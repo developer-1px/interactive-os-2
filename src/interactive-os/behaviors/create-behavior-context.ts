@@ -1,9 +1,9 @@
 import type { Command, Entity } from '../core/types'
 import type { CommandEngine } from '../core/command-engine'
-import type { BehaviorContext, SelectionMode } from './types'
+import type { BehaviorContext, GridNav, SelectionMode } from './types'
 import { getEntity, getChildren, getParent } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
-import { focusCommands, selectionCommands, expandCommands } from '../plugins/core'
+import { focusCommands, selectionCommands, expandCommands, gridColCommands } from '../plugins/core'
 
 function getFocusedId(engine: CommandEngine): string {
   return (engine.getStore().entities['__focus__']?.focusedId as string) ?? ''
@@ -47,11 +47,25 @@ function getVisibleNodes(engine: CommandEngine): string[] {
 export interface BehaviorContextOptions {
   expandable?: boolean
   selectionMode?: SelectionMode
+  colCount?: number
 }
 
 export function createBehaviorContext(engine: CommandEngine, options?: BehaviorContextOptions): BehaviorContext {
   const store = engine.getStore()
   const focusedId = getFocusedId(engine)
+
+  const colCount = options?.colCount
+  const grid: GridNav | undefined = colCount && colCount > 1 ? (() => {
+    const currentCol = (store.entities['__grid_col__']?.colIndex as number) ?? 0
+    return {
+      colIndex: currentCol,
+      colCount,
+      focusNextCol: () => gridColCommands.setColIndex(Math.min(currentCol + 1, colCount - 1)),
+      focusPrevCol: () => gridColCommands.setColIndex(Math.max(currentCol - 1, 0)),
+      focusFirstCol: () => gridColCommands.setColIndex(0),
+      focusLastCol: () => gridColCommands.setColIndex(colCount - 1),
+    }
+  })() : undefined
 
   return {
     focused: focusedId,
@@ -136,5 +150,7 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
     getChildren(id: string): string[] {
       return getChildren(store, id)
     },
+
+    grid,
   }
 }

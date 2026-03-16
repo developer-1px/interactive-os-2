@@ -3,6 +3,7 @@ import type { Command, Plugin, NormalizedData } from '../core/types'
 const FOCUS_ID = '__focus__'
 const SELECTION_ID = '__selection__'
 const EXPANDED_ID = '__expanded__'
+const GRID_COL_ID = '__grid_col__'
 
 export const focusCommands = {
   setFocus(nodeId: string): Command {
@@ -219,6 +220,35 @@ export const expandCommands = {
           entities: {
             ...store.entities,
             [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds },
+          },
+        }
+      },
+    }
+  },
+}
+
+export const gridColCommands = {
+  setColIndex(colIndex: number): Command {
+    let prev: number | undefined
+    return {
+      type: 'core:set-col-index',
+      payload: { colIndex },
+      execute(store) {
+        prev = store.entities[GRID_COL_ID]?.colIndex as number ?? 0
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [GRID_COL_ID]: { id: GRID_COL_ID, colIndex },
+          },
+        }
+      },
+      undo(store) {
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [GRID_COL_ID]: { id: GRID_COL_ID, colIndex: prev ?? 0 },
           },
         }
       },
