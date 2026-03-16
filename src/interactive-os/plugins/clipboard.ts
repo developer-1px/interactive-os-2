@@ -104,6 +104,7 @@ export const clipboardCommands = {
         // Capture clipboard state at execute time
         buffer = [...clipboardBuffer]
         mode = clipboardMode
+
         sourceIds = [...cutSourceIds]
 
         if (buffer.length === 0) return store

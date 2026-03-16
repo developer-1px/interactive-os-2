@@ -44,6 +44,9 @@ describe('focusRecovery middleware', () => {
       [historyPlugin.middleware!, recoveryPlugin.middleware!],
       vi.fn()
     )
+    // Expand folders so children are visible
+    engine.dispatch(expandCommands.expand('folder1'))
+    engine.dispatch(expandCommands.expand('folder2'))
     return { engine }
   }
 

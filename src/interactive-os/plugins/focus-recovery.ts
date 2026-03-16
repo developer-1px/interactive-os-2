@@ -10,32 +10,39 @@ function getFocusedId(store: NormalizedData): string {
   return (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
 }
 
-function getExpandedIds(store: NormalizedData): string[] {
-  return (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
-}
-
 /**
- * Check if a node exists in the store.
+ * A node is visible if it exists AND all ancestors are expanded.
  */
-function nodeExists(store: NormalizedData, nodeId: string): boolean {
-  return !!getEntity(store, nodeId)
-}
+function isVisible(store: NormalizedData, nodeId: string): boolean {
+  if (!getEntity(store, nodeId)) return false
+  const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
 
-/**
- * Check if a node is a descendant of a given ancestor.
- */
-function isDescendantOf(store: NormalizedData, nodeId: string, ancestorId: string): boolean {
   let current = nodeId
   while (true) {
     const parentId = getParent(store, current)
-    if (!parentId || parentId === ROOT_ID) return false
-    if (parentId === ancestorId) return true
+    if (!parentId) return false
+    if (parentId === ROOT_ID) return true
+    if (!expandedIds.includes(parentId)) return false
     current = parentId
   }
 }
 
 /**
- * Fallback: next sibling → prev sibling → parent (in storeBefore's structure)
+ * Find the nearest visible ancestor of a node.
+ */
+function findVisibleAncestor(store: NormalizedData, nodeId: string): string | null {
+  let current = nodeId
+  while (true) {
+    const parentId = getParent(store, current)
+    if (!parentId) return null
+    if (parentId === ROOT_ID) return null
+    if (isVisible(store, parentId)) return parentId
+    current = parentId
+  }
+}
+
+/**
+ * Fallback: next visible sibling → prev visible sibling → nearest visible ancestor.
  */
 function findFallbackFocus(
   storeBefore: NormalizedData,
@@ -48,28 +55,25 @@ function findFallbackFocus(
   const siblings = getChildren(storeBefore, parentId)
   const idx = siblings.indexOf(lostNodeId)
 
-  // Next sibling that still exists
+  // Next sibling
   for (let i = idx + 1; i < siblings.length; i++) {
-    const candidate = siblings[i]!
-    if (candidate !== lostNodeId && nodeExists(storeAfter, candidate)) {
-      return candidate
-    }
+    if (isVisible(storeAfter, siblings[i]!)) return siblings[i]!
   }
 
-  // Previous sibling that still exists
+  // Previous sibling
   for (let i = idx - 1; i >= 0; i--) {
-    const candidate = siblings[i]!
-    if (candidate !== lostNodeId && nodeExists(storeAfter, candidate)) {
-      return candidate
-    }
+    if (isVisible(storeAfter, siblings[i]!)) return siblings[i]!
   }
 
-  // Parent (if not root and still exists)
-  if (parentId !== ROOT_ID && nodeExists(storeAfter, parentId)) {
-    return parentId
+  // Nearest visible ancestor
+  if (parentId !== ROOT_ID) {
+    const ancestor = isVisible(storeAfter, parentId)
+      ? parentId
+      : findVisibleAncestor(storeAfter, parentId)
+    if (ancestor) return ancestor
   }
 
-  // First root child
+  // Last resort: first root child
   const rootChildren = getChildren(storeAfter, ROOT_ID)
   if (rootChildren.length > 0) return rootChildren[0]!
 
@@ -79,23 +83,18 @@ function findFallbackFocus(
 /**
  * Focus recovery middleware.
  *
- * Policy: "Focus follows the result"
- * - Deleted/gone → next sibling → prev sibling → parent
- * - Collapsed (focused child hidden) → collapsed node (parent)
- * - Created/pasted → new node
- * - Moved → focus stays on same ID (already handled)
- * - Undo restore → restored node
+ * Single rule: after every command, if focus is not on a visible node, fix it.
+ * - New visible node created → focus it
+ * - Focus invisible (deleted, collapsed, hidden) → fallback chain
  */
 export function focusRecovery(): Plugin {
   return {
     middleware: (next) => (command) => {
-      // Skip focus commands to avoid loops
       if (command.type === 'core:focus') {
         next(command)
         return
       }
 
-      // Capture storeBefore and storeAfter
       let storeBefore: NormalizedData | null = null
       let storeAfter: NormalizedData | null = null
 
@@ -113,48 +112,23 @@ export function focusRecovery(): Plugin {
 
       if (!storeBefore || !storeAfter) return
 
-      const focusedBefore = getFocusedId(storeBefore)
-      const focusedAfter = getFocusedId(storeAfter)
-      const currentFocus = focusedAfter || focusedBefore
-
-      if (!currentFocus) return
-
-      // --- Case 1: New entities (create, paste, undo-restore) ---
-      const beforeEntityIds = new Set(Object.keys(storeBefore.entities))
-      const newEntityIds = Object.keys(storeAfter.entities).filter(
-        (id) => !beforeEntityIds.has(id) && !id.startsWith('__')
+      // New visible entities → focus the last one
+      const beforeIds = new Set(Object.keys(storeBefore.entities))
+      const newVisibleIds = Object.keys(storeAfter.entities).filter(
+        (id) => !beforeIds.has(id) && !id.startsWith('__') && isVisible(storeAfter, id)
       )
 
-      if (newEntityIds.length > 0) {
-        const target = newEntityIds[newEntityIds.length - 1]!
-        if (nodeExists(storeAfter, target)) {
-          next(focusCommands.setFocus(target))
-          return
-        }
-      }
-
-      // --- Case 2: Focused node no longer exists → fallback ---
-      if (!nodeExists(storeAfter, currentFocus)) {
-        const fallback = findFallbackFocus(storeBefore, storeAfter, currentFocus)
-        if (fallback) {
-          next(focusCommands.setFocus(fallback))
-        }
+      if (newVisibleIds.length > 0) {
+        next(focusCommands.setFocus(newVisibleIds[newVisibleIds.length - 1]!))
         return
       }
 
-      // --- Case 3: Collapse — focused node is descendant of a just-collapsed node ---
-      if (command.type === 'core:collapse' || command.type === 'core:toggle-expand') {
-        const expandedBefore = getExpandedIds(storeBefore)
-        const expandedAfter = getExpandedIds(storeAfter)
-
-        // Find which node was just collapsed
-        const justCollapsed = expandedBefore.filter((id) => !expandedAfter.includes(id))
-
-        for (const collapsedId of justCollapsed) {
-          if (isDescendantOf(storeAfter, currentFocus, collapsedId)) {
-            next(focusCommands.setFocus(collapsedId))
-            return
-          }
+      // Current focus not visible → fallback
+      const currentFocus = getFocusedId(storeAfter) || getFocusedId(storeBefore)
+      if (currentFocus && !isVisible(storeAfter, currentFocus)) {
+        const fallback = findFallbackFocus(storeBefore, storeAfter, currentFocus)
+        if (fallback) {
+          next(focusCommands.setFocus(fallback))
         }
       }
     },
