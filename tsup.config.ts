@@ -10,6 +10,7 @@ export default defineConfig({
     'plugins/crud': 'src/interactive-os/plugins/crud.ts',
     'plugins/clipboard': 'src/interactive-os/plugins/clipboard.ts',
     'plugins/rename': 'src/interactive-os/plugins/rename.ts',
+    'plugins/dnd': 'src/interactive-os/plugins/dnd.ts',
     'behaviors/types': 'src/interactive-os/behaviors/types.ts',
     'behaviors/treegrid': 'src/interactive-os/behaviors/treegrid.ts',
     'behaviors/listbox': 'src/interactive-os/behaviors/listbox.ts',
