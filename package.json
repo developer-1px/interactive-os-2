@@ -28,7 +28,10 @@
     "./components/aria": { "import": "./dist-lib/components/aria.js", "types": "./dist-lib/components/aria.d.ts" },
     "./ui/tree-grid": { "import": "./dist-lib/ui/tree-grid.js", "types": "./dist-lib/ui/tree-grid.d.ts" },
     "./ui/list-box": { "import": "./dist-lib/ui/list-box.js", "types": "./dist-lib/ui/list-box.d.ts" },
-    "./ui/tab-list": { "import": "./dist-lib/ui/tab-list.js", "types": "./dist-lib/ui/tab-list.d.ts" }
+    "./ui/tab-list": { "import": "./dist-lib/ui/tab-list.js", "types": "./dist-lib/ui/tab-list.d.ts" },
+    "./ui/accordion": { "import": "./dist-lib/ui/accordion.js", "types": "./dist-lib/ui/accordion.d.ts" },
+    "./ui/menu-list": { "import": "./dist-lib/ui/menu-list.js", "types": "./dist-lib/ui/menu-list.d.ts" },
+    "./ui/disclosure-group": { "import": "./dist-lib/ui/disclosure-group.js", "types": "./dist-lib/ui/disclosure-group.d.ts" }
   },
   "files": ["dist-lib", "README.md", "LICENSE"],
   "scripts": {
