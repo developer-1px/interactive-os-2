@@ -73,9 +73,13 @@
 - [x] menu (role: menu, childRole: menuitem)
 - [x] disclosure (role: group, childRole: button)
 
+### 추가 프리셋
+- [x] dialog (role: dialog, childRole: group)
+- [x] toolbar (role: toolbar, childRole: button)
+
 ### 미구현 behavior
-- [ ] `[P2]` grid — 2D row/col 네비게이션, Relationship 모델 확장 필요
-- [ ] `[P2]` toolbar — horizontal 포커스, 그룹 내 순환
+- [ ] `[P1]` grid — 2D row/col 네비게이션, Relationship 모델 확장 필요
+- [ ] `[P1]` combobox — input + listbox 통합
 - [ ] `[P2]` radiogroup — single selection 강제
 
 ## ⑤ Components + Hooks
@@ -104,7 +108,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (204 tests, 26 files)
+- [x] Vitest (213 tests, 28 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 27 modules)
