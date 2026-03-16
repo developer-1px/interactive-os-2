@@ -15,6 +15,7 @@
     "./plugins/crud": { "import": "./dist-lib/plugins/crud.js", "types": "./dist-lib/plugins/crud.d.ts" },
     "./plugins/clipboard": { "import": "./dist-lib/plugins/clipboard.js", "types": "./dist-lib/plugins/clipboard.d.ts" },
     "./plugins/rename": { "import": "./dist-lib/plugins/rename.js", "types": "./dist-lib/plugins/rename.d.ts" },
+    "./plugins/dnd": { "import": "./dist-lib/plugins/dnd.js", "types": "./dist-lib/plugins/dnd.d.ts" },
     "./behaviors/types": { "import": "./dist-lib/behaviors/types.js", "types": "./dist-lib/behaviors/types.d.ts" },
     "./behaviors/treegrid": { "import": "./dist-lib/behaviors/treegrid.js", "types": "./dist-lib/behaviors/treegrid.d.ts" },
     "./behaviors/listbox": { "import": "./dist-lib/behaviors/listbox.js", "types": "./dist-lib/behaviors/listbox.d.ts" },
