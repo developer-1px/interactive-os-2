@@ -58,17 +58,27 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
     selected: getSelectedIds(engine),
     isExpanded: isExpanded(engine, focusedId),
 
-    focusNext(): Command {
+    focusNext(options?: { wrap?: boolean }): Command {
       const visible = getVisibleNodes(engine)
       const idx = visible.indexOf(focusedId)
-      const nextId = visible[idx + 1] ?? focusedId
+      let nextId: string
+      if (options?.wrap) {
+        nextId = visible[(idx + 1) % visible.length] ?? focusedId
+      } else {
+        nextId = visible[idx + 1] ?? focusedId
+      }
       return focusCommands.setFocus(nextId)
     },
 
-    focusPrev(): Command {
+    focusPrev(options?: { wrap?: boolean }): Command {
       const visible = getVisibleNodes(engine)
       const idx = visible.indexOf(focusedId)
-      const prevId = visible[idx - 1] ?? focusedId
+      let prevId: string
+      if (options?.wrap) {
+        prevId = visible[(idx - 1 + visible.length) % visible.length] ?? focusedId
+      } else {
+        prevId = visible[idx - 1] ?? focusedId
+      }
       return focusCommands.setFocus(prevId)
     },
 

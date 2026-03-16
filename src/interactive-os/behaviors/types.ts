@@ -23,8 +23,8 @@ export interface BehaviorContext {
   selected: string[]
   isExpanded: boolean
 
-  focusNext(): Command
-  focusPrev(): Command
+  focusNext(options?: { wrap?: boolean }): Command
+  focusPrev(options?: { wrap?: boolean }): Command
   focusFirst(): Command
   focusLast(): Command
   focusParent(): Command
