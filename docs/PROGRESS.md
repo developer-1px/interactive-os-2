@@ -79,7 +79,7 @@
 
 ### 미구현 behavior
 - [x] grid — 2D row/col 네비게이션, factory function `grid({ columns })`
-- [ ] `[P1]` combobox — input + listbox 통합
+- [x] combobox — input + listbox 통합, aria-activedescendant
 - [x] radiogroup — single selection 강제, wrapping nav, aria-checked
 - [x] switch — expanded state 재사용, aria-checked, natural-tab-order
 
@@ -111,7 +111,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (271 tests, 31 files)
+- [x] Vitest (286 tests, 32 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 27 modules)
@@ -124,4 +124,4 @@
 
 ---
 
-*Last updated: 2026-03-17 (Task 10-12 complete — grid behavior, Aria.Cell, Grid UI)*
+*Last updated: 2026-03-17 (Task 13-14 complete — combobox plugin, behavior, UI, keyboard test)*
