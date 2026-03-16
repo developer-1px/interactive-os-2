@@ -19,6 +19,7 @@ function fixtureStore() {
       [ROOT_ID]: ['folder1', 'folder2', 'folder3'],
       folder1: ['file1', 'file2'],
       folder2: ['file3'],
+      folder3: [],
     },
   })
 }

@@ -23,6 +23,7 @@ function fixtureStore() {
     relationships: {
       [ROOT_ID]: ['src', 'lib'],
       src: ['app', 'main'],
+      lib: [],
     },
   })
 }

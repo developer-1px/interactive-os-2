@@ -19,6 +19,7 @@ function fixtureStore() {
     relationships: {
       [ROOT_ID]: ['folder1', 'folder2'],
       folder1: ['file1', 'file2'],
+      folder2: [],
     },
   })
 }
@@ -100,5 +101,27 @@ describe('clipboardCommands.copy multiple', () => {
 
     const folder2Children = getChildren(engine.getStore(), 'folder2')
     expect(folder2Children).toHaveLength(2)
+  })
+})
+
+describe('paste into leaf node', () => {
+  it('pastes into parent when target is a leaf (no relationship entry)', () => {
+    const engine = createCommandEngine(fixtureStore(), [], vi.fn())
+
+    engine.dispatch(clipboardCommands.copy(['file2']))
+    // Paste targeting file1 (leaf) — should go into folder1 (file1's parent)
+    engine.dispatch(clipboardCommands.paste('file1'))
+
+    // file1 has no relationship entry, so paste goes to folder1
+    expect(getChildren(engine.getStore(), 'folder1').length).toBe(3) // file1, file2, clone
+  })
+
+  it('pastes into folder when target is a container (has relationship entry)', () => {
+    const engine = createCommandEngine(fixtureStore(), [], vi.fn())
+
+    engine.dispatch(clipboardCommands.copy(['file1']))
+    engine.dispatch(clipboardCommands.paste('folder2'))
+
+    expect(getChildren(engine.getStore(), 'folder2').length).toBe(1)
   })
 })

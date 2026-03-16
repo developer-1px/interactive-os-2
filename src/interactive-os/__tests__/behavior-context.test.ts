@@ -16,6 +16,7 @@ function setup() {
     relationships: {
       [ROOT_ID]: ['folder1', 'folder2'],
       folder1: ['file1', 'file2'],
+      folder2: [],
     },
   })
 
