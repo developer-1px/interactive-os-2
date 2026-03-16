@@ -2,6 +2,7 @@ import type { AriaBehavior, NodeState } from './types'
 
 export const listbox: AriaBehavior = {
   role: 'listbox',
+  childRole: 'option',
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),
     ArrowUp: (ctx) => ctx.focusPrev(),

@@ -2,6 +2,7 @@ import type { AriaBehavior, NodeState } from './types'
 
 export const treegrid: AriaBehavior = {
   role: 'treegrid',
+  childRole: 'row',
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),
     ArrowUp: (ctx) => ctx.focusPrev(),

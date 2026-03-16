@@ -2,6 +2,7 @@ import type { AriaBehavior, NodeState } from './types'
 
 export const tabs: AriaBehavior = {
   role: 'tablist',
+  childRole: 'tab',
   keyMap: {
     ArrowRight: (ctx) => ctx.focusNext(),
     ArrowLeft: (ctx) => ctx.focusPrev(),
