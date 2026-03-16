@@ -12,6 +12,7 @@ import { crud } from './interactive-os/plugins/crud'
 import { clipboard } from './interactive-os/plugins/clipboard'
 import { rename } from './interactive-os/plugins/rename'
 import { dnd } from './interactive-os/plugins/dnd'
+import { focusRecovery } from './interactive-os/plugins/focus-recovery'
 import './App.css'
 
 // --- Demo data ---
@@ -123,7 +124,7 @@ function App() {
             data={tree}
             onChange={setTree}
             enableEditing
-            plugins={[core(), crud(), clipboard(), rename(), dnd(), history()]}
+            plugins={[core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]}
             renderNode={(node, state: NodeState) => {
               const isFolder = node.type === 'folder'
               const indent = ((state.level ?? 1) - 1) * 20
