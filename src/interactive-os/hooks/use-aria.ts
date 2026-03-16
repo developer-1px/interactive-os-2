@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef } from 'react'
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import type { Command, NormalizedData, Plugin } from '../core/types'
 import { ROOT_ID } from '../core/types'
 import type { AriaBehavior, NodeState } from '../behaviors/types'
@@ -131,6 +131,15 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     },
     [store, behavior, mergedKeyMap, engine, focusedId, getNodeState]
   )
+
+  // Sync DOM focus with data focus
+  useEffect(() => {
+    if (!focusedId) return
+    const el = document.querySelector<HTMLElement>(`[data-node-id="${focusedId}"]`)
+    if (el && el !== document.activeElement) {
+      el.focus({ preventScroll: false })
+    }
+  }, [focusedId])
 
   return {
     dispatch,
