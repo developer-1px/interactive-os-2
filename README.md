@@ -131,6 +131,7 @@ import { treegrid } from 'interactive-os/behaviors/treegrid'
 | `crud()` | create, delete | Entity CRUD with subtree support |
 | `clipboard()` | copy, cut, paste | Copy clones, cut moves |
 | `rename()` | startRename, confirmRename, cancelRename | Inline field editing |
+| `dnd()` | moveUp, moveDown, moveIn, moveOut, moveTo | Keyboard reordering |
 
 ## Adding Editing Keys
 
@@ -164,10 +165,16 @@ Pre-built components for common use cases:
 import { TreeGrid } from 'interactive-os/ui/tree-grid'
 import { ListBox } from 'interactive-os/ui/list-box'
 import { TabList } from 'interactive-os/ui/tab-list'
+import { Accordion } from 'interactive-os/ui/accordion'
+import { MenuList } from 'interactive-os/ui/menu-list'
+import { DisclosureGroup } from 'interactive-os/ui/disclosure-group'
 
 <TreeGrid data={treeData} enableEditing onChange={setData} />
 <ListBox data={listData} />
 <TabList data={tabData} />
+<Accordion data={accordionData} />
+<MenuList data={menuData} />
+<DisclosureGroup data={disclosureData} />
 ```
 
 ## Design Principles
