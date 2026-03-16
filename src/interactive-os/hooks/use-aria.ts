@@ -24,6 +24,7 @@ export interface UseAriaReturn {
   focused: string
   selected: string[]
   getStore(): NormalizedData
+  containerProps: Record<string, unknown>
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
@@ -118,22 +119,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       const state = getNodeState(id)
       const entity = getEntity(store, id) ?? { id }
       const ariaAttrs = behavior.ariaAttributes(entity, state)
+      const isActivedescendant = behavior.focusStrategy.type === 'aria-activedescendant'
 
-      return {
+      const baseProps: Record<string, unknown> = {
         role: behavior.childRole ?? 'row',
-        tabIndex: behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1),
         'data-node-id': id,
         ...ariaAttrs,
-        onKeyDown: (event: KeyboardEvent) => {
-          const matchedKey = findMatchingKey(event, mergedKeyMap)
-          if (!matchedKey) return
-          const ctx = createBehaviorContext(engine, behaviorCtxOptions)
-          const handler = mergedKeyMap[matchedKey]
-          if (!handler) return
-          const command = handler(ctx)
-          if (command) engine.dispatch(command)
-          event.preventDefault()
-        },
         onClick: () => {
           if (behavior.activateOnClick) {
             const ctx = createBehaviorContext(engine, behaviorCtxOptions)
@@ -147,18 +138,53 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           }
         },
       }
+
+      if (!isActivedescendant) {
+        baseProps.tabIndex = behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
+        baseProps.onKeyDown = (event: KeyboardEvent) => {
+          const matchedKey = findMatchingKey(event, mergedKeyMap)
+          if (!matchedKey) return
+          const ctx = createBehaviorContext(engine, behaviorCtxOptions)
+          const handler = mergedKeyMap[matchedKey]
+          if (!handler) return
+          const command = handler(ctx)
+          if (command) engine.dispatch(command)
+          event.preventDefault()
+        }
+      }
+
+      return baseProps
     },
     [store, behavior, mergedKeyMap, engine, focusedId, getNodeState, behaviorCtxOptions]
   )
 
-  // Sync DOM focus with data focus
+  const containerProps = useMemo((): Record<string, unknown> => {
+    if (behavior.focusStrategy.type !== 'aria-activedescendant') return {}
+    return {
+      tabIndex: 0,
+      'aria-activedescendant': focusedId || undefined,
+      onKeyDown: (event: KeyboardEvent) => {
+        const matchedKey = findMatchingKey(event, mergedKeyMap)
+        if (!matchedKey) return
+        const ctx = createBehaviorContext(engine, behaviorCtxOptions)
+        const handler = mergedKeyMap[matchedKey]
+        if (!handler) return
+        const command = handler(ctx)
+        if (command) engine.dispatch(command)
+        event.preventDefault()
+      },
+    }
+  }, [behavior.focusStrategy.type, focusedId, mergedKeyMap, engine, behaviorCtxOptions])
+
+  // Sync DOM focus with data focus (skip for aria-activedescendant — container holds focus)
   useEffect(() => {
     if (!focusedId) return
+    if (behavior.focusStrategy.type === 'aria-activedescendant') return
     const el = document.querySelector<HTMLElement>(`[data-node-id="${focusedId}"]`)
     if (el && el !== document.activeElement) {
       el.focus({ preventScroll: false })
     }
-  }, [focusedId])
+  }, [focusedId, behavior.focusStrategy.type])
 
   return {
     dispatch,
@@ -167,5 +193,6 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     focused: focusedId,
     selected: selectedIds,
     getStore: () => engine.getStore(),
+    containerProps,
   }
 }
