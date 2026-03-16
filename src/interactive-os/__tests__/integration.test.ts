@@ -4,7 +4,7 @@ import { createStore, getEntity, getChildren } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
 import { history, undoCommand, redoCommand } from '../plugins/history'
 import { focusCommands, selectionCommands, expandCommands } from '../plugins/core'
-import type { Command, Middleware } from '../core/types'
+import type { Middleware } from '../core/types'
 
 describe('Integration: Store + Engine + Plugins', () => {
   function setup() {
