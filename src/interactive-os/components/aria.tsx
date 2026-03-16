@@ -20,6 +20,7 @@ interface AriaNodeProps {
   render: (node: Record<string, unknown>, state: NodeState) => ReactNode
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function AriaRoot({ behavior, data, plugins, keyMap, onChange, children }: AriaProps) {
   const aria = useAria({ behavior, data, plugins, keyMap, onChange })
   return (
@@ -31,6 +32,7 @@ function AriaRoot({ behavior, data, plugins, keyMap, onChange, children }: AriaP
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function AriaNode({ render }: AriaNodeProps) {
   return (
     <AriaInternalContext.Consumer>
