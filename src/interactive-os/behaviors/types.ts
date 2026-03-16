@@ -1,4 +1,4 @@
-import type { Entity, Command, NormalizedData } from '../core/types'
+import type { Entity, Command } from '../core/types'
 
 export interface FocusStrategy {
   type: 'roving-tabindex' | 'aria-activedescendant'

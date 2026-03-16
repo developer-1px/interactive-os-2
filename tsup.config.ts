@@ -1,0 +1,40 @@
+import { defineConfig } from 'tsup'
+
+export default defineConfig({
+  entry: {
+    'core/types': 'src/interactive-os/core/types.ts',
+    'core/normalized-store': 'src/interactive-os/core/normalized-store.ts',
+    'core/command-engine': 'src/interactive-os/core/command-engine.ts',
+    'plugins/core': 'src/interactive-os/plugins/core.ts',
+    'plugins/history': 'src/interactive-os/plugins/history.ts',
+    'plugins/crud': 'src/interactive-os/plugins/crud.ts',
+    'plugins/clipboard': 'src/interactive-os/plugins/clipboard.ts',
+    'plugins/rename': 'src/interactive-os/plugins/rename.ts',
+    'behaviors/types': 'src/interactive-os/behaviors/types.ts',
+    'behaviors/treegrid': 'src/interactive-os/behaviors/treegrid.ts',
+    'behaviors/listbox': 'src/interactive-os/behaviors/listbox.ts',
+    'behaviors/disclosure': 'src/interactive-os/behaviors/disclosure.ts',
+    'behaviors/tabs': 'src/interactive-os/behaviors/tabs.ts',
+    'behaviors/accordion': 'src/interactive-os/behaviors/accordion.ts',
+    'behaviors/menu': 'src/interactive-os/behaviors/menu.ts',
+    'behaviors/create-behavior-context': 'src/interactive-os/behaviors/create-behavior-context.ts',
+    'hooks/use-aria': 'src/interactive-os/hooks/use-aria.ts',
+    'hooks/use-keyboard': 'src/interactive-os/hooks/use-keyboard.ts',
+    'components/aria': 'src/interactive-os/components/aria.tsx',
+    'components/aria-context': 'src/interactive-os/components/aria-context.ts',
+    'ui/tree-grid': 'src/interactive-os/ui/tree-grid.tsx',
+    'ui/list-box': 'src/interactive-os/ui/list-box.tsx',
+    'ui/tab-list': 'src/interactive-os/ui/tab-list.tsx',
+  },
+  format: ['esm'],
+  dts: true,
+  splitting: true,
+  clean: true,
+  outDir: 'dist-lib',
+  external: ['react', 'react-dom'],
+  treeshake: true,
+  tsconfig: 'tsconfig.app.json',
+  esbuildOptions(options) {
+    options.jsx = 'automatic'
+  },
+})

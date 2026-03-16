@@ -1,11 +1,10 @@
 import type { Command, Entity, NormalizedData, Plugin } from '../core/types'
-import { ROOT_ID, createBatchCommand } from '../core/types'
+import { ROOT_ID } from '../core/types'
 import {
   addEntity,
   removeEntity,
   getEntity,
   getChildren,
-  getParent,
 } from '../core/normalized-store'
 
 interface ClipboardEntry {
