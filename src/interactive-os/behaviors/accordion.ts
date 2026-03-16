@@ -15,6 +15,8 @@ export const accordion: AriaBehavior = {
     type: 'roving-tabindex',
     orientation: 'vertical',
   },
+  expandable: true,
+  activateOnClick: true,
   ariaAttributes: (_node, state: NodeState) => {
     const attrs: Record<string, string> = {}
     if (state.expanded !== undefined) {

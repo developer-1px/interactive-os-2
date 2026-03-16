@@ -28,7 +28,7 @@ export default function DisclosurePage() {
       <div className="card">
         <DisclosureGroup
           data={disclosureData}
-          renderTrigger={(item, state: NodeState) => (
+          renderItem={(item, state: NodeState) => (
             <div>
               <div className={`disclosure-trigger${state.focused ? ' disclosure-trigger--focused' : ''}`}>
                 <span className="disclosure-trigger__icon">

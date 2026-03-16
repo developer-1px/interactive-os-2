@@ -9,10 +9,10 @@ interface AccordionProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderHeader?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
 }
 
-const defaultRenderHeader = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
+const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
   <div style={{
     padding: '12px 16px',
     background: state.focused ? 'var(--accordion-focus-bg, #e3f2fd)' : 'transparent',
@@ -34,11 +34,11 @@ export function Accordion({
   data,
   plugins = [core()],
   onChange,
-  renderHeader = defaultRenderHeader,
+  renderItem = defaultRenderItem,
 }: AccordionProps) {
   return (
     <Aria behavior={accordion} data={data} plugins={plugins} onChange={onChange}>
-      <Aria.Node render={renderHeader} />
+      <Aria.Node render={renderItem} />
     </Aria>
   )
 }

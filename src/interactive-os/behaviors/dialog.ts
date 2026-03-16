@@ -4,10 +4,9 @@ export const dialog: AriaBehavior = {
   role: 'dialog',
   childRole: 'group',
   keyMap: {
-    Escape: (ctx) => ctx.collapse(), // close dialog
-    Tab: (ctx) => ctx.focusNext(),   // trap focus within dialog
+    Escape: (ctx) => ctx.collapse(),
   },
-  focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+  focusStrategy: { type: 'natural-tab-order', orientation: 'vertical' },
   ariaAttributes: (_node, state: NodeState) => {
     const attrs: Record<string, string> = {}
     if (state.expanded !== undefined) {

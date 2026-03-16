@@ -31,7 +31,7 @@ export default function AccordionPage() {
       <div className="card">
         <Accordion
           data={accordionData}
-          renderHeader={(item, state: NodeState) => (
+          renderItem={(item, state: NodeState) => (
             <div>
               <div className={`accordion-header${state.focused ? ' accordion-header--focused' : ''}`}>
                 <span className="accordion-header__label">{item.label as string}</span>

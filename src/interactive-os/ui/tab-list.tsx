@@ -9,10 +9,10 @@ interface TabListProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderTab?: (tab: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (tab: Record<string, unknown>, state: NodeState) => React.ReactNode
 }
 
-const defaultRenderTab = (tab: Record<string, unknown>, state: NodeState): React.ReactNode => (
+const defaultRenderItem = (tab: Record<string, unknown>, state: NodeState): React.ReactNode => (
   <div
     style={{
       display: 'inline-flex',
@@ -33,11 +33,11 @@ export function TabList({
   data,
   plugins = [core()],
   onChange,
-  renderTab = defaultRenderTab,
+  renderItem = defaultRenderItem,
 }: TabListProps) {
   return (
     <Aria behavior={tabs} data={data} plugins={plugins} onChange={onChange}>
-      <Aria.Node render={renderTab} />
+      <Aria.Node render={renderItem} />
     </Aria>
   )
 }

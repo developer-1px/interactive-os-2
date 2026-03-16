@@ -44,7 +44,11 @@ function getVisibleNodes(engine: CommandEngine): string[] {
   return visible
 }
 
-export function createBehaviorContext(engine: CommandEngine): BehaviorContext {
+export interface BehaviorContextOptions {
+  expandable?: boolean
+}
+
+export function createBehaviorContext(engine: CommandEngine, options?: BehaviorContextOptions): BehaviorContext {
   const store = engine.getStore()
   const focusedId = getFocusedId(engine)
 
@@ -99,7 +103,7 @@ export function createBehaviorContext(engine: CommandEngine): BehaviorContext {
 
     activate(): Command {
       const children = getChildren(store, focusedId)
-      if (children.length > 0) return expandCommands.toggleExpand(focusedId)
+      if (children.length > 0 || options?.expandable) return expandCommands.toggleExpand(focusedId)
       return selectionCommands.select(focusedId)
     },
 

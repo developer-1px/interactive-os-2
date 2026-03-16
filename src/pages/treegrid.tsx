@@ -89,7 +89,7 @@ export default function TreeGridPage() {
           onChange={setTree}
           enableEditing
           plugins={plugins}
-          renderNode={(node, state: NodeState) => {
+          renderItem={(node, state: NodeState) => {
             const isFolder = node.type === 'folder'
             const indent = ((state.level ?? 1) - 1) * 18
             const name = node.name as string

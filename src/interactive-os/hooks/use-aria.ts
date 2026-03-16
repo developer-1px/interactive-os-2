@@ -63,10 +63,11 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   // eslint-disable-next-line react-hooks/refs
   const store = engine.getStore()
   const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
-  const selectedIds = useMemo(
-    () => (store.entities['__selection__']?.selectedIds as string[]) ?? [],
-    [store]
-  )
+  const selectedIdSet = useMemo(() => {
+    const ids = (store.entities['__selection__']?.selectedIds as string[]) ?? []
+    return new Set(ids)
+  }, [store])
+  const selectedIds = useMemo(() => Array.from(selectedIdSet), [selectedIdSet])
   const expandedIds = useMemo(
     () => (store.entities['__expanded__']?.expandedIds as string[]) ?? [],
     [store]
@@ -88,17 +89,24 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         current = parent
       }
 
+      const isExpandable = hasChildren || (behavior.expandable ?? false)
+
       return {
         focused: id === focusedId,
-        selected: selectedIds.includes(id),
+        selected: selectedIdSet.has(id),
         disabled: false,
         index: siblings.indexOf(id),
         siblingCount: siblings.length,
-        expanded: hasChildren ? expandedIds.includes(id) : undefined,
+        expanded: isExpandable ? expandedIds.includes(id) : undefined,
         level: level + 1,
       }
     },
-    [store, focusedId, selectedIds, expandedIds]
+    [store, focusedId, selectedIdSet, expandedIds, behavior.expandable]
+  )
+
+  const behaviorCtxOptions = useMemo(
+    () => ({ expandable: behavior.expandable }),
+    [behavior.expandable]
   )
 
   const getNodeProps = useCallback(
@@ -109,18 +117,25 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
       return {
         role: behavior.childRole ?? 'row',
-        tabIndex: id === focusedId ? 0 : -1,
+        tabIndex: behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1),
         'data-node-id': id,
         ...ariaAttrs,
         onKeyDown: (event: KeyboardEvent) => {
           const matchedKey = findMatchingKey(event, mergedKeyMap)
           if (!matchedKey) return
-          const ctx = createBehaviorContext(engine)
+          const ctx = createBehaviorContext(engine, behaviorCtxOptions)
           const handler = mergedKeyMap[matchedKey]
           if (!handler) return
           const command = handler(ctx)
           if (command) engine.dispatch(command)
           event.preventDefault()
+        },
+        onClick: () => {
+          if (behavior.activateOnClick) {
+            const ctx = createBehaviorContext(engine, behaviorCtxOptions)
+            const command = ctx.activate()
+            if (command) engine.dispatch(command)
+          }
         },
         onFocus: () => {
           if (id !== focusedId) {
@@ -129,7 +144,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         },
       }
     },
-    [store, behavior, mergedKeyMap, engine, focusedId, getNodeState]
+    [store, behavior, mergedKeyMap, engine, focusedId, getNodeState, behaviorCtxOptions]
   )
 
   // Sync DOM focus with data focus

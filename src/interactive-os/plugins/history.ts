@@ -18,6 +18,11 @@ export function redoCommand(): Command {
   }
 }
 
+export const historyCommands = {
+  undo: undoCommand,
+  redo: redoCommand,
+}
+
 export function history(): Plugin {
   const past: Array<{ command: Command; storeBefore: NormalizedData }> = []
   const future: Array<{ command: Command; storeAfter: NormalizedData }> = []

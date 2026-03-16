@@ -7,7 +7,7 @@
  */
 import { useState } from 'react'
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render } from '@testing-library/react'
+import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TreeGrid } from '../ui/tree-grid'
 import { createStore } from '../core/normalized-store'
@@ -47,7 +47,7 @@ function renderTree(data: NormalizedData, onChange?: (d: NormalizedData) => void
       plugins={plugins}
       enableEditing
       onChange={onChange}
-      renderNode={(node, state: NodeState) => (
+      renderItem={(node, state: NodeState) => (
         <span data-testid={`node-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
           {node.name as string}
         </span>
@@ -84,8 +84,7 @@ describe('TreeGrid keyboard integration', () => {
       expect(getFocusedNodeId(container)).toBe('src')
 
       // Focus the element and press ArrowDown
-      const firstNode = getNodeElement(container, 'src')!
-      await user.click(firstNode)
+      getNodeElement(container, 'src')!.focus()
       await user.keyboard('{ArrowDown}')
 
       expect(getFocusedNodeId(container)).toBe('lib')
@@ -95,8 +94,7 @@ describe('TreeGrid keyboard integration', () => {
       const user = userEvent.setup()
       const { container } = renderTree(fixtureData())
 
-      const secondNode = getNodeElement(container, 'lib')!
-      await user.click(secondNode)
+      getNodeElement(container, 'lib')!.focus()
       await user.keyboard('{ArrowUp}')
 
       expect(getFocusedNodeId(container)).toBe('src')
@@ -109,8 +107,7 @@ describe('TreeGrid keyboard integration', () => {
       // src is collapsed initially — only src and lib visible
       expect(getAllVisibleNodeIds(container)).toEqual(['src', 'lib'])
 
-      const srcNode = getNodeElement(container, 'src')!
-      await user.click(srcNode)
+      getNodeElement(container, 'src')!.focus()
       await user.keyboard('{ArrowRight}')
 
       // After expand, children should be visible
@@ -123,8 +120,7 @@ describe('TreeGrid keyboard integration', () => {
       const { container } = renderTree(fixtureData())
 
       // Expand src first
-      const srcNode = getNodeElement(container, 'src')!
-      await user.click(srcNode)
+      getNodeElement(container, 'src')!.focus()
       await user.keyboard('{ArrowRight}')
       expect(getAllVisibleNodeIds(container)).toContain('app')
 
@@ -137,8 +133,7 @@ describe('TreeGrid keyboard integration', () => {
       const user = userEvent.setup()
       const { container } = renderTree(fixtureData())
 
-      const libNode = getNodeElement(container, 'lib')!
-      await user.click(libNode)
+      act(() => { getNodeElement(container, 'lib')!.focus() })
       expect(getFocusedNodeId(container)).toBe('lib')
 
       await user.keyboard('{Home}')
@@ -149,8 +144,7 @@ describe('TreeGrid keyboard integration', () => {
       const user = userEvent.setup()
       const { container } = renderTree(fixtureData())
 
-      const srcNode = getNodeElement(container, 'src')!
-      await user.click(srcNode)
+      getNodeElement(container, 'src')!.focus()
       await user.keyboard('{End}')
 
       expect(getFocusedNodeId(container)).toBe('lib')
@@ -162,8 +156,7 @@ describe('TreeGrid keyboard integration', () => {
       const user = userEvent.setup()
       const { container } = renderTree(fixtureData())
 
-      const srcNode = getNodeElement(container, 'src')!
-      await user.click(srcNode)
+      getNodeElement(container, 'src')!.focus()
       await user.keyboard('{ }')
 
       // Check that the node's rendered content shows selected
@@ -177,8 +170,7 @@ describe('TreeGrid keyboard integration', () => {
       const user = userEvent.setup()
       const { container } = renderTree(fixtureData())
 
-      const srcNode = getNodeElement(container, 'src')!
-      await user.click(srcNode)
+      getNodeElement(container, 'src')!.focus()
 
       // First ArrowRight: expand
       await user.keyboard('{ArrowRight}')
@@ -194,8 +186,7 @@ describe('TreeGrid keyboard integration', () => {
       const { container } = renderTree(fixtureData())
 
       // Expand src and navigate to app
-      const srcNode = getNodeElement(container, 'src')!
-      await user.click(srcNode)
+      getNodeElement(container, 'src')!.focus()
       await user.keyboard('{ArrowRight}') // expand
       await user.keyboard('{ArrowRight}') // focus app
 
@@ -220,7 +211,7 @@ describe('TreeGrid keyboard integration', () => {
             plugins={plugins}
             enableEditing
             onChange={setData}
-            renderNode={(node, state: NodeState) => (
+            renderItem={(node, state: NodeState) => (
               <span data-testid={`node-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
                 {node.name as string}
               </span>
@@ -232,8 +223,7 @@ describe('TreeGrid keyboard integration', () => {
       const { container } = render(<StatefulTree />)
 
       // Expand src, navigate to app
-      const srcNode = getNodeElement(container, 'src')!
-      await user.click(srcNode)
+      getNodeElement(container, 'src')!.focus()
       await user.keyboard('{ArrowRight}') // expand
       await user.keyboard('{ArrowRight}') // focus app
 

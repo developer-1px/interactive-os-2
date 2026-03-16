@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createCommandEngine } from '../core/command-engine'
 import { createStore, getEntity, getChildren } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
-import { history, undoCommand } from '../plugins/history'
+import { history, historyCommands } from '../plugins/history'
 import { focusCommands } from '../plugins/core'
 import { crudCommands } from '../plugins/crud'
 import { clipboardCommands, resetClipboard } from '../plugins/clipboard'
@@ -45,7 +45,7 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
     engine.dispatch(crudCommands.create({ id: 'utils', name: 'utils.ts' }, 'lib'))
     expect(getEntity(engine.getStore(), 'utils')).toBeDefined()
 
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(getEntity(engine.getStore(), 'utils')).toBeUndefined()
   })
 
@@ -56,7 +56,7 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
     expect(getEntity(engine.getStore(), 'src')).toBeUndefined()
     expect(getEntity(engine.getStore(), 'app')).toBeUndefined()
 
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(getEntity(engine.getStore(), 'src')).toBeDefined()
     expect(getEntity(engine.getStore(), 'app')).toBeDefined()
     expect(getChildren(engine.getStore(), 'src')).toEqual(['app', 'main'])
@@ -71,7 +71,7 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
     const libChildren = getChildren(engine.getStore(), 'lib')
     expect(libChildren).toHaveLength(1)
 
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(getChildren(engine.getStore(), 'lib')).toEqual([])
   })
 
@@ -82,7 +82,7 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
     engine.dispatch(renameCommands.confirmRename('app', 'name', 'Application.tsx'))
     expect(getEntity(engine.getStore(), 'app')?.name).toBe('Application.tsx')
 
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(getEntity(engine.getStore(), 'app')?.name).toBe('App.tsx')
   })
 
@@ -106,7 +106,7 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
     expect(getChildren(engine.getStore(), 'src')).toEqual(['app', 'main'])
 
     // Undo delete
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(getEntity(engine.getStore(), 'new1')?.name).toBe('helpers.ts')
   })
 })
