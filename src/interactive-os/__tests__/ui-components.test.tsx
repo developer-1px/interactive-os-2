@@ -138,8 +138,8 @@ describe('DisclosureGroup reference component', () => {
     expect(screen.getByText('Details')).toBeDefined()
   })
 
-  it('applies button role', () => {
+  it('applies group role', () => {
     const { container } = render(<DisclosureGroup data={disclosureData} />)
-    expect(container.querySelector('[role="button"]')).not.toBeNull()
+    expect(container.querySelector('[role="group"]')).not.toBeNull()
   })
 })
