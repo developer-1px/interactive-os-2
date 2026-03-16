@@ -1,0 +1,3 @@
+- 기능 완료 및 커밋 시 `docs/PROGRESS.md` 체크리스트를 업데이트한다
+- 작업 시작 시 `docs/PROGRESS.md`를 읽고 현황을 파악한다
+- discussion 시작 시 메모리 + PROGRESS.md를 로드한다
