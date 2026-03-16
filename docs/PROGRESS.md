@@ -81,6 +81,7 @@
 - [ ] `[P1]` grid — 2D row/col 네비게이션, Relationship 모델 확장 필요
 - [ ] `[P1]` combobox — input + listbox 통합
 - [x] radiogroup — single selection 강제, wrapping nav, aria-checked
+- [x] switch — expanded state 재사용, aria-checked, natural-tab-order
 
 ## ⑤ Components + Hooks
 
@@ -104,11 +105,12 @@
 - [x] Accordion
 - [x] MenuList
 - [x] DisclosureGroup
+- [x] SwitchGroup
 - [ ] `[P2]` shadcn CLI — `npx interactive-os add treegrid`
 
 ## ⑦ 인프라
 
-- [x] Vitest (244 tests, 28 files)
+- [x] Vitest (257 tests, 30 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 27 modules)
@@ -121,4 +123,4 @@
 
 ---
 
-*Last updated: 2026-03-17*
+*Last updated: 2026-03-17 (Task 9 complete)*

@@ -13,6 +13,7 @@ import ToolbarPage from './pages/toolbar'
 import GridPage from './pages/grid'
 import RadioGroupPage from './pages/radiogroup'
 import AlertDialogPage from './pages/alertdialog'
+import SwitchPage from './pages/switch'
 
 const patterns = [
   { path: 'treegrid', label: 'TreeGrid', status: 'ready' },
@@ -26,6 +27,7 @@ const patterns = [
   { path: 'toolbar', label: 'Toolbar', status: 'ready' },
   { path: 'radiogroup', label: 'Radiogroup', status: 'ready' },
   { path: 'alertdialog', label: 'AlertDialog', status: 'ready' },
+  { path: 'switch', label: 'Switch', status: 'ready' },
   { path: 'grid', label: 'Grid', status: 'wip' },
 ]
 
@@ -71,6 +73,7 @@ function App() {
           <Route path="/toolbar" element={<ToolbarPage />} />
           <Route path="/radiogroup" element={<RadioGroupPage />} />
           <Route path="/alertdialog" element={<AlertDialogPage />} />
+          <Route path="/switch" element={<SwitchPage />} />
           <Route path="/grid" element={<GridPage />} />
         </Routes>
       </main>
