@@ -15,7 +15,7 @@ import { dnd } from './interactive-os/plugins/dnd'
 import { focusRecovery } from './interactive-os/plugins/focus-recovery'
 import './App.css'
 
-// --- Demo data ---
+// --- Data ---
 
 const treeData = createStore({
   entities: {
@@ -40,57 +40,37 @@ const treeData = createStore({
 
 const listData = createStore({
   entities: {
-    ts: { id: 'ts', label: 'TypeScript', desc: 'Typed JavaScript' },
-    react: { id: 'react', label: 'React', desc: 'UI library' },
-    vite: { id: 'vite', label: 'Vite', desc: 'Build tool' },
-    vitest: { id: 'vitest', label: 'Vitest', desc: 'Test runner' },
-    pnpm: { id: 'pnpm', label: 'pnpm', desc: 'Package manager' },
-    eslint: { id: 'eslint', label: 'ESLint', desc: 'Linter' },
+    ts: { id: 'ts', label: 'TypeScript', desc: 'Typed superset of JavaScript' },
+    react: { id: 'react', label: 'React 19', desc: 'UI component library' },
+    vite: { id: 'vite', label: 'Vite 8', desc: 'Next-gen build tool' },
+    vitest: { id: 'vitest', label: 'Vitest', desc: 'Unit test framework' },
+    pnpm: { id: 'pnpm', label: 'pnpm', desc: 'Fast package manager' },
+    axe: { id: 'axe', label: 'axe-core', desc: 'Accessibility engine' },
   },
   relationships: {
-    [ROOT_ID]: ['ts', 'react', 'vite', 'vitest', 'pnpm', 'eslint'],
+    [ROOT_ID]: ['ts', 'react', 'vite', 'vitest', 'pnpm', 'axe'],
   },
 })
 
 const tabData = createStore({
   entities: {
-    overview: { id: 'overview', label: 'Overview' },
-    api: { id: 'api', label: 'API' },
-    examples: { id: 'examples', label: 'Examples' },
-    changelog: { id: 'changelog', label: 'Changelog' },
+    overview: { id: 'overview', label: 'overview' },
+    api: { id: 'api', label: 'api' },
+    examples: { id: 'examples', label: 'examples' },
+    changelog: { id: 'changelog', label: 'changelog' },
   },
   relationships: {
     [ROOT_ID]: ['overview', 'api', 'examples', 'changelog'],
   },
 })
 
-// --- Styles ---
+const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
-const card: React.CSSProperties = {
-  border: '1px solid #333',
-  borderRadius: 8,
-  overflow: 'hidden',
-  background: '#1a1a1a',
-}
+// --- Helpers ---
 
-const sectionTitle: React.CSSProperties = {
-  fontSize: 14,
-  fontWeight: 600,
-  color: '#999',
-  textTransform: 'uppercase' as const,
-  letterSpacing: 1,
-  marginBottom: 8,
-}
-
-const kbd: React.CSSProperties = {
-  display: 'inline-block',
-  padding: '1px 6px',
-  fontSize: 11,
-  fontFamily: 'monospace',
-  background: '#2a2a2a',
-  border: '1px solid #444',
-  borderRadius: 3,
-  color: '#aaa',
+function getFileExt(name: string): string {
+  const dot = name.lastIndexOf('.')
+  return dot > 0 ? name.slice(dot) : ''
 }
 
 // --- App ---
@@ -99,132 +79,144 @@ function App() {
   const [tree, setTree] = useState<NormalizedData>(treeData)
 
   return (
-    <div style={{ maxWidth: 700, margin: '40px auto', padding: '0 20px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      <h1 style={{ fontSize: 28, marginBottom: 4, color: '#fff' }}>interactive-os</h1>
-      <p style={{ color: '#888', marginBottom: 32, fontSize: 15 }}>
-        Keyboard-first ARIA framework with plugin architecture
-      </p>
-
-      {/* TreeGrid */}
-      <section style={{ marginBottom: 40 }}>
-        <div style={sectionTitle}>TreeGrid — File Explorer</div>
-        <p style={{ color: '#666', fontSize: 13, marginBottom: 12 }}>
-          <span style={kbd}>↑↓</span> navigate{' '}
-          <span style={kbd}>→←</span> expand/collapse{' '}
-          <span style={kbd}>Space</span> select{' '}
-          <span style={kbd}>⌘C</span> copy{' '}
-          <span style={kbd}>⌘V</span> paste{' '}
-          <span style={kbd}>Del</span> delete{' '}
-          <span style={kbd}>⌘Z</span> undo{' '}
-          <span style={kbd}>Alt+↑↓</span> reorder{' '}
-          <span style={kbd}>Alt+←→</span> move in/out
-        </p>
-        <div style={card}>
-          <TreeGrid
-            data={tree}
-            onChange={setTree}
-            enableEditing
-            plugins={[core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]}
-            renderNode={(node, state: NodeState) => {
-              const isFolder = node.type === 'folder'
-              const indent = ((state.level ?? 1) - 1) * 20
-              return (
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '5px 12px',
-                  paddingLeft: 12 + indent,
-                  background: state.focused ? '#2a2d5e' : state.selected ? '#1e2a3a' : 'transparent',
-                  color: state.focused ? '#fff' : '#ccc',
-                  borderLeft: state.selected ? '2px solid #4d96ff' : '2px solid transparent',
-                  fontSize: 14,
-                  userSelect: 'none',
-                }}>
-                  <span style={{ width: 18, opacity: 0.5, flexShrink: 0, fontSize: 12 }}>
-                    {isFolder ? (state.expanded ? '▼' : '▶') : ''}
-                  </span>
-                  <span style={{ marginRight: 8 }}>{isFolder ? '📁' : '📄'}</span>
-                  <span>{node.name as string}</span>
-                </div>
-              )
-            }}
-          />
+    <div className="page">
+      <header className="header">
+        <div className="header-inner">
+          <div className="logo">
+            <div className="logo-mark" />
+            <h1>interactive-os</h1>
+            <span className="version">v0.1.0</span>
+          </div>
+          <p>
+            Keyboard-first ARIA framework. Plugin architecture
+            for composable navigation, focus, and CRUD operations.
+          </p>
+          <div className="stats">
+            <div className="stat"><strong>204</strong> tests</div>
+            <div className="stat"><strong>6</strong> plugins</div>
+            <div className="stat"><strong>6</strong> behaviors</div>
+            <div className="stat"><strong>6</strong> components</div>
+          </div>
         </div>
-      </section>
+      </header>
 
-      {/* Tabs */}
-      <section style={{ marginBottom: 40 }}>
-        <div style={sectionTitle}>TabList — Documentation Tabs</div>
-        <p style={{ color: '#666', fontSize: 13, marginBottom: 12 }}>
-          <span style={kbd}>←→</span> switch tabs{' '}
-          <span style={kbd}>Home</span> first{' '}
-          <span style={kbd}>End</span> last
-        </p>
-        <div style={{ ...card, padding: 0 }}>
-          <div style={{ borderBottom: '1px solid #333' }}>
-            <TabList
-              data={tabData}
-              renderTab={(tab, state: NodeState) => (
-                <div style={{
-                  display: 'inline-flex',
-                  padding: '10px 20px',
-                  borderBottom: state.focused ? '2px solid #6c8fff' : '2px solid transparent',
-                  color: state.focused ? '#6c8fff' : '#888',
-                  fontWeight: state.focused ? 600 : 400,
-                  fontSize: 14,
-                  cursor: 'default',
-                  userSelect: 'none',
-                  transition: 'color 0.15s',
-                }}>
-                  {tab.label as string}
-                </div>
-              )}
+      <div className="main">
+        {/* TreeGrid */}
+        <section className="section">
+          <div className="section-header">
+            <span className="section-num">01</span>
+            <h2 className="section-title">TreeGrid</h2>
+          </div>
+          <div className="section-desc">
+            <kbd>↑↓</kbd> <span className="key-hint">navigate</span>{' '}
+            <kbd>→←</kbd> <span className="key-hint">expand</span>{' '}
+            <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
+            <kbd>⌘C</kbd> <span className="key-hint">copy</span>{' '}
+            <kbd>⌘V</kbd> <span className="key-hint">paste</span>{' '}
+            <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
+            <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
+            <kbd>Alt↑↓</kbd> <span className="key-hint">reorder</span>
+          </div>
+          <div className="card">
+            <TreeGrid
+              data={tree}
+              onChange={setTree}
+              enableEditing
+              plugins={plugins}
+              renderNode={(node, state: NodeState) => {
+                const isFolder = node.type === 'folder'
+                const indent = ((state.level ?? 1) - 1) * 18
+                const name = node.name as string
+                const ext = getFileExt(name)
+                const baseName = ext ? name.slice(0, -ext.length) : name
+
+                const cls = [
+                  'tree-node',
+                  state.focused && 'tree-node--focused',
+                  state.selected && !state.focused && 'tree-node--selected',
+                ].filter(Boolean).join(' ')
+
+                return (
+                  <div className={cls} style={{ paddingLeft: 14 + indent }}>
+                    <span className="tree-node__chevron">
+                      {isFolder ? (state.expanded ? '▾' : '▸') : ''}
+                    </span>
+                    <span className="tree-node__icon">
+                      {isFolder ? '◇' : '·'}
+                    </span>
+                    <span className="tree-node__name">{baseName}</span>
+                    {ext && <span className="tree-node__ext">{ext}</span>}
+                  </div>
+                )
+              }}
             />
           </div>
-          <div style={{ padding: '20px', color: '#aaa', fontSize: 14, minHeight: 60 }}>
-            Tab content area — controlled by keyboard navigation above
+        </section>
+
+        {/* Tabs */}
+        <section className="section">
+          <div className="section-header">
+            <span className="section-num">02</span>
+            <h2 className="section-title">TabList</h2>
           </div>
-        </div>
-      </section>
+          <div className="section-desc">
+            <kbd>←→</kbd> <span className="key-hint">switch</span>{' '}
+            <kbd>Home</kbd> <span className="key-hint">first</span>{' '}
+            <kbd>End</kbd> <span className="key-hint">last</span>
+          </div>
+          <div className="card">
+            <div style={{ borderBottom: '1px solid var(--border-mid)' }}>
+              <TabList
+                data={tabData}
+                renderTab={(tab, state: NodeState) => (
+                  <div className={`tab ${state.focused ? 'tab--focused' : ''}`}>
+                    {tab.label as string}
+                  </div>
+                )}
+              />
+            </div>
+            <div className="tab-content">
+              {'>'} Each tab is a focusable ARIA tab element.<br />
+              {'>'} Navigation follows W3C APG tablist pattern.
+            </div>
+          </div>
+        </section>
 
-      {/* Listbox */}
-      <section style={{ marginBottom: 40 }}>
-        <div style={sectionTitle}>ListBox — Tech Stack</div>
-        <p style={{ color: '#666', fontSize: 13, marginBottom: 12 }}>
-          <span style={kbd}>↑↓</span> navigate{' '}
-          <span style={kbd}>Space</span> select{' '}
-          <span style={kbd}>Enter</span> activate
-        </p>
-        <div style={card}>
-          <ListBox
-            data={listData}
-            renderItem={(item, state: NodeState) => (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '8px 16px',
-                background: state.focused ? '#2a2d5e' : state.selected ? '#1e3a2a' : 'transparent',
-                color: state.focused ? '#fff' : '#ccc',
-                borderLeft: state.selected ? '3px solid #4caf50' : '3px solid transparent',
-                fontSize: 14,
-                userSelect: 'none',
-              }}>
-                <span style={{ fontWeight: state.selected ? 600 : 400 }}>
-                  {item.label as string}
-                </span>
-                <span style={{ fontSize: 12, color: '#666' }}>
-                  {item.desc as string}
-                </span>
-              </div>
-            )}
-          />
-        </div>
-      </section>
+        {/* ListBox */}
+        <section className="section">
+          <div className="section-header">
+            <span className="section-num">03</span>
+            <h2 className="section-title">ListBox</h2>
+          </div>
+          <div className="section-desc">
+            <kbd>↑↓</kbd> <span className="key-hint">navigate</span>{' '}
+            <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
+            <kbd>Enter</kbd> <span className="key-hint">activate</span>
+          </div>
+          <div className="card">
+            <ListBox
+              data={listData}
+              renderItem={(item, state: NodeState) => {
+                const cls = [
+                  'list-item',
+                  state.focused && 'list-item--focused',
+                  state.selected && !state.focused && 'list-item--selected',
+                ].filter(Boolean).join(' ')
 
-      {/* Footer */}
-      <footer style={{ textAlign: 'center', color: '#555', fontSize: 12, paddingBottom: 40 }}>
-        interactive-os — 157 tests, 6 behaviors, 5 plugins, 3 reference components
+                return (
+                  <div className={cls}>
+                    <span className="list-item__label">{item.label as string}</span>
+                    <span className="list-item__desc">{item.desc as string}</span>
+                  </div>
+                )
+              }}
+            />
+          </div>
+        </section>
+      </div>
+
+      <footer className="footer">
+        <span>■</span> interactive-os — keyboard-first aria framework
       </footer>
     </div>
   )
