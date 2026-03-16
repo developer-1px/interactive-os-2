@@ -13,6 +13,12 @@ import { clipboard } from './interactive-os/plugins/clipboard'
 import { rename } from './interactive-os/plugins/rename'
 import { dnd } from './interactive-os/plugins/dnd'
 import { focusRecovery } from './interactive-os/plugins/focus-recovery'
+import {
+  Folder, FolderOpen, FileText, FileCode, FileJson, FileType,
+  ChevronRight, ChevronDown,
+  ArrowUpDown, PanelLeft, SquareTerminal,
+  TestTube, Puzzle, Layers, Component,
+} from 'lucide-react'
 import './App.css'
 
 // --- Data ---
@@ -73,6 +79,26 @@ function getFileExt(name: string): string {
   return dot > 0 ? name.slice(dot) : ''
 }
 
+const iconSize = 14
+const iconStroke = 1.5
+
+function FileIcon({ name }: { name: string }) {
+  const ext = getFileExt(name)
+  switch (ext) {
+    case '.tsx':
+    case '.ts':
+    case '.js':
+    case '.jsx':
+      return <FileCode size={iconSize} strokeWidth={iconStroke} />
+    case '.json':
+      return <FileJson size={iconSize} strokeWidth={iconStroke} />
+    case '.md':
+      return <FileType size={iconSize} strokeWidth={iconStroke} />
+    default:
+      return <FileText size={iconSize} strokeWidth={iconStroke} />
+  }
+}
+
 // --- App ---
 
 function App() {
@@ -92,10 +118,10 @@ function App() {
             for composable navigation, focus, and CRUD operations.
           </p>
           <div className="stats">
-            <div className="stat"><strong>204</strong> tests</div>
-            <div className="stat"><strong>6</strong> plugins</div>
-            <div className="stat"><strong>6</strong> behaviors</div>
-            <div className="stat"><strong>6</strong> components</div>
+            <div className="stat"><TestTube size={12} strokeWidth={1.5} /> <strong>204</strong> tests</div>
+            <div className="stat"><Puzzle size={12} strokeWidth={1.5} /> <strong>6</strong> plugins</div>
+            <div className="stat"><Layers size={12} strokeWidth={1.5} /> <strong>6</strong> behaviors</div>
+            <div className="stat"><Component size={12} strokeWidth={1.5} /> <strong>6</strong> components</div>
           </div>
         </div>
       </header>
@@ -104,7 +130,7 @@ function App() {
         {/* TreeGrid */}
         <section className="section">
           <div className="section-header">
-            <span className="section-num">01</span>
+            <span className="section-num"><FolderOpen size={12} strokeWidth={1.5} /></span>
             <h2 className="section-title">TreeGrid</h2>
           </div>
           <div className="section-desc">
@@ -139,10 +165,13 @@ function App() {
                 return (
                   <div className={cls} style={{ paddingLeft: 14 + indent }}>
                     <span className="tree-node__chevron">
-                      {isFolder ? (state.expanded ? '▾' : '▸') : ''}
+                      {isFolder ? (state.expanded ? <ChevronDown size={12} strokeWidth={2} /> : <ChevronRight size={12} strokeWidth={2} />) : ''}
                     </span>
                     <span className="tree-node__icon">
-                      {isFolder ? '◇' : '·'}
+                      {isFolder
+                        ? (state.expanded ? <FolderOpen size={iconSize} strokeWidth={iconStroke} /> : <Folder size={iconSize} strokeWidth={iconStroke} />)
+                        : <FileIcon name={name} />
+                      }
                     </span>
                     <span className="tree-node__name">{baseName}</span>
                     {ext && <span className="tree-node__ext">{ext}</span>}
@@ -156,7 +185,7 @@ function App() {
         {/* Tabs */}
         <section className="section">
           <div className="section-header">
-            <span className="section-num">02</span>
+            <span className="section-num"><PanelLeft size={12} strokeWidth={1.5} /></span>
             <h2 className="section-title">TabList</h2>
           </div>
           <div className="section-desc">
@@ -185,7 +214,7 @@ function App() {
         {/* ListBox */}
         <section className="section">
           <div className="section-header">
-            <span className="section-num">03</span>
+            <span className="section-num"><ArrowUpDown size={12} strokeWidth={1.5} /></span>
             <h2 className="section-title">ListBox</h2>
           </div>
           <div className="section-desc">
@@ -216,7 +245,7 @@ function App() {
       </div>
 
       <footer className="footer">
-        <span>■</span> interactive-os — keyboard-first aria framework
+        <SquareTerminal size={12} strokeWidth={1.5} /> interactive-os — keyboard-first aria framework
       </footer>
     </div>
   )
