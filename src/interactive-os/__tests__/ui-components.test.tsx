@@ -3,6 +3,9 @@ import { render, screen } from '@testing-library/react'
 import { TreeGrid } from '../ui/tree-grid'
 import { ListBox } from '../ui/list-box'
 import { TabList } from '../ui/tab-list'
+import { Accordion } from '../ui/accordion'
+import { MenuList } from '../ui/menu-list'
+import { DisclosureGroup } from '../ui/disclosure-group'
 import { createStore } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
 
@@ -37,6 +40,30 @@ const tabData = createStore({
   relationships: {
     [ROOT_ID]: ['tab1', 'tab2', 'tab3'],
   },
+})
+
+const accordionData = createStore({
+  entities: {
+    s1: { id: 's1', label: 'Section 1' },
+    s2: { id: 's2', label: 'Section 2' },
+  },
+  relationships: { [ROOT_ID]: ['s1', 's2'] },
+})
+
+const menuData = createStore({
+  entities: {
+    file: { id: 'file', label: 'File' },
+    edit: { id: 'edit', label: 'Edit' },
+    view: { id: 'view', label: 'View' },
+  },
+  relationships: { [ROOT_ID]: ['file', 'edit', 'view'] },
+})
+
+const disclosureData = createStore({
+  entities: {
+    details: { id: 'details', label: 'Details' },
+  },
+  relationships: { [ROOT_ID]: ['details'] },
 })
 
 describe('TreeGrid reference component', () => {
@@ -76,5 +103,43 @@ describe('TabList reference component', () => {
   it('applies tablist role', () => {
     const { container } = render(<TabList data={tabData} />)
     expect(container.querySelector('[role="tablist"]')).not.toBeNull()
+  })
+})
+
+describe('Accordion reference component', () => {
+  it('renders headers', () => {
+    render(<Accordion data={accordionData} />)
+    expect(screen.getByText('Section 1')).toBeDefined()
+    expect(screen.getByText('Section 2')).toBeDefined()
+  })
+
+  it('applies region role', () => {
+    const { container } = render(<Accordion data={accordionData} />)
+    expect(container.querySelector('[role="region"]')).not.toBeNull()
+  })
+})
+
+describe('MenuList reference component', () => {
+  it('renders items', () => {
+    render(<MenuList data={menuData} />)
+    expect(screen.getByText('File')).toBeDefined()
+    expect(screen.getByText('Edit')).toBeDefined()
+  })
+
+  it('applies menu role', () => {
+    const { container } = render(<MenuList data={menuData} />)
+    expect(container.querySelector('[role="menu"]')).not.toBeNull()
+  })
+})
+
+describe('DisclosureGroup reference component', () => {
+  it('renders triggers', () => {
+    render(<DisclosureGroup data={disclosureData} />)
+    expect(screen.getByText('Details')).toBeDefined()
+  })
+
+  it('applies button role', () => {
+    const { container } = render(<DisclosureGroup data={disclosureData} />)
+    expect(container.querySelector('[role="button"]')).not.toBeNull()
   })
 })
