@@ -9,10 +9,10 @@ interface DisclosureGroupProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderTrigger?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
 }
 
-const defaultRenderTrigger = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
+const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
   <div style={{
     padding: '8px 12px',
     background: state.focused ? 'var(--disclosure-focus-bg, #e3f2fd)' : 'transparent',
@@ -32,11 +32,11 @@ export function DisclosureGroup({
   data,
   plugins = [core()],
   onChange,
-  renderTrigger = defaultRenderTrigger,
+  renderItem = defaultRenderItem,
 }: DisclosureGroupProps) {
   return (
     <Aria behavior={disclosure} data={data} plugins={plugins} onChange={onChange}>
-      <Aria.Node render={renderTrigger} />
+      <Aria.Node render={renderItem} />
     </Aria>
   )
 }

@@ -3,7 +3,7 @@ import { createCommandEngine } from '../core/command-engine'
 import { createStore, getChildren } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
 import { dndCommands, dnd } from '../plugins/dnd'
-import { history, undoCommand } from '../plugins/history'
+import { history, historyCommands } from '../plugins/history'
 
 function fixtureStore() {
   return createStore({
@@ -90,7 +90,7 @@ describe('dndCommands.moveOut', () => {
     const historyPlugin = history()
     const engine = createCommandEngine(fixtureStore(), [historyPlugin.middleware!], vi.fn())
     engine.dispatch(dndCommands.moveOut('file1'))
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(getChildren(engine.getStore(), 'folder1')).toEqual(['file1', 'file2'])
     expect(getChildren(engine.getStore(), ROOT_ID)).toEqual(['folder1', 'folder2', 'folder3'])
   })

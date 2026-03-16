@@ -38,7 +38,7 @@ export default function TabsPage() {
         <div style={{ borderBottom: '1px solid var(--border-mid)' }}>
           <TabList
             data={tabData}
-            renderTab={(tab, state: NodeState) => (
+            renderItem={(tab, state: NodeState) => (
               <div className={`tab${state.focused ? ' tab--focused' : ''}`}>
                 {tab.label as string}
               </div>

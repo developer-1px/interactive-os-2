@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { createCommandEngine } from '../core/command-engine'
 import { createStore, getEntity, getChildren } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
-import { history, undoCommand, redoCommand } from '../plugins/history'
+import { history, historyCommands } from '../plugins/history'
 import { focusCommands, selectionCommands, expandCommands } from '../plugins/core'
 import type { Middleware } from '../core/types'
 
@@ -43,9 +43,9 @@ describe('Integration: Store + Engine + Plugins', () => {
     const { engine } = setup()
     engine.dispatch(expandCommands.expand('src'))
     expect((engine.getStore().entities['__expanded__']?.expandedIds as string[])?.includes('src')).toBe(true)
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect((engine.getStore().entities['__expanded__']?.expandedIds as string[] | undefined)?.includes('src')).toBeFalsy()
-    engine.dispatch(redoCommand())
+    engine.dispatch(historyCommands.redo())
     expect((engine.getStore().entities['__expanded__']?.expandedIds as string[])?.includes('src')).toBe(true)
   })
 

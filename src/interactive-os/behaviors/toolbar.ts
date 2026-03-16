@@ -12,6 +12,7 @@ export const toolbar: AriaBehavior = {
     Space: (ctx) => ctx.activate(),
   },
   focusStrategy: { type: 'roving-tabindex', orientation: 'horizontal' },
+  activateOnClick: true,
   ariaAttributes: (_node, state: NodeState) => ({
     'aria-pressed': String(state.selected),
   }),

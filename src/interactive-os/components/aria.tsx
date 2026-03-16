@@ -21,12 +21,22 @@ interface AriaNodeProps {
   render: (node: Record<string, unknown>, state: NodeState) => ReactNode
 }
 
+const horizontalStyle = { display: 'flex' } as const
+
+const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist', 'toolbar', 'treegrid'])
+
 // eslint-disable-next-line react-refresh/only-export-components
 function AriaRoot({ behavior, data, plugins, keyMap, onChange, 'aria-label': ariaLabel, children }: AriaProps) {
   const aria = useAria({ behavior, data, plugins, keyMap, onChange })
+  const { orientation } = behavior.focusStrategy
   return (
     <AriaInternalContext.Provider value={aria}>
-      <div role={behavior.role} aria-label={ariaLabel}>
+      <div
+        role={behavior.role}
+        aria-label={ariaLabel}
+        aria-orientation={ROLES_WITH_ORIENTATION.has(behavior.role) ? orientation : undefined}
+        style={orientation === 'horizontal' ? horizontalStyle : undefined}
+      >
         {children}
       </div>
     </AriaInternalContext.Provider>

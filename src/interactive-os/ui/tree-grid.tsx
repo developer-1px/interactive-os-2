@@ -4,7 +4,7 @@ import type { BehaviorContext, NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
 import { treegrid } from '../behaviors/treegrid'
 import { core } from '../plugins/core'
-import { history, undoCommand, redoCommand } from '../plugins/history'
+import { history, historyCommands } from '../plugins/history'
 import { crudCommands } from '../plugins/crud'
 import { clipboardCommands } from '../plugins/clipboard'
 import { renameCommands } from '../plugins/rename'
@@ -14,11 +14,11 @@ interface TreeGridProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderNode?: (node: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (node: Record<string, unknown>, state: NodeState) => React.ReactNode
   enableEditing?: boolean
 }
 
-const defaultRenderNode = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
+const defaultRenderItem = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
   const indent = ((state.level ?? 1) - 1) * 20
   const hasChildren = state.expanded !== undefined
 
@@ -49,8 +49,8 @@ const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = 
   'Mod+X': (ctx) => clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
   'Mod+V': (ctx) => clipboardCommands.paste(ctx.focused),
   'Delete': (ctx) => crudCommands.remove(ctx.focused),
-  'Mod+Z': () => undoCommand(),
-  'Mod+Shift+Z': () => redoCommand(),
+  'Mod+Z': () => historyCommands.undo(),
+  'Mod+Shift+Z': () => historyCommands.redo(),
   'F2': (ctx) => renameCommands.startRename(ctx.focused),
   'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
   'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
@@ -62,7 +62,7 @@ export function TreeGrid({
   data,
   plugins = [core(), history()],
   onChange,
-  renderNode = defaultRenderNode,
+  renderItem = defaultRenderItem,
   enableEditing = false,
 }: TreeGridProps) {
   return (
@@ -73,7 +73,7 @@ export function TreeGrid({
       onChange={onChange}
       keyMap={enableEditing ? editingKeyMap : undefined}
     >
-      <Aria.Node render={renderNode} />
+      <Aria.Node render={renderItem} />
     </Aria>
   )
 }

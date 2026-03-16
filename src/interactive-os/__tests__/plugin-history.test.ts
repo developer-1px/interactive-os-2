@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { createCommandEngine } from '../core/command-engine'
 import { createStore } from '../core/normalized-store'
-import { history, undoCommand, redoCommand } from '../plugins/history'
+import { history, historyCommands } from '../plugins/history'
 import type { Command } from '../core/types'
 
 function makeAddCommand(id: string): Command {
@@ -37,31 +37,31 @@ describe('history plugin', () => {
     const { engine } = setup()
     engine.dispatch(makeAddCommand('a'))
     expect(engine.getStore().entities['a']).toBeDefined()
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(engine.getStore().entities['a']).toBeUndefined()
   })
 
   it('redo re-applies undone command', () => {
     const { engine } = setup()
     engine.dispatch(makeAddCommand('a'))
-    engine.dispatch(undoCommand())
-    engine.dispatch(redoCommand())
+    engine.dispatch(historyCommands.undo())
+    engine.dispatch(historyCommands.redo())
     expect(engine.getStore().entities['a']).toBeDefined()
   })
 
   it('redo stack is cleared on new command', () => {
     const { engine } = setup()
     engine.dispatch(makeAddCommand('a'))
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     engine.dispatch(makeAddCommand('b'))
-    engine.dispatch(redoCommand()) // should be no-op
+    engine.dispatch(historyCommands.redo()) // should be no-op
     expect(engine.getStore().entities['a']).toBeUndefined()
     expect(engine.getStore().entities['b']).toBeDefined()
   })
 
   it('undo with empty history is no-op', () => {
     const { engine } = setup()
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(Object.keys(engine.getStore().entities)).toHaveLength(0)
   })
 
@@ -70,11 +70,11 @@ describe('history plugin', () => {
     engine.dispatch(makeAddCommand('a'))
     engine.dispatch(makeAddCommand('b'))
     engine.dispatch(makeAddCommand('c'))
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(engine.getStore().entities['c']).toBeUndefined()
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(engine.getStore().entities['b']).toBeUndefined()
-    engine.dispatch(undoCommand())
+    engine.dispatch(historyCommands.undo())
     expect(engine.getStore().entities['a']).toBeUndefined()
   })
 })

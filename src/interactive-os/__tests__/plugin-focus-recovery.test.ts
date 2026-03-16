@@ -6,7 +6,7 @@ import { focusCommands, expandCommands } from '../plugins/core'
 import { crudCommands } from '../plugins/crud'
 import { clipboardCommands, resetClipboard } from '../plugins/clipboard'
 import { dndCommands } from '../plugins/dnd'
-import { history, undoCommand, redoCommand } from '../plugins/history'
+import { history, historyCommands } from '../plugins/history'
 import { focusRecovery } from '../plugins/focus-recovery'
 
 function fixtureStore() {
@@ -194,7 +194,7 @@ describe('focusRecovery middleware', () => {
       engine.dispatch(crudCommands.remove('file2'))
       expect(getFocusedId(engine)).toBe('file3') // recovery after delete
 
-      engine.dispatch(undoCommand())
+      engine.dispatch(historyCommands.undo())
       // file2 is restored — focus should go to it
       expect(getEntity(engine.getStore(), 'file2')).toBeDefined()
       expect(getFocusedId(engine)).toBe('file2')
@@ -206,7 +206,7 @@ describe('focusRecovery middleware', () => {
       engine.dispatch(crudCommands.create({ id: 'newfile', name: 'new.ts' }, 'folder1'))
       expect(getFocusedId(engine)).toBe('newfile')
 
-      engine.dispatch(undoCommand())
+      engine.dispatch(historyCommands.undo())
       // newfile is removed — recovery should fallback
       expect(getEntity(engine.getStore(), 'newfile')).toBeUndefined()
       expect(getFocusedId(engine)).not.toBe('newfile')
@@ -216,10 +216,10 @@ describe('focusRecovery middleware', () => {
       const { engine } = setup()
       engine.dispatch(focusCommands.setFocus('file2'))
       engine.dispatch(crudCommands.remove('file2'))
-      engine.dispatch(undoCommand())
+      engine.dispatch(historyCommands.undo())
       expect(getFocusedId(engine)).toBe('file2')
 
-      engine.dispatch(redoCommand())
+      engine.dispatch(historyCommands.redo())
       // file2 deleted again — recovery
       expect(getFocusedId(engine)).toBe('file3')
     })

@@ -12,6 +12,7 @@ export const listbox: AriaBehavior = {
     Enter: (ctx) => ctx.activate(),
   },
   focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+  activateOnClick: true,
   ariaAttributes: (_node, state: NodeState) => {
     const attrs: Record<string, string> = {
       'aria-selected': String(state.selected),
