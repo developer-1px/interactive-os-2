@@ -43,6 +43,7 @@
 - [x] copy (clone with new IDs)
 - [x] cut + paste (move)
 - [x] multi-node copy/paste
+- [x] paste into leaf → 부모로 라우팅 (container = relationship entry 존재)
 
 ### rename()
 - [x] startRename / confirmRename / cancelRename
@@ -103,14 +104,14 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (202 tests, 26 files)
+- [x] Vitest (204 tests, 26 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 27 modules)
 - [x] npm exports (package.json)
 - [x] README
 - [x] LICENSE (MIT)
-- [ ] `[P1]` CLAUDE.md (프로젝트 로컬) — PROGRESS.md 업데이트 규칙 명시
+- [x] CLAUDE.md (프로젝트 로컬) — PROGRESS.md 업데이트 규칙 명시
 - [ ] `[P2]` CI/CD — GitHub Actions (test + lint + build)
 - [ ] `[P2]` npm publish 자동화
 
