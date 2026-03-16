@@ -80,7 +80,7 @@
 ### 미구현 behavior
 - [ ] `[P1]` grid — 2D row/col 네비게이션, Relationship 모델 확장 필요
 - [ ] `[P1]` combobox — input + listbox 통합
-- [ ] `[P2]` radiogroup — single selection 강제
+- [x] radiogroup — single selection 강제, wrapping nav, aria-checked
 
 ## ⑤ Components + Hooks
 
@@ -108,7 +108,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (213 tests, 28 files)
+- [x] Vitest (244 tests, 28 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 27 modules)
