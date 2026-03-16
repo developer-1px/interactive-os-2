@@ -2,6 +2,7 @@ import type { AriaBehavior, NodeState } from './types'
 
 export const accordion: AriaBehavior = {
   role: 'region',
+  childRole: 'heading',
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),
     ArrowUp: (ctx) => ctx.focusPrev(),

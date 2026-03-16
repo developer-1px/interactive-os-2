@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { disclosure } from '../behaviors/disclosure'
 
 describe('disclosure behavior preset', () => {
-  it('has role button', () => {
-    expect(disclosure.role).toBe('button')
+  it('has role group', () => {
+    expect(disclosure.role).toBe('group')
   })
 
   it('Enter and Space both activate', () => {

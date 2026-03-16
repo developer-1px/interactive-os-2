@@ -2,6 +2,7 @@ import type { AriaBehavior, NodeState } from './types'
 
 export const menu: AriaBehavior = {
   role: 'menu',
+  childRole: 'menuitem',
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),
     ArrowUp: (ctx) => ctx.focusPrev(),

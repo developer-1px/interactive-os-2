@@ -1,7 +1,8 @@
 import type { AriaBehavior, NodeState } from './types'
 
 export const disclosure: AriaBehavior = {
-  role: 'button',
+  role: 'group',
+  childRole: 'button',
   keyMap: {
     Enter: (ctx) => ctx.activate(),
     Space: (ctx) => ctx.activate(),
