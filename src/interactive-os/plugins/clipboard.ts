@@ -5,6 +5,7 @@ import {
   removeEntity,
   getEntity,
   getChildren,
+  getParent,
 } from '../core/normalized-store'
 
 interface ClipboardEntry {
@@ -109,6 +110,11 @@ export const clipboardCommands = {
 
         if (buffer.length === 0) return store
 
+        // Leaf node (no relationship entry) → paste into its parent
+        const pasteInto = targetId in store.relationships
+          ? targetId
+          : (getParent(store, targetId) ?? ROOT_ID)
+
         let result = store
 
         if (mode === 'cut') {
@@ -118,7 +124,7 @@ export const clipboardCommands = {
           }
           // Insert at target with original IDs
           for (const entry of buffer) {
-            result = insertClipboardEntry(result, entry, targetId, false)
+            result = insertClipboardEntry(result, entry, pasteInto, false)
             pastedIds.push(entry.entity.id)
           }
           // Clear clipboard after cut-paste
@@ -128,7 +134,7 @@ export const clipboardCommands = {
           // Copy: insert with new IDs
           for (const entry of buffer) {
             const beforeIds = new Set(Object.keys(result.entities))
-            result = insertClipboardEntry(result, entry, targetId, true)
+            result = insertClipboardEntry(result, entry, pasteInto, true)
             const afterIds = Object.keys(result.entities)
             for (const id of afterIds) {
               if (!beforeIds.has(id)) pastedIds.push(id)
