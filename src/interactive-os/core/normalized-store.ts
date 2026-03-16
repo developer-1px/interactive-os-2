@@ -27,7 +27,8 @@ export function getParent(store: NormalizedData, nodeId: string): string | undef
 export function addEntity(
   store: NormalizedData, entity: Entity, parentId: string = ROOT_ID, index?: number
 ): NormalizedData {
-  const currentChildren = getChildren(store, parentId)
+  // Filter out existing ID to prevent duplicates in relationship array
+  const currentChildren = getChildren(store, parentId).filter((id) => id !== entity.id)
   const newChildren = index !== undefined
     ? [...currentChildren.slice(0, index), entity.id, ...currentChildren.slice(index)]
     : [...currentChildren, entity.id]
