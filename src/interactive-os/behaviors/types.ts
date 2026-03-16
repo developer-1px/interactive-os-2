@@ -2,6 +2,15 @@ import type { Entity, Command } from '../core/types'
 
 export type SelectionMode = 'single' | 'multiple'
 
+export interface GridNav {
+  colIndex: number
+  colCount: number
+  focusNextCol(): Command
+  focusPrevCol(): Command
+  focusFirstCol(): Command
+  focusLastCol(): Command
+}
+
 export interface FocusStrategy {
   type: 'roving-tabindex' | 'aria-activedescendant' | 'natural-tab-order'
   orientation: 'vertical' | 'horizontal' | 'both'
@@ -39,6 +48,8 @@ export interface BehaviorContext {
 
   getEntity(id: string): Entity | undefined
   getChildren(id: string): string[]
+
+  grid?: GridNav
 }
 
 export interface AriaBehavior<TState extends NodeState = NodeState> {
@@ -53,5 +64,7 @@ export interface AriaBehavior<TState extends NodeState = NodeState> {
   selectionMode?: SelectionMode
   /** When true, clicking a node calls activate(). Used by most behaviors except treegrid/dialog. */
   activateOnClick?: boolean
+  /** Number of columns for grid navigation. When > 1, BehaviorContext.grid is populated. */
+  colCount?: number
   ariaAttributes: (node: Entity, state: TState) => Record<string, string>
 }
