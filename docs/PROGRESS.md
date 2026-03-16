@@ -78,7 +78,7 @@
 - [x] toolbar (role: toolbar, childRole: button)
 
 ### 미구현 behavior
-- [ ] `[P1]` grid — 2D row/col 네비게이션, Relationship 모델 확장 필요
+- [x] grid — 2D row/col 네비게이션, factory function `grid({ columns })`
 - [ ] `[P1]` combobox — input + listbox 통합
 - [x] radiogroup — single selection 강제, wrapping nav, aria-checked
 - [x] switch — expanded state 재사용, aria-checked, natural-tab-order
@@ -92,7 +92,7 @@
 - [x] gridcell 자동 래핑 (treegrid row 내부)
 - [x] aria-label prop 지원
 - [x] **포커스 리커버리** — `focusRecovery()` 미들웨어로 삭제/축소/이동/생성/undo 시 자동 복구
-- [ ] `[P1]` `<Aria.Cell>` — treegrid 멀티 컬럼 지원
+- [x] `<Aria.Cell>` — grid 멀티 컬럼 지원, AriaNodeContext
 - [ ] `[P1]` useExternalStore — 외부 store 연동 훅 (Zustand/Jotai 어댑터)
 - [ ] `[P2]` 대용량 가상화 — 10k+ 노드 렌더링
 - [ ] `[P2]` DOM 스크롤 동기화 — 포커스 이동 시 자동 스크롤
@@ -106,11 +106,12 @@
 - [x] MenuList
 - [x] DisclosureGroup
 - [x] SwitchGroup
+- [x] Grid (2D row/col navigation with Aria.Cell)
 - [ ] `[P2]` shadcn CLI — `npx interactive-os add treegrid`
 
 ## ⑦ 인프라
 
-- [x] Vitest (257 tests, 30 files)
+- [x] Vitest (271 tests, 31 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 27 modules)
@@ -123,4 +124,4 @@
 
 ---
 
-*Last updated: 2026-03-17 (Task 9 complete)*
+*Last updated: 2026-03-17 (Task 10-12 complete — grid behavior, Aria.Cell, Grid UI)*

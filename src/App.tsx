@@ -28,7 +28,7 @@ const patterns = [
   { path: 'radiogroup', label: 'Radiogroup', status: 'ready' },
   { path: 'alertdialog', label: 'AlertDialog', status: 'ready' },
   { path: 'switch', label: 'Switch', status: 'ready' },
-  { path: 'grid', label: 'Grid', status: 'wip' },
+  { path: 'grid', label: 'Grid', status: 'ready' },
 ]
 
 function App() {
