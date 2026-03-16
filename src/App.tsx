@@ -11,6 +11,7 @@ import { history } from './interactive-os/plugins/history'
 import { crud } from './interactive-os/plugins/crud'
 import { clipboard } from './interactive-os/plugins/clipboard'
 import { rename } from './interactive-os/plugins/rename'
+import { dnd } from './interactive-os/plugins/dnd'
 import './App.css'
 
 // --- Demo data ---
@@ -114,14 +115,16 @@ function App() {
           <span style={kbd}>⌘C</span> copy{' '}
           <span style={kbd}>⌘V</span> paste{' '}
           <span style={kbd}>Del</span> delete{' '}
-          <span style={kbd}>⌘Z</span> undo
+          <span style={kbd}>⌘Z</span> undo{' '}
+          <span style={kbd}>Alt+↑↓</span> reorder{' '}
+          <span style={kbd}>Alt+←→</span> move in/out
         </p>
         <div style={card}>
           <TreeGrid
             data={tree}
             onChange={setTree}
             enableEditing
-            plugins={[core(), crud(), clipboard(), rename(), history()]}
+            plugins={[core(), crud(), clipboard(), rename(), dnd(), history()]}
             renderNode={(node, state: NodeState) => {
               const isFolder = node.type === 'folder'
               const indent = ((state.level ?? 1) - 1) * 20

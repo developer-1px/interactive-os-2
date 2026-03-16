@@ -8,6 +8,7 @@ import { history, undoCommand, redoCommand } from '../plugins/history'
 import { crudCommands } from '../plugins/crud'
 import { clipboardCommands } from '../plugins/clipboard'
 import { renameCommands } from '../plugins/rename'
+import { dndCommands } from '../plugins/dnd'
 
 interface TreeGridProps {
   data: NormalizedData
@@ -51,6 +52,10 @@ const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = 
   'Mod+Z': () => undoCommand(),
   'Mod+Shift+Z': () => redoCommand(),
   'F2': (ctx) => renameCommands.startRename(ctx.focused),
+  'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
+  'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+  'Alt+ArrowLeft': (ctx) => dndCommands.moveOut(ctx.focused),
+  'Alt+ArrowRight': (ctx) => dndCommands.moveIn(ctx.focused),
 }
 
 export function TreeGrid({
