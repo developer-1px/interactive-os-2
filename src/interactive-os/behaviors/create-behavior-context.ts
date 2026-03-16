@@ -1,6 +1,6 @@
 import type { Command, Entity } from '../core/types'
 import type { CommandEngine } from '../core/command-engine'
-import type { BehaviorContext } from './types'
+import type { BehaviorContext, SelectionMode } from './types'
 import { getEntity, getChildren, getParent } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
 import { focusCommands, selectionCommands, expandCommands } from '../plugins/core'
@@ -46,6 +46,7 @@ function getVisibleNodes(engine: CommandEngine): string[] {
 
 export interface BehaviorContextOptions {
   expandable?: boolean
+  selectionMode?: SelectionMode
 }
 
 export function createBehaviorContext(engine: CommandEngine, options?: BehaviorContextOptions): BehaviorContext {
@@ -108,6 +109,9 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
     },
 
     toggleSelect(): Command {
+      if (options?.selectionMode === 'single') {
+        return selectionCommands.select(focusedId)
+      }
       return selectionCommands.toggleSelect(focusedId)
     },
 

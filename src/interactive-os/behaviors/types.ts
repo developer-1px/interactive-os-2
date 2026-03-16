@@ -1,5 +1,7 @@
 import type { Entity, Command } from '../core/types'
 
+export type SelectionMode = 'single' | 'multiple'
+
 export interface FocusStrategy {
   type: 'roving-tabindex' | 'aria-activedescendant' | 'natural-tab-order'
   orientation: 'vertical' | 'horizontal' | 'both'
@@ -47,6 +49,8 @@ export interface AriaBehavior<TState extends NodeState = NodeState> {
   focusStrategy: FocusStrategy
   /** When true, all nodes are expandable regardless of children. Used by accordion, disclosure. */
   expandable?: boolean
+  /** Selection mode: 'single' replaces selection, 'multiple' toggles independently. Default: 'multiple' */
+  selectionMode?: SelectionMode
   /** When true, clicking a node calls activate(). Used by most behaviors except treegrid/dialog. */
   activateOnClick?: boolean
   ariaAttributes: (node: Entity, state: TState) => Record<string, string>

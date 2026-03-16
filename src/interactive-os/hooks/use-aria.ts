@@ -105,8 +105,8 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   )
 
   const behaviorCtxOptions = useMemo(
-    () => ({ expandable: behavior.expandable }),
-    [behavior.expandable]
+    () => ({ expandable: behavior.expandable, selectionMode: behavior.selectionMode }),
+    [behavior.expandable, behavior.selectionMode]
   )
 
   const getNodeProps = useCallback(
