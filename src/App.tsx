@@ -96,7 +96,6 @@ const kbd: React.CSSProperties = {
 
 function App() {
   const [tree, setTree] = useState<NormalizedData>(treeData)
-  const [activeTab, setActiveTab] = useState('overview')
 
   return (
     <div style={{ maxWidth: 700, margin: '40px auto', padding: '0 20px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>

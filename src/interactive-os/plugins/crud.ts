@@ -59,7 +59,7 @@ export const crudCommands = {
         if (!snapshot) return store
 
         // Restore entities
-        let result: NormalizedData = {
+        const result: NormalizedData = {
           ...store,
           entities: { ...store.entities, ...snapshot.entities },
         }

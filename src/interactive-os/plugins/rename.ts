@@ -18,7 +18,8 @@ export const renameCommands = {
         }
       },
       undo(store) {
-        const { [RENAME_ID]: _, ...rest } = store.entities
+        const { [RENAME_ID]: _removed, ...rest } = store.entities
+        void _removed
         return { ...store, entities: rest }
       },
     }

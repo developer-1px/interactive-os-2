@@ -31,7 +31,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   const [, forceRender] = useState(0)
   const engineRef = useRef<CommandEngine | null>(null)
 
-  if (!engineRef.current) {
+  if (engineRef.current == null) {
     const middlewares = plugins
       .map((p) => p.middleware)
       .filter((m): m is NonNullable<typeof m> => m != null)
@@ -43,6 +43,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
     const firstVisible = getChildren(data, ROOT_ID)[0]
     if (firstVisible) {
+      // eslint-disable-next-line react-hooks/refs
       engineRef.current.dispatch(focusCommands.setFocus(firstVisible))
     }
   }
@@ -59,10 +60,17 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     [engine]
   )
 
+  // eslint-disable-next-line react-hooks/refs
   const store = engine.getStore()
   const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
-  const selectedIds = (store.entities['__selection__']?.selectedIds as string[]) ?? []
-  const expandedIds = (store.entities['__expanded__']?.expandedIds as string[]) ?? []
+  const selectedIds = useMemo(
+    () => (store.entities['__selection__']?.selectedIds as string[]) ?? [],
+    [store]
+  )
+  const expandedIds = useMemo(
+    () => (store.entities['__expanded__']?.expandedIds as string[]) ?? [],
+    [store]
+  )
 
   const getNodeState = useCallback(
     (id: string): NodeState => {

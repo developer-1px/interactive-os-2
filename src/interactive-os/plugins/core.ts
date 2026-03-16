@@ -22,7 +22,8 @@ export const focusCommands = {
       },
       undo(store) {
         if (previousFocusedId === undefined) {
-          const { [FOCUS_ID]: _, ...rest } = store.entities
+          const { [FOCUS_ID]: _removed, ...rest } = store.entities
+          void _removed
           return { ...store, entities: rest }
         }
         return {
