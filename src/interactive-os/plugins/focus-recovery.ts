@@ -111,11 +111,13 @@ export function focusRecovery(): Plugin {
       next(wrappedCommand)
 
       if (!storeBefore || !storeAfter) return
+      const before = storeBefore as NormalizedData
+      const after = storeAfter as NormalizedData
 
       // New visible entities → focus the last one
-      const beforeIds = new Set(Object.keys(storeBefore.entities))
-      const newVisibleIds = Object.keys(storeAfter.entities).filter(
-        (id) => !beforeIds.has(id) && !id.startsWith('__') && isVisible(storeAfter, id)
+      const beforeIds = new Set(Object.keys(before.entities))
+      const newVisibleIds = Object.keys(after.entities).filter(
+        (id) => !beforeIds.has(id) && !id.startsWith('__') && isVisible(after, id)
       )
 
       if (newVisibleIds.length > 0) {
@@ -124,9 +126,9 @@ export function focusRecovery(): Plugin {
       }
 
       // Current focus not visible → fallback
-      const currentFocus = getFocusedId(storeAfter) || getFocusedId(storeBefore)
-      if (currentFocus && !isVisible(storeAfter, currentFocus)) {
-        const fallback = findFallbackFocus(storeBefore, storeAfter, currentFocus)
+      const currentFocus = getFocusedId(after) || getFocusedId(before)
+      if (currentFocus && !isVisible(after, currentFocus)) {
+        const fallback = findFallbackFocus(before, after, currentFocus)
         if (fallback) {
           next(focusCommands.setFocus(fallback))
         }

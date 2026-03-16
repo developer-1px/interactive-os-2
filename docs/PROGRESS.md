@@ -28,7 +28,7 @@
 - [x] selection (select, toggleSelect, clearSelection + undo)
 - [x] expand/collapse (expand, collapse, toggleExpand)
 - [x] **포커스 리커버리** — `focusRecovery()` 미들웨어, 단일 정책: 다음 형제 → 이전 형제 → 부모
-- [ ] `[P1]` 선택 모델 확장 — single/multiple/extended 모드, Shift 범위 선택
+- [x] 선택 모델 — single/multiple 모드 (selectionMode on AriaBehavior)
 
 ### history()
 - [x] undo/redo via snapshot-based command stack
@@ -64,6 +64,9 @@
 - [x] `behaviors/types.ts` — AriaBehavior, BehaviorContext, NodeState, FocusStrategy
 - [x] `behaviors/create-behavior-context.ts` — 엔진 → BehaviorContext 변환
 - [x] childRole 지원 (behavior별 ARIA 자식 role)
+- [x] focusNext/focusPrev wrap 옵션 (radiogroup용)
+- [x] grid? 네임스페이스 (col 네비게이션)
+- [x] aria-activedescendant 포커스 전략 + containerProps
 
 ### 프리셋
 - [x] treegrid (role: treegrid, childRole: row)
@@ -76,12 +79,14 @@
 ### 추가 프리셋
 - [x] dialog (role: dialog, childRole: group)
 - [x] toolbar (role: toolbar, childRole: button)
-
-### 미구현 behavior
 - [x] grid — 2D row/col 네비게이션, factory function `grid({ columns })`
 - [x] combobox — input + listbox 통합, aria-activedescendant
 - [x] radiogroup — single selection 강제, wrapping nav, aria-checked
+- [x] alertdialog — dialog variant with aria-modal
 - [x] switch — expanded state 재사용, aria-checked, natural-tab-order
+
+### 미구현 behavior
+- [ ] `[P2]` extended selection — Shift 범위 선택
 
 ## ⑤ Components + Hooks
 
@@ -93,7 +98,7 @@
 - [x] aria-label prop 지원
 - [x] **포커스 리커버리** — `focusRecovery()` 미들웨어로 삭제/축소/이동/생성/undo 시 자동 복구
 - [x] `<Aria.Cell>` — grid 멀티 컬럼 지원, AriaNodeContext
-- [ ] `[P1]` useExternalStore — 외부 store 연동 훅 (Zustand/Jotai 어댑터)
+- [x] `useControlledAria` — 외부 store 연동 훅 (controlled state variant)
 - [ ] `[P2]` 대용량 가상화 — 10k+ 노드 렌더링
 - [ ] `[P2]` DOM 스크롤 동기화 — 포커스 이동 시 자동 스크롤
 
@@ -107,14 +112,16 @@
 - [x] DisclosureGroup
 - [x] SwitchGroup
 - [x] Grid (2D row/col navigation with Aria.Cell)
+- [x] RadioGroup
+- [x] Combobox (input + listbox, aria-activedescendant)
 - [ ] `[P2]` shadcn CLI — `npx interactive-os add treegrid`
 
 ## ⑦ 인프라
 
-- [x] Vitest (286 tests, 32 files)
+- [x] Vitest (288 tests, 33 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
-- [x] tsup 라이브러리 빌드 (ESM + DTS, 27 modules)
+- [x] tsup 라이브러리 빌드 (ESM + DTS, 42 modules)
 - [x] npm exports (package.json)
 - [x] README
 - [x] LICENSE (MIT)
@@ -124,4 +131,4 @@
 
 ---
 
-*Last updated: 2026-03-17 (Task 13-14 complete — combobox plugin, behavior, UI, keyboard test)*
+*Last updated: 2026-03-17 — P1 complete, 5 new APG behaviors, Entity<T>, selection model, Aria.Cell, useControlledAria*
