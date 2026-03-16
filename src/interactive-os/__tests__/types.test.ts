@@ -3,10 +3,7 @@ import type {
   Entity,
   NormalizedData,
   Command,
-  BatchCommand,
   TransformAdapter,
-  Middleware,
-  Plugin,
 } from '../core/types'
 import { createBatchCommand } from '../core/types'
 

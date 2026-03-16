@@ -58,7 +58,6 @@ describe('clipboardCommands.copy + paste', () => {
 
   it('paste without prior copy is a no-op', () => {
     const engine = createCommandEngine(fixtureStore(), [], vi.fn())
-    const before = engine.getStore()
     engine.dispatch(clipboardCommands.paste('folder2'))
     // Store should be unchanged (paste creates a no-op command when clipboard is empty)
     expect(getChildren(engine.getStore(), 'folder2')).toEqual([])
