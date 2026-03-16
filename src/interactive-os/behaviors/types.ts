@@ -41,6 +41,8 @@ export interface BehaviorContext {
 
 export interface AriaBehavior<TState extends NodeState = NodeState> {
   role: string
+  /** ARIA role for each node element. Defaults to the behavior's childRole or 'row'. */
+  childRole?: string
   keyMap: Record<string, (ctx: BehaviorContext) => Command | void>
   focusStrategy: FocusStrategy
   ariaAttributes: (node: Entity, state: TState) => Record<string, string>

@@ -13,6 +13,7 @@ interface AriaProps {
   plugins: Plugin[]
   keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
   onChange?: (data: NormalizedData) => void
+  'aria-label'?: string
   children: ReactNode
 }
 
@@ -21,11 +22,11 @@ interface AriaNodeProps {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-function AriaRoot({ behavior, data, plugins, keyMap, onChange, children }: AriaProps) {
+function AriaRoot({ behavior, data, plugins, keyMap, onChange, 'aria-label': ariaLabel, children }: AriaProps) {
   const aria = useAria({ behavior, data, plugins, keyMap, onChange })
   return (
     <AriaInternalContext.Provider value={aria}>
-      <div role={behavior.role}>
+      <div role={behavior.role} aria-label={ariaLabel}>
         {children}
       </div>
     </AriaInternalContext.Provider>
@@ -51,9 +52,14 @@ function AriaNode({ render }: AriaNodeProps) {
             const props = aria.getNodeProps(childId)
             const hasChildren = getChildren(store, childId).length > 0
             const isExpanded = expandedIds.includes(childId)
+            // For treegrid rows, content must be wrapped in gridcell
+            const needsGridcell = (props as Record<string, unknown>).role === 'row'
             nodes.push(
               <div key={childId} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-                {render(entity, state)}
+                {needsGridcell
+                  ? <div role="gridcell">{render(entity, state)}</div>
+                  : render(entity, state)
+                }
               </div>
             )
             if (hasChildren && isExpanded) {

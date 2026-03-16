@@ -4,36 +4,123 @@
   "type": "module",
   "description": "Keyboard-first ARIA framework with plugin architecture for React",
   "license": "MIT",
-  "keywords": ["aria", "keyboard", "accessibility", "react", "headless", "treegrid", "undo-redo"],
+  "keywords": [
+    "aria",
+    "keyboard",
+    "accessibility",
+    "react",
+    "headless",
+    "treegrid",
+    "undo-redo"
+  ],
   "sideEffects": false,
   "exports": {
-    "./core/types": { "import": "./dist-lib/core/types.js", "types": "./dist-lib/core/types.d.ts" },
-    "./core/normalized-store": { "import": "./dist-lib/core/normalized-store.js", "types": "./dist-lib/core/normalized-store.d.ts" },
-    "./core/command-engine": { "import": "./dist-lib/core/command-engine.js", "types": "./dist-lib/core/command-engine.d.ts" },
-    "./plugins/core": { "import": "./dist-lib/plugins/core.js", "types": "./dist-lib/plugins/core.d.ts" },
-    "./plugins/history": { "import": "./dist-lib/plugins/history.js", "types": "./dist-lib/plugins/history.d.ts" },
-    "./plugins/crud": { "import": "./dist-lib/plugins/crud.js", "types": "./dist-lib/plugins/crud.d.ts" },
-    "./plugins/clipboard": { "import": "./dist-lib/plugins/clipboard.js", "types": "./dist-lib/plugins/clipboard.d.ts" },
-    "./plugins/rename": { "import": "./dist-lib/plugins/rename.js", "types": "./dist-lib/plugins/rename.d.ts" },
-    "./plugins/dnd": { "import": "./dist-lib/plugins/dnd.js", "types": "./dist-lib/plugins/dnd.d.ts" },
-    "./behaviors/types": { "import": "./dist-lib/behaviors/types.js", "types": "./dist-lib/behaviors/types.d.ts" },
-    "./behaviors/treegrid": { "import": "./dist-lib/behaviors/treegrid.js", "types": "./dist-lib/behaviors/treegrid.d.ts" },
-    "./behaviors/listbox": { "import": "./dist-lib/behaviors/listbox.js", "types": "./dist-lib/behaviors/listbox.d.ts" },
-    "./behaviors/disclosure": { "import": "./dist-lib/behaviors/disclosure.js", "types": "./dist-lib/behaviors/disclosure.d.ts" },
-    "./behaviors/tabs": { "import": "./dist-lib/behaviors/tabs.js", "types": "./dist-lib/behaviors/tabs.d.ts" },
-    "./behaviors/accordion": { "import": "./dist-lib/behaviors/accordion.js", "types": "./dist-lib/behaviors/accordion.d.ts" },
-    "./behaviors/menu": { "import": "./dist-lib/behaviors/menu.js", "types": "./dist-lib/behaviors/menu.d.ts" },
-    "./hooks/use-aria": { "import": "./dist-lib/hooks/use-aria.js", "types": "./dist-lib/hooks/use-aria.d.ts" },
-    "./hooks/use-keyboard": { "import": "./dist-lib/hooks/use-keyboard.js", "types": "./dist-lib/hooks/use-keyboard.d.ts" },
-    "./components/aria": { "import": "./dist-lib/components/aria.js", "types": "./dist-lib/components/aria.d.ts" },
-    "./ui/tree-grid": { "import": "./dist-lib/ui/tree-grid.js", "types": "./dist-lib/ui/tree-grid.d.ts" },
-    "./ui/list-box": { "import": "./dist-lib/ui/list-box.js", "types": "./dist-lib/ui/list-box.d.ts" },
-    "./ui/tab-list": { "import": "./dist-lib/ui/tab-list.js", "types": "./dist-lib/ui/tab-list.d.ts" },
-    "./ui/accordion": { "import": "./dist-lib/ui/accordion.js", "types": "./dist-lib/ui/accordion.d.ts" },
-    "./ui/menu-list": { "import": "./dist-lib/ui/menu-list.js", "types": "./dist-lib/ui/menu-list.d.ts" },
-    "./ui/disclosure-group": { "import": "./dist-lib/ui/disclosure-group.js", "types": "./dist-lib/ui/disclosure-group.d.ts" }
+    "./core/types": {
+      "import": "./dist-lib/core/types.js",
+      "types": "./dist-lib/core/types.d.ts"
+    },
+    "./core/normalized-store": {
+      "import": "./dist-lib/core/normalized-store.js",
+      "types": "./dist-lib/core/normalized-store.d.ts"
+    },
+    "./core/command-engine": {
+      "import": "./dist-lib/core/command-engine.js",
+      "types": "./dist-lib/core/command-engine.d.ts"
+    },
+    "./plugins/core": {
+      "import": "./dist-lib/plugins/core.js",
+      "types": "./dist-lib/plugins/core.d.ts"
+    },
+    "./plugins/history": {
+      "import": "./dist-lib/plugins/history.js",
+      "types": "./dist-lib/plugins/history.d.ts"
+    },
+    "./plugins/crud": {
+      "import": "./dist-lib/plugins/crud.js",
+      "types": "./dist-lib/plugins/crud.d.ts"
+    },
+    "./plugins/clipboard": {
+      "import": "./dist-lib/plugins/clipboard.js",
+      "types": "./dist-lib/plugins/clipboard.d.ts"
+    },
+    "./plugins/rename": {
+      "import": "./dist-lib/plugins/rename.js",
+      "types": "./dist-lib/plugins/rename.d.ts"
+    },
+    "./plugins/dnd": {
+      "import": "./dist-lib/plugins/dnd.js",
+      "types": "./dist-lib/plugins/dnd.d.ts"
+    },
+    "./behaviors/types": {
+      "import": "./dist-lib/behaviors/types.js",
+      "types": "./dist-lib/behaviors/types.d.ts"
+    },
+    "./behaviors/treegrid": {
+      "import": "./dist-lib/behaviors/treegrid.js",
+      "types": "./dist-lib/behaviors/treegrid.d.ts"
+    },
+    "./behaviors/listbox": {
+      "import": "./dist-lib/behaviors/listbox.js",
+      "types": "./dist-lib/behaviors/listbox.d.ts"
+    },
+    "./behaviors/disclosure": {
+      "import": "./dist-lib/behaviors/disclosure.js",
+      "types": "./dist-lib/behaviors/disclosure.d.ts"
+    },
+    "./behaviors/tabs": {
+      "import": "./dist-lib/behaviors/tabs.js",
+      "types": "./dist-lib/behaviors/tabs.d.ts"
+    },
+    "./behaviors/accordion": {
+      "import": "./dist-lib/behaviors/accordion.js",
+      "types": "./dist-lib/behaviors/accordion.d.ts"
+    },
+    "./behaviors/menu": {
+      "import": "./dist-lib/behaviors/menu.js",
+      "types": "./dist-lib/behaviors/menu.d.ts"
+    },
+    "./hooks/use-aria": {
+      "import": "./dist-lib/hooks/use-aria.js",
+      "types": "./dist-lib/hooks/use-aria.d.ts"
+    },
+    "./hooks/use-keyboard": {
+      "import": "./dist-lib/hooks/use-keyboard.js",
+      "types": "./dist-lib/hooks/use-keyboard.d.ts"
+    },
+    "./components/aria": {
+      "import": "./dist-lib/components/aria.js",
+      "types": "./dist-lib/components/aria.d.ts"
+    },
+    "./ui/tree-grid": {
+      "import": "./dist-lib/ui/tree-grid.js",
+      "types": "./dist-lib/ui/tree-grid.d.ts"
+    },
+    "./ui/list-box": {
+      "import": "./dist-lib/ui/list-box.js",
+      "types": "./dist-lib/ui/list-box.d.ts"
+    },
+    "./ui/tab-list": {
+      "import": "./dist-lib/ui/tab-list.js",
+      "types": "./dist-lib/ui/tab-list.d.ts"
+    },
+    "./ui/accordion": {
+      "import": "./dist-lib/ui/accordion.js",
+      "types": "./dist-lib/ui/accordion.d.ts"
+    },
+    "./ui/menu-list": {
+      "import": "./dist-lib/ui/menu-list.js",
+      "types": "./dist-lib/ui/menu-list.d.ts"
+    },
+    "./ui/disclosure-group": {
+      "import": "./dist-lib/ui/disclosure-group.js",
+      "types": "./dist-lib/ui/disclosure-group.d.ts"
+    }
   },
-  "files": ["dist-lib", "README.md", "LICENSE"],
+  "files": [
+    "dist-lib",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -60,6 +147,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.0",
+    "axe-core": "^4.11.1",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",

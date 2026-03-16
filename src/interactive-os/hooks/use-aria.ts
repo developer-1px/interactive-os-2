@@ -108,7 +108,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       const ariaAttrs = behavior.ariaAttributes(entity, state)
 
       return {
-        role: 'row',
+        role: behavior.childRole ?? 'row',
         tabIndex: id === focusedId ? 0 : -1,
         'data-node-id': id,
         ...ariaAttrs,
