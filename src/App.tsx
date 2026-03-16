@@ -19,9 +19,9 @@ const patterns = [
   { path: 'menu', label: 'Menu', status: 'ready' },
   { path: 'accordion', label: 'Accordion', status: 'ready' },
   { path: 'disclosure', label: 'Disclosure', status: 'ready' },
-  { path: 'dialog', label: 'Dialog', status: 'wip' },
+  { path: 'dialog', label: 'Dialog', status: 'ready' },
   { path: 'combobox', label: 'Combobox', status: 'wip' },
-  { path: 'toolbar', label: 'Toolbar', status: 'wip' },
+  { path: 'toolbar', label: 'Toolbar', status: 'ready' },
   { path: 'grid', label: 'Grid', status: 'wip' },
 ]
 
