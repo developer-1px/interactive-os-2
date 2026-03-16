@@ -3,10 +3,11 @@ export default function GridPage() {
     <div>
       <div className="page-header">
         <h2 className="page-title">Grid</h2>
-        <p className="page-desc">Data grid with row/cell navigation following W3C APG grid pattern</p>
+        <p className="page-desc">2D data grid with row/column navigation</p>
       </div>
       <div className="wip-placeholder">
-        Coming soon — behavior not yet implemented
+        Requires 2D relationship model extension (row + column relationships).<br />
+        Planned for Phase B.
       </div>
     </div>
   )
