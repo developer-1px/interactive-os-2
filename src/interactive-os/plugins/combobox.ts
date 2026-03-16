@@ -21,7 +21,7 @@ export const comboboxCommands = {
           ...store,
           entities: {
             ...store.entities,
-            [COMBOBOX_ID]: { id: COMBOBOX_ID, ...store.entities[COMBOBOX_ID], isOpen: true },
+            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: true },
           },
         }
       },
@@ -30,7 +30,7 @@ export const comboboxCommands = {
           ...store,
           entities: {
             ...store.entities,
-            [COMBOBOX_ID]: { id: COMBOBOX_ID, ...store.entities[COMBOBOX_ID], isOpen: prevOpen },
+            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: prevOpen },
           },
         }
       },
@@ -48,7 +48,7 @@ export const comboboxCommands = {
           ...store,
           entities: {
             ...store.entities,
-            [COMBOBOX_ID]: { id: COMBOBOX_ID, ...store.entities[COMBOBOX_ID], isOpen: false },
+            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: false },
           },
         }
       },
@@ -57,7 +57,7 @@ export const comboboxCommands = {
           ...store,
           entities: {
             ...store.entities,
-            [COMBOBOX_ID]: { id: COMBOBOX_ID, ...store.entities[COMBOBOX_ID], isOpen: prevOpen },
+            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: prevOpen },
           },
         }
       },
@@ -75,7 +75,7 @@ export const comboboxCommands = {
           ...store,
           entities: {
             ...store.entities,
-            [COMBOBOX_ID]: { id: COMBOBOX_ID, ...store.entities[COMBOBOX_ID], filterText: text },
+            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, filterText: text },
           },
         }
       },
@@ -84,7 +84,7 @@ export const comboboxCommands = {
           ...store,
           entities: {
             ...store.entities,
-            [COMBOBOX_ID]: { id: COMBOBOX_ID, ...store.entities[COMBOBOX_ID], filterText: prevText },
+            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, filterText: prevText },
           },
         }
       },
