@@ -6,8 +6,8 @@ import { ChevronDown, ChevronRight } from 'lucide-react'
 
 const disclosureData = createStore({
   entities: {
-    details: { id: 'details', label: 'View Details', content: 'Interactive-os provides keyboard-first ARIA components with zero styling. Compose behaviors and plugins to build accessible UIs.' },
-    advanced: { id: 'advanced', label: 'Advanced Options', content: 'Configure plugins, behaviors, and key mappings. Override any default behavior by writing a custom plugin.' },
+    details: { id: 'details', data: { label: 'View Details', content: 'Interactive-os provides keyboard-first ARIA components with zero styling. Compose behaviors and plugins to build accessible UIs.' } },
+    advanced: { id: 'advanced', data: { label: 'Advanced Options', content: 'Configure plugins, behaviors, and key mappings. Override any default behavior by writing a custom plugin.' } },
   },
   relationships: {
     [ROOT_ID]: ['details', 'advanced'],
@@ -28,7 +28,9 @@ export default function DisclosurePage() {
       <div className="card">
         <DisclosureGroup
           data={disclosureData}
-          renderItem={(item, state: NodeState) => (
+          renderItem={(item, state: NodeState) => {
+            const d = item.data as Record<string, unknown>
+            return (
             <div>
               <div className={`disclosure-trigger${state.focused ? ' disclosure-trigger--focused' : ''}`}>
                 <span className="disclosure-trigger__icon">
@@ -36,15 +38,15 @@ export default function DisclosurePage() {
                     ? <ChevronDown size={13} strokeWidth={2} />
                     : <ChevronRight size={13} strokeWidth={2} />}
                 </span>
-                <span className="disclosure-trigger__label">{item.label as string}</span>
+                <span className="disclosure-trigger__label">{d?.label as string}</span>
               </div>
               {state.expanded && (
                 <div className="disclosure-panel">
-                  {item.content as string}
+                  {d?.content as string}
                 </div>
               )}
             </div>
-          )}
+          )}}
         />
       </div>
     </div>

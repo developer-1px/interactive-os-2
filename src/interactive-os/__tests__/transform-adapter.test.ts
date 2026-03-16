@@ -13,19 +13,20 @@ describe('fileTreeAdapter', () => {
     // Root should have 2 children
     expect(data.relationships[ROOT_ID]).toHaveLength(2)
 
-    // All entities should have id, name, type
+    // All entities should have id, data.name, data.type
     for (const entity of Object.values(data.entities)) {
+      const d = entity.data as Record<string, unknown>
       expect(entity.id).toBeDefined()
-      expect(entity.name).toBeDefined()
-      expect(entity.type).toBeDefined()
+      expect(d.name).toBeDefined()
+      expect(d.type).toBeDefined()
     }
   })
 
   it('preserves extra fields (size, modified)', () => {
     const data = fileTreeAdapter.normalize(exampleFiles)
 
-    const appEntity = Object.values(data.entities).find((e) => e.name === 'App.tsx')
-    expect(appEntity?.size).toBe(2048)
+    const appEntity = Object.values(data.entities).find((e) => (e.data as Record<string, unknown>)?.name === 'App.tsx')
+    expect((appEntity?.data as Record<string, unknown>)?.size).toBe(2048)
   })
 
   it('denormalizes back to original structure', () => {

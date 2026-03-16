@@ -7,12 +7,12 @@ import type { NodeState } from '../interactive-os/behaviors/types'
 
 const toolbarData = createStore({
   entities: {
-    bold: { id: 'bold', label: 'B', title: 'Bold' },
-    italic: { id: 'italic', label: 'I', title: 'Italic' },
-    underline: { id: 'underline', label: 'U', title: 'Underline' },
-    alignL: { id: 'alignL', label: '≡', title: 'Align Left' },
-    alignC: { id: 'alignC', label: '≡', title: 'Align Center' },
-    alignR: { id: 'alignR', label: '≡', title: 'Align Right' },
+    bold: { id: 'bold', data: { label: 'B', title: 'Bold' } },
+    italic: { id: 'italic', data: { label: 'I', title: 'Italic' } },
+    underline: { id: 'underline', data: { label: 'U', title: 'Underline' } },
+    alignL: { id: 'alignL', data: { label: '≡', title: 'Align Left' } },
+    alignC: { id: 'alignC', data: { label: '≡', title: 'Align Center' } },
+    alignR: { id: 'alignR', data: { label: '≡', title: 'Align Right' } },
   },
   relationships: {
     [ROOT_ID]: ['bold', 'italic', 'underline', 'alignL', 'alignC', 'alignR'],
@@ -44,8 +44,8 @@ export default function ToolbarPage() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls} title={node.title as string}>
-                {node.label as string}
+              <div className={cls} title={(node.data as Record<string, unknown>)?.title as string}>
+                {(node.data as Record<string, unknown>)?.label as string}
               </div>
             )
           }} />

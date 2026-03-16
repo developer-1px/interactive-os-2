@@ -17,13 +17,13 @@ import type { NodeState } from '../behaviors/types'
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {
-      file: { id: 'file', name: 'File' },
-      newFile: { id: 'newFile', name: 'New File' },
-      open: { id: 'open', name: 'Open' },
-      edit: { id: 'edit', name: 'Edit' },
-      copy: { id: 'copy', name: 'Copy' },
-      paste: { id: 'paste', name: 'Paste' },
-      help: { id: 'help', name: 'Help' },
+      file: { id: 'file', data: { name: 'File' } },
+      newFile: { id: 'newFile', data: { name: 'New File' } },
+      open: { id: 'open', data: { name: 'Open' } },
+      edit: { id: 'edit', data: { name: 'Edit' } },
+      copy: { id: 'copy', data: { name: 'Copy' } },
+      paste: { id: 'paste', data: { name: 'Paste' } },
+      help: { id: 'help', data: { name: 'Help' } },
     },
     relationships: {
       [ROOT_ID]: ['file', 'edit', 'help'],
@@ -40,7 +40,7 @@ function renderMenu(data: NormalizedData) {
       plugins={[core()]}
       renderItem={(item, state: NodeState) => (
         <span data-testid={`item-${item.id}`} data-focused={state.focused} data-selected={state.selected}>
-          {item.name as string}
+          {(item.data as Record<string, unknown>)?.name as string}
         </span>
       )}
     />

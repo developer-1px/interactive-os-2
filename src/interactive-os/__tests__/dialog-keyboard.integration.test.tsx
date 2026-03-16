@@ -19,11 +19,11 @@ import type { NodeState } from '../behaviors/types'
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {
-      confirm: { id: 'confirm', name: 'Confirm Dialog' },
-      okBtn: { id: 'okBtn', name: 'OK' },
-      cancelBtn: { id: 'cancelBtn', name: 'Cancel' },
-      alert: { id: 'alert', name: 'Alert Dialog' },
-      dismissBtn: { id: 'dismissBtn', name: 'Dismiss' },
+      confirm: { id: 'confirm', data: { name: 'Confirm Dialog' } },
+      okBtn: { id: 'okBtn', data: { name: 'OK' } },
+      cancelBtn: { id: 'cancelBtn', data: { name: 'Cancel' } },
+      alert: { id: 'alert', data: { name: 'Alert Dialog' } },
+      dismissBtn: { id: 'dismissBtn', data: { name: 'Dismiss' } },
     },
     relationships: {
       [ROOT_ID]: ['confirm', 'alert'],
@@ -39,7 +39,7 @@ function renderDialog(data: NormalizedData) {
       <Aria.Node
         render={(node, state: NodeState) => (
           <span data-testid={`node-${node.id}`} data-focused={state.focused} data-expanded={state.expanded}>
-            {node.name as string}
+            {(node.data as Record<string, unknown>)?.name as string}
           </span>
         )}
       />

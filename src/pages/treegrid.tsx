@@ -18,16 +18,16 @@ import {
 
 const treeData = createStore({
   entities: {
-    src: { id: 'src', name: 'src', type: 'folder' },
-    components: { id: 'components', name: 'components', type: 'folder' },
-    app: { id: 'app', name: 'App.tsx', type: 'file' },
-    main: { id: 'main', name: 'main.tsx', type: 'file' },
-    button: { id: 'button', name: 'Button.tsx', type: 'file' },
-    input: { id: 'input', name: 'Input.tsx', type: 'file' },
-    lib: { id: 'lib', name: 'lib', type: 'folder' },
-    utils: { id: 'utils', name: 'utils.ts', type: 'file' },
-    readme: { id: 'readme', name: 'README.md', type: 'file' },
-    pkg: { id: 'pkg', name: 'package.json', type: 'file' },
+    src: { id: 'src', data: { name: 'src', type: 'folder' } },
+    components: { id: 'components', data: { name: 'components', type: 'folder' } },
+    app: { id: 'app', data: { name: 'App.tsx', type: 'file' } },
+    main: { id: 'main', data: { name: 'main.tsx', type: 'file' } },
+    button: { id: 'button', data: { name: 'Button.tsx', type: 'file' } },
+    input: { id: 'input', data: { name: 'Input.tsx', type: 'file' } },
+    lib: { id: 'lib', data: { name: 'lib', type: 'folder' } },
+    utils: { id: 'utils', data: { name: 'utils.ts', type: 'file' } },
+    readme: { id: 'readme', data: { name: 'README.md', type: 'file' } },
+    pkg: { id: 'pkg', data: { name: 'package.json', type: 'file' } },
   },
   relationships: {
     [ROOT_ID]: ['src', 'lib', 'readme', 'pkg'],
@@ -90,9 +90,10 @@ export default function TreeGridPage() {
           enableEditing
           plugins={plugins}
           renderItem={(node, state: NodeState) => {
-            const isFolder = node.type === 'folder'
+            const d = node.data as Record<string, unknown>
+            const isFolder = d?.type === 'folder'
             const indent = ((state.level ?? 1) - 1) * 18
-            const name = node.name as string
+            const name = d?.name as string
             const ext = getFileExt(name)
             const baseName = ext ? name.slice(0, -ext.length) : name
 

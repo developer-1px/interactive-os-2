@@ -103,3 +103,23 @@ export function insertNode(
 ): NormalizedData {
   return addEntity(store, entity, parentId, index)
 }
+
+export function getEntityData<T extends Record<string, unknown>>(
+  store: NormalizedData, id: string
+): T | undefined {
+  return store.entities[id]?.data as T | undefined
+}
+
+export function updateEntityData(
+  store: NormalizedData, nodeId: string, updates: Record<string, unknown>
+): NormalizedData {
+  const existing = store.entities[nodeId]
+  if (!existing) return store
+  return {
+    ...store,
+    entities: {
+      ...store.entities,
+      [nodeId]: { ...existing, data: { ...existing.data, ...updates } },
+    },
+  }
+}

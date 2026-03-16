@@ -24,11 +24,11 @@ import type { NodeState } from '../behaviors/types'
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {
-      src: { id: 'src', name: 'src', type: 'folder' },
-      app: { id: 'app', name: 'App.tsx', type: 'file' },
-      main: { id: 'main', name: 'main.tsx', type: 'file' },
-      lib: { id: 'lib', name: 'lib', type: 'folder' },
-      utils: { id: 'utils', name: 'utils.ts', type: 'file' },
+      src: { id: 'src', data: { name: 'src', type: 'folder' } },
+      app: { id: 'app', data: { name: 'App.tsx', type: 'file' } },
+      main: { id: 'main', data: { name: 'main.tsx', type: 'file' } },
+      lib: { id: 'lib', data: { name: 'lib', type: 'folder' } },
+      utils: { id: 'utils', data: { name: 'utils.ts', type: 'file' } },
     },
     relationships: {
       [ROOT_ID]: ['src', 'lib'],
@@ -49,7 +49,7 @@ function renderTree(data: NormalizedData, onChange?: (d: NormalizedData) => void
       onChange={onChange}
       renderItem={(node, state: NodeState) => (
         <span data-testid={`node-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
-          {node.name as string}
+          {(node.data as Record<string, unknown>)?.name as string}
         </span>
       )}
     />
@@ -213,7 +213,7 @@ describe('TreeGrid keyboard integration', () => {
             onChange={setData}
             renderItem={(node, state: NodeState) => (
               <span data-testid={`node-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
-                {node.name as string}
+                {(node.data as Record<string, unknown>)?.name as string}
               </span>
             )}
           />

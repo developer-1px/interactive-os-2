@@ -39,7 +39,7 @@ const defaultRenderItem = (node: Record<string, unknown>, state: NodeState): Rea
       <span style={{ width: 16, opacity: 0.5, flexShrink: 0 }}>
         {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
       </span>
-      <span>{node.name as string}</span>
+      <span>{(node.data as Record<string, unknown>)?.name as string}</span>
     </div>
   )
 }

@@ -8,12 +8,12 @@ import { history, historyCommands } from '../plugins/history'
 function fixtureStore() {
   return createStore({
     entities: {
-      folder1: { id: 'folder1', name: 'src' },
-      folder2: { id: 'folder2', name: 'lib' },
-      folder3: { id: 'folder3', name: 'test' },
-      file1: { id: 'file1', name: 'App.tsx' },
-      file2: { id: 'file2', name: 'main.tsx' },
-      file3: { id: 'file3', name: 'index.ts' },
+      folder1: { id: 'folder1', data: { name: 'src' } },
+      folder2: { id: 'folder2', data: { name: 'lib' } },
+      folder3: { id: 'folder3', data: { name: 'test' } },
+      file1: { id: 'file1', data: { name: 'App.tsx' } },
+      file2: { id: 'file2', data: { name: 'main.tsx' } },
+      file3: { id: 'file3', data: { name: 'index.ts' } },
     },
     relationships: {
       [ROOT_ID]: ['folder1', 'folder2', 'folder3'],

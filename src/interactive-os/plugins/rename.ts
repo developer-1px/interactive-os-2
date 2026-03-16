@@ -1,5 +1,5 @@
 import type { Command, Plugin } from '../core/types'
-import { getEntity, updateEntity } from '../core/normalized-store'
+import { getEntity, updateEntityData } from '../core/normalized-store'
 
 const RENAME_ID = '__rename__'
 
@@ -33,9 +33,9 @@ export const renameCommands = {
       payload: { nodeId, field, newValue },
       execute(store) {
         const entity = getEntity(store, nodeId)
-        previousValue = entity?.[field]
+        previousValue = entity?.data?.[field]
 
-        let result = updateEntity(store, nodeId, { [field]: newValue })
+        let result = updateEntityData(store, nodeId, { [field]: newValue })
         // Clear rename state
         result = {
           ...result,
@@ -47,7 +47,7 @@ export const renameCommands = {
         return result
       },
       undo(store) {
-        let result = updateEntity(store, nodeId, { [field]: previousValue })
+        let result = updateEntityData(store, nodeId, { [field]: previousValue })
         // Restore rename state to active
         result = {
           ...result,

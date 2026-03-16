@@ -5,12 +5,12 @@ import type { NodeState } from '../interactive-os/behaviors/types'
 
 const listData = createStore({
   entities: {
-    ts: { id: 'ts', label: 'TypeScript', desc: 'Typed superset of JavaScript' },
-    react: { id: 'react', label: 'React 19', desc: 'UI component library' },
-    vite: { id: 'vite', label: 'Vite 8', desc: 'Next-gen build tool' },
-    vitest: { id: 'vitest', label: 'Vitest', desc: 'Unit test framework' },
-    pnpm: { id: 'pnpm', label: 'pnpm', desc: 'Fast package manager' },
-    axe: { id: 'axe', label: 'axe-core', desc: 'Accessibility engine' },
+    ts: { id: 'ts', data: { label: 'TypeScript', desc: 'Typed superset of JavaScript' } },
+    react: { id: 'react', data: { label: 'React 19', desc: 'UI component library' } },
+    vite: { id: 'vite', data: { label: 'Vite 8', desc: 'Next-gen build tool' } },
+    vitest: { id: 'vitest', data: { label: 'Vitest', desc: 'Unit test framework' } },
+    pnpm: { id: 'pnpm', data: { label: 'pnpm', desc: 'Fast package manager' } },
+    axe: { id: 'axe', data: { label: 'axe-core', desc: 'Accessibility engine' } },
   },
   relationships: {
     [ROOT_ID]: ['ts', 'react', 'vite', 'vitest', 'pnpm', 'axe'],
@@ -33,6 +33,7 @@ export default function ListboxPage() {
         <ListBox
           data={listData}
           renderItem={(item, state: NodeState) => {
+            const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',
               state.focused && 'list-item--focused',
@@ -41,8 +42,8 @@ export default function ListboxPage() {
 
             return (
               <div className={cls}>
-                <span className="list-item__label">{item.label as string}</span>
-                <span className="list-item__desc">{item.desc as string}</span>
+                <span className="list-item__label">{d?.label as string}</span>
+                <span className="list-item__desc">{d?.desc as string}</span>
               </div>
             )
           }}

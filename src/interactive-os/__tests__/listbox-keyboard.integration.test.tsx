@@ -17,10 +17,10 @@ import type { NodeState } from '../behaviors/types'
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {
-      apple: { id: 'apple', name: 'Apple' },
-      banana: { id: 'banana', name: 'Banana' },
-      cherry: { id: 'cherry', name: 'Cherry' },
-      date: { id: 'date', name: 'Date' },
+      apple: { id: 'apple', data: { name: 'Apple' } },
+      banana: { id: 'banana', data: { name: 'Banana' } },
+      cherry: { id: 'cherry', data: { name: 'Cherry' } },
+      date: { id: 'date', data: { name: 'Date' } },
     },
     relationships: {
       [ROOT_ID]: ['apple', 'banana', 'cherry', 'date'],
@@ -35,7 +35,7 @@ function renderListBox(data: NormalizedData) {
       plugins={[core()]}
       renderItem={(item, state: NodeState) => (
         <span data-testid={`item-${item.id}`} data-focused={state.focused} data-selected={state.selected}>
-          {item.name as string}
+          {(item.data as Record<string, unknown>)?.name as string}
         </span>
       )}
     />

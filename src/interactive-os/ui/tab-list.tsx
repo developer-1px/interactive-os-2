@@ -25,7 +25,7 @@ const defaultRenderItem = (tab: Record<string, unknown>, state: NodeState): Reac
       fontSize: 14,
     }}
   >
-    {tab.label as string ?? tab.name as string ?? tab.id as string}
+    {(tab.data as Record<string, unknown>)?.label as string ?? (tab.data as Record<string, unknown>)?.name as string ?? tab.id as string}
   </div>
 )
 

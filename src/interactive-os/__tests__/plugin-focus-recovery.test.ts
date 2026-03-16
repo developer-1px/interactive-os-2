@@ -12,12 +12,12 @@ import { focusRecovery } from '../plugins/focus-recovery'
 function fixtureStore() {
   return createStore({
     entities: {
-      folder1: { id: 'folder1', name: 'src' },
-      file1: { id: 'file1', name: 'App.tsx' },
-      file2: { id: 'file2', name: 'main.tsx' },
-      file3: { id: 'file3', name: 'index.ts' },
-      folder2: { id: 'folder2', name: 'lib' },
-      file4: { id: 'file4', name: 'utils.ts' },
+      folder1: { id: 'folder1', data: { name: 'src' } },
+      file1: { id: 'file1', data: { name: 'App.tsx' } },
+      file2: { id: 'file2', data: { name: 'main.tsx' } },
+      file3: { id: 'file3', data: { name: 'index.ts' } },
+      folder2: { id: 'folder2', data: { name: 'lib' } },
+      file4: { id: 'file4', data: { name: 'utils.ts' } },
     },
     relationships: {
       [ROOT_ID]: ['folder1', 'folder2'],
@@ -132,7 +132,7 @@ describe('focusRecovery middleware', () => {
     it('focuses newly created node', () => {
       const { engine } = setup()
       engine.dispatch(focusCommands.setFocus('folder1'))
-      engine.dispatch(crudCommands.create({ id: 'newfile', name: 'new.ts' }, 'folder1'))
+      engine.dispatch(crudCommands.create({ id: 'newfile', data: { name: 'new.ts' } }, 'folder1'))
 
       expect(getFocusedId(engine)).toBe('newfile')
     })
@@ -203,7 +203,7 @@ describe('focusRecovery middleware', () => {
     it('undo create focuses back to where we were', () => {
       const { engine } = setup()
       engine.dispatch(focusCommands.setFocus('folder1'))
-      engine.dispatch(crudCommands.create({ id: 'newfile', name: 'new.ts' }, 'folder1'))
+      engine.dispatch(crudCommands.create({ id: 'newfile', data: { name: 'new.ts' } }, 'folder1'))
       expect(getFocusedId(engine)).toBe('newfile')
 
       engine.dispatch(historyCommands.undo())

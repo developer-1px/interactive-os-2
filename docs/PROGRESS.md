@@ -13,7 +13,7 @@
 - [x] `core/normalized-store.ts` — createStore, getEntity, getChildren, getParent, addEntity, removeEntity, updateEntity, moveNode, insertNode
 - [x] `core/command-engine.ts` — createCommandEngine, dispatch, middleware pipeline
 - [ ] `[P2]` 에러 처리 — Command execute() 실패 시 롤백, onError 콜백
-- [ ] `[P1]` 타입 안전 Entity 제네릭 — `Entity<T>` 로 소비자 데이터 shape 강제
+- [x] 타입 안전 Entity 제네릭 — `Entity<T>` with `data` property, `getEntityData<T>`, `updateEntityData`
 
 ## ② Command Engine
 
@@ -121,4 +121,4 @@
 
 ---
 
-*Last updated: 2026-03-16*
+*Last updated: 2026-03-17*

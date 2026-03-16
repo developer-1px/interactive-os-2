@@ -40,10 +40,12 @@ export const fileTreeAdapter: TransformAdapter<FileNode[]> = {
         const id = `node-${idCounter++}`
         entities[id] = {
           id,
-          name: node.name,
-          type: node.type,
-          ...(node.size !== undefined ? { size: node.size } : {}),
-          ...(node.modified !== undefined ? { modified: node.modified } : {}),
+          data: {
+            name: node.name,
+            type: node.type,
+            ...(node.size !== undefined ? { size: node.size } : {}),
+            ...(node.modified !== undefined ? { modified: node.modified } : {}),
+          },
         }
 
         if (!relationships[parentId]) relationships[parentId] = []
@@ -65,14 +67,15 @@ export const fileTreeAdapter: TransformAdapter<FileNode[]> = {
 
       return childIds.map((id) => {
         const entity = data.entities[id]!
+        const d = entity.data as Record<string, unknown>
         const children = build(id)
         const node: FileNode = {
-          name: entity.name as string,
-          type: entity.type as 'file' | 'folder',
+          name: d.name as string,
+          type: d.type as 'file' | 'folder',
         }
 
-        if (entity.size !== undefined) node.size = entity.size as number
-        if (entity.modified !== undefined) node.modified = entity.modified as string
+        if (d.size !== undefined) node.size = d.size as number
+        if (d.modified !== undefined) node.modified = d.modified as string
         if (children.length > 0) node.children = children
 
         return node

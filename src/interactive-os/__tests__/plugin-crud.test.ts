@@ -7,9 +7,9 @@ import { crudCommands, crud } from '../plugins/crud'
 function fixtureStore() {
   return createStore({
     entities: {
-      folder1: { id: 'folder1', name: 'src' },
-      file1: { id: 'file1', name: 'App.tsx' },
-      file2: { id: 'file2', name: 'main.tsx' },
+      folder1: { id: 'folder1', data: { name: 'src' } },
+      file1: { id: 'file1', data: { name: 'App.tsx' } },
+      file2: { id: 'file2', data: { name: 'main.tsx' } },
     },
     relationships: {
       [ROOT_ID]: ['folder1'],
@@ -30,29 +30,29 @@ describe('crud() plugin factory', () => {
 describe('crudCommands.create', () => {
   it('creates a new entity under a parent', () => {
     const engine = createCommandEngine(fixtureStore(), [], vi.fn())
-    engine.dispatch(crudCommands.create({ id: 'file3', name: 'index.ts' }, 'folder1'))
+    engine.dispatch(crudCommands.create({ id: 'file3', data: { name: 'index.ts' } }, 'folder1'))
 
-    expect(getEntity(engine.getStore(), 'file3')).toEqual({ id: 'file3', name: 'index.ts' })
+    expect(getEntity(engine.getStore(), 'file3')).toEqual({ id: 'file3', data: { name: 'index.ts' } })
     expect(getChildren(engine.getStore(), 'folder1')).toEqual(['file1', 'file2', 'file3'])
   })
 
   it('creates at root when no parent specified', () => {
     const engine = createCommandEngine(fixtureStore(), [], vi.fn())
-    engine.dispatch(crudCommands.create({ id: 'folder2', name: 'lib' }))
+    engine.dispatch(crudCommands.create({ id: 'folder2', data: { name: 'lib' } }))
 
     expect(getChildren(engine.getStore(), ROOT_ID)).toEqual(['folder1', 'folder2'])
   })
 
   it('creates at specific index', () => {
     const engine = createCommandEngine(fixtureStore(), [], vi.fn())
-    engine.dispatch(crudCommands.create({ id: 'file3', name: 'index.ts' }, 'folder1', 0))
+    engine.dispatch(crudCommands.create({ id: 'file3', data: { name: 'index.ts' } }, 'folder1', 0))
 
     expect(getChildren(engine.getStore(), 'folder1')).toEqual(['file3', 'file1', 'file2'])
   })
 
   it('undo removes the created entity', () => {
     const engine = createCommandEngine(fixtureStore(), [], vi.fn())
-    const cmd = crudCommands.create({ id: 'file3', name: 'index.ts' }, 'folder1')
+    const cmd = crudCommands.create({ id: 'file3', data: { name: 'index.ts' } }, 'folder1')
     engine.dispatch(cmd)
 
     const undone = cmd.undo(engine.getStore())
@@ -85,8 +85,8 @@ describe('crudCommands.remove', () => {
     engine.dispatch(cmd)
 
     const undone = cmd.undo(engine.getStore())
-    expect(getEntity(undone, 'folder1')).toEqual({ id: 'folder1', name: 'src' })
-    expect(getEntity(undone, 'file1')).toEqual({ id: 'file1', name: 'App.tsx' })
+    expect(getEntity(undone, 'folder1')).toEqual({ id: 'folder1', data: { name: 'src' } })
+    expect(getEntity(undone, 'file1')).toEqual({ id: 'file1', data: { name: 'App.tsx' } })
     expect(getChildren(undone, 'folder1')).toEqual(['file1', 'file2'])
     expect(getChildren(undone, ROOT_ID)).toEqual(['folder1'])
   })

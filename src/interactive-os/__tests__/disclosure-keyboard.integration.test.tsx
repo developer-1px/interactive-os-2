@@ -17,10 +17,10 @@ import type { NodeState } from '../behaviors/types'
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {
-      details1: { id: 'details1', name: 'Show more info' },
-      content1: { id: 'content1', name: 'Additional information here' },
-      details2: { id: 'details2', name: 'Show advanced' },
-      content2: { id: 'content2', name: 'Advanced settings' },
+      details1: { id: 'details1', data: { name: 'Show more info' } },
+      content1: { id: 'content1', data: { name: 'Additional information here' } },
+      details2: { id: 'details2', data: { name: 'Show advanced' } },
+      content2: { id: 'content2', data: { name: 'Advanced settings' } },
     },
     relationships: {
       [ROOT_ID]: ['details1', 'details2'],
@@ -33,8 +33,8 @@ function fixtureData(): NormalizedData {
 function leafFixtureData(): NormalizedData {
   return createStore({
     entities: {
-      info: { id: 'info', name: 'More Info', content: 'Details here...' },
-      opts: { id: 'opts', name: 'Options', content: 'Advanced options...' },
+      info: { id: 'info', data: { name: 'More Info', content: 'Details here...' } },
+      opts: { id: 'opts', data: { name: 'Options', content: 'Advanced options...' } },
     },
     relationships: {
       [ROOT_ID]: ['info', 'opts'],
@@ -49,7 +49,7 @@ function renderDisclosure(data: NormalizedData) {
       plugins={[core()]}
       renderItem={(item, state: NodeState) => (
         <span data-testid={`trigger-${item.id}`} data-focused={state.focused} data-expanded={state.expanded}>
-          {item.name as string}
+          {(item.data as Record<string, unknown>)?.name as string}
         </span>
       )}
     />
@@ -140,7 +140,7 @@ describe('DisclosureGroup keyboard integration', () => {
           plugins={[core()]}
           renderItem={(item, state: NodeState) => (
             <span data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
-              {item.name as string}
+              {(item.data as Record<string, unknown>)?.name as string}
             </span>
           )}
         />
@@ -161,7 +161,7 @@ describe('DisclosureGroup keyboard integration', () => {
           plugins={[core()]}
           renderItem={(item, state: NodeState) => (
             <span data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
-              {item.name as string}
+              {(item.data as Record<string, unknown>)?.name as string}
             </span>
           )}
         />

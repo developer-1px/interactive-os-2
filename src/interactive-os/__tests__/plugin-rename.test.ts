@@ -7,7 +7,7 @@ import { renameCommands, rename } from '../plugins/rename'
 function fixtureStore() {
   return createStore({
     entities: {
-      file1: { id: 'file1', name: 'App.tsx', size: 1024 },
+      file1: { id: 'file1', data: { name: 'App.tsx', size: 1024 } },
     },
     relationships: {
       [ROOT_ID]: ['file1'],
@@ -50,7 +50,7 @@ describe('renameCommands.confirmRename', () => {
     engine.dispatch(renameCommands.startRename('file1'))
     engine.dispatch(renameCommands.confirmRename('file1', 'name', 'App.test.tsx'))
 
-    expect(getEntity(engine.getStore(), 'file1')?.name).toBe('App.test.tsx')
+    expect((getEntity(engine.getStore(), 'file1')?.data as Record<string, unknown>)?.name).toBe('App.test.tsx')
     expect(engine.getStore().entities['__rename__']?.active).toBe(false)
   })
 
@@ -60,8 +60,8 @@ describe('renameCommands.confirmRename', () => {
     engine.dispatch(renameCommands.confirmRename('file1', 'name', 'NewName.tsx'))
 
     const entity = getEntity(engine.getStore(), 'file1')
-    expect(entity?.name).toBe('NewName.tsx')
-    expect(entity?.size).toBe(1024) // preserved
+    expect((entity?.data as Record<string, unknown>)?.name).toBe('NewName.tsx')
+    expect((entity?.data as Record<string, unknown>)?.size).toBe(1024) // preserved
   })
 
   it('undo restores original value', () => {
@@ -71,7 +71,7 @@ describe('renameCommands.confirmRename', () => {
     engine.dispatch(cmd)
 
     const undone = cmd.undo(engine.getStore())
-    expect(getEntity(undone, 'file1')?.name).toBe('App.tsx')
+    expect((getEntity(undone, 'file1')?.data as Record<string, unknown>)?.name).toBe('App.tsx')
   })
 })
 
@@ -82,6 +82,6 @@ describe('renameCommands.cancelRename', () => {
     engine.dispatch(renameCommands.cancelRename())
 
     expect(engine.getStore().entities['__rename__']?.active).toBe(false)
-    expect(getEntity(engine.getStore(), 'file1')?.name).toBe('App.tsx') // unchanged
+    expect((getEntity(engine.getStore(), 'file1')?.data as Record<string, unknown>)?.name).toBe('App.tsx') // unchanged
   })
 })

@@ -8,10 +8,10 @@ import { focusCommands, expandCommands } from '../plugins/core'
 function setup() {
   const store = createStore({
     entities: {
-      folder1: { id: 'folder1', name: 'src' },
-      file1: { id: 'file1', name: 'App.tsx' },
-      file2: { id: 'file2', name: 'main.tsx' },
-      folder2: { id: 'folder2', name: 'lib' },
+      folder1: { id: 'folder1', data: { name: 'src' } },
+      file1: { id: 'file1', data: { name: 'App.tsx' } },
+      file2: { id: 'file2', data: { name: 'main.tsx' } },
+      folder2: { id: 'folder2', data: { name: 'lib' } },
     },
     relationships: {
       [ROOT_ID]: ['folder1', 'folder2'],
@@ -38,7 +38,7 @@ describe('createBehaviorContext', () => {
   it('getEntity returns entity from store', () => {
     const { engine } = setup()
     const ctx = createBehaviorContext(engine)
-    expect(ctx.getEntity('folder1')).toEqual({ id: 'folder1', name: 'src' })
+    expect(ctx.getEntity('folder1')).toEqual({ id: 'folder1', data: { name: 'src' } })
     expect(ctx.getEntity('nonexistent')).toBeUndefined()
   })
 

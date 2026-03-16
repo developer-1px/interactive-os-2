@@ -16,9 +16,9 @@ import type { NormalizedData } from '../core/types'
 function fixtureStore(): NormalizedData {
   return createStore({
     entities: {
-      folder1: { id: 'folder1', name: 'src' },
-      file1: { id: 'file1', name: 'App.tsx' },
-      file2: { id: 'file2', name: 'main.tsx' },
+      folder1: { id: 'folder1', data: { name: 'src' } },
+      file1: { id: 'file1', data: { name: 'App.tsx' } },
+      file2: { id: 'file2', data: { name: 'main.tsx' } },
     },
     relationships: {
       [ROOT_ID]: ['folder1'],
@@ -44,7 +44,7 @@ describe('createStore', () => {
 describe('getEntity', () => {
   it('returns entity by id', () => {
     const store = fixtureStore()
-    expect(getEntity(store, 'folder1')).toEqual({ id: 'folder1', name: 'src' })
+    expect(getEntity(store, 'folder1')).toEqual({ id: 'folder1', data: { name: 'src' } })
   })
 
   it('returns undefined for missing id', () => {
@@ -85,26 +85,26 @@ describe('getParent', () => {
 describe('addEntity', () => {
   it('adds entity and relationship', () => {
     const store = fixtureStore()
-    const next = addEntity(store, { id: 'file3', name: 'index.ts' }, 'folder1')
-    expect(getEntity(next, 'file3')).toEqual({ id: 'file3', name: 'index.ts' })
+    const next = addEntity(store, { id: 'file3', data: { name: 'index.ts' } }, 'folder1')
+    expect(getEntity(next, 'file3')).toEqual({ id: 'file3', data: { name: 'index.ts' } })
     expect(getChildren(next, 'folder1')).toEqual(['file1', 'file2', 'file3'])
   })
 
   it('adds to root when no parent specified', () => {
     const store = fixtureStore()
-    const next = addEntity(store, { id: 'folder2', name: 'lib' })
+    const next = addEntity(store, { id: 'folder2', data: { name: 'lib' } })
     expect(getChildren(next, ROOT_ID)).toEqual(['folder1', 'folder2'])
   })
 
   it('adds at specific index', () => {
     const store = fixtureStore()
-    const next = addEntity(store, { id: 'file3', name: 'index.ts' }, 'folder1', 0)
+    const next = addEntity(store, { id: 'file3', data: { name: 'index.ts' } }, 'folder1', 0)
     expect(getChildren(next, 'folder1')).toEqual(['file3', 'file1', 'file2'])
   })
 
   it('does not mutate original store', () => {
     const store = fixtureStore()
-    addEntity(store, { id: 'file3', name: 'index.ts' }, 'folder1')
+    addEntity(store, { id: 'file3', data: { name: 'index.ts' } }, 'folder1')
     expect(getChildren(store, 'folder1')).toEqual(['file1', 'file2'])
   })
 })
@@ -130,16 +130,16 @@ describe('removeEntity', () => {
 describe('updateEntity', () => {
   it('updates entity fields immutably', () => {
     const store = fixtureStore()
-    const next = updateEntity(store, 'file1', { name: 'App.test.tsx' })
-    expect(getEntity(next, 'file1')).toEqual({ id: 'file1', name: 'App.test.tsx' })
-    expect(getEntity(store, 'file1')?.name).toBe('App.tsx')
+    const next = updateEntity(store, 'file1', { data: { name: 'App.test.tsx' } })
+    expect(getEntity(next, 'file1')).toEqual({ id: 'file1', data: { name: 'App.test.tsx' } })
+    expect((getEntity(store, 'file1')?.data as Record<string, unknown>)?.name).toBe('App.tsx')
   })
 })
 
 describe('moveNode', () => {
   it('moves node to new parent', () => {
     let store = fixtureStore()
-    store = addEntity(store, { id: 'folder2', name: 'lib' })
+    store = addEntity(store, { id: 'folder2', data: { name: 'lib' } })
     const next = moveNode(store, 'file1', 'folder2')
     expect(getChildren(next, 'folder1')).toEqual(['file2'])
     expect(getChildren(next, 'folder2')).toEqual(['file1'])
@@ -155,7 +155,7 @@ describe('moveNode', () => {
 describe('insertNode', () => {
   it('inserts at specific position in relationship', () => {
     const store = fixtureStore()
-    const next = insertNode(store, { id: 'file3', name: 'new.ts' }, 'folder1', 1)
+    const next = insertNode(store, { id: 'file3', data: { name: 'new.ts' } }, 'folder1', 1)
     expect(getChildren(next, 'folder1')).toEqual(['file1', 'file3', 'file2'])
   })
 })
@@ -169,14 +169,14 @@ describe('edge cases', () => {
 
   it('updateEntity on non-existent id returns store unchanged', () => {
     const store = fixtureStore()
-    const next = updateEntity(store, 'nonexistent', { name: 'nope' })
+    const next = updateEntity(store, 'nonexistent', { data: { name: 'nope' } })
     expect(next).toBe(store)
   })
 
   it('addEntity with duplicate id overwrites entity', () => {
     const store = fixtureStore()
-    const next = addEntity(store, { id: 'file1', name: 'Overwritten.tsx' }, 'folder1')
-    expect(getEntity(next, 'file1')?.name).toBe('Overwritten.tsx')
+    const next = addEntity(store, { id: 'file1', data: { name: 'Overwritten.tsx' } }, 'folder1')
+    expect((getEntity(next, 'file1')?.data as Record<string, unknown>)?.name).toBe('Overwritten.tsx')
   })
 
   it('getParent returns undefined for unknown node in empty store', () => {

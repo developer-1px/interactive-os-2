@@ -15,10 +15,10 @@ beforeEach(() => {
 function fixtureStore() {
   return createStore({
     entities: {
-      src: { id: 'src', name: 'src', type: 'folder' },
-      app: { id: 'app', name: 'App.tsx', type: 'file' },
-      main: { id: 'main', name: 'main.tsx', type: 'file' },
-      lib: { id: 'lib', name: 'lib', type: 'folder' },
+      src: { id: 'src', data: { name: 'src', type: 'folder' } },
+      app: { id: 'app', data: { name: 'App.tsx', type: 'file' } },
+      main: { id: 'main', data: { name: 'main.tsx', type: 'file' } },
+      lib: { id: 'lib', data: { name: 'lib', type: 'folder' } },
     },
     relationships: {
       [ROOT_ID]: ['src', 'lib'],
@@ -42,7 +42,7 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
   it('create + undo restores original state', () => {
     const { engine } = setup()
 
-    engine.dispatch(crudCommands.create({ id: 'utils', name: 'utils.ts' }, 'lib'))
+    engine.dispatch(crudCommands.create({ id: 'utils', data: { name: 'utils.ts' } }, 'lib'))
     expect(getEntity(engine.getStore(), 'utils')).toBeDefined()
 
     engine.dispatch(historyCommands.undo())
@@ -80,10 +80,10 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
 
     engine.dispatch(renameCommands.startRename('app'))
     engine.dispatch(renameCommands.confirmRename('app', 'name', 'Application.tsx'))
-    expect(getEntity(engine.getStore(), 'app')?.name).toBe('Application.tsx')
+    expect((getEntity(engine.getStore(), 'app')?.data as Record<string, unknown>)?.name).toBe('Application.tsx')
 
     engine.dispatch(historyCommands.undo())
-    expect(getEntity(engine.getStore(), 'app')?.name).toBe('App.tsx')
+    expect((getEntity(engine.getStore(), 'app')?.data as Record<string, unknown>)?.name).toBe('App.tsx')
   })
 
   it('full workflow: focus, select, create, rename, delete', () => {
@@ -93,13 +93,13 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
     engine.dispatch(focusCommands.setFocus('src'))
 
     // Create new file
-    engine.dispatch(crudCommands.create({ id: 'new1', name: 'new.ts' }, 'src'))
+    engine.dispatch(crudCommands.create({ id: 'new1', data: { name: 'new.ts' } }, 'src'))
     expect(getChildren(engine.getStore(), 'src')).toEqual(['app', 'main', 'new1'])
 
     // Rename it
     engine.dispatch(renameCommands.startRename('new1'))
     engine.dispatch(renameCommands.confirmRename('new1', 'name', 'helpers.ts'))
-    expect(getEntity(engine.getStore(), 'new1')?.name).toBe('helpers.ts')
+    expect((getEntity(engine.getStore(), 'new1')?.data as Record<string, unknown>)?.name).toBe('helpers.ts')
 
     // Delete it
     engine.dispatch(crudCommands.remove('new1'))
@@ -107,6 +107,6 @@ describe('Phase 3 Integration: CRUD + Clipboard + Rename + History', () => {
 
     // Undo delete
     engine.dispatch(historyCommands.undo())
-    expect(getEntity(engine.getStore(), 'new1')?.name).toBe('helpers.ts')
+    expect((getEntity(engine.getStore(), 'new1')?.data as Record<string, unknown>)?.name).toBe('helpers.ts')
   })
 })

@@ -23,7 +23,7 @@ const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): Rea
       borderLeft: state.selected ? '3px solid var(--list-accent, #4caf50)' : '3px solid transparent',
     }}
   >
-    {item.label as string ?? item.name as string ?? item.id as string}
+    {(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}
   </div>
 )
 

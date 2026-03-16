@@ -17,9 +17,9 @@ import type { NodeState } from '../behaviors/types'
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {
-      general: { id: 'general', name: 'General' },
-      security: { id: 'security', name: 'Security' },
-      advanced: { id: 'advanced', name: 'Advanced' },
+      general: { id: 'general', data: { name: 'General' } },
+      security: { id: 'security', data: { name: 'Security' } },
+      advanced: { id: 'advanced', data: { name: 'Advanced' } },
     },
     relationships: {
       [ROOT_ID]: ['general', 'security', 'advanced'],
@@ -34,7 +34,7 @@ function renderTabList(data: NormalizedData) {
       plugins={[core()]}
       renderItem={(tab, state: NodeState) => (
         <span data-testid={`tab-${tab.id}`} data-focused={state.focused} data-selected={state.selected}>
-          {tab.name as string}
+          {(tab.data as Record<string, unknown>)?.name as string}
         </span>
       )}
     />

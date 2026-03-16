@@ -7,9 +7,9 @@ import { ROOT_ID } from '../core/types'
 function fixtureData() {
   return {
     entities: {
-      src: { id: 'src', name: 'src' },
-      app: { id: 'app', name: 'App.tsx' },
-      main: { id: 'main', name: 'main.tsx' },
+      src: { id: 'src', data: { name: 'src' } },
+      app: { id: 'app', data: { name: 'App.tsx' } },
+      main: { id: 'main', data: { name: 'main.tsx' } },
     },
     relationships: {
       [ROOT_ID]: ['src'],
