@@ -27,7 +27,7 @@
 - [x] focus (setFocus, undo 시 이전 포커스 복원)
 - [x] selection (select, toggleSelect, clearSelection + undo)
 - [x] expand/collapse (expand, collapse, toggleExpand)
-- [ ] `[P0]` **포커스 리커버리** — 노드 삭제/축소/이동 시 포커스 자동 복구
+- [x] **포커스 리커버리** — `focusRecovery()` 미들웨어, 단일 정책: 다음 형제 → 이전 형제 → 부모
 - [ ] `[P1]` 선택 모델 확장 — single/multiple/extended 모드, Shift 범위 선택
 
 ### history()
@@ -54,6 +54,7 @@
 - [x] moveTo (임의 위치 이동)
 
 ### 미구현 플러그인
+- [x] focusRecovery() — 포커스 유효성 검증 + 자동 복구 미들웨어
 - [ ] `[P2]` permissions() — 노드별 Command 차단 미들웨어 (예제만 존재)
 
 ## ④ ARIA Behavior Layer
@@ -84,7 +85,7 @@
 - [x] `hooks/use-keyboard.ts` — parseKeyCombo, matchKeyEvent, findMatchingKey (Mod 플랫폼 독립)
 - [x] gridcell 자동 래핑 (treegrid row 내부)
 - [x] aria-label prop 지원
-- [ ] `[P0]` **포커스 리커버리** — 삭제/축소/이동 시 DOM 포커스 복구 로직
+- [x] **포커스 리커버리** — `focusRecovery()` 미들웨어로 삭제/축소/이동/생성/undo 시 자동 복구
 - [ ] `[P1]` `<Aria.Cell>` — treegrid 멀티 컬럼 지원
 - [ ] `[P1]` useExternalStore — 외부 store 연동 훅 (Zustand/Jotai 어댑터)
 - [ ] `[P2]` 대용량 가상화 — 10k+ 노드 렌더링
@@ -102,7 +103,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (186 tests, 24 files)
+- [x] Vitest (202 tests, 26 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 27 modules)
