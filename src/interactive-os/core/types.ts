@@ -1,0 +1,49 @@
+export interface Entity {
+  id: string
+  [key: string]: unknown
+}
+
+export interface NormalizedData {
+  entities: Record<string, Entity>
+  relationships: Record<string, string[]>
+}
+
+export const ROOT_ID = '__root__' as const
+
+export interface Command {
+  type: string
+  payload: unknown
+  execute(store: NormalizedData): NormalizedData
+  undo(store: NormalizedData): NormalizedData
+}
+
+export interface BatchCommand extends Command {
+  type: 'batch'
+  commands: Command[]
+}
+
+export interface TransformAdapter<TExternal> {
+  normalize(external: TExternal): NormalizedData
+  denormalize(internal: NormalizedData): TExternal
+}
+
+export function createBatchCommand(cmds: Command[]): BatchCommand {
+  return {
+    type: 'batch',
+    payload: null,
+    commands: cmds,
+    execute: (store: NormalizedData): NormalizedData =>
+      cmds.reduce((s, c) => c.execute(s), store),
+    undo: (store: NormalizedData): NormalizedData =>
+      [...cmds].reverse().reduce((s, c) => c.undo(s), store),
+  }
+}
+
+export type Middleware = (
+  next: (command: Command) => void
+) => (command: Command) => void
+
+export interface Plugin {
+  middleware?: Middleware
+  commands?: Record<string, (...args: unknown[]) => Command>
+}
