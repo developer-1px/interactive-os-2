@@ -1,0 +1,100 @@
+<h2>interactive-os 아키텍처 접근 방식</h2>
+<p class="subtitle">3가지 접근 방식 비교 — 추천: Approach A</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Command-Driven Plugin Engine (추천)</h3>
+      <p><strong>핵심:</strong> Command 패턴이 시스템의 심장. 모든 조작 = Command 객체.</p>
+      <div style="background:#1a1a2e;padding:16px;border-radius:8px;margin:12px 0;font-family:monospace;font-size:13px;line-height:1.6;color:#e0e0e0">
+        <div style="color:#888">// 레이어 구조</div>
+        <div style="margin:8px 0">
+          <span style="color:#ff6b6b">① Normalized Store</span> — entities + relationships<br/>
+          <span style="color:#ffd93d">② Command Engine</span> — execute/undo, 미들웨어 파이프라인<br/>
+          <span style="color:#6bcb77">③ Plugin System</span> — 미들웨어로 Command 체인에 참여<br/>
+          <span style="color:#4d96ff">④ ARIA Behavior</span> — role별 키보드/포커스 매핑<br/>
+          <span style="color:#b088f9">⑤ Compound Components</span> — render slot 기반 UI 바인딩
+        </div>
+      </div>
+      <div class="pros-cons">
+        <div class="pros"><h4>장점</h4><ul>
+          <li>undo/redo가 아키텍처에 내장</li>
+          <li>플러그인 간 의존성 없이 Command로 소통</li>
+          <li>treegrid에서 검증 후 다른 role로 확장 용이</li>
+          <li>ProseMirror가 증명한 패턴</li>
+        </ul></div>
+        <div class="cons"><h4>리스크</h4><ul>
+          <li>Command 설계가 초기에 잘 잡혀야 함</li>
+          <li>복합 Command (batch) 처리 복잡도</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Signal-Based Reactive Core</h3>
+      <p><strong>핵심:</strong> 정규화 데이터를 Signal(fine-grained reactivity)로 감싸서 플러그인이 반응형으로 동작</p>
+      <div style="background:#1a1a2e;padding:16px;border-radius:8px;margin:12px 0;font-family:monospace;font-size:13px;line-height:1.6;color:#e0e0e0">
+        <div style="color:#888">// 핵심 차이점</div>
+        <div style="margin:8px 0">
+          Command 대신 <span style="color:#ffd93d">Signal mutation</span>을 추적<br/>
+          history()는 signal 변경을 자동 스냅샷<br/>
+          플러그인은 signal을 구독/반응
+        </div>
+      </div>
+      <div class="pros-cons">
+        <div class="pros"><h4>장점</h4><ul>
+          <li>세밀한 리렌더링 최적화</li>
+          <li>플러그인 코드가 더 선언적</li>
+        </ul></div>
+        <div class="cons"><h4>리스크</h4><ul>
+          <li>React 19와 Signal 통합이 아직 불안정</li>
+          <li>undo/redo를 위한 별도 diff 로직 필요</li>
+          <li>디버깅이 어려움 (반응형 체인 추적)</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Reducer + Action 패턴 (Redux 스타일)</h3>
+      <p><strong>핵심:</strong> 상태 변경이 모두 Action → Reducer를 통과. 플러그인 = 미들웨어 or 커스텀 리듀서.</p>
+      <div style="background:#1a1a2e;padding:16px;border-radius:8px;margin:12px 0;font-family:monospace;font-size:13px;line-height:1.6;color:#e0e0e0">
+        <div style="color:#888">// 핵심 차이점</div>
+        <div style="margin:8px 0">
+          Action은 순수 데이터 (serialize 가능)<br/>
+          Reducer가 상태 변환 담당<br/>
+          미들웨어가 Action을 가로챔
+        </div>
+      </div>
+      <div class="pros-cons">
+        <div class="pros"><h4>장점</h4><ul>
+          <li>React 생태계에 익숙한 패턴</li>
+          <li>DevTools, time-travel 디버깅 용이</li>
+          <li>Action이 직렬화 가능 → 협업/로깅</li>
+        </ul></div>
+        <div class="cons"><h4>리스크</h4><ul>
+          <li>undo를 위해 inverse action 또는 스냅샷 필요</li>
+          <li>Command 패턴 대비 undo/redo가 자연스럽지 않음</li>
+          <li>보일러플레이트가 많아질 수 있음</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:24px;padding:20px;background:#1a1a2e;border-radius:12px;">
+  <h3 style="margin-top:0;">왜 A를 추천하는가</h3>
+  <p>이 프레임워크의 핵심 가치는 <strong>"키보드로 데이터를 조작"</strong>하는 것입니다. 조작의 기본 단위가 Command가 되면:</p>
+  <ul style="line-height:1.8">
+    <li><strong>키 입력 → Command 매핑</strong>이 직관적 (Ctrl+Z → history.undo() → command.undo())</li>
+    <li><strong>플러그인 = Command 생산자 + 미들웨어</strong>라는 단일 모델</li>
+    <li><strong>B의 장점(반응성)은 렌더링 레이어에서</strong> React 자체가 해결</li>
+    <li><strong>C의 장점(직렬화)은 Command에 serialize()</strong>를 추가하면 확보 가능</li>
+  </ul>
+</div>
