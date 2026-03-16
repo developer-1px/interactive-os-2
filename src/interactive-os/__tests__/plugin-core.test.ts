@@ -7,9 +7,9 @@ import { ROOT_ID } from '../core/types'
 function fixtureStore() {
   return createStore({
     entities: {
-      folder1: { id: 'folder1', name: 'src' },
-      file1: { id: 'file1', name: 'App.tsx' },
-      file2: { id: 'file2', name: 'main.tsx' },
+      folder1: { id: 'folder1', data: { name: 'src' } },
+      file1: { id: 'file1', data: { name: 'App.tsx' } },
+      file2: { id: 'file2', data: { name: 'main.tsx' } },
     },
     relationships: {
       [ROOT_ID]: ['folder1'],

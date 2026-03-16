@@ -11,8 +11,8 @@ import { ROOT_ID } from '../core/types'
 
 const treeData = createStore({
   entities: {
-    src: { id: 'src', name: 'src' },
-    app: { id: 'app', name: 'App.tsx' },
+    src: { id: 'src', data: { name: 'src' } },
+    app: { id: 'app', data: { name: 'App.tsx' } },
   },
   relationships: {
     [ROOT_ID]: ['src'],
@@ -22,9 +22,9 @@ const treeData = createStore({
 
 const listData = createStore({
   entities: {
-    a: { id: 'a', label: 'Apple' },
-    b: { id: 'b', label: 'Banana' },
-    c: { id: 'c', label: 'Cherry' },
+    a: { id: 'a', data: { label: 'Apple' } },
+    b: { id: 'b', data: { label: 'Banana' } },
+    c: { id: 'c', data: { label: 'Cherry' } },
   },
   relationships: {
     [ROOT_ID]: ['a', 'b', 'c'],
@@ -33,9 +33,9 @@ const listData = createStore({
 
 const tabData = createStore({
   entities: {
-    tab1: { id: 'tab1', label: 'General' },
-    tab2: { id: 'tab2', label: 'Settings' },
-    tab3: { id: 'tab3', label: 'About' },
+    tab1: { id: 'tab1', data: { label: 'General' } },
+    tab2: { id: 'tab2', data: { label: 'Settings' } },
+    tab3: { id: 'tab3', data: { label: 'About' } },
   },
   relationships: {
     [ROOT_ID]: ['tab1', 'tab2', 'tab3'],
@@ -44,24 +44,24 @@ const tabData = createStore({
 
 const accordionData = createStore({
   entities: {
-    s1: { id: 's1', label: 'Section 1' },
-    s2: { id: 's2', label: 'Section 2' },
+    s1: { id: 's1', data: { label: 'Section 1' } },
+    s2: { id: 's2', data: { label: 'Section 2' } },
   },
   relationships: { [ROOT_ID]: ['s1', 's2'] },
 })
 
 const menuData = createStore({
   entities: {
-    file: { id: 'file', label: 'File' },
-    edit: { id: 'edit', label: 'Edit' },
-    view: { id: 'view', label: 'View' },
+    file: { id: 'file', data: { label: 'File' } },
+    edit: { id: 'edit', data: { label: 'Edit' } },
+    view: { id: 'view', data: { label: 'View' } },
   },
   relationships: { [ROOT_ID]: ['file', 'edit', 'view'] },
 })
 
 const disclosureData = createStore({
   entities: {
-    details: { id: 'details', label: 'Details' },
+    details: { id: 'details', data: { label: 'Details' } },
   },
   relationships: { [ROOT_ID]: ['details'] },
 })

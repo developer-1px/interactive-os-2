@@ -25,9 +25,9 @@ async function checkA11y(container: HTMLElement): Promise<axe.AxeResults> {
 
 const treeData = createStore({
   entities: {
-    src: { id: 'src', name: 'src' },
-    app: { id: 'app', name: 'App.tsx' },
-    main: { id: 'main', name: 'main.tsx' },
+    src: { id: 'src', data: { name: 'src' } },
+    app: { id: 'app', data: { name: 'App.tsx' } },
+    main: { id: 'main', data: { name: 'main.tsx' } },
   },
   relationships: {
     [ROOT_ID]: ['src'],
@@ -37,9 +37,9 @@ const treeData = createStore({
 
 const listData = createStore({
   entities: {
-    a: { id: 'a', name: 'Apple' },
-    b: { id: 'b', name: 'Banana' },
-    c: { id: 'c', name: 'Cherry' },
+    a: { id: 'a', data: { name: 'Apple' } },
+    b: { id: 'b', data: { name: 'Banana' } },
+    c: { id: 'c', data: { name: 'Cherry' } },
   },
   relationships: {
     [ROOT_ID]: ['a', 'b', 'c'],
@@ -48,8 +48,8 @@ const listData = createStore({
 
 const tabData = createStore({
   entities: {
-    t1: { id: 't1', name: 'Tab 1' },
-    t2: { id: 't2', name: 'Tab 2' },
+    t1: { id: 't1', data: { name: 'Tab 1' } },
+    t2: { id: 't2', data: { name: 'Tab 2' } },
   },
   relationships: {
     [ROOT_ID]: ['t1', 't2'],
@@ -60,7 +60,7 @@ describe('Accessibility (axe-core)', () => {
   it('TreeGrid has no critical ARIA violations', async () => {
     const { container } = render(
       <Aria behavior={treegrid} data={treeData} plugins={[]}>
-        <Aria.Node render={(node) => <span>{node.name as string}</span>} />
+        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
@@ -82,7 +82,7 @@ describe('Accessibility (axe-core)', () => {
   it('ListBox has no critical ARIA violations', async () => {
     const { container } = render(
       <Aria behavior={listbox} data={listData} plugins={[]} aria-label="Fruits">
-        <Aria.Node render={(node) => <span>{node.name as string}</span>} />
+        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
@@ -104,7 +104,7 @@ describe('Accessibility (axe-core)', () => {
   it('TabList has no critical ARIA violations', async () => {
     const { container } = render(
       <Aria behavior={tabs} data={tabData} plugins={[]}>
-        <Aria.Node render={(node) => <span>{node.name as string}</span>} />
+        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
@@ -126,7 +126,7 @@ describe('Accessibility (axe-core)', () => {
   it('TreeGrid nodes have required ARIA attributes', () => {
     const { container } = render(
       <Aria behavior={treegrid} data={treeData} plugins={[]}>
-        <Aria.Node render={(node) => <span>{node.name as string}</span>} />
+        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
@@ -146,7 +146,7 @@ describe('Accessibility (axe-core)', () => {
   it('ListBox nodes have required ARIA attributes', () => {
     const { container } = render(
       <Aria behavior={listbox} data={listData} plugins={[]} aria-label="Fruits">
-        <Aria.Node render={(node) => <span>{node.name as string}</span>} />
+        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 

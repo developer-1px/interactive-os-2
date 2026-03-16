@@ -19,9 +19,9 @@ import type { NodeState } from '../behaviors/types'
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {
-      bold: { id: 'bold', name: 'Bold' },
-      italic: { id: 'italic', name: 'Italic' },
-      underline: { id: 'underline', name: 'Underline' },
+      bold: { id: 'bold', data: { name: 'Bold' } },
+      italic: { id: 'italic', data: { name: 'Italic' } },
+      underline: { id: 'underline', data: { name: 'Underline' } },
     },
     relationships: {
       [ROOT_ID]: ['bold', 'italic', 'underline'],
@@ -35,7 +35,7 @@ function renderToolbar(data: NormalizedData) {
       <Aria.Node
         render={(node, state: NodeState) => (
           <span data-testid={`btn-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
-            {node.name as string}
+            {(node.data as Record<string, unknown>)?.name as string}
           </span>
         )}
       />

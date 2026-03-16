@@ -1,5 +1,6 @@
-export interface Entity {
+export interface Entity<T extends Record<string, unknown> = Record<string, unknown>> {
   id: string
+  data?: T
   [key: string]: unknown
 }
 

@@ -17,12 +17,12 @@ import type { NodeState } from '../behaviors/types'
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {
-      section1: { id: 'section1', name: 'Getting Started' },
-      content1: { id: 'content1', name: 'Welcome content' },
-      section2: { id: 'section2', name: 'Configuration' },
-      content2: { id: 'content2', name: 'Config content' },
-      section3: { id: 'section3', name: 'Advanced' },
-      content3: { id: 'content3', name: 'Advanced content' },
+      section1: { id: 'section1', data: { name: 'Getting Started' } },
+      content1: { id: 'content1', data: { name: 'Welcome content' } },
+      section2: { id: 'section2', data: { name: 'Configuration' } },
+      content2: { id: 'content2', data: { name: 'Config content' } },
+      section3: { id: 'section3', data: { name: 'Advanced' } },
+      content3: { id: 'content3', data: { name: 'Advanced content' } },
     },
     relationships: {
       [ROOT_ID]: ['section1', 'section2', 'section3'],
@@ -36,9 +36,9 @@ function fixtureData(): NormalizedData {
 function leafFixtureData(): NormalizedData {
   return createStore({
     entities: {
-      getting: { id: 'getting', name: 'Getting Started', content: 'Install guide...' },
-      api: { id: 'api', name: 'API Reference', content: 'Core APIs...' },
-      faq: { id: 'faq', name: 'FAQ', content: 'Q&A...' },
+      getting: { id: 'getting', data: { name: 'Getting Started', content: 'Install guide...' } },
+      api: { id: 'api', data: { name: 'API Reference', content: 'Core APIs...' } },
+      faq: { id: 'faq', data: { name: 'FAQ', content: 'Q&A...' } },
     },
     relationships: {
       [ROOT_ID]: ['getting', 'api', 'faq'],
@@ -53,7 +53,7 @@ function renderAccordion(data: NormalizedData) {
       plugins={[core()]}
       renderItem={(item, state: NodeState) => (
         <span data-testid={`section-${item.id}`} data-focused={state.focused} data-expanded={state.expanded}>
-          {item.name as string}
+          {(item.data as Record<string, unknown>)?.name as string}
         </span>
       )}
     />
@@ -203,7 +203,7 @@ describe('Accordion keyboard integration', () => {
           plugins={[core()]}
           renderItem={(item, state: NodeState) => (
             <span data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
-              {item.name as string}
+              {(item.data as Record<string, unknown>)?.name as string}
             </span>
           )}
         />
@@ -224,7 +224,7 @@ describe('Accordion keyboard integration', () => {
           plugins={[core()]}
           renderItem={(item, state: NodeState) => (
             <span data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
-              {item.name as string}
+              {(item.data as Record<string, unknown>)?.name as string}
             </span>
           )}
         />

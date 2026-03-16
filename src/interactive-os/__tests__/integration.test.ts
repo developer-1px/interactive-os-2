@@ -12,11 +12,11 @@ describe('Integration: Store + Engine + Plugins', () => {
     const historyPlugin = history()
     const store = createStore({
       entities: {
-        src: { id: 'src', name: 'src', type: 'folder' },
-        app: { id: 'app', name: 'App.tsx', type: 'file' },
-        main: { id: 'main', name: 'main.tsx', type: 'file' },
-        lib: { id: 'lib', name: 'lib', type: 'folder' },
-        utils: { id: 'utils', name: 'utils.ts', type: 'file' },
+        src: { id: 'src', data: { name: 'src', type: 'folder' } },
+        app: { id: 'app', data: { name: 'App.tsx', type: 'file' } },
+        main: { id: 'main', data: { name: 'main.tsx', type: 'file' } },
+        lib: { id: 'lib', data: { name: 'lib', type: 'folder' } },
+        utils: { id: 'utils', data: { name: 'utils.ts', type: 'file' } },
       },
       relationships: {
         [ROOT_ID]: ['src', 'lib'],
@@ -57,7 +57,7 @@ describe('Integration: Store + Engine + Plugins', () => {
       next(command)
     }
     const store = createStore({
-      entities: { src: { id: 'src', name: 'src' } },
+      entities: { src: { id: 'src', data: { name: 'src' } } },
       relationships: { [ROOT_ID]: ['src'] },
     })
     const engine = createCommandEngine(store, [noDeleteRoot, historyPlugin.middleware!], onChange)
@@ -71,8 +71,8 @@ describe('Integration: Store + Engine + Plugins', () => {
     engine.dispatch(focusCommands.setFocus('src'))
     engine.dispatch(expandCommands.expand('src'))
     const store = engine.getStore()
-    expect(getEntity(store, 'src')).toEqual({ id: 'src', name: 'src', type: 'folder' })
-    expect(getEntity(store, 'app')).toEqual({ id: 'app', name: 'App.tsx', type: 'file' })
+    expect(getEntity(store, 'src')).toEqual({ id: 'src', data: { name: 'src', type: 'folder' } })
+    expect(getEntity(store, 'app')).toEqual({ id: 'app', data: { name: 'App.tsx', type: 'file' } })
     expect(getChildren(store, 'src')).toEqual(['app', 'main'])
   })
 })

@@ -25,7 +25,7 @@ const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): Rea
     alignItems: 'center',
     borderBottom: '1px solid var(--accordion-border, #e0e0e0)',
   }}>
-    <span>{item.label as string ?? item.name as string ?? item.id as string}</span>
+    <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
     <span style={{ opacity: 0.5 }}>{state.expanded ? '−' : '+'}</span>
   </div>
 )

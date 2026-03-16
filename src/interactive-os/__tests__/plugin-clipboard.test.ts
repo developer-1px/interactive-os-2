@@ -11,10 +11,10 @@ beforeEach(() => {
 function fixtureStore() {
   return createStore({
     entities: {
-      folder1: { id: 'folder1', name: 'src' },
-      file1: { id: 'file1', name: 'App.tsx' },
-      file2: { id: 'file2', name: 'main.tsx' },
-      folder2: { id: 'folder2', name: 'lib' },
+      folder1: { id: 'folder1', data: { name: 'src' } },
+      file1: { id: 'file1', data: { name: 'App.tsx' } },
+      file2: { id: 'file2', data: { name: 'main.tsx' } },
+      folder2: { id: 'folder2', data: { name: 'lib' } },
     },
     relationships: {
       [ROOT_ID]: ['folder1', 'folder2'],
@@ -53,7 +53,7 @@ describe('clipboardCommands.copy + paste', () => {
     // The cloned entity should have a new ID but same data
     const cloneId = folder2Children[0]!
     const clone = getEntity(engine.getStore(), cloneId)
-    expect(clone?.name).toBe('App.tsx')
+    expect((clone?.data as Record<string, unknown>)?.name).toBe('App.tsx')
     expect(cloneId).not.toBe('file1') // new ID
   })
 
@@ -88,7 +88,7 @@ describe('clipboardCommands.cut + paste', () => {
 
     // file1 should now be in folder2 (same ID, not cloned)
     expect(getChildren(engine.getStore(), 'folder2')).toEqual(['file1'])
-    expect(getEntity(engine.getStore(), 'file1')?.name).toBe('App.tsx')
+    expect((getEntity(engine.getStore(), 'file1')?.data as Record<string, unknown>)?.name).toBe('App.tsx')
   })
 })
 

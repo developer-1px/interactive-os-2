@@ -6,16 +6,16 @@ import { ChevronRight } from 'lucide-react'
 
 const menuData = createStore({
   entities: {
-    file: { id: 'file', label: 'File' },
-    new: { id: 'new', label: 'New File' },
-    open: { id: 'open', label: 'Open...' },
-    save: { id: 'save', label: 'Save' },
-    edit: { id: 'edit', label: 'Edit' },
-    undo: { id: 'undo', label: 'Undo' },
-    redo: { id: 'redo', label: 'Redo' },
-    cut: { id: 'cut', label: 'Cut' },
-    copy: { id: 'copy', label: 'Copy' },
-    paste: { id: 'paste', label: 'Paste' },
+    file: { id: 'file', data: { label: 'File' } },
+    new: { id: 'new', data: { label: 'New File' } },
+    open: { id: 'open', data: { label: 'Open...' } },
+    save: { id: 'save', data: { label: 'Save' } },
+    edit: { id: 'edit', data: { label: 'Edit' } },
+    undo: { id: 'undo', data: { label: 'Undo' } },
+    redo: { id: 'redo', data: { label: 'Redo' } },
+    cut: { id: 'cut', data: { label: 'Cut' } },
+    copy: { id: 'copy', data: { label: 'Copy' } },
+    paste: { id: 'paste', data: { label: 'Paste' } },
   },
   relationships: {
     [ROOT_ID]: ['file', 'edit'],
@@ -50,7 +50,7 @@ export default function MenuPage() {
 
             return (
               <div className={cls} style={{ paddingLeft: 14 + indent }}>
-                <span className="menu-item__label">{item.label as string}</span>
+                <span className="menu-item__label">{(item.data as Record<string, unknown>)?.label as string}</span>
                 {hasChildren && (
                   <span className="menu-item__arrow">
                     <ChevronRight size={11} strokeWidth={2} />

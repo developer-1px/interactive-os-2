@@ -8,8 +8,8 @@ import type { NodeState } from '../interactive-os/behaviors/types'
 
 const dialogData = createStore({
   entities: {
-    confirm: { id: 'confirm', label: 'OK' },
-    cancel: { id: 'cancel', label: 'Cancel' },
+    confirm: { id: 'confirm', data: { label: 'OK' } },
+    cancel: { id: 'cancel', data: { label: 'Cancel' } },
   },
   relationships: {
     [ROOT_ID]: ['confirm', 'cancel'],
@@ -48,7 +48,7 @@ export default function DialogPage() {
                     className={`btn-dialog ${state.focused ? 'btn-dialog--focused' : ''}`}
                     onClick={() => setOpen(false)}
                   >
-                    {node.label as string}
+                    {(node.data as Record<string, unknown>)?.label as string}
                   </button>
                 )} />
               </Aria>

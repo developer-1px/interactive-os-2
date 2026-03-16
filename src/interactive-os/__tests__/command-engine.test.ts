@@ -10,7 +10,7 @@ function makeAddCommand(id: string, name: string): Command {
     execute(store) {
       return {
         ...store,
-        entities: { ...store.entities, [id]: { id, name } },
+        entities: { ...store.entities, [id]: { id, data: { name } } },
       }
     },
     undo(store) {
@@ -25,7 +25,7 @@ describe('createCommandEngine', () => {
     const onChange = vi.fn()
     const engine = createCommandEngine(createStore(), [], onChange)
     engine.dispatch(makeAddCommand('a', 'Alpha'))
-    expect(engine.getStore().entities['a']).toEqual({ id: 'a', name: 'Alpha' })
+    expect(engine.getStore().entities['a']).toEqual({ id: 'a', data: { name: 'Alpha' } })
     expect(onChange).toHaveBeenCalledOnce()
   })
 
@@ -34,7 +34,7 @@ describe('createCommandEngine', () => {
     const engine = createCommandEngine(createStore(), [], onChange)
     engine.dispatch(makeAddCommand('a', 'Alpha'))
     const newStore = onChange.mock.calls[0]![0] as NormalizedData
-    expect(newStore.entities['a']).toEqual({ id: 'a', name: 'Alpha' })
+    expect(newStore.entities['a']).toEqual({ id: 'a', data: { name: 'Alpha' } })
   })
 
   it('middleware can intercept commands', () => {

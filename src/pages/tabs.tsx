@@ -5,10 +5,10 @@ import type { NodeState } from '../interactive-os/behaviors/types'
 
 const tabData = createStore({
   entities: {
-    overview: { id: 'overview', label: 'overview' },
-    api: { id: 'api', label: 'api' },
-    examples: { id: 'examples', label: 'examples' },
-    changelog: { id: 'changelog', label: 'changelog' },
+    overview: { id: 'overview', data: { label: 'overview' } },
+    api: { id: 'api', data: { label: 'api' } },
+    examples: { id: 'examples', data: { label: 'examples' } },
+    changelog: { id: 'changelog', data: { label: 'changelog' } },
   },
   relationships: {
     [ROOT_ID]: ['overview', 'api', 'examples', 'changelog'],
@@ -40,7 +40,7 @@ export default function TabsPage() {
             data={tabData}
             renderItem={(tab, state: NodeState) => (
               <div className={`tab${state.focused ? ' tab--focused' : ''}`}>
-                {tab.label as string}
+                {(tab.data as Record<string, unknown>)?.label as string}
               </div>
             )}
           />
