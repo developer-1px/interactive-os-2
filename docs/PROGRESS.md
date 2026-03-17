@@ -131,7 +131,7 @@
 
 ## ⑧ App Shell
 
-- [x] ActivityBar — 6 레이어 그룹 (Store, Engine, Plugins, Behaviors, Components, Vision)
+- [x] ActivityBar — 6 레이어 그룹 (Store, Engine, Navigation, Collection, Components, Vision)
 - [x] 레이어별 nested routes (`/{layer}/{page}`)
 - [x] Default landing: `/viewer` (독립 레이아웃, App Shell 밖)
 - [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
