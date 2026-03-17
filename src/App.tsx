@@ -1,4 +1,6 @@
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom'
+import { Database, Cog, Plug, Keyboard, Layout, Map } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import './App.css'
 
 import TreeGridPage from './pages/treegrid'
@@ -15,27 +17,123 @@ import RadioGroupPage from './pages/radiogroup'
 import AlertDialogPage from './pages/alertdialog'
 import SwitchPage from './pages/switch'
 import ViewerPage from './pages/viewer'
+import Placeholder from './pages/placeholder'
 
-const patterns = [
-  { path: 'treegrid', label: 'TreeGrid', status: 'ready' },
-  { path: 'listbox', label: 'Listbox', status: 'ready' },
-  { path: 'tabs', label: 'Tabs', status: 'ready' },
-  { path: 'menu', label: 'Menu', status: 'ready' },
-  { path: 'accordion', label: 'Accordion', status: 'ready' },
-  { path: 'disclosure', label: 'Disclosure', status: 'ready' },
-  { path: 'dialog', label: 'Dialog', status: 'ready' },
-  { path: 'combobox', label: 'Combobox', status: 'wip' },
-  { path: 'toolbar', label: 'Toolbar', status: 'ready' },
-  { path: 'radiogroup', label: 'Radiogroup', status: 'ready' },
-  { path: 'alertdialog', label: 'AlertDialog', status: 'ready' },
-  { path: 'switch', label: 'Switch', status: 'ready' },
-  { path: 'grid', label: 'Grid', status: 'ready' },
-  { path: 'viewer', label: 'Viewer', status: 'ready' },
+interface RouteItem {
+  path: string
+  label: string
+  status: 'ready' | 'wip' | 'placeholder'
+  component: React.ComponentType | null
+}
+
+interface RouteGroup {
+  id: string
+  label: string
+  icon: LucideIcon
+  basePath: string
+  items: RouteItem[]
+}
+
+const routeConfig: RouteGroup[] = [
+  {
+    id: 'store',
+    label: 'Store',
+    icon: Database,
+    basePath: '/store/explorer',
+    items: [
+      { path: 'explorer', label: 'Explorer', status: 'placeholder', component: null },
+      { path: 'operations', label: 'Operations', status: 'placeholder', component: null },
+    ],
+  },
+  {
+    id: 'engine',
+    label: 'Engine',
+    icon: Cog,
+    basePath: '/engine/pipeline',
+    items: [
+      { path: 'pipeline', label: 'Pipeline', status: 'placeholder', component: null },
+      { path: 'history', label: 'History', status: 'placeholder', component: null },
+    ],
+  },
+  {
+    id: 'plugins',
+    label: 'Plugins',
+    icon: Plug,
+    basePath: '/plugins/core',
+    items: [
+      { path: 'core', label: 'Core', status: 'placeholder', component: null },
+      { path: 'crud', label: 'CRUD', status: 'placeholder', component: null },
+      { path: 'clipboard', label: 'Clipboard', status: 'placeholder', component: null },
+      { path: 'rename', label: 'Rename', status: 'placeholder', component: null },
+      { path: 'dnd', label: 'DnD', status: 'placeholder', component: null },
+    ],
+  },
+  {
+    id: 'behaviors',
+    label: 'Behaviors',
+    icon: Keyboard,
+    basePath: '/behaviors/treegrid',
+    items: [
+      { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: TreeGridPage },
+      { path: 'listbox', label: 'Listbox', status: 'ready', component: ListboxPage },
+      { path: 'tabs', label: 'Tabs', status: 'ready', component: TabsPage },
+      { path: 'menu', label: 'Menu', status: 'ready', component: MenuPage },
+      { path: 'accordion', label: 'Accordion', status: 'ready', component: AccordionPage },
+      { path: 'disclosure', label: 'Disclosure', status: 'ready', component: DisclosurePage },
+      { path: 'dialog', label: 'Dialog', status: 'ready', component: DialogPage },
+      { path: 'combobox', label: 'Combobox', status: 'wip', component: ComboboxPage },
+      { path: 'toolbar', label: 'Toolbar', status: 'ready', component: ToolbarPage },
+      { path: 'grid', label: 'Grid', status: 'ready', component: GridPage },
+      { path: 'radiogroup', label: 'RadioGroup', status: 'ready', component: RadioGroupPage },
+      { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: AlertDialogPage },
+      { path: 'switch', label: 'Switch', status: 'ready', component: SwitchPage },
+    ],
+  },
+  {
+    id: 'components',
+    label: 'Components',
+    icon: Layout,
+    basePath: '/components/viewer',
+    items: [
+      { path: 'viewer', label: 'Viewer', status: 'ready', component: ViewerPage },
+    ],
+  },
+  {
+    id: 'vision',
+    label: 'Vision',
+    icon: Map,
+    basePath: '/vision/architecture',
+    items: [
+      { path: 'architecture', label: 'Architecture', status: 'placeholder', component: null },
+    ],
+  },
 ]
 
 function App() {
+  const { pathname } = useLocation()
+  const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id)) ?? routeConfig[4]
+
   return (
     <div className="page">
+      <nav className="activity-bar">
+        <div className="activity-bar__logo">
+          <div className="logo-mark" />
+        </div>
+        {routeConfig.map((group) => {
+          const Icon = group.icon
+          const isActive = group.id === activeGroup.id
+          return (
+            <NavLink
+              key={group.id}
+              to={group.basePath}
+              className={`activity-bar__item${isActive ? ' activity-bar__item--active' : ''}`}
+            >
+              <Icon size={20} />
+              <span className="activity-bar__label">{group.label}</span>
+            </NavLink>
+          )
+        })}
+      </nav>
       <nav className="sidebar">
         <div className="sidebar-header">
           <div className="logo">
@@ -44,18 +142,19 @@ function App() {
           </div>
           <span className="version">v0.1.0</span>
         </div>
-        <div className="sidebar-section-title">APG Patterns</div>
+        <div className="sidebar-section-title">{activeGroup.label}</div>
         <ul className="sidebar-nav">
-          {patterns.map((p) => (
-            <li key={p.path}>
+          {activeGroup.items.map((item) => (
+            <li key={item.path}>
               <NavLink
-                to={`/${p.path}`}
+                to={`/${activeGroup.id}/${item.path}`}
                 className={({ isActive }) =>
                   `sidebar-link${isActive ? ' sidebar-link--active' : ''}`
                 }
               >
-                {p.label}
-                {p.status === 'wip' && <span className="badge-wip">wip</span>}
+                {item.label}
+                {item.status === 'wip' && <span className="badge-wip">wip</span>}
+                {item.status === 'placeholder' && <span className="badge-wip">soon</span>}
               </NavLink>
             </li>
           ))}
@@ -63,21 +162,30 @@ function App() {
       </nav>
       <main className="content">
         <Routes>
-          <Route path="/" element={<Navigate to="/treegrid" replace />} />
-          <Route path="/treegrid" element={<TreeGridPage />} />
-          <Route path="/listbox" element={<ListboxPage />} />
-          <Route path="/tabs" element={<TabsPage />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/accordion" element={<AccordionPage />} />
-          <Route path="/disclosure" element={<DisclosurePage />} />
-          <Route path="/dialog" element={<DialogPage />} />
-          <Route path="/combobox" element={<ComboboxPage />} />
-          <Route path="/toolbar" element={<ToolbarPage />} />
-          <Route path="/radiogroup" element={<RadioGroupPage />} />
-          <Route path="/alertdialog" element={<AlertDialogPage />} />
-          <Route path="/switch" element={<SwitchPage />} />
-          <Route path="/grid" element={<GridPage />} />
-          <Route path="/viewer" element={<ViewerPage />} />
+          <Route path="/" element={<Navigate to="/components/viewer" replace />} />
+          {routeConfig.map((group) => (
+            <Route
+              key={group.id}
+              path={`/${group.id}`}
+              element={<Navigate to={group.basePath} replace />}
+            />
+          ))}
+          {routeConfig.flatMap((group) =>
+            group.items.map((item) => (
+              <Route
+                key={`${group.id}/${item.path}`}
+                path={`/${group.id}/${item.path}`}
+                element={
+                  item.component ? (
+                    <item.component />
+                  ) : (
+                    <Placeholder group={group.label} label={item.label} />
+                  )
+                }
+              />
+            ))
+          )}
+          <Route path="*" element={<Navigate to="/components/viewer" replace />} />
         </Routes>
       </main>
     </div>
