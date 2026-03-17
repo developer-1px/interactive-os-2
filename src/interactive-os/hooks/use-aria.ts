@@ -177,14 +177,16 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   }, [behavior.focusStrategy.type, focusedId, mergedKeyMap, engine, behaviorCtxOptions])
 
   // Sync DOM focus with data focus (skip for aria-activedescendant — container holds focus)
+  // Only move DOM focus if this widget already owns it (prevents stealing focus from other widgets)
   useEffect(() => {
     if (!focusedId) return
     if (behavior.focusStrategy.type === 'aria-activedescendant') return
     const el = document.querySelector<HTMLElement>(`[data-node-id="${focusedId}"]`)
-    if (el && el !== document.activeElement) {
-      el.focus({ preventScroll: false })
-    }
-  }, [focusedId, behavior.focusStrategy.type])
+    if (!el || el === document.activeElement) return
+    const container = el.closest(`[role="${behavior.role}"]`)
+    if (!container?.contains(document.activeElement)) return
+    el.focus({ preventScroll: false })
+  }, [focusedId, behavior.focusStrategy.type, behavior.role])
 
   return {
     dispatch,
