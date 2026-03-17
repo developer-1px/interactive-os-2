@@ -184,7 +184,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     const el = document.querySelector<HTMLElement>(`[data-node-id="${focusedId}"]`)
     if (!el || el === document.activeElement) return
     const container = el.closest(`[role="${behavior.role}"]`)
-    if (!container?.contains(document.activeElement)) return
+    const ownsActiveFocus = container?.contains(document.activeElement)
+    const focusIsOrphaned = document.activeElement === document.body || document.activeElement === null
+    if (!ownsActiveFocus && !focusIsOrphaned) return
     el.focus({ preventScroll: false })
   }, [focusedId, behavior.focusStrategy.type, behavior.role])
 
