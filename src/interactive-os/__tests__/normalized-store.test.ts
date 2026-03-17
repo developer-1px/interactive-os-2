@@ -9,7 +9,7 @@ import {
   updateEntity,
   moveNode,
   insertNode,
-} from '../core/normalized-store'
+} from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import type { NormalizedData } from '../core/types'
 

@@ -1,5 +1,5 @@
 import type { Command, Plugin } from '../core/types'
-import { getEntity, updateEntityData } from '../core/normalized-store'
+import { getEntity, updateEntityData } from '../core/createStore'
 
 const RENAME_ID = '__rename__'
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { createCommandEngine } from '../core/command-engine'
-import { createStore } from '../core/normalized-store'
+import { createCommandEngine } from '../core/createCommandEngine'
+import { createStore } from '../core/createStore'
 import type { Command, Middleware, NormalizedData } from '../core/types'
 
 function makeAddCommand(id: string, name: string): Command {

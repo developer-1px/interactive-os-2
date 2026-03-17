@@ -133,8 +133,10 @@
 
 - [x] ActivityBar — 6 레이어 그룹 (Store, Engine, Plugins, Behaviors, Components, Vision)
 - [x] 레이어별 nested routes (`/{layer}/{page}`)
-- [x] Default landing: `/components/viewer`
+- [x] Default landing: `/viewer` (독립 레이아웃, App Shell 밖)
 - [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
+- [x] Viewer 마크다운 렌더링 — remark-breaks 줄바꿈, 타이포그래피 전면 개선
+- [x] Viewer 소스 뷰어 — Shiki 라인 넘버 (CSS counter), 심볼 하이라이트 (클릭 토글)
 - [ ] `[P1]` Store Explorer — Entity/Relationship 실시간 inspector
 - [ ] `[P1]` Engine Pipeline — Command dispatch 흐름 시각화
 - [ ] `[P1]` Plugin 데모 — 각 플러그인 인터랙티브 시각화
@@ -142,4 +144,4 @@
 
 ---
 
-*Last updated: 2026-03-17 — ActivityBar + nested routes, 317 tests, 41 files*
+*Last updated: 2026-03-17 — Viewer md/source 강화, 317 tests, 41 files*

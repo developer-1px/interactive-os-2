@@ -9,7 +9,7 @@ import { Aria } from '../components/aria'
 import { treegrid } from '../behaviors/treegrid'
 import { listbox } from '../behaviors/listbox'
 import { tabs } from '../behaviors/tabs'
-import { createStore } from '../core/normalized-store'
+import { createStore } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 
 async function checkA11y(container: HTMLElement): Promise<axe.AxeResults> {

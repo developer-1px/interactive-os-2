@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
-import { createBehaviorContext } from '../behaviors/create-behavior-context'
-import { createStore } from '../core/normalized-store'
-import { createCommandEngine } from '../core/command-engine'
+import { createBehaviorContext } from '../behaviors/createBehaviorContext'
+import { createStore } from '../core/createStore'
+import { createCommandEngine } from '../core/createCommandEngine'
 import { ROOT_ID } from '../core/types'
 import { focusCommands, expandCommands } from '../plugins/core'
 

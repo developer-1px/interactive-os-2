@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import type { Command, NormalizedData, Plugin } from '../core/types'
-import type { CommandEngine } from '../core/command-engine'
+import type { CommandEngine } from '../core/createCommandEngine'
 import { ROOT_ID } from '../core/types'
 import type { AriaBehavior, NodeState } from '../behaviors/types'
-import { getChildren, getParent, getEntity } from '../core/normalized-store'
+import { getChildren, getParent, getEntity } from '../core/createStore'
 import { focusCommands } from '../plugins/core'
-import { createBehaviorContext } from '../behaviors/create-behavior-context'
-import { findMatchingKey } from './use-keyboard'
-import type { UseAriaReturn } from './use-aria'
+import { createBehaviorContext } from '../behaviors/createBehaviorContext'
+import { findMatchingKey } from './useKeyboard'
+import type { UseAriaReturn } from './useAria'
 
 export interface UseControlledAriaOptions {
   behavior: AriaBehavior

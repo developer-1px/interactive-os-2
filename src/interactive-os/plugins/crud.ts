@@ -1,6 +1,6 @@
 import type { Command, Entity, NormalizedData, Plugin } from '../core/types'
 import { ROOT_ID, createBatchCommand } from '../core/types'
-import { addEntity, removeEntity, getEntity, getChildren, getParent } from '../core/normalized-store'
+import { addEntity, removeEntity, getEntity, getChildren, getParent } from '../core/createStore'
 
 export const crudCommands = {
   create(entity: Entity, parentId: string = ROOT_ID, index?: number): Command {

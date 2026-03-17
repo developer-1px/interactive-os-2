@@ -3,8 +3,8 @@
  * When a command throws during execute, the store must remain unchanged.
  */
 import { describe, it, expect, vi } from 'vitest'
-import { createCommandEngine } from '../core/command-engine'
-import { createStore } from '../core/normalized-store'
+import { createCommandEngine } from '../core/createCommandEngine'
+import { createStore } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import type { NormalizedData, Command } from '../core/types'
 

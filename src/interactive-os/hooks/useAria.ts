@@ -2,12 +2,12 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import type { Command, NormalizedData, Plugin } from '../core/types'
 import { ROOT_ID } from '../core/types'
 import type { AriaBehavior, NodeState } from '../behaviors/types'
-import { createCommandEngine } from '../core/command-engine'
-import type { CommandEngine } from '../core/command-engine'
-import { getChildren, getParent, getEntity } from '../core/normalized-store'
+import { createCommandEngine } from '../core/createCommandEngine'
+import type { CommandEngine } from '../core/createCommandEngine'
+import { getChildren, getParent, getEntity } from '../core/createStore'
 import { focusCommands } from '../plugins/core'
-import { createBehaviorContext } from '../behaviors/create-behavior-context'
-import { findMatchingKey } from './use-keyboard'
+import { createBehaviorContext } from '../behaviors/createBehaviorContext'
+import { findMatchingKey } from './useKeyboard'
 
 export interface UseAriaOptions {
   behavior: AriaBehavior

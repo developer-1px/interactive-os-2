@@ -1,5 +1,5 @@
 import { MenuList } from '../interactive-os/ui/MenuList'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
 import { ChevronRight } from 'lucide-react'
@@ -24,7 +24,7 @@ const menuData = createStore({
   },
 })
 
-export default function MenuPage() {
+export default function PageMenu() {
   return (
     <div>
       <div className="page-header">

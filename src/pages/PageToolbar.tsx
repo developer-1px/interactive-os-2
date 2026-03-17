@@ -1,7 +1,7 @@
 import { Aria } from '../interactive-os/components/aria'
 import { toolbar } from '../interactive-os/behaviors/toolbar'
 import { core } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
 
@@ -21,7 +21,7 @@ const toolbarData = createStore({
 
 const plugins = [core()]
 
-export default function ToolbarPage() {
+export default function PageToolbar() {
   return (
     <div>
       <div className="page-header">

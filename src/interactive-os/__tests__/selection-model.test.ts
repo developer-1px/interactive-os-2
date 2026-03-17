@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { createStore } from '../core/normalized-store'
-import { createCommandEngine } from '../core/command-engine'
+import { createStore } from '../core/createStore'
+import { createCommandEngine } from '../core/createCommandEngine'
 import { ROOT_ID } from '../core/types'
 import { focusCommands } from '../plugins/core'
-import { createBehaviorContext } from '../behaviors/create-behavior-context'
+import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 
 function fixtureStore() {
   return createStore({

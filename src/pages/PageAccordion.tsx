@@ -1,5 +1,5 @@
 import { Accordion } from '../interactive-os/ui/Accordion'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
 import { ChevronDown, ChevronRight } from 'lucide-react'
@@ -15,7 +15,7 @@ const accordionData = createStore({
   },
 })
 
-export default function AccordionPage() {
+export default function PageAccordion() {
   return (
     <div>
       <div className="page-header">

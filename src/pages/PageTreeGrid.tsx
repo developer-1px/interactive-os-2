@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
@@ -64,7 +64,7 @@ function FileIcon({ name }: { name: string }) {
   }
 }
 
-export default function TreeGridPage() {
+export default function PageTreeGrid() {
   const [tree, setTree] = useState<NormalizedData>(treeData)
 
   return (

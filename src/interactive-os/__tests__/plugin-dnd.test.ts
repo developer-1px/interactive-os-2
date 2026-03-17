@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { createCommandEngine } from '../core/command-engine'
-import { createStore, getChildren } from '../core/normalized-store'
+import { createCommandEngine } from '../core/createCommandEngine'
+import { createStore, getChildren } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import { dndCommands, dnd } from '../plugins/dnd'
 import { history, historyCommands } from '../plugins/history'
