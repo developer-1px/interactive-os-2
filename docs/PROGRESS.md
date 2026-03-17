@@ -137,17 +137,20 @@
 
 ## ⑧ App Shell
 
-- [x] ActivityBar — 6 레이어 그룹 (Store, Engine, Navigation, Collection, Components, Vision)
+- [x] ActivityBar — 7 레이어 그룹 (Store, Engine, Navigation, Collection, Components, Vision + Viewer)
 - [x] 레이어별 nested routes (`/{layer}/{page}`)
 - [x] Default landing: `/viewer` (독립 레이아웃, App Shell 밖)
 - [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
 - [x] Viewer 마크다운 렌더링 — remark-breaks 줄바꿈, 타이포그래피 전면 개선
 - [x] Viewer 소스 뷰어 — Shiki 라인 넘버 (CSS counter), 심볼 하이라이트 (클릭 토글)
 - [x] APG Keyboard Tables — W3C 원문 키보드 인터랙션 표 14개 패턴 페이지 렌더링
-- [ ] `[P1]` Store Explorer — Entity/Relationship 실시간 inspector
-- [ ] `[P1]` Engine Pipeline — Command dispatch 흐름 시각화
+- [x] Store Explorer — NormalizedData 구조를 TreeGrid로 시각화 (meta entities 포함)
+- [x] Store Operations — 순수 함수 API 데모 (addEntity, removeEntity, moveNode 등)
+- [x] Engine Pipeline — Command dispatch 9단계 흐름 시각화
+- [x] Engine History — Undo/Redo 스택 실시간 로그
 - [x] Plugin 데모 — CRUD, Clipboard, History, DnD, Rename 인터랙티브 페이지
-- [ ] `[P1]` Vision Architecture — mermaid 비전 문서 렌더링
+- [x] Components 레이어 — `<Aria>`, `<Aria.Cell>`, Hooks API 쇼케이스 (3 pages)
+- [x] Vision Architecture — mermaid 아키텍처 다이어그램 5개 렌더링
 
 ## ⑨ APG Pattern Coverage
 
@@ -184,4 +187,4 @@
 
 ---
 
-*Last updated: 2026-03-17 — Collection 플러그인 데모 5개 추가, APG 패턴 커버리지 표, 317 tests, 42 files*
+*Last updated: 2026-03-17 — 모든 placeholder 페이지 완성 (33 pages), Components 레이어 추가, 321 tests, 42 files*

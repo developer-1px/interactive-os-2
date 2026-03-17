@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Compass, Layers, Eye, Map } from 'lucide-react'
+import { Database, Cog, Compass, Layers, Eye, Map, Box } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './App.css'
 
@@ -33,6 +33,14 @@ import PageClipboard from './pages/PageClipboard'
 import PageHistoryDemo from './pages/PageHistoryDemo'
 import PageDnd from './pages/PageDnd'
 import PageRename from './pages/PageRename'
+import PageAriaComponent from './pages/PageAriaComponent'
+import PageCell from './pages/PageCell'
+import PageHooks from './pages/PageHooks'
+import PageStoreExplorer from './pages/PageStoreExplorer'
+import PageStoreOperations from './pages/PageStoreOperations'
+import PageEnginePipeline from './pages/PageEnginePipeline'
+import PageEngineHistory from './pages/PageEngineHistory'
+import PageVisionArchitecture from './pages/PageVisionArchitecture'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 
@@ -87,8 +95,8 @@ const routeConfig: RouteGroup[] = [
     icon: Database,
     basePath: '/store/explorer',
     items: [
-      { path: 'explorer', label: 'Explorer', status: 'placeholder', component: null },
-      { path: 'operations', label: 'Operations', status: 'placeholder', component: null },
+      { path: 'explorer', label: 'Explorer', status: 'ready', component: PageStoreExplorer },
+      { path: 'operations', label: 'Operations', status: 'ready', component: PageStoreOperations },
     ],
   },
   {
@@ -97,8 +105,8 @@ const routeConfig: RouteGroup[] = [
     icon: Cog,
     basePath: '/engine/pipeline',
     items: [
-      { path: 'pipeline', label: 'Pipeline', status: 'placeholder', component: null },
-      { path: 'history', label: 'History', status: 'placeholder', component: null },
+      { path: 'pipeline', label: 'Pipeline', status: 'ready', component: PageEnginePipeline },
+      { path: 'history', label: 'History', status: 'ready', component: PageEngineHistory },
     ],
   },
   {
@@ -138,12 +146,23 @@ const routeConfig: RouteGroup[] = [
     ],
   },
   {
+    id: 'components',
+    label: 'Components',
+    icon: Box,
+    basePath: '/components/aria',
+    items: [
+      { path: 'aria', label: 'Aria', status: 'ready', component: PageAriaComponent },
+      { path: 'cell', label: 'Cell', status: 'ready', component: PageCell },
+      { path: 'hooks', label: 'Hooks', status: 'ready', component: PageHooks },
+    ],
+  },
+  {
     id: 'vision',
     label: 'Vision',
     icon: Map,
     basePath: '/vision/architecture',
     items: [
-      { path: 'architecture', label: 'Architecture', status: 'placeholder', component: null },
+      { path: 'architecture', label: 'Architecture', status: 'ready', component: PageVisionArchitecture },
     ],
   },
 ]
