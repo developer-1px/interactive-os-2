@@ -1,3 +1,4 @@
+import './PageViewer.css'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -190,7 +191,7 @@ function MarkdownViewer({ content }: { content: string }) {
 
 // --- File icon component ---
 
-const ICON_SIZE = 13
+const ICON_SIZE = 12
 const ICON_STROKE = 1.5
 
 function FileIcon({ name, type, expanded }: { name: string; type: string; expanded?: boolean }) {
