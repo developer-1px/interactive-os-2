@@ -27,6 +27,7 @@ import PageRadioGroup from './pages/PageRadioGroup'
 import PageAlertDialog from './pages/PageAlertDialog'
 import PageSwitch from './pages/PageSwitch'
 import PageTreeView from './pages/PageTreeView'
+import PageTabsCrud from './pages/PageTabsCrud'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 
@@ -122,6 +123,7 @@ const routeConfig: RouteGroup[] = [
       { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: PageTreeGrid },
       { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListbox },
       { path: 'grid', label: 'Grid', status: 'ready', component: PageGrid },
+      { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabsCrud },
       { path: 'combobox', label: 'Combobox', status: 'wip', component: PageCombobox },
       { path: 'crud', label: 'CRUD', status: 'placeholder', component: null },
       { path: 'clipboard', label: 'Clipboard', status: 'placeholder', component: null },
