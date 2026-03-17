@@ -752,6 +752,327 @@ kbd {
   font-weight: 500;
 }
 
+/* --- Viewer layout --- */
+
+.vw {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  flex: 1;
+  background: var(--bg-elevated);
+}
+
+.vw-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100svh;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.vw-loading__spinner {
+  animation: vw-spin 1.2s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes vw-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Viewer status bar --- */
+
+.vw-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 28px;
+  padding: 0 8px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-dim);
+  flex-shrink: 0;
+}
+
+.vw-statusbar__left,
+.vw-statusbar__right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vw-statusbar__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: none;
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+
+.vw-statusbar__btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.vw-statusbar__title {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* --- Rec button --- */
+
+.vw-rec {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  padding: 1px 8px;
+  cursor: pointer;
+  font-size: 9px;
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.vw-rec:hover {
+  border-color: var(--border-bright);
+  color: var(--text-primary);
+}
+
+.vw-rec__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: background 0.15s;
+}
+
+.vw-rec--active {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+
+.vw-rec--active .vw-rec__dot {
+  background: #fff;
+  animation: vw-pulse 1s ease-in-out infinite;
+}
+
+@keyframes vw-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* --- Viewer panels --- */
+
+.vw-panels {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* --- Tree panel --- */
+
+.vw-tree {
+  width: 230px;
+  min-width: 230px;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-dim);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0;
+}
+
+.vw-tree__item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 8px 1px 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: default;
+  user-select: none;
+  color: var(--text-primary);
+  transition: background 0.06s;
+  white-space: nowrap;
+  border-left: 2px solid transparent;
+}
+
+.vw-tree__item:hover {
+  background: var(--bg-hover);
+}
+
+.vw-tree__item--focused {
+  background: var(--bg-focus);
+  border-left-color: var(--accent);
+}
+
+.vw-tree__item--active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.vw-tree__item--active .vw-icon {
+  color: var(--accent);
+  opacity: 0.9;
+}
+
+.vw-tree__indent {
+  flex-shrink: 0;
+}
+
+.vw-tree__chevron {
+  width: 14px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.vw-tree__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vw-tree__name--dir {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.vw-tree__item--focused .vw-tree__name--dir {
+  color: var(--text-bright);
+}
+
+/* --- File icons --- */
+
+.vw-icon {
+  flex-shrink: 0;
+  margin-right: 4px;
+  opacity: 0.55;
+  color: var(--text-secondary);
+}
+
+.vw-icon--folder { color: #D4A843; opacity: 0.7; }
+.vw-icon--ts { color: #3178C6; opacity: 0.7; }
+.vw-icon--js { color: #F0DB4F; opacity: 0.7; }
+.vw-icon--json { color: #A3843A; opacity: 0.6; }
+.vw-icon--md { color: #518DBF; opacity: 0.6; }
+.vw-icon--css { color: #663399; opacity: 0.7; }
+.vw-icon--sh { color: #4EAA25; opacity: 0.6; }
+.vw-icon--img { color: #E5557F; opacity: 0.6; }
+.vw-icon--config { color: #8C8C8C; opacity: 0.6; }
+
+/* --- Content panel --- */
+
+.vw-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.vw-content__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 16px;
+  border-bottom: 1px solid var(--border-dim);
+  background: var(--bg-surface);
+  flex-shrink: 0;
+}
+
+.vw-content__body {
+  flex: 1;
+  overflow: auto;
+  padding: 0 16px;
+}
+
+.vw-content__meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.vw-content__meta .vw-icon {
+  margin-right: 2px;
+  opacity: 0.45;
+}
+
+.vw-content__meta-sep {
+  width: 1px;
+  height: 10px;
+  background: var(--border-mid);
+  margin: 0 2px;
+}
+
+/* --- Breadcrumb --- */
+
+.vw-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vw-breadcrumb__sep {
+  margin: 0 2px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.vw-breadcrumb__segment {
+  color: var(--text-muted);
+}
+
+.vw-breadcrumb__current {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* --- Empty state --- */
+
+.vw-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.vw-empty__icon {
+  opacity: 0.25;
+}
+
 /* --- Markdown prose (viewer) --- */
 
 .viewer-markdown {
