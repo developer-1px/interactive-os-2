@@ -1,5 +1,5 @@
 ---
-last_commit: 956f950461627bd0b0a215b5a858a224a69e1b4a
+last_commit: a0ce5b605407f8a4d29932c3b43c7cd0202cb465
 last_updated: 2026-03-17
 ---
 
@@ -73,6 +73,12 @@ last_updated: 2026-03-17
 | dnd | 1 | dndCommands |
 | aria | 4 | Aria, AriaInternalContext, AriaBehavior, useAria |
 | recovery | 1 | focusRecovery |
+| tree | 2 | tree (behavior), TreeView (UI) |
+| apg | 16 | ApgKeyboardEntry, ApgPatternData, ApgKeyboardTable, apgAccordion, apgDisclosure, apgSwitch, apgTabs, apgRadioGroup, apgMenu, apgToolbar, apgDialog, apgAlertDialog, apgTreeView, apgTreeGrid, apgListbox, apgGrid, apgCombobox |
+| keyboard | 2 | ApgKeyboardEntry, ApgKeyboardTable |
+| pattern | 1 | ApgPatternData |
+| entry | 1 | ApgKeyboardEntry |
+| table | 1 | ApgKeyboardTable |
 
 ## Adjectives
 | fragment | count | identifiers |
