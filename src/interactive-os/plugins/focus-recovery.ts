@@ -1,6 +1,6 @@
 import type { Command, NormalizedData, Plugin } from '../core/types'
 import { ROOT_ID } from '../core/types'
-import { getChildren, getParent, getEntity } from '../core/normalized-store'
+import { getChildren, getParent, getEntity } from '../core/createStore'
 import { focusCommands } from './core'
 
 const FOCUS_ID = '__focus__'

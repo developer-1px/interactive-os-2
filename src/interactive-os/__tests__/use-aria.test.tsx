@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
-import { useAria } from '../hooks/use-aria'
+import { useAria } from '../hooks/useAria'
 import { treegrid } from '../behaviors/treegrid'
 import { ROOT_ID } from '../core/types'
 

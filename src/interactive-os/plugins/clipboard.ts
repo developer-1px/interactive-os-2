@@ -6,7 +6,7 @@ import {
   getEntity,
   getChildren,
   getParent,
-} from '../core/normalized-store'
+} from '../core/createStore'
 
 interface ClipboardEntry {
   entity: Entity
@@ -43,12 +43,13 @@ function insertClipboardEntry(
   store: NormalizedData,
   entry: ClipboardEntry,
   parentId: string,
-  generateNewIds: boolean
+  generateNewIds: boolean,
+  index?: number,
 ): NormalizedData {
   const newId = generateNewIds ? generateId(entry.entity.id) : entry.entity.id
   const newEntity = { ...entry.entity, id: newId }
 
-  let result = addEntity(store, newEntity, parentId)
+  let result = addEntity(store, newEntity, parentId, index)
 
   for (const child of entry.children) {
     result = insertClipboardEntry(result, child, newId, generateNewIds)
@@ -110,10 +111,19 @@ export const clipboardCommands = {
 
         if (buffer.length === 0) return store
 
-        // Leaf node (no relationship entry) → paste into its parent
-        const pasteInto = targetId in store.relationships
+        // Determine paste location: container → inside, leaf → after (sibling)
+        const isContainer = targetId in store.relationships
+        const pasteInto = isContainer
           ? targetId
           : (getParent(store, targetId) ?? ROOT_ID)
+
+        // Insert after focused node's position (sibling paste)
+        let insertIndex: number | undefined
+        if (!isContainer) {
+          const siblings = getChildren(store, pasteInto)
+          const targetPos = siblings.indexOf(targetId)
+          if (targetPos >= 0) insertIndex = targetPos + 1
+        }
 
         let result = store
 
@@ -122,19 +132,29 @@ export const clipboardCommands = {
           for (const id of sourceIds) {
             result = removeEntity(result, id)
           }
+          // Recalculate index after removals (siblings may have shifted)
+          if (insertIndex !== undefined) {
+            const siblings = getChildren(result, pasteInto)
+            const targetPos = siblings.indexOf(targetId)
+            insertIndex = targetPos >= 0 ? targetPos + 1 : undefined
+          }
           // Insert at target with original IDs
-          for (const entry of buffer) {
-            result = insertClipboardEntry(result, entry, pasteInto, false)
+          for (let i = 0; i < buffer.length; i++) {
+            const entry = buffer[i]!
+            const idx = insertIndex !== undefined ? insertIndex + i : undefined
+            result = insertClipboardEntry(result, entry, pasteInto, false, idx)
             pastedIds.push(entry.entity.id)
           }
           // Clear clipboard after cut-paste
           clipboardBuffer = []
           cutSourceIds = []
         } else {
-          // Copy: insert with new IDs
-          for (const entry of buffer) {
+          // Copy: insert with new IDs at position
+          for (let i = 0; i < buffer.length; i++) {
+            const entry = buffer[i]!
+            const idx = insertIndex !== undefined ? insertIndex + i : undefined
             const beforeIds = new Set(Object.keys(result.entities))
-            result = insertClipboardEntry(result, entry, pasteInto, true)
+            result = insertClipboardEntry(result, entry, pasteInto, true, idx)
             const afterIds = Object.keys(result.entities)
             for (const id of afterIds) {
               if (!beforeIds.has(id)) pastedIds.push(id)

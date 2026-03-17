@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Combobox } from '../interactive-os/ui/Combobox'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
 import { core } from '../interactive-os/plugins/core'
@@ -20,7 +20,7 @@ function createFruitStore(): NormalizedData {
   return createStore({ entities, relationships: { [ROOT_ID]: ids } })
 }
 
-export default function ComboboxPage() {
+export default function PageCombobox() {
   const [data, setData] = useState(createFruitStore)
 
   return (

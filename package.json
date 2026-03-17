@@ -19,13 +19,13 @@
       "import": "./dist-lib/core/types.js",
       "types": "./dist-lib/core/types.d.ts"
     },
-    "./core/normalized-store": {
-      "import": "./dist-lib/core/normalized-store.js",
-      "types": "./dist-lib/core/normalized-store.d.ts"
+    "./core/createStore": {
+      "import": "./dist-lib/core/createStore.js",
+      "types": "./dist-lib/core/createStore.d.ts"
     },
-    "./core/command-engine": {
-      "import": "./dist-lib/core/command-engine.js",
-      "types": "./dist-lib/core/command-engine.d.ts"
+    "./core/createCommandEngine": {
+      "import": "./dist-lib/core/createCommandEngine.js",
+      "types": "./dist-lib/core/createCommandEngine.d.ts"
     },
     "./plugins/core": {
       "import": "./dist-lib/plugins/core.js",
@@ -107,9 +107,9 @@
       "import": "./dist-lib/behaviors/switch.js",
       "types": "./dist-lib/behaviors/switch.d.ts"
     },
-    "./behaviors/create-behavior-context": {
-      "import": "./dist-lib/behaviors/create-behavior-context.js",
-      "types": "./dist-lib/behaviors/create-behavior-context.d.ts"
+    "./behaviors/createBehaviorContext": {
+      "import": "./dist-lib/behaviors/createBehaviorContext.js",
+      "types": "./dist-lib/behaviors/createBehaviorContext.d.ts"
     },
     "./plugins/combobox": {
       "import": "./dist-lib/plugins/combobox.js",
@@ -119,17 +119,17 @@
       "import": "./dist-lib/plugins/focus-recovery.js",
       "types": "./dist-lib/plugins/focus-recovery.d.ts"
     },
-    "./hooks/use-aria": {
-      "import": "./dist-lib/hooks/use-aria.js",
-      "types": "./dist-lib/hooks/use-aria.d.ts"
+    "./hooks/useAria": {
+      "import": "./dist-lib/hooks/useAria.js",
+      "types": "./dist-lib/hooks/useAria.d.ts"
     },
-    "./hooks/use-keyboard": {
-      "import": "./dist-lib/hooks/use-keyboard.js",
-      "types": "./dist-lib/hooks/use-keyboard.d.ts"
+    "./hooks/useKeyboard": {
+      "import": "./dist-lib/hooks/useKeyboard.js",
+      "types": "./dist-lib/hooks/useKeyboard.d.ts"
     },
-    "./hooks/use-controlled-aria": {
-      "import": "./dist-lib/hooks/use-controlled-aria.js",
-      "types": "./dist-lib/hooks/use-controlled-aria.d.ts"
+    "./hooks/useControlledAria": {
+      "import": "./dist-lib/hooks/useControlledAria.js",
+      "types": "./dist-lib/hooks/useControlledAria.d.ts"
     },
     "./components/aria": {
       "import": "./dist-lib/components/aria.js",
@@ -192,7 +192,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:explore": "playwright test e2e/explore.spec.ts"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -200,6 +202,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.58.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -215,11 +218,13 @@
     "jsdom": "^29.0.0",
     "lucide-react": "^0.577.0",
     "mermaid": "^11.13.0",
+    "playwright": "^1.58.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.13.1",
     "rehype-raw": "^7.0.0",
+    "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "shiki": "^4.0.2",
     "tsup": "^8.5.1",

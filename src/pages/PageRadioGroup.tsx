@@ -1,5 +1,5 @@
 import { RadioGroup } from '../interactive-os/ui/RadioGroup'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
 
@@ -15,7 +15,7 @@ const radioData = createStore({
   },
 })
 
-export default function RadioGroupPage() {
+export default function PageRadioGroup() {
   return (
     <div>
       <div className="page-header">

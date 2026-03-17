@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createCommandEngine } from '../core/command-engine'
-import { createStore, getChildren, getEntity } from '../core/normalized-store'
+import { createCommandEngine } from '../core/createCommandEngine'
+import { createStore, getChildren, getEntity } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import { focusCommands, expandCommands } from '../plugins/core'
 import { crudCommands } from '../plugins/crud'

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseKeyCombo, matchKeyEvent } from '../hooks/use-keyboard'
+import { parseKeyCombo, matchKeyEvent } from '../hooks/useKeyboard'
 
 describe('parseKeyCombo', () => {
   it('parses simple key', () => {

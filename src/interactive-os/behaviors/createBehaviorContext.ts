@@ -1,8 +1,8 @@
 import type { Command, Entity } from '../core/types'
 import { createBatchCommand } from '../core/types'
-import type { CommandEngine } from '../core/command-engine'
+import type { CommandEngine } from '../core/createCommandEngine'
 import type { BehaviorContext, GridNav, SelectionMode } from './types'
-import { getEntity, getChildren, getParent } from '../core/normalized-store'
+import { getEntity, getChildren, getParent } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import { focusCommands, selectionCommands, expandCommands, gridColCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
 

@@ -10,7 +10,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Aria } from '../components/aria'
 import { treegrid } from '../behaviors/treegrid'
 import { core } from '../plugins/core'
-import { createStore } from '../core/normalized-store'
+import { createStore } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import type { NormalizedData } from '../core/types'
 

@@ -3,9 +3,9 @@ import type { ReactNode } from 'react'
 import type { NormalizedData, Plugin, Command } from '../core/types'
 import { ROOT_ID } from '../core/types'
 import type { AriaBehavior, BehaviorContext, NodeState } from '../behaviors/types'
-import { useAria } from '../hooks/use-aria'
+import { useAria } from '../hooks/useAria'
 import { AriaInternalContext } from './aria-context'
-import { getChildren } from '../core/normalized-store'
+import { getChildren } from '../core/createStore'
 import { EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
 
 interface AriaProps {

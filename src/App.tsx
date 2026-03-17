@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Plug, Keyboard, Layout, Map } from 'lucide-react'
+import { Database, Cog, Plug, Keyboard, Eye, Map } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './App.css'
 
@@ -8,26 +8,26 @@ import { Aria } from './interactive-os/components/aria'
 import { tabs } from './interactive-os/behaviors/tabs'
 import { listbox } from './interactive-os/behaviors/listbox'
 import { core } from './interactive-os/plugins/core'
-import { createStore } from './interactive-os/core/normalized-store'
+import { createStore } from './interactive-os/core/createStore'
 import { ROOT_ID } from './interactive-os/core/types'
 import type { AriaBehavior } from './interactive-os/behaviors/types'
 import type { NormalizedData } from './interactive-os/core/types'
 
-import TreeGridPage from './pages/treegrid'
-import ListboxPage from './pages/listbox'
-import TabsPage from './pages/tabs'
-import MenuPage from './pages/menu'
-import AccordionPage from './pages/accordion'
-import DisclosurePage from './pages/disclosure'
-import DialogPage from './pages/dialog'
-import ComboboxPage from './pages/combobox'
-import ToolbarPage from './pages/toolbar'
-import GridPage from './pages/grid'
-import RadioGroupPage from './pages/radiogroup'
-import AlertDialogPage from './pages/alertdialog'
-import SwitchPage from './pages/switch'
-import ViewerPage from './pages/viewer'
-import Placeholder from './pages/placeholder'
+import PageTreeGrid from './pages/PageTreeGrid'
+import PageListbox from './pages/PageListbox'
+import PageTabs from './pages/PageTabs'
+import PageMenu from './pages/PageMenu'
+import PageAccordion from './pages/PageAccordion'
+import PageDisclosure from './pages/PageDisclosure'
+import PageDialog from './pages/PageDialog'
+import PageCombobox from './pages/PageCombobox'
+import PageToolbar from './pages/PageToolbar'
+import PageGrid from './pages/PageGrid'
+import PageRadioGroup from './pages/PageRadioGroup'
+import PageAlertDialog from './pages/PageAlertDialog'
+import PageSwitch from './pages/PageSwitch'
+import PageViewer from './pages/PageViewer'
+import Placeholder from './pages/Placeholder'
 
 // --- Vertical tabs behavior (ActivityBar is a vertical tablist) ---
 
@@ -113,28 +113,19 @@ const routeConfig: RouteGroup[] = [
     icon: Keyboard,
     basePath: '/behaviors/treegrid',
     items: [
-      { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: TreeGridPage },
-      { path: 'listbox', label: 'Listbox', status: 'ready', component: ListboxPage },
-      { path: 'tabs', label: 'Tabs', status: 'ready', component: TabsPage },
-      { path: 'menu', label: 'Menu', status: 'ready', component: MenuPage },
-      { path: 'accordion', label: 'Accordion', status: 'ready', component: AccordionPage },
-      { path: 'disclosure', label: 'Disclosure', status: 'ready', component: DisclosurePage },
-      { path: 'dialog', label: 'Dialog', status: 'ready', component: DialogPage },
-      { path: 'combobox', label: 'Combobox', status: 'wip', component: ComboboxPage },
-      { path: 'toolbar', label: 'Toolbar', status: 'ready', component: ToolbarPage },
-      { path: 'grid', label: 'Grid', status: 'ready', component: GridPage },
-      { path: 'radiogroup', label: 'RadioGroup', status: 'ready', component: RadioGroupPage },
-      { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: AlertDialogPage },
-      { path: 'switch', label: 'Switch', status: 'ready', component: SwitchPage },
-    ],
-  },
-  {
-    id: 'components',
-    label: 'Components',
-    icon: Layout,
-    basePath: '/components/viewer',
-    items: [
-      { path: 'viewer', label: 'Viewer', status: 'ready', component: ViewerPage },
+      { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: PageTreeGrid },
+      { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListbox },
+      { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabs },
+      { path: 'menu', label: 'Menu', status: 'ready', component: PageMenu },
+      { path: 'accordion', label: 'Accordion', status: 'ready', component: PageAccordion },
+      { path: 'disclosure', label: 'Disclosure', status: 'ready', component: PageDisclosure },
+      { path: 'dialog', label: 'Dialog', status: 'ready', component: PageDialog },
+      { path: 'combobox', label: 'Combobox', status: 'wip', component: PageCombobox },
+      { path: 'toolbar', label: 'Toolbar', status: 'ready', component: PageToolbar },
+      { path: 'grid', label: 'Grid', status: 'ready', component: PageGrid },
+      { path: 'radiogroup', label: 'RadioGroup', status: 'ready', component: PageRadioGroup },
+      { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: PageAlertDialog },
+      { path: 'switch', label: 'Switch', status: 'ready', component: PageSwitch },
     ],
   },
   {
@@ -148,9 +139,23 @@ const routeConfig: RouteGroup[] = [
   },
 ]
 
+// --- ActivityBar nav items (includes standalone pages) ---
+
+interface NavItem {
+  id: string
+  label: string
+  icon: LucideIcon
+  path: string
+}
+
+const navItems: NavItem[] = [
+  { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
+  ...routeConfig.map((g) => ({ id: g.id, label: g.label, icon: g.icon, path: g.basePath })),
+]
+
 // --- Pre-computed stores ---
 
-const activityBarStore = toStore(routeConfig.map((g) => ({ id: g.id, label: g.label })))
+const activityBarStore = toStore(navItems.map((n) => ({ id: n.id, label: n.label })))
 
 const sidebarStores = Object.fromEntries(
   routeConfig.map((g) => [
@@ -161,20 +166,12 @@ const sidebarStores = Object.fromEntries(
 
 // --- Lookup maps ---
 
-const groupBasePaths = Object.fromEntries(routeConfig.map((g) => [g.id, g.basePath]))
+const navPaths = Object.fromEntries(navItems.map((n) => [n.id, n.path]))
 
-function App() {
-  const { pathname } = useLocation()
+// --- Sidebar (only for routeConfig groups) ---
+
+function Sidebar({ activeGroup }: { activeGroup: RouteGroup }) {
   const navigate = useNavigate()
-  const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
-    ?? routeConfig.find((g) => g.id === 'components')!
-
-  const handleActivityBarChange = useCallback((store: NormalizedData) => {
-    const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
-    if (focusedId && groupBasePaths[focusedId]) {
-      navigate(groupBasePaths[focusedId])
-    }
-  }, [navigate])
 
   const handleSidebarChange = useCallback((store: NormalizedData) => {
     const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
@@ -184,6 +181,54 @@ function App() {
   }, [navigate, activeGroup.id])
 
   const sidebarStore = useMemo(() => sidebarStores[activeGroup.id], [activeGroup.id])
+
+  return (
+    <nav className="sidebar">
+      <div className="sidebar-header">
+        <div className="logo">
+          <div className="logo-mark" />
+          <h1>interactive-os</h1>
+        </div>
+        <span className="version">v0.1.0</span>
+      </div>
+      <div className="sidebar-section-title">{activeGroup.label}</div>
+      <Aria
+        key={activeGroup.id}
+        behavior={listbox}
+        data={sidebarStore}
+        plugins={[core()]}
+        onChange={handleSidebarChange}
+        aria-label={`${activeGroup.label} pages`}
+      >
+        <Aria.Node render={(node, state) => {
+          const item = activeGroup.items.find((i) => i.path === node.id)
+          return (
+            <div className={`sidebar-link${state.focused ? ' sidebar-link--active' : ''}`}>
+              {(node.data as { label: string }).label}
+              {item?.status === 'wip' && <span className="badge-wip">wip</span>}
+              {item?.status === 'placeholder' && <span className="badge-wip">soon</span>}
+            </div>
+          )
+        }} />
+      </Aria>
+    </nav>
+  )
+}
+
+// --- App (shared ActivityBar + route-dependent content) ---
+
+function App() {
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
+  const isViewer = pathname === '/viewer' || pathname.startsWith('/viewer/')
+
+  const handleActivityBarChange = useCallback((store: NormalizedData) => {
+    const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
+    if (focusedId && navPaths[focusedId]) {
+      navigate(navPaths[focusedId])
+    }
+  }, [navigate])
 
   return (
     <div className="page">
@@ -199,74 +244,52 @@ function App() {
           aria-label="Layer navigation"
         >
           <Aria.Node render={(node, state) => {
-            const group = routeConfig.find((g) => g.id === node.id)!
-            const Icon = group.icon
+            const nav = navItems.find((n) => n.id === node.id)!
+            const Icon = nav.icon
             return (
               <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                <Icon size={20} />
-                <span className="activity-bar__label">{group.label}</span>
+                <Icon size={15} />
+                <span className="activity-bar__label">{nav.label}</span>
               </div>
             )
           }} />
         </Aria>
       </nav>
-      <nav className="sidebar">
-        <div className="sidebar-header">
-          <div className="logo">
-            <div className="logo-mark" />
-            <h1>interactive-os</h1>
-          </div>
-          <span className="version">v0.1.0</span>
-        </div>
-        <div className="sidebar-section-title">{activeGroup.label}</div>
-        <Aria
-          key={activeGroup.id}
-          behavior={listbox}
-          data={sidebarStore}
-          plugins={[core()]}
-          onChange={handleSidebarChange}
-          aria-label={`${activeGroup.label} pages`}
-        >
-          <Aria.Node render={(node, state) => {
-            const item = activeGroup.items.find((i) => i.path === node.id)
-            return (
-              <div className={`sidebar-link${state.focused ? ' sidebar-link--active' : ''}`}>
-                {(node.data as { label: string }).label}
-                {item?.status === 'wip' && <span className="badge-wip">wip</span>}
-                {item?.status === 'placeholder' && <span className="badge-wip">soon</span>}
-              </div>
-            )
-          }} />
-        </Aria>
-      </nav>
-      <main className="content">
-        <Routes>
-          <Route path="/" element={<Navigate to="/components/viewer" replace />} />
-          {routeConfig.map((group) => (
-            <Route
-              key={group.id}
-              path={`/${group.id}`}
-              element={<Navigate to={group.basePath} replace />}
-            />
-          ))}
-          {routeConfig.flatMap((group) =>
-            group.items.map((item) => (
-              <Route
-                key={`${group.id}/${item.path}`}
-                path={`/${group.id}/${item.path}`}
-                element={
-                  item.component ? (
-                    <item.component />
-                  ) : (
-                    <Placeholder group={group.label} label={item.label} />
-                  )
-                }
-              />
-            ))
-          )}
-          <Route path="*" element={<Navigate to="/components/viewer" replace />} />
-        </Routes>
-      </main>
+      {isViewer ? (
+        <PageViewer />
+      ) : (
+        <>
+          {activeGroup && <Sidebar activeGroup={activeGroup} />}
+          <main className="content">
+            <Routes>
+              <Route path="/" element={<Navigate to="/viewer" replace />} />
+              {routeConfig.map((group) => (
+                <Route
+                  key={group.id}
+                  path={`/${group.id}`}
+                  element={<Navigate to={group.basePath} replace />}
+                />
+              ))}
+              {routeConfig.flatMap((group) =>
+                group.items.map((item) => (
+                  <Route
+                    key={`${group.id}/${item.path}`}
+                    path={`/${group.id}/${item.path}`}
+                    element={
+                      item.component ? (
+                        <item.component />
+                      ) : (
+                        <Placeholder group={group.label} label={item.label} />
+                      )
+                    }
+                  />
+                ))
+              )}
+              <Route path="*" element={<Navigate to="/viewer" replace />} />
+            </Routes>
+          </main>
+        </>
+      )}
     </div>
   )
 }

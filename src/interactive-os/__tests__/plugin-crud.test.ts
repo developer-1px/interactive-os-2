@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { createCommandEngine } from '../core/command-engine'
-import { createStore, getEntity, getChildren } from '../core/normalized-store'
+import { createCommandEngine } from '../core/createCommandEngine'
+import { createStore, getEntity, getChildren } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import { crudCommands, crud } from '../plugins/crud'
 

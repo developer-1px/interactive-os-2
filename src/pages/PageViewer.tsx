@@ -1,16 +1,17 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkBreaks from 'remark-breaks'
 import rehypeRaw from 'rehype-raw'
 import mermaid from 'mermaid'
 import { codeToHtml } from 'shiki'
 import { Aria } from '../interactive-os/components/aria'
 import { treegrid } from '../interactive-os/behaviors/treegrid'
 import { core } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData, Entity } from '../interactive-os/core/types'
-import { createRecorder } from '../interactive-os/devtools/recorder'
+import { createRecorder } from '../interactive-os/devtools/createRecorder'
 
 // --- Types ---
 
@@ -23,11 +24,11 @@ interface TreeNode {
 
 // --- Mermaid init ---
 
-mermaid.initialize({ startOnLoad: false, theme: 'dark' })
+mermaid.initialize({ startOnLoad: false, theme: 'default' })
 
 // --- Data fetching ---
 
-const DEFAULT_ROOT = '/Users/user/Desktop/aria/src'
+const DEFAULT_ROOT = '/Users/user/Desktop/aria'
 
 async function fetchTree(root: string): Promise<TreeNode[]> {
   const res = await fetch(`/api/fs/tree?root=${encodeURIComponent(root)}`)
@@ -62,6 +63,8 @@ function treeToStore(nodes: TreeNode[]): NormalizedData {
 
 // --- Shiki code highlighting ---
 
+const IDENTIFIER_RE = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
+
 const EXT_TO_LANG: Record<string, string> = {
   ts: 'typescript', tsx: 'tsx', js: 'javascript', jsx: 'jsx',
   json: 'json', css: 'css', html: 'html', yaml: 'yaml', yml: 'yaml',
@@ -70,19 +73,67 @@ const EXT_TO_LANG: Record<string, string> = {
 
 function CodeBlock({ code, filename }: { code: string; filename: string }) {
   const [html, setHtml] = useState('')
+  const [highlightToken, setHighlightToken] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const ext = filename.split('.').pop() ?? ''
   const lang = EXT_TO_LANG[ext] ?? 'text'
 
   useEffect(() => {
     let cancelled = false
-    codeToHtml(code, { lang, theme: 'github-dark' }).then((result) => {
+    codeToHtml(code, {
+      lang,
+      theme: 'github-light',
+      transformers: [{
+        line(node, line) {
+          node.properties['data-line'] = line
+        },
+        span(node) {
+          const text = (node.children?.[0] as { type: string; value: string })?.value
+          if (text && IDENTIFIER_RE.test(text)) {
+            node.properties['data-token'] = text
+            const existing = node.properties['class'] ?? ''
+            node.properties['class'] = existing ? `${existing} code-token` : 'code-token'
+          }
+        },
+      }],
+    }).then((result) => {
       if (!cancelled) setHtml(result)
     })
     return () => { cancelled = true }
   }, [code, lang])
 
-  if (!html) return <pre style={{ padding: 16, overflow: 'auto' }}><code>{code}</code></pre>
-  return <div dangerouslySetInnerHTML={{ __html: html }} style={{ overflow: 'auto', fontSize: 13 }} />
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement
+    const token = target.getAttribute('data-token')
+    if (token) {
+      setHighlightToken((prev) => prev === token ? null : token)
+    } else {
+      setHighlightToken(null)
+    }
+  }, [])
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+    const tokens = container.querySelectorAll('.code-token')
+    for (const el of tokens) {
+      if (highlightToken && el.getAttribute('data-token') === highlightToken) {
+        (el as HTMLElement).classList.add('code-token--highlighted')
+      } else {
+        (el as HTMLElement).classList.remove('code-token--highlighted')
+      }
+    }
+  }, [highlightToken, html])
+
+  if (!html) return <pre className="code-block code-block--loading"><code>{code}</code></pre>
+  return (
+    <div
+      ref={containerRef}
+      className="code-block"
+      dangerouslySetInnerHTML={{ __html: html }}
+      onClick={handleClick}
+    />
+  )
 }
 
 // --- Mermaid renderer ---
@@ -108,7 +159,7 @@ function MarkdownViewer({ content }: { content: string }) {
   return (
     <div className="viewer-markdown">
       <Markdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeRaw]}
         children={content}
         components={{
@@ -146,7 +197,7 @@ function fileIcon(name: string, type: string, expanded?: boolean) {
 
 // --- Main viewer page ---
 
-export default function ViewerPage() {
+export default function PageViewer() {
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [fileContent, setFileContent] = useState('')
@@ -192,35 +243,36 @@ export default function ViewerPage() {
     }
   }, [recording, recorder])
 
-  if (loading || !initialStore) return <div style={{ padding: 32 }}>Loading file tree...</div>
+  if (loading || !initialStore) return <div style={{ padding: 16, color: '#787774', fontFamily: 'var(--mono)', fontSize: 10 }}>Loading...</div>
 
   const filename = selectedFile?.split('/').pop() ?? ''
   const isMarkdown = filename.endsWith('.md')
 
   return (
-    <div style={{ display: 'flex', height: '100%', gap: 0, flexDirection: 'column' }}>
+    <div style={{ display: 'flex', height: '100%', flex: 1, flexDirection: 'column' }}>
       {/* Recorder toolbar */}
-      <div style={{ padding: '6px 12px', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+      <div style={{ padding: '2px 8px', borderBottom: '1px solid var(--border-dim)', display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, background: 'var(--bg-surface)' }}>
         <button
           onClick={toggleRecording}
           style={{
-            background: recording ? '#d32f2f' : '#333',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 4,
-            padding: '4px 12px',
+            background: recording ? '#DC2626' : 'var(--bg-deep)',
+            color: recording ? '#fff' : 'var(--text-secondary)',
+            border: recording ? 'none' : '1px solid var(--border-mid)',
+            borderRadius: 2,
+            padding: '1px 8px',
             cursor: 'pointer',
-            fontSize: 12,
-            fontFamily: 'monospace',
+            fontSize: 9,
+            fontFamily: 'var(--mono)',
+            fontWeight: 500,
           }}
         >
-          {recording ? '⏹ STOP → Copy JSON' : '⏺ REC'}
+          {recording ? 'STOP' : 'REC'}
         </button>
-        {recording && <span style={{ color: '#f44336', fontSize: 12 }}>Recording...</span>}
+        {recording && <span style={{ color: '#DC2626', fontSize: 9, fontFamily: 'var(--mono)' }}>Recording...</span>}
       </div>
       <div style={{ display: 'flex', flex: 1, gap: 0, overflow: 'hidden' }}>
       {/* File tree panel */}
-      <div style={{ width: 280, minWidth: 280, borderRight: '1px solid #333', overflow: 'auto', padding: '8px 0' }}>
+      <div style={{ width: 220, minWidth: 220, borderRight: '1px solid var(--border-dim)', overflow: 'auto', padding: '2px 0', background: 'var(--bg-surface)' }}>
         <Aria
           behavior={treegrid}
           data={initialStore}
@@ -233,20 +285,21 @@ export default function ViewerPage() {
             const isActive = data.path === selectedFile
             return (
               <div style={{
-                paddingLeft: (state.level ?? 1) * 14,
-                padding: '3px 8px 3px ' + ((state.level ?? 1) * 14) + 'px',
-                background: isActive ? '#264f78' : state.focused ? '#2a2d2e' : 'transparent',
+                padding: `1px 6px 1px ${(state.level ?? 1) * 10}px`,
+                background: isActive ? 'var(--accent-mid)' : state.focused ? 'var(--bg-focus)' : 'transparent',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                fontSize: 13,
+                fontSize: 11,
+                fontFamily: 'var(--mono)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 6,
+                gap: 4,
+                color: isActive ? 'var(--accent)' : 'var(--text-primary)',
               }}>
-                <span style={{ fontSize: 12, width: 16, textAlign: 'center' }}>
+                <span style={{ fontSize: 10, width: 12, textAlign: 'center', flexShrink: 0 }}>
                   {fileIcon(data.name, data.type, state.expanded)}
                 </span>
-                <span style={{ opacity: data.type === 'directory' ? 0.8 : 1 }}>
+                <span style={{ opacity: data.type === 'directory' ? 0.7 : 1 }}>
                   {data.name}
                 </span>
               </div>
@@ -256,19 +309,19 @@ export default function ViewerPage() {
       </div>
 
       {/* Content panel */}
-      <div style={{ flex: 1, overflow: 'auto', padding: '0 24px' }}>
+      <div style={{ flex: 1, overflow: 'auto', padding: '0 14px' }}>
         {selectedFile ? (
           <>
             <div style={{
-              padding: '12px 0',
-              borderBottom: '1px solid #333',
-              fontSize: 12,
-              color: '#888',
-              fontFamily: 'monospace',
+              padding: '5px 0',
+              borderBottom: '1px solid var(--border-dim)',
+              fontSize: 9.5,
+              color: 'var(--text-muted)',
+              fontFamily: 'var(--mono)',
             }}>
               {selectedFile}
             </div>
-            <div style={{ paddingTop: 16 }}>
+            <div style={{ paddingTop: 8 }}>
               {isMarkdown
                 ? <MarkdownViewer content={fileContent} />
                 : <CodeBlock code={fileContent} filename={filename} />
@@ -276,8 +329,8 @@ export default function ViewerPage() {
             </div>
           </>
         ) : (
-          <div style={{ padding: 32, color: '#666' }}>
-            Select a file from the tree to view its contents.
+          <div style={{ padding: 16, color: 'var(--text-muted)', fontFamily: 'var(--mono)', fontSize: 10 }}>
+            Select a file to view.
           </div>
         )}
       </div>

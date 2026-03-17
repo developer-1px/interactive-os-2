@@ -6,7 +6,7 @@ import { TabList } from '../ui/TabList'
 import { Accordion } from '../ui/Accordion'
 import { MenuList } from '../ui/MenuList'
 import { DisclosureGroup } from '../ui/DisclosureGroup'
-import { createStore } from '../core/normalized-store'
+import { createStore } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 
 const treeData = createStore({

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SwitchGroup } from '../interactive-os/ui/SwitchGroup'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
@@ -18,7 +18,7 @@ const initialData: NormalizedData = createStore({
   },
 })
 
-export default function SwitchPage() {
+export default function PageSwitch() {
   const [data, setData] = useState<NormalizedData>(initialData)
 
   return (

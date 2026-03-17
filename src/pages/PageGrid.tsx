@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Grid } from '../interactive-os/ui/Grid'
-import { createStore } from '../interactive-os/core/normalized-store'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import { core } from '../interactive-os/plugins/core'
 
@@ -26,7 +26,7 @@ const initialData = createStore({
 
 const plugins = [core()]
 
-export default function GridPage() {
+export default function PageGrid() {
   const [data, setData] = useState(initialData)
 
   return (

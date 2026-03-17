@@ -1,12 +1,12 @@
 import React from 'react'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
-import { useAria } from '../hooks/use-aria'
+import { useAria } from '../hooks/useAria'
 import { combobox as comboboxBehavior } from '../behaviors/combobox'
 import { core } from '../plugins/core'
 import { combobox as comboboxPlugin } from '../plugins/combobox'
 import { ROOT_ID } from '../core/types'
-import { getChildren } from '../core/normalized-store'
+import { getChildren } from '../core/createStore'
 
 interface ComboboxProps {
   data: NormalizedData
