@@ -12,7 +12,9 @@ dist
 dist-lib
 dist-ssr
 *.local
+*.local.json
 .superpowers
+test-results
 
 # Editor directories and files
 .vscode/*
