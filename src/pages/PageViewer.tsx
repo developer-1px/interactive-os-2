@@ -12,6 +12,11 @@ import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData, Entity } from '../interactive-os/core/types'
 import { createRecorder } from '../interactive-os/devtools/createRecorder'
+import {
+  Folder, FolderOpen, FileText, FileCode, FileType,
+  File, ChevronRight, ChevronDown, Circle, PanelLeft,
+  Braces, Palette, Terminal, Image, Settings,
+} from 'lucide-react'
 
 // --- Types ---
 
@@ -183,16 +188,63 @@ function MarkdownViewer({ content }: { content: string }) {
   )
 }
 
-// --- File icon ---
+// --- File icon component ---
 
-function fileIcon(name: string, type: string, expanded?: boolean) {
-  if (type === 'directory') return expanded ? '📂' : '📁'
+const ICON_SIZE = 13
+const ICON_STROKE = 1.5
+
+function FileIcon({ name, type, expanded }: { name: string; type: string; expanded?: boolean }) {
+  if (type === 'directory') {
+    return expanded
+      ? <FolderOpen size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--folder" />
+      : <Folder size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--folder" />
+  }
   const ext = name.split('.').pop()
-  if (ext === 'ts' || ext === 'tsx') return '🟦'
-  if (ext === 'md') return '📝'
-  if (ext === 'json') return '📋'
-  if (ext === 'css') return '🎨'
-  return '📄'
+  switch (ext) {
+    case 'ts':
+    case 'tsx':
+      return <FileCode size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--ts" />
+    case 'js':
+    case 'jsx':
+      return <FileCode size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--js" />
+    case 'json':
+      return <Braces size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--json" />
+    case 'md':
+      return <FileType size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--md" />
+    case 'css':
+      return <Palette size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--css" />
+    case 'sh':
+    case 'bash':
+      return <Terminal size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--sh" />
+    case 'png':
+    case 'jpg':
+    case 'svg':
+    case 'gif':
+      return <Image size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--img" />
+    case 'yaml':
+    case 'yml':
+    case 'toml':
+      return <Settings size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--config" />
+    default:
+      return <File size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon" />
+  }
+}
+
+// --- Breadcrumb ---
+
+function Breadcrumb({ path, root }: { path: string; root: string }) {
+  const relative = path.startsWith(root) ? path.slice(root.length + 1) : path
+  const segments = relative.split('/')
+  return (
+    <div className="vw-breadcrumb">
+      {segments.map((seg, i) => (
+        <span key={i}>
+          {i > 0 && <ChevronRight size={10} strokeWidth={2} className="vw-breadcrumb__sep" />}
+          <span className={i === segments.length - 1 ? 'vw-breadcrumb__current' : 'vw-breadcrumb__segment'}>{seg}</span>
+        </span>
+      ))}
+    </div>
+  )
 }
 
 // --- Main viewer page ---
@@ -203,10 +255,10 @@ export default function PageViewer() {
   const [fileContent, setFileContent] = useState('')
   const [loading, setLoading] = useState(true)
   const [recording, setRecording] = useState(false)
+  const [treeCollapsed, setTreeCollapsed] = useState(false)
   const recorder = useMemo(() => createRecorder(), [])
   const selectedFileRef = useRef<string | null>(null)
 
-  // Load file tree on mount
   useEffect(() => {
     fetchTree(DEFAULT_ROOT).then((tree) => {
       setInitialStore(treeToStore(tree))
@@ -214,7 +266,6 @@ export default function PageViewer() {
     })
   }, [])
 
-  // Watch for focus changes → load file (no setStore — Aria manages its own state)
   const handleChange = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
     const entity = newStore.entities[focusedId]
@@ -243,97 +294,111 @@ export default function PageViewer() {
     }
   }, [recording, recorder])
 
-  if (loading || !initialStore) return <div style={{ padding: 16, color: '#787774', fontFamily: 'var(--mono)', fontSize: 10 }}>Loading...</div>
+  if (loading || !initialStore) {
+    return (
+      <div className="vw-loading">
+        <Circle size={14} strokeWidth={2} className="vw-loading__spinner" />
+        <span>Loading project...</span>
+      </div>
+    )
+  }
 
   const filename = selectedFile?.split('/').pop() ?? ''
   const isMarkdown = filename.endsWith('.md')
+  const ext = filename.split('.').pop() ?? ''
+  const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
-    <div style={{ display: 'flex', height: '100%', flex: 1, flexDirection: 'column' }}>
-      {/* Recorder toolbar */}
-      <div style={{ padding: '2px 8px', borderBottom: '1px solid var(--border-dim)', display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, background: 'var(--bg-surface)' }}>
-        <button
-          onClick={toggleRecording}
-          style={{
-            background: recording ? '#DC2626' : 'var(--bg-deep)',
-            color: recording ? '#fff' : 'var(--text-secondary)',
-            border: recording ? 'none' : '1px solid var(--border-mid)',
-            borderRadius: 2,
-            padding: '1px 8px',
-            cursor: 'pointer',
-            fontSize: 9,
-            fontFamily: 'var(--mono)',
-            fontWeight: 500,
-          }}
-        >
-          {recording ? 'STOP' : 'REC'}
-        </button>
-        {recording && <span style={{ color: '#DC2626', fontSize: 9, fontFamily: 'var(--mono)' }}>Recording...</span>}
-      </div>
-      <div style={{ display: 'flex', flex: 1, gap: 0, overflow: 'hidden' }}>
-      {/* File tree panel */}
-      <div style={{ width: 220, minWidth: 220, borderRight: '1px solid var(--border-dim)', overflow: 'auto', padding: '2px 0', background: 'var(--bg-surface)' }}>
-        <Aria
-          behavior={treegrid}
-          data={initialStore}
-          plugins={[core()]}
-          onChange={handleChange}
-          aria-label="File tree"
-        >
-          <Aria.Node render={(node, state) => {
-            const data = node.data as { name: string; type: string; path: string }
-            const isActive = data.path === selectedFile
-            return (
-              <div style={{
-                padding: `1px 6px 1px ${(state.level ?? 1) * 10}px`,
-                background: isActive ? 'var(--accent-mid)' : state.focused ? 'var(--bg-focus)' : 'transparent',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                fontSize: 11,
-                fontFamily: 'var(--mono)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 4,
-                color: isActive ? 'var(--accent)' : 'var(--text-primary)',
-              }}>
-                <span style={{ fontSize: 10, width: 12, textAlign: 'center', flexShrink: 0 }}>
-                  {fileIcon(data.name, data.type, state.expanded)}
-                </span>
-                <span style={{ opacity: data.type === 'directory' ? 0.7 : 1 }}>
-                  {data.name}
-                </span>
-              </div>
-            )
-          }} />
-        </Aria>
+    <div className="vw">
+      {/* Status bar */}
+      <div className="vw-statusbar">
+        <div className="vw-statusbar__left">
+          <button
+            className="vw-statusbar__btn"
+            onClick={() => setTreeCollapsed(!treeCollapsed)}
+            title={treeCollapsed ? 'Show explorer' : 'Hide explorer'}
+          >
+            <PanelLeft size={12} strokeWidth={1.5} />
+          </button>
+          <span className="vw-statusbar__title">Explorer</span>
+        </div>
+        <div className="vw-statusbar__right">
+          <button
+            className={`vw-rec${recording ? ' vw-rec--active' : ''}`}
+            onClick={toggleRecording}
+          >
+            <span className="vw-rec__dot" />
+            {recording ? 'STOP' : 'REC'}
+          </button>
+        </div>
       </div>
 
-      {/* Content panel */}
-      <div style={{ flex: 1, overflow: 'auto', padding: '0 14px' }}>
-        {selectedFile ? (
-          <>
-            <div style={{
-              padding: '5px 0',
-              borderBottom: '1px solid var(--border-dim)',
-              fontSize: 9.5,
-              color: 'var(--text-muted)',
-              fontFamily: 'var(--mono)',
-            }}>
-              {selectedFile}
-            </div>
-            <div style={{ paddingTop: 8 }}>
-              {isMarkdown
-                ? <MarkdownViewer content={fileContent} />
-                : <CodeBlock code={fileContent} filename={filename} />
-              }
-            </div>
-          </>
-        ) : (
-          <div style={{ padding: 16, color: 'var(--text-muted)', fontFamily: 'var(--mono)', fontSize: 10 }}>
-            Select a file to view.
+      {/* Main panels */}
+      <div className="vw-panels">
+        {/* Tree panel */}
+        {!treeCollapsed && (
+          <div className="vw-tree">
+            <Aria
+              behavior={treegrid}
+              data={initialStore}
+              plugins={[core()]}
+              onChange={handleChange}
+              aria-label="File tree"
+            >
+              <Aria.Node render={(node, state) => {
+                const data = node.data as { name: string; type: string; path: string }
+                const isActive = data.path === selectedFile
+                const indent = (state.level ?? 1) * 12
+                return (
+                  <div className={`vw-tree__item${isActive ? ' vw-tree__item--active' : ''}${state.focused ? ' vw-tree__item--focused' : ''}`}>
+                    <div className="vw-tree__indent" style={{ width: indent }} />
+                    {data.type === 'directory' ? (
+                      <span className="vw-tree__chevron">
+                        {state.expanded
+                          ? <ChevronDown size={11} strokeWidth={2} />
+                          : <ChevronRight size={11} strokeWidth={2} />}
+                      </span>
+                    ) : (
+                      <span className="vw-tree__chevron" />
+                    )}
+                    <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
+                    <span className={`vw-tree__name${data.type === 'directory' ? ' vw-tree__name--dir' : ''}`}>
+                      {data.name}
+                    </span>
+                  </div>
+                )
+              }} />
+            </Aria>
           </div>
         )}
-      </div>
+
+        {/* Content panel */}
+        <div className="vw-content">
+          {selectedFile ? (
+            <>
+              <div className="vw-content__header">
+                <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />
+                <div className="vw-content__meta">
+                  <FileIcon name={filename} type="file" />
+                  <span>{ext.toUpperCase()}</span>
+                  <span className="vw-content__meta-sep" />
+                  <span>{lineCount} lines</span>
+                </div>
+              </div>
+              <div className="vw-content__body">
+                {isMarkdown
+                  ? <MarkdownViewer content={fileContent} />
+                  : <CodeBlock code={fileContent} filename={filename} />
+                }
+              </div>
+            </>
+          ) : (
+            <div className="vw-empty">
+              <FileText size={24} strokeWidth={1} className="vw-empty__icon" />
+              <span>Select a file to view</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
