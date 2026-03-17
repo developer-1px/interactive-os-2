@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Grid } from '../interactive-os/ui/Grid'
+import { Aria } from '../interactive-os/components/aria'
+import { grid } from '../interactive-os/behaviors/grid'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
@@ -43,12 +44,8 @@ export default function PageCell() {
           <span>Role</span>
           <span>Focusable</span>
         </div>
-        <Grid
-          columns={3}
-          data={data}
-          onChange={setData}
-          plugins={[core()]}
-          renderItem={(node, state: NodeState) => {
+        <Aria behavior={grid({ columns: 3 })} data={data} plugins={[core()]} onChange={setData} aria-label="ARIA elements">
+          <Aria.Node render={(node: Record<string, unknown>, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = [
               'grid-row',
@@ -56,13 +53,13 @@ export default function PageCell() {
             ].filter(Boolean).join(' ')
             return (
               <div className={cls} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-                <span>{d?.name as string}</span>
-                <span><code>{d?.role as string}</code></span>
-                <span>{d?.focusable as string}</span>
+                <Aria.Cell index={0}><span>{d?.name as string}</span></Aria.Cell>
+                <Aria.Cell index={1}><span><code>{d?.role as string}</code></span></Aria.Cell>
+                <Aria.Cell index={2}><span>{d?.focusable as string}</span></Aria.Cell>
               </div>
             )
-          }}
-        />
+          }} />
+        </Aria>
       </div>
       <div className="page-section">
         <h3 className="page-section-title">Usage</h3>
