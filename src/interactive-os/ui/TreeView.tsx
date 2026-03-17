@@ -5,6 +5,8 @@ import { Aria } from '../components/aria'
 import { tree } from '../behaviors/tree'
 import { core } from '../plugins/core'
 
+const defaultPlugins: Plugin[] = [core()]
+
 interface TreeViewProps {
   data: NormalizedData
   plugins?: Plugin[]
@@ -40,7 +42,7 @@ const defaultRenderItem = (node: Record<string, unknown>, state: NodeState): Rea
 
 export function TreeView({
   data,
-  plugins = [core()],
+  plugins = defaultPlugins,
   onChange,
   renderItem = defaultRenderItem,
 }: TreeViewProps) {
