@@ -1,4 +1,4 @@
-import { Accordion } from '../interactive-os/ui/accordion'
+import { Accordion } from '../interactive-os/ui/Accordion'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'

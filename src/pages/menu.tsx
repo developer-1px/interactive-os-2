@@ -1,4 +1,4 @@
-import { MenuList } from '../interactive-os/ui/menu-list'
+import { MenuList } from '../interactive-os/ui/MenuList'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'

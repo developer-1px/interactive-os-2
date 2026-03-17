@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Accordion } from '../ui/accordion'
+import { Accordion } from '../ui/Accordion'
 import { createStore } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
 import type { NormalizedData } from '../core/types'

@@ -1,4 +1,4 @@
-import { DisclosureGroup } from '../interactive-os/ui/disclosure-group'
+import { DisclosureGroup } from '../interactive-os/ui/DisclosureGroup'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'

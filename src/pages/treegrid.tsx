@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TreeGrid } from '../interactive-os/ui/tree-grid'
+import { TreeGrid } from '../interactive-os/ui/TreeGrid'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'

@@ -1,4 +1,4 @@
-import { RadioGroup } from '../interactive-os/ui/radiogroup'
+import { RadioGroup } from '../interactive-os/ui/RadioGroup'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'

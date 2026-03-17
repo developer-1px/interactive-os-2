@@ -1,4 +1,4 @@
-import { ListBox } from '../interactive-os/ui/list-box'
+import { ListBox } from '../interactive-os/ui/ListBox'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
