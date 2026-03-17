@@ -28,6 +28,11 @@ import PageAlertDialog from './pages/PageAlertDialog'
 import PageSwitch from './pages/PageSwitch'
 import PageTreeView from './pages/PageTreeView'
 import PageTabsCrud from './pages/PageTabsCrud'
+import PageCrud from './pages/PageCrud'
+import PageClipboard from './pages/PageClipboard'
+import PageHistoryDemo from './pages/PageHistoryDemo'
+import PageDnd from './pages/PageDnd'
+import PageRename from './pages/PageRename'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 
@@ -125,11 +130,11 @@ const routeConfig: RouteGroup[] = [
       { path: 'grid', label: 'Grid', status: 'ready', component: PageGrid },
       { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabsCrud },
       { path: 'combobox', label: 'Combobox', status: 'wip', component: PageCombobox },
-      { path: 'crud', label: 'CRUD', status: 'placeholder', component: null },
-      { path: 'clipboard', label: 'Clipboard', status: 'placeholder', component: null },
-      { path: 'history', label: 'History', status: 'placeholder', component: null },
-      { path: 'dnd', label: 'DnD', status: 'placeholder', component: null },
-      { path: 'rename', label: 'Rename', status: 'placeholder', component: null },
+      { path: 'crud', label: 'CRUD', status: 'ready', component: PageCrud },
+      { path: 'clipboard', label: 'Clipboard', status: 'ready', component: PageClipboard },
+      { path: 'history', label: 'History', status: 'ready', component: PageHistoryDemo },
+      { path: 'dnd', label: 'DnD', status: 'ready', component: PageDnd },
+      { path: 'rename', label: 'Rename', status: 'ready', component: PageRename },
     ],
   },
   {
