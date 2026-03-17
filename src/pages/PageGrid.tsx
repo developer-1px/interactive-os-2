@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgGrid } from './apg-data'
 import { Grid } from '../interactive-os/ui/Grid'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -74,6 +76,7 @@ export default function PageGrid() {
           </tbody>
         </table>
       </div>
+      <ApgKeyboardTable {...apgGrid} />
     </div>
   )
 }

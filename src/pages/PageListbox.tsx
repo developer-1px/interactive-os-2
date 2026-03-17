@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgListbox } from './apg-data'
 import { ListBox } from '../interactive-os/ui/ListBox'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -70,6 +72,7 @@ export default function PageListbox() {
           }}
         />
       </div>
+      <ApgKeyboardTable {...apgListbox} />
     </div>
   )
 }

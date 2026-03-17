@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgTabs } from './apg-data'
 import { TabList } from '../interactive-os/ui/TabList'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -62,6 +64,7 @@ export default function PageTabs() {
           />
         </div>
       </div>
+      <ApgKeyboardTable {...apgTabs} />
     </div>
   )
 }
