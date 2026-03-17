@@ -111,7 +111,8 @@ const routeConfig: RouteGroup[] = [
 
 function App() {
   const { pathname } = useLocation()
-  const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id)) ?? routeConfig[4]
+  const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
+    ?? routeConfig.find((g) => g.id === 'components')!
 
   return (
     <div className="page">
