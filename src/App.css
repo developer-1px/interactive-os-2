@@ -304,6 +304,74 @@ body {
   background: var(--bg-surface);
 }
 
+/* --- APG Reference Table --- */
+
+.apg-table-wrap {
+  margin-top: 12px;
+}
+
+.apg-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.apg-table thead th {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border-mid);
+}
+
+.apg-table tbody td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border-dim);
+  vertical-align: top;
+}
+
+.apg-table tbody td:first-child {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.apg-table tbody td:first-child kbd {
+  font-size: 9px;
+  background: none;
+  border: none;
+  border-bottom-width: 0;
+  padding: 0;
+  color: var(--text-bright);
+  font-weight: 500;
+}
+
+.apg-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.apg-source {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.apg-source a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.apg-source a:hover {
+  text-decoration: underline;
+}
+
 /* --- Kbd --- */
 
 kbd {
