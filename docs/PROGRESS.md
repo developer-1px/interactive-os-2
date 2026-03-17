@@ -129,6 +129,17 @@
 - [x] CI/CD — GitHub Actions (test + lint + build)
 - [x] npm publish 자동화 — GitHub Release → npm publish (provenance)
 
+## ⑧ App Shell
+
+- [x] ActivityBar — 6 레이어 그룹 (Store, Engine, Plugins, Behaviors, Components, Vision)
+- [x] 레이어별 nested routes (`/{layer}/{page}`)
+- [x] Default landing: `/components/viewer`
+- [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
+- [ ] `[P1]` Store Explorer — Entity/Relationship 실시간 inspector
+- [ ] `[P1]` Engine Pipeline — Command dispatch 흐름 시각화
+- [ ] `[P1]` Plugin 데모 — 각 플러그인 인터랙티브 시각화
+- [ ] `[P1]` Vision Architecture — mermaid 비전 문서 렌더링
+
 ---
 
-*Last updated: 2026-03-17 — exports 41개, TS 에러 수정, CI/CD, scroll sync, extended selection, error rollback, npm publish, deps→devDeps, 298 tests*
+*Last updated: 2026-03-17 — ActivityBar + nested routes, 317 tests, 41 files*
