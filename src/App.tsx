@@ -1,7 +1,17 @@
-import { Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom'
+import { useCallback, useMemo } from 'react'
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Database, Cog, Plug, Keyboard, Layout, Map } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './App.css'
+
+import { Aria } from './interactive-os/components/aria'
+import { tabs } from './interactive-os/behaviors/tabs'
+import { listbox } from './interactive-os/behaviors/listbox'
+import { core } from './interactive-os/plugins/core'
+import { createStore } from './interactive-os/core/normalized-store'
+import { ROOT_ID } from './interactive-os/core/types'
+import type { AriaBehavior } from './interactive-os/behaviors/types'
+import type { NormalizedData } from './interactive-os/core/types'
 
 import TreeGridPage from './pages/treegrid'
 import ListboxPage from './pages/listbox'
@@ -18,6 +28,35 @@ import AlertDialogPage from './pages/alertdialog'
 import SwitchPage from './pages/switch'
 import ViewerPage from './pages/viewer'
 import Placeholder from './pages/placeholder'
+
+// --- Vertical tabs behavior (ActivityBar is a vertical tablist) ---
+
+const verticalTabs: AriaBehavior = {
+  ...tabs,
+  keyMap: {
+    ArrowDown: (ctx) => ctx.focusNext(),
+    ArrowUp: (ctx) => ctx.focusPrev(),
+    Home: (ctx) => ctx.focusFirst(),
+    End: (ctx) => ctx.focusLast(),
+    Enter: (ctx) => ctx.activate(),
+    Space: (ctx) => ctx.activate(),
+  },
+  focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+}
+
+// --- Route config → NormalizedData helper ---
+
+function toStore(items: { id: string; label: string }[]): NormalizedData {
+  const entities: Record<string, { id: string; data: { label: string } }> = {}
+  const ids: string[] = []
+  for (const item of items) {
+    entities[item.id] = { id: item.id, data: { label: item.label } }
+    ids.push(item.id)
+  }
+  return createStore({ entities, relationships: { [ROOT_ID]: ids } })
+}
+
+// --- Route config ---
 
 interface RouteItem {
   path: string
@@ -109,10 +148,42 @@ const routeConfig: RouteGroup[] = [
   },
 ]
 
+// --- Pre-computed stores ---
+
+const activityBarStore = toStore(routeConfig.map((g) => ({ id: g.id, label: g.label })))
+
+const sidebarStores = Object.fromEntries(
+  routeConfig.map((g) => [
+    g.id,
+    toStore(g.items.map((item) => ({ id: item.path, label: item.label }))),
+  ])
+)
+
+// --- Lookup maps ---
+
+const groupBasePaths = Object.fromEntries(routeConfig.map((g) => [g.id, g.basePath]))
+
 function App() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
     ?? routeConfig.find((g) => g.id === 'components')!
+
+  const handleActivityBarChange = useCallback((store: NormalizedData) => {
+    const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
+    if (focusedId && groupBasePaths[focusedId]) {
+      navigate(groupBasePaths[focusedId])
+    }
+  }, [navigate])
+
+  const handleSidebarChange = useCallback((store: NormalizedData) => {
+    const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
+    if (focusedId) {
+      navigate(`/${activeGroup.id}/${focusedId}`)
+    }
+  }, [navigate, activeGroup.id])
+
+  const sidebarStore = useMemo(() => sidebarStores[activeGroup.id], [activeGroup.id])
 
   return (
     <div className="page">
@@ -120,20 +191,24 @@ function App() {
         <div className="activity-bar__logo">
           <div className="logo-mark" />
         </div>
-        {routeConfig.map((group) => {
-          const Icon = group.icon
-          const isActive = group.id === activeGroup.id
-          return (
-            <NavLink
-              key={group.id}
-              to={group.basePath}
-              className={`activity-bar__item${isActive ? ' activity-bar__item--active' : ''}`}
-            >
-              <Icon size={20} />
-              <span className="activity-bar__label">{group.label}</span>
-            </NavLink>
-          )
-        })}
+        <Aria
+          behavior={verticalTabs}
+          data={activityBarStore}
+          plugins={[core()]}
+          onChange={handleActivityBarChange}
+          aria-label="Layer navigation"
+        >
+          <Aria.Node render={(node, state) => {
+            const group = routeConfig.find((g) => g.id === node.id)!
+            const Icon = group.icon
+            return (
+              <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+                <Icon size={20} />
+                <span className="activity-bar__label">{group.label}</span>
+              </div>
+            )
+          }} />
+        </Aria>
       </nav>
       <nav className="sidebar">
         <div className="sidebar-header">
@@ -144,22 +219,25 @@ function App() {
           <span className="version">v0.1.0</span>
         </div>
         <div className="sidebar-section-title">{activeGroup.label}</div>
-        <ul className="sidebar-nav">
-          {activeGroup.items.map((item) => (
-            <li key={item.path}>
-              <NavLink
-                to={`/${activeGroup.id}/${item.path}`}
-                className={({ isActive }) =>
-                  `sidebar-link${isActive ? ' sidebar-link--active' : ''}`
-                }
-              >
-                {item.label}
-                {item.status === 'wip' && <span className="badge-wip">wip</span>}
-                {item.status === 'placeholder' && <span className="badge-wip">soon</span>}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+        <Aria
+          key={activeGroup.id}
+          behavior={listbox}
+          data={sidebarStore}
+          plugins={[core()]}
+          onChange={handleSidebarChange}
+          aria-label={`${activeGroup.label} pages`}
+        >
+          <Aria.Node render={(node, state) => {
+            const item = activeGroup.items.find((i) => i.path === node.id)
+            return (
+              <div className={`sidebar-link${state.focused ? ' sidebar-link--active' : ''}`}>
+                {(node.data as { label: string }).label}
+                {item?.status === 'wip' && <span className="badge-wip">wip</span>}
+                {item?.status === 'placeholder' && <span className="badge-wip">soon</span>}
+              </div>
+            )
+          }} />
+        </Aria>
       </nav>
       <main className="content">
         <Routes>
