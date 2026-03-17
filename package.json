@@ -107,6 +107,10 @@
       "import": "./dist-lib/behaviors/switch.js",
       "types": "./dist-lib/behaviors/switch.d.ts"
     },
+    "./behaviors/tree": {
+      "import": "./dist-lib/behaviors/tree.js",
+      "types": "./dist-lib/behaviors/tree.d.ts"
+    },
     "./behaviors/createBehaviorContext": {
       "import": "./dist-lib/behaviors/createBehaviorContext.js",
       "types": "./dist-lib/behaviors/createBehaviorContext.d.ts"
@@ -178,6 +182,10 @@
     "./ui/SwitchGroup": {
       "import": "./dist-lib/ui/SwitchGroup.js",
       "types": "./dist-lib/ui/SwitchGroup.d.ts"
+    },
+    "./ui/TreeView": {
+      "import": "./dist-lib/ui/TreeView.js",
+      "types": "./dist-lib/ui/TreeView.d.ts"
     }
   },
   "files": [
