@@ -43,7 +43,7 @@ describe('useControlledAria', () => {
     const user = userEvent.setup()
     const { container } = render(<TestComponent store={fixtureStore()} onDispatch={onDispatch} />)
 
-    container.querySelector('[data-node-id="a"]')!.focus()
+    ;(container.querySelector('[data-node-id="a"]') as HTMLElement).focus()
     await user.keyboard('{ArrowDown}')
 
     expect(onDispatch).toHaveBeenCalledTimes(1)

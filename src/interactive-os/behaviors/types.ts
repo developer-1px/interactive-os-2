@@ -43,6 +43,7 @@ export interface BehaviorContext {
   collapse(): Command
   activate(): Command
   toggleSelect(): Command
+  extendSelection(direction: 'next' | 'prev' | 'first' | 'last'): Command
 
   dispatch(command: Command): void
 

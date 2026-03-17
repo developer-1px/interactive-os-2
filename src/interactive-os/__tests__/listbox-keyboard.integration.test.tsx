@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ListBox } from '../ui/list-box'
+import { ListBox } from '../ui/ListBox'
 import { createStore } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
 import type { NormalizedData } from '../core/types'

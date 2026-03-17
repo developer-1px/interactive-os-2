@@ -5,7 +5,6 @@
  * alertdialog is a dialog variant with role="alertdialog" and aria-modal="true".
  * Escape collapses (closes), Tab moves focus to next.
  */
-import React from 'react'
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'

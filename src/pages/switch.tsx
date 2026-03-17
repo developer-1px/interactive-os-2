@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SwitchGroup } from '../interactive-os/ui/switch-group'
+import { SwitchGroup } from '../interactive-os/ui/SwitchGroup'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'

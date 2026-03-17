@@ -79,6 +79,46 @@
       "import": "./dist-lib/behaviors/menu.js",
       "types": "./dist-lib/behaviors/menu.d.ts"
     },
+    "./behaviors/dialog": {
+      "import": "./dist-lib/behaviors/dialog.js",
+      "types": "./dist-lib/behaviors/dialog.d.ts"
+    },
+    "./behaviors/toolbar": {
+      "import": "./dist-lib/behaviors/toolbar.js",
+      "types": "./dist-lib/behaviors/toolbar.d.ts"
+    },
+    "./behaviors/grid": {
+      "import": "./dist-lib/behaviors/grid.js",
+      "types": "./dist-lib/behaviors/grid.d.ts"
+    },
+    "./behaviors/combobox": {
+      "import": "./dist-lib/behaviors/combobox.js",
+      "types": "./dist-lib/behaviors/combobox.d.ts"
+    },
+    "./behaviors/radiogroup": {
+      "import": "./dist-lib/behaviors/radiogroup.js",
+      "types": "./dist-lib/behaviors/radiogroup.d.ts"
+    },
+    "./behaviors/alertdialog": {
+      "import": "./dist-lib/behaviors/alertdialog.js",
+      "types": "./dist-lib/behaviors/alertdialog.d.ts"
+    },
+    "./behaviors/switch": {
+      "import": "./dist-lib/behaviors/switch.js",
+      "types": "./dist-lib/behaviors/switch.d.ts"
+    },
+    "./behaviors/create-behavior-context": {
+      "import": "./dist-lib/behaviors/create-behavior-context.js",
+      "types": "./dist-lib/behaviors/create-behavior-context.d.ts"
+    },
+    "./plugins/combobox": {
+      "import": "./dist-lib/plugins/combobox.js",
+      "types": "./dist-lib/plugins/combobox.d.ts"
+    },
+    "./plugins/focus-recovery": {
+      "import": "./dist-lib/plugins/focus-recovery.js",
+      "types": "./dist-lib/plugins/focus-recovery.d.ts"
+    },
     "./hooks/use-aria": {
       "import": "./dist-lib/hooks/use-aria.js",
       "types": "./dist-lib/hooks/use-aria.d.ts"
@@ -87,33 +127,57 @@
       "import": "./dist-lib/hooks/use-keyboard.js",
       "types": "./dist-lib/hooks/use-keyboard.d.ts"
     },
+    "./hooks/use-controlled-aria": {
+      "import": "./dist-lib/hooks/use-controlled-aria.js",
+      "types": "./dist-lib/hooks/use-controlled-aria.d.ts"
+    },
     "./components/aria": {
       "import": "./dist-lib/components/aria.js",
       "types": "./dist-lib/components/aria.d.ts"
     },
-    "./ui/tree-grid": {
-      "import": "./dist-lib/ui/tree-grid.js",
-      "types": "./dist-lib/ui/tree-grid.d.ts"
+    "./components/aria-context": {
+      "import": "./dist-lib/components/aria-context.js",
+      "types": "./dist-lib/components/aria-context.d.ts"
     },
-    "./ui/list-box": {
-      "import": "./dist-lib/ui/list-box.js",
-      "types": "./dist-lib/ui/list-box.d.ts"
+    "./ui/TreeGrid": {
+      "import": "./dist-lib/ui/TreeGrid.js",
+      "types": "./dist-lib/ui/TreeGrid.d.ts"
     },
-    "./ui/tab-list": {
-      "import": "./dist-lib/ui/tab-list.js",
-      "types": "./dist-lib/ui/tab-list.d.ts"
+    "./ui/ListBox": {
+      "import": "./dist-lib/ui/ListBox.js",
+      "types": "./dist-lib/ui/ListBox.d.ts"
     },
-    "./ui/accordion": {
-      "import": "./dist-lib/ui/accordion.js",
-      "types": "./dist-lib/ui/accordion.d.ts"
+    "./ui/TabList": {
+      "import": "./dist-lib/ui/TabList.js",
+      "types": "./dist-lib/ui/TabList.d.ts"
     },
-    "./ui/menu-list": {
-      "import": "./dist-lib/ui/menu-list.js",
-      "types": "./dist-lib/ui/menu-list.d.ts"
+    "./ui/Accordion": {
+      "import": "./dist-lib/ui/Accordion.js",
+      "types": "./dist-lib/ui/Accordion.d.ts"
     },
-    "./ui/disclosure-group": {
-      "import": "./dist-lib/ui/disclosure-group.js",
-      "types": "./dist-lib/ui/disclosure-group.d.ts"
+    "./ui/MenuList": {
+      "import": "./dist-lib/ui/MenuList.js",
+      "types": "./dist-lib/ui/MenuList.d.ts"
+    },
+    "./ui/DisclosureGroup": {
+      "import": "./dist-lib/ui/DisclosureGroup.js",
+      "types": "./dist-lib/ui/DisclosureGroup.d.ts"
+    },
+    "./ui/Grid": {
+      "import": "./dist-lib/ui/Grid.js",
+      "types": "./dist-lib/ui/Grid.d.ts"
+    },
+    "./ui/Combobox": {
+      "import": "./dist-lib/ui/Combobox.js",
+      "types": "./dist-lib/ui/Combobox.d.ts"
+    },
+    "./ui/RadioGroup": {
+      "import": "./dist-lib/ui/RadioGroup.js",
+      "types": "./dist-lib/ui/RadioGroup.d.ts"
+    },
+    "./ui/SwitchGroup": {
+      "import": "./dist-lib/ui/SwitchGroup.js",
+      "types": "./dist-lib/ui/SwitchGroup.d.ts"
     }
   },
   "files": [
@@ -134,12 +198,6 @@
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
-  "dependencies": {
-    "lucide-react": "^0.577.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-router-dom": "^7.13.1"
-  },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@testing-library/jest-dom": "^6.9.1",
@@ -155,6 +213,15 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "jsdom": "^29.0.0",
+    "lucide-react": "^0.577.0",
+    "mermaid": "^11.13.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.13.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^4.0.2",
     "tsup": "^8.5.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.56.1",

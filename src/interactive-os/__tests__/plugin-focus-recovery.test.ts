@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createCommandEngine } from '../core/command-engine'
 import { createStore, getChildren, getEntity } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'

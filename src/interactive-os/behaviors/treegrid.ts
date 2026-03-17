@@ -12,6 +12,10 @@ export const treegrid: AriaBehavior = {
     Space: (ctx) => ctx.toggleSelect(),
     Home: (ctx) => ctx.focusFirst(),
     End: (ctx) => ctx.focusLast(),
+    'Shift+ArrowDown': (ctx) => ctx.extendSelection('next'),
+    'Shift+ArrowUp': (ctx) => ctx.extendSelection('prev'),
+    'Shift+Home': (ctx) => ctx.extendSelection('first'),
+    'Shift+End': (ctx) => ctx.extendSelection('last'),
   },
   focusStrategy: {
     type: 'roving-tabindex',

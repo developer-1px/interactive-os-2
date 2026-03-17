@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Grid } from '../interactive-os/ui/grid'
+import { Grid } from '../interactive-os/ui/Grid'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import { core } from '../interactive-os/plugins/core'

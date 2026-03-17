@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Combobox } from '../interactive-os/ui/combobox'
+import { Combobox } from '../interactive-os/ui/Combobox'
 import { createStore } from '../interactive-os/core/normalized-store'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'

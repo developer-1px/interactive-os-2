@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import type { NormalizedData, Plugin, Command } from '../core/types'
 import { ROOT_ID } from '../core/types'
@@ -6,6 +6,7 @@ import type { AriaBehavior, BehaviorContext, NodeState } from '../behaviors/type
 import { useAria } from '../hooks/use-aria'
 import { AriaInternalContext } from './aria-context'
 import { getChildren } from '../core/normalized-store'
+import { EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
 
 interface AriaProps {
   behavior: AriaBehavior
@@ -47,13 +48,24 @@ function AriaRoot({ behavior, data, plugins, keyMap, onChange, 'aria-label': ari
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
+function FocusScrollDiv({ focused, children, ...props }: { focused: boolean; children: ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (focused && ref.current) {
+      ref.current.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
+    }
+  }, [focused])
+  return <div ref={ref} {...props}>{children}</div>
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
 function AriaNode({ render }: AriaNodeProps) {
   return (
     <AriaInternalContext.Consumer>
       {(aria) => {
         if (!aria) throw new Error('<Aria.Node> must be inside <Aria>')
         const store = aria.getStore()
-        const expandedIds = (store.entities['__expanded__']?.expandedIds as string[]) ?? []
+        const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
         // If behavior has colCount, consumer uses <Aria.Cell> — skip auto gridcell wrapping
         const hasColCount = !!(aria.behavior.colCount && aria.behavior.colCount > 0)
 
@@ -70,14 +82,14 @@ function AriaNode({ render }: AriaNodeProps) {
             // For treegrid rows, content must be wrapped in gridcell (but not for grid with colCount)
             const needsGridcell = !hasColCount && (props as Record<string, unknown>).role === 'row'
             nodes.push(
-              <div key={childId} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
+              <FocusScrollDiv key={childId} focused={state.focused} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
                 <AriaNodeContext.Provider value={{ nodeId: childId, focused: state.focused }}>
                   {needsGridcell
                     ? <div role="gridcell">{render(entity, state)}</div>
                     : render(entity, state)
                   }
                 </AriaNodeContext.Provider>
-              </div>
+              </FocusScrollDiv>
             )
             if (hasChildren && isExpanded) {
               nodes.push(...renderNodes(childId))
@@ -99,7 +111,7 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
       {(aria) => {
         if (!aria || !nodeCtx) throw new Error('<Aria.Cell> must be inside <Aria.Node>')
         const store = aria.getStore()
-        const focusedCol = (store.entities['__grid_col__']?.colIndex as number) ?? 0
+        const focusedCol = (store.entities[GRID_COL_ID]?.colIndex as number) ?? 0
         const isFocusedCell = nodeCtx.focused && index === focusedCol
         return (
           <div role="gridcell" aria-colindex={index + 1} tabIndex={isFocusedCell ? 0 : -1}>

@@ -13,8 +13,19 @@ export function createCommandEngine(
   let store = initialStore
 
   const executor = (command: Command) => {
-    store = command.execute(store)
-    onStoreChange(store)
+    const prev = store
+    try {
+      store = command.execute(store)
+    } catch (error) {
+      store = prev
+      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+        console.warn(`Command "${command.type}" failed:`, error)
+      }
+      return
+    }
+    if (store !== prev) {
+      onStoreChange(store)
+    }
   }
 
   const chain = middlewares.reduceRight<(command: Command) => void>(

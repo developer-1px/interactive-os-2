@@ -4,7 +4,6 @@
  * Tests the full user flow: render → keyboard input → visible result.
  * Horizontal navigation with ArrowRight/ArrowLeft. Click activates.
  */
-import React from 'react'
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'

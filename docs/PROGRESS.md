@@ -12,7 +12,7 @@
 - [x] `core/types.ts` — Entity, NormalizedData, Command, BatchCommand, TransformAdapter, Middleware, Plugin
 - [x] `core/normalized-store.ts` — createStore, getEntity, getChildren, getParent, addEntity, removeEntity, updateEntity, moveNode, insertNode
 - [x] `core/command-engine.ts` — createCommandEngine, dispatch, middleware pipeline
-- [ ] `[P2]` 에러 처리 — Command execute() 실패 시 롤백, onError 콜백
+- [x] 에러 처리 — Command execute() 실패 시 자동 롤백 (store 보전)
 - [x] 타입 안전 Entity 제네릭 — `Entity<T>` with `data` property, `getEntityData<T>`, `updateEntityData`
 
 ## ② Command Engine
@@ -86,7 +86,7 @@
 - [x] switch — expanded state 재사용, aria-checked, natural-tab-order
 
 ### 미구현 behavior
-- [ ] `[P2]` extended selection — Shift 범위 선택
+- [x] extended selection — Shift 범위 선택 (listbox, treegrid)
 
 ## ⑤ Components + Hooks
 
@@ -99,8 +99,8 @@
 - [x] **포커스 리커버리** — `focusRecovery()` 미들웨어로 삭제/축소/이동/생성/undo 시 자동 복구
 - [x] `<Aria.Cell>` — grid 멀티 컬럼 지원, AriaNodeContext
 - [x] `useControlledAria` — 외부 store 연동 훅 (controlled state variant)
+- [x] DOM 스크롤 동기화 — 포커스 이동 시 `scrollIntoView({ block: 'nearest' })` 자동 호출
 - [ ] `[P2]` 대용량 가상화 — 10k+ 노드 렌더링
-- [ ] `[P2]` DOM 스크롤 동기화 — 포커스 이동 시 자동 스크롤
 
 ## ⑥ UI Layer (Reference Components)
 
@@ -118,7 +118,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (288 tests, 33 files)
+- [x] Vitest (298 tests, 36 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 42 modules)
@@ -126,9 +126,9 @@
 - [x] README
 - [x] LICENSE (MIT)
 - [x] CLAUDE.md (프로젝트 로컬) — PROGRESS.md 업데이트 규칙 명시
-- [ ] `[P2]` CI/CD — GitHub Actions (test + lint + build)
-- [ ] `[P2]` npm publish 자동화
+- [x] CI/CD — GitHub Actions (test + lint + build)
+- [x] npm publish 자동화 — GitHub Release → npm publish (provenance)
 
 ---
 
-*Last updated: 2026-03-17 — P1 complete, 5 new APG behaviors, Entity<T>, selection model, Aria.Cell, useControlledAria*
+*Last updated: 2026-03-17 — exports 41개, TS 에러 수정, CI/CD, scroll sync, extended selection, error rollback, npm publish, deps→devDeps, 298 tests*

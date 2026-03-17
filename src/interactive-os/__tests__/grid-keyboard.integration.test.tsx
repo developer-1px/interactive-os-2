@@ -14,8 +14,6 @@ import { ROOT_ID } from '../core/types'
 import type { NormalizedData } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { core } from '../plugins/core'
-import React from 'react'
-
 function fixtureData(): NormalizedData {
   return createStore({
     entities: {

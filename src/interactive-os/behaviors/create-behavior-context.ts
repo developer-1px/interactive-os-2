@@ -1,20 +1,21 @@
 import type { Command, Entity } from '../core/types'
+import { createBatchCommand } from '../core/types'
 import type { CommandEngine } from '../core/command-engine'
 import type { BehaviorContext, GridNav, SelectionMode } from './types'
 import { getEntity, getChildren, getParent } from '../core/normalized-store'
 import { ROOT_ID } from '../core/types'
-import { focusCommands, selectionCommands, expandCommands, gridColCommands } from '../plugins/core'
+import { focusCommands, selectionCommands, expandCommands, gridColCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
 
 function getFocusedId(engine: CommandEngine): string {
-  return (engine.getStore().entities['__focus__']?.focusedId as string) ?? ''
+  return (engine.getStore().entities[FOCUS_ID]?.focusedId as string) ?? ''
 }
 
 function getSelectedIds(engine: CommandEngine): string[] {
-  return (engine.getStore().entities['__selection__']?.selectedIds as string[]) ?? []
+  return (engine.getStore().entities[SELECTION_ID]?.selectedIds as string[]) ?? []
 }
 
 function getExpandedIds(engine: CommandEngine): string[] {
-  return (engine.getStore().entities['__expanded__']?.expandedIds as string[]) ?? []
+  return (engine.getStore().entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
 }
 
 function isExpanded(engine: CommandEngine, nodeId: string): boolean {
@@ -54,9 +55,16 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
   const store = engine.getStore()
   const focusedId = getFocusedId(engine)
 
+  // Lazy-cached visible nodes — computed at most once per context
+  let _visibleNodes: string[] | null = null
+  const visibleNodes = (): string[] => {
+    if (!_visibleNodes) _visibleNodes = getVisibleNodes(engine)
+    return _visibleNodes
+  }
+
   const colCount = options?.colCount
   const grid: GridNav | undefined = colCount && colCount > 1 ? (() => {
-    const currentCol = (store.entities['__grid_col__']?.colIndex as number) ?? 0
+    const currentCol = (store.entities[GRID_COL_ID]?.colIndex as number) ?? 0
     return {
       colIndex: currentCol,
       colCount,
@@ -73,7 +81,7 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
     isExpanded: isExpanded(engine, focusedId),
 
     focusNext(options?: { wrap?: boolean }): Command {
-      const visible = getVisibleNodes(engine)
+      const visible = visibleNodes()
       const idx = visible.indexOf(focusedId)
       let nextId: string
       if (options?.wrap) {
@@ -85,7 +93,7 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
     },
 
     focusPrev(options?: { wrap?: boolean }): Command {
-      const visible = getVisibleNodes(engine)
+      const visible = visibleNodes()
       const idx = visible.indexOf(focusedId)
       let prevId: string
       if (options?.wrap) {
@@ -97,12 +105,12 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
     },
 
     focusFirst(): Command {
-      const visible = getVisibleNodes(engine)
+      const visible = visibleNodes()
       return focusCommands.setFocus(visible[0] ?? focusedId)
     },
 
     focusLast(): Command {
-      const visible = getVisibleNodes(engine)
+      const visible = visibleNodes()
       return focusCommands.setFocus(visible[visible.length - 1] ?? focusedId)
     },
 
@@ -137,6 +145,44 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
         return selectionCommands.select(focusedId)
       }
       return selectionCommands.toggleSelect(focusedId)
+    },
+
+    extendSelection(direction: 'next' | 'prev' | 'first' | 'last'): Command {
+      const visible = visibleNodes()
+      const idx = visible.indexOf(focusedId)
+
+      // Determine the target node
+      let targetId: string
+      switch (direction) {
+        case 'next': targetId = visible[idx + 1] ?? focusedId; break
+        case 'prev': targetId = visible[idx - 1] ?? focusedId; break
+        case 'first': targetId = visible[0] ?? focusedId; break
+        case 'last': targetId = visible[visible.length - 1] ?? focusedId; break
+      }
+
+      // Single selection mode: just move focus (no range)
+      if (options?.selectionMode === 'single') {
+        return focusCommands.setFocus(targetId)
+      }
+
+      // Get or initialize anchor
+      const anchorId = (store.entities[SELECTION_ANCHOR_ID]?.anchorId as string) ?? focusedId
+
+      // Compute range between anchor and target
+      const anchorIdx = visible.indexOf(anchorId)
+      const targetIdx = visible.indexOf(targetId)
+      const start = Math.min(anchorIdx, targetIdx)
+      const end = Math.max(anchorIdx, targetIdx)
+      const rangeIds = visible.slice(start, end + 1)
+
+      const commands: Command[] = []
+      // Set anchor if not already set
+      if (!store.entities[SELECTION_ANCHOR_ID]) {
+        commands.push(selectionCommands.setAnchor(focusedId))
+      }
+      commands.push(focusCommands.setFocus(targetId))
+      commands.push(selectionCommands.selectRange(rangeIds))
+      return createBatchCommand(commands)
     },
 
     dispatch(command: Command): void {
