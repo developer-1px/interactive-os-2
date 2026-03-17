@@ -1,3 +1,5 @@
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgDisclosure } from './apg-data'
 import { DisclosureGroup } from '../interactive-os/ui/DisclosureGroup'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -49,6 +51,7 @@ export default function PageDisclosure() {
           )}}
         />
       </div>
+      <ApgKeyboardTable {...apgDisclosure} />
     </div>
   )
 }

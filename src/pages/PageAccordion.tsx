@@ -1,3 +1,5 @@
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgAccordion } from './apg-data'
 import { Accordion } from '../interactive-os/ui/Accordion'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -52,6 +54,7 @@ export default function PageAccordion() {
           )}}
         />
       </div>
+      <ApgKeyboardTable {...apgAccordion} />
     </div>
   )
 }

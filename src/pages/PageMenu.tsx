@@ -1,3 +1,5 @@
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgMenu } from './apg-data'
 import { MenuList } from '../interactive-os/ui/MenuList'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -61,6 +63,7 @@ export default function PageMenu() {
           }}
         />
       </div>
+      <ApgKeyboardTable {...apgMenu} />
     </div>
   )
 }

@@ -1,3 +1,5 @@
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgToolbar } from './apg-data'
 import { Aria } from '../interactive-os/components/aria'
 import { toolbar } from '../interactive-os/behaviors/toolbar'
 import { core } from '../interactive-os/plugins/core'
@@ -51,6 +53,7 @@ export default function PageToolbar() {
           }} />
         </Aria>
       </div>
+      <ApgKeyboardTable {...apgToolbar} />
     </div>
   )
 }

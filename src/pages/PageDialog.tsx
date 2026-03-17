@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgDialog } from './apg-data'
 import { Aria } from '../interactive-os/components/aria'
 import { dialog } from '../interactive-os/behaviors/dialog'
 import { core } from '../interactive-os/plugins/core'
@@ -56,6 +58,7 @@ export default function PageDialog() {
           </div>
         </div>
       )}
+      <ApgKeyboardTable {...apgDialog} />
     </div>
   )
 }

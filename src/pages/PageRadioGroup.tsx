@@ -1,3 +1,5 @@
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgRadioGroup } from './apg-data'
 import { RadioGroup } from '../interactive-os/ui/RadioGroup'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -47,6 +49,7 @@ export default function PageRadioGroup() {
           }}
         />
       </div>
+      <ApgKeyboardTable {...apgRadioGroup} />
     </div>
   )
 }

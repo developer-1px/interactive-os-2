@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgAlertDialog } from './apg-data'
 import { Aria } from '../interactive-os/components/aria'
 import { alertdialog } from '../interactive-os/behaviors/alertdialog'
 import { core } from '../interactive-os/plugins/core'
@@ -63,6 +65,7 @@ export default function PageAlertDialog() {
           </div>
         </div>
       )}
+      <ApgKeyboardTable {...apgAlertDialog} />
     </div>
   )
 }

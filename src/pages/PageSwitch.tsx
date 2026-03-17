@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgSwitch } from './apg-data'
 import { SwitchGroup } from '../interactive-os/ui/SwitchGroup'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -53,6 +55,7 @@ export default function PageSwitch() {
           }}
         />
       </div>
+      <ApgKeyboardTable {...apgSwitch} />
     </div>
   )
 }

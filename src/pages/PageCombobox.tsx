@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgCombobox } from './apg-data'
 import { Combobox } from '../interactive-os/ui/Combobox'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -64,6 +66,7 @@ export default function PageCombobox() {
           </tbody>
         </table>
       </section>
+      <ApgKeyboardTable {...apgCombobox} />
     </div>
   )
 }

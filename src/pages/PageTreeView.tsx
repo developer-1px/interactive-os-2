@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { apgTreeView } from './apg-data'
 import { TreeView } from '../interactive-os/ui/TreeView'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -115,6 +117,7 @@ export default function PageTreeView() {
           }}
         />
       </div>
+      <ApgKeyboardTable {...apgTreeView} />
     </div>
   )
 }
