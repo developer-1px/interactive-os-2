@@ -143,6 +143,7 @@
 - [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
 - [x] Viewer 마크다운 렌더링 — remark-breaks 줄바꿈, 타이포그래피 전면 개선
 - [x] Viewer 소스 뷰어 — Shiki 라인 넘버 (CSS counter), 심볼 하이라이트 (클릭 토글)
+- [x] APG Keyboard Tables — W3C 원문 키보드 인터랙션 표 14개 패턴 페이지 렌더링
 - [ ] `[P1]` Store Explorer — Entity/Relationship 실시간 inspector
 - [ ] `[P1]` Engine Pipeline — Command dispatch 흐름 시각화
 - [ ] `[P1]` Plugin 데모 — 각 플러그인 인터랙티브 시각화
@@ -150,4 +151,4 @@
 
 ---
 
-*Last updated: 2026-03-17 — tree behavior 추가, AriaBehavior 축 분석, Navigation/Collection 재구성, 317 tests, 42 files*
+*Last updated: 2026-03-17 — APG keyboard tables 14개 페이지, tree behavior, AriaBehavior 축 분석, Navigation/Collection 재구성, 317 tests, 42 files*
