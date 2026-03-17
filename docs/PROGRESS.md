@@ -146,9 +146,42 @@
 - [x] APG Keyboard Tables — W3C 원문 키보드 인터랙션 표 14개 패턴 페이지 렌더링
 - [ ] `[P1]` Store Explorer — Entity/Relationship 실시간 inspector
 - [ ] `[P1]` Engine Pipeline — Command dispatch 흐름 시각화
-- [ ] `[P1]` Plugin 데모 — 각 플러그인 인터랙티브 시각화
+- [x] Plugin 데모 — CRUD, Clipboard, History, DnD, Rename 인터랙티브 페이지
 - [ ] `[P1]` Vision Architecture — mermaid 비전 문서 렌더링
+
+## ⑨ APG Pattern Coverage
+
+> W3C APG (ARIA Authoring Practices Guide) 패턴 기준 구현 현황
+
+| APG Pattern | Behavior | UI Comp | Demo Page | APG Table | Status |
+|---|---|---|---|---|---|
+| Accordion | ✅ | ✅ | ✅ | ✅ | Done |
+| Alert Dialog | ✅ | — | ✅ | ✅ | Done |
+| Combobox | ✅ | ✅ | ✅ | ✅ | WIP |
+| Dialog (Modal) | ✅ | — | ✅ | ✅ | Done |
+| Disclosure | ✅ | ✅ | ✅ | ✅ | Done |
+| Grid | ✅ | ✅ | ✅ | ✅ | Done |
+| Listbox | ✅ | ✅ | ✅ | ✅ | Done |
+| Menu | ✅ | ✅ | ✅ | ✅ | Done |
+| Radio Group | ✅ | ✅ | ✅ | ✅ | Done |
+| Switch | ✅ | ✅ | ✅ | ✅ | Done |
+| Tabs | ✅ | ✅ | ✅ | ✅ | Done |
+| Toolbar | ✅ | — | ✅ | ✅ | Done |
+| Tree View | ✅ | ✅ | ✅ | ✅ | Done |
+| Treegrid | ✅ | ✅ | ✅ | ✅ | Done |
+| Menubar | ❌ | ❌ | ❌ | ❌ | `[P2]` 다계층 keyMap |
+| Slider | ❌ | ❌ | ❌ | ❌ | `[P2]` 연속값 축 |
+| Spinbutton | ❌ | ❌ | ❌ | ❌ | `[P2]` 연속값 축 |
+| Carousel | ❌ | ❌ | ❌ | ❌ | — |
+| Feed | ❌ | ❌ | ❌ | ❌ | — |
+| Table | ❌ | ❌ | ❌ | ❌ | read-only grid |
+| Tooltip | ❌ | ❌ | ❌ | ❌ | — |
+| Window Splitter | ❌ | ❌ | ❌ | ❌ | — |
+
+*Native HTML 패턴 (Alert, Breadcrumb, Button, Checkbox, Link, Meter)은 behavior 불필요로 제외*
+
+**14/14 composite widget 구현 완료** · 8개 미구현 (P2 또는 미계획)
 
 ---
 
-*Last updated: 2026-03-17 — APG keyboard tables 14개 페이지, tree behavior, AriaBehavior 축 분석, Navigation/Collection 재구성, 317 tests, 42 files*
+*Last updated: 2026-03-17 — Collection 플러그인 데모 5개 추가, APG 패턴 커버리지 표, 317 tests, 42 files*
