@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Plug, Keyboard, Eye, Map } from 'lucide-react'
+import { Database, Cog, Compass, Layers, Eye, Map } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './App.css'
 
@@ -95,37 +95,37 @@ const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'plugins',
-    label: 'Plugins',
-    icon: Plug,
-    basePath: '/plugins/core',
+    id: 'navigation',
+    label: 'Navigation',
+    icon: Compass,
+    basePath: '/navigation/accordion',
     items: [
-      { path: 'core', label: 'Core', status: 'placeholder', component: null },
-      { path: 'crud', label: 'CRUD', status: 'placeholder', component: null },
-      { path: 'clipboard', label: 'Clipboard', status: 'placeholder', component: null },
-      { path: 'rename', label: 'Rename', status: 'placeholder', component: null },
-      { path: 'dnd', label: 'DnD', status: 'placeholder', component: null },
+      { path: 'accordion', label: 'Accordion', status: 'ready', component: PageAccordion },
+      { path: 'disclosure', label: 'Disclosure', status: 'ready', component: PageDisclosure },
+      { path: 'switch', label: 'Switch', status: 'ready', component: PageSwitch },
+      { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabs },
+      { path: 'radiogroup', label: 'RadioGroup', status: 'ready', component: PageRadioGroup },
+      { path: 'menu', label: 'Menu', status: 'ready', component: PageMenu },
+      { path: 'toolbar', label: 'Toolbar', status: 'ready', component: PageToolbar },
+      { path: 'dialog', label: 'Dialog', status: 'ready', component: PageDialog },
+      { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: PageAlertDialog },
     ],
   },
   {
-    id: 'behaviors',
-    label: 'Behaviors',
-    icon: Keyboard,
-    basePath: '/behaviors/treegrid',
+    id: 'collection',
+    label: 'Collection',
+    icon: Layers,
+    basePath: '/collection/treegrid',
     items: [
       { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: PageTreeGrid },
       { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListbox },
-      { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabs },
-      { path: 'menu', label: 'Menu', status: 'ready', component: PageMenu },
-      { path: 'accordion', label: 'Accordion', status: 'ready', component: PageAccordion },
-      { path: 'disclosure', label: 'Disclosure', status: 'ready', component: PageDisclosure },
-      { path: 'dialog', label: 'Dialog', status: 'ready', component: PageDialog },
-      { path: 'combobox', label: 'Combobox', status: 'wip', component: PageCombobox },
-      { path: 'toolbar', label: 'Toolbar', status: 'ready', component: PageToolbar },
       { path: 'grid', label: 'Grid', status: 'ready', component: PageGrid },
-      { path: 'radiogroup', label: 'RadioGroup', status: 'ready', component: PageRadioGroup },
-      { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: PageAlertDialog },
-      { path: 'switch', label: 'Switch', status: 'ready', component: PageSwitch },
+      { path: 'combobox', label: 'Combobox', status: 'wip', component: PageCombobox },
+      { path: 'crud', label: 'CRUD', status: 'placeholder', component: null },
+      { path: 'clipboard', label: 'Clipboard', status: 'placeholder', component: null },
+      { path: 'history', label: 'History', status: 'placeholder', component: null },
+      { path: 'dnd', label: 'DnD', status: 'placeholder', component: null },
+      { path: 'rename', label: 'Rename', status: 'placeholder', component: null },
     ],
   },
   {
