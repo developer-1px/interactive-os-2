@@ -4,7 +4,7 @@ description: "Audit naming consistency — synonym drift, format mismatch, seman
 
 # Naming Consistency Audit
 
-You are performing a full naming audit of the codebase. The purpose is to ensure every identifier tells the same story — the same concept always uses the same word, and the same word always refers to the same concept.
+You are performing a naming audit of the codebase. The purpose is to ensure every identifier tells the same story — the same concept always uses the same word, and the same word always refers to the same concept.
 
 ## Why this matters
 
@@ -12,7 +12,25 @@ Naming inconsistency is invisible technical debt. When `create`, `build`, and `m
 
 ## The Audit Process
 
-### Step 1: Collect all identifiers
+### Step 0: Check for dictionary cache
+
+Check if `.claude/naming-dictionary.md` exists.
+
+- **If exists**: Read it, extract `last_commit` from frontmatter. Run `git merge-base --is-ancestor {last_commit} HEAD` to verify it's still valid.
+  - **If valid**: Go to **Step 1a (incremental mode)**.
+  - **If invalid** (force push, rebase, etc.): Go to **Step 1b (full mode)**.
+- **If not exists**: Go to **Step 1b (full mode)**.
+
+### Step 1a: Incremental mode (dictionary exists)
+
+1. Run `git diff {last_commit}..HEAD --name-only -- 'src/'` to get changed files.
+2. If no src/ files changed → report "No naming changes since last audit" and **stop**.
+3. Scan only changed files for identifiers (exported symbols, file names, property keys).
+4. Compare new/modified/deleted identifiers against the dictionary's Key Pool.
+5. Go to **Step 4** (detect inconsistencies) with scope limited to the delta.
+6. After reporting, go to **Step 6** (update dictionary).
+
+### Step 1b: Full mode (no dictionary)
 
 Scan `src/` for all meaningful identifiers (skip `node_modules`, `dist`, test files):
 
@@ -23,7 +41,7 @@ Scan `src/` for all meaningful identifiers (skip `node_modules`, `dist`, test fi
 - **Object property keys**: `focusNext`, `focusPrev`, `selectRange`
 - **Directory names**: `behaviors/`, `plugins/`, `hooks/`
 
-Use Grep and Glob to collect these.
+Use Grep and Glob to collect these. Then go to **Step 2**.
 
 ### Step 2: Tokenize into fragments
 
@@ -76,6 +94,9 @@ Flag only when the bare word is used ambiguously in the same scope or adjacent f
 ```
 ## Naming Audit Report
 
+### Mode
+{Incremental (N files changed since {last_commit}) | Full scan}
+
 ### Key Pool Summary
 - Verbs: N unique (top 5: ...)
 - Nouns: N unique (top 5: ...)
@@ -96,10 +117,47 @@ Flag only when the bare word is used ambiguously in the same scope or adjacent f
 {CLEAN | N issues found}
 ```
 
+### Step 6: Update dictionary
+
+After the audit completes, update `.claude/naming-dictionary.md`:
+
+- **Incremental mode**: Merge new/modified identifiers into existing dictionary. Remove deleted identifiers. Update `last_commit` to current HEAD.
+- **Full mode**: Write the complete dictionary from scratch.
+
+Dictionary format:
+
+```markdown
+---
+last_commit: {HEAD hash}
+last_updated: {YYYY-MM-DD}
+---
+
+## Verbs
+| fragment | count | identifiers |
+|----------|-------|-------------|
+| create | 5 | createStore, createCommandEngine, ... |
+
+## Nouns
+| fragment | count | identifiers |
+|----------|-------|-------------|
+| store | 3 | createStore, NormalizedData, ... |
+
+## Adjectives
+| fragment | count | identifiers |
+|----------|-------|-------------|
+| normalized | 1 | NormalizedData |
+
+## Synonym Map
+| canonical | known synonyms | notes |
+|-----------|---------------|-------|
+| create | — | sole factory verb |
+| remove | delete (command type only) | removeEntity (store API), crud:delete (command type) |
+```
+
 ## Important Guidelines
 
 - **Standard terminology wins.** ARIA roles, DOM API, React API names are never flagged.
 - **Cross-boundary conventions are normal.** Files=kebab, exports=PascalCase/camelCase, constants=SCREAMING_SNAKE.
-- **Focus on the delta.** Call out which inconsistencies are NEW vs pre-existing.
+- **Focus on the delta.** In incremental mode, only report issues in changed identifiers.
 - **Be specific.** Say exactly which identifiers conflict, in which files, and recommend which to keep.
 - **Don't over-flag.** A codebase with 3 issues is healthy. Report only genuine inconsistencies.
