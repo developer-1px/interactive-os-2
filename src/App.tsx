@@ -26,6 +26,7 @@ import PageGrid from './pages/PageGrid'
 import PageRadioGroup from './pages/PageRadioGroup'
 import PageAlertDialog from './pages/PageAlertDialog'
 import PageSwitch from './pages/PageSwitch'
+import PageTreeView from './pages/PageTreeView'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 
@@ -109,6 +110,7 @@ const routeConfig: RouteGroup[] = [
       { path: 'toolbar', label: 'Toolbar', status: 'ready', component: PageToolbar },
       { path: 'dialog', label: 'Dialog', status: 'ready', component: PageDialog },
       { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: PageAlertDialog },
+      { path: 'treeview', label: 'Tree View', status: 'ready', component: PageTreeView },
     ],
   },
   {

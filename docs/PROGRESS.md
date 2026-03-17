@@ -85,8 +85,14 @@
 - [x] alertdialog — dialog variant with aria-modal
 - [x] switch — expanded state 재사용, aria-checked, natural-tab-order
 
+### 추가 프리셋 (Navigation)
+- [x] tree — tree view (role: tree, childRole: treeitem), treegrid에서 grid 부분 제거
+
 ### 미구현 behavior
 - [x] extended selection — Shift 범위 선택 (listbox, treegrid)
+- [ ] `[P2]` menubar — 다계층 keyMap 필요 (축 확장)
+- [ ] `[P2]` slider — 연속 값 (min/max/step) 축 필요
+- [ ] `[P2]` spinbutton — 연속 값 축 필요
 
 ## ⑤ Components + Hooks
 
@@ -144,4 +150,4 @@
 
 ---
 
-*Last updated: 2026-03-17 — Viewer md/source 강화, 317 tests, 41 files*
+*Last updated: 2026-03-17 — tree behavior 추가, AriaBehavior 축 분석, Navigation/Collection 재구성, 317 tests, 42 files*
