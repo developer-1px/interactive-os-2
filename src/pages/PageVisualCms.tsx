@@ -24,10 +24,10 @@ function Hero() {
         and 14 APG-compliant behavior presets — keyboard-first by design.
       </p>
       <div className="cms-hero__actions">
-        <button className="cms-hero__cta">
+        <button type="button" className="cms-hero__cta">
           Get Started <ArrowRight size={14} />
         </button>
-        <button className="cms-hero__cta-secondary">
+        <button type="button" className="cms-hero__cta-secondary">
           View on GitHub <ChevronRight size={14} />
         </button>
       </div>
@@ -200,11 +200,11 @@ function Footer() {
         <span className="cms-footer__name">interactive-os</span>
         <span className="cms-footer__copy">MIT License</span>
       </div>
-      <div className="cms-footer__links">
-        <span className="cms-footer__link">Documentation</span>
-        <span className="cms-footer__link">GitHub</span>
-        <span className="cms-footer__link">npm</span>
-      </div>
+      <nav className="cms-footer__links">
+        <a className="cms-footer__link" href="#docs">Documentation</a>
+        <a className="cms-footer__link" href="#github">GitHub</a>
+        <a className="cms-footer__link" href="#npm">npm</a>
+      </nav>
     </footer>
   )
 }
