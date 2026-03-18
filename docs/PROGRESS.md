@@ -133,7 +133,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (298 tests, 36 files)
+- [x] Vitest (365 tests, 47 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 42 modules)
@@ -198,4 +198,4 @@
 
 ---
 
-*Last updated: 2026-03-18 — Visual CMS PoC 필드 단위 포커스, 331 tests, 43 files*
+*Last updated: 2026-03-19 — Visual CMS spatial nav integration tests, 365 tests, 47 files*
