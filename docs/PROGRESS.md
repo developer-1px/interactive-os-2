@@ -162,6 +162,7 @@
 - [x] Components 레이어 — `<Aria>`, `<Aria.Cell>`, Hooks API 쇼케이스 (3 pages)
 - [x] Vision Architecture — mermaid 아키텍처 다이어그램 5개 렌더링
 - [x] Visual CMS Landing — interactive-os 소개 랜딩 페이지 (Hero, Features, How it works, 14 APG Patterns, Footer)
+- [x] Visual CMS Aria Integration — 4개 반복 섹션에 `<Aria>` listbox 키보드 네비게이션 적용
 
 ## ⑨ APG Pattern Coverage
 

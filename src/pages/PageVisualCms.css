@@ -144,16 +144,26 @@
 /* ── Stats bar ── */
 
 .cms-stats {
-  display: flex;
-  justify-content: center;
-  gap: 48px;
   padding: 28px 48px;
   background: var(--zinc-950);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.cms-stats [role="listbox"] {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+}
+
 .cms-stat {
   text-align: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background 0.12s;
+}
+
+.cms-stat--focused {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .cms-stat__value {
@@ -229,6 +239,11 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
+.cms-feature-card--focused {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 4px 16px rgba(91, 91, 214, 0.1);
+}
+
 .cms-feature-card__icon {
   width: 36px;
   height: 36px;
@@ -277,7 +292,13 @@
 
 .cms-step {
   position: relative;
-  padding: 0;
+  padding: 12px;
+  border-radius: 8px;
+  transition: background 0.12s;
+}
+
+.cms-step--focused {
+  background: var(--accent-dim);
 }
 
 .cms-step__number {
@@ -345,6 +366,12 @@
 .cms-pattern:hover {
   border-color: var(--accent-mid);
   box-shadow: 0 2px 8px rgba(91, 91, 214, 0.06);
+}
+
+.cms-pattern--focused {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  background: var(--accent-dim);
 }
 
 .cms-pattern__icon {
