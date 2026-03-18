@@ -54,6 +54,11 @@
 - [x] moveOut / moveIn (부모 레벨 이동)
 - [x] moveTo (임의 위치 이동)
 
+### spatial()
+- [x] enterChild / exitToParent — `__spatial_parent__` 기반 depth 네비게이션 (Figma-style)
+- [x] getSpatialParentId helper (ROOT_ID 기본값)
+- [x] undo/redo 지원
+
 ### 미구현 플러그인
 - [x] focusRecovery() — 포커스 유효성 검증 + 자동 복구 미들웨어
 - [ ] `[P2]` permissions() — 노드별 Command 차단 미들웨어 (예제만 존재)
@@ -119,7 +124,7 @@
 - [x] SwitchGroup
 - [x] Grid (2D row/col navigation with Aria.Cell)
 - [x] RadioGroup
-- [x] Combobox (input + listbox, aria-activedescendant)
+- [x] Combobox (input + listbox, aria-activedescendant, editable 모드 지원)
 - [ ] `[P2]` shadcn CLI — `npx interactive-os add treegrid`
 
 ## ⑦ 인프라
@@ -143,6 +148,7 @@
 - [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
 - [x] Viewer 마크다운 렌더링 — remark-breaks 줄바꿈, 타이포그래피 전면 개선
 - [x] Viewer 소스 뷰어 — Shiki 라인 넘버 (CSS counter), 심볼 하이라이트 (클릭 토글)
+- [x] Viewer Quick Open — Cmd+P fuzzy 파일 검색 (Fuse.js, combobox ARIA 패턴)
 - [x] APG Keyboard Tables — W3C 원문 키보드 인터랙션 표 14개 패턴 페이지 렌더링
 - [x] Store Explorer — NormalizedData 구조를 TreeGrid로 시각화 (meta entities 포함)
 - [x] Store Operations — 순수 함수 API 데모 (addEntity, removeEntity, moveNode 등)
@@ -151,6 +157,7 @@
 - [x] Plugin 데모 — CRUD, Clipboard, History, DnD, Rename 인터랙티브 페이지
 - [x] Components 레이어 — `<Aria>`, `<Aria.Cell>`, Hooks API 쇼케이스 (3 pages)
 - [x] Vision Architecture — mermaid 아키텍처 다이어그램 5개 렌더링
+- [x] Visual CMS PoC — 필드 단위(text/icon/image) 포커스, nested 4레벨 편집 엔진 검증
 
 ## ⑨ APG Pattern Coverage
 
@@ -160,7 +167,7 @@
 |---|---|---|---|---|---|
 | Accordion | ✅ | ✅ | ✅ | ✅ | Done |
 | Alert Dialog | ✅ | — | ✅ | ✅ | Done |
-| Combobox | ✅ | ✅ | ✅ | ✅ | WIP |
+| Combobox | ✅ | ✅ | ✅ | ✅ | Done |
 | Dialog (Modal) | ✅ | — | ✅ | ✅ | Done |
 | Disclosure | ✅ | ✅ | ✅ | ✅ | Done |
 | Grid | ✅ | ✅ | ✅ | ✅ | Done |
@@ -187,4 +194,4 @@
 
 ---
 
-*Last updated: 2026-03-17 — 모든 placeholder 페이지 완성 (33 pages), Components 레이어 추가, 321 tests, 42 files*
+*Last updated: 2026-03-18 — Visual CMS PoC 필드 단위 포커스, 331 tests, 43 files*
