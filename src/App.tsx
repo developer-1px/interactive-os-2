@@ -41,6 +41,7 @@ import PageStoreOperations from './pages/PageStoreOperations'
 import PageEnginePipeline from './pages/PageEnginePipeline'
 import PageEngineHistory from './pages/PageEngineHistory'
 import PageVisionArchitecture from './pages/PageVisionArchitecture'
+import PageVisualCms from './pages/PageVisualCms'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 
@@ -163,6 +164,7 @@ const routeConfig: RouteGroup[] = [
     basePath: '/vision/architecture',
     items: [
       { path: 'architecture', label: 'Architecture', status: 'ready', component: PageVisionArchitecture },
+      { path: 'visual-cms', label: 'Visual CMS', status: 'ready', component: PageVisualCms },
     ],
   },
 ]

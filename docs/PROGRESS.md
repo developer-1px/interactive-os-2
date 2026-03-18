@@ -161,7 +161,7 @@
 - [x] Plugin 데모 — CRUD, Clipboard, History, DnD, Rename 인터랙티브 페이지
 - [x] Components 레이어 — `<Aria>`, `<Aria.Cell>`, Hooks API 쇼케이스 (3 pages)
 - [x] Vision Architecture — mermaid 아키텍처 다이어그램 5개 렌더링
-- [x] Visual CMS PoC — spatial behavior 기반 홈페이지 편집 (TV리모컨 공간 네비게이션 + Figma식 Enter/Esc 깊이 탐색)
+- [x] Visual CMS Landing — interactive-os 소개 랜딩 페이지 (Hero, Features, How it works, 14 APG Patterns, Footer)
 
 ## ⑨ APG Pattern Coverage
 
