@@ -1,0 +1,536 @@
+/* ===================================================================
+   Visual CMS — spatial navigation homepage editor
+   =================================================================== */
+
+.vc-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: var(--sans);
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  font-size: 12px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Toolbar --- */
+
+.vc-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 40px;
+  border-bottom: 1px solid var(--border-dim);
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+.vc-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vc-toolbar__title {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.vc-toolbar__shortcuts {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.vc-toolbar__shortcuts kbd {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  padding: 1px 4px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  margin-left: 6px;
+  line-height: 1.4;
+}
+
+.vc-toolbar__shortcuts span {
+  font-family: var(--sans);
+  font-weight: 500;
+  margin-right: 2px;
+}
+
+/* --- Breadcrumb --- */
+
+.vc-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.vc-breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.vc-breadcrumb__sep {
+  color: var(--border-mid);
+  flex-shrink: 0;
+}
+
+.vc-breadcrumb__parent {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.vc-breadcrumb__current {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* --- Canvas --- */
+
+.vc-canvas {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: var(--bg-surface);
+  background-image: radial-gradient(circle, var(--border-dim) 0.5px, transparent 0.5px);
+  background-size: 16px 16px;
+}
+
+.vc-canvas__inner {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* --- Layout modes (based on spatial parent) --- */
+
+/* Root: vertical stack of sections */
+.vc-layout--root [role="group"] {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cards section: heading + 3-col grid for cards */
+.vc-layout--cards [role="group"] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 16px;
+}
+
+.vc-layout--cards [role="group"] > [data-node-id="features-heading"] {
+  grid-column: 1 / -1;
+}
+
+/* Tabs section: heading + horizontal tab row */
+.vc-layout--tabs [role="group"] {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+}
+
+/* Footer section */
+.vc-layout--footer [role="group"] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+/* Hero section: centered vertical stack */
+.vc-layout--hero [role="group"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 24px;
+  gap: 4px;
+}
+
+/* Fields layout (inside a card or tab) */
+.vc-layout--fields [role="group"] {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 4px;
+}
+
+/* --- Node base --- */
+
+.vc-node {
+  position: relative;
+  border-radius: var(--radius-sm);
+  transition: box-shadow 0.1s ease, background 0.1s ease;
+}
+
+/* --- Focus / selection states --- */
+
+.vc-node--focused {
+  box-shadow: 0 0 0 2px var(--accent);
+  z-index: 1;
+}
+
+.vc-node--focused .vc-node__indicator {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.vc-node--selected {
+  box-shadow: 0 0 0 2px var(--accent-muted);
+  z-index: 1;
+}
+
+.vc-node--selected .vc-node__indicator {
+  opacity: 1;
+}
+
+/* --- Node indicator (type icon + label) --- */
+
+.vc-node__indicator {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 5px;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 500;
+  color: var(--border-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  pointer-events: none;
+  background: var(--bg-elevated);
+  border-radius: 0 var(--radius-sm) 0 var(--radius-sm);
+  z-index: 2;
+}
+
+.vc-node--focused .vc-node__indicator,
+.vc-node:hover .vc-node__indicator {
+  opacity: 1;
+}
+
+/* --- Container nodes (section/card/tab at spatial level) --- */
+
+.vc-node--container {
+  min-height: 48px;
+  cursor: default;
+}
+
+/* Section: hero */
+.vc-section--hero {
+  background: linear-gradient(135deg, var(--zinc-900) 0%, var(--zinc-800) 100%);
+  padding: 40px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.vc-section--hero .vc-node__indicator {
+  color: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.vc-section--hero.vc-node--focused {
+  box-shadow: 0 0 0 2px var(--indigo-100);
+}
+
+.vc-section--hero.vc-node--focused .vc-node__indicator {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Section: cards */
+.vc-section--cards {
+  padding: 24px 20px;
+  border-top: 1px solid var(--border-dim);
+}
+
+/* Section: tabs */
+.vc-section--tabs {
+  padding: 24px 20px;
+  border-top: 1px solid var(--border-dim);
+}
+
+/* Section: footer */
+.vc-section--footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-dim);
+  background: var(--zinc-900);
+}
+
+.vc-section--footer .vc-node__indicator {
+  color: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.vc-section--footer.vc-node--focused {
+  box-shadow: 0 0 0 2px var(--indigo-100);
+}
+
+/* Card container */
+.vc-card {
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vc-card.vc-node--focused {
+  border-color: var(--accent);
+}
+
+/* Tab container */
+.vc-tab {
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  padding: 12px 16px;
+}
+
+.vc-tab.vc-node--focused {
+  border-color: var(--accent);
+}
+
+/* --- Section preview (shown at root level for containers) --- */
+
+.vc-section-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+
+.vc-section-preview--hero {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.vc-section-preview__label {
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.vc-section--hero .vc-section-preview__label {
+  color: var(--zinc-50);
+  font-size: 16px;
+}
+
+.vc-section-preview__hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+
+.vc-section--hero .vc-section-preview__hint {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.vc-section--footer .vc-section-preview {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.vc-section--footer .vc-section-preview__hint {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* Card preview */
+.vc-card-preview,
+.vc-tab-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+
+.vc-card-preview__label,
+.vc-tab-preview__label {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.vc-card-preview__hint,
+.vc-tab-preview__hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+
+/* --- Field nodes (leaf) --- */
+
+.vc-node--field {
+  display: flex;
+  align-items: flex-start;
+  min-height: 24px;
+  border-radius: var(--radius-sm);
+}
+
+.vc-node__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.vc-field {
+  display: block;
+  cursor: default;
+}
+
+/* Text roles */
+.vc-text--title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 4px 8px;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.vc-text--subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  line-height: 1.5;
+}
+
+.vc-text--heading {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 8px;
+}
+
+.vc-text--body {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding: 2px 8px;
+}
+
+.vc-text--cta {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  margin: 4px 8px;
+  letter-spacing: -0.01em;
+}
+
+.vc-text--label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 4px 8px;
+}
+
+.vc-text--copyright {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+}
+
+/* Hero-level field overrides (when inside hero via spatial nav) */
+.vc-layout--hero .vc-text--title {
+  color: var(--zinc-50);
+  font-size: 24px;
+}
+
+.vc-layout--hero .vc-text--subtitle {
+  color: var(--zinc-400);
+  font-size: 14px;
+}
+
+.vc-layout--hero .vc-text--cta {
+  background: var(--indigo-100);
+  color: var(--indigo-900);
+  margin-top: 8px;
+}
+
+.vc-layout--hero .vc-canvas__inner {
+  background: var(--zinc-900);
+}
+
+.vc-layout--hero .vc-node--focused {
+  box-shadow: 0 0 0 2px var(--indigo-100);
+}
+
+/* Footer-level field overrides */
+.vc-layout--footer .vc-text--copyright {
+  color: var(--zinc-400);
+}
+
+.vc-layout--footer .vc-canvas__inner {
+  background: var(--zinc-900);
+}
+
+.vc-layout--footer .vc-node--focused {
+  box-shadow: 0 0 0 2px var(--indigo-100);
+}
+
+/* Icon field */
+.vc-field--icon {
+  font-size: 20px;
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+/* Image field */
+.vc-field--image {
+  max-width: 120px;
+  height: auto;
+  border-radius: var(--radius-sm);
+  margin: 4px 8px;
+  opacity: 0.8;
+}
+
+/* --- Hover state --- */
+
+.vc-node:not(.vc-node--focused):not(.vc-node--selected):hover {
+  background: var(--bg-hover);
+}
+
+.vc-section--hero:not(.vc-node--focused):hover {
+  background: linear-gradient(135deg, var(--zinc-900) 0%, var(--zinc-800) 100%);
+}
+
+.vc-section--footer:not(.vc-node--focused):hover {
+  background: var(--zinc-900);
+}
+
+/* --- Animations --- */
+
+.vc-node--focused {
+  animation: vc-focus-in 0.12s ease-out;
+}
+
+@keyframes vc-focus-in {
+  from { box-shadow: 0 0 0 0px var(--accent); }
+}
