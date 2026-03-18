@@ -1,268 +1,225 @@
-import { useState, useMemo } from 'react'
-import { Aria } from '../interactive-os/components/aria'
-import { spatial } from '../interactive-os/behaviors/spatial'
-import { spatial as spatialPlugin, getSpatialParentId } from '../interactive-os/plugins/spatial'
-import { useSpatialNav } from '../interactive-os/hooks/use-spatial-nav'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData, Command } from '../interactive-os/core/types'
-import type { NodeState, BehaviorContext } from '../interactive-os/behaviors/types'
-import { core } from '../interactive-os/plugins/core'
-import { history, historyCommands } from '../interactive-os/plugins/history'
-import { crud, crudCommands } from '../interactive-os/plugins/crud'
-import { clipboard, clipboardCommands } from '../interactive-os/plugins/clipboard'
-import { rename } from '../interactive-os/plugins/rename'
-import { dnd, dndCommands } from '../interactive-os/plugins/dnd'
-import { focusRecovery } from '../interactive-os/plugins/focus-recovery'
-import { getParent } from '../interactive-os/core/createStore'
-import { ChevronRight } from 'lucide-react'
 import './PageVisualCms.css'
+import {
+  Database, Cog, Keyboard, Shield,
+  ChevronRight, ArrowRight,
+  List, Grid3X3, ToggleLeft, MessageSquare,
+  PanelTop, ChevronDown, MousePointerClick,
+  Layers, Table, Radio, Menu,
+} from 'lucide-react'
 
-// --- CMS Content Types ---
+// ── Section: Hero ──
 
-interface SectionData { type: 'section'; variant: 'hero' | 'logos' | 'features' | 'stats' | 'testimonial' | 'cta' | 'footer' }
-interface CardData { type: 'card' }
-interface TextData { type: 'text'; value: string; role: 'hero-title' | 'hero-sub' | 'hero-cta' | 'heading' | 'subheading' | 'body' | 'stat-num' | 'stat-label' | 'quote' | 'cite' | 'cta-title' | 'cta-btn' | 'logo' | 'footer-heading' | 'footer-link' | 'footer-copy' }
-interface ImageData { type: 'image'; src: string; alt: string }
-
-type CmsNodeData = SectionData | CardData | TextData | ImageData
-
-// --- Initial Store: Flux — design infrastructure brand ---
-
-const initialStore = createStore({
-  entities: {
-    // Hero
-    hero: { id: 'hero', data: { type: 'section', variant: 'hero' } },
-    'hero-tag': { id: 'hero-tag', data: { type: 'text', value: 'Now in public beta', role: 'subheading' } },
-    'hero-title': { id: 'hero-title', data: { type: 'text', value: 'Design infrastructure\nthat ships.', role: 'hero-title' } },
-    'hero-sub': { id: 'hero-sub', data: { type: 'text', value: 'Flux gives your team a single source of truth for design tokens, components, and documentation — so you ship consistent UI, faster.', role: 'hero-sub' } },
-    'hero-cta-1': { id: 'hero-cta-1', data: { type: 'text', value: 'Start free', role: 'hero-cta' } },
-    'hero-cta-2': { id: 'hero-cta-2', data: { type: 'text', value: 'Book a demo', role: 'cta-btn' } },
-
-    // Logo bar
-    logos: { id: 'logos', data: { type: 'section', variant: 'logos' } },
-    'logo-1': { id: 'logo-1', data: { type: 'text', value: 'Vercel', role: 'logo' } },
-    'logo-2': { id: 'logo-2', data: { type: 'text', value: 'Linear', role: 'logo' } },
-    'logo-3': { id: 'logo-3', data: { type: 'text', value: 'Raycast', role: 'logo' } },
-    'logo-4': { id: 'logo-4', data: { type: 'text', value: 'Resend', role: 'logo' } },
-    'logo-5': { id: 'logo-5', data: { type: 'text', value: 'Supabase', role: 'logo' } },
-
-    // Features (3-col grid)
-    features: { id: 'features', data: { type: 'section', variant: 'features' } },
-    'feat-heading': { id: 'feat-heading', data: { type: 'text', value: 'Everything your design system needs', role: 'heading' } },
-    'feat-sub': { id: 'feat-sub', data: { type: 'text', value: 'From tokens to production components, Flux handles the full lifecycle.', role: 'subheading' } },
-    'card-1': { id: 'card-1', data: { type: 'card' } },
-    'card-1-title': { id: 'card-1-title', data: { type: 'text', value: 'Token sync', role: 'heading' } },
-    'card-1-desc': { id: 'card-1-desc', data: { type: 'text', value: 'Push design tokens from Figma to code in one click. Supports CSS, Tailwind, and Swift.', role: 'body' } },
-    'card-2': { id: 'card-2', data: { type: 'card' } },
-    'card-2-title': { id: 'card-2-title', data: { type: 'text', value: 'Component registry', role: 'heading' } },
-    'card-2-desc': { id: 'card-2-desc', data: { type: 'text', value: 'Track every component across platforms. See usage, coverage gaps, and version drift at a glance.', role: 'body' } },
-    'card-3': { id: 'card-3', data: { type: 'card' } },
-    'card-3-title': { id: 'card-3-title', data: { type: 'text', value: 'Live documentation', role: 'heading' } },
-    'card-3-desc': { id: 'card-3-desc', data: { type: 'text', value: 'Auto-generated docs from your source code. Always up to date, zero maintenance.', role: 'body' } },
-
-    // Stats (horizontal row — good for ←→ spatial nav)
-    stats: { id: 'stats', data: { type: 'section', variant: 'stats' } },
-    'stat-1': { id: 'stat-1', data: { type: 'card' } },
-    'stat-1-num': { id: 'stat-1-num', data: { type: 'text', value: '2,400+', role: 'stat-num' } },
-    'stat-1-label': { id: 'stat-1-label', data: { type: 'text', value: 'Teams using Flux', role: 'stat-label' } },
-    'stat-2': { id: 'stat-2', data: { type: 'card' } },
-    'stat-2-num': { id: 'stat-2-num', data: { type: 'text', value: '12M', role: 'stat-num' } },
-    'stat-2-label': { id: 'stat-2-label', data: { type: 'text', value: 'Tokens synced / month', role: 'stat-label' } },
-    'stat-3': { id: 'stat-3', data: { type: 'card' } },
-    'stat-3-num': { id: 'stat-3-num', data: { type: 'text', value: '99.99%', role: 'stat-num' } },
-    'stat-3-label': { id: 'stat-3-label', data: { type: 'text', value: 'Uptime SLA', role: 'stat-label' } },
-    'stat-4': { id: 'stat-4', data: { type: 'card' } },
-    'stat-4-num': { id: 'stat-4-num', data: { type: 'text', value: '<50ms', role: 'stat-num' } },
-    'stat-4-label': { id: 'stat-4-label', data: { type: 'text', value: 'Sync latency', role: 'stat-label' } },
-
-    // Testimonial
-    testimonial: { id: 'testimonial', data: { type: 'section', variant: 'testimonial' } },
-    'quote-text': { id: 'quote-text', data: { type: 'text', value: '"Flux replaced our entire token pipeline. What used to take a full sprint now happens on every commit. Our designers and engineers finally speak the same language."', role: 'quote' } },
-    'quote-cite': { id: 'quote-cite', data: { type: 'text', value: 'Seo-yeon Park, Head of Design Systems — Linear', role: 'cite' } },
-
-    // CTA
-    cta: { id: 'cta', data: { type: 'section', variant: 'cta' } },
-    'cta-title': { id: 'cta-title', data: { type: 'text', value: 'Ready to unify your design infrastructure?', role: 'cta-title' } },
-    'cta-sub': { id: 'cta-sub', data: { type: 'text', value: 'Free for teams up to 10. No credit card required.', role: 'subheading' } },
-    'cta-btn': { id: 'cta-btn', data: { type: 'text', value: 'Get started for free', role: 'hero-cta' } },
-
-    // Footer (horizontal links — good for ←→ spatial nav)
-    footer: { id: 'footer', data: { type: 'section', variant: 'footer' } },
-    'footer-brand': { id: 'footer-brand', data: { type: 'text', value: 'Flux', role: 'footer-heading' } },
-    'footer-l1': { id: 'footer-l1', data: { type: 'text', value: 'Docs', role: 'footer-link' } },
-    'footer-l2': { id: 'footer-l2', data: { type: 'text', value: 'Changelog', role: 'footer-link' } },
-    'footer-l3': { id: 'footer-l3', data: { type: 'text', value: 'Pricing', role: 'footer-link' } },
-    'footer-l4': { id: 'footer-l4', data: { type: 'text', value: 'Blog', role: 'footer-link' } },
-    'footer-l5': { id: 'footer-l5', data: { type: 'text', value: 'GitHub', role: 'footer-link' } },
-    'footer-copy': { id: 'footer-copy', data: { type: 'text', value: '\u00a9 2026 Flux Inc.', role: 'footer-copy' } },
-  },
-  relationships: {
-    [ROOT_ID]: ['hero', 'logos', 'features', 'stats', 'testimonial', 'cta', 'footer'],
-    hero: ['hero-tag', 'hero-title', 'hero-sub', 'hero-cta-1', 'hero-cta-2'],
-    logos: ['logo-1', 'logo-2', 'logo-3', 'logo-4', 'logo-5'],
-    features: ['feat-heading', 'feat-sub', 'card-1', 'card-2', 'card-3'],
-    'card-1': ['card-1-title', 'card-1-desc'],
-    'card-2': ['card-2-title', 'card-2-desc'],
-    'card-3': ['card-3-title', 'card-3-desc'],
-    stats: ['stat-1', 'stat-2', 'stat-3', 'stat-4'],
-    'stat-1': ['stat-1-num', 'stat-1-label'],
-    'stat-2': ['stat-2-num', 'stat-2-label'],
-    'stat-3': ['stat-3-num', 'stat-3-label'],
-    'stat-4': ['stat-4-num', 'stat-4-label'],
-    testimonial: ['quote-text', 'quote-cite'],
-    cta: ['cta-title', 'cta-sub', 'cta-btn'],
-    footer: ['footer-brand', 'footer-l1', 'footer-l2', 'footer-l3', 'footer-l4', 'footer-l5', 'footer-copy'],
-  },
-})
-
-// Expand all containers so AriaNode renders the full page tree
-const containerIds = Object.entries(initialStore.relationships)
-  .filter(([key, children]) => key !== ROOT_ID && children.length > 0)
-  .map(([key]) => key)
-initialStore.entities['__expanded__'] = { id: '__expanded__', expandedIds: containerIds }
-
-// --- Plugins + KeyMap ---
-
-const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery(), spatialPlugin()]
-
-const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
-  'Mod+C': (ctx) => clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
-  'Mod+X': (ctx) => clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
-  'Mod+V': (ctx) => clipboardCommands.paste(ctx.focused),
-  'Delete': (ctx) => crudCommands.remove(ctx.focused),
-  'Mod+Z': () => historyCommands.undo(),
-  'Mod+Shift+Z': () => historyCommands.redo(),
-  'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-  'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
-}
-
-// --- Node Renderer ---
-
-function getNodeLabel(d: CmsNodeData): string {
-  if (d.type === 'section') return d.variant
-  if (d.type === 'card') return 'card'
-  if (d.type === 'text') return d.role
-  return d.type
-}
-
-function renderContent(d: CmsNodeData) {
-  if (d.type === 'text') {
-    return <span className={`vc-text vc-text--${d.role}`}>{d.value}</span>
-  }
-  if (d.type === 'image') {
-    return <img className="vc-image" src={d.src} alt={d.alt} />
-  }
-  // containers show a preview label at parent level
-  if (d.type === 'section') {
-    return <span className="vc-container-hint">{d.variant}</span>
-  }
-  if (d.type === 'card') {
-    return <span className="vc-container-hint">card</span>
-  }
-  return null
-}
-
-function CmsNode({ node, state }: { node: Record<string, unknown>; state: NodeState }) {
-  const d = node.data as CmsNodeData
-  const isContainer = d.type === 'section' || d.type === 'card'
-
-  const cls = [
-    'vc-node',
-    isContainer ? 'vc-node--container' : 'vc-node--field',
-    state.focused && 'vc-node--focused',
-    state.selected && !state.focused && 'vc-node--selected',
-    d.type === 'section' && `vc-section--${d.variant}`,
-    d.type === 'card' && 'vc-card',
-  ].filter(Boolean).join(' ')
-
+function Hero() {
   return (
-    <div className={cls}>
-      {renderContent(d)}
-      {state.focused && <div className="vc-focus-badge">{getNodeLabel(d)}</div>}
-    </div>
+    <section className="cms-hero">
+      <div className="cms-hero__badge">
+        <span className="cms-hero__badge-dot" />
+        Open Source
+      </div>
+      <h1 className="cms-hero__title">
+        Headless ARIA Engine
+      </h1>
+      <p className="cms-hero__subtitle">
+        Build fully accessible UI with a normalized store, command engine,
+        and 14 APG-compliant behavior presets — keyboard-first by design.
+      </p>
+      <div className="cms-hero__actions">
+        <button className="cms-hero__cta">
+          Get Started <ArrowRight size={14} />
+        </button>
+        <button className="cms-hero__cta-secondary">
+          View on GitHub <ChevronRight size={14} />
+        </button>
+      </div>
+    </section>
   )
 }
 
-// --- Breadcrumb ---
+// ── Section: Stats ──
 
-function Breadcrumb({ store }: { store: NormalizedData }) {
-  const spatialParentId = getSpatialParentId(store)
-  const crumbs: { id: string; label: string }[] = []
+const stats = [
+  { value: '14', label: 'APG Patterns' },
+  { value: '365+', label: 'Tests' },
+  { value: '42', label: 'Modules' },
+  { value: '0', label: 'Runtime Deps' },
+]
 
-  let current = spatialParentId
-  while (current && current !== ROOT_ID) {
-    const entity = store.entities[current]
-    if (entity) {
-      crumbs.unshift({ id: current, label: getNodeLabel(entity.data as CmsNodeData) })
-    }
-    current = getParent(store, current) ?? ROOT_ID
-  }
-  crumbs.unshift({ id: ROOT_ID, label: 'Flux' })
-
+function Stats() {
   return (
-    <nav className="vc-breadcrumb">
-      {crumbs.map((c, i) => (
-        <span key={c.id} className="vc-breadcrumb__item">
-          {i > 0 && <ChevronRight size={10} strokeWidth={2} className="vc-breadcrumb__sep" />}
-          <span className={i === crumbs.length - 1 ? 'vc-breadcrumb__current' : 'vc-breadcrumb__parent'}>
-            {c.label}
-          </span>
-        </span>
+    <section className="cms-stats">
+      {stats.map((s) => (
+        <div key={s.label} className="cms-stat">
+          <span className="cms-stat__value">{s.value}</span>
+          <span className="cms-stat__label">{s.label}</span>
+        </div>
       ))}
-    </nav>
+    </section>
   )
 }
 
-// --- Page ---
+// ── Section: Features ──
+
+const features = [
+  {
+    icon: <Database size={16} />,
+    title: 'Normalized Store',
+    desc: 'Tree data as flat entities + relationships. O(1) lookups, immutable updates, parent-child traversal built in.',
+  },
+  {
+    icon: <Cog size={16} />,
+    title: 'Command Engine',
+    desc: 'Every mutation is a command with undo/redo. Middleware pipeline for validation, logging, and side effects.',
+  },
+  {
+    icon: <Shield size={16} />,
+    title: '14 ARIA Patterns',
+    desc: 'Treegrid, listbox, tabs, combobox, dialog, menu, and more. Each preset wires up roles, states, and keyboard interaction.',
+  },
+  {
+    icon: <Keyboard size={16} />,
+    title: 'Keyboard-First',
+    desc: 'Every interaction works without a mouse. Roving tabindex, arrow key navigation, spatial nav, and platform-aware shortcuts.',
+  },
+]
+
+function Features() {
+  return (
+    <section className="cms-features">
+      <p className="cms-section-label">Core</p>
+      <h2 className="cms-section-title">Everything you need</h2>
+      <p className="cms-section-desc">
+        A complete headless engine for building accessible, keyboard-driven interfaces
+        on any component library.
+      </p>
+      <div className="cms-features__grid">
+        {features.map((f) => (
+          <div key={f.title} className="cms-feature-card">
+            <div className="cms-feature-card__icon">{f.icon}</div>
+            <h3 className="cms-feature-card__title">{f.title}</h3>
+            <p className="cms-feature-card__desc">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ── Section: How it works ──
+
+const steps = [
+  {
+    num: '01',
+    title: 'Define Store',
+    desc: 'Create entities and relationships in a normalized tree structure.',
+  },
+  {
+    num: '02',
+    title: 'Dispatch Commands',
+    desc: 'Mutations flow through a middleware pipeline with auto undo/redo.',
+  },
+  {
+    num: '03',
+    title: 'Apply Behavior',
+    desc: 'Pick an ARIA preset — it handles roles, states, and key bindings.',
+  },
+  {
+    num: '04',
+    title: 'Render UI',
+    desc: 'Wire the headless state to your own components. Full control.',
+  },
+]
+
+function HowItWorks() {
+  return (
+    <section className="cms-how">
+      <p className="cms-section-label">Workflow</p>
+      <h2 className="cms-section-title">How it works</h2>
+      <p className="cms-section-desc">
+        Four layers, each independently testable. Compose them for any UI pattern.
+      </p>
+      <div className="cms-how__steps">
+        {steps.map((s) => (
+          <div key={s.num} className="cms-step">
+            <span className="cms-step__number">{s.num}</span>
+            <h3 className="cms-step__title">{s.title}</h3>
+            <p className="cms-step__desc">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ── Section: Patterns ──
+
+const patterns = [
+  { name: 'Treegrid', icon: <Table size={12} /> },
+  { name: 'Listbox', icon: <List size={12} /> },
+  { name: 'Tabs', icon: <PanelTop size={12} /> },
+  { name: 'Combobox', icon: <MessageSquare size={12} /> },
+  { name: 'Grid', icon: <Grid3X3 size={12} /> },
+  { name: 'Menu', icon: <Menu size={12} /> },
+  { name: 'Dialog', icon: <Layers size={12} /> },
+  { name: 'Accordion', icon: <ChevronDown size={12} /> },
+  { name: 'Tree View', icon: <ChevronRight size={12} /> },
+  { name: 'Toolbar', icon: <Keyboard size={12} /> },
+  { name: 'Disclosure', icon: <MousePointerClick size={12} /> },
+  { name: 'Switch', icon: <ToggleLeft size={12} /> },
+  { name: 'RadioGroup', icon: <Radio size={12} /> },
+  { name: 'AlertDialog', icon: <Shield size={12} /> },
+]
+
+function Patterns() {
+  return (
+    <section className="cms-patterns">
+      <p className="cms-section-label">Coverage</p>
+      <h2 className="cms-section-title">14 APG patterns</h2>
+      <p className="cms-section-desc">
+        Every composite widget from the W3C ARIA Authoring Practices Guide,
+        fully implemented with keyboard interaction tables.
+      </p>
+      <div className="cms-patterns__grid">
+        {patterns.map((p) => (
+          <div key={p.name} className="cms-pattern">
+            <div className="cms-pattern__icon">{p.icon}</div>
+            <span className="cms-pattern__name">{p.name}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ── Section: Footer ──
+
+function Footer() {
+  return (
+    <footer className="cms-footer">
+      <div className="cms-footer__brand">
+        <div className="cms-footer__logo" />
+        <span className="cms-footer__name">interactive-os</span>
+        <span className="cms-footer__copy">MIT License</span>
+      </div>
+      <div className="cms-footer__links">
+        <span className="cms-footer__link">Documentation</span>
+        <span className="cms-footer__link">GitHub</span>
+        <span className="cms-footer__link">npm</span>
+      </div>
+    </footer>
+  )
+}
+
+// ── Page ──
 
 export default function PageVisualCms() {
-  const [data, setData] = useState<NormalizedData>(initialStore)
-  const spatialKeyMap = useSpatialNav('[aria-label="Page content editor"]', data)
-
-  const mergedKeyMap = useMemo(() => ({
-    ...spatialKeyMap,
-    ...editingKeyMap,
-  }), [spatialKeyMap])
-
-  const spatialParentId = getSpatialParentId(data)
-  const parentEntity = spatialParentId !== ROOT_ID ? data.entities[spatialParentId] : null
-  const parentData = parentEntity?.data as CmsNodeData | null
-
-  const layoutClass =
-    parentData?.type === 'section' ? `vc-layout--${parentData.variant}` :
-    parentData?.type === 'card' ? 'vc-layout--card-fields' :
-    'vc-layout--root'
-
   return (
-    <div className="vc-page">
-      <header className="vc-toolbar">
-        <div className="vc-toolbar__left">
-          <span className="vc-toolbar__title">Visual CMS</span>
-          <Breadcrumb store={data} />
-        </div>
-        <div className="vc-toolbar__keys">
-          <kbd>\u2190\u2191\u2192\u2193</kbd> navigate
-          <kbd>Enter</kbd> into
-          <kbd>Esc</kbd> back
-          <kbd>F2</kbd> edit
-        </div>
-      </header>
-
-      <div className="vc-canvas">
-        <div className={`vc-viewport ${layoutClass}`}>
-          <Aria
-            behavior={spatial}
-            data={data}
-            plugins={plugins}
-            onChange={setData}
-            keyMap={mergedKeyMap}
-            aria-label="Page content editor"
-          >
-            <Aria.Node render={(node, state) => <CmsNode node={node} state={state} />} />
-          </Aria>
-        </div>
-      </div>
+    <div className="cms-landing">
+      <Hero />
+      <Stats />
+      <Features />
+      <HowItWorks />
+      <Patterns />
+      <Footer />
     </div>
   )
 }
