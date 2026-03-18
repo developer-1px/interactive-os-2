@@ -114,6 +114,7 @@
 - [x] `<Aria.Cell>` — grid 멀티 컬럼 지원, AriaNodeContext
 - [x] `useControlledAria` — 외부 store 연동 훅 (controlled state variant)
 - [x] DOM 스크롤 동기화 — 포커스 이동 시 `scrollIntoView({ block: 'nearest' })` 자동 호출
+- [x] `hooks/use-spatial-nav.ts` — `useSpatialNav` hook + `findNearest` 순수 함수 (DOM 위치 기반 방향키 네비게이션)
 - [ ] `[P2]` 대용량 가상화 — 10k+ 노드 렌더링
 
 ## ⑥ UI Layer (Reference Components)
