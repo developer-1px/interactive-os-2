@@ -93,6 +93,9 @@
 ### 추가 프리셋 (Navigation)
 - [x] tree — tree view (role: tree, childRole: treeitem), treegrid에서 grid 부분 제거
 
+### 추가 프리셋 (Spatial)
+- [x] spatial — depth traversal (Enter/Escape), roving-tabindex both, F2 rename
+
 ### 미구현 behavior
 - [x] extended selection — Shift 범위 선택 (listbox, treegrid)
 - [ ] `[P2]` menubar — 다계층 keyMap 필요 (축 확장)
