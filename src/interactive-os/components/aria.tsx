@@ -7,6 +7,7 @@ import { useAria } from '../hooks/useAria'
 import { AriaInternalContext } from './aria-context'
 import { getChildren } from '../core/createStore'
 import { EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
+import { SPATIAL_PARENT_ID } from '../plugins/spatial'
 
 interface AriaProps {
   behavior: AriaBehavior
@@ -69,7 +70,11 @@ function AriaNode({ render }: AriaNodeProps) {
         // If behavior has colCount, consumer uses <Aria.Cell> — skip auto gridcell wrapping
         const hasColCount = !!(aria.behavior.colCount && aria.behavior.colCount > 0)
 
-        const renderNodes = (parentId: string): ReactNode[] => {
+        const spatialParentEntity = store.entities[SPATIAL_PARENT_ID]
+        const startParentId = (spatialParentEntity?.parentId as string) ?? ROOT_ID
+        const isSpatialMode = !!spatialParentEntity
+
+        const renderNodes = (parentId: string, flat = false): ReactNode[] => {
           const children = getChildren(store, parentId)
           const nodes: ReactNode[] = []
           for (const childId of children) {
@@ -91,13 +96,13 @@ function AriaNode({ render }: AriaNodeProps) {
                 </AriaNodeContext.Provider>
               </FocusScrollDiv>
             )
-            if (hasChildren && isExpanded) {
+            if (!flat && hasChildren && isExpanded) {
               nodes.push(...renderNodes(childId))
             }
           }
           return nodes
         }
-        return <>{renderNodes(ROOT_ID)}</>
+        return <>{renderNodes(startParentId, isSpatialMode)}</>
       }}
     </AriaInternalContext.Consumer>
   )
