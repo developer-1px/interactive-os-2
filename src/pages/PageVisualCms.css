@@ -1,5 +1,5 @@
 /* ===================================================================
-   Visual CMS — spatial navigation homepage editor
+   Visual CMS — Flux brand homepage editor
    =================================================================== */
 
 .vc-page {
@@ -8,8 +8,8 @@
   height: 100%;
   font-family: var(--sans);
   color: var(--text-primary);
-  background: var(--bg-surface);
-  font-size: 12px;
+  background: #0a0a0a;
+  font-size: 13px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -22,49 +22,42 @@
   justify-content: space-between;
   padding: 0 16px;
   height: 40px;
-  border-bottom: 1px solid var(--border-dim);
-  background: var(--bg-elevated);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: #111;
   flex-shrink: 0;
 }
 
 .vc-toolbar__left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .vc-toolbar__title {
   font-weight: 700;
   font-size: 12px;
-  color: var(--text-primary);
+  color: rgba(255, 255, 255, 0.5);
   letter-spacing: -0.01em;
 }
 
-.vc-toolbar__shortcuts {
+.vc-toolbar__keys {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   font-size: 10px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.25);
 }
 
-.vc-toolbar__shortcuts kbd {
+.vc-toolbar__keys kbd {
   font-family: var(--mono);
   font-size: 9px;
   font-weight: 500;
-  padding: 1px 4px;
-  background: var(--bg-deep);
-  border: 1px solid var(--border-dim);
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  margin-left: 6px;
-  line-height: 1.4;
-}
-
-.vc-toolbar__shortcuts span {
-  font-family: var(--sans);
-  font-weight: 500;
-  margin-right: 2px;
+  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-left: 8px;
 }
 
 /* --- Breadcrumb --- */
@@ -74,7 +67,6 @@
   align-items: center;
   gap: 2px;
   font-size: 11px;
-  color: var(--text-muted);
 }
 
 .vc-breadcrumb__item {
@@ -83,43 +75,33 @@
   gap: 2px;
 }
 
-.vc-breadcrumb__sep {
-  color: var(--border-mid);
-  flex-shrink: 0;
-}
-
-.vc-breadcrumb__parent {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.vc-breadcrumb__current {
-  color: var(--text-primary);
-  font-weight: 600;
-}
+.vc-breadcrumb__sep { color: rgba(255, 255, 255, 0.15); }
+.vc-breadcrumb__parent { color: rgba(255, 255, 255, 0.35); font-weight: 500; }
+.vc-breadcrumb__current { color: rgba(255, 255, 255, 0.7); font-weight: 600; }
 
 /* --- Canvas --- */
 
 .vc-canvas {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
-  background: var(--bg-surface);
-  background-image: radial-gradient(circle, var(--border-dim) 0.5px, transparent 0.5px);
-  background-size: 16px 16px;
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  background: #0a0a0a;
 }
 
-.vc-canvas__inner {
-  max-width: 720px;
-  margin: 0 auto;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-dim);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+.vc-viewport {
+  width: 100%;
+  max-width: 800px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
   overflow: hidden;
 }
 
-/* --- Layout modes (based on spatial parent) --- */
+/* ===================================================================
+   Layout modes — driven by spatial parent
+   =================================================================== */
 
 /* Root: vertical stack of sections */
 .vc-layout--root [role="group"] {
@@ -127,410 +109,425 @@
   flex-direction: column;
 }
 
-/* Cards section: heading + 3-col grid for cards */
-.vc-layout--cards [role="group"] {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  padding: 16px;
-}
-
-.vc-layout--cards [role="group"] > [data-node-id="features-heading"] {
-  grid-column: 1 / -1;
-}
-
-/* Tabs section: heading + horizontal tab row */
-.vc-layout--tabs [role="group"] {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  gap: 12px;
-}
-
-/* Footer section */
-.vc-layout--footer [role="group"] {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-}
-
-/* Hero section: centered vertical stack */
+/* Hero: centered content stack */
 .vc-layout--hero [role="group"] {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 32px 24px;
-  gap: 4px;
+  padding: 48px 32px;
+  gap: 6px;
+  background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
 }
 
-/* Fields layout (inside a card or tab) */
-.vc-layout--fields [role="group"] {
+/* Logos: horizontal row */
+.vc-layout--logos [role="group"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 16px 24px;
+}
+
+/* Features: header + 3-col grid */
+.vc-layout--features [role="group"] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 24px;
+}
+
+.vc-layout--features [role="group"] > :nth-child(1),
+.vc-layout--features [role="group"] > :nth-child(2) {
+  grid-column: 1 / -1;
+}
+
+/* Stats: 4-col horizontal */
+.vc-layout--stats [role="group"] {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Testimonial: centered */
+.vc-layout--testimonial [role="group"] {
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  gap: 4px;
+  align-items: center;
+  text-align: center;
+  padding: 48px 40px;
+  gap: 12px;
 }
 
-/* --- Node base --- */
+/* CTA: centered */
+.vc-layout--cta [role="group"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 32px;
+  gap: 8px;
+}
+
+/* Footer: horizontal links */
+.vc-layout--footer [role="group"] {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  flex-wrap: wrap;
+}
+
+/* Card fields: vertical stack */
+.vc-layout--card-fields [role="group"] {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 6px;
+}
+
+/* ===================================================================
+   Node styles
+   =================================================================== */
 
 .vc-node {
   position: relative;
-  border-radius: var(--radius-sm);
-  transition: box-shadow 0.1s ease, background 0.1s ease;
+  border-radius: 6px;
+  transition: box-shadow 0.1s ease;
 }
 
-/* --- Focus / selection states --- */
+/* --- Focus / selection --- */
 
 .vc-node--focused {
-  box-shadow: 0 0 0 2px var(--accent);
+  box-shadow: 0 0 0 2px #6366f1;
   z-index: 1;
-}
-
-.vc-node--focused .vc-node__indicator {
-  opacity: 1;
-  color: var(--accent);
 }
 
 .vc-node--selected {
-  box-shadow: 0 0 0 2px var(--accent-muted);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
   z-index: 1;
 }
 
-.vc-node--selected .vc-node__indicator {
-  opacity: 1;
+.vc-node:not(.vc-node--focused):not(.vc-node--selected):hover {
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
 }
 
-/* --- Node indicator (type icon + label) --- */
-
-.vc-node__indicator {
+/* Focus badge (type label on focused node) */
+.vc-focus-badge {
   position: absolute;
-  top: -1px;
-  right: -1px;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 5px;
+  top: -8px;
+  left: 8px;
   font-family: var(--mono);
   font-size: 8px;
-  font-weight: 500;
-  color: var(--border-mid);
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  opacity: 0;
-  transition: opacity 0.1s ease;
-  pointer-events: none;
-  background: var(--bg-elevated);
-  border-radius: 0 var(--radius-sm) 0 var(--radius-sm);
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  background: #6366f1;
+  color: #fff;
+  border-radius: 3px;
   z-index: 2;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
-.vc-node--focused .vc-node__indicator,
-.vc-node:hover .vc-node__indicator {
-  opacity: 1;
+/* Container hint (shown when container is at parent level) */
+.vc-container-hint {
+  display: none;
 }
 
-/* --- Container nodes (section/card/tab at spatial level) --- */
+/* ===================================================================
+   Section variants (at root level — section nodes)
+   =================================================================== */
 
-.vc-node--container {
-  min-height: 48px;
-  cursor: default;
-}
-
-/* Section: hero */
 .vc-section--hero {
-  background: linear-gradient(135deg, var(--zinc-900) 0%, var(--zinc-800) 100%);
-  padding: 40px 28px;
+  background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+  padding: 56px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.vc-section--hero .vc-node__indicator {
-  color: rgba(255, 255, 255, 0.3);
-  background: rgba(0, 0, 0, 0.3);
+.vc-section--logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.vc-section--hero.vc-node--focused {
-  box-shadow: 0 0 0 2px var(--indigo-100);
+.vc-section--features {
+  padding: 48px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.vc-section--hero.vc-node--focused .vc-node__indicator {
-  color: rgba(255, 255, 255, 0.6);
+.vc-section--stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
 }
 
-/* Section: cards */
-.vc-section--cards {
-  padding: 24px 20px;
-  border-top: 1px solid var(--border-dim);
+.vc-section--testimonial {
+  padding: 56px 40px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-/* Section: tabs */
-.vc-section--tabs {
-  padding: 24px 20px;
-  border-top: 1px solid var(--border-dim);
+.vc-section--cta {
+  padding: 56px 32px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-/* Section: footer */
 .vc-section--footer {
-  padding: 16px 20px;
-  border-top: 1px solid var(--border-dim);
-  background: var(--zinc-900);
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.vc-section--footer .vc-node__indicator {
-  color: rgba(255, 255, 255, 0.3);
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.vc-section--footer.vc-node--focused {
-  box-shadow: 0 0 0 2px var(--indigo-100);
-}
-
-/* Card container */
+/* Card inside features */
 .vc-card {
-  border: 1px solid var(--border-dim);
-  border-radius: var(--radius);
-  background: var(--bg-elevated);
-  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .vc-card.vc-node--focused {
-  border-color: var(--accent);
+  border-color: #6366f1;
 }
 
-/* Tab container */
-.vc-tab {
-  border: 1px solid var(--border-dim);
-  border-radius: var(--radius);
-  background: var(--bg-elevated);
-  padding: 12px 16px;
+/* Stat card inside stats section */
+.vc-section--stats .vc-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 24px;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.vc-tab.vc-node--focused {
-  border-color: var(--accent);
+.vc-section--stats .vc-card:last-child {
+  border-right: none;
 }
 
-/* --- Section preview (shown at root level for containers) --- */
+/* ===================================================================
+   Text styles — role-based
+   =================================================================== */
 
-.vc-section-preview {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-}
-
-.vc-section-preview--hero {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.vc-section-preview__label {
-  font-weight: 600;
-  font-size: 13px;
-  text-transform: capitalize;
-}
-
-.vc-section--hero .vc-section-preview__label {
-  color: var(--zinc-50);
-  font-size: 16px;
-}
-
-.vc-section-preview__hint {
-  font-size: 10px;
-  color: var(--text-muted);
-  font-family: var(--mono);
-}
-
-.vc-section--hero .vc-section-preview__hint {
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.vc-section--footer .vc-section-preview {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.vc-section--footer .vc-section-preview__hint {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-/* Card preview */
-.vc-card-preview,
-.vc-tab-preview {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-}
-
-.vc-card-preview__label,
-.vc-tab-preview__label {
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.vc-card-preview__hint,
-.vc-tab-preview__hint {
-  font-size: 10px;
-  color: var(--text-muted);
-  font-family: var(--mono);
-}
-
-/* --- Field nodes (leaf) --- */
-
-.vc-node--field {
-  display: flex;
-  align-items: flex-start;
-  min-height: 24px;
-  border-radius: var(--radius-sm);
-}
-
-.vc-node__content {
-  flex: 1;
-  min-width: 0;
-}
-
-.vc-field {
+.vc-text {
   display: block;
   cursor: default;
 }
 
-/* Text roles */
-.vc-text--title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
+.vc-text--hero-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #f5f5f5;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
   padding: 4px 8px;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
+  white-space: pre-line;
 }
 
-.vc-text--subtitle {
-  font-size: 13px;
-  color: var(--text-secondary);
-  padding: 2px 8px;
-  line-height: 1.5;
-}
-
-.vc-text--heading {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+.vc-text--hero-sub {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 480px;
   padding: 4px 8px;
+  line-height: 1.6;
 }
 
-.vc-text--body {
-  font-size: 12px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  padding: 2px 8px;
-}
-
-.vc-text--cta {
+.vc-text--hero-cta {
   display: inline-block;
-  background: var(--accent);
-  color: #fff;
-  padding: 5px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
+  background: #f5f5f5;
+  color: #0a0a0a;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 13px;
   font-weight: 600;
-  margin: 4px 8px;
+  margin: 8px 4px 0;
   letter-spacing: -0.01em;
 }
 
-.vc-text--label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent);
-  padding: 4px 8px;
+.vc-text--cta-btn {
+  display: inline-block;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 8px 4px 0;
 }
 
-.vc-text--copyright {
+.vc-text--subheading {
   font-size: 11px;
-  color: var(--text-muted);
+  font-weight: 500;
+  color: #6366f1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   padding: 4px 8px;
 }
 
-/* Hero-level field overrides (when inside hero via spatial nav) */
-.vc-layout--hero .vc-text--title {
-  color: var(--zinc-50);
-  font-size: 24px;
-}
-
-.vc-layout--hero .vc-text--subtitle {
-  color: var(--zinc-400);
+.vc-text--heading {
   font-size: 14px;
+  font-weight: 700;
+  color: #e5e5e5;
+  letter-spacing: -0.01em;
+  padding: 4px 8px;
+  line-height: 1.3;
 }
 
-.vc-layout--hero .vc-text--cta {
-  background: var(--indigo-100);
-  color: var(--indigo-900);
-  margin-top: 8px;
+/* Features section: larger heading */
+.vc-layout--features .vc-text--heading:first-child,
+.vc-section--features .vc-text--heading {
+  font-size: 24px;
+  letter-spacing: -0.03em;
 }
 
-.vc-layout--hero .vc-canvas__inner {
-  background: var(--zinc-900);
+.vc-text--body {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.6;
+  padding: 2px 8px;
 }
 
-.vc-layout--hero .vc-node--focused {
-  box-shadow: 0 0 0 2px var(--indigo-100);
+/* Features section description */
+.vc-layout--features .vc-text--subheading,
+.vc-section--features .vc-text--subheading {
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 12px;
 }
 
-/* Footer-level field overrides */
-.vc-layout--footer .vc-text--copyright {
-  color: var(--zinc-400);
-}
-
-.vc-layout--footer .vc-canvas__inner {
-  background: var(--zinc-900);
-}
-
-.vc-layout--footer .vc-node--focused {
-  box-shadow: 0 0 0 2px var(--indigo-100);
-}
-
-/* Icon field */
-.vc-field--icon {
-  font-size: 20px;
+.vc-text--stat-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #f5f5f5;
+  letter-spacing: -0.03em;
   padding: 4px 8px;
   line-height: 1;
 }
 
-/* Image field */
-.vc-field--image {
+.vc-text--stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 4px 8px;
+}
+
+.vc-text--quote {
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  padding: 4px 8px;
+  font-style: italic;
+  max-width: 560px;
+  letter-spacing: -0.01em;
+}
+
+.vc-text--cite {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 4px 8px;
+  font-style: normal;
+}
+
+.vc-text--cta-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #f5f5f5;
+  letter-spacing: -0.03em;
+  padding: 4px 8px;
+}
+
+.vc-text--logo {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.2);
+  letter-spacing: -0.01em;
+  padding: 4px 8px;
+}
+
+.vc-text--footer-heading {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 4px 8px;
+  margin-right: auto;
+}
+
+.vc-text--footer-link {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 4px 8px;
+}
+
+.vc-text--footer-link:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.vc-text--footer-copy {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.15);
+  padding: 4px 8px;
+  margin-left: auto;
+}
+
+/* Image */
+.vc-image {
   max-width: 120px;
   height: auto;
-  border-radius: var(--radius-sm);
-  margin: 4px 8px;
+  border-radius: 4px;
   opacity: 0.8;
 }
 
-/* --- Hover state --- */
+/* ===================================================================
+   Hero-level overrides (when inside hero via spatial nav)
+   =================================================================== */
 
-.vc-node:not(.vc-node--focused):not(.vc-node--selected):hover {
-  background: var(--bg-hover);
+.vc-layout--hero .vc-viewport {
+  background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
 }
 
-.vc-section--hero:not(.vc-node--focused):hover {
-  background: linear-gradient(135deg, var(--zinc-900) 0%, var(--zinc-800) 100%);
+.vc-layout--hero .vc-node--focused {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.6);
 }
 
-.vc-section--footer:not(.vc-node--focused):hover {
-  background: var(--zinc-900);
+/* CTA section level overrides */
+.vc-layout--cta .vc-viewport {
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, #111 100%);
 }
 
-/* --- Animations --- */
+/* Stats level: center each stat */
+.vc-layout--stats [role="group"] > div {
+  text-align: center;
+}
+
+/* ===================================================================
+   Animations
+   =================================================================== */
 
 .vc-node--focused {
-  animation: vc-focus-in 0.12s ease-out;
+  animation: vc-ring 0.12s ease-out;
 }
 
-@keyframes vc-focus-in {
-  from { box-shadow: 0 0 0 0px var(--accent); }
+@keyframes vc-ring {
+  from { box-shadow: 0 0 0 0px #6366f1; }
 }

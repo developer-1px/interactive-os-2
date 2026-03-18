@@ -1,7 +1,9 @@
 import { useLayoutEffect, useRef } from 'react'
-import type { Command } from '../core/types'
+import type { Command, NormalizedData } from '../core/types'
 import type { BehaviorContext } from '../behaviors/types'
 import { focusCommands } from '../plugins/core'
+import { getSpatialParentId } from '../plugins/spatial'
+import { getChildren } from '../core/createStore'
 
 type Direction = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 
@@ -52,8 +54,13 @@ export function findNearest(
   return bestId
 }
 
+/**
+ * Spatial navigation hook — arrow keys move focus based on DOM position.
+ * Only navigates among the direct children of the current __spatial_parent__.
+ */
 export function useSpatialNav(
   containerSelector: string,
+  store: NormalizedData,
 ): Record<string, (ctx: BehaviorContext) => Command | void> {
   const rectsRef = useRef<Map<string, DOMRect>>(new Map())
 
@@ -61,11 +68,17 @@ export function useSpatialNav(
     const container = document.querySelector(containerSelector)
     if (!container) return
 
+    // Only collect rects for current depth's children
+    const spatialParentId = getSpatialParentId(store)
+    const allowedIds = new Set(getChildren(store, spatialParentId))
+
     const elements = container.querySelectorAll<HTMLElement>('[data-node-id]')
     const next = new Map<string, DOMRect>()
     elements.forEach((el) => {
       const id = el.dataset.nodeId
-      if (id) next.set(id, el.getBoundingClientRect())
+      if (id && allowedIds.has(id)) {
+        next.set(id, el.getBoundingClientRect())
+      }
     })
     rectsRef.current = next
   })
