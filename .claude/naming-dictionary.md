@@ -1,6 +1,6 @@
 ---
-last_commit: de15a9ab26716d2f7a1a9aced721b40966f8b768
-last_updated: 2026-03-17
+last_commit: cea9620a24bc93309b8c9b3bce1d5ce4eec56659
+last_updated: 2026-03-19
 ---
 
 ## Verbs
@@ -34,12 +34,15 @@ last_updated: 2026-03-17
 | reset | 1 | resetClipboard |
 | parse | 1 | parseKeyCombo |
 | match | 1 | matchKeyEvent |
-| find | 1 | findMatchingKey |
+| find | 2 | findMatchingKey, findNearest |
+| enter | 1 | enterChild |
+| exit | 1 | exitToParent |
+| flatten | 1 | flattenFiles |
 | replay | 1 | replay |
 | format | 1 | formatSnapshots |
 | undo | 1 | undoCommand |
 | redo | 1 | redoCommand |
-| use | 3 | useAria, useControlledAria, useKeyboard |
+| use | 4 | useAria, useControlledAria, useKeyboard, useSpatialNav |
 
 ## Nouns
 | fragment | count | identifiers |
@@ -73,6 +76,7 @@ last_updated: 2026-03-17
 | dnd | 1 | dndCommands |
 | aria | 4 | Aria, AriaInternalContext, AriaBehavior, useAria |
 | recovery | 1 | focusRecovery |
+| spatial | 3 | spatial (behavior), spatial (plugin), spatialCommands, SPATIAL_PARENT_ID, getSpatialParentId, useSpatialNav, findNearest |
 | tree | 2 | tree (behavior), TreeView (UI) |
 | apg | 16 | ApgKeyboardEntry, ApgPatternData, ApgKeyboardTable, apgAccordion, apgDisclosure, apgSwitch, apgTabs, apgRadioGroup, apgMenu, apgToolbar, apgDialog, apgAlertDialog, apgTreeView, apgTreeGrid, apgListbox, apgGrid, apgCombobox |
 | keyboard | 2 | ApgKeyboardEntry, ApgKeyboardTable |
