@@ -39,6 +39,7 @@ function AriaRoot({ behavior, data, plugins, keyMap, onChange, 'aria-label': ari
         aria-label={ariaLabel}
         aria-orientation={ROLES_WITH_ORIENTATION.has(behavior.role) && orientation !== 'both' ? orientation : undefined}
         style={orientation === 'horizontal' ? horizontalStyle : undefined}
+        data-aria-container=""
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       >
         {children}

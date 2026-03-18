@@ -183,7 +183,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     if (behavior.focusStrategy.type === 'aria-activedescendant') return
     const el = document.querySelector<HTMLElement>(`[data-node-id="${focusedId}"]`)
     if (!el || el === document.activeElement) return
-    const container = el.closest(`[role="${behavior.role}"]`)
+    const container = el.closest('[data-aria-container]')
     const ownsActiveFocus = container?.contains(document.activeElement)
     const focusIsOrphaned = document.activeElement === document.body || document.activeElement === null
     if (!ownsActiveFocus && !focusIsOrphaned) return
