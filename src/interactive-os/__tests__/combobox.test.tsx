@@ -1,7 +1,8 @@
 /**
- * Unit tests: Combobox multi-select mode
+ * Unit tests: Combobox multi-select mode + grouping support
  *
- * Tests the combobox behavior factory for single and multi selection modes.
+ * Tests the combobox behavior factory for single and multi selection modes,
+ * and group header rendering with keyboard navigation that skips group headers.
  * Uses the Combobox UI component with controlled state via onChange.
  */
 import { describe, it, expect, vi } from 'vitest'
@@ -247,5 +248,91 @@ describe('Combobox behavior factory', () => {
 
       expect(container.querySelectorAll('[data-combobox-token]')).toHaveLength(0)
     })
+  })
+})
+
+// ─── Grouping support ────────────────────────────────────────────────────────
+
+function groupedStore(): NormalizedData {
+  return createStore({
+    entities: {
+      fruits: { id: 'fruits', data: { type: 'group', label: 'Fruits' } },
+      apple:  { id: 'apple',  data: { label: 'Apple' } },
+      banana: { id: 'banana', data: { label: 'Banana' } },
+      vegs:   { id: 'vegs',   data: { type: 'group', label: 'Vegetables' } },
+      carrot: { id: 'carrot', data: { label: 'Carrot' } },
+    },
+    relationships: {
+      [ROOT_ID]: ['fruits', 'vegs'],
+      fruits: ['apple', 'banana'],
+      vegs: ['carrot'],
+    },
+  })
+}
+
+function ControlledGroupedCombobox() {
+  const [data, setData] = useState(groupedStore)
+  return (
+    <Combobox
+      data={data}
+      plugins={[core(), comboboxPlugin()]}
+      onChange={setData}
+      placeholder="Pick..."
+      renderItem={renderItem}
+    />
+  )
+}
+
+describe('Combobox grouping support', () => {
+  it('renders group headers as non-interactive labels', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<ControlledGroupedCombobox />)
+    const input = getInput(container)
+
+    input.focus()
+    await user.keyboard('{ArrowDown}') // open
+
+    const groupLabels = container.querySelectorAll('.combo-group-label')
+    expect(groupLabels).toHaveLength(2)
+    expect(groupLabels[0].textContent).toBe('Fruits')
+    expect(groupLabels[1].textContent).toBe('Vegetables')
+
+    // Group labels have role="presentation" (non-selectable)
+    expect(groupLabels[0].getAttribute('role')).toBe('presentation')
+    expect(groupLabels[1].getAttribute('role')).toBe('presentation')
+  })
+
+  it('ArrowDown navigates only options, skipping group headers', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<ControlledGroupedCombobox />)
+    const input = getInput(container)
+
+    input.focus()
+    await user.keyboard('{ArrowDown}') // open + focus first option (apple)
+
+    const appleItem = container.querySelector('[data-testid="item-apple"]')
+    expect(appleItem?.getAttribute('data-focused')).toBe('true')
+
+    await user.keyboard('{ArrowDown}') // banana
+    const bananaItem = container.querySelector('[data-testid="item-banana"]')
+    expect(bananaItem?.getAttribute('data-focused')).toBe('true')
+
+    await user.keyboard('{ArrowDown}') // carrot (skips "Vegetables" group header)
+    const carrotItem = container.querySelector('[data-testid="item-carrot"]')
+    expect(carrotItem?.getAttribute('data-focused')).toBe('true')
+  })
+
+  it('Enter on grouped option selects it and closes dropdown', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<ControlledGroupedCombobox />)
+    const input = getInput(container)
+
+    input.focus()
+    await user.keyboard('{ArrowDown}') // open + focus apple
+    await user.keyboard('{ArrowDown}') // banana
+    await user.keyboard('{Enter}')     // select banana
+
+    expect(getListbox(container)).toBeNull()
+    expect(input.value).toBe('Banana')
   })
 })

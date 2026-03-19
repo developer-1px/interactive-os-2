@@ -18,6 +18,49 @@ interface ComboboxProps {
   selectionMode?: 'single' | 'multiple'
 }
 
+function flattenGroups(store: NormalizedData): NormalizedData {
+  const flatChildren: string[] = []
+  const newEntities = { ...store.entities }
+  for (const childId of getChildren(store, ROOT_ID)) {
+    const d = (store.entities[childId]?.data as Record<string, string>) ?? {}
+    if (d.type === 'group') {
+      flatChildren.push(...getChildren(store, childId))
+      delete newEntities[childId]
+    } else {
+      flatChildren.push(childId)
+    }
+  }
+  return {
+    entities: newEntities,
+    relationships: { ...store.relationships, [ROOT_ID]: flatChildren },
+  }
+}
+
+/**
+ * Restores group structure into a flat store that was produced by flattenGroups.
+ * The originalStore provides the group entities and relationships to graft back in.
+ */
+function restoreGroups(flatStore: NormalizedData, originalStore: NormalizedData): NormalizedData {
+  // Collect group entities and rebuild the root relationships from the original
+  const restoredEntities = { ...flatStore.entities }
+  const restoredRelationships = { ...flatStore.relationships }
+
+  const origRootChildren = getChildren(originalStore, ROOT_ID)
+  for (const childId of origRootChildren) {
+    const d = (originalStore.entities[childId]?.data as Record<string, string>) ?? {}
+    if (d.type === 'group') {
+      // Add the group entity back
+      restoredEntities[childId] = originalStore.entities[childId]!
+      // Restore original group → children relationship
+      restoredRelationships[childId] = getChildren(originalStore, childId)
+    }
+  }
+  // Restore root → groups relationship
+  restoredRelationships[ROOT_ID] = origRootChildren
+
+  return { entities: restoredEntities, relationships: restoredRelationships }
+}
+
 export function Combobox({
   data,
   plugins = [core(), comboboxPlugin()],
@@ -27,11 +70,27 @@ export function Combobox({
   editable = false,
   selectionMode,
 }: ComboboxProps) {
+  const originalStore = data
+  const rootChildren = getChildren(originalStore, ROOT_ID)
+
+  const isGrouped = rootChildren.some(id => {
+    const d = originalStore.entities[id]?.data as Record<string, string> | undefined
+    return d?.type === 'group'
+  })
+
+  const behaviorData = isGrouped ? flattenGroups(originalStore) : data
+
+  // When grouped, intercept onChange to restore group structure before propagating up.
+  // The behavior engine operates on a flat store; callers expect the grouped structure.
+  const handleChange = isGrouped && onChange
+    ? (flatStore: NormalizedData) => onChange(restoreGroups(flatStore, originalStore))
+    : onChange
+
   const aria = useAria({
     behavior: comboboxBehavior({ selectionMode }),
-    data,
+    data: behaviorData,
     plugins,
-    onChange,
+    onChange: handleChange,
   })
 
   const store = aria.getStore()
@@ -72,6 +131,18 @@ export function Combobox({
   )
 
   const render = renderItem ?? defaultRender
+
+  const renderOption = (childId: string) => {
+    const entity = store.entities[childId]
+    if (!entity) return null
+    const state = aria.getNodeState(childId)
+    const props = aria.getNodeProps(childId)
+    return (
+      <div key={childId} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
+        {render(entity, state)}
+      </div>
+    )
+  }
 
   const inputValue = editable
     ? (isOpen ? filterText : selectedLabel)
@@ -123,17 +194,24 @@ export function Combobox({
       )}
       {isOpen && (
         <div className="combo-dropdown" role="listbox">
-          {children.map(childId => {
-            const entity = store.entities[childId]
-            if (!entity) return null
-            const state = aria.getNodeState(childId)
-            const props = aria.getNodeProps(childId)
-            return (
-              <div key={childId} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-                {render(entity, state)}
-              </div>
-            )
-          })}
+          {isGrouped ? (
+            rootChildren.map(groupId => {
+              const group = originalStore.entities[groupId]
+              const groupData = (group?.data ?? {}) as Record<string, string>
+              if (groupData.type !== 'group') {
+                return renderOption(groupId)
+              }
+              const groupItems = getChildren(originalStore, groupId)
+              return (
+                <div key={groupId} role="group" aria-label={groupData.label}>
+                  <div role="presentation" className="combo-group-label">{groupData.label}</div>
+                  {groupItems.map(itemId => renderOption(itemId))}
+                </div>
+              )
+            })
+          ) : (
+            children.map(childId => renderOption(childId))
+          )}
         </div>
       )}
     </div>
