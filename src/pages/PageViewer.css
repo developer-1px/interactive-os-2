@@ -138,7 +138,7 @@
 /* --- Tree panel (TOC-style sidebar) --- */
 
 .vw-tree {
-  width: 240px;
+  width: 280px;
   min-width: 220px;
   background: var(--bg-surface);
   overflow-y: auto;
