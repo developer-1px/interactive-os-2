@@ -1,0 +1,24 @@
+/* --- Menu item --- */
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px;
+  margin: 1px 4px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+}
+
+.menu-item__label {
+  color: inherit;
+}
+
+.menu-item__arrow {
+  display: inline-flex;
+  color: var(--text-muted);
+}
+
+.menu-inner { display: inline-flex; align-items: center; justify-content: space-between; width: 100%; }
+.menu-chevron { opacity: 0.5; font-size: 12px; }

@@ -1,0 +1,40 @@
+/* --- Tree Node --- */
+
+.tree-node {
+  display: flex;
+  align-items: center;
+  padding: 3px 10px;
+  margin: 0 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  border-radius: var(--radius-sm);
+}
+
+.tree-node__chevron {
+  width: 14px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.tree-node__icon {
+  margin-right: 5px;
+  display: inline-flex;
+  opacity: 0.55;
+  color: var(--text-secondary);
+}
+
+.tree-node__name {
+  color: inherit;
+  font-weight: 500;
+}
+
+.tree-node__ext {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.tree-inner { display: inline-flex; align-items: center; }
+.tree-chevron { width: 16px; opacity: 0.5; flex-shrink: 0; }

@@ -1,0 +1,41 @@
+/* --- Dialog --- */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--dialog-backdrop);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialog-box {
+  width: 360px;
+  background: var(--surface-4);
+  box-shadow: var(--surface-4-shadow);
+  border: 1px solid var(--border-dim);
+  border-radius: calc(var(--radius) + 2px);
+}
+
+.dialog-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-dim);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+
+.dialog-body {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.dialog-footer {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border-dim);
+  background: var(--bg-deep);
+}
