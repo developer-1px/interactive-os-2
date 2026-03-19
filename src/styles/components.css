@@ -1,0 +1,167 @@
+/* ═══════════════════════════════════════════
+   ARIA Attribute-Based Component Styles
+   ═══════════════════════════════════════════
+   Selectors use ARIA roles and attributes rendered by <Aria>.
+   Scoped under [data-aria-container] to prevent role collisions.
+   No className needed — state comes from ARIA attrs + :focus.
+*/
+
+/* ── Common interactive item base ── */
+
+[data-aria-container] [role="option"],
+[data-aria-container] [role="treeitem"],
+[data-aria-container] [role="tab"],
+[data-aria-container] [role="menuitem"],
+[data-aria-container] [role="radio"],
+[data-aria-container] [role="switch"],
+[data-aria-container] [role="row"] {
+  padding: 4px 10px;
+  cursor: default;
+  user-select: none;
+  font-size: 13px;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  transition: background 0.08s;
+}
+
+/* Accordion heading — slightly different base */
+[data-aria-container] [role="heading"] {
+  padding: 6px 10px;
+  cursor: default;
+  user-select: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: background 0.08s;
+}
+
+/* Disclosure button */
+[data-aria-container] [role="group"] > [role="button"] {
+  padding: 5px 10px;
+  cursor: default;
+  user-select: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  transition: background 0.08s;
+}
+
+/* ── Hover ── */
+
+[data-aria-container] [role="option"]:hover,
+[data-aria-container] [role="treeitem"]:hover,
+[data-aria-container] [role="menuitem"]:hover,
+[data-aria-container] [role="radio"]:hover,
+[data-aria-container] [role="switch"]:hover,
+[data-aria-container] [role="row"]:hover,
+[data-aria-container] [role="heading"]:hover,
+[data-aria-container] [role="group"] > [role="button"]:hover {
+  background: var(--bg-hover);
+}
+
+/* Tabs: no background hover, use subtle text change */
+[data-aria-container] [role="tab"]:hover {
+  color: var(--text-secondary);
+}
+
+/* ── Focused (roving-tabindex — :focus) ── */
+
+[data-aria-container] [role="option"]:focus,
+[data-aria-container] [role="treeitem"]:focus,
+[data-aria-container] [role="menuitem"]:focus,
+[data-aria-container] [role="radio"]:focus,
+[data-aria-container] [role="switch"]:focus,
+[data-aria-container] [role="row"]:focus,
+[data-aria-container] [role="heading"]:focus,
+[data-aria-container] [role="group"] > [role="button"]:focus {
+  background: var(--accent-dim);
+  color: var(--text-bright);
+}
+
+/* Tabs: focused uses accent bottom border */
+[data-aria-container] [role="tab"]:focus {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Focused (aria-activedescendant — data-focused) ── */
+
+[data-aria-container] [data-focused] {
+  background: var(--accent-dim);
+  color: var(--text-bright);
+}
+
+/* ── Selected ── */
+
+[data-aria-container] [aria-selected="true"] {
+  background: var(--bg-select);
+}
+
+/* Tab selected uses accent border, not background */
+[data-aria-container] [role="tab"][aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+  background: transparent;
+}
+
+/* ── Checked (radio, switch) ── */
+
+[data-aria-container] [aria-checked="true"] {
+  background: var(--bg-select);
+}
+
+/* ── Focused + Selected compound ── */
+
+[data-aria-container] [aria-selected="true"]:focus,
+[data-aria-container] [aria-checked="true"]:focus,
+[data-aria-container] [aria-selected="true"][data-focused],
+[data-aria-container] [aria-checked="true"][data-focused] {
+  background: var(--accent-dim);
+  color: var(--text-bright);
+}
+
+/* ── Expanded chevron rotation ── */
+
+[data-aria-container] [aria-expanded="true"] > .chevron,
+[data-aria-container] [aria-expanded="true"] > * > .chevron {
+  transform: rotate(90deg);
+}
+
+/* ── Tree depth indentation ── */
+
+[data-aria-container] [aria-level="1"] { padding-left: 10px; }
+[data-aria-container] [aria-level="2"] { padding-left: 26px; }
+[data-aria-container] [aria-level="3"] { padding-left: 42px; }
+[data-aria-container] [aria-level="4"] { padding-left: 58px; }
+[data-aria-container] [aria-level="5"] { padding-left: 74px; }
+[data-aria-container] [aria-level="6"] { padding-left: 90px; }
+[data-aria-container] [aria-level="7"] { padding-left: 106px; }
+[data-aria-container] [aria-level="8"] { padding-left: 122px; }
+[data-aria-container] [aria-level="9"] { padding-left: 138px; }
+[data-aria-container] [aria-level="10"] { padding-left: 154px; }
+
+/* ── Grid cell ── */
+
+[data-aria-container] [role="gridcell"] {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  font-size: 12px;
+  min-height: 36px;
+}
+
+/* ── Tab-specific: horizontal + bottom border ── */
+
+[data-aria-container][role="tablist"] [role="tab"] {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: color 0.1s, border-color 0.1s;
+}

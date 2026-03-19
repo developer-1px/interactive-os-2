@@ -1,158 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
-
-:root {
-  /* ── Tier 1: Primitives ── */
-
-  --zinc-50: #FAFAFA;
-  --zinc-100: #F4F4F5;
-  --zinc-200: #E4E4E7;
-  --zinc-300: #D4D4D8;
-  --zinc-400: #A1A1AA;
-  --zinc-500: #71717A;
-  --zinc-600: #52525B;
-  --zinc-700: #3F3F46;
-  --zinc-800: #27272A;
-  --zinc-900: #18181B;
-  --zinc-950: #09090B;
-
-  --indigo-50: #EDEDFD;
-  --indigo-100: #C4C4F3;
-  --indigo-500: #5B5BD6;
-  --indigo-600: #4B4ACF;
-  --indigo-900: #2E2E8F;
-
-  --red-500: #E5484D;
-  --green-500: #30A46C;
-  --green-50: #E8F5E9;
-
-  /* ── Tier 2: Semantic tokens (dark default) ── */
-
-  /* Surface elevation system (bg + shadow pairs) */
-  --surface-0: var(--zinc-950);
-  --surface-0-shadow: none;
-  --surface-1: var(--zinc-900);
-  --surface-1-shadow: none;
-  --surface-2: var(--zinc-800);
-  --surface-2-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.3);
-  --surface-3: var(--zinc-800);
-  --surface-3-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.3);
-  --surface-4: var(--zinc-700);
-  --surface-4-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
-
-  /* Backward compat aliases */
-  --bg-deep: var(--surface-0);
-  --bg-surface: var(--surface-1);
-  --bg-elevated: var(--surface-2);
-
-  /* Interactive states */
-  --bg-focus: rgba(91, 91, 214, 0.15);
-  --bg-select: rgba(48, 164, 108, 0.15);
-  --bg-hover: rgba(255, 255, 255, 0.04);
-  --bg-active: rgba(255, 255, 255, 0.08);
-
-  /* Border */
-  --border-dim: rgba(255, 255, 255, 0.08);
-  --border-mid: rgba(255, 255, 255, 0.12);
-  --border-bright: rgba(255, 255, 255, 0.18);
-
-  /* Text */
-  --text-primary: var(--zinc-200);
-  --text-secondary: var(--zinc-400);
-  --text-muted: var(--zinc-500);
-  --text-bright: var(--zinc-50);
-
-  /* Accent (higher alpha for dark backgrounds — equivalent perceived contrast) */
-  --accent: var(--indigo-500);
-  --accent-dim: rgba(91, 91, 214, 0.10);
-  --accent-mid: rgba(91, 91, 214, 0.18);
-  --accent-bright: rgba(91, 91, 214, 0.28);
-  --accent-soft: var(--indigo-50);
-  --accent-muted: var(--indigo-100);
-
-  /* Aliases */
-  --blue: var(--indigo-500);
-  --blue-dim: rgba(91, 91, 214, 0.06);
-  --red: var(--red-500);
-  --green: var(--green-500);
-
-  /* Typography */
-  --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
-  --sans: 'Manrope', -apple-system, system-ui, sans-serif;
-
-  /* Layout */
-  --radius: 6px;
-  --radius-sm: 4px;
-  --radius-xs: 3px;
-  --shadow-sm: var(--surface-2-shadow);
-  --shadow-md: var(--surface-3-shadow);
-  --shadow-lg: var(--surface-4-shadow);
-}
-
-[data-theme="light"] {
-  /* Surface elevation system */
-  --surface-0: var(--zinc-100);
-  --surface-0-shadow: none;
-  --surface-1: var(--zinc-50);
-  --surface-1-shadow: none;
-  --surface-2: #FFFFFF;
-  --surface-2-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.06);
-  --surface-3: #FFFFFF;
-  --surface-3-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.08);
-  --surface-4: #FFFFFF;
-  --surface-4-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
-
-  /* Interactive states */
-  --bg-focus: var(--indigo-50);
-  --bg-select: var(--green-50);
-  --bg-hover: rgba(0, 0, 0, 0.03);
-  --bg-active: rgba(0, 0, 0, 0.06);
-
-  /* Border */
-  --border-dim: var(--zinc-200);
-  --border-mid: var(--zinc-300);
-  --border-bright: var(--zinc-400);
-
-  /* Text */
-  --text-primary: var(--zinc-900);
-  --text-secondary: var(--zinc-500);
-  --text-muted: var(--zinc-400);
-  --text-bright: var(--zinc-950);
-
-  /* Dialog backdrop */
-  --dialog-backdrop: rgba(0, 0, 0, 0.15);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  overflow: hidden;
-  background: var(--bg-deep);
-  color: var(--text-primary);
-  font-family: var(--sans);
-  font-size: 12px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
-  max-width: 100%;
-  margin: 0 auto;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  border: none;
-  text-align: left;
-}
-
-*:focus-visible {
-  outline: 1.5px solid var(--accent);
-  outline-offset: -1.5px;
-}
-
 /* ═══════════════════════════════════════════
    Activity Bar — narrow icon rail, left edge
    ═══════════════════════════════════════════ */
@@ -554,8 +399,11 @@ kbd {
 }
 
 /* ═══════════════════════════════════════════
-   Tree Node — file explorer style
+   Legacy component className styles
+   (progressively removed as ARIA CSS migration proceeds)
    ═══════════════════════════════════════════ */
+
+/* --- Tree Node --- */
 
 .tree-node {
   display: flex;
@@ -618,9 +466,7 @@ kbd {
   font-weight: 400;
 }
 
-/* ═══════════════════════════════════════════
-   Tab — horizontal tab bar
-   ═══════════════════════════════════════════ */
+/* --- Tab --- */
 
 .tab {
   display: inline-flex;
@@ -653,9 +499,7 @@ kbd {
   line-height: 1.6;
 }
 
-/* ═══════════════════════════════════════════
-   List item — selectable row
-   ═══════════════════════════════════════════ */
+/* --- List item --- */
 
 .list-item {
   display: flex;
@@ -698,9 +542,7 @@ kbd {
   color: var(--text-muted);
 }
 
-/* ═══════════════════════════════════════════
-   Menu item — dropdown/context menu row
-   ═══════════════════════════════════════════ */
+/* --- Menu item --- */
 
 .menu-item {
   display: flex;
@@ -734,7 +576,7 @@ kbd {
   color: var(--text-muted);
 }
 
-/* --- Combobox item --- */
+/* --- Combobox --- */
 
 .combo-item {
   padding: 5px 12px;
@@ -753,8 +595,6 @@ kbd {
   background: var(--bg-select);
   font-weight: 600;
 }
-
-/* Combobox input */
 
 .combo-input {
   width: 100%;
@@ -786,9 +626,7 @@ kbd {
   overflow: hidden;
 }
 
-/* ═══════════════════════════════════════════
-   Accordion — collapsible sections
-   ═══════════════════════════════════════════ */
+/* --- Accordion --- */
 
 .accordion-header {
   display: flex;
@@ -878,7 +716,7 @@ kbd {
 .dialog-backdrop {
   position: fixed;
   inset: 0;
-  background: var(--dialog-backdrop, rgba(0, 0, 0, 0.4));
+  background: var(--dialog-backdrop);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
@@ -1127,7 +965,9 @@ kbd {
   border-color: var(--green);
 }
 
-/* --- Demo section --- */
+/* ═══════════════════════════════════════════
+   Demo sections & utilities
+   ═══════════════════════════════════════════ */
 
 .demo-section {
   margin-bottom: 24px;
@@ -1321,24 +1161,4 @@ kbd {
 .coverage-table td:first-child {
   font-weight: 600;
   color: var(--text-primary);
-}
-
-/* --- Scrollbar (WebKit) --- */
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-mid);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--border-bright);
 }

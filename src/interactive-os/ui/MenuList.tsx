@@ -13,22 +13,12 @@ interface MenuListProps {
 }
 
 const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <div style={{
-    padding: '6px 12px',
-    paddingLeft: 12 + ((state.level ?? 1) - 1) * 16,
-    background: state.focused ? 'var(--menu-focus-bg, #e3f2fd)' : 'transparent',
-    cursor: 'default',
-    userSelect: 'none',
-    fontSize: 14,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  }}>
+  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
     <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
     {state.expanded !== undefined && (
-      <span style={{ opacity: 0.5, fontSize: 12 }}>{state.expanded ? '▾' : '▸'}</span>
+      <span className="chevron" style={{ opacity: 0.5, fontSize: 12 }}>{state.expanded ? '▾' : '▸'}</span>
     )}
-  </div>
+  </span>
 )
 
 export function MenuList({

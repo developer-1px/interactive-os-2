@@ -15,28 +15,15 @@ interface TreeViewProps {
 }
 
 const defaultRenderItem = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
-  const indent = ((state.level ?? 1) - 1) * 20
   const hasChildren = state.expanded !== undefined
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        padding: '4px 8px',
-        paddingLeft: 8 + indent,
-        background: state.focused ? 'var(--tree-focus-bg, #e3f2fd)' : state.selected ? 'var(--tree-select-bg, #f5f5f5)' : 'transparent',
-        cursor: 'default',
-        userSelect: 'none',
-        fontSize: 14,
-        lineHeight: '24px',
-      }}
-    >
-      <span style={{ width: 16, opacity: 0.5, flexShrink: 0 }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+      <span className="chevron" style={{ width: 16, opacity: 0.5, flexShrink: 0 }}>
         {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
       </span>
       <span>{(node.data as Record<string, unknown>)?.name as string}</span>
-    </div>
+    </span>
   )
 }
 

@@ -18,21 +18,9 @@ interface TabListProps {
   enableEditing?: boolean
 }
 
-const defaultRenderItem = (tab: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <div
-    style={{
-      display: 'inline-flex',
-      padding: '8px 16px',
-      borderBottom: state.selected ? '2px solid var(--tab-accent, #1976d2)' : '2px solid transparent',
-      color: state.selected ? 'var(--tab-active-color, #1976d2)' : 'inherit',
-      fontWeight: state.selected ? 600 : 400,
-      cursor: 'default',
-      userSelect: 'none',
-      fontSize: 14,
-    }}
-  >
-    {(tab.data as Record<string, unknown>)?.label as string ?? (tab.data as Record<string, unknown>)?.name as string ?? tab.id as string}
-  </div>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const defaultRenderItem = (tab: Record<string, unknown>, _state: NodeState): React.ReactNode => (
+  <span>{(tab.data as Record<string, unknown>)?.label as string ?? (tab.data as Record<string, unknown>)?.name as string ?? tab.id as string}</span>
 )
 
 const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {

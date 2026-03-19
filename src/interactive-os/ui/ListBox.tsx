@@ -18,19 +18,11 @@ interface ListBoxProps {
   enableEditing?: boolean
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <div
-    style={{
-      padding: '6px 12px',
-      background: state.focused ? 'var(--list-focus-bg, #e3f2fd)' : state.selected ? 'var(--list-select-bg, #e8f5e9)' : 'transparent',
-      cursor: 'default',
-      userSelect: 'none',
-      fontSize: 14,
-      borderLeft: state.selected ? '3px solid var(--list-accent, #4caf50)' : '3px solid transparent',
-    }}
-  >
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const defaultRenderItem = (item: Record<string, unknown>, _state: NodeState): React.ReactNode => (
+  <span>
     {(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}
-  </div>
+  </span>
 )
 
 const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
