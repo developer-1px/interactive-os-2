@@ -63,6 +63,7 @@ export function useSpatialNav(
   store: NormalizedData,
 ): Record<string, (ctx: BehaviorContext) => Command | void> {
   const rectsRef = useRef<Map<string, DOMRect>>(new Map())
+  const allowedIdsRef = useRef<string[]>([])
 
   useLayoutEffect(() => {
     const container = document.querySelector(containerSelector)
@@ -70,13 +71,15 @@ export function useSpatialNav(
 
     // Only collect rects for current depth's children
     const spatialParentId = getSpatialParentId(store)
-    const allowedIds = new Set(getChildren(store, spatialParentId))
+    const allowed = getChildren(store, spatialParentId)
+    allowedIdsRef.current = allowed
+    const allowedSet = new Set(allowed)
 
     const elements = container.querySelectorAll<HTMLElement>('[data-node-id]')
     const next = new Map<string, DOMRect>()
     elements.forEach((el) => {
       const id = el.dataset.nodeId
-      if (id && allowedIds.has(id)) {
+      if (id && allowedSet.has(id)) {
         next.set(id, el.getBoundingClientRect())
       }
     })
@@ -88,10 +91,19 @@ export function useSpatialNav(
     if (targetId) return focusCommands.setFocus(targetId)
   }
 
+  const makeShiftHandler = (dir: Direction) => (ctx: BehaviorContext): Command | void => {
+    const targetId = findNearest(ctx.focused, dir, rectsRef.current)
+    if (targetId) return ctx.extendSelectionTo(targetId, allowedIdsRef.current)
+  }
+
   return {
     ArrowUp: makeHandler('ArrowUp'),
     ArrowDown: makeHandler('ArrowDown'),
     ArrowLeft: makeHandler('ArrowLeft'),
     ArrowRight: makeHandler('ArrowRight'),
+    'Shift+ArrowUp': makeShiftHandler('ArrowUp'),
+    'Shift+ArrowDown': makeShiftHandler('ArrowDown'),
+    'Shift+ArrowLeft': makeShiftHandler('ArrowLeft'),
+    'Shift+ArrowRight': makeShiftHandler('ArrowRight'),
   }
 }
