@@ -4,6 +4,7 @@ import CmsTopToolbar from './CmsTopToolbar'
 import type { ViewportSize } from './CmsTopToolbar'
 import CmsHamburgerDrawer from './CmsHamburgerDrawer'
 import CmsCanvas from './CmsCanvas'
+import CmsSidebar from './CmsSidebar'
 import { useCmsData } from './cms-state'
 import type { Locale } from './cms-types'
 
@@ -26,10 +27,7 @@ export default function CmsLayout() {
         hamburgerRef={hamburgerRef}
       />
       <div className="cms-body">
-        <aside className="cms-sidebar">
-          {/* Task 5 will fill this */}
-          <div style={{ padding: '12px', fontSize: '11px', color: 'var(--text-muted)' }}>Sections</div>
-        </aside>
+        <CmsSidebar data={data} onDataChange={setData} locale={locale} />
         <div className="cms-canvas-area">
           <CmsCanvas data={data} onDataChange={setData} locale={locale} />
         </div>
