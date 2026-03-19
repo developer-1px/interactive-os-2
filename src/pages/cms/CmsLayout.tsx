@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react'
 import '../../styles/cms.css'
 import CmsTopToolbar from './CmsTopToolbar'
-import type { ViewportSize } from './CmsTopToolbar'
+import type { ViewportSize } from './CmsViewportWrapper'
+import CmsViewportWrapper from './CmsViewportWrapper'
 import CmsHamburgerDrawer from './CmsHamburgerDrawer'
 import CmsCanvas from './CmsCanvas'
 import CmsSidebar from './CmsSidebar'
@@ -30,7 +31,9 @@ export default function CmsLayout() {
       <div className="cms-body">
         <CmsSidebar data={data} onDataChange={setData} locale={locale} />
         <div className="cms-canvas-area">
-          <CmsCanvas data={data} onDataChange={setData} locale={locale} />
+          <CmsViewportWrapper viewport={viewport}>
+            <CmsCanvas data={data} onDataChange={setData} locale={locale} />
+          </CmsViewportWrapper>
         </div>
       </div>
       <CmsFloatingToolbar data={data} onDataChange={setData} hidden={false} />

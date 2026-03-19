@@ -114,6 +114,15 @@
 /* Canvas area */
 .cms-canvas-area { flex: 1; position: relative; overflow-y: auto; }
 
+/* Viewport wrapper */
+.cms-viewport {
+  margin: 0 auto;
+  transition: max-width 0.2s ease;
+  min-height: 100%;
+}
+.cms-viewport--mobile { max-width: 375px; }
+.cms-viewport--tablet { max-width: 768px; }
+
 /* Hamburger drawer overlay */
 .cms-drawer-overlay {
   position: fixed; inset: 0; z-index: 200;

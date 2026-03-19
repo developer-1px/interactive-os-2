@@ -1,8 +1,7 @@
 import { Menu, Smartphone, Tablet, Monitor, Play } from 'lucide-react'
+import type { ViewportSize } from './CmsViewportWrapper'
 import type { Locale } from './cms-types'
 import { LOCALES } from './cms-types'
-
-export type ViewportSize = 'mobile' | 'tablet' | 'desktop'
 
 interface CmsTopToolbarProps {
   onHamburgerClick: () => void
