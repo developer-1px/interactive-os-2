@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { Command, NormalizedData } from '../core/types'
 import type { BehaviorContext } from '../behaviors/types'
 import { focusCommands } from '../plugins/core'
@@ -64,6 +64,13 @@ export function useSpatialNav(
 ): Record<string, (ctx: BehaviorContext) => Command | void> {
   const rectsRef = useRef<Map<string, DOMRect>>(new Map())
   const allowedIdsRef = useRef<string[]>([])
+  const [, forceUpdate] = useState(0)
+
+  useEffect(() => {
+    const handler = () => forceUpdate(n => n + 1)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
 
   useLayoutEffect(() => {
     const container = document.querySelector(containerSelector)

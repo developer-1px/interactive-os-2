@@ -323,6 +323,20 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
     await user.keyboard('{Home}')
     expect(getFocused(container as HTMLElement)).toBe('stat-patterns')
   })
+
+  // T8: Tab moves focus outside CMS widget
+  it('T8: Tab moves focus outside CMS widget', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<PageVisualCms />)
+    const hero = (container as HTMLElement).querySelector('[data-node-id="hero"]') as HTMLElement
+    hero.focus()
+
+    await user.keyboard('{Tab}')
+
+    // After Tab, focus should NOT be on any CMS node
+    const activeNodeId = document.activeElement?.getAttribute('data-node-id')
+    expect(activeNodeId).toBeNull()
+  })
 })
 
 // ── PRD landing page examples (jsdom-compatible) ──

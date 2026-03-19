@@ -45,8 +45,13 @@ export const spatial: AriaBehavior = {
   },
   focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
   activateOnClick: true,
-  ariaAttributes: (_node, state: NodeState) => ({
-    'aria-level': String(state.level ?? 1),
-    ...(state.selected ? { 'aria-selected': 'true' } : {}),
-  }),
+  ariaAttributes: (node, state: NodeState) => {
+    const d = (node.data ?? {}) as Record<string, string>
+    const label = d.name || d.label || d.title || d.value || d.variant || ''
+    return {
+      'aria-level': String(state.level ?? 1),
+      ...(label ? { 'aria-label': label } : {}),
+      ...(state.selected ? { 'aria-selected': 'true' } : {}),
+    }
+  },
 }

@@ -133,7 +133,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (392 tests, 49 files)
+- [x] Vitest (393 tests, 49 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 42 modules)
@@ -205,4 +205,4 @@
 
 ---
 
-*Last updated: 2026-03-19 — Visual CMS keyboard nav (spatial + useSpatialNav + unified store + PRD workflow), 392 tests, 49 files*
+*Last updated: 2026-03-19 — Retro L1 백로그 처리 (selection CSS, aria-label, ResizeObserver, Tab test), 393 tests, 49 files*
