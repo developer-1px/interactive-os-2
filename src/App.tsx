@@ -51,6 +51,7 @@ import PageVisionArchitecture from './pages/PageVisionArchitecture'
 import PageVisualCms from './pages/PageVisualCms'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
+import CmsLayout from './pages/cms/CmsLayout'
 
 // --- Vertical tabs behavior (ActivityBar is a vertical tablist) ---
 
@@ -289,6 +290,7 @@ function App() {
   const navigate = useNavigate()
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
   const isViewer = pathname === '/viewer' || pathname.startsWith('/viewer/')
+  const isCms = pathname === '/'
 
   const handleActivityBarChange = useCallback((store: NormalizedData) => {
     const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
@@ -296,6 +298,11 @@ function App() {
       navigate(navPaths[focusedId])
     }
   }, [navigate])
+
+  // CMS layout — standalone, no ActivityBar
+  if (isCms) {
+    return <CmsLayout />
+  }
 
   return (
     <div className="page">
@@ -337,7 +344,6 @@ function App() {
           {activeGroup && <Sidebar activeGroup={activeGroup} />}
           <main className="content">
             <Routes>
-              <Route path="/" element={<Navigate to="/viewer" replace />} />
               {routeConfig.map((group) => (
                 <Route
                   key={group.id}
@@ -360,7 +366,7 @@ function App() {
                   />
                 ))
               )}
-              <Route path="*" element={<Navigate to="/viewer" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
         </>

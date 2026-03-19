@@ -1,0 +1,81 @@
+/* CMS Layout */
+.cms-layout { display: flex; flex-direction: column; height: 100svh; background: var(--surface-0); }
+
+/* Top toolbar — thin strip */
+.cms-top-toolbar {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border-dim);
+  flex-shrink: 0;
+}
+.cms-top-toolbar__spacer { flex: 1; }
+.cms-top-toolbar__btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  background: none; border: none; border-radius: var(--radius-sm);
+  color: var(--text-secondary); cursor: pointer;
+  transition: color 0.1s, background 0.1s;
+}
+.cms-top-toolbar__btn:hover { color: var(--text-bright); background: var(--bg-hover); }
+.cms-top-toolbar__btn--active { color: var(--text-bright); background: var(--bg-active); }
+
+.cms-top-toolbar__locale {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  color: var(--text-secondary); background: var(--surface-0);
+  border: 1px solid var(--border-dim); border-radius: var(--radius-sm);
+  padding: 2px 8px; cursor: pointer;
+}
+
+/* Body — sidebar + canvas */
+.cms-body { display: flex; flex: 1; min-height: 0; }
+
+/* Sidebar placeholder (Task 5 fills this) */
+.cms-sidebar {
+  width: 120px; flex-shrink: 0;
+  background: var(--surface-1);
+  border-right: 1px solid var(--border-dim);
+  padding: 8px 0;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+
+/* Canvas area */
+.cms-canvas-area { flex: 1; position: relative; overflow-y: auto; }
+
+/* Hamburger drawer overlay */
+.cms-drawer-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.5);
+}
+.cms-drawer {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 240px; z-index: 201;
+  background: var(--surface-1);
+  border-right: 1px solid var(--border-mid);
+  padding: 12px 0;
+  display: flex; flex-direction: column;
+}
+.cms-drawer__header {
+  padding: 0 12px 12px;
+  border-bottom: 1px solid var(--border-dim);
+  margin-bottom: 8px;
+}
+.cms-drawer__item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer; transition: background 0.1s, color 0.1s;
+  background: none; border: none; width: 100%; text-align: left;
+}
+.cms-drawer__item:hover { background: var(--bg-hover); color: var(--text-bright); }
+.cms-drawer__item--active { color: var(--text-bright); background: var(--bg-active); }
+
+/* Narrow browser */
+@media (max-width: 600px) {
+  .cms-sidebar { display: none; }
+}

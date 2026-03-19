@@ -153,7 +153,7 @@
 
 - [x] ActivityBar — 8 레이어 그룹 (Store, Engine, Navigation, Plugin, Collection, Components, Vision + Viewer)
 - [x] 레이어별 nested routes (`/{layer}/{page}`)
-- [x] Default landing: `/viewer` (독립 레이아웃, App Shell 밖)
+- [x] Default landing: `/` → CMS Layout (독립 레이아웃, App Shell 밖), `/viewer` showcase
 - [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
 - [x] Viewer 마크다운 렌더링 — remark-breaks 줄바꿈, 타이포그래피 전면 개선
 - [x] Viewer 소스 뷰어 — Shiki 라인 넘버 (CSS counter), 심볼 하이라이트 (클릭 토글)
@@ -170,6 +170,7 @@
 - [x] Visual CMS Spatial Navigation — 단일 useAria + spatial behavior + useSpatialNav로 DOM 위치 기반 4방향 네비게이션, Enter/Escape depth, Space 선택, Shift+Arrow 범위 선택, Home/End
 - [x] Visual CMS Unified Store — 6개 섹션 + 중첩 엔티티를 단일 normalized store로 통합
 - [x] Visual CMS Canvas Extract — NodeContent/renderers를 cms-renderers.tsx로, canvas 로직을 CmsCanvas.tsx로 분리 (i18n localized() 적용)
+- [x] Visual CMS Layout Shell — CmsLayout (top toolbar + sidebar + canvas), CmsTopToolbar (locale/viewport/present), CmsHamburgerDrawer (showcase 네비게이션), cms-state (module-scoped 영속 상태), `/` CMS 랜딩 라우트
 - [x] Dark/Light Theme System — `[data-theme]` CSS custom property layers, dark-first 디자인, localStorage 토글 + flash 방지
 - [x] Combobox Token Migration — 인라인 스타일 → CSS 토큰 클래스 (combo-item, combo-input, combo-dropdown)
 - [x] Demo Page Quality Lift — page-header, page-keys, demo-section, card 스타일 개선
@@ -215,4 +216,4 @@
 
 ---
 
-*Last updated: 2026-03-20 — Kanban Showcase: cross-column keyboard navigation + Collection page, 464 tests, 54 files*
+*Last updated: 2026-03-20 — Visual CMS Layout Shell: top toolbar + hamburger drawer + CMS route, 464 tests, 54 files*
