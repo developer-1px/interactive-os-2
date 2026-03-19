@@ -215,11 +215,7 @@
   background: var(--bg-hover);
 }
 
-.sidebar-link--active {
-  color: var(--accent);
-  background: var(--accent-dim);
-  font-weight: 600;
-}
+/* sidebar-link active/focus state handled by components.css ARIA selectors */
 
 .badge-wip {
   font-family: var(--mono);
