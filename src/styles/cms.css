@@ -143,6 +143,35 @@
 .cms-drawer__item:hover { background: var(--bg-hover); color: var(--text-bright); }
 .cms-drawer__item--active { color: var(--text-bright); background: var(--bg-active); }
 
+/* Floating CRUD toolbar */
+.cms-floating-toolbar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  box-shadow: var(--surface-4-shadow);
+  z-index: 100;
+}
+.cms-floating-toolbar__btn {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 4px 10px; height: 28px;
+  font-family: var(--sans); font-size: 11px; font-weight: 600;
+  color: var(--text-secondary); background: none;
+  border: none; border-radius: var(--radius-sm);
+  cursor: pointer; transition: color 0.1s, background 0.1s;
+  white-space: nowrap;
+}
+.cms-floating-toolbar__btn:hover:not(:disabled) { color: var(--text-bright); background: var(--bg-hover); }
+.cms-floating-toolbar__btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.cms-floating-toolbar__sep { width: 1px; height: 16px; background: var(--border-dim); margin: 0 2px; }
+
 /* Narrow browser */
 @media (max-width: 600px) {
   .cms-sidebar { display: none; }
