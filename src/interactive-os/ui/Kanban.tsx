@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import './kanban.css'
 import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
+import { ROOT_ID } from '../core/types'
+import { useAria } from '../hooks/useAria'
+import { AriaInternalContext } from '../components/aria-context'
+import { AriaItemContext, Aria } from '../components/aria'
 import { kanban as kanbanBehavior } from '../behaviors/kanban'
 import { core } from '../plugins/core'
-import { getChildren } from '../core/createStore'
+import { getChildren, getEntity } from '../core/createStore'
 
 interface KanbanProps {
   data: NormalizedData
@@ -14,47 +16,82 @@ interface KanbanProps {
   'aria-label'?: string
 }
 
+function FocusDiv({ focused, children, ...props }: { focused: boolean; children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (focused && ref.current) {
+      ref.current.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
+    }
+  }, [focused])
+  return <div ref={ref} {...props}>{children}</div>
+}
+
 export function Kanban({
   data,
   plugins = [core()],
   onChange,
   'aria-label': ariaLabel,
 }: KanbanProps) {
-  // Count columns to set CSS column-count dynamically
-  const columnCount = (data.relationships['__root__'] ?? []).length
-
-  const renderItem = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
-    const d = node.data as Record<string, unknown> | undefined
-    const title = (d?.title as string) ?? ''
-
-    // Level 0 = column header
-    if (state.level === 0) {
-      const cardCount = getChildren(data, node.id as string).length
-      return (
-        <div className="kanban-column-header-inner">
-          <span>{title}</span>
-          <span className="kanban-column-count">{cardCount}</span>
-        </div>
-      )
-    }
-
-    // Level 1 = card
-    return (
-      <Aria.Editable field="title">{title}</Aria.Editable>
-    )
-  }
+  const aria = useAria({ behavior: kanbanBehavior, data, plugins, onChange })
+  const store = aria.getStore()
+  const columns = getChildren(store, ROOT_ID)
 
   return (
-    <div className="kanban-board" style={{ ['--kanban-columns' as string]: columnCount }}>
-      <Aria
-        behavior={kanbanBehavior}
-        data={data}
-        plugins={plugins}
-        onChange={onChange}
+    <AriaInternalContext.Provider value={{ ...aria, behavior: kanbanBehavior }}>
+      <div
+        role={kanbanBehavior.role}
         aria-label={ariaLabel}
+        data-aria-container=""
+        className="kanban-board"
+        {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       >
-        <Aria.Item render={renderItem} />
-      </Aria>
-    </div>
+        {columns.map((colId) => {
+          const colEntity = getEntity(store, colId)
+          if (!colEntity) return null
+          const colState = aria.getNodeState(colId)
+          const colProps = aria.getNodeProps(colId)
+          const cards = getChildren(store, colId)
+          const colTitle = (colEntity.data as Record<string, unknown>)?.title as string ?? ''
+
+          return (
+            <div key={colId} className="kanban-column">
+              {/* Column header */}
+              <FocusDiv
+                focused={colState.focused}
+                className="kanban-column-header"
+                {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
+              >
+                <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>
+                  <span>{colTitle}</span>
+                  <span className="kanban-column-count">{cards.length}</span>
+                </AriaItemContext.Provider>
+              </FocusDiv>
+
+              {/* Cards */}
+              {cards.map((cardId) => {
+                const cardEntity = getEntity(store, cardId)
+                if (!cardEntity) return null
+                const cardState = aria.getNodeState(cardId)
+                const cardProps = aria.getNodeProps(cardId)
+                const cardTitle = (cardEntity.data as Record<string, unknown>)?.title as string ?? ''
+
+                return (
+                  <FocusDiv
+                    key={cardId}
+                    focused={cardState.focused}
+                    className="kanban-card"
+                    {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
+                  >
+                    <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
+                      <Aria.Editable field="title">{cardTitle}</Aria.Editable>
+                    </AriaItemContext.Provider>
+                  </FocusDiv>
+                )
+              })}
+            </div>
+          )
+        })}
+      </div>
+    </AriaInternalContext.Provider>
   )
 }
