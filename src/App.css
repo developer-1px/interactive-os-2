@@ -118,9 +118,6 @@
   --text-muted: var(--zinc-400);
   --text-bright: var(--zinc-950);
 
-  /* Activity bar stays dark in light mode */
-  --activity-bar-bg: var(--zinc-950);
-
   /* Dialog backdrop */
   --dialog-backdrop: rgba(0, 0, 0, 0.15);
 }
@@ -201,15 +198,15 @@ body {
   background: none;
   border: none;
   border-radius: var(--radius);
-  color: var(--zinc-500);
+  color: var(--text-muted);
   cursor: pointer;
   transition: color 0.12s, background 0.12s;
   margin-bottom: 4px;
 }
 
 .activity-bar__theme-toggle:hover {
-  color: var(--zinc-300);
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  background: var(--bg-hover);
 }
 
 .activity-bar__item {
@@ -219,7 +216,7 @@ body {
   justify-content: center;
   width: 40px;
   height: 40px;
-  color: var(--zinc-500);
+  color: var(--text-muted);
   text-decoration: none;
   border-radius: var(--radius);
   transition: color 0.12s, background 0.12s;
@@ -228,13 +225,13 @@ body {
 }
 
 .activity-bar__item:hover {
-  color: var(--zinc-300);
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  background: var(--bg-hover);
 }
 
 .activity-bar__item--active {
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-bright);
+  background: var(--bg-active);
 }
 
 .activity-bar__item--active::before {
