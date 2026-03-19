@@ -85,7 +85,7 @@
 - [x] dialog (role: dialog, childRole: group)
 - [x] toolbar (role: toolbar, childRole: button)
 - [x] grid — 2D row/col 네비게이션, factory function `grid({ columns })`
-- [x] combobox — input + listbox 통합, aria-activedescendant
+- [x] combobox — input + listbox 통합, aria-activedescendant, multi-select + tag tokens + grouped + creatable
 - [x] radiogroup — single selection 강제, wrapping nav, aria-checked
 - [x] alertdialog — dialog variant with aria-modal
 - [x] switch — expanded state 재사용, aria-checked, natural-tab-order
@@ -128,12 +128,12 @@
 - [x] SwitchGroup
 - [x] Grid (2D row/col navigation with Aria.Cell)
 - [x] RadioGroup
-- [x] Combobox (input + listbox, aria-activedescendant, editable 모드 지원)
+- [x] Combobox (input + listbox, aria-activedescendant, editable, multi-select + tag tokens, grouped, creatable)
 - [ ] `[P2]` shadcn CLI — `npx interactive-os add treegrid`
 
 ## ⑦ 인프라
 
-- [x] Vitest (393 tests, 49 files)
+- [x] Vitest (410 tests, 50 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 42 modules)
@@ -206,4 +206,4 @@
 
 ---
 
-*Last updated: 2026-03-19 — Design System: ARIA attr CSS, 3-file split, 11 UI 컴포넌트 inline style 제거, 393 tests, 49 files*
+*Last updated: 2026-03-19 — Combobox 완성: multi-select, tag tokens, grouped, creatable, 410 tests, 50 files*
