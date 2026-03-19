@@ -1,7 +1,7 @@
 import type { Command, Plugin } from '../core/types'
 import { getEntity, updateEntityData } from '../core/createStore'
 
-const RENAME_ID = '__rename__'
+export const RENAME_ID = '__rename__'
 
 export const renameCommands = {
   startRename(nodeId: string): Command {
