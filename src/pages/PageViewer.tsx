@@ -525,7 +525,7 @@ export default function PageViewer() {
 
   return (
     <div className="vw">
-      {/* Status bar */}
+      {/* Top bar — single unified bar */}
       <div className="vw-statusbar">
         <div className="vw-statusbar__left">
           <button
@@ -535,9 +535,21 @@ export default function PageViewer() {
           >
             <PanelLeft size={12} strokeWidth={1.5} />
           </button>
-          <span className="vw-statusbar__title">Explorer</span>
+          {selectedFile ? (
+            <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />
+          ) : (
+            <span className="vw-statusbar__title">Explorer</span>
+          )}
         </div>
         <div className="vw-statusbar__right">
+          {selectedFile && (
+            <div className="vw-content__meta">
+              <FileIcon name={filename} type="file" />
+              <span>{ext.toUpperCase()}</span>
+              <span className="vw-content__meta-sep" />
+              <span>{lineCount} lines</span>
+            </div>
+          )}
           <button
             className="vw-statusbar__btn"
             onClick={() => setQuickOpenVisible(true)}
@@ -597,23 +609,12 @@ export default function PageViewer() {
         {/* Content panel */}
         <div className="vw-content">
           {selectedFile ? (
-            <>
-              <div className="vw-content__header">
-                <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />
-                <div className="vw-content__meta">
-                  <FileIcon name={filename} type="file" />
-                  <span>{ext.toUpperCase()}</span>
-                  <span className="vw-content__meta-sep" />
-                  <span>{lineCount} lines</span>
-                </div>
-              </div>
-              <div className="vw-content__body" ref={contentBodyRef}>
-                {isMarkdown
-                  ? <MarkdownViewer content={fileContent} />
-                  : <CodeBlock code={fileContent} filename={filename} />
-                }
-              </div>
-            </>
+            <div className="vw-content__body" ref={contentBodyRef}>
+              {isMarkdown
+                ? <MarkdownViewer content={fileContent} />
+                : <CodeBlock code={fileContent} filename={filename} />
+              }
+            </div>
           ) : (
             <div className="vw-empty">
               <FileText size={24} strokeWidth={1} className="vw-empty__icon" />
