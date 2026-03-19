@@ -44,6 +44,7 @@ export interface BehaviorContext {
   activate(): Command
   toggleSelect(): Command
   extendSelection(direction: 'next' | 'prev' | 'first' | 'last'): Command
+  extendSelectionTo(targetId: string, navigableIds?: string[]): Command
 
   dispatch(command: Command): void
 
