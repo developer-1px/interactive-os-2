@@ -133,23 +133,35 @@ function AriaEditable({ field, children }: { field: string; children: React.Reac
   const originalValueRef = useRef<string>('')
   const composingRef = useRef(false)
   const committedRef = useRef(false)
+  const wasRenamingRef = useRef(false)
 
   const renaming = nodeCtx?.renaming ?? false
 
   useEffect(() => {
-    if (!renaming || !editRef.current) return
-    committedRef.current = false
-    composingRef.current = false
-    const el = editRef.current
-    originalValueRef.current = el.textContent ?? ''
-    // Select all text
-    const range = document.createRange()
-    range.selectNodeContents(el)
-    const sel = window.getSelection()
-    sel?.removeAllRanges()
-    sel?.addRange(range)
-    el.focus()
-  }, [renaming])
+    if (renaming) {
+      // Entering rename mode
+      wasRenamingRef.current = true
+      committedRef.current = false
+      composingRef.current = false
+      if (!editRef.current) return
+      const el = editRef.current
+      originalValueRef.current = el.textContent ?? ''
+      // Select all text
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      const sel = window.getSelection()
+      sel?.removeAllRanges()
+      sel?.addRange(range)
+      el.focus()
+    } else if (wasRenamingRef.current) {
+      // Exiting rename mode — restore focus to node
+      wasRenamingRef.current = false
+      if (nodeCtx) {
+        const nodeEl = document.querySelector<HTMLElement>(`[data-node-id="${nodeCtx.nodeId}"]`)
+        nodeEl?.focus()
+      }
+    }
+  }, [renaming, nodeCtx])
 
   if (!renaming) {
     return (

@@ -33,6 +33,7 @@ const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = 
   'Delete': (ctx) => crudCommands.remove(ctx.focused),
   'Mod+Z': () => historyCommands.undo(),
   'Mod+Shift+Z': () => historyCommands.redo(),
+  'Enter': (ctx) => renameCommands.startRename(ctx.focused),
   'F2': (ctx) => renameCommands.startRename(ctx.focused),
   'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
   'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
