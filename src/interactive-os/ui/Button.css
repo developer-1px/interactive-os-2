@@ -1,0 +1,38 @@
+/* --- Buttons --- */
+
+.btn-accent {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  background: var(--accent);
+  color: var(--zinc-50);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.12s, transform 0.08s;
+}
+
+.btn-accent:hover {
+  background: var(--indigo-600);
+}
+
+.btn-accent:active {
+  transform: scale(0.98);
+}
+
+.btn-dialog {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  cursor: pointer;
+  outline: none;
+  transition: background 0.08s, border-color 0.08s;
+}
+
+/* btn-dialog focus state handled by components.css ARIA selectors */

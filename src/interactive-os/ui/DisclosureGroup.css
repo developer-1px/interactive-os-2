@@ -1,0 +1,33 @@
+/* --- Disclosure --- */
+
+.disclosure-trigger {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  margin: 1px 4px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+}
+
+.disclosure-trigger__icon {
+  display: inline-flex;
+  color: var(--text-muted);
+}
+
+.disclosure-trigger__label {
+  color: inherit;
+}
+
+.disclosure-panel {
+  padding: 6px 10px 6px 28px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  border-bottom: 1px solid var(--border-dim);
+  background: var(--bg-deep);
+}
+
+.disclosure-inner { display: inline-flex; align-items: center; gap: 8px; }
+.disclosure-chevron { opacity: 0.5; }

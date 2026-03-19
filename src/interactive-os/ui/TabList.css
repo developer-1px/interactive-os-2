@@ -1,0 +1,19 @@
+/* --- Tab --- */
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+}
+
+.tab-content {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-height: 36px;
+  line-height: 1.6;
+}

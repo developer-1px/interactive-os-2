@@ -1,0 +1,14 @@
+/* --- Grid cell --- */
+
+.grid-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border-dim);
+  min-height: 36px;
+}
+
+.grid-row { display: flex; }

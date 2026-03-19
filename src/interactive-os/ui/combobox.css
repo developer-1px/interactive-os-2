@@ -1,0 +1,46 @@
+/* --- Combobox --- */
+
+.combo-item {
+  padding: 5px 12px;
+  font-size: 13px;
+}
+
+.combo-item--focused {
+  background: var(--bg-focus);
+  color: var(--text-bright);
+}
+
+.combo-item--selected {
+  background: var(--bg-select);
+  font-weight: 600;
+}
+
+.combo-input {
+  width: 100%;
+  padding: 6px 10px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--surface-2);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.combo-input:focus {
+  border-color: var(--accent);
+}
+
+.combo-input::placeholder {
+  color: var(--text-muted);
+}
+
+.combo-dropdown {
+  background: var(--surface-4);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  box-shadow: var(--surface-4-shadow);
+  margin-top: 4px;
+  overflow: hidden;
+}
