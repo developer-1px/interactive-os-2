@@ -161,24 +161,7 @@
   border-left: 2px solid transparent;
 }
 
-.vw-tree__item:hover {
-  background: var(--bg-hover);
-}
-
-.vw-tree__item--focused {
-  background: var(--bg-focus);
-  border-left-color: var(--accent);
-}
-
-.vw-tree__item--active {
-  background: var(--accent-dim);
-  color: var(--accent);
-}
-
-.vw-tree__item--active .vw-icon {
-  color: var(--accent);
-  opacity: 0.9;
-}
+/* State styling (focus, hover, selected) handled by components.css ARIA selectors */
 
 .vw-tree__indent {
   flex-shrink: 0;
@@ -203,9 +186,7 @@
   color: var(--text-secondary);
 }
 
-.vw-tree__item--focused .vw-tree__name--dir {
-  color: var(--text-bright);
-}
+/* focused dir name color handled by components.css ARIA :focus selector */
 
 /* --- File icons --- */
 
