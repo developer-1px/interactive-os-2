@@ -168,6 +168,7 @@
 - [x] Combobox Token Migration — 인라인 스타일 → CSS 토큰 클래스 (combo-item, combo-input, combo-dropdown)
 - [x] Demo Page Quality Lift — page-header, page-keys, demo-section, card 스타일 개선
 - [x] Viewer Theme Compat — Shiki 테마 자동 전환 (shared MutationObserver hook)
+- [x] Viewer Redesign — refined-documentation 스타일 (15px body, 1.75 line-height, 720px prose column, 48px padding)
 
 ## ⑨ APG Pattern Coverage
 
