@@ -223,4 +223,5 @@ function AriaEditable({ field, children }: { field: string; children: React.Reac
   )
 }
 
+export { AriaItemContext }
 export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Editable: AriaEditable })
