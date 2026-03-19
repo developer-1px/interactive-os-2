@@ -97,6 +97,9 @@
 ### 추가 프리셋 (Spatial)
 - [x] spatial — depth traversal (Enter/Escape), roving-tabindex both, F2 rename
 
+### 추가 프리셋 (Cross-Container)
+- [x] kanban — cross-column keyboard navigation (←→), cross-column move (Alt+←→), column-aware Home/End/Mod+Home/Mod+End, batch move (multi-select)
+
 ### 미구현 behavior
 - [x] extended selection — Shift 범위 선택 (listbox, treegrid)
 - [ ] `[P2]` menubar — 다계층 keyMap 필요 (축 확장)
@@ -128,13 +131,14 @@
 - [x] DisclosureGroup
 - [x] SwitchGroup
 - [x] Grid (2D row/col navigation with Aria.Cell)
+- [x] Kanban (cross-column card movement, horizontal column layout)
 - [x] RadioGroup
 - [x] Combobox (input + listbox, aria-activedescendant, editable, multi-select + tag tokens, grouped, creatable)
 - [ ] `[P2]` shadcn CLI — `npx interactive-os add treegrid`
 
 ## ⑦ 인프라
 
-- [x] Vitest (410 tests, 50 files)
+- [x] Vitest (464 tests, 54 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 42 modules)
@@ -174,6 +178,7 @@
 - [x] Design System — ARIA attr 기반 CSS 디자인 시스템 (`data-focused` 코어 추가, App.css → tokens/components/app 3파일 분리, 11개 UI 컴포넌트 inline style 제거, `prefers-reduced-motion`)
 - [x] CSS Architecture Migration — 3-Layer 구조 (tokens → ARIA state → component CSS), app.css 분해 (13개 컴포넌트 CSS 파일), UI 컴포넌트 inline style → className 전환, spacing/transition 토큰 추가
 - [x] Route Restructuring — Navigation(read-only) → Plugin(개별 능력) → Collection(조립 쇼케이스) 3층 분리, Plugin 그룹 신설, Navigation에 treegrid/listbox/grid/combobox read-only 추가, 데모 데이터 공유 모듈 추출
+- [x] Kanban Showcase — /collection/kanban, keyboard-first kanban board (cross-column move, CRUD, undo/redo, batch move), CSS multi-column layout
 
 ## ⑨ APG Pattern Coverage
 
@@ -210,4 +215,4 @@
 
 ---
 
-*Last updated: 2026-03-19 — Rename UI: Aria.Editable contenteditable 제자리 편집, 422 tests, 51 files*
+*Last updated: 2026-03-20 — Kanban Showcase: cross-column keyboard navigation + Collection page, 464 tests, 54 files*
