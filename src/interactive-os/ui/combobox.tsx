@@ -15,6 +15,7 @@ interface ComboboxProps {
   renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
   placeholder?: string
   editable?: boolean
+  selectionMode?: 'single' | 'multiple'
 }
 
 export function Combobox({
@@ -24,9 +25,10 @@ export function Combobox({
   renderItem,
   placeholder = 'Select...',
   editable = false,
+  selectionMode,
 }: ComboboxProps) {
   const aria = useAria({
-    behavior: comboboxBehavior,
+    behavior: comboboxBehavior({ selectionMode }),
     data,
     plugins,
     onChange,
