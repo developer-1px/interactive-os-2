@@ -185,6 +185,27 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
       return createBatchCommand(commands)
     },
 
+    extendSelectionTo(targetId: string, navigableIds?: string[]): Command {
+      const nodeList = navigableIds ?? visibleNodes()
+      const anchorId = (store.entities[SELECTION_ANCHOR_ID]?.anchorId as string) ?? focusedId
+
+      const anchorIdx = nodeList.indexOf(anchorId)
+      const targetIdx = nodeList.indexOf(targetId)
+      if (targetIdx === -1) return focusCommands.setFocus(focusedId)
+
+      const start = Math.min(anchorIdx, targetIdx)
+      const end = Math.max(anchorIdx, targetIdx)
+      const rangeIds = nodeList.slice(start, end + 1)
+
+      const commands: Command[] = []
+      if (!store.entities[SELECTION_ANCHOR_ID]) {
+        commands.push(selectionCommands.setAnchor(focusedId))
+      }
+      commands.push(focusCommands.setFocus(targetId))
+      commands.push(selectionCommands.selectRange(rangeIds))
+      return createBatchCommand(commands)
+    },
+
     dispatch(command: Command): void {
       engine.dispatch(command)
     },

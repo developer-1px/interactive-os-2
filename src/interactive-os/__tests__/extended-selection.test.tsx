@@ -13,7 +13,9 @@ import { treegrid } from '../behaviors/treegrid'
 import { createStore } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import type { NormalizedData } from '../core/types'
-import { core } from '../plugins/core'
+import { core, focusCommands } from '../plugins/core'
+import { createCommandEngine } from '../core/createCommandEngine'
+import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 
 function fixtureStore(): NormalizedData {
   return createStore({
@@ -133,6 +135,50 @@ describe('extended selection — listbox', () => {
     await user.keyboard('{Shift>}{ArrowDown}{/Shift}')
     expect(getFocused(container)).toBe('d')
     expect(getSelected(container)).toEqual(['c', 'd'])
+  })
+})
+
+describe('extendSelectionTo — target ID with custom navigable set', () => {
+  it('selects range from anchor to target within provided navigableIds', () => {
+    const store = fixtureStore()
+    const engine = createCommandEngine(store, [], () => {})
+    engine.dispatch(focusCommands.setFocus('b'))
+
+    const ctx = createBehaviorContext(engine)
+    const cmd = ctx.extendSelectionTo('d', ['a', 'b', 'c', 'd', 'e'])
+    engine.dispatch(cmd)
+
+    const result = engine.getStore()
+    const selected = (result.entities['__selection__']?.selectedIds as string[]) ?? []
+    expect(selected).toEqual(['b', 'c', 'd'])
+  })
+
+  it('skips nodes not in navigableIds for range calculation', () => {
+    const store = fixtureStore()
+    const engine = createCommandEngine(store, [], () => {})
+    engine.dispatch(focusCommands.setFocus('a'))
+
+    const ctx = createBehaviorContext(engine)
+    const cmd = ctx.extendSelectionTo('e', ['a', 'c', 'e'])
+    engine.dispatch(cmd)
+
+    const result = engine.getStore()
+    const selected = (result.entities['__selection__']?.selectedIds as string[]) ?? []
+    expect(selected).toEqual(['a', 'c', 'e'])
+  })
+
+  it('falls back to visibleNodes when navigableIds not provided', () => {
+    const store = fixtureStore()
+    const engine = createCommandEngine(store, [], () => {})
+    engine.dispatch(focusCommands.setFocus('b'))
+
+    const ctx = createBehaviorContext(engine)
+    const cmd = ctx.extendSelectionTo('d')
+    engine.dispatch(cmd)
+
+    const result = engine.getStore()
+    const selected = (result.entities['__selection__']?.selectedIds as string[]) ?? []
+    expect(selected).toEqual(['b', 'c', 'd'])
   })
 })
 
