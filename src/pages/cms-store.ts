@@ -13,8 +13,8 @@ export const cmsStore = createStore({
 
     // Hero children
     'hero-badge':    { id: 'hero-badge',    data: { type: 'badge', value: 'Open Source' } },
-    'hero-title':    { id: 'hero-title',    data: { type: 'text', value: 'Headless ARIA Engine' } },
-    'hero-subtitle': { id: 'hero-subtitle', data: { type: 'text', value: 'Build fully accessible UI with a normalized store, command engine, and 14 APG-compliant behavior presets — keyboard-first by design.' } },
+    'hero-title':    { id: 'hero-title',    data: { type: 'text', role: 'hero-title', value: 'Headless ARIA Engine' } },
+    'hero-subtitle': { id: 'hero-subtitle', data: { type: 'text', role: 'hero-subtitle', value: 'Build fully accessible UI with a normalized store, command engine, and 14 APG-compliant behavior presets — keyboard-first by design.' } },
     'hero-cta':      { id: 'hero-cta',      data: { type: 'cta', primary: 'Get Started', secondary: 'View on GitHub' } },
 
     // Section headers (label + title + desc for features/workflow/patterns)

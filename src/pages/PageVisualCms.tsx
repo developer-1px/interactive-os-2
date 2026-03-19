@@ -143,10 +143,10 @@ function getNodeClassName(data: Record<string, string>, state: NodeState): strin
     case 'pattern':
       return `cms-pattern${f ? ' cms-pattern--focused' : ''}`
     case 'text': {
+      if (data.role === 'hero-title') return 'cms-hero__title'
+      if (data.role === 'hero-subtitle') return 'cms-hero__subtitle'
       if (data.role === 'title') return 'cms-feature-card__title'
       if (data.role === 'desc') return 'cms-feature-card__desc'
-      if (data.value === 'Headless ARIA Engine') return 'cms-hero__title'
-      if (data.value?.startsWith('Build fully')) return 'cms-hero__subtitle'
       return ''
     }
     case 'section-label': return 'cms-section-label'
@@ -161,6 +161,9 @@ function getNodeClassName(data: Record<string, string>, state: NodeState): strin
     default: return ''
   }
 }
+
+// Section header types — rendered before the grid container
+const HEADER_TYPES = new Set(['section-label', 'section-title', 'section-desc', 'badge', 'text', 'cta'])
 
 function getChildrenContainerClassName(data: Record<string, string>): string | undefined {
   switch (data.variant) {
@@ -180,10 +183,10 @@ function getNodeTag(data: Record<string, string>): keyof JSX.IntrinsicElements {
     return 'section'
   }
   if (data.type === 'text') {
+    if (data.role === 'hero-title') return 'h1'
+    if (data.role === 'hero-subtitle') return 'p'
     if (data.role === 'title') return 'h3'
     if (data.role === 'desc') return 'p'
-    if (data.value === 'Headless ARIA Engine') return 'h1'
-    if (data.value?.startsWith('Build fully')) return 'p'
   }
   if (data.type === 'section-label') return 'p'
   if (data.type === 'section-title') return 'h2'
@@ -275,14 +278,11 @@ export default function PageVisualCms() {
           className={className}
         >
           {(() => {
-            // Separate header nodes (label/title/desc) from content nodes
-            const headerTypes = new Set(['section-label', 'section-title', 'section-desc', 'badge', 'text', 'cta'])
-            const store = aria.getStore()
             const headerIds: string[] = []
             const contentIds: string[] = []
             for (const childId of children) {
               const childData = (store.entities[childId]?.data ?? {}) as Record<string, string>
-              if (headerTypes.has(childData.type)) {
+              if (HEADER_TYPES.has(childData.type)) {
                 headerIds.push(childId)
               } else {
                 contentIds.push(childId)
