@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Compass, Layers, Eye, Map, Box, Sun, Moon } from 'lucide-react'
+import { Database, Cog, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -29,7 +29,11 @@ import PageRadioGroup from './pages/PageRadioGroup'
 import PageAlertDialog from './pages/PageAlertDialog'
 import PageSwitch from './pages/PageSwitch'
 import PageTreeView from './pages/PageTreeView'
+import PageTreeGridNav from './pages/PageTreeGridNav'
+import PageListboxNav from './pages/PageListboxNav'
+import PageComboboxNav from './pages/PageComboboxNav'
 import PageTabsCrud from './pages/PageTabsCrud'
+import PageGridCollection from './pages/PageGridCollection'
 import PageCrud from './pages/PageCrud'
 import PageClipboard from './pages/PageClipboard'
 import PageHistoryDemo from './pages/PageHistoryDemo'
@@ -128,6 +132,23 @@ const routeConfig: RouteGroup[] = [
       { path: 'dialog', label: 'Dialog', status: 'ready', component: PageDialog },
       { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: PageAlertDialog },
       { path: 'treeview', label: 'Tree View', status: 'ready', component: PageTreeView },
+      { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: PageTreeGridNav },
+      { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListboxNav },
+      { path: 'grid', label: 'Grid', status: 'ready', component: PageGrid },
+      { path: 'combobox', label: 'Combobox', status: 'ready', component: PageComboboxNav },
+    ],
+  },
+  {
+    id: 'plugin',
+    label: 'Plugin',
+    icon: Puzzle,
+    basePath: '/plugin/crud',
+    items: [
+      { path: 'crud', label: 'CRUD', status: 'ready', component: PageCrud },
+      { path: 'clipboard', label: 'Clipboard', status: 'ready', component: PageClipboard },
+      { path: 'history', label: 'History', status: 'ready', component: PageHistoryDemo },
+      { path: 'dnd', label: 'DnD', status: 'ready', component: PageDnd },
+      { path: 'rename', label: 'Rename', status: 'ready', component: PageRename },
     ],
   },
   {
@@ -138,14 +159,9 @@ const routeConfig: RouteGroup[] = [
     items: [
       { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: PageTreeGrid },
       { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListbox },
-      { path: 'grid', label: 'Grid', status: 'ready', component: PageGrid },
+      { path: 'grid', label: 'Grid', status: 'ready', component: PageGridCollection },
       { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabsCrud },
-      { path: 'combobox', label: 'Combobox', status: 'wip', component: PageCombobox },
-      { path: 'crud', label: 'CRUD', status: 'ready', component: PageCrud },
-      { path: 'clipboard', label: 'Clipboard', status: 'ready', component: PageClipboard },
-      { path: 'history', label: 'History', status: 'ready', component: PageHistoryDemo },
-      { path: 'dnd', label: 'DnD', status: 'ready', component: PageDnd },
-      { path: 'rename', label: 'Rename', status: 'ready', component: PageRename },
+      { path: 'combobox', label: 'Combobox', status: 'ready', component: PageCombobox },
     ],
   },
   {
@@ -296,9 +312,8 @@ function App() {
             const nav = navItems.find((n) => n.id === node.id)!
             const Icon = nav.icon
             return (
-              <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                <Icon size={15} />
-                <span className="activity-bar__label">{nav.label}</span>
+              <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`} title={nav.label}>
+                <Icon size={16} />
               </div>
             )
           }} />

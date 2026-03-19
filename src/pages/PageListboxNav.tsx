@@ -5,40 +5,29 @@ import { ListBox } from '../interactive-os/ui/ListBox'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
 import { core } from '../interactive-os/plugins/core'
-import { history } from '../interactive-os/plugins/history'
-import { crud } from '../interactive-os/plugins/crud'
-import { clipboard } from '../interactive-os/plugins/clipboard'
-import { rename } from '../interactive-os/plugins/rename'
-import { dnd } from '../interactive-os/plugins/dnd'
-import { focusRecovery } from '../interactive-os/plugins/focus-recovery'
 import { listData } from './shared-list-data'
 
-const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
+const plugins = [core()]
 
-export default function PageListbox() {
+export default function PageListboxNav() {
   const [data, setData] = useState<NormalizedData>(listData)
 
   return (
     <div>
       <div className="page-header">
         <h2 className="page-title">Listbox</h2>
-        <p className="page-desc">Tech stack list with full CRUD — add, delete, rename, copy/paste, reorder, undo</p>
+        <p className="page-desc">Read-only list with keyboard navigation — focus, select, multi-select</p>
       </div>
       <div className="page-keys">
         <kbd>↑↓</kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
-        <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
-        <kbd>⌘C</kbd> <span className="key-hint">copy</span>{' '}
-        <kbd>⌘V</kbd> <span className="key-hint">paste</span>{' '}
-        <kbd>F2</kbd> <span className="key-hint">rename</span>{' '}
-        <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
-        <kbd>Alt↑↓</kbd> <span className="key-hint">reorder</span>
+        <kbd>Home</kbd> <span className="key-hint">first</span>{' '}
+        <kbd>End</kbd> <span className="key-hint">last</span>
       </div>
       <div className="card">
         <ListBox
           data={data}
           onChange={setData}
-          enableEditing
           plugins={plugins}
           renderItem={(item, state: NodeState) => {
             const d = item.data as Record<string, unknown>

@@ -2,23 +2,38 @@ import { useState } from 'react'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgGrid } from './apg-data'
 import { Grid } from '../interactive-os/ui/Grid'
+import type { NormalizedData } from '../interactive-os/core/types'
 import { core } from '../interactive-os/plugins/core'
+import { history } from '../interactive-os/plugins/history'
+import { crud } from '../interactive-os/plugins/crud'
+import { clipboard } from '../interactive-os/plugins/clipboard'
+import { rename } from '../interactive-os/plugins/rename'
+import { dnd } from '../interactive-os/plugins/dnd'
+import { focusRecovery } from '../interactive-os/plugins/focus-recovery'
 import { gridColumns, gridInitialData } from './shared-grid-data'
 
-const plugins = [core()]
+const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
-export default function PageGrid() {
-  const [data, setData] = useState(gridInitialData)
+export default function PageGridCollection() {
+  const [data, setData] = useState<NormalizedData>(gridInitialData)
 
   return (
     <div>
       <div className="page-header">
         <h2 className="page-title">Grid</h2>
         <p className="page-desc">
-          2D data grid with row/column keyboard navigation.
-          Arrow Up/Down moves between rows. Arrow Left/Right moves between columns.
-          Home/End moves to first/last column. Ctrl+Home/End moves to first/last row.
+          2D data grid with full collection capabilities — CRUD, copy/paste, reorder, undo/redo
         </p>
+      </div>
+      <div className="page-keys">
+        <kbd>↑↓</kbd> <span className="key-hint">row</span>{' '}
+        <kbd>←→</kbd> <span className="key-hint">column</span>{' '}
+        <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
+        <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
+        <kbd>⌘C</kbd> <span className="key-hint">copy</span>{' '}
+        <kbd>⌘V</kbd> <span className="key-hint">paste</span>{' '}
+        <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
+        <kbd>Alt↑↓</kbd> <span className="key-hint">reorder</span>
       </div>
       <div className="demo-section">
         <h3 className="demo-title">Employee Directory</h3>
@@ -35,25 +50,10 @@ export default function PageGrid() {
             columns={gridColumns}
             plugins={plugins}
             onChange={setData}
+            enableEditing
             aria-label="Employee directory"
           />
         </div>
-      </div>
-      <div className="demo-section">
-        <h3 className="demo-title">Keyboard Shortcuts</h3>
-        <table className="shortcut-table">
-          <tbody>
-            <tr><td><kbd>Arrow Down</kbd></td><td>Move to next row</td></tr>
-            <tr><td><kbd>Arrow Up</kbd></td><td>Move to previous row</td></tr>
-            <tr><td><kbd>Arrow Right</kbd></td><td>Move to next column</td></tr>
-            <tr><td><kbd>Arrow Left</kbd></td><td>Move to previous column</td></tr>
-            <tr><td><kbd>Home</kbd></td><td>Move to first column</td></tr>
-            <tr><td><kbd>End</kbd></td><td>Move to last column</td></tr>
-            <tr><td><kbd>Ctrl + Home</kbd></td><td>Move to first row</td></tr>
-            <tr><td><kbd>Ctrl + End</kbd></td><td>Move to last row</td></tr>
-            <tr><td><kbd>Space</kbd></td><td>Toggle row selection</td></tr>
-          </tbody>
-        </table>
       </div>
       <ApgKeyboardTable {...apgGrid} />
     </div>
