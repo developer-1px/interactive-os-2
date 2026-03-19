@@ -24,6 +24,7 @@ function createFruitStore(): NormalizedData {
 
 export default function PageCombobox() {
   const [data, setData] = useState(createFruitStore)
+  const [editableData, setEditableData] = useState(createFruitStore)
 
   return (
     <div>
@@ -33,19 +34,31 @@ export default function PageCombobox() {
       </div>
 
       <section className="demo-section">
-        <h3>Fruit picker</h3>
+        <h3>Fruit picker (select-only)</h3>
         <Combobox
           data={data}
           plugins={[core(), comboboxPlugin()]}
           onChange={setData}
           placeholder="Pick a fruit..."
           renderItem={(item, state: NodeState) => (
-            <div style={{
-              padding: '6px 12px',
-              background: state.focused ? '#e3f2fd' : state.selected ? '#e8f5e9' : 'transparent',
-              cursor: 'default',
-              userSelect: 'none',
-            }}>
+            <div className={`combo-item${state.focused ? ' combo-item--focused' : ''}${state.selected ? ' combo-item--selected' : ''}`}>
+              {(item.data as Record<string, unknown>)?.label as string}
+            </div>
+          )}
+        />
+      </section>
+
+      <section className="demo-section">
+        <h3>Fruit picker (editable)</h3>
+        <p className="page-desc" style={{ marginBottom: 8 }}>Type to filter — uses <code>editable</code> prop + <code>setFilter</code> command</p>
+        <Combobox
+          data={editableData}
+          plugins={[core(), comboboxPlugin()]}
+          onChange={setEditableData}
+          placeholder="Type a fruit name..."
+          editable
+          renderItem={(item, state: NodeState) => (
+            <div className={`combo-item${state.focused ? ' combo-item--focused' : ''}${state.selected ? ' combo-item--selected' : ''}`}>
               {(item.data as Record<string, unknown>)?.label as string}
             </div>
           )}
