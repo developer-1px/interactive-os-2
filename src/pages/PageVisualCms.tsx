@@ -184,9 +184,9 @@ function getNodeClassName(data: Record<string, string>, state: NodeState): strin
     case 'pattern':
       return `cms-pattern${f ? ' cms-pattern--focused' : ''}`
     case 'text': {
-      // Hero title/subtitle get special classes
+      if (data.role === 'title') return 'cms-feature-card__title'
+      if (data.role === 'desc') return 'cms-feature-card__desc'
       if (data.value === 'Headless ARIA Engine') return 'cms-hero__title'
-      // Check if it's a subtitle (long text with "Build fully")
       if (data.value?.startsWith('Build fully')) return 'cms-hero__subtitle'
       return ''
     }
@@ -217,6 +217,8 @@ function getNodeTag(data: Record<string, string>): keyof JSX.IntrinsicElements {
     return 'section'
   }
   if (data.type === 'text') {
+    if (data.role === 'title') return 'h3'
+    if (data.role === 'desc') return 'p'
     if (data.value === 'Headless ARIA Engine') return 'h1'
     if (data.value?.startsWith('Build fully')) return 'p'
   }
@@ -224,22 +226,6 @@ function getNodeTag(data: Record<string, string>): keyof JSX.IntrinsicElements {
   return 'div'
 }
 
-// ── Feature card inner content (title + desc from children) ──
-
-function FeatureCardContent({ store, childIds }: { store: NormalizedData; childIds: string[] }) {
-  // Card children are [icon, title, desc] — we render title and desc inline
-  const titleEntity = childIds.length > 1 ? store.entities[childIds[1]] : undefined
-  const descEntity = childIds.length > 2 ? store.entities[childIds[2]] : undefined
-  const titleData = titleEntity?.data as Record<string, string> | undefined
-  const descData = descEntity?.data as Record<string, string> | undefined
-
-  return (
-    <>
-      {titleData && <h3 className="cms-feature-card__title">{titleData.value}</h3>}
-      {descData && <p className="cms-feature-card__desc">{descData.value}</p>}
-    </>
-  )
-}
 
 // ── Page ──
 
@@ -334,7 +320,7 @@ export default function PageVisualCms() {
       )
     }
 
-    // For card nodes, render icon from first child + title/desc from remaining children
+    // For card nodes, render all children via renderNode
     if (d.type === 'card') {
       return (
         <div
@@ -347,9 +333,7 @@ export default function PageVisualCms() {
           onClick={(e) => handleNodeClick(nodeId, e)}
           className={className}
         >
-          {/* First child is icon */}
-          {children.length > 0 && renderNode(children[0])}
-          <FeatureCardContent store={store} childIds={children} />
+          {children.map(childId => renderNode(childId))}
         </div>
       )
     }

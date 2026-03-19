@@ -30,23 +30,23 @@ export const cmsStore = createStore({
 
     // card-store children
     'card-store-icon':  { id: 'card-store-icon',  data: { type: 'icon',  value: 'database' } },
-    'card-store-title': { id: 'card-store-title', data: { type: 'text',  value: 'Normalized Store' } },
-    'card-store-desc':  { id: 'card-store-desc',  data: { type: 'text',  value: 'Tree data as flat entities + relationships. O(1) lookups, immutable updates, parent-child traversal built in.' } },
+    'card-store-title': { id: 'card-store-title', data: { type: 'text', role: 'title', value: 'Normalized Store' } },
+    'card-store-desc':  { id: 'card-store-desc',  data: { type: 'text', role: 'desc',  value: 'Tree data as flat entities + relationships. O(1) lookups, immutable updates, parent-child traversal built in.' } },
 
     // card-engine children
     'card-engine-icon':  { id: 'card-engine-icon',  data: { type: 'icon', value: 'cog' } },
-    'card-engine-title': { id: 'card-engine-title', data: { type: 'text', value: 'Command Engine' } },
-    'card-engine-desc':  { id: 'card-engine-desc',  data: { type: 'text', value: 'Every mutation is a command with undo/redo. Middleware pipeline for validation, logging, and side effects.' } },
+    'card-engine-title': { id: 'card-engine-title', data: { type: 'text', role: 'title', value: 'Command Engine' } },
+    'card-engine-desc':  { id: 'card-engine-desc',  data: { type: 'text', role: 'desc', value: 'Every mutation is a command with undo/redo. Middleware pipeline for validation, logging, and side effects.' } },
 
     // card-aria children
     'card-aria-icon':  { id: 'card-aria-icon',  data: { type: 'icon', value: 'shield' } },
-    'card-aria-title': { id: 'card-aria-title', data: { type: 'text', value: '14 ARIA Patterns' } },
-    'card-aria-desc':  { id: 'card-aria-desc',  data: { type: 'text', value: 'Treegrid, listbox, tabs, combobox, dialog, menu, and more. Each preset wires up roles, states, and keyboard interaction.' } },
+    'card-aria-title': { id: 'card-aria-title', data: { type: 'text', role: 'title', value: '14 ARIA Patterns' } },
+    'card-aria-desc':  { id: 'card-aria-desc',  data: { type: 'text', role: 'desc', value: 'Treegrid, listbox, tabs, combobox, dialog, menu, and more. Each preset wires up roles, states, and keyboard interaction.' } },
 
     // card-keyboard children
     'card-keyboard-icon':  { id: 'card-keyboard-icon',  data: { type: 'icon', value: 'keyboard' } },
-    'card-keyboard-title': { id: 'card-keyboard-title', data: { type: 'text', value: 'Keyboard-First' } },
-    'card-keyboard-desc':  { id: 'card-keyboard-desc',  data: { type: 'text', value: 'Every interaction works without a mouse. Roving tabindex, arrow key navigation, spatial nav, and platform-aware shortcuts.' } },
+    'card-keyboard-title': { id: 'card-keyboard-title', data: { type: 'text', role: 'title', value: 'Keyboard-First' } },
+    'card-keyboard-desc':  { id: 'card-keyboard-desc',  data: { type: 'text', role: 'desc', value: 'Every interaction works without a mouse. Roving tabindex, arrow key navigation, spatial nav, and platform-aware shortcuts.' } },
 
     // Workflow steps
     'step-1': { id: 'step-1', data: { type: 'step', num: '01', title: 'Define Store',       desc: 'Create entities and relationships in a normalized tree structure.' } },
