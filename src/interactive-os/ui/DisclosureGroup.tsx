@@ -13,19 +13,10 @@ interface DisclosureGroupProps {
 }
 
 const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <div style={{
-    padding: '8px 12px',
-    background: state.focused ? 'var(--disclosure-focus-bg, #e3f2fd)' : 'transparent',
-    cursor: 'default',
-    userSelect: 'none',
-    fontSize: 14,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-  }}>
-    <span style={{ opacity: 0.5 }}>{state.expanded ? '▾' : '▸'}</span>
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+    <span className="chevron" style={{ opacity: 0.5 }}>{state.expanded ? '▾' : '▸'}</span>
     <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
-  </div>
+  </span>
 )
 
 export function DisclosureGroup({

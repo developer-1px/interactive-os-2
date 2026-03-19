@@ -20,25 +20,12 @@ const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): Rea
   const checked = state.expanded ?? false
 
   return (
-    <div style={{
-      padding: '8px 12px',
-      background: state.focused ? 'var(--switch-focus-bg, #e3f2fd)' : 'transparent',
-      cursor: 'default',
-      userSelect: 'none',
-      fontSize: 14,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: 8,
-    }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 8 }}>
       <span>{label}</span>
-      <span style={{
-        fontWeight: 600,
-        color: checked ? 'var(--switch-on-color, #1976d2)' : 'var(--switch-off-color, #9e9e9e)',
-      }}>
+      <span style={{ fontWeight: 600, color: checked ? 'var(--accent)' : 'var(--text-muted)' }}>
         {checked ? '●' : '○'}
       </span>
-    </div>
+    </span>
   )
 }
 

@@ -125,20 +125,23 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         role: behavior.childRole ?? 'row',
         'data-node-id': id,
         ...ariaAttrs,
-        onClick: () => {
-          if (behavior.activateOnClick) {
-            const ctx = createBehaviorContext(engine, behaviorCtxOptions)
-            const command = ctx.activate()
-            if (command) engine.dispatch(command)
-          }
-        },
-        onFocus: (event: FocusEvent) => {
-          // Only handle direct focus, not bubbled from children
-          if (event.target !== event.currentTarget) return
-          if (id !== focusedId) {
-            engine.dispatch(focusCommands.setFocus(id))
-          }
-        },
+      }
+
+      if (state.focused) baseProps['data-focused'] = ''
+
+      baseProps.onClick = () => {
+        if (behavior.activateOnClick) {
+          const ctx = createBehaviorContext(engine, behaviorCtxOptions)
+          const command = ctx.activate()
+          if (command) engine.dispatch(command)
+        }
+      }
+      baseProps.onFocus = (event: FocusEvent) => {
+        // Only handle direct focus, not bubbled from children
+        if (event.target !== event.currentTarget) return
+        if (id !== focusedId) {
+          engine.dispatch(focusCommands.setFocus(id))
+        }
       }
 
       if (!isActivedescendant) {

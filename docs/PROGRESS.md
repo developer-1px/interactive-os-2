@@ -169,6 +169,7 @@
 - [x] Demo Page Quality Lift — page-header, page-keys, demo-section, card 스타일 개선
 - [x] Viewer Theme Compat — Shiki 테마 자동 전환 (shared MutationObserver hook)
 - [x] Viewer Redesign — refined-documentation 스타일 (15px body, 1.75 line-height, 720px prose column, 48px padding)
+- [x] Design System — ARIA attr 기반 CSS 디자인 시스템 (`data-focused` 코어 추가, App.css → tokens/components/app 3파일 분리, 11개 UI 컴포넌트 inline style 제거, `prefers-reduced-motion`)
 
 ## ⑨ APG Pattern Coverage
 
@@ -205,4 +206,4 @@
 
 ---
 
-*Last updated: 2026-03-19 — Retro L1 백로그 처리 (selection CSS, aria-label, ResizeObserver, Tab test), 393 tests, 49 files*
+*Last updated: 2026-03-19 — Design System: ARIA attr CSS, 3-file split, 11 UI 컴포넌트 inline style 제거, 393 tests, 49 files*
