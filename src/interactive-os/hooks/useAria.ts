@@ -6,8 +6,16 @@ import { createCommandEngine } from '../core/createCommandEngine'
 import type { CommandEngine } from '../core/createCommandEngine'
 import { getChildren, getParent, getEntity } from '../core/createStore'
 import { focusCommands } from '../plugins/core'
+import { RENAME_ID } from '../plugins/rename'
 import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 import { findMatchingKey } from './useKeyboard'
+
+function isEditableElement(el: Element): boolean {
+  const tag = el.tagName
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return true
+  if (el.getAttribute('contenteditable') != null) return true
+  return false
+}
 
 export interface UseAriaOptions {
   behavior: AriaBehavior
@@ -73,6 +81,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     () => (store.entities['__expanded__']?.expandedIds as string[]) ?? [],
     [store]
   )
+  const renameEntity = store.entities[RENAME_ID]
 
   const getNodeState = useCallback(
     (id: string): NodeState => {
@@ -91,6 +100,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       }
 
       const isExpandable = hasChildren || (behavior.expandable ?? false)
+      const renaming = !!(renameEntity?.active && renameEntity?.nodeId === id)
 
       return {
         focused: id === focusedId,
@@ -100,9 +110,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         siblingCount: siblings.length,
         expanded: isExpandable ? expandedIds.includes(id) : undefined,
         level: level + 1,
+        renaming,
       }
     },
-    [store, focusedId, selectedIdSet, expandedIds, behavior.expandable]
+    [store, focusedId, selectedIdSet, expandedIds, behavior.expandable, renameEntity]
   )
 
   const behaviorCtxOptions = useMemo(
@@ -171,6 +182,8 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       tabIndex: 0,
       'aria-activedescendant': focusedId || undefined,
       onKeyDown: (event: KeyboardEvent) => {
+        // Skip keyMap if a child editable element has focus (not the container itself)
+        if (event.target !== event.currentTarget && isEditableElement(event.target as Element)) return
         const matchedKey = findMatchingKey(event, mergedKeyMap)
         if (!matchedKey) return
         const ctx = createBehaviorContext(engine, behaviorCtxOptions)

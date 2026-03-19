@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ListBox } from '../interactive-os/ui/ListBox'
+import { Aria } from '../interactive-os/components/aria'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
@@ -59,7 +60,9 @@ export default function PageRename() {
 
             return (
               <div className={cls}>
-                <span className="list-item__label">{d?.label as string}</span>
+                <Aria.Editable field="label">
+                  <span className="list-item__label">{d?.label as string}</span>
+                </Aria.Editable>
                 <span className="list-item__desc">{d?.url as string}</span>
               </div>
             )
@@ -71,7 +74,7 @@ export default function PageRename() {
         <p className="page-desc">
           The <code>rename</code> plugin adds <code>startRename</code>, <code>confirmRename</code>,
           and <code>cancelRename</code> commands. The UI component enters an inline editing mode
-          where the node label becomes an input field. The previous value is captured for undo.
+          where the node label becomes contenteditable. The previous value is captured for undo.
         </p>
       </div>
     </div>

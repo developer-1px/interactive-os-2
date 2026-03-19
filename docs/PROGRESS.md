@@ -48,6 +48,7 @@
 ### rename()
 - [x] startRename / confirmRename / cancelRename
 - [x] 이전 값 복원 (undo)
+- [x] `<Aria.Editable>` — contenteditable 제자리 편집 UI (F2/Enter/Esc/blur/더블클릭, isEditableElement 가드, IME 지원)
 
 ### dnd()
 - [x] moveUp / moveDown (형제 간 리오더)
@@ -208,4 +209,4 @@
 
 ---
 
-*Last updated: 2026-03-19 — Route restructuring: Navigation→Plugin→Collection 3층 분리, 410 tests, 50 files*
+*Last updated: 2026-03-19 — Rename UI: Aria.Editable contenteditable 제자리 편집, 422 tests, 51 files*

@@ -7,6 +7,7 @@ import { useAria } from '../hooks/useAria'
 import { AriaInternalContext } from './aria-context'
 import { getChildren } from '../core/createStore'
 import { EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
+import { renameCommands } from '../plugins/rename'
 
 interface AriaProps {
   behavior: AriaBehavior
@@ -26,7 +27,7 @@ const horizontalStyle = { display: 'flex' } as const
 
 const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist', 'toolbar', 'treegrid'])
 
-const AriaNodeContext = React.createContext<{ nodeId: string; focused: boolean } | null>(null)
+const AriaNodeContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
 // eslint-disable-next-line react-refresh/only-export-components
 function AriaRoot({ behavior, data, plugins, keyMap, onChange, 'aria-label': ariaLabel, children }: AriaProps) {
@@ -84,7 +85,7 @@ function AriaNode({ render }: AriaNodeProps) {
             const needsGridcell = !hasColCount && (props as Record<string, unknown>).role === 'row'
             nodes.push(
               <FocusScrollDiv key={childId} focused={state.focused} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-                <AriaNodeContext.Provider value={{ nodeId: childId, focused: state.focused }}>
+                <AriaNodeContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
                   {needsGridcell
                     ? <div role="gridcell">{render(entity, state)}</div>
                     : render(entity, state)
@@ -124,4 +125,90 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
   )
 }
 
-export const Aria = Object.assign(AriaRoot, { Node: AriaNode, Cell: AriaCell })
+// eslint-disable-next-line react-refresh/only-export-components
+function AriaEditable({ field, children }: { field: string; children: React.ReactNode }) {
+  const nodeCtx = React.useContext(AriaNodeContext)
+  const ariaCtx = React.useContext(AriaInternalContext)
+  const editRef = useRef<HTMLSpanElement>(null)
+  const originalValueRef = useRef<string>('')
+  const composingRef = useRef(false)
+  const committedRef = useRef(false)
+
+  const renaming = nodeCtx?.renaming ?? false
+
+  useEffect(() => {
+    if (!renaming || !editRef.current) return
+    committedRef.current = false
+    composingRef.current = false
+    const el = editRef.current
+    originalValueRef.current = el.textContent ?? ''
+    // Select all text
+    const range = document.createRange()
+    range.selectNodeContents(el)
+    const sel = window.getSelection()
+    sel?.removeAllRanges()
+    sel?.addRange(range)
+    el.focus()
+  }, [renaming])
+
+  if (!renaming) {
+    return (
+      <span onDoubleClick={(e) => {
+        if (!nodeCtx || !ariaCtx) return
+        e.stopPropagation()
+        ariaCtx.dispatch(renameCommands.startRename(nodeCtx.nodeId))
+      }}>
+        {children}
+      </span>
+    )
+  }
+
+  const confirm = () => {
+    if (committedRef.current || !nodeCtx || !ariaCtx) return
+    committedRef.current = true
+    const el = editRef.current
+    const newValue = el?.textContent?.trim() ?? ''
+    if (newValue === '' || newValue === originalValueRef.current) {
+      // Restore DOM before React reconciles — prevents stale DOM from external mutation
+      if (el) el.textContent = originalValueRef.current
+      ariaCtx.dispatch(renameCommands.cancelRename())
+    } else {
+      ariaCtx.dispatch(renameCommands.confirmRename(nodeCtx.nodeId, field, newValue))
+    }
+  }
+
+  const cancel = () => {
+    if (committedRef.current || !ariaCtx || !editRef.current) return
+    committedRef.current = true
+    editRef.current.textContent = originalValueRef.current
+    ariaCtx.dispatch(renameCommands.cancelRename())
+  }
+
+  return (
+    <span
+      ref={editRef}
+      contentEditable
+      suppressContentEditableWarning
+      onCompositionStart={() => { composingRef.current = true }}
+      onCompositionEnd={() => { composingRef.current = false }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && !composingRef.current) {
+          e.preventDefault()
+          confirm()
+        } else if (e.key === 'Escape') {
+          e.preventDefault()
+          cancel()
+        } else if (e.key === 'Tab') {
+          e.preventDefault()
+          confirm()
+        }
+      }}
+      onBlur={confirm}
+      data-renaming=""
+    >
+      {children}
+    </span>
+  )
+}
+
+export const Aria = Object.assign(AriaRoot, { Node: AriaNode, Cell: AriaCell, Editable: AriaEditable })
