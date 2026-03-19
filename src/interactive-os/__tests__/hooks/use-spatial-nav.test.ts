@@ -1,32 +1,19 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+import { renderHook } from '@testing-library/react'
 import { useSpatialNav } from '../../hooks/use-spatial-nav'
-
-/**
- * useSpatialNav depends on getBoundingClientRect which returns all zeros in jsdom.
- * These tests verify the hook's returned keyMap structure — full integration in Task 6.
- */
+import type { NormalizedData } from '../../core/types'
+import { ROOT_ID } from '../../core/types'
+import { createStore } from '../../core/createStore'
 
 const DIRECTIONS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'] as const
 
 describe('useSpatialNav — keyMap structure', () => {
-  // Build a minimal NormalizedData store stub
-  const store = {
-    nodes: {},
-    rootId: 'root',
-    meta: {},
-  } as any
-
-  // renderHook is not needed: the hook only uses refs and returns a plain object
-  // We call it outside React (refs are just {current: ...} plain objects in tests)
-  // This works because useRef/useLayoutEffect are no-ops outside a render cycle,
-  // and vitest mocks react hooks stubs via the react shim.
-  // Instead, just verify the exported key set directly from the module shape.
+  const store: NormalizedData = createStore({
+    entities: { a: { id: 'a' } },
+    relationships: { [ROOT_ID]: ['a'] },
+  })
 
   it('returns all 4 plain Arrow handlers', () => {
-    // We cannot render hooks here without @testing-library/react setup,
-    // so we verify the static shape via a lightweight approach:
-    // confirm the function produces a record with the expected keys.
-    const { renderHook } = require('@testing-library/react')
     const { result } = renderHook(() => useSpatialNav('#root', store))
     const keys = Object.keys(result.current)
 
@@ -37,7 +24,6 @@ describe('useSpatialNav — keyMap structure', () => {
   })
 
   it('returns all 4 Shift+Arrow handlers', () => {
-    const { renderHook } = require('@testing-library/react')
     const { result } = renderHook(() => useSpatialNav('#root', store))
     const keys = Object.keys(result.current)
 
@@ -48,20 +34,16 @@ describe('useSpatialNav — keyMap structure', () => {
     }
   })
 
-  it('Shift+Arrow handler calls ctx.extendSelectionTo when a target is found', () => {
-    const { renderHook } = require('@testing-library/react')
+  it('Shift+Arrow handler is no-op when no rects available (jsdom)', () => {
     const { result } = renderHook(() => useSpatialNav('#root', store))
 
-    const extendSelectionTo = vi.fn(() => ({ type: 'EXTEND_SELECTION' }))
+    const extendSelectionTo = vi.fn(() => ({ type: 'test', payload: null, execute: (s: NormalizedData) => s, undo: (s: NormalizedData) => s }))
     const ctx = {
-      focused: 'node-a',
+      focused: 'a',
       extendSelectionTo,
-    } as any
+    } as Parameters<(typeof result.current)['Shift+ArrowDown']>[0]
 
-    // In jsdom all rects are zeros so findNearest returns null → handler is a no-op
-    // Verify it does NOT throw and returns undefined (no targetId found)
-    const handler = result.current['Shift+ArrowDown']
-    const cmd = handler(ctx)
+    const cmd = result.current['Shift+ArrowDown'](ctx)
     expect(cmd).toBeUndefined()
     expect(extendSelectionTo).not.toHaveBeenCalled()
   })

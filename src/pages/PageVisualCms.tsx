@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import './PageVisualCms.css'
 import {
   Database, Cog, Keyboard, Shield,
@@ -7,169 +7,20 @@ import {
   PanelTop, ChevronDown, MousePointerClick,
   Layers, Table, Radio, Menu,
 } from 'lucide-react'
-import { Aria } from '../interactive-os/components/aria'
-import { listbox } from '../interactive-os/behaviors/listbox'
+import { useAria } from '../interactive-os/hooks/useAria'
+import { spatial } from '../interactive-os/behaviors/spatial'
+import { useSpatialNav } from '../interactive-os/hooks/use-spatial-nav'
 import { core } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/core/createStore'
+import { focusCommands } from '../interactive-os/plugins/core'
+import { spatialCommands, getSpatialParentId } from '../interactive-os/plugins/spatial'
+import { getChildren, getParent } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
+import { createBatchCommand } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
+import { cmsStore } from './cms-store'
 
-// ── Unified CMS store ──
 
-export const cmsStore = createStore({
-  entities: {
-    // Sections
-    hero:     { id: 'hero',     data: { type: 'section', variant: 'hero' } },
-    stats:    { id: 'stats',    data: { type: 'section', variant: 'stats' } },
-    features: { id: 'features', data: { type: 'section', variant: 'features' } },
-    workflow: { id: 'workflow', data: { type: 'section', variant: 'workflow' } },
-    patterns: { id: 'patterns', data: { type: 'section', variant: 'patterns' } },
-    footer:   { id: 'footer',   data: { type: 'section', variant: 'footer' } },
-
-    // Hero children
-    'hero-title':    { id: 'hero-title',    data: { type: 'text', value: 'Headless ARIA Engine' } },
-    'hero-subtitle': { id: 'hero-subtitle', data: { type: 'text', value: 'Build fully accessible UI with a normalized store, command engine, and 14 APG-compliant behavior presets — keyboard-first by design.' } },
-    'hero-cta':      { id: 'hero-cta',      data: { type: 'cta', primary: 'Get Started', secondary: 'View on GitHub' } },
-
-    // Stats children
-    'stat-patterns': { id: 'stat-patterns', data: { type: 'stat', value: '14',   label: 'APG Patterns' } },
-    'stat-tests':    { id: 'stat-tests',    data: { type: 'stat', value: '365+', label: 'Tests' } },
-    'stat-modules':  { id: 'stat-modules',  data: { type: 'stat', value: '42',   label: 'Modules' } },
-    'stat-deps':     { id: 'stat-deps',     data: { type: 'stat', value: '0',    label: 'Runtime Deps' } },
-
-    // Features cards
-    'card-store':    { id: 'card-store',    data: { type: 'card' } },
-    'card-engine':   { id: 'card-engine',   data: { type: 'card' } },
-    'card-aria':     { id: 'card-aria',     data: { type: 'card' } },
-    'card-keyboard': { id: 'card-keyboard', data: { type: 'card' } },
-
-    // card-store children
-    'card-store-icon':  { id: 'card-store-icon',  data: { type: 'icon',  value: 'database' } },
-    'card-store-title': { id: 'card-store-title', data: { type: 'text',  value: 'Normalized Store' } },
-    'card-store-desc':  { id: 'card-store-desc',  data: { type: 'text',  value: 'Tree data as flat entities + relationships. O(1) lookups, immutable updates, parent-child traversal built in.' } },
-
-    // card-engine children
-    'card-engine-icon':  { id: 'card-engine-icon',  data: { type: 'icon', value: 'cog' } },
-    'card-engine-title': { id: 'card-engine-title', data: { type: 'text', value: 'Command Engine' } },
-    'card-engine-desc':  { id: 'card-engine-desc',  data: { type: 'text', value: 'Every mutation is a command with undo/redo. Middleware pipeline for validation, logging, and side effects.' } },
-
-    // card-aria children
-    'card-aria-icon':  { id: 'card-aria-icon',  data: { type: 'icon', value: 'shield' } },
-    'card-aria-title': { id: 'card-aria-title', data: { type: 'text', value: '14 ARIA Patterns' } },
-    'card-aria-desc':  { id: 'card-aria-desc',  data: { type: 'text', value: 'Treegrid, listbox, tabs, combobox, dialog, menu, and more. Each preset wires up roles, states, and keyboard interaction.' } },
-
-    // card-keyboard children
-    'card-keyboard-icon':  { id: 'card-keyboard-icon',  data: { type: 'icon', value: 'keyboard' } },
-    'card-keyboard-title': { id: 'card-keyboard-title', data: { type: 'text', value: 'Keyboard-First' } },
-    'card-keyboard-desc':  { id: 'card-keyboard-desc',  data: { type: 'text', value: 'Every interaction works without a mouse. Roving tabindex, arrow key navigation, spatial nav, and platform-aware shortcuts.' } },
-
-    // Workflow steps
-    'step-1': { id: 'step-1', data: { type: 'step', num: '01', title: 'Define Store',       desc: 'Create entities and relationships in a normalized tree structure.' } },
-    'step-2': { id: 'step-2', data: { type: 'step', num: '02', title: 'Dispatch Commands',  desc: 'Mutations flow through a middleware pipeline with auto undo/redo.' } },
-    'step-3': { id: 'step-3', data: { type: 'step', num: '03', title: 'Apply Behavior',     desc: 'Pick an ARIA preset — it handles roles, states, and key bindings.' } },
-    'step-4': { id: 'step-4', data: { type: 'step', num: '04', title: 'Render UI',          desc: 'Wire the headless state to your own components. Full control.' } },
-
-    // Patterns
-    'pat-treegrid':    { id: 'pat-treegrid',    data: { type: 'pattern', name: 'Treegrid',    icon: 'table' } },
-    'pat-listbox':     { id: 'pat-listbox',     data: { type: 'pattern', name: 'Listbox',     icon: 'list' } },
-    'pat-tabs':        { id: 'pat-tabs',        data: { type: 'pattern', name: 'Tabs',        icon: 'paneltop' } },
-    'pat-combobox':    { id: 'pat-combobox',    data: { type: 'pattern', name: 'Combobox',    icon: 'message' } },
-    'pat-grid':        { id: 'pat-grid',        data: { type: 'pattern', name: 'Grid',        icon: 'grid' } },
-    'pat-menu':        { id: 'pat-menu',        data: { type: 'pattern', name: 'Menu',        icon: 'menu' } },
-    'pat-dialog':      { id: 'pat-dialog',      data: { type: 'pattern', name: 'Dialog',      icon: 'layers' } },
-    'pat-accordion':   { id: 'pat-accordion',   data: { type: 'pattern', name: 'Accordion',   icon: 'chevrondown' } },
-    'pat-treeview':    { id: 'pat-treeview',    data: { type: 'pattern', name: 'Tree View',   icon: 'chevronright' } },
-    'pat-toolbar':     { id: 'pat-toolbar',     data: { type: 'pattern', name: 'Toolbar',     icon: 'keyboard' } },
-    'pat-disclosure':  { id: 'pat-disclosure',  data: { type: 'pattern', name: 'Disclosure',  icon: 'click' } },
-    'pat-switch':      { id: 'pat-switch',      data: { type: 'pattern', name: 'Switch',      icon: 'toggle' } },
-    'pat-radiogroup':  { id: 'pat-radiogroup',  data: { type: 'pattern', name: 'RadioGroup',  icon: 'radio' } },
-    'pat-alertdialog': { id: 'pat-alertdialog', data: { type: 'pattern', name: 'AlertDialog', icon: 'shield' } },
-
-    // Footer children
-    'footer-brand': { id: 'footer-brand', data: { type: 'brand', name: 'interactive-os', license: 'MIT' } },
-    'footer-links': { id: 'footer-links', data: { type: 'links' } },
-
-    // footer-links children
-    'footer-link-docs':   { id: 'footer-link-docs',   data: { type: 'link', label: 'Documentation', href: '#docs' } },
-    'footer-link-github': { id: 'footer-link-github', data: { type: 'link', label: 'GitHub',        href: '#github' } },
-    'footer-link-npm':    { id: 'footer-link-npm',    data: { type: 'link', label: 'npm',           href: '#npm' } },
-  },
-  relationships: {
-    [ROOT_ID]: ['hero', 'stats', 'features', 'workflow', 'patterns', 'footer'],
-    hero:     ['hero-title', 'hero-subtitle', 'hero-cta'],
-    stats:    ['stat-patterns', 'stat-tests', 'stat-modules', 'stat-deps'],
-    features: ['card-store', 'card-engine', 'card-aria', 'card-keyboard'],
-    'card-store':    ['card-store-icon',    'card-store-title',    'card-store-desc'],
-    'card-engine':   ['card-engine-icon',   'card-engine-title',   'card-engine-desc'],
-    'card-aria':     ['card-aria-icon',     'card-aria-title',     'card-aria-desc'],
-    'card-keyboard': ['card-keyboard-icon', 'card-keyboard-title', 'card-keyboard-desc'],
-    workflow: ['step-1', 'step-2', 'step-3', 'step-4'],
-    patterns: [
-      'pat-treegrid', 'pat-listbox', 'pat-tabs', 'pat-combobox', 'pat-grid', 'pat-menu', 'pat-dialog',
-      'pat-accordion', 'pat-treeview', 'pat-toolbar', 'pat-disclosure', 'pat-switch', 'pat-radiogroup', 'pat-alertdialog',
-    ],
-    footer: ['footer-brand', 'footer-links'],
-    'footer-links': ['footer-link-docs', 'footer-link-github', 'footer-link-npm'],
-  },
-})
-
-// ── Per-section stores (derived from cmsStore for backward-compat with components) ──
-
-const statsStore = createStore({
-  entities: {
-    'stat-patterns': cmsStore.entities['stat-patterns'],
-    'stat-tests':    cmsStore.entities['stat-tests'],
-    'stat-modules':  cmsStore.entities['stat-modules'],
-    'stat-deps':     cmsStore.entities['stat-deps'],
-  },
-  relationships: { [ROOT_ID]: ['stat-patterns', 'stat-tests', 'stat-modules', 'stat-deps'] },
-})
-
-const featuresStore = createStore({
-  entities: {
-    'card-store':    cmsStore.entities['card-store'],
-    'card-engine':   cmsStore.entities['card-engine'],
-    'card-aria':     cmsStore.entities['card-aria'],
-    'card-keyboard': cmsStore.entities['card-keyboard'],
-  },
-  relationships: { [ROOT_ID]: ['card-store', 'card-engine', 'card-aria', 'card-keyboard'] },
-})
-
-const stepsStore = createStore({
-  entities: {
-    'step-1': cmsStore.entities['step-1'],
-    'step-2': cmsStore.entities['step-2'],
-    'step-3': cmsStore.entities['step-3'],
-    'step-4': cmsStore.entities['step-4'],
-  },
-  relationships: { [ROOT_ID]: ['step-1', 'step-2', 'step-3', 'step-4'] },
-})
-
-const patternsStore = createStore({
-  entities: {
-    'pat-treegrid':    cmsStore.entities['pat-treegrid'],
-    'pat-listbox':     cmsStore.entities['pat-listbox'],
-    'pat-tabs':        cmsStore.entities['pat-tabs'],
-    'pat-combobox':    cmsStore.entities['pat-combobox'],
-    'pat-grid':        cmsStore.entities['pat-grid'],
-    'pat-menu':        cmsStore.entities['pat-menu'],
-    'pat-dialog':      cmsStore.entities['pat-dialog'],
-    'pat-accordion':   cmsStore.entities['pat-accordion'],
-    'pat-treeview':    cmsStore.entities['pat-treeview'],
-    'pat-toolbar':     cmsStore.entities['pat-toolbar'],
-    'pat-disclosure':  cmsStore.entities['pat-disclosure'],
-    'pat-switch':      cmsStore.entities['pat-switch'],
-    'pat-radiogroup':  cmsStore.entities['pat-radiogroup'],
-    'pat-alertdialog': cmsStore.entities['pat-alertdialog'],
-  },
-  relationships: {
-    [ROOT_ID]: [
-      'pat-treegrid', 'pat-listbox', 'pat-tabs', 'pat-combobox', 'pat-grid', 'pat-menu', 'pat-dialog',
-      'pat-accordion', 'pat-treeview', 'pat-toolbar', 'pat-disclosure', 'pat-switch', 'pat-radiogroup', 'pat-alertdialog',
-    ],
-  },
-})
 
 // ── Icon lookup (since JSX can't live in store data) ──
 
@@ -199,201 +50,331 @@ const patternIcons: Record<string, React.ReactNode> = {
 
 const plugins = [core()]
 
-// ── Section: Hero ──
+// ── Node content renderers by type ──
 
-function Hero() {
-  return (
-    <section className="cms-hero">
-      <div className="cms-hero__badge">
-        <span className="cms-hero__badge-dot" />
-        Open Source
-      </div>
-      <h1 className="cms-hero__title">
-        Headless ARIA Engine
-      </h1>
-      <p className="cms-hero__subtitle">
-        Build fully accessible UI with a normalized store, command engine,
-        and 14 APG-compliant behavior presets — keyboard-first by design.
-      </p>
-      <div className="cms-hero__actions">
-        <button type="button" className="cms-hero__cta">
-          Get Started <ArrowRight size={14} />
-        </button>
-        <button type="button" className="cms-hero__cta-secondary">
-          View on GitHub <ChevronRight size={14} />
-        </button>
-      </div>
-    </section>
-  )
-}
-
-// ── Section: Stats ──
-
-function Stats() {
-  const [data, setData] = useState<NormalizedData>(statsStore)
-
-  return (
-    <section className="cms-stats">
-      <Aria
-        behavior={listbox}
-        data={data}
-        plugins={plugins}
-        onChange={setData}
-        aria-label="Project stats"
-      >
-        <Aria.Node render={(node: Record<string, unknown>, state: NodeState) => {
-          const d = node.data as { value: string; label: string }
-          return (
-            <div className={`cms-stat${state.focused ? ' cms-stat--focused' : ''}`}>
-              <span className="cms-stat__value">{d.value}</span>
-              <span className="cms-stat__label">{d.label}</span>
-            </div>
-          )
-        }} />
-      </Aria>
-    </section>
-  )
-}
-
-// ── Section: Features ──
-
-function Features() {
-  const [data, setData] = useState<NormalizedData>(featuresStore)
-
-  return (
-    <section className="cms-features">
-      <p className="cms-section-label">Core</p>
-      <h2 className="cms-section-title">Everything you need</h2>
-      <p className="cms-section-desc">
-        A complete headless engine for building accessible, keyboard-driven interfaces
-        on any component library.
-      </p>
-      <Aria
-        behavior={listbox}
-        data={data}
-        plugins={plugins}
-        onChange={setData}
-        aria-label="Core features"
-      >
-        <div className="cms-features__grid">
-          <Aria.Node render={(node: Record<string, unknown>, state: NodeState) => {
-            const d = node.data as { title: string; desc: string; icon: string }
-            return (
-              <div className={`cms-feature-card${state.focused ? ' cms-feature-card--focused' : ''}`}>
-                <div className="cms-feature-card__icon">{featureIcons[d.icon]}</div>
-                <h3 className="cms-feature-card__title">{d.title}</h3>
-                <p className="cms-feature-card__desc">{d.desc}</p>
-              </div>
-            )
-          }} />
+function NodeContent({ data }: { data: Record<string, string> }) {
+  switch (data.type) {
+    case 'text':
+      return <>{data.value}</>
+    case 'cta':
+      return (
+        <div className="cms-hero__actions">
+          <button type="button" className="cms-hero__cta">
+            {data.primary} <ArrowRight size={14} />
+          </button>
+          <button type="button" className="cms-hero__cta-secondary">
+            {data.secondary} <ChevronRight size={14} />
+          </button>
         </div>
-      </Aria>
-    </section>
-  )
+      )
+    case 'stat':
+      return (
+        <>
+          <span className="cms-stat__value">{data.value}</span>
+          <span className="cms-stat__label">{data.label}</span>
+        </>
+      )
+    case 'icon':
+      return <>{featureIcons[data.value] ?? null}</>
+    case 'step':
+      return (
+        <>
+          <span className="cms-step__number">{data.num}</span>
+          <h3 className="cms-step__title">{data.title}</h3>
+          <p className="cms-step__desc">{data.desc}</p>
+        </>
+      )
+    case 'pattern':
+      return (
+        <>
+          <div className="cms-pattern__icon">{patternIcons[data.icon] ?? null}</div>
+          <span className="cms-pattern__name">{data.name}</span>
+        </>
+      )
+    case 'brand':
+      return (
+        <>
+          <div className="cms-footer__logo" />
+          <span className="cms-footer__name">{data.name}</span>
+          <span className="cms-footer__copy">{data.license} License</span>
+        </>
+      )
+    case 'links':
+      return null // children render the links
+    case 'link':
+      return <a className="cms-footer__link" href={data.href}>{data.label}</a>
+    default:
+      return null
+  }
 }
 
-// ── Section: How it works ──
+// ── Section wrapper renderers ──
 
-function HowItWorks() {
-  const [data, setData] = useState<NormalizedData>(stepsStore)
-
-  return (
-    <section className="cms-how">
-      <p className="cms-section-label">Workflow</p>
-      <h2 className="cms-section-title">How it works</h2>
-      <p className="cms-section-desc">
-        Four layers, each independently testable. Compose them for any UI pattern.
-      </p>
-      <Aria
-        behavior={listbox}
-        data={data}
-        plugins={plugins}
-        onChange={setData}
-        aria-label="Workflow steps"
-      >
-        <div className="cms-how__steps">
-          <Aria.Node render={(node: Record<string, unknown>, state: NodeState) => {
-            const d = node.data as { num: string; title: string; desc: string }
-            return (
-              <div className={`cms-step${state.focused ? ' cms-step--focused' : ''}`}>
-                <span className="cms-step__number">{d.num}</span>
-                <h3 className="cms-step__title">{d.title}</h3>
-                <p className="cms-step__desc">{d.desc}</p>
-              </div>
-            )
-          }} />
+function SectionHeader({ variant }: { variant: string }) {
+  switch (variant) {
+    case 'hero':
+      return (
+        <div className="cms-hero__badge">
+          <span className="cms-hero__badge-dot" />
+          Open Source
         </div>
-      </Aria>
-    </section>
-  )
+      )
+    case 'features':
+      return (
+        <>
+          <p className="cms-section-label">Core</p>
+          <h2 className="cms-section-title">Everything you need</h2>
+          <p className="cms-section-desc">
+            A complete headless engine for building accessible, keyboard-driven interfaces
+            on any component library.
+          </p>
+        </>
+      )
+    case 'workflow':
+      return (
+        <>
+          <p className="cms-section-label">Workflow</p>
+          <h2 className="cms-section-title">How it works</h2>
+          <p className="cms-section-desc">
+            Four layers, each independently testable. Compose them for any UI pattern.
+          </p>
+        </>
+      )
+    case 'patterns':
+      return (
+        <>
+          <p className="cms-section-label">Coverage</p>
+          <h2 className="cms-section-title">14 APG patterns</h2>
+          <p className="cms-section-desc">
+            Every composite widget from the W3C ARIA Authoring Practices Guide,
+            fully implemented with keyboard interaction tables.
+          </p>
+        </>
+      )
+    default:
+      return null
+  }
 }
 
-// ── Section: Patterns ──
+// ── CSS class mapping ──
 
-function Patterns() {
-  const [data, setData] = useState<NormalizedData>(patternsStore)
-
-  return (
-    <section className="cms-patterns">
-      <p className="cms-section-label">Coverage</p>
-      <h2 className="cms-section-title">14 APG patterns</h2>
-      <p className="cms-section-desc">
-        Every composite widget from the W3C ARIA Authoring Practices Guide,
-        fully implemented with keyboard interaction tables.
-      </p>
-      <Aria
-        behavior={listbox}
-        data={data}
-        plugins={plugins}
-        onChange={setData}
-        aria-label="APG patterns"
-      >
-        <div className="cms-patterns__grid">
-          <Aria.Node render={(node: Record<string, unknown>, state: NodeState) => {
-            const d = node.data as { name: string; icon: string }
-            return (
-              <div className={`cms-pattern${state.focused ? ' cms-pattern--focused' : ''}`}>
-                <div className="cms-pattern__icon">{patternIcons[d.icon]}</div>
-                <span className="cms-pattern__name">{d.name}</span>
-              </div>
-            )
-          }} />
-        </div>
-      </Aria>
-    </section>
-  )
+function getSectionClassName(variant: string): string {
+  switch (variant) {
+    case 'hero': return 'cms-hero'
+    case 'stats': return 'cms-stats'
+    case 'features': return 'cms-features'
+    case 'workflow': return 'cms-how'
+    case 'patterns': return 'cms-patterns'
+    case 'footer': return 'cms-footer'
+    default: return ''
+  }
 }
 
-// ── Section: Footer ──
+function getNodeClassName(data: Record<string, string>, state: NodeState): string {
+  const f = state.focused
+  switch (data.type) {
+    case 'section':
+      return getSectionClassName(data.variant)
+    case 'stat':
+      return `cms-stat${f ? ' cms-stat--focused' : ''}`
+    case 'card':
+      return `cms-feature-card${f ? ' cms-feature-card--focused' : ''}`
+    case 'step':
+      return `cms-step${f ? ' cms-step--focused' : ''}`
+    case 'pattern':
+      return `cms-pattern${f ? ' cms-pattern--focused' : ''}`
+    case 'text': {
+      // Hero title/subtitle get special classes
+      if (data.value === 'Headless ARIA Engine') return 'cms-hero__title'
+      // Check if it's a subtitle (long text with "Build fully")
+      if (data.value?.startsWith('Build fully')) return 'cms-hero__subtitle'
+      return ''
+    }
+    case 'cta': return ''
+    case 'icon': return 'cms-feature-card__icon'
+    case 'brand': return 'cms-footer__brand'
+    case 'links': return 'cms-footer__links'
+    case 'link': return ''
+    default: return ''
+  }
+}
 
-function Footer() {
+function getChildrenContainerClassName(data: Record<string, string>): string | undefined {
+  switch (data.variant) {
+    case 'stats': return 'cms-stats__items'
+    case 'features': return 'cms-features__grid'
+    case 'workflow': return 'cms-how__steps'
+    case 'patterns': return 'cms-patterns__grid'
+    default: return undefined
+  }
+}
+
+// ── What HTML tag to use ──
+
+function getNodeTag(data: Record<string, string>): keyof JSX.IntrinsicElements {
+  if (data.type === 'section') {
+    if (data.variant === 'footer') return 'footer'
+    return 'section'
+  }
+  if (data.type === 'text') {
+    if (data.value === 'Headless ARIA Engine') return 'h1'
+    if (data.value?.startsWith('Build fully')) return 'p'
+  }
+  if (data.type === 'links') return 'nav'
+  return 'div'
+}
+
+// ── Feature card inner content (title + desc from children) ──
+
+function FeatureCardContent({ store, childIds }: { store: NormalizedData; childIds: string[] }) {
+  // Card children are [icon, title, desc] — we render title and desc inline
+  const titleEntity = childIds.length > 1 ? store.entities[childIds[1]] : undefined
+  const descEntity = childIds.length > 2 ? store.entities[childIds[2]] : undefined
+  const titleData = titleEntity?.data as Record<string, string> | undefined
+  const descData = descEntity?.data as Record<string, string> | undefined
+
   return (
-    <footer className="cms-footer">
-      <div className="cms-footer__brand">
-        <div className="cms-footer__logo" />
-        <span className="cms-footer__name">interactive-os</span>
-        <span className="cms-footer__copy">MIT License</span>
-      </div>
-      <nav className="cms-footer__links">
-        <a className="cms-footer__link" href="#docs">Documentation</a>
-        <a className="cms-footer__link" href="#github">GitHub</a>
-        <a className="cms-footer__link" href="#npm">npm</a>
-      </nav>
-    </footer>
+    <>
+      {titleData && <h3 className="cms-feature-card__title">{titleData.value}</h3>}
+      {descData && <p className="cms-feature-card__desc">{descData.value}</p>}
+    </>
   )
 }
 
 // ── Page ──
 
 export default function PageVisualCms() {
+  const [data, setData] = useState<NormalizedData>(cmsStore)
+  const spatialKeyMap = useSpatialNav('[data-cms-root]', data)
+  const aria = useAria({
+    behavior: spatial,
+    data,
+    plugins,
+    keyMap: spatialKeyMap,
+    onChange: setData,
+  })
+
+  // Click handler: jump to node's depth + focus
+  const handleNodeClick = useCallback((nodeId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    const store = aria.getStore()
+    const parentId = getParent(store, nodeId) ?? ROOT_ID
+    const currentSpatialParent = getSpatialParentId(store)
+
+    if (parentId !== currentSpatialParent) {
+      // Switch depth to the clicked node's parent
+      if (parentId === ROOT_ID) {
+        // Go to root — exit until at root
+        const exitCmd = spatialCommands.exitToParent()
+        // Keep exiting (simple: just set spatial parent to nothing for root)
+        aria.dispatch(createBatchCommand([
+          exitCmd,
+          focusCommands.setFocus(nodeId),
+        ]))
+        return
+      }
+      aria.dispatch(createBatchCommand([
+        spatialCommands.enterChild(parentId),
+        focusCommands.setFocus(nodeId),
+      ]))
+      return
+    }
+    aria.dispatch(focusCommands.setFocus(nodeId))
+  }, [aria])
+
+  // Recursive renderer — ALL nodes always rendered
+  function renderNode(nodeId: string): React.ReactNode {
+    const store = aria.getStore()
+    const entity = store.entities[nodeId]
+    if (!entity) return null
+
+    const state = aria.getNodeState(nodeId)
+    const props = aria.getNodeProps(nodeId)
+    const children = getChildren(store, nodeId)
+    const d = (entity.data ?? {}) as Record<string, string>
+
+    // Destructure props from aria to override onClick
+    const {
+      onClick: _,
+      onKeyDown,
+      onFocus,
+      tabIndex,
+      role: ariaRole,
+      ...restProps
+    } = props as Record<string, unknown>
+    void _
+
+    const className = getNodeClassName(d, state)
+    const Tag = getNodeTag(d)
+
+    // For section nodes, render section header + children container
+    if (d.type === 'section') {
+      const childrenContainerClass = getChildrenContainerClassName(d)
+
+      return (
+        <Tag
+          key={nodeId}
+          {...(restProps as React.HTMLAttributes<HTMLElement>)}
+          role={ariaRole as string}
+          tabIndex={tabIndex as number}
+          onKeyDown={onKeyDown as React.KeyboardEventHandler}
+          onFocus={onFocus as React.FocusEventHandler}
+          onClick={(e: React.MouseEvent) => handleNodeClick(nodeId, e)}
+          className={className}
+        >
+          <SectionHeader variant={d.variant} />
+          {childrenContainerClass ? (
+            <div className={childrenContainerClass}>
+              {children.map(childId => renderNode(childId))}
+            </div>
+          ) : (
+            children.map(childId => renderNode(childId))
+          )}
+        </Tag>
+      )
+    }
+
+    // For card nodes, render icon from first child + title/desc from remaining children
+    if (d.type === 'card') {
+      return (
+        <div
+          key={nodeId}
+          {...(restProps as React.HTMLAttributes<HTMLDivElement>)}
+          role={ariaRole as string}
+          tabIndex={tabIndex as number}
+          onKeyDown={onKeyDown as React.KeyboardEventHandler}
+          onFocus={onFocus as React.FocusEventHandler}
+          onClick={(e) => handleNodeClick(nodeId, e)}
+          className={className}
+        >
+          {/* First child is icon */}
+          {children.length > 0 && renderNode(children[0])}
+          <FeatureCardContent store={store} childIds={children} />
+        </div>
+      )
+    }
+
+    // Leaf / generic nodes
+    return (
+      <Tag
+        key={nodeId}
+        {...(restProps as React.HTMLAttributes<HTMLElement>)}
+        role={ariaRole as string}
+        tabIndex={tabIndex as number}
+        onKeyDown={onKeyDown as React.KeyboardEventHandler}
+        onFocus={onFocus as React.FocusEventHandler}
+        onClick={(e: React.MouseEvent) => handleNodeClick(nodeId, e)}
+        className={className || undefined}
+      >
+        <NodeContent data={d} />
+        {children.length > 0 && children.map(childId => renderNode(childId))}
+      </Tag>
+    )
+  }
+
   return (
-    <div className="cms-landing">
-      <Hero />
-      <Stats />
-      <Features />
-      <HowItWorks />
-      <Patterns />
-      <Footer />
+    <div className="cms-landing" data-cms-root data-aria-container="">
+      {getChildren(aria.getStore(), ROOT_ID).map(id => renderNode(id))}
     </div>
   )
 }

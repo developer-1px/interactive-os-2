@@ -47,5 +47,6 @@ export const spatial: AriaBehavior = {
   activateOnClick: true,
   ariaAttributes: (_node, state: NodeState) => ({
     'aria-level': String(state.level ?? 1),
+    ...(state.selected ? { 'aria-selected': 'true' } : {}),
   }),
 }

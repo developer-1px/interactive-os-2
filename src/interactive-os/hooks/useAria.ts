@@ -132,7 +132,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
             if (command) engine.dispatch(command)
           }
         },
-        onFocus: () => {
+        onFocus: (event: FocusEvent) => {
+          // Only handle direct focus, not bubbled from children
+          if (event.target !== event.currentTarget) return
           if (id !== focusedId) {
             engine.dispatch(focusCommands.setFocus(id))
           }
@@ -142,6 +144,8 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       if (!isActivedescendant) {
         baseProps.tabIndex = behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
         baseProps.onKeyDown = (event: KeyboardEvent) => {
+          // Only handle on the directly focused element, not bubbled from children
+          if (event.target !== event.currentTarget) return
           const matchedKey = findMatchingKey(event, mergedKeyMap)
           if (!matchedKey) return
           const ctx = createBehaviorContext(engine, behaviorCtxOptions)
