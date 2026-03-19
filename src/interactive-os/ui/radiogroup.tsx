@@ -1,5 +1,5 @@
 import React from 'react'
-import './RadioGroup.css'
+import './radiogroup.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'

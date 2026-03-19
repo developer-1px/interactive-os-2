@@ -1,5 +1,5 @@
 import React from 'react'
-import './Grid.css'
+import './grid.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
