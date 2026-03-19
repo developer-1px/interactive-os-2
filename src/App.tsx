@@ -232,10 +232,11 @@ function Sidebar({ activeGroup }: { activeGroup: RouteGroup }) {
         onChange={handleSidebarChange}
         aria-label={`${activeGroup.label} pages`}
       >
-        <Aria.Node render={(node, state) => {
+        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+        <Aria.Node render={(node, _state) => {
           const item = activeGroup.items.find((i) => i.path === node.id)
           return (
-            <div className={`sidebar-link${state.focused ? ' sidebar-link--active' : ''}`}>
+            <div className="sidebar-link">
               {(node.data as { label: string }).label}
               {item?.status === 'wip' && <span className="badge-wip">wip</span>}
               {item?.status === 'placeholder' && <span className="badge-wip">soon</span>}
