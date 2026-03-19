@@ -34,6 +34,7 @@ import PageListboxNav from './pages/PageListboxNav'
 import PageComboboxNav from './pages/PageComboboxNav'
 import PageTabsCrud from './pages/PageTabsCrud'
 import PageGridCollection from './pages/PageGridCollection'
+import PageKanban from './pages/PageKanban'
 import PageCrud from './pages/PageCrud'
 import PageClipboard from './pages/PageClipboard'
 import PageHistoryDemo from './pages/PageHistoryDemo'
@@ -162,6 +163,7 @@ const routeConfig: RouteGroup[] = [
       { path: 'grid', label: 'Grid', status: 'ready', component: PageGridCollection },
       { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabsCrud },
       { path: 'combobox', label: 'Combobox', status: 'ready', component: PageCombobox },
+      { path: 'kanban', label: 'Kanban', status: 'ready', component: PageKanban },
     ],
   },
   {
