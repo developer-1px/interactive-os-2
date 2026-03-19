@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Compass, Layers, Eye, Map, Box } from 'lucide-react'
+import { Database, Cog, Compass, Layers, Eye, Map, Box, Sun, Moon } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './App.css'
 
@@ -248,6 +248,22 @@ function Sidebar({ activeGroup }: { activeGroup: RouteGroup }) {
 // --- App (shared ActivityBar + route-dependent content) ---
 
 function App() {
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const stored = localStorage.getItem('theme')
+    return stored === 'light' ? 'light' : 'dark'
+  })
+
+  useEffect(() => {
+    if (document.documentElement.getAttribute('data-theme') !== theme) {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  const toggleTheme = useCallback(() => {
+    setTheme(t => t === 'dark' ? 'light' : 'dark')
+  }, [])
+
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
@@ -266,6 +282,14 @@ function App() {
         <div className="activity-bar__logo">
           <div className="logo-mark" />
         </div>
+        <button
+          type="button"
+          className="activity-bar__theme-toggle"
+          onClick={toggleTheme}
+          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+        >
+          {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
+        </button>
         <Aria
           behavior={verticalTabs}
           data={activityBarStore}

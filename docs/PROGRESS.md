@@ -163,6 +163,10 @@
 - [x] Vision Architecture — mermaid 아키텍처 다이어그램 5개 렌더링
 - [x] Visual CMS Landing — interactive-os 소개 랜딩 페이지 (Hero, Features, How it works, 14 APG Patterns, Footer)
 - [x] Visual CMS Aria Integration — 4개 반복 섹션에 `<Aria>` listbox 키보드 네비게이션 적용
+- [x] Dark/Light Theme System — `[data-theme]` CSS custom property layers, dark-first 디자인, localStorage 토글 + flash 방지
+- [x] Combobox Token Migration — 인라인 스타일 → CSS 토큰 클래스 (combo-item, combo-input, combo-dropdown)
+- [x] Demo Page Quality Lift — page-header, page-keys, demo-section, card 스타일 개선
+- [x] Viewer Theme Compat — Shiki 테마 자동 전환 (shared MutationObserver hook)
 
 ## ⑨ APG Pattern Coverage
 
@@ -199,4 +203,4 @@
 
 ---
 
-*Last updated: 2026-03-19 — Visual CMS spatial nav integration tests, 365 tests, 47 files*
+*Last updated: 2026-03-19 — Design system overhaul (dark/light theme, token migration, demo quality), 364 tests, 47 files*

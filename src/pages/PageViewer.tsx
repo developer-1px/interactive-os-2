@@ -1,5 +1,6 @@
 import './PageViewer.css'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import Fuse from 'fuse.js'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
@@ -16,7 +17,7 @@ import { createRecorder } from '../interactive-os/devtools/createRecorder'
 import {
   Folder, FolderOpen, FileText, FileCode, FileType,
   File, ChevronRight, ChevronDown, Circle, PanelLeft,
-  Braces, Palette, Terminal, Image, Settings,
+  Braces, Palette, Terminal, Image, Settings, Search,
 } from 'lucide-react'
 
 // --- Types ---
@@ -26,6 +27,12 @@ interface TreeNode {
   name: string
   type: 'file' | 'directory'
   children?: TreeNode[]
+}
+
+interface FileNodeData {
+  name: string
+  type: 'file' | 'directory'
+  path: string
 }
 
 // --- Mermaid init ---
@@ -67,6 +74,35 @@ function treeToStore(nodes: TreeNode[]): NormalizedData {
   return createStore({ entities, relationships })
 }
 
+// --- Theme detection (single observer shared across all CodeBlock instances) ---
+
+function getShikiTheme(): string {
+  return document.documentElement.getAttribute('data-theme') === 'light'
+    ? 'github-light'
+    : 'github-dark'
+}
+
+const themeListeners = new Set<() => void>()
+let shikiThemeCache = getShikiTheme()
+
+if (typeof MutationObserver !== 'undefined') {
+  const themeObserver = new MutationObserver(() => {
+    shikiThemeCache = getShikiTheme()
+    themeListeners.forEach(fn => fn())
+  })
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+}
+
+function useShikiTheme(): string {
+  const [theme, setTheme] = useState(shikiThemeCache)
+  useEffect(() => {
+    const cb = () => setTheme(getShikiTheme())
+    themeListeners.add(cb)
+    return () => { themeListeners.delete(cb) }
+  }, [])
+  return theme
+}
+
 // --- Shiki code highlighting ---
 
 const IDENTIFIER_RE = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
@@ -80,6 +116,7 @@ const EXT_TO_LANG: Record<string, string> = {
 function CodeBlock({ code, filename }: { code: string; filename: string }) {
   const [html, setHtml] = useState('')
   const [highlightToken, setHighlightToken] = useState<string | null>(null)
+  const currentTheme = useShikiTheme()
   const containerRef = useRef<HTMLDivElement>(null)
   const ext = filename.split('.').pop() ?? ''
   const lang = EXT_TO_LANG[ext] ?? 'text'
@@ -88,7 +125,7 @@ function CodeBlock({ code, filename }: { code: string; filename: string }) {
     let cancelled = false
     codeToHtml(code, {
       lang,
-      theme: 'github-light',
+      theme: currentTheme,
       transformers: [{
         line(node, line) {
           node.properties['data-line'] = line
@@ -106,7 +143,7 @@ function CodeBlock({ code, filename }: { code: string; filename: string }) {
       if (!cancelled) setHtml(result)
     })
     return () => { cancelled = true }
-  }, [code, lang])
+  }, [code, lang, currentTheme])
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement
@@ -248,6 +285,164 @@ function Breadcrumb({ path, root }: { path: string; root: string }) {
   )
 }
 
+// --- Flatten file entities for search ---
+
+interface FileEntry {
+  id: string
+  name: string
+  path: string
+  relativePath: string
+}
+
+function flattenFiles(store: NormalizedData, root: string): FileEntry[] {
+  const files: FileEntry[] = []
+  for (const entity of Object.values(store.entities)) {
+    if (!entity.data) continue
+    const data = entity.data as FileNodeData
+    if (data.type === 'file') {
+      files.push({
+        id: entity.id,
+        name: data.name,
+        path: data.path,
+        relativePath: data.path.startsWith(root) ? data.path.slice(root.length + 1) : data.path,
+      })
+    }
+  }
+  return files
+}
+
+// --- Quick Open component ---
+
+const MAX_RESULTS = 12
+
+function QuickOpen({
+  fileStore,
+  root,
+  onSelect,
+  onClose,
+}: {
+  fileStore: NormalizedData
+  root: string
+  onSelect: (filePath: string) => void
+  onClose: () => void
+}) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [query, setQuery] = useState('')
+  const [focusIndex, setFocusIndex] = useState(0)
+
+  const files = useMemo(() => flattenFiles(fileStore, root), [fileStore, root])
+  const fuse = useMemo(() => new Fuse(files, {
+    keys: ['name', 'relativePath'],
+    threshold: 0.4,
+  }), [files])
+
+  const results = useMemo(() => {
+    if (!query.trim()) return files.slice(0, MAX_RESULTS)
+    return fuse.search(query).slice(0, MAX_RESULTS).map(r => r.item)
+  }, [query, fuse, files])
+
+  // Auto-focus input on mount
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
+  // Scroll focused item into view
+  useEffect(() => {
+    if (results.length === 0) return
+    const focused = results[focusIndex]
+    if (!focused) return
+    const el = document.getElementById(`qo-${focused.id}`)
+    el?.scrollIntoView({ block: 'nearest' })
+  }, [focusIndex, results])
+
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose()
+  }, [onClose])
+
+  const handleInputKeyDown = (e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case 'Escape':
+        e.preventDefault()
+        onClose()
+        break
+      case 'Enter': {
+        e.preventDefault()
+        const focused = results[focusIndex]
+        if (focused) onSelect(focused.path)
+        onClose()
+        break
+      }
+      case 'ArrowDown':
+        e.preventDefault()
+        setFocusIndex(i => i < results.length - 1 ? i + 1 : 0)
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        setFocusIndex(i => i > 0 ? i - 1 : results.length - 1)
+        break
+      case 'Home':
+        e.preventDefault()
+        setFocusIndex(0)
+        break
+      case 'End':
+        e.preventDefault()
+        setFocusIndex(Math.max(0, results.length - 1))
+        break
+    }
+  }
+
+  const focusedId = results[focusIndex]?.id
+
+  return (
+    <div className="qo-backdrop" onClick={handleBackdropClick}>
+      <div className="qo-dialog" role="dialog" aria-label="Quick Open">
+        <div className="qo-input-row">
+          <Search size={12} strokeWidth={1.5} className="qo-input-icon" />
+          <input
+            ref={inputRef}
+            className="qo-input"
+            type="text"
+            role="combobox"
+            aria-expanded={results.length > 0}
+            aria-haspopup="listbox"
+            aria-controls="qo-listbox"
+            aria-activedescendant={focusedId ? `qo-${focusedId}` : undefined}
+            placeholder="파일 검색..."
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setFocusIndex(0) }}
+            onKeyDown={handleInputKeyDown}
+            aria-label="파일 검색"
+          />
+          <kbd className="qo-shortcut">ESC</kbd>
+        </div>
+        {results.length > 0 ? (
+          <div className="qo-results" role="listbox" id="qo-listbox">
+            {results.map((file, i) => (
+              <div
+                key={file.id}
+                id={`qo-${file.id}`}
+                role="option"
+                aria-selected={i === focusIndex}
+                className={`qo-item${i === focusIndex ? ' qo-item--focused' : ''}`}
+                onClick={() => {
+                  onSelect(file.path)
+                  onClose()
+                }}
+              >
+                <FileIcon name={file.name} type="file" />
+                <span className="qo-item__name">{file.name}</span>
+                <span className="qo-item__path">{file.relativePath}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="qo-empty">일치하는 파일이 없습니다</div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // --- Main viewer page ---
 
 export default function PageViewer() {
@@ -257,8 +452,10 @@ export default function PageViewer() {
   const [loading, setLoading] = useState(true)
   const [recording, setRecording] = useState(false)
   const [treeCollapsed, setTreeCollapsed] = useState(false)
+  const [quickOpenVisible, setQuickOpenVisible] = useState(false)
   const recorder = useMemo(() => createRecorder(), [])
   const selectedFileRef = useRef<string | null>(null)
+  const contentBodyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetchTree(DEFAULT_ROOT).then((tree) => {
@@ -267,18 +464,21 @@ export default function PageViewer() {
     })
   }, [])
 
+  const selectFile = useCallback((filePath: string) => {
+    if (filePath === selectedFileRef.current) return
+    selectedFileRef.current = filePath
+    setSelectedFile(filePath)
+    contentBodyRef.current?.scrollTo(0, 0)
+    fetchFile(filePath).then(setFileContent)
+  }, [])
+
   const handleChange = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
     const entity = newStore.entities[focusedId]
-    if (entity?.data && (entity.data as Record<string, unknown>).type === 'file') {
-      const filePath = (entity.data as Record<string, unknown>).path as string
-      if (filePath !== selectedFileRef.current) {
-        selectedFileRef.current = filePath
-        setSelectedFile(filePath)
-        fetchFile(filePath).then(setFileContent)
-      }
+    if (entity?.data && (entity.data as FileNodeData).type === 'file') {
+      selectFile((entity.data as FileNodeData).path)
     }
-  }, [])
+  }, [selectFile])
 
   const toggleRecording = useCallback(() => {
     if (recording) {
@@ -294,6 +494,20 @@ export default function PageViewer() {
       setRecording(true)
     }
   }, [recording, recorder])
+
+  // Cmd+P / Ctrl+P → Quick Open
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'p') {
+        e.preventDefault()
+        setQuickOpenVisible(true)
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
+
+  const handleQuickOpenSelect = selectFile
 
   if (loading || !initialStore) {
     return (
@@ -325,6 +539,13 @@ export default function PageViewer() {
         </div>
         <div className="vw-statusbar__right">
           <button
+            className="vw-statusbar__btn"
+            onClick={() => setQuickOpenVisible(true)}
+            title="Quick Open (Cmd+P)"
+          >
+            <Search size={12} strokeWidth={1.5} />
+          </button>
+          <button
             className={`vw-rec${recording ? ' vw-rec--active' : ''}`}
             onClick={toggleRecording}
           >
@@ -347,7 +568,7 @@ export default function PageViewer() {
               aria-label="File tree"
             >
               <Aria.Node render={(node, state) => {
-                const data = node.data as { name: string; type: string; path: string }
+                const data = node.data as FileNodeData
                 const isActive = data.path === selectedFile
                 const indent = (state.level ?? 1) * 12
                 return (
@@ -386,7 +607,7 @@ export default function PageViewer() {
                   <span>{lineCount} lines</span>
                 </div>
               </div>
-              <div className="vw-content__body">
+              <div className="vw-content__body" ref={contentBodyRef}>
                 {isMarkdown
                   ? <MarkdownViewer content={fileContent} />
                   : <CodeBlock code={fileContent} filename={filename} />
@@ -401,6 +622,16 @@ export default function PageViewer() {
           )}
         </div>
       </div>
+
+      {/* Quick Open overlay */}
+      {quickOpenVisible && initialStore && (
+        <QuickOpen
+          fileStore={initialStore}
+          root={DEFAULT_ROOT}
+          onSelect={handleQuickOpenSelect}
+          onClose={() => setQuickOpenVisible(false)}
+        />
+      )}
     </div>
   )
 }

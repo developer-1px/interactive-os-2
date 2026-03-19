@@ -1,5 +1,5 @@
 ---
-last_commit: a24f93fba5d13ac5aaa35c48b81692fa0db309e5
+last_commit: 120acae1f763ff59a892b74ca55dc14335858611
 last_updated: 2026-03-19
 ---
 
@@ -14,7 +14,7 @@ last_updated: 2026-03-19
 | move | 5 | moveNode, moveUp, moveDown, moveOut, moveIn |
 | insert | 1 | insertNode |
 | set | 4 | setFocus, setAnchor, setGridCol, setFilter |
-| toggle | 3 | toggleSelect, toggleExpand, toggleSelect |
+| toggle | 4 | toggleSelect, toggleExpand, toggleSelect, toggleTheme |
 | select | 3 | select, selectRange, selectAll |
 | clear | 1 | clearSelection |
 | extend | 1 | extendSelection |

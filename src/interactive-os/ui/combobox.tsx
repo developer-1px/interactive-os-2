@@ -4,7 +4,7 @@ import type { NodeState } from '../behaviors/types'
 import { useAria } from '../hooks/useAria'
 import { combobox as comboboxBehavior } from '../behaviors/combobox'
 import { core } from '../plugins/core'
-import { combobox as comboboxPlugin } from '../plugins/combobox'
+import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
 import { ROOT_ID } from '../core/types'
 import { getChildren } from '../core/createStore'
 
@@ -14,6 +14,7 @@ interface ComboboxProps {
   onChange?: (data: NormalizedData) => void
   renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
   placeholder?: string
+  editable?: boolean
 }
 
 export function Combobox({
@@ -22,6 +23,7 @@ export function Combobox({
   onChange,
   renderItem,
   placeholder = 'Select...',
+  editable = false,
 }: ComboboxProps) {
   const aria = useAria({
     behavior: comboboxBehavior,
@@ -32,6 +34,7 @@ export function Combobox({
 
   const store = aria.getStore()
   const isOpen = (store.entities['__combobox__']?.isOpen as boolean) ?? false
+  const filterText = (store.entities['__combobox__']?.filterText as string) ?? ''
   const children = getChildren(store, ROOT_ID)
 
   const selectedId = aria.selected[0]
@@ -40,33 +43,40 @@ export function Combobox({
     ? ((selectedEntity.data as Record<string, unknown>).label as string ?? selectedEntity.id)
     : ''
 
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    aria.dispatch(comboboxCommands.setFilter(e.target.value))
+    if (!isOpen) {
+      aria.dispatch(comboboxCommands.open())
+    }
+  }
+
   const defaultRender = (item: Record<string, unknown>, state: NodeState) => (
-    <div style={{
-      padding: '6px 12px',
-      background: state.focused ? 'var(--combo-focus-bg, #e3f2fd)' : state.selected ? 'var(--combo-select-bg, #e8f5e9)' : 'transparent',
-      cursor: 'default',
-      userSelect: 'none',
-      fontSize: 14,
-    }}>
+    <div className={`combo-item${state.focused ? ' combo-item--focused' : ''}${state.selected ? ' combo-item--selected' : ''}`}>
       {(item.data as Record<string, unknown>)?.label as string ?? item.id}
     </div>
   )
 
   const render = renderItem ?? defaultRender
 
+  const inputValue = editable
+    ? (isOpen ? filterText : selectedLabel)
+    : selectedLabel
+
   return (
     <div>
       <input
+        className="combo-input"
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        value={selectedLabel}
+        value={inputValue}
         placeholder={placeholder}
-        readOnly
+        readOnly={!editable}
+        onChange={editable ? handleInput : undefined}
         {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
       />
       {isOpen && (
-        <div role="listbox">
+        <div className="combo-dropdown" role="listbox">
           {children.map(childId => {
             const entity = store.entities[childId]
             if (!entity) return null
