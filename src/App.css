@@ -34,9 +34,9 @@
   --surface-1-shadow: none;
   --surface-2: var(--zinc-800);
   --surface-2-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.3);
-  --surface-3: var(--zinc-800);
+  --surface-3: var(--zinc-700);
   --surface-3-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.3);
-  --surface-4: var(--zinc-800);
+  --surface-4: var(--zinc-700);
   --surface-4-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
 
   /* Backward compat aliases */
@@ -51,9 +51,9 @@
   --bg-active: rgba(255, 255, 255, 0.08);
 
   /* Border */
-  --border-dim: rgba(255, 255, 255, 0.06);
-  --border-mid: rgba(255, 255, 255, 0.10);
-  --border-bright: rgba(255, 255, 255, 0.16);
+  --border-dim: rgba(255, 255, 255, 0.10);
+  --border-mid: rgba(255, 255, 255, 0.14);
+  --border-bright: rgba(255, 255, 255, 0.22);
 
   /* Text */
   --text-primary: var(--zinc-200);
