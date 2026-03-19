@@ -301,6 +301,10 @@
   background: var(--accent-dim);
 }
 
+[aria-selected="true"][data-node-id] {
+  background: var(--accent-dim);
+}
+
 .cms-step__number {
   font-family: var(--mono);
   font-size: 32px;
