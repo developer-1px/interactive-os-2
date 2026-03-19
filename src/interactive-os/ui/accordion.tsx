@@ -28,7 +28,7 @@ export function Accordion({
 }: AccordionProps) {
   return (
     <Aria behavior={accordion} data={data} plugins={plugins} onChange={onChange}>
-      <Aria.Node render={renderItem} />
+      <Aria.Item render={renderItem} />
     </Aria>
   )
 }

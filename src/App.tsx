@@ -249,7 +249,7 @@ function Sidebar({ activeGroup }: { activeGroup: RouteGroup }) {
         aria-label={`${activeGroup.label} pages`}
       >
         {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-        <Aria.Node render={(node, _state) => {
+        <Aria.Item render={(node, _state) => {
           const item = activeGroup.items.find((i) => i.path === node.id)
           return (
             <div className="sidebar-link">
@@ -308,7 +308,7 @@ function App() {
           onChange={handleActivityBarChange}
           aria-label="Layer navigation"
         >
-          <Aria.Node render={(node, state) => {
+          <Aria.Item render={(node, state) => {
             const nav = navItems.find((n) => n.id === node.id)!
             const Icon = nav.icon
             return (

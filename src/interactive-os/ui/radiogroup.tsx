@@ -28,7 +28,7 @@ export function RadioGroup({
 }: RadioGroupProps) {
   return (
     <Aria behavior={radiogroup} data={data} plugins={plugins} onChange={onChange}>
-      <Aria.Node render={renderItem} />
+      <Aria.Item render={renderItem} />
     </Aria>
   )
 }

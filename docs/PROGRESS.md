@@ -105,14 +105,14 @@
 
 ## ⑤ Components + Hooks
 
-- [x] `components/aria.tsx` — `<Aria>` + `<Aria.Node>` compound component
+- [x] `components/aria.tsx` — `<Aria>` + `<Aria.Item>` compound component
 - [x] `components/aria-context.ts` — React context
 - [x] `hooks/use-aria.ts` — useAria() hook (escape hatch)
 - [x] `hooks/use-keyboard.ts` — parseKeyCombo, matchKeyEvent, findMatchingKey (Mod 플랫폼 독립)
 - [x] gridcell 자동 래핑 (treegrid row 내부)
 - [x] aria-label prop 지원
 - [x] **포커스 리커버리** — `focusRecovery()` 미들웨어로 삭제/축소/이동/생성/undo 시 자동 복구
-- [x] `<Aria.Cell>` — grid 멀티 컬럼 지원, AriaNodeContext
+- [x] `<Aria.Cell>` — grid 멀티 컬럼 지원, AriaItemContext
 - [x] `useControlledAria` — 외부 store 연동 훅 (controlled state variant)
 - [x] DOM 스크롤 동기화 — 포커스 이동 시 `scrollIntoView({ block: 'nearest' })` 자동 호출
 - [x] `hooks/use-spatial-nav.ts` — `useSpatialNav` hook + `findNearest` 순수 함수 (DOM 위치 기반 방향키 네비게이션)

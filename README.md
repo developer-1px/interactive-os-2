@@ -38,7 +38,7 @@ function FileTree() {
       plugins={[core(), history()]}
       onChange={setStore}
     >
-      <Aria.Node render={(node, state) => (
+      <Aria.Item render={(node, state) => (
         <span style={{ paddingLeft: (state.level ?? 1) * 16 }}>
           {state.expanded !== undefined && (state.expanded ? '▼' : '▶')}
           {node.name as string}
@@ -53,7 +53,7 @@ function FileTree() {
 
 ```
 ┌─────────────────────────────────────────────┐
-│  <Aria> + <Aria.Node>                        │  Compound Components
+│  <Aria> + <Aria.Item>                        │  Compound Components
 │  render slot, auto ARIA attributes           │
 ├─────────────────────────────────────────────┤
 │  Behavior Layer                              │  treegrid, listbox, tabs,

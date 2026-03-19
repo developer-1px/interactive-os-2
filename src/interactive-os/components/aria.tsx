@@ -19,7 +19,7 @@ interface AriaProps {
   children: ReactNode
 }
 
-interface AriaNodeProps {
+interface AriaItemProps {
   render: (node: Record<string, unknown>, state: NodeState) => ReactNode
 }
 
@@ -27,7 +27,7 @@ const horizontalStyle = { display: 'flex' } as const
 
 const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist', 'toolbar', 'treegrid'])
 
-const AriaNodeContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
+const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
 // eslint-disable-next-line react-refresh/only-export-components
 function AriaRoot({ behavior, data, plugins, keyMap, onChange, 'aria-label': ariaLabel, children }: AriaProps) {
@@ -61,11 +61,11 @@ function FocusScrollDiv({ focused, children, ...props }: { focused: boolean; chi
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-function AriaNode({ render }: AriaNodeProps) {
+function AriaItem({ render }: AriaItemProps) {
   return (
     <AriaInternalContext.Consumer>
       {(aria) => {
-        if (!aria) throw new Error('<Aria.Node> must be inside <Aria>')
+        if (!aria) throw new Error('<Aria.Item> must be inside <Aria>')
         const store = aria.getStore()
         const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
         // If behavior has colCount, consumer uses <Aria.Cell> — skip auto gridcell wrapping
@@ -85,12 +85,12 @@ function AriaNode({ render }: AriaNodeProps) {
             const needsGridcell = !hasColCount && (props as Record<string, unknown>).role === 'row'
             nodes.push(
               <FocusScrollDiv key={childId} focused={state.focused} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-                <AriaNodeContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
+                <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
                   {needsGridcell
                     ? <div role="gridcell">{render(entity, state)}</div>
                     : render(entity, state)
                   }
-                </AriaNodeContext.Provider>
+                </AriaItemContext.Provider>
               </FocusScrollDiv>
             )
             if (hasChildren && isExpanded) {
@@ -107,11 +107,11 @@ function AriaNode({ render }: AriaNodeProps) {
 
 // eslint-disable-next-line react-refresh/only-export-components
 function AriaCell({ index, children }: { index: number; children: React.ReactNode }) {
-  const nodeCtx = React.useContext(AriaNodeContext)
+  const nodeCtx = React.useContext(AriaItemContext)
   return (
     <AriaInternalContext.Consumer>
       {(aria) => {
-        if (!aria || !nodeCtx) throw new Error('<Aria.Cell> must be inside <Aria.Node>')
+        if (!aria || !nodeCtx) throw new Error('<Aria.Cell> must be inside <Aria.Item>')
         const store = aria.getStore()
         const focusedCol = (store.entities[GRID_COL_ID]?.colIndex as number) ?? 0
         const isFocusedCell = nodeCtx.focused && index === focusedCol
@@ -127,7 +127,7 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
 
 // eslint-disable-next-line react-refresh/only-export-components
 function AriaEditable({ field, children }: { field: string; children: React.ReactNode }) {
-  const nodeCtx = React.useContext(AriaNodeContext)
+  const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
   const editRef = useRef<HTMLSpanElement>(null)
   const originalValueRef = useRef<string>('')
@@ -223,4 +223,4 @@ function AriaEditable({ field, children }: { field: string; children: React.Reac
   )
 }
 
-export const Aria = Object.assign(AriaRoot, { Node: AriaNode, Cell: AriaCell, Editable: AriaEditable })
+export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Editable: AriaEditable })

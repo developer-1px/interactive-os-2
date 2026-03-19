@@ -49,7 +49,7 @@ export function Grid({
 
   return (
     <Aria behavior={behavior} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
-      <Aria.Node render={renderRow} />
+      <Aria.Item render={renderRow} />
     </Aria>
   )
 }

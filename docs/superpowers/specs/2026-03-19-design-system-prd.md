@@ -6,7 +6,7 @@
 
 | # | Given | When | Then |
 |---|-------|------|------|
-| S1 | 개발자가 `<Aria behavior={listbox}>` 사용 | `<Aria.Node>`에 render 함수만 제공 | ARIA attr 기반 CSS가 자동 적용되어 포커스/선택/확장 상태가 시각화됨 |
+| S1 | 개발자가 `<Aria behavior={listbox}>` 사용 | `<Aria.Item>`에 render 함수만 제공 | ARIA attr 기반 CSS가 자동 적용되어 포커스/선택/확장 상태가 시각화됨 |
 | S2 | 개발자가 테마를 전환 | `data-theme="light"` 토글 | 모든 컴포넌트가 라이트 테마로 일관 전환 |
 | S3 | 개발자가 스타일 커스터마이즈 | CSS 변수를 오버라이드하거나 자체 CSS 작성 | inline style 없으므로 specificity 충돌 없이 오버라이드 가능 |
 | S4 | 기존 데모 페이지 유지 | 마이그레이션 완료 후 | 기존과 동일한 시각적 결과 (regression 없음) |

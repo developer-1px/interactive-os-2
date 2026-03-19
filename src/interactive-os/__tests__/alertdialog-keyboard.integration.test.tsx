@@ -36,7 +36,7 @@ function fixtureData(): NormalizedData {
 function renderAlertDialog(data: NormalizedData) {
   return render(
     <Aria behavior={alertdialog} data={data} plugins={[core()]}>
-      <Aria.Node
+      <Aria.Item
         render={(node, state: NodeState) => (
           <span data-testid={`node-${node.id}`} data-focused={state.focused} data-expanded={state.expanded}>
             {(node.data as Record<string, unknown>)?.name as string}

@@ -60,7 +60,7 @@ describe('Accessibility (axe-core)', () => {
   it('TreeGrid has no critical ARIA violations', async () => {
     const { container } = render(
       <Aria behavior={treegrid} data={treeData} plugins={[]}>
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
@@ -82,7 +82,7 @@ describe('Accessibility (axe-core)', () => {
   it('ListBox has no critical ARIA violations', async () => {
     const { container } = render(
       <Aria behavior={listbox} data={listData} plugins={[]} aria-label="Fruits">
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
@@ -104,7 +104,7 @@ describe('Accessibility (axe-core)', () => {
   it('TabList has no critical ARIA violations', async () => {
     const { container } = render(
       <Aria behavior={tabs} data={tabData} plugins={[]}>
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
@@ -126,7 +126,7 @@ describe('Accessibility (axe-core)', () => {
   it('TreeGrid nodes have required ARIA attributes', () => {
     const { container } = render(
       <Aria behavior={treegrid} data={treeData} plugins={[]}>
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
@@ -146,7 +146,7 @@ describe('Accessibility (axe-core)', () => {
   it('ListBox nodes have required ARIA attributes', () => {
     const { container } = render(
       <Aria behavior={listbox} data={listData} plugins={[]} aria-label="Fruits">
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 

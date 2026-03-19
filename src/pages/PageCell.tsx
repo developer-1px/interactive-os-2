@@ -46,7 +46,7 @@ export default function PageCell() {
           <span>Focusable</span>
         </div>
         <Aria behavior={grid({ columns: 3 })} data={data} plugins={[core()]} onChange={setData} aria-label="ARIA elements">
-          <Aria.Node render={(node: Record<string, unknown>, state: NodeState) => {
+          <Aria.Item render={(node: Record<string, unknown>, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = [
               'grid-row',
@@ -69,7 +69,7 @@ import { grid } from 'interactive-os/behaviors/grid'
 
 // grid({ columns: 3 }) creates a behavior with colCount=3
 <Aria behavior={grid({ columns: 3 })} ...>
-  <Aria.Node render={(node, state) => (
+  <Aria.Item render={(node, state) => (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
       <Aria.Cell index={0}><span>{node.data.name}</span></Aria.Cell>
       <Aria.Cell index={1}><span>{node.data.role}</span></Aria.Cell>

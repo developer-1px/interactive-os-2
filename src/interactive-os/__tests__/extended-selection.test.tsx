@@ -44,7 +44,7 @@ describe('extended selection — listbox', () => {
     const user = userEvent.setup()
     const result = render(
       <Aria behavior={listbox} data={fixtureStore()} plugins={[core()]}>
-        <Aria.Node render={(node, state) => (
+        <Aria.Item render={(node, state) => (
           <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
@@ -187,7 +187,7 @@ describe('extended selection — treegrid', () => {
     const user = userEvent.setup()
     const { container } = render(
       <Aria behavior={treegrid} data={fixtureStore()} plugins={[core()]}>
-        <Aria.Node render={(node, state) => (
+        <Aria.Item render={(node, state) => (
           <div role="gridcell">
             <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
           </div>

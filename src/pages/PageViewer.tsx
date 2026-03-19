@@ -579,7 +579,7 @@ export default function PageViewer() {
               onChange={handleChange}
               aria-label="File tree"
             >
-              <Aria.Node render={(node, state) => {
+              <Aria.Item render={(node, state) => {
                 const data = node.data as FileNodeData
                 const isActive = data.path === selectedFile
                 const indent = (state.level ?? 1) * 12
