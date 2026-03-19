@@ -1,4 +1,5 @@
 import React from 'react'
+import './RadioGroup.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -13,21 +14,10 @@ interface RadioGroupProps {
 }
 
 const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <div
-    style={{
-      padding: '6px 12px',
-      background: state.focused ? 'var(--list-focus-bg, #e3f2fd)' : 'transparent',
-      cursor: 'default',
-      userSelect: 'none',
-      fontSize: 14,
-      display: 'flex',
-      alignItems: 'center',
-      gap: 8,
-    }}
-  >
-    <span style={{ fontSize: 16 }}>{state.selected ? '◉' : '○'}</span>
+  <span className="radio-inner">
+    <span className="radio-indicator">{state.selected ? '◉' : '○'}</span>
     <span>{(item.data as Record<string, unknown>)?.label as string ?? item.id as string}</span>
-  </div>
+  </span>
 )
 
 export function RadioGroup({

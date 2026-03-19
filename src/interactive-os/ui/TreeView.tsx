@@ -1,4 +1,5 @@
 import React from 'react'
+import './TreeView.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -18,8 +19,8 @@ const defaultRenderItem = (node: Record<string, unknown>, state: NodeState): Rea
   const hasChildren = state.expanded !== undefined
 
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center' }}>
-      <span className="chevron" style={{ width: 16, opacity: 0.5, flexShrink: 0 }}>
+    <span className="tree-inner">
+      <span className="chevron tree-chevron">
         {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
       </span>
       <span>{(node.data as Record<string, unknown>)?.name as string}</span>

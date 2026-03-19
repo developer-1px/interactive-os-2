@@ -1,4 +1,5 @@
 import React from 'react'
+import './MenuList.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -13,10 +14,10 @@ interface MenuListProps {
 }
 
 const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+  <span className="menu-inner">
     <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
     {state.expanded !== undefined && (
-      <span className="chevron" style={{ opacity: 0.5, fontSize: 12 }}>{state.expanded ? '▾' : '▸'}</span>
+      <span className="chevron menu-chevron">{state.expanded ? '▾' : '▸'}</span>
     )}
   </span>
 )

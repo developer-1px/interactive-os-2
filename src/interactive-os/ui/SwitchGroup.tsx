@@ -1,4 +1,5 @@
 import React from 'react'
+import './SwitchGroup.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -20,9 +21,9 @@ const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): Rea
   const checked = state.expanded ?? false
 
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 8 }}>
+    <span className="switch-inner">
       <span>{label}</span>
-      <span style={{ fontWeight: 600, color: checked ? 'var(--accent)' : 'var(--text-muted)' }}>
+      <span className={checked ? 'switch-label-on' : 'switch-label'}>
         {checked ? '●' : '○'}
       </span>
     </span>
