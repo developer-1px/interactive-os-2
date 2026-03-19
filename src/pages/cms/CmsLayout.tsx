@@ -5,6 +5,7 @@ import type { ViewportSize } from './CmsTopToolbar'
 import CmsHamburgerDrawer from './CmsHamburgerDrawer'
 import CmsCanvas from './CmsCanvas'
 import CmsSidebar from './CmsSidebar'
+import CmsFloatingToolbar from './CmsFloatingToolbar'
 import { useCmsData } from './cms-state'
 import type { Locale } from './cms-types'
 
@@ -32,6 +33,7 @@ export default function CmsLayout() {
           <CmsCanvas data={data} onDataChange={setData} locale={locale} />
         </div>
       </div>
+      <CmsFloatingToolbar data={data} onDataChange={setData} hidden={false} />
       {drawerOpen && (
         <CmsHamburgerDrawer
           open={drawerOpen}
