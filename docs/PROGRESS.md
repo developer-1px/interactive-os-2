@@ -181,6 +181,7 @@
 - [x] CSS Architecture Migration — 3-Layer 구조 (tokens → ARIA state → component CSS), app.css 분해 (13개 컴포넌트 CSS 파일), UI 컴포넌트 inline style → className 전환, spacing/transition 토큰 추가
 - [x] Route Restructuring — Navigation(read-only) → Plugin(개별 능력) → Collection(조립 쇼케이스) 3층 분리, Plugin 그룹 신설, Navigation에 treegrid/listbox/grid/combobox read-only 추가, 데모 데이터 공유 모듈 추출
 - [x] Kanban Showcase — /collection/kanban, keyboard-first kanban board (cross-column move, CRUD, undo/redo, batch move), CSS multi-column layout
+- [x] Visual CMS Integration & Polish — floating toolbar wired to CRUD (delete/duplicate/reorder/add), sidebar↔canvas bidirectional focus sync, minimum-1-section guard on toolbar
 
 ## ⑨ APG Pattern Coverage
 
@@ -217,4 +218,4 @@
 
 ---
 
-*Last updated: 2026-03-20 — Visual CMS Section Sidebar: PPT-style thumbnails + CRUD + reorder + template picker, 464 tests, 54 files*
+*Last updated: 2026-03-20 — Visual CMS Integration & Polish: toolbar CRUD wired, sidebar↔canvas sync, 464 tests, 54 files*
