@@ -1,4 +1,4 @@
-import { Menu, Smartphone, Tablet, Monitor, Play } from 'lucide-react'
+import { Menu, Smartphone, Tablet, Monitor, Play, Sheet } from 'lucide-react'
 import type { ViewportSize } from './CmsViewportWrapper'
 import type { Locale } from './cms-types'
 import { LOCALES } from './cms-types'
@@ -11,9 +11,11 @@ interface CmsTopToolbarProps {
   onViewportChange: (v: ViewportSize) => void
   onPresent: () => void
   hamburgerRef: React.RefObject<HTMLButtonElement | null>
+  i18nSheetOpen: boolean
+  onI18nSheetToggle: () => void
 }
 
-export default function CmsTopToolbar({ onHamburgerClick, locale, onLocaleChange, viewport, onViewportChange, onPresent, hamburgerRef }: CmsTopToolbarProps) {
+export default function CmsTopToolbar({ onHamburgerClick, locale, onLocaleChange, viewport, onViewportChange, onPresent, hamburgerRef, i18nSheetOpen, onI18nSheetToggle }: CmsTopToolbarProps) {
   return (
     <header className="cms-top-toolbar">
       <button ref={hamburgerRef} className="cms-top-toolbar__btn" onClick={onHamburgerClick} title="Menu" type="button">
@@ -26,6 +28,14 @@ export default function CmsTopToolbar({ onHamburgerClick, locale, onLocaleChange
       >
         {LOCALES.map(l => <option key={l} value={l}>{l}</option>)}
       </select>
+      <button
+        className={`cms-top-toolbar__btn${i18nSheetOpen ? ' cms-top-toolbar__btn--active' : ''}`}
+        onClick={onI18nSheetToggle}
+        title="Translation sheet"
+        type="button"
+      >
+        <Sheet size={14} />
+      </button>
       <div className="cms-top-toolbar__spacer" />
       {([['mobile', Smartphone], ['tablet', Tablet], ['desktop', Monitor]] as const).map(([v, Icon]) => (
         <button

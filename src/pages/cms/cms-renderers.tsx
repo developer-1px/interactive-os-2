@@ -7,8 +7,13 @@ import {
   Layers, Table, Radio, Menu,
 } from 'lucide-react'
 import { localized } from './cms-types'
-import type { Locale } from './cms-types'
+import type { Locale, LocaleMap } from './cms-types'
 import type { NodeState } from '../../interactive-os/behaviors/types'
+
+function LocalizedText({ value, locale }: { value: string | LocaleMap; locale: Locale }) {
+  const { text, isFallback } = localized(value, locale)
+  return <span className={isFallback ? 'cms-text--fallback' : undefined}>{text}</span>
+}
 
 // ── Icon lookup (since JSX can't live in store data) ──
 
@@ -41,23 +46,23 @@ export const patternIcons: Record<string, React.ReactNode> = {
 export function NodeContent({ data, locale }: { data: Record<string, unknown>; locale: Locale }) {
   switch (data.type) {
     case 'text':
-      return <>{localized(data.value as string, locale).text}</>
+      return <LocalizedText value={data.value as string | LocaleMap} locale={locale} />
     case 'cta':
       return (
         <div className="cms-hero__actions">
           <button type="button" className="cms-hero__cta">
-            {localized(data.primary as string, locale).text} <ArrowRight size={14} />
+            <LocalizedText value={data.primary as string | LocaleMap} locale={locale} /> <ArrowRight size={14} />
           </button>
           <button type="button" className="cms-hero__cta-secondary">
-            {localized(data.secondary as string, locale).text} <ChevronRight size={14} />
+            <LocalizedText value={data.secondary as string | LocaleMap} locale={locale} /> <ChevronRight size={14} />
           </button>
         </div>
       )
     case 'stat':
       return (
         <>
-          <span className="cms-stat__value">{localized(data.value as string, locale).text}</span>
-          <span className="cms-stat__label">{localized(data.label as string, locale).text}</span>
+          <span className="cms-stat__value"><LocalizedText value={data.value as string | LocaleMap} locale={locale} /></span>
+          <span className="cms-stat__label"><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></span>
         </>
       )
     case 'icon':
@@ -66,15 +71,15 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       return (
         <>
           <span className="cms-step__number">{data.num as string}</span>
-          <h3 className="cms-step__title">{localized(data.title as string, locale).text}</h3>
-          <p className="cms-step__desc">{localized(data.desc as string, locale).text}</p>
+          <h3 className="cms-step__title"><LocalizedText value={data.title as string | LocaleMap} locale={locale} /></h3>
+          <p className="cms-step__desc"><LocalizedText value={data.desc as string | LocaleMap} locale={locale} /></p>
         </>
       )
     case 'pattern':
       return (
         <>
           <div className="cms-pattern__icon">{patternIcons[data.icon as string] ?? null}</div>
-          <span className="cms-pattern__name">{localized(data.name as string, locale).text}</span>
+          <span className="cms-pattern__name"><LocalizedText value={data.name as string | LocaleMap} locale={locale} /></span>
         </>
       )
     case 'brand':
@@ -86,15 +91,15 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
         </>
       )
     case 'badge':
-      return <><span className="cms-hero__badge-dot" />{localized(data.value as string, locale).text}</>
+      return <><span className="cms-hero__badge-dot" /><LocalizedText value={data.value as string | LocaleMap} locale={locale} /></>
     case 'section-label':
     case 'section-title':
     case 'section-desc':
-      return <>{localized(data.value as string, locale).text}</>
+      return <LocalizedText value={data.value as string | LocaleMap} locale={locale} />
     case 'links':
       return null
     case 'link':
-      return <a className="cms-footer__link" href={data.href as string}>{localized(data.label as string, locale).text}</a>
+      return <a className="cms-footer__link" href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>
     default:
       return null
   }
