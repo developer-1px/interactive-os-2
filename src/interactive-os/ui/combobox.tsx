@@ -3,7 +3,7 @@ import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { useAria } from '../hooks/useAria'
 import { combobox as comboboxBehavior } from '../behaviors/combobox'
-import { core } from '../plugins/core'
+import { core, selectionCommands } from '../plugins/core'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
 import { ROOT_ID } from '../core/types'
 import { getChildren } from '../core/createStore'
@@ -39,6 +39,8 @@ export function Combobox({
   const filterText = (store.entities['__combobox__']?.filterText as string) ?? ''
   const children = getChildren(store, ROOT_ID)
 
+  const mode = selectionMode ?? 'single'
+
   const selectedId = aria.selected[0]
   const selectedEntity = selectedId ? store.entities[selectedId] : undefined
   const selectedLabel = selectedEntity?.data
@@ -50,6 +52,17 @@ export function Combobox({
     if (!isOpen) {
       aria.dispatch(comboboxCommands.open())
     }
+  }
+
+  const getLabel = (id: string): string => {
+    const entity = store.entities[id]
+    return entity?.data
+      ? ((entity.data as Record<string, unknown>).label as string ?? id)
+      : id
+  }
+
+  const removeToken = (id: string) => {
+    aria.dispatch(selectionCommands.toggleSelect(id))
   }
 
   const defaultRender = (item: Record<string, unknown>, state: NodeState) => (
@@ -66,6 +79,36 @@ export function Combobox({
 
   return (
     <div>
+      {mode === 'multiple' && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
+          <div role="list" className="combo-tokens">
+            {aria.selected.map((id) => (
+              <span key={id} data-combobox-token role="listitem" className="combo-token">
+                {getLabel(id)}
+                {' '}
+                <button
+                  type="button"
+                  onClick={() => removeToken(id)}
+                  aria-label={`Remove ${getLabel(id)}`}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+          <input
+            className="combo-input"
+            role="combobox"
+            aria-expanded={isOpen}
+            aria-haspopup="listbox"
+            value={filterText}
+            placeholder={aria.selected.length === 0 ? placeholder : ''}
+            onChange={handleInput}
+            {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
+          />
+        </div>
+      )}
+      {mode !== 'multiple' && (
       <input
         className="combo-input"
         role="combobox"
@@ -77,6 +120,7 @@ export function Combobox({
         onChange={editable ? handleInput : undefined}
         {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
       />
+      )}
       {isOpen && (
         <div className="combo-dropdown" role="listbox">
           {children.map(childId => {

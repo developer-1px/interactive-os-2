@@ -44,6 +44,17 @@ export function combobox(options?: ComboboxOptions): AriaBehavior {
       Escape: () => comboboxCommands.close(),
       Home: (ctx) => ctx.focusFirst(),
       End: (ctx) => ctx.focusLast(),
+      Backspace: (ctx) => {
+        if (selectionMode !== 'multiple') return undefined // single: browser native
+        const entity = ctx.getEntity('__combobox__')
+        const filterText = (entity as Record<string, unknown> | undefined)?.filterText ?? ''
+        if (filterText !== '') return undefined // has text: browser native
+        const selected = ctx.selected
+        if (selected.length > 0) {
+          return selectionCommands.toggleSelect(selected[selected.length - 1])
+        }
+        return undefined
+      },
     },
     focusStrategy: { type: 'aria-activedescendant', orientation: 'vertical' },
     ariaAttributes: (_node, state: NodeState) => ({

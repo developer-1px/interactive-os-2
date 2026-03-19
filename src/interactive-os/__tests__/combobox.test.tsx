@@ -171,5 +171,81 @@ describe('Combobox behavior factory', () => {
       expect(getListbox(container)).toBeNull()
       expect(input.getAttribute('aria-expanded')).toBe('false')
     })
+
+    it('multi-select renders selected items as tokens', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<ControlledCombobox selectionMode="multiple" />)
+      const input = getInput(container)
+
+      input.focus()
+      await user.keyboard('{ArrowDown}') // open + focus apple
+      await user.keyboard('{Enter}')     // select apple
+      await user.keyboard('{ArrowDown}') // banana
+      await user.keyboard('{Enter}')     // select banana
+
+      const tokens = container.querySelectorAll('[data-combobox-token]')
+      expect(tokens).toHaveLength(2)
+      expect(tokens[0].textContent).toContain('Apple')
+      expect(tokens[1].textContent).toContain('Banana')
+    })
+
+    it('Backspace on empty input removes last token', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<ControlledCombobox selectionMode="multiple" />)
+      const input = getInput(container)
+
+      input.focus()
+      await user.keyboard('{ArrowDown}') // open + focus apple
+      await user.keyboard('{Enter}')     // select apple
+      await user.keyboard('{ArrowDown}') // banana
+      await user.keyboard('{Enter}')     // select banana
+      await user.keyboard('{Escape}')    // close dropdown
+
+      expect(container.querySelectorAll('[data-combobox-token]')).toHaveLength(2)
+
+      input.focus()
+      await user.keyboard('{Backspace}') // remove last token (banana)
+
+      expect(container.querySelectorAll('[data-combobox-token]')).toHaveLength(1)
+      expect(container.querySelector('[data-combobox-token]')?.textContent).toContain('Apple')
+    })
+
+    it('token × button removes that token without opening dropdown', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<ControlledCombobox selectionMode="multiple" />)
+      const input = getInput(container)
+
+      input.focus()
+      await user.keyboard('{ArrowDown}') // open + focus apple
+      await user.keyboard('{Enter}')     // select apple
+      await user.keyboard('{ArrowDown}') // banana
+      await user.keyboard('{Enter}')     // select banana
+      await user.keyboard('{Escape}')    // close dropdown
+
+      const removeButtons = container.querySelectorAll('[data-combobox-token] button')
+      expect(removeButtons).toHaveLength(2)
+
+      // Click × on first token (Apple)
+      await user.click(removeButtons[0])
+
+      const tokens = container.querySelectorAll('[data-combobox-token]')
+      expect(tokens).toHaveLength(1)
+      expect(tokens[0].textContent).toContain('Banana')
+
+      // Dropdown should remain closed
+      expect(getListbox(container)).toBeNull()
+    })
+
+    it('tokens do not appear in single-select mode', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<ControlledCombobox selectionMode="single" />)
+      const input = getInput(container)
+
+      input.focus()
+      await user.keyboard('{ArrowDown}') // open + focus apple
+      await user.keyboard('{Enter}')     // select apple
+
+      expect(container.querySelectorAll('[data-combobox-token]')).toHaveLength(0)
+    })
   })
 })
