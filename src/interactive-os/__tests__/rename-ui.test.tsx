@@ -163,6 +163,32 @@ describe('Rename UI', () => {
     })
   })
 
+  describe('IME composition', () => {
+    it('Enter during IME composition does not confirm', () => {
+      const { container } = setupWithKeyMap()
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+      act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
+
+      const editable = container.querySelector('[contenteditable]') as HTMLElement
+
+      // Start IME composition
+      act(() => { fireEvent.compositionStart(editable) })
+
+      // Enter during composition should NOT confirm
+      act(() => { fireEvent.keyDown(editable, { key: 'Enter' }) })
+      expect(container.querySelector('[contenteditable]')).not.toBeNull()
+
+      // End composition
+      act(() => { fireEvent.compositionEnd(editable) })
+
+      // Now Enter should confirm
+      editable.textContent = 'IME Value'
+      act(() => { fireEvent.keyDown(editable, { key: 'Enter' }) })
+      expect(container.querySelector('[contenteditable]')).toBeNull()
+      expect(container.querySelector('[data-testid="item-a"]')!.textContent).toContain('IME Value')
+    })
+  })
+
   describe('double-click entry', () => {
     it('double-click starts rename', () => {
       const { container } = setupWithKeyMap()
