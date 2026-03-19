@@ -282,14 +282,6 @@ function App() {
         <div className="activity-bar__logo">
           <div className="logo-mark" />
         </div>
-        <button
-          type="button"
-          className="activity-bar__theme-toggle"
-          onClick={toggleTheme}
-          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-        >
-          {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
-        </button>
         <Aria
           behavior={verticalTabs}
           data={activityBarStore}
@@ -308,6 +300,15 @@ function App() {
             )
           }} />
         </Aria>
+        <div className="activity-bar__spacer" />
+        <button
+          type="button"
+          className="activity-bar__theme-toggle"
+          onClick={toggleTheme}
+          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+        >
+          {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
+        </button>
       </nav>
       {isViewer ? (
         <PageViewer />
