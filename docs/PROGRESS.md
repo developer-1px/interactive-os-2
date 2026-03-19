@@ -133,7 +133,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (365 tests, 47 files)
+- [x] Vitest (392 tests, 49 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 42 modules)
@@ -162,7 +162,8 @@
 - [x] Components 레이어 — `<Aria>`, `<Aria.Cell>`, Hooks API 쇼케이스 (3 pages)
 - [x] Vision Architecture — mermaid 아키텍처 다이어그램 5개 렌더링
 - [x] Visual CMS Landing — interactive-os 소개 랜딩 페이지 (Hero, Features, How it works, 14 APG Patterns, Footer)
-- [x] Visual CMS Aria Integration — 4개 반복 섹션에 `<Aria>` listbox 키보드 네비게이션 적용
+- [x] Visual CMS Spatial Navigation — 단일 useAria + spatial behavior + useSpatialNav로 DOM 위치 기반 4방향 네비게이션, Enter/Escape depth, Space 선택, Shift+Arrow 범위 선택, Home/End
+- [x] Visual CMS Unified Store — 6개 섹션 + 중첩 엔티티를 단일 normalized store로 통합
 - [x] Dark/Light Theme System — `[data-theme]` CSS custom property layers, dark-first 디자인, localStorage 토글 + flash 방지
 - [x] Combobox Token Migration — 인라인 스타일 → CSS 토큰 클래스 (combo-item, combo-input, combo-dropdown)
 - [x] Demo Page Quality Lift — page-header, page-keys, demo-section, card 스타일 개선
@@ -203,4 +204,4 @@
 
 ---
 
-*Last updated: 2026-03-19 — Design system overhaul (dark/light theme, token migration, demo quality), 364 tests, 47 files*
+*Last updated: 2026-03-19 — Visual CMS keyboard nav (spatial + useSpatialNav + unified store + PRD workflow), 392 tests, 49 files*

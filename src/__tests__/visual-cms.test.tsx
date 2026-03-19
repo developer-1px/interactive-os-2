@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createStore, getChildren, getEntity, addEntity, removeEntity, moveNode } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
-import { cmsStore } from '../pages/PageVisualCms'
+import { cmsStore } from '../pages/cms-store'
 import PageVisualCms from '../pages/PageVisualCms'
 
 describe('unified CMS store', () => {
