@@ -165,6 +165,7 @@
 - [x] Visual CMS Landing — interactive-os 소개 랜딩 페이지 (Hero, Features, How it works, 14 APG Patterns, Footer)
 - [x] Visual CMS Spatial Navigation — 단일 useAria + spatial behavior + useSpatialNav로 DOM 위치 기반 4방향 네비게이션, Enter/Escape depth, Space 선택, Shift+Arrow 범위 선택, Home/End
 - [x] Visual CMS Unified Store — 6개 섹션 + 중첩 엔티티를 단일 normalized store로 통합
+- [x] Visual CMS Canvas Extract — NodeContent/renderers를 cms-renderers.tsx로, canvas 로직을 CmsCanvas.tsx로 분리 (i18n localized() 적용)
 - [x] Dark/Light Theme System — `[data-theme]` CSS custom property layers, dark-first 디자인, localStorage 토글 + flash 방지
 - [x] Combobox Token Migration — 인라인 스타일 → CSS 토큰 클래스 (combo-item, combo-input, combo-dropdown)
 - [x] Demo Page Quality Lift — page-header, page-keys, demo-section, card 스타일 개선
