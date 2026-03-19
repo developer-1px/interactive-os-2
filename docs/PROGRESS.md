@@ -171,6 +171,7 @@
 - [x] Visual CMS Unified Store — 6개 섹션 + 중첩 엔티티를 단일 normalized store로 통합
 - [x] Visual CMS Canvas Extract — NodeContent/renderers를 cms-renderers.tsx로, canvas 로직을 CmsCanvas.tsx로 분리 (i18n localized() 적용)
 - [x] Visual CMS Layout Shell — CmsLayout (top toolbar + sidebar + canvas), CmsTopToolbar (locale/viewport/present), CmsHamburgerDrawer (showcase 네비게이션), cms-state (module-scoped 영속 상태), `/` CMS 랜딩 라우트
+- [x] Visual CMS Section Sidebar — PPT-style thumbnails (scaled mini preview), ↑↓ nav, Delete/Cmd+↑↓ reorder, Cmd+D duplicate, [+] template picker drop-up, minimum-1-section guard
 - [x] Dark/Light Theme System — `[data-theme]` CSS custom property layers, dark-first 디자인, localStorage 토글 + flash 방지
 - [x] Combobox Token Migration — 인라인 스타일 → CSS 토큰 클래스 (combo-item, combo-input, combo-dropdown)
 - [x] Demo Page Quality Lift — page-header, page-keys, demo-section, card 스타일 개선
@@ -216,4 +217,4 @@
 
 ---
 
-*Last updated: 2026-03-20 — Visual CMS Layout Shell: top toolbar + hamburger drawer + CMS route, 464 tests, 54 files*
+*Last updated: 2026-03-20 — Visual CMS Section Sidebar: PPT-style thumbnails + CRUD + reorder + template picker, 464 tests, 54 files*
