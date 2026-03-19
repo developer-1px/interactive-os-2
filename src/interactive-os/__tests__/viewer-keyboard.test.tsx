@@ -62,7 +62,7 @@ function ViewerTreeExact() {
 
   return (
     <Aria behavior={treegrid} data={store} plugins={[core()]} onChange={handleChange} aria-label="File tree">
-      <Aria.Node render={(node, state) => {
+      <Aria.Item render={(node, state) => {
         const data = node.data as { name: string; type: string }
         return (
           <div role="gridcell">

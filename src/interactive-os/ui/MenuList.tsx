@@ -30,7 +30,7 @@ export function MenuList({
 }: MenuListProps) {
   return (
     <Aria behavior={menu} data={data} plugins={plugins} onChange={onChange}>
-      <Aria.Node render={renderItem} />
+      <Aria.Item render={renderItem} />
     </Aria>
   )
 }

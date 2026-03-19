@@ -38,7 +38,7 @@ export function SwitchGroup({
 }: SwitchGroupProps) {
   return (
     <Aria behavior={switchBehavior} data={data} plugins={plugins} onChange={onChange}>
-      <Aria.Node render={renderItem} />
+      <Aria.Item render={renderItem} />
     </Aria>
   )
 }

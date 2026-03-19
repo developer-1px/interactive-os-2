@@ -28,7 +28,7 @@ export function DisclosureGroup({
 }: DisclosureGroupProps) {
   return (
     <Aria behavior={disclosure} data={data} plugins={plugins} onChange={onChange}>
-      <Aria.Node render={renderItem} />
+      <Aria.Item render={renderItem} />
     </Aria>
   )
 }

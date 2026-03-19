@@ -31,7 +31,7 @@ function fixtureData(): NormalizedData {
 function renderToolbar(data: NormalizedData) {
   return render(
     <Aria behavior={toolbar} data={data} plugins={[core()]}>
-      <Aria.Node
+      <Aria.Item
         render={(node, state: NodeState) => (
           <span data-testid={`btn-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
             {(node.data as Record<string, unknown>)?.name as string}

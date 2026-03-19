@@ -54,7 +54,7 @@ export function ListBox({
       onChange={onChange}
       keyMap={enableEditing ? editingKeyMap : undefined}
     >
-      <Aria.Node render={renderItem} />
+      <Aria.Item render={renderItem} />
     </Aria>
   )
 }

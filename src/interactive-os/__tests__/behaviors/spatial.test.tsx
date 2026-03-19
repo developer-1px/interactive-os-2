@@ -36,7 +36,7 @@ describe('spatial behavior — Space, Home, End', () => {
     const user = userEvent.setup()
     const result = render(
       <Aria behavior={spatial} data={spatialFixture()} plugins={[core()]}>
-        <Aria.Node render={(node, state) => (
+        <Aria.Item render={(node, state) => (
           <span data-focused={state.focused} data-selected={state.selected}>
             {(node as { data: { label: string } }).data.label}
           </span>

@@ -1,5 +1,5 @@
 ---
-last_commit: bfc7d9902ec56f04ffd48bd0f9e5f1474f87c546
+last_commit: b411298ab236431ff2df3053ff4a4fcec1025bf3
 last_updated: 2026-03-19
 ---
 
@@ -75,6 +75,7 @@ last_updated: 2026-03-19
 | crud | 1 | crudCommands |
 | dnd | 1 | dndCommands |
 | aria | 4 | Aria, AriaInternalContext, AriaBehavior, useAria |
+| item | 3 | AriaItem (component), AriaItemProps, AriaItemContext |
 | recovery | 1 | focusRecovery |
 | spatial | 3 | spatial (behavior), spatial (plugin), spatialCommands, SPATIAL_PARENT_ID, getSpatialParentId, useSpatialNav, findNearest |
 | tree | 2 | tree (behavior), TreeView (UI) |
@@ -106,3 +107,4 @@ last_updated: 2026-03-19
 | remove | delete (command type only) | removeEntity (store API), `crud:delete` (command type string) — different layers |
 | update | set (focus/grid state) | updateEntity (data mutation), setFocus/setGridCol (state assignment) — semantically distinct |
 | children | items (routeConfig only) | getChildren (store API), items (App.tsx route config) — different domains |
+| node | item (component layer) | node = store/data layer (NodeState, moveNode), item = component API (Aria.Item) — proper layer separation |

@@ -33,7 +33,7 @@ const plugins = [core()]
 function renderGrid(data: NormalizedData) {
   return render(
     <Aria behavior={behavior} data={data} plugins={plugins} aria-label="Employees">
-      <Aria.Node
+      <Aria.Item
         render={(node: Record<string, unknown>, state: NodeState) => {
           const cells = (node.data as Record<string, unknown>)?.cells as string[]
           return (

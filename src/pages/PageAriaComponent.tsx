@@ -44,7 +44,7 @@ export default function PageAriaComponent() {
           onChange={setData}
           aria-label="Fruit picker"
         >
-          <Aria.Node render={(node, state: NodeState) => {
+          <Aria.Item render={(node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = [
               'list-item',
@@ -68,7 +68,7 @@ export default function PageAriaComponent() {
   onChange={setData}      // State callback
   aria-label="My list"
 >
-  <Aria.Node render={(node, state) => (
+  <Aria.Item render={(node, state) => (
     <div>{node.data.label}</div>
   )} />
 </Aria>`}</code></pre>
@@ -90,7 +90,7 @@ export default function PageAriaComponent() {
         <p className="page-desc">
           <code>&lt;Aria&gt;</code> creates a command engine internally, wires the behavior's keyMap
           to keyboard events, and provides node props (role, tabIndex, aria-*) through{' '}
-          <code>&lt;Aria.Node&gt;</code>. The <code>render</code> callback receives the entity and
+          <code>&lt;Aria.Item&gt;</code>. The <code>render</code> callback receives the entity and
           its computed state — you control the visual output entirely.
         </p>
       </div>

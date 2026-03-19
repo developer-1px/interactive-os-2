@@ -41,7 +41,7 @@ export function TreeView({
       plugins={plugins}
       onChange={onChange}
     >
-      <Aria.Node render={renderItem} />
+      <Aria.Item render={renderItem} />
     </Aria>
   )
 }

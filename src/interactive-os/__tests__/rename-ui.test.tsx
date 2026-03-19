@@ -26,7 +26,7 @@ function TestListBox({ initialData, keyMap }: { initialData?: NormalizedData; ke
   const [data, setData] = useState(initialData ?? initialStore)
   return (
     <Aria behavior={listbox} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
-      <Aria.Node render={(node: Record<string, unknown>, _state: NodeState) => (
+      <Aria.Item render={(node: Record<string, unknown>, _state: NodeState) => (
         <div data-testid={`item-${node.id}`}>
           <Aria.Editable field="label">
             <span>{(node.data as Record<string, unknown>)?.label as string}</span>
@@ -206,7 +206,7 @@ describe('Rename UI', () => {
         const [data, setData] = useState(initialStore)
         return (
           <Aria behavior={listbox} data={data} plugins={[core()]} onChange={setData}>
-            <Aria.Node render={(node: Record<string, unknown>) => (
+            <Aria.Item render={(node: Record<string, unknown>) => (
               <Aria.Editable field="label">
                 <span>{(node.data as Record<string, unknown>)?.label as string}</span>
               </Aria.Editable>

@@ -19,10 +19,10 @@ function fixtureData() {
 }
 
 describe('<Aria> compound component', () => {
-  it('renders nodes with Aria.Node render slot', () => {
+  it('renders nodes with Aria.Item render slot', () => {
     render(
       <Aria behavior={treegrid} data={fixtureData()} plugins={[]}>
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
     expect(screen.getByText('src')).toBeDefined()
@@ -31,7 +31,7 @@ describe('<Aria> compound component', () => {
   it('applies ARIA role to the container', () => {
     const { container } = render(
       <Aria behavior={treegrid} data={fixtureData()} plugins={[]}>
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
     const el = container.querySelector('[role="treegrid"]')
@@ -41,7 +41,7 @@ describe('<Aria> compound component', () => {
   it('applies aria attributes to nodes', () => {
     const { container } = render(
       <Aria behavior={treegrid} data={fixtureData()} plugins={[]}>
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
     const rows = container.querySelectorAll('[role="row"]')
@@ -53,7 +53,7 @@ describe('<Aria> compound component', () => {
   it('first node has tabIndex 0, others have -1', () => {
     const { container } = render(
       <Aria behavior={treegrid} data={fixtureData()} plugins={[]}>
-        <Aria.Node render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
+        <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
     const rows = container.querySelectorAll('[role="row"]')
