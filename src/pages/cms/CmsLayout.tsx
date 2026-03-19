@@ -8,6 +8,7 @@ import CmsCanvas from './CmsCanvas'
 import CmsSidebar from './CmsSidebar'
 import CmsFloatingToolbar from './CmsFloatingToolbar'
 import CmsI18nSheet from './CmsI18nSheet'
+import CmsPresentMode from './CmsPresentMode'
 import { useCmsData } from './cms-state'
 import type { Locale } from './cms-types'
 
@@ -17,6 +18,7 @@ export default function CmsLayout() {
   const [viewport, setViewport] = useState<ViewportSize>('desktop')
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [i18nSheetOpen, setI18nSheetOpen] = useState(false)
+  const [presenting, setPresenting] = useState(false)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
 
   return (
@@ -27,7 +29,7 @@ export default function CmsLayout() {
         onLocaleChange={setLocale}
         viewport={viewport}
         onViewportChange={setViewport}
-        onPresent={() => {/* Task 9 */}}
+        onPresent={() => setPresenting(true)}
         hamburgerRef={hamburgerRef}
         i18nSheetOpen={i18nSheetOpen}
         onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
@@ -41,7 +43,7 @@ export default function CmsLayout() {
           <CmsI18nSheet data={data} onDataChange={setData} open={i18nSheetOpen} />
         </div>
       </div>
-      <CmsFloatingToolbar data={data} onDataChange={setData} hidden={false} />
+      <CmsFloatingToolbar data={data} onDataChange={setData} hidden={presenting} />
       {drawerOpen && (
         <CmsHamburgerDrawer
           open={drawerOpen}
@@ -50,6 +52,13 @@ export default function CmsLayout() {
             hamburgerRef.current?.focus()
           }}
           hamburgerRef={hamburgerRef}
+        />
+      )}
+      {presenting && (
+        <CmsPresentMode
+          data={data}
+          locale={locale}
+          onExit={() => setPresenting(false)}
         />
       )}
     </div>
