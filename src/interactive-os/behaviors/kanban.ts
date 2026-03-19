@@ -38,8 +38,8 @@ function focusInColumn(ctx: BehaviorContext, columnId: string, targetIndex: numb
 }
 
 export const kanban: AriaBehavior = {
-  role: 'grid',
-  childRole: 'row',
+  role: 'group',
+  childRole: 'group',
   focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
 
   keyMap: {
