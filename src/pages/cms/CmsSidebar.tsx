@@ -13,6 +13,7 @@ interface CmsSidebarProps {
   data: NormalizedData
   onDataChange: (d: NormalizedData) => void
   locale: Locale
+  activeSectionId: string | null
 }
 
 // ── Store manipulation helpers ──
@@ -149,10 +150,16 @@ function ThumbNode({ data, nodeId, locale }: {
 
 // ── CmsSidebar ──
 
-export default function CmsSidebar({ data, onDataChange, locale }: CmsSidebarProps) {
+export default function CmsSidebar({ data, onDataChange, locale, activeSectionId }: CmsSidebarProps) {
   const sectionIds = getChildren(data, ROOT_ID)
   const [rawFocusIdx, setFocusIdx] = useState(0)
-  const focusIdx = Math.min(rawFocusIdx, Math.max(0, sectionIds.length - 1))
+
+  // Derive focus index: canvas active section overrides manual selection
+  const activeSectionIdx = activeSectionId ? sectionIds.indexOf(activeSectionId) : -1
+  const focusIdx = activeSectionIdx >= 0
+    ? activeSectionIdx
+    : Math.min(rawFocusIdx, Math.max(0, sectionIds.length - 1))
+
   const [pickerOpen, setPickerOpen] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
@@ -171,7 +178,7 @@ export default function CmsSidebar({ data, onDataChange, locale }: CmsSidebarPro
     sectionEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [data])
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     const isMod = e.metaKey || e.ctrlKey
 
     switch (e.key) {
@@ -238,9 +245,9 @@ export default function CmsSidebar({ data, onDataChange, locale }: CmsSidebarPro
         setFocusIdx(sectionIds.length - 1)
         break
     }
-  }, [data, focusIdx, sectionIds, onDataChange, scrollCanvasToSection])
+  }
 
-  const handleAddSection = useCallback((variant: SectionVariant) => {
+  const handleAddSection = (variant: SectionVariant) => {
     setPickerOpen(false)
     const { store: newStore, newSectionId } = addSectionToStore(data, variant, focusIdx)
     onDataChange(newStore)
@@ -250,7 +257,7 @@ export default function CmsSidebar({ data, onDataChange, locale }: CmsSidebarPro
       scrollCanvasToSection(newSectionId)
       listRef.current?.focus()
     })
-  }, [data, focusIdx, onDataChange, scrollCanvasToSection])
+  }
 
   return (
     <aside className="cms-sidebar" aria-label="Sections">
