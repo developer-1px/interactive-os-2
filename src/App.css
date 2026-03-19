@@ -189,6 +189,10 @@ body {
   box-shadow: 0 0 8px rgba(91, 91, 214, 0.4);
 }
 
+.activity-bar__spacer {
+  flex: 1;
+}
+
 .activity-bar__theme-toggle {
   display: flex;
   align-items: center;
@@ -201,7 +205,7 @@ body {
   color: var(--text-muted);
   cursor: pointer;
   transition: color 0.12s, background 0.12s;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .activity-bar__theme-toggle:hover {
