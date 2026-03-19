@@ -12,24 +12,26 @@ describe('unified CMS store', () => {
     expect(children).toEqual(['hero', 'stats', 'features', 'workflow', 'patterns', 'footer'])
   })
 
-  it('hero has title, subtitle, cta', () => {
-    expect(getChildren(cmsStore, 'hero')).toEqual(['hero-title', 'hero-subtitle', 'hero-cta'])
+  it('hero has badge, title, subtitle, cta', () => {
+    expect(getChildren(cmsStore, 'hero')).toEqual(['hero-badge', 'hero-title', 'hero-subtitle', 'hero-cta'])
   })
 
   it('stats has 4 items', () => {
     expect(getChildren(cmsStore, 'stats')).toHaveLength(4)
   })
 
-  it('features has 4 cards each with 3 children', () => {
-    const cards = getChildren(cmsStore, 'features')
+  it('features has label+title+desc + 4 cards each with 3 children', () => {
+    const allChildren = getChildren(cmsStore, 'features')
+    expect(allChildren).toHaveLength(7) // 3 headers + 4 cards
+    const cards = allChildren.filter(id => id.startsWith('card-'))
     expect(cards).toHaveLength(4)
     for (const cardId of cards) {
       expect(getChildren(cmsStore, cardId)).toHaveLength(3)
     }
   })
 
-  it('patterns has 14 items', () => {
-    expect(getChildren(cmsStore, 'patterns')).toHaveLength(14)
+  it('patterns has label+title+desc + 14 pattern items', () => {
+    expect(getChildren(cmsStore, 'patterns')).toHaveLength(17)
   })
 
   it('footer has brand and links', () => {
@@ -172,7 +174,7 @@ describe('Visual CMS spatial navigation', () => {
     const hero = (container as HTMLElement).querySelector('[data-node-id="hero"]') as HTMLElement
     hero.focus()
     await user.keyboard('{Enter}')
-    expect(getFocused(container as HTMLElement)).toBe('hero-title')
+    expect(getFocused(container as HTMLElement)).toBe('hero-badge')
 
     // Escape returns to hero
     const focused = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
@@ -231,7 +233,7 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
     const features = (container as HTMLElement).querySelector('[data-node-id="features"]') as HTMLElement
     features.focus()
     await user.keyboard('{Enter}')
-    expect(getFocused(container as HTMLElement)).toBe('card-store')
+    expect(getFocused(container as HTMLElement)).toBe('features-label')
   })
 
   // T5: Escape returns to parent depth
@@ -242,7 +244,7 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
     const features = (container as HTMLElement).querySelector('[data-node-id="features"]') as HTMLElement
     features.focus()
     await user.keyboard('{Enter}')
-    expect(getFocused(container as HTMLElement)).toBe('card-store')
+    expect(getFocused(container as HTMLElement)).toBe('features-label')
     // Escape → features focused
     const focused = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
     focused.focus()
@@ -346,17 +348,20 @@ describe('PRD — landing page examples (jsdom-compatible)', () => {
   it('E7: Enter card to navigate fields', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    // Enter features section → card-store focused
+    // Enter features section
     const features = (container as HTMLElement).querySelector('[data-node-id="features"]') as HTMLElement
     features.focus()
     await user.keyboard('{Enter}')
-    expect(getFocused(container as HTMLElement)).toBe('card-store')
-    // Enter card-store → first child (card-store-icon) focused
-    const cardStore = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    expect(getFocused(container as HTMLElement)).toBe('features-label')
+
+    // Navigate to card-store by clicking (jsdom can't do arrow keys)
+    const cardStore = (container as HTMLElement).querySelector('[data-node-id="card-store"]') as HTMLElement
+    cardStore.click()
     cardStore.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('card-store-icon')
-    // Escape → back to card-store
+
+    // Escape → back to card-store level
     const cardField = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
     cardField.focus()
     await user.keyboard('{Escape}')
@@ -371,10 +376,11 @@ describe('PRD — landing page examples (jsdom-compatible)', () => {
     const features = (container as HTMLElement).querySelector('[data-node-id="features"]') as HTMLElement
     features.focus()
     await user.keyboard('{Enter}')
-    expect(getFocused(container as HTMLElement)).toBe('card-store')
+    expect(getFocused(container as HTMLElement)).toBe('features-label')
 
-    // Level 2: features → card-store (Enter)
-    const cardStore = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    // Navigate to card-store by clicking, then Enter for depth 2
+    const cardStore = (container as HTMLElement).querySelector('[data-node-id="card-store"]') as HTMLElement
+    cardStore.click()
     cardStore.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('card-store-icon')

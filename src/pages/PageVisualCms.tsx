@@ -99,8 +99,14 @@ function NodeContent({ data }: { data: Record<string, string> }) {
           <span className="cms-footer__copy">{data.license} License</span>
         </>
       )
+    case 'badge':
+      return <><span className="cms-hero__badge-dot" />{data.value}</>
+    case 'section-label':
+    case 'section-title':
+    case 'section-desc':
+      return <>{data.value}</>
     case 'links':
-      return null // children render the links
+      return null
     case 'link':
       return <a className="cms-footer__link" href={data.href}>{data.label}</a>
     default:
@@ -108,53 +114,6 @@ function NodeContent({ data }: { data: Record<string, string> }) {
   }
 }
 
-// ── Section wrapper renderers ──
-
-function SectionHeader({ variant }: { variant: string }) {
-  switch (variant) {
-    case 'hero':
-      return (
-        <div className="cms-hero__badge">
-          <span className="cms-hero__badge-dot" />
-          Open Source
-        </div>
-      )
-    case 'features':
-      return (
-        <>
-          <p className="cms-section-label">Core</p>
-          <h2 className="cms-section-title">Everything you need</h2>
-          <p className="cms-section-desc">
-            A complete headless engine for building accessible, keyboard-driven interfaces
-            on any component library.
-          </p>
-        </>
-      )
-    case 'workflow':
-      return (
-        <>
-          <p className="cms-section-label">Workflow</p>
-          <h2 className="cms-section-title">How it works</h2>
-          <p className="cms-section-desc">
-            Four layers, each independently testable. Compose them for any UI pattern.
-          </p>
-        </>
-      )
-    case 'patterns':
-      return (
-        <>
-          <p className="cms-section-label">Coverage</p>
-          <h2 className="cms-section-title">14 APG patterns</h2>
-          <p className="cms-section-desc">
-            Every composite widget from the W3C ARIA Authoring Practices Guide,
-            fully implemented with keyboard interaction tables.
-          </p>
-        </>
-      )
-    default:
-      return null
-  }
-}
 
 // ── CSS class mapping ──
 
@@ -190,6 +149,10 @@ function getNodeClassName(data: Record<string, string>, state: NodeState): strin
       if (data.value?.startsWith('Build fully')) return 'cms-hero__subtitle'
       return ''
     }
+    case 'section-label': return 'cms-section-label'
+    case 'section-title': return 'cms-section-title'
+    case 'section-desc': return 'cms-section-desc'
+    case 'badge': return 'cms-hero__badge'
     case 'cta': return ''
     case 'icon': return 'cms-feature-card__icon'
     case 'brand': return 'cms-footer__brand'
@@ -222,6 +185,9 @@ function getNodeTag(data: Record<string, string>): keyof JSX.IntrinsicElements {
     if (data.value === 'Headless ARIA Engine') return 'h1'
     if (data.value?.startsWith('Build fully')) return 'p'
   }
+  if (data.type === 'section-label') return 'p'
+  if (data.type === 'section-title') return 'h2'
+  if (data.type === 'section-desc') return 'p'
   if (data.type === 'links') return 'nav'
   return 'div'
 }
@@ -308,14 +274,33 @@ export default function PageVisualCms() {
           onClick={(e: React.MouseEvent) => handleNodeClick(nodeId, e)}
           className={className}
         >
-          <SectionHeader variant={d.variant} />
-          {childrenContainerClass ? (
-            <div className={childrenContainerClass}>
-              {children.map(childId => renderNode(childId))}
-            </div>
-          ) : (
-            children.map(childId => renderNode(childId))
-          )}
+          {(() => {
+            // Separate header nodes (label/title/desc) from content nodes
+            const headerTypes = new Set(['section-label', 'section-title', 'section-desc', 'badge', 'text', 'cta'])
+            const store = aria.getStore()
+            const headerIds: string[] = []
+            const contentIds: string[] = []
+            for (const childId of children) {
+              const childData = (store.entities[childId]?.data ?? {}) as Record<string, string>
+              if (headerTypes.has(childData.type)) {
+                headerIds.push(childId)
+              } else {
+                contentIds.push(childId)
+              }
+            }
+            return (
+              <>
+                {headerIds.map(childId => renderNode(childId))}
+                {childrenContainerClass && contentIds.length > 0 ? (
+                  <div className={childrenContainerClass}>
+                    {contentIds.map(childId => renderNode(childId))}
+                  </div>
+                ) : (
+                  contentIds.map(childId => renderNode(childId))
+                )}
+              </>
+            )
+          })()}
         </Tag>
       )
     }
