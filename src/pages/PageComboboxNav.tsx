@@ -4,22 +4,19 @@ import { apgCombobox } from './apg-data'
 import { Combobox } from '../interactive-os/ui/Combobox'
 import { core } from '../interactive-os/plugins/core'
 import { combobox as comboboxPlugin } from '../interactive-os/plugins/combobox'
-import { createFruitStore, createGroupedStore, comboboxRenderItem } from './shared-combobox-data'
+import { createFruitStore, comboboxRenderItem } from './shared-combobox-data'
 
 const plugins = [core(), comboboxPlugin()]
 
-export default function PageCombobox() {
+export default function PageComboboxNav() {
   const [data, setData] = useState(createFruitStore)
   const [editableData, setEditableData] = useState(createFruitStore)
-  const [multiData, setMultiData] = useState(createFruitStore)
-  const [groupedData, setGroupedData] = useState(createGroupedStore)
-  const [creatableData, setCreatableData] = useState(createFruitStore)
 
   return (
     <div>
       <div className="page-header">
         <h2 className="page-title">Combobox</h2>
-        <p className="page-desc">Text input with dropdown list — uses aria-activedescendant</p>
+        <p className="page-desc">Read-only combobox — select from dropdown, autocomplete filter</p>
       </div>
 
       <section className="demo-section">
@@ -42,46 +39,6 @@ export default function PageCombobox() {
           onChange={setEditableData}
           placeholder="Type a fruit name..."
           editable
-          renderItem={comboboxRenderItem}
-        />
-      </section>
-
-      <section className="demo-section">
-        <h3>Multi-Select (editable, multiple)</h3>
-        <p className="page-desc" style={{ marginBottom: 8 }}>Select multiple items — uses <code>selectionMode="multiple"</code></p>
-        <Combobox
-          data={multiData}
-          plugins={plugins}
-          onChange={setMultiData}
-          placeholder="Pick fruits..."
-          editable
-          selectionMode="multiple"
-          renderItem={comboboxRenderItem}
-        />
-      </section>
-
-      <section className="demo-section">
-        <h3>Grouped</h3>
-        <p className="page-desc" style={{ marginBottom: 8 }}>Options organized by group — uses nested store with <code>type: 'group'</code></p>
-        <Combobox
-          data={groupedData}
-          plugins={plugins}
-          onChange={setGroupedData}
-          placeholder="Pick a food..."
-          renderItem={comboboxRenderItem}
-        />
-      </section>
-
-      <section className="demo-section">
-        <h3>Creatable</h3>
-        <p className="page-desc" style={{ marginBottom: 8 }}>Type a new value to create it — uses <code>creatable</code> prop</p>
-        <Combobox
-          data={creatableData}
-          plugins={plugins}
-          onChange={setCreatableData}
-          placeholder="Pick or create a fruit..."
-          editable
-          creatable
           renderItem={comboboxRenderItem}
         />
       </section>

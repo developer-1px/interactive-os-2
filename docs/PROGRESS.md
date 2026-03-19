@@ -146,7 +146,7 @@
 
 ## ⑧ App Shell
 
-- [x] ActivityBar — 7 레이어 그룹 (Store, Engine, Navigation, Collection, Components, Vision + Viewer)
+- [x] ActivityBar — 8 레이어 그룹 (Store, Engine, Navigation, Plugin, Collection, Components, Vision + Viewer)
 - [x] 레이어별 nested routes (`/{layer}/{page}`)
 - [x] Default landing: `/viewer` (독립 레이아웃, App Shell 밖)
 - [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
@@ -158,7 +158,7 @@
 - [x] Store Operations — 순수 함수 API 데모 (addEntity, removeEntity, moveNode 등)
 - [x] Engine Pipeline — Command dispatch 9단계 흐름 시각화
 - [x] Engine History — Undo/Redo 스택 실시간 로그
-- [x] Plugin 데모 — CRUD, Clipboard, History, DnD, Rename 인터랙티브 페이지
+- [x] Plugin 레이어 — CRUD, Clipboard, History, DnD, Rename 인터랙티브 페이지 (독립 라우트 그룹)
 - [x] Components 레이어 — `<Aria>`, `<Aria.Cell>`, Hooks API 쇼케이스 (3 pages)
 - [x] Vision Architecture — mermaid 아키텍처 다이어그램 5개 렌더링
 - [x] Visual CMS Landing — interactive-os 소개 랜딩 페이지 (Hero, Features, How it works, 14 APG Patterns, Footer)
@@ -170,6 +170,8 @@
 - [x] Viewer Theme Compat — Shiki 테마 자동 전환 (shared MutationObserver hook)
 - [x] Viewer Redesign — refined-documentation 스타일 (15px body, 1.75 line-height, 720px prose column, 48px padding)
 - [x] Design System — ARIA attr 기반 CSS 디자인 시스템 (`data-focused` 코어 추가, App.css → tokens/components/app 3파일 분리, 11개 UI 컴포넌트 inline style 제거, `prefers-reduced-motion`)
+- [x] CSS Architecture Migration — 3-Layer 구조 (tokens → ARIA state → component CSS), app.css 분해 (13개 컴포넌트 CSS 파일), UI 컴포넌트 inline style → className 전환, spacing/transition 토큰 추가
+- [x] Route Restructuring — Navigation(read-only) → Plugin(개별 능력) → Collection(조립 쇼케이스) 3층 분리, Plugin 그룹 신설, Navigation에 treegrid/listbox/grid/combobox read-only 추가, 데모 데이터 공유 모듈 추출
 
 ## ⑨ APG Pattern Coverage
 
@@ -206,4 +208,4 @@
 
 ---
 
-*Last updated: 2026-03-19 — Combobox 완성: multi-select, tag tokens, grouped, creatable, 410 tests, 50 files*
+*Last updated: 2026-03-19 — Route restructuring: Navigation→Plugin→Collection 3층 분리, 410 tests, 50 files*
