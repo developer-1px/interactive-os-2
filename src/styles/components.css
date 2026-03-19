@@ -24,6 +24,12 @@
   transition: background 0.08s;
 }
 
+/* Tree/treegrid: dense padding */
+[data-aria-container] [role="treeitem"],
+[data-aria-container] [role="row"] {
+  padding: 2px 10px;
+}
+
 /* Accordion heading — slightly different base */
 [data-aria-container] [role="heading"] {
   padding: 6px 10px;
