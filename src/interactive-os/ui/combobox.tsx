@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
+import './combobox.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { useAria } from '../hooks/useAria'
 import { combobox as comboboxBehavior } from '../behaviors/combobox'
-import { core, selectionCommands } from '../plugins/core'
+import { core, selectionCommands, focusCommands } from '../plugins/core'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
-import { ROOT_ID } from '../core/types'
+import { ROOT_ID, createBatchCommand } from '../core/types'
 import { getChildren } from '../core/createStore'
+
+const CREATE_SENTINEL = '__create_option__'
 
 interface ComboboxProps {
   data: NormalizedData
@@ -16,6 +19,7 @@ interface ComboboxProps {
   placeholder?: string
   editable?: boolean
   selectionMode?: 'single' | 'multiple'
+  creatable?: boolean
 }
 
 function flattenGroups(store: NormalizedData): NormalizedData {
@@ -69,7 +73,9 @@ export function Combobox({
   placeholder = 'Select...',
   editable = false,
   selectionMode,
+  creatable = false,
 }: ComboboxProps) {
+  const [createOptionFocused, setCreateOptionFocused] = useState(false)
   const originalStore = data
   const rootChildren = getChildren(originalStore, ROOT_ID)
 
@@ -106,8 +112,52 @@ export function Combobox({
     ? ((selectedEntity.data as Record<string, unknown>).label as string ?? selectedEntity.id)
     : ''
 
+  // Filter children by filterText when editable (case-insensitive substring match)
+  const visibleChildren = (editable || creatable) && filterText
+    ? children.filter(id => {
+        const entity = store.entities[id]
+        if (!entity) return false
+        const label = (entity.data as Record<string, unknown>)?.label as string ?? ''
+        return label.toLowerCase().includes(filterText.toLowerCase())
+      })
+    : children
+
+  // Determine if the create option should be shown:
+  // creatable=true, dropdown open, filter text non-empty, and no items match the filter
+  const showCreateOption = creatable && isOpen && filterText.length > 0 && visibleChildren.length === 0
+
+  // When the create option visibility changes, clear its focused state
+  if (!showCreateOption && createOptionFocused) {
+    setCreateOptionFocused(false)
+  }
+
+  const handleCreate = (label: string) => {
+    const createCmd = comboboxCommands.create(label)
+    // Execute create command to get the new ID deterministically
+    const newStore = createCmd.execute(store)
+    const newChildren = getChildren(newStore, ROOT_ID)
+    const newId = newChildren[newChildren.length - 1]!
+
+    if (mode === 'multiple') {
+      aria.dispatch(createBatchCommand([
+        createCmd,
+        selectionCommands.toggleSelect(newId),
+        comboboxCommands.setFilter(''),
+      ]))
+    } else {
+      aria.dispatch(createBatchCommand([
+        createCmd,
+        selectionCommands.select(newId),
+        comboboxCommands.close(),
+        comboboxCommands.setFilter(''),
+      ]))
+    }
+    setCreateOptionFocused(false)
+  }
+
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     aria.dispatch(comboboxCommands.setFilter(e.target.value))
+    setCreateOptionFocused(false)
     if (!isOpen) {
       aria.dispatch(comboboxCommands.open())
     }
@@ -148,6 +198,51 @@ export function Combobox({
     ? (isOpen ? filterText : selectedLabel)
     : selectedLabel
 
+  // Wrap the behavior's onKeyDown to intercept create option navigation
+  const behaviorOnKeyDown = (aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>).onKeyDown
+  const wrappedOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (showCreateOption) {
+      if (createOptionFocused) {
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          handleCreate(filterText)
+          return
+        }
+        if (e.key === 'ArrowUp') {
+          e.preventDefault()
+          setCreateOptionFocused(false)
+          // Focus last visible item in list
+          const lastVisibleId = visibleChildren[visibleChildren.length - 1]
+          if (lastVisibleId) aria.dispatch(focusCommands.setFocus(lastVisibleId))
+          return
+        }
+        if (e.key === 'Escape') {
+          // Fall through to behavior's Escape handler
+        } else {
+          // For all other keys when create option is focused, let the browser handle
+          return
+        }
+      } else {
+        // Not on create option yet — check if ArrowDown from last visible item
+        if (e.key === 'ArrowDown') {
+          const lastVisibleId = visibleChildren[visibleChildren.length - 1]
+          if (aria.focused === lastVisibleId || visibleChildren.length === 0) {
+            e.preventDefault()
+            setCreateOptionFocused(true)
+            return
+          }
+        }
+      }
+    }
+    if (createOptionFocused && e.key !== 'Escape') return
+    behaviorOnKeyDown?.(e)
+  }
+
+  const containerPropsWithWrappedKeyDown = {
+    ...aria.containerProps,
+    onKeyDown: wrappedOnKeyDown,
+  }
+
   return (
     <div>
       {mode === 'multiple' && (
@@ -175,7 +270,7 @@ export function Combobox({
             value={filterText}
             placeholder={aria.selected.length === 0 ? placeholder : ''}
             onChange={handleInput}
-            {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
+            {...(containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>)}
           />
         </div>
       )}
@@ -189,7 +284,7 @@ export function Combobox({
         placeholder={placeholder}
         readOnly={!editable}
         onChange={editable ? handleInput : undefined}
-        {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
+        {...(containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>)}
       />
       )}
       {isOpen && (
@@ -210,7 +305,19 @@ export function Combobox({
               )
             })
           ) : (
-            children.map(childId => renderOption(childId))
+            visibleChildren.map(childId => renderOption(childId))
+          )}
+          {showCreateOption && (
+            <div
+              data-combobox-create
+              className={`combo-create-option${createOptionFocused ? ' combo-item--focused' : ''}`}
+              onClick={() => handleCreate(filterText)}
+              role="option"
+              aria-selected="false"
+              data-node-id={CREATE_SENTINEL}
+            >
+              Create &ldquo;{filterText}&rdquo;
+            </div>
           )}
         </div>
       )}

@@ -336,3 +336,116 @@ describe('Combobox grouping support', () => {
     expect(input.value).toBe('Banana')
   })
 })
+
+// ─── Creatable mode ───────────────────────────────────────────────────────────
+
+function ControlledCreatableCombobox({
+  selectionMode,
+  onChange,
+}: {
+  selectionMode?: 'single' | 'multiple'
+  onChange?: (data: NormalizedData) => void
+}) {
+  const [data, setData] = useState(fixtureData)
+  const handleChange = (d: NormalizedData) => {
+    setData(d)
+    onChange?.(d)
+  }
+  return (
+    <Combobox
+      data={data}
+      plugins={[core(), comboboxPlugin()]}
+      onChange={handleChange}
+      placeholder="Pick..."
+      editable
+      creatable
+      selectionMode={selectionMode}
+      renderItem={renderItem}
+    />
+  )
+}
+
+describe('combobox — creatable', () => {
+  it('shows create option when filter has no matches', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<ControlledCreatableCombobox />)
+    const input = getInput(container)
+
+    input.focus()
+    await user.keyboard('{ArrowDown}') // open
+    await user.type(input, 'Mango')
+
+    const createOption = container.querySelector('[data-combobox-create]')
+    expect(createOption).toBeTruthy()
+    expect(createOption?.textContent).toContain('Mango')
+  })
+
+  it('does not show create option when there are matching items', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<ControlledCreatableCombobox />)
+    const input = getInput(container)
+
+    input.focus()
+    await user.keyboard('{ArrowDown}') // open
+    await user.type(input, 'App')
+
+    const createOption = container.querySelector('[data-combobox-create]')
+    expect(createOption).toBeNull()
+  })
+
+  it('Enter on create option adds new entity (single mode)', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    const { container } = render(<ControlledCreatableCombobox onChange={onChange} />)
+    const input = getInput(container)
+
+    input.focus()
+    await user.keyboard('{ArrowDown}') // open
+    await user.type(input, 'Mango')
+
+    // ArrowDown past all items to focus the create option
+    await user.keyboard('{ArrowDown}') // apple
+    await user.keyboard('{ArrowDown}') // banana
+    await user.keyboard('{ArrowDown}') // cherry
+    await user.keyboard('{ArrowDown}') // create option
+
+    await user.keyboard('{Enter}')
+
+    // Dropdown closed (single mode)
+    expect(getListbox(container)).toBeNull()
+
+    // onChange was called with data containing the new entity
+    const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1]
+    const newData: NormalizedData = lastCall[0]
+    const newEntity = Object.values(newData.entities).find(
+      (e) => (e.data as Record<string, unknown>)?.label === 'Mango'
+    )
+    expect(newEntity).toBeTruthy()
+  })
+
+  it('Enter on create option adds entity and keeps dropdown open (multi mode)', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    const { container } = render(
+      <ControlledCreatableCombobox selectionMode="multiple" onChange={onChange} />
+    )
+    const input = getInput(container)
+
+    input.focus()
+    await user.keyboard('{ArrowDown}') // open
+    await user.type(input, 'Mango')
+
+    // ArrowDown to create option (no items match, so it's the first/only focusable)
+    await user.keyboard('{ArrowDown}') // create option
+
+    await user.keyboard('{Enter}')
+
+    // Dropdown stays open (multi mode)
+    expect(getListbox(container)).toBeTruthy()
+
+    // Token was added
+    const tokens = container.querySelectorAll('[data-combobox-token]')
+    expect(tokens).toHaveLength(1)
+    expect(tokens[0].textContent).toContain('Mango')
+  })
+})

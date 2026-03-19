@@ -1,4 +1,5 @@
 import type { Command, Plugin, NormalizedData } from '../core/types'
+import { ROOT_ID } from '../core/types'
 
 const COMBOBOX_ID = '__combobox__'
 
@@ -90,6 +91,41 @@ export const comboboxCommands = {
       },
     }
   },
+
+  create(label: string): Command {
+    const id = `created-${label.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`
+    let addedId: string
+    return {
+      type: 'combobox:create',
+      payload: { label },
+      execute(store) {
+        addedId = id
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [id]: { id, data: { label } },
+          },
+          relationships: {
+            ...store.relationships,
+            [ROOT_ID]: [...(store.relationships[ROOT_ID] ?? []), id],
+          },
+        }
+      },
+      undo(store) {
+        const { [addedId]: _, ...restEntities } = store.entities
+        void _
+        return {
+          ...store,
+          entities: restEntities,
+          relationships: {
+            ...store.relationships,
+            [ROOT_ID]: (store.relationships[ROOT_ID] ?? []).filter(i => i !== addedId),
+          },
+        }
+      },
+    }
+  },
 }
 
 export function combobox(): Plugin {
@@ -98,6 +134,7 @@ export function combobox(): Plugin {
       open: comboboxCommands.open,
       close: comboboxCommands.close,
       setFilter: comboboxCommands.setFilter,
+      create: comboboxCommands.create,
     },
   }
 }
