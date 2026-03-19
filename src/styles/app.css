@@ -399,8 +399,8 @@ kbd {
 }
 
 /* ═══════════════════════════════════════════
-   Legacy component className styles
-   (progressively removed as ARIA CSS migration proceeds)
+   Component layout className styles
+   (state styling handled by components.css ARIA selectors)
    ═══════════════════════════════════════════ */
 
 /* --- Tree Node --- */
@@ -412,27 +412,7 @@ kbd {
   margin: 0 4px;
   font-family: var(--mono);
   font-size: 12px;
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
   border-radius: var(--radius-sm);
-}
-
-.tree-node:hover {
-  background: var(--bg-hover);
-}
-
-.tree-node--focused {
-  background: var(--accent-dim);
-  color: var(--text-bright);
-}
-
-.tree-node--focused:hover {
-  background: var(--accent-mid);
-}
-
-.tree-node--selected {
-  background: var(--bg-select);
 }
 
 .tree-node__chevron {
@@ -449,11 +429,6 @@ kbd {
   display: inline-flex;
   opacity: 0.55;
   color: var(--text-secondary);
-}
-
-.tree-node--focused .tree-node__icon {
-  opacity: 0.9;
-  color: var(--accent);
 }
 
 .tree-node__name {
@@ -475,20 +450,7 @@ kbd {
   font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
-  cursor: default;
-  user-select: none;
   border-bottom: 2px solid transparent;
-  transition: color 0.1s, border-color 0.1s;
-}
-
-.tab:hover {
-  color: var(--text-secondary);
-}
-
-.tab--focused {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  font-weight: 600;
 }
 
 .tab-content {
@@ -509,28 +471,7 @@ kbd {
   margin: 1px 4px;
   font-size: 13px;
   font-weight: 500;
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
   border-radius: var(--radius-sm);
-}
-
-.list-item:hover {
-  background: var(--bg-hover);
-}
-
-.list-item--focused {
-  background: var(--accent-dim);
-  color: var(--text-bright);
-}
-
-.list-item--focused:hover {
-  background: var(--accent-mid);
-}
-
-.list-item--selected {
-  background: var(--bg-select);
-  font-weight: 600;
 }
 
 .list-item__label {
@@ -552,19 +493,7 @@ kbd {
   margin: 1px 4px;
   font-size: 13px;
   font-weight: 500;
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
   border-radius: var(--radius-sm);
-}
-
-.menu-item:hover {
-  background: var(--bg-hover);
-}
-
-.menu-item--focused {
-  background: var(--accent-dim);
-  color: var(--text-bright);
 }
 
 .menu-item__label {
@@ -581,9 +510,6 @@ kbd {
 .combo-item {
   padding: 5px 12px;
   font-size: 13px;
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
 }
 
 .combo-item--focused {
@@ -635,19 +561,7 @@ kbd {
   padding: 6px 10px;
   font-size: 13px;
   font-weight: 600;
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
   border-bottom: 1px solid var(--border-dim);
-}
-
-.accordion-header:hover {
-  background: var(--bg-hover);
-}
-
-.accordion-header--focused {
-  background: var(--accent-dim);
-  color: var(--text-bright);
 }
 
 .accordion-header__label {
@@ -678,19 +592,7 @@ kbd {
   margin: 1px 4px;
   font-size: 13px;
   font-weight: 500;
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
   border-radius: var(--radius-sm);
-}
-
-.disclosure-trigger:hover {
-  background: var(--bg-hover);
-}
-
-.disclosure-trigger--focused {
-  background: var(--accent-dim);
-  color: var(--text-bright);
 }
 
 .disclosure-trigger__icon {
@@ -792,11 +694,7 @@ kbd {
   transition: background 0.08s, border-color 0.08s;
 }
 
-.btn-dialog--focused {
-  background: var(--accent-dim);
-  color: var(--accent);
-  border-color: var(--accent-mid);
-}
+/* btn-dialog focus state handled by components.css ARIA selectors */
 
 /* --- Toolbar --- */
 
@@ -815,25 +713,6 @@ kbd {
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
-  cursor: default;
-  user-select: none;
-  transition: background 0.08s, color 0.08s;
-}
-
-.toolbar-btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.toolbar-btn--focused {
-  color: var(--accent);
-  background: var(--accent-dim);
-}
-
-.toolbar-btn--selected {
-  color: var(--text-bright);
-  background: var(--bg-active);
-  font-weight: 600;
 }
 
 /* --- Switch --- */
@@ -845,15 +724,6 @@ kbd {
   padding: 3px 10px;
   font-size: 12px;
   font-weight: 500;
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
-  border-left: 2px solid transparent;
-}
-
-.switch-item--focused {
-  background: var(--bg-focus);
-  border-left-color: var(--accent);
 }
 
 .switch-item__label {
@@ -899,15 +769,6 @@ kbd {
   padding: 3px 10px;
   font-size: 12px;
   font-weight: 500;
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
-  border-left: 2px solid transparent;
-}
-
-.radio-item--focused {
-  background: var(--bg-focus);
-  border-left-color: var(--accent);
 }
 
 .radio-item__dot {
@@ -948,21 +809,7 @@ kbd {
   font-size: 12px;
   font-weight: 500;
   border: 1px solid var(--border-dim);
-  cursor: default;
-  user-select: none;
-  transition: background 0.06s;
   min-height: 36px;
-}
-
-.grid-cell--focused {
-  background: var(--bg-focus);
-  border-color: var(--accent);
-  color: var(--text-bright);
-}
-
-.grid-cell--selected {
-  background: var(--bg-select);
-  border-color: var(--green);
 }
 
 /* ═══════════════════════════════════════════
