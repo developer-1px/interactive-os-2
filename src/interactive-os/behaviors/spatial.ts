@@ -29,6 +29,19 @@ export const spatial: AriaBehavior = {
       ])
     },
     F2: (ctx) => renameCommands.startRename(ctx.focused),
+    Space: (ctx) => ctx.toggleSelect(),
+    Home: (ctx) => {
+      const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
+      const depthParentId = (spatialParent?.parentId as string) ?? ROOT_ID
+      const siblings = ctx.getChildren(depthParentId)
+      if (siblings.length > 0) return focusCommands.setFocus(siblings[0])
+    },
+    End: (ctx) => {
+      const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
+      const depthParentId = (spatialParent?.parentId as string) ?? ROOT_ID
+      const siblings = ctx.getChildren(depthParentId)
+      if (siblings.length > 0) return focusCommands.setFocus(siblings[siblings.length - 1])
+    },
   },
   focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
   activateOnClick: true,
