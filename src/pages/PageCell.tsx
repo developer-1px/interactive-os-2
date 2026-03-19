@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import '../interactive-os/ui/grid.css'
 import { Aria } from '../interactive-os/components/aria'
 import { grid } from '../interactive-os/behaviors/grid'
 import { createStore } from '../interactive-os/core/createStore'

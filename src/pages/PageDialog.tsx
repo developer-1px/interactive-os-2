@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import '../interactive-os/ui/Button.css'
+import '../interactive-os/ui/Dialog.css'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgDialog } from './apg-data'
 import { Aria } from '../interactive-os/components/aria'

@@ -87,6 +87,18 @@
   --shadow-md: var(--surface-3-shadow);
   --shadow-lg: var(--surface-4-shadow);
 
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  /* Transition */
+  --transition-fast: 0.08s;
+  --transition-normal: 0.15s;
+
   /* Dialog */
   --dialog-backdrop: rgba(0, 0, 0, 0.4);
 }
