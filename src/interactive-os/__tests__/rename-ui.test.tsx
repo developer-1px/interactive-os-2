@@ -222,6 +222,59 @@ describe('Rename UI', () => {
     })
   })
 
+  describe('Enter to start rename', () => {
+    it('Enter starts rename when mapped in editingKeyMap', () => {
+      const keyMap = {
+        'F2': (ctx: import('../behaviors/types').BehaviorContext) => renameCommands.startRename(ctx.focused),
+        'Enter': (ctx: import('../behaviors/types').BehaviorContext) => renameCommands.startRename(ctx.focused),
+      }
+      const { container } = render(<TestListBox keyMap={keyMap} />)
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+
+      act(() => { fireEvent.keyDown(firstNode, { key: 'Enter' }) })
+
+      expect(container.querySelector('[contenteditable]')).not.toBeNull()
+    })
+  })
+
+  describe('focus recovery after rename', () => {
+    it('focus returns to node after Enter confirm', () => {
+      const { container } = setupWithKeyMap()
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+      // Give initial DOM focus to the node
+      act(() => { (firstNode as HTMLElement).focus() })
+
+      // Start rename
+      act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
+      const editable = container.querySelector('[contenteditable]') as HTMLElement
+      editable.textContent = 'New Value'
+
+      // Confirm
+      act(() => { fireEvent.keyDown(editable, { key: 'Enter' }) })
+
+      // Focus should return to the node, not be on document.body
+      const focusedNode = container.querySelector('[data-node-id="a"]') as HTMLElement
+      expect(focusedNode.getAttribute('data-focused')).toBe('')
+      expect(document.activeElement).toBe(focusedNode)
+    })
+
+    it('focus returns to node after Escape cancel', () => {
+      const { container } = setupWithKeyMap()
+      const firstNode = container.querySelector('[data-node-id="a"]') as HTMLElement
+      act(() => { firstNode.focus() })
+
+      act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
+      const editable = container.querySelector('[contenteditable]') as HTMLElement
+      editable.textContent = 'Changed'
+
+      act(() => { fireEvent.keyDown(editable, { key: 'Escape' }) })
+
+      const focusedNode = container.querySelector('[data-node-id="a"]') as HTMLElement
+      expect(focusedNode.getAttribute('data-focused')).toBe('')
+      expect(document.activeElement).toBe(focusedNode)
+    })
+  })
+
   describe('undo integration', () => {
     it('confirmRename undo restores original value (engine level)', () => {
       // Undo is tested at engine level since jsdom focus routing is limited.
