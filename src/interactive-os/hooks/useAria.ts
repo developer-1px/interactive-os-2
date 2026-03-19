@@ -23,6 +23,8 @@ export interface UseAriaOptions {
   plugins?: Plugin[]
   keyMap?: Record<string, (ctx: ReturnType<typeof createBehaviorContext>) => Command | void>
   onChange?: (data: NormalizedData) => void
+  /** Focus this node on mount instead of the first child */
+  initialFocus?: string
 }
 
 export interface UseAriaReturn {
@@ -36,7 +38,7 @@ export interface UseAriaReturn {
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { behavior, data, plugins = [], keyMap: keyMapOverrides, onChange } = options
+  const { behavior, data, plugins = [], keyMap: keyMapOverrides, onChange, initialFocus } = options
   const [, forceRender] = useState(0)
   const engineRef = useRef<CommandEngine | null>(null)
 
@@ -50,14 +52,35 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       forceRender((n) => n + 1)
     })
 
-    const firstVisible = getChildren(data, ROOT_ID)[0]
-    if (firstVisible) {
+    const focusTarget = (initialFocus && data.entities[initialFocus]) ? initialFocus : getChildren(data, ROOT_ID)[0]
+    if (focusTarget) {
       // eslint-disable-next-line react-hooks/refs
-      engineRef.current.dispatch(focusCommands.setFocus(firstVisible))
+      engineRef.current.dispatch(focusCommands.setFocus(focusTarget))
     }
   }
 
+  // eslint-disable-next-line react-hooks/refs
   const engine = engineRef.current
+
+  // Gap 1 fix: sync external data changes into the engine
+  // Merge external data while preserving internal meta-entities (__focus__, __selection__, etc.)
+  useEffect(() => {
+    const currentStore = engine.getStore()
+    // Check if content entities actually differ (skip meta-only diffs)
+    const contentChanged = data.relationships !== currentStore.relationships ||
+      Object.keys(data.entities).some(key => !key.startsWith('__') && data.entities[key] !== currentStore.entities[key]) ||
+      Object.keys(currentStore.entities).some(key => !key.startsWith('__') && !(key in data.entities))
+    if (!contentChanged) return
+
+    const mergedEntities = { ...data.entities }
+    for (const [key, value] of Object.entries(currentStore.entities)) {
+      if (key.startsWith('__')) {
+        mergedEntities[key] = value
+      }
+    }
+    engine.syncStore({ entities: mergedEntities, relationships: data.relationships })
+    forceRender(n => n + 1)
+  }, [data, engine])
 
   const mergedKeyMap = useMemo(
     () => ({ ...behavior.keyMap, ...keyMapOverrides }),

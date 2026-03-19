@@ -24,6 +24,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
     () => ({
       dispatch: onDispatch,
       getStore: () => store,
+      syncStore: () => { /* no-op for controlled mode */ },
     }),
     // Re-create whenever store or onDispatch changes so the engine always
     // reflects the latest props.

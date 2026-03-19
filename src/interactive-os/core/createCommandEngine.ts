@@ -3,6 +3,8 @@ import type { Command, Middleware, NormalizedData } from './types'
 export interface CommandEngine {
   dispatch(command: Command): void
   getStore(): NormalizedData
+  /** Replace internal store with external data (for controlled/sync scenarios) */
+  syncStore(newStore: NormalizedData): void
 }
 
 export function createCommandEngine(
@@ -36,5 +38,10 @@ export function createCommandEngine(
   return {
     dispatch: (command) => chain(command),
     getStore: () => store,
+    syncStore: (newStore: NormalizedData) => {
+      // Silently replace internal store — no onStoreChange callback
+      // This is for external data sync, not internal mutations
+      store = newStore
+    },
   }
 }
