@@ -12,9 +12,21 @@ export const cmsStore = createStore({
     footer:   { id: 'footer',   data: { type: 'section', variant: 'footer' } },
 
     // Hero children
+    'hero-badge':    { id: 'hero-badge',    data: { type: 'badge', value: 'Open Source' } },
     'hero-title':    { id: 'hero-title',    data: { type: 'text', value: 'Headless ARIA Engine' } },
     'hero-subtitle': { id: 'hero-subtitle', data: { type: 'text', value: 'Build fully accessible UI with a normalized store, command engine, and 14 APG-compliant behavior presets — keyboard-first by design.' } },
     'hero-cta':      { id: 'hero-cta',      data: { type: 'cta', primary: 'Get Started', secondary: 'View on GitHub' } },
+
+    // Section headers (label + title + desc for features/workflow/patterns)
+    'features-label': { id: 'features-label', data: { type: 'section-label', value: 'Core' } },
+    'features-title': { id: 'features-title', data: { type: 'section-title', value: 'Everything you need' } },
+    'features-desc':  { id: 'features-desc',  data: { type: 'section-desc', value: 'A complete headless engine for building accessible, keyboard-driven interfaces on any component library.' } },
+    'workflow-label': { id: 'workflow-label', data: { type: 'section-label', value: 'Workflow' } },
+    'workflow-title': { id: 'workflow-title', data: { type: 'section-title', value: 'How it works' } },
+    'workflow-desc':  { id: 'workflow-desc',  data: { type: 'section-desc', value: 'Four layers, each independently testable. Compose them for any UI pattern.' } },
+    'patterns-label': { id: 'patterns-label', data: { type: 'section-label', value: 'Coverage' } },
+    'patterns-title': { id: 'patterns-title', data: { type: 'section-title', value: '14 APG patterns' } },
+    'patterns-desc':  { id: 'patterns-desc',  data: { type: 'section-desc', value: 'Every composite widget from the W3C ARIA Authoring Practices Guide, fully implemented with keyboard interaction tables.' } },
 
     // Stats children
     'stat-patterns': { id: 'stat-patterns', data: { type: 'stat', value: '14',   label: 'APG Patterns' } },
@@ -81,15 +93,15 @@ export const cmsStore = createStore({
   },
   relationships: {
     [ROOT_ID]: ['hero', 'stats', 'features', 'workflow', 'patterns', 'footer'],
-    hero:     ['hero-title', 'hero-subtitle', 'hero-cta'],
+    hero:     ['hero-badge', 'hero-title', 'hero-subtitle', 'hero-cta'],
     stats:    ['stat-patterns', 'stat-tests', 'stat-modules', 'stat-deps'],
-    features: ['card-store', 'card-engine', 'card-aria', 'card-keyboard'],
+    features: ['features-label', 'features-title', 'features-desc', 'card-store', 'card-engine', 'card-aria', 'card-keyboard'],
     'card-store':    ['card-store-icon',    'card-store-title',    'card-store-desc'],
     'card-engine':   ['card-engine-icon',   'card-engine-title',   'card-engine-desc'],
     'card-aria':     ['card-aria-icon',     'card-aria-title',     'card-aria-desc'],
     'card-keyboard': ['card-keyboard-icon', 'card-keyboard-title', 'card-keyboard-desc'],
-    workflow: ['step-1', 'step-2', 'step-3', 'step-4'],
-    patterns: [
+    workflow: ['workflow-label', 'workflow-title', 'workflow-desc', 'step-1', 'step-2', 'step-3', 'step-4'],
+    patterns: ['patterns-label', 'patterns-title', 'patterns-desc',
       'pat-treegrid', 'pat-listbox', 'pat-tabs', 'pat-combobox', 'pat-grid', 'pat-menu', 'pat-dialog',
       'pat-accordion', 'pat-treeview', 'pat-toolbar', 'pat-disclosure', 'pat-switch', 'pat-radiogroup', 'pat-alertdialog',
     ],
