@@ -67,7 +67,7 @@
 ## ④ ARIA Behavior Layer
 
 ### 공통
-- [x] `behaviors/types.ts` — AriaBehavior, BehaviorContext, NodeState, FocusStrategy
+- [x] `behaviors/types.ts` — AriaBehavior, BehaviorContext, NodeState, FocusStrategy, followFocus
 - [x] `behaviors/create-behavior-context.ts` — 엔진 → BehaviorContext 변환
 - [x] childRole 지원 (behavior별 ARIA 자식 role)
 - [x] focusNext/focusPrev wrap 옵션 (radiogroup용)
@@ -119,6 +119,7 @@
 - [x] `useControlledAria` — 외부 store 연동 훅 (controlled state variant)
 - [x] DOM 스크롤 동기화 — 포커스 이동 시 `scrollIntoView({ block: 'nearest' })` 자동 호출
 - [x] `hooks/use-spatial-nav.ts` — `useSpatialNav` hook + `findNearest` 순수 함수 (DOM 위치 기반 방향키 네비게이션)
+- [x] `onActivate` + `followFocus` — 포커스/활성화 분리, behavior 수준 followFocus + entity별 opt-out
 - [ ] `[P2]` 대용량 가상화 — 10k+ 노드 렌더링
 
 ## ⑥ UI Layer (Reference Components)
@@ -151,7 +152,7 @@
 
 ## ⑧ App Shell
 
-- [x] ActivityBar — 8 레이어 그룹 (Store, Engine, Navigation, Plugin, Collection, Components, Vision + Viewer)
+- [x] ActivityBar — 8 레이어 그룹 + theme toggle, 단일 toolbar Aria (followFocus + onActivate), Tab stop 1개
 - [x] 레이어별 nested routes (`/{layer}/{page}`)
 - [x] Default landing: `/` → CMS Layout (독립 레이아웃, App Shell 밖), `/viewer` showcase
 - [x] Placeholder 컴포넌트 (미구현 레이어 페이지용)
@@ -220,4 +221,4 @@
 
 ---
 
-*Last updated: 2026-03-20 — Viewer Dependency Graph: 런타임 import 파싱 + mermaid 의존 그래프, 455 tests, 55 files*
+*Last updated: 2026-03-20 — followFocus + onActivate: 포커스/활성화 분리, ActivityBar 통합 toolbar, 468 tests, 56 files*

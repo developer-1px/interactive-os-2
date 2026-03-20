@@ -4,7 +4,7 @@ import { ROOT_ID } from '../core/types'
 import type { AriaBehavior, NodeState } from '../behaviors/types'
 import { createCommandEngine } from '../core/createCommandEngine'
 import type { CommandEngine } from '../core/createCommandEngine'
-import { getChildren, getParent, getEntity } from '../core/createStore'
+import { getChildren, getParent, getEntity, getEntityData } from '../core/createStore'
 import { focusCommands } from '../plugins/core'
 import { RENAME_ID } from '../plugins/rename'
 import { createBehaviorContext } from '../behaviors/createBehaviorContext'
@@ -17,12 +17,35 @@ function isEditableElement(el: Element): boolean {
   return false
 }
 
+/** Dispatch a keyMap handler, intercepting activate() when onActivate is provided. */
+function dispatchKeyAction(
+  ctx: ReturnType<typeof createBehaviorContext>,
+  handler: (ctx: ReturnType<typeof createBehaviorContext>) => Command | void,
+  engine: CommandEngine,
+  onActivateFn: ((nodeId: string) => void) | undefined,
+) {
+  if (onActivateFn) {
+    let intercepted = false
+    ctx.activate = () => {
+      intercepted = true
+      onActivateFn(ctx.focused)
+      return undefined as unknown as Command
+    }
+    const command = handler(ctx)
+    if (!intercepted && command) engine.dispatch(command)
+  } else {
+    const command = handler(ctx)
+    if (command) engine.dispatch(command)
+  }
+}
+
 export interface UseAriaOptions {
   behavior: AriaBehavior
   data: NormalizedData
   plugins?: Plugin[]
   keyMap?: Record<string, (ctx: ReturnType<typeof createBehaviorContext>) => Command | void>
   onChange?: (data: NormalizedData) => void
+  onActivate?: (nodeId: string) => void
   /** Focus this node on mount instead of the first child */
   initialFocus?: string
 }
@@ -38,9 +61,14 @@ export interface UseAriaReturn {
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { behavior, data, plugins = [], keyMap: keyMapOverrides, onChange, initialFocus } = options
+  const { behavior, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus } = options
   const [, forceRender] = useState(0)
   const engineRef = useRef<CommandEngine | null>(null)
+  const onActivateRef = useRef(onActivate)
+  onActivateRef.current = onActivate
+  const behaviorRef = useRef(behavior)
+  behaviorRef.current = behavior
+  const prevFocusRef = useRef<string>('')
 
   if (engineRef.current == null) {
     const middlewares = plugins
@@ -48,6 +76,15 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       .filter((m): m is NonNullable<typeof m> => m != null)
 
     engineRef.current = createCommandEngine(data, middlewares, (newStore) => {
+      // followFocus: detect focus change and call onActivate for eligible items
+      const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
+      if (behaviorRef.current.followFocus && onActivateRef.current && newFocusedId && newFocusedId !== prevFocusRef.current) {
+        const entityData = getEntityData<{ followFocus?: boolean }>(newStore, newFocusedId)
+        if (entityData?.followFocus !== false) {
+          onActivateRef.current(newFocusedId)
+        }
+      }
+      prevFocusRef.current = newFocusedId
       onChange?.(newStore)
       forceRender((n) => n + 1)
     })
@@ -165,9 +202,13 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
       baseProps.onClick = () => {
         if (behavior.activateOnClick) {
-          const ctx = createBehaviorContext(engine, behaviorCtxOptions)
-          const command = ctx.activate()
-          if (command) engine.dispatch(command)
+          if (onActivateRef.current) {
+            onActivateRef.current(id)
+          } else {
+            const ctx = createBehaviorContext(engine, behaviorCtxOptions)
+            const command = ctx.activate()
+            if (command) engine.dispatch(command)
+          }
         }
       }
       baseProps.onFocus = (event: FocusEvent) => {
@@ -188,8 +229,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           const ctx = createBehaviorContext(engine, behaviorCtxOptions)
           const handler = mergedKeyMap[matchedKey]
           if (!handler) return
-          const command = handler(ctx)
-          if (command) engine.dispatch(command)
+          dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
           event.preventDefault()
         }
       }
@@ -212,8 +252,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         const ctx = createBehaviorContext(engine, behaviorCtxOptions)
         const handler = mergedKeyMap[matchedKey]
         if (!handler) return
-        const command = handler(ctx)
-        if (command) engine.dispatch(command)
+        dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
         event.preventDefault()
       },
     }

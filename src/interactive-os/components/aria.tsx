@@ -15,6 +15,7 @@ interface AriaProps {
   plugins: Plugin[]
   keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
   onChange?: (data: NormalizedData) => void
+  onActivate?: (nodeId: string) => void
   'aria-label'?: string
   children: ReactNode
 }
@@ -30,8 +31,8 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
 // eslint-disable-next-line react-refresh/only-export-components
-function AriaRoot({ behavior, data, plugins, keyMap, onChange, 'aria-label': ariaLabel, children }: AriaProps) {
-  const aria = useAria({ behavior, data, plugins, keyMap, onChange })
+function AriaRoot({ behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, children }: AriaProps) {
+  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate })
   const { orientation } = behavior.focusStrategy
   return (
     <AriaInternalContext.Provider value={{ ...aria, behavior }}>

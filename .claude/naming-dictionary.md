@@ -1,6 +1,6 @@
 ---
-last_commit: b411298ab236431ff2df3053ff4a4fcec1025bf3
-last_updated: 2026-03-19
+last_commit: 6de9f8dfdafac64258f5da6c34548bc7a8b63140
+last_updated: 2026-03-20
 ---
 
 ## Verbs
@@ -21,7 +21,8 @@ last_updated: 2026-03-19
 | focus | 8 | focusNext, focusPrev, focusFirst, focusLast, focusParent, focusChild, focusCommands, focusRecovery |
 | expand | 2 | expand, expandCommands |
 | collapse | 1 | collapse |
-| activate | 1 | activate |
+| activate | 3 | activate, onActivate, activateOnClick |
+| follow | 1 | followFocus |
 | dispatch | 1 | dispatch |
 | start | 1 | startRename |
 | confirm | 1 | confirmRename |

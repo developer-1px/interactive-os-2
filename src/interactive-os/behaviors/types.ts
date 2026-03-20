@@ -66,6 +66,8 @@ export interface AriaBehavior<TState extends NodeState = NodeState> {
   selectionMode?: SelectionMode
   /** When true, clicking a node calls activate(). Used by most behaviors except treegrid/dialog. */
   activateOnClick?: boolean
+  /** When true, focus change auto-triggers onActivate. Per-item opt-out via entity.data.followFocus=false. */
+  followFocus?: boolean
   /** Number of columns for grid navigation. When > 1, BehaviorContext.grid is populated. */
   colCount?: number
   ariaAttributes: (node: Entity, state: TState) => Record<string, string>
