@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { composePattern } from '../axes/compose-pattern'
-import type { Axis, PatternMetadata } from '../axes/compose-pattern'
+import { composePattern, isStructuredAxis, extractKeyMap, extractConfig } from '../axes/composePattern'
+import type { Axis, KeyMap, StructuredAxis, PatternConfig, Identity } from '../axes/composePattern'
 import type { BehaviorContext } from '../behaviors/types'
 import type { Command } from '../core/types'
 
@@ -34,7 +34,7 @@ const mockCtx: BehaviorContext = {
   getChildren: () => [],
 }
 
-const baseMetadata: PatternMetadata = {
+const baseMetadata: PatternConfig = {
   role: 'listbox',
   focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
   ariaAttributes: () => ({}),
@@ -100,7 +100,7 @@ describe('composePattern', () => {
   })
 
   it('metadata is passed through to AriaBehavior', () => {
-    const meta: PatternMetadata = {
+    const meta: PatternConfig = {
       role: 'tree',
       childRole: 'treeitem',
       focusStrategy: { type: 'aria-activedescendant', orientation: 'vertical' },
@@ -146,7 +146,7 @@ describe('composePattern', () => {
   })
 
   it('expandable and activateOnClick metadata passthrough', () => {
-    const meta: PatternMetadata = {
+    const meta: PatternConfig = {
       ...baseMetadata,
       expandable: true,
       activateOnClick: true,
@@ -178,5 +178,110 @@ describe('composePattern', () => {
 
     expect(dispatchSpy).toHaveBeenCalledWith(expect.objectContaining({ type: 'focusNext' }))
     expect(result).toMatchObject({ type: 'focusNext' })
+  })
+})
+
+describe('v2 structured axis', () => {
+  const identity: Identity = {
+    role: 'listbox',
+    ariaAttributes: () => ({}),
+  }
+
+  it('extracts keyMap from structured axis', () => {
+    const structured: StructuredAxis = {
+      keyMap: {
+        ArrowDown: (ctx) => ctx.focusNext(),
+      },
+      config: {
+        focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+      },
+    }
+
+    expect(isStructuredAxis(structured)).toBe(true)
+    expect(extractKeyMap(structured)).toBe(structured.keyMap)
+    expect(extractConfig(structured)).toEqual(structured.config)
+
+    const behavior = composePattern(identity, structured)
+    expect(behavior.keyMap['ArrowDown'](mockCtx)).toMatchObject({ type: 'focusNext' })
+    expect(behavior.focusStrategy).toEqual({ type: 'roving-tabindex', orientation: 'vertical' })
+  })
+
+  it('merges config from multiple structured axes', () => {
+    const axisA: StructuredAxis = {
+      keyMap: { ArrowDown: (ctx) => ctx.focusNext() },
+      config: {
+        focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+        expandable: true,
+      },
+    }
+    const axisB: StructuredAxis = {
+      keyMap: { Space: (ctx) => ctx.toggleSelect() },
+      config: {
+        selectionMode: 'multiple',
+      },
+    }
+
+    const behavior = composePattern(identity, axisA, axisB)
+
+    expect(behavior.focusStrategy).toEqual({ type: 'roving-tabindex', orientation: 'vertical' })
+    expect(behavior.expandable).toBe(true)
+    expect(behavior.selectionMode).toBe('multiple')
+    expect(behavior.keyMap).toHaveProperty('ArrowDown')
+    expect(behavior.keyMap).toHaveProperty('Space')
+  })
+
+  it('mixes plain KeyMap and structured axis', () => {
+    const plainAxis: KeyMap = {
+      ArrowUp: (ctx) => ctx.focusPrev(),
+    }
+    const structured: StructuredAxis = {
+      keyMap: { ArrowDown: (ctx) => ctx.focusNext() },
+      config: {
+        focusStrategy: { type: 'roving-tabindex', orientation: 'horizontal' },
+      },
+    }
+
+    expect(isStructuredAxis(plainAxis)).toBe(false)
+    expect(extractKeyMap(plainAxis)).toBe(plainAxis)
+    expect(extractConfig(plainAxis)).toBeUndefined()
+
+    const behavior = composePattern(identity, plainAxis, structured)
+
+    expect(behavior.keyMap['ArrowUp'](mockCtx)).toMatchObject({ type: 'focusPrev' })
+    expect(behavior.keyMap['ArrowDown'](mockCtx)).toMatchObject({ type: 'focusNext' })
+    expect(behavior.focusStrategy).toEqual({ type: 'roving-tabindex', orientation: 'horizontal' })
+  })
+
+  it('defaults to natural-tab-order when no axis provides focusStrategy', () => {
+    const axis: StructuredAxis = {
+      keyMap: { Enter: (ctx) => ctx.activate() },
+      config: { activateOnClick: true },
+    }
+
+    const behavior = composePattern(identity, axis)
+
+    expect(behavior.focusStrategy).toEqual({ type: 'natural-tab-order', orientation: 'vertical' })
+  })
+
+  it('later axis config overwrites earlier on same key', () => {
+    const axisA: StructuredAxis = {
+      keyMap: {},
+      config: {
+        expandable: true,
+        selectionMode: 'single',
+      },
+    }
+    const axisB: StructuredAxis = {
+      keyMap: {},
+      config: {
+        expandable: false,
+        selectionMode: 'multiple',
+      },
+    }
+
+    const behavior = composePattern(identity, axisA, axisB)
+
+    expect(behavior.expandable).toBe(false)
+    expect(behavior.selectionMode).toBe('multiple')
   })
 })
