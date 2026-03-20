@@ -182,6 +182,8 @@
 - [x] Route Restructuring — Navigation(read-only) → Plugin(개별 능력) → Collection(조립 쇼케이스) 3층 분리, Plugin 그룹 신설, Navigation에 treegrid/listbox/grid/combobox read-only 추가, 데모 데이터 공유 모듈 추출
 - [x] Kanban Showcase — /collection/kanban, keyboard-first kanban board (cross-column move, CRUD, undo/redo, batch move), CSS multi-column layout
 - [x] Visual CMS Integration & Polish — floating toolbar wired to CRUD (delete/duplicate/reorder/add), sidebar↔canvas bidirectional focus sync, minimum-1-section guard on toolbar
+- [x] Visual CMS Canvas CRUD — os 개밥먹기: Canvas keyMap에 Delete/Mod+D/Mod+↑↓/Mod+C/X/V/Mod+Z/Shift+Z 추가, crudCommands/dndCommands/clipboardCommands/historyCommands 직접 사용, history() 플러그인으로 undo/redo 지원
+- [x] Viewer Dependency Graph — 파일 선택 시 코드 위에 1-depth mermaid 의존 그래프 표시 (런타임 import 파싱, 레이어 subgraph, 노드 클릭 네비게이션, Vite watcher 자동 캐시 갱신)
 
 ## ⑨ APG Pattern Coverage
 
@@ -218,4 +220,4 @@
 
 ---
 
-*Last updated: 2026-03-20 — Visual CMS Integration & Polish: toolbar CRUD wired, sidebar↔canvas sync, 464 tests, 54 files*
+*Last updated: 2026-03-20 — Viewer Dependency Graph: 런타임 import 파싱 + mermaid 의존 그래프, 455 tests, 55 files*
