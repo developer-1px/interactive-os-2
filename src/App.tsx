@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon, Presentation } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon, Presentation } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -52,6 +52,17 @@ import PageVisualCms from './pages/PageVisualCms'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
+import PageNavV from './pages/axis/PageNavV'
+import PageNavH from './pages/axis/PageNavH'
+import PageNavVhUniform from './pages/axis/PageNavVhUniform'
+import PageNavGrid from './pages/axis/PageNavGrid'
+import PageDepthArrow from './pages/axis/PageDepthArrow'
+import PageDepthEnterEsc from './pages/axis/PageDepthEnterEsc'
+import PageSelectToggle from './pages/axis/PageSelectToggle'
+import PageSelectExtended from './pages/axis/PageSelectExtended'
+import PageActivate from './pages/axis/PageActivate'
+import PageActivateFollowFocus from './pages/axis/PageActivateFollowFocus'
+import PageFocusTrap from './pages/axis/PageFocusTrap'
 
 // --- Vertical toolbar behavior (ActivityBar: navigation + utility in one roving group) ---
 
@@ -118,6 +129,25 @@ const routeConfig: RouteGroup[] = [
     items: [
       { path: 'pipeline', label: 'Pipeline', status: 'ready', component: PageEnginePipeline },
       { path: 'history', label: 'History', status: 'ready', component: PageEngineHistory },
+    ],
+  },
+  {
+    id: 'axis',
+    label: 'Axis',
+    icon: Axe,
+    basePath: '/axis/nav-v',
+    items: [
+      { path: 'nav-v', label: 'navV', status: 'ready', component: PageNavV },
+      { path: 'nav-h', label: 'navH', status: 'ready', component: PageNavH },
+      { path: 'nav-vh-uniform', label: 'navVhUniform', status: 'ready', component: PageNavVhUniform },
+      { path: 'nav-grid', label: 'navGrid', status: 'ready', component: PageNavGrid },
+      { path: 'depth-arrow', label: 'depthArrow', status: 'ready', component: PageDepthArrow },
+      { path: 'depth-enter-esc', label: 'depthEnterEsc', status: 'ready', component: PageDepthEnterEsc },
+      { path: 'select-toggle', label: 'selectToggle', status: 'ready', component: PageSelectToggle },
+      { path: 'select-extended', label: 'selectExtended', status: 'ready', component: PageSelectExtended },
+      { path: 'activate', label: 'activate', status: 'ready', component: PageActivate },
+      { path: 'activate-follow-focus', label: 'activateFollowFocus', status: 'ready', component: PageActivateFollowFocus },
+      { path: 'focus-trap', label: 'focusTrap', status: 'ready', component: PageFocusTrap },
     ],
   },
   {
