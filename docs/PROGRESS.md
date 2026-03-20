@@ -188,6 +188,7 @@
 - [x] Visual CMS Integration & Polish — floating toolbar wired to CRUD (delete/duplicate/reorder/add), sidebar↔canvas bidirectional focus sync, minimum-1-section guard on toolbar
 - [x] Visual CMS Canvas CRUD — os 개밥먹기: Canvas keyMap에 Delete/Mod+D/Mod+↑↓/Mod+C/X/V/Mod+Z/Shift+Z 추가, crudCommands/dndCommands/clipboardCommands/historyCommands 직접 사용, history() 플러그인으로 undo/redo 지원
 - [x] Viewer Dependency Graph — 파일 선택 시 코드 위에 1-depth mermaid 의존 그래프 표시 (런타임 import 파싱, 레이어 subgraph, 노드 클릭 네비게이션, Vite watcher 자동 캐시 갱신)
+- [x] Axis Showcase — /axis/{name}, 11개 공유 축 각각 최소 pattern 래핑 인터랙티브 데모 (navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap), ActivityBar Axis 레이어 (Store→Engine→Axis→Navigation 인과 순서)
 
 ## ⑨ APG Pattern Coverage
 
