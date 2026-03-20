@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { selectToggle } from '../axes/select-toggle'
-import { selectExtended } from '../axes/select-extended'
+import { selectToggle } from '../axes/selectToggle'
+import { selectExtended } from '../axes/selectExtended'
 import { activate } from '../axes/activate'
-import { activateFollowFocus } from '../axes/activate-follow-focus'
+import { activateFollowFocus } from '../axes/activateFollowFocus'
 import type { BehaviorContext } from '../behaviors/types'
 import type { Command } from '../core/types'
 

@@ -1,3 +1,4 @@
 - 기능 완료 및 커밋 시 `docs/PROGRESS.md` 체크리스트를 업데이트한다
-- 작업 시작 시 `docs/PROGRESS.md`를 읽고 현황을 파악한다
-- discussion 시작 시 메모리 + PROGRESS.md를 로드한다
+- discussion 시작 시 메모리를 로드한다
+- 파일명 = 주 export 식별자 (예: `useAria.ts` → `export function useAria`, `TreeGrid.tsx` → `export function TreeGrid`). multi-export 파일은 모듈명 camelCase (예: `keymapHelpers.ts`). kebab-case 파일명 금지. rename 시 반드시 `git mv` 사용.
+- 테스트 원칙: **계산은 unit, 인터랙션은 통합(userEvent → DOM/ARIA 상태 검증)**. mock 호출 검증(`toHaveBeenCalled` 등) 금지 — 테스트를 위한 테스트가 된다. 통합테스트는 `user.keyboard()` → DOM 결과로 검증.

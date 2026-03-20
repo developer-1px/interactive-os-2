@@ -1,10 +1,10 @@
 import type { NodeState } from './types'
 import type { Entity } from '../core/types'
-import { composePattern } from '../axes/compose-pattern'
-import { selectExtended } from '../axes/select-extended'
-import { selectToggle } from '../axes/select-toggle'
+import { composePattern } from '../axes/composePattern'
+import { selectExtended } from '../axes/selectExtended'
+import { selectToggle } from '../axes/selectToggle'
 import { activate } from '../axes/activate'
-import { navV } from '../axes/nav-v'
+import { navV } from '../axes/navV'
 
 export const listbox = composePattern(
   {

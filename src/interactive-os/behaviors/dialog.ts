@@ -1,6 +1,6 @@
 import type { NodeState } from './types'
-import { composePattern } from '../axes/compose-pattern'
-import { focusTrap } from '../axes/focus-trap'
+import { composePattern } from '../axes/composePattern'
+import { focusTrap } from '../axes/focusTrap'
 
 export const dialog = composePattern(
   {

@@ -8,7 +8,7 @@ import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
 import { dnd } from '../interactive-os/plugins/dnd'
-import { focusRecovery } from '../interactive-os/plugins/focus-recovery'
+import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 
 const opsData = createStore({
   entities: {

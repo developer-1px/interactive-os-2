@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { navV } from '../axes/nav-v'
-import { navH } from '../axes/nav-h'
-import { navVhUniform } from '../axes/nav-vh-uniform'
-import { navGrid } from '../axes/nav-grid'
+import { navV } from '../axes/navV'
+import { navH } from '../axes/navH'
+import { navVhUniform } from '../axes/navVhUniform'
+import { navGrid } from '../axes/navGrid'
 import type { BehaviorContext } from '../behaviors/types'
 import type { Command } from '../core/types'
 

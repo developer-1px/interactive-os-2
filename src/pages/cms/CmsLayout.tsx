@@ -11,43 +11,51 @@ import CmsI18nSheet from './CmsI18nSheet'
 import CmsPresentMode from './CmsPresentMode'
 import { useCmsData } from './cms-state'
 import type { Locale } from './cms-types'
-import { FOCUS_ID } from '../../interactive-os/plugins/core'
+import { useEngine } from '../../interactive-os/hooks/useEngine'
+import { history } from '../../interactive-os/plugins/history'
 import { getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
+import type { Plugin } from '../../interactive-os/core/types'
+
+const sharedPlugins: Plugin[] = [history()]
 
 export default function CmsLayout() {
-  const [data, setData] = useCmsData()
+  const [persistedData, setPersistedData] = useCmsData()
+  const { engine, store } = useEngine({ data: persistedData, plugins: sharedPlugins, onChange: setPersistedData })
   const [locale, setLocale] = useState<Locale>('ko')
   const [viewport, setViewport] = useState<ViewportSize>('desktop')
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [i18nSheetOpen, setI18nSheetOpen] = useState(false)
   const [presenting, setPresenting] = useState(false)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
+  const [canvasFocusedId, setCanvasFocusedId] = useState('')
 
   // Compute which root section is currently active from canvas focus
+  // deps: store is intentionally omitted — recomputes only when focus changes.
+  // Tree topology changes always accompany a focus change (focus recovery).
   const activeSectionId = useMemo(() => {
-    const focusedId = data.entities[FOCUS_ID]?.focusedId as string | undefined
-    if (!focusedId) return null
+    if (!canvasFocusedId) return null
 
-    const spatialParent = getSpatialParentId(data)
-    const sections = getChildren(data, ROOT_ID)
+    const spatialParent = getSpatialParentId(store)
+    const sections = getChildren(store, ROOT_ID)
 
     if (spatialParent === ROOT_ID) {
-      return sections.includes(focusedId) ? focusedId : null
+      return sections.includes(canvasFocusedId) ? canvasFocusedId : null
     }
 
     // Walk up to find the root-level section ancestor
-    let current = focusedId
+    let current = canvasFocusedId
     while (current) {
-      const parent = getParent(data, current)
+      const parent = getParent(store, current)
       if (!parent || parent === ROOT_ID) {
         return sections.includes(current) ? current : null
       }
       current = parent
     }
     return null
-  }, [data])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canvasFocusedId])
 
   return (
     <div className="cms-layout">
@@ -63,15 +71,15 @@ export default function CmsLayout() {
         onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
       />
       <div className="cms-body">
-        <CmsSidebar data={data} onDataChange={setData} locale={locale} activeSectionId={activeSectionId} />
+        <CmsSidebar engine={engine} store={store} locale={locale} activeSectionId={activeSectionId} />
         <div className="cms-canvas-area">
           <CmsViewportWrapper viewport={viewport}>
-            <CmsCanvas data={data} onDataChange={setData} locale={locale} />
+            <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} />
           </CmsViewportWrapper>
-          <CmsI18nSheet data={data} onDataChange={setData} open={i18nSheetOpen} />
+          <CmsI18nSheet data={store} onDataChange={setPersistedData} open={i18nSheetOpen} />
         </div>
       </div>
-      <CmsFloatingToolbar data={data} onDataChange={setData} hidden={presenting} />
+      <CmsFloatingToolbar data={store} onDataChange={setPersistedData} hidden={presenting} />
       {drawerOpen && (
         <CmsHamburgerDrawer
           open={drawerOpen}
@@ -84,7 +92,7 @@ export default function CmsLayout() {
       )}
       {presenting && (
         <CmsPresentMode
-          data={data}
+          data={store}
           locale={locale}
           onExit={() => setPresenting(false)}
         />

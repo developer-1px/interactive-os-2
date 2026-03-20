@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
-import { useSpatialNav } from '../../hooks/use-spatial-nav'
+import { useSpatialNav } from '../../hooks/useSpatialNav'
 import type { NormalizedData } from '../../core/types'
 import { ROOT_ID } from '../../core/types'
 import { createStore } from '../../core/createStore'

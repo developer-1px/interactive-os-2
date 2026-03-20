@@ -7,15 +7,9 @@ import { getChildren, getParent, getEntity, getEntityData } from '../core/create
 import { focusCommands } from '../plugins/core'
 import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 import { findMatchingKey } from './useKeyboard'
-import { isVisible, findFallbackFocus, detectNewVisibleEntities } from '../plugins/focus-recovery'
+import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
+import { isVisible, findFallbackFocus, detectNewVisibleEntities } from '../plugins/focusRecovery'
 import type { UseAriaReturn } from './useAria'
-
-function isEditableElement(el: Element): boolean {
-  const tag = el.tagName
-  if (tag === 'INPUT' || tag === 'TEXTAREA') return true
-  if (el.getAttribute('contenteditable') != null) return true
-  return false
-}
 
 /** Command types that update zone-local view state (not shared engine data). */
 const META_COMMAND_TYPES = new Set([
@@ -53,41 +47,40 @@ interface ZoneViewState {
 }
 
 function applyMetaCommand(state: ZoneViewState, command: Command): ZoneViewState {
+  const p = command.payload as Record<string, unknown>
   switch (command.type) {
     case 'core:focus':
-      return { ...state, focusedId: (command.payload as { id: string }).id }
+      return { ...state, focusedId: p.nodeId as string }
     case 'core:toggle-select': {
-      const id = (command.payload as { id: string }).id
+      const id = p.nodeId as string
       const set = new Set(state.selectedIds)
       if (set.has(id)) set.delete(id); else set.add(id)
       return { ...state, selectedIds: Array.from(set) }
     }
-    case 'core:select-range': {
-      const ids = (command.payload as { ids: string[] }).ids
-      return { ...state, selectedIds: ids }
-    }
+    case 'core:select-range':
+      return { ...state, selectedIds: p.nodeIds as string[] }
     case 'core:set-anchor':
-      return { ...state, selectionAnchor: (command.payload as { id: string }).id }
+      return { ...state, selectionAnchor: p.nodeId as string }
     case 'core:clear-anchor':
       return { ...state, selectionAnchor: '' }
     case 'core:clear-selection':
       return { ...state, selectedIds: [] }
     case 'core:expand': {
-      const id = (command.payload as { id: string }).id
+      const id = p.nodeId as string
       return state.expandedIds.includes(id) ? state : { ...state, expandedIds: [...state.expandedIds, id] }
     }
     case 'core:collapse': {
-      const id = (command.payload as { id: string }).id
+      const id = p.nodeId as string
       return { ...state, expandedIds: state.expandedIds.filter(x => x !== id) }
     }
     case 'core:toggle-expand': {
-      const id = (command.payload as { id: string }).id
+      const id = p.nodeId as string
       return state.expandedIds.includes(id)
         ? { ...state, expandedIds: state.expandedIds.filter(x => x !== id) }
         : { ...state, expandedIds: [...state.expandedIds, id] }
     }
     case 'core:set-col-index':
-      return { ...state, gridCol: (command.payload as { colIndex: number }).colIndex }
+      return { ...state, gridCol: p.colIndex as number }
     default:
       return state
   }
@@ -184,11 +177,13 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
         }
 
         if (META_COMMAND_TYPES.has(command.type)) {
-          setViewState(prev => applyMetaCommand(prev, command))
-          // Anchor reset: when standalone focus fires, clear selection anchor
-          if (command.type === 'core:focus') {
-            setViewState(prev => ({ ...prev, selectionAnchor: '' }))
-          }
+          setViewState(prev => {
+            const next = applyMetaCommand(prev, command)
+            // Anchor reset: when standalone focus fires, clear selection anchor
+            return command.type === 'core:focus'
+              ? { ...next, selectionAnchor: '' }
+              : next
+          })
           return
         }
 
@@ -397,28 +392,5 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     selected: selectedIds,
     getStore: () => virtualEngine.getStore(),
     containerProps,
-  }
-}
-
-// ── Shared helper (same as useAria) ──
-
-function dispatchKeyAction(
-  ctx: ReturnType<typeof createBehaviorContext>,
-  handler: (ctx: ReturnType<typeof createBehaviorContext>) => Command | void,
-  engine: CommandEngine,
-  onActivateFn: ((nodeId: string) => void) | undefined,
-) {
-  if (onActivateFn) {
-    let intercepted = false
-    ctx.activate = () => {
-      intercepted = true
-      onActivateFn(ctx.focused)
-      return undefined as unknown as Command
-    }
-    const command = handler(ctx)
-    if (!intercepted && command) engine.dispatch(command)
-  } else {
-    const command = handler(ctx)
-    if (command) engine.dispatch(command)
   }
 }

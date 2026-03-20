@@ -1,30 +1,27 @@
-import { useCallback, useMemo } from 'react'
-import { useAria } from '../../interactive-os/hooks/useAria'
+import { useCallback, useEffect, useMemo } from 'react'
+import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
 import { spatial } from '../../interactive-os/behaviors/spatial'
-import { useSpatialNav } from '../../interactive-os/hooks/use-spatial-nav'
-import { core, focusCommands } from '../../interactive-os/plugins/core'
-import { crud, crudCommands } from '../../interactive-os/plugins/crud'
-import { dnd, dndCommands } from '../../interactive-os/plugins/dnd'
-import { clipboard, clipboardCommands } from '../../interactive-os/plugins/clipboard'
-import { history, historyCommands } from '../../interactive-os/plugins/history'
+import { useSpatialNav } from '../../interactive-os/hooks/useSpatialNav'
+import { focusCommands } from '../../interactive-os/plugins/core'
+import { crudCommands } from '../../interactive-os/plugins/crud'
+import { dndCommands } from '../../interactive-os/plugins/dnd'
+import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
+import { historyCommands } from '../../interactive-os/plugins/history'
 import { spatialCommands, getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
 import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import type { Locale } from './cms-types'
 import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
 
 interface CmsCanvasProps {
-  data: NormalizedData
-  onDataChange: (data: NormalizedData) => void
+  engine: CommandEngine
+  store: NormalizedData
   locale: Locale
+  onFocusChange?: (focusedId: string) => void
 }
-
-// focusRecovery() intentionally omitted: its isVisible() uses expand/collapse model,
-// which conflicts with spatial depth navigation (all CMS nodes are always rendered).
-// This is an os gap — focusRecovery needs spatial-awareness.
-const plugins = [core(), crud(), dnd(), clipboard(), history()]
 
 /** CRUD keyMap for CMS Canvas — os commands with undo/redo */
 const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
@@ -50,8 +47,8 @@ const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
   'Mod+Shift+Z': () => historyCommands.redo(),
 }
 
-export default function CmsCanvas({ data, onDataChange, locale }: CmsCanvasProps) {
-  const spatialKeyMap = useSpatialNav('[data-cms-root]', data)
+export default function CmsCanvas({ engine, store, locale, onFocusChange }: CmsCanvasProps) {
+  const spatialKeyMap = useSpatialNav('[data-cms-root]', store, 'cms')
 
   // Merge spatial nav + CMS CRUD keyMap (CRUD takes precedence for Mod+ combos)
   const mergedKeyMap = useMemo(
@@ -59,27 +56,31 @@ export default function CmsCanvas({ data, onDataChange, locale }: CmsCanvasProps
     [spatialKeyMap],
   )
 
-  const aria = useAria({
+  // focusRecovery disabled: spatial depth navigation conflicts with isVisible() expand/collapse model
+  const aria = useAriaZone({
+    engine,
+    store,
     behavior: spatial,
-    data,
-    plugins,
+    scope: 'cms',
     keyMap: mergedKeyMap,
-    onChange: onDataChange,
+    focusRecovery: false,
   })
+
+  // Report focus changes to parent (for activeSectionId computation)
+  useEffect(() => {
+    onFocusChange?.(aria.focused)
+  }, [aria.focused, onFocusChange])
 
   // Click handler: jump to node's depth + focus
   const handleNodeClick = useCallback((nodeId: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    const store = aria.getStore()
-    const parentId = getParent(store, nodeId) ?? ROOT_ID
-    const currentSpatialParent = getSpatialParentId(store)
+    const s = aria.getStore()
+    const parentId = getParent(s, nodeId) ?? ROOT_ID
+    const currentSpatialParent = getSpatialParentId(s)
 
     if (parentId !== currentSpatialParent) {
-      // Switch depth to the clicked node's parent
       if (parentId === ROOT_ID) {
-        // Go to root — exit until at root
         const exitCmd = spatialCommands.exitToParent()
-        // Keep exiting (simple: just set spatial parent to nothing for root)
         aria.dispatch(createBatchCommand([
           exitCmd,
           focusCommands.setFocus(nodeId),
@@ -96,14 +97,14 @@ export default function CmsCanvas({ data, onDataChange, locale }: CmsCanvasProps
   }, [aria])
 
   // Recursive renderer — ALL nodes always rendered
+  const currentStore = aria.getStore()
   function renderNode(nodeId: string): React.ReactNode {
-    const store = aria.getStore()
-    const entity = store.entities[nodeId]
+    const entity = currentStore.entities[nodeId]
     if (!entity) return null
 
     const state = aria.getNodeState(nodeId)
     const props = aria.getNodeProps(nodeId)
-    const children = getChildren(store, nodeId)
+    const children = getChildren(currentStore, nodeId)
     const d = (entity.data ?? {}) as Record<string, string>
 
     // Destructure props from aria to override onClick
@@ -139,7 +140,7 @@ export default function CmsCanvas({ data, onDataChange, locale }: CmsCanvasProps
             const headerIds: string[] = []
             const contentIds: string[] = []
             for (const childId of children) {
-              const childData = (store.entities[childId]?.data ?? {}) as Record<string, string>
+              const childData = (currentStore.entities[childId]?.data ?? {}) as Record<string, string>
               if (HEADER_TYPES.has(childData.type)) {
                 headerIds.push(childId)
               } else {
@@ -201,7 +202,7 @@ export default function CmsCanvas({ data, onDataChange, locale }: CmsCanvasProps
 
   return (
     <div className="cms-landing" data-cms-root data-aria-container="">
-      {getChildren(aria.getStore(), ROOT_ID).map(id => renderNode(id))}
+      {getChildren(currentStore, ROOT_ID).map(id => renderNode(id))}
     </div>
   )
 }

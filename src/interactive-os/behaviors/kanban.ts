@@ -7,8 +7,8 @@ import { historyCommands } from '../plugins/history'
 import { clipboardCommands } from '../plugins/clipboard'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands } from '../plugins/rename'
-import { composePattern, type Axis } from '../axes/compose-pattern'
-import { selectToggle } from '../axes/select-toggle'
+import { composePattern, type Axis } from '../axes/composePattern'
+import { selectToggle } from '../axes/selectToggle'
 
 // ── Shared helpers ──
 
