@@ -98,7 +98,7 @@
 - [x] spatial — depth traversal (Enter/Escape), roving-tabindex both, F2 rename
 
 ### 추가 프리셋 (Cross-Container)
-- [x] kanban — cross-column keyboard navigation (←→), cross-column move (Alt+←→), column-aware Home/End/Mod+Home/Mod+End, batch move (multi-select)
+- [x] kanban — composePattern 리팩토링 (5 axes: selectToggle, kanbanEditing, kanbanCrossH, kanbanNavV, kanbanPlugins), plugin keybindings → Kanban.tsx keyMap override 분리
 
 ### 미구현 behavior
 - [x] extended selection — Shift 범위 선택 (listbox, treegrid)
