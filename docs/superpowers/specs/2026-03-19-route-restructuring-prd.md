@@ -73,6 +73,7 @@ N/A — 이 작업에 상태 전이 없음.
 |------|------|
 | Plugin 그룹 아이콘 | `Puzzle` (lucide-react) — plugin = 끼워넣는 확장 |
 | ActivityBar 아이콘 수 | 7 → 8개 |
+| ActivityBar 아이템 | 아이콘(16px) only, 텍스트 라벨 제거, `title` 속성으로 tooltip 제공 |
 | 나머지 스타일 | 변경 없음 |
 
 상태: 🟢
@@ -117,6 +118,18 @@ collection.items = [treegrid, listbox, grid, tabs, combobox]
 
 - Navigation read-only 버전: `Page{Behavior}Nav.tsx` (레이어명과 일치)
 - Collection full-plugin 버전: `Page{Behavior}Collection.tsx` (신규 생성 시만)
+
+### 공유 데이터 모듈
+
+Nav/Collection 버전 간 데모 데이터 중복을 제거하기 위해 공유 모듈 추출:
+
+| 모듈 | 내용 |
+|------|------|
+| `shared-tree-data.ts` | `treeData`, `getFileExt()` |
+| `SharedTreeComponents.tsx` | `FileIcon`, `RenderTreeItem` |
+| `shared-list-data.ts` | `listData` |
+| `shared-combobox-data.tsx` | `createFruitStore()`, `createGroupedStore()`, `comboboxRenderItem` |
+| `shared-grid-data.ts` | `gridColumns`, `gridInitialData` |
 
 상태: 🟢
 

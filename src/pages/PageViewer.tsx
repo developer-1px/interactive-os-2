@@ -53,23 +53,24 @@ async function fetchFile(path: string): Promise<string> {
   return res.text()
 }
 
-// --- Import graph fetching ---
+// --- Export structure fetching ---
 
-interface ImportInfo {
-  path: string
-  layer: string
+interface ExportedSymbol {
+  kind: 'function' | 'interface' | 'type' | 'const' | 'class'
+  name: string
+  signature?: string
+  properties?: { name: string; type: string }[]
+  value?: string
 }
 
-interface ImportsData {
+interface ExportsData {
   file: string
-  layer: string
-  imports: ImportInfo[]
-  importedBy: ImportInfo[]
+  symbols: ExportedSymbol[]
 }
 
-async function fetchImports(filePath: string, root: string): Promise<ImportsData | null> {
+async function fetchExports(filePath: string): Promise<ExportsData | null> {
   try {
-    const res = await fetch(`/api/fs/imports?path=${encodeURIComponent(filePath)}&root=${encodeURIComponent(root)}`)
+    const res = await fetch(`/api/fs/exports?path=${encodeURIComponent(filePath)}`)
     if (!res.ok) return null
     return res.json()
   } catch {
@@ -82,78 +83,68 @@ function isSourceFile(filename: string): boolean {
   return ['ts', 'tsx', 'js', 'jsx'].includes(ext)
 }
 
-function generateMermaid(data: ImportsData, root: string): string {
-  const toLabel = (filePath: string) => {
-    const rel = filePath.startsWith(root) ? filePath.slice(root.length + 1) : filePath
-    // Use __sep__ for / and __dot__ for . to avoid collisions
-    return rel.replace(/\//g, '__sep__').replace(/\./g, '__dot__')
-  }
+function escapeMermaid(text: string): string {
+  return text
+    .replace(/~/g, '∼')
+    .replace(/[<>]/g, m => m === '<' ? '‹' : '›')
+    .replace(/"/g, "'")
+}
 
-  const escapeDisplay = (text: string) =>
-    text.replace(/"/g, '#quot;').replace(/]/g, '#93;')
+function generateClassDiagram(data: ExportsData, filename: string): string {
+  if (data.symbols.length === 0) return ''
 
-  const toDisplay = (filePath: string) => {
-    const rel = filePath.startsWith(root) ? filePath.slice(root.length + 1) : filePath
-    const parts = rel.split('/')
-    const display = parts.length > 2 ? parts.slice(-2).join('/') : rel
-    return escapeDisplay(display)
-  }
+  const lines: string[] = ['classDiagram']
+  const moduleName = filename.replace(/\.[^.]+$/, '')
 
-  // Collect all nodes grouped by layer
-  const layers = new Map<string, { id: string; display: string; filePath: string; isCurrent: boolean }[]>()
+  // Group by kind
+  const interfaces = data.symbols.filter(s => s.kind === 'interface' || s.kind === 'type' && s.properties?.length)
+  const types = data.symbols.filter(s => s.kind === 'type' && !s.properties?.length)
+  const functions = data.symbols.filter(s => s.kind === 'function')
+  const consts = data.symbols.filter(s => s.kind === 'const')
+  const classes = data.symbols.filter(s => s.kind === 'class')
 
-  const addNode = (filePath: string, layer: string, isCurrent: boolean) => {
-    if (!layers.has(layer)) layers.set(layer, [])
-    const nodes = layers.get(layer)!
-    const id = toLabel(filePath)
-    if (!nodes.some(n => n.id === id)) {
-      nodes.push({ id, display: toDisplay(filePath), filePath, isCurrent })
+  // Render interfaces/types with properties as classes
+  for (const sym of [...interfaces, ...classes]) {
+    lines.push(`  class ${sym.name} {`)
+    if (sym.properties) {
+      for (const prop of sym.properties) {
+        lines.push(`    +${escapeMermaid(prop.name)} ${escapeMermaid(prop.type)}`)
+      }
+    }
+    lines.push('  }')
+    if (sym.kind === 'interface') {
+      lines.push(`  <<interface>> ${sym.name}`)
     }
   }
 
-  // Current file
-  addNode(data.file, data.layer, true)
-
-  // Imports
-  for (const imp of data.imports) {
-    addNode(imp.path, imp.layer, false)
-  }
-
-  // ImportedBy
-  for (const imp of data.importedBy) {
-    addNode(imp.path, imp.layer, false)
-  }
-
-  const lines: string[] = ['graph LR']
-
-  // Subgraphs by layer
-  for (const [layer, nodes] of layers) {
-    lines.push(`  subgraph ${layer}`)
-    for (const node of nodes) {
-      lines.push(`    ${node.id}["${node.display}"]`)
+  // Render functions as a module class
+  if (functions.length > 0 || consts.length > 0) {
+    lines.push(`  class ${moduleName} {`)
+    for (const fn of functions) {
+      lines.push(`    +${escapeMermaid(fn.name)}${escapeMermaid(fn.signature ?? '()')}`)
     }
-    lines.push('  end')
+    for (const c of consts) {
+      lines.push(`    +${escapeMermaid(c.name)} ${escapeMermaid(c.value ?? '')}`)
+    }
+    lines.push('  }')
+    lines.push(`  <<module>> ${moduleName}`)
   }
 
-  // Edges: imports (current → dependency)
-  const currentId = toLabel(data.file)
-  for (const imp of data.imports) {
-    lines.push(`  ${toLabel(imp.path)} --> ${currentId}`)
+  // Type aliases without properties → note
+  for (const t of types) {
+    lines.push(`  class ${t.name} {`)
+    lines.push(`    ${escapeMermaid(t.value ?? '...')}`)
+    lines.push('  }')
+    lines.push(`  <<type>> ${t.name}`)
   }
 
-  // Edges: importedBy (current → consumer)
-  for (const imp of data.importedBy) {
-    lines.push(`  ${currentId} --> ${toLabel(imp.path)}`)
-  }
-
-  // Style current node
-  lines.push(`  style ${currentId} fill:#f9a825,stroke:#f57f17,stroke-width:2px`)
-
-  // Click handlers
-  for (const [, nodes] of layers) {
-    for (const node of nodes) {
-      if (!node.isCurrent) {
-        lines.push(`  click ${node.id} href "${node.filePath}" _self`)
+  // Relationships: if a function returns or takes an interface type
+  const typeNames = new Set([...interfaces, ...classes, ...types].map(s => s.name))
+  for (const fn of functions) {
+    const sig = fn.signature ?? ''
+    for (const typeName of typeNames) {
+      if (sig.includes(typeName)) {
+        lines.push(`  ${moduleName} ..> ${typeName} : uses`)
       }
     }
   }
@@ -306,48 +297,24 @@ function MermaidBlock({ code }: { code: string }) {
 
 // --- Dependency graph ---
 
-function DependencyGraph({ filePath, root, onNavigate }: {
-  filePath: string
-  root: string
-  onNavigate: (path: string) => void
-}) {
+function ExportDiagram({ filePath }: { filePath: string }) {
   const [mermaidCode, setMermaidCode] = useState<string | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const filename = filePath.split('/').pop() ?? ''
 
   useEffect(() => {
     let cancelled = false
-    fetchImports(filePath, root).then(data => {
+    fetchExports(filePath).then(data => {
       if (cancelled || !data) { setMermaidCode(null); return }
-      const totalNodes = data.imports.length + data.importedBy.length
-      if (totalNodes === 0) { setMermaidCode(null); return }
-      setMermaidCode(generateMermaid(data, root))
+      const code = generateClassDiagram(data, filename)
+      setMermaidCode(code || null)
     })
     return () => { cancelled = true }
-  }, [filePath, root])
-
-  // Intercept mermaid click events to navigate
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      const anchor = target.closest('a')
-      if (!anchor) return
-      const href = anchor.getAttribute('href')
-      if (href && href.startsWith('/')) {
-        e.preventDefault()
-        e.stopPropagation()
-        onNavigate(href)
-      }
-    }
-    container.addEventListener('click', handleClick)
-    return () => container.removeEventListener('click', handleClick)
-  }, [onNavigate, mermaidCode])
+  }, [filePath, filename])
 
   if (!mermaidCode) return null
 
   return (
-    <div ref={containerRef} className="vw-dep-graph">
+    <div className="vw-dep-graph">
       <MermaidBlock code={mermaidCode} />
     </div>
   )
@@ -767,17 +734,17 @@ export default function PageViewer() {
         <div className="vw-content">
           {selectedFile ? (
             <div className="vw-content__body" ref={contentBodyRef}>
+              <div className="vw-content__code">
+                {isMarkdown
+                  ? <MarkdownViewer content={fileContent} />
+                  : <CodeBlock code={fileContent} filename={filename} />
+                }
+              </div>
               {!isMarkdown && isSourceFile(filename) && (
-                <DependencyGraph
-                  filePath={selectedFile}
-                  root={DEFAULT_ROOT}
-                  onNavigate={selectFile}
-                />
+                <div className="vw-content__graph">
+                  <ExportDiagram filePath={selectedFile} />
+                </div>
               )}
-              {isMarkdown
-                ? <MarkdownViewer content={fileContent} />
-                : <CodeBlock code={fileContent} filename={filename} />
-              }
             </div>
           ) : (
             <div className="vw-empty">

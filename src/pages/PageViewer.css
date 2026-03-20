@@ -8,8 +8,8 @@
 .vw {
   display: flex;
   flex-direction: column;
-  height: 100svh;
-  flex: 1;
+  grid-column: 2 / -1;
+  min-height: 0;
   background: var(--bg-elevated);
 }
 
@@ -219,25 +219,43 @@
 
 .vw-content__body {
   flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* --- Code panel (left) --- */
+
+.vw-content__code {
+  flex: 1;
   overflow: auto;
   padding: 32px 48px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 0;
 }
 
-.vw-content__body > * {
+.vw-content__code > * {
   max-width: 720px;
   width: 100%;
 }
 
-/* --- Dependency graph --- */
+/* --- Diagram panel (right) --- */
+
+.vw-content__graph {
+  width: 380px;
+  min-width: 280px;
+  overflow: auto;
+  padding: 24px;
+  border-left: 1px solid var(--border-subtle, rgba(128, 128, 128, 0.15));
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
 
 .vw-dep-graph {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border-subtle, rgba(128, 128, 128, 0.15));
-  margin-bottom: 16px;
-  overflow-x: auto;
+  flex: 1;
+  overflow: auto;
 }
 
 .vw-dep-graph svg {
