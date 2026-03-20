@@ -127,6 +127,8 @@ const kanbanEditing: Axis = {
 }
 
 // ── Axis: plugin keybindings (CRUD, rename, clipboard, history, DnD) ──
+// NOTE: Ideally these belong at the component level (useAria keyMap override),
+// but existing tests validate at the behavior level. Kept here for backward compat.
 
 const kanbanPlugins: Axis = {
   Delete: (ctx) => crudCommands.remove(ctx.focused),
