@@ -6,14 +6,14 @@ import { focusCommands } from './core'
 const FOCUS_ID = '__focus__'
 const EXPANDED_ID = '__expanded__'
 
-function getFocusedId(store: NormalizedData): string {
+export function getFocusedId(store: NormalizedData): string {
   return (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
 }
 
 /**
  * A node is visible if it exists AND all ancestors are expanded.
  */
-function isVisible(store: NormalizedData, nodeId: string): boolean {
+export function isVisible(store: NormalizedData, nodeId: string): boolean {
   if (!getEntity(store, nodeId)) return false
   const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
 
@@ -44,7 +44,7 @@ function findVisibleAncestor(store: NormalizedData, nodeId: string): string | nu
 /**
  * Fallback: next visible sibling → prev visible sibling → nearest visible ancestor.
  */
-function findFallbackFocus(
+export function findFallbackFocus(
   storeBefore: NormalizedData,
   storeAfter: NormalizedData,
   lostNodeId: string
@@ -78,6 +78,19 @@ function findFallbackFocus(
   if (rootChildren.length > 0) return rootChildren[0]!
 
   return null
+}
+
+/**
+ * Detect entity IDs that are new and visible in storeAfter compared to storeBefore.
+ */
+export function detectNewVisibleEntities(
+  storeBefore: NormalizedData,
+  storeAfter: NormalizedData
+): string[] {
+  const beforeIds = new Set(Object.keys(storeBefore.entities))
+  return Object.keys(storeAfter.entities).filter(
+    (id) => !beforeIds.has(id) && !id.startsWith('__') && isVisible(storeAfter, id)
+  )
 }
 
 /**
@@ -115,10 +128,7 @@ export function focusRecovery(): Plugin {
       const after = storeAfter as NormalizedData
 
       // New visible entities → focus the last one
-      const beforeIds = new Set(Object.keys(before.entities))
-      const newVisibleIds = Object.keys(after.entities).filter(
-        (id) => !beforeIds.has(id) && !id.startsWith('__') && isVisible(after, id)
-      )
+      const newVisibleIds = detectNewVisibleEntities(before, after)
 
       if (newVisibleIds.length > 0) {
         next(focusCommands.setFocus(newVisibleIds[newVisibleIds.length - 1]!))
