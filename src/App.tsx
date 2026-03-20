@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon } from 'lucide-react'
+import { Database, Cog, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon, Presentation } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -202,6 +202,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
   ...routeConfig.map((g) => ({ id: g.id, label: g.label, icon: g.icon, path: g.basePath })),
 ]
@@ -301,11 +302,6 @@ function App() {
     }
   }, [navigate])
 
-  // CMS layout — standalone, no ActivityBar
-  if (isCms) {
-    return <CmsLayout />
-  }
-
   return (
     <div className="page">
       <nav className="activity-bar">
@@ -338,7 +334,9 @@ function App() {
           }} />
         </Aria>
       </nav>
-      {isViewer ? (
+      {isCms ? (
+        <CmsLayout />
+      ) : isViewer ? (
         <PageViewer />
       ) : (
         <>

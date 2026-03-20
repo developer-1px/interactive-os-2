@@ -1,5 +1,5 @@
 /* CMS Layout */
-.cms-layout { display: flex; flex-direction: column; height: 100svh; background: var(--surface-0); }
+.cms-layout { display: flex; flex-direction: column; flex: 1; min-height: 0; background: var(--surface-0); }
 
 /* Top toolbar — thin strip */
 .cms-top-toolbar {
