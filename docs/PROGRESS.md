@@ -73,9 +73,9 @@
 - [x] focusNext/focusPrev wrap 옵션 (radiogroup용)
 - [x] grid? 네임스페이스 (col 네비게이션)
 - [x] aria-activedescendant 포커스 전략 + containerProps
-- [x] **Axis Decomposition** — `axes/` 디렉터리, 11개 공유 축 (navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap)
-- [x] `composePattern(metadata, ...axes)` — chain of responsibility (void fallback) 합성 함수, AriaBehavior 호환, v2 structured Axis (keyMap + config) 지원
-- [x] 17개 behavior 전수 composePattern으로 재작성 (기존 테스트 변경 0건)
+- [x] **Axis v2** — 5축 모델: navigate(), select(), activate(), expand(), trap(). metadata 행동 플래그를 축 옵션으로 흡수. activateFollowFocus 삭제. Axis 타입 확장 (keyMap + config)
+- [x] `composePattern(identity, ...axes)` — chain of responsibility 합성, Identity(role/childRole/ariaAttributes) + 축 config 머지, v1 PatternConfig 호환
+- [x] 17개 behavior 전수 5축 모델로 재작성 (기존 테스트 변경 0건)
 
 ### 프리셋
 - [x] treegrid (role: treegrid, childRole: row)
@@ -188,7 +188,7 @@
 - [x] Visual CMS Integration & Polish — floating toolbar wired to CRUD (delete/duplicate/reorder/add), sidebar↔canvas bidirectional focus sync, minimum-1-section guard on toolbar
 - [x] Visual CMS Canvas CRUD — os 개밥먹기: Canvas keyMap에 Delete/Mod+D/Mod+↑↓/Mod+C/X/V/Mod+Z/Shift+Z 추가, crudCommands/dndCommands/clipboardCommands/historyCommands 직접 사용, history() 플러그인으로 undo/redo 지원
 - [x] Viewer Dependency Graph — 파일 선택 시 코드 위에 1-depth mermaid 의존 그래프 표시 (런타임 import 파싱, 레이어 subgraph, 노드 클릭 네비게이션, Vite watcher 자동 캐시 갱신)
-- [x] Axis Showcase — /axis/{name}, 11개 공유 축 각각 최소 pattern 래핑 인터랙티브 데모 (navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap), ActivityBar Axis 레이어 (Store→Engine→Axis→Navigation 인과 순서)
+- [x] Axis Showcase v2 — /axis/{name}, 5축 인터랙티브 데모 (navigate, select, activate, expand, trap), 각 페이지에서 옵션 토글로 행동 변화 체험, ActivityBar Axis 레이어
 
 ## ⑨ APG Pattern Coverage
 
@@ -225,4 +225,4 @@
 
 ---
 
-*Last updated: 2026-03-20 — Axis v2 structured type (keyMap + config), composePattern Identity 지원*
+*Last updated: 2026-03-20 — Axis v2 5축 모델 완료, 쇼케이스 v2 (옵션 토글), v1 축 삭제*
