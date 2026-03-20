@@ -53,6 +53,114 @@ async function fetchFile(path: string): Promise<string> {
   return res.text()
 }
 
+// --- Import graph fetching ---
+
+interface ImportInfo {
+  path: string
+  layer: string
+}
+
+interface ImportsData {
+  file: string
+  layer: string
+  imports: ImportInfo[]
+  importedBy: ImportInfo[]
+}
+
+async function fetchImports(filePath: string, root: string): Promise<ImportsData | null> {
+  try {
+    const res = await fetch(`/api/fs/imports?path=${encodeURIComponent(filePath)}&root=${encodeURIComponent(root)}`)
+    if (!res.ok) return null
+    return res.json()
+  } catch {
+    return null
+  }
+}
+
+function isSourceFile(filename: string): boolean {
+  const ext = filename.split('.').pop() ?? ''
+  return ['ts', 'tsx', 'js', 'jsx'].includes(ext)
+}
+
+function generateMermaid(data: ImportsData, root: string): string {
+  const toLabel = (filePath: string) => {
+    const rel = filePath.startsWith(root) ? filePath.slice(root.length + 1) : filePath
+    // Use __sep__ for / and __dot__ for . to avoid collisions
+    return rel.replace(/\//g, '__sep__').replace(/\./g, '__dot__')
+  }
+
+  const escapeDisplay = (text: string) =>
+    text.replace(/"/g, '#quot;').replace(/]/g, '#93;')
+
+  const toDisplay = (filePath: string) => {
+    const rel = filePath.startsWith(root) ? filePath.slice(root.length + 1) : filePath
+    const parts = rel.split('/')
+    const display = parts.length > 2 ? parts.slice(-2).join('/') : rel
+    return escapeDisplay(display)
+  }
+
+  // Collect all nodes grouped by layer
+  const layers = new Map<string, { id: string; display: string; filePath: string; isCurrent: boolean }[]>()
+
+  const addNode = (filePath: string, layer: string, isCurrent: boolean) => {
+    if (!layers.has(layer)) layers.set(layer, [])
+    const nodes = layers.get(layer)!
+    const id = toLabel(filePath)
+    if (!nodes.some(n => n.id === id)) {
+      nodes.push({ id, display: toDisplay(filePath), filePath, isCurrent })
+    }
+  }
+
+  // Current file
+  addNode(data.file, data.layer, true)
+
+  // Imports
+  for (const imp of data.imports) {
+    addNode(imp.path, imp.layer, false)
+  }
+
+  // ImportedBy
+  for (const imp of data.importedBy) {
+    addNode(imp.path, imp.layer, false)
+  }
+
+  const lines: string[] = ['graph LR']
+
+  // Subgraphs by layer
+  for (const [layer, nodes] of layers) {
+    lines.push(`  subgraph ${layer}`)
+    for (const node of nodes) {
+      lines.push(`    ${node.id}["${node.display}"]`)
+    }
+    lines.push('  end')
+  }
+
+  // Edges: imports (current → dependency)
+  const currentId = toLabel(data.file)
+  for (const imp of data.imports) {
+    lines.push(`  ${toLabel(imp.path)} --> ${currentId}`)
+  }
+
+  // Edges: importedBy (current → consumer)
+  for (const imp of data.importedBy) {
+    lines.push(`  ${currentId} --> ${toLabel(imp.path)}`)
+  }
+
+  // Style current node
+  lines.push(`  style ${currentId} fill:#f9a825,stroke:#f57f17,stroke-width:2px`)
+
+  // Click handlers
+  for (const [, nodes] of layers) {
+    for (const node of nodes) {
+      if (!node.isCurrent) {
+        lines.push(`  click ${node.id} href "${node.filePath}" _self`)
+      }
+    }
+  }
+
+  return lines.join('\n')
+}
+
 // --- Convert tree to normalized store ---
 
 function treeToStore(nodes: TreeNode[]): NormalizedData {
@@ -194,6 +302,55 @@ function MermaidBlock({ code }: { code: string }) {
 
   if (!svg) return <pre><code>{code}</code></pre>
   return <div ref={ref} dangerouslySetInnerHTML={{ __html: svg }} />
+}
+
+// --- Dependency graph ---
+
+function DependencyGraph({ filePath, root, onNavigate }: {
+  filePath: string
+  root: string
+  onNavigate: (path: string) => void
+}) {
+  const [mermaidCode, setMermaidCode] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetchImports(filePath, root).then(data => {
+      if (cancelled || !data) { setMermaidCode(null); return }
+      const totalNodes = data.imports.length + data.importedBy.length
+      if (totalNodes === 0) { setMermaidCode(null); return }
+      setMermaidCode(generateMermaid(data, root))
+    })
+    return () => { cancelled = true }
+  }, [filePath, root])
+
+  // Intercept mermaid click events to navigate
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      const anchor = target.closest('a')
+      if (!anchor) return
+      const href = anchor.getAttribute('href')
+      if (href && href.startsWith('/')) {
+        e.preventDefault()
+        e.stopPropagation()
+        onNavigate(href)
+      }
+    }
+    container.addEventListener('click', handleClick)
+    return () => container.removeEventListener('click', handleClick)
+  }, [onNavigate, mermaidCode])
+
+  if (!mermaidCode) return null
+
+  return (
+    <div ref={containerRef} className="vw-dep-graph">
+      <MermaidBlock code={mermaidCode} />
+    </div>
+  )
 }
 
 // --- Markdown viewer ---
@@ -610,6 +767,13 @@ export default function PageViewer() {
         <div className="vw-content">
           {selectedFile ? (
             <div className="vw-content__body" ref={contentBodyRef}>
+              {!isMarkdown && isSourceFile(filename) && (
+                <DependencyGraph
+                  filePath={selectedFile}
+                  root={DEFAULT_ROOT}
+                  onNavigate={selectFile}
+                />
+              )}
               {isMarkdown
                 ? <MarkdownViewer content={fileContent} />
                 : <CodeBlock code={fileContent} filename={filename} />
