@@ -7,7 +7,7 @@ import './styles/components.css'
 import './styles/app.css'
 
 import { Aria } from './interactive-os/components/aria'
-import { tabs } from './interactive-os/behaviors/tabs'
+import { toolbar } from './interactive-os/behaviors/toolbar'
 import { listbox } from './interactive-os/behaviors/listbox'
 import { core } from './interactive-os/plugins/core'
 import { createStore } from './interactive-os/core/createStore'
@@ -53,10 +53,10 @@ import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
 
-// --- Vertical tabs behavior (ActivityBar is a vertical tablist) ---
+// --- Vertical toolbar behavior (ActivityBar: navigation + utility in one roving group) ---
 
-const verticalTabs: AriaBehavior = {
-  ...tabs,
+const verticalToolbar: AriaBehavior = {
+  ...toolbar,
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),
     ArrowUp: (ctx) => ctx.focusPrev(),
@@ -66,16 +66,18 @@ const verticalTabs: AriaBehavior = {
     Space: (ctx) => ctx.activate(),
   },
   focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+  followFocus: true,
 }
 
 // --- Route config → NormalizedData helper ---
 
-function toStore(items: { id: string; label: string }[]): NormalizedData {
-  const entities: Record<string, { id: string; data: { label: string } }> = {}
+function toStore(items: { id: string; [key: string]: unknown }[]): NormalizedData {
+  const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
   const ids: string[] = []
   for (const item of items) {
-    entities[item.id] = { id: item.id, data: { label: item.label } }
-    ids.push(item.id)
+    const { id, ...data } = item
+    entities[id] = { id, data }
+    ids.push(id)
   }
   return createStore({ entities, relationships: { [ROOT_ID]: ids } })
 }
@@ -206,7 +208,10 @@ const navItems: NavItem[] = [
 
 // --- Pre-computed stores ---
 
-const activityBarStore = toStore(navItems.map((n) => ({ id: n.id, label: n.label })))
+const activityBarStore = toStore([
+  ...navItems.map((n) => ({ id: n.id, label: n.label })),
+  { id: 'theme', label: 'Theme', followFocus: false },
+])
 
 const sidebarStores = Object.fromEntries(
   routeConfig.map((g) => [
@@ -282,20 +287,17 @@ function App() {
     localStorage.setItem('theme', theme)
   }, [theme])
 
-  const toggleTheme = useCallback(() => {
-    setTheme(t => t === 'dark' ? 'light' : 'dark')
-  }, [])
-
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
   const isViewer = pathname === '/viewer' || pathname.startsWith('/viewer/')
   const isCms = pathname === '/'
 
-  const handleActivityBarChange = useCallback((store: NormalizedData) => {
-    const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
-    if (focusedId && navPaths[focusedId]) {
-      navigate(navPaths[focusedId])
+  const handleActivityBarActivate = useCallback((nodeId: string) => {
+    if (nodeId === 'theme') {
+      setTheme(t => t === 'dark' ? 'light' : 'dark')
+    } else if (navPaths[nodeId]) {
+      navigate(navPaths[nodeId])
     }
   }, [navigate])
 
@@ -311,13 +313,21 @@ function App() {
           <div className="logo-mark" />
         </div>
         <Aria
-          behavior={verticalTabs}
+          behavior={verticalToolbar}
           data={activityBarStore}
           plugins={[core()]}
-          onChange={handleActivityBarChange}
+          onActivate={handleActivityBarActivate}
           aria-label="Layer navigation"
         >
           <Aria.Item render={(node, state) => {
+            if (node.id === 'theme') {
+              const ThemeIcon = theme === 'dark' ? Sun : Moon
+              return (
+                <div className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
+                  <ThemeIcon size={13} />
+                </div>
+              )
+            }
             const nav = navItems.find((n) => n.id === node.id)!
             const Icon = nav.icon
             return (
@@ -327,15 +337,6 @@ function App() {
             )
           }} />
         </Aria>
-        <div className="activity-bar__spacer" />
-        <button
-          type="button"
-          className="activity-bar__theme-toggle"
-          onClick={toggleTheme}
-          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-        >
-          {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
-        </button>
       </nav>
       {isViewer ? (
         <PageViewer />

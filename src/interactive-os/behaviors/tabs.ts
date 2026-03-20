@@ -14,6 +14,7 @@ export const tabs: AriaBehavior = {
   focusStrategy: { type: 'roving-tabindex', orientation: 'horizontal' },
   selectionMode: 'single',
   activateOnClick: true,
+  followFocus: true,
   ariaAttributes: (_node, state: NodeState) => ({
     'aria-selected': String(state.selected),
   }),
