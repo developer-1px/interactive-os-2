@@ -1,14 +1,17 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useAria } from '../../interactive-os/hooks/useAria'
 import { spatial } from '../../interactive-os/behaviors/spatial'
 import { useSpatialNav } from '../../interactive-os/hooks/use-spatial-nav'
-import { core } from '../../interactive-os/plugins/core'
-import { focusCommands } from '../../interactive-os/plugins/core'
+import { core, focusCommands } from '../../interactive-os/plugins/core'
+import { crud, crudCommands } from '../../interactive-os/plugins/crud'
+import { dnd, dndCommands } from '../../interactive-os/plugins/dnd'
+import { clipboard, clipboardCommands } from '../../interactive-os/plugins/clipboard'
+import { history, historyCommands } from '../../interactive-os/plugins/history'
 import { spatialCommands, getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
-import { ROOT_ID } from '../../interactive-os/core/types'
-import { createBatchCommand } from '../../interactive-os/core/types'
-import type { NormalizedData } from '../../interactive-os/core/types'
+import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
+import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import type { Locale } from './cms-types'
 import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
 
@@ -18,15 +21,49 @@ interface CmsCanvasProps {
   locale: Locale
 }
 
-const plugins = [core()]
+// focusRecovery() intentionally omitted: its isVisible() uses expand/collapse model,
+// which conflicts with spatial depth navigation (all CMS nodes are always rendered).
+// This is an os gap — focusRecovery needs spatial-awareness.
+const plugins = [core(), crud(), dnd(), clipboard(), history()]
+
+/** CRUD keyMap for CMS Canvas — os commands with undo/redo */
+const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
+  Delete: (ctx) => {
+    // Minimum-1-section guard: if focused is a root child and it's the only one, skip
+    const rootChildren = ctx.getChildren(ROOT_ID)
+    if (rootChildren.includes(ctx.focused) && rootChildren.length <= 1) return
+    return crudCommands.remove(ctx.focused)
+  },
+  'Mod+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
+  'Mod+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+  'Mod+D': (ctx) => {
+    // Copy then paste = duplicate with new IDs (handles subtrees)
+    return createBatchCommand([
+      clipboardCommands.copy([ctx.focused]),
+      clipboardCommands.paste(ctx.focused),
+    ])
+  },
+  'Mod+C': (ctx) => clipboardCommands.copy([ctx.focused]),
+  'Mod+X': (ctx) => clipboardCommands.cut([ctx.focused]),
+  'Mod+V': (ctx) => clipboardCommands.paste(ctx.focused),
+  'Mod+Z': () => historyCommands.undo(),
+  'Mod+Shift+Z': () => historyCommands.redo(),
+}
 
 export default function CmsCanvas({ data, onDataChange, locale }: CmsCanvasProps) {
   const spatialKeyMap = useSpatialNav('[data-cms-root]', data)
+
+  // Merge spatial nav + CMS CRUD keyMap (CRUD takes precedence for Mod+ combos)
+  const mergedKeyMap = useMemo(
+    () => ({ ...spatialKeyMap, ...cmsKeyMap }),
+    [spatialKeyMap],
+  )
+
   const aria = useAria({
     behavior: spatial,
     data,
     plugins,
-    keyMap: spatialKeyMap,
+    keyMap: mergedKeyMap,
     onChange: onDataChange,
   })
 

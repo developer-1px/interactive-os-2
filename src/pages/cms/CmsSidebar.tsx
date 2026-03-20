@@ -1,12 +1,19 @@
-import { createElement, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createElement } from 'react'
 import { getChildren, removeEntity } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
-import type { NormalizedData } from '../../interactive-os/core/types'
+import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import type { Locale } from './cms-types'
 import type { SectionVariant } from './cms-templates'
 import { createSection } from './cms-templates'
-import { getSectionClassName } from './cms-renderers'
-import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
+import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
+import { useAria } from '../../interactive-os/hooks/useAria'
+import { listbox } from '../../interactive-os/behaviors/listbox'
+import { core, focusCommands } from '../../interactive-os/plugins/core'
+import { crudCommands } from '../../interactive-os/plugins/crud'
+import { dndCommands } from '../../interactive-os/plugins/dnd'
+import { focusRecovery } from '../../interactive-os/plugins/focus-recovery'
 import CmsTemplatePicker from './CmsTemplatePicker'
 
 interface CmsSidebarProps {
@@ -27,11 +34,9 @@ function addSectionToStore(
   const rootChildren = getChildren(store, ROOT_ID)
   const insertAt = afterIndex + 1
 
-  // Merge template entities into store
   const entities = { ...store.entities, ...template.entities }
   const relationships = { ...store.relationships, ...template.relationships }
 
-  // Insert into ROOT_ID children
   const newRootChildren = [
     ...rootChildren.slice(0, insertAt),
     template.rootId,
@@ -40,20 +45,6 @@ function addSectionToStore(
   relationships[ROOT_ID] = newRootChildren
 
   return { store: { entities, relationships }, newSectionId: template.rootId }
-}
-
-function reorderSection(
-  store: NormalizedData,
-  fromIndex: number,
-  toIndex: number,
-): NormalizedData {
-  const rootChildren = [...getChildren(store, ROOT_ID)]
-  const [moved] = rootChildren.splice(fromIndex, 1)
-  rootChildren.splice(toIndex, 0, moved)
-  return {
-    ...store,
-    relationships: { ...store.relationships, [ROOT_ID]: rootChildren },
-  }
 }
 
 function duplicateSection(
@@ -82,7 +73,6 @@ function SectionThumbnail({ data, sectionId, locale }: {
   const tag = getNodeTag(d)
   const childrenContainerClass = getChildrenContainerClassName(d)
 
-  // Separate header vs content children (same logic as CmsCanvas)
   const headerIds: string[] = []
   const contentIds: string[] = []
   for (const childId of children) {
@@ -150,143 +140,162 @@ function ThumbNode({ data, nodeId, locale }: {
 
 // ── CmsSidebar ──
 
+const sidebarPlugins = [core(), focusRecovery()]
+
 export default function CmsSidebar({ data, onDataChange, locale, activeSectionId }: CmsSidebarProps) {
-  const sectionIds = getChildren(data, ROOT_ID)
-  const [rawFocusIdx, setFocusIdx] = useState(0)
-
-  // Derive focus index: canvas active section overrides manual selection
-  const activeSectionIdx = activeSectionId ? sectionIds.indexOf(activeSectionId) : -1
-  const focusIdx = activeSectionIdx >= 0
-    ? activeSectionIdx
-    : Math.min(rawFocusIdx, Math.max(0, sectionIds.length - 1))
-
   const [pickerOpen, setPickerOpen] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
+  const pendingFocusRef = useRef<string | null>(null)
+
+  // Refs for stable keyMap closures
+  const dataRef = useRef(data)
+  dataRef.current = data
+  const onDataChangeRef = useRef(onDataChange)
+  onDataChangeRef.current = onDataChange
+
+  // Flat store: root-level sections only (no children)
+  const sidebarData = useMemo((): NormalizedData => {
+    const ids = getChildren(data, ROOT_ID)
+    const entities: Record<string, unknown> = {}
+    for (const id of ids) entities[id] = data.entities[id]
+    return { entities, relationships: { [ROOT_ID]: [...ids] } }
+  }, [data])
+
+  const scrollToSection = useCallback((id: string) => {
+    const el = document.querySelector(`[data-cms-root] [data-node-id="${id}"]`) as HTMLElement
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+  const scrollRef = useRef(scrollToSection)
+  scrollRef.current = scrollToSection
+
+  // CRUD keyMap — commands dispatch to sidebar engine, onChange syncs to CMS store
+  const sidebarKeyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+    Delete: (ctx) => {
+      if (ctx.getChildren(ROOT_ID).length <= 1) return
+      return crudCommands.remove(ctx.focused)
+    },
+    Backspace: (ctx) => {
+      if (ctx.getChildren(ROOT_ID).length <= 1) return
+      return crudCommands.remove(ctx.focused)
+    },
+    'Mod+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
+    'Mod+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+    'Mod+D': (ctx) => {
+      const sections = getChildren(dataRef.current, ROOT_ID)
+      const idx = sections.indexOf(ctx.focused)
+      const { store, newSectionId } = duplicateSection(dataRef.current, idx)
+      onDataChangeRef.current(store)
+      pendingFocusRef.current = newSectionId
+    },
+    Enter: (ctx) => { scrollRef.current(ctx.focused) },
+    Escape: () => {
+      ;(document.querySelector('[data-cms-root]') as HTMLElement)?.focus()
+    },
+  }), [])
+
+  // Sync sidebar store changes (delete, reorder) back to CMS store
+  const handleChange = useCallback((newStore: NormalizedData) => {
+    const cur = dataRef.current
+    const oldIds = getChildren(cur, ROOT_ID)
+    const newIds = getChildren(newStore, ROOT_ID)
+
+    // Deletion — remove full subtree from CMS store
+    const deleted = oldIds.filter(id => !newIds.includes(id))
+    if (deleted.length > 0) {
+      let updated = cur
+      for (const id of deleted) updated = removeEntity(updated, id)
+      onDataChangeRef.current(updated)
+      return
+    }
+
+    // Reorder
+    if (oldIds.join(',') !== newIds.join(',')) {
+      onDataChangeRef.current({
+        ...cur,
+        relationships: { ...cur.relationships, [ROOT_ID]: newIds },
+      })
+    }
+  }, [])
+
+  const aria = useAria({
+    behavior: listbox,
+    data: sidebarData,
+    plugins: sidebarPlugins,
+    keyMap: sidebarKeyMap,
+    onChange: handleChange,
+  })
+
+  // Pending focus after add/duplicate — wait for sidebarData to include the new entity
+  useEffect(() => {
+    const id = pendingFocusRef.current
+    if (!id) return
+    const ids = getChildren(sidebarData, ROOT_ID)
+    if (!ids.includes(id)) return
+    pendingFocusRef.current = null
+    aria.dispatch(focusCommands.setFocus(id))
+    scrollRef.current(id)
+  }, [sidebarData, aria])
+
+  // Sync with canvas active section (when sidebar not focused)
+  useEffect(() => {
+    if (!activeSectionId) return
+    if (listRef.current?.contains(document.activeElement)) return
+    aria.dispatch(focusCommands.setFocus(activeSectionId))
+  }, [activeSectionId, aria])
+
+  // Manual DOM focus sync — scoped to sidebar (avoids data-node-id conflict with canvas)
+  useEffect(() => {
+    if (!aria.focused) return
+    const el = listRef.current?.querySelector(`[data-sidebar-id="${aria.focused}"]`) as HTMLElement
+    if (!el || el === document.activeElement) return
+    if (!listRef.current?.contains(document.activeElement)) return
+    el.focus({ preventScroll: false })
+  }, [aria.focused])
 
   // Scroll focused thumbnail into view
   useEffect(() => {
-    const el = listRef.current?.children[focusIdx] as HTMLElement | undefined
+    const el = listRef.current?.querySelector(`[data-sidebar-id="${aria.focused}"]`) as HTMLElement
     el?.scrollIntoView({ block: 'nearest' })
-  }, [focusIdx])
+  }, [aria.focused])
 
-  const scrollCanvasToSection = useCallback((sectionId: string) => {
-    const canvasEl = document.querySelector(`[data-cms-root]`)
-    if (!canvasEl) return
-    const sectionEl = canvasEl.querySelector(`[data-id="${sectionId}"]`)
-      ?? canvasEl.children[getChildren(data, ROOT_ID).indexOf(sectionId)] as HTMLElement | null
-    sectionEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [data])
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    const isMod = e.metaKey || e.ctrlKey
-
-    switch (e.key) {
-      case 'ArrowUp':
-        e.preventDefault()
-        if (isMod) {
-          // Reorder: move section up
-          if (focusIdx > 0) {
-            onDataChange(reorderSection(data, focusIdx, focusIdx - 1))
-            setFocusIdx(focusIdx - 1)
-          }
-        } else {
-          setFocusIdx(i => Math.max(i - 1, 0))
-        }
-        break
-      case 'ArrowDown':
-        e.preventDefault()
-        if (isMod) {
-          // Reorder: move section down
-          if (focusIdx < sectionIds.length - 1) {
-            onDataChange(reorderSection(data, focusIdx, focusIdx + 1))
-            setFocusIdx(focusIdx + 1)
-          }
-        } else {
-          setFocusIdx(i => Math.min(i + 1, sectionIds.length - 1))
-        }
-        break
-      case 'Enter':
-        e.preventDefault()
-        scrollCanvasToSection(sectionIds[focusIdx])
-        break
-      case 'Escape':
-        e.preventDefault()
-        // Focus the canvas
-        ;(document.querySelector('[data-cms-root]') as HTMLElement)?.focus()
-        break
-      case 'Delete':
-      case 'Backspace':
-        e.preventDefault()
-        if (sectionIds.length <= 1) break // Minimum 1 section
-        {
-          const newStore = removeEntity(data, sectionIds[focusIdx])
-          onDataChange(newStore)
-          // Focus next or previous
-          setFocusIdx(i => Math.min(i, sectionIds.length - 2))
-        }
-        break
-      case 'd':
-        if (isMod) {
-          e.preventDefault()
-          const { store: newStore, newSectionId } = duplicateSection(data, focusIdx)
-          onDataChange(newStore)
-          setFocusIdx(focusIdx + 1)
-          // Scroll to new section after render
-          requestAnimationFrame(() => scrollCanvasToSection(newSectionId))
-        }
-        break
-      case 'Home':
-        e.preventDefault()
-        setFocusIdx(0)
-        break
-      case 'End':
-        e.preventDefault()
-        setFocusIdx(sectionIds.length - 1)
-        break
-    }
-  }
+  const sectionIds = getChildren(data, ROOT_ID)
 
   const handleAddSection = (variant: SectionVariant) => {
     setPickerOpen(false)
-    const { store: newStore, newSectionId } = addSectionToStore(data, variant, focusIdx)
-    onDataChange(newStore)
-    setFocusIdx(focusIdx + 1)
-    // Scroll + refocus sidebar after render
-    requestAnimationFrame(() => {
-      scrollCanvasToSection(newSectionId)
-      listRef.current?.focus()
-    })
+    const focusedIdx = sectionIds.indexOf(aria.focused)
+    const { store, newSectionId } = addSectionToStore(data, variant, focusedIdx >= 0 ? focusedIdx : sectionIds.length - 1)
+    onDataChange(store)
+    pendingFocusRef.current = newSectionId
   }
 
   return (
     <aside className="cms-sidebar" aria-label="Sections">
-      <div
-        className="cms-sidebar__list"
-        role="listbox"
-        aria-label="Section thumbnails"
-        ref={listRef}
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-      >
-        {sectionIds.map((sectionId, i) => (
-          <div
-            key={sectionId}
-            role="option"
-            aria-selected={i === focusIdx}
-            className={`cms-sidebar__thumb${i === focusIdx ? ' cms-sidebar__thumb--focused' : ''}`}
-            onClick={() => {
-              setFocusIdx(i)
-              scrollCanvasToSection(sectionId)
-              listRef.current?.focus()
-            }}
-          >
-            <div className="cms-sidebar__thumb-inner">
-              <SectionThumbnail data={data} sectionId={sectionId} locale={locale} />
+      <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef}>
+        {sectionIds.map((sectionId, i) => {
+          const nodeProps = aria.getNodeProps(sectionId)
+          const state = aria.getNodeState(sectionId)
+          // Strip data-node-id (avoid collision with canvas) and onClick (custom handler)
+          const { 'data-node-id': _nodeId, onClick: _click, ...restProps } = nodeProps
+          void _nodeId; void _click
+          return (
+            <div
+              key={sectionId}
+              {...(restProps as React.HTMLAttributes<HTMLDivElement>)}
+              data-sidebar-id={sectionId}
+              className={`cms-sidebar__thumb${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
+              onClick={() => {
+                aria.dispatch(focusCommands.setFocus(sectionId))
+                scrollToSection(sectionId)
+              }}
+            >
+              <div className="cms-sidebar__thumb-inner">
+                <SectionThumbnail data={data} sectionId={sectionId} locale={locale} />
+              </div>
+              <span className="cms-sidebar__thumb-index">{i + 1}</span>
             </div>
-            <span className="cms-sidebar__thumb-index">{i + 1}</span>
-          </div>
-        ))}
+          )
+        })}
       </div>
       <div className="cms-sidebar__add-area">
         <button

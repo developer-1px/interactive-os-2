@@ -210,6 +210,125 @@ function getImportsData(filePath: string, projectRoot: string): ImportsResponse 
   }
 }
 
+// --- Export parsing ---
+
+interface ExportedSymbol {
+  kind: 'function' | 'interface' | 'type' | 'const' | 'class'
+  name: string
+  signature?: string       // function params + return type
+  properties?: { name: string; type: string }[]  // interface/type members
+  value?: string           // const value hint or type alias
+}
+
+interface ExportsResponse {
+  file: string
+  symbols: ExportedSymbol[]
+}
+
+function parseExports(content: string): ExportedSymbol[] {
+  const symbols: ExportedSymbol[] = []
+  const lines = content.split('\n')
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+
+    // export function name(params): returnType
+    const fnMatch = line.match(/^export\s+(?:default\s+)?function\s+(\w+)\s*(\([^)]*\))(?:\s*:\s*(.+?))?(?:\s*\{|$)/)
+    if (fnMatch) {
+      symbols.push({
+        kind: 'function',
+        name: fnMatch[1],
+        signature: `${fnMatch[2]}${fnMatch[3] ? ': ' + fnMatch[3].trim() : ''}`,
+      })
+      continue
+    }
+
+    // export const name = (...) => ... or export const name: Type = ...
+    const constMatch = line.match(/^export\s+(?:default\s+)?const\s+(\w+)(?:\s*:\s*([^=]+?))?\s*=/)
+    if (constMatch) {
+      // Check if it's an arrow function
+      const rest = line.slice(line.indexOf('=') + 1).trim()
+      const arrowMatch = rest.match(/^\s*(\([^)]*\))(?:\s*:\s*(\w[^=]*?))?\s*=>/)
+      if (arrowMatch) {
+        symbols.push({
+          kind: 'function',
+          name: constMatch[1],
+          signature: `${arrowMatch[1]}${arrowMatch[2] ? ': ' + arrowMatch[2].trim() : ''}`,
+        })
+      } else {
+        symbols.push({
+          kind: 'const',
+          name: constMatch[1],
+          value: constMatch[2]?.trim() ?? rest.slice(0, 40).replace(/[{[\n]/g, '').trim(),
+        })
+      }
+      continue
+    }
+
+    // export interface Name { ... }
+    const ifaceMatch = line.match(/^export\s+(?:default\s+)?interface\s+(\w+)/)
+    if (ifaceMatch) {
+      const props = parseMembers(lines, i + 1)
+      symbols.push({ kind: 'interface', name: ifaceMatch[1], properties: props })
+      continue
+    }
+
+    // export type Name = { ... } or export type Name = ...
+    const typeMatch = line.match(/^export\s+(?:default\s+)?type\s+(\w+)(?:<[^>]*>)?\s*=\s*(.*)/)
+    if (typeMatch) {
+      const rhs = typeMatch[2].trim()
+      if (rhs === '{' || rhs === '') {
+        const props = parseMembers(lines, i + 1)
+        symbols.push({ kind: 'type', name: typeMatch[1], properties: props })
+      } else {
+        symbols.push({ kind: 'type', name: typeMatch[1], value: rhs.slice(0, 60) })
+      }
+      continue
+    }
+
+    // export class Name
+    const classMatch = line.match(/^export\s+(?:default\s+)?(?:abstract\s+)?class\s+(\w+)/)
+    if (classMatch) {
+      const props = parseMembers(lines, i + 1)
+      symbols.push({ kind: 'class', name: classMatch[1], properties: props })
+      continue
+    }
+  }
+
+  return symbols
+}
+
+function parseMembers(lines: string[], startLine: number): { name: string; type: string }[] {
+  const members: { name: string; type: string }[] = []
+  let depth = 1
+
+  for (let i = startLine; i < lines.length && depth > 0; i++) {
+    const line = lines[i].trim()
+    if (line.includes('{')) depth++
+    if (line.includes('}')) depth--
+    if (depth <= 0) break
+
+    // Match property: name: type or name?: type
+    const propMatch = line.match(/^(?:readonly\s+)?(\w+)\??\s*:\s*(.+?)(?:\s*[;,]?\s*$)/)
+    if (propMatch && depth === 1) {
+      members.push({ name: propMatch[1], type: propMatch[2].replace(/[;,]$/, '').trim() })
+    }
+
+    // Match method: name(params): returnType
+    const methodMatch = line.match(/^(?:readonly\s+)?(\w+)\s*(\([^)]*\))(?:\s*:\s*(.+?))?(?:\s*[;,{]?\s*$)/)
+    if (methodMatch && !propMatch && depth === 1) {
+      members.push({ name: methodMatch[1], type: `${methodMatch[2]}${methodMatch[3] ? ' → ' + methodMatch[3].replace(/[;,{]$/, '').trim() : ''}` })
+    }
+  }
+
+  return members
+}
+
+function getExportsData(filePath: string): ExportsResponse {
+  const content = fs.readFileSync(filePath, 'utf-8')
+  return { file: filePath, symbols: parseExports(content) }
+}
+
 export function fsPlugin(): Plugin {
   return {
     name: 'vite-plugin-fs',
@@ -233,6 +352,19 @@ export function fsPlugin(): Plugin {
           }
           res.setHeader('Content-Type', 'application/json')
           res.end(JSON.stringify(buildTree(root)))
+          return
+        }
+
+        if (url.pathname === '/api/fs/exports') {
+          const filePath = url.searchParams.get('path')
+          if (!filePath || !fs.existsSync(filePath)) {
+            res.statusCode = 404
+            res.end(JSON.stringify({ error: 'File not found' }))
+            return
+          }
+          const data = getExportsData(filePath)
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify(data))
           return
         }
 

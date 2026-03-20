@@ -1,5 +1,5 @@
 /* CMS Layout */
-.cms-layout { display: flex; flex-direction: column; flex: 1; min-height: 0; background: var(--surface-0); }
+.cms-layout { display: flex; flex-direction: column; flex: 1; min-height: 0; background: var(--surface-0); grid-column: 2 / -1; }
 
 /* Top toolbar — thin strip */
 .cms-top-toolbar {
@@ -51,7 +51,7 @@
 .cms-sidebar__list:focus { outline: none; }
 
 .cms-sidebar__thumb {
-  width: 104px; height: 60px; overflow: hidden;
+  width: 104px; overflow: hidden;
   border-radius: var(--radius-sm);
   border: 2px solid transparent;
   cursor: pointer; position: relative;
@@ -63,8 +63,7 @@
   border-color: var(--accent);
 }
 .cms-sidebar__thumb-inner {
-  transform: scale(0.1);
-  transform-origin: top left;
+  zoom: 0.1;
   width: 1040px;
   pointer-events: none;
 }
