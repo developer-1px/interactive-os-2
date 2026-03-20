@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
-import { depthArrow } from '../axes/depth-arrow'
-import { depthEnterEsc } from '../axes/depth-enter-esc'
+import { depthArrow } from '../axes/depthArrow'
+import { depthEnterEsc } from '../axes/depthEnterEsc'
 import type { BehaviorContext } from '../behaviors/types'
 import type { Command } from '../core/types'
 

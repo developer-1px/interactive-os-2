@@ -1,7 +1,7 @@
 import type { NodeState } from './types'
-import { composePattern } from '../axes/compose-pattern'
-import { selectToggle } from '../axes/select-toggle'
-import { navVhUniform } from '../axes/nav-vh-uniform'
+import { composePattern } from '../axes/composePattern'
+import { selectToggle } from '../axes/selectToggle'
+import { navVhUniform } from '../axes/navVhUniform'
 
 export const radiogroup = composePattern(
   {

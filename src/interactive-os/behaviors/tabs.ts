@@ -1,7 +1,7 @@
 import type { NodeState } from './types'
-import { composePattern } from '../axes/compose-pattern'
-import { activateFollowFocus } from '../axes/activate-follow-focus'
-import { navH } from '../axes/nav-h'
+import { composePattern } from '../axes/composePattern'
+import { activateFollowFocus } from '../axes/activateFollowFocus'
+import { navH } from '../axes/navH'
 
 export const tabs = composePattern(
   {

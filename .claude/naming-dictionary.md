@@ -1,5 +1,5 @@
 ---
-last_commit: 6de9f8dfdafac64258f5da6c34548bc7a8b63140
+last_commit: d0cef0627e593a4cd5730587db97a9971bb11251
 last_updated: 2026-03-20
 ---
 
@@ -23,7 +23,7 @@ last_updated: 2026-03-20
 | collapse | 1 | collapse |
 | activate | 3 | activate, onActivate, activateOnClick |
 | follow | 1 | followFocus |
-| dispatch | 1 | dispatch |
+| dispatch | 2 | dispatch, dispatchKeyAction |
 | start | 1 | startRename |
 | confirm | 1 | confirmRename |
 | cancel | 1 | cancelRename |
@@ -43,7 +43,11 @@ last_updated: 2026-03-20
 | format | 1 | formatSnapshots |
 | undo | 1 | undoCommand |
 | redo | 1 | redoCommand |
-| use | 4 | useAria, useControlledAria, useKeyboard, useSpatialNav |
+| use | 6 | useAria, useAriaZone, useControlledAria, useEngine, useKeyboard, useSpatialNav |
+| compose | 1 | composePattern |
+| apply | 1 | applyMetaCommand |
+| sync | 1 | syncStore |
+| nav | 4 | navV, navH, navVhUniform, navGrid |
 
 ## Nouns
 | fragment | count | identifiers |
@@ -51,7 +55,7 @@ last_updated: 2026-03-20
 | store | 2 | createStore, NormalizedData |
 | entity | 4 | Entity, getEntity, addEntity, removeEntity, updateEntity, getEntityData, updateEntityData |
 | command | 5 | Command, BatchCommand, CommandEngine, createCommandEngine, createBatchCommand |
-| engine | 2 | CommandEngine, createCommandEngine |
+| engine | 3 | CommandEngine, createCommandEngine, useEngine |
 | behavior | 3 | AriaBehavior, BehaviorContext, createBehaviorContext |
 | context | 3 | BehaviorContext, createBehaviorContext, AriaInternalContext |
 | plugin | 1 | Plugin |
@@ -63,7 +67,7 @@ last_updated: 2026-03-20
 | selection | 4 | SELECTION_ID, SELECTION_ANCHOR_ID, selectionCommands, SelectionMode |
 | anchor | 1 | SELECTION_ANCHOR_ID, setAnchor |
 | state | 1 | NodeState |
-| grid | 4 | GridNav, GRID_COL_ID, gridColCommands, grid (behavior) |
+| grid | 5 | GridNav, GRID_COL_ID, gridColCommands, grid (behavior), navGrid |
 | key | 3 | KeyCombo, findMatchingKey, parseKeyCombo |
 | recorder | 1 | createRecorder |
 | snapshot | 1 | ReplaySnapshot |
@@ -75,16 +79,22 @@ last_updated: 2026-03-20
 | history | 2 | historyCommands, history (plugin) |
 | crud | 1 | crudCommands |
 | dnd | 1 | dndCommands |
-| aria | 4 | Aria, AriaInternalContext, AriaBehavior, useAria |
+| aria | 5 | Aria, AriaInternalContext, AriaBehavior, useAria, useAriaZone |
 | item | 3 | AriaItem (component), AriaItemProps, AriaItemContext |
 | recovery | 1 | focusRecovery |
 | spatial | 3 | spatial (behavior), spatial (plugin), spatialCommands, SPATIAL_PARENT_ID, getSpatialParentId, useSpatialNav, findNearest |
 | tree | 2 | tree (behavior), TreeView (UI) |
 | apg | 16 | ApgKeyboardEntry, ApgPatternData, ApgKeyboardTable, apgAccordion, apgDisclosure, apgSwitch, apgTabs, apgRadioGroup, apgMenu, apgToolbar, apgDialog, apgAlertDialog, apgTreeView, apgTreeGrid, apgListbox, apgGrid, apgCombobox |
 | keyboard | 2 | ApgKeyboardEntry, ApgKeyboardTable |
-| pattern | 1 | ApgPatternData |
+| pattern | 2 | ApgPatternData, composePattern, PatternConfig |
 | entry | 1 | ApgKeyboardEntry |
 | table | 1 | ApgKeyboardTable |
+| axis | 12 | Axis (type), navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap |
+| zone | 2 | useAriaZone, UseAriaZoneOptions |
+| scope | 1 | UseAriaZoneOptions.scope |
+| depth | 2 | depthArrow, depthEnterEsc |
+| trap | 1 | focusTrap |
+| keymap | 1 | keymap-helpers (file) |
 
 ## Adjectives
 | fragment | count | identifiers |
@@ -99,6 +109,10 @@ last_updated: 2026-03-20
 | batch | 2 | BatchCommand, createBatchCommand |
 | raw | 1 | RawEvent |
 | matching | 1 | findMatchingKey |
+| editable | 1 | isEditableElement |
+| uniform | 1 | navVhUniform |
+| extended | 1 | selectExtended |
+| meta | 1 | META_COMMAND_TYPES |
 
 ## Synonym Map
 | canonical | known synonyms | notes |
@@ -108,4 +122,16 @@ last_updated: 2026-03-20
 | remove | delete (command type only) | removeEntity (store API), `crud:delete` (command type string) — different layers |
 | update | set (focus/grid state) | updateEntity (data mutation), setFocus/setGridCol (state assignment) — semantically distinct |
 | children | items (routeConfig only) | getChildren (store API), items (App.tsx route config) — different domains |
+| pattern | navigation (deprecated) | route group for ARIA APG patterns was 'navigation' → renamed to 'pattern' per ARIA terminology |
 | node | item (component layer) | node = store/data layer (NodeState, moveNode), item = component API (Aria.Item) — proper layer separation |
+| activate | activateFollowFocus | activateFollowFocus is alias for activate — followFocus is metadata flag, not keyMap |
+| compose | create | composePattern (axis→behavior composition), create (entity/engine factory) — distinct intent |
+| switchBehavior | — | `switch` is JS reserved word; only behavior export with suffix — unavoidable exception |
+| metadata | config | PatternMetadata → PatternConfig (renamed: Omit&lt;AriaBehavior, 'keyMap'&gt;) |
+
+## File Naming Rule
+- **파일명 = 주 export 식별자** — `useAria.ts` → `export function useAria`, `TreeGrid.tsx` → `export function TreeGrid`
+- **multi-export 파일** — 모듈명 camelCase (`keymapHelpers.ts`)
+- **단일 소문자 export** — 그대로 (`accordion.ts` → `export const accordion`)
+- **kebab-case 파일명 금지** — 기존 kebab 파일은 `git mv`로 rename
+- **rename 시 반드시 `git mv`** — macOS case-insensitive 충돌 방지

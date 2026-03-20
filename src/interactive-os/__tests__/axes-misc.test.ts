@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { focusTrap } from '../axes/focus-trap'
+import { focusTrap } from '../axes/focusTrap'
 import type { BehaviorContext } from '../behaviors/types'
 import type { Command } from '../core/types'
 

@@ -1,4 +1,4 @@
-import type { Axis } from './compose-pattern'
+import type { Axis } from './composePattern'
 
 export const activate: Axis = {
   Enter: (ctx) => ctx.activate(),

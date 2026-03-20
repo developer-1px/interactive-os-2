@@ -151,10 +151,10 @@ const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'navigation',
-    label: 'Navigation',
+    id: 'pattern',
+    label: 'Pattern',
     icon: Compass,
-    basePath: '/navigation/accordion',
+    basePath: '/pattern/accordion',
     items: [
       { path: 'accordion', label: 'Accordion', status: 'ready', component: PageAccordion },
       { path: 'disclosure', label: 'Disclosure', status: 'ready', component: PageDisclosure },

@@ -5,7 +5,7 @@ import { ROOT_ID } from '../core/types'
 import { focusCommands, expandCommands } from '../plugins/core'
 import { crudCommands } from '../plugins/crud'
 import { history } from '../plugins/history'
-import { focusRecovery } from '../plugins/focus-recovery'
+import { focusRecovery } from '../plugins/focusRecovery'
 
 /**
  * Reproduce: tree에서 삭제 시 포커스 복구 안 됨

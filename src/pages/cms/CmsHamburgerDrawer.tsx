@@ -15,7 +15,7 @@ const drawerItems: DrawerNavItem[] = [
   { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
   { id: 'store', label: 'Store', icon: Database, path: '/store/explorer' },
   { id: 'engine', label: 'Engine', icon: Cog, path: '/engine/pipeline' },
-  { id: 'navigation', label: 'Navigation', icon: Compass, path: '/navigation/accordion' },
+  { id: 'pattern', label: 'Pattern', icon: Compass, path: '/pattern/accordion' },
   { id: 'plugin', label: 'Plugin', icon: Puzzle, path: '/plugin/crud' },
   { id: 'collection', label: 'Collection', icon: Layers, path: '/collection/treegrid' },
   { id: 'components', label: 'Components', icon: Box, path: '/components/aria' },

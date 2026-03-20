@@ -7,7 +7,7 @@ import type { NodeState } from '../interactive-os/behaviors/types'
 import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
-import { focusRecovery } from '../interactive-os/plugins/focus-recovery'
+import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 
 // Sample store data — the store visualizes itself
 const sampleStore = createStore({

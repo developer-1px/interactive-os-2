@@ -8,7 +8,7 @@ import type { NodeState } from '../interactive-os/behaviors/types'
 import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { rename } from '../interactive-os/plugins/rename'
-import { focusRecovery } from '../interactive-os/plugins/focus-recovery'
+import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 
 const bookmarkData = createStore({
   entities: {

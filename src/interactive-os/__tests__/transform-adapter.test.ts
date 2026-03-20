@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { fileTreeAdapter, exampleFiles } from '../examples/transform-adapter'
-import type { FileNode } from '../examples/transform-adapter'
+import { fileTreeAdapter, exampleFiles } from '../examples/fileTreeAdapter'
+import type { FileNode } from '../examples/fileTreeAdapter'
 import { ROOT_ID } from '../core/types'
 
 describe('fileTreeAdapter', () => {

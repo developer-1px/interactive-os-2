@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { Command, NormalizedData } from '../core/types'
 import type { BehaviorContext } from '../behaviors/types'
 import { focusCommands } from '../plugins/core'
@@ -68,21 +68,27 @@ export function useSpatialNav(
   const [, forceUpdate] = useState(0)
 
   useEffect(() => {
-    const handler = () => forceUpdate(n => n + 1)
+    let rafId = 0
+    const handler = () => {
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => forceUpdate(n => n + 1))
+    }
     window.addEventListener('resize', handler)
-    return () => window.removeEventListener('resize', handler)
+    return () => {
+      window.removeEventListener('resize', handler)
+      cancelAnimationFrame(rafId)
+    }
   }, [])
+
+  const spatialParentId = getSpatialParentId(store)
+  const allowed = getChildren(store, spatialParentId)
+  allowedIdsRef.current = allowed
 
   useLayoutEffect(() => {
     const container = document.querySelector(containerSelector)
     if (!container) return
 
-    // Only collect rects for current depth's children
-    const spatialParentId = getSpatialParentId(store)
-    const allowed = getChildren(store, spatialParentId)
-    allowedIdsRef.current = allowed
     const allowedSet = new Set(allowed)
-
     const attrName = scope ? `data-${scope}-id` : 'data-node-id'
     const elements = container.querySelectorAll<HTMLElement>(`[${attrName}]`)
     const next = new Map<string, DOMRect>()
@@ -93,26 +99,28 @@ export function useSpatialNav(
       }
     })
     rectsRef.current = next
-  })
+  }, [containerSelector, allowed, scope])
 
-  const makeHandler = (dir: Direction) => (ctx: BehaviorContext): Command | void => {
-    const targetId = findNearest(ctx.focused, dir, rectsRef.current)
-    if (targetId) return focusCommands.setFocus(targetId)
-  }
+  return useMemo(() => {
+    const makeHandler = (dir: Direction) => (ctx: BehaviorContext): Command | void => {
+      const targetId = findNearest(ctx.focused, dir, rectsRef.current)
+      if (targetId) return focusCommands.setFocus(targetId)
+    }
 
-  const makeShiftHandler = (dir: Direction) => (ctx: BehaviorContext): Command | void => {
-    const targetId = findNearest(ctx.focused, dir, rectsRef.current)
-    if (targetId) return ctx.extendSelectionTo(targetId, allowedIdsRef.current)
-  }
+    const makeShiftHandler = (dir: Direction) => (ctx: BehaviorContext): Command | void => {
+      const targetId = findNearest(ctx.focused, dir, rectsRef.current)
+      if (targetId) return ctx.extendSelectionTo(targetId, allowedIdsRef.current)
+    }
 
-  return {
-    ArrowUp: makeHandler('ArrowUp'),
-    ArrowDown: makeHandler('ArrowDown'),
-    ArrowLeft: makeHandler('ArrowLeft'),
-    ArrowRight: makeHandler('ArrowRight'),
-    'Shift+ArrowUp': makeShiftHandler('ArrowUp'),
-    'Shift+ArrowDown': makeShiftHandler('ArrowDown'),
-    'Shift+ArrowLeft': makeShiftHandler('ArrowLeft'),
-    'Shift+ArrowRight': makeShiftHandler('ArrowRight'),
-  }
+    return {
+      ArrowUp: makeHandler('ArrowUp'),
+      ArrowDown: makeHandler('ArrowDown'),
+      ArrowLeft: makeHandler('ArrowLeft'),
+      ArrowRight: makeHandler('ArrowRight'),
+      'Shift+ArrowUp': makeShiftHandler('ArrowUp'),
+      'Shift+ArrowDown': makeShiftHandler('ArrowDown'),
+      'Shift+ArrowLeft': makeShiftHandler('ArrowLeft'),
+      'Shift+ArrowRight': makeShiftHandler('ArrowRight'),
+    }
+  }, [allowed])
 }

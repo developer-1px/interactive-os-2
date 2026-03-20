@@ -17,7 +17,7 @@ import { core } from '../plugins/core'
 import { crud } from '../plugins/crud'
 import { clipboard, resetClipboard } from '../plugins/clipboard'
 import { history } from '../plugins/history'
-import { focusRecovery } from '../plugins/focus-recovery'
+import { focusRecovery } from '../plugins/focusRecovery'
 import { dnd } from '../plugins/dnd'
 import type { NodeState } from '../behaviors/types'
 

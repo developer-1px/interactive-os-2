@@ -10,7 +10,7 @@ import { crud } from '../interactive-os/plugins/crud'
 import { clipboard } from '../interactive-os/plugins/clipboard'
 import { rename } from '../interactive-os/plugins/rename'
 import { dnd } from '../interactive-os/plugins/dnd'
-import { focusRecovery } from '../interactive-os/plugins/focus-recovery'
+import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 
 const initialData = createStore({
   entities: {

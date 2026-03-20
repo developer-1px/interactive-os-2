@@ -7,7 +7,7 @@ import { crudCommands } from '../plugins/crud'
 import { clipboardCommands, resetClipboard } from '../plugins/clipboard'
 import { dndCommands } from '../plugins/dnd'
 import { history, historyCommands } from '../plugins/history'
-import { focusRecovery } from '../plugins/focus-recovery'
+import { focusRecovery } from '../plugins/focusRecovery'
 
 function fixtureStore() {
   return createStore({

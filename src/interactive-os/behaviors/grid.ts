@@ -1,7 +1,7 @@
 import type { AriaBehavior, NodeState } from './types'
-import { composePattern } from '../axes/compose-pattern'
-import { selectToggle } from '../axes/select-toggle'
-import { navGrid } from '../axes/nav-grid'
+import { composePattern } from '../axes/composePattern'
+import { selectToggle } from '../axes/selectToggle'
+import { navGrid } from '../axes/navGrid'
 
 export function grid(options: { columns: number }): AriaBehavior {
   return composePattern(

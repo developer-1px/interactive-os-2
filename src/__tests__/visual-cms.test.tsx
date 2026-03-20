@@ -158,7 +158,7 @@ describe('Visual CMS field-level CRUD', () => {
 // ── Spatial navigation (jsdom-compatible: Enter, Escape, Space, Home, End) ──
 
 function getFocused(container: HTMLElement): string {
-  return container.querySelector('[tabindex="0"][data-node-id]')?.getAttribute('data-node-id') ?? ''
+  return container.querySelector('[tabindex="0"][data-cms-id]')?.getAttribute('data-cms-id') ?? ''
 }
 
 describe('Visual CMS spatial navigation', () => {
@@ -171,13 +171,13 @@ describe('Visual CMS spatial navigation', () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
     // Focus hero (initial focus), then Enter to drill in
-    const hero = (container as HTMLElement).querySelector('[data-node-id="hero"]') as HTMLElement
+    const hero = (container as HTMLElement).querySelector('[data-cms-id="hero"]') as HTMLElement
     hero.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('hero-badge')
 
     // Escape returns to hero
-    const focused = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    const focused = (container as HTMLElement).querySelector('[tabindex="0"][data-cms-id]') as HTMLElement
     focused.focus()
     await user.keyboard('{Escape}')
     expect(getFocused(container as HTMLElement)).toBe('hero')
@@ -186,7 +186,7 @@ describe('Visual CMS spatial navigation', () => {
   it('Space toggles selection', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    const hero = (container as HTMLElement).querySelector('[data-node-id="hero"]') as HTMLElement
+    const hero = (container as HTMLElement).querySelector('[data-cms-id="hero"]') as HTMLElement
     hero.focus()
     await user.keyboard(' ')
     expect(hero.getAttribute('aria-selected')).toBe('true')
@@ -195,11 +195,11 @@ describe('Visual CMS spatial navigation', () => {
   it('Home/End navigate to first/last at current depth', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    const hero = (container as HTMLElement).querySelector('[data-node-id="hero"]') as HTMLElement
+    const hero = (container as HTMLElement).querySelector('[data-cms-id="hero"]') as HTMLElement
     hero.focus()
     await user.keyboard('{End}')
     expect(getFocused(container as HTMLElement)).toBe('footer')
-    const footer = (container as HTMLElement).querySelector('[data-node-id="footer"]') as HTMLElement
+    const footer = (container as HTMLElement).querySelector('[data-cms-id="footer"]') as HTMLElement
     footer.focus()
     await user.keyboard('{Home}')
     expect(getFocused(container as HTMLElement)).toBe('hero')
@@ -208,16 +208,16 @@ describe('Visual CMS spatial navigation', () => {
   it('all nodes are always visible in the DOM', () => {
     const { container } = render(<PageVisualCms />)
     // Check that some deep nodes are rendered even without Enter
-    expect((container as HTMLElement).querySelector('[data-node-id="stat-patterns"]')).toBeTruthy()
-    expect((container as HTMLElement).querySelector('[data-node-id="card-store"]')).toBeTruthy()
-    expect((container as HTMLElement).querySelector('[data-node-id="pat-treegrid"]')).toBeTruthy()
-    expect((container as HTMLElement).querySelector('[data-node-id="footer-brand"]')).toBeTruthy()
+    expect((container as HTMLElement).querySelector('[data-cms-id="stat-patterns"]')).toBeTruthy()
+    expect((container as HTMLElement).querySelector('[data-cms-id="card-store"]')).toBeTruthy()
+    expect((container as HTMLElement).querySelector('[data-cms-id="pat-treegrid"]')).toBeTruthy()
+    expect((container as HTMLElement).querySelector('[data-cms-id="footer-brand"]')).toBeTruthy()
   })
 
   it('click on node focuses it', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    const patterns = (container as HTMLElement).querySelector('[data-node-id="patterns"]') as HTMLElement
+    const patterns = (container as HTMLElement).querySelector('[data-cms-id="patterns"]') as HTMLElement
     await user.click(patterns)
     expect(getFocused(container as HTMLElement)).toBe('patterns')
   })
@@ -230,7 +230,7 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
   it('T4: Enter on section focuses first child', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    const features = (container as HTMLElement).querySelector('[data-node-id="features"]') as HTMLElement
+    const features = (container as HTMLElement).querySelector('[data-cms-id="features"]') as HTMLElement
     features.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('features-label')
@@ -241,12 +241,12 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
     // Enter features → focus card-store
-    const features = (container as HTMLElement).querySelector('[data-node-id="features"]') as HTMLElement
+    const features = (container as HTMLElement).querySelector('[data-cms-id="features"]') as HTMLElement
     features.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('features-label')
     // Escape → features focused
-    const focused = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    const focused = (container as HTMLElement).querySelector('[tabindex="0"][data-cms-id]') as HTMLElement
     focused.focus()
     await user.keyboard('{Escape}')
     expect(getFocused(container as HTMLElement)).toBe('features')
@@ -256,7 +256,7 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
   it('T6: Space toggles selection (aria-selected)', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    const stats = (container as HTMLElement).querySelector('[data-node-id="stats"]') as HTMLElement
+    const stats = (container as HTMLElement).querySelector('[data-cms-id="stats"]') as HTMLElement
     stats.focus()
     await user.keyboard(' ')
     expect(stats.getAttribute('aria-selected')).toBe('true')
@@ -269,7 +269,7 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
   it('T9: Home on first section stays on first section (no wrap)', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    const hero = (container as HTMLElement).querySelector('[data-node-id="hero"]') as HTMLElement
+    const hero = (container as HTMLElement).querySelector('[data-cms-id="hero"]') as HTMLElement
     hero.focus()
     await user.keyboard('{Home}')
     expect(getFocused(container as HTMLElement)).toBe('hero')
@@ -278,7 +278,7 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
   it('T9: End on last section stays on last section (no wrap)', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    const footer = (container as HTMLElement).querySelector('[data-node-id="footer"]') as HTMLElement
+    const footer = (container as HTMLElement).querySelector('[data-cms-id="footer"]') as HTMLElement
     footer.focus()
     await user.keyboard('{End}')
     expect(getFocused(container as HTMLElement)).toBe('footer')
@@ -289,13 +289,13 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
     // Navigate into stats section
-    const stats = (container as HTMLElement).querySelector('[data-node-id="stats"]') as HTMLElement
+    const stats = (container as HTMLElement).querySelector('[data-cms-id="stats"]') as HTMLElement
     stats.focus()
     await user.keyboard('{Enter}')
     // Should now be at stat-patterns (first child of stats)
     expect(getFocused(container as HTMLElement)).toBe('stat-patterns')
     // stat-patterns has no children — Enter should not change depth
-    const statPatterns = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    const statPatterns = (container as HTMLElement).querySelector('[tabindex="0"][data-cms-id]') as HTMLElement
     statPatterns.focus()
     await user.keyboard('{Enter}')
     // Still at leaf level — either stays on stat-patterns or is a no-op
@@ -310,17 +310,17 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
     // Enter stats → inside stat children
-    const stats = (container as HTMLElement).querySelector('[data-node-id="stats"]') as HTMLElement
+    const stats = (container as HTMLElement).querySelector('[data-cms-id="stats"]') as HTMLElement
     stats.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('stat-patterns')
     // End → last stat child
-    const firstStat = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    const firstStat = (container as HTMLElement).querySelector('[tabindex="0"][data-cms-id]') as HTMLElement
     firstStat.focus()
     await user.keyboard('{End}')
     expect(getFocused(container as HTMLElement)).toBe('stat-deps')
     // Home → first stat child
-    const lastStat = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    const lastStat = (container as HTMLElement).querySelector('[tabindex="0"][data-cms-id]') as HTMLElement
     lastStat.focus()
     await user.keyboard('{Home}')
     expect(getFocused(container as HTMLElement)).toBe('stat-patterns')
@@ -330,13 +330,13 @@ describe('PRD — universal rules (jsdom-compatible)', () => {
   it('T8: Tab moves focus outside CMS widget', async () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
-    const hero = (container as HTMLElement).querySelector('[data-node-id="hero"]') as HTMLElement
+    const hero = (container as HTMLElement).querySelector('[data-cms-id="hero"]') as HTMLElement
     hero.focus()
 
     await user.keyboard('{Tab}')
 
     // After Tab, focus should NOT be on any CMS node
-    const activeNodeId = document.activeElement?.getAttribute('data-node-id')
+    const activeNodeId = document.activeElement?.getAttribute('data-cms-id')
     expect(activeNodeId).toBeNull()
   })
 })
@@ -349,20 +349,20 @@ describe('PRD — landing page examples (jsdom-compatible)', () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
     // Enter features section
-    const features = (container as HTMLElement).querySelector('[data-node-id="features"]') as HTMLElement
+    const features = (container as HTMLElement).querySelector('[data-cms-id="features"]') as HTMLElement
     features.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('features-label')
 
     // Navigate to card-store by clicking (jsdom can't do arrow keys)
-    const cardStore = (container as HTMLElement).querySelector('[data-node-id="card-store"]') as HTMLElement
+    const cardStore = (container as HTMLElement).querySelector('[data-cms-id="card-store"]') as HTMLElement
     cardStore.click()
     cardStore.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('card-store-icon')
 
     // Escape → back to card-store level
-    const cardField = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    const cardField = (container as HTMLElement).querySelector('[tabindex="0"][data-cms-id]') as HTMLElement
     cardField.focus()
     await user.keyboard('{Escape}')
     expect(getFocused(container as HTMLElement)).toBe('card-store')
@@ -373,26 +373,26 @@ describe('PRD — landing page examples (jsdom-compatible)', () => {
     const user = userEvent.setup()
     const { container } = render(<PageVisualCms />)
     // Level 1: root → features (Enter)
-    const features = (container as HTMLElement).querySelector('[data-node-id="features"]') as HTMLElement
+    const features = (container as HTMLElement).querySelector('[data-cms-id="features"]') as HTMLElement
     features.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('features-label')
 
     // Navigate to card-store by clicking, then Enter for depth 2
-    const cardStore = (container as HTMLElement).querySelector('[data-node-id="card-store"]') as HTMLElement
+    const cardStore = (container as HTMLElement).querySelector('[data-cms-id="card-store"]') as HTMLElement
     cardStore.click()
     cardStore.focus()
     await user.keyboard('{Enter}')
     expect(getFocused(container as HTMLElement)).toBe('card-store-icon')
 
     // Escape from field → card-store
-    const field = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    const field = (container as HTMLElement).querySelector('[tabindex="0"][data-cms-id]') as HTMLElement
     field.focus()
     await user.keyboard('{Escape}')
     expect(getFocused(container as HTMLElement)).toBe('card-store')
 
     // Escape from card → features
-    const card = (container as HTMLElement).querySelector('[tabindex="0"][data-node-id]') as HTMLElement
+    const card = (container as HTMLElement).querySelector('[tabindex="0"][data-cms-id]') as HTMLElement
     card.focus()
     await user.keyboard('{Escape}')
     expect(getFocused(container as HTMLElement)).toBe('features')

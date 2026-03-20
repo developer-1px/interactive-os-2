@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findNearest } from '../../interactive-os/hooks/use-spatial-nav'
+import { findNearest } from '../../interactive-os/hooks/useSpatialNav'
 
 /**
  * Layout:

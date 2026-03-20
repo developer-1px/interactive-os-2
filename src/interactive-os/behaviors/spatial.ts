@@ -3,10 +3,10 @@ import { ROOT_ID } from '../core/types'
 import { SPATIAL_PARENT_ID } from '../plugins/spatial'
 import { focusCommands } from '../plugins/core'
 import { renameCommands } from '../plugins/rename'
-import { composePattern } from '../axes/compose-pattern'
-import type { Axis } from '../axes/compose-pattern'
-import { selectToggle } from '../axes/select-toggle'
-import { depthEnterEsc } from '../axes/depth-enter-esc'
+import { composePattern } from '../axes/composePattern'
+import type { Axis } from '../axes/composePattern'
+import { selectToggle } from '../axes/selectToggle'
+import { depthEnterEsc } from '../axes/depthEnterEsc'
 
 const spatialNav: Axis = {
   F2: (ctx) => renameCommands.startRename(ctx.focused),
