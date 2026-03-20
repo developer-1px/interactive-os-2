@@ -1,38 +1,35 @@
-import type { AriaBehavior, NodeState } from './types'
+import type { NodeState } from './types'
+import type { Entity } from '../core/types'
+import { composePattern } from '../axes/compose-pattern'
+import { selectExtended } from '../axes/select-extended'
+import { selectToggle } from '../axes/select-toggle'
+import { activate } from '../axes/activate'
+import { depthArrow } from '../axes/depth-arrow'
+import { navV } from '../axes/nav-v'
 
-export const treegrid: AriaBehavior = {
-  role: 'treegrid',
-  childRole: 'row',
-  keyMap: {
-    ArrowDown: (ctx) => ctx.focusNext(),
-    ArrowUp: (ctx) => ctx.focusPrev(),
-    ArrowRight: (ctx) => ctx.isExpanded ? ctx.focusChild() : ctx.expand(),
-    ArrowLeft: (ctx) => ctx.isExpanded ? ctx.collapse() : ctx.focusParent(),
-    Enter: (ctx) => ctx.activate(),
-    Space: (ctx) => ctx.toggleSelect(),
-    Home: (ctx) => ctx.focusFirst(),
-    End: (ctx) => ctx.focusLast(),
-    'Shift+ArrowDown': (ctx) => ctx.extendSelection('next'),
-    'Shift+ArrowUp': (ctx) => ctx.extendSelection('prev'),
-    'Shift+Home': (ctx) => ctx.extendSelection('first'),
-    'Shift+End': (ctx) => ctx.extendSelection('last'),
+export const treegrid = composePattern(
+  {
+    role: 'treegrid',
+    childRole: 'row',
+    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+    ariaAttributes: (_node: Entity, state: NodeState) => {
+      const attrs: Record<string, string> = {
+        'aria-selected': String(state.selected),
+        'aria-posinset': String(state.index + 1),
+        'aria-setsize': String(state.siblingCount),
+      }
+      if (state.expanded !== undefined) {
+        attrs['aria-expanded'] = String(state.expanded)
+      }
+      if (state.level !== undefined) {
+        attrs['aria-level'] = String(state.level)
+      }
+      return attrs
+    },
   },
-  focusStrategy: {
-    type: 'roving-tabindex',
-    orientation: 'vertical',
-  },
-  ariaAttributes: (_node, state: NodeState) => {
-    const attrs: Record<string, string> = {
-      'aria-selected': String(state.selected),
-      'aria-posinset': String(state.index + 1),
-      'aria-setsize': String(state.siblingCount),
-    }
-    if (state.expanded !== undefined) {
-      attrs['aria-expanded'] = String(state.expanded)
-    }
-    if (state.level !== undefined) {
-      attrs['aria-level'] = String(state.level)
-    }
-    return attrs
-  },
-}
+  selectExtended,
+  selectToggle,
+  activate,
+  depthArrow,
+  navV,
+)
