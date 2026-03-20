@@ -1,12 +1,11 @@
 import type { NodeState } from './types'
 import { composePattern } from '../axes/composePattern'
-import { focusTrap } from '../axes/focusTrap'
+import { trap } from '../axes/trap'
 
 export const alertdialog = composePattern(
   {
     role: 'alertdialog',
     childRole: 'group',
-    focusStrategy: { type: 'natural-tab-order', orientation: 'vertical' },
     ariaAttributes: (_node, state: NodeState) => {
       const attrs: Record<string, string> = { 'aria-modal': 'true' }
       if (state.expanded !== undefined) {
@@ -15,5 +14,5 @@ export const alertdialog = composePattern(
       return attrs
     },
   },
-  focusTrap,
+  trap(),
 )

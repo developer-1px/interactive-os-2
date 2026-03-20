@@ -1,7 +1,6 @@
 import type { AriaBehavior, NodeState } from './types'
 import type { Axis } from '../axes/composePattern'
 import { composePattern } from '../axes/composePattern'
-import { navV } from '../axes/navV'
 import { comboboxCommands } from '../plugins/combobox'
 import { selectionCommands } from '../plugins/core'
 import { createBatchCommand } from '../core/types'
@@ -24,7 +23,7 @@ export function combobox(options?: ComboboxOptions): AriaBehavior {
         ctx.dispatch(comboboxCommands.open())
         return ctx.focusFirst()
       }
-      return undefined // fallback to navV
+      return undefined // fallback to nav
     },
     Enter: (ctx) => {
       const isOpen = getIsOpen(ctx)
@@ -51,6 +50,13 @@ export function combobox(options?: ComboboxOptions): AriaBehavior {
       }
       return undefined
     },
+  }
+
+  const navV: Axis = {
+    ArrowDown: (ctx) => ctx.focusNext(),
+    ArrowUp: (ctx) => ctx.focusPrev(),
+    Home: (ctx) => ctx.focusFirst(),
+    End: (ctx) => ctx.focusLast(),
   }
 
   return composePattern(

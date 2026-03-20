@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { activate } from '../axes/activateV2'
+import { activate } from '../axes/activate'
 import type { BehaviorContext } from '../behaviors/types'
 import type { Command } from '../core/types'
 

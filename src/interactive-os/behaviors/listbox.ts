@@ -1,17 +1,14 @@
 import type { NodeState } from './types'
 import type { Entity } from '../core/types'
 import { composePattern } from '../axes/composePattern'
-import { selectExtended } from '../axes/selectExtended'
-import { selectToggle } from '../axes/selectToggle'
+import { select } from '../axes/select'
 import { activate } from '../axes/activate'
-import { navV } from '../axes/navV'
+import { navigate } from '../axes/navigate'
 
 export const listbox = composePattern(
   {
     role: 'listbox',
     childRole: 'option',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
-    activateOnClick: true,
     ariaAttributes: (_node: Entity, state: NodeState) => {
       const attrs: Record<string, string> = {
         'aria-selected': String(state.selected),
@@ -21,8 +18,7 @@ export const listbox = composePattern(
       return attrs
     },
   },
-  selectExtended,
-  selectToggle,
-  activate,
-  navV,
+  select({ mode: 'multiple', extended: true }),
+  activate({ onClick: true }),
+  navigate({ orientation: 'vertical' }),
 )

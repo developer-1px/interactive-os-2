@@ -1,20 +1,18 @@
 import type { NodeState } from './types'
 import { composePattern } from '../axes/composePattern'
-import { activateFollowFocus } from '../axes/activateFollowFocus'
-import { navH } from '../axes/navH'
+import { select } from '../axes/select'
+import { activate } from '../axes/activate'
+import { navigate } from '../axes/navigate'
 
 export const tabs = composePattern(
   {
     role: 'tablist',
     childRole: 'tab',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'horizontal' },
-    selectionMode: 'single',
-    activateOnClick: true,
-    followFocus: true,
     ariaAttributes: (_node, state: NodeState) => ({
       'aria-selected': String(state.selected),
     }),
   },
-  activateFollowFocus,
-  navH(),
+  select({ mode: 'single' }),
+  activate({ onClick: true, followFocus: true }),
+  navigate({ orientation: 'horizontal' }),
 )

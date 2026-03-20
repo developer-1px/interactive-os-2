@@ -8,7 +8,6 @@ import { clipboardCommands } from '../plugins/clipboard'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands } from '../plugins/rename'
 import { composePattern, type Axis } from '../axes/composePattern'
-import { selectToggle } from '../axes/selectToggle'
 
 // ── Shared helpers ──
 
@@ -39,6 +38,12 @@ export function focusInColumn(ctx: BehaviorContext, columnId: string, targetInde
   if (cards.length === 0) return focusCommands.setFocus(columnId)
   const clamped = Math.min(Math.max(targetIndex, 0), cards.length - 1)
   return focusCommands.setFocus(cards[clamped]!)
+}
+
+// ── Axis: inline selectToggle (no selectionMode on this behavior) ──
+
+const selectToggle: Axis = {
+  Space: (ctx) => ctx.toggleSelect(),
 }
 
 // ── Axis: column-aware vertical navigation ──
@@ -207,13 +212,13 @@ export const kanban = composePattern(
   {
     role: 'group',
     childRole: 'group',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
     ariaAttributes: (_node, state) => ({
       'aria-rowindex': String(state.index + 1),
       'aria-level': String((state.level ?? 0) + 1),
       'aria-selected': String(state.selected),
     }),
   },
+  { keyMap: {}, config: { focusStrategy: { type: 'roving-tabindex', orientation: 'both' } } },
   selectToggle,
   kanbanEditing,
   kanbanCrossH,

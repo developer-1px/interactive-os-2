@@ -33,7 +33,7 @@ export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Parti
         ])
       },
     }
-    return { keyMap, config: { expandable: true } }
+    return { keyMap, config: {} }
   }
 
   // mode === 'arrow' (default)
@@ -41,5 +41,5 @@ export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Parti
     ArrowRight: (ctx) => (ctx.isExpanded ? ctx.focusChild() : ctx.expand()),
     ArrowLeft: (ctx) => (ctx.isExpanded ? ctx.collapse() : ctx.focusParent()),
   }
-  return { keyMap, config: { expandable: true } }
+  return { keyMap, config: {} }
 }

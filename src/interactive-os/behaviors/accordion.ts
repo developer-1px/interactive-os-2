@@ -1,15 +1,12 @@
 import type { NodeState } from './types'
 import { composePattern } from '../axes/composePattern'
 import { activate } from '../axes/activate'
-import { navV } from '../axes/navV'
+import { navigate } from '../axes/navigate'
 
 export const accordion = composePattern(
   {
     role: 'region',
     childRole: 'heading',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
-    expandable: true,
-    activateOnClick: true,
     ariaAttributes: (_node, state: NodeState) => {
       const attrs: Record<string, string> = {}
       if (state.expanded !== undefined) {
@@ -18,6 +15,6 @@ export const accordion = composePattern(
       return attrs
     },
   },
-  activate,
-  navV,
+  activate({ onClick: true, toggleExpand: true }),
+  navigate({ orientation: 'vertical' }),
 )
