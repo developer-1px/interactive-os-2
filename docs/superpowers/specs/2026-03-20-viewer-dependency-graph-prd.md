@@ -94,7 +94,7 @@ graph LR
 
 | 조건 | 예상 동작 |
 |------|----------|
-| 파일에 import문이 0개 | 그래프에 현재 파일 노드만 표시 (importedBy는 있을 수 있음) |
+| 파일에 import문이 0개 | importedBy가 있으면 그래프 표시, 둘 다 0이면 그래프 미표시 |
 | importedBy가 0개 | 그래프에 imports 방향만 표시 |
 | imports + importedBy 합계가 20+개 | 전부 표시 (1-depth라서 실제 20+ 드묾, mermaid 자동 레이아웃) |
 | `import type` (타입 전용 import) | 포함한다 (의존 관계는 동일) |
@@ -125,7 +125,7 @@ graph LR
 | 1 | `core/normalized-store.ts` 열기 | 코드 위에 mermaid 그래프: types.ts ← normalized-store.ts → crud.ts, clipboard.ts 등. 레이어 subgraph 구분 |
 | 2 | 그래프에서 `crud.ts` 노드 클릭 | Viewer가 crud.ts를 열고, 새로운 그래프가 crud.ts 중심으로 갱신 |
 | 3 | `README.md` 열기 | 그래프 영역 없이 마크다운 렌더링만 |
-| 4 | import 0개인 파일 열기 | 현재 파일 노드 + importedBy만 표시 |
+| 4 | import 0개인 파일 열기 | importedBy가 있으면 해당 관계만 표시, 둘 다 0이면 그래프 미표시 |
 | 5 | 코드 수정 후 파일 다시 열기 | prebuild 없이 변경된 import 관계 반영 |
 | 6 | `pages/PageViewer.tsx` 열기 (import 많은 파일) | 모든 1-depth 관계가 레이어별 subgraph로 표시 |
 
