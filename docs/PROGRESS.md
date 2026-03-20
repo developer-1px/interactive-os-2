@@ -73,6 +73,9 @@
 - [x] focusNext/focusPrev wrap 옵션 (radiogroup용)
 - [x] grid? 네임스페이스 (col 네비게이션)
 - [x] aria-activedescendant 포커스 전략 + containerProps
+- [x] **Axis Decomposition** — `axes/` 디렉터리, 11개 공유 축 (navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap)
+- [x] `composePattern(metadata, ...axes)` — chain of responsibility (void fallback) 합성 함수, AriaBehavior 호환
+- [x] 17개 behavior 전수 composePattern으로 재작성 (기존 테스트 변경 0건)
 
 ### 프리셋
 - [x] treegrid (role: treegrid, childRole: row)
