@@ -1,9 +1,10 @@
 import { activate } from './activate'
+import type { KeyMap } from './composePattern'
 
 /**
- * Alias for `activate` axis.
- * The follow-focus behavior itself is controlled by `PatternConfig.followFocus`,
- * not by the keyMap — this alias exists for readability at the composition site
- * (e.g., `composePattern(metadata, navH(), activateFollowFocus)`).
+ * Pre-built activate axis with default options.
+ * The follow-focus behavior itself is controlled by axis config (followFocus),
+ * not by the keyMap — this alias exists for backward compatibility.
  */
-export const activateFollowFocus = activate
+const result = activate()
+export const activateFollowFocus: KeyMap = result.keyMap

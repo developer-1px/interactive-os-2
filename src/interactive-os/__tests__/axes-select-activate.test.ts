@@ -90,21 +90,23 @@ describe('selectExtended', () => {
 })
 
 describe('activate', () => {
+  const activateAxis = activate()
+
   it('defines Enter and Space keys', () => {
-    expect(activate).toHaveProperty('Enter')
-    expect(activate).toHaveProperty('Space')
+    expect(activateAxis.keyMap).toHaveProperty('Enter')
+    expect(activateAxis.keyMap).toHaveProperty('Space')
   })
 
   it('Enter calls activate()', () => {
     const ctx = makeMockCtx()
-    const result = activate['Enter'](ctx)
+    const result = activateAxis.keyMap['Enter'](ctx)
     expect(ctx.activate).toHaveBeenCalled()
     expect(result).toMatchObject({ type: 'activate' })
   })
 
   it('Space calls activate()', () => {
     const ctx = makeMockCtx()
-    const result = activate['Space'](ctx)
+    const result = activateAxis.keyMap['Space'](ctx)
     expect(ctx.activate).toHaveBeenCalled()
     expect(result).toMatchObject({ type: 'activate' })
   })
@@ -131,9 +133,10 @@ describe('activateFollowFocus', () => {
   })
 
   it('has identical keyMap to activate axis', () => {
-    const enterHandlerActivate = activate['Enter']
+    const activateAxis = activate()
+    const enterHandlerActivate = activateAxis.keyMap['Enter']
     const enterHandlerFollowFocus = activateFollowFocus['Enter']
-    const spaceHandlerActivate = activate['Space']
+    const spaceHandlerActivate = activateAxis.keyMap['Space']
     const spaceHandlerFollowFocus = activateFollowFocus['Space']
 
     // Both should call activate

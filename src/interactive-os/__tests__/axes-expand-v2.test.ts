@@ -37,11 +37,11 @@ function makeMockCtx(overrides?: Partial<BehaviorContext>): BehaviorContext {
 }
 
 describe('expand() factory — arrow mode', () => {
-  it('binds ArrowRight and ArrowLeft, config.expandable = true', () => {
+  it('binds ArrowRight and ArrowLeft, config is empty (expandable managed by activate)', () => {
     const axis = expand({ mode: 'arrow' })
     expect(axis.keyMap).toHaveProperty('ArrowRight')
     expect(axis.keyMap).toHaveProperty('ArrowLeft')
-    expect(axis.config).toMatchObject({ expandable: true })
+    expect(axis.config).toEqual({})
   })
 
   it('ArrowRight calls expand() when collapsed', () => {
@@ -82,11 +82,11 @@ describe('expand() factory — arrow mode', () => {
 })
 
 describe('expand() factory — enter-esc mode', () => {
-  it('binds Enter and Escape, config.expandable = true', () => {
+  it('binds Enter and Escape, config is empty (expandable managed by activate)', () => {
     const axis = expand({ mode: 'enter-esc' })
     expect(axis.keyMap).toHaveProperty('Enter')
     expect(axis.keyMap).toHaveProperty('Escape')
-    expect(axis.config).toMatchObject({ expandable: true })
+    expect(axis.config).toEqual({})
   })
 
   it('Enter returns batch command when node has children', () => {
@@ -160,6 +160,6 @@ describe('expand() factory — default mode', () => {
     expect(axis.keyMap).toHaveProperty('ArrowLeft')
     expect(axis.keyMap).not.toHaveProperty('Enter')
     expect(axis.keyMap).not.toHaveProperty('Escape')
-    expect(axis.config).toMatchObject({ expandable: true })
+    expect(axis.config).toEqual({})
   })
 })

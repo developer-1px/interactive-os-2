@@ -1,17 +1,15 @@
 import type { NodeState } from './types'
 import type { Entity } from '../core/types'
 import { composePattern } from '../axes/composePattern'
-import { selectExtended } from '../axes/selectExtended'
-import { selectToggle } from '../axes/selectToggle'
+import { select } from '../axes/select'
 import { activate } from '../axes/activate'
-import { depthArrow } from '../axes/depthArrow'
-import { navV } from '../axes/navV'
+import { expand } from '../axes/expand'
+import { navigate } from '../axes/navigate'
 
 export const treegrid = composePattern(
   {
     role: 'treegrid',
     childRole: 'row',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
     ariaAttributes: (_node: Entity, state: NodeState) => {
       const attrs: Record<string, string> = {
         'aria-selected': String(state.selected),
@@ -27,9 +25,8 @@ export const treegrid = composePattern(
       return attrs
     },
   },
-  selectExtended,
-  selectToggle,
-  activate,
-  depthArrow,
-  navV,
+  select({ mode: 'multiple', extended: true }),
+  activate(),
+  expand({ mode: 'arrow' }),
+  navigate({ orientation: 'vertical' }),
 )

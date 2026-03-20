@@ -5,8 +5,9 @@ import { focusCommands } from '../plugins/core'
 import { renameCommands } from '../plugins/rename'
 import { composePattern } from '../axes/composePattern'
 import type { Axis } from '../axes/composePattern'
-import { selectToggle } from '../axes/selectToggle'
-import { depthEnterEsc } from '../axes/depthEnterEsc'
+import { select } from '../axes/select'
+import { activate } from '../axes/activate'
+import { expand } from '../axes/expand'
 
 const spatialNav: Axis = {
   F2: (ctx) => renameCommands.startRename(ctx.focused),
@@ -28,8 +29,6 @@ export const spatial: AriaBehavior = composePattern(
   {
     role: 'group',
     childRole: 'group',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
-    activateOnClick: true,
     ariaAttributes: (node, state: NodeState) => {
       const d = (node.data ?? {}) as Record<string, string>
       const label = d.name || d.label || d.title || d.value || d.variant || ''
@@ -40,7 +39,9 @@ export const spatial: AriaBehavior = composePattern(
       }
     },
   },
-  selectToggle,
-  depthEnterEsc,
+  { keyMap: {}, config: { focusStrategy: { type: 'roving-tabindex', orientation: 'both' } } },
+  select(),
+  activate({ onClick: true }),
+  expand({ mode: 'enter-esc' }),
   spatialNav,
 )

@@ -1,19 +1,18 @@
 import type { NodeState } from './types'
 import { composePattern } from '../axes/composePattern'
-import { selectToggle } from '../axes/selectToggle'
-import { navVhUniform } from '../axes/navVhUniform'
+import { select } from '../axes/select'
+import { activate } from '../axes/activate'
+import { navigate } from '../axes/navigate'
 
 export const radiogroup = composePattern(
   {
     role: 'radiogroup',
     childRole: 'radio',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
-    selectionMode: 'single',
-    activateOnClick: true,
     ariaAttributes: (_node, state: NodeState) => ({
       'aria-checked': String(state.selected),
     }),
   },
-  selectToggle,
-  navVhUniform({ wrap: true }),
+  select({ mode: 'single' }),
+  activate({ onClick: true }),
+  navigate({ orientation: 'both', wrap: true }),
 )
