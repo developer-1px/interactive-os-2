@@ -74,7 +74,7 @@
 - [x] grid? 네임스페이스 (col 네비게이션)
 - [x] aria-activedescendant 포커스 전략 + containerProps
 - [x] **Axis Decomposition** — `axes/` 디렉터리, 11개 공유 축 (navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap)
-- [x] `composePattern(metadata, ...axes)` — chain of responsibility (void fallback) 합성 함수, AriaBehavior 호환
+- [x] `composePattern(metadata, ...axes)` — chain of responsibility (void fallback) 합성 함수, AriaBehavior 호환, v2 structured Axis (keyMap + config) 지원
 - [x] 17개 behavior 전수 composePattern으로 재작성 (기존 테스트 변경 0건)
 
 ### 프리셋
@@ -225,4 +225,4 @@
 
 ---
 
-*Last updated: 2026-03-20 — followFocus + onActivate: 포커스/활성화 분리, ActivityBar 통합 toolbar, 468 tests, 56 files*
+*Last updated: 2026-03-20 — Axis v2 structured type (keyMap + config), composePattern Identity 지원*
