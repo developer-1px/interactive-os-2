@@ -1,16 +1,17 @@
-import type { AriaBehavior, NodeState } from './types'
+import type { NodeState } from './types'
+import { composePattern } from '../axes/compose-pattern'
+import { activate } from '../axes/activate'
 
-export const switchBehavior: AriaBehavior = {
-  role: 'switch',
-  childRole: 'switch',
-  keyMap: {
-    Enter: (ctx) => ctx.activate(),
-    Space: (ctx) => ctx.activate(),
+export const switchBehavior = composePattern(
+  {
+    role: 'switch',
+    childRole: 'switch',
+    focusStrategy: { type: 'natural-tab-order', orientation: 'vertical' },
+    expandable: true,
+    activateOnClick: true,
+    ariaAttributes: (_node, state: NodeState) => ({
+      'aria-checked': String(state.expanded ?? false),
+    }),
   },
-  focusStrategy: { type: 'natural-tab-order', orientation: 'vertical' },
-  expandable: true,
-  activateOnClick: true,
-  ariaAttributes: (_node, state: NodeState) => ({
-    'aria-checked': String(state.expanded ?? false),
-  }),
-}
+  activate,
+)

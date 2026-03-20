@@ -1,17 +1,19 @@
-import type { AriaBehavior, NodeState } from './types'
+import type { NodeState } from './types'
+import { composePattern } from '../axes/compose-pattern'
+import { focusTrap } from '../axes/focus-trap'
 
-export const alertdialog: AriaBehavior = {
-  role: 'alertdialog',
-  childRole: 'group',
-  keyMap: {
-    Escape: (ctx) => ctx.collapse(),
+export const alertdialog = composePattern(
+  {
+    role: 'alertdialog',
+    childRole: 'group',
+    focusStrategy: { type: 'natural-tab-order', orientation: 'vertical' },
+    ariaAttributes: (_node, state: NodeState) => {
+      const attrs: Record<string, string> = { 'aria-modal': 'true' }
+      if (state.expanded !== undefined) {
+        attrs['aria-expanded'] = String(state.expanded)
+      }
+      return attrs
+    },
   },
-  focusStrategy: { type: 'natural-tab-order', orientation: 'vertical' },
-  ariaAttributes: (_node, state: NodeState) => {
-    const attrs: Record<string, string> = { 'aria-modal': 'true' }
-    if (state.expanded !== undefined) {
-      attrs['aria-expanded'] = String(state.expanded)
-    }
-    return attrs
-  },
-}
+  focusTrap,
+)
