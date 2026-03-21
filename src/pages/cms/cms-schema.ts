@@ -41,6 +41,9 @@ const nodeSchemas = {
   links:            z.object({ type: z.literal('links') }),
   card:             z.object({ type: z.literal('card') }),
   section:          z.object({ type: z.literal('section'), variant: z.string() }),
+  'tab-group':      z.object({ type: z.literal('tab-group') }),
+  'tab-item':       z.object({ type: z.literal('tab-item'),  label: localeMapSchema.describe('Label') }),
+  'tab-panel':      z.object({ type: z.literal('tab-panel') }),
 } as const
 
 // ── Children rules ──
@@ -56,13 +59,19 @@ const childRules: Record<string, z.ZodType> = {
   step:  z.discriminatedUnion('type', [nodeSchemas['step-num'], nodeSchemas.text]),
   stat:  z.discriminatedUnion('type', [nodeSchemas['stat-value'], nodeSchemas.text]),
   links: z.discriminatedUnion('type', [nodeSchemas.link]),
+  'tab-group': z.discriminatedUnion('type', [nodeSchemas['tab-item']]),
+  'tab-item':  z.discriminatedUnion('type', [nodeSchemas['tab-panel']]),
+  'tab-panel': z.discriminatedUnion('type', [nodeSchemas.section]),
 }
 
 // ── Derived: canAccept (clipboard paste routing) ──
 
 export const cmsCanAccept: CanAcceptFn = (parentData, childData) => {
   if (!childData) return false
-  if (!parentData?.type) return nodeSchemas.section.safeParse(childData).success
+  if (!parentData?.type) {
+    return nodeSchemas.section.safeParse(childData).success
+      || nodeSchemas['tab-group'].safeParse(childData).success
+  }
   const rule = childRules[parentData.type as string]
   return rule ? rule.safeParse(childData).success : false
 }
