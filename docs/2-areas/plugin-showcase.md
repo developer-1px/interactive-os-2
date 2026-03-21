@@ -1,6 +1,6 @@
 # Plugin Showcase
 
-> 최종 갱신: 2026-03-21 (retro: plugin-showcase-gap-fix)
+> 최종 갱신: 2026-03-21 (retro: plugin-showcase-gap-phase2)
 
 ## 현재 구조
 
@@ -9,7 +9,7 @@
 | 페이지 | 플러그인 | UI 컴포넌트 | 데모 데이터 |
 |--------|---------|------------|-----------|
 | `/plugin/crud` | core, crud, history, focusRecovery | **TreeGrid** | 2-depth tree (projects, docs) |
-| `/plugin/clipboard` | core, crud, clipboard, history, focusRecovery | ListBox | flat 6개 color |
+| `/plugin/clipboard` | core, crud, clipboard, history, focusRecovery | **TreeGrid** + cut dim + ID 표시 | 2-depth tree (warm, cool) |
 | `/plugin/history` | core, crud, clipboard, rename, dnd, history, focusRecovery | ListBox + **Editable** | flat 6개 note |
 | `/plugin/dnd` | core, dnd, history, focusRecovery | TreeGrid | 2-depth tree (todo, doing, done) |
 | `/plugin/rename` | core, rename, history, focusRecovery | ListBox + Editable | flat 5개 bookmark |
@@ -17,15 +17,13 @@
 ## 핵심 규칙
 
 1. **텍스트 = 스펙**: page-desc + page-section 텍스트가 약속하는 모든 기능은 데모에서 체험 가능해야 함
-2. **플러그인 코드 미수정**: 쇼케이스는 기존 플러그인을 그대로 사용. 플러그인 변경이 필요하면 별도 작업
+2. **플러그인 getter 패턴**: UI에 플러그인 내부 상태를 노출할 때는 읽기 전용 getter export (예: `getCutSourceIds()`)
 3. **페이지 구조 일관성**: page-header → page-keys → card → page-section 패턴 유지
 4. **데모 데이터 ≥ 텍스트 최소 조건**: subtree 설명 → tree 데이터 필수, rename 키힌트 → Editable 필수
 
-## 미해결 (Phase 2)
+## 미해결
 
-- Clipboard: cut 상태 시각 피드백 (플러그인이 cutIds UI 노출 필요)
-- Clipboard: leaf→parent 라우팅 데모 (tree 데이터 전환 필요)
-- Clipboard: copy 시 새 ID 체감 방법
+(없음 — Phase 1 + Phase 2 완료)
 
 ## 관련 경험
 
