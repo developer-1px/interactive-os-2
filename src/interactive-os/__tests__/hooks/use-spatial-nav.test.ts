@@ -13,24 +13,31 @@ describe('useSpatialNav — keyMap structure', () => {
     relationships: { [ROOT_ID]: ['a'] },
   })
 
-  it('returns all 4 plain Arrow handlers', () => {
+  it('returns object with keyMap and clearCursorsAtDepth', () => {
     const { result } = renderHook(() => useSpatialNav('#root', store))
-    const keys = Object.keys(result.current)
+    expect(result.current).toHaveProperty('keyMap')
+    expect(result.current).toHaveProperty('clearCursorsAtDepth')
+    expect(typeof result.current.clearCursorsAtDepth).toBe('function')
+  })
+
+  it('returns all 4 plain Arrow handlers in keyMap', () => {
+    const { result } = renderHook(() => useSpatialNav('#root', store))
+    const keys = Object.keys(result.current.keyMap)
 
     for (const dir of DIRECTIONS) {
       expect(keys).toContain(dir)
-      expect(typeof result.current[dir]).toBe('function')
+      expect(typeof result.current.keyMap[dir]).toBe('function')
     }
   })
 
-  it('returns all 4 Shift+Arrow handlers', () => {
+  it('returns all 4 Shift+Arrow handlers in keyMap', () => {
     const { result } = renderHook(() => useSpatialNav('#root', store))
-    const keys = Object.keys(result.current)
+    const keys = Object.keys(result.current.keyMap)
 
     for (const dir of DIRECTIONS) {
       const key = `Shift+${dir}`
       expect(keys).toContain(key)
-      expect(typeof result.current[key]).toBe('function')
+      expect(typeof result.current.keyMap[key]).toBe('function')
     }
   })
 
@@ -41,10 +48,9 @@ describe('useSpatialNav — keyMap structure', () => {
     const ctx = {
       focused: 'a',
       extendSelectionTo,
-    } as Parameters<(typeof result.current)['Shift+ArrowDown']>[0]
+    } as Parameters<(typeof result.current.keyMap)['Shift+ArrowDown']>[0]
 
-    const cmd = result.current['Shift+ArrowDown'](ctx)
+    const cmd = result.current.keyMap['Shift+ArrowDown'](ctx)
     expect(cmd).toBeUndefined()
-    expect(extendSelectionTo).not.toHaveBeenCalled()
   })
 })

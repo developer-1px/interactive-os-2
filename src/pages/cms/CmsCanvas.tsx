@@ -29,32 +29,6 @@ interface CmsCanvasProps {
 
 /** CRUD keyMap for CMS Canvas — os commands with undo/redo */
 const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
-  Enter: (ctx) => {
-    const children = ctx.getChildren(ctx.focused)
-    if (children.length === 0) {
-      // Guard: only start rename if node has editable text fields
-      const entity = ctx.getEntity(ctx.focused)
-      const data = (entity?.data ?? {}) as Record<string, unknown>
-      const fields = getEditableFields(data)
-      if (fields.length === 0) return
-      return renameCommands.startRename(ctx.focused)
-    }
-    // Container node → enterChild (spatial depth navigation)
-    return createBatchCommand([
-      spatialCommands.enterChild(ctx.focused),
-      focusCommands.setFocus(children[0]),
-    ])
-  },
-  Escape: (ctx) => {
-    // Exit to parent depth (if not at root)
-    const spatialParent = ctx.getEntity('__spatial_parent__')
-    const parentId = spatialParent?.parentId as string | undefined
-    if (!parentId || parentId === ROOT_ID) return undefined
-    return createBatchCommand([
-      spatialCommands.exitToParent(),
-      focusCommands.setFocus(parentId),
-    ])
-  },
   Delete: (ctx) => {
     // Minimum-1-section guard: if focused is a root child and it's the only one, skip
     const rootChildren = ctx.getChildren(ROOT_ID)
@@ -74,12 +48,44 @@ const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
 }
 
 export default function CmsCanvas({ engine, store, locale, onFocusChange, plugins }: CmsCanvasProps) {
-  const spatialKeyMap = useSpatialNav('[data-cms-root]', store, 'cms')
+  const spatialNav = useSpatialNav('[data-cms-root]', store, 'cms')
 
   // Merge spatial nav + CMS CRUD keyMap (CRUD takes precedence for Mod+ combos)
+  // Enter/Escape need closure over spatialNav.clearCursorsAtDepth, so they live here
   const mergedKeyMap = useMemo(
-    () => ({ ...spatialKeyMap, ...cmsKeyMap }),
-    [spatialKeyMap],
+    () => ({
+      ...spatialNav.keyMap,
+      ...cmsKeyMap,
+      Enter: (ctx: BehaviorContext) => {
+        const children = ctx.getChildren(ctx.focused)
+        if (children.length === 0) {
+          // Guard: only start rename if node has editable text fields
+          const entity = ctx.getEntity(ctx.focused)
+          const data = (entity?.data ?? {}) as Record<string, unknown>
+          const fields = getEditableFields(data)
+          if (fields.length === 0) return
+          return renameCommands.startRename(ctx.focused)
+        }
+        spatialNav.clearCursorsAtDepth(ctx.focused)
+        // Container node → enterChild (spatial depth navigation)
+        return createBatchCommand([
+          spatialCommands.enterChild(ctx.focused),
+          focusCommands.setFocus(children[0]),
+        ])
+      },
+      Escape: (ctx: BehaviorContext) => {
+        // Exit to parent depth (if not at root)
+        const spatialParent = ctx.getEntity('__spatial_parent__')
+        const parentId = spatialParent?.parentId as string | undefined
+        if (!parentId || parentId === ROOT_ID) return undefined
+        spatialNav.clearCursorsAtDepth(parentId)
+        return createBatchCommand([
+          spatialCommands.exitToParent(),
+          focusCommands.setFocus(parentId),
+        ])
+      },
+    }),
+    [spatialNav],
   )
 
   // Spatial model: all nodes always rendered — reachable = exists in store
@@ -105,6 +111,8 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     const parentId = getParent(s, nodeId) ?? ROOT_ID
     const currentSpatialParent = getSpatialParentId(s)
 
+    spatialNav.clearCursorsAtDepth(parentId)
+
     if (parentId !== currentSpatialParent) {
       if (parentId === ROOT_ID) {
         const exitCmd = spatialCommands.exitToParent()
@@ -121,7 +129,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       return
     }
     aria.dispatch(focusCommands.setFocus(nodeId))
-  }, [aria])
+  }, [aria, spatialNav])
 
   // Recursive renderer — ALL nodes always rendered
   const currentStore = aria.getStore()
