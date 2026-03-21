@@ -20,8 +20,9 @@ function fixtureData() {
 
 describe('useAria hook', () => {
   it('returns dispatch, getNodeProps, getNodeState, focused, selected', () => {
+    const data = fixtureData()
     const { result } = renderHook(() =>
-      useAria({ behavior: treegrid, data: fixtureData(), plugins: [] })
+      useAria({ behavior: treegrid, data, plugins: [] })
     )
     expect(result.current.dispatch).toBeInstanceOf(Function)
     expect(result.current.getNodeProps).toBeInstanceOf(Function)
@@ -31,8 +32,9 @@ describe('useAria hook', () => {
   })
 
   it('getNodeProps returns ARIA attributes and role', () => {
+    const data = fixtureData()
     const { result } = renderHook(() =>
-      useAria({ behavior: treegrid, data: fixtureData(), plugins: [] })
+      useAria({ behavior: treegrid, data, plugins: [] })
     )
     const props = result.current.getNodeProps('src')
     expect(props.role).toBe('row')
@@ -42,8 +44,9 @@ describe('useAria hook', () => {
   })
 
   it('getNodeState returns computed state', () => {
+    const data = fixtureData()
     const { result } = renderHook(() =>
-      useAria({ behavior: treegrid, data: fixtureData(), plugins: [] })
+      useAria({ behavior: treegrid, data, plugins: [] })
     )
     const state = result.current.getNodeState('src')
     expect(state.focused).toBeDefined()
@@ -53,18 +56,20 @@ describe('useAria hook', () => {
   })
 
   it('first visible node gets focus by default', () => {
+    const data = fixtureData()
     const { result } = renderHook(() =>
-      useAria({ behavior: treegrid, data: fixtureData(), plugins: [] })
+      useAria({ behavior: treegrid, data, plugins: [] })
     )
     expect(result.current.focused).toBe('src')
   })
 
   it('keyMap overrides merge with behavior defaults', () => {
+    const data = fixtureData()
     const customHandler = vi.fn()
     const { result } = renderHook(() =>
       useAria({
         behavior: treegrid,
-        data: fixtureData(),
+        data,
         plugins: [],
         keyMap: { Enter: () => { customHandler(); return undefined } },
       })
