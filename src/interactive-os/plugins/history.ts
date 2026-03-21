@@ -81,5 +81,9 @@ export function history(): Plugin {
         }
       }
     },
+    keyMap: {
+      'Mod+Z': () => historyCommands.undo(),
+      'Mod+Shift+Z': () => historyCommands.redo(),
+    },
   }
 }

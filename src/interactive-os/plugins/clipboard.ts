@@ -200,5 +200,13 @@ export function clipboard(): Plugin {
       cut: clipboardCommands.cut,
       paste: clipboardCommands.paste,
     },
+    keyMap: {
+      'Mod+C': (ctx: { focused: string; selected: string[] }) =>
+        clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
+      'Mod+X': (ctx: { focused: string; selected: string[] }) =>
+        clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
+      'Mod+V': (ctx: { focused: string }) =>
+        clipboardCommands.paste(ctx.focused),
+    },
   }
 }

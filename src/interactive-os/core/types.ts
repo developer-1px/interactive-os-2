@@ -48,4 +48,6 @@ export interface Plugin {
   middleware?: Middleware
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: Record<string, (...args: any[]) => Command>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  keyMap?: Record<string, (ctx: any) => Command | void>
 }

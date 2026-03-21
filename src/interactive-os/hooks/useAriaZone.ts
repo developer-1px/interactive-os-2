@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
-import type { Command, NormalizedData } from '../core/types'
+import type { Command, NormalizedData, Plugin } from '../core/types'
 import { ROOT_ID, createBatchCommand } from '../core/types'
 import type { AriaBehavior, NodeState } from '../behaviors/types'
 import type { CommandEngine } from '../core/createCommandEngine'
@@ -30,6 +30,7 @@ export interface UseAriaZoneOptions {
   store: NormalizedData
   behavior: AriaBehavior
   scope: string
+  plugins?: Plugin[]
   keyMap?: Record<string, (ctx: ReturnType<typeof createBehaviorContext>) => Command | void>
   onActivate?: (nodeId: string) => void
   initialFocus?: string
@@ -91,6 +92,7 @@ function applyMetaCommand(state: ZoneViewState, command: Command): ZoneViewState
 export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
   const {
     engine, store, behavior, scope,
+    plugins: zonePlugins,
     keyMap: keyMapOverrides,
     onActivate, initialFocus,
     focusRecovery: enableFocusRecovery = true,
@@ -239,9 +241,21 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
 
   // ── KeyMap ──
 
+  const pluginKeyMaps = useMemo(
+    () => {
+      if (!zonePlugins?.length) return undefined
+      const merged: Record<string, (ctx: ReturnType<typeof createBehaviorContext>) => Command | void> = {}
+      for (const p of zonePlugins) {
+        if (p.keyMap) Object.assign(merged, p.keyMap)
+      }
+      return Object.keys(merged).length > 0 ? merged : undefined
+    },
+    [zonePlugins],
+  )
+
   const mergedKeyMap = useMemo(
-    () => ({ ...behavior.keyMap, ...keyMapOverrides }),
-    [behavior.keyMap, keyMapOverrides],
+    () => ({ ...behavior.keyMap, ...pluginKeyMaps, ...keyMapOverrides }),
+    [behavior.keyMap, pluginKeyMaps, keyMapOverrides],
   )
 
   const behaviorCtxOptions = useMemo(

@@ -91,9 +91,21 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     forceRender(n => n + 1)
   }, [data, engine])
 
+  const pluginKeyMaps = useMemo(
+    () => {
+      if (!plugins.length) return undefined
+      const merged: Record<string, (ctx: ReturnType<typeof createBehaviorContext>) => Command | void> = {}
+      for (const p of plugins) {
+        if (p.keyMap) Object.assign(merged, p.keyMap)
+      }
+      return Object.keys(merged).length > 0 ? merged : undefined
+    },
+    [plugins],
+  )
+
   const mergedKeyMap = useMemo(
-    () => ({ ...behavior.keyMap, ...keyMapOverrides }),
-    [behavior.keyMap, keyMapOverrides]
+    () => ({ ...behavior.keyMap, ...pluginKeyMaps, ...keyMapOverrides }),
+    [behavior.keyMap, pluginKeyMaps, keyMapOverrides]
   )
 
   const dispatch = useCallback(
