@@ -241,3 +241,10 @@
   font-family: inherit; font-size: inherit;
   color: var(--text-bright); outline: none; padding: 2px 0;
 }
+
+/* Editable placeholder — shown when contenteditable is empty */
+[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  opacity: 0.4;
+  pointer-events: none;
+}
