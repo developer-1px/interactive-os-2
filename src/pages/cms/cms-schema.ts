@@ -2,10 +2,15 @@
  * CMS Zod Schema — single source of truth for CMS data model.
  *
  * Derives: canAccept (paste routing), validate (detail panel),
- *          fieldsOf (editable fields), localeFieldsOf (i18n sheet).
+ *          fieldsOf (editable fields), localeFieldsOf (i18n sheet),
+ *          collectEditableGroups (container → grouped fields).
  */
 import { z } from 'zod'
 import type { CanAcceptFn } from '../../interactive-os/plugins/clipboard'
+import type { NormalizedData } from '../../interactive-os/core/types'
+import { getChildren } from '../../interactive-os/core/createStore'
+import { localized } from './cms-types'
+import type { Locale, LocaleMap } from './cms-types'
 
 // ── Locale map ──
 
@@ -87,9 +92,6 @@ function fieldsOf(type: string): EditableField[] {
     }))
 }
 
-// ── Derived: getEditableFields (backward-compatible wrapper) ──
-// Takes entity data object, extracts type, delegates to fieldsOf.
-
 export function getEditableFields(data: Record<string, unknown>): EditableField[] {
   const type = data.type as string | undefined
   return type ? fieldsOf(type) : []
@@ -99,4 +101,145 @@ export function getEditableFields(data: Record<string, unknown>): EditableField[
 
 export function localeFieldsOf(type: string): string[] {
   return fieldsOf(type).filter(f => f.isLocaleMap).map(f => f.field)
+}
+
+// ── Derived: collectEditableGroups (container → grouped fields for Detail Panel) ──
+
+export interface EditableGroupEntry {
+  nodeId: string
+  field: string
+  label: string
+  isLocaleMap: boolean
+}
+
+export interface EditableGroup {
+  groupLabel: string
+  entries: EditableGroupEntry[]
+}
+
+/** Derive a human-readable label for a container group.
+ *  - section → capitalize variant
+ *  - other containers → first text child with title/label role
+ *  - fallback → node type */
+function deriveGroupLabel(
+  store: NormalizedData,
+  nodeId: string,
+  locale: Locale,
+  children?: string[],
+): string {
+  const data = (store.entities[nodeId]?.data ?? {}) as Record<string, unknown>
+
+  if (data.type === 'section') {
+    const v = data.variant as string
+    return v.charAt(0).toUpperCase() + v.slice(1)
+  }
+
+  const kids = children ?? getChildren(store, nodeId)
+  for (const childId of kids) {
+    const cd = (store.entities[childId]?.data ?? {}) as Record<string, unknown>
+    if (cd.type === 'text') {
+      const role = cd.role as string
+      if (role?.includes('title') || role?.includes('label')) {
+        return localized(cd.value as string | LocaleMap, locale).text
+      }
+    }
+  }
+
+  return (data.type as string) ?? nodeId
+}
+
+function contextualLabel(data: Record<string, unknown>, fieldLabel: string): string {
+  if (data.type === 'text' && data.role) {
+    const role = data.role as string
+    // subtitle before title — 'subtitle'.includes('title') is true
+    if (role.includes('subtitle')) return 'Subtitle'
+    if (role.includes('title')) return 'Title'
+    if (role.includes('desc')) return 'Description'
+    if (role.includes('label')) return 'Label'
+  }
+  if (data.type === 'section-label') return 'Label'
+  if (data.type === 'section-title') return 'Title'
+  if (data.type === 'section-desc') return 'Description'
+  return fieldLabel
+}
+
+/** Collect editable fields from a node and its children as groups.
+ *  - Leaf with fields → single group (no label)
+ *  - Container → recurse children, group by sub-container
+ *  - Depth limited to 2 levels (matches CMS data model) */
+export function collectEditableGroups(
+  store: NormalizedData,
+  nodeId: string,
+  locale: Locale,
+): EditableGroup[] {
+  const entity = store.entities[nodeId]
+  if (!entity) return []
+
+  const data = (entity.data ?? {}) as Record<string, unknown>
+  const fields = getEditableFields(data)
+  const children = getChildren(store, nodeId)
+
+  // Leaf with fields → single group, backward-compatible
+  if (children.length === 0) {
+    if (fields.length === 0) return []
+    return [{
+      groupLabel: '',
+      entries: fields.map(f => ({ nodeId, field: f.field, label: f.label, isLocaleMap: f.isLocaleMap })),
+    }]
+  }
+
+  // Container → collect children
+  const groups: EditableGroup[] = []
+  const headerEntries: EditableGroupEntry[] = []
+
+  for (const childId of children) {
+    const childEntity = store.entities[childId]
+    if (!childEntity) continue
+    const childData = (childEntity.data ?? {}) as Record<string, unknown>
+    const childFields = getEditableFields(childData)
+    const childChildren = getChildren(store, childId)
+
+    if (childChildren.length > 0) {
+      // Sub-container → create a named group from its leaf children
+      const subEntries: EditableGroupEntry[] = []
+      for (const gcId of childChildren) {
+        const gcEntity = store.entities[gcId]
+        if (!gcEntity) continue
+        const gcData = (gcEntity.data ?? {}) as Record<string, unknown>
+        const gcFields = getEditableFields(gcData)
+        for (const f of gcFields) {
+          subEntries.push({
+            nodeId: gcId,
+            field: f.field,
+            label: contextualLabel(gcData, f.label),
+            isLocaleMap: f.isLocaleMap,
+          })
+        }
+      }
+      if (subEntries.length > 0) {
+        groups.push({
+          groupLabel: deriveGroupLabel(store, childId, locale, childChildren),
+          entries: subEntries,
+        })
+      }
+    } else if (childFields.length > 0) {
+      // Leaf child with fields → header entries
+      for (const f of childFields) {
+        headerEntries.push({
+          nodeId: childId,
+          field: f.field,
+          label: contextualLabel(childData, f.label),
+          isLocaleMap: f.isLocaleMap,
+        })
+      }
+    }
+  }
+
+  // Header group first (section headers, standalone leaf fields)
+  if (headerEntries.length > 0) {
+    const label = deriveGroupLabel(store, nodeId, locale, children)
+    groups.unshift({ groupLabel: label, entries: headerEntries })
+  }
+
+  return groups
 }
