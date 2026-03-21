@@ -1,0 +1,40 @@
+/* --- Spinbutton --- */
+
+.spinbutton-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+}
+
+.spinbutton-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 64px;
+}
+
+.spinbutton-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border, var(--border));
+  border-radius: 4px;
+  padding: 4px 12px;
+  min-width: 56px;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+[data-focused] .spinbutton-inner {
+  border-color: var(--color-accent, var(--accent));
+  box-shadow: 0 0 0 2px var(--focus-ring, var(--color-accent, var(--accent)));
+  outline: none;
+}
+
+.spinbutton-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
