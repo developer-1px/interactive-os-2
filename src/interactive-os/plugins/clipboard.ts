@@ -18,6 +18,11 @@ let clipboardBuffer: ClipboardEntry[] = []
 let clipboardMode: 'copy' | 'cut' = 'copy'
 let cutSourceIds: string[] = []
 
+/** Read-only access to cut source IDs — for UI cut-state styling */
+export function getCutSourceIds(): readonly string[] {
+  return cutSourceIds
+}
+
 /** Reset clipboard state — use in tests to isolate state between cases */
 export function resetClipboard(): void {
   clipboardBuffer = []

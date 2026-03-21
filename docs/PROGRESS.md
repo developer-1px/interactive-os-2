@@ -190,6 +190,7 @@
 - [x] Viewer Dependency Graph — 파일 선택 시 코드 위에 1-depth mermaid 의존 그래프 표시 (런타임 import 파싱, 레이어 subgraph, 노드 클릭 네비게이션, Vite watcher 자동 캐시 갱신)
 - [x] Axis Showcase v2 — /axis/{name}, 5축 인터랙티브 데모 (navigate, select, activate, expand, trap), 각 페이지에서 옵션 토글로 행동 변화 체험, ActivityBar Axis 레이어
 - [x] Plugin Showcase Gap Fix (Phase 1) — CRUD를 TreeGrid로 전환(subtree 삭제/복원 체험), History에 Editable 추가(F2 rename 동작), Clipboard 텍스트 정합성 수정
+- [x] Plugin Showcase Gap Fix (Phase 2) — Clipboard TreeGrid 전환, getCutSourceIds() export로 cut dim 피드백, copy paste 시 새 ID 표시, leaf→parent 라우팅 텍스트 복원
 
 ## ⑨ APG Pattern Coverage
 
