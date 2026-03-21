@@ -3,37 +3,79 @@
 .spinbutton-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 6px 10px;
 }
 
 .spinbutton-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-primary);
   min-width: 64px;
 }
 
-.spinbutton-inner {
+/* Unified group: − [value] + with single focus ring */
+.spinbutton-group {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
   border: 1px solid var(--color-border, var(--border));
-  border-radius: 4px;
-  padding: 4px 12px;
-  min-width: 56px;
+  border-radius: 6px;
+  overflow: hidden;
   transition: border-color 0.12s, box-shadow 0.12s;
 }
 
-[data-focused] .spinbutton-inner {
+[data-focused] .spinbutton-group {
   border-color: var(--color-accent, var(--accent));
   box-shadow: 0 0 0 2px var(--focus-ring, var(--color-accent, var(--accent)));
   outline: none;
 }
 
+.spinbutton-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  border: none;
+  background: var(--bg-secondary, var(--color-bg-secondary, rgba(255, 255, 255, 0.05)));
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.1s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.spinbutton-btn:hover {
+  background: var(--bg-hover, var(--color-bg-hover, rgba(255, 255, 255, 0.1)));
+}
+
+.spinbutton-btn:active {
+  background: var(--bg-active, var(--color-bg-active, rgba(255, 255, 255, 0.15)));
+}
+
+.spinbutton-btn[aria-disabled] {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.spinbutton-btn--dec {
+  border-right: 1px solid var(--color-border, var(--border));
+}
+
+.spinbutton-btn--inc {
+  border-left: 1px solid var(--color-border, var(--border));
+}
+
 .spinbutton-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  padding: 6px 12px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-primary);
   text-align: center;
   font-variant-numeric: tabular-nums;
