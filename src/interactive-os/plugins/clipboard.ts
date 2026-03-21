@@ -179,7 +179,8 @@ export const clipboardCommands = {
 
         // Determine paste location using schema or legacy logic
         const childData = buffer[0]!.entity.data as Record<string, unknown> | undefined
-        let { pasteInto, insertIndex } = findPasteTarget(store, targetId, childData)
+        const { pasteInto, insertIndex: initialInsertIndex } = findPasteTarget(store, targetId, childData)
+        let insertIndex = initialInsertIndex
 
         let result = store
 
