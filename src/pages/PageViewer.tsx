@@ -15,7 +15,7 @@ import { combobox as comboboxPlugin, comboboxCommands } from '../interactive-os/
 import { useAria } from '../interactive-os/hooks/useAria'
 import { createStore, getChildren } from '../interactive-os/core/createStore'
 import { ROOT_ID, createBatchCommand } from '../interactive-os/core/types'
-import type { NormalizedData, Entity } from '../interactive-os/core/types'
+import type { NormalizedData, Entity, Plugin } from '../interactive-os/core/types'
 import { createRecorder } from '../interactive-os/devtools/createRecorder'
 import {
   Folder, FolderOpen, FileText, FileCode, FileType,
@@ -420,6 +420,8 @@ function flattenFiles(store: NormalizedData, root: string): FileEntry[] {
 // --- Quick Open component ---
 
 const MAX_RESULTS = 12
+const EMPTY_STORE = createStore({ entities: {}, relationships: { [ROOT_ID]: [] } })
+const EMPTY_PLUGINS: Plugin[] = []
 
 function QuickOpen({
   fileStore,
@@ -607,14 +609,6 @@ export default function PageViewer() {
     'Meta+p': () => { setQuickOpenVisibleRef.current(true); return undefined },
   }), [])
 
-  const emptyData = useMemo(() => createStore({
-    entities: {},
-    relationships: { [ROOT_ID]: [] },
-  }), [])
-
-  const emptyPlugins = useMemo(() => [] as never[], [])
-
-  const handleQuickOpenSelect = selectFile
 
   if (loading || !initialStore) {
     return (
@@ -633,8 +627,8 @@ export default function PageViewer() {
   return (
     <Aria
       keyMap={quickOpenKeyMap}
-      data={emptyData}
-      plugins={emptyPlugins}
+      data={EMPTY_STORE}
+      plugins={EMPTY_PLUGINS}
     >
     <div className="vw">
       {/* Top bar — single unified bar */}
@@ -748,7 +742,7 @@ export default function PageViewer() {
         <QuickOpen
           fileStore={initialStore}
           root={DEFAULT_ROOT}
-          onSelect={handleQuickOpenSelect}
+          onSelect={selectFile}
           onClose={() => setQuickOpenVisible(false)}
         />
       )}
