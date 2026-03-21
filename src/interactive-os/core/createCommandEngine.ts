@@ -1,7 +1,6 @@
 import type { Command, Middleware, NormalizedData, BatchCommand } from './types'
 import { computeStoreDiff } from './computeStoreDiff'
-import type { LogEntry, Logger } from './dispatchLogger'
-import type { EngineOptions } from './dispatchLogger'
+import type { LogEntry, Logger, EngineOptions } from './dispatchLogger'
 import { defaultLogger, isBatchCommand } from './dispatchLogger'
 
 export interface CommandEngine {
@@ -23,12 +22,8 @@ export function createCommandEngine(
   const resolveLogger = (): Logger | null => {
     if (options?.logger === false) return null
     if (typeof options?.logger === 'function') return options.logger
-    // logger: true or undefined → DEV only (not in test)
-    if (
-      typeof import.meta !== 'undefined' &&
-      import.meta.env?.DEV &&
-      import.meta.env?.MODE !== 'test'
-    ) {
+    // logger: true or undefined → DEV only
+    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
       return defaultLogger
     }
     return null
