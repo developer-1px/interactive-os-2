@@ -5,11 +5,11 @@ import type { AriaBehavior, NodeState } from '../behaviors/types'
 import { createCommandEngine } from '../core/createCommandEngine'
 import type { CommandEngine } from '../core/createCommandEngine'
 import { getChildren, getParent, getEntity, getEntityData } from '../core/createStore'
-import { focusCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
+import { focusCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, VALUE_ID } from '../plugins/core'
 import { RENAME_ID } from '../plugins/rename'
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
-const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__'])
+const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID])
 import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
@@ -147,6 +147,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     [store]
   )
   const renameEntity = store.entities[RENAME_ID]
+  const valueMeta = behavior.valueRange ? store.entities[VALUE_ID] as Record<string, unknown> | undefined : undefined
 
   const getNodeState = useCallback(
     (id: string): NodeState => {
@@ -176,9 +177,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         expanded: isExpandable ? expandedIds.includes(id) : undefined,
         level: level + 1,
         renaming,
+        ...(behavior.valueRange && { valueCurrent: (valueMeta?.value as number) ?? behavior.valueRange.min }),
       }
     },
-    [store, focusedId, selectedIdSet, expandedIds, behavior.expandable, renameEntity]
+    [store, focusedId, selectedIdSet, expandedIds, behavior.expandable, renameEntity, valueMeta, behavior.valueRange]
   )
 
   const behaviorCtxOptions = useMemo(
@@ -186,8 +188,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       expandable: behavior.expandable,
       selectionMode: behavior.selectionMode,
       colCount: behavior.colCount,
+      valueRange: behavior.valueRange,
     }),
-    [behavior.expandable, behavior.selectionMode, behavior.colCount]
+    [behavior.expandable, behavior.selectionMode, behavior.colCount, behavior.valueRange]
   )
 
   const getNodeProps = useCallback(
