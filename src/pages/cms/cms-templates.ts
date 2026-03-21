@@ -5,7 +5,7 @@ import { localeMap } from './cms-types'
 
 export type SectionVariant = 'hero' | 'stats' | 'features' | 'workflow' | 'patterns' | 'footer'
 
-export interface TemplateVariant {
+interface TemplateVariant {
   id: SectionVariant
   label: string
   icon: string
@@ -20,7 +20,7 @@ export const TEMPLATE_VARIANTS: TemplateVariant[] = [
   { id: 'footer',   label: 'Footer',   icon: 'minus' },
 ]
 
-export interface SectionTemplate {
+interface SectionTemplate {
   entities: Record<string, { id: string; data: Record<string, unknown> }>
   relationships: Record<string, string[]>
   rootId: string

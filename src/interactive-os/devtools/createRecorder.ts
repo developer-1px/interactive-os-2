@@ -13,7 +13,7 @@
  *   console.log(JSON.stringify(data, null, 2))
  */
 
-export interface RawEvent {
+interface RawEvent {
   ts: number
   type: 'keydown' | 'click' | 'focus' | 'blur'
   key?: string
@@ -23,7 +23,7 @@ export interface RawEvent {
   activeNodeId: string | null
 }
 
-export interface Recording {
+interface Recording {
   meta: {
     url: string
     startedAt: string
