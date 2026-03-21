@@ -236,7 +236,7 @@ kbd {
 .demo-section code {
   font-family: var(--mono);
   font-size: 12px;
-  background: var(--bg-deep);
+  background: var(--surface-0);
   border: 1px solid var(--border-dim);
   padding: 1px 4px;
   border-radius: var(--radius-sm);
@@ -333,7 +333,7 @@ kbd {
   color: var(--text-secondary);
   line-height: 1.6;
   border-bottom: 1px solid var(--border-dim);
-  background: var(--bg-deep);
+  background: var(--surface-0);
 }
 
 /* ═══════════════════════════════════════════
@@ -390,7 +390,7 @@ kbd {
   color: var(--text-secondary);
   line-height: 1.6;
   border-bottom: 1px solid var(--border-dim);
-  background: var(--bg-deep);
+  background: var(--surface-0);
 }
 
 /* ═══════════════════════════════════════════

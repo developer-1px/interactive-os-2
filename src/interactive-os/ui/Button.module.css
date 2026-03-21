@@ -26,7 +26,7 @@
   font-size: 12px;
   font-weight: 500;
   padding: 4px 10px;
-  background: var(--bg-elevated);
+  background: var(--surface-2);
   color: var(--text-secondary);
   border: 1px solid var(--border-mid);
   border-radius: var(--radius);
