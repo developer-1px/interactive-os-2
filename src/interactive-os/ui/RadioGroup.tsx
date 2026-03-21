@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './RadioGroup.module.css'
+
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -14,8 +14,8 @@ interface RadioGroupProps {
 }
 
 const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <span className={styles.radioInner}>
-    <span className={styles.radioIndicator}>{state.selected ? '◉' : '○'}</span>
+  <span className="item-inner">
+    <span className="radio-indicator">{state.selected ? '◉' : '○'}</span>
     <span>{(item.data as Record<string, unknown>)?.label as string ?? item.id as string}</span>
   </span>
 )
