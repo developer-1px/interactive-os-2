@@ -50,4 +50,8 @@ export interface Plugin {
   commands?: Record<string, (...args: any[]) => Command>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   keyMap?: Record<string, (ctx: any) => Command | void>
+  /** Fallback handler for keyboard events not matched by keyMap.
+   *  Receives the raw KeyboardEvent. Return true to preventDefault. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onUnhandledKey?: (event: KeyboardEvent, engine: any) => boolean
 }

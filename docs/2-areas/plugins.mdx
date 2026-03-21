@@ -15,6 +15,7 @@
 | focusRecovery | `focusRecovery()` | (자동) 삭제 후 포커스 복구 | `IsReachable`, `isVisible`, `spatialReachable` | 🟢 |
 | spatial | `spatial()` | spatialParent, spatialChild | `SPATIAL_PARENT_ID`, `spatialCommands` | 🟢 |
 | combobox | `combobox()` | filter, selectOption | `comboboxCommands` | 🟢 |
+| typeahead | `typeahead()` | (없음 — onUnhandledKey) | `findTypeaheadMatch`, `isPrintableKey` | 🟢 |
 
 ## 설계 원칙
 
@@ -33,9 +34,9 @@ clipboard, rename, dnd (crud 위에 구축)
   ↓
 focusRecovery (CRUD 후 포커스 복구)
 
-spatial, combobox (독립)
+spatial, combobox, typeahead (독립)
 ```
 
 ## 갭
 
-(없음 — 현재 9개 플러그인으로 안정)
+(없음 — 현재 10개 플러그인으로 안정)
