@@ -1,0 +1,43 @@
+# interactive-os
+
+> 키보드 우선 ARIA 프레임워크. LLM이 인터랙션을 재발명하지 않도록 하는 빌딩블록.
+
+## 레이어 순서
+
+의존 방향: 위에서 아래로. 아래 레이어는 위 레이어만 참조.
+
+| # | 레이어 | Area | 모듈 수 | 설명 |
+|---|--------|------|---------|------|
+| 1 | Core | [core](./core.mdx) | 3 | Entity, Store, CommandEngine |
+| 2 | Axes | [axes](./axes.mdx) | 6 + 1⬜ | 키맵 원자 — navigate, select, activate, expand, trap, value |
+| 3 | Patterns | [patterns](./patterns.mdx) | 17 + 1⬜ | 축 조합 → AriaBehavior |
+| 4 | Plugins | [plugins](./plugins.mdx) | 9 | Command 확장 — crud, history, clipboard, dnd, rename, focusRecovery |
+| 5 | Hooks | [hooks](./hooks.mdx) | 7 | React 통합 — useAria, useEngine, useAriaZone |
+| 6 | UI | [ui](./ui.mdx) | 14 + 3⬜ | 패턴별 컴포넌트 |
+| 7 | Pages | — | 41 | 쇼케이스 (후순위) |
+
+## 의존 그래프
+
+```
+Core (Entity, Command, Store)
+  ↓
+Axes (navigate, select, activate, expand, trap, value)
+  ↓
+Patterns (composePattern → AriaBehavior)
+  ↓
+Plugins (Command 확장)
+  ↓
+Hooks (useEngine → useAria → DOM)
+  ↓
+UI (React 컴포넌트)
+  ↓
+Pages (쇼케이스)
+```
+
+## 전체 빈칸 (⬜)
+
+| 레이어 | 빈칸 | 비고 |
+|--------|------|------|
+| Axes | trigger↔popup | combobox open/close를 축으로 분리 가능한지 미결정 |
+| Patterns | menubar | multi-zone (useAriaZone)으로 해결 예상 |
+| UI | Dialog, AlertDialog, Toolbar | behavior는 있지만 범용 UI 컴포넌트 없음 |

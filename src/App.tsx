@@ -217,9 +217,15 @@ const routeConfig: RouteGroup[] = [
     id: 'area',
     label: 'Area',
     icon: BookOpen,
-    basePath: '/area/axes',
+    basePath: '/area/overview',
     items: [
+      { path: 'overview', label: 'Overview', status: 'ready', component: PageAreaViewer },
+      { path: 'core', label: 'Core', status: 'ready', component: PageAreaViewer },
       { path: 'axes', label: 'Axes', status: 'ready', component: PageAreaViewer },
+      { path: 'patterns', label: 'Patterns', status: 'ready', component: PageAreaViewer },
+      { path: 'plugins', label: 'Plugins', status: 'ready', component: PageAreaViewer },
+      { path: 'hooks', label: 'Hooks', status: 'ready', component: PageAreaViewer },
+      { path: 'ui', label: 'UI', status: 'ready', component: PageAreaViewer },
     ],
   },
 ]
