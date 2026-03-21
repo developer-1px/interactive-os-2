@@ -62,16 +62,6 @@ export const cmsCanAccept: CanAcceptFn = (parentData, childData) => {
   return rule ? rule.safeParse(childData).success : false
 }
 
-// ── Derived: validate (detail panel input validation) ──
-
-const allNodeSchemas = z.discriminatedUnion('type', [
-  nodeSchemas.badge, nodeSchemas.icon, nodeSchemas.text, nodeSchemas.cta,
-  nodeSchemas.stat, nodeSchemas['stat-value'], nodeSchemas.step, nodeSchemas['step-num'], nodeSchemas.pattern,
-  nodeSchemas.link, nodeSchemas.brand,
-  nodeSchemas['section-label'], nodeSchemas['section-title'], nodeSchemas['section-desc'],
-  nodeSchemas.links, nodeSchemas.card, nodeSchemas.section,
-])
-
 // ── Derived: fieldsOf (editable fields for detail panel) ──
 
 interface EditableField {

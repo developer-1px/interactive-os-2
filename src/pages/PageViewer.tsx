@@ -687,7 +687,6 @@ export default function PageViewer() {
             >
               <Aria.Item render={(node, state) => {
                 const data = node.data as FileNodeData
-                const isActive = data.path === selectedFile
                 const indent = (state.level ?? 1) * 12
                 return (
                   <div className={styles.vwTreeItem}>
@@ -715,8 +714,8 @@ export default function PageViewer() {
         {/* Content panel */}
         <div className={styles.vwContent}>
           {selectedFile ? (
-            <div className={styles.vwContentBody} ref={contentBodyRef}>
-              <div className={styles.vwContentCode}>
+            <div className={styles.vwContentBody}>
+              <div className={styles.vwContentCode} ref={contentBodyRef}>
                 {isMarkdown
                   ? <MarkdownViewer content={fileContent} />
                   : <CodeBlock code={fileContent} filename={filename} />
