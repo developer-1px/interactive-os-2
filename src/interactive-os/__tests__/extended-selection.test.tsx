@@ -141,7 +141,7 @@ describe('extended selection — listbox', () => {
 describe('extendSelectionTo — target ID with custom navigable set', () => {
   it('selects range from anchor to target within provided navigableIds', () => {
     const store = fixtureStore()
-    const engine = createCommandEngine(store, [], () => {})
+    const engine = createCommandEngine(store, [], () => {}, { logger: false })
     engine.dispatch(focusCommands.setFocus('b'))
 
     const ctx = createBehaviorContext(engine)
@@ -155,7 +155,7 @@ describe('extendSelectionTo — target ID with custom navigable set', () => {
 
   it('skips nodes not in navigableIds for range calculation', () => {
     const store = fixtureStore()
-    const engine = createCommandEngine(store, [], () => {})
+    const engine = createCommandEngine(store, [], () => {}, { logger: false })
     engine.dispatch(focusCommands.setFocus('a'))
 
     const ctx = createBehaviorContext(engine)
@@ -169,7 +169,7 @@ describe('extendSelectionTo — target ID with custom navigable set', () => {
 
   it('falls back to visibleNodes when navigableIds not provided', () => {
     const store = fixtureStore()
-    const engine = createCommandEngine(store, [], () => {})
+    const engine = createCommandEngine(store, [], () => {}, { logger: false })
     engine.dispatch(focusCommands.setFocus('b'))
 
     const ctx = createBehaviorContext(engine)

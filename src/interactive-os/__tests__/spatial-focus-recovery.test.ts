@@ -110,7 +110,8 @@ describe('focusRecovery plugin with isReachable (spatial model)', () => {
     const engine = createCommandEngine(
       fixtureStore(),
       [historyPlugin.middleware!, recoveryPlugin.middleware!],
-      vi.fn()
+      vi.fn(),
+      { logger: false }
     )
     // No expand needed — spatial model
     return { engine }
