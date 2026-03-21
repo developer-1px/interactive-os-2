@@ -10,4 +10,9 @@ export default defineConfig({
     react(),
     fsPlugin(),
   ],
+  css: {
+    modules: {
+      localsConvention: 'camelCaseOnly',
+    },
+  },
 })

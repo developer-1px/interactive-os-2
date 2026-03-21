@@ -4,6 +4,7 @@ import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon, 
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
+import './styles/layout.css'
 import './styles/app.css'
 
 import { Aria } from './interactive-os/components/aria'
