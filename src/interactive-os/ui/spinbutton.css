@@ -79,4 +79,29 @@
   color: var(--text-primary);
   text-align: center;
   font-variant-numeric: tabular-nums;
+  cursor: text;
+}
+
+.spinbutton-input {
+  width: 48px;
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+/* Error state */
+.spinbutton-group[data-invalid] {
+  border-color: var(--color-error, #f85149);
+  box-shadow: 0 0 0 2px var(--color-error, #f85149);
+}
+
+[data-focused] .spinbutton-group[data-invalid] {
+  border-color: var(--color-error, #f85149);
+  box-shadow: 0 0 0 2px var(--color-error, #f85149);
 }
