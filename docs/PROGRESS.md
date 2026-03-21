@@ -121,6 +121,7 @@
 - [x] **포커스 리커버리** — `focusRecovery()` 미들웨어로 삭제/축소/이동/생성/undo 시 자동 복구, `isReachable` zone별 주입으로 spatial/tree 모델 통합
 - [x] `<Aria.Cell>` — grid 멀티 컬럼 지원, AriaItemContext
 - [x] `useControlledAria` — 외부 store 연동 훅 (controlled state variant)
+- [x] `useAriaZone` — multi-zone 공유 훅 (useEngine + 복수 behavior zone, 독립 포커스/확장 상태)
 - [x] DOM 스크롤 동기화 — 포커스 이동 시 `scrollIntoView({ block: 'nearest' })` 자동 호출
 - [x] `hooks/use-spatial-nav.ts` — `useSpatialNav` hook + `findNearest` 순수 함수 (DOM 위치 기반 방향키 네비게이션)
 - [x] `onActivate` + `followFocus` — 포커스/활성화 분리, behavior 수준 followFocus + entity별 opt-out
