@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import './combobox.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
@@ -84,7 +84,10 @@ export function Combobox({
     return d?.type === 'group'
   })
 
-  const behaviorData = isGrouped ? flattenGroups(originalStore) : data
+  const behaviorData = useMemo(
+    () => isGrouped ? flattenGroups(originalStore) : data,
+    [isGrouped, originalStore, data],
+  )
 
   // When grouped, intercept onChange to restore group structure before propagating up.
   // The behavior engine operates on a flat store; callers expect the grouped structure.
@@ -126,10 +129,10 @@ export function Combobox({
   // creatable=true, dropdown open, filter text non-empty, and no items match the filter
   const showCreateOption = creatable && isOpen && filterText.length > 0 && visibleChildren.length === 0
 
-  // When the create option visibility changes, clear its focused state
-  if (!showCreateOption && createOptionFocused) {
-    setCreateOptionFocused(false)
-  }
+  // When the create option disappears, clear its focused state
+  useEffect(() => {
+    if (!showCreateOption) setCreateOptionFocused(false)
+  }, [showCreateOption])
 
   const handleCreate = (label: string) => {
     const createCmd = comboboxCommands.create(label)

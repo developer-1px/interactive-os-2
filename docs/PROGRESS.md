@@ -148,7 +148,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (408 tests, 45 files)
+- [x] Vitest (416 tests, 47 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 46 modules)
@@ -158,6 +158,7 @@
 - [x] CLAUDE.md (프로젝트 로컬) — PROGRESS.md 업데이트 규칙 명시
 - [x] CI/CD — GitHub Actions (test + lint + build)
 - [x] npm publish 자동화 — GitHub Release → npm publish (provenance)
+- [x] Code Health Check — `pnpm health` (knip dead code + madge circular deps + os 미사용 징후 grep + 비대 파일 LOC)
 
 ## ⑧ App Shell
 
@@ -236,4 +237,4 @@
 
 ---
 
-*Last updated: 2026-03-21 — Focus Token System (MECE state separation, hover suppression, --bg-press)*
+*Last updated: 2026-03-21 — Code Health Check (pnpm health: knip + madge + os 미사용 징후 + LOC)*
