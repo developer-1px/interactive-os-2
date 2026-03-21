@@ -250,5 +250,9 @@
 - [x] PageViewer QuickOpen os 전환 — QuickOpen을 useAria+combobox behavior로 마이그레이션, role/onKeyDown/addEventListener 하드코딩 제거, body keyMap-only Aria로 Cmd+P 래핑
 
 - [x] CSS Modules Page Migration — 페이지 CSS 3건 모듈 전환 (PageViewer.css, PageVisualCms.css, area-viewer 추출), `:global()` Shiki/attribute 셀렉터, cms-renderers 모듈 참조 전환
+- [x] Area L3 Documentation — 6개 레이어 55개 L3 문서 생성 (core 3, axes 4, patterns 17, plugins 9, hooks 7, ui 15), L2 주기율표에 구현/문서 진척도 칼럼 + L3 링크 추가
+- [x] Area TreeView Sidebar — Area 그룹 사이드바를 TreeView로 교체 (AreaSidebar.tsx), glob에서 트리 데이터 자동 생성, L2 레이어순 + L3 알파벳순, URL→focus/expand 동기화
 
-*Last updated: 2026-03-21 — CSS Modules Page Migration*
+- [x] CSS Dead Code Cleanup — app.css dead code 118줄 제거, index.css 중복 정리, app.css→layout.css 분해, Vite CSS Modules 설정, 모듈 내 dead `:global()` 제거, phantom className 정리, Toolbar 누락 CSS 추가
+
+*Last updated: 2026-03-21 — CSS Dead Code Cleanup*
