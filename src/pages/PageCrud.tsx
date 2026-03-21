@@ -48,7 +48,6 @@ export default function PageCrud() {
       <div className="page-keys">
         <kbd>↑↓</kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>←→</kbd> <span className="key-hint">expand</span>{' '}
-        <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}
         <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
