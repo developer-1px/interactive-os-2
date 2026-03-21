@@ -245,6 +245,12 @@ export function Combobox({
           return
         }
       } else {
+        // Enter with Create option visible → auto-create (no ArrowDown needed)
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          handleCreate(filterText)
+          return
+        }
         if (e.key === 'ArrowDown') {
           const lastVisibleId = visibleChildren[visibleChildren.length - 1]
           if (aria.focused === lastVisibleId || visibleChildren.length === 0) {
