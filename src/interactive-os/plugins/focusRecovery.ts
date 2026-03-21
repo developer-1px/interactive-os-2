@@ -6,15 +6,18 @@ import { focusCommands } from './core'
 const FOCUS_ID = '__focus__'
 const EXPANDED_ID = '__expanded__'
 
-export function getFocusedId(store: NormalizedData): string {
-  return (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
-}
+export type IsReachable = (store: NormalizedData, nodeId: string) => boolean
 
 /**
- * A node is visible if it exists AND all ancestors are expanded.
+ * Spatial reachability: all nodes are always rendered, so reachable = exists.
+ * isVisible already guards existence, so this is simply () => true.
  */
-export function isVisible(store: NormalizedData, nodeId: string): boolean {
-  if (!getEntity(store, nodeId)) return false
+export const spatialReachable: IsReachable = () => true
+
+/**
+ * Default tree reachability: all ancestors must be expanded.
+ */
+function treeReachable(store: NormalizedData, nodeId: string): boolean {
   const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
 
   let current = nodeId
@@ -27,16 +30,37 @@ export function isVisible(store: NormalizedData, nodeId: string): boolean {
   }
 }
 
+export function getFocusedId(store: NormalizedData): string {
+  return (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
+}
+
+/**
+ * A node is visible if it exists AND is reachable.
+ * isReachable defaults to tree model (all ancestors expanded).
+ */
+export function isVisible(
+  store: NormalizedData,
+  nodeId: string,
+  isReachable: IsReachable = treeReachable
+): boolean {
+  if (!getEntity(store, nodeId)) return false
+  return isReachable(store, nodeId)
+}
+
 /**
  * Find the nearest visible ancestor of a node.
  */
-function findVisibleAncestor(store: NormalizedData, nodeId: string): string | null {
+function findVisibleAncestor(
+  store: NormalizedData,
+  nodeId: string,
+  isReachable: IsReachable = treeReachable
+): string | null {
   let current = nodeId
   while (true) {
     const parentId = getParent(store, current)
     if (!parentId) return null
     if (parentId === ROOT_ID) return null
-    if (isVisible(store, parentId)) return parentId
+    if (isVisible(store, parentId, isReachable)) return parentId
     current = parentId
   }
 }
@@ -47,7 +71,8 @@ function findVisibleAncestor(store: NormalizedData, nodeId: string): string | nu
 export function findFallbackFocus(
   storeBefore: NormalizedData,
   storeAfter: NormalizedData,
-  lostNodeId: string
+  lostNodeId: string,
+  isReachable: IsReachable = treeReachable
 ): string | null {
   const parentId = getParent(storeBefore, lostNodeId)
   if (!parentId) return null
@@ -57,19 +82,19 @@ export function findFallbackFocus(
 
   // Next sibling
   for (let i = idx + 1; i < siblings.length; i++) {
-    if (isVisible(storeAfter, siblings[i]!)) return siblings[i]!
+    if (isVisible(storeAfter, siblings[i]!, isReachable)) return siblings[i]!
   }
 
   // Previous sibling
   for (let i = idx - 1; i >= 0; i--) {
-    if (isVisible(storeAfter, siblings[i]!)) return siblings[i]!
+    if (isVisible(storeAfter, siblings[i]!, isReachable)) return siblings[i]!
   }
 
   // Nearest visible ancestor
   if (parentId !== ROOT_ID) {
-    const ancestor = isVisible(storeAfter, parentId)
+    const ancestor = isVisible(storeAfter, parentId, isReachable)
       ? parentId
-      : findVisibleAncestor(storeAfter, parentId)
+      : findVisibleAncestor(storeAfter, parentId, isReachable)
     if (ancestor) return ancestor
   }
 
@@ -85,12 +110,17 @@ export function findFallbackFocus(
  */
 export function detectNewVisibleEntities(
   storeBefore: NormalizedData,
-  storeAfter: NormalizedData
+  storeAfter: NormalizedData,
+  isReachable: IsReachable = treeReachable
 ): string[] {
   const beforeIds = new Set(Object.keys(storeBefore.entities))
   return Object.keys(storeAfter.entities).filter(
-    (id) => !beforeIds.has(id) && !id.startsWith('__') && isVisible(storeAfter, id)
+    (id) => !beforeIds.has(id) && !id.startsWith('__') && isVisible(storeAfter, id, isReachable)
   )
+}
+
+export interface FocusRecoveryOptions {
+  isReachable?: IsReachable
 }
 
 /**
@@ -100,7 +130,9 @@ export function detectNewVisibleEntities(
  * - New visible node created → focus it
  * - Focus invisible (deleted, collapsed, hidden) → fallback chain
  */
-export function focusRecovery(): Plugin {
+export function focusRecovery(options?: FocusRecoveryOptions): Plugin {
+  const reachable = options?.isReachable ?? treeReachable
+
   return {
     middleware: (next) => (command) => {
       if (command.type === 'core:focus') {
@@ -128,7 +160,7 @@ export function focusRecovery(): Plugin {
       const after = storeAfter as NormalizedData
 
       // New visible entities → focus the last one
-      const newVisibleIds = detectNewVisibleEntities(before, after)
+      const newVisibleIds = detectNewVisibleEntities(before, after, reachable)
 
       if (newVisibleIds.length > 0) {
         next(focusCommands.setFocus(newVisibleIds[newVisibleIds.length - 1]!))
@@ -137,8 +169,8 @@ export function focusRecovery(): Plugin {
 
       // Current focus not visible → fallback
       const currentFocus = getFocusedId(after) || getFocusedId(before)
-      if (currentFocus && !isVisible(after, currentFocus)) {
-        const fallback = findFallbackFocus(before, after, currentFocus)
+      if (currentFocus && !isVisible(after, currentFocus, reachable)) {
+        const fallback = findFallbackFocus(before, after, currentFocus, reachable)
         if (fallback) {
           next(focusCommands.setFocus(fallback))
         }

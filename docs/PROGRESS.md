@@ -27,7 +27,7 @@
 - [x] focus (setFocus, undo 시 이전 포커스 복원)
 - [x] selection (select, toggleSelect, clearSelection + undo)
 - [x] expand/collapse (expand, collapse, toggleExpand)
-- [x] **포커스 리커버리** — `focusRecovery()` 미들웨어, 단일 정책: 다음 형제 → 이전 형제 → 부모
+- [x] **포커스 리커버리** — `focusRecovery()` 미들웨어, 단일 정책: 다음 형제 → 이전 형제 → 부모, `isReachable` pluggable (spatial/tree 모델 지원), 항상 활성 (옵션 아닌 불변 조건)
 - [x] 선택 모델 — single/multiple 모드 (selectionMode on AriaBehavior)
 
 ### history()
@@ -117,7 +117,7 @@
 - [x] `hooks/use-keyboard.ts` — parseKeyCombo, matchKeyEvent, findMatchingKey (Mod 플랫폼 독립)
 - [x] gridcell 자동 래핑 (treegrid row 내부)
 - [x] aria-label prop 지원
-- [x] **포커스 리커버리** — `focusRecovery()` 미들웨어로 삭제/축소/이동/생성/undo 시 자동 복구
+- [x] **포커스 리커버리** — `focusRecovery()` 미들웨어로 삭제/축소/이동/생성/undo 시 자동 복구, `isReachable` zone별 주입으로 spatial/tree 모델 통합
 - [x] `<Aria.Cell>` — grid 멀티 컬럼 지원, AriaItemContext
 - [x] `useControlledAria` — 외부 store 연동 훅 (controlled state variant)
 - [x] DOM 스크롤 동기화 — 포커스 이동 시 `scrollIntoView({ block: 'nearest' })` 자동 호출
@@ -225,4 +225,4 @@
 
 ---
 
-*Last updated: 2026-03-20 — Axis v2 5축 모델 완료, 쇼케이스 v2 (옵션 토글), v1 축 삭제*
+*Last updated: 2026-03-21 — focusRecovery 불변 조건화: isReachable pluggable, CMS Canvas 포커스 복구 활성화*

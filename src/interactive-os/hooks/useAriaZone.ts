@@ -9,6 +9,7 @@ import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
 import { isVisible, findFallbackFocus, detectNewVisibleEntities } from '../plugins/focusRecovery'
+import type { IsReachable } from '../plugins/focusRecovery'
 import type { UseAriaReturn } from './useAria'
 
 /** Command types that update zone-local view state (not shared engine data). */
@@ -34,7 +35,7 @@ export interface UseAriaZoneOptions {
   keyMap?: Record<string, (ctx: ReturnType<typeof createBehaviorContext>) => Command | void>
   onActivate?: (nodeId: string) => void
   initialFocus?: string
-  focusRecovery?: boolean
+  isReachable?: IsReachable
 }
 
 // ── Zone-local meta-entity state ──
@@ -95,7 +96,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     plugins: zonePlugins,
     keyMap: keyMapOverrides,
     onActivate, initialFocus,
-    focusRecovery: enableFocusRecovery = true,
+    isReachable,
   } = options
 
   const [viewState, setViewState] = useState<ZoneViewState>(() => {
@@ -167,12 +168,10 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
               // Re-batch data commands
               engine.dispatch(createBatchCommand(dataCmds))
             }
-            // Zone-level focus recovery
-            if (enableFocusRecovery) {
-              const storeAfter = engine.getStore()
-              if (storeAfter !== storeBefore) {
-                runFocusRecovery(storeBefore, storeAfter)
-              }
+            // Zone-level focus recovery (always active)
+            const storeAfter = engine.getStore()
+            if (storeAfter !== storeBefore) {
+              runFocusRecovery(storeBefore, storeAfter)
             }
           }
           return
@@ -189,14 +188,12 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
           return
         }
 
-        // Data command → shared engine + focus recovery
+        // Data command → shared engine + focus recovery (always active)
         const storeBefore = engine.getStore()
         engine.dispatch(command)
-        if (enableFocusRecovery) {
-          const storeAfter = engine.getStore()
-          if (storeAfter !== storeBefore) {
-            runFocusRecovery(storeBefore, storeAfter)
-          }
+        const storeAfter = engine.getStore()
+        if (storeAfter !== storeBefore) {
+          runFocusRecovery(storeBefore, storeAfter)
         }
       },
       syncStore() { /* no-op — zone doesn't own engine store */ },
@@ -205,21 +202,20 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     function runFocusRecovery(storeBefore: NormalizedData, storeAfter: NormalizedData) {
       const vs = viewStateRef.current
       // New visible entities → focus last new one
-      const newVisible = detectNewVisibleEntities(storeBefore, storeAfter)
+      const newVisible = detectNewVisibleEntities(storeBefore, storeAfter, isReachable)
       if (newVisible.length > 0) {
         setViewState(prev => ({ ...prev, focusedId: newVisible[newVisible.length - 1]! }))
         return
       }
       // Current focus not visible → fallback
-      if (vs.focusedId && !isVisible(storeAfter, vs.focusedId)) {
-        const fallback = findFallbackFocus(storeBefore, storeAfter, vs.focusedId)
+      if (vs.focusedId && !isVisible(storeAfter, vs.focusedId, isReachable)) {
+        const fallback = findFallbackFocus(storeBefore, storeAfter, vs.focusedId, isReachable)
         if (fallback) {
           setViewState(prev => ({ ...prev, focusedId: fallback }))
         }
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [engine, enableFocusRecovery])
+  }, [engine, isReachable])
 
   // ── Derived state ──
 
