@@ -64,6 +64,13 @@
 - [x] cross-boundary 이동 — 그룹 경계 넘는 방향키 네비게이션 (findAdjacentGroup fallback)
 - [x] sticky cursor — 그룹별 마지막 포커스 위치 보관/복원 (useRef, undo/redo 밖)
 
+### typeahead()
+- [x] `onUnhandledKey` — Plugin 인터페이스 확장, keyMap fallback 경로
+- [x] `findTypeaheadMatch` — case-insensitive prefix 검색, 순환(wrap-around), multi-char 누적
+- [x] per-instance buffer + 타이머 (500ms 기본, store 저장 금지)
+- [x] IME composing / modifier 키 가드
+- [x] visible nodes만 검색 (collapsed 제외)
+
 ### 미구현 플러그인
 - [x] focusRecovery() — 포커스 유효성 검증 + 자동 복구 미들웨어
 - [ ] `[P2]` permissions() — 노드별 Command 차단 미들웨어 (예제만 존재)
