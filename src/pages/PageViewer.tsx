@@ -1,4 +1,4 @@
-import './PageViewer.css'
+import styles from './PageViewer.module.css'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Fuse from 'fuse.js'
 import Markdown from 'react-markdown'
@@ -266,11 +266,11 @@ function CodeBlock({ code, filename }: { code: string; filename: string }) {
     }
   }, [highlightToken, html])
 
-  if (!html) return <pre className="code-block code-block--loading"><code>{code}</code></pre>
+  if (!html) return <pre className={`${styles.codeBlock} ${styles.codeBlockLoading}`}><code>{code}</code></pre>
   return (
     <div
       ref={containerRef}
-      className="code-block"
+      className={styles.codeBlock}
       dangerouslySetInnerHTML={{ __html: html }}
       onClick={handleClick}
     />
@@ -296,7 +296,7 @@ function ExportDiagram({ filePath }: { filePath: string }) {
   if (!mermaidCode) return null
 
   return (
-    <div className="vw-dep-graph">
+    <div className={styles.vwDepGraph}>
       <MermaidBlock code={mermaidCode} />
     </div>
   )
@@ -306,7 +306,7 @@ function ExportDiagram({ filePath }: { filePath: string }) {
 
 function MarkdownViewer({ content }: { content: string }) {
   return (
-    <div className="viewer-markdown">
+    <div className={styles.viewerMarkdown}>
       <Markdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeRaw]}
@@ -340,37 +340,37 @@ const ICON_STROKE = 1.5
 function FileIcon({ name, type, expanded }: { name: string; type: string; expanded?: boolean }) {
   if (type === 'directory') {
     return expanded
-      ? <FolderOpen size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--folder" />
-      : <Folder size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--folder" />
+      ? <FolderOpen size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconFolder}`} />
+      : <Folder size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconFolder}`} />
   }
   const ext = name.split('.').pop()
   switch (ext) {
     case 'ts':
     case 'tsx':
-      return <FileCode size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--ts" />
+      return <FileCode size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconTs}`} />
     case 'js':
     case 'jsx':
-      return <FileCode size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--js" />
+      return <FileCode size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconJs}`} />
     case 'json':
-      return <Braces size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--json" />
+      return <Braces size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconJson}`} />
     case 'md':
-      return <FileType size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--md" />
+      return <FileType size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconMd}`} />
     case 'css':
-      return <Palette size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--css" />
+      return <Palette size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconCss}`} />
     case 'sh':
     case 'bash':
-      return <Terminal size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--sh" />
+      return <Terminal size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconSh}`} />
     case 'png':
     case 'jpg':
     case 'svg':
     case 'gif':
-      return <Image size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--img" />
+      return <Image size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconImg}`} />
     case 'yaml':
     case 'yml':
     case 'toml':
-      return <Settings size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon vw-icon--config" />
+      return <Settings size={ICON_SIZE} strokeWidth={ICON_STROKE} className={`${styles.vwIcon} ${styles.vwIconConfig}`} />
     default:
-      return <File size={ICON_SIZE} strokeWidth={ICON_STROKE} className="vw-icon" />
+      return <File size={ICON_SIZE} strokeWidth={ICON_STROKE} className={styles.vwIcon} />
   }
 }
 
@@ -380,11 +380,11 @@ function Breadcrumb({ path, root }: { path: string; root: string }) {
   const relative = path.startsWith(root) ? path.slice(root.length + 1) : path
   const segments = relative.split('/')
   return (
-    <div className="vw-breadcrumb">
+    <div className={styles.vwBreadcrumb}>
       {segments.map((seg, i) => (
         <span key={i}>
-          {i > 0 && <ChevronRight size={10} strokeWidth={2} className="vw-breadcrumb__sep" />}
-          <span className={i === segments.length - 1 ? 'vw-breadcrumb__current' : 'vw-breadcrumb__segment'}>{seg}</span>
+          {i > 0 && <ChevronRight size={10} strokeWidth={2} className={styles.vwBreadcrumbSep} />}
+          <span className={i === segments.length - 1 ? styles.vwBreadcrumbCurrent : styles.vwBreadcrumbSegment}>{seg}</span>
         </span>
       ))}
     </div>
@@ -499,13 +499,13 @@ function QuickOpen({
   }, [onClose])
 
   return (
-    <div className="qo-backdrop" onClick={handleBackdropClick}>
-      <div className="qo-dialog" aria-label="Quick Open">
-        <div className="qo-input-row">
-          <Search size={12} strokeWidth={1.5} className="qo-input-icon" />
+    <div className={styles.qoBackdrop} onClick={handleBackdropClick}>
+      <div className={styles.qoDialog} aria-label="Quick Open">
+        <div className={styles.qoInputRow}>
+          <Search size={12} strokeWidth={1.5} className={styles.qoInputIcon} />
           <input
             ref={inputRef}
-            className="qo-input"
+            className={styles.qoInput}
             type="text"
             placeholder="파일 검색..."
             value={query}
@@ -513,10 +513,10 @@ function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className="qo-shortcut">ESC</kbd>
+          <kbd className={styles.qoShortcut}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
-          <div className="qo-results" onMouseDown={e => e.preventDefault()}>
+          <div className={styles.qoResults} onMouseDown={e => e.preventDefault()}>
             {children.map(childId => {
               const entity = store.entities[childId]
               if (!entity) return null
@@ -527,7 +527,7 @@ function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`qo-item${state.focused ? ' qo-item--focused' : ''}`}
+                  className={`${styles.qoItem}${state.focused ? ` ${styles.qoItemFocused}` : ''}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),
@@ -536,14 +536,14 @@ function QuickOpen({
                   }}
                 >
                   <FileIcon name={fileData.name} type="file" />
-                  <span className="qo-item__name">{fileData.name}</span>
-                  <span className="qo-item__path">{fileData.relativePath}</span>
+                  <span className={styles.qoItemName}>{fileData.name}</span>
+                  <span className={styles.qoItemPath}>{fileData.relativePath}</span>
                 </div>
               )
             })}
           </div>
         ) : (
-          <div className="qo-empty">일치하는 파일이 없습니다</div>
+          <div className={styles.qoEmpty}>일치하는 파일이 없습니다</div>
         )}
       </div>
     </div>
@@ -612,8 +612,8 @@ export default function PageViewer() {
 
   if (loading || !initialStore) {
     return (
-      <div className="vw-loading">
-        <Circle size={14} strokeWidth={2} className="vw-loading__spinner" />
+      <div className={styles.vwLoading}>
+        <Circle size={14} strokeWidth={2} className={styles.vwLoadingSpinner} />
         <span>Loading project...</span>
       </div>
     )
@@ -630,12 +630,12 @@ export default function PageViewer() {
       data={EMPTY_STORE}
       plugins={EMPTY_PLUGINS}
     >
-    <div className="vw">
+    <div className={styles.vw}>
       {/* Top bar — single unified bar */}
-      <div className="vw-statusbar">
-        <div className="vw-statusbar__left">
+      <div className={styles.vwStatusbar}>
+        <div className={styles.vwStatusbarLeft}>
           <button
-            className="vw-statusbar__btn"
+            className={styles.vwStatusbarBtn}
             onClick={() => setTreeCollapsed(!treeCollapsed)}
             title={treeCollapsed ? 'Show explorer' : 'Hide explorer'}
           >
@@ -644,40 +644,40 @@ export default function PageViewer() {
           {selectedFile ? (
             <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />
           ) : (
-            <span className="vw-statusbar__title">Explorer</span>
+            <span className={styles.vwStatusbarTitle}>Explorer</span>
           )}
         </div>
-        <div className="vw-statusbar__right">
+        <div className={styles.vwStatusbarRight}>
           {selectedFile && (
-            <div className="vw-content__meta">
+            <div className={styles.vwContentMeta}>
               <FileIcon name={filename} type="file" />
               <span>{ext.toUpperCase()}</span>
-              <span className="vw-content__meta-sep" />
+              <span className={styles.vwContentMetaSep} />
               <span>{lineCount} lines</span>
             </div>
           )}
           <button
-            className="vw-statusbar__btn"
+            className={styles.vwStatusbarBtn}
             onClick={() => setQuickOpenVisible(true)}
             title="Quick Open (Cmd+P)"
           >
             <Search size={12} strokeWidth={1.5} />
           </button>
           <button
-            className={`vw-rec${recording ? ' vw-rec--active' : ''}`}
+            className={`${styles.vwRec}${recording ? ` ${styles.vwRecActive}` : ''}`}
             onClick={toggleRecording}
           >
-            <span className="vw-rec__dot" />
+            <span className={styles.vwRecDot} />
             {recording ? 'STOP' : 'REC'}
           </button>
         </div>
       </div>
 
       {/* Main panels */}
-      <div className="vw-panels">
+      <div className={styles.vwPanels}>
         {/* Tree panel */}
         {!treeCollapsed && (
-          <div className="vw-tree">
+          <div className={styles.vwTree}>
             <Aria
               behavior={treegrid}
               data={initialStore}
@@ -690,19 +690,19 @@ export default function PageViewer() {
                 const isActive = data.path === selectedFile
                 const indent = (state.level ?? 1) * 12
                 return (
-                  <div className={`vw-tree__item${isActive ? ' vw-tree__item--active' : ''}${state.focused ? ' vw-tree__item--focused' : ''}`}>
-                    <div className="vw-tree__indent" style={{ width: indent }} />
+                  <div className={`${styles.vwTreeItem}${isActive ? ` ${styles.vwTreeItemActive}` : ''}${state.focused ? ` ${styles.vwTreeItemFocused}` : ''}`}>
+                    <div className={styles.vwTreeIndent} style={{ width: indent }} />
                     {data.type === 'directory' ? (
-                      <span className="vw-tree__chevron">
+                      <span className={styles.vwTreeChevron}>
                         {state.expanded
                           ? <ChevronDown size={11} strokeWidth={2} />
                           : <ChevronRight size={11} strokeWidth={2} />}
                       </span>
                     ) : (
-                      <span className="vw-tree__chevron" />
+                      <span className={styles.vwTreeChevron} />
                     )}
                     <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
-                    <span className={`vw-tree__name${data.type === 'directory' ? ' vw-tree__name--dir' : ''}`}>
+                    <span className={`${styles.vwTreeName}${data.type === 'directory' ? ` ${styles.vwTreeNameDir}` : ''}`}>
                       {data.name}
                     </span>
                   </div>
@@ -713,24 +713,24 @@ export default function PageViewer() {
         )}
 
         {/* Content panel */}
-        <div className="vw-content">
+        <div className={styles.vwContent}>
           {selectedFile ? (
-            <div className="vw-content__body" ref={contentBodyRef}>
-              <div className="vw-content__code">
+            <div className={styles.vwContentBody} ref={contentBodyRef}>
+              <div className={styles.vwContentCode}>
                 {isMarkdown
                   ? <MarkdownViewer content={fileContent} />
                   : <CodeBlock code={fileContent} filename={filename} />
                 }
               </div>
               {!isMarkdown && isSourceFile(filename) && (
-                <div className="vw-content__graph">
+                <div className={styles.vwContentGraph}>
                   <ExportDiagram filePath={selectedFile} />
                 </div>
               )}
             </div>
           ) : (
-            <div className="vw-empty">
-              <FileText size={24} strokeWidth={1} className="vw-empty__icon" />
+            <div className={styles.vwEmpty}>
+              <FileText size={24} strokeWidth={1} className={styles.vwEmptyIcon} />
               <span>Select a file to view</span>
             </div>
           )}

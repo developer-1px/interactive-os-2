@@ -1,0 +1,132 @@
+/* ═══════════════════════════════════════════
+   Area MDX — prose styles for rendered MDX
+   ═══════════════════════════════════════════ */
+
+.root h1 {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin: 0 0 4px;
+}
+
+.root h2 {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 28px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.root h3 {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 20px 0 8px;
+}
+
+.root > blockquote {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  margin: 0 0 20px;
+  padding: 0;
+  border: none;
+}
+
+.root p {
+  font-size: 0.85em;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 8px 0;
+}
+
+.root ul,
+.root ol {
+  font-size: 0.85em;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.root li {
+  margin: 4px 0;
+}
+
+.root strong {
+  color: var(--text-bright);
+}
+
+.root code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--surface-2);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--accent);
+}
+
+.root pre {
+  background: var(--surface-1);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.root pre code {
+  background: none;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* --- MDX tables --- */
+
+.root table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 12px 0;
+}
+
+.root thead th {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-mid);
+  white-space: nowrap;
+}
+
+.root tbody td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-dim);
+  vertical-align: top;
+}
+
+.root tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.root tbody tr:hover {
+  background: var(--surface-1);
+}
+
+.root tbody td code {
+  font-size: 11px;
+}
+
+/* status indicators */
+.root tbody td:last-child {
+  text-align: center;
+  white-space: nowrap;
+}

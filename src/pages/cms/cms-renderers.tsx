@@ -9,6 +9,7 @@ import {
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
 import type { NodeState } from '../../interactive-os/behaviors/types'
+import s from '../PageVisualCms.module.css'
 
 function LocalizedText({ value, locale }: { value: string | LocaleMap; locale: Locale }) {
   const { text, isFallback } = localized(value, locale)
@@ -49,11 +50,11 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       return <LocalizedText value={data.value as string | LocaleMap} locale={locale} />
     case 'cta':
       return (
-        <div className="cms-hero__actions">
-          <button type="button" className="cms-hero__cta">
+        <div className={s.cmsHeroActions}>
+          <button type="button" className={s.cmsHeroCta}>
             <LocalizedText value={data.primary as string | LocaleMap} locale={locale} /> <ArrowRight size={14} />
           </button>
-          <button type="button" className="cms-hero__cta-secondary">
+          <button type="button" className={s.cmsHeroCtaSecondary}>
             <LocalizedText value={data.secondary as string | LocaleMap} locale={locale} /> <ChevronRight size={14} />
           </button>
         </div>
@@ -73,20 +74,20 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
     case 'pattern':
       return (
         <>
-          <div className="cms-pattern__icon">{patternIcons[data.icon as string] ?? null}</div>
-          <span className="cms-pattern__name"><LocalizedText value={data.name as string | LocaleMap} locale={locale} /></span>
+          <div className={s.cmsPatternIcon}>{patternIcons[data.icon as string] ?? null}</div>
+          <span className={s.cmsPatternName}><LocalizedText value={data.name as string | LocaleMap} locale={locale} /></span>
         </>
       )
     case 'brand':
       return (
         <>
-          <div className="cms-footer__logo" />
-          <span className="cms-footer__name">{data.name as string}</span>
-          <span className="cms-footer__copy">{data.license as string} License</span>
+          <div className={s.cmsFooterLogo} />
+          <span className={s.cmsFooterName}>{data.name as string}</span>
+          <span className={s.cmsFooterCopy}>{data.license as string} License</span>
         </>
       )
     case 'badge':
-      return <><span className="cms-hero__badge-dot" /><LocalizedText value={data.value as string | LocaleMap} locale={locale} /></>
+      return <><span className={s.cmsHeroBadgeDot} /><LocalizedText value={data.value as string | LocaleMap} locale={locale} /></>
     case 'section-label':
     case 'section-title':
     case 'section-desc':
@@ -94,7 +95,7 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
     case 'links':
       return null
     case 'link':
-      return <a className="cms-footer__link" href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>
+      return <a className={s.cmsFooterLink} href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>
     default:
       return null
   }
@@ -105,12 +106,12 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
 
 export function getSectionClassName(variant: string): string {
   switch (variant) {
-    case 'hero': return 'cms-hero'
-    case 'stats': return 'cms-stats'
-    case 'features': return 'cms-features'
-    case 'workflow': return 'cms-how'
-    case 'patterns': return 'cms-patterns'
-    case 'footer': return 'cms-footer'
+    case 'hero': return s.cmsHero
+    case 'stats': return s.cmsStats
+    case 'features': return s.cmsFeatures
+    case 'workflow': return s.cmsHow
+    case 'patterns': return s.cmsPatterns
+    case 'footer': return s.cmsFooter
     default: return ''
   }
 }
@@ -121,35 +122,35 @@ export function getNodeClassName(data: Record<string, string>, state: NodeState)
     case 'section':
       return getSectionClassName(data.variant)
     case 'stat':
-      return `cms-stat${f ? ' cms-stat--focused' : ''}`
+      return `${s.cmsStat}${f ? ` ${s.cmsStatFocused}` : ''}`
     case 'card':
-      return `cms-feature-card${f ? ' cms-feature-card--focused' : ''}`
+      return `${s.cmsFeatureCard}${f ? ` ${s.cmsFeatureCardFocused}` : ''}`
     case 'step':
-      return `cms-step${f ? ' cms-step--focused' : ''}`
+      return `${s.cmsStep}${f ? ` ${s.cmsStepFocused}` : ''}`
     case 'pattern':
-      return `cms-pattern${f ? ' cms-pattern--focused' : ''}`
+      return `${s.cmsPattern}${f ? ` ${s.cmsPatternFocused}` : ''}`
     case 'step-num':
-      return 'cms-step__number'
+      return s.cmsStepNumber
     case 'stat-value':
-      return `cms-stat__value${f ? ' cms-stat__value--focused' : ''}`
+      return s.cmsStatValue
     case 'text': {
-      if (data.role === 'hero-title') return 'cms-hero__title'
-      if (data.role === 'hero-subtitle') return 'cms-hero__subtitle'
-      if (data.role === 'title') return 'cms-feature-card__title'
-      if (data.role === 'desc') return 'cms-feature-card__desc'
-      if (data.role === 'step-title') return 'cms-step__title'
-      if (data.role === 'step-desc') return 'cms-step__desc'
-      if (data.role === 'stat-label') return 'cms-stat__label'
+      if (data.role === 'hero-title') return s.cmsHeroTitle
+      if (data.role === 'hero-subtitle') return s.cmsHeroSubtitle
+      if (data.role === 'title') return s.cmsFeatureCardTitle
+      if (data.role === 'desc') return s.cmsFeatureCardDesc
+      if (data.role === 'step-title') return s.cmsStepTitle
+      if (data.role === 'step-desc') return s.cmsStepDesc
+      if (data.role === 'stat-label') return s.cmsStatLabel
       return ''
     }
-    case 'section-label': return 'cms-section-label'
-    case 'section-title': return 'cms-section-title'
-    case 'section-desc': return 'cms-section-desc'
-    case 'badge': return 'cms-hero__badge'
+    case 'section-label': return s.cmsSectionLabel
+    case 'section-title': return s.cmsSectionTitle
+    case 'section-desc': return s.cmsSectionDesc
+    case 'badge': return s.cmsHeroBadge
     case 'cta': return ''
-    case 'icon': return 'cms-feature-card__icon'
-    case 'brand': return 'cms-footer__brand'
-    case 'links': return 'cms-footer__links'
+    case 'icon': return s.cmsFeatureCardIcon
+    case 'brand': return s.cmsFooterBrand
+    case 'links': return s.cmsFooterLinks
     case 'link': return ''
     default: return ''
   }
@@ -160,10 +161,10 @@ export const HEADER_TYPES = new Set(['section-label', 'section-title', 'section-
 
 export function getChildrenContainerClassName(data: Record<string, string>): string | undefined {
   switch (data.variant) {
-    case 'stats': return 'cms-stats__items'
-    case 'features': return 'cms-features__grid'
-    case 'workflow': return 'cms-how__steps'
-    case 'patterns': return 'cms-patterns__grid'
+    case 'stats': return s.cmsStatsItems
+    case 'features': return s.cmsFeaturesGrid
+    case 'workflow': return s.cmsHowSteps
+    case 'patterns': return s.cmsPatternsGrid
     default: return undefined
   }
 }

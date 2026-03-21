@@ -537,23 +537,23 @@
   font-size: 13px;
 }
 
-.code-block .shiki {
+.code-block :global(.shiki) {
   margin: 0;
   padding: 16px 0;
   counter-reset: line;
 }
 
-.code-block .shiki code {
+.code-block :global(.shiki) code {
   display: block;
 }
 
-.code-block .shiki .line {
+.code-block :global(.shiki .line) {
   display: inline-block;
   width: 100%;
   padding: 0 16px 0 0;
 }
 
-.code-block .shiki .line::before {
+.code-block :global(.shiki .line)::before {
   counter-increment: line;
   content: counter(line);
   display: inline-block;
@@ -566,17 +566,17 @@
   opacity: 0.5;
 }
 
-.code-token {
+:global(.code-token) {
   cursor: pointer;
   border-radius: 2px;
   transition: background 0.1s;
 }
 
-.code-token:hover {
+:global(.code-token):hover {
   background: var(--accent-dim);
 }
 
-.code-token--highlighted {
+:global(.code-token--highlighted) {
   background: var(--accent-mid) !important;
   outline: 1px solid var(--accent-bright);
   border-radius: 2px;
