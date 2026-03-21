@@ -102,10 +102,15 @@
 }
 
 /* ── Focused (aria-activedescendant — data-focused) ── */
+/* Inactive: background only (restore cursor) */
 
 [data-aria-container] [data-focused] {
   background: var(--bg-focus);
   color: var(--text-bright);
+}
+
+/* Active: outline only when container has focus */
+[data-aria-container]:focus-within [data-focused] {
   outline-color: var(--accent);
 }
 
@@ -143,7 +148,7 @@
 }
 
 /* ── Focused + Selected compound ── */
-/* Selected background preserved; focus indicated by outline */
+/* Selected background preserved; outline only when container active */
 
 [data-aria-container] [aria-selected="true"]:focus,
 [data-aria-container] [aria-checked="true"]:focus,
@@ -151,6 +156,10 @@
 [data-aria-container] [aria-checked="true"][data-focused] {
   background: var(--bg-select);
   color: var(--text-bright);
+}
+
+[data-aria-container]:focus-within [aria-selected="true"][data-focused],
+[data-aria-container]:focus-within [aria-checked="true"][data-focused] {
   outline-color: var(--accent);
 }
 
