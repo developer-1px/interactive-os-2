@@ -47,6 +47,7 @@
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border-dim);
+  max-width: 720px;
 }
 
 .page-title {
@@ -95,6 +96,7 @@
 
 .apg-table-wrap {
   margin-top: 14px;
+  max-width: 720px;
 }
 
 .apg-table {
@@ -193,6 +195,7 @@ kbd {
   overflow: hidden;
   background: var(--surface-3);
   box-shadow: var(--surface-3-shadow);
+  max-width: 720px;
 }
 
 /* ═══════════════════════════════════════════
@@ -201,6 +204,7 @@ kbd {
 
 .demo-section {
   margin-bottom: 24px;
+  max-width: 720px;
 }
 
 .demo-section h3 {
@@ -246,6 +250,7 @@ kbd {
   border-collapse: collapse;
   font-size: 12px;
   margin-top: 6px;
+  max-width: 720px;
 }
 
 .key-table th {
