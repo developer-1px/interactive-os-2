@@ -42,6 +42,7 @@ import PageCrud from './pages/PageCrud'
 import PageClipboard from './pages/PageClipboard'
 import PageHistoryDemo from './pages/PageHistoryDemo'
 import PageDnd from './pages/PageDnd'
+import PageTypeahead from './pages/PageTypeahead'
 import PageRename from './pages/PageRename'
 import PageAriaComponent from './pages/PageAriaComponent'
 import PageCell from './pages/PageCell'
@@ -177,6 +178,7 @@ const routeConfig: RouteGroup[] = [
       { path: 'history', label: 'History', status: 'ready', component: PageHistoryDemo },
       { path: 'dnd', label: 'DnD', status: 'ready', component: PageDnd },
       { path: 'rename', label: 'Rename', status: 'ready', component: PageRename },
+      { path: 'typeahead', label: 'Typeahead', status: 'ready', component: PageTypeahead },
     ],
   },
   {
