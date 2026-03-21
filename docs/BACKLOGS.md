@@ -5,5 +5,5 @@
 - [x] axe-core 접근성 테스트 추가 (slider, spinbutton) — aria-valuenow/min/max 정합성 자동 검증 — 출처: docs/0-inbox/17-[retro]value-axis.md (2026-03-21)
 - [x] Slider 데모 키힌트 확장 — 트랙 클릭, Ctrl+Z undo 안내 추가 (구현은 완료, 키힌트만 누락) — 출처: walkthrough 대조 (2026-03-21)
 - [x] Spinbutton 데모 키힌트 확장 — 직접 입력(클릭→타이핑), ▲▼ 버튼, Escape 취소, Ctrl+Z undo 안내 추가 (구현은 완료, 키힌트만 누락) — 출처: walkthrough 대조 (2026-03-21)
-- [ ] Grid 셀 클릭 → 행 선택 테스트 추가 — grid behavior는 select() 축 사용으로 selectOnClick 자동 동작하지만 검증 테스트 없음 — 출처: docs/0-inbox/11-[retro]pointer-interaction.md (2026-03-22)
-- [ ] disabled 노드 클릭 → 무동작 테스트 추가 — PRD 경계#2에 명시됐으나 테스트 미작성 — 출처: docs/0-inbox/11-[retro]pointer-interaction.md (2026-03-22)
+- [x] Grid 셀 클릭 → 행 선택 테스트 추가 — grid behavior는 select() 축 사용으로 selectOnClick 자동 동작하지만 검증 테스트 없음 — 출처: docs/0-inbox/11-[retro]pointer-interaction.md (2026-03-22)
+- [x] disabled 노드 클릭 → 무동작 테스트 추가 — PRD 경계#2에 명시됐으나 테스트 미작성 — 출처: docs/0-inbox/11-[retro]pointer-interaction.md (2026-03-22)
