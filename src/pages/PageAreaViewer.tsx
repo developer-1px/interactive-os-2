@@ -1,5 +1,6 @@
 import { useState, useEffect, type ComponentType } from 'react'
 import { useLocation } from 'react-router-dom'
+import areaStyles from './AreaViewer.module.css'
 
 const mdxModules = import.meta.glob<{ default: ComponentType }>('/docs/2-areas/**/*.mdx')
 
@@ -33,7 +34,7 @@ export default function PageAreaViewer() {
   if (!Content) return <div className="page-header"><p className="page-desc">Loading...</p></div>
 
   return (
-    <div className="area-viewer">
+    <div className={areaStyles.root}>
       <Content />
     </div>
   )

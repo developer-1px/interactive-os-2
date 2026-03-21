@@ -298,7 +298,7 @@
   background: var(--bg-focus);
 }
 
-[aria-selected="true"][data-node-id] {
+:global([aria-selected="true"][data-node-id]) {
   background: var(--bg-select);
 }
 
