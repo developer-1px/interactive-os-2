@@ -32,7 +32,7 @@ export default function PageAreaViewer() {
   if (!Content) return <div className="page-header"><p className="page-desc">Loading...</p></div>
 
   return (
-    <div>
+    <div className="area-viewer">
       <Content />
     </div>
   )
