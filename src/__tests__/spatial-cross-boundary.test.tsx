@@ -356,6 +356,33 @@ describe('spatial cross-boundary + sticky cursor', () => {
     expect(getFocused(container)).toBe('a') // a is first in sec1
   })
 
+  // T7: click within same group resets sticky cursor for sibling groups
+  it('T7: click resets sticky cursor', async () => {
+    const { user, container } = setup()
+    const sec1 = container.querySelector('[data-test-id="sec1"]') as HTMLElement
+    sec1.focus()
+    await user.keyboard('{Enter}') // sec1 → a
+    await user.keyboard('{ArrowRight}') // → b
+    expect(getFocused(container)).toBe('b')
+    // Cross to sec2 → d (nearest to b). sticky: {sec1: b}
+    await user.keyboard('{ArrowDown}')
+    expect(getFocused(container)).toBe('d')
+    // Move to c within sec2
+    await user.keyboard('{ArrowLeft}')
+    expect(getFocused(container)).toBe('c')
+    // Click on d (same group sec2) — clearCursorsAtDepth clears ROOT siblings = sec1, sec2, sec3
+    const nodeD = container.querySelector('[data-test-id="d"]') as HTMLElement
+    await user.click(nodeD)
+    expect(getFocused(container)).toBe('d')
+    // Cross back to sec1 — sticky for sec1 was 'b' but click cleared it
+    // From d(300,320) ↑ → nearest in sec1: b(300,100) aligned, BUT no sticky
+    // findBestInDirection from d → b (same x). This is same as sticky result.
+    // So instead, cross from c perspective: go back to c first, then up
+    await user.keyboard('{ArrowLeft}') // → c
+    await user.keyboard('{ArrowUp}')   // cross to sec1, no sticky → nearest from c(100,320) = a(100,100)
+    expect(getFocused(container)).toBe('a') // without sticky, nearest to c is a (not b)
+  })
+
   // T12: depth 2 cross-boundary between sibling containers
   it('T12: depth 2 cross-boundary between sibling containers', async () => {
     const { user, container } = setup(nestedFixture(), nestedRectMap)
