@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import '../interactive-os/ui/ListBox.module.css'
+
 import { Aria } from '../interactive-os/components/aria'
 import { listbox } from '../interactive-os/behaviors/listbox'
 import { createStore } from '../interactive-os/core/createStore'

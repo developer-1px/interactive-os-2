@@ -1,5 +1,0 @@
-/* --- Switch --- */
-
-.switchInner { display: inline-flex; align-items: center; justify-content: space-between; width: 100%; gap: 8px; }
-.switchLabel { font-weight: 600; color: var(--text-muted); }
-.switchLabelOn { font-weight: 600; color: var(--accent); }

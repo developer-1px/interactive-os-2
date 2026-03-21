@@ -29,9 +29,7 @@
 
   /* Surface elevation system (bg + shadow pairs) */
   --surface-0: var(--zinc-950);
-  --surface-0-shadow: none;
   --surface-1: var(--zinc-900);
-  --surface-1-shadow: none;
   --surface-2: var(--zinc-800);
   --surface-2-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.3);
   --surface-3: var(--zinc-800);
@@ -67,12 +65,8 @@
   --accent-dim: rgba(91, 91, 214, 0.10);
   --accent-mid: rgba(91, 91, 214, 0.18);
   --accent-bright: rgba(91, 91, 214, 0.28);
-  --accent-soft: var(--indigo-50);
-  --accent-muted: var(--indigo-100);
 
   /* Aliases */
-  --blue: var(--indigo-500);
-  --blue-dim: rgba(91, 91, 214, 0.06);
   --red: var(--red-500);
   --green: var(--green-500);
 
@@ -98,7 +92,6 @@
 
   /* Transition */
   --transition-fast: 0.08s;
-  --transition-normal: 0.15s;
 
   /* Dialog */
   --dialog-backdrop: rgba(0, 0, 0, 0.4);
@@ -107,9 +100,7 @@
 [data-theme="light"] {
   /* Surface elevation system */
   --surface-0: var(--zinc-100);
-  --surface-0-shadow: none;
   --surface-1: var(--zinc-50);
-  --surface-1-shadow: none;
   --surface-2: #FFFFFF;
   --surface-2-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.06);
   --surface-3: #FFFFFF;
