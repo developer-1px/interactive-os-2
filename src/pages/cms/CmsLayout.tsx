@@ -9,6 +9,7 @@ import CmsSidebar from './CmsSidebar'
 import CmsFloatingToolbar from './CmsFloatingToolbar'
 import CmsI18nSheet from './CmsI18nSheet'
 import CmsPresentMode from './CmsPresentMode'
+import CmsDetailPanel from './CmsDetailPanel'
 import { useCmsData } from './cms-state'
 import type { Locale } from './cms-types'
 import { useEngine } from '../../interactive-os/hooks/useEngine'
@@ -80,6 +81,12 @@ export default function CmsLayout() {
           </CmsViewportWrapper>
           <CmsI18nSheet data={store} onDataChange={setPersistedData} open={i18nSheetOpen} />
         </div>
+        <CmsDetailPanel
+          engine={engine}
+          store={store}
+          focusedNodeId={canvasFocusedId}
+          locale={locale}
+        />
       </div>
       <CmsFloatingToolbar data={store} onDataChange={setPersistedData} hidden={presenting} />
       {drawerOpen && (
