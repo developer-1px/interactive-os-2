@@ -1,7 +1,7 @@
 import type { Entity, Plugin } from '../core/types'
-import { ROOT_ID } from '../core/types'
 import type { CommandEngine } from '../core/createCommandEngine'
-import { focusCommands, FOCUS_ID, EXPANDED_ID } from './core'
+import { focusCommands, FOCUS_ID } from './core'
+import { getVisibleNodes } from '../behaviors/createBehaviorContext'
 
 export type GetLabelFn = (entity: Entity) => string
 
@@ -99,26 +99,17 @@ export function typeahead(options: TypeaheadOptions): Plugin {
         timer = null
       }, timeout)
 
-      // Build searchable node list from visible entities
       const store = engine.getStore()
       const focusedId = (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
 
-      // Get visible nodes (non-meta entities that exist in relationships)
-      const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
+      const visibleIds = getVisibleNodes(engine)
       const nodes: TypeaheadNode[] = []
-      const collectVisible = (parentId: string) => {
-        const children = store.relationships[parentId] ?? []
-        for (const childId of children) {
-          const entity = store.entities[childId]
-          if (entity && !childId.startsWith('__')) {
-            nodes.push({ id: childId, label: getLabel(entity) })
-          }
-          if (expandedIds.includes(childId)) {
-            collectVisible(childId)
-          }
+      for (const id of visibleIds) {
+        const entity = store.entities[id]
+        if (entity) {
+          nodes.push({ id, label: getLabel(entity) })
         }
       }
-      collectVisible(ROOT_ID)
 
       const matchId = findTypeaheadMatch(nodes, buffer, focusedId)
       if (matchId && matchId !== focusedId) {

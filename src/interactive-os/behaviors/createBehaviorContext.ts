@@ -27,7 +27,7 @@ function isExpanded(engine: CommandEngine, nodeId: string): boolean {
  * Build flat list of visible node IDs respecting expanded/collapsed state.
  * Walks depth-first from __root__, only descends into expanded nodes.
  */
-function getVisibleNodes(engine: CommandEngine): string[] {
+export function getVisibleNodes(engine: CommandEngine): string[] {
   const store = engine.getStore()
   const expandedIds = getExpandedIds(engine)
   const visible: string[] = []
