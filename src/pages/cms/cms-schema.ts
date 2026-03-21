@@ -21,7 +21,7 @@ export const localeMapSchema = z.object({
 export const nodeSchemas = {
   badge:            z.object({ type: z.literal('badge'),         value: localeMapSchema.describe('Badge') }),
   icon:             z.object({ type: z.literal('icon'),          value: z.string() }),
-  text:             z.object({ type: z.literal('text'),          role: z.string().describe('Role'), value: localeMapSchema.describe('Text') }),
+  text:             z.object({ type: z.literal('text'),          role: z.string(), value: localeMapSchema.describe('Text') }),
   cta:              z.object({ type: z.literal('cta'),           primary: localeMapSchema.describe('Primary CTA'), secondary: localeMapSchema.describe('Secondary CTA') }),
   stat:             z.object({ type: z.literal('stat'),          value: z.string().describe('Value'), label: localeMapSchema.describe('Label') }),
   step:             z.object({ type: z.literal('step'),          num: z.string().describe('Number'), title: localeMapSchema.describe('Title'), desc: localeMapSchema.describe('Description') }),
