@@ -12,6 +12,7 @@ import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
 import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/types'
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
+import { spatialReachable } from '../../interactive-os/plugins/focusRecovery'
 import type { Locale } from './cms-types'
 import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
 
@@ -52,7 +53,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     [spatialKeyMap],
   )
 
-  // focusRecovery disabled: spatial depth navigation conflicts with isVisible() expand/collapse model
+  // Spatial model: all nodes always rendered — reachable = exists in store
   const aria = useAriaZone({
     engine,
     store,
@@ -60,7 +61,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     scope: 'cms',
     plugins,
     keyMap: mergedKeyMap,
-    focusRecovery: false,
+    isReachable: spatialReachable,
   })
 
   // Report focus changes to parent (for activeSectionId computation)
