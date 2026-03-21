@@ -34,6 +34,54 @@ UI (React 컴포넌트)
 Pages (쇼케이스)
 ```
 
+## Ideal Usage
+
+하나의 ListBox가 전 레이어를 관통하는 모습. 번호(❶~❻)가 위 레이어 표와 대응한다.
+
+```tsx
+// ❶ Core — 정규화된 데이터 구조
+const data = createStore({
+  entities: {
+    a: { id: 'a', data: { label: 'Apple' } },
+    b: { id: 'b', data: { label: 'Banana' } },
+    c: { id: 'c', data: { label: 'Cherry' } },
+  },
+  relationships: { [ROOT_ID]: ['a', 'b', 'c'] },
+})
+
+// ❷ Axes + ❸ Patterns — 축 조합 → AriaBehavior
+const listbox = composePattern(
+  { role: 'listbox', childRole: 'option' },
+  select({ mode: 'multiple', extended: true }),
+  activate({ onClick: true }),
+  navigate({ orientation: 'vertical' }),
+)
+
+// ❹ Plugins — Command 확장
+const plugins = [core(), crud(), history()]
+
+// ❺ Hooks + ❻ UI — React 통합 → DOM 바인딩
+function MyList() {
+  const [items, setItems] = useState(data)
+  const aria = useAria({
+    behavior: listbox,
+    data: items,
+    plugins,
+    onChange: setItems,
+  })
+
+  return (
+    <div {...aria.containerProps}>
+      {getChildren(items, ROOT_ID).map(id => (
+        <div key={id} {...aria.getNodeProps(id)}>
+          {getEntity(items, id)?.data?.label}
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
 ## 전체 빈칸 (⬜)
 
 | 레이어 | 빈칸 | 비고 |
