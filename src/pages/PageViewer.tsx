@@ -12,7 +12,7 @@ import { MermaidBlock } from './MermaidBlock'
 import { Aria } from '../interactive-os/components/aria'
 import { treegrid } from '../interactive-os/behaviors/treegrid'
 import { combobox } from '../interactive-os/behaviors/combobox'
-import { core, selectionCommands } from '../interactive-os/plugins/core'
+import { core, selectionCommands, FOCUS_ID } from '../interactive-os/plugins/core'
 import { combobox as comboboxPlugin, comboboxCommands } from '../interactive-os/plugins/combobox'
 import { useAria } from '../interactive-os/hooks/useAria'
 import { createStore, getChildren } from '../interactive-os/core/createStore'
@@ -618,9 +618,8 @@ function getAncestorIds(filePath: string, store: NormalizedData): string[] {
   return ancestors
 }
 
-function withExpandedAncestors(store: NormalizedData, filePath: string): NormalizedData {
+function withInitialFileSelected(store: NormalizedData, filePath: string): NormalizedData {
   const ancestors = getAncestorIds(filePath, store)
-  if (ancestors.length === 0) return store
   const existing = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
   const merged = [...new Set([...existing, ...ancestors])]
   return {
@@ -628,6 +627,7 @@ function withExpandedAncestors(store: NormalizedData, filePath: string): Normali
     entities: {
       ...store.entities,
       [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: merged },
+      [FOCUS_ID]: { id: FOCUS_ID, focusedId: filePath },
     },
   }
 }
@@ -655,7 +655,7 @@ export default function PageViewer() {
     fetchTree(DEFAULT_ROOT).then((tree) => {
       let store = treeToStore(tree)
       if (initialFilePath && store.entities[initialFilePath]) {
-        store = withExpandedAncestors(store, initialFilePath)
+        store = withInitialFileSelected(store, initialFilePath)
       }
       setInitialStore(store)
       setLoading(false)
