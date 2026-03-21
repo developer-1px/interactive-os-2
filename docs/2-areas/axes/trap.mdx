@@ -1,0 +1,24 @@
+# trap()
+
+> 포커스 트랩 축. Escape로 탈출.
+
+## 스펙
+
+| 키 | 동작 | 조건 |
+|---|---|---|
+| Escape | collapse | escape=true (기본) |
+
+### 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| escape | `boolean` | `true` | Escape 키로 트랩 해제 |
+
+## 관계
+
+- **expand**와 Escape 공유 가능 → dialog/alertdialog에서는 trap만 사용
+- 최소 축 — 단독으로 dialog/alertdialog 패턴 구성
+
+## 관련
+
+- 사용 패턴: dialog, alertdialog

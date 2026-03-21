@@ -1,6 +1,6 @@
 /* --- Menu item --- */
 
-.menu-item {
+:global(.menu-item) {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -11,14 +11,14 @@
   border-radius: var(--radius-sm);
 }
 
-.menu-item__label {
+:global(.menu-item__label) {
   color: inherit;
 }
 
-.menu-item__arrow {
+:global(.menu-item__arrow) {
   display: inline-flex;
   color: var(--text-muted);
 }
 
-.menu-inner { display: inline-flex; align-items: center; justify-content: space-between; width: 100%; }
-.menu-chevron { opacity: 0.5; font-size: 12px; }
+.menuInner { display: inline-flex; align-items: center; justify-content: space-between; width: 100%; }
+.menuChevron { opacity: 0.5; font-size: 12px; }

@@ -1,5 +1,5 @@
 import React from 'react'
-import './SwitchGroup.css'
+import styles from './SwitchGroup.module.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -21,9 +21,9 @@ const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): Rea
   const checked = state.expanded ?? false
 
   return (
-    <span className="switch-inner">
+    <span className={styles.switchInner}>
       <span>{label}</span>
-      <span className={checked ? 'switch-label-on' : 'switch-label'}>
+      <span className={checked ? styles.switchLabelOn : styles.switchLabel}>
         {checked ? '●' : '○'}
       </span>
     </span>

@@ -1,0 +1,36 @@
+# expand()
+
+> 확장 축. 트리 깊이 탐색(arrow) 또는 공간 진입/탈출(enter-esc).
+
+## 스펙
+
+### mode: 'arrow' (기본)
+
+| 키 | 동작 | 조건 |
+|---|---|---|
+| ArrowRight | expand 또는 focusChild | expanded 상태에 따라 분기 |
+| ArrowLeft | collapse 또는 focusParent | expanded 상태에 따라 분기 |
+
+### mode: 'enter-esc'
+
+| 키 | 동작 | 조건 |
+|---|---|---|
+| Enter | enterChild (spatial) 또는 startRename (fallback) | — |
+| Escape | exitToParent (spatial) | — |
+
+### 옵션
+
+| 옵션 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| mode | `'arrow' \| 'enter-esc'` | `'arrow'` | 확장 모드 |
+
+## 관계
+
+- **navigate**와 ←→ 키 충돌 → expand가 우선, expanded 상태 아니면 void → navigate로 fallback
+- **spatial** 플러그인 의존 → enter-esc 모드에서 enterChild/exitToParent 커맨드 사용
+- **rename** 플러그인 의존 → enter-esc 모드에서 Enter의 fallback으로 startRename
+- **trap**과 Escape 공유 가능 → compose 순서로 해결
+
+## 관련
+
+- 사용 패턴: tree (arrow), menu (arrow), spatial (enter-esc), accordion (via activate.toggleExpand)

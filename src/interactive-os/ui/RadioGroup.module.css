@@ -1,6 +1,6 @@
 /* --- Radio --- */
 
-.radio-item {
+:global(.radio-item) {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -9,7 +9,7 @@
   font-weight: 500;
 }
 
-.radio-item__dot {
+:global(.radio-item__dot) {
   width: 14px;
   height: 14px;
   border-radius: 50%;
@@ -21,11 +21,11 @@
   transition: border-color 0.12s;
 }
 
-.radio-item__dot--checked {
+:global(.radio-item__dot--checked) {
   border-color: var(--accent);
 }
 
-.radio-item__dot--checked::after {
+:global(.radio-item__dot--checked)::after {
   content: '';
   width: 6px;
   height: 6px;
@@ -33,9 +33,9 @@
   background: var(--accent);
 }
 
-.radio-item__label {
+:global(.radio-item__label) {
   color: var(--text-primary);
 }
 
-.radio-inner { display: inline-flex; align-items: center; gap: 8px; }
-.radio-indicator { font-size: 16px; }
+.radioInner { display: inline-flex; align-items: center; gap: 8px; }
+.radioIndicator { font-size: 16px; }

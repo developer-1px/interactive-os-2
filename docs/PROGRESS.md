@@ -206,6 +206,9 @@
 - [x] Combobox Bug Fix — editable combobox Backspace 차단 수정 (dispatchKeyAction 반환값 기반 조건부 preventDefault), blur 시 드롭다운 닫기 (onBlur + dropdown onMouseDown preventDefault), keyMap-only Aria 모드 (behavior optional), nested Aria defaultPrevented 버블링 가드
 - [x] CMS Zod Schema — cms-schema.ts 단일 소스 (nodeSchemas 15타입 + childRules), canAccept/validate/fieldsOf/localeFieldsOf 파생, CMS_SCHEMA·getEditableFields switch·getTranslatableEntries 수동 로직 삭제
 - [x] CSS Modules Batch A — 단순 컴포넌트 6개 CSS Modules 전환 (TreeView, TabList, ListBox, Grid, Tooltip, Toolbar), grid.tsx 대소문자 정리, `:global()` 래핑으로 페이지 호환 유지
+- [x] CSS Modules Batch B — 중간 컴포넌트 7개 CSS Modules 전환 (MenuList, Accordion, DisclosureGroup, RadioGroup, Slider, Spinbutton, SwitchGroup), radiogroup.tsx→RadioGroup.tsx 대소문자 정리
+- [x] CMS Step/Stat Child Entities — flat entity → container + children (step→[step-num, text, text], stat→[stat-value, text]), Enter drilldown 활성화, aria-label [object Object] 수정
+- [x] Combobox Infinite Loop Fix — grouped combobox flattenGroups useMemo 메모이제이션, setState-during-render → 파생 상태 전환
 
 ## ⑨ APG Pattern Coverage
 
@@ -245,4 +248,4 @@
 - [x] Nested Aria bubbling — defaultPrevented 가드 (useAria + useAriaZone), behavior optional (keyMap-only Aria 컨테이너)
 - [x] PageViewer QuickOpen os 전환 — QuickOpen을 useAria+combobox behavior로 마이그레이션, role/onKeyDown/addEventListener 하드코딩 제거, body keyMap-only Aria로 Cmd+P 래핑
 
-*Last updated: 2026-03-21 — PageViewer QuickOpen → os combobox 전환*
+*Last updated: 2026-03-21 — CSS Modules Batch B 중간 컴포넌트 전환*
