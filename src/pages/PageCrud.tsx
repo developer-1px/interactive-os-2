@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
-import { createStore, addEntity, getChildren } from '../interactive-os/core/createStore'
+import { createStore, addEntity, getChildren, getParent } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
-import { core } from '../interactive-os/plugins/core'
+import { core, FOCUS_ID } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
@@ -42,10 +42,12 @@ export default function PageCrud() {
   const handleCreate = () => {
     const name = randomNames[counter % randomNames.length]!
     const id = `item-${++counter}`
-    // Find first group to insert into
-    const groups = getChildren(data, ROOT_ID)
-    const parentId = groups[0] ?? ROOT_ID
-    setData(addEntity(data, { id, data: { label: name, type: 'item' } }, parentId))
+    const focusedId = (data.entities[FOCUS_ID] as { focusedId?: string } | undefined)?.focusedId ?? ''
+    // Insert as sibling after focused node (same parent, next index)
+    const parentId = (focusedId && getParent(data, focusedId)) || getChildren(data, ROOT_ID)[0] || ROOT_ID
+    const siblings = getChildren(data, parentId)
+    const index = focusedId ? siblings.indexOf(focusedId) + 1 : siblings.length
+    setData(addEntity(data, { id, data: { label: name, type: 'item' } }, parentId, index))
   }
 
   return (
