@@ -690,7 +690,7 @@ export default function PageViewer() {
                 const isActive = data.path === selectedFile
                 const indent = (state.level ?? 1) * 12
                 return (
-                  <div className={`${styles.vwTreeItem}${isActive ? ` ${styles.vwTreeItemActive}` : ''}${state.focused ? ` ${styles.vwTreeItemFocused}` : ''}`}>
+                  <div className={styles.vwTreeItem}>
                     <div className={styles.vwTreeIndent} style={{ width: indent }} />
                     {data.type === 'directory' ? (
                       <span className={styles.vwTreeChevron}>

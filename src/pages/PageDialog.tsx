@@ -49,7 +49,7 @@ export default function PageDialog() {
               <Aria behavior={dialog} data={dialogData} plugins={plugins}>
                 <Aria.Item render={(node, state: NodeState) => (
                   <button
-                    className={`${buttonStyles.dialog}${state.focused ? ` ${buttonStyles.dialogFocused}` : ''}`}
+                    className={buttonStyles.dialog}
                     onClick={() => setOpen(false)}
                   >
                     {(node.data as Record<string, unknown>)?.label as string}
