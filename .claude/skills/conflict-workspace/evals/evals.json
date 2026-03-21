@@ -1,0 +1,23 @@
+{
+  "skill_name": "conflict",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "타입 안전성을 높이면 유연성이 떨어지고, 유연성을 높이면 타입이 느슨해져. 어떡하지?",
+      "expected_output": "EC 5단계 진행: 공통 목표 → 필요조건 → 행동/충돌 → 전제 나열 → 전제 깨기 → Injection",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "컴포넌트를 범용으로 만들면 설정이 복잡해지고, 단순하게 만들면 재사용이 안 돼",
+      "expected_output": "EC 5단계 진행 with Cloud 다이어그램",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "우리 discussion에서 제약이 정체됐어. 제약: '매 턴 3단계 UX를 유지해야 한다'인데, 이게 진짜 제약인지 모르겠어. /conflict로 분석해줘",
+      "expected_output": "discussion 드릴다운으로 진입, Cloud 구성 후 discussion 복귀용 산출물",
+      "files": []
+    }
+  ]
+}
