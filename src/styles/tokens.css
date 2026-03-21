@@ -37,11 +37,6 @@
   --surface-4: var(--zinc-700);
   --surface-4-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
 
-  /* Backward compat aliases */
-  --bg-deep: var(--surface-0);
-  --bg-surface: var(--surface-1);
-  --bg-elevated: var(--surface-2);
-
   /* Interactive states */
   --bg-focus: rgba(91, 91, 214, 0.10);
   --bg-select: rgba(48, 164, 108, 0.15);
@@ -78,9 +73,7 @@
   --radius: 6px;
   --radius-sm: 4px;
   --radius-xs: 3px;
-  --shadow-sm: var(--surface-2-shadow);
   --shadow-md: var(--surface-3-shadow);
-  --shadow-lg: var(--surface-4-shadow);
 
   /* Spacing */
   --space-xs: 4px;
@@ -139,7 +132,7 @@
 body {
   margin: 0;
   overflow: hidden;
-  background: var(--bg-deep);
+  background: var(--surface-0);
   color: var(--text-primary);
   font-family: var(--sans);
   font-size: 12px;

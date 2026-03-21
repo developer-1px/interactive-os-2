@@ -37,5 +37,5 @@
 .footer {
   padding: 8px 14px;
   border-top: 1px solid var(--border-dim);
-  background: var(--bg-deep);
+  background: var(--surface-0);
 }
