@@ -78,6 +78,7 @@
 - [x] grid? 네임스페이스 (col 네비게이션)
 - [x] aria-activedescendant 포커스 전략 + containerProps
 - [x] **Axis v2** — 5축 모델: navigate(), select(), activate(), expand(), trap(). metadata 행동 플래그를 축 옵션으로 흡수. activateFollowFocus 삭제. Axis 타입 확장 (keyMap + config)
+- [x] **Pointer Interaction** — selectOnClick (plain/Ctrl+Click/Shift+Click), activateOnClick on tree/treegrid, onPointerDown pre-focus ctx capture for Shift+Click range
 - [x] `composePattern(identity, ...axes)` — chain of responsibility 합성, Identity(role/childRole/ariaAttributes) + 축 config 머지, v1 PatternConfig 호환
 - [x] 17개 behavior 전수 5축 모델로 재작성 (기존 테스트 변경 0건)
 
@@ -152,7 +153,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (383 tests, 45 files) — axes mock-dispatch 유닛 5개 삭제 (통합 테스트가 동일 커버리지 제공), 테스트 셀렉터 role/data-* 기반으로 정규화 (CSS class 셀렉터 제거)
+- [x] Vitest (397 tests, 46 files) — axes mock-dispatch 유닛 5개 삭제 (통합 테스트가 동일 커버리지 제공), 테스트 셀렉터 role/data-* 기반으로 정규화 (CSS class 셀렉터 제거)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 46 modules)
@@ -265,4 +266,4 @@
 
 - [x] PageViewer File Split — 853줄 PageViewer.tsx를 7개 파일로 분리 (CodeBlock, ExportDiagram, MarkdownViewer, MdxViewer, FileIcon, Breadcrumb, QuickOpen) + 공유 types.ts, PageViewer 본체 ~210줄로 축소
 
-*Last updated: 2026-03-22 — PageViewer File Split*
+*Last updated: 2026-03-22 — Pointer Interaction (Task 2+3)*

@@ -26,7 +26,7 @@ export const treegrid = composePattern(
     },
   },
   select({ mode: 'multiple', extended: true }),
-  activate(),
+  activate({ onClick: true }),
   expand({ mode: 'arrow' }),
   navigate({ orientation: 'vertical' }),
 )

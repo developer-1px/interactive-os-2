@@ -4,6 +4,7 @@ import { composePattern, isStructuredAxis, extractKeyMap, extractConfig } from '
 import type { Axis, KeyMap, StructuredAxis, PatternConfig, Identity } from '../axes/composePattern'
 import type { BehaviorContext } from '../behaviors/types'
 import type { Command } from '../core/types'
+import { select } from '../axes/select'
 
 function makeCmd(type: string): Command {
   return {
@@ -284,5 +285,10 @@ describe('v2 structured axis', () => {
 
     expect(behavior.expandable).toBe(false)
     expect(behavior.selectionMode).toBe('multiple')
+  })
+
+  it('select() axis sets selectOnClick: true in composed behavior', () => {
+    const behavior = composePattern(identity, select())
+    expect(behavior.selectOnClick).toBe(true)
   })
 })
