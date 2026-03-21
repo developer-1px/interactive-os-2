@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import './combobox.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
@@ -84,10 +84,7 @@ export function Combobox({
     return d?.type === 'group'
   })
 
-  const behaviorData = useMemo(
-    () => isGrouped ? flattenGroups(originalStore) : data,
-    [isGrouped, data]
-  )
+  const behaviorData = isGrouped ? flattenGroups(originalStore) : data
 
   // When grouped, intercept onChange to restore group structure before propagating up.
   // The behavior engine operates on a flat store; callers expect the grouped structure.
@@ -117,15 +114,12 @@ export function Combobox({
 
   // Filter children by filterText when editable (case-insensitive substring match)
   const visibleChildren = (editable || creatable) && filterText
-    ? (() => {
-        const needle = filterText.toLowerCase()
-        return children.filter(id => {
-          const entity = store.entities[id]
-          if (!entity) return false
-          const label = (entity.data as Record<string, unknown>)?.label as string ?? ''
-          return label.toLowerCase().includes(needle)
-        })
-      })()
+    ? children.filter(id => {
+        const entity = store.entities[id]
+        if (!entity) return false
+        const label = (entity.data as Record<string, unknown>)?.label as string ?? ''
+        return label.toLowerCase().includes(filterText.toLowerCase())
+      })
     : children
 
   // Determine if the create option should be shown:

@@ -318,6 +318,95 @@ export const gridColCommands = {
   },
 }
 
+export const VALUE_ID = '__value__'
+
+export interface ValueRange {
+  min: number
+  max: number
+  step: number
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
+}
+
+/** Round to avoid floating-point drift (e.g. 0.1 + 0.2 !== 0.3) */
+function roundToStep(value: number, step: number): number {
+  const precision = Math.max(
+    (step.toString().split('.')[1] || '').length,
+    (value.toString().split('.')[1] || '').length,
+  )
+  return Number(value.toFixed(precision))
+}
+
+export const valueCommands = {
+  setValue(value: number, range: ValueRange): Command {
+    let prev: number | undefined
+    const clamped = clamp(roundToStep(value, range.step), range.min, range.max)
+    return {
+      type: 'core:set-value',
+      payload: { value: clamped },
+      execute(store) {
+        prev = (store.entities[VALUE_ID] as Record<string, unknown>)?.value as number | undefined
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [VALUE_ID]: { id: VALUE_ID, value: clamped, min: range.min, max: range.max, step: range.step },
+          },
+        }
+      },
+      undo(store) {
+        if (prev === undefined) {
+          const { [VALUE_ID]: _removed, ...rest } = store.entities
+          void _removed
+          return { ...store, entities: rest }
+        }
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [VALUE_ID]: { id: VALUE_ID, value: prev, min: range.min, max: range.max, step: range.step },
+          },
+        }
+      },
+    }
+  },
+
+  increment(step: number, range: ValueRange): Command {
+    const store_ref = { prev: 0 }
+    return {
+      type: 'core:increment-value',
+      payload: { step },
+      execute(store) {
+        const current = ((store.entities[VALUE_ID] as Record<string, unknown>)?.value as number) ?? range.min
+        store_ref.prev = current
+        const next = clamp(roundToStep(current + step, range.step), range.min, range.max)
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [VALUE_ID]: { id: VALUE_ID, value: next, min: range.min, max: range.max, step: range.step },
+          },
+        }
+      },
+      undo(store) {
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [VALUE_ID]: { id: VALUE_ID, value: store_ref.prev, min: range.min, max: range.max, step: range.step },
+          },
+        }
+      },
+    }
+  },
+
+  decrement(step: number, range: ValueRange): Command {
+    return valueCommands.increment(-step, range)
+  },
+}
+
 /**
  * Middleware that clears the selection anchor when a standalone focus command fires.
  * This ensures Shift+Arrow starts fresh after normal navigation.
