@@ -292,14 +292,10 @@ describe('Combobox grouping support', () => {
     input.focus()
     await user.keyboard('{ArrowDown}') // open
 
-    const groupLabels = container.querySelectorAll('.combo-group-label')
+    const groupLabels = container.querySelectorAll('[role="presentation"]')
     expect(groupLabels).toHaveLength(2)
     expect(groupLabels[0].textContent).toBe('Fruits')
     expect(groupLabels[1].textContent).toBe('Vegetables')
-
-    // Group labels have role="presentation" (non-selectable)
-    expect(groupLabels[0].getAttribute('role')).toBe('presentation')
-    expect(groupLabels[1].getAttribute('role')).toBe('presentation')
   })
 
   it('ArrowDown navigates only options, skipping group headers', async () => {
