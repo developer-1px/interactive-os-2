@@ -8,7 +8,6 @@ import { alertdialog } from '../interactive-os/behaviors/alertdialog'
 import { core } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
 
 const alertDialogData = createStore({
   entities: {
@@ -54,7 +53,7 @@ export default function PageAlertDialog() {
             </div>
             <div className={dialogStyles.footer}>
               <Aria behavior={alertdialog} data={alertDialogData} plugins={plugins}>
-                <Aria.Item render={(node, state: NodeState) => (
+                <Aria.Item render={(node) => (
                   <button
                     className={buttonStyles.dialog}
                     onClick={() => setOpen(false)}

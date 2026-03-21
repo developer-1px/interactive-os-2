@@ -256,4 +256,6 @@
 - [x] CSS Dead Code Cleanup — app.css dead code 118줄 제거, index.css 중복 정리, app.css→layout.css 분해, Vite CSS Modules 설정, 모듈 내 dead `:global()` 제거, phantom className 정리, Toolbar 누락 CSS 추가
 - [x] Knip Health Cleanup — unused files 3개 삭제, unused deps 2개 제거(@mdx-js/react, @babel/core), unused exports 13개 내부화, validateNode 삭제 → knip CLEAN 달성
 
-*Last updated: 2026-03-21 — Knip Health Cleanup*
+- [x] CSS Consolidation + Design Token Unification — 컴포넌트 CSS 17→8개 통합 (9개 글로벌로 이동), 디자인 토큰 alias 정리 (bg-deep→surface-0, shadow-sm/lg 제거), 하드코딩 rgba→토큰, CMS 랜딩 리디자인 (Technical Precision), content max-width 720px 적용, spacing 토큰 채택 규칙 확립
+
+*Last updated: 2026-03-22 — CSS Consolidation + Design Token Unification*
