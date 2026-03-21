@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
-import { createStore, addEntity, getChildren, getParent } from '../interactive-os/core/createStore'
+import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
-import { core, FOCUS_ID } from '../interactive-os/plugins/core'
+import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
@@ -33,25 +33,8 @@ const treeData = createStore({
 
 const plugins = [core(), crud(), history(), focusRecovery()]
 
-const randomNames = ['Webpack', 'Vite', 'Rollup', 'esbuild', 'Turbopack', 'Parcel', 'SWC', 'Bun', 'Deno', 'Rome']
-let counter = 0
-
 export default function PageCrud() {
   const [data, setData] = useState<NormalizedData>(treeData)
-
-  const handleCreate = () => {
-    const name = randomNames[counter % randomNames.length]!
-    const id = `item-${++counter}`
-    const focusedId = (data.entities[FOCUS_ID] as { focusedId?: string } | undefined)?.focusedId ?? ''
-    // Insert as sibling after focused node (same parent, next index)
-    const parentId = (focusedId && getParent(data, focusedId)) || getChildren(data, ROOT_ID)[0] || ROOT_ID
-    const siblings = getChildren(data, parentId)
-    const index = focusedId ? siblings.indexOf(focusedId) + 1 : siblings.length
-    let next = addEntity(data, { id, data: { label: name, type: 'item' } }, parentId, index)
-    // Focus the newly created node
-    next = { ...next, entities: { ...next.entities, [FOCUS_ID]: { id: FOCUS_ID, focusedId: id } } }
-    setData(next)
-  }
 
   return (
     <div>
@@ -65,11 +48,11 @@ export default function PageCrud() {
       <div className="page-keys">
         <kbd>↑↓</kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>←→</kbd> <span className="key-hint">expand</span>{' '}
+        <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}
         <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
-        <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
-        <button type="button" onClick={handleCreate} style={{ marginLeft: 8, fontSize: '0.85em' }}>+ Add item</button>
+        <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
       <div className="card">
         <TreeGrid
