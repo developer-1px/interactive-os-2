@@ -277,4 +277,6 @@
 
 - [x] CMS Detail Panel Container Edit — 컨테이너 노드(card/stat/step/section) 포커스 시 자식 필드를 재귀 수집하여 그룹별 Form 표시, collectEditableGroups + EditableGroup 타입 (cms-schema.ts), 포커스 깊이에 따라 패널 범위 자동 조절
 
-*Last updated: 2026-03-22 — CMS Detail Panel Container Edit*
+- [x] CMS Tab Container — tab-group/tab-item/tab-panel 3개 노드 타입 추가 (배열+조건부렌더링+중첩 프리미티브 검증). Zod 스키마 + childRules, 탭 선택 시 패널 전환 (조건부 렌더링), F2 인라인 라벨 편집, 최소 1탭 Delete 가드, navigateTabSibling 헬퍼, 23개 테스트 (스키마 12 + 통합 11)
+
+*Last updated: 2026-03-22 — CMS Tab Container*
