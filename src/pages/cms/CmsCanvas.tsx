@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
 import { spatial } from '../../interactive-os/behaviors/spatial'
 import { useSpatialNav } from '../../interactive-os/hooks/useSpatialNav'
@@ -13,8 +13,11 @@ import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import { spatialReachable } from '../../interactive-os/plugins/focusRecovery'
+import { RENAME_ID, renameCommands } from '../../interactive-os/plugins/rename'
 import type { Locale } from './cms-types'
-import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
+import { localized } from './cms-types'
+import type { LocaleMap } from './cms-types'
+import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getEditableFields } from './cms-renderers'
 
 interface CmsCanvasProps {
   engine: CommandEngine
@@ -26,6 +29,32 @@ interface CmsCanvasProps {
 
 /** CRUD keyMap for CMS Canvas — os commands with undo/redo */
 const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
+  Enter: (ctx) => {
+    const children = ctx.getChildren(ctx.focused)
+    if (children.length === 0) {
+      // Guard: only start rename if node has editable text fields
+      const entity = ctx.getEntity(ctx.focused)
+      const data = (entity?.data ?? {}) as Record<string, unknown>
+      const fields = getEditableFields(data)
+      if (fields.length === 0) return
+      return renameCommands.startRename(ctx.focused)
+    }
+    // Container node → enterChild (spatial depth navigation)
+    return createBatchCommand([
+      spatialCommands.enterChild(ctx.focused),
+      focusCommands.setFocus(children[0]),
+    ])
+  },
+  Escape: (ctx) => {
+    // Exit to parent depth (if not at root)
+    const spatialParent = ctx.getEntity('__spatial_parent__')
+    const parentId = spatialParent?.parentId as string | undefined
+    if (!parentId || parentId === ROOT_ID) return undefined
+    return createBatchCommand([
+      spatialCommands.exitToParent(),
+      focusCommands.setFocus(parentId),
+    ])
+  },
   Delete: (ctx) => {
     // Minimum-1-section guard: if focused is a root child and it's the only one, skip
     const rootChildren = ctx.getChildren(ROOT_ID)
@@ -96,6 +125,89 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
 
   // Recursive renderer — ALL nodes always rendered
   const currentStore = aria.getStore()
+
+  function CmsInlineEditable({ nodeId, data, loc, disp, s }: {
+    nodeId: string
+    data: Record<string, unknown>
+    loc: Locale
+    disp: (cmd: Command) => void
+    s: NormalizedData
+  }) {
+    const editRef = useRef<HTMLSpanElement>(null)
+    const originalValueRef = useRef('')
+    const composingRef = useRef(false)
+    const committedRef = useRef(false)
+
+    const renameEntity = s.entities[RENAME_ID]
+    const isRenaming = renameEntity?.active === true && (renameEntity as Record<string, unknown>).nodeId === nodeId
+
+    const fields = getEditableFields(data)
+    const primaryField = fields[0]
+
+    useEffect(() => {
+      if (isRenaming && editRef.current) {
+        committedRef.current = false
+        composingRef.current = false
+        const el = editRef.current
+        originalValueRef.current = el.textContent ?? ''
+        const range = document.createRange()
+        range.selectNodeContents(el)
+        const sel = window.getSelection()
+        sel?.removeAllRanges()
+        sel?.addRange(range)
+        el.focus()
+      }
+    }, [isRenaming])
+
+    if (!isRenaming || !primaryField) {
+      return <NodeContent data={data} locale={loc} />
+    }
+
+    const rawValue = data[primaryField.field]
+    const { text } = localized(rawValue as string | LocaleMap, loc)
+
+    const confirm = () => {
+      if (committedRef.current) return
+      committedRef.current = true
+      const newText = editRef.current?.textContent?.trim() ?? ''
+      if (newText === '' || newText === originalValueRef.current) {
+        if (editRef.current) editRef.current.textContent = originalValueRef.current
+        disp(renameCommands.cancelRename())
+      } else {
+        const newValue = primaryField.isLocaleMap
+          ? { ...(rawValue as Record<string, string>), [loc]: newText }
+          : newText
+        disp(renameCommands.confirmRename(nodeId, primaryField.field, newValue))
+      }
+    }
+
+    const cancel = () => {
+      if (committedRef.current) return
+      committedRef.current = true
+      if (editRef.current) editRef.current.textContent = originalValueRef.current
+      disp(renameCommands.cancelRename())
+    }
+
+    return (
+      <span
+        ref={editRef}
+        contentEditable
+        suppressContentEditableWarning
+        data-renaming=""
+        onCompositionStart={() => { composingRef.current = true }}
+        onCompositionEnd={() => { composingRef.current = false }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !composingRef.current) { e.preventDefault(); confirm() }
+          else if (e.key === 'Escape') { e.preventDefault(); cancel() }
+          else if (e.key === 'Tab') { e.preventDefault(); confirm() }
+        }}
+        onBlur={confirm}
+      >
+        {text}
+      </span>
+    )
+  }
+
   function renderNode(nodeId: string): React.ReactNode {
     const entity = currentStore.entities[nodeId]
     if (!entity) return null
@@ -192,7 +304,13 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         onClick={(e: React.MouseEvent) => handleNodeClick(nodeId, e)}
         className={className || undefined}
       >
-        <NodeContent data={d} locale={locale} />
+        <CmsInlineEditable
+          nodeId={nodeId}
+          data={d}
+          loc={locale}
+          disp={aria.dispatch}
+          s={currentStore}
+        />
         {children.length > 0 && children.map(childId => renderNode(childId))}
       </Tag>
     )
