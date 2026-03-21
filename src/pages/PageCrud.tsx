@@ -47,7 +47,10 @@ export default function PageCrud() {
     const parentId = (focusedId && getParent(data, focusedId)) || getChildren(data, ROOT_ID)[0] || ROOT_ID
     const siblings = getChildren(data, parentId)
     const index = focusedId ? siblings.indexOf(focusedId) + 1 : siblings.length
-    setData(addEntity(data, { id, data: { label: name, type: 'item' } }, parentId, index))
+    let next = addEntity(data, { id, data: { label: name, type: 'item' } }, parentId, index)
+    // Focus the newly created node
+    next = { ...next, entities: { ...next.entities, [FOCUS_ID]: { id: FOCUS_ID, focusedId: id } } }
+    setData(next)
   }
 
   return (
