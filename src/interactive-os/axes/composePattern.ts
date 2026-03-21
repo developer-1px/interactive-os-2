@@ -113,7 +113,7 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
   // v1 PatternConfig path — backward compatible
   // PatternConfig fields take precedence as base, axis config can override
   return {
-    ...config,
+    ...(config as PatternConfig),
     ...(mergedConfig.focusStrategy !== undefined && { focusStrategy: mergedConfig.focusStrategy }),
     ...(mergedConfig.expandable !== undefined && { expandable: mergedConfig.expandable }),
     ...(mergedConfig.selectionMode !== undefined && { selectionMode: mergedConfig.selectionMode }),
