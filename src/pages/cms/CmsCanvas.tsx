@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
 import { spatial } from '../../interactive-os/behaviors/spatial'
 import { useSpatialNav } from '../../interactive-os/hooks/useSpatialNav'
@@ -13,11 +13,10 @@ import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import { spatialReachable } from '../../interactive-os/plugins/focusRecovery'
-import { RENAME_ID, renameCommands } from '../../interactive-os/plugins/rename'
+import { renameCommands } from '../../interactive-os/plugins/rename'
 import type { Locale } from './cms-types'
-import { localized } from './cms-types'
-import type { LocaleMap } from './cms-types'
-import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getEditableFields } from './cms-renderers'
+import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getEditableFields } from './cms-renderers'
+import { CmsInlineEditable } from './CmsInlineEditable'
 
 interface CmsCanvasProps {
   engine: CommandEngine
@@ -134,99 +133,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
   // Recursive renderer — ALL nodes always rendered
   const currentStore = aria.getStore()
 
-  function CmsInlineEditable({ nodeId, data, loc, disp, s }: {
-    nodeId: string
-    data: Record<string, unknown>
-    loc: Locale
-    disp: (cmd: Command) => void
-    s: NormalizedData
-  }) {
-    const editRef = useRef<HTMLSpanElement>(null)
-    const originalValueRef = useRef('')
-    const composingRef = useRef(false)
-    const committedRef = useRef(false)
-
-    const renameEntity = s.entities[RENAME_ID]
-    const isRenaming = renameEntity?.active === true && (renameEntity as Record<string, unknown>).nodeId === nodeId
-
-    const fields = getEditableFields(data)
-    const primaryField = fields[0]
-
-    useEffect(() => {
-      if (isRenaming && editRef.current) {
-        committedRef.current = false
-        composingRef.current = false
-        const el = editRef.current
-        originalValueRef.current = el.textContent ?? ''
-        const range = document.createRange()
-        range.selectNodeContents(el)
-        range.collapse(false)
-        const sel = window.getSelection()
-        sel?.removeAllRanges()
-        sel?.addRange(range)
-        el.focus()
-      }
-    }, [isRenaming])
-
-    // Focus recovery: schedule after React re-render (component remounts on store change)
-    const restoreFocus = useCallback(() => {
-      requestAnimationFrame(() => {
-        const nodeEl = document.querySelector<HTMLElement>(`[data-cms-id="${nodeId}"]`)
-        nodeEl?.focus()
-      })
-    }, [nodeId])
-
-    if (!isRenaming || !primaryField) {
-      return <NodeContent data={data} locale={loc} />
-    }
-
-    const rawValue = data[primaryField.field]
-    const { text } = localized(rawValue as string | LocaleMap, loc)
-
-    const confirm = (shouldRestoreFocus: boolean) => {
-      if (committedRef.current) return
-      committedRef.current = true
-      const newText = editRef.current?.textContent?.trim() ?? ''
-      if (newText === '' || newText === originalValueRef.current) {
-        if (editRef.current) editRef.current.textContent = originalValueRef.current
-        disp(renameCommands.cancelRename())
-      } else {
-        const newValue = primaryField.isLocaleMap
-          ? { ...(rawValue as Record<string, string>), [loc]: newText }
-          : newText
-        disp(renameCommands.confirmRename(nodeId, primaryField.field, newValue))
-      }
-      if (shouldRestoreFocus) restoreFocus()
-    }
-
-    const cancel = () => {
-      if (committedRef.current) return
-      committedRef.current = true
-      if (editRef.current) editRef.current.textContent = originalValueRef.current
-      disp(renameCommands.cancelRename())
-      restoreFocus()
-    }
-
-    return (
-      <span
-        ref={editRef}
-        contentEditable
-        suppressContentEditableWarning
-        data-renaming=""
-        onCompositionStart={() => { composingRef.current = true }}
-        onCompositionEnd={() => { composingRef.current = false }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !composingRef.current) { e.preventDefault(); confirm(true) }
-          else if (e.key === 'Escape') { e.preventDefault(); cancel() }
-          else if (e.key === 'Tab') { e.preventDefault(); confirm(true) }
-        }}
-        onBlur={() => confirm(false)}
-      >
-        {text}
-      </span>
-    )
-  }
-
   function renderNode(nodeId: string): React.ReactNode {
     const entity = currentStore.entities[nodeId]
     if (!entity) return null
@@ -326,9 +232,9 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         <CmsInlineEditable
           nodeId={nodeId}
           data={d}
-          loc={locale}
-          disp={aria.dispatch}
-          s={currentStore}
+          locale={locale}
+          dispatch={aria.dispatch}
+          store={currentStore}
         />
         {children.length > 0 && children.map(childId => renderNode(childId))}
       </Tag>

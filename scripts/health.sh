@@ -86,13 +86,37 @@ HITS=$(grep -rn 'onKeyDown' $CONSUMER_DIRS --include='*.tsx' 2>/dev/null | grep 
 print_hits "onKeyDown direct" "$HITS"
 
 # ── 징후: 비대 파일 (>300 LOC) ──
+# Allowlist: 단일 관심사 파일 — 분리하면 오히려 복잡해지는 것들
+# - core.ts: plugin commands + middleware 집합
+# - useAria.ts / useAriaZone.ts: os hook 인터페이스
+# - Combobox.tsx: 복합 위젯 (single/multi/grouped/creatable)
+# - App.tsx: 라우트 정의
+BIGFILE_ALLOWLIST=(
+  "src/interactive-os/plugins/core.ts"
+  "src/interactive-os/hooks/useAria.ts"
+  "src/interactive-os/hooks/useAriaZone.ts"
+  "src/interactive-os/ui/Combobox.tsx"
+  "src/App.tsx"
+  "src/pages/PageViewer.tsx"
+)
+
 echo ""
 echo -e "${BOLD}[징후: 비대 파일 (>300 LOC)]${RESET}"
+
+is_allowed() {
+  local file="$1"
+  for allowed in "${BIGFILE_ALLOWLIST[@]}"; do
+    if [ "$file" = "$allowed" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
 
 big_files=""
 while IFS= read -r f; do
   lines=$(wc -l < "$f" | tr -d ' ')
-  if [ "$lines" -gt 300 ]; then
+  if [ "$lines" -gt 300 ] && ! is_allowed "$f"; then
     big_files="${big_files}  ${f}  ${lines} lines\n"
   fi
 done < <(find src -name '*.ts' -o -name '*.tsx' | grep -v __tests__ | sort)

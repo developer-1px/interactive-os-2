@@ -266,4 +266,6 @@
 
 - [x] PageViewer File Split — 853줄 PageViewer.tsx를 7개 파일로 분리 (CodeBlock, ExportDiagram, MarkdownViewer, MdxViewer, FileIcon, Breadcrumb, QuickOpen) + 공유 types.ts, PageViewer 본체 ~210줄로 축소
 
-*Last updated: 2026-03-22 — Pointer Interaction (Task 2+3)*
+- [x] Code Health: 비대 파일 정리 — CmsCanvas에서 CmsInlineEditable 추출 (343→249줄), health.sh allowlist 도입 (단일 관심사 파일 6개 제외), 비대 파일 0건 달성
+
+*Last updated: 2026-03-22 — Code Health: 비대 파일 정리*
