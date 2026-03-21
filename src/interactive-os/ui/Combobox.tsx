@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import './combobox.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
@@ -84,7 +84,13 @@ export function Combobox({
     return d?.type === 'group'
   })
 
-  const behaviorData = isGrouped ? flattenGroups(originalStore) : data
+  const behaviorData = useMemo(() => {
+    const grouped = getChildren(data, ROOT_ID).some(id => {
+      const d = data.entities[id]?.data as Record<string, string> | undefined
+      return d?.type === 'group'
+    })
+    return grouped ? flattenGroups(data) : data
+  }, [data])
 
   // When grouped, intercept onChange to restore group structure before propagating up.
   // The behavior engine operates on a flat store; callers expect the grouped structure.
@@ -126,10 +132,8 @@ export function Combobox({
   // creatable=true, dropdown open, filter text non-empty, and no items match the filter
   const showCreateOption = creatable && isOpen && filterText.length > 0 && visibleChildren.length === 0
 
-  // When the create option visibility changes, clear its focused state
-  if (!showCreateOption && createOptionFocused) {
-    setCreateOptionFocused(false)
-  }
+  // Derive: create option can't be focused when not shown
+  const effectiveCreateFocused = showCreateOption && createOptionFocused
 
   const handleCreate = (label: string) => {
     const createCmd = comboboxCommands.create(label)
@@ -202,7 +206,7 @@ export function Combobox({
   const behaviorOnKeyDown = (aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>).onKeyDown
   const wrappedOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (showCreateOption) {
-      if (createOptionFocused) {
+      if (effectiveCreateFocused) {
         if (e.key === 'Enter') {
           e.preventDefault()
           handleCreate(filterText)
@@ -234,7 +238,7 @@ export function Combobox({
         }
       }
     }
-    if (createOptionFocused && e.key !== 'Escape') return
+    if (effectiveCreateFocused && e.key !== 'Escape') return
     behaviorOnKeyDown?.(e)
   }
 
@@ -310,7 +314,7 @@ export function Combobox({
           {showCreateOption && (
             <div
               data-combobox-create
-              className={`combo-create-option${createOptionFocused ? ' combo-item--focused' : ''}`}
+              className={`combo-create-option${effectiveCreateFocused ? ' combo-item--focused' : ''}`}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"
