@@ -166,6 +166,7 @@ function AriaEditable({ field, placeholder, selection = 'all', children }: { fie
         nodeEl?.focus()
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- selection prop is stable, only needed on rename entry
   }, [renaming, nodeCtx])
 
   if (!renaming) {
