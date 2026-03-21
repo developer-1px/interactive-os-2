@@ -1,0 +1,33 @@
+# Hooks
+
+> React 통합. store + engine + behavior를 React 컴포넌트에 연결하는 훅.
+
+## 주기율표
+
+| 훅 | 함수 | 역할 | 상태 |
+|----|------|------|------|
+| useEngine | `useEngine()` | store + commandEngine 생성, React 상태 동기화 | 🟢 |
+| useAria | `useAria()` | engine + behavior → DOM 속성 + 키보드 핸들링 | 🟢 |
+| useAriaZone | `useAriaZone()` | 하나의 engine을 여러 위젯이 공유 (multi-zone) | 🟢 |
+| useControlledAria | `useControlledAria()` | 외부 상태와 연동 (controlled component 패턴) | 🟢 |
+| useKeyboard | `parseKeyCombo()`, `matchKeyEvent()`, `findMatchingKey()` | 키보드 이벤트 파싱 유틸리티 | 🟢 |
+| useSpatialNav | `useSpatialNav()`, `findNearest()` | 공간 네비게이션 (TV리모컨식 방향 탐색) | 🟢 |
+| keymapHelpers | `isEditableElement()`, `dispatchKeyAction()` | keyMap 실행 헬퍼 (multi-export) | 🟢 |
+
+## 핵심 관계
+
+```
+useEngine (store + engine)
+  ↓
+useAria (engine + behavior → DOM)
+  ├── useAriaZone (engine 공유, 위젯 분리)
+  └── useControlledAria (외부 상태 연동)
+
+useKeyboard (독립 유틸리티)
+useSpatialNav (독립, spatial plugin과 쌍)
+keymapHelpers (useAria 내부에서 사용)
+```
+
+## 갭
+
+(없음 — AriaZone으로 multi-view 해결됨)
