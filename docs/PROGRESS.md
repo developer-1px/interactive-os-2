@@ -103,11 +103,12 @@
 ### 추가 프리셋 (Cross-Container)
 - [x] kanban — composePattern 리팩토링 (5 axes: selectToggle, kanbanEditing, kanbanCrossH, kanbanNavV, kanbanPlugins), plugin keybindings → Kanban.tsx keyMap override 분리
 
+- [x] slider — 연속 값 (value axis), ArrowRight/Left/Up/Down ±step, Home/End min/max, PageUp/PageDown ±step×10
+- [x] spinbutton — 연속 값 (value axis, vertical), ArrowUp/Down ±step
+
 ### 미구현 behavior
 - [x] extended selection — Shift 범위 선택 (listbox, treegrid)
 - [ ] `[P2]` menubar — 다계층 keyMap 필요 (축 확장)
-- [ ] `[P2]` slider — 연속 값 (min/max/step) 축 필요
-- [ ] `[P2]` spinbutton — 연속 값 축 필요
 
 ## ⑤ Components + Hooks
 
@@ -123,6 +124,8 @@
 - [x] DOM 스크롤 동기화 — 포커스 이동 시 `scrollIntoView({ block: 'nearest' })` 자동 호출
 - [x] `hooks/use-spatial-nav.ts` — `useSpatialNav` hook + `findNearest` 순수 함수 (DOM 위치 기반 방향키 네비게이션)
 - [x] `onActivate` + `followFocus` — 포커스/활성화 분리, behavior 수준 followFocus + entity별 opt-out
+- [x] `BehaviorContext.value?` — ValueNav optional namespace (grid? 패턴), increment/decrement/setValue
+- [x] `__value__` meta-entity — 연속 값 위젯 상태 관리
 - [ ] `[P2]` 대용량 가상화 — 10k+ 노드 렌더링
 
 ## ⑥ UI Layer (Reference Components)
@@ -138,14 +141,16 @@
 - [x] Kanban (cross-column card movement, horizontal column layout)
 - [x] RadioGroup
 - [x] Combobox (input + listbox, aria-activedescendant, editable, multi-select + tag tokens, grouped, creatable)
+- [x] Slider
+- [x] Spinbutton
 - [ ] `[P2]` shadcn CLI — `npx interactive-os add treegrid`
 
 ## ⑦ 인프라
 
-- [x] Vitest (464 tests, 54 files)
+- [x] Vitest (408 tests, 45 files)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
-- [x] tsup 라이브러리 빌드 (ESM + DTS, 42 modules)
+- [x] tsup 라이브러리 빌드 (ESM + DTS, 46 modules)
 - [x] npm exports (package.json)
 - [x] README
 - [x] LICENSE (MIT)
@@ -214,8 +219,8 @@
 | Tree View | ✅ | ✅ | ✅ | ✅ | Done |
 | Treegrid | ✅ | ✅ | ✅ | ✅ | Done |
 | Menubar | ❌ | ❌ | ❌ | ❌ | `[P2]` 다계층 keyMap |
-| Slider | ❌ | ❌ | ❌ | ❌ | `[P2]` 연속값 축 |
-| Spinbutton | ❌ | ❌ | ❌ | ❌ | `[P2]` 연속값 축 |
+| Slider | ✅ | ✅ | ✅ | ✅ | Done |
+| Spinbutton | ✅ | ✅ | ✅ | ✅ | Done |
 | Carousel | ❌ | ❌ | ❌ | ❌ | — |
 | Feed | ❌ | ❌ | ❌ | ❌ | — |
 | Table | ❌ | ❌ | ❌ | ❌ | read-only grid |
@@ -224,8 +229,8 @@
 
 *Native HTML 패턴 (Alert, Breadcrumb, Button, Checkbox, Link, Meter)은 behavior 불필요로 제외*
 
-**14/14 composite widget 구현 완료** · 8개 미구현 (P2 또는 미계획)
+**16/16 composite widget 구현 완료** · 6개 미구현 (P2 또는 미계획)
 
 ---
 
-*Last updated: 2026-03-21 — CMS Inline Edit + Detail Panel: 인라인 편집 + 우측 Form 패널*
+*Last updated: 2026-03-21 — Slider + Spinbutton: value axis (6th axis) complete, 16/16 composite widgets*

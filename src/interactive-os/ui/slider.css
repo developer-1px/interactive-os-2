@@ -1,0 +1,58 @@
+/* --- Slider --- */
+
+.slider-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+}
+
+.slider-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 64px;
+}
+
+.slider-track {
+  position: relative;
+  flex: 1;
+  height: 6px;
+  background: var(--color-border, var(--border));
+  border-radius: 3px;
+}
+
+.slider-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--color-accent, var(--accent));
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent, var(--accent));
+  transform: translate(-50%, -50%);
+  transition: box-shadow 0.12s;
+}
+
+[data-focused] .slider-thumb {
+  box-shadow: 0 0 0 3px var(--focus-ring, var(--color-accent, var(--accent)));
+  outline: none;
+}
+
+.slider-value {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  min-width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

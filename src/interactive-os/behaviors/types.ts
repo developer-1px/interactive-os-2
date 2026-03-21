@@ -1,4 +1,5 @@
 import type { Entity, Command } from '../core/types'
+import type { ValueRange } from '../plugins/core'
 
 export type SelectionMode = 'single' | 'multiple'
 
@@ -9,6 +10,18 @@ export interface GridNav {
   focusPrevCol(): Command
   focusFirstCol(): Command
   focusLastCol(): Command
+}
+
+export interface ValueNav {
+  current: number
+  min: number
+  max: number
+  step: number
+  increment(step?: number): Command
+  decrement(step?: number): Command
+  setToMin(): Command
+  setToMax(): Command
+  setValue(value: number): Command
 }
 
 export interface FocusStrategy {
@@ -24,6 +37,7 @@ export interface NodeState {
   siblingCount: number
   expanded?: boolean
   level?: number
+  valueCurrent?: number
   [key: string]: unknown
 }
 
@@ -52,6 +66,7 @@ export interface BehaviorContext {
   getChildren(id: string): string[]
 
   grid?: GridNav
+  value?: ValueNav
 }
 
 export interface AriaBehavior<TState extends NodeState = NodeState> {
@@ -70,5 +85,7 @@ export interface AriaBehavior<TState extends NodeState = NodeState> {
   followFocus?: boolean
   /** Number of columns for grid navigation. When > 1, BehaviorContext.grid is populated. */
   colCount?: number
+  /** Value range for continuous-value widgets (slider, spinbutton). */
+  valueRange?: ValueRange
   ariaAttributes: (node: Entity, state: TState) => Record<string, string>
 }
