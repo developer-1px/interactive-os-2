@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import axe from 'axe-core'
 import { Aria } from '../components/aria'
 import { spinbutton } from '../behaviors/spinbutton'
 import { createStore } from '../core/createStore'
@@ -68,6 +69,27 @@ describe('Spinbutton keyboard integration', () => {
     expect(getAriaValueNow(container)).toBe('10')
     await user.keyboard('{Home}')
     expect(getAriaValueNow(container)).toBe('0')
+  })
+
+  describe('accessibility (axe-core)', () => {
+    it('has no accessibility violations', async () => {
+      const { container } = renderSpinbutton(fixtureData())
+      const results = await axe.run(container, {
+        rules: {
+          'color-contrast': { enabled: false },
+          region: { enabled: false },
+        },
+      })
+      expect(results.violations).toEqual([])
+    })
+
+    it('spinbutton element has correct aria-valuenow/min/max attributes', () => {
+      const { container } = renderSpinbutton(fixtureData())
+      const el = container.querySelector('[role="spinbutton"]')
+      expect(el?.getAttribute('aria-valuenow')).toBe('0')
+      expect(el?.getAttribute('aria-valuemin')).toBe('0')
+      expect(el?.getAttribute('aria-valuemax')).toBe('10')
+    })
   })
 
   it('clamps at boundaries', async () => {

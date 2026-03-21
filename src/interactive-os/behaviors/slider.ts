@@ -16,10 +16,13 @@ export function slider(options: SliderOptions) {
     {
       role: 'none',
       childRole: 'slider',
-      ariaAttributes: (_node: Entity, state: NodeState) => ({
+      ariaAttributes: (node: Entity, state: NodeState) => ({
         'aria-valuenow': String(state.valueCurrent ?? min),
         'aria-valuemin': String(min),
         'aria-valuemax': String(max),
+        ...((node.data as Record<string, unknown>)?.label
+          ? { 'aria-label': String((node.data as Record<string, unknown>).label) }
+          : {}),
       }),
     },
     value({ min, max, step, orientation: 'horizontal' }),

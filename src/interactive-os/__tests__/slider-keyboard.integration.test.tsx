@@ -7,6 +7,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import axe from 'axe-core'
 import { Aria } from '../components/aria'
 import { slider } from '../behaviors/slider'
 import { createStore } from '../core/createStore'
@@ -155,6 +156,27 @@ describe('Slider keyboard integration', () => {
     it('renders aria-valuemin and aria-valuemax', () => {
       const { container } = renderSlider(fixtureData())
       const el = getSliderElement(container)
+      expect(el?.getAttribute('aria-valuemin')).toBe('0')
+      expect(el?.getAttribute('aria-valuemax')).toBe('100')
+    })
+  })
+
+  describe('accessibility (axe-core)', () => {
+    it('has no accessibility violations', async () => {
+      const { container } = renderSlider(fixtureData())
+      const results = await axe.run(container, {
+        rules: {
+          'color-contrast': { enabled: false },
+          region: { enabled: false },
+        },
+      })
+      expect(results.violations).toEqual([])
+    })
+
+    it('slider element has correct aria-valuenow/min/max attributes', () => {
+      const { container } = renderSlider(fixtureData())
+      const el = getSliderElement(container)
+      expect(el?.getAttribute('aria-valuenow')).toBe('0')
       expect(el?.getAttribute('aria-valuemin')).toBe('0')
       expect(el?.getAttribute('aria-valuemax')).toBe('100')
     })
