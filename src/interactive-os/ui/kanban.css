@@ -38,7 +38,7 @@
 .kanban-column-header:focus {
   outline: 1.5px solid var(--accent);
   outline-offset: -1.5px;
-  background: var(--accent-dim);
+  background: var(--bg-focus);
   color: var(--text-bright);
 }
 
@@ -64,7 +64,7 @@
 .kanban-card:focus {
   outline: 1.5px solid var(--accent);
   outline-offset: -1.5px;
-  background: var(--accent-dim);
+  background: var(--bg-focus);
   color: var(--text-bright);
 }
 
@@ -73,7 +73,8 @@
 }
 
 .kanban-card[aria-selected="true"]:focus {
-  background: var(--accent-dim);
+  background: var(--bg-select);
+  outline: 1.5px solid var(--accent);
 }
 
 /* ── Editable card title ── */

@@ -45,10 +45,11 @@
   --bg-elevated: var(--surface-2);
 
   /* Interactive states */
-  --bg-focus: rgba(91, 91, 214, 0.15);
+  --bg-focus: rgba(91, 91, 214, 0.10);
   --bg-select: rgba(48, 164, 108, 0.15);
   --bg-hover: rgba(255, 255, 255, 0.04);
   --bg-active: rgba(255, 255, 255, 0.08);
+  --bg-press: rgba(91, 91, 214, 0.18);
 
   /* Border */
   --border-dim: rgba(255, 255, 255, 0.08);
@@ -121,6 +122,7 @@
   --bg-select: var(--green-50);
   --bg-hover: rgba(0, 0, 0, 0.03);
   --bg-active: rgba(0, 0, 0, 0.06);
+  --bg-press: rgba(91, 91, 214, 0.14);
 
   /* Border */
   --border-dim: var(--zinc-200);

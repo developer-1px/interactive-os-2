@@ -188,6 +188,7 @@
 - [x] Viewer Redesign — refined-documentation 스타일 (15px body, 1.75 line-height, 720px prose column, 48px padding)
 - [x] Design System — ARIA attr 기반 CSS 디자인 시스템 (`data-focused` 코어 추가, App.css → tokens/components/app 3파일 분리, 11개 UI 컴포넌트 inline style 제거, `prefers-reduced-motion`)
 - [x] CSS Architecture Migration — 3-Layer 구조 (tokens → ARIA state → component CSS), app.css 분해 (13개 컴포넌트 CSS 파일), UI 컴포넌트 inline style → className 전환, spacing/transition 토큰 추가
+- [x] Focus Token System — MECE 상태 분리 (hover/focused/active/selected 시각 구분), `--bg-focus`·`--bg-press` 토큰, `:focus-within` hover 억제, selected+focused outline, `--accent-dim` 장식 분리, Tab 예외, fallback chain 정리
 - [x] Route Restructuring — Navigation(read-only) → Plugin(개별 능력) → Collection(조립 쇼케이스) 3층 분리, Plugin 그룹 신설, Navigation에 treegrid/listbox/grid/combobox read-only 추가, 데모 데이터 공유 모듈 추출
 - [x] Kanban Showcase — /collection/kanban, keyboard-first kanban board (cross-column move, CRUD, undo/redo, batch move), CSS multi-column layout
 - [x] Visual CMS Integration & Polish — floating toolbar wired to CRUD (delete/duplicate/reorder/add), sidebar↔canvas bidirectional focus sync, minimum-1-section guard on toolbar
@@ -234,4 +235,4 @@
 
 ---
 
-*Last updated: 2026-03-21 — Area MDX viewer added, Slider + Spinbutton: value axis (6th axis) complete, 16/16 composite widgets*
+*Last updated: 2026-03-21 — Focus Token System (MECE state separation, hover suppression, --bg-press)*

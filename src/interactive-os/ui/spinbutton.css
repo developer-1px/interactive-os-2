@@ -18,15 +18,15 @@
 .spinbutton-group {
   display: inline-flex;
   align-items: stretch;
-  border: 1px solid var(--color-border, var(--border));
+  border: 1px solid var(--border-mid);
   border-radius: 6px;
   overflow: hidden;
   transition: border-color 0.12s, box-shadow 0.12s;
 }
 
 [data-focused] .spinbutton-group {
-  border-color: var(--color-accent, var(--accent));
-  box-shadow: 0 0 0 2px var(--focus-ring, var(--color-accent, var(--accent)));
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
   outline: none;
 }
 
@@ -36,7 +36,7 @@
   justify-content: center;
   width: 36px;
   border: none;
-  background: var(--bg-secondary, var(--color-bg-secondary, rgba(255, 255, 255, 0.05)));
+  background: var(--bg-hover);
   color: var(--text-primary);
   font-size: 18px;
   font-weight: 400;
@@ -47,11 +47,11 @@
 }
 
 .spinbutton-btn:hover {
-  background: var(--bg-hover, var(--color-bg-hover, rgba(255, 255, 255, 0.1)));
+  background: var(--bg-active);
 }
 
 .spinbutton-btn:active {
-  background: var(--bg-active, var(--color-bg-active, rgba(255, 255, 255, 0.15)));
+  background: var(--bg-press);
 }
 
 .spinbutton-btn[aria-disabled] {
@@ -61,11 +61,11 @@
 }
 
 .spinbutton-btn--dec {
-  border-right: 1px solid var(--color-border, var(--border));
+  border-right: 1px solid var(--border-mid);
 }
 
 .spinbutton-btn--inc {
-  border-left: 1px solid var(--color-border, var(--border));
+  border-left: 1px solid var(--border-mid);
 }
 
 .spinbutton-value {
@@ -97,11 +97,6 @@
 
 /* Error state */
 .spinbutton-group[data-invalid] {
-  border-color: var(--color-error, #f85149);
-  box-shadow: 0 0 0 2px var(--color-error, #f85149);
-}
-
-[data-focused] .spinbutton-group[data-invalid] {
-  border-color: var(--color-error, #f85149);
-  box-shadow: 0 0 0 2px var(--color-error, #f85149);
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px var(--red);
 }
