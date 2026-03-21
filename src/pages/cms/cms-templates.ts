@@ -1,3 +1,6 @@
+import type { Command } from '../../interactive-os/core/types'
+import { createBatchCommand } from '../../interactive-os/core/types'
+import { crudCommands } from '../../interactive-os/plugins/crud'
 import { localeMap } from './cms-types'
 
 export type SectionVariant = 'hero' | 'stats' | 'features' | 'workflow' | 'patterns' | 'footer'
@@ -234,4 +237,30 @@ export function createSection(variant: SectionVariant): SectionTemplate {
     case 'patterns': return createPatterns()
     case 'footer':   return createFooter()
   }
+}
+
+/** Convert a template into a BatchCommand of crudCommands.create calls.
+ *  Undo removes all created entities in reverse order. */
+export function templateToCommand(variant: SectionVariant, parentId: string, index?: number): { command: Command; rootId: string } {
+  const template = createSection(variant)
+  const commands: Command[] = []
+
+  commands.push(crudCommands.create(
+    template.entities[template.rootId]!,
+    parentId,
+    index,
+  ))
+
+  function addChildren(entityId: string) {
+    const childIds = template.relationships[entityId]
+    if (!childIds) return
+    for (let i = 0; i < childIds.length; i++) {
+      const childId = childIds[i]!
+      commands.push(crudCommands.create(template.entities[childId]!, entityId, i))
+      addChildren(childId)
+    }
+  }
+  addChildren(template.rootId)
+
+  return { command: createBatchCommand(commands), rootId: template.rootId }
 }

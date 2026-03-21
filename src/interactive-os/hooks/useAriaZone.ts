@@ -379,6 +379,31 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     }
   }, [behavior.focusStrategy.type, focusedId, mergedKeyMap, virtualEngine, behaviorCtxOptions])
 
+  // ── External store-change focus recovery ──
+  // When something outside the zone mutates the engine store (e.g. toolbar button),
+  // the zone's synchronous runFocusRecovery in dispatch() doesn't fire.
+  // This effect catches those external mutations and recovers focus.
+
+  const prevStoreRef = useRef(store)
+
+  useEffect(() => {
+    const prevStore = prevStoreRef.current
+    prevStoreRef.current = store
+    if (prevStore === store) return
+
+    const vs = viewStateRef.current
+    if (!vs.focusedId) return
+
+    // Focus still valid → skip
+    if (isVisible(store, vs.focusedId, isReachable)) return
+
+    // Focus invalid — external mutation removed the focused node
+    const fallback = findFallbackFocus(prevStore, store, vs.focusedId, isReachable)
+    if (fallback) {
+      setViewState(prev => prev.focusedId === fallback ? prev : { ...prev, focusedId: fallback })
+    }
+  }, [store, isReachable])
+
   // ── DOM focus sync (scoped to zone container) ──
 
   useEffect(() => {

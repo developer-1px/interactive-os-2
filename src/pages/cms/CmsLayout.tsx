@@ -79,7 +79,7 @@ export default function CmsLayout() {
           <CmsViewportWrapper viewport={viewport}>
             <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} />
           </CmsViewportWrapper>
-          <CmsI18nSheet data={store} onDataChange={setPersistedData} open={i18nSheetOpen} />
+          <CmsI18nSheet engine={engine} store={store} open={i18nSheetOpen} />
         </div>
         <CmsDetailPanel
           engine={engine}
@@ -88,7 +88,7 @@ export default function CmsLayout() {
           locale={locale}
         />
       </div>
-      <CmsFloatingToolbar data={store} onDataChange={setPersistedData} hidden={presenting} />
+      <CmsFloatingToolbar store={store} focusedId={canvasFocusedId} dispatch={(cmd) => engine.dispatch(cmd)} hidden={presenting} />
       {drawerOpen && (
         <CmsHamburgerDrawer
           open={drawerOpen}
