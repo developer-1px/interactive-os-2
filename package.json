@@ -223,6 +223,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "happy-dom": "^20.8.4",
     "jsdom": "^29.0.0",
     "lucide-react": "^0.577.0",
     "mermaid": "^11.13.0",
