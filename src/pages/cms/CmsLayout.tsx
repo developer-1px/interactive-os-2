@@ -14,12 +14,13 @@ import type { Locale } from './cms-types'
 import { useEngine } from '../../interactive-os/hooks/useEngine'
 import { history } from '../../interactive-os/plugins/history'
 import { clipboard } from '../../interactive-os/plugins/clipboard'
+import { rename } from '../../interactive-os/plugins/rename'
 import { getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
 import type { Plugin } from '../../interactive-os/core/types'
 
-const sharedPlugins: Plugin[] = [history(), clipboard()]
+const sharedPlugins: Plugin[] = [history(), clipboard(), rename()]
 
 export default function CmsLayout() {
   const [persistedData, setPersistedData] = useCmsData()
