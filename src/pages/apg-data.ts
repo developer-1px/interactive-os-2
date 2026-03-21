@@ -183,6 +183,34 @@ export const apgGrid: ApgPatternData = {
   ],
 }
 
+export const apgSlider: ApgPatternData = {
+  pattern: 'Slider',
+  url: 'https://www.w3.org/WAI/ARIA/apg/patterns/slider/',
+  entries: [
+    { key: 'Right Arrow', description: 'Increases the value of the slider by one step.' },
+    { key: 'Up Arrow', description: 'Increases the value of the slider by one step.' },
+    { key: 'Left Arrow', description: 'Decreases the value of the slider by one step.' },
+    { key: 'Down Arrow', description: 'Decreases the value of the slider by one step.' },
+    { key: 'Home', description: 'Sets the slider to the first allowed value in its range.' },
+    { key: 'End', description: 'Sets the slider to the last allowed value in its range.' },
+    { key: 'Page Up (Optional)', description: 'Increases the slider value by an amount larger than the step change made by Up Arrow.' },
+    { key: 'Page Down (Optional)', description: 'Decreases the slider value by an amount larger than the step change made by Down Arrow.' },
+  ],
+}
+
+export const apgSpinbutton: ApgPatternData = {
+  pattern: 'Spinbutton',
+  url: 'https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/',
+  entries: [
+    { key: 'Up Arrow', description: 'Increases the value.' },
+    { key: 'Down Arrow', description: 'Decreases the value.' },
+    { key: 'Home', description: 'If the spinbutton has a minimum value, sets the value to its minimum.' },
+    { key: 'End', description: 'If the spinbutton has a maximum value, sets the value to its maximum.' },
+    { key: 'Page Up (Optional)', description: 'Increases the value by a larger step than Up Arrow.' },
+    { key: 'Page Down (Optional)', description: 'Decreases the value by a larger step than Down Arrow.' },
+  ],
+}
+
 export const apgCombobox: ApgPatternData = {
   pattern: 'Combobox',
   url: 'https://www.w3.org/WAI/ARIA/apg/patterns/combobox/',

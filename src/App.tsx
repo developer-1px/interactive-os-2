@@ -26,6 +26,8 @@ import PageCombobox from './pages/PageCombobox'
 import PageToolbar from './pages/PageToolbar'
 import PageGrid from './pages/PageGrid'
 import PageRadioGroup from './pages/PageRadioGroup'
+import PageSlider from './pages/PageSlider'
+import PageSpinbutton from './pages/PageSpinbutton'
 import PageAlertDialog from './pages/PageAlertDialog'
 import PageSwitch from './pages/PageSwitch'
 import PageTreeView from './pages/PageTreeView'
@@ -149,6 +151,8 @@ const routeConfig: RouteGroup[] = [
       { path: 'switch', label: 'Switch', status: 'ready', component: PageSwitch },
       { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabs },
       { path: 'radiogroup', label: 'RadioGroup', status: 'ready', component: PageRadioGroup },
+      { path: 'slider', label: 'Slider', status: 'ready', component: PageSlider },
+      { path: 'spinbutton', label: 'Spinbutton', status: 'ready', component: PageSpinbutton },
       { path: 'menu', label: 'Menu', status: 'ready', component: PageMenu },
       { path: 'toolbar', label: 'Toolbar', status: 'ready', component: PageToolbar },
       { path: 'dialog', label: 'Dialog', status: 'ready', component: PageDialog },
