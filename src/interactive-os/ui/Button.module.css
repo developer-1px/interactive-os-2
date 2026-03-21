@@ -35,7 +35,3 @@
   transition: background 0.08s, border-color 0.08s;
 }
 
-/* btn-dialog focus state handled by components.css ARIA selectors */
-
-.dialogFocused {
-}
