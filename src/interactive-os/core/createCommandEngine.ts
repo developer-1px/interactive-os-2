@@ -1,4 +1,8 @@
-import type { Command, Middleware, NormalizedData } from './types'
+import type { Command, Middleware, NormalizedData, BatchCommand } from './types'
+import { computeStoreDiff } from './computeStoreDiff'
+import type { LogEntry, Logger } from './dispatchLogger'
+import type { EngineOptions } from './dispatchLogger'
+import { defaultLogger, isBatchCommand } from './dispatchLogger'
 
 export interface CommandEngine {
   dispatch(command: Command): void
@@ -10,9 +14,69 @@ export interface CommandEngine {
 export function createCommandEngine(
   initialStore: NormalizedData,
   middlewares: Middleware[],
-  onStoreChange: (store: NormalizedData) => void
+  onStoreChange: (store: NormalizedData) => void,
+  options?: EngineOptions
 ): CommandEngine {
   let store = initialStore
+
+  // --- resolve logger ---
+  const resolveLogger = (): Logger | null => {
+    if (options?.logger === false) return null
+    if (typeof options?.logger === 'function') return options.logger
+    // logger: true or undefined → DEV only (not in test)
+    if (
+      typeof import.meta !== 'undefined' &&
+      import.meta.env?.DEV &&
+      import.meta.env?.MODE !== 'test'
+    ) {
+      return defaultLogger
+    }
+    return null
+  }
+  const logger = resolveLogger()
+  let seq = 0
+
+  const logCommand = (
+    command: Command,
+    prev: NormalizedData,
+    next: NormalizedData,
+    parentSeq?: number,
+    error?: string
+  ) => {
+    if (!logger) return
+    seq++
+    const entry: LogEntry = {
+      seq,
+      type: command.type,
+      payload: command.payload,
+      diff: error ? [] : computeStoreDiff(prev, next),
+      ...(parentSeq != null ? { parent: parentSeq } : {}),
+      ...(error ? { error } : {}),
+    }
+    logger(entry)
+
+    // batch children: type/payload only, no re-execution
+    if (!error && isBatchCommand(command)) {
+      const topParentSeq = entry.seq
+      const logChildren = (batch: BatchCommand) => {
+        for (const child of batch.commands) {
+          seq++
+          logger({
+            seq,
+            type: child.type,
+            payload: child.payload,
+            diff: [],
+            parent: topParentSeq,
+          })
+          // recurse for nested batch
+          if (isBatchCommand(child)) {
+            logChildren(child as BatchCommand)
+          }
+        }
+      }
+      logChildren(command as BatchCommand)
+    }
+  }
 
   const executor = (command: Command) => {
     const prev = store
@@ -20,11 +84,10 @@ export function createCommandEngine(
       store = command.execute(store)
     } catch (error) {
       store = prev
-      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
-        console.warn(`Command "${command.type}" failed:`, error)
-      }
+      logCommand(command, prev, prev, undefined, error instanceof Error ? error.message : String(error))
       return
     }
+    logCommand(command, prev, store)
     if (store !== prev) {
       onStoreChange(store)
     }
