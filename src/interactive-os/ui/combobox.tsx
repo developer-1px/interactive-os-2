@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import './combobox.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
@@ -129,10 +129,8 @@ export function Combobox({
   // creatable=true, dropdown open, filter text non-empty, and no items match the filter
   const showCreateOption = creatable && isOpen && filterText.length > 0 && visibleChildren.length === 0
 
-  // When the create option disappears, clear its focused state
-  useEffect(() => {
-    if (!showCreateOption) setCreateOptionFocused(false)
-  }, [showCreateOption])
+  // Derive: create option can't be focused when not shown
+  const effectiveCreateFocused = showCreateOption && createOptionFocused
 
   const handleCreate = (label: string) => {
     const createCmd = comboboxCommands.create(label)
@@ -201,32 +199,11 @@ export function Combobox({
     ? (isOpen ? filterText : selectedLabel)
     : selectedLabel
 
-  // Navigate only through visible (filtered) items instead of full store
-  const navigateFiltered = (key: string): boolean => {
-    if (!filterText || !(editable || creatable) || visibleChildren.length === 0) return false
-    if (isOpen && (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Home' || key === 'End')) {
-      const idx = visibleChildren.indexOf(aria.focused)
-      let next: string | undefined
-      if (key === 'ArrowDown') next = idx < visibleChildren.length - 1 ? visibleChildren[idx + 1] : visibleChildren[idx]
-      else if (key === 'ArrowUp') next = idx > 0 ? visibleChildren[idx - 1] : visibleChildren[0]
-      else if (key === 'Home') next = visibleChildren[0]
-      else if (key === 'End') next = visibleChildren[visibleChildren.length - 1]
-      if (next) aria.dispatch(focusCommands.setFocus(next))
-      return true
-    }
-    if (!isOpen && key === 'ArrowDown') {
-      aria.dispatch(comboboxCommands.open())
-      aria.dispatch(focusCommands.setFocus(visibleChildren[0]!))
-      return true
-    }
-    return false
-  }
-
-  // Wrap the behavior's onKeyDown to intercept create option and filtered navigation
+  // Wrap the behavior's onKeyDown to intercept create option navigation
   const behaviorOnKeyDown = (aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>).onKeyDown
   const wrappedOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (showCreateOption) {
-      if (createOptionFocused) {
+      if (effectiveCreateFocused) {
         if (e.key === 'Enter') {
           e.preventDefault()
           handleCreate(filterText)
@@ -235,6 +212,7 @@ export function Combobox({
         if (e.key === 'ArrowUp') {
           e.preventDefault()
           setCreateOptionFocused(false)
+          // Focus last visible item in list
           const lastVisibleId = visibleChildren[visibleChildren.length - 1]
           if (lastVisibleId) aria.dispatch(focusCommands.setFocus(lastVisibleId))
           return
@@ -242,15 +220,11 @@ export function Combobox({
         if (e.key === 'Escape') {
           // Fall through to behavior's Escape handler
         } else {
+          // For all other keys when create option is focused, let the browser handle
           return
         }
       } else {
-        // Enter with Create option visible → auto-create (no ArrowDown needed)
-        if (e.key === 'Enter') {
-          e.preventDefault()
-          handleCreate(filterText)
-          return
-        }
+        // Not on create option yet — check if ArrowDown from last visible item
         if (e.key === 'ArrowDown') {
           const lastVisibleId = visibleChildren[visibleChildren.length - 1]
           if (aria.focused === lastVisibleId || visibleChildren.length === 0) {
@@ -261,23 +235,13 @@ export function Combobox({
         }
       }
     }
-    if (createOptionFocused && e.key !== 'Escape') return
-    if (navigateFiltered(e.key)) { e.preventDefault(); return }
+    if (effectiveCreateFocused && e.key !== 'Escape') return
     behaviorOnKeyDown?.(e)
-  }
-
-  const handleBlur = (e: React.FocusEvent) => {
-    if (!isOpen) return
-    // Keep dropdown open when focus moves to token remove buttons
-    const container = (e.target as HTMLElement).closest('div')?.parentElement
-    if (container && e.relatedTarget && container.contains(e.relatedTarget as Node)) return
-    aria.dispatch(comboboxCommands.close())
   }
 
   const containerPropsWithWrappedKeyDown = {
     ...aria.containerProps,
     onKeyDown: wrappedOnKeyDown,
-    onBlur: handleBlur,
   }
 
   return (
@@ -325,7 +289,7 @@ export function Combobox({
       />
       )}
       {isOpen && (
-        <div className="combo-dropdown" role="listbox" onMouseDown={e => e.preventDefault()}>
+        <div className="combo-dropdown" role="listbox">
           {isGrouped ? (
             rootChildren.map(groupId => {
               const group = originalStore.entities[groupId]
@@ -347,7 +311,7 @@ export function Combobox({
           {showCreateOption && (
             <div
               data-combobox-create
-              className={`combo-create-option${createOptionFocused ? ' combo-item--focused' : ''}`}
+              className={`combo-create-option${effectiveCreateFocused ? ' combo-item--focused' : ''}`}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"
