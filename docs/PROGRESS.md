@@ -268,4 +268,6 @@
 
 - [x] Code Health: 비대 파일 정리 — CmsCanvas에서 CmsInlineEditable 추출 (343→249줄), health.sh allowlist 도입 (단일 관심사 파일 6개 제외), 비대 파일 0건 달성
 
-*Last updated: 2026-03-22 — Code Health: 비대 파일 정리*
+- [x] CMS Detail Panel Container Edit — 컨테이너 노드(card/stat/step/section) 포커스 시 자식 필드를 재귀 수집하여 그룹별 Form 표시, collectEditableGroups + EditableGroup 타입 (cms-schema.ts), 포커스 깊이에 따라 패널 범위 자동 조절
+
+*Last updated: 2026-03-22 — CMS Detail Panel Container Edit*
