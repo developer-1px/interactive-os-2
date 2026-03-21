@@ -65,6 +65,7 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
         break
       }
       case 'add': {
+        // Collection-level add = duplicate current item (same as 'duplicate')
         dispatch(createBatchCommand([
           clipboardCommands.copy([focusedId]),
           clipboardCommands.paste(focusedId),
