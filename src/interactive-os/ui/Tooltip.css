@@ -1,0 +1,22 @@
+.tooltip {
+  position: fixed;
+  position-area: bottom span-all;
+  position-try-fallbacks: flip-block;
+  margin: 0;
+  margin-top: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  max-width: 240px;
+
+  background: var(--surface-3);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-sm);
+
+  color: var(--text-primary);
+  font: 400 12px / 1.4 var(--sans);
+  white-space: normal;
+  word-wrap: break-word;
+
+  /* popover reset */
+  inset: unset;
+}
