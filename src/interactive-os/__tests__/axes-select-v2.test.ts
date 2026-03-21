@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi } from 'vitest'
 import { select } from '../axes/select'
 import type { BehaviorContext } from '../behaviors/types'

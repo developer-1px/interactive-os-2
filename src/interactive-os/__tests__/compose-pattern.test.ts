@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi } from 'vitest'
 import { composePattern, isStructuredAxis, extractKeyMap, extractConfig } from '../axes/composePattern'
 import type { Axis, KeyMap, StructuredAxis, PatternConfig, Identity } from '../axes/composePattern'
