@@ -4,20 +4,22 @@ import { crudCommands } from '../../interactive-os/plugins/crud'
 import { localeMap } from './cms-types'
 
 export type SectionVariant = 'hero' | 'stats' | 'features' | 'workflow' | 'patterns' | 'footer'
+export type TemplateType = SectionVariant | 'tab-group'
 
 interface TemplateVariant {
-  id: SectionVariant
+  id: TemplateType
   label: string
   icon: string
 }
 
 export const TEMPLATE_VARIANTS: TemplateVariant[] = [
-  { id: 'hero',     label: 'Hero',     icon: 'star' },
-  { id: 'stats',    label: 'Stats',    icon: 'bar-chart' },
-  { id: 'features', label: 'Features', icon: 'grid' },
-  { id: 'workflow', label: 'Workflow', icon: 'git-branch' },
-  { id: 'patterns', label: 'Patterns', icon: 'puzzle' },
-  { id: 'footer',   label: 'Footer',   icon: 'minus' },
+  { id: 'hero',      label: 'Hero',      icon: 'star' },
+  { id: 'stats',     label: 'Stats',     icon: 'bar-chart' },
+  { id: 'features',  label: 'Features',  icon: 'grid' },
+  { id: 'workflow',  label: 'Workflow',  icon: 'git-branch' },
+  { id: 'patterns',  label: 'Patterns',  icon: 'puzzle' },
+  { id: 'footer',    label: 'Footer',    icon: 'minus' },
+  { id: 'tab-group', label: 'Tab Group', icon: 'layout-panel-top' },
 ]
 
 interface SectionTemplate {
@@ -246,21 +248,48 @@ function createFooter(): SectionTemplate {
   }
 }
 
-function createSection(variant: SectionVariant): SectionTemplate {
+function createTabGroup(): SectionTemplate {
+  const rootId = uid('tab-group')
+  const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
+  const relationships: Record<string, string[]> = {}
+
+  entities[rootId] = { id: rootId, data: { type: 'tab-group' } }
+  relationships[rootId] = []
+
+  for (let i = 0; i < 2; i++) {
+    const tabId = uid('tab-item')
+    const panelId = uid('tab-panel')
+    const sectionId = uid('section')
+
+    entities[tabId] = { id: tabId, data: { type: 'tab-item', label: localeMap(`Tab ${i + 1}`) } }
+    entities[panelId] = { id: panelId, data: { type: 'tab-panel' } }
+    entities[sectionId] = { id: sectionId, data: { type: 'section', variant: 'features' } }
+
+    relationships[rootId].push(tabId)
+    relationships[tabId] = [panelId]
+    relationships[panelId] = [sectionId]
+    relationships[sectionId] = []
+  }
+
+  return { rootId, entities, relationships }
+}
+
+function createTemplate(variant: TemplateType): SectionTemplate {
   switch (variant) {
-    case 'hero':     return createHero()
-    case 'stats':    return createStats()
-    case 'features': return createFeatures()
-    case 'workflow': return createWorkflow()
-    case 'patterns': return createPatterns()
-    case 'footer':   return createFooter()
+    case 'hero':      return createHero()
+    case 'stats':     return createStats()
+    case 'features':  return createFeatures()
+    case 'workflow':  return createWorkflow()
+    case 'patterns':  return createPatterns()
+    case 'footer':    return createFooter()
+    case 'tab-group': return createTabGroup()
   }
 }
 
 /** Convert a template into a BatchCommand of crudCommands.create calls.
  *  Undo removes all created entities in reverse order. */
-export function templateToCommand(variant: SectionVariant, parentId: string, index?: number): { command: Command; rootId: string } {
-  const template = createSection(variant)
+export function templateToCommand(variant: TemplateType, parentId: string, index?: number): { command: Command; rootId: string } {
+  const template = createTemplate(variant)
   const commands: Command[] = []
 
   commands.push(crudCommands.create(

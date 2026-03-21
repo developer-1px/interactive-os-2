@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { TEMPLATE_VARIANTS } from './cms-templates'
-import type { SectionVariant } from './cms-templates'
+import type { TemplateType } from './cms-templates'
 
 interface CmsTemplatePickerProps {
   open: boolean
   onClose: () => void
-  onSelect: (variant: SectionVariant) => void
+  onSelect: (variant: TemplateType) => void
 }
 
 export default function CmsTemplatePicker({ open, onClose, onSelect }: CmsTemplatePickerProps) {

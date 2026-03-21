@@ -5,7 +5,7 @@ import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import type { Locale } from './cms-types'
-import type { SectionVariant } from './cms-templates'
+import type { TemplateType } from './cms-templates'
 import { templateToCommand } from './cms-templates'
 import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
 import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
@@ -168,7 +168,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     el?.scrollIntoView({ block: 'nearest' })
   }, [aria.focused])
 
-  const handleAddSection = (variant: SectionVariant) => {
+  const handleAddSection = (variant: TemplateType) => {
     setPickerOpen(false)
     const focusedIdx = sectionIds.indexOf(aria.focused)
     const insertAt = (focusedIdx >= 0 ? focusedIdx : sectionIds.length - 1) + 1
