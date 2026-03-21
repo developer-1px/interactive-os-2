@@ -603,7 +603,7 @@ export default function PageViewer() {
   }, [recording, recorder])
 
   const setQuickOpenVisibleRef = useRef(setQuickOpenVisible)
-  setQuickOpenVisibleRef.current = setQuickOpenVisible
+  useEffect(() => { setQuickOpenVisibleRef.current = setQuickOpenVisible }, [setQuickOpenVisible])
 
   const quickOpenKeyMap = useMemo(() => ({
     'Meta+p': () => { setQuickOpenVisibleRef.current(true); return undefined },

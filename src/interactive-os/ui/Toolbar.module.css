@@ -16,3 +16,15 @@
   border: none;
   border-radius: var(--radius-sm);
 }
+
+.toolbar-btn-focused {
+  background: var(--bg-focus);
+  color: var(--text-bright);
+  outline: 1.5px solid var(--accent);
+  outline-offset: -1.5px;
+}
+
+.toolbar-btn-selected {
+  background: var(--bg-select);
+  color: var(--text-bright);
+}
