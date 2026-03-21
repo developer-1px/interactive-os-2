@@ -1,41 +1,4 @@
 /* --- Radio --- */
 
-:global(.radio-item) {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 3px 10px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-:global(.radio-item__dot) {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid var(--border-bright);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: border-color 0.12s;
-}
-
-:global(.radio-item__dot--checked) {
-  border-color: var(--accent);
-}
-
-:global(.radio-item__dot--checked)::after {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-:global(.radio-item__label) {
-  color: var(--text-primary);
-}
-
 .radioInner { display: inline-flex; align-items: center; gap: 8px; }
 .radioIndicator { font-size: 16px; }

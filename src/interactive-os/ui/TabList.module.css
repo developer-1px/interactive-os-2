@@ -10,10 +10,3 @@
   border-bottom: 2px solid transparent;
 }
 
-:global(.tab-content) {
-  padding: 12px 14px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  min-height: 36px;
-  line-height: 1.6;
-}

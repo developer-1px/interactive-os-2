@@ -1,5 +1,5 @@
 ---
-last_commit: dfa7f741d99a32f42a6a1c2310c3b03bb1310a6f
+last_commit: 0aa919d4c9a5215ef0717665ac0e1145eea70e33
 last_updated: 2026-03-21
 ---
 
@@ -36,6 +36,8 @@ last_updated: 2026-03-21
 | parse | 1 | parseKeyCombo |
 | match | 1 | matchKeyEvent |
 | find | 2 | findMatchingKey, findNearest |
+| compute | 1 | computeStoreDiff |
+| validate | 1 | validateNode |
 | enter | 1 | enterChild |
 | exit | 1 | exitToParent |
 | flatten | 1 | flattenFiles |
@@ -93,7 +95,12 @@ last_updated: 2026-03-21
 | apg | 16 | ApgKeyboardEntry, ApgPatternData, ApgKeyboardTable, apgAccordion, apgDisclosure, apgSwitch, apgTabs, apgRadioGroup, apgMenu, apgToolbar, apgDialog, apgAlertDialog, apgTreeView, apgTreeGrid, apgListbox, apgGrid, apgCombobox |
 | keyboard | 2 | ApgKeyboardEntry, ApgKeyboardTable |
 | pattern | 2 | ApgPatternData, composePattern, PatternConfig |
-| entry | 1 | ApgKeyboardEntry |
+| entry | 2 | ApgKeyboardEntry, LogEntry |
+| diff | 1 | StoreDiff, computeStoreDiff |
+| logger | 1 | Logger, defaultLogger |
+| field | 3 | EditableField, fieldsOf, getEditableFields, localeFieldsOf |
+| schema | 3 | localeMapSchema, nodeSchemas, childRules |
+| mermaid | 1 | MermaidBlock |
 | table | 1 | ApgKeyboardTable |
 | axis | 13 | Axis (type), navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap, value |
 | zone | 2 | useAriaZone, UseAriaZoneOptions |
