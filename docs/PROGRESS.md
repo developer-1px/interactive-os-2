@@ -203,6 +203,7 @@
 - [x] Plugin Showcase Gap Fix (Phase 2) — Clipboard TreeGrid 전환, getCutSourceIds() export로 cut dim 피드백, copy paste 시 새 ID 표시, leaf→parent 라우팅 텍스트 복원
 - [x] Visual CMS Inline Edit + Detail Panel — 리프 노드 Enter→인라인 contenteditable 편집, 우측 CmsDetailPanel Form 패널 (타입별 필드 매핑, blur/Enter 커밋), rename 플러그인 연결 (undo 일관성), Aria.Editable placeholder prop, 3열 레이아웃
 - [x] Visual CMS Engine Unification — 날코딩 10개 제거: Toolbar/Sidebar/I18nSheet의 raw store 조작을 모두 engine.dispatch로 전환 (crudCommands, dndCommands, clipboardCommands, renameCommands), templateToCommand BatchCommand 헬퍼, useAriaZone 외부 store 변경 focus recovery 추가
+- [x] Combobox Bug Fix — editable combobox Backspace 차단 수정 (dispatchKeyAction 반환값 기반 조건부 preventDefault), blur 시 드롭다운 닫기 (onBlur + dropdown onMouseDown preventDefault), keyMap-only Aria 모드 (behavior optional), nested Aria defaultPrevented 버블링 가드
 
 ## ⑨ APG Pattern Coverage
 
@@ -239,4 +240,6 @@
 
 ---
 
-*Last updated: 2026-03-21 — Visual CMS Engine Unification (날코딩 제거, useAriaZone external focus recovery)*
+- [x] Nested Aria bubbling — defaultPrevented 가드 (useAria + useAriaZone), behavior optional (keyMap-only Aria 컨테이너)
+
+*Last updated: 2026-03-21 — Nested Aria bubbling via defaultPrevented + behavior optional*

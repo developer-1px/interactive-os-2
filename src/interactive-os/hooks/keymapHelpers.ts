@@ -9,13 +9,14 @@ export function isEditableElement(el: Element): boolean {
   return false
 }
 
-/** Dispatch a keyMap handler, intercepting activate() when onActivate is provided. */
+/** Dispatch a keyMap handler, intercepting activate() when onActivate is provided.
+ *  Returns true if the handler produced a command or triggered onActivate. */
 export function dispatchKeyAction(
   ctx: ReturnType<typeof createBehaviorContext>,
   handler: (ctx: ReturnType<typeof createBehaviorContext>) => Command | void,
   engine: CommandEngine,
   onActivateFn: ((nodeId: string) => void) | undefined,
-) {
+): boolean {
   if (onActivateFn) {
     let intercepted = false
     ctx.activate = () => {
@@ -25,8 +26,10 @@ export function dispatchKeyAction(
     }
     const command = handler(ctx)
     if (!intercepted && command) engine.dispatch(command)
+    return intercepted || !!command
   } else {
     const command = handler(ctx)
     if (command) engine.dispatch(command)
+    return !!command
   }
 }
