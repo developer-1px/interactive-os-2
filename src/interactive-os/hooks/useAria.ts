@@ -14,8 +14,15 @@ import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
 
+const EMPTY_BEHAVIOR: AriaBehavior = {
+  role: '',
+  focusStrategy: { type: 'natural-tab-order', orientation: 'vertical' },
+  ariaAttributes: () => ({}),
+  keyMap: {},
+}
+
 export interface UseAriaOptions {
-  behavior: AriaBehavior
+  behavior?: AriaBehavior
   data: NormalizedData
   plugins?: Plugin[]
   keyMap?: Record<string, (ctx: ReturnType<typeof createBehaviorContext>) => Command | void>
@@ -36,7 +43,7 @@ export interface UseAriaReturn {
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { behavior, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus } = options
+  const { behavior = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus } = options
   const [, forceRender] = useState(0)
   const engineRef = useRef<CommandEngine | null>(null)
   const onActivateRef = useRef(onActivate)
@@ -216,8 +223,11 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     [behavior.expandable, behavior.selectionMode, behavior.colCount, behavior.valueRange]
   )
 
+  const isKeyMapOnly = behavior === EMPTY_BEHAVIOR
+
   const getNodeProps = useCallback(
     (id: string): Record<string, unknown> => {
+      if (isKeyMapOnly) return {}
       const state = getNodeState(id)
       const entity = getEntity(store, id) ?? { id }
       const ariaAttrs = behavior.ariaAttributes(entity, state)
@@ -253,6 +263,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       if (!isActivedescendant) {
         baseProps.tabIndex = behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
         baseProps.onKeyDown = (event: KeyboardEvent) => {
+          if (event.defaultPrevented) return
           // Only handle on the directly focused element, not bubbled from children
           if (event.target !== event.currentTarget) return
           const matchedKey = findMatchingKey(event, mergedKeyMap)
@@ -260,22 +271,38 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           const ctx = createBehaviorContext(engine, behaviorCtxOptions)
           const handler = mergedKeyMap[matchedKey]
           if (!handler) return
-          dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
-          event.preventDefault()
+          const handled = dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
+          if (handled) event.preventDefault()
         }
       }
 
       return baseProps
     },
-    [store, behavior, mergedKeyMap, engine, focusedId, getNodeState, behaviorCtxOptions]
+    [store, behavior, isKeyMapOnly, mergedKeyMap, engine, focusedId, getNodeState, behaviorCtxOptions]
   )
 
   const containerProps = useMemo((): Record<string, unknown> => {
+    if (isKeyMapOnly) {
+      // keyMap-only mode: catch bubbled keyboard events, no role/tabIndex
+      return {
+        onKeyDown: (event: KeyboardEvent) => {
+          if (event.defaultPrevented) return
+          const matchedKey = findMatchingKey(event, mergedKeyMap)
+          if (!matchedKey) return
+          const ctx = createBehaviorContext(engine, behaviorCtxOptions)
+          const handler = mergedKeyMap[matchedKey]
+          if (!handler) return
+          const handled = dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
+          if (handled) event.preventDefault()
+        },
+      }
+    }
     if (behavior.focusStrategy.type !== 'aria-activedescendant') return {}
     return {
       tabIndex: 0,
       'aria-activedescendant': focusedId || undefined,
       onKeyDown: (event: KeyboardEvent) => {
+        if (event.defaultPrevented) return
         // Skip keyMap if a child editable element has focus (not the container itself)
         if (event.target !== event.currentTarget && isEditableElement(event.target as Element)) return
         const matchedKey = findMatchingKey(event, mergedKeyMap)
@@ -283,15 +310,16 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         const ctx = createBehaviorContext(engine, behaviorCtxOptions)
         const handler = mergedKeyMap[matchedKey]
         if (!handler) return
-        dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
-        event.preventDefault()
+        const handled = dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
+        if (handled) event.preventDefault()
       },
     }
-  }, [behavior.focusStrategy.type, focusedId, mergedKeyMap, engine, behaviorCtxOptions])
+  }, [isKeyMapOnly, behavior.focusStrategy.type, focusedId, mergedKeyMap, engine, behaviorCtxOptions])
 
   // Sync DOM focus with data focus (skip for aria-activedescendant — container holds focus)
   // Only move DOM focus if this widget already owns it (prevents stealing focus from other widgets)
   useEffect(() => {
+    if (isKeyMapOnly) return // keyMap-only mode: no focus management
     if (!focusedId) return
     if (behavior.focusStrategy.type === 'aria-activedescendant') return
     const el = document.querySelector<HTMLElement>(`[data-node-id="${focusedId}"]`)
@@ -301,7 +329,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     const focusIsOrphaned = document.activeElement === document.body || document.activeElement === null
     if (!ownsActiveFocus && !focusIsOrphaned) return
     el.focus({ preventScroll: false })
-  }, [focusedId, behavior.focusStrategy.type, behavior.role])
+  }, [isKeyMapOnly, focusedId, behavior.focusStrategy.type, behavior.role])
 
   return {
     dispatch,

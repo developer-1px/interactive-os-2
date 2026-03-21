@@ -12,7 +12,7 @@ import { registerAria, unregisterAria } from './ariaRegistry'
 
 interface AriaProps {
   id?: string
-  behavior: AriaBehavior
+  behavior?: AriaBehavior
   data: NormalizedData
   plugins: Plugin[]
   keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
@@ -41,13 +41,14 @@ function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, '
     return () => unregisterAria(id)
   }, [id, aria.dispatch, aria.getStore])
 
-  const { orientation } = behavior.focusStrategy
+  const role = behavior?.role || undefined
+  const orientation = behavior?.focusStrategy?.orientation
   return (
     <AriaInternalContext.Provider value={{ ...aria, behavior }}>
       <div
-        role={behavior.role}
+        role={role}
         aria-label={ariaLabel}
-        aria-orientation={ROLES_WITH_ORIENTATION.has(behavior.role) && orientation !== 'both' ? orientation : undefined}
+        aria-orientation={role && ROLES_WITH_ORIENTATION.has(role) && orientation !== 'both' ? orientation : undefined}
         style={orientation === 'horizontal' ? horizontalStyle : undefined}
         data-aria-container=""
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
@@ -76,7 +77,7 @@ function AriaItem({ render }: AriaItemProps) {
         const store = aria.getStore()
         const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
         // If behavior has colCount, consumer uses <Aria.Cell> — skip auto gridcell wrapping
-        const hasColCount = !!(aria.behavior.colCount && aria.behavior.colCount > 0)
+        const hasColCount = !!(aria.behavior?.colCount && aria.behavior.colCount > 0)
 
         const renderNodes = (parentId: string): ReactNode[] => {
           const children = getChildren(store, parentId)

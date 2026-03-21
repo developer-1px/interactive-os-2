@@ -343,6 +343,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
       if (!isActivedescendant) {
         baseProps.tabIndex = behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
         baseProps.onKeyDown = (event: KeyboardEvent) => {
+          if (event.defaultPrevented) return
           if (event.target !== event.currentTarget) return
           const matchedKey = findMatchingKey(event, mergedKeyMap)
           if (!matchedKey) return
@@ -367,6 +368,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
       tabIndex: 0,
       'aria-activedescendant': focusedId || undefined,
       onKeyDown: (event: KeyboardEvent) => {
+        if (event.defaultPrevented) return
         if (event.target !== event.currentTarget && isEditableElement(event.target as Element)) return
         const matchedKey = findMatchingKey(event, mergedKeyMap)
         if (!matchedKey) return

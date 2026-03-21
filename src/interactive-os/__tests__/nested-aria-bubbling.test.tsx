@@ -1,0 +1,80 @@
+import { describe, it, expect } from 'vitest'
+import { render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import React, { useState } from 'react'
+import { Aria } from '../components/aria'
+import { listbox } from '../behaviors/listbox'
+import { ROOT_ID } from '../core/types'
+import { core } from '../plugins/core'
+import type { Command } from '../core/types'
+import type { BehaviorContext } from '../behaviors/types'
+
+function fixtureData() {
+  return {
+    entities: {
+      a: { id: 'a', data: { label: 'A' } },
+      b: { id: 'b', data: { label: 'B' } },
+    },
+    relationships: { [ROOT_ID]: ['a', 'b'] },
+  }
+}
+
+/** keyMap-only parent Aria (no behavior) wrapping a listbox child */
+function NestedAriaHarness({ parentKey }: { parentKey: string }) {
+  const [opened, setOpened] = useState(false)
+  return (
+    <div data-testid="root" data-opened={opened || undefined}>
+      <Aria
+        keyMap={{ [parentKey]: (() => { setOpened(true); return undefined }) as (ctx: BehaviorContext) => Command | void }}
+        data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
+        plugins={[]}
+      >
+        <Aria behavior={listbox} data={fixtureData()} plugins={[core()]} aria-label="inner">
+          <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.label as string}</span>} />
+        </Aria>
+      </Aria>
+    </div>
+  )
+}
+
+describe('Nested Aria bubbling', () => {
+  it('parent keyMap receives keys not handled by child', async () => {
+    const user = userEvent.setup()
+    render(<NestedAriaHarness parentKey="Meta+p" />)
+
+    const option = document.querySelector('[role="option"]')!
+    await user.click(option)
+    await user.keyboard('{Meta>}p{/Meta}')
+
+    expect(document.querySelector('[data-testid="root"]')!.hasAttribute('data-opened')).toBe(true)
+  })
+
+  it('parent does NOT receive keys already handled by child', async () => {
+    const user = userEvent.setup()
+    render(<NestedAriaHarness parentKey="ArrowDown" />)
+
+    const option = document.querySelector('[role="option"]')!
+    await user.click(option)
+    await user.keyboard('{ArrowDown}')
+
+    // ArrowDown은 listbox가 처리 → preventDefault → 부모 스킵
+    expect(document.querySelector('[data-testid="root"]')!.hasAttribute('data-opened')).toBe(false)
+  })
+
+  it('keyMap-only Aria (no behavior) renders without role/tabIndex', () => {
+    const { container } = render(
+      <Aria
+        keyMap={{ 'Meta+k': (() => undefined) as (ctx: BehaviorContext) => Command | void }}
+        data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
+        plugins={[]}
+      >
+        <button>child</button>
+      </Aria>
+    )
+
+    const wrapper = container.firstElementChild as HTMLElement
+    expect(wrapper.getAttribute('role')).toBeNull()
+    expect(wrapper.getAttribute('tabindex')).toBeNull()
+    expect(wrapper.hasAttribute('data-aria-container')).toBe(true)
+  })
+})
