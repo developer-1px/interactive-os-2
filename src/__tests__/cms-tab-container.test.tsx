@@ -1,13 +1,16 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CmsLayout from '../pages/cms/CmsLayout'
+import { resetCmsData } from '../pages/cms/cms-state'
 
 function getFocused(container: HTMLElement): string {
   return container.querySelector('[tabindex="0"][data-cms-id]')?.getAttribute('data-cms-id') ?? ''
 }
 
 describe('CMS Tab Container', () => {
+  beforeEach(() => { resetCmsData() })
+
   describe('navigation', () => {
     it('Enter on tab-group focuses first tab-item', async () => {
       const user = userEvent.setup()

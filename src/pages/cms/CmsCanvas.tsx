@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
 import { spatial } from '../../interactive-os/behaviors/spatial'
 import { useSpatialNav } from '../../interactive-os/hooks/useSpatialNav'
@@ -43,6 +43,13 @@ const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
       clipboardCommands.paste(ctx.focused),
     ])
   },
+  F2: (ctx) => {
+    const entity = ctx.getEntity(ctx.focused)
+    const data = (entity?.data ?? {}) as Record<string, unknown>
+    const fields = getEditableFields(data)
+    if (fields.length === 0) return
+    return renameCommands.startRename(ctx.focused)
+  },
   // Mod+C/X/V → clipboard plugin keyMap, Mod+Z → history plugin keyMap
 }
 
@@ -55,6 +62,63 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     () => ({
       ...spatialNav.keyMap,
       ...cmsKeyMap,
+      Delete: (ctx: BehaviorContext) => {
+        // Minimum-1-section guard
+        const rootChildren = ctx.getChildren(ROOT_ID)
+        if (rootChildren.includes(ctx.focused) && rootChildren.length <= 1) return
+
+        // Minimum-1-tab guard: if focused is a tab-item, check sibling count
+        const entity = ctx.getEntity(ctx.focused)
+        const data = (entity?.data ?? {}) as Record<string, unknown>
+        if (data.type === 'tab-item') {
+          const spatialParent = ctx.getEntity('__spatial_parent__')
+          const parentId = spatialParent?.parentId as string | undefined
+          if (parentId) {
+            const siblings = ctx.getChildren(parentId)
+            if (siblings.length <= 1) return
+          }
+        }
+
+        return crudCommands.remove(ctx.focused)
+      },
+      ArrowRight: (ctx: BehaviorContext) => {
+        // Tab-item: navigate to next tab within tab-group
+        const entity = ctx.getEntity(ctx.focused)
+        const d = (entity?.data ?? {}) as Record<string, unknown>
+        if (d.type === 'tab-item') {
+          const spatialParent = ctx.getEntity('__spatial_parent__')
+          const parentId = spatialParent?.parentId as string | undefined
+          if (parentId) {
+            const siblings = ctx.getChildren(parentId)
+            const idx = siblings.indexOf(ctx.focused)
+            if (idx >= 0 && idx < siblings.length - 1) {
+              return focusCommands.setFocus(siblings[idx + 1])
+            }
+          }
+          return
+        }
+        // Fall through to spatial nav
+        return spatialNav.keyMap.ArrowRight(ctx)
+      },
+      ArrowLeft: (ctx: BehaviorContext) => {
+        // Tab-item: navigate to previous tab within tab-group
+        const entity = ctx.getEntity(ctx.focused)
+        const d = (entity?.data ?? {}) as Record<string, unknown>
+        if (d.type === 'tab-item') {
+          const spatialParent = ctx.getEntity('__spatial_parent__')
+          const parentId = spatialParent?.parentId as string | undefined
+          if (parentId) {
+            const siblings = ctx.getChildren(parentId)
+            const idx = siblings.indexOf(ctx.focused)
+            if (idx > 0) {
+              return focusCommands.setFocus(siblings[idx - 1])
+            }
+          }
+          return
+        }
+        // Fall through to spatial nav
+        return spatialNav.keyMap.ArrowLeft(ctx)
+      },
       Enter: (ctx: BehaviorContext) => {
         const children = ctx.getChildren(ctx.focused)
         if (children.length === 0) {
@@ -65,6 +129,22 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           if (fields.length === 0) return
           return renameCommands.startRename(ctx.focused)
         }
+
+        // Tab-item: Enter goes through panel to its first section
+        const entity = ctx.getEntity(ctx.focused)
+        const d = (entity?.data ?? {}) as Record<string, unknown>
+        if (d.type === 'tab-item') {
+          const panelId = children[0]
+          const panelChildren = ctx.getChildren(panelId)
+          if (panelChildren.length > 0) {
+            spatialNav.clearCursorsAtDepth(ctx.focused)
+            return createBatchCommand([
+              spatialCommands.enterChild(ctx.focused),
+              focusCommands.setFocus(panelChildren[0]),
+            ])
+          }
+        }
+
         spatialNav.clearCursorsAtDepth(ctx.focused)
         // Container node → enterChild (spatial depth navigation)
         return createBatchCommand([
@@ -98,9 +178,36 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     isReachable: spatialReachable,
   })
 
+  // Recursive renderer — ALL nodes always rendered
+  const currentStore = aria.getStore()
+
+  const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
+
+  function getActiveTabId(tabGroupId: string): string | undefined {
+    const active = activeTabMap.get(tabGroupId)
+    if (active && currentStore.entities[active]) return active
+    const children = getChildren(currentStore, tabGroupId)
+    return children[0]
+  }
+
   // Report focus changes to parent (for activeSectionId computation)
   useEffect(() => {
     onFocusChange?.(aria.focused)
+    // Track active tab: if focused node is a tab-item, update its parent tab-group
+    const s = aria.getStore()
+    const entity = s.entities[aria.focused]
+    const data = (entity?.data ?? {}) as Record<string, unknown>
+    if (data.type === 'tab-item') {
+      const parentId = getParent(s, aria.focused)
+      if (parentId) {
+        setActiveTabMap(prev => {
+          if (prev.get(parentId) === aria.focused) return prev
+          const next = new Map(prev)
+          next.set(parentId, aria.focused)
+          return next
+        })
+      }
+    }
   }, [aria.focused, onFocusChange])
 
   // Click handler: jump to node's depth + focus
@@ -129,9 +236,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     }
     aria.dispatch(focusCommands.setFocus(nodeId))
   }, [aria, spatialNav])
-
-  // Recursive renderer — ALL nodes always rendered
-  const currentStore = aria.getStore()
 
   function renderNode(nodeId: string): React.ReactNode {
     const entity = currentStore.entities[nodeId]
@@ -196,6 +300,88 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
             )
           })()}
         </Tag>
+      )
+    }
+
+    // For tab-group nodes, render tablist + active panel
+    if (d.type === 'tab-group') {
+      const tabItems = children
+      const activeTabId = getActiveTabId(nodeId)
+
+      return (
+        <div
+          key={nodeId}
+          {...(restProps as React.HTMLAttributes<HTMLDivElement>)}
+          role={ariaRole as string}
+          tabIndex={tabIndex as number}
+          onKeyDown={onKeyDown as React.KeyboardEventHandler}
+          onFocus={onFocus as React.FocusEventHandler}
+          onClick={(e) => handleNodeClick(nodeId, e)}
+          className={className}
+        >
+          <div className="cms-tablist" role="tablist">
+            {tabItems.map(tabId => {
+              const tabEntity = currentStore.entities[tabId]
+              if (!tabEntity) return null
+              const tabState = aria.getNodeState(tabId)
+              const tabProps = aria.getNodeProps(tabId)
+              const tabData = (tabEntity.data ?? {}) as Record<string, unknown>
+              const isActive = tabId === activeTabId
+              const { onClick: _tabClick, onKeyDown: tkd, onFocus: tf, tabIndex: ti, role: _tr, ...tabRest } = tabProps as Record<string, unknown>
+              void _tabClick
+
+              return (
+                <button
+                  key={tabId}
+                  {...(tabRest as React.HTMLAttributes<HTMLButtonElement>)}
+                  role="tab"
+                  tabIndex={ti as number}
+                  aria-selected={isActive}
+                  onKeyDown={tkd as React.KeyboardEventHandler}
+                  onFocus={tf as React.FocusEventHandler}
+                  onClick={(e) => handleNodeClick(tabId, e)}
+                  className={getNodeClassName(tabData, tabState)}
+                >
+                  <CmsInlineEditable
+                    nodeId={tabId}
+                    data={tabData}
+                    locale={locale}
+                    dispatch={aria.dispatch}
+                    store={currentStore}
+                  />
+                </button>
+              )
+            })}
+          </div>
+          {activeTabId && (() => {
+            const panelChildren = getChildren(currentStore, activeTabId)
+            const panelId = panelChildren[0]
+            if (!panelId) return null
+            const panelEntity = currentStore.entities[panelId]
+            if (!panelEntity) return null
+            const panelProps = aria.getNodeProps(panelId)
+            const panelState = aria.getNodeState(panelId)
+            const panelData = (panelEntity.data ?? {}) as Record<string, unknown>
+            const { onClick: _panelClick, onKeyDown: pkd, onFocus: pf, tabIndex: pti, role: _pr, ...panelRest } = panelProps as Record<string, unknown>
+            void _panelClick
+            const panelSections = getChildren(currentStore, panelId)
+
+            return (
+              <div
+                key={panelId}
+                {...(panelRest as React.HTMLAttributes<HTMLDivElement>)}
+                role="tabpanel"
+                tabIndex={pti as number}
+                onKeyDown={pkd as React.KeyboardEventHandler}
+                onFocus={pf as React.FocusEventHandler}
+                onClick={(e) => handleNodeClick(panelId, e)}
+                className={getNodeClassName(panelData, panelState)}
+              >
+                {panelSections.map(sectionId => renderNode(sectionId))}
+              </div>
+            )
+          })()}
+        </div>
       )
     }
 
