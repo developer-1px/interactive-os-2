@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ListBox } from '../interactive-os/ui/ListBox'
+import { TreeGrid } from '../interactive-os/ui/TreeGrid'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
@@ -9,23 +9,32 @@ import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 
-const taskData = createStore({
+const treeData = createStore({
   entities: {
-    task1: { id: 'task1', data: { label: 'Set up project structure', done: true } },
-    task2: { id: 'task2', data: { label: 'Write core types', done: true } },
-    task3: { id: 'task3', data: { label: 'Implement store', done: false } },
-    task4: { id: 'task4', data: { label: 'Add command engine', done: false } },
-    task5: { id: 'task5', data: { label: 'Create plugin system', done: false } },
+    projects: { id: 'projects', data: { label: 'Projects', type: 'group' } },
+    design: { id: 'design', data: { label: 'Design', type: 'group' } },
+    figma: { id: 'figma', data: { label: 'Figma', type: 'item' } },
+    sketch: { id: 'sketch', data: { label: 'Sketch', type: 'item' } },
+    api: { id: 'api', data: { label: 'API', type: 'group' } },
+    rest: { id: 'rest', data: { label: 'REST', type: 'item' } },
+    graphql: { id: 'graphql', data: { label: 'GraphQL', type: 'item' } },
+    docs: { id: 'docs', data: { label: 'Docs', type: 'group' } },
+    readme: { id: 'readme', data: { label: 'README', type: 'item' } },
+    changelog: { id: 'changelog', data: { label: 'Changelog', type: 'item' } },
   },
   relationships: {
-    [ROOT_ID]: ['task1', 'task2', 'task3', 'task4', 'task5'],
+    [ROOT_ID]: ['projects', 'docs'],
+    projects: ['design', 'api'],
+    design: ['figma', 'sketch'],
+    api: ['rest', 'graphql'],
+    docs: ['readme', 'changelog'],
   },
 })
 
 const plugins = [core(), crud(), history(), focusRecovery()]
 
 export default function PageCrud() {
-  const [data, setData] = useState<NormalizedData>(taskData)
+  const [data, setData] = useState<NormalizedData>(treeData)
 
   return (
     <div>
@@ -38,6 +47,7 @@ export default function PageCrud() {
       </div>
       <div className="page-keys">
         <kbd>↑↓</kbd> <span className="key-hint">navigate</span>{' '}
+        <kbd>←→</kbd> <span className="key-hint">expand</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}
         <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
@@ -45,22 +55,28 @@ export default function PageCrud() {
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
       <div className="card">
-        <ListBox
+        <TreeGrid
           data={data}
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(item, state: NodeState) => {
-            const d = item.data as Record<string, unknown>
+          renderItem={(node, state: NodeState) => {
+            const d = node.data as Record<string, unknown>
+            const isGroup = d?.type === 'group'
+            const indent = ((state.level ?? 1) - 1) * 18
+
             const cls = [
-              'list-item',
-              state.focused && 'list-item--focused',
-              state.selected && !state.focused && 'list-item--selected',
+              'tree-node',
+              state.focused && 'tree-node--focused',
+              state.selected && !state.focused && 'tree-node--selected',
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls}>
-                <span style={{ opacity: d?.done ? 0.5 : 1, textDecoration: d?.done ? 'line-through' : 'none' }}>
+              <div className={cls} style={{ paddingLeft: 14 + indent }}>
+                <span className="tree-node__chevron">
+                  {isGroup ? (state.expanded ? '▾' : '▸') : ''}
+                </span>
+                <span className="tree-node__name" style={{ fontWeight: isGroup ? 600 : 400 }}>
                   {d?.label as string}
                 </span>
               </div>

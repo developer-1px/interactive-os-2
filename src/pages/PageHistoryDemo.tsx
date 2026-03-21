@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ListBox } from '../interactive-os/ui/ListBox'
+import { Aria } from '../interactive-os/components/aria'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
@@ -14,12 +15,15 @@ import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 
 const noteData = createStore({
   entities: {
-    note1: { id: 'note1', data: { label: 'First note' } },
-    note2: { id: 'note2', data: { label: 'Second note' } },
-    note3: { id: 'note3', data: { label: 'Third note' } },
+    note1: { id: 'note1', data: { label: 'Meeting notes' } },
+    note2: { id: 'note2', data: { label: 'API design draft' } },
+    note3: { id: 'note3', data: { label: 'Bug triage list' } },
+    note4: { id: 'note4', data: { label: 'Sprint retrospective' } },
+    note5: { id: 'note5', data: { label: 'Release checklist' } },
+    note6: { id: 'note6', data: { label: 'Onboarding guide' } },
   },
   relationships: {
-    [ROOT_ID]: ['note1', 'note2', 'note3'],
+    [ROOT_ID]: ['note1', 'note2', 'note3', 'note4', 'note5', 'note6'],
   },
 })
 
@@ -62,7 +66,9 @@ export default function PageHistoryDemo() {
 
             return (
               <div className={cls}>
-                <span className="list-item__label">{d?.label as string}</span>
+                <Aria.Editable field="label">
+                  <span className="list-item__label">{d?.label as string}</span>
+                </Aria.Editable>
               </div>
             )
           }}
