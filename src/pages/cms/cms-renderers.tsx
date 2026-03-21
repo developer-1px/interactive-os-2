@@ -186,53 +186,6 @@ export function getNodeTag(data: Record<string, string>): keyof React.JSX.Intrin
   return 'div'
 }
 
-// ── Editable text fields per entity type ──
+// ── Editable fields — re-export from schema (single source of truth) ──
 
-export interface EditableField {
-  field: string
-  label: string
-  isLocaleMap: boolean
-}
-
-export function getEditableFields(data: Record<string, unknown>): EditableField[] {
-  switch (data.type) {
-    case 'text':
-      return [{ field: 'value', label: 'Text', isLocaleMap: true }]
-    case 'badge':
-      return [{ field: 'value', label: 'Badge', isLocaleMap: true }]
-    case 'cta':
-      return [
-        { field: 'primary', label: 'Primary CTA', isLocaleMap: true },
-        { field: 'secondary', label: 'Secondary CTA', isLocaleMap: true },
-      ]
-    case 'stat':
-      return [
-        { field: 'value', label: 'Value', isLocaleMap: false },
-        { field: 'label', label: 'Label', isLocaleMap: true },
-      ]
-    case 'step':
-      return [
-        { field: 'num', label: 'Number', isLocaleMap: false },
-        { field: 'title', label: 'Title', isLocaleMap: true },
-        { field: 'desc', label: 'Description', isLocaleMap: true },
-      ]
-    case 'pattern':
-      return [{ field: 'name', label: 'Name', isLocaleMap: true }]
-    case 'link':
-      return [
-        { field: 'label', label: 'Label', isLocaleMap: true },
-        { field: 'href', label: 'URL', isLocaleMap: false },
-      ]
-    case 'brand':
-      return [
-        { field: 'name', label: 'Name', isLocaleMap: false },
-        { field: 'license', label: 'License', isLocaleMap: false },
-      ]
-    case 'section-label':
-    case 'section-title':
-    case 'section-desc':
-      return [{ field: 'value', label: 'Text', isLocaleMap: true }]
-    default:
-      return []
-  }
-}
+export { getEditableFields, type EditableField } from './cms-schema'

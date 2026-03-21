@@ -15,28 +15,12 @@ import type { Locale } from './cms-types'
 import { useEngine } from '../../interactive-os/hooks/useEngine'
 import { history } from '../../interactive-os/plugins/history'
 import { clipboard } from '../../interactive-os/plugins/clipboard'
-import type { CanAcceptFn } from '../../interactive-os/plugins/clipboard'
 import { rename } from '../../interactive-os/plugins/rename'
 import { getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
 import type { Plugin } from '../../interactive-os/core/types'
-
-/** CMS schema: which parent types accept which child types. */
-const CMS_SCHEMA: Record<string, string[]> = {
-  section:  ['card', 'stat', 'step', 'pattern', 'badge', 'text', 'cta',
-             'section-label', 'section-title', 'section-desc',
-             'icon', 'link', 'brand', 'links'],
-  card:     ['icon', 'text'],
-  links:    ['link'],
-}
-
-const cmsCanAccept: CanAcceptFn = (parentData, childData) => {
-  const parentType = parentData?.type as string | undefined
-  const childType = childData?.type as string | undefined
-  if (!parentType || !childType) return false
-  return CMS_SCHEMA[parentType]?.includes(childType) ?? false
-}
+import { cmsCanAccept } from './cms-schema'
 
 const sharedPlugins: Plugin[] = [history(), clipboard({ canAccept: cmsCanAccept }), rename()]
 
