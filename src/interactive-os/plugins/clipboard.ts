@@ -13,10 +13,17 @@ interface ClipboardEntry {
   children: ClipboardEntry[]
 }
 
+/** Schema-based paste routing: can parentData accept childData as a child? */
+export type CanAcceptFn = (
+  parentData: Record<string, unknown> | undefined,
+  childData: Record<string, unknown> | undefined,
+) => boolean
+
 // Module-level clipboard state (shared across instances)
 let clipboardBuffer: ClipboardEntry[] = []
 let clipboardMode: 'copy' | 'cut' = 'copy'
 let cutSourceIds: string[] = []
+let canAcceptFn: CanAcceptFn | undefined
 
 /** Read-only access to cut source IDs — for UI cut-state styling */
 export function getCutSourceIds(): readonly string[] {
@@ -61,6 +68,60 @@ function insertClipboardEntry(
   }
 
   return result
+}
+
+/**
+ * Find the paste target for a given node.
+ *
+ * With canAccept: walk up from targetId until an ancestor accepts the child type.
+ * Without canAccept: container (has relationships) → inside, leaf → sibling.
+ */
+function findPasteTarget(
+  store: NormalizedData,
+  targetId: string,
+  childData: Record<string, unknown> | undefined,
+): { pasteInto: string; insertIndex: number | undefined } {
+  if (canAcceptFn) {
+    // Schema-based routing: walk up from target to find first accepting ancestor
+    let candidate: string | undefined = targetId
+    while (candidate) {
+      const candidateData = getEntity(store, candidate)?.data as Record<string, unknown> | undefined
+      if (canAcceptFn(candidateData, childData)) {
+        if (candidate === targetId) {
+          // Target itself accepts → paste as child (append)
+          return { pasteInto: candidate, insertIndex: undefined }
+        }
+        // Ancestor accepts → insert after the direct child that contains targetId
+        const children = getChildren(store, candidate)
+        let ancestorChild = targetId
+        let parent = getParent(store, ancestorChild)
+        while (parent && parent !== candidate) {
+          ancestorChild = parent
+          parent = getParent(store, ancestorChild)
+        }
+        const pos = children.indexOf(ancestorChild)
+        return { pasteInto: candidate, insertIndex: pos >= 0 ? pos + 1 : undefined }
+      }
+      candidate = getParent(store, candidate)
+    }
+    // No ancestor accepted → paste at ROOT as last resort
+    return { pasteInto: ROOT_ID, insertIndex: undefined }
+  }
+
+  // Legacy behavior: container → inside, leaf → sibling
+  const isContainer = targetId in store.relationships
+  const pasteInto = isContainer
+    ? targetId
+    : (getParent(store, targetId) ?? ROOT_ID)
+
+  let insertIndex: number | undefined
+  if (!isContainer) {
+    const siblings = getChildren(store, pasteInto)
+    const targetPos = siblings.indexOf(targetId)
+    if (targetPos >= 0) insertIndex = targetPos + 1
+  }
+
+  return { pasteInto, insertIndex }
 }
 
 export const clipboardCommands = {
@@ -116,19 +177,9 @@ export const clipboardCommands = {
 
         if (buffer.length === 0) return store
 
-        // Determine paste location: container → inside, leaf → after (sibling)
-        const isContainer = targetId in store.relationships
-        const pasteInto = isContainer
-          ? targetId
-          : (getParent(store, targetId) ?? ROOT_ID)
-
-        // Insert after focused node's position (sibling paste)
-        let insertIndex: number | undefined
-        if (!isContainer) {
-          const siblings = getChildren(store, pasteInto)
-          const targetPos = siblings.indexOf(targetId)
-          if (targetPos >= 0) insertIndex = targetPos + 1
-        }
+        // Determine paste location using schema or legacy logic
+        const childData = buffer[0]!.entity.data as Record<string, unknown> | undefined
+        let { pasteInto, insertIndex } = findPasteTarget(store, targetId, childData)
 
         let result = store
 
@@ -140,7 +191,19 @@ export const clipboardCommands = {
           // Recalculate index after removals (siblings may have shifted)
           if (insertIndex !== undefined) {
             const siblings = getChildren(result, pasteInto)
-            const targetPos = siblings.indexOf(targetId)
+            // Find the reference node for position calculation
+            let refNode = targetId
+            if (canAcceptFn && pasteInto !== getParent(store, targetId)) {
+              // Walking up happened — find the ancestor child
+              let current = targetId
+              let parent = getParent(store, current)
+              while (parent && parent !== pasteInto) {
+                current = parent
+                parent = getParent(store, current)
+              }
+              refNode = current
+            }
+            const targetPos = siblings.indexOf(refNode)
             insertIndex = targetPos >= 0 ? targetPos + 1 : undefined
           }
           // Insert at target with original IDs
@@ -198,7 +261,14 @@ export const clipboardCommands = {
   },
 }
 
-export function clipboard(): Plugin {
+export interface ClipboardOptions {
+  /** Schema-based paste routing. When provided, paste walks up from target
+   *  to find the first ancestor where canAccept returns true. */
+  canAccept?: CanAcceptFn
+}
+
+export function clipboard(options?: ClipboardOptions): Plugin {
+  canAcceptFn = options?.canAccept
   return {
     commands: {
       copy: clipboardCommands.copy,
