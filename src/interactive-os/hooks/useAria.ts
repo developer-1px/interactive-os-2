@@ -5,8 +5,11 @@ import type { AriaBehavior, NodeState } from '../behaviors/types'
 import { createCommandEngine } from '../core/createCommandEngine'
 import type { CommandEngine } from '../core/createCommandEngine'
 import { getChildren, getParent, getEntity, getEntityData } from '../core/createStore'
-import { focusCommands } from '../plugins/core'
+import { focusCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
 import { RENAME_ID } from '../plugins/rename'
+
+/** Known internal meta-entity IDs — only these are preserved during external sync */
+const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__'])
 import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
@@ -72,21 +75,39 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   const engine = engineRef.current
 
   // Gap 1 fix: sync external data changes into the engine
-  // Merge external data while preserving internal meta-entities (__focus__, __selection__, etc.)
+  // Merge external data while preserving only known internal meta-entities
   useEffect(() => {
     const currentStore = engine.getStore()
     // Check if content entities actually differ (skip meta-only diffs)
     const contentChanged = data.relationships !== currentStore.relationships ||
-      Object.keys(data.entities).some(key => !key.startsWith('__') && data.entities[key] !== currentStore.entities[key]) ||
-      Object.keys(currentStore.entities).some(key => !key.startsWith('__') && !(key in data.entities))
+      Object.keys(data.entities).some(key => !META_ENTITY_IDS.has(key) && data.entities[key] !== currentStore.entities[key]) ||
+      Object.keys(currentStore.entities).some(key => !META_ENTITY_IDS.has(key) && !(key in data.entities))
     if (!contentChanged) return
 
     const mergedEntities = { ...data.entities }
     for (const [key, value] of Object.entries(currentStore.entities)) {
-      if (key.startsWith('__')) {
+      if (META_ENTITY_IDS.has(key)) {
         mergedEntities[key] = value
       }
     }
+
+    // Sanitize stale references in meta-entities
+    const focusMeta = mergedEntities[FOCUS_ID] as { focusedId?: string } | undefined
+    if (focusMeta?.focusedId && !(focusMeta.focusedId in data.entities)) {
+      // Focused item was removed externally → recover to nearest sibling or first child
+      const allChildren = data.relationships[ROOT_ID] ?? []
+      const fallback = allChildren[0] ?? ''
+      mergedEntities[FOCUS_ID] = { ...focusMeta, focusedId: fallback }
+    }
+
+    const selectionMeta = mergedEntities[SELECTION_ID] as { selectedIds?: string[] } | undefined
+    if (selectionMeta?.selectedIds) {
+      const cleaned = selectionMeta.selectedIds.filter(id => id in data.entities)
+      if (cleaned.length !== selectionMeta.selectedIds.length) {
+        mergedEntities[SELECTION_ID] = { ...selectionMeta, selectedIds: cleaned }
+      }
+    }
+
     engine.syncStore({ entities: mergedEntities, relationships: data.relationships })
     forceRender(n => n + 1)
   }, [data, engine])

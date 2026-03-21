@@ -41,7 +41,7 @@ export const spatial: AriaBehavior = composePattern(
   },
   { keyMap: {}, config: { focusStrategy: { type: 'roving-tabindex', orientation: 'both' } } },
   select(),
-  activate({ onClick: true }),
   expand({ mode: 'enter-esc' }),
+  activate({ onClick: true }),
   spatialNav,
 )
