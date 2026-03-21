@@ -127,7 +127,7 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-function AriaEditable({ field, placeholder, children }: { field: string; placeholder?: string; children: React.ReactNode }) {
+function AriaEditable({ field, placeholder, selection = 'all', children }: { field: string; placeholder?: string; selection?: 'all' | 'end'; children: React.ReactNode }) {
   const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
   const editRef = useRef<HTMLSpanElement>(null)
@@ -147,9 +147,9 @@ function AriaEditable({ field, placeholder, children }: { field: string; placeho
       if (!editRef.current) return
       const el = editRef.current
       originalValueRef.current = el.textContent ?? ''
-      // Select all text
       const range = document.createRange()
       range.selectNodeContents(el)
+      if (selection === 'end') range.collapse(false)
       const sel = window.getSelection()
       sel?.removeAllRanges()
       sel?.addRange(range)

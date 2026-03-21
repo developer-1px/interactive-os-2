@@ -152,12 +152,21 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         originalValueRef.current = el.textContent ?? ''
         const range = document.createRange()
         range.selectNodeContents(el)
+        range.collapse(false)
         const sel = window.getSelection()
         sel?.removeAllRanges()
         sel?.addRange(range)
         el.focus()
       }
     }, [isRenaming])
+
+    // Focus recovery: schedule after React re-render (component remounts on store change)
+    const restoreFocus = useCallback(() => {
+      requestAnimationFrame(() => {
+        const nodeEl = document.querySelector<HTMLElement>(`[data-cms-id="${nodeId}"]`)
+        nodeEl?.focus()
+      })
+    }, [nodeId])
 
     if (!isRenaming || !primaryField) {
       return <NodeContent data={data} locale={loc} />
@@ -166,7 +175,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     const rawValue = data[primaryField.field]
     const { text } = localized(rawValue as string | LocaleMap, loc)
 
-    const confirm = () => {
+    const confirm = (shouldRestoreFocus: boolean) => {
       if (committedRef.current) return
       committedRef.current = true
       const newText = editRef.current?.textContent?.trim() ?? ''
@@ -179,6 +188,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           : newText
         disp(renameCommands.confirmRename(nodeId, primaryField.field, newValue))
       }
+      if (shouldRestoreFocus) restoreFocus()
     }
 
     const cancel = () => {
@@ -186,6 +196,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       committedRef.current = true
       if (editRef.current) editRef.current.textContent = originalValueRef.current
       disp(renameCommands.cancelRename())
+      restoreFocus()
     }
 
     return (
@@ -197,11 +208,11 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         onCompositionStart={() => { composingRef.current = true }}
         onCompositionEnd={() => { composingRef.current = false }}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !composingRef.current) { e.preventDefault(); confirm() }
+          if (e.key === 'Enter' && !composingRef.current) { e.preventDefault(); confirm(true) }
           else if (e.key === 'Escape') { e.preventDefault(); cancel() }
-          else if (e.key === 'Tab') { e.preventDefault(); confirm() }
+          else if (e.key === 'Tab') { e.preventDefault(); confirm(true) }
         }}
-        onBlur={confirm}
+        onBlur={() => confirm(false)}
       >
         {text}
       </span>
