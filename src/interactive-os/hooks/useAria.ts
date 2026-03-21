@@ -67,7 +67,13 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       forceRender((n) => n + 1)
     })
 
-    const focusTarget = (initialFocus && data.entities[initialFocus]) ? initialFocus : getChildren(data, ROOT_ID)[0]
+    // Priority: data.__focus__ (external binding) > initialFocus (hint) > first child
+    const externalFocus = (data.entities[FOCUS_ID]?.focusedId as string) ?? ''
+    const focusTarget = (externalFocus && data.entities[externalFocus])
+      ? externalFocus
+      : (initialFocus && data.entities[initialFocus])
+        ? initialFocus
+        : getChildren(data, ROOT_ID)[0]
     if (focusTarget) {
       // eslint-disable-next-line react-hooks/refs
       engineRef.current.dispatch(focusCommands.setFocus(focusTarget))
@@ -82,7 +88,11 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   useEffect(() => {
     const currentStore = engine.getStore()
     // Check if content entities actually differ (skip meta-only diffs)
-    const contentChanged = data.relationships !== currentStore.relationships ||
+    // Also detect external __focus__ changes (CRUD two-way binding)
+    const externalFocusChanged = FOCUS_ID in data.entities &&
+      (data.entities[FOCUS_ID]?.focusedId as string) !== (currentStore.entities[FOCUS_ID]?.focusedId as string)
+    const contentChanged = externalFocusChanged ||
+      data.relationships !== currentStore.relationships ||
       Object.keys(data.entities).some(key => !META_ENTITY_IDS.has(key) && data.entities[key] !== currentStore.entities[key]) ||
       Object.keys(currentStore.entities).some(key => !META_ENTITY_IDS.has(key) && !(key in data.entities))
     if (!contentChanged) return
@@ -90,6 +100,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     const mergedEntities = { ...data.entities }
     for (const [key, value] of Object.entries(currentStore.entities)) {
       if (META_ENTITY_IDS.has(key)) {
+        // If external data explicitly provides __focus__, respect it (CRUD two-way binding)
+        // Otherwise preserve internal meta-entity state (default one-way)
+        if (key === FOCUS_ID && FOCUS_ID in data.entities) continue
         mergedEntities[key] = value
       }
     }
