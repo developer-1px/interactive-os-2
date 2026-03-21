@@ -4,6 +4,7 @@ import type { CommandEngine } from '../../interactive-os/core/createCommandEngin
 import { renameCommands } from '../../interactive-os/plugins/rename'
 import type { Locale, LocaleMap } from './cms-types'
 import { LOCALES } from './cms-types'
+import { localeFieldsOf } from './cms-schema'
 
 interface TranslatableEntry {
   entityId: string
@@ -18,8 +19,11 @@ function getTranslatableEntries(data: NormalizedData): TranslatableEntry[] {
     if (id.startsWith('__')) continue
     const d = entity.data as Record<string, unknown> | undefined
     if (!d) continue
-    for (const [field, value] of Object.entries(d)) {
-      if (value && typeof value === 'object' && 'ko' in value && 'en' in value) {
+    const type = d.type as string | undefined
+    if (!type) continue
+    for (const field of localeFieldsOf(type)) {
+      const value = d[field]
+      if (value && typeof value === 'object' && 'ko' in value) {
         entries.push({ entityId: id, field, label: `${id}.${field}`, value: value as LocaleMap })
       }
     }
