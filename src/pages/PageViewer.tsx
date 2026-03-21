@@ -1,5 +1,7 @@
 import styles from './PageViewer.module.css'
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import areaStyles from './AreaViewer.module.css'
+import { useState, useEffect, useCallback, useRef, useMemo, type ComponentType } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Fuse from 'fuse.js'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -16,6 +18,7 @@ import { useAria } from '../interactive-os/hooks/useAria'
 import { createStore, getChildren } from '../interactive-os/core/createStore'
 import { ROOT_ID, createBatchCommand } from '../interactive-os/core/types'
 import type { NormalizedData, Entity, Plugin } from '../interactive-os/core/types'
+import { EXPANDED_ID } from '../interactive-os/plugins/core'
 import { createRecorder } from '../interactive-os/devtools/createRecorder'
 import {
   Folder, FolderOpen, FileText, FileCode, FileType,
@@ -37,6 +40,10 @@ interface FileNodeData {
   type: 'file' | 'directory'
   path: string
 }
+
+// --- MDX modules ---
+
+const mdxModules = import.meta.glob<{ default: ComponentType }>('/docs/**/*.mdx')
 
 // --- Data fetching ---
 
@@ -332,6 +339,40 @@ function MarkdownViewer({ content }: { content: string }) {
   )
 }
 
+// --- MDX viewer ---
+
+function MdxViewer({ filePath }: { filePath: string }) {
+  const [Content, setContent] = useState<ComponentType | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setContent(null)
+    setError(null)
+
+    // filePath → glob key: /Users/.../aria/docs/foo.mdx → /docs/foo.mdx
+    const globKey = filePath.startsWith(DEFAULT_ROOT)
+      ? filePath.slice(DEFAULT_ROOT.length)
+      : filePath
+
+    const loader = mdxModules[globKey]
+    if (!loader) {
+      setError(`MDX not found: ${globKey}`)
+      return
+    }
+
+    loader().then((mod) => setContent(() => mod.default)).catch((e) => setError(String(e)))
+  }, [filePath])
+
+  if (error) return <div className={styles.viewerMarkdown}><p>{error}</p></div>
+  if (!Content) return <div className={styles.viewerMarkdown}><p>Loading MDX...</p></div>
+
+  return (
+    <div className={areaStyles.root}>
+      <Content />
+    </div>
+  )
+}
+
 // --- File icon component ---
 
 const ICON_SIZE = 12
@@ -550,34 +591,89 @@ function QuickOpen({
   )
 }
 
-// --- Main viewer page ---
+// --- URL ↔ file path helpers ---
+
+function urlPathToFilePath(pathname: string): string | null {
+  const relative = pathname.replace(/^\/viewer\/?/, '')
+  if (!relative) return null
+  return `${DEFAULT_ROOT}/${relative}`
+}
+
+function filePathToUrlPath(filePath: string): string {
+  const relative = filePath.startsWith(DEFAULT_ROOT + '/')
+    ? filePath.slice(DEFAULT_ROOT.length + 1)
+    : filePath
+  return `/viewer/${relative}`
+}
+
+function getAncestorIds(filePath: string, store: NormalizedData): string[] {
+  const ancestors: string[] = []
+  const parts = filePath.split('/')
+  for (let i = 1; i < parts.length; i++) {
+    const ancestorPath = parts.slice(0, i).join('/')
+    if (store.entities[ancestorPath]) {
+      ancestors.push(ancestorPath)
+    }
+  }
+  return ancestors
+}
+
+function withExpandedAncestors(store: NormalizedData, filePath: string): NormalizedData {
+  const ancestors = getAncestorIds(filePath, store)
+  if (ancestors.length === 0) return store
+  const existing = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
+  const merged = [...new Set([...existing, ...ancestors])]
+  return {
+    ...store,
+    entities: {
+      ...store.entities,
+      [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: merged },
+    },
+  }
+}
 
 export default function PageViewer() {
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const urlFilePath = useMemo(() => urlPathToFilePath(pathname), [pathname])
+
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
-  const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [fileContent, setFileContent] = useState('')
   const [loading, setLoading] = useState(true)
   const [recording, setRecording] = useState(false)
   const [treeCollapsed, setTreeCollapsed] = useState(false)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
   const recorder = useMemo(() => createRecorder(), [])
-  const selectedFileRef = useRef<string | null>(null)
+  const loadedFileRef = useRef<string | null>(null)
   const contentBodyRef = useRef<HTMLDivElement>(null)
 
+  // selectedFile은 URL에서 파생 (single source of truth)
+  const selectedFile = urlFilePath && initialStore?.entities[urlFilePath] ? urlFilePath : null
+
   useEffect(() => {
+    const initialFilePath = urlPathToFilePath(window.location.pathname)
     fetchTree(DEFAULT_ROOT).then((tree) => {
-      setInitialStore(treeToStore(tree))
+      let store = treeToStore(tree)
+      if (initialFilePath && store.entities[initialFilePath]) {
+        store = withExpandedAncestors(store, initialFilePath)
+      }
+      setInitialStore(store)
       setLoading(false)
     })
   }, [])
 
-  const selectFile = useCallback((filePath: string) => {
-    if (filePath === selectedFileRef.current) return
-    selectedFileRef.current = filePath
-    setSelectedFile(filePath)
+  // selectedFile 변경 → 파일 콘텐츠 로드
+  useEffect(() => {
+    if (!selectedFile) return
+    if (selectedFile === loadedFileRef.current) return
+    loadedFileRef.current = selectedFile
     contentBodyRef.current?.scrollTo(0, 0)
-    fetchFile(filePath).then(setFileContent)
-  }, [])
+    fetchFile(selectedFile).then(setFileContent)
+  }, [selectedFile])
+
+  const selectFile = useCallback((filePath: string) => {
+    navigate(filePathToUrlPath(filePath), { replace: true })
+  }, [navigate])
 
   const handleChange = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
@@ -620,7 +716,8 @@ export default function PageViewer() {
   }
 
   const filename = selectedFile?.split('/').pop() ?? ''
-  const isMarkdown = filename.endsWith('.md')
+  const isMdx = filename.endsWith('.mdx')
+  const isMarkdown = !isMdx && filename.endsWith('.md')
   const ext = filename.split('.').pop() ?? ''
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
@@ -631,53 +728,20 @@ export default function PageViewer() {
       plugins={EMPTY_PLUGINS}
     >
     <div className={styles.vw}>
-      {/* Top bar — single unified bar */}
-      <div className={styles.vwStatusbar}>
-        <div className={styles.vwStatusbarLeft}>
-          <button
-            className={styles.vwStatusbarBtn}
-            onClick={() => setTreeCollapsed(!treeCollapsed)}
-            title={treeCollapsed ? 'Show explorer' : 'Hide explorer'}
-          >
-            <PanelLeft size={12} strokeWidth={1.5} />
-          </button>
-          {selectedFile ? (
-            <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />
-          ) : (
-            <span className={styles.vwStatusbarTitle}>Explorer</span>
-          )}
-        </div>
-        <div className={styles.vwStatusbarRight}>
-          {selectedFile && (
-            <div className={styles.vwContentMeta}>
-              <FileIcon name={filename} type="file" />
-              <span>{ext.toUpperCase()}</span>
-              <span className={styles.vwContentMetaSep} />
-              <span>{lineCount} lines</span>
-            </div>
-          )}
-          <button
-            className={styles.vwStatusbarBtn}
-            onClick={() => setQuickOpenVisible(true)}
-            title="Quick Open (Cmd+P)"
-          >
-            <Search size={12} strokeWidth={1.5} />
-          </button>
-          <button
-            className={`${styles.vwRec}${recording ? ` ${styles.vwRecActive}` : ''}`}
-            onClick={toggleRecording}
-          >
-            <span className={styles.vwRecDot} />
-            {recording ? 'STOP' : 'REC'}
-          </button>
-        </div>
-      </div>
-
-      {/* Main panels */}
-      <div className={styles.vwPanels}>
-        {/* Tree panel */}
-        {!treeCollapsed && (
-          <div className={styles.vwTree}>
+      {/* Tree panel (sidebar) */}
+      {!treeCollapsed && (
+        <div className={styles.vwTree}>
+          <div className={styles.vwTreeHeader}>
+            <span className={styles.vwTreeHeaderTitle}>Explorer</span>
+            <button
+              className={styles.vwStatusbarBtn}
+              onClick={() => setTreeCollapsed(true)}
+              title="Hide explorer"
+            >
+              <PanelLeft size={12} strokeWidth={1.5} />
+            </button>
+          </div>
+          <div className={styles.vwTreeBody}>
             <Aria
               behavior={treegrid}
               data={initialStore}
@@ -687,10 +751,8 @@ export default function PageViewer() {
             >
               <Aria.Item render={(node, state) => {
                 const data = node.data as FileNodeData
-                const indent = (state.level ?? 1) * 12
                 return (
                   <div className={styles.vwTreeItem}>
-                    <div className={styles.vwTreeIndent} style={{ width: indent }} />
                     {data.type === 'directory' ? (
                       <span className={styles.vwTreeChevron}>
                         {state.expanded
@@ -709,31 +771,71 @@ export default function PageViewer() {
               }} />
             </Aria>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Content panel */}
-        <div className={styles.vwContent}>
-          {selectedFile ? (
-            <div className={styles.vwContentBody}>
-              <div className={styles.vwContentCode} ref={contentBodyRef}>
-                {isMarkdown
+      {/* Content panel */}
+      <div className={styles.vwContent}>
+        <div className={styles.vwContentHeader}>
+          <div className={styles.vwContentHeaderLeft}>
+            {treeCollapsed && (
+              <button
+                className={styles.vwStatusbarBtn}
+                onClick={() => setTreeCollapsed(false)}
+                title="Show explorer"
+              >
+                <PanelLeft size={12} strokeWidth={1.5} />
+              </button>
+            )}
+            {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
+          </div>
+          <div className={styles.vwContentHeaderRight}>
+            {selectedFile && (
+              <div className={styles.vwContentMeta}>
+                <FileIcon name={filename} type="file" />
+                <span>{ext.toUpperCase()}</span>
+                <span className={styles.vwContentMetaSep} />
+                <span>{lineCount} lines</span>
+              </div>
+            )}
+            <button
+              className={styles.vwStatusbarBtn}
+              onClick={() => setQuickOpenVisible(true)}
+              title="Quick Open (Cmd+P)"
+            >
+              <Search size={12} strokeWidth={1.5} />
+            </button>
+            <button
+              className={`${styles.vwRec}${recording ? ` ${styles.vwRecActive}` : ''}`}
+              onClick={toggleRecording}
+            >
+              <span className={styles.vwRecDot} />
+              {recording ? 'STOP' : 'REC'}
+            </button>
+          </div>
+        </div>
+        {selectedFile ? (
+          <div className={styles.vwContentBody}>
+            <div className={styles.vwContentCode} ref={contentBodyRef}>
+              {isMdx
+                ? <MdxViewer filePath={selectedFile} />
+                : isMarkdown
                   ? <MarkdownViewer content={fileContent} />
                   : <CodeBlock code={fileContent} filename={filename} />
-                }
+              }
+            </div>
+            {!isMarkdown && !isMdx && isSourceFile(filename) && (
+              <div className={styles.vwContentGraph}>
+                <ExportDiagram filePath={selectedFile} />
               </div>
-              {!isMarkdown && isSourceFile(filename) && (
-                <div className={styles.vwContentGraph}>
-                  <ExportDiagram filePath={selectedFile} />
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className={styles.vwEmpty}>
-              <FileText size={24} strokeWidth={1} className={styles.vwEmptyIcon} />
-              <span>Select a file to view</span>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        ) : (
+          <div className={styles.vwEmpty}>
+            <FileText size={24} strokeWidth={1} className={styles.vwEmptyIcon} />
+            <span>Select a file to view</span>
+          </div>
+        )}
       </div>
 
       {/* Quick Open overlay */}

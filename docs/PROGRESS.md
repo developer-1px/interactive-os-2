@@ -171,6 +171,7 @@
 - [x] Viewer 마크다운 렌더링 — remark-breaks 줄바꿈, 타이포그래피 전면 개선
 - [x] Viewer 소스 뷰어 — Shiki 라인 넘버 (CSS counter), 심볼 하이라이트 (클릭 토글)
 - [x] Viewer Quick Open — Cmd+P fuzzy 파일 검색 (Fuse.js, combobox ARIA 패턴)
+- [x] Viewer URL 동기화 — `/viewer/{relative-path}` path 기반 양방향 동기화, 조상 노드 자동 전개, 딥링크/새로고침 유지
 - [x] APG Keyboard Tables — W3C 원문 키보드 인터랙션 표 14개 패턴 페이지 렌더링
 - [x] Store Explorer — NormalizedData 구조를 TreeGrid로 시각화 (meta entities 포함)
 - [x] Store Operations — 순수 함수 API 데모 (addEntity, removeEntity, moveNode 등)
