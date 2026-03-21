@@ -1,6 +1,6 @@
 ---
-last_commit: d0cef0627e593a4cd5730587db97a9971bb11251
-last_updated: 2026-03-20
+last_commit: c2441999a37458ffc680be6c6d3dd8b353ea1fbd
+last_updated: 2026-03-21
 ---
 
 ## Verbs
@@ -13,7 +13,7 @@ last_updated: 2026-03-20
 | update | 2 | updateEntity, updateEntityData |
 | move | 5 | moveNode, moveUp, moveDown, moveOut, moveIn |
 | insert | 1 | insertNode |
-| set | 4 | setFocus, setAnchor, setGridCol, setFilter |
+| set | 5 | setFocus, setAnchor, setGridCol, setFilter, setValue |
 | toggle | 4 | toggleSelect, toggleExpand, toggleSelect, toggleTheme |
 | select | 3 | select, selectRange, selectAll |
 | clear | 1 | clearSelection |
@@ -44,6 +44,9 @@ last_updated: 2026-03-20
 | undo | 1 | undoCommand |
 | redo | 1 | redoCommand |
 | use | 6 | useAria, useAriaZone, useControlledAria, useEngine, useKeyboard, useSpatialNav |
+| increment | 1 | valueCommands.increment |
+| decrement | 1 | valueCommands.decrement |
+| clamp | 1 | clamp (internal to core.ts) |
 | compose | 1 | composePattern |
 | apply | 1 | applyMetaCommand |
 | sync | 1 | syncStore |
@@ -68,6 +71,9 @@ last_updated: 2026-03-20
 | anchor | 1 | SELECTION_ANCHOR_ID, setAnchor |
 | state | 1 | NodeState |
 | grid | 5 | GridNav, GRID_COL_ID, gridColCommands, grid (behavior), navGrid |
+| value | 5 | VALUE_ID, ValueRange, valueCommands, ValueNav, value (axis), valueCurrent |
+| slider | 2 | slider (behavior factory), Slider (UI) |
+| spinbutton | 2 | spinbutton (behavior factory), Spinbutton (UI) |
 | key | 3 | KeyCombo, findMatchingKey, parseKeyCombo |
 | recorder | 1 | createRecorder |
 | snapshot | 1 | ReplaySnapshot |
@@ -89,7 +95,7 @@ last_updated: 2026-03-20
 | pattern | 2 | ApgPatternData, composePattern, PatternConfig |
 | entry | 1 | ApgKeyboardEntry |
 | table | 1 | ApgKeyboardTable |
-| axis | 12 | Axis (type), navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap |
+| axis | 13 | Axis (type), navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap, value |
 | zone | 2 | useAriaZone, UseAriaZoneOptions |
 | scope | 1 | UseAriaZoneOptions.scope |
 | depth | 2 | depthArrow, depthEnterEsc |
