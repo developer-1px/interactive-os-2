@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
-import { createStore } from '../interactive-os/core/createStore'
+import { createStore, addEntity, getChildren } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
@@ -33,8 +33,20 @@ const treeData = createStore({
 
 const plugins = [core(), crud(), history(), focusRecovery()]
 
+const randomNames = ['Webpack', 'Vite', 'Rollup', 'esbuild', 'Turbopack', 'Parcel', 'SWC', 'Bun', 'Deno', 'Rome']
+let counter = 0
+
 export default function PageCrud() {
   const [data, setData] = useState<NormalizedData>(treeData)
+
+  const handleCreate = () => {
+    const name = randomNames[counter % randomNames.length]!
+    const id = `item-${++counter}`
+    // Find first group to insert into
+    const groups = getChildren(data, ROOT_ID)
+    const parentId = groups[0] ?? ROOT_ID
+    setData(addEntity(data, { id, data: { label: name, type: 'item' } }, parentId))
+  }
 
   return (
     <div>
@@ -51,7 +63,8 @@ export default function PageCrud() {
         <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
-        <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
+        <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
+        <button type="button" onClick={handleCreate} style={{ marginLeft: 8, fontSize: '0.85em' }}>+ Add item</button>
       </div>
       <div className="card">
         <TreeGrid
