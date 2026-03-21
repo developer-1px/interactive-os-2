@@ -78,7 +78,6 @@ export default function PageClipboard() {
         <p className="page-desc">
           The <code>clipboard</code> plugin adds <code>copy</code>, <code>cut</code>, and <code>paste</code> commands.
           Copy clones entities with fresh IDs. Cut moves entities on paste.
-          Paste into a leaf node routes to the parent container automatically.
         </p>
       </div>
     </div>
