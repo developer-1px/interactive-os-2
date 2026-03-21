@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import type { Command, NormalizedData, Plugin } from '../core/types'
-import { ROOT_ID } from '../core/types'
+import { ROOT_ID, createBatchCommand } from '../core/types'
 import type { AriaBehavior, NodeState } from '../behaviors/types'
 import { createCommandEngine } from '../core/createCommandEngine'
 import type { CommandEngine } from '../core/createCommandEngine'
 import { getChildren, getParent, getEntity, getEntityData } from '../core/createStore'
-import { focusCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, VALUE_ID } from '../plugins/core'
+import { focusCommands, selectionCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, VALUE_ID } from '../plugins/core'
 import { RENAME_ID } from '../plugins/rename'
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
@@ -53,6 +53,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   // eslint-disable-next-line react-hooks/refs
   behaviorRef.current = behavior
   const prevFocusRef = useRef<string>('')
+  // Stores BehaviorContext captured on pointerdown (before browser focus fires).
+  // Must be a ref so it survives the re-render triggered by onFocus → setFocus.
+  const pointerDownCtxRef = useRef<ReturnType<typeof createBehaviorContext> | null>(null)
 
   if (engineRef.current == null) {
     const middlewares = plugins
@@ -241,8 +244,43 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
       if (state.focused) baseProps['data-focused'] = ''
 
-      baseProps.onClick = () => {
-        if (behavior.activateOnClick) {
+      // Capture BehaviorContext on pointerdown (before browser focus fires).
+      // onFocus → setFocus → anchorResetMiddleware clears anchor.
+      // We need the pre-focus ctx for Shift+Click range calculation.
+      // Uses ref so it survives the re-render triggered by onFocus.
+      baseProps.onPointerDown = () => {
+        if (behavior.selectOnClick) {
+          pointerDownCtxRef.current = createBehaviorContext(engine, behaviorCtxOptions)
+        }
+      }
+
+      baseProps.onClick = (event: MouseEvent) => {
+        if (event.defaultPrevented) return // bubbling guard for nested aria instances
+
+        // 1. Select on click
+        if (behavior.selectOnClick) {
+          if (event.shiftKey && behavior.selectionMode === 'multiple') {
+            // Range select: use pre-focus ctx (has correct anchor)
+            if (pointerDownCtxRef.current) {
+              engine.dispatch(pointerDownCtxRef.current.extendSelectionTo(id))
+            }
+          } else if ((event.ctrlKey || event.metaKey) && behavior.selectionMode === 'multiple') {
+            // Toggle select: add/remove from current selection
+            engine.dispatch(selectionCommands.toggleSelect(id))
+          } else {
+            // Plain click: replace selection + set anchor for future Shift+Click
+            engine.dispatch(createBatchCommand([
+              selectionCommands.select(id),
+              selectionCommands.setAnchor(id),
+            ]))
+          }
+          pointerDownCtxRef.current = null
+        }
+
+        // 2. Activate on click (existing behavior)
+        // Skip activate when modifier keys are held — modifier+click is for selection, not activation
+        const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
+        if (behavior.activateOnClick && !hasModifier) {
           if (onActivateRef.current) {
             onActivateRef.current(id)
           } else {

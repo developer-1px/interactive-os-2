@@ -79,6 +79,8 @@ export interface AriaBehavior<TState extends NodeState = NodeState> {
   expandable?: boolean
   /** Selection mode: 'single' replaces selection, 'multiple' toggles independently. Default: 'multiple' */
   selectionMode?: SelectionMode
+  /** When true, clicking a node selects it. Shift+Click = range, Ctrl/Cmd+Click = toggle. Auto-set by select() axis. */
+  selectOnClick?: boolean
   /** When true, clicking a node calls activate(). Used by most behaviors except treegrid/dialog. */
   activateOnClick?: boolean
   /** When true, focus change auto-triggers onActivate. Per-item opt-out via entity.data.followFocus=false. */

@@ -21,5 +21,5 @@ export function select(options?: SelectOptions): { keyMap: KeyMap; config: Parti
     keyMap['Shift+End'] = (ctx) => ctx.extendSelection('last')
   }
 
-  return { keyMap, config: { selectionMode: mode } }
+  return { keyMap, config: { selectionMode: mode, selectOnClick: true } }
 }

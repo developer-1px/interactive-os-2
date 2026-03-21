@@ -8,6 +8,7 @@ export interface AxisConfig {
   focusStrategy: FocusStrategy
   expandable: boolean
   selectionMode: SelectionMode
+  selectOnClick: boolean
   activateOnClick: boolean
   followFocus: boolean
   colCount: number
@@ -102,6 +103,7 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
       focusStrategy,
       ...(mergedConfig.expandable !== undefined && { expandable: mergedConfig.expandable }),
       ...(mergedConfig.selectionMode !== undefined && { selectionMode: mergedConfig.selectionMode }),
+      ...(mergedConfig.selectOnClick !== undefined && { selectOnClick: mergedConfig.selectOnClick }),
       ...(mergedConfig.activateOnClick !== undefined && { activateOnClick: mergedConfig.activateOnClick }),
       ...(mergedConfig.followFocus !== undefined && { followFocus: mergedConfig.followFocus }),
       ...(mergedConfig.colCount !== undefined && { colCount: mergedConfig.colCount }),
@@ -117,6 +119,7 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
     ...(mergedConfig.focusStrategy !== undefined && { focusStrategy: mergedConfig.focusStrategy }),
     ...(mergedConfig.expandable !== undefined && { expandable: mergedConfig.expandable }),
     ...(mergedConfig.selectionMode !== undefined && { selectionMode: mergedConfig.selectionMode }),
+    ...(mergedConfig.selectOnClick !== undefined && { selectOnClick: mergedConfig.selectOnClick }),
     ...(mergedConfig.activateOnClick !== undefined && { activateOnClick: mergedConfig.activateOnClick }),
     ...(mergedConfig.followFocus !== undefined && { followFocus: mergedConfig.followFocus }),
     ...(mergedConfig.colCount !== undefined && { colCount: mergedConfig.colCount }),
