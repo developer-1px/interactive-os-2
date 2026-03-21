@@ -1,156 +1,74 @@
-import type { NormalizedData } from '../../interactive-os/core/types'
-import { ROOT_ID } from '../../interactive-os/core/types'
-import { getChildren, getParent, removeEntity, addEntity } from '../../interactive-os/core/createStore'
+import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
+import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { getSpatialParentId } from '../../interactive-os/plugins/spatial'
-import { FOCUS_ID } from '../../interactive-os/plugins/core'
-import type { SectionVariant } from './cms-templates'
-import { createSection } from './cms-templates'
+import { crudCommands } from '../../interactive-os/plugins/crud'
+import { dndCommands } from '../../interactive-os/plugins/dnd'
+import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
 
 interface CmsFloatingToolbarProps {
-  data: NormalizedData
-  onDataChange: (data: NormalizedData) => void
-  hidden: boolean // true during present mode
+  store: NormalizedData
+  focusedId: string
+  dispatch: (cmd: Command) => void
+  hidden: boolean
 }
 
 type DepthContext = 'none' | 'root' | 'collection' | 'fields'
 
-function getDepthContext(data: NormalizedData): { context: DepthContext; focusedId: string | undefined } {
-  const focusedId = data.entities[FOCUS_ID]?.focusedId as string | undefined
+function getDepthContext(store: NormalizedData, focusedId: string): DepthContext {
+  if (!focusedId) return 'none'
 
-  if (!focusedId) {
-    return { context: 'none', focusedId: undefined }
+  const spatialParent = getSpatialParentId(store)
+
+  if (spatialParent === ROOT_ID) return 'root'
+
+  const spatialGrandparent = getParent(store, spatialParent)
+  if (spatialGrandparent === ROOT_ID || spatialGrandparent === undefined) {
+    return 'collection'
   }
 
-  const spatialParent = getSpatialParentId(data)
-
-  // spatialParent is ROOT_ID (or undefined maps to ROOT_ID) → section level
-  if (spatialParent === ROOT_ID) {
-    return { context: 'root', focusedId }
-  }
-
-  // spatialParent is a child of ROOT_ID → collection level
-  const spatialParentOfSpatialParent = getParent(data, spatialParent)
-  if (spatialParentOfSpatialParent === ROOT_ID || spatialParentOfSpatialParent === undefined) {
-    return { context: 'collection', focusedId }
-  }
-
-  // Deeper → fields
-  return { context: 'fields', focusedId }
+  return 'fields'
 }
 
-// ── Store manipulation helpers (mirror sidebar logic) ──
-
-function reorderInParent(
-  store: NormalizedData,
-  parentId: string,
-  nodeId: string,
-  direction: -1 | 1,
-): NormalizedData {
-  const children = [...getChildren(store, parentId)]
-  const idx = children.indexOf(nodeId)
-  if (idx < 0) return store
-  const target = idx + direction
-  if (target < 0 || target >= children.length) return store
-  ;[children[idx], children[target]] = [children[target], children[idx]]
-  return {
-    ...store,
-    relationships: { ...store.relationships, [parentId]: children },
-  }
-}
-
-function duplicateInParent(
-  store: NormalizedData,
-  parentId: string,
-  nodeId: string,
-): NormalizedData {
-  if (parentId === ROOT_ID) {
-    // Root-level section: use template factory
-    const sectionData = store.entities[nodeId]?.data as Record<string, string> | undefined
-    const variant = (sectionData?.variant ?? 'hero') as SectionVariant
-    const template = createSection(variant)
-    const rootChildren = getChildren(store, ROOT_ID)
-    const idx = rootChildren.indexOf(nodeId)
-    const insertAt = idx + 1
-    const entities = { ...store.entities, ...template.entities }
-    const relationships = { ...store.relationships, ...template.relationships }
-    const newRootChildren = [
-      ...rootChildren.slice(0, insertAt),
-      template.rootId,
-      ...rootChildren.slice(insertAt),
-    ]
-    relationships[ROOT_ID] = newRootChildren
-    return { entities, relationships }
-  }
-  // Collection-level: clone entity
-  const entity = store.entities[nodeId]
-  if (!entity) return store
-  const cloneId = `${nodeId}-copy-${Date.now()}`
-  const cloned = { ...entity, id: cloneId, data: { ...(entity.data as Record<string, unknown>) } }
-  const children = getChildren(store, parentId)
-  const idx = children.indexOf(nodeId)
-  const newChildren = [...children.slice(0, idx + 1), cloneId, ...children.slice(idx + 1)]
-  return {
-    entities: { ...store.entities, [cloneId]: cloned },
-    relationships: { ...store.relationships, [parentId]: newChildren },
-  }
-}
-
-function addAfterCurrent(
-  store: NormalizedData,
-  parentId: string,
-  nodeId: string,
-): NormalizedData {
-  const entity = store.entities[nodeId]
-  if (!entity) return store
-  const newId = `${parentId}-item-${Date.now()}`
-  const newEntity = { ...entity, id: newId, data: { ...(entity.data as Record<string, unknown>) } }
-  const children = getChildren(store, parentId)
-  const idx = children.indexOf(nodeId)
-  return addEntity(
-    { ...store, entities: { ...store.entities, [newId]: newEntity } },
-    newEntity,
-    parentId,
-    idx + 1,
-  )
-}
-
-export default function CmsFloatingToolbar({ data, onDataChange, hidden }: CmsFloatingToolbarProps) {
+export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden }: CmsFloatingToolbarProps) {
   if (hidden) return null
 
-  const { context, focusedId } = getDepthContext(data)
+  const context = getDepthContext(store, focusedId)
 
   const focusCanvas = () => {
-    requestAnimationFrame(() => {
-      const canvasEl = document.querySelector('[data-cms-root]') as HTMLElement
-      canvasEl?.focus()
-    })
+    const canvasEl = document.querySelector('[data-cms-root]') as HTMLElement
+    canvasEl?.focus()
   }
 
   const handleAction = (action: string) => {
     if (!focusedId) return
-    const parentId = getParent(data, focusedId) ?? ROOT_ID
 
     switch (action) {
       case 'delete': {
-        // Guard: minimum 1 section at root
-        if (parentId === ROOT_ID && getChildren(data, ROOT_ID).length <= 1) return
-        onDataChange(removeEntity(data, focusedId))
+        if (context === 'root' && getChildren(store, ROOT_ID).length <= 1) return
+        dispatch(crudCommands.remove(focusedId))
         break
       }
       case 'duplicate': {
-        onDataChange(duplicateInParent(data, parentId, focusedId))
+        dispatch(createBatchCommand([
+          clipboardCommands.copy([focusedId]),
+          clipboardCommands.paste(focusedId),
+        ]))
         break
       }
       case 'move-up': {
-        onDataChange(reorderInParent(data, parentId, focusedId, -1))
+        dispatch(dndCommands.moveUp(focusedId))
         break
       }
       case 'move-down': {
-        onDataChange(reorderInParent(data, parentId, focusedId, 1))
+        dispatch(dndCommands.moveDown(focusedId))
         break
       }
       case 'add': {
-        onDataChange(addAfterCurrent(data, parentId, focusedId))
+        dispatch(createBatchCommand([
+          clipboardCommands.copy([focusedId]),
+          clipboardCommands.paste(focusedId),
+        ]))
         break
       }
     }
@@ -164,10 +82,8 @@ export default function CmsFloatingToolbar({ data, onDataChange, hidden }: CmsFl
     }
   }
 
-  // Guard: disable delete at root level when only 1 section remains
-  const rootChildren = getChildren(data, ROOT_ID)
+  const rootChildren = getChildren(store, ROOT_ID)
   const isOnlySection = context === 'root' && rootChildren.length <= 1
-
   const disabled = context === 'none' || context === 'fields'
 
   return (

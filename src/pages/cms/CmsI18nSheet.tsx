@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import type { NormalizedData } from '../../interactive-os/core/types'
+import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
+import { renameCommands } from '../../interactive-os/plugins/rename'
 import type { Locale, LocaleMap } from './cms-types'
 import { LOCALES } from './cms-types'
 
@@ -32,18 +34,18 @@ interface EditingCell {
 }
 
 interface CmsI18nSheetProps {
-  data: NormalizedData
-  onDataChange: (data: NormalizedData) => void
+  engine: CommandEngine
+  store: NormalizedData
   open: boolean
 }
 
-export default function CmsI18nSheet({ data, onDataChange, open }: CmsI18nSheetProps) {
+export default function CmsI18nSheet({ engine, store, open }: CmsI18nSheetProps) {
   const [editing, setEditing] = useState<EditingCell | null>(null)
   const [draft, setDraft] = useState('')
 
   if (!open) return null
 
-  const entries = getTranslatableEntries(data)
+  const entries = getTranslatableEntries(store)
 
   function startEdit(entityId: string, field: string, locale: Locale, current: string) {
     setEditing({ entityId, field, locale })
@@ -53,16 +55,12 @@ export default function CmsI18nSheet({ data, onDataChange, open }: CmsI18nSheetP
   function commitEdit() {
     if (!editing) return
     const { entityId, field, locale } = editing
-    const entity = data.entities[entityId]
+    const entity = store.entities[entityId]
     if (!entity) { setEditing(null); return }
     const d = entity.data as Record<string, unknown>
     const prev = d[field] as LocaleMap
     const updatedValue: LocaleMap = { ...prev, [locale]: draft }
-    const updatedEntity = { ...entity, data: { ...d, [field]: updatedValue } }
-    onDataChange({
-      ...data,
-      entities: { ...data.entities, [entityId]: updatedEntity },
-    })
+    engine.dispatch(renameCommands.confirmRename(entityId, field, updatedValue))
     setEditing(null)
   }
 

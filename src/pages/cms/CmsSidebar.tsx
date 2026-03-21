@@ -1,18 +1,19 @@
 import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getChildren } from '../../interactive-os/core/createStore'
-import { ROOT_ID } from '../../interactive-os/core/types'
+import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
 import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/types'
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import type { Locale } from './cms-types'
 import type { SectionVariant } from './cms-templates'
-import { createSection } from './cms-templates'
+import { templateToCommand } from './cms-templates'
 import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
 import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
 import { listbox } from '../../interactive-os/behaviors/listbox'
 import { focusCommands } from '../../interactive-os/plugins/core'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
+import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
 import CmsTemplatePicker from './CmsTemplatePicker'
 
 interface CmsSidebarProps {
@@ -21,41 +22,6 @@ interface CmsSidebarProps {
   locale: Locale
   activeSectionId: string | null
   plugins?: Plugin[]
-}
-
-// ── Store manipulation helpers (for add/duplicate — these modify engine store directly) ──
-
-function addSectionToStore(
-  store: NormalizedData,
-  variant: SectionVariant,
-  afterIndex: number,
-): { store: NormalizedData; newSectionId: string } {
-  const template = createSection(variant)
-  const rootChildren = getChildren(store, ROOT_ID)
-  const insertAt = afterIndex + 1
-
-  const entities = { ...store.entities, ...template.entities }
-  const relationships = { ...store.relationships, ...template.relationships }
-
-  const newRootChildren = [
-    ...rootChildren.slice(0, insertAt),
-    template.rootId,
-    ...rootChildren.slice(insertAt),
-  ]
-  relationships[ROOT_ID] = newRootChildren
-
-  return { store: { entities, relationships }, newSectionId: template.rootId }
-}
-
-function duplicateSection(
-  store: NormalizedData,
-  sectionIndex: number,
-): { store: NormalizedData; newSectionId: string } {
-  const rootChildren = getChildren(store, ROOT_ID)
-  const sectionId = rootChildren[sectionIndex]
-  const sectionData = store.entities[sectionId]?.data as Record<string, string> | undefined
-  const variant = (sectionData?.variant ?? 'hero') as SectionVariant
-  return addSectionToStore(store, variant, sectionIndex)
 }
 
 // ── Thumbnail renderer (read-only mini preview) ──
@@ -164,19 +130,17 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
       'Mod+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
       'Mod+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
       'Mod+D': (ctx) => {
-        const sections = getChildren(engine.getStore(), ROOT_ID)
-        const idx = sections.indexOf(ctx.focused)
-        const { store: newStore, newSectionId } = duplicateSection(engine.getStore(), idx)
-        engine.syncStore(newStore)
-        return focusCommands.setFocus(newSectionId)
+        return createBatchCommand([
+          clipboardCommands.copy([ctx.focused]),
+          clipboardCommands.paste(ctx.focused),
+        ])
       },
-      // Mod+C/X/V → clipboard plugin keyMap, Mod+Z → history plugin keyMap
       Enter: (ctx) => { scrollToSection(ctx.focused) },
       Escape: () => {
         ;(document.querySelector('[data-cms-root]') as HTMLElement)?.focus()
       },
     }
-  }, [engine, scrollToSection])
+  }, [scrollToSection])
 
   const aria = useAriaZone({
     engine,
@@ -207,10 +171,11 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   const handleAddSection = (variant: SectionVariant) => {
     setPickerOpen(false)
     const focusedIdx = sectionIds.indexOf(aria.focused)
-    const { store: newStore, newSectionId } = addSectionToStore(store, variant, focusedIdx >= 0 ? focusedIdx : sectionIds.length - 1)
-    engine.syncStore(newStore)
-    aria.dispatch(focusCommands.setFocus(newSectionId))
-    requestAnimationFrame(() => scrollToSection(newSectionId))
+    const insertAt = (focusedIdx >= 0 ? focusedIdx : sectionIds.length - 1) + 1
+    const { command, rootId } = templateToCommand(variant, ROOT_ID, insertAt)
+    engine.dispatch(command)
+    aria.dispatch(focusCommands.setFocus(rootId))
+    requestAnimationFrame(() => scrollToSection(rootId))
   }
 
   return (

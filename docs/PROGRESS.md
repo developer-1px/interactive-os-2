@@ -201,6 +201,7 @@
 - [x] Plugin Showcase Gap Fix (Phase 1) — CRUD를 TreeGrid로 전환(subtree 삭제/복원 체험), History에 Editable 추가(F2 rename 동작), Clipboard 텍스트 정합성 수정
 - [x] Plugin Showcase Gap Fix (Phase 2) — Clipboard TreeGrid 전환, getCutSourceIds() export로 cut dim 피드백, copy paste 시 새 ID 표시, leaf→parent 라우팅 텍스트 복원
 - [x] Visual CMS Inline Edit + Detail Panel — 리프 노드 Enter→인라인 contenteditable 편집, 우측 CmsDetailPanel Form 패널 (타입별 필드 매핑, blur/Enter 커밋), rename 플러그인 연결 (undo 일관성), Aria.Editable placeholder prop, 3열 레이아웃
+- [x] Visual CMS Engine Unification — 날코딩 10개 제거: Toolbar/Sidebar/I18nSheet의 raw store 조작을 모두 engine.dispatch로 전환 (crudCommands, dndCommands, clipboardCommands, renameCommands), templateToCommand BatchCommand 헬퍼, useAriaZone 외부 store 변경 focus recovery 추가
 
 ## ⑨ APG Pattern Coverage
 
@@ -237,4 +238,4 @@
 
 ---
 
-*Last updated: 2026-03-21 — Code Health Check (pnpm health: knip + madge + os 미사용 징후 + LOC)*
+*Last updated: 2026-03-21 — Visual CMS Engine Unification (날코딩 제거, useAriaZone external focus recovery)*
