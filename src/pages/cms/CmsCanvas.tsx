@@ -6,7 +6,7 @@ import { focusCommands } from '../../interactive-os/plugins/core'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
-import { spatialCommands, getSpatialParentId } from '../../interactive-os/plugins/spatial'
+import { spatialCommands, getSpatialParentId, SPATIAL_PARENT_ID } from '../../interactive-os/plugins/spatial'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
 import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/types'
@@ -26,14 +26,24 @@ interface CmsCanvasProps {
   plugins?: Plugin[]
 }
 
+/** Navigate to adjacent tab sibling (ArrowRight/ArrowLeft in tablist) */
+function navigateTabSibling(ctx: BehaviorContext, dir: 1 | -1): Command | void {
+  const entity = ctx.getEntity(ctx.focused)
+  const d = (entity?.data ?? {}) as Record<string, unknown>
+  if (d.type !== 'tab-item') return undefined
+  const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
+  const parentId = spatialParent?.parentId as string | undefined
+  if (!parentId) return
+  const siblings = ctx.getChildren(parentId)
+  const idx = siblings.indexOf(ctx.focused)
+  const nextIdx = idx + dir
+  if (nextIdx >= 0 && nextIdx < siblings.length) {
+    return focusCommands.setFocus(siblings[nextIdx])
+  }
+}
+
 /** CRUD keyMap for CMS Canvas — os commands with undo/redo */
 const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
-  Delete: (ctx) => {
-    // Minimum-1-section guard: if focused is a root child and it's the only one, skip
-    const rootChildren = ctx.getChildren(ROOT_ID)
-    if (rootChildren.includes(ctx.focused) && rootChildren.length <= 1) return
-    return crudCommands.remove(ctx.focused)
-  },
   'Mod+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
   'Mod+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
   'Mod+D': (ctx) => {
@@ -71,7 +81,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         const entity = ctx.getEntity(ctx.focused)
         const data = (entity?.data ?? {}) as Record<string, unknown>
         if (data.type === 'tab-item') {
-          const spatialParent = ctx.getEntity('__spatial_parent__')
+          const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
           const parentId = spatialParent?.parentId as string | undefined
           if (parentId) {
             const siblings = ctx.getChildren(parentId)
@@ -82,42 +92,10 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         return crudCommands.remove(ctx.focused)
       },
       ArrowRight: (ctx: BehaviorContext) => {
-        // Tab-item: navigate to next tab within tab-group
-        const entity = ctx.getEntity(ctx.focused)
-        const d = (entity?.data ?? {}) as Record<string, unknown>
-        if (d.type === 'tab-item') {
-          const spatialParent = ctx.getEntity('__spatial_parent__')
-          const parentId = spatialParent?.parentId as string | undefined
-          if (parentId) {
-            const siblings = ctx.getChildren(parentId)
-            const idx = siblings.indexOf(ctx.focused)
-            if (idx >= 0 && idx < siblings.length - 1) {
-              return focusCommands.setFocus(siblings[idx + 1])
-            }
-          }
-          return
-        }
-        // Fall through to spatial nav
-        return spatialNav.keyMap.ArrowRight(ctx)
+        return navigateTabSibling(ctx, 1) ?? spatialNav.keyMap.ArrowRight(ctx)
       },
       ArrowLeft: (ctx: BehaviorContext) => {
-        // Tab-item: navigate to previous tab within tab-group
-        const entity = ctx.getEntity(ctx.focused)
-        const d = (entity?.data ?? {}) as Record<string, unknown>
-        if (d.type === 'tab-item') {
-          const spatialParent = ctx.getEntity('__spatial_parent__')
-          const parentId = spatialParent?.parentId as string | undefined
-          if (parentId) {
-            const siblings = ctx.getChildren(parentId)
-            const idx = siblings.indexOf(ctx.focused)
-            if (idx > 0) {
-              return focusCommands.setFocus(siblings[idx - 1])
-            }
-          }
-          return
-        }
-        // Fall through to spatial nav
-        return spatialNav.keyMap.ArrowLeft(ctx)
+        return navigateTabSibling(ctx, -1) ?? spatialNav.keyMap.ArrowLeft(ctx)
       },
       Enter: (ctx: BehaviorContext) => {
         const children = ctx.getChildren(ctx.focused)
@@ -154,7 +132,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       },
       Escape: (ctx: BehaviorContext) => {
         // Exit to parent depth (if not at root)
-        const spatialParent = ctx.getEntity('__spatial_parent__')
+        const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
         const parentId = spatialParent?.parentId as string | undefined
         if (!parentId || parentId === ROOT_ID) return undefined
         spatialNav.clearCursorsAtDepth(parentId)
@@ -194,11 +172,10 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
   useEffect(() => {
     onFocusChange?.(aria.focused)
     // Track active tab: if focused node is a tab-item, update its parent tab-group
-    const s = aria.getStore()
-    const entity = s.entities[aria.focused]
+    const entity = currentStore.entities[aria.focused]
     const data = (entity?.data ?? {}) as Record<string, unknown>
     if (data.type === 'tab-item') {
-      const parentId = getParent(s, aria.focused)
+      const parentId = getParent(currentStore, aria.focused)
       if (parentId) {
         setActiveTabMap(prev => {
           if (prev.get(parentId) === aria.focused) return prev
