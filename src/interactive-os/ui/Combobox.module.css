@@ -1,21 +1,21 @@
 /* --- Combobox --- */
 
-.combo-item {
+.comboItem {
   padding: 5px 12px;
   font-size: 13px;
 }
 
-.combo-item--focused {
+.comboItemFocused {
   background: var(--bg-focus);
   color: var(--text-bright);
 }
 
-.combo-item--selected {
+.comboItemSelected {
   background: var(--bg-select);
   font-weight: 600;
 }
 
-.combo-input {
+.comboInput {
   width: 100%;
   padding: 6px 10px;
   font-family: var(--sans);
@@ -28,15 +28,15 @@
   transition: border-color 0.12s;
 }
 
-.combo-input:focus {
+.comboInput:focus {
   border-color: var(--accent);
 }
 
-.combo-input::placeholder {
+.comboInput::placeholder {
   color: var(--text-muted);
 }
 
-.combo-dropdown {
+.comboDropdown {
   background: var(--surface-4);
   border: 1px solid var(--border-mid);
   border-radius: var(--radius);

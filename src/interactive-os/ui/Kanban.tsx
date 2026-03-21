@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import './kanban.css'
+import styles from './Kanban.module.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import { ROOT_ID } from '../core/types'
 import { useAria } from '../hooks/useAria'
@@ -42,7 +42,7 @@ export function Kanban({
         role={kanbanBehavior.role}
         aria-label={ariaLabel}
         data-aria-container=""
-        className="kanban-board"
+        className={styles.board}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       >
         {columns.map((colId) => {
@@ -54,16 +54,16 @@ export function Kanban({
           const colTitle = (colEntity.data as Record<string, unknown>)?.title as string ?? ''
 
           return (
-            <div key={colId} className="kanban-column">
+            <div key={colId} className={styles.column}>
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className="kanban-column-header"
+                className={styles.columnHeader}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
               >
                 <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>
                   <span>{colTitle}</span>
-                  <span className="kanban-column-count">{cards.length}</span>
+                  <span className={styles.columnCount}>{cards.length}</span>
                 </AriaItemContext.Provider>
               </FocusDiv>
 
@@ -79,7 +79,7 @@ export function Kanban({
                   <FocusDiv
                     key={cardId}
                     focused={cardState.focused}
-                    className="kanban-card"
+                    className={styles.card}
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>

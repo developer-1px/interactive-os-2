@@ -1,6 +1,6 @@
 /* --- Kanban Board --- */
 
-.kanban-board {
+.board {
   display: flex;
   gap: var(--space-md);
   overflow-x: auto;
@@ -8,7 +8,7 @@
 }
 
 /* ── Column panel ── */
-.kanban-column {
+.column {
   flex: 1 1 0;
   min-width: 200px;
   max-width: 320px;
@@ -22,7 +22,7 @@
 }
 
 /* ── Column header ── */
-.kanban-column-header {
+.columnHeader {
   font-weight: 600;
   font-size: 12px;
   text-transform: uppercase;
@@ -35,14 +35,14 @@
   border-radius: var(--radius-sm);
 }
 
-.kanban-column-header:focus {
+.columnHeader:focus {
   outline: 1.5px solid var(--accent);
   outline-offset: -1.5px;
   background: var(--bg-focus);
   color: var(--text-bright);
 }
 
-.kanban-column-count {
+.columnCount {
   font-size: 11px;
   font-weight: 400;
   color: var(--text-muted);
@@ -51,7 +51,7 @@
 }
 
 /* ── Card ── */
-.kanban-card {
+.card {
   background: var(--surface-2);
   border: 1px solid var(--border-dim);
   border-radius: var(--radius);
@@ -61,24 +61,24 @@
   cursor: default;
 }
 
-.kanban-card:focus {
+.card:focus {
   outline: 1.5px solid var(--accent);
   outline-offset: -1.5px;
   background: var(--bg-focus);
   color: var(--text-bright);
 }
 
-.kanban-card[aria-selected="true"] {
+.card[aria-selected="true"] {
   background: var(--bg-select);
 }
 
-.kanban-card[aria-selected="true"]:focus {
+.card[aria-selected="true"]:focus {
   background: var(--bg-select);
   outline: 1.5px solid var(--accent);
 }
 
 /* ── Editable card title ── */
-.kanban-card [data-renaming] {
+.card :global([data-renaming]) {
   outline: 1.5px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-xs);
