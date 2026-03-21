@@ -254,5 +254,6 @@
 - [x] Area TreeView Sidebar — Area 그룹 사이드바를 TreeView로 교체 (AreaSidebar.tsx), glob에서 트리 데이터 자동 생성, L2 레이어순 + L3 알파벳순, URL→focus/expand 동기화
 
 - [x] CSS Dead Code Cleanup — app.css dead code 118줄 제거, index.css 중복 정리, app.css→layout.css 분해, Vite CSS Modules 설정, 모듈 내 dead `:global()` 제거, phantom className 정리, Toolbar 누락 CSS 추가
+- [x] Knip Health Cleanup — unused files 3개 삭제, unused deps 2개 제거(@mdx-js/react, @babel/core), unused exports 13개 내부화, validateNode 삭제 → knip CLEAN 달성
 
-*Last updated: 2026-03-21 — CSS Dead Code Cleanup*
+*Last updated: 2026-03-21 — Knip Health Cleanup*

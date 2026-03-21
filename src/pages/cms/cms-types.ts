@@ -1,6 +1,6 @@
 export type Locale = 'ko' | 'en' | 'ja'
 export const LOCALES: Locale[] = ['ko', 'en', 'ja']
-export const DEFAULT_LOCALE: Locale = 'ko'
+const DEFAULT_LOCALE: Locale = 'ko'
 
 export type LocaleMap = Record<Locale, string>
 

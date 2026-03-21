@@ -18,14 +18,14 @@ function LocalizedText({ value, locale }: { value: string | LocaleMap; locale: L
 
 // ── Icon lookup (since JSX can't live in store data) ──
 
-export const featureIcons: Record<string, React.ReactNode> = {
+const featureIcons: Record<string, React.ReactNode> = {
   database: <Database size={16} />,
   cog: <Cog size={16} />,
   shield: <Shield size={16} />,
   keyboard: <Keyboard size={16} />,
 }
 
-export const patternIcons: Record<string, React.ReactNode> = {
+const patternIcons: Record<string, React.ReactNode> = {
   table: <Table size={12} />,
   list: <List size={12} />,
   paneltop: <PanelTop size={12} />,
@@ -193,4 +193,4 @@ export function getNodeTag(data: Record<string, string>): keyof React.JSX.Intrin
 
 // ── Editable fields — re-export from schema (single source of truth) ──
 
-export { getEditableFields, type EditableField } from './cms-schema'
+export { getEditableFields } from './cms-schema'

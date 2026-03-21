@@ -7,7 +7,7 @@ const _listeners = new Set<() => void>()
 
 function notify() { _listeners.forEach(fn => fn()) }
 
-export const cmsState = {
+const cmsState = {
   getData: () => _data,
   setData: (next: NormalizedData) => { _data = next; notify() },
   subscribe: (fn: () => void) => { _listeners.add(fn); return () => { _listeners.delete(fn) } },

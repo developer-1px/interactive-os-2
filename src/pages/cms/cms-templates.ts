@@ -246,7 +246,7 @@ function createFooter(): SectionTemplate {
   }
 }
 
-export function createSection(variant: SectionVariant): SectionTemplate {
+function createSection(variant: SectionVariant): SectionTemplate {
   switch (variant) {
     case 'hero':     return createHero()
     case 'stats':    return createStats()

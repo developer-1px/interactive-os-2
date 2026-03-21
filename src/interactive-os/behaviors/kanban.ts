@@ -16,7 +16,7 @@ interface CardInfo {
   cardIndex: number // -1 if focused on column header
 }
 
-export function findCardInfoFor(ctx: BehaviorContext, nodeId: string): CardInfo | null {
+function findCardInfoFor(ctx: BehaviorContext, nodeId: string): CardInfo | null {
   const columns = ctx.getChildren(ROOT_ID)
   const colIdx = columns.indexOf(nodeId)
   if (colIdx !== -1) return { columnId: nodeId, columnIndex: colIdx, cardIndex: -1 }
@@ -28,11 +28,11 @@ export function findCardInfoFor(ctx: BehaviorContext, nodeId: string): CardInfo 
   return null
 }
 
-export function findCardInfo(ctx: BehaviorContext): CardInfo | null {
+function findCardInfo(ctx: BehaviorContext): CardInfo | null {
   return findCardInfoFor(ctx, ctx.focused)
 }
 
-export function focusInColumn(ctx: BehaviorContext, columnId: string, targetIndex: number): Command {
+function focusInColumn(ctx: BehaviorContext, columnId: string, targetIndex: number): Command {
   const cards = ctx.getChildren(columnId)
   if (cards.length === 0) return focusCommands.setFocus(columnId)
   const clamped = Math.min(Math.max(targetIndex, 0), cards.length - 1)

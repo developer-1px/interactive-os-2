@@ -9,7 +9,7 @@ import type { CanAcceptFn } from '../../interactive-os/plugins/clipboard'
 
 // ── Locale map ──
 
-export const localeMapSchema = z.object({
+const localeMapSchema = z.object({
   ko: z.string(),
   en: z.string(),
   ja: z.string(),
@@ -18,7 +18,7 @@ export const localeMapSchema = z.object({
 // ── Node data schemas ──
 // .describe() on each field provides the UI label for Detail Panel.
 
-export const nodeSchemas = {
+const nodeSchemas = {
   badge:            z.object({ type: z.literal('badge'),         value: localeMapSchema.describe('Badge') }),
   icon:             z.object({ type: z.literal('icon'),          value: z.string() }),
   text:             z.object({ type: z.literal('text'),          role: z.string(), value: localeMapSchema.describe('Text') }),
@@ -40,7 +40,7 @@ export const nodeSchemas = {
 
 // ── Children rules ──
 
-export const childRules: Record<string, z.ZodType> = {
+const childRules: Record<string, z.ZodType> = {
   section: z.discriminatedUnion('type', [
     nodeSchemas.card, nodeSchemas.stat, nodeSchemas.step, nodeSchemas.pattern,
     nodeSchemas.badge, nodeSchemas.text, nodeSchemas.cta,
@@ -72,15 +72,9 @@ const allNodeSchemas = z.discriminatedUnion('type', [
   nodeSchemas.links, nodeSchemas.card, nodeSchemas.section,
 ])
 
-export function validateNode(data: unknown): { success: boolean; error?: string } {
-  const result = allNodeSchemas.safeParse(data)
-  if (result.success) return { success: true }
-  return { success: false, error: result.error.issues.map(i => i.message).join(', ') }
-}
-
 // ── Derived: fieldsOf (editable fields for detail panel) ──
 
-export interface EditableField {
+interface EditableField {
   field: string
   label: string
   isLocaleMap: boolean
@@ -90,7 +84,7 @@ function isLocaleMapShape(schema: z.ZodType): boolean {
   return schema instanceof z.ZodObject && 'ko' in (schema as z.ZodObject<z.core.$ZodLooseShape>).shape
 }
 
-export function fieldsOf(type: string): EditableField[] {
+function fieldsOf(type: string): EditableField[] {
   const schema = nodeSchemas[type as keyof typeof nodeSchemas]
   if (!schema) return []
   const shape = schema.shape as Record<string, z.ZodType & { description?: string }>
