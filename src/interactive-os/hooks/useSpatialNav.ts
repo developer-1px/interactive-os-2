@@ -82,7 +82,6 @@ export function useSpatialNav(
 
   const spatialParentId = getSpatialParentId(store)
   const allowed = getChildren(store, spatialParentId)
-  // eslint-disable-next-line react-hooks/refs
   allowedIdsRef.current = allowed
 
   useLayoutEffect(() => {
@@ -123,5 +122,6 @@ export function useSpatialNav(
       'Shift+ArrowLeft': makeShiftHandler('ArrowLeft'),
       'Shift+ArrowRight': makeShiftHandler('ArrowRight'),
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- allowed triggers handler refresh; refs read at call time
   }, [allowed])
 }
