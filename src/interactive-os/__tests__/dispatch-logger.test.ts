@@ -4,6 +4,11 @@ import { computeStoreDiff } from '../core/computeStoreDiff'
 import { defaultLogger } from '../core/dispatchLogger'
 import type { NormalizedData } from '../core/types'
 import type { LogEntry } from '../core/dispatchLogger'
+import { createCommandEngine } from '../core/createCommandEngine'
+import { createStore } from '../core/createStore'
+import { focusCommands } from '../plugins/core'
+import { createBatchCommand } from '../core/types'
+import type { Command } from '../core/types'
 
 describe('computeStoreDiff', () => {
   const base: NormalizedData = {
@@ -113,15 +118,16 @@ describe('defaultLogger', () => {
     const logs: string[] = []
     const origLog = console.log
     console.log = (...args: unknown[]) => logs.push(args.join(' '))
-
-    defaultLogger({
-      seq: 1,
-      type: 'core:focus',
-      payload: { nodeId: 'item1' },
-      diff: [{ path: '__focus__.focusedId', kind: 'changed' as const, before: '', after: 'item1' }],
-    })
-
-    console.log = origLog
+    try {
+      defaultLogger({
+        seq: 1,
+        type: 'core:focus',
+        payload: { nodeId: 'item1' },
+        diff: [{ path: '__focus__.focusedId', kind: 'changed' as const, before: '', after: 'item1' }],
+      })
+    } finally {
+      console.log = origLog
+    }
     expect(logs[0]).toContain('[dispatch #1]')
     expect(logs[0]).toContain('core:focus')
     expect(logs[0]).toContain('∆')
@@ -131,16 +137,17 @@ describe('defaultLogger', () => {
     const logs: string[] = []
     const origLog = console.log
     console.log = (...args: unknown[]) => logs.push(args.join(' '))
-
-    defaultLogger({
-      seq: 3,
-      type: 'bad:command',
-      payload: {},
-      diff: [],
-      error: 'Boom',
-    })
-
-    console.log = origLog
+    try {
+      defaultLogger({
+        seq: 3,
+        type: 'bad:command',
+        payload: {},
+        diff: [],
+        error: 'Boom',
+      })
+    } finally {
+      console.log = origLog
+    }
     expect(logs[0]).toContain('ERROR')
     expect(logs[0]).toContain('Boom')
     expect(logs[0]).toContain('(rollback)')
@@ -150,15 +157,16 @@ describe('defaultLogger', () => {
     const logs: string[] = []
     const origLog = console.log
     console.log = (...args: unknown[]) => logs.push(args.join(' '))
-
-    defaultLogger({
-      seq: 2,
-      type: 'core:focus',
-      payload: { nodeId: 'item1' },
-      diff: [],
-    })
-
-    console.log = origLog
+    try {
+      defaultLogger({
+        seq: 2,
+        type: 'core:focus',
+        payload: { nodeId: 'item1' },
+        diff: [],
+      })
+    } finally {
+      console.log = origLog
+    }
     expect(logs[0]).toContain('(no change)')
   })
 
@@ -166,16 +174,139 @@ describe('defaultLogger', () => {
     const logs: string[] = []
     const origLog = console.log
     console.log = (...args: unknown[]) => logs.push(args.join(' '))
-
-    defaultLogger({
-      seq: 2,
-      type: 'core:focus',
-      payload: { nodeId: 'item1' },
-      diff: [],
-      parent: 1,
-    })
-
-    console.log = origLog
+    try {
+      defaultLogger({
+        seq: 2,
+        type: 'core:focus',
+        payload: { nodeId: 'item1' },
+        diff: [],
+        parent: 1,
+      })
+    } finally {
+      console.log = origLog
+    }
     expect(logs[0]).toMatch(/^\s{2}/)
+  })
+})
+
+describe('engine logger integration', () => {
+  function setup(logger: (entry: LogEntry) => void) {
+    const store = createStore({
+      entities: {
+        item1: { id: 'item1', data: { name: 'A' } },
+        item2: { id: 'item2', data: { name: 'B' } },
+      },
+      relationships: { __root__: ['item1', 'item2'] },
+    })
+    return createCommandEngine(store, [], () => {}, { logger })
+  }
+
+  it('logs single command with seq, type, payload, diff', () => {
+    const entries: LogEntry[] = []
+    const engine = setup((e) => entries.push(e))
+
+    engine.dispatch(focusCommands.setFocus('item1'))
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0]!.seq).toBe(1)
+    expect(entries[0]!.type).toBe('core:focus')
+    expect(entries[0]!.payload).toEqual({ nodeId: 'item1' })
+    expect(entries[0]!.diff.length).toBeGreaterThan(0)
+    expect(entries[0]!.parent).toBeUndefined()
+    expect(entries[0]!.error).toBeUndefined()
+  })
+
+  it('increments seq across dispatches', () => {
+    const entries: LogEntry[] = []
+    const engine = setup((e) => entries.push(e))
+
+    engine.dispatch(focusCommands.setFocus('item1'))
+    engine.dispatch(focusCommands.setFocus('item2'))
+
+    expect(entries[0]!.seq).toBe(1)
+    expect(entries[1]!.seq).toBe(2)
+  })
+
+  it('logs batch with parent (full diff) + children (type/payload only)', () => {
+    const entries: LogEntry[] = []
+    const engine = setup((e) => entries.push(e))
+
+    const batch = createBatchCommand([
+      focusCommands.setFocus('item1'),
+      focusCommands.setFocus('item2'),
+    ])
+    engine.dispatch(batch)
+
+    expect(entries).toHaveLength(3)
+    expect(entries[0]!.type).toBe('batch')
+    expect(entries[0]!.diff.length).toBeGreaterThan(0)
+    expect(entries[0]!.parent).toBeUndefined()
+    const parentSeq = entries[0]!.seq
+    expect(entries[1]!.parent).toBe(parentSeq)
+    expect(entries[1]!.diff).toEqual([])
+    expect(entries[2]!.parent).toBe(parentSeq)
+    expect(entries[2]!.diff).toEqual([])
+  })
+
+  it('handles nested batch recursively', () => {
+    const entries: LogEntry[] = []
+    const engine = setup((e) => entries.push(e))
+
+    const inner = createBatchCommand([
+      focusCommands.setFocus('item1'),
+    ])
+    const outer = createBatchCommand([
+      inner,
+      focusCommands.setFocus('item2'),
+    ])
+    engine.dispatch(outer)
+
+    // outer(1) → inner(2) → setFocus-item1(3) → setFocus-item2(4)
+    expect(entries).toHaveLength(4)
+    expect(entries[0]!.type).toBe('batch')
+    expect(entries[1]!.type).toBe('batch')
+    expect(entries[1]!.parent).toBe(entries[0]!.seq)
+    expect(entries[2]!.parent).toBe(entries[0]!.seq)
+    expect(entries[3]!.parent).toBe(entries[0]!.seq)
+  })
+
+  it('logs no-change command with empty diff', () => {
+    const entries: LogEntry[] = []
+    const engine = setup((e) => entries.push(e))
+
+    engine.dispatch(focusCommands.setFocus('item1'))
+    engine.dispatch(focusCommands.setFocus('item1'))
+
+    expect(entries[1]!.diff).toEqual([])
+  })
+
+  it('logs error command with error field', () => {
+    const entries: LogEntry[] = []
+    const engine = setup((e) => entries.push(e))
+
+    const badCommand: Command = {
+      type: 'bad:command',
+      payload: {},
+      execute() { throw new Error('Boom') },
+      undo(s) { return s },
+    }
+    engine.dispatch(badCommand)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0]!.error).toBe('Boom')
+    expect(entries[0]!.diff).toEqual([])
+  })
+
+  it('does not log when logger is false', () => {
+    const entries: LogEntry[] = []
+    const store = createStore({ entities: {}, relationships: { __root__: [] } })
+    const engine = createCommandEngine(store, [], () => {}, { logger: false })
+    const engineWithLogger = createCommandEngine(store, [], () => {}, { logger: (e) => entries.push(e) })
+
+    engine.dispatch(focusCommands.setFocus('x'))
+    expect(entries).toHaveLength(0)
+
+    engineWithLogger.dispatch(focusCommands.setFocus('x'))
+    expect(entries).toHaveLength(1)
   })
 })

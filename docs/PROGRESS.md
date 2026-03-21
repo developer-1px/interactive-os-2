@@ -19,6 +19,7 @@
 
 - [x] dispatch + middleware pipeline (outside-in)
 - [x] onStoreChange 외부 동기화
+- [x] Dispatch Logger — computeStoreDiff (id-level diff), defaultLogger (structured console), EngineOptions logger 통합 (executor 내부 prev/next 캡처, batch children type/payload only)
 - [ ] `[P2]` Command 직렬화 — 협업/로깅용 serialize/deserialize
 
 ## ③ Plugins
@@ -248,4 +249,4 @@
 - [x] Nested Aria bubbling — defaultPrevented 가드 (useAria + useAriaZone), behavior optional (keyMap-only Aria 컨테이너)
 - [x] PageViewer QuickOpen os 전환 — QuickOpen을 useAria+combobox behavior로 마이그레이션, role/onKeyDown/addEventListener 하드코딩 제거, body keyMap-only Aria로 Cmd+P 래핑
 
-*Last updated: 2026-03-21 — CSS Modules Batch B 중간 컴포넌트 전환*
+*Last updated: 2026-03-21 — Dispatch Logger engine 통합*
