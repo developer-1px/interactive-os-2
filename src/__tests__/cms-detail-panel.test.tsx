@@ -156,4 +156,92 @@ describe('CMS Detail Panel', () => {
 
     expect(panel.querySelectorAll('input').length).toBe(2)
   })
+
+  // V4: Escape widens panel scope back to section
+  it('widens panel scope when escaping from card to section', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<CmsLayout />)
+
+    // Enter features section
+    const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
+    await user.click(features)
+
+    // Enter card depth
+    const cardStore = container.querySelector('[data-cms-id="card-store"]') as HTMLElement
+    await user.click(cardStore)
+
+    const panel = container.querySelector('.cms-detail-panel')!
+    expect(panel.querySelectorAll('input').length).toBe(2)
+
+    // Escape back to section
+    await user.keyboard('{Escape}')
+
+    // Panel should widen to section scope
+    expect(panel.querySelectorAll('input').length).toBe(11)
+  })
+
+  // V6: undo via Mod+Z — skipped in jsdom (Cmd+Z keyboard dispatch limitation)
+  // Verified via existing history plugin unit tests + manual browser testing
+
+  // V8: patterns section → 17 fields scrollable
+  it('shows all 17 fields for patterns section', async () => {
+    const { container } = render(<CmsLayout />)
+
+    const patterns = container.querySelector('[data-cms-id="patterns"]') as HTMLElement
+    act(() => { patterns.click() })
+
+    const panel = container.querySelector('.cms-detail-panel')!
+    const inputs = panel.querySelectorAll('input')
+    // patterns: header (label + title + desc = 3) + 14 patterns × name = 17
+    expect(inputs.length).toBe(17)
+  })
+
+  // V9: edit in progress + focus change → commit
+  it('commits edit on focus change via blur', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<CmsLayout />)
+
+    const badge = container.querySelector('[data-cms-id="hero-badge"]') as HTMLElement
+    await user.click(badge)
+
+    const panel = container.querySelector('.cms-detail-panel')!
+    const input = panel.querySelector('input')!
+
+    await user.clear(input)
+    await user.type(input, 'Auto Committed')
+
+    // Click a different node — causes blur → commit
+    const title = container.querySelector('[data-cms-id="hero-title"]') as HTMLElement
+    await user.click(title)
+
+    expect(badge.textContent).toContain('Auto Committed')
+  })
+
+  // V10: stat container group label = text child localized value
+  it('uses text label child value as stat group label', async () => {
+    const { container } = render(<CmsLayout />)
+
+    const stats = container.querySelector('[data-cms-id="stats"]') as HTMLElement
+    act(() => { stats.click() })
+
+    const panel = container.querySelector('.cms-detail-panel')!
+    const legends = panel.querySelectorAll('.cms-detail-group__label')
+    // First stat group should use the text(stat-label) child value
+    const labels = Array.from(legends).map(l => l.textContent)
+    expect(labels).toContain('APG Patterns')
+    expect(labels).toContain('Tests')
+  })
+
+  // V12: footer-links container → link fields
+  it('shows link fields for footer-links container', async () => {
+    const { container } = render(<CmsLayout />)
+
+    const footerLinks = container.querySelector('[data-cms-id="footer-links"]') as HTMLElement
+    act(() => { footerLinks.click() })
+
+    const panel = container.querySelector('.cms-detail-panel')!
+    const inputs = panel.querySelectorAll('input')
+    // 3 links × (label + href) = 6 fields
+    expect(inputs.length).toBe(6)
+  })
 })
