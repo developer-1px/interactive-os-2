@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "discussion-drilldown-constraint",
+  "prompt": "우리 discussion에서 제약이 정체됐어. 제약: '매 턴 3단계 UX를 유지해야 한다'인데, 이게 진짜 제약인지 모르겠어. /conflict로 분석해줘",
+  "assertions": [
+    {"text": "discussion 드릴다운 경로로 진입했는가", "type": "structural"},
+    {"text": "5단계를 모두 거쳤는가", "type": "structural"},
+    {"text": "5개 화살표 각각에 전제가 나열되었는가", "type": "completeness"},
+    {"text": "discussion 복귀용 산출물(깨진 전제 + 제약 갱신 + 목표/해결책 반영)이 있는가", "type": "structural"},
+    {"text": "Injection 검증을 수행했는가", "type": "structural"}
+  ]
+}

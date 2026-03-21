@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "component-generality-vs-simplicity",
+  "prompt": "컴포넌트를 범용으로 만들면 설정이 복잡해지고, 단순하게 만들면 재사용이 안 돼",
+  "assertions": [
+    {"text": "5단계를 모두 거쳤는가", "type": "structural"},
+    {"text": "Cloud 다이어그램이 표현되었는가", "type": "structural"},
+    {"text": "5개 화살표 각각에 전제가 나열되었는가", "type": "completeness"},
+    {"text": "전제 깨기가 구체적 대안을 제시하는가", "type": "quality"},
+    {"text": "Injection 검증을 수행했는가", "type": "structural"}
+  ]
+}

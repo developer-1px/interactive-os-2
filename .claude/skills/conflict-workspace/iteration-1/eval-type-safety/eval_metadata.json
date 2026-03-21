@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "type-safety-vs-flexibility",
+  "prompt": "타입 안전성을 높이면 유연성이 떨어지고, 유연성을 높이면 타입이 느슨해져. 어떡하지?",
+  "assertions": [
+    {"text": "5단계(공통 목표→필요조건→행동/충돌→전제 나열→전제 깨기)를 모두 거쳤는가", "type": "structural"},
+    {"text": "Cloud 다이어그램이 A→B→D, A→C→D' 구조로 표현되었는가", "type": "structural"},
+    {"text": "5개 화살표(①~⑤) 각각에 전제가 나열되었는가", "type": "completeness"},
+    {"text": "전제 깨기가 추상적이 아닌 구체적 대안(코드 패턴 수준)을 제시하는가", "type": "quality"},
+    {"text": "Injection 검증(B충족/C충족/부작용)을 수행했는가", "type": "structural"}
+  ]
+}
