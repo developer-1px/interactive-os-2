@@ -44,6 +44,7 @@
 - [x] cut + paste (move)
 - [x] multi-node copy/paste
 - [x] paste into leaf → 부모로 라우팅 (container = relationship entry 존재)
+- [x] `canAccept` 스키마 기반 paste 라우팅 — `clipboard({ canAccept })` 옵션, 자식 불가 시 조상 탐색
 
 ### rename()
 - [x] startRename / confirmRename / cancelRename
