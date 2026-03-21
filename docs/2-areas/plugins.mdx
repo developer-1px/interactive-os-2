@@ -1,0 +1,41 @@
+# Plugins
+
+> Command 확장. 엔진에 CRUD, history, clipboard 등 도메인 기능을 주입하는 미들웨어.
+
+## 주기율표
+
+| 플러그인 | 함수 | 제공 커맨드 | 주요 상수/export | 상태 |
+|---------|------|-----------|-----------------|------|
+| core | `core()` | focus, select, expand, activate, gridCol | `FOCUS_ID`, `SELECTION_ID`, `EXPANDED_ID`, `GRID_COL_ID` | 🟢 |
+| crud | `crud()` | add, remove, update | `crudCommands` | 🟢 |
+| history | `history()` | undo, redo | `historyCommands`, `undoCommand`, `redoCommand` | 🟢 |
+| clipboard | `clipboard()` | cut, copy, paste | `clipboardCommands`, `getCutSourceIds()` | 🟢 |
+| rename | `rename()` | startRename, commitRename, cancelRename | `RENAME_ID`, `renameCommands` | 🟢 |
+| dnd | `dnd()` | moveUp, moveDown, moveIn, moveOut | `dndCommands` | 🟢 |
+| focusRecovery | `focusRecovery()` | (자동) 삭제 후 포커스 복구 | `IsReachable`, `isVisible`, `spatialReachable` | 🟢 |
+| spatial | `spatial()` | spatialParent, spatialChild | `SPATIAL_PARENT_ID`, `spatialCommands` | 🟢 |
+| combobox | `combobox()` | filter, selectOption | `comboboxCommands` | 🟢 |
+
+## 설계 원칙
+
+- **Plugin은 keyMap까지 소유**: commands만 제공하면 복붙+누락 버그
+- **focusRecovery는 불변 조건**: CRUD 있으면 반드시 동작, `isReachable`로 모델별 주입
+- **core는 필수**: 다른 모든 플러그인의 전제 (FOCUS_ID, SELECTION_ID 등)
+
+## 의존 방향
+
+```
+core (필수 — FOCUS_ID, SELECTION_ID)
+  ↓
+crud, history (기본 CRUD + undo)
+  ↓
+clipboard, rename, dnd (crud 위에 구축)
+  ↓
+focusRecovery (CRUD 후 포커스 복구)
+
+spatial, combobox (독립)
+```
+
+## 갭
+
+(없음 — 현재 9개 플러그인으로 안정)
