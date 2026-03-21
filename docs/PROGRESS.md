@@ -61,6 +61,8 @@
 - [x] enterChild / exitToParent — `__spatial_parent__` 기반 depth 네비게이션 (Figma-style)
 - [x] getSpatialParentId helper (ROOT_ID 기본값)
 - [x] undo/redo 지원
+- [x] cross-boundary 이동 — 그룹 경계 넘는 방향키 네비게이션 (findAdjacentGroup fallback)
+- [x] sticky cursor — 그룹별 마지막 포커스 위치 보관/복원 (useRef, undo/redo 밖)
 
 ### 미구현 플러그인
 - [x] focusRecovery() — 포커스 유효성 검증 + 자동 복구 미들웨어
@@ -125,7 +127,7 @@
 - [x] `useControlledAria` — 외부 store 연동 훅 (controlled state variant)
 - [x] `useAriaZone` — multi-zone 공유 훅 (useEngine + 복수 behavior zone, 독립 포커스/확장 상태)
 - [x] DOM 스크롤 동기화 — 포커스 이동 시 `scrollIntoView({ block: 'nearest' })` 자동 호출
-- [x] `hooks/use-spatial-nav.ts` — `useSpatialNav` hook + `findNearest` 순수 함수 (DOM 위치 기반 방향키 네비게이션)
+- [x] `hooks/use-spatial-nav.ts` — `useSpatialNav` hook + `findNearest`/`findAdjacentGroup` 순수 함수, cross-boundary fallback, sticky cursor (DOM 위치 기반 방향키 네비게이션)
 - [x] `onActivate` + `followFocus` — 포커스/활성화 분리, behavior 수준 followFocus + entity별 opt-out
 - [x] `BehaviorContext.value?` — ValueNav optional namespace (grid? 패턴), increment/decrement/setValue
 - [x] `__value__` meta-entity — 연속 값 위젯 상태 관리
@@ -150,7 +152,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (367 tests, 44 files) — axes mock-dispatch 유닛 5개 삭제 (통합 테스트가 동일 커버리지 제공), 테스트 셀렉터 role/data-* 기반으로 정규화 (CSS class 셀렉터 제거)
+- [x] Vitest (383 tests, 45 files) — axes mock-dispatch 유닛 5개 삭제 (통합 테스트가 동일 커버리지 제공), 테스트 셀렉터 role/data-* 기반으로 정규화 (CSS class 셀렉터 제거)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 46 modules)
@@ -259,4 +261,6 @@
 
 - [x] CSS Consolidation + Design Token Unification — 컴포넌트 CSS 17→8개 통합 (9개 글로벌로 이동), 디자인 토큰 alias 정리 (bg-deep→surface-0, shadow-sm/lg 제거), 하드코딩 rgba→토큰, CMS 랜딩 리디자인 (Technical Precision), content max-width 720px 적용, spacing 토큰 채택 규칙 확립
 
-*Last updated: 2026-03-22 — CSS Consolidation + Design Token Unification*
+- [x] Spatial Cross-Boundary + Sticky Cursor — useSpatialNav cross-boundary fallback (findAdjacentGroup), sticky cursor (Map<parentId, childId> useRef), CmsCanvas Enter/Escape/Click cursor clear, 11개 통합 테스트 (T1-T13, N2)
+
+*Last updated: 2026-03-22 — Spatial Cross-Boundary + Sticky Cursor*

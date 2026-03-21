@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findNearest } from '../../interactive-os/hooks/useSpatialNav'
+import { findNearest, findAdjacentGroup } from '../../interactive-os/hooks/useSpatialNav'
 
 /**
  * Layout:
@@ -55,5 +55,35 @@ describe('findNearest', () => {
   it('returns null when only one element exists', () => {
     const single = new Map([['a', rects.get('a')!]])
     expect(findNearest('a', 'ArrowRight', single)).toBeNull()
+  })
+})
+
+describe('findAdjacentGroup', () => {
+  // Layout:
+  //   sec1: [0,0,300,200]     children: a[0,0,100,100], b[120,0,100,100]
+  //   sec2: [0,220,300,200]   children: c[0,220,100,100], d[120,220,100,100]
+  const rect = (x: number, y: number, w: number, h: number) =>
+    ({ x, y, width: w, height: h, top: y, left: x, right: x + w, bottom: y + h, toJSON() {} }) as DOMRect
+
+  const groupRects = new Map([
+    ['sec1', rect(0, 0, 300, 200)],
+    ['sec2', rect(0, 220, 300, 200)],
+  ])
+  const siblings = ['sec1', 'sec2']
+
+  it('ArrowDown from sec1 → sec2', () => {
+    expect(findAdjacentGroup('sec1', 'ArrowDown', siblings, groupRects)).toBe('sec2')
+  })
+
+  it('ArrowUp from sec2 → sec1', () => {
+    expect(findAdjacentGroup('sec2', 'ArrowUp', siblings, groupRects)).toBe('sec1')
+  })
+
+  it('ArrowDown from sec2 → null (no group below)', () => {
+    expect(findAdjacentGroup('sec2', 'ArrowDown', siblings, groupRects)).toBeNull()
+  })
+
+  it('ArrowRight from sec1 → null (no group to the right)', () => {
+    expect(findAdjacentGroup('sec1', 'ArrowRight', siblings, groupRects)).toBeNull()
   })
 })

@@ -1,5 +1,5 @@
 ---
-last_commit: 5722ff86acf048cfe3ec43009969f1b56fcc9f03
+last_commit: be12c2a59e72bb753528af8a83ed0407ec2b36a1
 last_updated: 2026-03-22
 ---
 
@@ -16,7 +16,7 @@ last_updated: 2026-03-22
 | set | 5 | setFocus, setAnchor, setGridCol, setFilter, setValue |
 | toggle | 4 | toggleSelect, toggleExpand, toggleSelect, toggleTheme |
 | select | 3 | select, selectRange, selectAll |
-| clear | 1 | clearSelection |
+| clear | 2 | clearSelection, clearCursorsAtDepth |
 | extend | 1 | extendSelection |
 | focus | 8 | focusNext, focusPrev, focusFirst, focusLast, focusParent, focusChild, focusCommands, focusRecovery |
 | expand | 2 | expand, expandCommands |
@@ -35,7 +35,7 @@ last_updated: 2026-03-22
 | reset | 1 | resetClipboard |
 | parse | 1 | parseKeyCombo |
 | match | 1 | matchKeyEvent |
-| find | 2 | findMatchingKey, findNearest |
+| find | 3 | findMatchingKey, findNearest, findAdjacentGroup |
 | compute | 1 | computeStoreDiff |
 | validate | 1 | validateNode |
 | enter | 1 | enterChild |
@@ -90,7 +90,7 @@ last_updated: 2026-03-22
 | aria | 5 | Aria, AriaInternalContext, AriaBehavior, useAria, useAriaZone |
 | item | 3 | AriaItem (component), AriaItemProps, AriaItemContext |
 | recovery | 1 | focusRecovery |
-| spatial | 3 | spatial (behavior), spatial (plugin), spatialCommands, SPATIAL_PARENT_ID, getSpatialParentId, useSpatialNav, findNearest |
+| spatial | 3 | spatial (behavior), spatial (plugin), spatialCommands, SPATIAL_PARENT_ID, getSpatialParentId, useSpatialNav, SpatialNavResult, findNearest, findAdjacentGroup |
 | tree | 2 | tree (behavior), TreeView (UI) |
 | apg | 16 | ApgKeyboardEntry, ApgPatternData, ApgKeyboardTable, apgAccordion, apgDisclosure, apgSwitch, apgTabs, apgRadioGroup, apgMenu, apgToolbar, apgDialog, apgAlertDialog, apgTreeView, apgTreeGrid, apgListbox, apgGrid, apgCombobox |
 | keyboard | 2 | ApgKeyboardEntry, ApgKeyboardTable |
@@ -105,7 +105,11 @@ last_updated: 2026-03-22
 | axis | 13 | Axis (type), navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap, value |
 | zone | 2 | useAriaZone, UseAriaZoneOptions |
 | scope | 1 | UseAriaZoneOptions.scope |
-| depth | 2 | depthArrow, depthEnterEsc |
+| depth | 3 | depthArrow, depthEnterEsc, clearCursorsAtDepth |
+| cursor | 1 | stickyCursorRef (보관된 이전 위치 ≠ focus. focus=현재 활성, cursor=이전 보관) |
+| direction | 1 | Direction (type) |
+| group | 1 | findAdjacentGroup |
+| result | 1 | SpatialNavResult |
 | trap | 1 | focusTrap |
 | keymap | 1 | keymap-helpers (file) |
 
@@ -126,6 +130,8 @@ last_updated: 2026-03-22
 | uniform | 1 | navVhUniform |
 | extended | 1 | selectExtended |
 | meta | 1 | META_COMMAND_TYPES |
+| sticky | 1 | stickyCursorRef |
+| adjacent | 1 | findAdjacentGroup |
 
 ## Synonym Map
 | canonical | known synonyms | notes |
@@ -139,6 +145,7 @@ last_updated: 2026-03-22
 | node | item (component layer) | node = store/data layer (NodeState, moveNode), item = component API (Aria.Item) — proper layer separation |
 | activate | activateFollowFocus | activateFollowFocus is alias for activate — followFocus is metadata flag, not keyMap |
 | compose | create | composePattern (axis→behavior composition), create (entity/engine factory) — distinct intent |
+| cursor | focus | cursor=보관된 이전 위치 (sticky cursor), focus=현재 활성 노드 — semantically distinct |
 | switchBehavior | — | `switch` is JS reserved word; only behavior export with suffix — unavoidable exception |
 | metadata | config | PatternMetadata → PatternConfig (renamed: Omit&lt;AriaBehavior, 'keyMap'&gt;) |
 
