@@ -59,22 +59,17 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
         </div>
       )
     case 'stat':
-      return (
-        <>
-          <span className="cms-stat__value"><LocalizedText value={data.value as string | LocaleMap} locale={locale} /></span>
-          <span className="cms-stat__label"><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></span>
-        </>
-      )
+      return null  // container — children rendered by CmsCanvas
+    case 'stat-value':
+      return <>{data.value as string}</>
+
     case 'icon':
       return <>{featureIcons[data.value as string] ?? null}</>
     case 'step':
-      return (
-        <>
-          <span className="cms-step__number">{data.num as string}</span>
-          <h3 className="cms-step__title"><LocalizedText value={data.title as string | LocaleMap} locale={locale} /></h3>
-          <p className="cms-step__desc"><LocalizedText value={data.desc as string | LocaleMap} locale={locale} /></p>
-        </>
-      )
+      return null  // container — children rendered by CmsCanvas
+    case 'step-num':
+      return <>{data.value as string}</>
+
     case 'pattern':
       return (
         <>
@@ -133,11 +128,18 @@ export function getNodeClassName(data: Record<string, string>, state: NodeState)
       return `cms-step${f ? ' cms-step--focused' : ''}`
     case 'pattern':
       return `cms-pattern${f ? ' cms-pattern--focused' : ''}`
+    case 'step-num':
+      return 'cms-step__number'
+    case 'stat-value':
+      return `cms-stat__value${f ? ' cms-stat__value--focused' : ''}`
     case 'text': {
       if (data.role === 'hero-title') return 'cms-hero__title'
       if (data.role === 'hero-subtitle') return 'cms-hero__subtitle'
       if (data.role === 'title') return 'cms-feature-card__title'
       if (data.role === 'desc') return 'cms-feature-card__desc'
+      if (data.role === 'step-title') return 'cms-step__title'
+      if (data.role === 'step-desc') return 'cms-step__desc'
+      if (data.role === 'stat-label') return 'cms-stat__label'
       return ''
     }
     case 'section-label': return 'cms-section-label'
@@ -176,9 +178,11 @@ export function getNodeTag(data: Record<string, string>): keyof React.JSX.Intrin
   if (data.type === 'text') {
     if (data.role === 'hero-title') return 'h1'
     if (data.role === 'hero-subtitle') return 'p'
-    if (data.role === 'title') return 'h3'
-    if (data.role === 'desc') return 'p'
+    if (data.role === 'title' || data.role === 'step-title') return 'h3'
+    if (data.role === 'desc' || data.role === 'step-desc') return 'p'
   }
+  if (data.type === 'step-num') return 'span'
+  if (data.type === 'stat-value') return 'span'
   if (data.type === 'section-label') return 'p'
   if (data.type === 'section-title') return 'h2'
   if (data.type === 'section-desc') return 'p'

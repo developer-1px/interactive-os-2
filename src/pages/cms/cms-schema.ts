@@ -23,8 +23,10 @@ export const nodeSchemas = {
   icon:             z.object({ type: z.literal('icon'),          value: z.string() }),
   text:             z.object({ type: z.literal('text'),          role: z.string(), value: localeMapSchema.describe('Text') }),
   cta:              z.object({ type: z.literal('cta'),           primary: localeMapSchema.describe('Primary CTA'), secondary: localeMapSchema.describe('Secondary CTA') }),
-  stat:             z.object({ type: z.literal('stat'),          value: z.string().describe('Value'), label: localeMapSchema.describe('Label') }),
-  step:             z.object({ type: z.literal('step'),          num: z.string().describe('Number'), title: localeMapSchema.describe('Title'), desc: localeMapSchema.describe('Description') }),
+  'stat-value':     z.object({ type: z.literal('stat-value'),    value: z.string().describe('Value') }),
+  stat:             z.object({ type: z.literal('stat') }),
+  'step-num':       z.object({ type: z.literal('step-num'),      value: z.string().describe('Number') }),
+  step:             z.object({ type: z.literal('step') }),
   pattern:          z.object({ type: z.literal('pattern'),       name: localeMapSchema.describe('Name'), icon: z.string() }),
   link:             z.object({ type: z.literal('link'),          label: localeMapSchema.describe('Label'), href: z.string().describe('URL') }),
   brand:            z.object({ type: z.literal('brand'),         name: localeMapSchema.describe('Name'), license: z.string().describe('License') }),
@@ -46,6 +48,8 @@ export const childRules: Record<string, z.ZodType> = {
     nodeSchemas.icon, nodeSchemas.link, nodeSchemas.brand, nodeSchemas.links,
   ]),
   card:  z.discriminatedUnion('type', [nodeSchemas.icon, nodeSchemas.text]),
+  step:  z.discriminatedUnion('type', [nodeSchemas['step-num'], nodeSchemas.text]),
+  stat:  z.discriminatedUnion('type', [nodeSchemas['stat-value'], nodeSchemas.text]),
   links: z.discriminatedUnion('type', [nodeSchemas.link]),
 }
 
@@ -62,7 +66,7 @@ export const cmsCanAccept: CanAcceptFn = (parentData, childData) => {
 
 const allNodeSchemas = z.discriminatedUnion('type', [
   nodeSchemas.badge, nodeSchemas.icon, nodeSchemas.text, nodeSchemas.cta,
-  nodeSchemas.stat, nodeSchemas.step, nodeSchemas.pattern,
+  nodeSchemas.stat, nodeSchemas['stat-value'], nodeSchemas.step, nodeSchemas['step-num'], nodeSchemas.pattern,
   nodeSchemas.link, nodeSchemas.brand,
   nodeSchemas['section-label'], nodeSchemas['section-title'], nodeSchemas['section-desc'],
   nodeSchemas.links, nodeSchemas.card, nodeSchemas.section,
