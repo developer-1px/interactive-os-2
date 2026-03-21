@@ -241,5 +241,6 @@
 ---
 
 - [x] Nested Aria bubbling — defaultPrevented 가드 (useAria + useAriaZone), behavior optional (keyMap-only Aria 컨테이너)
+- [x] PageViewer QuickOpen os 전환 — QuickOpen을 useAria+combobox behavior로 마이그레이션, role/onKeyDown/addEventListener 하드코딩 제거, body keyMap-only Aria로 Cmd+P 래핑
 
-*Last updated: 2026-03-21 — Nested Aria bubbling via defaultPrevented + behavior optional*
+*Last updated: 2026-03-21 — PageViewer QuickOpen → os combobox 전환*
