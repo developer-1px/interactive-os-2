@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon, Presentation } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon, Presentation, BookOpen } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -54,6 +54,7 @@ import PageVisualCms from './pages/PageVisualCms'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
+import PageAreaViewer from './pages/PageAreaViewer'
 import PageNavigate from './pages/axis/PageNavigate'
 import PageSelect from './pages/axis/PageSelect'
 import PageActivate from './pages/axis/PageActivate'
@@ -210,6 +211,15 @@ const routeConfig: RouteGroup[] = [
     items: [
       { path: 'architecture', label: 'Architecture', status: 'ready', component: PageVisionArchitecture },
       { path: 'visual-cms', label: 'Visual CMS', status: 'ready', component: PageVisualCms },
+    ],
+  },
+  {
+    id: 'area',
+    label: 'Area',
+    icon: BookOpen,
+    basePath: '/area/axes',
+    items: [
+      { path: 'axes', label: 'Axes', status: 'ready', component: PageAreaViewer },
     ],
   },
 ]
@@ -387,6 +397,7 @@ function App() {
                   />
                 ))
               )}
+              <Route path="/area/*" element={<PageAreaViewer />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
