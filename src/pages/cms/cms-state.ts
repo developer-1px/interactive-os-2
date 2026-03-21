@@ -17,3 +17,9 @@ export function useCmsData(): [NormalizedData, (d: NormalizedData) => void] {
   const data = useSyncExternalStore(cmsState.subscribe, cmsState.getData)
   return [data, cmsState.setData]
 }
+
+/** Reset module-level CMS data to initial store — for test isolation */
+export function resetCmsData() {
+  _data = cmsStore
+  notify()
+}
