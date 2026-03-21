@@ -7,12 +7,12 @@
 | 훅 | 함수 | 역할 | 상태 |
 |----|------|------|------|
 | useEngine | `useEngine()` | store + commandEngine 생성, React 상태 동기화 | 🟢 |
-| useAria | `useAria()` | engine + behavior → DOM 속성 + 키보드 핸들링 | 🟢 |
+| useAria | `useAria()` | engine + behavior → DOM 속성 + 키보드 핸들링. behavior optional → keyMap-only 모드 | 🟢 |
 | useAriaZone | `useAriaZone()` | 하나의 engine을 여러 위젯이 공유 (multi-zone) | 🟢 |
 | useControlledAria | `useControlledAria()` | 외부 상태와 연동 (controlled component 패턴) | 🟢 |
 | useKeyboard | `parseKeyCombo()`, `matchKeyEvent()`, `findMatchingKey()` | 키보드 이벤트 파싱 유틸리티 | 🟢 |
 | useSpatialNav | `useSpatialNav()`, `findNearest()` | 공간 네비게이션 (TV리모컨식 방향 탐색) | 🟢 |
-| keymapHelpers | `isEditableElement()`, `dispatchKeyAction()` | keyMap 실행 헬퍼 (multi-export) | 🟢 |
+| keymapHelpers | `isEditableElement()`, `dispatchKeyAction(): boolean` | keyMap 실행 헬퍼 (multi-export). 반환값으로 조건부 preventDefault | 🟢 |
 
 ## 핵심 관계
 
@@ -28,6 +28,16 @@ useSpatialNav (독립, spatial plugin과 쌍)
 keymapHelpers (useAria 내부에서 사용)
 ```
 
+## Nested Aria Bubbling
+
+> 최종 갱신: 2026-03-21 (retro: nested-aria-bubbling)
+
+모든 onKeyDown 핸들러에 `if (event.defaultPrevented) return` 가드가 기존 `target !== currentTarget` 앞에 위치. 중첩 `<Aria>` 컨테이너가 DOM 이벤트 버블링으로 자연스럽게 합성됨.
+
+- **behavior optional**: `<Aria keyMap={...}>` — behavior 생략 시 role/tabIndex 없이 keyMap onKeyDown만 등록
+- **글로벌/지역 단축키 통합**: 같은 메커니즘, 차이는 keyMap이 걸린 레이어 위치뿐
+- **EMPTY_BEHAVIOR sentinel**: `isKeyMapOnly` 플래그로 분기, getNodeProps → `{}`
+
 ## 갭
 
-(없음 — AriaZone으로 multi-view 해결됨)
+(없음)
