@@ -140,7 +140,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     const state = aria.getNodeState(nodeId)
     const props = aria.getNodeProps(nodeId)
     const children = getChildren(currentStore, nodeId)
-    const d = (entity.data ?? {}) as Record<string, string>
+    const d = (entity.data ?? {}) as Record<string, unknown>
 
     // Destructure props from aria to override onClick
     const {
