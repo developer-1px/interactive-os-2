@@ -263,4 +263,6 @@
 
 - [x] Spatial Cross-Boundary + Sticky Cursor — useSpatialNav cross-boundary fallback (findAdjacentGroup), sticky cursor (Map<parentId, childId> useRef), CmsCanvas Enter/Escape/Click cursor clear, 11개 통합 테스트 (T1-T13, N2)
 
-*Last updated: 2026-03-22 — Spatial Cross-Boundary + Sticky Cursor*
+- [x] PageViewer File Split — 853줄 PageViewer.tsx를 7개 파일로 분리 (CodeBlock, ExportDiagram, MarkdownViewer, MdxViewer, FileIcon, Breadcrumb, QuickOpen) + 공유 types.ts, PageViewer 본체 ~210줄로 축소
+
+*Last updated: 2026-03-22 — PageViewer File Split*
