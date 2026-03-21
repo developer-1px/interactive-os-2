@@ -5,9 +5,8 @@ import type { BehaviorContext, NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
 import { tabs } from '../behaviors/tabs'
 import { core } from '../plugins/core'
-import { history, historyCommands } from '../plugins/history'
+import { history } from '../plugins/history'
 import { crudCommands } from '../plugins/crud'
-import { clipboardCommands } from '../plugins/clipboard'
 import { renameCommands } from '../plugins/rename'
 import { dndCommands } from '../plugins/dnd'
 
@@ -25,12 +24,7 @@ const defaultRenderItem = (tab: Record<string, unknown>, _state: NodeState): Rea
 )
 
 const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
-  'Mod+C': (ctx) => clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
-  'Mod+X': (ctx) => clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
-  'Mod+V': (ctx) => clipboardCommands.paste(ctx.focused),
   'Delete': (ctx) => crudCommands.remove(ctx.focused),
-  'Mod+Z': () => historyCommands.undo(),
-  'Mod+Shift+Z': () => historyCommands.redo(),
   'F2': (ctx) => renameCommands.startRename(ctx.focused),
   'Alt+ArrowLeft': (ctx) => dndCommands.moveUp(ctx.focused),
   'Alt+ArrowRight': (ctx) => dndCommands.moveDown(ctx.focused),

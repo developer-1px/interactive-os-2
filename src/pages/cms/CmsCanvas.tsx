@@ -6,11 +6,10 @@ import { focusCommands } from '../../interactive-os/plugins/core'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
-import { historyCommands } from '../../interactive-os/plugins/history'
 import { spatialCommands, getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
-import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/types'
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import type { Locale } from './cms-types'
@@ -21,6 +20,7 @@ interface CmsCanvasProps {
   store: NormalizedData
   locale: Locale
   onFocusChange?: (focusedId: string) => void
+  plugins?: Plugin[]
 }
 
 /** CRUD keyMap for CMS Canvas — os commands with undo/redo */
@@ -40,14 +40,10 @@ const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
       clipboardCommands.paste(ctx.focused),
     ])
   },
-  'Mod+C': (ctx) => clipboardCommands.copy([ctx.focused]),
-  'Mod+X': (ctx) => clipboardCommands.cut([ctx.focused]),
-  'Mod+V': (ctx) => clipboardCommands.paste(ctx.focused),
-  'Mod+Z': () => historyCommands.undo(),
-  'Mod+Shift+Z': () => historyCommands.redo(),
+  // Mod+C/X/V → clipboard plugin keyMap, Mod+Z → history plugin keyMap
 }
 
-export default function CmsCanvas({ engine, store, locale, onFocusChange }: CmsCanvasProps) {
+export default function CmsCanvas({ engine, store, locale, onFocusChange, plugins }: CmsCanvasProps) {
   const spatialKeyMap = useSpatialNav('[data-cms-root]', store, 'cms')
 
   // Merge spatial nav + CMS CRUD keyMap (CRUD takes precedence for Mod+ combos)
@@ -62,6 +58,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange }: CmsC
     store,
     behavior: spatial,
     scope: 'cms',
+    plugins,
     keyMap: mergedKeyMap,
     focusRecovery: false,
   })

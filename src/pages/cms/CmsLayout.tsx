@@ -13,12 +13,13 @@ import { useCmsData } from './cms-state'
 import type { Locale } from './cms-types'
 import { useEngine } from '../../interactive-os/hooks/useEngine'
 import { history } from '../../interactive-os/plugins/history'
+import { clipboard } from '../../interactive-os/plugins/clipboard'
 import { getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
 import type { Plugin } from '../../interactive-os/core/types'
 
-const sharedPlugins: Plugin[] = [history()]
+const sharedPlugins: Plugin[] = [history(), clipboard()]
 
 export default function CmsLayout() {
   const [persistedData, setPersistedData] = useCmsData()
@@ -71,10 +72,10 @@ export default function CmsLayout() {
         onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
       />
       <div className="cms-body">
-        <CmsSidebar engine={engine} store={store} locale={locale} activeSectionId={activeSectionId} />
+        <CmsSidebar engine={engine} store={store} locale={locale} activeSectionId={activeSectionId} plugins={sharedPlugins} />
         <div className="cms-canvas-area">
           <CmsViewportWrapper viewport={viewport}>
-            <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} />
+            <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} />
           </CmsViewportWrapper>
           <CmsI18nSheet data={store} onDataChange={setPersistedData} open={i18nSheetOpen} />
         </div>

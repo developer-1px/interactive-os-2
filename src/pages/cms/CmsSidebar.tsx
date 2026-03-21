@@ -1,7 +1,7 @@
 import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getChildren } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
-import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/types'
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import type { Locale } from './cms-types'
@@ -13,7 +13,6 @@ import { listbox } from '../../interactive-os/behaviors/listbox'
 import { focusCommands } from '../../interactive-os/plugins/core'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
-import { historyCommands } from '../../interactive-os/plugins/history'
 import CmsTemplatePicker from './CmsTemplatePicker'
 
 interface CmsSidebarProps {
@@ -21,6 +20,7 @@ interface CmsSidebarProps {
   store: NormalizedData
   locale: Locale
   activeSectionId: string | null
+  plugins?: Plugin[]
 }
 
 // ── Store manipulation helpers (for add/duplicate — these modify engine store directly) ──
@@ -140,7 +140,7 @@ function ThumbNode({ data, nodeId, locale }: {
 
 // ── CmsSidebar ──
 
-export default function CmsSidebar({ engine, store, locale, activeSectionId }: CmsSidebarProps) {
+export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins }: CmsSidebarProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
@@ -170,8 +170,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId }: C
         engine.syncStore(newStore)
         return focusCommands.setFocus(newSectionId)
       },
-      'Mod+Z': () => historyCommands.undo(),
-      'Mod+Shift+Z': () => historyCommands.redo(),
+      // Mod+C/X/V → clipboard plugin keyMap, Mod+Z → history plugin keyMap
       Enter: (ctx) => { scrollToSection(ctx.focused) },
       Escape: () => {
         ;(document.querySelector('[data-cms-root]') as HTMLElement)?.focus()
@@ -184,6 +183,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId }: C
     store,
     behavior: listbox,
     scope: 'sidebar',
+    plugins,
     keyMap: sidebarKeyMap,
   })
 

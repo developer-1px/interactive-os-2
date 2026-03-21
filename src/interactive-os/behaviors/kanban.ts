@@ -2,9 +2,8 @@ import type { BehaviorContext } from './types'
 import type { Command } from '../core/types'
 import { ROOT_ID, createBatchCommand } from '../core/types'
 import { focusCommands, selectionCommands } from '../plugins/core'
-import { dndCommands } from '../plugins/dnd'
 import { historyCommands } from '../plugins/history'
-import { clipboardCommands } from '../plugins/clipboard'
+import { dndCommands } from '../plugins/dnd'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands } from '../plugins/rename'
 import { composePattern, type Axis } from '../axes/composePattern'
@@ -159,10 +158,8 @@ const kanbanPlugins: Axis = {
   Enter: (ctx) => renameCommands.startRename(ctx.focused),
   F2: (ctx) => renameCommands.startRename(ctx.focused),
 
-  'Mod+C': (ctx) => clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
-  'Mod+X': (ctx) => clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
-  'Mod+V': (ctx) => clipboardCommands.paste(ctx.focused),
-
+  // Mod+C/X/V → clipboard plugin keyMap
+  // Mod+Z/Shift+Z kept here because kanban's cross-column move needs undo at behavior level
   'Mod+Z': () => historyCommands.undo(),
   'Mod+Shift+Z': () => historyCommands.redo(),
 
