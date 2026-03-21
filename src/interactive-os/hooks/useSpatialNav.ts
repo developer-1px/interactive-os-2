@@ -82,6 +82,7 @@ export function useSpatialNav(
 
   const spatialParentId = getSpatialParentId(store)
   const allowed = getChildren(store, spatialParentId)
+  // eslint-disable-next-line react-hooks/refs
   allowedIdsRef.current = allowed
 
   useLayoutEffect(() => {

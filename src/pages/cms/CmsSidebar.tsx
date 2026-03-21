@@ -189,6 +189,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
 
   // Sync with canvas active section (when sidebar not focused)
   const ariaRef = useRef(aria)
+  // eslint-disable-next-line react-hooks/refs
   ariaRef.current = aria
   useEffect(() => {
     if (!activeSectionId) return

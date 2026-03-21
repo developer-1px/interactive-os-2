@@ -39,6 +39,7 @@ describe('useAriaZone', () => {
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const aria = useAriaZone({ engine, store, behavior: listbox, scope: 'test' })
+      // eslint-disable-next-line react-hooks/immutability
       holder.dispatch = aria.dispatch
       return <div data-testid="f">{aria.focused}</div>
     }
@@ -91,7 +92,9 @@ describe('useAriaZone', () => {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const zoneA = useAriaZone({ engine, store, behavior: listbox, scope: 'za' })
       const zoneB = useAriaZone({ engine, store, behavior: listbox, scope: 'zb' })
+      // eslint-disable-next-line react-hooks/immutability
       holder.dispatchA = zoneA.dispatch
+      // eslint-disable-next-line react-hooks/immutability
       holder.dispatchB = zoneB.dispatch
       return (
         <div>
@@ -115,7 +118,8 @@ describe('useAriaZone', () => {
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const zoneA = useAriaZone({ engine, store, behavior: listbox, scope: 'za' })
-      const zoneB = useAriaZone({ engine, store, behavior: listbox, scope: 'zb' })
+      const _zoneB = useAriaZone({ engine, store, behavior: listbox, scope: 'zb' })
+      // eslint-disable-next-line react-hooks/immutability
       holder.dispatchA = zoneA.dispatch
       const itemsA = Object.keys(store.entities).filter(k => !k.startsWith('__'))
       const itemsB = Object.keys(store.entities).filter(k => !k.startsWith('__'))

@@ -19,6 +19,7 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
   const [, forceRender] = useState(0)
   const engineRef = useRef<CommandEngine | null>(null)
   const onChangeRef = useRef(onChange)
+  // eslint-disable-next-line react-hooks/refs
   onChangeRef.current = onChange
 
   if (engineRef.current == null) {
@@ -26,6 +27,7 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
       .map((p) => p.middleware)
       .filter((m): m is NonNullable<typeof m> => m != null)
 
+    // eslint-disable-next-line react-hooks/refs
     engineRef.current = createCommandEngine(data, middlewares, (newStore) => {
       onChangeRef.current?.(newStore)
       forceRender((n) => n + 1)
@@ -52,5 +54,6 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
   // eslint-disable-next-line react-hooks/refs
   const store = engine.getStore()
 
+  // eslint-disable-next-line react-hooks/refs
   return { engine, store }
 }
