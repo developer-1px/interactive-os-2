@@ -249,4 +249,44 @@ describe('Combobox keyboard integration', () => {
       expect(input.value).toBe('Banana')
     })
   })
+
+  describe('editable Backspace', () => {
+    it('Backspace deletes characters in editable single-mode combobox', async () => {
+      const user = userEvent.setup()
+      const { container } = render(
+        <Combobox
+          data={fixtureData()}
+          plugins={[core(), comboboxPlugin()]}
+          placeholder="Type..."
+          editable
+          renderItem={(item, state: NodeState) => (
+            <span data-testid={`item-${item.id}`} data-focused={state.focused}>{(item.data as Record<string, unknown>)?.label as string}</span>
+          )}
+        />,
+      )
+      const input = getInput(container)
+      input.focus()
+
+      await user.type(input, 'ban')
+      expect(input.value).toBe('ban')
+
+      await user.keyboard('{Backspace}')
+      expect(input.value).toBe('ba')
+    })
+  })
+
+  describe('blur closes dropdown', () => {
+    it('dropdown closes when input loses focus', async () => {
+      const user = userEvent.setup()
+      const { container } = renderCombobox(fixtureData())
+      const input = getInput(container)
+
+      input.focus()
+      await user.keyboard('{ArrowDown}')
+      expect(getListbox(container)).toBeTruthy()
+
+      await user.tab()
+      expect(getListbox(container)).toBeNull()
+    })
+  })
 })
