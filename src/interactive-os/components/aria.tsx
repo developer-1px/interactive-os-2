@@ -127,7 +127,7 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-function AriaEditable({ field, children }: { field: string; children: React.ReactNode }) {
+function AriaEditable({ field, placeholder, children }: { field: string; placeholder?: string; children: React.ReactNode }) {
   const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
   const editRef = useRef<HTMLSpanElement>(null)
@@ -166,7 +166,7 @@ function AriaEditable({ field, children }: { field: string; children: React.Reac
 
   if (!renaming) {
     return (
-      <span onDoubleClick={(e) => {
+      <span data-placeholder={placeholder} onDoubleClick={(e) => {
         if (!nodeCtx || !ariaCtx) return
         e.stopPropagation()
         ariaCtx.dispatch(renameCommands.startRename(nodeCtx.nodeId))
@@ -218,6 +218,7 @@ function AriaEditable({ field, children }: { field: string; children: React.Reac
       }}
       onBlur={confirm}
       data-renaming=""
+      data-placeholder={placeholder}
     >
       {children}
     </span>
