@@ -84,7 +84,7 @@ export default function PageTypeahead() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls}>
+              <div className={cls} style={{ justifyContent: 'flex-start' }}>
                 <span style={{ marginRight: 8 }}>{d?.emoji as string}</span>
                 <span className="list-item__label">{d?.label as string}</span>
               </div>
