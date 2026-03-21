@@ -9,7 +9,7 @@ import './styles/app.css'
 import { Aria } from './interactive-os/components/aria'
 import { toolbar } from './interactive-os/behaviors/toolbar'
 import { listbox } from './interactive-os/behaviors/listbox'
-import { core } from './interactive-os/plugins/core'
+import { core, FOCUS_ID } from './interactive-os/plugins/core'
 import { createStore } from './interactive-os/core/createStore'
 import { ROOT_ID } from './interactive-os/core/types'
 import type { AriaBehavior } from './interactive-os/behaviors/types'
@@ -266,7 +266,7 @@ const navPaths = Object.fromEntries(navItems.map((n) => [n.id, n.path]))
 
 // --- Sidebar (only for routeConfig groups) ---
 
-function Sidebar({ activeGroup }: { activeGroup: RouteGroup }) {
+function Sidebar({ activeGroup, activeItemPath }: { activeGroup: RouteGroup; activeItemPath?: string }) {
   const navigate = useNavigate()
 
   const handleSidebarChange = useCallback((store: NormalizedData) => {
@@ -276,7 +276,18 @@ function Sidebar({ activeGroup }: { activeGroup: RouteGroup }) {
     }
   }, [navigate, activeGroup.id])
 
-  const sidebarStore = useMemo(() => sidebarStores[activeGroup.id], [activeGroup.id])
+  // URL → Sidebar focus binding (CRUD two-way)
+  const sidebarStore = useMemo(() => {
+    const base = sidebarStores[activeGroup.id]
+    if (!activeItemPath || !base.entities[activeItemPath]) return base
+    return {
+      ...base,
+      entities: {
+        ...base.entities,
+        [FOCUS_ID]: { id: FOCUS_ID, focusedId: activeItemPath },
+      },
+    }
+  }, [activeGroup.id, activeItemPath])
 
   return (
     <nav className="sidebar">
@@ -333,6 +344,19 @@ function App() {
   const isViewer = pathname === '/viewer' || pathname.startsWith('/viewer/')
   const isCms = pathname === '/'
 
+  // URL → ActivityBar focus binding (CRUD two-way)
+  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isCms ? 'cms' : undefined)
+  const activityBarData = useMemo(() => {
+    if (!activityBarFocusId) return activityBarStore
+    return {
+      ...activityBarStore,
+      entities: {
+        ...activityBarStore.entities,
+        [FOCUS_ID]: { id: FOCUS_ID, focusedId: activityBarFocusId },
+      },
+    }
+  }, [activityBarFocusId])
+
   const handleActivityBarActivate = useCallback((nodeId: string) => {
     if (nodeId === 'theme') {
       setTheme(t => t === 'dark' ? 'light' : 'dark')
@@ -349,7 +373,7 @@ function App() {
         </div>
         <Aria
           behavior={verticalToolbar}
-          data={activityBarStore}
+          data={activityBarData}
           plugins={[core()]}
           onActivate={handleActivityBarActivate}
           aria-label="Layer navigation"
@@ -383,7 +407,7 @@ function App() {
         <PageViewer />
       ) : (
         <>
-          {activeGroup && <Sidebar activeGroup={activeGroup} />}
+          {activeGroup && <Sidebar activeGroup={activeGroup} activeItemPath={pathname.split('/')[2]} />}
           <main className="content">
             <Routes>
               {routeConfig.map((group) => (
