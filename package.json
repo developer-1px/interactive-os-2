@@ -235,7 +235,6 @@
     "@mdx-js/rollup": "^3.1.1",
     "@playwright/test": "^1.58.2",
     "@rolldown/plugin-babel": "^0.2.2",
-    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.12.0",
@@ -270,10 +269,16 @@
   },
   "dependencies": {
     "@mdx-js/react": "^3.1.1",
-    "fuse.js": "^7.1.0"
+    "fuse.js": "^7.1.0",
+    "zod": "^4.3.6"
   },
   "knip": {
-    "ignoreDependencies": ["madge"],
-    "ignore": ["docs/**/*.mdx", "vite-plugins/component-inspector/**"]
+    "ignoreDependencies": [
+      "madge"
+    ],
+    "ignore": [
+      "docs/**/*.mdx",
+      "vite-plugins/component-inspector/**"
+    ]
   }
 }

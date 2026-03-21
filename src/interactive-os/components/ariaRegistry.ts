@@ -18,8 +18,3 @@ export function unregisterAria(id: string): void {
 export function getAriaActions(id: string): AriaActions | undefined {
   return registry.get(id)
 }
-
-/** Reset registry — use in tests to isolate state between cases */
-export function resetAriaRegistry(): void {
-  registry.clear()
-}

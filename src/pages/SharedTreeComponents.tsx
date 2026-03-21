@@ -8,7 +8,7 @@ import { getFileExt } from './shared-tree-data'
 const iconSize = 14
 const iconStroke = 1.5
 
-export function FileIcon({ name }: { name: string }) {
+function FileIcon({ name }: { name: string }) {
   const ext = getFileExt(name)
   switch (ext) {
     case '.tsx':
