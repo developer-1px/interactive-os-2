@@ -78,7 +78,7 @@
 - [x] grid? 네임스페이스 (col 네비게이션)
 - [x] aria-activedescendant 포커스 전략 + containerProps
 - [x] **Axis v2** — 5축 모델: navigate(), select(), activate(), expand(), trap(). metadata 행동 플래그를 축 옵션으로 흡수. activateFollowFocus 삭제. Axis 타입 확장 (keyMap + config)
-- [x] **Pointer Interaction** — selectOnClick (plain/Ctrl+Click/Shift+Click), activateOnClick on tree/treegrid, onPointerDown pre-focus ctx capture for Shift+Click range
+- [x] **Pointer Interaction** — selectOnClick (plain/Ctrl+Click/Shift+Click), activateOnClick on tree/treegrid, onPointerDown pre-focus ctx capture for Shift+Click range, Combobox click handlers (input open + option select/toggle)
 - [x] `composePattern(identity, ...axes)` — chain of responsibility 합성, Identity(role/childRole/ariaAttributes) + 축 config 머지, v1 PatternConfig 호환
 - [x] 17개 behavior 전수 5축 모델로 재작성 (기존 테스트 변경 0건)
 
