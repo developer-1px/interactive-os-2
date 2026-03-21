@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react'
-import './spinbutton.css'
+import styles from './Spinbutton.module.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -123,12 +123,12 @@ export function Spinbutton({
     }
 
     return (
-      <div className="spinbutton-item" data-focused={state.focused || undefined}>
-        {itemLabel && <span className="spinbutton-label">{itemLabel}</span>}
-        <div className="spinbutton-group" data-invalid={invalid || undefined}>
+      <div className={styles.spinbuttonItem} data-focused={state.focused || undefined}>
+        {itemLabel && <span className={styles.spinbuttonLabel}>{itemLabel}</span>}
+        <div className={styles.spinbuttonGroup} data-invalid={invalid || undefined}>
           <button
             type="button"
-            className="spinbutton-btn spinbutton-btn--dec"
+            className={`${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
             aria-disabled={atMin || undefined}
@@ -139,7 +139,7 @@ export function Spinbutton({
           {editing ? (
             <input
               ref={inputRef}
-              className="spinbutton-input"
+              className={styles.spinbuttonInput}
               type="text"
               inputMode="numeric"
               value={editValue}
@@ -150,7 +150,7 @@ export function Spinbutton({
             />
           ) : (
             <div
-              className="spinbutton-value"
+              className={styles.spinbuttonValue}
               onClick={startEditing}
               onDoubleClick={startEditing}
             >
@@ -159,7 +159,7 @@ export function Spinbutton({
           )}
           <button
             type="button"
-            className="spinbutton-btn spinbutton-btn--inc"
+            className={`${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}
             aria-disabled={atMax || undefined}

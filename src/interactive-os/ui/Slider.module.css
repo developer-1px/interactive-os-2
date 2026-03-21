@@ -1,20 +1,20 @@
 /* --- Slider --- */
 
-.slider-item {
+.sliderItem {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 6px 10px;
 }
 
-.slider-label {
+.sliderLabel {
   font-size: 12px;
   font-weight: 500;
   color: var(--text-primary);
   min-width: 64px;
 }
 
-.slider-track {
+.sliderTrack {
   position: relative;
   flex: 1;
   height: 6px;
@@ -22,7 +22,7 @@
   border-radius: 3px;
 }
 
-.slider-fill {
+.sliderFill {
   position: absolute;
   left: 0;
   top: 0;
@@ -32,7 +32,7 @@
   pointer-events: none;
 }
 
-.slider-thumb {
+.sliderThumb {
   position: absolute;
   top: 50%;
   width: 16px;
@@ -43,12 +43,12 @@
   transition: box-shadow 0.12s;
 }
 
-[data-focused] .slider-thumb {
+[data-focused] .sliderThumb {
   box-shadow: 0 0 0 3px var(--accent);
   outline: none;
 }
 
-.slider-value {
+.sliderValue {
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);

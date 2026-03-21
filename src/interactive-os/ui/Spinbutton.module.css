@@ -1,13 +1,13 @@
 /* --- Spinbutton --- */
 
-.spinbutton-item {
+.spinbuttonItem {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 6px 10px;
 }
 
-.spinbutton-label {
+.spinbuttonLabel {
   font-size: 13px;
   font-weight: 500;
   color: var(--text-primary);
@@ -15,7 +15,7 @@
 }
 
 /* Unified group: − [value] + with single focus ring */
-.spinbutton-group {
+.spinbuttonGroup {
   display: inline-flex;
   align-items: stretch;
   border: 1px solid var(--border-mid);
@@ -24,13 +24,13 @@
   transition: border-color 0.12s, box-shadow 0.12s;
 }
 
-[data-focused] .spinbutton-group {
+[data-focused] .spinbuttonGroup {
   border-color: var(--accent);
   box-shadow: 0 0 0 2px var(--accent);
   outline: none;
 }
 
-.spinbutton-btn {
+.spinbuttonBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,29 +46,29 @@
   user-select: none;
 }
 
-.spinbutton-btn:hover {
+.spinbuttonBtn:hover {
   background: var(--bg-active);
 }
 
-.spinbutton-btn:active {
+.spinbuttonBtn:active {
   background: var(--bg-press);
 }
 
-.spinbutton-btn[aria-disabled] {
+.spinbuttonBtn[aria-disabled] {
   opacity: 0.35;
   cursor: default;
   pointer-events: none;
 }
 
-.spinbutton-btn--dec {
+.spinbuttonBtnDec {
   border-right: 1px solid var(--border-mid);
 }
 
-.spinbutton-btn--inc {
+.spinbuttonBtnInc {
   border-left: 1px solid var(--border-mid);
 }
 
-.spinbutton-value {
+.spinbuttonValue {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,7 +82,7 @@
   cursor: text;
 }
 
-.spinbutton-input {
+.spinbuttonInput {
   width: 48px;
   padding: 6px 8px;
   border: none;
@@ -96,7 +96,7 @@
 }
 
 /* Error state */
-.spinbutton-group[data-invalid] {
+.spinbuttonGroup[data-invalid] {
   border-color: var(--red);
   box-shadow: 0 0 0 2px var(--red);
 }

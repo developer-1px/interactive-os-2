@@ -1,5 +1,5 @@
 import React from 'react'
-import './DisclosureGroup.css'
+import styles from './DisclosureGroup.module.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -14,8 +14,8 @@ interface DisclosureGroupProps {
 }
 
 const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <span className="disclosure-inner">
-    <span className="chevron disclosure-chevron">{state.expanded ? '▾' : '▸'}</span>
+  <span className={styles.disclosureInner}>
+    <span className={`chevron ${styles.disclosureChevron}`}>{state.expanded ? '▾' : '▸'}</span>
     <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
   </span>
 )

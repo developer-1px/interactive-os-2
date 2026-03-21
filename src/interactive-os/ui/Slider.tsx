@@ -1,5 +1,5 @@
 import React from 'react'
-import './slider.css'
+import styles from './Slider.module.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -49,13 +49,13 @@ export function Slider({
     const label = (item.data as Record<string, unknown>)?.label as string ?? item.id as string
 
     return (
-      <div className="slider-item" data-focused={state.focused || undefined}>
-        {label && <span className="slider-label">{label}</span>}
-        <div className="slider-track" ref={trackRef} onClick={handleTrackClick}>
-          <div className="slider-fill" style={{ width: `${pct}%` }} />
-          <div className="slider-thumb" style={{ left: `${pct}%` }} />
+      <div className={styles.sliderItem} data-focused={state.focused || undefined}>
+        {label && <span className={styles.sliderLabel}>{label}</span>}
+        <div className={styles.sliderTrack} ref={trackRef} onClick={handleTrackClick}>
+          <div className={styles.sliderFill} style={{ width: `${pct}%` }} />
+          <div className={styles.sliderThumb} style={{ left: `${pct}%` }} />
         </div>
-        <span className="slider-value">{current}</span>
+        <span className={styles.sliderValue}>{current}</span>
       </div>
     )
   }

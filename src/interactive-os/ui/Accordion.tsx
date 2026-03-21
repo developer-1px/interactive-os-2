@@ -1,5 +1,5 @@
 import React from 'react'
-import './accordion.css'
+import styles from './Accordion.module.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
@@ -14,9 +14,9 @@ interface AccordionProps {
 }
 
 const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <span className="accordion-inner">
+  <span className={styles.accordionInner}>
     <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
-    <span className="chevron accordion-chevron">{state.expanded ? '−' : '+'}</span>
+    <span className={`chevron ${styles.accordionChevron}`}>{state.expanded ? '−' : '+'}</span>
   </span>
 )
 

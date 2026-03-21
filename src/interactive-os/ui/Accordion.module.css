@@ -1,6 +1,6 @@
 /* --- Accordion --- */
 
-.accordion-header {
+:global(.accordion-header) {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10,16 +10,16 @@
   border-bottom: 1px solid var(--border-dim);
 }
 
-.accordion-header__label {
+:global(.accordion-header__label) {
   color: inherit;
 }
 
-.accordion-header__icon {
+:global(.accordion-header__icon) {
   display: inline-flex;
   color: var(--text-muted);
 }
 
-.accordion-panel {
+:global(.accordion-panel) {
   padding: 8px 10px;
   font-size: 12px;
   color: var(--text-secondary);
@@ -28,5 +28,5 @@
   background: var(--bg-deep);
 }
 
-.accordion-inner { display: inline-flex; align-items: center; justify-content: space-between; width: 100%; }
-.accordion-chevron { opacity: 0.5; }
+.accordionInner { display: inline-flex; align-items: center; justify-content: space-between; width: 100%; }
+.accordionChevron { opacity: 0.5; }
