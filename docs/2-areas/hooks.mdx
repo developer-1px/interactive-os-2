@@ -28,6 +28,18 @@ useSpatialNav (독립, spatial plugin과 쌍)
 keymapHelpers (useAria 내부에서 사용)
 ```
 
+## Pointer Interaction
+
+> 최종 갱신: 2026-03-22 (retro: pointer-interaction)
+
+useAria의 `getNodeProps()`가 `onPointerDown` + `onClick` 핸들러를 반환한다.
+
+- **selectOnClick**: `select()` 축이 자동 설정. Click→select, Shift+Click→range, Ctrl/Cmd+Click→toggle
+- **activateOnClick**: `activate({ onClick: true })` 옵션. Click→activate (expand/select by children)
+- **onPointerDown**: `selectOnClick` 시 BehaviorContext를 `useRef`로 캡처. onFocus→setFocus→anchorResetMiddleware가 앵커를 클리어하기 때문에, focus 전 상태를 보존하여 Shift+Click 범위 계산에 사용
+- **modifier 클릭 시 activate 억제**: Shift/Ctrl/Meta+Click은 selection 전용 — activate를 건너뜀
+- **event.defaultPrevented 가드**: 중첩 Aria 인스턴스에서 이중 처리 방지 (Nested Aria Bubbling과 동일 메커니즘)
+
 ## Nested Aria Bubbling
 
 > 최종 갱신: 2026-03-21 (retro: nested-aria-bubbling)
