@@ -31,7 +31,12 @@ export default function PageSpinbutton() {
       <div className="page-keys">
         <kbd>↑</kbd><kbd>↓</kbd> <span className="key-hint">±{STEP}</span>{' '}
         <kbd>PgUp</kbd><kbd>PgDn</kbd> <span className="key-hint">±{STEP * 10}</span>{' '}
-        <kbd>Home</kbd><kbd>End</kbd> <span className="key-hint">min / max</span>
+        <kbd>Home</kbd><kbd>End</kbd> <span className="key-hint">min / max</span>{' '}
+        <span className="key-hint">click value → type</span>{' '}
+        <kbd>▲</kbd><kbd>▼</kbd> <span className="key-hint">buttons</span>{' '}
+        <kbd>Esc</kbd> <span className="key-hint">cancel edit</span>{' '}
+        <kbd>Ctrl+Z</kbd> <span className="key-hint">undo</span>{' '}
+        <kbd>Ctrl+Shift+Z</kbd> <span className="key-hint">redo</span>
       </div>
       <div className="card">
         <Spinbutton

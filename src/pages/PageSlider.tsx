@@ -32,7 +32,10 @@ export default function PageSlider() {
         <kbd>←</kbd><kbd>→</kbd> <span className="key-hint">±{STEP}</span>{' '}
         <kbd>↑</kbd><kbd>↓</kbd> <span className="key-hint">±{STEP}</span>{' '}
         <kbd>PgUp</kbd><kbd>PgDn</kbd> <span className="key-hint">±{STEP * 10}</span>{' '}
-        <kbd>Home</kbd><kbd>End</kbd> <span className="key-hint">min / max</span>
+        <kbd>Home</kbd><kbd>End</kbd> <span className="key-hint">min / max</span>{' '}
+        <span className="key-hint">track click</span>{' '}
+        <kbd>Ctrl+Z</kbd> <span className="key-hint">undo</span>{' '}
+        <kbd>Ctrl+Shift+Z</kbd> <span className="key-hint">redo</span>
       </div>
       <div className="card">
         <Slider
