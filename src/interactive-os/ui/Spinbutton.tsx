@@ -76,25 +76,35 @@ export function Spinbutton({
     const atMin = current <= min
     const atMax = current >= max
 
+    const dispatchAndSync = (cmd: ReturnType<typeof valueCommands.setValue>) => {
+      dispatch(cmd)
+      // Read back the committed value from store so editValue stays in sync
+      requestAnimationFrame(() => {
+        const store = getAriaActions(stableId)?.getStore()
+        const v = (store?.entities['__value__'] as Record<string, unknown>)?.value as number | undefined
+        if (v !== undefined) setEditValue(String(v))
+      })
+    }
+
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'ArrowUp') {
         e.preventDefault()
-        handleIncrement()
+        dispatchAndSync(valueCommands.increment(step, range))
       } else if (e.key === 'ArrowDown') {
         e.preventDefault()
-        handleDecrement()
+        dispatchAndSync(valueCommands.decrement(step, range))
       } else if (e.key === 'Home') {
         e.preventDefault()
-        dispatch(valueCommands.setValue(min, range))
+        dispatchAndSync(valueCommands.setValue(min, range))
       } else if (e.key === 'End') {
         e.preventDefault()
-        dispatch(valueCommands.setValue(max, range))
+        dispatchAndSync(valueCommands.setValue(max, range))
       } else if (e.key === 'PageUp') {
         e.preventDefault()
-        dispatch(valueCommands.increment(step * 10, range))
+        dispatchAndSync(valueCommands.increment(step * 10, range))
       } else if (e.key === 'PageDown') {
         e.preventDefault()
-        dispatch(valueCommands.decrement(step * 10, range))
+        dispatchAndSync(valueCommands.decrement(step * 10, range))
       } else if (e.key === 'Enter') {
         e.preventDefault()
         commitEdit(e.currentTarget.value)
