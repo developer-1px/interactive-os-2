@@ -225,7 +225,7 @@
 | Carousel | ❌ | ❌ | ❌ | ❌ | — |
 | Feed | ❌ | ❌ | ❌ | ❌ | — |
 | Table | ❌ | ❌ | ❌ | ❌ | read-only grid |
-| Tooltip | ❌ | ❌ | ❌ | ❌ | — |
+| Tooltip | ✅ | ✅ | ❌ | ❌ | native `popover="hint"` + `interestfor`, engine 밖 독립 컴포넌트 |
 | Window Splitter | ❌ | ❌ | ❌ | ❌ | — |
 
 *Native HTML 패턴 (Alert, Breadcrumb, Button, Checkbox, Link, Meter)은 behavior 불필요로 제외*
