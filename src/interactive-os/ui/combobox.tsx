@@ -201,7 +201,28 @@ export function Combobox({
     ? (isOpen ? filterText : selectedLabel)
     : selectedLabel
 
-  // Wrap the behavior's onKeyDown to intercept create option navigation
+  // Navigate only through visible (filtered) items instead of full store
+  const navigateFiltered = (key: string): boolean => {
+    if (!filterText || !(editable || creatable) || visibleChildren.length === 0) return false
+    if (isOpen && (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Home' || key === 'End')) {
+      const idx = visibleChildren.indexOf(aria.focused)
+      let next: string | undefined
+      if (key === 'ArrowDown') next = idx < visibleChildren.length - 1 ? visibleChildren[idx + 1] : visibleChildren[idx]
+      else if (key === 'ArrowUp') next = idx > 0 ? visibleChildren[idx - 1] : visibleChildren[0]
+      else if (key === 'Home') next = visibleChildren[0]
+      else if (key === 'End') next = visibleChildren[visibleChildren.length - 1]
+      if (next) aria.dispatch(focusCommands.setFocus(next))
+      return true
+    }
+    if (!isOpen && key === 'ArrowDown') {
+      aria.dispatch(comboboxCommands.open())
+      aria.dispatch(focusCommands.setFocus(visibleChildren[0]!))
+      return true
+    }
+    return false
+  }
+
+  // Wrap the behavior's onKeyDown to intercept create option and filtered navigation
   const behaviorOnKeyDown = (aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>).onKeyDown
   const wrappedOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (showCreateOption) {
@@ -214,7 +235,6 @@ export function Combobox({
         if (e.key === 'ArrowUp') {
           e.preventDefault()
           setCreateOptionFocused(false)
-          // Focus last visible item in list
           const lastVisibleId = visibleChildren[visibleChildren.length - 1]
           if (lastVisibleId) aria.dispatch(focusCommands.setFocus(lastVisibleId))
           return
@@ -222,11 +242,9 @@ export function Combobox({
         if (e.key === 'Escape') {
           // Fall through to behavior's Escape handler
         } else {
-          // For all other keys when create option is focused, let the browser handle
           return
         }
       } else {
-        // Not on create option yet — check if ArrowDown from last visible item
         if (e.key === 'ArrowDown') {
           const lastVisibleId = visibleChildren[visibleChildren.length - 1]
           if (aria.focused === lastVisibleId || visibleChildren.length === 0) {
@@ -238,6 +256,7 @@ export function Combobox({
       }
     }
     if (createOptionFocused && e.key !== 'Escape') return
+    if (navigateFiltered(e.key)) { e.preventDefault(); return }
     behaviorOnKeyDown?.(e)
   }
 
