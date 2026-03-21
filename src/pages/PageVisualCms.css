@@ -295,11 +295,11 @@
 }
 
 .cms-step--focused {
-  background: var(--accent-dim);
+  background: var(--bg-focus);
 }
 
 [aria-selected="true"][data-node-id] {
-  background: var(--accent-dim);
+  background: var(--bg-select);
 }
 
 .cms-step__number {
@@ -372,7 +372,7 @@
 .cms-pattern--focused {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent);
-  background: var(--accent-dim);
+  background: var(--bg-focus);
 }
 
 .cms-pattern__icon {

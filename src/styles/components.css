@@ -22,6 +22,8 @@
   color: var(--text-primary);
   border-radius: var(--radius-sm);
   transition: background 0.08s;
+  outline: 1.5px solid transparent;
+  outline-offset: -1.5px;
 }
 
 /* Tree/treegrid: dense padding */
@@ -39,6 +41,8 @@
   font-weight: 600;
   color: var(--text-primary);
   transition: background 0.08s;
+  outline: 1.5px solid transparent;
+  outline-offset: -1.5px;
 }
 
 /* Disclosure button */
@@ -51,23 +55,25 @@
   color: var(--text-primary);
   border-radius: var(--radius-sm);
   transition: background 0.08s;
+  outline: 1.5px solid transparent;
+  outline-offset: -1.5px;
 }
 
-/* ── Hover ── */
+/* ── Hover (suppressed when focus is active via :focus-within) ── */
 
-[data-aria-container] [role="option"]:hover,
-[data-aria-container] [role="treeitem"]:hover,
-[data-aria-container] [role="menuitem"]:hover,
-[data-aria-container] [role="radio"]:hover,
-[data-aria-container] [role="switch"]:hover,
-[data-aria-container] [role="row"]:hover,
-[data-aria-container] [role="heading"]:hover,
-[data-aria-container] [role="group"] > [role="button"]:hover {
+[data-aria-container]:not(:focus-within) [role="option"]:hover,
+[data-aria-container]:not(:focus-within) [role="treeitem"]:hover,
+[data-aria-container]:not(:focus-within) [role="menuitem"]:hover,
+[data-aria-container]:not(:focus-within) [role="radio"]:hover,
+[data-aria-container]:not(:focus-within) [role="switch"]:hover,
+[data-aria-container]:not(:focus-within) [role="row"]:hover,
+[data-aria-container]:not(:focus-within) [role="heading"]:hover,
+[data-aria-container]:not(:focus-within) [role="group"] > [role="button"]:hover {
   background: var(--bg-hover);
 }
 
 /* Tabs: no background hover, use subtle text change */
-[data-aria-container] [role="tab"]:hover {
+[data-aria-container]:not(:focus-within) [role="tab"]:hover {
   color: var(--text-secondary);
 }
 
@@ -81,22 +87,39 @@
 [data-aria-container] [role="row"]:focus,
 [data-aria-container] [role="heading"]:focus,
 [data-aria-container] [role="group"] > [role="button"]:focus {
-  background: var(--accent-dim);
+  background: var(--bg-focus);
   color: var(--text-bright);
+  outline-color: var(--accent);
 }
 
-/* Tabs: focused uses accent bottom border */
-[data-aria-container] [role="tab"]:focus {
+/* Tabs: focused uses accent bottom border (exception — no outline) */
+[data-aria-container] [role="tab"]:focus,
+[data-aria-container] [role="tab"][data-focused] {
   color: var(--accent);
   border-bottom-color: var(--accent);
   font-weight: 600;
+  outline-color: transparent;
 }
 
 /* ── Focused (aria-activedescendant — data-focused) ── */
 
 [data-aria-container] [data-focused] {
-  background: var(--accent-dim);
+  background: var(--bg-focus);
   color: var(--text-bright);
+  outline-color: var(--accent);
+}
+
+/* ── Active (press feedback) ── */
+
+[data-aria-container] [role="option"]:active,
+[data-aria-container] [role="treeitem"]:active,
+[data-aria-container] [role="menuitem"]:active,
+[data-aria-container] [role="radio"]:active,
+[data-aria-container] [role="switch"]:active,
+[data-aria-container] [role="row"]:active,
+[data-aria-container] [role="heading"]:active,
+[data-aria-container] [role="group"] > [role="button"]:active {
+  background: var(--bg-press);
 }
 
 /* ── Selected ── */
@@ -120,13 +143,15 @@
 }
 
 /* ── Focused + Selected compound ── */
+/* Selected background preserved; focus indicated by outline */
 
 [data-aria-container] [aria-selected="true"]:focus,
 [data-aria-container] [aria-checked="true"]:focus,
 [data-aria-container] [aria-selected="true"][data-focused],
 [data-aria-container] [aria-checked="true"][data-focused] {
-  background: var(--accent-dim);
+  background: var(--bg-select);
   color: var(--text-bright);
+  outline-color: var(--accent);
 }
 
 /* ── Expanded chevron rotation ── */
