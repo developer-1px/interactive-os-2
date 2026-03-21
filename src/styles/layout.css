@@ -167,11 +167,11 @@
 .content {
   min-width: 0;
   padding: 24px 32px;
-  max-width: 760px;
   background: var(--surface-2);
   box-shadow: var(--surface-2-shadow);
   overflow-y: auto;
 }
+
 
 /* sidebar 없을 때 content가 2번째 자식 → 2열부터 끝까지 */
 .content:nth-child(2) {
