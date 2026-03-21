@@ -242,9 +242,17 @@ export function Combobox({
     behaviorOnKeyDown?.(e)
   }
 
+  const handleBlur = () => {
+    setCreateOptionFocused(false)
+    if (isOpen) {
+      aria.dispatch(comboboxCommands.close())
+    }
+  }
+
   const containerPropsWithWrappedKeyDown = {
     ...aria.containerProps,
     onKeyDown: wrappedOnKeyDown,
+    onBlur: handleBlur,
   }
 
   return (
@@ -292,7 +300,7 @@ export function Combobox({
       />
       )}
       {isOpen && (
-        <div className={styles.comboDropdown} role="listbox">
+        <div className={styles.comboDropdown} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? (
             rootChildren.map(groupId => {
               const group = originalStore.entities[groupId]

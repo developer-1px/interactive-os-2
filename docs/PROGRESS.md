@@ -150,7 +150,7 @@
 
 ## ⑦ 인프라
 
-- [x] Vitest (367 tests, 44 files) — axes mock-dispatch 유닛 5개 삭제 (통합 테스트가 동일 커버리지 제공)
+- [x] Vitest (367 tests, 44 files) — axes mock-dispatch 유닛 5개 삭제 (통합 테스트가 동일 커버리지 제공), 테스트 셀렉터 role/data-* 기반으로 정규화 (CSS class 셀렉터 제거)
 - [x] axe-core 접근성 테스트
 - [x] ESLint (0 errors)
 - [x] tsup 라이브러리 빌드 (ESM + DTS, 46 modules)

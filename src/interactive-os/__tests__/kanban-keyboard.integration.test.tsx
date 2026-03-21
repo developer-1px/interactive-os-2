@@ -87,10 +87,13 @@ function getSelectedNodeIds(container: HTMLElement): string[] {
 }
 
 function getAllCardIds(container: HTMLElement, columnIndex: number): string[] {
-  const columns = container.querySelectorAll('.kanban-column')
-  const col = columns[columnIndex]
-  if (!col) return []
-  return Array.from(col.querySelectorAll('.kanban-card[data-node-id]'))
+  const board = container.querySelector('[data-aria-container]')
+  if (!board) return []
+  const columnWrapper = board.children[columnIndex]
+  if (!columnWrapper) return []
+  // First [data-node-id] is column header, rest are cards
+  return Array.from(columnWrapper.querySelectorAll('[data-node-id]'))
+    .slice(1)
     .map((el) => el.getAttribute('data-node-id')!)
 }
 
