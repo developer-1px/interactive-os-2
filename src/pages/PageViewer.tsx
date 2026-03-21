@@ -5,13 +5,16 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
 import rehypeRaw from 'rehype-raw'
-import mermaid from 'mermaid'
 import { codeToHtml } from 'shiki'
+import { MermaidBlock } from './MermaidBlock'
 import { Aria } from '../interactive-os/components/aria'
 import { treegrid } from '../interactive-os/behaviors/treegrid'
-import { core } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
+import { combobox } from '../interactive-os/behaviors/combobox'
+import { core, selectionCommands } from '../interactive-os/plugins/core'
+import { combobox as comboboxPlugin, comboboxCommands } from '../interactive-os/plugins/combobox'
+import { useAria } from '../interactive-os/hooks/useAria'
+import { createStore, getChildren } from '../interactive-os/core/createStore'
+import { ROOT_ID, createBatchCommand } from '../interactive-os/core/types'
 import type { NormalizedData, Entity } from '../interactive-os/core/types'
 import { createRecorder } from '../interactive-os/devtools/createRecorder'
 import {
@@ -34,10 +37,6 @@ interface FileNodeData {
   type: 'file' | 'directory'
   path: string
 }
-
-// --- Mermaid init ---
-
-mermaid.initialize({ startOnLoad: false, theme: 'default' })
 
 // --- Data fetching ---
 
@@ -278,23 +277,6 @@ function CodeBlock({ code, filename }: { code: string; filename: string }) {
   )
 }
 
-// --- Mermaid renderer ---
-
-let mermaidCounter = 0
-
-function MermaidBlock({ code }: { code: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [svg, setSvg] = useState('')
-
-  useEffect(() => {
-    const id = `mermaid-${++mermaidCounter}`
-    mermaid.render(id, code).then(({ svg }) => setSvg(svg)).catch(() => setSvg(''))
-  }, [code])
-
-  if (!svg) return <pre><code>{code}</code></pre>
-  return <div ref={ref} dangerouslySetInnerHTML={{ __html: svg }} />
-}
-
 // --- Dependency graph ---
 
 function ExportDiagram({ filePath }: { filePath: string }) {
@@ -452,7 +434,6 @@ function QuickOpen({
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
-  const [focusIndex, setFocusIndex] = useState(0)
 
   const files = useMemo(() => flattenFiles(fileStore, root), [fileStore, root])
   const fuse = useMemo(() => new Fuse(files, {
@@ -465,99 +446,99 @@ function QuickOpen({
     return fuse.search(query).slice(0, MAX_RESULTS).map(r => r.item)
   }, [query, fuse, files])
 
-  // Auto-focus input on mount
-  useEffect(() => {
-    inputRef.current?.focus()
+  // Convert Fuse.js results to NormalizedData for the combobox behavior
+  const comboboxData = useMemo(() => createStore({
+    entities: Object.fromEntries(results.map(f => [f.id, { id: f.id, data: f }])),
+    relationships: { [ROOT_ID]: results.map(f => f.id) },
+  }), [results])
+
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+  const onSelectRef = useRef(onSelect)
+  onSelectRef.current = onSelect
+
+  const handleChange = useCallback((newStore: NormalizedData) => {
+    // Detect close: __combobox__ isOpen went to false
+    const isOpen = (newStore.entities['__combobox__']?.isOpen as boolean) ?? false
+    if (!isOpen) {
+      // Check if a selection was made
+      const selectedIds = (newStore.entities['__selection__']?.selectedIds as string[]) ?? []
+      if (selectedIds.length > 0) {
+        const selectedEntity = newStore.entities[selectedIds[0]]
+        if (selectedEntity?.data) {
+          const fileData = selectedEntity.data as FileEntry
+          onSelectRef.current(fileData.path)
+        }
+      }
+      onCloseRef.current()
+    }
   }, [])
 
-  // Scroll focused item into view
+  const aria = useAria({
+    behavior: combobox(),
+    data: comboboxData,
+    plugins: [core(), comboboxPlugin()],
+    onChange: handleChange,
+  })
+
+  const store = aria.getStore()
+  const isOpen = (store.entities['__combobox__']?.isOpen as boolean) ?? false
+  const children = getChildren(store, ROOT_ID)
+
+  // Auto-focus input and open combobox on mount
   useEffect(() => {
-    if (results.length === 0) return
-    const focused = results[focusIndex]
-    if (!focused) return
-    const el = document.getElementById(`qo-${focused.id}`)
-    el?.scrollIntoView({ block: 'nearest' })
-  }, [focusIndex, results])
+    inputRef.current?.focus()
+    aria.dispatch(comboboxCommands.open())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) onClose()
   }, [onClose])
 
-  const handleInputKeyDown = (e: React.KeyboardEvent) => {
-    switch (e.key) {
-      case 'Escape':
-        e.preventDefault()
-        onClose()
-        break
-      case 'Enter': {
-        e.preventDefault()
-        const focused = results[focusIndex]
-        if (focused) onSelect(focused.path)
-        onClose()
-        break
-      }
-      case 'ArrowDown':
-        e.preventDefault()
-        setFocusIndex(i => i < results.length - 1 ? i + 1 : 0)
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        setFocusIndex(i => i > 0 ? i - 1 : results.length - 1)
-        break
-      case 'Home':
-        e.preventDefault()
-        setFocusIndex(0)
-        break
-      case 'End':
-        e.preventDefault()
-        setFocusIndex(Math.max(0, results.length - 1))
-        break
-    }
-  }
-
-  const focusedId = results[focusIndex]?.id
-
   return (
     <div className="qo-backdrop" onClick={handleBackdropClick}>
-      <div className="qo-dialog" role="dialog" aria-label="Quick Open">
+      <div className="qo-dialog" aria-label="Quick Open">
         <div className="qo-input-row">
           <Search size={12} strokeWidth={1.5} className="qo-input-icon" />
           <input
             ref={inputRef}
             className="qo-input"
             type="text"
-            role="combobox"
-            aria-expanded={results.length > 0}
-            aria-haspopup="listbox"
-            aria-controls="qo-listbox"
-            aria-activedescendant={focusedId ? `qo-${focusedId}` : undefined}
             placeholder="파일 검색..."
             value={query}
-            onChange={(e) => { setQuery(e.target.value); setFocusIndex(0) }}
-            onKeyDown={handleInputKeyDown}
+            onChange={(e) => { setQuery(e.target.value) }}
             aria-label="파일 검색"
+            {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
           <kbd className="qo-shortcut">ESC</kbd>
         </div>
-        {results.length > 0 ? (
-          <div className="qo-results" role="listbox" id="qo-listbox">
-            {results.map((file, i) => (
-              <div
-                key={file.id}
-                id={`qo-${file.id}`}
-                role="option"
-                aria-selected={i === focusIndex}
-                className={`qo-item${i === focusIndex ? ' qo-item--focused' : ''}`}
-                onClick={() => {
-                  onSelect(file.path)
-                  onClose()
-                }}
-              >
-                <FileIcon name={file.name} type="file" />
-                <span className="qo-item__name">{file.name}</span>
-                <span className="qo-item__path">{file.relativePath}</span>
-              </div>
-            ))}
+        {isOpen && children.length > 0 ? (
+          <div className="qo-results" onMouseDown={e => e.preventDefault()}>
+            {children.map(childId => {
+              const entity = store.entities[childId]
+              if (!entity) return null
+              const state = aria.getNodeState(childId)
+              const props = aria.getNodeProps(childId)
+              const fileData = entity.data as FileEntry
+              return (
+                <div
+                  key={childId}
+                  {...(props as React.HTMLAttributes<HTMLDivElement>)}
+                  className={`qo-item${state.focused ? ' qo-item--focused' : ''}`}
+                  onClick={() => {
+                    aria.dispatch(createBatchCommand([
+                      selectionCommands.select(childId),
+                      comboboxCommands.close(),
+                    ]))
+                  }}
+                >
+                  <FileIcon name={fileData.name} type="file" />
+                  <span className="qo-item__name">{fileData.name}</span>
+                  <span className="qo-item__path">{fileData.relativePath}</span>
+                </div>
+              )
+            })}
           </div>
         ) : (
           <div className="qo-empty">일치하는 파일이 없습니다</div>
@@ -619,17 +600,19 @@ export default function PageViewer() {
     }
   }, [recording, recorder])
 
-  // Cmd+P / Ctrl+P → Quick Open
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'p') {
-        e.preventDefault()
-        setQuickOpenVisible(true)
-      }
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [])
+  const setQuickOpenVisibleRef = useRef(setQuickOpenVisible)
+  setQuickOpenVisibleRef.current = setQuickOpenVisible
+
+  const quickOpenKeyMap = useMemo(() => ({
+    'Meta+p': () => { setQuickOpenVisibleRef.current(true); return undefined },
+  }), [])
+
+  const emptyData = useMemo(() => createStore({
+    entities: {},
+    relationships: { [ROOT_ID]: [] },
+  }), [])
+
+  const emptyPlugins = useMemo(() => [] as never[], [])
 
   const handleQuickOpenSelect = selectFile
 
@@ -648,6 +631,11 @@ export default function PageViewer() {
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
+    <Aria
+      keyMap={quickOpenKeyMap}
+      data={emptyData}
+      plugins={emptyPlugins}
+    >
     <div className="vw">
       {/* Top bar — single unified bar */}
       <div className="vw-statusbar">
@@ -765,5 +753,6 @@ export default function PageViewer() {
         />
       )}
     </div>
+    </Aria>
   )
 }
