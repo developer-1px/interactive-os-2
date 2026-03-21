@@ -205,6 +205,7 @@
 - [x] Visual CMS Engine Unification — 날코딩 10개 제거: Toolbar/Sidebar/I18nSheet의 raw store 조작을 모두 engine.dispatch로 전환 (crudCommands, dndCommands, clipboardCommands, renameCommands), templateToCommand BatchCommand 헬퍼, useAriaZone 외부 store 변경 focus recovery 추가
 - [x] Combobox Bug Fix — editable combobox Backspace 차단 수정 (dispatchKeyAction 반환값 기반 조건부 preventDefault), blur 시 드롭다운 닫기 (onBlur + dropdown onMouseDown preventDefault), keyMap-only Aria 모드 (behavior optional), nested Aria defaultPrevented 버블링 가드
 - [x] CMS Zod Schema — cms-schema.ts 단일 소스 (nodeSchemas 15타입 + childRules), canAccept/validate/fieldsOf/localeFieldsOf 파생, CMS_SCHEMA·getEditableFields switch·getTranslatableEntries 수동 로직 삭제
+- [x] CSS Modules Batch A — 단순 컴포넌트 6개 CSS Modules 전환 (TreeView, TabList, ListBox, Grid, Tooltip, Toolbar), grid.tsx 대소문자 정리, `:global()` 래핑으로 페이지 호환 유지
 
 ## ⑨ APG Pattern Coverage
 
