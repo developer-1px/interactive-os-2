@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Map, Box, Sun, Moon, Presentation, BookOpen } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Moon, Presentation, BookOpen } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -50,12 +50,11 @@ import PageStoreExplorer from './pages/PageStoreExplorer'
 import PageStoreOperations from './pages/PageStoreOperations'
 import PageEnginePipeline from './pages/PageEnginePipeline'
 import PageEngineHistory from './pages/PageEngineHistory'
-import PageVisionArchitecture from './pages/PageVisionArchitecture'
-import PageVisualCms from './pages/PageVisualCms'
 import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
 import PageAreaViewer from './pages/PageAreaViewer'
+import { AreaSidebar } from './pages/AreaSidebar'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import PageNavigate from './pages/axis/PageNavigate'
 import PageSelect from './pages/axis/PageSelect'
@@ -203,16 +202,6 @@ const routeConfig: RouteGroup[] = [
       { path: 'aria', label: 'Aria', status: 'ready', component: PageAriaComponent },
       { path: 'cell', label: 'Cell', status: 'ready', component: PageCell },
       { path: 'hooks', label: 'Hooks', status: 'ready', component: PageHooks },
-    ],
-  },
-  {
-    id: 'vision',
-    label: 'Vision',
-    icon: Map,
-    basePath: '/vision/architecture',
-    items: [
-      { path: 'architecture', label: 'Architecture', status: 'ready', component: PageVisionArchitecture },
-      { path: 'visual-cms', label: 'Visual CMS', status: 'ready', component: PageVisualCms },
     ],
   },
   {
@@ -408,7 +397,10 @@ function App() {
         <PageViewer />
       ) : (
         <>
-          {activeGroup && <Sidebar activeGroup={activeGroup} activeItemPath={pathname.split('/')[2]} />}
+          {activeGroup && (activeGroup.id === 'area'
+            ? <AreaSidebar />
+            : <Sidebar activeGroup={activeGroup} activeItemPath={pathname.split('/')[2]} />
+          )}
           <main className="content">
             <Routes>
               {routeConfig.map((group) => (
