@@ -97,14 +97,14 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       // Focused item was removed externally → recover to nearest sibling or first child
       const allChildren = data.relationships[ROOT_ID] ?? []
       const fallback = allChildren[0] ?? ''
-      mergedEntities[FOCUS_ID] = { ...focusMeta, focusedId: fallback }
+      mergedEntities[FOCUS_ID] = { id: FOCUS_ID, ...focusMeta, focusedId: fallback }
     }
 
     const selectionMeta = mergedEntities[SELECTION_ID] as { selectedIds?: string[] } | undefined
     if (selectionMeta?.selectedIds) {
       const cleaned = selectionMeta.selectedIds.filter(id => id in data.entities)
       if (cleaned.length !== selectionMeta.selectedIds.length) {
-        mergedEntities[SELECTION_ID] = { ...selectionMeta, selectedIds: cleaned }
+        mergedEntities[SELECTION_ID] = { id: SELECTION_ID, ...selectionMeta, selectedIds: cleaned }
       }
     }
 

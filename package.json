@@ -99,6 +99,14 @@
       "import": "./dist-lib/behaviors/radiogroup.js",
       "types": "./dist-lib/behaviors/radiogroup.d.ts"
     },
+    "./behaviors/slider": {
+      "import": "./dist-lib/behaviors/slider.js",
+      "types": "./dist-lib/behaviors/slider.d.ts"
+    },
+    "./behaviors/spinbutton": {
+      "import": "./dist-lib/behaviors/spinbutton.js",
+      "types": "./dist-lib/behaviors/spinbutton.d.ts"
+    },
     "./behaviors/alertdialog": {
       "import": "./dist-lib/behaviors/alertdialog.js",
       "types": "./dist-lib/behaviors/alertdialog.d.ts"
@@ -186,6 +194,18 @@
     "./ui/TreeView": {
       "import": "./dist-lib/ui/TreeView.js",
       "types": "./dist-lib/ui/TreeView.d.ts"
+    },
+    "./ui/Slider": {
+      "import": "./dist-lib/ui/Slider.js",
+      "types": "./dist-lib/ui/Slider.d.ts"
+    },
+    "./ui/Spinbutton": {
+      "import": "./dist-lib/ui/Spinbutton.js",
+      "types": "./dist-lib/ui/Spinbutton.d.ts"
+    },
+    "./axes/value": {
+      "import": "./dist-lib/axes/value.js",
+      "types": "./dist-lib/axes/value.d.ts"
     }
   },
   "files": [
