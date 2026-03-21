@@ -1,6 +1,6 @@
 import { Children, cloneElement, useId, useRef, useCallback } from 'react'
 import type { ReactElement, ReactNode, CSSProperties } from 'react'
-import './Tooltip.css'
+import styles from './Tooltip.module.css'
 
 interface TooltipProps {
   content: string
@@ -45,7 +45,7 @@ export function Tooltip({ content, children }: TooltipProps): ReactNode {
         id={id}
         popover="hint"
         role="tooltip"
-        className="tooltip"
+        className={styles.tooltip}
         style={{ positionAnchor: anchorName } as CSSProperties}
       >
         {content}

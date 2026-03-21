@@ -1,6 +1,6 @@
 /* --- Tree Node --- */
 
-.tree-node {
+:global(.tree-node) {
   display: flex;
   align-items: center;
   padding: 3px 10px;
@@ -10,7 +10,7 @@
   border-radius: var(--radius-sm);
 }
 
-.tree-node__chevron {
+:global(.tree-node__chevron) {
   width: 14px;
   flex-shrink: 0;
   display: inline-flex;
@@ -19,22 +19,22 @@
   color: var(--text-muted);
 }
 
-.tree-node__icon {
+:global(.tree-node__icon) {
   margin-right: 5px;
   display: inline-flex;
   opacity: 0.55;
   color: var(--text-secondary);
 }
 
-.tree-node__name {
+:global(.tree-node__name) {
   color: inherit;
   font-weight: 500;
 }
 
-.tree-node__ext {
+:global(.tree-node__ext) {
   color: var(--text-muted);
   font-weight: 400;
 }
 
-.tree-inner { display: inline-flex; align-items: center; }
-.tree-chevron { width: 16px; opacity: 0.5; flex-shrink: 0; }
+.treeInner { display: inline-flex; align-items: center; }
+.treeChevron { width: 16px; opacity: 0.5; flex-shrink: 0; }

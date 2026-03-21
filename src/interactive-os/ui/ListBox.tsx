@@ -1,5 +1,5 @@
 import React from 'react'
-import './ListBox.css'
+import './ListBox.module.css'
 import type { NormalizedData, Plugin, Command } from '../core/types'
 import type { BehaviorContext, NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'

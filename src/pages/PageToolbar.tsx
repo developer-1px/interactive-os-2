@@ -1,4 +1,4 @@
-import '../interactive-os/ui/Toolbar.css'
+import styles from '../interactive-os/ui/Toolbar.module.css'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgToolbar } from './apg-data'
 import { Aria } from '../interactive-os/components/aria'
@@ -37,13 +37,13 @@ export default function PageToolbar() {
         <kbd>End</kbd> <span className="key-hint">last</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">activate</span>
       </div>
-      <div className="card toolbar-card">
+      <div className={`card ${styles.toolbarCard}`}>
         <Aria behavior={toolbar} data={toolbarData} plugins={plugins} aria-label="Text formatting">
           <Aria.Item render={(node, state: NodeState) => {
             const cls = [
-              'toolbar-btn',
-              state.focused && 'toolbar-btn--focused',
-              state.selected && 'toolbar-btn--selected',
+              styles.toolbarBtn,
+              state.focused && styles.toolbarBtnFocused,
+              state.selected && styles.toolbarBtnSelected,
             ].filter(Boolean).join(' ')
 
             return (
