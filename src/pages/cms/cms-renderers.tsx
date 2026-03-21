@@ -96,6 +96,8 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       return null
     case 'link':
       return <a className={s.cmsFooterLink} href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>
+    case 'tab-item':
+      return <LocalizedText value={data.label as LocaleMap} locale={locale} />
     default:
       return null
   }
@@ -152,6 +154,9 @@ export function getNodeClassName(data: Record<string, string>, state: NodeState)
     case 'brand': return s.cmsFooterBrand
     case 'links': return s.cmsFooterLinks
     case 'link': return ''
+    case 'tab-group': return `cms-tab-group${f ? ' cms-tab-group--focused' : ''}`
+    case 'tab-item': return `cms-tab-item${f ? ' cms-tab-item--focused' : ''}`
+    case 'tab-panel': return `cms-tab-panel${f ? ' cms-tab-panel--focused' : ''}`
     default: return ''
   }
 }
@@ -188,6 +193,9 @@ export function getNodeTag(data: Record<string, string>): keyof React.JSX.Intrin
   if (data.type === 'section-title') return 'h2'
   if (data.type === 'section-desc') return 'p'
   if (data.type === 'links') return 'nav'
+  if (data.type === 'tab-group') return 'div'
+  if (data.type === 'tab-item') return 'button'
+  if (data.type === 'tab-panel') return 'div'
   return 'div'
 }
 
