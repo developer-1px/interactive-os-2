@@ -8,8 +8,10 @@ import { AriaInternalContext } from './AriaInternalContext'
 import { getChildren } from '../core/createStore'
 import { EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
 import { renameCommands } from '../plugins/rename'
+import { registerAria, unregisterAria } from './ariaRegistry'
 
 interface AriaProps {
+  id?: string
   behavior: AriaBehavior
   data: NormalizedData
   plugins: Plugin[]
@@ -31,8 +33,15 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
 // eslint-disable-next-line react-refresh/only-export-components
-function AriaRoot({ behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, children }: AriaProps) {
+function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, children }: AriaProps) {
   const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate })
+
+  useEffect(() => {
+    if (!id) return
+    registerAria(id, { dispatch: aria.dispatch, getStore: aria.getStore })
+    return () => unregisterAria(id)
+  }, [id, aria.dispatch, aria.getStore])
+
   const { orientation } = behavior.focusStrategy
   return (
     <AriaInternalContext.Provider value={{ ...aria, behavior }}>

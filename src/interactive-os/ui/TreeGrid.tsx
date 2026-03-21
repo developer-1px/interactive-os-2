@@ -11,6 +11,7 @@ import { renameCommands } from '../plugins/rename'
 import { dndCommands } from '../plugins/dnd'
 
 interface TreeGridProps {
+  id?: string
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
@@ -41,6 +42,7 @@ const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = 
 }
 
 export function TreeGrid({
+  id,
   data,
   plugins = [core(), history()],
   onChange,
@@ -49,6 +51,7 @@ export function TreeGrid({
 }: TreeGridProps) {
   return (
     <Aria
+      id={id}
       behavior={treegrid}
       data={data}
       plugins={plugins}
