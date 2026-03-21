@@ -186,13 +186,29 @@ export function Combobox({
 
   const render = renderItem ?? defaultRender
 
+  const handleInputClick = () => {
+    if (!isOpen) {
+      aria.dispatch(comboboxCommands.open())
+    }
+  }
+
   const renderOption = (childId: string) => {
     const entity = store.entities[childId]
     if (!entity) return null
     const state = aria.getNodeState(childId)
     const props = aria.getNodeProps(childId)
+    const handleOptionClick = () => {
+      if (mode === 'multiple') {
+        aria.dispatch(selectionCommands.toggleSelect(childId))
+      } else {
+        aria.dispatch(createBatchCommand([
+          selectionCommands.select(childId),
+          comboboxCommands.close(),
+        ]))
+      }
+    }
     return (
-      <div key={childId} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
+      <div key={childId} {...(props as React.HTMLAttributes<HTMLDivElement>)} onClick={handleOptionClick}>
         {render(entity, state)}
       </div>
     )
@@ -282,6 +298,7 @@ export function Combobox({
             value={filterText}
             placeholder={aria.selected.length === 0 ? placeholder : ''}
             onChange={handleInput}
+            onClick={handleInputClick}
             {...(containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>)}
           />
         </div>
@@ -296,6 +313,7 @@ export function Combobox({
         placeholder={placeholder}
         readOnly={!editable}
         onChange={editable ? handleInput : undefined}
+        onClick={handleInputClick}
         {...(containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>)}
       />
       )}
