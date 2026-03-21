@@ -48,7 +48,7 @@
 ### rename()
 - [x] startRename / confirmRename / cancelRename
 - [x] 이전 값 복원 (undo)
-- [x] `<Aria.Editable>` — contenteditable 제자리 편집 UI (F2/Enter/Esc/blur/더블클릭, isEditableElement 가드, IME 지원)
+- [x] `<Aria.Editable>` — contenteditable 제자리 편집 UI (F2/Enter/Esc/blur/더블클릭, isEditableElement 가드, IME 지원, placeholder prop)
 
 ### dnd()
 - [x] moveUp / moveDown (형제 간 리오더)
@@ -191,6 +191,7 @@
 - [x] Axis Showcase v2 — /axis/{name}, 5축 인터랙티브 데모 (navigate, select, activate, expand, trap), 각 페이지에서 옵션 토글로 행동 변화 체험, ActivityBar Axis 레이어
 - [x] Plugin Showcase Gap Fix (Phase 1) — CRUD를 TreeGrid로 전환(subtree 삭제/복원 체험), History에 Editable 추가(F2 rename 동작), Clipboard 텍스트 정합성 수정
 - [x] Plugin Showcase Gap Fix (Phase 2) — Clipboard TreeGrid 전환, getCutSourceIds() export로 cut dim 피드백, copy paste 시 새 ID 표시, leaf→parent 라우팅 텍스트 복원
+- [x] Visual CMS Inline Edit + Detail Panel — 리프 노드 Enter→인라인 contenteditable 편집, 우측 CmsDetailPanel Form 패널 (타입별 필드 매핑, blur/Enter 커밋), rename 플러그인 연결 (undo 일관성), Aria.Editable placeholder prop, 3열 레이아웃
 
 ## ⑨ APG Pattern Coverage
 
@@ -227,4 +228,4 @@
 
 ---
 
-*Last updated: 2026-03-21 — focusRecovery 불변 조건화: isReachable pluggable, CMS Canvas 포커스 복구 활성화*
+*Last updated: 2026-03-21 — CMS Inline Edit + Detail Panel: 인라인 편집 + 우측 Form 패널*
