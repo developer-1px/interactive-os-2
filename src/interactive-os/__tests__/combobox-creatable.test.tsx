@@ -64,6 +64,19 @@ describe('Creatable combobox', () => {
     expect((input as HTMLInputElement).value).toBe('Mango')
   })
 
+  it('Enter on non-matching input creates item (no ArrowDown needed)', async () => {
+    const user = userEvent.setup()
+    render(<CreatableHarness />)
+    const input = screen.getByRole('combobox') as HTMLInputElement
+
+    await user.click(input)
+    await user.type(input, 'Mango')
+    await user.keyboard('{Enter}')
+
+    // Should create "Mango", not select "Apple"
+    expect(input.value).toBe('Mango')
+  })
+
   it('typing partial match filters and Create does not appear', async () => {
     const user = userEvent.setup()
     render(<CreatableHarness />)
