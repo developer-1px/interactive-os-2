@@ -55,6 +55,7 @@ import PageViewer from './pages/PageViewer'
 import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
 import PageAreaViewer from './pages/PageAreaViewer'
+import { Tooltip } from './interactive-os/ui/Tooltip'
 import PageNavigate from './pages/axis/PageNavigate'
 import PageSelect from './pages/axis/PageSelect'
 import PageActivate from './pages/axis/PageActivate'
@@ -357,17 +358,21 @@ function App() {
             if (node.id === 'theme') {
               const ThemeIcon = theme === 'dark' ? Sun : Moon
               return (
-                <div className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
-                  <ThemeIcon size={13} />
-                </div>
+                <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
+                  <div className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`}>
+                    <ThemeIcon size={13} />
+                  </div>
+                </Tooltip>
               )
             }
             const nav = navItems.find((n) => n.id === node.id)!
             const Icon = nav.icon
             return (
-              <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`} title={nav.label}>
-                <Icon size={16} />
-              </div>
+              <Tooltip content={nav.label}>
+                <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+                  <Icon size={16} />
+                </div>
+              </Tooltip>
             )
           }} />
         </Aria>
