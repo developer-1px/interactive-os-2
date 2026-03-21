@@ -31,10 +31,6 @@
   box-shadow: 0 0 8px rgba(91, 91, 214, 0.4);
 }
 
-.activity-bar__spacer {
-  flex: 1;
-}
-
 .activity-bar__theme-toggle {
   display: flex;
   align-items: center;
@@ -457,124 +453,6 @@ kbd {
   font-weight: 500;
   color: var(--text-primary);
   white-space: nowrap;
-}
-
-/* --- Log / history --- */
-
-.log-entry {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 3px 0;
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border-dim);
-}
-
-.log-entry__type {
-  font-weight: 600;
-  color: var(--text-primary);
-  flex-shrink: 0;
-  min-width: 80px;
-}
-
-.log-entry__detail {
-  color: var(--text-muted);
-  word-break: break-all;
-}
-
-/* --- Store explorer --- */
-
-.store-json {
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.6;
-  padding: 10px;
-  background: var(--bg-deep);
-  border: 1px solid var(--border-dim);
-  border-radius: var(--radius);
-  overflow-x: auto;
-  white-space: pre;
-  color: var(--text-primary);
-}
-
-/* --- Pipeline step --- */
-
-.pipeline-step {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-bottom: 1px solid var(--border-dim);
-  font-size: 12px;
-}
-
-.pipeline-step__num {
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--accent);
-  width: 20px;
-  text-align: center;
-}
-
-.pipeline-step__label {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.pipeline-step__desc {
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-/* --- Mermaid --- */
-
-.mermaid-diagram {
-  padding: 14px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-dim);
-  border-radius: var(--radius);
-  overflow-x: auto;
-  margin-bottom: 12px;
-}
-
-.mermaid-diagram svg {
-  max-width: 100%;
-  height: auto;
-}
-
-/* --- Coverage table --- */
-
-.coverage-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-  margin-top: 8px;
-}
-
-.coverage-table th {
-  font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
-  text-align: left;
-  padding: 5px 8px;
-  border-bottom: 1px solid var(--border-mid);
-}
-
-.coverage-table td {
-  padding: 4px 8px;
-  border-bottom: 1px solid var(--border-dim);
-  vertical-align: middle;
-}
-
-.coverage-table td:first-child {
-  font-weight: 600;
-  color: var(--text-primary);
 }
 
 /* ═══════════════════════════════════════════
