@@ -35,6 +35,7 @@ export function resetClipboard(): void {
   clipboardBuffer = []
   clipboardMode = 'copy'
   cutSourceIds = []
+  idCounter = 0
 }
 
 function collectSubtree(store: NormalizedData, nodeId: string): ClipboardEntry {
@@ -177,7 +178,9 @@ export const clipboardCommands = {
 
         if (buffer.length === 0) return store
 
-        // Determine paste location using schema or legacy logic
+        // Determine paste location using schema or legacy logic.
+        // Note: uses first buffer entry's type for routing. Mixed-type selections
+        // are assumed homogeneous — CMS only copies same-type siblings.
         const childData = buffer[0]!.entity.data as Record<string, unknown> | undefined
         const { pasteInto, insertIndex: initialInsertIndex } = findPasteTarget(store, targetId, childData)
         let insertIndex = initialInsertIndex
@@ -268,6 +271,8 @@ export interface ClipboardOptions {
   canAccept?: CanAcceptFn
 }
 
+/** Clipboard is a singleton plugin — clipboardBuffer and canAccept are module-level
+ *  shared state. Call clipboard() once per application. */
 export function clipboard(options?: ClipboardOptions): Plugin {
   canAcceptFn = options?.canAccept
   return {

@@ -173,6 +173,8 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     const focusedIdx = sectionIds.indexOf(aria.focused)
     const insertAt = (focusedIdx >= 0 ? focusedIdx : sectionIds.length - 1) + 1
     const { command, rootId } = templateToCommand(variant, ROOT_ID, insertAt)
+    // Data command → engine (triggers external focus recovery in useAriaZone).
+    // Focus command → zone (zone-local viewState, not engine meta-entity).
     engine.dispatch(command)
     aria.dispatch(focusCommands.setFocus(rootId))
     requestAnimationFrame(() => scrollToSection(rootId))
