@@ -84,10 +84,13 @@ export function Combobox({
     return d?.type === 'group'
   })
 
-  const behaviorData = useMemo(
-    () => isGrouped ? flattenGroups(originalStore) : data,
-    [isGrouped, originalStore, data],
-  )
+  const behaviorData = useMemo(() => {
+    const grouped = getChildren(data, ROOT_ID).some(id => {
+      const d = data.entities[id]?.data as Record<string, string> | undefined
+      return d?.type === 'group'
+    })
+    return grouped ? flattenGroups(data) : data
+  }, [data])
 
   // When grouped, intercept onChange to restore group structure before propagating up.
   // The behavior engine operates on a flat store; callers expect the grouped structure.
