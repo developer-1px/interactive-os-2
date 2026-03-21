@@ -1,5 +1,6 @@
 import type { Entity, Command } from '../core/types'
 import type { AriaBehavior, BehaviorContext, FocusStrategy, SelectionMode, NodeState } from '../behaviors/types'
+import type { ValueRange } from '../plugins/core'
 
 export type KeyMap = Record<string, (ctx: BehaviorContext) => Command | void>
 
@@ -10,6 +11,7 @@ export interface AxisConfig {
   activateOnClick: boolean
   followFocus: boolean
   colCount: number
+  valueRange: ValueRange
 }
 
 export interface StructuredAxis {
@@ -103,6 +105,7 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
       ...(mergedConfig.activateOnClick !== undefined && { activateOnClick: mergedConfig.activateOnClick }),
       ...(mergedConfig.followFocus !== undefined && { followFocus: mergedConfig.followFocus }),
       ...(mergedConfig.colCount !== undefined && { colCount: mergedConfig.colCount }),
+      ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
       keyMap,
     }
   }
@@ -110,13 +113,14 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
   // v1 PatternConfig path — backward compatible
   // PatternConfig fields take precedence as base, axis config can override
   return {
-    ...config,
+    ...(config as PatternConfig),
     ...(mergedConfig.focusStrategy !== undefined && { focusStrategy: mergedConfig.focusStrategy }),
     ...(mergedConfig.expandable !== undefined && { expandable: mergedConfig.expandable }),
     ...(mergedConfig.selectionMode !== undefined && { selectionMode: mergedConfig.selectionMode }),
     ...(mergedConfig.activateOnClick !== undefined && { activateOnClick: mergedConfig.activateOnClick }),
     ...(mergedConfig.followFocus !== undefined && { followFocus: mergedConfig.followFocus }),
     ...(mergedConfig.colCount !== undefined && { colCount: mergedConfig.colCount }),
+    ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
     keyMap,
   }
 }

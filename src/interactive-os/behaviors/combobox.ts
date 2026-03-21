@@ -1,4 +1,4 @@
-import type { AriaBehavior, NodeState } from './types'
+import type { AriaBehavior, BehaviorContext, NodeState } from './types'
 import type { Axis } from '../axes/composePattern'
 import { composePattern } from '../axes/composePattern'
 import { comboboxCommands } from '../plugins/combobox'
@@ -12,7 +12,7 @@ export interface ComboboxOptions {
 export function combobox(options?: ComboboxOptions): AriaBehavior {
   const selectionMode = options?.selectionMode ?? 'single'
 
-  function getIsOpen(ctx: Parameters<Axis[string]>[0]): boolean {
+  function getIsOpen(ctx: BehaviorContext): boolean {
     const comboboxEntity = ctx.getEntity('__combobox__')
     return (comboboxEntity as Record<string, unknown> | undefined)?.isOpen === true
   }

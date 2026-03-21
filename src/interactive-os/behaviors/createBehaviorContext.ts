@@ -1,10 +1,11 @@
 import type { Command, Entity } from '../core/types'
 import { createBatchCommand } from '../core/types'
 import type { CommandEngine } from '../core/createCommandEngine'
-import type { BehaviorContext, GridNav, SelectionMode } from './types'
+import type { BehaviorContext, GridNav, SelectionMode, ValueNav } from './types'
 import { getEntity, getChildren, getParent } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
-import { focusCommands, selectionCommands, expandCommands, gridColCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
+import { focusCommands, selectionCommands, expandCommands, gridColCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, valueCommands, VALUE_ID } from '../plugins/core'
+import type { ValueRange } from '../plugins/core'
 
 function getFocusedId(engine: CommandEngine): string {
   return (engine.getStore().entities[FOCUS_ID]?.focusedId as string) ?? ''
@@ -49,6 +50,7 @@ export interface BehaviorContextOptions {
   expandable?: boolean
   selectionMode?: SelectionMode
   colCount?: number
+  valueRange?: ValueRange
 }
 
 export function createBehaviorContext(engine: CommandEngine, options?: BehaviorContextOptions): BehaviorContext {
@@ -72,6 +74,22 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
       focusPrevCol: () => gridColCommands.setColIndex(Math.max(currentCol - 1, 0)),
       focusFirstCol: () => gridColCommands.setColIndex(0),
       focusLastCol: () => gridColCommands.setColIndex(colCount - 1),
+    }
+  })() : undefined
+
+  const valueRange = options?.valueRange
+  const value: ValueNav | undefined = valueRange ? (() => {
+    const currentValue = ((store.entities[VALUE_ID] as Record<string, unknown>)?.value as number) ?? valueRange.min
+    return {
+      current: currentValue,
+      min: valueRange.min,
+      max: valueRange.max,
+      step: valueRange.step,
+      increment: (s?: number) => valueCommands.increment(s ?? valueRange.step, valueRange),
+      decrement: (s?: number) => valueCommands.decrement(s ?? valueRange.step, valueRange),
+      setToMin: () => valueCommands.setValue(valueRange.min, valueRange),
+      setToMax: () => valueCommands.setValue(valueRange.max, valueRange),
+      setValue: (v: number) => valueCommands.setValue(v, valueRange),
     }
   })() : undefined
 
@@ -219,5 +237,6 @@ export function createBehaviorContext(engine: CommandEngine, options?: BehaviorC
     },
 
     grid,
+    value,
   }
 }
