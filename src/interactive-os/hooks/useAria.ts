@@ -40,8 +40,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   const [, forceRender] = useState(0)
   const engineRef = useRef<CommandEngine | null>(null)
   const onActivateRef = useRef(onActivate)
+  // eslint-disable-next-line react-hooks/refs
   onActivateRef.current = onActivate
   const behaviorRef = useRef(behavior)
+  // eslint-disable-next-line react-hooks/refs
   behaviorRef.current = behavior
   const prevFocusRef = useRef<string>('')
 
@@ -50,6 +52,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       .map((p) => p.middleware)
       .filter((m): m is NonNullable<typeof m> => m != null)
 
+    // eslint-disable-next-line react-hooks/refs
     engineRef.current = createCommandEngine(data, middlewares, (newStore) => {
       // followFocus: detect focus change and call onActivate for eligible items
       const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''

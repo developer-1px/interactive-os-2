@@ -32,7 +32,6 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
-// eslint-disable-next-line react-refresh/only-export-components
 function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, children }: AriaProps) {
   const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate })
 
@@ -59,7 +58,6 @@ function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, '
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 function FocusScrollDiv({ focused, children, ...props }: { focused: boolean; children: ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -70,7 +68,6 @@ function FocusScrollDiv({ focused, children, ...props }: { focused: boolean; chi
   return <div ref={ref} {...props}>{children}</div>
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 function AriaItem({ render }: AriaItemProps) {
   return (
     <AriaInternalContext.Consumer>
@@ -115,7 +112,6 @@ function AriaItem({ render }: AriaItemProps) {
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 function AriaCell({ index, children }: { index: number; children: React.ReactNode }) {
   const nodeCtx = React.useContext(AriaItemContext)
   return (
@@ -135,7 +131,6 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 function AriaEditable({ field, placeholder, selection = 'all', children }: { field: string; placeholder?: string; selection?: 'all' | 'end'; children: React.ReactNode }) {
   const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
@@ -235,4 +230,5 @@ function AriaEditable({ field, placeholder, selection = 'all', children }: { fie
 }
 
 export { AriaItemContext }
+// eslint-disable-next-line react-refresh/only-export-components
 export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Editable: AriaEditable })
