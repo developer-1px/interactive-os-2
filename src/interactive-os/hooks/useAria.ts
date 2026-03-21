@@ -75,6 +75,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         ? initialFocus
         : getChildren(data, ROOT_ID)[0]
     if (focusTarget) {
+      // Set prevFocusRef BEFORE dispatch to prevent followFocus from firing
+      // onActivate during render (navigate() must not be called during render)
+      // eslint-disable-next-line react-hooks/refs
+      prevFocusRef.current = focusTarget
       // eslint-disable-next-line react-hooks/refs
       engineRef.current.dispatch(focusCommands.setFocus(focusTarget))
     }
