@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import '../interactive-os/ui/Button.css'
-import '../interactive-os/ui/Dialog.css'
+import buttonStyles from '../interactive-os/ui/Button.module.css'
+import dialogStyles from '../interactive-os/ui/Dialog.module.css'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgAlertDialog } from './apg-data'
 import { Aria } from '../interactive-os/components/aria'
@@ -35,28 +35,28 @@ export default function PageAlertDialog() {
         <kbd>Escape</kbd> <span className="key-hint">close</span>{' '}
         <kbd>Tab</kbd> <span className="key-hint">cycle focus</span>
       </div>
-      <button className="btn-accent" onClick={() => setOpen(true)}>
+      <button className={buttonStyles.accent} onClick={() => setOpen(true)}>
         Open AlertDialog
       </button>
       {open && (
-        <div className="dialog-backdrop" onClick={() => setOpen(false)}>
+        <div className={dialogStyles.backdrop} onClick={() => setOpen(false)}>
           <div
-            className="card dialog-box"
+            className={`card ${dialogStyles.box}`}
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="alertdialog-title"
             aria-describedby="alertdialog-desc"
             onClick={(e) => e.stopPropagation()}
           >
-            <div id="alertdialog-title" className="dialog-header">Delete Item</div>
-            <div id="alertdialog-desc" className="dialog-body">
+            <div id="alertdialog-title" className={dialogStyles.header}>Delete Item</div>
+            <div id="alertdialog-desc" className={dialogStyles.body}>
               This action is permanent and cannot be undone. Are you sure you want to delete this item?
             </div>
-            <div className="dialog-footer">
+            <div className={dialogStyles.footer}>
               <Aria behavior={alertdialog} data={alertDialogData} plugins={plugins}>
                 <Aria.Item render={(node, state: NodeState) => (
                   <button
-                    className={`btn-dialog ${state.focused ? 'btn-dialog--focused' : ''}`}
+                    className={`${buttonStyles.dialog}${state.focused ? ` ${buttonStyles.dialogFocused}` : ''}`}
                     onClick={() => setOpen(false)}
                   >
                     {(node.data as Record<string, unknown>)?.label as string}

@@ -1,6 +1,6 @@
 /* --- Buttons --- */
 
-.btn-accent {
+.accent {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
@@ -13,15 +13,15 @@
   transition: background 0.12s, transform 0.08s;
 }
 
-.btn-accent:hover {
+.accent:hover {
   background: var(--indigo-600);
 }
 
-.btn-accent:active {
+.accent:active {
   transform: scale(0.98);
 }
 
-.btn-dialog {
+.dialog {
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 500;
@@ -36,3 +36,6 @@
 }
 
 /* btn-dialog focus state handled by components.css ARIA selectors */
+
+.dialogFocused {
+}

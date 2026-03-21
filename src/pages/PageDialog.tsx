@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import '../interactive-os/ui/Button.css'
-import '../interactive-os/ui/Dialog.css'
+import buttonStyles from '../interactive-os/ui/Button.module.css'
+import dialogStyles from '../interactive-os/ui/Dialog.module.css'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgDialog } from './apg-data'
 import { Aria } from '../interactive-os/components/aria'
@@ -35,21 +35,21 @@ export default function PageDialog() {
         <kbd>Escape</kbd> <span className="key-hint">close</span>{' '}
         <kbd>Tab</kbd> <span className="key-hint">cycle focus</span>
       </div>
-      <button className="btn-accent" onClick={() => setOpen(true)}>
+      <button className={buttonStyles.accent} onClick={() => setOpen(true)}>
         Open Dialog
       </button>
       {open && (
-        <div className="dialog-backdrop" onClick={() => setOpen(false)}>
-          <div className="card dialog-box" onClick={(e) => e.stopPropagation()}>
-            <div className="dialog-header">Confirm Action</div>
-            <div className="dialog-body">
+        <div className={dialogStyles.backdrop} onClick={() => setOpen(false)}>
+          <div className={`card ${dialogStyles.box}`} onClick={(e) => e.stopPropagation()}>
+            <div className={dialogStyles.header}>Confirm Action</div>
+            <div className={dialogStyles.body}>
               Are you sure you want to proceed? This action cannot be undone.
             </div>
-            <div className="dialog-footer">
+            <div className={dialogStyles.footer}>
               <Aria behavior={dialog} data={dialogData} plugins={plugins}>
                 <Aria.Item render={(node, state: NodeState) => (
                   <button
-                    className={`btn-dialog ${state.focused ? 'btn-dialog--focused' : ''}`}
+                    className={`${buttonStyles.dialog}${state.focused ? ` ${buttonStyles.dialogFocused}` : ''}`}
                     onClick={() => setOpen(false)}
                   >
                     {(node.data as Record<string, unknown>)?.label as string}

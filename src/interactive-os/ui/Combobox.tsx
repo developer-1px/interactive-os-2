@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import './combobox.css'
+import styles from './Combobox.module.css'
 import type { NormalizedData, Plugin } from '../core/types'
 import type { NodeState } from '../behaviors/types'
 import { useAria } from '../hooks/useAria'
@@ -179,7 +179,7 @@ export function Combobox({
   }
 
   const defaultRender = (item: Record<string, unknown>, state: NodeState) => (
-    <div className={`combo-item${state.focused ? ' combo-item--focused' : ''}${state.selected ? ' combo-item--selected' : ''}`}>
+    <div className={`${styles.comboItem}${state.focused ? ` ${styles.comboItemFocused}` : ''}${state.selected ? ` ${styles.comboItemSelected}` : ''}`}>
       {(item.data as Record<string, unknown>)?.label as string ?? item.id}
     </div>
   )
@@ -251,9 +251,9 @@ export function Combobox({
     <div>
       {mode === 'multiple' && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
-          <div role="list" className="combo-tokens">
+          <div role="list">
             {aria.selected.map((id) => (
-              <span key={id} data-combobox-token role="listitem" className="combo-token">
+              <span key={id} data-combobox-token role="listitem">
                 {getLabel(id)}
                 {' '}
                 <button
@@ -267,7 +267,7 @@ export function Combobox({
             ))}
           </div>
           <input
-            className="combo-input"
+            className={styles.comboInput}
             role="combobox"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -280,7 +280,7 @@ export function Combobox({
       )}
       {mode !== 'multiple' && (
       <input
-        className="combo-input"
+        className={styles.comboInput}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -292,7 +292,7 @@ export function Combobox({
       />
       )}
       {isOpen && (
-        <div className="combo-dropdown" role="listbox">
+        <div className={styles.comboDropdown} role="listbox">
           {isGrouped ? (
             rootChildren.map(groupId => {
               const group = originalStore.entities[groupId]
@@ -303,7 +303,7 @@ export function Combobox({
               const groupItems = getChildren(originalStore, groupId)
               return (
                 <div key={groupId} role="group" aria-label={groupData.label}>
-                  <div role="presentation" className="combo-group-label">{groupData.label}</div>
+                  <div role="presentation">{groupData.label}</div>
                   {groupItems.map(itemId => renderOption(itemId))}
                 </div>
               )
@@ -314,7 +314,7 @@ export function Combobox({
           {showCreateOption && (
             <div
               data-combobox-create
-              className={`combo-create-option${effectiveCreateFocused ? ' combo-item--focused' : ''}`}
+              className={effectiveCreateFocused ? styles.comboItemFocused : undefined}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"
