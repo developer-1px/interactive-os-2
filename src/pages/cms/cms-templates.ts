@@ -59,24 +59,36 @@ function createHero(): SectionTemplate {
 
 function createStats(): SectionTemplate {
   const rootId = uid('stats')
-  const s1 = uid('stat-patterns')
-  const s2 = uid('stat-tests')
-  const s3 = uid('stat-modules')
-  const s4 = uid('stat-deps')
 
-  return {
-    rootId,
-    entities: {
-      [rootId]: entity(rootId, { type: 'section', variant: 'stats' }),
-      [s1]: entity(s1, { type: 'stat', value: '14',   label: localeMap('APG Patterns') }),
-      [s2]: entity(s2, { type: 'stat', value: '365+', label: localeMap('Tests') }),
-      [s3]: entity(s3, { type: 'stat', value: '42',   label: localeMap('Modules') }),
-      [s4]: entity(s4, { type: 'stat', value: '0',    label: localeMap('Runtime Deps') }),
-    },
-    relationships: {
-      [rootId]: [s1, s2, s3, s4],
-    },
+  const statDefs = [
+    { slug: 'patterns', value: '14',   label: 'APG Patterns' },
+    { slug: 'tests',    value: '365+', label: 'Tests' },
+    { slug: 'modules',  value: '42',   label: 'Modules' },
+    { slug: 'deps',     value: '0',    label: 'Runtime Deps' },
+  ]
+
+  const entities: SectionTemplate['entities'] = {
+    [rootId]: entity(rootId, { type: 'section', variant: 'stats' }),
   }
+  const relationships: SectionTemplate['relationships'] = {}
+  const statIds: string[] = []
+
+  for (const s of statDefs) {
+    const statId = uid(`stat-${s.slug}`)
+    const valueId = uid(`stat-${s.slug}-value`)
+    const labelId = uid(`stat-${s.slug}-label`)
+
+    entities[statId]  = entity(statId,  { type: 'stat' })
+    entities[valueId] = entity(valueId, { type: 'stat-value', value: s.value })
+    entities[labelId] = entity(labelId, { type: 'text', role: 'stat-label', value: localeMap(s.label) })
+
+    relationships[statId] = [valueId, labelId]
+    statIds.push(statId)
+  }
+
+  relationships[rootId] = statIds
+
+  return { rootId, entities, relationships }
 }
 
 function createFeatures(): SectionTemplate {
@@ -127,7 +139,7 @@ function createWorkflow(): SectionTemplate {
   const titleId = uid('workflow-title')
   const descId  = uid('workflow-desc')
 
-  const steps = [
+  const stepDefs = [
     { num: '01', title: 'Define Store',      desc: 'Create entities and relationships in a normalized tree structure.' },
     { num: '02', title: 'Dispatch Commands', desc: 'Mutations flow through a middleware pipeline with auto undo/redo.' },
     { num: '03', title: 'Apply Behavior',    desc: 'Pick an ARIA preset — it handles roles, states, and key bindings.' },
@@ -140,21 +152,27 @@ function createWorkflow(): SectionTemplate {
     [titleId]: entity(titleId, { type: 'section-title', value: localeMap('How it works') }),
     [descId]:  entity(descId,  { type: 'section-desc',  value: localeMap('Four layers, each independently testable. Compose them for any UI pattern.') }),
   }
+  const relationships: SectionTemplate['relationships'] = {}
   const stepIds: string[] = []
 
-  for (const step of steps) {
-    const stepId = uid(`step-${step.num}`)
-    entities[stepId] = entity(stepId, { type: 'step', num: step.num, title: localeMap(step.title), desc: localeMap(step.desc) })
+  for (const s of stepDefs) {
+    const stepId  = uid(`step-${s.num}`)
+    const numId   = uid(`step-${s.num}-num`)
+    const sTitleId = uid(`step-${s.num}-title`)
+    const sDescId  = uid(`step-${s.num}-desc`)
+
+    entities[stepId]   = entity(stepId,   { type: 'step' })
+    entities[numId]    = entity(numId,    { type: 'step-num', value: s.num })
+    entities[sTitleId] = entity(sTitleId, { type: 'text', role: 'step-title', value: localeMap(s.title) })
+    entities[sDescId]  = entity(sDescId,  { type: 'text', role: 'step-desc',  value: localeMap(s.desc) })
+
+    relationships[stepId] = [numId, sTitleId, sDescId]
     stepIds.push(stepId)
   }
 
-  return {
-    rootId,
-    entities,
-    relationships: {
-      [rootId]: [labelId, titleId, descId, ...stepIds],
-    },
-  }
+  relationships[rootId] = [labelId, titleId, descId, ...stepIds]
+
+  return { rootId, entities, relationships }
 }
 
 function createPatterns(): SectionTemplate {
