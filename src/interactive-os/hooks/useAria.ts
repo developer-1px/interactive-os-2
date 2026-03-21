@@ -52,8 +52,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       .map((p) => p.middleware)
       .filter((m): m is NonNullable<typeof m> => m != null)
 
+    // Suppress subscriber during initialization to prevent setState/navigate during render.
+    // The initial render reads from getStore() directly, so forceRender is unnecessary.
+    let initializing = true
     // eslint-disable-next-line react-hooks/refs
     engineRef.current = createCommandEngine(data, middlewares, (newStore) => {
+      if (initializing) return
       // followFocus: detect focus change and call onActivate for eligible items
       const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
       if (behaviorRef.current.followFocus && onActivateRef.current && newFocusedId && newFocusedId !== prevFocusRef.current) {
@@ -75,13 +79,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         ? initialFocus
         : getChildren(data, ROOT_ID)[0]
     if (focusTarget) {
-      // Set prevFocusRef BEFORE dispatch to prevent followFocus from firing
-      // onActivate during render (navigate() must not be called during render)
       // eslint-disable-next-line react-hooks/refs
       prevFocusRef.current = focusTarget
       // eslint-disable-next-line react-hooks/refs
       engineRef.current.dispatch(focusCommands.setFocus(focusTarget))
     }
+    initializing = false
   }
 
   // eslint-disable-next-line react-hooks/refs
