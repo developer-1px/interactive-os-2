@@ -241,10 +241,12 @@ export function Combobox({
     behaviorOnKeyDown?.(e)
   }
 
-  const handleBlur = () => {
-    if (isOpen) {
-      aria.dispatch(comboboxCommands.close())
-    }
+  const handleBlur = (e: React.FocusEvent) => {
+    if (!isOpen) return
+    // Keep dropdown open when focus moves to token remove buttons
+    const container = (e.target as HTMLElement).closest('div')?.parentElement
+    if (container && e.relatedTarget && container.contains(e.relatedTarget as Node)) return
+    aria.dispatch(comboboxCommands.close())
   }
 
   const containerPropsWithWrappedKeyDown = {
