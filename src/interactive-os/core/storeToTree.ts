@@ -22,6 +22,7 @@ export function storeToTree(source: NormalizedData): NormalizedData {
   for (const [id, entity] of Object.entries(source.entities)) {
     const nodeId = `_e:${id}`
     const isMeta = id.startsWith('__')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: _id, ...rest } = entity
     entities[nodeId] = {
       id: nodeId,

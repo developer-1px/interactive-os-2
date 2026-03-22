@@ -14,29 +14,31 @@ import { storeToTree } from '../interactive-os/core/storeToTree'
 import { treeData } from './shared-tree-data'
 import styles from './PageStoreInspector.module.css'
 
-// --- Module-level plugin instances (stable, not created inside component) ---
+// --- Stateless module-level constants ---
 
-let nodeCounter = 0
-
-const createPlugin: Plugin = {
-  keyMap: {
-    'Enter': (ctx: BehaviorContext): Command => {
-      const id = `node-${++nodeCounter}`
-      return crudCommands.create(
-        { id, data: { name: `New Item ${nodeCounter}`, type: 'file' } },
-        ctx.focused || undefined,
-      )
-    },
-  },
-}
-
-const editorPlugins: Plugin[] = [core(), crud(), dnd(), history(), focusRecovery(), createPlugin]
 const inspectorPlugins: Plugin[] = [core()]
 
 const editorKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
   'Delete': (ctx) => crudCommands.remove(ctx.focused),
   'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
   'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+}
+
+function makeEditorPlugins(): { plugins: Plugin[]; keyMap: Record<string, (ctx: BehaviorContext) => Command | void> } {
+  let nodeCounter = 0
+  const createKeyMap: Record<string, (ctx: BehaviorContext) => Command> = {
+    'Enter': (ctx) => {
+      const id = `node-${++nodeCounter}`
+      return crudCommands.create(
+        { id, data: { name: `New Item ${nodeCounter}`, type: 'file' } },
+        ctx.focused || undefined,
+      )
+    },
+  }
+  return {
+    plugins: [core(), crud(), dnd(), history(), focusRecovery()],
+    keyMap: { ...editorKeyMap, ...createKeyMap },
+  }
 }
 
 // --- Inspector render helpers ---
@@ -161,6 +163,7 @@ export default function PageStoreInspector() {
   const [data, setData] = useState<NormalizedData>(treeData)
   const [log, setLog] = useState<LogEntry[]>([])
   const logRef = useRef<HTMLDivElement>(null)
+  const editor = useMemo(() => makeEditorPlugins(), [])
 
   const captureLogger = useCallback((entry: LogEntry) => {
     setLog((prev) => {
@@ -205,8 +208,8 @@ export default function PageStoreInspector() {
             <Aria
               behavior={treegrid}
               data={data}
-              plugins={editorPlugins}
-              keyMap={editorKeyMap}
+              plugins={editor.plugins}
+              keyMap={editor.keyMap}
               onChange={setData}
               logger={captureLogger}
               aria-label="Store editor"
