@@ -23,11 +23,13 @@ export function useResizer(options: UseResizerOptions) {
   const { defaultSize, minSize, maxSize, direction = 'horizontal', step = 10, storageKey } = options
   const [size, setSize] = useState(() => loadSize(storageKey, defaultSize, minSize, maxSize))
   const dragging = useRef(false)
-  const startX = useRef(0)
+  const startPos = useRef(0)
   const startSize = useRef(0)
   const sizeRef = useRef(size)
   sizeRef.current = size
   const separatorRef = useRef<HTMLElement | null>(null)
+  const isHorizontalRef = useRef(direction === 'horizontal')
+  isHorizontalRef.current = direction === 'horizontal'
 
   const clamp = useCallback((v: number) => Math.min(maxSize, Math.max(minSize, v)), [minSize, maxSize])
 
@@ -47,16 +49,20 @@ export function useResizer(options: UseResizerOptions) {
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
       if (!dragging.current) return
-      const delta = e.clientX - startX.current
+      const pos = isHorizontalRef.current ? e.clientX : e.clientY
+      const delta = pos - startPos.current
       const next = clamp(startSize.current + delta)
       sizeRef.current = next
       // DOM direct manipulation — no React re-render
       const el = separatorRef.current
       if (el) {
         el.setAttribute('aria-valuenow', String(next))
-        // Apply width to left panel (previousElementSibling)
+        // Apply size to adjacent panel
         const panel = el.previousElementSibling as HTMLElement | null
-        if (panel) panel.style.width = `${next}px`
+        if (panel) {
+          if (isHorizontalRef.current) panel.style.width = `${next}px`
+          else panel.style.height = `${next}px`
+        }
       }
     }
     const onUp = () => {
@@ -75,9 +81,10 @@ export function useResizer(options: UseResizerOptions) {
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     dragging.current = true
-    startX.current = e.clientX
+    startPos.current = isHorizontalRef.current ? e.clientX : e.clientY
     startSize.current = sizeRef.current
     separatorRef.current = e.currentTarget as HTMLElement
+    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
     ;(e.currentTarget as HTMLElement).focus()
     e.preventDefault()
   }, [])
