@@ -1,5 +1,20 @@
 import { useState, useCallback } from 'react'
 import styles from './PageThemeCreator.module.css'
+import type { NormalizedData } from '../interactive-os/core/types'
+
+import { ListBox } from '../interactive-os/ui/ListBox'
+import { TreeView } from '../interactive-os/ui/TreeView'
+import { TabList } from '../interactive-os/ui/TabList'
+import { Accordion } from '../interactive-os/ui/Accordion'
+import { Toolbar } from '../interactive-os/ui/Toolbar'
+import { RadioGroup } from '../interactive-os/ui/RadioGroup'
+
+import {
+  makeListBoxData, makeTreeViewData, makeTabListData,
+  makeAccordionData, makeToolbarData, makeRadioGroupData,
+} from './showcaseFixtures'
+
+/* ── Token definitions ── */
 
 interface TokenControl {
   variable: string
@@ -33,6 +48,60 @@ function getComputedToken(variable: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(variable).trim()
 }
 
+/* ── Live component card ── */
+
+function DemoCard({ title, badge, children }: {
+  title: string
+  badge: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className={styles.card} data-surface="raised">
+      <div className={styles.cardHeader}>
+        <span className={styles.cardTitle}>{title}</span>
+        <span className={styles.cardBadge}>{badge}</span>
+      </div>
+      <div className={styles.cardBody}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+/* ── Stateful component wrappers ── */
+
+function LiveListBox() {
+  const [data, setData] = useState<NormalizedData>(makeListBoxData)
+  return <ListBox data={data} onChange={setData} />
+}
+
+function LiveTreeView() {
+  const [data, setData] = useState<NormalizedData>(makeTreeViewData)
+  return <TreeView data={data} onChange={setData} />
+}
+
+function LiveTabList() {
+  const [data, setData] = useState<NormalizedData>(makeTabListData)
+  return <TabList data={data} onChange={setData} />
+}
+
+function LiveAccordion() {
+  const [data, setData] = useState<NormalizedData>(makeAccordionData)
+  return <Accordion data={data} onChange={setData} />
+}
+
+function LiveToolbar() {
+  const [data, setData] = useState<NormalizedData>(makeToolbarData)
+  return <Toolbar data={data} onChange={setData} />
+}
+
+function LiveRadioGroup() {
+  const [data, setData] = useState<NormalizedData>(makeRadioGroupData)
+  return <RadioGroup data={data} onChange={setData} />
+}
+
+/* ── Main ── */
+
 export default function PageThemeCreator() {
   const [values, setValues] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {}
@@ -60,94 +129,78 @@ export default function PageThemeCreator() {
     setValues(fresh)
   }, [])
 
+  const renderTokenRow = (token: TokenControl) => (
+    <div key={token.variable} className={styles.row}>
+      {token.type === 'color' ? (
+        <>
+          <input
+            type="color"
+            className={styles.swatch}
+            value={values[token.variable]}
+            onChange={e => handleChange(token.variable, e.target.value)}
+          />
+          <span className={styles.label}>{token.label}</span>
+          <input
+            type="text"
+            className={styles.hex}
+            value={values[token.variable]}
+            onChange={e => handleChange(token.variable, e.target.value)}
+          />
+        </>
+      ) : (
+        <>
+          <span className={styles.label}>{token.label}</span>
+          <input
+            type="text"
+            className={styles.radiusInput}
+            value={values[token.variable]}
+            onChange={e => handleChange(token.variable, e.target.value)}
+          />
+        </>
+      )}
+    </div>
+  )
+
   return (
     <div className={styles.root}>
       <div className={styles.controls}>
         <h3 className={styles.heading}>Surface</h3>
-        {surfaceTokens.map(token => (
-          <div key={token.variable} className={styles.row}>
-            <span className={styles.label}>{token.label}</span>
-            <input
-              type="color"
-              className={styles.swatch}
-              value={values[token.variable]}
-              onChange={e => handleChange(token.variable, e.target.value)}
-            />
-          </div>
-        ))}
+        {surfaceTokens.map(renderTokenRow)}
 
-        <h3 className={styles.heading}>Semantic</h3>
-        {semanticTokens.map(token => (
-          <div key={token.variable} className={styles.row}>
-            <span className={styles.label}>{token.label}</span>
-            <input
-              type="color"
-              className={styles.swatch}
-              value={values[token.variable]}
-              onChange={e => handleChange(token.variable, e.target.value)}
-            />
-          </div>
-        ))}
+        <h3 className={styles.heading}>Color</h3>
+        {semanticTokens.map(renderTokenRow)}
 
         <h3 className={styles.heading}>Layout</h3>
-        {layoutTokens.map(token => (
-          <div key={token.variable} className={styles.row}>
-            <span className={styles.label}>{token.label}</span>
-            <input
-              type="text"
-              className={styles.radiusInput}
-              value={values[token.variable]}
-              onChange={e => handleChange(token.variable, e.target.value)}
-            />
-          </div>
-        ))}
+        {layoutTokens.map(renderTokenRow)}
 
-        <button className={styles.reset} onClick={handleReset}>
-          Reset All
-        </button>
+        <button className={styles.reset} onClick={handleReset}>Reset</button>
       </div>
 
       <div className={styles.preview}>
-        <h2 className={styles.previewHeading}>Surface Levels</h2>
-        <div className={styles.surfaceGrid}>
-          <div className={styles.surfaceCard} data-surface="base">
-            <span className={styles.surfaceLabel}>base</span>
-          </div>
-          <div className={styles.surfaceCard} data-surface="sunken">
-            <span className={styles.surfaceLabel}>sunken</span>
-          </div>
-          <div className={styles.surfaceCard} data-surface="default">
-            <span className={styles.surfaceLabel}>default</span>
-          </div>
-          <div className={styles.surfaceCard} data-surface="raised">
-            <span className={styles.surfaceLabel}>raised</span>
-          </div>
-          <div className={styles.surfaceCard} data-surface="overlay">
-            <span className={styles.surfaceLabel}>overlay</span>
-          </div>
-          <div className={styles.surfaceCard} data-surface="outlined">
-            <span className={styles.surfaceLabel}>outlined</span>
-          </div>
-        </div>
+        <div className={styles.grid}>
+          <DemoCard title="ListBox" badge="navigation">
+            <LiveListBox />
+          </DemoCard>
 
-        <h2 className={styles.previewHeading}>Semantic Colors</h2>
-        <div className={styles.colorRow}>
-          <div className={styles.colorSample} style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
-            primary
-          </div>
-          <div className={styles.colorSample} style={{ background: 'var(--selection)', color: 'var(--text-bright)' }}>
-            selection
-          </div>
-          <div className={styles.colorSample} style={{ background: 'var(--destructive)', color: 'var(--destructive-foreground)' }}>
-            destructive
-          </div>
-        </div>
+          <DemoCard title="TreeView" badge="navigation">
+            <LiveTreeView />
+          </DemoCard>
 
-        <h2 className={styles.previewHeading}>Focus Ring</h2>
-        <div>
-          <button className={styles.focusDemo} tabIndex={0}>Tab here</button>
-          <button className={styles.focusDemo} tabIndex={0}>And here</button>
-          <button className={styles.focusDemo} tabIndex={0}>And here</button>
+          <DemoCard title="Tabs" badge="navigation">
+            <LiveTabList />
+          </DemoCard>
+
+          <DemoCard title="Accordion" badge="navigation">
+            <LiveAccordion />
+          </DemoCard>
+
+          <DemoCard title="Toolbar" badge="navigation">
+            <LiveToolbar />
+          </DemoCard>
+
+          <DemoCard title="RadioGroup" badge="value">
+            <LiveRadioGroup />
+          </DemoCard>
         </div>
       </div>
     </div>
