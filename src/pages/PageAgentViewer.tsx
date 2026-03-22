@@ -1,6 +1,9 @@
 import styles from './PageAgentViewer.module.css'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { Eye, EyeOff, Circle } from 'lucide-react'
+import {
+  Eye, EyeOff, Circle, User, Bot, FileText, Terminal,
+  Pencil, Search, FilePlus,
+} from 'lucide-react'
 import { Aria } from '../interactive-os/components/aria'
 import { listbox } from '../interactive-os/behaviors/listbox'
 import { core, FOCUS_ID } from '../interactive-os/plugins/core'
@@ -16,15 +19,20 @@ import { DEFAULT_ROOT } from './viewer/types'
 
 // --- Types ---
 
-interface AgentOp {
+interface TimelineEvent {
+  type: 'user' | 'assistant' | 'tool_use' | 'tool_result'
   ts: string
-  tool: string
-  file: string
+  tool?: string
+  filePath?: string
+  text?: string
+  editOld?: string
+  editNew?: string
 }
 
 interface ModifiedFile {
   file: string
   count: number
+  editRanges: string[] // new_string snippets for highlight
 }
 
 // --- Behaviors ---
@@ -33,176 +41,181 @@ const modifiedListbox = { ...listbox, followFocus: true }
 
 // --- Helpers ---
 
-function parseOps(lines: string[]): { modified: ModifiedFile[]; reads: AgentOp[] } {
-  const modifiedMap = new Map<string, number>()
-  const modifiedOrder: string[] = []
-  const reads: AgentOp[] = []
-
-  for (const line of lines) {
-    if (!line.trim()) continue
-    let op: AgentOp
-    try {
-      op = JSON.parse(line)
-    } catch {
-      continue
-    }
-    if (op.tool === 'Edit' || op.tool === 'Write') {
-      const prev = modifiedMap.get(op.file) ?? 0
-      modifiedMap.set(op.file, prev + 1)
-      // Move to front (most recent first)
-      const idx = modifiedOrder.indexOf(op.file)
-      if (idx !== -1) modifiedOrder.splice(idx, 1)
-      modifiedOrder.unshift(op.file)
-    } else if (op.tool === 'Read') {
-      reads.push(op)
-    }
-  }
-
-  const modified = modifiedOrder.map((file) => ({ file, count: modifiedMap.get(file)! }))
-  return { modified, reads: reads.slice(-200) }
+function relPath(absPath: string): string {
+  return absPath.replace(DEFAULT_ROOT + '/', '')
 }
 
 function buildModifiedStore(files: ModifiedFile[], selectedFile: string | null): NormalizedData {
   const entities: Record<string, Entity> = {}
   const childIds: string[] = []
-
   for (const f of files) {
     entities[f.file] = { id: f.file, data: { file: f.file, count: f.count } }
     childIds.push(f.file)
   }
-
   if (selectedFile && entities[selectedFile]) {
     entities[FOCUS_ID] = { id: FOCUS_ID, focusedId: selectedFile }
   }
-
   return createStore({ entities, relationships: { [ROOT_ID]: childIds } })
 }
 
-function buildReadStore(reads: AgentOp[]): NormalizedData {
-  const entities: Record<string, Entity> = {}
-  const childIds: string[] = []
-
-  for (let i = 0; i < reads.length; i++) {
-    const id = `read-${i}`
-    entities[id] = { id, data: { ts: reads[i].ts, file: reads[i].file } }
-    childIds.push(id)
-  }
-
-  return createStore({ entities, relationships: { [ROOT_ID]: childIds } })
-}
-
-async function fetchFile(path: string): Promise<string> {
-  const res = await fetch(`/api/fs/file?path=${encodeURIComponent(path)}`)
+async function fetchFile(filePath: string): Promise<string> {
+  const res = await fetch(`/api/fs/file?path=${encodeURIComponent(filePath)}`)
   return res.text()
+}
+
+// --- Timeline event icon ---
+
+function EventIcon({ evt }: { evt: TimelineEvent }) {
+  if (evt.type === 'user') return <User size={11} />
+  if (evt.type === 'assistant') return <Bot size={11} />
+  if (evt.tool === 'Read') return <FileText size={11} />
+  if (evt.tool === 'Edit') return <Pencil size={11} />
+  if (evt.tool === 'Write') return <FilePlus size={11} />
+  if (evt.tool === 'Bash') return <Terminal size={11} />
+  if (evt.tool === 'Grep' || evt.tool === 'Glob') return <Search size={11} />
+  return <Circle size={11} />
+}
+
+function eventLabel(evt: TimelineEvent): string {
+  if (evt.type === 'user') return evt.text ?? ''
+  if (evt.type === 'assistant') return evt.text ?? ''
+  if (evt.tool === 'Read' && evt.filePath) return `Read ${relPath(evt.filePath)}`
+  if (evt.tool === 'Edit' && evt.filePath) return `Edit ${relPath(evt.filePath)}`
+  if (evt.tool === 'Write' && evt.filePath) return `Write ${relPath(evt.filePath)}`
+  if (evt.tool === 'Bash') return `$ ${evt.text ?? ''}`
+  if (evt.tool === 'Grep') return `grep "${evt.text ?? ''}"`
+  if (evt.tool === 'Glob') return `glob "${evt.text ?? ''}"`
+  return evt.tool ?? evt.type
 }
 
 // --- Component ---
 
 export default function PageAgentViewer() {
+  const [timeline, setTimeline] = useState<TimelineEvent[]>([])
   const [modifiedFiles, setModifiedFiles] = useState<ModifiedFile[]>([])
-  const [readStream, setReadStream] = useState<AgentOp[]>([])
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [fileContent, setFileContent] = useState('')
   const [followMode, setFollowMode] = useState(true)
   const [loading, setLoading] = useState(true)
   const [fetchCounter, setFetchCounter] = useState(0)
 
-  const streamBodyRef = useRef<HTMLDivElement>(null)
-  const loadedFileRef = useRef<string | null>(null)
+  const timelineBodyRef = useRef<HTMLDivElement>(null)
   const followModeRef = useRef(followMode)
   useEffect(() => { followModeRef.current = followMode }, [followMode])
 
+  // --- Derive modified files from timeline ---
+  const deriveModified = useCallback((events: TimelineEvent[]): ModifiedFile[] => {
+    const map = new Map<string, ModifiedFile>()
+    const order: string[] = []
+    for (const evt of events) {
+      if (evt.type !== 'tool_use') continue
+      if ((evt.tool === 'Edit' || evt.tool === 'Write') && evt.filePath) {
+        const existing = map.get(evt.filePath)
+        if (existing) {
+          existing.count++
+          if (evt.editNew) existing.editRanges.push(evt.editNew)
+          const idx = order.indexOf(evt.filePath)
+          if (idx !== -1) order.splice(idx, 1)
+          order.unshift(evt.filePath)
+        } else {
+          map.set(evt.filePath, {
+            file: evt.filePath,
+            count: 1,
+            editRanges: evt.editNew ? [evt.editNew] : [],
+          })
+          order.unshift(evt.filePath)
+        }
+      }
+    }
+    return order.map(f => map.get(f)!)
+  }, [])
+
   // --- Initial fetch ---
   useEffect(() => {
-    fetch('/api/agent-ops/latest')
-      .then((res) => res.text())
-      .then((text) => {
-        const lines = text.split('\n').filter(Boolean)
-        const { modified, reads } = parseOps(lines)
+    fetch('/api/agent-ops/timeline')
+      .then(res => res.json())
+      .then((events: TimelineEvent[]) => {
+        setTimeline(events)
+        const modified = deriveModified(events)
         setModifiedFiles(modified)
-        setReadStream(reads)
-        if (modified.length > 0) {
-          setSelectedFile(modified[0].file)
-        }
+        if (modified.length > 0) setSelectedFile(modified[0].file)
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [])
+  }, [deriveModified])
 
-  // --- SSE ---
+  // --- SSE timeline stream ---
   useEffect(() => {
-    const es = new EventSource('/api/agent-ops/stream')
+    const es = new EventSource('/api/agent-ops/timeline-stream')
 
     es.onmessage = (event) => {
-      let op: AgentOp
-      try {
-        op = JSON.parse(event.data)
-      } catch {
-        return
-      }
+      let evt: TimelineEvent
+      try { evt = JSON.parse(event.data) } catch { return }
 
-      if (op.tool === 'Edit' || op.tool === 'Write') {
-        setModifiedFiles((prev) => {
-          const idx = prev.findIndex((f) => f.file === op.file)
+      setTimeline(prev => {
+        const next = [...prev, evt]
+        return next.length > 500 ? next.slice(-500) : next
+      })
+
+      // Update modified files if Edit/Write
+      if (evt.type === 'tool_use' && (evt.tool === 'Edit' || evt.tool === 'Write') && evt.filePath) {
+        setModifiedFiles(prev => {
+          const idx = prev.findIndex(f => f.file === evt.filePath)
           if (idx !== -1) {
-            const updated = { file: op.file, count: prev[idx].count + 1 }
-            const next = [updated, ...prev.slice(0, idx), ...prev.slice(idx + 1)]
-            return next
+            const updated = {
+              ...prev[idx],
+              count: prev[idx].count + 1,
+              editRanges: evt.editNew
+                ? [...prev[idx].editRanges, evt.editNew]
+                : prev[idx].editRanges,
+            }
+            return [updated, ...prev.slice(0, idx), ...prev.slice(idx + 1)]
           }
-          return [{ file: op.file, count: 1 }, ...prev]
+          return [{
+            file: evt.filePath!,
+            count: 1,
+            editRanges: evt.editNew ? [evt.editNew] : [],
+          }, ...prev]
         })
+
         if (followModeRef.current) {
-          setSelectedFile(op.file)
+          setSelectedFile(evt.filePath!)
           setFetchCounter(c => c + 1)
         }
-      } else if (op.tool === 'Read') {
-        setReadStream((prev) => {
-          const next = [...prev, op]
-          return next.length > 200 ? next.slice(-200) : next
-        })
       }
     }
 
     es.onerror = () => {
-      // On reconnect, re-fetch to fill any gap
       es.addEventListener('open', function refetch() {
         es.removeEventListener('open', refetch)
-        fetch('/api/agent-ops/latest')
-          .then((res) => res.text())
-          .then((text) => {
-            const lines = text.split('\n').filter(Boolean)
-            const { modified, reads } = parseOps(lines)
-            setModifiedFiles(modified)
-            setReadStream(reads)
+        fetch('/api/agent-ops/timeline')
+          .then(res => res.json())
+          .then((events: TimelineEvent[]) => {
+            setTimeline(events)
+            setModifiedFiles(deriveModified(events))
           })
       })
     }
 
     return () => es.close()
-  }, [])
+  }, [deriveModified])
 
   // --- File content loading ---
   useEffect(() => {
     if (!selectedFile) return
-    loadedFileRef.current = selectedFile
     fetchFile(selectedFile).then(setFileContent).catch(() => setFileContent(''))
   }, [selectedFile, fetchCounter])
 
-  // --- Auto-scroll read stream ---
+  // --- Auto-scroll timeline ---
   useEffect(() => {
-    const el = streamBodyRef.current
+    const el = timelineBodyRef.current
     if (el) el.scrollTo(0, el.scrollHeight)
-  }, [readStream.length])
+  }, [timeline.length])
 
   // --- Derived stores ---
   const modifiedStore = useMemo(
     () => buildModifiedStore(modifiedFiles, selectedFile),
     [modifiedFiles, selectedFile],
-  )
-
-  const readStore = useMemo(
-    () => buildReadStore(readStream),
-    [readStream],
   )
 
   // --- Handlers ---
@@ -213,15 +226,52 @@ export default function PageAgentViewer() {
     }
   }, [])
 
-  const handleReadActivate = useCallback((nodeId: string) => {
-    const idx = parseInt(nodeId.replace('read-', ''), 10)
-    setReadStream((prev) => {
-      if (idx >= 0 && idx < prev.length) {
-        setSelectedFile(prev[idx].file)
-      }
-      return prev
-    })
+  const handleTimelineClick = useCallback((evt: TimelineEvent) => {
+    if (evt.filePath) {
+      setSelectedFile(evt.filePath)
+      setFetchCounter(c => c + 1)
+    }
   }, [])
+
+  // --- Highlight edit ranges in code ---
+  const highlightedContent = useMemo(() => {
+    if (!selectedFile || !fileContent) return fileContent
+    const mod = modifiedFiles.find(f => f.file === selectedFile)
+    if (!mod || mod.editRanges.length === 0) return fileContent
+    // For PoC: wrap each editNew match in a <mark> for CodeBlock
+    // This only works for non-markdown; we'll inject highlight markers
+    return fileContent
+  }, [fileContent, selectedFile, modifiedFiles])
+
+  // Find line numbers that were edited (for highlight)
+  const editedLines = useMemo<Set<number>>(() => {
+    const lines = new Set<number>()
+    if (!selectedFile || !fileContent) return lines
+    const mod = modifiedFiles.find(f => f.file === selectedFile)
+    if (!mod || mod.editRanges.length === 0) return lines
+
+    const contentLines = fileContent.split('\n')
+    for (const editNew of mod.editRanges) {
+      const editLines = editNew.split('\n')
+      // Find where this snippet starts in the file
+      for (let i = 0; i <= contentLines.length - editLines.length; i++) {
+        let match = true
+        for (let j = 0; j < editLines.length; j++) {
+          if (contentLines[i + j].trim() !== editLines[j].trim()) {
+            match = false
+            break
+          }
+        }
+        if (match) {
+          for (let j = 0; j < editLines.length; j++) {
+            lines.add(i + j + 1) // 1-indexed
+          }
+          break
+        }
+      }
+    }
+    return lines
+  }, [fileContent, selectedFile, modifiedFiles])
 
   // --- Derived values ---
   const filename = selectedFile?.split('/').pop() ?? ''
@@ -241,39 +291,31 @@ export default function PageAgentViewer() {
 
   return (
     <div className={styles.av}>
-      {/* Left panel — modified files */}
-      <div className={styles.avModified}>
-        <div className={styles.avModifiedHeader}>
-          <span className={styles.avModifiedTitle}>Modified</span>
-          <button
-            className={`${styles.avFollowBtn}${followMode ? ` ${styles.avFollowBtnActive}` : ''}`}
-            onClick={() => setFollowMode((f) => !f)}
-            title={followMode ? 'Follow mode on' : 'Follow mode off'}
-          >
-            {followMode ? <Eye size={12} /> : <EyeOff size={12} />}
-          </button>
+      {/* Left panel — Activity Timeline */}
+      <div className={styles.avTimeline}>
+        <div className={styles.avTimelineHeader}>
+          <span className={styles.avTimelineTitle}>Timeline</span>
         </div>
-        <div className={styles.avModifiedBody}>
-          <Aria
-            behavior={modifiedListbox}
-            data={modifiedStore}
-            plugins={[core()]}
-            onChange={handleModifiedChange}
-            aria-label="Modified files"
-          >
-            <Aria.Item render={(node) => {
-              const data = node.data as { file: string; count: number }
-              const name = data.file.split('/').pop() ?? ''
-              const relPath = data.file.replace(DEFAULT_ROOT + '/', '')
-              return (
-                <div className={styles.avModifiedItem}>
-                  <FileIcon name={name} type="file" />
-                  <span>{relPath}</span>
-                  {data.count > 1 && <span className={styles.avModifiedBadge}>&times;{data.count}</span>}
-                </div>
-              )
-            }} />
-          </Aria>
+        <div className={styles.avTimelineBody} ref={timelineBodyRef}>
+          {timeline.length === 0 ? (
+            <div className={styles.avTimelineEmpty}>Waiting for agent activity...</div>
+          ) : (
+            timeline.map((evt, i) => (
+              <div
+                key={i}
+                className={`${styles.avTimelineItem} ${styles[`avTl${evt.type === 'tool_use' ? (evt.tool ?? '') : evt.type}`] ?? ''}`}
+                onClick={() => handleTimelineClick(evt)}
+                style={evt.filePath ? { cursor: 'pointer' } : undefined}
+              >
+                <span className={styles.avTimelineIcon}>
+                  <EventIcon evt={evt} />
+                </span>
+                <span className={styles.avTimelineText}>
+                  {eventLabel(evt)}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -290,6 +332,12 @@ export default function PageAgentViewer() {
                 <span>{ext.toUpperCase()}</span>
                 <span className={styles.avContentMetaSep} />
                 <span>{lineCount} lines</span>
+                {editedLines.size > 0 && (
+                  <>
+                    <span className={styles.avContentMetaSep} />
+                    <span className={styles.avEditBadge}>{editedLines.size} lines edited</span>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -299,38 +347,49 @@ export default function PageAgentViewer() {
             {isMdx
               ? <MdxViewer filePath={selectedFile} />
               : isMarkdown
-                ? <MarkdownViewer content={fileContent} />
-                : <CodeBlock code={fileContent} filename={filename} />}
+                ? <MarkdownViewer content={highlightedContent} />
+                : <CodeBlock
+                    code={highlightedContent}
+                    filename={filename}
+                    highlightLines={editedLines.size > 0 ? editedLines : undefined}
+                  />}
           </div>
         ) : (
           <div className={styles.avEmpty}>
             <Circle size={24} strokeWidth={1} className={styles.avEmptyIcon} />
-            <span>Waiting for agent activity...</span>
+            <span>Select a file to view</span>
           </div>
         )}
       </div>
 
-      {/* Right panel — read stream */}
-      <div className={styles.avStream}>
-        <div className={styles.avStreamHeader}>
-          <span className={styles.avStreamTitle}>Read Stream</span>
+      {/* Right panel — Modified files */}
+      <div className={styles.avModified}>
+        <div className={styles.avModifiedHeader}>
+          <span className={styles.avModifiedTitle}>Modified</span>
+          <button
+            className={`${styles.avFollowBtn}${followMode ? ` ${styles.avFollowBtnActive}` : ''}`}
+            onClick={() => setFollowMode(f => !f)}
+            title={followMode ? 'Follow mode on' : 'Follow mode off'}
+          >
+            {followMode ? <Eye size={12} /> : <EyeOff size={12} />}
+          </button>
         </div>
-        <div className={styles.avStreamBody} ref={streamBodyRef}>
+        <div className={styles.avModifiedBody}>
           <Aria
-            behavior={listbox}
-            data={readStore}
+            behavior={modifiedListbox}
+            data={modifiedStore}
             plugins={[core()]}
-            onActivate={handleReadActivate}
-            aria-label="Read stream"
+            onChange={handleModifiedChange}
+            aria-label="Modified files"
           >
             <Aria.Item render={(node) => {
-              const data = node.data as { ts: string; file: string }
-              const time = new Date(data.ts).toLocaleTimeString('en-US', { hour12: false })
-              const relPath = data.file.replace(DEFAULT_ROOT + '/', '')
+              const data = node.data as { file: string; count: number }
+              const name = data.file.split('/').pop() ?? ''
               return (
-                <div className={styles.avStreamItem}>
-                  <span className={styles.avStreamTs}>{time}</span>
-                  <span className={styles.avStreamPath}>{relPath}</span>
+                <div className={styles.avModifiedItem}>
+                  <FileIcon name={name} type="file" />
+                  <span className={styles.avModifiedPath}>{relPath(data.file)}</span>
+                  {data.count > 1 && <span className={styles.avModifiedBadge}>&times;{data.count}</span>}
                 </div>
               )
             }} />

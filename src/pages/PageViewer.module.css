@@ -7,10 +7,8 @@
 
 .vw {
   display: flex;
-  flex-direction: column;
   flex: 1;
   min-height: 0;
-  background: var(--surface-2);
 }
 
 .vw-loading {
@@ -33,24 +31,7 @@
   to { transform: rotate(360deg); }
 }
 
-/* --- Viewer status bar --- */
-
-.vw-statusbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 36px;
-  padding: 0 16px;
-  background: transparent;
-  flex-shrink: 0;
-}
-
-.vw-statusbar__left,
-.vw-statusbar__right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+/* --- Shared header bar --- */
 
 .vw-statusbar__btn {
   display: flex;
@@ -69,15 +50,6 @@
 .vw-statusbar__btn:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
-}
-
-.vw-statusbar__title {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: var(--text-muted);
 }
 
 /* --- Rec button --- */
@@ -127,44 +99,48 @@
   50% { opacity: 0.3; }
 }
 
-/* --- Viewer panels --- */
-
-.vw-panels {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-/* --- Tree panel (TOC-style sidebar) --- */
+/* --- Tree panel (sidebar) --- */
 
 .vw-tree {
   width: 280px;
   min-width: 220px;
   background: var(--surface-1);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-dim);
+}
+
+.vw-tree__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.vw-tree__header-title {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.vw-tree__body {
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 8px 0;
+  padding: 4px 0;
 }
 
 .vw-tree__item {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 12px 4px 0;
-  font-family: var(--sans);
-  font-size: 13px;
-  cursor: default;
-  user-select: none;
-  color: var(--text-primary);
-  transition: background 0.06s;
   white-space: nowrap;
-  border-left: 2px solid transparent;
-}
-
-/* State styling (focus, hover, selected) handled by components.css ARIA selectors */
-
-.vw-tree__indent {
-  flex-shrink: 0;
 }
 
 .vw-tree__chevron {
@@ -215,6 +191,24 @@
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
+  background: var(--surface-2);
+}
+
+.vw-content__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 16px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.vw-content__header-left,
+.vw-content__header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .vw-content__body {
@@ -228,16 +222,7 @@
 .vw-content__code {
   flex: 1;
   overflow: auto;
-  padding: 32px 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   min-width: 0;
-}
-
-.vw-content__code > * {
-  max-width: 720px;
-  width: 100%;
 }
 
 /* --- Diagram panel (right) --- */
@@ -343,6 +328,9 @@
    ═══════════════════════════════════════════ */
 
 .viewer-markdown {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 48px;
   font-family: var(--sans);
   font-size: 15px;
   font-weight: 450;
@@ -580,6 +568,12 @@
   background: var(--accent-mid) !important;
   outline: 1px solid var(--accent-bright);
   border-radius: 2px;
+}
+
+:global(.code-line--edited) {
+  background: rgba(229, 163, 58, 0.08) !important;
+  border-left: 2px solid #e5a33a;
+  padding-left: 6px !important;
 }
 
 /* ═══════════════════════════════════════════
