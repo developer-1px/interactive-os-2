@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { ROOT_ID } from '../interactive-os/core/types'
 import { collectSections } from '../pages/cms/collectSections'
+import { getRootAncestor, getTabItemAncestor } from '../pages/cms/collectSections'
 import type { NormalizedData } from '../interactive-os/core/types'
 
 function makeStore(entities: Record<string, { type: string }>, relationships: Record<string, string[]>): NormalizedData {
@@ -69,5 +70,51 @@ describe('collectSections', () => {
       { [ROOT_ID]: ['outer'], outer: ['inner'], inner: ['s1'] },
     )
     expect(collectSections(store, ROOT_ID)).toEqual(['s1'])
+  })
+})
+
+describe('getRootAncestor', () => {
+  it('returns self for root-level section', () => {
+    const store = makeStore(
+      { s1: { type: 'section' } },
+      { [ROOT_ID]: ['s1'] },
+    )
+    expect(getRootAncestor(store, 's1')).toBe('s1')
+  })
+
+  it('returns tab-group for section inside tab', () => {
+    const store = makeStore(
+      {
+        tg: { type: 'tab-group' },
+        t1: { type: 'tab-item' },
+        p1: { type: 'tab-panel' },
+        s1: { type: 'section' },
+      },
+      { [ROOT_ID]: ['tg'], tg: ['t1'], t1: ['p1'], p1: ['s1'] },
+    )
+    expect(getRootAncestor(store, 's1')).toBe('tg')
+  })
+})
+
+describe('getTabItemAncestor', () => {
+  it('returns tab-item ancestor for section inside tab', () => {
+    const store = makeStore(
+      {
+        tg: { type: 'tab-group' },
+        t1: { type: 'tab-item' },
+        p1: { type: 'tab-panel' },
+        s1: { type: 'section' },
+      },
+      { [ROOT_ID]: ['tg'], tg: ['t1'], t1: ['p1'], p1: ['s1'] },
+    )
+    expect(getTabItemAncestor(store, 's1')).toBe('t1')
+  })
+
+  it('returns undefined for root-level section', () => {
+    const store = makeStore(
+      { s1: { type: 'section' } },
+      { [ROOT_ID]: ['s1'] },
+    )
+    expect(getTabItemAncestor(store, 's1')).toBeUndefined()
   })
 })
