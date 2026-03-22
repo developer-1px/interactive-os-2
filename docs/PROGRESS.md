@@ -150,7 +150,7 @@
 - [x] MenuList
 - [x] DisclosureGroup
 - [x] SwitchGroup
-- [x] Grid (2D row/col navigation with Aria.Cell)
+- [x] Grid (2D row/col navigation with Aria.Cell, enableEditing + keyMap + ColumnDef.field)
 - [x] Kanban (cross-column card movement, horizontal column layout)
 - [x] RadioGroup
 - [x] Combobox (input + listbox, aria-activedescendant, editable, multi-select + tag tokens, grouped, creatable)
