@@ -12,26 +12,6 @@
   grid-column: 2 / -1;
 }
 
-/* --- Left panel: Activity Timeline (320px) --- */
-
-.avTimeline {
-  width: 420px;
-  min-width: 320px;
-  background: var(--surface-1);
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--border-dim);
-}
-
-.avTimelineHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 12px;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border-dim);
-}
 
 /* --- Sessions panel --- */
 
@@ -86,99 +66,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.avTimelineTitle {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.avTimelineBody {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 4px 0;
-}
-
-.avTimelineEmpty {
-  padding: 24px 12px;
-  color: var(--text-muted);
-  font-family: var(--sans);
-  font-size: 12px;
-  text-align: center;
-}
-
-.avTimelineItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  padding: 4px 12px;
-  font-family: var(--sans);
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  transition: background 0.08s;
-}
-
-.avTimelineItem:hover {
-  background: var(--bg-hover);
-}
-
-.avTimelineItem[style*="cursor"] {
-  color: var(--text-primary);
-}
-
-.avTimelineIcon {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1px;
-  opacity: 0.6;
-}
-
-.avTimelineText {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  word-break: break-word;
-}
-
-/* Event type colors */
-.avTluser {
-  color: var(--accent, #4da6ff);
-  background: rgba(77, 166, 255, 0.08);
-  border-left: 2px solid var(--accent, #4da6ff);
-  padding: 8px 12px 8px 10px;
-  margin: 24px 0 6px;
-  border-radius: 0 4px 4px 0;
-  border-top: 1px solid var(--border-dim);
-  font-weight: 500;
-}
-.avTluser:first-child {
-  margin-top: 4px;
-  border-top: none;
-}
-.avTluser .avTimelineIcon { opacity: 0.9; color: var(--accent, #4da6ff); }
-
-.avTlassistant { color: var(--text-muted); font-style: italic; }
-.avTlassistant .avTimelineIcon { opacity: 0.5; }
-
-.avTlEdit .avTimelineIcon,
-.avTlWrite .avTimelineIcon { color: #e5a33a; opacity: 0.9; }
-
-.avTlRead .avTimelineIcon { color: var(--text-muted); opacity: 0.5; }
-.avTlRead { color: var(--text-muted); font-size: 10px; }
-
-.avTlBash .avTimelineIcon { color: #4EAA25; opacity: 0.8; }
-.avTlBash { font-family: var(--mono, monospace); font-size: 10px; }
 
 /* --- Center panel: file content --- */
 

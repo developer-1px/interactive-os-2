@@ -283,4 +283,6 @@
 
 - [x] Agent Viewer — Agent(Claude Code)의 세션별 파일 읽기/수정 내역 실시간 3패널 뷰어. PostToolUse hook → NDJSON 로그 → Vite SSE → React UI. 좌(수정 목록 Aria listbox, ×N 뱃지, follow 토글) | 중(콘텐츠 — CodeBlock/Markdown/MDX) | 우(읽기 이벤트 스트림), `/agent` 라우트
 
-*Last updated: 2026-03-22 — CMS Tab Visual*
+- [x] Agent Viewer Multi-Session (2/7) — TimelineColumn 컴포넌트 추출. 세션별 SSE 연결, smart scroll (user event→viewport top, assistant→near-bottom auto-scroll), 헤더(live indicator, archive close), PageAgentViewer에서 timeline 로직 제거 후 `<TimelineColumn>` 위임
+
+*Last updated: 2026-03-22 — Agent Viewer TimelineColumn 추출*
