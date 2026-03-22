@@ -119,9 +119,9 @@
 .tcText :global(h4),
 .tcText :global(h5),
 .tcText :global(h6) {
-  font-size: inherit;
+  font-size: 12px;
   font-weight: 600;
-  margin: 4px 0 2px;
+  margin: 6px 0 2px;
   line-height: 1.4;
 }
 
