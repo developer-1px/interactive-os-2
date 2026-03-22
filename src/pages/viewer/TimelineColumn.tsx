@@ -1,7 +1,7 @@
 import styles from './TimelineColumn.module.css'
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
 import {
-  Circle, FileText, Terminal,
+  Circle, Bot, FileText, Terminal,
   Pencil, Search, FilePlus,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
@@ -56,6 +56,7 @@ function isNearBottom(el: HTMLElement, threshold = 100): boolean {
 // --- Event icon ---
 
 function EventIcon({ evt }: { evt: TimelineEvent }) {
+  if (evt.type === 'assistant') return <Bot size={12} />
   if (evt.tool === 'Read') return <FileText size={12} />
   if (evt.tool === 'Edit') return <Pencil size={12} />
   if (evt.tool === 'Write') return <FilePlus size={12} />
@@ -74,7 +75,7 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
       : evt.type === 'assistant'
         ? styles.tcAssistant
         : ''
-  const showIcon = evt.type === 'tool_use'
+  const showIcon = evt.type === 'tool_use' || evt.type === 'assistant'
   const cls = `${styles.tcItem} ${typeClass}${evt.filePath ? ` ${styles.tcFile}` : ''}`
   return (
     <div
