@@ -279,6 +279,8 @@
 
 - [x] CMS Tab Container — tab-group/tab-item/tab-panel 3개 노드 타입 추가 (배열+조건부렌더링+중첩 프리미티브 검증). Zod 스키마 + childRules, 탭 선택 시 패널 전환 (조건부 렌더링), F2 인라인 라벨 편집, 최소 1탭 Delete 가드, navigateTabSibling 헬퍼, 23개 테스트 (스키마 12 + 통합 11)
 
+- [x] CMS Tab Visual — 캔버스 탭 CSS (밑줄 인디케이터) + 사이드바 탭 flat 펼침. collectSections DFS 범용 함수로 정규화 트리 순회 (컨테이너 타입 무관), 구분선+탭 라벨 자동 삽입, active 탭 하이라이트 (activeSectionId 파생), 비활성 탭 Enter 시 탭 활성화→스크롤
+
 - [x] Agent Viewer — Agent(Claude Code)의 세션별 파일 읽기/수정 내역 실시간 3패널 뷰어. PostToolUse hook → NDJSON 로그 → Vite SSE → React UI. 좌(수정 목록 Aria listbox, ×N 뱃지, follow 토글) | 중(콘텐츠 — CodeBlock/Markdown/MDX) | 우(읽기 이벤트 스트림), `/agent` 라우트
 
-*Last updated: 2026-03-22 — Store Split Inspector*
+*Last updated: 2026-03-22 — CMS Tab Visual*
