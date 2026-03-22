@@ -86,6 +86,17 @@
   border-radius: 0 2px 2px 0;
 }
 
+.activity-bar__separator {
+  width: 16px;
+  height: 1px;
+  background: var(--border-dim);
+  margin: 4px auto;
+}
+
+.activity-bar__util {
+  margin-top: auto;
+}
+
 /* ═══════════════════════════════════════════
    Layout — page, sidebar, content
    ═══════════════════════════════════════════ */
