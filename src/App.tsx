@@ -391,7 +391,7 @@ function App() {
               return (
                 <Tooltip content={nav.label}>
                   <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <Icon size={16} />
+                    <Icon size={20} />
                   </div>
                 </Tooltip>
               )
@@ -405,7 +405,7 @@ function App() {
               return (
                 <Tooltip content={nav.label}>
                   <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <Icon size={16} />
+                    <Icon size={20} />
                   </div>
                 </Tooltip>
               )
@@ -417,7 +417,7 @@ function App() {
               return (
                 <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
                   <div {...props} className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <ThemeIcon size={12} />
+                    <ThemeIcon size={16} />
                   </div>
                 </Tooltip>
               )
