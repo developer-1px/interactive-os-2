@@ -8,7 +8,8 @@ import type { Locale } from './cms-types'
 import type { TemplateType } from './cms-templates'
 import { templateToCommand } from './cms-templates'
 import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
-import { collectSections } from './collectSections'
+import { collectSections, getRootAncestor, getTabItemAncestor } from './collectSections'
+import type { LocaleMap } from './cms-types'
 import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
 import { listbox } from '../../interactive-os/behaviors/listbox'
 import { focusCommands } from '../../interactive-os/plugins/core'
@@ -193,26 +194,65 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   return (
     <aside className="cms-sidebar" aria-label="Sections">
       <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="">
-        {sectionIds.map((sectionId, i) => {
-          const props = aria.getNodeProps(sectionId)
-          const state = aria.getNodeState(sectionId)
-          return (
-            <div
-              key={sectionId}
-              {...(props as React.HTMLAttributes<HTMLDivElement>)}
-              className={`cms-sidebar__thumb${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
-              onClick={() => {
-                aria.dispatch(focusCommands.setFocus(sectionId))
-                scrollToSection(sectionId)
-              }}
-            >
-              <div className="cms-sidebar__thumb-inner">
-                <SectionThumbnail data={store} sectionId={sectionId} locale={locale} />
+        {(() => {
+          let prevRootAncestor = ''
+          let prevTabItem = ''
+          let sectionIndex = 0
+          return sectionIds.map((sectionId) => {
+            const rootAncestor = getRootAncestor(store, sectionId)
+            const tabItemId = getTabItemAncestor(store, sectionId)
+            const elements: React.ReactNode[] = []
+
+            if (rootAncestor !== prevRootAncestor) {
+              const rootData = (store.entities[rootAncestor]?.data ?? {}) as Record<string, unknown>
+              if (rootData.type === 'tab-group' && prevRootAncestor !== '') {
+                elements.push(<div key={`sep-start-${rootAncestor}`} className="cms-sidebar__group-sep" />)
+              }
+              if (prevRootAncestor) {
+                const prevRootData = (store.entities[prevRootAncestor]?.data ?? {}) as Record<string, unknown>
+                if (prevRootData.type === 'tab-group' && rootData.type !== 'tab-group') {
+                  elements.push(<div key={`sep-end-${prevRootAncestor}`} className="cms-sidebar__group-sep" />)
+                }
+              }
+            }
+
+            if (tabItemId && tabItemId !== prevTabItem) {
+              const tabData = (store.entities[tabItemId]?.data ?? {}) as Record<string, unknown>
+              const label = tabData.label as LocaleMap | undefined
+              const labelText = label?.[locale] ?? label?.ko ?? ''
+              elements.push(
+                <div key={`label-${tabItemId}`} className="cms-sidebar__group-label">
+                  {labelText}
+                </div>
+              )
+            }
+
+            prevRootAncestor = rootAncestor
+            prevTabItem = tabItemId ?? ''
+            sectionIndex++
+
+            const props = aria.getNodeProps(sectionId)
+            const state = aria.getNodeState(sectionId)
+            elements.push(
+              <div
+                key={sectionId}
+                {...(props as React.HTMLAttributes<HTMLDivElement>)}
+                className={`cms-sidebar__thumb${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
+                onClick={() => {
+                  aria.dispatch(focusCommands.setFocus(sectionId))
+                  scrollToSection(sectionId)
+                }}
+              >
+                <div className="cms-sidebar__thumb-inner">
+                  <SectionThumbnail data={store} sectionId={sectionId} locale={locale} />
+                </div>
+                <span className="cms-sidebar__thumb-index">{sectionIndex}</span>
               </div>
-              <span className="cms-sidebar__thumb-index">{i + 1}</span>
-            </div>
-          )
-        })}
+            )
+
+            return elements
+          })
+        })()}
       </div>
       <div className="cms-sidebar__add-area">
         <button
