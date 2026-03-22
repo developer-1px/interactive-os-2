@@ -211,6 +211,7 @@ const routeConfig: RouteGroup[] = [
     icon: BookOpen,
     basePath: '/area/overview',
     items: [
+      { path: 'vision', label: 'Vision', status: 'ready', component: PageAreaViewer },
       { path: 'overview', label: 'Overview', status: 'ready', component: PageAreaViewer },
       { path: 'core', label: 'Core', status: 'ready', component: PageAreaViewer },
       { path: 'axes', label: 'Axes', status: 'ready', component: PageAreaViewer },
@@ -239,6 +240,10 @@ const navItems: NavItem[] = [
 ]
 
 // --- Pre-computed stores ---
+
+const APP_IDS = ['cms', 'viewer', 'agent']
+const OS_IDS = routeConfig.map((g) => g.id)
+const UTIL_IDS = ['theme']
 
 const activityBarStore = toStore([
   ...navItems.map((n) => ({ id: n.id, label: n.label })),
@@ -371,8 +376,35 @@ function App() {
           onActivate={handleActivityBarActivate}
           aria-label="Layer navigation"
         >
-          <Aria.Item render={(node, state) => {
-            if (node.id === 'theme') {
+          <div role="group" aria-label="App">
+            <Aria.Item ids={APP_IDS} render={(node, state) => {
+              const nav = navItems.find((n) => n.id === node.id)!
+              const Icon = nav.icon
+              return (
+                <Tooltip content={nav.label}>
+                  <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+                    <Icon size={16} />
+                  </div>
+                </Tooltip>
+              )
+            }} />
+          </div>
+          <div role="separator" className="activity-bar__separator" />
+          <div role="group" aria-label="OS">
+            <Aria.Item ids={OS_IDS} render={(node, state) => {
+              const nav = navItems.find((n) => n.id === node.id)!
+              const Icon = nav.icon
+              return (
+                <Tooltip content={nav.label}>
+                  <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+                    <Icon size={16} />
+                  </div>
+                </Tooltip>
+              )
+            }} />
+          </div>
+          <div role="group" aria-label="Util" className="activity-bar__util">
+            <Aria.Item ids={UTIL_IDS} render={(node, state) => {
               const ThemeIcon = theme === 'dark' ? Sun : Moon
               return (
                 <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
@@ -381,17 +413,8 @@ function App() {
                   </div>
                 </Tooltip>
               )
-            }
-            const nav = navItems.find((n) => n.id === node.id)!
-            const Icon = nav.icon
-            return (
-              <Tooltip content={nav.label}>
-                <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                  <Icon size={16} />
-                </div>
-              </Tooltip>
-            )
-          }} />
+            }} />
+          </div>
         </Aria>
       </nav>
       {isCms ? (
