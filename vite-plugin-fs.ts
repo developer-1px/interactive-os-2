@@ -389,6 +389,18 @@ export function fsPlugin(): Plugin {
             res.end(JSON.stringify({ error: 'File not found' }))
             return
           }
+          const fileExt = path.extname(filePath).toLowerCase()
+          const IMAGE_MIME: Record<string, string> = {
+            '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+            '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp',
+            '.ico': 'image/x-icon', '.bmp': 'image/bmp',
+          }
+          if (IMAGE_MIME[fileExt]) {
+            const buf = fs.readFileSync(filePath)
+            res.setHeader('Content-Type', IMAGE_MIME[fileExt])
+            res.end(buf)
+            return
+          }
           const content = fs.readFileSync(filePath, 'utf-8')
           res.setHeader('Content-Type', 'text/plain; charset=utf-8')
           res.end(content)
