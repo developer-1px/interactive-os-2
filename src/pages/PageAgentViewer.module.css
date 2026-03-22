@@ -33,24 +33,52 @@
   border-bottom: 1px solid var(--border-dim);
 }
 
-.avSessionSelect {
-  flex: 1;
-  min-width: 0;
-  background: var(--surface-0);
-  border: 1px solid var(--border-dim);
-  border-radius: var(--radius);
-  color: var(--text-secondary);
-  font-family: var(--sans);
-  font-size: 11px;
-  padding: 2px 6px;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.avSessionList {
+  border-bottom: 1px solid var(--border-dim);
+  padding: 4px 0;
+  max-height: 160px;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
-.avSessionSelect:focus {
-  outline: 1px solid var(--accent, #4da6ff);
-  border-color: var(--accent, #4da6ff);
+.avSessionItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 4px 12px;
+  background: none;
+  border: none;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.08s;
+  overflow: hidden;
+}
+
+.avSessionItem:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.avSessionItemActive {
+  background: rgba(77, 166, 255, 0.08);
+  color: var(--accent, #4da6ff);
+  font-weight: 600;
+}
+
+.avSessionLive {
+  color: #4ade80;
+  font-size: 8px;
+  flex-shrink: 0;
+}
+
+.avSessionLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .avTimelineTitle {
