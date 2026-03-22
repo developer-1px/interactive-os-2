@@ -1,7 +1,7 @@
 import styles from './TimelineColumn.module.css'
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
 import {
-  Circle, User, Bot, FileText, Terminal,
+  Circle, FileText, Terminal,
   Pencil, Search, FilePlus,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
@@ -56,8 +56,6 @@ function isNearBottom(el: HTMLElement, threshold = 100): boolean {
 // --- Event icon ---
 
 function EventIcon({ evt }: { evt: TimelineEvent }) {
-  if (evt.type === 'user') return <User size={12} />
-  if (evt.type === 'assistant') return <Bot size={12} />
   if (evt.tool === 'Read') return <FileText size={12} />
   if (evt.tool === 'Edit') return <Pencil size={12} />
   if (evt.tool === 'Write') return <FilePlus size={12} />
@@ -76,15 +74,18 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
       : evt.type === 'assistant'
         ? styles.tcAssistant
         : ''
+  const showIcon = evt.type === 'tool_use'
   const cls = `${styles.tcItem} ${typeClass}${evt.filePath ? ` ${styles.tcFile}` : ''}`
   return (
     <div
       className={cls}
       onClick={() => onClick(evt)}
     >
-      <span className={styles.tcIcon}>
-        <EventIcon evt={evt} />
-      </span>
+      {showIcon && (
+        <span className={styles.tcIcon}>
+          <EventIcon evt={evt} />
+        </span>
+      )}
       <span className={styles.tcText}>
         {evt.type === 'assistant' && evt.text
           ? <Markdown remarkPlugins={[remarkGfm, remarkBreaks]}>{evt.text}</Markdown>
