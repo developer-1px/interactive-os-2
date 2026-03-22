@@ -42,7 +42,7 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
     // Strip XML tags for cleaner display
     text = text.replace(/<[^>]+>/g, '').trim()
     if (text) {
-      events.push({ type: 'user', ts, text: text.slice(0, 200) })
+      events.push({ type: 'user', ts, text })
     }
   }
 
@@ -59,7 +59,7 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
       if (b.type === 'text') {
         const text = (b.text as string).replace(/<[^>]+>/g, '').trim()
         if (text) {
-          events.push({ type: 'assistant', ts, text: text.slice(0, 200) })
+          events.push({ type: 'assistant', ts, text })
         }
       }
 
@@ -72,14 +72,14 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
           evt.filePath = input.file_path as string
         }
         if (name === 'Edit') {
-          evt.editOld = (input.old_string as string)?.slice(0, 200)
-          evt.editNew = (input.new_string as string)?.slice(0, 200)
+          evt.editOld = input.old_string as string
+          evt.editNew = input.new_string as string
         }
         if (name === 'Bash') {
-          evt.text = (input.command as string)?.slice(0, 120)
+          evt.text = input.command as string
         }
         if (name === 'Glob' || name === 'Grep') {
-          evt.text = (input.pattern as string)?.slice(0, 80)
+          evt.text = input.pattern as string
         }
 
         events.push(evt)
@@ -103,9 +103,12 @@ interface SessionInfo {
   filePath: string
   mtime: number
   label: string // first user message or timestamp
+  active: boolean
 }
 
-function listSessions(projectRoot: string, limit = 10): SessionInfo[] {
+const ACTIVE_THRESHOLD_MS = 6 * 60 * 60 * 1000 // 6시간
+
+function listSessions(projectRoot: string, limit = 20): SessionInfo[] {
   const dir = getTranscriptDir(projectRoot)
   if (!dir) return []
 
@@ -147,7 +150,7 @@ function listSessions(projectRoot: string, limit = 10): SessionInfo[] {
         }
       }
     } catch { /* ignore */ }
-    return { id, filePath, mtime: f.mtime, label }
+    return { id, filePath, mtime: f.mtime, label, active: (Date.now() - f.mtime) < ACTIVE_THRESHOLD_MS }
   })
 }
 
@@ -156,7 +159,7 @@ function findLatestTranscript(projectRoot: string): string | null {
   return sessions.length > 0 ? sessions[0].filePath : null
 }
 
-function loadTranscriptEvents(filePath: string, limit = 300): TimelineEvent[] {
+function loadTranscriptEvents(filePath: string): TimelineEvent[] {
   if (!fs.existsSync(filePath)) return []
   const content = fs.readFileSync(filePath, 'utf-8')
   const lines = content.trim().split('\n').filter(Boolean)
@@ -164,7 +167,7 @@ function loadTranscriptEvents(filePath: string, limit = 300): TimelineEvent[] {
   for (const line of lines) {
     allEvents.push(...parseTranscriptLine(line))
   }
-  return allEvents.slice(-limit)
+  return allEvents
 }
 
 // --- Also keep existing NDJSON ops support ---
@@ -188,46 +191,36 @@ export function agentOpsPlugin(): Plugin {
       const opsDir = path.resolve('.claude/agent-ops')
       fs.mkdirSync(opsDir, { recursive: true })
 
-      // --- Transcript timeline SSE ---
-      const timelineClients = new Set<import('node:http').ServerResponse>()
-      let watchedTranscript: string | null = null
-      let transcriptSize = 0
-
-      function startTranscriptWatch() {
-        const tp = findLatestTranscript(projectRoot)
-        if (!tp || tp === watchedTranscript) return
-        watchedTranscript = tp
-        transcriptSize = fs.existsSync(tp) ? fs.statSync(tp).size : 0
-
-        server.watcher.add(tp)
-      }
-
-      // Check for new transcripts periodically
-      startTranscriptWatch()
-      const transcriptPoll = setInterval(startTranscriptWatch, 5000)
+      // --- Transcript timeline SSE (per-session) ---
+      const timelineClients = new Map<string, Set<import('node:http').ServerResponse>>()
+      const transcriptSizes = new Map<string, number>()
 
       server.watcher.on('change', (changedPath) => {
-        // --- Transcript tailing ---
-        if (changedPath === watchedTranscript) {
+        // --- Transcript tailing (per-session) ---
+        const clients = timelineClients.get(changedPath)
+        if (clients && clients.size > 0) {
+          const prevSize = transcriptSizes.get(changedPath) ?? 0
           const stat = fs.statSync(changedPath)
-          if (stat.size > transcriptSize) {
+          if (stat.size > prevSize) {
             const fd = fs.openSync(changedPath, 'r')
-            const buf = Buffer.alloc(stat.size - transcriptSize)
-            fs.readSync(fd, buf, 0, buf.length, transcriptSize)
+            const buf = Buffer.alloc(stat.size - prevSize)
+            fs.readSync(fd, buf, 0, buf.length, prevSize)
             fs.closeSync(fd)
+            transcriptSizes.set(changedPath, stat.size)
 
             const newLines = buf.toString('utf-8').trim().split('\n').filter(Boolean)
             for (const line of newLines) {
               const events = parseTranscriptLine(line)
               for (const evt of events) {
                 const json = JSON.stringify(evt)
-                for (const client of timelineClients) {
+                for (const client of clients) {
                   client.write(`data: ${json}\n\n`)
                 }
               }
             }
+          } else {
+            transcriptSizes.set(changedPath, stat.size)
           }
-          transcriptSize = stat.size
           return
         }
 
@@ -250,9 +243,9 @@ export function agentOpsPlugin(): Plugin {
 
         // Session list
         if (url.pathname === '/api/agent-ops/sessions') {
-          const sessions = listSessions(projectRoot, 10)
+          const sessions = listSessions(projectRoot)
           res.setHeader('Content-Type', 'application/json')
-          res.end(JSON.stringify(sessions.map(s => ({ id: s.id, mtime: s.mtime, label: s.label }))))
+          res.end(JSON.stringify(sessions.map(s => ({ id: s.id, mtime: s.mtime, label: s.label, active: s.active }))))
           return
         }
 
@@ -282,17 +275,38 @@ export function agentOpsPlugin(): Plugin {
           return
         }
 
-        // NEW: Transcript timeline SSE stream
+        // Transcript timeline SSE stream (per-session)
         if (url.pathname === '/api/agent-ops/timeline-stream') {
+          const sessionId = url.searchParams.get('session')
+          const dir = getTranscriptDir(projectRoot)
+          let targetPath: string | null = null
+
+          if (sessionId && dir) {
+            const candidate = path.join(dir, `${sessionId}.jsonl`)
+            if (fs.existsSync(candidate)) targetPath = candidate
+          } else {
+            targetPath = findLatestTranscript(projectRoot)
+          }
+
+          if (!targetPath) { res.statusCode = 404; res.end(); return }
+
+          server.watcher.add(targetPath)
+          if (!transcriptSizes.has(targetPath)) {
+            transcriptSizes.set(targetPath, fs.statSync(targetPath).size)
+          }
+
+          if (!timelineClients.has(targetPath)) {
+            timelineClients.set(targetPath, new Set())
+          }
+          timelineClients.get(targetPath)!.add(res)
+
           res.setHeader('Content-Type', 'text/event-stream')
           res.setHeader('Cache-Control', 'no-cache')
           res.setHeader('Connection', 'keep-alive')
-
-          timelineClients.add(res)
           const heartbeat = setInterval(() => res.write(':heartbeat\n\n'), 30000)
 
           req.on('close', () => {
-            timelineClients.delete(res)
+            timelineClients.get(targetPath!)?.delete(res)
             clearInterval(heartbeat)
           })
           return
@@ -315,7 +329,6 @@ export function agentOpsPlugin(): Plugin {
       // Cleanup
       const origClose = server.close.bind(server)
       server.close = async () => {
-        clearInterval(transcriptPoll)
         return origClose()
       }
     },
