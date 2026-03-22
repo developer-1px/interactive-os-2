@@ -1,0 +1,143 @@
+/* ═══════════════════════════════════════════
+   TimelineColumn — per-session timeline panel
+   ═══════════════════════════════════════════ */
+
+.tc {
+  min-width: 360px;
+  flex: 1;
+  background: var(--surface-1);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-dim);
+}
+
+.tcHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.tcLabel {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.tcLive {
+  color: #4ade80;
+  font-size: 8px;
+  flex-shrink: 0;
+}
+
+.tcClose {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: background 0.1s, color 0.1s;
+}
+
+.tcClose:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.tcBody {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0;
+}
+
+.tcEmpty {
+  padding: 24px 12px;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 12px;
+  text-align: center;
+}
+
+.tcItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 12px;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  transition: background 0.08s;
+}
+
+.tcItem:hover {
+  background: var(--bg-hover);
+}
+
+.tcItem[style*="cursor"] {
+  color: var(--text-primary);
+}
+
+.tcIcon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  opacity: 0.6;
+}
+
+.tcText {
+  word-break: break-word;
+}
+
+/* Event type colors */
+.tcUser {
+  color: var(--accent, #4da6ff);
+  background: rgba(77, 166, 255, 0.08);
+  border-left: 2px solid var(--accent, #4da6ff);
+  padding: 8px 12px 8px 10px;
+  margin: 24px 0 6px;
+  border-radius: 0 4px 4px 0;
+  border-top: 1px solid var(--border-dim);
+  font-weight: 500;
+}
+.tcUser:first-child {
+  margin-top: 4px;
+  border-top: none;
+}
+.tcUser .tcIcon { opacity: 0.9; color: var(--accent, #4da6ff); }
+
+.tcAssistant { color: var(--text-muted); font-style: italic; }
+.tcAssistant .tcIcon { opacity: 0.5; }
+
+.tcEdit .tcIcon,
+.tcWrite .tcIcon { color: #e5a33a; opacity: 0.9; }
+
+.tcRead .tcIcon { color: var(--text-muted); opacity: 0.5; }
+.tcRead { color: var(--text-muted); font-size: 10px; }
+
+.tcBash .tcIcon { color: #4EAA25; opacity: 0.8; }
+.tcBash { font-family: var(--mono, monospace); font-size: 10px; }
+
+/* Bottom spacer after last user event */
+.tcSpacer {
+  min-height: 100vh;
+}
