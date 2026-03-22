@@ -92,9 +92,9 @@
   --sans: 'Manrope', -apple-system, system-ui, sans-serif;
 
   /* ── Layout ── */
-  --radius:    6px;
-  --radius-sm: 4px;
-  --radius-xs: 3px;
+  --radius:    8px;
+  --radius-sm: 6px;
+  --radius-xs: 4px;
 
   /* ── Spacing ── */
   --space-xs:  4px;
