@@ -97,7 +97,14 @@
 }
 
 /* Event type colors */
-.avTluser { color: var(--accent, #4da6ff); }
+.avTluser {
+  color: var(--accent, #4da6ff);
+  background: rgba(77, 166, 255, 0.08);
+  border-left: 2px solid var(--accent, #4da6ff);
+  padding-left: 10px;
+  margin: 2px 0;
+  border-radius: 0 4px 4px 0;
+}
 .avTluser .avTimelineIcon { opacity: 0.9; color: var(--accent, #4da6ff); }
 
 .avTlassistant { color: var(--text-muted); font-style: italic; }
