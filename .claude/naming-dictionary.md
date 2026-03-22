@@ -1,5 +1,5 @@
 ---
-last_commit: 75df1e6d99287ef26e6672b6a0ec7d88fd83e480
+last_commit: 8999465b273d2f42dd72d633dff4500bf16282d9
 last_updated: 2026-03-22
 ---
 
@@ -116,7 +116,8 @@ last_updated: 2026-03-22
 | depth | 3 | depthArrow, depthEnterEsc, clearCursorsAtDepth |
 | cursor | 1 | stickyCursorRef (보관된 이전 위치 ≠ focus. focus=현재 활성, cursor=이전 보관) |
 | direction | 1 | Direction (type) |
-| group | 1 | findAdjacentGroup |
+| group | 3 | findAdjacentGroup, ToolGroup, ToolGroupCard, groupEvents |
+| display | 1 | DisplayItem |
 | result | 1 | SpatialNavResult |
 | trap | 1 | focusTrap |
 | keymap | 1 | keymap-helpers (file) |
