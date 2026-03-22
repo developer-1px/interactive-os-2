@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Moon, Presentation, BookOpen, Activity } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Moon, Presentation, BookOpen, Activity, Component } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -54,9 +54,11 @@ import PageViewer from './pages/PageViewer'
 import PageAgentViewer from './pages/PageAgentViewer'
 import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
+import PageUiShowcase from './pages/PageUiShowcase'
 import PageAreaViewer from './pages/PageAreaViewer'
 import { AreaSidebar } from './pages/AreaSidebar'
 import { Tooltip } from './interactive-os/ui/Tooltip'
+import { ReproRecorderOverlay } from './interactive-os/devtools/ReproRecorderOverlay'
 import PageNavigate from './pages/axis/PageNavigate'
 import PageSelect from './pages/axis/PageSelect'
 import PageActivate from './pages/axis/PageActivate'
@@ -236,12 +238,13 @@ const navItems: NavItem[] = [
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
   { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
+  { id: 'ui-showcase', label: 'UI', icon: Component, path: '/ui' },
   ...routeConfig.map((g) => ({ id: g.id, label: g.label, icon: g.icon, path: g.basePath })),
 ]
 
 // --- Pre-computed stores ---
 
-const APP_IDS = ['cms', 'viewer', 'agent']
+const APP_IDS = ['cms', 'viewer', 'agent', 'ui-showcase']
 const OS_IDS = routeConfig.map((g) => g.id)
 const UTIL_IDS = ['theme']
 
@@ -340,10 +343,11 @@ function App() {
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
   const isViewer = pathname === '/viewer' || pathname.startsWith('/viewer/')
   const isAgent = pathname === '/agent' || pathname.startsWith('/agent/')
+  const isUiShowcase = pathname === '/ui' || pathname.startsWith('/ui/')
   const isCms = pathname === '/'
 
   // URL → ActivityBar focus binding (CRUD two-way)
-  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isAgent ? 'agent' : isCms ? 'cms' : undefined)
+  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isAgent ? 'agent' : isUiShowcase ? 'ui-showcase' : isCms ? 'cms' : undefined)
   const activityBarData = useMemo(() => {
     if (!activityBarFocusId) return activityBarStore
     return {
@@ -365,6 +369,7 @@ function App() {
 
   return (
     <div className="page">
+      <ReproRecorderOverlay />
       <nav className="activity-bar">
         <div className="activity-bar__logo">
           <div className="logo-mark" />
@@ -377,12 +382,12 @@ function App() {
           aria-label="Layer navigation"
         >
           <div role="group" aria-label="App">
-            <Aria.Item ids={APP_IDS} render={(node, state) => {
+            <Aria.Item asChild ids={APP_IDS} render={(node, state, props) => {
               const nav = navItems.find((n) => n.id === node.id)!
               const Icon = nav.icon
               return (
                 <Tooltip content={nav.label}>
-                  <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+                  <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
                     <Icon size={16} />
                   </div>
                 </Tooltip>
@@ -391,12 +396,12 @@ function App() {
           </div>
           <div role="separator" className="activity-bar__separator" />
           <div role="group" aria-label="OS">
-            <Aria.Item ids={OS_IDS} render={(node, state) => {
+            <Aria.Item asChild ids={OS_IDS} render={(node, state, props) => {
               const nav = navItems.find((n) => n.id === node.id)!
               const Icon = nav.icon
               return (
                 <Tooltip content={nav.label}>
-                  <div className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+                  <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
                     <Icon size={16} />
                   </div>
                 </Tooltip>
@@ -404,11 +409,11 @@ function App() {
             }} />
           </div>
           <div role="group" aria-label="Util" className="activity-bar__util">
-            <Aria.Item ids={UTIL_IDS} render={(node, state) => {
+            <Aria.Item asChild ids={UTIL_IDS} render={(node, state, props) => {
               const ThemeIcon = theme === 'dark' ? Sun : Moon
               return (
                 <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
-                  <div className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`}>
+                  <div {...props} className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`}>
                     <ThemeIcon size={13} />
                   </div>
                 </Tooltip>
@@ -423,6 +428,8 @@ function App() {
         <PageViewer />
       ) : isAgent ? (
         <PageAgentViewer />
+      ) : isUiShowcase ? (
+        <PageUiShowcase />
       ) : (
         <>
           {activeGroup && (activeGroup.id === 'area'
