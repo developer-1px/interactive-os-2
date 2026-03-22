@@ -18,7 +18,7 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `tokens.css` — 아이콘 토큰 추가 | `--icon-xs: 10px`, `--icon-sm: 12px`, `--icon-md: 16px`, `--icon-lg: 24px`, `--icon-stroke: 1.5` |  |
+| `tokens.css` — 아이콘 토큰 추가 | `--icon-xs: 10px`, `--icon-sm: 12px`, `--icon-md: 16px`, `--icon-lg: 20px`, `--icon-xl: 24px`, `--icon-stroke: 1.5` |  |
 | `tokens.css` — 파일 컬러 토큰 추가 | `--file-folder`, `--file-ts`, `--file-js`, `--file-json`, `--file-md`, `--file-css`, `--file-sh`, `--file-img`, `--file-config` (다크/라이트 블록 모두) |  |
 | 전체 TSX — 아이콘 사이즈 마이그레이션 | 모든 `size={N}` → 4단계 스케일 중 가장 가까운 값으로 라운딩 |  |
 | 전체 TSX — strokeWidth 통일 | 모든 `strokeWidth={N}` → `1.5` 단일값 (명시적 prop 제거, 글로벌 기본값 활용) |  |
