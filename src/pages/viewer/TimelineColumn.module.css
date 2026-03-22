@@ -143,12 +143,12 @@
   color: var(--accent);
 }
 
-/* Assistant — main readable content, generous breathing room */
+/* Assistant — main readable content */
 .tcAssistant {
-  padding: 8px 12px 12px;
+  padding: 4px 12px;
   color: var(--text-primary);
   line-height: 1.7;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
   letter-spacing: 0.01em;
 }
 .tcAssistant .tcIcon { color: var(--text-secondary); }
