@@ -285,4 +285,6 @@
 
 - [x] Agent Viewer Multi-Session (2/7) — TimelineColumn 컴포넌트 추출. 세션별 SSE 연결, smart scroll (user event→viewport top, assistant→near-bottom auto-scroll), 헤더(live indicator, archive close), PageAgentViewer에서 timeline 로직 제거 후 `<TimelineColumn>` 위임
 
-*Last updated: 2026-03-22 — Agent Viewer TimelineColumn 추출*
+- [x] Agent Viewer Multi-Session (4/7) — `useVirtualScroll` 훅. variable-height 가상 스크롤, measured height cache + estimated fallback, rAF scroll handler, overscan, `scrollToIndex` API. TimelineColumn에 적용하여 DOM 노드 수 viewport+overscan으로 제한
+
+*Last updated: 2026-03-22 — Agent Viewer useVirtualScroll 훅*
