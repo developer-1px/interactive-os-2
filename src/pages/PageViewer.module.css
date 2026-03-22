@@ -58,8 +58,8 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background: var(--surface-0);
-  border: 1px solid var(--border-mid);
+  background: var(--surface-base);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius);
   padding: 2px 10px;
   cursor: pointer;
@@ -71,7 +71,7 @@
 }
 
 .vw-rec:hover {
-  border-color: var(--border-bright);
+  border-color: var(--border-strong);
   color: var(--text-primary);
 }
 
@@ -84,8 +84,8 @@
 }
 
 .vw-rec--active {
-  background: var(--red);
-  border-color: var(--red);
+  background: var(--destructive);
+  border-color: var(--destructive);
   color: #fff;
 }
 
@@ -104,10 +104,10 @@
 .vw-tree {
   width: 280px;
   min-width: 220px;
-  background: var(--surface-1);
+  background: var(--surface-sunken);
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--border-dim);
+  border-right: 1px solid var(--border-subtle);
 }
 
 .vw-tree__header {
@@ -117,7 +117,7 @@
   height: 36px;
   padding: 0 12px;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .vw-tree__header-title {
@@ -191,7 +191,7 @@
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  background: var(--surface-2);
+  background: var(--surface-default);
 }
 
 .vw-content__header {
@@ -201,7 +201,7 @@
   height: 36px;
   padding: 0 16px;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .vw-content__header-left,
@@ -270,7 +270,7 @@
 .vw-content__meta-sep {
   width: 1px;
   height: 10px;
-  background: var(--border-mid);
+  background: var(--border-default);
   margin: 0 2px;
 }
 
@@ -351,7 +351,7 @@
   color: var(--text-bright);
   margin: 2.5em 0 0.6em;
   padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
@@ -362,7 +362,7 @@
   color: var(--text-bright);
   margin: 2em 0 0.5em;
   padding-bottom: 0.25em;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
   line-height: 1.3;
   letter-spacing: -0.015em;
 }
@@ -391,19 +391,26 @@
 .viewer-markdown code {
   font-family: var(--mono);
   font-size: 13px;
-  background: var(--surface-0);
+  background: var(--surface-base);
   padding: 2px 6px;
   border-radius: 4px;
-  border: 1px solid var(--border-dim);
+  border: 1px solid var(--border-subtle);
 }
 
 .viewer-markdown pre {
-  background: var(--surface-0);
-  border: 1px solid var(--border-dim);
-  border-left: 3px solid var(--accent-mid);
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
   padding: 16px 20px;
   overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+/* CodeBlock이 들어있으면 wrapper pre 스타일 리셋 */
+.viewer-markdown pre:has(:global(.shiki)) {
+  background: none;
+  border: none;
+  padding: 0;
   margin: 1.5em 0;
 }
 
@@ -439,9 +446,9 @@
 .viewer-markdown blockquote {
   margin: 1.2em 0;
   padding: 0.6em 1em;
-  border-left: 3px solid var(--accent-mid);
+  border-left: 3px solid var(--primary-mid);
   color: var(--text-secondary);
-  background: var(--accent-dim);
+  background: var(--primary-dim);
   border-radius: 0 8px 8px 0;
 }
 
@@ -462,23 +469,23 @@
 
 .viewer-markdown th,
 .viewer-markdown td {
-  border: 1px solid var(--border-dim);
+  border: 1px solid var(--border-subtle);
   padding: 8px 12px;
   text-align: left;
 }
 
 .viewer-markdown th {
-  background: var(--surface-0);
+  background: var(--surface-base);
   font-weight: 600;
   color: var(--text-bright);
 }
 
 .viewer-markdown tr:nth-child(even) {
-  background: var(--surface-1);
+  background: var(--surface-sunken);
 }
 
 .viewer-markdown a {
-  color: var(--accent);
+  color: var(--primary);
   text-decoration: none;
 }
 
@@ -493,7 +500,7 @@
 
 .viewer-markdown hr {
   border: none;
-  border-top: 1px solid var(--border-dim);
+  border-top: 1px solid var(--border-subtle);
   margin: 2em 0;
 }
 
@@ -519,7 +526,7 @@
 
 .code-block--loading {
   padding: 16px 20px;
-  background: var(--surface-0);
+  background: var(--surface-base);
   border-radius: 8px;
   font-family: var(--mono);
   font-size: 13px;
@@ -529,6 +536,9 @@
   margin: 0;
   padding: 16px 0;
   counter-reset: line;
+  background: var(--surface-base) !important;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
 }
 
 .code-block :global(.shiki) code {
@@ -561,12 +571,12 @@
 }
 
 :global(.code-token):hover {
-  background: var(--accent-dim);
+  background: var(--primary-dim);
 }
 
 :global(.code-token--highlighted) {
-  background: var(--accent-mid) !important;
-  outline: 1px solid var(--accent-bright);
+  background: var(--primary-mid) !important;
+  outline: 1px solid var(--primary-bright);
   border-radius: 2px;
 }
 
@@ -599,8 +609,8 @@
 .qo-dialog {
   width: 480px;
   max-height: 440px;
-  background: var(--surface-2);
-  border: 1px solid var(--border-mid);
+  background: var(--surface-default);
+  border: 1px solid var(--border-default);
   border-radius: 10px;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.18),
@@ -621,7 +631,7 @@
   align-items: center;
   gap: 10px;
   padding: 14px 18px;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .qo-input-icon {
@@ -638,7 +648,7 @@
   font-family: var(--mono);
   font-size: 13px;
   color: var(--text-primary);
-  caret-color: var(--accent);
+  caret-color: var(--primary);
 }
 
 .qo-input::placeholder {
@@ -652,8 +662,8 @@
   font-size: 9px;
   font-weight: 500;
   color: var(--text-muted);
-  background: var(--surface-0);
-  border: 1px solid var(--border-dim);
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
   padding: 2px 6px;
   line-height: 1.4;
@@ -679,8 +689,8 @@
 }
 
 .qo-item--focused {
-  background: var(--bg-focus);
-  border-left: 2px solid var(--accent);
+  background: var(--primary-dim);
+  border-left: 2px solid var(--primary);
   padding-left: 14px;
 }
 

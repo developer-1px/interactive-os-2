@@ -9,7 +9,7 @@
 .cms-landing {
   min-height: 100vh;
   overflow-x: hidden;
-  background: var(--surface-0);
+  background: var(--surface-base);
   color: var(--text-primary);
 }
 
@@ -18,8 +18,8 @@
 .cms-hero {
   position: relative;
   padding: 80px 48px 64px;
-  background: var(--surface-1);
-  border-bottom: 1px solid var(--border-dim);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,7 +36,7 @@
   transform: translateX(-50%);
   width: 480px;
   height: 320px;
-  background: radial-gradient(ellipse, var(--accent-dim) 0%, transparent 70%);
+  background: radial-gradient(ellipse, var(--primary-dim) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -50,9 +50,9 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-dim);
-  border: 1px solid var(--accent-mid);
+  color: var(--primary);
+  background: var(--primary-dim);
+  border: 1px solid var(--primary-mid);
   padding: 4px 14px;
   border-radius: 20px;
   margin-bottom: 28px;
@@ -61,7 +61,7 @@
 .cms-hero__badge-dot {
   width: 5px;
   height: 5px;
-  background: var(--accent);
+  background: var(--primary);
   border-radius: 50%;
 }
 
@@ -103,7 +103,7 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--text-bright);
-  background: var(--accent);
+  background: var(--primary);
   border: none;
   padding: 10px 24px;
   border-radius: var(--radius);
@@ -125,7 +125,7 @@
   font-weight: 500;
   color: var(--text-secondary);
   background: none;
-  border: 1px solid var(--border-mid);
+  border: 1px solid var(--border-default);
   padding: 9px 22px;
   border-radius: var(--radius);
   cursor: pointer;
@@ -134,15 +134,15 @@
 
 .cms-hero__cta-secondary:hover {
   color: var(--text-bright);
-  border-color: var(--border-bright);
+  border-color: var(--border-strong);
 }
 
 /* ── Stats — accent-tinted strip ── */
 
 .cms-stats {
   padding: 0;
-  background: var(--surface-0);
-  border-bottom: 1px solid var(--border-dim);
+  background: var(--surface-base);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .cms-stats__items {
@@ -161,7 +161,7 @@
 }
 
 .cms-stat--focused {
-  background: var(--bg-focus);
+  background: var(--primary-dim);
 }
 
 .cms-stat__value {
@@ -190,7 +190,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--primary);
   margin: 0 0 6px;
 }
 
@@ -214,8 +214,8 @@
 /* ── Features — elevated section ── */
 
 .cms-features {
-  background: var(--surface-1);
-  border-bottom: 1px solid var(--border-dim);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
   padding: 48px 48px;
 }
 
@@ -237,21 +237,21 @@
 
 .cms-feature-card {
   padding: 24px;
-  background: var(--surface-2);
-  border: 1px solid var(--border-dim);
+  background: var(--surface-default);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   box-shadow: var(--surface-2-shadow);
   transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .cms-feature-card:hover {
-  border-color: var(--border-mid);
+  border-color: var(--border-default);
   transform: translateY(-1px);
 }
 
 .cms-feature-card--focused {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
 .cms-feature-card__icon {
@@ -260,10 +260,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-dim);
-  border: 1px solid var(--accent-mid);
+  background: var(--primary-dim);
+  border: 1px solid var(--primary-mid);
   border-radius: 10px;
-  color: var(--accent);
+  color: var(--primary);
   margin-bottom: 16px;
   font-size: 18px;
 }
@@ -286,8 +286,8 @@
 /* ── How it works ── */
 
 .cms-how {
-  background: var(--surface-0);
-  border-bottom: 1px solid var(--border-dim);
+  background: var(--surface-base);
+  border-bottom: 1px solid var(--border-subtle);
   padding: 48px 48px;
 }
 
@@ -305,16 +305,16 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  border: 1px solid var(--border-dim);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   overflow: hidden;
-  background: var(--surface-1);
+  background: var(--surface-sunken);
 }
 
 .cms-step {
   position: relative;
   padding: 20px;
-  border-right: 1px solid var(--border-dim);
+  border-right: 1px solid var(--border-subtle);
   transition: background var(--transition-fast);
 }
 
@@ -323,18 +323,18 @@
 }
 
 .cms-step--focused {
-  background: var(--bg-focus);
+  background: var(--primary-dim);
 }
 
 :global([aria-selected="true"][data-node-id]) {
-  background: var(--bg-select);
+  background: var(--selection);
 }
 
 .cms-step__number {
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--primary);
   letter-spacing: 0.08em;
   line-height: 1;
   margin-bottom: 12px;
@@ -359,8 +359,8 @@
 /* ── Patterns — grid with presence ── */
 
 .cms-patterns {
-  background: var(--surface-1);
-  border-bottom: 1px solid var(--border-dim);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
   padding: 48px 48px;
 }
 
@@ -385,20 +385,20 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: var(--surface-2);
-  border: 1px solid var(--border-dim);
+  background: var(--surface-default);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .cms-pattern:hover {
-  border-color: var(--border-mid);
+  border-color: var(--border-default);
   transform: translateY(-1px);
 }
 
 .cms-pattern--focused {
-  border-color: var(--accent);
-  background: var(--bg-focus);
+  border-color: var(--primary);
+  background: var(--primary-dim);
 }
 
 .cms-pattern__icon {
@@ -407,10 +407,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-dim);
-  border: 1px solid var(--accent-mid);
+  background: var(--primary-dim);
+  border: 1px solid var(--primary-mid);
   border-radius: var(--radius-xs);
-  color: var(--accent);
+  color: var(--primary);
   flex-shrink: 0;
 }
 
@@ -425,7 +425,7 @@
 
 .cms-footer {
   padding: 28px 48px;
-  background: var(--surface-0);
+  background: var(--surface-base);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -440,7 +440,7 @@
 .cms-footer__logo {
   width: 6px;
   height: 6px;
-  background: var(--accent);
+  background: var(--primary);
   border-radius: 2px;
 }
 

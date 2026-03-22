@@ -7,9 +7,9 @@
   padding: var(--space-xs) var(--space-sm);
   max-width: 240px;
 
-  background: var(--surface-3);
+  background: var(--surface-raised);
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-dim);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
 
   color: var(--text-primary);
