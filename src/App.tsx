@@ -391,7 +391,7 @@ function App() {
               return (
                 <Tooltip content={nav.label}>
                   <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <Icon size={20} />
+                    <Icon size={16} />
                   </div>
                 </Tooltip>
               )
@@ -405,7 +405,7 @@ function App() {
               return (
                 <Tooltip content={nav.label}>
                   <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <Icon size={20} />
+                    <Icon size={16} />
                   </div>
                 </Tooltip>
               )
