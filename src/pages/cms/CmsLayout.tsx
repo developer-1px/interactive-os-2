@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef } from 'react'
+import { useCallback, useMemo, useState, useRef } from 'react'
 import '../../styles/cms.css'
 import CmsTopToolbar from './CmsTopToolbar'
 import type { ViewportSize } from './CmsViewportWrapper'
@@ -16,7 +16,7 @@ import { useEngine } from '../../interactive-os/hooks/useEngine'
 import { history } from '../../interactive-os/plugins/history'
 import { clipboard } from '../../interactive-os/plugins/clipboard'
 import { rename } from '../../interactive-os/plugins/rename'
-import { getParent } from '../../interactive-os/core/createStore'
+import { getChildren, getParent } from '../../interactive-os/core/createStore'
 import { collectSections } from './collectSections'
 import { ROOT_ID } from '../../interactive-os/core/types'
 import type { Plugin } from '../../interactive-os/core/types'
@@ -34,6 +34,18 @@ export default function CmsLayout() {
   const [presenting, setPresenting] = useState(false)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
+  const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
+
+  const handleActivateTabItem = useCallback((tabItemId: string) => {
+    setActiveTabMap(prev => {
+      const parentId = getParent(store, tabItemId)
+      if (!parentId) return prev
+      if (prev.get(parentId) === tabItemId) return prev
+      const next = new Map(prev)
+      next.set(parentId, tabItemId)
+      return next
+    })
+  }, [store])
 
   const sidebarSections = useMemo(() => collectSections(store, ROOT_ID), [store])
 
@@ -67,10 +79,10 @@ export default function CmsLayout() {
         onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
       />
       <div className="cms-body">
-        <CmsSidebar engine={engine} store={store} locale={locale} activeSectionId={activeSectionId} plugins={sharedPlugins} />
+        <CmsSidebar engine={engine} store={store} locale={locale} activeSectionId={activeSectionId} plugins={sharedPlugins} onActivateTabItem={handleActivateTabItem} />
         <div className="cms-canvas-area">
           <CmsViewportWrapper viewport={viewport}>
-            <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} />
+            <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} activeTabMap={activeTabMap} onActivateTabItem={handleActivateTabItem} />
           </CmsViewportWrapper>
           <CmsI18nSheet engine={engine} store={store} open={i18nSheetOpen} />
         </div>

@@ -24,6 +24,7 @@ interface CmsSidebarProps {
   locale: Locale
   activeSectionId: string | null
   plugins?: Plugin[]
+  onActivateTabItem?: (tabItemId: string) => void
 }
 
 // ── Thumbnail renderer (read-only mini preview) ──
@@ -108,7 +109,7 @@ function ThumbNode({ data, nodeId, locale }: {
 
 // ── CmsSidebar ──
 
-export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins }: CmsSidebarProps) {
+export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins, onActivateTabItem }: CmsSidebarProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
@@ -120,10 +121,23 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     return getTabItemAncestor(store, activeSectionId)
   }, [activeSectionId, store])
 
-  const scrollToSection = useCallback((id: string) => {
-    const el = document.querySelector(`[data-cms-root] [data-cms-id="${id}"]`) as HTMLElement
+  const scrollToSection = useCallback((sectionId: string) => {
+    const tabItemId = getTabItemAncestor(store, sectionId)
+    if (tabItemId) {
+      // Activate the tab via shared callback so canvas renders the correct panel
+      onActivateTabItem?.(tabItemId)
+      // Double rAF: 1st for React re-render, 2nd for DOM paint
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const el = document.querySelector(`[data-cms-root] [data-cms-id="${sectionId}"]`) as HTMLElement
+          el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        })
+      })
+      return
+    }
+    const el = document.querySelector(`[data-cms-root] [data-cms-id="${sectionId}"]`) as HTMLElement
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [])
+  }, [store, onActivateTabItem])
 
   // CRUD keyMap — commands go to shared engine via zone dispatch
   const sidebarKeyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => {
@@ -196,9 +210,20 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     requestAnimationFrame(() => scrollToSection(rootId))
   }
 
+  // When container itself has focus (before an option captures it), forward key events to focused option
+  const handleContainerKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return
+    const focusedOption = listRef.current?.querySelector(`[data-sidebar-id="${aria.focused}"]`) as HTMLElement
+    if (!focusedOption) return
+    focusedOption.dispatchEvent(new KeyboardEvent(e.type, {
+      key: e.key, code: e.code, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, altKey: e.altKey, metaKey: e.metaKey, bubbles: true, cancelable: true,
+    }))
+    e.preventDefault()
+  }, [aria.focused])
+
   return (
     <aside className="cms-sidebar" aria-label="Sections">
-      <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="">
+      <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onKeyDown={handleContainerKeyDown}>
         {(() => {
           let prevRootAncestor = ''
           let prevTabItem = ''

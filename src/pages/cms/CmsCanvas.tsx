@@ -24,6 +24,8 @@ interface CmsCanvasProps {
   locale: Locale
   onFocusChange?: (focusedId: string) => void
   plugins?: Plugin[]
+  activeTabMap?: Map<string, string>
+  onActivateTabItem?: (tabItemId: string) => void
 }
 
 /** Navigate to adjacent tab sibling (ArrowRight/ArrowLeft in tablist) */
@@ -63,7 +65,7 @@ const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
   // Mod+C/X/V → clipboard plugin keyMap, Mod+Z → history plugin keyMap
 }
 
-export default function CmsCanvas({ engine, store, locale, onFocusChange, plugins }: CmsCanvasProps) {
+export default function CmsCanvas({ engine, store, locale, onFocusChange, plugins, activeTabMap: activeTabMapProp, onActivateTabItem }: CmsCanvasProps) {
   const spatialNav = useSpatialNav('[data-cms-root]', store, 'cms')
 
   // Merge spatial nav + CMS CRUD keyMap (CRUD takes precedence for Mod+ combos)
@@ -159,7 +161,8 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
   // Recursive renderer — ALL nodes always rendered
   const currentStore = aria.getStore()
 
-  const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
+  const [localActiveTabMap, setLocalActiveTabMap] = useState<Map<string, string>>(new Map())
+  const activeTabMap = activeTabMapProp ?? localActiveTabMap
 
   function getActiveTabId(tabGroupId: string): string | undefined {
     const active = activeTabMap.get(tabGroupId)
@@ -177,15 +180,19 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     if (data.type === 'tab-item') {
       const parentId = getParent(currentStore, aria.focused)
       if (parentId) {
-        setActiveTabMap(prev => {
-          if (prev.get(parentId) === aria.focused) return prev
-          const next = new Map(prev)
-          next.set(parentId, aria.focused)
-          return next
-        })
+        if (onActivateTabItem) {
+          onActivateTabItem(aria.focused)
+        } else {
+          setLocalActiveTabMap(prev => {
+            if (prev.get(parentId) === aria.focused) return prev
+            const next = new Map(prev)
+            next.set(parentId, aria.focused)
+            return next
+          })
+        }
       }
     }
-  }, [aria.focused, onFocusChange])
+  }, [aria.focused, onFocusChange, onActivateTabItem])
 
   // Click handler: jump to node's depth + focus
   const handleNodeClick = useCallback((nodeId: string, e: React.MouseEvent) => {
