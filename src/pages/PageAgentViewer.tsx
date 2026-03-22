@@ -105,6 +105,7 @@ export default function PageAgentViewer() {
   const [fileContent, setFileContent] = useState('')
   const [followMode, setFollowMode] = useState(true)
   const [loading, setLoading] = useState(true)
+  const [fetchCounter, setFetchCounter] = useState(0)
 
   const streamBodyRef = useRef<HTMLDivElement>(null)
   const loadedFileRef = useRef<string | null>(null)
@@ -152,6 +153,7 @@ export default function PageAgentViewer() {
         })
         if (followModeRef.current) {
           setSelectedFile(op.file)
+          setFetchCounter(c => c + 1)
         }
       } else if (op.tool === 'Read') {
         setReadStream((prev) => {
@@ -182,10 +184,9 @@ export default function PageAgentViewer() {
   // --- File content loading ---
   useEffect(() => {
     if (!selectedFile) return
-    if (selectedFile === loadedFileRef.current) return
     loadedFileRef.current = selectedFile
-    fetchFile(selectedFile).then(setFileContent)
-  }, [selectedFile])
+    fetchFile(selectedFile).then(setFileContent).catch(() => setFileContent(''))
+  }, [selectedFile, fetchCounter])
 
   // --- Auto-scroll read stream ---
   useEffect(() => {
