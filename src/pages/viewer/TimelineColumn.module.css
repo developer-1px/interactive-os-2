@@ -91,7 +91,7 @@
   gap: 6px;
   padding: 3px 12px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.55;
   color: var(--text-secondary);
   min-width: 0;
@@ -128,10 +128,10 @@
 /* User message — chat bubble */
 .tcUser {
   padding: 6px 10px;
-  margin: 12px 8px 4px;
+  margin: 24px 8px 4px;
   color: var(--text-primary);
   font-weight: 500;
-  font-size: 12px;
+  font-size: 13px;
   background: var(--accent-dim, rgba(91, 91, 214, 0.1));
   border-radius: 12px;
 }
@@ -147,7 +147,7 @@
 .tcAssistant {
   padding: 4px 12px;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
 }
 .tcAssistant .tcIcon { opacity: 0.3; }
