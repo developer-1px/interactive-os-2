@@ -14,9 +14,10 @@ import type { NodeState } from '../interactive-os/behaviors/types'
 
 const mdxModules = import.meta.glob<{ default: React.ComponentType }>('/docs/2-areas/**/*.mdx')
 
-const L2_ORDER = ['overview', 'core', 'axes', 'patterns', 'plugins', 'hooks', 'ui']
+const L2_ORDER = ['vision', 'overview', 'core', 'axes', 'patterns', 'plugins', 'hooks', 'ui']
 
 const L2_LABELS: Record<string, string> = {
+  vision: 'Vision',
   overview: 'Overview',
   core: 'Core',
   axes: 'Axes',
