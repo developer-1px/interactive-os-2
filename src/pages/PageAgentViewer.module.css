@@ -72,28 +72,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  width: 100%;
-  padding: 4px 12px;
-  background: none;
-  border: none;
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--text-muted);
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.08s;
-  overflow: hidden;
-}
-
-.avSessionItem:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.avSessionItemActive {
-  background: rgba(77, 166, 255, 0.08);
-  color: var(--accent, #4da6ff);
-  font-weight: 600;
+  white-space: nowrap;
 }
 
 .avSessionLive {
