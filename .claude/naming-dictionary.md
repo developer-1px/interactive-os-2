@@ -1,12 +1,12 @@
 ---
-last_commit: efcdea02b02fb9442b85a849924267a9ff1e548e
+last_commit: 1b9875d06aaf93616db908ef6a9042db8e199f8b
 last_updated: 2026-03-22
 ---
 
 ## Verbs
 | fragment | count | identifiers |
 |----------|-------|-------------|
-| create | 5 | createStore, createCommandEngine, createBehaviorContext, createRecorder, createBatchCommand |
+| create | 6 | createStore, createCommandEngine, createBehaviorContext, createRecorder, createBatchCommand, createToaster |
 | get | 4 | getEntity, getChildren, getParent, getEntityData |
 | add | 1 | addEntity |
 | remove | 1 | removeEntity |
@@ -112,6 +112,7 @@ last_updated: 2026-03-22
 | result | 1 | SpatialNavResult |
 | trap | 1 | focusTrap |
 | keymap | 1 | keymap-helpers (file) |
+| toast | 3 | ToastData, Toaster, createToaster |
 
 ## Adjectives
 | fragment | count | identifiers |

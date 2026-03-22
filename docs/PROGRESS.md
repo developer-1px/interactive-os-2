@@ -156,6 +156,10 @@
 - [x] Combobox (input + listbox, aria-activedescendant, editable, multi-select + tag tokens, grouped, creatable)
 - [x] Slider
 - [x] Spinbutton
+- [x] Toaster (engine 밖, OS 안 — pub/sub + timer + aria-live, createToaster + Toaster component)
+- [ ] `[P1]` Select (Combobox 래퍼, input 없는 드롭다운)
+- [ ] `[P1]` ContextMenu (MenuList + popover trigger + 우클릭/Shift+F10)
+- [ ] `[P1]` DatePicker (Grid + value 축 + popover)
 - [ ] `[P2]` shadcn CLI — `npx interactive-os add treegrid`
 
 ## ⑦ 인프라
