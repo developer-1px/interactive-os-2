@@ -1,5 +1,5 @@
 import styles from './TimelineColumn.module.css'
-import { useState, useEffect, useRef, useCallback, memo } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
 import {
   Circle, User, Bot, FileText, Terminal,
   Pencil, Search, FilePlus,
@@ -93,6 +93,7 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
 
 export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onClose, onFileClick }: TimelineColumnProps) {
   const [timeline, setTimeline] = useState<TimelineEvent[]>([])
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
   const lastUserRef = useRef<HTMLDivElement>(null)
 
@@ -117,12 +118,14 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
   // --- Initial timeline fetch ---
   useEffect(() => {
     fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}`)
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
       .then((events: TimelineEvent[]) => {
         editRangesRef.current = new Map()
         trackEditRanges(events)
         setTimeline(events)
+        setFetchError(null)
       })
+      .catch(e => setFetchError(e.message))
   }, [sessionId, trackEditRanges])
 
   // --- SSE connection (live sessions only) ---
@@ -202,13 +205,12 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
   }, [onFileClick])
 
   // Find index of last user event for ref attachment
-  let lastUserIndex = -1
-  for (let i = timeline.length - 1; i >= 0; i--) {
-    if (timeline[i].type === 'user') {
-      lastUserIndex = i
-      break
+  const lastUserIndex = useMemo(() => {
+    for (let i = timeline.length - 1; i >= 0; i--) {
+      if (timeline[i].type === 'user') return i
     }
-  }
+    return -1
+  }, [timeline])
 
   return (
     <div className={styles.tc}>
@@ -220,7 +222,9 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
         )}
       </div>
       <div className={styles.tcBody} ref={bodyRef}>
-        {timeline.length === 0 ? (
+        {fetchError ? (
+          <div className={styles.tcEmpty}>Failed to load: {fetchError}</div>
+        ) : timeline.length === 0 ? (
           <div className={styles.tcEmpty}>Waiting for agent activity...</div>
         ) : (
           <>
