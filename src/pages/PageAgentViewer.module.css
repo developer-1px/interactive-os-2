@@ -16,8 +16,7 @@
 /* --- Sessions panel --- */
 
 .avSessions {
-  width: 200px;
-  min-width: 160px;
+  flex-shrink: 0;
   background: var(--surface-sunken);
   display: flex;
   flex-direction: column;
