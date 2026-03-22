@@ -1,0 +1,171 @@
+.root {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Controls panel ── */
+
+.controls {
+  width: 280px;
+  flex-shrink: 0;
+  padding: var(--space-lg);
+  overflow-y: auto;
+  background: var(--surface-sunken);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.heading {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-sm);
+}
+
+.heading:not(:first-child) {
+  margin-top: var(--space-xl);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: 3px 0;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.swatch {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 20px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+
+.swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.swatch::-webkit-color-swatch {
+  border: none;
+  border-radius: calc(var(--radius-xs) - 1px);
+}
+
+.radiusInput {
+  width: 52px;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: right;
+  padding: 2px 4px;
+  background: var(--surface-default);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xs);
+}
+
+.reset {
+  margin-top: var(--space-lg);
+  width: 100%;
+  padding: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--surface-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.reset:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* ── Preview panel ── */
+
+.preview {
+  flex: 1;
+  padding: var(--space-xl);
+  overflow-y: auto;
+}
+
+.previewHeading {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin: 0 0 var(--space-lg);
+}
+
+.surfaceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.surfaceCard {
+  padding: var(--space-lg);
+  border-radius: var(--radius);
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.surfaceLabel {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.colorRow {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.colorSample {
+  flex: 1;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.focusDemo {
+  display: inline-block;
+  padding: 6px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-primary);
+  background: var(--surface-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius);
+  margin-right: var(--space-sm);
+}
+
+.focusDemo:focus-visible {
+  outline: 1.5px solid var(--focus);
+  outline-offset: -1.5px;
+}

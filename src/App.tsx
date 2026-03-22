@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Moon, Presentation, BookOpen, Activity, Component } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Presentation, BookOpen, Activity, Component } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -56,6 +56,7 @@ import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
 import PageUiShowcase from './pages/PageUiShowcase'
 import PageAreaViewer from './pages/PageAreaViewer'
+import PageThemeCreator from './pages/PageThemeCreator'
 import { AreaSidebar } from './pages/AreaSidebar'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './interactive-os/devtools/ReproRecorderOverlay'
@@ -240,6 +241,7 @@ const navItems: NavItem[] = [
   { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
   { id: 'ui-showcase', label: 'UI', icon: Component, path: '/ui' },
   ...routeConfig.map((g) => ({ id: g.id, label: g.label, icon: g.icon, path: g.basePath })),
+  { id: 'theme', label: 'Theme', icon: Sun, path: '/theme' },
 ]
 
 // --- Pre-computed stores ---
@@ -344,10 +346,11 @@ function App() {
   const isViewer = pathname === '/viewer' || pathname.startsWith('/viewer/')
   const isAgent = pathname === '/agent' || pathname.startsWith('/agent/')
   const isUiShowcase = pathname === '/ui' || pathname.startsWith('/ui/')
+  const isTheme = pathname === '/theme'
   const isCms = pathname === '/'
 
   // URL → ActivityBar focus binding (CRUD two-way)
-  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isAgent ? 'agent' : isUiShowcase ? 'ui-showcase' : isCms ? 'cms' : undefined)
+  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isAgent ? 'agent' : isUiShowcase ? 'ui-showcase' : isTheme ? 'theme' : isCms ? 'cms' : undefined)
   const activityBarData = useMemo(() => {
     if (!activityBarFocusId) return activityBarStore
     return {
@@ -360,9 +363,7 @@ function App() {
   }, [activityBarFocusId])
 
   const handleActivityBarActivate = useCallback((nodeId: string) => {
-    if (nodeId === 'theme') {
-      setTheme(t => t === 'dark' ? 'light' : 'dark')
-    } else if (navPaths[nodeId]) {
+    if (navPaths[nodeId]) {
       navigate(navPaths[nodeId])
     }
   }, [navigate])
@@ -410,11 +411,12 @@ function App() {
           </div>
           <div role="group" aria-label="Util" className="activity-bar__util">
             <Aria.Item asChild ids={UTIL_IDS} render={(node, state, props) => {
-              const ThemeIcon = theme === 'dark' ? Sun : Moon
+              const nav = navItems.find((n) => n.id === node.id)!
+              const Icon = nav.icon
               return (
-                <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
-                  <div {...props} className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <ThemeIcon size={13} />
+                <Tooltip content={nav.label}>
+                  <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+                    <Icon size={16} />
                   </div>
                 </Tooltip>
               )
@@ -430,6 +432,8 @@ function App() {
         <PageAgentViewer />
       ) : isUiShowcase ? (
         <PageUiShowcase />
+      ) : isTheme ? (
+        <PageThemeCreator />
       ) : (
         <>
           {activeGroup && (activeGroup.id === 'area'
