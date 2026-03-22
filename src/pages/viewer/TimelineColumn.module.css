@@ -121,7 +121,7 @@
   align-items: center;
   justify-content: center;
   margin-top: 3px;
-  opacity: 0.45;
+  opacity: 0.6;
 }
 
 .tcText {
@@ -174,9 +174,8 @@
 .tcRead {
   font-size: 11px;
   color: var(--text-muted);
-  opacity: 0.6;
 }
-.tcRead .tcIcon { opacity: 0.35; }
+.tcRead .tcIcon { opacity: 0.5; }
 
 .tcBash {
   font-family: var(--mono);
@@ -188,7 +187,6 @@
 .tcGrep, .tcGlob {
   font-size: 11px;
   color: var(--text-muted);
-  opacity: 0.6;
 }
 
 /* ─── Markdown reset — nuke all defaults, build from zero ─── */
