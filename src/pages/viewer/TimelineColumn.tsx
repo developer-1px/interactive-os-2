@@ -5,6 +5,7 @@ import {
   Pencil, Search, FilePlus,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
+import { useVirtualScroll } from './useVirtualScroll'
 
 // --- Types ---
 
@@ -94,8 +95,6 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
 export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onClose, onFileClick }: TimelineColumnProps) {
   const [timeline, setTimeline] = useState<TimelineEvent[]>([])
   const [fetchError, setFetchError] = useState<string | null>(null)
-  const bodyRef = useRef<HTMLDivElement>(null)
-  const lastUserRef = useRef<HTMLDivElement>(null)
 
   // Track editRanges per file for onFileClick
   const editRangesRef = useRef<Map<string, string[]>>(new Map())
@@ -114,6 +113,14 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
       }
     }
   }, [])
+
+  // --- Virtual scroll ---
+  const spacerHeight = 2000 // approximate 100vh spacer for last-user padding
+  const { containerRef, totalHeight, visibleRange, offsetTop, measureItem, scrollToIndex } = useVirtualScroll({
+    itemCount: timeline.length,
+    estimatedItemHeight: 40,
+    overscan: 10,
+  })
 
   // --- Initial timeline fetch ---
   useEffect(() => {
@@ -174,7 +181,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
   // --- Smart scroll ---
   const prevLengthRef = useRef(0)
   useEffect(() => {
-    const el = bodyRef.current
+    const el = containerRef.current
     if (!el || timeline.length === 0) return
 
     const newEvents = timeline.slice(prevLengthRef.current)
@@ -188,13 +195,15 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
 
     const hasUserEvent = newEvents.some(e => e.type === 'user')
 
-    if (hasUserEvent && lastUserRef.current) {
-      lastUserRef.current.scrollIntoView({ block: 'start' })
+    if (hasUserEvent) {
+      // Find last user event index and scroll to it
+      const lastUser = findLastUserIndex(timeline)
+      if (lastUser >= 0) scrollToIndex(lastUser, 'start')
     } else if (isNearBottom(el)) {
       el.scrollTo(0, el.scrollHeight)
     }
     // If scrolled up and no user event, don't auto-scroll
-  }, [timeline])
+  }, [timeline, scrollToIndex, containerRef])
 
   // --- File click handler ---
   const handleTimelineClick = useCallback((evt: TimelineEvent) => {
@@ -204,13 +213,21 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
     }
   }, [onFileClick])
 
-  // Find index of last user event for ref attachment
-  const lastUserIndex = useMemo(() => {
-    for (let i = timeline.length - 1; i >= 0; i--) {
-      if (timeline[i].type === 'user') return i
-    }
-    return -1
-  }, [timeline])
+  // Find index of last user event for spacer
+  const lastUserIndex = useMemo(() => findLastUserIndex(timeline), [timeline])
+
+  // Ref callback to measure each rendered item
+  const makeMeasureRef = useCallback(
+    (index: number) => (node: HTMLDivElement | null) => {
+      if (!node) return
+      const h = node.getBoundingClientRect().height
+      if (h > 0) measureItem(index, h)
+    },
+    [measureItem],
+  )
+
+  // Total content height including spacer
+  const contentHeight = totalHeight + (lastUserIndex >= 0 ? spacerHeight : 0)
 
   return (
     <div className={styles.tc}>
@@ -221,22 +238,33 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
           <button className={styles.tcClose} onClick={onClose}>×</button>
         )}
       </div>
-      <div className={styles.tcBody} ref={bodyRef}>
+      <div className={styles.tcBody} ref={containerRef}>
         {fetchError ? (
           <div className={styles.tcEmpty}>Failed to load: {fetchError}</div>
         ) : timeline.length === 0 ? (
           <div className={styles.tcEmpty}>Waiting for agent activity...</div>
         ) : (
-          <>
-            {timeline.map((evt, i) => (
-              <div key={`${evt.ts}-${i}`} ref={i === lastUserIndex ? lastUserRef : undefined}>
-                <TimelineItem evt={evt} onClick={handleTimelineClick} />
-              </div>
-            ))}
-            {lastUserIndex >= 0 && <div className={styles.tcSpacer} />}
-          </>
+          <div style={{ height: contentHeight, position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, transform: `translateY(${offsetTop}px)` }}>
+              {timeline.slice(visibleRange.start, visibleRange.end).map((evt, i) => {
+                const actualIndex = visibleRange.start + i
+                return (
+                  <div key={`${evt.ts}-${actualIndex}`} ref={makeMeasureRef(actualIndex)}>
+                    <TimelineItem evt={evt} onClick={handleTimelineClick} />
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         )}
       </div>
     </div>
   )
+}
+
+function findLastUserIndex(timeline: TimelineEvent[]): number {
+  for (let i = timeline.length - 1; i >= 0; i--) {
+    if (timeline[i].type === 'user') return i
+  }
+  return -1
 }
