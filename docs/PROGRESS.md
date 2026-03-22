@@ -297,4 +297,6 @@
 
 - [x] Surface Token System — surface 변수 숫자→의미 이름(base/sunken/default/raised/overlay/outlined), `[data-surface]` 속성으로 bg+border+shadow 번들, semantic color 분리(accent→primary+focus+selection, red→destructive), 하위호환 alias
 
-*Last updated: 2026-03-22 — Surface Token System*
+- [x] Agent Viewer — Tool Call 카드 그룹핑. Bot 아이콘 제거, 연속 tool_use를 rounded border 카드(ToolGroupCard)로 묶어 LLM 응답과 구조적 분리. groupEvents 순수 함수 + 7 unit tests, virtual scroll 호환
+
+*Last updated: 2026-03-22 — Agent Viewer Tool Card Grouping*
