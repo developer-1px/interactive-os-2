@@ -9,6 +9,8 @@ import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData, Entity } from '../interactive-os/core/types'
 import { TimelineColumn } from './viewer/TimelineColumn'
 import { FileViewerModal } from './viewer/FileViewerModal'
+import { useResizer } from '../hooks/useResizer'
+import '../styles/resizer.css'
 
 // --- Types ---
 
@@ -44,6 +46,32 @@ function saveColumnOrder(order: string[]) {
 
 // --- Component ---
 
+function ResizableColumn({ session, onClose, onFileClick }: {
+  session: SessionInfo
+  onClose: () => void
+  onFileClick: (path: string, ranges?: string[]) => void
+}) {
+  const resizer = useResizer({
+    defaultSize: 420, minSize: 280, maxSize: 800, step: 10,
+    storageKey: `agent-col-${session.id}`,
+  })
+
+  return (
+    <>
+      <div style={{ width: resizer.size, flexShrink: 0, height: '100%' }}>
+        <TimelineColumn
+          sessionId={session.id}
+          sessionLabel={session.label}
+          isLive={session.active}
+          onClose={onClose}
+          onFileClick={onFileClick}
+        />
+      </div>
+      <div className="resizer-handle" aria-label={`Resize ${session.label}`} {...resizer.separatorProps} />
+    </>
+  )
+}
+
 export default function PageAgentViewer() {
   const [sessions, setSessions] = useState<SessionInfo[]>([])
   const [columnOrder, setColumnOrderRaw] = useState<string[]>(loadColumnOrder)
@@ -57,6 +85,11 @@ export default function PageAgentViewer() {
   }, [])
   const [modalFile, setModalFile] = useState<{ path: string; editRanges?: string[] } | null>(null)
   const [loading, setLoading] = useState(true)
+
+  const sessionsResizer = useResizer({
+    defaultSize: 200, minSize: 120, maxSize: 360, step: 10,
+    storageKey: 'agent-sessions-width',
+  })
 
   // Session list polling (5s) — auto-append new active sessions to columnOrder
   useEffect(() => {
@@ -131,29 +164,32 @@ export default function PageAgentViewer() {
     <div className={styles.av}>
       {/* Sessions panel — archive only */}
       {archiveSessions.length > 0 && (
-        <div className={styles.avSessions}>
-          <div className={styles.avSessionsHeader}>
-            <span className={styles.avSessionsTitle}>Archive</span>
+        <>
+          <div className={styles.avSessions} style={{ width: sessionsResizer.size }}>
+            <div className={styles.avSessionsHeader}>
+              <span className={styles.avSessionsTitle}>Archive</span>
+            </div>
+            <div className={styles.avSessionList}>
+              <Aria
+                behavior={sessionListbox}
+                data={archiveStore}
+                plugins={CORE_PLUGINS}
+                onChange={handleArchiveSelect}
+                aria-label="Archive sessions"
+              >
+                <Aria.Item render={(node) => {
+                  const data = node.data as { label: string; mtime: number }
+                  return (
+                    <div className={styles.avSessionItem}>
+                      <span className={styles.avSessionLabel}>{data.label}</span>
+                    </div>
+                  )
+                }} />
+              </Aria>
+            </div>
           </div>
-          <div className={styles.avSessionList}>
-            <Aria
-              behavior={sessionListbox}
-              data={archiveStore}
-              plugins={CORE_PLUGINS}
-              onChange={handleArchiveSelect}
-              aria-label="Archive sessions"
-            >
-              <Aria.Item render={(node) => {
-                const data = node.data as { label: string; mtime: number }
-                return (
-                  <div className={styles.avSessionItem}>
-                    <span className={styles.avSessionLabel}>{data.label}</span>
-                  </div>
-                )
-              }} />
-            </Aria>
-          </div>
-        </div>
+          <div className="resizer-handle" aria-label="Resize sessions panel" {...sessionsResizer.separatorProps} />
+        </>
       )}
 
       {/* Timeline columns — horizontally scrollable */}
@@ -164,18 +200,27 @@ export default function PageAgentViewer() {
             <span>세션을 선택하세요</span>
           </div>
         ) : (
-          displayColumns.map(session => (
-            <TimelineColumn
-              key={session.id}
-              sessionId={session.id}
-              sessionLabel={session.label}
-              isLive={session.active}
-              onClose={() => updateColumnOrder(prev =>
-                prev.filter(id => id !== session.id)
-              )}
-              onFileClick={handleFileClick}
-            />
-          ))
+          displayColumns.map((session, i) => {
+            const isLast = i === displayColumns.length - 1
+            return isLast ? (
+              <div key={session.id} style={{ flex: 1, minWidth: 280, height: '100%' }}>
+                <TimelineColumn
+                  sessionId={session.id}
+                  sessionLabel={session.label}
+                  isLive={session.active}
+                  onClose={() => updateColumnOrder(prev => prev.filter(id => id !== session.id))}
+                  onFileClick={handleFileClick}
+                />
+              </div>
+            ) : (
+              <ResizableColumn
+                key={session.id}
+                session={session}
+                onClose={() => updateColumnOrder(prev => prev.filter(id => id !== session.id))}
+                onFileClick={handleFileClick}
+              />
+            )
+          })
         )}
       </div>
 
