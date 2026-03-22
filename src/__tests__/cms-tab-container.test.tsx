@@ -225,5 +225,30 @@ describe('CMS Tab Container', () => {
       expect(sep).not.toBeNull()
       expect(sep.getAttribute('role')).toBeNull()
     })
+
+    it('active tab label is highlighted when canvas tab changes', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<CmsLayout />)
+
+      // Enter tab-group and focus tab-1 → then enter its section
+      const tabGroup = container.querySelector('[data-cms-id="tab-group-1"]') as HTMLElement
+      tabGroup.focus()
+      await user.keyboard('{Enter}')  // → tab-1
+      await user.keyboard('{Enter}')  // → tab-1-section
+
+      // Tab-1 label should be active
+      const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
+      const labels = sidebar.querySelectorAll('.cms-sidebar__group-label')
+      expect(labels[0].classList.contains('cms-sidebar__group-label--active')).toBe(true)
+
+      // Go back to tab level and switch to tab-2
+      await user.keyboard('{Escape}')  // → tab-1
+      await user.keyboard('{ArrowRight}')  // → tab-2
+      await user.keyboard('{Enter}')  // → tab-2-section
+
+      const updatedLabels = sidebar.querySelectorAll('.cms-sidebar__group-label')
+      expect(updatedLabels[0].classList.contains('cms-sidebar__group-label--active')).toBe(false)
+      expect(updatedLabels[1].classList.contains('cms-sidebar__group-label--active')).toBe(true)
+    })
   })
 })

@@ -115,6 +115,11 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
 
   const sectionIds = useMemo(() => collectSections(store, ROOT_ID), [store])
 
+  const activeTabItemId = useMemo(() => {
+    if (!activeSectionId) return undefined
+    return getTabItemAncestor(store, activeSectionId)
+  }, [activeSectionId, store])
+
   const scrollToSection = useCallback((id: string) => {
     const el = document.querySelector(`[data-cms-root] [data-cms-id="${id}"]`) as HTMLElement
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -221,7 +226,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
               const label = tabData.label as LocaleMap | undefined
               const labelText = label?.[locale] ?? label?.ko ?? ''
               elements.push(
-                <div key={`label-${tabItemId}`} className="cms-sidebar__group-label">
+                <div key={`label-${tabItemId}`} className={`cms-sidebar__group-label${tabItemId === activeTabItemId ? ' cms-sidebar__group-label--active' : ''}`}>
                   {labelText}
                 </div>
               )
