@@ -48,6 +48,14 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
       /^Caveat:/,
       /^\/clear$/,
       /^clear$/,
+      /^Read the output file to retrieve/,
+      /toolu_/,
+      /failed with exit code/,
+      /^Background command/,
+      /^Hook \w+ success/,
+      /^OK$/,
+      /^UserPromptSubmit hook/,
+      /^SessionStart/,
     ]
     if (dropPatterns.some(p => p.test(text))) return []
 
