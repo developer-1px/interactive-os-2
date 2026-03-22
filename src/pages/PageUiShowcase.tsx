@@ -26,6 +26,8 @@ import { ToggleGroup } from '../interactive-os/ui/ToggleGroup'
 import { Toolbar } from '../interactive-os/ui/Toolbar'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
 import { TreeView } from '../interactive-os/ui/TreeView'
+import { Toaster } from '../interactive-os/ui/Toaster'
+import { createToaster } from '../interactive-os/ui/createToaster'
 
 // --- Fixture data factories ---
 
@@ -270,6 +272,31 @@ function makeTreeViewData(): NormalizedData {
       api: ['ref'],
     },
   })
+}
+
+// --- Toast demo ---
+
+const demoToaster = createToaster({ duration: 3000, maxToasts: 3 })
+let toastCount = 0
+const toastVariants: Array<'default' | 'success' | 'error'> = ['default', 'success', 'error']
+
+function ToasterDemo() {
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <button onClick={() => {
+        const variant = toastVariants[toastCount % 3]
+        toastCount++
+        demoToaster.toast({
+          title: `Toast #${toastCount}`,
+          description: variant === 'error' ? 'Something went wrong' : variant === 'success' ? 'Operation complete' : 'This is a notification',
+          variant,
+        })
+      }}>
+        Add Toast
+      </button>
+      <Toaster toaster={demoToaster} />
+    </div>
+  )
 }
 
 // --- Component registry ---
@@ -593,6 +620,24 @@ const data = createStore({
 })
 
 <TabList data={data} onChange={setData} />`,
+  },
+  {
+    slug: 'toaster',
+    name: 'Toaster',
+    description: 'Ephemeral notifications with auto-dismiss, queue management, and aria-live.',
+    makeData: makeListBoxData,
+    render: () => <ToasterDemo />,
+    usage: `import { Toaster } from 'interactive-os/ui/Toaster'
+import { createToaster } from 'interactive-os/ui/createToaster'
+
+const toaster = createToaster({ duration: 5000, maxToasts: 5 })
+
+// trigger from anywhere
+toaster.toast({ title: 'Saved', variant: 'success' })
+toaster.toast({ title: 'Error', description: 'Network failed', variant: 'error' })
+
+// mount once at app root
+<Toaster toaster={toaster} />`,
   },
   {
     slug: 'toggle',
