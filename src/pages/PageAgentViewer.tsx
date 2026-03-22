@@ -1,5 +1,5 @@
 import styles from './PageAgentViewer.module.css'
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo, memo } from 'react'
 import {
   Eye, EyeOff, Circle, User, Bot, FileText, Terminal,
   Pencil, Search, FilePlus,
@@ -45,6 +45,11 @@ interface SessionInfo {
 
 const sessionListbox = { ...listbox, followFocus: true }
 const modifiedListbox = { ...listbox, followFocus: true }
+
+// --- Constants (stable references) ---
+
+const CORE_PLUGINS = [core()]
+const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp'])
 
 // --- Helpers ---
 
@@ -94,6 +99,26 @@ function eventLabel(evt: TimelineEvent): string {
   if (evt.tool === 'Glob') return `glob "${evt.text ?? ''}"`
   return evt.tool ?? evt.type
 }
+
+// --- Timeline item (memoized to avoid re-rendering unchanged items) ---
+
+const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: TimelineEvent; onClick: (evt: TimelineEvent) => void }) {
+  const cls = `${styles.avTimelineItem} ${styles[`avTl${evt.type === 'tool_use' ? (evt.tool ?? '') : evt.type}`] ?? ''}`
+  return (
+    <div
+      className={cls}
+      onClick={() => onClick(evt)}
+      style={evt.filePath ? { cursor: 'pointer' } : undefined}
+    >
+      <span className={styles.avTimelineIcon}>
+        <EventIcon evt={evt} />
+      </span>
+      <span className={styles.avTimelineText}>
+        {eventLabel(evt)}
+      </span>
+    </div>
+  )
+})
 
 // --- Component ---
 
@@ -174,41 +199,55 @@ export default function PageAgentViewer() {
     if (!isLiveSession) return
     const es = new EventSource('/api/agent-ops/timeline-stream')
 
-    es.onmessage = (event) => {
-      let evt: TimelineEvent
-      try { evt = JSON.parse(event.data) } catch { return }
+    // Batch SSE events to avoid per-event re-renders
+    let pendingEvents: TimelineEvent[] = []
+    let rafId = 0
+
+    function flushPending() {
+      rafId = 0
+      if (pendingEvents.length === 0) return
+      const batch = pendingEvents
+      pendingEvents = []
 
       setTimeline(prev => {
-        const next = [...prev, evt]
+        const next = [...prev, ...batch]
         return next.length > 500 ? next.slice(-500) : next
       })
 
-      // Update modified files if Edit/Write
-      if (evt.type === 'tool_use' && (evt.tool === 'Edit' || evt.tool === 'Write') && evt.filePath) {
+      // Update modified files for Edit/Write events in batch
+      const edits = batch.filter(e => e.type === 'tool_use' && (e.tool === 'Edit' || e.tool === 'Write') && e.filePath)
+      if (edits.length > 0) {
         setModifiedFiles(prev => {
-          const idx = prev.findIndex(f => f.file === evt.filePath)
-          if (idx !== -1) {
-            const updated = {
-              ...prev[idx],
-              count: prev[idx].count + 1,
-              editRanges: evt.editNew
-                ? [...prev[idx].editRanges, evt.editNew]
-                : prev[idx].editRanges,
+          let next = [...prev]
+          for (const evt of edits) {
+            const idx = next.findIndex(f => f.file === evt.filePath)
+            if (idx !== -1) {
+              const updated = {
+                ...next[idx],
+                count: next[idx].count + 1,
+                editRanges: evt.editNew ? [...next[idx].editRanges, evt.editNew] : next[idx].editRanges,
+              }
+              next = [updated, ...next.slice(0, idx), ...next.slice(idx + 1)]
+            } else {
+              next = [{ file: evt.filePath!, count: 1, editRanges: evt.editNew ? [evt.editNew] : [] }, ...next]
             }
-            return [updated, ...prev.slice(0, idx), ...prev.slice(idx + 1)]
           }
-          return [{
-            file: evt.filePath!,
-            count: 1,
-            editRanges: evt.editNew ? [evt.editNew] : [],
-          }, ...prev]
+          return next
         })
 
         if (followModeRef.current) {
-          setSelectedFile(evt.filePath!)
+          const lastEdit = edits[edits.length - 1]
+          setSelectedFile(lastEdit.filePath!)
           setFetchCounter(c => c + 1)
         }
       }
+    }
+
+    es.onmessage = (event) => {
+      let evt: TimelineEvent
+      try { evt = JSON.parse(event.data) } catch { return }
+      pendingEvents.push(evt)
+      if (!rafId) rafId = requestAnimationFrame(flushPending)
     }
 
     es.onerror = () => {
@@ -223,7 +262,10 @@ export default function PageAgentViewer() {
       })
     }
 
-    return () => es.close()
+    return () => {
+      es.close()
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [deriveModified, isLiveSession])
 
   // --- File content loading ---
@@ -280,16 +322,6 @@ export default function PageAgentViewer() {
     }
   }, [])
 
-  // --- Highlight edit ranges in code ---
-  const highlightedContent = useMemo(() => {
-    if (!selectedFile || !fileContent) return fileContent
-    const mod = modifiedFiles.find(f => f.file === selectedFile)
-    if (!mod || mod.editRanges.length === 0) return fileContent
-    // For PoC: wrap each editNew match in a <mark> for CodeBlock
-    // This only works for non-markdown; we'll inject highlight markers
-    return fileContent
-  }, [fileContent, selectedFile, modifiedFiles])
-
   // Find line numbers that were edited (for highlight)
   const editedLines = useMemo<Set<number>>(() => {
     const lines = new Set<number>()
@@ -325,7 +357,6 @@ export default function PageAgentViewer() {
   const isMdx = filename.endsWith('.mdx')
   const isMarkdown = !isMdx && filename.endsWith('.md')
   const ext = filename.split('.').pop() ?? ''
-  const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp'])
   const isImage = IMAGE_EXTS.has(ext.toLowerCase())
   const lineCount = !isImage && fileContent ? fileContent.split('\n').length : 0
 
@@ -350,7 +381,7 @@ export default function PageAgentViewer() {
             <Aria
               behavior={sessionListbox}
               data={sessionStore}
-              plugins={[core()]}
+              plugins={CORE_PLUGINS}
               onChange={handleSessionChange}
               aria-label="Sessions"
             >
@@ -378,19 +409,7 @@ export default function PageAgentViewer() {
             <div className={styles.avTimelineEmpty}>Waiting for agent activity...</div>
           ) : (
             timeline.map((evt, i) => (
-              <div
-                key={i}
-                className={`${styles.avTimelineItem} ${styles[`avTl${evt.type === 'tool_use' ? (evt.tool ?? '') : evt.type}`] ?? ''}`}
-                onClick={() => handleTimelineClick(evt)}
-                style={evt.filePath ? { cursor: 'pointer' } : undefined}
-              >
-                <span className={styles.avTimelineIcon}>
-                  <EventIcon evt={evt} />
-                </span>
-                <span className={styles.avTimelineText}>
-                  {eventLabel(evt)}
-                </span>
-              </div>
+              <TimelineItem key={`${evt.ts}-${i}`} evt={evt} onClick={handleTimelineClick} />
             ))
           )}
         </div>
@@ -436,9 +455,9 @@ export default function PageAgentViewer() {
               : isMdx
                 ? <MdxViewer filePath={selectedFile} />
                 : isMarkdown
-                  ? <MarkdownViewer content={highlightedContent} />
+                  ? <MarkdownViewer content={fileContent} />
                   : <CodeBlock
-                      code={highlightedContent}
+                      code={fileContent}
                       filename={filename}
                       highlightLines={editedLines.size > 0 ? editedLines : undefined}
                     />}
@@ -467,7 +486,7 @@ export default function PageAgentViewer() {
           <Aria
             behavior={modifiedListbox}
             data={modifiedStore}
-            plugins={[core()]}
+            plugins={CORE_PLUGINS}
             onChange={handleModifiedChange}
             aria-label="Modified files"
           >
