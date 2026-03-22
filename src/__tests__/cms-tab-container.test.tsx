@@ -212,11 +212,11 @@ describe('CMS Tab Container', () => {
       const { container } = render(<CmsLayout />)
       const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
       const labels = sidebar.querySelectorAll('.cms-sidebar__group-label')
-      // 3 tabs = 3 labels: Overview, Details, More
+      // 3 tabs = 3 labels: Overview, Details, Integration
       expect(labels.length).toBe(3)
       expect(labels[0].textContent).toBe('Overview')
       expect(labels[1].textContent).toBe('Details')
-      expect(labels[2].textContent).toBe('More')
+      expect(labels[2].textContent).toBe('Integration')
     })
 
     it('group separators are not listbox items', () => {
