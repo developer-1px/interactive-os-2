@@ -24,6 +24,7 @@ interface AriaProps {
 }
 
 interface AriaItemProps {
+  ids?: string[]
   render: (node: Record<string, unknown>, state: NodeState) => ReactNode
 }
 
@@ -70,7 +71,7 @@ function FocusScrollDiv({ focused, children, ...props }: { focused: boolean; chi
   return <div ref={ref} {...props}>{children}</div>
 }
 
-function AriaItem({ render }: AriaItemProps) {
+function AriaItem({ ids, render }: AriaItemProps) {
   return (
     <AriaInternalContext.Consumer>
       {(aria) => {
@@ -80,33 +81,42 @@ function AriaItem({ render }: AriaItemProps) {
         // If behavior has colCount, consumer uses <Aria.Cell> — skip auto gridcell wrapping
         const hasColCount = !!(aria.behavior?.colCount && aria.behavior.colCount > 0)
 
+        const renderNode = (childId: string): ReactNode | null => {
+          const entity = store.entities[childId]
+          if (!entity) return null
+          const state = aria.getNodeState(childId)
+          const props = aria.getNodeProps(childId)
+          const needsGridcell = !hasColCount && (props as Record<string, unknown>).role === 'row'
+          return (
+            <FocusScrollDiv key={childId} focused={state.focused} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
+              <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
+                {needsGridcell
+                  ? <div role="gridcell">{render(entity, state)}</div>
+                  : render(entity, state)
+                }
+              </AriaItemContext.Provider>
+            </FocusScrollDiv>
+          )
+        }
+
         const renderNodes = (parentId: string): ReactNode[] => {
           const children = getChildren(store, parentId)
           const nodes: ReactNode[] = []
           for (const childId of children) {
-            const entity = store.entities[childId]
-            if (!entity) continue
-            const state = aria.getNodeState(childId)
-            const props = aria.getNodeProps(childId)
+            const node = renderNode(childId)
+            if (!node) continue
+            nodes.push(node)
             const hasChildren = getChildren(store, childId).length > 0
             const isExpanded = expandedIds.includes(childId)
-            // For treegrid rows, content must be wrapped in gridcell (but not for grid with colCount)
-            const needsGridcell = !hasColCount && (props as Record<string, unknown>).role === 'row'
-            nodes.push(
-              <FocusScrollDiv key={childId} focused={state.focused} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-                <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
-                  {needsGridcell
-                    ? <div role="gridcell">{render(entity, state)}</div>
-                    : render(entity, state)
-                  }
-                </AriaItemContext.Provider>
-              </FocusScrollDiv>
-            )
             if (hasChildren && isExpanded) {
               nodes.push(...renderNodes(childId))
             }
           }
           return nodes
+        }
+        // ids mode: flat rendering only (no recursion into children). See PRD F4.
+        if (ids) {
+          return <>{ids.map(id => renderNode(id)).filter(Boolean)}</>
         }
         return <>{renderNodes(ROOT_ID)}</>
       }}
