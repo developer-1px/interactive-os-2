@@ -207,5 +207,23 @@ describe('CMS Tab Container', () => {
       const focused = sidebar.querySelector('[data-focused]')
       expect(focused?.getAttribute('data-sidebar-id')).toBe('tab-1-section')
     })
+
+    it('renders group separators with tab labels at tab-group boundaries', () => {
+      const { container } = render(<CmsLayout />)
+      const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
+      const labels = sidebar.querySelectorAll('.cms-sidebar__group-label')
+      // 3 tabs = 3 labels: Overview, Details, More
+      expect(labels.length).toBe(3)
+      expect(labels[0].textContent).toBe('Overview')
+      expect(labels[1].textContent).toBe('Details')
+      expect(labels[2].textContent).toBe('More')
+    })
+
+    it('group separators are not listbox items', () => {
+      const { container } = render(<CmsLayout />)
+      const sep = container.querySelector('.cms-sidebar__group-sep') as HTMLElement
+      expect(sep).not.toBeNull()
+      expect(sep.getAttribute('role')).toBeNull()
+    })
   })
 })

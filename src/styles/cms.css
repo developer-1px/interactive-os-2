@@ -332,3 +332,22 @@
 .cms-tab-panel {
   padding: 0;
 }
+
+/* ── Sidebar group separators ── */
+.cms-sidebar__group-sep {
+  height: 1px;
+  background: var(--border-mid);
+  margin: 4px 8px;
+  pointer-events: none;
+}
+.cms-sidebar__group-label {
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  color: var(--text-muted);
+  padding: 2px 10px 0;
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.cms-sidebar__group-label--active {
+  color: var(--accent);
+}
