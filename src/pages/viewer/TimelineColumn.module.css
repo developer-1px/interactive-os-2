@@ -95,6 +95,7 @@
   line-height: 1.7;
   color: var(--text-secondary);
   min-width: 0;
+  max-width: 720px;
 }
 
 .tcFile {
@@ -129,6 +130,7 @@
   display: block;
   padding: 8px 12px;
   margin: 28px 8px 8px;
+  max-width: 720px;
   color: var(--text-primary);
   font-weight: 500;
   background: var(--accent-dim);
