@@ -47,8 +47,7 @@ import PageRename from './pages/PageRename'
 import PageAriaComponent from './pages/PageAriaComponent'
 import PageCell from './pages/PageCell'
 import PageHooks from './pages/PageHooks'
-import PageStoreExplorer from './pages/PageStoreExplorer'
-import PageStoreOperations from './pages/PageStoreOperations'
+import PageStoreInspector from './pages/PageStoreInspector'
 import PageEnginePipeline from './pages/PageEnginePipeline'
 import PageEngineHistory from './pages/PageEngineHistory'
 import PageViewer from './pages/PageViewer'
@@ -114,10 +113,9 @@ const routeConfig: RouteGroup[] = [
     id: 'store',
     label: 'Store',
     icon: Database,
-    basePath: '/store/explorer',
+    basePath: '/store/inspector',
     items: [
-      { path: 'explorer', label: 'Explorer', status: 'ready', component: PageStoreExplorer },
-      { path: 'operations', label: 'Operations', status: 'ready', component: PageStoreOperations },
+      { path: 'inspector', label: 'Inspector', status: 'ready', component: PageStoreInspector },
     ],
   },
   {
