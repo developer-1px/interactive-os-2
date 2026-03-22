@@ -3,6 +3,8 @@
 .tc {
   min-width: 280px;
   flex: 1;
+  height: 100%;
+  min-height: 0;
   background: var(--surface-sunken);
   display: flex;
   flex-direction: column;
@@ -269,5 +271,59 @@
   text-decoration-color: var(--primary);
 }
 
-/* Spacer */
-.tcSpacer { min-height: 80vh; }
+/* Status bar */
+
+.tcStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tcStatusSpinner {
+  animation: spin 1.5s linear infinite;
+  color: var(--green);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Chat input */
+
+.tcInput {
+  display: flex;
+  gap: 0;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.tcInput textarea {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: inherit;
+  background: var(--surface-base);
+  color: var(--text-primary);
+  outline: none;
+  max-height: 120px;
+}
+
+.tcInput textarea:focus {
+  border-color: var(--primary);
+}
+
+.tcInput textarea::placeholder {
+  color: var(--text-muted);
+}
