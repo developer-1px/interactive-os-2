@@ -30,7 +30,11 @@ function collectTsFiles(dir: string): string[] {
   return result;
 }
 
-function splitIdentifier(name: string): string[] {
+function splitIdentifier(rawName: string): string[] {
+  // Strip leading/trailing underscores
+  const name = rawName.replace(/^_+|_+$/g, "");
+  if (name.length === 0) return [];
+
   // UPPER_SNAKE_CASE: split by _
   if (/^[A-Z][A-Z0-9_]*$/.test(name)) {
     return name
@@ -78,9 +82,7 @@ function collectIdentifiers(sourceFile: ts.SourceFile): string[] {
         ts.isMethodDeclaration(parent) ||
         ts.isMethodSignature(parent) ||
         ts.isBindingElement(parent) ||
-        ts.isEnumMember(parent) ||
-        ts.isImportSpecifier(parent) ||
-        ts.isExportSpecifier(parent);
+        ts.isEnumMember(parent);
 
       if (isDeclaration && parent.name === node) {
         names.push(node.text);
