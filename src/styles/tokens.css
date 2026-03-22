@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* ── Tier 1: Primitives ── */
+  /* ══ Tier 1: Palette ══
+     Single source of truth. Every semantic token maps here. */
 
-  --zinc-50: #FAFAFA;
+  --zinc-0:   #FFFFFF;
+  --zinc-50:  #FAFAFA;
   --zinc-100: #F4F4F5;
   --zinc-200: #E4E4E7;
   --zinc-300: #D4D4D8;
@@ -12,118 +14,139 @@
   --zinc-600: #52525B;
   --zinc-700: #3F3F46;
   --zinc-800: #27272A;
+  --zinc-850: #1F1F23;
   --zinc-900: #18181B;
   --zinc-950: #09090B;
 
-  --indigo-50: #EDEDFD;
-  --indigo-100: #C4C4F3;
+  --indigo-50:  #EDEDFD;
+  --indigo-100: #D5D5F8;
+  --indigo-200: #B0B0F0;
+  --indigo-400: #7272DB;
   --indigo-500: #5B5BD6;
   --indigo-600: #4B4ACF;
+  --indigo-700: #3D3DC4;
   --indigo-900: #2E2E8F;
 
-  --red-500: #E5484D;
+  --red-400:   #F07178;
+  --red-500:   #E5484D;
+  --green-400: #4CC38A;
   --green-500: #30A46C;
-  --green-50: #E8F5E9;
+  --amber-400: #F0B429;
+  --amber-500: #D4A037;
 
-  /* ── Tier 2: Semantic tokens (dark default) ── */
+  /* ══ Tier 2: Semantic (dark default) ══
+     No raw rgba. Every value is a solid color or maps to palette. */
 
-  /* Surface elevation system (bg + shadow pairs) */
+  /* ── Surface: elevation via palette steps ── */
   --surface-0: var(--zinc-950);
   --surface-1: var(--zinc-900);
-  --surface-2: var(--zinc-800);
-  --surface-2-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.3);
+  --surface-2: var(--zinc-850);
   --surface-3: var(--zinc-800);
-  --surface-3-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 1px rgba(0, 0, 0, 0.3);
   --surface-4: var(--zinc-700);
-  --surface-4-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
 
-  /* Interactive states */
-  --bg-focus: rgba(91, 91, 214, 0.12);
-  --bg-select: rgba(48, 164, 108, 0.18);
-  --bg-hover: rgba(255, 255, 255, 0.06);
-  --bg-active: rgba(255, 255, 255, 0.10);
-  --bg-press: rgba(91, 91, 214, 0.22);
+  /* ── Shadow: only place opacity is acceptable ── */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.4), 0 0 1px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
 
-  /* Border */
-  --border-dim: rgba(255, 255, 255, 0.10);
-  --border-mid: rgba(255, 255, 255, 0.16);
-  --border-bright: rgba(255, 255, 255, 0.24);
+  /* ── Text: 4-level hierarchy ── */
+  --text-bright:    var(--zinc-0);
+  --text-primary:   var(--zinc-100);
+  --text-secondary: var(--zinc-400);
+  --text-muted:     var(--zinc-600);
 
-  /* Text */
-  --text-primary: var(--zinc-100);
-  --text-secondary: var(--zinc-300);
-  --text-muted: var(--zinc-500);
-  --text-bright: var(--zinc-50);
+  /* ── Border: solid colors, not transparency ── */
+  --border-subtle: var(--zinc-800);
+  --border-default: var(--zinc-700);
+  --border-strong: var(--zinc-600);
 
-  /* Accent (higher alpha for dark backgrounds — equivalent perceived contrast) */
-  --accent: var(--indigo-500);
-  --accent-dim: rgba(91, 91, 214, 0.10);
-  --accent-mid: rgba(91, 91, 214, 0.18);
-  --accent-bright: rgba(91, 91, 214, 0.28);
+  /* backward compat aliases — migrate away over time */
+  --border-dim: var(--border-subtle);
+  --border-mid: var(--border-default);
+  --border-bright: var(--border-strong);
 
-  /* Aliases */
-  --red: var(--red-500);
-  --green: var(--green-500);
+  /* ── Interactive: solid tints ── */
+  --bg-hover:  var(--zinc-800);
+  --bg-active: var(--zinc-700);
+  --bg-focus:  #252550;
+  --bg-select: #1A3A2A;
+  --bg-press:  #2D2D6B;
 
-  /* Typography */
+  /* ── Accent ── */
+  --accent:       var(--indigo-500);
+  --accent-hover: var(--indigo-400);
+  --accent-dim:   #1E1E3A;
+  --accent-mid:   #252550;
+  --accent-bright: #2D2D6B;
+
+  /* ── Status ── */
+  --red:    var(--red-500);
+  --green:  var(--green-500);
+  --amber:  var(--amber-500);
+
+  /* ── Typography ── */
   --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
   --sans: 'Manrope', -apple-system, system-ui, sans-serif;
 
-  /* Layout */
-  --radius: 6px;
+  /* ── Layout ── */
+  --radius:    6px;
   --radius-sm: 4px;
   --radius-xs: 3px;
-  --shadow-md: var(--surface-3-shadow);
 
-  /* Spacing */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 12px;
-  --space-lg: 16px;
-  --space-xl: 24px;
+  /* ── Spacing ── */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  12px;
+  --space-lg:  16px;
+  --space-xl:  24px;
   --space-2xl: 32px;
 
-  /* Transition */
+  /* ── Transition ── */
   --transition-fast: 0.08s;
 
-  /* Dialog */
-  --dialog-backdrop: rgba(0, 0, 0, 0.4);
+  /* ── Dialog ── */
+  --dialog-backdrop: rgba(0, 0, 0, 0.5);
 }
+
+/* ══ Light theme ══ */
 
 [data-theme="light"] {
-  /* Surface elevation system */
   --surface-0: var(--zinc-100);
   --surface-1: var(--zinc-50);
-  --surface-2: #FFFFFF;
-  --surface-2-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.06);
-  --surface-3: #FFFFFF;
-  --surface-3-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.08);
-  --surface-4: #FFFFFF;
-  --surface-4-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --surface-2: var(--zinc-0);
+  --surface-3: var(--zinc-0);
+  --surface-4: var(--zinc-0);
 
-  /* Interactive states */
-  --bg-focus: var(--indigo-50);
-  --bg-select: var(--green-50);
-  --bg-hover: rgba(0, 0, 0, 0.03);
-  --bg-active: rgba(0, 0, 0, 0.06);
-  --bg-press: rgba(91, 91, 214, 0.14);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
 
-  /* Border */
-  --border-dim: var(--zinc-200);
-  --border-mid: var(--zinc-300);
-  --border-bright: var(--zinc-400);
-
-  /* Text */
-  --text-primary: var(--zinc-900);
+  --text-bright:    var(--zinc-950);
+  --text-primary:   var(--zinc-900);
   --text-secondary: var(--zinc-500);
-  --text-muted: var(--zinc-400);
-  --text-bright: var(--zinc-950);
+  --text-muted:     var(--zinc-400);
 
-  /* Dialog backdrop */
-  --dialog-backdrop: rgba(0, 0, 0, 0.15);
+  --border-subtle: var(--zinc-200);
+  --border-default: var(--zinc-300);
+  --border-strong: var(--zinc-400);
+  --border-dim: var(--border-subtle);
+  --border-mid: var(--border-default);
+  --border-bright: var(--border-strong);
+
+  --bg-hover:  var(--zinc-100);
+  --bg-active: var(--zinc-200);
+  --bg-focus:  var(--indigo-50);
+  --bg-select: #E8F5E9;
+  --bg-press:  var(--indigo-100);
+
+  --accent-dim:    var(--indigo-50);
+  --accent-mid:    var(--indigo-100);
+  --accent-bright: var(--indigo-200);
+
+  --dialog-backdrop: rgba(0, 0, 0, 0.2);
 }
 
-/* ── Global resets ── */
+/* ══ Global resets ══ */
 
 * {
   box-sizing: border-box;
@@ -135,7 +158,7 @@ body {
   background: var(--surface-0);
   color: var(--text-primary);
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -160,7 +183,7 @@ p {
   outline-offset: -1.5px;
 }
 
-/* ── Scrollbar (WebKit) ── */
+/* ══ Scrollbar (WebKit) ══ */
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -172,15 +195,15 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-mid);
+  background: var(--border-default);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-bright);
+  background: var(--border-strong);
 }
 
-/* ── Reduced motion ── */
+/* ══ Reduced motion ══ */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
