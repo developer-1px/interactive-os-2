@@ -303,7 +303,9 @@ export default function PageAgentViewer() {
   const isMdx = filename.endsWith('.mdx')
   const isMarkdown = !isMdx && filename.endsWith('.md')
   const ext = filename.split('.').pop() ?? ''
-  const lineCount = fileContent ? fileContent.split('\n').length : 0
+  const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp'])
+  const isImage = IMAGE_EXTS.has(ext.toLowerCase())
+  const lineCount = !isImage && fileContent ? fileContent.split('\n').length : 0
 
   if (loading) {
     return (
@@ -368,8 +370,12 @@ export default function PageAgentViewer() {
               <div className={styles.avContentMeta}>
                 <FileIcon name={filename} type="file" />
                 <span>{ext.toUpperCase()}</span>
-                <span className={styles.avContentMetaSep} />
-                <span>{lineCount} lines</span>
+                {!isImage && (
+                  <>
+                    <span className={styles.avContentMetaSep} />
+                    <span>{lineCount} lines</span>
+                  </>
+                )}
                 {editedLines.size > 0 && (
                   <>
                     <span className={styles.avContentMetaSep} />
@@ -382,15 +388,23 @@ export default function PageAgentViewer() {
         </div>
         {selectedFile ? (
           <div className={styles.avContentBody}>
-            {isMdx
-              ? <MdxViewer filePath={selectedFile} />
-              : isMarkdown
-                ? <MarkdownViewer content={highlightedContent} />
-                : <CodeBlock
-                    code={highlightedContent}
-                    filename={filename}
-                    highlightLines={editedLines.size > 0 ? editedLines : undefined}
-                  />}
+            {isImage
+              ? <div className={styles.avImageViewer}>
+                  <img
+                    src={`/api/fs/file?path=${encodeURIComponent(selectedFile)}`}
+                    alt={filename}
+                    className={styles.avImage}
+                  />
+                </div>
+              : isMdx
+                ? <MdxViewer filePath={selectedFile} />
+                : isMarkdown
+                  ? <MarkdownViewer content={highlightedContent} />
+                  : <CodeBlock
+                      code={highlightedContent}
+                      filename={filename}
+                      highlightLines={editedLines.size > 0 ? editedLines : undefined}
+                    />}
           </div>
         ) : (
           <div className={styles.avEmpty}>

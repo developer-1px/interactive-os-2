@@ -202,6 +202,25 @@
   font-weight: 600;
 }
 
+/* --- Image viewer --- */
+
+.avImageViewer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+  background: var(--surface-0);
+}
+
+.avImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
 /* --- Right panel: modified files (240px) --- */
 
 .avModified {
