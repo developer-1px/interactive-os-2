@@ -43,27 +43,36 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
     text = text.replace(/<[^>]+>/g, '').trim()
     if (!text) return []
 
-    // Filter out skill/system noise — only surface user's actual input
-    const noisePatterns = [
-      /^Base directory for this skill:/,
-      /^## 역할/,
-      /^This skill/,
-      /^Launching skill:/,
-      /^ARGUMENTS:/,
+    // Drop pure noise — no value even as "..."
+    const dropPatterns = [
       /^Caveat:/,
       /^\/clear$/,
       /^clear$/,
     ]
-    if (noisePatterns.some(p => p.test(text))) return []
+    if (dropPatterns.some(p => p.test(text))) return []
 
-    // If text is a skill body (very long system-injected content), truncate to first line
-    // Skill bodies are injected as user messages and start with known patterns
-    const isSkillBody = text.length > 500 && (
-      text.includes('## ') && text.includes('###') && text.includes('```')
-    )
-    if (isSkillBody) return [] // skip skill body entirely
+    // Detect system-injected content → collapse to "..."
+    // Real user input: short, conversational, no markdown structure
+    const isInjected =
+      // Skill bodies / system prompts
+      text.startsWith('Base directory for this skill:') ||
+      text.startsWith('Launching skill:') ||
+      text.startsWith('ARGUMENTS:') ||
+      text.startsWith('## ') ||
+      text.startsWith('This skill') ||
+      // Long structured content (skills, agent results, hook output)
+      (text.length > 300 && /^#{1,4} /m.test(text)) ||
+      // Agent subagent results
+      (text.length > 500)
 
-    events.push({ type: 'user', ts, text })
+    if (isInjected) {
+      // Extract first meaningful line as hint, collapse rest
+      const firstLine = text.split('\n').find(l => l.trim().length > 3)?.trim() ?? ''
+      const hint = firstLine.length > 60 ? firstLine.slice(0, 60) + '…' : firstLine
+      events.push({ type: 'user', ts, text: hint ? `… ${hint}` : '…' })
+    } else {
+      events.push({ type: 'user', ts, text })
+    }
   }
 
   if (type === 'assistant') {
