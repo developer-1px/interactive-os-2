@@ -180,4 +180,32 @@ describe('CMS Tab Container', () => {
       expect(container.querySelector('[contenteditable]')).not.toBeNull()
     })
   })
+
+  describe('sidebar tab integration', () => {
+    it('sidebar lists tab-internal sections as focusable items', () => {
+      const { container } = render(<CmsLayout />)
+      const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
+      const items = sidebar.querySelectorAll('[role="option"]')
+      const ids = Array.from(items).map(el => el.getAttribute('data-sidebar-id'))
+      expect(ids).toContain('tab-1-section')
+      expect(ids).toContain('tab-2-section')
+      expect(ids).toContain('tab-3-section')
+      expect(ids).not.toContain('tab-group-1')
+    })
+
+    it('sidebar ↑↓ navigates through tab-internal sections', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<CmsLayout />)
+      const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
+
+      // Focus the first option (roving tabindex — one option has tabIndex=0)
+      const firstOption = sidebar.querySelector('[role="option"][tabindex="0"]') as HTMLElement
+      firstOption.focus()
+
+      // Navigate down to reach tab sections (hero → stats → features → tab-1-section)
+      await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}')
+      const focused = sidebar.querySelector('[data-focused]')
+      expect(focused?.getAttribute('data-sidebar-id')).toBe('tab-1-section')
+    })
+  })
 })
