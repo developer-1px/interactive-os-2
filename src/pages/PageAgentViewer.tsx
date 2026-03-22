@@ -179,7 +179,6 @@ export default function PageAgentViewer() {
   // --- Load timeline for active session ---
   useEffect(() => {
     if (!activeSession) return
-    setLoading(true)
     const url = `/api/agent-ops/timeline?session=${encodeURIComponent(activeSession)}`
     fetch(url)
       .then(res => res.json())
@@ -188,7 +187,6 @@ export default function PageAgentViewer() {
         const modified = deriveModified(events)
         setModifiedFiles(modified)
         setSelectedFile(modified.length > 0 ? modified[0].file : null)
-        setFileContent('')
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -281,7 +279,7 @@ export default function PageAgentViewer() {
   }, [timeline.length])
 
   // --- Derived stores ---
-  // --- Session store ---
+  // --- Session store (no FOCUS_ID — let Aria manage focus internally to avoid render loop) ---
   const sessionStore = useMemo(() => {
     const entities: Record<string, Entity> = {}
     const childIds: string[] = []
@@ -289,11 +287,8 @@ export default function PageAgentViewer() {
       entities[s.id] = { id: s.id, data: { label: s.label, mtime: s.mtime, isLive: s.id === sessions[0]?.id } }
       childIds.push(s.id)
     }
-    if (activeSession && entities[activeSession]) {
-      entities[FOCUS_ID] = { id: FOCUS_ID, focusedId: activeSession }
-    }
     return createStore({ entities, relationships: { [ROOT_ID]: childIds } })
-  }, [sessions, activeSession])
+  }, [sessions])
 
   const handleSessionChange = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities[FOCUS_ID]?.focusedId as string) ?? ''
@@ -302,9 +297,10 @@ export default function PageAgentViewer() {
     }
   }, [])
 
+  // modifiedStore: no FOCUS_ID sync to avoid onChange→setState→rerender loop
   const modifiedStore = useMemo(
-    () => buildModifiedStore(modifiedFiles, selectedFile),
-    [modifiedFiles, selectedFile],
+    () => buildModifiedStore(modifiedFiles, null),
+    [modifiedFiles],
   )
 
   // --- Handlers ---
