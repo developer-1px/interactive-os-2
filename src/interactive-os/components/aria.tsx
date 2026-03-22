@@ -25,7 +25,8 @@ interface AriaProps {
 
 interface AriaItemProps {
   ids?: string[]
-  render: (node: Record<string, unknown>, state: NodeState) => ReactNode
+  asChild?: boolean
+  render: (node: Record<string, unknown>, state: NodeState, props?: React.HTMLAttributes<HTMLElement>) => ReactNode
 }
 
 const horizontalStyle = { display: 'flex' } as const
@@ -71,7 +72,7 @@ function FocusScrollDiv({ focused, children, ...props }: { focused: boolean; chi
   return <div ref={ref} {...props}>{children}</div>
 }
 
-function AriaItem({ ids, render }: AriaItemProps) {
+function AriaItem({ ids, asChild, render }: AriaItemProps) {
   return (
     <AriaInternalContext.Consumer>
       {(aria) => {
@@ -87,6 +88,15 @@ function AriaItem({ ids, render }: AriaItemProps) {
           const state = aria.getNodeState(childId)
           const props = aria.getNodeProps(childId)
           const needsGridcell = !hasColCount && (props as Record<string, unknown>).role === 'row'
+
+          if (asChild) {
+            return (
+              <AriaItemContext.Provider key={childId} value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
+                {render(entity, state, props as React.HTMLAttributes<HTMLElement>)}
+              </AriaItemContext.Provider>
+            )
+          }
+
           return (
             <FocusScrollDiv key={childId} focused={state.focused} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
               <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
