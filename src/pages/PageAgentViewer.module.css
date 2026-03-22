@@ -9,6 +9,7 @@
   display: flex;
   flex: 1;
   min-height: 0;
+  grid-column: 2 / -1;
 }
 
 /* --- Left panel: modified files (260px) --- */
