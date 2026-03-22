@@ -318,12 +318,12 @@ export default function PageAgentViewer() {
 
   return (
     <div className={styles.av}>
-      {/* Left panel — Activity Timeline */}
-      <div className={styles.avTimeline}>
-        <div className={styles.avTimelineHeader}>
-          <span className={styles.avTimelineTitle}>Timeline</span>
-        </div>
-        {sessions.length > 1 && (
+      {/* Sessions panel */}
+      {sessions.length > 1 && (
+        <div className={styles.avSessions}>
+          <div className={styles.avSessionsHeader}>
+            <span className={styles.avSessionsTitle}>Sessions</span>
+          </div>
           <div className={styles.avSessionList}>
             {sessions.map((s, i) => (
               <button
@@ -337,7 +337,14 @@ export default function PageAgentViewer() {
               </button>
             ))}
           </div>
-        )}
+        </div>
+      )}
+
+      {/* Timeline panel */}
+      <div className={styles.avTimeline}>
+        <div className={styles.avTimelineHeader}>
+          <span className={styles.avTimelineTitle}>Timeline</span>
+        </div>
         <div className={styles.avTimelineBody} ref={timelineBodyRef}>
           {timeline.length === 0 ? (
             <div className={styles.avTimelineEmpty}>Waiting for agent activity...</div>
