@@ -1,26 +1,16 @@
 import styles from './TimelineColumn.module.css'
-import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo, memo, type ReactNode } from 'react'
 import {
-  Circle, Bot, FileText, Terminal,
+  Circle, FileText, Terminal,
   Pencil, Search, FilePlus,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import { useVirtualScroll } from './useVirtualScroll'
-import Markdown from 'react-markdown'
+import { groupEvents, type TimelineEvent, type DisplayItem, type ToolGroup } from './groupEvents'
+import Markdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
 
-// --- Types ---
-
-export interface TimelineEvent {
-  type: 'user' | 'assistant' | 'tool_use' | 'tool_result'
-  ts: string
-  tool?: string
-  filePath?: string
-  text?: string
-  editOld?: string
-  editNew?: string
-}
 
 interface TimelineColumnProps {
   sessionId: string
@@ -55,7 +45,6 @@ function isNearBottom(el: HTMLElement, threshold = 100): boolean {
 // --- Event icon ---
 
 function EventIcon({ evt }: { evt: TimelineEvent }) {
-  if (evt.type === 'assistant') return <Bot size={12} />
   if (evt.tool === 'Read') return <FileText size={12} />
   if (evt.tool === 'Edit') return <Pencil size={12} />
   if (evt.tool === 'Write') return <FilePlus size={12} />
@@ -64,33 +53,120 @@ function EventIcon({ evt }: { evt: TimelineEvent }) {
   return <Circle size={12} />
 }
 
+// --- File path detection in markdown text ---
+
+// Matches relative file paths with extensions (e.g. docs/foo/bar.md, src/App.tsx)
+// Excludes URLs (http://, https://) and bare filenames without directory
+const FILE_PATH_RE = /(?<![a-zA-Z0-9:/.])([a-zA-Z._][a-zA-Z0-9._-]*\/[a-zA-Z0-9._\-/]+\.[a-zA-Z0-9]+)/g
+
+function splitByFilePaths(text: string, onFileClick: (absPath: string) => void): ReactNode[] {
+  const parts: ReactNode[] = []
+  let lastIndex = 0
+  for (const match of text.matchAll(FILE_PATH_RE)) {
+    const path = match[1]
+    const start = match.index!
+    if (start > lastIndex) parts.push(text.slice(lastIndex, start))
+    const absPath = `${DEFAULT_ROOT}/${path}`
+    parts.push(
+      <span
+        key={`fp-${start}`}
+        className={styles.tcFilePath}
+        onClick={(e) => { e.stopPropagation(); onFileClick(absPath) }}
+      >
+        {path}
+      </span>,
+    )
+    lastIndex = start + path.length
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex))
+  return parts
+}
+
+function createMarkdownComponents(onFileClick: (absPath: string) => void): Components {
+  return {
+    // Override text rendering inside paragraphs, list items, etc.
+    p({ children }) {
+      return <p>{processChildren(children, onFileClick)}</p>
+    },
+    li({ children }) {
+      return <li>{processChildren(children, onFileClick)}</li>
+    },
+    td({ children }) {
+      return <td>{processChildren(children, onFileClick)}</td>
+    },
+    // Inline code: detect file paths
+    code({ children, className }) {
+      // Skip code blocks (they have a className like language-*)
+      if (className) return <code className={className}>{children}</code>
+      const text = typeof children === 'string' ? children : ''
+      if (text && FILE_PATH_RE.test(text)) {
+        FILE_PATH_RE.lastIndex = 0
+        return <code>{splitByFilePaths(text, onFileClick)}</code>
+      }
+      return <code>{children}</code>
+    },
+  }
+}
+
+function processChildren(children: ReactNode, onFileClick: (absPath: string) => void): ReactNode {
+  if (typeof children === 'string') {
+    const parts = splitByFilePaths(children, onFileClick)
+    return parts.length === 1 && typeof parts[0] === 'string' ? children : parts
+  }
+  if (Array.isArray(children)) {
+    return children.map((child, i) => {
+      if (typeof child === 'string') {
+        const parts = splitByFilePaths(child, onFileClick)
+        return parts.length === 1 && typeof parts[0] === 'string'
+          ? child
+          : <span key={i}>{parts}</span>
+      }
+      return child
+    })
+  }
+  return children
+}
+
 // --- Timeline item (memoized) ---
 
-const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: TimelineEvent; onClick: (evt: TimelineEvent) => void }) {
-  const typeClass = evt.type === 'tool_use'
-    ? styles[`tc${evt.tool ?? ''}`] ?? ''
-    : evt.type === 'user'
-      ? styles.tcUser
-      : evt.type === 'assistant'
-        ? styles.tcAssistant
-        : ''
-  const showIcon = evt.type === 'tool_use' || evt.type === 'assistant'
-  const cls = `${styles.tcItem} ${typeClass}${evt.filePath ? ` ${styles.tcFile}` : ''}`
-  return (
-    <div
-      className={cls}
-      onClick={() => onClick(evt)}
-    >
-      {showIcon && (
-        <span className={styles.tcIcon}>
-          <EventIcon evt={evt} />
+const TimelineItem = memo(function TimelineItem({ evt, onFileClick }: { evt: TimelineEvent; onFileClick: (absPath: string) => void }) {
+  if (evt.type === 'assistant') {
+    return (
+      <div className={`${styles.tcItem} ${styles.tcAssistant}`}>
+        <span className={styles.tcText}>
+          {evt.text
+            ? <Markdown remarkPlugins={[remarkGfm, remarkBreaks]} components={createMarkdownComponents(onFileClick)}>{evt.text}</Markdown>
+            : eventLabel(evt)}
         </span>
-      )}
-      <span className={styles.tcText}>
-        {evt.type === 'assistant' && evt.text
-          ? <Markdown remarkPlugins={[remarkGfm, remarkBreaks]}>{evt.text}</Markdown>
-          : eventLabel(evt)}
-      </span>
+      </div>
+    )
+  }
+
+  return (
+    <div className={`${styles.tcItem} ${styles.tcUser}`}>
+      <span className={styles.tcText}>{eventLabel(evt)}</span>
+    </div>
+  )
+})
+
+const ToolGroupCard = memo(function ToolGroupCard({ group, onClick }: { group: ToolGroup; onClick: (evt: TimelineEvent) => void }) {
+  return (
+    <div className={styles.tcToolGroup}>
+      {group.events.map((evt, i) => {
+        const toolClass = styles[`tc${evt.tool ?? ''}`] ?? ''
+        return (
+          <div
+            key={`${evt.ts}-${i}`}
+            className={`${styles.tcToolRow} ${toolClass}${evt.filePath ? ` ${styles.tcFile}` : ''}${i < group.events.length - 1 ? ` ${styles.tcToolDivider}` : ''}`}
+            onClick={() => onClick(evt)}
+          >
+            <span className={styles.tcIcon}>
+              <EventIcon evt={evt} />
+            </span>
+            <span className={styles.tcText}>{eventLabel(evt)}</span>
+          </div>
+        )
+      })}
     </div>
   )
 })
@@ -124,10 +200,13 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }
   }, [])
 
+  // --- Group events for display ---
+  const displayItems = useMemo(() => groupEvents(timeline), [timeline])
+
   // --- Virtual scroll ---
   const spacerHeight = 2000
   const { containerRef, totalHeight, visibleRange, offsetTop, measureItem, scrollToIndex } = useVirtualScroll({
-    itemCount: timeline.length,
+    itemCount: displayItems.length,
     estimatedItemHeight: 40,
     overscan: 10,
   })
@@ -229,50 +308,40 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   const initialLoadRef = useRef(true)
   useEffect(() => {
     const el = containerRef.current
-    if (!el || timeline.length === 0) return
+    if (!el || displayItems.length === 0) return
 
     if (initialLoadRef.current) {
       initialLoadRef.current = false
-      prevLengthRef.current = timeline.length
-      // 초기 80개만 로드 → 바로 맨 아래로
+      prevLengthRef.current = displayItems.length
       requestAnimationFrame(() => {
         el.scrollTo(0, el.scrollHeight)
-        // 한 프레임 더 — virtual scroll 측정 후 보정
         requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
       })
       return
     }
 
     const prevLen = prevLengthRef.current
-    const newLen = timeline.length
+    const newLen = displayItems.length
 
-    // prepend (load older) — 스크롤 위치 보존
     if (newLen > prevLen && prevLen > 0) {
-      const addedAtFront = newLen - prevLen
-      // 맨 앞에 추가된 경우인지 확인 (SSE append와 구분)
-      const isAppend = timeline[newLen - 1] !== timeline[prevLen - 1]
-
-      if (!isAppend && addedAtFront > 0) {
-        // prepend — 스크롤 위치 보정
+      const isAppend = displayItems[newLen - 1] !== displayItems[prevLen - 1]
+      if (!isAppend) {
         prevLengthRef.current = newLen
         return
       }
     }
 
     prevLengthRef.current = newLen
-    const newEvents = timeline.slice(prevLen)
 
-    if (newEvents.length === 0) return
-
-    const hasUserEvent = newEvents.some(e => e.type === 'user')
+    const hasUserEvent = displayItems.slice(prevLen).some(d => d.type === 'user')
 
     if (hasUserEvent) {
-      const lastUser = findLastUserIndex(timeline)
+      const lastUser = findLastUserIndex(displayItems)
       if (lastUser >= 0) scrollToIndex(lastUser, 'start')
     } else if (isNearBottom(el)) {
       el.scrollTo(0, el.scrollHeight)
     }
-  }, [timeline, scrollToIndex, containerRef])
+  }, [displayItems, scrollToIndex, containerRef])
 
   // --- File click handler ---
   const handleTimelineClick = useCallback((evt: TimelineEvent) => {
@@ -283,7 +352,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   }, [onFileClick])
 
   // Find index of last user event for spacer
-  const lastUserIndex = useMemo(() => findLastUserIndex(timeline), [timeline])
+  const lastUserIndex = useMemo(() => findLastUserIndex(displayItems), [displayItems])
 
   // Ref callback to measure each rendered item
   const makeMeasureRef = useCallback(
@@ -308,16 +377,23 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
       <div className={styles.tcBody} ref={containerRef}>
         {fetchError ? (
           <div className={styles.tcEmpty}>Failed to load: {fetchError}</div>
-        ) : timeline.length === 0 ? (
+        ) : displayItems.length === 0 ? (
           <div className={styles.tcEmpty}>Waiting for agent activity...</div>
         ) : (
           <div style={{ height: contentHeight, position: 'relative' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, transform: `translateY(${offsetTop}px)` }}>
-              {timeline.slice(visibleRange.start, visibleRange.end).map((evt, i) => {
+              {displayItems.slice(visibleRange.start, visibleRange.end).map((item, i) => {
                 const actualIndex = visibleRange.start + i
+                if (item.type === 'tool_group') {
+                  return (
+                    <div key={`grp-${item.events[0].ts}-${actualIndex}`} ref={makeMeasureRef(actualIndex)}>
+                      <ToolGroupCard group={item} onClick={handleTimelineClick} />
+                    </div>
+                  )
+                }
                 return (
-                  <div key={`${evt.ts}-${actualIndex}`} ref={makeMeasureRef(actualIndex)}>
-                    <TimelineItem evt={evt} onClick={handleTimelineClick} />
+                  <div key={`${item.ts}-${actualIndex}`} ref={makeMeasureRef(actualIndex)} className={item.type === 'user' ? styles.tcUserWrap : undefined}>
+                    <TimelineItem evt={item} onFileClick={onFileClick} />
                   </div>
                 )
               })}
@@ -329,9 +405,9 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   )
 }
 
-function findLastUserIndex(timeline: TimelineEvent[]): number {
-  for (let i = timeline.length - 1; i >= 0; i--) {
-    if (timeline[i].type === 'user') return i
+function findLastUserIndex(items: DisplayItem[]): number {
+  for (let i = items.length - 1; i >= 0; i--) {
+    if (items[i].type === 'user') return i
   }
   return -1
 }
