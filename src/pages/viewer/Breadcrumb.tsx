@@ -8,7 +8,7 @@ export function Breadcrumb({ path, root }: { path: string; root: string }) {
     <div className={styles.vwBreadcrumb}>
       {segments.map((seg, i) => (
         <span key={i}>
-          {i > 0 && <ChevronRight size={10} strokeWidth={2} className={styles.vwBreadcrumbSep} />}
+          {i > 0 && <ChevronRight size={10} className={styles.vwBreadcrumbSep} />}
           <span className={i === segments.length - 1 ? styles.vwBreadcrumbCurrent : styles.vwBreadcrumbSegment}>{seg}</span>
         </span>
       ))}

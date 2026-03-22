@@ -154,7 +154,7 @@ export default function PageAgentViewer() {
   if (loading) {
     return (
       <div className={styles.avLoading}>
-        <Circle size={14} strokeWidth={2} />
+        <Circle size={12} />
         <span>Connecting to agent...</span>
       </div>
     )
@@ -196,7 +196,7 @@ export default function PageAgentViewer() {
       <div className={styles.avColumns}>
         {displayColumns.length === 0 ? (
           <div className={styles.avEmpty}>
-            <Circle size={24} strokeWidth={1} className={styles.avEmptyIcon} />
+            <Circle size={24} className={styles.avEmptyIcon} />
             <span>세션을 선택하세요</span>
           </div>
         ) : (

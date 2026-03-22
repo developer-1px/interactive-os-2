@@ -85,7 +85,7 @@ export default function CmsHamburgerDrawer({ open, onClose, hamburgerRef }: CmsH
               className={`cms-drawer__item${isActive(item) ? ' cms-drawer__item--active' : ''}`}
               onClick={() => handleItemClick(item.path)}
             >
-              <Icon size={15} />
+              <Icon size={16} />
               {item.label}
             </button>
           )

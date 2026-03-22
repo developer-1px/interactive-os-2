@@ -11,7 +11,6 @@ import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData, Entity, Plugin } from '../interactive-os/core/types'
 import { EXPANDED_ID } from '../interactive-os/plugins/core'
-import { createRecorder } from '../interactive-os/devtools/createRecorder'
 import { CodeBlock } from './viewer/CodeBlock'
 import { ExportDiagram } from './viewer/ExportDiagram'
 import { MarkdownViewer } from './viewer/MarkdownViewer'
@@ -124,10 +123,8 @@ export default function PageViewer() {
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
   const [fileContent, setFileContent] = useState('')
   const [loading, setLoading] = useState(true)
-  const [recording, setRecording] = useState(false)
   const [treeCollapsed, setTreeCollapsed] = useState(false)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
-  const recorder = useMemo(() => createRecorder(), [])
   const loadedFileRef = useRef<string | null>(null)
   const contentBodyRef = useRef<HTMLDivElement>(null)
 
@@ -167,21 +164,6 @@ export default function PageViewer() {
     }
   }, [selectFile])
 
-  const toggleRecording = useCallback(() => {
-    if (recording) {
-      const data = recorder.stop()
-      setRecording(false)
-      const json = JSON.stringify(data, null, 2)
-      navigator.clipboard.writeText(json).then(() => {
-        console.log('Recording copied to clipboard')
-        console.log(json)
-      })
-    } else {
-      recorder.start()
-      setRecording(true)
-    }
-  }, [recording, recorder])
-
   const setQuickOpenVisibleRef = useRef(setQuickOpenVisible)
   useEffect(() => { setQuickOpenVisibleRef.current = setQuickOpenVisible }, [setQuickOpenVisible])
 
@@ -193,7 +175,7 @@ export default function PageViewer() {
   if (loading || !initialStore) {
     return (
       <div className={styles.vwLoading}>
-        <Circle size={14} strokeWidth={2} className={styles.vwLoadingSpinner} />
+        <Circle size={12} className={styles.vwLoadingSpinner} />
         <span>Loading project...</span>
       </div>
     )
@@ -222,7 +204,7 @@ export default function PageViewer() {
               onClick={() => setTreeCollapsed(true)}
               title="Hide explorer"
             >
-              <PanelLeft size={12} strokeWidth={1.5} />
+              <PanelLeft size={12} />
             </button>
           </div>
           <div className={styles.vwTreeBody}>
@@ -240,8 +222,8 @@ export default function PageViewer() {
                     {data.type === 'directory' ? (
                       <span className={styles.vwTreeChevron}>
                         {state.expanded
-                          ? <ChevronDown size={11} strokeWidth={2} />
-                          : <ChevronRight size={11} strokeWidth={2} />}
+                          ? <ChevronDown size={12} />
+                          : <ChevronRight size={12} />}
                       </span>
                     ) : (
                       <span className={styles.vwTreeChevron} />
@@ -268,7 +250,7 @@ export default function PageViewer() {
                 onClick={() => setTreeCollapsed(false)}
                 title="Show explorer"
               >
-                <PanelLeft size={12} strokeWidth={1.5} />
+                <PanelLeft size={12} />
               </button>
             )}
             {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
@@ -287,14 +269,7 @@ export default function PageViewer() {
               onClick={() => setQuickOpenVisible(true)}
               title="Quick Open (Cmd+P)"
             >
-              <Search size={12} strokeWidth={1.5} />
-            </button>
-            <button
-              className={`${styles.vwRec}${recording ? ` ${styles.vwRecActive}` : ''}`}
-              onClick={toggleRecording}
-            >
-              <span className={styles.vwRecDot} />
-              {recording ? 'STOP' : 'REC'}
+              <Search size={12} />
             </button>
           </div>
         </div>
@@ -316,7 +291,7 @@ export default function PageViewer() {
           </div>
         ) : (
           <div className={styles.vwEmpty}>
-            <FileText size={24} strokeWidth={1} className={styles.vwEmptyIcon} />
+            <FileText size={24} className={styles.vwEmptyIcon} />
             <span>Select a file to view</span>
           </div>
         )}

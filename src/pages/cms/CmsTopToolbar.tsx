@@ -34,7 +34,7 @@ export default function CmsTopToolbar({ onHamburgerClick, locale, onLocaleChange
         title="Translation sheet"
         type="button"
       >
-        <Sheet size={14} />
+        <Sheet size={16} />
       </button>
       <div className="cms-top-toolbar__spacer" />
       {([['mobile', Smartphone], ['tablet', Tablet], ['desktop', Monitor]] as const).map(([v, Icon]) => (
@@ -45,11 +45,11 @@ export default function CmsTopToolbar({ onHamburgerClick, locale, onLocaleChange
           onClick={() => onViewportChange(v as ViewportSize)}
           title={v}
         >
-          <Icon size={14} />
+          <Icon size={16} />
         </button>
       ))}
       <button className="cms-top-toolbar__btn" onClick={onPresent} title="Present" type="button">
-        <Play size={14} />
+        <Play size={16} />
       </button>
     </header>
   )

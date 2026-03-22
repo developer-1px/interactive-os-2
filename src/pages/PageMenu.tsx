@@ -55,7 +55,7 @@ export default function PageMenu() {
                 <span className="menu-item__label">{(item.data as Record<string, unknown>)?.label as string}</span>
                 {hasChildren && (
                   <span className="menu-item__arrow">
-                    <ChevronRight size={11} strokeWidth={2} />
+                    <ChevronRight size={12} />
                   </span>
                 )}
               </div>

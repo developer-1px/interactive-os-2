@@ -52,10 +52,10 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       return (
         <div className={s.cmsHeroActions}>
           <button type="button" className={s.cmsHeroCta}>
-            <LocalizedText value={data.primary as string | LocaleMap} locale={locale} /> <ArrowRight size={14} />
+            <LocalizedText value={data.primary as string | LocaleMap} locale={locale} /> <ArrowRight size={16} />
           </button>
           <button type="button" className={s.cmsHeroCtaSecondary}>
-            <LocalizedText value={data.secondary as string | LocaleMap} locale={locale} /> <ChevronRight size={14} />
+            <LocalizedText value={data.secondary as string | LocaleMap} locale={locale} /> <ChevronRight size={16} />
           </button>
         </div>
       )

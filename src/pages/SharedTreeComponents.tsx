@@ -5,8 +5,7 @@ import {
 } from 'lucide-react'
 import { getFileExt } from './shared-tree-data'
 
-const iconSize = 14
-const iconStroke = 1.5
+const iconSize = 12
 
 function FileIcon({ name }: { name: string }) {
   const ext = getFileExt(name)
@@ -15,13 +14,13 @@ function FileIcon({ name }: { name: string }) {
     case '.ts':
     case '.js':
     case '.jsx':
-      return <FileCode size={iconSize} strokeWidth={iconStroke} />
+      return <FileCode size={iconSize}  />
     case '.json':
-      return <FileJson size={iconSize} strokeWidth={iconStroke} />
+      return <FileJson size={iconSize}  />
     case '.md':
-      return <FileType size={iconSize} strokeWidth={iconStroke} />
+      return <FileType size={iconSize}  />
     default:
-      return <FileText size={iconSize} strokeWidth={iconStroke} />
+      return <FileText size={iconSize}  />
   }
 }
 
@@ -45,15 +44,15 @@ export function RenderTreeItem(props: { node: Record<string, unknown>; state: No
       <span className="tree-node__chevron">
         {isFolder
           ? (state.expanded
-            ? <ChevronDown size={12} strokeWidth={2} />
-            : <ChevronRight size={12} strokeWidth={2} />)
+            ? <ChevronDown size={12} />
+            : <ChevronRight size={12} />)
           : ''}
       </span>
       <span className="tree-node__icon">
         {isFolder
           ? (state.expanded
-            ? <FolderOpen size={iconSize} strokeWidth={iconStroke} />
-            : <Folder size={iconSize} strokeWidth={iconStroke} />)
+            ? <FolderOpen size={iconSize}  />
+            : <Folder size={iconSize}  />)
           : <FileIcon name={name} />
         }
       </span>

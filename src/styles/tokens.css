@@ -111,6 +111,24 @@
   --space-xl:  24px;
   --space-2xl: 32px;
 
+  /* ── Icon ── */
+  --icon-xs:  10px;
+  --icon-sm:  12px;
+  --icon-md:  16px;
+  --icon-lg:  24px;
+  --icon-stroke: 1.5;
+
+  /* ── File type colors ── */
+  --file-folder: #B8923A;
+  --file-ts:     #2B6DB5;
+  --file-js:     #C4B53E;
+  --file-json:   #8A7035;
+  --file-md:     #4578A3;
+  --file-css:    #5C3091;
+  --file-sh:     #3F8A1F;
+  --file-img:    #C44A6E;
+  --file-config: #71717A;
+
   /* ── Transition ── */
   --transition-fast: 0.08s;
 
@@ -155,6 +173,17 @@
   /* ── Interactive ── */
   --bg-hover:  var(--zinc-100);
   --bg-active: var(--zinc-200);
+
+  /* ── File type colors (lower saturation for light bg) ── */
+  --file-folder: #9A7A30;
+  --file-ts:     #245C99;
+  --file-js:     #9E9133;
+  --file-json:   #73602E;
+  --file-md:     #3A6488;
+  --file-css:    #4D2878;
+  --file-sh:     #35751A;
+  --file-img:    #A33F5D;
+  --file-config: #52525B;
 
   --dialog-backdrop: rgba(0, 0, 0, 0.2);
 }
