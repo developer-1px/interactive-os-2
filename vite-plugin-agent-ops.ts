@@ -306,7 +306,15 @@ export function agentOpsPlugin(): Plugin {
           const heartbeat = setInterval(() => res.write(':heartbeat\n\n'), 30000)
 
           req.on('close', () => {
-            timelineClients.get(targetPath!)?.delete(res)
+            const clients = timelineClients.get(targetPath!)
+            if (clients) {
+              clients.delete(res)
+              if (clients.size === 0) {
+                timelineClients.delete(targetPath!)
+                transcriptSizes.delete(targetPath!)
+                server.watcher.unwatch(targetPath!)
+              }
+            }
             clearInterval(heartbeat)
           })
           return
