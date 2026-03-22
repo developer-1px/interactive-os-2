@@ -105,6 +105,7 @@
 
   /* ── Spacing ── */
   --space-xs:  4px;
+  --space-1:   6px;
   --space-sm:  8px;
   --space-md:  12px;
   --space-lg:  16px;
@@ -115,8 +116,7 @@
   --icon-xs:  10px;
   --icon-sm:  12px;
   --icon-md:  16px;
-  --icon-lg:  20px;
-  --icon-xl:  24px;
+  --icon-lg:  24px;
   --icon-stroke: 1.5;
 
   /* ── File type colors ── */

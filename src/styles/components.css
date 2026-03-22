@@ -24,7 +24,7 @@
 [data-aria-container] [role="radio"],
 [data-aria-container] [role="switch"],
 [data-aria-container] [role="row"] {
-  padding: 6px 12px;
+  padding: var(--space-1) var(--space-md);
   margin: 1px 0;
   cursor: default;
   user-select: none;
@@ -40,13 +40,13 @@
 /* Tree/treegrid: slightly denser + row layout */
 [data-aria-container] [role="treeitem"],
 [data-aria-container] [role="row"] {
-  padding: 4px 12px;
+  padding: var(--space-xs) var(--space-md);
   display: flex;
 }
 
 /* Accordion heading */
 [data-aria-container] [role="heading"] {
-  padding: 8px 12px;
+  padding: var(--space-sm) var(--space-md);
   cursor: default;
   user-select: none;
   font-size: 13px;
@@ -59,7 +59,7 @@
 
 /* Disclosure button */
 [data-aria-container] [role="group"] > [role="button"] {
-  padding: 6px 12px;
+  padding: var(--space-1) var(--space-md);
   margin: 1px 0;
   cursor: default;
   user-select: none;
@@ -70,6 +70,13 @@
   transition: background 0.08s;
   outline: 1.5px solid transparent;
   outline-offset: -1.5px;
+}
+
+/* Icon-only button: equal padding, square aspect */
+[data-aria-container] [role="option"]:has(> svg:only-child),
+[data-aria-container] [role="button"]:has(> svg:only-child) {
+  padding: var(--space-1);
+  aspect-ratio: 1;
 }
 
 /* ── Hover (suppressed when focus is active via :focus-within) ── */
