@@ -1,13 +1,13 @@
 ---
-last_commit: 99f028f4521828e30d92dfbe31aca6c1e9ab60ba
-last_updated: 2026-03-22
+last_commit: 30cc744e8c18061dfef4a20addf7ce416274320b
+last_updated: 2026-03-23
 ---
 
 ## Verbs
 | fragment | count | identifiers |
 |----------|-------|-------------|
 | create | 15 | createStore, createCommandEngine, createBehaviorContext, createRecorder, createBatchCommand, createToaster, createReproRecorder, createFruitStore, createGroupedStore |
-| get | 18 | getEntity, getChildren, getParent, getEntityData, getAriaActions, getChildrenContainerClassName, getCutSourceIds, getEditableFields, getFileExt, getFocusedId, GetLabelFn, getNodeClassName, getNodeTag, getRootAncestor, getSectionClassName, getSpatialParentId, getTabItemAncestor, getVisibleNodes |
+| get | 19 | getEntity, getChildren, getParent, getEntityData, getAriaActions, getChildrenContainerClassName, getCutSourceIds, getEditableFields, getFileExt, getFocusedId, GetLabelFn, getNodeClassName, getNodeTag, getRootAncestor, getRowMetadata, getSectionClassName, getSpatialParentId, getTabItemAncestor, getVisibleNodes |
 | add | 1 | addEntity |
 | remove | 1 | removeEntity |
 | update | 2 | updateEntity, updateEntityData |
@@ -82,14 +82,14 @@ last_updated: 2026-03-22
 | selection | 4 | SELECTION_ID, SELECTION_ANCHOR_ID, selectionCommands, SelectionMode |
 | anchor | 1 | SELECTION_ANCHOR_ID, setAnchor |
 | state | 1 | NodeState |
-| grid | 26 | GridNav, GRID_COL_ID, gridColCommands, grid (behavior), navGrid, gridColumns, gridInitialData, PageGrid, TreeGrid |
+| grid | 28 | GridNav, GRID_COL_ID, gridColCommands, grid (behavior), navGrid, gridColumns, gridInitialData, PageGrid, TreeGrid, translatableEntriesToGrid, editingKeyMap |
 | value | 7 | VALUE_ID, ValueRange, valueCommands, ValueNav, value (axis), valueCurrent |
 | slider | 8 | slider (behavior factory), Slider (UI), apgSlider, makeSliderData |
 | spinbutton | 8 | spinbutton (behavior factory), Spinbutton (UI), apgSpinbutton, makeSpinbuttonData |
 | key | 7 | KeyCombo, findMatchingKey, parseKeyCombo, dispatchKeyAction, extractKeyMap, matchKeyEvent, isPrintableKey |
 | recorder | 6 | createRecorder, createReproRecorder, ReproRecorderOverlay |
 | snapshot | 1 | ReplaySnapshot |
-| adapter | 1 | TransformAdapter, fileTreeAdapter |
+| adapter | 3 | TransformAdapter, fileTreeAdapter, cmsI18nAdapter |
 | data | 42 | NormalizedData, getEntityData, updateEntityData, ApgPatternData, ToastData, FileNodeData, ... (shared data files) |
 | clipboard | 7 | clipboardCommands, resetClipboard, ClipboardOptions, CanAcceptFn, CanAcceptResult, CanDeleteFn |
 | rename | 6 | renameCommands, startRename, confirmRename, cancelRename, RENAME_ID |

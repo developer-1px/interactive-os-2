@@ -2,6 +2,7 @@
  * Integration test: CMS i18n Grid boundary cases
  *
  * V7: empty cell (ja) allows F2 rename entry
+ * V8: Key column (col 0) F2 does not enter rename
  * V10: boundary navigation — first row/first col, ArrowUp + ArrowLeft do nothing
  */
 import { useState, useRef } from 'react'
@@ -114,6 +115,26 @@ describe('CMS i18n Grid boundary cases', () => {
       // contenteditable should appear even for empty cell
       const editable = container.querySelector('[contenteditable]')
       expect(editable).not.toBeNull()
+    })
+  })
+
+  describe('V8: Key column F2 does not enter rename', () => {
+    it('F2 on Key column (col 0) does not produce contenteditable', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<StatefulI18nGrid />)
+
+      const row = container.querySelector('[role="row"]') as HTMLElement
+      act(() => { row.focus() })
+
+      // Navigate to first column (Key)
+      await user.keyboard('{Home}')
+      expect(getFocusedColIndex(container)).toBe(1) // aria-colindex 1 = Key column
+
+      // Press F2 — Key column has no Aria.Editable, so rename should not activate
+      act(() => { fireEvent.keyDown(row, { key: 'F2' }) })
+
+      const editable = container.querySelector('[contenteditable]')
+      expect(editable).toBeNull()
     })
   })
 

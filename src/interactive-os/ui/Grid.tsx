@@ -49,9 +49,10 @@ export function Grid({
 }: GridProps) {
   const behavior = React.useMemo(() => gridBehavior({ columns: columns.length }), [columns.length])
 
+  const hasKeyMap = enableEditing || !!keyMap
   const mergedKeyMap = React.useMemo(
-    () => ({ ...(enableEditing ? editingKeyMap : {}), ...keyMap }),
-    [enableEditing, keyMap],
+    () => hasKeyMap ? { ...(enableEditing ? editingKeyMap : {}), ...keyMap } : undefined,
+    [enableEditing, keyMap, hasKeyMap],
   )
 
   const renderRow = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
@@ -73,7 +74,7 @@ export function Grid({
       data={data}
       plugins={plugins}
       onChange={onChange}
-      keyMap={Object.keys(mergedKeyMap).length > 0 ? mergedKeyMap : undefined}
+      keyMap={mergedKeyMap}
       aria-label={ariaLabel}
     >
       <Aria.Item render={renderRow} />
