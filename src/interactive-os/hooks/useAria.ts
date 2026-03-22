@@ -358,7 +358,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         },
       }
     }
-    if (behavior.focusStrategy.type !== 'aria-activedescendant') return {}
+    if (behavior.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1 }
     return {
       tabIndex: 0,
       'aria-activedescendant': focusedId || undefined,
