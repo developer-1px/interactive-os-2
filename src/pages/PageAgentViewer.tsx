@@ -322,20 +322,22 @@ export default function PageAgentViewer() {
       <div className={styles.avTimeline}>
         <div className={styles.avTimelineHeader}>
           <span className={styles.avTimelineTitle}>Timeline</span>
-          {sessions.length > 1 && (
-            <select
-              className={styles.avSessionSelect}
-              value={activeSession ?? ''}
-              onChange={e => setActiveSession(e.target.value)}
-            >
-              {sessions.map((s, i) => (
-                <option key={s.id} value={s.id}>
-                  {i === 0 ? '● ' : ''}{s.label}
-                </option>
-              ))}
-            </select>
-          )}
         </div>
+        {sessions.length > 1 && (
+          <div className={styles.avSessionList}>
+            {sessions.map((s, i) => (
+              <button
+                key={s.id}
+                className={`${styles.avSessionItem}${s.id === activeSession ? ` ${styles.avSessionItemActive}` : ''}`}
+                onClick={() => setActiveSession(s.id)}
+                title={s.label}
+              >
+                {i === 0 && <span className={styles.avSessionLive}>●</span>}
+                <span className={styles.avSessionLabel}>{s.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
         <div className={styles.avTimelineBody} ref={timelineBodyRef}>
           {timeline.length === 0 ? (
             <div className={styles.avTimelineEmpty}>Waiting for agent activity...</div>
