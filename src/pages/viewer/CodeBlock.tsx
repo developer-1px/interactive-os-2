@@ -41,7 +41,7 @@ const EXT_TO_LANG: Record<string, string> = {
   sh: 'bash', bash: 'bash', py: 'python', md: 'markdown',
 }
 
-export function CodeBlock({ code, filename }: { code: string; filename: string }) {
+export function CodeBlock({ code, filename, highlightLines }: { code: string; filename: string; highlightLines?: Set<number> }) {
   const [html, setHtml] = useState('')
   const [highlightToken, setHighlightToken] = useState<string | null>(null)
   const currentTheme = useShikiTheme()
@@ -57,6 +57,10 @@ export function CodeBlock({ code, filename }: { code: string; filename: string }
       transformers: [{
         line(node, line) {
           node.properties['data-line'] = line
+          if (highlightLines?.has(line)) {
+            const existing = (node.properties['class'] as string) ?? ''
+            node.properties['class'] = existing ? `${existing} code-line--edited` : 'code-line--edited'
+          }
         },
         span(node) {
           const text = (node.children?.[0] as { type: string; value: string })?.value
@@ -71,7 +75,7 @@ export function CodeBlock({ code, filename }: { code: string; filename: string }
       if (!cancelled) setHtml(result)
     })
     return () => { cancelled = true }
-  }, [code, lang, currentTheme])
+  }, [code, lang, currentTheme, highlightLines])
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement

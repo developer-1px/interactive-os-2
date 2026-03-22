@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
-   Agent Viewer — 3-panel layout
-   Left: modified files, Center: content, Right: read stream
+   Agent Viewer — 3-panel layout (PoC v2)
+   Left: activity timeline, Center: content, Right: modified files
    ═══════════════════════════════════════════ */
 
 /* --- Layout --- */
@@ -12,28 +12,27 @@
   grid-column: 2 / -1;
 }
 
-/* --- Left panel: modified files (260px) --- */
+/* --- Left panel: Activity Timeline (320px) --- */
 
-.avModified {
-  width: 260px;
-  min-width: 200px;
+.avTimeline {
+  width: 320px;
+  min-width: 260px;
   background: var(--surface-1);
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border-dim);
 }
 
-.avModifiedHeader {
+.avTimelineHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 36px;
   padding: 0 12px;
   flex-shrink: 0;
   border-bottom: 1px solid var(--border-dim);
 }
 
-.avModifiedTitle {
+.avTimelineTitle {
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
@@ -42,28 +41,76 @@
   color: var(--text-muted);
 }
 
-.avModifiedBody {
+.avTimelineBody {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 4px 0;
 }
 
-.avModifiedItem {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
+.avTimelineEmpty {
+  padding: 24px 12px;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 12px;
+  text-align: center;
 }
 
-.avModifiedBadge {
+.avTimelineItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 3px 12px;
   font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-left: auto;
-  padding-right: 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  transition: background 0.08s;
 }
+
+.avTimelineItem:hover {
+  background: var(--bg-hover);
+}
+
+.avTimelineItem[style*="cursor"] {
+  color: var(--text-primary);
+}
+
+.avTimelineIcon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  opacity: 0.6;
+}
+
+.avTimelineText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+/* Event type colors */
+.avTluser { color: var(--accent, #4da6ff); }
+.avTluser .avTimelineIcon { opacity: 0.9; color: var(--accent, #4da6ff); }
+
+.avTlassistant { color: var(--text-muted); font-style: italic; }
+.avTlassistant .avTimelineIcon { opacity: 0.5; }
+
+.avTlEdit .avTimelineIcon,
+.avTlWrite .avTimelineIcon { color: #e5a33a; opacity: 0.9; }
+
+.avTlRead .avTimelineIcon { color: var(--text-muted); opacity: 0.5; }
+.avTlRead { color: var(--text-muted); font-size: 10px; }
+
+.avTlBash .avTimelineIcon { color: #4EAA25; opacity: 0.8; }
+.avTlBash { font-family: var(--mono, monospace); font-size: 10px; }
 
 /* --- Center panel: file content --- */
 
@@ -116,27 +163,33 @@
   margin: 0 2px;
 }
 
-/* --- Right panel: read stream (280px) --- */
+.avEditBadge {
+  color: #e5a33a;
+  font-weight: 600;
+}
 
-.avStream {
-  width: 280px;
-  min-width: 220px;
+/* --- Right panel: modified files (240px) --- */
+
+.avModified {
+  width: 240px;
+  min-width: 180px;
   background: var(--surface-1);
   display: flex;
   flex-direction: column;
   border-left: 1px solid var(--border-dim);
 }
 
-.avStreamHeader {
+.avModifiedHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 36px;
   padding: 0 12px;
   flex-shrink: 0;
   border-bottom: 1px solid var(--border-dim);
 }
 
-.avStreamTitle {
+.avModifiedTitle {
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
@@ -145,32 +198,32 @@
   color: var(--text-muted);
 }
 
-.avStreamBody {
+.avModifiedBody {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 4px 0;
 }
 
-.avStreamItem {
+.avModifiedItem {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   white-space: nowrap;
-  font-family: var(--mono, monospace);
-  font-size: 11px;
 }
 
-.avStreamTs {
-  color: var(--text-muted);
-  flex-shrink: 0;
-  font-size: 10px;
-}
-
-.avStreamPath {
-  color: var(--text-secondary);
+.avModifiedPath {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.avModifiedBadge {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: auto;
+  padding-right: 8px;
 }
 
 /* --- Follow toggle button --- */
@@ -227,4 +280,5 @@
   color: var(--text-muted);
   font-family: var(--sans);
   font-size: 13px;
+  grid-column: 2 / -1;
 }
