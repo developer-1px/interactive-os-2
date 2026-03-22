@@ -2,7 +2,7 @@ import styles from './TimelineColumn.module.css'
 import { useState, useEffect, useRef, useCallback, useMemo, memo, type ReactNode } from 'react'
 import {
   Circle, FileText, Terminal,
-  Pencil, Search, FilePlus,
+  Pencil, Search, FilePlus, Send, Loader,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import { useVirtualScroll } from './useVirtualScroll'
@@ -200,6 +200,50 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }
   }, [])
 
+  // --- Agent status: running / idle / done ---
+  const [agentStatus, setAgentStatus] = useState<'running' | 'idle' | 'done'>(isLive ? 'idle' : 'done')
+  const [runStartTs, setRunStartTs] = useState<number | null>(null)
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const markRunning = useCallback(() => {
+    setAgentStatus('running')
+    setRunStartTs(prev => prev ?? Date.now())
+    if (idleTimerRef.current) { clearTimeout(idleTimerRef.current); idleTimerRef.current = null }
+  }, [])
+
+  const scheduleIdle = useCallback(() => {
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
+    idleTimerRef.current = setTimeout(() => {
+      setAgentStatus('idle')
+      setRunStartTs(null)
+    }, 3000)
+  }, [])
+
+  // Derive status from incoming events
+  const updateStatusFromEvent = useCallback((evt: TimelineEvent) => {
+    if (evt.type === 'user') {
+      markRunning()
+    } else if (evt.type === 'tool_use' || evt.type === 'tool_result') {
+      markRunning()
+    } else if (evt.type === 'assistant') {
+      scheduleIdle()
+    }
+  }, [markRunning, scheduleIdle])
+
+  // Set initial status from loaded timeline
+  useEffect(() => {
+    if (!isLive) { setAgentStatus('done'); return }
+    if (timeline.length === 0) return
+    const last = timeline[timeline.length - 1]
+    if (last.type === 'user' || last.type === 'tool_use' || last.type === 'tool_result') {
+      markRunning()
+    } else {
+      setAgentStatus('idle')
+      setRunStartTs(null)
+    }
+    return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current) }
+  }, [isLive]) // eslint-disable-line react-hooks/exhaustive-deps -- initial status only
+
   // --- Group events for display ---
   const displayItems = useMemo(() => groupEvents(timeline), [timeline])
 
@@ -279,6 +323,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
       let evt: TimelineEvent
       try { evt = JSON.parse(event.data) } catch { return }
       pendingEvents.push(evt)
+      updateStatusFromEvent(evt)
       if (!rafId) rafId = requestAnimationFrame(flushPending)
     }
 
@@ -301,7 +346,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
       es.close()
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [isLive, sessionId, trackEditRanges])
+  }, [isLive, sessionId, trackEditRanges, updateStatusFromEvent])
 
   // --- Smart scroll ---
   const prevLengthRef = useRef(0)
@@ -401,6 +446,53 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
           </div>
         )}
       </div>
+      {isLive && agentStatus === 'running' && (
+        <AgentRunningBar startTs={runStartTs} />
+      )}
+      {isLive && agentStatus === 'idle' && (
+        <ChatInput sessionId={sessionId} />
+      )}
+    </div>
+  )
+}
+
+function AgentRunningBar({ startTs }: { startTs: number | null }) {
+  const [elapsed, setElapsed] = useState(0)
+
+  useEffect(() => {
+    if (startTs == null) return
+    setElapsed(Math.floor((Date.now() - startTs) / 1000))
+    const id = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startTs) / 1000))
+    }, 1000)
+    return () => clearInterval(id)
+  }, [startTs])
+
+  return (
+    <div className={styles.tcStatus}>
+      <Loader size={12} className={styles.tcStatusSpinner} />
+      <span>Running {elapsed}s</span>
+    </div>
+  )
+}
+
+const CHANNEL_URL = 'http://127.0.0.1:8788'
+
+function ChatInput({ sessionId }: { sessionId: string }) {
+  const [text, setText] = useState('')
+  const [sending, setSending] = useState(false)
+  const ref = useRef<HTMLTextAreaElement>(null)
+
+  return (
+    <div className={styles.tcInput}>
+      <textarea
+        ref={ref}
+        value={text}
+        onChange={e => setText(e.target.value)}
+        placeholder="Send a message... (channel 미연결)"
+        rows={1}
+        disabled
+      />
     </div>
   )
 }
