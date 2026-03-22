@@ -12,8 +12,8 @@
   flex: 1 1 0;
   min-width: 200px;
   max-width: 320px;
-  background: var(--surface-1);
-  border: 1px solid var(--border-dim);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   padding: var(--space-sm);
   display: flex;
@@ -36,9 +36,9 @@
 }
 
 .columnHeader:focus {
-  outline: 1.5px solid var(--accent);
+  outline: 1.5px solid var(--primary);
   outline-offset: -1.5px;
-  background: var(--bg-focus);
+  background: var(--primary-dim);
   color: var(--text-bright);
 }
 
@@ -52,8 +52,8 @@
 
 /* ── Card ── */
 .card {
-  background: var(--surface-2);
-  border: 1px solid var(--border-dim);
+  background: var(--surface-default);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   padding: var(--space-sm) var(--space-md);
   font-size: 13px;
@@ -62,24 +62,24 @@
 }
 
 .card:focus {
-  outline: 1.5px solid var(--accent);
+  outline: 1.5px solid var(--primary);
   outline-offset: -1.5px;
-  background: var(--bg-focus);
+  background: var(--primary-dim);
   color: var(--text-bright);
 }
 
 .card[aria-selected="true"] {
-  background: var(--bg-select);
+  background: var(--selection);
 }
 
 .card[aria-selected="true"]:focus {
-  background: var(--bg-select);
-  outline: 1.5px solid var(--accent);
+  background: var(--selection);
+  outline: 1.5px solid var(--primary);
 }
 
 /* ── Editable card title ── */
 .card :global([data-renaming]) {
-  outline: 1.5px solid var(--accent);
+  outline: 1.5px solid var(--primary);
   outline-offset: 2px;
   border-radius: var(--radius-xs);
   padding: 0 2px;

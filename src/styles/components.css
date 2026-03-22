@@ -88,16 +88,16 @@
 [data-aria-container] [role="row"]:focus,
 [data-aria-container] [role="heading"]:focus,
 [data-aria-container] [role="group"] > [role="button"]:focus {
-  background: var(--bg-focus);
+  background: var(--primary-dim);
   color: var(--text-bright);
-  outline-color: var(--accent);
+  outline-color: var(--primary);
 }
 
 /* Tabs: focused uses accent bottom border (exception — no outline) */
 [data-aria-container] [role="tab"]:focus,
 [data-aria-container] [role="tab"][data-focused] {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--primary);
+  border-bottom-color: var(--primary);
   font-weight: 600;
   outline-color: transparent;
 }
@@ -106,13 +106,13 @@
 /* Inactive: background only (restore cursor) */
 
 [data-aria-container] [data-focused] {
-  background: var(--bg-focus);
+  background: var(--primary-dim);
   color: var(--text-bright);
 }
 
 /* Active: outline only when container has focus */
 [data-aria-container]:focus-within [data-focused] {
-  outline-color: var(--accent);
+  outline-color: var(--primary);
 }
 
 /* ── Active (press feedback) ── */
@@ -125,19 +125,19 @@
 [data-aria-container] [role="row"]:active,
 [data-aria-container] [role="heading"]:active,
 [data-aria-container] [role="group"] > [role="button"]:active {
-  background: var(--bg-press);
+  background: var(--primary-bright);
 }
 
 /* ── Selected ── */
 
 [data-aria-container] [aria-selected="true"] {
-  background: var(--bg-select);
+  background: var(--selection);
 }
 
 /* Tab selected uses accent border, not background */
 [data-aria-container] [role="tab"][aria-selected="true"] {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--primary);
+  border-bottom-color: var(--primary);
   font-weight: 600;
   background: transparent;
 }
@@ -145,7 +145,7 @@
 /* ── Checked (radio, switch) ── */
 
 [data-aria-container] [aria-checked="true"] {
-  background: var(--bg-select);
+  background: var(--selection);
 }
 
 /* ── Focused + Selected compound ── */
@@ -155,13 +155,13 @@
 [data-aria-container] [aria-checked="true"]:focus,
 [data-aria-container] [aria-selected="true"][data-focused],
 [data-aria-container] [aria-checked="true"][data-focused] {
-  background: var(--bg-select);
+  background: var(--selection);
   color: var(--text-bright);
 }
 
 [data-aria-container]:focus-within [aria-selected="true"][data-focused],
 [data-aria-container]:focus-within [aria-checked="true"][data-focused] {
-  outline-color: var(--accent);
+  outline-color: var(--primary);
 }
 
 /* ── Expanded chevron rotation ── */

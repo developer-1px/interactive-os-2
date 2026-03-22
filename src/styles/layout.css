@@ -4,7 +4,7 @@
 
 .activity-bar {
   width: 48px;
-  background: var(--activity-bar-bg, var(--surface-0));
+  background: var(--activity-bar-bg, var(--surface-base));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,7 +28,7 @@
   height: 10px;
   background: var(--indigo-500);
   border-radius: 3px;
-  box-shadow: 0 0 8px var(--accent-bright);
+  box-shadow: 0 0 8px var(--primary-bright);
 }
 
 .activity-bar__theme-toggle {
@@ -89,7 +89,7 @@
 .activity-bar__separator {
   width: 16px;
   height: 1px;
-  background: var(--border-dim);
+  background: var(--border-subtle);
   margin: 4px auto;
 }
 
@@ -106,19 +106,19 @@
   grid-template-columns: 48px 192px 1fr;
   height: 100svh;
   overflow: hidden;
-  background: var(--surface-0);
+  background: var(--surface-base);
 }
 
 .sidebar {
-  background: var(--surface-1);
-  border-right: 1px solid var(--border-dim);
+  background: var(--surface-sunken);
+  border-right: 1px solid var(--border-subtle);
   padding: 12px 0;
   overflow-y: auto;
 }
 
 .sidebar-header {
   padding: 0 12px 10px;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
   margin-bottom: 6px;
 }
 
@@ -169,7 +169,7 @@
   font-size: 9px;
   font-weight: 600;
   color: var(--text-muted);
-  background: var(--surface-0);
+  background: var(--surface-base);
   padding: 1px 5px;
   border-radius: 10px;
   letter-spacing: 0.02em;
@@ -178,7 +178,7 @@
 .content {
   min-width: 0;
   padding: 24px 32px;
-  background: var(--surface-2);
+  background: var(--surface-default);
   box-shadow: var(--surface-2-shadow);
   overflow-y: auto;
 }

@@ -5,7 +5,7 @@
   font-size: 13px;
   font-weight: 600;
   padding: 6px 14px;
-  background: var(--accent);
+  background: var(--primary);
   color: var(--zinc-50);
   border: none;
   border-radius: var(--radius);
@@ -26,9 +26,9 @@
   font-size: 12px;
   font-weight: 500;
   padding: 4px 10px;
-  background: var(--surface-2);
+  background: var(--surface-default);
   color: var(--text-secondary);
-  border: 1px solid var(--border-mid);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius);
   cursor: pointer;
   outline: none;

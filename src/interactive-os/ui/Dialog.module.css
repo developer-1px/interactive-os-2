@@ -13,15 +13,15 @@
 
 .box {
   width: 360px;
-  background: var(--surface-4);
+  background: var(--surface-overlay);
   box-shadow: var(--surface-4-shadow);
-  border: 1px solid var(--border-dim);
+  border: 1px solid var(--border-subtle);
   border-radius: calc(var(--radius) + 2px);
 }
 
 .header {
   padding: 10px 14px;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
   font-size: 13px;
   font-weight: 600;
   color: var(--text-bright);
@@ -36,6 +36,6 @@
 
 .footer {
   padding: 8px 14px;
-  border-top: 1px solid var(--border-dim);
-  background: var(--surface-0);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--surface-base);
 }

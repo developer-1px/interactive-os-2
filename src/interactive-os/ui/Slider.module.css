@@ -18,7 +18,7 @@
   position: relative;
   flex: 1;
   height: 6px;
-  background: var(--border-mid);
+  background: var(--border-default);
   border-radius: 3px;
 }
 
@@ -27,7 +27,7 @@
   left: 0;
   top: 0;
   height: 100%;
-  background: var(--accent);
+  background: var(--primary);
   border-radius: 3px;
   pointer-events: none;
 }
@@ -38,13 +38,13 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--primary);
   transform: translate(-50%, -50%);
   transition: box-shadow 0.12s;
 }
 
 [data-focused] .sliderThumb {
-  box-shadow: 0 0 0 3px var(--accent);
+  box-shadow: 0 0 0 3px var(--primary);
   outline: none;
 }
 

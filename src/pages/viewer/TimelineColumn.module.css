@@ -3,7 +3,7 @@
 .tc {
   min-width: 280px;
   flex: 1;
-  background: var(--surface-1);
+  background: var(--surface-sunken);
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border-subtle);
@@ -111,27 +111,59 @@
 /* ─── Event types ─── */
 
 /* User */
+.tcUserWrap { padding-top: 24px; padding-left: 48px; }
 .tcUser {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
+  margin: 0 8px 8px auto;
   padding: 6px 14px;
-  margin: 28px 8px 8px;
   max-width: 720px;
   color: var(--text-primary);
   font-weight: 500;
-  background: var(--accent-dim);
-  border-radius: 16px;
+  background: var(--primary-dim);
+  border-radius: 16px 16px 4px 16px;
 }
-.tcUser:first-child { margin-top: 4px; }
-.tcUser .tcIcon { color: var(--accent); }
 
-/* Assistant */
+/* Assistant — no icon, text only */
 .tcAssistant {
+  display: block;
+  padding: 3px 12px;
+  font-size: 13px;
+  line-height: 1.7;
   color: var(--text-primary);
+  max-width: 720px;
 }
-.tcAssistant .tcIcon { color: var(--text-secondary); }
 .tcAssistant .tcText { white-space: normal; }
 
-/* Tools — icon color only */
+/* ─── Tool Group Card ─── */
+
+.tcToolGroup {
+  margin: 4px 12px;
+  max-width: 696px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface-base);
+}
+
+.tcToolRow {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.tcToolDivider {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tcToolRow.tcFile { cursor: pointer; }
+.tcToolRow.tcFile:hover { background: var(--bg-hover); }
+
+/* Tools — icon color */
 .tcEdit .tcIcon, .tcWrite .tcIcon { color: var(--amber); }
 .tcRead { color: var(--text-muted); }
 .tcBash { font-family: var(--mono); font-size: 12px; }
@@ -188,7 +220,7 @@
 .tcText :global(pre) {
   margin: 0.5em 0;
   padding: 0.5em 0.7em;
-  background: var(--surface-0);
+  background: var(--surface-base);
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   overflow-x: auto;
@@ -202,8 +234,8 @@
 .tcText :global(code) {
   font-family: var(--mono);
   font-size: 0.88em;
-  color: var(--accent-hover);
-  background: var(--accent-dim);
+  color: var(--primary-hover);
+  background: var(--primary-dim);
   padding: 0.1em 0.3em;
   border-radius: 3px;
 }
@@ -219,10 +251,23 @@
 .tcText :global(td) { padding: 0.25em 0.5em; border-bottom: 1px solid var(--border-subtle); text-align: left; }
 
 /* Block elements */
-.tcText :global(blockquote) { margin: 0.3em 0; padding-left: 0.7em; border-left: 3px solid var(--accent); color: var(--text-secondary); }
+.tcText :global(blockquote) { margin: 0.3em 0; padding-left: 0.7em; border-left: 3px solid var(--primary); color: var(--text-secondary); }
 .tcText :global(hr) { margin: 0.5em 0; border: none; border-top: 1px solid var(--border-default); }
 .tcText :global(img) { max-width: 100%; border-radius: 4px; }
-.tcText :global(a) { color: var(--accent); }
+.tcText :global(a) { color: var(--primary); }
+
+/* File path link */
+.tcFilePath {
+  color: var(--primary);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s;
+}
+.tcFilePath:hover {
+  text-decoration-color: var(--primary);
+}
 
 /* Spacer */
 .tcSpacer { min-height: 80vh; }

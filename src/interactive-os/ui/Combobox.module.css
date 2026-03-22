@@ -6,12 +6,12 @@
 }
 
 .comboItemFocused {
-  background: var(--bg-focus);
+  background: var(--primary-dim);
   color: var(--text-bright);
 }
 
 .comboItemSelected {
-  background: var(--bg-select);
+  background: var(--selection);
   font-weight: 600;
 }
 
@@ -21,15 +21,15 @@
   font-family: var(--sans);
   font-size: 13px;
   color: var(--text-primary);
-  background: var(--surface-2);
-  border: 1px solid var(--border-mid);
+  background: var(--surface-default);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius);
   outline: none;
   transition: border-color 0.12s;
 }
 
 .comboInput:focus {
-  border-color: var(--accent);
+  border-color: var(--primary);
 }
 
 .comboInput::placeholder {
@@ -37,8 +37,8 @@
 }
 
 .comboDropdown {
-  background: var(--surface-4);
-  border: 1px solid var(--border-mid);
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius);
   box-shadow: var(--surface-4-shadow);
   margin-top: 4px;

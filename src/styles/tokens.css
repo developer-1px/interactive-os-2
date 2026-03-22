@@ -61,11 +61,6 @@
   --border-default: var(--zinc-700);
   --border-strong: var(--zinc-600);
 
-  /* backward compat aliases — migrate away over time */
-  --border-dim: var(--border-subtle);
-  --border-mid: var(--border-default);
-  --border-bright: var(--border-strong);
-
   /* ── Primary: brand/CTA ── */
   --primary:            var(--indigo-500);
   --primary-hover:      var(--indigo-400);
@@ -114,22 +109,6 @@
 
   /* ── Dialog ── */
   --dialog-backdrop: rgba(0, 0, 0, 0.5);
-
-  /* ══ Backward-compat aliases — migrate away, then remove ══ */
-  --surface-0: var(--surface-base);
-  --surface-1: var(--surface-sunken);
-  --surface-2: var(--surface-default);
-  --surface-3: var(--surface-raised);
-  --surface-4: var(--surface-overlay);
-  --accent:       var(--primary);
-  --accent-hover: var(--primary-hover);
-  --accent-dim:   var(--primary-dim);
-  --accent-mid:   var(--primary-mid);
-  --accent-bright: var(--primary-bright);
-  --bg-focus:  var(--primary-dim);
-  --bg-select: var(--selection);
-  --bg-press:  var(--primary-bright);
-  --red:       var(--destructive);
 }
 
 /* ══ Light theme ══ */

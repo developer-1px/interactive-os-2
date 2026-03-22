@@ -18,15 +18,15 @@
 .spinbuttonGroup {
   display: inline-flex;
   align-items: stretch;
-  border: 1px solid var(--border-mid);
+  border: 1px solid var(--border-default);
   border-radius: 6px;
   overflow: hidden;
   transition: border-color 0.12s, box-shadow 0.12s;
 }
 
 [data-focused] .spinbuttonGroup {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary);
   outline: none;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .spinbuttonBtn:active {
-  background: var(--bg-press);
+  background: var(--primary-bright);
 }
 
 .spinbuttonBtn[aria-disabled] {
@@ -61,11 +61,11 @@
 }
 
 .spinbuttonBtnDec {
-  border-right: 1px solid var(--border-mid);
+  border-right: 1px solid var(--border-default);
 }
 
 .spinbuttonBtnInc {
-  border-left: 1px solid var(--border-mid);
+  border-left: 1px solid var(--border-default);
 }
 
 .spinbuttonValue {
@@ -97,6 +97,6 @@
 
 /* Error state */
 .spinbuttonGroup[data-invalid] {
-  border-color: var(--red);
-  box-shadow: 0 0 0 2px var(--red);
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 2px var(--destructive);
 }

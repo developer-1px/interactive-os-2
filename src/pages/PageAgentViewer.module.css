@@ -18,10 +18,10 @@
 .avSessions {
   width: 200px;
   min-width: 160px;
-  background: var(--surface-1);
+  background: var(--surface-sunken);
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--border-dim);
+  border-right: 1px solid var(--border-subtle);
 }
 
 .avSessionsHeader {
@@ -30,7 +30,7 @@
   height: 36px;
   padding: 0 12px;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .avSessionsTitle {
