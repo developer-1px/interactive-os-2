@@ -226,6 +226,28 @@ describe('CMS Tab Container', () => {
       expect(sep.getAttribute('role')).toBeNull()
     })
 
+    it('Enter on sidebar tab-internal section activates that tab in canvas', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<CmsLayout />)
+
+      const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
+      sidebar.focus()
+
+      // Navigate to tab-2-section using dynamic index
+      const items = Array.from(sidebar.querySelectorAll('[role="option"]'))
+      const tab2Idx = items.findIndex(el => el.getAttribute('data-sidebar-id') === 'tab-2-section')
+      for (let i = 0; i < tab2Idx; i++) {
+        await user.keyboard('{ArrowDown}')
+      }
+
+      await user.keyboard('{Enter}')
+
+      // Canvas should now show tab-2 as active
+      const tab2 = container.querySelector('[data-cms-id="tab-2"]') as HTMLElement
+      expect(tab2.getAttribute('aria-selected')).toBe('true')
+      expect(container.querySelector('[data-cms-id="tab-2-section"]')).not.toBeNull()
+    })
+
     it('active tab label is highlighted when canvas tab changes', async () => {
       const user = userEvent.setup()
       const { container } = render(<CmsLayout />)
