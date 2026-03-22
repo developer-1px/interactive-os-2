@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Moon, Presentation, BookOpen } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Moon, Presentation, BookOpen, Activity } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -51,6 +51,7 @@ import PageStoreInspector from './pages/PageStoreInspector'
 import PageEnginePipeline from './pages/PageEnginePipeline'
 import PageEngineHistory from './pages/PageEngineHistory'
 import PageViewer from './pages/PageViewer'
+import PageAgentViewer from './pages/PageAgentViewer'
 import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
 import PageAreaViewer from './pages/PageAreaViewer'
@@ -233,6 +234,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
+  { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
   ...routeConfig.map((g) => ({ id: g.id, label: g.label, icon: g.icon, path: g.basePath })),
 ]
 
@@ -332,10 +334,11 @@ function App() {
   const navigate = useNavigate()
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
   const isViewer = pathname === '/viewer' || pathname.startsWith('/viewer/')
+  const isAgent = pathname === '/agent' || pathname.startsWith('/agent/')
   const isCms = pathname === '/'
 
   // URL → ActivityBar focus binding (CRUD two-way)
-  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isCms ? 'cms' : undefined)
+  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isAgent ? 'agent' : isCms ? 'cms' : undefined)
   const activityBarData = useMemo(() => {
     if (!activityBarFocusId) return activityBarStore
     return {
@@ -395,6 +398,8 @@ function App() {
         <CmsLayout />
       ) : isViewer ? (
         <PageViewer />
+      ) : isAgent ? (
+        <PageAgentViewer />
       ) : (
         <>
           {activeGroup && (activeGroup.id === 'area'
