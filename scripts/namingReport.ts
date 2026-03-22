@@ -169,7 +169,7 @@ function buildFragmentDictionary(
     const segments = relativePath.split("/");
     for (const segment of segments) {
       const isFile = segment.includes(".");
-      const label = isFile ? `📄 ${segment}` : `📁 ${segment}/`;
+      const label = isFile ? segment : `/${segment}`;
       const key = `${label}@path`;
       if (seen.has(key)) continue;
       seen.add(key);
