@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
-   Agent Viewer — 3-panel layout (PoC v2)
-   Left: activity timeline, Center: content, Right: modified files
+   Agent Viewer — multi-column layout
+   Left: archive sessions, Center: timeline columns (horizontally scrollable)
    ═══════════════════════════════════════════ */
 
 /* --- Layout --- */
@@ -67,162 +67,13 @@
   white-space: nowrap;
 }
 
-/* --- Center panel: file content --- */
+/* --- Timeline columns --- */
 
-.avContent {
-  flex: 1;
+.avColumns {
   display: flex;
-  flex-direction: column;
+  flex: 1;
   min-width: 0;
-  overflow: hidden;
-  background: var(--surface-2);
-}
-
-.avContentHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 36px;
-  padding: 0 16px;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border-dim);
-}
-
-.avContentHeaderLeft,
-.avContentHeaderRight {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.avContentBody {
-  flex: 1;
-  overflow: auto;
-  min-height: 0;
-}
-
-.avContentMeta {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--text-muted);
-  flex-shrink: 0;
-}
-
-.avContentMetaSep {
-  width: 1px;
-  height: 10px;
-  background: var(--border-mid);
-  margin: 0 2px;
-}
-
-.avEditBadge {
-  color: #e5a33a;
-  font-weight: 600;
-}
-
-/* --- Image viewer --- */
-
-.avImageViewer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 24px;
-  background: var(--surface-0);
-}
-
-.avImage {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* --- Right panel: modified files (240px) --- */
-
-.avModified {
-  width: 240px;
-  min-width: 180px;
-  background: var(--surface-1);
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid var(--border-dim);
-}
-
-.avModifiedHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 36px;
-  padding: 0 12px;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border-dim);
-}
-
-.avModifiedTitle {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.avModifiedBody {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 4px 0;
-}
-
-.avModifiedItem {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-.avModifiedPath {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.avModifiedBadge {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-left: auto;
-  padding-right: 8px;
-}
-
-/* --- Follow toggle button --- */
-
-.avFollowBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: none;
-  border: none;
-  border-radius: var(--radius);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: background 0.1s, color 0.1s;
-}
-
-.avFollowBtn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.avFollowBtnActive {
-  color: var(--accent, #4da6ff);
+  overflow-x: auto;
 }
 
 /* --- Empty/waiting state --- */
@@ -234,6 +85,7 @@
   justify-content: center;
   gap: 12px;
   height: 100%;
+  width: 100%;
   color: var(--text-muted);
   font-family: var(--sans);
   font-size: 14px;

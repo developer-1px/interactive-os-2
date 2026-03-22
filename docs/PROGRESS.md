@@ -287,4 +287,6 @@
 
 - [x] Agent Viewer Multi-Session (4/7) — `useVirtualScroll` 훅. variable-height 가상 스크롤, measured height cache + estimated fallback, rAF scroll handler, overscan, `scrollToIndex` API. TimelineColumn에 적용하여 DOM 노드 수 viewport+overscan으로 제한
 
-*Last updated: 2026-03-22 — Agent Viewer useVirtualScroll 훅*
+- [x] Agent Viewer Multi-Session (5/7) — PageAgentViewer 멀티 컬럼 레이아웃. Content/Modified 패널 제거, active 세션 자동 컬럼 표시, archive 세션 선택 열기, FileViewerModal로 파일 보기, 5초 폴링으로 세션 목록 갱신
+
+*Last updated: 2026-03-22 — Agent Viewer 멀티 컬럼 레이아웃*
