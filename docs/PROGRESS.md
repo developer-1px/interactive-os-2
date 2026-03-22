@@ -225,6 +225,7 @@
 - [x] CSS Modules Batch B — 중간 컴포넌트 7개 CSS Modules 전환 (MenuList, Accordion, DisclosureGroup, RadioGroup, Slider, Spinbutton, SwitchGroup), radiogroup.tsx→RadioGroup.tsx 대소문자 정리
 - [x] CMS Step/Stat Child Entities — flat entity → container + children (step→[step-num, text, text], stat→[stat-value, text]), Enter drilldown 활성화, aria-label [object Object] 수정
 - [x] Combobox Infinite Loop Fix — grouped combobox flattenGroups useMemo 메모이제이션, setState-during-render → 파생 상태 전환
+- [x] CMS i18n Sheet Grid Migration — HTML table → Grid 컴포넌트 교체, 키보드 네비게이션 + F2 셀 편집, onChange diff 기반 양방향 싱크 (Grid → CMS store)
 
 ## ⑨ APG Pattern Coverage
 
