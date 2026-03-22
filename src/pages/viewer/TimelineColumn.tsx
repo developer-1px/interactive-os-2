@@ -76,12 +76,11 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
       : evt.type === 'assistant'
         ? styles.tcAssistant
         : ''
-  const cls = `${styles.tcItem} ${typeClass}`
+  const cls = `${styles.tcItem} ${typeClass}${evt.filePath ? ` ${styles.tcFile}` : ''}`
   return (
     <div
       className={cls}
       onClick={() => onClick(evt)}
-      style={evt.filePath ? { cursor: 'pointer' } : undefined}
     >
       <span className={styles.tcIcon}>
         <EventIcon evt={evt} />
