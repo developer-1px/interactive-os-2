@@ -183,8 +183,7 @@
 - [x] Viewer Quick Open — Cmd+P fuzzy 파일 검색 (Fuse.js, combobox ARIA 패턴)
 - [x] Viewer URL 동기화 — `/viewer/{relative-path}` path 기반 양방향 동기화, 조상 노드 자동 전개, 딥링크/새로고침 유지
 - [x] APG Keyboard Tables — W3C 원문 키보드 인터랙션 표 14개 패턴 페이지 렌더링
-- [x] Store Explorer — NormalizedData 구조를 TreeGrid로 시각화 (meta entities 포함)
-- [x] Store Operations — 순수 함수 API 데모 (addEntity, removeEntity, moveNode 등)
+- [x] Store Split Inspector — Split 3패널 (Editor TreeGrid + Inspector storeToTree 실시간 + Operation Log), useAria logger 옵션 추가, Explorer/Operations 통합 대체
 - [x] Engine Pipeline — Command dispatch 9단계 흐름 시각화
 - [x] Engine History — Undo/Redo 스택 실시간 로그
 - [x] Plugin 레이어 — CRUD, Clipboard, History, DnD, Rename 인터랙티브 페이지 (독립 라우트 그룹)
@@ -282,4 +281,4 @@
 
 - [x] Agent Viewer — Agent(Claude Code)의 세션별 파일 읽기/수정 내역 실시간 3패널 뷰어. PostToolUse hook → NDJSON 로그 → Vite SSE → React UI. 좌(수정 목록 Aria listbox, ×N 뱃지, follow 토글) | 중(콘텐츠 — CodeBlock/Markdown/MDX) | 우(읽기 이벤트 스트림), `/agent` 라우트
 
-*Last updated: 2026-03-22 — Agent Viewer*
+*Last updated: 2026-03-22 — Store Split Inspector*
