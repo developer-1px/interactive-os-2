@@ -19,6 +19,7 @@ interface AriaProps {
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   'aria-label'?: string
+  logger?: import('../core/dispatchLogger').EngineOptions['logger']
   children: ReactNode
 }
 
@@ -32,8 +33,8 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
-function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, children }: AriaProps) {
-  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate })
+function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, children }: AriaProps) {
+  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, logger })
 
   useEffect(() => {
     if (!id) return

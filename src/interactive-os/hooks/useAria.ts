@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import type { EngineOptions } from '../core/dispatchLogger'
 import type { Command, NormalizedData, Plugin } from '../core/types'
 import { ROOT_ID, createBatchCommand } from '../core/types'
 import type { AriaBehavior, NodeState } from '../behaviors/types'
@@ -30,6 +31,8 @@ export interface UseAriaOptions {
   onActivate?: (nodeId: string) => void
   /** Focus this node on mount instead of the first child */
   initialFocus?: string
+  /** Logger for engine dispatch events */
+  logger?: EngineOptions['logger']
 }
 
 export interface UseAriaReturn {
@@ -43,7 +46,7 @@ export interface UseAriaReturn {
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { behavior = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus } = options
+  const { behavior = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus, logger } = options
   const [, forceRender] = useState(0)
   const engineRef = useRef<CommandEngine | null>(null)
   const onActivateRef = useRef(onActivate)
@@ -79,7 +82,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       prevFocusRef.current = newFocusedId
       onChange?.(newStore)
       forceRender((n) => n + 1)
-    })
+    }, logger != null ? { logger } : undefined)
 
     // Priority: data.__focus__ (external binding) > initialFocus (hint) > first child
     const externalFocus = (data.entities[FOCUS_ID]?.focusedId as string) ?? ''
