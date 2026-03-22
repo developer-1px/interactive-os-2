@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
 import '../../styles/cms.css'
+import { useResizer } from '../../hooks/useResizer'
+import '../../styles/resizer.css'
 import CmsTopToolbar from './CmsTopToolbar'
 import type { ViewportSize } from './CmsViewportWrapper'
 import CmsViewportWrapper from './CmsViewportWrapper'
@@ -16,13 +18,13 @@ import { useEngine } from '../../interactive-os/hooks/useEngine'
 import { history } from '../../interactive-os/plugins/history'
 import { clipboard } from '../../interactive-os/plugins/clipboard'
 import { rename } from '../../interactive-os/plugins/rename'
-import { getChildren, getParent } from '../../interactive-os/core/createStore'
+import { getParent } from '../../interactive-os/core/createStore'
 import { collectSections } from './collectSections'
 import { ROOT_ID } from '../../interactive-os/core/types'
 import type { Plugin } from '../../interactive-os/core/types'
-import { cmsCanAccept } from './cms-schema'
+import { cmsCanAccept, cmsCanDelete } from './cms-schema'
 
-const sharedPlugins: Plugin[] = [history(), clipboard({ canAccept: cmsCanAccept }), rename()]
+const sharedPlugins: Plugin[] = [history(), clipboard({ canAccept: cmsCanAccept, canDelete: cmsCanDelete }), rename()]
 
 export default function CmsLayout() {
   const [persistedData, setPersistedData] = useCmsData()
@@ -35,6 +37,15 @@ export default function CmsLayout() {
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
+
+  const sidebarResizer = useResizer({
+    defaultSize: 120, minSize: 80, maxSize: 300, step: 10,
+    storageKey: 'cms-sidebar-width',
+  })
+  const detailResizer = useResizer({
+    defaultSize: 240, minSize: 160, maxSize: 480, step: 10,
+    storageKey: 'cms-detail-width',
+  })
 
   const handleActivateTabItem = useCallback((tabItemId: string) => {
     setActiveTabMap(prev => {
@@ -79,18 +90,21 @@ export default function CmsLayout() {
         onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
       />
       <div className="cms-body">
-        <CmsSidebar engine={engine} store={store} locale={locale} activeSectionId={activeSectionId} plugins={sharedPlugins} onActivateTabItem={handleActivateTabItem} />
+        <CmsSidebar engine={engine} store={store} locale={locale} activeSectionId={activeSectionId} plugins={sharedPlugins} onActivateTabItem={handleActivateTabItem} style={{ width: sidebarResizer.size }} />
+        <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
         <div className="cms-canvas-area">
           <CmsViewportWrapper viewport={viewport}>
             <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} activeTabMap={activeTabMap} onActivateTabItem={handleActivateTabItem} />
           </CmsViewportWrapper>
           <CmsI18nSheet engine={engine} store={store} open={i18nSheetOpen} />
         </div>
+        <div className="resizer-handle" aria-label="Resize detail panel" {...detailResizer.separatorProps} />
         <CmsDetailPanel
           engine={engine}
           store={store}
           focusedNodeId={canvasFocusedId}
           locale={locale}
+          style={{ width: detailResizer.size }}
         />
       </div>
       <CmsFloatingToolbar store={store} focusedId={canvasFocusedId} dispatch={(cmd) => engine.dispatch(cmd)} hidden={presenting} />

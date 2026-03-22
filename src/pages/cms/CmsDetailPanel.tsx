@@ -1,4 +1,5 @@
 import { useRef, useEffect, useCallback, useMemo } from 'react'
+import type React from 'react'
 import type { NormalizedData } from '../../interactive-os/core/types'
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import { renameCommands } from '../../interactive-os/plugins/rename'
@@ -12,9 +13,10 @@ interface CmsDetailPanelProps {
   store: NormalizedData
   focusedNodeId: string
   locale: Locale
+  style?: React.CSSProperties
 }
 
-export default function CmsDetailPanel({ engine, store, focusedNodeId, locale }: CmsDetailPanelProps) {
+export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, style }: CmsDetailPanelProps) {
   const groups = useMemo(
     () => focusedNodeId ? collectEditableGroups(store, focusedNodeId, locale) : [],
     [store, focusedNodeId, locale],
@@ -22,7 +24,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale }:
 
   if (groups.length === 0) {
     return (
-      <div className="cms-detail-panel">
+      <div className="cms-detail-panel" style={style}>
         <div className="cms-detail-panel__empty">
           {focusedNodeId ? 'No editable fields' : 'Select a node'}
         </div>
@@ -35,7 +37,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale }:
     const entity = store.entities[focusedNodeId]
     const data = (entity?.data ?? {}) as Record<string, unknown>
     return (
-      <div className="cms-detail-panel">
+      <div className="cms-detail-panel" style={style}>
         <div className="cms-detail-panel__header">
           <span className="cms-detail-panel__type">{data.type as string}</span>
         </div>
@@ -56,7 +58,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale }:
 
   // Multiple groups → grouped layout
   return (
-    <div className="cms-detail-panel">
+    <div className="cms-detail-panel" style={style}>
       <div className="cms-detail-panel__groups">
         {groups.map((group) => (
           <DetailGroup

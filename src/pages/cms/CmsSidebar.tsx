@@ -1,4 +1,5 @@
 import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type React from 'react'
 import { getChildren } from '../../interactive-os/core/createStore'
 import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
 import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/types'
@@ -25,6 +26,7 @@ interface CmsSidebarProps {
   activeSectionId: string | null
   plugins?: Plugin[]
   onActivateTabItem?: (tabItemId: string) => void
+  style?: React.CSSProperties
 }
 
 // ── Thumbnail renderer (read-only mini preview) ──
@@ -109,7 +111,7 @@ function ThumbNode({ data, nodeId, locale }: {
 
 // ── CmsSidebar ──
 
-export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins, onActivateTabItem }: CmsSidebarProps) {
+export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins, onActivateTabItem, style }: CmsSidebarProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
@@ -218,7 +220,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   }, [aria.focused])
 
   return (
-    <aside className="cms-sidebar" aria-label="Sections">
+    <aside className="cms-sidebar" aria-label="Sections" style={style}>
       <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onFocus={handleContainerFocus}>
         {(() => {
           let prevRootAncestor = ''
