@@ -54,14 +54,14 @@ function isNearBottom(el: HTMLElement, threshold = 100): boolean {
 // --- Event icon ---
 
 function EventIcon({ evt }: { evt: TimelineEvent }) {
-  if (evt.type === 'user') return <User size={11} />
-  if (evt.type === 'assistant') return <Bot size={11} />
-  if (evt.tool === 'Read') return <FileText size={11} />
-  if (evt.tool === 'Edit') return <Pencil size={11} />
-  if (evt.tool === 'Write') return <FilePlus size={11} />
-  if (evt.tool === 'Bash') return <Terminal size={11} />
-  if (evt.tool === 'Grep' || evt.tool === 'Glob') return <Search size={11} />
-  return <Circle size={11} />
+  if (evt.type === 'user') return <User size={10} />
+  if (evt.type === 'assistant') return <Bot size={10} />
+  if (evt.tool === 'Read') return <FileText size={10} />
+  if (evt.tool === 'Edit') return <Pencil size={10} />
+  if (evt.tool === 'Write') return <FilePlus size={10} />
+  if (evt.tool === 'Bash') return <Terminal size={10} />
+  if (evt.tool === 'Grep' || evt.tool === 'Glob') return <Search size={10} />
+  return <Circle size={10} />
 }
 
 // --- Timeline item (memoized) ---
