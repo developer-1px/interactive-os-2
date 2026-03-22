@@ -295,4 +295,6 @@
 
 - [x] Agent Viewer — 세션 컬럼 순서 localStorage 보존. HMR/새로고침 시 컬럼 위치 유지, 새 active 세션은 끝에 append, 모든 컬럼에 닫기 버튼, stale 세션 ID 자동 필터링. updateColumnOrder 래퍼로 persist 로직 단일화
 
-*Last updated: 2026-03-22 — Agent Viewer 멀티 컬럼 레이아웃*
+- [x] Surface Token System — surface 변수 숫자→의미 이름(base/sunken/default/raised/overlay/outlined), `[data-surface]` 속성으로 bg+border+shadow 번들, semantic color 분리(accent→primary+focus+selection, red→destructive), 하위호환 alias
+
+*Last updated: 2026-03-22 — Surface Token System*
