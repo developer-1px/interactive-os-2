@@ -6,8 +6,8 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| 1 | AI/자신이 이 프레임워크를 처음 접하거나 새 세션을 시작 | overview.mdx를 열어 프레임워크 구조를 파악하려 함 | 레이어 표와 의존 그래프만 보임. "어떻게 조립하는지"는 L3까지 내려가야 알 수 있음 | |
-| 2 | overview.mdx에 ideal usage 코드가 있음 | AI가 overview.mdx를 읽음 | 7개 레이어가 하나의 ListBox로 관통되는 코드를 보고 즉시 멘탈 모델을 형성함 | |
+| 1 | AI/자신이 이 프레임워크를 처음 접하거나 새 세션을 시작 | overview.mdx를 열어 프레임워크 구조를 파악하려 함 | 레이어 표와 의존 그래프만 보임. "어떻게 조립하는지"는 L3까지 내려가야 알 수 있음 | ✅ 일치 |
+| 2 | overview.mdx에 ideal usage 코드가 있음 | AI가 overview.mdx를 읽음 | 7개 레이어가 하나의 ListBox로 관통되는 코드를 보고 즉시 멘탈 모델을 형성함 | ✅ 일치 |
 
 완성도: 🟢
 
@@ -17,7 +17,7 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `docs/2-areas/overview.mdx` — `## Ideal Usage` 섹션 추가 | 기존 "전체 빈칸" 섹션 뒤에 추가. 하나의 tsx 코드 블록으로 7개 레이어 관통 | |
+| `docs/2-areas/overview.mdx` — `## Ideal Usage` 섹션 추가 | 기존 "전체 빈칸" 섹션 뒤에 추가. 하나의 tsx 코드 블록으로 7개 레이어 관통 | ✅ 일치 |
 
 **코드 구조 (pseudo-real, ~30줄):**
 
@@ -82,8 +82,8 @@ function MyList() {
 
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
-| AI가 overview.mdx 읽기 | 레이어 표 + 의존 그래프만 있음 | Ideal Usage 섹션의 코드를 위에서 아래로 읽음 | ❶~❻ 번호가 레이어 표와 1:1 대응하므로 구조와 코드가 즉시 연결됨 | 7개 레이어의 조립 방식을 이해한 상태 | |
-| AI가 새 패턴 구현 시도 | overview의 ListBox 예제를 본 상태 | 같은 구조로 다른 behavior를 조합 | composePattern + useAria 패턴이 동일하므로 ListBox를 템플릿으로 복제 | 새 패턴 구현 가능 | |
+| AI가 overview.mdx 읽기 | 레이어 표 + 의존 그래프만 있음 | Ideal Usage 섹션의 코드를 위에서 아래로 읽음 | ❶~❻ 번호가 레이어 표와 1:1 대응하므로 구조와 코드가 즉시 연결됨 | 7개 레이어의 조립 방식을 이해한 상태 | ✅ 일치 |
+| AI가 새 패턴 구현 시도 | overview의 ListBox 예제를 본 상태 | 같은 구조로 다른 behavior를 조합 | composePattern + useAria 패턴이 동일하므로 ListBox를 템플릿으로 복제 | 새 패턴 구현 가능 | ✅ 일치 |
 
 완성도: 🟡
 
@@ -91,8 +91,8 @@ function MyList() {
 
 | 극단 조건 | 현재 상태 | 왜 이렇게 동작해야 하는가 | 예상 동작 | 결과 상태 | 역PRD |
 |----------|----------|------------------------|----------|----------|-------|
-| API가 변경되어 코드와 실제가 불일치 | overview에 옛 시그니처가 남아있음 | stale 코드는 잘못된 멘탈 모델을 형성, 없는 것보다 해로움 | /area 갱신 시 L1 코드의 함수명을 grep으로 검증 | 불일치 발견 시 코드 갱신 | |
-| overview가 100줄을 초과 | Ideal Usage 섹션이 너무 길어짐 | L1은 "첫 인상"이므로 간결해야 함. 긴 문서는 AI 컨텍스트 낭비 | 코드 블록 30줄 + 설명 5줄 이내로 제한 | overview 총 80~90줄 | |
+| API가 변경되어 코드와 실제가 불일치 | overview에 옛 시그니처가 남아있음 | stale 코드는 잘못된 멘탈 모델을 형성, 없는 것보다 해로움 | /area 갱신 시 L1 코드의 함수명을 grep으로 검증 | 불일치 발견 시 코드 갱신 | ✅ grep 검증 완료 |
+| overview가 100줄을 초과 | Ideal Usage 섹션이 너무 길어짐 | L1은 "첫 인상"이므로 간결해야 함. 긴 문서는 AI 컨텍스트 낭비 | 코드 블록 30줄 + 설명 5줄 이내로 제한 | overview 총 80~90줄 | ✅ 92줄 |
 
 완성도: 🟡
 
@@ -100,10 +100,10 @@ function MyList() {
 
 | # | 원칙 (출처) | 관련 항목 | 위반 여부 | 위반 시 수정 | 역PRD |
 |---|------------|----------|----------|------------|-------|
-| 1 | Area MDX는 영구 자산 (area 스킬) | ② 산출물 | ✅ 준수 | — | |
-| 2 | walkthrough 필수 (feedback_walkthrough_in_area) | ② 코드 | ✅ 준수 — ideal usage 코드가 walkthrough 역할 | — | |
-| 3 | 파일명 = 주 export (CLAUDE.md) | ② 산출물 | ✅ 해당 없음 — 기존 파일 수정 | — | |
-| 4 | 최소 구현 수렴 (feedback_minimum_impl_is_good) | ② 코드 | ✅ 준수 — 30줄로 전 레이어 관통 | — | |
+| 1 | Area MDX는 영구 자산 (area 스킬) | ② 산출물 | ✅ 준수 | — | ✅ 일치 |
+| 2 | walkthrough 필수 (feedback_walkthrough_in_area) | ② 코드 | ✅ 준수 — ideal usage 코드가 walkthrough 역할 | — | ✅ 일치 |
+| 3 | 파일명 = 주 export (CLAUDE.md) | ② 산출물 | ✅ 해당 없음 — 기존 파일 수정 | — | ✅ 일치 |
+| 4 | 최소 구현 수렴 (feedback_minimum_impl_is_good) | ② 코드 | ✅ 준수 — 30줄로 전 레이어 관통 | — | ✅ 일치 |
 
 완성도: 🟡
 
@@ -131,13 +131,13 @@ function MyList() {
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| 1 | ①-2 | overview.mdx에 Ideal Usage 섹션이 존재 | `## Ideal Usage` 헤딩 + tsx 코드 블록 1개 | |
-| 2 | ④-1 | 코드 내 함수명이 실제 export와 일치 | `createStore`, `composePattern`, `select`, `activate`, `navigate`, `useAria`, `core`, `crud`, `history`, `getChildren`, `getEntity`, `ROOT_ID` — 모두 src/에서 grep 가능 | |
-| 3 | ④-2 | overview.mdx 총 줄 수 | 100줄 이내 | |
-| 4 | ①-2 | 코드의 ❶~❻ 번호가 레이어 표와 대응 | Core(1), Axes(2), Patterns(3), Plugins(4), Hooks(5), UI(6) | |
+| 1 | ①-2 | overview.mdx에 Ideal Usage 섹션이 존재 | `## Ideal Usage` 헤딩 + tsx 코드 블록 1개 | ✅ 존재 |
+| 2 | ④-1 | 코드 내 함수명이 실제 export와 일치 | `createStore`, `composePattern`, `select`, `activate`, `navigate`, `useAria`, `core`, `crud`, `history`, `getChildren`, `getEntity`, `ROOT_ID` — 모두 src/에서 grep 가능 | ✅ 12개 전부 확인 |
+| 3 | ④-2 | overview.mdx 총 줄 수 | 100줄 이내 | ✅ 92줄 |
+| 4 | ①-2 | 코드의 ❶~❻ 번호가 레이어 표와 대응 | Core(1), Axes(2), Patterns(3), Plugins(4), Hooks(5), UI(6) | ✅ 대응 |
 
 완성도: 🟡
 
 ---
 
-**전체 완성도:** 🟡 8/8 (AI 초안 완료, 사용자 확인 대기)
+**전체 완성도:** 🟢 8/8 (retro 완료, 일치율 8/8)
