@@ -38,20 +38,20 @@
   --surface-4-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
 
   /* Interactive states */
-  --bg-focus: rgba(91, 91, 214, 0.10);
-  --bg-select: rgba(48, 164, 108, 0.15);
-  --bg-hover: rgba(255, 255, 255, 0.04);
-  --bg-active: rgba(255, 255, 255, 0.08);
-  --bg-press: rgba(91, 91, 214, 0.18);
+  --bg-focus: rgba(91, 91, 214, 0.12);
+  --bg-select: rgba(48, 164, 108, 0.18);
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --bg-active: rgba(255, 255, 255, 0.10);
+  --bg-press: rgba(91, 91, 214, 0.22);
 
   /* Border */
-  --border-dim: rgba(255, 255, 255, 0.08);
-  --border-mid: rgba(255, 255, 255, 0.12);
-  --border-bright: rgba(255, 255, 255, 0.18);
+  --border-dim: rgba(255, 255, 255, 0.10);
+  --border-mid: rgba(255, 255, 255, 0.16);
+  --border-bright: rgba(255, 255, 255, 0.24);
 
   /* Text */
-  --text-primary: var(--zinc-200);
-  --text-secondary: var(--zinc-400);
+  --text-primary: var(--zinc-100);
+  --text-secondary: var(--zinc-300);
   --text-muted: var(--zinc-500);
   --text-bright: var(--zinc-50);
 
