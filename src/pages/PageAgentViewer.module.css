@@ -15,8 +15,8 @@
 /* --- Left panel: Activity Timeline (320px) --- */
 
 .avTimeline {
-  width: 320px;
-  min-width: 260px;
+  width: 420px;
+  min-width: 320px;
   background: var(--surface-1);
   display: flex;
   flex-direction: column;
@@ -60,10 +60,10 @@
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  padding: 3px 12px;
+  padding: 4px 12px;
   font-family: var(--sans);
-  font-size: 11px;
-  line-height: 1.4;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--text-secondary);
   transition: background 0.08s;
 }
@@ -101,8 +101,8 @@
   color: var(--accent, #4da6ff);
   background: rgba(77, 166, 255, 0.08);
   border-left: 2px solid var(--accent, #4da6ff);
-  padding-left: 10px;
-  margin: 2px 0;
+  padding: 6px 12px 6px 10px;
+  margin: 12px 0 4px;
   border-radius: 0 4px 4px 0;
 }
 .avTluser .avTimelineIcon { opacity: 0.9; color: var(--accent, #4da6ff); }
