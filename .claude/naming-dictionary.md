@@ -1,5 +1,5 @@
 ---
-last_commit: 1b9875d06aaf93616db908ef6a9042db8e199f8b
+last_commit: 75df1e6d99287ef26e6672b6a0ec7d88fd83e480
 last_updated: 2026-03-22
 ---
 
@@ -46,6 +46,9 @@ last_updated: 2026-03-22
 | undo | 1 | undoCommand |
 | redo | 1 | redoCommand |
 | use | 6 | useAria, useAriaZone, useControlledAria, useEngine, useKeyboard, useSpatialNav |
+| load | 1 | loadColumnOrder |
+| save | 1 | saveColumnOrder |
+| make | 20 | makeListBoxData, makeTreeGridData, makeAccordionData, ... (fixture factories) |
 | increment | 1 | valueCommands.increment |
 | decrement | 1 | valueCommands.decrement |
 | clamp | 1 | clamp (internal to core.ts) |
@@ -104,6 +107,11 @@ last_updated: 2026-03-22
 | table | 1 | ApgKeyboardTable |
 | axis | 13 | Axis (type), navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap, value |
 | zone | 2 | useAriaZone, UseAriaZoneOptions |
+| column | 2 | columnOrder, TimelineColumn |
+| order | 1 | columnOrder |
+| session | 2 | SessionInfo, sessionMap |
+| component | 1 | ComponentEntry |
+| fixture | 20 | showcaseFixtures.ts (makeXxxData factories) |
 | scope | 1 | UseAriaZoneOptions.scope |
 | depth | 3 | depthArrow, depthEnterEsc, clearCursorsAtDepth |
 | cursor | 1 | stickyCursorRef (보관된 이전 위치 ≠ focus. focus=현재 활성, cursor=이전 보관) |
@@ -146,6 +154,8 @@ last_updated: 2026-03-22
 | node | item (component layer) | node = store/data layer (NodeState, moveNode), item = component API (Aria.Item) — proper layer separation |
 | activate | activateFollowFocus | activateFollowFocus is alias for activate — followFocus is metadata flag, not keyMap |
 | compose | create | composePattern (axis→behavior composition), create (entity/engine factory) — distinct intent |
+| make | create | make = fixture/demo data factory, create = runtime instance factory — distinct intent |
+| load/save | get/set | load/save = localStorage I/O, get/set = in-memory state access — distinct intent |
 | cursor | focus | cursor=보관된 이전 위치 (sticky cursor), focus=현재 활성 노드 — semantically distinct |
 | switchBehavior | — | `switch` is JS reserved word; only behavior export with suffix — unavoidable exception |
 | metadata | config | PatternMetadata → PatternConfig (renamed: Omit&lt;AriaBehavior, 'keyMap'&gt;) |
