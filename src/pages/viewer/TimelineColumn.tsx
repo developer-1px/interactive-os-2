@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import { useVirtualScroll } from './useVirtualScroll'
+import { MarkdownViewer } from './MarkdownViewer'
 
 // --- Types ---
 
@@ -84,7 +85,9 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
         <EventIcon evt={evt} />
       </span>
       <span className={styles.tcText}>
-        {eventLabel(evt)}
+        {evt.type === 'assistant' && evt.text
+          ? <MarkdownViewer content={evt.text} />
+          : eventLabel(evt)}
       </span>
     </div>
   )
