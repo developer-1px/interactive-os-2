@@ -92,18 +92,79 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
 
 // --- Find the most recent transcript JSONL ---
 
-function findLatestTranscript(projectRoot: string): string | null {
-  // Claude Code stores transcripts at ~/.claude/projects/{encoded-path}/{session-id}.jsonl
+function getTranscriptDir(projectRoot: string): string | null {
   const encoded = projectRoot.replace(/\//g, '-')
-  const transcriptDir = path.join(os.homedir(), '.claude', 'projects', encoded)
-  if (!fs.existsSync(transcriptDir)) return null
+  const dir = path.join(os.homedir(), '.claude', 'projects', encoded)
+  return fs.existsSync(dir) ? dir : null
+}
 
-  const files = fs.readdirSync(transcriptDir)
+interface SessionInfo {
+  id: string
+  filePath: string
+  mtime: number
+  label: string // first user message or timestamp
+}
+
+function listSessions(projectRoot: string, limit = 10): SessionInfo[] {
+  const dir = getTranscriptDir(projectRoot)
+  if (!dir) return []
+
+  const files = fs.readdirSync(dir)
     .filter(f => f.endsWith('.jsonl'))
-    .map(f => ({ name: f, mtime: fs.statSync(path.join(transcriptDir, f)).mtimeMs }))
+    .map(f => ({ name: f, mtime: fs.statSync(path.join(dir, f)).mtimeMs }))
     .sort((a, b) => b.mtime - a.mtime)
+    .slice(0, limit)
 
-  return files.length > 0 ? path.join(transcriptDir, files[0].name) : null
+  return files.map(f => {
+    const id = f.name.replace('.jsonl', '')
+    const filePath = path.join(dir, f.name)
+    // Extract first user message as label
+    let label = new Date(f.mtime).toLocaleString('ko-KR', {
+      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+    })
+    try {
+      const content = fs.readFileSync(filePath, 'utf-8')
+      for (const line of content.split('\n').slice(0, 80)) {
+        if (!line.trim()) continue
+        const obj = JSON.parse(line)
+        if (obj.type === 'user') {
+          const msg = obj.message
+          let text = ''
+          if (typeof msg?.content === 'string') text = msg.content
+          else if (Array.isArray(msg?.content)) {
+            for (const b of msg.content) {
+              if (b?.type === 'text') text += b.text
+            }
+          }
+          // Strip XML/HTML tags and system noise
+          text = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+          // Skip system-generated and command messages
+          if (text.startsWith('Caveat:') || text.startsWith('/clear') || text.startsWith('clear')
+            || text.startsWith('Base directory') || text.startsWith('ARGUMENTS:')
+            || text.length <= 5) continue
+          label = text.slice(0, 60)
+          break
+        }
+      }
+    } catch { /* ignore */ }
+    return { id, filePath, mtime: f.mtime, label }
+  })
+}
+
+function findLatestTranscript(projectRoot: string): string | null {
+  const sessions = listSessions(projectRoot, 1)
+  return sessions.length > 0 ? sessions[0].filePath : null
+}
+
+function loadTranscriptEvents(filePath: string, limit = 300): TimelineEvent[] {
+  if (!fs.existsSync(filePath)) return []
+  const content = fs.readFileSync(filePath, 'utf-8')
+  const lines = content.trim().split('\n').filter(Boolean)
+  const allEvents: TimelineEvent[] = []
+  for (const line of lines) {
+    allEvents.push(...parseTranscriptLine(line))
+  }
+  return allEvents.slice(-limit)
 }
 
 // --- Also keep existing NDJSON ops support ---
@@ -187,23 +248,37 @@ export function agentOpsPlugin(): Plugin {
           return
         }
 
-        // NEW: Transcript timeline — initial load (last 100 events from latest transcript)
+        // Session list
+        if (url.pathname === '/api/agent-ops/sessions') {
+          const sessions = listSessions(projectRoot, 10)
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify(sessions.map(s => ({ id: s.id, mtime: s.mtime, label: s.label }))))
+          return
+        }
+
+        // Timeline for a specific session (or latest)
         if (url.pathname === '/api/agent-ops/timeline') {
-          const tp = findLatestTranscript(projectRoot)
-          if (!tp || !fs.existsSync(tp)) {
+          const sessionId = url.searchParams.get('session')
+          let filePath: string | null = null
+
+          if (sessionId) {
+            const dir = getTranscriptDir(projectRoot)
+            if (dir) {
+              const candidate = path.join(dir, `${sessionId}.jsonl`)
+              if (fs.existsSync(candidate)) filePath = candidate
+            }
+          } else {
+            filePath = findLatestTranscript(projectRoot)
+          }
+
+          if (!filePath) {
             res.setHeader('Content-Type', 'application/json')
             res.end('[]')
             return
           }
-          const content = fs.readFileSync(tp, 'utf-8')
-          const lines = content.trim().split('\n').filter(Boolean)
-          const allEvents: TimelineEvent[] = []
-          for (const line of lines) {
-            allEvents.push(...parseTranscriptLine(line))
-          }
-          // Return last 200 events
+          const events = loadTranscriptEvents(filePath)
           res.setHeader('Content-Type', 'application/json')
-          res.end(JSON.stringify(allEvents.slice(-200)))
+          res.end(JSON.stringify(events))
           return
         }
 

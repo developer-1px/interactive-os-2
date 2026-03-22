@@ -35,6 +35,12 @@ interface ModifiedFile {
   editRanges: string[] // new_string snippets for highlight
 }
 
+interface SessionInfo {
+  id: string
+  mtime: number
+  label: string
+}
+
 // --- Behaviors ---
 
 const modifiedListbox = { ...listbox, followFocus: true }
@@ -91,6 +97,8 @@ function eventLabel(evt: TimelineEvent): string {
 // --- Component ---
 
 export default function PageAgentViewer() {
+  const [sessions, setSessions] = useState<SessionInfo[]>([])
+  const [activeSession, setActiveSession] = useState<string | null>(null)
   const [timeline, setTimeline] = useState<TimelineEvent[]>([])
   const [modifiedFiles, setModifiedFiles] = useState<ModifiedFile[]>([])
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
@@ -102,6 +110,7 @@ export default function PageAgentViewer() {
   const timelineBodyRef = useRef<HTMLDivElement>(null)
   const followModeRef = useRef(followMode)
   useEffect(() => { followModeRef.current = followMode }, [followMode])
+  const isLiveSession = sessions.length > 0 && activeSession === sessions[0]?.id
 
   // --- Derive modified files from timeline ---
   const deriveModified = useCallback((events: TimelineEvent[]): ModifiedFile[] => {
@@ -130,22 +139,38 @@ export default function PageAgentViewer() {
     return order.map(f => map.get(f)!)
   }, [])
 
-  // --- Initial fetch ---
+  // --- Load session list ---
   useEffect(() => {
-    fetch('/api/agent-ops/timeline')
+    fetch('/api/agent-ops/sessions')
+      .then(res => res.json())
+      .then((list: SessionInfo[]) => {
+        setSessions(list)
+        if (list.length > 0) setActiveSession(list[0].id)
+      })
+      .catch(() => setLoading(false))
+  }, [])
+
+  // --- Load timeline for active session ---
+  useEffect(() => {
+    if (!activeSession) return
+    setLoading(true)
+    const url = `/api/agent-ops/timeline?session=${encodeURIComponent(activeSession)}`
+    fetch(url)
       .then(res => res.json())
       .then((events: TimelineEvent[]) => {
         setTimeline(events)
         const modified = deriveModified(events)
         setModifiedFiles(modified)
-        if (modified.length > 0) setSelectedFile(modified[0].file)
+        setSelectedFile(modified.length > 0 ? modified[0].file : null)
+        setFileContent('')
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [deriveModified])
+  }, [activeSession, deriveModified])
 
-  // --- SSE timeline stream ---
+  // --- SSE timeline stream (live session only) ---
   useEffect(() => {
+    if (!isLiveSession) return
     const es = new EventSource('/api/agent-ops/timeline-stream')
 
     es.onmessage = (event) => {
@@ -198,7 +223,7 @@ export default function PageAgentViewer() {
     }
 
     return () => es.close()
-  }, [deriveModified])
+  }, [deriveModified, isLiveSession])
 
   // --- File content loading ---
   useEffect(() => {
@@ -295,6 +320,19 @@ export default function PageAgentViewer() {
       <div className={styles.avTimeline}>
         <div className={styles.avTimelineHeader}>
           <span className={styles.avTimelineTitle}>Timeline</span>
+          {sessions.length > 1 && (
+            <select
+              className={styles.avSessionSelect}
+              value={activeSession ?? ''}
+              onChange={e => setActiveSession(e.target.value)}
+            >
+              {sessions.map((s, i) => (
+                <option key={s.id} value={s.id}>
+                  {i === 0 ? '● ' : ''}{s.label}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         <div className={styles.avTimelineBody} ref={timelineBodyRef}>
           {timeline.length === 0 ? (
