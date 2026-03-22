@@ -121,7 +121,7 @@ export function QuickOpen({
     <div className={styles.qoBackdrop} onClick={handleBackdropClick}>
       <div className={styles.qoDialog} aria-label="Quick Open">
         <div className={styles.qoInputRow}>
-          <Search size={12} strokeWidth={1.5} className={styles.qoInputIcon} />
+          <Search size={12} className={styles.qoInputIcon} />
           <input
             ref={inputRef}
             className={styles.qoInput}

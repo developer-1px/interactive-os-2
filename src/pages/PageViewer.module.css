@@ -173,15 +173,15 @@
   color: var(--text-secondary);
 }
 
-.vw-icon--folder { color: #D4A843; opacity: 0.7; }
-.vw-icon--ts { color: #3178C6; opacity: 0.7; }
-.vw-icon--js { color: #F0DB4F; opacity: 0.7; }
-.vw-icon--json { color: #A3843A; opacity: 0.6; }
-.vw-icon--md { color: #518DBF; opacity: 0.6; }
-.vw-icon--css { color: #663399; opacity: 0.7; }
-.vw-icon--sh { color: #4EAA25; opacity: 0.6; }
-.vw-icon--img { color: #E5557F; opacity: 0.6; }
-.vw-icon--config { color: #8C8C8C; opacity: 0.6; }
+.vw-icon--folder { color: var(--file-folder); }
+.vw-icon--ts { color: var(--file-ts); }
+.vw-icon--js { color: var(--file-js); }
+.vw-icon--json { color: var(--file-json); }
+.vw-icon--md { color: var(--file-md); }
+.vw-icon--css { color: var(--file-css); }
+.vw-icon--sh { color: var(--file-sh); }
+.vw-icon--img { color: var(--file-img); }
+.vw-icon--config { color: var(--file-config); }
 
 /* --- Content panel --- */
 

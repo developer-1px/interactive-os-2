@@ -417,7 +417,7 @@ function App() {
               return (
                 <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
                   <div {...props} className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <ThemeIcon size={13} />
+                    <ThemeIcon size={12} />
                   </div>
                 </Tooltip>
               )

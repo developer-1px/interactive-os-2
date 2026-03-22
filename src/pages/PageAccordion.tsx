@@ -41,8 +41,8 @@ export default function PageAccordion() {
                 <span className="accordion-header__label">{d?.label as string}</span>
                 <span className="accordion-header__icon">
                   {state.expanded
-                    ? <ChevronDown size={13} strokeWidth={2} />
-                    : <ChevronRight size={13} strokeWidth={2} />}
+                    ? <ChevronDown size={12} />
+                    : <ChevronRight size={12} />}
                 </span>
               </div>
               {state.expanded && (

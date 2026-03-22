@@ -37,8 +37,8 @@ export default function PageDisclosure() {
               <div className={`disclosure-trigger${state.focused ? ' disclosure-trigger--focused' : ''}`}>
                 <span className="disclosure-trigger__icon">
                   {state.expanded
-                    ? <ChevronDown size={13} strokeWidth={2} />
-                    : <ChevronRight size={13} strokeWidth={2} />}
+                    ? <ChevronDown size={12} />
+                    : <ChevronRight size={12} />}
                 </span>
                 <span className="disclosure-trigger__label">{d?.label as string}</span>
               </div>
