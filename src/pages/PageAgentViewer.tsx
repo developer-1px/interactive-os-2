@@ -43,6 +43,7 @@ interface SessionInfo {
 
 // --- Behaviors ---
 
+const sessionListbox = { ...listbox, followFocus: true }
 const modifiedListbox = { ...listbox, followFocus: true }
 
 // --- Helpers ---
@@ -238,6 +239,27 @@ export default function PageAgentViewer() {
   }, [timeline.length])
 
   // --- Derived stores ---
+  // --- Session store ---
+  const sessionStore = useMemo(() => {
+    const entities: Record<string, Entity> = {}
+    const childIds: string[] = []
+    for (const s of sessions) {
+      entities[s.id] = { id: s.id, data: { label: s.label, mtime: s.mtime, isLive: s.id === sessions[0]?.id } }
+      childIds.push(s.id)
+    }
+    if (activeSession && entities[activeSession]) {
+      entities[FOCUS_ID] = { id: FOCUS_ID, focusedId: activeSession }
+    }
+    return createStore({ entities, relationships: { [ROOT_ID]: childIds } })
+  }, [sessions, activeSession])
+
+  const handleSessionChange = useCallback((newStore: NormalizedData) => {
+    const focusedId = (newStore.entities[FOCUS_ID]?.focusedId as string) ?? ''
+    if (focusedId && newStore.entities[focusedId]) {
+      setActiveSession(focusedId)
+    }
+  }, [])
+
   const modifiedStore = useMemo(
     () => buildModifiedStore(modifiedFiles, selectedFile),
     [modifiedFiles, selectedFile],
@@ -325,17 +347,23 @@ export default function PageAgentViewer() {
             <span className={styles.avSessionsTitle}>Sessions</span>
           </div>
           <div className={styles.avSessionList}>
-            {sessions.map((s, i) => (
-              <button
-                key={s.id}
-                className={`${styles.avSessionItem}${s.id === activeSession ? ` ${styles.avSessionItemActive}` : ''}`}
-                onClick={() => setActiveSession(s.id)}
-                title={s.label}
-              >
-                {i === 0 && <span className={styles.avSessionLive}>●</span>}
-                <span className={styles.avSessionLabel}>{s.label}</span>
-              </button>
-            ))}
+            <Aria
+              behavior={sessionListbox}
+              data={sessionStore}
+              plugins={[core()]}
+              onChange={handleSessionChange}
+              aria-label="Sessions"
+            >
+              <Aria.Item render={(node) => {
+                const data = node.data as { label: string; isLive: boolean }
+                return (
+                  <div className={styles.avSessionItem}>
+                    {data.isLive && <span className={styles.avSessionLive}>●</span>}
+                    <span className={styles.avSessionLabel}>{data.label}</span>
+                  </div>
+                )
+              }} />
+            </Aria>
           </div>
         </div>
       )}
