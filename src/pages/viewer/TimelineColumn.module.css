@@ -101,8 +101,15 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+.tcItem[style*="cursor"] {
+  background: var(--surface-0);
+  border-radius: 4px;
+  margin: 1px 4px;
+  padding: 3px 8px;
+}
+
 .tcItem[style*="cursor"]:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--accent-dim, rgba(91, 91, 214, 0.1));
 }
 
 .tcIcon {
