@@ -296,3 +296,39 @@
   opacity: 0.4;
   pointer-events: none;
 }
+
+/* ── Canvas Tab Group ── */
+.cms-tablist {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border-dim);
+  margin-bottom: 16px;
+}
+.cms-tab-item {
+  padding: 6px 14px;
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--text-secondary);
+  background: none; border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.1s, border-color 0.1s;
+}
+.cms-tab-item:hover { color: var(--text-bright); }
+.cms-tab-item[aria-selected="true"] {
+  color: var(--text-bright);
+  border-bottom-color: var(--accent);
+}
+.cms-tab-item[data-focused] {
+  background: var(--bg-hover);
+}
+.cms-tab-group {
+  margin: 24px 0;
+}
+.cms-tab-group--focused {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+.cms-tab-panel {
+  padding: 0;
+}
