@@ -1,7 +1,4 @@
-/* ═══════════════════════════════════════════
-   TimelineColumn — Claude-web-style conversation view
-   Sans-serif body, mono for code only, clean message separation
-   ═══════════════════════════════════════════ */
+/* TimelineColumn */
 
 .tc {
   min-width: 280px;
@@ -9,10 +6,10 @@
   background: var(--surface-1);
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--border-dim);
+  border-right: 1px solid var(--border-subtle);
 }
 
-/* --- Header --- */
+/* Header */
 
 .tcHeader {
   display: flex;
@@ -21,11 +18,10 @@
   height: 32px;
   padding: 0 12px;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .tcLabel {
-  font-family: var(--sans);
   font-size: 11px;
   font-weight: 600;
   color: var(--text-muted);
@@ -48,9 +44,6 @@
 
 .tcClose {
   margin-left: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 20px;
   height: 20px;
   background: none;
@@ -59,7 +52,6 @@
   color: var(--text-muted);
   cursor: pointer;
   font-size: 13px;
-  line-height: 1;
 }
 
 .tcClose:hover {
@@ -67,7 +59,7 @@
   color: var(--text-primary);
 }
 
-/* --- Body --- */
+/* Body */
 
 .tcBody {
   flex: 1;
@@ -78,32 +70,21 @@
 .tcEmpty {
   padding: 24px 16px;
   color: var(--text-muted);
-  font-family: var(--sans);
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
 }
 
-/* --- Timeline items --- */
+/* Items — grid: icon | text */
 
 .tcItem {
   display: grid;
   grid-template-columns: 16px 1fr;
   gap: 6px;
   padding: 3px 12px;
-  font-family: var(--sans);
   font-size: 13px;
   line-height: 1.7;
   color: var(--text-secondary);
-  min-width: 0;
   max-width: 720px;
-}
-
-.tcFile {
-  cursor: pointer;
-}
-
-.tcFile:hover {
-  background: var(--bg-hover);
 }
 
 .tcIcon {
@@ -120,12 +101,16 @@
   word-break: break-word;
   overflow: hidden;
   min-width: 0;
-  flex: 1;
 }
+
+/* File (clickable) */
+
+.tcFile { cursor: pointer; }
+.tcFile:hover { background: var(--bg-hover); }
 
 /* ─── Event types ─── */
 
-/* User message — chat bubble, clear section break */
+/* User */
 .tcUser {
   display: inline-flex;
   padding: 6px 14px;
@@ -136,37 +121,24 @@
   background: var(--accent-dim);
   border-radius: 16px;
 }
-.tcUser:first-child {
-  margin-top: 4px;
-}
-.tcUser .tcIcon {
-  color: var(--accent);
-}
+.tcUser:first-child { margin-top: 4px; }
+.tcUser .tcIcon { color: var(--accent); }
 
-/* Assistant — main readable content */
+/* Assistant */
 .tcAssistant {
-  padding: 4px 12px;
   color: var(--text-primary);
-  line-height: 1.7;
-  margin-bottom: 4px;
-  letter-spacing: 0.01em;
 }
 .tcAssistant .tcIcon { color: var(--text-secondary); }
 .tcAssistant .tcText { white-space: normal; }
 
-/* Tool events — same font size, color differentiates */
-.tcEdit .tcIcon,
-.tcWrite .tcIcon { color: var(--amber); }
-
+/* Tools — icon color only */
+.tcEdit .tcIcon, .tcWrite .tcIcon { color: var(--amber); }
 .tcRead { color: var(--text-muted); }
-.tcRead .tcIcon { color: var(--text-muted); }
-
 .tcBash { font-family: var(--mono); font-size: 12px; }
 .tcBash .tcIcon { color: var(--green); }
-
 .tcGrep, .tcGlob { color: var(--text-muted); }
 
-/* ─── Markdown reset — nuke all defaults, build from zero ─── */
+/* ─── Markdown reset ─── */
 
 .tcText :global(*) {
   margin: 0;
@@ -179,14 +151,8 @@
 
 /* ─── Markdown theme ─── */
 
-.tcText :global(h1) {
-  font-weight: 700;
-  color: var(--text-bright);
-  margin: 1em 0 0.4em;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
+/* Headings */
+.tcText :global(h1),
 .tcText :global(h2) {
   font-weight: 700;
   color: var(--text-bright);
@@ -194,58 +160,34 @@
   padding-bottom: 0.2em;
   border-bottom: 1px solid var(--border-subtle);
 }
-
-.tcText :global(h3) {
-  font-weight: 600;
-  color: var(--text-bright);
-  margin: 0.7em 0 0.2em;
-}
-
+.tcText :global(h3),
 .tcText :global(h4),
 .tcText :global(h5),
 .tcText :global(h6) {
   font-weight: 600;
-  color: var(--text-primary);
-  margin: 0.5em 0 0.2em;
+  color: var(--text-bright);
+  margin: 0.6em 0 0.2em;
 }
-
 .tcText :global(h1):first-child,
 .tcText :global(h2):first-child,
 .tcText :global(h3):first-child {
   margin-top: 0;
 }
 
-.tcText :global(p) + :global(p) {
-  margin-top: 0.5em;
-}
+/* Text */
+.tcText :global(p) + :global(p) { margin-top: 0.5em; }
+.tcText :global(strong) { font-weight: 700; color: var(--text-bright); }
+.tcText :global(em) { font-style: italic; }
 
-.tcText :global(ul),
-.tcText :global(ol) {
-  padding-left: 1.3em;
-  margin: 0.4em 0;
-}
-
-.tcText :global(li) {
-  margin: 0.2em 0;
-}
-
-.tcText :global(li)::marker {
-  color: var(--text-muted);
-}
-
-.tcText :global(strong) {
-  font-weight: 700;
-  color: var(--text-bright);
-}
-
-.tcText :global(em) {
-  font-style: italic;
-}
+/* Lists */
+.tcText :global(ul), .tcText :global(ol) { padding-left: 1.3em; margin: 0.3em 0; }
+.tcText :global(li) { margin: 0.15em 0; }
+.tcText :global(li)::marker { color: var(--text-muted); }
 
 /* Code block */
 .tcText :global(pre) {
   margin: 0.5em 0;
-  padding: 0.6em 0.8em;
+  padding: 0.5em 0.7em;
   background: var(--surface-0);
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
@@ -262,68 +204,25 @@
   font-size: 0.88em;
   color: var(--accent-hover);
   background: var(--accent-dim);
-  padding: 0.15em 0.35em;
-  border-radius: 4px;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
 }
-
 .tcText :global(pre) :global(code) {
+  color: inherit;
   background: none;
   padding: 0;
-  border-radius: 0;
 }
 
 /* Table */
-.tcText :global(table) {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 0.4em 0;
-}
+.tcText :global(table) { border-collapse: collapse; width: 100%; margin: 0.4em 0; }
+.tcText :global(th) { padding: 0.3em 0.5em; border-bottom: 2px solid var(--border-default); font-weight: 600; color: var(--text-bright); text-align: left; }
+.tcText :global(td) { padding: 0.25em 0.5em; border-bottom: 1px solid var(--border-subtle); text-align: left; }
 
-.tcText :global(th) {
-  padding: 0.3em 0.5em;
-  border-bottom: 2px solid var(--border-default);
-  text-align: left;
-  font-weight: 600;
-  color: var(--text-bright);
-}
+/* Block elements */
+.tcText :global(blockquote) { margin: 0.3em 0; padding-left: 0.7em; border-left: 3px solid var(--accent); color: var(--text-secondary); }
+.tcText :global(hr) { margin: 0.5em 0; border: none; border-top: 1px solid var(--border-default); }
+.tcText :global(img) { max-width: 100%; border-radius: 4px; }
+.tcText :global(a) { color: var(--accent); }
 
-.tcText :global(td) {
-  padding: 0.25em 0.5em;
-  border-bottom: 1px solid var(--border-subtle);
-  text-align: left;
-}
-
-.tcText :global(tr):hover :global(td) {
-  background: var(--surface-0);
-}
-
-/* Blockquote */
-.tcText :global(blockquote) {
-  margin: 0.4em 0;
-  padding: 0.2em 0 0.2em 0.8em;
-  border-left: 3px solid var(--accent);
-  color: var(--text-secondary);
-}
-
-.tcText :global(img) {
-  max-width: 100%;
-  border-radius: 4px;
-}
-
-.tcText :global(a) {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.tcText :global(hr) {
-  margin: 0.6em 0;
-  border: none;
-  border-top: 1px solid var(--border-default);
-}
-
-/* ─── Spacer ─── */
-
-.tcSpacer {
-  min-height: 80vh;
-}
+/* Spacer */
+.tcSpacer { min-height: 80vh; }
