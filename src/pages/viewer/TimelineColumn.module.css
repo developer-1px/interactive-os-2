@@ -86,8 +86,8 @@
 /* --- Timeline items --- */
 
 .tcItem {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 16px 1fr;
   gap: 6px;
   padding: 3px 12px;
   font-family: var(--sans);
@@ -106,13 +106,12 @@
 }
 
 .tcIcon {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 3px;
+  margin-top: 4px;
   color: var(--text-muted);
 }
 
@@ -127,6 +126,7 @@
 
 /* User message — chat bubble, clear section break */
 .tcUser {
+  display: block;
   padding: 8px 12px;
   margin: 28px 8px 8px;
   color: var(--text-primary);
