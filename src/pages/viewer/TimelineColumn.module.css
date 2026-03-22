@@ -127,14 +127,14 @@
 
 /* User message — chat bubble, clear section break */
 .tcUser {
-  display: block;
-  padding: 8px 12px;
+  display: inline-flex;
+  padding: 6px 14px;
   margin: 28px 8px 8px;
   max-width: 720px;
   color: var(--text-primary);
   font-weight: 500;
   background: var(--accent-dim);
-  border-radius: 12px;
+  border-radius: 16px;
 }
 .tcUser:first-child {
   margin-top: 4px;
