@@ -89,7 +89,7 @@
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  padding: 3px 12px;
+  padding: 4px 12px;
   font-family: var(--sans);
   font-size: 13px;
   line-height: 1.55;
@@ -97,15 +97,15 @@
   min-width: 0;
 }
 
-.tcItem:hover {
-  background: rgba(255, 255, 255, 0.02);
+.tcItem + .tcItem {
+  margin-top: 2px;
 }
 
 .tcFile {
   background: var(--surface-0);
   border-radius: 4px;
-  margin: 1px 4px;
-  padding: 3px 8px;
+  margin: 2px 4px;
+  padding: 4px 8px;
   cursor: pointer;
 }
 
@@ -153,10 +153,11 @@
 
 /* Assistant */
 .tcAssistant {
-  padding: 4px 12px;
+  padding: 6px 12px;
   color: var(--text-secondary);
   font-size: 13px;
   line-height: 1.6;
+  margin-bottom: 8px;
 }
 .tcAssistant .tcIcon { opacity: 0.3; }
 .tcAssistant .tcText { white-space: normal; }
