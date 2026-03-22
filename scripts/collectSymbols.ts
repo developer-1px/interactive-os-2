@@ -31,11 +31,10 @@ function collectTsFiles(dir: string): string[] {
 }
 
 function splitIdentifier(rawName: string): string[] {
-  // Strip leading/trailing underscores
   const name = rawName.replace(/^_+|_+$/g, "");
   if (name.length === 0) return [];
 
-  // UPPER_SNAKE_CASE: split by _
+  // UPPER_SNAKE_CASE
   if (/^[A-Z][A-Z0-9_]*$/.test(name)) {
     return name
       .split("_")
@@ -43,61 +42,95 @@ function splitIdentifier(rawName: string): string[] {
       .filter((s) => s.length > 0);
   }
 
-  // camelCase / PascalCase: split at case boundaries
-  const parts = name
+  // camelCase / PascalCase
+  return name
     .replace(/([a-z0-9])([A-Z])/g, "$1\0$2")
     .replace(/([A-Z]+)([A-Z][a-z])/g, "$1\0$2")
     .split("\0")
     .map((s) => s.toLowerCase())
     .filter((s) => s.length > 0);
-
-  return parts;
 }
 
-interface IdentifierEntry {
+interface ExportedSymbol {
   name: string;
+  kind: string;
   file: string;
 }
 
-type FragmentDictionary = Record<string, { identifiers: IdentifierEntry[] }>;
+function hasExportModifier(node: ts.Node): boolean {
+  return (
+    ts.canHaveModifiers(node) &&
+    ts.getModifiers(node)?.some(
+      (m) => m.kind === ts.SyntaxKind.ExportKeyword
+    ) === true
+  );
+}
 
-function collectIdentifiers(sourceFile: ts.SourceFile): string[] {
-  const names: string[] = [];
+function collectExports(sourceFile: ts.SourceFile): ExportedSymbol[] {
+  const symbols: ExportedSymbol[] = [];
 
-  function visit(node: ts.Node) {
-    if (ts.isIdentifier(node)) {
-      const parent = node.parent;
-      if (!parent) return;
-
-      const isDeclaration =
-        ts.isVariableDeclaration(parent) ||
-        ts.isFunctionDeclaration(parent) ||
-        ts.isClassDeclaration(parent) ||
-        ts.isInterfaceDeclaration(parent) ||
-        ts.isTypeAliasDeclaration(parent) ||
-        ts.isEnumDeclaration(parent) ||
-        ts.isParameter(parent) ||
-        ts.isPropertyDeclaration(parent) ||
-        ts.isPropertySignature(parent) ||
-        ts.isMethodDeclaration(parent) ||
-        ts.isMethodSignature(parent) ||
-        ts.isBindingElement(parent) ||
-        ts.isEnumMember(parent);
-
-      if (isDeclaration && parent.name === node) {
-        names.push(node.text);
-      }
-    }
-    ts.forEachChild(node, visit);
+  function addSymbol(name: string, kind: string) {
+    if (name.length <= 1) return;
+    symbols.push({ name, kind, file: "" });
   }
 
-  visit(sourceFile);
-  return names;
+  for (const stmt of sourceFile.statements) {
+    // export function foo() {}
+    if (ts.isFunctionDeclaration(stmt) && hasExportModifier(stmt)) {
+      if (stmt.name) addSymbol(stmt.name.text, "function");
+    }
+
+    // export class Foo {}
+    if (ts.isClassDeclaration(stmt) && hasExportModifier(stmt)) {
+      if (stmt.name) addSymbol(stmt.name.text, "class");
+    }
+
+    // export interface Foo {}
+    if (ts.isInterfaceDeclaration(stmt) && hasExportModifier(stmt)) {
+      addSymbol(stmt.name.text, "interface");
+    }
+
+    // export type Foo = ...
+    if (ts.isTypeAliasDeclaration(stmt) && hasExportModifier(stmt)) {
+      addSymbol(stmt.name.text, "type");
+    }
+
+    // export enum Foo {}
+    if (ts.isEnumDeclaration(stmt) && hasExportModifier(stmt)) {
+      addSymbol(stmt.name.text, "enum");
+    }
+
+    // export const/let/var foo = ...
+    if (ts.isVariableStatement(stmt) && hasExportModifier(stmt)) {
+      for (const decl of stmt.declarationList.declarations) {
+        if (ts.isIdentifier(decl.name)) {
+          addSymbol(decl.name.text, "variable");
+        }
+        // destructuring: export const { a, b } = ...
+        if (ts.isObjectBindingPattern(decl.name)) {
+          for (const el of decl.name.elements) {
+            if (ts.isIdentifier(el.name)) {
+              addSymbol(el.name.text, "variable");
+            }
+          }
+        }
+      }
+    }
+
+    // export default (named)
+    if (ts.isExportAssignment(stmt) && !stmt.isExportEquals) {
+      if (ts.isIdentifier(stmt.expression)) {
+        addSymbol(stmt.expression.text, "default");
+      }
+    }
+  }
+
+  return symbols;
 }
 
 function main() {
   const files = collectTsFiles(SRC_DIR);
-  const dictionary: FragmentDictionary = {};
+  const allSymbols: ExportedSymbol[] = [];
 
   for (const filePath of files) {
     const content = fs.readFileSync(filePath, "utf-8");
@@ -111,41 +144,32 @@ function main() {
         : ts.ScriptKind.TS
     );
 
-    const identifiers = collectIdentifiers(sourceFile);
+    const exports = collectExports(sourceFile);
     const relativePath = path.relative(PROJECT_ROOT, filePath);
+    for (const sym of exports) {
+      sym.file = relativePath;
+    }
+    allSymbols.push(...exports);
+  }
 
-    for (const name of identifiers) {
-      // Skip 1-char identifiers
-      if (name.length <= 1) continue;
+  // Deduplicate names
+  const names = [...new Set(allSymbols.map((s) => s.name))];
 
-      const fragments = splitIdentifier(name);
-      for (const fragment of fragments) {
-        if (fragment.length <= 1) continue;
-
-        if (!dictionary[fragment]) {
-          dictionary[fragment] = { identifiers: [] };
-        }
-
-        // Avoid duplicate name+file entries within the same fragment
-        const exists = dictionary[fragment].identifiers.some(
-          (e) => e.name === name && e.file === relativePath
-        );
-        if (!exists) {
-          dictionary[fragment].identifiers.push({
-            name,
-            file: relativePath,
-          });
-        }
-      }
+  // Group by fragment
+  const groups = new Map<string, Set<string>>();
+  for (const name of names) {
+    for (const fragment of splitIdentifier(name)) {
+      if (fragment.length <= 1) continue;
+      if (!groups.has(fragment)) groups.set(fragment, new Set());
+      groups.get(fragment)!.add(name);
     }
   }
 
-  // Sort fragments alphabetically
-  const sorted = Object.fromEntries(
-    Object.entries(dictionary).sort(([a], [b]) => a.localeCompare(b))
-  );
-
-  console.log(JSON.stringify(sorted, null, 2));
+  // Sort by fragment name
+  const sorted = [...groups.entries()].sort(([a], [b]) => a.localeCompare(b));
+  for (const [fragment, ids] of sorted) {
+    console.log(`${fragment}: ${[...ids].sort().join(", ")}`);
+  }
 }
 
 main();
