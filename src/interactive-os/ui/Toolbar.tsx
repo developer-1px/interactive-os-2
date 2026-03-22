@@ -1,0 +1,52 @@
+import React from 'react'
+
+import type { NormalizedData, Plugin, Command } from '../core/types'
+import type { BehaviorContext, NodeState } from '../behaviors/types'
+import { Aria } from '../components/aria'
+import { toolbar } from '../behaviors/toolbar'
+import { core } from '../plugins/core'
+
+interface ToolbarProps {
+  data: NormalizedData
+  plugins?: Plugin[]
+  onChange?: (data: NormalizedData) => void
+  onActivate?: (nodeId: string) => void
+  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  orientation?: 'horizontal' | 'vertical'
+}
+
+const defaultRenderItem = (item: Record<string, unknown>, _state: NodeState): React.ReactNode => (
+  <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
+)
+
+// Override toolbar's horizontal keyMap to use vertical arrows instead
+const verticalKeyMap: Record<string, ((ctx: BehaviorContext) => Command | void) | undefined> = {
+  ArrowDown: (ctx: BehaviorContext) => ctx.focusNext(),
+  ArrowUp: (ctx: BehaviorContext) => ctx.focusPrev(),
+  ArrowRight: undefined,
+  ArrowLeft: undefined,
+  Home: (ctx: BehaviorContext) => ctx.focusFirst(),
+  End: (ctx: BehaviorContext) => ctx.focusLast(),
+}
+
+export function Toolbar({
+  data,
+  plugins = [core()],
+  onChange,
+  onActivate,
+  renderItem = defaultRenderItem,
+  orientation = 'horizontal',
+}: ToolbarProps) {
+  return (
+    <Aria
+      behavior={toolbar}
+      data={data}
+      plugins={plugins}
+      onChange={onChange}
+      onActivate={onActivate}
+      keyMap={orientation === 'vertical' ? verticalKeyMap as Record<string, (ctx: BehaviorContext) => Command | void> : undefined}
+    >
+      <Aria.Item render={renderItem} />
+    </Aria>
+  )
+}
