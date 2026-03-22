@@ -181,14 +181,40 @@
 
 /* ─── Markdown theme ─── */
 
-.tcText :global(h1),
-.tcText :global(h2),
-.tcText :global(h3),
+.tcText :global(h1) {
+  font-weight: 700;
+  color: var(--text-bright);
+  margin: 1em 0 0.4em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tcText :global(h2) {
+  font-weight: 700;
+  color: var(--text-bright);
+  margin: 0.8em 0 0.3em;
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tcText :global(h3) {
+  font-weight: 600;
+  color: var(--text-bright);
+  margin: 0.7em 0 0.2em;
+}
+
 .tcText :global(h4),
 .tcText :global(h5),
 .tcText :global(h6) {
   font-weight: 600;
   color: var(--text-primary);
+  margin: 0.5em 0 0.2em;
+}
+
+.tcText :global(h1):first-child,
+.tcText :global(h2):first-child,
+.tcText :global(h3):first-child {
+  margin-top: 0;
 }
 
 .tcText :global(p) + :global(p) {
@@ -198,11 +224,11 @@
 .tcText :global(ul),
 .tcText :global(ol) {
   padding-left: 1.3em;
-  margin: 0.3em 0;
+  margin: 0.4em 0;
 }
 
 .tcText :global(li) {
-  margin: 0.15em 0;
+  margin: 0.2em 0;
 }
 
 .tcText :global(li)::marker {
@@ -210,16 +236,21 @@
 }
 
 .tcText :global(strong) {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-bright);
 }
 
+.tcText :global(em) {
+  font-style: italic;
+}
+
+/* Code block */
 .tcText :global(pre) {
-  margin: 0.4em 0;
-  padding: 0.5em 0.6em;
+  margin: 0.5em 0;
+  padding: 0.6em 0.8em;
   background: var(--surface-0);
-  border-radius: 4px;
-  border-left: 2px solid var(--border-default);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
   overflow-x: auto;
   font-family: var(--mono);
   font-size: 0.85em;
@@ -227,45 +258,70 @@
   white-space: pre;
 }
 
+/* Inline code */
 .tcText :global(code) {
   font-family: var(--mono);
   font-size: 0.88em;
   color: var(--text-bright);
+  background: var(--surface-0);
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
 }
 
+.tcText :global(pre) :global(code) {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Table */
 .tcText :global(table) {
   border-collapse: collapse;
   width: 100%;
+  margin: 0.4em 0;
 }
 
 .tcText :global(th) {
-  border-bottom: 1px solid var(--border-mid);
+  padding: 0.3em 0.5em;
+  border-bottom: 2px solid var(--border-default);
   text-align: left;
   font-weight: 600;
+  color: var(--text-bright);
 }
 
 .tcText :global(td) {
-  border-bottom: 1px solid var(--border-dim);
+  padding: 0.25em 0.5em;
+  border-bottom: 1px solid var(--border-subtle);
   text-align: left;
 }
 
+.tcText :global(tr):hover :global(td) {
+  background: var(--surface-0);
+}
+
+/* Blockquote */
 .tcText :global(blockquote) {
-  padding-left: 0.5em;
-  border-left: 2px solid var(--border-mid);
-  color: var(--text-muted);
+  margin: 0.4em 0;
+  padding: 0.2em 0 0.2em 0.8em;
+  border-left: 3px solid var(--accent);
+  color: var(--text-secondary);
 }
 
 .tcText :global(img) {
   max-width: 100%;
+  border-radius: 4px;
 }
 
 .tcText :global(a) {
   color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .tcText :global(hr) {
+  margin: 0.6em 0;
   border: none;
-  border-top: 1px solid var(--border-dim);
+  border-top: 1px solid var(--border-default);
 }
 
 /* ─── Spacer ─── */
