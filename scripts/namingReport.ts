@@ -120,31 +120,62 @@ interface NameWithFile {
   file: string;
 }
 
+function splitPathSegment(segment: string): string[] {
+  // Remove extension
+  const name = segment.replace(/\.\w+$/, "");
+  if (name.length === 0) return [];
+
+  // kebab-case or snake_case: split by - or _
+  if (name.includes("-") || name.includes("_")) {
+    return name
+      .split(/[-_]/)
+      .map((s) => s.toLowerCase())
+      .filter((s) => s.length > 1);
+  }
+
+  return splitIdentifier(name);
+}
+
 function buildFragmentDictionary(
   sourceFiles: { file: string; sf: ts.SourceFile }[]
 ): Map<string, NameWithFile[]> {
-  const allNames: NameWithFile[] = [];
   const seen = new Set<string>();
+  const groups = new Map<string, NameWithFile[]>();
 
-  for (const { file, sf } of sourceFiles) {
-    const relativePath = path.relative(PROJECT_ROOT, file);
-    for (const name of collectExportNames(sf)) {
-      const key = `${name}@${relativePath}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        allNames.push({ name, file: relativePath });
-      }
+  function addToGroup(fragment: string, name: string, file: string) {
+    if (fragment.length <= 1) return;
+    if (!groups.has(fragment)) groups.set(fragment, []);
+    const list = groups.get(fragment)!;
+    if (!list.some((e) => e.name === name && e.file === file)) {
+      list.push({ name, file });
     }
   }
 
-  const groups = new Map<string, NameWithFile[]>();
-  for (const entry of allNames) {
-    for (const fragment of splitIdentifier(entry.name)) {
-      if (fragment.length <= 1) continue;
-      if (!groups.has(fragment)) groups.set(fragment, []);
-      const list = groups.get(fragment)!;
-      if (!list.some((e) => e.name === entry.name && e.file === entry.file)) {
-        list.push(entry);
+  for (const { file, sf } of sourceFiles) {
+    const relativePath = path.relative(PROJECT_ROOT, file);
+
+    // Collect export names
+    for (const name of collectExportNames(sf)) {
+      const key = `${name}@${relativePath}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      for (const fragment of splitIdentifier(name)) {
+        addToGroup(fragment, name, relativePath);
+      }
+    }
+
+    // Collect file name and folder names as vocabulary
+    const segments = relativePath.split("/");
+    for (const segment of segments) {
+      const isFile = segment.includes(".");
+      const label = isFile ? `📄 ${segment}` : `📁 ${segment}/`;
+      const key = `${label}@path`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      for (const fragment of splitPathSegment(segment)) {
+        addToGroup(fragment, label, "path");
       }
     }
   }
