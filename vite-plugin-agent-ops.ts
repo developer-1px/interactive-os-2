@@ -126,7 +126,7 @@ interface SessionInfo {
   active: boolean
 }
 
-const ACTIVE_THRESHOLD_MS = 6 * 60 * 60 * 1000 // 6시간
+const ACTIVE_THRESHOLD_MS = 10 * 60 * 1000 // 10분 — 브라우저 연결 제한(6) 때문에 active를 좁게
 
 function listSessions(projectRoot: string, limit = 20): SessionInfo[] {
   const dir = getTranscriptDir(projectRoot)
