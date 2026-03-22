@@ -7,9 +7,7 @@ import { rename } from '../../interactive-os/plugins/rename'
 import { renameCommands } from '../../interactive-os/plugins/rename'
 import { history } from '../../interactive-os/plugins/history'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
-import { translatableEntriesToGrid, I18N_COLUMNS, getRowMetadata } from './cmsI18nAdapter'
-import { LOCALES } from './cms-types'
-import type { LocaleMap } from './cms-types'
+import { translatableEntriesToGrid, I18N_COLUMNS, diffGridChanges } from './cmsI18nAdapter'
 
 const plugins = [core(), rename(), history(), focusRecovery()]
 
@@ -25,28 +23,9 @@ export default function CmsI18nSheet({ engine, store, open }: CmsI18nSheetProps)
   prevGridDataRef.current = gridData
 
   const handleChange = useCallback((newGridData: NormalizedData) => {
-    const prev = prevGridDataRef.current
-
-    for (const [rowId, entity] of Object.entries(newGridData.entities)) {
-      if (rowId.startsWith('__')) continue
-      const prevEntity = prev.entities[rowId]
-      if (!prevEntity) continue
-      const newCells = (entity.data as Record<string, unknown>)?.cells as string[] | undefined
-      const prevCells = (prevEntity.data as Record<string, unknown>)?.cells as string[] | undefined
-      if (!newCells || !prevCells) continue
-
-      for (let i = 1; i < newCells.length; i++) {
-        if (newCells[i] !== prevCells[i]) {
-          const meta = getRowMetadata(newGridData, rowId)
-          if (!meta) continue
-          const locale = LOCALES[i - 1]
-          if (!locale) continue
-          const currentMap = (store.entities[meta.sourceEntityId]?.data as Record<string, unknown>)?.[meta.sourceField] as LocaleMap
-          if (!currentMap) continue
-          const updatedMap: LocaleMap = { ...currentMap, [locale]: newCells[i]! }
-          engine.dispatch(renameCommands.confirmRename(meta.sourceEntityId, meta.sourceField, updatedMap))
-        }
-      }
+    const changes = diffGridChanges(prevGridDataRef.current, newGridData, store)
+    for (const { entityId, field, updatedMap } of changes) {
+      engine.dispatch(renameCommands.confirmRename(entityId, field, updatedMap))
     }
   }, [store, engine])
 

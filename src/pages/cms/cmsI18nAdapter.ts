@@ -43,6 +43,45 @@ export function translatableEntriesToGrid(store: NormalizedData): NormalizedData
   }
 }
 
+/**
+ * Grid 변경 → CMS store 업데이트 명령 목록을 반환.
+ * 셀 diff를 감지하여 변경된 locale 값을 원본 entity의 LocaleMap에 반영하는 데 필요한 정보를 반환.
+ */
+export function diffGridChanges(
+  prev: NormalizedData,
+  next: NormalizedData,
+  cmsStore: NormalizedData,
+): Array<{ entityId: string; field: string; updatedMap: LocaleMap }> {
+  const changes: Array<{ entityId: string; field: string; updatedMap: LocaleMap }> = []
+
+  for (const [rowId, entity] of Object.entries(next.entities)) {
+    if (rowId.startsWith('__')) continue
+    const prevEntity = prev.entities[rowId]
+    if (!prevEntity) continue
+    const newCells = (entity.data as Record<string, unknown>)?.cells as string[] | undefined
+    const prevCells = (prevEntity.data as Record<string, unknown>)?.cells as string[] | undefined
+    if (!newCells || !prevCells) continue
+
+    for (let i = 1; i < newCells.length; i++) {
+      if (newCells[i] !== prevCells[i]) {
+        const meta = getRowMetadata(next, rowId)
+        if (!meta) continue
+        const locale = LOCALES[i - 1]
+        if (!locale) continue
+        const currentMap = (cmsStore.entities[meta.sourceEntityId]?.data as Record<string, unknown>)?.[meta.sourceField] as LocaleMap
+        if (!currentMap) continue
+        changes.push({
+          entityId: meta.sourceEntityId,
+          field: meta.sourceField,
+          updatedMap: { ...currentMap, [locale]: newCells[i]! },
+        })
+      }
+    }
+  }
+
+  return changes
+}
+
 export function getRowMetadata(
   gridData: NormalizedData,
   rowId: string,
