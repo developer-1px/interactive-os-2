@@ -8,6 +8,7 @@ import type { Locale } from './cms-types'
 import type { TemplateType } from './cms-templates'
 import { templateToCommand } from './cms-templates'
 import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
+import { collectSections } from './collectSections'
 import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
 import { listbox } from '../../interactive-os/behaviors/listbox'
 import { focusCommands } from '../../interactive-os/plugins/core'
@@ -111,7 +112,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
 
-  const sectionIds = useMemo(() => getChildren(store, ROOT_ID), [store])
+  const sectionIds = useMemo(() => collectSections(store, ROOT_ID), [store])
 
   const scrollToSection = useCallback((id: string) => {
     const el = document.querySelector(`[data-cms-root] [data-cms-id="${id}"]`) as HTMLElement
@@ -124,7 +125,16 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
       if (ctx.getChildren(ROOT_ID).length <= 1) return
       return crudCommands.remove(ctx.focused)
     }
+    const navigateInSections = (ctx: BehaviorContext, delta: number) => {
+      const idx = sectionIds.indexOf(ctx.focused)
+      const next = sectionIds[idx + delta]
+      if (next !== undefined) return focusCommands.setFocus(next)
+    }
     return {
+      ArrowDown: (ctx) => navigateInSections(ctx, +1),
+      ArrowUp: (ctx) => navigateInSections(ctx, -1),
+      Home: () => sectionIds[0] !== undefined ? focusCommands.setFocus(sectionIds[0]) : undefined,
+      End: () => sectionIds[sectionIds.length - 1] !== undefined ? focusCommands.setFocus(sectionIds[sectionIds.length - 1]!) : undefined,
       Delete: removeSection,
       Backspace: removeSection,
       'Mod+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
@@ -140,7 +150,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
         ;(document.querySelector('[data-cms-root]') as HTMLElement)?.focus()
       },
     }
-  }, [scrollToSection])
+  }, [scrollToSection, sectionIds])
 
   const aria = useAriaZone({
     engine,

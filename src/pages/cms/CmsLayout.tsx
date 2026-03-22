@@ -16,8 +16,8 @@ import { useEngine } from '../../interactive-os/hooks/useEngine'
 import { history } from '../../interactive-os/plugins/history'
 import { clipboard } from '../../interactive-os/plugins/clipboard'
 import { rename } from '../../interactive-os/plugins/rename'
-import { getSpatialParentId } from '../../interactive-os/plugins/spatial'
-import { getChildren, getParent } from '../../interactive-os/core/createStore'
+import { getParent } from '../../interactive-os/core/createStore'
+import { collectSections } from './collectSections'
 import { ROOT_ID } from '../../interactive-os/core/types'
 import type { Plugin } from '../../interactive-os/core/types'
 import { cmsCanAccept } from './cms-schema'
@@ -35,31 +35,23 @@ export default function CmsLayout() {
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
 
-  // Compute which root section is currently active from canvas focus
-  // deps: store is intentionally omitted — recomputes only when focus changes.
-  // Tree topology changes always accompany a focus change (focus recovery).
+  const sidebarSections = useMemo(() => collectSections(store, ROOT_ID), [store])
+
   const activeSectionId = useMemo(() => {
     if (!canvasFocusedId) return null
-
-    const spatialParent = getSpatialParentId(store)
-    const sections = getChildren(store, ROOT_ID)
-
-    if (spatialParent === ROOT_ID) {
-      return sections.includes(canvasFocusedId) ? canvasFocusedId : null
-    }
-
-    // Walk up to find the root-level section ancestor
+    // If focused node is itself a section in the sidebar list, return it
+    if (sidebarSections.includes(canvasFocusedId)) return canvasFocusedId
+    // Walk up to find the nearest section ancestor that's in the sidebar list
     let current = canvasFocusedId
     while (current) {
       const parent = getParent(store, current)
-      if (!parent || parent === ROOT_ID) {
-        return sections.includes(current) ? current : null
-      }
+      if (!parent) return null
+      if (sidebarSections.includes(parent)) return parent
       current = parent
     }
     return null
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvasFocusedId])
+  }, [canvasFocusedId, sidebarSections])
 
   return (
     <div className="cms-layout">
