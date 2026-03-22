@@ -210,25 +210,20 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     requestAnimationFrame(() => scrollToSection(rootId))
   }
 
-  // When container itself has focus (before an option captures it), forward key events to focused option
-  const handleContainerKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+  // When container itself receives focus, move DOM focus to the focused option
+  const handleContainerFocus = useCallback((e: React.FocusEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) return
     const focusedOption = listRef.current?.querySelector(`[data-sidebar-id="${aria.focused}"]`) as HTMLElement
-    if (!focusedOption) return
-    focusedOption.dispatchEvent(new KeyboardEvent(e.type, {
-      key: e.key, code: e.code, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, altKey: e.altKey, metaKey: e.metaKey, bubbles: true, cancelable: true,
-    }))
-    e.preventDefault()
+    focusedOption?.focus()
   }, [aria.focused])
 
   return (
     <aside className="cms-sidebar" aria-label="Sections">
-      <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onKeyDown={handleContainerKeyDown}>
+      <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onFocus={handleContainerFocus}>
         {(() => {
           let prevRootAncestor = ''
           let prevTabItem = ''
-          let sectionIndex = 0
-          return sectionIds.map((sectionId) => {
+          return sectionIds.map((sectionId, index) => {
             const rootAncestor = getRootAncestor(store, sectionId)
             const tabItemId = getTabItemAncestor(store, sectionId)
             const elements: React.ReactNode[] = []
@@ -259,7 +254,6 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
 
             prevRootAncestor = rootAncestor
             prevTabItem = tabItemId ?? ''
-            sectionIndex++
 
             const props = aria.getNodeProps(sectionId)
             const state = aria.getNodeState(sectionId)
@@ -276,7 +270,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
                 <div className="cms-sidebar__thumb-inner">
                   <SectionThumbnail data={store} sectionId={sectionId} locale={locale} />
                 </div>
-                <span className="cms-sidebar__thumb-index">{sectionIndex}</span>
+                <span className="cms-sidebar__thumb-index">{index + 1}</span>
               </div>
             )
 
