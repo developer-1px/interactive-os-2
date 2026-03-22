@@ -5,9 +5,9 @@
 .root {
   max-width: 720px;
   margin: 0 auto;
-  padding: 32px 48px;
+  padding: var(--space-2xl) 48px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-lg);
   font-weight: 450;
   color: var(--text-primary);
   line-height: 1.75;
@@ -21,7 +21,7 @@
 }
 
 .root h1 {
-  font-size: 28px;
+  font-size: var(--text-2xl);
   font-weight: 800;
   color: var(--text-bright);
   margin: 2.5em 0 0.6em;
@@ -32,7 +32,7 @@
 }
 
 .root h2 {
-  font-size: 20px;
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--text-bright);
   margin: 2em 0 0.5em;
@@ -96,9 +96,9 @@
 
 .root code {
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: var(--text-md);
   background: var(--surface-base);
-  padding: 2px 6px;
+  padding: 2px var(--space-sm);
   border-radius: var(--radius-xs);
   border: 1px solid var(--border-subtle);
 }
@@ -107,7 +107,7 @@
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
-  padding: 16px 20px;
+  padding: var(--space-lg) var(--space-xl);
   overflow-x: auto;
   margin: 1.5em 0;
 }
@@ -116,7 +116,7 @@
   background: none;
   border: none;
   padding: 0;
-  font-size: 13px;
+  font-size: var(--text-md);
   line-height: 1.6;
   color: var(--text-primary);
 }
@@ -146,14 +146,14 @@
 .root table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: var(--text-md);
   margin: 1.2em 0;
 }
 
 .root th,
 .root td {
   border: 1px solid var(--border-subtle);
-  padding: 8px 12px;
+  padding: var(--space-sm) var(--space-md);
   text-align: left;
 }
 

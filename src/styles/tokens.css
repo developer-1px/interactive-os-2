@@ -91,6 +91,13 @@
   --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
   --sans: 'Manrope', -apple-system, system-ui, sans-serif;
 
+  --text-xs:  10px;
+  --text-sm:  11px;
+  --text-md:  13px;
+  --text-lg:  15px;
+  --text-xl:  20px;
+  --text-2xl: 28px;
+
   /* ── Layout ── */
   --radius:    8px;
   --radius-sm: 6px;
