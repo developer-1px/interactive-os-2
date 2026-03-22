@@ -180,9 +180,18 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
 
   // --- Smart scroll ---
   const prevLengthRef = useRef(0)
+  const initialLoadRef = useRef(true)
   useEffect(() => {
     const el = containerRef.current
     if (!el || timeline.length === 0) return
+
+    // 초기 로드: 최신(맨 아래)으로 스크롤
+    if (initialLoadRef.current) {
+      initialLoadRef.current = false
+      prevLengthRef.current = timeline.length
+      requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
+      return
+    }
 
     const newEvents = timeline.slice(prevLengthRef.current)
     prevLengthRef.current = timeline.length
