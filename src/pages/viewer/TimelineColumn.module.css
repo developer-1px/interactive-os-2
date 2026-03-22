@@ -112,6 +112,95 @@
   min-width: 0;
 }
 
+/* Markdown inside timeline — compact reset for narrow columns */
+.tcText :global(h1),
+.tcText :global(h2),
+.tcText :global(h3),
+.tcText :global(h4),
+.tcText :global(h5),
+.tcText :global(h6) {
+  font-size: inherit;
+  font-weight: 600;
+  margin: 4px 0 2px;
+  line-height: 1.4;
+}
+
+.tcText :global(p) {
+  margin: 2px 0;
+}
+
+.tcText :global(ul),
+.tcText :global(ol) {
+  margin: 2px 0;
+  padding-left: 16px;
+}
+
+.tcText :global(li) {
+  margin: 1px 0;
+}
+
+.tcText :global(pre) {
+  margin: 4px 0;
+  padding: 6px 8px;
+  background: var(--surface-0, rgba(0,0,0,0.15));
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 10px;
+  line-height: 1.4;
+  white-space: pre;
+}
+
+.tcText :global(code) {
+  font-family: var(--mono, monospace);
+  font-size: 0.9em;
+  padding: 1px 3px;
+  background: var(--surface-0, rgba(0,0,0,0.1));
+  border-radius: 2px;
+}
+
+.tcText :global(pre) :global(code) {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+
+.tcText :global(table) {
+  font-size: 10px;
+  border-collapse: collapse;
+  margin: 4px 0;
+  width: 100%;
+}
+
+.tcText :global(th),
+.tcText :global(td) {
+  padding: 2px 4px;
+  border: 1px solid var(--border-dim);
+  text-align: left;
+}
+
+.tcText :global(blockquote) {
+  margin: 2px 0;
+  padding: 2px 8px;
+  border-left: 2px solid var(--border-mid);
+  color: var(--text-muted);
+}
+
+.tcText :global(img) {
+  max-width: 100%;
+  height: auto;
+}
+
+.tcText :global(a) {
+  color: var(--accent, #4da6ff);
+  text-decoration: none;
+}
+
+.tcText :global(hr) {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid var(--border-dim);
+}
+
 /* Event type colors */
 .tcUser {
   color: var(--accent, #4da6ff);
