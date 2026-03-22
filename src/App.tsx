@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Presentation, BookOpen, Activity, Component } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Moon, Palette, Presentation, BookOpen, Activity, Component } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -240,13 +240,13 @@ const navItems: NavItem[] = [
   { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
   { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
   { id: 'ui-showcase', label: 'UI', icon: Component, path: '/ui' },
+  { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/theme' },
   ...routeConfig.map((g) => ({ id: g.id, label: g.label, icon: g.icon, path: g.basePath })),
-  { id: 'theme', label: 'Theme', icon: Sun, path: '/theme' },
 ]
 
 // --- Pre-computed stores ---
 
-const APP_IDS = ['cms', 'viewer', 'agent', 'ui-showcase']
+const APP_IDS = ['cms', 'viewer', 'agent', 'ui-showcase', 'theme-creator']
 const OS_IDS = routeConfig.map((g) => g.id)
 const UTIL_IDS = ['theme']
 
@@ -350,7 +350,7 @@ function App() {
   const isCms = pathname === '/'
 
   // URL → ActivityBar focus binding (CRUD two-way)
-  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isAgent ? 'agent' : isUiShowcase ? 'ui-showcase' : isTheme ? 'theme' : isCms ? 'cms' : undefined)
+  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isAgent ? 'agent' : isUiShowcase ? 'ui-showcase' : isTheme ? 'theme-creator' : isCms ? 'cms' : undefined)
   const activityBarData = useMemo(() => {
     if (!activityBarFocusId) return activityBarStore
     return {
@@ -363,7 +363,9 @@ function App() {
   }, [activityBarFocusId])
 
   const handleActivityBarActivate = useCallback((nodeId: string) => {
-    if (navPaths[nodeId]) {
+    if (nodeId === 'theme') {
+      setTheme(t => t === 'dark' ? 'light' : 'dark')
+    } else if (navPaths[nodeId]) {
       navigate(navPaths[nodeId])
     }
   }, [navigate])
@@ -411,12 +413,11 @@ function App() {
           </div>
           <div role="group" aria-label="Util" className="activity-bar__util">
             <Aria.Item asChild ids={UTIL_IDS} render={(node, state, props) => {
-              const nav = navItems.find((n) => n.id === node.id)!
-              const Icon = nav.icon
+              const ThemeIcon = theme === 'dark' ? Sun : Moon
               return (
-                <Tooltip content={nav.label}>
-                  <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <Icon size={16} />
+                <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
+                  <div {...props} className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`}>
+                    <ThemeIcon size={13} />
                   </div>
                 </Tooltip>
               )
