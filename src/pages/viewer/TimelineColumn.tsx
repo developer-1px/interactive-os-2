@@ -6,7 +6,9 @@ import {
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import { useVirtualScroll } from './useVirtualScroll'
-import { MarkdownViewer } from './MarkdownViewer'
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import remarkBreaks from 'remark-breaks'
 
 // --- Types ---
 
@@ -86,7 +88,7 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
       </span>
       <span className={styles.tcText}>
         {evt.type === 'assistant' && evt.text
-          ? <MarkdownViewer content={evt.text} />
+          ? <Markdown remarkPlugins={[remarkGfm, remarkBreaks]}>{evt.text}</Markdown>
           : eventLabel(evt)}
       </span>
     </div>

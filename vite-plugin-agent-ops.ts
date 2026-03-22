@@ -41,9 +41,29 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
     }
     // Strip XML tags for cleaner display
     text = text.replace(/<[^>]+>/g, '').trim()
-    if (text) {
-      events.push({ type: 'user', ts, text })
-    }
+    if (!text) return []
+
+    // Filter out skill/system noise — only surface user's actual input
+    const noisePatterns = [
+      /^Base directory for this skill:/,
+      /^## 역할/,
+      /^This skill/,
+      /^Launching skill:/,
+      /^ARGUMENTS:/,
+      /^Caveat:/,
+      /^\/clear$/,
+      /^clear$/,
+    ]
+    if (noisePatterns.some(p => p.test(text))) return []
+
+    // If text is a skill body (very long system-injected content), truncate to first line
+    // Skill bodies are injected as user messages and start with known patterns
+    const isSkillBody = text.length > 500 && (
+      text.includes('## ') && text.includes('###') && text.includes('```')
+    )
+    if (isSkillBody) return [] // skip skill body entirely
+
+    events.push({ type: 'user', ts, text })
   }
 
   if (type === 'assistant') {
