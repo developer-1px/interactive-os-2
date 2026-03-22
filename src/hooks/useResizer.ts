@@ -26,10 +26,11 @@ export function useResizer(options: UseResizerOptions) {
   const startPos = useRef(0)
   const startSize = useRef(0)
   const sizeRef = useRef(size)
-  sizeRef.current = size
   const separatorRef = useRef<HTMLElement | null>(null)
   const isHorizontalRef = useRef(direction === 'horizontal')
-  isHorizontalRef.current = direction === 'horizontal'
+
+  useEffect(() => { sizeRef.current = size }, [size])
+  useEffect(() => { isHorizontalRef.current = direction === 'horizontal' }, [direction])
 
   const clamp = useCallback((v: number) => Math.min(maxSize, Math.max(minSize, v)), [minSize, maxSize])
 
