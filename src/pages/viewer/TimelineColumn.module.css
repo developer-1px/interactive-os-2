@@ -182,7 +182,18 @@
   opacity: 0.6;
 }
 
-/* ─── Markdown — inherits parent scale, no independent sizing ─── */
+/* ─── Markdown reset — nuke all defaults, build from zero ─── */
+
+.tcText :global(*) {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+/* ─── Markdown theme ─── */
 
 .tcText :global(h1),
 .tcText :global(h2),
@@ -190,29 +201,17 @@
 .tcText :global(h4),
 .tcText :global(h5),
 .tcText :global(h6) {
-  font-size: inherit;
   font-weight: 600;
-  margin: 0;
-  line-height: inherit;
   color: var(--text-primary);
 }
 
-.tcText :global(p) {
-  margin: 0;
-}
-
 .tcText :global(p) + :global(p) {
-  margin-top: 0.4em;
+  margin-top: 0.35em;
 }
 
 .tcText :global(ul),
 .tcText :global(ol) {
-  margin: 0.3em 0;
-  padding-left: 1.4em;
-}
-
-.tcText :global(li) {
-  margin: 0;
+  padding-left: 1.2em;
 }
 
 .tcText :global(li)::marker {
@@ -225,8 +224,8 @@
 }
 
 .tcText :global(pre) {
-  margin: 0.3em 0;
-  padding: 0.4em 0.6em;
+  margin: 0.25em 0;
+  padding: 0.3em 0.5em;
   background: var(--surface-0);
   border-radius: 3px;
   overflow-x: auto;
@@ -239,60 +238,39 @@
 .tcText :global(code) {
   font-family: var(--mono);
   font-size: 0.88em;
-  padding: 0.1em 0.3em;
-  background: var(--surface-0);
-  border-radius: 2px;
-}
-
-.tcText :global(pre) :global(code) {
-  padding: 0;
-  background: none;
-  font-size: inherit;
 }
 
 .tcText :global(table) {
-  font-size: 0.92em;
   border-collapse: collapse;
-  margin: 0.3em 0;
   width: 100%;
 }
 
 .tcText :global(th) {
-  padding: 0.2em 0.4em;
   border-bottom: 1px solid var(--border-mid);
   text-align: left;
   font-weight: 600;
 }
 
 .tcText :global(td) {
-  padding: 0.15em 0.4em;
   border-bottom: 1px solid var(--border-dim);
   text-align: left;
 }
 
 .tcText :global(blockquote) {
-  margin: 0.3em 0;
-  padding: 0 0.6em;
+  padding-left: 0.5em;
   border-left: 2px solid var(--border-mid);
   color: var(--text-muted);
 }
 
 .tcText :global(img) {
   max-width: 100%;
-  height: auto;
 }
 
 .tcText :global(a) {
   color: var(--accent, #5b5bd6);
-  text-decoration: none;
-}
-
-.tcText :global(a):hover {
-  text-decoration: underline;
 }
 
 .tcText :global(hr) {
-  margin: 0.5em 0;
   border: none;
   border-top: 1px solid var(--border-dim);
 }
