@@ -96,14 +96,19 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
 
 // --- Component ---
 
+const INITIAL_TAIL = 80
+const LOAD_MORE_CHUNK = 100
+
 export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onClose, onFileClick }: TimelineColumnProps) {
   const [timeline, setTimeline] = useState<TimelineEvent[]>([])
   const [fetchError, setFetchError] = useState<string | null>(null)
+  const totalRef = useRef(0)        // total events on server
+  const loadedFromRef = useRef(0)   // how far back we've loaded (server index)
+  const loadingMoreRef = useRef(false)
 
   // Track editRanges per file for onFileClick
   const editRangesRef = useRef<Map<string, string[]>>(new Map())
 
-  // Accumulate editRanges from events
   const trackEditRanges = useCallback((events: TimelineEvent[]) => {
     for (const evt of events) {
       if (evt.type !== 'tool_use') continue
@@ -119,25 +124,58 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
   }, [])
 
   // --- Virtual scroll ---
-  const spacerHeight = 2000 // approximate 100vh spacer for last-user padding
+  const spacerHeight = 2000
   const { containerRef, totalHeight, visibleRange, offsetTop, measureItem, scrollToIndex } = useVirtualScroll({
     itemCount: timeline.length,
     estimatedItemHeight: 40,
     overscan: 10,
   })
 
-  // --- Initial timeline fetch ---
+  // --- Initial timeline fetch (tail only) ---
   useEffect(() => {
-    fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}`)
+    fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}&tail=${INITIAL_TAIL}`)
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
-      .then((events: TimelineEvent[]) => {
+      .then((data: { events: TimelineEvent[]; total: number }) => {
         editRangesRef.current = new Map()
-        trackEditRanges(events)
-        setTimeline(events)
+        trackEditRanges(data.events)
+        setTimeline(data.events)
+        totalRef.current = data.total
+        loadedFromRef.current = Math.max(0, data.total - data.events.length)
         setFetchError(null)
       })
       .catch(e => setFetchError(e.message))
   }, [sessionId, trackEditRanges])
+
+  // --- Load older events on scroll-up ---
+  const loadOlder = useCallback(() => {
+    if (loadingMoreRef.current || loadedFromRef.current <= 0) return
+    loadingMoreRef.current = true
+
+    const before = loadedFromRef.current
+    fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}&tail=${LOAD_MORE_CHUNK}&before=${before}`)
+      .then(r => r.json())
+      .then((data: { events: TimelineEvent[]; total: number }) => {
+        if (data.events.length > 0) {
+          trackEditRanges(data.events)
+          setTimeline(prev => [...data.events, ...prev])
+          loadedFromRef.current = Math.max(0, before - data.events.length)
+        }
+      })
+      .finally(() => { loadingMoreRef.current = false })
+  }, [sessionId, trackEditRanges])
+
+  // Detect scroll near top → load more
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const handleScroll = () => {
+      if (el.scrollTop < 200 && loadedFromRef.current > 0) {
+        loadOlder()
+      }
+    }
+    el.addEventListener('scroll', handleScroll, { passive: true })
+    return () => el.removeEventListener('scroll', handleScroll)
+  }, [containerRef, loadOlder])
 
   // --- SSE connection (live sessions only) ---
   useEffect(() => {
@@ -154,6 +192,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
       pendingEvents = []
       trackEditRanges(batch)
       setTimeline(prev => [...prev, ...batch])
+      totalRef.current += batch.length
     }
 
     es.onmessage = (event) => {
@@ -166,12 +205,14 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
     es.onerror = () => {
       es.addEventListener('open', function refetch() {
         es.removeEventListener('open', refetch)
-        fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}`)
+        fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}&tail=${INITIAL_TAIL}`)
           .then(r => r.json())
-          .then((events: TimelineEvent[]) => {
+          .then((data: { events: TimelineEvent[]; total: number }) => {
             editRangesRef.current = new Map()
-            trackEditRanges(events)
-            setTimeline(events)
+            trackEditRanges(data.events)
+            setTimeline(data.events)
+            totalRef.current = data.total
+            loadedFromRef.current = Math.max(0, data.total - data.events.length)
           })
       })
     }
@@ -189,33 +230,47 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
     const el = containerRef.current
     if (!el || timeline.length === 0) return
 
-    // 초기 로드: 최신(맨 아래)으로 스크롤
     if (initialLoadRef.current) {
       initialLoadRef.current = false
       prevLengthRef.current = timeline.length
-      requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
+      // 초기 80개만 로드 → 바로 맨 아래로
+      requestAnimationFrame(() => {
+        el.scrollTo(0, el.scrollHeight)
+        // 한 프레임 더 — virtual scroll 측정 후 보정
+        requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
+      })
       return
     }
 
-    const newEvents = timeline.slice(prevLengthRef.current)
-    prevLengthRef.current = timeline.length
+    const prevLen = prevLengthRef.current
+    const newLen = timeline.length
 
-    if (newEvents.length === 0) {
-      // Full refetch — scroll to bottom
-      el.scrollTo(0, el.scrollHeight)
-      return
+    // prepend (load older) — 스크롤 위치 보존
+    if (newLen > prevLen && prevLen > 0) {
+      const addedAtFront = newLen - prevLen
+      // 맨 앞에 추가된 경우인지 확인 (SSE append와 구분)
+      const isAppend = timeline[newLen - 1] !== timeline[prevLen - 1]
+
+      if (!isAppend && addedAtFront > 0) {
+        // prepend — 스크롤 위치 보정
+        prevLengthRef.current = newLen
+        return
+      }
     }
+
+    prevLengthRef.current = newLen
+    const newEvents = timeline.slice(prevLen)
+
+    if (newEvents.length === 0) return
 
     const hasUserEvent = newEvents.some(e => e.type === 'user')
 
     if (hasUserEvent) {
-      // Find last user event index and scroll to it
       const lastUser = findLastUserIndex(timeline)
       if (lastUser >= 0) scrollToIndex(lastUser, 'start')
     } else if (isNearBottom(el)) {
       el.scrollTo(0, el.scrollHeight)
     }
-    // If scrolled up and no user event, don't auto-scroll
   }, [timeline, scrollToIndex, containerRef])
 
   // --- File click handler ---

@@ -269,9 +269,14 @@ export function agentOpsPlugin(): Plugin {
           return
         }
 
-        // Timeline for a specific session (or latest)
+        // Timeline for a specific session — supports tail pagination
+        // ?session=X          → last 100 events + total count
+        // ?session=X&tail=200 → last 200 events + total count
+        // ?session=X&before=500 → 100 events before index 500 (for scroll-up loading)
         if (url.pathname === '/api/agent-ops/timeline') {
           const sessionId = url.searchParams.get('session')
+          const tail = parseInt(url.searchParams.get('tail') ?? '100', 10)
+          const before = url.searchParams.get('before')
           let filePath: string | null = null
 
           if (sessionId) {
@@ -286,12 +291,23 @@ export function agentOpsPlugin(): Plugin {
 
           if (!filePath) {
             res.setHeader('Content-Type', 'application/json')
-            res.end('[]')
+            res.end(JSON.stringify({ events: [], total: 0 }))
             return
           }
-          const events = loadTranscriptEvents(filePath)
+          const allEvents = loadTranscriptEvents(filePath)
+          const total = allEvents.length
+
+          let events: TimelineEvent[]
+          if (before) {
+            const end = parseInt(before, 10)
+            const start = Math.max(0, end - tail)
+            events = allEvents.slice(start, end)
+          } else {
+            events = allEvents.slice(-tail)
+          }
+
           res.setHeader('Content-Type', 'application/json')
-          res.end(JSON.stringify(events))
+          res.end(JSON.stringify({ events, total }))
           return
         }
 
