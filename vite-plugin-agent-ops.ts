@@ -159,7 +159,7 @@ function findLatestTranscript(projectRoot: string): string | null {
   return sessions.length > 0 ? sessions[0].filePath : null
 }
 
-function loadTranscriptEvents(filePath: string): TimelineEvent[] {
+function loadTranscriptEvents(filePath: string, limit = 2000): TimelineEvent[] {
   if (!fs.existsSync(filePath)) return []
   const content = fs.readFileSync(filePath, 'utf-8')
   const lines = content.trim().split('\n').filter(Boolean)
@@ -167,7 +167,7 @@ function loadTranscriptEvents(filePath: string): TimelineEvent[] {
   for (const line of lines) {
     allEvents.push(...parseTranscriptLine(line))
   }
-  return allEvents
+  return allEvents.length > limit ? allEvents.slice(-limit) : allEvents
 }
 
 // --- Also keep existing NDJSON ops support ---
