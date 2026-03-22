@@ -1,0 +1,46 @@
+.splitContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  gap: 12px;
+  min-height: 400px;
+}
+
+.panel {
+  min-height: 0;
+  overflow: auto;
+}
+
+.logPanel {
+  grid-column: 1 / -1;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  line-height: 1.6;
+  padding: 8px 12px;
+  background: var(--color-surface-2, #1a1a2e);
+  border-radius: 6px;
+}
+
+.logEntry {
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.logEntry[data-batch-child] {
+  padding-left: 16px;
+  opacity: 0.7;
+}
+
+.logDiff {
+  color: var(--color-accent, #7c8aff);
+}
+
+.panelLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.5;
+  margin-bottom: 6px;
+}
