@@ -27,37 +27,81 @@ const sessionListbox = { ...listbox, followFocus: true }
 
 const CORE_PLUGINS = [core()]
 
+// --- localStorage-backed column order ---
+
+const STORAGE_KEY = 'agent-viewer-columns'
+
+function loadColumnOrder(): string[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch { return [] }
+}
+
+function saveColumnOrder(order: string[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(order))
+}
+
 // --- Component ---
 
 export default function PageAgentViewer() {
   const [sessions, setSessions] = useState<SessionInfo[]>([])
-  const [openArchiveIds, setOpenArchiveIds] = useState<Set<string>>(new Set())
+  const [columnOrder, setColumnOrderRaw] = useState<string[]>(loadColumnOrder)
+
+  const updateColumnOrder = useCallback((updater: (prev: string[]) => string[]) => {
+    setColumnOrderRaw(prev => {
+      const next = updater(prev)
+      if (next !== prev) saveColumnOrder(next)
+      return next
+    })
+  }, [])
   const [modalFile, setModalFile] = useState<{ path: string; editRanges?: string[] } | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Session list polling (5s)
+  // Session list polling (5s) — auto-append new active sessions to columnOrder
   useEffect(() => {
+    const handleSessions = (fetched: SessionInfo[]) => {
+      setSessions(fetched)
+      if (fetched.length === 0) return
+
+      const sessionIds = new Set(fetched.map(s => s.id))
+      const activeIds = new Set(fetched.filter(s => s.active).map(s => s.id))
+
+      updateColumnOrder(prev => {
+        const kept = prev.filter(id => sessionIds.has(id))
+        const keptSet = new Set(kept)
+        const appended = [...activeIds].filter(id => !keptSet.has(id))
+        const next = [...kept, ...appended]
+        if (next.length !== prev.length || next.some((id, i) => id !== prev[i])) {
+          return next
+        }
+        return prev
+      })
+    }
+
     const fetchSessions = () =>
-      fetch('/api/agent-ops/sessions').then(r => r.json()).then(setSessions).finally(() => setLoading(false))
+      fetch('/api/agent-ops/sessions').then(r => r.json()).then(handleSessions).finally(() => setLoading(false))
     fetchSessions()
     const interval = setInterval(fetchSessions, 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [updateColumnOrder])
 
-  const activeSessions = sessions.filter(s => s.active)
-  const archiveSessions = sessions.filter(s => !s.active)
-  const displayColumns = [
-    ...activeSessions,
-    ...archiveSessions.filter(s => openArchiveIds.has(s.id)),
-  ]
+  const sessionMap = useMemo(() => new Map(sessions.map(s => [s.id, s])), [sessions])
+  const archiveSessions = useMemo(() => sessions.filter(s => !s.active), [sessions])
+  const displayColumns = columnOrder
+    .map(id => sessionMap.get(id))
+    .filter((s): s is SessionInfo => s != null)
 
   // Archive session handlers
   const handleArchiveSelect = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities[FOCUS_ID]?.focusedId as string) ?? ''
     if (focusedId && newStore.entities[focusedId]) {
-      setOpenArchiveIds(prev => new Set(prev).add(focusedId))
+      updateColumnOrder(prev => {
+        if (prev.includes(focusedId)) return prev
+        return [...prev, focusedId]
+      })
     }
-  }, [])
+  }, [updateColumnOrder])
 
   const handleFileClick = useCallback((filePath: string, editRanges?: string[]) => {
     setModalFile({ path: filePath, editRanges })
@@ -126,12 +170,9 @@ export default function PageAgentViewer() {
               sessionId={session.id}
               sessionLabel={session.label}
               isLive={session.active}
-              isArchive={openArchiveIds.has(session.id)}
-              onClose={() => setOpenArchiveIds(prev => {
-                const next = new Set(prev)
-                next.delete(session.id)
-                return next
-              })}
+              onClose={() => updateColumnOrder(prev =>
+                prev.filter(id => id !== session.id)
+              )}
               onFileClick={handleFileClick}
             />
           ))

@@ -293,4 +293,6 @@
 
 - [x] Agent Viewer Multi-Session (5/7) — PageAgentViewer 멀티 컬럼 레이아웃. Content/Modified 패널 제거, active 세션 자동 컬럼 표시, archive 세션 선택 열기, FileViewerModal로 파일 보기, 5초 폴링으로 세션 목록 갱신
 
+- [x] Agent Viewer — 세션 컬럼 순서 localStorage 보존. HMR/새로고침 시 컬럼 위치 유지, 새 active 세션은 끝에 append, 모든 컬럼에 닫기 버튼, stale 세션 ID 자동 필터링. updateColumnOrder 래퍼로 persist 로직 단일화
+
 *Last updated: 2026-03-22 — Agent Viewer 멀티 컬럼 레이아웃*

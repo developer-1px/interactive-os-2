@@ -26,8 +26,7 @@ interface TimelineColumnProps {
   sessionId: string
   sessionLabel: string
   isLive: boolean
-  isArchive?: boolean
-  onClose?: () => void
+  onClose: () => void
   onFileClick: (filePath: string, editRanges?: string[]) => void
 }
 
@@ -101,7 +100,7 @@ const TimelineItem = memo(function TimelineItem({ evt, onClick }: { evt: Timelin
 const INITIAL_TAIL = 80
 const LOAD_MORE_CHUNK = 100
 
-export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onClose, onFileClick }: TimelineColumnProps) {
+export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFileClick }: TimelineColumnProps) {
   const [timeline, setTimeline] = useState<TimelineEvent[]>([])
   const [fetchError, setFetchError] = useState<string | null>(null)
   const totalRef = useRef(0)        // total events on server
@@ -304,9 +303,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, isArchive, onC
       <div className={styles.tcHeader}>
         {isLive && <span className={styles.tcLive}>●</span>}
         <span className={styles.tcLabel}>{sessionLabel}</span>
-        {isArchive && (
-          <button className={styles.tcClose} onClick={onClose}>×</button>
-        )}
+        <button className={styles.tcClose} onClick={onClose}>×</button>
       </div>
       <div className={styles.tcBody} ref={containerRef}>
         {fetchError ? (
