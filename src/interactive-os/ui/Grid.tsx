@@ -2,12 +2,14 @@ import React from 'react'
 
 import type { NormalizedData, Plugin, Command } from '../core/types'
 import type { BehaviorContext, NodeState } from '../behaviors/types'
+import type { CommandEngine } from '../core/createCommandEngine'
 import { Aria } from '../components/aria'
 import { grid as gridBehavior } from '../behaviors/grid'
-import { core } from '../plugins/core'
+import { core, FOCUS_ID } from '../plugins/core'
 import { crudCommands } from '../plugins/crud'
-import { renameCommands } from '../plugins/rename'
+import { renameCommands, RENAME_ID } from '../plugins/rename'
 import { dndCommands } from '../plugins/dnd'
+import { isPrintableKey } from '../plugins/typeahead'
 
 interface ColumnDef {
   key: string
@@ -22,6 +24,8 @@ interface GridProps {
   onChange?: (data: NormalizedData) => void
   renderCell?: (value: unknown, column: ColumnDef, state: NodeState) => React.ReactNode
   enableEditing?: boolean
+  /** Enable Tab/Shift+Tab cell cycling across columns and rows */
+  tabCycle?: boolean
   keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
   'aria-label'?: string
 }
@@ -37,6 +41,22 @@ const defaultRenderCell = (value: unknown): React.ReactNode => (
   <span>{String(value ?? '')}</span>
 )
 
+/** Plugin that intercepts printable keys on focused cells and starts replace-mode editing */
+function createReplaceEditPlugin(): Plugin {
+  return {
+    onUnhandledKey(event: KeyboardEvent, engine: CommandEngine): boolean {
+      if (!isPrintableKey(event)) return false
+      const store = engine.getStore()
+      // Don't trigger if already in rename mode
+      if (store.entities[RENAME_ID]?.active) return false
+      const focusedId = (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
+      if (!focusedId) return false
+      engine.dispatch(renameCommands.startRename(focusedId, { replace: true, initialChar: event.key }))
+      return true
+    },
+  }
+}
+
 export function Grid({
   data,
   columns,
@@ -44,10 +64,23 @@ export function Grid({
   onChange,
   renderCell = defaultRenderCell,
   enableEditing = false,
+  tabCycle = false,
   keyMap,
   'aria-label': ariaLabel,
 }: GridProps) {
-  const behavior = React.useMemo(() => gridBehavior({ columns: columns.length }), [columns.length])
+  const behavior = React.useMemo(
+    () => gridBehavior({ columns: columns.length, tabCycle }),
+    [columns.length, tabCycle],
+  )
+
+  const replaceEditPlugin = React.useMemo(
+    () => enableEditing ? createReplaceEditPlugin() : null,
+    [enableEditing],
+  )
+  const mergedPlugins = React.useMemo(
+    () => replaceEditPlugin ? [...plugins, replaceEditPlugin] : plugins,
+    [plugins, replaceEditPlugin],
+  )
 
   const hasKeyMap = enableEditing || !!keyMap
   const mergedKeyMap = React.useMemo(
@@ -72,7 +105,7 @@ export function Grid({
     <Aria
       behavior={behavior}
       data={data}
-      plugins={plugins}
+      plugins={mergedPlugins}
       onChange={onChange}
       keyMap={mergedKeyMap}
       aria-label={ariaLabel}
