@@ -117,7 +117,8 @@ export function applyDelta(
       const [entityId, field] = diff.path.split('.')
       const entity = entities[entityId!] ?? { id: entityId! }
       if (effectiveKind === 'removed') {
-        const { [field!]: _, ...rest } = entity
+        const { [field!]: _removedField, ...rest } = entity
+        void _removedField
         entities = { ...entities, [entityId!]: { ...rest, id: entityId! } as Entity }
       } else {
         entities = { ...entities, [entityId!]: { ...entity, [field!]: value } }
@@ -132,7 +133,8 @@ export function applyDelta(
         entities = { ...entities, [entity.id]: entity }
       } else if (effectiveKind === 'removed') {
         const entity = antiValue as Entity
-        const { [entity.id]: _, ...rest } = entities
+        const { [entity.id]: _removedEntity, ...rest } = entities
+        void _removedEntity
         entities = rest
       } else {
         const entity = value as Entity
@@ -145,7 +147,8 @@ export function applyDelta(
     if (effectiveKind === 'added') {
       relationships = { ...relationships, [diff.path]: value as string[] }
     } else if (effectiveKind === 'removed') {
-      const { [diff.path]: _, ...rest } = relationships
+      const { [diff.path]: _removedRel, ...rest } = relationships
+      void _removedRel
       relationships = rest
     } else {
       relationships = { ...relationships, [diff.path]: value as string[] }
