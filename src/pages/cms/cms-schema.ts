@@ -14,8 +14,8 @@ import type { Locale, LocaleMap } from './cms-types'
 
 // ── Field types ──
 
-const FIELD_TYPES = new Set(['short-text', 'long-text', 'url'] as const)
-export type FieldType = 'short-text' | 'long-text' | 'url'
+const FIELD_TYPES = new Set(['short-text', 'long-text', 'url', 'icon'] as const)
+export type FieldType = 'short-text' | 'long-text' | 'url' | 'icon'
 
 // ── Locale map ──
 
@@ -30,7 +30,7 @@ const localeMapSchema = z.object({
 
 export const nodeSchemas = {
   badge:            z.object({ type: z.literal('badge'),         value: localeMapSchema.describe('Badge') }),
-  icon:             z.object({ type: z.literal('icon'),          value: z.string() }),
+  icon:             z.object({ type: z.literal('icon'),          value: z.string().meta({ fieldType: 'icon' }).describe('Icon') }),
   text:             z.object({ type: z.literal('text'),          role: z.string(), value: localeMapSchema.describe('Text') }),
   cta:              z.object({ type: z.literal('cta'),           primary: localeMapSchema.describe('Primary CTA'), secondary: localeMapSchema.describe('Secondary CTA') }),
   'stat-value':     z.object({ type: z.literal('stat-value'),    value: z.string().describe('Value') }),
