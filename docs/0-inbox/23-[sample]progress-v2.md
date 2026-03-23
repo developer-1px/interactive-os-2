@@ -1,9 +1,7 @@
 # interactive-os — Architecture Map
 
-> Concept Map + Maturity Tracker. Task list가 아님.
-> **갱신 시점:** 모듈 추가/삭제 시 행 갱신. Maturity·Gaps는 /retro 시 반영.
-> **Maturity:** Concept → Prototype → Validated → Integrated → Production
-> **이력:** PROGRESS-ARCHIVE.md (체크리스트 시절 전체 이력)
+> LLM 세션 시작 시 프로젝트 현황 파악용. 구조적 변경 시에만 업데이트.
+> Maturity: Concept → Prototype → Validated → Integrated → Production
 
 ## Core
 
