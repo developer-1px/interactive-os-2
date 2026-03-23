@@ -6,6 +6,7 @@ import { useNavList } from './useNavList'
 import { core } from '../plugins/core'
 import { ROOT_ID } from '../core/types'
 import { getChildren } from '../core/createStore'
+import styles from './NavList.module.css'
 
 interface NavListProps {
   data: NormalizedData
@@ -45,14 +46,14 @@ export function NavList({
   const childIds = getChildren(store, ROOT_ID)
 
   return (
-    <div {...(nav.rootProps as React.HTMLAttributes<HTMLDivElement>)}>
+    <div {...(nav.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={styles.root}>
       {childIds.map((id) => {
         const entity = store.entities[id]
         if (!entity) return null
         const state = nav.getItemState(id)
         const props = nav.getItemProps(id)
         return (
-          <div key={id} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
+          <div key={id} {...(props as React.HTMLAttributes<HTMLDivElement>)} className={styles.item} data-focused={String(state.focused)}>
             {renderItem(entity, state)}
           </div>
         )
