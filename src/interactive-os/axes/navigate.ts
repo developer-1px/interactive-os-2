@@ -1,10 +1,11 @@
 import type { BehaviorContext } from '../behaviors/types'
 import type { AxisConfig, KeyMap } from './composePattern'
+import { createBatchCommand } from '../core/types'
 
 export interface NavigateOptions {
   orientation?: 'vertical' | 'horizontal' | 'both'
   wrap?: boolean
-  grid?: { columns: number }
+  grid?: { columns: number; tabCycle?: boolean }
 }
 
 export function navigate(options?: NavigateOptions): { keyMap: KeyMap; config: Partial<AxisConfig> } {
@@ -24,6 +25,32 @@ export function navigate(options?: NavigateOptions): { keyMap: KeyMap; config: P
       'Mod+Home': (ctx: BehaviorContext) => ctx.focusFirst(),
       'Mod+End': (ctx: BehaviorContext) => ctx.focusLast(),
     }
+
+    if (options.grid.tabCycle) {
+      keyMap['Tab'] = (ctx: BehaviorContext) => {
+        const g = ctx.grid
+        if (!g) return
+        const atLastCol = g.colIndex >= g.colCount - 1
+        if (!atLastCol) return g.focusNextCol()
+        // At last col: move to next row + reset to first col
+        const nextRowCmd = ctx.focusNext()
+        // If focusNext targets the same node, we're at the absolute last cell — stop
+        if (nextRowCmd.payload?.nodeId === ctx.focused) return
+        return createBatchCommand([nextRowCmd, g.focusFirstCol()])
+      }
+      keyMap['Shift+Tab'] = (ctx: BehaviorContext) => {
+        const g = ctx.grid
+        if (!g) return
+        const atFirstCol = g.colIndex <= 0
+        if (!atFirstCol) return g.focusPrevCol()
+        // At first col: move to prev row + set to last col
+        const prevRowCmd = ctx.focusPrev()
+        // If focusPrev targets the same node, we're at the absolute first cell — stop
+        if (prevRowCmd.payload?.nodeId === ctx.focused) return
+        return createBatchCommand([prevRowCmd, g.focusLastCol()])
+      }
+    }
+
     return {
       keyMap,
       config: {
