@@ -1,0 +1,23 @@
+{
+  "skill_name": "naming-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "src/interactive-os/core/에 buildEngine.ts를 추가했어. export function buildEngine이 있어. /naming-audit 돌려줘",
+      "expected_output": "동의어 drift 감지: build는 create가 표준이므로 createEngine으로 변경 권장",
+      "files": ["src/interactive-os/core/buildEngine.ts"]
+    },
+    {
+      "id": 2,
+      "prompt": "src/pages/에 ShowcaseSlider.tsx를 추가했어. export function ShowcaseSlider가 있어. /naming-audit 돌려줘",
+      "expected_output": "포맷 불일치 감지: 페이지 컴포넌트는 Page~ 접두사가 표준 (PageSlider)",
+      "files": ["src/pages/ShowcaseSlider.tsx"]
+    },
+    {
+      "id": 3,
+      "prompt": "src/interactive-os/plugins/에 zoom.ts를 추가했어. export const zoomCommands가 있어. /naming-audit 돌려줘",
+      "expected_output": "CLEAN — ~Commands 패턴 준수, 위반 없음",
+      "files": ["src/interactive-os/plugins/zoom.ts"]
+    }
+  ]
+}

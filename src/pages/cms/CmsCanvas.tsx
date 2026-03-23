@@ -17,6 +17,7 @@ import { renameCommands } from '../../interactive-os/plugins/rename'
 import type { Locale } from './cms-types'
 import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getEditableFields } from './cms-renderers'
 import { CmsInlineEditable } from './CmsInlineEditable'
+import { cmsCanDelete } from './cms-schema'
 
 interface CmsCanvasProps {
   engine: CommandEngine
@@ -75,6 +76,13 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       ...spatialNav.keyMap,
       ...cmsKeyMap,
       Delete: (ctx: BehaviorContext) => {
+        // Slot guard: non-array parent → structural child → cannot delete
+        const parentId = getParent(engine.getStore(), ctx.focused)
+        if (parentId) {
+          const parentData = ctx.getEntity(parentId)?.data as Record<string, unknown> | undefined
+          if (!cmsCanDelete(parentData)) return
+        }
+
         // Minimum-1-section guard
         const rootChildren = ctx.getChildren(ROOT_ID)
         if (rootChildren.includes(ctx.focused) && rootChildren.length <= 1) return
@@ -84,9 +92,9 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         const data = (entity?.data ?? {}) as Record<string, unknown>
         if (data.type === 'tab-item') {
           const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
-          const parentId = spatialParent?.parentId as string | undefined
-          if (parentId) {
-            const siblings = ctx.getChildren(parentId)
+          const parentId2 = spatialParent?.parentId as string | undefined
+          if (parentId2) {
+            const siblings = ctx.getChildren(parentId2)
             if (siblings.length <= 1) return
           }
         }

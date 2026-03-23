@@ -159,11 +159,11 @@ export function focusRecovery(options?: FocusRecoveryOptions): Plugin {
       const before = storeBefore as NormalizedData
       const after = storeAfter as NormalizedData
 
-      // New visible entities → focus the last one
+      // New visible entities → focus the first one (top-level result)
       const newVisibleIds = detectNewVisibleEntities(before, after, reachable)
 
       if (newVisibleIds.length > 0) {
-        next(focusCommands.setFocus(newVisibleIds[newVisibleIds.length - 1]!))
+        next(focusCommands.setFocus(newVisibleIds[0]!))
         return
       }
 

@@ -6,7 +6,7 @@
  *          collectEditableGroups (container → grouped fields).
  */
 import { z } from 'zod'
-import type { CanAcceptFn } from '../../interactive-os/plugins/clipboard'
+import type { CanAcceptFn, CanDeleteFn } from '../../interactive-os/plugins/clipboard'
 import type { NormalizedData } from '../../interactive-os/core/types'
 import { getChildren } from '../../interactive-os/core/createStore'
 import { localized } from './cms-types'
@@ -49,17 +49,19 @@ const nodeSchemas = {
 // ── Children rules ──
 
 const childRules: Record<string, z.ZodType> = {
-  section: z.discriminatedUnion('type', [
+  // Collections (z.array): children can be added/removed/reordered
+  section: z.array(z.discriminatedUnion('type', [
     nodeSchemas.card, nodeSchemas.stat, nodeSchemas.step, nodeSchemas.pattern,
     nodeSchemas.badge, nodeSchemas.text, nodeSchemas.cta,
     nodeSchemas['section-label'], nodeSchemas['section-title'], nodeSchemas['section-desc'],
     nodeSchemas.icon, nodeSchemas.link, nodeSchemas.brand, nodeSchemas.links,
-  ]),
+  ])),
+  links: z.array(z.discriminatedUnion('type', [nodeSchemas.link])),
+  'tab-group': z.array(z.discriminatedUnion('type', [nodeSchemas['tab-item']])),
+  // Slots (non-array): fixed structure, children cannot be deleted
   card:  z.discriminatedUnion('type', [nodeSchemas.icon, nodeSchemas.text]),
   step:  z.discriminatedUnion('type', [nodeSchemas['step-num'], nodeSchemas.text]),
   stat:  z.discriminatedUnion('type', [nodeSchemas['stat-value'], nodeSchemas.text]),
-  links: z.discriminatedUnion('type', [nodeSchemas.link]),
-  'tab-group': z.discriminatedUnion('type', [nodeSchemas['tab-item']]),
   'tab-item':  z.discriminatedUnion('type', [nodeSchemas['tab-panel']]),
   'tab-panel': z.discriminatedUnion('type', [nodeSchemas.section]),
 }
@@ -69,11 +71,32 @@ const childRules: Record<string, z.ZodType> = {
 export const cmsCanAccept: CanAcceptFn = (parentData, childData) => {
   if (!childData) return false
   if (!parentData?.type) {
-    return nodeSchemas.section.safeParse(childData).success
-      || nodeSchemas['tab-group'].safeParse(childData).success
+    const isSection = nodeSchemas.section.safeParse(childData).success
+    const isTabGroup = nodeSchemas['tab-group'].safeParse(childData).success
+    return (isSection || isTabGroup) ? 'insert' : false
   }
   const rule = childRules[parentData.type as string]
-  return rule ? rule.safeParse(childData).success : false
+  if (!rule) {
+    // No childRule = leaf node. Check if same type → overwrite candidate
+    if (parentData.type === (childData as Record<string, unknown>).type) return 'overwrite'
+    return false
+  }
+  if (rule instanceof z.ZodArray) {
+    // Collection: validate against element schema
+    const elementRule = rule.element
+    return elementRule.safeParse(childData).success ? 'insert' : false
+  }
+  // Slot container: fixed structure, cannot accept new children → skip
+  return false
+}
+
+/** Can children of this parent be deleted/cut?
+ *  Collection (array rule) → true, Slot (non-array) → false. */
+export const cmsCanDelete: CanDeleteFn = (parentData) => {
+  if (!parentData?.type) return true // ROOT-level: always deletable
+  const rule = childRules[parentData.type as string]
+  if (!rule) return true // No rule = leaf, no children to protect
+  return rule instanceof z.ZodArray
 }
 
 // ── Derived: fieldsOf (editable fields for detail panel) ──

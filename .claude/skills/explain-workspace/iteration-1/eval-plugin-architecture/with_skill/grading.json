@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "heading-is-insight", "passed": true, "evidence": "'UI 위젯마다 필요한 기능 조합이 다르기 때문에 모놀리식 접근은 실패한다', 'Plugin 인터페이스는 commands, middleware, keyMap 세 확장점을 제공한다', 'Behavior와 Plugin은 별도 레이어에서 합성된다', '새 플러그인 추가 시 Plugin 인터페이스만 구현하면 기존 코드를 변경하지 않는다' — 모두 주장형"},
+    {"text": "top-down-first-sentence", "passed": true, "evidence": "섹션1: 'interactive-os가 해결하는 근본 문제는 UI 위젯 간 기능의 비대칭이다' — 결론 선행. 섹션4: 'interactive-os에서 ARIA 역할과 앱 기능은 서로 다른 축이다' — 결론 선행"},
+    {"text": "so-what-closure", "passed": true, "evidence": "섹션1 끝: '플러그인 시스템은 이 M:N 관계를 선언적 합성으로 해결한다'. 섹션2 끝: '하나의 플러그인이 다른 플러그인의 Command를 가로채거나 보강할 수 있다'. 섹션4 끝: '각각의 관심사가 독립적으로 개발되고 테스트된다'"},
+    {"text": "scqa-intro", "passed": true, "evidence": "SCQA 도입부 존재"},
+    {"text": "mermaid-minimum", "passed": true, "evidence": "3개 mermaid"},
+    {"text": "whhwi-structure", "passed": true, "evidence": "Why→How→What→If 흐름을 인사이트 제목으로 표현"}
+  ]
+}

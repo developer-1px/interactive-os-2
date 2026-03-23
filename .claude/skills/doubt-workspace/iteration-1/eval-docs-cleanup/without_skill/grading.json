@@ -1,0 +1,32 @@
+{
+  "eval_id": 3,
+  "eval_name": "docs-cleanup",
+  "variant": "without_skill",
+  "expectations": [
+    {
+      "text": "docs/2-areas/ 내 모든 MDX 파일을 나열했다",
+      "passed": true,
+      "evidence": "섹션 1 전체 파일 목록 테이블: 인덱스 7 + axes 7 + core 3 + hooks 7 + patterns 17 + plugins 9 + ui 14 + 기타 MD 1 = 65 MDX + 1 MD. 패턴은 19개(slider, spinbutton 포함)로 보이나 테이블에서 17로 표기. ui는 15개(Grid, Slider, Spinbutton 포함)이나 14로 표기. 카운트에 약간의 불일치가 있으나 실제 파일명은 대부분 나열됨."
+    },
+    {
+      "text": "각 문서의 역할을 요약했다",
+      "passed": false,
+      "evidence": "카테고리별 파일명 목록만 제시되었고, 개별 문서의 역할 요약은 없다. 중복 발견 사항과 불필요 문서 점검에서 일부 문서의 역할이 언급되나, 전체 문서에 대한 역할 요약은 빠져 있다."
+    },
+    {
+      "text": "중복/유사한 문서 쌍을 식별했다 (있는 경우)",
+      "passed": true,
+      "evidence": "5개 중복/유사 쌍 식별: 2-1 plugins/spatial vs hooks/useSpatialNav(높음), 2-2 dialog vs alertdialog(중간), 2-3 disclosure vs switch(낮음), 2-4 slider/spinbutton patterns vs ui(중간), 2-5 plugins/combobox vs patterns/combobox(낮음)"
+    },
+    {
+      "text": "문서 내용을 실제로 읽고 판단했다 (제목만 보고 추측하지 않음)",
+      "passed": true,
+      "evidence": "구체적 내용 비교 증거: plugins/spatial vs hooks/useSpatialNav의 항목별 비교 테이블(useSpatialNav API, findNearest, Cross-Boundary 등), dialog vs alertdialog의 축 조합/키맵/ARIA 속성 비교 테이블, trigger-popup.mdx '3줄 설명 + TODO 3개, 총 16줄' 등 내용 수준 판단"
+    },
+    {
+      "text": "유지/제거/병합 판정을 각 문서에 내렸다",
+      "passed": false,
+      "evidence": "중복 발견 5건과 불필요 후보 3건에 대해서만 판정이 있고, 나머지 ~57개 문서에 대해서는 '나머지 60개 문서 — 정상, 변경 불필요'로 일괄 처리. 개별 문서별 판정이 아니라 일괄 판정이므로 '각 문서에' 판정을 내렸다고 보기 어렵다."
+    }
+  ]
+}

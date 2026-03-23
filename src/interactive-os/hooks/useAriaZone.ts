@@ -201,10 +201,10 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
 
     function runFocusRecovery(storeBefore: NormalizedData, storeAfter: NormalizedData) {
       const vs = viewStateRef.current
-      // New visible entities → focus last new one
+      // New visible entities → focus the first one (top-level result)
       const newVisible = detectNewVisibleEntities(storeBefore, storeAfter, isReachable)
       if (newVisible.length > 0) {
-        setViewState(prev => ({ ...prev, focusedId: newVisible[newVisible.length - 1]! }))
+        setViewState(prev => ({ ...prev, focusedId: newVisible[0]! }))
         return
       }
       // Current focus not visible → fallback

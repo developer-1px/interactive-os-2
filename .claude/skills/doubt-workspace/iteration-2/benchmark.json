@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "skill_name": "doubt (v2)",
+    "skill_path": "/Users/user/Desktop/aria/.claude/skills/doubt/SKILL.md",
+    "executor_model": "claude-opus-4-6",
+    "timestamp": "2026-03-22T02:10:00Z",
+    "evals_run": ["abstraction-cleanup", "occam-gate", "docs-cleanup"],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_name": "abstraction-cleanup",
+      "configuration": "with_skill_v2",
+      "pass_rate": 1.0, "passed": 6, "total": 6,
+      "time_seconds": 101.8, "total_tokens": 42959
+    },
+    {
+      "eval_name": "abstraction-cleanup",
+      "configuration": "with_skill_v1",
+      "pass_rate": 1.0, "passed": 6, "total": 6,
+      "time_seconds": 109.9, "total_tokens": 35169
+    },
+    {
+      "eval_name": "abstraction-cleanup",
+      "configuration": "without_skill",
+      "pass_rate": 0.833, "passed": 5, "total": 6,
+      "time_seconds": 66.7, "total_tokens": 27407
+    },
+    {
+      "eval_name": "occam-gate",
+      "configuration": "with_skill_v2",
+      "pass_rate": 1.0, "passed": 5, "total": 5,
+      "time_seconds": 96.0, "total_tokens": 38001
+    },
+    {
+      "eval_name": "occam-gate",
+      "configuration": "with_skill_v1",
+      "pass_rate": 1.0, "passed": 5, "total": 5,
+      "time_seconds": 113.1, "total_tokens": 35411
+    },
+    {
+      "eval_name": "occam-gate",
+      "configuration": "without_skill",
+      "pass_rate": 0.8, "passed": 4, "total": 5,
+      "time_seconds": 71.6, "total_tokens": 30552
+    },
+    {
+      "eval_name": "docs-cleanup",
+      "configuration": "with_skill_v2",
+      "pass_rate": 1.0, "passed": 5, "total": 5,
+      "time_seconds": 137.8, "total_tokens": 65065
+    },
+    {
+      "eval_name": "docs-cleanup",
+      "configuration": "with_skill_v1",
+      "pass_rate": 1.0, "passed": 5, "total": 5,
+      "time_seconds": 187.2, "total_tokens": 67664
+    },
+    {
+      "eval_name": "docs-cleanup",
+      "configuration": "without_skill",
+      "pass_rate": 0.6, "passed": 3, "total": 5,
+      "time_seconds": 138.3, "total_tokens": 62598
+    }
+  ],
+  "run_summary": {
+    "with_skill_v2": {
+      "pass_rate": "100%",
+      "avg_time_seconds": 111.9,
+      "avg_tokens": 48675
+    },
+    "with_skill_v1": {
+      "pass_rate": "100%",
+      "avg_time_seconds": 136.7,
+      "avg_tokens": 46081
+    },
+    "without_skill": {
+      "pass_rate": "75%",
+      "avg_time_seconds": 92.2,
+      "avg_tokens": 40186
+    },
+    "delta_v2_vs_v1": {
+      "pass_rate": "0% (both 100%)",
+      "time_seconds": "-24.8s (18% faster)",
+      "tokens": "+2594 (slightly more)"
+    },
+    "delta_v2_vs_baseline": {
+      "pass_rate": "+25%",
+      "time_seconds": "+19.7s",
+      "tokens": "+8489"
+    }
+  },
+  "notes": [
+    "v2 pass rate = v1 (100%), but v2 is 18% faster on average (111.9s vs 136.7s)",
+    "Biggest time gain: docs-cleanup -49.4s (26% faster) — removed recursive re-evaluation overhead",
+    "v2 eval-1 found additional insight: updateEntity has 0 callers (watchlist item) — deeper analysis despite same pass rate",
+    "v2 eval-3 found 5 issues vs v1's 2 — slider/spinbutton walkthrough misplacement + hooks.mdx detail leak",
+    "v2 report format is more concise: changes in table, retained items as count+category"
+  ]
+}

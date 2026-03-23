@@ -1,0 +1,23 @@
+{
+  "skill_name": "prd",
+  "evals": [
+    {
+      "id": 1,
+      "name": "spatial-crossboundary",
+      "prompt": "Discussion에서 spatial cross-boundary 이동이 합의됐어. OS 데스크탑처럼 포커스가 ActivityBar → Editor → Panel 사이를 화살표로 이동하고, sticky cursor로 마지막 위치를 기억하는 기능이야. useAria engine 기반이고, 각 zone은 독립 store를 가져. Discussion 이해도 테이블: 목적 🟢 95%, 배경 🟢 90%, 이상적결과 🟢 90%, 현실 🟢 90%, 문제 🟢 90%, 원인 🟢 90%, 제약 🟢 90%, 목표 🟢 90%, 해결 🟢 90%, 부작용 🟢 90%. Knowledge: K1. 공간 이동은 가역적이어야 한다 / K2. sticky cursor는 zone별로 마지막 포커스 위치 기억 / K3. cross-boundary는 findBestInDirection으로 인접 zone 자식 중 nearest 탐색. /prd 해줘",
+      "expected_output": "8단계 의존 체인을 따르는 PRD 파일. 인과 열이 채워진 인터페이스/경계. 원칙 대조에서 reversible_motion, one_app_one_store 등이 점검됨. 부작용에서 기존 zone 내 네비게이션 영향 분석."
+    },
+    {
+      "id": 2,
+      "name": "combobox-behavior",
+      "prompt": "Discussion에서 combobox behavior를 aria engine에 추가하기로 했어. input에 타이핑하면 listbox가 필터링되고, 화살표로 옵션 선택, Enter로 확정하는 기능이야. useAria 훅으로 구현하고 <Aria> 컴포넌트는 안 쓸 거야 (containerProps가 input에 가야 해서). Discussion 이해도 테이블: 전 항목 🟢 90%. Knowledge: K1. combobox는 useAria 훅이 적합 — containerProps를 input에 spread / K2. listbox는 별도 DOM으로 data-aria-container 밖. /prd 해줘",
+      "expected_output": "8단계 PRD. 인터페이스에서 타이핑/화살표/Enter/Escape 각각의 인과가 설명됨. 원칙 대조에서 design_over_request, plugin_owns_keymap 점검. 부작용에서 기존 listbox behavior와의 충돌 분석."
+    },
+    {
+      "id": 3,
+      "name": "retro-skill-upgrade",
+      "prompt": "Discussion에서 retro 스킬의 경험 DB 자동 승격 기능을 강화하기로 했어. 현재는 빈도 3회면 feedback memory로 승격하는데, 승격 시 자동으로 관련 PRD 체크리스트에 항목을 추가하고, 승격 이력을 경험 DB에 남기는 기능이야. 비-UI 작업이야. Discussion 이해도 테이블: 전 항목 🟢 90%. Knowledge: K1. 경험 DB → feedback 승격은 '삽질이 규칙이 될 만큼 반복' 신호 / K2. L2 수정은 PRD 스킬 체크리스트 추가. /prd 해줘",
+      "expected_output": "8단계 PRD. 인터페이스가 키보드가 아닌 데이터 변환(경험 DB row → feedback memory file → PRD checklist item)으로 채워짐. 인과 열에 '왜 3회인가', '왜 자동인가' 설명. 비-UI이므로 인터페이스 체크리스트가 적절히 대체됨."
+    }
+  ]
+}

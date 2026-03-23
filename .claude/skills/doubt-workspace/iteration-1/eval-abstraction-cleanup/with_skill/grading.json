@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "eval_name": "abstraction-cleanup",
+  "variant": "with_skill",
+  "expectations": [
+    {
+      "text": "모든 export 함수를 빠짐없이 나열했다",
+      "passed": true,
+      "evidence": "Step 1 목록화 테이블에 11개 함수(createStore, getEntity, getChildren, getParent, addEntity, removeEntity, updateEntity, moveNode, insertNode, getEntityData, updateEntityData)를 모두 나열함"
+    },
+    {
+      "text": "각 함수에 대해 유지/제거/축소 판정을 내렸다",
+      "passed": true,
+      "evidence": "Step 2 필터 체인에서 11개 함수 각각에 대해 판정을 내림 — insertNode만 🔴 제거, 나머지 10개 🟢 유지"
+    },
+    {
+      "text": "제거 후보에 대해 근거(사용처 확인 등)를 제시했다",
+      "passed": true,
+      "evidence": "insertNode에 대해 '외부 호출처 0개', 'addEntity가 이미 index? 파라미터를 받으므로 의미적 구분이 실질적 차이를 만들지 않음', git log 최초 커밋 확인, Lean 분류(과잉생산) 등 상세 근거 제시"
+    },
+    {
+      "text": "insertNode 같은 1줄 래퍼를 식별하고 다뤘다",
+      "passed": true,
+      "evidence": "insertNode을 '1줄 래퍼: return addEntity(store, entity, parentId, index)'로 식별하고 🔴 제거 판정. getEntity, getChildren, getEntityData도 1-2줄 래퍼로 식별한 뒤 Chesterton's Fence 분석으로 유지 판정"
+    },
+    {
+      "text": "핵심 함수(addEntity, removeEntity, moveNode)를 유지로 판정했다",
+      "passed": true,
+      "evidence": "addEntity(🟢 유지 — '12줄의 실질 로직. 중복 방지 + 인덱스 삽입'), removeEntity(🟢 유지 — '21줄 재귀 삭제 로직'), moveNode(🟢 유지 — '24줄. 같은 부모 내 이동과 다른 부모 간 이동')"
+    },
+    {
+      "text": "Before → After 수치 요약이 있다",
+      "passed": true,
+      "evidence": "📊 Before → After (누적) 섹션: '함수 수: 11 → 10 (-1)'"
+    }
+  ]
+}

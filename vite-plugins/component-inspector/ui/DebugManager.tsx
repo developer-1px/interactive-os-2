@@ -88,8 +88,8 @@ export const DebugManager: React.FC = () => {
   // Key Event Handling (Toggles + Traversal)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd+D: Toggle Inspector
-      if ((e.metaKey || e.ctrlKey) && e.key === "d") {
+      // Shift+Cmd+D: Toggle Inspector
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "d") {
         e.preventDefault();
         setIsInspectorActive((prev) => {
           if (!prev) {
@@ -262,8 +262,8 @@ export const DebugManager: React.FC = () => {
             }}
           />
         ))}
-      {isInspectorActive && !lockedElement && (
-        <InspectorOverlay activeElement={activeElement} />
+      {isInspectorActive && (
+        <InspectorOverlay activeElement={activeElement} locked={!!lockedElement} />
       )}
       {toastMessage && (
         <div className="debug-toast">

@@ -1,0 +1,32 @@
+{
+  "eval_id": 3,
+  "eval_name": "docs-cleanup",
+  "prompt": "docs/2-areas/ 아래 MDX 문서들이 많아졌는데, 중복되거나 불필요한 문서가 있는지 점검해줘.",
+  "assertions": [
+    {
+      "id": "a1",
+      "text": "docs/2-areas/ 내 모든 MDX 파일을 나열했다",
+      "type": "completeness"
+    },
+    {
+      "id": "a2",
+      "text": "각 문서의 역할을 요약했다",
+      "type": "structure"
+    },
+    {
+      "id": "a3",
+      "text": "중복/유사한 문서 쌍을 식별했다 (있는 경우)",
+      "type": "accuracy"
+    },
+    {
+      "id": "a4",
+      "text": "문서 내용을 실제로 읽고 판단했다 (제목만 보고 추측하지 않음)",
+      "type": "evidence"
+    },
+    {
+      "id": "a5",
+      "text": "유지/제거/병합 판정을 각 문서에 내렸다",
+      "type": "completeness"
+    }
+  ]
+}
