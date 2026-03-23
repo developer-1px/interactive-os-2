@@ -5,7 +5,7 @@ import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import { FOCUS_ID } from '../interactive-os/plugins/core'
 import type { NormalizedData } from '../interactive-os/core/types'
-import { ListBox } from '../interactive-os/ui/ListBox'
+import { NavList } from '../interactive-os/ui/NavList'
 import { components } from './showcaseRegistry'
 import type { ComponentEntry } from './showcaseRegistry'
 
@@ -63,10 +63,9 @@ export default function PageUiShowcase() {
     } as NormalizedData
   }, [activeSlug])
 
-  const handleSidebarChange = useCallback((next: NormalizedData) => {
-    const focusedId = (next.entities[FOCUS_ID]?.focusedId as string) ?? ''
-    if (focusedId && focusedId !== activeSlug) {
-      navigate(`/ui/${focusedId}`)
+  const handleActivate = useCallback((nodeId: string) => {
+    if (nodeId !== activeSlug) {
+      navigate(`/ui/${nodeId}`)
     }
   }, [navigate, activeSlug])
 
@@ -76,7 +75,7 @@ export default function PageUiShowcase() {
         <div className={styles.uiSidebarHeader}>
           <span className={styles.uiSidebarTitle}>UI Components</span>
         </div>
-        <ListBox data={sidebarStore} onChange={handleSidebarChange} />
+        <NavList data={sidebarStore} onActivate={handleActivate} aria-label="UI Components" />
       </nav>
       <div className={styles.uiContent}>
         <div className={styles.uiContentHeader}>
