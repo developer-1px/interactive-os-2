@@ -2,6 +2,22 @@
 
 > 네이티브 Popover API 기반 툴팁 — engine 밖 독립 컴포넌트
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="tooltip" />
+```
+
+## Usage
+
+```tsx
+import { Tooltip } from 'interactive-os/ui/Tooltip'
+
+<Tooltip content="Helpful text">
+  <button>Hover me</button>
+</Tooltip>
+```
+
 ## Props
 
 | prop | 타입 | 기본값 | 설명 |
@@ -9,26 +25,34 @@
 | content | string | — | 툴팁 텍스트 |
 | children | ReactElement | — | 트리거 엘리먼트 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="tooltip" />
+```
+
+## Accessibility
 
 - pattern: 없음 (engine 밖 독립)
 - role: tooltip
 - childRole: —
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 cloneElement(child, {interestfor, aria-describedby}) trigger
 span[popover="hint", role=tooltip] tooltip
 ```
 
-## Features
+### Features
 
 - 네이티브 Popover API + CSS Anchor Positioning
 - JS 이벤트 핸들러 0개 목표 (현재 hover/focus 핸들러 있음)
 - position-try-fallbacks: flip-block
 
-## CSS
+### CSS
 
 - 방식: CSS Modules
 - 파일: Tooltip.module.css

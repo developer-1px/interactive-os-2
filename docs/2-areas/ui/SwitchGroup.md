@@ -1,6 +1,29 @@
 # SwitchGroup
 
-> 토글 스위치 그룹 — expanded=checked 매핑
+> Toggle switches that can be independently turned on or off.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="switch-group" />
+```
+
+## Usage
+
+```tsx
+import { SwitchGroup } from 'interactive-os/ui/SwitchGroup'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    wifi: { id: 'wifi', data: { label: 'Wi-Fi' } },
+    bluetooth: { id: 'bluetooth', data: { label: 'Bluetooth' } },
+  },
+  relationships: { __root__: ['wifi', 'bluetooth'] },
+})
+
+<SwitchGroup data={data} onChange={setData} />
+```
 
 ## Props
 
@@ -11,13 +34,21 @@
 | onChange | (data: AriaData) => void | — | 데이터 변경 콜백 |
 | renderItem | (item, state) => ReactNode | — | 항목 커스텀 렌더러 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="switch-group" />
+```
+
+## Accessibility
 
 - pattern: switchBehavior
 - role: group
 - childRole: (div)
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div[role=group] container
@@ -25,7 +56,7 @@ div[role=group] container
        └─ indicator (●/○, expanded=checked)
 ```
 
-## CSS
+### CSS
 
 - 방식: Global CSS
 - 파일: 전역 스타일

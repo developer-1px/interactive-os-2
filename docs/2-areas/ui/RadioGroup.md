@@ -1,6 +1,30 @@
 # RadioGroup
 
-> 단일 선택 라디오 그룹 — 시각적 indicator(◉/○) 포함
+> Single-select group where only one option can be active at a time.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="radio-group" />
+```
+
+## Usage
+
+```tsx
+import { RadioGroup } from 'interactive-os/ui/RadioGroup'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    small: { id: 'small', data: { label: 'Small' } },
+    medium: { id: 'medium', data: { label: 'Medium' } },
+    large: { id: 'large', data: { label: 'Large' } },
+  },
+  relationships: { __root__: ['small', 'medium', 'large'] },
+})
+
+<RadioGroup data={data} onChange={setData} />
+```
 
 ## Props
 
@@ -11,13 +35,21 @@
 | onChange | (data: AriaData) => void | — | 데이터 변경 콜백 |
 | renderItem | (item, state) => ReactNode | — | 항목 커스텀 렌더러 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="radio-group" />
+```
+
+## Accessibility
 
 - pattern: radiogroup
 - role: radiogroup
 - childRole: radio
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div[role=radiogroup] container
@@ -25,7 +57,7 @@ div[role=radiogroup] container
        └─ indicator (◉/○)
 ```
 
-## CSS
+### CSS
 
 - 방식: Global CSS
 - 파일: 전역 스타일

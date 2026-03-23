@@ -1,6 +1,33 @@
 # TreeGrid
 
-> 계층 그리드 — 트리 + 그리드 결합, 편집(Delete, F2, Alt+↑↓←/→ 리오더+인덴트) 지원
+> Hierarchical tree with grid-like keyboard navigation and expand/collapse.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="tree-grid" />
+```
+
+## Usage
+
+```tsx
+import { TreeGrid } from 'interactive-os/ui/TreeGrid'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    src: { id: 'src', data: { name: 'src' } },
+    components: { id: 'components', data: { name: 'components' } },
+    'app-tsx': { id: 'app-tsx', data: { name: 'App.tsx' } },
+  },
+  relationships: {
+    __root__: ['src'],
+    src: ['components', 'app-tsx'],
+  },
+})
+
+<TreeGrid data={data} onChange={setData} />
+```
 
 ## Props
 
@@ -12,13 +39,21 @@
 | renderItem | (item, state) => ReactNode | — | 항목 커스텀 렌더러 |
 | enableEditing | boolean | — | Delete, F2, Alt+↑↓←/→ 리오더+인덴트 활성화 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="tree-grid" />
+```
+
+## Accessibility
 
 - pattern: treegrid
 - role: treegrid
 - childRole: row > gridcell
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div[role=treegrid] container
@@ -26,7 +61,7 @@ div[role=treegrid] container
        └─ div[role=gridcell] cell
 ```
 
-## CSS
+### CSS
 
 - 방식: CSS Modules
 - 파일: TreeView.module.css (TreeView와 공유)

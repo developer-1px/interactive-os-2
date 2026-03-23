@@ -1,6 +1,29 @@
 # DisclosureGroup
 
-> 펼침/접힘 그룹 — 각 항목이 독립적으로 토글
+> A group of items that can independently expand or collapse.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="disclosure-group" />
+```
+
+## Usage
+
+```tsx
+import { DisclosureGroup } from 'interactive-os/ui/DisclosureGroup'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    general: { id: 'general', data: { label: 'General Settings' } },
+    appearance: { id: 'appearance', data: { label: 'Appearance' } },
+  },
+  relationships: { __root__: ['general', 'appearance'] },
+})
+
+<DisclosureGroup data={data} onChange={setData} />
+```
 
 ## Props
 
@@ -11,13 +34,21 @@
 | onChange | (data: AriaData) => void | — | 데이터 변경 콜백 |
 | renderItem | (item, state) => ReactNode | — | 항목 커스텀 렌더러 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="disclosure-group" />
+```
+
+## Accessibility
 
 - pattern: disclosure
 - role: region
 - childRole: (div)
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div[role=region] container
@@ -26,7 +57,7 @@ div[role=region] container
        └─ [aria-expanded] content
 ```
 
-## CSS
+### CSS
 
 - 방식: Global CSS
 - 파일: 전역 스타일

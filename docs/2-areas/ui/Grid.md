@@ -1,6 +1,37 @@
 # Grid
 
-> 2차원 그리드 — 컬럼 정의 기반 셀 렌더링
+> Two-dimensional data grid with row/cell keyboard navigation.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="grid" />
+```
+
+## Usage
+
+```tsx
+import { Grid } from 'interactive-os/ui/Grid'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    r1: { id: 'r1', data: { cells: ['Alice', 'Engineer', 'NYC'] } },
+    r2: { id: 'r2', data: { cells: ['Bob', 'Designer', 'SF'] } },
+  },
+  relationships: { __root__: ['r1', 'r2'] },
+})
+
+<Grid
+  data={data}
+  onChange={setData}
+  columns={[
+    { key: 'name', header: 'Name' },
+    { key: 'role', header: 'Role' },
+    { key: 'city', header: 'City' },
+  ]}
+/>
+```
 
 ## Props
 
@@ -13,13 +44,21 @@
 | renderCell | (cell, row, col) => ReactNode | — | 셀 커스텀 렌더러 |
 | aria-label | string | — | 그리드 접근성 라벨 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="grid" />
+```
+
+## Accessibility
 
 - pattern: `grid({columns})`
 - role: grid
 - childRole: row > gridcell
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div[role=grid] container
@@ -27,7 +66,7 @@ div[role=grid] container
        └─ Aria.Cell[role=gridcell, aria-colindex] cell
 ```
 
-## CSS
+### CSS
 
 - 방식: CSS Modules
 - 파일: Grid.module.css

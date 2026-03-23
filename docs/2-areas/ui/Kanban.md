@@ -1,6 +1,32 @@
 # Kanban
 
-> 칸반 보드 — useAria() + AriaInternalContext 직접 사용 (lower-level)
+> Board layout with columns and cards, spatial keyboard navigation.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="kanban" />
+```
+
+## Usage
+
+```tsx
+import { Kanban } from 'interactive-os/ui/Kanban'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    todo: { id: 'todo', data: { title: 'To Do' } },
+    t1: { id: 't1', data: { title: 'Design mockups' } },
+  },
+  relationships: {
+    __root__: ['todo'],
+    todo: ['t1'],
+  },
+})
+
+<Kanban data={data} onChange={setData} aria-label="Board" />
+```
 
 ## Props
 
@@ -11,13 +37,21 @@
 | onChange | (data: AriaData) => void | — | 데이터 변경 콜백 |
 | aria-label | string | — | 보드 접근성 라벨 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="kanban" />
+```
+
+## Accessibility
 
 - pattern: kanban
 - role: (커스텀 — useAria() + AriaInternalContext 직접 사용)
 - childRole: (column > card)
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div.kanban-board(row) container
@@ -27,7 +61,7 @@ div.kanban-board(row) container
        └─ Aria.Editable
 ```
 
-## CSS
+### CSS
 
 - 방식: Global CSS
 - 파일: kanban.css

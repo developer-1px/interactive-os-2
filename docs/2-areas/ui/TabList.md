@@ -1,6 +1,30 @@
 # TabList
 
-> 탭 탐색 — 편집(Delete, F2, Alt+←/→ 리오더) 지원
+> Horizontal tab bar with keyboard navigation and selection.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="tab-list" />
+```
+
+## Usage
+
+```tsx
+import { TabList } from 'interactive-os/ui/TabList'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    overview: { id: 'overview', data: { label: 'Overview' } },
+    api: { id: 'api', data: { label: 'API' } },
+    examples: { id: 'examples', data: { label: 'Examples' } },
+  },
+  relationships: { __root__: ['overview', 'api', 'examples'] },
+})
+
+<TabList data={data} onChange={setData} />
+```
 
 ## Props
 
@@ -12,20 +36,28 @@
 | renderItem | (item, state) => ReactNode | — | 항목 커스텀 렌더러 |
 | enableEditing | boolean | — | Delete, F2, Alt+←/→ 리오더 활성화 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="tab-list" />
+```
+
+## Accessibility
 
 - pattern: tabs
 - role: tablist
 - childRole: tab
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div[role=tablist, display:flex] container
   └─ div[role=tab, aria-selected] item
 ```
 
-## CSS
+### CSS
 
 - 방식: CSS Modules
 - 파일: TabList.module.css
