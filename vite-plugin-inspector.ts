@@ -82,19 +82,28 @@ export function inspectorPlugin(): Plugin {
           if (Array.isArray(node)) { node.forEach(walk); return }
 
           if (node.type === 'JSXOpeningElement' && node.loc && node.end != null) {
-            // Skip if already has data-inspector-line
-            const hasAttr = node.attributes?.some(
-              (a: any) => a.type === 'JSXAttribute' && a.name?.name === 'data-inspector-line',
-            )
-            if (!hasAttr) {
-              // Insert after the tag name (node.name.end)
-              const nameEnd = node.name?.end
-              if (nameEnd != null) {
-                insertions.push({
-                  offset: nameEnd,
-                  line: node.loc.start.line,
-                  col: node.loc.start.column + 1,
-                })
+            const nameNode = node.name
+            // Skip fragments — React.Fragment only accepts key and children
+            const isFragment = !nameNode
+              || nameNode.type === 'JSXFragment'
+              || nameNode.type === 'JSXNamespacedName'
+              || (nameNode.type === 'JSXMemberExpression' && nameNode.property?.name === 'Fragment')
+              || (nameNode.type === 'JSXIdentifier' && nameNode.name === 'Fragment')
+
+            if (!isFragment) {
+              // Skip if already has data-inspector-line
+              const hasAttr = node.attributes?.some(
+                (a: any) => a.type === 'JSXAttribute' && a.name?.name === 'data-inspector-line',
+              )
+              if (!hasAttr) {
+                const nameEnd = nameNode?.end
+                if (nameEnd != null) {
+                  insertions.push({
+                    offset: nameEnd,
+                    line: node.loc.start.line,
+                    col: node.loc.start.column + 1,
+                  })
+                }
               }
             }
           }
