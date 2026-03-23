@@ -1,6 +1,28 @@
 # Slider
 
-> 연속값 슬라이더 — 트랙 클릭 + 드래그 지원
+> Continuous value selector with track and thumb, keyboard + pointer input.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="slider" />
+```
+
+## Usage
+
+```tsx
+import { Slider } from 'interactive-os/ui/Slider'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    volume: { id: 'volume', data: { label: 'Volume' } },
+  },
+  relationships: { __root__: ['volume'] },
+})
+
+<Slider data={data} onChange={setData} min={0} max={100} step={1} />
+```
 
 ## Props
 
@@ -13,13 +35,21 @@
 | plugins | Plugin[] | [core(), history()] | 플러그인 배열 |
 | onChange | (data: AriaData) => void | — | 데이터 변경 콜백 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="slider" />
+```
+
+## Accessibility
 
 - pattern: `slider({min, max, step})`
 - role: slider
 - childRole: —
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div.slider-item container
@@ -29,7 +59,7 @@ div.slider-item container
        └─ span.slider-value
 ```
 
-## CSS
+### CSS
 
 - 방식: Global CSS
 - 파일: 전역 스타일

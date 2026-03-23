@@ -1,6 +1,29 @@
 # Accordion
 
-> 접이식 섹션 리스트 — 하나의 섹션만 펼쳐지는 아코디언 패턴
+> Vertically stacked headers that expand/collapse content sections.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="accordion" />
+```
+
+## Usage
+
+```tsx
+import { Accordion } from 'interactive-os/ui/Accordion'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    q1: { id: 'q1', data: { label: 'What is interactive-os?' } },
+    q2: { id: 'q2', data: { label: 'How does the store work?' } },
+  },
+  relationships: { __root__: ['q1', 'q2'] },
+})
+
+<Accordion data={data} onChange={setData} />
+```
 
 ## Props
 
@@ -11,13 +34,21 @@
 | onChange | (data: AriaData) => void | — | 데이터 변경 콜백 |
 | renderItem | (item, state) => ReactNode | — | 항목 커스텀 렌더러 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="accordion" />
+```
+
+## Accessibility
 
 - pattern: accordion
 - role: region
 - childRole: (내부 FocusScrollDiv)
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div[role=region] container
@@ -27,7 +58,7 @@ div[role=region] container
             └─ label
 ```
 
-## CSS
+### CSS
 
 - 방식: Global CSS
 - 파일: 전역 스타일

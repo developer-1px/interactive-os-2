@@ -1,6 +1,28 @@
 # Spinbutton
 
-> 숫자 증감 컨트롤 — 편집 모드(click->input), 유효성 검증, min/max disabled
+> Numeric input with increment/decrement buttons and keyboard control.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="spinbutton" />
+```
+
+## Usage
+
+```tsx
+import { Spinbutton } from 'interactive-os/ui/Spinbutton'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    quantity: { id: 'quantity', data: { label: 'Quantity' } },
+  },
+  relationships: { __root__: ['quantity'] },
+})
+
+<Spinbutton data={data} onChange={setData} min={0} max={99} step={1} />
+```
 
 ## Props
 
@@ -14,13 +36,21 @@
 | onChange | (data: AriaData) => void | — | 데이터 변경 콜백 |
 | label | string | — | 접근성 라벨 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="spinbutton" />
+```
+
+## Accessibility
 
 - pattern: `spinbutton({min, max, step})`
 - role: spinbutton
 - childRole: —
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div.spinbutton-item container
@@ -30,13 +60,13 @@ div.spinbutton-item container
        └─ button (+)
 ```
 
-## Features
+### Features
 
 - 편집 모드: click -> input 전환
 - 유효성 검증: min/max 범위 체크
 - aria-disabled: min/max 도달 시 버튼 비활성화
 
-## CSS
+### CSS
 
 - 방식: Global CSS
 - 파일: 전역 스타일

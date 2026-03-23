@@ -1,6 +1,30 @@
 # ListBox
 
-> 키보드 탐색 가능한 선택 리스트 — 편집(Delete, F2, Alt+Arrow 리오더) 지원
+> Keyboard-navigable list with single or multi-select support.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="listbox" />
+```
+
+## Usage
+
+```tsx
+import { ListBox } from 'interactive-os/ui/ListBox'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    apple: { id: 'apple', data: { label: 'Apple' } },
+    banana: { id: 'banana', data: { label: 'Banana' } },
+    cherry: { id: 'cherry', data: { label: 'Cherry' } },
+  },
+  relationships: { __root__: ['apple', 'banana', 'cherry'] },
+})
+
+<ListBox data={data} onChange={setData} />
+```
 
 ## Props
 
@@ -12,20 +36,28 @@
 | renderItem | (item, state) => ReactNode | — | 항목 커스텀 렌더러 |
 | enableEditing | boolean | — | Delete, F2, Alt+↑↓ 리오더 활성화 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="listbox" />
+```
+
+## Accessibility
 
 - pattern: listbox
 - role: listbox
 - childRole: option
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 div[role=listbox] container
   └─ div[role=option] item
 ```
 
-## CSS
+### CSS
 
 - 방식: CSS Modules
 - 파일: ListBox.module.css

@@ -1,6 +1,29 @@
 # Combobox
 
-> 검색 가능한 드롭다운 — 그룹 flatten/restore, 생성, 다중선택 지원
+> Input with a filterable dropdown list of options.
+
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="combobox" />
+```
+
+## Usage
+
+```tsx
+import { Combobox } from 'interactive-os/ui/Combobox'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    red: { id: 'red', data: { label: 'Red' } },
+    blue: { id: 'blue', data: { label: 'Blue' } },
+  },
+  relationships: { __root__: ['red', 'blue'] },
+})
+
+<Combobox data={data} onChange={setData} placeholder="Pick a color..." />
+```
 
 ## Props
 
@@ -15,14 +38,22 @@
 | selectionMode | "single" \| "multiple" | "single" | 선택 모드 |
 | creatable | boolean | — | 새 항목 생성 허용 |
 
-## behavior 대응
+## Keyboard
+
+```tsx render
+<ApgKeyboardTable slug="combobox" />
+```
+
+## Accessibility
 
 - pattern: `combobox({selectionMode})`
 - role: combobox (input) + listbox (dropdown)
 - childRole: option
 - focusStrategy: aria-activedescendant
 
-## DOM 구조
+## Internals
+
+### DOM 구조
 
 ```
 input[role=combobox] trigger/input
@@ -30,13 +61,13 @@ div[role=listbox].combo-dropdown popup
   └─ div[role=option] item
 ```
 
-## Features
+### Features
 
 - 그룹 flatten/restore: 검색 시 그룹 평탄화, 검색 해제 시 복원
 - create option: creatable=true 시 "Create ..." 옵션 표시
 - multiple: selectionMode="multiple" 시 토큰 UI
 
-## CSS
+### CSS
 
 - 방식: Global CSS
 - 파일: combobox.css
