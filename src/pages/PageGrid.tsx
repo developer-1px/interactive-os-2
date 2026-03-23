@@ -23,18 +23,12 @@ export default function PageGrid() {
       <div className="demo-section">
         <h3 className="demo-title">Employee Directory</h3>
         <div style={{ border: '1px solid var(--border, #e0e0e0)', borderRadius: 8, overflow: 'hidden' }}>
-          <div className="grid-header">
-            {gridColumns.map((col) => (
-              <div key={col.key} className="grid-header-cell">
-                {col.header}
-              </div>
-            ))}
-          </div>
           <Grid
             data={data}
             columns={gridColumns}
             plugins={plugins}
             onChange={setData}
+            header
             aria-label="Employee directory"
           />
         </div>
