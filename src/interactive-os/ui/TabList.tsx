@@ -12,15 +12,15 @@ interface TabListProps {
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
-  renderItem?: (tab: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (tab: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
   enableEditing?: boolean
   keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
   initialFocus?: string
   'aria-label'?: string
 }
 
-const defaultRenderItem = (tab: Record<string, unknown>, _state: NodeState): React.ReactNode => (
-  <span>{(tab.data as Record<string, unknown>)?.label as string ?? (tab.data as Record<string, unknown>)?.name as string ?? tab.id as string}</span>
+const defaultRenderItem = (tab: Record<string, unknown>, _state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => (
+  <span {...props}>{(tab.data as Record<string, unknown>)?.label as string ?? (tab.data as Record<string, unknown>)?.name as string ?? tab.id as string}</span>
 )
 
 export function TabList({
@@ -57,7 +57,7 @@ export function TabList({
         const props = tl.getItemProps(id)
         return (
           <div key={id} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-            {renderItem(entity, state)}
+            {renderItem(entity, state, {} as React.HTMLAttributes<HTMLElement>)}
           </div>
         )
       })}

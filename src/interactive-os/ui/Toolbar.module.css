@@ -1,7 +1,7 @@
 /* --- Toolbar --- */
 
 .toolbar-card {
-  padding: 4px 6px;
+  padding: var(--space-xs) var(--space-sm);
 }
 
 .toolbar-btn {
@@ -10,7 +10,7 @@
   justify-content: center;
   width: 30px;
   height: 30px;
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: var(--text-secondary);
   background: transparent;
   border: none;

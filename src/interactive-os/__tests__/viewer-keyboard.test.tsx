@@ -62,10 +62,10 @@ function ViewerTreeExact() {
 
   return (
     <Aria behavior={tree} data={store} plugins={[core()]} onChange={handleChange} aria-label="File tree">
-      <Aria.Item render={(node, state) => {
+      <Aria.Item render={(node, state, props) => {
         const data = node.data as { name: string; type: string }
         return (
-            <span data-testid={`node-${data.name}`} data-focused={state.focused}>
+            <span {...props} data-testid={`node-${data.name}`} data-focused={state.focused}>
               {data.name}
             </span>
         )

@@ -1,7 +1,12 @@
-import { useEffect, useRef, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Eye, Database, Cog, Compass, Puzzle, Layers, Box, Map, PenTool } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { BehaviorContext } from '../../interactive-os/behaviors/types'
+import { menu } from '../../interactive-os/behaviors/menu'
+import { useAria } from '../../interactive-os/hooks/useAria'
+import { core } from '../../interactive-os/plugins/core'
 
 interface DrawerNavItem {
   id: string
@@ -22,6 +27,17 @@ const drawerItems: DrawerNavItem[] = [
   { id: 'vision', label: 'Vision', icon: Map, path: '/internals/area/vision' },
 ]
 
+const drawerData: NormalizedData = {
+  entities: Object.fromEntries(
+    drawerItems.map(item => [item.id, { id: item.id, data: { label: item.label, path: item.path } }])
+  ),
+  relationships: { __root__: drawerItems.map(item => item.id) },
+}
+
+const iconMap: Record<string, LucideIcon> = Object.fromEntries(
+  drawerItems.map(item => [item.id, item.icon])
+)
+
 interface CmsHamburgerDrawerProps {
   open: boolean
   onClose: () => void
@@ -33,32 +49,36 @@ export default function CmsHamburgerDrawer({ open, onClose, hamburgerRef }: CmsH
   const { pathname } = useLocation()
   const drawerRef = useRef<HTMLDivElement>(null)
 
+  const keyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+    Escape: () => {
+      onClose()
+      hamburgerRef.current?.focus()
+    },
+  }), [onClose, hamburgerRef])
+
+  const aria = useAria({
+    behavior: menu,
+    data: drawerData,
+    plugins: [core()],
+    keyMap,
+    onActivate: (nodeId) => {
+      const item = drawerItems.find(i => i.id === nodeId)
+      if (item) {
+        navigate(item.path)
+        onClose()
+      }
+    },
+  })
+
   // Focus first item on open
   useEffect(() => {
     if (open && drawerRef.current) {
-      const first = drawerRef.current.querySelector<HTMLButtonElement>('.cms-drawer__item')
+      const first = drawerRef.current.querySelector<HTMLElement>('[role="menuitem"]')
       first?.focus()
     }
   }, [open])
 
   if (!open) return null
-
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Escape') {
-      e.preventDefault()
-      onClose()
-      hamburgerRef.current?.focus()
-    }
-  }
-
-  function handleItemClick(path: string) {
-    navigate(path)
-    onClose()
-  }
-
-  function isActive(item: DrawerNavItem) {
-    return pathname.startsWith(item.path)
-  }
 
   return (
     <>
@@ -70,20 +90,24 @@ export default function CmsHamburgerDrawer({ open, onClose, hamburgerRef }: CmsH
             <span style={{ fontWeight: 700, fontSize: '13px', color: 'var(--text-bright)' }}>interactive-os</span>
           </div>
         </div>
-        {drawerItems.map(item => {
-          const Icon = item.icon
-          return (
-            <button
-              key={item.id}
-              type="button"
-              className={`cms-drawer__item${isActive(item) ? ' cms-drawer__item--active' : ''}`}
-              onClick={() => handleItemClick(item.path)}
-            >
-              <Icon size={16} />
-              {item.label}
-            </button>
-          )
-        })}
+        <div role="menu" aria-label="Navigation menu" {...aria.containerProps}>
+          {drawerItems.map(item => {
+            const props = aria.getNodeProps(item.id)
+            const data = (drawerData.entities[item.id]?.data ?? {}) as Record<string, string>
+            const Icon = iconMap[item.id]
+            const isActive = pathname.startsWith(data.path)
+            return (
+              <div
+                key={item.id}
+                {...(props as React.HTMLAttributes<HTMLDivElement>)}
+                className={`cms-drawer__item${isActive ? ' cms-drawer__item--active' : ''}`}
+              >
+                {Icon && <Icon size={16} />}
+                {data.label}
+              </div>
+            )
+          })}
+        </div>
       </div>
     </>
   )

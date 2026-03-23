@@ -62,7 +62,7 @@ function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, '
   )
 }
 
-function FocusScrollRef({ focused }: { focused: boolean }) {
+function useFocusScroll(focused: boolean) {
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {
     if (focused && ref.current) {
@@ -80,7 +80,7 @@ function AriaItemNode({ childId, render }: { childId: string; render: AriaItemPr
   if (!entity) return null
   const state = aria.getNodeState(childId)
   const props = aria.getNodeProps(childId) as React.HTMLAttributes<HTMLElement>
-  const scrollRef = FocusScrollRef({ focused: state.focused })
+  const scrollRef = useFocusScroll(state.focused)
 
   return (
     <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>

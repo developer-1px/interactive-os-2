@@ -42,7 +42,7 @@ export default function PageMenu() {
       <div className="card" style={{ maxWidth: 280 }}>
         <MenuList
           data={menuData}
-          renderItem={(item, state: NodeState) => {
+          renderItem={(item, state: NodeState, props) => {
             const indent = ((state.level ?? 1) - 1) * 16
             const hasChildren = state.expanded !== undefined
             const cls = [
@@ -51,7 +51,7 @@ export default function PageMenu() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls} style={{ paddingLeft: 14 + indent }}>
+              <div {...props} className={cls} style={{ paddingLeft: 14 + indent }}>
                 <span className="menu-item__label">{(item.data as Record<string, unknown>)?.label as string}</span>
                 {hasChildren && (
                   <span className="menu-item__arrow">

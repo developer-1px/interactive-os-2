@@ -30,10 +30,10 @@ export default function PageDisclosure() {
       <div className="card">
         <DisclosureGroup
           data={disclosureData}
-          renderItem={(item, state: NodeState) => {
+          renderItem={(item, state: NodeState, props) => {
             const d = item.data as Record<string, unknown>
             return (
-            <div>
+            <div {...props}>
               <div className={`disclosure-trigger${state.focused ? ' disclosure-trigger--focused' : ''}`}>
                 <span className="disclosure-trigger__icon">
                   {state.expanded

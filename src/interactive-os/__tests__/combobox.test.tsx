@@ -30,9 +30,10 @@ function fixtureData(): NormalizedData {
   })
 }
 
-function renderItem(item: Record<string, unknown>, state: NodeState) {
+function renderItem(item: Record<string, unknown>, state: NodeState, props: Record<string, unknown>) {
   return (
     <span
+      {...props}
       data-testid={`item-${item.id}`}
       data-selected={state.selected}
       data-focused={state.focused}

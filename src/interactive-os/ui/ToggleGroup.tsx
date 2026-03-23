@@ -10,16 +10,16 @@ interface ToggleGroupProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
   orientation?: 'horizontal' | 'vertical'
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => {
+const defaultRenderItem = (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
   return (
-    <span>
+    <span {...props}>
       {state.selected ? '● ' : '○ '}
       {label}
     </span>

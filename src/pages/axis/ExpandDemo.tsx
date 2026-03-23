@@ -80,12 +80,12 @@ export default function ExpandDemo() {
           onChange={setData}
           aria-label="expand demo"
         >
-          <Aria.Item render={(node, state: NodeState) => {
+          <Aria.Item render={(node, state: NodeState, props) => {
             const d = node.data as Record<string, unknown>
             const indent = mode === 'arrow' ? ((state.level ?? 1) - 1) * 20 : 0
             const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')
             return (
-              <div className={cls} style={indent ? { paddingLeft: indent } : undefined}>
+              <div {...props} className={cls} style={indent ? { paddingLeft: indent } : undefined}>
                 {mode === 'arrow' && state.expanded !== undefined && (
                   <span style={{ display: 'inline-block', width: 16, opacity: 0.5 }}>
                     {state.expanded ? '▾' : '▸'}

@@ -95,7 +95,7 @@ describe('NavList', () => {
     render(
       <NavList
         data={makeNavData(['Alpha'])}
-        renderItem={(node) => <span data-testid="custom">{(node.data as { label: string }).label}!</span>}
+        renderItem={(node, _state, props) => <span {...props} data-testid="custom">{(node.data as { label: string }).label}!</span>}
         aria-label="Custom nav"
       />
     )

@@ -53,10 +53,10 @@ export default function PageTabsCrud() {
             onChange={setData}
             enableEditing
             plugins={plugins}
-            renderItem={(tab, state: NodeState) => {
+            renderItem={(tab, state: NodeState, props) => {
               const d = tab.data as Record<string, unknown>
               return (
-                <div className={`tab${state.focused ? ' tab--focused' : ''}${state.selected ? ' tab--selected' : ''}`}>
+                <div {...props} className={`tab${state.focused ? ' tab--focused' : ''}${state.selected ? ' tab--selected' : ''}`}>
                   {d?.label as string}
                 </div>
               )

@@ -47,8 +47,8 @@ function renderDisclosure(data: NormalizedData) {
     <DisclosureGroup
       data={data}
       plugins={[core()]}
-      renderItem={(item, state: NodeState) => (
-        <span data-testid={`trigger-${item.id}`} data-focused={state.focused} data-expanded={state.expanded}>
+      renderItem={(item, state: NodeState, props) => (
+        <span {...props} data-testid={`trigger-${item.id}`} data-focused={state.focused} data-expanded={state.expanded}>
           {(item.data as Record<string, unknown>)?.name as string}
         </span>
       )}
@@ -138,8 +138,8 @@ describe('DisclosureGroup keyboard integration', () => {
         <DisclosureGroup
           data={leafFixtureData()}
           plugins={[core()]}
-          renderItem={(item, state: NodeState) => (
-            <span data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
+          renderItem={(item, state: NodeState, props) => (
+            <span {...props} data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
               {(item.data as Record<string, unknown>)?.name as string}
             </span>
           )}
@@ -159,8 +159,8 @@ describe('DisclosureGroup keyboard integration', () => {
         <DisclosureGroup
           data={leafFixtureData()}
           plugins={[core()]}
-          renderItem={(item, state: NodeState) => (
-            <span data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
+          renderItem={(item, state: NodeState, props) => (
+            <span {...props} data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
               {(item.data as Record<string, unknown>)?.name as string}
             </span>
           )}

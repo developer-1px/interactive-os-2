@@ -1,16 +1,14 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import type { Command, NormalizedData, Plugin } from '../core/types'
 import { ROOT_ID, createBatchCommand } from '../core/types'
-import type { AriaBehavior, NodeState } from '../behaviors/types'
+import type { AriaBehavior } from '../behaviors/types'
 import type { CommandEngine } from '../core/createCommandEngine'
-import { getChildren, getParent, getEntity, getEntityData } from '../core/createStore'
-import { focusCommands } from '../plugins/core'
+import { getChildren, getEntityData } from '../core/createStore'
 import { createBehaviorContext } from '../behaviors/createBehaviorContext'
-import { findMatchingKey } from './useKeyboard'
-import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
 import { isVisible, findFallbackFocus, detectNewVisibleEntities } from '../plugins/focusRecovery'
 import type { IsReachable } from '../plugins/focusRecovery'
 import type { UseAriaReturn } from './useAria'
+import { useAriaView } from './useAriaView'
 
 /** Command types that update zone-local view state (not shared engine data). */
 const META_COMMAND_TYPES = new Set([
@@ -121,8 +119,6 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
   viewStateRef.current = viewState
 
   // ── Virtual engine adapter ──
-  // Overlays zone-local meta-entities onto the real engine's store.
-  // createBehaviorContext reads from engine.getStore(), so this makes it zone-aware.
 
   const virtualEngine = useMemo<CommandEngine>(() => {
     function getVirtualStore(): NormalizedData {
@@ -151,7 +147,6 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
             if (META_COMMAND_TYPES.has(sub.type)) metaCmds.push(sub)
             else dataCmds.push(sub)
           }
-          // Apply meta commands to zone state
           if (metaCmds.length > 0) {
             setViewState(prev => {
               let s = prev
@@ -159,16 +154,13 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
               return s
             })
           }
-          // Dispatch data commands to real engine
           if (dataCmds.length > 0) {
             const storeBefore = engine.getStore()
             if (dataCmds.length === 1) {
               engine.dispatch(dataCmds[0]!)
             } else {
-              // Re-batch data commands
               engine.dispatch(createBatchCommand(dataCmds))
             }
-            // Zone-level focus recovery (always active)
             const storeAfter = engine.getStore()
             if (storeAfter !== storeBefore) {
               runFocusRecovery(storeBefore, storeAfter)
@@ -180,7 +172,6 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
         if (META_COMMAND_TYPES.has(command.type)) {
           setViewState(prev => {
             const next = applyMetaCommand(prev, command)
-            // Anchor reset: when standalone focus fires, clear selection anchor
             return command.type === 'core:focus'
               ? { ...next, selectionAnchor: '' }
               : next
@@ -188,7 +179,6 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
           return
         }
 
-        // Data command → shared engine + focus recovery (always active)
         const storeBefore = engine.getStore()
         engine.dispatch(command)
         const storeAfter = engine.getStore()
@@ -201,13 +191,11 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
 
     function runFocusRecovery(storeBefore: NormalizedData, storeAfter: NormalizedData) {
       const vs = viewStateRef.current
-      // New visible entities → focus the first one (top-level result)
       const newVisible = detectNewVisibleEntities(storeBefore, storeAfter, isReachable)
       if (newVisible.length > 0) {
         setViewState(prev => ({ ...prev, focusedId: newVisible[0]! }))
         return
       }
-      // Current focus not visible → fallback
       if (vs.focusedId && !isVisible(storeAfter, vs.focusedId, isReachable)) {
         const fallback = findFallbackFocus(storeBefore, storeAfter, vs.focusedId, isReachable)
         if (fallback) {
@@ -235,201 +223,22 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     }
   }, [focusedId, store])
 
-  // ── KeyMap ──
+  // ── Shared view logic ──
 
-  const pluginKeyMaps = useMemo(
-    () => {
-      if (!zonePlugins?.length) return undefined
-      const merged: Record<string, (ctx: ReturnType<typeof createBehaviorContext>) => Command | void> = {}
-      for (const p of zonePlugins) {
-        if (p.keyMap) Object.assign(merged, p.keyMap)
-      }
-      return Object.keys(merged).length > 0 ? merged : undefined
-    },
-    [zonePlugins],
-  )
-
-  const pluginClipboardHandlers = useMemo(
-    () => {
-      if (!zonePlugins?.length) return null
-      type ClipboardHandler = (ctx: ReturnType<typeof createBehaviorContext>) => Command | void
-      const handlers: { onCopy?: ClipboardHandler; onCut?: ClipboardHandler; onPaste?: ClipboardHandler } = {}
-      for (const p of zonePlugins) {
-        if (p.onCopy) handlers.onCopy = p.onCopy
-        if (p.onCut) handlers.onCut = p.onCut
-        if (p.onPaste) handlers.onPaste = p.onPaste
-      }
-      return (handlers.onCopy || handlers.onCut || handlers.onPaste) ? handlers : null
-    },
-    [zonePlugins],
-  )
-
-  const mergedKeyMap = useMemo(
-    () => ({ ...behavior.keyMap, ...pluginKeyMaps, ...keyMapOverrides }),
-    [behavior.keyMap, pluginKeyMaps, keyMapOverrides],
-  )
-
-  const behaviorCtxOptions = useMemo(
-    () => ({
-      expandable: behavior.expandable,
-      selectionMode: behavior.selectionMode,
-      colCount: behavior.colCount,
-    }),
-    [behavior.expandable, behavior.selectionMode, behavior.colCount],
-  )
-
-  // ── dispatch (exposed) ──
-
-  const dispatch = useCallback(
-    (command: Command) => virtualEngine.dispatch(command),
-    [virtualEngine],
-  )
-
-  // ── getNodeState ──
-
-  const getNodeState = useCallback(
-    (id: string): NodeState => {
-      const parentId = getParent(store, id)
-      const siblings = parentId ? getChildren(store, parentId) : []
-      const children = getChildren(store, id)
-      const hasChildren = children.length > 0
-
-      let level = 0
-      let current = id
-      while (true) {
-        const parent = getParent(store, current)
-        if (!parent || parent === ROOT_ID) break
-        level++
-        current = parent
-      }
-
-      const isExpandable = hasChildren || (behavior.expandable ?? false)
-
-      return {
-        focused: id === focusedId,
-        selected: selectedIdSet.has(id),
-        disabled: false,
-        index: siblings.indexOf(id),
-        siblingCount: siblings.length,
-        expanded: isExpandable ? expandedIds.includes(id) : undefined,
-        level: level + 1,
-      }
-    },
-    [store, focusedId, selectedIdSet, expandedIds, behavior.expandable],
-  )
-
-  // ── getNodeProps (scoped) ──
-
-  const scopeAttr = `data-${scope}-id`
-
-  const getNodeProps = useCallback(
-    (id: string): Record<string, unknown> => {
-      const state = getNodeState(id)
-      const entity = getEntity(store, id) ?? { id }
-      const ariaAttrs = behavior.ariaAttributes(entity, state)
-      const isActivedescendant = behavior.focusStrategy.type === 'aria-activedescendant'
-
-      const baseProps: Record<string, unknown> = {
-        role: behavior.childRole ?? 'row',
-        [scopeAttr]: id,
-        ...ariaAttrs,
-      }
-
-      if (state.focused) baseProps['data-focused'] = ''
-
-      baseProps.onClick = () => {
-        if (behavior.activateOnClick) {
-          if (onActivateRef.current) {
-            onActivateRef.current(id)
-          } else {
-            const ctx = createBehaviorContext(virtualEngine, behaviorCtxOptions)
-            const command = ctx.activate()
-            if (command) virtualEngine.dispatch(command)
-          }
-        }
-      }
-      baseProps.onFocus = (event: FocusEvent) => {
-        if (event.target !== event.currentTarget) return
-        if (id !== focusedId) {
-          virtualEngine.dispatch(focusCommands.setFocus(id))
-        }
-      }
-
-      if (!isActivedescendant) {
-        baseProps.tabIndex = behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
-        baseProps.onKeyDown = (event: KeyboardEvent) => {
-          if (event.defaultPrevented) return
-          if (event.target !== event.currentTarget) return
-          const matchedKey = findMatchingKey(event, mergedKeyMap)
-          if (!matchedKey) return
-          const ctx = createBehaviorContext(virtualEngine, behaviorCtxOptions)
-          const handler = mergedKeyMap[matchedKey]
-          if (!handler) return
-          dispatchKeyAction(ctx, handler, virtualEngine, onActivateRef.current)
-          event.preventDefault()
-        }
-      }
-
-      return baseProps
-    },
-    [store, behavior, mergedKeyMap, virtualEngine, focusedId, getNodeState, behaviorCtxOptions, scopeAttr],
-  )
-
-  // ── Clipboard event handler ──
-
-  const handleClipboardEvent = useCallback(
-    (event: ClipboardEvent) => {
-      if (event.defaultPrevented) return
-      if (!pluginClipboardHandlers) return
-      if (isEditableElement(event.target as Element)) return
-
-      const ctx = createBehaviorContext(virtualEngine, behaviorCtxOptions)
-      let handler: ((ctx: ReturnType<typeof createBehaviorContext>) => Command | void) | undefined
-      switch (event.type) {
-        case 'copy': handler = pluginClipboardHandlers.onCopy; break
-        case 'cut': handler = pluginClipboardHandlers.onCut; break
-        case 'paste': handler = pluginClipboardHandlers.onPaste; break
-      }
-      if (!handler) return
-      const command = handler(ctx)
-      if (command) {
-        virtualEngine.dispatch(command)
-        event.preventDefault()
-      }
-    },
-    [pluginClipboardHandlers, virtualEngine, behaviorCtxOptions],
-  )
-
-  // ── containerProps (for aria-activedescendant mode) ──
-
-  const containerProps = useMemo((): Record<string, unknown> => {
-    const clipboardProps: Record<string, unknown> = pluginClipboardHandlers
-      ? { onCopy: handleClipboardEvent, onCut: handleClipboardEvent, onPaste: handleClipboardEvent }
-      : {}
-
-    if (behavior.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1, ...clipboardProps }
-    return {
-      tabIndex: 0,
-      'aria-activedescendant': focusedId || undefined,
-      onKeyDown: (event: KeyboardEvent) => {
-        if (event.defaultPrevented) return
-        if (event.target !== event.currentTarget && isEditableElement(event.target as Element)) return
-        const matchedKey = findMatchingKey(event, mergedKeyMap)
-        if (!matchedKey) return
-        const ctx = createBehaviorContext(virtualEngine, behaviorCtxOptions)
-        const handler = mergedKeyMap[matchedKey]
-        if (!handler) return
-        dispatchKeyAction(ctx, handler, virtualEngine, onActivateRef.current)
-        event.preventDefault()
-      },
-      ...clipboardProps,
-    }
-  }, [behavior.focusStrategy.type, focusedId, mergedKeyMap, virtualEngine, behaviorCtxOptions, pluginClipboardHandlers, handleClipboardEvent])
+  const view = useAriaView({
+    engine: virtualEngine,
+    store,
+    behavior,
+    plugins: zonePlugins,
+    keyMap: keyMapOverrides,
+    onActivate,
+    focusedId,
+    selectedIdSet,
+    expandedIds,
+    nodeIdAttr: `data-${scope}-id`,
+  })
 
   // ── External store-change focus recovery ──
-  // When something outside the zone mutates the engine store (e.g. toolbar button),
-  // the zone's synchronous runFocusRecovery in dispatch() doesn't fire.
-  // This effect catches those external mutations and recovers focus.
 
   const prevStoreRef = useRef(store)
 
@@ -440,39 +249,28 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
 
     const vs = viewStateRef.current
     if (!vs.focusedId) return
-
-    // Focus still valid → skip
     if (isVisible(store, vs.focusedId, isReachable)) return
 
-    // Focus invalid — external mutation removed the focused node
     const fallback = findFallbackFocus(prevStore, store, vs.focusedId, isReachable)
     if (fallback) {
       setViewState(prev => prev.focusedId === fallback ? prev : { ...prev, focusedId: fallback })
     }
   }, [store, isReachable])
 
-  // ── DOM focus sync (scoped to zone container) ──
+  // ── dispatch (exposed) ──
 
-  useEffect(() => {
-    if (!focusedId) return
-    if (behavior.focusStrategy.type === 'aria-activedescendant') return
-    // Find within any ancestor container that has data-aria-container
-    const el = document.querySelector<HTMLElement>(`[${scopeAttr}="${focusedId}"]`)
-    if (!el || el === document.activeElement) return
-    const container = el.closest('[data-aria-container]')
-    const ownsActiveFocus = container?.contains(document.activeElement)
-    const focusIsOrphaned = document.activeElement === document.body || document.activeElement === null
-    if (!ownsActiveFocus && !focusIsOrphaned) return
-    el.focus({ preventScroll: false })
-  }, [focusedId, behavior.focusStrategy.type, scopeAttr])
+  const dispatch = useCallback(
+    (command: Command) => virtualEngine.dispatch(command),
+    [virtualEngine],
+  )
 
   return {
     dispatch,
-    getNodeProps,
-    getNodeState,
+    getNodeProps: view.getNodeProps,
+    getNodeState: view.getNodeState,
     focused: focusedId,
     selected: selectedIds,
     getStore: () => virtualEngine.getStore(),
-    containerProps,
+    containerProps: view.containerProps,
   }
 }

@@ -32,7 +32,7 @@ export default function PageRadioGroup() {
       <div className="card">
         <RadioGroup
           data={radioData}
-          renderItem={(item, state: NodeState) => {
+          renderItem={(item, state: NodeState, props) => {
             const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',
@@ -41,7 +41,7 @@ export default function PageRadioGroup() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div {...props} className={cls} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ fontSize: 16 }}>{state.selected ? '◉' : '○'}</span>
                 <span className="list-item__label">{d?.label as string}</span>
               </div>

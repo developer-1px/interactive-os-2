@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react'
 import type { NormalizedData, Command } from '../../interactive-os/core/types'
 import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
 import { getChildren, getParent } from '../../interactive-os/core/createStore'
@@ -6,6 +7,10 @@ import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
 import { cmsCanDelete } from './cms-schema'
+import type { BehaviorContext } from '../../interactive-os/behaviors/types'
+import { toolbar } from '../../interactive-os/behaviors/toolbar'
+import { useAria } from '../../interactive-os/hooks/useAria'
+import { core } from '../../interactive-os/plugins/core'
 
 interface CmsFloatingToolbarProps {
   store: NormalizedData
@@ -31,110 +36,109 @@ function getDepthContext(store: NormalizedData, focusedId: string): DepthContext
   return 'fields'
 }
 
+interface ToolbarAction {
+  id: string
+  label: string
+  condition?: (ctx: DepthContext) => boolean
+  disabledWhen?: (ctx: DepthContext, isOnly: boolean) => boolean
+}
+
+const toolbarActions: ToolbarAction[] = [
+  { id: 'add', label: '+ 추가', condition: (ctx) => ctx === 'collection' },
+  { id: 'duplicate', label: '복제' },
+  { id: 'delete', label: '삭제' },
+  { id: 'move-up', label: '↑ 위로' },
+  { id: 'move-down', label: '↓ 아래로' },
+]
+
 export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden }: CmsFloatingToolbarProps) {
   if (hidden) return null
 
   const context = getDepthContext(store, focusedId)
+  const rootChildren = getChildren(store, ROOT_ID)
+  const isOnlySection = context === 'root' && rootChildren.length <= 1
+  const disabled = context === 'none' || context === 'fields'
+
+  const { visibleActions, toolbarData } = useMemo(() => {
+    const visible = toolbarActions.filter(a => !a.condition || a.condition(context))
+    return {
+      visibleActions: visible,
+      toolbarData: {
+        entities: Object.fromEntries(
+          visible.map(a => [a.id, { id: a.id, data: { label: a.label } }])
+        ),
+        relationships: { __root__: visible.map(a => a.id) },
+      } as NormalizedData,
+    }
+  }, [context])
 
   const focusCanvas = () => {
     const canvasEl = document.querySelector('[data-cms-root]') as HTMLElement
     canvasEl?.focus()
   }
 
-  const handleAction = (action: string) => {
-    if (!focusedId) return
+  const keyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+    Escape: () => { focusCanvas() },
+  }), [])
 
-    switch (action) {
-      case 'delete': {
-        // Slot guard
-        const parentId = getParent(store, focusedId)
-        if (parentId) {
-          const parentData = store.entities[parentId]?.data as Record<string, unknown> | undefined
-          if (!cmsCanDelete(parentData)) return
+  const aria = useAria({
+    behavior: toolbar,
+    data: toolbarData,
+    plugins: [core()],
+    keyMap,
+    onActivate: (actionId) => {
+      if (!focusedId || disabled) return
+
+      switch (actionId) {
+        case 'delete': {
+          const parentId = getParent(store, focusedId)
+          if (parentId) {
+            const parentData = store.entities[parentId]?.data as Record<string, unknown> | undefined
+            if (!cmsCanDelete(parentData)) return
+          }
+          if (isOnlySection) return
+          dispatch(crudCommands.remove(focusedId))
+          break
         }
-        if (context === 'root' && getChildren(store, ROOT_ID).length <= 1) return
-        dispatch(crudCommands.remove(focusedId))
-        break
+        case 'duplicate':
+        case 'add':
+          dispatch(createBatchCommand([
+            clipboardCommands.copy([focusedId]),
+            clipboardCommands.paste(focusedId),
+          ]))
+          break
+        case 'move-up':
+          dispatch(dndCommands.moveUp(focusedId))
+          break
+        case 'move-down':
+          dispatch(dndCommands.moveDown(focusedId))
+          break
       }
-      case 'duplicate':
-      case 'add': {
-        dispatch(createBatchCommand([
-          clipboardCommands.copy([focusedId]),
-          clipboardCommands.paste(focusedId),
-        ]))
-        break
-      }
-      case 'move-up': {
-        dispatch(dndCommands.moveUp(focusedId))
-        break
-      }
-      case 'move-down': {
-        dispatch(dndCommands.moveDown(focusedId))
-        break
-      }
-    }
-    focusCanvas()
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      e.preventDefault()
       focusCanvas()
-    }
-  }
-
-  const rootChildren = getChildren(store, ROOT_ID)
-  const isOnlySection = context === 'root' && rootChildren.length <= 1
-  const disabled = context === 'none' || context === 'fields'
+    },
+  })
 
   return (
-    <div className="cms-floating-toolbar" onKeyDown={handleKeyDown}>
-      {context === 'collection' && (
-        <>
-          <button
-            className="cms-floating-toolbar__btn"
-            disabled={disabled}
-            onClick={() => handleAction('add')}
-          >
-            + 추가
-          </button>
-          <div className="cms-floating-toolbar__sep" />
-        </>
-      )}
+    <div className="cms-floating-toolbar" role="toolbar" aria-label="Section actions" {...aria.containerProps}>
+      {visibleActions.map((action) => {
+        const props = aria.getNodeProps(action.id)
+        const isDisabled = disabled || (action.id === 'delete' && isOnlySection)
 
-      <button
-        className="cms-floating-toolbar__btn"
-        disabled={disabled}
-        onClick={() => handleAction('duplicate')}
-      >
-        복제
-      </button>
-
-      <button
-        className="cms-floating-toolbar__btn"
-        disabled={disabled || isOnlySection}
-        onClick={() => handleAction('delete')}
-      >
-        삭제
-      </button>
-
-      <div className="cms-floating-toolbar__sep" />
-
-      <button
-        className="cms-floating-toolbar__btn"
-        disabled={disabled}
-        onClick={() => handleAction('move-up')}
-      >
-        ↑ 위로
-      </button>
-
-      <button
-        className="cms-floating-toolbar__btn"
-        disabled={disabled}
-        onClick={() => handleAction('move-down')}
-      >
-        ↓ 아래로
-      </button>
+        return (
+          <React.Fragment key={action.id}>
+            <button
+              {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+              className="cms-floating-toolbar__btn"
+              disabled={isDisabled}
+            >
+              {action.label}
+            </button>
+            {(action.id === 'add' || action.id === 'delete') && (
+              <div className="cms-floating-toolbar__sep" />
+            )}
+          </React.Fragment>
+        )
+      })}
     </div>
   )
 }

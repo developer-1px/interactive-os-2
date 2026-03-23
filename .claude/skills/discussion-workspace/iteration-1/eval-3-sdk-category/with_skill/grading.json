@@ -1,0 +1,9 @@
+{
+  "eval_id": 3,
+  "eval_name": "sdk-category-tradeoff-exit-mapping",
+  "expectations": [
+    {"text": "트레이드오프를 제약/원칙에서 다룸", "passed": true, "evidence": "behavior 분류 금지가 확정 원칙임을 짚고, 실제 트레이드오프가 아님을 판단"},
+    {"text": "출구 매핑 인식", "passed": true, "evidence": "에이전트 요약: 선택지 간 트레이드오프 -> /conflict, 바로 실행 가능 -> /go 또는 /plan 매핑 확인"},
+    {"text": "실행 경로 언급", "passed": true, "evidence": "사용자가 바로 실행까지라고 했으므로, 논의 후 실행 가능한 경로 인식"}
+  ]
+}

@@ -1,0 +1,1 @@
+{"eval_id": 2, "eval_name": "onboarding-journey-map", "prompt": "새 사용자가 처음 우리 에디터에 들어왔을 때 이상적인 경험이 어떤 건지 구체화하고 싶어", "assertions": ["경험 도메인 감지", "저니맵 테이블", "감정 열 채움", "갭 발견"]}

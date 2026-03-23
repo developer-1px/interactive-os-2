@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import type { NormalizedData, Plugin, Command } from '../interactive-os/core/types'
 import type { BehaviorContext, NodeState } from '../interactive-os/behaviors/types'
 import type { LogEntry } from '../interactive-os/core/dispatchLogger'
@@ -53,7 +53,7 @@ function truncate(str: string, max = 60): string {
   return str.slice(0, max) + '…'
 }
 
-function renderInspectorItem(node: Record<string, unknown>, state: NodeState) {
+function renderInspectorItem(node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) {
   const d = node.data as Record<string, unknown>
   const type = d?.type as string
   const label = d?.label as string
@@ -65,6 +65,7 @@ function renderInspectorItem(node: Record<string, unknown>, state: NodeState) {
 
   return (
     <div
+      {...props}
       style={{
         paddingLeft: 8 + indent,
         paddingTop: 2,
@@ -110,7 +111,7 @@ function renderInspectorItem(node: Record<string, unknown>, state: NodeState) {
 
 // --- Editor render ---
 
-function renderEditorItem(node: Record<string, unknown>, state: NodeState) {
+function renderEditorItem(node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) {
   const d = node.data as Record<string, unknown>
   const name = d?.name as string
   const type = d?.type as string
@@ -119,6 +120,7 @@ function renderEditorItem(node: Record<string, unknown>, state: NodeState) {
 
   return (
     <div
+      {...props}
       style={{
         paddingLeft: 14 + indent,
         paddingTop: 3,

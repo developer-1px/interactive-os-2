@@ -46,8 +46,9 @@ export default function PageDialog() {
             </div>
             <div className={dialogStyles.footer}>
               <Aria behavior={dialog} data={dialogData} plugins={plugins}>
-                <Aria.Item render={(node) => (
+                <Aria.Item render={(node, _state, props) => (
                   <button
+                    {...props}
                     className={buttonStyles.dialog}
                     onClick={() => setOpen(false)}
                   >

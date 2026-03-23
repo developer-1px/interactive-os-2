@@ -50,7 +50,7 @@ export default function PageRename() {
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(item, state: NodeState) => {
+          renderItem={(item, state: NodeState, props) => {
             const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',
@@ -59,7 +59,7 @@ export default function PageRename() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls}>
+              <div {...props} className={cls}>
                 <Aria.Editable field="label">
                   <span className="list-item__label">{d?.label as string}</span>
                 </Aria.Editable>

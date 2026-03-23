@@ -44,7 +44,7 @@ export default function PageEnginePipeline() {
           data={data}
           onChange={setData}
           plugins={[core()]}
-          renderItem={(item, state: NodeState) => {
+          renderItem={(item, state: NodeState, props) => {
             const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',
@@ -52,7 +52,7 @@ export default function PageEnginePipeline() {
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')
             return (
-              <div className={cls}>
+              <div {...props} className={cls}>
                 <span style={{ opacity: 0.4, fontSize: '10px', marginRight: '8px', fontFamily: 'var(--font-mono, monospace)' }}>
                   {d?.step as string}
                 </span>

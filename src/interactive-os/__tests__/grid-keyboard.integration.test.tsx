@@ -43,10 +43,10 @@ function renderGrid(data: NormalizedData, opts?: { tabCycle?: boolean }) {
   return render(
     <Aria behavior={b} data={data} plugins={plugins} aria-label="Employees">
       <Aria.Item
-        render={(node: Record<string, unknown>, state: NodeState) => {
+        render={(node: Record<string, unknown>, state: NodeState, props) => {
           const cells = (node.data as Record<string, unknown>)?.cells as string[]
           return (
-            <div style={{ display: 'flex' }} data-testid={`row-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
+            <div {...props} style={{ display: 'flex' }} data-testid={`row-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
               {cells.map((cell, i) => (
                 <Aria.Cell key={i} index={i}>
                   <span data-testid={`cell-${node.id}-${i}`}>{cell}</span>

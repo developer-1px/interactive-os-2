@@ -91,10 +91,10 @@
   --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
   --sans: 'Manrope', -apple-system, system-ui, sans-serif;
 
-  --text-xs:  10px;
-  --text-sm:  11px;
-  --text-md:  13px;
-  --text-lg:  15px;
+  --text-xs:  11px;
+  --text-sm:  12px;
+  --text-md:  14px;
+  --text-lg:  16px;
   --text-xl:  20px;
   --text-2xl: 28px;
 
@@ -104,17 +104,17 @@
   --radius-xs: 4px;
 
   /* ── Spacing ── */
-  --space-xs:  4px;
-  --space-1:   6px;
-  --space-sm:  8px;
+  --space-xs: 4px;
+  --space-sm: 8px;
   --space-md:  12px;
   --space-lg:  16px;
   --space-xl:  24px;
   --space-2xl: 32px;
+  --space-3xl: 40px;
 
   /* ── Icon ── */
-  --icon-xs:  10px;
-  --icon-sm:  12px;
+  --icon-xs:  12px;
+  --icon-sm:  14px;
   --icon-md:  16px;
   --icon-lg:  24px;
   --icon-stroke: 1.5;
@@ -236,7 +236,7 @@ body {
   background: var(--surface-base);
   color: var(--text-primary);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-md);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

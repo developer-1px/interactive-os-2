@@ -2,9 +2,9 @@
 
 .accent {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-md);
   font-weight: 600;
-  padding: 6px 14px;
+  padding: var(--space-sm) var(--space-lg);
   background: var(--primary);
   color: var(--zinc-50);
   border: none;
@@ -23,9 +23,9 @@
 
 .dialog {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: 500;
-  padding: 4px 10px;
+  padding: var(--space-xs) var(--space-md);
   background: var(--surface-default);
   color: var(--text-secondary);
   border: 1px solid var(--border-default);
