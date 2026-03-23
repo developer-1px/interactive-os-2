@@ -8,7 +8,7 @@ import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData, Entity } from '../interactive-os/core/types'
 import { TimelineColumn } from './viewer/TimelineColumn'
-import { FileViewerModal } from './viewer/FileViewerModal'
+import { FileViewerModal } from '../interactive-os/ui/FileViewerModal'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
 
