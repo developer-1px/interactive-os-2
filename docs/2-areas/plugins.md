@@ -8,7 +8,7 @@
 |---------|------|-----------|-----------------|------|
 | core | `core()` | focus, select, expand, activate, gridCol | `FOCUS_ID`, `SELECTION_ID`, `EXPANDED_ID`, `GRID_COL_ID` | 🟢 |
 | crud | `crud()` | add, remove, update | `crudCommands` | 🟢 |
-| history | `history()` | undo, redo | `historyCommands`, `undoCommand`, `redoCommand` | 🟢 |
+| history | `history()` | undo, redo | `historyCommands`, `SKIP_META`, `isContentDelta` | 🟢 delta-based |
 | clipboard | `clipboard()` | cut, copy, paste | `clipboardCommands`, `getCutSourceIds()` | 🟢 |
 | rename | `rename()` | startRename, commitRename, cancelRename | `RENAME_ID`, `renameCommands` | 🟢 |
 | dnd | `dnd()` | moveUp, moveDown, moveIn, moveOut | `dndCommands` | 🟢 |
@@ -22,6 +22,7 @@
 - **Plugin은 keyMap까지 소유**: commands만 제공하면 복붙+누락 버그
 - **focusRecovery는 불변 조건**: CRUD 있으면 반드시 동작, `isReachable`로 모델별 주입
 - **core는 필수**: 다른 모든 플러그인의 전제 (FOCUS_ID, SELECTION_ID 등)
+- **history는 content delta만 기록**: SKIP_META(focus, selection, expanded, gridCol, spatialParent)는 view state → undo 대상 아님. `__value__`는 content
 
 ## 의존 방향
 
