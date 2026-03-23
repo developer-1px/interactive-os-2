@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { CodeBlock } from './CodeBlock'
 import { MarkdownViewer } from './MarkdownViewer'
-import { MdxViewer } from './MdxViewer'
 import { FileIcon } from './FileIcon'
 import { Breadcrumb } from './Breadcrumb'
 import { DEFAULT_ROOT } from './types'
@@ -67,7 +66,6 @@ export function FileViewerModal({ filePath, editRanges, onClose }: FileViewerMod
 
   const filename = filePath?.split('/').pop() ?? ''
   const ext = filename.includes('.') ? filename.split('.').pop()!.toLowerCase() : ''
-  const isMdx = ext === 'mdx'
   const isMarkdown = ext === 'md'
   const isImage = IMAGE_EXTS.has(ext)
   const lineCount = fileContent ? fileContent.split('\n').length : 0
@@ -104,8 +102,6 @@ export function FileViewerModal({ filePath, editRanges, onClose }: FileViewerMod
             <div className={styles.fvmError}>File not found</div>
           ) : isImage ? (
             <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className={styles.fvmImage} />
-          ) : isMdx ? (
-            <MdxViewer filePath={filePath!} />
           ) : isMarkdown ? (
             <MarkdownViewer content={fileContent} />
           ) : (

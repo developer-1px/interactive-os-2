@@ -4,6 +4,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'happy-dom',
-    exclude: ['e2e/**', 'node_modules/**'],
+    exclude: ['node_modules/**', '.claude/worktrees/**'],
   },
 })

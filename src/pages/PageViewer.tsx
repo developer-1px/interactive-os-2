@@ -14,7 +14,6 @@ import { EXPANDED_ID } from '../interactive-os/plugins/core'
 import { CodeBlock } from './viewer/CodeBlock'
 import { ExportDiagram } from './viewer/ExportDiagram'
 import { MarkdownViewer } from './viewer/MarkdownViewer'
-import { MdxViewer } from './viewer/MdxViewer'
 import { FileIcon } from './viewer/FileIcon'
 import { Breadcrumb } from './viewer/Breadcrumb'
 import { QuickOpen } from './viewer/QuickOpen'
@@ -182,8 +181,7 @@ export default function PageViewer() {
   }
 
   const filename = selectedFile?.split('/').pop() ?? ''
-  const isMdx = filename.endsWith('.mdx')
-  const isMarkdown = !isMdx && filename.endsWith('.md')
+  const isMarkdown = filename.endsWith('.md')
   const ext = filename.split('.').pop() ?? ''
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
@@ -276,14 +274,12 @@ export default function PageViewer() {
         {selectedFile ? (
           <div className={styles.vwContentBody}>
             <div className={styles.vwContentCode} ref={contentBodyRef}>
-              {isMdx
-                ? <MdxViewer filePath={selectedFile} />
-                : isMarkdown
-                  ? <MarkdownViewer content={fileContent} />
-                  : <CodeBlock code={fileContent} filename={filename} />
+              {isMarkdown
+                ? <MarkdownViewer content={fileContent} />
+                : <CodeBlock code={fileContent} filename={filename} />
               }
             </div>
-            {!isMarkdown && !isMdx && isSourceFile(filename) && (
+            {!isMarkdown && isSourceFile(filename) && (
               <div className={styles.vwContentGraph}>
                 <ExportDiagram filePath={selectedFile} />
               </div>
