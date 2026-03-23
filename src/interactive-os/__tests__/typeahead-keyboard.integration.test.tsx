@@ -45,8 +45,8 @@ function renderListBox(data: NormalizedData, opts?: { enableEditing?: boolean })
       data={data}
       plugins={[core(), typeahead({ getLabel, timeout: TEST_TIMEOUT })]}
       enableEditing={opts?.enableEditing}
-      renderItem={(item, _state: NodeState) => (
-        <span>{(item.data as Record<string, unknown>)?.name as string}</span>
+      renderItem={(item, _state: NodeState, props) => (
+        <span {...props}>{(item.data as Record<string, unknown>)?.name as string}</span>
       )}
     />
   )
@@ -172,13 +172,13 @@ describe('Typeahead keyboard integration', () => {
 
     const { container } = render(
       <Aria
-        behavior={listbox}
+        behavior={listbox()}
         data={data}
         plugins={[core(), rename(), typeahead({ getLabel })]}
         keyMap={editKeyMap}
       >
-        <Aria.Item render={(node: Record<string, unknown>, _state: NodeState) => (
-          <Aria.Editable field="name">
+        <Aria.Item render={(node: Record<string, unknown>, _state: NodeState, props) => (
+          <Aria.Editable {...props} field="name">
             <span>{(node.data as Record<string, unknown>)?.name as string}</span>
           </Aria.Editable>
         )} />

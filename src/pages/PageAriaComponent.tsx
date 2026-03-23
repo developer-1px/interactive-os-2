@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 import { Aria } from '../interactive-os/components/aria'
 import { listbox } from '../interactive-os/behaviors/listbox'
@@ -22,6 +22,7 @@ const demoData = createStore({
 
 export default function PageAriaComponent() {
   const [data, setData] = useState<NormalizedData>(demoData)
+  const behavior = useMemo(() => listbox(), [])
 
   return (
     <div>
@@ -38,13 +39,13 @@ export default function PageAriaComponent() {
       </div>
       <div className="card">
         <Aria
-          behavior={listbox}
+          behavior={behavior}
           data={data}
           plugins={[core()]}
           onChange={setData}
           aria-label="Fruit picker"
         >
-          <Aria.Item render={(node, state: NodeState) => {
+          <Aria.Item render={(node, state: NodeState, props) => {
             const d = node.data as Record<string, unknown>
             const cls = [
               'list-item',
@@ -52,7 +53,7 @@ export default function PageAriaComponent() {
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')
             return (
-              <div className={cls}>
+              <div {...props} className={cls}>
                 <span className="list-item__label">{d?.emoji as string} {d?.label as string}</span>
               </div>
             )

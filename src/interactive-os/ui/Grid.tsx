@@ -2,15 +2,11 @@ import React from 'react'
 
 import type { NormalizedData, Plugin, Command } from '../core/types'
 import type { BehaviorContext, NodeState } from '../behaviors/types'
-import type { CommandEngine } from '../core/createCommandEngine'
 import { Aria } from '../components/aria'
 import { grid as gridBehavior } from '../behaviors/grid'
-import { core, FOCUS_ID } from '../plugins/core'
-import { crudCommands } from '../plugins/crud'
-import { renameCommands, RENAME_ID } from '../plugins/rename'
-import { dndCommands } from '../plugins/dnd'
+import { core } from '../plugins/core'
 import { clipboardCommands } from '../plugins/clipboard'
-import { isPrintableKey } from '../plugins/typeahead'
+import { replaceEditPlugin } from '../axes/edit'
 
 interface ColumnDef {
   key: string
@@ -23,7 +19,7 @@ interface GridProps {
   columns: ColumnDef[]
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderCell?: (value: unknown, column: ColumnDef, state: NodeState) => React.ReactNode
+  renderCell?: (value: unknown, column: ColumnDef, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
   enableEditing?: boolean
   /** Enable Tab/Shift+Tab cell cycling across columns and rows */
   tabCycle?: boolean
@@ -33,12 +29,8 @@ interface GridProps {
   'aria-label'?: string
 }
 
-const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
-  'Delete': (ctx) => crudCommands.remove(ctx.focused),
-  'F2': (ctx) => renameCommands.startRename(ctx.focused),
-  'Enter': (ctx) => renameCommands.startRename(ctx.focused),
-  'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-  'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+/** Cell-level clipboard keyMap (Mod+C/V with colIndex) — component-level override */
+const cellClipboardKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
   'Mod+C': (ctx) => {
     const colIndex = ctx.grid?.colIndex ?? 0
     return clipboardCommands.copyCellValue(ctx.focused, colIndex)
@@ -49,25 +41,9 @@ const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = 
   },
 }
 
-const defaultRenderCell = (value: unknown): React.ReactNode => (
-  <span>{String(value ?? '')}</span>
+const defaultRenderCell = (value: unknown, _column: ColumnDef, _state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => (
+  <span {...props}>{String(value ?? '')}</span>
 )
-
-/** Plugin that intercepts printable keys on focused cells and starts replace-mode editing */
-function createReplaceEditPlugin(): Plugin {
-  return {
-    onUnhandledKey(event: KeyboardEvent, engine: CommandEngine): boolean {
-      if (!isPrintableKey(event)) return false
-      const store = engine.getStore()
-      // Don't trigger if already in rename mode
-      if (store.entities[RENAME_ID]?.active) return false
-      const focusedId = (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
-      if (!focusedId) return false
-      engine.dispatch(renameCommands.startRename(focusedId, { replace: true, initialChar: event.key }))
-      return true
-    },
-  }
-}
 
 const defaultPlugins: Plugin[] = [core()]
 
@@ -84,21 +60,17 @@ export function Grid({
   'aria-label': ariaLabel,
 }: GridProps) {
   const behavior = React.useMemo(
-    () => gridBehavior({ columns: columns.length, tabCycle }),
-    [columns.length, tabCycle],
+    () => gridBehavior({ columns: columns.length, tabCycle, edit: enableEditing }),
+    [columns.length, tabCycle, enableEditing],
   )
 
-  const replaceEditPlugin = React.useMemo(
-    () => enableEditing ? createReplaceEditPlugin() : null,
-    [enableEditing],
-  )
   const mergedPlugins = React.useMemo(
-    () => replaceEditPlugin ? [...plugins, replaceEditPlugin] : plugins,
-    [plugins, replaceEditPlugin],
+    () => enableEditing ? [...plugins, replaceEditPlugin()] : plugins,
+    [plugins, enableEditing],
   )
 
   const mergedKeyMap = React.useMemo(
-    () => (enableEditing || keyMap) ? { ...(enableEditing ? editingKeyMap : {}), ...keyMap } : undefined,
+    () => (enableEditing || keyMap) ? { ...(enableEditing ? cellClipboardKeyMap : {}), ...keyMap } : undefined,
     [enableEditing, keyMap],
   )
 
@@ -107,10 +79,10 @@ export function Grid({
     [columns.length],
   )
 
-  const renderRow = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
+  const renderRow = (node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
     const cells = (node.data as Record<string, unknown>)?.cells as unknown[] | undefined
     return (
-      <div className="grid-row">
+      <div className="grid-row" {...props}>
         {columns.map((col, i) => (
           <Aria.Cell key={col.key} index={i}>
             {renderCell(cells?.[i], col, state)}

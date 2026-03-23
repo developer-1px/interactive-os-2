@@ -27,7 +27,7 @@ describe('useAriaZone', () => {
   it('initial focus on first item', () => {
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
-      const aria = useAriaZone({ engine, store, behavior: listbox, scope: 'test' })
+      const aria = useAriaZone({ engine, store, behavior: listbox(), scope: 'test' })
       return <div data-testid="f">{aria.focused}</div>
     }
     const { getByTestId } = render(<App />)
@@ -38,7 +38,7 @@ describe('useAriaZone', () => {
     const holder = { dispatch: null as null | ((cmd: Command) => void) }
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
-      const aria = useAriaZone({ engine, store, behavior: listbox, scope: 'test' })
+      const aria = useAriaZone({ engine, store, behavior: listbox(), scope: 'test' })
       // eslint-disable-next-line react-hooks/immutability
       holder.dispatch = aria.dispatch
       return <div data-testid="f">{aria.focused}</div>
@@ -53,7 +53,7 @@ describe('useAriaZone', () => {
   it('getNodeProps uses scoped data attribute', () => {
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
-      const aria = useAriaZone({ engine, store, behavior: listbox, scope: 'test' })
+      const aria = useAriaZone({ engine, store, behavior: listbox(), scope: 'test' })
       return (
         <div>{['a', 'b', 'c'].map(id => (
           <div key={id} {...(aria.getNodeProps(id) as React.HTMLAttributes<HTMLDivElement>)}>{id}</div>
@@ -69,7 +69,7 @@ describe('useAriaZone', () => {
     const user = userEvent.setup()
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
-      const aria = useAriaZone({ engine, store, behavior: listbox, scope: 'test' })
+      const aria = useAriaZone({ engine, store, behavior: listbox(), scope: 'test' })
       return (
         <div role="listbox" data-aria-container="">
           {['a', 'b', 'c'].map(id => (
@@ -90,8 +90,8 @@ describe('useAriaZone', () => {
     const holder = { dispatchA: null as null | ((cmd: Command) => void), dispatchB: null as null | ((cmd: Command) => void) }
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
-      const zoneA = useAriaZone({ engine, store, behavior: listbox, scope: 'za' })
-      const zoneB = useAriaZone({ engine, store, behavior: listbox, scope: 'zb' })
+      const zoneA = useAriaZone({ engine, store, behavior: listbox(), scope: 'za' })
+      const zoneB = useAriaZone({ engine, store, behavior: listbox(), scope: 'zb' })
       // eslint-disable-next-line react-hooks/immutability
       holder.dispatchA = zoneA.dispatch
       // eslint-disable-next-line react-hooks/immutability
@@ -117,8 +117,8 @@ describe('useAriaZone', () => {
     const holder = { dispatchA: null as null | ((cmd: Command) => void) }
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
-      const zoneA = useAriaZone({ engine, store, behavior: listbox, scope: 'za' })
-      const _zoneB = useAriaZone({ engine, store, behavior: listbox, scope: 'zb' })
+      const zoneA = useAriaZone({ engine, store, behavior: listbox(), scope: 'za' })
+      const _zoneB = useAriaZone({ engine, store, behavior: listbox(), scope: 'zb' })
       // eslint-disable-next-line react-hooks/immutability
       holder.dispatchA = zoneA.dispatch
       const itemsA = Object.keys(store.entities).filter(k => !k.startsWith('__'))

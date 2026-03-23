@@ -1,44 +1,33 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin, Command } from '../core/types'
-import type { BehaviorContext, NodeState } from '../behaviors/types'
+import type { NormalizedData, Plugin } from '../core/types'
+import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
 import { treegrid } from '../behaviors/treegrid'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
-import { crudCommands } from '../plugins/crud'
-import { renameCommands } from '../plugins/rename'
-import { dndCommands } from '../plugins/dnd'
+import { replaceEditPlugin } from '../axes/edit'
 
 interface TreeGridProps {
   id?: string
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (node: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
   enableEditing?: boolean
 }
 
-const defaultRenderItem = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
+const defaultRenderItem = (node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
   const hasChildren = state.expanded !== undefined
 
   return (
-    <span className="item-inner">
+    <span {...props} className="item-inner">
       <span className="item-chevron--tree">
         {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
       </span>
       <span>{(node.data as Record<string, unknown>)?.name as string}</span>
     </span>
   )
-}
-
-const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
-  'Delete': (ctx) => crudCommands.remove(ctx.focused),
-  'F2': (ctx) => renameCommands.startRename(ctx.focused),
-  'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-  'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
-  'Alt+ArrowLeft': (ctx) => dndCommands.moveOut(ctx.focused),
-  'Alt+ArrowRight': (ctx) => dndCommands.moveIn(ctx.focused),
 }
 
 export function TreeGrid({
@@ -49,14 +38,23 @@ export function TreeGrid({
   renderItem = defaultRenderItem,
   enableEditing = false,
 }: TreeGridProps) {
+  const behavior = React.useMemo(
+    () => treegrid({ edit: enableEditing }),
+    [enableEditing],
+  )
+
+  const mergedPlugins = React.useMemo(
+    () => enableEditing ? [...plugins, replaceEditPlugin()] : plugins,
+    [plugins, enableEditing],
+  )
+
   return (
     <Aria
       id={id}
-      behavior={treegrid}
+      behavior={behavior}
       data={data}
-      plugins={plugins}
+      plugins={mergedPlugins}
       onChange={onChange}
-      keyMap={enableEditing ? editingKeyMap : undefined}
     >
       <Aria.Item render={renderItem} />
     </Aria>
