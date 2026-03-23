@@ -389,13 +389,11 @@ export function clipboard(options?: ClipboardOptions) {
       [COPY_CELL]: clipboardCommands.copyCellValue,
       [PASTE_CELL]: clipboardCommands.pasteCellValue,
     },
-    keyMap: {
-      'Mod+C': (ctx: { focused: string; selected: string[] }) =>
-        clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
-      'Mod+X': (ctx: { focused: string; selected: string[] }) =>
-        clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused], boundCanDelete),
-      'Mod+V': (ctx: { focused: string }) =>
-        clipboardCommands.paste(ctx.focused, boundCanAccept),
-    },
+    onCopy: (ctx: { focused: string; selected: string[] }) =>
+      clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
+    onCut: (ctx: { focused: string; selected: string[] }) =>
+      clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused], boundCanDelete),
+    onPaste: (ctx: { focused: string }) =>
+      clipboardCommands.paste(ctx.focused, boundCanAccept),
   })
 }

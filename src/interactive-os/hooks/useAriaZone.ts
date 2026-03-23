@@ -249,6 +249,21 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     [zonePlugins],
   )
 
+  const pluginClipboardHandlers = useMemo(
+    () => {
+      if (!zonePlugins?.length) return null
+      type ClipboardHandler = (ctx: ReturnType<typeof createBehaviorContext>) => Command | void
+      const handlers: { onCopy?: ClipboardHandler; onCut?: ClipboardHandler; onPaste?: ClipboardHandler } = {}
+      for (const p of zonePlugins) {
+        if (p.onCopy) handlers.onCopy = p.onCopy
+        if (p.onCut) handlers.onCut = p.onCut
+        if (p.onPaste) handlers.onPaste = p.onPaste
+      }
+      return (handlers.onCopy || handlers.onCut || handlers.onPaste) ? handlers : null
+    },
+    [zonePlugins],
+  )
+
   const mergedKeyMap = useMemo(
     () => ({ ...behavior.keyMap, ...pluginKeyMaps, ...keyMapOverrides }),
     [behavior.keyMap, pluginKeyMaps, keyMapOverrides],
@@ -360,10 +375,39 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     [store, behavior, mergedKeyMap, virtualEngine, focusedId, getNodeState, behaviorCtxOptions, scopeAttr],
   )
 
+  // ── Clipboard event handler ──
+
+  const handleClipboardEvent = useCallback(
+    (event: ClipboardEvent) => {
+      if (event.defaultPrevented) return
+      if (!pluginClipboardHandlers) return
+      if (isEditableElement(event.target as Element)) return
+
+      const ctx = createBehaviorContext(virtualEngine, behaviorCtxOptions)
+      let handler: ((ctx: ReturnType<typeof createBehaviorContext>) => Command | void) | undefined
+      switch (event.type) {
+        case 'copy': handler = pluginClipboardHandlers.onCopy; break
+        case 'cut': handler = pluginClipboardHandlers.onCut; break
+        case 'paste': handler = pluginClipboardHandlers.onPaste; break
+      }
+      if (!handler) return
+      const command = handler(ctx)
+      if (command) {
+        virtualEngine.dispatch(command)
+        event.preventDefault()
+      }
+    },
+    [pluginClipboardHandlers, virtualEngine, behaviorCtxOptions],
+  )
+
   // ── containerProps (for aria-activedescendant mode) ──
 
   const containerProps = useMemo((): Record<string, unknown> => {
-    if (behavior.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1 }
+    const clipboardProps: Record<string, unknown> = pluginClipboardHandlers
+      ? { onCopy: handleClipboardEvent, onCut: handleClipboardEvent, onPaste: handleClipboardEvent }
+      : {}
+
+    if (behavior.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1, ...clipboardProps }
     return {
       tabIndex: 0,
       'aria-activedescendant': focusedId || undefined,
@@ -378,8 +422,9 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
         dispatchKeyAction(ctx, handler, virtualEngine, onActivateRef.current)
         event.preventDefault()
       },
+      ...clipboardProps,
     }
-  }, [behavior.focusStrategy.type, focusedId, mergedKeyMap, virtualEngine, behaviorCtxOptions])
+  }, [behavior.focusStrategy.type, focusedId, mergedKeyMap, virtualEngine, behaviorCtxOptions, pluginClipboardHandlers, handleClipboardEvent])
 
   // ── External store-change focus recovery ──
   // When something outside the zone mutates the engine store (e.g. toolbar button),

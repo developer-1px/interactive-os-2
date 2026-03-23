@@ -1,3 +1,5 @@
+> ✅ 완료 — 2026-03-23
+
 # clipboard keyMap → native event 전환 — 2026-03-23
 
 ## 배경

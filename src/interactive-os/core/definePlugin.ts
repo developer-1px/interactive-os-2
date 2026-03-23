@@ -1,4 +1,4 @@
-import type { Middleware, Plugin } from './types'
+import type { Command, Middleware, Plugin } from './types'
 
 export interface PluginConfig {
   name: string
@@ -11,6 +11,13 @@ export interface PluginConfig {
   onUnhandledKey?: (event: KeyboardEvent, engine: any) => boolean
   intercepts?: readonly string[]
   requires?: Plugin[]
+  /** Native clipboard event handlers — dispatch commands on copy/cut/paste events */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onCopy?: (ctx: any) => Command | void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onCut?: (ctx: any) => Command | void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onPaste?: (ctx: any) => Command | void
 }
 
 function composeMiddlewares(middlewares: Middleware[]): Middleware {
@@ -22,7 +29,7 @@ function composeMiddlewares(middlewares: Middleware[]): Middleware {
 }
 
 export function definePlugin(config: PluginConfig): Plugin {
-  const { name, commands, keyMap, middleware, onUnhandledKey, intercepts, requires } = config
+  const { name, commands, keyMap, middleware, onUnhandledKey, intercepts, requires, onCopy, onCut, onPaste } = config
 
   const middlewares: Middleware[] = []
   for (const dep of requires ?? []) {
@@ -37,5 +44,8 @@ export function definePlugin(config: PluginConfig): Plugin {
     middleware: middlewares.length > 0 ? composeMiddlewares(middlewares) : undefined,
     onUnhandledKey,
     intercepts,
+    onCopy,
+    onCut,
+    onPaste,
   }
 }

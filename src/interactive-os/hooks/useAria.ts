@@ -171,6 +171,21 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     [plugins],
   )
 
+  const pluginClipboardHandlers = useMemo(
+    () => {
+      if (!plugins.length) return null
+      type ClipboardHandler = (ctx: ReturnType<typeof createBehaviorContext>) => Command | void
+      const handlers: { onCopy?: ClipboardHandler; onCut?: ClipboardHandler; onPaste?: ClipboardHandler } = {}
+      for (const p of plugins) {
+        if (p.onCopy) handlers.onCopy = p.onCopy
+        if (p.onCut) handlers.onCut = p.onCut
+        if (p.onPaste) handlers.onPaste = p.onPaste
+      }
+      return (handlers.onCopy || handlers.onCut || handlers.onPaste) ? handlers : null
+    },
+    [plugins],
+  )
+
   const mergedKeyMap = useMemo(
     () => ({ ...behavior.keyMap, ...pluginKeyMaps, ...keyMapOverrides }),
     [behavior.keyMap, pluginKeyMaps, keyMapOverrides]
@@ -238,6 +253,30 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       valueRange: behavior.valueRange,
     }),
     [behavior.expandable, behavior.selectionMode, behavior.colCount, behavior.valueRange]
+  )
+
+  /** Handle native clipboard events (copy/cut/paste) from plugins */
+  const handleClipboardEvent = useCallback(
+    (event: ClipboardEvent) => {
+      if (event.defaultPrevented) return
+      if (!pluginClipboardHandlers) return
+      if (isEditableElement(event.target as Element)) return
+
+      const ctx = createBehaviorContext(engine, behaviorCtxOptions)
+      let handler: ((ctx: ReturnType<typeof createBehaviorContext>) => Command | void) | undefined
+      switch (event.type) {
+        case 'copy': handler = pluginClipboardHandlers.onCopy; break
+        case 'cut': handler = pluginClipboardHandlers.onCut; break
+        case 'paste': handler = pluginClipboardHandlers.onPaste; break
+      }
+      if (!handler) return
+      const command = handler(ctx)
+      if (command) {
+        engine.dispatch(command)
+        event.preventDefault()
+      }
+    },
+    [pluginClipboardHandlers, engine, behaviorCtxOptions],
   )
 
   /** Shared keydown dispatch: try keyMap first, then plugin onUnhandledKey fallback */
@@ -345,10 +384,14 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
       return baseProps
     },
-    [store, behavior, isKeyMapOnly, engine, focusedId, getNodeState, handleKeyDown]
+    [store, behavior, isKeyMapOnly, engine, focusedId, getNodeState, handleKeyDown, behaviorCtxOptions]
   )
 
   const containerProps = useMemo((): Record<string, unknown> => {
+    const clipboardProps: Record<string, unknown> = pluginClipboardHandlers
+      ? { onCopy: handleClipboardEvent, onCut: handleClipboardEvent, onPaste: handleClipboardEvent }
+      : {}
+
     if (isKeyMapOnly) {
       // keyMap-only mode: catch bubbled keyboard events, no role/tabIndex
       return {
@@ -356,9 +399,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           if (event.defaultPrevented) return
           handleKeyDown(event)
         },
+        ...clipboardProps,
       }
     }
-    if (behavior.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1 }
+    if (behavior.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1, ...clipboardProps }
     return {
       tabIndex: 0,
       'aria-activedescendant': focusedId || undefined,
@@ -367,8 +411,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         if (event.target !== event.currentTarget && isEditableElement(event.target as Element)) return
         handleKeyDown(event)
       },
+      ...clipboardProps,
     }
-  }, [isKeyMapOnly, behavior.focusStrategy.type, focusedId, handleKeyDown])
+  }, [isKeyMapOnly, behavior.focusStrategy.type, focusedId, handleKeyDown, pluginClipboardHandlers, handleClipboardEvent])
 
   // Sync DOM focus with data focus (skip for aria-activedescendant — container holds focus)
   // Only move DOM focus if this widget already owns it (prevents stealing focus from other widgets)
