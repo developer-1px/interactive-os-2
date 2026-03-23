@@ -27,7 +27,7 @@ function ComponentDemo({ entry }: { entry: ComponentEntry }) {
 
       {entry.testPath && (
         <div className={styles.uiTestRunner}>
-          <TestRunnerPanel testPath={entry.testPath} autoRun headless />
+          <TestRunnerPanel testPath={entry.testPath} headless />
         </div>
       )}
 
