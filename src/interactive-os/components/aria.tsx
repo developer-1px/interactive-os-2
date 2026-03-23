@@ -6,8 +6,8 @@ import type { AriaBehavior, BehaviorContext, NodeState } from '../behaviors/type
 import { useAria } from '../hooks/useAria'
 import { AriaInternalContext } from './AriaInternalContext'
 import { getChildren } from '../core/createStore'
-import { EXPANDED_ID, GRID_COL_ID } from '../plugins/core'
-import { renameCommands } from '../plugins/rename'
+import { EXPANDED_ID, GRID_COL_ID, FOCUS_ID } from '../plugins/core'
+import { renameCommands, RENAME_ID } from '../plugins/rename'
 import { registerAria, unregisterAria } from './ariaRegistry'
 
 interface AriaProps {
@@ -153,6 +153,15 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
   )
 }
 
+function placeCaret(el: HTMLElement, atEnd: boolean) {
+  const range = document.createRange()
+  range.selectNodeContents(el)
+  if (atEnd) range.collapse(false)
+  const sel = window.getSelection()
+  sel?.removeAllRanges()
+  sel?.addRange(range)
+}
+
 function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = false, tabContinue = false, children }: { field: string; placeholder?: string; selection?: 'all' | 'end'; allowEmpty?: boolean; tabContinue?: boolean; children: React.ReactNode }) {
   const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
@@ -174,28 +183,15 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
       const el = editRef.current
       originalValueRef.current = el.textContent ?? ''
 
-      // Check for replace mode from __rename__ entity
       const store = ariaCtx?.getStore()
-      const renameEntity = store?.entities['__rename__'] as Record<string, unknown> | undefined
+      const renameEntity = store?.entities[RENAME_ID] as Record<string, unknown> | undefined
       const isReplace = renameEntity?.replace === true
       const initialChar = renameEntity?.initialChar as string | undefined
 
       if (isReplace) {
         el.textContent = initialChar ?? ''
-        const range = document.createRange()
-        range.selectNodeContents(el)
-        range.collapse(false) // cursor at end
-        const sel = window.getSelection()
-        sel?.removeAllRanges()
-        sel?.addRange(range)
-      } else {
-        const range = document.createRange()
-        range.selectNodeContents(el)
-        if (selection === 'end') range.collapse(false)
-        const sel = window.getSelection()
-        sel?.removeAllRanges()
-        sel?.addRange(range)
       }
+      placeCaret(el, isReplace || selection === 'end')
       el.focus()
     } else if (wasRenamingRef.current) {
       // Exiting rename mode — restore focus to node
@@ -275,7 +271,7 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
               // After navigation, start rename on new focused node
               setTimeout(() => {
                 const store = ariaCtx.getStore()
-                const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
+                const focusedId = (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
                 if (focusedId) {
                   ariaCtx.dispatch(renameCommands.startRename(focusedId))
                 }

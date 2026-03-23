@@ -184,16 +184,19 @@ function extractOverwriteFields(
   return fields
 }
 
+function getCells(store: NormalizedData, nodeId: string): string[] {
+  const entity = getEntity(store, nodeId)
+  return [...((entity?.data as Record<string, unknown>)?.cells ?? [])] as string[]
+}
+
 export const clipboardCommands = {
   copyCellValue(nodeId: string, colIndex: number): Command {
     return {
       type: 'clipboard:copyCellValue',
       payload: { nodeId, colIndex },
       execute(store) {
-        const entity = getEntity(store, nodeId)
-        const cells = ((entity?.data as any)?.cells ?? []) as string[]
-        cellValueBuffer = cells[colIndex] ?? ''
-        return store // copy doesn't modify store
+        cellValueBuffer = getCells(store, nodeId)[colIndex] ?? ''
+        return store
       },
       undo(store) {
         return store
@@ -208,15 +211,13 @@ export const clipboardCommands = {
       payload: { nodeId, colIndex },
       execute(store) {
         if (cellValueBuffer === '') return store
-        const entity = getEntity(store, nodeId)
-        const cells = [...((entity?.data as any)?.cells ?? [])] as string[]
+        const cells = getCells(store, nodeId)
         previousValue = cells[colIndex] ?? ''
         cells[colIndex] = cellValueBuffer
         return updateEntityData(store, nodeId, { cells })
       },
       undo(store) {
-        const entity = getEntity(store, nodeId)
-        const cells = [...((entity?.data as any)?.cells ?? [])] as string[]
+        const cells = getCells(store, nodeId)
         cells[colIndex] = previousValue
         return updateEntityData(store, nodeId, { cells })
       },
