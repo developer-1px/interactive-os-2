@@ -53,8 +53,8 @@
 
 | Component | Maturity | Gaps |
 |-----------|----------|------|
-| TreeGrid · ListBox · TabList · Grid | Integrated | — |
-| Accordion · MenuList · DisclosureGroup | Integrated | — |
+| TreeGrid · ListBox · TabList · Grid | Integrated | CSS module 내장 렌더링 |
+| Accordion · MenuList · DisclosureGroup | Integrated | Accordion CSS module 완료 |
 | Combobox · RadioGroup · SwitchGroup | Integrated | — |
 | Kanban · Slider · Spinbutton | Integrated | — |
 | Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음 |
@@ -66,7 +66,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Vitest (634 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+| Vitest (705 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
 | pnpm health | Validated | — |
@@ -76,7 +76,7 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | ActivityBar (External/Internal) · routing | Integrated | createBrowserRouter + layout route 전환 완료 |
-| UI Showcase (/ui/{name}) | Integrated | 18/23 testPath + 16/23 APG table 연결 완료 |
+| UI Showcase (/ui/{name}) | Integrated | TestRunnerPanel 통합 완료, 18/23 testPath + 16/23 APG table |
 | Landing (/) · Docs (/docs) | Validated | hero + component grid, Getting Started + architecture |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs · field types) | Validated | paste overwrite, viewer channel 미구현 |

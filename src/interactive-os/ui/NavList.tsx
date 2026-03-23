@@ -6,6 +6,7 @@ import { useNavList } from './useNavList'
 import { core } from '../plugins/core'
 import { ROOT_ID } from '../core/types'
 import { getChildren } from '../core/createStore'
+import styles from './NavList.module.css'
 
 interface NavListProps {
   data: NormalizedData
@@ -17,11 +18,13 @@ interface NavListProps {
   'aria-label'?: string
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => (
-  <span {...props}>
-    {(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}
-  </span>
-)
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
+  const label = (item.data as Record<string, unknown>)?.label as string
+    ?? (item.data as Record<string, unknown>)?.name as string
+    ?? item.id as string
+  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '')
+  return <div {...props} className={cls}>{label}</div>
+}
 
 export function NavList({
   data,

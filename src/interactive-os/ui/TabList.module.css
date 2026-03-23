@@ -1,0 +1,19 @@
+/* --- TabList --- */
+
+.tab {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-md);
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+  border-bottom: 2px solid transparent;
+}
+
+.tabFocused {
+  color: var(--text-bright);
+  border-bottom-color: var(--primary);
+}
+
+.tabSelected {
+  font-weight: 600;
+}

@@ -6,6 +6,7 @@ import { useTreeView } from './useTreeView'
 import { core } from '../plugins/core'
 import { ROOT_ID } from '../core/types'
 import { getChildren } from '../core/createStore'
+import styles from './TreeView.module.css'
 
 interface TreeViewProps {
   data: NormalizedData
@@ -18,15 +19,17 @@ interface TreeViewProps {
   'aria-label'?: string
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
+const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
+  const label = (node.data as Record<string, unknown>)?.label as string
+    ?? (node.data as Record<string, unknown>)?.name as string
+    ?? node.id as string
   const hasChildren = state.expanded !== undefined
+  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
   return (
-    <span {...props} className="item-inner">
-      <span className="item-chevron--tree">
-        {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
-      </span>
-      <span>{(node.data as Record<string, unknown>)?.name as string ?? (node.data as Record<string, unknown>)?.label as string ?? node.id as string}</span>
-    </span>
+    <div className={cls}>
+      <span className={styles.chevron}>{hasChildren ? (state.expanded ? '▾' : '▸') : ''}</span>
+      <span>{label}</span>
+    </div>
   )
 }
 
