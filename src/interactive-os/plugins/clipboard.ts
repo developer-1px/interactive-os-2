@@ -157,7 +157,7 @@ function findPasteTarget(
     return { pasteInto: ROOT_ID, insertIndex: undefined, mode: 'insert' }
   }
 
-  // Legacy behavior: container → inside, leaf → sibling
+  // Default: container → inside, leaf → sibling after
   const isContainer = targetId in store.relationships
   const pasteInto = isContainer
     ? targetId
