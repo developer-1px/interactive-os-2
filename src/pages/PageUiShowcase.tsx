@@ -20,14 +20,14 @@ function ComponentDemo({ entry }: { entry: ComponentEntry }) {
       <h2 className={styles.uiCardHeading}>{entry.name}</h2>
       <p className={styles.uiCardDescription}>{entry.description}</p>
 
-      {entry.testPath ? (
+      <div className={styles.uiDemo}>
+        <div className={styles.uiDemoLabel}>Live Demo</div>
+        {entry.render(data, onChange)}
+      </div>
+
+      {entry.testPath && (
         <div className={styles.uiTestRunner}>
-          <TestRunnerPanel testPath={entry.testPath} autoRun />
-        </div>
-      ) : (
-        <div className={styles.uiDemo}>
-          <div className={styles.uiDemoLabel}>Live Demo</div>
-          {entry.render(data, onChange)}
+          <TestRunnerPanel testPath={entry.testPath} autoRun headless />
         </div>
       )}
 
