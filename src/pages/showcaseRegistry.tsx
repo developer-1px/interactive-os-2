@@ -1,6 +1,10 @@
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { ApgPatternData } from './apg-data'
-import { apgListbox } from './apg-data'
+import {
+  apgAccordion, apgAlertDialog, apgCombobox, apgDialog, apgDisclosure,
+  apgGrid, apgListbox, apgMenu, apgRadioGroup, apgSlider, apgSpinbutton,
+  apgSwitch, apgTabs, apgToolbar, apgTreeGrid, apgTreeView,
+} from './apg-data'
 
 import { Accordion } from '../interactive-os/ui/Accordion'
 import { AlertDialog } from '../interactive-os/ui/AlertDialog'
@@ -79,6 +83,8 @@ export const components: ComponentEntry[] = [
     description: 'Vertically stacked headers that expand/collapse content sections.',
     makeData: makeAccordionData,
     render: (data, onChange) => <Accordion data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/accordion-keyboard.integration.test',
+    apg: apgAccordion,
     usage: `import { Accordion } from 'interactive-os/ui/Accordion'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -98,6 +104,8 @@ const data = createStore({
     description: 'Modal dialog requiring explicit user confirmation before proceeding — no implicit dismiss.',
     makeData: makeAlertDialogData,
     render: (data, onChange) => <AlertDialog data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/alertdialog-keyboard.integration.test',
+    apg: apgAlertDialog,
     usage: `import { AlertDialog } from 'interactive-os/ui/AlertDialog'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -118,6 +126,8 @@ const data = createStore({
     description: 'Input with a filterable dropdown list of options.',
     makeData: makeComboboxData,
     render: (data, onChange) => <Combobox data={data} onChange={onChange} placeholder="Pick a color..." />,
+    testPath: 'src/interactive-os/__tests__/combobox-keyboard.integration.test',
+    apg: apgCombobox,
     usage: `import { Combobox } from 'interactive-os/ui/Combobox'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -156,6 +166,8 @@ const data = createStore({
     description: 'A group of items that can independently expand or collapse.',
     makeData: makeDisclosureGroupData,
     render: (data, onChange) => <DisclosureGroup data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/disclosure-keyboard.integration.test',
+    apg: apgDisclosure,
     usage: `import { DisclosureGroup } from 'interactive-os/ui/DisclosureGroup'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -175,6 +187,8 @@ const data = createStore({
     description: 'Focus-trapping container for modal interactions with keyboard navigation.',
     makeData: makeDialogData,
     render: (data, onChange) => <Dialog data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/dialog-keyboard.integration.test',
+    apg: apgDialog,
     usage: `import { Dialog } from 'interactive-os/ui/Dialog'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -193,6 +207,8 @@ const data = createStore({
     name: 'Grid',
     description: 'Two-dimensional data grid with row/cell keyboard navigation.',
     makeData: makeGridData,
+    testPath: 'src/interactive-os/__tests__/grid-keyboard.integration.test',
+    apg: apgGrid,
     render: (data, onChange) => (
       <Grid
         data={data}
@@ -232,6 +248,7 @@ const data = createStore({
     description: 'Board layout with columns and cards, spatial keyboard navigation.',
     makeData: makeKanbanData,
     render: (data, onChange) => <Kanban data={data} onChange={onChange} aria-label="Project board" />,
+    testPath: 'src/interactive-os/__tests__/kanban-keyboard.integration.test',
     usage: `import { Kanban } from 'interactive-os/ui/Kanban'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -276,6 +293,8 @@ const data = createStore({
     description: 'Vertical menu with keyboard navigation and activation.',
     makeData: makeMenuListData,
     render: (data, onChange) => <MenuList data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/menu-keyboard.integration.test',
+    apg: apgMenu,
     usage: `import { MenuList } from 'interactive-os/ui/MenuList'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -296,6 +315,7 @@ const data = createStore({
     description: 'Vertical navigation list with keyboard navigation and followFocus activation.',
     makeData: makeNavListData,
     render: (data, onChange) => <NavList data={data} onChange={onChange} onActivate={() => {}} />,
+    testPath: 'src/interactive-os/__tests__/navlist.integration.test',
     usage: `import { NavList } from 'interactive-os/ui/NavList'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -315,6 +335,8 @@ const data = createStore({
     description: 'Single-select group where only one option can be active at a time.',
     makeData: makeRadioGroupData,
     render: (data, onChange) => <RadioGroup data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/radiogroup-keyboard.integration.test',
+    apg: apgRadioGroup,
     usage: `import { RadioGroup } from 'interactive-os/ui/RadioGroup'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -335,6 +357,8 @@ const data = createStore({
     description: 'Continuous value selector with track and thumb, keyboard + pointer input.',
     makeData: makeSliderData,
     render: (data, onChange) => <Slider data={data} onChange={onChange} min={0} max={100} step={1} />,
+    testPath: 'src/interactive-os/__tests__/slider-keyboard.integration.test',
+    apg: apgSlider,
     usage: `import { Slider } from 'interactive-os/ui/Slider'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -353,6 +377,8 @@ const data = createStore({
     description: 'Numeric input with increment/decrement buttons and keyboard control.',
     makeData: makeSpinbuttonData,
     render: (data, onChange) => <Spinbutton data={data} onChange={onChange} min={0} max={99} step={1} />,
+    testPath: 'src/interactive-os/__tests__/spinbutton-keyboard.integration.test',
+    apg: apgSpinbutton,
     usage: `import { Spinbutton } from 'interactive-os/ui/Spinbutton'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -371,6 +397,8 @@ const data = createStore({
     description: 'Toggle switches that can be independently turned on or off.',
     makeData: makeSwitchGroupData,
     render: (data, onChange) => <SwitchGroup data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/switch-keyboard.integration.test',
+    apg: apgSwitch,
     usage: `import { SwitchGroup } from 'interactive-os/ui/SwitchGroup'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -390,6 +418,8 @@ const data = createStore({
     description: 'Horizontal tab bar with keyboard navigation and selection.',
     makeData: makeTabListData,
     render: (data, onChange) => <TabList data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/tablist.integration.test',
+    apg: apgTabs,
     usage: `import { TabList } from 'interactive-os/ui/TabList'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -466,6 +496,8 @@ const data = createStore({
     description: 'Horizontal (or vertical) row of action buttons with roving focus and toggle state.',
     makeData: makeToolbarData,
     render: (data, onChange) => <Toolbar data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/toolbar-keyboard.integration.test',
+    apg: apgToolbar,
     usage: `import { Toolbar } from 'interactive-os/ui/Toolbar'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -486,6 +518,8 @@ const data = createStore({
     description: 'Hierarchical tree with grid-like keyboard navigation and expand/collapse.',
     makeData: makeTreeGridData,
     render: (data, onChange) => <TreeGrid data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/treegrid-keyboard.integration.test',
+    apg: apgTreeGrid,
     usage: `import { TreeGrid } from 'interactive-os/ui/TreeGrid'
 import { createStore } from 'interactive-os/core/createStore'
 
@@ -509,6 +543,8 @@ const data = createStore({
     description: 'Hierarchical tree with expand/collapse, used for navigation outlines.',
     makeData: makeTreeViewData,
     render: (data, onChange) => <TreeView data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/treeview.integration.test',
+    apg: apgTreeView,
     usage: `import { TreeView } from 'interactive-os/ui/TreeView'
 import { createStore } from 'interactive-os/core/createStore'
 
