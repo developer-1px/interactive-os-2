@@ -1,4 +1,4 @@
-import type { NormalizedData } from './types'
+import type { NormalizedData, Entity } from './types'
 
 export interface StoreDiff {
   path: string
@@ -94,4 +94,63 @@ export function computeStoreDiff(
   }
 
   return diffs
+}
+
+export function applyDelta(
+  store: NormalizedData,
+  diffs: StoreDiff[],
+  direction: 'forward' | 'reverse'
+): NormalizedData {
+  let entities = { ...store.entities }
+  let relationships = { ...store.relationships }
+
+  for (const diff of diffs) {
+    const value = direction === 'forward' ? diff.after : diff.before
+    const antiValue = direction === 'forward' ? diff.before : diff.after
+    const effectiveKind = direction === 'forward' ? diff.kind
+      : diff.kind === 'added' ? 'removed' as const
+      : diff.kind === 'removed' ? 'added' as const
+      : 'changed' as const
+
+    // Meta entity field diff (path like "__focus__.focusedId")
+    if (diff.path.includes('.')) {
+      const [entityId, field] = diff.path.split('.')
+      const entity = entities[entityId!] ?? { id: entityId! }
+      if (effectiveKind === 'removed') {
+        const { [field!]: _, ...rest } = entity
+        entities = { ...entities, [entityId!]: { ...rest, id: entityId! } as Entity }
+      } else {
+        entities = { ...entities, [entityId!]: { ...entity, [field!]: value } }
+      }
+      continue
+    }
+
+    // Content entity diff (path === 'entities')
+    if (diff.path === 'entities') {
+      if (effectiveKind === 'added') {
+        const entity = value as Entity
+        entities = { ...entities, [entity.id]: entity }
+      } else if (effectiveKind === 'removed') {
+        const entity = antiValue as Entity
+        const { [entity.id]: _, ...rest } = entities
+        entities = rest
+      } else {
+        const entity = value as Entity
+        entities = { ...entities, [entity.id]: entity }
+      }
+      continue
+    }
+
+    // Relationship diff
+    if (effectiveKind === 'added') {
+      relationships = { ...relationships, [diff.path]: value as string[] }
+    } else if (effectiveKind === 'removed') {
+      const { [diff.path]: _, ...rest } = relationships
+      relationships = rest
+    } else {
+      relationships = { ...relationships, [diff.path]: value as string[] }
+    }
+  }
+
+  return { entities, relationships }
 }

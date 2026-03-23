@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest'
-import { computeStoreDiff } from '../core/computeStoreDiff'
+import { computeStoreDiff, applyDelta } from '../core/computeStoreDiff'
+import type { StoreDiff } from '../core/computeStoreDiff'
 import { defaultLogger } from '../core/dispatchLogger'
 import type { NormalizedData } from '../core/types'
 import type { LogEntry } from '../core/dispatchLogger'
@@ -158,6 +159,100 @@ describe('computeStoreDiff', () => {
     expect(diff).toEqual([
       { path: '__selection__.selected', kind: 'changed', before: ['a', 'b'], after: ['c'] },
     ])
+  })
+})
+
+describe('applyDelta', () => {
+  const base: NormalizedData = {
+    entities: {
+      __focus__: { id: '__focus__', focusedId: 'a' },
+      item1: { id: 'item1', data: { name: 'Item 1' } },
+      item2: { id: 'item2', data: { name: 'Item 2' } },
+    },
+    relationships: { __root__: ['item1', 'item2'] },
+  }
+
+  it('reverse: undoes entity add (removes entity)', () => {
+    const diff: StoreDiff[] = [
+      { path: 'entities', kind: 'added', after: { id: 'item3', data: { name: 'New' } } },
+    ]
+    const storeWithItem3 = {
+      ...base,
+      entities: { ...base.entities, item3: { id: 'item3', data: { name: 'New' } } },
+    }
+    const result = applyDelta(storeWithItem3, diff, 'reverse')
+    expect(result.entities['item3']).toBeUndefined()
+  })
+
+  it('reverse: undoes entity remove (restores entity)', () => {
+    const diff: StoreDiff[] = [
+      { path: 'entities', kind: 'removed', before: { id: 'item2', data: { name: 'Item 2' } } },
+    ]
+    const { item2: _, ...restEntities } = base.entities
+    const storeWithoutItem2 = { ...base, entities: restEntities }
+    const result = applyDelta(storeWithoutItem2, diff, 'reverse')
+    expect(result.entities['item2']).toEqual({ id: 'item2', data: { name: 'Item 2' } })
+  })
+
+  it('reverse: undoes entity change (restores before)', () => {
+    const diff: StoreDiff[] = [
+      { path: 'entities', kind: 'changed', before: { id: 'item1', data: { name: 'Item 1' } }, after: { id: 'item1', data: { name: 'Updated' } } },
+    ]
+    const storeUpdated = {
+      ...base,
+      entities: { ...base.entities, item1: { id: 'item1', data: { name: 'Updated' } } },
+    }
+    const result = applyDelta(storeUpdated, diff, 'reverse')
+    expect(result.entities['item1']).toEqual({ id: 'item1', data: { name: 'Item 1' } })
+  })
+
+  it('reverse: undoes relationship change (restores order)', () => {
+    const diff: StoreDiff[] = [
+      { path: '__root__', kind: 'changed', before: ['item1', 'item2'], after: ['item2', 'item1'] },
+    ]
+    const reordered = { ...base, relationships: { __root__: ['item2', 'item1'] } }
+    const result = applyDelta(reordered, diff, 'reverse')
+    expect(result.relationships['__root__']).toEqual(['item1', 'item2'])
+  })
+
+  it('reverse: undoes meta field change', () => {
+    const diff: StoreDiff[] = [
+      { path: '__focus__.focusedId', kind: 'changed', before: 'a', after: 'b' },
+    ]
+    const focused = {
+      ...base,
+      entities: { ...base.entities, __focus__: { id: '__focus__', focusedId: 'b' } },
+    }
+    const result = applyDelta(focused, diff, 'reverse')
+    expect((result.entities['__focus__'] as Record<string, unknown>)?.focusedId).toBe('a')
+  })
+
+  it('forward: re-applies diffs', () => {
+    const diff: StoreDiff[] = [
+      { path: 'entities', kind: 'added', after: { id: 'item3', data: { name: 'New' } } },
+      { path: '__root__', kind: 'changed', before: ['item1', 'item2'], after: ['item1', 'item2', 'item3'] },
+    ]
+    const result = applyDelta(base, diff, 'forward')
+    expect(result.entities['item3']).toEqual({ id: 'item3', data: { name: 'New' } })
+    expect(result.relationships['__root__']).toEqual(['item1', 'item2', 'item3'])
+  })
+
+  it('reverse: undoes relationship add (removes key)', () => {
+    const diff: StoreDiff[] = [
+      { path: 'item3', kind: 'added', after: ['child1'] },
+    ]
+    const withRel = { ...base, relationships: { ...base.relationships, item3: ['child1'] } }
+    const result = applyDelta(withRel, diff, 'reverse')
+    expect(result.relationships['item3']).toBeUndefined()
+  })
+
+  it('reverse: undoes relationship remove (restores key)', () => {
+    const diff: StoreDiff[] = [
+      { path: '__root__', kind: 'removed', before: ['item1', 'item2'] },
+    ]
+    const withoutRoot = { ...base, relationships: {} }
+    const result = applyDelta(withoutRoot, diff, 'reverse')
+    expect(result.relationships['__root__']).toEqual(['item1', 'item2'])
   })
 })
 
