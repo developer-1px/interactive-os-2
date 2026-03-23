@@ -31,6 +31,12 @@
 - **rename** 플러그인 의존 → enter-esc 모드에서 Enter의 fallback으로 startRename
 - **trap**과 Escape 공유 가능 → compose 순서로 해결
 
+## 데모
+
+```tsx render
+<ExpandDemo />
+```
+
 ## 관련
 
 - 사용 패턴: tree (arrow), menu (arrow), spatial (enter-esc), accordion (via activate.toggleExpand)

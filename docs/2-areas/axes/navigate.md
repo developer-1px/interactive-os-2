@@ -1,5 +1,3 @@
-import NavigateDemo from '../../../src/pages/axis/NavigateDemo'
-
 # navigate()
 
 > 키보드 네비게이션 축. ↑↓←→ Home End로 포커스를 이동한다.
@@ -32,7 +30,9 @@ import NavigateDemo from '../../../src/pages/axis/NavigateDemo'
 
 ## 데모
 
+```tsx render
 <NavigateDemo />
+```
 
 ## 관련
 

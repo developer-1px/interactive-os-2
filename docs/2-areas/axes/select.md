@@ -25,6 +25,12 @@
 - **navigate**와 조합 → listbox multi-select (Shift+↑↓로 범위 선택)
 - 단독 사용 안 함 — 항상 navigate + activate와 함께
 
+## 데모
+
+```tsx render
+<SelectDemo />
+```
+
 ## 관련
 
 - 사용 패턴: listbox, tree, treegrid, grid, radiogroup, tabs, spatial

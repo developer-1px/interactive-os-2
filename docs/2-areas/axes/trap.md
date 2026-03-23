@@ -19,6 +19,12 @@
 - **expand**와 Escape 공유 가능 → dialog/alertdialog에서는 trap만 사용
 - 최소 축 — 단독으로 dialog/alertdialog 패턴 구성
 
+## 데모
+
+```tsx render
+<TrapDemo />
+```
+
 ## 관련
 
 - 사용 패턴: dialog, alertdialog
