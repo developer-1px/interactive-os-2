@@ -1,12 +1,13 @@
 /**
- * Integration test: clipboard + crud undo via userEvent
+ * Integration test: clipboard + crud undo
  *
- * Tests the full user flow: render → keyboard input → DOM result.
- * No engine.dispatch() — only userEvent simulation.
+ * Tests the full user flow: render → native clipboard events + keyboard → DOM result.
+ * Clipboard uses fireEvent.copy/cut/paste (native event path).
+ * Undo/redo uses userEvent keyboard simulation.
  * Covers cut-paste-undo, copy-paste-undo, delete-undo, paste position.
  */
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { ListBox } from '../ui/ListBox'
@@ -36,7 +37,7 @@ function fixtureData(): NormalizedData {
 
 const plugins = [core(), crud(), clipboard(), history()]
 
-const renderItem = (item: Record<string, unknown>, state: NodeState) => (
+const renderItem = (item: Record<string, unknown>, _state: NodeState) => (
   <span data-testid={`item-${item.id}`}>
     <Aria.Editable field="label">
       <span>{(item.data as Record<string, unknown>)?.label as string}</span>
@@ -76,16 +77,16 @@ function getNodeElement(container: HTMLElement, id: string): HTMLElement | null 
 describe('clipboard + crud undo integration (userEvent)', () => {
   beforeEach(() => resetClipboard())
 
-  it('Mod+C → Mod+V pastes after cursor, Mod+Z undoes', async () => {
+  it('copy → paste inserts after cursor, Mod+Z undoes', async () => {
     const user = userEvent.setup()
     const { container } = render(<StatefulList />)
 
-    // Focus on 'b', copy it
+    // Focus on 'b', copy it (native clipboard event)
     getNodeElement(container, 'b')!.focus()
-    await user.keyboard('{Control>}c{/Control}')
+    fireEvent.copy(getNodeElement(container, 'b')!)
 
     // Paste — should insert after 'b'
-    await user.keyboard('{Control>}v{/Control}')
+    fireEvent.paste(getNodeElement(container, 'b')!)
 
     const afterPaste = getVisibleLabels(container)
     expect(afterPaste.length).toBe(5)
@@ -101,17 +102,17 @@ describe('clipboard + crud undo integration (userEvent)', () => {
     expect(afterUndo).toEqual(['Alpha', 'Bravo', 'Charlie', 'Delta'])
   })
 
-  it('Mod+X → Mod+V moves item, Mod+Z undoes', async () => {
+  it('cut → paste moves item, Mod+Z undoes', async () => {
     const user = userEvent.setup()
     const { container } = render(<StatefulList />)
 
-    // Focus on 'a', cut it
+    // Focus on 'a', cut it (native clipboard event)
     getNodeElement(container, 'a')!.focus()
-    await user.keyboard('{Control>}x{/Control}')
+    fireEvent.cut(getNodeElement(container, 'a')!)
 
     // Move focus to 'c', paste
     getNodeElement(container, 'c')!.focus()
-    await user.keyboard('{Control>}v{/Control}')
+    fireEvent.paste(getNodeElement(container, 'c')!)
 
     // 'a' moved after 'c'
     const afterPaste = getVisibleLabels(container)
@@ -154,17 +155,16 @@ describe('clipboard + crud undo integration (userEvent)', () => {
     expect(getFocusedNodeId(container)).toBe('c')
   })
 
-  it('paste position: always after cursor, not at end', async () => {
-    const user = userEvent.setup()
+  it('paste position: always after cursor, not at end', () => {
     const { container } = render(<StatefulList />)
 
-    // Copy 'd'
-    getNodeElement(container, 'd')!.focus()
-    await user.keyboard('{Control>}c{/Control}')
+    // Copy 'd' (native clipboard event)
+    act(() => { getNodeElement(container, 'd')!.focus() })
+    fireEvent.copy(getNodeElement(container, 'd')!)
 
-    // Paste on 'a' (first item) — should insert after 'a', not at end
-    getNodeElement(container, 'a')!.focus()
-    await user.keyboard('{Control>}v{/Control}')
+    // Move focus to 'a', paste — should insert after 'a', not at end
+    act(() => { getNodeElement(container, 'a')!.focus() })
+    fireEvent.paste(getNodeElement(container, 'a')!)
 
     const labels = getVisibleLabels(container)
     expect(labels[0]).toBe('Alpha')

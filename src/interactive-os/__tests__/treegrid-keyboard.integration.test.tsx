@@ -7,7 +7,7 @@
  */
 import { useState } from 'react'
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, act } from '@testing-library/react'
+import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TreeGrid } from '../ui/TreeGrid'
 import { createStore } from '../core/createStore'
@@ -380,7 +380,7 @@ describe('TreeGrid keyboard integration', () => {
   })
 
   describe('clipboard cut and paste', () => {
-    it('Mod+X then Mod+V moves node to new location', async () => {
+    it('cut then paste moves node to new location', async () => {
       const user = userEvent.setup()
       const { container } = render(<StatefulTree />)
 
@@ -388,11 +388,11 @@ describe('TreeGrid keyboard integration', () => {
       getNodeElement(container, 'src')!.focus()
       await user.keyboard('{ArrowRight}') // expand
       await user.keyboard('{ArrowRight}') // focus app
-      await user.keyboard('{Control>}x{/Control}') // cut
+      fireEvent.cut(getNodeElement(container, 'app')!) // cut (native event)
 
       // Navigate to lib and paste
-      getNodeElement(container, 'lib')!.focus()
-      await user.keyboard('{Control>}v{/Control}') // paste
+      act(() => { getNodeElement(container, 'lib')!.focus() })
+      fireEvent.paste(getNodeElement(container, 'lib')!) // paste (native event)
 
       // app should be removed from src's children and moved to lib's children
       // Expand lib to verify
@@ -403,7 +403,7 @@ describe('TreeGrid keyboard integration', () => {
       expect(visible.indexOf('app')).toBeGreaterThan(visible.indexOf('lib'))
     })
 
-    it('Mod+C then Mod+V copies node with new ID', async () => {
+    it('copy then paste copies node with new ID', async () => {
       const user = userEvent.setup()
       const { container } = render(<StatefulTree />)
 
@@ -411,18 +411,18 @@ describe('TreeGrid keyboard integration', () => {
       getNodeElement(container, 'src')!.focus()
       await user.keyboard('{ArrowRight}') // expand
       await user.keyboard('{ArrowRight}') // focus app
-      await user.keyboard('{Control>}c{/Control}') // copy
+      fireEvent.copy(getNodeElement(container, 'app')!) // copy (native event)
 
       // Navigate to lib and paste
-      getNodeElement(container, 'lib')!.focus()
-      await user.keyboard('{Control>}v{/Control}') // paste
+      act(() => { getNodeElement(container, 'lib')!.focus() })
+      fireEvent.paste(getNodeElement(container, 'lib')!) // paste (native event)
 
       // Original app should still exist under src
       const visible = getAllVisibleNodeIds(container)
       expect(visible).toContain('app')
 
       // Expand lib to see the copy
-      getNodeElement(container, 'lib')!.focus()
+      act(() => { getNodeElement(container, 'lib')!.focus() })
       await user.keyboard('{ArrowRight}') // expand lib
       const visibleAfter = getAllVisibleNodeIds(container)
       // There should be a new node (copy of app) — total visible count increased
