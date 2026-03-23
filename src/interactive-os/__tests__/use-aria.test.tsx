@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { useAria } from '../hooks/useAria'
-import { treegrid } from '../behaviors/treegrid'
+import { tree } from '../behaviors/tree'
 import { ROOT_ID } from '../core/types'
 
 function fixtureData() {
@@ -22,7 +22,7 @@ describe('useAria hook', () => {
   it('returns dispatch, getNodeProps, getNodeState, focused, selected', () => {
     const data = fixtureData()
     const { result } = renderHook(() =>
-      useAria({ behavior: treegrid, data, plugins: [] })
+      useAria({ behavior: tree, data, plugins: [] })
     )
     expect(result.current.dispatch).toBeInstanceOf(Function)
     expect(result.current.getNodeProps).toBeInstanceOf(Function)
@@ -34,10 +34,10 @@ describe('useAria hook', () => {
   it('getNodeProps returns ARIA attributes and role', () => {
     const data = fixtureData()
     const { result } = renderHook(() =>
-      useAria({ behavior: treegrid, data, plugins: [] })
+      useAria({ behavior: tree, data, plugins: [] })
     )
     const props = result.current.getNodeProps('src')
-    expect(props.role).toBe('row')
+    expect(props.role).toBe('treeitem')
     expect(props['aria-level']).toBeDefined()
     expect(props.onKeyDown).toBeInstanceOf(Function)
     expect(props.onFocus).toBeInstanceOf(Function)
@@ -46,7 +46,7 @@ describe('useAria hook', () => {
   it('getNodeState returns computed state', () => {
     const data = fixtureData()
     const { result } = renderHook(() =>
-      useAria({ behavior: treegrid, data, plugins: [] })
+      useAria({ behavior: tree, data, plugins: [] })
     )
     const state = result.current.getNodeState('src')
     expect(state.focused).toBeDefined()
@@ -58,7 +58,7 @@ describe('useAria hook', () => {
   it('first visible node gets focus by default', () => {
     const data = fixtureData()
     const { result } = renderHook(() =>
-      useAria({ behavior: treegrid, data, plugins: [] })
+      useAria({ behavior: tree, data, plugins: [] })
     )
     expect(result.current.focused).toBe('src')
   })
@@ -68,7 +68,7 @@ describe('useAria hook', () => {
     const customHandler = vi.fn()
     const { result } = renderHook(() =>
       useAria({
-        behavior: treegrid,
+        behavior: tree,
         data,
         plugins: [],
         keyMap: { Enter: () => { customHandler(); return undefined } },

@@ -10,7 +10,6 @@ import userEvent from '@testing-library/user-event'
 import { Aria } from '../components/aria'
 import { listbox } from '../behaviors/listbox'
 import { tree } from '../behaviors/tree'
-import { treegrid } from '../behaviors/treegrid'
 import { grid } from '../behaviors/grid'
 import { composePattern } from '../axes/composePattern'
 import { select } from '../axes/select'
@@ -151,11 +150,11 @@ describe('pointer interaction — tree click', () => {
   })
 })
 
-describe('pointer interaction — treegrid click', () => {
+describe('pointer interaction — tree click (second suite)', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={treegrid} data={treeFixtureStore()} plugins={[core()]}>
+      <Aria behavior={tree} data={treeFixtureStore()} plugins={[core()]}>
         <Aria.Item render={(node, state) => (
           <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />

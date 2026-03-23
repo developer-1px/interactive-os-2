@@ -9,7 +9,7 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../components/aria'
 import { listbox } from '../behaviors/listbox'
-import { treegrid } from '../behaviors/treegrid'
+import { tree } from '../behaviors/tree'
 import { createStore } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
 import type { NormalizedData } from '../core/types'
@@ -182,15 +182,13 @@ describe('extendSelectionTo — target ID with custom navigable set', () => {
   })
 })
 
-describe('extended selection — treegrid', () => {
-  it('Shift+ArrowDown selects range in treegrid', async () => {
+describe('extended selection — tree', () => {
+  it('Shift+ArrowDown selects range in tree', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={treegrid} data={fixtureStore()} plugins={[core()]}>
+      <Aria behavior={tree} data={fixtureStore()} plugins={[core()]}>
         <Aria.Item render={(node, state) => (
-          <div role="gridcell">
-            <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
-          </div>
+          <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
     )

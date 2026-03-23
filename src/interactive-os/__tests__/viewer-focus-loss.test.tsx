@@ -12,7 +12,7 @@ import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState, useCallback } from 'react'
 import { Aria } from '../components/aria'
-import { treegrid } from '../behaviors/treegrid'
+import { tree } from '../behaviors/tree'
 import { core } from '../plugins/core'
 import { createStore } from '../core/createStore'
 import { ROOT_ID } from '../core/types'
@@ -49,10 +49,10 @@ function BrokenViewer() {
 
   return (
     <div>
-      <Aria behavior={treegrid} data={store} plugins={[core()]} onChange={handleChange} aria-label="tree">
+      <Aria behavior={tree} data={store} plugins={[core()]} onChange={handleChange} aria-label="tree">
         <Aria.Item render={(node, state) => {
           const data = node.data as { name: string }
-          return <div role="gridcell"><span data-focused={state.focused}>{data.name}</span></div>
+          return <span data-focused={state.focused}>{data.name}</span>
         }} />
       </Aria>
       <div data-testid="selected">{selected}</div>
@@ -76,10 +76,10 @@ function FixedViewer() {
 
   return (
     <div>
-      <Aria behavior={treegrid} data={initialStore} plugins={[core()]} onChange={handleChange} aria-label="tree">
+      <Aria behavior={tree} data={initialStore} plugins={[core()]} onChange={handleChange} aria-label="tree">
         <Aria.Item render={(node, state) => {
           const data = node.data as { name: string }
-          return <div role="gridcell"><span data-focused={state.focused}>{data.name}</span></div>
+          return <span data-focused={state.focused}>{data.name}</span>
         }} />
       </Aria>
       <div data-testid="selected">{selected}</div>

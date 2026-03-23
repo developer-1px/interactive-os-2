@@ -13,8 +13,8 @@ import PageStoreInspector from '../../pages/PageStoreInspector'
 // ---- helpers ----------------------------------------------------------------
 
 function getPanels() {
-  const editor = screen.getByRole('treegrid')
-  const inspector = screen.getByRole('tree')
+  const editor = screen.getByLabelText('Store editor')
+  const inspector = screen.getByLabelText('Store inspector')
   const log = screen.getByLabelText('Operation Log')
   return { editor, inspector, log }
 }
@@ -185,7 +185,7 @@ describe('Store Inspector — PRD V1–V10', () => {
     }
 
     // Inspector should still be in the DOM (no crash — just asserting it's queryable)
-    const inspectorAfter = screen.getByRole('tree')
+    const inspectorAfter = screen.getByLabelText('Store inspector')
     expect(inspectorAfter).toBeTruthy()
 
     // Inspector entity count should be ≤ number of meta entities (no user entities remain)
