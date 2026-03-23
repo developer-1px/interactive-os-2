@@ -12,6 +12,7 @@ import { rename } from '../interactive-os/plugins/rename'
 import { dnd } from '../interactive-os/plugins/dnd'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 import { listData } from './shared-list-data'
+import { TestRunnerPanel } from '../testRunner/TestRunnerPanel'
 
 const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
@@ -58,6 +59,10 @@ export default function PageListbox() {
         />
       </div>
       <ApgKeyboardTable {...apgListbox} />
+      <TestRunnerPanel
+        testPath="src/interactive-os/__tests__/listbox-keyboard.integration.test"
+        label="ListBox Keyboard Integration"
+      />
     </div>
   )
 }
