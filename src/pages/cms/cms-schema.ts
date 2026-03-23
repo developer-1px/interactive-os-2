@@ -37,7 +37,7 @@ export const nodeSchemas = {
   stat:             z.object({ type: z.literal('stat') }),
   'step-num':       z.object({ type: z.literal('step-num'),      value: z.string().describe('Number') }),
   step:             z.object({ type: z.literal('step') }),
-  pattern:          z.object({ type: z.literal('pattern'),       name: localeMapSchema.describe('Name'), icon: z.string() }),
+  pattern:          z.object({ type: z.literal('pattern'),       name: localeMapSchema.describe('Name'), icon: z.string().meta({ fieldType: 'icon' }).describe('Icon') }),
   link:             z.object({ type: z.literal('link'),          label: localeMapSchema.describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),
   brand:            z.object({ type: z.literal('brand'),         name: localeMapSchema.describe('Name'), license: z.string().describe('License') }),
   'section-label':  z.object({ type: z.literal('section-label'), value: localeMapSchema.describe('Text') }),
