@@ -1,51 +1,66 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin, Command } from '../core/types'
-import type { BehaviorContext, NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { tabs } from '../behaviors/tabs'
-import { core } from '../plugins/core'
-import { history } from '../plugins/history'
-import { crudCommands } from '../plugins/crud'
-import { renameCommands } from '../plugins/rename'
-import { dndCommands } from '../plugins/dnd'
+import type { NormalizedData, Plugin } from '../core/types'
+import type { NodeState, BehaviorContext } from '../behaviors/types'
+import type { Command } from '../core/types'
+import { useTabList } from './useTabList'
+import { ROOT_ID } from '../core/types'
+import { getChildren } from '../core/createStore'
 
 interface TabListProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
+  onActivate?: (nodeId: string) => void
   renderItem?: (tab: Record<string, unknown>, state: NodeState) => React.ReactNode
   enableEditing?: boolean
+  keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
+  initialFocus?: string
+  'aria-label'?: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const defaultRenderItem = (tab: Record<string, unknown>, _state: NodeState): React.ReactNode => (
   <span>{(tab.data as Record<string, unknown>)?.label as string ?? (tab.data as Record<string, unknown>)?.name as string ?? tab.id as string}</span>
 )
 
-const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
-  'Delete': (ctx) => crudCommands.remove(ctx.focused),
-  'F2': (ctx) => renameCommands.startRename(ctx.focused),
-  'Alt+ArrowLeft': (ctx) => dndCommands.moveUp(ctx.focused),
-  'Alt+ArrowRight': (ctx) => dndCommands.moveDown(ctx.focused),
-}
-
 export function TabList({
   data,
-  plugins = [core(), history()],
+  plugins,
   onChange,
+  onActivate,
   renderItem = defaultRenderItem,
   enableEditing = false,
+  keyMap,
+  initialFocus,
+  'aria-label': ariaLabel,
 }: TabListProps) {
+  const tl = useTabList({
+    data,
+    plugins,
+    onChange,
+    onActivate,
+    enableEditing,
+    keyMap,
+    initialFocus,
+    'aria-label': ariaLabel,
+  })
+
+  const store = tl.getStore()
+  const childIds = getChildren(store, ROOT_ID)
+
   return (
-    <Aria
-      behavior={tabs}
-      data={data}
-      plugins={plugins}
-      onChange={onChange}
-      keyMap={enableEditing ? editingKeyMap : undefined}
-    >
-      <Aria.Item render={renderItem} />
-    </Aria>
+    <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)}>
+      {childIds.map((id) => {
+        const entity = store.entities[id]
+        if (!entity) return null
+        const state = tl.getItemState(id)
+        const props = tl.getItemProps(id)
+        return (
+          <div key={id} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
+            {renderItem(entity, state)}
+          </div>
+        )
+      })}
+    </div>
   )
 }
