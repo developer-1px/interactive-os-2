@@ -7,6 +7,7 @@ import { treegrid } from '../behaviors/treegrid'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
 import { replaceEditPlugin } from '../axes/edit'
+import styles from './TreeGrid.module.css'
 
 interface TreeGridProps {
   id?: string
@@ -18,15 +19,16 @@ interface TreeGridProps {
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
+  const label = (node.data as Record<string, unknown>)?.label as string
+    ?? (node.data as Record<string, unknown>)?.name as string
+    ?? node.id as string
   const hasChildren = state.expanded !== undefined
-
+  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
   return (
-    <span {...props} className="item-inner">
-      <span className="item-chevron--tree">
-        {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
-      </span>
-      <span>{(node.data as Record<string, unknown>)?.name as string}</span>
-    </span>
+    <div {...props} className={cls}>
+      <span className={styles.chevron}>{hasChildren ? (state.expanded ? '▾' : '▸') : ''}</span>
+      <span>{label}</span>
+    </div>
   )
 }
 

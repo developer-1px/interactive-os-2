@@ -7,22 +7,34 @@ import { FOCUS_ID } from '../interactive-os/plugins/core'
 import type { NormalizedData } from '../interactive-os/core/types'
 import { NavList } from '../interactive-os/ui/NavList'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
+import { TestRunnerPanel } from '../testRunner/TestRunnerPanel'
 import { components } from './showcaseRegistry'
 import type { ComponentEntry } from './showcaseRegistry'
 
-function ComponentDemo({ entry }: { entry: ComponentEntry }) {
+function LiveDemo({ entry }: { entry: ComponentEntry }) {
   const [data, setData] = useState(() => entry.makeData())
   const onChange = useCallback((next: NormalizedData) => setData(next), [])
+  return (
+    <div className={styles.uiDemo}>
+      <div className={styles.uiDemoLabel}>Live Demo</div>
+      {entry.render(data, onChange)}
+    </div>
+  )
+}
 
+function ComponentDemo({ entry }: { entry: ComponentEntry }) {
   return (
     <div className={styles.uiCard}>
       <h2 className={styles.uiCardHeading}>{entry.name}</h2>
       <p className={styles.uiCardDescription}>{entry.description}</p>
 
-      <div className={styles.uiDemo}>
-        <div className={styles.uiDemoLabel}>Live Demo</div>
-        {entry.render(data, onChange)}
-      </div>
+      {entry.testPath ? (
+        <div className={styles.uiTestRunner}>
+          <TestRunnerPanel testPath={entry.testPath} autoRun />
+        </div>
+      ) : (
+        <LiveDemo entry={entry} />
+      )}
 
       <div className={styles.uiCodeSection}>
         <div className={styles.uiCodeLabel}>Usage</div>

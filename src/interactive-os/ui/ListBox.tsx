@@ -7,6 +7,7 @@ import { listbox } from '../behaviors/listbox'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
 import { replaceEditPlugin } from '../axes/edit'
+import styles from './ListBox.module.css'
 
 interface ListBoxProps {
   data: NormalizedData
@@ -16,12 +17,13 @@ interface ListBoxProps {
   enableEditing?: boolean
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => (
-  <span {...props}>
-    {(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}
-  </span>
-)
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
+  const label = (item.data as Record<string, unknown>)?.label as string
+    ?? (item.data as Record<string, unknown>)?.name as string
+    ?? item.id as string
+  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
+  return <div {...props} className={cls}>{label}</div>
+}
 
 export function ListBox({
   data,
