@@ -153,7 +153,7 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
   )
 }
 
-function AriaEditable({ field, placeholder, selection = 'all', children }: { field: string; placeholder?: string; selection?: 'all' | 'end'; children: React.ReactNode }) {
+function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = false, children }: { field: string; placeholder?: string; selection?: 'all' | 'end'; allowEmpty?: boolean; children: React.ReactNode }) {
   const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
   const editRef = useRef<HTMLSpanElement>(null)
@@ -173,12 +173,29 @@ function AriaEditable({ field, placeholder, selection = 'all', children }: { fie
       if (!editRef.current) return
       const el = editRef.current
       originalValueRef.current = el.textContent ?? ''
-      const range = document.createRange()
-      range.selectNodeContents(el)
-      if (selection === 'end') range.collapse(false)
-      const sel = window.getSelection()
-      sel?.removeAllRanges()
-      sel?.addRange(range)
+
+      // Check for replace mode from __rename__ entity
+      const store = ariaCtx?.getStore()
+      const renameEntity = store?.entities['__rename__'] as Record<string, unknown> | undefined
+      const isReplace = renameEntity?.replace === true
+      const initialChar = renameEntity?.initialChar as string | undefined
+
+      if (isReplace) {
+        el.textContent = initialChar ?? ''
+        const range = document.createRange()
+        range.selectNodeContents(el)
+        range.collapse(false) // cursor at end
+        const sel = window.getSelection()
+        sel?.removeAllRanges()
+        sel?.addRange(range)
+      } else {
+        const range = document.createRange()
+        range.selectNodeContents(el)
+        if (selection === 'end') range.collapse(false)
+        const sel = window.getSelection()
+        sel?.removeAllRanges()
+        sel?.addRange(range)
+      }
       el.focus()
     } else if (wasRenamingRef.current) {
       // Exiting rename mode — restore focus to node
@@ -208,7 +225,7 @@ function AriaEditable({ field, placeholder, selection = 'all', children }: { fie
     committedRef.current = true
     const el = editRef.current
     const newValue = el?.textContent?.trim() ?? ''
-    if (newValue === '' || newValue === originalValueRef.current) {
+    if ((!allowEmpty && newValue === '') || newValue === originalValueRef.current) {
       // Restore DOM before React reconciles — prevents stale DOM from external mutation
       if (el) el.textContent = originalValueRef.current
       ariaCtx.dispatch(renameCommands.cancelRename())
