@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "spatial-navigation",
+  "prompt": "spatial navigation 어떻게 구현하는지 조사해줘",
+  "assertions": [
+    {"name": "golden-circle-structure", "text": "Why, How, What, If 4개 섹션 헤딩이 모두 존재한다"},
+    {"name": "mermaid-diagrams", "text": "mermaid 코드블록이 최소 2개 이상 포함되어 있다"},
+    {"name": "insights-section", "text": "Insights 또는 흥미로운 점 관련 별도 섹션이 존재한다"},
+    {"name": "sources-with-urls", "text": "Sources 섹션에 실제 URL이 포함된 출처 표가 있다"},
+    {"name": "external-research", "text": "문서 내용이 외부 소스 기반이며 단순 내부 지식 나열이 아니다"},
+    {"name": "project-connection", "text": "If 섹션에서 현재 aria 프로젝트의 spatial behavior 맥락과 연결점을 언급한다"}
+  ]
+}

@@ -5,6 +5,7 @@ import { getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
+import { cmsCanDelete } from './cms-schema'
 
 interface CmsFloatingToolbarProps {
   store: NormalizedData
@@ -45,6 +46,12 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
 
     switch (action) {
       case 'delete': {
+        // Slot guard
+        const parentId = getParent(store, focusedId)
+        if (parentId) {
+          const parentData = store.entities[parentId]?.data as Record<string, unknown> | undefined
+          if (!cmsCanDelete(parentData)) return
+        }
         if (context === 'root' && getChildren(store, ROOT_ID).length <= 1) return
         dispatch(crudCommands.remove(focusedId))
         break

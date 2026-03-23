@@ -1,0 +1,23 @@
+{
+  "skill_name": "doubt",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "createStore.ts를 보면 insertNode, getEntity, getChildren 같은 1-2줄짜리 래퍼 함수가 여러 개 있어. 이 파일에서 불필요한 추상화를 정리해줘.",
+      "expected_output": "4단 필터를 적용해 각 함수의 존재 이유를 판단하고, 불필요한 래퍼는 제거 후보로, 필수 함수는 유지로 분류한 구조화된 보고",
+      "files": ["src/interactive-os/core/createStore.ts"]
+    },
+    {
+      "id": 2,
+      "prompt": "cms-schema.ts에 EditableGroup, EditableGroupEntry 타입이랑 collectEditableGroups, deriveGroupLabel, contextualLabel 함수를 새로 추가했는데, 이게 다 필요한 건지 모르겠어. 기존 fieldsOf로 충분하지 않았을까?",
+      "expected_output": "Occam Gate를 통과시켜 각 새 개념이 기존 메커니즘으로 대체 가능한지 검증하고, 필요/불필요를 판정",
+      "files": ["src/pages/cms/cms-schema.ts"]
+    },
+    {
+      "id": 3,
+      "prompt": "docs/2-areas/ 아래 MDX 문서들이 많아졌는데, 중복되거나 불필요한 문서가 있는지 점검해줘.",
+      "expected_output": "비코드 대상(문서)에서도 필터 체인을 적용해 중복/불필요 문서를 식별하고 정리 방안 제시",
+      "files": []
+    }
+  ]
+}

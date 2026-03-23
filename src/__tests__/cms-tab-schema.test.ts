@@ -3,31 +3,33 @@ import { cmsCanAccept, getEditableFields } from '../pages/cms/cms-schema'
 
 describe('CMS Tab Container Schema', () => {
   it('root accepts tab-group', () => {
-    expect(cmsCanAccept(undefined, { type: 'tab-group' })).toBe(true)
+    expect(cmsCanAccept(undefined, { type: 'tab-group' })).toBe('insert')
   })
 
   it('root still accepts section', () => {
-    expect(cmsCanAccept(undefined, { type: 'section', variant: 'hero' })).toBe(true)
+    expect(cmsCanAccept(undefined, { type: 'section', variant: 'hero' })).toBe('insert')
   })
 
   it('tab-group accepts tab-item', () => {
-    expect(cmsCanAccept({ type: 'tab-group' }, { type: 'tab-item', label: { ko: '탭', en: '', ja: '' } })).toBe(true)
+    expect(cmsCanAccept({ type: 'tab-group' }, { type: 'tab-item', label: { ko: '탭', en: '', ja: '' } })).toBe('insert')
   })
 
   it('tab-group rejects section', () => {
     expect(cmsCanAccept({ type: 'tab-group' }, { type: 'section', variant: 'hero' })).toBe(false)
   })
 
-  it('tab-item accepts tab-panel', () => {
-    expect(cmsCanAccept({ type: 'tab-item', label: { ko: '', en: '', ja: '' } }, { type: 'tab-panel' })).toBe(true)
+  it('tab-item is slot (rejects paste insert)', () => {
+    // tab-item has non-array childRule → slot, no insert/overwrite via paste
+    expect(cmsCanAccept({ type: 'tab-item', label: { ko: '', en: '', ja: '' } }, { type: 'tab-panel' })).toBe(false)
   })
 
   it('tab-item rejects text', () => {
     expect(cmsCanAccept({ type: 'tab-item', label: { ko: '', en: '', ja: '' } }, { type: 'text', role: 'title', value: { ko: '', en: '', ja: '' } })).toBe(false)
   })
 
-  it('tab-panel accepts section', () => {
-    expect(cmsCanAccept({ type: 'tab-panel' }, { type: 'section', variant: 'hero' })).toBe(true)
+  it('tab-panel is slot (rejects paste insert)', () => {
+    // tab-panel has non-array childRule → slot, no insert via paste
+    expect(cmsCanAccept({ type: 'tab-panel' }, { type: 'section', variant: 'hero' })).toBe(false)
   })
 
   it('tab-panel rejects tab-group (no nesting)', () => {

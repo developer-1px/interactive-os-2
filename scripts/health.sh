@@ -50,6 +50,53 @@ fi
 # 소비자 코드 = src/pages/, src/interactive-os/ui/, src/interactive-os/examples/
 CONSUMER_DIRS="src/pages src/interactive-os/ui src/interactive-os/examples"
 
+# ── 자동 제외: useAriaZone/useAria를 import하는 파일은 엔진 위임 ──
+OS_INTEGRATED=$(grep -rl 'from.*useAria\|from.*useAriaZone' $CONSUMER_DIRS --include='*.ts' --include='*.tsx' 2>/dev/null || true)
+
+# ── 수동 허용: 폼/모달/인라인 에디터 등 os 대상이 아닌 정당한 raw 패턴 ──
+OS_SYMPTOM_ALLOWLIST=(
+  "src/pages/cms/CmsFloatingToolbar.tsx"    # action toolbar — Escape only
+  "src/pages/cms/CmsDetailPanel.tsx"        # form editor — Enter to commit
+  "src/pages/cms/CmsInlineEditable.tsx"     # contentEditable inline editor
+  "src/pages/cms/CmsTemplatePicker.tsx"     # transient picker popup
+  "src/pages/cms/CmsPresentMode.tsx"        # modal fullscreen — global Escape
+  "src/pages/cms/CmsHamburgerDrawer.tsx"    # modal nav drawer — global Escape
+  "src/pages/cms/CmsI18nSheet.tsx"          # spreadsheet cell editor
+  "src/interactive-os/ui/Spinbutton.tsx"    # native input wrapper
+  "src/pages/PageAlertDialog.tsx"           # alert dialog — native role
+  "src/interactive-os/ui/Tooltip.tsx"       # tooltip — os 범위 밖, 네이티브 API 우선
+)
+
+# 제외 목록 합산 (자동 + 수동)
+EXCLUDE_FILES=""
+if [ -n "$OS_INTEGRATED" ]; then
+  EXCLUDE_FILES="$OS_INTEGRATED"
+fi
+for f in "${OS_SYMPTOM_ALLOWLIST[@]}"; do
+  EXCLUDE_FILES="${EXCLUDE_FILES}
+${f}"
+done
+
+filter_excluded() {
+  local hits="$1"
+  if [ -z "$hits" ]; then
+    echo ""
+    return
+  fi
+  echo "$hits" | while IFS= read -r line; do
+    local file="${line%%:*}"
+    local skip=false
+    echo "$EXCLUDE_FILES" | while IFS= read -r excl; do
+      [ -z "$excl" ] && continue
+      if [ "$file" = "$excl" ]; then
+        echo "SKIP"
+        break
+      fi
+    done | grep -q "SKIP" && continue
+    echo "$line"
+  done
+}
+
 echo ""
 echo -e "${BOLD}[징후: os 미사용]${RESET}"
 
@@ -71,18 +118,22 @@ print_hits() {
 
 # addEventListener 직접 사용
 HITS=$(grep -rn "addEventListener" $CONSUMER_DIRS --include='*.ts' --include='*.tsx' 2>/dev/null | grep -v "__tests__" || true)
+HITS=$(filter_excluded "$HITS")
 print_hits "addEventListener" "$HITS"
 
 # role= 하드코딩
 HITS=$(grep -rn 'role="' $CONSUMER_DIRS --include='*.tsx' 2>/dev/null | grep -v "__tests__" || true)
+HITS=$(filter_excluded "$HITS")
 print_hits "hardcoded role=" "$HITS"
 
 # tabIndex 직접 관리 (코멘트/문서 제외)
-HITS=$(grep -rn 'tabIndex' $CONSUMER_DIRS --include='*.tsx' 2>/dev/null | grep -v "__tests__" | grep -v '//' | grep -v '{/\*' || true)
+HITS=$(grep -rn 'tabIndex' $CONSUMER_DIRS --include='*.tsx' 2>/dev/null | grep -v "__tests__" | grep -v '//' | grep -v '{/\*' | grep -v '<code>' || true)
+HITS=$(filter_excluded "$HITS")
 print_hits "manual tabIndex" "$HITS"
 
 # onKeyDown 직접 핸들링 (코멘트/문서 제외)
 HITS=$(grep -rn 'onKeyDown' $CONSUMER_DIRS --include='*.tsx' 2>/dev/null | grep -v "__tests__" | grep -v '//' | grep -v '{/\*' || true)
+HITS=$(filter_excluded "$HITS")
 print_hits "onKeyDown direct" "$HITS"
 
 # ── 징후: 비대 파일 (>300 LOC) ──

@@ -1,0 +1,32 @@
+{
+  "eval_id": 2,
+  "eval_name": "occam-gate",
+  "variant": "without_skill",
+  "expectations": [
+    {
+      "text": "Occam Gate 3가지 질문을 각 새 개념에 적용했다",
+      "passed": false,
+      "evidence": "'Occam Gate'라는 용어나 명시적 3가지 질문 프레임워크가 사용되지 않았다. 분석은 fieldsOf vs collectEditableGroups 차이점 비교 형태로 진행되었으며, 각 개념별로 체계적 gate 질문을 적용한 구조가 아니다."
+    },
+    {
+      "text": "fieldsOf와 새 함수의 차이점을 구체적으로 설명했다",
+      "passed": true,
+      "evidence": "표로 3가지 차이 명시: '1. 트리 재귀 순회 — fieldsOf는 nodeSchemas[type]의 shape만 읽는다. store 트리 구조를 알지 못한다. 2. 그룹화 — fieldsOf는 flat 배열만 반환. nodeId 정보가 없어 구별 불가. 3. 컨텍스트 라벨링 — fieldsOf는 schema.description만 읽는다.'"
+    },
+    {
+      "text": "실제 사용처(import/호출)를 조사했다",
+      "passed": true,
+      "evidence": "섹션 5 '실제 사용 현황' 테이블: CmsDetailPanel.tsx — collectEditableGroups/EditableGroup/EditableGroupEntry, CmsCanvas.tsx — getEditableFields, CmsInlineEditable.tsx — getEditableFields. fieldsOf 사용처도 별도 나열."
+    },
+    {
+      "text": "각 새 개념에 대해 유지/제거 판정을 내렸다",
+      "passed": true,
+      "evidence": "Conclusion 테이블에서 전체 판정: '새 export 수: 3개', '새 internal 함수 수: 2개', '결론: 새 추상화는 fieldsOf가 풀지 못하는 구체적인 문제를 풀며, 기존 API를 건드리지 않는다. Occam's razor 위반 아님.' 모두 유지 판정."
+    },
+    {
+      "text": "기존 메커니즘으로 대체 가능 여부를 구체적으로 답했다",
+      "passed": true,
+      "evidence": "섹션 4 'fieldsOf 확장으로 대체 가능했을까?'에서 대안 A(fieldsOf에 재귀 추가 — 시그니처 변경으로 기존 호출처 회귀)와 대안 B(뷰에서 직접 그룹화 — 관심사 분리 위반)를 검토하고 둘 다 부적절하다고 결론"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "skill_name": "explain",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/explain focusRecovery 플러그인이 뭔지, 왜 필요한지 해설해줘",
+      "expected_output": "focusRecovery 플러그인의 설계 의도와 메커니즘을 Why→How→What→If 구조로 해설하는 문서",
+      "files": [],
+      "assertions": [
+        {"id": "A1", "text": "heading-is-insight: 모든 ## 제목이 라벨이 아닌 주장/인사이트 문장이다"},
+        {"id": "A2", "text": "top-down-first-sentence: 각 본문 섹션의 첫 문장이 해당 섹션의 결론이다"},
+        {"id": "A3", "text": "so-what-closure: 각 섹션이 시사점/의미로 마무리된다"},
+        {"id": "A4", "text": "scqa-intro: SCQA 도입부가 존재한다"},
+        {"id": "A5", "text": "mermaid-minimum: Mermaid 2개 이상"},
+        {"id": "A6", "text": "whhwi-structure: Why→How→What→If 4단 구조"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/explain cms-schema.ts에서 Zod 스키마가 어떻게 동작하는지 설명해줘. 타입 파생 구조가 복잡해서 정리가 필요해",
+      "expected_output": "cms-schema.ts의 Zod 스키마 단일 소스 → 15개 노드 타입 파생 구조를 해설하는 문서",
+      "files": [],
+      "assertions": [
+        {"id": "A1", "text": "heading-is-insight: 모든 ## 제목이 라벨이 아닌 주장/인사이트 문장이다"},
+        {"id": "A2", "text": "top-down-first-sentence: 각 본문 섹션의 첫 문장이 해당 섹션의 결론이다"},
+        {"id": "A3", "text": "so-what-closure: 각 섹션이 시사점/의미로 마무리된다"},
+        {"id": "A4", "text": "scqa-intro: SCQA 도입부가 존재한다"},
+        {"id": "A5", "text": "mermaid-minimum: Mermaid 2개 이상"},
+        {"id": "A6", "text": "whhwi-structure: Why→How→What→If 4단 구조"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/explain interactive-os의 플러그인 아키텍처를 해설해줘. 새로 합류한 개발자가 이해할 수 있게",
+      "expected_output": "interactive-os 플러그인 시스템의 전체 아키텍처를 해설하는 문서",
+      "files": [],
+      "assertions": [
+        {"id": "A1", "text": "heading-is-insight: 모든 ## 제목이 라벨이 아닌 주장/인사이트 문장이다"},
+        {"id": "A2", "text": "top-down-first-sentence: 각 본문 섹션의 첫 문장이 해당 섹션의 결론이다"},
+        {"id": "A3", "text": "so-what-closure: 각 섹션이 시사점/의미로 마무리된다"},
+        {"id": "A4", "text": "scqa-intro: SCQA 도입부가 존재한다"},
+        {"id": "A5", "text": "mermaid-minimum: Mermaid 2개 이상"},
+        {"id": "A6", "text": "whhwi-structure: Why→How→What→If 4단 구조"}
+      ]
+    }
+  ]
+}

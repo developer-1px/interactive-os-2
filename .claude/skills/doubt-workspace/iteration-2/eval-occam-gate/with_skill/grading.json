@@ -1,0 +1,32 @@
+{
+  "eval_id": 2,
+  "eval_name": "occam-gate",
+  "variant": "with_skill",
+  "expectations": [
+    {
+      "text": "Occam Gate 3가지 질문을 각 새 개념에 적용했다",
+      "passed": true,
+      "evidence": "Occam Gate 섹션에서 3가지 질문(기존 메커니즘으로 해결 가능?, 없으면 어떻게 되나?, 개념 수를 줄이나 늘리나?)을 전체에 적용. 이후 필터 체인에서 5개 개별 항목에 4단계 필터(쓸모/형태/줄일수있나/더적게)를 각각 적용."
+    },
+    {
+      "text": "fieldsOf와 새 함수의 차이점을 구체적으로 설명했다",
+      "passed": true,
+      "evidence": "테이블로 3가지 차이 명시: (1) 트리 재귀 순회 불가(store 접근 없음), (2) 그룹화 불가(flat 배열, nodeId 정보 없음), (3) 맥락적 라벨 불가(같은 type 구분 불가). 시그니처 확장 시 기존 호출처 깨짐도 언급."
+    },
+    {
+      "text": "실제 사용처(import/호출)를 조사했다",
+      "passed": true,
+      "evidence": "각 항목에 구체적 사용처 기재: EditableGroupEntry → CmsDetailPanel.tsx line 98/106/133, EditableGroup → line 76/61, collectEditableGroups → line 19 useMemo, deriveGroupLabel → line 221/240, contextualLabel → line 214/231."
+    },
+    {
+      "text": "각 새 개념에 대해 유지/제거 판정을 내렸다",
+      "passed": true,
+      "evidence": "5개 항목 모두 '유지' 판정. 변경 테이블에 '5개 신규 항목 모두 Gate + 필터 통과'로 요약. 결론에서 '5개 개념 모두 유지. 제거/축소 대상 없음' 명시."
+    },
+    {
+      "text": "기존 메커니즘으로 대체 가능 여부를 구체적으로 답했다",
+      "passed": true,
+      "evidence": "Occam Gate 질문 1에서 '불가능하다'를 3가지 이유와 함께 논증. 결론에서도 '충분하지 않다'를 3개 항목으로 재확인. fieldsOf 확장 시 시그니처 변경 + 기존 호출처 파괴 + PRD N5 금지 조항까지 언급."
+    }
+  ]
+}

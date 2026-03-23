@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "viewer-channel": {
+      "command": "node",
+      "args": ["viewer-channel.mjs"]
+    }
+  }
+}

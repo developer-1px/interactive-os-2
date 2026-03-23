@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "abstraction-cleanup",
+  "prompt": "createStore.ts를 보면 insertNode, getEntity, getChildren 같은 1-2줄짜리 래퍼 함수가 여러 개 있어. 이 파일에서 불필요한 추상화를 정리해줘.",
+  "assertions": [
+    { "id": "a1", "text": "모든 export 함수를 빠짐없이 나열했다", "type": "completeness" },
+    { "id": "a2", "text": "각 함수에 대해 유지/제거/축소 판정을 내렸다", "type": "structure" },
+    { "id": "a3", "text": "제거 후보에 대해 근거(사용처 확인 등)를 제시했다", "type": "reasoning" },
+    { "id": "a4", "text": "insertNode 같은 1줄 래퍼를 식별하고 다뤘다", "type": "accuracy" },
+    { "id": "a5", "text": "핵심 함수(addEntity, removeEntity, moveNode)를 유지로 판정했다", "type": "accuracy" },
+    { "id": "a6", "text": "Before → After 수치 요약이 있다", "type": "format" }
+  ]
+}

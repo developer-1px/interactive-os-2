@@ -1,0 +1,32 @@
+{
+  "eval_id": 3,
+  "eval_name": "docs-cleanup",
+  "variant": "with_skill",
+  "expectations": [
+    {
+      "text": "docs/2-areas/ 내 모든 MDX 파일을 나열했다",
+      "passed": true,
+      "evidence": "1. 목록화 섹션에서 67개 파일을 카테고리별로 전수 나열: 인덱스 7 + axes 7 + core 3 + patterns 18 + plugins 9 + hooks 7 + ui 17(추가 3개 포함). 부록에서 수 정합성 메모까지 첨부."
+    },
+    {
+      "text": "각 문서의 역할을 요약했다",
+      "passed": true,
+      "evidence": "목록화 테이블의 '역할' 열에 각 문서의 역할을 한 줄로 요약 — 예: 'overview.mdx: 전체 레이어 구조와 의존 그래프, 빈칸 요약', 'navigate.mdx: navigate 축 스펙 + 데모'"
+    },
+    {
+      "text": "중복/유사한 문서 쌍을 식별했다 (있는 경우)",
+      "passed": true,
+      "evidence": "5개 중복/유사 후보 식별: 🟡-1 plugins/spatial vs hooks/useSpatialNav, 🟡-2 dialog vs alertdialog, 🟡-3 disclosure vs switch, 🟡-4 slider vs value, 🟡-5 plugins/combobox vs patterns/combobox"
+    },
+    {
+      "text": "문서 내용을 실제로 읽고 판단했다 (제목만 보고 추측하지 않음)",
+      "passed": true,
+      "evidence": "구체적 내용 비교 증거 다수: 'plugins/spatial.mdx의 useSpatialNav Hook 섹션(약 60%)과 hooks/useSpatialNav.mdx 전체가 거의 동일한 정보를 기술', 'dialog와 alertdialog의 차이는 role과 aria-modal: true 한 줄뿐', 줄 수 인용(49줄→~20줄, 37줄→0줄)"
+    },
+    {
+      "text": "유지/제거/병합 판정을 각 문서에 내렸다",
+      "passed": true,
+      "evidence": "최종 판정 완료: 🔴 제거 0건, 🟡 축소/병합 2건(plugins/spatial.mdx 축소, patterns/alertdialog.mdx 병합), 🟢 유지 65건. Round 2에서 나머지 62개 항목도 카테고리별 재검토 후 전체 🟢 확인."
+    }
+  ]
+}

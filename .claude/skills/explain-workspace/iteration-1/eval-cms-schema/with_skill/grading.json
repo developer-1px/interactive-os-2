@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "heading-is-insight", "passed": true, "evidence": "'CMS는 타입 정의와 행위 규칙을 분리하면 유지보수 비용이 폭발한다', '2개의 테이블이 전체 데이터 모델을 결정한다', 'Zod의 4가지 런타임 API로 5개 파생물을 도출한다', '스키마 변경 시 영향 범위는 예측 가능하지만 타입 안전성에 한계가 있다' — 모두 주장형"},
+    {"text": "top-down-first-sentence", "passed": true, "evidence": "섹션1: 'CMS 노드는 19가지 타입이 있고... 분리하면 5곳 동기화 필요'. 섹션2: 'cms-schema.ts의 핵심 구조는 단 2개의 객체다' — 결론 선행"},
+    {"text": "so-what-closure", "passed": true, "evidence": "섹션1 끝: '5가지 파생물이 자동으로 갱신된다'. 섹션2 끝: 'Collection/Slot 이분법이 기반이 된다'. 섹션3 끝: 'Panel 코드를 수정할 필요가 없다'. 섹션4 끝: 'childRules 타입 강화를 검토할 필요가 있다'"},
+    {"text": "scqa-intro", "passed": true, "evidence": "SCQA 도입부 존재"},
+    {"text": "mermaid-minimum", "passed": true, "evidence": "3개 mermaid"},
+    {"text": "whhwi-structure", "passed": true, "evidence": "Why→How→What→If 흐름을 인사이트 제목으로 표현"}
+  ]
+}
