@@ -10,7 +10,7 @@ import { axisListData } from './axis-demo-data'
 
 const plugins = [core(), focusRecovery()]
 
-export function TrapDemo() {
+export default function TrapDemo() {
   const [escape, setEscape] = useState(true)
   const [data, setData] = useState<NormalizedData>(axisListData)
 

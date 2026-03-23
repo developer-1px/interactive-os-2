@@ -11,7 +11,7 @@ import { axisListData } from './axis-demo-data'
 
 const plugins = [core(), focusRecovery()]
 
-export function ActivateDemo() {
+export default function ActivateDemo() {
   const [onClick, setOnClick] = useState(false)
   const [followFocus, setFollowFocus] = useState(false)
   const [toggleExpand, setToggleExpand] = useState(false)

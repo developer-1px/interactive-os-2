@@ -15,7 +15,7 @@ type ExpandMode = 'arrow' | 'enter-esc'
 const pluginsArrow = [core(), focusRecovery()]
 const pluginsEnterEsc = [core(), spatial(), focusRecovery()]
 
-export function ExpandDemo() {
+export default function ExpandDemo() {
   const [mode, setMode] = useState<ExpandMode>('arrow')
   const [data, setData] = useState<NormalizedData>(axisTreeData)
 
