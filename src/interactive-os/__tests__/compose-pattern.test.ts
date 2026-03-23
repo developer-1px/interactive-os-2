@@ -291,4 +291,39 @@ describe('v2 structured axis', () => {
     const behavior = composePattern(identity, select())
     expect(behavior.selectOnClick).toBe(true)
   })
+
+  it('tabFocusStrategy takes precedence over focusStrategy', () => {
+    const navAxis: StructuredAxis = {
+      keyMap: { ArrowDown: (ctx) => ctx.focusNext() },
+      config: {
+        focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
+      },
+    }
+    const tabAxis: StructuredAxis = {
+      keyMap: {},
+      config: {
+        tabFocusStrategy: { type: 'natural-tab-order', orientation: 'both' },
+      },
+    }
+
+    // tab before navigate — tab wins
+    const behavior1 = composePattern(identity, tabAxis, navAxis)
+    expect(behavior1.focusStrategy).toEqual({ type: 'natural-tab-order', orientation: 'both' })
+
+    // navigate before tab — tab still wins
+    const behavior2 = composePattern(identity, navAxis, tabAxis)
+    expect(behavior2.focusStrategy).toEqual({ type: 'natural-tab-order', orientation: 'both' })
+  })
+
+  it('falls back to focusStrategy when no tabFocusStrategy', () => {
+    const navAxis: StructuredAxis = {
+      keyMap: {},
+      config: {
+        focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+      },
+    }
+
+    const behavior = composePattern(identity, navAxis)
+    expect(behavior.focusStrategy).toEqual({ type: 'roving-tabindex', orientation: 'vertical' })
+  })
 })
