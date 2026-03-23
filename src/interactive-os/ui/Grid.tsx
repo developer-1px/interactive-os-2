@@ -66,10 +66,12 @@ function createReplaceEditPlugin(): Plugin {
   }
 }
 
+const defaultPlugins: Plugin[] = [core()]
+
 export function Grid({
   data,
   columns,
-  plugins = [core()],
+  plugins = defaultPlugins,
   onChange,
   renderCell = defaultRenderCell,
   enableEditing = false,
@@ -91,10 +93,9 @@ export function Grid({
     [plugins, replaceEditPlugin],
   )
 
-  const hasKeyMap = enableEditing || !!keyMap
   const mergedKeyMap = React.useMemo(
-    () => hasKeyMap ? { ...(enableEditing ? editingKeyMap : {}), ...keyMap } : undefined,
-    [enableEditing, keyMap, hasKeyMap],
+    () => (enableEditing || keyMap) ? { ...(enableEditing ? editingKeyMap : {}), ...keyMap } : undefined,
+    [enableEditing, keyMap],
   )
 
   const renderRow = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
