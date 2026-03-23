@@ -309,6 +309,15 @@
   font-family: var(--sans); font-size: 12px;
   color: var(--text-secondary);
   margin-bottom: 4px;
+  background: none; border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+.cms-icon-field__current:hover {
+  border-color: var(--primary);
+  color: var(--text-primary);
 }
 .cms-icon-field__current--fallback {
   font-style: italic; color: var(--text-muted);

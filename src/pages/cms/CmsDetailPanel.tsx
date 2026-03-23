@@ -49,6 +49,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, s
               store={store}
               locale={locale}
               engine={engine}
+              defaultExpanded
             />
           ))}
         </div>
@@ -150,6 +151,7 @@ interface DetailFieldProps {
   store: NormalizedData
   locale: Locale
   engine: CommandEngine
+  defaultExpanded?: boolean
 }
 
 function DetailField(props: DetailFieldProps) {
@@ -235,44 +237,46 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
   )
 }
 
-function IconField({ entry, store, locale, engine }: DetailFieldProps) {
+function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) {
   const entity = store.entities[entry.nodeId]
   const data = (entity?.data ?? {}) as Record<string, unknown>
   const currentValue = (data[entry.field] as string) ?? ''
+  const [expanded, setExpanded] = useState(defaultExpanded ?? false)
 
   const handleSelect = useCallback((key: string) => {
     if (key === currentValue) return
     engine.dispatch(renameCommands.confirmRename(entry.nodeId, entry.field, key))
-  }, [entry.nodeId, entry.field, currentValue, engine])
+    if (!defaultExpanded) setExpanded(false)
+  }, [entry.nodeId, entry.field, currentValue, engine, defaultExpanded])
 
   const CurrentIcon = CMS_ICON_MAP.get(currentValue)
 
   return (
     <div className="cms-detail-field">
       <label className="cms-detail-field__label">{entry.label}</label>
-      {CurrentIcon && (
-        <div className="cms-icon-field__current">
-          <CurrentIcon size={16} /> <span>{currentValue}</span>
+      <button
+        type="button"
+        className={`cms-icon-field__current${!CurrentIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
+        onClick={() => setExpanded(v => !v)}
+      >
+        {CurrentIcon ? <CurrentIcon size={16} /> : null}
+        <span>{currentValue || 'none'}</span>
+      </button>
+      {expanded && (
+        <div className="cms-icon-field__grid">
+          {CMS_ICONS.map(({ key, Icon }) => (
+            <button
+              key={key}
+              type="button"
+              className={`cms-icon-field__option${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
+              title={key}
+              onClick={() => handleSelect(key)}
+            >
+              <Icon size={14} />
+            </button>
+          ))}
         </div>
       )}
-      {!CurrentIcon && currentValue && (
-        <div className="cms-icon-field__current cms-icon-field__current--fallback">
-          <span>{currentValue}</span>
-        </div>
-      )}
-      <div className="cms-icon-field__grid">
-        {CMS_ICONS.map(({ key, Icon }) => (
-          <button
-            key={key}
-            type="button"
-            className={`cms-icon-field__option${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
-            title={key}
-            onClick={() => handleSelect(key)}
-          >
-            <Icon size={14} />
-          </button>
-        ))}
-      </div>
     </div>
   )
 }
