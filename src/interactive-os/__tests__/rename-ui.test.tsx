@@ -22,13 +22,13 @@ const initialStore = createStore({
 
 const plugins = [core(), rename(), history()]
 
-function TestListBox({ initialData, keyMap }: { initialData?: NormalizedData; keyMap?: Record<string, (ctx: import('../behaviors/types').BehaviorContext) => import('../core/types').Command | void> }) {
+function TestListBox({ initialData, keyMap, allowEmpty }: { initialData?: NormalizedData; keyMap?: Record<string, (ctx: import('../behaviors/types').BehaviorContext) => import('../core/types').Command | void>; allowEmpty?: boolean }) {
   const [data, setData] = useState(initialData ?? initialStore)
   return (
     <Aria behavior={listbox} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
       <Aria.Item render={(node: Record<string, unknown>, _state: NodeState) => (
         <div data-testid={`item-${node.id}`}>
-          <Aria.Editable field="label">
+          <Aria.Editable field="label" allowEmpty={allowEmpty}>
             <span>{(node.data as Record<string, unknown>)?.label as string}</span>
           </Aria.Editable>
         </div>
@@ -316,6 +316,70 @@ describe('Rename UI', () => {
       act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
 
       expect(container.querySelector('[contenteditable]')).not.toBeNull()
+    })
+  })
+
+  describe('replace mode UI', () => {
+    function setupReplaceMode() {
+      const keyMap = {
+        'F2': (ctx: import('../behaviors/types').BehaviorContext) => renameCommands.startRename(ctx.focused),
+        'a': (ctx: import('../behaviors/types').BehaviorContext) =>
+          renameCommands.startRename(ctx.focused, { replace: true, initialChar: 'a' }),
+      }
+      return render(<TestListBox keyMap={keyMap} />)
+    }
+
+    it('replace mode clears text and inserts initialChar', () => {
+      const { container } = setupReplaceMode()
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+      act(() => { fireEvent.keyDown(firstNode, { key: 'a' }) })
+
+      const editable = container.querySelector('[contenteditable]') as HTMLElement
+      expect(editable).not.toBeNull()
+      expect(editable.textContent).toBe('a')
+    })
+
+    it('replace mode + Escape restores original value', () => {
+      const { container } = setupReplaceMode()
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+      act(() => { fireEvent.keyDown(firstNode, { key: 'a' }) })
+
+      const editable = container.querySelector('[contenteditable]') as HTMLElement
+      act(() => { fireEvent.keyDown(editable, { key: 'Escape' }) })
+
+      expect(container.querySelector('[data-testid="item-a"]')!.textContent).toContain('Alpha')
+    })
+  })
+
+  describe('allowEmpty prop', () => {
+    it('allowEmpty=false (default): empty string cancels rename', () => {
+      const { container } = setupWithKeyMap()
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+      act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
+
+      const editable = container.querySelector('[contenteditable]') as HTMLElement
+      editable.textContent = ''
+      act(() => { fireEvent.keyDown(editable, { key: 'Enter' }) })
+
+      // Original value restored (cancel behavior)
+      expect(container.querySelector('[data-testid="item-a"]')!.textContent).toContain('Alpha')
+    })
+
+    it('allowEmpty=true: empty string confirms with empty value', () => {
+      const keyMap = {
+        'F2': (ctx: import('../behaviors/types').BehaviorContext) => renameCommands.startRename(ctx.focused),
+      }
+      const { container } = render(<TestListBox keyMap={keyMap} allowEmpty />)
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+      act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
+
+      const editable = container.querySelector('[contenteditable]') as HTMLElement
+      editable.textContent = ''
+      act(() => { fireEvent.keyDown(editable, { key: 'Enter' }) })
+
+      // Empty string confirmed — label should be empty
+      expect(container.querySelector('[data-testid="item-a"]')!.textContent).toBe('')
+      expect(container.querySelector('[contenteditable]')).toBeNull()
     })
   })
 
