@@ -52,9 +52,9 @@
 
 .page-title {
   font-family: var(--sans);
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   color: var(--text-bright);
   margin: 0 0 var(--space-sm);
 }
