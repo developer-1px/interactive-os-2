@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
 import { spatial } from '../../interactive-os/behaviors/spatial'
-import { tab } from '../../interactive-os/axes/tab'
 import { useSpatialNav } from '../../interactive-os/hooks/useSpatialNav'
 import { focusCommands } from '../../interactive-os/plugins/core'
 import { crudCommands } from '../../interactive-os/plugins/crud'
@@ -158,7 +157,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
 
   const cmsBehavior = useMemo(() => ({
     ...spatial,
-    focusStrategy: tab('flow').config.tabFocusStrategy!,
+    focusStrategy: { type: 'natural-tab-order' as const, orientation: 'both' as const },
   }), [])
 
   // Spatial model: all nodes always rendered — reachable = exists in store

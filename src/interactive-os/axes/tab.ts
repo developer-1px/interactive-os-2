@@ -34,16 +34,8 @@ export function tab(strategy: TabStrategy, options?: TabOptions): { keyMap: KeyM
 
   if (strategy === 'loop') {
     const keyMap: KeyMap = {
-      Tab: (ctx: BehaviorContext) => {
-        const next = ctx.focusNext()
-        if (next.payload?.nodeId === ctx.focused) return ctx.focusFirst()
-        return undefined
-      },
-      'Shift+Tab': (ctx: BehaviorContext) => {
-        const prev = ctx.focusPrev()
-        if (prev.payload?.nodeId === ctx.focused) return ctx.focusLast()
-        return undefined
-      },
+      Tab: (ctx: BehaviorContext) => ctx.focusNext({ wrap: true }),
+      'Shift+Tab': (ctx: BehaviorContext) => ctx.focusPrev({ wrap: true }),
     }
     return {
       keyMap,
