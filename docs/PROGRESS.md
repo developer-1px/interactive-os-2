@@ -75,7 +75,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| ActivityBar (External/Internal) · routing | Integrated | Phase 1 big-bang 완료 |
+| ActivityBar (External/Internal) · routing | Integrated | createBrowserRouter + layout route 전환 완료 |
 | UI Showcase (/ui/{name}) | Integrated | 18/23 testPath + 16/23 APG table 연결 완료 |
 | Landing (/) · Docs (/docs) | Validated | hero + component grid, Getting Started + architecture |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
