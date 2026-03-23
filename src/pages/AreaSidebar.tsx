@@ -12,7 +12,7 @@ import type { NodeState } from '../interactive-os/behaviors/types'
 
 // --- Build tree data from glob keys ---
 
-const mdxModules = import.meta.glob<{ default: React.ComponentType }>('/docs/2-areas/**/*.mdx')
+const mdModules = import.meta.glob<{ default: React.ComponentType }>('/docs/2-areas/**/*.md')
 
 const L2_ORDER = ['vision', 'overview', 'core', 'axes', 'patterns', 'plugins', 'hooks', 'ui']
 
@@ -30,9 +30,9 @@ const L2_LABELS: Record<string, string> = {
 function buildAreaTree(): NormalizedData {
   // Parse glob keys into { l2, l3? } entries
   const entries: { l2: string; l3?: string; path: string }[] = []
-  for (const key of Object.keys(mdxModules)) {
-    // key: /docs/2-areas/axes.mdx or /docs/2-areas/axes/navigate.mdx
-    const match = key.match(/^\/docs\/2-areas\/(.+)\.mdx$/)
+  for (const key of Object.keys(mdModules)) {
+    // key: /docs/2-areas/axes.md or /docs/2-areas/axes/navigate.md
+    const match = key.match(/^\/docs\/2-areas\/(.+)\.md$/)
     if (!match) continue
     const segments = match[1].split('/')
     if (segments.length === 1) {

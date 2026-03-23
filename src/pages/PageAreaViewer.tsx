@@ -1,41 +1,10 @@
-import { useState, useEffect, type ComponentType } from 'react'
 import { useLocation } from 'react-router-dom'
-import areaStyles from './AreaViewer.module.css'
-
-const mdxModules = import.meta.glob<{ default: ComponentType }>('/docs/2-areas/**/*.mdx')
+import MdPage from './MdPage'
 
 export default function PageAreaViewer() {
-  const location = useLocation()
-  const [Content, setContent] = useState<ComponentType | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const { pathname } = useLocation()
+  const segments = pathname.replace(/^\/area\/?/, '')
+  const md = segments || 'overview'
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setContent(null)
-    setError(null)
-
-    // /area/axes → /docs/2-areas/axes.mdx
-    // /area/axes/navigate → /docs/2-areas/axes/navigate.mdx
-    const segments = location.pathname.replace(/^\/area\/?/, '')
-    const mdxPath = segments
-      ? `/docs/2-areas/${segments}.mdx`
-      : '/docs/2-areas/axes.mdx'
-
-    const loader = mdxModules[mdxPath]
-    if (!loader) {
-      setError(`Not found: ${mdxPath}`)
-      return
-    }
-
-    loader().then((mod) => setContent(() => mod.default)).catch((e) => setError(String(e)))
-  }, [location.pathname])
-
-  if (error) return <div className="page-header"><p className="page-desc">{error}</p></div>
-  if (!Content) return <div className="page-header"><p className="page-desc">Loading...</p></div>
-
-  return (
-    <div className={areaStyles.root}>
-      <Content />
-    </div>
-  )
+  return <MdPage md={md} />
 }
