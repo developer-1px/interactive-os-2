@@ -60,11 +60,7 @@ import PageThemeCreator from './pages/PageThemeCreator'
 import { AreaSidebar } from './pages/AreaSidebar'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './interactive-os/devtools/ReproRecorderOverlay'
-import PageNavigate from './pages/axis/PageNavigate'
-import PageSelect from './pages/axis/PageSelect'
-import PageActivate from './pages/axis/PageActivate'
-import PageExpand from './pages/axis/PageExpand'
-import PageTrap from './pages/axis/PageTrap'
+import MdPage from './pages/MdPage'
 
 // --- Vertical toolbar behavior (ActivityBar: navigation + utility in one roving group) ---
 
@@ -101,7 +97,8 @@ interface RouteItem {
   path: string
   label: string
   status: 'ready' | 'wip' | 'placeholder'
-  component: React.ComponentType | null
+  component?: React.ComponentType | null
+  md?: string
 }
 
 interface RouteGroup {
@@ -138,11 +135,11 @@ const routeConfig: RouteGroup[] = [
     icon: Axe,
     basePath: '/axis/navigate',
     items: [
-      { path: 'navigate', label: 'navigate()', status: 'ready', component: PageNavigate },
-      { path: 'select', label: 'select()', status: 'ready', component: PageSelect },
-      { path: 'activate', label: 'activate()', status: 'ready', component: PageActivate },
-      { path: 'expand', label: 'expand()', status: 'ready', component: PageExpand },
-      { path: 'trap', label: 'trap()', status: 'ready', component: PageTrap },
+      { path: 'navigate', label: 'navigate()', status: 'ready', md: 'axes/navigate' },
+      { path: 'select', label: 'select()', status: 'ready', md: 'axes/select' },
+      { path: 'activate', label: 'activate()', status: 'ready', md: 'axes/activate' },
+      { path: 'expand', label: 'expand()', status: 'ready', md: 'axes/expand' },
+      { path: 'trap', label: 'trap()', status: 'ready', md: 'axes/trap' },
     ],
   },
   {
@@ -456,7 +453,9 @@ function App() {
                     key={`${group.id}/${item.path}`}
                     path={`/${group.id}/${item.path}`}
                     element={
-                      item.component ? (
+                      item.md ? (
+                        <MdPage md={item.md} />
+                      ) : item.component ? (
                         <item.component />
                       ) : (
                         <Placeholder group={group.label} label={item.label} />
