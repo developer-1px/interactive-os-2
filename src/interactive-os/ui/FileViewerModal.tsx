@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { CodeBlock } from './CodeBlock'
-import { MarkdownViewer } from '../../pages/viewer/MarkdownViewer'
+import { MarkdownViewer } from './MarkdownViewer'
 import { FileIcon } from './FileIcon'
 import { Breadcrumb } from './Breadcrumb'
 import styles from './FileViewerModal.module.css'

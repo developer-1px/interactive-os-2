@@ -25,3 +25,4 @@
 - [ ] [P2] shadcn CLI — `npx interactive-os add treegrid` — 출처: PROGRESS.md 전환 (2026-03-23)
 - [ ] [P1] treegrid 쇼케이스 페이지 — 실제 다중 컬럼(파일명+크기+날짜) 데이터로 treegrid 패턴 시연. 기존 treegrid 라우트는 tree로 교체됨 — 출처: discussion (2026-03-23)
 - [ ] [P0] UI SDK 카탈로그 32개 장기 플랜 — 상세: docs/5-backlogs/uiSdkCatalog.md — 출처: UI SDK discussion (2026-03-23)
+- [ ] [P1] Viewer lightbox — mermaid/이미지 클릭 시 전체화면 보기 — 출처: architecture snapshot discussion (2026-03-23)

@@ -13,7 +13,36 @@ interactive-os v1이 과도한 추상화로 실패한 교훈을 바탕으로, v2
 4. 쇼케이스 → 완성품 승격은 제품에서 실제로 쓸 때 진행
 5. v1 교훈: 범용 추상화 금지, 적절한 컴포넌트를 발견하려는 노력 필수
 
-### 🟡 쇼케이스 → 완성품 승격 (18개)
+### 위계 (3층)
+
+```
+Composition (조립)    — Element + Pattern을 조립한 더 큰 완성품
+Pattern (인터랙션)    — os behavior 기반. 키보드/포커스/ARIA
+Element (시각)        — behavior 없음. 데이터 → 표시
+```
+
+| 레이어 | 정의 | 특징 |
+|--------|------|------|
+| **Element** | 인터랙션 없음. 데이터 → 표시 | props in → JSX out |
+| **Pattern** | os behavior 기반 (또는 향후 지원할 축) | hook-first (useX + `<X>`) |
+| **Composition** | Element + Pattern 조립 | 여러 하위 완성품 조합 |
+
+SplitPane/Popover는 위계상 Pattern이지만 os 미지원 축(drag/resize, anchor/position)으로 현재 자체 구현. 향후 behavior 전환 대상.
+
+상세: docs/0-inbox/28-[vision]ui-component-hierarchy.md
+
+### Element (8개)
+
+- [x] FileIcon (2026-03-23)
+- [x] CodeBlock (2026-03-23)
+- [x] Breadcrumb (2026-03-23)
+- [ ] MarkdownViewer — viewer/에서 분리 필요
+- [ ] Avatar
+- [ ] Badge
+- [ ] Progress
+- [ ] Skeleton
+
+### Pattern — 🟡 쇼케이스 → 완성품 승격 (17개)
 
 제품에서 실제로 쓸 때 hook-first로 전환. NavList 패턴 반복.
 
@@ -37,33 +66,30 @@ interactive-os v1이 과도한 추상화로 실패한 교훈을 바탕으로, v2
 - [ ] Toggle / ToggleGroup — 모드 전환
 - [ ] Kanban — 보드 뷰
 
-### 🔴 새로 만들어야 할 것 (10개)
+### Pattern — 🔴 새로 만들어야 할 것
 
-우선순위 순.
+- [ ] **SplitPane** — 3개 제품 전부. drag/resize 축 (os 갭)
+- [ ] **Popover** — 툴팁 확장, 인포 패널. anchor/position 축 (os 갭)
 
-- [ ] **SplitPane** — 3개 제품 전부에서 사용. 레이아웃 뼈대. AppKit NSSplitView
-- [ ] **CommandPalette** — QuickOpen을 승격. Cmd+K 검색+액션. VS Code, Raycast, Notion
-- [ ] **MarkdownViewer** — viewer/에서 분리 필요. Viewer + Agent에서 사용
-- [ ] **Timeline** — Agent 뷰어 핵심. 채팅/로그/활동 피드
-- [ ] **ContextMenu** — 우클릭 메뉴. MenuList + popover + trigger (BACKLOGS.md에도 등록됨)
-- [ ] **VirtualList** — useVirtualScroll hook → 완성품. 긴 목록 성능
-- [ ] **Popover** — 툴팁 확장, 인포 패널, 드롭다운 컨테이너. AppKit NSPopover
-- [ ] **Avatar** — 사용자/에이전트 아이덴티티
-- [ ] **Badge** — 상태, 카운트, 라벨
-- [ ] **Progress** — 로딩, 업로드, 태스크 완료
+### Composition (5개)
 
-### ✅ 완성품 (4개, 완료)
+- [x] FileViewerModal — Dialog + CodeBlock + Breadcrumb + FileIcon + MarkdownViewer (2026-03-23)
+- [ ] **CommandPalette** — Combobox + 검색 엔진 + 결과 리스트
+- [ ] **ContextMenu** — MenuList + Popover + 트리거
+- [ ] **Timeline** — VirtualList + MarkdownViewer + 이벤트 그루핑
+- [ ] Kanban — ListBox(열) + ListBox(카드) + DnD (🟡 쇼케이스)
 
-- [x] NavList — 네비게이션 리스트 (hook-first 패턴 확립)
-- [x] CodeBlock — Shiki 구문 하이라이팅
-- [x] Breadcrumb — 경로 표시
-- [x] FileIcon — 파일 타입 아이콘
+### ✅ 완성품 (완료)
+
+**Element:** FileIcon, CodeBlock, Breadcrumb
+**Pattern:** NavList (hook-first 패턴 확립), TreeView
+**Composition:** FileViewerModal (Inspector 연동)
 
 ## 검증
 
 - 각 완성품 완료 시 이 문서에서 체크 (`- [x]`)
 - 쇼케이스 승격 시 hook-first 전환 + 제품 교체로 검증
-- 전체 진행률: ✅ 5/32
+- 전체 진행률: ✅ 6/32
 
 ## 출처
 

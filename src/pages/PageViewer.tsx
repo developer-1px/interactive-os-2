@@ -13,7 +13,7 @@ import type { NormalizedData, Entity, Plugin } from '../interactive-os/core/type
 import { EXPANDED_ID } from '../interactive-os/plugins/core'
 import { CodeBlock } from '../interactive-os/ui/CodeBlock'
 import { ExportDiagram } from './viewer/ExportDiagram'
-import { MarkdownViewer } from './viewer/MarkdownViewer'
+import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
 import { FileIcon } from '../interactive-os/ui/FileIcon'
 import { Breadcrumb } from '../interactive-os/ui/Breadcrumb'
 import { QuickOpen } from './viewer/QuickOpen'
