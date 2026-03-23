@@ -110,8 +110,8 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')!
     const inputs = panel.querySelectorAll('input')
-    // features: header (label + title + desc = 3) + 4 cards × (title + desc = 2) = 11
-    expect(inputs.length).toBe(11)
+    // features: header (label + title = 2 inputs, desc = 1 textarea) + 4 cards × (title + desc = 2) = 10 inputs
+    expect(inputs.length).toBe(10)
 
     // 5 groups: 1 header group + 4 card groups
     const groups = panel.querySelectorAll('.cms-detail-group')
@@ -143,12 +143,12 @@ describe('CMS Detail Panel', () => {
   it('narrows panel scope when entering card depth from section', async () => {
     const { container } = render(<CmsLayout />)
 
-    // Focus section → see all 11 fields
+    // Focus section → see all 10 input fields (desc is textarea)
     const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
     act(() => { features.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    expect(panel.querySelectorAll('input').length).toBe(11)
+    expect(panel.querySelectorAll('input').length).toBe(10)
 
     // Click into a specific card → scope narrows
     const cardStore = container.querySelector('[data-cms-id="card-store"]') as HTMLElement
@@ -176,8 +176,8 @@ describe('CMS Detail Panel', () => {
     // Escape back to section
     await user.keyboard('{Escape}')
 
-    // Panel should widen to section scope
-    expect(panel.querySelectorAll('input').length).toBe(11)
+    // Panel should widen to section scope (desc is textarea, so 10 inputs)
+    expect(panel.querySelectorAll('input').length).toBe(10)
   })
 
   // V6: undo via Mod+Z — skipped in jsdom (Cmd+Z keyboard dispatch limitation)
@@ -192,8 +192,8 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')!
     const inputs = panel.querySelectorAll('input')
-    // patterns: header (label + title + desc = 3) + 14 patterns × name = 17
-    expect(inputs.length).toBe(17)
+    // patterns: header (label + title = 2 inputs, desc = 1 textarea) + 14 patterns × name = 16 inputs
+    expect(inputs.length).toBe(16)
   })
 
   // V9: edit in progress + focus change → commit

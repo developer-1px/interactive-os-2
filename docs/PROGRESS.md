@@ -79,7 +79,7 @@
 | UI Showcase (/ui/{name}) | Integrated | 18/23 testPath + 16/23 APG table 연결 완료 |
 | Landing (/) · Docs (/docs) | Validated | hero + component grid, Getting Started + architecture |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
-| CMS (canvas · sidebar · i18n · detail panel · tabs) | Validated | paste overwrite, viewer channel 미구현 |
+| CMS (canvas · sidebar · i18n · detail panel · tabs · field types) | Validated | paste overwrite, viewer channel 미구현 |
 | Agent Viewer (multi-session · virtual scroll) | Validated | viewer channel disabled |
 | Inspector · Command · Diff | Validated | — |
 | Showcase (Plugin · Collection · Axis · Area) | Validated | — |

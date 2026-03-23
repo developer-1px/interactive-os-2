@@ -42,7 +42,7 @@ describe('CMS Tab Container Schema', () => {
 
   it('tab-item has label as editable field', () => {
     const fields = getEditableFields({ type: 'tab-item', label: { ko: '탭', en: '', ja: '' } })
-    expect(fields).toEqual([{ field: 'label', label: 'Label', isLocaleMap: true }])
+    expect(fields).toEqual([{ field: 'label', label: 'Label', isLocaleMap: true, fieldType: 'short-text' }])
   })
 
   it('tab-group has no editable fields', () => {

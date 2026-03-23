@@ -12,6 +12,11 @@ import { getChildren } from '../../interactive-os/core/createStore'
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
 
+// ── Field types ──
+
+const FIELD_TYPES = new Set(['short-text', 'long-text', 'url'] as const)
+export type FieldType = 'short-text' | 'long-text' | 'url'
+
 // ── Locale map ──
 
 const localeMapSchema = z.object({
@@ -33,11 +38,11 @@ export const nodeSchemas = {
   'step-num':       z.object({ type: z.literal('step-num'),      value: z.string().describe('Number') }),
   step:             z.object({ type: z.literal('step') }),
   pattern:          z.object({ type: z.literal('pattern'),       name: localeMapSchema.describe('Name'), icon: z.string() }),
-  link:             z.object({ type: z.literal('link'),          label: localeMapSchema.describe('Label'), href: z.string().describe('URL') }),
+  link:             z.object({ type: z.literal('link'),          label: localeMapSchema.describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),
   brand:            z.object({ type: z.literal('brand'),         name: localeMapSchema.describe('Name'), license: z.string().describe('License') }),
   'section-label':  z.object({ type: z.literal('section-label'), value: localeMapSchema.describe('Text') }),
   'section-title':  z.object({ type: z.literal('section-title'), value: localeMapSchema.describe('Text') }),
-  'section-desc':   z.object({ type: z.literal('section-desc'),  value: localeMapSchema.describe('Text') }),
+  'section-desc':   z.object({ type: z.literal('section-desc'),  value: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Text') }),
   links:            z.object({ type: z.literal('links') }),
   card:             z.object({ type: z.literal('card') }),
   section:          z.object({ type: z.literal('section'), variant: z.string() }),
@@ -101,10 +106,11 @@ export const cmsCanDelete: CanDeleteFn = (parentData) => {
 
 // ── Derived: fieldsOf (editable fields for detail panel) ──
 
-interface EditableField {
+export interface EditableField {
   field: string
   label: string
   isLocaleMap: boolean
+  fieldType: FieldType
 }
 
 function isLocaleMapShape(schema: z.ZodType): boolean {
@@ -117,11 +123,15 @@ function fieldsOf(type: string): EditableField[] {
   const shape = schema.shape as Record<string, z.ZodType & { description?: string }>
   return Object.entries(shape)
     .filter(([key, fieldSchema]) => key !== 'type' && fieldSchema.description !== undefined)
-    .map(([key, fieldSchema]) => ({
-      field: key,
-      label: fieldSchema.description!,
-      isLocaleMap: isLocaleMapShape(fieldSchema),
-    }))
+    .map(([key, fieldSchema]) => {
+      const meta = z.globalRegistry.get(fieldSchema)
+      return {
+        field: key,
+        label: fieldSchema.description!,
+        isLocaleMap: isLocaleMapShape(fieldSchema),
+        fieldType: FIELD_TYPES.has((meta as Record<string, unknown>)?.fieldType as FieldType) ? (meta as Record<string, unknown>).fieldType as FieldType : 'short-text',
+      }
+    })
 }
 
 export function getEditableFields(data: Record<string, unknown>): EditableField[] {
@@ -142,6 +152,7 @@ export interface EditableGroupEntry {
   field: string
   label: string
   isLocaleMap: boolean
+  fieldType: FieldType
 }
 
 export interface EditableGroup {
@@ -216,7 +227,7 @@ export function collectEditableGroups(
     if (fields.length === 0) return []
     return [{
       groupLabel: '',
-      entries: fields.map(f => ({ nodeId, field: f.field, label: f.label, isLocaleMap: f.isLocaleMap })),
+      entries: fields.map(f => ({ nodeId, field: f.field, label: f.label, isLocaleMap: f.isLocaleMap, fieldType: f.fieldType })),
     }]
   }
 
@@ -245,6 +256,7 @@ export function collectEditableGroups(
             field: f.field,
             label: contextualLabel(gcData, f.label),
             isLocaleMap: f.isLocaleMap,
+            fieldType: f.fieldType,
           })
         }
       }
@@ -262,6 +274,7 @@ export function collectEditableGroups(
           field: f.field,
           label: contextualLabel(childData, f.label),
           isLocaleMap: f.isLocaleMap,
+          fieldType: f.fieldType,
         })
       }
     }

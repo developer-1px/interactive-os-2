@@ -207,6 +207,7 @@
   margin: 0 0 var(--space-2xl);
   max-width: 440px;
   line-height: var(--leading-normal);
+  white-space: pre-line;
 }
 
 /* ── Features — elevated section ── */
