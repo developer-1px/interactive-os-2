@@ -1,6 +1,6 @@
 import type { NodeState } from './types'
 import { composePattern } from '../axes/composePattern'
-import { trap } from '../axes/trap'
+import { dismiss } from '../axes/dismiss'
 
 export const dialog = composePattern(
   {
@@ -14,5 +14,5 @@ export const dialog = composePattern(
       return attrs
     },
   },
-  trap(),
+  dismiss(),
 )

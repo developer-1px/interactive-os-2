@@ -10,7 +10,7 @@
 | Selection | `select()` | Space, Shift+↑↓ Home End, Click/Shift+Click/Ctrl+Click (auto selectOnClick) | listbox, tree, treegrid, grid, kanban | 🟢 |
 | Activation | `activate()` | Enter, Space(fallback) | listbox, menu, switch, toolbar | 🟢 |
 | Expansion | `expand()` | ←→ (state-dependent) | tree, accordion, disclosure | 🟢 |
-| Trap | `trap()` | Escape | dialog, alertdialog | 🟢 |
+| Dismiss | `dismiss()` | Escape | dialog, alertdialog | 🟢 |
 | Value | `value()` | ↑↓←→ min/max/step | slider, spinbutton | 🟢 |
 | Tab | `tab()` | Tab, Shift+Tab (loop만) | CMS(flow), dialog(loop 가능) | 🟢 |
 | **Trigger↔Popup** | **—** | **?** | **combobox, tooltip, popover** | **⬜** |
@@ -20,7 +20,7 @@
 ```
 core (Entity, Command, Store)
   ↓
-axes (navigate, select, activate, expand, trap, value, tab)
+axes (navigate, select, activate, expand, dismiss, value, tab)
   ↓
 behaviors (composePattern → AriaBehavior)
 ```
