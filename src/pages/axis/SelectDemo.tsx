@@ -13,7 +13,7 @@ type SelectionMode = 'single' | 'multiple'
 
 const plugins = [core(), focusRecovery()]
 
-export function SelectDemo() {
+export default function SelectDemo() {
   const [mode, setMode] = useState<SelectionMode>('multiple')
   const [extended, setExtended] = useState(false)
   const [data, setData] = useState<NormalizedData>(axisListData)
