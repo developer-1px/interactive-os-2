@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event'
 import CmsLayout from '../pages/cms/CmsLayout'
 import { resetCmsData } from '../pages/cms/cms-state'
 
-function getFocused(container: HTMLElement): string {
-  return container.querySelector('[tabindex="0"][data-cms-id]')?.getAttribute('data-cms-id') ?? ''
+function getFocused(): string {
+  return document.activeElement?.getAttribute('data-cms-id') ?? ''
 }
 
 describe('CMS Tab Container', () => {
@@ -20,7 +20,7 @@ describe('CMS Tab Container', () => {
       tabGroup.focus()
       await user.keyboard('{Enter}')
 
-      expect(getFocused(container)).toBe('tab-1')
+      expect(getFocused()).toBe('tab-1')
     })
 
     it('Arrow Right moves to next tab and switches panel', async () => {
@@ -30,10 +30,10 @@ describe('CMS Tab Container', () => {
       const tabGroup = container.querySelector('[data-cms-id="tab-group-1"]') as HTMLElement
       tabGroup.focus()
       await user.keyboard('{Enter}')
-      expect(getFocused(container)).toBe('tab-1')
+      expect(getFocused()).toBe('tab-1')
 
       await user.keyboard('{ArrowRight}')
-      expect(getFocused(container)).toBe('tab-2')
+      expect(getFocused()).toBe('tab-2')
 
       // Tab 2's panel should now be visible
       const visiblePanel = container.querySelector('[role="tabpanel"]') as HTMLElement
@@ -49,10 +49,10 @@ describe('CMS Tab Container', () => {
       tabGroup.focus()
       await user.keyboard('{Enter}')
       await user.keyboard('{ArrowRight}')
-      expect(getFocused(container)).toBe('tab-2')
+      expect(getFocused()).toBe('tab-2')
 
       await user.keyboard('{ArrowLeft}')
-      expect(getFocused(container)).toBe('tab-1')
+      expect(getFocused()).toBe('tab-1')
     })
 
     it('Enter on tab-item enters its panel first section', async () => {
@@ -64,7 +64,7 @@ describe('CMS Tab Container', () => {
       await user.keyboard('{Enter}')  // → tab-1
       await user.keyboard('{Enter}')  // → tab-1-section
 
-      expect(getFocused(container)).toBe('tab-1-section')
+      expect(getFocused()).toBe('tab-1-section')
     })
 
     it('Escape from panel section returns to tab-item', async () => {
@@ -77,7 +77,7 @@ describe('CMS Tab Container', () => {
       await user.keyboard('{Enter}')  // → tab-1-section
 
       await user.keyboard('{Escape}') // → back to tab-1
-      expect(getFocused(container)).toBe('tab-1')
+      expect(getFocused()).toBe('tab-1')
     })
 
     it('Escape from tab-item returns to tab-group', async () => {
@@ -87,10 +87,10 @@ describe('CMS Tab Container', () => {
       const tabGroup = container.querySelector('[data-cms-id="tab-group-1"]') as HTMLElement
       tabGroup.focus()
       await user.keyboard('{Enter}')
-      expect(getFocused(container)).toBe('tab-1')
+      expect(getFocused()).toBe('tab-1')
 
       await user.keyboard('{Escape}')
-      expect(getFocused(container)).toBe('tab-group-1')
+      expect(getFocused()).toBe('tab-group-1')
     })
   })
 
@@ -174,7 +174,7 @@ describe('CMS Tab Container', () => {
       const tabGroup = container.querySelector('[data-cms-id="tab-group-1"]') as HTMLElement
       tabGroup.focus()
       await user.keyboard('{Enter}')
-      expect(getFocused(container)).toBe('tab-1')
+      expect(getFocused()).toBe('tab-1')
 
       await user.keyboard('{F2}')
       expect(container.querySelector('[contenteditable]')).not.toBeNull()
