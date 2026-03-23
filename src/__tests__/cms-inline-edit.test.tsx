@@ -3,8 +3,8 @@ import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CmsLayout from '../pages/cms/CmsLayout'
 
-function getFocused(container: HTMLElement): string {
-  return container.querySelector('[tabindex="0"][data-cms-id]')?.getAttribute('data-cms-id') ?? ''
+function getFocused(): string {
+  return document.activeElement?.getAttribute('data-cms-id') ?? ''
 }
 
 describe('CMS inline edit', () => {
@@ -17,7 +17,7 @@ describe('CMS inline edit', () => {
     const hero = container.querySelector('[data-cms-id="hero"]') as HTMLElement
     hero.focus()
     await user.keyboard('{Enter}')
-    expect(getFocused(container)).toBe('hero-badge')
+    expect(getFocused()).toBe('hero-badge')
 
     // Now focus the badge and press Enter to start rename
     const badge = container.querySelector('[data-cms-id="hero-badge"]') as HTMLElement
@@ -37,7 +37,7 @@ describe('CMS inline edit', () => {
 
     // Should drill into hero, not start editing
     expect(container.querySelector('[contenteditable]')).toBeNull()
-    expect(getFocused(container)).toBe('hero-badge')
+    expect(getFocused()).toBe('hero-badge')
   })
 
   it('inline edit → type → Enter confirms and updates text', async () => {
@@ -101,7 +101,7 @@ describe('CMS inline edit', () => {
     await user.keyboard('{Enter}')
 
     // Now at card-store-icon (type: 'icon', no editable fields)
-    expect(getFocused(container)).toBe('card-store-icon')
+    expect(getFocused()).toBe('card-store-icon')
     const icon = container.querySelector('[data-cms-id="card-store-icon"]') as HTMLElement
     icon.focus()
     await user.keyboard('{Enter}')
