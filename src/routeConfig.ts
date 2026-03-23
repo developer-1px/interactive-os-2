@@ -84,6 +84,7 @@ export const routeConfig: RouteGroup[] = [
       { path: 'activate', label: 'activate()', status: 'ready', md: 'axes/activate' },
       { path: 'expand', label: 'expand()', status: 'ready', md: 'axes/expand' },
       { path: 'trap', label: 'trap()', status: 'ready', md: 'axes/trap' },
+      { path: 'edit', label: 'edit()', status: 'ready', md: 'axes/edit' },
     ],
   },
   {

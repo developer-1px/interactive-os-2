@@ -5,6 +5,7 @@ import SelectDemo from './axis/SelectDemo'
 import ActivateDemo from './axis/ActivateDemo'
 import ExpandDemo from './axis/ExpandDemo'
 import TrapDemo from './axis/TrapDemo'
+import EditDemo from './axis/EditDemo'
 
 export const mdComponents: Record<string, ComponentType<Record<string, unknown>>> = {
   AxisSpec,
@@ -13,4 +14,5 @@ export const mdComponents: Record<string, ComponentType<Record<string, unknown>>
   ActivateDemo,
   ExpandDemo,
   TrapDemo,
+  EditDemo,
 }
