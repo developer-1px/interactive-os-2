@@ -53,11 +53,12 @@
 
 | Component | Maturity | Gaps |
 |-----------|----------|------|
-| TreeGrid · ListBox · TabList · Grid | Integrated | CSS module 내장 렌더링 |
-| Accordion · MenuList · DisclosureGroup | Integrated | Accordion CSS module 완료 |
-| Combobox · RadioGroup · SwitchGroup | Integrated | — |
-| Kanban · Slider · Spinbutton | Integrated | — |
-| Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음 |
+| TreeGrid · ListBox · TabList · Grid | Integrated | CSS module 완비 |
+| Accordion · MenuList · DisclosureGroup | Integrated | CSS module 완비 |
+| Combobox · RadioGroup · SwitchGroup | Integrated | CSS module 완비 |
+| Kanban · Slider · Spinbutton | Integrated | CSS module 완비 |
+| Checkbox · Toggle · ToggleGroup · AlertDialog | Integrated | CSS module 완비, testPath 미연결(4종) |
+| Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음, Toaster testPath 없음 |
 | *Select* | — | Combobox 래퍼, 미구현 |
 | *ContextMenu* | — | MenuList + popover, 미구현 |
 | *DatePicker* | — | Grid + value + popover, 미구현 |
