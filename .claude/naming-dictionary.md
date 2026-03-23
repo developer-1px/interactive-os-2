@@ -1,5 +1,5 @@
 ---
-last_commit: 64705403681a570db217109ae85c35a9764684ca
+last_commit: 35494bf5ff0498d6d09f974d085b282e3af594c1
 last_updated: 2026-03-23
 ---
 
@@ -164,6 +164,7 @@ last_updated: 2026-03-23
 | switch | 8 | switchBehavior, SwitchGroup, apgSwitch, makeSwitchGroupData |
 | radio | 6 | RadioGroup, apgRadioGroup, makeRadioGroupData |
 | listbox | 7 | listbox (behavior), ListBox (UI), apgListbox |
+| navlist | 5 | navlist (behavior), NavList (UI), useNavList, UseNavListOptions, UseNavListReturn |
 
 ## Adjectives
 | fragment | count | identifiers |
