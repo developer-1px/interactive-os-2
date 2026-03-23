@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Box, Sun, Moon, Presentation, BookOpen, Component, Home, BookText } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Box, Sun, Moon, Presentation, BookOpen, Component, Home, BookText, Eye, Activity, Palette } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -57,6 +57,7 @@ import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
 import PageUiShowcase from './pages/PageUiShowcase'
 import PageAreaViewer from './pages/PageAreaViewer'
+import PageThemeCreator from './pages/PageThemeCreator'
 import PageLanding from './pages/PageLanding'
 import PageDocs from './pages/PageDocs'
 import { AreaSidebar } from './pages/AreaSidebar'
@@ -238,7 +239,10 @@ const externalNavItems: NavItem[] = [
   { id: 'landing', label: 'Home', icon: Home, path: '/' },
   { id: 'docs', label: 'Docs', icon: BookText, path: '/docs' },
   { id: 'ui-showcase', label: 'UI', icon: Component, path: '/ui' },
-  { id: 'examples', label: 'Examples', icon: Presentation, path: '/examples/cms' },
+  { id: 'examples-cms', label: 'CMS', icon: Presentation, path: '/examples/cms' },
+  { id: 'examples-viewer', label: 'Viewer', icon: Eye, path: '/examples/viewer' },
+  { id: 'examples-agent', label: 'Agent', icon: Activity, path: '/examples/agent' },
+  { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
 ]
 
 const internalNavItems: NavItem[] = routeConfig.map((g) => ({
@@ -375,10 +379,19 @@ function App() {
   const isExampleCms = pathname === '/examples/cms'
   const isExampleViewer = pathname.startsWith('/examples/viewer')
   const isExampleAgent = pathname.startsWith('/examples/agent')
-  const isExample = isExampleCms || isExampleViewer || isExampleAgent
+  const isTheme = pathname === '/internals/theme'
 
   // URL → ActivityBar focus binding (CRUD two-way)
-  const activityBarFocusId = activeGroup?.id ?? (isLanding ? 'landing' : isDocs ? 'docs' : isUiShowcase ? 'ui-showcase' : isExample ? 'examples' : undefined)
+  const activityBarFocusId = activeGroup?.id ?? (
+    isLanding ? 'landing' :
+    isDocs ? 'docs' :
+    isUiShowcase ? 'ui-showcase' :
+    isExampleCms ? 'examples-cms' :
+    isExampleViewer ? 'examples-viewer' :
+    isExampleAgent ? 'examples-agent' :
+    isTheme ? 'theme-creator' :
+    undefined
+  )
   const activityBarData = useMemo(() => {
     if (!activityBarFocusId) return activityBarStore
     return {
@@ -445,6 +458,8 @@ function App() {
         <PageAgentViewer />
       ) : isUiShowcase ? (
         <PageUiShowcase />
+      ) : isTheme ? (
+        <PageThemeCreator />
       ) : (
         <>
           {activeGroup && (activeGroup.id === 'internals/area'
