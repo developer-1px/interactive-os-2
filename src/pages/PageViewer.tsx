@@ -5,7 +5,7 @@ import {
   FileText, ChevronRight, ChevronDown, Circle, PanelLeft, Search,
 } from 'lucide-react'
 import { Aria } from '../interactive-os/components/aria'
-import { treegrid } from '../interactive-os/behaviors/treegrid'
+import { tree } from '../interactive-os/behaviors/tree'
 import { core, FOCUS_ID } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -207,7 +207,7 @@ export default function PageViewer() {
           </div>
           <div className={styles.vwTreeBody}>
             <Aria
-              behavior={treegrid}
+              behavior={tree}
               data={initialStore}
               plugins={[core()]}
               onChange={handleChange}
