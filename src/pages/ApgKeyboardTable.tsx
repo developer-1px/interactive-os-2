@@ -1,6 +1,18 @@
 import type { ApgPatternData } from './apg-data'
+import { components } from './showcaseRegistry'
 
-export function ApgKeyboardTable({ pattern, url, entries }: ApgPatternData) {
+type ApgKeyboardTableProps = ApgPatternData | { slug: string }
+
+export function ApgKeyboardTable(props: ApgKeyboardTableProps) {
+  if ('slug' in props) {
+    const entry = components.find((c) => c.slug === props.slug)
+    if (!entry?.apg) return null
+    return <ApgKeyboardTableInner {...entry.apg} />
+  }
+  return <ApgKeyboardTableInner {...props} />
+}
+
+function ApgKeyboardTableInner({ pattern, url, entries }: ApgPatternData) {
   return (
     <div className="apg-table-wrap">
       <table className="apg-table">
