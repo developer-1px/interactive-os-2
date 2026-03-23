@@ -20,22 +20,22 @@
 }
 
 .header {
-  padding: 10px 14px;
+  padding: var(--space-md) var(--space-lg);
   border-bottom: 1px solid var(--border-subtle);
-  font-size: 13px;
+  font-size: var(--text-md);
   font-weight: 600;
   color: var(--text-bright);
 }
 
 .body {
-  padding: 10px 14px;
-  font-size: 12px;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-sm);
   color: var(--text-secondary);
   line-height: 1.5;
 }
 
 .footer {
-  padding: 8px 14px;
+  padding: var(--space-sm) var(--space-lg);
   border-top: 1px solid var(--border-subtle);
   background: var(--surface-base);
 }

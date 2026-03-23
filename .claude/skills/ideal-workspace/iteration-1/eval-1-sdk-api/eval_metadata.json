@@ -1,0 +1,1 @@
+{"eval_id": 1, "eval_name": "sdk-api-code-usage", "prompt": "SDK를 만들려고 하는데 useAria 하나면 다 되게 하고 싶어. 근데 구체적으로 어떤 API가 나와야 하는지 감이 안 잡혀", "assertions": ["개발 도메인 감지", "소비자 관점 코드 먼저", "API 시그니처 역추출", "갭 발견 섹션"]}

@@ -29,7 +29,7 @@ export default function PageListboxNav() {
           data={data}
           onChange={setData}
           plugins={plugins}
-          renderItem={(item, state: NodeState) => {
+          renderItem={(item, state: NodeState, props) => {
             const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',
@@ -38,7 +38,7 @@ export default function PageListboxNav() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls}>
+              <div {...props} className={cls}>
                 <span className="list-item__label">{d?.label as string}</span>
                 <span className="list-item__desc">{d?.desc as string}</span>
               </div>

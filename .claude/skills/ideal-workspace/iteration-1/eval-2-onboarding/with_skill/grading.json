@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "onboarding-journey-map",
+  "expectations": [
+    {"text": "경험 도메인 감지", "passed": true, "evidence": "도메인: 경험 명시"},
+    {"text": "저니맵 테이블", "passed": true, "evidence": "8단계 저니맵: 단계/행동/생각·감정/터치포인트/문제점 5열 테이블"},
+    {"text": "감정 열 채움", "passed": true, "evidence": "각 단계마다 감정 기술: 이게 뭐지?, 이걸 선택한 건가?, 어떻게 고치지? 등"},
+    {"text": "갭 발견", "passed": true, "evidence": "5개 갭: 편집 진입 발견성, 구조 변경 발견성, 첫 화면 할 일 부재, Sidebar 모호, DetailPanel 인지 실패"}
+  ]
+}

@@ -1,24 +1,24 @@
 .codeBlock {
   overflow: auto;
-  font-size: 13px;
+  font-size: var(--text-md);
   line-height: 1.6;
 }
 
 .codeBlockLoading {
-  padding: 16px 20px;
+  padding: var(--space-lg) var(--space-xl);
   background: var(--surface-base);
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: var(--text-md);
 }
 
 .codeBlock :global(.shiki) {
   margin: 0;
-  padding: 16px 0;
+  padding: var(--space-lg) 0;
   counter-reset: line;
   background: var(--surface-base) !important;
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
+  border-radius: var(--radius);
 }
 
 .codeBlock :global(.shiki) code {
@@ -28,7 +28,7 @@
 .codeBlock :global(.shiki .line) {
   display: inline-block;
   width: 100%;
-  padding: 0 16px 0 0;
+  padding: 0 var(--space-lg) 0 0;
 }
 
 .codeBlock :global(.shiki .line)::before {
@@ -39,7 +39,7 @@
   padding-right: 1em;
   text-align: right;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--text-sm);
   user-select: none;
   opacity: 0.5;
 }
@@ -63,5 +63,5 @@
 :global(.code-line--edited) {
   background: rgba(229, 163, 58, 0.08) !important;
   border-left: 2px solid #e5a33a;
-  padding-left: 6px !important;
+  padding-left: var(--space-sm) !important;
 }

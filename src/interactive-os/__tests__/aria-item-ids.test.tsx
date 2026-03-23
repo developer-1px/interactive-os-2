@@ -20,8 +20,8 @@ function fixtureData() {
   }
 }
 
-const renderItem = (node: Record<string, unknown>, _state: NodeState) => (
-  <span data-testid={node.id as string}>{(node.data as Record<string, unknown>)?.name as string}</span>
+const renderItem = (node: Record<string, unknown>, _state: NodeState, props: Record<string, unknown>) => (
+  <span {...props} data-testid={node.id as string}>{(node.data as Record<string, unknown>)?.name as string}</span>
 )
 
 const verticalToolbar: AriaBehavior = {

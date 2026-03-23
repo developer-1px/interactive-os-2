@@ -38,11 +38,11 @@ export default function PageSwitch() {
         <SwitchGroup
           data={data}
           onChange={setData}
-          renderItem={(item, state: NodeState) => {
+          renderItem={(item, state: NodeState, props) => {
             const d = item.data as Record<string, unknown>
             const checked = state.expanded ?? false
             return (
-              <div className={`switch-row${state.focused ? ' switch-row--focused' : ''}`}>
+              <div {...props} className={`switch-row${state.focused ? ' switch-row--focused' : ''}`}>
                 <span className="switch-label">{d?.label as string}</span>
                 <span
                   className={`switch-toggle${checked ? ' switch-toggle--on' : ''}`}

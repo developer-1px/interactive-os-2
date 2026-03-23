@@ -39,7 +39,7 @@ export default function PageToolbar() {
       </div>
       <div className={`card ${styles.toolbarCard}`}>
         <Aria behavior={toolbar} data={toolbarData} plugins={plugins} aria-label="Text formatting">
-          <Aria.Item render={(node, state: NodeState) => {
+          <Aria.Item render={(node, state: NodeState, props) => {
             const cls = [
               styles.toolbarBtn,
               state.focused && styles.toolbarBtnFocused,
@@ -47,7 +47,7 @@ export default function PageToolbar() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls} title={(node.data as Record<string, unknown>)?.title as string}>
+              <div {...props} className={cls} title={(node.data as Record<string, unknown>)?.title as string}>
                 {(node.data as Record<string, unknown>)?.label as string}
               </div>
             )

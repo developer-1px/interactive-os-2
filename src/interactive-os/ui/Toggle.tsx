@@ -10,10 +10,10 @@ interface ToggleProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => {
+const defaultRenderItem = (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
   const label =
     (item.data as Record<string, unknown>)?.label as string ??
     (item.data as Record<string, unknown>)?.name as string ??
@@ -21,7 +21,7 @@ const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): Rea
   const checked = state.expanded ?? false
 
   return (
-    <span className="item-inner item-spread">
+    <span {...props} className="item-inner item-spread">
       <span>{label}</span>
       <span className={checked ? 'switch-label--on' : 'switch-label'}>
         {checked ? 'On' : 'Off'}

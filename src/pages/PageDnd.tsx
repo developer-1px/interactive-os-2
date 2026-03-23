@@ -57,7 +57,7 @@ export default function PageDnd() {
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(node, state: NodeState) => {
+          renderItem={(node, state: NodeState, props) => {
             const d = node.data as Record<string, unknown>
             const isGroup = d?.type === 'group'
             const indent = ((state.level ?? 1) - 1) * 18
@@ -69,7 +69,7 @@ export default function PageDnd() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls} style={{ paddingLeft: 14 + indent }}>
+              <div {...props} className={cls} style={{ paddingLeft: 14 + indent }}>
                 <span className="tree-node__chevron">
                   {isGroup ? (state.expanded ? '▾' : '▸') : ''}
                 </span>

@@ -32,8 +32,9 @@ function renderSwitch(data: NormalizedData) {
     <SwitchGroup
       data={data}
       plugins={[core()]}
-      renderItem={(item, state: NodeState) => (
+      renderItem={(item, state: NodeState, props) => (
         <span
+          {...props}
           data-testid={`switch-${item.id}`}
           data-focused={state.focused}
           data-checked={state.expanded}

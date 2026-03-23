@@ -98,11 +98,11 @@ export default function NavigateDemo() {
               </thead>
             </table>
             <Aria behavior={behavior} data={gridData} plugins={plugins} onChange={setGridData} aria-label="navigate grid demo">
-              <Aria.Item render={(node, state: NodeState) => {
+              <Aria.Item render={(node, state: NodeState, props) => {
                 const cells = (node.data as Record<string, unknown>)?.cells as string[]
                 const cls = ['grid-row', state.focused && 'grid-row--focused'].filter(Boolean).join(' ')
                 return (
-                  <div className={cls}>
+                  <div {...props} className={cls}>
                     {cells?.map((cell, i) => (
                       <Aria.Cell key={i} index={i}><span>{cell}</span></Aria.Cell>
                     ))}
@@ -113,10 +113,10 @@ export default function NavigateDemo() {
           </>
         ) : (
           <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="navigate demo">
-            <Aria.Item render={(node, state: NodeState) => {
+            <Aria.Item render={(node, state: NodeState, props) => {
               const d = node.data as Record<string, unknown>
               const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')
-              return <div className={cls}>{d?.label as string}</div>
+              return <div {...props} className={cls}>{d?.label as string}</div>
             }} />
           </Aria>
         )}

@@ -45,14 +45,14 @@ export default function PageCell() {
           <span>Focusable</span>
         </div>
         <Aria behavior={grid({ columns: 3 })} data={data} plugins={[core()]} onChange={setData} aria-label="ARIA elements">
-          <Aria.Item render={(node: Record<string, unknown>, state: NodeState) => {
+          <Aria.Item render={(node: Record<string, unknown>, state: NodeState, props) => {
             const d = node.data as Record<string, unknown>
             const cls = [
               'grid-row',
               state.focused && 'grid-row--focused',
             ].filter(Boolean).join(' ')
             return (
-              <div className={cls} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <div {...props} className={cls} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
                 <Aria.Cell index={0}><span>{d?.name as string}</span></Aria.Cell>
                 <Aria.Cell index={1}><span><code>{d?.role as string}</code></span></Aria.Cell>
                 <Aria.Cell index={2}><span>{d?.focusable as string}</span></Aria.Cell>

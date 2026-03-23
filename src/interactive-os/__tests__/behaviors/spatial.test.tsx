@@ -48,8 +48,8 @@ describe('spatial behavior — Enter/Escape drill-in/out', () => {
     const user = userEvent.setup()
     const result = render(
       <Aria behavior={spatial} data={spatialFixtureExpanded()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused} data-selected={state.selected}>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused} data-selected={state.selected}>
             {(node as { data: { label: string } }).data.label}
           </span>
         )} />
@@ -127,8 +127,8 @@ describe('spatial behavior — Space, Home, End', () => {
     const user = userEvent.setup()
     const result = render(
       <Aria behavior={spatial} data={spatialFixture()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused} data-selected={state.selected}>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused} data-selected={state.selected}>
             {(node as { data: { label: string } }).data.label}
           </span>
         )} />
@@ -143,7 +143,7 @@ describe('spatial behavior — Space, Home, End', () => {
     first.focus()
     await user.keyboard(' ')
     // data-selected is set by the render prop from state.selected
-    expect(container.querySelector('[data-node-id="sec1"] span')?.getAttribute('data-selected')).toBe('true')
+    expect(container.querySelector('[data-node-id="sec1"]')?.getAttribute('data-selected')).toBe('true')
   })
 
   it('Home focuses first sibling in current spatial depth', async () => {

@@ -32,8 +32,8 @@ function renderToolbar(data: NormalizedData) {
   return render(
     <Aria behavior={toolbar} data={data} plugins={[core()]}>
       <Aria.Item
-        render={(node, state: NodeState) => (
-          <span data-testid={`btn-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
+        render={(node, state: NodeState, props) => (
+          <span {...props} data-testid={`btn-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
             {(node.data as Record<string, unknown>)?.name as string}
           </span>
         )}

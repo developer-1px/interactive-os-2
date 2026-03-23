@@ -1,0 +1,10 @@
+{
+  "eval_id": 1,
+  "eval_name": "sdk-api-code-usage",
+  "expectations": [
+    {"text": "개발 도메인 감지", "passed": true, "evidence": "시뮬레이션: 개발 (Code Usage) 헤더로 시작"},
+    {"text": "소비자 관점 코드 먼저", "passed": true, "evidence": "시나리오 1에서 소비자가 쓰고 싶은 코드를 먼저 작성한 뒤 자연스러운가? 판정"},
+    {"text": "API 시그니처 역추출", "passed": true, "evidence": "4개 시나리오에서 useAria 하나 3가지 옵션을 역추출"},
+    {"text": "갭 발견 섹션", "passed": true, "evidence": "발견된 갭 4개: overload 지옥, 데이터 입력 불편, items 편의 접근자 부재, import 경로 분산"}
+  ]
+}

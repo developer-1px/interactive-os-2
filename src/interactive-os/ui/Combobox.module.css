@@ -1,8 +1,8 @@
 /* --- Combobox --- */
 
 .comboItem {
-  padding: 5px 12px;
-  font-size: 13px;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-md);
 }
 
 .comboItemFocused {
@@ -17,9 +17,9 @@
 
 .comboInput {
   width: 100%;
-  padding: 6px 10px;
+  padding: var(--space-sm) var(--space-md);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-md);
   color: var(--text-primary);
   background: var(--surface-default);
   border: 1px solid var(--border-default);
@@ -41,6 +41,6 @@
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
   box-shadow: var(--surface-4-shadow);
-  margin-top: 4px;
+  margin-top: var(--space-xs);
   overflow: hidden;
 }

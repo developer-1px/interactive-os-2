@@ -43,7 +43,7 @@
 }
 
 .root h3 {
-  font-size: 16px;
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--text-bright);
   margin: 1.6em 0 0.4em;
@@ -52,7 +52,7 @@
 }
 
 .root h4 {
-  font-size: 14px;
+  font-size: var(--text-md);
   font-weight: 600;
   color: var(--text-secondary);
   margin: 1.2em 0 0.3em;
@@ -168,7 +168,7 @@
 }
 
 .root td code {
-  font-size: 12px;
+  font-size: var(--text-sm);
 }
 
 /* status indicators */

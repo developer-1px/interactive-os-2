@@ -12,13 +12,13 @@ interface NavListProps {
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
   initialFocus?: string
   'aria-label'?: string
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, _state: NodeState): React.ReactNode => (
-  <span>
+const defaultRenderItem = (item: Record<string, unknown>, _state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => (
+  <span {...props}>
     {(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}
   </span>
 )
@@ -51,11 +51,7 @@ export function NavList({
         if (!entity) return null
         const state = nav.getItemState(id)
         const props = nav.getItemProps(id)
-        return (
-          <div key={id} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-            {renderItem(entity, state)}
-          </div>
-        )
+        return React.cloneElement(renderItem(entity, state, props as React.HTMLAttributes<HTMLElement>), { key: id })
       })}
     </div>
   )

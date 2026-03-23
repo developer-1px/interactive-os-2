@@ -11,12 +11,12 @@ interface ToolbarProps {
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
   orientation?: 'horizontal' | 'vertical'
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, _state: NodeState): React.ReactNode => (
-  <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
+const defaultRenderItem = (item: Record<string, unknown>, _state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => (
+  <span {...props}>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
 )
 
 // Override toolbar's horizontal keyMap to use vertical arrows instead

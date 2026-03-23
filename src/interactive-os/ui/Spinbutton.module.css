@@ -3,12 +3,12 @@
 .spinbuttonItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 6px 10px;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
 }
 
 .spinbuttonLabel {
-  font-size: 13px;
+  font-size: var(--text-md);
   font-weight: 500;
   color: var(--text-primary);
   min-width: 64px;
@@ -19,7 +19,7 @@
   display: inline-flex;
   align-items: stretch;
   border: 1px solid var(--border-default);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   transition: border-color 0.12s, box-shadow 0.12s;
 }
@@ -38,7 +38,7 @@
   border: none;
   background: var(--bg-hover);
   color: var(--text-primary);
-  font-size: 18px;
+  font-size: var(--text-xl);
   font-weight: 400;
   cursor: pointer;
   transition: background 0.1s;
@@ -73,8 +73,8 @@
   align-items: center;
   justify-content: center;
   min-width: 48px;
-  padding: 6px 12px;
-  font-size: 14px;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-md);
   font-weight: 600;
   color: var(--text-primary);
   text-align: center;
@@ -84,10 +84,10 @@
 
 .spinbuttonInput {
   width: 48px;
-  padding: 6px 8px;
+  padding: var(--space-sm) var(--space-sm);
   border: none;
   background: transparent;
-  font-size: 14px;
+  font-size: var(--text-md);
   font-weight: 600;
   color: var(--text-primary);
   text-align: center;

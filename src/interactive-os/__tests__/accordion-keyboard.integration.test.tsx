@@ -51,8 +51,8 @@ function renderAccordion(data: NormalizedData) {
     <Accordion
       data={data}
       plugins={[core()]}
-      renderItem={(item, state: NodeState) => (
-        <span data-testid={`section-${item.id}`} data-focused={state.focused} data-expanded={state.expanded}>
+      renderItem={(item, state: NodeState, props) => (
+        <span {...props} data-testid={`section-${item.id}`} data-focused={state.focused} data-expanded={state.expanded}>
           {(item.data as Record<string, unknown>)?.name as string}
         </span>
       )}
@@ -201,8 +201,8 @@ describe('Accordion keyboard integration', () => {
         <Accordion
           data={leafFixtureData()}
           plugins={[core()]}
-          renderItem={(item, state: NodeState) => (
-            <span data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
+          renderItem={(item, state: NodeState, props) => (
+            <span {...props} data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
               {(item.data as Record<string, unknown>)?.name as string}
             </span>
           )}
@@ -222,8 +222,8 @@ describe('Accordion keyboard integration', () => {
         <Accordion
           data={leafFixtureData()}
           plugins={[core()]}
-          renderItem={(item, state: NodeState) => (
-            <span data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
+          renderItem={(item, state: NodeState, props) => (
+            <span {...props} data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
               {(item.data as Record<string, unknown>)?.name as string}
             </span>
           )}

@@ -38,8 +38,8 @@ function renderMenu(data: NormalizedData) {
     <MenuList
       data={data}
       plugins={[core()]}
-      renderItem={(item, state: NodeState) => (
-        <span data-testid={`item-${item.id}`} data-focused={state.focused} data-selected={state.selected}>
+      renderItem={(item, state: NodeState, props) => (
+        <span {...props} data-testid={`item-${item.id}`} data-focused={state.focused} data-selected={state.selected}>
           {(item.data as Record<string, unknown>)?.name as string}
         </span>
       )}

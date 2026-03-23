@@ -36,8 +36,9 @@ function renderCombobox(data: NormalizedData) {
       data={data}
       plugins={[core(), comboboxPlugin()]}
       placeholder="Pick a fruit..."
-      renderItem={(item, state: NodeState) => (
+      renderItem={(item, state: NodeState, props) => (
         <span
+          {...props}
           data-testid={`item-${item.id}`}
           data-focused={state.focused}
           data-selected={state.selected}
@@ -259,8 +260,8 @@ describe('Combobox keyboard integration', () => {
           plugins={[core(), comboboxPlugin()]}
           placeholder="Type..."
           editable
-          renderItem={(item, state: NodeState) => (
-            <span data-testid={`item-${item.id}`} data-focused={state.focused}>{(item.data as Record<string, unknown>)?.label as string}</span>
+          renderItem={(item, state: NodeState, props) => (
+            <span {...props} data-testid={`item-${item.id}`} data-focused={state.focused}>{(item.data as Record<string, unknown>)?.label as string}</span>
           )}
         />,
       )

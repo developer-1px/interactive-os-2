@@ -32,8 +32,8 @@ const sliderBehavior = slider({ min: 0, max: 100, step: 1 })
 function renderSlider(data: NormalizedData, plugins = [core(), history()]) {
   return render(
     <Aria behavior={sliderBehavior} data={data} plugins={plugins}>
-      <Aria.Item render={(item) => (
-        <span data-testid="slider-thumb">
+      <Aria.Item render={(item, _state, props) => (
+        <span {...props} data-testid="slider-thumb">
           {(item.data as Record<string, unknown>)?.label as string}
         </span>
       )} />
@@ -188,8 +188,8 @@ describe('Slider keyboard integration', () => {
       const onChange = vi.fn()
       const { container } = render(
         <Aria behavior={sliderBehavior} data={fixtureData()} plugins={[core()]} onChange={onChange}>
-          <Aria.Item render={(item) => (
-            <span>{(item.data as Record<string, unknown>)?.label as string}</span>
+          <Aria.Item render={(item, _state, props) => (
+            <span {...props}>{(item.data as Record<string, unknown>)?.label as string}</span>
           )} />
         </Aria>
       )

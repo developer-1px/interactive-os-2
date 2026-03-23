@@ -32,8 +32,9 @@ function renderRadioGroup(data: NormalizedData) {
     <RadioGroup
       data={data}
       plugins={[core()]}
-      renderItem={(item, state: NodeState) => (
+      renderItem={(item, state: NodeState, props) => (
         <span
+          {...props}
           data-testid={`item-${item.id}`}
           data-focused={state.focused}
           data-selected={state.selected}

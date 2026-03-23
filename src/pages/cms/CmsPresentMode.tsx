@@ -1,10 +1,14 @@
-import { useCallback } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import cmsStyles from '../PageVisualCms.module.css'
 import { getChildren } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
-import type { NormalizedData } from '../../interactive-os/core/types'
+import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { BehaviorContext } from '../../interactive-os/behaviors/types'
 import type { Locale } from './cms-types'
 import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
+import { useAria } from '../../interactive-os/hooks/useAria'
+
+const EMPTY_DATA: NormalizedData = { entities: {}, relationships: {} }
 
 interface CmsPresentModeProps {
   data: NormalizedData
@@ -13,9 +17,21 @@ interface CmsPresentModeProps {
 }
 
 export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeProps) {
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') { e.preventDefault(); onExit() }
-  }, [onExit])
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const keyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+    Escape: () => { onExit() },
+  }), [onExit])
+
+  const { containerProps } = useAria({
+    data: EMPTY_DATA,
+    keyMap,
+  })
+
+  // Present mode has no focusable content — autoFocus the container so keyMap catches Escape
+  useEffect(() => {
+    containerRef.current?.focus()
+  }, [])
 
   function renderNode(nodeId: string): React.ReactNode {
     const entity = data.entities[nodeId]
@@ -61,7 +77,13 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
   }
 
   return (
-    <div className="cms-present" onClick={onExit} onKeyDown={handleKeyDown}>
+    <div
+      className="cms-present"
+      ref={containerRef}
+      tabIndex={-1}
+      onClick={onExit}
+      {...(containerProps as React.HTMLAttributes<HTMLDivElement>)}
+    >
       <div className={cmsStyles.cmsLanding}>
         {getChildren(data, ROOT_ID).map(id => renderNode(id))}
       </div>

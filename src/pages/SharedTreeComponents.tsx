@@ -24,8 +24,8 @@ function FileIcon({ name }: { name: string }) {
   }
 }
 
-export function RenderTreeItem(props: { node: Record<string, unknown>; state: NodeState }) {
-  const { node, state } = props
+export function RenderTreeItem(props: { node: Record<string, unknown>; state: NodeState } & Record<string, unknown>) {
+  const { node, state, ...rest } = props
   const d = node.data as Record<string, unknown>
   const isFolder = d?.type === 'folder'
   const indent = ((state.level ?? 1) - 1) * 18
@@ -40,7 +40,7 @@ export function RenderTreeItem(props: { node: Record<string, unknown>; state: No
   ].filter(Boolean).join(' ')
 
   return (
-    <div className={cls} style={{ paddingLeft: 14 + indent }}>
+    <div {...rest as Record<string, unknown>} className={cls} style={{ paddingLeft: 14 + indent }}>
       <span className="tree-node__chevron">
         {isFolder
           ? (state.expanded

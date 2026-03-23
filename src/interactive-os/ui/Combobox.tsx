@@ -15,7 +15,7 @@ interface ComboboxProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
   placeholder?: string
   editable?: boolean
   selectionMode?: 'single' | 'multiple'
@@ -178,8 +178,8 @@ export function Combobox({
     aria.dispatch(selectionCommands.toggleSelect(id))
   }
 
-  const defaultRender = (item: Record<string, unknown>, state: NodeState) => (
-    <div className={`${styles.comboItem}${state.focused ? ` ${styles.comboItemFocused}` : ''}${state.selected ? ` ${styles.comboItemSelected}` : ''}`}>
+  const defaultRender = (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => (
+    <div {...props} className={`${styles.comboItem}${state.focused ? ` ${styles.comboItemFocused}` : ''}${state.selected ? ` ${styles.comboItemSelected}` : ''}`}>
       {(item.data as Record<string, unknown>)?.label as string ?? item.id}
     </div>
   )
@@ -207,11 +207,8 @@ export function Combobox({
         ]))
       }
     }
-    return (
-      <div key={childId} {...(props as React.HTMLAttributes<HTMLDivElement>)} onClick={handleOptionClick}>
-        {render(entity, state)}
-      </div>
-    )
+    const optionProps = { ...(props as React.HTMLAttributes<HTMLElement>), key: childId, onClick: handleOptionClick }
+    return render(entity, state, optionProps)
   }
 
   const inputValue = editable

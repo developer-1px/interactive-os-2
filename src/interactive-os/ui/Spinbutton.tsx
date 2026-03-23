@@ -70,7 +70,7 @@ export function Spinbutton({
     setEditing(false)
   }, [dispatch, min, range])
 
-  const renderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => {
+  const renderItem = (item: Record<string, unknown>, state: NodeState, _props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
     const current = state.valueCurrent ?? min
     const itemLabel = label ?? (item.data as Record<string, unknown>)?.label as string ?? item.id as string
     const atMin = current <= min

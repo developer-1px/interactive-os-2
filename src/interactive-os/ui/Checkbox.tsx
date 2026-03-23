@@ -10,10 +10,10 @@ interface CheckboxProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactElement
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => {
+const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label =
     (item.data as Record<string, unknown>)?.label as string ??
     (item.data as Record<string, unknown>)?.name as string ??
@@ -21,7 +21,7 @@ const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): Rea
   const checked = state.expanded ?? false
 
   return (
-    <span className="item-inner">
+    <span {...props} className="item-inner">
       <span className={checked ? 'checkbox-indicator--checked' : 'checkbox-indicator'}>
         {checked ? '☑' : '☐'}
       </span>

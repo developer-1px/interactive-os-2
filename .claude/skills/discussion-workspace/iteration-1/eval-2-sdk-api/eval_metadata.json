@@ -1,0 +1,6 @@
+{
+  "eval_id": 2,
+  "eval_name": "sdk-api-ideal-result-drilldown",
+  "prompt": "SDK를 만들려고 하는데 사용자가 hook 하나로 복잡한 트리 구조를 다룰 수 있게 하고 싶어. 이상적으로는 useAria 하나면 다 되는 건데, 구체적으로 어떤 API가 나와야 하는지는 아직 감이 안 잡혀",
+  "assertions": ["이상적 결과 이해도 낮게 판정", "/ideal 드릴다운 인식", "code usage 시뮬레이션 방향 제시", "성급한 해결책 제시 방지"]
+}

@@ -1,0 +1,6 @@
+{
+  "eval_id": 3,
+  "eval_name": "sdk-category-tradeoff-exit-mapping",
+  "prompt": "지금 컴포넌트가 15개인데 이걸 3개 카테고리로 묶어서 SDK로 내보내야 해. 근데 카테고리를 behavior 기준으로 할지 용도 기준으로 할지가 트레이드오프야. 논의해서 결정하고 바로 실행까지 가자",
+  "assertions": ["트레이드오프를 제약/원칙에서 다룸", "출구 매핑 인식", "실행 경로 언급"]
+}

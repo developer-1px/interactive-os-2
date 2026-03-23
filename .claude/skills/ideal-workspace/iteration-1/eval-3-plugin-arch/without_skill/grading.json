@@ -1,0 +1,10 @@
+{
+  "eval_id": 3,
+  "eval_name": "plugin-arch-mermaid",
+  "expectations": [
+    {"text": "설계 도메인 감지", "passed": true, "evidence": "아키텍처 분석 맥락 인식"},
+    {"text": "Mermaid 다이어그램", "passed": false, "evidence": "코드 블록으로 구조를 서술했지만 Mermaid 다이어그램 없음"},
+    {"text": "이상적 상태 그림 (현재 아님)", "passed": false, "evidence": "현재 구조 분석 + 긴장 식별이 주 내용. 이상적 상태를 명시적으로 그리지 않음"},
+    {"text": "갭 발견", "passed": true, "evidence": "3가지 긴장: 상태 관리 분산, core 이중 역할, behaviors↔plugins 순환 의존"}
+  ]
+}

@@ -38,7 +38,7 @@ export default function PageHooks() {
           data={data}
           onChange={setData}
           plugins={[core()]}
-          renderItem={(item, state: NodeState) => {
+          renderItem={(item, state: NodeState, props) => {
             const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',
@@ -46,7 +46,7 @@ export default function PageHooks() {
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')
             return (
-              <div className={cls}>
+              <div {...props} className={cls}>
                 <span className="list-item__label"><code>{d?.label as string}</code></span>
                 <span className="list-item__desc">{d?.desc as string}</span>
               </div>

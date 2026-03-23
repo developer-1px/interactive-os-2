@@ -58,7 +58,7 @@ export default function PageClipboard() {
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(node, state: NodeState) => {
+          renderItem={(node, state: NodeState, props) => {
             const d = node.data as Record<string, unknown>
             const isGroup = d?.type === 'group'
             const isCut = getCutSourceIds().includes(node.id)
@@ -71,7 +71,7 @@ export default function PageClipboard() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div className={cls} style={{ paddingLeft: 14 + indent, opacity: isCut ? 0.4 : 1 }}>
+              <div {...props} className={cls} style={{ paddingLeft: 14 + indent, opacity: isCut ? 0.4 : 1 }}>
                 <span className="tree-node__chevron">
                   {isGroup ? (state.expanded ? '▾' : '▸') : ''}
                 </span>

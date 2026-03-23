@@ -10,11 +10,11 @@ interface RadioGroupProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
-  <span className="item-inner">
+const defaultRenderItem = (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => (
+  <span {...props} className="item-inner">
     <span className="radio-indicator">{state.selected ? '◉' : '○'}</span>
     <span>{(item.data as Record<string, unknown>)?.label as string ?? item.id as string}</span>
   </span>

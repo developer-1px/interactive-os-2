@@ -10,10 +10,10 @@ interface AccordionProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactElement
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactNode => (
+const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactElement => (
   <span className="item-inner item-spread">
     <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
     <span className="chevron item-chevron">{state.expanded ? '−' : '+'}</span>
