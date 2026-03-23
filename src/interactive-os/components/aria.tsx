@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react'
-import type { ReactNode } from 'react'
+import React, { useRef, useEffect, cloneElement } from 'react'
+import type { ReactNode, ReactElement } from 'react'
 import type { NormalizedData, Plugin, Command } from '../core/types'
 import { ROOT_ID } from '../core/types'
 import type { AriaBehavior, BehaviorContext, NodeState } from '../behaviors/types'
@@ -20,13 +20,13 @@ interface AriaProps {
   onActivate?: (nodeId: string) => void
   'aria-label'?: string
   logger?: import('../core/dispatchLogger').EngineOptions['logger']
+  autoFocus?: boolean
   children: ReactNode
 }
 
 interface AriaItemProps {
   ids?: string[]
-  asChild?: boolean
-  render: (node: Record<string, unknown>, state: NodeState, props?: React.HTMLAttributes<HTMLElement>) => ReactNode
+  render: (node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => ReactElement
 }
 
 const horizontalStyle = { display: 'flex' } as const
@@ -35,8 +35,8 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
-function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, children }: AriaProps) {
-  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, logger })
+function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, autoFocus, children }: AriaProps) {
+  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, logger, autoFocus })
 
   useEffect(() => {
     if (!id) return
@@ -62,51 +62,45 @@ function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, '
   )
 }
 
-function FocusScrollDiv({ focused, children, ...props }: { focused: boolean; children: ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
-  const ref = useRef<HTMLDivElement>(null)
+function FocusScrollRef({ focused }: { focused: boolean }) {
+  const ref = useRef<HTMLElement>(null)
   useEffect(() => {
     if (focused && ref.current) {
       ref.current.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
     }
   }, [focused])
-  return <div ref={ref} {...props}>{children}</div>
+  return ref
 }
 
-function AriaItem({ ids, asChild, render }: AriaItemProps) {
+function AriaItemNode({ childId, render }: { childId: string; render: AriaItemProps['render'] }) {
+  const aria = React.useContext(AriaInternalContext)
+  if (!aria) throw new Error('<Aria.Item> must be inside <Aria>')
+  const store = aria.getStore()
+  const entity = store.entities[childId]
+  if (!entity) return null
+  const state = aria.getNodeState(childId)
+  const props = aria.getNodeProps(childId) as React.HTMLAttributes<HTMLElement>
+  const scrollRef = FocusScrollRef({ focused: state.focused })
+
+  return (
+    <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
+      {cloneElement(render(entity, state, props), { key: childId, ref: scrollRef })}
+    </AriaItemContext.Provider>
+  )
+}
+
+function AriaItem({ ids, render }: AriaItemProps) {
   return (
     <AriaInternalContext.Consumer>
       {(aria) => {
         if (!aria) throw new Error('<Aria.Item> must be inside <Aria>')
         const store = aria.getStore()
         const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
-        // If behavior has colCount, consumer uses <Aria.Cell> — skip auto gridcell wrapping
-        const hasColCount = !!(aria.behavior?.colCount && aria.behavior.colCount > 0)
 
         const renderNode = (childId: string): ReactNode | null => {
           const entity = store.entities[childId]
           if (!entity) return null
-          const state = aria.getNodeState(childId)
-          const props = aria.getNodeProps(childId)
-          const needsGridcell = !hasColCount && (props as Record<string, unknown>).role === 'row'
-
-          if (asChild) {
-            return (
-              <AriaItemContext.Provider key={childId} value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
-                {render(entity, state, props as React.HTMLAttributes<HTMLElement>)}
-              </AriaItemContext.Provider>
-            )
-          }
-
-          return (
-            <FocusScrollDiv key={childId} focused={state.focused} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-              <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
-                {needsGridcell
-                  ? <div role="gridcell">{render(entity, state)}</div>
-                  : render(entity, state)
-                }
-              </AriaItemContext.Provider>
-            </FocusScrollDiv>
-          )
+          return <AriaItemNode key={childId} childId={childId} render={render} />
         }
 
         const renderNodes = (parentId: string): ReactNode[] => {
@@ -162,7 +156,7 @@ function placeCaret(el: HTMLElement, atEnd: boolean) {
   sel?.addRange(range)
 }
 
-function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = false, tabContinue = false, children }: { field: string; placeholder?: string; selection?: 'all' | 'end'; allowEmpty?: boolean; tabContinue?: boolean; children: React.ReactNode }) {
+function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = false, tabContinue = false, children, ...restProps }: { field: string; placeholder?: string; selection?: 'all' | 'end'; allowEmpty?: boolean; tabContinue?: boolean; children: React.ReactNode } & React.HTMLAttributes<HTMLSpanElement>) {
   const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
   const editRef = useRef<HTMLSpanElement>(null)
@@ -206,7 +200,7 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
 
   if (!renaming) {
     return (
-      <span data-placeholder={placeholder} onDoubleClick={(e) => {
+      <span {...restProps} data-placeholder={placeholder} onDoubleClick={(e) => {
         if (!nodeCtx || !ariaCtx) return
         e.stopPropagation()
         ariaCtx.dispatch(renameCommands.startRename(nodeCtx.nodeId))
@@ -239,6 +233,7 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
 
   return (
     <span
+      {...restProps}
       ref={editRef}
       contentEditable
       suppressContentEditableWarning
