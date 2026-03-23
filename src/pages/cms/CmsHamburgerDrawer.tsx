@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type KeyboardEvent } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Eye, Database, Cog, Compass, Puzzle, Layers, Box, Map, PenTool } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -11,15 +11,15 @@ interface DrawerNavItem {
 }
 
 const drawerItems: DrawerNavItem[] = [
-  { id: 'cms', label: 'CMS', icon: PenTool, path: '/' },
-  { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
-  { id: 'store', label: 'Store', icon: Database, path: '/store/explorer' },
-  { id: 'engine', label: 'Engine', icon: Cog, path: '/engine/pipeline' },
-  { id: 'pattern', label: 'Pattern', icon: Compass, path: '/pattern/accordion' },
-  { id: 'plugin', label: 'Plugin', icon: Puzzle, path: '/plugin/crud' },
-  { id: 'collection', label: 'Collection', icon: Layers, path: '/collection/treegrid' },
-  { id: 'components', label: 'Components', icon: Box, path: '/components/aria' },
-  { id: 'vision', label: 'Vision', icon: Map, path: '/vision/architecture' },
+  { id: 'cms', label: 'CMS', icon: PenTool, path: '/examples/cms' },
+  { id: 'viewer', label: 'Viewer', icon: Eye, path: '/examples/viewer' },
+  { id: 'store', label: 'Store', icon: Database, path: '/internals/store/inspector' },
+  { id: 'engine', label: 'Engine', icon: Cog, path: '/internals/engine/pipeline' },
+  { id: 'pattern', label: 'Pattern', icon: Compass, path: '/internals/pattern/accordion' },
+  { id: 'plugin', label: 'Plugin', icon: Puzzle, path: '/internals/plugin/crud' },
+  { id: 'collection', label: 'Collection', icon: Layers, path: '/internals/collection/treegrid' },
+  { id: 'components', label: 'Components', icon: Box, path: '/internals/components/aria' },
+  { id: 'vision', label: 'Vision', icon: Map, path: '/internals/area/vision' },
 ]
 
 interface CmsHamburgerDrawerProps {
@@ -33,19 +33,6 @@ export default function CmsHamburgerDrawer({ open, onClose, hamburgerRef }: CmsH
   const { pathname } = useLocation()
   const drawerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (!open) return
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        onClose()
-        hamburgerRef.current?.focus()
-      }
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [open, onClose, hamburgerRef])
-
   // Focus first item on open
   useEffect(() => {
     if (open && drawerRef.current) {
@@ -56,14 +43,21 @@ export default function CmsHamburgerDrawer({ open, onClose, hamburgerRef }: CmsH
 
   if (!open) return null
 
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      onClose()
+      hamburgerRef.current?.focus()
+    }
+  }
+
   function handleItemClick(path: string) {
     navigate(path)
     onClose()
   }
 
   function isActive(item: DrawerNavItem) {
-    if (item.id === 'cms') return pathname === '/'
-    return pathname.startsWith('/' + item.id)
+    return pathname.startsWith(item.path)
   }
 
   return (

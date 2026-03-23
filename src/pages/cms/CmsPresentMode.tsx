@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback } from 'react'
 import cmsStyles from '../PageVisualCms.module.css'
 import { getChildren } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
@@ -13,12 +13,8 @@ interface CmsPresentModeProps {
 }
 
 export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeProps) {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { e.preventDefault(); onExit() }
-    }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') { e.preventDefault(); onExit() }
   }, [onExit])
 
   function renderNode(nodeId: string): React.ReactNode {
@@ -65,7 +61,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
   }
 
   return (
-    <div className="cms-present" onClick={onExit}>
+    <div className="cms-present" onClick={onExit} onKeyDown={handleKeyDown}>
       <div className={cmsStyles.cmsLanding}>
         {getChildren(data, ROOT_ID).map(id => renderNode(id))}
       </div>

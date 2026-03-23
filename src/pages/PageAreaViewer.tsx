@@ -3,7 +3,7 @@ import MdPage from './MdPage'
 
 export default function PageAreaViewer() {
   const { pathname } = useLocation()
-  const segments = pathname.replace(/^\/area\/?/, '')
+  const segments = pathname.replace(/^\/internals\/area\/?/, '')
   const md = segments || 'overview'
 
   return <MdPage md={md} />

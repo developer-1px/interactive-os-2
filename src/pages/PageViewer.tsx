@@ -69,7 +69,7 @@ function treeToStore(nodes: TreeNode[]): NormalizedData {
 // --- URL ↔ file path helpers ---
 
 function urlPathToFilePath(pathname: string): string | null {
-  const relative = pathname.replace(/^\/viewer\/?/, '')
+  const relative = pathname.replace(/^\/examples\/viewer\/?/, '')
   if (!relative) return null
   return `${DEFAULT_ROOT}/${relative}`
 }
@@ -78,7 +78,7 @@ function filePathToUrlPath(filePath: string): string {
   const relative = filePath.startsWith(DEFAULT_ROOT + '/')
     ? filePath.slice(DEFAULT_ROOT.length + 1)
     : filePath
-  return `/viewer/${relative}`
+  return `/examples/viewer/${relative}`
 }
 
 function getAncestorIds(filePath: string, store: NormalizedData): string[] {

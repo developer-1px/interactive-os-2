@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Eye, Box, Sun, Moon, Palette, Presentation, BookOpen, Activity, Component } from 'lucide-react'
+import { Database, Cog, Axe, Compass, Puzzle, Layers, Box, Sun, Moon, Presentation, BookOpen, Component, Home, BookText } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import './styles/tokens.css'
 import './styles/components.css'
@@ -57,7 +57,8 @@ import Placeholder from './pages/Placeholder'
 import CmsLayout from './pages/cms/CmsLayout'
 import PageUiShowcase from './pages/PageUiShowcase'
 import PageAreaViewer from './pages/PageAreaViewer'
-import PageThemeCreator from './pages/PageThemeCreator'
+import PageLanding from './pages/PageLanding'
+import PageDocs from './pages/PageDocs'
 import { AreaSidebar } from './pages/AreaSidebar'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './interactive-os/devtools/ReproRecorderOverlay'
@@ -112,29 +113,29 @@ interface RouteGroup {
 
 const routeConfig: RouteGroup[] = [
   {
-    id: 'store',
+    id: 'internals/store',
     label: 'Store',
     icon: Database,
-    basePath: '/store/inspector',
+    basePath: '/internals/store/inspector',
     items: [
       { path: 'inspector', label: 'Inspector', status: 'ready', component: PageStoreInspector },
     ],
   },
   {
-    id: 'engine',
+    id: 'internals/engine',
     label: 'Engine',
     icon: Cog,
-    basePath: '/engine/pipeline',
+    basePath: '/internals/engine/pipeline',
     items: [
       { path: 'pipeline', label: 'Pipeline', status: 'ready', component: PageEnginePipeline },
       { path: 'history', label: 'History', status: 'ready', component: PageEngineHistory },
     ],
   },
   {
-    id: 'axis',
+    id: 'internals/axis',
     label: 'Axis',
     icon: Axe,
-    basePath: '/axis/navigate',
+    basePath: '/internals/axis/navigate',
     items: [
       { path: 'navigate', label: 'navigate()', status: 'ready', md: 'axes/navigate' },
       { path: 'select', label: 'select()', status: 'ready', md: 'axes/select' },
@@ -144,10 +145,10 @@ const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'pattern',
+    id: 'internals/pattern',
     label: 'Pattern',
     icon: Compass,
-    basePath: '/pattern/accordion',
+    basePath: '/internals/pattern/accordion',
     items: [
       { path: 'accordion', label: 'Accordion', status: 'ready', component: PageAccordion },
       { path: 'disclosure', label: 'Disclosure', status: 'ready', component: PageDisclosure },
@@ -167,10 +168,10 @@ const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'plugin',
+    id: 'internals/plugin',
     label: 'Plugin',
     icon: Puzzle,
-    basePath: '/plugin/crud',
+    basePath: '/internals/plugin/crud',
     items: [
       { path: 'crud', label: 'CRUD', status: 'ready', component: PageCrud },
       { path: 'clipboard', label: 'Clipboard', status: 'ready', component: PageClipboard },
@@ -181,10 +182,10 @@ const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'collection',
+    id: 'internals/collection',
     label: 'Collection',
     icon: Layers,
-    basePath: '/collection/treegrid',
+    basePath: '/internals/collection/treegrid',
     items: [
       { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: PageTreeGrid },
       { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListbox },
@@ -196,10 +197,10 @@ const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'components',
+    id: 'internals/components',
     label: 'Components',
     icon: Box,
-    basePath: '/components/aria',
+    basePath: '/internals/components/aria',
     items: [
       { path: 'aria', label: 'Aria', status: 'ready', component: PageAriaComponent },
       { path: 'cell', label: 'Cell', status: 'ready', component: PageCell },
@@ -207,10 +208,10 @@ const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'area',
+    id: 'internals/area',
     label: 'Area',
     icon: BookOpen,
-    basePath: '/area/overview',
+    basePath: '/internals/area/overview',
     items: [
       { path: 'vision', label: 'Vision', status: 'ready', component: PageAreaViewer },
       { path: 'overview', label: 'Overview', status: 'ready', component: PageAreaViewer },
@@ -224,7 +225,7 @@ const routeConfig: RouteGroup[] = [
   },
 ]
 
-// --- ActivityBar nav items (includes standalone pages) ---
+// --- ActivityBar nav items (external + internal) ---
 
 interface NavItem {
   id: string
@@ -233,19 +234,26 @@ interface NavItem {
   path: string
 }
 
-const navItems: NavItem[] = [
-  { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
-  { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
-  { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
+const externalNavItems: NavItem[] = [
+  { id: 'landing', label: 'Home', icon: Home, path: '/' },
+  { id: 'docs', label: 'Docs', icon: BookText, path: '/docs' },
   { id: 'ui-showcase', label: 'UI', icon: Component, path: '/ui' },
-  { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/theme' },
-  ...routeConfig.map((g) => ({ id: g.id, label: g.label, icon: g.icon, path: g.basePath })),
+  { id: 'examples', label: 'Examples', icon: Presentation, path: '/examples/cms' },
 ]
+
+const internalNavItems: NavItem[] = routeConfig.map((g) => ({
+  id: g.id,
+  label: g.label,
+  icon: g.icon,
+  path: g.basePath,
+}))
+
+const navItems: NavItem[] = [...externalNavItems, ...internalNavItems]
 
 // --- Pre-computed stores ---
 
-const APP_IDS = ['cms', 'viewer', 'agent', 'ui-showcase', 'theme-creator']
-const OS_IDS = routeConfig.map((g) => g.id)
+const EXTERNAL_IDS = externalNavItems.map((n) => n.id)
+const INTERNAL_IDS = internalNavItems.map((n) => n.id)
 const UTIL_IDS = ['theme']
 
 const activityBarStore = toStore([
@@ -263,6 +271,20 @@ const sidebarStores = Object.fromEntries(
 // --- Lookup maps ---
 
 const navPaths = Object.fromEntries(navItems.map((n) => [n.id, n.path]))
+
+// --- Shared ActivityBar item renderer ---
+
+const renderNavItem = (node: { id: string }, state: { focused: boolean }, props: Record<string, unknown>) => {
+  const nav = navItems.find((n) => n.id === node.id)!
+  const Icon = nav.icon
+  return (
+    <Tooltip content={nav.label}>
+      <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+        <Icon size={16} />
+      </div>
+    </Tooltip>
+  )
+}
 
 // --- Sidebar (only for routeConfig groups) ---
 
@@ -347,14 +369,16 @@ function App() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
-  const isViewer = pathname === '/viewer' || pathname.startsWith('/viewer/')
-  const isAgent = pathname === '/agent' || pathname.startsWith('/agent/')
+  const isLanding = pathname === '/'
+  const isDocs = pathname === '/docs'
   const isUiShowcase = pathname === '/ui' || pathname.startsWith('/ui/')
-  const isTheme = pathname === '/theme'
-  const isCms = pathname === '/'
+  const isExampleCms = pathname === '/examples/cms'
+  const isExampleViewer = pathname.startsWith('/examples/viewer')
+  const isExampleAgent = pathname.startsWith('/examples/agent')
+  const isExample = isExampleCms || isExampleViewer || isExampleAgent
 
   // URL → ActivityBar focus binding (CRUD two-way)
-  const activityBarFocusId = activeGroup?.id ?? (isViewer ? 'viewer' : isAgent ? 'agent' : isUiShowcase ? 'ui-showcase' : isTheme ? 'theme-creator' : isCms ? 'cms' : undefined)
+  const activityBarFocusId = activeGroup?.id ?? (isLanding ? 'landing' : isDocs ? 'docs' : isUiShowcase ? 'ui-showcase' : isExample ? 'examples' : undefined)
   const activityBarData = useMemo(() => {
     if (!activityBarFocusId) return activityBarStore
     return {
@@ -388,32 +412,12 @@ function App() {
           onActivate={handleActivityBarActivate}
           aria-label="Layer navigation"
         >
-          <div role="group" aria-label="App">
-            <Aria.Item asChild ids={APP_IDS} render={(node, state, props) => {
-              const nav = navItems.find((n) => n.id === node.id)!
-              const Icon = nav.icon
-              return (
-                <Tooltip content={nav.label}>
-                  <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <Icon size={16} />
-                  </div>
-                </Tooltip>
-              )
-            }} />
+          <div role="group" aria-label="External">
+            <Aria.Item asChild ids={EXTERNAL_IDS} render={renderNavItem} />
           </div>
           <div role="separator" className="activity-bar__separator" />
-          <div role="group" aria-label="OS">
-            <Aria.Item asChild ids={OS_IDS} render={(node, state, props) => {
-              const nav = navItems.find((n) => n.id === node.id)!
-              const Icon = nav.icon
-              return (
-                <Tooltip content={nav.label}>
-                  <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-                    <Icon size={16} />
-                  </div>
-                </Tooltip>
-              )
-            }} />
+          <div role="group" aria-label="Internal">
+            <Aria.Item asChild ids={INTERNAL_IDS} render={renderNavItem} />
           </div>
           <div role="group" aria-label="Util" className="activity-bar__util">
             <Aria.Item asChild ids={UTIL_IDS} render={(node, state, props) => {
@@ -429,21 +433,23 @@ function App() {
           </div>
         </Aria>
       </nav>
-      {isCms ? (
+      {isLanding ? (
+        <PageLanding />
+      ) : isDocs ? (
+        <PageDocs />
+      ) : isExampleCms ? (
         <CmsLayout />
-      ) : isViewer ? (
+      ) : isExampleViewer ? (
         <PageViewer />
-      ) : isAgent ? (
+      ) : isExampleAgent ? (
         <PageAgentViewer />
       ) : isUiShowcase ? (
         <PageUiShowcase />
-      ) : isTheme ? (
-        <PageThemeCreator />
       ) : (
         <>
-          {activeGroup && (activeGroup.id === 'area'
+          {activeGroup && (activeGroup.id === 'internals/area'
             ? <AreaSidebar />
-            : <Sidebar activeGroup={activeGroup} activeItemPath={pathname.split('/')[2]} />
+            : <Sidebar activeGroup={activeGroup} activeItemPath={pathname.slice(('/' + activeGroup.id + '/').length)} />
           )}
           <main className="content">
             <Routes>
@@ -471,7 +477,7 @@ function App() {
                   />
                 ))
               )}
-              <Route path="/area/*" element={<PageAreaViewer />} />
+              <Route path="/internals/area/*" element={<PageAreaViewer />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>

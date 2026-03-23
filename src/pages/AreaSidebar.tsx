@@ -73,8 +73,8 @@ export function AreaSidebar() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  // Extract current path segments: /area/axes/navigate → "axes/navigate"
-  const currentPath = pathname.replace(/^\/area\/?/, '') || 'overview'
+  // Extract current path segments: /internals/area/axes/navigate → "axes/navigate"
+  const currentPath = pathname.replace(/^\/internals\/area\/?/, '') || 'overview'
   const currentL2 = currentPath.split('/')[0]
 
   // Sync URL → focus + expand
@@ -101,7 +101,7 @@ export function AreaSidebar() {
   }, [currentPath, currentL2])
 
   const handleActivate = useCallback((nodeId: string) => {
-    navigate(`/area/${nodeId}`)
+    navigate(`/internals/area/${nodeId}`)
   }, [navigate])
 
   const renderItem = useCallback((node: Record<string, unknown>, state: NodeState) => {
