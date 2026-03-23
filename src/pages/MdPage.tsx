@@ -75,11 +75,10 @@ export default function MdPage({ md }: MdPageProps) {
         rehypePlugins={[rehypeRaw]}
         components={{
           div({ children, node, ...rest }) {
-            if ((rest as Record<string, unknown>)['data-render'] !== undefined) {
-              const text = typeof children === 'string' ? children
-                : Array.isArray(children) ? children.filter(c => typeof c === 'string').join('')
-                : ''
-              if (text) return <RenderBlock>{text}</RenderBlock>
+            const dataRender = (rest as Record<string, unknown>)['data-render']
+            if (typeof dataRender === 'string') {
+              const decoded = atob(dataRender)
+              return <RenderBlock>{decoded}</RenderBlock>
             }
             return <div {...rest}>{children}</div>
           },
