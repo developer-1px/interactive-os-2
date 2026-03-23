@@ -35,7 +35,7 @@ export function computeStoreDiff(
           diffs.push({ path: `${id}.${key}`, kind: 'added', after: val })
         }
       } else {
-        diffs.push({ path: 'entities', kind: 'added', after: id })
+        diffs.push({ path: 'entities', kind: 'added', after: nextEntity })
       }
     } else if (prevEntity && !nextEntity) {
       if (isMetaEntity(id)) {
@@ -44,7 +44,7 @@ export function computeStoreDiff(
           diffs.push({ path: `${id}.${key}`, kind: 'removed', before: val })
         }
       } else {
-        diffs.push({ path: 'entities', kind: 'removed', before: id })
+        diffs.push({ path: 'entities', kind: 'removed', before: prevEntity })
       }
     } else if (prevEntity && nextEntity && prevEntity !== nextEntity) {
       if (isMetaEntity(id)) {
@@ -67,7 +67,7 @@ export function computeStoreDiff(
           }
         }
       } else {
-        diffs.push({ path: 'entities', kind: 'changed', before: id, after: id })
+        diffs.push({ path: 'entities', kind: 'changed', before: prevEntity, after: nextEntity })
       }
     }
   }
@@ -83,17 +83,12 @@ export function computeStoreDiff(
     if (pArr === nArr) continue
 
     if (!pArr && nArr) {
-      for (const id of nArr) diffs.push({ path: key, kind: 'added', after: id })
+      diffs.push({ path: key, kind: 'added', after: [...nArr] })
     } else if (pArr && !nArr) {
-      for (const id of pArr) diffs.push({ path: key, kind: 'removed', before: id })
+      diffs.push({ path: key, kind: 'removed', before: [...pArr] })
     } else if (pArr && nArr) {
-      const prevSet = new Set(pArr)
-      const nextSet = new Set(nArr)
-      for (const id of nArr) {
-        if (!prevSet.has(id)) diffs.push({ path: key, kind: 'added', after: id })
-      }
-      for (const id of pArr) {
-        if (!nextSet.has(id)) diffs.push({ path: key, kind: 'removed', before: id })
+      if (pArr.length !== nArr.length || pArr.some((id, i) => id !== nArr[i])) {
+        diffs.push({ path: key, kind: 'changed', before: [...pArr], after: [...nArr] })
       }
     }
   }
