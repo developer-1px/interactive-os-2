@@ -21,7 +21,7 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `computeStoreDiff` 수정 | ①relationship 순서 변경 감지 (Set→배열 동등성) ②content entity data field 단위 diff 추가 ③`kind: 'reordered'` 추가 | |
+| `computeStoreDiff` 수정 | ①relationship 순서 변경 감지 (Set→배열 동등성) ②content entity 전체 before/after 저장. relationship은 `kind: 'changed'`로 통일 (reordered 별도 kind 불필요 — changed의 before/after 배열로 순서 복원 가능) | |
 | `applyDelta(store, diffs, direction)` | StoreDiff[]를 store에 적용. `direction: 'forward'`=redo, `'reverse'`=undo. computeStoreDiff.ts에 추가 | |
 | `isContentDelta(diffs)` | StoreDiff[] 중 SKIP_META에 해당하지 않는 delta가 있는지 판정. history.ts 내부 | |
 | `history.ts` 교체 | `past`/`future` 스택이 `StoreDiff[]`를 저장 (snapshot 대신). content delta 없으면 스택에 안 쌓음. undo 시 applyDelta reverse, redo 시 applyDelta forward | |
@@ -40,8 +40,8 @@
 | entity 추가 (crud:create) | entity 없음 | `{ path: 'entities', kind: 'added', after: { id, data } }` | content entity는 data 포함하여 전체 저장해야 undo 시 복원 가능 | entity diff 기록 | |
 | entity 삭제 (crud:delete) | entity 존재 | `{ path: 'entities', kind: 'removed', before: { id, data } }` | 삭제된 entity의 data를 보관해야 undo 시 복원 가능 | entity diff 기록 | |
 | entity data 변경 (rename 등) | entity.data.name = 'old' | `{ path: 'entities', kind: 'changed', before: { id, data: { name: 'old' } }, after: { id, data: { name: 'new' } } }` | entity 전체를 before/after로 저장. field 단위 내려가면 applyDelta 복잡도 증가 | entity diff 기록 | |
-| relationship 멤버 추가 | `parent: [a, b]` | `{ path: 'relationships:parent', kind: 'changed', before: ['a','b'], after: ['a','b','c'] }` | 배열 전체를 before/after로 저장. 순서까지 정확히 복원해야 DnD undo 동작 | relationship diff 기록 | |
-| relationship 순서 변경 (DnD moveUp) | `parent: [a, b]` | `{ path: 'relationships:parent', kind: 'changed', before: ['a','b'], after: ['b','a'] }` | **현재 버그: Set 비교로 감지 안 됨.** 배열 동등성으로 수정 | relationship diff 기록 | |
+| relationship 멤버 추가 | `parent: [a, b]` | `{ path: 'parent', kind: 'changed', before: ['a','b'], after: ['a','b','c'] }` | 배열 전체를 before/after로 저장. path는 relationship key 그대로 사용 | relationship diff 기록 | |
+| relationship 순서 변경 (DnD moveUp) | `parent: [a, b]` | `{ path: 'parent', kind: 'changed', before: ['a','b'], after: ['b','a'] }` | 배열 동등성 비교로 순서 변경 감지 | relationship diff 기록 | |
 | meta entity 변경 (__focus__) | `__focus__.focusedId = 'a'` | `{ path: '__focus__.focusedId', kind: 'changed', before: 'a', after: 'b' }` | meta entity는 기존처럼 field 단위 diff (로거 호환) | meta diff 기록 | |
 
 ### applyDelta(store, diffs, direction)
