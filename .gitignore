@@ -28,3 +28,4 @@ test-results
 *.sw?
 .superpowers/
 .claude/agent-ops/
+coverage/

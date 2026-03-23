@@ -11,6 +11,7 @@ import { Aria } from './interactive-os/components/aria'
 import { toolbar } from './interactive-os/behaviors/toolbar'
 import { core, FOCUS_ID } from './interactive-os/plugins/core'
 import { NavList } from './interactive-os/ui/NavList'
+import { FileViewerModal } from './interactive-os/ui/FileViewerModal'
 import { createStore } from './interactive-os/core/createStore'
 import { ROOT_ID } from './interactive-os/core/types'
 import type { AriaBehavior } from './interactive-os/behaviors/types'
@@ -327,6 +328,20 @@ function App() {
     localStorage.setItem('theme', theme)
   }, [theme])
 
+  // Global FileViewerModal for Inspector integration
+  const [previewFile, setPreviewFile] = useState<{ path: string; line?: number } | null>(null)
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { fileName: string; lineNumber?: number }
+      if (detail?.fileName) {
+        setPreviewFile({ path: detail.fileName, line: detail.lineNumber })
+      }
+    }
+    window.addEventListener('inspector:open-source', handler)
+    return () => window.removeEventListener('inspector:open-source', handler)
+  }, [])
+
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
@@ -460,6 +475,11 @@ function App() {
           </main>
         </>
       )}
+      <FileViewerModal
+        filePath={previewFile?.path ?? null}
+        highlightLines={previewFile?.line ? new Set([previewFile.line]) : undefined}
+        onClose={() => setPreviewFile(null)}
+      />
     </div>
   )
 }
