@@ -492,6 +492,87 @@ describe('TreeGrid keyboard integration', () => {
       await user.keyboard('{Control>}z{/Control}')
       expect(getAllVisibleNodeIds(container)).toEqual(visibleBefore)
     })
+
+    it('Mod+Z skips focus-only changes and undoes content change (V1/V9)', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<StatefulTree />)
+
+      // Focus src, expand, navigate to app (3 focus changes)
+      getNodeElement(container, 'src')!.focus()
+      await user.keyboard('{ArrowRight}') // expand
+      await user.keyboard('{ArrowRight}') // focus app
+      await user.keyboard('{ArrowDown}') // focus main
+
+      expect(getFocusedNodeId(container)).toBe('main')
+
+      // Delete main (content change)
+      await user.keyboard('{Delete}')
+      expect(getNodeElement(container, 'main')).toBeNull()
+
+      // Mod+Z — should undo delete, skipping all focus/expand moves
+      await user.keyboard('{Control>}z{/Control}')
+      expect(getNodeElement(container, 'main')).not.toBeNull()
+    })
+
+    it('Mod+Z after only focus/selection changes is no-op (V6)', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<StatefulTree />)
+
+      const visibleBefore = getAllVisibleNodeIds(container)
+
+      // Focus moves + selection (all view state)
+      getNodeElement(container, 'src')!.focus()
+      await user.keyboard('{ArrowDown}') // focus lib
+      await user.keyboard('{ }') // select lib
+
+      // Mod+Z — nothing to undo (focus and selection are view state)
+      await user.keyboard('{Control>}z{/Control}')
+      expect(getAllVisibleNodeIds(container)).toEqual(visibleBefore)
+    })
+
+    it('undo then new command clears redo future (V7/E4)', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<StatefulTree />)
+
+      // Delete src
+      getNodeElement(container, 'src')!.focus()
+      await user.keyboard('{Delete}')
+      expect(getNodeElement(container, 'src')).toBeNull()
+
+      // Undo
+      getNodeElement(container, 'lib')!.focus()
+      await user.keyboard('{Control>}z{/Control}')
+      expect(getNodeElement(container, 'src')).not.toBeNull()
+
+      // New command (delete lib) — should clear redo future
+      getNodeElement(container, 'lib')!.focus()
+      await user.keyboard('{Delete}')
+      expect(getNodeElement(container, 'lib')).toBeNull()
+
+      // Redo should NOT redo the original src deletion — future was cleared
+      await user.keyboard('{Control>}{Shift>}z{/Shift}{/Control}')
+      expect(getNodeElement(container, 'src')).not.toBeNull()
+    })
+
+    it('expand then delete — undo restores file, folder stays expanded (V4)', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<StatefulTree />)
+
+      // Expand src
+      getNodeElement(container, 'src')!.focus()
+      await user.keyboard('{ArrowRight}') // expand
+      await user.keyboard('{ArrowRight}') // focus app
+
+      // Delete app
+      await user.keyboard('{Delete}')
+      expect(getNodeElement(container, 'app')).toBeNull()
+
+      // Undo — file restored, folder stays expanded
+      await user.keyboard('{Control>}z{/Control}')
+      expect(getNodeElement(container, 'app')).not.toBeNull()
+      expect(getAllVisibleNodeIds(container)).toContain('app')
+      expect(getAllVisibleNodeIds(container)).toContain('main')
+    })
   })
 
   describe('delete + focus recovery', () => {
