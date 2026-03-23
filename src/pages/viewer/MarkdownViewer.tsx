@@ -3,7 +3,7 @@ import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
 import rehypeRaw from 'rehype-raw'
 import { MermaidBlock } from '../MermaidBlock'
-import { CodeBlock } from './CodeBlock'
+import { CodeBlock } from '../../interactive-os/ui/CodeBlock'
 import styles from '../PageViewer.module.css'
 
 export function MarkdownViewer({ content }: { content: string }) {

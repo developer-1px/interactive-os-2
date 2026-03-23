@@ -120,6 +120,7 @@ export default function PageAgentViewer() {
   }, [updateColumnOrder])
 
   const sessionMap = useMemo(() => new Map(sessions.map(s => [s.id, s])), [sessions])
+  const activeSessions = useMemo(() => sessions.filter(s => s.active), [sessions])
   const archiveSessions = useMemo(() => sessions.filter(s => !s.active), [sessions])
   const displayColumns = columnOrder
     .map(id => sessionMap.get(id))
@@ -139,6 +140,17 @@ export default function PageAgentViewer() {
   const handleFileClick = useCallback((filePath: string, editRanges?: string[]) => {
     setModalFile({ path: filePath, editRanges })
   }, [])
+
+  // Active store for Aria listbox
+  const activeStore = useMemo(() => {
+    const entities: Record<string, Entity> = {}
+    const childIds: string[] = []
+    for (const s of activeSessions) {
+      entities[s.id] = { id: s.id, data: { label: s.label, mtime: s.mtime } }
+      childIds.push(s.id)
+    }
+    return createStore({ entities, relationships: { [ROOT_ID]: childIds } })
+  }, [activeSessions])
 
   // Archive store for Aria listbox
   const archiveStore = useMemo(() => {
@@ -162,30 +174,57 @@ export default function PageAgentViewer() {
 
   return (
     <div className={styles.av}>
-      {/* Sessions panel — archive only */}
-      {archiveSessions.length > 0 && (
+      {/* Sessions panel */}
+      {sessions.length > 0 && (
         <>
           <div className={styles.avSessions} style={{ width: sessionsResizer.size }}>
             <div className={styles.avSessionsHeader}>
-              <span className={styles.avSessionsTitle}>Archive</span>
+              <span className={styles.avSessionsTitle}>세션</span>
             </div>
             <div className={styles.avSessionList}>
-              <Aria
-                behavior={sessionListbox}
-                data={archiveStore}
-                plugins={CORE_PLUGINS}
-                onChange={handleArchiveSelect}
-                aria-label="Archive sessions"
-              >
-                <Aria.Item render={(node) => {
-                  const data = node.data as { label: string; mtime: number }
-                  return (
-                    <div className={styles.avSessionItem}>
-                      <span className={styles.avSessionLabel}>{data.label}</span>
-                    </div>
-                  )
-                }} />
-              </Aria>
+              {activeSessions.length > 0 && (
+                <>
+                  <div className={styles.avGroupLabel}>활성</div>
+                  <Aria
+                    behavior={sessionListbox}
+                    data={activeStore}
+                    plugins={CORE_PLUGINS}
+                    onChange={handleArchiveSelect}
+                    aria-label="Active sessions"
+                  >
+                    <Aria.Item render={(node) => {
+                      const data = node.data as { label: string; mtime: number }
+                      return (
+                        <div className={styles.avSessionItem}>
+                          <span className={styles.avSessionLive}>●</span>
+                          <span className={styles.avSessionLabel}>{data.label}</span>
+                        </div>
+                      )
+                    }} />
+                  </Aria>
+                </>
+              )}
+              {archiveSessions.length > 0 && (
+                <>
+                  <div className={styles.avGroupLabel}>종료</div>
+                  <Aria
+                    behavior={sessionListbox}
+                    data={archiveStore}
+                    plugins={CORE_PLUGINS}
+                    onChange={handleArchiveSelect}
+                    aria-label="Ended sessions"
+                  >
+                    <Aria.Item render={(node) => {
+                      const data = node.data as { label: string; mtime: number }
+                      return (
+                        <div className={styles.avSessionItem}>
+                          <span className={styles.avSessionLabel}>{data.label}</span>
+                        </div>
+                      )
+                    }} />
+                  </Aria>
+                </>
+              )}
             </div>
           </div>
           <div className="resizer-handle" aria-label="Resize sessions panel" {...sessionsResizer.separatorProps} />

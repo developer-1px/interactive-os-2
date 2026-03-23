@@ -248,8 +248,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   const displayItems = useMemo(() => groupEvents(timeline), [timeline])
 
   // --- Virtual scroll ---
-  const spacerHeight = 2000
-  const { containerRef, totalHeight, visibleRange, offsetTop, measureItem, scrollToIndex } = useVirtualScroll({
+  const { containerRef, totalHeight, visibleRange, offsetTop, measureItem } = useVirtualScroll({
     itemCount: displayItems.length,
     estimatedItemHeight: 40,
     overscan: 10,
@@ -378,15 +377,10 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
 
     prevLengthRef.current = newLen
 
-    const hasUserEvent = displayItems.slice(prevLen).some(d => d.type === 'user')
-
-    if (hasUserEvent) {
-      const lastUser = findLastUserIndex(displayItems)
-      if (lastUser >= 0) scrollToIndex(lastUser, 'start')
-    } else if (isNearBottom(el)) {
-      el.scrollTo(0, el.scrollHeight)
+    if (isNearBottom(el)) {
+      requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
     }
-  }, [displayItems, scrollToIndex, containerRef])
+  }, [displayItems, containerRef])
 
   // --- File click handler ---
   const handleTimelineClick = useCallback((evt: TimelineEvent) => {
@@ -395,9 +389,6 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
       onFileClick(evt.filePath, ranges)
     }
   }, [onFileClick])
-
-  // Find index of last user event for spacer
-  const lastUserIndex = useMemo(() => findLastUserIndex(displayItems), [displayItems])
 
   // Ref callback to measure each rendered item
   const makeMeasureRef = useCallback(
@@ -409,14 +400,20 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     [measureItem],
   )
 
-  // Total content height including spacer
-  const contentHeight = totalHeight + (lastUserIndex >= 0 ? spacerHeight : 0)
+  const contentHeight = totalHeight
 
   return (
     <div className={styles.tc}>
-      <div className={styles.tcHeader}>
-        {isLive && <span className={styles.tcLive}>●</span>}
+      <div className={`${styles.tcHeader} ${isLive && agentStatus === 'idle' ? styles.tcHeaderIdle : ''}`}>
+        {isLive && (
+          <span className={agentStatus === 'idle' ? styles.tcIdle : styles.tcLive}>●</span>
+        )}
         <span className={styles.tcLabel}>{sessionLabel}</span>
+        {isLive && (
+          <span className={styles.tcHeaderStatus}>
+            {agentStatus === 'running' ? '진행중' : agentStatus === 'idle' ? '입력 대기' : ''}
+          </span>
+        )}
         <button className={styles.tcClose} onClick={onClose}>×</button>
       </div>
       <div className={styles.tcBody} ref={containerRef}>
@@ -497,9 +494,3 @@ function ChatInput({ sessionId }: { sessionId: string }) {
   )
 }
 
-function findLastUserIndex(items: DisplayItem[]): number {
-  for (let i = items.length - 1; i >= 0; i--) {
-    if (items[i].type === 'user') return i
-  }
-  return -1
-}

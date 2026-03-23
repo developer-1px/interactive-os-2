@@ -110,7 +110,7 @@ export function ReproRecorderOverlay() {
       }} />
       {recording ? 'STOP' : 'REC'}
       {recording && <span style={styles.timer}>{formatTime(elapsed)}</span>}
-      <style>{`@keyframes repro-pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }`}</style>
+      {recording && <style>{`@keyframes repro-pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }`}</style>}
     </button>
   )
 }

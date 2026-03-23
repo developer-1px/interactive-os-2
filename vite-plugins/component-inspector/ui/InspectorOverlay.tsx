@@ -448,7 +448,7 @@ export const InspectorOverlay: React.FC<{
             ? "1px solid #EF4444"
             : "1px solid rgba(255,255,255,0.1)",
           whiteSpace: "nowrap",
-          pointerEvents: "none",
+          pointerEvents: locked ? "auto" : "none",
         }}
       >
         {/* Header Row */}
@@ -472,7 +472,20 @@ export const InspectorOverlay: React.FC<{
                 opacity: 0.9,
               }}
             >
-              <span>{fileInfo}</span>
+              <span
+                style={{ cursor: locked ? "pointer" : "default", textDecoration: locked ? "underline" : "none" }}
+                onMouseDown={(e) => {
+                  if (!locked || !fileInfo) return;
+                  e.stopPropagation();
+                  e.preventDefault();
+                  const [fn, ln] = fileInfo.split(":");
+                  window.dispatchEvent(
+                    new CustomEvent("inspector:open-source", {
+                      detail: { fileName: fn, lineNumber: parseInt(ln, 10) },
+                    }),
+                  );
+                }}
+              >{fileInfo}</span>
               {loc !== undefined && (
                 <span
                   style={{

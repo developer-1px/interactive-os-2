@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
-import { CodeBlock } from './CodeBlock'
+import { CodeBlock } from '../../interactive-os/ui/CodeBlock'
 import { MarkdownViewer } from './MarkdownViewer'
-import { FileIcon } from './FileIcon'
-import { Breadcrumb } from './Breadcrumb'
+import { FileIcon } from '../../interactive-os/ui/FileIcon'
+import { Breadcrumb } from '../../interactive-os/ui/Breadcrumb'
 import { DEFAULT_ROOT } from './types'
 import styles from './FileViewerModal.module.css'
 
