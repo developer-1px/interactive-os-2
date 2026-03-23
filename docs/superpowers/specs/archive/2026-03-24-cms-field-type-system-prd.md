@@ -6,9 +6,9 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| M1 | CMS 관리자가 section-desc 노드를 선택 | Detail Panel에서 설명 텍스트를 편집하려 함 | 한 줄 text input만 보여 긴 텍스트 편집이 불편 | |
-| M2 | CMS 관리자가 link 노드를 선택 | href 필드에 URL을 입력 | 일반 text input이라 유효하지 않은 URL도 커밋됨, 실수 인지 불가 | |
-| M3 | 디자이너/개발자가 새 콘텐츠 타입을 추가 | 스키마에 노드를 정의 | 필드 타입별 UI가 자동으로 결정되어 별도 렌더러 코드 불필요 | |
+| M1 | CMS 관리자가 section-desc 노드를 선택 | Detail Panel에서 설명 텍스트를 편집하려 함 | 한 줄 text input만 보여 긴 텍스트 편집이 불편 | ✅ textarea 렌더링, Enter=줄바꿈, blur=커밋 |
+| M2 | CMS 관리자가 link 노드를 선택 | href 필드에 URL을 입력 | 일반 text input이라 유효하지 않은 URL도 커밋됨, 실수 인지 불가 | ✅ input[url] + isValidUrl + --invalid 시각 피드백 |
+| M3 | 디자이너/개발자가 새 콘텐츠 타입을 추가 | 스키마에 노드를 정의 | 필드 타입별 UI가 자동으로 결정되어 별도 렌더러 코드 불필요 | ✅ .meta({ fieldType }) → fieldsOf → DetailField switch |
 
 완성도: 🟢
 
