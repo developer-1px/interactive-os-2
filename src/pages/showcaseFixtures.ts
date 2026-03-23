@@ -228,6 +228,21 @@ export function makeToolbarData(): NormalizedData {
   })
 }
 
+export function makeNavListData(): NormalizedData {
+  return createStore({
+    entities: {
+      home: { id: 'home', data: { label: 'Home' } },
+      products: { id: 'products', data: { label: 'Products' } },
+      about: { id: 'about', data: { label: 'About' } },
+      settings: { id: 'settings', data: { label: 'Settings' } },
+      help: { id: 'help', data: { label: 'Help' } },
+    },
+    relationships: {
+      [ROOT_ID]: ['home', 'products', 'about', 'settings', 'help'],
+    },
+  })
+}
+
 export function makeTreeViewData(): NormalizedData {
   return createStore({
     entities: {

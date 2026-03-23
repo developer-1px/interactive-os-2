@@ -9,8 +9,8 @@ import './styles/app.css'
 
 import { Aria } from './interactive-os/components/aria'
 import { toolbar } from './interactive-os/behaviors/toolbar'
-import { listbox } from './interactive-os/behaviors/listbox'
 import { core, FOCUS_ID } from './interactive-os/plugins/core'
+import { NavList } from './interactive-os/ui/NavList'
 import { createStore } from './interactive-os/core/createStore'
 import { ROOT_ID } from './interactive-os/core/types'
 import type { AriaBehavior } from './interactive-os/behaviors/types'
@@ -268,14 +268,10 @@ const navPaths = Object.fromEntries(navItems.map((n) => [n.id, n.path]))
 function Sidebar({ activeGroup, activeItemPath }: { activeGroup: RouteGroup; activeItemPath?: string }) {
   const navigate = useNavigate()
 
-  const handleSidebarChange = useCallback((store: NormalizedData) => {
-    const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
-    if (focusedId) {
-      navigate(`/${activeGroup.id}/${focusedId}`)
-    }
+  const handleActivate = useCallback((nodeId: string) => {
+    navigate(`/${activeGroup.id}/${nodeId}`)
   }, [navigate, activeGroup.id])
 
-  // URL → Sidebar focus binding (CRUD two-way)
   const sidebarStore = useMemo(() => {
     const base = sidebarStores[activeGroup.id]
     if (!activeItemPath || !base.entities[activeItemPath]) return base
@@ -298,16 +294,11 @@ function Sidebar({ activeGroup, activeItemPath }: { activeGroup: RouteGroup; act
         <span className="version">v0.1.0</span>
       </div>
       <div className="sidebar-section-title">{activeGroup.label}</div>
-      <Aria
+      <NavList
         key={activeGroup.id}
-        behavior={listbox}
         data={sidebarStore}
-        plugins={[core()]}
-        onChange={handleSidebarChange}
-        aria-label={`${activeGroup.label} pages`}
-      >
-        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-        <Aria.Item render={(node, _state) => {
+        onActivate={handleActivate}
+        renderItem={(node) => {
           const item = activeGroup.items.find((i) => i.path === node.id)
           return (
             <div className="sidebar-link">
@@ -316,8 +307,9 @@ function Sidebar({ activeGroup, activeItemPath }: { activeGroup: RouteGroup; act
               {item?.status === 'placeholder' && <span className="badge-wip">soon</span>}
             </div>
           )
-        }} />
-      </Aria>
+        }}
+        aria-label={`${activeGroup.label} pages`}
+      />
     </nav>
   )
 }

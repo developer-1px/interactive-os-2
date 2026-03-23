@@ -10,6 +10,7 @@ import { Grid } from '../interactive-os/ui/Grid'
 import { Kanban } from '../interactive-os/ui/Kanban'
 import { ListBox } from '../interactive-os/ui/ListBox'
 import { MenuList } from '../interactive-os/ui/MenuList'
+import { NavList } from '../interactive-os/ui/NavList'
 import { RadioGroup } from '../interactive-os/ui/RadioGroup'
 import { Slider } from '../interactive-os/ui/Slider'
 import { Spinbutton } from '../interactive-os/ui/Spinbutton'
@@ -26,7 +27,7 @@ import { createToaster } from '../interactive-os/ui/createToaster'
 import {
   makeAccordionData, makeAlertDialogData, makeCheckboxData, makeComboboxData,
   makeDialogData, makeDisclosureGroupData, makeGridData, makeKanbanData,
-  makeListBoxData, makeMenuListData, makeRadioGroupData, makeSliderData,
+  makeListBoxData, makeMenuListData, makeNavListData, makeRadioGroupData, makeSliderData,
   makeSpinbuttonData, makeSwitchGroupData, makeTabListData, makeToggleData,
   makeToggleGroupData, makeToolbarData, makeTreeGridData, makeTreeViewData,
 } from './showcaseFixtures'
@@ -282,6 +283,25 @@ const data = createStore({
 })
 
 <MenuList data={data} onChange={setData} />`,
+  },
+  {
+    slug: 'navlist',
+    name: 'NavList',
+    description: 'Vertical navigation list with keyboard navigation and followFocus activation.',
+    makeData: makeNavListData,
+    render: (data, onChange) => <NavList data={data} onChange={onChange} onActivate={() => {}} />,
+    usage: `import { NavList } from 'interactive-os/ui/NavList'
+import { createStore } from 'interactive-os/core/createStore'
+
+const data = createStore({
+  entities: {
+    home: { id: 'home', data: { label: 'Home' } },
+    about: { id: 'about', data: { label: 'About' } },
+  },
+  relationships: { __root__: ['home', 'about'] },
+})
+
+<NavList data={data} onActivate={(id) => navigate(id)} />`,
   },
   {
     slug: 'radio-group',
