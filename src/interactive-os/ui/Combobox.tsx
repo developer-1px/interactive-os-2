@@ -8,6 +8,7 @@ import { core, selectionCommands, focusCommands } from '../plugins/core'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
 import { ROOT_ID, createBatchCommand } from '../core/types'
 import { getChildren } from '../core/createStore'
+import { mergeProps } from '../core/mergeProps'
 
 const CREATE_SENTINEL = '__create_option__'
 
@@ -207,7 +208,7 @@ export function Combobox({
         ]))
       }
     }
-    const optionProps = { ...(props as React.HTMLAttributes<HTMLElement>), key: childId, onClick: handleOptionClick }
+    const optionProps = mergeProps(props as React.HTMLAttributes<HTMLElement>, { key: childId, onClick: handleOptionClick })
     return render(optionProps, entity, state)
   }
 
