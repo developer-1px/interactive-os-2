@@ -54,7 +54,7 @@ function I18nGrid() {
         const colIdx = i18nColumns.indexOf(col)
         if (isEditable && state.focused && colIdx === focusedCol) {
           return (
-            <Aria.Editable field="cells" allowEmpty tabContinue>
+            <Aria.Editable field={`cells.${colIdx}`} allowEmpty tabContinue>
               <span>{String(value ?? '')}</span>
             </Aria.Editable>
           )
@@ -496,6 +496,106 @@ describe('i18n DataTable editing', () => {
       } finally {
         vi.useRealTimers()
       }
+    })
+  })
+
+  describe('Cell edit isolation: editing one cell does not affect other cells', () => {
+    it('replace edit on EN cell only changes EN, preserves KEY/KO/JA', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<I18nGrid />)
+
+      // Focus first row
+      const row = container.querySelector('[role="row"]') as HTMLElement
+      act(() => { row.focus() })
+
+      // Navigate to EN column (col 2, aria-colindex=3)
+      await user.keyboard('{ArrowRight}')
+      await user.keyboard('{ArrowRight}')
+      expect(getFocusedColIndex(container)).toBe(3)
+
+      // Type 'z' to enter replace mode
+      act(() => { fireEvent.keyDown(row, { key: 'z' }) })
+
+      // Verify editing
+      const editable = getEditableEl(container)
+      expect(editable).not.toBeNull()
+      expect(editable!.textContent).toBe('z')
+
+      // Type more and confirm with Enter
+      editable!.textContent = 'New EN Value'
+      act(() => { fireEvent.keyDown(editable!, { key: 'Enter' }) })
+
+      // Verify: EN cell changed
+      const focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      const cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[2]?.textContent).toBe('New EN Value')
+
+      // Verify: other cells unchanged
+      expect(cells?.[0]?.textContent).toBe('hero.title')       // KEY
+      expect(cells?.[1]?.textContent).toBe('헤드리스 ARIA 엔진')  // KO
+      expect(cells?.[3]?.textContent).toBe('')                    // JA (empty)
+    })
+
+    it('F2 preserve edit on KO cell only changes KO', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<I18nGrid />)
+
+      const row = container.querySelector('[role="row"]') as HTMLElement
+      act(() => { row.focus() })
+
+      // Navigate to KO column (col 1, aria-colindex=2)
+      await user.keyboard('{ArrowRight}')
+      expect(getFocusedColIndex(container)).toBe(2)
+
+      // F2 to enter preserve edit
+      act(() => { fireEvent.keyDown(row, { key: 'F2' }) })
+
+      const editable = getEditableEl(container)
+      expect(editable).not.toBeNull()
+
+      // Modify and confirm
+      editable!.textContent = 'Updated KO'
+      act(() => { fireEvent.keyDown(editable!, { key: 'Enter' }) })
+
+      // Verify: KO changed, others unchanged
+      const focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      const cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[0]?.textContent).toBe('hero.title')
+      expect(cells?.[1]?.textContent).toBe('Updated KO')
+      expect(cells?.[2]?.textContent).toBe('Headless ARIA Engine')
+      expect(cells?.[3]?.textContent).toBe('')
+    })
+
+    it('undo after cell paste restores only that cell', async () => {
+      resetClipboard()
+      const user = userEvent.setup()
+      const { container } = render(<I18nGrid />)
+
+      const row = container.querySelector('[role="row"]') as HTMLElement
+      act(() => { row.focus() })
+
+      // Navigate to KO column, copy
+      await user.keyboard('{ArrowRight}')
+      await user.keyboard('{Control>}c{/Control}')
+
+      // Navigate to EN column, paste
+      await user.keyboard('{ArrowRight}')
+      await user.keyboard('{Control>}v{/Control}')
+
+      // Verify: EN changed, others intact
+      let cells = container.querySelector('[role="row"][tabindex="0"]')?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[0]?.textContent).toBe('hero.title')
+      expect(cells?.[1]?.textContent).toBe('헤드리스 ARIA 엔진')
+      expect(cells?.[2]?.textContent).toBe('헤드리스 ARIA 엔진')
+
+      // Undo
+      await user.keyboard('{Control>}z{/Control}')
+
+      // Verify: EN restored, others still intact
+      cells = container.querySelector('[role="row"][tabindex="0"]')?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[0]?.textContent).toBe('hero.title')
+      expect(cells?.[1]?.textContent).toBe('헤드리스 ARIA 엔진')
+      expect(cells?.[2]?.textContent).toBe('Headless ARIA Engine')
     })
   })
 })

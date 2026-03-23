@@ -34,15 +34,30 @@ export const renameCommands = {
   confirmRename(nodeId: string, field: string, newValue: unknown): Command {
     let previousValue: unknown
 
+    // Dot-path support: "cells.2" → update array element at index 2
+    const dotIdx = field.indexOf('.')
+    const isArrayPath = dotIdx > 0
+    const arrayField = isArrayPath ? field.slice(0, dotIdx) : field
+    const arrayIndex = isArrayPath ? parseInt(field.slice(dotIdx + 1), 10) : -1
+
     return {
       type: 'rename:confirm',
       payload: { nodeId, field, newValue },
       execute(store) {
         const entity = getEntity(store, nodeId)
-        previousValue = entity?.data?.[field]
 
-        let result = updateEntityData(store, nodeId, { [field]: newValue })
-        // Clear rename state
+        let updateData: Record<string, unknown>
+        if (isArrayPath) {
+          const arr = [...((entity?.data?.[arrayField] as unknown[]) ?? [])]
+          previousValue = arr[arrayIndex]
+          arr[arrayIndex] = newValue
+          updateData = { [arrayField]: arr }
+        } else {
+          previousValue = entity?.data?.[field]
+          updateData = { [field]: newValue }
+        }
+
+        let result = updateEntityData(store, nodeId, updateData)
         result = {
           ...result,
           entities: {
@@ -53,8 +68,18 @@ export const renameCommands = {
         return result
       },
       undo(store) {
-        let result = updateEntityData(store, nodeId, { [field]: previousValue })
-        // Restore rename state to active
+        const entity = getEntity(store, nodeId)
+
+        let updateData: Record<string, unknown>
+        if (isArrayPath) {
+          const arr = [...((entity?.data?.[arrayField] as unknown[]) ?? [])]
+          arr[arrayIndex] = previousValue
+          updateData = { [arrayField]: arr }
+        } else {
+          updateData = { [field]: previousValue }
+        }
+
+        let result = updateEntityData(store, nodeId, updateData)
         result = {
           ...result,
           entities: {
