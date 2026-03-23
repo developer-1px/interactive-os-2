@@ -25,13 +25,19 @@ function truncatePayload(payload: unknown): string {
   return str ?? 'undefined'
 }
 
+function summarizeValue(val: unknown): string {
+  if (val && typeof val === 'object' && !Array.isArray(val) && 'id' in val) return JSON.stringify((val as { id: string }).id)
+  if (Array.isArray(val) && val.length > 5) return `[${val.slice(0, 3).map(v => JSON.stringify(v)).join(', ')}, ...(${val.length})]`
+  return JSON.stringify(val)
+}
+
 function formatDiff(diff: StoreDiff[]): string {
   if (diff.length === 0) return '(no change)'
   return diff
     .map((d) => {
-      if (d.kind === 'added') return `∆ ${d.path}: +${JSON.stringify(d.after)}`
-      if (d.kind === 'removed') return `∆ ${d.path}: -${JSON.stringify(d.before)}`
-      return `∆ ${d.path}: ${JSON.stringify(d.before)} → ${JSON.stringify(d.after)}`
+      if (d.kind === 'added') return `∆ ${d.path}: +${summarizeValue(d.after)}`
+      if (d.kind === 'removed') return `∆ ${d.path}: -${summarizeValue(d.before)}`
+      return `∆ ${d.path}: ${summarizeValue(d.before)} → ${summarizeValue(d.after)}`
     })
     .join(' | ')
 }

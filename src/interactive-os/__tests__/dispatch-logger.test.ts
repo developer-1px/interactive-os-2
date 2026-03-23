@@ -49,7 +49,7 @@ describe('computeStoreDiff', () => {
     }
     const diff = computeStoreDiff(base, next)
     expect(diff).toEqual([
-      { path: 'entities', kind: 'added', after: 'item3' },
+      { path: 'entities', kind: 'added', after: { id: 'item3', data: { name: 'Item 3' } } },
     ])
   })
 
@@ -58,7 +58,7 @@ describe('computeStoreDiff', () => {
     const next = { ...base, entities: rest }
     const diff = computeStoreDiff(base, next)
     expect(diff).toEqual([
-      { path: 'entities', kind: 'removed', before: 'item2' },
+      { path: 'entities', kind: 'removed', before: { id: 'item2', data: { name: 'Item 2' } } },
     ])
   })
 
@@ -72,29 +72,77 @@ describe('computeStoreDiff', () => {
     }
     const diff = computeStoreDiff(base, next)
     expect(diff).toEqual([
-      { path: 'entities', kind: 'changed', before: 'item1', after: 'item1' },
+      { path: 'entities', kind: 'changed', before: { id: 'item1', data: { name: 'Item 1' } }, after: { id: 'item1', data: { name: 'Updated' } } },
     ])
   })
 
-  it('detects relationship added ids', () => {
+  it('detects relationship member added', () => {
     const next = {
       ...base,
       relationships: { __root__: ['item1', 'item2', 'item3'] },
     }
     const diff = computeStoreDiff(base, next)
     expect(diff).toEqual([
-      { path: '__root__', kind: 'added', after: 'item3' },
+      { path: '__root__', kind: 'changed', before: ['item1', 'item2'], after: ['item1', 'item2', 'item3'] },
     ])
   })
 
-  it('detects relationship removed ids', () => {
+  it('detects relationship member removed', () => {
     const next = {
       ...base,
       relationships: { __root__: ['item1'] },
     }
     const diff = computeStoreDiff(base, next)
     expect(diff).toEqual([
-      { path: '__root__', kind: 'removed', before: 'item2' },
+      { path: '__root__', kind: 'changed', before: ['item1', 'item2'], after: ['item1'] },
+    ])
+  })
+
+  it('detects relationship order change', () => {
+    const next = {
+      ...base,
+      relationships: { __root__: ['item2', 'item1'] },
+    }
+    const diff = computeStoreDiff(base, next)
+    expect(diff).toEqual([
+      { path: '__root__', kind: 'changed', before: ['item1', 'item2'], after: ['item2', 'item1'] },
+    ])
+  })
+
+  it('stores full entity object in content entity added diff', () => {
+    const next = {
+      ...base,
+      entities: {
+        ...base.entities,
+        item3: { id: 'item3', data: { name: 'Item 3' } },
+      },
+    }
+    const diff = computeStoreDiff(base, next)
+    expect(diff).toEqual([
+      { path: 'entities', kind: 'added', after: { id: 'item3', data: { name: 'Item 3' } } },
+    ])
+  })
+
+  it('stores full entity object in content entity removed diff', () => {
+    const { item2: _removed, ...rest } = base.entities
+    const next = { ...base, entities: rest }
+    const diff = computeStoreDiff(base, next)
+    expect(diff).toEqual([
+      { path: 'entities', kind: 'removed', before: { id: 'item2', data: { name: 'Item 2' } } },
+    ])
+  })
+
+  it('stores full entity objects in content entity changed diff', () => {
+    const next = {
+      ...base,
+      entities: {
+        ...base.entities,
+        item1: { id: 'item1', data: { name: 'Updated' } },
+      },
+    }
+    const diff = computeStoreDiff(base, next)
+    expect(diff).toEqual([
+      { path: 'entities', kind: 'changed', before: { id: 'item1', data: { name: 'Item 1' } }, after: { id: 'item1', data: { name: 'Updated' } } },
     ])
   })
 
