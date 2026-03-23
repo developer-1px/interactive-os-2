@@ -5,6 +5,7 @@ import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
 import { radiogroup } from '../behaviors/radiogroup'
 import { core } from '../plugins/core'
+import styles from './RadioGroup.module.css'
 
 interface RadioGroupProps {
   data: NormalizedData
@@ -13,12 +14,19 @@ interface RadioGroupProps {
   renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => (
-  <span {...props} className="item-inner">
-    <span className="radio-indicator">{state.selected ? '◉' : '○'}</span>
-    <span>{(item.data as Record<string, unknown>)?.label as string ?? item.id as string}</span>
-  </span>
-)
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
+  const label = (item.data as Record<string, unknown>)?.label as string
+    ?? (item.data as Record<string, unknown>)?.name as string
+    ?? item.id as string
+  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '')
+  const indCls = styles.indicator + (state.selected ? ' ' + styles.indicatorSelected : '')
+  return (
+    <div {...props} className={cls}>
+      <span className={indCls}>{state.selected ? '◉' : '○'}</span>
+      <span>{label}</span>
+    </div>
+  )
+}
 
 export function RadioGroup({
   data,

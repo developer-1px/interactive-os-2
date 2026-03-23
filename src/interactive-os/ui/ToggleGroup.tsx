@@ -5,6 +5,7 @@ import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
 import { toolbar } from '../behaviors/toolbar'
 import { core } from '../plugins/core'
+import styles from './ToggleGroup.module.css'
 
 interface ToggleGroupProps {
   data: NormalizedData
@@ -18,11 +19,13 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
+  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
+  const indCls = state.selected ? styles.indicatorSelected : styles.indicator
   return (
-    <span {...props}>
-      {state.selected ? '● ' : '○ '}
-      {label}
-    </span>
+    <div {...props} className={cls}>
+      <span className={indCls}>{state.selected ? '●' : '○'}</span>
+      <span>{label}</span>
+    </div>
   )
 }
 

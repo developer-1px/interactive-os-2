@@ -1,0 +1,25 @@
+/* --- DisclosureGroup --- */
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-md);
+  border-radius: var(--radius-sm);
+  cursor: default;
+  user-select: none;
+}
+
+.itemFocused {
+  background: var(--primary-dim);
+  color: var(--text-bright);
+}
+
+.chevron {
+  width: 12px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}

@@ -5,6 +5,7 @@ import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
 import { switchBehavior } from '../behaviors/switch'
 import { core } from '../plugins/core'
+import styles from './SwitchGroup.module.css'
 
 interface SwitchGroupProps {
   data: NormalizedData
@@ -14,19 +15,16 @@ interface SwitchGroupProps {
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label =
-    (item.data as Record<string, unknown>)?.label as string ??
-    (item.data as Record<string, unknown>)?.name as string ??
-    item.id as string
+  const label = (item.data as Record<string, unknown>)?.label as string
+    ?? (item.data as Record<string, unknown>)?.name as string
+    ?? item.id as string
   const checked = state.expanded ?? false
-
+  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '')
   return (
-    <span {...props} className="item-inner item-spread">
+    <div {...props} className={cls}>
       <span>{label}</span>
-      <span className={checked ? 'switch-label--on' : 'switch-label'}>
-        {checked ? '●' : '○'}
-      </span>
-    </span>
+      <span className={checked ? styles.indicatorOn : styles.indicator}>{checked ? '●' : '○'}</span>
+    </div>
   )
 }
 

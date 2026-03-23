@@ -1,0 +1,14 @@
+/* --- AlertDialog --- */
+
+.item {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-md);
+  border-radius: var(--radius-sm);
+  cursor: default;
+  user-select: none;
+}
+
+.itemFocused {
+  background: var(--primary-dim);
+  color: var(--text-bright);
+}
