@@ -31,18 +31,16 @@
 }
 
 .heroTitle {
-  font-family: var(--sans);
   font-size: 40px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--text-bright);
   margin: 0 0 var(--space-md);
 }
 
 .heroSub {
-  font-family: var(--sans);
   font-size: var(--text-lg);
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
   color: var(--text-secondary);
   margin: 0 0 var(--space-2xl);
   max-width: 420px;
@@ -55,7 +53,6 @@
 }
 
 .btnPrimary {
-  font-family: var(--sans);
   font-size: var(--text-md);
   font-weight: 600;
   padding: var(--space-sm) var(--space-xl);
@@ -72,7 +69,6 @@
 }
 
 .btnGhost {
-  font-family: var(--sans);
   font-size: var(--text-md);
   font-weight: 600;
   padding: var(--space-sm) var(--space-xl);
@@ -130,7 +126,6 @@
   cursor: pointer;
   text-align: left;
   transition: background 0.12s;
-  font-family: var(--sans);
 }
 
 .card:hover {
