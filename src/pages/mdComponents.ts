@@ -6,6 +6,8 @@ import ActivateDemo from './axis/ActivateDemo'
 import ExpandDemo from './axis/ExpandDemo'
 import DismissDemo from './axis/DismissDemo'
 import EditDemo from './axis/EditDemo'
+import { ShowcaseDemo } from './ShowcaseDemo'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
 
 export const mdComponents: Record<string, ComponentType<Record<string, unknown>>> = {
   AxisSpec,
@@ -15,4 +17,6 @@ export const mdComponents: Record<string, ComponentType<Record<string, unknown>>
   ExpandDemo,
   DismissDemo,
   EditDemo,
+  ShowcaseDemo,
+  ApgKeyboardTable,
 }
