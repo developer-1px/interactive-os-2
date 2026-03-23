@@ -1,45 +1,19 @@
 /* eslint-disable react-refresh/only-export-components */
-import {
-  Database, Cog, Keyboard, Shield,
-  ChevronRight, ArrowRight,
-  List, Grid3X3, ToggleLeft, MessageSquare,
-  PanelTop, ChevronDown, MousePointerClick,
-  Layers, Table, Radio, Menu,
-} from 'lucide-react'
+import { ChevronRight, ArrowRight } from 'lucide-react'
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
 import type { NodeState } from '../../interactive-os/behaviors/types'
 import s from '../PageVisualCms.module.css'
+import { CMS_ICON_MAP } from './cmsIcons'
 
 function LocalizedText({ value, locale }: { value: string | LocaleMap; locale: Locale }) {
   const { text, isFallback } = localized(value, locale)
   return <span className={isFallback ? 'cms-text--fallback' : undefined}>{text}</span>
 }
 
-// ── Icon lookup (since JSX can't live in store data) ──
-
-const featureIcons: Record<string, React.ReactNode> = {
-  database: <Database size={16} />,
-  cog: <Cog size={16} />,
-  shield: <Shield size={16} />,
-  keyboard: <Keyboard size={16} />,
-}
-
-const patternIcons: Record<string, React.ReactNode> = {
-  table: <Table size={12} />,
-  list: <List size={12} />,
-  paneltop: <PanelTop size={12} />,
-  message: <MessageSquare size={12} />,
-  grid: <Grid3X3 size={12} />,
-  menu: <Menu size={12} />,
-  layers: <Layers size={12} />,
-  chevrondown: <ChevronDown size={12} />,
-  chevronright: <ChevronRight size={12} />,
-  keyboard: <Keyboard size={12} />,
-  click: <MousePointerClick size={12} />,
-  toggle: <ToggleLeft size={12} />,
-  radio: <Radio size={12} />,
-  shield: <Shield size={12} />,
+function CmsIcon({ name, size }: { name: string; size: number }) {
+  const Icon = CMS_ICON_MAP.get(name)
+  return Icon ? <Icon size={size} /> : null
 }
 
 // ── Node content renderers by type ──
@@ -65,7 +39,7 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       return <>{data.value as string}</>
 
     case 'icon':
-      return <>{featureIcons[data.value as string] ?? null}</>
+      return <CmsIcon name={data.value as string} size={16} />
     case 'step':
       return null  // container — children rendered by CmsCanvas
     case 'step-num':
@@ -74,7 +48,7 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
     case 'pattern':
       return (
         <>
-          <div className={s.cmsPatternIcon}>{patternIcons[data.icon as string] ?? null}</div>
+          <div className={s.cmsPatternIcon}><CmsIcon name={data.icon as string} size={12} /></div>
           <span className={s.cmsPatternName}><LocalizedText value={data.name as string | LocaleMap} locale={locale} /></span>
         </>
       )
