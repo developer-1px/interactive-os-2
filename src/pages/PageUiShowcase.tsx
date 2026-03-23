@@ -6,7 +6,6 @@ import { ROOT_ID } from '../interactive-os/core/types'
 import { FOCUS_ID } from '../interactive-os/plugins/core'
 import type { NormalizedData } from '../interactive-os/core/types'
 import { NavList } from '../interactive-os/ui/NavList'
-import { TestRunnerPanel } from '../testRunner/TestRunnerPanel'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { components } from './showcaseRegistry'
 import type { ComponentEntry } from './showcaseRegistry'
@@ -24,12 +23,6 @@ function ComponentDemo({ entry }: { entry: ComponentEntry }) {
         <div className={styles.uiDemoLabel}>Live Demo</div>
         {entry.render(data, onChange)}
       </div>
-
-      {entry.testPath && (
-        <div className={styles.uiTestRunner}>
-          <TestRunnerPanel testPath={entry.testPath} headless />
-        </div>
-      )}
 
       <div className={styles.uiCodeSection}>
         <div className={styles.uiCodeLabel}>Usage</div>
