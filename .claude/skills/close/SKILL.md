@@ -1,20 +1,20 @@
 ---
-description: 구현 사이클 마무리 오케스트레이터. retro 완료 후 실행하여 L1 처리, PROGRESS/ARCHITECTURE 갱신, area 누적, 커밋, 다음 행동 제안을 순서대로 수행한다. "/close", "마무리", "정리하자", "닫자" 등을 말할 때 사용. retro 완료 후 자동으로 제안한다.
+description: 구현 사이클 마무리 오케스트레이터. retrospect 완료 후 실행하여 L1 처리, PROGRESS/ARCHITECTURE 갱신, area 누적, 커밋, 다음 행동 제안을 순서대로 수행한다. "/close", "마무리", "정리하자", "닫자" 등을 말할 때 사용. retrospect 완료 후 자동으로 제안한다.
 ---
 
 ## 역할
 
-구현 사이클의 **마무리 오케스트레이터**다. retro가 "뭘 했고 뭘 빠뜨렸나"를 분석하는 역할이라면, close는 "분석 결과를 반영하고 깔끔하게 닫는" 역할이다.
+구현 사이클의 **마무리 오케스트레이터**다. retrospect가 "뭘 했고 뭘 빠뜨렸나"를 분석하는 역할이라면, close는 "분석 결과를 반영하고 깔끔하게 닫는" 역할이다.
 
-구현 코드의 test/simplify/commit은 이미 `/go`에서 완료된 상태다. `/close`가 다루는 건 **retro가 만든 변경분**(L1 수정, L2~L4 스킬/메모리 수정, docs 갱신, area MDX)의 마무리다.
+구현 코드의 test/simplify/commit은 이미 `/go`에서 완료된 상태다. `/close`가 다루는 건 **retrospect가 만든 변경분**(L1 수정, L2~L4 스킬/메모리 수정, docs 갱신, area MDX)의 마무리다.
 
 ## 파이프라인 위치
 
 ```
-/go(implement → test → simplify → commit) → /retro(분석 + L2~L4 수정) → /close(마무리)
+/go(implement → test → simplify → commit) → /retrospect(분석 + L2~L4 수정) → /close(마무리)
 ```
 
-/go가 구현을 오케스트레이션하고, /retro가 분석과 자기 수정을 하고, /close가 남은 정리를 한다.
+/go가 구현을 오케스트레이션하고, /retrospect가 분석과 자기 수정을 하고, /close가 남은 정리를 한다.
 
 ## Step 1: L1 코드 처리
 
@@ -30,8 +30,8 @@ retro 결과가 없으면 건너뛴다.
 `docs/PROGRESS.md`는 concept map이다. retro 결과를 반영한다:
 
 - **모듈 추가/삭제** → 행 추가/제거
-- **Maturity 변경** → retro가 판정한 수준으로 갱신
-- **Gaps** → retro가 발견한 갭 기록
+- **Maturity 변경** → retrospect가 판정한 수준으로 갱신
+- **Gaps** → retrospect가 발견한 갭 기록
 
 변경이 없으면 건너뛴다.
 
@@ -60,7 +60,7 @@ Area MDX에 영향 없으면 건너뛴다.
 retro + close에서 만든 변경분을 커밋한다:
 
 - L1 수정 (Step 1에서 미니 사이클로 이미 커밋했으면 제외)
-- L2~L4 스킬/메모리 수정 (retro가 만든 것)
+- L2~L4 스킬/메모리 수정 (retrospect가 만든 것)
 - docs 갱신 (PROGRESS, ARCHITECTURE)
 - Area MDX 갱신
 
