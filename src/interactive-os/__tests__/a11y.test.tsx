@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import axe from 'axe-core'
 import { Aria } from '../components/aria'
-import { treegrid } from '../behaviors/treegrid'
+import { tree } from '../behaviors/tree'
 import { listbox } from '../behaviors/listbox'
 import { tabs } from '../behaviors/tabs'
 import { createStore } from '../core/createStore'
@@ -57,9 +57,9 @@ const tabData = createStore({
 })
 
 describe('Accessibility (axe-core)', () => {
-  it('TreeGrid has no critical ARIA violations', async () => {
+  it('Tree has no critical ARIA violations', async () => {
     const { container } = render(
-      <Aria behavior={treegrid} data={treeData} plugins={[]}>
+      <Aria behavior={tree} data={treeData} plugins={[]}>
         <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
@@ -123,19 +123,19 @@ describe('Accessibility (axe-core)', () => {
     expect(critical).toEqual([])
   })
 
-  it('TreeGrid nodes have required ARIA attributes', () => {
+  it('Tree nodes have required ARIA attributes', () => {
     const { container } = render(
-      <Aria behavior={treegrid} data={treeData} plugins={[]}>
+      <Aria behavior={tree} data={treeData} plugins={[]}>
         <Aria.Item render={(node) => <span>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
 
-    const rows = container.querySelectorAll('[role="row"]')
+    const rows = container.querySelectorAll('[role="treeitem"]')
     expect(rows.length).toBeGreaterThan(0)
 
-    // Check first row has all required treegrid attributes
+    // Check first row has all required tree attributes
     const firstRow = rows[0]!
-    expect(firstRow.getAttribute('role')).toBe('row')
+    expect(firstRow.getAttribute('role')).toBe('treeitem')
     expect(firstRow.getAttribute('tabindex')).toBeDefined()
     expect(firstRow.getAttribute('aria-level')).toBeDefined()
     expect(firstRow.getAttribute('aria-posinset')).toBeDefined()

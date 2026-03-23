@@ -4,7 +4,6 @@ import type { BehaviorContext, NodeState } from '../interactive-os/behaviors/typ
 import type { LogEntry } from '../interactive-os/core/dispatchLogger'
 import { Aria } from '../interactive-os/components/aria'
 import { tree } from '../interactive-os/behaviors/tree'
-import { treegrid } from '../interactive-os/behaviors/treegrid'
 import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud, crudCommands } from '../interactive-os/plugins/crud'
@@ -206,7 +205,7 @@ export default function PageStoreInspector() {
           <div className={styles.panel}>
             <div className={styles.panelLabel}>Editor</div>
             <Aria
-              behavior={treegrid}
+              behavior={tree}
               data={data}
               plugins={editor.plugins}
               keyMap={editor.keyMap}
