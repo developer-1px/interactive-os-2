@@ -75,7 +75,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| ActivityBar (8 layers) · routing | Integrated | — |
+| ActivityBar (External/Internal) · routing | Integrated | Phase 1 big-bang 완료: /ui, /examples/*, /internals/* |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs) | Validated | paste overwrite, viewer channel 미구현 |
 | Agent Viewer (multi-session · virtual scroll) | Validated | viewer channel disabled |
