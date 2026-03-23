@@ -71,21 +71,19 @@
 
 ## 실행 Phase
 
-### Phase 1: 구조 big-bang (한번에)
-- [ ] 라우트 구조 전환 (/, /docs, /ui/*, /examples/*, /internals/*)
-- [ ] 기존 페이지를 새 위치로 이동 (내용은 그대로)
-- [ ] ActivityBar 재구성 (외부용 / 내부용 분리)
-- [ ] Landing placeholder 페이지
-- [ ] Docs placeholder 페이지
-- [ ] 빈 /ui/* 페이지들 (기존 컴포넌트 연결)
+### Phase 1: 구조 big-bang (한번에) ✅
+- [x] 라우트 구조 전환 (/, /docs, /ui/*, /examples/*, /internals/*)
+- [x] 기존 페이지를 새 위치로 이동 (내용은 그대로)
+- [x] ActivityBar 재구성 (외부용 / 내부용 분리)
+- [x] Landing placeholder 페이지
+- [x] Docs placeholder 페이지
+- [x] 빈 /ui/* 페이지들 (기존 컴포넌트 연결)
 
-### Phase 2: UI 완성품 (컴포넌트별 점진)
-- [ ] ListBox 완성품 (behavior + design + 기본 렌더링)
-- [ ] TreeGrid 완성품
-- [ ] TabList 완성품
-- [ ] ... (11개 표준 UI)
-- [ ] 각 완성품에 visual test runner 연결
-- [ ] 기존 테스트를 완성품 기반으로 전환
+### Phase 2: UI 완성품 (컴포넌트별 점진) ✅
+- [x] 15종 UI 컴포넌트 CSS module 내장 렌더링
+- [x] 각 완성품에 visual test runner 연결 (18/23 testPath)
+- [x] TestRunnerPanel showcase ComponentDemo 통합
+- [ ] 남은 5개 testPath 연결 (checkbox, toggle, toggleGroup, toaster, i18n)
 
 ### Phase 3: 문서 + 랜딩
 - [ ] Landing 페이지 컨텐츠
