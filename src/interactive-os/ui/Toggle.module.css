@@ -1,0 +1,26 @@
+/* --- Toggle --- */
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-md);
+  border-radius: var(--radius-sm);
+  cursor: default;
+  user-select: none;
+}
+
+.itemFocused {
+  background: var(--primary-dim);
+  color: var(--text-bright);
+}
+
+.indicator {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.indicatorOn {
+  color: var(--green);
+}

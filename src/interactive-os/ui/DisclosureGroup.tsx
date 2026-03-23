@@ -5,6 +5,7 @@ import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
 import { disclosure } from '../behaviors/disclosure'
 import { core } from '../plugins/core'
+import styles from './DisclosureGroup.module.css'
 
 interface DisclosureGroupProps {
   data: NormalizedData
@@ -13,12 +14,18 @@ interface DisclosureGroupProps {
   renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => (
-  <span {...props} className="item-inner">
-    <span className="chevron item-chevron">{state.expanded ? '▾' : '▸'}</span>
-    <span>{(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}</span>
-  </span>
-)
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
+  const label = (item.data as Record<string, unknown>)?.label as string
+    ?? (item.data as Record<string, unknown>)?.name as string
+    ?? item.id as string
+  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '')
+  return (
+    <div {...props} className={cls}>
+      <span className={styles.chevron}>{state.expanded ? '▾' : '▸'}</span>
+      <span>{label}</span>
+    </div>
+  )
+}
 
 export function DisclosureGroup({
   data,
