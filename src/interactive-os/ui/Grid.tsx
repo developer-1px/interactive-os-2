@@ -27,6 +27,8 @@ interface GridProps {
   enableEditing?: boolean
   /** Enable Tab/Shift+Tab cell cycling across columns and rows */
   tabCycle?: boolean
+  /** Render column headers inside the grid-table container (subgrid-aligned) */
+  header?: boolean
   keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
   'aria-label'?: string
 }
@@ -76,6 +78,7 @@ export function Grid({
   renderCell = defaultRenderCell,
   enableEditing = false,
   tabCycle = false,
+  header = false,
   keyMap,
   'aria-label': ariaLabel,
 }: GridProps) {
@@ -98,6 +101,11 @@ export function Grid({
     [enableEditing, keyMap],
   )
 
+  const gridStyle = React.useMemo(
+    () => ({ '--grid-col-count': columns.length } as React.CSSProperties),
+    [columns.length],
+  )
+
   const renderRow = (node: Record<string, unknown>, state: NodeState): React.ReactNode => {
     const cells = (node.data as Record<string, unknown>)?.cells as unknown[] | undefined
     return (
@@ -112,15 +120,24 @@ export function Grid({
   }
 
   return (
-    <Aria
-      behavior={behavior}
-      data={data}
-      plugins={mergedPlugins}
-      onChange={onChange}
-      keyMap={mergedKeyMap}
-      aria-label={ariaLabel}
-    >
-      <Aria.Item render={renderRow} />
-    </Aria>
+    <div className="grid-table" style={gridStyle}>
+      {header && (
+        <div className="grid-header">
+          {columns.map((col) => (
+            <div key={col.key} className="grid-header-cell">{col.header}</div>
+          ))}
+        </div>
+      )}
+      <Aria
+        behavior={behavior}
+        data={data}
+        plugins={mergedPlugins}
+        onChange={onChange}
+        keyMap={mergedKeyMap}
+        aria-label={ariaLabel}
+      >
+        <Aria.Item render={renderRow} />
+      </Aria>
+    </div>
   )
 }

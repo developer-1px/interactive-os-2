@@ -203,16 +203,24 @@
 [data-aria-container] [aria-level="9"] { padding-left: 136px; }
 [data-aria-container] [aria-level="10"] { padding-left: 152px; }
 
+/* ── Grid table (subgrid layout) ── */
+
+.grid-table {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-col-count, 4), 1fr);
+}
+
 /* ── Grid header ── */
 
 .grid-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
   border-bottom: 2px solid var(--border, #e0e0e0);
   background: var(--header-bg, #fafafa);
 }
 
 .grid-header-cell {
-  flex: 1;
   padding: 8px 12px;
   min-width: 80px;
   font-weight: 600;
@@ -227,10 +235,26 @@
   border-right: none;
 }
 
+/* ── Grid body (Aria container) ── */
+
+.grid-table > [data-aria-container] {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
 /* ── Grid row ── */
 
-[data-aria-container] .grid-row {
-  display: flex;
+.grid-table [role="row"] {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+.grid-table [role="row"] .grid-row {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
 }
 
 /* ── Grid cell ── */
@@ -238,7 +262,6 @@
 [data-aria-container] [role="gridcell"] {
   display: flex;
   align-items: center;
-  flex: 1;
   padding: 4px 12px;
   min-width: 80px;
   font-size: 12px;

@@ -52,13 +52,6 @@ export default function PageI18nDataTable() {
       </div>
       <div className="demo-section">
         <div style={{ border: '1px solid var(--border, #e0e0e0)', borderRadius: 8, overflow: 'hidden' }}>
-          <div className="grid-header">
-            {i18nColumns.map((col) => (
-              <div key={col.key} className="grid-header-cell">
-                {col.header}
-              </div>
-            ))}
-          </div>
           <Grid
             data={data}
             columns={i18nColumns}
@@ -68,6 +61,7 @@ export default function PageI18nDataTable() {
             tabCycle
             renderCell={renderCell}
             aria-label="i18n Translation Table"
+            header
           />
         </div>
       </div>
