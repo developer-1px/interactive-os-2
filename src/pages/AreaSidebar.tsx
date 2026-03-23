@@ -1,10 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Aria } from '../interactive-os/components/aria'
-import { tree as baseTree } from '../interactive-os/behaviors/tree'
-
-const tree = { ...baseTree, followFocus: true }
-import { core, FOCUS_ID, EXPANDED_ID } from '../interactive-os/plugins/core'
+import { TreeView } from '../interactive-os/ui/TreeView'
+import { FOCUS_ID, EXPANDED_ID } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
@@ -129,15 +126,13 @@ export function AreaSidebar() {
         <span className="version">v0.1.0</span>
       </div>
       <div className="sidebar-section-title">Area</div>
-      <Aria
-        behavior={tree}
+      <TreeView
         data={areaStore}
-        plugins={[core()]}
+        followFocus
         onActivate={handleActivate}
+        renderItem={renderItem}
         aria-label="Area documentation"
-      >
-        <Aria.Item render={renderItem} />
-      </Aria>
+      />
     </nav>
   )
 }
