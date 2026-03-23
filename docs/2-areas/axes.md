@@ -1,6 +1,6 @@
 # Axes
 
-> 키맵 원자. 6개 축이 behavior(패턴)를 조합하는 빌딩블록. `composePattern(metadata, ...axes)` → `AriaBehavior`.
+> 키맵 원자. 7개 축이 behavior(패턴)를 조합하는 빌딩블록. `composePattern(metadata, ...axes)` → `AriaBehavior`.
 
 ## 주기율표
 
@@ -12,6 +12,7 @@
 | Expansion | `expand()` | ←→ (state-dependent) | tree, accordion, disclosure | 🟢 |
 | Trap | `trap()` | Escape | dialog, alertdialog | 🟢 |
 | Value | `value()` | ↑↓←→ min/max/step | slider, spinbutton | 🟢 |
+| Tab | `tab()` | Tab, Shift+Tab (loop만) | CMS(flow), dialog(loop 가능) | 🟢 |
 | **Trigger↔Popup** | **—** | **?** | **combobox, tooltip, popover** | **⬜** |
 
 ## 의존 방향
@@ -19,7 +20,7 @@
 ```
 core (Entity, Command, Store)
   ↓
-axes (navigate, select, activate, expand, trap, value)
+axes (navigate, select, activate, expand, trap, value, tab)
   ↓
 behaviors (composePattern → AriaBehavior)
 ```
@@ -33,6 +34,7 @@ behaviors (composePattern → AriaBehavior)
 | ←→ | expand (depthArrow) | navigate | expand가 expanded 상태에서만 반응, 아니면 void → navigate로 fallback |
 | ←→ | value | navigate | value가 slider에서만 사용, 조합하지 않음 |
 | Space | select (selectToggle) | activate | select가 먼저 처리, select 없으면 activate로 fallback |
+| Tab | tab (loop) | navigate (grid tabCycle) | **동시 사용 금지** — 둘 다 Tab keyMap 정의. JSDoc 경고 명시 |
 
 ## 갭
 

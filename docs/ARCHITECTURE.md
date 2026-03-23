@@ -67,14 +67,15 @@ graph TB
 
   subgraph L4["L4 · Behavior (인터랙션 표준 = ARIA APG)"]
     direction TB
-    subgraph L4_axis["5축 · 13 원자 (Axis → partial keyMap)"]
+    subgraph L4_axis["7축 (Axis → partial keyMap + config)"]
       direction LR
-      ax_nav["nav: navV · navH · navVhUniform · navGrid"]
-      ax_depth["depth: depthArrow · depthEnterEsc"]
-      ax_sel["selection: selectToggle · selectExtended"]
-      ax_act["activation: activate · activateFollowFocus"]
+      ax_nav["navigate: navV · navH · navBoth · navGrid"]
+      ax_depth["expand: depthArrow · depthEnterEsc"]
+      ax_sel["select: selectToggle · selectExtended"]
+      ax_act["activate: activate · activateFollowFocus"]
       ax_trap["trap: focusTrap"]
       ax_val["value: valueArrow (increment · decrement · clamp)"]
+      ax_tab["tab: native · flow · loop · escape"]
     end
     subgraph L4_compose["합성"]
       compose["composePattern(config, ...axes) → AriaBehavior"]
