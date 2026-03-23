@@ -6,6 +6,7 @@ export type KeyMap = Record<string, (ctx: BehaviorContext) => Command | void>
 
 export interface AxisConfig {
   focusStrategy: FocusStrategy
+  tabFocusStrategy: FocusStrategy
   expandable: boolean
   selectionMode: SelectionMode
   selectOnClick: boolean
@@ -94,7 +95,7 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
   // Build behavior
   if (isIdentity(config)) {
     // v2 Identity path
-    const focusStrategy = mergedConfig.focusStrategy ?? DEFAULT_FOCUS_STRATEGY
+    const focusStrategy = mergedConfig.tabFocusStrategy ?? mergedConfig.focusStrategy ?? DEFAULT_FOCUS_STRATEGY
 
     return {
       role: config.role,
@@ -117,6 +118,7 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
   return {
     ...(config as PatternConfig),
     ...(mergedConfig.focusStrategy !== undefined && { focusStrategy: mergedConfig.focusStrategy }),
+    ...(mergedConfig.tabFocusStrategy !== undefined && { focusStrategy: mergedConfig.tabFocusStrategy }),
     ...(mergedConfig.expandable !== undefined && { expandable: mergedConfig.expandable }),
     ...(mergedConfig.selectionMode !== undefined && { selectionMode: mergedConfig.selectionMode }),
     ...(mergedConfig.selectOnClick !== undefined && { selectOnClick: mergedConfig.selectOnClick }),
