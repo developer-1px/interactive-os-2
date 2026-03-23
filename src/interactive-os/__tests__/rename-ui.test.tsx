@@ -275,6 +275,50 @@ describe('Rename UI', () => {
     })
   })
 
+  describe('replace mode options', () => {
+    it('startRename with replace:true and initialChar stores them in __rename__ entity', () => {
+      let capturedStore: ReturnType<typeof createStore> | null = null
+
+      function StoreCapture() {
+        const [data, setData] = useState(initialStore)
+        capturedStore = data
+
+        const keyMap = {
+          'F2': (_ctx: import('../behaviors/types').BehaviorContext) =>
+            renameCommands.startRename('a', { replace: true, initialChar: 'a' }),
+        }
+        return (
+          <Aria behavior={listbox} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
+            <Aria.Item render={(node: Record<string, unknown>) => (
+              <div data-testid={`item-${node.id}`}>
+                <Aria.Editable field="label">
+                  <span>{(node.data as Record<string, unknown>)?.label as string}</span>
+                </Aria.Editable>
+              </div>
+            )} />
+          </Aria>
+        )
+      }
+
+      const { container } = render(<StoreCapture />)
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+      act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
+
+      const renameEntity = capturedStore!.entities['__rename__']
+      expect(renameEntity).toBeDefined()
+      expect(renameEntity.replace).toBe(true)
+      expect(renameEntity.initialChar).toBe('a')
+    })
+
+    it('startRename without options still works (backward compatible)', () => {
+      const { container } = setupWithKeyMap()
+      const firstNode = container.querySelector('[data-node-id="a"]')!
+      act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
+
+      expect(container.querySelector('[contenteditable]')).not.toBeNull()
+    })
+  })
+
   describe('undo integration', () => {
     it('confirmRename undo restores original value (engine level)', () => {
       const { container } = setupWithKeyMap()
