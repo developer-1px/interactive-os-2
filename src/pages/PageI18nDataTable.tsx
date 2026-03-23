@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
 import { Grid } from '../interactive-os/ui/Grid'
 import { Aria } from '../interactive-os/components/aria'
-import { core } from '../interactive-os/plugins/core'
+import { core, GRID_COL_ID } from '../interactive-os/plugins/core'
 import { rename } from '../interactive-os/plugins/rename'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
@@ -16,22 +16,35 @@ const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusR
 
 export default function PageI18nDataTable() {
   const [data, setData] = useState<NormalizedData>(i18nInitialData)
+  const dataRef = useRef(data)
+  dataRef.current = data
 
-  const renderCell = (value: unknown, column: { key: string }, _state: NodeState) => {
+  const renderCell = (value: unknown, column: { key: string }, state: NodeState) => {
     const text = String(value ?? '')
     const isKey = column.key === 'key'
     const isEmpty = text === '' && !isKey
+    const colIdx = i18nColumns.findIndex(c => c.key === column.key)
+    const focusedCol = (dataRef.current.entities[GRID_COL_ID]?.colIndex as number) ?? 0
+    const isActiveCell = !isKey && state.focused && colIdx === focusedCol
+
+    if (isActiveCell) {
+      return (
+        <Aria.Editable field={`cells.${colIdx}`} allowEmpty tabContinue>
+          <span className={isEmpty ? 'cell-empty' : undefined}>
+            {isEmpty ? '—' : text}
+          </span>
+        </Aria.Editable>
+      )
+    }
 
     if (isKey) {
       return <span className="cell-key">{text}</span>
     }
 
     return (
-      <Aria.Editable field="cells" allowEmpty tabContinue>
-        <span className={isEmpty ? 'cell-empty' : undefined}>
-          {isEmpty ? '—' : text}
-        </span>
-      </Aria.Editable>
+      <span className={isEmpty ? 'cell-empty' : undefined}>
+        {isEmpty ? '—' : text}
+      </span>
     )
   }
 
