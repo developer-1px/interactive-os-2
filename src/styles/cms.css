@@ -94,7 +94,7 @@
 .cms-template-picker {
   position: absolute; bottom: calc(100% + 4px); left: 4px; right: 4px;
   background: var(--surface-raised); border: 1px solid var(--border-default);
-  border-radius: var(--radius); box-shadow: var(--surface-4-shadow);
+  border-radius: var(--radius); box-shadow: var(--shadow-lg);
   z-index: 50; padding: 4px;
 }
 .cms-template-picker:focus { outline: none; }
@@ -164,7 +164,7 @@
   background: var(--surface-raised);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
-  box-shadow: var(--surface-4-shadow);
+  box-shadow: var(--shadow-lg);
   z-index: 100;
 }
 .cms-floating-toolbar__btn {
@@ -276,7 +276,8 @@
   font-family: var(--sans); font-size: 10px; font-weight: 600;
   color: var(--text-muted); text-transform: uppercase;
 }
-.cms-detail-field__input {
+.cms-detail-field__input,
+.cms-detail-field__textarea {
   width: 100%;
   padding: 4px 8px;
   font-family: var(--sans); font-size: 13px;
@@ -287,8 +288,19 @@
   outline: none;
   transition: border-color var(--transition-fast);
 }
-.cms-detail-field__input:focus {
+.cms-detail-field__input:focus,
+.cms-detail-field__textarea:focus {
   border-color: var(--primary);
+}
+.cms-detail-field__input--invalid {
+  border-color: var(--destructive);
+}
+.cms-detail-field__input--invalid:focus {
+  border-color: var(--destructive);
+}
+.cms-detail-field__textarea {
+  resize: vertical;
+  min-height: 60px;
 }
 
 /* Editable placeholder — shown when contenteditable is empty */

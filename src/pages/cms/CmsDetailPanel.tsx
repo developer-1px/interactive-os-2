@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useMemo } from 'react'
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react'
 import type React from 'react'
 import type { NormalizedData } from '../../interactive-os/core/types'
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
@@ -32,7 +32,6 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, s
     )
   }
 
-  // Single group with no label → flat layout (backward-compatible with leaf nodes)
   if (groups.length === 1 && groups[0].groupLabel === '') {
     const entity = store.entities[focusedNodeId]
     const data = (entity?.data ?? {}) as Record<string, unknown>
@@ -56,7 +55,6 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, s
     )
   }
 
-  // Multiple groups → grouped layout
   return (
     <div className="cms-detail-panel" style={style}>
       <div className="cms-detail-panel__groups">
@@ -96,13 +94,12 @@ function DetailGroup({ group, store, locale, engine }: {
   )
 }
 
-function DetailField({ entry, store, locale, engine }: {
-  entry: EditableGroupEntry
-  store: NormalizedData
-  locale: Locale
-  engine: CommandEngine
-}) {
-  const inputRef = useRef<HTMLInputElement>(null)
+// ── Shared hook: field value + commit logic ──
+
+function useFieldCommit<T extends HTMLInputElement | HTMLTextAreaElement>(
+  entry: EditableGroupEntry, store: NormalizedData, locale: Locale, engine: CommandEngine,
+) {
+  const elRef = useRef<T>(null)
   const snapshotRef = useRef<string>('')
 
   const entity = store.entities[entry.nodeId]
@@ -113,20 +110,19 @@ function DetailField({ entry, store, locale, engine }: {
     ? localized(rawValue as string | LocaleMap, locale).text
     : (rawValue as string) ?? ''
 
-  // Sync input with store value (undo/redo, external changes)
   useEffect(() => {
-    if (inputRef.current && document.activeElement !== inputRef.current) {
-      inputRef.current.value = displayValue
+    if (elRef.current && document.activeElement !== elRef.current) {
+      elRef.current.value = displayValue
       snapshotRef.current = displayValue
     }
   }, [displayValue])
 
-  const handleFocus = () => {
-    snapshotRef.current = inputRef.current?.value ?? ''
-  }
+  const handleFocus = useCallback(() => {
+    snapshotRef.current = elRef.current?.value ?? ''
+  }, [])
 
   const handleCommit = useCallback(() => {
-    const newText = inputRef.current?.value.trim() ?? ''
+    const newText = elRef.current?.value.trim() ?? ''
     if (newText === snapshotRef.current || newText === '') return
 
     const newValue = entry.isLocaleMap
@@ -136,23 +132,101 @@ function DetailField({ entry, store, locale, engine }: {
     snapshotRef.current = newText
   }, [entry.nodeId, entry.field, entry.isLocaleMap, rawValue, locale, engine])
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+  const commitOnEnter = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault()
       handleCommit()
     }
   }, [handleCommit])
 
+  return { elRef, displayValue, handleFocus, handleCommit, commitOnEnter }
+}
+
+// ── Field renderers ──
+
+interface DetailFieldProps {
+  entry: EditableGroupEntry
+  store: NormalizedData
+  locale: Locale
+  engine: CommandEngine
+}
+
+function DetailField(props: DetailFieldProps) {
+  switch (props.entry.fieldType) {
+    case 'long-text': return <LongTextField {...props} />
+    case 'url': return <UrlField {...props} />
+    default: return <ShortTextField {...props} />
+  }
+}
+
+function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
+  const { elRef, displayValue, handleFocus, handleCommit, commitOnEnter } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
+
   return (
     <div className="cms-detail-field">
       <label className="cms-detail-field__label">{entry.label}</label>
       <input
-        ref={inputRef}
+        ref={elRef}
         className="cms-detail-field__input"
         type="text"
         defaultValue={displayValue}
         onFocus={handleFocus}
         onBlur={handleCommit}
+        onKeyDown={commitOnEnter}
+      />
+    </div>
+  )
+}
+
+function LongTextField({ entry, store, locale, engine }: DetailFieldProps) {
+  const { elRef, displayValue, handleFocus, handleCommit } = useFieldCommit<HTMLTextAreaElement>(entry, store, locale, engine)
+
+  return (
+    <div className="cms-detail-field">
+      <label className="cms-detail-field__label">{entry.label}</label>
+      <textarea
+        ref={elRef}
+        className="cms-detail-field__textarea"
+        defaultValue={displayValue}
+        rows={4}
+        onFocus={handleFocus}
+        onBlur={handleCommit}
+      />
+    </div>
+  )
+}
+
+function isValidUrl(value: string): boolean {
+  try { new URL(value); return true } catch { return false }
+}
+
+function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
+  const { elRef, displayValue, handleFocus, handleCommit } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
+  const [invalid, setInvalid] = useState(false)
+
+  const handleBlur = useCallback(() => {
+    handleCommit()
+    const val = elRef.current?.value.trim() ?? ''
+    setInvalid(val !== '' && !isValidUrl(val))
+  }, [handleCommit, elRef])
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleBlur()
+    }
+  }, [handleBlur])
+
+  return (
+    <div className="cms-detail-field">
+      <label className="cms-detail-field__label">{entry.label}</label>
+      <input
+        ref={elRef}
+        className={`cms-detail-field__input${invalid ? ' cms-detail-field__input--invalid' : ''}`}
+        type="url"
+        defaultValue={displayValue}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onKeyDown={handleKeyDown}
       />
     </div>
