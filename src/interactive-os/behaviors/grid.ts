@@ -3,7 +3,7 @@ import { composePattern } from '../axes/composePattern'
 import { select } from '../axes/select'
 import { navigate } from '../axes/navigate'
 
-export function grid(options: { columns: number }): AriaBehavior {
+export function grid(options: { columns: number; tabCycle?: boolean }): AriaBehavior {
   return composePattern(
     {
       role: 'grid',
@@ -14,6 +14,6 @@ export function grid(options: { columns: number }): AriaBehavior {
       }),
     },
     select(),
-    navigate({ grid: { columns: options.columns } }),
+    navigate({ grid: { columns: options.columns, tabCycle: options.tabCycle } }),
   )
 }

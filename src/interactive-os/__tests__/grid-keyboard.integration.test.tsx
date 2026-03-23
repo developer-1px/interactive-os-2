@@ -35,11 +35,13 @@ function fixtureData(): NormalizedData {
 }
 
 const behavior = grid({ columns: 3 })
+const tabCycleBehavior = grid({ columns: 3, tabCycle: true })
 const plugins = [core()]
 
-function renderGrid(data: NormalizedData) {
+function renderGrid(data: NormalizedData, opts?: { tabCycle?: boolean }) {
+  const b = opts?.tabCycle ? tabCycleBehavior : behavior
   return render(
-    <Aria behavior={behavior} data={data} plugins={plugins} aria-label="Employees">
+    <Aria behavior={b} data={data} plugins={plugins} aria-label="Employees">
       <Aria.Item
         render={(node: Record<string, unknown>, state: NodeState) => {
           const cells = (node.data as Record<string, unknown>)?.cells as string[]
@@ -217,6 +219,111 @@ describe('Grid keyboard integration', () => {
       const rowIndices = Array.from(rows).map((r) => r.getAttribute('aria-rowindex'))
       expect(rowIndices).toEqual(['1', '2', '3'])
     })
+  })
+})
+
+describe('Tab cell cycle (tabCycle: true)', () => {
+  it('Tab moves to next column', async () => {
+    const user = userEvent.setup()
+    const { container } = renderGrid(fixtureData(), { tabCycle: true })
+
+    getRowElement(container, 'row-1')!.focus()
+    expect(getFocusedCellColIndex(container)).toBe(0)
+
+    await user.keyboard('{Tab}')
+
+    expect(getFocusedRowId(container)).toBe('row-1')
+    expect(getFocusedCellColIndex(container)).toBe(1)
+  })
+
+  it('Tab at last col wraps to first col of next row', async () => {
+    const user = userEvent.setup()
+    const { container } = renderGrid(fixtureData(), { tabCycle: true })
+
+    getRowElement(container, 'row-1')!.focus()
+    await user.keyboard('{End}')
+    expect(getFocusedCellColIndex(container)).toBe(2)
+
+    await user.keyboard('{Tab}')
+
+    expect(getFocusedRowId(container)).toBe('row-2')
+    expect(getFocusedCellColIndex(container)).toBe(0)
+  })
+
+  it('Tab at absolute last cell (last row, last col) stops', async () => {
+    const user = userEvent.setup()
+    const { container } = renderGrid(fixtureData(), { tabCycle: true })
+
+    // Navigate to last row, last col
+    getRowElement(container, 'row-3')!.focus()
+    await user.keyboard('{End}')
+    expect(getFocusedRowId(container)).toBe('row-3')
+    expect(getFocusedCellColIndex(container)).toBe(2)
+
+    await user.keyboard('{Tab}')
+
+    expect(getFocusedRowId(container)).toBe('row-3')
+    expect(getFocusedCellColIndex(container)).toBe(2)
+  })
+
+  it('Shift+Tab moves to previous column', async () => {
+    const user = userEvent.setup()
+    const { container } = renderGrid(fixtureData(), { tabCycle: true })
+
+    getRowElement(container, 'row-1')!.focus()
+    await user.keyboard('{End}')
+    expect(getFocusedCellColIndex(container)).toBe(2)
+
+    await user.keyboard('{Shift>}{Tab}{/Shift}')
+
+    expect(getFocusedRowId(container)).toBe('row-1')
+    expect(getFocusedCellColIndex(container)).toBe(1)
+  })
+
+  it('Shift+Tab at first col wraps to last col of previous row', async () => {
+    const user = userEvent.setup()
+    const { container } = renderGrid(fixtureData(), { tabCycle: true })
+
+    getRowElement(container, 'row-2')!.focus()
+    expect(getFocusedCellColIndex(container)).toBe(0)
+
+    await user.keyboard('{Shift>}{Tab}{/Shift}')
+
+    expect(getFocusedRowId(container)).toBe('row-1')
+    expect(getFocusedCellColIndex(container)).toBe(2)
+  })
+
+  it('Shift+Tab at absolute first cell (first row, first col) stops', async () => {
+    const user = userEvent.setup()
+    const { container } = renderGrid(fixtureData(), { tabCycle: true })
+
+    getRowElement(container, 'row-1')!.focus()
+    expect(getFocusedRowId(container)).toBe('row-1')
+    expect(getFocusedCellColIndex(container)).toBe(0)
+
+    await user.keyboard('{Shift>}{Tab}{/Shift}')
+
+    expect(getFocusedRowId(container)).toBe('row-1')
+    expect(getFocusedCellColIndex(container)).toBe(0)
+  })
+
+  it('Tab does nothing when tabCycle is not enabled', async () => {
+    const user = userEvent.setup()
+    const { container } = renderGrid(fixtureData()) // no tabCycle
+
+    getRowElement(container, 'row-1')!.focus()
+    expect(getFocusedCellColIndex(container)).toBe(0)
+
+    await user.keyboard('{Tab}')
+
+    // Without tabCycle, Tab should NOT be handled by the grid
+    // Focus may leave the grid entirely (default browser behavior)
+    // The key point: column should NOT have changed via our handler
+    // (focus may have left the grid, so we just check it didn't advance)
+    const col = getFocusedCellColIndex(container)
+    const row = getFocusedRowId(container)
+    // Either focus left (null) or stayed at col 0 — never moved to col 1
+    expect(col).not.toBe(1)
   })
 })
 

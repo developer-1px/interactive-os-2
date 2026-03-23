@@ -38,6 +38,7 @@ import PageComboboxNav from './pages/PageComboboxNav'
 import PageTabsCrud from './pages/PageTabsCrud'
 import PageGridCollection from './pages/PageGridCollection'
 import PageKanban from './pages/PageKanban'
+import PageI18nDataTable from './pages/PageI18nDataTable'
 import PageCrud from './pages/PageCrud'
 import PageClipboard from './pages/PageClipboard'
 import PageHistoryDemo from './pages/PageHistoryDemo'
@@ -191,6 +192,7 @@ const routeConfig: RouteGroup[] = [
       { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabsCrud },
       { path: 'combobox', label: 'Combobox', status: 'ready', component: PageCombobox },
       { path: 'kanban', label: 'Kanban', status: 'ready', component: PageKanban },
+      { path: 'i18n', label: 'i18n DataTable', status: 'ready', component: PageI18nDataTable },
     ],
   },
   {
