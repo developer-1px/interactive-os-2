@@ -21,11 +21,13 @@
 | focusRecovery | Integrated | — |
 | history | Integrated | delta-based undo/redo, navigation skip 구현. command grouping 미구현 |
 | crud | Integrated | — |
-| clipboard | Integrated | — |
+| clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화 완료. keyMap→native event 미전환 |
+| zodSchema | Integrated | Zod childRules → canAccept/canDelete 자동 파생, middleware 기반 |
 | rename | Integrated | — |
 | dnd | Integrated | — |
 | spatial | Integrated | — |
 | typeahead | Integrated | — |
+| definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires. 전 플러그인 전환 완료 |
 | *permissions* | Concept | 예제만 존재 |
 
 ## Behavior (5축 + 18 presets)

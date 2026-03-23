@@ -26,3 +26,8 @@
 - [ ] [P1] treegrid 쇼케이스 페이지 — 실제 다중 컬럼(파일명+크기+날짜) 데이터로 treegrid 패턴 시연. 기존 treegrid 라우트는 tree로 교체됨 — 출처: discussion (2026-03-23)
 - [ ] [P0] UI SDK 카탈로그 32개 장기 플랜 — 상세: docs/5-backlogs/uiSdkCatalog.md — 출처: UI SDK discussion (2026-03-23)
 - [ ] [P1] Viewer lightbox — mermaid/이미지 클릭 시 전체화면 보기 — 출처: architecture snapshot discussion (2026-03-23)
+- [ ] [P1] edit 축 도입 — Grid.tsx editingKeyMap 접착제 제거, grid({ edit: true })로 behavior가 F2/Enter/printable/Delete 소유, Grid.tsx 순수 렌더러화 — 출처: i18n DataTable discussion (2026-03-23)
+- [ ] [P2] Mod+X 셀 단위 cut — Mod+C/V는 셀 특화 완료, X만 아직 행 단위 — 출처: i18n DataTable 브라우저 재현 (2026-03-23)
+- [ ] [P2] Delete → 셀 값 클리어 — DataTable에서 Delete=행 삭제가 아닌 셀 클리어가 자연스러움 (Page keyMap override) — 출처: i18n DataTable 브라우저 재현 (2026-03-23)
+- [ ] [P2] Enter confirm 후 아래 셀 이동 — 구글 시트 패턴 (Tab=오른쪽, Enter=아래) — 출처: i18n DataTable 브라우저 재현 (2026-03-23)
+- [ ] [P1] clipboard-overwrite 테스트 충돌 — Enter keyMap 추가로 1개 실패, 병합 시 해결 필요 — 출처: i18n DataTable Enter 추가 (2026-03-23)

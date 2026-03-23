@@ -1,6 +1,9 @@
-import type { Command, Entity, NormalizedData, Plugin } from '../core/types'
+import type { Command, Entity, NormalizedData } from '../core/types'
 import { ROOT_ID, createBatchCommand } from '../core/types'
 import { addEntity, removeEntity, getEntity, getChildren, getParent } from '../core/createStore'
+import { definePlugin } from '../core/definePlugin'
+import { focusRecovery } from './focusRecovery'
+import type { IsReachable } from './focusRecovery'
 
 export const crudCommands = {
   create(entity: Entity, parentId: string = ROOT_ID, index?: number): Command {
@@ -88,12 +91,18 @@ export const crudCommands = {
   },
 }
 
-export function crud(): Plugin {
-  return {
+export interface CrudOptions {
+  isReachable?: IsReachable
+}
+
+export function crud(options?: CrudOptions) {
+  return definePlugin({
+    name: 'crud',
+    requires: [focusRecovery({ isReachable: options?.isReachable })],
     commands: {
       create: crudCommands.create,
       delete: crudCommands.remove,
       deleteMultiple: crudCommands.removeMultiple,
     },
-  }
+  })
 }

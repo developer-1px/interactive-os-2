@@ -1,4 +1,5 @@
-import type { Command, Plugin, NormalizedData } from '../core/types'
+import type { Command, NormalizedData } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 import { computeStoreDiff, applyDelta } from '../core/computeStoreDiff'
 import type { StoreDiff } from '../core/computeStoreDiff'
 
@@ -31,11 +32,12 @@ export function redoCommand(): Command {
 
 export const historyCommands = { undo: undoCommand, redo: redoCommand }
 
-export function history(): Plugin {
+export function history() {
   const past: StoreDiff[][] = []
   const future: StoreDiff[][] = []
 
-  return {
+  return definePlugin({
+    name: 'history',
     middleware: (next) => (command) => {
       if (command.type === 'history:undo') {
         const diffs = past.pop()
@@ -79,5 +81,5 @@ export function history(): Plugin {
       'Mod+Z': () => historyCommands.undo(),
       'Mod+Shift+Z': () => historyCommands.redo(),
     },
-  }
+  })
 }

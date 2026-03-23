@@ -6,7 +6,8 @@ import { ROOT_ID } from '../core/types'
 import { clipboardCommands, resetClipboard, clipboard } from '../plugins/clipboard'
 import { crudCommands } from '../plugins/crud'
 import { history, historyCommands } from '../plugins/history'
-import { cmsCanAccept, cmsCanDelete } from '../../pages/cms/cms-schema'
+import { zodSchema } from '../plugins/zodSchema'
+import { childRules, nodeSchemas, cmsCanDelete } from '../../pages/cms/cms-schema'
 
 /**
  * CMS-like fixture:
@@ -51,10 +52,15 @@ function fixtureStore() {
 
 function createEngine() {
   const historyPlugin = history()
-  const clipboardPlugin = clipboard({ canAccept: cmsCanAccept, canDelete: cmsCanDelete })
+  const clipboardPlugin = clipboard()
+  const zodSchemaPlugin = zodSchema({ childRules, rootTypes: [nodeSchemas.section, nodeSchemas['tab-group']] })
+  // zodSchema intercepts first → history wraps the replaced command for undo
+  const middlewares = [zodSchemaPlugin, historyPlugin, clipboardPlugin]
+    .map((p) => p.middleware)
+    .filter((m): m is NonNullable<typeof m> => m != null)
   return createCommandEngine(
     fixtureStore(),
-    [historyPlugin.middleware!],
+    middlewares,
     vi.fn(),
     { logger: false },
   )

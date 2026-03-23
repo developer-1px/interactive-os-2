@@ -1,4 +1,5 @@
 import type { Command, NormalizedData } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 import { ROOT_ID } from '../core/types'
 import { getParent } from '../core/createStore'
 
@@ -81,6 +82,6 @@ export const spatialCommands = {
   },
 }
 
-export function spatial(): { name: string } {
-  return { name: 'spatial' }
+export function spatial() {
+  return definePlugin({ name: 'spatial' })
 }

@@ -23,7 +23,7 @@ const localeMapSchema = z.object({
 // ── Node data schemas ──
 // .describe() on each field provides the UI label for Detail Panel.
 
-const nodeSchemas = {
+export const nodeSchemas = {
   badge:            z.object({ type: z.literal('badge'),         value: localeMapSchema.describe('Badge') }),
   icon:             z.object({ type: z.literal('icon'),          value: z.string() }),
   text:             z.object({ type: z.literal('text'),          role: z.string(), value: localeMapSchema.describe('Text') }),
@@ -48,7 +48,7 @@ const nodeSchemas = {
 
 // ── Children rules ──
 
-const childRules: Record<string, z.ZodType> = {
+export const childRules: Record<string, z.ZodType> = {
   // Collections (z.array): children can be added/removed/reordered
   section: z.array(z.discriminatedUnion('type', [
     nodeSchemas.card, nodeSchemas.stat, nodeSchemas.step, nodeSchemas.pattern,

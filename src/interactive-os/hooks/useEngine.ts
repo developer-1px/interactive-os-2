@@ -23,6 +23,17 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
   onChangeRef.current = onChange
 
   if (engineRef.current == null) {
+    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+      const commandTypes = new Set(plugins.flatMap((p) => Object.keys(p.commands ?? {})))
+      for (const p of plugins) {
+        for (const dep of p.intercepts ?? []) {
+          if (!commandTypes.has(dep)) {
+            console.warn(`[${p.name ?? 'anonymous'}] intercepts "${dep}" but no plugin provides it`)
+          }
+        }
+      }
+    }
+
     const middlewares = plugins
       .map((p) => p.middleware)
       .filter((m): m is NonNullable<typeof m> => m != null)

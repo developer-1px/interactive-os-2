@@ -22,9 +22,15 @@ import { getParent } from '../../interactive-os/core/createStore'
 import { collectSections } from './collectSections'
 import { ROOT_ID } from '../../interactive-os/core/types'
 import type { Plugin } from '../../interactive-os/core/types'
-import { cmsCanAccept, cmsCanDelete } from './cms-schema'
+import { childRules, nodeSchemas } from './cms-schema'
+import { zodSchema } from '../../interactive-os/plugins/zodSchema'
 
-const sharedPlugins: Plugin[] = [history(), clipboard({ canAccept: cmsCanAccept, canDelete: cmsCanDelete }), rename()]
+const sharedPlugins: Plugin[] = [
+  history(),
+  clipboard(),
+  zodSchema({ childRules, rootTypes: [nodeSchemas.section, nodeSchemas['tab-group']] }),
+  rename(),
+]
 
 export default function CmsLayout() {
   const [persistedData, setPersistedData] = useCmsData()

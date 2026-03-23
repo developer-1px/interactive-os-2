@@ -1,4 +1,5 @@
-import type { Command, Plugin, NormalizedData } from '../core/types'
+import type { Command, NormalizedData } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 import { ROOT_ID } from '../core/types'
 
 const COMBOBOX_ID = '__combobox__'
@@ -128,13 +129,14 @@ export const comboboxCommands = {
   },
 }
 
-export function combobox(): Plugin {
-  return {
+export function combobox() {
+  return definePlugin({
+    name: 'combobox',
     commands: {
       open: comboboxCommands.open,
       close: comboboxCommands.close,
       setFilter: comboboxCommands.setFilter,
       create: comboboxCommands.create,
     },
-  }
+  })
 }

@@ -45,6 +45,7 @@ export type Middleware = (
 ) => (command: Command) => void
 
 export interface Plugin {
+  name?: string
   middleware?: Middleware
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: Record<string, (...args: any[]) => Command>
@@ -54,4 +55,5 @@ export interface Plugin {
    *  Receives the raw KeyboardEvent. Return true to preventDefault. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUnhandledKey?: (event: KeyboardEvent, engine: any) => boolean
+  intercepts?: readonly string[]
 }

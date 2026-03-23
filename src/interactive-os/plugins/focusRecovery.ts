@@ -1,4 +1,5 @@
-import type { Command, NormalizedData, Plugin } from '../core/types'
+import type { Command, NormalizedData } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 import { ROOT_ID } from '../core/types'
 import { getChildren, getParent, getEntity } from '../core/createStore'
 import { focusCommands } from './core'
@@ -130,10 +131,11 @@ export interface FocusRecoveryOptions {
  * - New visible node created → focus it
  * - Focus invisible (deleted, collapsed, hidden) → fallback chain
  */
-export function focusRecovery(options?: FocusRecoveryOptions): Plugin {
+export function focusRecovery(options?: FocusRecoveryOptions) {
   const reachable = options?.isReachable ?? treeReachable
 
-  return {
+  return definePlugin({
+    name: 'focusRecovery',
     middleware: (next) => (command) => {
       if (command.type === 'core:focus') {
         next(command)
@@ -176,5 +178,5 @@ export function focusRecovery(options?: FocusRecoveryOptions): Plugin {
         }
       }
     },
-  }
+  })
 }
