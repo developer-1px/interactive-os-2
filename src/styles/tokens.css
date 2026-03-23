@@ -91,12 +91,20 @@
   --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
   --sans: 'Manrope', -apple-system, system-ui, sans-serif;
 
-  --text-xs:  11px;
+  --text-xs:  10px;
   --text-sm:  12px;
   --text-md:  14px;
-  --text-lg:  16px;
+  --text-lg:  17px;
   --text-xl:  20px;
-  --text-2xl: 28px;
+  --text-2xl: 24px;
+  --text-3xl: 29px;
+
+  /* ── Line-height ── */
+  --leading-tight:   1.2;
+  --leading-snug:    1.4;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.7;
+  --leading-code:    1.6;
 
   /* ── Layout ── */
   --radius:    8px;
@@ -237,7 +245,7 @@ body {
   color: var(--text-primary);
   font-family: var(--sans);
   font-size: var(--text-md);
-  line-height: 1.5;
+  line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

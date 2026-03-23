@@ -44,6 +44,16 @@
   display: flex;
 }
 
+[data-aria-container] [role="treeitem"] {
+  flex-wrap: wrap;
+}
+
+/* Nested group wraps below the item label */
+[data-aria-container] [role="treeitem"] > [role="group"] {
+  flex-basis: 100%;
+  padding: 0;
+}
+
 /* Accordion heading */
 [data-aria-container] [role="heading"] {
   padding: var(--space-sm) var(--space-md);

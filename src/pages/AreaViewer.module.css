@@ -3,15 +3,12 @@
    ═══════════════════════════════════════════ */
 
 .root {
-  max-width: 720px;
   margin: 0 auto;
   padding: var(--space-2xl) 48px;
-  font-family: var(--sans);
-  font-size: var(--text-lg);
-  font-weight: 450;
+  font-size: var(--text-md);
+  font-weight: 400;
   color: var(--text-primary);
-  line-height: 1.75;
-  letter-spacing: 0.01em;
+  line-height: var(--leading-relaxed);
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -20,43 +17,57 @@
   margin-top: 0;
 }
 
+/* ── Prose elements: constrained width ── */
+
+.root h1,
+.root h2,
+.root h3,
+.root h4,
+.root p,
+.root ul,
+.root ol,
+.root blockquote,
+.root hr {
+  max-width: 720px;
+}
+
 .root h1 {
-  font-size: var(--text-2xl);
-  font-weight: 800;
+  font-size: var(--text-3xl);
+  font-weight: 700;
   color: var(--text-bright);
   margin: 2.5em 0 0.6em;
   padding-bottom: 0.3em;
   border-bottom: 1px solid var(--border-subtle);
-  line-height: 1.2;
+  line-height: var(--leading-tight);
   letter-spacing: -0.02em;
 }
 
 .root h2 {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--text-bright);
   margin: 2em 0 0.5em;
   padding-bottom: 0.25em;
   border-bottom: 1px solid var(--border-subtle);
-  line-height: 1.3;
-  letter-spacing: -0.015em;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
 }
 
 .root h3 {
-  font-size: var(--text-lg);
-  font-weight: 700;
+  font-size: var(--text-xl);
+  font-weight: 600;
   color: var(--text-bright);
   margin: 1.6em 0 0.4em;
-  line-height: 1.35;
+  line-height: var(--leading-tight);
   letter-spacing: -0.01em;
 }
 
 .root h4 {
-  font-size: var(--text-md);
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-secondary);
   margin: 1.2em 0 0.3em;
-  line-height: 1.4;
+  line-height: var(--leading-snug);
 }
 
 .root > blockquote {
@@ -103,6 +114,8 @@
   border: 1px solid var(--border-subtle);
 }
 
+/* ── Wide elements: use full available width ── */
+
 .root pre {
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
@@ -117,7 +130,7 @@
   border: none;
   padding: 0;
   font-size: var(--text-md);
-  line-height: 1.6;
+  line-height: var(--leading-code);
   color: var(--text-primary);
 }
 
@@ -141,10 +154,17 @@
   border-radius: var(--radius);
 }
 
+/* Mermaid diagrams: full width */
+.root svg {
+  max-width: 100%;
+  height: auto;
+}
+
 /* --- MDX tables --- */
 
 .root table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
   font-size: var(--text-md);
   margin: 1.2em 0;
@@ -174,5 +194,4 @@
 /* status indicators */
 .root td:last-child {
   text-align: center;
-  white-space: nowrap;
 }
