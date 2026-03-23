@@ -10,10 +10,10 @@ interface CheckboxProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactElement
+  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
 }
 
-const defaultRenderItem = (item: Record<string, unknown>, state: NodeState): React.ReactElement => {
+const defaultRenderItem = (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
   const label =
     (item.data as Record<string, unknown>)?.label as string ??
     (item.data as Record<string, unknown>)?.name as string ??

@@ -11,6 +11,7 @@ import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
 
 type KeyMapHandler = (ctx: ReturnType<typeof createBehaviorContext>) => Command | void
+type ClipboardHandler = KeyMapHandler
 
 // ── Plugin handler extraction (pure) ──
 
