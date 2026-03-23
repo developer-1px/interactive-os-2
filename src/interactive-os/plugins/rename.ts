@@ -1,4 +1,5 @@
-import type { Command, Plugin } from '../core/types'
+import type { Command } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 import { getEntity, updateEntityData } from '../core/createStore'
 
 export const RENAME_ID = '__rename__'
@@ -126,12 +127,13 @@ export const renameCommands = {
   },
 }
 
-export function rename(): Plugin {
-  return {
+export function rename() {
+  return definePlugin({
+    name: 'rename',
     commands: {
       startRename: renameCommands.startRename,
       confirmRename: renameCommands.confirmRename,
       cancelRename: renameCommands.cancelRename,
     },
-  }
+  })
 }

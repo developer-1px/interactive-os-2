@@ -1,4 +1,5 @@
-import type { Entity, Plugin } from '../core/types'
+import type { Entity } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 import type { CommandEngine } from '../core/createCommandEngine'
 import { focusCommands, FOCUS_ID } from './core'
 import { getVisibleNodes } from '../behaviors/createBehaviorContext'
@@ -69,7 +70,7 @@ export function resetTypeahead(): void {
   activeReset?.()
 }
 
-export function typeahead(options: TypeaheadOptions): Plugin {
+export function typeahead(options: TypeaheadOptions) {
   const { getLabel, timeout = DEFAULT_TIMEOUT } = options
 
   // Per-instance state (NOT module-level) — each typeahead() call gets its own buffer
@@ -85,7 +86,8 @@ export function typeahead(options: TypeaheadOptions): Plugin {
   // Register as active instance for resetTypeahead()
   activeReset = reset
 
-  return {
+  return definePlugin({
+    name: 'typeahead',
     onUnhandledKey(event: KeyboardEvent, engine: CommandEngine): boolean {
       if (!isPrintableKey(event)) return false
 
@@ -118,5 +120,5 @@ export function typeahead(options: TypeaheadOptions): Plugin {
 
       return true // always consume printable chars to prevent browser default
     },
-  }
+  })
 }

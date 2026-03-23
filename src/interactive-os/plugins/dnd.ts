@@ -1,4 +1,5 @@
-import type { Command, Plugin } from '../core/types'
+import type { Command } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 import { ROOT_ID } from '../core/types'
 import { getChildren, getParent, moveNode } from '../core/createStore'
 
@@ -121,8 +122,9 @@ export const dndCommands = {
   },
 }
 
-export function dnd(): Plugin {
-  return {
+export function dnd() {
+  return definePlugin({
+    name: 'dnd',
     commands: {
       moveUp: dndCommands.moveUp,
       moveDown: dndCommands.moveDown,
@@ -130,5 +132,5 @@ export function dnd(): Plugin {
       moveIn: dndCommands.moveIn,
       moveTo: dndCommands.moveTo,
     },
-  }
+  })
 }

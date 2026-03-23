@@ -1,4 +1,5 @@
-import type { Command, Plugin, NormalizedData, Middleware } from '../core/types'
+import type { Command, NormalizedData, Middleware } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 
 export const FOCUS_ID = '__focus__'
 export const SELECTION_ID = '__selection__'
@@ -422,8 +423,9 @@ function anchorResetMiddleware(): Middleware {
   }
 }
 
-export function core(): Plugin {
-  return {
+export function core() {
+  return definePlugin({
+    name: 'core',
     middleware: anchorResetMiddleware(),
     commands: {
       focus: focusCommands.setFocus,
@@ -434,5 +436,5 @@ export function core(): Plugin {
       collapse: expandCommands.collapse,
       toggleExpand: expandCommands.toggleExpand,
     },
-  }
+  })
 }

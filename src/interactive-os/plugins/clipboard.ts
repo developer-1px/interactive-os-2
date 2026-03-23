@@ -1,5 +1,6 @@
-import type { Command, Entity, NormalizedData, Plugin } from '../core/types'
+import type { Command, Entity, NormalizedData } from '../core/types'
 import { ROOT_ID } from '../core/types'
+import { definePlugin } from '../core/definePlugin'
 import {
   addEntity,
   removeEntity,
@@ -33,12 +34,19 @@ export type CanDeleteFn = (
   parentData: Record<string, unknown> | undefined,
 ) => boolean
 
-// Module-level clipboard state (shared across instances)
+// ── Command TYPE constants ──
+
+export const COPY = 'clipboard:copy' as const
+export const CUT = 'clipboard:cut' as const
+export const PASTE = 'clipboard:paste' as const
+export const COPY_CELL = 'clipboard:copyCellValue' as const
+export const PASTE_CELL = 'clipboard:pasteCellValue' as const
+
+// ── Module-level clipboard data (shared — OS clipboard model) ──
+
 let clipboardBuffer: ClipboardEntry[] = []
 let clipboardMode: 'copy' | 'cut' = 'copy'
 let cutSourceIds: string[] = []
-let canAcceptFn: CanAcceptFn | undefined
-let canDeleteFn: CanDeleteFn | undefined
 let cellValueBuffer: string = ''
 
 /** Read-only access to cut source IDs — for UI cut-state styling */
@@ -96,7 +104,7 @@ function normalizeAcceptResult(result: CanAcceptResult): 'insert' | 'overwrite' 
 }
 
 /** Check if a node can be deleted/cut based on its parent's canDelete. */
-function canDeleteNode(store: NormalizedData, nodeId: string): boolean {
+function canDeleteNode(store: NormalizedData, nodeId: string, canDeleteFn?: CanDeleteFn): boolean {
   if (!canDeleteFn) return true
   const parentId = getParent(store, nodeId)
   if (!parentId) return true // ROOT-level
@@ -116,6 +124,7 @@ function findPasteTarget(
   store: NormalizedData,
   targetId: string,
   childData: Record<string, unknown> | undefined,
+  canAcceptFn?: CanAcceptFn,
 ): { pasteInto: string; insertIndex: number | undefined; mode: 'insert' | 'overwrite' } {
   if (canAcceptFn) {
     // Schema-based routing: walk up from target to find first accepting ancestor
@@ -125,16 +134,13 @@ function findPasteTarget(
       const result = normalizeAcceptResult(canAcceptFn(candidateData, childData))
 
       if (result === 'overwrite' && candidate === targetId) {
-        // Overwrite: target itself is the slot node to replace
         return { pasteInto: candidate, insertIndex: undefined, mode: 'overwrite' }
       }
 
       if (result === 'insert') {
         if (candidate === targetId) {
-          // Target itself accepts → paste as child (append)
           return { pasteInto: candidate, insertIndex: undefined, mode: 'insert' }
         }
-        // Ancestor accepts → insert after the direct child that contains targetId
         const children = getChildren(store, candidate)
         let ancestorChild = targetId
         let parent = getParent(store, ancestorChild)
@@ -146,10 +152,8 @@ function findPasteTarget(
         return { pasteInto: candidate, insertIndex: pos >= 0 ? pos + 1 : undefined, mode: 'insert' }
       }
 
-      // result === false or overwrite but not target → skip, walk up
       candidate = getParent(store, candidate)
     }
-    // No ancestor accepted → paste at ROOT as last resort
     return { pasteInto: ROOT_ID, insertIndex: undefined, mode: 'insert' }
   }
 
@@ -169,10 +173,7 @@ function findPasteTarget(
   return { pasteInto, insertIndex, mode: 'insert' }
 }
 
-/** Extract editable field values from entity data.
- *  "Editable" = fields with .describe() in the Zod schema.
- *  Since we don't have schema access here, we copy all fields except 'type' and 'role'
- *  which are structural. The canAccept already validated type compatibility. */
+/** Extract editable field values from entity data. */
 function extractOverwriteFields(
   sourceData: Record<string, unknown>,
 ): Record<string, unknown> {
@@ -192,22 +193,20 @@ function getCells(store: NormalizedData, nodeId: string): string[] {
 export const clipboardCommands = {
   copyCellValue(nodeId: string, colIndex: number): Command {
     return {
-      type: 'clipboard:copyCellValue',
+      type: COPY_CELL,
       payload: { nodeId, colIndex },
       execute(store) {
         cellValueBuffer = getCells(store, nodeId)[colIndex] ?? ''
         return store
       },
-      undo(store) {
-        return store
-      },
+      undo(store) { return store },
     }
   },
 
   pasteCellValue(nodeId: string, colIndex: number): Command {
     let previousValue: string = ''
     return {
-      type: 'clipboard:pasteCellValue',
+      type: PASTE_CELL,
       payload: { nodeId, colIndex },
       execute(store) {
         if (cellValueBuffer === '') return store
@@ -226,43 +225,36 @@ export const clipboardCommands = {
 
   copy(nodeIds: string[]): Command {
     return {
-      type: 'clipboard:copy',
+      type: COPY,
       payload: { nodeIds },
       execute(store) {
         clipboardBuffer = nodeIds.map((id) => collectSubtree(store, id))
         clipboardMode = 'copy'
         cutSourceIds = []
-        return store // copy doesn't modify store
+        return store
       },
-      undo(store) {
-        return store // copy is not undoable (no store change)
-      },
+      undo(store) { return store },
     }
   },
 
-  cut(nodeIds: string[]): Command {
+  cut(nodeIds: string[], canDeleteFn?: CanDeleteFn): Command {
     return {
-      type: 'clipboard:cut',
+      type: CUT,
       payload: { nodeIds },
       execute(store) {
-        // Filter out nodes that can't be deleted (slot children)
-        const deletable = nodeIds.filter((id) => canDeleteNode(store, id))
+        const deletable = nodeIds.filter((id) => canDeleteNode(store, id, canDeleteFn))
         if (deletable.length === 0) return store
 
         clipboardBuffer = deletable.map((id) => collectSubtree(store, id))
         clipboardMode = 'cut'
         cutSourceIds = [...deletable]
-        return store // cut doesn't modify store until paste
-      },
-      undo(store) {
         return store
       },
+      undo(store) { return store },
     }
   },
 
-  paste(targetId: string): Command {
-    // Clipboard state is captured at execute time (not creation time) so that
-    // copy/cut dispatched before paste is reflected correctly
+  paste(targetId: string, canAcceptFn?: CanAcceptFn): Command {
     let buffer: ClipboardEntry[] = []
     let mode: 'copy' | 'cut' = 'copy'
     let sourceIds: string[] = []
@@ -270,30 +262,24 @@ export const clipboardCommands = {
     let overwriteSnapshot: { nodeId: string; oldData: Record<string, unknown> } | null = null
 
     return {
-      type: 'clipboard:paste',
+      type: PASTE,
       payload: { targetId },
       execute(store) {
-        // Capture clipboard state at execute time
         buffer = [...clipboardBuffer]
         mode = clipboardMode
-
         sourceIds = [...cutSourceIds]
 
         if (buffer.length === 0) return store
 
-        // Determine paste location using schema or legacy logic.
-        // Note: uses first buffer entry's type for routing. Mixed-type selections
-        // are assumed homogeneous — CMS only copies same-type siblings.
         const childData = buffer[0]!.entity.data as Record<string, unknown> | undefined
-        const { pasteInto, insertIndex: initialInsertIndex, mode: pasteMode } = findPasteTarget(store, targetId, childData)
+        const { pasteInto, insertIndex: initialInsertIndex, mode: pasteMode } = findPasteTarget(store, targetId, childData, canAcceptFn)
 
-        // Overwrite mode: replace editable fields on target node
+        // Overwrite mode
         if (pasteMode === 'overwrite') {
           if (!childData) return store
           const fields = extractOverwriteFields(childData)
           if (Object.keys(fields).length === 0) return store
 
-          // Snapshot for undo
           const existing = getEntity(store, targetId)
           overwriteSnapshot = {
             nodeId: targetId,
@@ -303,22 +289,18 @@ export const clipboardCommands = {
           return updateEntityData(store, targetId, fields)
         }
 
-        // Insert mode (collection or legacy)
+        // Insert mode
         let insertIndex = initialInsertIndex
         let result = store
 
         if (mode === 'cut') {
-          // Remove from source first
           for (const id of sourceIds) {
             result = removeEntity(result, id)
           }
-          // Recalculate index after removals (siblings may have shifted)
           if (insertIndex !== undefined) {
             const siblings = getChildren(result, pasteInto)
-            // Find the reference node for position calculation
             let refNode = targetId
             if (canAcceptFn && pasteInto !== getParent(store, targetId)) {
-              // Walking up happened — find the ancestor child
               let current = targetId
               let parent = getParent(store, current)
               while (parent && parent !== pasteInto) {
@@ -330,18 +312,15 @@ export const clipboardCommands = {
             const targetPos = siblings.indexOf(refNode)
             insertIndex = targetPos >= 0 ? targetPos + 1 : undefined
           }
-          // Insert at target with original IDs
           for (let i = 0; i < buffer.length; i++) {
             const entry = buffer[i]!
             const idx = insertIndex !== undefined ? insertIndex + i : undefined
             result = insertClipboardEntry(result, entry, pasteInto, false, idx)
             pastedIds.push(entry.entity.id)
           }
-          // Clear clipboard after cut-paste
           clipboardBuffer = []
           cutSourceIds = []
         } else {
-          // Copy: insert with new IDs at position
           for (let i = 0; i < buffer.length; i++) {
             const entry = buffer[i]!
             const idx = insertIndex !== undefined ? insertIndex + i : undefined
@@ -357,7 +336,6 @@ export const clipboardCommands = {
         return result
       },
       undo(store) {
-        // Undo overwrite: restore old data
         if (overwriteSnapshot) {
           return updateEntityData(store, overwriteSnapshot.nodeId, overwriteSnapshot.oldData)
         }
@@ -367,18 +345,13 @@ export const clipboardCommands = {
         let result = store
 
         if (mode === 'cut') {
-          // Remove pasted nodes from target
           for (const id of pastedIds) {
             result = removeEntity(result, id)
           }
-          // Restore at original locations
           for (const entry of buffer) {
-            // We need to find original parent — stored in the entry context
-            // For simplicity, we add back to root; history plugin's snapshot handles correctness
             result = insertClipboardEntry(result, entry, ROOT_ID, false)
           }
         } else {
-          // Remove cloned nodes
           for (const id of pastedIds) {
             result = removeEntity(result, id)
           }
@@ -391,34 +364,38 @@ export const clipboardCommands = {
 }
 
 export interface ClipboardOptions {
-  /** Schema-based paste routing. When provided, paste walks up from target
-   *  to find the first ancestor where canAccept returns true.
-   *  Return 'insert' for collection, 'overwrite' for slot, false to reject.
-   *  Boolean return is backward compatible: true → 'insert', false → false. */
+  /** @deprecated Use zodSchema() plugin instead. */
   canAccept?: CanAcceptFn
-  /** Slot protection. When provided, cut filters out nodes whose parent
-   *  returns false. Use to prevent cutting structural children. */
+  /** @deprecated Use zodSchema() plugin instead. */
   canDelete?: CanDeleteFn
 }
 
-/** Clipboard is a singleton plugin — clipboardBuffer and canAccept are module-level
- *  shared state. Call clipboard() once per application. */
-export function clipboard(options?: ClipboardOptions): Plugin {
-  canAcceptFn = options?.canAccept
-  canDeleteFn = options?.canDelete
-  return {
+export function clipboard(options?: ClipboardOptions) {
+  const boundCanAccept = options?.canAccept
+  const boundCanDelete = options?.canDelete
+
+  if (boundCanAccept || boundCanDelete) {
+    if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+      console.warn('[clipboard] canAccept/canDelete options are deprecated. Use zodSchema() plugin instead.')
+    }
+  }
+
+  return definePlugin({
+    name: 'clipboard',
     commands: {
-      copy: clipboardCommands.copy,
-      cut: clipboardCommands.cut,
-      paste: clipboardCommands.paste,
+      [COPY]: clipboardCommands.copy,
+      [CUT]: clipboardCommands.cut,
+      [PASTE]: clipboardCommands.paste,
+      [COPY_CELL]: clipboardCommands.copyCellValue,
+      [PASTE_CELL]: clipboardCommands.pasteCellValue,
     },
     keyMap: {
       'Mod+C': (ctx: { focused: string; selected: string[] }) =>
         clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
       'Mod+X': (ctx: { focused: string; selected: string[] }) =>
-        clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
+        clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused], boundCanDelete),
       'Mod+V': (ctx: { focused: string }) =>
-        clipboardCommands.paste(ctx.focused),
+        clipboardCommands.paste(ctx.focused, boundCanAccept),
     },
-  }
+  })
 }

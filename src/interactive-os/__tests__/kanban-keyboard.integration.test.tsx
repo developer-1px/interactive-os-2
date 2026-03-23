@@ -15,6 +15,7 @@ import { core } from '../plugins/core'
 import { dnd } from '../plugins/dnd'
 import { history } from '../plugins/history'
 import { crud } from '../plugins/crud'
+import { spatialReachable } from '../plugins/focusRecovery'
 
 /**
  * Store structure:
@@ -63,7 +64,7 @@ function fixtureWithEmptyColumn(): NormalizedData {
   })
 }
 
-const plugins = [core(), dnd(), history(), crud()]
+const plugins = [core(), dnd(), history(), crud({ isReachable: spatialReachable })]
 
 function renderKanban(data: NormalizedData, onChange?: (d: NormalizedData) => void) {
   return render(
