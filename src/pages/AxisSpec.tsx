@@ -3,6 +3,7 @@ import { select } from '../interactive-os/axes/select'
 import { activate } from '../interactive-os/axes/activate'
 import { expand } from '../interactive-os/axes/expand'
 import { trap } from '../interactive-os/axes/trap'
+import { tab } from '../interactive-os/axes/tab'
 import type { KeyMap, AxisConfig } from '../interactive-os/axes/composePattern'
 
 const axisRegistry: Record<string, () => { keyMap: KeyMap; config: Partial<AxisConfig> }> = {
@@ -16,6 +17,10 @@ const axisRegistry: Record<string, () => { keyMap: KeyMap; config: Partial<AxisC
   expand: () => expand(),
   'expand-enter-esc': () => expand({ mode: 'enter-esc' }),
   trap: () => trap(),
+  'tab-native': () => tab('native'),
+  'tab-flow': () => tab('flow'),
+  'tab-loop': () => tab('loop'),
+  'tab-escape': () => tab('escape'),
 }
 
 export default function AxisSpec({ axis }: { axis?: string }) {
