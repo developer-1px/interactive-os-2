@@ -60,7 +60,7 @@ export default function PageLanding() {
         <div className={styles.heroStats}>
           <span><strong>23</strong> components</span>
           <span className={styles.dot} />
-          <span><strong>680+</strong> tests</span>
+          <span><strong>705</strong> tests</span>
           <span className={styles.dot} />
           <span><strong>16/19</strong> APG patterns</span>
         </div>

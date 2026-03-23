@@ -85,10 +85,10 @@
 - [x] TestRunnerPanel showcase ComponentDemo 통합
 - [ ] 남은 5개 testPath 연결 (checkbox, toggle, toggleGroup, toaster, i18n)
 
-### Phase 3: 문서 + 랜딩
-- [ ] Landing 페이지 컨텐츠
-- [ ] Getting Started 문서
-- [ ] 각 완성품 API 문서 + 코드 예시
+### Phase 3: 문서 + 랜딩 ✅
+- [x] Landing 페이지 — hero + component grid + stats
+- [x] Getting Started 문서 — install + Quick Start + Core Concepts + Architecture
+- [x] 완성품 API — showcase Usage 섹션에 통합 (test=demo=showcase 원칙)
 
 ## 배경 지식 (discussion에서 도출)
 
