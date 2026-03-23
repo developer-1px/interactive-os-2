@@ -23,3 +23,4 @@
 - [ ] [P1] ContextMenu — MenuList + popover + 우클릭/Shift+F10 — 출처: PROGRESS.md 전환 (2026-03-23)
 - [ ] [P1] DatePicker — Grid + value 축 + popover — 출처: PROGRESS.md 전환 (2026-03-23)
 - [ ] [P2] shadcn CLI — `npx interactive-os add treegrid` — 출처: PROGRESS.md 전환 (2026-03-23)
+- [ ] [P1] treegrid 쇼케이스 페이지 — 실제 다중 컬럼(파일명+크기+날짜) 데이터로 treegrid 패턴 시연. 기존 treegrid 라우트는 tree로 교체됨 — 출처: discussion (2026-03-23)

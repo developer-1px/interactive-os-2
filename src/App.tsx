@@ -31,8 +31,7 @@ import PageSlider from './pages/PageSlider'
 import PageSpinbutton from './pages/PageSpinbutton'
 import PageAlertDialog from './pages/PageAlertDialog'
 import PageSwitch from './pages/PageSwitch'
-import PageTreeView from './pages/PageTreeView'
-import PageTreeGridNav from './pages/PageTreeGridNav'
+import PageTreeNav from './pages/PageTreeNav'
 import PageListboxNav from './pages/PageListboxNav'
 import PageComboboxNav from './pages/PageComboboxNav'
 import PageTabsCrud from './pages/PageTabsCrud'
@@ -159,8 +158,7 @@ const routeConfig: RouteGroup[] = [
       { path: 'toolbar', label: 'Toolbar', status: 'ready', component: PageToolbar },
       { path: 'dialog', label: 'Dialog', status: 'ready', component: PageDialog },
       { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: PageAlertDialog },
-      { path: 'treeview', label: 'Tree View', status: 'ready', component: PageTreeView },
-      { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: PageTreeGridNav },
+      { path: 'tree', label: 'Tree', status: 'ready', component: PageTreeNav },
       { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListboxNav },
       { path: 'grid', label: 'Grid', status: 'ready', component: PageGrid },
       { path: 'combobox', label: 'Combobox', status: 'ready', component: PageComboboxNav },
