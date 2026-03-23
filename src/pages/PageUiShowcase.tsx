@@ -1,55 +1,9 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styles from './PageUiShowcase.module.css'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import { FOCUS_ID } from '../interactive-os/plugins/core'
-import type { NormalizedData } from '../interactive-os/core/types'
-import { NavList } from '../interactive-os/ui/NavList'
-import { ApgKeyboardTable } from './ApgKeyboardTable'
-import { TestRunnerPanel } from '../testRunner/TestRunnerPanel'
+import MdPage from './MdPage'
+import { uiCategories, slugToMdFile } from './uiCategories'
 import { components } from './showcaseRegistry'
-import type { ComponentEntry } from './showcaseRegistry'
-
-function LiveDemo({ entry }: { entry: ComponentEntry }) {
-  const [data, setData] = useState(() => entry.makeData())
-  const onChange = useCallback((next: NormalizedData) => setData(next), [])
-  return (
-    <div className={styles.uiDemo}>
-      <div className={styles.uiDemoLabel}>Live Demo</div>
-      {entry.render(data, onChange)}
-    </div>
-  )
-}
-
-function ComponentDemo({ entry }: { entry: ComponentEntry }) {
-  return (
-    <div className={styles.uiCard}>
-      <h2 className={styles.uiCardHeading}>{entry.name}</h2>
-      <p className={styles.uiCardDescription}>{entry.description}</p>
-
-      {entry.testPath ? (
-        <div className={styles.uiTestRunner}>
-          <TestRunnerPanel testPath={entry.testPath} autoRun />
-        </div>
-      ) : (
-        <LiveDemo entry={entry} />
-      )}
-
-      <div className={styles.uiCodeSection}>
-        <div className={styles.uiCodeLabel}>Usage</div>
-        <pre className={styles.uiCode}><code>{entry.usage}</code></pre>
-      </div>
-
-      {entry.apg && (
-        <div className={styles.uiKeyboardSection}>
-          <div className={styles.uiCodeLabel}>Keyboard</div>
-          <ApgKeyboardTable {...entry.apg} />
-        </div>
-      )}
-    </div>
-  )
-}
 
 export default function PageUiShowcase() {
   const { pathname } = useLocation()
@@ -57,37 +11,11 @@ export default function PageUiShowcase() {
 
   const activeSlug = useMemo(() => {
     const segment = pathname.replace(/^\/ui\/?/, '').split('/')[0]
-    const found = components.find((c) => c.slug === segment)
-    return found ? found.slug : components[0]!.slug
+    const found = slugToMdFile[segment]
+    return found ? segment : uiCategories[0].slugs[0]
   }, [pathname])
 
-  const activeEntry = useMemo(
-    () => components.find((c) => c.slug === activeSlug) ?? components[0]!,
-    [activeSlug],
-  )
-
-  const sidebarStore = useMemo(() => {
-    const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
-    const ids: string[] = []
-    for (const c of components) {
-      entities[c.slug] = { id: c.slug, data: { label: c.name } }
-      ids.push(c.slug)
-    }
-    const store = createStore({ entities, relationships: { [ROOT_ID]: ids } })
-    return {
-      ...store,
-      entities: {
-        ...store.entities,
-        [FOCUS_ID]: { id: FOCUS_ID, focusedId: activeSlug },
-      },
-    } as NormalizedData
-  }, [activeSlug])
-
-  const handleActivate = useCallback((nodeId: string) => {
-    if (nodeId !== activeSlug) {
-      navigate(`/ui/${nodeId}`)
-    }
-  }, [navigate, activeSlug])
+  const mdFile = slugToMdFile[activeSlug]
 
   return (
     <div className={styles.uiPage}>
@@ -95,14 +23,34 @@ export default function PageUiShowcase() {
         <div className={styles.uiSidebarHeader}>
           <span className={styles.uiSidebarTitle}>UI Components</span>
         </div>
-        <NavList data={sidebarStore} onActivate={handleActivate} aria-label="UI Components" />
+        <div className={styles.uiSidebarBody}>
+          {uiCategories.map((cat) => (
+            <div key={cat.label} className={styles.uiCategory}>
+              <div className={styles.uiCategoryLabel}>{cat.label}</div>
+              {cat.slugs.map((slug) => {
+                const entry = components.find((c) => c.slug === slug)
+                if (!entry) return null
+                return (
+                  <button
+                    key={slug}
+                    className={styles.uiNavItem + (slug === activeSlug ? ' ' + styles.uiNavItemActive : '')}
+                    onClick={() => navigate(`/ui/${slug}`)}
+                  >
+                    {entry.name}
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
       </nav>
       <div className={styles.uiContent}>
-        <div className={styles.uiContentHeader}>
-          <span className={styles.uiContentTitle}>{activeEntry.name}</span>
-        </div>
         <div className={styles.uiContentBody}>
-          <ComponentDemo key={activeEntry.slug} entry={activeEntry} />
+          {mdFile ? (
+            <MdPage key={activeSlug} md={`ui/${mdFile}`} />
+          ) : (
+            <div style={{ padding: 24, color: 'var(--text-muted)' }}>Unknown component: {activeSlug}</div>
+          )}
         </div>
       </div>
     </div>
