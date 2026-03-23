@@ -4,7 +4,7 @@ import { getEntity, updateEntityData } from '../core/createStore'
 export const RENAME_ID = '__rename__'
 
 export const renameCommands = {
-  startRename(nodeId: string): Command {
+  startRename(nodeId: string, options?: { replace?: boolean; initialChar?: string }): Command {
     return {
       type: 'rename:start',
       payload: { nodeId },
@@ -13,7 +13,13 @@ export const renameCommands = {
           ...store,
           entities: {
             ...store.entities,
-            [RENAME_ID]: { id: RENAME_ID, nodeId, active: true },
+            [RENAME_ID]: {
+              id: RENAME_ID,
+              nodeId,
+              active: true,
+              ...(options?.replace !== undefined && { replace: options.replace }),
+              ...(options?.initialChar !== undefined && { initialChar: options.initialChar }),
+            },
           },
         }
       },
