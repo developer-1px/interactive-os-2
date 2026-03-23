@@ -44,7 +44,7 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | Aria · Aria.Item · Aria.Cell · Aria.Editable | Integrated | — |
-| useAria · useAriaZone · useControlledAria | Integrated | — |
+| useAria · useAriaZone · useControlledAria | Integrated | lastActiveContainer 싱글턴 미구현 (소비자 필요 시 추가) |
 | useKeyboard · useSpatialNav | Integrated | — |
 | useResizer · useVirtualScroll | Validated | — |
 | *가상화 (10k+ 노드)* | Concept | — |

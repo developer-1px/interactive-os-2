@@ -258,7 +258,25 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         ...clipboardProps,
       }
     }
-    if (behavior.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1, ...clipboardProps }
+    if (behavior.focusStrategy.type !== 'aria-activedescendant') {
+      return {
+        tabIndex: -1,
+        onPointerDown: (event: PointerEvent) => {
+          if (!focusedId) return
+          const target = event.target as HTMLElement
+          const container = event.currentTarget as HTMLElement
+          // Nested guard: if click landed inside a deeper aria-container, let that one handle it
+          if (target.closest('[data-aria-container]') !== container) return
+          // If click was on an Item, onFocus will handle it
+          if (target.closest(`[${nodeIdAttr}]`)) return
+          // preventDefault stops browser from focusing the tabIndex=-1 container
+          event.preventDefault()
+          const el = container.querySelector<HTMLElement>(`[${nodeIdAttr}="${focusedId}"]`)
+          if (el) el.focus()
+        },
+        ...clipboardProps,
+      }
+    }
     return {
       tabIndex: 0,
       'aria-activedescendant': focusedId || undefined,
@@ -269,7 +287,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       },
       ...clipboardProps,
     }
-  }, [isKeyMapOnly, behavior.focusStrategy.type, focusedId, handleKeyDown, pluginClipboardHandlers, handleClipboardEvent])
+  }, [isKeyMapOnly, behavior.focusStrategy.type, focusedId, handleKeyDown, pluginClipboardHandlers, handleClipboardEvent, nodeIdAttr])
 
   // ── DOM focus sync ──
 
