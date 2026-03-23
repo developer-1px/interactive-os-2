@@ -9,17 +9,16 @@ const SKIP_META = new Set([
   '__expanded__',
   '__grid_col__',
   '__spatial_parent__',
+  '__rename__',
 ])
 
-function isContentDelta(diffs: StoreDiff[]): boolean {
-  return diffs.some((d) => {
-    if (d.path === 'entities') return true
-    if (d.path.includes('.')) {
-      const entityId = d.path.split('.')[0]!
-      return !SKIP_META.has(entityId)
-    }
-    return !SKIP_META.has(d.path)
-  })
+function isContentDiff(d: StoreDiff): boolean {
+  if (d.path === 'entities') return true
+  if (d.path.includes('.')) {
+    const entityId = d.path.split('.')[0]!
+    return !SKIP_META.has(entityId)
+  }
+  return !SKIP_META.has(d.path)
 }
 
 export function undoCommand(): Command {
@@ -67,9 +66,10 @@ export function history(): Plugin {
         next(wrappedCommand)
 
         if (storeBefore !== null && storeAfter !== null) {
-          const diffs = computeStoreDiff(storeBefore, storeAfter)
-          if (diffs.length > 0 && isContentDelta(diffs)) {
-            past.push(diffs)
+          const allDiffs = computeStoreDiff(storeBefore, storeAfter)
+          const contentDiffs = allDiffs.filter(isContentDiff)
+          if (contentDiffs.length > 0) {
+            past.push(contentDiffs)
             future.length = 0
           }
         }
