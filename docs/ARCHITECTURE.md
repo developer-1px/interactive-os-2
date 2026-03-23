@@ -73,7 +73,7 @@ graph TB
       ax_depth["expand: depthArrow · depthEnterEsc"]
       ax_sel["select: selectToggle · selectExtended"]
       ax_act["activate: activate · activateFollowFocus"]
-      ax_trap["trap: focusTrap"]
+      ax_dismiss["dismiss: Escape → collapse"]
       ax_val["value: valueArrow (increment · decrement · clamp)"]
       ax_tab["tab: native · flow · loop · escape"]
     end

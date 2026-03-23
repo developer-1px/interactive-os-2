@@ -2,7 +2,7 @@ import { navigate } from '../interactive-os/axes/navigate'
 import { select } from '../interactive-os/axes/select'
 import { activate } from '../interactive-os/axes/activate'
 import { expand } from '../interactive-os/axes/expand'
-import { trap } from '../interactive-os/axes/trap'
+import { dismiss } from '../interactive-os/axes/dismiss'
 import { tab } from '../interactive-os/axes/tab'
 import type { KeyMap, AxisConfig } from '../interactive-os/axes/composePattern'
 
@@ -16,7 +16,7 @@ const axisRegistry: Record<string, () => { keyMap: KeyMap; config: Partial<AxisC
   activate: () => activate(),
   expand: () => expand(),
   'expand-enter-esc': () => expand({ mode: 'enter-esc' }),
-  trap: () => trap(),
+  dismiss: () => dismiss(),
   'tab-native': () => tab('native'),
   'tab-flow': () => tab('flow'),
   'tab-loop': () => tab('loop'),

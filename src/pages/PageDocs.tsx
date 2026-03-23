@@ -30,7 +30,7 @@ const CONCEPTS = [
   },
   {
     title: 'Behavior',
-    desc: '5 composable axes (navigate, select, activate, expand, trap) that combine into ARIA-compliant presets.',
+    desc: '7 composable axes (navigate, select, activate, expand, dismiss, value, tab) that combine into ARIA-compliant presets.',
   },
   {
     title: 'Plugin',

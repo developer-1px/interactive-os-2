@@ -13,7 +13,7 @@
 ## 축 조합
 
 `composePattern(identity, ...axes)` 호출:
-- trap()
+- dismiss()
 
 ## 키맵 요약
 
