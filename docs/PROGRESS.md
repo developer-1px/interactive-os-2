@@ -81,7 +81,7 @@
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs) | Validated | paste overwrite, viewer channel 미구현 |
 | Agent Viewer (multi-session · virtual scroll) | Validated | viewer channel disabled |
-| Inspector · Pipeline · History | Validated | — |
+| Inspector · Command · Diff | Validated | — |
 | Showcase (Plugin · Collection · Axis · Area) | Validated | — |
 
 ## APG Coverage (16/19)
