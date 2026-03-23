@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { runTest, type RunTestResult, type TestResult } from './runTest'
 
 function StatusIcon({ status }: { status: 'pass' | 'fail' | 'pending' }) {
@@ -52,12 +52,13 @@ type Props = {
 export function TestRunnerPanel({ testPath, label }: Props) {
   const [state, setState] = useState<'idle' | 'running' | 'done'>('idle')
   const [result, setResult] = useState<RunTestResult | null>(null)
+  const renderAreaRef = useRef<HTMLDivElement>(null)
 
   const run = useCallback(async () => {
     setState('running')
     setResult(null)
     try {
-      const r = await runTest(testPath)
+      const r = await runTest(testPath, renderAreaRef.current ?? undefined)
       setResult(r)
     } catch (e) {
       setResult({
@@ -90,6 +91,17 @@ export function TestRunnerPanel({ testPath, label }: Props) {
         fontFamily: 'var(--font-mono, monospace)',
       }}
     >
+      <div
+        ref={renderAreaRef}
+        style={{
+          minHeight: state === 'idle' ? 0 : 120,
+          marginBottom: state === 'idle' ? 0 : 12,
+          borderRadius: 6,
+          background: state === 'idle' ? 'transparent' : 'var(--color-surface-raised, #222)',
+          padding: state === 'idle' ? 0 : 12,
+          overflow: 'auto',
+        }}
+      />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
         <span style={{ fontWeight: 700, fontSize: 14 }}>
           {label ?? 'Test Runner'}

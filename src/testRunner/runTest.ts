@@ -16,14 +16,15 @@ let runCounter = 0
  *
  * @param testPath — path relative to project root, e.g.
  *   'src/interactive-os/__tests__/listbox-keyboard.integration.test'
+ * @param renderTarget — DOM element where test render() output should appear
  */
-export async function runTest(testPath: string): Promise<RunTestResult> {
+export async function runTest(testPath: string, renderTarget?: HTMLElement): Promise<RunTestResult> {
   // Cache-bust so re-imports re-execute the module's top-level describe() calls
   runCounter++
   await import(/* @vite-ignore */ `/${testPath}.tsx?browser&_r=${runCounter}`)
 
   const { groups } = getRegistry()
-  const results = await runAll()
+  const results = await runAll(renderTarget)
 
   return { groups, results }
 }

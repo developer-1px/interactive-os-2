@@ -229,13 +229,22 @@ function collectTests(scope: DescribeScope): RegisteredTest[] {
 // runAll
 // ---------------------------------------------------------------------------
 
-export async function runAll(): Promise<TestResult[]> {
+export async function runAll(renderTarget?: HTMLElement): Promise<TestResult[]> {
   const allTests = collectTests(rootScope)
   const results: TestResult[] = []
+
+  // Redirect render() output to renderTarget if provided
+  const originalAppendChild = document.body.appendChild.bind(document.body)
+  if (renderTarget) {
+    document.body.appendChild = <T extends Node>(node: T): T => {
+      return renderTarget.appendChild(node)
+    }
+  }
 
   for (const test of allTests) {
     // cleanup DOM before each test
     cleanup()
+    if (renderTarget) renderTarget.innerHTML = ''
 
     // run beforeEach hooks (outermost → innermost)
     for (const hook of test.beforeEachChain) {
@@ -271,6 +280,11 @@ export async function runAll(): Promise<TestResult[]> {
       error,
       duration,
     })
+  }
+
+  // Restore original appendChild
+  if (renderTarget) {
+    document.body.appendChild = originalAppendChild
   }
 
   // reset registry for next runAll call
