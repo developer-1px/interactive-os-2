@@ -143,3 +143,15 @@
   white-space: pre;
   margin: 0;
 }
+
+/* --- Test runner --- */
+
+.uiTestRunner {
+  margin-bottom: 16px;
+}
+
+/* --- Keyboard section --- */
+
+.uiKeyboardSection {
+  margin-bottom: 32px;
+}

@@ -6,6 +6,8 @@ import { ROOT_ID } from '../interactive-os/core/types'
 import { FOCUS_ID } from '../interactive-os/plugins/core'
 import type { NormalizedData } from '../interactive-os/core/types'
 import { NavList } from '../interactive-os/ui/NavList'
+import { TestRunnerPanel } from '../testRunner/TestRunnerPanel'
+import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { components } from './showcaseRegistry'
 import type { ComponentEntry } from './showcaseRegistry'
 
@@ -18,15 +20,28 @@ function ComponentDemo({ entry }: { entry: ComponentEntry }) {
       <h2 className={styles.uiCardHeading}>{entry.name}</h2>
       <p className={styles.uiCardDescription}>{entry.description}</p>
 
-      <div className={styles.uiDemo}>
-        <div className={styles.uiDemoLabel}>Live Demo</div>
-        {entry.render(data, onChange)}
-      </div>
+      {entry.testPath ? (
+        <div className={styles.uiTestRunner}>
+          <TestRunnerPanel testPath={entry.testPath} autoRun />
+        </div>
+      ) : (
+        <div className={styles.uiDemo}>
+          <div className={styles.uiDemoLabel}>Live Demo</div>
+          {entry.render(data, onChange)}
+        </div>
+      )}
 
       <div className={styles.uiCodeSection}>
         <div className={styles.uiCodeLabel}>Usage</div>
         <pre className={styles.uiCode}><code>{entry.usage}</code></pre>
       </div>
+
+      {entry.apg && (
+        <div className={styles.uiKeyboardSection}>
+          <div className={styles.uiCodeLabel}>Keyboard</div>
+          <ApgKeyboardTable {...entry.apg} />
+        </div>
+      )}
     </div>
   )
 }
