@@ -9,6 +9,7 @@ import { core, FOCUS_ID } from '../plugins/core'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands, RENAME_ID } from '../plugins/rename'
 import { dndCommands } from '../plugins/dnd'
+import { clipboardCommands } from '../plugins/clipboard'
 import { isPrintableKey } from '../plugins/typeahead'
 
 interface ColumnDef {
@@ -35,6 +36,14 @@ const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = 
   'F2': (ctx) => renameCommands.startRename(ctx.focused),
   'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
   'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+  'Mod+C': (ctx) => {
+    const colIndex = ctx.grid?.colIndex ?? 0
+    return clipboardCommands.copyCellValue(ctx.focused, colIndex)
+  },
+  'Mod+V': (ctx) => {
+    const colIndex = ctx.grid?.colIndex ?? 0
+    return clipboardCommands.pasteCellValue(ctx.focused, colIndex)
+  },
 }
 
 const defaultRenderCell = (value: unknown): React.ReactNode => (
