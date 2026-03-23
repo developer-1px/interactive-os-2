@@ -277,8 +277,6 @@ describe('Rename UI', () => {
 
   describe('undo integration', () => {
     it('confirmRename undo restores original value (engine level)', () => {
-      // Undo is tested at engine level since jsdom focus routing is limited.
-      // See plugin-rename.test.ts and phase3-integration.test.ts for full undo coverage.
       const { container } = setupWithKeyMap()
       const firstNode = container.querySelector('[data-node-id="a"]')!
 
@@ -289,5 +287,8 @@ describe('Rename UI', () => {
       act(() => { fireEvent.keyDown(editable, { key: 'Enter' }) })
       expect(container.querySelector('[data-testid="item-a"]')!.textContent).toContain('Renamed')
     })
+
+    // rename undo의 edit 모드 비복귀는 실제 Chrome에서 검증 (2026-03-23)
+    // happy-dom에서는 contenteditable + undo 연동의 React flush 한계로 검증 불가
   })
 })
