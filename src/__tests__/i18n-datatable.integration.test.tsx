@@ -17,10 +17,11 @@ import { core, GRID_COL_ID } from '../interactive-os/plugins/core'
 import { rename } from '../interactive-os/plugins/rename'
 import { history } from '../interactive-os/plugins/history'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
+import { clipboard, resetClipboard } from '../interactive-os/plugins/clipboard'
 import { i18nColumns, i18nInitialData } from '../pages/sharedI18nData'
 import type { NormalizedData } from '../interactive-os/core/types'
 
-const plugins = [core(), rename(), history(), focusRecovery()]
+const plugins = [core(), rename(), history(), focusRecovery(), clipboard()]
 
 /**
  * Stateful wrapper rendering Grid with i18n sample data.
@@ -228,6 +229,70 @@ describe('i18n DataTable editing', () => {
       } finally {
         vi.useRealTimers()
       }
+    })
+  })
+
+  describe('V7: cell-level copy/paste in Grid with enableEditing', () => {
+    beforeEach(() => {
+      resetClipboard()
+    })
+
+    it('Mod+C copies cell value at current column, Mod+V pastes into another cell', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<I18nGrid />)
+
+      // Focus first row
+      const row = container.querySelector('[role="row"]') as HTMLElement
+      act(() => { row.focus() })
+
+      // Navigate to ko column (col 1, aria-colindex=2)
+      await user.keyboard('{ArrowRight}')
+      expect(getFocusedColIndex(container)).toBe(2)
+
+      // Copy cell value with Mod+C
+      await user.keyboard('{Control>}c{/Control}')
+
+      // Navigate to en column (col 2, aria-colindex=3)
+      await user.keyboard('{ArrowRight}')
+      expect(getFocusedColIndex(container)).toBe(3)
+
+      // Paste cell value with Mod+V
+      await user.keyboard('{Control>}v{/Control}')
+
+      // en column should now have the ko value ('헤드리스 ARIA 엔진')
+      const focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      const cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      // en column is index 2 (0=key, 1=ko, 2=en, 3=ja)
+      expect(cells?.[2]?.textContent).toBe('헤드리스 ARIA 엔진')
+    })
+
+    it('paste is undoable via Mod+Z', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<I18nGrid />)
+
+      const row = container.querySelector('[role="row"]') as HTMLElement
+      act(() => { row.focus() })
+
+      // Navigate to ko column and copy
+      await user.keyboard('{ArrowRight}')
+      await user.keyboard('{Control>}c{/Control}')
+
+      // Navigate to en column and paste
+      await user.keyboard('{ArrowRight}')
+      await user.keyboard('{Control>}v{/Control}')
+
+      // Verify paste happened
+      let focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      let cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[2]?.textContent).toBe('헤드리스 ARIA 엔진')
+
+      // Undo with Mod+Z
+      await user.keyboard('{Control>}z{/Control}')
+
+      // en column should be restored to original value
+      focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[2]?.textContent).toBe('Headless ARIA Engine')
     })
   })
 })

@@ -39,6 +39,7 @@ let clipboardMode: 'copy' | 'cut' = 'copy'
 let cutSourceIds: string[] = []
 let canAcceptFn: CanAcceptFn | undefined
 let canDeleteFn: CanDeleteFn | undefined
+let cellValueBuffer: string = ''
 
 /** Read-only access to cut source IDs — for UI cut-state styling */
 export function getCutSourceIds(): readonly string[] {
@@ -50,6 +51,7 @@ export function resetClipboard(): void {
   clipboardBuffer = []
   clipboardMode = 'copy'
   cutSourceIds = []
+  cellValueBuffer = ''
   idCounter = 0
 }
 
@@ -183,6 +185,44 @@ function extractOverwriteFields(
 }
 
 export const clipboardCommands = {
+  copyCellValue(nodeId: string, colIndex: number): Command {
+    return {
+      type: 'clipboard:copyCellValue',
+      payload: { nodeId, colIndex },
+      execute(store) {
+        const entity = getEntity(store, nodeId)
+        const cells = ((entity?.data as any)?.cells ?? []) as string[]
+        cellValueBuffer = cells[colIndex] ?? ''
+        return store // copy doesn't modify store
+      },
+      undo(store) {
+        return store
+      },
+    }
+  },
+
+  pasteCellValue(nodeId: string, colIndex: number): Command {
+    let previousValue: string = ''
+    return {
+      type: 'clipboard:pasteCellValue',
+      payload: { nodeId, colIndex },
+      execute(store) {
+        if (cellValueBuffer === '') return store
+        const entity = getEntity(store, nodeId)
+        const cells = [...((entity?.data as any)?.cells ?? [])] as string[]
+        previousValue = cells[colIndex] ?? ''
+        cells[colIndex] = cellValueBuffer
+        return updateEntityData(store, nodeId, { cells })
+      },
+      undo(store) {
+        const entity = getEntity(store, nodeId)
+        const cells = [...((entity?.data as any)?.cells ?? [])] as string[]
+        cells[colIndex] = previousValue
+        return updateEntityData(store, nodeId, { cells })
+      },
+    }
+  },
+
   copy(nodeIds: string[]): Command {
     return {
       type: 'clipboard:copy',
