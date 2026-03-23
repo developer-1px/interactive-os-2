@@ -251,34 +251,25 @@ export function createReproRecorder() {
 
   // Channel 5: Console errors/warnings
   function interceptConsole() {
-    const origError = console.error
-    const origWarn = console.warn
-
-    console.error = (...args: unknown[]) => {
-      if (active) {
-        timeline.push({
-          seq: nextSeq(),
-          time: elapsed(),
-          ch: 'console',
-          level: 'error',
-          message: args.map(a => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ').slice(0, 500),
-        })
+    function wrapConsoleMethod(level: 'error' | 'warn') {
+      const orig = console[level]
+      console[level] = (...args: unknown[]) => {
+        if (active) {
+          timeline.push({
+            seq: nextSeq(),
+            time: elapsed(),
+            ch: 'console',
+            level,
+            message: args.map(a => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ').slice(0, 500),
+          })
+        }
+        orig.apply(console, args)
       }
-      origError.apply(console, args)
+      return () => { console[level] = orig }
     }
 
-    console.warn = (...args: unknown[]) => {
-      if (active) {
-        timeline.push({
-          seq: nextSeq(),
-          time: elapsed(),
-          ch: 'console',
-          level: 'warn',
-          message: args.map(a => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ').slice(0, 500),
-        })
-      }
-      origWarn.apply(console, args)
-    }
+    const restoreError = wrapConsoleMethod('error')
+    const restoreWarn = wrapConsoleMethod('warn')
 
     // Also catch uncaught errors
     const onError = (event: ErrorEvent) => {
@@ -307,8 +298,8 @@ export function createReproRecorder() {
     window.addEventListener('unhandledrejection', onUnhandledRejection)
 
     return () => {
-      console.error = origError
-      console.warn = origWarn
+      restoreError()
+      restoreWarn()
       window.removeEventListener('error', onError)
       window.removeEventListener('unhandledrejection', onUnhandledRejection)
     }

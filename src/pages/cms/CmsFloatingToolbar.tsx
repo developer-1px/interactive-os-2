@@ -56,7 +56,8 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
         dispatch(crudCommands.remove(focusedId))
         break
       }
-      case 'duplicate': {
+      case 'duplicate':
+      case 'add': {
         dispatch(createBatchCommand([
           clipboardCommands.copy([focusedId]),
           clipboardCommands.paste(focusedId),
@@ -69,14 +70,6 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
       }
       case 'move-down': {
         dispatch(dndCommands.moveDown(focusedId))
-        break
-      }
-      case 'add': {
-        // Collection-level add = duplicate current item (same as 'duplicate')
-        dispatch(createBatchCommand([
-          clipboardCommands.copy([focusedId]),
-          clipboardCommands.paste(focusedId),
-        ]))
         break
       }
     }

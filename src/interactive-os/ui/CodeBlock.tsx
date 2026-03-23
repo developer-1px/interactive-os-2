@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { codeToHtml } from 'shiki'
-import styles from '../PageViewer.module.css'
+import styles from './CodeBlock.module.css'
 
 // --- Theme detection (single observer shared across all CodeBlock instances) ---
 

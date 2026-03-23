@@ -1,0 +1,16 @@
+.icon {
+  flex-shrink: 0;
+  margin-right: 4px;
+  opacity: 0.55;
+  color: var(--text-secondary);
+}
+
+.iconFolder { color: var(--file-folder); }
+.iconTs { color: var(--file-ts); }
+.iconJs { color: var(--file-js); }
+.iconJson { color: var(--file-json); }
+.iconMd { color: var(--file-md); }
+.iconCss { color: var(--file-css); }
+.iconSh { color: var(--file-sh); }
+.iconImg { color: var(--file-img); }
+.iconConfig { color: var(--file-config); }

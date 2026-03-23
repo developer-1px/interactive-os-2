@@ -8,7 +8,7 @@ import type { NormalizedData } from '../../interactive-os/core/types'
 import { core, selectionCommands } from '../../interactive-os/plugins/core'
 import { combobox } from '../../interactive-os/behaviors/combobox'
 import { combobox as comboboxPlugin, comboboxCommands } from '../../interactive-os/plugins/combobox'
-import { FileIcon } from './FileIcon'
+import { FileIcon } from '../../interactive-os/ui/FileIcon'
 import type { FileNodeData } from './types'
 import styles from '../PageViewer.module.css'
 

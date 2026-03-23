@@ -1,0 +1,67 @@
+.codeBlock {
+  overflow: auto;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.codeBlockLoading {
+  padding: 16px 20px;
+  background: var(--surface-base);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.codeBlock :global(.shiki) {
+  margin: 0;
+  padding: 16px 0;
+  counter-reset: line;
+  background: var(--surface-base) !important;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+
+.codeBlock :global(.shiki) code {
+  display: block;
+}
+
+.codeBlock :global(.shiki .line) {
+  display: inline-block;
+  width: 100%;
+  padding: 0 16px 0 0;
+}
+
+.codeBlock :global(.shiki .line)::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 3.5em;
+  padding-right: 1em;
+  text-align: right;
+  color: var(--text-muted);
+  font-size: 12px;
+  user-select: none;
+  opacity: 0.5;
+}
+
+:global(.code-token) {
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.1s;
+}
+
+:global(.code-token):hover {
+  background: var(--primary-dim);
+}
+
+:global(.code-token--highlighted) {
+  background: var(--primary-mid) !important;
+  outline: 1px solid var(--primary-bright);
+  border-radius: 2px;
+}
+
+:global(.code-line--edited) {
+  background: rgba(229, 163, 58, 0.08) !important;
+  border-left: 2px solid #e5a33a;
+  padding-left: 6px !important;
+}

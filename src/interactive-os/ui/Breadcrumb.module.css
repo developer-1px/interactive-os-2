@@ -1,0 +1,26 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sep {
+  margin: 0 2px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.segment {
+  color: var(--text-muted);
+}
+
+.current {
+  color: var(--text-primary);
+  font-weight: 500;
+}

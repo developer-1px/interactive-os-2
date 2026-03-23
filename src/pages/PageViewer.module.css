@@ -164,24 +164,6 @@
 
 /* focused dir name color handled by components.css ARIA :focus selector */
 
-/* --- File icons --- */
-
-.vw-icon {
-  flex-shrink: 0;
-  margin-right: 4px;
-  opacity: 0.55;
-  color: var(--text-secondary);
-}
-
-.vw-icon--folder { color: var(--file-folder); }
-.vw-icon--ts { color: var(--file-ts); }
-.vw-icon--js { color: var(--file-js); }
-.vw-icon--json { color: var(--file-json); }
-.vw-icon--md { color: var(--file-md); }
-.vw-icon--css { color: var(--file-css); }
-.vw-icon--sh { color: var(--file-sh); }
-.vw-icon--img { color: var(--file-img); }
-.vw-icon--config { color: var(--file-config); }
 
 /* --- Content panel --- */
 
@@ -262,7 +244,7 @@
   flex-shrink: 0;
 }
 
-.vw-content__meta .vw-icon {
+.vw-content__meta svg {
   margin-right: 2px;
   opacity: 0.45;
 }
@@ -274,34 +256,6 @@
   margin: 0 2px;
 }
 
-/* --- Breadcrumb --- */
-
-.vw-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 1px;
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--text-muted);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.vw-breadcrumb__sep {
-  margin: 0 2px;
-  opacity: 0.4;
-  flex-shrink: 0;
-}
-
-.vw-breadcrumb__segment {
-  color: var(--text-muted);
-}
-
-.vw-breadcrumb__current {
-  color: var(--text-primary);
-  font-weight: 500;
-}
 
 /* --- Empty state --- */
 
@@ -514,77 +468,6 @@
   vertical-align: middle;
 }
 
-/* ═══════════════════════════════════════════
-   Code block (source viewer)
-   ═══════════════════════════════════════════ */
-
-.code-block {
-  overflow: auto;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.code-block--loading {
-  padding: 16px 20px;
-  background: var(--surface-base);
-  border-radius: 8px;
-  font-family: var(--mono);
-  font-size: 13px;
-}
-
-.code-block :global(.shiki) {
-  margin: 0;
-  padding: 16px 0;
-  counter-reset: line;
-  background: var(--surface-base) !important;
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-}
-
-.code-block :global(.shiki) code {
-  display: block;
-}
-
-.code-block :global(.shiki .line) {
-  display: inline-block;
-  width: 100%;
-  padding: 0 16px 0 0;
-}
-
-.code-block :global(.shiki .line)::before {
-  counter-increment: line;
-  content: counter(line);
-  display: inline-block;
-  width: 3.5em;
-  padding-right: 1em;
-  text-align: right;
-  color: var(--text-muted);
-  font-size: 12px;
-  user-select: none;
-  opacity: 0.5;
-}
-
-:global(.code-token) {
-  cursor: pointer;
-  border-radius: 2px;
-  transition: background 0.1s;
-}
-
-:global(.code-token):hover {
-  background: var(--primary-dim);
-}
-
-:global(.code-token--highlighted) {
-  background: var(--primary-mid) !important;
-  outline: 1px solid var(--primary-bright);
-  border-radius: 2px;
-}
-
-:global(.code-line--edited) {
-  background: rgba(229, 163, 58, 0.08) !important;
-  border-left: 2px solid #e5a33a;
-  padding-left: 6px !important;
-}
 
 /* ═══════════════════════════════════════════
    Quick Open
