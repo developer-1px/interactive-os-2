@@ -19,7 +19,7 @@
 |--------|----------|------|
 | core (focus · selection · expand) | Integrated | — |
 | focusRecovery | Integrated | — |
-| history | Integrated | navigation skip 미처리, command grouping 없음 |
+| history | Integrated | delta-based undo/redo, navigation skip 구현. command grouping 미구현 |
 | crud | Integrated | — |
 | clipboard | Integrated | — |
 | rename | Integrated | — |
@@ -64,7 +64,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Vitest (618 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+| Vitest (634 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
 | pnpm health | Validated | — |
