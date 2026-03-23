@@ -240,3 +240,93 @@ describe('cmsCanDelete', () => {
     expect(cmsCanDelete({ type: 'badge' })).toBe(true)
   })
 })
+
+/**
+ * Undo integration: cut-paste and delete with full subtree restoration.
+ * Covers clipboard undo (cut-paste restore), crud undo (subtree rebuild),
+ * and history middleware interaction.
+ */
+describe('undo integration — cut-paste and delete', () => {
+  beforeEach(() => resetClipboard())
+
+  it('cut-paste card to another section, undo restores original position', () => {
+    const engine = createEngine()
+    // card1 is in section1
+    expect(getChildren(engine.getStore(), 'section1')).toEqual(['card1', 'card2'])
+    expect(getChildren(engine.getStore(), 'section2')).toEqual(['card3'])
+
+    // Cut card1, paste into section2
+    engine.dispatch(clipboardCommands.cut(['card1']))
+    engine.dispatch(clipboardCommands.paste('section2'))
+
+    // card1 moved to section2
+    expect(getChildren(engine.getStore(), 'section1')).toEqual(['card2'])
+    expect(getChildren(engine.getStore(), 'section2')).toContain('card1')
+
+    // Undo paste → card1 back in section1
+    engine.dispatch(historyCommands.undo())
+    expect(getChildren(engine.getStore(), 'section2')).toEqual(['card3'])
+    // card1's subtree (icon1, text1) should be intact
+    expect(getChildren(engine.getStore(), 'card1')).toEqual(['icon1', 'text1'])
+  })
+
+  it('delete section with deep subtree, undo restores all entities and relationships', () => {
+    const engine = createEngine()
+    const storeBefore = engine.getStore()
+
+    // section1 has card1(icon1, text1) and card2(icon2, text2) = 5 entities
+    engine.dispatch(crudCommands.remove('section1'))
+
+    // section1 and all children gone
+    expect(getChildren(engine.getStore(), ROOT_ID)).toEqual(['section2'])
+    expect(getEntity(engine.getStore(), 'card1')).toBeUndefined()
+    expect(getEntity(engine.getStore(), 'text1')).toBeUndefined()
+
+    // Undo → full subtree restored
+    engine.dispatch(historyCommands.undo())
+    expect(getChildren(engine.getStore(), ROOT_ID)).toEqual(['section1', 'section2'])
+    expect(getChildren(engine.getStore(), 'section1')).toEqual(['card1', 'card2'])
+    expect(getChildren(engine.getStore(), 'card1')).toEqual(['icon1', 'text1'])
+    expect(getChildren(engine.getStore(), 'card2')).toEqual(['icon2', 'text2'])
+    // Data intact
+    const text1 = getEntityData<{ value: Record<string, string> }>(engine.getStore(), 'text1')
+    expect(text1?.value).toEqual({ ko: 'Hello', en: 'Hello', ja: 'Hello' })
+  })
+
+  it('cut card, paste with walk-up (paste on slot child → inserts at collection ancestor), undo restores', () => {
+    const engine = createEngine()
+    // Cut card1 from section1
+    engine.dispatch(clipboardCommands.cut(['card1']))
+    // Paste on text3 (inside card3 inside section2)
+    // Walk-up: card3 rejects (slot) → section2 accepts (collection) → insert after card3
+    engine.dispatch(clipboardCommands.paste('text3'))
+
+    expect(getChildren(engine.getStore(), 'section1')).toEqual(['card2'])
+    const s2children = getChildren(engine.getStore(), 'section2')
+    expect(s2children).toContain('card1')
+    expect(s2children[0]).toBe('card3') // card1 inserted after card3
+
+    // Undo → card1 back
+    engine.dispatch(historyCommands.undo())
+    expect(getChildren(engine.getStore(), 'section2')).toEqual(['card3'])
+    expect(getChildren(engine.getStore(), 'card1')).toEqual(['icon1', 'text1'])
+  })
+
+  it('delete section, redo, undo again → full round-trip', () => {
+    const engine = createEngine()
+    engine.dispatch(crudCommands.remove('section1'))
+
+    // Undo
+    engine.dispatch(historyCommands.undo())
+    expect(getChildren(engine.getStore(), ROOT_ID)).toEqual(['section1', 'section2'])
+
+    // Redo
+    engine.dispatch(historyCommands.redo())
+    expect(getChildren(engine.getStore(), ROOT_ID)).toEqual(['section2'])
+
+    // Undo again
+    engine.dispatch(historyCommands.undo())
+    expect(getChildren(engine.getStore(), 'section1')).toEqual(['card1', 'card2'])
+    expect(getChildren(engine.getStore(), 'card1')).toEqual(['icon1', 'text1'])
+  })
+})
