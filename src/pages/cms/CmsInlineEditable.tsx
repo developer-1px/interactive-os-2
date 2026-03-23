@@ -24,7 +24,7 @@ export function CmsInlineEditable({ nodeId, data, locale, dispatch, store }: Cms
   const isRenaming = renameEntity?.active === true && (renameEntity as Record<string, unknown>).nodeId === nodeId
 
   const fields = getEditableFields(data)
-  const primaryField = fields[0]
+  const primaryField = fields.find(f => f.fieldType !== 'icon')
 
   useEffect(() => {
     if (isRenaming && editRef.current) {

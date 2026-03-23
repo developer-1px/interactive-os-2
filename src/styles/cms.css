@@ -303,6 +303,41 @@
   min-height: 60px;
 }
 
+/* ── Icon picker ── */
+.cms-icon-field__current {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--sans); font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.cms-icon-field__current--fallback {
+  font-style: italic; color: var(--text-muted);
+}
+.cms-icon-field__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 28px);
+  gap: 2px;
+}
+.cms-icon-field__option {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.cms-icon-field__option:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+.cms-icon-field__option--selected {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  color: var(--primary);
+}
+
 /* Editable placeholder — shown when contenteditable is empty */
 [data-placeholder]:empty::before {
   content: attr(data-placeholder);
