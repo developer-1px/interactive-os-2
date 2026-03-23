@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { tab } from '../axes/tab'
+import type { BehaviorContext } from '../behaviors/types'
 
 describe('tab axis', () => {
   describe('native', () => {
@@ -30,46 +31,30 @@ describe('tab axis', () => {
       })
     })
 
-    it('Tab at last item wraps to first', () => {
+    it('Tab delegates to focusNext with wrap', () => {
       const result = tab('loop')
       const ctx = {
         focused: 'c',
-        focusNext: () => ({ type: 'focus', payload: { nodeId: 'c' } }),
-        focusFirst: () => ({ type: 'focus', payload: { nodeId: 'a' } }),
+        focusNext: (opts?: { wrap?: boolean }) => ({
+          type: 'focus',
+          payload: { nodeId: opts?.wrap ? 'a' : 'c' },
+        }),
       }
-      const cmd = result.keyMap['Tab'](ctx as any)
+      const cmd = result.keyMap['Tab'](ctx as unknown as BehaviorContext)
       expect(cmd).toMatchObject({ type: 'focus', payload: { nodeId: 'a' } })
     })
 
-    it('Tab at non-last item does nothing (browser handles)', () => {
+    it('Shift+Tab delegates to focusPrev with wrap', () => {
       const result = tab('loop')
       const ctx = {
         focused: 'a',
-        focusNext: () => ({ type: 'focus', payload: { nodeId: 'b' } }),
+        focusPrev: (opts?: { wrap?: boolean }) => ({
+          type: 'focus',
+          payload: { nodeId: opts?.wrap ? 'c' : 'a' },
+        }),
       }
-      const cmd = result.keyMap['Tab'](ctx as any)
-      expect(cmd).toBeUndefined()
-    })
-
-    it('Shift+Tab at first item wraps to last', () => {
-      const result = tab('loop')
-      const ctx = {
-        focused: 'a',
-        focusPrev: () => ({ type: 'focus', payload: { nodeId: 'a' } }),
-        focusLast: () => ({ type: 'focus', payload: { nodeId: 'c' } }),
-      }
-      const cmd = result.keyMap['Shift+Tab'](ctx as any)
+      const cmd = result.keyMap['Shift+Tab'](ctx as unknown as BehaviorContext)
       expect(cmd).toMatchObject({ type: 'focus', payload: { nodeId: 'c' } })
-    })
-
-    it('Shift+Tab at non-first item does nothing (browser handles)', () => {
-      const result = tab('loop')
-      const ctx = {
-        focused: 'b',
-        focusPrev: () => ({ type: 'focus', payload: { nodeId: 'a' } }),
-      }
-      const cmd = result.keyMap['Shift+Tab'](ctx as any)
-      expect(cmd).toBeUndefined()
     })
   })
 

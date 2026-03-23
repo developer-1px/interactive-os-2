@@ -34,7 +34,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| composePattern + 6축 (edit 추가) | Integrated | — |
+| composePattern + 7축 (tab 추가) | Integrated | — |
 | pointer interaction | Integrated | — |
 | 17 presets (listbox~spinbutton) | Integrated | — |
 | *menubar* | Concept | 다계층 keyMap 필요 |
