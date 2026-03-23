@@ -15,7 +15,7 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `shared-grid-data.ts` | 컬럼 6~8개 × 행 15~20개 Employee Directory 데이터. 셀 유형 다양성(문자열, 숫자, 이메일, 날짜, 부서) | |
+| `sharedGridData.ts` | 컬럼 6~8개 × 행 15~20개 Employee Directory 데이터. 셀 유형 다양성(문자열, 숫자, 이메일, 날짜, 부서) | |
 | `PageGridCollection.tsx` | 헤더 컬럼 수 반영 + 셀 border 스타일링으로 스프레드시트 느낌 | |
 | `PageGrid.tsx` | 같은 shared-grid-data를 쓰므로 자동 반영. pattern 쪽도 확장된 데이터로 동작 확인 | |
 | `components.css` gridcell 스타일 | 셀 경계선 + 포커스 하이라이트 추가 (기존 `[role="gridcell"]` 규칙 보강) | |
@@ -57,7 +57,7 @@
 
 | # | 원칙 (출처) | 관련 항목 | 위반 여부 | 위반 시 수정 | 역PRD |
 |---|------------|----------|----------|------------|-------|
-| P1 | 파일명 = 주 export 식별자 (CLAUDE.md) | ② shared-grid-data.ts | ✅ 미위반 — 모듈명 camelCase 멀티 export | — | |
+| P1 | 파일명 = 주 export 식별자 (CLAUDE.md) | ② sharedGridData.ts | ✅ 미위반 — 모듈명 camelCase 멀티 export | — | |
 | P2 | ARIA 표준 용어 우선 (feedback_naming_convention) | ② 컬럼 key 이름 | ✅ 미위반 — 도메인 데이터, ARIA 용어 아님 | — | |
 | P3 | 테스트 원칙: 계산은 unit, 인터랙션은 통합 (CLAUDE.md) | ⑧ 검증 | ✅ 미위반 — 기존 integration test 유지 | — | |
 | P4 | never barrel export (CLAUDE.md) | ② 산출물 | ✅ 미위반 — 기존 구조 유지 | — | |
@@ -69,7 +69,7 @@
 
 | # | 이 기능이 건드리는 기존 것 | 예상 부작용 | 심각도 | 대응 | 역PRD |
 |---|------------------------|-----------|--------|------|-------|
-| S1 | `shared-grid-data.ts` — PageGrid(pattern)도 import | 컬럼 수 증가로 pattern 쪽 헤더 렌더링도 변경됨 | 낮 | 허용 — pattern 쪽도 더 풍부한 데이터로 이득 | |
+| S1 | `sharedGridData.ts` — PageGrid(pattern)도 import | 컬럼 수 증가로 pattern 쪽 헤더 렌더링도 변경됨 | 낮 | 허용 — pattern 쪽도 더 풍부한 데이터로 이득 | |
 | S2 | `components.css` gridcell 스타일 | 다른 grid 사용처(cms-i18n-sheet)에 영향 가능 | 중 | cms-i18n-sheet는 자체 `.cms-i18n-sheet__grid [role="gridcell"]` 스타일로 오버라이드 중 → 영향 없음 | |
 | S3 | 기존 grid integration test | 테스트가 `shared-grid-data`를 직접 import하지 않음 (자체 fixture 사용) | 낮 | 영향 없음 확인됨 | |
 

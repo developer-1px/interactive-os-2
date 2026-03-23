@@ -3,7 +3,7 @@ import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgGrid } from './apg-data'
 import { Grid } from '../interactive-os/ui/Grid'
 import { core } from '../interactive-os/plugins/core'
-import { gridColumns, gridInitialData } from './shared-grid-data'
+import { gridColumns, gridInitialData } from './sharedGridData'
 
 const plugins = [core()]
 
