@@ -3,8 +3,14 @@
  *
  * V1: printable key on editable cell → replace edit (contenteditable shows only typed char)
  * E2: printable key on read-only cell (col 0) → no edit
- * V16: F2 on editable cell → preserve edit (existing value shown)
+ * V6: Mod+Z undo chain — multi-edit undo in reverse order
+ * V8: empty cell renders empty string
+ * V9: arrow keys in edit mode → text cursor, not grid navigation
+ * V13: empty string confirm with allowEmpty
  * V14: replace mode → Escape → original value restored
+ * V15: blur confirms edit
+ * V16: F2 on editable cell → preserve edit (existing value shown)
+ * V17: F2 on read-only cell → no edit
  * Tab continuation: Tab during editing → confirm + move + auto-edit
  */
 import { useState, useRef } from 'react'
@@ -293,6 +299,203 @@ describe('i18n DataTable editing', () => {
       focusedRow = container.querySelector('[role="row"][tabindex="0"]')
       cells = focusedRow?.querySelectorAll('[role="gridcell"]')
       expect(cells?.[2]?.textContent).toBe('Headless ARIA Engine')
+    })
+  })
+
+  describe('V6: Mod+Z undo chain', () => {
+    beforeEach(() => {
+      resetClipboard()
+    })
+
+    it('undoes multiple paste operations in reverse order', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<I18nGrid />)
+
+      // Focus first row
+      const row = container.querySelector('[role="row"]') as HTMLElement
+      act(() => { row.focus() })
+
+      // Navigate to ko column (col 1, aria-colindex=2)
+      await user.keyboard('{ArrowRight}')
+      expect(getFocusedColIndex(container)).toBe(2)
+
+      // Copy ko cell value ('헤드리스 ARIA 엔진')
+      await user.keyboard('{Control>}c{/Control}')
+
+      // Navigate to en column (col 2, aria-colindex=3) and paste
+      await user.keyboard('{ArrowRight}')
+      await user.keyboard('{Control>}v{/Control}')
+
+      // Verify: en column now has ko value
+      let focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      let cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[2]?.textContent).toBe('헤드리스 ARIA 엔진')
+
+      // Navigate to ja column (col 3, aria-colindex=4) and paste
+      await user.keyboard('{ArrowRight}')
+      await user.keyboard('{Control>}v{/Control}')
+
+      // Verify: ja column now has ko value
+      focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[3]?.textContent).toBe('헤드리스 ARIA 엔진')
+
+      // Mod+Z → ja column reverts to original ('')
+      await user.keyboard('{Control>}z{/Control}')
+      focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[3]?.textContent).toBe('')
+
+      // Mod+Z → en column reverts to original ('Headless ARIA Engine')
+      await user.keyboard('{Control>}z{/Control}')
+      focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[2]?.textContent).toBe('Headless ARIA Engine')
+    })
+  })
+
+  describe('V8: empty cell renders empty string', () => {
+    it('cell with empty value renders empty text content', () => {
+      const { container } = render(<I18nGrid />)
+
+      // hero-title row is first row, ja column (col 3, index 3) has empty string ''
+      const rows = container.querySelectorAll('[role="row"]')
+      const firstRow = rows[0] as HTMLElement
+      const cells = firstRow.querySelectorAll('[role="gridcell"]')
+      // ja column is index 3 (0=key, 1=ko, 2=en, 3=ja)
+      const jaCell = cells[3]
+      expect(jaCell?.textContent).toBe('')
+    })
+  })
+
+  describe('V9: arrow keys in edit mode = text cursor, not grid navigation', () => {
+    it('ArrowLeft/ArrowRight do not navigate grid while editing', () => {
+      vi.useFakeTimers()
+      try {
+        const { container } = render(<I18nGrid />)
+
+        const row = container.querySelector('[role="row"]') as HTMLElement
+        act(() => { row.focus() })
+
+        // Navigate to ko column (col 1)
+        act(() => { fireEvent.keyDown(row, { key: 'ArrowRight' }) })
+        expect(getFocusedColIndex(container)).toBe(2)
+
+        // Enter editing with F2
+        act(() => { fireEvent.keyDown(row, { key: 'F2' }) })
+        let editable = getEditableEl(container)
+        expect(editable).not.toBeNull()
+
+        // Press ArrowLeft — should stay in editing mode
+        act(() => { fireEvent.keyDown(editable!, { key: 'ArrowLeft' }) })
+        editable = getEditableEl(container)
+        expect(editable).not.toBeNull()
+        // Still at same column
+        expect(getFocusedColIndex(container)).toBe(2)
+
+        // Press ArrowRight — should stay in editing mode
+        act(() => { fireEvent.keyDown(editable!, { key: 'ArrowRight' }) })
+        editable = getEditableEl(container)
+        expect(editable).not.toBeNull()
+        expect(getFocusedColIndex(container)).toBe(2)
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+  })
+
+  describe('V13: empty string confirm with allowEmpty', () => {
+    it('confirming empty content preserves empty string (does not cancel)', () => {
+      vi.useFakeTimers()
+      try {
+        const { container } = render(<I18nGrid />)
+
+        const row = container.querySelector('[role="row"]') as HTMLElement
+        act(() => { row.focus() })
+
+        // Navigate to ko column (col 1)
+        act(() => { fireEvent.keyDown(row, { key: 'ArrowRight' }) })
+
+        // Enter editing with F2
+        act(() => { fireEvent.keyDown(row, { key: 'F2' }) })
+        let editable = getEditableEl(container)
+        expect(editable).not.toBeNull()
+
+        // Clear content to empty string
+        editable!.textContent = ''
+
+        // Press Enter to confirm
+        act(() => { fireEvent.keyDown(editable!, { key: 'Enter' }) })
+
+        // Editing should end
+        editable = getEditableEl(container)
+        expect(editable).toBeNull()
+
+        // Cell should show empty string (not original value)
+        const focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+        const cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+        expect(cells?.[1]?.textContent).toBe('')
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+  })
+
+  describe('V15: blur confirms edit', () => {
+    it('blurring the editable element confirms the new value', () => {
+      vi.useFakeTimers()
+      try {
+        const { container } = render(<I18nGrid />)
+
+        const row = container.querySelector('[role="row"]') as HTMLElement
+        act(() => { row.focus() })
+
+        // Navigate to ko column (col 1)
+        act(() => { fireEvent.keyDown(row, { key: 'ArrowRight' }) })
+
+        // Enter editing with F2
+        act(() => { fireEvent.keyDown(row, { key: 'F2' }) })
+        const editable = getEditableEl(container)
+        expect(editable).not.toBeNull()
+
+        // Modify content
+        editable!.textContent = 'blurred value'
+
+        // Blur to confirm
+        act(() => { editable!.blur() })
+
+        // Cell should show the new value
+        const focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+        const cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+        expect(cells?.[1]?.textContent).toBe('blurred value')
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+  })
+
+  describe('V17: F2 on read-only cell → no edit', () => {
+    it('F2 on key column (col 0) does not enter editing', () => {
+      vi.useFakeTimers()
+      try {
+        const { container } = render(<I18nGrid />)
+
+        const row = container.querySelector('[role="row"]') as HTMLElement
+        act(() => { row.focus() })
+
+        // Ensure col 0 (key column)
+        act(() => { fireEvent.keyDown(row, { key: 'Home' }) })
+        expect(getFocusedColIndex(container)).toBe(1) // aria-colindex 1 = key column
+
+        // Press F2
+        act(() => { fireEvent.keyDown(row, { key: 'F2' }) })
+
+        // No contenteditable should appear
+        const editable = getEditableEl(container)
+        expect(editable).toBeNull()
+      } finally {
+        vi.useRealTimers()
+      }
     })
   })
 })
