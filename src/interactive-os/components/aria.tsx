@@ -26,7 +26,7 @@ interface AriaProps {
 
 interface AriaItemProps {
   ids?: string[]
-  render: (node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => ReactElement
+  render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
 }
 
 const horizontalStyle = { display: 'flex' } as const
@@ -84,7 +84,7 @@ function AriaItemNode({ childId, render }: { childId: string; render: AriaItemPr
 
   return (
     <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
-      {cloneElement(render(entity, state, props), { key: childId, ref: scrollRef })}
+      {cloneElement(render(props, entity, state), { key: childId, ref: scrollRef })}
     </AriaItemContext.Provider>
   )
 }

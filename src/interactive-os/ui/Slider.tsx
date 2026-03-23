@@ -43,7 +43,7 @@ export function Slider({
     getAriaActions(id)?.dispatch(valueCommands.setValue(snapped, { min, max, step }))
   }, [id, min, max, step])
 
-  const renderItem = (item: Record<string, unknown>, state: NodeState, _props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
+  const renderItem = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
     const current = state.valueCurrent ?? min
     const pct = max > min ? ((current - min) / (max - min)) * 100 : 0
     const label = (item.data as Record<string, unknown>)?.label as string ?? item.id as string

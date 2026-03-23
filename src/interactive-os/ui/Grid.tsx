@@ -19,7 +19,7 @@ interface GridProps {
   columns: ColumnDef[]
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderCell?: (value: unknown, column: ColumnDef, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
+  renderCell?: (props: React.HTMLAttributes<HTMLElement>, value: unknown, column: ColumnDef, state: NodeState) => React.ReactElement
   enableEditing?: boolean
   /** Enable Tab/Shift+Tab cell cycling across columns and rows */
   tabCycle?: boolean
@@ -41,7 +41,7 @@ const cellClipboardKeyMap: Record<string, (ctx: BehaviorContext) => Command | vo
   },
 }
 
-const defaultRenderCell = (value: unknown, _column: ColumnDef, _state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => (
+const defaultRenderCell = (props: React.HTMLAttributes<HTMLElement>, value: unknown, _column: ColumnDef, _state: NodeState): React.ReactElement => (
   <span {...props}>{String(value ?? '')}</span>
 )
 
@@ -79,13 +79,13 @@ export function Grid({
     [columns.length],
   )
 
-  const renderRow = (node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
+  const renderRow = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
     const cells = (node.data as Record<string, unknown>)?.cells as unknown[] | undefined
     return (
       <div className="grid-row" {...props}>
         {columns.map((col, i) => (
           <Aria.Cell key={col.key} index={i}>
-            {renderCell(cells?.[i], col, state)}
+            {renderCell({} as React.HTMLAttributes<HTMLElement>, cells?.[i], col, state)}
           </Aria.Cell>
         ))}
       </div>

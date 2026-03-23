@@ -32,7 +32,7 @@ function renderTabList(data: NormalizedData) {
     <TabList
       data={data}
       plugins={[core()]}
-      renderItem={(tab, state: NodeState, props) => (
+      renderItem={(props, tab, state: NodeState) => (
         <span {...props} data-testid={`tab-${tab.id}`} data-focused={state.focused} data-selected={state.selected}>
           {(tab.data as Record<string, unknown>)?.name as string}
         </span>

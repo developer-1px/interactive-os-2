@@ -38,7 +38,7 @@ export default function PageSwitch() {
         <SwitchGroup
           data={data}
           onChange={setData}
-          renderItem={(item, state: NodeState, props) => {
+          renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const checked = state.expanded ?? false
             return (

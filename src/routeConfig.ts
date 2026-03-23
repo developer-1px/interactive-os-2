@@ -33,8 +33,8 @@ import PageAriaComponent from './pages/PageAriaComponent'
 import PageCell from './pages/PageCell'
 import PageHooks from './pages/PageHooks'
 import PageStoreInspector from './pages/PageStoreInspector'
-import PageEnginePipeline from './pages/PageEnginePipeline'
-import PageEngineHistory from './pages/PageEngineHistory'
+import PageEngineCommand from './pages/PageEngineCommand'
+import PageEngineDiff from './pages/PageEngineDiff'
 import PageAreaViewer from './pages/PageAreaViewer'
 
 export interface RouteItem {
@@ -67,10 +67,10 @@ export const routeConfig: RouteGroup[] = [
     id: 'internals/engine',
     label: 'Engine',
     icon: Cog,
-    basePath: '/internals/engine/pipeline',
+    basePath: '/internals/engine/command',
     items: [
-      { path: 'pipeline', label: 'Pipeline', status: 'ready', component: PageEnginePipeline },
-      { path: 'history', label: 'History', status: 'ready', component: PageEngineHistory },
+      { path: 'command', label: 'Command', status: 'ready', component: PageEngineCommand },
+      { path: 'diff', label: 'Diff', status: 'ready', component: PageEngineDiff },
     ],
   },
   {

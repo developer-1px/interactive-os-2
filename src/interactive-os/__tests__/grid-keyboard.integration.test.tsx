@@ -43,7 +43,7 @@ function renderGrid(data: NormalizedData, opts?: { tabCycle?: boolean }) {
   return render(
     <Aria behavior={b} data={data} plugins={plugins} aria-label="Employees">
       <Aria.Item
-        render={(node: Record<string, unknown>, state: NodeState, props) => {
+        render={(props, node: Record<string, unknown>, state: NodeState) => {
           const cells = (node.data as Record<string, unknown>)?.cells as string[]
           return (
             <div {...props} style={{ display: 'flex' }} data-testid={`row-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
@@ -359,7 +359,7 @@ function StatefulEditableGrid() {
       enableEditing
       onChange={setData}
       aria-label="Employees"
-      renderCell={(value, col, _state) => {
+      renderCell={(_props, value, col, _state) => {
         // Only the 'name' column is editable — multiple Aria.Editable per row
         // would compete for focus in rename mode (each useEffect calls el.focus())
         if (col.field === 'name') {

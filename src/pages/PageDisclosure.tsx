@@ -30,7 +30,7 @@ export default function PageDisclosure() {
       <div className="card">
         <DisclosureGroup
           data={disclosureData}
-          renderItem={(item, state: NodeState, props) => {
+          renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             return (
             <div {...props}>

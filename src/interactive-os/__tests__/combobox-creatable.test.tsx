@@ -30,7 +30,7 @@ function CreatableHarness() {
       editable
       creatable
       onChange={setData}
-      renderItem={(item, state: NodeState, props) => (
+      renderItem={(props, item, state: NodeState) => (
         <span {...props} data-focused={state.focused}>
           {(item.data as Record<string, unknown>)?.label as string}
         </span>

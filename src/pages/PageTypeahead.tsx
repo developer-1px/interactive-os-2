@@ -75,7 +75,7 @@ export default function PageTypeahead() {
         <ListBox
           data={data}
           plugins={plugins}
-          renderItem={(item, state: NodeState, props) => {
+          renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',

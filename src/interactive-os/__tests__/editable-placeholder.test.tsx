@@ -19,7 +19,7 @@ function TestListBox({ initialData, keyMap }: {
   const [data, setData] = useState(initialData)
   return (
     <Aria behavior={listbox()} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
-      <Aria.Item render={(node: Record<string, unknown>, _state: NodeState, props) => (
+      <Aria.Item render={(props, node: Record<string, unknown>, _state: NodeState) => (
         <div {...props} data-testid={`item-${node.id}`}>
           <Aria.Editable field="label" placeholder="Enter text...">
             <span>{(node.data as Record<string, unknown>)?.label as string}</span>
@@ -50,7 +50,7 @@ describe('Aria.Editable placeholder', () => {
       const [data, setData] = useState(store)
       return (
         <Aria behavior={listbox()} data={data} plugins={plugins} onChange={setData}>
-          <Aria.Item render={(node: Record<string, unknown>, _state, props) => (
+          <Aria.Item render={(props, node: Record<string, unknown>, _state) => (
             <Aria.Editable {...props} field="label">
               <span>{(node.data as Record<string, unknown>)?.label as string}</span>
             </Aria.Editable>

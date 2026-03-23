@@ -50,7 +50,7 @@ function BrokenViewer() {
   return (
     <div>
       <Aria behavior={tree} data={store} plugins={[core()]} onChange={handleChange} aria-label="tree">
-        <Aria.Item render={(node, state, props) => {
+        <Aria.Item render={(props, node, state) => {
           const data = node.data as { name: string }
           return <span {...props} data-focused={state.focused}>{data.name}</span>
         }} />
@@ -77,7 +77,7 @@ function FixedViewer() {
   return (
     <div>
       <Aria behavior={tree} data={initialStore} plugins={[core()]} onChange={handleChange} aria-label="tree">
-        <Aria.Item render={(node, state, props) => {
+        <Aria.Item render={(props, node, state) => {
           const data = node.data as { name: string }
           return <span {...props} data-focused={state.focused}>{data.name}</span>
         }} />

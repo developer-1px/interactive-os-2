@@ -34,7 +34,7 @@ export default function PageTabs() {
         <div style={{ borderBottom: '1px solid var(--border-mid)' }}>
           <TabList
             data={tabData}
-            renderItem={(tab, state: NodeState, props) => {
+            renderItem={(props, tab, state: NodeState) => {
               const d = tab.data as Record<string, unknown>
               return (
                 <div {...props} className={`tab${state.focused ? ' tab--focused' : ''}${state.selected ? ' tab--selected' : ''}`}>

@@ -38,7 +38,7 @@ export default function PageHooks() {
           data={data}
           onChange={setData}
           plugins={[core()]}
-          renderItem={(item, state: NodeState, props) => {
+          renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',

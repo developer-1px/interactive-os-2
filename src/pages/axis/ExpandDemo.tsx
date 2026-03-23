@@ -80,7 +80,7 @@ export default function ExpandDemo() {
           onChange={setData}
           aria-label="expand demo"
         >
-          <Aria.Item render={(node, state: NodeState, props) => {
+          <Aria.Item render={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const indent = mode === 'arrow' ? ((state.level ?? 1) - 1) * 20 : 0
             const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')

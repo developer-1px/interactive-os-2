@@ -30,7 +30,7 @@ export default function PageTreeNav() {
           data={tree}
           onChange={setTree}
           plugins={plugins}
-          renderItem={(node, state, props) => <RenderTreeItem {...props} node={node} state={state} />}
+          renderItem={(props, node, state) => <RenderTreeItem {...props} node={node} state={state} />}
         />
       </div>
       <ApgKeyboardTable {...apgTreeView} />

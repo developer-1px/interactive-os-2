@@ -38,10 +38,6 @@ function eventLabel(evt: TimelineEvent): string {
   return evt.tool ?? evt.type
 }
 
-function isNearBottom(el: HTMLElement, threshold = 100): boolean {
-  return el.scrollHeight - el.scrollTop - el.clientHeight < threshold
-}
-
 // --- Event icon ---
 
 function EventIcon({ evt }: { evt: TimelineEvent }) {
@@ -377,9 +373,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
 
     prevLengthRef.current = newLen
 
-    if (isNearBottom(el)) {
-      requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
-    }
+    requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
   }, [displayItems, containerRef])
 
   // --- File click handler ---

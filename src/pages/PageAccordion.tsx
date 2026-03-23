@@ -33,7 +33,7 @@ export default function PageAccordion() {
       <div className="card">
         <Accordion
           data={accordionData}
-          renderItem={(item, state: NodeState, props) => {
+          renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             return (
             <div {...props}>

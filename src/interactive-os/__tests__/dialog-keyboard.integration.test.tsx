@@ -36,7 +36,7 @@ function renderDialog(data: NormalizedData) {
   return render(
     <Aria behavior={dialog} data={data} plugins={[core()]}>
       <Aria.Item
-        render={(node, state: NodeState, props) => (
+        render={(props, node, state: NodeState) => (
           <span {...props} data-testid={`node-${node.id}`} data-focused={state.focused} data-expanded={state.expanded}>
             {(node.data as Record<string, unknown>)?.name as string}
           </span>

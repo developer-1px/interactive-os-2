@@ -30,7 +30,7 @@ describe('combobox click interaction', () => {
         data={fixtureData()}
         plugins={[core(), comboboxPlugin()]}
         placeholder="Pick a fruit..."
-        renderItem={(item, _state, props) => <span {...props}>{(item.data as { label: string }).label}</span>}
+        renderItem={(props, item, _state) => <span {...props}>{(item.data as { label: string }).label}</span>}
       />
     )
     const input = container.querySelector('[role="combobox"]') as HTMLElement
@@ -45,7 +45,7 @@ describe('combobox click interaction', () => {
         data={fixtureData()}
         plugins={[core(), comboboxPlugin()]}
         placeholder="Pick a fruit..."
-        renderItem={(item, _state, props) => <span {...props}>{(item.data as { label: string }).label}</span>}
+        renderItem={(props, item, _state) => <span {...props}>{(item.data as { label: string }).label}</span>}
       />
     )
     const input = container.querySelector('[role="combobox"]') as HTMLElement
@@ -63,7 +63,7 @@ describe('combobox click interaction', () => {
         plugins={[core(), comboboxPlugin()]}
         placeholder="Pick..."
         selectionMode="multiple"
-        renderItem={(item, _state, props) => <span {...props}>{(item.data as { label: string }).label}</span>}
+        renderItem={(props, item, _state) => <span {...props}>{(item.data as { label: string }).label}</span>}
       />
     )
     const input = container.querySelector('[role="combobox"]') as HTMLElement
