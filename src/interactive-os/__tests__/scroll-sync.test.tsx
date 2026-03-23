@@ -30,9 +30,9 @@ describe('scroll sync', () => {
 
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={listbox} data={fixtureStore()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
     )

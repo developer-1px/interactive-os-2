@@ -1,37 +1,27 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin, Command } from '../core/types'
-import type { BehaviorContext, NodeState } from '../behaviors/types'
+import type { NormalizedData, Plugin } from '../core/types'
+import type { NodeState } from '../behaviors/types'
 import { Aria } from '../components/aria'
 import { listbox } from '../behaviors/listbox'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
-import { crudCommands } from '../plugins/crud'
-import { renameCommands } from '../plugins/rename'
-import { dndCommands } from '../plugins/dnd'
+import { replaceEditPlugin } from '../axes/edit'
 
 interface ListBoxProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState) => React.ReactNode
+  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
   enableEditing?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const defaultRenderItem = (item: Record<string, unknown>, _state: NodeState): React.ReactNode => (
-  <span>
+const defaultRenderItem = (item: Record<string, unknown>, _state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => (
+  <span {...props}>
     {(item.data as Record<string, unknown>)?.label as string ?? (item.data as Record<string, unknown>)?.name as string ?? item.id as string}
   </span>
 )
-
-const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
-  'Delete': (ctx) => crudCommands.remove(ctx.focused),
-  'Enter': (ctx) => renameCommands.startRename(ctx.focused),
-  'F2': (ctx) => renameCommands.startRename(ctx.focused),
-  'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-  'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
-}
 
 export function ListBox({
   data,
@@ -40,13 +30,22 @@ export function ListBox({
   renderItem = defaultRenderItem,
   enableEditing = false,
 }: ListBoxProps) {
+  const behavior = React.useMemo(
+    () => listbox({ edit: enableEditing }),
+    [enableEditing],
+  )
+
+  const mergedPlugins = React.useMemo(
+    () => enableEditing ? [...plugins, replaceEditPlugin()] : plugins,
+    [plugins, enableEditing],
+  )
+
   return (
     <Aria
-      behavior={listbox}
+      behavior={behavior}
       data={data}
-      plugins={plugins}
+      plugins={mergedPlugins}
       onChange={onChange}
-      keyMap={enableEditing ? editingKeyMap : undefined}
     >
       <Aria.Item render={renderItem} />
     </Aria>

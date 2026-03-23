@@ -23,7 +23,7 @@ interface SessionInfo {
 
 // --- Behaviors ---
 
-const sessionListbox = { ...listbox, followFocus: true }
+const sessionListbox = { ...listbox(), followFocus: true }
 
 // --- Constants (stable references) ---
 
@@ -192,10 +192,10 @@ export default function PageAgentViewer() {
                     onChange={handleArchiveSelect}
                     aria-label="Active sessions"
                   >
-                    <Aria.Item render={(node) => {
+                    <Aria.Item render={(node, _state, props) => {
                       const data = node.data as { label: string; mtime: number }
                       return (
-                        <div className={styles.avSessionItem}>
+                        <div {...props} className={styles.avSessionItem}>
                           <span className={styles.avSessionLive}>●</span>
                           <span className={styles.avSessionLabel}>{data.label}</span>
                         </div>
@@ -214,10 +214,10 @@ export default function PageAgentViewer() {
                     onChange={handleArchiveSelect}
                     aria-label="Ended sessions"
                   >
-                    <Aria.Item render={(node) => {
+                    <Aria.Item render={(node, _state, props) => {
                       const data = node.data as { label: string; mtime: number }
                       return (
-                        <div className={styles.avSessionItem}>
+                        <div {...props} className={styles.avSessionItem}>
                           <span className={styles.avSessionLabel}>{data.label}</span>
                         </div>
                       )

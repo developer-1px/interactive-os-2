@@ -21,7 +21,7 @@ function fixtureStore(): NormalizedData {
 }
 
 function TestComponent({ store, onDispatch }: { store: NormalizedData; onDispatch: (cmd: Command) => void }) {
-  const aria = useControlledAria({ behavior: listbox, store, onDispatch })
+  const aria = useControlledAria({ behavior: listbox(), store, onDispatch })
   return (
     <div role="listbox">
       {['a', 'b'].map(id => {

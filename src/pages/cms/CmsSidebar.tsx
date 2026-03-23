@@ -174,10 +174,12 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     }
   }, [scrollToSection, sectionIds])
 
+  const sidebarBehavior = useMemo(() => listbox(), [])
+
   const aria = useAriaZone({
     engine,
     store,
-    behavior: listbox,
+    behavior: sidebarBehavior,
     scope: 'sidebar',
     plugins,
     keyMap: sidebarKeyMap,

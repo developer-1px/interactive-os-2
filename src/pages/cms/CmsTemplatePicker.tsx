@@ -1,6 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { TEMPLATE_VARIANTS } from './cms-templates'
 import type { TemplateType } from './cms-templates'
+import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { BehaviorContext } from '../../interactive-os/behaviors/types'
+import { listbox } from '../../interactive-os/behaviors/listbox'
+import { useAria } from '../../interactive-os/hooks/useAria'
+import { core, focusCommands } from '../../interactive-os/plugins/core'
+
+const pickerData: NormalizedData = {
+  entities: Object.fromEntries(
+    TEMPLATE_VARIANTS.map(v => [v.id, { id: v.id, data: { label: v.label } }])
+  ),
+  relationships: { __root__: TEMPLATE_VARIANTS.map(v => v.id) },
+}
 
 interface CmsTemplatePickerProps {
   open: boolean
@@ -14,59 +26,54 @@ export default function CmsTemplatePicker({ open, onClose, onSelect }: CmsTempla
 }
 
 function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps, 'open'>) {
-  const [focusIdx, setFocusIdx] = useState(0)
   const listRef = useRef<HTMLDivElement>(null)
 
-  // Auto-focus the list when mounted
-  useEffect(() => {
-    listRef.current?.focus()
-  }, [])
+  const keyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+    Escape: () => { onClose() },
+  }), [onClose])
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault()
-        setFocusIdx(i => Math.min(i + 1, TEMPLATE_VARIANTS.length - 1))
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        setFocusIdx(i => Math.max(i - 1, 0))
-        break
-      case 'Enter':
-        e.preventDefault()
-        onSelect(TEMPLATE_VARIANTS[focusIdx].id)
-        break
-      case 'Escape':
-        e.preventDefault()
-        onClose()
-        break
-    }
-  }
+  const behavior = useMemo(() => listbox(), [])
+
+  const aria = useAria({
+    behavior,
+    data: pickerData,
+    plugins: [core()],
+    keyMap,
+    onActivate: (nodeId) => {
+      onSelect(nodeId as TemplateType)
+    },
+  })
+
+  // Auto-focus the first item when mounted
+  useEffect(() => {
+    const first = listRef.current?.querySelector<HTMLElement>('[role="option"]')
+    first?.focus()
+  }, [])
 
   return (
     <div
       className="cms-template-picker"
-      role="listbox"
-      aria-label="Section templates"
       ref={listRef}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) onClose()
       }}
     >
-      {TEMPLATE_VARIANTS.map((v, i) => (
-        <div
-          key={v.id}
-          role="option"
-          aria-selected={i === focusIdx}
-          className={`cms-template-picker__item${i === focusIdx ? ' cms-template-picker__item--focused' : ''}`}
-          onClick={() => onSelect(v.id)}
-          onPointerEnter={() => setFocusIdx(i)}
-        >
-          {v.label}
-        </div>
-      ))}
+      <div role="listbox" aria-label="Section templates" {...aria.containerProps}>
+        {TEMPLATE_VARIANTS.map(v => {
+          const props = aria.getNodeProps(v.id)
+          const state = aria.getNodeState(v.id)
+          return (
+            <div
+              key={v.id}
+              {...(props as React.HTMLAttributes<HTMLDivElement>)}
+              className={`cms-template-picker__item${state.focused ? ' cms-template-picker__item--focused' : ''}`}
+              onPointerEnter={() => aria.dispatch(focusCommands.setFocus(v.id))}
+            >
+              {v.label}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

@@ -57,9 +57,9 @@ describe('pointer interaction — listbox click selection', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={listbox} data={fixtureStore()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
     )
@@ -122,8 +122,8 @@ describe('pointer interaction — tree click', () => {
     const user = userEvent.setup()
     const result = render(
       <Aria behavior={tree} data={treeFixtureStore()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
     )
@@ -155,8 +155,8 @@ describe('pointer interaction — tree click (second suite)', () => {
     const user = userEvent.setup()
     const result = render(
       <Aria behavior={tree} data={treeFixtureStore()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
     )
@@ -182,8 +182,8 @@ describe('pointer interaction — edge cases', () => {
     const user = userEvent.setup()
     const { container } = render(
       <Aria behavior={singleListbox} data={fixtureStore()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
     )
@@ -197,9 +197,9 @@ describe('pointer interaction — edge cases', () => {
   it('click followed by keyboard Shift+Arrow still works', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={listbox} data={fixtureStore()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
     )
@@ -226,8 +226,8 @@ describe('pointer interaction — grid click', () => {
     const user = userEvent.setup()
     const { container } = render(
       <Aria behavior={grid({ columns: 1 })} data={gridFixtureStore()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { name: string } }).data.name}</span>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { name: string } }).data.name}</span>
         )} />
       </Aria>
     )
@@ -239,8 +239,8 @@ describe('pointer interaction — grid click', () => {
     const user = userEvent.setup()
     const { container } = render(
       <Aria behavior={grid({ columns: 1 })} data={gridFixtureStore()} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { name: string } }).data.name}</span>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { name: string } }).data.name}</span>
         )} />
       </Aria>
     )
@@ -262,9 +262,9 @@ describe('pointer interaction — disabled node', () => {
     })
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={listbox} data={data} plugins={[core()]}>
-        <Aria.Item render={(node, state) => (
-          <span data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+      <Aria behavior={listbox()} data={data} plugins={[core()]}>
+        <Aria.Item render={(node, state, props) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
       </Aria>
     )
