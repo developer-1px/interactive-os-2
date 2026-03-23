@@ -1,11 +1,11 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Sun, Moon, Home, BookText, Component, Presentation, Eye, Activity, Palette } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import { Aria } from './interactive-os/components/aria'
 import { toolbar } from './interactive-os/behaviors/toolbar'
-import { core, FOCUS_ID } from './interactive-os/plugins/core'
+import { core } from './interactive-os/plugins/core'
 import { FileViewerModal } from './interactive-os/ui/FileViewerModal'
 import { createStore } from './interactive-os/core/createStore'
 import { ROOT_ID } from './interactive-os/core/types'
@@ -90,29 +90,12 @@ const activityBarStore = toStore([
 
 const navPaths = Object.fromEntries(navItems.map((n) => [n.id, n.path]))
 
-// --- Shared ActivityBar item renderer ---
+// --- URL → active nav ID (visual indicator, not DOM focus) ---
 
-const renderNavItem = (node: { id: string }, state: { focused: boolean }, props: Record<string, unknown>) => {
-  const nav = navItems.find((n) => n.id === node.id)!
-  const Icon = nav.icon
-  return (
-    <Tooltip content={nav.label}>
-      <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
-        <Icon size={16} />
-      </div>
-    </Tooltip>
-  )
-}
-
-// --- URL → ActivityBar focus ID ---
-
-function resolveActivityBarFocusId(pathname: string): string | undefined {
-  // Check internals routeConfig first
+function resolveActiveNavId(pathname: string): string | undefined {
   const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
   if (activeGroup) return activeGroup.id
 
-  // Check external nav items (most specific match first)
-  // Sort by path length descending to match /examples/cms before /
   const sorted = [...externalNavItems].sort((a, b) => b.path.length - a.path.length)
   for (const nav of sorted) {
     if (nav.path === '/') {
@@ -155,17 +138,22 @@ export default function AppShell() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
-  const activityBarFocusId = resolveActivityBarFocusId(pathname)
-  const activityBarData = useMemo(() => {
-    if (!activityBarFocusId) return activityBarStore
-    return {
-      ...activityBarStore,
-      entities: {
-        ...activityBarStore.entities,
-        [FOCUS_ID]: { id: FOCUS_ID, focusedId: activityBarFocusId },
-      },
-    }
-  }, [activityBarFocusId])
+  // Active indicator (visual only, driven by URL — NOT DOM focus)
+  const activeNavId = resolveActiveNavId(pathname)
+
+  // Render function that separates active indicator from keyboard focus
+  const renderNavItem = useCallback((node: { id: string }, state: { focused: boolean }, props: Record<string, unknown>) => {
+    const nav = navItems.find((n) => n.id === node.id)!
+    const Icon = nav.icon
+    const isActive = node.id === activeNavId
+    return (
+      <Tooltip content={nav.label}>
+        <div {...props} className={`activity-bar__item${isActive ? ' activity-bar__item--active' : ''}`}>
+          <Icon size={16} />
+        </div>
+      </Tooltip>
+    )
+  }, [activeNavId])
 
   const handleActivityBarActivate = useCallback((nodeId: string) => {
     if (nodeId === 'theme') {
@@ -184,10 +172,11 @@ export default function AppShell() {
         </div>
         <Aria
           behavior={verticalToolbar}
-          data={activityBarData}
+          data={activityBarStore}
           plugins={[core()]}
           onActivate={handleActivityBarActivate}
           aria-label="Layer navigation"
+          autoFocus={false}
         >
           <div role="group" aria-label="External">
             <Aria.Item asChild ids={EXTERNAL_IDS} render={renderNavItem} />
