@@ -38,9 +38,9 @@ export default function PageGridCollection() {
       <div className="demo-section">
         <h3 className="demo-title">Employee Directory</h3>
         <div style={{ border: '1px solid var(--border, #e0e0e0)', borderRadius: 8, overflow: 'hidden' }}>
-          <div style={{ display: 'flex', borderBottom: '2px solid var(--border, #e0e0e0)', background: 'var(--header-bg, #fafafa)' }}>
+          <div className="grid-header">
             {gridColumns.map((col) => (
-              <div key={col.key} style={{ padding: '8px 12px', minWidth: 120, fontWeight: 600, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary, #666)' }}>
+              <div key={col.key} className="grid-header-cell">
                 {col.header}
               </div>
             ))}
