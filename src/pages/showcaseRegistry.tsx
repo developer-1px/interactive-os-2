@@ -1,4 +1,6 @@
 import type { NormalizedData } from '../interactive-os/core/types'
+import type { ApgPatternData } from './apg-data'
+import { apgListbox } from './apg-data'
 
 import { Accordion } from '../interactive-os/ui/Accordion'
 import { AlertDialog } from '../interactive-os/ui/AlertDialog'
@@ -66,6 +68,8 @@ export interface ComponentEntry {
   usage: string
   render: (data: NormalizedData, onChange: (d: NormalizedData) => void) => React.ReactNode
   makeData: () => NormalizedData
+  testPath?: string
+  apg?: ApgPatternData
 }
 
 export const components: ComponentEntry[] = [
@@ -247,9 +251,11 @@ const data = createStore({
   {
     slug: 'listbox',
     name: 'ListBox',
-    description: 'Single-selection list with keyboard navigation and focus management.',
+    description: 'Keyboard-navigable list with single or multi-select support.',
     makeData: makeListBoxData,
     render: (data, onChange) => <ListBox data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/listbox-keyboard.integration.test',
+    apg: apgListbox,
     usage: `import { ListBox } from 'interactive-os/ui/ListBox'
 import { createStore } from 'interactive-os/core/createStore'
 

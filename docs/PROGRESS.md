@@ -75,7 +75,8 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| ActivityBar (External/Internal) · routing | Integrated | Phase 1 big-bang 완료: /ui, /examples/*, /internals/* |
+| ActivityBar (External/Internal) · routing | Integrated | Phase 1 big-bang 완료 |
+| UI Showcase (/ui/{name}) | Validated | Phase 2: ListBox 완성품 연결 (test runner + APG table). 나머지 10개 점진 |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs) | Validated | paste overwrite, viewer channel 미구현 |
 | Agent Viewer (multi-session · virtual scroll) | Validated | viewer channel disabled |
