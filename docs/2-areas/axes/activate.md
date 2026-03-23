@@ -23,6 +23,12 @@
 - **expand**와 조합 → toggleExpand 옵션으로 activate가 expand/collapse 겸임
 - followFocus: true → tabs 패턴에서 포커스 이동만으로 탭 전환
 
+## 데모
+
+```tsx render
+<ActivateDemo />
+```
+
 ## 관련
 
 - 사용 패턴: listbox, menu, toolbar, tabs, radiogroup, accordion, disclosure, switch, spatial, kanban
