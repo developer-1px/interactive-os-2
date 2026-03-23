@@ -446,11 +446,10 @@ describe('TreeGrid keyboard integration', () => {
       expect(getNodeElement(container, 'src')).not.toBeNull()
     })
 
-    it('Mod+Z undoes expand and restores collapsed state', async () => {
+    it('Mod+Z does not undo expand (expand is view state, not content)', async () => {
       const user = userEvent.setup()
       const { container } = renderTree(fixtureData())
 
-      // src starts collapsed
       expect(getAllVisibleNodeIds(container)).toEqual(['src', 'lib'])
 
       // Expand src
@@ -458,27 +457,30 @@ describe('TreeGrid keyboard integration', () => {
       await user.keyboard('{ArrowRight}')
       expect(getAllVisibleNodeIds(container)).toContain('app')
 
-      // Undo expand
+      // Mod+Z — expand is view state, nothing to undo
       await user.keyboard('{Control>}z{/Control}')
-      expect(getAllVisibleNodeIds(container)).not.toContain('app')
+      // Folder stays expanded
+      expect(getAllVisibleNodeIds(container)).toContain('app')
     })
 
     it('Mod+Shift+Z redoes after undo', async () => {
       const user = userEvent.setup()
       const { container } = render(<StatefulTree />)
 
-      // Expand src
+      // Delete src (content change)
       getNodeElement(container, 'src')!.focus()
-      await user.keyboard('{ArrowRight}')
-      expect(getAllVisibleNodeIds(container)).toContain('app')
+      await user.keyboard('{Delete}')
+      expect(getNodeElement(container, 'src')).toBeNull()
 
       // Undo
+      getNodeElement(container, 'lib')!.focus()
       await user.keyboard('{Control>}z{/Control}')
-      expect(getAllVisibleNodeIds(container)).not.toContain('app')
+      expect(getNodeElement(container, 'src')).not.toBeNull()
 
       // Redo
+      getNodeElement(container, 'src')!.focus()
       await user.keyboard('{Control>}{Shift>}z{/Shift}{/Control}')
-      expect(getAllVisibleNodeIds(container)).toContain('app')
+      expect(getNodeElement(container, 'src')).toBeNull()
     })
 
     it('Mod+Z on empty history is no-op', async () => {
