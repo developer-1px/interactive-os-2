@@ -64,7 +64,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Vitest (571 tests) · axe-core · ESLint | Integrated | — |
+| Vitest (618 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
 | pnpm health | Validated | — |
