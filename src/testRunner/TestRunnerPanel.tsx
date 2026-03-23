@@ -55,6 +55,7 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
   const [state, setState] = useState<'idle' | 'running' | 'done'>('idle')
   const [result, setResult] = useState<RunTestResult | null>(null)
   const renderAreaRef = useRef<HTMLDivElement>(null)
+  const hiddenAreaRef = useRef<HTMLDivElement>(null)
 
   const runningRef = useRef(false)
 
@@ -64,7 +65,9 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
     setState('running')
     setResult(null)
     try {
-      const target = headless ? undefined : (renderAreaRef.current ?? undefined)
+      const target = headless
+        ? (hiddenAreaRef.current ?? undefined)
+        : (renderAreaRef.current ?? undefined)
       const r = await runTest(testPath, target)
       setResult(r)
     } catch (e) {
@@ -95,7 +98,10 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
 
   return (
     <div>
-      {!headless && <div className="card" ref={renderAreaRef} style={{ minHeight: 60, padding: 12, marginBottom: 16 }} />}
+      {headless
+        ? <div ref={hiddenAreaRef} style={{ display: 'none' }} />
+        : <div className="card" ref={renderAreaRef} style={{ minHeight: 60, padding: 12, marginBottom: 16 }} />
+      }
       <div className="card" style={{ padding: 16 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: state === 'done' ? 12 : 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
