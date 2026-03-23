@@ -30,7 +30,7 @@ function NestedAriaHarness({ parentKey }: { parentKey: string }) {
         plugins={[]}
       >
         <Aria behavior={listbox()} data={fixtureData()} plugins={[core()]} aria-label="inner">
-          <Aria.Item render={(node, _state, props) => <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>} />
+          <Aria.Item render={(props, node, _state) => <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>} />
         </Aria>
       </Aria>
     </div>

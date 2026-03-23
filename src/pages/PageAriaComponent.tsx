@@ -45,7 +45,7 @@ export default function PageAriaComponent() {
           onChange={setData}
           aria-label="Fruit picker"
         >
-          <Aria.Item render={(node, state: NodeState, props) => {
+          <Aria.Item render={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = [
               'list-item',

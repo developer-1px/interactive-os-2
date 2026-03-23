@@ -25,7 +25,7 @@ function truncatePayload(payload: unknown): string {
   return str ?? 'undefined'
 }
 
-function summarizeValue(val: unknown): string {
+export function summarizeValue(val: unknown): string {
   if (val && typeof val === 'object' && !Array.isArray(val) && 'id' in val) return JSON.stringify((val as { id: string }).id)
   if (Array.isArray(val) && val.length > 5) return `[${val.slice(0, 3).map(v => JSON.stringify(v)).join(', ')}, ...(${val.length})]`
   return JSON.stringify(val)

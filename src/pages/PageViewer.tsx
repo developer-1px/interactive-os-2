@@ -213,7 +213,7 @@ export default function PageViewer() {
               onChange={handleChange}
               aria-label="File tree"
             >
-              <Aria.Item render={(node, state, props) => {
+              <Aria.Item render={(props, node, state) => {
                 const data = node.data as FileNodeData
                 return (
                   <div {...props} className={styles.vwTreeItem}>

@@ -12,13 +12,13 @@ interface TreeViewProps {
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
-  renderItem?: (item: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) => React.ReactElement
+  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
   followFocus?: boolean
   initialFocus?: string
   'aria-label'?: string
 }
 
-const defaultRenderItem = (node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>): React.ReactElement => {
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const hasChildren = state.expanded !== undefined
   return (
     <span {...props} className="item-inner">
@@ -62,7 +62,7 @@ export function TreeView({
       const children = getChildren(store, id)
       return (
         <div key={id} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-          {renderItem(entity, state, {} as React.HTMLAttributes<HTMLElement>)}
+          {renderItem({} as React.HTMLAttributes<HTMLElement>, entity, state)}
           {state.expanded && children.length > 0 && (
             <div role="group">
               {renderNodes(id)}

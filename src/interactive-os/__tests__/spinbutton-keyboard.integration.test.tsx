@@ -25,7 +25,7 @@ const spinBehavior = spinbutton({ min: 0, max: 10, step: 1 })
 function renderSpinbutton(data: NormalizedData) {
   return render(
     <Aria behavior={spinBehavior} data={data} plugins={[core()]}>
-      <Aria.Item render={(item, _state, props) => (
+      <Aria.Item render={(props, item, _state) => (
         <span {...props}>{(item.data as Record<string, unknown>)?.label as string}</span>
       )} />
     </Aria>

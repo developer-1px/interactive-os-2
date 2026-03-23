@@ -29,7 +29,7 @@ export default function PageListboxNav() {
           data={data}
           onChange={setData}
           plugins={plugins}
-          renderItem={(item, state: NodeState, props) => {
+          renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [
               'list-item',

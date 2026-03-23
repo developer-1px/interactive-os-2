@@ -42,7 +42,7 @@ export default function PageMenu() {
       <div className="card" style={{ maxWidth: 280 }}>
         <MenuList
           data={menuData}
-          renderItem={(item, state: NodeState, props) => {
+          renderItem={(props, item, state: NodeState) => {
             const indent = ((state.level ?? 1) - 1) * 16
             const hasChildren = state.expanded !== undefined
             const cls = [

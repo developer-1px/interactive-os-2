@@ -19,7 +19,7 @@ const drawerItems: DrawerNavItem[] = [
   { id: 'cms', label: 'CMS', icon: PenTool, path: '/examples/cms' },
   { id: 'viewer', label: 'Viewer', icon: Eye, path: '/examples/viewer' },
   { id: 'store', label: 'Store', icon: Database, path: '/internals/store/inspector' },
-  { id: 'engine', label: 'Engine', icon: Cog, path: '/internals/engine/pipeline' },
+  { id: 'engine', label: 'Engine', icon: Cog, path: '/internals/engine/command' },
   { id: 'pattern', label: 'Pattern', icon: Compass, path: '/internals/pattern/accordion' },
   { id: 'plugin', label: 'Plugin', icon: Puzzle, path: '/internals/plugin/crud' },
   { id: 'collection', label: 'Collection', icon: Layers, path: '/internals/collection/treegrid' },

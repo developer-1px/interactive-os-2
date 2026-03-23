@@ -58,7 +58,7 @@ function StatefulI18nGrid() {
       enableEditing
       onChange={setData}
       aria-label="i18n Translation Sheet"
-      renderCell={(value, col, state) => {
+      renderCell={(_props, value, col, state) => {
         const isLocale = col.key === 'ko' || col.key === 'en' || col.key === 'ja'
         // Only the focused column gets Aria.Editable to avoid multi-editable focus race
         const focusedCol = (dataRef.current.entities[GRID_COL_ID]?.colIndex as number) ?? 0

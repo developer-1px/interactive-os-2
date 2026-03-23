@@ -66,7 +66,7 @@ export default function ActivateDemo() {
       )}
       <div className="card">
         <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} onActivate={handleActivate} aria-label="activate demo">
-          <Aria.Item render={(node, state: NodeState, props) => {
+          <Aria.Item render={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')
             return <div {...props} className={cls}>{d?.label as string}</div>

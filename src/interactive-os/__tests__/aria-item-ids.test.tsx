@@ -20,7 +20,7 @@ function fixtureData() {
   }
 }
 
-const renderItem = (node: Record<string, unknown>, _state: NodeState, props: Record<string, unknown>) => (
+const renderItem = (props: Record<string, unknown>, node: Record<string, unknown>, _state: NodeState) => (
   <span {...props} data-testid={node.id as string}>{(node.data as Record<string, unknown>)?.name as string}</span>
 )
 

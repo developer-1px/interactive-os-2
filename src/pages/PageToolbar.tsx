@@ -39,7 +39,7 @@ export default function PageToolbar() {
       </div>
       <div className={`card ${styles.toolbarCard}`}>
         <Aria behavior={toolbar} data={toolbarData} plugins={plugins} aria-label="Text formatting">
-          <Aria.Item render={(node, state: NodeState, props) => {
+          <Aria.Item render={(props, node, state: NodeState) => {
             const cls = [
               styles.toolbarBtn,
               state.focused && styles.toolbarBtnFocused,

@@ -45,7 +45,7 @@ function ViewerTree({ onSelect }: { onSelect?: (path: string) => void }) {
 
   return (
     <Aria behavior={tree} data={store} plugins={[core()]} onChange={handleChange} aria-label="File tree">
-      <Aria.Item render={(node, state, props) => {
+      <Aria.Item render={(props, node, state) => {
         const data = node.data as { name: string; type: string }
         return (
             <span {...props} data-testid={`node-${data.name}`} data-focused={state.focused} data-expanded={state.expanded}>

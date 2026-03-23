@@ -57,7 +57,7 @@ export default function PageDnd() {
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(node, state: NodeState, props) => {
+          renderItem={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const isGroup = d?.type === 'group'
             const indent = ((state.level ?? 1) - 1) * 18

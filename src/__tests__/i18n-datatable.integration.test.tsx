@@ -48,7 +48,7 @@ function I18nGrid() {
       tabCycle
       onChange={setData}
       aria-label="i18n DataTable"
-      renderCell={(value, col, state) => {
+      renderCell={(_props, value, col, state) => {
         const isEditable = col.key === 'ko' || col.key === 'en' || col.key === 'ja'
         const focusedCol = (dataRef.current.entities[GRID_COL_ID]?.colIndex as number) ?? 0
         const colIdx = i18nColumns.indexOf(col)

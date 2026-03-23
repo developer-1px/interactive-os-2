@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
 import { Grid } from '../interactive-os/ui/Grid'
@@ -19,7 +19,7 @@ export default function PageI18nDataTable() {
   const dataRef = useRef(data)
   dataRef.current = data
 
-  const renderCell = (value: unknown, column: { key: string }, state: NodeState) => {
+  const renderCell = (_props: React.HTMLAttributes<HTMLElement>, value: unknown, column: { key: string }, state: NodeState) => {
     const text = String(value ?? '')
     const isKey = column.key === 'key'
     const isEmpty = text === '' && !isKey

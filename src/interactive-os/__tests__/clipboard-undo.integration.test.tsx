@@ -37,7 +37,7 @@ function fixtureData(): NormalizedData {
 
 const plugins = [core(), crud(), clipboard(), history()]
 
-const renderItem = (item: Record<string, unknown>, _state: NodeState, props: Record<string, unknown>) => (
+const renderItem = (props: Record<string, unknown>, item: Record<string, unknown>, _state: NodeState) => (
   <span {...props} data-testid={`item-${item.id}`}>
     <Aria.Editable field="label">
       <span>{(item.data as Record<string, unknown>)?.label as string}</span>

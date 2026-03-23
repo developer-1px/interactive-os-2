@@ -47,7 +47,7 @@ function renderTree(data: NormalizedData, onChange?: (d: NormalizedData) => void
       plugins={plugins}
       enableEditing
       onChange={onChange}
-      renderItem={(node, state: NodeState, props) => (
+      renderItem={(props, node, state: NodeState) => (
         <span {...props} data-testid={`node-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
           {(node.data as Record<string, unknown>)?.name as string}
         </span>
@@ -78,7 +78,7 @@ function StatefulTree() {
       plugins={plugins}
       enableEditing
       onChange={setData}
-      renderItem={(node, state: NodeState, props) => (
+      renderItem={(props, node, state: NodeState) => (
         <span {...props} data-testid={`node-${node.id}`} data-focused={state.focused} data-selected={state.selected}>
           {(node.data as Record<string, unknown>)?.name as string}
         </span>

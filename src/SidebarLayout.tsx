@@ -63,10 +63,10 @@ function Sidebar({ activeGroup, activeItemPath }: { activeGroup: RouteGroup; act
         key={activeGroup.id}
         data={sidebarStore}
         onActivate={handleActivate}
-        renderItem={(node) => {
+        renderItem={(props, node) => {
           const item = activeGroup.items.find((i) => i.path === node.id)
           return (
-            <div className="sidebar-link">
+            <div {...props} className="sidebar-link">
               {(node.data as { label: string }).label}
               {item?.status === 'wip' && <span className="badge-wip">wip</span>}
               {item?.status === 'placeholder' && <span className="badge-wip">soon</span>}

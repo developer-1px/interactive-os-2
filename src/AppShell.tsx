@@ -92,7 +92,7 @@ const navPaths = Object.fromEntries(navItems.map((n) => [n.id, n.path]))
 
 // --- Shared ActivityBar item renderer ---
 
-const renderNavItem = (node: { id: string }, state: { focused: boolean }, props: Record<string, unknown>) => {
+const renderNavItem = (props: Record<string, unknown>, node: { id: string }, state: { focused: boolean }) => {
   const nav = navItems.find((n) => n.id === node.id)!
   const Icon = nav.icon
   return (
@@ -196,7 +196,7 @@ export default function AppShell() {
             <Aria.Item asChild ids={INTERNAL_IDS} render={renderNavItem} />
           </div>
           <div role="group" aria-label="Util" className="activity-bar__util">
-            <Aria.Item asChild ids={UTIL_IDS} render={(node, state, props) => {
+            <Aria.Item asChild ids={UTIL_IDS} render={(props, node, state) => {
               const ThemeIcon = theme === 'dark' ? Sun : Moon
               return (
                 <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>

@@ -30,7 +30,7 @@ function fixtureData(): NormalizedData {
   })
 }
 
-function renderItem(item: Record<string, unknown>, state: NodeState, props: Record<string, unknown>) {
+function renderItem(props: Record<string, unknown>, item: Record<string, unknown>, state: NodeState) {
   return (
     <span
       {...props}

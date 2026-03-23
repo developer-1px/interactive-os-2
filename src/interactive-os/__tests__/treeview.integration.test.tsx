@@ -152,7 +152,7 @@ describe('TreeView', () => {
     render(
       <TreeView
         data={makeTreeData()}
-        renderItem={(node: Record<string, unknown>, _state: NodeState, props) => (
+        renderItem={(props, node: Record<string, unknown>, _state: NodeState) => (
           <span {...props} data-testid="custom">{(node.data as Record<string, unknown>)?.name as string}!</span>
         )}
         aria-label="Custom tree"

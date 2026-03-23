@@ -53,7 +53,7 @@ function truncate(str: string, max = 60): string {
   return str.slice(0, max) + '…'
 }
 
-function renderInspectorItem(node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) {
+function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) {
   const d = node.data as Record<string, unknown>
   const type = d?.type as string
   const label = d?.label as string
@@ -111,7 +111,7 @@ function renderInspectorItem(node: Record<string, unknown>, state: NodeState, pr
 
 // --- Editor render ---
 
-function renderEditorItem(node: Record<string, unknown>, state: NodeState, props: React.HTMLAttributes<HTMLElement>) {
+function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) {
   const d = node.data as Record<string, unknown>
   const name = d?.name as string
   const type = d?.type as string

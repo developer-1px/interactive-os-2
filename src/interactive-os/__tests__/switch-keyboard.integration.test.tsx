@@ -32,7 +32,7 @@ function renderSwitch(data: NormalizedData) {
     <SwitchGroup
       data={data}
       plugins={[core()]}
-      renderItem={(item, state: NodeState, props) => (
+      renderItem={(props, item, state: NodeState) => (
         <span
           {...props}
           data-testid={`switch-${item.id}`}

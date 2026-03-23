@@ -63,7 +63,7 @@ function renderWithActivate(
   return render(
     <Aria behavior={behavior} data={data} plugins={[core()]} onActivate={onActivate}>
       <Aria.Item
-        render={(node, state: NodeState, props) => (
+        render={(props, node, state: NodeState) => (
           <span {...props} data-testid={`item-${node.id}`} data-focused={state.focused}>
             {(node.data as Record<string, unknown>)?.label as string}
           </span>
@@ -162,7 +162,7 @@ describe('followFocus + onActivate', () => {
       const { container } = render(
         <Aria behavior={toolbar} data={fixtureDataAllFollowFocus()} plugins={[core()]}>
           <Aria.Item
-            render={(node, state: NodeState, props) => (
+            render={(props, node, state: NodeState) => (
               <span {...props} data-testid={`item-${node.id}`} data-selected={state.selected}>
                 {(node.data as Record<string, unknown>)?.label as string}
               </span>

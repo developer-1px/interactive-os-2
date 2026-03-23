@@ -192,7 +192,7 @@ export default function PageAgentViewer() {
                     onChange={handleArchiveSelect}
                     aria-label="Active sessions"
                   >
-                    <Aria.Item render={(node, _state, props) => {
+                    <Aria.Item render={(props, node, _state) => {
                       const data = node.data as { label: string; mtime: number }
                       return (
                         <div {...props} className={styles.avSessionItem}>
@@ -214,7 +214,7 @@ export default function PageAgentViewer() {
                     onChange={handleArchiveSelect}
                     aria-label="Ended sessions"
                   >
-                    <Aria.Item render={(node, _state, props) => {
+                    <Aria.Item render={(props, node, _state) => {
                       const data = node.data as { label: string; mtime: number }
                       return (
                         <div {...props} className={styles.avSessionItem}>
