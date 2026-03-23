@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
-import { apgTreeGrid } from './apg-data'
-import { TreeGrid } from '../interactive-os/ui/TreeGrid'
+import { apgTreeView } from './apg-data'
+import { TreeView } from '../interactive-os/ui/TreeView'
 import type { NormalizedData } from '../interactive-os/core/types'
 import { core } from '../interactive-os/plugins/core'
 import { treeData } from './shared-tree-data'
@@ -9,13 +9,13 @@ import { RenderTreeItem } from './SharedTreeComponents'
 
 const plugins = [core()]
 
-export default function PageTreeGridNav() {
+export default function PageTreeNav() {
   const [tree, setTree] = useState<NormalizedData>(treeData)
 
   return (
     <div>
       <div className="page-header">
-        <h2 className="page-title">TreeGrid</h2>
+        <h2 className="page-title">Tree</h2>
         <p className="page-desc">Read-only file explorer with keyboard navigation — expand, collapse, focus</p>
       </div>
       <div className="page-keys">
@@ -26,14 +26,14 @@ export default function PageTreeGridNav() {
         <kbd>End</kbd> <span className="key-hint">last</span>
       </div>
       <div className="card">
-        <TreeGrid
+        <TreeView
           data={tree}
           onChange={setTree}
           plugins={plugins}
           renderItem={(node, state) => <RenderTreeItem node={node} state={state} />}
         />
       </div>
-      <ApgKeyboardTable {...apgTreeGrid} />
+      <ApgKeyboardTable {...apgTreeView} />
     </div>
   )
 }
