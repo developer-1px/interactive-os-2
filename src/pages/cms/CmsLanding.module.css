@@ -121,7 +121,7 @@
   font-family: var(--landing-font-body);
   font-size: var(--landing-size-body);
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--landing-text-on-accent);
   background: var(--landing-accent);
   border: none;
   padding: 14px 28px;
@@ -454,6 +454,59 @@
   color: var(--landing-text-muted);
   text-decoration: none;
   cursor: pointer;
+}
+
+/* ══════════════════════════════
+   Tab Group — landing-token based
+   ══════════════════════════════ */
+
+.cmsTabGroup {
+  margin: 40px 0;
+}
+
+.cmsTabGroupFocused {
+  outline: 2px solid var(--landing-accent);
+  outline-offset: 4px;
+  border-radius: var(--landing-radius-card);
+}
+
+.cmsTablist {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px;
+  margin-bottom: 24px;
+  background: var(--landing-bg-section);
+  border-radius: var(--landing-radius-badge);
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.cmsTabItem {
+  padding: 8px 20px;
+  font-family: var(--landing-font-body);
+  font-size: var(--landing-size-body);
+  font-weight: 600;
+  color: var(--landing-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--landing-radius-badge);
+  cursor: pointer;
+}
+
+.cmsTabItemActive {
+  color: var(--landing-text-heading);
+  background: var(--landing-bg-card);
+  box-shadow: var(--landing-shadow-card);
+}
+
+.cmsTabItemFocused {
+  outline: 2px solid var(--landing-accent);
+  outline-offset: -2px;
+}
+
+.cmsTabPanel {
+  padding: 0;
 }
 
 /* ══════════════════════════════

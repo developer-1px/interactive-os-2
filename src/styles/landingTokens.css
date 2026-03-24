@@ -26,6 +26,7 @@
   --landing-accent:        #818CF8;
   --landing-accent-dim:    #1E1E3A;
   --landing-accent-mid:    #2A2A50;
+  --landing-text-on-accent: #FFFFFF;
 
   --landing-border-subtle: #27272A;
   --landing-border-default:#3F3F46;
@@ -89,6 +90,7 @@
   --landing-accent:         #6366F1;
   --landing-accent-dim:     #EEF2FF;
   --landing-accent-mid:     #C7D2FE;
+  --landing-text-on-accent: #FFFFFF;
 
   --landing-border-subtle:  #E4E4E7;
   --landing-border-default: #D4D4D8;
