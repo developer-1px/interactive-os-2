@@ -44,12 +44,10 @@ export const router = createBrowserRouter([
   {
     element: <AppShell />,
     children: [
-      { path: '/', lazy: () => import('./pages/PageLanding').then(m => ({ Component: m.default })) },
-      { path: '/docs', lazy: () => import('./pages/PageDocs').then(m => ({ Component: m.default })) },
+      { path: '/', lazy: () => import('./pages/cms/CmsLayout').then(m => ({ Component: m.default })) },
       { path: '/ui/*', lazy: () => import('./pages/PageUiShowcase').then(m => ({ Component: m.default })) },
-      { path: '/examples/cms', lazy: () => import('./pages/cms/CmsLayout').then(m => ({ Component: m.default })) },
-      { path: '/examples/viewer/*', lazy: () => import('./pages/PageViewer').then(m => ({ Component: m.default })) },
-      { path: '/examples/agent/*', lazy: () => import('./pages/PageAgentViewer').then(m => ({ Component: m.default })) },
+      { path: '/viewer/*', lazy: () => import('./pages/PageViewer').then(m => ({ Component: m.default })) },
+      { path: '/agent/*', lazy: () => import('./pages/PageAgentViewer').then(m => ({ Component: m.default })) },
       { path: '/internals/theme', lazy: () => import('./pages/PageThemeCreator').then(m => ({ Component: m.default })) },
 
       {

@@ -1,18 +1,7 @@
 import { useState, useCallback } from 'react'
 import styles from './PageThemeCreator.module.css'
 import type { NormalizedData } from '../interactive-os/core/types'
-
-import { ListBox } from '../interactive-os/ui/ListBox'
-import { TreeView } from '../interactive-os/ui/TreeView'
-import { TabList } from '../interactive-os/ui/TabList'
-import { Accordion } from '../interactive-os/ui/Accordion'
-import { Toolbar } from '../interactive-os/ui/Toolbar'
-import { RadioGroup } from '../interactive-os/ui/RadioGroup'
-
-import {
-  makeListBoxData, makeTreeViewData, makeTabListData,
-  makeAccordionData, makeToolbarData, makeRadioGroupData,
-} from './showcaseFixtures'
+import { components } from './showcaseRegistry'
 
 /* ── Token definitions ── */
 
@@ -48,56 +37,31 @@ function getComputedToken(variable: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(variable).trim()
 }
 
-/* ── Live component card ── */
+/* ── MiniDemo from showcaseRegistry ── */
 
-function DemoCard({ title, badge, children }: {
-  title: string
-  badge: string
-  children: React.ReactNode
-}) {
+const FEATURED_SLUGS = [
+  'listbox', 'tree-grid', 'tab-list', 'combobox', 'grid', 'kanban',
+  'accordion', 'dialog', 'slider', 'radio-group', 'toolbar', 'tree-view',
+]
+
+const featured = FEATURED_SLUGS
+  .map((slug) => components.find((c) => c.slug === slug)!)
+  .filter(Boolean)
+
+function MiniDemo({ entry }: { entry: typeof components[number] }) {
+  const [data, setData] = useState(() => entry.makeData())
+  const onChange = useCallback((next: NormalizedData) => setData(next), [])
   return (
     <div className={styles.card} data-surface="raised">
       <div className={styles.cardHeader}>
-        <span className={styles.cardTitle}>{title}</span>
-        <span className={styles.cardBadge}>{badge}</span>
+        <span className={styles.cardTitle}>{entry.name}</span>
+        {entry.testPath && <span className={styles.cardBadge}>tested</span>}
       </div>
       <div className={styles.cardBody}>
-        {children}
+        {entry.render(data, onChange)}
       </div>
     </div>
   )
-}
-
-/* ── Stateful component wrappers ── */
-
-function LiveListBox() {
-  const [data, setData] = useState<NormalizedData>(makeListBoxData)
-  return <ListBox data={data} onChange={setData} />
-}
-
-function LiveTreeView() {
-  const [data, setData] = useState<NormalizedData>(makeTreeViewData)
-  return <TreeView data={data} onChange={setData} />
-}
-
-function LiveTabList() {
-  const [data, setData] = useState<NormalizedData>(makeTabListData)
-  return <TabList data={data} onChange={setData} />
-}
-
-function LiveAccordion() {
-  const [data, setData] = useState<NormalizedData>(makeAccordionData)
-  return <Accordion data={data} onChange={setData} />
-}
-
-function LiveToolbar() {
-  const [data, setData] = useState<NormalizedData>(makeToolbarData)
-  return <Toolbar data={data} onChange={setData} />
-}
-
-function LiveRadioGroup() {
-  const [data, setData] = useState<NormalizedData>(makeRadioGroupData)
-  return <RadioGroup data={data} onChange={setData} />
 }
 
 /* ── Main ── */
@@ -178,29 +142,9 @@ export default function PageThemeCreator() {
 
       <div className={styles.preview}>
         <div className={styles.grid}>
-          <DemoCard title="ListBox" badge="navigation">
-            <LiveListBox />
-          </DemoCard>
-
-          <DemoCard title="TreeView" badge="navigation">
-            <LiveTreeView />
-          </DemoCard>
-
-          <DemoCard title="Tabs" badge="navigation">
-            <LiveTabList />
-          </DemoCard>
-
-          <DemoCard title="Accordion" badge="navigation">
-            <LiveAccordion />
-          </DemoCard>
-
-          <DemoCard title="Toolbar" badge="navigation">
-            <LiveToolbar />
-          </DemoCard>
-
-          <DemoCard title="RadioGroup" badge="value">
-            <LiveRadioGroup />
-          </DemoCard>
+          {featured.map((entry) => (
+            <MiniDemo key={entry.slug} entry={entry} />
+          ))}
         </div>
       </div>
     </div>
