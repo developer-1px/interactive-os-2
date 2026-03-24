@@ -1,0 +1,36 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "schedule": ["every weekend"],
+  "timezone": "Asia/Seoul",
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Patch/minor devDeps — auto-merge",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "groupName": "dev patch/minor"
+    },
+    {
+      "description": "Patch/minor deps — auto-merge",
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchDepTypes": ["dependencies"],
+      "automerge": true,
+      "groupName": "deps patch/minor"
+    },
+    {
+      "description": "Major updates — manual review",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "groupName": "major updates"
+    },
+    {
+      "description": "TypeScript — pin minor, manual major",
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "groupName": "typescript major"
+    }
+  ]
+}
