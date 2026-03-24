@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { runTest, type RunTestResult, type TestResult } from './runTest'
+import { runTest, demoTest, type RunTestResult, type TestResult } from './runTest'
 
 function StatusIcon({ status }: { status: 'pass' | 'fail' | 'pending' }) {
   if (status === 'pass') return <span style={{ color: 'var(--green)' }}>●</span>
@@ -21,7 +21,7 @@ function ResultItem({ result }: { result: TestResult }) {
         <span className="text-muted" style={{ fontSize: '0.85em' }}>{result.duration.toFixed(0)}ms</span>
       </div>
       {expanded && result.error && (
-        <pre style={{ color: 'var(--red)', margin: '4px 0 4px 24px', whiteSpace: 'pre-wrap', fontSize: '0.85em' }}>
+        <pre style={{ color: 'var(--red)', margin: 'var(--space-xs) 0 var(--space-xs) var(--space-xl)', whiteSpace: 'pre-wrap', fontSize: '0.85em' }}>
           {result.error}
         </pre>
       )}
@@ -52,12 +52,35 @@ type Props = {
 }
 
 export function TestRunnerPanel({ testPath, label, autoRun = true, headless = false }: Props) {
-  const [state, setState] = useState<'idle' | 'running' | 'done'>('idle')
+  const [state, setState] = useState<'idle' | 'running' | 'demo' | 'done'>('idle')
   const [result, setResult] = useState<RunTestResult | null>(null)
   const renderAreaRef = useRef<HTMLDivElement>(null)
   const hiddenAreaRef = useRef<HTMLDivElement>(null)
 
   const runningRef = useRef(false)
+
+  const getTarget = useCallback(() => {
+    return headless
+      ? (hiddenAreaRef.current ?? undefined)
+      : (renderAreaRef.current ?? undefined)
+  }, [headless])
+
+  const demo = useCallback(async () => {
+    if (runningRef.current) return
+    runningRef.current = true
+    setState('running')
+    try {
+      const r = await demoTest(testPath, getTarget())
+      setResult(r)
+    } catch (e) {
+      setResult({
+        groups: [],
+        results: [{ group: [], name: 'Import Error', status: 'fail', error: e instanceof Error ? e.message : String(e), duration: 0 }],
+      })
+    }
+    setState('demo')
+    runningRef.current = false
+  }, [testPath, getTarget])
 
   const run = useCallback(async () => {
     if (runningRef.current) return
@@ -65,10 +88,7 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
     setState('running')
     setResult(null)
     try {
-      const target = headless
-        ? (hiddenAreaRef.current ?? undefined)
-        : (renderAreaRef.current ?? undefined)
-      const r = await runTest(testPath, target)
+      const r = await runTest(testPath, getTarget())
       setResult(r)
     } catch (e) {
       setResult({
@@ -78,11 +98,11 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
     }
     setState('done')
     runningRef.current = false
-  }, [testPath])
+  }, [testPath, getTarget])
 
   useEffect(() => {
-    if (autoRun) run()
-  }, [autoRun, run])
+    if (autoRun) demo()
+  }, [autoRun, demo])
 
   const passed = result?.results.filter((r) => r.status === 'pass').length ?? 0
   const failed = result?.results.filter((r) => r.status === 'fail').length ?? 0
@@ -96,18 +116,25 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
       }, {})
     : {}
 
+  const ready = state === 'demo' || state === 'done'
+
   return (
     <div>
       {headless
         ? <div ref={hiddenAreaRef} style={{ display: 'none' }} />
-        : <div className="card" ref={renderAreaRef} style={{ minHeight: 60, padding: 12, marginBottom: 16 }} />
+        : <div className="card" ref={renderAreaRef} style={{ minHeight: 60, padding: 12, marginBottom: 16, display: ready ? undefined : 'none' }} />
       }
-      <div className="card" style={{ padding: 16 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: state === 'done' ? 12 : 0 }}>
+      <div className="card" style={{ padding: 16, display: ready ? undefined : 'none' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: ready ? 12 : 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ fontFamily: 'var(--mono)', fontWeight: 700 }}>
               {label ?? 'Test Runner'}
             </span>
+            {state === 'demo' && result && (
+              <span className="text-muted" style={{ fontFamily: 'var(--mono)', fontSize: '0.85em' }}>
+                {total} tests
+              </span>
+            )}
             {state === 'done' && result && (
               <span style={{ fontFamily: 'var(--mono)', fontSize: '0.85em' }}>
                 <span style={{ color: 'var(--green)' }}>{passed} passed</span>

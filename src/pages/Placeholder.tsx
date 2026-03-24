@@ -4,7 +4,7 @@ function Placeholder({ group, label }: { group: string; label: string }) {
       <div style={{ marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
         {group}
       </div>
-      <div style={{ fontSize: 16, marginBottom: 12 }}>{label}</div>
+      <div style={{ fontSize: 'var(--text-md)', marginBottom: 'var(--space-md)' }}>{label}</div>
       <div>Coming soon</div>
     </div>
   )

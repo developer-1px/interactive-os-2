@@ -67,39 +67,39 @@ function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, node: Rec
     <div
       {...props}
       style={{
-        paddingLeft: 8 + indent,
+        paddingLeft: `calc(var(--space-sm) + ${indent}px)`,
         paddingTop: 2,
         paddingBottom: 2,
         display: 'flex',
         alignItems: 'center',
         gap: 6,
-        fontFamily: 'var(--font-mono, monospace)',
-        fontSize: 12,
+        fontFamily: 'var(--mono)',
+        fontSize: 'var(--text-sm)',
         opacity: state.focused ? 1 : 0.85,
-        background: state.focused ? 'var(--color-surface-hover, rgba(124,138,255,0.12))' : undefined,
-        outline: state.focused ? '1px solid var(--color-accent, #7c8aff)' : undefined,
+        background: state.focused ? 'var(--bg-hover)' : undefined,
+        outline: state.focused ? '1.5px solid var(--focus)' : undefined,
         cursor: 'default',
       }}
     >
       {isGroup ? (
         <>
-          <span style={{ opacity: 0.6, fontSize: 10 }}>
+          <span style={{ opacity: 0.6, fontSize: 'var(--text-xs)' }}>
             {state.expanded ? '▾' : '▸'}
           </span>
           <span style={{ fontWeight: 600 }}>{label}</span>
           {count !== undefined && (
-            <span style={{ opacity: 0.5, fontSize: 10 }}>({count})</span>
+            <span style={{ opacity: 0.5, fontSize: 'var(--text-xs)' }}>({count})</span>
           )}
         </>
       ) : (
         <>
-          <span style={{ opacity: 0.3, fontSize: 10 }}>·</span>
-          <span style={{ color: TYPE_COLORS[type] ?? 'inherit', fontSize: 10, opacity: 0.8 }}>
+          <span style={{ opacity: 0.3, fontSize: 'var(--text-xs)' }}>·</span>
+          <span style={{ color: TYPE_COLORS[type] ?? 'inherit', fontSize: 'var(--text-xs)', opacity: 0.8 }}>
             {type}
           </span>
           <span>{label}</span>
           {value && (
-            <span style={{ opacity: 0.5, fontSize: 10 }}>
+            <span style={{ opacity: 0.5, fontSize: 'var(--text-xs)' }}>
               {truncate(value)}
             </span>
           )}
@@ -122,22 +122,22 @@ function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record
     <div
       {...props}
       style={{
-        paddingLeft: 14 + indent,
+        paddingLeft: `calc(var(--space-md) + ${indent}px)`,
         paddingTop: 3,
         paddingBottom: 3,
         display: 'flex',
         alignItems: 'center',
         gap: 6,
-        fontFamily: 'var(--font-mono, monospace)',
-        fontSize: 12,
-        background: state.focused ? 'var(--color-surface-hover, rgba(124,138,255,0.12))' : undefined,
-        outline: state.focused ? '1px solid var(--color-accent, #7c8aff)' : undefined,
+        fontFamily: 'var(--mono)',
+        fontSize: 'var(--text-sm)',
+        background: state.focused ? 'var(--bg-hover)' : undefined,
+        outline: state.focused ? '1.5px solid var(--focus)' : undefined,
       }}
     >
       <span style={{ opacity: 0.5, width: 10, textAlign: 'center' }}>
         {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
       </span>
-      <span style={{ opacity: 0.4, fontSize: 10 }}>{type === 'folder' ? '📁' : '📄'}</span>
+      <span style={{ opacity: 0.4, fontSize: 'var(--text-xs)' }}>{type === 'folder' ? '📁' : '📄'}</span>
       <span>{name}</span>
     </div>
   )

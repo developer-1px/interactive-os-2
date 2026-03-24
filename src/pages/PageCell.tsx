@@ -39,7 +39,7 @@ export default function PageCell() {
         <kbd>End</kbd> <span className="key-hint">last cell</span>
       </div>
       <div className="card">
-        <div className="grid-header" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0, borderBottom: '1px solid var(--border-mid)', padding: '6px 12px', fontSize: '11px', opacity: 0.6 }}>
+        <div className="grid-header" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0, borderBottom: '1px solid var(--border-mid)', padding: 'var(--space-xs) var(--space-md)', fontSize: 'var(--text-xs)', opacity: 0.6 }}>
           <span>Element</span>
           <span>Role</span>
           <span>Focusable</span>

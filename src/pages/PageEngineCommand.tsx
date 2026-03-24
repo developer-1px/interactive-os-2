@@ -123,7 +123,7 @@ export default function PageEngineCommand() {
 
       <div className="page-section">
         <h3 className="page-section-title">Dispatch Log ({entries.length})</h3>
-        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '11px', lineHeight: 1.8, maxHeight: '240px', overflow: 'auto' }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 'var(--text-xs)', lineHeight: 1.8, maxHeight: '240px', overflow: 'auto' }}>
           {entries.length === 0 ? (
             <span style={{ opacity: 0.5 }}>Interact with the list to see dispatched commands…</span>
           ) : (
