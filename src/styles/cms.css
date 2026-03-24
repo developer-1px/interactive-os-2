@@ -64,7 +64,7 @@
 .cms-sidebar__list:focus { outline: none; }
 
 .cms-sidebar__thumb {
-  width: 100%; overflow: hidden;
+  width: 100%;
   border-radius: var(--radius-sm);
   border: 2px solid transparent;
   cursor: pointer; position: relative;
@@ -76,7 +76,7 @@
 }
 .cms-sidebar__thumb-inner {
   zoom: 0.1;
-  width: 1200px;
+  width: var(--thumb-inner-w, 1040px);
   pointer-events: none;
 }
 .cms-sidebar__thumb-index {
