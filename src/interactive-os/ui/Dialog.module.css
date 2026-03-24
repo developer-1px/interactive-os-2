@@ -12,7 +12,7 @@
 }
 
 .box {
-  width: 360px;
+  width: var(--overlay-width);
   background: var(--surface-overlay);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-subtle);
