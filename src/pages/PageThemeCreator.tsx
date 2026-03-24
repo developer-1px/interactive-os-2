@@ -109,7 +109,9 @@ function DataViewCard() {
       <div className={styles.stack}>
         <div className={styles.row}>
           <TabList data={tabData} onChange={setTabData} />
-          <Combobox data={comboData} onChange={setComboData} placeholder="Filter..." />
+          <div className={styles.fill}>
+            <Combobox data={comboData} onChange={setComboData} placeholder="Filter..." />
+          </div>
         </div>
         <Grid
           data={gridData}

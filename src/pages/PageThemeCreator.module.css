@@ -140,7 +140,6 @@
 .card {
   border-radius: var(--radius);
   padding: var(--space-lg);
-  overflow: hidden;
 }
 
 .cardWide {
@@ -157,6 +156,11 @@
   display: flex;
   align-items: center;
   gap: var(--space-md);
+}
+
+.fill {
+  flex: 1;
+  min-width: 0;
 }
 
 /* ── Toast trigger (minimal) ── */
