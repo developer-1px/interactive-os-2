@@ -19,11 +19,11 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| **Surface 토큰 6단계** | `--surface-base`, `--surface-sunken`, `--surface-default`, `--surface-raised`, `--surface-overlay` (bg 값). `--surface-outlined`는 bg transparent | |
-| **`[data-surface]` 셀렉터 블록** | 각 level별 `background`, `border`, `box-shadow` 번들 적용. `:root`(dark) + `[data-theme="light"]` 양쪽에 정의 | |
-| **Surface별 번들 매핑** | base: bg만 / sunken: bg만 / default: bg만 / raised: bg+border+shadow / overlay: bg+border+shadow / outlined: transparent bg+border | |
-| **Semantic color 토큰** | `--primary`, `--primary-foreground`, `--primary-dim` / `--focus` / `--selection` / `--destructive`, `--destructive-foreground` | |
-| **하위호환 alias** | `--surface-0` → `--surface-base`, `--accent` → `--primary`, `--bg-focus` → `--primary-dim`, `--bg-select` → `--selection` 등 | |
+| **Surface 토큰 6단계** | `--surface-base`, `--surface-sunken`, `--surface-default`, `--surface-raised`, `--surface-overlay` (bg 값). `--surface-outlined`는 bg transparent | `tokens.css::--surface-base/sunken/default/raised/overlay` |
+| **`[data-surface]` 셀렉터 블록** | 각 level별 `background`, `border`, `box-shadow` 번들 적용. `:root`(dark) + `[data-theme="light"]` 양쪽에 정의 | `tokens.css::[data-surface="*"]` |
+| **Surface별 번들 매핑** | base: bg만 / sunken: bg만 / default: bg만 / raised: bg+border+shadow / overlay: bg+border+shadow / outlined: transparent bg+border | `tokens.css::[data-surface="*"]` |
+| **Semantic color 토큰** | `--primary`, `--primary-foreground`, `--primary-dim` / `--focus` / `--selection` / `--destructive`, `--destructive-foreground` | `tokens.css::--primary/--focus/--selection/--destructive` |
+| **하위호환 alias** | `--surface-0` → `--surface-base`, `--accent` → `--primary`, `--bg-focus` → `--primary-dim`, `--bg-select` → `--selection` 등 | ❌ alias 미구현 (구 변수 참조 0건, 직접 마이그레이션 완료) |
 
 완성도: 🟢
 
@@ -98,14 +98,14 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | `.card`에서 `data-surface="raised"` 적용 후 bg/border/shadow 개별 선언 제거 | 시각적 동일. bg(zinc-800) + border(border-subtle) + shadow(shadow-md) 자동 적용 | |
-| V2 | ①M2 | `--focus` 값만 변경 (primary 유지) | 포커스 링 색상만 변경, 버튼/링크 색상 불변 | |
-| V3 | ①M3 | 코드에서 `data-surface="raised"` 검색 | 이름만으로 "떠 있는 카드/패널"임을 알 수 있음 | |
-| V4 | ①M4 | `[data-theme="light"]` 전환 | surface별 bg/border/shadow가 light 값으로 자동 전환 | |
-| V5 | ④경계1 | outlined 요소를 sunken surface 위에 배치 | sunken 배경이 투과되고 border만 표시 | |
-| V6 | ④경계2 | raised 안에 sunken 중첩 | 내부는 sunken bg, 외부는 raised bg — 독립 적용 | |
-| V7 | ④경계3 | 마이그레이션 전 코드(`var(--surface-3)`)와 후 코드(`var(--surface-raised)`) 혼재 | alias 덕분에 양쪽 동일 값, 시각적 차이 없음 | |
-| V8 | ⑥S5 | `*:focus-visible` outline이 `var(--focus)` 참조 | focus 전용 색상으로 렌더링, `--primary` 변경에 영향받지 않음 | |
+| V1 | ①M1 | `.card`에서 `data-surface="raised"` 적용 후 bg/border/shadow 개별 선언 제거 | 시각적 동일. bg(zinc-800) + border(border-subtle) + shadow(shadow-md) 자동 적용 | (시각 확인 — `tokens.css::[data-surface="raised"]`) |
+| V2 | ①M2 | `--focus` 값만 변경 (primary 유지) | 포커스 링 색상만 변경, 버튼/링크 색상 불변 | (시각 확인 — `tokens.css::--focus`) |
+| V3 | ①M3 | 코드에서 `data-surface="raised"` 검색 | 이름만으로 "떠 있는 카드/패널"임을 알 수 있음 | (grep 검증 — 24개 파일에서 data-surface 사용) |
+| V4 | ①M4 | `[data-theme="light"]` 전환 | surface별 bg/border/shadow가 light 값으로 자동 전환 | (시각 확인 — tokens.css light 블록 정의) |
+| V5 | ④경계1 | outlined 요소를 sunken surface 위에 배치 | sunken 배경이 투과되고 border만 표시 | (시각 확인) |
+| V6 | ④경계2 | raised 안에 sunken 중첩 | 내부는 sunken bg, 외부는 raised bg — 독립 적용 | (시각 확인) |
+| V7 | ④경계3 | 마이그레이션 전 코드(`var(--surface-3)`)와 후 코드(`var(--surface-raised)`) 혼재 | alias 덕분에 양쪽 동일 값, 시각적 차이 없음 | (구 변수 참조 0건 — 직접 마이그레이션 완료) |
+| V8 | ⑥S5 | `*:focus-visible` outline이 `var(--focus)` 참조 | focus 전용 색상으로 렌더링, `--primary` 변경에 영향받지 않음 | `tokens.css::focus-visible` → `var(--focus)` |
 
 완성도: 🟢
 

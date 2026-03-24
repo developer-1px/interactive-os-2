@@ -19,14 +19,14 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `interactive-os/ui/FileIcon.tsx` | `src/pages/viewer/FileIcon.tsx` 이동. 자체 `FileIcon.module.css` | |
-| `interactive-os/ui/FileIcon.module.css` | `PageViewer.module.css`에서 `.vw-icon*` 스타일 추출 | |
-| `interactive-os/ui/CodeBlock.tsx` | `src/pages/viewer/CodeBlock.tsx` 이동. 자체 `CodeBlock.module.css` | |
-| `interactive-os/ui/CodeBlock.module.css` | `PageViewer.module.css`에서 `.code-block*` + `:global(.code-token*)` + `:global(.code-line--edited)` 스타일 추출 | |
-| `interactive-os/ui/Breadcrumb.tsx` | `src/pages/viewer/Breadcrumb.tsx` 이동. 자체 `Breadcrumb.module.css` | |
-| `interactive-os/ui/Breadcrumb.module.css` | `PageViewer.module.css`에서 `.vw-breadcrumb*` 스타일 추출 | |
-| `PageViewer.module.css` 수정 | 이동된 스타일 블록 제거 | |
-| import 경로 갱신 | PageViewer.tsx, FileViewerModal.tsx, MarkdownViewer.tsx, QuickOpen.tsx 등에서 import 경로를 `../../interactive-os/ui/` 또는 `../interactive-os/ui/`로 변경 | |
+| `interactive-os/ui/FileIcon.tsx` | `src/pages/viewer/FileIcon.tsx` 이동. 자체 `FileIcon.module.css` | `FileIcon.tsx::FileIcon` |
+| `interactive-os/ui/FileIcon.module.css` | `PageViewer.module.css`에서 `.vw-icon*` 스타일 추출 | `FileIcon.module.css` |
+| `interactive-os/ui/CodeBlock.tsx` | `src/pages/viewer/CodeBlock.tsx` 이동. 자체 `CodeBlock.module.css` | `CodeBlock.tsx::CodeBlock` |
+| `interactive-os/ui/CodeBlock.module.css` | `PageViewer.module.css`에서 `.code-block*` + `:global(.code-token*)` + `:global(.code-line--edited)` 스타일 추출 | `CodeBlock.module.css` |
+| `interactive-os/ui/Breadcrumb.tsx` | `src/pages/viewer/Breadcrumb.tsx` 이동. 자체 `Breadcrumb.module.css` | `Breadcrumb.tsx::Breadcrumb` |
+| `interactive-os/ui/Breadcrumb.module.css` | `PageViewer.module.css`에서 `.vw-breadcrumb*` 스타일 추출 | `Breadcrumb.module.css` |
+| `PageViewer.module.css` 수정 | 이동된 스타일 블록 제거 | `PageViewer.module.css` |
+| import 경로 갱신 | PageViewer.tsx, FileViewerModal.tsx, MarkdownViewer.tsx, QuickOpen.tsx 등에서 import 경로를 `../../interactive-os/ui/` 또는 `../interactive-os/ui/`로 변경 | `PageViewer.tsx, FileViewerModal.tsx, MarkdownViewer.tsx, QuickOpen.tsx` |
 
 완성도: 🟢
 
@@ -96,14 +96,14 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | `/viewer`에서 파일 선택 → 코드 표시 | Shiki 하이라이팅, 라인 넘버, 토큰 클릭 하이라이트 동작 | |
-| V2 | M2 | `/viewer`에서 파일 선택 → 상단 breadcrumb 경로 표시 | 세그먼트 구분, 마지막 세그먼트 볼드 | |
-| V3 | M3 | `/viewer`에서 파일 트리 → 아이콘 표시 | 파일 타입별 색상 아이콘 (.ts=파랑, 폴더=노랑 등) | |
-| V4 | M4 | 분리 후 PageViewer.module.css에서 제거된 스타일이 다른 곳에서 안 쓰이는지 확인 | grep 결과 0건 | |
-| V5 | E1 | 코드 내 토큰 클릭 → 같은 이름 토큰 하이라이트 | `:global(.code-token--highlighted)` 동작 유지 | |
-| V6 | E3 | 다크→라이트 테마 전환 | CodeBlock이 github-light 테마로 재렌더 | |
-| V7 | E4 | `/viewer`에서 .md 파일 선택 → 마크다운 내 코드블록 | MarkdownViewer가 CodeBlock을 정상 렌더 | |
-| V8 | E5 | `/viewer`에서 Cmd+P → QuickOpen 검색 결과 | FileIcon이 검색 결과 옆에 정상 표시 | |
+| V1 | M1 | `/viewer`에서 파일 선택 → 코드 표시 | Shiki 하이라이팅, 라인 넘버, 토큰 클릭 하이라이트 동작 | ❌ 테스트 없음 |
+| V2 | M2 | `/viewer`에서 파일 선택 → 상단 breadcrumb 경로 표시 | 세그먼트 구분, 마지막 세그먼트 볼드 | ❌ 테스트 없음 |
+| V3 | M3 | `/viewer`에서 파일 트리 → 아이콘 표시 | 파일 타입별 색상 아이콘 (.ts=파랑, 폴더=노랑 등) | ❌ 테스트 없음 |
+| V4 | M4 | 분리 후 PageViewer.module.css에서 제거된 스타일이 다른 곳에서 안 쓰이는지 확인 | grep 결과 0건 | ❌ 테스트 없음 |
+| V5 | E1 | 코드 내 토큰 클릭 → 같은 이름 토큰 하이라이트 | `:global(.code-token--highlighted)` 동작 유지 | ❌ 테스트 없음 |
+| V6 | E3 | 다크→라이트 테마 전환 | CodeBlock이 github-light 테마로 재렌더 | ❌ 테스트 없음 |
+| V7 | E4 | `/viewer`에서 .md 파일 선택 → 마크다운 내 코드블록 | MarkdownViewer가 CodeBlock을 정상 렌더 | ❌ 테스트 없음 |
+| V8 | E5 | `/viewer`에서 Cmd+P → QuickOpen 검색 결과 | FileIcon이 검색 결과 옆에 정상 표시 | ❌ 테스트 없음 |
 
 완성도: 🟢
 

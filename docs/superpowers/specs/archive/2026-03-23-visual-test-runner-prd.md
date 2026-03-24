@@ -18,11 +18,11 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `src/testRunner/vitestShim.ts` | vitest API(describe, it, expect, beforeEach, afterEach)의 브라우저 구현. 실행 + 시각적 pass/fail 피드백 | |
-| `src/testRunner/runTest.ts` | 테스트 파일을 동적 import하여 브라우저에서 실행하는 러너 함수 | |
-| `src/testRunner/TestRunnerPanel.tsx` | 데모 페이지에 삽입되는 UI — Run Test 버튼, 테스트 목록, 실시간 pass/fail 표시 | |
-| Vite 플러그인 (`vite-plugin-browser-test`) | `?browser` 쿼리 시 `from 'vitest'` → `from '@/testRunner/vitestShim'`으로 import 교체 | |
-| 프로토타입 대상: `listbox-keyboard.integration.test.tsx` | 기존 테스트 코드 변경 없이 브라우저에서 실행되는 첫 번째 검증 | |
+| `src/testRunner/vitestShim.ts` | vitest API(describe, it, expect, beforeEach, afterEach)의 브라우저 구현. 실행 + 시각적 pass/fail 피드백 | `vitestShim.ts::describe, it, expect` |
+| `src/testRunner/runTest.ts` | 테스트 파일을 동적 import하여 브라우저에서 실행하는 러너 함수 | `runTest.ts::runTest` |
+| `src/testRunner/TestRunnerPanel.tsx` | 데모 페이지에 삽입되는 UI — Run Test 버튼, 테스트 목록, 실시간 pass/fail 표시 | `TestRunnerPanel.tsx::TestRunnerPanel` |
+| Vite 플러그인 (`vite-plugin-browser-test`) | `?browser` 쿼리 시 `from 'vitest'` → `from '@/testRunner/vitestShim'`으로 import 교체 | `browserTestPlugin.ts::browserTestPlugin` |
+| 프로토타입 대상: `listbox-keyboard.integration.test.tsx` | 기존 테스트 코드 변경 없이 브라우저에서 실행되는 첫 번째 검증 | `listbox-keyboard.integration.test.tsx` |
 
 **산출물 관계:**
 ```
@@ -107,12 +107,12 @@ test.tsx?browser → Vite 플러그인 → 'vitest' → vitestShim
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | listbox-keyboard 테스트를 데모 페이지에서 Run Test 버튼으로 실행 | 브라우저에서 ListBox가 렌더되고, 포커스 이동이 눈으로 보이며, 11개 it 전부 🟢 | |
-| V2 | ①M2 | 테스트 코드를 한 줄도 수정하지 않고 V1 달성 | 원본 `listbox-keyboard.integration.test.tsx`가 `?browser` import로 그대로 실행 | |
-| V3 | ①M3 | localhost:5173의 데모 페이지에서 직접 실행, vitest 서버 불필요 | vitest가 실행 중이 아니어도 Run Test 동작 | |
-| V4 | ④ expect 실패 | expect를 의도적으로 실패하게 수정 후 실행 | 해당 it 🔴 표시, 에러 메시지 표시, 나머지 it 계속 실행 | |
-| V5 | ④ cleanup | 테스트 실행 후 다시 Run Test | 이전 실행 결과가 초기화되고 새로 실행 | |
-| V6 | ④ vi.fn | vi.fn을 사용하는 테스트 파일을 import 시도 | vi.fn은 noop 반환, 해당 테스트 실행되되 mock 관련 assertion은 skip | |
+| V1 | ①M1 | listbox-keyboard 테스트를 데모 페이지에서 Run Test 버튼으로 실행 | 브라우저에서 ListBox가 렌더되고, 포커스 이동이 눈으로 보이며, 11개 it 전부 🟢 | ❌ 테스트 없음 |
+| V2 | ①M2 | 테스트 코드를 한 줄도 수정하지 않고 V1 달성 | 원본 `listbox-keyboard.integration.test.tsx`가 `?browser` import로 그대로 실행 | ❌ 테스트 없음 |
+| V3 | ①M3 | localhost:5173의 데모 페이지에서 직접 실행, vitest 서버 불필요 | vitest가 실행 중이 아니어도 Run Test 동작 | ❌ 테스트 없음 |
+| V4 | ④ expect 실패 | expect를 의도적으로 실패하게 수정 후 실행 | 해당 it 🔴 표시, 에러 메시지 표시, 나머지 it 계속 실행 | ❌ 테스트 없음 |
+| V5 | ④ cleanup | 테스트 실행 후 다시 Run Test | 이전 실행 결과가 초기화되고 새로 실행 | ❌ 테스트 없음 |
+| V6 | ④ vi.fn | vi.fn을 사용하는 테스트 파일을 import 시도 | vi.fn은 noop 반환, 해당 테스트 실행되되 mock 관련 assertion은 skip | ❌ 테스트 없음 |
 
 완성도: 🟢
 

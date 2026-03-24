@@ -21,12 +21,12 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `childRules` 스키마 분기 | collection: `z.array(union)` — section, links, tab-group. slot: `union` 그대로 — card, step, stat, tab-item, tab-panel | |
-| `CanAcceptFn` 반환 타입 | `boolean` → `'insert' \| 'overwrite' \| false`. clipboard.ts에서 export | |
-| `cmsCanAccept` 판정 로직 | `rule instanceof z.ZodArray` → 내부 element로 safeParse → `'insert'`. non-array rule → safeParse 성공 시 `'overwrite'`, 실패 시 `false`. ROOT(!parentData?.type) → `'insert'` | |
-| `findPasteTarget` 반환 확장 | 기존 `{ pasteInto, insertIndex }` → `{ pasteInto, insertIndex, mode: 'insert' \| 'overwrite' }` | |
-| paste command overwrite 분기 | mode=overwrite일 때: `updateEntityData(store, targetId, editableFields)`. source의 `.describe()` 필드만 추출하여 target에 merge. 새 노드 생성 안 함 | |
-| cut/delete 차단 | 부모의 childRule이 non-array(slot)인 노드는 cut·delete 거부. `canDelete` 판정을 CMS가 제공, clipboard·crud 플러그인이 사용 | |
+| `childRules` 스키마 분기 | collection: `z.array(union)` — section, links, tab-group. slot: `union` 그대로 — card, step, stat, tab-item, tab-panel | `cms-schema.ts::childRules` |
+| `CanAcceptFn` 반환 타입 | `boolean` → `'insert' \| 'overwrite' \| false`. clipboard.ts에서 export | `clipboard.ts::CanAcceptResult` |
+| `cmsCanAccept` 판정 로직 | `rule instanceof z.ZodArray` → 내부 element로 safeParse → `'insert'`. non-array rule → safeParse 성공 시 `'overwrite'`, 실패 시 `false`. ROOT(!parentData?.type) → `'insert'` | `cms-schema.ts::cmsCanAccept` |
+| `findPasteTarget` 반환 확장 | 기존 `{ pasteInto, insertIndex }` → `{ pasteInto, insertIndex, mode: 'insert' \| 'overwrite' }` | `clipboard.ts::findPasteTarget` |
+| paste command overwrite 분기 | mode=overwrite일 때: `updateEntityData(store, targetId, editableFields)`. source의 `.describe()` 필드만 추출하여 target에 merge. 새 노드 생성 안 함 | `clipboard.ts::findPasteTarget` (overwrite 분기) |
+| cut/delete 차단 | 부모의 childRule이 non-array(slot)인 노드는 cut·delete 거부. `canDelete` 판정을 CMS가 제공, clipboard·crud 플러그인이 사용 | `cms-schema.ts::cmsCanDelete`, `clipboard.ts::CanDeleteFn` |
 
 완성도: 🟢
 
@@ -99,17 +99,17 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| T1 | ①M1 | copy text(title:"Hello") → paste on text(title:"World") | target value = "Hello", id/위치 불변 | |
-| T2 | ①M2 | copy card → paste on section | card가 section 자식으로 insert | |
-| T3 | ①M3 | copy text → paste on icon | no-op (type 불일치) | |
-| T4 | ①M4 | copy section → paste on card 내 text | section이 ROOT에 insert (walk-up) | |
-| T5 | ①M5 | Ctrl+X on slot 노드 (card 내 text) | no-op (cut 거부) | |
-| T6 | ①M6 | Delete on slot 노드 | no-op (delete 거부) | |
-| T7 | ④E1 | 복수 선택 copy → overwrite 대상에 paste | 첫 번째 entry만 overwrite | |
-| T8 | ④E3 | Delete on ROOT 레벨 section | section 삭제 (collection 자식) | |
-| T9 | ④E6 | Ctrl+D on slot 노드 | no-op (자기 값으로 자기 덮어쓰기) | |
-| T10 | ⑥S1 | canAccept가 boolean 반환하는 기존 코드 | 하위호환 — true='insert' 매핑 | |
-| T11 | ⑥S5 | overwrite 후 Ctrl+Z | 원래 값으로 복원 | |
+| T1 | ①M1 | copy text(title:"Hello") → paste on text(title:"World") | target value = "Hello", id/위치 불변 | `clipboard-overwrite.test.ts::"overwrites text value when pasting text on text (same type)"` |
+| T2 | ①M2 | copy card → paste on section | card가 section 자식으로 insert | `clipboard-overwrite.test.ts::"inserts card into section (collection insert)"` |
+| T3 | ①M3 | copy text → paste on icon | no-op (type 불일치) | `clipboard-overwrite.test.ts::"rejects paste when types do not match (text on icon)"` |
+| T4 | ①M4 | copy section → paste on card 내 text | section이 ROOT에 insert (walk-up) | `clipboard-overwrite.test.ts::"walks up to ROOT when pasting section on slot child"` |
+| T5 | ①M5 | Ctrl+X on slot 노드 (card 내 text) | no-op (cut 거부) | `clipboard-overwrite.test.ts::"blocks cut on slot nodes (non-array parent)"` |
+| T6 | ①M6 | Delete on slot 노드 | no-op (delete 거부) | `clipboard-overwrite.test.ts::"blocks delete on slot nodes via canDelete"` |
+| T7 | ④E1 | 복수 선택 copy → overwrite 대상에 paste | 첫 번째 entry만 overwrite | `clipboard-overwrite.test.ts::"overwrites with first entry when multiple items copied"` |
+| T8 | ④E3 | Delete on ROOT 레벨 section | section 삭제 (collection 자식) | `clipboard-overwrite.test.ts::"allows delete on collection children (ROOT section)"` |
+| T9 | ④E6 | Ctrl+D on slot 노드 | no-op (자기 값으로 자기 덮어쓰기) | `clipboard-overwrite.test.ts::"duplicate on slot node is effectively no-op"` |
+| T10 | ⑥S1 | canAccept가 boolean 반환하는 기존 코드 | 하위호환 — true='insert' 매핑 | `clipboard-overwrite.test.ts::"supports boolean canAccept for backward compatibility"` |
+| T11 | ⑥S5 | overwrite 후 Ctrl+Z | 원래 값으로 복원 | `clipboard-overwrite.test.ts::"undo restores original value after overwrite"` |
 
 완성도: 🟢
 

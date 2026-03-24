@@ -20,9 +20,9 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `Aria.Item` ids prop | `ids?: string[]` — 렌더링할 entity id 목록. 미지정 시 기존 동작(ROOT에서 재귀). ids 지정 시 해당 id만 flat 렌더링 | |
-| Activity bar JSX 변경 | ids로 그룹별 아이템 지정, `role="group"` div + separator div + theme에 margin-top: auto | |
-| CSS hack 제거 | `activity-bar__group-start`, `::after` 관련 CSS/클래스 삭제 | |
+| `Aria.Item` ids prop | `ids?: string[]` — 렌더링할 entity id 목록. 미지정 시 기존 동작(ROOT에서 재귀). ids 지정 시 해당 id만 flat 렌더링 | `aria.tsx::AriaItem` (ids prop at L28) |
+| Activity bar JSX 변경 | ids로 그룹별 아이템 지정, `role="group"` div + separator div + theme에 margin-top: auto | `AppShell.tsx` |
+| CSS hack 제거 | `activity-bar__group-start`, `::after` 관련 CSS/클래스 삭제 | `layout.css` |
 
 > Store 구조 변경 없음 — flat 유지
 
@@ -114,16 +114,16 @@
 
 | # | 출처 | 시나리오 | 예상 결과 | 역PRD |
 |---|------|---------|----------|-------|
-| V1 | ①D3 | `Aria.Item ids={['cms','viewer','agent']}` 렌더링 | 3개 아이템만 렌더링 | |
-| V2 | ①D3 | `Aria.Item` ids 미지정 | ROOT에서 전체 재귀 렌더링 (하위 호환) | |
-| V3 | ①D1 | Activity bar에서 ↑↓로 그룹 경계 넘어 순회 | flat store 순서대로 모든 아이템 순회. separator/group div 무시 | |
-| V4 | ①D2 | theme 버튼 위치 확인 | 하단에 고정 (margin-top: auto) | |
-| V5 | ④ 경계 | ids에 store에 없는 id 포함 | 해당 id 건너뜀, 에러 없음 | |
-| V6 | ④ 경계 | ids 빈 배열 | 아무것도 렌더링 안 됨 | |
-| V7 | ③ 인터페이스 | separator 영역 클릭 | 아무 반응 없음 | |
-| V8 | ③ 인터페이스 | Home → 첫 아이템, End → 마지막 아이템 | cms / theme | |
-| V9 | ①D5 | store에서 viewer entity 제거 후 렌더링 | ids에 viewer가 있어도 렌더링 안 됨. navigate도 viewer 건너뜀 | |
-| V10 | ④ 경계 | ids 순서가 store 순서와 다름 | ids 순서대로 렌더링됨 | |
+| V1 | ①D3 | `Aria.Item ids={['cms','viewer','agent']}` 렌더링 | 3개 아이템만 렌더링 | `aria-item-ids.test.tsx::renders only specified ids` |
+| V2 | ①D3 | `Aria.Item` ids 미지정 | ROOT에서 전체 재귀 렌더링 (하위 호환) | `aria-item-ids.test.tsx::renders all from ROOT when ids is not specified (backward compat)` |
+| V3 | ①D1 | Activity bar에서 ↑↓로 그룹 경계 넘어 순회 | flat store 순서대로 모든 아이템 순회. separator/group div 무시 | `aria-item-ids.test.tsx::vertical toolbar: ArrowDown/Up navigates across groups` |
+| V4 | ①D2 | theme 버튼 위치 확인 | 하단에 고정 (margin-top: auto) | ❌ 테스트 없음 |
+| V5 | ④ 경계 | ids에 store에 없는 id 포함 | 해당 id 건너뜀, 에러 없음 | `aria-item-ids.test.tsx::skips ids not in store` |
+| V6 | ④ 경계 | ids 빈 배열 | 아무것도 렌더링 안 됨 | `aria-item-ids.test.tsx::renders empty when ids is empty array` |
+| V7 | ③ 인터페이스 | separator 영역 클릭 | 아무 반응 없음 | `aria-item-ids.test.tsx::separator click does not move focus (V7)` |
+| V8 | ③ 인터페이스 | Home → 첫 아이템, End → 마지막 아이템 | cms / theme | `aria-item-ids.test.tsx::Home/End works across groups` |
+| V9 | ①D5 | store에서 viewer entity 제거 후 렌더링 | ids에 viewer가 있어도 렌더링 안 됨. navigate도 viewer 건너뜀 | `aria-item-ids.test.tsx::navigate skips ids not in store (V9: dynamic removal)` |
+| V10 | ④ 경계 | ids 순서가 store 순서와 다름 | ids 순서대로 렌더링됨 | `aria-item-ids.test.tsx::renders in ids array order` |
 
 완성도: 🟢
 

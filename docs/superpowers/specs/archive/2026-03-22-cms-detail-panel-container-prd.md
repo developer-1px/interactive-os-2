@@ -19,10 +19,10 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `collectEditableGroups()` 함수 | store + nodeId → `EditableGroup[]` 반환. children 재귀 순회, 컨테이너는 그룹 헤더, leaf는 필드 수집 | |
-| `EditableGroup` 타입 | `{ groupLabel: string, nodeId: string, fields: EditableField[] }` — 그룹 헤더 라벨 + 해당 노드 ID + 편집 필드 목록 | |
-| `CmsDetailPanel` 확장 | 기존 단일 노드 Form → 컨테이너일 때 그룹별 `<fieldset>` 렌더링. 기존 `DetailField` 컴포넌트 재사용 | |
-| 그룹별 자동 스크롤 | 캔버스에서 포커스가 card 내부 노드로 이동하면, 패널에서 해당 그룹으로 scrollIntoView | |
+| `collectEditableGroups()` 함수 | store + nodeId → `EditableGroup[]` 반환. children 재귀 순회, 컨테이너는 그룹 헤더, leaf는 필드 수집 | `cms-schema.ts::collectEditableGroups` |
+| `EditableGroup` 타입 | `{ groupLabel: string, nodeId: string, fields: EditableField[] }` — 그룹 헤더 라벨 + 해당 노드 ID + 편집 필드 목록 | `cms-schema.ts::EditableGroup` |
+| `CmsDetailPanel` 확장 | 기존 단일 노드 Form → 컨테이너일 때 그룹별 `<fieldset>` 렌더링. 기존 `DetailField` 컴포넌트 재사용 | `CmsDetailPanel.tsx::CmsDetailPanel` |
+| 그룹별 자동 스크롤 | 캔버스에서 포커스가 card 내부 노드로 이동하면, 패널에서 해당 그룹으로 scrollIntoView | `CmsDetailPanel.tsx::CmsDetailPanel` |
 
 완성도: 🟢
 
@@ -111,18 +111,18 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | card(card-store) 포커스 → 패널 확인 | "Normalized Store" 그룹: title input + desc input 표시 | |
-| V2 | ①M2 | section(features) 포커스 → 패널 확인 | Section Header 그룹(label·title·desc) + card 4개 그룹(각 title·desc) = 11필드 | |
-| V3 | ①M3 | section 포커스 → Enter → card 깊이 진입 | 패널이 해당 card 필드만으로 좁혀짐 | |
-| V4 | ①M3 역 | card 깊이에서 Escape → section 복귀 | 패널이 section 전체 그룹으로 넓어짐 | |
-| V5 | ①M4 | 컨테이너 패널에서 title input 수정 + blur | 캔버스 텍스트 즉시 갱신 | |
-| V6 | ①M4 + undo | V5 후 캔버스에서 Mod+Z | 캔버스 텍스트 + 패널 input 모두 이전 값 복원 | |
-| V7 | ④ leaf 기존 동작 | leaf 노드(hero-title) 포커스 → 패널 | 기존과 동일: 단일 Text 필드 Form (회귀 없음) | |
-| V8 | ④ patterns 17필드 | patterns section 포커스 → 패널 | 14 pattern name + section header 3 = 17필드, 스크롤 가능 | |
-| V9 | ④ 편집 중 포커스 변경 | 패널 input 편집 중 캔버스에서 다른 노드 클릭 | blur → commit → 패널 새 노드로 갱신 | |
-| V10 | ④ 그룹 라벨 | stat 컨테이너 그룹 라벨 | text(label) 자식의 localized 값이 그룹 헤더로 표시 (예: "APG Patterns") | |
-| V11 | ④ 초기 상태 | CMS 진입 직후 (포커스 없음) | "Select a node" 빈 상태 (기존 동작) | |
-| V12 | ④ links 컨테이너 | footer-links 포커스 → 패널 | link 3개 그룹: 각 label + href 필드 | |
+| V1 | ①M1 | card(card-store) 포커스 → 패널 확인 | "Normalized Store" 그룹: title input + desc input 표시 | `cms-detail-panel.test.tsx::shows grouped fields when a card container is focused` |
+| V2 | ①M2 | section(features) 포커스 → 패널 확인 | Section Header 그룹(label·title·desc) + card 4개 그룹(각 title·desc) = 11필드 | `cms-detail-panel.test.tsx::section focus shows section header fields + sub-container groups` |
+| V3 | ①M3 | section 포커스 → Enter → card 깊이 진입 | 패널이 해당 card 필드만으로 좁혀짐 | `cms-detail-panel.test.tsx::narrows panel scope when entering card depth from section` |
+| V4 | ①M3 역 | card 깊이에서 Escape → section 복귀 | 패널이 section 전체 그룹으로 넓어짐 | `cms-detail-panel.test.tsx::widens panel scope when escaping from card to section` |
+| V5 | ①M4 | 컨테이너 패널에서 title input 수정 + blur | 캔버스 텍스트 즉시 갱신 | `cms-detail-panel.test.tsx::container panel edit updates canvas text via rename` |
+| V6 | ①M4 + undo | V5 후 캔버스에서 Mod+Z | 캔버스 텍스트 + 패널 input 모두 이전 값 복원 | ❌ 테스트 없음 (jsdom Cmd+Z 제한) |
+| V7 | ④ leaf 기존 동작 | leaf 노드(hero-title) 포커스 → 패널 | 기존과 동일: 단일 Text 필드 Form (회귀 없음) | `cms-detail-panel.test.tsx::shows editable fields when a leaf node is focused` |
+| V8 | ④ patterns 17필드 | patterns section 포커스 → 패널 | 14 pattern name + section header 3 = 17필드, 스크롤 가능 | `cms-detail-panel.test.tsx::shows all 17 fields for patterns section` |
+| V9 | ④ 편집 중 포커스 변경 | 패널 input 편집 중 캔버스에서 다른 노드 클릭 | blur → commit → 패널 새 노드로 갱신 | `cms-detail-panel.test.tsx::commits edit on focus change via blur` |
+| V10 | ④ 그룹 라벨 | stat 컨테이너 그룹 라벨 | text(label) 자식의 localized 값이 그룹 헤더로 표시 (예: "APG Patterns") | `cms-detail-panel.test.tsx::uses text label child value as stat group label` |
+| V11 | ④ 초기 상태 | CMS 진입 직후 (포커스 없음) | "Select a node" 빈 상태 (기존 동작) | `cms-detail-panel.test.tsx::shows grouped fields on initial render (section auto-focused by spatial)` |
+| V12 | ④ links 컨테이너 | footer-links 포커스 → 패널 | link 3개 그룹: 각 label + href 필드 | `cms-detail-panel.test.tsx::shows link fields for footer-links container` |
 
 완성도: 🟢
 

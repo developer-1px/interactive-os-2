@@ -23,12 +23,12 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `PageI18nDataTable.tsx` | 독립 Route 페이지. 샘플 i18n NormalizedData + Grid + plugins 조합. `/collection/i18n` 경로 | |
-| `sharedI18nData.ts` | 샘플 i18n 데이터. key × locale(ko/en/ja) 구조의 NormalizedData. 빈 셀 포함 | |
-| rename plugin 확장 | `startRename`에 replace 모드 추가. printable key → 기존 값 대체 + 편집 진입. 기존 F2 preserve 모드는 디폴트 유지 | |
-| `Aria.Editable` 확장 | replace 모드 지원 — 기존 텍스트 클리어 + initialChar 삽입. IME(한글) composition 진입도 replace 트리거로 처리 | |
-| navigate axis 확장 | Tab 셀 순회 — Grid 모드에서 Tab/Shift+Tab으로 셀 간 이동. 행 경계 넘어가는 순환 포함 | |
-| clipboard plugin 확장 | 셀 단위 copy/paste. 현재 행 단위 → Grid에서 포커스된 셀 값 복사 모드 추가. (중요도 🔴, M1~M3 완성 후 착수) | |
+| `PageI18nDataTable.tsx` | 독립 Route 페이지. 샘플 i18n NormalizedData + Grid + plugins 조합. `/collection/i18n` 경로 | `PageI18nDataTable.tsx::PageI18nDataTable` |
+| `sharedI18nData.ts` | 샘플 i18n 데이터. key × locale(ko/en/ja) 구조의 NormalizedData. 빈 셀 포함 | `sharedI18nData.ts::i18nColumns, i18nInitialData` |
+| rename plugin 확장 | `startRename`에 replace 모드 추가. printable key → 기존 값 대체 + 편집 진입. 기존 F2 preserve 모드는 디폴트 유지 | `rename.ts::renameCommands.startRename({ replace, initialChar })` |
+| `Aria.Editable` 확장 | replace 모드 지원 — 기존 텍스트 클리어 + initialChar 삽입. IME(한글) composition 진입도 replace 트리거로 처리 | `aria.tsx::AriaEditable (allowEmpty, tabContinue)` |
+| navigate axis 확장 | Tab 셀 순회 — Grid 모드에서 Tab/Shift+Tab으로 셀 간 이동. 행 경계 넘어가는 순환 포함 | `navigate.ts::navigate({ grid: { tabCycle } })` |
+| clipboard plugin 확장 | 셀 단위 copy/paste. 현재 행 단위 → Grid에서 포커스된 셀 값 복사 모드 추가. (중요도 🔴, M1~M3 완성 후 착수) | `clipboard.ts::COPY_CELL, PASTE_CELL` |
 
 ### os 갭 요약
 
@@ -172,23 +172,23 @@ columns: [
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | 영문 셀에 포커스 → `a` 키 입력 | 기존 값 클리어, `a` 표시, 편집 모드 | |
-| V2 | M1 + E10 | 한글 셀에 포커스 → `ㅎ` 키 입력 | compositionstart → 기존 값 클리어, `ㅎ` 조합 표시, 편집 모드 | |
-| V3 | M2 | 셀 편집 중 → Tab | 현재 셀 확정, 오른쪽 셀로 이동 + 편집 모드 유지 (preserve) | |
-| V4 | M3 | 마지막 열(ja) 편집 중 → Tab | 현재 셀 확정, 다음 행 첫 locale 셀(ko)로 이동 + 편집 모드 유지 | |
-| V5 | M2 + E4 | 한글 조합 중 → Tab | 조합 확정 → 셀 확정 → 다음 셀 편집 진입. 글자 손실 없음 | |
-| V6 | M4 | 셀 2개 연속 편집 후 → Mod+Z 2회 | 두 번째 편집 취소, 첫 번째 편집 취소. 각각 원래 값 복원 | |
-| V7 | M5 | 셀 A에서 Mod+C → 셀 B에서 Mod+V | 셀 B에 셀 A의 값이 붙여넣기됨 | |
-| V8 | M6 | 빈 셀(미번역)이 있는 DataTable 로드 | 빈 셀이 시각적으로 구분됨 (배경색/텍스트 등) | |
-| V9 | E1 | 편집 중 → ← → 키 입력 | 텍스트 내 커서 이동. Grid 셀 이동 아님 | |
-| V10 | E2 | key 열 셀에서 `a` 키 입력 | 편집 진입 안 됨. 내비게이션 유지 | |
-| V11 | E3 | 한글 조합 중 → Escape | 조합 취소 + 편집 취소. 원래 값 복원 | |
-| V12 | E5 | 마지막 행 마지막 셀에서 편집 중 → Tab | 편집 확정, 같은 셀 유지 (순회 멈춤) | |
-| V13 | E7 | 셀 편집 → 내용 전부 삭제 → Enter | 빈 문자열로 확정됨 (cancel 아님). 빈 셀 시각 표시 | |
-| V14 | E8 | replace 모드 진입 직후 → Escape | 원래 값 복원. 편집 취소 | |
-| V15 | E9 | 셀 편집 중 → Grid 밖 클릭 | blur → 편집 확정. 새 값 저장 | |
-| V16 | M1 | F2로 편집 진입 | 기존 값 유지 (preserve). 텍스트 전체 선택 | |
-| V17 | M1 + E2 | 읽기 전용 셀에서 F2 | 편집 진입 안 됨 | |
+| V1 | M1 | 영문 셀에 포커스 → `a` 키 입력 | 기존 값 클리어, `a` 표시, 편집 모드 | `i18n-datatable.integration.test.tsx::typing a printable key enters replace mode with only that character` |
+| V2 | M1 + E10 | 한글 셀에 포커스 → `ㅎ` 키 입력 | compositionstart → 기존 값 클리어, `ㅎ` 조합 표시, 편집 모드 | ❌ 테스트 없음 |
+| V3 | M2 | 셀 편집 중 → Tab | 현재 셀 확정, 오른쪽 셀로 이동 + 편집 모드 유지 (preserve) | `i18n-datatable.integration.test.tsx::Tab during editing confirms value, moves to next cell, and starts editing` |
+| V4 | M3 | 마지막 열(ja) 편집 중 → Tab | 현재 셀 확정, 다음 행 첫 locale 셀(ko)로 이동 + 편집 모드 유지 | `grid-keyboard.integration.test.tsx::Tab at last col wraps to first col of next row` |
+| V5 | M2 + E4 | 한글 조합 중 → Tab | 조합 확정 → 셀 확정 → 다음 셀 편집 진입. 글자 손실 없음 | ❌ 테스트 없음 |
+| V6 | M4 | 셀 2개 연속 편집 후 → Mod+Z 2회 | 두 번째 편집 취소, 첫 번째 편집 취소. 각각 원래 값 복원 | `i18n-datatable.integration.test.tsx::undoes multiple paste operations in reverse order` |
+| V7 | M5 | 셀 A에서 Mod+C → 셀 B에서 Mod+V | 셀 B에 셀 A의 값이 붙여넣기됨 | `i18n-datatable.integration.test.tsx::Mod+C copies cell value at current column, Mod+V pastes into another cell` |
+| V8 | M6 | 빈 셀(미번역)이 있는 DataTable 로드 | 빈 셀이 시각적으로 구분됨 (배경색/텍스트 등) | `i18n-datatable.integration.test.tsx::cell with empty value renders empty text content` |
+| V9 | E1 | 편집 중 → ← → 키 입력 | 텍스트 내 커서 이동. Grid 셀 이동 아님 | `i18n-datatable.integration.test.tsx::ArrowLeft/ArrowRight do not navigate grid while editing` |
+| V10 | E2 | key 열 셀에서 `a` 키 입력 | 편집 진입 안 됨. 내비게이션 유지 | `i18n-datatable.integration.test.tsx::typing on key column (col 0) does not enter editing` |
+| V11 | E3 | 한글 조합 중 → Escape | 조합 취소 + 편집 취소. 원래 값 복원 | ❌ 테스트 없음 |
+| V12 | E5 | 마지막 행 마지막 셀에서 편집 중 → Tab | 편집 확정, 같은 셀 유지 (순회 멈춤) | `grid-keyboard.integration.test.tsx::Tab at absolute last cell (last row, last col) stops` |
+| V13 | E7 | 셀 편집 → 내용 전부 삭제 → Enter | 빈 문자열로 확정됨 (cancel 아님). 빈 셀 시각 표시 | `i18n-datatable.integration.test.tsx::confirming empty content preserves empty string (does not cancel)` |
+| V14 | E8 | replace 모드 진입 직후 → Escape | 원래 값 복원. 편집 취소 | `i18n-datatable.integration.test.tsx::Escape during replace mode cancels and restores original value` |
+| V15 | E9 | 셀 편집 중 → Grid 밖 클릭 | blur → 편집 확정. 새 값 저장 | `i18n-datatable.integration.test.tsx::blurring the editable element confirms the new value` |
+| V16 | M1 | F2로 편집 진입 | 기존 값 유지 (preserve). 텍스트 전체 선택 | `i18n-datatable.integration.test.tsx::F2 enters edit mode showing the existing cell value` |
+| V17 | M1 + E2 | 읽기 전용 셀에서 F2 | 편집 진입 안 됨 | `i18n-datatable.integration.test.tsx::F2 on key column (col 0) does not enter editing` |
 
 완성도: 🟢
 

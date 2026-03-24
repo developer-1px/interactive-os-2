@@ -67,12 +67,12 @@ export default function PageAccordion() {
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| **Demo 컴포넌트 추출** | 기존 PageXxx.tsx에서 데모 부분을 독립 컴포넌트로 추출 (AccordionDemo, TreeDemo 등). 데이터 + 렌더링 자체 포함. | |
-| **ApgTable 래퍼** | 기존 ApgKeyboardTable을 mdComponents 호환 래퍼로 감싸기. `pattern` prop으로 apg-data에서 데이터 선택. | |
-| **mdComponents 확장** | 추출된 Demo + ApgTable을 레지스트리에 등록 | |
-| **showcase .md 파일** | docs/2-areas/{patterns,plugins,...}/ 에 MD 파일 생성. 1차: Accordion, Tree, Listbox, Disclosure, Dialog (대표 5개) | |
-| **routeConfig 전환** | 1차 대상 5개 라우트를 `{ component: PageXxx }` → area MD 경로로 전환. 홈페이지 카드 클릭 → area 상세 페이지 | |
-| **홈페이지 카드 링크 변경** | 카드 클릭 시 기존 /internals/pattern/accordion → /internals/area/patterns/accordion 으로 이동 | |
+| **Demo 컴포넌트 추출** | 기존 PageXxx.tsx에서 데모 부분을 독립 컴포넌트로 추출 (AccordionDemo, TreeDemo 등). 데이터 + 렌더링 자체 포함. | `ShowcaseDemo.tsx::ShowcaseDemo` |
+| **ApgTable 래퍼** | 기존 ApgKeyboardTable을 mdComponents 호환 래퍼로 감싸기. `pattern` prop으로 apg-data에서 데이터 선택. | `ApgKeyboardTable.tsx::ApgKeyboardTable` |
+| **mdComponents 확장** | 추출된 Demo + ApgTable을 레지스트리에 등록 | `mdComponents.ts::mdComponents` |
+| **showcase .md 파일** | docs/2-areas/{patterns,plugins,...}/ 에 MD 파일 생성. 1차: Accordion, Tree, Listbox, Disclosure, Dialog (대표 5개) | `docs/2-areas/ui/*.md` (23종) |
+| **routeConfig 전환** | 1차 대상 5개 라우트를 `{ component: PageXxx }` → area MD 경로로 전환. 홈페이지 카드 클릭 → area 상세 페이지 | `routeConfig.ts::routeConfig` |
+| **홈페이지 카드 링크 변경** | 카드 클릭 시 기존 /internals/pattern/accordion → /internals/area/patterns/accordion 으로 이동 | `routeConfig.ts::routeConfig` |
 
 완성도: 🟢 ✅
 
@@ -147,13 +147,13 @@ export default function PageAccordion() {
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | 홈페이지 → Accordion 카드 클릭 → 상세 페이지 | prose 기반 레이아웃, 라이브 데모 동작, sidebar에 Accordion 활성화 | |
-| V2 | M2 | docs/2-areas/patterns/에 새 .md 파일 추가 | sidebar Patterns 섹션에 자동 등록, 클릭 시 렌더링 | |
-| V3 | M3 | AccordionDemo에서 ↑↓ Enter 키보드 조작 | 기존 PageAccordion.tsx와 동일한 인터랙션 | |
-| V4 | ④-1 | Demo 컴포넌트 내부 state 변경 (펼침/접힘) | 다른 ```tsx render 블록에 영향 없음 | |
-| V5 | ④-2 | 존재하지 않는 MD 경로 접근 | 에러 메시지 또는 404, 크래시 없음 | |
-| V6 | ④-4 | 전환기: .tsx 라우트 5개 제거 + .md 5개 추가 | 기존 url로 접근 시 정상 동작 (리다이렉트 또는 직접) | |
-| V7 | S5 | 홈페이지 카드에 status badge 표시 | 전환된 페이지도 tested/ready badge 유지 | |
+| V1 | M1 | 홈페이지 → Accordion 카드 클릭 → 상세 페이지 | prose 기반 레이아웃, 라이브 데모 동작, sidebar에 Accordion 활성화 | ❌ 테스트 없음 |
+| V2 | M2 | docs/2-areas/patterns/에 새 .md 파일 추가 | sidebar Patterns 섹션에 자동 등록, 클릭 시 렌더링 | ❌ 테스트 없음 |
+| V3 | M3 | AccordionDemo에서 ↑↓ Enter 키보드 조작 | 기존 PageAccordion.tsx와 동일한 인터랙션 | `accordion-keyboard.integration.test.tsx::Accordion keyboard integration` |
+| V4 | ④-1 | Demo 컴포넌트 내부 state 변경 (펼침/접힘) | 다른 ```tsx render 블록에 영향 없음 | ❌ 테스트 없음 |
+| V5 | ④-2 | 존재하지 않는 MD 경로 접근 | 에러 메시지 또는 404, 크래시 없음 | ❌ 테스트 없음 |
+| V6 | ④-4 | 전환기: .tsx 라우트 5개 제거 + .md 5개 추가 | 기존 url로 접근 시 정상 동작 (리다이렉트 또는 직접) | ❌ 테스트 없음 |
+| V7 | S5 | 홈페이지 카드에 status badge 표시 | 전환된 페이지도 tested/ready badge 유지 | ❌ 테스트 없음 |
 
 완성도: 🟢 ✅
 

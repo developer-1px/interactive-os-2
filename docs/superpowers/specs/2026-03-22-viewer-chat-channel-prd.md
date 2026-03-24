@@ -18,10 +18,10 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `viewer-channel.ts` | MCP Channel 서버. stdio transport + localhost HTTP 리스너. POST 받아서 `mcp.notification()` 발행 | |
-| `.mcp.json` 항목 | `"viewer-channel"` 서버 등록 | |
-| `ChatInput` (컴포넌트) | TimelineColumn 하단 입력창. textarea + submit | |
-| `POST /api/viewer-channel/send` | vite 서버 프록시 또는 Channel 서버 직접 HTTP 엔드포인트 | |
+| `viewer-channel.ts` | MCP Channel 서버. stdio transport + localhost HTTP 리스너. POST 받아서 `mcp.notification()` 발행 | `viewer-channel.mjs` (root) |
+| `.mcp.json` 항목 | `"viewer-channel"` 서버 등록 | `.mcp.json::viewer-channel` |
+| `ChatInput` (컴포넌트) | TimelineColumn 하단 입력창. textarea + submit | `TimelineColumn.tsx::ChatInput` (local function) |
+| `POST /api/viewer-channel/send` | vite 서버 프록시 또는 Channel 서버 직접 HTTP 엔드포인트 | ❌ 미구현 |
 
 완성도: 🟡  ← ① 🟢 후 착수
 
@@ -85,11 +85,11 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | Channel 서버 기동 + viewer 입력창에서 "hello" 전송 | Claude 세션에 `<channel source="viewer-channel">hello</channel>` 수신 | |
-| V2 | ①M3 | 메시지 전송 후 Claude 응답 대기 | 타임라인 SSE로 assistant 이벤트 표시 | |
-| V3 | ④E1 | Channel 서버 미기동 상태에서 전송 시도 | 에러 표시, 입력 내용 보존 | |
-| V4 | ④E2 | inactive 세션에서 입력 시도 | 입력 비활성화 또는 안내 메시지 | |
-| V5 | ①M2 | Claude 작업 중에 추가 메시지 전송 | Channel이 순차 전달, Claude가 새 지시 반영 | |
+| V1 | ①M1 | Channel 서버 기동 + viewer 입력창에서 "hello" 전송 | Claude 세션에 `<channel source="viewer-channel">hello</channel>` 수신 | ❌ 테스트 없음 |
+| V2 | ①M3 | 메시지 전송 후 Claude 응답 대기 | 타임라인 SSE로 assistant 이벤트 표시 | ❌ 테스트 없음 |
+| V3 | ④E1 | Channel 서버 미기동 상태에서 전송 시도 | 에러 표시, 입력 내용 보존 | ❌ 테스트 없음 |
+| V4 | ④E2 | inactive 세션에서 입력 시도 | 입력 비활성화 또는 안내 메시지 | ❌ 테스트 없음 |
+| V5 | ①M2 | Claude 작업 중에 추가 메시지 전송 | Channel이 순차 전달, Claude가 새 지시 반영 | ❌ 테스트 없음 |
 
 완성도: 🟡  ← ①~⑦ 🟢 후 착수
 

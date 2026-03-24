@@ -33,13 +33,13 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `LogEntry` 타입 | `{ seq: number, type: string, payload: unknown, diff: StoreDiff[], parent?: number, error?: string }` | |
-| `StoreDiff` 타입 | `{ path: string, before: unknown, after: unknown }` 또는 `{ path: string, kind: 'added' \| 'removed' \| 'changed', before?: unknown, after?: unknown }` | |
-| `Logger` 타입 | `(entry: LogEntry) => void` | |
-| `dispatchLogger.ts` 모듈 | LogEntry, Logger, EngineOptions 타입 + defaultLogger + isBatchCommand. 로깅 로직은 engine 내부에서 executor를 감싸는 형태 | |
-| `defaultLogger: Logger` | LogEntry → 구조화 console.log 포맷 변환 | |
-| `computeStoreDiff(prev, next)` | NormalizedData 두 개를 비교하여 StoreDiff[] 반환 | |
-| `EngineOptions` 타입 | `{ logger?: boolean \| Logger }` — createCommandEngine 4번째 인자 | |
+| `LogEntry` 타입 | `{ seq: number, type: string, payload: unknown, diff: StoreDiff[], parent?: number, error?: string }` | `dispatchLogger.ts::LogEntry` |
+| `StoreDiff` 타입 | `{ path: string, before: unknown, after: unknown }` 또는 `{ path: string, kind: 'added' \| 'removed' \| 'changed', before?: unknown, after?: unknown }` | `computeStoreDiff.ts::StoreDiff` |
+| `Logger` 타입 | `(entry: LogEntry) => void` | `dispatchLogger.ts::Logger` |
+| `dispatchLogger.ts` 모듈 | LogEntry, Logger, EngineOptions 타입 + defaultLogger + isBatchCommand. 로깅 로직은 engine 내부에서 executor를 감싸는 형태 | `dispatchLogger.ts` |
+| `defaultLogger: Logger` | LogEntry → 구조화 console.log 포맷 변환 | `dispatchLogger.ts::defaultLogger` |
+| `computeStoreDiff(prev, next)` | NormalizedData 두 개를 비교하여 StoreDiff[] 반환 | `computeStoreDiff.ts::computeStoreDiff` |
+| `EngineOptions` 타입 | `{ logger?: boolean \| Logger }` — createCommandEngine 4번째 인자 | `dispatchLogger.ts::EngineOptions` |
 
 상태: 🟢
 
@@ -75,16 +75,16 @@
 
 | # | 시나리오 | 예상 결과 | 역PRD |
 |---|---------|----------|-------|
-| 1 | 커스텀 delegate로 engine 생성 → setFocus dispatch | delegate에 LogEntry 전달됨: seq=1, type="setFocus", diff에 __focus__ 변경 | |
-| 2 | batch(removeEntity + setFocus) dispatch | delegate에 3개 entry: parent batch + 2 children, parent는 seq=N, children은 parent=N | |
-| 3 | store 변경 없는 command dispatch | diff: [], 기본 포맷에 `(no change)` 표시 | |
-| 4 | `{ logger: false }` 옵션 → dispatch | delegate 호출 없음 | |
-| 5 | 옵션 생략 + DEV 환경 → dispatch | console.log 호출됨 (기본 delegate) | |
-| 6 | 옵션 생략 + PROD 환경 → dispatch | 로그 없음 | |
-| 7 | 메타 엔티티 변경 | diff에 값 수준: `__focus__.focusedId: "a" → "b"` | |
-| 8 | 사용자 엔티티 추가/제거 | diff에 id 수준: `entities: +item-4` | |
-| 9 | 사용자 엔티티 값 변경 | diff에 id 수준: `entities: ~item-1` (변경됨 표시, 값 미표시) | |
-| 10 | Command.execute가 throw → dispatch | LogEntry에 error 필드, diff 빈 배열, 기본 포맷에 `ERROR` + 에러 메시지 표시 | |
+| 1 | 커스텀 delegate로 engine 생성 → setFocus dispatch | delegate에 LogEntry 전달됨: seq=1, type="setFocus", diff에 __focus__ 변경 | `dispatch-logger.test.ts::logs single command with seq, type, payload, diff` |
+| 2 | batch(removeEntity + setFocus) dispatch | delegate에 3개 entry: parent batch + 2 children, parent는 seq=N, children은 parent=N | `dispatch-logger.test.ts::logs batch with parent (full diff) + children (type/payload only)` |
+| 3 | store 변경 없는 command dispatch | diff: [], 기본 포맷에 `(no change)` 표시 | `dispatch-logger.test.ts::logs no-change command with empty diff` + `dispatch-logger.test.ts::formats no-change command` |
+| 4 | `{ logger: false }` 옵션 → dispatch | delegate 호출 없음 | `dispatch-logger.test.ts::does not log when logger is false` |
+| 5 | 옵션 생략 + DEV 환경 → dispatch | console.log 호출됨 (기본 delegate) | `dispatch-logger.test.ts::formats single command as structured string` |
+| 6 | 옵션 생략 + PROD 환경 → dispatch | 로그 없음 | ❌ 테스트 없음 |
+| 7 | 메타 엔티티 변경 | diff에 값 수준: `__focus__.focusedId: "a" → "b"` | `dispatch-logger.test.ts::detects meta entity value-level change` |
+| 8 | 사용자 엔티티 추가/제거 | diff에 id 수준: `entities: +item-4` | `dispatch-logger.test.ts::detects user entity added` + `dispatch-logger.test.ts::detects user entity removed` |
+| 9 | 사용자 엔티티 값 변경 | diff에 id 수준: `entities: ~item-1` (변경됨 표시, 값 미표시) | `dispatch-logger.test.ts::detects user entity changed (shallow)` |
+| 10 | Command.execute가 throw → dispatch | LogEntry에 error 필드, diff 빈 배열, 기본 포맷에 `ERROR` + 에러 메시지 표시 | `dispatch-logger.test.ts::logs error command with error field` + `dispatch-logger.test.ts::formats error command` |
 
 상태: 🟢
 
