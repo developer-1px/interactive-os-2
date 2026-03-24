@@ -23,7 +23,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <div {...props} className={cls}>
       <span>{label}</span>
-      <span className={checked ? styles.indicatorOn : styles.indicator}>{checked ? '●' : '○'}</span>
+      <span className={checked ? styles.trackOn : styles.track}>
+        <span className={checked ? styles.thumbOn : styles.thumb} />
+      </span>
     </div>
   )
 }

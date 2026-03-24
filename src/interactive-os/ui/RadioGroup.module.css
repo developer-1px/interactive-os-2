@@ -16,11 +16,33 @@
   color: var(--text-bright);
 }
 
-.indicator {
+.circle {
   flex-shrink: 0;
-  color: var(--text-muted);
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border: 1px solid var(--border-default);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition-fast);
 }
 
-.indicatorSelected {
-  color: var(--primary);
+.circleSelected {
+  flex-shrink: 0;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border: 1px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition-fast);
+}
+
+.dot {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: 50%;
+  background: var(--primary);
 }

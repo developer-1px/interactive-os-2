@@ -16,11 +16,34 @@
   color: var(--text-bright);
 }
 
-.indicator {
+.box {
   flex-shrink: 0;
-  color: var(--text-muted);
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
-.indicatorChecked {
-  color: var(--primary);
+.boxChecked {
+  flex-shrink: 0;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.checkIcon {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  color: var(--primary-foreground);
 }
