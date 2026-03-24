@@ -4,46 +4,36 @@ import styles from './PageUiShowcase.module.css'
 import MdPage from './MdPage'
 import { uiCategories, slugToMdFile } from './uiCategories'
 import { components } from './showcaseRegistry'
-import { Aria } from '../interactive-os/components/aria'
-import { navlist } from '../interactive-os/behaviors/navlist'
-import { core, FOCUS_ID } from '../interactive-os/plugins/core'
+import { NavList } from '../interactive-os/ui/NavList'
+import { FOCUS_ID } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
 import type { NormalizedData } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
 
-// --- Pre-computed store + ids ---
-
-const allSlugs = uiCategories.flatMap((cat) => cat.slugs)
+// --- Grouped store: ROOT → groups → items ---
 
 const sidebarBaseStore = createStore({
-  entities: Object.fromEntries(
-    allSlugs.map((slug) => {
-      const entry = components.find((c) => c.slug === slug)
-      return [slug, { id: slug, data: { label: entry?.name ?? slug } }]
-    })
-  ),
-  relationships: { [ROOT_ID]: allSlugs },
+  entities: {
+    ...Object.fromEntries(
+      uiCategories.map((cat) => [
+        cat.label,
+        { id: cat.label, data: { label: cat.label, type: 'group' } },
+      ])
+    ),
+    ...Object.fromEntries(
+      uiCategories.flatMap((cat) => cat.slugs).map((slug) => {
+        const entry = components.find((c) => c.slug === slug)
+        return [slug, { id: slug, data: { label: entry?.name ?? slug } }]
+      })
+    ),
+  },
+  relationships: {
+    [ROOT_ID]: uiCategories.map((cat) => cat.label),
+    ...Object.fromEntries(
+      uiCategories.map((cat) => [cat.label, cat.slugs])
+    ),
+  },
 })
-
-const categoryIds = Object.fromEntries(
-  uiCategories.map((cat) => [cat.label, cat.slugs])
-)
-
-// --- Sidebar item renderer ---
-
-const renderSidebarItem = (
-  props: React.HTMLAttributes<HTMLElement>,
-  node: Record<string, unknown>,
-  state: NodeState,
-): React.ReactElement => {
-  const label = (node.data as Record<string, unknown>)?.label as string ?? node.id as string
-  return (
-    <div {...props} className={styles.uiNavItem + (state.focused ? ' ' + styles.uiNavItemActive : '')}>
-      {label}
-    </div>
-  )
-}
 
 // --- PageUiShowcase ---
 
@@ -77,21 +67,11 @@ export default function PageUiShowcase() {
           <span className={styles.uiSidebarTitle}>UI Components</span>
         </div>
         <div className={styles.uiSidebarBody}>
-          <Aria
-            behavior={navlist}
+          <NavList
             data={sidebarData}
-            plugins={[core()]}
             onActivate={handleActivate}
             aria-label="UI Components"
-            autoFocus={false}
-          >
-            {uiCategories.map((cat) => (
-              <div key={cat.label} role="group" aria-label={cat.label} className={styles.uiCategory}>
-                <div className={styles.uiCategoryLabel}>{cat.label}</div>
-                <Aria.Item asChild ids={categoryIds[cat.label]} render={renderSidebarItem} />
-              </div>
-            ))}
-          </Aria>
+          />
         </div>
       </nav>
       <div className={styles.uiContent}>
@@ -99,7 +79,7 @@ export default function PageUiShowcase() {
           {mdFile ? (
             <MdPage key={activeSlug} md={`ui/${mdFile}`} />
           ) : (
-            <div style={{ padding: 24, color: 'var(--text-muted)' }}>Unknown component: {activeSlug}</div>
+            <div style={{ padding: 'var(--space-xl)', color: 'var(--text-muted)' }}>Unknown component: {activeSlug}</div>
           )}
         </div>
       </div>
