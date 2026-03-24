@@ -8,7 +8,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: [
-        'src/interactive-os/axes/**',
+        'src/interactive-os/axis/**',
         'src/interactive-os/plugins/**',
         'src/interactive-os/core/**',
       ],
