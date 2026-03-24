@@ -153,7 +153,7 @@ async function checkRuntime(page) {
     const cardNames = [
       'Kanban', 'Preferences', 'DataView', 'Explorer',
       'Hierarchy', 'InputGroup', 'Sidebar', 'Actions',
-      'Confirm', 'Menu',
+      'Confirm', 'Menu', 'Form',
     ]
 
     // R1: data-surface check per card
@@ -466,6 +466,7 @@ async function main() {
     Actions: ['Toaster', 'ListBox'],
     Confirm: ['Dialog', 'AlertDialog'],
     Menu: ['DisclosureGroup', 'MenuList'],
+    Form: ['Breadcrumb', 'TextInput', 'Button'],
   }
 
   // Build final output

@@ -4,6 +4,7 @@ import { Button } from '../interactive-os/ui/Button'
 import { ColorInput } from '../interactive-os/ui/ColorInput'
 import { TextInput } from '../interactive-os/ui/TextInput'
 import { Accordion } from '../interactive-os/ui/Accordion'
+import { Breadcrumb } from '../interactive-os/ui/Breadcrumb'
 import { AlertDialog } from '../interactive-os/ui/AlertDialog'
 import { Checkbox } from '../interactive-os/ui/Checkbox'
 import { Combobox } from '../interactive-os/ui/Combobox'
@@ -237,6 +238,21 @@ function MenuCard() {
   )
 }
 
+function FormCard() {
+  return (
+    <div className={styles.card} data-surface="default">
+      <div className={styles.stack}>
+        <Breadcrumb path="src/interactive-os/ui/Button.tsx" root="src" />
+        <TextInput placeholder="Search components..." />
+        <div className={styles.row}>
+          <Button variant="accent">Save changes</Button>
+          <Button variant="ghost">Cancel</Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ── Main ── */
 
 export default function PageThemeCreator() {
@@ -329,6 +345,7 @@ export default function PageThemeCreator() {
           <ActionsCard />
           <ConfirmCard />
           <MenuCard />
+          <FormCard />
         </div>
       </div>
     </div>
