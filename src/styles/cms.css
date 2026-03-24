@@ -64,20 +64,20 @@
 .cms-sidebar__list:focus { outline: none; }
 
 .cms-sidebar__thumb {
-  width: 104px; overflow: hidden;
+  width: 100%; overflow: hidden;
   border-radius: var(--radius-sm);
   border: 2px solid transparent;
   cursor: pointer; position: relative;
   background: var(--surface-default);
-  margin: 0 auto;
   flex-shrink: 0;
+  aspect-ratio: auto;
 }
 .cms-sidebar__thumb--focused {
   border-color: var(--primary);
 }
 .cms-sidebar__thumb-inner {
   zoom: 0.1;
-  width: 1040px;
+  width: 1000%;
   pointer-events: none;
 }
 .cms-sidebar__thumb-index {
