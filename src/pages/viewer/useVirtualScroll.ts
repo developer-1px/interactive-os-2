@@ -80,9 +80,7 @@ export function useVirtualScroll({
 
     // Find last visible item
     let endIdx = startIdx
-    let visibleAccum = accumulated - scrollTop // negative portion of first item above viewport
-    // Actually recalculate: accumulated is the top of startIdx
-    visibleAccum = 0
+    let visibleAccum = 0
     for (let i = startIdx; i < itemCount; i++) {
       visibleAccum += getItemHeight(i)
       endIdx = i + 1
