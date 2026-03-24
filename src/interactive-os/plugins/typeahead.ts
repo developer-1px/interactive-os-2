@@ -2,7 +2,7 @@ import type { Entity } from '../store/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { definePlugin } from './definePlugin'
 import { focusCommands, FOCUS_ID } from './core'
-import { getVisibleNodes } from '../pattern/createPatternContext'
+import { getVisibleNodes } from '../engine/getVisibleNodes'
 
 export type GetLabelFn = (entity: Entity) => string
 

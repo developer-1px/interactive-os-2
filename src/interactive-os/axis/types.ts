@@ -51,6 +51,13 @@ export interface PatternContext {
   extendSelection(direction: 'next' | 'prev' | 'first' | 'last'): Command
   extendSelectionTo(targetId: string, navigableIds?: string[]): Command
 
+  /** Spatial: enter child container (sets spatial parent) */
+  enterChild(parentId: string): Command
+  /** Spatial: exit to parent container */
+  exitToParent(): Command | undefined
+  /** Start inline rename */
+  startRename(nodeId: string): Command
+
   dispatch(command: Command): void
 
   getEntity(id: string): Entity | undefined
