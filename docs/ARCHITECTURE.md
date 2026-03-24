@@ -192,7 +192,7 @@ graph TB
 | 색상 | 레이어 | 디렉토리 | 파일 수 | 역할 | 렌더러 독립 |
 |------|--------|----------|--------|------|------------|
 | 🔵 | L1 Store | `store/` | 4 | 데이터 구조 + CRUD | ✅ |
-| 🔵 | L2 Engine | `engine/` | 5 | 커맨드 디스패치 + 미들웨어 + useEngine | ✅ (useEngine 제외) |
+| 🔵 | L2 Engine | `engine/` | 6 | 커맨드 디스패치 + 미들웨어 + useEngine + getVisibleNodes | ✅ (useEngine 제외) |
 | 🟢 | L3 Plugin | `plugins/` | 14 | 데이터 조작 표준 (definePlugin + useSpatialNav) | ✅ (useSpatialNav 제외) |
 | 🟢 | L4 Axis | `axis/` | 8 | 읽기 전용 축 7종 + 계약 타입 (PatternContext, KeyMap) | ✅ |
 | 🟢 | L5 Pattern | `pattern/` | 23 | composePattern + edit + 17 presets + createPatternContext | ✅ |
@@ -202,9 +202,7 @@ graph TB
 
 **의존 방향:** L7 → L6 → L5 → L4 → L3 → L2 → L1 (단방향, 하위 레이어는 상위를 모름)
 
-**알려진 레이어 위반:**
-- `axis/expand.ts` → `plugins/` 직접 import (enter-esc 모드에서 spatialCommands 사용. PatternContext 확장으로 해소 예정)
-- `plugins/typeahead.ts` → `pattern/createPatternContext` (getVisibleNodes. engine/으로 이동 예정)
+**알려진 레이어 위반:** 없음
 
 ## Key Renames (from v1 architecture)
 
