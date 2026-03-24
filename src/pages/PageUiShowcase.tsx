@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import styles from './PageUiShowcase.module.css'
 import MdPage from './MdPage'
 import { uiCategories, slugToMdFile } from './uiCategories'
-import { components } from './showcaseRegistry'
 import { NavList } from '../interactive-os/ui/NavList'
 import { FOCUS_ID } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/store/createStore'
@@ -22,8 +21,8 @@ const sidebarBaseStore = createStore({
     ),
     ...Object.fromEntries(
       uiCategories.flatMap((cat) => cat.slugs).map((slug) => {
-        const entry = components.find((c) => c.slug === slug)
-        return [slug, { id: slug, data: { label: entry?.name ?? slug } }]
+        const label = slugToMdFile[slug] ?? slug
+        return [slug, { id: slug, data: { label } }]
       })
     ),
   },

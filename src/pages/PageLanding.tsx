@@ -1,6 +1,8 @@
+// ② 2026-03-25-registry-md-ssot-prd.md
 import { useNavigate } from 'react-router-dom'
 import { useState, useCallback } from 'react'
 import { components } from './showcaseRegistry'
+import { slugToMdFile } from './uiCategories'
 import type { NormalizedData } from '../interactive-os/store/types'
 import styles from './PageLanding.module.css'
 
@@ -8,6 +10,7 @@ function MiniDemo({ entry }: { entry: typeof components[number] }) {
   const [data, setData] = useState(() => entry.makeData())
   const onChange = useCallback((next: NormalizedData) => setData(next), [])
   const navigate = useNavigate()
+  const label = slugToMdFile[entry.slug] ?? entry.slug
 
   return (
     <button
@@ -21,7 +24,7 @@ function MiniDemo({ entry }: { entry: typeof components[number] }) {
         </div>
       </div>
       <div className={styles.cardMeta}>
-        <span className={styles.cardName}>{entry.name}</span>
+        <span className={styles.cardName}>{label}</span>
         {entry.testPath && <span className={styles.cardBadge}>tested</span>}
       </div>
     </button>

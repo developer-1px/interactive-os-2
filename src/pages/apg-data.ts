@@ -224,3 +224,23 @@ export const apgCombobox: ApgPatternData = {
     { key: 'Alt + Up Arrow (Optional)', description: 'If the popup is displayed: returns focus to the combobox and closes the popup.' },
   ],
 }
+
+// ② 2026-03-25-registry-md-ssot-prd.md
+export const apgBySlug: Record<string, ApgPatternData> = {
+  'accordion': apgAccordion,
+  'disclosure-group': apgDisclosure,
+  'switch-group': apgSwitch,
+  'tab-list': apgTabs,
+  'radio-group': apgRadioGroup,
+  'menu-list': apgMenu,
+  'toolbar': apgToolbar,
+  'dialog': apgDialog,
+  'alert-dialog': apgAlertDialog,
+  'tree-view': apgTreeView,
+  'tree-grid': apgTreeGrid,
+  'listbox': apgListbox,
+  'grid': apgGrid,
+  'slider': apgSlider,
+  'spinbutton': apgSpinbutton,
+  'combobox': apgCombobox,
+}

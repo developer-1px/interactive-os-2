@@ -1,13 +1,14 @@
+// ② 2026-03-25-registry-md-ssot-prd.md
 import type { ApgPatternData } from './apg-data'
-import { components } from './showcaseRegistry'
+import { apgBySlug } from './apg-data'
 
 type ApgKeyboardTableProps = ApgPatternData | { slug: string }
 
 export function ApgKeyboardTable(props: ApgKeyboardTableProps) {
   if ('slug' in props) {
-    const entry = components.find((c) => c.slug === props.slug)
-    if (!entry?.apg) return null
-    return <ApgKeyboardTableInner {...entry.apg} />
+    const apg = apgBySlug[props.slug]
+    if (!apg) return null
+    return <ApgKeyboardTableInner {...apg} />
   }
   return <ApgKeyboardTableInner {...props} />
 }
