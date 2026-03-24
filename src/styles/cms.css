@@ -57,8 +57,8 @@
   min-width: 0; flex: 1;
 }
 .cms-sidebar__list {
-  flex: 1; padding: var(--space-xs);
-  display: flex; flex-direction: column; gap: var(--space-xs);
+  flex: 1; padding: 0;
+  display: flex; flex-direction: column; gap: 2px;
   overflow-y: auto;
 }
 .cms-sidebar__list:focus { outline: none; }
