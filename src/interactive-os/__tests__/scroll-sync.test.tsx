@@ -1,7 +1,8 @@
 /**
- * Test: DOM scroll synchronization — scrollIntoView called when focus moves.
+ * Test: DOM scroll synchronization — container scrollTop adjusts when focus moves.
+ * jsdom has no layout engine, so we mock getBoundingClientRect and scroll dimensions.
  */
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
@@ -23,11 +24,9 @@ function fixtureStore(): NormalizedData {
 }
 
 describe('scroll sync', () => {
-  it('calls scrollIntoView when focus moves via keyboard', async () => {
-    const scrollMock = vi.fn()
-    // Stub scrollIntoView on HTMLElement prototype for jsdom
-    HTMLElement.prototype.scrollIntoView = scrollMock
+  afterEach(() => { vi.restoreAllMocks() })
 
+  it('adjusts container scrollTop when focused item is below viewport', async () => {
     const user = userEvent.setup()
     const { container } = render(
       <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
@@ -37,19 +36,52 @@ describe('scroll sync', () => {
       </Aria>
     )
 
+    const ariaContainer = container.querySelector('[data-aria-container]') as HTMLElement
+    // Mock scrollable container: 100px tall, 300px content
+    Object.defineProperty(ariaContainer, 'scrollHeight', { value: 300, configurable: true })
+    Object.defineProperty(ariaContainer, 'clientHeight', { value: 100, configurable: true })
+    vi.spyOn(ariaContainer, 'getBoundingClientRect').mockReturnValue(
+      { top: 0, bottom: 100, left: 0, right: 200, width: 200, height: 100, x: 0, y: 0, toJSON: () => {} },
+    )
+
     const first = container.querySelector('[data-node-id="a"]') as HTMLElement
     first.focus()
-    scrollMock.mockClear()
+
+    // Item B is below the container viewport
+    const itemB = container.querySelector('[data-node-id="b"]') as HTMLElement
+    vi.spyOn(itemB, 'getBoundingClientRect').mockReturnValue(
+      { top: 120, bottom: 150, left: 0, right: 200, width: 200, height: 30, x: 0, y: 120, toJSON: () => {} },
+    )
 
     await user.keyboard('{ArrowDown}')
 
-    // scrollIntoView should have been called for the newly focused node
-    expect(scrollMock).toHaveBeenCalled()
-    const lastCall = scrollMock.mock.calls[scrollMock.mock.calls.length - 1]
-    expect(lastCall[0]).toEqual({ block: 'nearest', inline: 'nearest' })
+    // scrollTop should increase to bring item B into view
+    expect(ariaContainer.scrollTop).toBeGreaterThan(0)
+  })
 
-    // Clean up
-    // @ts-expect-error — removing stub
-    delete HTMLElement.prototype.scrollIntoView
+  it('does not scroll outer containers', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+        <Aria.Item render={(props, node, state) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+        )} />
+      </Aria>
+    )
+
+    const ariaContainer = container.querySelector('[data-aria-container]') as HTMLElement
+    // Non-scrollable container (content fits)
+    Object.defineProperty(ariaContainer, 'scrollHeight', { value: 100, configurable: true })
+    Object.defineProperty(ariaContainer, 'clientHeight', { value: 100, configurable: true })
+
+    const first = container.querySelector('[data-node-id="a"]') as HTMLElement
+    first.focus()
+
+    // Parent scroll position should not change
+    const parentScrollBefore = container.scrollTop
+
+    await user.keyboard('{ArrowDown}')
+
+    expect(container.scrollTop).toBe(parentScrollBefore)
   })
 })
