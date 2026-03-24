@@ -53,13 +53,13 @@ export default function PageAlertDialog() {
             </div>
             <div className={dialogStyles.footer}>
               <Aria behavior={alertdialog} data={alertDialogData} plugins={plugins}>
-                <Aria.Item render={(props, node, _state) => (
+                <Aria.Item render={(props, _node, _state) => (
                   <button
                     {...props}
                     className={buttonStyles.dialog}
                     onClick={() => setOpen(false)}
                   >
-                    {(node.data as Record<string, unknown>)?.label as string}
+                    {(_node.data as Record<string, unknown>)?.label as string}
                   </button>
                 )} />
               </Aria>

@@ -1,10 +1,8 @@
 import type { Command, NormalizedData, Plugin } from '../core/types'
 import type { NodeState, BehaviorContext } from '../behaviors/types'
-import type { CommandEngine } from '../core/createCommandEngine'
 import { tabs } from '../behaviors/tabs'
 import { useAria } from '../hooks/useAria'
 import type { UseAriaReturn } from '../hooks/useAria'
-import { useAriaZone } from '../hooks/useAriaZone'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
 import { crudCommands } from '../plugins/crud'
@@ -18,32 +16,16 @@ const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = 
   'Alt+ArrowRight': (ctx) => dndCommands.moveDown(ctx.focused),
 }
 
-interface UseTabListBaseOptions {
+export interface UseTabListOptions {
+  data: NormalizedData
   plugins?: Plugin[]
   keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
+  onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   initialFocus?: string
   enableEditing?: boolean
   'aria-label'?: string
 }
-
-interface UseTabListStandaloneOptions extends UseTabListBaseOptions {
-  data: NormalizedData
-  onChange?: (data: NormalizedData) => void
-  engine?: undefined
-  scope?: undefined
-  store?: undefined
-}
-
-interface UseTabListZoneOptions extends UseTabListBaseOptions {
-  engine: CommandEngine
-  scope: string
-  store: NormalizedData
-  data?: undefined
-  onChange?: undefined
-}
-
-export type UseTabListOptions = UseTabListStandaloneOptions | UseTabListZoneOptions
 
 export interface UseTabListReturn {
   rootProps: Record<string, unknown>
@@ -72,20 +54,8 @@ function toTabListReturn(aria: UseAriaReturn, ariaLabel?: string): UseTabListRet
 }
 
 export function useTabList(options: UseTabListOptions): UseTabListReturn {
-  const ariaLabel = options['aria-label']
-  const enableEditing = options.enableEditing ?? false
-
-  const mergedKeyMap = enableEditing
-    ? { ...editingKeyMap, ...options.keyMap }
-    : options.keyMap
-
-  if (options.engine) {
-    const { engine, scope, store, plugins, onActivate, initialFocus } = options as UseTabListZoneOptions
-    const aria = useAriaZone({ engine, store, behavior: tabs, scope, plugins, keyMap: mergedKeyMap, onActivate, initialFocus })
-    return toTabListReturn(aria, ariaLabel)
-  }
-
-  const { data, plugins = [core(), ...(enableEditing ? [history()] : [])], keyMap: _keyMap, onChange, onActivate, initialFocus } = options as UseTabListStandaloneOptions
+  const { data, plugins = [core(), ...(options.enableEditing ? [history()] : [])], keyMap, onChange, onActivate, initialFocus, enableEditing = false, 'aria-label': ariaLabel } = options
+  const mergedKeyMap = enableEditing ? { ...editingKeyMap, ...keyMap } : keyMap
   const aria = useAria({ behavior: tabs, data, plugins, keyMap: mergedKeyMap, onChange, onActivate, initialFocus })
   return toTabListReturn(aria, ariaLabel)
 }

@@ -3,6 +3,17 @@ import path from 'node:path'
 import { createRequire } from 'node:module'
 import type { Plugin } from 'vite'
 
+/** Minimal shape for babel AST nodes used during walk */
+interface BabelNode {
+  type?: string
+  name?: string | BabelNode
+  end?: number
+  loc?: { start: { line: number; column: number } }
+  attributes?: BabelNode[]
+  property?: BabelNode
+  [key: string]: unknown
+}
+
 // Resolve @babel/parser from @vitejs/plugin-react's dependencies (pnpm-safe)
 const _require = createRequire(import.meta.url)
 let parsePath: string
@@ -77,12 +88,12 @@ export function inspectorPlugin(): Plugin {
         // Collect JSX opening element positions (sorted by descending offset for safe insertion)
         const insertions: { offset: number; line: number; col: number }[] = []
 
-        function walk(node: any) {
+        function walk(node: BabelNode) {
           if (!node || typeof node !== 'object') return
           if (Array.isArray(node)) { node.forEach(walk); return }
 
           if (node.type === 'JSXOpeningElement' && node.loc && node.end != null) {
-            const nameNode = node.name
+            const nameNode = node.name as BabelNode | undefined
             // Skip fragments — React.Fragment only accepts key and children
             const isFragment = !nameNode
               || nameNode.type === 'JSXFragment'
@@ -93,7 +104,7 @@ export function inspectorPlugin(): Plugin {
             if (!isFragment) {
               // Skip if already has data-inspector-line
               const hasAttr = node.attributes?.some(
-                (a: any) => a.type === 'JSXAttribute' && a.name?.name === 'data-inspector-line',
+                (a) => a.type === 'JSXAttribute' && typeof a.name === 'object' && (a.name as BabelNode)?.name === 'data-inspector-line',
               )
               if (!hasAttr) {
                 const nameEnd = nameNode?.end
@@ -112,13 +123,13 @@ export function inspectorPlugin(): Plugin {
           for (const key of Object.keys(node)) {
             if (key === 'leadingComments' || key === 'trailingComments' || key === 'innerComments') continue
             const child = node[key]
-            if (child && typeof child === 'object' && (child.type || Array.isArray(child))) {
-              walk(child)
+            if (child && typeof child === 'object' && ((child as BabelNode).type || Array.isArray(child))) {
+              walk(child as BabelNode)
             }
           }
         }
 
-        walk(ast.program)
+        walk(ast.program as BabelNode)
 
         if (insertions.length === 0) return
 

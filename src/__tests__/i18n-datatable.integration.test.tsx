@@ -13,7 +13,7 @@
  * V17: F2 on read-only cell → no edit
  * Tab continuation: Tab during editing → confirm + move + auto-edit
  */
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -25,7 +25,7 @@ import { history } from '../interactive-os/plugins/history'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 import { clipboard, resetClipboard } from '../interactive-os/plugins/clipboard'
 import { i18nColumns, i18nInitialData } from '../pages/sharedI18nData'
-import type { NormalizedData } from '../interactive-os/core/types'
+import type { NormalizedData as _NormalizedData } from '../interactive-os/core/types'
 
 const plugins = [core(), rename(), history(), focusRecovery(), clipboard()]
 
@@ -37,7 +37,7 @@ const plugins = [core(), rename(), history(), focusRecovery(), clipboard()]
 function I18nGrid() {
   const [data, setData] = useState(() => i18nInitialData)
   const dataRef = useRef(data)
-  dataRef.current = data
+  useEffect(() => { dataRef.current = data })
 
   return (
     <Grid

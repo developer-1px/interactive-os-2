@@ -11,6 +11,9 @@ import { RENAME_ID } from '../plugins/rename'
 import { createBehaviorContext } from '../behaviors/createBehaviorContext'
 import { useAriaView } from './useAriaView'
 
+type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; behavior: AriaBehavior; prevFocus: string }
+const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
+
 /** Known internal meta-entity IDs — only these are preserved during external sync */
 const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID])
 
@@ -49,38 +52,36 @@ export interface UseAriaReturn {
 export function useAria(options: UseAriaOptions): UseAriaReturn {
   const { behavior = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus, logger, autoFocus = true } = options
   const [, forceRender] = useState(0)
-  const engineRef = useRef<CommandEngine | null>(null)
-  const onActivateRef = useRef(onActivate)
-  // eslint-disable-next-line react-hooks/refs
-  onActivateRef.current = onActivate
-  const behaviorRef = useRef(behavior)
-  // eslint-disable-next-line react-hooks/refs
-  behaviorRef.current = behavior
-  const prevFocusRef = useRef<string>('')
   const pointerDownCtxRef = useRef<ReturnType<typeof createBehaviorContext> | null>(null)
 
   // ── ① Engine creation (useAria-only) ──
+  // Mutable callbacks bag lives inside the engine wrapper so the useState
+  // initializer owns it without capturing any React ref.
 
-  if (engineRef.current == null) {
+  const [engine] = useState(() => {
+    const bag: EngineCallbacks = { onActivate, behavior, prevFocus: '' }
+
     const middlewares = plugins
       .map((p) => p.middleware)
       .filter((m): m is NonNullable<typeof m> => m != null)
 
     let initializing = true
-    // eslint-disable-next-line react-hooks/refs
-    engineRef.current = createCommandEngine(data, middlewares, (newStore) => {
+    const created = createCommandEngine(data, middlewares, (newStore) => {
       if (initializing) return
+      const cb = engineCallbacksMap.get(created)!
       const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
-      if (behaviorRef.current.followFocus && onActivateRef.current && newFocusedId && newFocusedId !== prevFocusRef.current) {
+      if (cb.behavior.followFocus && cb.onActivate && newFocusedId && newFocusedId !== cb.prevFocus) {
         const entityData = getEntityData<{ followFocus?: boolean }>(newStore, newFocusedId)
         if (entityData?.followFocus !== false) {
-          onActivateRef.current(newFocusedId)
+          cb.onActivate(newFocusedId)
         }
       }
-      prevFocusRef.current = newFocusedId
+      cb.prevFocus = newFocusedId
       onChange?.(newStore)
       forceRender((n) => n + 1)
     }, logger != null ? { logger } : undefined)
+
+    engineCallbacksMap.set(created, bag)
 
     const externalFocus = (data.entities[FOCUS_ID]?.focusedId as string) ?? ''
     const focusTarget = (externalFocus && data.entities[externalFocus])
@@ -89,20 +90,21 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         ? initialFocus
         : getChildren(data, ROOT_ID)[0]
     if (focusTarget) {
-      // eslint-disable-next-line react-hooks/refs
-      prevFocusRef.current = focusTarget
-      // eslint-disable-next-line react-hooks/refs
-      engineRef.current.dispatch(focusCommands.setFocus(focusTarget))
+      bag.prevFocus = focusTarget
+      created.dispatch(focusCommands.setFocus(focusTarget))
     }
     initializing = false
-  }
-
-  // eslint-disable-next-line react-hooks/refs
-  const engine = engineRef.current
+    return created
+  })
+  useEffect(() => {
+    const cb = engineCallbacksMap.get(engine)!
+    cb.onActivate = onActivate
+    cb.behavior = behavior
+  })
 
   // ── ② External data sync (useAria-only) ──
 
-  useEffect(() => {
+  useMemo(() => {
     const currentStore = engine.getStore()
     const externalFocusChanged = FOCUS_ID in data.entities &&
       (data.entities[FOCUS_ID]?.focusedId as string) !== (currentStore.entities[FOCUS_ID]?.focusedId as string)
@@ -136,12 +138,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     }
 
     engine.syncStore({ entities: mergedEntities, relationships: data.relationships })
-    forceRender(n => n + 1)
   }, [data, engine])
 
   // ── State derivation ──
 
-  // eslint-disable-next-line react-hooks/refs
   const store = engine.getStore()
   const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
   const selectedIdSet = useMemo(() => {
@@ -199,8 +199,8 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           // Activate on click (skip when modifier keys held)
           const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
           if (behavior.activateOnClick && !hasModifier) {
-            if (onActivateRef.current) {
-              onActivateRef.current(id)
+            if (engineCallbacksMap.get(engine)?.onActivate) {
+              engineCallbacksMap.get(engine)!.onActivate!(id)
             } else {
               const ctx = createBehaviorContext(engine, behaviorCtxOptions)
               const command = ctx.activate()

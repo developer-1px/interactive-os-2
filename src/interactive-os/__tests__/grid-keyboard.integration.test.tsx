@@ -321,7 +321,7 @@ describe('Tab cell cycle (tabCycle: true)', () => {
     // The key point: column should NOT have changed via our handler
     // (focus may have left the grid, so we just check it didn't advance)
     const col = getFocusedCellColIndex(container)
-    const row = getFocusedRowId(container)
+    const _row = getFocusedRowId(container)
     // Either focus left (null) or stayed at col 0 — never moved to col 1
     expect(col).not.toBe(1)
   })

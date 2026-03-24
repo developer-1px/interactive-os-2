@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { ApgPatternData } from './apg-data'
 import {

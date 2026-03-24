@@ -21,8 +21,8 @@ export function mergeProps<T extends Record<string, unknown>>(
       typeof bVal === 'function'
     ) {
       merged[key] = (...args: unknown[]) => {
-        ;(aVal as Function)(...args)
-        ;(bVal as Function)(...args)
+        ;(aVal as (...args: unknown[]) => void)(...args)
+        ;(bVal as (...args: unknown[]) => void)(...args)
       }
     } else {
       merged[key] = bVal

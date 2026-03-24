@@ -1,18 +1,25 @@
-import { Children, cloneElement, useId, useRef, useCallback } from 'react'
+import { Children, cloneElement, useId, useRef, useCallback, useEffect } from 'react'
 import type { ReactElement, ReactNode, CSSProperties } from 'react'
 import styles from './Tooltip.module.css'
 
 interface TooltipProps {
   content: string
-  children: ReactElement
+  children: ReactNode
 }
 
 export function Tooltip({ content, children }: TooltipProps): ReactNode {
-  const child = Children.only(children)
   const id = `tooltip-${useId()}`
   const anchorName = `--${id.replace(/[^a-zA-Z0-9-]/g, '')}`
   const tooltipRef = useRef<HTMLSpanElement>(null)
   const delayRef = useRef<ReturnType<typeof setTimeout>>(null)
+  const triggerRef = useRef<HTMLElement>(null)
+
+  // Apply anchor-name style via ref to avoid accessing child.props during render
+  useEffect(() => {
+    if (triggerRef.current) {
+      ;(triggerRef.current.style as unknown as Record<string, unknown>).anchorName = anchorName
+    }
+  }, [anchorName])
 
   const show = useCallback(() => {
     delayRef.current = setTimeout(() => {
@@ -26,15 +33,17 @@ export function Tooltip({ content, children }: TooltipProps): ReactNode {
   }, [])
 
   if (!content) {
-    return child
+    return children
   }
+
+  const child = Children.only(children) as ReactElement
 
   return (
     <>
-      {cloneElement(child, {
+      {cloneElement(child as ReactElement<Record<string, unknown>>, {
+        ref: triggerRef,
         interestfor: id,
         'aria-describedby': id,
-        style: { anchorName, ...(child.props as { style?: CSSProperties }).style },
         onMouseEnter: show,
         onMouseLeave: hide,
         onFocus: show,
