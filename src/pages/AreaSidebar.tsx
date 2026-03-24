@@ -10,7 +10,7 @@ import type { NodeState } from '../interactive-os/pattern/types'
 
 // --- Build tree data from glob keys ---
 
-const mdModules = import.meta.glob<{ default: React.ComponentType }>('/docs/2-areas/**/*.md')
+const mdModules = import.meta.glob('/docs/2-areas/**/*.md', { query: '?raw' })
 
 const L2_ORDER = ['vision', 'overview', 'core', 'axes', 'patterns', 'plugins', 'hooks', 'ui']
 
