@@ -18,6 +18,9 @@
 
 [data-aria-container] {
   padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 
 /* ── Common interactive item base ── */
@@ -30,7 +33,6 @@
 [data-aria-container] [role="switch"],
 [data-aria-container] [role="row"] {
   padding: var(--space-sm) var(--space-md);
-  margin: 1px 0;
   cursor: default;
   user-select: none;
   font-size: var(--text-md);
@@ -75,7 +77,6 @@
 /* Disclosure button */
 [data-aria-container] [role="group"] > [role="button"] {
   padding: var(--space-sm) var(--space-md);
-  margin: 1px 0;
   cursor: default;
   user-select: none;
   font-size: var(--text-md);
