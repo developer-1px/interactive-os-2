@@ -4,7 +4,7 @@
   padding: var(--space-xs) var(--space-md);
   font-size: var(--text-md);
   white-space: nowrap;
-  cursor: default;
+  cursor: pointer;
   user-select: none;
   border-bottom: 2px solid transparent;
 }

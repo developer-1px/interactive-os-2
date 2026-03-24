@@ -12,6 +12,10 @@
   border-radius: var(--radius-sm);
 }
 
+.header:hover {
+  background: var(--bg-hover);
+}
+
 .headerFocused {
   background: var(--primary-dim);
   color: var(--text-bright);

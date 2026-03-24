@@ -30,7 +30,7 @@
 [data-aria-container] [role="switch"],
 [data-aria-container] [role="row"] {
   padding: var(--space-sm) var(--space-md);
-  cursor: default;
+  cursor: pointer;
   user-select: none;
   font-size: var(--text-md);
   font-weight: var(--weight-medium);
@@ -61,7 +61,7 @@
 /* Accordion heading */
 [data-aria-container] [role="heading"] {
   padding: var(--space-sm) var(--space-md);
-  cursor: default;
+  cursor: pointer;
   user-select: none;
   font-size: var(--text-md);
   font-weight: var(--weight-semi);
@@ -74,7 +74,7 @@
 /* Disclosure button */
 [data-aria-container] [role="group"] > [role="button"] {
   padding: var(--space-sm) var(--space-md);
-  cursor: default;
+  cursor: pointer;
   user-select: none;
   font-size: var(--text-md);
   font-weight: var(--weight-medium);

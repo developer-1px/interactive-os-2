@@ -61,6 +61,10 @@
   cursor: default;
 }
 
+.card:hover {
+  background: var(--bg-hover);
+}
+
 .card:focus {
   outline: 1px solid var(--focus);
   outline-offset: -1px;
