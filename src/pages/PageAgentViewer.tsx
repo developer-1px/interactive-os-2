@@ -47,7 +47,7 @@ function relPath(absPath: string): string {
 }
 
 function isMdFile(path: string): boolean {
-  return path.endsWith('.md') || path.endsWith('.mdx')
+  return path.endsWith('.md')
 }
 
 function buildFilesStore(files: string[]): NormalizedData {
