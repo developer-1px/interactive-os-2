@@ -5,6 +5,7 @@ import type { Plugin } from '../interactive-os/plugins/types'
 import type { PatternContext, NodeState } from '../interactive-os/pattern/types'
 import type { LogEntry } from '../interactive-os/engine/dispatchLogger'
 import { Aria } from '../interactive-os/primitives/aria'
+import { TreeView } from '../interactive-os/ui/TreeView'
 import { tree } from '../interactive-os/pattern/tree'
 import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
@@ -224,14 +225,12 @@ export default function PageStoreInspector() {
           {/* Inspector panel */}
           <div className={styles.panel}>
             <div className={styles.panelLabel}>Inspector — NormalizedData</div>
-            <Aria
-              behavior={tree}
+            <TreeView
               data={inspectorData}
               plugins={inspectorPlugins}
+              renderItem={renderInspectorItem}
               aria-label="Store inspector"
-            >
-              <Aria.Item render={renderInspectorItem} />
-            </Aria>
+            />
           </div>
 
           {/* Log panel */}
