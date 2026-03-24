@@ -157,9 +157,10 @@
   --shape-xl-r: 20px;
 
   /* ── Layout (alias) ── */
-  --radius:    var(--shape-xl-r);
-  --radius-sm: var(--shape-md-r);
-  --radius-xs: var(--shape-xs-r);
+  --radius:      var(--shape-xl-r);
+  --radius-sm:   var(--shape-md-r);
+  --radius-xs:   var(--shape-xs-r);
+  --radius-pill: 9999px;
 
   /* ── Spacing ── */
   --space-xs:  4px;
@@ -183,6 +184,7 @@
   --input-radius:   var(--radius-sm);
   --sidebar-width:  288px;
   --sidebar-item-height: 32px;
+  --overlay-width:  360px;
   --switch-width:   36px;
   --switch-height:  20px;
 

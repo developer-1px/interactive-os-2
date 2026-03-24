@@ -1,6 +1,12 @@
 /* --- Spinbutton --- */
 
+/* ── Component tokens ── */
 .spinbuttonItem {
+  --_label-min-w: calc(var(--space-lg) * 4);      /* 64px */
+  --_btn-w: var(--switch-width);                     /* 36px */
+  --_value-min-w: calc(var(--space-lg) * 3);       /* 48px */
+  --_ring-spread: 2px;
+
   display: flex;
   align-items: center;
   gap: var(--space-md);
@@ -11,7 +17,7 @@
   font-size: var(--text-md);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
-  min-width: 64px;
+  min-width: var(--_label-min-w);
 }
 
 /* Unified group: − [value] + with single focus ring */
@@ -26,7 +32,7 @@
 
 [data-focused] .spinbuttonGroup {
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px var(--primary);
+  box-shadow: 0 0 0 var(--_ring-spread) var(--primary);
   outline: none;
 }
 
@@ -34,7 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
+  width: var(--_btn-w);
   border: none;
   background: var(--bg-hover);
   color: var(--text-primary);
@@ -72,7 +78,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 48px;
+  min-width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-md);
   font-size: var(--text-md);
   font-weight: var(--weight-semi);
@@ -83,7 +89,7 @@
 }
 
 .spinbuttonInput {
-  width: 48px;
+  width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-sm);
   border: none;
   background: transparent;
@@ -98,5 +104,5 @@
 /* Error state */
 .spinbuttonGroup[data-invalid] {
   border-color: var(--destructive);
-  box-shadow: 0 0 0 2px var(--destructive);
+  box-shadow: 0 0 0 var(--_ring-spread) var(--destructive);
 }

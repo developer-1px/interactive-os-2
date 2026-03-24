@@ -56,6 +56,8 @@ function isExemptValue(value) {
   if (/^calc\(/.test(trimmed) && /var\(--/.test(trimmed)) return true
   // Pure numbers that are unitless (like line-height: 1.4, font-weight: 500, flex: 1)
   if (/^-?\d+(\.\d+)?$/.test(trimmed)) return true
+  // 1px border-width is universal and has no token — exempt
+  if (trimmed === '1px') return true
   // Percentages with no design meaning
   if (/^-?\d+(\.\d+)?%$/.test(trimmed) && (trimmed === '100%' || trimmed === '50%')) return true
   return false
