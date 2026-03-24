@@ -309,6 +309,8 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     const focusIsOrphaned = document.activeElement === document.body || document.activeElement === null
     if (!ownsActiveFocus && !focusIsOrphaned) return
     if (focusIsOrphaned && !autoFocus) return
+    // Don't steal focus from editable elements inside the container (e.g., search input)
+    if (ownsActiveFocus && isEditableElement(document.activeElement as Element)) return
     el.focus({ preventScroll: false })
   }, [disabled, isKeyMapOnly, focusedId, behavior.focusStrategy.type, nodeIdAttr, autoFocus])
 

@@ -1,10 +1,16 @@
 // ② 2026-03-25-search-plugin-prd.md
 import { describe, it, expect } from 'vitest'
+import { useState } from 'react'
+import { render, screen, act, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import { core } from '../plugins/core'
 import { search, searchCommands, SEARCH_ID, matchesSearchFilter } from '../plugins/search'
+import { Aria } from '../primitives/aria'
+import { listbox } from '../pattern/listbox'
+import type { NormalizedData } from '../store/types'
 
 function fixtureStore() {
   return createStore({
@@ -127,5 +133,168 @@ describe('matchesSearchFilter', () => {
   it('returns false for entity with no data field', () => {
     const entity = { id: 'meta-entity' }
     expect(matchesSearchFilter(entity, 'anything')).toBe(false)
+  })
+})
+
+// ── integration tests ─────────────────────────────────────────────────────
+
+function fixtureData() {
+  return createStore({
+    entities: {
+      'item-hero': { id: 'item-hero', data: { label: 'Hero Section' } },
+      'item-about': { id: 'item-about', data: { label: 'About Page' } },
+      'item-hero-sub': { id: 'item-hero-sub', data: { label: 'Hero Subtitle' } },
+    },
+    relationships: { [ROOT_ID]: ['item-hero', 'item-about', 'item-hero-sub'] },
+  })
+}
+
+function SearchableList() {
+  const [data, setData] = useState<NormalizedData>(fixtureData())
+  return (
+    <Aria behavior={listbox()} data={data} plugins={[core(), search()]} onChange={setData} aria-label="Test">
+      <Aria.Search placeholder="Search..." />
+      <Aria.Item render={(props, node) => (
+        <div {...props} data-testid={`item-${(node.data as { label?: string })?.label}`}>
+          <Aria.SearchHighlight>
+            <span>{(node.data as { label?: string })?.label as string}</span>
+          </Aria.SearchHighlight>
+        </div>
+      )} />
+    </Aria>
+  )
+}
+
+function focusFirstOption() {
+  const option = document.querySelector<HTMLElement>('[role="option"]')
+  option?.focus()
+}
+
+describe('Aria.Search integration', () => {
+  // V1: Ctrl+F on collection → search input gets focus
+  it('Ctrl+F on collection → search input focused', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    const input = screen.getByPlaceholderText('Search...')
+    expect(document.activeElement).toBe(input)
+  })
+
+  // V2: type "hero" → only Hero Section and Hero Subtitle visible (2 items), About Page hidden
+  it('typing "hero" filters to matching items only', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    const input = screen.getByPlaceholderText('Search...')
+    await act(async () => { fireEvent.change(input, { target: { value: 'hero' } }) })
+    const items = screen.getAllByRole('option')
+    expect(items).toHaveLength(2)
+    expect(screen.queryByTestId('item-About Page')).toBeNull()
+  })
+
+  // V3: Escape from search input → filter cleared, all 3 items visible, collection has focus
+  it('Escape from search input → clears filter and focuses collection', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    const input = screen.getByPlaceholderText('Search...')
+    await act(async () => { fireEvent.change(input, { target: { value: 'hero' } }) })
+    await user.keyboard('{Escape}')
+    const items = screen.getAllByRole('option')
+    expect(items).toHaveLength(3)
+    // After escape, focus should be on a collection item (not the search input)
+    expect(document.activeElement).not.toBe(screen.getByPlaceholderText('Search...'))
+  })
+
+  // V4: type "hero" → <mark> elements contain "Hero" text
+  it('typing "hero" highlights matching text with <mark>', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    const input = screen.getByPlaceholderText('Search...')
+    await act(async () => { fireEvent.change(input, { target: { value: 'hero' } }) })
+    const marks = document.querySelectorAll('mark')
+    expect(marks.length).toBeGreaterThan(0)
+    for (const mark of marks) {
+      expect(mark.textContent?.toLowerCase()).toContain('hero')
+    }
+  })
+
+  // V5: type "hero" → ArrowDown navigates within filtered items only
+  it('ArrowDown navigates only within filtered items', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    const input = screen.getByPlaceholderText('Search...')
+    await act(async () => { fireEvent.change(input, { target: { value: 'hero' } }) })
+    // Press Enter to move focus to collection, then navigate
+    await user.keyboard('{Enter}')
+    const focused = document.activeElement
+    expect(focused?.getAttribute('role')).toBe('option')
+    // Navigate down — should still be within hero items
+    await user.keyboard('{ArrowDown}')
+    const newFocused = document.activeElement
+    const label = newFocused?.textContent ?? ''
+    expect(label.toLowerCase()).toContain('hero')
+  })
+
+  // V6: type "hero" then clear input → all 3 items visible
+  it('clearing the search input shows all items', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    const input = screen.getByPlaceholderText('Search...')
+    await act(async () => { fireEvent.change(input, { target: { value: 'hero' } }) })
+    await act(async () => { fireEvent.change(input, { target: { value: '' } }) })
+    const items = screen.getAllByRole('option')
+    expect(items).toHaveLength(3)
+  })
+
+  // V8: type "zzz" → 0 items visible
+  it('no matching query shows 0 items', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    const input = screen.getByPlaceholderText('Search...')
+    await act(async () => { fireEvent.change(input, { target: { value: 'zzz' } }) })
+    const items = screen.queryAllByRole('option')
+    expect(items).toHaveLength(0)
+  })
+
+  // V10: no filterText → no <mark> elements
+  it('no filterText → no mark elements', () => {
+    render(<SearchableList />)
+    const marks = document.querySelectorAll('mark')
+    expect(marks).toHaveLength(0)
+  })
+
+  // V11: type "HERO" (uppercase) → matches Hero Section (case-insensitive)
+  it('uppercase query matches case-insensitively', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    const input = screen.getByPlaceholderText('Search...')
+    await act(async () => { fireEvent.change(input, { target: { value: 'HERO' } }) })
+    const items = screen.getAllByRole('option')
+    expect(items).toHaveLength(2)
+  })
+
+  // Enter from search input → collection first item gets focus
+  it('Enter from search input → first collection item focused', async () => {
+    const user = userEvent.setup()
+    render(<SearchableList />)
+    focusFirstOption()
+    await user.keyboard('{Control>}f{/Control}')
+    await user.keyboard('{Enter}')
+    const focused = document.activeElement
+    expect(focused?.getAttribute('role')).toBe('option')
   })
 })
