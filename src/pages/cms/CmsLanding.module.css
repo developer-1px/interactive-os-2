@@ -8,7 +8,8 @@
 /* ── Page ── */
 
 .cmsLanding {
-  min-height: 100vh;
+  min-height: 100%;
+  width: 100%;
   overflow-x: hidden;
   background: var(--landing-bg-page);
   color: var(--landing-text-body);

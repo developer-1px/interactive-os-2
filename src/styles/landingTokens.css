@@ -60,7 +60,7 @@
   --landing-space-section-sm:    56px;
   --landing-space-card-gap:      24px;
   --landing-space-card-padding:  24px;
-  --landing-space-content-max:   1100px;
+  --landing-space-content-max:   min(1100px, 100%);
   --landing-space-content-narrow: 600px;
   --landing-space-inline:        clamp(20px, 4vw, 64px);
 
@@ -126,7 +126,7 @@
   --landing-space-section-sm:    56px;
   --landing-space-card-gap:      24px;
   --landing-space-card-padding:  24px;
-  --landing-space-content-max:   1100px;
+  --landing-space-content-max:   min(1100px, 100%);
   --landing-space-content-narrow: 600px;
   --landing-space-inline:        clamp(20px, 4vw, 64px);
 
