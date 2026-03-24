@@ -75,9 +75,8 @@
   border-color: var(--primary);
 }
 .cms-sidebar__thumb-inner {
-  transform: scale(0.1);
-  transform-origin: top left;
-  width: 1000%;
+  zoom: 0.1;
+  width: 1200px;
   pointer-events: none;
 }
 .cms-sidebar__thumb-index {
