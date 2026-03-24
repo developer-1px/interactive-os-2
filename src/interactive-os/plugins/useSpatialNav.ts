@@ -34,14 +34,17 @@ function findBestInDirection(
   fromRect: DOMRect,
   dir: Direction,
   candidates: Iterable<[string, DOMRect]>,
+  preferredOrtho?: number,
 ): string | null {
   const isVertical = dir === 'ArrowUp' || dir === 'ArrowDown'
   const fromCenter = isVertical
     ? fromRect.y + fromRect.height / 2
     : fromRect.x + fromRect.width / 2
-  const fromCenterOrtho = isVertical
+  // When preferredOrtho is provided, tiebreak uses the remembered coordinate
+  // instead of the current element's center (text-editor "preferred column" model)
+  const referenceOrtho = preferredOrtho ?? (isVertical
     ? fromRect.x + fromRect.width / 2
-    : fromRect.y + fromRect.height / 2
+    : fromRect.y + fromRect.height / 2)
   let bestId: string | null = null
   let bestScore = Infinity
 
@@ -71,7 +74,7 @@ function findBestInDirection(
       const candidateCenterOrtho = isVertical
         ? rect.x + rect.width / 2
         : rect.y + rect.height / 2
-      score = primaryGap + Math.abs(candidateCenterOrtho - fromCenterOrtho) * CENTER_TIEBREAK_WEIGHT
+      score = primaryGap + Math.abs(candidateCenterOrtho - referenceOrtho) * CENTER_TIEBREAK_WEIGHT
     } else {
       const secondaryGap = isVertical
         ? Math.min(Math.abs(fromRect.right - rect.left), Math.abs(fromRect.left - rect.right))
@@ -92,12 +95,13 @@ export function findNearest(
   fromId: string,
   dir: Direction,
   rects: Map<string, DOMRect>,
+  preferredOrtho?: number,
 ): string | null {
   const fromRect = rects.get(fromId)
   if (!fromRect) return null
   const filtered = new Map(rects)
   filtered.delete(fromId)
-  return findBestInDirection(fromRect, dir, filtered)
+  return findBestInDirection(fromRect, dir, filtered, preferredOrtho)
 }
 
 export function findAdjacentGroup(
@@ -138,6 +142,11 @@ export function useSpatialNav(
   const groupRectsRef = useRef<Map<string, DOMRect>>(new Map())
   const siblingGroupIdsRef = useRef<string[]>([])
   const stickyCursorRef = useRef<Map<string, string>>(new Map())
+  // Text-editor "preferred column" model: remembers the orthogonal-axis
+  // coordinate from the first move in a consecutive same-axis chain,
+  // so wide/tall elements don't erase the user's column/row intent.
+  const preferredXRef = useRef<number | null>(null)
+  const preferredYRef = useRef<number | null>(null)
   const [, forceUpdate] = useState(0)
 
   // storeRef: makeHandler reads store at keypress time without re-creating keyMap on every store change
@@ -202,11 +211,30 @@ export function useSpatialNav(
     for (const sib of siblings) {
       stickyCursorRef.current.delete(sib)
     }
+    preferredXRef.current = null
+    preferredYRef.current = null
   }, [])
 
   const keyMap = useMemo(() => {
     const makeHandler = (dir: Direction) => (ctx: PatternContext): Command | void => {
-      const targetId = findNearest(ctx.focused, dir, rectsRef.current)
+      const isVert = dir === 'ArrowUp' || dir === 'ArrowDown'
+      const fromRect = rectsRef.current.get(ctx.focused)
+
+      // Set preferred on the first move in a chain; reset the orthogonal axis
+      if (isVert) {
+        if (preferredXRef.current == null && fromRect) {
+          preferredXRef.current = fromRect.x + fromRect.width / 2
+        }
+        preferredYRef.current = null
+      } else {
+        if (preferredYRef.current == null && fromRect) {
+          preferredYRef.current = fromRect.y + fromRect.height / 2
+        }
+        preferredXRef.current = null
+      }
+
+      const preferredOrtho = (isVert ? preferredXRef.current : preferredYRef.current) ?? undefined
+      const targetId = findNearest(ctx.focused, dir, rectsRef.current, preferredOrtho)
       if (targetId) return focusCommands.setFocus(targetId)
 
       if (spatialParentId === ROOT_ID) return
@@ -236,9 +264,7 @@ export function useSpatialNav(
           const el = container.querySelector<HTMLElement>(`[${attrName}="${cid}"]`)
           if (el) adjRects.set(cid, el.getBoundingClientRect())
         }
-        // ctx.focused is not in adjRects, so use findBestInDirection with source rect directly
-        const fromRect = rectsRef.current.get(ctx.focused)
-        const nearestInAdj = fromRect ? findBestInDirection(fromRect, dir, adjRects) : null
+        const nearestInAdj = fromRect ? findBestInDirection(fromRect, dir, adjRects, preferredOrtho) : null
         if (nearestInAdj) {
           return createBatchCommand([
             spatialCommands.enterChild(adjacentId),
