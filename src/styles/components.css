@@ -12,7 +12,7 @@
 /* ── Container: inset padding for breathing room ── */
 
 [data-aria-container] {
-  padding: 4px;
+  padding: var(--space-xs);
 }
 
 /* ── Common interactive item base ── */
@@ -308,7 +308,7 @@
 [data-aria-container][role="tablist"] [role="tab"] {
   display: inline-flex;
   align-items: center;
-  padding: 8px 16px;
+  padding: var(--space-sm) var(--space-lg);
   margin: 0;
   font-weight: 500;
   color: var(--text-muted);
@@ -322,7 +322,7 @@
 [data-aria-container] .item-inner {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 [data-aria-container] .item-spread {
@@ -343,5 +343,5 @@
 /* ── Radio-specific gap ── */
 
 :where([role="radio"]) .item-inner {
-  gap: 8px;
+  gap: var(--space-sm);
 }

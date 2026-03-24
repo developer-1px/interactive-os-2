@@ -15,11 +15,11 @@
   grid-column: 1 / -1;
   max-height: 200px;
   overflow-y: auto;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--mono);
   font-size: var(--text-xs);
-  line-height: 1.6;
+  line-height: var(--leading-normal);
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-surface-2, #1a1a2e);
+  background: var(--surface-sunken);
   border-radius: var(--radius-sm);
 }
 
@@ -34,7 +34,7 @@
 }
 
 .logDiff {
-  color: var(--color-accent, #7c8aff);
+  color: var(--primary);
 }
 
 .panelLabel {
