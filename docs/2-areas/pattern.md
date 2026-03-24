@@ -1,6 +1,6 @@
-# Patterns
+# Pattern (L5)
 
-> `composePattern(identity, ...axes)` → AriaBehavior. 축을 조합하여 W3C APG 패턴을 선언적으로 구성.
+> `composePattern(identity, ...axes)` → AriaPattern. 축을 조합하여 W3C APG 패턴을 선언적으로 구성. edit 축 + presets + createPatternContext 포함.
 
 ## 주기율표
 

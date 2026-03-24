@@ -197,8 +197,14 @@
   --file-img:    #C44A6E;
   --file-config: #73726C;
 
-  /* ── Transition ── */
-  --transition-fast: 0.08s;
+  /* ── Motion: duration + easing 번들 (claude.ai 실측)
+     property는 독립. duration과 easing이 세트. ── */
+  --motion-instant-duration: 0.075s;  --motion-instant-easing: cubic-bezier(0.165, 0.85, 0.45, 1);
+  --motion-normal-duration:  0.15s;   --motion-normal-easing:  cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-enter-duration:   0.15s;   --motion-enter-easing:   cubic-bezier(0, 0, 0.2, 1);
+
+  /* ── Alias (하위호환) ── */
+  --transition-fast: var(--motion-instant-duration);
 
   /* ── Dialog ── */
   --dialog-backdrop: rgba(0, 0, 0, 0.5);
