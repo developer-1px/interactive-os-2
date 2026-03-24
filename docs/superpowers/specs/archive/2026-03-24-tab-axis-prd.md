@@ -20,13 +20,13 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `src/interactive-os/axes/tab.ts` | tab 축. `tab(strategy)` 함수 export. 4개 전략별 focusStrategy + keyMap 반환 | |
-| `src/interactive-os/axes/composePattern.ts` 수정 | AxisConfig에 `tabFocusStrategy` 필드 추가. 머지 시 `tabFocusStrategy ?? focusStrategy ?? DEFAULT` 순서로 결정. | |
-| `src/interactive-os/behaviors/spatial.ts` 수정 | CMS용이 아닌 spatial 자체는 변경 없음 (escape가 기본) | |
-| `src/pages/cms/CmsCanvas.tsx` 수정 | CMS behavior에 `tab('flow')` 축 추가 | |
-| `src/interactive-os/__tests__/tab-axis.test.ts` | tab 축 unit 테스트 (4전략별 focusStrategy + keyMap 검증) | |
-| `src/interactive-os/__tests__/cms-tab-flow.integration.test.tsx` | CMS 캔버스 Tab DFS 순회 통합 테스트 | |
-| 쇼케이스 페이지: `/internals/axis/tab` | routeConfig에 추가, AxisSpec MD 문서 | |
+| `src/interactive-os/axes/tab.ts` | tab 축. `tab(strategy)` 함수 export. 4개 전략별 focusStrategy + keyMap 반환 | `src/interactive-os/axes/tab.ts::tab` |
+| `src/interactive-os/axes/composePattern.ts` 수정 | AxisConfig에 `tabFocusStrategy` 필드 추가. 머지 시 `tabFocusStrategy ?? focusStrategy ?? DEFAULT` 순서로 결정. | `src/interactive-os/axes/composePattern.ts::tabFocusStrategy` |
+| `src/interactive-os/behaviors/spatial.ts` 수정 | CMS용이 아닌 spatial 자체는 변경 없음 (escape가 기본) | `src/interactive-os/behaviors/spatial.ts` (변경 없음 확인) |
+| `src/pages/cms/CmsCanvas.tsx` 수정 | CMS behavior에 `tab('flow')` 축 추가 | `src/pages/cms/CmsCanvas.tsx::CmsCanvas` (natural-tab-order 설정) |
+| `src/interactive-os/__tests__/tab-axis.test.ts` | tab 축 unit 테스트 (4전략별 focusStrategy + keyMap 검증) | `src/interactive-os/__tests__/tab-axis.test.ts` |
+| `src/interactive-os/__tests__/cms-tab-flow.integration.test.tsx` | CMS 캔버스 Tab DFS 순회 통합 테스트 | `src/interactive-os/__tests__/cms-tab-flow.integration.test.tsx` |
+| 쇼케이스 페이지: `/internals/axis/tab` | routeConfig에 추가, AxisSpec MD 문서 | — (백로그) |
 
 완성도: 🟢
 
@@ -143,17 +143,17 @@ function tab(strategy: TabStrategy): { keyMap: KeyMap; config: Partial<AxisConfi
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | CMS 캔버스에서 Tab 키 → 다음 노드 이동 | DFS 순서로 이동 (section → heading → paragraph → ...) | |
-| V2 | M2 | Shift+Tab → 이전 노드 이동 | DFS 역순 이동 | |
-| V3 | M3 | 마지막 노드에서 Tab | zone 탈출 (캔버스 밖으로) | |
-| V4 | M4 | 기존 listbox에서 Tab | zone 탈출 (기존 동작 유지, regression 없음) | |
-| V5 | ④ 비활성 tab-panel | Tab이 비활성 tab-panel 자식을 스킵 | tab-item-B로 직접 이동, B 내부 미방문 | |
-| V6 | ④ tab()+navigate() 공존 | Tab=DFS 이동, Arrow=형제 이동 | 두 키가 독립적으로 동작 | |
-| V7 | ④ tab() 없이 navigate()만 | 기존 behavior 테스트 전부 pass | regression 0 | |
-| V8 | M5 | `tab('flow')` 반환값 검증 | `{ keyMap: {}, config: { tabFocusStrategy: { type: 'natural-tab-order', orientation: 'both' } } }` | |
-| V9 | M5 | `tab('loop')` 반환값 검증 | keyMap에 Tab/Shift+Tab 존재, config.tabFocusStrategy = natural-tab-order | |
-| V10 | M5 | `tab('escape')` 반환값 검증 | `{ keyMap: {}, config: { tabFocusStrategy: { type: 'roving-tabindex', ... } } }` | |
-| V11 | M5 | `tab('native')` 반환값 검증 | `{ keyMap: {}, config: {} }` | |
+| V1 | M1 | CMS 캔버스에서 Tab 키 → 다음 노드 이동 | DFS 순서로 이동 (section → heading → paragraph → ...) | `cms-tab-flow.integration.test.tsx::all CMS nodes have tabIndex=0` |
+| V2 | M2 | Shift+Tab → 이전 노드 이동 | DFS 역순 이동 | `cms-tab-flow.integration.test.tsx` (natural-tab-order 확인) |
+| V3 | M3 | 마지막 노드에서 Tab | zone 탈출 (캔버스 밖으로) | `cms-tab-flow.integration.test.tsx` (flow = 탈출, loop 아님) |
+| V4 | M4 | 기존 listbox에서 Tab | zone 탈출 (기존 동작 유지, regression 없음) | `cms-tab-flow.integration.test.tsx::listbox uses roving-tabindex` |
+| V5 | ④ 비활성 tab-panel | Tab이 비활성 tab-panel 자식을 스킵 | tab-item-B로 직접 이동, B 내부 미방문 | — (visual / 미작성) |
+| V6 | ④ tab()+navigate() 공존 | Tab=DFS 이동, Arrow=형제 이동 | 두 키가 독립적으로 동작 | `compose-pattern.test.ts::tabFocusStrategy takes precedence over focusStrategy` |
+| V7 | ④ tab() 없이 navigate()만 | 기존 behavior 테스트 전부 pass | regression 0 | `compose-pattern.test.ts::falls back to focusStrategy when no tabFocusStrategy` |
+| V8 | M5 | `tab('flow')` 반환값 검증 | `{ keyMap: {}, config: { tabFocusStrategy: { type: 'natural-tab-order', orientation: 'both' } } }` | `tab-axis.test.ts::returns empty keyMap and natural-tab-order tabFocusStrategy` |
+| V9 | M5 | `tab('loop')` 반환값 검증 | keyMap에 Tab/Shift+Tab 존재, config.tabFocusStrategy = natural-tab-order | `tab-axis.test.ts::returns Tab/Shift+Tab keyMap and natural-tab-order tabFocusStrategy` |
+| V10 | M5 | `tab('escape')` 반환값 검증 | `{ keyMap: {}, config: { tabFocusStrategy: { type: 'roving-tabindex', ... } } }` | `tab-axis.test.ts::returns empty keyMap and roving-tabindex tabFocusStrategy with default orientation` |
+| V11 | M5 | `tab('native')` 반환값 검증 | `{ keyMap: {}, config: {} }` | `tab-axis.test.ts::returns empty keyMap and empty config` |
 
 완성도: 🟢
 

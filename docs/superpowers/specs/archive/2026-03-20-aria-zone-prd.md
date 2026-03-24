@@ -61,6 +61,13 @@ interactive-os/
     useControlledAria.ts    ← 폐기 예정 (useAriaZone이 상위 호환)
 ```
 
+| 산출물 | 역PRD |
+|--------|-------|
+| `useEngine` | `hooks/useEngine.ts::useEngine` |
+| `useAriaZone` | `hooks/useAriaZone.ts::useAriaZone` |
+| `useAria` (리팩터) | `hooks/useAria.ts::useAria` |
+| `useAriaView` (내부) | `hooks/useAriaView.ts::useAriaView` |
+
 ### 관계
 
 - `useEngine` → `createCommandEngine` (내부 호출)
@@ -138,15 +145,15 @@ zone: container.querySelector(`[data-${scope}-id="${focusedId}"]`)
 
 ## 6. 검증
 
-| # | 시나리오 | 예상 결과 |
-|---|---------|----------|
-| 1 | 기존 useAria 테스트 전체 실행 | 전부 통과 (sugar 리팩터이므로) |
-| 2 | 두 zone이 같은 engine 공유, zone A에서 entity 삭제 | zone B에서도 즉시 사라짐 |
-| 3 | zone A와 zone B가 같은 entity ID를 렌더 | DOM에 `data-sidebar-id`, `data-canvas-id` 별도 존재, 충돌 없음 |
-| 4 | zone A에서 focus 이동 | zone B의 focus 불변 |
-| 5 | zone A에서 삭제 → zone B가 삭제된 entity에 focus 중 | zone B의 focusRecovery가 다음 형제로 이동 |
-| 6 | 공유 engine에서 undo | 두 zone 모두 이전 상태 반영 |
-| 7 | CmsSidebar를 useAriaZone으로 전환 | derived store, onChange diff, data-sidebar-id, manual DOM focus sync, pendingFocusRef 전부 제거 |
+| # | 시나리오 | 예상 결과 | 역PRD |
+|---|---------|----------|-------|
+| 1 | 기존 useAria 테스트 전체 실행 | 전부 통과 (sugar 리팩터이므로) | `__tests__/use-aria.test.tsx` (전체) |
+| 2 | 두 zone이 같은 engine 공유, zone A에서 entity 삭제 | zone B에서도 즉시 사라짐 | `__tests__/use-aria-zone.test.tsx::"two zones share engine — data command visible in both"` |
+| 3 | zone A와 zone B가 같은 entity ID를 렌더 | DOM에 `data-sidebar-id`, `data-canvas-id` 별도 존재, 충돌 없음 | `__tests__/use-aria-zone.test.tsx::"getNodeProps uses scoped data attribute"` |
+| 4 | zone A에서 focus 이동 | zone B의 focus 불변 | `__tests__/use-aria-zone.test.tsx::"two zones share engine — independent focus"` |
+| 5 | zone A에서 삭제 → zone B가 삭제된 entity에 focus 중 | zone B의 focusRecovery가 다음 형제로 이동 | (통합 테스트 미작성) |
+| 6 | 공유 engine에서 undo | 두 zone 모두 이전 상태 반영 | (통합 테스트 미작성) |
+| 7 | CmsSidebar를 useAriaZone으로 전환 | derived store, onChange diff, data-sidebar-id, manual DOM focus sync, pendingFocusRef 전부 제거 | (시각 검증) |
 
 상태: 🟢
 

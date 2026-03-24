@@ -31,11 +31,11 @@
 
 ### 변경 파일
 
-| 파일 | 변경 |
-|------|------|
-| `focusRecovery.ts` | `isVisible()`, `findFallbackFocus()`, `detectNewVisibleEntities()` — 모두 `isReachable` 파라미터 추가. 기본값 = tree 판정 (현행 로직). `focusRecovery()` 플러그인도 `isReachable` 옵션 수용 |
-| `useAriaZone.ts` | `focusRecovery?: boolean` 옵션 삭제. `isReachable?: (store, nodeId) => boolean` 옵션 추가. `runFocusRecovery()`에서 주입된 판정 사용 |
-| `CmsCanvas.tsx` | `focusRecovery: false` 제거. `isReachable: (store, nodeId) => !!getEntity(store, nodeId)` 전달 (존재 = 도달 가능) |
+| 파일 | 변경 | 역PRD |
+|------|------|-------|
+| `focusRecovery.ts` | `isVisible()`, `findFallbackFocus()`, `detectNewVisibleEntities()` — 모두 `isReachable` 파라미터 추가. 기본값 = tree 판정 (현행 로직). `focusRecovery()` 플러그인도 `isReachable` 옵션 수용 | ✅ `src/interactive-os/plugins/focusRecovery.ts::isVisible` (L42), `::findFallbackFocus` (L72), `::detectNewVisibleEntities` (L112), `::focusRecovery` (L134) |
+| `useAriaZone.ts` | `focusRecovery?: boolean` 옵션 삭제. `isReachable?: (store, nodeId) => boolean` 옵션 추가. `runFocusRecovery()`에서 주입된 판정 사용 | ✅ `src/interactive-os/hooks/useAriaZone.ts::isReachable` (L36 옵션, L97·194·199·200·252·258 사용) |
+| `CmsCanvas.tsx` | `focusRecovery: false` 제거. `isReachable: (store, nodeId) => !!getEntity(store, nodeId)` 전달 (존재 = 도달 가능) | ✅ `src/pages/cms/CmsCanvas.tsx::spatialReachable` (L171) — `focusRecovery.ts::spatialReachable` import |
 
 ### 구조 변경
 
@@ -75,18 +75,18 @@ UseAriaZoneOptions.isReachable?: (store: NormalizedData, nodeId: string) => bool
 
 ## 6. 검증
 
-| # | 시나리오 | 예상 결과 |
-|---|---------|----------|
-| V1 | Tree: 중간 노드 삭제 | 다음 형제로 포커스 이동 (기존 동작 유지) |
-| V2 | Tree: 마지막 형제 삭제 | 이전 형제로 포커스 이동 |
-| V3 | Tree: 유일한 자식 삭제 | 부모로 포커스 이동 |
-| V4 | Tree: collapse로 포커스된 자식 숨김 | 부모로 포커스 이동 |
-| V5 | CMS Canvas: 노드 삭제 | 다음 형제 → 이전 형제 → 부모 체인으로 포커스 이동 |
-| V6 | CMS Canvas: Cmd+V (paste) | 새로 생긴 노드에 포커스 |
-| V7 | CMS Canvas: Cmd+Z (undo delete) | 복원된 노드에 포커스 |
-| V8 | CMS Canvas: Cmd+D (duplicate) | 복제된 새 노드에 포커스 |
-| V9 | CMS Sidebar: 노드 삭제 | 기존 동작 유지 (tree 기본 판정) |
-| V10 | isReachable 미전달 시 기존 tree 테스트 전체 통과 | 하위 호환 |
+| # | 시나리오 | 예상 결과 | 역PRD |
+|---|---------|----------|-------|
+| V1 | Tree: 중간 노드 삭제 | 다음 형제로 포커스 이동 (기존 동작 유지) | ✅ `spatial-focus-recovery.test.ts::"focuses next sibling after deleting focused node"` |
+| V2 | Tree: 마지막 형제 삭제 | 이전 형제로 포커스 이동 | ✅ `spatial-focus-recovery.test.ts::"focuses previous sibling when deleting last child"` |
+| V3 | Tree: 유일한 자식 삭제 | 부모로 포커스 이동 | ✅ `spatial-focus-recovery.test.ts::"focuses parent when deleting only child"` |
+| V4 | Tree: collapse로 포커스된 자식 숨김 | 부모로 포커스 이동 | ✅ `spatial-focus-recovery.test.ts::"uses default tree logic when isReachable is not provided"` (기본 판정 유지) |
+| V5 | CMS Canvas: 노드 삭제 | 다음 형제 → 이전 형제 → 부모 체인으로 포커스 이동 | ✅ `spatial-focus-recovery.test.ts::delete` describe 블록 (spatial 모델 3개 케이스) |
+| V6 | CMS Canvas: Cmd+V (paste) | 새로 생긴 노드에 포커스 | ✅ `spatial-focus-recovery.test.ts::"focuses pasted node after copy+paste"` |
+| V7 | CMS Canvas: Cmd+Z (undo delete) | 복원된 노드에 포커스 | ✅ `spatial-focus-recovery.test.ts::"undo delete focuses restored node"` |
+| V8 | CMS Canvas: Cmd+D (duplicate) | 복제된 새 노드에 포커스 | ✅ `spatial-focus-recovery.test.ts::"focuses duplicated node after copy+paste batch (Cmd+D)"` |
+| V9 | CMS Sidebar: 노드 삭제 | 기존 동작 유지 (tree 기본 판정) | ✅ `treegrid-keyboard.integration.test.tsx` (기존 treegrid 테스트 통과) |
+| V10 | isReachable 미전달 시 기존 tree 테스트 전체 통과 | 하위 호환 | ✅ `spatial-focus-recovery.test.ts::"uses default tree logic when isReachable is not provided"` |
 
 상태: 🟢
 

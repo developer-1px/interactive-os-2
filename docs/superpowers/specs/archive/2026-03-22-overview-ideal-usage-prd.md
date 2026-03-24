@@ -17,7 +17,7 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `docs/2-areas/overview.mdx` — `## Ideal Usage` 섹션 추가 | 기존 "전체 빈칸" 섹션 뒤에 추가. 하나의 tsx 코드 블록으로 7개 레이어 관통 | ✅ 일치 |
+| `docs/2-areas/overview.mdx` — `## Ideal Usage` 섹션 추가 | 기존 "전체 빈칸" 섹션 뒤에 추가. 하나의 tsx 코드 블록으로 7개 레이어 관통 | `docs/2-areas/overview.md::## Ideal Usage` |
 
 **코드 구조 (pseudo-real, ~30줄):**
 
@@ -131,10 +131,10 @@ function MyList() {
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| 1 | ①-2 | overview.mdx에 Ideal Usage 섹션이 존재 | `## Ideal Usage` 헤딩 + tsx 코드 블록 1개 | ✅ 존재 |
-| 2 | ④-1 | 코드 내 함수명이 실제 export와 일치 | `createStore`, `composePattern`, `select`, `activate`, `navigate`, `useAria`, `core`, `crud`, `history`, `getChildren`, `getEntity`, `ROOT_ID` — 모두 src/에서 grep 가능 | ✅ 12개 전부 확인 |
-| 3 | ④-2 | overview.mdx 총 줄 수 | 100줄 이내 | ✅ 92줄 |
-| 4 | ①-2 | 코드의 ❶~❻ 번호가 레이어 표와 대응 | Core(1), Axes(2), Patterns(3), Plugins(4), Hooks(5), UI(6) | ✅ 대응 |
+| 1 | ①-2 | overview.mdx에 Ideal Usage 섹션이 존재 | `## Ideal Usage` 헤딩 + tsx 코드 블록 1개 | `docs/2-areas/overview.md::## Ideal Usage` |
+| 2 | ④-1 | 코드 내 함수명이 실제 export와 일치 | `createStore`, `composePattern`, `select`, `activate`, `navigate`, `useAria`, `core`, `crud`, `history`, `getChildren`, `getEntity`, `ROOT_ID` — 모두 src/에서 grep 가능 | grep 검증 (자동화 테스트 없음) |
+| 3 | ④-2 | overview.mdx 총 줄 수 | 100줄 이내 | grep 검증 (자동화 테스트 없음) |
+| 4 | ①-2 | 코드의 ❶~❻ 번호가 레이어 표와 대응 | Core(1), Axes(2), Patterns(3), Plugins(4), Hooks(5), UI(6) | `docs/2-areas/overview.md::## Ideal Usage` |
 
 완성도: 🟡
 

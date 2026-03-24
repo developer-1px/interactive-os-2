@@ -15,10 +15,10 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `sharedGridData.ts` | 컬럼 6~8개 × 행 15~20개 Employee Directory 데이터. 셀 유형 다양성(문자열, 숫자, 이메일, 날짜, 부서) | |
-| `PageGridCollection.tsx` | 헤더 컬럼 수 반영 + 셀 border 스타일링으로 스프레드시트 느낌 | |
-| `PageGrid.tsx` | 같은 shared-grid-data를 쓰므로 자동 반영. pattern 쪽도 확장된 데이터로 동작 확인 | |
-| `components.css` gridcell 스타일 | 셀 경계선 + 포커스 하이라이트 추가 (기존 `[role="gridcell"]` 규칙 보강) | |
+| `sharedGridData.ts` | 컬럼 6~8개 × 행 15~20개 Employee Directory 데이터. 셀 유형 다양성(문자열, 숫자, 이메일, 날짜, 부서) | `src/pages/sharedGridData.ts::gridColumns, gridInitialData` |
+| `PageGridCollection.tsx` | 헤더 컬럼 수 반영 + 셀 border 스타일링으로 스프레드시트 느낌 | `src/pages/PageGridCollection.tsx::PageGridCollection` |
+| `PageGrid.tsx` | 같은 shared-grid-data를 쓰므로 자동 반영. pattern 쪽도 확장된 데이터로 동작 확인 | `src/pages/PageGrid.tsx::PageGrid` |
+| `components.css` gridcell 스타일 | 셀 경계선 + 포커스 하이라이트 추가 (기존 `[role="gridcell"]` 규칙 보강) | `src/styles/components.css::[role="gridcell"]` |
 
 완성도: 🟢
 
@@ -89,15 +89,15 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | /collection/grid 열기 | 셀 경계가 보이는 스프레드시트 형태, 6~8컬럼 × 15~20행 | |
-| V2 | ③ ←→ | 셀에서 ←→ 누르기 | 인접 셀로 포커스 이동 + 시각적 하이라이트 | |
-| V3 | ③ ↑↓ | 셀에서 ↑↓ 누르기 | 같은 컬럼 상/하 행으로 이동 | |
-| V4 | ③ F2 | 셀에서 F2 | 셀 편집 모드 진입 | |
-| V5 | ③ ⌘C/V | 행 선택 후 ⌘C, 다른 위치에서 ⌘V | 행 복사 삽입 | |
-| V6 | ③ ⌘Z | 삭제 후 ⌘Z | 삭제 취소, 행 복원 | |
-| V7 | ④ 경계 | 첫 셀에서 ←, 마지막 셀에서 → | 포커스 유지, 아무 일 없음 | |
-| V8 | ⑥ S1 | /pattern/grid 열기 | 확장된 데이터로 정상 표시 | |
-| V9 | ⑥ S2 | CMS i18n 시트 grid 확인 | 기존 스타일 유지 | |
+| V1 | ①M1 | /collection/grid 열기 | 셀 경계가 보이는 스프레드시트 형태, 6~8컬럼 × 15~20행 | (visual) |
+| V2 | ③ ←→ | 셀에서 ←→ 누르기 | 인접 셀로 포커스 이동 + 시각적 하이라이트 | `grid-keyboard.integration.test.tsx::ArrowRight moves to next column` |
+| V3 | ③ ↑↓ | 셀에서 ↑↓ 누르기 | 같은 컬럼 상/하 행으로 이동 | `grid-keyboard.integration.test.tsx::ArrowDown moves focus to next row` |
+| V4 | ③ F2 | 셀에서 F2 | 셀 편집 모드 진입 | `grid-keyboard.integration.test.tsx::F2 enters rename mode on focused row` |
+| V5 | ③ ⌘C/V | 행 선택 후 ⌘C, 다른 위치에서 ⌘V | 행 복사 삽입 | `clipboard-undo.integration.test.tsx::copy → paste inserts after cursor, Mod+Z undoes` |
+| V6 | ③ ⌘Z | 삭제 후 ⌘Z | 삭제 취소, 행 복원 | `clipboard-undo.integration.test.tsx::Delete removes item, focus recovers, Mod+Z restores` |
+| V7 | ④ 경계 | 첫 셀에서 ←, 마지막 셀에서 → | 포커스 유지, 아무 일 없음 | `grid-keyboard.integration.test.tsx::boundary: first row ArrowUp does nothing` + `boundary: last col ArrowRight does nothing` |
+| V8 | ⑥ S1 | /pattern/grid 열기 | 확장된 데이터로 정상 표시 | (visual) |
+| V9 | ⑥ S2 | CMS i18n 시트 grid 확인 | 기존 스타일 유지 | (visual) |
 
 완성도: 🟢
 

@@ -20,15 +20,15 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `definePlugin` 함수 | `core/definePlugin.ts`. PluginConfig → Plugin 변환. requires의 middleware 합성, name/intercepts 메타 부착 | |
-| `Plugin` 인터페이스 확장 | `core/types.ts`에 `name?: string`, `intercepts?: readonly string[]` 추가. 기존 Plugin과 하위호환 (optional) | |
-| clipboard TYPE 상수 | `plugins/clipboard.ts`에서 `PASTE`, `CUT`, `COPY` as const export. command.type에 사용 | |
-| `paste` 시그니처 확장 | `paste(targetId, canAccept?, canDelete?)` — canAccept 미전달 시 legacy 경로 | |
-| `canAcceptFn`/`canDeleteFn` 전역 제거 | module-level let 변수 삭제. paste command 내부에서 인자로 받은 canAccept 사용 | |
-| `zodSchema` 플러그인 | `plugins/zodSchema.ts`. childRules(Zod) → canAccept/canDelete 자동 파생. middleware로 PASTE/CUT 가로채기 | |
-| `crud` + `focusRecovery` 번들 | `crud(options?)` 내부에서 `focusRecovery(options)` middleware 합성. `requires: [focusRecovery]` | |
-| engine intercepts 검증 | `createCommandEngine`에서 plugins의 intercepts vs 제공된 command types 교차 검증 | |
-| 기존 10개 플러그인 definePlugin 전환 | 모든 플러그인 팩토리를 definePlugin으로 래핑 | |
+| `definePlugin` 함수 | `core/definePlugin.ts`. PluginConfig → Plugin 변환. requires의 middleware 합성, name/intercepts 메타 부착 | `src/interactive-os/core/definePlugin.ts::definePlugin` |
+| `Plugin` 인터페이스 확장 | `core/types.ts`에 `name?: string`, `intercepts?: readonly string[]` 추가. 기존 Plugin과 하위호환 (optional) | `src/interactive-os/core/types.ts::intercepts` |
+| clipboard TYPE 상수 | `plugins/clipboard.ts`에서 `PASTE`, `CUT`, `COPY` as const export. command.type에 사용 | `src/interactive-os/plugins/clipboard.ts::COPY, CUT, PASTE` |
+| `paste` 시그니처 확장 | `paste(targetId, canAccept?, canDelete?)` — canAccept 미전달 시 legacy 경로 | `src/interactive-os/plugins/clipboard.ts::clipboard` |
+| `canAcceptFn`/`canDeleteFn` 전역 제거 | module-level let 변수 삭제. paste command 내부에서 인자로 받은 canAccept 사용 | `src/interactive-os/plugins/clipboard.ts::clipboard` |
+| `zodSchema` 플러그인 | `plugins/zodSchema.ts`. childRules(Zod) → canAccept/canDelete 자동 파생. middleware로 PASTE/CUT 가로채기 | `src/interactive-os/plugins/zodSchema.ts::zodSchema` |
+| `crud` + `focusRecovery` 번들 | `crud(options?)` 내부에서 `focusRecovery(options)` middleware 합성. `requires: [focusRecovery]` | `src/interactive-os/plugins/crud.ts::crud` + `src/interactive-os/plugins/focusRecovery.ts::focusRecovery` |
+| engine intercepts 검증 | `createCommandEngine`에서 plugins의 intercepts vs 제공된 command types 교차 검증 | `src/interactive-os/core/createCommandEngine.ts::createCommandEngine` |
+| 기존 10개 플러그인 definePlugin 전환 | 모든 플러그인 팩토리를 definePlugin으로 래핑 | (각 plugins/*.ts 파일) |
 
 완성도: 🟢
 
@@ -104,18 +104,18 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| T1 | ①M1 | zodSchema 없이 clipboard만 사용 → paste | legacy 경로: 커서 뒤에 insert | |
-| T2 | ①M1 | zodSchema(childRules) + clipboard → CMS 타입 paste | canAccept 기반 insert/overwrite/reject | |
-| T3 | ①M2 | 여러 페이지가 각각 다른 plugins 조합 사용 | 각 페이지의 paste 동작이 독립 (singleton 오염 없음) | |
-| T4 | ①M3 | zodSchema 없이 legacy paste on leaf | 포커스된 항목 바로 뒤에 insert | |
-| T5 | ①M4 | crud() 사용 시 focusRecovery 미등록 | 자동 번들되어 삭제 후 포커스 복구 동작 | |
-| T6 | ①M5 | zodSchema만 넣고 clipboard 안 넣음 | engine 생성 시 console.warn | |
-| T7 | ④E1 | 두 플러그인이 같은 type intercept | plugins 배열 순서대로 middleware 체이닝 | |
-| T8 | ④E2 | crud()와 focusRecovery() 둘 다 명시 | 중복이지만 멱등 — 정상 동작 | |
-| T9 | ④E3 | legacy 플러그인과 definePlugin 혼용 | 정상 혼용, legacy는 검증 스킵 | |
-| T10 | ⑥S2 | `clipboard({ canAccept })` deprecated 호출 | 경고 출력 + 기존 동작 유지 | |
-| T11 | ⑥S7 | 기존 clipboard-overwrite 테스트 전부 | 전부 통과 (하위호환) | |
-| T12 | ①M1 | 기존 paste 위치 테스트 (legacy 경로) | 전부 통과 | |
+| T1 | ①M1 | zodSchema 없이 clipboard만 사용 → paste | legacy 경로: 커서 뒤에 insert | `clipboard-overwrite.test.ts::overwrites text value when pasting text on text (same type)` |
+| T2 | ①M1 | zodSchema(childRules) + clipboard → CMS 타입 paste | canAccept 기반 insert/overwrite/reject | `clipboard-overwrite.test.ts::inserts card into section (collection insert)` |
+| T3 | ①M2 | 여러 페이지가 각각 다른 plugins 조합 사용 | 각 페이지의 paste 동작이 독립 (singleton 오염 없음) | `clipboard-overwrite.test.ts::rejects paste when types do not match (text on icon)` |
+| T4 | ①M3 | zodSchema 없이 legacy paste on leaf | 포커스된 항목 바로 뒤에 insert | `clipboard-undo.integration.test.tsx::paste position: always after cursor, not at end` |
+| T5 | ①M4 | crud() 사용 시 focusRecovery 미등록 | 자동 번들되어 삭제 후 포커스 복구 동작 | `clipboard-undo.integration.test.tsx::Delete removes item, focus recovers, Mod+Z restores` |
+| T6 | ①M5 | zodSchema만 넣고 clipboard 안 넣음 | engine 생성 시 console.warn | — (warn 검증 테스트 미확인) |
+| T7 | ④E1 | 두 플러그인이 같은 type intercept | plugins 배열 순서대로 middleware 체이닝 | — |
+| T8 | ④E2 | crud()와 focusRecovery() 둘 다 명시 | 중복이지만 멱등 — 정상 동작 | — |
+| T9 | ④E3 | legacy 플러그인과 definePlugin 혼용 | 정상 혼용, legacy는 검증 스킵 | — |
+| T10 | ⑥S2 | `clipboard({ canAccept })` deprecated 호출 | 경고 출력 + 기존 동작 유지 | `clipboard-overwrite.test.ts::supports boolean canAccept for backward compatibility` |
+| T11 | ⑥S7 | 기존 clipboard-overwrite 테스트 전부 | 전부 통과 (하위호환) | `clipboard-overwrite.test.ts` (전체) |
+| T12 | ①M1 | 기존 paste 위치 테스트 (legacy 경로) | 전부 통과 | `clipboard-undo.integration.test.tsx::copy → paste inserts after cursor, Mod+Z undoes` |
 
 완성도: 🟢
 

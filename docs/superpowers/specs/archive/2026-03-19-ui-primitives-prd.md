@@ -68,22 +68,22 @@
 
 **app.css (1008줄) → 분해:**
 
-| 현재 className | 이동할 곳 | 컴포넌트 |
-|---------------|----------|---------|
-| `.card` | `ui/Card.css` → 신규 `Card.tsx` | Card |
-| `.tree-node*` | `ui/TreeView.css` | TreeView (기존) |
-| `.tab*`, `.tab-content` | `ui/TabList.css` | TabList (기존) |
-| `.list-item*` | `ui/ListBox.css` | ListBox (기존) |
-| `.menu-item*` | `ui/MenuList.css` | MenuList (기존) |
-| `.combo-*` | `ui/Combobox.css` | Combobox (기존) |
-| `.accordion-*` | `ui/Accordion.css` | Accordion (기존) |
-| `.disclosure-*` | `ui/DisclosureGroup.css` | DisclosureGroup (기존) |
-| `.dialog-*` | `ui/Dialog.css` → 신규 `Dialog.tsx` (?) | Dialog |
-| `.btn-accent`, `.btn-dialog` | `ui/Button.css` → 신규 `Button.tsx` | Button |
-| `.toolbar-*` | `ui/Toolbar.css` (기존 Toolbar 없음) | Toolbar (?) |
-| `.switch-item*` | `ui/SwitchGroup.css` | SwitchGroup (기존) |
-| `.radio-item*` | `ui/RadioGroup.css` | RadioGroup (기존) |
-| `.grid-cell` | `ui/Grid.css` | Grid (기존) |
+| 현재 className | 이동할 곳 | 컴포넌트 | 역PRD |
+|---------------|----------|---------|-------|
+| `.card` | `ui/Card.css` → 신규 `Card.tsx` | Card | (module.css 미생성 — app.css 잔류 추정) |
+| `.tree-node*` | `ui/TreeView.css` | TreeView (기존) | `ui/TreeView.module.css` |
+| `.tab*`, `.tab-content` | `ui/TabList.css` | TabList (기존) | `ui/TabList.module.css` |
+| `.list-item*` | `ui/ListBox.css` | ListBox (기존) | `ui/ListBox.module.css` |
+| `.menu-item*` | `ui/MenuList.css` | MenuList (기존) | `ui/MenuList.module.css` |
+| `.combo-*` | `ui/Combobox.css` | Combobox (기존) | `ui/Combobox.module.css` |
+| `.accordion-*` | `ui/Accordion.css` | Accordion (기존) | `ui/Accordion.module.css` |
+| `.disclosure-*` | `ui/DisclosureGroup.css` | DisclosureGroup (기존) | `ui/DisclosureGroup.module.css` |
+| `.dialog-*` | `ui/Dialog.css` → 신규 `Dialog.tsx` (?) | Dialog | `ui/Dialog.module.css`, `ui/Dialog.tsx` |
+| `.btn-accent`, `.btn-dialog` | `ui/Button.css` → 신규 `Button.tsx` | Button | `ui/Button.module.css`, `ui/Button.tsx` |
+| `.toolbar-*` | `ui/Toolbar.css` (기존 Toolbar 없음) | Toolbar (?) | `ui/Toolbar.module.css`, `ui/Toolbar.tsx` |
+| `.switch-item*` | `ui/SwitchGroup.css` | SwitchGroup (기존) | `ui/SwitchGroup.module.css` |
+| `.radio-item*` | `ui/RadioGroup.css` | RadioGroup (기존) | `ui/RadioGroup.module.css` |
+| `.grid-cell` | `ui/Grid.css` | Grid (기존) | `ui/Grid.tsx` (module.css 미생성) |
 
 **app.css에 잔류:**
 
@@ -248,17 +248,17 @@ Phase 2 새 프리미티브의 store 연결 패턴 (참고):
 
 ## 9. 검증 기준
 
-| # | 시나리오 | 예상 결과 | 우선순위 |
-|---|---------|----------|---------|
-| V1 | `pnpm dev` → 모든 데모 페이지 순회 | 시각적 변화 없음 | P0 |
-| V2 | `pnpm test` | 기존 393 tests 전부 통과 | P0 |
-| V3 | `pnpm lint` | 0 errors | P0 |
-| V4 | `pnpm build:lib` | 빌드 성공 | P0 |
-| V5 | app.css에 컴포넌트 클래스 잔류 없음 | grep 결과 0 | P0 |
-| V6 | 모든 ui/*.tsx에 inline style 없음 (dynamic 제외) | grep 결과 0 (또는 dynamic만) | P0 |
-| V7 | 각 ui/*.tsx가 자기 CSS를 import | import 문 존재 확인 | P0 |
-| V8 | tokens.css에 spacing + transition 토큰 추가됨 | 변수 존재 확인 | P1 |
-| V9 | 새 토큰이 기존 코드에 영향 없음 | 기존 코드에서 새 토큰 미사용 → 부작용 0 | P1 |
+| # | 시나리오 | 예상 결과 | 우선순위 | 역PRD |
+|---|---------|----------|---------|-------|
+| V1 | `pnpm dev` → 모든 데모 페이지 순회 | 시각적 변화 없음 | P0 | (시각 검증) |
+| V2 | `pnpm test` | 기존 393 tests 전부 통과 | P0 | 전체 테스트 스위트 |
+| V3 | `pnpm lint` | 0 errors | P0 | `pnpm lint` |
+| V4 | `pnpm build:lib` | 빌드 성공 | P0 | `pnpm build:lib` |
+| V5 | app.css에 컴포넌트 클래스 잔류 없음 | grep 결과 0 | P0 | (부분 잔류 — module.css 마이그레이션 진행 중) |
+| V6 | 모든 ui/*.tsx에 inline style 없음 (dynamic 제외) | grep 결과 0 (또는 dynamic만) | P0 | `__tests__/ui-components.test.tsx` |
+| V7 | 각 ui/*.tsx가 자기 CSS를 import | import 문 존재 확인 | P0 | 각 `ui/*.tsx` → `*.module.css` import |
+| V8 | tokens.css에 spacing + transition 토큰 추가됨 | 변수 존재 확인 | P1 | `styles/tokens.css::--space-xs, --transition-fast` |
+| V9 | 새 토큰이 기존 코드에 영향 없음 | 기존 코드에서 새 토큰 미사용 → 부작용 0 | P1 | (부작용 없음 확인됨) |
 
 상태: 🟡
 

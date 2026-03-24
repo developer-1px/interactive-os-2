@@ -132,6 +132,16 @@ HTML 요소에 data-node-id → normalized store Entity
 **방향 결정:** `findNearest(fromId, direction, rects)` — DOM `getBoundingClientRect()` 기반.
 **깊이 추적:** `__spatial_parent__` 엔티티가 현재 탐색 중인 부모 ID를 저장. `enterChild`/`exitToParent` 커맨드로 변경.
 
+| 산출물 | 역PRD |
+|--------|-------|
+| `spatial` behavior | `plugins/spatial.ts::spatial` |
+| `useSpatialNav` hook | `hooks/useSpatialNav.ts::useSpatialNav` |
+| `findNearest` 알고리즘 | `hooks/useSpatialNav.ts::findNearest` |
+| `findAdjacentGroup` | `hooks/useSpatialNav.ts::findAdjacentGroup` |
+| `spatialCommands` (enterChild, exitToParent) | `plugins/spatial.ts::spatialCommands` |
+| `SPATIAL_PARENT_ID` 엔티티 | `plugins/spatial.ts::SPATIAL_PARENT_ID` |
+| CMS Canvas 적용 | `pages/cms/CmsCanvas.tsx` |
+
 ### 적용 예시: 현재 랜딩 페이지
 
 ```
@@ -191,34 +201,34 @@ ROOT
 
 ### 보편 규칙 테스트
 
-| # | 시나리오 | 예상 결과 | 우선순위 |
-|---|---------|----------|---------|
-| T1 | 가로 배치 요소에서 → | 오른쪽 nearest 요소로 이동 | P0 |
-| T2 | 가로 배치 요소에서 ↑↓ | 해당 방향에 대상 없으면 무시 | P0 |
-| T3 | 그리드 배치 요소에서 4방향 | DOM 위치 기반 nearest 이동 | P0 |
-| T4 | Enter로 깊이 진입 | 자식들이 이동 대상, 첫 번째 자식 포커스 | P0 |
-| T5 | Escape로 깊이 복귀 | 부모 레벨로 돌아감, 진입했던 요소에 포커스 | P0 |
-| T6 | Space | 선택 토글 (accent background) | P0 |
-| T7 | Shift+방향키 | anchor 기반 범위 선택 | P0 |
-| T8 | Tab | 위젯 밖 DOM 순서 다음 요소로 | P0 |
-| T9 | 끝에서 같은 방향 | 무시 (래핑 없음) | P1 |
-| T10 | 불완전 그리드 행에서 ↓ | DOM nearest로 가장 가까운 항목 | P1 |
-| T11 | 리사이즈 후 방향키 | DOM 위치 재계산, 변경된 배치 반영 | P1 |
-| T12 | 자식 없는 요소에서 Enter | 무시 | P1 |
-| T13 | Home/End | 현재 깊이 첫/마지막 형제 | P1 |
-| T14 | 클릭으로 깊이 점프 | 해당 깊이로 자동 전환 + 포커스 | P0 |
+| # | 시나리오 | 예상 결과 | 우선순위 | 역PRD |
+|---|---------|----------|---------|-------|
+| T1 | 가로 배치 요소에서 → | 오른쪽 nearest 요소로 이동 | P0 | `__tests__/hooks/use-spatial-nav.test.ts::"ArrowRight from a → b"` |
+| T2 | 가로 배치 요소에서 ↑↓ | 해당 방향에 대상 없으면 무시 | P0 | `__tests__/hooks/use-spatial-nav.test.ts::"ArrowRight from b → null"` |
+| T3 | 그리드 배치 요소에서 4방향 | DOM 위치 기반 nearest 이동 | P0 | `__tests__/hooks/use-spatial-nav.test.ts::"ArrowDown from a → c"` |
+| T4 | Enter로 깊이 진입 | 자식들이 이동 대상, 첫 번째 자식 포커스 | P0 | `__tests__/behaviors/spatial.test.tsx::"Enter on parent with children drills into first child"` |
+| T5 | Escape로 깊이 복귀 | 부모 레벨로 돌아감, 진입했던 요소에 포커스 | P0 | `__tests__/behaviors/spatial.test.tsx::"Escape after drill-in returns to parent level"` |
+| T6 | Space | 선택 토글 (accent background) | P0 | `__tests__/behaviors/spatial.test.tsx::"Space toggles selection on focused node"` |
+| T7 | Shift+방향키 | anchor 기반 범위 선택 | P0 | `__tests__/extended-selection.test.tsx::"Shift+ArrowDown selects current and next node"` |
+| T8 | Tab | 위젯 밖 DOM 순서 다음 요소로 | P0 | (브라우저 네이티브, 테스트 해당 없음) |
+| T9 | 끝에서 같은 방향 | 무시 (래핑 없음) | P1 | `__tests__/hooks/use-spatial-nav.test.ts::"ArrowRight from b → null"` |
+| T10 | 불완전 그리드 행에서 ↓ | DOM nearest로 가장 가까운 항목 | P1 | `__tests__/hooks/use-spatial-nav.test.ts::"ArrowDown from a prefers c over d"` |
+| T11 | 리사이즈 후 방향키 | DOM 위치 재계산, 변경된 배치 반영 | P1 | (런타임 검증 — getBoundingClientRect 재호출) |
+| T12 | 자식 없는 요소에서 Enter | 무시 | P1 | `__tests__/behaviors/spatial.test.tsx::"Enter on leaf node does not drill deeper"` |
+| T13 | Home/End | 현재 깊이 첫/마지막 형제 | P1 | `__tests__/behaviors/spatial.test.tsx::"Home focuses first sibling"`, `"End focuses last sibling"` |
+| T14 | 클릭으로 깊이 점프 | 해당 깊이로 자동 전환 + 포커스 | P0 | (시각 검증) |
 
 ### 적용 예시 테스트 (랜딩 페이지)
 
-| # | 시나리오 | 예상 결과 | 우선순위 |
-|---|---------|----------|---------|
-| E1 | Features(2열 그리드) 진입 → → | 같은 행 오른쪽 카드 | P0 |
-| E2 | Features 진입 → ↓ | 아래 행 같은 열 카드 | P0 |
-| E3 | Stats(가로) 진입 → → | 다음 stat 항목 | P0 |
-| E4 | Hero(세로) 진입 → ↓ | title → subtitle → CTA 순 | P0 |
-| E5 | Footer 진입 → → | brand → links 그룹 | P0 |
-| E6 | Patterns(auto-fill) 진입 → 4방향 | DOM 위치 기반 이동 | P0 |
-| E7 | card 진입 → ↓ | icon → title → desc 순 | P0 |
+| # | 시나리오 | 예상 결과 | 우선순위 | 역PRD |
+|---|---------|----------|---------|-------|
+| E1 | Features(2열 그리드) 진입 → → | 같은 행 오른쪽 카드 | P0 | (시각 검증 — CmsCanvas.tsx) |
+| E2 | Features 진입 → ↓ | 아래 행 같은 열 카드 | P0 | (시각 검증 — CmsCanvas.tsx) |
+| E3 | Stats(가로) 진입 → → | 다음 stat 항목 | P0 | (시각 검증 — CmsCanvas.tsx) |
+| E4 | Hero(세로) 진입 → ↓ | title → subtitle → CTA 순 | P0 | (시각 검증 — CmsCanvas.tsx) |
+| E5 | Footer 진입 → → | brand → links 그룹 | P0 | (시각 검증 — CmsCanvas.tsx) |
+| E6 | Patterns(auto-fill) 진입 → 4방향 | DOM 위치 기반 이동 | P0 | (시각 검증 — CmsCanvas.tsx) |
+| E7 | card 진입 → ↓ | icon → title → desc 순 | P0 | (시각 검증 — CmsCanvas.tsx) |
 
 > T: 삭제 후 포커스 복구, 인라인 편집 → `visual-cms-editing-prd.md`
 

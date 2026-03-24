@@ -21,11 +21,11 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `computeStoreDiff` 수정 | ①relationship 순서 변경 감지 (Set→배열 동등성) ②content entity 전체 before/after 저장. relationship은 `kind: 'changed'`로 통일 (reordered 별도 kind 불필요 — changed의 before/after 배열로 순서 복원 가능) | |
-| `applyDelta(store, diffs, direction)` | StoreDiff[]를 store에 적용. `direction: 'forward'`=redo, `'reverse'`=undo. computeStoreDiff.ts에 추가 | |
-| `isContentDelta(diffs)` | StoreDiff[] 중 SKIP_META에 해당하지 않는 delta가 있는지 판정. history.ts 내부 | |
-| `history.ts` 교체 | `past`/`future` 스택이 `StoreDiff[]`를 저장 (snapshot 대신). content delta 없으면 스택에 안 쌓음. undo 시 applyDelta reverse, redo 시 applyDelta forward | |
-| `SKIP_META` set | `__focus__`, `__selection__`, `__selection_anchor__`, `__expanded__`, `__grid_col__`, `__spatial_parent__` — content delta 판정에서 제외할 meta entity ID | |
+| `computeStoreDiff` 수정 | ①relationship 순서 변경 감지 (Set→배열 동등성) ②content entity 전체 before/after 저장. relationship은 `kind: 'changed'`로 통일 (reordered 별도 kind 불필요 — changed의 before/after 배열로 순서 복원 가능) | `src/interactive-os/core/computeStoreDiff.ts::computeStoreDiff` |
+| `applyDelta(store, diffs, direction)` | StoreDiff[]를 store에 적용. `direction: 'forward'`=redo, `'reverse'`=undo. computeStoreDiff.ts에 추가 | `src/interactive-os/core/computeStoreDiff.ts::applyDelta` |
+| `isContentDelta(diffs)` | StoreDiff[] 중 SKIP_META에 해당하지 않는 delta가 있는지 판정. history.ts 내부 | `src/interactive-os/plugins/history.ts::(내부 함수)` |
+| `history.ts` 교체 | `past`/`future` 스택이 `StoreDiff[]`를 저장 (snapshot 대신). content delta 없으면 스택에 안 쌓음. undo 시 applyDelta reverse, redo 시 applyDelta forward | `src/interactive-os/plugins/history.ts::history` |
+| `SKIP_META` set | `__focus__`, `__selection__`, `__selection_anchor__`, `__expanded__`, `__grid_col__`, `__spatial_parent__` — content delta 판정에서 제외할 meta entity ID | `src/interactive-os/plugins/history.ts::SKIP_META` |
 
 완성도: 🟢
 
@@ -149,16 +149,16 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | TreeGrid: 포커스 이동 3번 → 파일 삭제 → Mod+Z 1번 | 파일 복원, 포커스가 복원된 파일에 | |
-| V2 | M3 | Kanban: Alt+ArrowDown(reorder) → Mod+Z | 카드 순서 원복 | |
-| V3 | M4 | Slider: ArrowRight 3번(값 50→53) → Mod+Z | 값 52로 복귀 | |
-| V4 | M5 | TreeGrid: ArrowRight(expand) → 파일 삭제 → Mod+Z | 파일 복원, 폴더 열린 채 유지 | |
-| V5 | E1 | batch(setFocus + crud:delete) → Mod+Z | 삭제 취소 + 포커스 복원 | |
-| V6 | E3 | setFocus 5번 → past 스택 확인 | past에 0개 (모두 skip) | |
-| V7 | E4 | undo → 새 command → Mod+Shift+Z | redo 불가 (future 초기화됨) | |
-| V8 | E7 | no-op command (store 동일 반환) | past에 안 쌓임 | |
-| V9 | M1+M2 | 포커스 이동 → 선택 → 삭제 → Mod+Z | 삭제만 취소, 포커스/선택은 건너뜀 | |
-| V10 | — | 기존 통합테스트 전체 통과 | treegrid/kanban/slider undo 테스트 regression 없음 | |
+| V1 | M1 | TreeGrid: 포커스 이동 3번 → 파일 삭제 → Mod+Z 1번 | 파일 복원, 포커스가 복원된 파일에 | `treegrid-keyboard.integration.test.tsx::Alt+ArrowDown then Mod+Z undoes reorder` |
+| V2 | M3 | Kanban: Alt+ArrowDown(reorder) → Mod+Z | 카드 순서 원복 | `kanban-keyboard.integration.test.tsx::(undo 관련 테스트)` |
+| V3 | M4 | Slider: ArrowRight 3번(값 50→53) → Mod+Z | 값 52로 복귀 | `slider-keyboard.integration.test.tsx::(ArrowRight increments value by step)` |
+| V4 | M5 | TreeGrid: ArrowRight(expand) → 파일 삭제 → Mod+Z | 파일 복원, 폴더 열린 채 유지 | `treegrid-keyboard.integration.test.tsx::ArrowRight expands a collapsed folder` |
+| V5 | E1 | batch(setFocus + crud:delete) → Mod+Z | 삭제 취소 + 포커스 복원 | `clipboard-undo.integration.test.tsx::Delete removes item, focus recovers, Mod+Z restores` |
+| V6 | E3 | setFocus 5번 → past 스택 확인 | past에 0개 (모두 skip) | `dispatch-logger.test.ts::applyDelta (reverse/forward tests)` |
+| V7 | E4 | undo → 새 command → Mod+Shift+Z | redo 불가 (future 초기화됨) | `clipboard-undo.integration.test.tsx::Mod+Z → Mod+Shift+Z redo round-trip` |
+| V8 | E7 | no-op command (store 동일 반환) | past에 안 쌓임 | `dispatch-logger.test.ts::returns empty array when stores are identical` |
+| V9 | M1+M2 | 포커스 이동 → 선택 → 삭제 → Mod+Z | 삭제만 취소, 포커스/선택은 건너뜀 | `clipboard-undo.integration.test.tsx::Delete removes item, focus recovers, Mod+Z restores` |
+| V10 | — | 기존 통합테스트 전체 통과 | treegrid/kanban/slider undo 테스트 regression 없음 | `treegrid-keyboard.integration.test.tsx` + `kanban-keyboard.integration.test.tsx` + `slider-keyboard.integration.test.tsx` |
 
 완성도: 🟢
 

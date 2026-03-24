@@ -20,7 +20,7 @@
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
 | `lastActiveContainer` 싱글턴 | `useAriaView.ts` 모듈 스코프 `let lastActiveContainer: HTMLElement \| null`. React 상태 아님 — 리렌더 전파 없음 | ❌ 미구현 — /simplify에서 dead code로 제거. 소비자 없이 쓰기만 하므로 YAGNI 적용 |
-| `containerProps` 확장 | roving-tabindex/natural-tab-order containerProps에 `onPointerDown` + `onFocusIn` 핸들러 추가 | 🔀 onPointerDown만 구현, onFocusIn은 싱글턴 제거로 불필요하여 미구현 |
+| `containerProps` 확장 | roving-tabindex/natural-tab-order containerProps에 `onPointerDown` + `onFocusIn` 핸들러 추가 | `src/interactive-os/hooks/useAriaView.ts`::`containerProps` — `onPointerDown` 핸들러 (L264). 🔀 onFocusIn은 싱글턴 제거로 미구현 |
 | DOM focus sync 보강 | 기존 `focusIsOrphaned` 분기에서 `lastActiveContainer` 참조하여 복구 판단 | ❌ 미변경 — 싱글턴 없으므로 참조 불가. F1(금지) 준수. 클릭 핸들러가 직접 focus() 호출 |
 
 완성도: 🟢
@@ -89,13 +89,13 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | toolbar zone에서 빈 영역(separator)을 pointerdown → focusedId 아이템 확인 | `document.activeElement`가 focusedId 엘리먼트, ArrowDown으로 다음 아이템 이동 가능 | ✅ 테스트 2개 (focus + keyboard) |
-| V2 | ①M2 | zone A에서 item 포커스 → zone B의 빈 영역 pointerdown | zone B의 focusedId에 focus. zone A의 `[data-focused]`에 outline 없음 (`:focus-within` 이탈) | ✅ 테스트 통과 |
-| V3 | ①M3 | zone에서 작업 후 body 클릭(focus 유실) → 같은 zone 빈 영역 pointerdown | focusedId로 즉시 복구 | ✅ 테스트 통과 |
-| V4 | ④ focusedId 없음 | focusedId가 빈 zone의 빈 영역 pointerdown | focus 이동 없음, 에러 없음 | ✅ 테스트 통과 |
-| V5 | ④ nested | 바깥 Aria 안에 안쪽 Aria가 있을 때, 안쪽 zone의 빈 영역 pointerdown | 안쪽 zone만 active, 바깥 zone은 영향 없음 | ✅ 테스트 통과 |
-| V6 | ④ isKeyMapOnly | keyMap-only zone의 빈 영역 pointerdown | 아무 동작 없음 (핸들러 미부착) | ✅ 테스트 통과 |
-| V7 | ④ autoFocus=false | autoFocus=false zone, body에 focus 유실 상태에서 빈 영역 pointerdown | 클릭은 명시적 의도이므로 focusedId로 복구 | ✅ 테스트 통과 |
+| V1 | ①M1 | toolbar zone에서 빈 영역(separator)을 pointerdown → focusedId 아이템 확인 | `document.activeElement`가 focusedId 엘리먼트, ArrowDown으로 다음 아이템 이동 가능 | `activeZone.integration.test.tsx`::`pointerdown on empty area focuses the focusedId item` + `keyboard works after empty area activation` |
+| V2 | ①M2 | zone A에서 item 포커스 → zone B의 빈 영역 pointerdown | zone B의 focusedId에 focus. zone A의 `[data-focused]`에 outline 없음 (`:focus-within` 이탈) | `activeZone.integration.test.tsx`::`clicking zone B empty area moves focus away from zone A` |
+| V3 | ①M3 | zone에서 작업 후 body 클릭(focus 유실) → 같은 zone 빈 영역 pointerdown | focusedId로 즉시 복구 | `activeZone.integration.test.tsx`::`pointerdown recovers focus after body loss` |
+| V4 | ④ focusedId 없음 | focusedId가 빈 zone의 빈 영역 pointerdown | focus 이동 없음, 에러 없음 | `activeZone.integration.test.tsx`::`does nothing when focusedId is empty` |
+| V5 | ④ nested | 바깥 Aria 안에 안쪽 Aria가 있을 때, 안쪽 zone의 빈 영역 pointerdown | 안쪽 zone만 active, 바깥 zone은 영향 없음 | `activeZone.integration.test.tsx`::`nested: inner zone empty area activates only inner zone` |
+| V6 | ④ isKeyMapOnly | keyMap-only zone의 빈 영역 pointerdown | 아무 동작 없음 (핸들러 미부착) | `activeZone.integration.test.tsx`::`keyMap-only zone does not respond to empty area pointerdown` |
+| V7 | ④ autoFocus=false | autoFocus=false zone, body에 focus 유실 상태에서 빈 영역 pointerdown | 클릭은 명시적 의도이므로 focusedId로 복구 | `activeZone.integration.test.tsx`::`autoFocus=false zone still responds to explicit click` |
 
 완성도: 🟢
 

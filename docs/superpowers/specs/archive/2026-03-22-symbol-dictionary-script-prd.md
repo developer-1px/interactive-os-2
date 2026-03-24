@@ -18,8 +18,8 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `scripts/collectSymbols.ts` | TS compiler API로 심볼 수집 → JSON 출력하는 CLI 스크립트 | `collectSymbols.ts` (스크립트 파일) |
-| stdout JSON | fragment dictionary — fragment별 그룹핑된 식별자 목록 | `collectSymbols.ts` (stdout 출력) |
+| `scripts/collectSymbols.ts` | TS compiler API로 심볼 수집 → JSON 출력하는 CLI 스크립트 | `scripts/collectSymbols.ts` — CLI 스크립트 (export 없음, 직접 실행) |
+| stdout JSON | fragment dictionary — fragment별 그룹핑된 식별자 목록 | `scripts/collectSymbols.ts` stdout 출력 |
 
 **출력 JSON 스키마:**
 

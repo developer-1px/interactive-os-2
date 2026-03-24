@@ -18,15 +18,15 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `FieldType` 타입 | `'short-text' \| 'long-text' \| 'url'` union. 향후 확장 가능. cms-schema.ts에 정의. **long-text의 정의 = 줄바꿈 허용** | |
-| `.meta({ fieldType })` | Zod v4 `.meta()` API로 스키마 필드에 타입 선언. `z.globalRegistry.get(schema)`로 읽음 | |
-| `EditableField.fieldType` | 기존 인터페이스에 `fieldType: FieldType` 추가. `fieldsOf()` 에서 추출 | |
-| `EditableGroupEntry.fieldType` | 그룹 엔트리에도 fieldType 전파. collectEditableGroups 경로 | |
-| `DetailField` 분기 | fieldType switch로 타입별 컴포넌트 렌더링. CmsDetailPanel.tsx 내부 | |
-| `TextareaField` | long-text용 `<textarea>`. 줄바꿈(`\n`) 허용. Enter/Shift+Enter/Cmd+Enter 모두 줄바꿈. 커밋 = blur만 | |
-| `UrlField` | url용 `<input type="url">`. 커밋 시 URL 유효성 표시(빨간 테두리). 잘못된 값도 저장은 허용 | |
-| `LocalizedText` 줄바꿈 지원 | long-text 필드 값에 `\n`이 있으면 렌더러에서 줄바꿈 표시. CSS `white-space: pre-line` 적용 | |
-| CSS 클래스 | `cms-detail-field__textarea`, `cms-detail-field__input--url` 등. cms.css에 추가 | |
+| `FieldType` 타입 | `'short-text' \| 'long-text' \| 'url'` union. 향후 확장 가능. cms-schema.ts에 정의. **long-text의 정의 = 줄바꿈 허용** | `src/pages/cms/cms-schema.ts::FieldType` |
+| `.meta({ fieldType })` | Zod v4 `.meta()` API로 스키마 필드에 타입 선언. `z.globalRegistry.get(schema)`로 읽음 | `src/pages/cms/cms-schema.ts::.meta({ fieldType })` |
+| `EditableField.fieldType` | 기존 인터페이스에 `fieldType: FieldType` 추가. `fieldsOf()` 에서 추출 | `src/pages/cms/cms-schema.ts::EditableField.fieldType` |
+| `EditableGroupEntry.fieldType` | 그룹 엔트리에도 fieldType 전파. collectEditableGroups 경로 | `src/pages/cms/cms-schema.ts::EditableGroupEntry.fieldType` |
+| `DetailField` 분기 | fieldType switch로 타입별 컴포넌트 렌더링. CmsDetailPanel.tsx 내부 | `src/pages/cms/CmsDetailPanel.tsx::DetailField` |
+| `TextareaField` | long-text용 `<textarea>`. 줄바꿈(`\n`) 허용. Enter/Shift+Enter/Cmd+Enter 모두 줄바꿈. 커밋 = blur만 | `src/pages/cms/CmsDetailPanel.tsx::(DetailField 내 long-text 분기)` |
+| `UrlField` | url용 `<input type="url">`. 커밋 시 URL 유효성 표시(빨간 테두리). 잘못된 값도 저장은 허용 | `src/pages/cms/CmsDetailPanel.tsx::UrlField` |
+| `LocalizedText` 줄바꿈 지원 | long-text 필드 값에 `\n`이 있으면 렌더러에서 줄바꿈 표시. CSS `white-space: pre-line` 적용 | `src/pages/cms/cms-renderers.tsx::LocalizedText` + `src/pages/PageVisualCms.module.css` |
+| CSS 클래스 | `cms-detail-field__textarea`, `cms-detail-field__input--url` 등. cms.css에 추가 | `src/styles/cms.css` |
 
 **변경되는 기존 파일:**
 - `cms-schema.ts` — FieldType 타입 + `.meta()` 적용 + `fieldsOf()` 수정
@@ -148,16 +148,16 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | section-desc 노드 선택 → Detail Panel에 textarea 표시 | textarea 렌더링, 여러 줄 표시 | |
-| V2 | ①M1 | textarea에 줄바꿈 입력(Enter) → blur | `\n` 포함 값이 store에 저장됨 | |
-| V3 | ①M1 | 줄바꿈 포함 값이 캔버스에 표시 | `white-space: pre-line`으로 줄바꿈 시각 표시 | |
-| V4 | ①M2 | link 노드 선택 → href 필드에 유효 URL 입력 → blur | 정상 커밋, 경고 없음 | |
-| V5 | ①M2 | href에 "abc" (유효하지 않은 URL) 입력 → blur | 저장은 되지만 빨간 테두리 경고 표시 | |
-| V6 | ①M3 | `.meta()` 없는 기존 필드 (예: badge.value) | 기존과 동일한 text input 렌더링 (하위호환) | |
-| V7 | ④E5 | long-text 편집 후 Ctrl+Z (undo) | 이전 값(`\n` 포함) 복원, textarea에 정상 표시 | |
-| V8 | ④E6 | long-text 편집 후 locale 전환 (ko → en) | en locale의 값 표시 (줄바꿈 유무 독립) | |
-| V9 | ④E4 | textarea에 줄바꿈만 입력 후 blur | trim 결과 빈 문자열 → 커밋 스킵 | |
-| V10 | ④E7 | href에 "mailto:a@b.com" 입력 | `new URL()` 성공 → 유효, 경고 없음 | |
+| V1 | ①M1 | section-desc 노드 선택 → Detail Panel에 textarea 표시 | textarea 렌더링, 여러 줄 표시 | `cms-detail-panel.test.tsx::shows all grouped fields when a section is focused` (textarea 확인) |
+| V2 | ①M1 | textarea에 줄바꿈 입력(Enter) → blur | `\n` 포함 값이 store에 저장됨 | `cms-detail-panel.test.tsx::form edit then blur updates canvas text` |
+| V3 | ①M1 | 줄바꿈 포함 값이 캔버스에 표시 | `white-space: pre-line`으로 줄바꿈 시각 표시 | (visual — CSS 검증) |
+| V4 | ①M2 | link 노드 선택 → href 필드에 유효 URL 입력 → blur | 정상 커밋, 경고 없음 | `cms-detail-panel.test.tsx::shows link fields for footer-links container` |
+| V5 | ①M2 | href에 "abc" (유효하지 않은 URL) 입력 → blur | 저장은 되지만 빨간 테두리 경고 표시 | — (validation visual 검증 미작성) |
+| V6 | ①M3 | `.meta()` 없는 기존 필드 (예: badge.value) | 기존과 동일한 text input 렌더링 (하위호환) | `cms-detail-panel.test.tsx::shows editable fields when a leaf node is focused` |
+| V7 | ④E5 | long-text 편집 후 Ctrl+Z (undo) | 이전 값(`\n` 포함) 복원, textarea에 정상 표시 | — (undo + textarea 복합 테스트 미작성) |
+| V8 | ④E6 | long-text 편집 후 locale 전환 (ko → en) | en locale의 값 표시 (줄바꿈 유무 독립) | — (locale + textarea 복합 테스트 미작성) |
+| V9 | ④E4 | textarea에 줄바꿈만 입력 후 blur | trim 결과 빈 문자열 → 커밋 스킵 | — (미작성) |
+| V10 | ④E7 | href에 "mailto:a@b.com" 입력 | `new URL()` 성공 → 유효, 경고 없음 | — (미작성) |
 
 완성도: 🟡
 

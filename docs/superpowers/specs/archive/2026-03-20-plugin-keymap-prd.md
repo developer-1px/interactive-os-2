@@ -82,6 +82,16 @@ useAriaZone에서 mergedKeyMap 계산 시 plugin keyMap 포함:
 - TabList.tsx
 - kanban.ts (behavior)
 
+### 역PRD: 산출물 ↔ 코드 매핑
+
+| 산출물 | 역PRD (실제 코드) |
+|---|---|
+| Plugin 타입에 keyMap 필드 추가 | `src/interactive-os/core/definePlugin.ts` (L8: `keyMap?: Record<string, (ctx: any) => any>`) |
+| definePlugin — keyMap 전달 | `src/interactive-os/core/definePlugin.ts` (L32, L43) |
+| history plugin keyMap | `src/interactive-os/plugins/history.ts` (L80: `keyMap: { ... }`) |
+| keyMap 합성 (behavior → plugin → options) | `src/interactive-os/hooks/useAriaView.ts::collectPluginKeyMaps` (L18) |
+| mergedKeyMap 합성 순서 | `src/interactive-os/hooks/useAriaView.ts` (L89: `{ ...behavior.keyMap, ...pluginKeyMaps, ...keyMapOverrides }`) |
+
 상태: 🟢
 
 ## 4. 경계
@@ -116,6 +126,15 @@ useAriaZone에서 mergedKeyMap 계산 시 plugin keyMap 포함:
 | 4 | options.keyMap으로 Mod+C를 다른 동작으로 override | options.keyMap의 동작이 실행됨 |
 | 5 | CmsSidebar에서 `plugins=[clipboard()]` | 사이드바에서 Mod+C/V로 섹션 복사/붙여넣기 동작 |
 | 6 | ListBox/TreeGrid에서 기존 clipboard 수동 keyMap 제거 후 | plugin keyMap으로 동일하게 동작 |
+
+### 역PRD: 검증 ↔ 테스트 매핑
+
+| # | 테스트 파일 :: 테스트명 |
+|---|---|
+| 1 | `src/interactive-os/__tests__/clipboard-undo.integration.test.tsx::clipboard + crud undo integration > copy → paste inserts after cursor, Mod+Z undoes` |
+| 2 | `src/interactive-os/__tests__/clipboard-undo.integration.test.tsx::clipboard + crud undo integration > Mod+Z → Mod+Shift+Z redo round-trip` |
+| 3 | 기존 behavior integration 테스트 전수 (하위 호환) |
+| 6 | `src/interactive-os/__tests__/listbox-keyboard.integration.test.tsx` + `src/interactive-os/__tests__/treegrid-keyboard.integration.test.tsx` |
 
 상태: 🟢
 

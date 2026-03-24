@@ -66,17 +66,17 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `AxisConfig.selectOnClick` | 새 config 필드. boolean. select 축이 자동으로 true 설정 (opt-in 옵션 불필요) | |
-| `select()` 축 수정 | 항상 `selectOnClick: true`를 config에 추가. selectionMode=multiple이면 Shift/Cmd+Click도 자동 지원 | |
-| `activate()` 축 수정 | tree/treegrid용 onClick 옵션 추가 | |
-| `useAria.ts` onClick 핸들러 확장 | MouseEvent 받아서 modifier 분기 + select 디스패치 | |
-| `AriaBehavior.selectOnClick` | 타입에 optional 필드 추가 | |
-| `tree.ts` behavior 수정 | `activate({ onClick: true, toggleExpand: true })` 추가 | |
-| `treegrid.ts` behavior 수정 | 동일 | |
-| `grid.ts` behavior | select 축 사용 → selectOnClick 자동 (변경 불필요) | |
-| `kanban.ts` behavior | select 축 사용 → selectOnClick 자동 (변경 불필요) | |
-| `listbox.ts` behavior | select 축 사용 → selectOnClick 자동 (변경 불필요) | |
-| Combobox 컴포넌트 수정 | input onClick → `comboboxCommands.open()`. option onClick → single이면 select+close, multiple이면 toggleSelect (Enter 키와 동일) | |
+| `AxisConfig.selectOnClick` | 새 config 필드. boolean. select 축이 자동으로 true 설정 (opt-in 옵션 불필요) | `src/interactive-os/behaviors/types.ts::selectOnClick` |
+| `select()` 축 수정 | 항상 `selectOnClick: true`를 config에 추가. selectionMode=multiple이면 Shift/Cmd+Click도 자동 지원 | `src/interactive-os/axes/select.ts::select` |
+| `activate()` 축 수정 | tree/treegrid용 onClick 옵션 추가 | `src/interactive-os/axes/activate.ts::activate` |
+| `useAria.ts` onClick 핸들러 확장 | MouseEvent 받아서 modifier 분기 + select 디스패치 | `src/interactive-os/hooks/useAria.ts::useAria` |
+| `AriaBehavior.selectOnClick` | 타입에 optional 필드 추가 | `src/interactive-os/behaviors/types.ts::selectOnClick` |
+| `tree.ts` behavior 수정 | `activate({ onClick: true, toggleExpand: true })` 추가 | `src/interactive-os/behaviors/tree.ts::tree` |
+| `treegrid.ts` behavior 수정 | 동일 | `src/interactive-os/behaviors/treegrid.ts::treegrid` |
+| `grid.ts` behavior | select 축 사용 → selectOnClick 자동 (변경 불필요) | `src/interactive-os/behaviors/grid.ts::grid` |
+| `kanban.ts` behavior | select 축 사용 → selectOnClick 자동 (변경 불필요) | `src/interactive-os/behaviors/kanban.ts::kanban` |
+| `listbox.ts` behavior | select 축 사용 → selectOnClick 자동 (변경 불필요) | `src/interactive-os/behaviors/listbox.ts::listbox` |
+| Combobox 컴포넌트 수정 | input onClick → `comboboxCommands.open()`. option onClick → single이면 select+close, multiple이면 toggleSelect (Enter 키와 동일) | `src/interactive-os/ui/Combobox.tsx` |
 
 상태: 🟡
 
@@ -110,19 +110,19 @@
 
 | # | 시나리오 | 예상 결과 | 역PRD |
 |---|---------|----------|-------|
-| 1 | Tree: 폴더 노드 클릭 | aria-expanded="true" + aria-selected="true" | |
-| 2 | Tree: 리프 노드 클릭 | aria-selected="true" (expand 무관) | |
-| 3 | Treegrid: 폴더 행 클릭 | aria-expanded="true" + aria-selected="true" | |
-| 4 | Listbox: option 클릭 | aria-selected="true" | |
-| 5 | Listbox: Shift+Click | 앵커~타겟 범위의 모든 option이 aria-selected="true" | |
-| 6 | Listbox: Ctrl+Click | 기존 선택 유지 + 타겟 토글 | |
-| 7 | Grid: 셀 클릭 | 해당 행 aria-selected="true" | |
-| 8 | Combobox: input 클릭 | 드롭다운 열림 (aria-expanded="true") | |
-| 9 | 기존 키보드 테스트 | 전부 통과 (regression 없음) | |
-| 10 | 중첩 구조에서 자식 클릭 | 부모에 이벤트 전파 안 됨 | |
-| 11 | disabled 노드 클릭 | 아무 변화 없음 | |
-| 12 | Combobox: option 클릭 (single) | select + dropdown 닫힘 | |
-| 13 | Combobox: option 클릭 (multiple) | toggleSelect + dropdown 유지 | |
+| 1 | Tree: 폴더 노드 클릭 | aria-expanded="true" + aria-selected="true" | `src/interactive-os/__tests__/pointer-interaction.test.tsx::'click on folder expands it'`, `'click on folder also selects it'` |
+| 2 | Tree: 리프 노드 클릭 | aria-selected="true" (expand 무관) | `src/interactive-os/__tests__/pointer-interaction.test.tsx::'click on leaf node selects it (no expand attr change)'` |
+| 3 | Treegrid: 폴더 행 클릭 | aria-expanded="true" + aria-selected="true" | `src/interactive-os/__tests__/pointer-interaction.test.tsx::'click on folder row expands and selects it'` |
+| 4 | Listbox: option 클릭 | aria-selected="true" | `src/interactive-os/__tests__/pointer-interaction.test.tsx::'click selects a single node'` |
+| 5 | Listbox: Shift+Click | 앵커~타겟 범위의 모든 option이 aria-selected="true" | `src/interactive-os/__tests__/pointer-interaction.test.tsx::'Shift+Click selects range from anchor to target'` |
+| 6 | Listbox: Ctrl+Click | 기존 선택 유지 + 타겟 토글 | `src/interactive-os/__tests__/pointer-interaction.test.tsx::'Ctrl+Click toggles individual selection'`, `'Ctrl+Click deselects already selected node'` |
+| 7 | Grid: 셀 클릭 | 해당 행 aria-selected="true" | `src/interactive-os/__tests__/pointer-interaction.test.tsx::'click on grid row selects it'` |
+| 8 | Combobox: input 클릭 | 드롭다운 열림 (aria-expanded="true") | — (테스트 미구현) |
+| 9 | 기존 키보드 테스트 | 전부 통과 (regression 없음) | regression suite |
+| 10 | 중첩 구조에서 자식 클릭 | 부모에 이벤트 전파 안 됨 | — (테스트 미구현) |
+| 11 | disabled 노드 클릭 | 아무 변화 없음 | `src/interactive-os/__tests__/pointer-interaction.test.tsx::'clicking a disabled node does not change selection'` |
+| 12 | Combobox: option 클릭 (single) | select + dropdown 닫힘 | — (테스트 미구현) |
+| 13 | Combobox: option 클릭 (multiple) | toggleSelect + dropdown 유지 | — (테스트 미구현) |
 
 상태: 🟡
 

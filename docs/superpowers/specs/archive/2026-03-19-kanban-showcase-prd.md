@@ -116,14 +116,14 @@ relationships:
 
 ### 3.6 파일 목록
 
-| 파일 | 유형 | 설명 |
-|------|------|------|
-| `src/interactive-os/behaviors/kanban.ts` | 신규 | kanban behavior |
-| `src/interactive-os/ui/Kanban.tsx` | 신규 | 칸반 UI 컴포넌트 |
-| `src/pages/collection/PageKanban.tsx` | 신규 | Collection 쇼케이스 페이지 |
-| `src/pages/data/shared-kanban-data.ts` | 신규 | 데모 데이터 |
-| `src/interactive-os/behaviors/kanban.test.ts` | 신규 | behavior 테스트 |
-| `src/App.tsx` | 수정 | Collection 라우트에 kanban 추가 |
+| 파일 | 유형 | 설명 | 역PRD |
+|------|------|------|-------|
+| `src/interactive-os/behaviors/kanban.ts` | 신규 | kanban behavior | ✅ `behaviors/kanban.ts::kanban` (composePattern) |
+| `src/interactive-os/ui/Kanban.tsx` | 신규 | 칸반 UI 컴포넌트 | ✅ `ui/Kanban.tsx::Kanban` |
+| `src/pages/collection/PageKanban.tsx` | 신규 | Collection 쇼케이스 페이지 | ✅ `pages/PageKanban.tsx::PageKanban` (경로 변경) |
+| `src/pages/data/shared-kanban-data.ts` | 신규 | 데모 데이터 | ✅ `pages/shared-kanban-data.ts::kanbanInitialData` (경로 변경) |
+| `src/interactive-os/behaviors/kanban.test.ts` | 신규 | behavior 테스트 | ✅ `__tests__/kanban-keyboard.integration.test.tsx` (경로 변경) |
+| `src/App.tsx` | 수정 | Collection 라우트에 kanban 추가 | ✅ `showcaseRegistry.tsx` (라우트 등록 방식 변경) |
 
 상태: 🟢
 
@@ -159,24 +159,24 @@ relationships:
 
 ## 6. 검증
 
-| # | 시나리오 | 예상 결과 |
-|---|---------|----------|
-| 1 | `Alt+→`로 카드를 다음 컬럼으로 이동 | store에서 카드의 parent가 변경됨. UI에서 카드가 다음 컬럼에 표시 |
-| 2 | 이동 후 `Mod+Z` | 카드가 원래 컬럼 + 원래 위치로 복귀 |
-| 3 | `←` `→`로 컬럼 간 포커스 이동 | 포커스가 인접 컬럼의 카드로 이동. store 변경 없음 |
-| 4 | `↑` `↓`로 컬럼 내 탐색 | 같은 컬럼 내 카드 간 포커스 이동 |
-| 5 | `Alt+↑` `Alt+↓`로 컬럼 내 리오더 | moveUp/moveDown으로 카드 순서 변경 |
-| 6 | `F2`로 rename 진입 → Enter로 확정 | 카드 제목 변경, rename 모드 종료 |
-| 7 | `Space`로 다중 선택 → `Delete` | 선택된 카드들 일괄 삭제 |
-| 8 | 빈 컬럼으로 카드 이동 | 카드가 빈 컬럼의 유일한 자식이 됨 |
-| 9 | 기존 플러그인 전체 동작 | copy/cut/paste, create, delete, undo/redo 모두 칸반에서 동작 |
-| 10 | ARIA 속성 검증 | axe-core 접근성 위반 없음 |
-| 11 | `Alt+→` 후 `Alt+←` (가역성) | 카드가 원래 컬럼 + 원래 index로 복귀 (undo 없이) |
-| 12 | 빈 컬럼으로 `→` 포커스 이동 | 컬럼 헤더 엔티티에 포커스 |
-| 13 | 빈 컬럼에서 `N` | 컬럼의 첫 번째 자식으로 새 카드 생성 |
-| 14 | 다중 선택 + `Alt+→` | 선택된 카드 전부 BatchCommand로 이동, undo 시 전부 복귀 |
-| 15 | rename 중 `Alt+→` | 이동 무시, rename 계속 |
-| 16 | Tab 키 | 칸반 위젯 밖으로 포커스 이동 |
+| # | 시나리오 | 예상 결과 | 역PRD |
+|---|---------|----------|-------|
+| 1 | `Alt+→`로 카드를 다음 컬럼으로 이동 | store에서 카드의 parent가 변경됨. UI에서 카드가 다음 컬럼에 표시 | ✅ `kanban-keyboard.integration.test.tsx::Alt+ArrowRight moves card to next column` |
+| 2 | 이동 후 `Mod+Z` | 카드가 원래 컬럼 + 원래 위치로 복귀 | ✅ `kanban-keyboard.integration.test.tsx::Mod+Z undoes cross-column move` |
+| 3 | `←` `→`로 컬럼 간 포커스 이동 | 포커스가 인접 컬럼의 카드로 이동. store 변경 없음 | ✅ `kanban-keyboard.integration.test.tsx::ArrowRight moves to same-index card in next column` |
+| 4 | `↑` `↓`로 컬럼 내 탐색 | 같은 컬럼 내 카드 간 포커스 이동 | ✅ `kanban-keyboard.integration.test.tsx::ArrowDown moves to next card in same column` |
+| 5 | `Alt+↑` `Alt+↓`로 컬럼 내 리오더 | moveUp/moveDown으로 카드 순서 변경 | ✅ `kanban-keyboard.integration.test.tsx::Alt+ArrowDown reorders card down within column` |
+| 6 | `F2`로 rename 진입 → Enter로 확정 | 카드 제목 변경, rename 모드 종료 | — |
+| 7 | `Space`로 다중 선택 → `Delete` | 선택된 카드들 일괄 삭제 | ✅ `kanban-keyboard.integration.test.tsx::Space toggles selection on focused card`, `Delete removes focused card` |
+| 8 | 빈 컬럼으로 카드 이동 | 카드가 빈 컬럼의 유일한 자식이 됨 | — |
+| 9 | 기존 플러그인 전체 동작 | copy/cut/paste, create, delete, undo/redo 모두 칸반에서 동작 | ✅ `kanban-keyboard.integration.test.tsx::N creates a new card after focused card` |
+| 10 | ARIA 속성 검증 | axe-core 접근성 위반 없음 | — |
+| 11 | `Alt+→` 후 `Alt+←` (가역성) | 카드가 원래 컬럼 + 원래 index로 복귀 (undo 없이) | ✅ `kanban-keyboard.integration.test.tsx::Alt+ArrowRight then Alt+ArrowLeft is reversible` |
+| 12 | 빈 컬럼으로 `→` 포커스 이동 | 컬럼 헤더 엔티티에 포커스 | ✅ `kanban-keyboard.integration.test.tsx::ArrowRight into empty column focuses column header` |
+| 13 | 빈 컬럼에서 `N` | 컬럼의 첫 번째 자식으로 새 카드 생성 | — |
+| 14 | 다중 선택 + `Alt+→` | 선택된 카드 전부 BatchCommand로 이동, undo 시 전부 복귀 | — |
+| 15 | rename 중 `Alt+→` | 이동 무시, rename 계속 | — |
+| 16 | Tab 키 | 칸반 위젯 밖으로 포커스 이동 | — |
 
 상태: 🟢
 
