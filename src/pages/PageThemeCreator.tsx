@@ -25,6 +25,7 @@ import { Toolbar } from '../interactive-os/ui/Toolbar'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
 import { TreeView } from '../interactive-os/ui/TreeView'
 import { Toaster } from '../interactive-os/ui/Toaster'
+import { Tooltip } from '../interactive-os/ui/Tooltip'
 import { createToaster } from '../interactive-os/ui/createToaster'
 
 import {
@@ -187,20 +188,22 @@ function ActionsCard() {
   return (
     <div className={styles.card} data-surface="default">
       <div className={styles.stack}>
-        <button
-          className={styles.toastTrigger}
-          onClick={() => {
-            const variant = toastVariants[toastCount % 3]
-            toastCount++
-            demoToaster.toast({
-              title: `Toast #${toastCount}`,
-              description: variant === 'error' ? 'Something went wrong' : variant === 'success' ? 'Operation complete' : 'Notification',
-              variant,
-            })
-          }}
-        >
-          Add Toast
-        </button>
+        <Tooltip content="Cycles through default, success, and error variants">
+          <button
+            className={styles.toastTrigger}
+            onClick={() => {
+              const variant = toastVariants[toastCount % 3]
+              toastCount++
+              demoToaster.toast({
+                title: `Toast #${toastCount}`,
+                description: variant === 'error' ? 'Something went wrong' : variant === 'success' ? 'Operation complete' : 'Notification',
+                variant,
+              })
+            }}
+          >
+            Add Toast
+          </button>
+        </Tooltip>
         <Toaster toaster={demoToaster} />
         <ListBox data={listData} onChange={setListData} />
       </div>
