@@ -17,13 +17,14 @@ export default function NavigateDemo() {
   const [orientation, setOrientation] = useState<Orientation>('vertical')
   const [wrap, setWrap] = useState(false)
   const [mode, setMode] = useState<Mode>('list')
+  const [tabCycle, setTabCycle] = useState(false)
   const [data, setData] = useState<NormalizedData>(axisListData)
   const [gridData, setGridData] = useState<NormalizedData>(axisGridData)
 
   const behavior = mode === 'grid'
     ? composePattern(
         { role: 'grid', childRole: 'row', ariaAttributes: () => ({}) },
-        navigate({ grid: { columns: 3 } }),
+        navigate({ grid: { columns: 3, tabCycle } }),
       )
     : composePattern(
         { role: 'listbox', childRole: 'option', ariaAttributes: () => ({}) },
@@ -39,6 +40,12 @@ export default function NavigateDemo() {
             <option value="grid">Grid</option>
           </select>
         </label>
+        {mode === 'grid' && (
+          <label style={{ marginRight: 12 }}>
+            <input type="checkbox" checked={tabCycle} onChange={(e) => setTabCycle(e.target.checked)} />
+            {' '}tabCycle
+          </label>
+        )}
         {mode === 'list' && (
           <>
             <label style={{ marginRight: 12 }}>
@@ -63,6 +70,12 @@ export default function NavigateDemo() {
             <kbd>←→</kbd> <span className="key-hint">col</span>{' '}
             <kbd>Home/End</kbd> <span className="key-hint">col bounds</span>{' '}
             <kbd>⌘Home/End</kbd> <span className="key-hint">row bounds</span>
+            {tabCycle && (
+              <>
+                {' '}<kbd>Tab</kbd> <span className="key-hint">next cell</span>{' '}
+                <kbd>Shift+Tab</kbd> <span className="key-hint">prev cell</span>
+              </>
+            )}
           </>
         ) : orientation === 'vertical' ? (
           <>

@@ -221,7 +221,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "health": "bash scripts/health.sh"
+    "health": "bash scripts/health.sh",
+    "score:design": "node scripts/designScore.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -248,6 +249,7 @@
     "lucide-react": "^0.577.0",
     "madge": "^8.0.0",
     "mermaid": "^11.13.0",
+    "puppeteer-core": "^24.40.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.1.0",
