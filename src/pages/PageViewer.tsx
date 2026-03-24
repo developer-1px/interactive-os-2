@@ -219,12 +219,12 @@ export default function PageViewer() {
               plugins={[core()]}
               onChange={handleChange}
               aria-label="File tree"
-              renderItem={(_props, node, state) => {
+              renderItem={(props, node, state) => {
                 const data = node.data as FileNodeData
                 return (
                   <div className={styles.vwTreeItem}>
                     {data.type === 'directory' ? (
-                      <span className={styles.vwTreeChevron}>
+                      <span className={styles.vwTreeChevron} {...props.toggleProps}>
                         {state.expanded
                           ? <ChevronDown size={12} />
                           : <ChevronRight size={12} />}

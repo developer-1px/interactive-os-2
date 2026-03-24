@@ -56,7 +56,7 @@ function truncate(str: string, max = 60): string {
   return str.slice(0, max) + '…'
 }
 
-function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) {
+function renderInspectorItem(_props: Record<string, unknown>, node: Record<string, unknown>, state: NodeState) {
   const d = node.data as Record<string, unknown>
   const type = d?.type as string
   const label = d?.label as string
@@ -68,7 +68,6 @@ function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, node: Rec
 
   return (
     <div
-      {...props}
       style={{
         paddingLeft: `calc(var(--space-sm) + ${indent}px)`,
         paddingTop: 2,

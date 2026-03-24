@@ -92,7 +92,7 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | ActivityBar (CMS·UI·Viewer·Agent·Theme / internals) | Integrated | / = CMS, /viewer, /agent 1급 앱 |
-| UI Docs (/ui/{name}) | Integrated | MD SSOT 완성 — registry 렌더 전용 4필드, apgBySlug 분리, name/desc/usage MD 단일 소스 |
+| UI Docs (/ui/{name}) | Integrated | MD SSOT 완성, /publish 스킬로 7섹션 완전성 감사, 23/23 module 100% 완전 |
 | Theme (/internals/theme) | Validated | MiniDemo 그리드 흡수, token 편집기, `pnpm score:design` 누락 감지 (49.4%) |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs · field types) | Validated | paste overwrite, viewer channel 미구현 |

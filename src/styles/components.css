@@ -219,27 +219,21 @@
   transform: rotate(90deg);
 }
 
-/* ── Tree depth indentation (tree/treegrid only) ── */
+/* ── Tree depth indentation ── */
 
-[role="tree"] [aria-level="1"],
+/* Tree: nested DOM — group-based indentation (each nesting level adds one increment) */
+[role="tree"] [role="group"] { padding-left: var(--space-lg); }
+
+/* Treegrid: flat DOM — absolute aria-level-based indentation */
 [role="treegrid"] [aria-level="1"] { padding-left: var(--space-sm); }
-[role="tree"] [aria-level="2"],
 [role="treegrid"] [aria-level="2"] { padding-left: var(--space-xl); }
-[role="tree"] [aria-level="3"],
 [role="treegrid"] [aria-level="3"] { padding-left: var(--space-3xl); }
-[role="tree"] [aria-level="4"],
 [role="treegrid"] [aria-level="4"] { padding-left: 56px; }
-[role="tree"] [aria-level="5"],
 [role="treegrid"] [aria-level="5"] { padding-left: 72px; }
-[role="tree"] [aria-level="6"],
 [role="treegrid"] [aria-level="6"] { padding-left: 88px; }
-[role="tree"] [aria-level="7"],
 [role="treegrid"] [aria-level="7"] { padding-left: 104px; }
-[role="tree"] [aria-level="8"],
 [role="treegrid"] [aria-level="8"] { padding-left: 120px; }
-[role="tree"] [aria-level="9"],
 [role="treegrid"] [aria-level="9"] { padding-left: 136px; }
-[role="tree"] [aria-level="10"],
 [role="treegrid"] [aria-level="10"] { padding-left: 152px; }
 
 /* ── Grid table (subgrid layout) ── */
