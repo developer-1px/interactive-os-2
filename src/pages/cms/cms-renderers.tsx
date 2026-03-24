@@ -1,9 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
+import { createElement } from 'react'
 import { ChevronRight, ArrowRight } from 'lucide-react'
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
 import type { NodeState } from '../../interactive-os/behaviors/types'
-import s from '../PageVisualCms.module.css'
+import s from './CmsLanding.module.css'
 import { CMS_ICON_MAP } from './cmsIcons'
 
 function LocalizedText({ value, locale }: { value: string | LocaleMap; locale: Locale }) {
@@ -11,9 +12,10 @@ function LocalizedText({ value, locale }: { value: string | LocaleMap; locale: L
   return <span className={isFallback ? 'cms-text--fallback' : undefined}>{text}</span>
 }
 
-function CmsIcon({ name, size }: { name: string; size: number }) {
+export function CmsIcon({ name, size }: { name: string; size: number }) {
   const Icon = CMS_ICON_MAP.get(name)
-  return Icon ? <Icon size={size} /> : null
+  if (!Icon) return null
+  return createElement(Icon, { size })
 }
 
 // ── Node content renderers by type ──

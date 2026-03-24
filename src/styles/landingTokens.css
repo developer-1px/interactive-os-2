@@ -1,0 +1,98 @@
+/* ══════════════════════════════════════════════
+   Landing Tokens — Content Design System
+   ══════════════════════════════════════════════
+   Independent from app tokens (tokens.css).
+   CMS canvas sections use ONLY these tokens.
+   Swap values here to change the entire landing tone.
+   ② 2026-03-24-cms-landing-prd.md
+*/
+
+/* ── Dark (default) ── */
+
+[data-landing-theme="dark"],
+.cms-landing {
+  --landing-bg-page:       #09090B;
+  --landing-bg-section:    #0F0F12;
+  --landing-bg-section-alt:#111116;
+  --landing-bg-card:       #18181B;
+  --landing-bg-card-alt:   #1C1C21;
+  --landing-bg-card-accent: #1A1A2E;
+
+  --landing-text-heading:  #FAFAFA;
+  --landing-text-body:     #D4D4D8;
+  --landing-text-muted:    #71717A;
+  --landing-text-accent:   #818CF8;
+
+  --landing-accent:        #818CF8;
+  --landing-accent-dim:    #1E1E3A;
+  --landing-accent-mid:    #2A2A50;
+
+  --landing-border-subtle: #27272A;
+  --landing-border-default:#3F3F46;
+
+  --landing-shadow-card:   0 1px 3px rgba(0,0,0,0.4), 0 0 1px rgba(0,0,0,0.3);
+  --landing-shadow-card-hover: 0 4px 16px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);
+
+  --landing-font-display:  'Manrope', -apple-system, system-ui, sans-serif;
+  --landing-font-body:     'Manrope', -apple-system, system-ui, sans-serif;
+  --landing-font-mono:     'SF Mono', 'Cascadia Code', ui-monospace, monospace;
+
+  /* ── Typography scale (larger than app) ── */
+  --landing-size-display:  56px;
+  --landing-size-title:    36px;
+  --landing-size-subtitle: 24px;
+  --landing-size-body:     17px;
+  --landing-size-caption:  13px;
+  --landing-size-label:    11px;
+
+  --landing-weight-display: 800;
+  --landing-weight-title:   700;
+  --landing-weight-body:    400;
+  --landing-weight-caption:  500;
+  --landing-weight-label:   600;
+
+  --landing-leading-tight:   1.15;
+  --landing-leading-normal:  1.5;
+  --landing-leading-relaxed: 1.7;
+
+  /* ── Spacing ── */
+  --landing-space-section:     80px;
+  --landing-space-section-sm:  48px;
+  --landing-space-card-gap:    20px;
+  --landing-space-card-padding: 28px;
+  --landing-space-content-max: 1080px;
+  --landing-space-content-narrow: 720px;
+  --landing-space-inline:      48px;
+
+  /* ── Radius ── */
+  --landing-radius-card:    16px;
+  --landing-radius-card-sm: 12px;
+  --landing-radius-badge:   999px;
+  --landing-radius-icon:    12px;
+}
+
+/* ── Light ── */
+
+[data-landing-theme="light"] {
+  --landing-bg-page:        #FFFFFF;
+  --landing-bg-section:     #F8F8FA;
+  --landing-bg-section-alt: #F4F4F5;
+  --landing-bg-card:        #FFFFFF;
+  --landing-bg-card-alt:    #FAFAFA;
+  --landing-bg-card-accent: #EEF2FF;
+
+  --landing-text-heading:   #09090B;
+  --landing-text-body:      #3F3F46;
+  --landing-text-muted:     #A1A1AA;
+  --landing-text-accent:    #6366F1;
+
+  --landing-accent:         #6366F1;
+  --landing-accent-dim:     #EEF2FF;
+  --landing-accent-mid:     #C7D2FE;
+
+  --landing-border-subtle:  #E4E4E7;
+  --landing-border-default: #D4D4D8;
+
+  --landing-shadow-card:    0 1px 3px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.04);
+  --landing-shadow-card-hover: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+}

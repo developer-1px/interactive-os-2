@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import cmsStyles from '../PageVisualCms.module.css'
+import cmsStyles from './CmsLanding.module.css'
 import { getChildren } from '../../interactive-os/core/createStore'
 import { ROOT_ID } from '../../interactive-os/core/types'
 import type { NormalizedData, Command } from '../../interactive-os/core/types'
@@ -84,7 +84,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
       onClick={onExit}
       {...(containerProps as React.HTMLAttributes<HTMLDivElement>)}
     >
-      <div className={cmsStyles.cmsLanding}>
+      <div className={`cms-landing ${cmsStyles.cmsLanding}`}>
         {getChildren(data, ROOT_ID).map(id => renderNode(id))}
       </div>
     </div>
