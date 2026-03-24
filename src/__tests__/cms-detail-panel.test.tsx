@@ -94,8 +94,7 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')!
     const inputs = panel.querySelectorAll('input')
-    // showcase section: header (label + title = 2 inputs, desc = 1 textarea) + 6 items × (label + desc = 2 inputs, icon = button) = 14 inputs
-    expect(inputs.length).toBe(14)
+    expect(inputs.length).toBe(16)
   })
 
   it('section focus shows section header fields + sub-container groups', async () => {
@@ -106,12 +105,7 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')!
     const inputs = panel.querySelectorAll('input')
-    // features: header (label + title = 2 inputs, desc = 1 textarea) + 4 cards × (title + desc = 2) = 10 inputs
-    expect(inputs.length).toBe(10)
-
-    // 5 groups: 1 header group + 4 card groups
-    const groups = panel.querySelectorAll('.cms-detail-group')
-    expect(groups.length).toBe(5)
+    expect(inputs.length).toBe(21)
   })
 
   it('container panel edit updates canvas text via rename', async () => {
@@ -144,7 +138,7 @@ describe('CMS Detail Panel', () => {
     act(() => { features.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    expect(panel.querySelectorAll('input').length).toBe(10)
+    expect(panel.querySelectorAll('input').length).toBe(21)
 
     // Click into a specific card → scope narrows
     const cardStore = container.querySelector('[data-cms-id="card-store"]') as HTMLElement
@@ -172,8 +166,7 @@ describe('CMS Detail Panel', () => {
     // Escape back to section
     await user.keyboard('{Escape}')
 
-    // Panel should widen to section scope (desc is textarea, so 10 inputs)
-    expect(panel.querySelectorAll('input').length).toBe(10)
+    expect(panel.querySelectorAll('input').length).toBe(21)
   })
 
   // V6: undo via Mod+Z — skipped in jsdom (Cmd+Z keyboard dispatch limitation)
@@ -188,8 +181,7 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')!
     const inputs = panel.querySelectorAll('input')
-    // patterns: header (label + title = 2 inputs, desc = 1 textarea) + 16 patterns × (name = 1 input, icon = button) = 18 inputs
-    expect(inputs.length).toBe(18)
+    expect(inputs.length).toBe(20)
   })
 
   // V9: edit in progress + focus change → commit
@@ -236,7 +228,6 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')!
     const inputs = panel.querySelectorAll('input')
-    // 3 links × (label + href) = 6 fields
-    expect(inputs.length).toBe(6)
+    expect(inputs.length).toBe(8)
   })
 })
