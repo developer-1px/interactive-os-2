@@ -1,5 +1,8 @@
 import { useState, useCallback } from 'react'
 import styles from './PageThemeCreator.module.css'
+import { Button } from '../interactive-os/ui/Button'
+import { ColorInput } from '../interactive-os/ui/ColorInput'
+import { TextInput } from '../interactive-os/ui/TextInput'
 import { Accordion } from '../interactive-os/ui/Accordion'
 import { AlertDialog } from '../interactive-os/ui/AlertDialog'
 import { Checkbox } from '../interactive-os/ui/Checkbox'
@@ -263,28 +266,26 @@ export default function PageThemeCreator() {
     <div key={token.variable} className={styles.tokenRow}>
       {token.type === 'color' ? (
         <>
-          <input
-            type="color"
-            className={styles.swatch}
+          <ColorInput
             value={values[token.variable]}
             onChange={e => handleChange(token.variable, e.target.value)}
           />
           <span className={styles.label}>{token.label}</span>
-          <input
-            type="text"
+          <TextInput
             className={styles.hex}
             value={values[token.variable]}
             onChange={e => handleChange(token.variable, e.target.value)}
+            align="right"
           />
         </>
       ) : (
         <>
           <span className={styles.label}>{token.label}</span>
-          <input
-            type="text"
-            className={styles.radiusInput}
+          <TextInput
+            className={styles.valueInput}
             value={values[token.variable]}
             onChange={e => handleChange(token.variable, e.target.value)}
+            align="right"
           />
         </>
       )}
@@ -294,16 +295,22 @@ export default function PageThemeCreator() {
   return (
     <div className={styles.root}>
       <div className={styles.controls}>
-        <h3 className={styles.heading}>Surface</h3>
-        {surfaceTokens.map(renderTokenRow)}
+        <div className={styles.section}>
+          <span className={styles.heading}>Surface</span>
+          {surfaceTokens.map(renderTokenRow)}
+        </div>
 
-        <h3 className={styles.heading}>Color</h3>
-        {semanticTokens.map(renderTokenRow)}
+        <div className={styles.section}>
+          <span className={styles.heading}>Color</span>
+          {semanticTokens.map(renderTokenRow)}
+        </div>
 
-        <h3 className={styles.heading}>Layout</h3>
-        {layoutTokens.map(renderTokenRow)}
+        <div className={styles.section}>
+          <span className={styles.heading}>Layout</span>
+          {layoutTokens.map(renderTokenRow)}
+        </div>
 
-        <button className={styles.reset} onClick={handleReset}>Reset</button>
+        <Button variant="ghost" onClick={handleReset}>Reset to defaults</Button>
       </div>
 
       <div className={styles.preview} data-surface="base">
