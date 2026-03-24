@@ -77,13 +77,13 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | ActivityBar (External/Internal) · routing | Integrated | createBrowserRouter + layout route 전환 완료 |
-| UI Showcase (/ui/{name}) | Integrated | TestRunnerPanel 통합 완료, 18/23 testPath + 16/23 APG table |
+| UI Docs (/ui/{name}) | Integrated | Area MD SSOT + MdPage 렌더, 5범주 사이드바, 23종 MD 뼈대 |
 | Landing (/) · Docs (/docs) | Validated | hero + component grid, Getting Started + architecture |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs · field types) | Validated | paste overwrite, viewer channel 미구현 |
 | Agent Viewer (multi-session · virtual scroll) | Validated | viewer channel disabled |
 | Inspector · Command · Diff | Validated | — |
-| Showcase (Plugin · Collection · Axis · Area) | Validated | — |
+| Showcase (Plugin · Axis · Area) | Validated | Pattern/Collection → /ui 흡수 완료 |
 
 ## APG Coverage (16/19)
 
