@@ -1,139 +1,197 @@
 /* ══════════════════════════════════════════════
-   Landing Tokens — Developer Documentation Style
+   Landing Tokens — DESIGN.md 번들 체계 복사 + 웹 스케일 확장
    ══════════════════════════════════════════════
-   Independent from app tokens (tokens.css).
-   CMS canvas sections use ONLY these tokens.
-   Swap values here to change the entire landing tone.
+   tokens.css 번들을 그대로 복사하되, 랜딩 페이지는 앱보다 극적.
+   독자 관리 — tokens.css 변경 시 여기도 수동 동기화.
 */
 
 /* ── Dark (default) ── */
 
 [data-landing-theme="dark"],
 .cms-landing {
-  --landing-bg-page:        #09090B;
-  --landing-bg-section:     #09090B;
-  --landing-bg-section-alt: #0F0F12;
-  --landing-bg-card:        #131316;
-  --landing-bg-card-alt:    #18181B;
-  --landing-bg-card-accent: #1C1C20;
 
-  --landing-text-heading:   #FAFAFA;
-  --landing-text-body:      #A1A1AA;
-  --landing-text-muted:     #52525B;
-  --landing-text-accent:    #E4E4E7;
+  /* ═══ Surface 번들 (bg + border + shadow) ═══ */
+  --landing-surface-base:     #0E0E0D;
+  --landing-surface-sunken:   #1A1918;
+  --landing-surface-default:  #242220;
+  --landing-surface-raised-bg: #2D2B28;
+  --landing-surface-raised-border: #3D3D3A;
+  --landing-surface-raised-shadow: 0 4px 20px rgba(0,0,0,0.035);
+  --landing-surface-outlined-border: #3D3D3A;
 
-  --landing-accent:         #E4E4E7;
-  --landing-accent-dim:     #18181B;
-  --landing-accent-mid:     #27272A;
-  --landing-text-on-accent: #09090B;
+  /* ═══ Tone 번들 (base + hover + dim + foreground) ═══ */
+  --landing-tone-primary:     #2C84DB;
+  --landing-tone-primary-hover: #4A9DE0;
+  --landing-tone-primary-dim: #1A2A3A;
+  --landing-tone-primary-fg:  #FFFFFF;
 
-  --landing-border-subtle:  #1C1C20;
-  --landing-border-default: #27272A;
+  --landing-tone-neutral:     #73726C;
+  --landing-tone-neutral-hover: #A19F97;
+  --landing-tone-neutral-dim: #2D2B28;
+  --landing-tone-neutral-fg:  #FFFFFF;
 
-  --landing-shadow-card:       0 1px 2px rgba(0,0,0,0.3);
-  --landing-shadow-card-hover: 0 4px 12px rgba(0,0,0,0.4);
+  --landing-tone-success:     #30A46C;
+  --landing-tone-success-dim: #1A2E22;
 
-  --landing-font-display:   'Manrope', -apple-system, system-ui, sans-serif;
-  --landing-font-body:      'Manrope', -apple-system, system-ui, sans-serif;
-  --landing-font-mono:      'SF Mono', 'Cascadia Code', ui-monospace, monospace;
+  /* ═══ Text hierarchy (독립 축) ═══ */
+  --landing-text-bright:   #FFFFFF;
+  --landing-text-primary:  #F0EEE6;
+  --landing-text-secondary: #A19F97;
+  --landing-text-muted:    #5C5B56;
 
-  /* ── Typography scale — docs comfortable ── */
-  --landing-size-display:   clamp(40px, 5vw, 64px);
-  --landing-size-title:     clamp(24px, 3vw, 36px);
-  --landing-size-subtitle:  20px;
-  --landing-size-body:      16px;
-  --landing-size-caption:   13px;
-  --landing-size-label:     11px;
+  /* ═══ Type 번들 (size + weight + family + lh) ═══
+     랜딩은 앱보다 한 단계 확장. hero 80px, body 16px = 5:1 비율 */
 
-  --landing-weight-display: 700;
-  --landing-weight-title:   600;
-  --landing-weight-body:    400;
-  --landing-weight-caption: 500;
-  --landing-weight-label:   600;
+  /* type-hero (웹 랜딩 확장) */
+  --landing-type-hero-size:   clamp(56px, 7vw, 80px);
+  --landing-type-hero-weight: 330;
+  --landing-type-hero-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --landing-type-hero-lh:     1.1;
 
-  --landing-leading-tight:   1.15;
-  --landing-leading-normal:  1.6;
-  --landing-leading-relaxed: 1.7;
+  /* type-page (섹션 제목) */
+  --landing-type-page-size:   clamp(28px, 3.5vw, 40px);
+  --landing-type-page-weight: 330;
+  --landing-type-page-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --landing-type-page-lh:     1.15;
 
-  /* ── Spacing — comfortable ── */
-  --landing-space-section:       100px;
-  --landing-space-section-sm:    56px;
-  --landing-space-card-gap:      24px;
-  --landing-space-card-padding:  24px;
-  --landing-space-content-max:   min(1100px, 100%);
-  --landing-space-content-narrow: 600px;
-  --landing-space-inline:        clamp(20px, 4vw, 64px);
+  /* type-section (카드 제목) */
+  --landing-type-section-size:   18px;
+  --landing-type-section-weight: 600;
+  --landing-type-section-family: 'Inter', -apple-system, system-ui, sans-serif;
+  --landing-type-section-lh:     1.4;
 
-  /* ── Radius — standard docs ── */
-  --landing-radius-card:    8px;
-  --landing-radius-card-sm: 6px;
-  --landing-radius-badge:   99px;
-  --landing-radius-icon:    6px;
+  /* type-body */
+  --landing-type-body-size:   16px;
+  --landing-type-body-weight: 430;
+  --landing-type-body-family: 'Inter', -apple-system, system-ui, sans-serif;
+  --landing-type-body-lh:     1.5;
 
-  /* ── Hairline rule ── */
-  --landing-rule:           1px solid #27272A;
+  /* type-caption */
+  --landing-type-caption-size:   14px;
+  --landing-type-caption-weight: 430;
+  --landing-type-caption-family: 'Inter', -apple-system, system-ui, sans-serif;
+  --landing-type-caption-lh:     1.4;
+
+  /* type-label (mono) */
+  --landing-type-label-size:   11px;
+  --landing-type-label-weight: 600;
+  --landing-type-label-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace;
+  --landing-type-label-lh:     1.3;
+
+  /* ═══ Shape 번들 (radius + padding) ═══ */
+  --landing-shape-xs-r: 6px;   --landing-shape-xs-py: 6px;   --landing-shape-xs-px: 12px;
+  --landing-shape-sm-r: 6px;   --landing-shape-sm-py: 8px;   --landing-shape-sm-px: 20px;
+  --landing-shape-md-r: 10px;  --landing-shape-md-py: 10px;  --landing-shape-md-px: 24px;
+  --landing-shape-lg-r: 12px;  --landing-shape-lg-py: 24px;  --landing-shape-lg-px: 24px;
+  --landing-shape-xl-r: 20px;
+
+  /* ═══ Motion 번들 (duration + easing) ═══ */
+  --landing-motion-instant-duration: 0.075s;
+  --landing-motion-instant-easing: cubic-bezier(0.165, 0.85, 0.45, 1);
+  --landing-motion-normal-duration: 0.15s;
+  --landing-motion-normal-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ═══ Layout (번들 외 독립 값) ═══ */
+  --landing-space-section:        120px;
+  --landing-space-section-sm:     64px;
+  --landing-space-gap-row:        12px;
+  --landing-space-gap-col:        24px;
+  --landing-space-content-max:    min(1100px, 100%);
+  --landing-space-content-narrow: 640px;
+  --landing-space-inline:         clamp(24px, 4vw, 64px);
+
+  /* ═══ Misc ═══ */
+  --landing-radius-pill:  9999px;
+  --landing-rule:         1px solid #3D3D3A;
 }
 
-/* ── Light ── */
+/* ── Light (claude.ai 실측 기반) ── */
 
 [data-landing-theme="light"],
 [data-theme="light"] .cms-landing {
-  --landing-bg-page:        #FFFFFF;
-  --landing-bg-section:     #FFFFFF;
-  --landing-bg-section-alt: #FAFAFA;
-  --landing-bg-card:        #FFFFFF;
-  --landing-bg-card-alt:    #F4F4F5;
-  --landing-bg-card-accent: #F4F4F5;
 
-  --landing-text-heading:   #09090B;
-  --landing-text-body:      #52525B;
-  --landing-text-muted:     #A1A1AA;
-  --landing-text-accent:    #18181B;
+  /* ═══ Surface 번들 ═══ */
+  --landing-surface-base:     #FAF9F5;
+  --landing-surface-sunken:   #F0EEE6;
+  --landing-surface-default:  #FFFFFF;
+  --landing-surface-raised-bg: #FFFFFF;
+  --landing-surface-raised-border: #E8E6DC;
+  --landing-surface-raised-shadow: 0 4px 20px rgba(0,0,0,0.035);
+  --landing-surface-outlined-border: #E8E6DC;
 
-  --landing-accent:         #18181B;
-  --landing-accent-dim:     #F4F4F5;
-  --landing-accent-mid:     #E4E4E7;
-  --landing-text-on-accent: #FAFAFA;
+  /* ═══ Tone 번들 ═══ */
+  --landing-tone-primary:     #1B67B2;
+  --landing-tone-primary-hover: #155290;
+  --landing-tone-primary-dim: #EBF3FC;
+  --landing-tone-primary-fg:  #FFFFFF;
 
-  --landing-border-subtle:  #F4F4F5;
-  --landing-border-default: #E4E4E7;
+  --landing-tone-neutral:     #73726C;
+  --landing-tone-neutral-hover: #5C5B56;
+  --landing-tone-neutral-dim: #F0EEE6;
+  --landing-tone-neutral-fg:  #FFFFFF;
 
-  --landing-shadow-card:       0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --landing-shadow-card-hover: 0 4px 12px rgba(0,0,0,0.08);
+  --landing-tone-success:     #2E8B57;
+  --landing-tone-success-dim: #F0FDF5;
 
-  --landing-font-display:   'Manrope', -apple-system, system-ui, sans-serif;
-  --landing-font-body:      'Manrope', -apple-system, system-ui, sans-serif;
-  --landing-font-mono:      'SF Mono', 'Cascadia Code', ui-monospace, monospace;
+  /* ═══ Text hierarchy ═══ */
+  --landing-text-bright:   #0E0E0D;
+  --landing-text-primary:  #1A1918;
+  --landing-text-secondary: #73726C;
+  --landing-text-muted:    #A19F97;
 
-  --landing-size-display:   clamp(40px, 5vw, 64px);
-  --landing-size-title:     clamp(24px, 3vw, 36px);
-  --landing-size-subtitle:  20px;
-  --landing-size-body:      16px;
-  --landing-size-caption:   13px;
-  --landing-size-label:     11px;
+  /* ═══ Type 번들 (light — 값 동일, 변수만 재선언) ═══ */
+  --landing-type-hero-size:   clamp(56px, 7vw, 80px);
+  --landing-type-hero-weight: 330;
+  --landing-type-hero-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --landing-type-hero-lh:     1.1;
 
-  --landing-weight-display: 700;
-  --landing-weight-title:   600;
-  --landing-weight-body:    400;
-  --landing-weight-caption: 500;
-  --landing-weight-label:   600;
+  --landing-type-page-size:   clamp(28px, 3.5vw, 40px);
+  --landing-type-page-weight: 330;
+  --landing-type-page-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --landing-type-page-lh:     1.15;
 
-  --landing-leading-tight:   1.15;
-  --landing-leading-normal:  1.6;
-  --landing-leading-relaxed: 1.7;
+  --landing-type-section-size:   18px;
+  --landing-type-section-weight: 600;
+  --landing-type-section-family: 'Inter', -apple-system, system-ui, sans-serif;
+  --landing-type-section-lh:     1.4;
 
-  --landing-space-section:       100px;
-  --landing-space-section-sm:    56px;
-  --landing-space-card-gap:      24px;
-  --landing-space-card-padding:  24px;
-  --landing-space-content-max:   min(1100px, 100%);
-  --landing-space-content-narrow: 600px;
-  --landing-space-inline:        clamp(20px, 4vw, 64px);
+  --landing-type-body-size:   16px;
+  --landing-type-body-weight: 430;
+  --landing-type-body-family: 'Inter', -apple-system, system-ui, sans-serif;
+  --landing-type-body-lh:     1.5;
 
-  --landing-radius-card:    8px;
-  --landing-radius-card-sm: 6px;
-  --landing-radius-badge:   99px;
-  --landing-radius-icon:    6px;
+  --landing-type-caption-size:   14px;
+  --landing-type-caption-weight: 430;
+  --landing-type-caption-family: 'Inter', -apple-system, system-ui, sans-serif;
+  --landing-type-caption-lh:     1.4;
 
-  --landing-rule:           1px solid #E4E4E7;
+  --landing-type-label-size:   11px;
+  --landing-type-label-weight: 600;
+  --landing-type-label-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace;
+  --landing-type-label-lh:     1.3;
+
+  /* ═══ Shape 번들 ═══ */
+  --landing-shape-xs-r: 6px;   --landing-shape-xs-py: 6px;   --landing-shape-xs-px: 12px;
+  --landing-shape-sm-r: 6px;   --landing-shape-sm-py: 8px;   --landing-shape-sm-px: 20px;
+  --landing-shape-md-r: 10px;  --landing-shape-md-py: 10px;  --landing-shape-md-px: 24px;
+  --landing-shape-lg-r: 12px;  --landing-shape-lg-py: 24px;  --landing-shape-lg-px: 24px;
+  --landing-shape-xl-r: 20px;
+
+  /* ═══ Motion 번들 ═══ */
+  --landing-motion-instant-duration: 0.075s;
+  --landing-motion-instant-easing: cubic-bezier(0.165, 0.85, 0.45, 1);
+  --landing-motion-normal-duration: 0.15s;
+  --landing-motion-normal-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ═══ Layout ═══ */
+  --landing-space-section:        120px;
+  --landing-space-section-sm:     64px;
+  --landing-space-gap-row:        12px;
+  --landing-space-gap-col:        24px;
+  --landing-space-content-max:    min(1100px, 100%);
+  --landing-space-content-narrow: 640px;
+  --landing-space-inline:         clamp(24px, 4vw, 64px);
+
+  --landing-radius-pill:  9999px;
+  --landing-rule:         1px solid #E8E6DC;
 }

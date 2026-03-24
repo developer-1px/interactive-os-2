@@ -54,6 +54,8 @@ export const nodeSchemas = {
   'quote':          z.object({ type: z.literal('quote'),          text: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Quote'), attribution: localeMapSchema.describe('Attribution') }),
   'article':        z.object({ type: z.literal('article'),        icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.describe('Title'), category: localeMapSchema.describe('Category'), readTime: z.string().describe('Read Time') }),
   'showcase-item':  z.object({ type: z.literal('showcase-item'),  icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
+  'stat-card':      z.object({ type: z.literal('stat-card'),      value: z.string().describe('Value'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
+  'section-cta':    z.object({ type: z.literal('section-cta'),    label: localeMapSchema.describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),
 } as const
 
 // ── Children rules ──
@@ -66,6 +68,7 @@ export const childRules: Record<string, z.ZodType> = {
     nodeSchemas['section-label'], nodeSchemas['section-title'], nodeSchemas['section-desc'],
     nodeSchemas.icon, nodeSchemas.link, nodeSchemas.brand, nodeSchemas.links,
     nodeSchemas['value-item'], nodeSchemas.quote, nodeSchemas.article, nodeSchemas['showcase-item'],
+    nodeSchemas['stat-card'], nodeSchemas['section-cta'],
   ])),
   links: z.array(z.discriminatedUnion('type', [nodeSchemas.link])),
   'tab-group': z.array(z.discriminatedUnion('type', [nodeSchemas['tab-item']])),
