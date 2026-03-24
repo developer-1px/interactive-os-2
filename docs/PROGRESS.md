@@ -20,7 +20,7 @@
 | dispatch + middleware | Integrated | — |
 | Dispatch Logger | Validated | — |
 
-## Plugins (L3 · 9종)
+## Plugins (L3 · 10종)
 
 | Plugin | Maturity | Gaps |
 |--------|----------|------|
@@ -29,6 +29,7 @@
 | history | Integrated | delta-based undo/redo, navigation skip 구현. command grouping 미구현 |
 | crud | Integrated | — |
 | cellEdit | Integrated | Google Sheets 2모드: Delete→셀 클리어, Enter→행 이동, Mod+X/C/V 셀 클립보드 |
+| search | Integrated | Mod+F 검색, Aria.Search input + Aria.SearchHighlight mark. getVisibleNodes 필터. Grid searchable prop |
 | clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료, cutCellValue/clearCellValue 추가 |
 | zodSchema | Integrated | Zod childRules → canAccept/canDelete 자동 파생, middleware 기반 |
 | rename | Integrated | — |
@@ -58,7 +59,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Aria · Aria.Item · Aria.Cell · Aria.Editable | Integrated | — |
+| Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight | Integrated | — |
 | useAria · useAriaZone · useControlledAria | Integrated | disabled 옵션 추가 (inert + focus sync 스킵). lastActiveContainer 싱글턴 미구현 (소비자 필요 시 추가) |
 | useKeyboard · useSpatialNav | Integrated | — |
 | useResizer · useVirtualScroll | Validated | — |

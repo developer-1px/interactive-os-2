@@ -40,13 +40,19 @@ export default function PageI18nEditor() {
     }
 
     if (isKey) {
-      return <span className="cell-key">{text}</span>
+      return (
+        <Aria.SearchHighlight>
+          <span className="cell-key">{text}</span>
+        </Aria.SearchHighlight>
+      )
     }
 
     return (
-      <span className={isEmpty ? 'cell-empty' : undefined}>
-        {isEmpty ? '—' : text}
-      </span>
+      <Aria.SearchHighlight>
+        <span className={isEmpty ? 'cell-empty' : undefined}>
+          {isEmpty ? '—' : text}
+        </span>
+      </Aria.SearchHighlight>
     )
   }
 
@@ -65,7 +71,8 @@ export default function PageI18nEditor() {
         <kbd>Tab</kbd> <span className="key-hint">다음 셀 편집</span>{' '}
         <kbd>Delete</kbd> <span className="key-hint">셀 클리어</span>{' '}
         <kbd>⌘X/C/V</kbd> <span className="key-hint">셀 클립보드</span>{' '}
-        <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
+        <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
+        <kbd>⌘F</kbd> <span className="key-hint">검색</span>
       </div>
       <div className="demo-section">
         <div style={{ border: '1px solid var(--border, #e0e0e0)', borderRadius: 8, overflow: 'hidden' }}>
@@ -75,6 +82,7 @@ export default function PageI18nEditor() {
             plugins={plugins}
             onChange={setData}
             enableEditing
+            searchable
             tabCycle
             renderCell={renderCell}
             aria-label="i18n Translation Editor"

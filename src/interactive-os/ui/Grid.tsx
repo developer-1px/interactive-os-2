@@ -8,6 +8,7 @@ import { Aria } from '../primitives/aria'
 import { grid as gridBehavior } from '../pattern/grid'
 import { core } from '../plugins/core'
 import { cellEdit } from '../plugins/cellEdit'
+import { search } from '../plugins/search'
 import { replaceEditPlugin } from '../pattern/edit'
 
 interface ColumnDef {
@@ -23,6 +24,8 @@ interface GridProps {
   onChange?: (data: NormalizedData) => void
   renderCell?: (props: React.HTMLAttributes<HTMLElement>, value: unknown, column: ColumnDef, state: NodeState) => React.ReactElement
   enableEditing?: boolean
+  /** Enable Ctrl+F search with inline filter */
+  searchable?: boolean
   /** Enable Tab/Shift+Tab cell cycling across columns and rows */
   tabCycle?: boolean
   /** Render column headers inside the grid-table container (subgrid-aligned) */
@@ -44,6 +47,7 @@ export function Grid({
   onChange,
   renderCell = defaultRenderCell,
   enableEditing = false,
+  searchable = false,
   tabCycle = false,
   header = false,
   keyMap,
@@ -55,8 +59,13 @@ export function Grid({
   )
 
   const mergedPlugins = React.useMemo(
-    () => enableEditing ? [...plugins, replaceEditPlugin(), cellEdit()] : plugins,
-    [plugins, enableEditing],
+    () => {
+      const result = [...plugins]
+      if (enableEditing) { result.push(replaceEditPlugin(), cellEdit()) }
+      if (searchable) { result.push(search()) }
+      return result
+    },
+    [plugins, enableEditing, searchable],
   )
 
   const gridStyle = React.useMemo(
@@ -94,6 +103,7 @@ export function Grid({
         keyMap={keyMap}
         aria-label={ariaLabel}
       >
+        {searchable && <Aria.Search placeholder="Search..." />}
         <Aria.Item render={renderRow} />
       </Aria>
     </div>
