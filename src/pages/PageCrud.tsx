@@ -96,7 +96,7 @@ export default function PageCrud() {
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
-        <button type="button" onClick={handleCreate} style={{ marginLeft: 8, fontSize: '0.85em' }}>+ Add item</button>
+        <button type="button" onClick={handleCreate} style={{ marginLeft: 'var(--space-sm)', fontSize: '0.85em' }}>+ Add item</button>
       </div>
       <div className="card">
         <TreeGrid

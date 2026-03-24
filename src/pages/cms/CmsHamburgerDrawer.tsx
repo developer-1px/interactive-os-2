@@ -85,7 +85,7 @@ export default function CmsHamburgerDrawer({ open, onClose, hamburgerRef }: CmsH
         <div className="cms-drawer__header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div className="logo-mark" />
-            <span style={{ fontWeight: 700, fontSize: '13px', color: 'var(--text-bright)' }}>interactive-os</span>
+            <span style={{ fontWeight: 700, fontSize: 'var(--text-sm)', color: 'var(--text-bright)' }}>interactive-os</span>
           </div>
         </div>
         <div role="menu" aria-label="Navigation menu" {...aria.containerProps}>

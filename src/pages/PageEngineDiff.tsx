@@ -98,7 +98,7 @@ export default function PageEngineDiff() {
 
       <div className="page-section">
         <h3 className="page-section-title">Diff Log ({entries.length})</h3>
-        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '11px', lineHeight: 1.8, maxHeight: '200px', overflow: 'auto' }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 'var(--text-xs)', lineHeight: 1.8, maxHeight: '200px', overflow: 'auto' }}>
           {entries.length === 0 ? (
             <span style={{ opacity: 0.5 }}>Interact with the list to generate diffs…</span>
           ) : (
@@ -129,8 +129,8 @@ export default function PageEngineDiff() {
             <button
               onClick={handleReverse}
               style={{
-                marginLeft: '12px',
-                fontSize: '11px',
+                marginLeft: 'var(--space-md)',
+                fontSize: 'var(--text-xs)',
                 padding: '2px 8px',
                 borderRadius: '4px',
                 border: '1px solid var(--color-border, rgba(128,128,128,0.3))',
@@ -142,7 +142,7 @@ export default function PageEngineDiff() {
               {selection?.reversed ? 'applyDelta(forward)' : 'applyDelta(reverse)'}
             </button>
           </h3>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '11px', lineHeight: 1.8 }}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 'var(--text-xs)', lineHeight: 1.8 }}>
             {selectedEntry.diffs.map((d, i) => (
               <div key={i} style={{ padding: '2px 0' }}>
                 <span style={{ opacity: 0.5 }}>{d.path}</span>{' '}
