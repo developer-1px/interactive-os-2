@@ -3,10 +3,13 @@ import { ROOT_ID } from '../store/types'
 import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
+import { getVisibleNodes } from '../engine/getVisibleNodes'
 import type { PatternContext, GridNav, SelectionMode, ValueNav } from './types'
 import { getEntity, getChildren, getParent } from '../store/createStore'
 import { focusCommands, selectionCommands, expandCommands, gridColCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, valueCommands, VALUE_ID } from '../plugins/core'
 import type { ValueRange } from '../plugins/core'
+import { spatialCommands, SPATIAL_PARENT_ID } from '../plugins/spatial'
+import { renameCommands } from '../plugins/rename'
 
 function getFocusedId(engine: CommandEngine): string {
   return (engine.getStore().entities[FOCUS_ID]?.focusedId as string) ?? ''
@@ -16,35 +19,9 @@ function getSelectedIds(engine: CommandEngine): string[] {
   return (engine.getStore().entities[SELECTION_ID]?.selectedIds as string[]) ?? []
 }
 
-function getExpandedIds(engine: CommandEngine): string[] {
-  return (engine.getStore().entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
-}
-
 function isExpanded(engine: CommandEngine, nodeId: string): boolean {
-  return getExpandedIds(engine).includes(nodeId)
-}
-
-/**
- * Build flat list of visible node IDs respecting expanded/collapsed state.
- * Walks depth-first from __root__, only descends into expanded nodes.
- */
-export function getVisibleNodes(engine: CommandEngine): string[] {
-  const store = engine.getStore()
-  const expandedIds = getExpandedIds(engine)
-  const visible: string[] = []
-
-  const walk = (parentId: string) => {
-    const children = getChildren(store, parentId)
-    for (const childId of children) {
-      visible.push(childId)
-      if (expandedIds.includes(childId)) {
-        walk(childId)
-      }
-    }
-  }
-
-  walk(ROOT_ID)
-  return visible
+  const expandedIds = (engine.getStore().entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
+  return expandedIds.includes(nodeId)
 }
 
 export interface PatternContextOptions {
@@ -223,6 +200,24 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
       commands.push(focusCommands.setFocus(targetId))
       commands.push(selectionCommands.selectRange(rangeIds))
       return createBatchCommand(commands)
+    },
+
+    enterChild(parentId: string): Command {
+      return spatialCommands.enterChild(parentId)
+    },
+
+    exitToParent(): Command | undefined {
+      const spatialParent = getEntity(store, SPATIAL_PARENT_ID)
+      const parentId = spatialParent?.parentId as string | undefined
+      if (!parentId || parentId === ROOT_ID) return undefined
+      return createBatchCommand([
+        spatialCommands.exitToParent(),
+        focusCommands.setFocus(parentId),
+      ])
+    },
+
+    startRename(nodeId: string): Command {
+      return renameCommands.startRename(nodeId)
     },
 
     dispatch(command: Command): void {
