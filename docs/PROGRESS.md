@@ -76,9 +76,9 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| ActivityBar (External/Internal) · routing | Integrated | createBrowserRouter + layout route 전환 완료 |
+| ActivityBar (CMS·UI·Viewer·Agent·Theme / internals) | Integrated | / = CMS, /viewer, /agent 1급 앱 |
 | UI Docs (/ui/{name}) | Integrated | Area MD SSOT + MdPage 렌더, 5범주 사이드바, 23종 MD 뼈대 |
-| Landing (/) · Docs (/docs) | Validated | hero + component grid, Getting Started + architecture |
+| Theme (/internals/theme) | Validated | MiniDemo 그리드 흡수, token 편집기 |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs · field types) | Validated | paste overwrite, viewer channel 미구현 |
 | Agent Viewer (multi-session · virtual scroll) | Validated | viewer channel disabled |

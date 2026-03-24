@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Sun, Moon, Home, BookText, Component, Presentation, Eye, Activity, Palette } from 'lucide-react'
+import { Sun, Moon, Presentation, Component, Eye, Activity, Palette } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import { Aria } from './interactive-os/components/aria'
@@ -59,12 +59,10 @@ interface NavItem {
 }
 
 const externalNavItems: NavItem[] = [
-  { id: 'landing', label: 'Home', icon: Home, path: '/' },
-  { id: 'docs', label: 'Docs', icon: BookText, path: '/docs' },
+  { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'ui-showcase', label: 'UI', icon: Component, path: '/ui' },
-  { id: 'examples-cms', label: 'CMS', icon: Presentation, path: '/examples/cms' },
-  { id: 'examples-viewer', label: 'Viewer', icon: Eye, path: '/examples/viewer' },
-  { id: 'examples-agent', label: 'Agent', icon: Activity, path: '/examples/agent' },
+  { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
+  { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
 ]
 

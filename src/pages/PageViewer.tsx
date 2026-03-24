@@ -5,6 +5,8 @@ import {
   FileText, ChevronRight, ChevronDown, Circle, PanelLeft, Search,
 } from 'lucide-react'
 import { Aria } from '../interactive-os/components/aria'
+import { useResizer } from '../hooks/useResizer'
+import '../styles/resizer.css'
 import { tree } from '../interactive-os/behaviors/tree'
 import { core, FOCUS_ID } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/core/createStore'
@@ -78,7 +80,7 @@ function filePathToUrlPath(filePath: string): string {
   const relative = filePath.startsWith(DEFAULT_ROOT + '/')
     ? filePath.slice(DEFAULT_ROOT.length + 1)
     : filePath
-  return `/examples/viewer/${relative}`
+  return `/viewer/${relative}`
 }
 
 function getAncestorIds(filePath: string, store: NormalizedData): string[] {
@@ -124,6 +126,10 @@ export default function PageViewer() {
   const [loading, setLoading] = useState(true)
   const [treeCollapsed, setTreeCollapsed] = useState(false)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
+  const treeResizer = useResizer({
+    defaultSize: 280, minSize: 180, maxSize: 480, step: 10,
+    storageKey: 'viewer-tree-width',
+  })
   const loadedFileRef = useRef<string | null>(null)
   const contentBodyRef = useRef<HTMLDivElement>(null)
 
@@ -194,7 +200,8 @@ export default function PageViewer() {
     <div className={styles.vw}>
       {/* Tree panel (sidebar) */}
       {!treeCollapsed && (
-        <div className={styles.vwTree}>
+        <>
+        <div className={styles.vwTree} style={{ width: treeResizer.size }}>
           <div className={styles.vwTreeHeader}>
             <span className={styles.vwTreeHeaderTitle}>Explorer</span>
             <button
@@ -236,6 +243,8 @@ export default function PageViewer() {
             </Aria>
           </div>
         </div>
+        <div className="resizer-handle" aria-label="Resize explorer" {...treeResizer.separatorProps} />
+        </>
       )}
 
       {/* Content panel */}

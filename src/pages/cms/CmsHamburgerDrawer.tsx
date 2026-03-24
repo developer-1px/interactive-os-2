@@ -1,6 +1,6 @@
 import { useEffect, useRef, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Eye, Database, Cog, Compass, Puzzle, Layers, Box, Map, PenTool } from 'lucide-react'
+import { Eye, Database, Cog, Puzzle, Box, Map, PenTool } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { NormalizedData, Command } from '../../interactive-os/core/types'
 import type { BehaviorContext } from '../../interactive-os/behaviors/types'
@@ -16,13 +16,11 @@ interface DrawerNavItem {
 }
 
 const drawerItems: DrawerNavItem[] = [
-  { id: 'cms', label: 'CMS', icon: PenTool, path: '/examples/cms' },
-  { id: 'viewer', label: 'Viewer', icon: Eye, path: '/examples/viewer' },
+  { id: 'cms', label: 'CMS', icon: PenTool, path: '/' },
+  { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
   { id: 'store', label: 'Store', icon: Database, path: '/internals/store/inspector' },
   { id: 'engine', label: 'Engine', icon: Cog, path: '/internals/engine/command' },
-  { id: 'pattern', label: 'Pattern', icon: Compass, path: '/internals/pattern/accordion' },
   { id: 'plugin', label: 'Plugin', icon: Puzzle, path: '/internals/plugin/crud' },
-  { id: 'collection', label: 'Collection', icon: Layers, path: '/internals/collection/treegrid' },
   { id: 'components', label: 'Components', icon: Box, path: '/internals/components/aria' },
   { id: 'vision', label: 'Vision', icon: Map, path: '/internals/area/vision' },
 ]
