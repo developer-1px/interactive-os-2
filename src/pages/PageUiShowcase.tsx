@@ -4,46 +4,48 @@ import styles from './PageUiShowcase.module.css'
 import MdPage from './MdPage'
 import { uiCategories, slugToMdFile } from './uiCategories'
 import { components } from './showcaseRegistry'
-import { NavList } from '../interactive-os/ui/NavList'
+import { Aria } from '../interactive-os/components/aria'
+import { navlist } from '../interactive-os/behaviors/navlist'
+import { core, FOCUS_ID } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
-import { FOCUS_ID } from '../interactive-os/plugins/core'
 import type { NormalizedData } from '../interactive-os/core/types'
+import type { NodeState } from '../interactive-os/behaviors/types'
 
-function CategoryNavList({ category, activeSlug, onActivate }: {
-  category: typeof uiCategories[number]
-  activeSlug: string
-  onActivate: (slug: string) => void
-}) {
-  const store = useMemo(() => {
-    const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
-    const ids: string[] = []
-    for (const slug of category.slugs) {
+// --- Pre-computed store + ids ---
+
+const allSlugs = uiCategories.flatMap((cat) => cat.slugs)
+
+const sidebarBaseStore = createStore({
+  entities: Object.fromEntries(
+    allSlugs.map((slug) => {
       const entry = components.find((c) => c.slug === slug)
-      if (!entry) continue
-      entities[slug] = { id: slug, data: { label: entry.name } }
-      ids.push(slug)
-    }
-    const base = createStore({ entities, relationships: { [ROOT_ID]: ids } })
-    const isActive = category.slugs.includes(activeSlug)
-    if (!isActive) return base
-    return {
-      ...base,
-      entities: {
-        ...base.entities,
-        [FOCUS_ID]: { id: FOCUS_ID, focusedId: activeSlug },
-      },
-    } as NormalizedData
-  }, [category.slugs, activeSlug])
+      return [slug, { id: slug, data: { label: entry?.name ?? slug } }]
+    })
+  ),
+  relationships: { [ROOT_ID]: allSlugs },
+})
 
+const categoryIds = Object.fromEntries(
+  uiCategories.map((cat) => [cat.label, cat.slugs])
+)
+
+// --- Sidebar item renderer ---
+
+const renderSidebarItem = (
+  props: React.HTMLAttributes<HTMLElement>,
+  node: Record<string, unknown>,
+  state: NodeState,
+): React.ReactElement => {
+  const label = (node.data as Record<string, unknown>)?.label as string ?? node.id as string
   return (
-    <NavList
-      data={store}
-      onActivate={onActivate}
-      aria-label={`${category.label} components`}
-    />
+    <div {...props} className={styles.uiNavItem + (state.focused ? ' ' + styles.uiNavItemActive : '')}>
+      {label}
+    </div>
   )
 }
+
+// --- PageUiShowcase ---
 
 export default function PageUiShowcase() {
   const { pathname } = useLocation()
@@ -51,9 +53,16 @@ export default function PageUiShowcase() {
 
   const activeSlug = useMemo(() => {
     const segment = pathname.replace(/^\/ui\/?/, '').split('/')[0]
-    const found = slugToMdFile[segment]
-    return found ? segment : uiCategories[0].slugs[0]
+    return slugToMdFile[segment] ? segment : uiCategories[0].slugs[0]
   }, [pathname])
+
+  const sidebarData = useMemo<NormalizedData>(() => ({
+    ...sidebarBaseStore,
+    entities: {
+      ...sidebarBaseStore.entities,
+      [FOCUS_ID]: { id: FOCUS_ID, focusedId: activeSlug },
+    },
+  }), [activeSlug])
 
   const handleActivate = useCallback((slug: string) => {
     navigate(`/ui/${slug}`)
@@ -68,16 +77,21 @@ export default function PageUiShowcase() {
           <span className={styles.uiSidebarTitle}>UI Components</span>
         </div>
         <div className={styles.uiSidebarBody}>
-          {uiCategories.map((cat) => (
-            <div key={cat.label} className={styles.uiCategory}>
-              <div className={styles.uiCategoryLabel}>{cat.label}</div>
-              <CategoryNavList
-                category={cat}
-                activeSlug={activeSlug}
-                onActivate={handleActivate}
-              />
-            </div>
-          ))}
+          <Aria
+            behavior={navlist}
+            data={sidebarData}
+            plugins={[core()]}
+            onActivate={handleActivate}
+            aria-label="UI Components"
+            autoFocus={false}
+          >
+            {uiCategories.map((cat) => (
+              <div key={cat.label} role="group" aria-label={cat.label} className={styles.uiCategory}>
+                <div className={styles.uiCategoryLabel}>{cat.label}</div>
+                <Aria.Item asChild ids={categoryIds[cat.label]} render={renderSidebarItem} />
+              </div>
+            ))}
+          </Aria>
         </div>
       </nav>
       <div className={styles.uiContent}>
