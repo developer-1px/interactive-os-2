@@ -5,15 +5,22 @@
 > **Maturity:** Concept → Prototype → Validated → Integrated → Production
 > **이력:** PROGRESS-ARCHIVE.md (체크리스트 시절 전체 이력)
 
-## Core
+## Store (L1)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Store (NormalizedData) | Integrated | 직렬화 미구현 |
-| Engine (dispatch + middleware) | Integrated | — |
+| NormalizedData | Integrated | 직렬화 미구현 |
+| storeToTree | Integrated | — |
+| computeStoreDiff | Integrated | — |
+
+## Engine (L2)
+
+| Module | Maturity | Gaps |
+|--------|----------|------|
+| dispatch + middleware | Integrated | — |
 | Dispatch Logger | Validated | — |
 
-## Plugins (8종)
+## Plugins (L3 · 8종)
 
 | Plugin | Maturity | Gaps |
 |--------|----------|------|
@@ -30,16 +37,23 @@
 | definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires. 전 플러그인 전환 완료 |
 | *permissions* | Concept | 예제만 존재 |
 
-## Behavior (5축 + 18 presets)
+## Axis (L4 · 7축)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| composePattern + 7축 (tab 추가) | Integrated | — |
+| 7축 (navigation · selection · expand · focus · tab · value · edit) | Integrated | — |
+
+## Pattern (L5)
+
+| Module | Maturity | Gaps |
+|--------|----------|------|
+| composePattern | Integrated | — |
+| edit | Integrated | — |
 | pointer interaction | Integrated | — |
 | 17 presets (listbox~spinbutton) | Integrated | — |
 | *menubar* | Concept | 다계층 keyMap 필요 |
 
-## Hooks & Components
+## Primitives (L6)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
@@ -49,7 +63,7 @@
 | useResizer · useVirtualScroll | Validated | — |
 | *가상화 (10k+ 노드)* | Concept | — |
 
-## UI (15종)
+## UI (L7 · 15종)
 
 | Component | Maturity | Gaps |
 |-----------|----------|------|
