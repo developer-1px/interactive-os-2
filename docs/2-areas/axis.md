@@ -1,6 +1,6 @@
-# Axes
+# Axis (L4)
 
-> 키맵 원자. 7개 축이 behavior(패턴)를 조합하는 빌딩블록. `composePattern(metadata, ...axes)` → `AriaBehavior`.
+> 인터랙션 차원. 7개 축이 pattern을 조합하는 빌딩블록. 읽기/view state 전용, ctx 추상화만 사용.
 
 ## 주기율표
 

@@ -1,6 +1,6 @@
-# Hooks
+# Primitives (L6)
 
-> React 통합. store + engine + behavior를 React 컴포넌트에 연결하는 훅.
+> Aria 컴포넌트 + zone + hook. store + engine + pattern을 React 컴포넌트에 연결하는 빌딩블록.
 
 ## 주기율표
 

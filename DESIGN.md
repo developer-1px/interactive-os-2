@@ -14,8 +14,9 @@
 | **shape** | radius + padding | 5개 (xs~xl) | 요소 형태. radius와 padding 비례 |
 | **type** | fontSize + weight + family + lineHeight | 5개 (caption~hero) | 글자 계층. size↑ → serif + lighter |
 | **tone** | base + hover + dim + foreground | 5개 (primary~neutral) | 의미 색상. 모든 tone이 동일 4축 구조 |
+| **motion** | duration + easing | 3개 (instant/normal/enter) | 전환 속도감. property는 독립 |
 
-독립 축 (번들에 속하지 않음): **color** (text-bright~muted), **border** (subtle~strong), **interactive** (hover/active)
+독립 축 (번들에 속하지 않음): **color** (text-bright~muted), **border** (subtle~strong), **interactive** (hover/active), **icon** (xs~lg, 거의 16px 고정), **gap** (상관관계 없음)
 
 ## 1. 레퍼런스 수치 (claude.ai 실측)
 
@@ -234,6 +235,15 @@ Input radius: 10px (body radius보다 큼)
 ```
 
 설명은 왼쪽에서 흐르고, 액션은 오른쪽 끝에 정렬. 시선 흐름: 읽기(좌→우) → 행동(우측).
+
+### Rule 10: gap 기본값 — 가로 좁게, 세로 넓게
+
+```
+row(가로 배치):    gap: var(--space-md)  /* 12px — claude.ai 61/76회 */
+column(세로 배치): gap: var(--space-xl)  /* 24px — 섹션 간 분리 */
+```
+
+가로는 요소 간 결합감을 유지하되, 세로는 섹션 분리를 위해 2배 넓게.
 
 ---
 
