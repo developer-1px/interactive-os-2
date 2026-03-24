@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, fireEvent, act } from '@testing-library/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Aria } from '../components/aria'
 import { listbox } from '../behaviors/listbox'
 import { core } from '../plugins/core'
@@ -277,11 +277,11 @@ describe('Rename UI', () => {
 
   describe('replace mode options', () => {
     it('startRename with replace:true and initialChar stores them in __rename__ entity', () => {
-      let capturedStore: ReturnType<typeof createStore> | null = null
+      const capturedStoreRef = { current: null as ReturnType<typeof createStore> | null }
 
       function StoreCapture() {
         const [data, setData] = useState(initialStore)
-        capturedStore = data
+        useEffect(() => { capturedStoreRef.current = data })
 
         const keyMap = {
           'F2': (_ctx: import('../behaviors/types').BehaviorContext) =>
@@ -304,7 +304,7 @@ describe('Rename UI', () => {
       const firstNode = container.querySelector('[data-node-id="a"]')!
       act(() => { fireEvent.keyDown(firstNode, { key: 'F2' }) })
 
-      const renameEntity = capturedStore!.entities['__rename__']
+      const renameEntity = capturedStoreRef.current!.entities['__rename__']
       expect(renameEntity).toBeDefined()
       expect(renameEntity.replace).toBe(true)
       expect(renameEntity.initialChar).toBe('a')

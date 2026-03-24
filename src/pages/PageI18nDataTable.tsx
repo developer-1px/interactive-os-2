@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import type { NormalizedData } from '../interactive-os/core/types'
 import type { NodeState } from '../interactive-os/behaviors/types'
 import { Grid } from '../interactive-os/ui/Grid'
@@ -17,7 +17,7 @@ const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusR
 export default function PageI18nDataTable() {
   const [data, setData] = useState<NormalizedData>(i18nInitialData)
   const dataRef = useRef(data)
-  dataRef.current = data
+  useEffect(() => { dataRef.current = data })
 
   const renderCell = (_props: React.HTMLAttributes<HTMLElement>, value: unknown, column: { key: string }, state: NodeState) => {
     const text = String(value ?? '')

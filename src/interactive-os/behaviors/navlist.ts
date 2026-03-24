@@ -19,5 +19,5 @@ const base = composePattern(
 )
 
 // Remove Space key — NavList is activation-only, Space is for selection (ListBox)
-const { Space: _, ...keyMap } = base.keyMap
+const { Space: _space, ...keyMap } = base.keyMap
 export const navlist = { ...base, keyMap }

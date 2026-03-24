@@ -77,10 +77,10 @@ function AriaItemNode({ childId, render }: { childId: string; render: AriaItemPr
   if (!aria) throw new Error('<Aria.Item> must be inside <Aria>')
   const store = aria.getStore()
   const entity = store.entities[childId]
+  const state = entity ? aria.getNodeState(childId) : { focused: false } as ReturnType<typeof aria.getNodeState>
+  const scrollRef = useFocusScroll(entity ? state.focused : false)
   if (!entity) return null
-  const state = aria.getNodeState(childId)
   const props = aria.getNodeProps(childId) as React.HTMLAttributes<HTMLElement>
-  const scrollRef = useFocusScroll(state.focused)
 
   return (
     <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>

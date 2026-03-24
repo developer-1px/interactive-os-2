@@ -8,6 +8,7 @@ import type { EditableGroup, EditableGroupEntry } from './cms-schema'
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
 import { CMS_ICONS, CMS_ICON_MAP } from './cmsIcons'
+import { CmsIcon } from './cms-renderers'
 
 interface CmsDetailPanelProps {
   engine: CommandEngine
@@ -249,17 +250,17 @@ function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) 
     if (!defaultExpanded) setExpanded(false)
   }, [entry.nodeId, entry.field, currentValue, engine, defaultExpanded])
 
-  const CurrentIcon = CMS_ICON_MAP.get(currentValue)
+  const hasIcon = CMS_ICON_MAP.has(currentValue)
 
   return (
     <div className="cms-detail-field">
       <label className="cms-detail-field__label">{entry.label}</label>
       <button
         type="button"
-        className={`cms-icon-field__current${!CurrentIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
+        className={`cms-icon-field__current${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
         onClick={() => setExpanded(v => !v)}
       >
-        {CurrentIcon ? <CurrentIcon size={16} /> : null}
+        <CmsIcon name={currentValue} size={16} />
         <span>{currentValue || 'none'}</span>
       </button>
       {expanded && (

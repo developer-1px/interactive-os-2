@@ -1,4 +1,4 @@
-import { useState, useEffect, createElement, type ReactNode } from 'react'
+import { createElement, type ReactNode } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -11,9 +11,9 @@ interface MdPageProps {
   md: string
 }
 
-const mdModules = import.meta.glob<string>('/docs/2-areas/**/*.md', {
+const mdModules = import.meta.glob<{ default: string }>('/docs/2-areas/**/*.md', {
   query: '?raw',
-  import: 'default',
+  eager: true,
 })
 
 function RenderBlock({ children }: { children: string }) {
@@ -48,25 +48,14 @@ function RenderBlock({ children }: { children: string }) {
 }
 
 export default function MdPage({ md }: MdPageProps) {
-  const [content, setContent] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const mdPath = `/docs/2-areas/${md}.md`
+  const mod = mdModules[mdPath]
 
-  useEffect(() => {
-    setContent(null)
-    setError(null)
+  if (!mod) {
+    return <div className="page-header"><p className="page-desc">Not found: {mdPath}</p></div>
+  }
 
-    const mdPath = `/docs/2-areas/${md}.md`
-    const loader = mdModules[mdPath]
-    if (!loader) {
-      setError(`Not found: ${mdPath}`)
-      return
-    }
-
-    loader().then(setContent).catch((e) => setError(String(e)))
-  }, [md])
-
-  if (error) return <div className="page-header"><p className="page-desc">{error}</p></div>
-  if (content === null) return <div className="page-header"><p className="page-desc">Loading...</p></div>
+  const content = mod.default
 
   return (
     <div className={areaStyles.root}>
@@ -74,6 +63,7 @@ export default function MdPage({ md }: MdPageProps) {
         remarkPlugins={[remarkGfm, remarkRender]}
         rehypePlugins={[rehypeRaw]}
         components={{
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           div({ children, node, ...rest }) {
             const dataRender = (rest as Record<string, unknown>)['data-render']
             if (typeof dataRender === 'string') {

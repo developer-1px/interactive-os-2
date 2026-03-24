@@ -75,7 +75,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   } = options
 
   const onActivateRef = useRef(onActivate)
-  onActivateRef.current = onActivate
+  useEffect(() => { onActivateRef.current = onActivate })
 
   // ── Plugin handlers ──
 

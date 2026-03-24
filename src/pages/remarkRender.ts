@@ -10,7 +10,7 @@ const remarkRender: Plugin<[], Root> = () => (tree) => {
       parent.children[index] = {
         type: 'html',
         value: `<div data-render="${encoded}"></div>`,
-      } as any
+      } as unknown as typeof parent.children[number]
     }
   })
 }

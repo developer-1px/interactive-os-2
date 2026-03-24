@@ -12,11 +12,11 @@ import remarkBreaks from 'remark-breaks'
 
 // --- Helpers ---
 
-export function relPath(absPath: string): string {
+function relPath(absPath: string): string {
   return absPath.replace(DEFAULT_ROOT + '/', '')
 }
 
-export function eventLabel(evt: TimelineEvent): string {
+function eventLabel(evt: TimelineEvent): string {
   if (evt.type === 'user') return evt.text ?? ''
   if (evt.type === 'assistant') return evt.text ?? ''
   if (evt.tool === 'Skill') return `/${evt.text ?? 'skill'}`

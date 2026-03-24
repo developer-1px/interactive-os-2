@@ -18,6 +18,7 @@ interface UseVirtualScrollReturn {
   offsetTop: number
   measureItem: (index: number, height: number) => void
   scrollToIndex: (index: number, block?: 'start' | 'end') => void
+  recalc: () => void
 }
 
 export function useVirtualScroll({
@@ -126,10 +127,11 @@ export function useVirtualScroll({
     }
   }, [recalc])
 
-  // Recalc when itemCount changes
+  // Recalc when itemCount changes (e.g. items appended without scrolling)
   useEffect(() => {
-    recalc()
-  }, [recalc])
+    const id = requestAnimationFrame(() => recalc())
+    return () => cancelAnimationFrame(id)
+  }, [itemCount, recalc])
 
   // measureItem: update height cache and trigger recalc
   const measureItem = useCallback(
@@ -158,5 +160,5 @@ export function useVirtualScroll({
     [getOffsetForIndex, getItemHeight],
   )
 
-  return { containerRef, totalHeight, visibleRange, offsetTop, measureItem, scrollToIndex }
+  return { containerRef, totalHeight, visibleRange, offsetTop, measureItem, scrollToIndex, recalc }
 }

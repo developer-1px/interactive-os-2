@@ -19,9 +19,6 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
-  },
-  {
-    files: ['**/__tests__/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',

@@ -1,4 +1,5 @@
 import { cleanup } from '@testing-library/react'
+import { DemoComplete } from './rtlShim'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -201,11 +202,11 @@ export const vi = {
     return noop
   },
 
-  mock(..._args: unknown[]): void {
+  mock(): void {
     console.warn('vi.mock() is a noop in browser shim')
   },
 
-  spyOn(..._args: unknown[]) {
+  spyOn() {
     return {
       mockImplementation: noop,
       mockReturnValue: noop,
@@ -229,9 +230,17 @@ function collectTests(scope: DescribeScope): RegisteredTest[] {
 // runAll
 // ---------------------------------------------------------------------------
 
-export async function runAll(renderTarget?: HTMLElement): Promise<TestResult[]> {
+export type RunAllOptions = {
+  demoOnly?: boolean
+}
+
+export async function runAll(renderTarget?: HTMLElement, opts?: RunAllOptions): Promise<TestResult[]> {
   const allTests = collectTests(rootScope)
   const results: TestResult[] = []
+  const demo = opts?.demoOnly ?? false
+
+  // In demo mode, only run the first test to get a rendered preview
+  const toRun = demo ? allTests.slice(0, 1) : allTests
 
   // Redirect render() output to renderTarget if provided
   const originalAppendChild = document.body.appendChild.bind(document.body)
@@ -241,7 +250,7 @@ export async function runAll(renderTarget?: HTMLElement): Promise<TestResult[]> 
     }
   }
 
-  for (const test of allTests) {
+  for (const test of toRun) {
     // cleanup DOM before each test
     cleanup()
     if (renderTarget) renderTarget.innerHTML = ''
@@ -258,18 +267,25 @@ export async function runAll(renderTarget?: HTMLElement): Promise<TestResult[]> 
     try {
       await test.fn()
     } catch (e) {
-      status = 'fail'
-      error = e instanceof Error ? e.message : String(e)
+      // DemoComplete = render succeeded, halt is intentional
+      if (e instanceof DemoComplete) {
+        // keep status 'pass' — render completed, demo is visible
+      } else {
+        status = 'fail'
+        error = e instanceof Error ? e.message : String(e)
+      }
     }
 
     const duration = performance.now() - start
 
-    // run afterEach hooks (innermost → outermost)
-    for (const hook of test.afterEachChain) {
-      try {
-        await hook()
-      } catch {
-        // afterEach errors don't override the test result
+    // skip afterEach in demo mode — DOM should stay mounted for preview
+    if (!demo) {
+      for (const hook of test.afterEachChain) {
+        try {
+          await hook()
+        } catch {
+          // afterEach errors don't override the test result
+        }
       }
     }
 
@@ -287,9 +303,11 @@ export async function runAll(renderTarget?: HTMLElement): Promise<TestResult[]> 
     document.body.appendChild = originalAppendChild
   }
 
-  // reset registry for next runAll call
-  rootScope = createScope('root')
-  scopeStack = [rootScope]
+  // Don't reset registry in demo mode — full run needs it later
+  if (!demo) {
+    rootScope = createScope('root')
+    scopeStack = [rootScope]
+  }
 
   return results
 }

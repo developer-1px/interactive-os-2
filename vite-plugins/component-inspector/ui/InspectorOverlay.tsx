@@ -126,7 +126,7 @@ export const InspectorOverlay: React.FC<{
             x: minLeft,
             y: minTop,
             toJSON: () => {},
-          } as any;
+          } as DOMRect;
         }
       }
     }
@@ -247,10 +247,11 @@ export const InspectorOverlay: React.FC<{
   }, [activeElement]);
 
   useEffect(() => {
-    updateBox();
+    const rafId = requestAnimationFrame(updateBox);
     window.addEventListener("scroll", updateBox, true);
     window.addEventListener("resize", updateBox, true);
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", updateBox, true);
       window.removeEventListener("resize", updateBox, true);
     };
@@ -672,6 +673,7 @@ export const InspectorOverlay: React.FC<{
   );
 };
 
+ 
 function _getFileInfo(element: HTMLElement): string | null {
   const source = getDebugSource(element);
   if (!source) return null;

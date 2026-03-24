@@ -2,11 +2,12 @@ import styles from './TimelineColumn.module.css'
 import { useState, useEffect, useRef, useCallback, useMemo, memo, type ReactNode } from 'react'
 import {
   Circle, FileText, Terminal,
-  Pencil, Search, FilePlus, Send, Loader,
+  Pencil, Search, FilePlus, Loader,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import { useVirtualScroll } from './useVirtualScroll'
-import { groupEvents, type TimelineEvent, type DisplayItem, type ToolGroup } from './groupEvents'
+import { groupEvents, type TimelineEvent, type ToolGroup } from './groupEvents'
+import { subscribeTimeline } from './timelineSSE'
 import Markdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
@@ -228,14 +229,16 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
 
   // Set initial status from loaded timeline
   useEffect(() => {
-    if (!isLive) { setAgentStatus('done'); return }
+    if (!isLive) {
+      queueMicrotask(() => setAgentStatus('done'))
+      return
+    }
     if (timeline.length === 0) return
     const last = timeline[timeline.length - 1]
     if (last.type === 'user' || last.type === 'tool_use' || last.type === 'tool_result') {
-      markRunning()
+      queueMicrotask(() => markRunning())
     } else {
-      setAgentStatus('idle')
-      setRunStartTs(null)
+      queueMicrotask(() => { setAgentStatus('idle'); setRunStartTs(null) })
     }
     return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current) }
   }, [isLive]) // eslint-disable-line react-hooks/exhaustive-deps -- initial status only
@@ -244,7 +247,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   const displayItems = useMemo(() => groupEvents(timeline), [timeline])
 
   // --- Virtual scroll ---
-  const { containerRef, totalHeight, visibleRange, offsetTop, measureItem } = useVirtualScroll({
+  const { containerRef, totalHeight, visibleRange, offsetTop, measureItem, recalc } = useVirtualScroll({
     itemCount: displayItems.length,
     estimatedItemHeight: 40,
     overscan: 10,
@@ -296,10 +299,9 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     return () => el.removeEventListener('scroll', handleScroll)
   }, [containerRef, loadOlder])
 
-  // --- SSE connection (live sessions only) ---
+  // --- SSE via shared multiplexed connection ---
   useEffect(() => {
     if (!isLive) return
-    const es = new EventSource(`/api/agent-ops/timeline-stream?session=${encodeURIComponent(sessionId)}`)
 
     let pendingEvents: TimelineEvent[] = []
     let rafId = 0
@@ -314,31 +316,14 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
       totalRef.current += batch.length
     }
 
-    es.onmessage = (event) => {
-      let evt: TimelineEvent
-      try { evt = JSON.parse(event.data) } catch { return }
+    const unsubscribe = subscribeTimeline(sessionId, (evt) => {
       pendingEvents.push(evt)
       updateStatusFromEvent(evt)
       if (!rafId) rafId = requestAnimationFrame(flushPending)
-    }
-
-    es.onerror = () => {
-      es.addEventListener('open', function refetch() {
-        es.removeEventListener('open', refetch)
-        fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}&tail=${INITIAL_TAIL}`)
-          .then(r => r.json())
-          .then((data: { events: TimelineEvent[]; total: number }) => {
-            editRangesRef.current = new Map()
-            trackEditRanges(data.events)
-            setTimeline(data.events)
-            totalRef.current = data.total
-            loadedFromRef.current = Math.max(0, data.total - data.events.length)
-          })
-      })
-    }
+    })
 
     return () => {
-      es.close()
+      unsubscribe()
       if (rafId) cancelAnimationFrame(rafId)
     }
   }, [isLive, sessionId, trackEditRanges, updateStatusFromEvent])
@@ -346,6 +331,26 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   // --- Smart scroll ---
   const prevLengthRef = useRef(0)
   const initialLoadRef = useRef(true)
+
+  const scrollToBottom = useCallback(() => {
+    const el = containerRef.current
+    if (!el) return
+    // Multi-pass: scroll, recalc (renders new items), scroll again with correct heights
+    requestAnimationFrame(() => {
+      el.scrollTo(0, el.scrollHeight)
+      recalc()
+      requestAnimationFrame(() => {
+        el.scrollTo(0, el.scrollHeight)
+        recalc()
+        // Third pass for items that just got measured
+        requestAnimationFrame(() => {
+          el.scrollTo(0, el.scrollHeight)
+          recalc()
+        })
+      })
+    })
+  }, [containerRef, recalc])
+
   useEffect(() => {
     const el = containerRef.current
     if (!el || displayItems.length === 0) return
@@ -353,10 +358,8 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     if (initialLoadRef.current) {
       initialLoadRef.current = false
       prevLengthRef.current = displayItems.length
-      requestAnimationFrame(() => {
-        el.scrollTo(0, el.scrollHeight)
-        requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
-      })
+      // Use scrollToIndex to reliably reach the bottom
+      scrollToBottom()
       return
     }
 
@@ -372,9 +375,8 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }
 
     prevLengthRef.current = newLen
-
-    requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))
-  }, [displayItems, containerRef])
+    scrollToBottom()
+  }, [displayItems, containerRef, scrollToBottom])
 
   // --- File click handler ---
   const handleTimelineClick = useCallback((evt: TimelineEvent) => {
@@ -448,11 +450,10 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
 }
 
 function AgentRunningBar({ startTs }: { startTs: number | null }) {
-  const [elapsed, setElapsed] = useState(0)
+  const [elapsed, setElapsed] = useState(() => startTs != null ? Math.floor((Date.now() - startTs) / 1000) : 0)
 
   useEffect(() => {
     if (startTs == null) return
-    setElapsed(Math.floor((Date.now() - startTs) / 1000))
     const id = setInterval(() => {
       setElapsed(Math.floor((Date.now() - startTs) / 1000))
     }, 1000)
@@ -467,11 +468,11 @@ function AgentRunningBar({ startTs }: { startTs: number | null }) {
   )
 }
 
-const CHANNEL_URL = 'http://127.0.0.1:8788'
+// const CHANNEL_URL = 'http://127.0.0.1:8788'
 
-function ChatInput({ sessionId }: { sessionId: string }) {
+ 
+function ChatInput({ sessionId: _sessionId }: { sessionId: string }) {
   const [text, setText] = useState('')
-  const [sending, setSending] = useState(false)
   const ref = useRef<HTMLTextAreaElement>(null)
 
   return (

@@ -73,7 +73,7 @@ export const DebugManager: React.FC = () => {
       // Snap to SVG if inside one
       const svgRoot = target.closest("svg");
       if (svgRoot) {
-        target = svgRoot as any;
+        target = svgRoot as unknown as HTMLElement;
       }
 
       setHoveredElement(target);
@@ -201,13 +201,11 @@ export const DebugManager: React.FC = () => {
 
   // Scan OS components when inspector is active
   useEffect(() => {
-    if (!isInspectorActive) {
-      setOsComponents([]);
-      return;
-    }
+    if (!isInspectorActive) return;
 
     const update = () => setOsComponents(getAllOSComponents());
-    update();
+    // Defer initial update to avoid synchronous setState in effect
+    const rafId = requestAnimationFrame(update);
 
     // Refresh on scroll/resize
     window.addEventListener("scroll", update, true);
@@ -217,9 +215,11 @@ export const DebugManager: React.FC = () => {
     const interval = setInterval(update, 500);
 
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", update, true);
       window.removeEventListener("resize", update, true);
       clearInterval(interval);
+      setOsComponents([]);
     };
   }, [isInspectorActive]);
 

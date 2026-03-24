@@ -5,7 +5,7 @@
  * V8: Key column (col 0) F2 does not enter rename
  * V10: boundary navigation — first row/first col, ArrowUp + ArrowLeft do nothing
  */
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { describe, it, expect } from 'vitest'
 import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -48,7 +48,7 @@ const plugins = [core(), rename(), history(), focusRecovery()]
 function StatefulI18nGrid() {
   const [data, setData] = useState(() => translatableEntriesToGrid(cmsFixture()))
   const dataRef = useRef(data)
-  dataRef.current = data
+  useEffect(() => { dataRef.current = data })
 
   return (
     <Grid

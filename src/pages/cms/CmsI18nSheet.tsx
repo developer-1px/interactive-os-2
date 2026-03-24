@@ -1,4 +1,4 @@
-import { useMemo, useRef, useCallback } from 'react'
+import { useMemo, useRef, useCallback, useEffect } from 'react'
 import type { NormalizedData } from '../../interactive-os/core/types'
 import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
 import { Grid } from '../../interactive-os/ui/Grid'
@@ -20,7 +20,7 @@ interface CmsI18nSheetProps {
 export default function CmsI18nSheet({ engine, store, open }: CmsI18nSheetProps) {
   const gridData = useMemo(() => translatableEntriesToGrid(store), [store])
   const prevGridDataRef = useRef(gridData)
-  prevGridDataRef.current = gridData
+  useEffect(() => { prevGridDataRef.current = gridData })
 
   const handleChange = useCallback((newGridData: NormalizedData) => {
     const changes = diffGridChanges(prevGridDataRef.current, newGridData, store)

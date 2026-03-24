@@ -52,8 +52,6 @@ const toolbarActions: ToolbarAction[] = [
 ]
 
 export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden }: CmsFloatingToolbarProps) {
-  if (hidden) return null
-
   const context = getDepthContext(store, focusedId)
   const rootChildren = getChildren(store, ROOT_ID)
   const isOnlySection = context === 'root' && rootChildren.length <= 1
@@ -117,6 +115,8 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
       focusCanvas()
     },
   })
+
+  if (hidden) return null
 
   return (
     <div className="cms-floating-toolbar" role="toolbar" aria-label="Section actions" {...aria.containerProps}>

@@ -95,7 +95,7 @@ describe('clipboard paste overwrite', () => {
   // T3: copy text → paste on icon → no-op (type mismatch)
   it('rejects paste when types do not match (text on icon)', () => {
     const engine = createEngine()
-    const storeBefore = engine.getStore()
+    const _storeBefore = engine.getStore()
     engine.dispatch(clipboardCommands.copy(['text1']))
     engine.dispatch(clipboardCommands.paste('icon2'))
 
@@ -203,7 +203,7 @@ describe('clipboard cut/delete slot protection', () => {
   // T6: delete on slot node → no-op
   it('blocks delete on slot nodes via canDelete', () => {
     const engine = createEngine()
-    const childrenBefore = getChildren(engine.getStore(), 'card1')
+    const _childrenBefore = getChildren(engine.getStore(), 'card1')
     engine.dispatch(crudCommands.remove('text1'))
 
     // text1 should still exist — delete was blocked
@@ -272,7 +272,7 @@ describe('undo integration — cut-paste and delete', () => {
 
   it('delete section with deep subtree, undo restores all entities and relationships', () => {
     const engine = createEngine()
-    const storeBefore = engine.getStore()
+    const _storeBefore = engine.getStore()
 
     // section1 has card1(icon1, text1) and card2(icon2, text2) = 5 entities
     engine.dispatch(crudCommands.remove('section1'))

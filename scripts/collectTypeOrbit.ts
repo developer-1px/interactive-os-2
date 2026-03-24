@@ -158,8 +158,7 @@ function main() {
   // Pass 2: find all references to those types
   const orbit = new Map<string, Set<string>>();
 
-  for (const { file, sf } of sourceFiles) {
-    const relativePath = path.relative(PROJECT_ROOT, file);
+  for (const { sf } of sourceFiles) {
     const refs = collectTypeReferences(sf, allExportedTypes);
 
     for (const [typeName, usages] of refs) {

@@ -34,7 +34,7 @@ export function ToggleGroup({
   plugins = [core()],
   onChange,
   renderItem = defaultRenderItem,
-  orientation = 'horizontal',
+  orientation: _orientation = 'horizontal',
 }: ToggleGroupProps) {
   return (
     <Aria

@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 import { ListBox } from '../interactive-os/ui/ListBox'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -34,44 +35,54 @@ function truncate(str: string, max = 60): string {
   return str.length > max ? str.slice(0, max) + '…' : str
 }
 
-function createTracingMiddleware(name: string, trace: React.RefObject<string[]>): Middleware {
+interface MutableBox<T> { current: T }
+
+function createTracingMiddleware(name: string, trace: MutableBox<string[]>): Middleware {
   return (next) => (command: Command) => {
     trace.current.push(name)
     next(command)
   }
 }
 
+function createPlugins(
+  seqBox: MutableBox<number>,
+  traceBox: MutableBox<string[]>,
+  setEntries: React.Dispatch<React.SetStateAction<DispatchEntry[]>>,
+) {
+  const recorder = definePlugin({
+    name: 'recorder',
+    middleware: (next) => (command: Command) => {
+      traceBox.current = []
+      next(command)
+      seqBox.current++
+      setEntries((prev) => [...prev.slice(-(MAX_LOG_ENTRIES - 1)), {
+        seq: seqBox.current,
+        type: command.type,
+        payload: truncate(JSON.stringify(command.payload)),
+        middlewares: [...traceBox.current],
+      }])
+    },
+  })
+  const traceHistory = definePlugin({
+    name: 'trace:history',
+    middleware: createTracingMiddleware('history', traceBox),
+  })
+  const traceFocusRecovery = definePlugin({
+    name: 'trace:focusRecovery',
+    middleware: createTracingMiddleware('focusRecovery', traceBox),
+  })
+  return [recorder, core(), crud(), traceHistory, history(), traceFocusRecovery, focusRecovery()]
+}
+
 export default function PageEngineCommand() {
   const [data, setData] = useState<NormalizedData>(initialData)
   const [entries, setEntries] = useState<DispatchEntry[]>([])
-  const seqRef = useRef(0)
-  const traceRef = useRef<string[]>([])
-
-  const [plugins] = useState(() => {
-    const recorder = definePlugin({
-      name: 'recorder',
-      middleware: (next) => (command: Command) => {
-        traceRef.current = []
-        next(command)
-        seqRef.current++
-        setEntries((prev) => [...prev.slice(-(MAX_LOG_ENTRIES - 1)), {
-          seq: seqRef.current,
-          type: command.type,
-          payload: truncate(JSON.stringify(command.payload)),
-          middlewares: [...traceRef.current],
-        }])
-      },
-    })
-    const traceHistory = definePlugin({
-      name: 'trace:history',
-      middleware: createTracingMiddleware('history', traceRef),
-    })
-    const traceFocusRecovery = definePlugin({
-      name: 'trace:focusRecovery',
-      middleware: createTracingMiddleware('focusRecovery', traceRef),
-    })
-    return [recorder, core(), crud(), traceHistory, history(), traceFocusRecovery, focusRecovery()]
+  const [state] = useState(() => {
+    const seqBox: MutableBox<number> = { current: 0 }
+    const traceBox: MutableBox<string[]> = { current: [] }
+    return { seqBox, traceBox, plugins: createPlugins(seqBox, traceBox, setEntries) }
   })
+  const plugins = state.plugins
 
   return (
     <div>
