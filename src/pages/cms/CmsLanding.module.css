@@ -1,8 +1,8 @@
 /* ══════════════════════════════════════════════
-   CMS Landing — Editorial / Magazine
+   CMS Landing — Developer Documentation Style
    ══════════════════════════════════════════════
    Uses ONLY --landing-* tokens.
-   Typography + whitespace + asymmetry + icons.
+   Sans-serif, cards, icons, center-aligned, comfortable density.
 */
 
 /* ── Page ── */
@@ -25,21 +25,20 @@
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
   font-weight: var(--landing-weight-label);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
-  margin: 0 0 24px;
+  margin: 0 0 12px;
 }
 
 .cmsSectionTitle {
   font-family: var(--landing-font-display);
   font-size: var(--landing-size-title);
   font-weight: var(--landing-weight-title);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   line-height: var(--landing-leading-tight);
   color: var(--landing-text-heading);
-  margin: 0 0 20px;
-  font-style: italic;
+  margin: 0 0 12px;
   white-space: pre-line;
 }
 
@@ -47,25 +46,25 @@
   font-size: var(--landing-size-body);
   font-weight: var(--landing-weight-body);
   color: var(--landing-text-body);
-  margin: 0;
-  max-width: 440px;
+  margin: 0 0 var(--landing-space-section-sm);
+  max-width: 560px;
   line-height: var(--landing-leading-relaxed);
   white-space: pre-line;
 }
 
 /* ══════════════════════════════
-   Hero — full viewport, left-aligned
+   Hero — centered, generous
    ══════════════════════════════ */
 
 .cmsHero {
-  min-height: 90vh;
+  min-height: 70vh;
   padding: var(--landing-space-section) var(--landing-space-inline);
-  padding-top: 20vh;
+  padding-top: 16vh;
   background: var(--landing-bg-page);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
   max-width: var(--landing-space-content-max);
   margin: 0 auto;
 }
@@ -74,28 +73,36 @@
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
   font-weight: var(--landing-weight-label);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
-  margin-bottom: 40px;
-  border: none;
-  background: none;
-  padding: 0;
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-default);
+  border-radius: var(--landing-radius-badge);
+  padding: 4px 14px;
+  margin-bottom: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .cmsHeroBadgeDot {
-  display: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22C55E;
+  display: inline-block;
 }
 
 .cmsHeroTitle {
   font-family: var(--landing-font-display);
   font-size: var(--landing-size-display);
   font-weight: var(--landing-weight-display);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   line-height: var(--landing-leading-tight);
-  margin: 0 0 48px;
+  margin: 0 0 24px;
   color: var(--landing-text-heading);
-  max-width: 16ch;
+  max-width: 18ch;
 }
 
 .cmsHeroSubtitle {
@@ -103,62 +110,61 @@
   font-weight: var(--landing-weight-body);
   line-height: var(--landing-leading-relaxed);
   color: var(--landing-text-body);
-  margin: 0 0 64px;
-  max-width: 36ch;
+  margin: 0 0 40px;
+  max-width: 48ch;
 }
 
 .cmsHeroActions {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 16px;
 }
 
 .cmsHeroCta {
-  font-family: var(--landing-font-mono);
+  font-family: var(--landing-font-body);
   font-size: var(--landing-size-caption);
   font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--landing-text-heading);
-  background: none;
+  color: var(--landing-text-on-accent);
+  background: var(--landing-accent);
   border: none;
-  border-bottom: 1px solid var(--landing-text-heading);
-  padding: 0 0 4px;
+  border-radius: var(--landing-radius-card-sm);
+  padding: 10px 24px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .cmsHeroCtaSecondary {
-  font-family: var(--landing-font-mono);
+  font-family: var(--landing-font-body);
   font-size: var(--landing-size-caption);
   font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--landing-text-muted);
+  color: var(--landing-text-body);
   background: none;
-  border: none;
-  padding: 0;
+  border: 1px solid var(--landing-border-default);
+  border-radius: var(--landing-radius-card-sm);
+  padding: 10px 24px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* ══════════════════════════════
-   Manifesto — philosophy / values
+   Manifesto — values with icons, 3-col cards
    ══════════════════════════════ */
 
 .cmsManifesto {
   padding: var(--landing-space-section) var(--landing-space-inline);
-  background: var(--landing-bg-page);
-  border-top: var(--landing-rule);
+  background: var(--landing-bg-section-alt);
 }
 
 .cmsManifesto > .cmsSectionTitle {
   max-width: var(--landing-space-content-max);
   margin-left: auto;
   margin-right: auto;
-  font-size: var(--landing-size-display);
-  font-weight: var(--landing-weight-display);
-  letter-spacing: -0.04em;
-  margin-bottom: var(--landing-space-section-sm);
   text-align: center;
+  margin-bottom: var(--landing-space-section-sm);
 }
 
 .cmsManifestoValues {
@@ -166,16 +172,19 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(32px, 4vw, 80px);
+  gap: var(--landing-space-card-gap);
 }
 
 .cmsValueItem {
-  padding: 0;
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-default);
+  border-radius: var(--landing-radius-card);
+  padding: var(--landing-space-card-padding);
 }
 
 .cmsValueItemFocused {
-  border-left: 2px solid var(--landing-text-heading);
-  padding-left: 20px;
+  border-color: var(--landing-text-heading);
+  box-shadow: var(--landing-shadow-card-hover);
 }
 
 .cmsValueItemContent {
@@ -185,8 +194,14 @@
 }
 
 .cmsValueItemIcon {
-  color: var(--landing-text-muted);
-  margin-bottom: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--landing-accent-dim);
+  border-radius: var(--landing-radius-icon);
+  color: var(--landing-text-accent);
 }
 
 .cmsValueItemTitle {
@@ -195,9 +210,8 @@
   font-weight: var(--landing-weight-title);
   color: var(--landing-text-heading);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   line-height: var(--landing-leading-tight);
-  font-style: italic;
 }
 
 .cmsValueItemDesc {
@@ -208,19 +222,24 @@
 }
 
 /* ══════════════════════════════
-   Features — text blocks, alternating sides
+   Features — 2-col cards with icons
    ══════════════════════════════ */
 
 .cmsFeatures {
   padding: var(--landing-space-section) var(--landing-space-inline);
   background: var(--landing-bg-page);
-  border-top: var(--landing-rule);
 }
 
 .cmsFeatures > .cmsSectionLabel,
 .cmsFeatures > .cmsSectionTitle,
 .cmsFeatures > .cmsSectionDesc {
   max-width: var(--landing-space-content-max);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.cmsFeatures > .cmsSectionDesc {
   margin-left: auto;
   margin-right: auto;
 }
@@ -230,38 +249,41 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--landing-space-section-sm) clamp(40px, 8vw, 160px);
-}
-
-.cmsFeaturesGrid > :nth-child(even) {
-  padding-top: var(--landing-space-section-sm);
+  gap: var(--landing-space-card-gap);
 }
 
 .cmsFeatureCard {
-  padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-default);
+  border-radius: var(--landing-radius-card);
+  padding: var(--landing-space-card-padding);
 }
 
 .cmsFeatureCardFocused {
-  border-left: 2px solid var(--landing-text-heading);
-  padding-left: 20px;
+  border-color: var(--landing-text-heading);
+  box-shadow: var(--landing-shadow-card-hover);
 }
 
 .cmsFeatureCardIcon {
-  display: none;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--landing-accent-dim);
+  border-radius: var(--landing-radius-icon);
+  color: var(--landing-text-accent);
+  margin-bottom: 16px;
 }
 
 .cmsFeatureCardTitle {
   font-family: var(--landing-font-display);
-  font-size: var(--landing-size-title);
+  font-size: var(--landing-size-subtitle);
   font-weight: var(--landing-weight-title);
   color: var(--landing-text-heading);
-  margin: 0 0 16px;
-  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
   line-height: var(--landing-leading-tight);
-  font-style: italic;
 }
 
 .cmsFeatureCardDesc {
@@ -269,17 +291,15 @@
   color: var(--landing-text-body);
   line-height: var(--landing-leading-relaxed);
   margin: 0;
-  max-width: 32ch;
 }
 
 /* ══════════════════════════════
-   Patterns — flowing text list
+   Patterns — 4-col icon grid
    ══════════════════════════════ */
 
 .cmsPatterns {
   padding: var(--landing-space-section) var(--landing-space-inline);
-  background: var(--landing-bg-page);
-  border-top: var(--landing-rule);
+  background: var(--landing-bg-section-alt);
 }
 
 .cmsPatterns > .cmsSectionLabel,
@@ -288,69 +308,79 @@
   max-width: var(--landing-space-content-max);
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
+}
+
+.cmsPatterns > .cmsSectionDesc {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .cmsPatternsGrid {
   max-width: var(--landing-space-content-max);
   margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-}
-
-.cmsPatternsGrid > :nth-child(4n+1) {
-  grid-column: unset;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
 }
 
 .cmsPattern {
-  display: inline;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  border-radius: 0;
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-default);
+  border-radius: var(--landing-radius-card);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .cmsPattern::after {
-  content: ',\00a0\00a0';
-  color: var(--landing-text-muted);
-}
-
-.cmsPattern:last-child::after {
-  content: '.';
-}
-
-.cmsPatternFocused {
-  border-bottom: 1px solid var(--landing-text-heading);
-  background: transparent;
-}
-
-.cmsPatternIcon {
   display: none;
 }
 
+.cmsPatternFocused {
+  border-color: var(--landing-text-heading);
+  box-shadow: var(--landing-shadow-card-hover);
+}
+
+.cmsPatternIcon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--landing-accent-dim);
+  border-radius: var(--landing-radius-icon);
+  color: var(--landing-text-accent);
+  flex-shrink: 0;
+}
+
 .cmsPatternName {
-  font-family: var(--landing-font-display);
-  font-size: clamp(24px, 3vw, 40px);
-  font-weight: 700;
+  font-family: var(--landing-font-body);
+  font-size: var(--landing-size-caption);
+  font-weight: var(--landing-weight-title);
   color: var(--landing-text-heading);
-  font-style: italic;
 }
 
 /* ══════════════════════════════
-   Showcase — proof, icon + label grid
+   Showcase — 3-col icon + label cards
    ══════════════════════════════ */
 
 .cmsShowcase {
   padding: var(--landing-space-section) var(--landing-space-inline);
   background: var(--landing-bg-page);
-  border-top: var(--landing-rule);
 }
 
 .cmsShowcase > .cmsSectionLabel,
 .cmsShowcase > .cmsSectionTitle,
 .cmsShowcase > .cmsSectionDesc {
   max-width: var(--landing-space-content-max);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.cmsShowcase > .cmsSectionDesc {
   margin-left: auto;
   margin-right: auto;
 }
@@ -360,17 +390,19 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 32px clamp(32px, 4vw, 64px);
+  gap: var(--landing-space-card-gap);
 }
 
 .cmsShowcaseItem {
-  padding: 24px 0;
-  border-top: var(--landing-rule);
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-default);
+  border-radius: var(--landing-radius-card);
+  padding: var(--landing-space-card-padding);
 }
 
 .cmsShowcaseItemFocused {
-  border-left: 2px solid var(--landing-text-heading);
-  padding-left: 20px;
+  border-color: var(--landing-text-heading);
+  box-shadow: var(--landing-shadow-card-hover);
 }
 
 .cmsShowcaseItemContent {
@@ -380,7 +412,14 @@
 }
 
 .cmsShowcaseItemIcon {
-  color: var(--landing-text-muted);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--landing-accent-dim);
+  border-radius: var(--landing-radius-icon);
+  color: var(--landing-text-accent);
   margin-bottom: 4px;
 }
 
@@ -389,8 +428,7 @@
   font-size: var(--landing-size-subtitle);
   font-weight: var(--landing-weight-title);
   color: var(--landing-text-heading);
-  letter-spacing: -0.02em;
-  font-style: italic;
+  letter-spacing: -0.01em;
 }
 
 .cmsShowcaseItemDesc {
@@ -400,13 +438,12 @@
 }
 
 /* ══════════════════════════════
-   Journal — article list
+   Journal — article list with icons
    ══════════════════════════════ */
 
 .cmsJournal {
   padding: var(--landing-space-section) var(--landing-space-inline);
-  background: var(--landing-bg-page);
-  border-top: var(--landing-rule);
+  background: var(--landing-bg-section-alt);
 }
 
 .cmsJournal > .cmsSectionTitle {
@@ -425,72 +462,80 @@
 }
 
 .cmsArticle {
-  padding: 24px 0;
+  padding: 20px 0;
   border-top: var(--landing-rule);
 }
 
 .cmsArticleFocused {
-  border-left: 2px solid var(--landing-text-heading);
-  padding-left: 20px;
+  background: var(--landing-accent-dim);
+  border-radius: var(--landing-radius-card-sm);
+  padding: 20px 16px;
+  margin: 0 -16px;
 }
 
 .cmsArticleContent {
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
+  gap: 16px;
+  align-items: center;
 }
 
 .cmsArticleIcon {
-  color: var(--landing-text-muted);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--landing-accent-dim);
+  border: 1px solid var(--landing-border-default);
+  border-radius: var(--landing-radius-icon);
+  color: var(--landing-text-accent);
   flex-shrink: 0;
-  margin-top: 2px;
 }
 
 .cmsArticleBody {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .cmsArticleTitle {
   font-family: var(--landing-font-display);
-  font-size: var(--landing-size-subtitle);
+  font-size: var(--landing-size-body);
   font-weight: var(--landing-weight-title);
   color: var(--landing-text-heading);
   margin: 0;
-  letter-spacing: -0.02em;
-  font-style: italic;
 }
 
 .cmsArticleMeta {
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
 }
 
 /* ══════════════════════════════
-   Testimonial — large quote
+   Testimonial — centered quote
    ══════════════════════════════ */
 
 .cmsTestimonial {
   padding: var(--landing-space-section) var(--landing-space-inline);
   background: var(--landing-bg-page);
-  border-top: var(--landing-rule);
   display: flex;
   justify-content: center;
 }
 
 .cmsQuote {
-  max-width: var(--landing-space-content-max);
+  max-width: var(--landing-space-content-narrow);
   width: 100%;
+  text-align: center;
 }
 
 .cmsQuoteFocused {
-  border-left: 2px solid var(--landing-text-heading);
-  padding-left: 20px;
+  background: var(--landing-accent-dim);
+  border-radius: var(--landing-radius-card);
+  padding: 32px;
 }
 
 .cmsQuoteContent {
@@ -501,46 +546,43 @@
 
 .cmsQuoteMark {
   font-family: var(--landing-font-display);
-  font-size: clamp(80px, 10vw, 160px);
-  font-weight: 900;
+  font-size: 64px;
+  font-weight: 700;
   color: var(--landing-text-muted);
   line-height: 0.5;
   display: block;
   margin-bottom: 24px;
-  opacity: 0.3;
+  opacity: 0.4;
 }
 
 .cmsQuoteText {
   font-family: var(--landing-font-display);
-  font-size: clamp(28px, 4vw, 48px);
+  font-size: var(--landing-size-title);
   font-weight: var(--landing-weight-title);
   color: var(--landing-text-heading);
   line-height: var(--landing-leading-tight);
-  letter-spacing: -0.03em;
-  margin: 0 0 32px;
-  font-style: italic;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
   white-space: pre-line;
-  max-width: 20ch;
 }
 
 .cmsQuoteAttribution {
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-caption);
   font-weight: 600;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
   font-style: normal;
 }
 
 /* ══════════════════════════════
-   CTA — final conversion
+   CTA — centered with buttons
    ══════════════════════════════ */
 
 .cmsCta {
   padding: var(--landing-space-section) var(--landing-space-inline);
-  background: var(--landing-bg-page);
-  border-top: var(--landing-rule);
+  background: var(--landing-bg-section-alt);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -550,17 +592,16 @@
 .cmsCta > .cmsSectionTitle {
   font-size: var(--landing-size-display);
   font-weight: var(--landing-weight-display);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   max-width: 20ch;
-  text-align: center;
 }
 
 /* ══════════════════════════════
-   Footer — minimal, left-aligned
+   Footer — minimal, horizontal
    ══════════════════════════════ */
 
 .cmsFooter {
-  padding: var(--landing-space-section-sm) var(--landing-space-inline);
+  padding: 40px var(--landing-space-inline);
   background: var(--landing-bg-page);
   border-top: var(--landing-rule);
   display: flex;
@@ -584,7 +625,7 @@
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
   font-weight: 600;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
 }
@@ -602,18 +643,16 @@
 }
 
 .cmsFooterLink {
-  font-family: var(--landing-font-mono);
+  font-family: var(--landing-font-body);
   font-size: var(--landing-size-caption);
   font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--landing-text-muted);
   text-decoration: none;
   cursor: pointer;
 }
 
 /* ══════════════════════════════
-   Tab Group — editorial style
+   Tab Group
    ══════════════════════════════ */
 
 .cmsTabGroup {
@@ -627,43 +666,37 @@
 
 .cmsTablist {
   display: flex;
-  gap: 32px;
+  gap: 0;
   padding: 0;
   margin-bottom: var(--landing-space-section-sm);
-  background: none;
-  border-radius: 0;
-  border-bottom: var(--landing-rule);
-  width: auto;
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-default);
+  border-radius: var(--landing-radius-card-sm);
+  width: fit-content;
   margin-inline: var(--landing-space-inline);
   max-width: var(--landing-space-content-max);
 }
 
 .cmsTabItem {
-  padding: 12px 0;
-  font-family: var(--landing-font-mono);
+  padding: 8px 20px;
+  font-family: var(--landing-font-body);
   font-size: var(--landing-size-caption);
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-weight: 500;
   color: var(--landing-text-muted);
   background: none;
   border: none;
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
+  border-radius: var(--landing-radius-card-sm);
   cursor: pointer;
-  margin-bottom: -1px;
 }
 
 .cmsTabItemActive {
   color: var(--landing-text-heading);
-  border-bottom-color: var(--landing-text-heading);
-  background: none;
-  box-shadow: none;
+  background: var(--landing-accent-dim);
 }
 
 .cmsTabItemFocused {
   outline: 1px solid var(--landing-text-muted);
-  outline-offset: 2px;
+  outline-offset: -1px;
 }
 
 .cmsTabPanel {
@@ -677,15 +710,13 @@
 @media (max-width: 768px) {
   .cmsHeroTitle { max-width: 100%; }
   .cmsFeaturesGrid { grid-template-columns: 1fr; }
-  .cmsFeaturesGrid > :nth-child(even) { padding-top: 0; }
   .cmsManifestoValues { grid-template-columns: 1fr; }
+  .cmsPatternsGrid { grid-template-columns: repeat(2, 1fr); }
   .cmsShowcaseGrid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 480px) {
-  .cmsHero { min-height: 70vh; padding-top: 15vh; }
+  .cmsHero { min-height: auto; padding-top: 12vh; }
+  .cmsPatternsGrid { grid-template-columns: 1fr 1fr; }
   .cmsShowcaseGrid { grid-template-columns: 1fr; }
-  .cmsTablist { flex-direction: column; gap: 8px; border-bottom: none; }
-  .cmsTabItem { border-bottom: none; border-left: 2px solid transparent; padding: 8px 12px; }
-  .cmsTabItemActive { border-left-color: var(--landing-text-heading); border-bottom-color: transparent; }
 }
