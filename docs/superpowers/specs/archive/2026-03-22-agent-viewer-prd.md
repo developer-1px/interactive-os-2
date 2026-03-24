@@ -20,14 +20,14 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| PostToolUse hook script | `.claude/hooks/log-agent-ops.sh` — `Read\|Edit\|Write` 매칭, stdin JSON에서 `session_id`, `tool_name`, `file_path` 추출 → `.claude/agent-ops/{session_id}.ndjson`에 append | |
-| `.claude/settings.json` 훅 등록 | PostToolUse에 matcher `"Read\|Edit\|Write"` + command로 hook script 실행 | |
-| SSE endpoint (`/api/agent-ops/stream`) | `vite-plugin-fs.ts`에 추가. chokidar로 `.claude/agent-ops/` watch → 가장 최근 파일의 새 줄을 SSE로 push | |
-| 초기 로드 endpoint (`/api/agent-ops/latest`) | 가장 최근 세션의 NDJSON 전체 반환 (뷰어 진입 시 기존 데이터 로드용) | |
-| NDJSON 스키마 | `{ "ts": "ISO8601", "tool": "Read\|Edit\|Write", "file": "/abs/path" }` 한 줄 | |
-| `PageAgentViewer.tsx` | 3패널 레이아웃: 좌(수정 목록 — 상대 경로 + 수정 횟수 뱃지, e.g. `src/App.tsx ×3`) \| 중(콘텐츠) \| 우(읽기 스트림). follow mode 토글 포함 | |
-| `PageAgentViewer.module.css` | 3패널 CSS. 기존 PageViewer.module.css 패턴 재활용 | |
-| App.tsx 라우트 등록 | `/agent/*` 경로, navItems에 추가 | |
+| PostToolUse hook script | `.claude/hooks/log-agent-ops.sh` — `Read\|Edit\|Write` 매칭, stdin JSON에서 `session_id`, `tool_name`, `file_path` 추출 → `.claude/agent-ops/{session_id}.ndjson`에 append | `.claude/hooks/logAgentOps.mjs` |
+| `.claude/settings.json` 훅 등록 | PostToolUse에 matcher `"Read\|Edit\|Write"` + command로 hook script 실행 | `.claude/settings.json` |
+| SSE endpoint (`/api/agent-ops/stream`) | `vite-plugin-fs.ts`에 추가. chokidar로 `.claude/agent-ops/` watch → 가장 최근 파일의 새 줄을 SSE로 push | `vite-plugin-agent-ops.ts::agentOpsPlugin` |
+| 초기 로드 endpoint (`/api/agent-ops/latest`) | 가장 최근 세션의 NDJSON 전체 반환 (뷰어 진입 시 기존 데이터 로드용) | `vite-plugin-agent-ops.ts::agentOpsPlugin` |
+| NDJSON 스키마 | `{ "ts": "ISO8601", "tool": "Read\|Edit\|Write", "file": "/abs/path" }` 한 줄 | `.claude/hooks/logAgentOps.mjs` |
+| `PageAgentViewer.tsx` | 3패널 레이아웃: 좌(수정 목록 — 상대 경로 + 수정 횟수 뱃지, e.g. `src/App.tsx ×3`) \| 중(콘텐츠) \| 우(읽기 스트림). follow mode 토글 포함 | `PageAgentViewer.tsx::PageAgentViewer` |
+| `PageAgentViewer.module.css` | 3패널 CSS. 기존 PageViewer.module.css 패턴 재활용 | `PageAgentViewer.module.css` |
+| App.tsx 라우트 등록 | `/agent/*` 경로, navItems에 추가 | `router.tsx` |
 
 완성도: 🟢
 
@@ -109,16 +109,16 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | Claude Code에서 파일 Edit → Agent Viewer 확인 | 좌측 수정 목록에 상대 경로 나타남, follow ON이면 콘텐츠 자동 전환 | |
-| V2 | ①M1b | follow OFF 상태에서 Edit 이벤트 수신 | 좌측 목록에 추가되지만 콘텐츠 불변 | |
-| V3 | ①M2 | Claude Code에서 파일 Read → Agent Viewer 확인 | 우측 읽기 스트림에 `HH:MM:SS src/path/file.ts` 추가, 자동 스크롤 | |
-| V4 | ①M3 | 우측 읽기 스트림 항목 클릭 | 콘텐츠 패널에 해당 파일 내용 표시 | |
-| V5 | ①M4 | Agent Viewer를 열었을 때 이미 세션 진행 중 | `/api/agent-ops/latest`로 기존 데이터 로드 후 SSE 실시간 전환 | |
-| V6 | ④ 중복 Edit | 같은 파일 3회 Edit | 수정 목록에 1개 항목, 맨 위, 뱃지 ×3 | |
-| V7 | ④ 빈 상태 | 세션 로그 없이 Agent Viewer 진입 | "Waiting for agent activity..." 표시, SSE 연결 유지 | |
-| V8 | ④ 읽기 1000+ | Read 이벤트 대량 수신 | 최근 200줄만 유지, 이전 줄 자동 제거 | |
-| V9 | ④ SSE 재연결 | dev server 재시작 후 Agent Viewer | EventSource 자동 재연결 + 전체 재로드로 데이터 복원 | |
-| V10 | ⑥ S3 | hook async 동작 확인 | Claude Code 응답 지연 없이 hook 비동기 실행, NDJSON 정상 append | |
+| V1 | ①M1 | Claude Code에서 파일 Edit → Agent Viewer 확인 | 좌측 수정 목록에 상대 경로 나타남, follow ON이면 콘텐츠 자동 전환 | ❌ 테스트 없음 |
+| V2 | ①M1b | follow OFF 상태에서 Edit 이벤트 수신 | 좌측 목록에 추가되지만 콘텐츠 불변 | ❌ 테스트 없음 |
+| V3 | ①M2 | Claude Code에서 파일 Read → Agent Viewer 확인 | 우측 읽기 스트림에 `HH:MM:SS src/path/file.ts` 추가, 자동 스크롤 | ❌ 테스트 없음 |
+| V4 | ①M3 | 우측 읽기 스트림 항목 클릭 | 콘텐츠 패널에 해당 파일 내용 표시 | ❌ 테스트 없음 |
+| V5 | ①M4 | Agent Viewer를 열었을 때 이미 세션 진행 중 | `/api/agent-ops/latest`로 기존 데이터 로드 후 SSE 실시간 전환 | ❌ 테스트 없음 |
+| V6 | ④ 중복 Edit | 같은 파일 3회 Edit | 수정 목록에 1개 항목, 맨 위, 뱃지 ×3 | ❌ 테스트 없음 |
+| V7 | ④ 빈 상태 | 세션 로그 없이 Agent Viewer 진입 | "Waiting for agent activity..." 표시, SSE 연결 유지 | ❌ 테스트 없음 |
+| V8 | ④ 읽기 1000+ | Read 이벤트 대량 수신 | 최근 200줄만 유지, 이전 줄 자동 제거 | ❌ 테스트 없음 |
+| V9 | ④ SSE 재연결 | dev server 재시작 후 Agent Viewer | EventSource 자동 재연결 + 전체 재로드로 데이터 복원 | ❌ 테스트 없음 |
+| V10 | ⑥ S3 | hook async 동작 확인 | Claude Code 응답 지연 없이 hook 비동기 실행, NDJSON 정상 append | ❌ 테스트 없음 |
 
 완성도: 🟢
 

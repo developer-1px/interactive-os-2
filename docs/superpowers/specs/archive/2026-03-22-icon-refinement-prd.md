@@ -18,11 +18,11 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `tokens.css` — 아이콘 토큰 추가 | `--icon-xs: 10px`, `--icon-sm: 12px`, `--icon-md: 16px`, `--icon-lg: 24px`, `--icon-stroke: 1.5` |  |
-| `tokens.css` — 파일 컬러 토큰 추가 | `--file-folder`, `--file-ts`, `--file-js`, `--file-json`, `--file-md`, `--file-css`, `--file-sh`, `--file-img`, `--file-config` (다크/라이트 블록 모두) |  |
-| 전체 TSX — 아이콘 사이즈 마이그레이션 | 모든 `size={N}` → 4단계 스케일 중 가장 가까운 값으로 라운딩 |  |
-| 전체 TSX — strokeWidth 통일 | 모든 `strokeWidth={N}` → `1.5` 단일값 (명시적 prop 제거, 글로벌 기본값 활용) |  |
-| `PageViewer.module.css` — raw color 제거 | `.vw-icon--*` 셀렉터에서 하드코딩 hex → `var(--file-*)` |  |
+| `tokens.css` — 아이콘 토큰 추가 | `--icon-xs: 10px`, `--icon-sm: 12px`, `--icon-md: 16px`, `--icon-lg: 24px`, `--icon-stroke: 1.5` | `tokens.css::--icon-xs/sm/md/lg/stroke` (값: 12/14/16/24/1.5) |
+| `tokens.css` — 파일 컬러 토큰 추가 | `--file-folder`, `--file-ts`, `--file-js`, `--file-json`, `--file-md`, `--file-css`, `--file-sh`, `--file-img`, `--file-config` (다크/라이트 블록 모두) | `tokens.css::--file-*` (9종, dark+light) |
+| 전체 TSX — 아이콘 사이즈 마이그레이션 | 모든 `size={N}` → 4단계 스케일 중 가장 가까운 값으로 라운딩 | (완료 — `strokeWidth` prop 0건, 비표준 size 0건) |
+| 전체 TSX — strokeWidth 통일 | 모든 `strokeWidth={N}` → `1.5` 단일값 (명시적 prop 제거, 글로벌 기본값 활용) | (완료 — `strokeWidth` prop 0건) |
+| `PageViewer.module.css` — raw color 제거 | `.vw-icon--*` 셀렉터에서 하드코딩 hex → `var(--file-*)` | `FileIcon.module.css::var(--file-*)` (FileIcon으로 이관) |
 
 완성도: 🟢
 
@@ -91,12 +91,12 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | 전체 TSX에서 `size={` grep → 4가지 값(10,12,16,24)만 존재 | 8종→4종 확인 | |
-| V2 | M2 | 전체 TSX에서 `strokeWidth` grep → 결과 0건 (기본값 1.5 사용) | strokeWidth prop 제거 확인 | |
-| V3 | M3 | PageViewer.module.css에서 `#[hex]` grep → `.vw-icon--*`에 0건 | raw color 제거 확인 | |
-| V4 | 경계8 | 다크/라이트 테마 전환 → 파일 아이콘 색상이 테마에 맞게 변경됨 | 시각 확인 | |
-| V5 | M1 | tokens.css에 `--icon-xs`, `--icon-sm`, `--icon-md`, `--icon-lg`, `--icon-stroke` 존재 | 토큰 정의 확인 | |
-| V6 | S3 | SharedTreeComponents 트리 아이콘 12px 변경 후 텍스트와 수직 정렬 유지 | 시각 확인 | |
+| V1 | M1 | 전체 TSX에서 `size={` grep → 4가지 값(10,12,16,24)만 존재 | 8종→4종 확인 | (grep 검증 — 비표준 size 0건) |
+| V2 | M2 | 전체 TSX에서 `strokeWidth` grep → 결과 0건 (기본값 1.5 사용) | strokeWidth prop 제거 확인 | (grep 검증 — strokeWidth 0건) |
+| V3 | M3 | PageViewer.module.css에서 `#[hex]` grep → `.vw-icon--*`에 0건 | raw color 제거 확인 | (grep 검증 — FileIcon.module.css에서 var(--file-*) 사용) |
+| V4 | 경계8 | 다크/라이트 테마 전환 → 파일 아이콘 색상이 테마에 맞게 변경됨 | 시각 확인 | (시각 확인 — tokens.css dark/light 양쪽 정의) |
+| V5 | M1 | tokens.css에 `--icon-xs`, `--icon-sm`, `--icon-md`, `--icon-lg`, `--icon-stroke` 존재 | 토큰 정의 확인 | `tokens.css::--icon-xs/sm/md/lg/stroke` |
+| V6 | S3 | SharedTreeComponents 트리 아이콘 12px 변경 후 텍스트와 수직 정렬 유지 | 시각 확인 | (시각 확인) |
 
 완성도: 🟢
 

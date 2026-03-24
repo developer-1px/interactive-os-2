@@ -36,18 +36,24 @@
 
 각 템플릿은 **섹션의 엔티티 구조를 정의하는 팩토리**:
 
-| variant | 생성되는 구조 | 기본 자식 |
-|---------|-------------|----------|
-| `hero` | 섹션 + badge + title + subtitle + cta | 4개 필드 |
-| `stats` | 섹션 + stat 카드 N개 | 4개 stat |
-| `features` | 섹션 + header(label+title+desc) + card N개 (각 icon+title+desc) | header + 4개 카드 |
-| `workflow` | 섹션 + header + step N개 (num+title+desc) | header + 4개 스텝 |
-| `patterns` | 섹션 + header + pattern pill N개 | header + 14개 패턴 |
-| `footer` | 섹션 + brand + links | brand + link 그룹 |
+| variant | 생성되는 구조 | 기본 자식 | 역PRD |
+|---------|-------------|----------|-------|
+| `hero` | 섹션 + badge + title + subtitle + cta | 4개 필드 | `cms-templates.ts::TEMPLATE_VARIANTS` |
+| `stats` | 섹션 + stat 카드 N개 | 4개 stat | `cms-templates.ts::TEMPLATE_VARIANTS` |
+| `features` | 섹션 + header(label+title+desc) + card N개 (각 icon+title+desc) | header + 4개 카드 | `cms-templates.ts::TEMPLATE_VARIANTS` |
+| `workflow` | 섹션 + header + step N개 (num+title+desc) | header + 4개 스텝 | `cms-templates.ts::TEMPLATE_VARIANTS` |
+| `patterns` | 섹션 + header + pattern pill N개 | header + 14개 패턴 | `cms-templates.ts::TEMPLATE_VARIANTS` |
+| `footer` | 섹션 + brand + links | brand + link 그룹 | `cms-templates.ts::TEMPLATE_VARIANTS` |
 
-- **팩토리 함수**: variant를 받아 새 ID를 생성하고, 엔티티 + relationships를 반환
+- **팩토리 함수**: variant를 받아 새 ID를 생성하고, 엔티티 + relationships를 반환 — `cms-templates.ts::templateToCommand`
 - **기본값**: 기본 locale(ko)에 placeholder 텍스트, 나머지 locale은 빈 문자열
 - **추가 위치**: 사이드바에서 현재 선택된 섹션의 다음 위치에 삽입
+
+### 템플릿 선택 UI 컴포넌트
+
+| 산출물 | 설명 | 역PRD |
+|--------|------|-------|
+| 템플릿 선택 UI | 사이드바 [+]에서 열리는 드롭업 팝업 | `CmsTemplatePicker.tsx::CmsTemplatePicker` |
 
 ### 템플릿 등록 구조
 
@@ -78,13 +84,13 @@
 
 ## 6. 검증
 
-| # | 시나리오 | 예상 결과 |
-|---|---------|----------|
-| V1 | [+] 클릭 | 6가지 템플릿이 프리뷰와 함께 표시 |
-| V2 | Hero 선택 | hero 구조(badge+title+subtitle+cta) 생성, 사이드바 썸네일 추가, 캔버스에 표시 |
-| V3 | 추가 직후 undo | 섹션 전체 롤백 |
-| V4 | Stats 2개 추가 | 각각 독립된 stat 섹션, 서로 다른 ID |
-| V5 | 새 섹션의 i18n | ko에 기본값, en/ja는 빈 문자열 (fallback 흐리게 표시) |
+| # | 시나리오 | 예상 결과 | 역PRD |
+|---|---------|----------|-------|
+| V1 | [+] 클릭 | 6가지 템플릿이 프리뷰와 함께 표시 | ❌ 테스트 없음 |
+| V2 | Hero 선택 | hero 구조(badge+title+subtitle+cta) 생성, 사이드바 썸네일 추가, 캔버스에 표시 | ❌ 테스트 없음 |
+| V3 | 추가 직후 undo | 섹션 전체 롤백 | ❌ 테스트 없음 |
+| V4 | Stats 2개 추가 | 각각 독립된 stat 섹션, 서로 다른 ID | ❌ 테스트 없음 |
+| V5 | 새 섹션의 i18n | ko에 기본값, en/ja는 빈 문자열 (fallback 흐리게 표시) | ❌ 테스트 없음 |
 
 상태: 🟢
 

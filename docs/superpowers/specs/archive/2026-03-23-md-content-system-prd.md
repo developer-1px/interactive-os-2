@@ -20,12 +20,12 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `MdPage` 컴포넌트 | MD 문자열을 받아 렌더하는 범용 컴포넌트. react-markdown + 커스텀 code 렌더러 | |
-| `mdComponents` 레지스트리 | `tsx render` codeblock에서 사용 가능한 컴포넌트 매핑 객체. `{ NavigateDemo, AxisSpec, ... }` | |
-| `AxisSpec` 컴포넌트 | axis 함수(navigate 등)를 호출해 keyMap/options를 읽고 스펙 테이블을 런타임 렌더 | |
-| 간이 JSX 파서 | `tsx render` codeblock 내 셀프 클로징 JSX → `React.createElement` 변환. 지원: props 없음 / 문자열 props(`prop="value"`) / boolean flag(`compact`). 미지원: JS 표현식 `{}`, children, 중첩 JSX. eval 금지 | |
-| routeConfig `md` 필드 | 각 item에 `md: 'axes/navigate'` 추가 → `docs/2-areas/${md}.md`를 MdPage로 렌더 | |
-| 65개 `.md` 파일 | 기존 `.mdx` → `.md` 일괄 전환. navigate.md만 import문 제거 + `tsx render` codeblock 적용 | |
+| `MdPage` 컴포넌트 | MD 문자열을 받아 렌더하는 범용 컴포넌트. react-markdown + 커스텀 code 렌더러 | `MdPage.tsx::MdPage` |
+| `mdComponents` 레지스트리 | `tsx render` codeblock에서 사용 가능한 컴포넌트 매핑 객체. `{ NavigateDemo, AxisSpec, ... }` | `mdComponents.ts::mdComponents` |
+| `AxisSpec` 컴포넌트 | axis 함수(navigate 등)를 호출해 keyMap/options를 읽고 스펙 테이블을 런타임 렌더 | `AxisSpec.tsx::AxisSpec` |
+| 간이 JSX 파서 | `tsx render` codeblock 내 셀프 클로징 JSX → `React.createElement` 변환. 지원: props 없음 / 문자열 props(`prop="value"`) / boolean flag(`compact`). 미지원: JS 표현식 `{}`, children, 중첩 JSX. eval 금지 | `parseJsx.ts::parseJsx` |
+| routeConfig `md` 필드 | 각 item에 `md: 'axes/navigate'` 추가 → `docs/2-areas/${md}.md`를 MdPage로 렌더 | `routeConfig.ts::md 필드` |
+| 65개 `.md` 파일 | 기존 `.mdx` → `.md` 일괄 전환. navigate.md만 import문 제거 + `tsx render` codeblock 적용 | `docs/2-areas/**/*.md (86개 파일)` |
 
 완성도: 🟢
 
@@ -103,16 +103,16 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 SSOT | navigate.ts의 keyMap에 키 추가 → `/axis/navigate` 접근 | AxisSpec 테이블에 새 키 자동 표시 | |
-| V2 | ①M2 추가 비용 | 새 axis `value`를 MD로 추가: `docs/2-areas/axes/value.md` 작성 + routeConfig에 `md: 'axes/value'` 추가 | Page 컴포넌트 없이 페이지 렌더 | |
-| V3 | ①M3 컴포넌트 렌더 | navigate.md에 `` ```tsx render\n<NavigateDemo />\n``` `` 작성 | NavigateDemo가 라이브로 동작 (키보드 네비게이션 가능) | |
-| V4 | ①M4 레이어 구분 | ActivityBar에서 "Axis" → Sidebar에 navigate/select/... 표시 | 기존과 동일한 레이어 구분 + MD 기반 콘텐츠 | |
-| V5 | ①M5 단일 관리 | navigate.md 하나 수정 | `/axis/navigate`에 변경 즉시 반영. Page*.tsx 수정 불필요 | |
-| V6 | ④ 미등록 컴포넌트 | `tsx render`에 `<NonExistent />` 작성 | 에러 메시지 인라인 표시, 페이지 크래시 없음 | |
-| V7 | ④ 중첩 JSX | `tsx render`에 `<Outer><Inner /></Outer>` 작성 | 파싱 실패 → 에러 메시지 표시 | |
-| V8 | ④ GFM 테이블 | MD 파일에 기존 마크다운 테이블 유지 | react-markdown + remark-gfm으로 정상 렌더 | |
-| V9 | ⑥ S4 | `.mdx` → `.md` 전환 후 AreaSidebar 확인 | 사이드바 트리가 정상 빌드 (빈 목록 아님) | |
-| V10 | ⑥ S1 | `@mdx-js/rollup` 제거 후 빌드 | 빌드 성공. `.mdx` import 잔존 없음 | |
+| V1 | ①M1 SSOT | navigate.ts의 keyMap에 키 추가 → `/axis/navigate` 접근 | AxisSpec 테이블에 새 키 자동 표시 | ❌ 테스트 없음 |
+| V2 | ①M2 추가 비용 | 새 axis `value`를 MD로 추가: `docs/2-areas/axes/value.md` 작성 + routeConfig에 `md: 'axes/value'` 추가 | Page 컴포넌트 없이 페이지 렌더 | ❌ 테스트 없음 |
+| V3 | ①M3 컴포넌트 렌더 | navigate.md에 `` ```tsx render\n<NavigateDemo />\n``` `` 작성 | NavigateDemo가 라이브로 동작 (키보드 네비게이션 가능) | ❌ 테스트 없음 |
+| V4 | ①M4 레이어 구분 | ActivityBar에서 "Axis" → Sidebar에 navigate/select/... 표시 | 기존과 동일한 레이어 구분 + MD 기반 콘텐츠 | ❌ 테스트 없음 |
+| V5 | ①M5 단일 관리 | navigate.md 하나 수정 | `/axis/navigate`에 변경 즉시 반영. Page*.tsx 수정 불필요 | ❌ 테스트 없음 |
+| V6 | ④ 미등록 컴포넌트 | `tsx render`에 `<NonExistent />` 작성 | 에러 메시지 인라인 표시, 페이지 크래시 없음 | ❌ 테스트 없음 |
+| V7 | ④ 중첩 JSX | `tsx render`에 `<Outer><Inner /></Outer>` 작성 | 파싱 실패 → 에러 메시지 표시 | `parseJsx.test.ts::returns null for nested JSX` |
+| V8 | ④ GFM 테이블 | MD 파일에 기존 마크다운 테이블 유지 | react-markdown + remark-gfm으로 정상 렌더 | ❌ 테스트 없음 |
+| V9 | ⑥ S4 | `.mdx` → `.md` 전환 후 AreaSidebar 확인 | 사이드바 트리가 정상 빌드 (빈 목록 아님) | ❌ 테스트 없음 |
+| V10 | ⑥ S1 | `@mdx-js/rollup` 제거 후 빌드 | 빌드 성공. `.mdx` import 잔존 없음 | ❌ 테스트 없음 |
 
 완성도: 🟢
 

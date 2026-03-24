@@ -18,8 +18,8 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `scripts/collectSymbols.ts` | TS compiler API로 심볼 수집 → JSON 출력하는 CLI 스크립트 | |
-| stdout JSON | fragment dictionary — fragment별 그룹핑된 식별자 목록 | |
+| `scripts/collectSymbols.ts` | TS compiler API로 심볼 수집 → JSON 출력하는 CLI 스크립트 | `collectSymbols.ts` (스크립트 파일) |
+| stdout JSON | fragment dictionary — fragment별 그룹핑된 식별자 목록 | `collectSymbols.ts` (stdout 출력) |
 
 **출력 JSON 스키마:**
 
@@ -97,12 +97,12 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | 현재 src/에 대해 스크립트 실행 | 유효한 JSON 출력. `createStore`, `useAria` 등 기존 딕셔너리의 식별자가 모두 포함 | |
-| V2 | ①M3 | 동일 코드베이스에서 2회 실행 | 동일한 JSON 출력 (결정적) | |
-| V3 | ③ 1글자 제외 | `i`, `_` 같은 1글자 식별자가 있는 파일 | 출력에 1글자 식별자 없음 | |
-| V4 | ③ 테스트 제외 | `__tests__/`, `*.test.ts` 파일 존재 | 해당 파일의 심볼이 출력에 없음 | |
-| V5 | ④ 동일 식별자 복수 파일 | `dispatch`가 여러 파일에 선언 | identifiers 배열에 파일별 별도 항목 | |
-| V6 | ④ UPPER_SNAKE_CASE | `FOCUS_ID` 수집 | `["focus", "id"]` 두 fragment에 등록 | |
+| V1 | ①M1 | 현재 src/에 대해 스크립트 실행 | 유효한 JSON 출력. `createStore`, `useAria` 등 기존 딕셔너리의 식별자가 모두 포함 | ❌ 테스트 없음 (수동 실행 검증) |
+| V2 | ①M3 | 동일 코드베이스에서 2회 실행 | 동일한 JSON 출력 (결정적) | ❌ 테스트 없음 (수동 실행 검증) |
+| V3 | ③ 1글자 제외 | `i`, `_` 같은 1글자 식별자가 있는 파일 | 출력에 1글자 식별자 없음 | ❌ 테스트 없음 |
+| V4 | ③ 테스트 제외 | `__tests__/`, `*.test.ts` 파일 존재 | 해당 파일의 심볼이 출력에 없음 | ❌ 테스트 없음 |
+| V5 | ④ 동일 식별자 복수 파일 | `dispatch`가 여러 파일에 선언 | identifiers 배열에 파일별 별도 항목 | ❌ 테스트 없음 |
+| V6 | ④ UPPER_SNAKE_CASE | `FOCUS_ID` 수집 | `["focus", "id"]` 두 fragment에 등록 | ❌ 테스트 없음 |
 
 완성도: 🟢
 

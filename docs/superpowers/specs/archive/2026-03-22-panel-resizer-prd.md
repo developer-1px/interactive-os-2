@@ -19,11 +19,11 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `useResizer` hook | 하나의 separator 경계를 관리. pointer events + keyboard → 왼쪽 패널의 폭(px) 반환. `{ separatorProps, size }` | |
-| 호출 패턴 | CMS: `useResizer` × 2 (sidebar, detail). Agent: `useResizer` × N (동적). 각 호출이 독립적 | |
-| `separatorProps` | `role="separator"`, `aria-valuenow/min/max`, `tabIndex={0}`, pointer/keyboard handlers를 spread할 props 객체 | |
-| hook 옵션 | `{ defaultSize, minSize, maxSize, direction, step, storageKey }` | |
-| CSS | `.resizer-handle` — 공용 스타일. 4px 폭, hover 시 accent 색상, `cursor: col-resize` | |
+| `useResizer` hook | 하나의 separator 경계를 관리. pointer events + keyboard → 왼쪽 패널의 폭(px) 반환. `{ separatorProps, size }` | `useResizer.ts::useResizer` |
+| 호출 패턴 | CMS: `useResizer` × 2 (sidebar, detail). Agent: `useResizer` × N (동적). 각 호출이 독립적 | `CmsLayout.tsx`, `PageAgentViewer.tsx`, `PageViewer.tsx` |
+| `separatorProps` | `role="separator"`, `aria-valuenow/min/max`, `tabIndex={0}`, pointer/keyboard handlers를 spread할 props 객체 | `useResizer.ts::useResizer` (반환값) |
+| hook 옵션 | `{ defaultSize, minSize, maxSize, direction, step, storageKey }` | `useResizer.ts::UseResizerOptions` |
+| CSS | `.resizer-handle` — 공용 스타일. 4px 폭, hover 시 accent 색상, `cursor: col-resize` | `resizer.css::.resizer-handle` |
 
 완성도: 🟢
 
@@ -107,15 +107,15 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | CMS에서 sidebar↔canvas separator를 pointerdown→pointermove(+100px)→pointerup | sidebar 폭 = 220px (120+100), aria-valuenow = 220 | |
-| V2 | ①M2 | Agent Viewer에서 컬럼 A↔B separator를 드래그 | 컬럼 A 폭 변경, 컬럼 B는 나머지 공간 차지 | |
-| V3 | ①M3 | separator에 포커스 후 ArrowRight 3회 (step=10) | 패널 폭 += 30px, aria-valuenow 갱신 | |
-| V4 | ①M3 | separator에 포커스 후 Home | 패널 폭 = minSize | |
-| V5 | ①M4 | 패널 폭 조절 후 새로고침 | localStorage에서 복원, 이전 폭 유지 | |
-| V6 | ④E1 | 드래그로 minSize 이하로 축소 시도 | minSize에서 clamp, 더 이상 줄지 않음 | |
-| V7 | ④E5 | Agent Viewer에서 컬럼 추가 후 | 새 컬럼 경계에 resizer 자동 생성 | |
-| V8 | ④E6 | 뷰포트 ≤ 600px | sidebar resizer 비표시 | |
-| V9 | ④E7 | ArrowLeft로 현재 폭이 minSize + step/2일 때 | 폭 = minSize (clamp), 더 축소 안 됨 | |
+| V1 | ①M1 | CMS에서 sidebar↔canvas separator를 pointerdown→pointermove(+100px)→pointerup | sidebar 폭 = 220px (120+100), aria-valuenow = 220 | `useResizer.test.tsx::"updates size on pointer drag"` |
+| V2 | ①M2 | Agent Viewer에서 컬럼 A↔B separator를 드래그 | 컬럼 A 폭 변경, 컬럼 B는 나머지 공간 차지 | `useResizer.test.tsx::"updates size on pointer drag"` (동일 hook) |
+| V3 | ①M3 | separator에 포커스 후 ArrowRight 3회 (step=10) | 패널 폭 += 30px, aria-valuenow 갱신 | `useResizer.test.tsx::"ArrowRight increases size by step"` |
+| V4 | ①M3 | separator에 포커스 후 Home | 패널 폭 = minSize | `useResizer.test.tsx::"Home sets minSize"` |
+| V5 | ①M4 | 패널 폭 조절 후 새로고침 | localStorage에서 복원, 이전 폭 유지 | `useResizer.test.tsx::"restores size from localStorage on mount"` |
+| V6 | ④E1 | 드래그로 minSize 이하로 축소 시도 | minSize에서 clamp, 더 이상 줄지 않음 | `useResizer.test.tsx::"clamps to minSize"` |
+| V7 | ④E5 | Agent Viewer에서 컬럼 추가 후 | 새 컬럼 경계에 resizer 자동 생성 | ❌ 테스트 없음 (통합 레벨) |
+| V8 | ④E6 | 뷰포트 ≤ 600px | sidebar resizer 비표시 | ❌ 테스트 없음 (CSS 미디어쿼리) |
+| V9 | ④E7 | ArrowLeft로 현재 폭이 minSize + step/2일 때 | 폭 = minSize (clamp), 더 축소 안 됨 | `useResizer.test.tsx::"clamps stored value to min/max range"` |
 
 완성도: 🟢
 

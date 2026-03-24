@@ -20,11 +20,11 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `useNavList` hook | `src/interactive-os/ui/useNavList.ts` — 제어 모드. engine/scope/keyMap/plugins 주입 가능. rootProps, getItemProps(id), getItemState(id), focused, dispatch 반환 | |
-| `<NavList>` component | `src/interactive-os/ui/NavList.tsx` — 편의 모드. useNavList를 내부에서 호출하는 래퍼. data + onActivate + renderItem만으로 동작 | |
-| `NavList.module.css` | `src/interactive-os/ui/NavList.module.css` — Surface 토큰 기반 스타일. 포커스/호버/액티브 상태 | |
-| App.tsx Sidebar 교체 | 기존 `<Aria behavior={listbox}>` 직접 조립 → `<NavList>` 컴포넌트로 교체 | |
-| 기존 `ListBox.tsx` | 별개 유지. ListBox = selection 중심(multi-select), NavList = activation 중심(followFocus + onActivate). 용도가 다르므로 별개 완성품 | |
+| `useNavList` hook | `src/interactive-os/ui/useNavList.ts` — 제어 모드. engine/scope/keyMap/plugins 주입 가능. rootProps, getItemProps(id), getItemState(id), focused, dispatch 반환 | `useNavList.ts::useNavList` |
+| `<NavList>` component | `src/interactive-os/ui/NavList.tsx` — 편의 모드. useNavList를 내부에서 호출하는 래퍼. data + onActivate + renderItem만으로 동작 | `NavList.tsx::NavList` |
+| `NavList.module.css` | `src/interactive-os/ui/NavList.module.css` — Surface 토큰 기반 스타일. 포커스/호버/액티브 상태 | `NavList.module.css` |
+| App.tsx Sidebar 교체 | 기존 `<Aria behavior={listbox}>` 직접 조립 → `<NavList>` 컴포넌트로 교체 | `NavList.tsx (AppShell.tsx에서 사용)` |
+| 기존 `ListBox.tsx` | 별개 유지. ListBox = selection 중심(multi-select), NavList = activation 중심(followFocus + onActivate). 용도가 다르므로 별개 완성품 | — |
 
 완성도: 🟢
 
@@ -123,16 +123,16 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | `<NavList data={store} onActivate={fn} />`을 렌더하고 ↓ 키를 누른다 | 다음 항목으로 포커스 이동 + onActivate 호출 | |
-| V2 | M2 | App.tsx Sidebar를 `<NavList>`로 교체 후 동일 페이지 네비게이션 | 기존과 동일하게 URL 변경 + 포커스 이동 동작 | |
-| V3 | M3 | `useNavList` hook으로 커스텀 renderItem(아이콘+뱃지) 구현 | rootProps + getItemProps로 자유 JSX, 키보드 동작 유지 | |
-| V4 | M4 | `useNavList({ engine, scope: 'sidebar' })` + 다른 zone과 engine 공유 | 양쪽 zone이 같은 store를 공유하며 독립적 포커스 | |
-| V5 | M5 | NavList를 dark/light 테마에서 렌더 | Surface 토큰에 따라 포커스/호버/액티브 상태 비주얼 자동 대응 | |
-| V6 | E1 | 빈 data로 `<NavList>` 렌더 | 빈 listbox 렌더, 에러 없음, aria-label 표시 | |
-| V7 | E3 | NavList 외부에서 activeId를 변경 | 포커스가 해당 항목으로 동기화 | |
-| V8 | E4 | 존재하지 않는 activeId 전달 | 첫 번째 항목으로 fallback, 에러 없음 | |
-| V9 | E5 | 포커스된 항목을 동적 제거 | focusRecovery로 인접 항목에 포커스 | |
-| V10 | E6 | 30개 항목 + 마지막 항목으로 End 키 | 마지막 항목으로 스크롤 + 포커스 | |
+| V1 | M1 | `<NavList data={store} onActivate={fn} />`을 렌더하고 ↓ 키를 누른다 | 다음 항목으로 포커스 이동 + onActivate 호출 | `navlist.integration.test.tsx::ArrowDown moves focus to next item and activates it` |
+| V2 | M2 | App.tsx Sidebar를 `<NavList>`로 교체 후 동일 페이지 네비게이션 | 기존과 동일하게 URL 변경 + 포커스 이동 동작 | ❌ 테스트 없음 |
+| V3 | M3 | `useNavList` hook으로 커스텀 renderItem(아이콘+뱃지) 구현 | rootProps + getItemProps로 자유 JSX, 키보드 동작 유지 | `navlist.integration.test.tsx::supports custom renderItem` |
+| V4 | M4 | `useNavList({ engine, scope: 'sidebar' })` + 다른 zone과 engine 공유 | 양쪽 zone이 같은 store를 공유하며 독립적 포커스 | ❌ 테스트 없음 |
+| V5 | M5 | NavList를 dark/light 테마에서 렌더 | Surface 토큰에 따라 포커스/호버/액티브 상태 비주얼 자동 대응 | ❌ 테스트 없음 |
+| V6 | E1 | 빈 data로 `<NavList>` 렌더 | 빈 listbox 렌더, 에러 없음, aria-label 표시 | `navlist.integration.test.tsx::renders empty listbox without error` |
+| V7 | E3 | NavList 외부에서 activeId를 변경 | 포커스가 해당 항목으로 동기화 | `navlist.integration.test.tsx::syncs focus when data changes with new FOCUS_ID` |
+| V8 | E4 | 존재하지 않는 activeId 전달 | 첫 번째 항목으로 fallback, 에러 없음 | `navlist.integration.test.tsx::handles nonexistent activeId gracefully` |
+| V9 | E5 | 포커스된 항목을 동적 제거 | focusRecovery로 인접 항목에 포커스 | ❌ 테스트 없음 |
+| V10 | E6 | 30개 항목 + 마지막 항목으로 End 키 | 마지막 항목으로 스크롤 + 포커스 | `navlist.integration.test.tsx::End key reaches last item in a long list` |
 
 완성도: 🟢
 

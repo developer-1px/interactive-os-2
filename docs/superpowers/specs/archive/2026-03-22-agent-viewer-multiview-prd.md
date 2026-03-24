@@ -19,13 +19,13 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| 레이아웃 변경 | 4패널(Sessions│Timeline│Content│Modified) → N컬럼(Sessions│Timeline₁│Timeline₂│…). Content·Modified 패널 제거 | |
-| FileViewerModal | 새 컴포넌트. 파일 클릭 시 모달로 CodeBlock/MarkdownViewer/MdxViewer/ImageViewer 렌더링. ESC/배경 클릭으로 닫기 | |
-| TimelineColumn | 단일 세션 타임라인 렌더링 컴포넌트. 기존 타임라인 로직을 추출하여 재사용. 세션 라벨 헤더 포함 | |
-| 가상 스크롤 | 타임라인 이벤트에 virtual lazy loading 적용. 전체 내용 잘림 없이 노출하면서 성능 확보 | |
-| 세션 활성 판정 | 서버에서 mtime 기반 active/inactive 분류. active 세션만 자동으로 타임라인 컬럼 생성 | |
-| 서버 변경 | text slice(0,200) 제거 (전체 내용 전달). 세션별 SSE 스트림 다중화 지원 | |
-| CSS 변경 | line-clamp 제거. 타임라인 컬럼 flex 레이아웃 | |
+| 레이아웃 변경 | 4패널(Sessions│Timeline│Content│Modified) → N컬럼(Sessions│Timeline₁│Timeline₂│…). Content·Modified 패널 제거 | `PageAgentViewer.tsx::PageAgentViewer` |
+| FileViewerModal | 새 컴포넌트. 파일 클릭 시 모달로 CodeBlock/MarkdownViewer/MdxViewer/ImageViewer 렌더링. ESC/배경 클릭으로 닫기 | `FileViewerModal.tsx::FileViewerModal` |
+| TimelineColumn | 단일 세션 타임라인 렌더링 컴포넌트. 기존 타임라인 로직을 추출하여 재사용. 세션 라벨 헤더 포함 | `TimelineColumn.tsx::TimelineColumn` |
+| 가상 스크롤 | 타임라인 이벤트에 virtual lazy loading 적용. 전체 내용 잘림 없이 노출하면서 성능 확보 | `useVirtualScroll.ts::useVirtualScroll` |
+| 세션 활성 판정 | 서버에서 mtime 기반 active/inactive 분류. active 세션만 자동으로 타임라인 컬럼 생성 | `vite-plugin-agent-ops.ts::agentOpsPlugin` |
+| 서버 변경 | text slice(0,200) 제거 (전체 내용 전달). 세션별 SSE 스트림 다중화 지원 | `vite-plugin-agent-ops.ts::agentOpsPlugin` + `timelineSSE.ts` |
+| CSS 변경 | line-clamp 제거. 타임라인 컬럼 flex 레이아웃 | `PageAgentViewer.module.css` + `TimelineColumn.module.css` |
 
 완성도: 🟢
 
@@ -136,21 +136,21 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | active 세션 2개 실행 중 → Agent Viewer 열기 | 타임라인 컬럼 2개가 나란히 표시, 각각 SSE로 실시간 이벤트 수신 | |
-| V2 | M1 | active 세션 1개 추가 (3번째 터미널에서 claude 실행) | 새 타임라인 컬럼이 자동으로 추가됨 | |
-| V3 | M2 | 타임라인에서 assistant 긴 응답 이벤트 확인 | 전체 텍스트가 잘림 없이 표시됨 | |
-| V4 | M2 | 장시간 세션 (이벤트 1000개+)에서 위로 빠르게 스크롤 | 가상 스크롤로 버벅임 없이 과거 이벤트 로딩 | |
-| V5 | M3 | 타임라인에서 Edit 이벤트의 파일 경로 클릭 | 모달 열림, CodeBlock에 파일 내용 + edit highlight 표시 | |
-| V6 | M3 | 모달 열린 상태에서 다른 Read 이벤트 클릭 | 모달 내용이 새 파일로 교체 (닫고 다시 열지 않음) | |
-| V7 | M3 | 모달에서 ESC 누름 | 모달 닫힘, 타임라인으로 복귀 | |
-| V8 | M4 | Sessions 패널에서 아카이브 세션 클릭 | 해당 세션의 타임라인 컬럼이 닫기 버튼과 함께 추가 | |
-| V9 | M4 | 아카이브 컬럼의 닫기 버튼 클릭 | 해당 컬럼만 제거, active 컬럼 영향 없음 | |
-| V10 | E1 | active 세션 0개, 아카이브만 존재 | Sessions 패널 + "세션을 선택하세요" 안내 표시 | |
-| V11 | E2 | active 4개 + 아카이브 1개 열림 | 컬럼 최소 폭 360px 유지, 가로 스크롤 가능 | |
-| V12 | E5 | SSE 연결 끊김 후 복구 | 기존 이벤트 유지 + refetch로 누락분 보충 | |
-| V13 | E6 | 삭제된 파일의 이벤트 클릭 | 모달에 "File not found" 메시지, 정상 닫기 가능 | |
-| V14 | ③ 스크롤 | live 세션에서 user 메시지 도착 | user 메시지가 뷰포트 최상단으로 스크롤 + 하단 여백 확보 | |
-| V15 | ③ 스크롤 | 사용자가 위로 스크롤 후 assistant 이벤트 도착 | 자동 스크롤 안 함, 스크롤 위치 유지 | |
+| V1 | M1 | active 세션 2개 실행 중 → Agent Viewer 열기 | 타임라인 컬럼 2개가 나란히 표시, 각각 SSE로 실시간 이벤트 수신 | ❌ 테스트 없음 |
+| V2 | M1 | active 세션 1개 추가 (3번째 터미널에서 claude 실행) | 새 타임라인 컬럼이 자동으로 추가됨 | ❌ 테스트 없음 |
+| V3 | M2 | 타임라인에서 assistant 긴 응답 이벤트 확인 | 전체 텍스트가 잘림 없이 표시됨 | ❌ 테스트 없음 |
+| V4 | M2 | 장시간 세션 (이벤트 1000개+)에서 위로 빠르게 스크롤 | 가상 스크롤로 버벅임 없이 과거 이벤트 로딩 | ❌ 테스트 없음 |
+| V5 | M3 | 타임라인에서 Edit 이벤트의 파일 경로 클릭 | 모달 열림, CodeBlock에 파일 내용 + edit highlight 표시 | ❌ 테스트 없음 |
+| V6 | M3 | 모달 열린 상태에서 다른 Read 이벤트 클릭 | 모달 내용이 새 파일로 교체 (닫고 다시 열지 않음) | ❌ 테스트 없음 |
+| V7 | M3 | 모달에서 ESC 누름 | 모달 닫힘, 타임라인으로 복귀 | ❌ 테스트 없음 |
+| V8 | M4 | Sessions 패널에서 아카이브 세션 클릭 | 해당 세션의 타임라인 컬럼이 닫기 버튼과 함께 추가 | ❌ 테스트 없음 |
+| V9 | M4 | 아카이브 컬럼의 닫기 버튼 클릭 | 해당 컬럼만 제거, active 컬럼 영향 없음 | ❌ 테스트 없음 |
+| V10 | E1 | active 세션 0개, 아카이브만 존재 | Sessions 패널 + "세션을 선택하세요" 안내 표시 | ❌ 테스트 없음 |
+| V11 | E2 | active 4개 + 아카이브 1개 열림 | 컬럼 최소 폭 360px 유지, 가로 스크롤 가능 | ❌ 테스트 없음 |
+| V12 | E5 | SSE 연결 끊김 후 복구 | 기존 이벤트 유지 + refetch로 누락분 보충 | ❌ 테스트 없음 |
+| V13 | E6 | 삭제된 파일의 이벤트 클릭 | 모달에 "File not found" 메시지, 정상 닫기 가능 | ❌ 테스트 없음 |
+| V14 | ③ 스크롤 | live 세션에서 user 메시지 도착 | user 메시지가 뷰포트 최상단으로 스크롤 + 하단 여백 확보 | ❌ 테스트 없음 |
+| V15 | ③ 스크롤 | 사용자가 위로 스크롤 후 assistant 이벤트 도착 | 자동 스크롤 안 함, 스크롤 위치 유지 | ❌ 테스트 없음 |
 
 완성도: 🟢
 

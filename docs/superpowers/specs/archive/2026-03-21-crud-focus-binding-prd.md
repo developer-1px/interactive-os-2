@@ -29,9 +29,9 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `useAria.ts` data sync 로직 변경 | `META_ENTITY_IDS` 보호 정책에서 `__focus__`를 조건부 예외 처리: data prop에 `__focus__`가 있으면 외부 값 사용 | |
-| `App.tsx` ActivityBar data 구성 | pathname에서 group id 파싱 → `activityBarStore`에 `__focus__` 엔티티 포함하여 전달 | |
-| `App.tsx` Sidebar data 구성 | pathname에서 item path 파싱 → `sidebarStore`에 `__focus__` 엔티티 포함하여 전달 | |
+| `useAria.ts` data sync 로직 변경 | `META_ENTITY_IDS` 보호 정책에서 `__focus__`를 조건부 예외 처리: data prop에 `__focus__`가 있으면 외부 값 사용 | `useAria.ts::useAria` |
+| `App.tsx` ActivityBar data 구성 | pathname에서 group id 파싱 → `activityBarStore`에 `__focus__` 엔티티 포함하여 전달 | `AppShell.tsx::resolveActivityBarFocusId` |
+| `App.tsx` Sidebar data 구성 | pathname에서 item path 파싱 → `sidebarStore`에 `__focus__` 엔티티 포함하여 전달 | `SidebarLayout.tsx::SidebarLayout` |
 
 상태: 🟢
 
@@ -62,11 +62,11 @@
 
 | # | 시나리오 | 예상 결과 | 역PRD |
 |---|---------|----------|-------|
-| 1 | `/engine/pipeline`으로 직접 접속 (새로고침) | ActivityBar의 engine 아이템에 `tabindex=0` + `data-focused` 속성 | |
-| 2 | `/axis/select`로 직접 접속 | ActivityBar의 axis focused + Sidebar의 select focused | |
-| 3 | ActivityBar에서 키보드로 다른 그룹 이동 | URL 변경 + 해당 그룹 focused (기존 동작 유지) | |
-| 4 | data에 `__focus__` 없는 기존 Aria 컴포넌트 | 기존 동작과 동일 (첫 아이템 focused) | |
-| 5 | 존재하지 않는 경로 접속 (`/nonexistent`) | fallback 동작 (redirect 후 해당 위치 focused) | |
+| 1 | `/engine/pipeline`으로 직접 접속 (새로고침) | ActivityBar의 engine 아이템에 `tabindex=0` + `data-focused` 속성 | `activitybar-focus.test.tsx::/ — exactly one item has --active class` |
+| 2 | `/axis/select`로 직접 접속 | ActivityBar의 axis focused + Sidebar의 select focused | ❌ 테스트 없음 |
+| 3 | ActivityBar에서 키보드로 다른 그룹 이동 | URL 변경 + 해당 그룹 focused (기존 동작 유지) | ❌ 테스트 없음 |
+| 4 | data에 `__focus__` 없는 기존 Aria 컴포넌트 | 기존 동작과 동일 (첫 아이템 focused) | `use-aria.test.tsx::first visible node gets focus by default` |
+| 5 | 존재하지 않는 경로 접속 (`/nonexistent`) | fallback 동작 (redirect 후 해당 위치 focused) | ❌ 테스트 없음 |
 
 상태: 🟢
 
