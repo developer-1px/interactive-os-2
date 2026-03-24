@@ -7,9 +7,9 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| M1 | CMS 캔버스에 랜딩 섹션이 렌더링됨 | 섹션의 CSS가 앱 토큰(`--surface-*`, `--text-*`)을 참조 | 섹션이 앱 UI와 같은 톤으로 보여서 "관리 도구에 갇힌" 느낌 | |
-| M2 | 6개 섹션 variant가 존재 | 모든 variant가 동일한 그리드 패턴(720px, 균일 카드)을 사용 | 스크롤해도 섹션 간 시각적 차이가 없어 단조로움 | |
-| M3 | 디자이너가 콘텐츠 톤을 바꾸고 싶을 때 | 토큰이 앱과 공유되어 있어서 콘텐츠만 독립 변경 불가 | 앱 전체가 영향받거나, 하드코딩으로 우회해야 함 | |
+| M1 | CMS 캔버스에 랜딩 섹션이 렌더링됨 | 섹션의 CSS가 앱 토큰(`--surface-*`, `--text-*`)을 참조 | 섹션이 앱 UI와 같은 톤으로 보여서 "관리 도구에 갇힌" 느낌 | ✅ 일치 |
+| M2 | 6개 섹션 variant가 존재 | 모든 variant가 동일한 그리드 패턴(720px, 균일 카드)을 사용 | 스크롤해도 섹션 간 시각적 차이가 없어 단조로움 | ✅ 일치 |
+| M3 | 디자이너가 콘텐츠 톤을 바꾸고 싶을 때 | 토큰이 앱과 공유되어 있어서 콘텐츠만 독립 변경 불가 | 앱 전체가 영향받거나, 하드코딩으로 우회해야 함 | ✅ 일치 |
 
 완성도: 🟢
 
@@ -19,9 +19,9 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `src/styles/landingTokens.css` | 콘텐츠 전용 토큰 파일. `--landing-*` 네임스페이스. 앱 토큰 참조 0. dark/light 두 세트. | |
-| `src/pages/cms/CmsLanding.module.css` | 기존 `PageVisualCms.module.css`를 대체. `--landing-*` 토큰만 참조. variant별 카드/그리드 베리에이션 포함. | |
-| `PageVisualCms.module.css` 수정 | 콘텐츠 섹션 스타일 제거. 앱 크롬(사이드바 썸네일 등)에서 참조하는 스타일만 잔류하거나, 새 파일로 이관. | |
+| `src/styles/landingTokens.css` | 콘텐츠 전용 토큰 파일. `--landing-*` 네임스페이스. 앱 토큰 참조 0. dark/light 두 세트. | ✅ `landingTokens.css` |
+| `src/pages/cms/CmsLanding.module.css` | 기존 `PageVisualCms.module.css`를 대체. `--landing-*` 토큰만 참조. variant별 카드/그리드 베리에이션 포함. | ✅ `CmsLanding.module.css` |
+| `PageVisualCms.module.css` 수정 | 콘텐츠 섹션 스타일 제거. 앱 크롬(사이드바 썸네일 등)에서 참조하는 스타일만 잔류하거나, 새 파일로 이관. | 🔀 "수정"이 아니라 완전 삭제. 참조 0이어서 잔류 불필요 |
 
 **토큰 구조:**
 
@@ -58,11 +58,11 @@
 
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
-| `landingTokens.css`에서 `--landing-accent` 값 변경 | 기본 악센트 | 토큰 값 교체 | 모든 섹션이 `--landing-accent`만 참조하므로 | 전체 섹션 악센트 일괄 전환 | |
-| `landingTokens.css`에서 `--landing-bg-*` 값 변경 | 기본 배경 팔레트 | 토큰 값 교체 | 섹션/카드 배경이 `--landing-bg-*`만 참조하므로 | 전체 배경 톤 전환 | |
-| `landingTokens.css`에서 `--landing-font-display` 값 변경 | 기본 display 폰트 | 토큰 값 교체 | 모든 display 텍스트가 이 토큰 참조 | 전체 display 폰트 전환 | |
-| 앱 토큰(`tokens.css`)의 아무 값 변경 | 앱 UI 변경됨 | — | 콘텐츠 CSS가 앱 토큰을 참조하지 않으므로 | 콘텐츠 섹션 영향 없음 | |
-| CMS 사이드바 썸네일이 콘텐츠를 미니 프리뷰 | 썸네일 렌더링 | 콘텐츠 CSS가 적용됨 | 썸네일이 동일 DOM 구조를 zoom:0.1로 렌더링하므로 | 썸네일도 콘텐츠 토큰으로 렌더링 | |
+| `landingTokens.css`에서 `--landing-accent` 값 변경 | 기본 악센트 | 토큰 값 교체 | 모든 섹션이 `--landing-accent`만 참조하므로 | 전체 섹션 악센트 일괄 전환 | ✅ 역PRD 확인 |
+| `landingTokens.css`에서 `--landing-bg-*` 값 변경 | 기본 배경 팔레트 | 토큰 값 교체 | 섹션/카드 배경이 `--landing-bg-*`만 참조하므로 | 전체 배경 톤 전환 | ✅ 역PRD 확인 |
+| `landingTokens.css`에서 `--landing-font-display` 값 변경 | 기본 display 폰트 | 토큰 값 교체 | 모든 display 텍스트가 이 토큰 참조 | 전체 display 폰트 전환 | ✅ 역PRD 확인 |
+| 앱 토큰(`tokens.css`)의 아무 값 변경 | 앱 UI 변경됨 | — | 콘텐츠 CSS가 앱 토큰을 참조하지 않으므로 | 콘텐츠 섹션 영향 없음 | ✅ 역PRD 확인 |
+| CMS 사이드바 썸네일이 콘텐츠를 미니 프리뷰 | 썸네일 렌더링 | 콘텐츠 CSS가 적용됨 | 썸네일이 동일 DOM 구조를 zoom:0.1로 렌더링하므로 | 썸네일도 콘텐츠 토큰으로 렌더링 | ✅ cms-renderers import 변경으로 자동 적용 |
 
 완성도: 🟡
 
@@ -117,13 +117,13 @@
 
 | # | 출처 | 시나리오 | 예상 결과 | 역PRD |
 |---|------|---------|----------|-------|
-| V1 | ①M1 | 콘텐츠 섹션 CSS에 앱 토큰 변수가 0개 | `CmsLanding.module.css`에서 `--surface-*`, `--text-*` 등 grep 결과 0 | |
-| V2 | ①M3 | `--landing-accent` 값을 red로 변경 | 모든 섹션의 악센트가 red로 일괄 전환 | |
-| V3 | ①M2 | features 섹션과 patterns 섹션의 그리드 column 수가 다름 | 시각적 확인: features는 1+2 또는 3-col, patterns는 사이즈 믹스 | |
-| V4 | ④ 앱다크+콘텐츠라이트 | 앱 다크모드에서 콘텐츠 토큰을 라이트로 설정 | 캔버스 내부만 라이트, 사이드바/툴바는 다크 유지 | |
-| V5 | ④ 썸네일 | 사이드바 썸네일이 콘텐츠 CSS로 렌더링 | 썸네일과 캔버스가 같은 톤 | |
-| V6 | ④ 프레젠트 | 프레젠트 모드에서 콘텐츠 렌더링 | 앱 토큰 없이 정상 렌더링 | |
-| V7 | ④ 모바일 | viewport 375px에서 카드 그리드 | 1-col fallback, 깨지지 않음 | |
+| V1 | ①M1 | 콘텐츠 섹션 CSS에 앱 토큰 변수가 0개 | `CmsLanding.module.css`에서 `--surface-*`, `--text-*` 등 grep 결과 0 | ✅ grep 검증 완료 |
+| V2 | ①M3 | `--landing-accent` 값을 red로 변경 | 모든 섹션의 악센트가 red로 일괄 전환 | ✅ 토큰 구조상 보장 (시각 미확인) |
+| V3 | ①M2 | features 섹션과 patterns 섹션의 그리드 column 수가 다름 | 시각적 확인: features는 1+2 또는 3-col, patterns는 사이즈 믹스 | ✅ CSS: features 2col+first-child span, patterns 3col+nth-child span |
+| V4 | ④ 앱다크+콘텐츠라이트 | 앱 다크모드에서 콘텐츠 토큰을 라이트로 설정 | 캔버스 내부만 라이트, 사이드바/툴바는 다크 유지 | ✅ `[data-landing-theme="light"]` 셀렉터 존재 |
+| V5 | ④ 썸네일 | 사이드바 썸네일이 콘텐츠 CSS로 렌더링 | 썸네일과 캔버스가 같은 톤 | ✅ cms-renderers import 변경으로 자동 적용 |
+| V6 | ④ 프레젠트 | 프레젠트 모드에서 콘텐츠 렌더링 | 앱 토큰 없이 정상 렌더링 | ✅ `CmsPresentMode` import + `cms-landing` class 추가 |
+| V7 | ④ 모바일 | viewport 375px에서 카드 그리드 | 1-col fallback, 깨지지 않음 | ✅ @media 480px/768px breakpoint 존재 |
 
 완성도: 🟡
 
