@@ -71,7 +71,7 @@
 
   /* ── Focus: keyboard focus ── */
   --focus:      var(--indigo-400);
-  --focus-idle: var(--primary-dim);
+  --focus-idle: var(--bg-hover);
 
   /* ── Selection: selected state (same hue as focus, different intensity) ── */
   --selection: var(--primary-dim);
@@ -179,7 +179,7 @@
 
   /* ── Focus ── */
   --focus:      var(--indigo-500);
-  --focus-idle: var(--indigo-100);
+  --focus-idle: var(--bg-hover);
 
   /* ── Selection ── */
   --selection: var(--primary-dim);
