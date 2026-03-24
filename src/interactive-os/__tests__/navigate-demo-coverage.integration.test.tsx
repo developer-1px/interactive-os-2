@@ -144,37 +144,99 @@ describe('NavigateDemo coverage', () => {
   })
 
   describe('grid mode — tabCycle', () => {
-    it('Tab/Shift+Tab cycles through cells', async () => {
-      const user = userEvent.setup()
-      render(<NavigateDemo />)
-
-      // Switch to grid mode
+    function renderGridWithTabCycle() {
+      const result = render(<NavigateDemo />)
       const modeSelect = Array.from(document.querySelectorAll('select')).find(s =>
         Array.from(s.options).some(o => o.value === 'grid')
-      )
-      await user.selectOptions(modeSelect!, 'grid')
+      )!
+      return { ...result, modeSelect }
+    }
 
-      // Enable tabCycle
-      const tabCycleCheckbox = document.querySelector('input[type="checkbox"]')
-      expect(tabCycleCheckbox).not.toBeNull()
-      await user.click(tabCycleCheckbox!)
+    async function enableTabCycle(user: ReturnType<typeof userEvent.setup>, modeSelect: HTMLSelectElement) {
+      await user.selectOptions(modeSelect, 'grid')
+      const checkbox = document.querySelector('input[type="checkbox"]')!
+      await user.click(checkbox)
+    }
+
+    it('Tab moves to next cell', async () => {
+      const user = userEvent.setup()
+      const { modeSelect } = renderGridWithTabCycle()
+      await enableTabCycle(user, modeSelect)
 
       const grid = screen.getByRole('grid')
       await user.click(grid.querySelector('[data-node-id]')!)
 
-      // Tab should move to next cell
       await user.keyboard('{Tab}')
-      const afterTab = grid.querySelector('[role="gridcell"][tabindex="0"]')
-      expect(afterTab).not.toBeNull()
+      const cell = grid.querySelector('[role="gridcell"][tabindex="0"]')
+      expect(cell).not.toBeNull()
+    })
 
-      // Shift+Tab should move back
+    it('Shift+Tab at non-first column moves to prev column', async () => {
+      // Covers line 45: if (!atFirstCol) return g.focusPrevCol()
+      const user = userEvent.setup()
+      const { modeSelect } = renderGridWithTabCycle()
+      await enableTabCycle(user, modeSelect)
+
+      const grid = screen.getByRole('grid')
+      await user.click(grid.querySelector('[data-node-id]')!)
+
+      // Move to col 2
+      await user.keyboard('{Tab}')
+      await user.keyboard('{Tab}')
+
+      // Shift+Tab should go back to col 1
       await user.keyboard('{Shift>}{Tab}{/Shift}')
-      const afterShiftTab = grid.querySelector('[role="gridcell"][tabindex="0"]')
-      expect(afterShiftTab).not.toBeNull()
+      const cell = grid.querySelector('[role="gridcell"][tabindex="0"]')
+      expect(cell).not.toBeNull()
+    })
 
-      // Tab to end of row should wrap to next row
-      await user.keyboard('{End}') // go to last col
-      await user.keyboard('{Tab}') // should wrap to next row first col
+    it('Tab at last cell of last row stops', async () => {
+      // Covers line 38: if (nextRowCmd.payload?.nodeId === ctx.focused) return
+      const user = userEvent.setup()
+      const { modeSelect } = renderGridWithTabCycle()
+      await enableTabCycle(user, modeSelect)
+
+      const grid = screen.getByRole('grid')
+      await user.click(grid.querySelector('[data-node-id]')!)
+
+      // Go to last row, last col
+      await user.keyboard('{Control>}{End}{/Control}') // last row
+      await user.keyboard('{End}') // last col
+
+      const beforeTab = grid.querySelector('[tabindex="0"]')?.getAttribute('data-node-id')
+      await user.keyboard('{Tab}') // should stop — already at absolute last
+      const afterTab = grid.querySelector('[tabindex="0"]')?.getAttribute('data-node-id')
+
+      expect(afterTab).toBe(beforeTab)
+    })
+
+    it('Shift+Tab at first cell of first row stops', async () => {
+      // Covers line 49: if (prevRowCmd.payload?.nodeId === ctx.focused) return
+      const user = userEvent.setup()
+      const { modeSelect } = renderGridWithTabCycle()
+      await enableTabCycle(user, modeSelect)
+
+      const grid = screen.getByRole('grid')
+      await user.click(grid.querySelector('[data-node-id]')!)
+
+      // Already at first row, first col
+      const beforeTab = grid.querySelector('[tabindex="0"]')?.getAttribute('data-node-id')
+      await user.keyboard('{Shift>}{Tab}{/Shift}') // should stop
+
+      const afterTab = grid.querySelector('[tabindex="0"]')?.getAttribute('data-node-id')
+      expect(afterTab).toBe(beforeTab)
+    })
+
+    it('Tab at end of row wraps to next row', async () => {
+      const user = userEvent.setup()
+      const { modeSelect } = renderGridWithTabCycle()
+      await enableTabCycle(user, modeSelect)
+
+      const grid = screen.getByRole('grid')
+      await user.click(grid.querySelector('[data-node-id]')!)
+
+      await user.keyboard('{End}') // last col
+      await user.keyboard('{Tab}') // wrap to next row first col
 
       const focused = grid.querySelector('[tabindex="0"]')
       expect(focused).not.toBeNull()
