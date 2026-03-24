@@ -102,5 +102,39 @@
   --landing-shadow-card:    none;
   --landing-shadow-card-hover: none;
 
+  --landing-font-display:   'Playfair Display', Georgia, 'Times New Roman', serif;
+  --landing-font-body:      'Manrope', -apple-system, system-ui, sans-serif;
+  --landing-font-mono:      'SF Mono', 'Cascadia Code', ui-monospace, monospace;
+
+  --landing-size-display:   clamp(56px, 8vw, 120px);
+  --landing-size-title:     clamp(32px, 4vw, 48px);
+  --landing-size-subtitle:  24px;
+  --landing-size-body:      18px;
+  --landing-size-caption:   13px;
+  --landing-size-label:     11px;
+
+  --landing-weight-display: 800;
+  --landing-weight-title:   700;
+  --landing-weight-body:    400;
+  --landing-weight-caption: 500;
+  --landing-weight-label:   600;
+
+  --landing-leading-tight:   1.05;
+  --landing-leading-normal:  1.6;
+  --landing-leading-relaxed: 1.8;
+
+  --landing-space-section:       160px;
+  --landing-space-section-sm:    80px;
+  --landing-space-card-gap:      0;
+  --landing-space-card-padding:  0;
+  --landing-space-content-max:   1200px;
+  --landing-space-content-narrow: 600px;
+  --landing-space-inline:        clamp(24px, 6vw, 120px);
+
+  --landing-radius-card:    0;
+  --landing-radius-card-sm: 0;
+  --landing-radius-badge:   0;
+  --landing-radius-icon:    0;
+
   --landing-rule:           1px solid #E5E5E5;
 }
