@@ -5,9 +5,9 @@ import {
   FileText, ChevronRight, ChevronDown, Circle, PanelLeft, Search,
 } from 'lucide-react'
 import { Aria } from '../interactive-os/components/aria'
+import { TreeView } from '../interactive-os/ui/TreeView'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
-import { tree } from '../interactive-os/behaviors/tree'
 import { core, FOCUS_ID } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/core/createStore'
 import { ROOT_ID } from '../interactive-os/core/types'
@@ -71,7 +71,7 @@ function treeToStore(nodes: TreeNode[]): NormalizedData {
 // --- URL ↔ file path helpers ---
 
 function urlPathToFilePath(pathname: string): string | null {
-  const relative = pathname.replace(/^\/examples\/viewer\/?/, '')
+  const relative = pathname.replace(/^\/viewer\/?/, '')
   if (!relative) return null
   return `${DEFAULT_ROOT}/${relative}`
 }
@@ -213,17 +213,15 @@ export default function PageViewer() {
             </button>
           </div>
           <div className={styles.vwTreeBody}>
-            <Aria
-              behavior={tree}
+            <TreeView
               data={initialStore}
               plugins={[core()]}
               onChange={handleChange}
               aria-label="File tree"
-            >
-              <Aria.Item render={(props, node, state) => {
+              renderItem={(_props, node, state) => {
                 const data = node.data as FileNodeData
                 return (
-                  <div {...props} className={styles.vwTreeItem}>
+                  <div className={styles.vwTreeItem}>
                     {data.type === 'directory' ? (
                       <span className={styles.vwTreeChevron}>
                         {state.expanded
@@ -239,8 +237,8 @@ export default function PageViewer() {
                     </span>
                   </div>
                 )
-              }} />
-            </Aria>
+              }}
+            />
           </div>
         </div>
         <div className="resizer-handle" aria-label="Resize explorer" {...treeResizer.separatorProps} />
