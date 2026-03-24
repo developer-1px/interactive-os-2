@@ -67,8 +67,15 @@ function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, '
 function useFocusScroll(focused: boolean) {
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {
-    if (focused && ref.current) {
-      ref.current.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
+    if (!focused || !ref.current) return
+    const container = ref.current.closest('[data-aria-container]')
+    if (!container || container.scrollHeight <= container.clientHeight) return
+    const itemRect = ref.current.getBoundingClientRect()
+    const containerRect = container.getBoundingClientRect()
+    if (itemRect.top < containerRect.top) {
+      container.scrollTop -= containerRect.top - itemRect.top
+    } else if (itemRect.bottom > containerRect.bottom) {
+      container.scrollTop += itemRect.bottom - containerRect.bottom
     }
   }, [focused])
   return ref
@@ -158,7 +165,7 @@ function placeCaret(el: HTMLElement, atEnd: boolean) {
   sel?.addRange(range)
 }
 
-function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = false, tabContinue = false, children, ...restProps }: { field: string; placeholder?: string; selection?: 'all' | 'end'; allowEmpty?: boolean; tabContinue?: boolean; children: React.ReactNode } & React.HTMLAttributes<HTMLSpanElement>) {
+function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = false, tabContinue = false, enterContinue = false, children, ...restProps }: { field: string; placeholder?: string; selection?: 'all' | 'end'; allowEmpty?: boolean; tabContinue?: boolean; enterContinue?: boolean; children: React.ReactNode } & React.HTMLAttributes<HTMLSpanElement>) {
   const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
   const editRef = useRef<HTMLSpanElement>(null)
@@ -244,7 +251,21 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
       onKeyDown={(e) => {
         if (e.key === 'Enter' && !composingRef.current) {
           e.preventDefault()
+          const shiftKey = e.shiftKey
           confirm()
+          if (enterContinue && nodeCtx && ariaCtx) {
+            setTimeout(() => {
+              const nodeEl = document.querySelector<HTMLElement>(`[data-node-id="${nodeCtx.nodeId}"]`)
+              if (nodeEl) {
+                nodeEl.dispatchEvent(new KeyboardEvent('keydown', {
+                  key: shiftKey ? 'ArrowUp' : 'ArrowDown',
+                  code: shiftKey ? 'ArrowUp' : 'ArrowDown',
+                  bubbles: true, cancelable: true,
+                }))
+              }
+              // No auto-rename — Google Sheets standard: return to cell mode
+            }, 0)
+          }
         } else if (e.key === 'Escape') {
           e.preventDefault()
           cancel()
