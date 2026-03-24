@@ -23,6 +23,7 @@ interface AriaProps {
   'aria-label'?: string
   logger?: import('../engine/dispatchLogger').EngineOptions['logger']
   autoFocus?: boolean
+  disabled?: boolean
   children: ReactNode
 }
 
@@ -37,8 +38,8 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
-function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, autoFocus, children }: AriaProps) {
-  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, logger, autoFocus })
+function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, autoFocus, disabled, children }: AriaProps) {
+  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, logger, autoFocus, disabled })
 
   useEffect(() => {
     if (!id) return

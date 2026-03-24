@@ -7,7 +7,7 @@ import type { PatternContext, NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { grid as gridBehavior } from '../pattern/grid'
 import { core } from '../plugins/core'
-import { clipboardCommands } from '../plugins/clipboard'
+import { cellEdit } from '../plugins/cellEdit'
 import { replaceEditPlugin } from '../pattern/edit'
 
 interface ColumnDef {
@@ -29,18 +29,6 @@ interface GridProps {
   header?: boolean
   keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   'aria-label'?: string
-}
-
-/** Cell-level clipboard keyMap (Mod+C/V with colIndex) — component-level override */
-const cellClipboardKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
-  'Mod+C': (ctx) => {
-    const colIndex = ctx.grid?.colIndex ?? 0
-    return clipboardCommands.copyCellValue(ctx.focused, colIndex)
-  },
-  'Mod+V': (ctx) => {
-    const colIndex = ctx.grid?.colIndex ?? 0
-    return clipboardCommands.pasteCellValue(ctx.focused, colIndex)
-  },
 }
 
 const defaultRenderCell = (props: React.HTMLAttributes<HTMLElement>, value: unknown, _column: ColumnDef, _state: NodeState): React.ReactElement => (
@@ -67,13 +55,8 @@ export function Grid({
   )
 
   const mergedPlugins = React.useMemo(
-    () => enableEditing ? [...plugins, replaceEditPlugin()] : plugins,
+    () => enableEditing ? [...plugins, replaceEditPlugin(), cellEdit()] : plugins,
     [plugins, enableEditing],
-  )
-
-  const mergedKeyMap = React.useMemo(
-    () => (enableEditing || keyMap) ? { ...(enableEditing ? cellClipboardKeyMap : {}), ...keyMap } : undefined,
-    [enableEditing, keyMap],
   )
 
   const gridStyle = React.useMemo(
@@ -108,7 +91,7 @@ export function Grid({
         data={data}
         plugins={mergedPlugins}
         onChange={onChange}
-        keyMap={mergedKeyMap}
+        keyMap={keyMap}
         aria-label={ariaLabel}
       >
         <Aria.Item render={renderRow} />

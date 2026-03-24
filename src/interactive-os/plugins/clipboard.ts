@@ -43,7 +43,7 @@ export const PASTE = 'clipboard:paste' as const
 export const COPY_CELL = 'clipboard:copyCellValue' as const
 export const PASTE_CELL = 'clipboard:pasteCellValue' as const
 export const CLEAR_CELL = 'clipboard:clearCellValue' as const
-export const CUT_CELL_VALUE = 'clipboard:cutCellValue' as const
+export const CUT_CELL = 'clipboard:cutCellValue' as const
 
 // ── Module-level clipboard data (shared — OS clipboard model) ──
 
@@ -229,7 +229,7 @@ export const clipboardCommands = {
   cutCellValue(nodeId: string, colIndex: number): Command {
     let previousValue: string = ''
     return {
-      type: CUT_CELL_VALUE,
+      type: CUT_CELL,
       payload: { nodeId, colIndex },
       execute(store) {
         const cells = getCells(store, nodeId)
@@ -432,7 +432,7 @@ export function clipboard(options?: ClipboardOptions) {
       [COPY_CELL]: clipboardCommands.copyCellValue,
       [PASTE_CELL]: clipboardCommands.pasteCellValue,
       [CLEAR_CELL]: clipboardCommands.clearCellValue,
-      [CUT_CELL_VALUE]: clipboardCommands.cutCellValue,
+      [CUT_CELL]: clipboardCommands.cutCellValue,
     },
     onCopy: (ctx: { focused: string; selected: string[] }) =>
       clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),

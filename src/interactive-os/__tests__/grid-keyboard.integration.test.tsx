@@ -386,7 +386,7 @@ describe('Grid enableEditing integration', () => {
     expect(container.querySelector('[contenteditable]')).not.toBeNull()
   })
 
-  it('Delete removes focused row', async () => {
+  it('Delete clears focused cell value (cellEdit shadows row delete)', async () => {
     const user = userEvent.setup()
     const { container } = render(<StatefulEditableGrid />)
 
@@ -394,9 +394,10 @@ describe('Grid enableEditing integration', () => {
     act(() => { firstRow.focus() })
     await user.keyboard('{Delete}')
 
+    // Row still exists — cellEdit plugin intercepts Delete for cell clear
     const rows = container.querySelectorAll('[role="row"]')
-    expect(rows.length).toBe(2)
-    expect(getRowElement(container, 'row-1')).toBeNull()
+    expect(rows.length).toBe(3)
+    expect(getRowElement(container, 'row-1')).not.toBeNull()
   })
 
   it('Alt+ArrowDown moves row down', async () => {
