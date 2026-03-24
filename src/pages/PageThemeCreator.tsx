@@ -110,18 +110,18 @@ function DataViewCard() {
         <div className={styles.row}>
           <TabList data={tabData} onChange={setTabData} />
           <div className={styles.fill}>
-            <Combobox data={comboData} onChange={setComboData} placeholder="Filter..." />
+            <Combobox data={comboData} onChange={setComboData} placeholder="Filter by label..." />
           </div>
         </div>
         <Grid
           data={gridData}
           onChange={setGridData}
           columns={[
-            { key: 'name', header: 'Name' },
-            { key: 'role', header: 'Role' },
-            { key: 'city', header: 'City' },
+            { key: 'id', header: 'ID' },
+            { key: 'title', header: 'Title' },
+            { key: 'priority', header: 'Priority' },
           ]}
-          aria-label="Team members"
+          aria-label="Issue tracker"
         />
       </div>
     </div>

@@ -215,11 +215,11 @@ const data = createStore({
         data={data}
         onChange={onChange}
         columns={[
-          { key: 'name', header: 'Name' },
-          { key: 'role', header: 'Role' },
-          { key: 'city', header: 'City' },
+          { key: 'id', header: 'ID' },
+          { key: 'title', header: 'Title' },
+          { key: 'priority', header: 'Priority' },
         ]}
-        aria-label="Team members"
+        aria-label="Issue tracker"
       />
     ),
     usage: `import { Grid } from 'interactive-os/ui/Grid'
@@ -227,8 +227,8 @@ import { createStore } from 'interactive-os/core/createStore'
 
 const data = createStore({
   entities: {
-    r1: { id: 'r1', data: { cells: ['Alice', 'Engineer', 'NYC'] } },
-    r2: { id: 'r2', data: { cells: ['Bob', 'Designer', 'SF'] } },
+    r1: { id: 'r1', data: { cells: ['AUTH-142', 'Login timeout', 'Critical'] } },
+    r2: { id: 'r2', data: { cells: ['UI-891', 'Dark mode contrast', 'Medium'] } },
   },
   relationships: { __root__: ['r1', 'r2'] },
 })
@@ -237,9 +237,9 @@ const data = createStore({
   data={data}
   onChange={setData}
   columns={[
-    { key: 'name', header: 'Name' },
-    { key: 'role', header: 'Role' },
-    { key: 'city', header: 'City' },
+    { key: 'id', header: 'ID' },
+    { key: 'title', header: 'Title' },
+    { key: 'priority', header: 'Priority' },
   ]}
 />`,
   },
