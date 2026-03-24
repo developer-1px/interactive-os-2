@@ -11,6 +11,7 @@ export default defineConfig({
         'src/interactive-os/axis/**',
         'src/interactive-os/plugins/**',
         'src/interactive-os/core/**',
+        'src/interactive-os/ui/**',
       ],
       reporter: ['text', 'json'],
     },
