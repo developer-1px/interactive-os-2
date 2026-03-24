@@ -5,8 +5,13 @@
    rendered by <Aria>. No className needed.
    Scoped under [data-aria-container] to prevent role collisions.
 
-   Design spec: comfortable density, ~36px item height,
-   8px 12px padding, 6px radius, 2px item gap.
+   Focus rule (Apple HIG convention):
+     [data-aria-container] 안의 자식 → background highlight (컬렉션 커서)
+     독립 요소 (*:focus-visible)      → outline ring (standalone)
+
+   Focus states:
+     idle   = container 비활성 → var(--focus-idle) background, no outline
+     active = container :focus-within → var(--primary-dim) background + var(--focus) outline
 */
 
 /* ── Container: inset padding for breathing room ── */
@@ -107,8 +112,22 @@
   color: var(--text-secondary);
 }
 
-/* ── Focused (roving-tabindex — :focus) ── */
-/* Active container: full focus */
+/* ── Focused: idle (roving-tabindex — container NOT active) ── */
+/* Background only, gray tone — "cursor was here" */
+
+[data-aria-container]:not(:focus-within) [role="option"]:focus,
+[data-aria-container]:not(:focus-within) [role="treeitem"]:focus,
+[data-aria-container]:not(:focus-within) [role="menuitem"]:focus,
+[data-aria-container]:not(:focus-within) [role="radio"]:focus,
+[data-aria-container]:not(:focus-within) [role="switch"]:focus,
+[data-aria-container]:not(:focus-within) [role="row"]:focus,
+[data-aria-container]:not(:focus-within) [role="heading"]:focus,
+[data-aria-container]:not(:focus-within) [role="group"] > [role="button"]:focus {
+  background: var(--focus-idle);
+}
+
+/* ── Focused: active (roving-tabindex — container HAS focus) ── */
+/* Background highlight + outline ring */
 
 [data-aria-container]:focus-within [role="option"]:focus,
 [data-aria-container]:focus-within [role="treeitem"]:focus,
@@ -123,7 +142,7 @@
   outline-color: var(--focus);
 }
 
-/* Tabs: focused uses accent bottom border (exception — no outline) */
+/* Tabs: focused uses accent bottom border (exception — no background) */
 [data-aria-container] [role="tab"]:focus,
 [data-aria-container] [role="tab"][data-focused] {
   color: var(--primary);
@@ -133,13 +152,13 @@
 }
 
 /* ── Focused (aria-activedescendant — data-focused) ── */
-/* Idle: muted background only (restore cursor position) */
+/* Idle: gray background only (restore cursor position) */
 
 [data-aria-container] [data-focused] {
   background: var(--focus-idle);
 }
 
-/* Active: full focus when container has focus */
+/* Active: background highlight + outline ring */
 [data-aria-container]:focus-within [data-focused] {
   background: var(--primary-dim);
   color: var(--text-bright);
@@ -205,11 +224,11 @@
 /* ── Tree depth indentation (tree/treegrid only) ── */
 
 [role="tree"] [aria-level="1"],
-[role="treegrid"] [aria-level="1"] { padding-left: 8px; }
+[role="treegrid"] [aria-level="1"] { padding-left: var(--space-sm); }
 [role="tree"] [aria-level="2"],
-[role="treegrid"] [aria-level="2"] { padding-left: 24px; }
+[role="treegrid"] [aria-level="2"] { padding-left: var(--space-xl); }
 [role="tree"] [aria-level="3"],
-[role="treegrid"] [aria-level="3"] { padding-left: 40px; }
+[role="treegrid"] [aria-level="3"] { padding-left: var(--space-3xl); }
 [role="tree"] [aria-level="4"],
 [role="treegrid"] [aria-level="4"] { padding-left: 56px; }
 [role="tree"] [aria-level="5"],
@@ -238,19 +257,19 @@
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
-  border-bottom: 2px solid var(--border, #e0e0e0);
-  background: var(--header-bg, #fafafa);
+  border-bottom: 2px solid var(--border-default);
+  background: var(--surface-sunken);
 }
 
 .grid-header-cell {
-  padding: var(--space-md) var(--space-md);
+  padding: var(--space-md);
   min-width: 80px;
   font-weight: 600;
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-secondary, #666);
-  border-right: 1px solid var(--border-subtle, #eee);
+  color: var(--text-secondary);
+  border-right: 1px solid var(--border-subtle);
 }
 
 .grid-header-cell:last-child {
@@ -287,8 +306,8 @@
   padding: var(--space-sm) var(--space-md);
   min-width: 80px;
   font-size: var(--text-sm);
-  border-right: 1px solid var(--border-subtle, #eee);
-  border-bottom: 1px solid var(--border-subtle, #eee);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 [data-aria-container] [role="gridcell"]:last-child {
@@ -296,9 +315,9 @@
 }
 
 [data-aria-container] [role="gridcell"][tabindex="0"] {
-  outline: 2px solid var(--focus, #2563eb);
-  outline-offset: -2px;
-  background: var(--focus-bg, rgba(37, 99, 235, 0.06));
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
+  background: var(--primary-dim);
 }
 
 /* ── Tab-specific: horizontal + bottom border ── */
