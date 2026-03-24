@@ -130,9 +130,9 @@ export function getNodeClassName(data: Record<string, string>, state: NodeState)
     case 'brand': return s.cmsFooterBrand
     case 'links': return s.cmsFooterLinks
     case 'link': return ''
-    case 'tab-group': return `cms-tab-group${f ? ' cms-tab-group--focused' : ''}`
-    case 'tab-item': return `cms-tab-item${f ? ' cms-tab-item--focused' : ''}`
-    case 'tab-panel': return `cms-tab-panel${f ? ' cms-tab-panel--focused' : ''}`
+    case 'tab-group': return `${s.cmsTabGroup}${f ? ` ${s.cmsTabGroupFocused}` : ''}`
+    case 'tab-item': return `${s.cmsTabItem}${f ? ` ${s.cmsTabItemFocused}` : ''}`
+    case 'tab-panel': return s.cmsTabPanel
     default: return ''
   }
 }

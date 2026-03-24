@@ -116,6 +116,60 @@ function ThumbNode({ data, nodeId, locale }: {
   )
 }
 
+// ── Section grouping (precomputed outside render to avoid mutable let in JSX) ──
+
+interface SectionGroupEntry {
+  sectionId: string
+  index: number
+  rootAncestor: string
+  tabItemId: string | undefined
+  showSepStart: boolean
+  showSepEnd: boolean
+  prevRootAncestorForSepEnd: string
+  showLabel: boolean
+  labelText: string
+}
+
+function computeSectionGrouping(sectionIds: string[], store: NormalizedData, locale: Locale): SectionGroupEntry[] {
+  let prevRoot = ''
+  let prevTab = ''
+  return sectionIds.map((sectionId, index) => {
+    const rootAncestor = getRootAncestor(store, sectionId)
+    const tabItemId = getTabItemAncestor(store, sectionId)
+
+    let showSepStart = false
+    let showSepEnd = false
+    let prevRootAncestorForSepEnd = ''
+    if (rootAncestor !== prevRoot) {
+      const rootData = (store.entities[rootAncestor]?.data ?? {}) as Record<string, unknown>
+      if (rootData.type === 'tab-group' && prevRoot !== '') {
+        showSepStart = true
+      }
+      if (prevRoot) {
+        const prevRootData = (store.entities[prevRoot]?.data ?? {}) as Record<string, unknown>
+        if (prevRootData.type === 'tab-group' && rootData.type !== 'tab-group') {
+          showSepEnd = true
+          prevRootAncestorForSepEnd = prevRoot
+        }
+      }
+    }
+
+    let showLabel = false
+    let labelText = ''
+    if (tabItemId && tabItemId !== prevTab) {
+      showLabel = true
+      const tabData = (store.entities[tabItemId]?.data ?? {}) as Record<string, unknown>
+      const label = tabData.label as LocaleMap | undefined
+      labelText = label?.[locale] ?? label?.ko ?? ''
+    }
+
+    prevRoot = rootAncestor
+    prevTab = tabItemId ?? ''
+
+    return { sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }
+  })
+}
+
 // ── CmsSidebar ──
 
 export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins, onActivateTabItem, style, onHamburgerClick, onLocaleChange, hamburgerRef, i18nSheetOpen, onI18nSheetToggle }: CmsSidebarProps) {
@@ -194,8 +248,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
 
   // Sync with canvas active section (when sidebar not focused)
   const ariaRef = useRef(aria)
-  // eslint-disable-next-line react-hooks/refs
-  ariaRef.current = aria
+  useEffect(() => { ariaRef.current = aria })
   useEffect(() => {
     if (!activeSectionId) return
     if (activeSectionId === ariaRef.current.focused) return
@@ -222,6 +275,8 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   }
 
   // When container itself receives focus, move DOM focus to the focused option
+  const sectionGrouping = useMemo(() => computeSectionGrouping(sectionIds, store, locale), [sectionIds, store, locale])
+
   const handleContainerFocus = useCallback((e: React.FocusEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) return
     const focusedOption = listRef.current?.querySelector(`[data-sidebar-id="${aria.focused}"]`) as HTMLElement
@@ -251,40 +306,23 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
         </button>
       </div>
       <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onFocus={handleContainerFocus}>
-        {(() => {
-          let prevRootAncestor = ''
-          let prevTabItem = ''
-          return sectionIds.map((sectionId, index) => {
-            const rootAncestor = getRootAncestor(store, sectionId)
-            const tabItemId = getTabItemAncestor(store, sectionId)
+        {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
             const elements: React.ReactNode[] = []
 
-            if (rootAncestor !== prevRootAncestor) {
-              const rootData = (store.entities[rootAncestor]?.data ?? {}) as Record<string, unknown>
-              if (rootData.type === 'tab-group' && prevRootAncestor !== '') {
-                elements.push(<div key={`sep-start-${rootAncestor}`} className="cms-sidebar__group-sep" />)
-              }
-              if (prevRootAncestor) {
-                const prevRootData = (store.entities[prevRootAncestor]?.data ?? {}) as Record<string, unknown>
-                if (prevRootData.type === 'tab-group' && rootData.type !== 'tab-group') {
-                  elements.push(<div key={`sep-end-${prevRootAncestor}`} className="cms-sidebar__group-sep" />)
-                }
-              }
+            if (showSepStart) {
+              elements.push(<div key={`sep-start-${rootAncestor}`} className="cms-sidebar__group-sep" />)
+            }
+            if (showSepEnd && prevRootAncestorForSepEnd) {
+              elements.push(<div key={`sep-end-${prevRootAncestorForSepEnd}`} className="cms-sidebar__group-sep" />)
             }
 
-            if (tabItemId && tabItemId !== prevTabItem) {
-              const tabData = (store.entities[tabItemId]?.data ?? {}) as Record<string, unknown>
-              const label = tabData.label as LocaleMap | undefined
-              const labelText = label?.[locale] ?? label?.ko ?? ''
+            if (showLabel && tabItemId) {
               elements.push(
                 <div key={`label-${tabItemId}`} className={`cms-sidebar__group-label${tabItemId === activeTabItemId ? ' cms-sidebar__group-label--active' : ''}`}>
                   {labelText}
                 </div>
               )
             }
-
-            prevRootAncestor = rootAncestor
-            prevTabItem = tabItemId ?? ''
 
             const props = aria.getNodeProps(sectionId)
             const state = aria.getNodeState(sectionId)
@@ -298,7 +336,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
                   scrollToSection(sectionId)
                 }}
               >
-                <div className="cms-sidebar__thumb-inner">
+                <div className="cms-sidebar__thumb-inner cms-landing">
                   <SectionThumbnail data={store} sectionId={sectionId} locale={locale} />
                 </div>
                 <span className="cms-sidebar__thumb-index">{index + 1}</span>
@@ -306,8 +344,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
             )
 
             return elements
-          })
-        })()}
+          })}
       </div>
       <div className="cms-sidebar__add-area">
         <button

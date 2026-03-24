@@ -326,7 +326,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           onClick={(e) => handleNodeClick(nodeId, e)}
           className={className}
         >
-          <div className="cms-tablist" role="tablist">
+          <div className={landingStyles.cmsTablist} role="tablist">
             {tabItems.map(tabId => {
               const tabEntity = currentStore.entities[tabId]
               if (!tabEntity) return null
@@ -347,7 +347,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
                   onKeyDown={tkd as React.KeyboardEventHandler}
                   onFocus={tf as React.FocusEventHandler}
                   onClick={(e) => handleNodeClick(tabId, e)}
-                  className={getNodeClassName(tabData, tabState)}
+                  className={`${getNodeClassName(tabData, tabState)}${isActive ? ` ${landingStyles.cmsTabItemActive}` : ''}`}
                 >
                   <CmsInlineEditable
                     nodeId={tabId}
