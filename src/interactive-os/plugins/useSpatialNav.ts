@@ -10,39 +10,74 @@ import { getChildren, getParent } from '../store/createStore'
 
 export type Direction = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight'
 
-function center(r: DOMRect): { x: number; y: number } {
-  return { x: r.x + r.width / 2, y: r.y + r.height / 2 }
-}
+// Any overlapping candidate beats any non-overlapping one.
+// Must exceed the maximum realistic primaryGap + secondaryGap * 2 sum.
+const NON_OVERLAP_PENALTY = 100_000
 
-/** Shared spatial scoring: find the nearest candidate in a direction from a given rect. */
+// Weight must be smaller than the minimum meaningful primaryGap unit (1px)
+// so center-alignment only breaks ties, never overrides proximity.
+const CENTER_TIEBREAK_WEIGHT = 0.001
+
+/**
+ * Overlap-based spatial scoring (W3C CSS Spatial Navigation model).
+ *
+ * 1. Direction filter — candidate center must be in the movement direction.
+ * 2. Orthogonal-axis projection overlap — if the two rects overlap when
+ *    projected onto the axis perpendicular to movement, the candidate is
+ *    "visually aligned" and ranked by primary-axis edge gap alone.
+ * 3. Non-overlapping candidates are always scored worse than any overlapping one.
+ *    Among non-overlapping candidates, combined primary + secondary gap is used.
+ * 4. Center-alignment tiebreak — when primary gap is equal among overlapping
+ *    candidates, the one whose center is closer on the secondary axis wins.
+ */
 function findBestInDirection(
   fromRect: DOMRect,
   dir: Direction,
   candidates: Iterable<[string, DOMRect]>,
 ): string | null {
-  const from = center(fromRect)
+  const isVertical = dir === 'ArrowUp' || dir === 'ArrowDown'
+  const fromCenter = isVertical
+    ? fromRect.y + fromRect.height / 2
+    : fromRect.x + fromRect.width / 2
+  const fromCenterOrtho = isVertical
+    ? fromRect.x + fromRect.width / 2
+    : fromRect.y + fromRect.height / 2
   let bestId: string | null = null
   let bestScore = Infinity
 
   for (const [id, rect] of candidates) {
-    const c = center(rect)
+    const candidateCenter = isVertical
+      ? rect.y + rect.height / 2
+      : rect.x + rect.width / 2
 
-    const inDirection =
-      dir === 'ArrowRight' ? c.x > from.x + 1 :
-      dir === 'ArrowLeft'  ? c.x < from.x - 1 :
-      dir === 'ArrowDown'  ? c.y > from.y + 1 :
-      /* ArrowUp */          c.y < from.y - 1
+    const inDirection = isVertical
+      ? (dir === 'ArrowDown' ? candidateCenter > fromCenter + 1 : candidateCenter < fromCenter - 1)
+      : (dir === 'ArrowRight' ? candidateCenter > fromCenter + 1 : candidateCenter < fromCenter - 1)
 
     if (!inDirection) continue
 
-    const dx = Math.abs(c.x - from.x)
-    const dy = Math.abs(c.y - from.y)
+    const overlap = isVertical
+      ? Math.max(0, Math.min(fromRect.right, rect.right) - Math.max(fromRect.left, rect.left))
+      : Math.max(0, Math.min(fromRect.bottom, rect.bottom) - Math.max(fromRect.top, rect.top))
 
-    // Secondary axis penalized ×2 to prefer aligned targets
-    const score =
-      (dir === 'ArrowLeft' || dir === 'ArrowRight')
-        ? dx + dy * 2
-        : dy + dx * 2
+    const primaryGap =
+      dir === 'ArrowDown'  ? Math.max(0, rect.top - fromRect.bottom) :
+      dir === 'ArrowUp'    ? Math.max(0, fromRect.top - rect.bottom) :
+      dir === 'ArrowRight' ? Math.max(0, rect.left - fromRect.right) :
+      /* ArrowLeft */        Math.max(0, fromRect.left - rect.right)
+
+    let score: number
+    if (overlap > 0) {
+      const candidateCenterOrtho = isVertical
+        ? rect.x + rect.width / 2
+        : rect.y + rect.height / 2
+      score = primaryGap + Math.abs(candidateCenterOrtho - fromCenterOrtho) * CENTER_TIEBREAK_WEIGHT
+    } else {
+      const secondaryGap = isVertical
+        ? Math.min(Math.abs(fromRect.right - rect.left), Math.abs(fromRect.left - rect.right))
+        : Math.min(Math.abs(fromRect.bottom - rect.top), Math.abs(fromRect.top - rect.bottom))
+      score = primaryGap + secondaryGap * 2 + NON_OVERLAP_PENALTY
+    }
 
     if (score < bestScore) {
       bestScore = score
