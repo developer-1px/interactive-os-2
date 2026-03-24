@@ -70,13 +70,13 @@
   cursor: pointer; position: relative;
   background: var(--surface-default);
   flex-shrink: 0;
-  aspect-ratio: auto;
 }
 .cms-sidebar__thumb--focused {
   border-color: var(--primary);
 }
 .cms-sidebar__thumb-inner {
-  zoom: 0.1;
+  transform: scale(0.1);
+  transform-origin: top left;
   width: 1000%;
   pointer-events: none;
 }
@@ -373,7 +373,7 @@
   margin: var(--space-3xl) 0;
 }
 .cms-tab-group--focused {
-  outline: 2px solid var(--primary);
+  outline: 1px solid var(--focus);
   outline-offset: var(--space-xs);
   border-radius: var(--radius);
 }
@@ -407,7 +407,7 @@
   box-shadow: var(--shadow-sm);
 }
 .cms-tab-item[data-focused] {
-  outline: 2px solid var(--primary);
+  outline: 1px solid var(--focus);
   outline-offset: -2px;
 }
 .cms-tab-panel {

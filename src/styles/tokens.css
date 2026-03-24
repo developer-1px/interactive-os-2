@@ -69,11 +69,12 @@
   --primary-mid:        #252550;
   --primary-bright:     #2D2D6B;
 
-  /* ── Focus: keyboard focus (same hue as primary, independent control) ── */
-  --focus: var(--primary);
+  /* ── Focus: keyboard focus ── */
+  --focus:      var(--indigo-400);
+  --focus-idle: var(--indigo-900);
 
-  /* ── Selection: selected state (independent of primary) ── */
-  --selection: #1A3A2A;
+  /* ── Selection: selected state (same hue as focus, different intensity) ── */
+  --selection: var(--primary-dim);
 
   /* ── Destructive: danger/delete ── */
   --destructive:            var(--red-500);
@@ -176,8 +177,12 @@
   --primary-mid:    var(--indigo-100);
   --primary-bright: var(--indigo-200);
 
+  /* ── Focus ── */
+  --focus:      var(--indigo-500);
+  --focus-idle: var(--indigo-100);
+
   /* ── Selection ── */
-  --selection: #E8F5E9;
+  --selection: var(--primary-dim);
 
   /* ── Interactive ── */
   --bg-hover:  var(--zinc-100);
@@ -265,8 +270,8 @@ p {
 }
 
 *:focus-visible {
-  outline: 1.5px solid var(--focus);
-  outline-offset: -1.5px;
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
 }
 
 /* ══ Scrollbar (WebKit) ══ */

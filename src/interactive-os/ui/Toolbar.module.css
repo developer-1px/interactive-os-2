@@ -20,8 +20,8 @@
 .toolbar-btn-focused {
   background: var(--primary-dim);
   color: var(--text-bright);
-  outline: 1.5px solid var(--primary);
-  outline-offset: -1.5px;
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
 }
 
 .toolbar-btn-selected {
