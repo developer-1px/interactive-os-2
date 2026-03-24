@@ -56,7 +56,7 @@ const surfaceTokens: TokenControl[] = [
 const semanticTokens: TokenControl[] = [
   { variable: '--primary', label: 'primary', defaultValue: '#5B5BD6', type: 'color' },
   { variable: '--focus', label: 'focus', defaultValue: '#7272DB', type: 'color' },
-  { variable: '--focus-idle', label: 'focus idle', defaultValue: '#2E2E8F', type: 'color' },
+  { variable: '--focus-idle', label: 'focus idle', defaultValue: '#27272A', type: 'color' },
   { variable: '--selection', label: 'selection', defaultValue: '#1E1E3A', type: 'color' },
   { variable: '--destructive', label: 'destructive', defaultValue: '#E5484D', type: 'color' },
 ]
