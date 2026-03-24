@@ -46,7 +46,7 @@ describe('clearCellValue', () => {
   it('sets cell to empty string', () => {
     const engine = createEngine()
     engine.dispatch(clipboardCommands.clearCellValue('row-1', 0))
-    const cells = (getEntity(engine.getStore(), 'row-1')?.data as any).cells
+    const cells = (getEntity(engine.getStore(), 'row-1')?.data as Record<string, unknown>).cells as string[]
     expect(cells[0]).toBe('')
     expect(cells[1]).toBe('world') // other cells unchanged
   })
@@ -56,7 +56,7 @@ describe('clearCellValue', () => {
     const engine = createEngine()
     engine.dispatch(clipboardCommands.clearCellValue('row-1', 0))
     engine.dispatch(historyCommands.undo())
-    const cells = (getEntity(engine.getStore(), 'row-1')?.data as any).cells
+    const cells = (getEntity(engine.getStore(), 'row-1')?.data as Record<string, unknown>).cells as string[]
     expect(cells[0]).toBe('hello')
   })
 
@@ -81,11 +81,11 @@ describe('cutCellValue', () => {
     const engine = createEngine()
     engine.dispatch(clipboardCommands.cutCellValue('row-1', 0))
     // Cell cleared
-    const cells = (getEntity(engine.getStore(), 'row-1')?.data as any).cells
+    const cells = (getEntity(engine.getStore(), 'row-1')?.data as Record<string, unknown>).cells as string[]
     expect(cells[0]).toBe('')
     // Buffer has value — verify by pasting to another cell
     engine.dispatch(clipboardCommands.pasteCellValue('row-2', 0))
-    const cells2 = (getEntity(engine.getStore(), 'row-2')?.data as any).cells
+    const cells2 = (getEntity(engine.getStore(), 'row-2')?.data as Record<string, unknown>).cells as string[]
     expect(cells2[0]).toBe('hello')
   })
 
@@ -94,7 +94,7 @@ describe('cutCellValue', () => {
     const engine = createEngine()
     engine.dispatch(clipboardCommands.cutCellValue('row-1', 0))
     engine.dispatch(historyCommands.undo())
-    const cells = (getEntity(engine.getStore(), 'row-1')?.data as any).cells
+    const cells = (getEntity(engine.getStore(), 'row-1')?.data as Record<string, unknown>).cells as string[]
     expect(cells[0]).toBe('hello')
   })
 })
@@ -121,8 +121,8 @@ function StatefulCellEditGrid({ initialData, withCellEdit = true }: { initialDat
   const behavior = gridBehavior({ columns: 3, edit: true })
   return (
     <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="Test Grid">
-      <Aria.Item render={(props, node, state: NodeState) => {
-        const cells = (node.data as any)?.cells as string[] ?? []
+      <Aria.Item render={(props, node, _state: NodeState) => {
+        const cells = ((node.data as Record<string, unknown>)?.cells as string[]) ?? []
         return (
           <div {...props}>
             {cells.map((cell, i) => (
@@ -220,7 +220,7 @@ describe('enterContinue prop', () => {
     return (
       <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="Editable Grid">
         <Aria.Item render={(props, node, state) => {
-          const cells = (node.data as any)?.cells as string[] ?? []
+          const cells = ((node.data as Record<string, unknown>)?.cells as string[]) ?? []
           const focusedColIdx = (dataRef.current.entities[GRID_COL_ID]?.colIndex as number) ?? 0
           return (
             <div {...props}>
@@ -289,4 +289,7 @@ describe('enterContinue prop', () => {
     expect(getFocusedRowId(container)).toBe('row-2')
     expect(container.querySelector('[data-renaming]')).toBeNull()
   })
+
+  // V11: 2026-03-25-cell-edit-plugin-prd.md — IME는 jsdom 한계로 스킵
+  it.todo('IME composition Enter does not confirm')
 })

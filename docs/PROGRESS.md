@@ -20,7 +20,7 @@
 | dispatch + middleware | Integrated | — |
 | Dispatch Logger | Validated | — |
 
-## Plugins (L3 · 8종)
+## Plugins (L3 · 9종)
 
 | Plugin | Maturity | Gaps |
 |--------|----------|------|
@@ -28,7 +28,8 @@
 | focusRecovery | Integrated | — |
 | history | Integrated | delta-based undo/redo, navigation skip 구현. command grouping 미구현 |
 | crud | Integrated | — |
-| clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료 |
+| cellEdit | Integrated | Google Sheets 2모드: Delete→셀 클리어, Enter→행 이동, Mod+X/C/V 셀 클립보드 |
+| clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료, cutCellValue/clearCellValue 추가 |
 | zodSchema | Integrated | Zod childRules → canAccept/canDelete 자동 파생, middleware 기반 |
 | rename | Integrated | — |
 | dnd | Integrated | — |
