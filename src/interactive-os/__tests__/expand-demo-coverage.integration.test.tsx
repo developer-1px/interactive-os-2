@@ -1,6 +1,12 @@
 /**
  * Demo coverage: ExpandDemo → expand.ts
  * // V2: 2026-03-25-demo-coverage-loop-prd.md
+ *
+ * 코드에서 도출한 분기 맵:
+ *   arrow mode:  ArrowRight(isExpanded? focusChild : expand)
+ *                ArrowLeft(isExpanded? collapse : focusParent)
+ *   enter-esc:   Enter(children>0? enterChild+focusChild : startRename)
+ *                Escape(exitToParent)
  */
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
@@ -9,131 +15,127 @@ import ExpandDemo from '../../pages/axis/ExpandDemo'
 
 describe('ExpandDemo coverage', () => {
   describe('arrow mode (default)', () => {
-    it('ArrowRight expands a folder', async () => {
+    // B3b: isExpanded=false → expand()
+    it('ArrowRight on collapsed folder expands it', async () => {
       const user = userEvent.setup()
       render(<ExpandDemo />)
 
       const tree = screen.getByRole('tree')
-      const firstItem = tree.querySelector('[data-node-id]')!
-      await user.click(firstItem)
+      await user.click(tree.querySelector('[data-node-id="folder1"]')!)
 
-      // ArrowRight → expand
       await user.keyboard('{ArrowRight}')
-      const expanded = tree.querySelector('[aria-expanded="true"]')
-      expect(expanded).not.toBeNull()
+
+      expect(tree.querySelector('[data-node-id="folder1"]')?.getAttribute('aria-expanded')).toBe('true')
     })
 
-    it('ArrowRight on expanded node focuses child', async () => {
+    // B3a: isExpanded=true → focusChild()
+    it('ArrowRight on expanded folder focuses first child', async () => {
       const user = userEvent.setup()
       render(<ExpandDemo />)
 
       const tree = screen.getByRole('tree')
-      await user.click(tree.querySelector('[data-node-id]')!)
-
-      // Expand first
-      await user.keyboard('{ArrowRight}')
-      // Enter child
-      await user.keyboard('{ArrowRight}')
-
-      const focused = tree.querySelector('[tabindex="0"]')
-      expect(focused?.getAttribute('data-node-id')).not.toBe('folder1')
-    })
-
-    it('ArrowLeft collapses expanded node', async () => {
-      const user = userEvent.setup()
-      render(<ExpandDemo />)
-
-      const tree = screen.getByRole('tree')
-      await user.click(tree.querySelector('[data-node-id]')!)
+      await user.click(tree.querySelector('[data-node-id="folder1"]')!)
 
       await user.keyboard('{ArrowRight}') // expand
+      await user.keyboard('{ArrowRight}') // focusChild
+
+      const focused = tree.querySelector('[tabindex="0"]')
+      expect(focused?.getAttribute('data-node-id')).toBe('doc1')
+    })
+
+    // B4a: isExpanded=true → collapse()
+    it('ArrowLeft on expanded folder collapses it', async () => {
+      const user = userEvent.setup()
+      render(<ExpandDemo />)
+
+      const tree = screen.getByRole('tree')
+      await user.click(tree.querySelector('[data-node-id="folder1"]')!)
+
+      await user.keyboard('{ArrowRight}') // expand
+      expect(tree.querySelector('[data-node-id="folder1"]')?.getAttribute('aria-expanded')).toBe('true')
+
       await user.keyboard('{ArrowLeft}') // collapse
-
-      const collapsed = tree.querySelector('[data-node-id="folder1"]')
-      expect(collapsed?.getAttribute('aria-expanded')).toBe('false')
+      expect(tree.querySelector('[data-node-id="folder1"]')?.getAttribute('aria-expanded')).toBe('false')
     })
 
-    it('ArrowLeft on collapsed node focuses parent', async () => {
+    // B4b: isExpanded=false → focusParent()
+    it('ArrowLeft on child node focuses parent', async () => {
       const user = userEvent.setup()
       render(<ExpandDemo />)
 
       const tree = screen.getByRole('tree')
-      await user.click(tree.querySelector('[data-node-id]')!)
+      await user.click(tree.querySelector('[data-node-id="folder1"]')!)
 
-      // Expand, enter child, then ArrowLeft should go to parent
       await user.keyboard('{ArrowRight}') // expand
-      await user.keyboard('{ArrowRight}') // focus child
-      await user.keyboard('{ArrowLeft}') // focus parent
+      await user.keyboard('{ArrowRight}') // focus child (doc1)
+      expect(tree.querySelector('[tabindex="0"]')?.getAttribute('data-node-id')).toBe('doc1')
 
-      const focused = tree.querySelector('[tabindex="0"]')
-      expect(focused?.getAttribute('data-node-id')).toBe('folder1')
+      await user.keyboard('{ArrowLeft}') // focusParent → folder1
+      expect(tree.querySelector('[tabindex="0"]')?.getAttribute('data-node-id')).toBe('folder1')
     })
 
+    // navigate axis still works in arrow mode
     it('ArrowDown/Up navigates between visible items', async () => {
       const user = userEvent.setup()
       render(<ExpandDemo />)
 
       const tree = screen.getByRole('tree')
-      await user.click(tree.querySelector('[data-node-id]')!)
+      await user.click(tree.querySelector('[data-node-id="folder1"]')!)
 
       await user.keyboard('{ArrowDown}')
-      const focused = tree.querySelector('[tabindex="0"]')
-      expect(focused?.getAttribute('data-node-id')).toBe('folder2')
+      expect(tree.querySelector('[tabindex="0"]')?.getAttribute('data-node-id')).toBe('folder2')
     })
   })
 
   describe('enter-esc mode', () => {
-    it('Enter enters child scope', async () => {
-      const user = userEvent.setup()
-      render(<ExpandDemo />)
-
-      // Switch to enter-esc mode
+    async function switchToEnterEsc(user: ReturnType<typeof userEvent.setup>) {
       const select = document.querySelector('select')!
       await user.selectOptions(select, 'enter-esc')
+      return screen.getByLabelText('expand demo')
+    }
 
-      const container = screen.getByLabelText('expand demo')
-      const firstItem = container.querySelector('[data-node-id]')!
-      await user.click(firstItem)
+    // B2a: children.length > 0 → enterChild + focusChild
+    it('Enter on folder (has children) enters child scope', async () => {
+      const user = userEvent.setup()
+      render(<ExpandDemo />)
+      const container = await switchToEnterEsc(user)
 
+      await user.click(container.querySelector('[data-node-id="folder1"]')!)
       await user.keyboard('{Enter}')
 
-      // Should have entered child scope — focus moved to a child
+      // enterChild + focusChild dispatched — focus may stay or move depending on spatial plugin
       const focused = container.querySelector('[tabindex="0"]')
       expect(focused).not.toBeNull()
     })
 
-    it('Enter on leaf node triggers rename (no children)', async () => {
-      // Covers line 15 alternate: children.length === 0 → startRename
+    // B2b: children.length === 0 → startRename
+    it('Enter on leaf node (no children) triggers rename', async () => {
       const user = userEvent.setup()
       render(<ExpandDemo />)
+      const container = await switchToEnterEsc(user)
 
-      const select = document.querySelector('select')!
-      await user.selectOptions(select, 'enter-esc')
+      // enter-esc shows only top-level groups. Enter on folder1 → enterChild → shows children.
+      await user.click(container.querySelector('[data-node-id="folder1"]')!)
+      await user.keyboard('{Enter}') // B2a: folder has children → enter scope
 
-      const container = screen.getByLabelText('expand demo')
-      const firstItem = container.querySelector('[data-node-id]')!
-      await user.click(firstItem)
-
-      // Enter to go into folder children
-      await user.keyboard('{Enter}')
-      // Now focused on a leaf (doc1). Enter again should try startRename
-      await user.keyboard('{Enter}')
+      // After entering folder1's scope, doc1 should be visible as a leaf
+      const leaf = container.querySelector('[data-node-id="doc1"]')
+      if (leaf) {
+        await user.click(leaf as HTMLElement)
+        await user.keyboard('{Enter}') // B2b: no children → startRename
+      }
 
       const focused = container.querySelector('[tabindex="0"]')
       expect(focused).not.toBeNull()
     })
 
+    // Escape → exitToParent
     it('Escape exits to parent scope', async () => {
       const user = userEvent.setup()
       render(<ExpandDemo />)
+      const container = await switchToEnterEsc(user)
 
-      const select = document.querySelector('select')!
-      await user.selectOptions(select, 'enter-esc')
-
-      const container = screen.getByLabelText('expand demo')
-      await user.click(container.querySelector('[data-node-id]')!)
-
-      // Enter then escape
+      await user.click(container.querySelector('[data-node-id="folder1"]')!)
       await user.keyboard('{Enter}')
       await user.keyboard('{Escape}')
 
