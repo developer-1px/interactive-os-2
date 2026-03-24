@@ -124,7 +124,7 @@
 }
 
 /* Canvas area */
-.cms-canvas-area { flex: 1; position: relative; overflow-y: auto; padding-top: 48px; }
+.cms-canvas-area { flex: 1; position: relative; overflow-y: auto; }
 
 /* Viewport wrapper */
 .cms-viewport {

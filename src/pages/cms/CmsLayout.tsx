@@ -50,7 +50,7 @@ export default function CmsLayout() {
   })
   const detailResizer = useResizer({
     defaultSize: 240, minSize: 160, maxSize: 480, step: 10,
-    storageKey: 'cms-detail-width',
+    storageKey: 'cms-detail-width', reverse: true,
   })
 
   const handleActivateTabItem = useCallback((tabItemId: string) => {
