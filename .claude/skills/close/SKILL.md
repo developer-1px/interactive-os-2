@@ -45,15 +45,16 @@ retro 결과가 없으면 건너뛴다.
 
 단순 기능 추가/버그 수정 → 건너뛴다.
 
-## Step 4: /area 실행
+## Step 4: /publish 실행
 
-area 스킬을 호출하여 Area MDX 문서를 갱신한다:
+`/publish` 스킬을 호출하여 Living Documentation 파이프라인을 실행한다:
 
-- L2 주기율표에서 ⬜→🟢 전환
-- L3 모듈 MDX 생성/갱신
-- 구조적 빈칸(⬜) 발견
+- 7섹션 완전성 감사
+- 역PRD → MD 이식 (retro 결과가 있으면)
+- 데모·registry 완전성 확인
+- /area 위임 (L2 ⬜→🟢 전환, L3 생성/갱신, 구조적 빈칸 발견)
 
-Area MDX에 영향 없으면 건너뛴다.
+변경된 module이 없으면 건너뛴다.
 
 ## Step 5: 커밋
 
