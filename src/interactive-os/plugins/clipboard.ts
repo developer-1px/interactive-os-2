@@ -42,6 +42,8 @@ export const CUT = 'clipboard:cut' as const
 export const PASTE = 'clipboard:paste' as const
 export const COPY_CELL = 'clipboard:copyCellValue' as const
 export const PASTE_CELL = 'clipboard:pasteCellValue' as const
+export const CLEAR_CELL = 'clipboard:clearCellValue' as const
+export const CUT_CELL_VALUE = 'clipboard:cutCellValue' as const
 
 // ── Module-level clipboard data (shared — OS clipboard model) ──
 
@@ -201,6 +203,46 @@ export const clipboardCommands = {
         return store
       },
       undo(store) { return store },
+    }
+  },
+
+  clearCellValue(nodeId: string, colIndex: number): Command {
+    let previousValue: string = ''
+    return {
+      type: CLEAR_CELL,
+      payload: { nodeId, colIndex },
+      execute(store) {
+        const cells = getCells(store, nodeId)
+        previousValue = cells[colIndex] ?? ''
+        if (previousValue === '') return store
+        cells[colIndex] = ''
+        return updateEntityData(store, nodeId, { cells })
+      },
+      undo(store) {
+        const cells = getCells(store, nodeId)
+        cells[colIndex] = previousValue
+        return updateEntityData(store, nodeId, { cells })
+      },
+    }
+  },
+
+  cutCellValue(nodeId: string, colIndex: number): Command {
+    let previousValue: string = ''
+    return {
+      type: CUT_CELL_VALUE,
+      payload: { nodeId, colIndex },
+      execute(store) {
+        const cells = getCells(store, nodeId)
+        previousValue = cells[colIndex] ?? ''
+        cellValueBuffer = previousValue
+        cells[colIndex] = ''
+        return updateEntityData(store, nodeId, { cells })
+      },
+      undo(store) {
+        const cells = getCells(store, nodeId)
+        cells[colIndex] = previousValue
+        return updateEntityData(store, nodeId, { cells })
+      },
     }
   },
 
@@ -389,6 +431,8 @@ export function clipboard(options?: ClipboardOptions) {
       [PASTE]: clipboardCommands.paste,
       [COPY_CELL]: clipboardCommands.copyCellValue,
       [PASTE_CELL]: clipboardCommands.pasteCellValue,
+      [CLEAR_CELL]: clipboardCommands.clearCellValue,
+      [CUT_CELL_VALUE]: clipboardCommands.cutCellValue,
     },
     onCopy: (ctx: { focused: string; selected: string[] }) =>
       clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
