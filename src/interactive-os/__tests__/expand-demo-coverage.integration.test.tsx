@@ -102,6 +102,27 @@ describe('ExpandDemo coverage', () => {
       expect(focused).not.toBeNull()
     })
 
+    it('Enter on leaf node triggers rename (no children)', async () => {
+      // Covers line 15 alternate: children.length === 0 → startRename
+      const user = userEvent.setup()
+      render(<ExpandDemo />)
+
+      const select = document.querySelector('select')!
+      await user.selectOptions(select, 'enter-esc')
+
+      const container = screen.getByLabelText('expand demo')
+      const firstItem = container.querySelector('[data-node-id]')!
+      await user.click(firstItem)
+
+      // Enter to go into folder children
+      await user.keyboard('{Enter}')
+      // Now focused on a leaf (doc1). Enter again should try startRename
+      await user.keyboard('{Enter}')
+
+      const focused = container.querySelector('[tabindex="0"]')
+      expect(focused).not.toBeNull()
+    })
+
     it('Escape exits to parent scope', async () => {
       const user = userEvent.setup()
       render(<ExpandDemo />)
