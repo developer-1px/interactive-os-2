@@ -24,7 +24,7 @@ try {
 } catch {
   parsePath = _require.resolve('@babel/parser')
 }
-const { parse } = await import(parsePath) as typeof import('@babel/parser')
+const { parse } = await import(parsePath) as { parse: (code: string, options: Record<string, unknown>) => { program: BabelNode } }
 
 export function inspectorPlugin(): Plugin {
   let root = ''

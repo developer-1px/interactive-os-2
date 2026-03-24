@@ -1,5 +1,6 @@
-import type { AriaPattern, PatternContext, NodeState } from './types'
+import type { AriaPattern, NodeState } from './types'
 import type { Axis } from './composePattern'
+import type { PatternContext } from '../axis/types'
 import { composePattern } from './composePattern'
 import { comboboxCommands } from '../plugins/combobox'
 import { selectionCommands } from '../plugins/core'
@@ -18,14 +19,14 @@ export function combobox(options?: ComboboxOptions): AriaPattern {
   }
 
   const popupToggle: Axis = {
-    ArrowDown: (ctx) => {
+    ArrowDown: (ctx: PatternContext) => {
       if (!getIsOpen(ctx)) {
         ctx.dispatch(comboboxCommands.open())
         return ctx.focusFirst()
       }
       return undefined // fallback to nav
     },
-    Enter: (ctx) => {
+    Enter: (ctx: PatternContext) => {
       const isOpen = getIsOpen(ctx)
       if (isOpen) {
         if (selectionMode === 'multiple') {
@@ -39,7 +40,7 @@ export function combobox(options?: ComboboxOptions): AriaPattern {
       return comboboxCommands.open()
     },
     Escape: () => comboboxCommands.close(),
-    Backspace: (ctx) => {
+    Backspace: (ctx: PatternContext) => {
       if (selectionMode !== 'multiple') return undefined
       const entity = ctx.getEntity('__combobox__')
       const filterText = (entity as Record<string, unknown> | undefined)?.filterText ?? ''
@@ -53,10 +54,10 @@ export function combobox(options?: ComboboxOptions): AriaPattern {
   }
 
   const navV: Axis = {
-    ArrowDown: (ctx) => ctx.focusNext(),
-    ArrowUp: (ctx) => ctx.focusPrev(),
-    Home: (ctx) => ctx.focusFirst(),
-    End: (ctx) => ctx.focusLast(),
+    ArrowDown: (ctx: PatternContext) => ctx.focusNext(),
+    ArrowUp: (ctx: PatternContext) => ctx.focusPrev(),
+    Home: (ctx: PatternContext) => ctx.focusFirst(),
+    End: (ctx: PatternContext) => ctx.focusLast(),
   }
 
   return composePattern(

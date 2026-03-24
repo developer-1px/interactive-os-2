@@ -1,11 +1,14 @@
 import { z } from 'zod'
+import type { Command } from '../engine/types'
 import { definePlugin } from './definePlugin'
 import { PASTE, CUT, clipboardCommands } from './clipboard'
 import type { CanAcceptFn, CanDeleteFn } from './clipboard'
 
+type ZodSchema = z.ZodType & { safeParse(data: unknown): { success: boolean } }
+
 function deriveCanAccept(
-  childRules: Record<string, z.ZodType>,
-  rootTypes?: z.ZodType[],
+  childRules: Record<string, ZodSchema>,
+  rootTypes?: ZodSchema[],
 ): CanAcceptFn {
   return (parentData, childData) => {
     if (!childData) return false
@@ -24,7 +27,7 @@ function deriveCanAccept(
     }
     if (rule instanceof z.ZodArray) {
       // Collection: validate against element schema
-      const elementRule = rule.element
+      const elementRule = rule.element as ZodSchema
       return elementRule.safeParse(childData).success ? 'insert' : false
     }
     // Slot container: fixed structure, cannot accept new children → skip
@@ -32,7 +35,7 @@ function deriveCanAccept(
   }
 }
 
-function deriveCanDelete(childRules: Record<string, z.ZodType>): CanDeleteFn {
+function deriveCanDelete(childRules: Record<string, ZodSchema>): CanDeleteFn {
   return (parentData) => {
     if (!parentData?.type) return true // ROOT-level: always deletable
     const rule = childRules[parentData.type as string]
@@ -42,8 +45,8 @@ function deriveCanDelete(childRules: Record<string, z.ZodType>): CanDeleteFn {
 }
 
 export interface ZodSchemaOptions {
-  childRules: Record<string, z.ZodType>
-  rootTypes?: z.ZodType[]
+  childRules: Record<string, ZodSchema>
+  rootTypes?: ZodSchema[]
 }
 
 export function zodSchema(options: ZodSchemaOptions) {
@@ -53,7 +56,7 @@ export function zodSchema(options: ZodSchemaOptions) {
   return definePlugin({
     name: 'zodSchema',
     intercepts: [PASTE, CUT],
-    middleware: (next) => (command) => {
+    middleware: (next: (command: Command) => void) => (command: Command) => {
       if (command.type === PASTE) {
         const payload = command.payload as { targetId: string }
         next(clipboardCommands.paste(payload.targetId, canAccept))

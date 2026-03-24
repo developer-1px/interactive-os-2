@@ -267,12 +267,13 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     } = props as Record<string, unknown>
     void _
 
-    const className = getNodeClassName(d, state)
-    const Tag = getNodeTag(d)
+    const ds = d as Record<string, string>
+    const className = getNodeClassName(ds, state)
+    const Tag = getNodeTag(ds) as React.ElementType
 
     // For section nodes, render section header + children container
     if (d.type === 'section') {
-      const childrenContainerClass = getChildrenContainerClassName(d)
+      const childrenContainerClass = getChildrenContainerClassName(ds)
 
       return (
         <Tag
@@ -350,7 +351,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
                   onKeyDown={tkd as React.KeyboardEventHandler}
                   onFocus={tf as React.FocusEventHandler}
                   onClick={(e) => handleNodeClick(tabId, e)}
-                  className={`${getNodeClassName(tabData, tabState)}${isActive ? ` ${landingStyles.cmsTabItemActive}` : ''}`}
+                  className={`${getNodeClassName(tabData as Record<string, string>, tabState)}${isActive ? ` ${landingStyles.cmsTabItemActive}` : ''}`}
                 >
                   <CmsInlineEditable
                     nodeId={tabId}
@@ -385,7 +386,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
                 onKeyDown={pkd as React.KeyboardEventHandler}
                 onFocus={pf as React.FocusEventHandler}
                 onClick={(e) => handleNodeClick(panelId, e)}
-                className={getNodeClassName(panelData, panelState)}
+                className={getNodeClassName(panelData as Record<string, string>, panelState)}
               >
                 {panelSections.map(sectionId => renderNode(sectionId))}
               </div>

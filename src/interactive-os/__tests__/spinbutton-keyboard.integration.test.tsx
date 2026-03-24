@@ -33,7 +33,7 @@ function renderSpinbutton(data: NormalizedData) {
 }
 
 function getAriaValueNow(container: HTMLElement): string | null {
-  return container.querySelector('[role="spinbutton"]')?.getAttribute('aria-valuenow')
+  return container.querySelector('[role="spinbutton"]')?.getAttribute('aria-valuenow') ?? null
 }
 
 describe('Spinbutton keyboard integration', () => {

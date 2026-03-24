@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { ListBox } from '../ui/ListBox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
@@ -37,7 +37,7 @@ function fixtureData(): NormalizedData {
 
 const plugins = [core(), crud(), clipboard(), history()]
 
-const renderItem = (props: Record<string, unknown>, item: Record<string, unknown>, _state: NodeState) => (
+const renderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState) => (
   <span {...props} data-testid={`item-${item.id}`}>
     <Aria.Editable field="label">
       <span>{(item.data as Record<string, unknown>)?.label as string}</span>

@@ -8,7 +8,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Combobox } from '../ui/Combobox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
@@ -30,7 +30,7 @@ function fixtureData(): NormalizedData {
   })
 }
 
-function renderItem(props: Record<string, unknown>, item: Record<string, unknown>, state: NodeState) {
+function renderItem(props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) {
   return (
     <span
       {...props}

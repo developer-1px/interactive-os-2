@@ -26,7 +26,7 @@ function flattenFiles(store: NormalizedData, root: string): FileEntry[] {
   const files: FileEntry[] = []
   for (const entity of Object.values(store.entities)) {
     if (!entity.data) continue
-    const data = entity.data as FileNodeData
+    const data = entity.data as unknown as FileNodeData
     if (data.type === 'file') {
       files.push({
         id: entity.id,
@@ -70,7 +70,7 @@ export function QuickOpen({
 
   // Convert Fuse.js results to NormalizedData for the combobox behavior
   const comboboxData = useMemo(() => createStore({
-    entities: Object.fromEntries(results.map(f => [f.id, { id: f.id, data: f }])),
+    entities: Object.fromEntries(results.map(f => [f.id, { id: f.id, data: f as unknown as Record<string, unknown> }])),
     relationships: { [ROOT_ID]: results.map(f => f.id) },
   }), [results])
 
@@ -88,7 +88,7 @@ export function QuickOpen({
       if (selectedIds.length > 0) {
         const selectedEntity = newStore.entities[selectedIds[0]]
         if (selectedEntity?.data) {
-          const fileData = selectedEntity.data as FileEntry
+          const fileData = selectedEntity.data as unknown as FileEntry
           onSelectRef.current(fileData.path)
         }
       }
@@ -142,7 +142,7 @@ export function QuickOpen({
               if (!entity) return null
               const state = aria.getNodeState(childId)
               const props = aria.getNodeProps(childId)
-              const fileData = entity.data as FileEntry
+              const fileData = entity.data as unknown as FileEntry
               return (
                 <div
                   key={childId}

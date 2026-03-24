@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { TreeView } from '../interactive-os/ui/TreeView'
+import type { TreeItemRenderProps } from '../interactive-os/ui/TreeView'
 import { FOCUS_ID, EXPANDED_ID } from '../interactive-os/plugins/core'
 import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
@@ -104,7 +105,7 @@ export function AreaSidebar() {
     navigate(`/internals/area/${nodeId}`)
   }, [navigate])
 
-  const renderItem = useCallback((_props: Record<string, unknown>, node: Record<string, unknown>, state: NodeState) => {
+  const renderItem = useCallback((_props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState) => {
     const hasChildren = state.expanded !== undefined
     return (
       <span className="item-inner">

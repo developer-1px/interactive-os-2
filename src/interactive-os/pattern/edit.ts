@@ -1,4 +1,5 @@
 import type { StructuredAxis } from './composePattern'
+import type { PatternContext } from '../axis/types'
 import type { Plugin } from '../plugins/types'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands, RENAME_ID } from '../plugins/rename'
@@ -14,16 +15,16 @@ interface EditOptions {
 
 export function edit(options?: EditOptions): StructuredAxis {
   const keyMap: StructuredAxis['keyMap'] = {
-    'F2': (ctx) => renameCommands.startRename(ctx.focused),
-    'Enter': (ctx) => renameCommands.startRename(ctx.focused),
-    'Delete': (ctx) => crudCommands.remove(ctx.focused),
-    'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-    'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+    'F2': (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
+    'Enter': (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
+    'Delete': (ctx: PatternContext) => crudCommands.remove(ctx.focused),
+    'Alt+ArrowUp': (ctx: PatternContext) => dndCommands.moveUp(ctx.focused),
+    'Alt+ArrowDown': (ctx: PatternContext) => dndCommands.moveDown(ctx.focused),
   }
 
   if (options?.tree) {
-    keyMap['Alt+ArrowLeft'] = (ctx) => dndCommands.moveOut(ctx.focused)
-    keyMap['Alt+ArrowRight'] = (ctx) => dndCommands.moveIn(ctx.focused)
+    keyMap['Alt+ArrowLeft'] = (ctx: PatternContext) => dndCommands.moveOut(ctx.focused)
+    keyMap['Alt+ArrowRight'] = (ctx: PatternContext) => dndCommands.moveIn(ctx.focused)
   }
 
   return { keyMap }

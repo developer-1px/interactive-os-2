@@ -35,7 +35,7 @@ export function navigate(options?: NavigateOptions): { keyMap: KeyMap; config: P
         // At last col: move to next row + reset to first col
         const nextRowCmd = ctx.focusNext()
         // If focusNext targets the same node, we're at the absolute last cell — stop
-        if (nextRowCmd.payload?.nodeId === ctx.focused) return
+        if ((nextRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
         return createBatchCommand([nextRowCmd, g.focusFirstCol()])
       }
       keyMap['Shift+Tab'] = (ctx: PatternContext) => {
@@ -46,7 +46,7 @@ export function navigate(options?: NavigateOptions): { keyMap: KeyMap; config: P
         // At first col: move to prev row + set to last col
         const prevRowCmd = ctx.focusPrev()
         // If focusPrev targets the same node, we're at the absolute first cell — stop
-        if (prevRowCmd.payload?.nodeId === ctx.focused) return
+        if ((prevRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
         return createBatchCommand([prevRowCmd, g.focusLastCol()])
       }
     }

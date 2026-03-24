@@ -48,7 +48,7 @@ describe('useSpatialNav — keyMap structure', () => {
     const ctx = {
       focused: 'a',
       extendSelectionTo,
-    } as Parameters<(typeof result.current.keyMap)['Shift+ArrowDown']>[0]
+    } as unknown as Parameters<(typeof result.current.keyMap)['Shift+ArrowDown']>[0]
 
     const cmd = result.current.keyMap['Shift+ArrowDown'](ctx)
     expect(cmd).toBeUndefined()

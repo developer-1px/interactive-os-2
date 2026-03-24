@@ -39,7 +39,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
     if (!entity) return null
     const d = (entity.data ?? {}) as Record<string, string>
     const children = getChildren(data, nodeId)
-    const className = getNodeClassName(d, { focused: false, selected: false, expanded: false, level: 0, disabled: false })
+    const className = getNodeClassName(d, { focused: false, selected: false, expanded: false, level: 0, disabled: false, index: 0, siblingCount: 0 })
     const Tag = getNodeTag(d)
 
     if (d.type === 'section') {

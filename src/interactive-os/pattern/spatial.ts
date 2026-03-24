@@ -1,4 +1,5 @@
 import type { AriaPattern, NodeState } from './types'
+import type { PatternContext } from '../axis/types'
 import { ROOT_ID } from '../store/types'
 import { SPATIAL_PARENT_ID } from '../plugins/spatial'
 import { focusCommands } from '../plugins/core'
@@ -10,14 +11,14 @@ import { activate } from '../axis/activate'
 import { expand } from '../axis/expand'
 
 const spatialNav: Axis = {
-  F2: (ctx) => renameCommands.startRename(ctx.focused),
-  Home: (ctx) => {
+  F2: (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
+  Home: (ctx: PatternContext) => {
     const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
     const depthParentId = (spatialParent?.parentId as string) ?? ROOT_ID
     const siblings = ctx.getChildren(depthParentId)
     if (siblings.length > 0) return focusCommands.setFocus(siblings[0])
   },
-  End: (ctx) => {
+  End: (ctx: PatternContext) => {
     const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
     const depthParentId = (spatialParent?.parentId as string) ?? ROOT_ID
     const siblings = ctx.getChildren(depthParentId)

@@ -1,8 +1,10 @@
 import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
 import type { AriaPattern, NodeState } from './types'
-import type { PatternContext, FocusStrategy, KeyMap, Axis, AxisConfig } from '../axis/types'
+import type { PatternContext, FocusStrategy, KeyMap, Axis, AxisConfig, StructuredAxis } from '../axis/types'
 import { extractKeyMap, extractConfig } from '../axis/types'
+
+export type { Axis, StructuredAxis, KeyMap, AxisConfig }
 
 export interface Identity {
   role: string

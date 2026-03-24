@@ -165,8 +165,8 @@ export default function PageViewer() {
   const handleChange = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
     const entity = newStore.entities[focusedId]
-    if (entity?.data && (entity.data as FileNodeData).type === 'file') {
-      selectFile((entity.data as FileNodeData).path)
+    if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
+      selectFile((entity.data as unknown as FileNodeData).path)
     }
   }, [selectFile])
 

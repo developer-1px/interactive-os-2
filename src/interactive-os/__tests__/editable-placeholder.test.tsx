@@ -14,7 +14,7 @@ const plugins = [core(), rename()]
 
 function TestListBox({ initialData, keyMap }: {
   initialData: NormalizedData
-  keyMap?: Record<string, (ctx: import('../behaviors/types').PatternContext) => import('../core/types').Command | void>
+  keyMap?: Record<string, (ctx: import('../axis/types').PatternContext) => import('../engine/types').Command | void>
 }) {
   const [data, setData] = useState(initialData)
   return (
@@ -69,7 +69,7 @@ describe('Aria.Editable placeholder', () => {
       relationships: { [ROOT_ID]: ['a'] },
     })
     const keyMap = {
-      F2: (ctx: import('../behaviors/types').PatternContext) => renameCommands.startRename(ctx.focused),
+      F2: (ctx: import('../axis/types').PatternContext) => renameCommands.startRename(ctx.focused),
     }
     const { container } = render(<TestListBox initialData={store} keyMap={keyMap} />)
     const node = container.querySelector('[data-node-id="a"]')!

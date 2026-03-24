@@ -44,7 +44,7 @@ export function ReproRecorderOverlay() {
   const recorder = useMemo(() => createReproRecorder(), [])
   const [recording, setRecording] = useState(false)
   const [elapsed, setElapsed] = useState(0)
-  const intervalRef = useRef<ReturnType<typeof setInterval>>()
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined)
   const startTimeRef = useRef(0)
 
   const toggle = useCallback(() => {

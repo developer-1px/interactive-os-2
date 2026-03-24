@@ -120,7 +120,7 @@ describe('useAriaZone', () => {
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const zoneA = useAriaZone({ engine, store, behavior: listbox(), scope: 'za' })
-      const _zoneB = useAriaZone({ engine, store, behavior: listbox(), scope: 'zb' })
+      useAriaZone({ engine, store, behavior: listbox(), scope: 'zb' })
       // eslint-disable-next-line react-hooks/immutability
       holder.dispatchA = zoneA.dispatch
       const itemsA = Object.keys(store.entities).filter(k => !k.startsWith('__'))
