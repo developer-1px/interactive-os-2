@@ -281,7 +281,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
 
     const before = loadedFromRef.current
     fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}&tail=${LOAD_MORE_CHUNK}&before=${before}`)
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
       .then((data: { events: TimelineEvent[]; total: number }) => {
         if (data.events.length > 0) {
           trackEditRanges(data.events)
@@ -289,6 +289,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
           loadedFromRef.current = Math.max(0, before - data.events.length)
         }
       })
+      .catch(() => { loadedFromRef.current = 0 })
       .finally(() => { loadingMoreRef.current = false })
   }, [sessionId, trackEditRanges])
 
