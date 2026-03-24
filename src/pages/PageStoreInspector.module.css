@@ -16,11 +16,11 @@
   max-height: 200px;
   overflow-y: auto;
   font-family: var(--mono);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   line-height: var(--leading-normal);
   padding: var(--space-sm) var(--space-md);
   background: var(--surface-sunken);
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
 }
 
 .logEntry {
@@ -34,11 +34,11 @@
 }
 
 .logDiff {
-  color: var(--primary);
+  color: var(--tone-primary-base);
 }
 
 .panelLabel {
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   opacity: 0.5;

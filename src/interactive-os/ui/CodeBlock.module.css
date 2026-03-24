@@ -1,15 +1,15 @@
 .codeBlock {
   overflow: auto;
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   line-height: var(--leading-code);
 }
 
 .codeBlockLoading {
   padding: var(--space-lg) var(--space-xl);
   background: var(--surface-base);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   font-family: var(--mono);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
 }
 
 .codeBlock :global(.shiki) {
@@ -18,7 +18,7 @@
   counter-reset: line;
   background: var(--surface-base) !important;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
 }
 
 .codeBlock :global(.shiki) code {
@@ -39,7 +39,7 @@
   padding-right: 1em;
   text-align: right;
   color: var(--text-muted);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   user-select: none;
   opacity: 0.5;
 }
@@ -51,17 +51,17 @@
 }
 
 :global(.code-token):hover {
-  background: var(--primary-dim);
+  background: var(--tone-primary-dim);
 }
 
 :global(.code-token--highlighted) {
-  background: var(--primary-mid) !important;
-  outline: 1px solid var(--primary-bright);
+  background: var(--tone-primary-mid) !important;
+  outline: 1px solid var(--tone-primary-bright);
   border-radius: 2px;
 }
 
 :global(.code-line--edited) {
-  background: color-mix(in srgb, var(--amber) 12%, transparent) !important;
-  border-left: 2px solid var(--amber);
+  background: color-mix(in srgb, var(--tone-warning-base) 12%, transparent) !important;
+  border-left: 2px solid var(--tone-warning-base);
   padding-left: var(--space-sm) !important;
 }

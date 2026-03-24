@@ -10,10 +10,10 @@
   background: var(--surface-raised);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
 
   color: var(--text-primary);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
   white-space: normal;

@@ -2,8 +2,8 @@
 
 .item {
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-md);
-  border-radius: var(--radius-sm);
+  font-size: var(--type-body-size);
+  border-radius: var(--shape-md-radius);
   cursor: default;
   user-select: none;
 }
@@ -13,6 +13,6 @@
 }
 
 .itemFocused {
-  background: var(--primary-dim);
+  background: var(--tone-primary-dim);
   color: var(--text-bright);
 }

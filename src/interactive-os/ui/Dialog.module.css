@@ -16,20 +16,20 @@
   background: var(--surface-overlay);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-subtle);
-  border-radius: calc(var(--radius) + 2px);
+  border-radius: calc(var(--shape-xl-radius) + 2px);
 }
 
 .header {
   padding: var(--space-md) var(--space-lg);
   border-bottom: 1px solid var(--border-subtle);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 
 .body {
   padding: var(--space-md) var(--space-lg);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   color: var(--text-secondary);
   line-height: var(--leading-snug);
 }

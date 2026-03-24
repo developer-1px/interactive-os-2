@@ -12,13 +12,13 @@
 .logo-mark {
   width: var(--space-sm);
   height: var(--space-sm);
-  background: var(--primary);
-  border-radius: var(--radius-xs);
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-xs-radius);
 }
 
 .logo h1 {
   font-family: var(--sans);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -29,13 +29,13 @@
 .version {
   display: inline-block;
   font-family: var(--mono);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
-  color: var(--primary);
-  background: var(--primary-dim);
+  color: var(--tone-primary-base);
+  background: var(--tone-primary-dim);
   padding: 1px 6px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--primary-mid);
+  border-radius: var(--shape-md-radius);
+  border: 1px solid var(--tone-primary-mid);
   vertical-align: middle;
 }
 
@@ -52,7 +52,7 @@
 
 .page-title {
   font-family: var(--sans);
-  font-size: var(--text-2xl);
+  font-size: var(--type-display-size);
   font-weight: var(--weight-semi);
   letter-spacing: -0.02em;
   color: var(--text-bright);
@@ -61,7 +61,7 @@
 
 .page-desc {
   font-family: var(--sans);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   color: var(--text-secondary);
   margin: 0;
   line-height: var(--leading-normal);
@@ -74,21 +74,21 @@
   gap: var(--space-xs) 6px;
   margin-bottom: var(--space-lg);
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   color: var(--text-muted);
   align-items: center;
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
 }
 
 .wip-placeholder {
   padding: var(--space-3xl) var(--space-lg);
   text-align: center;
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   color: var(--text-muted);
   border: 1px dashed var(--border-default);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   background: var(--surface-sunken);
 }
 
@@ -102,14 +102,14 @@
 .apg-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   line-height: var(--leading-snug);
   color: var(--text-primary);
 }
 
 .apg-table thead th {
   font-family: var(--mono);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -131,7 +131,7 @@
 }
 
 .apg-table tbody td:first-child kbd {
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   background: none;
   border: none;
   border-bottom-width: 0;
@@ -147,12 +147,12 @@
 .apg-source {
   margin-top: var(--space-sm);
   font-family: var(--mono);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
 .apg-source a {
-  color: var(--primary);
+  color: var(--tone-primary-base);
   text-decoration: none;
 }
 
@@ -167,13 +167,13 @@
 kbd {
   display: inline-block;
   font-family: var(--mono);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
   background: var(--surface-sunken);
   border: 1px solid var(--border-default);
   border-bottom-width: 2px;
-  border-radius: var(--radius-xs);
+  border-radius: var(--shape-xs-radius);
   padding: 1px 5px;
   line-height: var(--leading-snug);
   vertical-align: baseline;
@@ -181,7 +181,7 @@ kbd {
 
 .key-hint {
   color: var(--text-muted);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   font-weight: var(--weight-medium);
 }
 
@@ -191,7 +191,7 @@ kbd {
 
 .card {
   border: 1px solid var(--border-subtle);
-  border-radius: calc(var(--radius) + 2px);
+  border-radius: calc(var(--shape-xl-radius) + 2px);
   overflow: hidden;
   background: var(--surface-raised);
   box-shadow: var(--surface-3-shadow);
@@ -209,7 +209,7 @@ kbd {
 
 .demo-section h3 {
   font-family: var(--sans);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
   margin: 0 0 var(--space-sm);
@@ -218,16 +218,16 @@ kbd {
 
 .demo-section h4 {
   font-family: var(--mono);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
-  color: var(--primary);
+  color: var(--tone-primary-base);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin: var(--space-lg) 0 6px;
 }
 
 .demo-section p {
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   color: var(--text-secondary);
   margin: 0 0 6px;
   line-height: var(--leading-snug);
@@ -235,12 +235,12 @@ kbd {
 
 .demo-section code {
   font-family: var(--mono);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
   padding: 1px var(--space-xs);
-  border-radius: var(--radius-sm);
-  color: var(--primary);
+  border-radius: var(--shape-md-radius);
+  color: var(--tone-primary-base);
 }
 
 /* --- Key table (APG) --- */
@@ -248,14 +248,14 @@ kbd {
 .key-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   margin-top: var(--space-sm);
   max-width: 720px;
 }
 
 .key-table th {
   font-family: var(--mono);
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -274,7 +274,7 @@ kbd {
 
 .key-table td:first-child {
   font-family: var(--mono);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
   white-space: nowrap;
@@ -290,9 +290,9 @@ kbd {
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
   margin: 1px var(--space-xs);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
 }
 
 .list-item__label {
@@ -300,7 +300,7 @@ kbd {
 }
 
 .list-item__desc {
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
@@ -313,7 +313,7 @@ kbd {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -329,7 +329,7 @@ kbd {
 
 .accordion-panel {
   padding: var(--space-sm) 10px;
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   color: var(--text-secondary);
   line-height: var(--leading-normal);
   border-bottom: 1px solid var(--border-subtle);
@@ -346,9 +346,9 @@ kbd {
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
   margin: 1px var(--space-xs);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
 }
 
 .menu-item__label {
@@ -370,9 +370,9 @@ kbd {
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
   margin: 1px var(--space-xs);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
 }
 
 .disclosure-trigger__icon {
@@ -386,7 +386,7 @@ kbd {
 
 .disclosure-panel {
   padding: 6px 10px 6px 28px;
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   color: var(--text-secondary);
   line-height: var(--leading-normal);
   border-bottom: 1px solid var(--border-subtle);
@@ -403,8 +403,8 @@ kbd {
   padding: 3px 10px;
   margin: 0 var(--space-xs);
   font-family: var(--mono);
-  font-size: var(--text-sm);
-  border-radius: var(--radius-sm);
+  font-size: var(--type-body-size);
+  border-radius: var(--shape-md-radius);
 }
 
 .tree-node__chevron {
@@ -438,7 +438,7 @@ kbd {
    ═══════════════════════════════════════════ */
 
 .radio-indicator {
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
 }
 
 /* ═══════════════════════════════════════════
@@ -452,5 +452,5 @@ kbd {
 
 .switch-label--on {
   font-weight: var(--weight-semi);
-  color: var(--primary);
+  color: var(--tone-primary-base);
 }

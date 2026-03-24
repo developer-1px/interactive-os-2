@@ -1,13 +1,13 @@
 /* --- Buttons --- */
 
 .accent {
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   padding: var(--space-sm) var(--space-lg);
-  background: var(--primary);
+  background: var(--tone-primary-base);
   color: var(--stone-50);
   border: none;
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   cursor: pointer;
   transition: background 0.12s, transform 0.08s;
 }
@@ -21,30 +21,30 @@
 }
 
 .dialog {
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   padding: var(--space-xs) var(--space-md);
   background: var(--surface-default);
   color: var(--text-secondary);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   cursor: pointer;
   outline: none;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
 }
 
 .ghost {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
   font-family: var(--sans);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-muted);
   background: transparent;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--motion-instant-duration), color var(--motion-instant-duration);
 }
 
 .ghost:hover {

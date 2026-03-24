@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 1px;
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   color: var(--text-muted);
   overflow: hidden;
   white-space: nowrap;

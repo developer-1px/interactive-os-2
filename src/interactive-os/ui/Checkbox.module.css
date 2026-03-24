@@ -5,14 +5,14 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-md);
-  border-radius: var(--radius-sm);
+  font-size: var(--type-body-size);
+  border-radius: var(--shape-md-radius);
   cursor: pointer;
   user-select: none;
 }
 
 .itemFocused {
-  background: var(--primary-dim);
+  background: var(--tone-primary-dim);
   color: var(--text-bright);
 }
 
@@ -21,29 +21,29 @@
   width: var(--icon-md);
   height: var(--icon-md);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-xs);
+  border-radius: var(--shape-xs-radius);
   display: flex;
   align-items: center;
   justify-content: center;
   background: transparent;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
 }
 
 .boxChecked {
   flex-shrink: 0;
   width: var(--icon-md);
   height: var(--icon-md);
-  border: 1px solid var(--primary);
-  border-radius: var(--radius-xs);
+  border: 1px solid var(--tone-primary-base);
+  border-radius: var(--shape-xs-radius);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--primary);
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  background: var(--tone-primary-base);
+  transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
 }
 
 .checkIcon {
   width: var(--icon-sm);
   height: var(--icon-sm);
-  color: var(--primary-foreground);
+  color: var(--tone-primary-foreground);
 }

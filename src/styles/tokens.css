@@ -44,13 +44,13 @@
   --surface-overlay:  var(--stone-700);
   --surface-outlined: transparent;
 
-  /* ── Shadow ── */
+  /* ── Shadow (xs/sm/md/lg scale) ── */
+  --shadow-xs: 0 4px 20px rgba(0,0,0,0.035);
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.15);
   --shadow-md: 0 2px 6px rgba(0,0,0,0.2), 0 0 1px rgba(0,0,0,0.15);
   --shadow-lg: 0 4px 16px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.15);
-  --shadow-float: 0 4px 20px rgba(0,0,0,0.035);
 
-  /* ── Text: 4-level hierarchy ── */
+  /* ── Text color: 4-level hierarchy ── */
   --text-bright:    var(--stone-0);
   --text-primary:   var(--stone-100);
   --text-secondary: var(--stone-400);
@@ -61,44 +61,34 @@
   --border-default: var(--stone-700);
   --border-strong:  var(--stone-600);
 
-  /* ── Tone: 의미 색상 번들 (base + hover + dim + foreground)
-     모든 tone이 같은 4축 구조. dim = 배경 tint용. ── */
-  --tone-primary:            var(--blue-500);
+  /* ── Tone: 의미 색상 번들 (base + hover + dim + mid + bright + foreground)
+     모든 tone이 같은 축 구조. dim/mid/bright = 배경 tint 3단계. ── */
+  --tone-primary-base:       var(--blue-500);
   --tone-primary-hover:      var(--blue-400);
   --tone-primary-dim:        #1A2A3A;
+  --tone-primary-mid:        #1E3348;
+  --tone-primary-bright:     #243D55;
   --tone-primary-foreground: var(--stone-0);
 
-  --tone-destructive:            var(--red-500);
+  --tone-destructive-base:       var(--red-500);
   --tone-destructive-hover:      var(--red-400);
   --tone-destructive-dim:        #3A1A1A;
   --tone-destructive-foreground: var(--stone-0);
 
-  --tone-success:            var(--green-500);
+  --tone-success-base:       var(--green-500);
   --tone-success-hover:      var(--green-400);
   --tone-success-dim:        #1A2E22;
   --tone-success-foreground: var(--stone-0);
 
-  --tone-warning:            var(--amber-500);
+  --tone-warning-base:       var(--amber-500);
   --tone-warning-hover:      var(--amber-400);
   --tone-warning-dim:        #2E2A1A;
   --tone-warning-foreground: var(--stone-950);
 
-  --tone-neutral:            var(--stone-500);
+  --tone-neutral-base:       var(--stone-500);
   --tone-neutral-hover:      var(--stone-400);
   --tone-neutral-dim:        var(--stone-800);
   --tone-neutral-foreground: var(--stone-0);
-
-  /* ── Alias (하위호환) ── */
-  --primary:            var(--tone-primary);
-  --primary-hover:      var(--tone-primary-hover);
-  --primary-foreground: var(--tone-primary-foreground);
-  --primary-dim:        var(--tone-primary-dim);
-  --primary-mid:        #1E3348;
-  --primary-bright:     #243D55;
-  --destructive:            var(--tone-destructive);
-  --destructive-foreground: var(--tone-destructive-foreground);
-  --green: var(--tone-success);
-  --amber: var(--tone-warning);
 
   /* ── Focus ── */
   --focus:        var(--blue-400);
@@ -115,56 +105,46 @@
   --bg-hover:  var(--stone-800);
   --bg-active: var(--stone-700);
 
-  /* ── Typography ──
-     Sans: Inter (variable, supports 430)
-     Serif: Newsreader (variable, supports 330 for hero)
-     Scale: body 구간 압축(12→14→16) + hero 점프(24→40) */
+  /* ══ Typography ══ */
+
+  /* ── Font families ── */
   --mono:  'SF Mono', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
   --sans:  'Inter', -apple-system, system-ui, sans-serif;
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
 
-  /* ── Type: fontSize + fontWeight + fontFamily + lineHeight 번들 (claude.ai 실측)
-     size가 바뀌면 weight·family·lh가 함께 바뀐다. color는 독립. ── */
-  --type-hero-size: 40px;    --type-hero-weight: 330;  --type-hero-family: var(--serif); --type-hero-lh: 1.5;
-  --type-page-size: 24px;    --type-page-weight: 500;  --type-page-family: var(--serif); --type-page-lh: 1.3;
-  --type-section-size: 16px; --type-section-weight: 600; --type-section-family: var(--sans); --type-section-lh: 1.4;
-  --type-body-size: 14px;    --type-body-weight: 430;  --type-body-family: var(--sans); --type-body-lh: 1.4;
-  --type-caption-size: 12px; --type-caption-weight: 430; --type-caption-family: var(--sans); --type-caption-lh: 1.33;
+  /* ── Type bundle: size + weight + family + line-height (claude.ai 실측)
+     size가 바뀌면 weight·family·line-height가 함께 바뀐다. color는 독립. ── */
+  --type-hero-size: 40px;       --type-hero-weight: 330;    --type-hero-family: var(--serif); --type-hero-line-height: 1.5;
+  --type-display-size: 32px;    --type-display-weight: 400;  --type-display-family: var(--serif); --type-display-line-height: 1.3;
+  --type-page-size: 24px;       --type-page-weight: 500;    --type-page-family: var(--serif); --type-page-line-height: 1.3;
+  --type-section-size: 16px;    --type-section-weight: 600;  --type-section-family: var(--sans); --type-section-line-height: 1.4;
+  --type-body-size: 14px;       --type-body-weight: 430;    --type-body-family: var(--sans); --type-body-line-height: 1.4;
+  --type-caption-size: 12px;    --type-caption-weight: 430;  --type-caption-family: var(--sans); --type-caption-line-height: 1.33;
 
-  /* ── Primitives (alias — 개별 참조 시) ── */
-  --text-xs:  12px;
-  --text-sm:  14px;
-  --text-md:  14px;
-  --text-lg:  16px;
-  --text-xl:  24px;
-  --text-2xl: 32px;
-  --text-3xl: 40px;
-
+  /* ── Independent axes: weight
+     type 번들과 독립적으로 사용. 버튼·배지 등 텍스트 계층과 무관한 요소용. ── */
   --weight-light:   330;
   --weight-regular: 400;
   --weight-book:    430;
   --weight-medium:  500;
   --weight-semi:    600;
 
+  /* ── Independent axes: line-height
+     type 번들과 독립적으로 사용. 마크다운·코드 등 특수 line-height 필요 시. ── */
   --leading-tight:   1.3;
   --leading-snug:    1.4;
   --leading-normal:  1.5;
   --leading-relaxed: 1.75;
   --leading-code:    1.6;
 
-  /* ── Shape: radius + padding 번들 (claude.ai 실측)
+  /* ── Shape bundle: radius + padding-y + padding-x (claude.ai 실측)
      radius와 padding은 비례 관계. 세트로 사용. ── */
-  --shape-xs-r: 6px;   --shape-xs-py: 6px;  --shape-xs-px: 12px;
-  --shape-sm-r: 6px;   --shape-sm-py: 6px;  --shape-sm-px: 16px;
-  --shape-md-r: 10px;  --shape-md-py: 0px;  --shape-md-px: 12px;
-  --shape-lg-r: 12px;  --shape-lg-py: 20px; --shape-lg-px: 20px;
-  --shape-xl-r: 20px;
-
-  /* ── Layout (alias) ── */
-  --radius:      var(--shape-xl-r);
-  --radius-sm:   var(--shape-md-r);
-  --radius-xs:   var(--shape-xs-r);
-  --radius-pill: 9999px;
+  --shape-xs-radius: 6px;   --shape-xs-py: 6px;  --shape-xs-px: 12px;
+  --shape-sm-radius: 6px;   --shape-sm-py: 6px;  --shape-sm-px: 16px;
+  --shape-md-radius: 10px;  --shape-md-py: 0px;  --shape-md-px: 12px;
+  --shape-lg-radius: 12px;  --shape-lg-py: 20px; --shape-lg-px: 20px;
+  --shape-xl-radius: 20px;  --shape-xl-py: 24px; --shape-xl-px: 24px;
+  --shape-pill-radius: 9999px;
 
   /* ── Spacing ── */
   --space-xs:  4px;
@@ -185,7 +165,7 @@
   /* ── Component specs (claude.ai 실측) ── */
   --input-height:   44px;
   --input-padding-x: 12px;
-  --input-radius:   var(--radius-sm);
+  --input-radius:   var(--shape-md-radius);
   --sidebar-width:  288px;
   --sidebar-item-height: 32px;
   --overlay-width:  360px;
@@ -203,14 +183,11 @@
   --file-img:    #C44A6E;
   --file-config: #73726C;
 
-  /* ── Motion: duration + easing 번들 (claude.ai 실측)
+  /* ── Motion bundle: duration + easing (claude.ai 실측)
      property는 독립. duration과 easing이 세트. ── */
   --motion-instant-duration: 0.075s;  --motion-instant-easing: cubic-bezier(0.165, 0.85, 0.45, 1);
   --motion-normal-duration:  0.15s;   --motion-normal-easing:  cubic-bezier(0.4, 0, 0.2, 1);
   --motion-enter-duration:   0.15s;   --motion-enter-easing:   cubic-bezier(0, 0, 0.2, 1);
-
-  /* ── Alias (하위호환) ── */
-  --transition-fast: var(--motion-instant-duration);
 
   /* ── Dialog ── */
   --dialog-backdrop: rgba(0, 0, 0, 0.5);
@@ -227,10 +204,10 @@
   --surface-overlay:  var(--stone-0);
   --surface-outlined: transparent;
 
+  --shadow-xs: 0 4px 20px rgba(0,0,0,0.035);
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
   --shadow-md: 0 2px 6px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.06);
   --shadow-lg: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
-  --shadow-float: 0 4px 20px rgba(0,0,0,0.035);
 
   --text-bright:    var(--stone-950);
   --text-primary:   var(--stone-900);
@@ -242,32 +219,28 @@
   --border-strong:  var(--stone-400);
 
   /* ── Tone (light) ── */
-  --tone-primary:       var(--blue-600);
-  --tone-primary-hover: var(--blue-700);
-  --tone-primary-dim:   var(--blue-50);
+  --tone-primary-base:   var(--blue-600);
+  --tone-primary-hover:  var(--blue-700);
+  --tone-primary-dim:    var(--blue-50);
+  --tone-primary-mid:    var(--blue-100);
+  --tone-primary-bright: var(--blue-200);
 
-  --tone-destructive:       #DC3545;
+  --tone-destructive-base:  #DC3545;
   --tone-destructive-hover: #C82333;
   --tone-destructive-dim:   #FDF0F0;
 
-  --tone-success:       #2E8B57;
+  --tone-success-base:  #2E8B57;
   --tone-success-hover: #267A4B;
   --tone-success-dim:   #F0FDF5;
 
-  --tone-warning:            #B8860B;
+  --tone-warning-base:       #B8860B;
   --tone-warning-hover:      #A07608;
   --tone-warning-dim:        #FEFCE8;
   --tone-warning-foreground: var(--stone-950);
 
-  --tone-neutral:       var(--stone-500);
+  --tone-neutral-base:  var(--stone-500);
   --tone-neutral-hover: var(--stone-600);
   --tone-neutral-dim:   var(--stone-100);
-
-  --primary:        var(--tone-primary);
-  --primary-hover:  var(--tone-primary-hover);
-  --primary-dim:    var(--tone-primary-dim);
-  --primary-mid:    var(--blue-100);
-  --primary-bright: var(--blue-200);
 
   /* ── Focus ── */
   --focus:      var(--blue-500);
@@ -315,7 +288,7 @@
 [data-surface="raised"] {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-float);
+  box-shadow: var(--shadow-xs);
 }
 
 [data-surface="overlay"] {
@@ -341,7 +314,7 @@ body {
   background: var(--surface-base);
   color: var(--text-primary);
   font-family: var(--sans);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-book);
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
