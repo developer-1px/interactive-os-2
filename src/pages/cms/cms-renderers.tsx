@@ -111,6 +111,20 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
           <span className={s.cmsShowcaseItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
         </div>
       )
+    case 'stat-card':
+      return (
+        <div className={s.cmsStatCardContent}>
+          <span className={s.cmsStatCardValue}>{data.value as string}</span>
+          <span className={s.cmsStatCardLabel}><LocalizedText value={data.label as LocaleMap} locale={locale} /></span>
+          <span className={s.cmsStatCardDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
+        </div>
+      )
+    case 'section-cta':
+      return (
+        <a className={s.cmsSectionCtaLink} href={data.href as string}>
+          <LocalizedText value={data.label as LocaleMap} locale={locale} /> <ArrowRight size={14} />
+        </a>
+      )
     default:
       return null
   }
@@ -134,23 +148,22 @@ export function getSectionClassName(variant: string): string {
   }
 }
 
+/** Combine base class with optional focused class */
+function fc(base: string, focused: string | undefined, isFocused: boolean): string {
+  return isFocused && focused ? `${base} ${focused}` : base
+}
+
 export function getNodeClassName(data: Record<string, string>, state: NodeState): string {
   const f = state.focused
   switch (data.type) {
     case 'section':
       return getSectionClassName(data.variant)
-    case 'stat':
-      return `${s.cmsStat}${f ? ` ${s.cmsStatFocused}` : ''}`
-    case 'card':
-      return `${s.cmsFeatureCard}${f ? ` ${s.cmsFeatureCardFocused}` : ''}`
-    case 'step':
-      return `${s.cmsStep}${f ? ` ${s.cmsStepFocused}` : ''}`
-    case 'pattern':
-      return `${s.cmsPattern}${f ? ` ${s.cmsPatternFocused}` : ''}`
-    case 'step-num':
-      return s.cmsStepNumber
-    case 'stat-value':
-      return s.cmsStatValue
+    case 'stat':         return fc(s.cmsStat, s.cmsStatFocused, f)
+    case 'card':         return fc(s.cmsFeatureCard, s.cmsFeatureCardFocused, f)
+    case 'step':         return fc(s.cmsStep, s.cmsStepFocused, f)
+    case 'pattern':      return fc(s.cmsPattern, s.cmsPatternFocused, f)
+    case 'step-num':     return s.cmsStepNumber
+    case 'stat-value':   return s.cmsStatValue
     case 'text': {
       if (data.role === 'hero-title') return s.cmsHeroTitle
       if (data.role === 'hero-subtitle') return s.cmsHeroSubtitle
@@ -159,31 +172,33 @@ export function getNodeClassName(data: Record<string, string>, state: NodeState)
       if (data.role === 'step-title') return s.cmsStepTitle
       if (data.role === 'step-desc') return s.cmsStepDesc
       if (data.role === 'stat-label') return s.cmsStatLabel
+      if (data.role === 'footer-tagline') return s.cmsFooterTagline
       return ''
     }
     case 'section-label': return s.cmsSectionLabel
     case 'section-title': return s.cmsSectionTitle
-    case 'section-desc': return s.cmsSectionDesc
-    case 'badge': return s.cmsHeroBadge
-    case 'cta': return ''
-    case 'icon': return s.cmsFeatureCardIcon
-    case 'brand': return s.cmsFooterBrand
-    case 'links': return s.cmsFooterLinks
-    case 'link': return ''
-    case 'tab-group': return `${s.cmsTabGroup}${f ? ` ${s.cmsTabGroupFocused}` : ''}`
-    case 'tab-item': return `${s.cmsTabItem}${f ? ` ${s.cmsTabItemFocused}` : ''}`
-    case 'tab-panel': return s.cmsTabPanel
-    // Editorial types
-    case 'value-item': return `${s.cmsValueItem}${f ? ` ${s.cmsValueItemFocused}` : ''}`
-    case 'quote': return `${s.cmsQuote}${f ? ` ${s.cmsQuoteFocused}` : ''}`
-    case 'article': return `${s.cmsArticle}${f ? ` ${s.cmsArticleFocused}` : ''}`
-    case 'showcase-item': return `${s.cmsShowcaseItem}${f ? ` ${s.cmsShowcaseItemFocused}` : ''}`
+    case 'section-desc':  return s.cmsSectionDesc
+    case 'badge':         return s.cmsHeroBadge
+    case 'cta':           return ''
+    case 'icon':          return s.cmsFeatureCardIcon
+    case 'brand':         return s.cmsFooterBrand
+    case 'links':         return s.cmsFooterLinks
+    case 'link':          return ''
+    case 'tab-group':     return fc(s.cmsTabGroup, s.cmsTabGroupFocused, f)
+    case 'tab-item':      return fc(s.cmsTabItem, s.cmsTabItemFocused, f)
+    case 'tab-panel':     return s.cmsTabPanel
+    case 'value-item':    return fc(s.cmsValueItem, s.cmsValueItemFocused, f)
+    case 'quote':         return fc(s.cmsQuote, s.cmsQuoteFocused, f)
+    case 'article':       return fc(s.cmsArticle, s.cmsArticleFocused, f)
+    case 'showcase-item': return fc(s.cmsShowcaseItem, s.cmsShowcaseItemFocused, f)
+    case 'stat-card':     return fc(s.cmsStatCard, s.cmsStatCardFocused, f)
+    case 'section-cta':   return fc(s.cmsSectionCta, s.cmsSectionCtaFocused, f)
     default: return ''
   }
 }
 
 // Section header types — rendered before the grid container
-export const HEADER_TYPES = new Set(['section-label', 'section-title', 'section-desc', 'badge', 'text', 'cta'])
+export const HEADER_TYPES = new Set(['section-label', 'section-title', 'section-desc', 'badge', 'text', 'cta', 'section-cta'])
 
 export function getChildrenContainerClassName(data: Record<string, string>): string | undefined {
   switch (data.variant) {
@@ -222,6 +237,8 @@ export function getNodeTag(data: Record<string, string>): keyof React.JSX.Intrin
   if (data.type === 'quote') return 'div'
   if (data.type === 'article') return 'div'
   if (data.type === 'showcase-item') return 'div'
+  if (data.type === 'stat-card') return 'div'
+  if (data.type === 'section-cta') return 'div'
   return 'div'
 }
 
