@@ -108,15 +108,16 @@
 }
 
 /* ── Focused (roving-tabindex — :focus) ── */
+/* Active container: full focus */
 
-[data-aria-container] [role="option"]:focus,
-[data-aria-container] [role="treeitem"]:focus,
-[data-aria-container] [role="menuitem"]:focus,
-[data-aria-container] [role="radio"]:focus,
-[data-aria-container] [role="switch"]:focus,
-[data-aria-container] [role="row"]:focus,
-[data-aria-container] [role="heading"]:focus,
-[data-aria-container] [role="group"] > [role="button"]:focus {
+[data-aria-container]:focus-within [role="option"]:focus,
+[data-aria-container]:focus-within [role="treeitem"]:focus,
+[data-aria-container]:focus-within [role="menuitem"]:focus,
+[data-aria-container]:focus-within [role="radio"]:focus,
+[data-aria-container]:focus-within [role="switch"]:focus,
+[data-aria-container]:focus-within [role="row"]:focus,
+[data-aria-container]:focus-within [role="heading"]:focus,
+[data-aria-container]:focus-within [role="group"] > [role="button"]:focus {
   background: var(--primary-dim);
   color: var(--text-bright);
   outline-color: var(--focus);
@@ -132,15 +133,16 @@
 }
 
 /* ── Focused (aria-activedescendant — data-focused) ── */
-/* Inactive: background only (restore cursor) */
+/* Idle: muted background only (restore cursor position) */
 
 [data-aria-container] [data-focused] {
-  background: var(--primary-dim);
-  color: var(--text-bright);
+  background: var(--focus-idle);
 }
 
-/* Active: outline only when container has focus */
+/* Active: full focus when container has focus */
 [data-aria-container]:focus-within [data-focused] {
+  background: var(--primary-dim);
+  color: var(--text-bright);
   outline-color: var(--focus);
 }
 
