@@ -1,0 +1,484 @@
+/* ══════════════════════════════════════════════
+   CMS Landing Sections — Content Design System
+   ══════════════════════════════════════════════
+   Uses ONLY --landing-* tokens.
+   Zero references to app tokens (--surface-*, --text-*, etc.).
+   ② 2026-03-24-cms-landing-prd.md
+*/
+
+/* ── Page container ── */
+
+.cmsLanding {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--landing-bg-page);
+  color: var(--landing-text-body);
+  font-family: var(--landing-font-body);
+  font-size: var(--landing-size-body);
+  line-height: var(--landing-leading-normal);
+}
+
+/* ══════════════════════════════
+   Shared section header elements
+   ══════════════════════════════ */
+
+.cmsSectionLabel {
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-label);
+  font-weight: var(--landing-weight-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--landing-text-accent);
+  margin: 0 0 12px;
+}
+
+.cmsSectionTitle {
+  font-family: var(--landing-font-display);
+  font-size: var(--landing-size-title);
+  font-weight: var(--landing-weight-title);
+  letter-spacing: -0.03em;
+  line-height: var(--landing-leading-tight);
+  color: var(--landing-text-heading);
+  margin: 0 0 12px;
+}
+
+.cmsSectionDesc {
+  font-size: var(--landing-size-body);
+  font-weight: var(--landing-weight-body);
+  color: var(--landing-text-muted);
+  margin: 0 0 var(--landing-space-section-sm);
+  max-width: 480px;
+  line-height: var(--landing-leading-relaxed);
+  white-space: pre-line;
+}
+
+/* ══════════════════════════════
+   Hero — full-bleed, centered
+   ══════════════════════════════ */
+
+.cmsHero {
+  padding: 96px var(--landing-space-inline) 80px;
+  background: var(--landing-bg-section);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cmsHeroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-label);
+  font-weight: var(--landing-weight-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--landing-text-accent);
+  background: var(--landing-accent-dim);
+  border: 1px solid var(--landing-accent-mid);
+  padding: 6px 20px;
+  border-radius: var(--landing-radius-badge);
+  margin-bottom: 32px;
+}
+
+.cmsHeroBadgeDot {
+  width: 6px;
+  height: 6px;
+  background: var(--landing-accent);
+  border-radius: 50%;
+}
+
+.cmsHeroTitle {
+  font-family: var(--landing-font-display);
+  font-size: var(--landing-size-display);
+  font-weight: var(--landing-weight-display);
+  letter-spacing: -0.04em;
+  line-height: var(--landing-leading-tight);
+  margin: 0 0 24px;
+  color: var(--landing-text-heading);
+}
+
+.cmsHeroSubtitle {
+  font-size: var(--landing-size-subtitle);
+  font-weight: var(--landing-weight-body);
+  line-height: var(--landing-leading-relaxed);
+  color: var(--landing-text-muted);
+  margin: 0 0 40px;
+  max-width: 520px;
+}
+
+.cmsHeroActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cmsHeroCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--landing-font-body);
+  font-size: var(--landing-size-body);
+  font-weight: 600;
+  color: #FFFFFF;
+  background: var(--landing-accent);
+  border: none;
+  padding: 14px 28px;
+  border-radius: var(--landing-radius-card-sm);
+  cursor: pointer;
+}
+
+.cmsHeroCtaSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--landing-font-body);
+  font-size: var(--landing-size-body);
+  font-weight: 500;
+  color: var(--landing-text-body);
+  background: none;
+  border: 1px solid var(--landing-border-default);
+  padding: 13px 26px;
+  border-radius: var(--landing-radius-card-sm);
+  cursor: pointer;
+}
+
+/* ══════════════════════════════
+   Stats — 1 large + 3 small (Apple card mix)
+   ══════════════════════════════ */
+
+.cmsStats {
+  padding: 0;
+  background: var(--landing-bg-page);
+}
+
+.cmsStatsItems {
+  max-width: var(--landing-space-content-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: var(--landing-space-card-gap);
+  padding: var(--landing-space-section-sm) var(--landing-space-inline);
+}
+
+.cmsStat {
+  text-align: center;
+  padding: var(--landing-space-card-padding);
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-subtle);
+  border-radius: var(--landing-radius-card-sm);
+  box-shadow: var(--landing-shadow-card);
+}
+
+.cmsStatFocused {
+  border-color: var(--landing-accent);
+  box-shadow: 0 0 0 1px var(--landing-accent);
+}
+
+.cmsStatValue {
+  font-family: var(--landing-font-display);
+  font-size: var(--landing-size-title);
+  font-weight: var(--landing-weight-display);
+  color: var(--landing-text-heading);
+  letter-spacing: -0.03em;
+  display: block;
+}
+
+.cmsStatLabel {
+  font-size: var(--landing-size-caption);
+  font-weight: var(--landing-weight-caption);
+  color: var(--landing-text-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ══════════════════════════════
+   Features — 1 full-width + 2 half (Apple style)
+   ══════════════════════════════ */
+
+.cmsFeatures {
+  background: var(--landing-bg-section);
+  padding: var(--landing-space-section) var(--landing-space-inline);
+}
+
+.cmsFeatures > .cmsSectionLabel,
+.cmsFeatures > .cmsSectionTitle,
+.cmsFeatures > .cmsSectionDesc {
+  max-width: var(--landing-space-content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cmsFeaturesGrid {
+  max-width: var(--landing-space-content-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--landing-space-card-gap);
+}
+
+/* First card spans full width */
+.cmsFeaturesGrid > :first-child {
+  grid-column: 1 / -1;
+}
+
+.cmsFeatureCard {
+  padding: var(--landing-space-card-padding);
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-subtle);
+  border-radius: var(--landing-radius-card);
+  box-shadow: var(--landing-shadow-card);
+}
+
+.cmsFeatureCardFocused {
+  border-color: var(--landing-accent);
+  box-shadow: 0 0 0 1px var(--landing-accent);
+}
+
+.cmsFeatureCardIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--landing-accent-dim);
+  border: 1px solid var(--landing-accent-mid);
+  border-radius: var(--landing-radius-icon);
+  color: var(--landing-accent);
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.cmsFeatureCardTitle {
+  font-family: var(--landing-font-display);
+  font-size: var(--landing-size-subtitle);
+  font-weight: var(--landing-weight-title);
+  color: var(--landing-text-heading);
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.cmsFeatureCardDesc {
+  font-size: var(--landing-size-body);
+  color: var(--landing-text-muted);
+  line-height: var(--landing-leading-normal);
+  margin: 0;
+}
+
+/* ══════════════════════════════
+   Workflow — horizontal timeline, bigger padding
+   ══════════════════════════════ */
+
+.cmsHow {
+  background: var(--landing-bg-page);
+  padding: var(--landing-space-section) var(--landing-space-inline);
+}
+
+.cmsHow > .cmsSectionLabel,
+.cmsHow > .cmsSectionTitle,
+.cmsHow > .cmsSectionDesc {
+  max-width: var(--landing-space-content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cmsHowSteps {
+  max-width: var(--landing-space-content-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--landing-border-subtle);
+  border-radius: var(--landing-radius-card);
+  overflow: hidden;
+  background: var(--landing-bg-section);
+}
+
+.cmsStep {
+  position: relative;
+  padding: 32px var(--landing-space-card-padding);
+  border-right: 1px solid var(--landing-border-subtle);
+}
+
+.cmsStep:last-child {
+  border-right: none;
+}
+
+.cmsStepFocused {
+  background: var(--landing-accent-dim);
+}
+
+.cmsStepNumber {
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-label);
+  font-weight: 700;
+  color: var(--landing-accent);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.cmsStepTitle {
+  font-family: var(--landing-font-display);
+  font-size: var(--landing-size-body);
+  font-weight: var(--landing-weight-title);
+  color: var(--landing-text-heading);
+  margin: 0 0 8px;
+}
+
+.cmsStepDesc {
+  font-size: var(--landing-size-caption);
+  color: var(--landing-text-muted);
+  line-height: var(--landing-leading-normal);
+  margin: 0;
+}
+
+/* ══════════════════════════════
+   Patterns — size-mixed grid (some 2x span)
+   ══════════════════════════════ */
+
+.cmsPatterns {
+  background: var(--landing-bg-section);
+  padding: var(--landing-space-section) var(--landing-space-inline);
+}
+
+.cmsPatterns > .cmsSectionLabel,
+.cmsPatterns > .cmsSectionTitle,
+.cmsPatterns > .cmsSectionDesc {
+  max-width: var(--landing-space-content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cmsPatternsGrid {
+  max-width: var(--landing-space-content-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--landing-space-card-gap);
+}
+
+/* Every 4th pattern spans 2 columns for visual rhythm */
+.cmsPatternsGrid > :nth-child(4n+1) {
+  grid-column: span 2;
+}
+
+.cmsPattern {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--landing-bg-card);
+  border: 1px solid var(--landing-border-subtle);
+  border-radius: var(--landing-radius-card-sm);
+  box-shadow: var(--landing-shadow-card);
+}
+
+.cmsPatternFocused {
+  border-color: var(--landing-accent);
+  background: var(--landing-accent-dim);
+}
+
+.cmsPatternIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--landing-accent-dim);
+  border: 1px solid var(--landing-accent-mid);
+  border-radius: 8px;
+  color: var(--landing-accent);
+  flex-shrink: 0;
+}
+
+.cmsPatternName {
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-caption);
+  font-weight: 600;
+  color: var(--landing-text-body);
+}
+
+/* ══════════════════════════════
+   Footer — centered brand
+   ══════════════════════════════ */
+
+.cmsFooter {
+  padding: 40px var(--landing-space-inline);
+  background: var(--landing-bg-page);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cmsFooterBrand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cmsFooterLogo {
+  width: 8px;
+  height: 8px;
+  background: var(--landing-accent);
+  border-radius: 3px;
+}
+
+.cmsFooterName {
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-label);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--landing-text-muted);
+}
+
+.cmsFooterCopy {
+  font-size: var(--landing-size-label);
+  color: var(--landing-text-muted);
+  margin-left: 4px;
+}
+
+.cmsFooterLinks {
+  display: flex;
+  gap: 20px;
+  margin-left: 32px;
+}
+
+.cmsFooterLink {
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-caption);
+  font-weight: 500;
+  color: var(--landing-text-muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ══════════════════════════════
+   Responsive — mobile 1-col fallback
+   ══════════════════════════════ */
+
+@media (max-width: 768px) {
+  .cmsHeroTitle { font-size: 36px; }
+  .cmsHeroSubtitle { font-size: 18px; }
+  .cmsSectionTitle { font-size: 28px; }
+
+  .cmsStatsItems { grid-template-columns: repeat(2, 1fr); }
+  .cmsFeaturesGrid { grid-template-columns: 1fr; }
+  .cmsFeaturesGrid > :first-child { grid-column: 1; }
+  .cmsHowSteps { grid-template-columns: repeat(2, 1fr); }
+  .cmsStep { border-bottom: 1px solid var(--landing-border-subtle); }
+  .cmsStep:nth-child(2) { border-right: none; }
+  .cmsPatternsGrid { grid-template-columns: repeat(2, 1fr); }
+  .cmsPatternsGrid > :nth-child(4n+1) { grid-column: span 1; }
+}
+
+@media (max-width: 480px) {
+  .cmsStatsItems { grid-template-columns: 1fr; }
+  .cmsHowSteps { grid-template-columns: 1fr; }
+  .cmsStep { border-right: none; }
+  .cmsPatternsGrid { grid-template-columns: 1fr; }
+  .cmsHeroActions { flex-direction: column; }
+}

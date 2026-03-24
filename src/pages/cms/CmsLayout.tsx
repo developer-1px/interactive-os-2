@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
 import '../../styles/cms.css'
+import '../../styles/landingTokens.css'
 import { useResizer } from '../../hooks/useResizer'
 import '../../styles/resizer.css'
 import type { ViewportSize } from './CmsViewportWrapper'
