@@ -31,10 +31,10 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `plugins/cellEdit.ts` | cellEdit plugin: keyMap(Delete→clearCell, Mod+X→cutCell, Mod+C→copyCell, Mod+V→pasteCell, Enter→focusNext, Shift+Enter→focusPrev) + commands(cutCellValue, clearCellValue) | |
-| `clipboard.ts` 확장 | cutCellValue command 추가 — copyCellValue + clearCellValue 조합. cellValueBuffer 공유 | |
-| `AriaEditable` `enterContinue` prop | Enter confirm 후 아래 행 이동 (셀 모드 복귀, auto-rename 없음). Shift+Enter=위 행. 기존 `tabContinue` 패턴과 동일 구조 | |
-| `Grid.tsx` 정리 | cellClipboardKeyMap 제거 → cellEdit plugin의 keyMap으로 이전. `enableEditing` 시 cellEdit plugin 자동 포함 | |
+| `plugins/cellEdit.ts` | cellEdit plugin: keyMap(Delete→clearCell, Mod+X→cutCell, Mod+C→copyCell, Mod+V→pasteCell, Enter→focusNext, Shift+Enter→focusPrev) + commands(cutCellValue, clearCellValue) | ✅ `cellEdit.ts::cellEdit` |
+| `clipboard.ts` 확장 | cutCellValue command 추가 — copyCellValue + clearCellValue 조합. cellValueBuffer 공유 | ✅ `clipboard.ts::cutCellValue, clearCellValue` |
+| `AriaEditable` `enterContinue` prop | Enter confirm 후 아래 행 이동 (셀 모드 복귀, auto-rename 없음). Shift+Enter=위 행. 기존 `tabContinue` 패턴과 동일 구조 | ✅ `aria.tsx::AriaEditable` |
+| `Grid.tsx` 정리 | cellClipboardKeyMap 제거 → cellEdit plugin의 keyMap으로 이전. `enableEditing` 시 cellEdit plugin 자동 포함 | ✅ `Grid.tsx::Grid` |
 
 완성도: 🟢
 
@@ -122,20 +122,20 @@
 
 | # | 출처 | 시나리오 | 예상 결과 | 역PRD |
 |---|------|---------|----------|-------|
-| V1 | S1 동기 | Grid 셀 모드에서 Mod+X → 셀 값이 클립보드에 복사되고 셀이 빈 문자열 | cellValueBuffer에 원래 값, DOM 셀 텍스트 "" | |
-| V2 | S2 동기 | Mod+X 후 다른 셀에서 Mod+V → 대상 셀에 값 붙여넣기 | DOM 셀 텍스트 = 원래 값 | |
-| V3 | S3 동기 | Grid 셀 모드에서 Delete → 셀 값 클리어, 행은 그대로 | 행 수 변화 없음, 셀 텍스트 "" | |
-| V4 | S4 동기 | 편집 모드에서 Enter → confirm + 아래 행 같은 열로 이동 | aria-rowindex 증가, 셀 모드 (편집 종료) | |
-| V5 | S5 동기 | 편집 모드에서 Shift+Enter → confirm + 위 행 같은 열로 이동 | aria-rowindex 감소, 셀 모드 (편집 종료) | |
-| V6 | S6 동기 | Mod+X 후 Mod+Z → 셀 값 복원 | DOM 셀 텍스트 = 원래 값 | |
-| V7 | S7 동기 | Delete 후 Mod+Z → 셀 값 복원 | DOM 셀 텍스트 = 원래 값 | |
-| V8 | 경계#1 | 마지막 행에서 Enter confirm → 이동 없음 | aria-rowindex 변화 없음, 셀 모드 | |
-| V9 | 경계#3 | 빈 셀에서 Delete → no-op | store 변경 없음 | |
-| V10 | 경계#6 | cellEdit 없는 Grid에서 Delete → 행 삭제 | 행 수 감소 (기존 동작) | |
-| V11 | 경계#7 | IME 조합 중 Enter → 조합 계속 | 편집 모드 유지, 값 confirm 안 됨 | |
-| V12 | S5a 동기 | 셀 모드에서 Enter → 아래 행 같은 열로 이동 (편집 진입 아님) | aria-rowindex 증가, 셀 모드 유지 | |
-| V13a | S5b 동기 | 셀 모드에서 Shift+Enter → 위 행 같은 열로 이동 | aria-rowindex 감소, 셀 모드 유지 | |
-| V13 | ⑥#5 | clipboard-overwrite 기존 테스트 통과 확인 | 기존 테스트 green | |
+| V1 | S1 동기 | Grid 셀 모드에서 Mod+X → 셀 값이 클립보드에 복사되고 셀이 빈 문자열 | cellValueBuffer에 원래 값, DOM 셀 텍스트 "" | ✅ `cell-edit.integration.test.tsx::Mod+X in cell mode cuts cell value` |
+| V2 | S2 동기 | Mod+X 후 다른 셀에서 Mod+V → 대상 셀에 값 붙여넣기 | DOM 셀 텍스트 = 원래 값 | ✅ `cell-edit.integration.test.tsx::Mod+X then Mod+V pastes cut value to target cell` |
+| V3 | S3 동기 | Grid 셀 모드에서 Delete → 셀 값 클리어, 행은 그대로 | 행 수 변화 없음, 셀 텍스트 "" | ✅ `cell-edit.integration.test.tsx::Delete in cell mode clears cell value, not row` |
+| V4 | S4 동기 | 편집 모드에서 Enter → confirm + 아래 행 같은 열로 이동 | aria-rowindex 증가, 셀 모드 (편집 종료) | ✅ `cell-edit.integration.test.tsx::Enter in edit mode confirms and moves to next row` |
+| V5 | S5 동기 | 편집 모드에서 Shift+Enter → confirm + 위 행 같은 열로 이동 | aria-rowindex 감소, 셀 모드 (편집 종료) | ✅ `cell-edit.integration.test.tsx::Shift+Enter in edit mode confirms and moves to previous row` |
+| V6 | S6 동기 | Mod+X 후 Mod+Z → 셀 값 복원 | DOM 셀 텍스트 = 원래 값 | ✅ `cell-edit.integration.test.tsx::cutCellValue undo restores original value` |
+| V7 | S7 동기 | Delete 후 Mod+Z → 셀 값 복원 | DOM 셀 텍스트 = 원래 값 | ✅ `cell-edit.integration.test.tsx::clearCellValue undo restores original value` |
+| V8 | 경계#1 | 마지막 행에서 Enter confirm → 이동 없음 | aria-rowindex 변화 없음, 셀 모드 | ✅ `cell-edit.integration.test.tsx::Enter at last row confirms without moving` |
+| V9 | 경계#3 | 빈 셀에서 Delete → no-op | store 변경 없음 | ✅ `cell-edit.integration.test.tsx::clearCellValue on empty cell is no-op` |
+| V10 | 경계#6 | cellEdit 없는 Grid에서 Delete → 행 삭제 | 행 수 감소 (기존 동작) | ✅ `cell-edit.integration.test.tsx::Grid without cellEdit: Delete removes row` |
+| V11 | 경계#7 | IME 조합 중 Enter → 조합 계속 | 편집 모드 유지, 값 confirm 안 됨 | ⏭️ `it.todo` — jsdom 한계 |
+| V12 | S5a 동기 | 셀 모드에서 Enter → 아래 행 같은 열로 이동 (편집 진입 아님) | aria-rowindex 증가, 셀 모드 유지 | ✅ `cell-edit.integration.test.tsx::Enter in cell mode moves focus to next row without entering edit mode` |
+| V13a | S5b 동기 | 셀 모드에서 Shift+Enter → 위 행 같은 열로 이동 | aria-rowindex 감소, 셀 모드 유지 | ✅ `cell-edit.integration.test.tsx::Shift+Enter in cell mode moves focus to previous row` |
+| V13 | ⑥#5 | clipboard-overwrite 기존 테스트 통과 확인 | 기존 테스트 green | ✅ 604/604 통과 |
 
 완성도: 🟢
 
