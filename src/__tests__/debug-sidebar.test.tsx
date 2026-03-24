@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CmsLayout from '/Users/user/Desktop/aria/src/pages/cms/CmsLayout'
-import { resetCmsData } from '/Users/user/Desktop/aria/src/pages/cms/cms-state'
+import CmsLayout from '../pages/cms/CmsLayout'
+import { resetCmsData } from '../pages/cms/cms-state'
 
 describe('debug sidebar', () => {
   beforeEach(() => { resetCmsData() })
