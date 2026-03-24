@@ -12,3 +12,22 @@
   background: var(--primary-dim);
   color: var(--text-bright);
 }
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.group + .group {
+  padding-top: var(--space-lg);
+}
+
+.groupLabel {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: var(--space-xs) var(--space-md);
+}
