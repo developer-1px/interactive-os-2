@@ -36,8 +36,8 @@
 }
 
 .columnHeader:focus {
-  outline: 1.5px solid var(--primary);
-  outline-offset: -1.5px;
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
   background: var(--primary-dim);
   color: var(--text-bright);
 }
@@ -62,8 +62,8 @@
 }
 
 .card:focus {
-  outline: 1.5px solid var(--primary);
-  outline-offset: -1.5px;
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
   background: var(--primary-dim);
   color: var(--text-bright);
 }
@@ -74,12 +74,12 @@
 
 .card[aria-selected="true"]:focus {
   background: var(--selection);
-  outline: 1.5px solid var(--primary);
+  outline: 1px solid var(--focus);
 }
 
 /* ── Editable card title ── */
 .card :global([data-renaming]) {
-  outline: 1.5px solid var(--primary);
+  outline: 1px solid var(--focus);
   outline-offset: 2px;
   border-radius: var(--radius-xs);
   padding: 0 2px;
