@@ -75,8 +75,8 @@
   border-color: var(--primary);
 }
 .cms-sidebar__thumb-inner {
-  zoom: 0.1;
-  width: var(--thumb-inner-w, 1040px);
+  zoom: var(--thumb-zoom, 0.1);
+  width: 1200px;
   pointer-events: none;
 }
 .cms-sidebar__thumb-index {

@@ -177,13 +177,15 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
 
-  // Sync --thumb-inner-w so zoom:0.1 thumbnails fill the sidebar width
+  // Sync --thumb-zoom so thumbnails scale to fill sidebar width
   useEffect(() => {
     const el = listRef.current
     if (!el) return
+    const INNER_W = 1200
     const ro = new ResizeObserver(([entry]) => {
-      const w = Math.round(entry.contentBoxSize[0].inlineSize * 10)
-      el.style.setProperty('--thumb-inner-w', `${w}px`)
+      const listW = entry.contentBoxSize[0].inlineSize
+      const zoom = listW / INNER_W
+      el.style.setProperty('--thumb-zoom', String(Math.min(zoom, 0.3).toFixed(4)))
     })
     ro.observe(el)
     return () => ro.disconnect()

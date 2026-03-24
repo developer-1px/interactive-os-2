@@ -19,10 +19,11 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
   const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '')
-  const indCls = styles.indicator + (state.selected ? ' ' + styles.indicatorSelected : '')
   return (
     <div {...props} className={cls}>
-      <span className={indCls}>{state.selected ? '◉' : '○'}</span>
+      <span className={state.selected ? styles.circleSelected : styles.circle}>
+        {state.selected && <span className={styles.dot} />}
+      </span>
       <span>{label}</span>
     </div>
   )
