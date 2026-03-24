@@ -1,6 +1,6 @@
 # CMS (Visual CMS)
 
-> 최종 갱신: 2026-03-24 (retro: cms-field-type-system)
+> 최종 갱신: 2026-03-24 (retro: cms-landing-design-system)
 
 ## 현재 구조
 
@@ -18,6 +18,12 @@ CMS는 interactive-os 엔진 위에 구축된 콘텐츠 관리 도구.
 - `long-text` — `<textarea>`, Enter=줄바꿈, blur=커밋. 정의: 줄바꿈 허용
 - `url` — `<input type="url">`, 유효성 시각 피드백 (저장은 항상 허용)
 - `useFieldCommit<T>` 제네릭 훅으로 커밋 로직 공유
+
+**콘텐츠 디자인 시스템** (앱 UI와 완전 독립):
+- `landingTokens.css` — `--landing-*` 토큰 62개 (dark/light). 앱 토큰 참조 0.
+- `CmsLanding.module.css` — 섹션 스타일. landing 토큰만 참조.
+- 토큰 값 교체만으로 전체 톤 전환 가능
+- Apple 스타일 카드 베리에이션: features(1+2), stats(2fr+1fr×3), patterns(3-col+span)
 
 **렌더링**:
 - `cms-renderers.tsx` — NodeContent, getNodeClassName, getNodeTag
