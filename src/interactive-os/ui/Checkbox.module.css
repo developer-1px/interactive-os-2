@@ -7,7 +7,7 @@
   padding: var(--space-sm) var(--space-md);
   font-size: var(--text-md);
   border-radius: var(--radius-sm);
-  cursor: default;
+  cursor: pointer;
   user-select: none;
 }
 

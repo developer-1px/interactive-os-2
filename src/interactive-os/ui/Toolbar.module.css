@@ -8,13 +8,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  min-width: var(--space-2xl);
+  min-height: var(--space-2xl);
   font-size: var(--text-sm);
   color: var(--text-secondary);
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
+  cursor: pointer;
 }
 
 .toolbar-btn-focused {

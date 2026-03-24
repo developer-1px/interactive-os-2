@@ -11,6 +11,10 @@
   user-select: none;
 }
 
+.item:hover {
+  background: var(--bg-hover);
+}
+
 .itemFocused {
   background: var(--primary-dim);
   color: var(--text-bright);
