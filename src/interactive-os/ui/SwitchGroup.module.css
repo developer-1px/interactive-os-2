@@ -18,22 +18,24 @@
 
 .track {
   flex-shrink: 0;
-  width: 32px;
-  height: 18px;
+  width: 36px;
+  height: 20px;
   border-radius: 9999px;
-  background: var(--bg-active);
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
   position: relative;
-  transition: background var(--transition-fast);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .trackOn {
   flex-shrink: 0;
-  width: 32px;
-  height: 18px;
+  width: 36px;
+  height: 20px;
   border-radius: 9999px;
   background: var(--primary);
+  border: 1px solid var(--primary);
   position: relative;
-  transition: background var(--transition-fast);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .thumb {
@@ -43,8 +45,9 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--text-primary);
-  transition: transform 0.15s ease;
+  background: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .thumbOn {
@@ -55,6 +58,7 @@
   height: 14px;
   border-radius: 50%;
   background: var(--primary-foreground);
-  transform: translateX(14px);
-  transition: transform 0.15s ease;
+  box-shadow: var(--shadow-sm);
+  transform: translateX(16px);
+  transition: transform 0.2s ease, background 0.2s ease;
 }
