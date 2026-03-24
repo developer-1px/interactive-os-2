@@ -53,7 +53,7 @@ describe('disabled', () => {
       </Aria>
     )
     const items = container.querySelectorAll('[role="option"]')
-    items[0]!.focus()
+    ;(items[0] as HTMLElement).focus()
     expect(document.activeElement).not.toBe(items[0])
 
     await user.keyboard('{ArrowDown}')

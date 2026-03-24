@@ -14,7 +14,7 @@
  * Tab continuation: Tab during editing → confirm + move + auto-edit
  */
 import { useState, useRef, useEffect } from 'react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Grid } from '../interactive-os/ui/Grid'

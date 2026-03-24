@@ -61,7 +61,7 @@ export default function PageClipboard() {
           renderItem={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const isGroup = d?.type === 'group'
-            const isCut = getCutSourceIds().includes(node.id)
+            const isCut = getCutSourceIds().includes(node.id as string)
             const indent = ((state.level ?? 1) - 1) * 18
 
             const cls = [
@@ -75,7 +75,7 @@ export default function PageClipboard() {
                 <span className="tree-node__chevron">
                   {isGroup ? (state.expanded ? '▾' : '▸') : ''}
                 </span>
-                {!isGroup && d?.hex && (
+                {!isGroup && !!(d?.hex) && (
                   <span
                     className="list-item__dot"
                     style={{ background: d.hex as string }}
@@ -86,7 +86,7 @@ export default function PageClipboard() {
                 </span>
                 <span className="list-item__desc" style={{ marginLeft: 8, opacity: 0.5, fontSize: '0.85em' }}>
                   {d?.hex ? d.hex as string : ''}{' '}
-                  <span style={{ opacity: 0.4 }}>{node.id}</span>
+                  <span style={{ opacity: 0.4 }}>{node.id as string}</span>
                 </span>
               </div>
             )

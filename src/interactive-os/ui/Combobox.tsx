@@ -210,7 +210,7 @@ export function Combobox({
         ]))
       }
     }
-    const optionProps = mergeProps(props as React.HTMLAttributes<HTMLElement>, { key: childId, onClick: handleOptionClick })
+    const optionProps = mergeProps(props as unknown as Record<string, unknown>, { key: childId, onClick: handleOptionClick }) as React.HTMLAttributes<HTMLElement>
     return render(optionProps, entity, state)
   }
 

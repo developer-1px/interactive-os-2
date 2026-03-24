@@ -15,7 +15,7 @@
  *   const data = rec.stop()
  */
 
-import type { LogEntry, Logger } from '../core/dispatchLogger'
+import type { LogEntry, Logger } from '../engine/dispatchLogger'
 
 // ---- Types ----
 

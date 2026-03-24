@@ -190,7 +190,7 @@ function extractOverwriteFields(
 
 function getCells(store: NormalizedData, nodeId: string): string[] {
   const entity = getEntity(store, nodeId)
-  return [...((entity?.data as Record<string, unknown>)?.cells ?? [])] as string[]
+  return [...(((entity?.data as Record<string, unknown>)?.cells as unknown[]) ?? [])] as string[]
 }
 
 export const clipboardCommands = {

@@ -98,7 +98,7 @@ export const cmsCanAccept: CanAcceptFn = (parentData, childData) => {
   if (rule instanceof z.ZodArray) {
     // Collection: validate against element schema
     const elementRule = rule.element
-    return elementRule.safeParse(childData).success ? 'insert' : false
+    return (elementRule as z.ZodType & { safeParse(data: unknown): { success: boolean } }).safeParse(childData).success ? 'insert' : false
   }
   // Slot container: fixed structure, cannot accept new children → skip
   return false

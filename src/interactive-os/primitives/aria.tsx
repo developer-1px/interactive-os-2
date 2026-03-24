@@ -30,6 +30,7 @@ interface AriaProps {
 
 interface AriaItemProps {
   ids?: string[]
+  asChild?: boolean
   render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
 }
 
@@ -95,7 +96,7 @@ function AriaItemNode({ childId, render }: { childId: string; render: AriaItemPr
 
   return (
     <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
-      {cloneElement(render(props, entity, state), { key: childId, ref: scrollRef })}
+      {cloneElement(render(props, entity, state) as React.ReactElement<Record<string, unknown>>, { key: childId, ref: scrollRef })}
     </AriaItemContext.Provider>
   )
 }
@@ -392,7 +393,7 @@ function AriaSearchHighlight({ children }: { children: React.ReactNode }) {
 
   return <>{React.Children.map(children, child => {
     if (typeof child === 'string') return highlightText(child, filterText)
-    if (React.isValidElement(child) && child.props.children) {
+    if (React.isValidElement(child) && (child.props as { children?: React.ReactNode }).children) {
       return React.cloneElement(child as React.ReactElement<{ children?: React.ReactNode }>, {},
         <AriaSearchHighlight>{(child.props as { children?: React.ReactNode }).children}</AriaSearchHighlight>
       )

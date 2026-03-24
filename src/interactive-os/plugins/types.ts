@@ -2,6 +2,8 @@
 import type { Command } from '../engine/types'
 import type { Middleware } from '../engine/types'
 
+export type { Command, Middleware }
+
 export interface Plugin {
   name?: string
   middleware?: Middleware

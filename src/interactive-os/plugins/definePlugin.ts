@@ -22,7 +22,7 @@ export interface PluginConfig {
 
 function composeMiddlewares(middlewares: Middleware[]): Middleware {
   if (middlewares.length === 1) return middlewares[0]!
-  return (next) => middlewares.reduceRight(
+  return (next: (command: Command) => void) => middlewares.reduceRight(
     (acc, mw) => mw(acc),
     next,
   )

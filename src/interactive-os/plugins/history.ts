@@ -39,17 +39,17 @@ export function history() {
 
   return definePlugin({
     name: 'history',
-    middleware: (next) => (command) => {
+    middleware: (next: (command: Command) => void) => (command: Command) => {
       if (command.type === 'history:undo') {
         const diffs = past.pop()
         if (!diffs) return
         future.push(diffs)
-        next({ type: 'history:__restore', payload: null, execute: (store) => applyDelta(store, diffs, 'reverse'), undo: (s) => s })
+        next({ type: 'history:__restore', payload: null, execute: (store: NormalizedData) => applyDelta(store, diffs, 'reverse'), undo: (s: NormalizedData) => s })
       } else if (command.type === 'history:redo') {
         const diffs = future.pop()
         if (!diffs) return
         past.push(diffs)
-        next({ type: 'history:__restore', payload: null, execute: (store) => applyDelta(store, diffs, 'forward'), undo: (s) => s })
+        next({ type: 'history:__restore', payload: null, execute: (store: NormalizedData) => applyDelta(store, diffs, 'forward'), undo: (s: NormalizedData) => s })
       } else if (command.type === 'history:__restore') {
         next(command)
       } else {

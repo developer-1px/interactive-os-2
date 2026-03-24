@@ -12,6 +12,7 @@ import { getChildren, getEntityData } from '../store/createStore'
 import { focusCommands, selectionCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, VALUE_ID } from '../plugins/core'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
+import type { PatternContextOptions } from '../pattern/createPatternContext'
 import { useAriaView } from './useAriaView'
 
 type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; behavior: AriaPattern; prevFocus: string }
@@ -191,7 +192,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
       if (behavior.selectOnClick) {
         baseProps.onPointerDown = () => {
-          pointerDownCtxRef.current = createPatternContext(engine, behaviorCtxOptions)
+          pointerDownCtxRef.current = createPatternContext(engine, behaviorCtxOptions as PatternContextOptions)
         }
 
         baseProps.onClick = (event: MouseEvent) => {
@@ -217,7 +218,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
             if (engineCallbacksMap.get(engine)?.onActivate) {
               engineCallbacksMap.get(engine)!.onActivate!(id)
             } else {
-              const ctx = createPatternContext(engine, behaviorCtxOptions)
+              const ctx = createPatternContext(engine, behaviorCtxOptions as PatternContextOptions)
               const command = ctx.activate()
               if (command) engine.dispatch(command)
             }

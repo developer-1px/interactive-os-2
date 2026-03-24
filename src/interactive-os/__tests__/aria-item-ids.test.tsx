@@ -1,3 +1,4 @@
+import React from 'react'
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -20,7 +21,7 @@ function fixtureData() {
   }
 }
 
-const renderItem = (props: Record<string, unknown>, node: Record<string, unknown>, _state: NodeState) => (
+const renderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, _state: NodeState) => (
   <span {...props} data-testid={node.id as string}>{(node.data as Record<string, unknown>)?.name as string}</span>
 )
 

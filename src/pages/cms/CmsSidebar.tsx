@@ -93,7 +93,7 @@ function ThumbNode({ data, nodeId, locale }: {
   if (!entity) return null
   const d = (entity.data ?? {}) as Record<string, string>
   const children = getChildren(data, nodeId)
-  const dummyState = { focused: false, selected: false, expanded: false, disabled: false }
+  const dummyState = { focused: false, selected: false, expanded: false, disabled: false, index: 0, siblingCount: 0 }
   const className = getNodeClassName(d, dummyState)
   const tag = getNodeTag(d)
 

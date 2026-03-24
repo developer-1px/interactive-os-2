@@ -6,6 +6,7 @@ import type { PatternContext, NodeState } from '../interactive-os/pattern/types'
 import type { LogEntry } from '../interactive-os/engine/dispatchLogger'
 import { Aria } from '../interactive-os/primitives/aria'
 import { TreeView } from '../interactive-os/ui/TreeView'
+import type { TreeItemRenderProps } from '../interactive-os/ui/TreeView'
 import { tree } from '../interactive-os/pattern/tree'
 import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
@@ -56,7 +57,7 @@ function truncate(str: string, max = 60): string {
   return str.slice(0, max) + '…'
 }
 
-function renderInspectorItem(_props: Record<string, unknown>, node: Record<string, unknown>, state: NodeState) {
+function renderInspectorItem(_props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState) {
   const d = node.data as Record<string, unknown>
   const type = d?.type as string
   const label = d?.label as string
@@ -76,7 +77,7 @@ function renderInspectorItem(_props: Record<string, unknown>, node: Record<strin
         alignItems: 'center',
         gap: 6,
         fontFamily: 'var(--mono)',
-        fontSize: 'var(--text-sm)',
+        fontSize: 'var(--type-body-size)',
         opacity: state.focused ? 1 : 0.85,
         background: state.focused ? 'var(--bg-hover)' : undefined,
         outline: state.focused ? '1.5px solid var(--focus)' : undefined,
@@ -85,23 +86,23 @@ function renderInspectorItem(_props: Record<string, unknown>, node: Record<strin
     >
       {isGroup ? (
         <>
-          <span style={{ opacity: 0.6, fontSize: 'var(--text-xs)' }}>
+          <span style={{ opacity: 0.6, fontSize: 'var(--type-caption-size)' }}>
             {state.expanded ? '▾' : '▸'}
           </span>
           <span style={{ fontWeight: 600 }}>{label}</span>
           {count !== undefined && (
-            <span style={{ opacity: 0.5, fontSize: 'var(--text-xs)' }}>({count})</span>
+            <span style={{ opacity: 0.5, fontSize: 'var(--type-caption-size)' }}>({count})</span>
           )}
         </>
       ) : (
         <>
-          <span style={{ opacity: 0.3, fontSize: 'var(--text-xs)' }}>·</span>
-          <span style={{ color: TYPE_COLORS[type] ?? 'inherit', fontSize: 'var(--text-xs)', opacity: 0.8 }}>
+          <span style={{ opacity: 0.3, fontSize: 'var(--type-caption-size)' }}>·</span>
+          <span style={{ color: TYPE_COLORS[type] ?? 'inherit', fontSize: 'var(--type-caption-size)', opacity: 0.8 }}>
             {type}
           </span>
           <span>{label}</span>
           {value && (
-            <span style={{ opacity: 0.5, fontSize: 'var(--text-xs)' }}>
+            <span style={{ opacity: 0.5, fontSize: 'var(--type-caption-size)' }}>
               {truncate(value)}
             </span>
           )}
@@ -131,7 +132,7 @@ function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record
         alignItems: 'center',
         gap: 6,
         fontFamily: 'var(--mono)',
-        fontSize: 'var(--text-sm)',
+        fontSize: 'var(--type-body-size)',
         background: state.focused ? 'var(--bg-hover)' : undefined,
         outline: state.focused ? '1.5px solid var(--focus)' : undefined,
       }}
@@ -139,7 +140,7 @@ function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record
       <span style={{ opacity: 0.5, width: 10, textAlign: 'center' }}>
         {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
       </span>
-      <span style={{ opacity: 0.4, fontSize: 'var(--text-xs)' }}>{type === 'folder' ? '📁' : '📄'}</span>
+      <span style={{ opacity: 0.4, fontSize: 'var(--type-caption-size)' }}>{type === 'folder' ? '📁' : '📄'}</span>
       <span>{name}</span>
     </div>
   )

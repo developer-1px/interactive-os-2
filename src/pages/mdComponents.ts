@@ -9,7 +9,8 @@ import EditDemo from './axis/EditDemo'
 import { ShowcaseDemo } from './ShowcaseDemo'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 
-export const mdComponents: Record<string, ComponentType<Record<string, unknown>>> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const mdComponents: Record<string, ComponentType<any>> = {
   AxisSpec,
   NavigateDemo,
   SelectDemo,

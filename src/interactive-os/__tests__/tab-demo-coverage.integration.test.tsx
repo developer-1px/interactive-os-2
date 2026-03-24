@@ -17,7 +17,7 @@ describe('TabDemo coverage', () => {
       await user.selectOptions(select, 'native')
 
       const listbox = screen.getByRole('listbox')
-      const firstItem = listbox.querySelector('[data-node-id]')!
+      const firstItem = listbox.querySelector('[data-node-id]') as HTMLElement
       firstItem.focus()
 
       // native: engine doesn't intercept Tab
@@ -36,7 +36,7 @@ describe('TabDemo coverage', () => {
       await user.selectOptions(select, 'flow')
 
       const listbox = screen.getByRole('listbox')
-      const firstItem = listbox.querySelector('[data-node-id]')!
+      const firstItem = listbox.querySelector('[data-node-id]') as HTMLElement
       firstItem.focus()
 
       await user.keyboard('{ArrowDown}')
@@ -54,7 +54,7 @@ describe('TabDemo coverage', () => {
       await user.selectOptions(select, 'loop')
 
       const listbox = screen.getByRole('listbox')
-      const firstItem = listbox.querySelector('[data-node-id]')!
+      const firstItem = listbox.querySelector('[data-node-id]') as HTMLElement
       firstItem.focus()
 
       await user.keyboard('{Tab}')
@@ -72,7 +72,7 @@ describe('TabDemo coverage', () => {
 
       const listbox = screen.getByRole('listbox')
       // Navigate to second item first
-      const firstItem = listbox.querySelector('[data-node-id]')!
+      const firstItem = listbox.querySelector('[data-node-id]') as HTMLElement
       firstItem.focus()
       await user.keyboard('{ArrowDown}')
 
@@ -89,7 +89,7 @@ describe('TabDemo coverage', () => {
 
       // escape is default
       const listbox = screen.getByRole('listbox')
-      const firstItem = listbox.querySelector('[data-node-id]')!
+      const firstItem = listbox.querySelector('[data-node-id]') as HTMLElement
       firstItem.focus()
 
       // ArrowDown should work (roving-tabindex + navigate)

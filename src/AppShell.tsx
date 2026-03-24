@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, type HTMLAttributes } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Sun, Moon, Presentation, Component, Eye, Activity, Palette } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -9,7 +9,7 @@ import { core, FOCUS_ID } from './interactive-os/plugins/core'
 import { FileViewerModal } from './interactive-os/ui/FileViewerModal'
 import { createStore } from './interactive-os/store/createStore'
 import { ROOT_ID } from './interactive-os/store/types'
-import type { AriaPattern } from './interactive-os/pattern/types'
+import type { AriaPattern, NodeState } from './interactive-os/pattern/types'
 import type { NormalizedData } from './interactive-os/store/types'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './interactive-os/devtools/ReproRecorderOverlay'
@@ -90,8 +90,8 @@ const navPaths = Object.fromEntries(navItems.map((n) => [n.id, n.path]))
 
 // --- Shared ActivityBar item renderer ---
 
-const renderNavItem = (props: Record<string, unknown>, node: { id: string }, state: { focused: boolean }) => {
-  const nav = navItems.find((n) => n.id === node.id)!
+const renderNavItem = (props: HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => {
+  const nav = navItems.find((n) => n.id === (node.id as string))!
   const Icon = nav.icon
   return (
     <Tooltip content={nav.label}>
@@ -194,7 +194,7 @@ export default function AppShell() {
             <Aria.Item asChild ids={INTERNAL_IDS} render={renderNavItem} />
           </div>
           <div role="group" aria-label="Util" className="activity-bar__util">
-            <Aria.Item asChild ids={UTIL_IDS} render={(props, node, state) => {
+            <Aria.Item asChild ids={UTIL_IDS} render={(props, _node, state) => {
               const ThemeIcon = theme === 'dark' ? Sun : Moon
               return (
                 <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>

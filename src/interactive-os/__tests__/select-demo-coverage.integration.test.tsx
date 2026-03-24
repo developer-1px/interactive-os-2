@@ -14,7 +14,7 @@ describe('SelectDemo coverage', () => {
       render(<SelectDemo />)
 
       const listbox = screen.getByRole('listbox')
-      const firstItem = listbox.querySelector('[data-node-id]')!
+      const firstItem = listbox.querySelector('[data-node-id]') as HTMLElement
       firstItem.focus()
 
       await user.keyboard('{ }') // toggle → selected
@@ -28,7 +28,7 @@ describe('SelectDemo coverage', () => {
       render(<SelectDemo />)
 
       const listbox = screen.getByRole('listbox')
-      const firstItem = listbox.querySelector('[data-node-id]')!
+      const firstItem = listbox.querySelector('[data-node-id]') as HTMLElement
       firstItem.focus()
 
       await user.keyboard('{ }')        // select first

@@ -52,7 +52,7 @@ function createPlugins(
 ) {
   const recorder = definePlugin({
     name: 'recorder',
-    middleware: (next) => (command: Command) => {
+    middleware: (next: (command: Command) => void) => (command: Command) => {
       traceBox.current = []
       next(command)
       seqBox.current++
@@ -124,7 +124,7 @@ export default function PageEngineCommand() {
 
       <div className="page-section">
         <h3 className="page-section-title">Dispatch Log ({entries.length})</h3>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 'var(--text-xs)', lineHeight: 1.8, maxHeight: '240px', overflow: 'auto' }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 'var(--type-caption-size)', lineHeight: 1.8, maxHeight: '240px', overflow: 'auto' }}>
           {entries.length === 0 ? (
             <span style={{ opacity: 0.5 }}>Interact with the list to see dispatched commands…</span>
           ) : (

@@ -140,7 +140,7 @@ export function focusRecovery(options?: FocusRecoveryOptions) {
 
   return definePlugin({
     name: 'focusRecovery',
-    middleware: (next) => (command) => {
+    middleware: (next: (command: Command) => void) => (command: Command) => {
       if (command.type === 'core:focus') {
         next(command)
         return

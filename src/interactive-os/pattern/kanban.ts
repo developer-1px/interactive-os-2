@@ -43,13 +43,13 @@ function focusInColumn(ctx: PatternContext, columnId: string, targetIndex: numbe
 // ── Axis: inline selectToggle (no selectionMode on this behavior) ──
 
 const selectToggle: Axis = {
-  Space: (ctx) => ctx.toggleSelect(),
+  Space: (ctx: PatternContext) => ctx.toggleSelect(),
 }
 
 // ── Axis: column-aware vertical navigation ──
 
 const kanbanNavV: Axis = {
-  ArrowDown(ctx) {
+  ArrowDown(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return ctx.focusNext()
     if (info.cardIndex === -1) return ctx.focusChild() // column header -> first card
@@ -58,7 +58,7 @@ const kanbanNavV: Axis = {
     return focusCommands.setFocus(cards[info.cardIndex + 1]!)
   },
 
-  ArrowUp(ctx) {
+  ArrowUp(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return ctx.focusPrev()
     if (info.cardIndex <= 0) return focusCommands.setFocus(ctx.focused) // stay (first card or header)
@@ -69,7 +69,7 @@ const kanbanNavV: Axis = {
 // ── Axis: cross-column horizontal navigation ──
 
 const kanbanCrossH: Axis = {
-  ArrowRight(ctx) {
+  ArrowRight(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return ctx.focusNext()
     const columns = ctx.getChildren(ROOT_ID)
@@ -78,7 +78,7 @@ const kanbanCrossH: Axis = {
     return focusInColumn(ctx, nextColId, info.cardIndex === -1 ? 0 : info.cardIndex)
   },
 
-  ArrowLeft(ctx) {
+  ArrowLeft(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return ctx.focusPrev()
     const columns = ctx.getChildren(ROOT_ID)
@@ -87,26 +87,26 @@ const kanbanCrossH: Axis = {
     return focusInColumn(ctx, prevColId, info.cardIndex === -1 ? 0 : info.cardIndex)
   },
 
-  Home(ctx) {
+  Home(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return ctx.focusFirst()
     return focusInColumn(ctx, info.columnId, 0)
   },
 
-  End(ctx) {
+  End(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return ctx.focusLast()
     const cards = ctx.getChildren(info.columnId)
     return focusInColumn(ctx, info.columnId, cards.length - 1)
   },
 
-  'Mod+Home'(ctx) {
+  'Mod+Home'(ctx: PatternContext) {
     const columns = ctx.getChildren(ROOT_ID)
     if (columns.length === 0) return focusCommands.setFocus(ctx.focused)
     return focusInColumn(ctx, columns[0]!, 0)
   },
 
-  'Mod+End'(ctx) {
+  'Mod+End'(ctx: PatternContext) {
     const columns = ctx.getChildren(ROOT_ID)
     if (columns.length === 0) return focusCommands.setFocus(ctx.focused)
     const lastCol = columns[columns.length - 1]!
@@ -118,7 +118,7 @@ const kanbanCrossH: Axis = {
 // ── Axis: kanban-specific ARIA editing behaviors ──
 
 const kanbanEditing: Axis = {
-  'Mod+A'(ctx) {
+  'Mod+A'(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return
     const cards = ctx.getChildren(info.columnId)
@@ -126,7 +126,7 @@ const kanbanEditing: Axis = {
     return selectionCommands.selectRange(cards)
   },
 
-  Escape(ctx) {
+  Escape(ctx: PatternContext) {
     if (ctx.selected.length > 0) return selectionCommands.clearSelection()
   },
 }
@@ -136,9 +136,9 @@ const kanbanEditing: Axis = {
 // but existing tests validate at the behavior level. Kept here for backward compat.
 
 const kanbanPlugins: Axis = {
-  Delete: (ctx) => crudCommands.remove(ctx.focused),
+  Delete: (ctx: PatternContext) => crudCommands.remove(ctx.focused),
 
-  'N'(ctx) {
+  'N'(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return
     const parentId = info.columnId
@@ -147,7 +147,7 @@ const kanbanPlugins: Axis = {
     return crudCommands.create({ id: newId, data: { title: 'New card' } }, parentId, insertIndex)
   },
 
-  'Ctrl+Enter'(ctx) {
+  'Ctrl+Enter'(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info) return
     const parentId = info.columnId
@@ -156,22 +156,22 @@ const kanbanPlugins: Axis = {
     return crudCommands.create({ id: newId, data: { title: 'New card' } }, parentId, insertIndex)
   },
 
-  Enter: (ctx) => renameCommands.startRename(ctx.focused),
-  F2: (ctx) => renameCommands.startRename(ctx.focused),
+  Enter: (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
+  F2: (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
 
   // Mod+C/X/V → clipboard plugin keyMap
   // Mod+Z/Shift+Z kept here because kanban's cross-column move needs undo at behavior level
   'Mod+Z': () => historyCommands.undo(),
   'Mod+Shift+Z': () => historyCommands.redo(),
 
-  'Alt+ArrowRight'(ctx) {
+  'Alt+ArrowRight'(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info || info.cardIndex === -1) return
     const columns = ctx.getChildren(ROOT_ID)
     if (info.columnIndex >= columns.length - 1) return
     const targetCol = columns[info.columnIndex + 1]!
     if (ctx.selected.length > 1) {
-      const cmds = ctx.selected.map((id) => {
+      const cmds = ctx.selected.map((id: string) => {
         const ci = findCardInfoFor(ctx, id)
         if (!ci || ci.cardIndex === -1) return null
         return dndCommands.moveTo(id, targetCol, Math.min(ci.cardIndex, ctx.getChildren(targetCol).length))
@@ -182,14 +182,14 @@ const kanbanPlugins: Axis = {
     return dndCommands.moveTo(ctx.focused, targetCol, targetIndex)
   },
 
-  'Alt+ArrowLeft'(ctx) {
+  'Alt+ArrowLeft'(ctx: PatternContext) {
     const info = findCardInfo(ctx)
     if (!info || info.cardIndex === -1) return
     const columns = ctx.getChildren(ROOT_ID)
     if (info.columnIndex <= 0) return
     const targetCol = columns[info.columnIndex - 1]!
     if (ctx.selected.length > 1) {
-      const cmds = ctx.selected.map((id) => {
+      const cmds = ctx.selected.map((id: string) => {
         const ci = findCardInfoFor(ctx, id)
         if (!ci || ci.cardIndex === -1) return null
         return dndCommands.moveTo(id, targetCol, Math.min(ci.cardIndex, ctx.getChildren(targetCol).length))
@@ -200,8 +200,8 @@ const kanbanPlugins: Axis = {
     return dndCommands.moveTo(ctx.focused, targetCol, targetIndex)
   },
 
-  'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-  'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+  'Alt+ArrowUp': (ctx: PatternContext) => dndCommands.moveUp(ctx.focused),
+  'Alt+ArrowDown': (ctx: PatternContext) => dndCommands.moveDown(ctx.focused),
 }
 
 // ── Compose all axes into the behavior ──

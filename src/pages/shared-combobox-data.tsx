@@ -1,6 +1,7 @@
 import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
+import type { HTMLAttributes } from 'react'
 import type { NodeState } from '../interactive-os/pattern/types'
 
 const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig', 'Grape', 'Honeydew']
@@ -35,7 +36,7 @@ export function createGroupedStore(): NormalizedData {
   })
 }
 
-export const comboboxRenderItem = (item: Record<string, unknown>, state: NodeState) => (
+export const comboboxRenderItem = (_props: HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
   <div className={`combo-item${state.focused ? ' combo-item--focused' : ''}${state.selected ? ' combo-item--selected' : ''}`}>
     {(item.data as Record<string, unknown>)?.label as string}
   </div>
