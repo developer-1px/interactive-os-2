@@ -5,6 +5,7 @@ interface UseResizerOptions {
   minSize: number
   maxSize: number
   direction?: 'horizontal' | 'vertical'
+  reverse?: boolean
   step?: number
   storageKey?: string
 }
@@ -20,7 +21,7 @@ function loadSize(key: string | undefined, defaultSize: number, min: number, max
 }
 
 export function useResizer(options: UseResizerOptions) {
-  const { defaultSize, minSize, maxSize, direction = 'horizontal', step = 10, storageKey } = options
+  const { defaultSize, minSize, maxSize, direction = 'horizontal', reverse = false, step = 10, storageKey } = options
   const [size, setSize] = useState(() => loadSize(storageKey, defaultSize, minSize, maxSize))
   const dragging = useRef(false)
   const startPos = useRef(0)
@@ -28,9 +29,11 @@ export function useResizer(options: UseResizerOptions) {
   const sizeRef = useRef(size)
   const separatorRef = useRef<HTMLElement | null>(null)
   const isHorizontalRef = useRef(direction === 'horizontal')
+  const reverseRef = useRef(reverse)
 
   useEffect(() => { sizeRef.current = size }, [size])
   useEffect(() => { isHorizontalRef.current = direction === 'horizontal' }, [direction])
+  useEffect(() => { reverseRef.current = reverse }, [reverse])
 
   const clamp = useCallback((v: number) => Math.min(maxSize, Math.max(minSize, v)), [minSize, maxSize])
 
@@ -51,7 +54,8 @@ export function useResizer(options: UseResizerOptions) {
     const onMove = (e: PointerEvent) => {
       if (!dragging.current) return
       const pos = isHorizontalRef.current ? e.clientX : e.clientY
-      const delta = pos - startPos.current
+      const rawDelta = pos - startPos.current
+      const delta = reverseRef.current ? -rawDelta : rawDelta
       const next = clamp(startSize.current + delta)
       sizeRef.current = next
       // DOM direct manipulation — no React re-render
@@ -59,7 +63,7 @@ export function useResizer(options: UseResizerOptions) {
       if (el) {
         el.setAttribute('aria-valuenow', String(next))
         // Apply size to adjacent panel
-        const panel = el.previousElementSibling as HTMLElement | null
+        const panel = (reverseRef.current ? el.nextElementSibling : el.previousElementSibling) as HTMLElement | null
         if (panel) {
           if (isHorizontalRef.current) panel.style.width = `${next}px`
           else panel.style.height = `${next}px`
@@ -91,8 +95,8 @@ export function useResizer(options: UseResizerOptions) {
   }, [])
 
   const isHorizontal = direction === 'horizontal'
-  const growKey = isHorizontal ? 'ArrowRight' : 'ArrowDown'
-  const shrinkKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp'
+  const growKey = isHorizontal ? (reverse ? 'ArrowLeft' : 'ArrowRight') : 'ArrowDown'
+  const shrinkKey = isHorizontal ? (reverse ? 'ArrowRight' : 'ArrowLeft') : 'ArrowUp'
 
   const onKeyDown = useCallback((e: React.KeyboardEvent) => {
     switch (e.key) {
