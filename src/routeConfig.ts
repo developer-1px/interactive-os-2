@@ -1,4 +1,4 @@
-import { Database, Cog, Axe, Puzzle, Box, BookOpen } from 'lucide-react'
+import { Database, Cog, Axe, Puzzle, Box, Layers, BookOpen } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import PageCrud from './pages/PageCrud'
@@ -52,25 +52,10 @@ export const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'internals/axis',
-    label: 'Axis',
-    icon: Axe,
-    basePath: '/internals/axis/navigate',
-    items: [
-      { path: 'navigate', label: 'navigate()', status: 'ready', md: 'axes/navigate' },
-      { path: 'select', label: 'select()', status: 'ready', md: 'axes/select' },
-      { path: 'activate', label: 'activate()', status: 'ready', md: 'axes/activate' },
-      { path: 'expand', label: 'expand()', status: 'ready', md: 'axes/expand' },
-      { path: 'dismiss', label: 'dismiss()', status: 'ready', md: 'axes/dismiss' },
-      { path: 'edit', label: 'edit()', status: 'ready', md: 'axes/edit' },
-      { path: 'tab', label: 'tab()', status: 'ready', md: 'axes/tab' },
-    ],
-  },
-  {
-    id: 'internals/plugin',
-    label: 'Plugin',
+    id: 'internals/plugins',
+    label: 'Plugins',
     icon: Puzzle,
-    basePath: '/internals/plugin/crud',
+    basePath: '/internals/plugins/crud',
     items: [
       { path: 'crud', label: 'CRUD', status: 'ready', component: PageCrud },
       { path: 'clipboard', label: 'Clipboard', status: 'ready', component: PageClipboard },
@@ -81,10 +66,33 @@ export const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'internals/components',
-    label: 'Components',
+    id: 'internals/axis',
+    label: 'Axis',
+    icon: Axe,
+    basePath: '/internals/axis/navigate',
+    items: [
+      { path: 'navigate', label: 'navigate()', status: 'ready', md: 'axis/navigate' },
+      { path: 'select', label: 'select()', status: 'ready', md: 'axis/select' },
+      { path: 'activate', label: 'activate()', status: 'ready', md: 'axis/activate' },
+      { path: 'expand', label: 'expand()', status: 'ready', md: 'axis/expand' },
+      { path: 'dismiss', label: 'dismiss()', status: 'ready', md: 'axis/dismiss' },
+      { path: 'tab', label: 'tab()', status: 'ready', md: 'axis/tab' },
+    ],
+  },
+  {
+    id: 'internals/pattern',
+    label: 'Pattern',
+    icon: Layers,
+    basePath: '/internals/pattern/edit',
+    items: [
+      { path: 'edit', label: 'edit()', status: 'ready', md: 'pattern/edit' },
+    ],
+  },
+  {
+    id: 'internals/primitives',
+    label: 'Primitives',
     icon: Box,
-    basePath: '/internals/components/aria',
+    basePath: '/internals/primitives/aria',
     items: [
       { path: 'aria', label: 'Aria', status: 'ready', component: PageAriaComponent },
       { path: 'cell', label: 'Cell', status: 'ready', component: PageCell },
@@ -99,11 +107,12 @@ export const routeConfig: RouteGroup[] = [
     items: [
       { path: 'vision', label: 'Vision', status: 'ready', component: PageAreaViewer },
       { path: 'overview', label: 'Overview', status: 'ready', component: PageAreaViewer },
-      { path: 'core', label: 'Core', status: 'ready', component: PageAreaViewer },
-      { path: 'axes', label: 'Axes', status: 'ready', component: PageAreaViewer },
-      { path: 'patterns', label: 'Patterns', status: 'ready', component: PageAreaViewer },
+      { path: 'store', label: 'Store', status: 'ready', component: PageAreaViewer },
+      { path: 'engine', label: 'Engine', status: 'ready', component: PageAreaViewer },
       { path: 'plugins', label: 'Plugins', status: 'ready', component: PageAreaViewer },
-      { path: 'hooks', label: 'Hooks', status: 'ready', component: PageAreaViewer },
+      { path: 'axis', label: 'Axis', status: 'ready', component: PageAreaViewer },
+      { path: 'pattern', label: 'Pattern', status: 'ready', component: PageAreaViewer },
+      { path: 'primitives', label: 'Primitives', status: 'ready', component: PageAreaViewer },
       { path: 'ui', label: 'UI', status: 'ready', component: PageAreaViewer },
     ],
   },
