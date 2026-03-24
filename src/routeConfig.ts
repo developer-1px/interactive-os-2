@@ -1,28 +1,6 @@
-import { Database, Cog, Axe, Compass, Puzzle, Layers, Box, BookOpen } from 'lucide-react'
+import { Database, Cog, Axe, Puzzle, Box, BookOpen } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-import PageTreeGrid from './pages/PageTreeGrid'
-import PageListbox from './pages/PageListbox'
-import PageTabs from './pages/PageTabs'
-import PageMenu from './pages/PageMenu'
-import PageAccordion from './pages/PageAccordion'
-import PageDisclosure from './pages/PageDisclosure'
-import PageDialog from './pages/PageDialog'
-import PageCombobox from './pages/PageCombobox'
-import PageToolbar from './pages/PageToolbar'
-import PageGrid from './pages/PageGrid'
-import PageRadioGroup from './pages/PageRadioGroup'
-import PageSlider from './pages/PageSlider'
-import PageSpinbutton from './pages/PageSpinbutton'
-import PageAlertDialog from './pages/PageAlertDialog'
-import PageSwitch from './pages/PageSwitch'
-import PageTreeNav from './pages/PageTreeNav'
-import PageListboxNav from './pages/PageListboxNav'
-import PageComboboxNav from './pages/PageComboboxNav'
-import PageTabsCrud from './pages/PageTabsCrud'
-import PageGridCollection from './pages/PageGridCollection'
-import PageKanban from './pages/PageKanban'
-import PageI18nDataTable from './pages/PageI18nDataTable'
 import PageCrud from './pages/PageCrud'
 import PageClipboard from './pages/PageClipboard'
 import PageHistoryDemo from './pages/PageHistoryDemo'
@@ -89,29 +67,6 @@ export const routeConfig: RouteGroup[] = [
     ],
   },
   {
-    id: 'internals/pattern',
-    label: 'Pattern',
-    icon: Compass,
-    basePath: '/internals/pattern/accordion',
-    items: [
-      { path: 'accordion', label: 'Accordion', status: 'ready', component: PageAccordion },
-      { path: 'disclosure', label: 'Disclosure', status: 'ready', component: PageDisclosure },
-      { path: 'switch', label: 'Switch', status: 'ready', component: PageSwitch },
-      { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabs },
-      { path: 'radiogroup', label: 'RadioGroup', status: 'ready', component: PageRadioGroup },
-      { path: 'slider', label: 'Slider', status: 'ready', component: PageSlider },
-      { path: 'spinbutton', label: 'Spinbutton', status: 'ready', component: PageSpinbutton },
-      { path: 'menu', label: 'Menu', status: 'ready', component: PageMenu },
-      { path: 'toolbar', label: 'Toolbar', status: 'ready', component: PageToolbar },
-      { path: 'dialog', label: 'Dialog', status: 'ready', component: PageDialog },
-      { path: 'alertdialog', label: 'AlertDialog', status: 'ready', component: PageAlertDialog },
-      { path: 'tree', label: 'Tree', status: 'ready', component: PageTreeNav },
-      { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListboxNav },
-      { path: 'grid', label: 'Grid', status: 'ready', component: PageGrid },
-      { path: 'combobox', label: 'Combobox', status: 'ready', component: PageComboboxNav },
-    ],
-  },
-  {
     id: 'internals/plugin',
     label: 'Plugin',
     icon: Puzzle,
@@ -123,21 +78,6 @@ export const routeConfig: RouteGroup[] = [
       { path: 'dnd', label: 'DnD', status: 'ready', component: PageDnd },
       { path: 'rename', label: 'Rename', status: 'ready', component: PageRename },
       { path: 'typeahead', label: 'Typeahead', status: 'ready', component: PageTypeahead },
-    ],
-  },
-  {
-    id: 'internals/collection',
-    label: 'Collection',
-    icon: Layers,
-    basePath: '/internals/collection/treegrid',
-    items: [
-      { path: 'treegrid', label: 'TreeGrid', status: 'ready', component: PageTreeGrid },
-      { path: 'listbox', label: 'Listbox', status: 'ready', component: PageListbox },
-      { path: 'grid', label: 'Grid', status: 'ready', component: PageGridCollection },
-      { path: 'tabs', label: 'Tabs', status: 'ready', component: PageTabsCrud },
-      { path: 'combobox', label: 'Combobox', status: 'ready', component: PageCombobox },
-      { path: 'kanban', label: 'Kanban', status: 'ready', component: PageKanban },
-      { path: 'i18n', label: 'i18n DataTable', status: 'ready', component: PageI18nDataTable },
     ],
   },
   {
