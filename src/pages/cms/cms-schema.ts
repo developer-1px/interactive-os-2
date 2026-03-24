@@ -49,6 +49,11 @@ export const nodeSchemas = {
   'tab-group':      z.object({ type: z.literal('tab-group') }),
   'tab-item':       z.object({ type: z.literal('tab-item'),  label: localeMapSchema.describe('Label') }),
   'tab-panel':      z.object({ type: z.literal('tab-panel') }),
+  // ② 2026-03-24-cms-editorial-content-prd.md
+  'value-item':     z.object({ type: z.literal('value-item'),    icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.describe('Title'), desc: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Description') }),
+  'quote':          z.object({ type: z.literal('quote'),          text: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Quote'), attribution: localeMapSchema.describe('Attribution') }),
+  'article':        z.object({ type: z.literal('article'),        icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.describe('Title'), category: localeMapSchema.describe('Category'), readTime: z.string().describe('Read Time') }),
+  'showcase-item':  z.object({ type: z.literal('showcase-item'),  icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
 } as const
 
 // ── Children rules ──
@@ -60,6 +65,7 @@ export const childRules: Record<string, z.ZodType> = {
     nodeSchemas.badge, nodeSchemas.text, nodeSchemas.cta,
     nodeSchemas['section-label'], nodeSchemas['section-title'], nodeSchemas['section-desc'],
     nodeSchemas.icon, nodeSchemas.link, nodeSchemas.brand, nodeSchemas.links,
+    nodeSchemas['value-item'], nodeSchemas.quote, nodeSchemas.article, nodeSchemas['showcase-item'],
   ])),
   links: z.array(z.discriminatedUnion('type', [nodeSchemas.link])),
   'tab-group': z.array(z.discriminatedUnion('type', [nodeSchemas['tab-item']])),
