@@ -78,7 +78,8 @@
 
 /* ── Light ── */
 
-[data-landing-theme="light"] {
+[data-landing-theme="light"],
+[data-theme="light"] .cms-landing {
   --landing-bg-page:        #FAFAFA;
   --landing-bg-section:     #FAFAFA;
   --landing-bg-section-alt: #FAFAFA;
