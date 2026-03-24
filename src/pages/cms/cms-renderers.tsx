@@ -1,3 +1,4 @@
+// ② 2026-03-24-cms-editorial-content-prd.md
 /* eslint-disable react-refresh/only-export-components */
 import { createElement } from 'react'
 import { ChevronRight, ArrowRight } from 'lucide-react'
@@ -36,17 +37,15 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
         </div>
       )
     case 'stat':
-      return null  // container — children rendered by CmsCanvas
+      return null
     case 'stat-value':
       return <>{data.value as string}</>
-
     case 'icon':
       return <CmsIcon name={data.value as string} size={16} />
     case 'step':
-      return null  // container — children rendered by CmsCanvas
+      return null
     case 'step-num':
       return <>{data.value as string}</>
-
     case 'pattern':
       return (
         <>
@@ -58,7 +57,7 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       return (
         <>
           <div className={s.cmsFooterLogo} />
-          <span className={s.cmsFooterName}>{data.name as string}</span>
+          <span className={s.cmsFooterName}><LocalizedText value={data.name as string | LocaleMap} locale={locale} /></span>
           <span className={s.cmsFooterCopy}>{data.license as string} License</span>
         </>
       )
@@ -74,6 +73,44 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       return <a className={s.cmsFooterLink} href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>
     case 'tab-item':
       return <LocalizedText value={data.label as LocaleMap} locale={locale} />
+
+    // ── Editorial section types ──
+    case 'value-item':
+      return (
+        <div className={s.cmsValueItemContent}>
+          <div className={s.cmsValueItemIcon}><CmsIcon name={data.icon as string} size={24} /></div>
+          <h3 className={s.cmsValueItemTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
+          <p className={s.cmsValueItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></p>
+        </div>
+      )
+    case 'quote':
+      return (
+        <blockquote className={s.cmsQuoteContent}>
+          <span className={s.cmsQuoteMark}>"</span>
+          <p className={s.cmsQuoteText}><LocalizedText value={data.text as LocaleMap} locale={locale} /></p>
+          <cite className={s.cmsQuoteAttribution}>— <LocalizedText value={data.attribution as LocaleMap} locale={locale} /></cite>
+        </blockquote>
+      )
+    case 'article':
+      return (
+        <div className={s.cmsArticleContent}>
+          <div className={s.cmsArticleIcon}><CmsIcon name={data.icon as string} size={20} /></div>
+          <div className={s.cmsArticleBody}>
+            <h3 className={s.cmsArticleTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
+            <span className={s.cmsArticleMeta}>
+              <LocalizedText value={data.category as LocaleMap} locale={locale} /> · {data.readTime as string}
+            </span>
+          </div>
+        </div>
+      )
+    case 'showcase-item':
+      return (
+        <div className={s.cmsShowcaseItemContent}>
+          <div className={s.cmsShowcaseItemIcon}><CmsIcon name={data.icon as string} size={20} /></div>
+          <span className={s.cmsShowcaseItemLabel}><LocalizedText value={data.label as LocaleMap} locale={locale} /></span>
+          <span className={s.cmsShowcaseItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
+        </div>
+      )
     default:
       return null
   }
@@ -84,12 +121,15 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
 
 export function getSectionClassName(variant: string): string {
   switch (variant) {
-    case 'hero': return s.cmsHero
-    case 'stats': return s.cmsStats
-    case 'features': return s.cmsFeatures
-    case 'workflow': return s.cmsHow
-    case 'patterns': return s.cmsPatterns
-    case 'footer': return s.cmsFooter
+    case 'hero':        return s.cmsHero
+    case 'manifesto':   return s.cmsManifesto
+    case 'features':    return s.cmsFeatures
+    case 'patterns':    return s.cmsPatterns
+    case 'showcase':    return s.cmsShowcase
+    case 'journal':     return s.cmsJournal
+    case 'testimonial': return s.cmsTestimonial
+    case 'cta':         return s.cmsCta
+    case 'footer':      return s.cmsFooter
     default: return ''
   }
 }
@@ -133,6 +173,11 @@ export function getNodeClassName(data: Record<string, string>, state: NodeState)
     case 'tab-group': return `${s.cmsTabGroup}${f ? ` ${s.cmsTabGroupFocused}` : ''}`
     case 'tab-item': return `${s.cmsTabItem}${f ? ` ${s.cmsTabItemFocused}` : ''}`
     case 'tab-panel': return s.cmsTabPanel
+    // Editorial types
+    case 'value-item': return `${s.cmsValueItem}${f ? ` ${s.cmsValueItemFocused}` : ''}`
+    case 'quote': return `${s.cmsQuote}${f ? ` ${s.cmsQuoteFocused}` : ''}`
+    case 'article': return `${s.cmsArticle}${f ? ` ${s.cmsArticleFocused}` : ''}`
+    case 'showcase-item': return `${s.cmsShowcaseItem}${f ? ` ${s.cmsShowcaseItemFocused}` : ''}`
     default: return ''
   }
 }
@@ -142,10 +187,11 @@ export const HEADER_TYPES = new Set(['section-label', 'section-title', 'section-
 
 export function getChildrenContainerClassName(data: Record<string, string>): string | undefined {
   switch (data.variant) {
-    case 'stats': return s.cmsStatsItems
     case 'features': return s.cmsFeaturesGrid
-    case 'workflow': return s.cmsHowSteps
     case 'patterns': return s.cmsPatternsGrid
+    case 'manifesto': return s.cmsManifestoValues
+    case 'showcase': return s.cmsShowcaseGrid
+    case 'journal': return s.cmsJournalList
     default: return undefined
   }
 }
@@ -172,6 +218,10 @@ export function getNodeTag(data: Record<string, string>): keyof React.JSX.Intrin
   if (data.type === 'tab-group') return 'div'
   if (data.type === 'tab-item') return 'button'
   if (data.type === 'tab-panel') return 'div'
+  if (data.type === 'value-item') return 'div'
+  if (data.type === 'quote') return 'div'
+  if (data.type === 'article') return 'div'
+  if (data.type === 'showcase-item') return 'div'
   return 'div'
 }
 

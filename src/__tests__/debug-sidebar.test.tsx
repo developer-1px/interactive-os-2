@@ -12,13 +12,10 @@ describe('debug sidebar', () => {
     const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
     const allOptions = sidebar.querySelectorAll('[role="option"]')
     const ids = Array.from(allOptions).map(el => el.getAttribute('data-sidebar-id'))
-    // Verify the full list includes tab-internal sections
+    // Verify first sections match editorial store order
     expect(ids[0]).toBe('hero')
-    expect(ids[1]).toBe('stats')
+    expect(ids[1]).toBe('manifesto')
     expect(ids[2]).toBe('features')
-    expect(ids[3]).toBe('tab-1-section')
-    expect(ids[4]).toBe('tab-2-section')
-    expect(ids[5]).toBe('tab-3-section')
   })
 
   it('what has tabindex=0 after 3 ArrowDowns', async () => {
@@ -39,6 +36,6 @@ describe('debug sidebar', () => {
 
     // There should be exactly one item with tabindex=0
     expect(tabindexZeroItems.length).toBe(1)
-    expect(tabindexZeroItems[0]).toBe('tab-1-section')
+    expect(tabindexZeroItems[0]).toBe('patterns')
   })
 })

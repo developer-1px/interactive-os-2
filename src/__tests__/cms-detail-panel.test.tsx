@@ -88,18 +88,14 @@ describe('CMS Detail Panel', () => {
   it('shows all grouped fields when a section is focused', async () => {
     const { container } = render(<CmsLayout />)
 
-    // Focus on stats section (4 stat containers, each with value + label = 8 fields)
-    const stats = container.querySelector('[data-cms-id="stats"]') as HTMLElement
-    act(() => { stats.click() })
+    // Focus on showcase section (6 showcase-items, each with icon + label + desc = 3 fields)
+    const showcase = container.querySelector('[data-cms-id="showcase"]') as HTMLElement
+    act(() => { showcase.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
     const inputs = panel.querySelectorAll('input')
-    // stats section: no section headers, 4 stats × (value + label) = 8 fields
-    expect(inputs.length).toBe(8)
-
-    // Should have 4 groups (one per stat container)
-    const groups = panel.querySelectorAll('.cms-detail-group')
-    expect(groups.length).toBe(4)
+    // showcase section: header (label + title = 2 inputs, desc = 1 textarea) + 6 items × (label + desc = 2 inputs, icon = button) = 14 inputs
+    expect(inputs.length).toBe(14)
   })
 
   it('section focus shows section header fields + sub-container groups', async () => {
@@ -192,8 +188,8 @@ describe('CMS Detail Panel', () => {
 
     const panel = container.querySelector('.cms-detail-panel')!
     const inputs = panel.querySelectorAll('input')
-    // patterns: header (label + title = 2 inputs, desc = 1 textarea) + 14 patterns × name = 16 inputs
-    expect(inputs.length).toBe(16)
+    // patterns: header (label + title = 2 inputs, desc = 1 textarea) + 16 patterns × (name = 1 input, icon = button) = 18 inputs
+    expect(inputs.length).toBe(18)
   })
 
   // V9: edit in progress + focus change → commit
@@ -217,19 +213,18 @@ describe('CMS Detail Panel', () => {
     expect(badge.textContent).toContain('Auto Committed')
   })
 
-  // V10: stat container group label = text child localized value
-  it('uses text label child value as stat group label', async () => {
+  // V10: container group label = derived from content
+  it('uses section variant as group label', async () => {
     const { container } = render(<CmsLayout />)
 
-    const stats = container.querySelector('[data-cms-id="stats"]') as HTMLElement
-    act(() => { stats.click() })
+    const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
+    act(() => { features.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
     const legends = panel.querySelectorAll('.cms-detail-group__label')
-    // First stat group should use the text(stat-label) child value
     const labels = Array.from(legends).map(l => l.textContent)
-    expect(labels).toContain('APG Patterns')
-    expect(labels).toContain('Tests')
+    // Section header group uses variant-derived label, card sub-groups use title text
+    expect(labels[0]).toBe('Features')
   })
 
   // V12: footer-links container → link fields

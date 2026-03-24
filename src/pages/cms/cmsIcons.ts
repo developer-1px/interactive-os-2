@@ -3,7 +3,8 @@ import {
   PanelTop, MessageSquare, Menu, Layers, ChevronDown, ChevronRight,
   MousePointerClick, ToggleLeft, Radio, Star, Heart, Zap, Globe,
   Settings, Search, Bell, Mail, Image, FileText, Lock, Unlock,
-  ArrowRight,
+  ArrowRight, Quote, BookOpen, Compass, Scissors, Clock,
+  SlidersHorizontal, Hash,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -42,6 +43,13 @@ export const CMS_ICONS: CmsIconEntry[] = [
   { key: 'lock', Icon: Lock },
   { key: 'unlock', Icon: Unlock },
   { key: 'arrow-right', Icon: ArrowRight },
+  { key: 'quote', Icon: Quote },
+  { key: 'book', Icon: BookOpen },
+  { key: 'compass', Icon: Compass },
+  { key: 'scissors', Icon: Scissors },
+  { key: 'clock', Icon: Clock },
+  { key: 'slider', Icon: SlidersHorizontal },
+  { key: 'hash', Icon: Hash },
 ]
 
 export const CMS_ICON_MAP = new Map(CMS_ICONS.map(i => [i.key, i.Icon]))

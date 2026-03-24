@@ -1,9 +1,10 @@
+// ② 2026-03-24-cms-editorial-content-prd.md
 import type { Command } from '../../interactive-os/core/types'
 import { createBatchCommand } from '../../interactive-os/core/types'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { localeMap } from './cms-types'
 
-export type SectionVariant = 'hero' | 'stats' | 'features' | 'workflow' | 'patterns' | 'footer'
+export type SectionVariant = 'hero' | 'manifesto' | 'features' | 'patterns' | 'showcase' | 'journal' | 'testimonial' | 'cta' | 'footer'
 export type TemplateType = SectionVariant | 'tab-group'
 
 interface TemplateVariant {
@@ -13,13 +14,16 @@ interface TemplateVariant {
 }
 
 export const TEMPLATE_VARIANTS: TemplateVariant[] = [
-  { id: 'hero',      label: 'Hero',      icon: 'star' },
-  { id: 'stats',     label: 'Stats',     icon: 'bar-chart' },
-  { id: 'features',  label: 'Features',  icon: 'grid' },
-  { id: 'workflow',  label: 'Workflow',  icon: 'git-branch' },
-  { id: 'patterns',  label: 'Patterns',  icon: 'puzzle' },
-  { id: 'footer',    label: 'Footer',    icon: 'minus' },
-  { id: 'tab-group', label: 'Tab Group', icon: 'layout-panel-top' },
+  { id: 'hero',        label: 'Hero',        icon: 'star' },
+  { id: 'manifesto',   label: 'Manifesto',   icon: 'heart' },
+  { id: 'features',    label: 'Features',    icon: 'grid' },
+  { id: 'patterns',    label: 'Patterns',    icon: 'shield' },
+  { id: 'showcase',    label: 'Showcase',    icon: 'layers' },
+  { id: 'journal',     label: 'Journal',     icon: 'book' },
+  { id: 'testimonial', label: 'Testimonial', icon: 'quote' },
+  { id: 'cta',         label: 'CTA',         icon: 'zap' },
+  { id: 'footer',      label: 'Footer',      icon: 'arrow-right' },
+  { id: 'tab-group',   label: 'Tab Group',   icon: 'paneltop' },
 ]
 
 interface SectionTemplate {
@@ -37,6 +41,8 @@ function entity(id: string, data: Record<string, unknown>) {
   return { id, data }
 }
 
+// ── Hero ──
+
 function createHero(): SectionTemplate {
   const rootId = uid('hero')
   const badgeId = uid('hero-badge')
@@ -47,11 +53,11 @@ function createHero(): SectionTemplate {
   return {
     rootId,
     entities: {
-      [rootId]:   entity(rootId,   { type: 'section', variant: 'hero' }),
-      [badgeId]:  entity(badgeId,  { type: 'badge', value: localeMap('Open Source') }),
-      [titleId]:  entity(titleId,  { type: 'text', role: 'hero-title', value: localeMap('Headless ARIA Engine') }),
-      [subtitleId]: entity(subtitleId, { type: 'text', role: 'hero-subtitle', value: localeMap('Build fully accessible UI with a normalized store, command engine, and 14 APG-compliant behavior presets — keyboard-first by design.') }),
-      [ctaId]:    entity(ctaId,    { type: 'cta', primary: localeMap('Get Started'), secondary: localeMap('View on GitHub') }),
+      [rootId]:     entity(rootId,     { type: 'section', variant: 'hero' }),
+      [badgeId]:    entity(badgeId,    { type: 'badge', value: localeMap('Open Source') }),
+      [titleId]:    entity(titleId,    { type: 'text', role: 'hero-title', value: localeMap("Accessibility shouldn't be the thing you add last.") }),
+      [subtitleId]: entity(subtitleId, { type: 'text', role: 'hero-subtitle', value: localeMap('키보드 인터랙션, ARIA 역할, 포커스 관리 — 이 모든 것이 설계의 첫 번째 결정이 되는 엔진.') }),
+      [ctaId]:      entity(ctaId,      { type: 'cta', primary: localeMap('Get Started'), secondary: localeMap('View on GitHub') }),
     },
     relationships: {
       [rootId]: [badgeId, titleId, subtitleId, ctaId],
@@ -59,39 +65,36 @@ function createHero(): SectionTemplate {
   }
 }
 
-function createStats(): SectionTemplate {
-  const rootId = uid('stats')
+// ── Manifesto ──
 
-  const statDefs = [
-    { slug: 'patterns', value: '14',   label: 'APG Patterns' },
-    { slug: 'tests',    value: '365+', label: 'Tests' },
-    { slug: 'modules',  value: '42',   label: 'Modules' },
-    { slug: 'deps',     value: '0',    label: 'Runtime Deps' },
+function createManifesto(): SectionTemplate {
+  const rootId = uid('manifesto')
+  const titleId = uid('manifesto-title')
+
+  const values = [
+    { slug: 'keyboard', icon: 'keyboard', title: 'Keyboard-first, not keyboard-also', desc: '모든 인터랙션이 키보드에서 시작한다. 마우스는 편의, 키보드는 기본값.' },
+    { slug: 'accessible', icon: 'shield', title: 'Accessible by default', desc: 'ARIA 역할과 상태가 자동으로 바인딩된다. 접근성은 추가 작업이 아니라 기본 동작.' },
+    { slug: 'headless', icon: 'layers', title: 'Headless, not styleless', desc: '렌더링은 당신의 것. 상태와 인터랙션은 엔진의 것. 어떤 컴포넌트 라이브러리 위에서든 동작한다.' },
   ]
 
   const entities: SectionTemplate['entities'] = {
-    [rootId]: entity(rootId, { type: 'section', variant: 'stats' }),
+    [rootId]:  entity(rootId,  { type: 'section', variant: 'manifesto' }),
+    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('Built for keyboards.\nDesigned for everyone.') }),
   }
   const relationships: SectionTemplate['relationships'] = {}
-  const statIds: string[] = []
+  const childIds: string[] = [titleId]
 
-  for (const s of statDefs) {
-    const statId = uid(`stat-${s.slug}`)
-    const valueId = uid(`stat-${s.slug}-value`)
-    const labelId = uid(`stat-${s.slug}-label`)
-
-    entities[statId]  = entity(statId,  { type: 'stat' })
-    entities[valueId] = entity(valueId, { type: 'stat-value', value: s.value })
-    entities[labelId] = entity(labelId, { type: 'text', role: 'stat-label', value: localeMap(s.label) })
-
-    relationships[statId] = [valueId, labelId]
-    statIds.push(statId)
+  for (const v of values) {
+    const id = uid(`value-${v.slug}`)
+    entities[id] = entity(id, { type: 'value-item', icon: v.icon, title: localeMap(v.title), desc: localeMap(v.desc) })
+    childIds.push(id)
   }
 
-  relationships[rootId] = statIds
-
+  relationships[rootId] = childIds
   return { rootId, entities, relationships }
 }
+
+// ── Features ──
 
 function createFeatures(): SectionTemplate {
   const rootId = uid('features')
@@ -100,24 +103,24 @@ function createFeatures(): SectionTemplate {
   const descId  = uid('features-desc')
 
   const cards = [
-    { slug: 'store',    icon: 'database', title: 'Normalized Store',  desc: 'Tree data as flat entities + relationships. O(1) lookups, immutable updates, parent-child traversal built in.' },
-    { slug: 'engine',   icon: 'cog',      title: 'Command Engine',    desc: 'Every mutation is a command with undo/redo. Middleware pipeline for validation, logging, and side effects.' },
-    { slug: 'aria',     icon: 'shield',   title: '14 ARIA Patterns',  desc: 'Treegrid, listbox, tabs, combobox, dialog, menu, and more. Each preset wires up roles, states, and keyboard interaction.' },
-    { slug: 'keyboard', icon: 'keyboard', title: 'Keyboard-First',    desc: 'Every interaction works without a mouse. Roving tabindex, arrow key navigation, spatial nav, and platform-aware shortcuts.' },
+    { slug: 'store',    icon: 'database', title: 'Normalized Store',     desc: '엔티티와 관계를 정규화 트리로 관리. O(1) 조회, 불변 업데이트, 부모-자식 순회.' },
+    { slug: 'engine',   icon: 'cog',      title: 'Command Engine',       desc: '모든 변경은 커맨드. 미들웨어 파이프라인으로 유효성 검증, 로깅, undo/redo.' },
+    { slug: 'behavior', icon: 'shield',   title: '16 ARIA Behaviors',    desc: 'Treegrid, listbox, tabs, combobox — 프리셋 하나로 역할, 상태, 키 바인딩 완성.' },
+    { slug: 'keyboard', icon: 'keyboard', title: 'Keyboard Interaction', desc: '로빙 탭인덱스, 방향키 탐색, 공간 내비게이션, 플랫폼 인식 단축키.' },
   ]
 
   const entities: SectionTemplate['entities'] = {
     [rootId]:  entity(rootId,  { type: 'section', variant: 'features' }),
     [labelId]: entity(labelId, { type: 'section-label', value: localeMap('Core') }),
-    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('Everything you need') }),
-    [descId]:  entity(descId,  { type: 'section-desc',  value: localeMap('A complete headless engine for building accessible, keyboard-driven interfaces on any component library.') }),
+    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('Everything you need to build accessible interfaces') }),
+    [descId]:  entity(descId,  { type: 'section-desc',  value: localeMap('네 개의 독립 레이어. 각각 테스트 가능. 조합하면 어떤 UI 패턴이든.') }),
   }
   const relationships: SectionTemplate['relationships'] = {}
   const cardIds: string[] = []
 
   for (const card of cards) {
-    const cardId  = uid(`card-${card.slug}`)
-    const iconId  = uid(`card-${card.slug}-icon`)
+    const cardId   = uid(`card-${card.slug}`)
+    const iconId   = uid(`card-${card.slug}-icon`)
     const cTitleId = uid(`card-${card.slug}-title`)
     const cDescId  = uid(`card-${card.slug}-desc`)
 
@@ -131,51 +134,10 @@ function createFeatures(): SectionTemplate {
   }
 
   relationships[rootId] = [labelId, titleId, descId, ...cardIds]
-
   return { rootId, entities, relationships }
 }
 
-function createWorkflow(): SectionTemplate {
-  const rootId  = uid('workflow')
-  const labelId = uid('workflow-label')
-  const titleId = uid('workflow-title')
-  const descId  = uid('workflow-desc')
-
-  const stepDefs = [
-    { num: '01', title: 'Define Store',      desc: 'Create entities and relationships in a normalized tree structure.' },
-    { num: '02', title: 'Dispatch Commands', desc: 'Mutations flow through a middleware pipeline with auto undo/redo.' },
-    { num: '03', title: 'Apply Behavior',    desc: 'Pick an ARIA preset — it handles roles, states, and key bindings.' },
-    { num: '04', title: 'Render UI',         desc: 'Wire the headless state to your own components. Full control.' },
-  ]
-
-  const entities: SectionTemplate['entities'] = {
-    [rootId]:  entity(rootId,  { type: 'section', variant: 'workflow' }),
-    [labelId]: entity(labelId, { type: 'section-label', value: localeMap('Workflow') }),
-    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('How it works') }),
-    [descId]:  entity(descId,  { type: 'section-desc',  value: localeMap('Four layers, each independently testable. Compose them for any UI pattern.') }),
-  }
-  const relationships: SectionTemplate['relationships'] = {}
-  const stepIds: string[] = []
-
-  for (const s of stepDefs) {
-    const stepId  = uid(`step-${s.num}`)
-    const numId   = uid(`step-${s.num}-num`)
-    const sTitleId = uid(`step-${s.num}-title`)
-    const sDescId  = uid(`step-${s.num}-desc`)
-
-    entities[stepId]   = entity(stepId,   { type: 'step' })
-    entities[numId]    = entity(numId,    { type: 'step-num', value: s.num })
-    entities[sTitleId] = entity(sTitleId, { type: 'text', role: 'step-title', value: localeMap(s.title) })
-    entities[sDescId]  = entity(sDescId,  { type: 'text', role: 'step-desc',  value: localeMap(s.desc) })
-
-    relationships[stepId] = [numId, sTitleId, sDescId]
-    stepIds.push(stepId)
-  }
-
-  relationships[rootId] = [labelId, titleId, descId, ...stepIds]
-
-  return { rootId, entities, relationships }
-}
+// ── Patterns ──
 
 function createPatterns(): SectionTemplate {
   const rootId  = uid('patterns')
@@ -198,13 +160,15 @@ function createPatterns(): SectionTemplate {
     { slug: 'switch',      name: 'Switch',      icon: 'toggle' },
     { slug: 'radiogroup',  name: 'RadioGroup',  icon: 'radio' },
     { slug: 'alertdialog', name: 'AlertDialog', icon: 'shield' },
+    { slug: 'slider',      name: 'Slider',      icon: 'slider' },
+    { slug: 'spinbutton',  name: 'Spinbutton',  icon: 'hash' },
   ]
 
   const entities: SectionTemplate['entities'] = {
     [rootId]:  entity(rootId,  { type: 'section', variant: 'patterns' }),
     [labelId]: entity(labelId, { type: 'section-label', value: localeMap('Coverage') }),
-    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('14 APG patterns') }),
-    [descId]:  entity(descId,  { type: 'section-desc',  value: localeMap('Every composite widget from the W3C ARIA Authoring Practices Guide, fully implemented with keyboard interaction tables.') }),
+    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('16 APG patterns. Zero guesswork.') }),
+    [descId]:  entity(descId,  { type: 'section-desc',  value: localeMap('W3C ARIA Authoring Practices Guide의 모든 복합 위젯. 키보드 인터랙션 테이블 완비.') }),
   }
   const patIds: string[] = []
 
@@ -222,6 +186,111 @@ function createPatterns(): SectionTemplate {
     },
   }
 }
+
+// ── Showcase ──
+
+function createShowcase(): SectionTemplate {
+  const rootId  = uid('showcase')
+  const labelId = uid('showcase-label')
+  const titleId = uid('showcase-title')
+  const descId  = uid('showcase-desc')
+
+  const items = [
+    { slug: 'store',     icon: 'database', label: 'Store',      desc: '정규화 트리로 모든 엔티티 관리' },
+    { slug: 'nav',       icon: 'compass',  label: 'Navigation', desc: '방향키로 모든 섹션 탐색' },
+    { slug: 'select',    icon: 'click',    label: 'Selection',  desc: 'Shift+Click 다중 선택' },
+    { slug: 'clipboard', icon: 'scissors', label: 'Clipboard',  desc: 'Cut/Copy/Paste + canAccept' },
+    { slug: 'history',   icon: 'clock',    label: 'History',    desc: 'Undo/Redo 전체 이력' },
+    { slug: 'i18n',      icon: 'globe',    label: 'i18n',       desc: '3개 언어 동시 편집' },
+  ]
+
+  const entities: SectionTemplate['entities'] = {
+    [rootId]:  entity(rootId,  { type: 'section', variant: 'showcase' }),
+    [labelId]: entity(labelId, { type: 'section-label', value: localeMap('Proof') }),
+    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('Built with interactive-os') }),
+    [descId]:  entity(descId,  { type: 'section-desc',  value: localeMap('이 페이지가 증거다.\n지금 보고 있는 랜딩 페이지는 interactive-os 위에서 동작하는 Visual CMS로 편집되고 있다.') }),
+  }
+  const relationships: SectionTemplate['relationships'] = {}
+  const itemIds: string[] = []
+
+  for (const item of items) {
+    const id = uid(`showcase-${item.slug}`)
+    entities[id] = entity(id, { type: 'showcase-item', icon: item.icon, label: localeMap(item.label), desc: localeMap(item.desc) })
+    itemIds.push(id)
+  }
+
+  relationships[rootId] = [labelId, titleId, descId, ...itemIds]
+  return { rootId, entities, relationships }
+}
+
+// ── Journal ──
+
+function createJournal(): SectionTemplate {
+  const rootId  = uid('journal')
+  const titleId = uid('journal-title')
+
+  const articles = [
+    { slug: 'getting-started', icon: 'file',     title: 'Getting Started',             category: 'Guides',       readTime: '5 min' },
+    { slug: 'core-concepts',   icon: 'layers',   title: 'Core Concepts',               category: 'Architecture', readTime: '10 min' },
+    { slug: 'keyboard-tables', icon: 'keyboard', title: 'Keyboard Interaction Tables',  category: 'Reference',    readTime: '—' },
+  ]
+
+  const entities: SectionTemplate['entities'] = {
+    [rootId]:  entity(rootId,  { type: 'section', variant: 'journal' }),
+    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('From the docs') }),
+  }
+  const relationships: SectionTemplate['relationships'] = {}
+  const childIds: string[] = [titleId]
+
+  for (const a of articles) {
+    const id = uid(`article-${a.slug}`)
+    entities[id] = entity(id, { type: 'article', icon: a.icon, title: localeMap(a.title), category: localeMap(a.category), readTime: a.readTime })
+    childIds.push(id)
+  }
+
+  relationships[rootId] = childIds
+  return { rootId, entities, relationships }
+}
+
+// ── Testimonial ──
+
+function createTestimonial(): SectionTemplate {
+  const rootId  = uid('testimonial')
+  const quoteId = uid('testimonial-quote')
+
+  return {
+    rootId,
+    entities: {
+      [rootId]:  entity(rootId,  { type: 'section', variant: 'testimonial' }),
+      [quoteId]: entity(quoteId, { type: 'quote', text: localeMap('The cost of accessibility has been hiding its value.\nWhen the cost is zero, every interface is accessible.'), attribution: localeMap('interactive-os') }),
+    },
+    relationships: {
+      [rootId]: [quoteId],
+    },
+  }
+}
+
+// ── CTA ──
+
+function createCta(): SectionTemplate {
+  const rootId  = uid('cta')
+  const titleId = uid('cta-title')
+  const ctaId   = uid('cta-buttons')
+
+  return {
+    rootId,
+    entities: {
+      [rootId]:  entity(rootId,  { type: 'section', variant: 'cta' }),
+      [titleId]: entity(titleId, { type: 'section-title', value: localeMap('Start building accessible interfaces.') }),
+      [ctaId]:   entity(ctaId,   { type: 'cta', primary: localeMap('Get Started'), secondary: localeMap('View on GitHub') }),
+    },
+    relationships: {
+      [rootId]: [titleId, ctaId],
+    },
+  }
+}
+
+// ── Footer ──
 
 function createFooter(): SectionTemplate {
   const rootId   = uid('footer')
@@ -247,6 +316,8 @@ function createFooter(): SectionTemplate {
     },
   }
 }
+
+// ── Tab Group ──
 
 function createTabGroup(): SectionTemplate {
   const rootId = uid('tab-group')
@@ -274,15 +345,20 @@ function createTabGroup(): SectionTemplate {
   return { rootId, entities, relationships }
 }
 
+// ── Template factory ──
+
 function createTemplate(variant: TemplateType): SectionTemplate {
   switch (variant) {
-    case 'hero':      return createHero()
-    case 'stats':     return createStats()
-    case 'features':  return createFeatures()
-    case 'workflow':  return createWorkflow()
-    case 'patterns':  return createPatterns()
-    case 'footer':    return createFooter()
-    case 'tab-group': return createTabGroup()
+    case 'hero':        return createHero()
+    case 'manifesto':   return createManifesto()
+    case 'features':    return createFeatures()
+    case 'patterns':    return createPatterns()
+    case 'showcase':    return createShowcase()
+    case 'journal':     return createJournal()
+    case 'testimonial': return createTestimonial()
+    case 'cta':         return createCta()
+    case 'footer':      return createFooter()
+    case 'tab-group':   return createTabGroup()
   }
 }
 
