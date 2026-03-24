@@ -1,12 +1,11 @@
 import styles from './PageAgentViewer.module.css'
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Circle } from 'lucide-react'
-import { Aria } from '../interactive-os/primitives/aria'
-import { listbox } from '../interactive-os/pattern/listbox'
-import { core, FOCUS_ID } from '../interactive-os/plugins/core'
+import { Circle, FileText, Code } from 'lucide-react'
+import { NavList } from '../interactive-os/ui/NavList'
 import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 import { TimelineColumn } from './viewer/TimelineColumn'
 import { FileViewerModal } from '../interactive-os/ui/FileViewerModal'
 import { useResizer } from '../hooks/useResizer'
@@ -21,15 +20,7 @@ interface SessionInfo {
   active: boolean
 }
 
-// --- Behaviors ---
-
-const sessionListbox = { ...listbox(), followFocus: true }
-
-// --- Constants (stable references) ---
-
-const CORE_PLUGINS = [core()]
-
-// --- localStorage-backed column order ---
+// --- Constants ---
 
 const STORAGE_KEY = 'agent-viewer-columns'
 
@@ -44,12 +35,75 @@ function saveColumnOrder(order: string[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(order))
 }
 
-// --- Component ---
+// --- Helpers ---
 
-function ResizableColumn({ session, onClose, onFileClick }: {
+function relPath(absPath: string): string {
+  const idx = absPath.indexOf('/src/')
+  if (idx !== -1) return absPath.slice(idx + 1)
+  const docsIdx = absPath.indexOf('/docs/')
+  if (docsIdx !== -1) return absPath.slice(docsIdx + 1)
+  const parts = absPath.split('/')
+  return parts.slice(-2).join('/')
+}
+
+function isMdFile(path: string): boolean {
+  return path.endsWith('.md') || path.endsWith('.mdx')
+}
+
+function buildFilesStore(files: string[]): NormalizedData {
+  const mdFiles = files.filter(isMdFile)
+  const srcFiles = files.filter(f => !isMdFile(f))
+
+  const entities: Record<string, Entity> = {}
+  const rootChildren: string[] = []
+
+  if (srcFiles.length > 0) {
+    const groupId = 'group-source'
+    entities[groupId] = { id: groupId, data: { type: 'group', label: `Source (${srcFiles.length})` } }
+    rootChildren.push(groupId)
+    const groupChildren: string[] = []
+    for (const f of srcFiles) {
+      const id = `file-${f}`
+      entities[id] = { id, data: { label: relPath(f), path: f } }
+      groupChildren.push(id)
+    }
+    return createStore({
+      entities: {
+        ...entities,
+        ...Object.fromEntries(mdFiles.map(f => [`file-${f}`, { id: `file-${f}`, data: { label: relPath(f), path: f } }])),
+        ...(mdFiles.length > 0 ? { 'group-docs': { id: 'group-docs', data: { type: 'group', label: `Docs (${mdFiles.length})` } } } : {}),
+      },
+      relationships: {
+        [ROOT_ID]: mdFiles.length > 0 ? [groupId, 'group-docs'] : [groupId],
+        [groupId]: groupChildren,
+        ...(mdFiles.length > 0 ? { 'group-docs': mdFiles.map(f => `file-${f}`) } : {}),
+      },
+    })
+  }
+
+  if (mdFiles.length > 0) {
+    const groupId = 'group-docs'
+    entities[groupId] = { id: groupId, data: { type: 'group', label: `Docs (${mdFiles.length})` } }
+    rootChildren.push(groupId)
+    const groupChildren: string[] = []
+    for (const f of mdFiles) {
+      const id = `file-${f}`
+      entities[id] = { id, data: { label: relPath(f), path: f } }
+      groupChildren.push(id)
+    }
+    return createStore({ entities, relationships: { [ROOT_ID]: rootChildren, [groupId]: groupChildren } })
+  }
+
+  return createStore({ entities: {}, relationships: { [ROOT_ID]: [] } })
+}
+
+// --- Resizable Column ---
+
+function ResizableColumn({ session, onClose, onFileClick, onModifiedFilesChange }: {
   session: SessionInfo
   onClose: () => void
   onFileClick: (path: string, ranges?: string[]) => void
+  onModifiedFilesChange?: (files: string[]) => void
 }) {
   const resizer = useResizer({
     defaultSize: 420, minSize: 280, maxSize: 800, step: 10,
@@ -65,6 +119,7 @@ function ResizableColumn({ session, onClose, onFileClick }: {
           isLive={session.active}
           onClose={onClose}
           onFileClick={onFileClick}
+          onModifiedFilesChange={onModifiedFilesChange}
         />
       </div>
       <div className="resizer-handle" aria-label={`Resize ${session.label}`} {...resizer.separatorProps} />
@@ -72,9 +127,12 @@ function ResizableColumn({ session, onClose, onFileClick }: {
   )
 }
 
+// --- Main Component ---
+
 export default function PageAgentViewer() {
   const [sessions, setSessions] = useState<SessionInfo[]>([])
   const [columnOrder, setColumnOrderRaw] = useState<string[]>(loadColumnOrder)
+  const [modifiedFiles, setModifiedFiles] = useState<Map<string, string[]>>(new Map())
 
   const updateColumnOrder = useCallback((updater: (prev: string[]) => string[]) => {
     setColumnOrderRaw(prev => {
@@ -91,7 +149,7 @@ export default function PageAgentViewer() {
     storageKey: 'agent-sessions-width',
   })
 
-  // Session list polling (5s) — auto-append new active sessions to columnOrder
+  // Session list polling — active only, auto-append to columns
   useEffect(() => {
     const handleSessions = (fetched: SessionInfo[]) => {
       setSessions(fetched)
@@ -121,47 +179,51 @@ export default function PageAgentViewer() {
 
   const sessionMap = useMemo(() => new Map(sessions.map(s => [s.id, s])), [sessions])
   const activeSessions = useMemo(() => sessions.filter(s => s.active), [sessions])
-  const archiveSessions = useMemo(() => sessions.filter(s => !s.active), [sessions])
+
   const displayColumns = columnOrder
     .map(id => sessionMap.get(id))
-    .filter((s): s is SessionInfo => s != null)
-
-  // Archive session handlers
-  const handleArchiveSelect = useCallback((newStore: NormalizedData) => {
-    const focusedId = (newStore.entities[FOCUS_ID]?.focusedId as string) ?? ''
-    if (focusedId && newStore.entities[focusedId]) {
-      updateColumnOrder(prev => {
-        if (prev.includes(focusedId)) return prev
-        return [...prev, focusedId]
-      })
-    }
-  }, [updateColumnOrder])
+    .filter((s): s is SessionInfo => s != null && s.active)
 
   const handleFileClick = useCallback((filePath: string, editRanges?: string[]) => {
     setModalFile({ path: filePath, editRanges })
   }, [])
 
-  // Active store for Aria listbox
-  const activeStore = useMemo(() => {
-    const entities: Record<string, Entity> = {}
-    const childIds: string[] = []
-    for (const s of activeSessions) {
-      entities[s.id] = { id: s.id, data: { label: s.label, mtime: s.mtime } }
-      childIds.push(s.id)
+  // Collect all modified files across active sessions
+  const allModifiedFiles = useMemo(() => {
+    const allFiles = new Set<string>()
+    for (const files of modifiedFiles.values()) {
+      for (const f of files) allFiles.add(f)
     }
-    return createStore({ entities, relationships: { [ROOT_ID]: childIds } })
-  }, [activeSessions])
+    return [...allFiles].sort()
+  }, [modifiedFiles])
 
-  // Archive store for Aria listbox
-  const archiveStore = useMemo(() => {
-    const entities: Record<string, Entity> = {}
-    const childIds: string[] = []
-    for (const s of archiveSessions) {
-      entities[s.id] = { id: s.id, data: { label: s.label, mtime: s.mtime } }
-      childIds.push(s.id)
-    }
-    return createStore({ entities, relationships: { [ROOT_ID]: childIds } })
-  }, [archiveSessions])
+  const filesStore = useMemo(() => buildFilesStore(allModifiedFiles), [allModifiedFiles])
+
+  const handleModifiedFilesChange = useCallback((sessionId: string) => (files: string[]) => {
+    setModifiedFiles(prev => {
+      const next = new Map(prev)
+      next.set(sessionId, files)
+      return next
+    })
+  }, [])
+
+  const handleFileActivate = useCallback((nodeId: string) => {
+    const path = nodeId.replace('file-', '')
+    handleFileClick(path)
+  }, [handleFileClick])
+
+  const renderFileItem = useCallback((props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
+    const data = item.data as Record<string, unknown>
+    const label = data.label as string
+    const isMd = isMdFile(data.path as string)
+    const cls = styles.avFileItem + (state.focused ? ' ' + styles.avFileItemFocused : '')
+    return (
+      <div {...props} className={cls}>
+        {isMd ? <FileText size={12} /> : <Code size={12} />}
+        <span>{label}</span>
+      </div>
+    )
+  }, [])
 
   if (loading) {
     return (
@@ -174,69 +236,48 @@ export default function PageAgentViewer() {
 
   return (
     <div className={styles.av}>
-      {/* Sessions panel */}
-      {sessions.length > 0 && (
+      {/* Sessions + Files panel */}
+      {activeSessions.length > 0 && (
         <>
           <div className={styles.avSessions} style={{ width: sessionsResizer.size }}>
             <div className={styles.avSessionsHeader}>
-              <span className={styles.avSessionsTitle}>세션</span>
+              <span className={styles.avSessionsTitle}>Agent</span>
             </div>
+
+            {/* Active sessions */}
             <div className={styles.avSessionList}>
-              {activeSessions.length > 0 && (
-                <>
-                  <div className={styles.avGroupLabel}>활성</div>
-                  <Aria
-                    behavior={sessionListbox}
-                    data={activeStore}
-                    plugins={CORE_PLUGINS}
-                    onChange={handleArchiveSelect}
-                    aria-label="Active sessions"
-                  >
-                    <Aria.Item render={(props, node) => {
-                      const data = node.data as { label: string; mtime: number }
-                      return (
-                        <div {...props} className={styles.avSessionItem}>
-                          <span className={styles.avSessionLive}>●</span>
-                          <span className={styles.avSessionLabel}>{data.label}</span>
-                        </div>
-                      )
-                    }} />
-                  </Aria>
-                </>
-              )}
-              {archiveSessions.length > 0 && (
-                <>
-                  <div className={styles.avGroupLabel}>종료</div>
-                  <Aria
-                    behavior={sessionListbox}
-                    data={archiveStore}
-                    plugins={CORE_PLUGINS}
-                    onChange={handleArchiveSelect}
-                    aria-label="Ended sessions"
-                  >
-                    <Aria.Item render={(props, node) => {
-                      const data = node.data as { label: string; mtime: number }
-                      return (
-                        <div {...props} className={styles.avSessionItem}>
-                          <span className={styles.avSessionLabel}>{data.label}</span>
-                        </div>
-                      )
-                    }} />
-                  </Aria>
-                </>
-              )}
+              <div className={styles.avGroupLabel}>활성 ({activeSessions.length})</div>
+              {activeSessions.map(s => (
+                <div key={s.id} className={styles.avSessionItem}>
+                  <span className={styles.avSessionLive}>●</span>
+                  <span className={styles.avSessionLabel}>{s.label}</span>
+                </div>
+              ))}
             </div>
+
+            {/* Modified files */}
+            {allModifiedFiles.length > 0 && (
+              <div className={styles.avFilesSection}>
+                <div className={styles.avGroupLabel}>수정 파일 ({allModifiedFiles.length})</div>
+                <NavList
+                  data={filesStore}
+                  onActivate={handleFileActivate}
+                  renderItem={renderFileItem}
+                  aria-label="Modified files"
+                />
+              </div>
+            )}
           </div>
           <div className="resizer-handle" aria-label="Resize sessions panel" {...sessionsResizer.separatorProps} />
         </>
       )}
 
-      {/* Timeline columns — horizontally scrollable */}
+      {/* Timeline columns */}
       <div className={styles.avColumns}>
         {displayColumns.length === 0 ? (
           <div className={styles.avEmpty}>
             <Circle size={24} className={styles.avEmptyIcon} />
-            <span>세션을 선택하세요</span>
+            <span>활성 세션 없음</span>
           </div>
         ) : (
           displayColumns.map((session, i) => {
@@ -249,6 +290,7 @@ export default function PageAgentViewer() {
                   isLive={session.active}
                   onClose={() => updateColumnOrder(prev => prev.filter(id => id !== session.id))}
                   onFileClick={handleFileClick}
+                  onModifiedFilesChange={handleModifiedFilesChange(session.id)}
                 />
               </div>
             ) : (
@@ -257,6 +299,7 @@ export default function PageAgentViewer() {
                 session={session}
                 onClose={() => updateColumnOrder(prev => prev.filter(id => id !== session.id))}
                 onFileClick={handleFileClick}
+                onModifiedFilesChange={handleModifiedFilesChange(session.id)}
               />
             )
           })

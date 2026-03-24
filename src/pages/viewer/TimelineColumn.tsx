@@ -19,6 +19,7 @@ interface TimelineColumnProps {
   isLive: boolean
   onClose: () => void
   onFileClick: (filePath: string, editRanges?: string[]) => void
+  onModifiedFilesChange?: (files: string[]) => void
 }
 
 // --- Helpers ---
@@ -173,7 +174,7 @@ const ToolGroupCard = memo(function ToolGroupCard({ group, onClick }: { group: T
 const INITIAL_TAIL = 80
 const LOAD_MORE_CHUNK = 100
 
-export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFileClick }: TimelineColumnProps) {
+export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFileClick, onModifiedFilesChange }: TimelineColumnProps) {
   const [timeline, setTimeline] = useState<TimelineEvent[]>([])
   const [fetchError, setFetchError] = useState<string | null>(null)
   const totalRef = useRef(0)        // total events on server
@@ -184,6 +185,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   const editRangesRef = useRef<Map<string, string[]>>(new Map())
 
   const trackEditRanges = useCallback((events: TimelineEvent[]) => {
+    let changed = false
     for (const evt of events) {
       if (evt.type !== 'tool_use') continue
       if ((evt.tool === 'Edit' || evt.tool === 'Write') && evt.filePath && evt.editNew) {
@@ -192,10 +194,14 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
           existing.push(evt.editNew)
         } else {
           editRangesRef.current.set(evt.filePath, [evt.editNew])
+          changed = true
         }
       }
     }
-  }, [])
+    if (changed && onModifiedFilesChange) {
+      onModifiedFilesChange([...editRangesRef.current.keys()])
+    }
+  }, [onModifiedFilesChange])
 
   // --- Agent status: running / idle / done ---
   const [agentStatus, setAgentStatus] = useState<'running' | 'idle' | 'done'>(isLive ? 'idle' : 'done')

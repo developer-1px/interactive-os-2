@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    Agent Viewer — multi-column layout
-   Left: sessions (active + ended), Center: timeline columns (horizontally scrollable)
+   Left: active sessions + modified files, Center: timeline columns
    ═══════════════════════════════════════════ */
 
 /* --- Layout --- */
@@ -42,8 +42,7 @@
 }
 
 .avSessionList {
-  flex: 1;
-  overflow-y: auto;
+  flex-shrink: 0;
   padding: var(--space-xs) 0;
 }
 
@@ -61,6 +60,9 @@
   align-items: center;
   gap: var(--space-xs);
   white-space: nowrap;
+  padding: 2px var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
 }
 
 .avSessionLive {
@@ -73,6 +75,38 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* --- Modified files section --- */
+
+.avFilesSection {
+  border-top: 1px solid var(--border-subtle);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.avFileItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 3px var(--space-md);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.avFileItem:hover {
+  background: var(--bg-hover);
+  color: var(--text-bright);
+}
+
+.avFileItemFocused {
+  background: var(--bg-active);
+  color: var(--text-bright);
 }
 
 /* --- Timeline columns --- */
