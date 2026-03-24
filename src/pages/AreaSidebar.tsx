@@ -2,10 +2,10 @@ import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { TreeView } from '../interactive-os/ui/TreeView'
 import { FOCUS_ID, EXPANDED_ID } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NormalizedData } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 
 // --- Build tree data from glob keys ---
 

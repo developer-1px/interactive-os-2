@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react'
-import { Aria } from '../../interactive-os/components/aria'
-import { composePattern } from '../../interactive-os/axes/composePattern'
-import { navigate } from '../../interactive-os/axes/navigate'
-import { activate } from '../../interactive-os/axes/activate'
+import { Aria } from '../../interactive-os/primitives/aria'
+import { composePattern } from '../../interactive-os/pattern/composePattern'
+import { navigate } from '../../interactive-os/axis/navigate'
+import { activate } from '../../interactive-os/axis/activate'
 import { core } from '../../interactive-os/plugins/core'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
-import type { NormalizedData } from '../../interactive-os/core/types'
-import type { NodeState } from '../../interactive-os/behaviors/types'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import type { NodeState } from '../../interactive-os/pattern/types'
 import { axisListData } from './axis-demo-data'
 
 const plugins = [core(), focusRecovery()]

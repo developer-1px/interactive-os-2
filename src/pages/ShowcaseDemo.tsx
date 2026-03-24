@@ -1,7 +1,7 @@
 // ② 2026-03-24-ui-docs-ssot-prd.md
 // src/pages/ShowcaseDemo.tsx
 import { useState, useCallback } from 'react'
-import type { NormalizedData } from '../interactive-os/core/types'
+import type { NormalizedData } from '../interactive-os/store/types'
 import { components } from './showcaseRegistry'
 import { TestRunnerPanel } from '../testRunner/TestRunnerPanel'
 
@@ -12,11 +12,14 @@ export function ShowcaseDemo({ slug }: { slug?: string }) {
     return <div style={{ color: 'var(--destructive)', padding: '8px' }}>Unknown component: {slug}</div>
   }
 
-  if (entry.testPath) {
-    return <TestRunnerPanel testPath={entry.testPath} autoRun />
-  }
-
-  return <LiveDemo entry={entry} />
+  return (
+    <>
+      <LiveDemo entry={entry} />
+      {entry.testPath && (
+        <TestRunnerPanel testPath={entry.testPath} autoRun={false} headless />
+      )}
+    </>
+  )
 }
 
 function LiveDemo({ entry }: { entry: typeof components[number] }) {

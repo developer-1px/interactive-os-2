@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { TEMPLATE_VARIANTS } from './cms-templates'
 import type { TemplateType } from './cms-templates'
-import type { NormalizedData, Command } from '../../interactive-os/core/types'
-import type { BehaviorContext } from '../../interactive-os/behaviors/types'
-import { listbox } from '../../interactive-os/behaviors/listbox'
-import { useAria } from '../../interactive-os/hooks/useAria'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import type { Command } from '../../interactive-os/engine/types'
+import type { PatternContext } from '../../interactive-os/pattern/types'
+import { listbox } from '../../interactive-os/pattern/listbox'
+import { useAria } from '../../interactive-os/primitives/useAria'
 import { core, focusCommands } from '../../interactive-os/plugins/core'
 
 const pickerData: NormalizedData = {
@@ -28,7 +29,7 @@ export default function CmsTemplatePicker({ open, onClose, onSelect }: CmsTempla
 function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps, 'open'>) {
   const listRef = useRef<HTMLDivElement>(null)
 
-  const keyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+  const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
     Escape: () => { onClose() },
   }), [onClose])
 

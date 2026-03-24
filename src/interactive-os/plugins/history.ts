@@ -1,7 +1,8 @@
-import type { Command, NormalizedData } from '../core/types'
-import { definePlugin } from '../core/definePlugin'
-import { computeStoreDiff, applyDelta } from '../core/computeStoreDiff'
-import type { StoreDiff } from '../core/computeStoreDiff'
+import type { Command } from '../engine/types'
+import type { NormalizedData } from '../store/types'
+import { computeStoreDiff, applyDelta } from '../store/computeStoreDiff'
+import type { StoreDiff } from '../store/computeStoreDiff'
+import { definePlugin } from './definePlugin'
 
 const SKIP_META = new Set([
   '__focus__',

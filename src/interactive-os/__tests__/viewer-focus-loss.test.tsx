@@ -11,12 +11,12 @@ import { describe, it, expect } from 'vitest'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState, useCallback } from 'react'
-import { Aria } from '../components/aria'
-import { tree } from '../behaviors/tree'
+import { Aria } from '../primitives/aria'
+import { tree } from '../pattern/tree'
 import { core } from '../plugins/core'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 
 function makeStore(): NormalizedData {
   return createStore({

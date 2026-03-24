@@ -1,9 +1,9 @@
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgMenu } from './apg-data'
 import { MenuList } from '../interactive-os/ui/MenuList'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 import { ChevronRight } from 'lucide-react'
 
 const menuData = createStore({

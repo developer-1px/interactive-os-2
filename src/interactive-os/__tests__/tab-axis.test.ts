@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { tab } from '../axes/tab'
-import type { BehaviorContext } from '../behaviors/types'
+import { tab } from '../axis/tab'
+import type { PatternContext } from '../pattern/types'
 
 describe('tab axis', () => {
   describe('native', () => {
@@ -40,7 +40,7 @@ describe('tab axis', () => {
           payload: { nodeId: opts?.wrap ? 'a' : 'c' },
         }),
       }
-      const cmd = result.keyMap['Tab'](ctx as unknown as BehaviorContext)
+      const cmd = result.keyMap['Tab'](ctx as unknown as PatternContext)
       expect(cmd).toMatchObject({ type: 'focus', payload: { nodeId: 'a' } })
     })
 
@@ -53,7 +53,7 @@ describe('tab axis', () => {
           payload: { nodeId: opts?.wrap ? 'c' : 'a' },
         }),
       }
-      const cmd = result.keyMap['Shift+Tab'](ctx as unknown as BehaviorContext)
+      const cmd = result.keyMap['Shift+Tab'](ctx as unknown as PatternContext)
       expect(cmd).toMatchObject({ type: 'focus', payload: { nodeId: 'c' } })
     })
   })

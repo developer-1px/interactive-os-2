@@ -2,9 +2,9 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import CmsLayout from '../../pages/cms/CmsLayout'
 import { resetCmsData } from '../../pages/cms/cms-state'
-import { listbox } from '../behaviors/listbox'
-import { tree } from '../behaviors/tree'
-import { spatial } from '../behaviors/spatial'
+import { listbox } from '../pattern/listbox'
+import { tree } from '../pattern/tree'
+import { spatial } from '../pattern/spatial'
 
 /**
  * jsdom limitation: actual Tab DFS ordering and zone escape cannot be tested

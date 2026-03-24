@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
-import { useSpatialNav } from '../../hooks/useSpatialNav'
-import type { NormalizedData } from '../../core/types'
-import { ROOT_ID } from '../../core/types'
-import { createStore } from '../../core/createStore'
+import { useSpatialNav } from '../../plugins/useSpatialNav'
+import type { NormalizedData } from '../../store/types'
+import { ROOT_ID } from '../../store/types'
+import { createStore } from '../../store/createStore'
 
 const DIRECTIONS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'] as const
 

@@ -1,5 +1,6 @@
-import type { Command, NormalizedData, Middleware } from '../core/types'
-import { definePlugin } from '../core/definePlugin'
+import type { Command, Middleware } from '../engine/types'
+import type { NormalizedData } from '../store/types'
+import { definePlugin } from './definePlugin'
 
 export const FOCUS_ID = '__focus__'
 export const SELECTION_ID = '__selection__'

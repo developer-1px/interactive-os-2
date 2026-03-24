@@ -1,11 +1,12 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState } from '../pattern/types'
 import { useTreeView } from './useTreeView'
 import { core } from '../plugins/core'
-import { ROOT_ID } from '../core/types'
-import { getChildren } from '../core/createStore'
+import { ROOT_ID } from '../store/types'
+import { getChildren } from '../store/createStore'
 import styles from './TreeView.module.css'
 
 interface TreeViewProps {

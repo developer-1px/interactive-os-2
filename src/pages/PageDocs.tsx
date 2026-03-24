@@ -3,7 +3,7 @@ import styles from './PageDocs.module.css'
 const INSTALL_CODE = `npm install interactive-os`
 
 const QUICK_START = `import { ListBox } from 'interactive-os/ui/ListBox'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {

@@ -1,9 +1,9 @@
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgDisclosure } from './apg-data'
 import { DisclosureGroup } from '../interactive-os/ui/DisclosureGroup'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 
 const disclosureData = createStore({

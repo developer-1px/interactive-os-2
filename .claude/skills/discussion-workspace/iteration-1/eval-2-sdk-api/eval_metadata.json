@@ -1,6 +1,10 @@
 {
   "eval_id": 2,
-  "eval_name": "sdk-api-ideal-result-drilldown",
-  "prompt": "SDK를 만들려고 하는데 사용자가 hook 하나로 복잡한 트리 구조를 다룰 수 있게 하고 싶어. 이상적으로는 useAria 하나면 다 되는 건데, 구체적으로 어떤 API가 나와야 하는지는 아직 감이 안 잡혀",
-  "assertions": ["이상적 결과 이해도 낮게 판정", "/ideal 드릴다운 인식", "code usage 시뮬레이션 방향 제시", "성급한 해결책 제시 방지"]
+  "eval_name": "sdk-api",
+  "prompt": "SDK API를 설계하는데, 사용자가 플러그인 시스템으로 행동을 확장할 수 있게 하고 싶어. 지금은 하드코딩된 keyMap이 있고, 트리뷰·그리드·리스트 3개 컴포넌트에서 쓰여. 근데 플러그인이 키맵을 오버라이드하면 기존 동작이 깨질 수 있어서 걱정이야. 어떤 구조가 좋을까?",
+  "assertions": [
+    {"text": "AI 판단이 질문보다 먼저 나온다", "type": "qualitative"},
+    {"text": "제약(기존 동작 보존)과 부작용(플러그인 충돌) 사이의 긴장을 식별한다", "type": "qualitative"},
+    {"text": "갭 질문이 논리적으로 다음 빈칸을 향한다", "type": "qualitative"}
+  ]
 }

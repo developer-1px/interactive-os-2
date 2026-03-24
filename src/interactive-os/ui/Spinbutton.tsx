@@ -1,12 +1,13 @@
 import React, { useCallback, useState, useRef } from 'react'
 import styles from './Spinbutton.module.css'
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { spinbutton } from '../behaviors/spinbutton'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { spinbutton } from '../pattern/spinbutton'
 import { core, valueCommands } from '../plugins/core'
 import { history } from '../plugins/history'
-import { getAriaActions } from '../components/ariaRegistry'
+import { getAriaActions } from '../primitives/ariaRegistry'
 
 let spinIdCounter = 0
 

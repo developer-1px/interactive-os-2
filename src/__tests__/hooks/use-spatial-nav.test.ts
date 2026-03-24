@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findNearest, findAdjacentGroup } from '../../interactive-os/hooks/useSpatialNav'
+import { findNearest, findAdjacentGroup } from '../../interactive-os/plugins/useSpatialNav'
 
 /**
  * Layout:

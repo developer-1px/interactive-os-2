@@ -1,9 +1,0 @@
-{
-  "eval_id": 1,
-  "eval_name": "dnd-keyboard-model-sharing",
-  "expectations": [
-    {"text": "이해도 테이블 10개 요소 갱신", "passed": true, "evidence": "10개 요소 모두 갱신됨"},
-    {"text": "판단-먼저-질문 형식 준수", "passed": true, "evidence": "모델은 반드시 공유해야 합니다 + 근거 3개 제시"},
-    {"text": "FE 하드코딩 없는 범용 표현", "passed": true, "evidence": "이 프롬프트가 FE 도메인이라 구분 불가 — 둘 다 FE 용어를 자연스럽게 사용"}
-  ]
-}

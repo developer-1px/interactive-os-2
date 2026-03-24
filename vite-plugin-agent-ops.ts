@@ -228,42 +228,91 @@ export function agentOpsPlugin(): Plugin {
       const opsDir = path.resolve('.claude/agent-ops')
       fs.mkdirSync(opsDir, { recursive: true })
 
-      // --- Transcript timeline SSE (per-session) ---
-      const timelineClients = new Map<string, Set<import('node:http').ServerResponse>>()
+      // --- Multiplexed SSE: single connection serves all sessions ---
+      // Key: filePath → tracked size for tailing
       const transcriptSizes = new Map<string, number>()
+      // Key: filePath → set of session IDs (for reverse lookup)
+      const watchedPaths = new Map<string, Set<string>>()
+      // All connected mux clients
+      const muxClients = new Set<import('node:http').ServerResponse>()
+      // Key: sessionId → filePath
+      const sessionPaths = new Map<string, string>()
+      // Key: client → set of subscribed session IDs
+      const clientSubscriptions = new Map<import('node:http').ServerResponse, Set<string>>()
+
+      function resolveSessionPath(sessionId: string): string | null {
+        const dir = getTranscriptDir(projectRoot)
+        if (!dir) return null
+        const candidate = path.join(dir, `${sessionId}.jsonl`)
+        return fs.existsSync(candidate) ? candidate : null
+      }
+
+      function watchSession(sessionId: string) {
+        if (sessionPaths.has(sessionId)) return
+        const filePath = resolveSessionPath(sessionId)
+        if (!filePath) return
+        sessionPaths.set(sessionId, filePath)
+        server.watcher.add(filePath)
+        if (!transcriptSizes.has(filePath)) {
+          transcriptSizes.set(filePath, fs.statSync(filePath).size)
+        }
+        if (!watchedPaths.has(filePath)) {
+          watchedPaths.set(filePath, new Set())
+        }
+        watchedPaths.get(filePath)!.add(sessionId)
+      }
+
+      function unwatchSessionIfOrphaned(sessionId: string) {
+        // Check if any client still subscribes to this session
+        for (const subs of clientSubscriptions.values()) {
+          if (subs.has(sessionId)) return
+        }
+        const filePath = sessionPaths.get(sessionId)
+        if (!filePath) return
+        sessionPaths.delete(sessionId)
+        const pathSessions = watchedPaths.get(filePath)
+        if (pathSessions) {
+          pathSessions.delete(sessionId)
+          if (pathSessions.size === 0) {
+            watchedPaths.delete(filePath)
+            transcriptSizes.delete(filePath)
+            server.watcher.unwatch(filePath)
+          }
+        }
+      }
 
       server.watcher.on('change', (changedPath) => {
-        // --- Transcript tailing (per-session) ---
-        const clients = timelineClients.get(changedPath)
-        if (clients && clients.size > 0) {
-          const prevSize = transcriptSizes.get(changedPath) ?? 0
-          const stat = fs.statSync(changedPath)
-          if (stat.size > prevSize) {
-            const fd = fs.openSync(changedPath, 'r')
-            const buf = Buffer.alloc(stat.size - prevSize)
-            fs.readSync(fd, buf, 0, buf.length, prevSize)
-            fs.closeSync(fd)
-            transcriptSizes.set(changedPath, stat.size)
+        const sessions = watchedPaths.get(changedPath)
+        if (!sessions || sessions.size === 0) return
+        if (muxClients.size === 0) return
 
-            const newLines = buf.toString('utf-8').trim().split('\n').filter(Boolean)
-            for (const line of newLines) {
-              const events = parseTranscriptLine(line)
-              for (const evt of events) {
-                const json = JSON.stringify(evt)
-                for (const client of clients) {
-                  client.write(`data: ${json}\n\n`)
-                }
-              }
-            }
-          } else {
-            transcriptSizes.set(changedPath, stat.size)
-          }
+        const prevSize = transcriptSizes.get(changedPath) ?? 0
+        const stat = fs.statSync(changedPath)
+        if (stat.size <= prevSize) {
+          transcriptSizes.set(changedPath, stat.size)
           return
         }
 
-        // --- NDJSON ops tailing (kept for /api/agent-ops/stream) ---
-        if (changedPath.startsWith(opsDir) && changedPath.endsWith('.ndjson')) {
-          // existing behavior omitted for brevity — kept via latest endpoint
+        const fd = fs.openSync(changedPath, 'r')
+        const buf = Buffer.alloc(stat.size - prevSize)
+        fs.readSync(fd, buf, 0, buf.length, prevSize)
+        fs.closeSync(fd)
+        transcriptSizes.set(changedPath, stat.size)
+
+        const newLines = buf.toString('utf-8').trim().split('\n').filter(Boolean)
+        // Find session ID for this path
+        const sessionId = [...sessions][0] // one file = one session
+        for (const line of newLines) {
+          const events = parseTranscriptLine(line)
+          for (const evt of events) {
+            const payload = JSON.stringify({ session: sessionId, ...evt })
+            for (const client of muxClients) {
+              const subs = clientSubscriptions.get(client)
+              if (subs && subs.has(sessionId)) {
+                client.write(`data: ${payload}\n\n`)
+              }
+            }
+          }
         }
       })
 
@@ -328,30 +377,17 @@ export function agentOpsPlugin(): Plugin {
           return
         }
 
-        // Transcript timeline SSE stream (per-session)
-        if (url.pathname === '/api/agent-ops/timeline-stream') {
-          const sessionId = url.searchParams.get('session')
-          const dir = getTranscriptDir(projectRoot)
-          let targetPath: string | null = null
+        // Multiplexed SSE — single connection for all sessions
+        // ?sessions=id1,id2,id3
+        if (url.pathname === '/api/agent-ops/timeline-stream-mux') {
+          const sessionsCsv = url.searchParams.get('sessions') ?? ''
+          const sessionIds = sessionsCsv.split(',').filter(Boolean)
 
-          if (sessionId && dir) {
-            const candidate = path.join(dir, `${sessionId}.jsonl`)
-            if (fs.existsSync(candidate)) targetPath = candidate
-          } else {
-            targetPath = findLatestTranscript(projectRoot)
-          }
+          muxClients.add(res)
+          const subs = new Set(sessionIds)
+          clientSubscriptions.set(res, subs)
 
-          if (!targetPath) { res.statusCode = 404; res.end(); return }
-
-          server.watcher.add(targetPath)
-          if (!transcriptSizes.has(targetPath)) {
-            transcriptSizes.set(targetPath, fs.statSync(targetPath).size)
-          }
-
-          if (!timelineClients.has(targetPath)) {
-            timelineClients.set(targetPath, new Set())
-          }
-          timelineClients.get(targetPath)!.add(res)
+          for (const sid of sessionIds) watchSession(sid)
 
           res.setHeader('Content-Type', 'text/event-stream')
           res.setHeader('Cache-Control', 'no-cache')
@@ -359,15 +395,32 @@ export function agentOpsPlugin(): Plugin {
           const heartbeat = setInterval(() => res.write(':heartbeat\n\n'), 30000)
 
           req.on('close', () => {
-            const clients = timelineClients.get(targetPath!)
-            if (clients) {
-              clients.delete(res)
-              if (clients.size === 0) {
-                timelineClients.delete(targetPath!)
-                transcriptSizes.delete(targetPath!)
-                server.watcher.unwatch(targetPath!)
-              }
-            }
+            muxClients.delete(res)
+            clientSubscriptions.delete(res)
+            for (const sid of subs) unwatchSessionIfOrphaned(sid)
+            clearInterval(heartbeat)
+          })
+          return
+        }
+
+        // Legacy per-session SSE (kept for backward compat)
+        if (url.pathname === '/api/agent-ops/timeline-stream') {
+          const sessionId = url.searchParams.get('session')
+          if (!sessionId) { res.statusCode = 400; res.end(); return }
+
+          watchSession(sessionId)
+          muxClients.add(res)
+          clientSubscriptions.set(res, new Set([sessionId]))
+
+          res.setHeader('Content-Type', 'text/event-stream')
+          res.setHeader('Cache-Control', 'no-cache')
+          res.setHeader('Connection', 'keep-alive')
+          const heartbeat = setInterval(() => res.write(':heartbeat\n\n'), 30000)
+
+          req.on('close', () => {
+            muxClients.delete(res)
+            clientSubscriptions.delete(res)
+            unwatchSessionIfOrphaned(sessionId)
             clearInterval(heartbeat)
           })
           return

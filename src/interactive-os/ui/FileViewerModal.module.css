@@ -63,7 +63,7 @@
 
 .fvmEditBadge {
   color: #e5a33a;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
 }
 
 .fvmClose {

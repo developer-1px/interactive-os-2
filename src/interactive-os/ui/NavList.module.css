@@ -25,7 +25,7 @@
 
 .groupLabel {
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: var(--weight-semi);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-muted);

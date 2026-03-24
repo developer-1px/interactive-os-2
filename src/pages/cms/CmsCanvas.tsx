@@ -1,17 +1,20 @@
 import { useCallback, useEffect, useMemo, useReducer } from 'react'
-import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
-import { spatial } from '../../interactive-os/behaviors/spatial'
-import { useSpatialNav } from '../../interactive-os/hooks/useSpatialNav'
+import { useAriaZone } from '../../interactive-os/primitives/useAriaZone'
+import { spatial } from '../../interactive-os/pattern/spatial'
+import { useSpatialNav } from '../../interactive-os/plugins/useSpatialNav'
 import { focusCommands } from '../../interactive-os/plugins/core'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
 import { spatialCommands, getSpatialParentId, SPATIAL_PARENT_ID } from '../../interactive-os/plugins/spatial'
-import { getChildren, getParent } from '../../interactive-os/core/createStore'
-import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
-import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/types'
-import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
-import type { BehaviorContext } from '../../interactive-os/behaviors/types'
+import { getChildren, getParent } from '../../interactive-os/store/createStore'
+import { ROOT_ID } from '../../interactive-os/store/types'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import { createBatchCommand } from '../../interactive-os/engine/types'
+import type { Command } from '../../interactive-os/engine/types'
+import type { Plugin } from '../../interactive-os/plugins/types'
+import type { CommandEngine } from '../../interactive-os/engine/createCommandEngine'
+import type { PatternContext } from '../../interactive-os/pattern/types'
 import { spatialReachable } from '../../interactive-os/plugins/focusRecovery'
 import { renameCommands } from '../../interactive-os/plugins/rename'
 import type { Locale } from './cms-types'
@@ -31,7 +34,7 @@ interface CmsCanvasProps {
 }
 
 /** Navigate to adjacent tab sibling (ArrowRight/ArrowLeft in tablist) */
-function navigateTabSibling(ctx: BehaviorContext, dir: 1 | -1): Command | void {
+function navigateTabSibling(ctx: PatternContext, dir: 1 | -1): Command | void {
   const entity = ctx.getEntity(ctx.focused)
   const d = (entity?.data ?? {}) as Record<string, unknown>
   if (d.type !== 'tab-item') return undefined
@@ -47,7 +50,7 @@ function navigateTabSibling(ctx: BehaviorContext, dir: 1 | -1): Command | void {
 }
 
 /** CRUD keyMap for CMS Canvas — os commands with undo/redo */
-const cmsKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
+const cmsKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
   'Mod+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
   'Mod+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
   'Mod+D': (ctx) => {
@@ -77,7 +80,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     () => ({
       ...spatialNav.keyMap,
       ...cmsKeyMap,
-      Delete: (ctx: BehaviorContext) => {
+      Delete: (ctx: PatternContext) => {
         // Slot guard: non-array parent → structural child → cannot delete
         const parentId = getParent(engine.getStore(), ctx.focused)
         if (parentId) {
@@ -103,13 +106,13 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
 
         return crudCommands.remove(ctx.focused)
       },
-      ArrowRight: (ctx: BehaviorContext) => {
+      ArrowRight: (ctx: PatternContext) => {
         return navigateTabSibling(ctx, 1) ?? spatialNav.keyMap.ArrowRight(ctx)
       },
-      ArrowLeft: (ctx: BehaviorContext) => {
+      ArrowLeft: (ctx: PatternContext) => {
         return navigateTabSibling(ctx, -1) ?? spatialNav.keyMap.ArrowLeft(ctx)
       },
-      Enter: (ctx: BehaviorContext) => {
+      Enter: (ctx: PatternContext) => {
         const children = ctx.getChildren(ctx.focused)
         if (children.length === 0) {
           // Guard: only start rename if node has editable text fields
@@ -142,7 +145,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           focusCommands.setFocus(children[0]),
         ])
       },
-      Escape: (ctx: BehaviorContext) => {
+      Escape: (ctx: PatternContext) => {
         // Exit to parent depth (if not at root)
         const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
         const parentId = spatialParent?.parentId as string | undefined

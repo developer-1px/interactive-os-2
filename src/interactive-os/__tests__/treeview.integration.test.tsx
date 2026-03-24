@@ -3,10 +3,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { TreeView } from '../ui/TreeView'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
-import type { NodeState } from '../behaviors/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
+import type { NodeState } from '../pattern/types'
 
 function makeTreeData(): NormalizedData {
   return createStore({

@@ -8,11 +8,11 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Accordion } from '../ui/Accordion'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 import { core } from '../plugins/core'
-import type { NodeState } from '../behaviors/types'
+import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
   return createStore({

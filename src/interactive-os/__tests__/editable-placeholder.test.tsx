@@ -1,20 +1,20 @@
 import { describe, it, expect } from 'vitest'
 import { render, fireEvent, act } from '@testing-library/react'
 import { useState } from 'react'
-import { Aria } from '../components/aria'
-import { listbox } from '../behaviors/listbox'
+import { Aria } from '../primitives/aria'
+import { listbox } from '../pattern/listbox'
 import { core } from '../plugins/core'
 import { rename, renameCommands } from '../plugins/rename'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
-import type { NodeState } from '../behaviors/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
+import type { NodeState } from '../pattern/types'
 
 const plugins = [core(), rename()]
 
 function TestListBox({ initialData, keyMap }: {
   initialData: NormalizedData
-  keyMap?: Record<string, (ctx: import('../behaviors/types').BehaviorContext) => import('../core/types').Command | void>
+  keyMap?: Record<string, (ctx: import('../behaviors/types').PatternContext) => import('../core/types').Command | void>
 }) {
   const [data, setData] = useState(initialData)
   return (
@@ -69,7 +69,7 @@ describe('Aria.Editable placeholder', () => {
       relationships: { [ROOT_ID]: ['a'] },
     })
     const keyMap = {
-      F2: (ctx: import('../behaviors/types').BehaviorContext) => renameCommands.startRename(ctx.focused),
+      F2: (ctx: import('../behaviors/types').PatternContext) => renameCommands.startRename(ctx.focused),
     }
     const { container } = render(<TestListBox initialData={store} keyMap={keyMap} />)
     const node = container.querySelector('[data-node-id="a"]')!

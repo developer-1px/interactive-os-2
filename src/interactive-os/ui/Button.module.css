@@ -2,10 +2,10 @@
 
 .accent {
   font-size: var(--text-md);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   padding: var(--space-sm) var(--space-lg);
   background: var(--primary);
-  color: var(--zinc-50);
+  color: var(--stone-50);
   border: none;
   border-radius: var(--radius);
   cursor: pointer;
@@ -13,7 +13,7 @@
 }
 
 .accent:hover {
-  background: var(--indigo-600);
+  background: var(--blue-600);
 }
 
 .accent:active {
@@ -22,7 +22,7 @@
 
 .dialog {
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   padding: var(--space-xs) var(--space-md);
   background: var(--surface-default);
   color: var(--text-secondary);
@@ -38,7 +38,7 @@
   padding: var(--space-sm) var(--space-md);
   font-family: var(--sans);
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text-muted);
   background: transparent;
   border: 1px solid var(--border-subtle);

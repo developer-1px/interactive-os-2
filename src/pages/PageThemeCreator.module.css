@@ -28,7 +28,7 @@
 .heading {
   font-family: var(--sans);
   font-size: var(--text-xs);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--text-muted);
   margin: 0;
   padding: 0;

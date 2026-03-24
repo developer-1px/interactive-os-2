@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
-import { createStore, getChildren } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData, Plugin } from '../interactive-os/core/types'
-import type { BehaviorContext, NodeState } from '../interactive-os/behaviors/types'
+import { createStore, getChildren } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NormalizedData } from '../interactive-os/store/types'
+import type { Plugin } from '../interactive-os/plugins/types'
+import type { PatternContext, NodeState } from '../interactive-os/pattern/types'
 import { core, FOCUS_ID } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud, crudCommands } from '../interactive-os/plugins/crud'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
-import { getAriaActions } from '../interactive-os/components/ariaRegistry'
+import { getAriaActions } from '../interactive-os/primitives/ariaRegistry'
 
 const treeData = createStore({
   entities: {
@@ -35,7 +36,7 @@ const treeData = createStore({
 const randomNames = ['Webpack', 'Vite', 'Rollup', 'esbuild', 'Turbopack', 'Parcel', 'SWC', 'Bun', 'Deno', 'Rome']
 let counter = 0
 
-/** Find parent of focusedId using getChildren traversal (BehaviorContext has no getParent) */
+/** Find parent of focusedId using getChildren traversal (PatternContext has no getParent) */
 function findParent(focusedId: string, getChildrenFn: (id: string) => string[]): string {
   const roots = getChildrenFn(ROOT_ID)
   for (const rootId of roots) {
@@ -62,7 +63,7 @@ function makeCreateCommand(focusedId: string, getChildrenFn: (id: string) => str
 // Inline plugin: N key → create after focused (engine pipeline: focusRecovery + history)
 const createPlugin: Plugin = {
   keyMap: {
-    'N': (ctx: BehaviorContext) => makeCreateCommand(ctx.focused, ctx.getChildren),
+    'N': (ctx: PatternContext) => makeCreateCommand(ctx.focused, ctx.getChildren),
   },
 }
 

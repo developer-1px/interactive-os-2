@@ -1,14 +1,16 @@
 import { describe, it, expect } from 'vitest'
 import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useEngine } from '../hooks/useEngine'
-import { useAriaZone } from '../hooks/useAriaZone'
-import { listbox } from '../behaviors/listbox'
+import { useEngine } from '../engine/useEngine'
+import { useAriaZone } from '../primitives/useAriaZone'
+import { listbox } from '../pattern/listbox'
 import { history } from '../plugins/history'
 import { focusCommands } from '../plugins/core'
 import { crudCommands } from '../plugins/crud'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData, Plugin, Command } from '../core/types'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { Command } from '../engine/types'
 
 const testStore: NormalizedData = {
   entities: {

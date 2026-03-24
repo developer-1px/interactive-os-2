@@ -1,6 +1,10 @@
 {
   "eval_id": 3,
-  "eval_name": "sdk-category-tradeoff-exit-mapping",
-  "prompt": "지금 컴포넌트가 15개인데 이걸 3개 카테고리로 묶어서 SDK로 내보내야 해. 근데 카테고리를 behavior 기준으로 할지 용도 기준으로 할지가 트레이드오프야. 논의해서 결정하고 바로 실행까지 가자",
-  "assertions": ["트레이드오프를 제약/원칙에서 다룸", "출구 매핑 인식", "실행 경로 언급"]
+  "eval_name": "sdk-category",
+  "prompt": "우리 서비스에 카테고리 기능을 추가하려고 해. 지금은 태그만 있는데 사용자들이 계층 구조를 원하거든. 근데 기존 태그 시스템을 버릴 수는 없어서 두 개가 공존해야 해. 검색도 두 시스템 모두 지원해야 하고.",
+  "assertions": [
+    {"text": "AI 판단이 질문보다 먼저 나온다", "type": "qualitative"},
+    {"text": "태그→카테고리 전환의 구조적 문제를 잡는다", "type": "qualitative"},
+    {"text": "공존 제약 하에서의 해결 방향을 탐색한다", "type": "qualitative"}
+  ]
 }

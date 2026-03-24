@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useAria } from '../hooks/useAria'
-import { listbox } from '../behaviors/listbox'
+import { useAria } from '../primitives/useAria'
+import { listbox } from '../pattern/listbox'
 import { core, focusCommands, selectionCommands } from '../plugins/core'
 import { history } from '../plugins/history'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 
 function makeStore(items: string[]): NormalizedData {
   const entities: Record<string, { id: string; data: { label: string } }> = {}

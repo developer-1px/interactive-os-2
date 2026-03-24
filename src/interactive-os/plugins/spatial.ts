@@ -1,7 +1,8 @@
-import type { Command, NormalizedData } from '../core/types'
-import { definePlugin } from '../core/definePlugin'
-import { ROOT_ID } from '../core/types'
-import { getParent } from '../core/createStore'
+import type { Command } from '../engine/types'
+import type { NormalizedData } from '../store/types'
+import { ROOT_ID } from '../store/types'
+import { getParent } from '../store/createStore'
+import { definePlugin } from './definePlugin'
 
 export const SPATIAL_PARENT_ID = '__spatial_parent__'
 

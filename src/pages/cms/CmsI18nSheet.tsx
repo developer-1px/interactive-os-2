@@ -1,6 +1,6 @@
 import { useMemo, useRef, useCallback, useEffect } from 'react'
-import type { NormalizedData } from '../../interactive-os/core/types'
-import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import type { CommandEngine } from '../../interactive-os/engine/createCommandEngine'
 import { Grid } from '../../interactive-os/ui/Grid'
 import { core } from '../../interactive-os/plugins/core'
 import { rename } from '../../interactive-os/plugins/rename'

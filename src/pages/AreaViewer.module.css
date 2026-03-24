@@ -6,7 +6,7 @@
   margin: 0 auto;
   padding: var(--space-2xl) 48px;
   font-size: var(--text-md);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   color: var(--text-primary);
   line-height: var(--leading-relaxed);
   word-wrap: break-word;
@@ -33,7 +33,7 @@
 
 .root h1 {
   font-size: var(--text-3xl);
-  font-weight: 700;
+  font-weight: var(--weight-semi);
   color: var(--text-bright);
   margin: 2.5em 0 0.6em;
   padding-bottom: 0.3em;
@@ -44,7 +44,7 @@
 
 .root h2 {
   font-size: var(--text-2xl);
-  font-weight: 700;
+  font-weight: var(--weight-semi);
   color: var(--text-bright);
   margin: 2em 0 0.5em;
   padding-bottom: 0.25em;
@@ -55,7 +55,7 @@
 
 .root h3 {
   font-size: var(--text-xl);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--text-bright);
   margin: 1.6em 0 0.4em;
   line-height: var(--leading-tight);
@@ -64,7 +64,7 @@
 
 .root h4 {
   font-size: var(--text-lg);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--text-secondary);
   margin: 1.2em 0 0.3em;
   line-height: var(--leading-snug);
@@ -101,7 +101,7 @@
 }
 
 .root strong {
-  font-weight: 700;
+  font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 
@@ -179,7 +179,7 @@
 
 .root th {
   background: var(--surface-base);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 

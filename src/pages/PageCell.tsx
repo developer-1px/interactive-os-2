@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Aria } from '../interactive-os/components/aria'
-import { grid } from '../interactive-os/behaviors/grid'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { Aria } from '../interactive-os/primitives/aria'
+import { grid } from '../interactive-os/pattern/grid'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NormalizedData } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 import { core } from '../interactive-os/plugins/core'
 
 const gridData = createStore({
@@ -63,8 +63,8 @@ export default function PageCell() {
       </div>
       <div className="page-section">
         <h3 className="page-section-title">Usage</h3>
-        <pre className="code-block"><code>{`import { Aria } from 'interactive-os/components/aria'
-import { grid } from 'interactive-os/behaviors/grid'
+        <pre className="code-block"><code>{`import { Aria } from 'interactive-os/primitives/aria'
+import { grid } from 'interactive-os/pattern/grid'
 
 // grid({ columns: 3 }) creates a behavior with colCount=3
 <Aria behavior={grid({ columns: 3 })} ...>

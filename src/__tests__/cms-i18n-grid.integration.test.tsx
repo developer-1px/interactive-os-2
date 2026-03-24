@@ -10,14 +10,14 @@ import { describe, it, expect } from 'vitest'
 import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Grid } from '../interactive-os/ui/Grid'
-import { Aria } from '../interactive-os/components/aria'
+import { Aria } from '../interactive-os/primitives/aria'
 import { core, GRID_COL_ID } from '../interactive-os/plugins/core'
 import { rename } from '../interactive-os/plugins/rename'
 import { history } from '../interactive-os/plugins/history'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 import { translatableEntriesToGrid, I18N_COLUMNS } from '../pages/cms/cmsI18nAdapter'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID, type NormalizedData } from '../interactive-os/core/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID, type NormalizedData } from '../interactive-os/store/types'
 
 // Single CMS entity: text with ja empty
 function cmsFixture(): NormalizedData {

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { ROOT_ID } from '../interactive-os/core/types'
+import { ROOT_ID } from '../interactive-os/store/types'
 import { collectSections } from '../pages/cms/collectSections'
 import { getRootAncestor, getTabItemAncestor } from '../pages/cms/collectSections'
-import type { NormalizedData } from '../interactive-os/core/types'
+import type { NormalizedData } from '../interactive-os/store/types'
 
 function makeStore(entities: Record<string, { type: string }>, relationships: Record<string, string[]>): NormalizedData {
   const ents: NormalizedData['entities'] = {}

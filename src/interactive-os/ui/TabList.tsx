@@ -1,11 +1,12 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState, BehaviorContext } from '../behaviors/types'
-import type { Command } from '../core/types'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState, PatternContext } from '../pattern/types'
+import type { Command } from '../engine/types'
 import { useTabList } from './useTabList'
-import { ROOT_ID } from '../core/types'
-import { getChildren } from '../core/createStore'
+import { ROOT_ID } from '../store/types'
+import { getChildren } from '../store/createStore'
 import styles from './TabList.module.css'
 
 interface TabListProps {
@@ -15,7 +16,7 @@ interface TabListProps {
   onActivate?: (nodeId: string) => void
   renderItem?: (props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, state: NodeState) => React.ReactElement
   enableEditing?: boolean
-  keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
+  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   initialFocus?: string
   'aria-label'?: string
 }

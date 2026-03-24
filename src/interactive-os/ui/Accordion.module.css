@@ -6,7 +6,7 @@
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
   font-size: var(--text-md);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   cursor: default;
   user-select: none;
   border-radius: var(--radius-sm);

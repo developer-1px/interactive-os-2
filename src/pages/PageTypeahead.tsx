@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { ListBox } from '../interactive-os/ui/ListBox'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData, Entity } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NormalizedData, Entity } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 import { core } from '../interactive-os/plugins/core'
 import { typeahead } from '../interactive-os/plugins/typeahead'
 

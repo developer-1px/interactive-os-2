@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { edit, replaceEditPlugin } from '../axes/edit'
-import { extractKeyMap } from '../axes/composePattern'
+import { edit, replaceEditPlugin } from '../pattern/edit'
+import { extractKeyMap } from '../axis/types'
 
 describe('edit axis', () => {
   it('returns F2, Enter, Delete, Alt+Arrow keyMap by default', () => {

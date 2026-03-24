@@ -1,7 +1,7 @@
-import type { Command } from '../core/types'
-import { definePlugin } from '../core/definePlugin'
-import { ROOT_ID } from '../core/types'
-import { getChildren, getParent, moveNode } from '../core/createStore'
+import type { Command } from '../engine/types'
+import { ROOT_ID } from '../store/types'
+import { getChildren, getParent, moveNode } from '../store/createStore'
+import { definePlugin } from './definePlugin'
 
 export const dndCommands = {
   /** Move node up among its siblings (swap with previous) */

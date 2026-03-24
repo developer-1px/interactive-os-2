@@ -17,10 +17,10 @@
 
 .resizer-handle:hover,
 .resizer-handle:active {
-  background: var(--accent);
+  background: var(--primary);
 }
 
 .resizer-handle:focus-visible {
-  background: var(--accent);
+  background: var(--primary);
   outline: none;
 }

@@ -2,12 +2,12 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React, { useState } from 'react'
-import { Aria } from '../components/aria'
-import { listbox } from '../behaviors/listbox'
-import { ROOT_ID } from '../core/types'
+import { Aria } from '../primitives/aria'
+import { listbox } from '../pattern/listbox'
+import { ROOT_ID } from '../store/types'
 import { core } from '../plugins/core'
-import type { Command } from '../core/types'
-import type { BehaviorContext } from '../behaviors/types'
+import type { Command } from '../engine/types'
+import type { PatternContext } from '../pattern/types'
 
 function fixtureData() {
   return {
@@ -25,7 +25,7 @@ function NestedAriaHarness({ parentKey }: { parentKey: string }) {
   return (
     <div data-testid="root" data-opened={opened || undefined}>
       <Aria
-        keyMap={{ [parentKey]: (() => { setOpened(true); return undefined }) as (ctx: BehaviorContext) => Command | void }}
+        keyMap={{ [parentKey]: (() => { setOpened(true); return undefined }) as (ctx: PatternContext) => Command | void }}
         data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
         plugins={[]}
       >
@@ -64,7 +64,7 @@ describe('Nested Aria bubbling', () => {
   it('keyMap-only Aria (no behavior) renders without role/tabIndex', () => {
     const { container } = render(
       <Aria
-        keyMap={{ 'Meta+k': (() => undefined) as (ctx: BehaviorContext) => Command | void }}
+        keyMap={{ 'Meta+k': (() => undefined) as (ctx: PatternContext) => Command | void }}
         data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
         plugins={[]}
       >

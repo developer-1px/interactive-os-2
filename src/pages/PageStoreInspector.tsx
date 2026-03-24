@@ -1,15 +1,17 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
-import type { NormalizedData, Plugin, Command } from '../interactive-os/core/types'
-import type { BehaviorContext, NodeState } from '../interactive-os/behaviors/types'
-import type { LogEntry } from '../interactive-os/core/dispatchLogger'
-import { Aria } from '../interactive-os/components/aria'
-import { tree } from '../interactive-os/behaviors/tree'
+import type { NormalizedData } from '../interactive-os/store/types'
+import type { Command } from '../interactive-os/engine/types'
+import type { Plugin } from '../interactive-os/plugins/types'
+import type { PatternContext, NodeState } from '../interactive-os/pattern/types'
+import type { LogEntry } from '../interactive-os/engine/dispatchLogger'
+import { Aria } from '../interactive-os/primitives/aria'
+import { tree } from '../interactive-os/pattern/tree'
 import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud, crudCommands } from '../interactive-os/plugins/crud'
 import { dnd, dndCommands } from '../interactive-os/plugins/dnd'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
-import { storeToTree } from '../interactive-os/core/storeToTree'
+import { storeToTree } from '../interactive-os/store/storeToTree'
 import { treeData } from './shared-tree-data'
 import styles from './PageStoreInspector.module.css'
 
@@ -17,15 +19,15 @@ import styles from './PageStoreInspector.module.css'
 
 const inspectorPlugins: Plugin[] = [core()]
 
-const editorKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
+const editorKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
   'Delete': (ctx) => crudCommands.remove(ctx.focused),
   'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
   'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
 }
 
-function makeEditorPlugins(): { plugins: Plugin[]; keyMap: Record<string, (ctx: BehaviorContext) => Command | void> } {
+function makeEditorPlugins(): { plugins: Plugin[]; keyMap: Record<string, (ctx: PatternContext) => Command | void> } {
   let nodeCounter = 0
-  const createKeyMap: Record<string, (ctx: BehaviorContext) => Command> = {
+  const createKeyMap: Record<string, (ctx: PatternContext) => Command> = {
     'Enter': (ctx) => {
       const id = `node-${++nodeCounter}`
       return crudCommands.create(

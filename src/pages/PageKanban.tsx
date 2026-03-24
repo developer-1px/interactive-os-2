@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Kanban } from '../interactive-os/ui/Kanban'
-import type { NormalizedData } from '../interactive-os/core/types'
+import type { NormalizedData } from '../interactive-os/store/types'
 import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'

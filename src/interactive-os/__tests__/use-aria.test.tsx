@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
-import { useAria } from '../hooks/useAria'
-import { tree } from '../behaviors/tree'
-import { ROOT_ID } from '../core/types'
+import { useAria } from '../primitives/useAria'
+import { tree } from '../pattern/tree'
+import { ROOT_ID } from '../store/types'
 
 function fixtureData() {
   return {

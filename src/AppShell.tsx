@@ -3,14 +3,14 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Sun, Moon, Presentation, Component, Eye, Activity, Palette } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-import { Aria } from './interactive-os/components/aria'
-import { toolbar } from './interactive-os/behaviors/toolbar'
+import { Aria } from './interactive-os/primitives/aria'
+import { toolbar } from './interactive-os/pattern/toolbar'
 import { core, FOCUS_ID } from './interactive-os/plugins/core'
 import { FileViewerModal } from './interactive-os/ui/FileViewerModal'
-import { createStore } from './interactive-os/core/createStore'
-import { ROOT_ID } from './interactive-os/core/types'
-import type { AriaBehavior } from './interactive-os/behaviors/types'
-import type { NormalizedData } from './interactive-os/core/types'
+import { createStore } from './interactive-os/store/createStore'
+import { ROOT_ID } from './interactive-os/store/types'
+import type { AriaPattern } from './interactive-os/pattern/types'
+import type { NormalizedData } from './interactive-os/store/types'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './interactive-os/devtools/ReproRecorderOverlay'
 import { routeConfig } from './routeConfig'
@@ -22,7 +22,7 @@ import './styles/app.css'
 
 // --- Vertical toolbar behavior ---
 
-const verticalToolbar: AriaBehavior = {
+const verticalToolbar: AriaPattern = {
   ...toolbar,
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),

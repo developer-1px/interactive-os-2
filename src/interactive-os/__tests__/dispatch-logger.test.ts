@@ -1,15 +1,15 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest'
-import { computeStoreDiff, applyDelta } from '../core/computeStoreDiff'
-import type { StoreDiff } from '../core/computeStoreDiff'
-import { defaultLogger } from '../core/dispatchLogger'
-import type { NormalizedData } from '../core/types'
-import type { LogEntry } from '../core/dispatchLogger'
-import { createCommandEngine } from '../core/createCommandEngine'
-import { createStore } from '../core/createStore'
+import { computeStoreDiff, applyDelta } from '../store/computeStoreDiff'
+import type { StoreDiff } from '../store/computeStoreDiff'
+import { defaultLogger } from '../engine/dispatchLogger'
+import type { NormalizedData } from '../store/types'
+import type { LogEntry } from '../engine/dispatchLogger'
+import { createCommandEngine } from '../engine/createCommandEngine'
+import { createStore } from '../store/createStore'
 import { focusCommands } from '../plugins/core'
-import { createBatchCommand } from '../core/types'
-import type { Command } from '../core/types'
+import { createBatchCommand } from '../engine/types'
+import type { Command } from '../engine/types'
 
 describe('computeStoreDiff', () => {
   const base: NormalizedData = {
