@@ -1,0 +1,21 @@
+.swatch {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  flex-shrink: 0;
+}
+
+.swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.swatch::-webkit-color-swatch {
+  border: none;
+  border-radius: calc(var(--radius-xs) - 1px);
+}

@@ -1,7 +1,6 @@
 /* --- Buttons --- */
 
 .accent {
-  font-family: var(--sans);
   font-size: var(--text-md);
   font-weight: 600;
   padding: var(--space-sm) var(--space-lg);
@@ -22,7 +21,6 @@
 }
 
 .dialog {
-  font-family: var(--sans);
   font-size: var(--text-sm);
   font-weight: 500;
   padding: var(--space-xs) var(--space-md);
@@ -32,6 +30,26 @@
   border-radius: var(--radius);
   cursor: pointer;
   outline: none;
-  transition: background 0.08s, border-color 0.08s;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.ghost {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-default);
 }
 
