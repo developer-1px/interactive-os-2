@@ -17,7 +17,7 @@
 /* ── Container: inset padding for breathing room ── */
 
 [data-aria-container] {
-  padding: var(--space-xs);
+  padding: var(--space-sm);
 }
 
 /* ── Common interactive item base ── */
