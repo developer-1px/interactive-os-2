@@ -37,6 +37,7 @@ export interface UseAriaZoneOptions {
   onActivate?: (nodeId: string) => void
   initialFocus?: string
   isReachable?: IsReachable
+  disabled?: boolean
 }
 
 // ── Zone-local meta-entity state ──
@@ -97,7 +98,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     plugins: zonePlugins,
     keyMap: keyMapOverrides,
     onActivate, initialFocus,
-    isReachable,
+    isReachable, disabled = false,
   } = options
 
   const [viewState, setViewState] = useState<ZoneViewState>(() => {
@@ -239,6 +240,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     selectedIdSet,
     expandedIds,
     nodeIdAttr: `data-${scope}-id`,
+    disabled,
   })
 
   // ── External store-change focus recovery ──

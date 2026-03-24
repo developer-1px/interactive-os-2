@@ -40,6 +40,8 @@ export interface UseAriaOptions {
   logger?: EngineOptions['logger']
   /** Whether to auto-focus the first item on mount (default: true) */
   autoFocus?: boolean
+  /** When true, the zone is fully inert — no focus, no events, no ARIA */
+  disabled?: boolean
 }
 
 export interface UseAriaReturn {
@@ -53,7 +55,7 @@ export interface UseAriaReturn {
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { behavior = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus, logger, autoFocus = true } = options
+  const { behavior = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus, logger, autoFocus = true, disabled = false } = options
   const [, forceRender] = useState(0)
   const pointerDownCtxRef = useRef<ReturnType<typeof createPatternContext> | null>(null)
 
@@ -164,7 +166,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   const view = useAriaView({
     engine, store, behavior, plugins, keyMap: keyMapOverrides,
     onActivate, focusedId, selectedIdSet, expandedIds,
-    isKeyMapOnly, autoFocus,
+    isKeyMapOnly, autoFocus, disabled,
   })
 
   // ── Pointer selection overlay (useAria-only) ──
