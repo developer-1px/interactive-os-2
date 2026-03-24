@@ -7,10 +7,6 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import NavigateDemo from '../../pages/axis/NavigateDemo'
 
-function getContainer() {
-  return screen.getByRole('listbox').closest('.card')?.parentElement ?? document.body
-}
-
 describe('NavigateDemo coverage', () => {
   describe('list mode — vertical (default)', () => {
     it('ArrowDown/Up/Home/End', async () => {

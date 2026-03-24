@@ -24,7 +24,6 @@ describe('DismissDemo coverage', () => {
       const firstItem = container.querySelector('[data-node-id]')!
       await user.click(firstItem)
 
-      const focusedBefore = container.querySelector('[tabindex="0"]')?.getAttribute('data-node-id')
       await user.keyboard('{Escape}')
 
       // B1a: Escape handler calls ctx.collapse() — focus should be maintained or moved
