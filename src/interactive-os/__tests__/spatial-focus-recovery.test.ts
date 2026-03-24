@@ -53,9 +53,21 @@ describe('isVisible with custom isReachable', () => {
   })
 
   it('uses default tree logic when isReachable is not provided', () => {
-    const store = fixtureStore()
-    // No expand → child not visible in tree model
+    const store = {
+      ...fixtureStore(),
+      entities: {
+        ...fixtureStore().entities,
+        __expanded__: { id: '__expanded__', expandedIds: [] },
+      },
+    }
+    // __expanded__ entity exists with empty expandedIds → tree gating active → child not visible
     expect(isVisible(store, 'card1')).toBe(false)
+  })
+
+  it('returns true for all nodes when no __expanded__ entity (no gating)', () => {
+    const store = fixtureStore()
+    // No __expanded__ entity → no gating → all nodes reachable
+    expect(isVisible(store, 'card1')).toBe(true)
   })
 })
 

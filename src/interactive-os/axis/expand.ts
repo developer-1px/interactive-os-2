@@ -24,7 +24,7 @@ export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Parti
         return ctx.exitToParent()
       },
     }
-    return { keyMap, config: {} }
+    return { keyMap, config: { expandTracking: true } }
   }
 
   // mode === 'arrow' (default)
@@ -32,5 +32,5 @@ export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Parti
     ArrowRight: (ctx) => (ctx.isExpanded ? ctx.focusChild() : ctx.expand()),
     ArrowLeft: (ctx) => (ctx.isExpanded ? ctx.collapse() : ctx.focusParent()),
   }
-  return { keyMap, config: {} }
+  return { keyMap, config: { expandTracking: true } }
 }
