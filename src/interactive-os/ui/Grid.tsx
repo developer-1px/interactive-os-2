@@ -1,12 +1,14 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin, Command } from '../core/types'
-import type { BehaviorContext, NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { grid as gridBehavior } from '../behaviors/grid'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { Command } from '../engine/types'
+import type { PatternContext, NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { grid as gridBehavior } from '../pattern/grid'
 import { core } from '../plugins/core'
 import { clipboardCommands } from '../plugins/clipboard'
-import { replaceEditPlugin } from '../axes/edit'
+import { replaceEditPlugin } from '../pattern/edit'
 
 interface ColumnDef {
   key: string
@@ -25,12 +27,12 @@ interface GridProps {
   tabCycle?: boolean
   /** Render column headers inside the grid-table container (subgrid-aligned) */
   header?: boolean
-  keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
+  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   'aria-label'?: string
 }
 
 /** Cell-level clipboard keyMap (Mod+C/V with colIndex) — component-level override */
-const cellClipboardKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
+const cellClipboardKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
   'Mod+C': (ctx) => {
     const colIndex = ctx.grid?.colIndex ?? 0
     return clipboardCommands.copyCellValue(ctx.focused, colIndex)

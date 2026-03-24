@@ -9,7 +9,7 @@
 
 .sliderLabel {
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text-primary);
   min-width: 64px;
 }
@@ -50,7 +50,7 @@
 
 .sliderValue {
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text-secondary);
   min-width: 32px;
   text-align: right;

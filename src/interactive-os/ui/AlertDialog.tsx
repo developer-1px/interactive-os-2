@@ -1,9 +1,10 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { alertdialog } from '../behaviors/alertdialog'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { alertdialog } from '../pattern/alertdialog'
 import { core } from '../plugins/core'
 import styles from './AlertDialog.module.css'
 

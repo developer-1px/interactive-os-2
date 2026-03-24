@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { TabList } from '../ui/TabList'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 
 function makeTabData(labels: string[]): NormalizedData {
   const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}

@@ -1,15 +1,15 @@
 import { useState, useRef } from 'react'
 import { ListBox } from '../interactive-os/ui/ListBox'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData } from '../interactive-os/core/types'
-import type { StoreDiff } from '../interactive-os/core/computeStoreDiff'
-import { computeStoreDiff, applyDelta } from '../interactive-os/core/computeStoreDiff'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NormalizedData } from '../interactive-os/store/types'
+import type { StoreDiff } from '../interactive-os/store/computeStoreDiff'
+import { computeStoreDiff, applyDelta } from '../interactive-os/store/computeStoreDiff'
+import type { NodeState } from '../interactive-os/pattern/types'
 import { core } from '../interactive-os/plugins/core'
 import { crud } from '../interactive-os/plugins/crud'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
-import { summarizeValue } from '../interactive-os/core/dispatchLogger'
+import { summarizeValue } from '../interactive-os/engine/dispatchLogger'
 
 interface DiffEntry {
   seq: number

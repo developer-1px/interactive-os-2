@@ -10,12 +10,12 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { Combobox } from '../ui/Combobox'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 import { core } from '../plugins/core'
 import { combobox as comboboxPlugin } from '../plugins/combobox'
-import type { NodeState } from '../behaviors/types'
+import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
   return createStore({

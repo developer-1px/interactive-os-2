@@ -23,7 +23,7 @@
 
 /* ── Column header ── */
 .columnHeader {
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -44,7 +44,7 @@
 
 .columnCount {
   font-size: var(--text-xs);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   color: var(--text-muted);
   text-transform: none;
   letter-spacing: 0;

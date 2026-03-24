@@ -4,7 +4,7 @@ import { createElement } from 'react'
 import { ChevronRight, ArrowRight } from 'lucide-react'
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
-import type { NodeState } from '../../interactive-os/behaviors/types'
+import type { NodeState } from '../../interactive-os/pattern/types'
 import s from './CmsLanding.module.css'
 import { CMS_ICON_MAP } from './cmsIcons'
 

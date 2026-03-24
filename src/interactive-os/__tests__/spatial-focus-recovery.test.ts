@@ -1,8 +1,9 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createCommandEngine } from '../core/createCommandEngine'
-import { createStore, getChildren, getEntity } from '../core/createStore'
-import { ROOT_ID, createBatchCommand } from '../core/types'
+import { createCommandEngine } from '../engine/createCommandEngine'
+import { createStore, getChildren, getEntity } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import { createBatchCommand } from '../engine/types'
 import { focusCommands } from '../plugins/core'
 import { crudCommands } from '../plugins/crud'
 import { clipboardCommands, resetClipboard } from '../plugins/clipboard'

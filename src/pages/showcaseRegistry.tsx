@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import type { NormalizedData } from '../interactive-os/core/types'
+import type { NormalizedData } from '../interactive-os/store/types'
 import type { ApgPatternData } from './apg-data'
 import {
   apgAccordion, apgAlertDialog, apgCombobox, apgDialog, apgDisclosure,
@@ -87,7 +87,7 @@ export const components: ComponentEntry[] = [
     testPath: 'src/interactive-os/__tests__/accordion-keyboard.integration.test',
     apg: apgAccordion,
     usage: `import { Accordion } from 'interactive-os/ui/Accordion'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -108,7 +108,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/alertdialog-keyboard.integration.test',
     apg: apgAlertDialog,
     usage: `import { AlertDialog } from 'interactive-os/ui/AlertDialog'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -130,7 +130,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/combobox-keyboard.integration.test',
     apg: apgCombobox,
     usage: `import { Combobox } from 'interactive-os/ui/Combobox'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -149,7 +149,7 @@ const data = createStore({
     makeData: makeCheckboxData,
     render: (data, onChange) => <Checkbox data={data} onChange={onChange} />,
     usage: `import { Checkbox } from 'interactive-os/ui/Checkbox'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -170,7 +170,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/disclosure-keyboard.integration.test',
     apg: apgDisclosure,
     usage: `import { DisclosureGroup } from 'interactive-os/ui/DisclosureGroup'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -191,7 +191,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/dialog-keyboard.integration.test',
     apg: apgDialog,
     usage: `import { Dialog } from 'interactive-os/ui/Dialog'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -223,7 +223,7 @@ const data = createStore({
       />
     ),
     usage: `import { Grid } from 'interactive-os/ui/Grid'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -251,7 +251,7 @@ const data = createStore({
     render: (data, onChange) => <Kanban data={data} onChange={onChange} aria-label="Project board" />,
     testPath: 'src/interactive-os/__tests__/kanban-keyboard.integration.test',
     usage: `import { Kanban } from 'interactive-os/ui/Kanban'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -275,7 +275,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/listbox-keyboard.integration.test',
     apg: apgListbox,
     usage: `import { ListBox } from 'interactive-os/ui/ListBox'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -297,7 +297,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/menu-keyboard.integration.test',
     apg: apgMenu,
     usage: `import { MenuList } from 'interactive-os/ui/MenuList'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -318,7 +318,7 @@ const data = createStore({
     render: (data, onChange) => <NavList data={data} onChange={onChange} onActivate={() => {}} />,
     testPath: 'src/interactive-os/__tests__/navlist.integration.test',
     usage: `import { NavList } from 'interactive-os/ui/NavList'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -339,7 +339,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/radiogroup-keyboard.integration.test',
     apg: apgRadioGroup,
     usage: `import { RadioGroup } from 'interactive-os/ui/RadioGroup'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -361,7 +361,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/slider-keyboard.integration.test',
     apg: apgSlider,
     usage: `import { Slider } from 'interactive-os/ui/Slider'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -381,7 +381,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/spinbutton-keyboard.integration.test',
     apg: apgSpinbutton,
     usage: `import { Spinbutton } from 'interactive-os/ui/Spinbutton'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -401,7 +401,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/switch-keyboard.integration.test',
     apg: apgSwitch,
     usage: `import { SwitchGroup } from 'interactive-os/ui/SwitchGroup'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -422,7 +422,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/tablist.integration.test',
     apg: apgTabs,
     usage: `import { TabList } from 'interactive-os/ui/TabList'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -460,7 +460,7 @@ toaster.toast({ title: 'Error', description: 'Network failed', variant: 'error' 
     makeData: makeToggleData,
     render: (data, onChange) => <Toggle data={data} onChange={onChange} />,
     usage: `import { Toggle } from 'interactive-os/ui/Toggle'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -478,7 +478,7 @@ const data = createStore({
     makeData: makeToggleGroupData,
     render: (data, onChange) => <ToggleGroup data={data} onChange={onChange} />,
     usage: `import { ToggleGroup } from 'interactive-os/ui/ToggleGroup'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -500,7 +500,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/toolbar-keyboard.integration.test',
     apg: apgToolbar,
     usage: `import { Toolbar } from 'interactive-os/ui/Toolbar'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -522,7 +522,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/treegrid-keyboard.integration.test',
     apg: apgTreeGrid,
     usage: `import { TreeGrid } from 'interactive-os/ui/TreeGrid'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {
@@ -547,7 +547,7 @@ const data = createStore({
     testPath: 'src/interactive-os/__tests__/treeview.integration.test',
     apg: apgTreeView,
     usage: `import { TreeView } from 'interactive-os/ui/TreeView'
-import { createStore } from 'interactive-os/core/createStore'
+import { createStore } from 'interactive-os/store/createStore'
 
 const data = createStore({
   entities: {

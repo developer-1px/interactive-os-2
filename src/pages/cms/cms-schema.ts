@@ -7,8 +7,8 @@
  */
 import { z } from 'zod'
 import type { CanAcceptFn, CanDeleteFn } from '../../interactive-os/plugins/clipboard'
-import type { NormalizedData } from '../../interactive-os/core/types'
-import { getChildren } from '../../interactive-os/core/createStore'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import { getChildren } from '../../interactive-os/store/createStore'
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
 

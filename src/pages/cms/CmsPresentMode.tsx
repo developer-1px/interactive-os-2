@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef } from 'react'
 import cmsStyles from './CmsLanding.module.css'
-import { getChildren } from '../../interactive-os/core/createStore'
-import { ROOT_ID } from '../../interactive-os/core/types'
-import type { NormalizedData, Command } from '../../interactive-os/core/types'
-import type { BehaviorContext } from '../../interactive-os/behaviors/types'
+import { getChildren } from '../../interactive-os/store/createStore'
+import { ROOT_ID } from '../../interactive-os/store/types'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import type { Command } from '../../interactive-os/engine/types'
+import type { PatternContext } from '../../interactive-os/pattern/types'
 import type { Locale } from './cms-types'
 import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
-import { useAria } from '../../interactive-os/hooks/useAria'
+import { useAria } from '../../interactive-os/primitives/useAria'
 
 const EMPTY_DATA: NormalizedData = { entities: {}, relationships: {} }
 
@@ -19,7 +20,7 @@ interface CmsPresentModeProps {
 export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const keyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+  const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
     Escape: () => { onExit() },
   }), [onExit])
 

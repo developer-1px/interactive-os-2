@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
-import type { NormalizedData, Command } from '../../interactive-os/core/types'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import type { Command } from '../../interactive-os/engine/types'
 import { RENAME_ID, renameCommands } from '../../interactive-os/plugins/rename'
 import type { Locale } from './cms-types'
 import { localized } from './cms-types'

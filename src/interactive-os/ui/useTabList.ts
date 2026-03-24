@@ -1,15 +1,17 @@
-import type { Command, NormalizedData, Plugin } from '../core/types'
-import type { NodeState, BehaviorContext } from '../behaviors/types'
-import { tabs } from '../behaviors/tabs'
-import { useAria } from '../hooks/useAria'
-import type { UseAriaReturn } from '../hooks/useAria'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { Command } from '../engine/types'
+import type { NodeState, PatternContext } from '../pattern/types'
+import { tabs } from '../pattern/tabs'
+import { useAria } from '../primitives/useAria'
+import type { UseAriaReturn } from '../primitives/useAria'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands } from '../plugins/rename'
 import { dndCommands } from '../plugins/dnd'
 
-const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
+const editingKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
   'Delete': (ctx) => crudCommands.remove(ctx.focused),
   'F2': (ctx) => renameCommands.startRename(ctx.focused),
   'Alt+ArrowLeft': (ctx) => dndCommands.moveUp(ctx.focused),
@@ -19,7 +21,7 @@ const editingKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = 
 export interface UseTabListOptions {
   data: NormalizedData
   plugins?: Plugin[]
-  keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
+  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   initialFocus?: string

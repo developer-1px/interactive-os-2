@@ -14,10 +14,15 @@ export function browserTestPlugin(): Plugin {
     transform(code, id) {
       if (!id.includes('?browser')) return null
 
-      const transformed = code.replace(
-        /from\s+(["'])vitest\1/g,
-        "from '/src/testRunner/vitestShim'",
-      )
+      const transformed = code
+        .replace(
+          /from\s+(["'])vitest\1/g,
+          "from '/src/testRunner/vitestShim'",
+        )
+        .replace(
+          /from\s+(["'])@testing-library\/react\1/g,
+          "from '/src/testRunner/rtlShim'",
+        )
 
       return transformed !== code ? { code: transformed, map: null } : null
     },

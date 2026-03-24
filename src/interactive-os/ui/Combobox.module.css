@@ -12,13 +12,12 @@
 
 .comboItemSelected {
   background: var(--selection);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
 }
 
 .comboInput {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
-  font-family: var(--sans);
   font-size: var(--text-md);
   color: var(--text-primary);
   background: var(--surface-default);
@@ -40,7 +39,7 @@
   background: var(--surface-overlay);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
-  box-shadow: var(--surface-4-shadow);
+  box-shadow: var(--shadow-lg);
   margin-top: var(--space-xs);
   overflow: hidden;
 }

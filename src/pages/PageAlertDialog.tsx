@@ -3,11 +3,11 @@ import buttonStyles from '../interactive-os/ui/Button.module.css'
 import dialogStyles from '../interactive-os/ui/Dialog.module.css'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgAlertDialog } from './apg-data'
-import { Aria } from '../interactive-os/components/aria'
-import { alertdialog } from '../interactive-os/behaviors/alertdialog'
+import { Aria } from '../interactive-os/primitives/aria'
+import { alertdialog } from '../interactive-os/pattern/alertdialog'
 import { core } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
 
 const alertDialogData = createStore({
   entities: {

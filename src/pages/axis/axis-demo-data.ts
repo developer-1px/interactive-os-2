@@ -1,5 +1,5 @@
-import { createStore } from '../../interactive-os/core/createStore'
-import { ROOT_ID } from '../../interactive-os/core/types'
+import { createStore } from '../../interactive-os/store/createStore'
+import { ROOT_ID } from '../../interactive-os/store/types'
 
 // Flat list — shared by navV, navH, navVhUniform, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap
 export const axisListData = createStore({

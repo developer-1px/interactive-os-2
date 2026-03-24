@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Aria } from '../components/aria'
-import { toolbar } from '../behaviors/toolbar'
-import { ROOT_ID } from '../core/types'
+import { Aria } from '../primitives/aria'
+import { toolbar } from '../pattern/toolbar'
+import { ROOT_ID } from '../store/types'
 import { core } from '../plugins/core'
-import { createStore } from '../core/createStore'
-import type { AriaBehavior, NodeState } from '../behaviors/types'
+import { createStore } from '../store/createStore'
+import type { AriaPattern, NodeState } from '../pattern/types'
 
 function fixtureData() {
   return {
@@ -24,7 +24,7 @@ const renderItem = (props: Record<string, unknown>, node: Record<string, unknown
   <span {...props} data-testid={node.id as string}>{(node.data as Record<string, unknown>)?.name as string}</span>
 )
 
-const verticalToolbar: AriaBehavior = {
+const verticalToolbar: AriaPattern = {
   ...toolbar,
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),

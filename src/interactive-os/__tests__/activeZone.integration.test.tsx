@@ -7,13 +7,13 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Aria } from '../components/aria'
-import { toolbar } from '../behaviors/toolbar'
-import { listbox } from '../behaviors/listbox'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
-import type { BehaviorContext, NodeState } from '../behaviors/types'
+import { Aria } from '../primitives/aria'
+import { toolbar } from '../pattern/toolbar'
+import { listbox } from '../pattern/listbox'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
+import type { PatternContext, NodeState } from '../pattern/types'
 import { core } from '../plugins/core'
 
 function toolbarData(): NormalizedData {
@@ -180,7 +180,7 @@ describe('Active Zone', () => {
     const user = userEvent.setup()
     const { container } = render(
       <Aria
-        keyMap={{ 'Meta+k': (_ctx: BehaviorContext) => undefined }}
+        keyMap={{ 'Meta+k': (_ctx: PatternContext) => undefined }}
         data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
         plugins={[]}
       >

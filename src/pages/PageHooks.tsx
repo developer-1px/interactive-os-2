@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { ListBox } from '../interactive-os/ui/ListBox'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NormalizedData } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 import { core } from '../interactive-os/plugins/core'
 
 const hookData = createStore({
@@ -82,7 +82,7 @@ const aria = useControlledAria({
       </div>
       <div className="page-section">
         <h3 className="page-section-title">useKeyboard — key matching</h3>
-        <pre className="code-block"><code>{`import { parseKeyCombo, matchKeyEvent } from 'interactive-os/hooks/useKeyboard'
+        <pre className="code-block"><code>{`import { parseKeyCombo, matchKeyEvent } from 'interactive-os/primitives/useKeyboard'
 
 // Mod = Meta on Mac, Ctrl on Windows/Linux
 parseKeyCombo('Mod+Shift+z')

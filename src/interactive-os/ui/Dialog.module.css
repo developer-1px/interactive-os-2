@@ -23,7 +23,7 @@
   padding: var(--space-md) var(--space-lg);
   border-bottom: 1px solid var(--border-subtle);
   font-size: var(--text-md);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 

@@ -5,12 +5,12 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Aria } from '../components/aria'
-import { tree } from '../behaviors/tree'
+import { Aria } from '../primitives/aria'
+import { tree } from '../pattern/tree'
 import { core } from '../plugins/core'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 
 // Simulate the viewer's tree-to-store conversion
 function fixtureStore(): NormalizedData {

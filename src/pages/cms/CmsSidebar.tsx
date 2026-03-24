@@ -1,11 +1,14 @@
 import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type React from 'react'
 import { Menu, Sheet } from 'lucide-react'
-import { getChildren } from '../../interactive-os/core/createStore'
-import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
-import type { NormalizedData, Command, Plugin } from '../../interactive-os/core/types'
-import type { CommandEngine } from '../../interactive-os/core/createCommandEngine'
-import type { BehaviorContext } from '../../interactive-os/behaviors/types'
+import { getChildren } from '../../interactive-os/store/createStore'
+import { ROOT_ID } from '../../interactive-os/store/types'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import { createBatchCommand } from '../../interactive-os/engine/types'
+import type { Command } from '../../interactive-os/engine/types'
+import type { Plugin } from '../../interactive-os/plugins/types'
+import type { CommandEngine } from '../../interactive-os/engine/createCommandEngine'
+import type { PatternContext } from '../../interactive-os/pattern/types'
 import type { Locale } from './cms-types'
 import type { TemplateType } from './cms-templates'
 import { templateToCommand } from './cms-templates'
@@ -13,8 +16,8 @@ import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContaine
 import { collectSections, getRootAncestor, getTabItemAncestor } from './collectSections'
 import type { LocaleMap } from './cms-types'
 import { LOCALES } from './cms-types'
-import { useAriaZone } from '../../interactive-os/hooks/useAriaZone'
-import { listbox } from '../../interactive-os/behaviors/listbox'
+import { useAriaZone } from '../../interactive-os/primitives/useAriaZone'
+import { listbox } from '../../interactive-os/pattern/listbox'
 import { focusCommands } from '../../interactive-os/plugins/core'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
@@ -217,12 +220,12 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   }, [store, onActivateTabItem])
 
   // CRUD keyMap — commands go to shared engine via zone dispatch
-  const sidebarKeyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => {
-    const removeSection = (ctx: BehaviorContext) => {
+  const sidebarKeyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => {
+    const removeSection = (ctx: PatternContext) => {
       if (ctx.getChildren(ROOT_ID).length <= 1) return
       return crudCommands.remove(ctx.focused)
     }
-    const navigateInSections = (ctx: BehaviorContext, delta: number) => {
+    const navigateInSections = (ctx: PatternContext, delta: number) => {
       const idx = sectionIds.indexOf(ctx.focused)
       const next = sectionIds[idx + delta]
       if (next !== undefined) return focusCommands.setFocus(next)

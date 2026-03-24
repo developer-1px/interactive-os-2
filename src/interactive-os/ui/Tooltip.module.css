@@ -14,7 +14,7 @@
 
   color: var(--text-primary);
   font-size: var(--text-sm);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
   white-space: normal;
   word-wrap: break-word;

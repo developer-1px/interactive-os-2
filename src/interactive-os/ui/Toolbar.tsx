@@ -1,9 +1,11 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin, Command } from '../core/types'
-import type { BehaviorContext, NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { toolbar } from '../behaviors/toolbar'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { Command } from '../engine/types'
+import type { PatternContext, NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { toolbar } from '../pattern/toolbar'
 import { core } from '../plugins/core'
 
 interface ToolbarProps {
@@ -20,13 +22,13 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 )
 
 // Override toolbar's horizontal keyMap to use vertical arrows instead
-const verticalKeyMap: Record<string, ((ctx: BehaviorContext) => Command | void) | undefined> = {
-  ArrowDown: (ctx: BehaviorContext) => ctx.focusNext(),
-  ArrowUp: (ctx: BehaviorContext) => ctx.focusPrev(),
+const verticalKeyMap: Record<string, ((ctx: PatternContext) => Command | void) | undefined> = {
+  ArrowDown: (ctx: PatternContext) => ctx.focusNext(),
+  ArrowUp: (ctx: PatternContext) => ctx.focusPrev(),
   ArrowRight: undefined,
   ArrowLeft: undefined,
-  Home: (ctx: BehaviorContext) => ctx.focusFirst(),
-  End: (ctx: BehaviorContext) => ctx.focusLast(),
+  Home: (ctx: PatternContext) => ctx.focusFirst(),
+  End: (ctx: PatternContext) => ctx.focusLast(),
 }
 
 export function Toolbar({
@@ -44,7 +46,7 @@ export function Toolbar({
       plugins={plugins}
       onChange={onChange}
       onActivate={onActivate}
-      keyMap={orientation === 'vertical' ? verticalKeyMap as Record<string, (ctx: BehaviorContext) => Command | void> : undefined}
+      keyMap={orientation === 'vertical' ? verticalKeyMap as Record<string, (ctx: PatternContext) => Command | void> : undefined}
     >
       <Aria.Item render={renderItem} />
     </Aria>

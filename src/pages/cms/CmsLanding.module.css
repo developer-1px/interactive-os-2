@@ -124,7 +124,7 @@
 .cmsHeroCta {
   font-family: var(--landing-font-body);
   font-size: var(--landing-size-caption);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--landing-text-on-accent);
   background: var(--landing-accent);
   border: none;
@@ -139,7 +139,7 @@
 .cmsHeroCtaSecondary {
   font-family: var(--landing-font-body);
   font-size: var(--landing-size-caption);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--landing-text-body);
   background: none;
   border: 1px solid var(--landing-border-default);
@@ -510,7 +510,7 @@
 .cmsArticleMeta {
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
@@ -548,7 +548,7 @@
 .cmsQuoteMark {
   font-family: var(--landing-font-display);
   font-size: 64px;
-  font-weight: 700;
+  font-weight: var(--weight-semi);
   color: var(--landing-text-muted);
   line-height: 0.5;
   display: block;
@@ -570,7 +570,7 @@
 .cmsQuoteAttribution {
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-caption);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
@@ -625,7 +625,7 @@
 .cmsFooterName {
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
@@ -646,7 +646,7 @@
 .cmsFooterLink {
   font-family: var(--landing-font-body);
   font-size: var(--landing-size-caption);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--landing-text-muted);
   text-decoration: none;
   cursor: pointer;
@@ -682,7 +682,7 @@
   padding: 8px 20px;
   font-family: var(--landing-font-body);
   font-size: var(--landing-size-caption);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--landing-text-muted);
   background: none;
   border: none;

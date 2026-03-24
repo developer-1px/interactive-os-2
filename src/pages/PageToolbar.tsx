@@ -1,12 +1,12 @@
 import styles from '../interactive-os/ui/Toolbar.module.css'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgToolbar } from './apg-data'
-import { Aria } from '../interactive-os/components/aria'
-import { toolbar } from '../interactive-os/behaviors/toolbar'
+import { Aria } from '../interactive-os/primitives/aria'
+import { toolbar } from '../interactive-os/pattern/toolbar'
 import { core } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 
 const toolbarData = createStore({
   entities: {

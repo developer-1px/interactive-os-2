@@ -1,49 +1,32 @@
-좋은 질문이에요. 프로젝트 메모리와 현재 코드를 먼저 살펴봤습니다.
+좋은 주제입니다. 먼저 현재 상태를 정리하고 숨겨진 갭을 찾아보겠습니다.
 
-현재 `dnd` 플러그인(`src/interactive-os/plugins/dnd.ts`)에 이미 `moveUp`, `moveDown`, `moveOut`, `moveIn`, `moveTo` 5개 Command가 있고, 모두 `moveNode` 기반에 `execute/undo` 쌍을 갖추고 있습니다. 키보드 리오더(Cmd+Arrow)는 spatial behavior 메모에서도 "컬렉션 레벨 기본기"로 명시되어 있고, 기존 dnd plugin의 keyMap은 뷰마다 달라서 `options.keyMap`으로 유지하는 것이 확정된 원칙입니다.
+**선행 조사 결과:** 현재 `dnd` 플러그인은 이미 키보드 커맨드를 가지고 있습니다 — `moveUp`, `moveDown`, `moveIn`, `moveOut`, `moveTo`. 그리고 kanban behavior에서 `Alt+Arrow` 키바인딩으로 이 커맨드들을 연결하고 있습니다. treegrid 등 다른 behavior에서는 dnd 키바인딩이 없는 상태입니다.
+
+즉 "키보드로 drag and drop"은 이미 kanban에서 동작하고 있고, 문제는 **다른 패턴(treegrid, listbox 등)에 dnd 키보드를 어떻게 확산하느냐**인 것 같습니다. 아니면 "마우스 drag"(실제 HTML5 DnD 또는 pointer drag)을 말씀하시는 건지 확인이 필요합니다.
 
 ---
 
 | 요소 | 내용 | 이해도 |
 |------|------|--------|
-| 목적 | 드래그앤드롭과 키보드 두 경로로 아이템 순서를 바꾸고 싶음. 두 인터랙션의 모델 공유 여부를 결정하려 함 | 🟡 70% |
-| 배경 | interactive-os에 이미 dnd 플러그인(Command 기반 moveUp/Down/Out/In/moveTo)이 존재. 키보드 리오더도 spatial behavior에서 Cmd+Arrow로 설계됨. 마우스 드래그는 아직 DOM 이벤트 레벨 구현이 없음 | 🟡 65% |
-| 이상적 결과 | 마우스 드래그와 키보드 양쪽에서 아이템 순서를 바꿀 수 있고, undo/redo가 통합됨 | 🟡 50% |
-| 현실 | Command 레벨(moveUp/moveDown/moveTo)은 존재. 키보드 keyMap 바인딩은 뷰별로 주입하는 구조. 마우스 드래그 이벤트 → Command 연결은 미구현 | 🟡 60% |
-| 문제 | 마우스 드래그가 만드는 "임의 위치로 이동"과 키보드의 "한 칸씩 이동"이 같은 Command를 쓸 수 있는지, 중간 상태(드래그 중 preview)는 어떻게 모델링할지 | 🔴 40% |
-| 원인 | 미정 | 🔴 10% |
-| 제약 | 미정 | 🔴 10% |
-| 목표 | 미정 | 🔴 10% |
-| 해결 | 미정 | 🔴 10% |
-| 부작용 | 미정 | 🔴 10% |
+| 목적 | 마우스 전용인 DnD에 키보드 접근성 추가 | 🟡 60% |
+| 배경 | dnd 플러그인(moveUp/Down/In/Out/To)은 존재. kanban은 Alt+Arrow로 연결됨. 다른 behavior는 미연결 | 🟡 70% |
+| 이상적 결과 | 모든(또는 특정) behavior에서 키보드로 노드 이동 가능 | 🔴 30% |
+| 현실 | kanban만 Alt+Arrow DnD 키바인딩 있음. treegrid/listbox 등은 dnd 플러그인 등록은 가능하나 키바인딩 없음. 마우스 pointer drag는 별도 구현 필요 | 🟡 70% |
+| 문제 | 이상적 결과가 불명확하여 갭 정의 불가 | 🔴 20% |
+| 원인 | — | 🔴 0% |
+| 제약 | 축 모델 6축 상한. dnd는 플러그인 레벨(축 밖). Plugin은 keyMap까지 소유해야 함 | 🟡 60% |
+| 목표 | — | 🔴 0% |
+| 해결 | — | 🔴 0% |
+| 부작용 | — | 🔴 0% |
 
 ---
 
-제 판단부터 말씀드리겠습니다.
+"키보드 네비게이션을 drag and drop에 넣고 싶다"는 말이 두 가지로 읽힙니다:
 
-**모델은 반드시 공유해야 합니다.** 이유는 세 가지입니다:
+**A) dnd 키바인딩을 더 많은 behavior에 확산** — kanban처럼 Alt+Arrow를 treegrid, listbox 등에도 넣는 것. 이건 각 behavior에 `kanbanPlugins` 같은 axis를 추가하거나, dnd 플러그인이 자체 keyMap을 소유하게 하면 됩니다. 기존 아키텍처로 바로 가능.
 
-1. **이미 공유하고 있습니다.** 현재 `dndCommands.moveTo(nodeId, targetParentId, index)`가 "임의 위치 이동"의 범용 Command입니다. 키보드의 `moveUp/moveDown`도 내부적으로 같은 `moveNode` 함수를 씁니다. 마우스 드래그의 drop도 최종적으로 `moveTo`를 dispatch하면 됩니다.
+**B) 마우스 drag 인터랙션 자체를 키보드로 대체** — "grab 모드 진입 → 화살표로 위치 미리보기 → Enter로 drop" 같은 ARIA live drag-and-drop 패턴. 이건 새로운 인터랙션 모드가 필요합니다.
 
-2. **undo/redo 통합이 자동으로 됩니다.** Command 패턴이니까 history 플러그인이 입력 경로(마우스/키보드)를 구분하지 않습니다. 모델을 분리하면 히스토리를 두 벌 관리해야 하는데, 이건 정확히 interactive-os가 해결하려던 문제의 반대 방향입니다.
+**제 판단: A가 더 가능성 높습니다.** 이유: 현재 프로젝트의 설계 철학이 "키보드로 모든 것을 할 수 있어야 한다"이고, dnd 커맨드는 이미 있으니 키바인딩 연결만 남은 상황입니다. B는 APG의 drag-and-drop 패턴인데, 현재 축 모델과 별개의 새 모드 개념이 필요해서 스코프가 큽니다.
 
-3. **"입력 경로가 다르고 모델은 같다"는 게 이 프레임워크의 핵심 설계입니다.** clipboard도 Ctrl+C(키보드)와 우클릭 복사(마우스)가 같은 Command를 씁니다. dnd도 동일한 패턴입니다.
-
-분리가 필요한 부분은 모델이 아니라 **인터랙션 레이어**입니다:
-- **키보드**: keyMap에서 `Cmd+ArrowUp` → `dndCommands.moveUp(focusedId)` dispatch (동기적, 한 칸)
-- **마우스 드래그**: dragstart/dragover/drop 이벤트 → 중간 preview 상태(이건 store 밖의 로컬 UI state) → drop 시 `dndCommands.moveTo(nodeId, targetParentId, dropIndex)` dispatch
-
-다르게 보시면 말씀해주세요.
-
----
-
-가장 이해도가 낮은 부분을 향해 질문합니다:
-
-**이 기능을 넣으려는 구체적 뷰가 어디인가요?** TreeGrid(파일 탐색기), ListBox, Kanban 등에 따라 "드래그 중 preview"의 형태와 drop 가능 위치 규칙이 완전히 달라집니다.
-
-A) TreeGrid — 트리 노드 간 이동, 깊이 변경 포함
-B) ListBox / 플랫 리스트 — 형제 간 순서만
-C) Kanban — 컬럼 간 + 컬럼 내 이동
-D) 다른 뷰
-
-**제 판단: 어떤 뷰든 Command 레이어는 공유하되, 드래그 preview / drop target 판정 로직은 뷰별로 달라야 합니다.** 이유: 현재 dnd plugin이 keyMap을 뷰별 `options.keyMap`으로 주입하는 원칙과 동일한 패턴이기 때문입니다. 대상 뷰를 알면 구체적인 drop 규칙을 정할 수 있습니다.
+**어떤 쪽인가요? 아니면 C) 다른 의미가 있으시면 말씀해 주세요.**

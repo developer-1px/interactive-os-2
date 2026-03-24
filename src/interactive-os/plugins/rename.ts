@@ -1,6 +1,6 @@
-import type { Command } from '../core/types'
-import { definePlugin } from '../core/definePlugin'
-import { getEntity, updateEntityData } from '../core/createStore'
+import type { Command } from '../engine/types'
+import { getEntity, updateEntityData } from '../store/createStore'
+import { definePlugin } from './definePlugin'
 
 export const RENAME_ID = '__rename__'
 

@@ -4,10 +4,10 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Aria } from '../../components/aria'
-import { spatial } from '../../behaviors/spatial'
-import { createStore } from '../../core/createStore'
-import { ROOT_ID } from '../../core/types'
+import { Aria } from '../../primitives/aria'
+import { spatial } from '../../pattern/spatial'
+import { createStore } from '../../store/createStore'
+import { ROOT_ID } from '../../store/types'
 import { core, EXPANDED_ID } from '../../plugins/core'
 
 function spatialFixture() {

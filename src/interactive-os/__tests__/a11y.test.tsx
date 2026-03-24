@@ -5,12 +5,12 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import axe from 'axe-core'
-import { Aria } from '../components/aria'
-import { tree } from '../behaviors/tree'
-import { listbox } from '../behaviors/listbox'
-import { tabs } from '../behaviors/tabs'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
+import { Aria } from '../primitives/aria'
+import { tree } from '../pattern/tree'
+import { listbox } from '../pattern/listbox'
+import { tabs } from '../pattern/tabs'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
 
 async function checkA11y(container: HTMLElement): Promise<axe.AxeResults> {
   return axe.run(container, {

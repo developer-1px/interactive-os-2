@@ -8,15 +8,16 @@ import { describe, it, expect, afterEach } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ListBox } from '../ui/ListBox'
-import { Aria } from '../components/aria'
-import { listbox } from '../behaviors/listbox'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData, Entity, Command } from '../core/types'
+import { Aria } from '../primitives/aria'
+import { listbox } from '../pattern/listbox'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData, Entity } from '../store/types'
+import type { Command } from '../engine/types'
 import { core } from '../plugins/core'
 import { rename, renameCommands } from '../plugins/rename'
 import { typeahead, resetTypeahead } from '../plugins/typeahead'
-import type { BehaviorContext, NodeState } from '../behaviors/types'
+import type { PatternContext, NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
   return createStore({
@@ -159,7 +160,7 @@ describe('Typeahead keyboard integration', () => {
   // V4: M4 — rename mode blocks typeahead (contenteditable captures event)
   it('typeahead does not fire during rename mode', async () => {
     const user = userEvent.setup()
-    const editKeyMap: Record<string, (ctx: BehaviorContext) => Command | void> = {
+    const editKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
       'F2': (ctx) => renameCommands.startRename(ctx.focused),
     }
     const data = createStore({

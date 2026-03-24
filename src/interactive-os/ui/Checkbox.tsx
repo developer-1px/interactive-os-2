@@ -1,9 +1,10 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { switchBehavior } from '../behaviors/switch'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { switchPattern } from '../pattern/switch'
 import { core } from '../plugins/core'
 import styles from './Checkbox.module.css'
 
@@ -45,7 +46,7 @@ export function Checkbox({
   renderItem = defaultRenderItem,
 }: CheckboxProps) {
   return (
-    <Aria behavior={switchBehavior} data={data} plugins={plugins} onChange={onChange}>
+    <Aria behavior={switchPattern} data={data} plugins={plugins} onChange={onChange}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

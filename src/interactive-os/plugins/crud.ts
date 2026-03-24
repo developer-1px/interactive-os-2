@@ -1,7 +1,9 @@
-import type { Command, Entity, NormalizedData } from '../core/types'
-import { ROOT_ID, createBatchCommand } from '../core/types'
-import { addEntity, removeEntity, getEntity, getChildren, getParent } from '../core/createStore'
-import { definePlugin } from '../core/definePlugin'
+import type { Command } from '../engine/types'
+import { createBatchCommand } from '../engine/types'
+import type { Entity, NormalizedData } from '../store/types'
+import { ROOT_ID } from '../store/types'
+import { addEntity, removeEntity, getEntity, getChildren, getParent } from '../store/createStore'
+import { definePlugin } from './definePlugin'
 import { focusRecovery } from './focusRecovery'
 import type { IsReachable } from './focusRecovery'
 

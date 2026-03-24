@@ -1,10 +1,10 @@
-import { navigate } from '../interactive-os/axes/navigate'
-import { select } from '../interactive-os/axes/select'
-import { activate } from '../interactive-os/axes/activate'
-import { expand } from '../interactive-os/axes/expand'
-import { dismiss } from '../interactive-os/axes/dismiss'
-import { tab } from '../interactive-os/axes/tab'
-import type { KeyMap, AxisConfig } from '../interactive-os/axes/composePattern'
+import { navigate } from '../interactive-os/axis/navigate'
+import { select } from '../interactive-os/axis/select'
+import { activate } from '../interactive-os/axis/activate'
+import { expand } from '../interactive-os/axis/expand'
+import { dismiss } from '../interactive-os/axis/dismiss'
+import { tab } from '../interactive-os/axis/tab'
+import type { KeyMap, AxisConfig } from '../interactive-os/pattern/composePattern'
 
 const axisRegistry: Record<string, () => { keyMap: KeyMap; config: Partial<AxisConfig> }> = {
   navigate: () => navigate(),

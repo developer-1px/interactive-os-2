@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useCallback } from 'react'
 import { components } from './showcaseRegistry'
-import type { NormalizedData } from '../interactive-os/core/types'
+import type { NormalizedData } from '../interactive-os/store/types'
 import styles from './PageLanding.module.css'
 
 function MiniDemo({ entry }: { entry: typeof components[number] }) {

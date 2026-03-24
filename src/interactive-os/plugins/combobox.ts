@@ -1,6 +1,7 @@
-import type { Command, NormalizedData } from '../core/types'
-import { definePlugin } from '../core/definePlugin'
-import { ROOT_ID } from '../core/types'
+import type { Command } from '../engine/types'
+import type { NormalizedData } from '../store/types'
+import { ROOT_ID } from '../store/types'
+import { definePlugin } from './definePlugin'
 
 const COMBOBOX_ID = '__combobox__'
 

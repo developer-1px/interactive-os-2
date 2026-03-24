@@ -7,15 +7,15 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Aria } from '../components/aria'
-import { listbox } from '../behaviors/listbox'
-import { tree } from '../behaviors/tree'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { Aria } from '../primitives/aria'
+import { listbox } from '../pattern/listbox'
+import { tree } from '../pattern/tree'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 import { core, focusCommands } from '../plugins/core'
-import { createCommandEngine } from '../core/createCommandEngine'
-import { createBehaviorContext } from '../behaviors/createBehaviorContext'
+import { createCommandEngine } from '../engine/createCommandEngine'
+import { createPatternContext } from '../pattern/createPatternContext'
 
 function fixtureStore(): NormalizedData {
   return createStore({
@@ -144,7 +144,7 @@ describe('extendSelectionTo — target ID with custom navigable set', () => {
     const engine = createCommandEngine(store, [], () => {}, { logger: false })
     engine.dispatch(focusCommands.setFocus('b'))
 
-    const ctx = createBehaviorContext(engine)
+    const ctx = createPatternContext(engine)
     const cmd = ctx.extendSelectionTo('d', ['a', 'b', 'c', 'd', 'e'])
     engine.dispatch(cmd)
 
@@ -158,7 +158,7 @@ describe('extendSelectionTo — target ID with custom navigable set', () => {
     const engine = createCommandEngine(store, [], () => {}, { logger: false })
     engine.dispatch(focusCommands.setFocus('a'))
 
-    const ctx = createBehaviorContext(engine)
+    const ctx = createPatternContext(engine)
     const cmd = ctx.extendSelectionTo('e', ['a', 'c', 'e'])
     engine.dispatch(cmd)
 
@@ -172,7 +172,7 @@ describe('extendSelectionTo — target ID with custom navigable set', () => {
     const engine = createCommandEngine(store, [], () => {}, { logger: false })
     engine.dispatch(focusCommands.setFocus('b'))
 
-    const ctx = createBehaviorContext(engine)
+    const ctx = createPatternContext(engine)
     const cmd = ctx.extendSelectionTo('d')
     engine.dispatch(cmd)
 

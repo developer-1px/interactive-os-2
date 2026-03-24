@@ -2,10 +2,11 @@ import { useEffect, useRef, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Eye, Database, Cog, Puzzle, Box, Map, PenTool } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import type { NormalizedData, Command } from '../../interactive-os/core/types'
-import type { BehaviorContext } from '../../interactive-os/behaviors/types'
-import { menu } from '../../interactive-os/behaviors/menu'
-import { useAria } from '../../interactive-os/hooks/useAria'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import type { Command } from '../../interactive-os/engine/types'
+import type { PatternContext } from '../../interactive-os/pattern/types'
+import { menu } from '../../interactive-os/pattern/menu'
+import { useAria } from '../../interactive-os/primitives/useAria'
 import { core } from '../../interactive-os/plugins/core'
 
 interface DrawerNavItem {
@@ -47,7 +48,7 @@ export default function CmsHamburgerDrawer({ open, onClose, hamburgerRef }: CmsH
   const { pathname } = useLocation()
   const drawerRef = useRef<HTMLDivElement>(null)
 
-  const keyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+  const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
     Escape: () => {
       onClose()
       hamburgerRef.current?.focus()

@@ -1,1 +1,0 @@
-{"eval_id": 3, "eval_name": "plugin-arch-mermaid", "prompt": "플러그인 시스템 아키텍처를 리팩토링하려는데, 이상적인 모듈 구조가 어떤 모습인지 그려보고 싶어", "assertions": ["설계 도메인 감지", "Mermaid 다이어그램", "이상적 상태 그림", "갭 발견"]}

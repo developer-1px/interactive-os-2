@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest'
-import { storeToTree } from '../core/storeToTree'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { storeToTree } from '../store/storeToTree'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 
 describe('storeToTree', () => {
   const source: NormalizedData = {

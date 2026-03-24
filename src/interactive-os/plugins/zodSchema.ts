@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { definePlugin } from '../core/definePlugin'
+import { definePlugin } from './definePlugin'
 import { PASTE, CUT, clipboardCommands } from './clipboard'
 import type { CanAcceptFn, CanDeleteFn } from './clipboard'
 

@@ -120,6 +120,12 @@ interface NameWithFile {
   file: string;
 }
 
+interface ExportWithReturn {
+  name: string;
+  file: string;
+  returnType: string;
+}
+
 function splitPathSegment(segment: string): string[] {
   // Remove extension
   const name = segment.replace(/\.\w+$/, "");
@@ -183,7 +189,103 @@ function buildFragmentDictionary(
   return groups;
 }
 
-// --- Part 2: Type orbit ---
+// --- Part 2: Return type variance ---
+
+function typeToString(typeNode: ts.TypeNode): string {
+  if (ts.isTypeReferenceNode(typeNode)) {
+    if (ts.isIdentifier(typeNode.typeName)) return typeNode.typeName.text;
+    return typeNode.typeName.getText();
+  }
+  if (ts.isArrayTypeNode(typeNode)) return `${typeToString(typeNode.elementType)}[]`;
+  if (ts.isUnionTypeNode(typeNode))
+    return typeNode.types.map(typeToString).join(" | ");
+  if (ts.isLiteralTypeNode(typeNode)) return typeNode.literal.getText();
+  if (typeNode.kind === ts.SyntaxKind.StringKeyword) return "string";
+  if (typeNode.kind === ts.SyntaxKind.NumberKeyword) return "number";
+  if (typeNode.kind === ts.SyntaxKind.BooleanKeyword) return "boolean";
+  if (typeNode.kind === ts.SyntaxKind.VoidKeyword) return "void";
+  if (typeNode.kind === ts.SyntaxKind.UndefinedKeyword) return "undefined";
+  if (typeNode.kind === ts.SyntaxKind.NullKeyword) return "null";
+  if (ts.isTypeLiteralNode(typeNode)) return "object";
+  if (ts.isFunctionTypeNode(typeNode)) return "function";
+  return "unknown";
+}
+
+function collectExportedFunctions(
+  sourceFile: ts.SourceFile,
+  relativePath: string,
+): ExportWithReturn[] {
+  const results: ExportWithReturn[] = [];
+
+  for (const stmt of sourceFile.statements) {
+    if (ts.isFunctionDeclaration(stmt) && hasExportModifier(stmt) && stmt.name) {
+      const returnType = stmt.type ? typeToString(stmt.type) : "inferred";
+      results.push({ name: stmt.name.text, file: relativePath, returnType });
+    }
+    if (ts.isVariableStatement(stmt) && hasExportModifier(stmt)) {
+      for (const decl of stmt.declarationList.declarations) {
+        if (!ts.isIdentifier(decl.name)) continue;
+        if (!decl.initializer) continue;
+        // Arrow functions / function expressions with explicit return type
+        if (
+          (ts.isArrowFunction(decl.initializer) ||
+            ts.isFunctionExpression(decl.initializer)) &&
+          decl.initializer.type
+        ) {
+          results.push({
+            name: decl.name.text,
+            file: relativePath,
+            returnType: typeToString(decl.initializer.type),
+          });
+        } else if (decl.type && ts.isFunctionTypeNode(decl.type) && decl.type.type) {
+          results.push({
+            name: decl.name.text,
+            file: relativePath,
+            returnType: typeToString(decl.type.type),
+          });
+        }
+      }
+    }
+  }
+
+  return results;
+}
+
+function getVerbPrefix(name: string): string | null {
+  const fragments = splitIdentifier(name);
+  if (fragments.length < 2) return null;
+  const verb = fragments[0]!;
+  const knownVerbs = new Set([
+    "get", "find", "create", "make", "use", "set", "toggle", "focus",
+    "select", "clear", "reset", "compute", "validate", "collect",
+    "extract", "detect", "dispatch", "render", "build", "fetch",
+    "update", "remove", "add", "insert", "move", "expand", "collapse",
+    "activate", "register", "unregister", "define", "compose", "merge",
+    "replace", "start", "confirm", "cancel", "load", "save", "apply",
+    "format", "parse", "match", "flatten", "navigate", "enter", "exit",
+  ]);
+  return knownVerbs.has(verb) ? verb : null;
+}
+
+function buildReturnTypeVariance(
+  sourceFiles: { file: string; sf: ts.SourceFile }[],
+): Map<string, ExportWithReturn[]> {
+  const byVerb = new Map<string, ExportWithReturn[]>();
+
+  for (const { file, sf } of sourceFiles) {
+    const relativePath = path.relative(PROJECT_ROOT, file);
+    for (const fn of collectExportedFunctions(sf, relativePath)) {
+      const verb = getVerbPrefix(fn.name);
+      if (!verb) continue;
+      if (!byVerb.has(verb)) byVerb.set(verb, []);
+      byVerb.get(verb)!.push(fn);
+    }
+  }
+
+  return byVerb;
+}
+
+// --- Part 3: Type orbit ---
 
 function collectExportedTypeNames(sourceFile: ts.SourceFile): string[] {
   const types: string[] = [];
@@ -266,6 +368,7 @@ function buildTypeOrbit(
 function main() {
   const sourceFiles = parseSourceFiles();
   const fragments = buildFragmentDictionary(sourceFiles);
+  const returnVariance = buildReturnTypeVariance(sourceFiles);
   const orbit = buildTypeOrbit(sourceFiles);
 
   const lines: string[] = [];
@@ -293,7 +396,38 @@ function main() {
 
   lines.push("");
 
-  // Part 2: Type orbit
+  // Part 2: Return type variance (aptness signal)
+  lines.push("## Return Type Variance");
+  lines.push("");
+  lines.push(
+    "> High-frequency verb prefixes with diverse return types may indicate semantic overloading."
+  );
+  lines.push("");
+
+  const sortedVariance = [...returnVariance.entries()]
+    .filter(([, fns]) => fns.length >= 3)
+    .sort(([, a], [, b]) => b.length - a.length);
+
+  for (const [verb, fns] of sortedVariance) {
+    const typeGroups = new Map<string, string[]>();
+    for (const fn of fns) {
+      if (!typeGroups.has(fn.returnType)) typeGroups.set(fn.returnType, []);
+      typeGroups.get(fn.returnType)!.push(fn.name);
+    }
+    const uniqueTypes = typeGroups.size;
+    const variance = uniqueTypes >= 3 ? "HIGH" : uniqueTypes >= 2 ? "MEDIUM" : "LOW";
+
+    lines.push(`### \`${verb}\` (${fns.length} functions, ${uniqueTypes} return types — ${variance})`);
+    lines.push("");
+    lines.push("| return type | functions |");
+    lines.push("|-------------|----------|");
+    for (const [returnType, names] of [...typeGroups.entries()].sort(([a], [b]) => a.localeCompare(b))) {
+      lines.push(`| \`${returnType}\` | ${names.join(", ")} |`);
+    }
+    lines.push("");
+  }
+
+  // Part 3: Type orbit
   lines.push("## Type Orbit");
   lines.push("");
   lines.push("| type | usages | variable names |");

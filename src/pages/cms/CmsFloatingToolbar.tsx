@@ -1,15 +1,17 @@
 import React, { useMemo } from 'react'
-import type { NormalizedData, Command } from '../../interactive-os/core/types'
-import { ROOT_ID, createBatchCommand } from '../../interactive-os/core/types'
-import { getChildren, getParent } from '../../interactive-os/core/createStore'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import { ROOT_ID } from '../../interactive-os/store/types'
+import type { Command } from '../../interactive-os/engine/types'
+import { createBatchCommand } from '../../interactive-os/engine/types'
+import { getChildren, getParent } from '../../interactive-os/store/createStore'
 import { getSpatialParentId } from '../../interactive-os/plugins/spatial'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
 import { cmsCanDelete } from './cms-schema'
-import type { BehaviorContext } from '../../interactive-os/behaviors/types'
-import { toolbar } from '../../interactive-os/behaviors/toolbar'
-import { useAria } from '../../interactive-os/hooks/useAria'
+import type { PatternContext } from '../../interactive-os/pattern/types'
+import { toolbar } from '../../interactive-os/pattern/toolbar'
+import { useAria } from '../../interactive-os/primitives/useAria'
 import { core } from '../../interactive-os/plugins/core'
 
 interface CmsFloatingToolbarProps {
@@ -75,7 +77,7 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
     canvasEl?.focus()
   }
 
-  const keyMap = useMemo((): Record<string, (ctx: BehaviorContext) => Command | void> => ({
+  const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
     Escape: () => { focusCanvas() },
   }), [])
 

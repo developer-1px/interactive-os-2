@@ -1,12 +1,13 @@
 import React from 'react'
 import styles from './Slider.module.css'
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { slider } from '../behaviors/slider'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { slider } from '../pattern/slider'
 import { core, valueCommands } from '../plugins/core'
 import { history } from '../plugins/history'
-import { getAriaActions } from '../components/ariaRegistry'
+import { getAriaActions } from '../primitives/ariaRegistry'
 
 let sliderIdCounter = 0
 

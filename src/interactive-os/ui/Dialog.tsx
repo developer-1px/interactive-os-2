@@ -1,9 +1,10 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { dialog } from '../behaviors/dialog'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { dialog } from '../pattern/dialog'
 import { core } from '../plugins/core'
 
 interface DialogProps {

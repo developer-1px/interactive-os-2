@@ -6,8 +6,8 @@ import { TabList } from '../ui/TabList'
 import { Accordion } from '../ui/Accordion'
 import { MenuList } from '../ui/MenuList'
 import { DisclosureGroup } from '../ui/DisclosureGroup'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
 
 const treeData = createStore({
   entities: {

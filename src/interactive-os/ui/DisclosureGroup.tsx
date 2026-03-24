@@ -1,9 +1,10 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { disclosure } from '../behaviors/disclosure'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { disclosure } from '../pattern/disclosure'
 import { core } from '../plugins/core'
 import styles from './DisclosureGroup.module.css'
 

@@ -6,9 +6,9 @@ import { uiCategories, slugToMdFile } from './uiCategories'
 import { components } from './showcaseRegistry'
 import { NavList } from '../interactive-os/ui/NavList'
 import { FOCUS_ID } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData } from '../interactive-os/core/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NormalizedData } from '../interactive-os/store/types'
 
 // --- Grouped store: ROOT → groups → items ---
 

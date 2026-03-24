@@ -1,8 +1,8 @@
-import type { Entity } from '../core/types'
-import { definePlugin } from '../core/definePlugin'
-import type { CommandEngine } from '../core/createCommandEngine'
+import type { Entity } from '../store/types'
+import type { CommandEngine } from '../engine/createCommandEngine'
+import { definePlugin } from './definePlugin'
 import { focusCommands, FOCUS_ID } from './core'
-import { getVisibleNodes } from '../behaviors/createBehaviorContext'
+import { getVisibleNodes } from '../pattern/createPatternContext'
 
 export type GetLabelFn = (entity: Entity) => string
 

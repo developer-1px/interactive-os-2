@@ -1,9 +1,9 @@
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgTabs } from './apg-data'
 import { TabList } from '../interactive-os/ui/TabList'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NodeState } from '../interactive-os/behaviors/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 
 const tabData = createStore({
   entities: {

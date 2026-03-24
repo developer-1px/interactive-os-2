@@ -1,6 +1,6 @@
-import type { Command, Entity, NormalizedData } from '../core/types'
-import { ROOT_ID } from '../core/types'
-import { definePlugin } from '../core/definePlugin'
+import type { Command } from '../engine/types'
+import type { Entity, NormalizedData } from '../store/types'
+import { ROOT_ID } from '../store/types'
 import {
   addEntity,
   removeEntity,
@@ -8,7 +8,8 @@ import {
   getChildren,
   getParent,
   updateEntityData,
-} from '../core/createStore'
+} from '../store/createStore'
+import { definePlugin } from './definePlugin'
 
 interface ClipboardEntry {
   entity: Entity

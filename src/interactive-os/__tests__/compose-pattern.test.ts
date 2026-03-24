@@ -1,10 +1,11 @@
 // @vitest-environment node
 import { describe, it, expect, vi } from 'vitest'
-import { composePattern, isStructuredAxis, extractKeyMap, extractConfig } from '../axes/composePattern'
-import type { Axis, KeyMap, StructuredAxis, PatternConfig, Identity } from '../axes/composePattern'
-import type { BehaviorContext } from '../behaviors/types'
-import type { Command } from '../core/types'
-import { select } from '../axes/select'
+import { composePattern } from '../pattern/composePattern'
+import type { PatternConfig, Identity } from '../pattern/composePattern'
+import { isStructuredAxis, extractKeyMap, extractConfig } from '../axis/types'
+import type { Axis, KeyMap, StructuredAxis, PatternContext } from '../axis/types'
+import type { Command } from '../engine/types'
+import { select } from '../axis/select'
 
 function makeCmd(type: string): Command {
   return {
@@ -15,7 +16,7 @@ function makeCmd(type: string): Command {
   }
 }
 
-const mockCtx: BehaviorContext = {
+const mockCtx: PatternContext = {
   focused: 'node-1',
   selected: [],
   isExpanded: false,
@@ -101,7 +102,7 @@ describe('composePattern', () => {
     expect(result).toBeUndefined()
   })
 
-  it('metadata is passed through to AriaBehavior', () => {
+  it('metadata is passed through to AriaPattern', () => {
     const meta: PatternConfig = {
       role: 'tree',
       childRole: 'treeitem',
@@ -162,7 +163,7 @@ describe('composePattern', () => {
 
   it('axis using ctx.dispatch() can still return Command', () => {
     const dispatchSpy = vi.fn()
-    const ctxWithDispatch: BehaviorContext = {
+    const ctxWithDispatch: PatternContext = {
       ...mockCtx,
       dispatch: dispatchSpy,
     }

@@ -1,4 +1,4 @@
-import type { NodeState } from '../interactive-os/behaviors/types'
+import type { NodeState } from '../interactive-os/pattern/types'
 import {
   Folder, FolderOpen, FileText, FileCode, FileJson, FileType,
   ChevronRight, ChevronDown,

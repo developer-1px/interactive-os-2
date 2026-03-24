@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import { cmsStore } from './cms-store'
-import type { NormalizedData } from '../../interactive-os/core/types'
+import type { NormalizedData } from '../../interactive-os/store/types'
 
 let _data: NormalizedData = cmsStore
 const _listeners = new Set<() => void>()

@@ -1,11 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useControlledAria } from '../hooks/useControlledAria'
-import { listbox } from '../behaviors/listbox'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData, Command } from '../core/types'
+import { useControlledAria } from '../primitives/useControlledAria'
+import { listbox } from '../pattern/listbox'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
+import type { Command } from '../engine/types'
 import { focusCommands } from '../plugins/core'
 
 function fixtureStore(): NormalizedData {

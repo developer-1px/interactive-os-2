@@ -1,5 +1,5 @@
-import type { NormalizedData } from '../../interactive-os/core/types'
-import { ROOT_ID } from '../../interactive-os/core/types'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import { ROOT_ID } from '../../interactive-os/store/types'
 import { localeFieldsOf } from './cms-schema'
 import { LOCALES } from './cms-types'
 import type { LocaleMap } from './cms-types'

@@ -1,9 +1,0 @@
-{
-  "eval_id": 1,
-  "eval_name": "dnd-keyboard-model-sharing",
-  "expectations": [
-    {"text": "이해도 테이블 10개 요소 갱신", "passed": true, "evidence": "10개 요소 모두 내용과 이해도 판정 완료"},
-    {"text": "판단-먼저-질문 형식 준수", "passed": true, "evidence": "같은 모델을 공유해야 합니다 + 3가지 근거 먼저 제시 후 갭 질문"},
-    {"text": "FE 하드코딩 없는 범용 표현", "passed": true, "evidence": "인터랙션 단계를 키보드/마우스로 구분. 화면에서 뭐가 바뀌는가 같은 하드코딩 없음"}
-  ]
-}

@@ -1,12 +1,13 @@
 import React from 'react'
 
-import type { NormalizedData, Plugin } from '../core/types'
-import type { NodeState } from '../behaviors/types'
-import { Aria } from '../components/aria'
-import { treegrid } from '../behaviors/treegrid'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { NodeState } from '../pattern/types'
+import { Aria } from '../primitives/aria'
+import { treegrid } from '../pattern/treegrid'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
-import { replaceEditPlugin } from '../axes/edit'
+import { replaceEditPlugin } from '../pattern/edit'
 import styles from './TreeGrid.module.css'
 
 interface TreeGridProps {

@@ -12,17 +12,18 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useCallback, useMemo } from 'react'
-import { useEngine } from '../interactive-os/hooks/useEngine'
-import { useAriaZone } from '../interactive-os/hooks/useAriaZone'
-import { useSpatialNav } from '../interactive-os/hooks/useSpatialNav'
-import { spatial } from '../interactive-os/behaviors/spatial'
+import { useEngine } from '../interactive-os/engine/useEngine'
+import { useAriaZone } from '../interactive-os/primitives/useAriaZone'
+import { useSpatialNav } from '../interactive-os/plugins/useSpatialNav'
+import { spatial } from '../interactive-os/pattern/spatial'
 import { spatialCommands } from '../interactive-os/plugins/spatial'
 import { focusCommands } from '../interactive-os/plugins/core'
 import { spatialReachable } from '../interactive-os/plugins/focusRecovery'
-import { createStore, getParent } from '../interactive-os/core/createStore'
-import { ROOT_ID, createBatchCommand } from '../interactive-os/core/types'
-import type { NormalizedData } from '../interactive-os/core/types'
-import type { BehaviorContext } from '../interactive-os/behaviors/types'
+import { createStore, getParent } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import { createBatchCommand } from '../interactive-os/engine/types'
+import type { NormalizedData } from '../interactive-os/store/types'
+import type { PatternContext } from '../interactive-os/pattern/types'
 
 // ── rect helper ──
 
@@ -124,7 +125,7 @@ function TestCanvas({ data, activeRectMap }: { data: NormalizedData; activeRectM
 
   const testKeyMap = useMemo(() => ({
     ...spatialNav.keyMap,
-    Enter: (ctx: BehaviorContext) => {
+    Enter: (ctx: PatternContext) => {
       const children = ctx.getChildren(ctx.focused)
       if (children.length === 0) return
       spatialNav.clearCursorsAtDepth(ctx.focused)
@@ -133,7 +134,7 @@ function TestCanvas({ data, activeRectMap }: { data: NormalizedData; activeRectM
         focusCommands.setFocus(children[0]),
       ])
     },
-    Escape: (ctx: BehaviorContext) => {
+    Escape: (ctx: PatternContext) => {
       const spatialParent = ctx.getEntity('__spatial_parent__')
       const parentId = spatialParent?.parentId as string | undefined
       if (!parentId || parentId === ROOT_ID) return undefined

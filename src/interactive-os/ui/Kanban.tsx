@@ -1,13 +1,14 @@
 import React, { useRef, useEffect } from 'react'
 import styles from './Kanban.module.css'
-import type { NormalizedData, Plugin } from '../core/types'
-import { ROOT_ID } from '../core/types'
-import { useAria } from '../hooks/useAria'
-import { AriaInternalContext } from '../components/AriaInternalContext'
-import { AriaItemContext, Aria } from '../components/aria'
-import { kanban as kanbanBehavior } from '../behaviors/kanban'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import { ROOT_ID } from '../store/types'
+import { useAria } from '../primitives/useAria'
+import { AriaInternalContext } from '../primitives/AriaInternalContext'
+import { AriaItemContext, Aria } from '../primitives/aria'
+import { kanban as kanbanBehavior } from '../pattern/kanban'
 import { core } from '../plugins/core'
-import { getChildren, getEntity } from '../core/createStore'
+import { getChildren, getEntity } from '../store/createStore'
 
 interface KanbanProps {
   data: NormalizedData

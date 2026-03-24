@@ -9,7 +9,7 @@
 
 .spinbuttonLabel {
   font-size: var(--text-md);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text-primary);
   min-width: 64px;
 }
@@ -39,7 +39,7 @@
   background: var(--bg-hover);
   color: var(--text-primary);
   font-size: var(--text-xl);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   cursor: pointer;
   transition: background 0.1s;
   -webkit-user-select: none;
@@ -75,7 +75,7 @@
   min-width: 48px;
   padding: var(--space-sm) var(--space-md);
   font-size: var(--text-md);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--text-primary);
   text-align: center;
   font-variant-numeric: tabular-nums;
@@ -88,7 +88,7 @@
   border: none;
   background: transparent;
   font-size: var(--text-md);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--text-primary);
   text-align: center;
   font-variant-numeric: tabular-nums;

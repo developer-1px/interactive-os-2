@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import { apgSlider } from './apg-data'
 import { Slider } from '../interactive-os/ui/Slider'
-import { createStore } from '../interactive-os/core/createStore'
-import { ROOT_ID } from '../interactive-os/core/types'
-import type { NormalizedData } from '../interactive-os/core/types'
+import { createStore } from '../interactive-os/store/createStore'
+import { ROOT_ID } from '../interactive-os/store/types'
+import type { NormalizedData } from '../interactive-os/store/types'
 
 const MIN = 0
 const MAX = 100

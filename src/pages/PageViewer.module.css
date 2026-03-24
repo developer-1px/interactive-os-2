@@ -61,11 +61,11 @@
   background: var(--surface-base);
   border: 1px solid var(--border-default);
   border-radius: var(--radius);
-  padding: 2px var(--space-md);
+  padding: var(--space-xs) var(--space-md);
   cursor: pointer;
   font-size: var(--text-xs);
 
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text-secondary);
   transition: all 0.15s;
 }
@@ -120,9 +120,8 @@
 
 .vw-tree__header-title {
   font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: var(--weight-semi);
+  letter-spacing: 0.02em;
   color: var(--text-muted);
 }
 
@@ -135,6 +134,7 @@
 
 .vw-tree__item {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--space-xs);
   white-space: nowrap;
@@ -152,14 +152,12 @@
 .vw-tree__name {
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.vw-tree__name--dir {
-  font-weight: 500;
   color: var(--text-secondary);
 }
 
-/* focused dir name color handled by components.css ARIA :focus selector */
+.vw-tree__name--dir {
+  font-weight: var(--weight-medium);
+}
 
 
 /* --- Content panel --- */
@@ -242,7 +240,7 @@
 }
 
 .vw-content__meta svg {
-  margin-right: 2px;
+  margin-right: var(--space-xs);
   opacity: 0.45;
 }
 
@@ -250,7 +248,7 @@
   width: 1px;
   height: 10px;
   background: var(--border-default);
-  margin: 0 2px;
+  margin: 0 var(--space-xs);
 }
 
 
@@ -347,7 +345,7 @@
   flex-shrink: 0;
   font-family: var(--mono);
   font-size: var(--text-xs);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text-muted);
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
@@ -382,7 +380,7 @@
 }
 
 .qo-item__name {
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   white-space: nowrap;
   flex-shrink: 0;
 }

@@ -6,13 +6,13 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Aria } from '../components/aria'
-import { toolbar } from '../behaviors/toolbar'
-import { tabs } from '../behaviors/tabs'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
-import type { AriaBehavior, NodeState } from '../behaviors/types'
+import { Aria } from '../primitives/aria'
+import { toolbar } from '../pattern/toolbar'
+import { tabs } from '../pattern/tabs'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
+import type { AriaPattern, NodeState } from '../pattern/types'
 import { core } from '../plugins/core'
 
 function fixtureData(): NormalizedData {
@@ -41,7 +41,7 @@ function fixtureDataAllFollowFocus(): NormalizedData {
   })
 }
 
-const verticalToolbar: AriaBehavior = {
+const verticalToolbar: AriaPattern = {
   ...toolbar,
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),
@@ -57,7 +57,7 @@ const verticalToolbar: AriaBehavior = {
 
 function renderWithActivate(
   data: NormalizedData,
-  behavior: AriaBehavior,
+  behavior: AriaPattern,
   onActivate: (id: string) => void,
 ) {
   return render(
@@ -188,7 +188,7 @@ describe('followFocus + onActivate', () => {
     it('does NOT call onActivate on focus change when followFocus is falsy', async () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
-      const toolbarNoFollow: AriaBehavior = { ...toolbar }
+      const toolbarNoFollow: AriaPattern = { ...toolbar }
       const { container } = renderWithActivate(fixtureDataAllFollowFocus(), toolbarNoFollow, onActivate)
 
       const firstNode = getNodeElement(container, 'a')!

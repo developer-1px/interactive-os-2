@@ -8,13 +8,13 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Aria } from '../components/aria'
-import { alertdialog } from '../behaviors/alertdialog'
-import { createStore } from '../core/createStore'
-import { ROOT_ID } from '../core/types'
-import type { NormalizedData } from '../core/types'
+import { Aria } from '../primitives/aria'
+import { alertdialog } from '../pattern/alertdialog'
+import { createStore } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 import { core } from '../plugins/core'
-import type { NodeState } from '../behaviors/types'
+import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
   return createStore({

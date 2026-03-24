@@ -1,14 +1,16 @@
-import type { Command, NormalizedData, Plugin } from '../core/types'
-import type { NodeState, BehaviorContext } from '../behaviors/types'
-import { tree } from '../behaviors/tree'
-import { useAria } from '../hooks/useAria'
-import type { UseAriaReturn } from '../hooks/useAria'
+import type { NormalizedData } from '../store/types'
+import type { Plugin } from '../plugins/types'
+import type { Command } from '../engine/types'
+import type { NodeState, PatternContext } from '../pattern/types'
+import { tree } from '../pattern/tree'
+import { useAria } from '../primitives/useAria'
+import type { UseAriaReturn } from '../primitives/useAria'
 import { core } from '../plugins/core'
 
 export interface UseTreeViewOptions {
   data: NormalizedData
   plugins?: Plugin[]
-  keyMap?: Record<string, (ctx: BehaviorContext) => Command | void>
+  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   initialFocus?: string
