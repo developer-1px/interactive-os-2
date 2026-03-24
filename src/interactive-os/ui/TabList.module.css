@@ -6,7 +6,7 @@
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: var(--indicator-width) solid transparent;
 }
 
 .tabFocused {

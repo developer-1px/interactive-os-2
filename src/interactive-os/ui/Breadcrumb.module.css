@@ -10,7 +10,7 @@
 }
 
 .sep {
-  margin: 0 2px;
+  margin: 0 var(--space-xs);
   opacity: 0.4;
   flex-shrink: 0;
 }

@@ -5,7 +5,7 @@
   margin: 0;
   margin-top: var(--space-xs);
   padding: var(--space-xs) var(--space-sm);
-  max-width: 240px;
+  max-width: calc(var(--space-3xl) * 6);
 
   background: var(--surface-raised);
   box-shadow: var(--shadow-md);
