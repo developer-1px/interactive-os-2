@@ -26,8 +26,9 @@ toaster.toast({ title: 'Error', description: 'Network failed', variant: 'error' 
 
 ## Props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
+| prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| toaster | ToasterInstance | — | createToaster()로 생성한 토스터 인스턴스 |
 
 ## Keyboard
 
@@ -37,8 +38,29 @@ toaster.toast({ title: 'Error', description: 'Network failed', variant: 'error' 
 
 ## Accessibility
 
-<!-- TODO -->
+- pattern 미사용 (useAria/engine 밖 독립 컴포넌트)
+- aria-live="polite" + aria-atomic="false": 스크린리더에 새 토스트 알림
+- dismiss 버튼: aria-label="Dismiss"
 
 ## Internals
 
-<!-- TODO -->
+### DOM 구조
+
+```
+div[aria-live=polite] container
+  └─ div[data-variant] toast
+       ├─ div  content
+       │   ├─ div  title
+       │   └─ div  description (optional)
+       └─ button  dismiss (×)
+```
+
+### 상태 관리
+
+- useSyncExternalStore로 외부 toaster 구독
+- createToaster(): 자동 dismiss 타이머, maxToasts 큐 관리
+
+### CSS
+
+- 방식: CSS Modules
+- 파일: Toaster.module.css
