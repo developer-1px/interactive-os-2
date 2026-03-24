@@ -101,8 +101,12 @@
   --amber: var(--tone-warning);
 
   /* ── Focus ── */
-  --focus:      var(--blue-400);
-  --focus-idle: var(--bg-hover);
+  --focus:        var(--blue-400);
+  --focus-idle:   var(--bg-hover);
+  --focus-ring:   1px;
+
+  /* ── Indicator ── */
+  --indicator-width: 2px;
 
   /* ── Selection ── */
   --selection: var(--tone-primary-dim);
@@ -359,8 +363,8 @@ p {
 }
 
 *:focus-visible {
-  outline: 1px solid var(--focus);
-  outline-offset: -1px;
+  outline: var(--focus-ring) solid var(--focus);
+  outline-offset: calc(-1 * var(--focus-ring));
 }
 
 /* ══ Scrollbar (WebKit) ══ */

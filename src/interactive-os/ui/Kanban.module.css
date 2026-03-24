@@ -10,8 +10,8 @@
 /* ── Column panel ── */
 .column {
   flex: 1 1 0;
-  min-width: 200px;
-  max-width: 320px;
+  min-width: calc(var(--space-3xl) * 5);
+  max-width: calc(var(--space-3xl) * 8);
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
@@ -84,8 +84,8 @@
 /* ── Editable card title ── */
 .card :global([data-renaming]) {
   outline: 1px solid var(--focus);
-  outline-offset: 2px;
+  outline-offset: calc(var(--space-xs) / 2);
   border-radius: var(--radius-xs);
-  padding: 0 2px;
-  min-width: 40px;
+  padding: 0 calc(var(--space-xs) / 2);
+  min-width: var(--space-3xl);
 }
