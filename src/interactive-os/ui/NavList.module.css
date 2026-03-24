@@ -2,14 +2,14 @@
 
 .item {
   padding: var(--space-xs) var(--space-md);
-  font-size: var(--text-md);
-  border-radius: var(--radius-sm);
+  font-size: var(--type-body-size);
+  border-radius: var(--shape-md-radius);
   cursor: pointer;
   user-select: none;
 }
 
 .itemFocused {
-  background: var(--primary-dim);
+  background: var(--tone-primary-dim);
   color: var(--text-bright);
 }
 
@@ -24,7 +24,7 @@
 }
 
 .groupLabel {
-  font-size: var(--text-xs);
+  font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   letter-spacing: 0.04em;
   text-transform: uppercase;

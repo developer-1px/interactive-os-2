@@ -15,7 +15,7 @@
 }
 
 .title {
-  font-size: var(--text-3xl);
+  font-size: var(--type-hero-size);
   font-weight: var(--weight-semi);
   letter-spacing: -0.02em;
   color: var(--text-bright);
@@ -23,7 +23,7 @@
 }
 
 .lead {
-  font-size: var(--text-lg);
+  font-size: var(--type-section-size);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
   margin: 0 0 var(--space-3xl);
@@ -36,7 +36,7 @@
 }
 
 .heading {
-  font-size: var(--text-xl);
+  font-size: var(--type-page-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
   margin: 0 0 var(--space-md);
@@ -44,7 +44,7 @@
 }
 
 .text {
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
   margin: 0 0 var(--space-md);
@@ -55,11 +55,11 @@
 .code {
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   padding: var(--space-lg) var(--space-xl);
   overflow-x: auto;
   font-family: var(--mono);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   line-height: var(--leading-code);
   color: var(--text-primary);
   white-space: pre;
@@ -68,10 +68,10 @@
 
 .inlineCode {
   font-family: var(--mono);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   background: var(--surface-raised);
   padding: 2px var(--space-sm);
-  border-radius: var(--radius-xs);
+  border-radius: var(--shape-xs-radius);
   color: var(--blue-200);
 }
 
@@ -83,7 +83,7 @@
   gap: 1px;
   background: var(--border-subtle);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   overflow: hidden;
 }
 
@@ -98,14 +98,14 @@
 
 .conceptTitle {
   font-family: var(--mono);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--blue-200);
   margin: 0 0 var(--space-sm);
 }
 
 .conceptDesc {
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   line-height: var(--leading-normal);
   color: var(--text-secondary);
   margin: 0;
@@ -123,21 +123,21 @@
 .layer {
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
   padding: var(--space-sm) var(--space-lg);
   text-align: center;
 }
 
 .layerLabel {
   font-family: var(--mono);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-secondary);
   letter-spacing: 0.02em;
 }
 
 .caption {
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
   color: var(--text-muted);
   text-align: center;
   margin: 0;

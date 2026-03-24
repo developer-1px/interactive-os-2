@@ -14,7 +14,7 @@
 }
 
 .spinbuttonLabel {
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
   min-width: var(--_label-min-w);
@@ -25,14 +25,14 @@
   display: inline-flex;
   align-items: stretch;
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
   overflow: hidden;
   transition: border-color 0.12s, box-shadow 0.12s;
 }
 
 [data-focused] .spinbuttonGroup {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 var(--_ring-spread) var(--primary);
+  border-color: var(--tone-primary-base);
+  box-shadow: 0 0 0 var(--_ring-spread) var(--tone-primary-base);
   outline: none;
 }
 
@@ -44,7 +44,7 @@
   border: none;
   background: var(--bg-hover);
   color: var(--text-primary);
-  font-size: var(--text-xl);
+  font-size: var(--type-page-size);
   font-weight: var(--weight-regular);
   cursor: pointer;
   transition: background 0.1s;
@@ -57,7 +57,7 @@
 }
 
 .spinbuttonBtn:active {
-  background: var(--primary-bright);
+  background: var(--tone-primary-bright);
 }
 
 .spinbuttonBtn[aria-disabled] {
@@ -80,7 +80,7 @@
   justify-content: center;
   min-width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-primary);
   text-align: center;
@@ -93,7 +93,7 @@
   padding: var(--space-sm) var(--space-sm);
   border: none;
   background: transparent;
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-primary);
   text-align: center;
@@ -103,6 +103,6 @@
 
 /* Error state */
 .spinbuttonGroup[data-invalid] {
-  border-color: var(--destructive);
-  box-shadow: 0 0 0 var(--_ring-spread) var(--destructive);
+  border-color: var(--tone-destructive-base);
+  box-shadow: 0 0 0 var(--_ring-spread) var(--tone-destructive-base);
 }

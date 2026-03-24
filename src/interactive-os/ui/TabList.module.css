@@ -2,7 +2,7 @@
 
 .tab {
   padding: var(--space-xs) var(--space-md);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
@@ -11,7 +11,7 @@
 
 .tabFocused {
   color: var(--text-bright);
-  border-bottom-color: var(--primary);
+  border-bottom-color: var(--tone-primary-base);
 }
 
 .tabSelected {

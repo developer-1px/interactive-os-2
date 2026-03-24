@@ -2,11 +2,11 @@
 
 .comboItem {
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
 }
 
 .comboItemFocused {
-  background: var(--primary-dim);
+  background: var(--tone-primary-dim);
   color: var(--text-bright);
 }
 
@@ -18,17 +18,17 @@
 .comboInput {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   color: var(--text-primary);
   background: var(--surface-default);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   outline: none;
   transition: border-color 0.12s;
 }
 
 .comboInput:focus {
-  border-color: var(--primary);
+  border-color: var(--tone-primary-base);
 }
 
 .comboInput::placeholder {
@@ -38,7 +38,7 @@
 .comboDropdown {
   background: var(--surface-overlay);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   box-shadow: var(--shadow-lg);
   margin-top: var(--space-xs);
   overflow: hidden;

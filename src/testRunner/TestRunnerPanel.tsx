@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { runTest, demoTest, type RunTestResult, type TestResult } from './runTest'
 
 function StatusIcon({ status }: { status: 'pass' | 'fail' | 'pending' }) {
-  if (status === 'pass') return <span style={{ color: 'var(--green)' }}>●</span>
+  if (status === 'pass') return <span style={{ color: 'var(--tone-success-base)' }}>●</span>
   if (status === 'fail') return <span style={{ color: 'var(--red)' }}>●</span>
   return <span style={{ color: 'var(--text-muted)' }}>○</span>
 }
@@ -137,7 +137,7 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
             )}
             {state === 'done' && result && (
               <span style={{ fontFamily: 'var(--mono)', fontSize: '0.85em' }}>
-                <span style={{ color: 'var(--green)' }}>{passed} passed</span>
+                <span style={{ color: 'var(--tone-success-base)' }}>{passed} passed</span>
                 {failed > 0 && <span style={{ color: 'var(--red)', marginLeft: 12 }}>{failed} failed</span>}
                 <span className="text-muted" style={{ marginLeft: 12 }}>{total} total</span>
               </span>

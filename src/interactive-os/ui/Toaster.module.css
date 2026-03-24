@@ -18,20 +18,20 @@
   padding: var(--space-sm) var(--space-md);
   background: var(--surface-default);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
+  border-radius: var(--shape-xl-radius);
   box-shadow: var(--shadow-lg);
   color: var(--text-primary);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   line-height: var(--leading-snug);
   animation: slideIn 150ms ease-out;
 }
 
 .toast[data-variant='success'] {
-  border-color: var(--green);
+  border-color: var(--tone-success-base);
 }
 
 .toast[data-variant='error'] {
-  border-color: var(--destructive);
+  border-color: var(--tone-destructive-base);
 }
 
 .content {
@@ -46,7 +46,7 @@
 .description {
   margin-top: var(--space-xs);
   color: var(--text-secondary);
-  font-size: var(--text-sm);
+  font-size: var(--type-body-size);
 }
 
 .dismiss {
@@ -59,9 +59,9 @@
   justify-content: center;
   background: none;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--shape-md-radius);
   color: var(--text-secondary);
-  font-size: var(--text-md);
+  font-size: var(--type-body-size);
   cursor: pointer;
 }
 

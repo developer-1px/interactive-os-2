@@ -71,7 +71,7 @@ export default function EditDemo() {
           <input type="checkbox" checked={replaceMode} onChange={(e) => setReplaceMode(e.target.checked)} />
           {' '}replaceEditPlugin
         </label>
-        <button onClick={handleReset} style={{ fontSize: 'var(--text-sm)', padding: '2px var(--space-sm)' }}>Reset</button>
+        <button onClick={handleReset} style={{ fontSize: 'var(--type-body-size)', padding: '2px var(--space-sm)' }}>Reset</button>
       </div>
       <div className="page-keys">
         <kbd>F2</kbd> <span className="key-hint">rename</span>{' '}

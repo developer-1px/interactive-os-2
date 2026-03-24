@@ -9,7 +9,7 @@ export function ShowcaseDemo({ slug }: { slug?: string }) {
   const entry = components.find((c) => c.slug === slug)
 
   if (!entry) {
-    return <div style={{ color: 'var(--destructive)', padding: '8px' }}>Unknown component: {slug}</div>
+    return <div style={{ color: 'var(--tone-destructive-base)', padding: '8px' }}>Unknown component: {slug}</div>
   }
 
   return (

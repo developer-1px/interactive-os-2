@@ -83,7 +83,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Vitest (723 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+| Vitest (799 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
 | pnpm health | Validated | — |
@@ -94,7 +94,7 @@
 |--------|----------|------|
 | ActivityBar (CMS·UI·Viewer·Agent·Theme / internals) | Integrated | / = CMS, /viewer, /agent 1급 앱 |
 | UI Docs (/ui/{name}) | Integrated | MD SSOT 완성, /publish 스킬로 7섹션 완전성 감사, 23/23 module 100% 완전 |
-| Theme (/internals/theme) | Validated | MiniDemo 그리드 흡수, token 편집기, `pnpm score:design` 누락 감지 (49.4%) |
+| Theme (/internals/theme) | Validated | MiniDemo 그리드 흡수, token 편집기, `pnpm score:design` 누락 감지 (49.4%). 토큰 번들 네이밍 완성 (6레이어 CSS Layer Protocol 제안 중) |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs · field types) | Validated | paste overwrite, viewer channel 미구현 |
 | CMS Landing Tokens (landingTokens.css · CmsLanding.module.css) | Integrated | editorial 9섹션(hero→manifesto→features→patterns→showcase→journal→testimonial→cta→footer), 4 신규 노드타입 |

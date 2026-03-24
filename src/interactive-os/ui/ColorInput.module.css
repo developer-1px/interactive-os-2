@@ -4,7 +4,7 @@
   width: var(--icon-lg);
   height: var(--icon-lg);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-xs);
+  border-radius: var(--shape-xs-radius);
   cursor: pointer;
   padding: 0;
   background: none;
@@ -17,5 +17,5 @@
 
 .swatch::-webkit-color-swatch {
   border: none;
-  border-radius: calc(var(--radius-xs) - 1px);
+  border-radius: calc(var(--shape-xs-radius) - 1px);
 }
