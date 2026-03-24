@@ -18,10 +18,10 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `ToolGroup` 타입 | `{ type: 'tool_group'; events: TimelineEvent[] }` — 연속 tool_use 이벤트를 묶는 단위 | ✅ groupEvents.ts에 정의 |
-| `DisplayItem` 유니온 | `TimelineEvent \| ToolGroup` — virtual scroll 아이템 단위 | ✅ groupEvents.ts에 정의 |
-| `groupEvents()` 함수 | `TimelineEvent[]` → `DisplayItem[]` 전처리. 연속 tool_use를 ToolGroup으로 묶음 | ✅ groupEvents.ts에 구현 |
-| `ToolGroupCard` 컴포넌트 | rounded border 카드. 내부에 tool별 행을 divider로 구분하여 렌더링 | ✅ TimelineColumn.tsx에 memo 컴포넌트 |
+| `ToolGroup` 타입 | `{ type: 'tool_group'; events: TimelineEvent[] }` — 연속 tool_use 이벤트를 묶는 단위 | `src/pages/viewer/groupEvents.ts`::`export interface ToolGroup` |
+| `DisplayItem` 유니온 | `TimelineEvent \| ToolGroup` — virtual scroll 아이템 단위 | `src/pages/viewer/groupEvents.ts`::`export type DisplayItem` |
+| `groupEvents()` 함수 | `TimelineEvent[]` → `DisplayItem[]` 전처리. 연속 tool_use를 ToolGroup으로 묶음 | `src/pages/viewer/groupEvents.ts`::`export function groupEvents` |
+| `ToolGroupCard` 컴포넌트 | rounded border 카드. 내부에 tool별 행을 divider로 구분하여 렌더링 | `src/pages/viewer/TimelineColumn.tsx`::`ToolGroupCard` (memo, 비-export) |
 | CSS: `.tcToolGroup` | 카드 외곽 스타일 (border, radius, background) | ✅ border-radius: 12px, border: 1px solid, surface-base |
 | CSS: `.tcToolRow` | 카드 내부 개별 tool 행 스타일 | ✅ grid 16px 1fr, padding 6px 12px |
 | CSS: `.tcToolDivider` | 카드 내 행 간 구분선 | ✅ border-bottom: 1px solid |
@@ -101,13 +101,13 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | M1 | assistant + tool_use × 3 + assistant 시퀀스 렌더링 | tool_use 3개가 하나의 rounded border 카드 안에, assistant 텍스트는 카드 밖 | ✅ 테스트: breaks group when assistant event arrives |
-| V2 | M2 | assistant 이벤트 렌더링 | Bot 아이콘 없음, 텍스트만 표시 | ✅ Bot import 제거, assistant에 아이콘 없음 |
-| V3 | 경계: 1개 tool | assistant → tool_use(1개) → assistant | 1행짜리 카드, divider 없음 | ✅ 테스트: handles single tool_use as a group of 1 |
-| V4 | 경계: tool_result 사이 | tool_use → tool_result → tool_use | tool_result 무시, 두 tool_use가 한 카드 | ✅ 테스트: skips tool_result but preserves tool_use continuity |
-| V5 | M1 + S2 | SSE로 실시간 이벤트 도착 | 카드가 점진적으로 커지며 그룹핑 유지 | ✅ useMemo 재계산 |
-| V6 | 경계: 20+ tool | tool_use × 25 연속 | 긴 카드 렌더링, 스크롤 정상 동작 | ✅ virtual scroll + measureItem 실측 |
-| V7 | S1 | virtual scroll에서 ToolGroup 높이 측정 | measureItem으로 실측 후 스크롤 위치 보정 | ✅ makeMeasureRef → measureItem |
+| V1 | M1 | assistant + tool_use × 3 + assistant 시퀀스 렌더링 | tool_use 3개가 하나의 rounded border 카드 안에, assistant 텍스트는 카드 밖 | `src/__tests__/groupEvents.test.ts`::`breaks group when assistant event arrives` |
+| V2 | M2 | assistant 이벤트 렌더링 | Bot 아이콘 없음, 텍스트만 표시 | ✅ Bot import 제거 — 코드 리뷰 검증 (테스트 없음) |
+| V3 | 경계: 1개 tool | assistant → tool_use(1개) → assistant | 1행짜리 카드, divider 없음 | `src/__tests__/groupEvents.test.ts`::`handles single tool_use as a group of 1` |
+| V4 | 경계: tool_result 사이 | tool_use → tool_result → tool_use | tool_result 무시, 두 tool_use가 한 카드 | `src/__tests__/groupEvents.test.ts`::`skips tool_result but preserves tool_use continuity` |
+| V5 | M1 + S2 | SSE로 실시간 이벤트 도착 | 카드가 점진적으로 커지며 그룹핑 유지 | ✅ useMemo 재계산 — 코드 리뷰 검증 (테스트 없음) |
+| V6 | 경계: 20+ tool | tool_use × 25 연속 | 긴 카드 렌더링, 스크롤 정상 동작 | `src/__tests__/groupEvents.test.ts`::`groups consecutive tool_use events into a ToolGroup` (구조 검증) |
+| V7 | S1 | virtual scroll에서 ToolGroup 높이 측정 | measureItem으로 실측 후 스크롤 위치 보정 | ✅ 코드 리뷰 검증 — makeMeasureRef → measureItem |
 
 완성도: 🟢
 

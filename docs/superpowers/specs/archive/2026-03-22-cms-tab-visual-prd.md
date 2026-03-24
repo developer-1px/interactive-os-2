@@ -22,12 +22,12 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `cms.css` 캔버스 탭 스타일 | `.cms-tablist`, `.cms-tab-item`, `.cms-tab-item--active`, `.cms-tab-panel` — 밑줄 기반 최소 구조 스타일 | |
-| `collectSections(store, parentId)` | 정규화 트리를 깊이 우선 순회하여 `type === 'section'`인 노드만 수집하는 범용 함수. tab-group, accordion 등 컨테이너 타입을 몰라도 동작 | |
-| `CmsSidebar.tsx` sectionIds 교체 | `getChildren(store, ROOT_ID)` → `collectSections(store, ROOT_ID)`로 교체. 사이드바 listbox 아이템이 자동으로 탭 내부 section 포함 | |
-| `CmsSidebar.tsx` 구분선 렌더링 | 연속된 section의 root 조상(getParent 체인)이 바뀌는 지점에 구분선 + 탭 라벨 삽입. 조상 비교 로직만으로 그룹 경계 감지 | |
-| `CmsSidebar.tsx` active 탭 하이라이트 | section의 tab-item 조상을 getParent 체인으로 탐색하여 active 여부 판단. CmsLayout 변경 없음, 사이드바 내부에서 store만으로 해결 | |
-| `cms.css` 사이드바 구분선 스타일 | `.cms-sidebar__group-sep`, `.cms-sidebar__group-label`, `.cms-sidebar__group-label--active` | |
+| `cms.css` 캔버스 탭 스타일 | `.cms-tablist`, `.cms-tab-item`, `.cms-tab-item--active`, `.cms-tab-panel` — 밑줄 기반 최소 구조 스타일 | `src/styles/cms.css` |
+| `collectSections(store, parentId)` | 정규화 트리를 깊이 우선 순회하여 `type === 'section'`인 노드만 수집하는 범용 함수. tab-group, accordion 등 컨테이너 타입을 몰라도 동작 | `src/pages/cms/collectSections.ts::collectSections` |
+| `CmsSidebar.tsx` sectionIds 교체 | `getChildren(store, ROOT_ID)` → `collectSections(store, ROOT_ID)`로 교체. 사이드바 listbox 아이템이 자동으로 탭 내부 section 포함 | `src/pages/cms/CmsSidebar.tsx::CmsSidebar` |
+| `CmsSidebar.tsx` 구분선 렌더링 | 연속된 section의 root 조상(getParent 체인)이 바뀌는 지점에 구분선 + 탭 라벨 삽입. 조상 비교 로직만으로 그룹 경계 감지 | `src/pages/cms/CmsSidebar.tsx::CmsSidebar` |
+| `CmsSidebar.tsx` active 탭 하이라이트 | section의 tab-item 조상을 getParent 체인으로 탐색하여 active 여부 판단. CmsLayout 변경 없음, 사이드바 내부에서 store만으로 해결 | `src/pages/cms/CmsSidebar.tsx::CmsSidebar` |
+| `cms.css` 사이드바 구분선 스타일 | `.cms-sidebar__group-sep`, `.cms-sidebar__group-label`, `.cms-sidebar__group-label--active` | `src/styles/cms.css` |
 
 완성도: 🟢
 
@@ -150,17 +150,17 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M1 | 캔버스에서 tab-group 렌더링 시, tablist에 밑줄 인디케이터가 보인다 | `.cms-tablist` 내 `[aria-selected=true]`에 accent 하단 border | |
-| V2 | ①M2 | 사이드바에서 tab-group 영역이 구분선 + 탭 라벨로 구분되어 보인다 | 조상 변화 지점에 구분선, tab-item.label 표시 | |
-| V3 | ①M3 | 사이드바에서 비활성 탭 내부 section 클릭 → 캔버스 탭 활성화 + 스크롤 | activeTabMap 업데이트 → tabpanel 렌더 → scrollIntoView | |
-| V4 | ①M3 | 사이드바에서 비활성 탭 내부 section Enter → V3과 동일 | V3과 동일 결과 | |
-| V5 | ①M4 | 캔버스 ←→ 탭 전환 → 사이드바 active 탭 라벨 하이라이트 변경 | getParent 체인으로 tab-item 조상 감지 → 라벨 강조 | |
-| V6 | ①M5 | collectSections에 tab-specific 분기가 0줄인지 코드 리뷰 | `type === 'section'` 조건만 존재, 컨테이너 타입 참조 없음 | |
-| V7 | ④경계: tab-group 0개 | 탭 없는 페이지에서 사이드바 정상 동작 | collectSections = 기존 getChildren(ROOT_ID)와 동일, 구분선 0개 | |
-| V8 | ④경계: tab-group 2개 | 여러 탭 그룹이 각각 독립 구분선 블록 표시 | 조상 비교로 각 블록 자동 분리 | |
-| V9 | ④경계: 탭 1개 | 단일 탭도 구분선 + 라벨 표시 | 조상이 tab-group이면 구분선 생성 | |
-| V10 | ④경계: 비활성 탭 Enter | 사이드바 Enter → DOM에 없는 section → 탭 활성화 → 렌더 → 스크롤 | 순서 보장으로 정상 스크롤 | |
-| V11 | ④경계: 새 컨테이너 | accordion 등 추가 시 사이드바 코드 변경 없이 동작 | collectSections 재귀 순회가 자동 수집 | |
+| V1 | ①M1 | 캔버스에서 tab-group 렌더링 시, tablist에 밑줄 인디케이터가 보인다 | `.cms-tablist` 내 `[aria-selected=true]`에 accent 하단 border | `src/__tests__/cms-tab-container.test.tsx::'aria-selected reflects active tab'` |
+| V2 | ①M2 | 사이드바에서 tab-group 영역이 구분선 + 탭 라벨로 구분되어 보인다 | 조상 변화 지점에 구분선, tab-item.label 표시 | `src/__tests__/cms-tab-container.test.tsx::'renders group separators with tab labels at tab-group boundaries'` |
+| V3 | ①M3 | 사이드바에서 비활성 탭 내부 section 클릭 → 캔버스 탭 활성화 + 스크롤 | activeTabMap 업데이트 → tabpanel 렌더 → scrollIntoView | `src/__tests__/cms-tab-container.test.tsx::'Enter on sidebar tab-internal section activates that tab in canvas'` |
+| V4 | ①M3 | 사이드바에서 비활성 탭 내부 section Enter → V3과 동일 | V3과 동일 결과 | `src/__tests__/cms-tab-container.test.tsx::'Enter on sidebar tab-internal section activates that tab in canvas'` |
+| V5 | ①M4 | 캔버스 ←→ 탭 전환 → 사이드바 active 탭 라벨 하이라이트 변경 | getParent 체인으로 tab-item 조상 감지 → 라벨 강조 | `src/__tests__/cms-tab-container.test.tsx::'active tab label is highlighted when canvas tab changes'` |
+| V6 | ①M5 | collectSections에 tab-specific 분기가 0줄인지 코드 리뷰 | `type === 'section'` 조건만 존재, 컨테이너 타입 참조 없음 | `src/__tests__/collectSections.test.ts::'collects sections inside tab-group (DFS through tab-item → tab-panel)'` |
+| V7 | ④경계: tab-group 0개 | 탭 없는 페이지에서 사이드바 정상 동작 | collectSections = 기존 getChildren(ROOT_ID)와 동일, 구분선 0개 | `src/__tests__/collectSections.test.ts::'returns same as getChildren when no containers exist'` |
+| V8 | ④경계: tab-group 2개 | 여러 탭 그룹이 각각 독립 구분선 블록 표시 | 조상 비교로 각 블록 자동 분리 | — (테스트 미구현) |
+| V9 | ④경계: 탭 1개 | 단일 탭도 구분선 + 라벨 표시 | 조상이 tab-group이면 구분선 생성 | — (테스트 미구현) |
+| V10 | ④경계: 비활성 탭 Enter | 사이드바 Enter → DOM에 없는 section → 탭 활성화 → 렌더 → 스크롤 | 순서 보장으로 정상 스크롤 | `src/__tests__/cms-tab-container.test.tsx::'Enter on sidebar tab-internal section activates that tab in canvas'` |
+| V11 | ④경계: 새 컨테이너 | accordion 등 추가 시 사이드바 코드 변경 없이 동작 | collectSections 재귀 순회가 자동 수집 | `src/__tests__/collectSections.test.ts::'handles nested containers (future-proofing)'` |
 
 완성도: 🟢
 

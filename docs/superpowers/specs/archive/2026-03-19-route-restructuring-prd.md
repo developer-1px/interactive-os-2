@@ -101,18 +101,18 @@ collection.items = [treegrid, listbox, grid, tabs, combobox]
 
 ### 페이지 컴포넌트 변경
 
-| 작업 | 페이지 | 설명 |
-|------|--------|------|
-| 신규 | PageTreeGridNav | PageTreeGrid 기반, plugins=[core()] read-only |
-| 신규 | PageListboxNav | PageListbox 기반, plugins=[core()] read-only |
-| 신규 | PageComboboxNav | PageCombobox 기반, plugins=[core()] read-only |
-| 이동 | PageGrid → Navigation | 이미 core만 사용, 그대로 Navigation으로 |
-| 신규 | PageGridCollection | PageGrid 기반 + full plugins (crud, clipboard, dnd, history, rename, focusRecovery) |
-| 이동 | PageCrud → Plugin | routeConfig만 변경 |
-| 이동 | PageClipboard → Plugin | routeConfig만 변경 |
-| 이동 | PageHistoryDemo → Plugin | routeConfig만 변경 |
-| 이동 | PageDnd → Plugin | routeConfig만 변경 |
-| 이동 | PageRename → Plugin | routeConfig만 변경 |
+| 작업 | 페이지 | 설명 | 역PRD |
+|------|--------|------|-------|
+| 신규 | PageTreeGridNav | PageTreeGrid 기반, plugins=[core()] read-only | (미생성 — PageTreeNav.tsx로 대체 추정) |
+| 신규 | PageListboxNav | PageListbox 기반, plugins=[core()] read-only | `pages/PageListboxNav.tsx::PageListboxNav` |
+| 신규 | PageComboboxNav | PageCombobox 기반, plugins=[core()] read-only | `pages/PageComboboxNav.tsx::PageComboboxNav` |
+| 이동 | PageGrid → Navigation | 이미 core만 사용, 그대로 Navigation으로 | (Axis 레이어로 재배치됨) |
+| 신규 | PageGridCollection | PageGrid 기반 + full plugins (crud, clipboard, dnd, history, rename, focusRecovery) | `pages/PageGridCollection.tsx::PageGridCollection` |
+| 이동 | PageCrud → Plugin | routeConfig만 변경 | `routeConfig.ts` — `internals/plugin` 그룹 |
+| 이동 | PageClipboard → Plugin | routeConfig만 변경 | `routeConfig.ts` — `internals/plugin` 그룹 |
+| 이동 | PageHistoryDemo → Plugin | routeConfig만 변경 | `routeConfig.ts` — `internals/plugin` 그룹 |
+| 이동 | PageDnd → Plugin | routeConfig만 변경 | `routeConfig.ts` — `internals/plugin` 그룹 |
+| 이동 | PageRename → Plugin | routeConfig만 변경 | `routeConfig.ts` — `internals/plugin` 그룹 |
 
 ### 파일명 컨벤션
 
@@ -123,13 +123,13 @@ collection.items = [treegrid, listbox, grid, tabs, combobox]
 
 Nav/Collection 버전 간 데모 데이터 중복을 제거하기 위해 공유 모듈 추출:
 
-| 모듈 | 내용 |
-|------|------|
-| `shared-tree-data.ts` | `treeData`, `getFileExt()` |
-| `SharedTreeComponents.tsx` | `FileIcon`, `RenderTreeItem` |
-| `shared-list-data.ts` | `listData` |
-| `shared-combobox-data.tsx` | `createFruitStore()`, `createGroupedStore()`, `comboboxRenderItem` |
-| `shared-grid-data.ts` | `gridColumns`, `gridInitialData` |
+| 모듈 | 내용 | 역PRD |
+|------|------|-------|
+| `shared-tree-data.ts` | `treeData`, `getFileExt()` | `pages/shared-tree-data.ts::treeData, getFileExt` |
+| `SharedTreeComponents.tsx` | `FileIcon`, `RenderTreeItem` | `pages/SharedTreeComponents.tsx::RenderTreeItem` |
+| `shared-list-data.ts` | `listData` | `pages/shared-list-data.ts::listData` |
+| `shared-combobox-data.tsx` | `createFruitStore()`, `createGroupedStore()`, `comboboxRenderItem` | `pages/shared-combobox-data.tsx::createFruitStore, createGroupedStore, comboboxRenderItem` |
+| `shared-grid-data.ts` | `gridColumns`, `gridInitialData` | (미생성 — grid 데이터는 PageGridCollection 내부) |
 
 상태: 🟢
 
@@ -157,16 +157,16 @@ Nav/Collection 버전 간 데모 데이터 중복을 제거하기 위해 공유 
 
 ## 9. 검증 기준
 
-| # | 시나리오 | 예상 결과 | 우선순위 |
-|---|---------|----------|---------|
-| V1 | ActivityBar에 8개 그룹 표시 | Viewer, Store, Engine, Navigation, Plugin, Collection, Components, Vision 순서 | P0 |
-| V2 | `/navigation/listbox` 접근 | read-only listbox (focus/select만, crud 없음) | P0 |
-| V3 | `/navigation/grid` 접근 | read-only grid (기존 PageGrid) | P0 |
-| V4 | `/plugin/crud` 접근 | crud plugin 데모 페이지 | P0 |
-| V5 | `/collection/listbox` 접근 | full-plugin listbox 쇼케이스 | P0 |
-| V6 | `/collection/grid` 접근 | full-plugin grid 쇼케이스 | P0 |
-| V7 | `/collection/crud` 접근 | `/viewer`로 리다이렉트 (catch-all) | P0 |
-| V8 | 기존 테스트 통과 | 라우트 변경 외 기능 변화 없음 | P0 |
+| # | 시나리오 | 예상 결과 | 우선순위 | 역PRD |
+|---|---------|----------|---------|-------|
+| V1 | ActivityBar에 8개 그룹 표시 | Viewer, Store, Engine, Navigation, Plugin, Collection, Components, Vision 순서 | P0 | (라우트 구조 변경됨 — 현재 Axis 레이어 추가, `routeConfig.ts` 참조) |
+| V2 | `/navigation/listbox` 접근 | read-only listbox (focus/select만, crud 없음) | P0 | `pages/PageListboxNav.tsx` |
+| V3 | `/navigation/grid` 접근 | read-only grid (기존 PageGrid) | P0 | (Axis 레이어로 재배치됨) |
+| V4 | `/plugin/crud` 접근 | crud plugin 데모 페이지 | P0 | `routeConfig.ts` — `internals/plugin/crud` |
+| V5 | `/collection/listbox` 접근 | full-plugin listbox 쇼케이스 | P0 | (라우트 구조 변경됨) |
+| V6 | `/collection/grid` 접근 | full-plugin grid 쇼케이스 | P0 | `pages/PageGridCollection.tsx` |
+| V7 | `/collection/crud` 접근 | `/viewer`로 리다이렉트 (catch-all) | P0 | (시각 검증) |
+| V8 | 기존 테스트 통과 | 라우트 변경 외 기능 변화 없음 | P0 | 전체 테스트 스위트 |
 
 상태: 🟢
 

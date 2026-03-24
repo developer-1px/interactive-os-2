@@ -41,11 +41,11 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `useSpatialNav.ts` 확장 — sticky cursor ref | `useRef<Map<string, string>>()` — `Map<parentId, lastFocusedChildId>`. store에 넣지 않음 (undo/redo 밖) | ✅ stickyCursorRef useRef<Map> |
-| `useSpatialNav.ts` 확장 — cross-boundary fallback | 방향키 핸들러: ① 현재 그룹 findNearest → ② 실패 시 `findAdjacentGroup` → ③ sticky cursor 복원 or 인접 그룹 자식 findNearest or 첫 자식 | ✅ makeHandler 3단계 fallback |
-| `findAdjacentGroup` 함수 (`useSpatialNav.ts` 내) | 현재 spatialParent의 형제들(= 부모의 children)에서 해당 방향에 있는 가장 가까운 그룹 ID 반환. DOM rect 기반 | ✅ 구현 + export |
-| `useSpatialNav` 반환값 확장 | `saveCursor(parentId, childId)` / `clearCursorsAtDepth(parentId)` 콜백을 반환. 외부(Enter/Escape/클릭 핸들러)에서 호출 | 🔀 saveCursor 제거됨 — 내부 전용으로 판단. clearCursorsAtDepth만 외부 노출 |
-| `spatialCommands.enterChild` / `exitToParent` 호출부 수정 | Enter: `clearCursorsAtDepth(진입그룹)` 호출. Escape: `clearCursorsAtDepth(현재 spatialParent의 모든 형제)` 호출. 클릭: `clearCursorsAtDepth(클릭 대상 그룹)` 호출 | ✅ CmsCanvas에서 구현 |
+| `useSpatialNav.ts` 확장 — sticky cursor ref | `useRef<Map<string, string>>()` — `Map<parentId, lastFocusedChildId>`. store에 넣지 않음 (undo/redo 밖) | `src/interactive-os/hooks/useSpatialNav.ts::useSpatialNav` |
+| `useSpatialNav.ts` 확장 — cross-boundary fallback | 방향키 핸들러: ① 현재 그룹 findNearest → ② 실패 시 `findAdjacentGroup` → ③ sticky cursor 복원 or 인접 그룹 자식 findNearest or 첫 자식 | `src/interactive-os/hooks/useSpatialNav.ts::useSpatialNav` |
+| `findAdjacentGroup` 함수 (`useSpatialNav.ts` 내) | 현재 spatialParent의 형제들(= 부모의 children)에서 해당 방향에 있는 가장 가까운 그룹 ID 반환. DOM rect 기반 | `src/interactive-os/hooks/useSpatialNav.ts::findAdjacentGroup` |
+| `useSpatialNav` 반환값 확장 | `saveCursor(parentId, childId)` / `clearCursorsAtDepth(parentId)` 콜백을 반환. 외부(Enter/Escape/클릭 핸들러)에서 호출 | `src/interactive-os/hooks/useSpatialNav.ts::useSpatialNav` (🔀 saveCursor 제거됨 — 내부 전용) |
+| `spatialCommands.enterChild` / `exitToParent` 호출부 수정 | Enter: `clearCursorsAtDepth(진입그룹)` 호출. Escape: `clearCursorsAtDepth(현재 spatialParent의 모든 형제)` 호출. 클릭: `clearCursorsAtDepth(클릭 대상 그룹)` 호출 | `src/pages/cms/CmsCanvas.tsx::CmsCanvas` |
 
 > ⚠️ PRD에 없었으나 구현됨:
 > - `findBestInDirection` 내부 함수 — findNearest/findAdjacentGroup 공통 스코어링 로직 추출 (simplify 리뷰에서 발견한 중복 제거)
@@ -83,19 +83,19 @@
 
 | # | 시나리오 | 예상 결과 | 역PRD |
 |---|---------|----------|-------|
-| T1 | features(2열 grid) 마지막 행 card에서 ↓ | stats의 자식 중 시각적 nearest로 이동. spatialParent가 stats로 전환 | ✅ 테스트 통과 |
-| T2 | T1 후 stats에서 ↑ | features의 sticky cursor (원래 card)로 복원 | ✅ 테스트 통과 |
-| T3 | features card에서 ↓↓↓ 연타 | features→stats→workflow→... 순차 섹션 이동 | ✅ 테스트 통과 |
-| T4 | 마지막 섹션(footer) 마지막 자식에서 ↓ | 무시 (인접 그룹 없음) | ✅ 테스트 통과 |
-| T5 | cross-boundary 후 Enter | 해당 노드 자식으로 깊이 진입 + 도착한 그룹의 sticky cursor 리셋 | ❌ 테스트 미구현 (코드는 구현됨) |
-| T6 | cross-boundary 후 Escape | 부모 깊이로 복귀 + 해당 깊이 sticky cursor 리셋 | ✅ 테스트 통과 |
-| T7 | cross-boundary 후 클릭으로 다른 노드 이동 | 클릭 대상의 depth로 점프 + 해당 그룹 sticky cursor 리셋 | ❌ 테스트 미구현 (코드는 구현됨) |
-| T8 | sticky cursor 대상 노드가 CRUD로 삭제된 상태에서 복귀 | findNearest fallback 사용 | ❌ 테스트 미구현 (코드에 가드 존재) |
-| T9 | 기존 동작: 같은 그룹 내 방향키 이동 | 변경 없음 — 기존 findNearest 동작 유지 | ✅ 테스트 통과 |
-| T10 | ROOT(depth 0)에서 방향키 끝 | 무시 — cross-boundary 없음 (ROOT에 상위 없음) | ✅ 테스트 통과 |
-| T11 | Shift+방향키로 그룹 끝 | cross-boundary 안 함 — 범위 선택은 현재 그룹 내에서만 | ✅ 테스트 통과 |
-| T12 | depth 2: card-1 > desc에서 ↓ | card-2 > nearest 자식으로 이동. spatialParent card-1→card-2 전환 | ✅ 테스트 통과 |
-| T13 | T12 후 ↑ | card-1 > desc로 sticky cursor 복원 | ✅ 테스트 통과 |
+| T1 | features(2열 grid) 마지막 행 card에서 ↓ | stats의 자식 중 시각적 nearest로 이동. spatialParent가 stats로 전환 | `src/__tests__/spatial-cross-boundary.test.tsx::'T1: ArrowDown at group boundary crosses to adjacent group'` |
+| T2 | T1 후 stats에서 ↑ | features의 sticky cursor (원래 card)로 복원 | `src/__tests__/spatial-cross-boundary.test.tsx::'T2: ArrowUp after cross-boundary restores sticky cursor'` |
+| T3 | features card에서 ↓↓↓ 연타 | features→stats→workflow→... 순차 섹션 이동 | `src/__tests__/spatial-cross-boundary.test.tsx::'T3: consecutive ArrowDown crosses multiple groups'` |
+| T4 | 마지막 섹션(footer) 마지막 자식에서 ↓ | 무시 (인접 그룹 없음) | `src/__tests__/spatial-cross-boundary.test.tsx::'T4: ArrowDown at last group does nothing'` |
+| T5 | cross-boundary 후 Enter | 해당 노드 자식으로 깊이 진입 + 도착한 그룹의 sticky cursor 리셋 | — (테스트 미구현, 코드는 구현됨) |
+| T6 | cross-boundary 후 Escape | 부모 깊이로 복귀 + 해당 깊이 sticky cursor 리셋 | `src/__tests__/spatial-cross-boundary.test.tsx::'T6: Escape clears sticky cursors at that depth'` |
+| T7 | cross-boundary 후 클릭으로 다른 노드 이동 | 클릭 대상의 depth로 점프 + 해당 그룹 sticky cursor 리셋 | `src/__tests__/spatial-cross-boundary.test.tsx::'T7: click resets sticky cursor'` |
+| T8 | sticky cursor 대상 노드가 CRUD로 삭제된 상태에서 복귀 | findNearest fallback 사용 | — (테스트 미구현, 코드에 가드 존재) |
+| T9 | 기존 동작: 같은 그룹 내 방향키 이동 | 변경 없음 — 기존 findNearest 동작 유지 | `src/__tests__/spatial-cross-boundary.test.tsx::'T9: intra-group ArrowRight moves within same group'` |
+| T10 | ROOT(depth 0)에서 방향키 끝 | 무시 — cross-boundary 없음 (ROOT에 상위 없음) | `src/__tests__/spatial-cross-boundary.test.tsx::'T10: ArrowDown at ROOT depth 0 boundary does nothing'` |
+| T11 | Shift+방향키로 그룹 끝 | cross-boundary 안 함 — 범위 선택은 현재 그룹 내에서만 | `src/__tests__/spatial-cross-boundary.test.tsx::'T11: Shift+ArrowDown does not cross boundary'` |
+| T12 | depth 2: card-1 > desc에서 ↓ | card-2 > nearest 자식으로 이동. spatialParent card-1→card-2 전환 | `src/__tests__/spatial-cross-boundary.test.tsx::'T12: depth 2 cross-boundary between sibling containers'` |
+| T13 | T12 후 ↑ | card-1 > desc로 sticky cursor 복원 | `src/__tests__/spatial-cross-boundary.test.tsx::'T13: depth 2 sticky cursor restore'` |
 
 상태: 🟢
 

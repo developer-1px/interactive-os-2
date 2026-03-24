@@ -108,6 +108,21 @@ items: 11개 축 페이지
 | activateFollowFocus | role: tablist, childRole: tab, followFocus | 4~5개 탭 + 포커스 이동 시 자동 활성화 피드백 |
 | focusTrap | role: dialog, childRole: group | 3~5개 아이템 + Escape 시 탈출 피드백 |
 
+### 역PRD: 산출물 ↔ 코드 매핑
+
+> axis-v2(5축 모델) 적용으로 11개 개별 페이지 → 6개 통합 데모로 수렴.
+
+| 산출물 | 역PRD (실제 코드) |
+|---|---|
+| 축 데모 페이지 (navigate) | `src/pages/axis/NavigateDemo.tsx::NavigateDemo` |
+| 축 데모 페이지 (select) | `src/pages/axis/SelectDemo.tsx::SelectDemo` |
+| 축 데모 페이지 (activate) | `src/pages/axis/ActivateDemo.tsx::ActivateDemo` |
+| 축 데모 페이지 (expand) | `src/pages/axis/ExpandDemo.tsx::ExpandDemo` |
+| 축 데모 페이지 (dismiss) | `src/pages/axis/DismissDemo.tsx::DismissDemo` |
+| 축 데모 페이지 (edit) | `src/pages/axis/EditDemo.tsx::EditDemo` |
+| 데모 데이터 | `src/pages/axis/axis-demo-data.ts::axisListData, axisTreeData, axisGridData` |
+| ActivityBar 등록 | `src/routeConfig.ts` (id: `internals/axis`, basePath: `/internals/axis/navigate`) |
+
 상태: 🟢
 
 ## 4. 경계

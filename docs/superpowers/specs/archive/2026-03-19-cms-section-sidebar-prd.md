@@ -69,15 +69,14 @@
 
 > 구조, 관계, 이름
 
-- **섹션 사이드바 컴포넌트** — CMS 레이아웃의 좌측 패널
-  - 썸네일 리스트: 각 섹션의 미니 프리뷰 (축소 렌더링 또는 스냅샷)
-  - [+] 버튼: 사이드바 하단, 템플릿 선택 트리거
-  - 선택 상태: 현재 캔버스에서 포커스된 섹션과 동기화
-- **썸네일 렌더링**: 실제 섹션 JSX의 축소 프리뷰 (CSS transform scale)
-- **섹션-캔버스 동기화**: 사이드바 선택 ↔ 캔버스 스크롤 위치 양방향 연동
-- **리오더**: dnd plugin의 moveUp/moveDown (Cmd+↑↓) + 드래그 앤 드롭 (moveTo). store의 relationships 순서 변경
-- **데이터**: 기존 `cms-store.ts`의 ROOT_ID children이 섹션 목록
-- **store 공유**: CMS 앱 전체가 하나의 store. 사이드바와 캔버스는 같은 store의 서로 다른 `<Aria>` 뷰
+| 산출물 | 설명 | 역PRD |
+|--------|------|-------|
+| 섹션 사이드바 컴포넌트 | CMS 레이아웃의 좌측 패널. 썸네일 리스트 + [+] 버튼 + 선택 상태 동기화 | ✅ `CmsSidebar.tsx::CmsSidebar` |
+| 썸네일 렌더링 | 실제 섹션 JSX의 축소 프리뷰 (CSS transform scale) | ✅ `CmsSidebar.tsx::CmsSidebar` |
+| 섹션-캔버스 동기화 | 사이드바 선택 ↔ 캔버스 스크롤 위치 양방향 연동 | ✅ `CmsSidebar.tsx::CmsSidebar` (activeSectionId prop) |
+| 리오더 | dnd plugin의 moveUp/moveDown + 드래그 앤 드롭. store의 relationships 순서 변경 | ✅ `CmsSidebar.tsx::CmsSidebar` (plugins prop) |
+| 데이터 | 기존 `cms-store.ts`의 ROOT_ID children이 섹션 목록 | ✅ `cms-store.ts::cmsStore` |
+| store 공유 | CMS 앱 전체가 하나의 store. 사이드바와 캔버스는 같은 store의 서로 다른 `<Aria>` 뷰 | ✅ `CmsLayout.tsx::CmsLayout` (단일 store 전달) |
 
 상태: 🟢
 
@@ -107,16 +106,16 @@
 
 ## 6. 검증
 
-| # | 시나리오 | 예상 결과 |
-|---|---------|----------|
-| V1 | CMS 진입 시 | 좌측에 6개 섹션 썸네일이 세로로 나열됨 |
-| V2 | 썸네일 클릭 | 캔버스가 해당 섹션으로 스크롤 |
-| V3 | ↑↓ 키로 썸네일 이동 + Enter | 포커스 이동 후 캔버스 스크롤 |
-| V4 | Cmd+↓로 리오더 | 섹션 순서 변경, 캔버스에 즉시 반영 |
-| V5 | 드래그로 리오더 | 섹션 순서 변경, 캔버스에 즉시 반영 |
-| V6 | [+] 클릭 → 템플릿 선택 → 확인 | 새 섹션 추가, 썸네일 생성, 캔버스에 표시 |
-| V7 | Delete로 섹션 삭제 → Cmd+Z | 섹션 삭제 후 undo로 복원 |
-| V8 | 캔버스에서 다른 섹션으로 spatial nav 이동 | 사이드바 선택이 해당 섹션으로 동기화 |
+| # | 시나리오 | 예상 결과 | 역PRD |
+|---|---------|----------|-------|
+| V1 | CMS 진입 시 | 좌측에 6개 섹션 썸네일이 세로로 나열됨 | ✅ `cms-tab-container.test.tsx::sidebar lists tab-internal sections as focusable items` |
+| V2 | 썸네일 클릭 | 캔버스가 해당 섹션으로 스크롤 | ✅ `cms-tab-container.test.tsx::Enter on sidebar tab-internal section activates that tab in canvas` |
+| V3 | ↑↓ 키로 썸네일 이동 + Enter | 포커스 이동 후 캔버스 스크롤 | ✅ `cms-tab-container.test.tsx::sidebar ↑↓ navigates through tab-internal sections` |
+| V4 | Cmd+↓로 리오더 | 섹션 순서 변경, 캔버스에 즉시 반영 | — |
+| V5 | 드래그로 리오더 | 섹션 순서 변경, 캔버스에 즉시 반영 | — |
+| V6 | [+] 클릭 → 템플릿 선택 → 확인 | 새 섹션 추가, 썸네일 생성, 캔버스에 표시 | — |
+| V7 | Delete로 섹션 삭제 → Cmd+Z | 섹션 삭제 후 undo로 복원 | ✅ `cms-tab-container.test.tsx::Delete on tab-item removes tab (min 1 guard)` |
+| V8 | 캔버스에서 다른 섹션으로 spatial nav 이동 | 사이드바 선택이 해당 섹션으로 동기화 | ✅ `cms-tab-container.test.tsx::active tab label is highlighted when canvas tab changes` |
 
 상태: 🟢
 

@@ -171,6 +171,16 @@ interface ComboboxProps {
 }
 ```
 
+### 역PRD: 산출물 매핑
+
+| 산출물 | 역PRD |
+|--------|-------|
+| combobox behavior | ✅ `behaviors/combobox.ts::combobox` |
+| combobox plugin | ✅ `plugins/combobox.ts::combobox` |
+| Combobox UI 컴포넌트 | ✅ `ui/Combobox.tsx::Combobox` |
+| ComboboxProps 인터페이스 | ✅ `ui/Combobox.tsx::Combobox` (selectionMode, creatable props) |
+| comboboxCommands | ✅ `plugins/combobox.ts::comboboxCommands` |
+
 상태: 🟡
 
 ## 7. 경계 조건
@@ -210,22 +220,22 @@ interface ComboboxProps {
 
 ## 9. 검증 기준
 
-| # | 시나리오 | 예상 결과 | 우선순위 |
-|---|---------|----------|---------|
-| T1 | 단일 선택: Enter → 항목 선택 | 선택 + 드롭다운 닫힘 | P0 |
-| T2 | 멀티 선택: Enter → 항목 토글 | 토글 + 드롭다운 유지 | P0 |
-| T3 | 멀티 선택: 3개 선택 → 토큰 표시 | 3개 토큰 렌더링 | P0 |
-| T4 | 토큰에서 Backspace | 토큰 제거 + 선택 해제 | P0 |
-| T5 | 토큰 ←→ 이동 | 토큰 간 포커스 이동 | P0 |
-| T6 | 그룹핑: ↓ 키 | 그룹 헤더 건너뜀 | P0 |
-| T7 | Creatable: 필터 결과 0 → Enter | 새 엔티티 생성 + 선택 | P0 |
-| T8 | editable: 텍스트 입력 | 필터링 동작 (기존) | P0 |
-| T9 | Tab | 드롭다운 닫기 + 외부 포커스 | P0 |
-| T10 | 빈 입력 Backspace → 마지막 토큰 포커스 | 토큰 하이라이트 | P1 |
-| T11 | 필터 결과 0개 (non-creatable) | 드롭다운 빈 상태 (소비자 renderEmpty 호출) | P1 |
-| T12 | 그룹 내 전부 필터링됨 | 그룹 헤더도 숨김 | P1 |
-| T13 | 토큰 × 클릭 | 토큰 제거, 드롭다운 안 열림 | P1 |
-| T14 | 선택 항목 10+ | 토큰 영역 줄바꿈 (flex-wrap) | P1 |
+| # | 시나리오 | 예상 결과 | 우선순위 | 역PRD |
+|---|---------|----------|---------|-------|
+| T1 | 단일 선택: Enter → 항목 선택 | 선택 + 드롭다운 닫힘 | P0 | ✅ `combobox.test.tsx::Enter selects focused option and closes dropdown` |
+| T2 | 멀티 선택: Enter → 항목 토글 | 토글 + 드롭다운 유지 | P0 | ✅ `combobox.test.tsx::Enter toggles selection and keeps dropdown open` |
+| T3 | 멀티 선택: 3개 선택 → 토큰 표시 | 3개 토큰 렌더링 | P0 | ✅ `combobox.test.tsx::multi-select renders selected items as tokens` |
+| T4 | 토큰에서 Backspace | 토큰 제거 + 선택 해제 | P0 | ✅ `combobox.test.tsx::Backspace on empty input removes last token` |
+| T5 | 토큰 ←→ 이동 | 토큰 간 포커스 이동 | P0 | — |
+| T6 | 그룹핑: ↓ 키 | 그룹 헤더 건너뜀 | P0 | ✅ `combobox.test.tsx::ArrowDown navigates only options, skipping group headers` |
+| T7 | Creatable: 필터 결과 0 → Enter | 새 엔티티 생성 + 선택 | P0 | ✅ `combobox.test.tsx::Enter on create option adds new entity (single mode)` |
+| T8 | editable: 텍스트 입력 | 필터링 동작 (기존) | P0 | ✅ `combobox-keyboard.integration.test.tsx::Backspace deletes characters in editable single-mode combobox` |
+| T9 | Tab | 드롭다운 닫기 + 외부 포커스 | P0 | ✅ `combobox-keyboard.integration.test.tsx::dropdown closes when input loses focus` |
+| T10 | 빈 입력 Backspace → 마지막 토큰 포커스 | 토큰 하이라이트 | P1 | ✅ `combobox.test.tsx::Backspace on empty input removes last token` |
+| T11 | 필터 결과 0개 (non-creatable) | 드롭다운 빈 상태 (소비자 renderEmpty 호출) | P1 | — |
+| T12 | 그룹 내 전부 필터링됨 | 그룹 헤더도 숨김 | P1 | — |
+| T13 | 토큰 × 클릭 | 토큰 제거, 드롭다운 안 열림 | P1 | ✅ `combobox.test.tsx::token × button removes that token without opening dropdown` |
+| T14 | 선택 항목 10+ | 토큰 영역 줄바꿈 (flex-wrap) | P1 | — (시각 검증) |
 
 상태: 🟡
 

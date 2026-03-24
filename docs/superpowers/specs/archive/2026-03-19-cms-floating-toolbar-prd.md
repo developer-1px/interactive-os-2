@@ -46,12 +46,12 @@
 
 ## 3. 산출물
 
-- **플로팅 툴바 컴포넌트** — `position: fixed`, 캔버스 하단 센터
-  - `<Aria>` + toolbar behavior
-  - 깊이 컨텍스트에 따라 버튼 세트 교체
-- **컨텍스트 감지** — 캔버스의 현재 포커스 깊이(`__spatial_parent__` 기반)를 읽어 툴바 내용 결정
-- **command dispatch** — 툴바 버튼이 캔버스의 store에 직접 command dispatch (같은 store)
-- **시각**: 반투명 배경 + 그림자, 캔버스 콘텐츠 위에 떠있음 (z-index)
+| 산출물 | 설명 | 역PRD |
+|--------|------|-------|
+| 플로팅 툴바 컴포넌트 | `position: fixed`, 캔버스 하단 센터. `<Aria>` + toolbar behavior. 깊이 컨텍스트에 따라 버튼 세트 교체 | ✅ `CmsFloatingToolbar.tsx::CmsFloatingToolbar` |
+| 컨텍스트 감지 | 캔버스의 현재 포커스 깊이(`__spatial_parent__` 기반)를 읽어 툴바 내용 결정 | ✅ `CmsFloatingToolbar.tsx::CmsFloatingToolbar` (focusedId prop) |
+| command dispatch | 툴바 버튼이 캔버스의 store에 직접 command dispatch (같은 store) | ✅ `CmsFloatingToolbar.tsx::CmsFloatingToolbar` (dispatch prop) |
+| 시각 | 반투명 배경 + 그림자, 캔버스 콘텐츠 위에 떠있음 (z-index) | ✅ `cms.css` (.cms-floating-toolbar) |
 
 상태: 🟢
 
@@ -82,16 +82,16 @@
 
 ## 6. 검증
 
-| # | 시나리오 | 예상 결과 |
-|---|---------|----------|
-| V1 | CMS 진입 시 | 캔버스 하단 센터에 플로팅 툴바 표시 |
-| V2 | 섹션에 포커스 (Root) | 툴바에 복제/삭제/리오더 버튼 |
-| V3 | Enter로 Collection 진입 | 툴바가 추가/복제/삭제/리오더로 전환 |
-| V4 | Enter로 Fields 진입 | 툴바 비활성 |
-| V5 | Escape로 Root 복귀 | 툴바가 섹션 CRUD로 복귀 |
-| V6 | 툴바 삭제 버튼 클릭 | 캔버스에서 해당 노드 삭제, focusRecovery 동작 |
-| V7 | 프레젠트 모드 진입 | 툴바 사라짐 |
-| V8 | Tab으로 툴바 진입 → ←→ 이동 → Escape | toolbar behavior 네비게이션 후 캔버스 복귀 |
+| # | 시나리오 | 예상 결과 | 역PRD |
+|---|---------|----------|-------|
+| V1 | CMS 진입 시 | 캔버스 하단 센터에 플로팅 툴바 표시 | — (시각 검증, 자동화 테스트 없음) |
+| V2 | 섹션에 포커스 (Root) | 툴바에 복제/삭제/리오더 버튼 | — |
+| V3 | Enter로 Collection 진입 | 툴바가 추가/복제/삭제/리오더로 전환 | — |
+| V4 | Enter로 Fields 진입 | 툴바 비활성 | — |
+| V5 | Escape로 Root 복귀 | 툴바가 섹션 CRUD로 복귀 | — |
+| V6 | 툴바 삭제 버튼 클릭 | 캔버스에서 해당 노드 삭제, focusRecovery 동작 | — |
+| V7 | 프레젠트 모드 진입 | 툴바 사라짐 | — |
+| V8 | Tab으로 툴바 진입 → ←→ 이동 → Escape | toolbar behavior 네비게이션 후 캔버스 복귀 | ✅ `toolbar-keyboard.integration.test.tsx::ArrowRight moves focus to next button`, `ArrowLeft moves focus to previous button` |
 
 상태: 🟢
 

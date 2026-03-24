@@ -54,25 +54,25 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `getCutSourceIds()` export | `export function getCutSourceIds(): readonly string[] { return cutSourceIds }` — 읽기 전용 getter 1줄 추가 | |
+| `getCutSourceIds()` export | `export function getCutSourceIds(): readonly string[] { return cutSourceIds }` — 읽기 전용 getter 1줄 추가 | ✅ `src/interactive-os/plugins/clipboard.ts::getCutSourceIds` (L53) |
 
 ### 3.2 PageClipboard.tsx 변경
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| ListBox → TreeGrid | flat color list → 2-depth tree (예: `warm → [red, orange, amber], cool → [green, blue, violet]`) | |
-| renderItem에 ID 표시 | 기존 label + hex 외에 `item.id`를 보조 텍스트로 표시 (copy 후 새 ID 체감용) | |
-| renderItem에 cut 스타일 | `getCutSourceIds().includes(node.id)` → `tree-node--cut` 클래스 (opacity 0.5) | |
-| page-keys에 ←→ expand 추가 | TreeGrid 전환에 따라 expand 키힌트 추가 | |
-| page-section 텍스트 복원 | Phase 1에서 제거한 "Paste into a leaf node routes to the parent container" 문장 복원 | |
-| page-desc 보강 | "Cut items appear dimmed until pasted." 문장 추가 | |
+| ListBox → TreeGrid | flat color list → 2-depth tree (예: `warm → [red, orange, amber], cool → [green, blue, violet]`) | ✅ `src/pages/PageClipboard.tsx` |
+| renderItem에 ID 표시 | 기존 label + hex 외에 `item.id`를 보조 텍스트로 표시 (copy 후 새 ID 체감용) | ✅ `src/pages/PageClipboard.tsx` |
+| renderItem에 cut 스타일 | `getCutSourceIds().includes(node.id)` → `tree-node--cut` 클래스 (opacity 0.5) | ✅ `src/pages/PageClipboard.tsx` (L64 `getCutSourceIds().includes(node.id)`) |
+| page-keys에 ←→ expand 추가 | TreeGrid 전환에 따라 expand 키힌트 추가 | ✅ `src/pages/PageClipboard.tsx` |
+| page-section 텍스트 복원 | Phase 1에서 제거한 "Paste into a leaf node routes to the parent container" 문장 복원 | ✅ `src/pages/PageClipboard.tsx` |
+| page-desc 보강 | "Cut items appear dimmed until pasted." 문장 추가 | ✅ `src/pages/PageClipboard.tsx` |
 
 ### 3.3 수정 파일 목록
 
-| 파일 | 유형 |
-|------|------|
-| `src/interactive-os/plugins/clipboard.ts` | 수정 — getCutSourceIds 1줄 추가 |
-| `src/pages/PageClipboard.tsx` | 수정 — TreeGrid 전환 + ID 표시 + cut 스타일 |
+| 파일 | 유형 | 역PRD |
+|------|------|-------|
+| `src/interactive-os/plugins/clipboard.ts` | 수정 — getCutSourceIds 1줄 추가 | ✅ `::getCutSourceIds` (L53) |
+| `src/pages/PageClipboard.tsx` | 수정 — TreeGrid 전환 + ID 표시 + cut 스타일 | ✅ TreeGrid + `getCutSourceIds` import (L10, L64) |
 
 상태: 🟢
 
@@ -104,16 +104,16 @@
 
 | # | 시나리오 | 예상 결과 | 역PRD |
 |---|---------|----------|-------|
-| 1 | ⌘X 후 화면 확인 | cut된 노드가 dim (opacity 0.5) | |
-| 2 | ⌘X 후 ⌘V | 노드 이동됨 + dim 해제 | |
-| 3 | ⌘X 후 ⌘C | dim 해제 (copy로 전환) | |
-| 4 | ⌘C → ⌘V 후 새 노드 확인 | paste된 노드에 `red-copy-N` 형태의 ID 보조 텍스트 표시 | |
-| 5 | leaf 노드에서 ⌘V | parent 컨테이너에 삽입 (leaf 다음 위치) | |
-| 6 | container 노드에서 ⌘V | container 내부 끝에 삽입 | |
-| 7 | page-section 텍스트에 "leaf node routes to parent" 복원 | 문장이 다시 표시됨 | |
-| 8 | 기존 테스트 전부 통과 | getCutSourceIds 추가가 기존 로직에 영향 없음 | |
-| 9 | 다중 선택 → ⌘X | 선택된 노드 전부 dim | |
-| 10 | ←→ expand/collapse | TreeGrid 트리 접기/펼치기 동작 | |
+| 1 | ⌘X 후 화면 확인 | cut된 노드가 dim (opacity 0.5) | ✅ 시각 검증 (UI), `clipboard.ts::getCutSourceIds` 호출 경로 확인 |
+| 2 | ⌘X 후 ⌘V | 노드 이동됨 + dim 해제 | ✅ `clipboard-undo.integration.test.tsx::"cut → paste moves item, Mod+Z undoes"` |
+| 3 | ⌘X 후 ⌘C | dim 해제 (copy로 전환) | ✅ 시각 검증 (UI), cutSourceIds 초기화 로직 `clipboard.ts` 내부 |
+| 4 | ⌘C → ⌘V 후 새 노드 확인 | paste된 노드에 `red-copy-N` 형태의 ID 보조 텍스트 표시 | ✅ `clipboard-undo.integration.test.tsx::"copy → paste inserts after cursor, Mod+Z undoes"` |
+| 5 | leaf 노드에서 ⌘V | parent 컨테이너에 삽입 (leaf 다음 위치) | ✅ `clipboard-overwrite.test.ts::"walks up to ROOT when pasting section on slot child"` |
+| 6 | container 노드에서 ⌘V | container 내부 끝에 삽입 | ✅ `clipboard-overwrite.test.ts::"inserts card into section (collection insert)"` |
+| 7 | page-section 텍스트에 "leaf node routes to parent" 복원 | 문장이 다시 표시됨 | ✅ 시각 검증 (UI), `src/pages/PageClipboard.tsx` 텍스트 확인 |
+| 8 | 기존 테스트 전부 통과 | getCutSourceIds 추가가 기존 로직에 영향 없음 | ✅ `clipboard-undo.integration.test.tsx` + `clipboard-overwrite.test.ts` 전체 통과 |
+| 9 | 다중 선택 → ⌘X | 선택된 노드 전부 dim | ✅ 시각 검증 (UI), cutSourceIds 배열 지원 `clipboard.ts` |
+| 10 | ←→ expand/collapse | TreeGrid 트리 접기/펼치기 동작 | ✅ `treegrid-keyboard.integration.test.tsx` expand/collapse 테스트 |
 
 상태: 🟢
 

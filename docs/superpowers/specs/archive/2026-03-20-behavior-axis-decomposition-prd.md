@@ -139,6 +139,37 @@ axes/depth-arrow.ts ─┘                         │
   'Mod+Z': historyCommands.undo }
 ```
 
+### 역PRD: 산출물 ↔ 코드 매핑
+
+> axis-v2(5축 모델) 적용으로 11개 공유 축 → 5개 factory로 통합. v1 축 파일 삭제 완료.
+
+| 산출물 | 역PRD (실제 코드) |
+|---|---|
+| Axis 타입 (KeyMap) | `src/interactive-os/axes/composePattern.ts::KeyMap` |
+| 공유 축 navV → navigate | `src/interactive-os/axes/navigate.ts::navigate` |
+| 공유 축 navH → navigate | `src/interactive-os/axes/navigate.ts::navigate({ orientation: 'horizontal' })` |
+| 공유 축 navVhUniform → navigate | `src/interactive-os/axes/navigate.ts::navigate({ orientation: 'both', wrap: true })` |
+| 공유 축 navGrid → navigate | `src/interactive-os/axes/navigate.ts::navigate({ grid: { columns: N } })` |
+| 공유 축 depthArrow → expand | `src/interactive-os/axes/expand.ts::expand({ mode: 'arrow' })` |
+| 공유 축 depthEnterEsc → expand | `src/interactive-os/axes/expand.ts::expand({ mode: 'enter-esc' })` |
+| 공유 축 selectToggle → select | `src/interactive-os/axes/select.ts::select()` |
+| 공유 축 selectExtended → select | `src/interactive-os/axes/select.ts::select({ extended: true })` |
+| 공유 축 activate → activate | `src/interactive-os/axes/activate.ts::activate` |
+| 공유 축 activateFollowFocus → activate | `src/interactive-os/axes/activate.ts::activate({ followFocus: true })` |
+| 공유 축 focusTrap → dismiss | `src/interactive-os/axes/dismiss.ts::dismiss` |
+| composePattern 합성 함수 | `src/interactive-os/axes/composePattern.ts::composePattern` |
+| behavior 재작성 (listbox) | `src/interactive-os/behaviors/listbox.ts::listbox` |
+| behavior 재작성 (tree) | `src/interactive-os/behaviors/tree.ts::tree` |
+| behavior 재작성 (treegrid) | `src/interactive-os/behaviors/treegrid.ts::treegrid` |
+| behavior 재작성 (grid) | `src/interactive-os/behaviors/grid.ts::grid` |
+| behavior 재작성 (tabs) | `src/interactive-os/behaviors/tabs.ts::tabs` |
+| behavior 재작성 (toolbar) | `src/interactive-os/behaviors/toolbar.ts::toolbar` |
+| behavior 재작성 (menu) | `src/interactive-os/behaviors/menu.ts::menu` |
+| behavior 재작성 (kanban) | `src/interactive-os/behaviors/kanban.ts::kanban` |
+| behavior 재작성 (combobox) | `src/interactive-os/behaviors/combobox.ts::combobox` |
+| behavior 재작성 (spatial) | `src/interactive-os/behaviors/spatial.ts::spatial` |
+| 디렉터리 구조 (axes/) | `src/interactive-os/axes/` (9 파일: composePattern, navigate, select, activate, expand, dismiss, tab, value, edit) |
+
 상태: 🟢
 
 ## 4. 경계
@@ -185,6 +216,21 @@ axes/depth-arrow.ts ─┘                         │
 | 8 | kanban behavior가 composePattern으로 재작성 후 기존 테스트 통과 | kanban 키보드 테스트 전수 통과 |
 | 9 | composePattern 리턴값이 AriaBehavior 타입 | TypeScript 컴파일 에러 없음 |
 | 10 | 축 순서 변경 시 동작 변경 확인 | `[activate, selectToggle]` vs `[selectToggle, activate]` — Space 동작이 달라짐 |
+
+### 역PRD: 검증 ↔ 테스트 매핑
+
+| # | 테스트 파일 :: 테스트명 |
+|---|---|
+| 1 | 기존 integration 테스트 전수 (listbox/tree/tabs/toolbar/menu/grid 등) |
+| 2 | `src/interactive-os/__tests__/listbox-keyboard.integration.test.tsx::ListBox keyboard integration > selection > Space toggles selection` |
+| 3 | `src/interactive-os/__tests__/treeview.integration.test.tsx::TreeView > ArrowRight expands a parent node` |
+| 4 | (chain of responsibility) `src/interactive-os/__tests__/compose-pattern.test.ts::composePattern > chain of responsibility — void falls through to next axis` |
+| 5 | `src/interactive-os/__tests__/tabs-keyboard.integration.test.tsx::TabList keyboard integration > activation > Enter activates focused tab` |
+| 6 | composePattern으로 축 빼기 가능 — `src/interactive-os/__tests__/compose-pattern.test.ts::composePattern > merges non-overlapping axes` |
+| 7 | tree/treegrid 동일 축 조합 — behavior 파일 비교 (role/childRole만 다름) |
+| 8 | `src/interactive-os/__tests__/kanban-keyboard.integration.test.tsx` |
+| 9 | `src/interactive-os/__tests__/compose-pattern.test.ts::composePattern > metadata is passed through to AriaBehavior` |
+| 10 | `src/interactive-os/__tests__/compose-pattern.test.ts::composePattern > axis reorder changes behavior on same key` |
 
 상태: 🟢
 

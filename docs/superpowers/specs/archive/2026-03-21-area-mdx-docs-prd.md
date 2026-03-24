@@ -53,12 +53,12 @@ Discussion → PRD → Plan → 실행 → retro(갭 감지) → /area(누적)
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `docs/2-areas/overview.mdx` | L1: 시스템 전체. 레이어 목록 + 의존 방향 다이어그램 | |
-| `docs/2-areas/{layer}.mdx` | L2: 레이어별 주기율표. 모듈 목록 + 관계 + 🟢/⬜/— 상태 | |
-| `docs/2-areas/{layer}/{module}.mdx` | L3: 모듈 상세. 스펙 + 관계 + 데모 컴포넌트 import | |
-| Vite MDX 설정 | `@mdx-js/rollup` 플러그인 추가 | |
-| Viewer MDX 렌더링 라우트 | Area MDX를 Viewer 내에서 렌더링하는 경로 | |
-| `/area` 스킬 | retro 후 실행. git diff → Area MDX 갱신 (⬜→🟢, 새 ⬜ 발견, L3 생성) | |
+| `docs/2-areas/overview.mdx` | L1: 시스템 전체. 레이어 목록 + 의존 방향 다이어그램 | ✅ `docs/2-areas/overview.md` |
+| `docs/2-areas/{layer}.mdx` | L2: 레이어별 주기율표. 모듈 목록 + 관계 + 🟢/⬜/— 상태 | ✅ `docs/2-areas/{core,axes,patterns,plugins,hooks,ui}.md` |
+| `docs/2-areas/{layer}/{module}.mdx` | L3: 모듈 상세. 스펙 + 관계 + 데모 컴포넌트 import | ✅ `docs/2-areas/axes/*.md`, `docs/2-areas/patterns/*.md` 등 80+ 파일 |
+| Vite MDX 설정 | `@mdx-js/rollup` 플러그인 추가 | 🔀 MDX→MD 전환. `src/pages/MdPage.tsx`로 MD 렌더링 |
+| Viewer MDX 렌더링 라우트 | Area MDX를 Viewer 내에서 렌더링하는 경로 | ✅ `src/routeConfig.ts::PageAreaViewer` + `src/pages/PageAreaViewer.tsx` |
+| `/area` 스킬 | retro 후 실행. git diff → Area MDX 갱신 (⬜→🟢, 새 ⬜ 발견, L3 생성) | ✅ `.claude/skills/area/SKILL.md` |
 
 ### 폴더 구조
 
@@ -204,12 +204,12 @@ import { NavigateDemo } from '../../src/pages/axis/NavigateDemo'
 
 | # | 시나리오 | 예상 결과 | 역PRD |
 |---|---------|----------|-------|
-| 1 | axes.mdx를 Viewer에서 열기 | 6개 축 주기율표 + ⬜ trigger↔popup 빈칸이 렌더링됨 | |
-| 2 | axes/navigate.mdx를 Viewer에서 열기 | 스펙 표 + 관계 섹션 + NavigateDemo 라이브 데모가 한 화면에 보임 | |
-| 3 | Vite 빌드 시 MDX 파일 정상 컴파일 | 빌드 에러 없음 | |
-| 4 | 새 축 구현 후 axes.mdx에 ⬜→🟢 갱신 | 주기율표에서 해당 축이 🟢로 변경되고 L3 링크 활성화 | |
-| 5 | LLM이 Area MDX를 읽고 프로젝트 전체상 파악 | MDX를 md처럼 읽어서 레이어·모듈·관계·갭 파악 가능 | |
-| 6 | ⬜ 빈칸 모듈의 L3 열기 | 개념 소개 + "미구현" + 왜 필요한지가 보임. 빈 페이지가 아님 | |
+| 1 | axes.mdx를 Viewer에서 열기 | 6개 축 주기율표 + ⬜ trigger↔popup 빈칸이 렌더링됨 | ✅ `/internals/area/axes` 라우트, `docs/2-areas/axes.md` |
+| 2 | axes/navigate.mdx를 Viewer에서 열기 | 스펙 표 + 관계 섹션 + NavigateDemo 라이브 데모가 한 화면에 보임 | 🔀 MD 전환으로 데모 import 없음, 스펙+관계는 `docs/2-areas/axes/navigate.md` |
+| 3 | Vite 빌드 시 MDX 파일 정상 컴파일 | 빌드 에러 없음 | 🔀 MDX→MD 전환, `MdPage.tsx`로 렌더링 |
+| 4 | 새 축 구현 후 axes.mdx에 ⬜→🟢 갱신 | 주기율표에서 해당 축이 🟢로 변경되고 L3 링크 활성화 | ✅ `/area` 스킬로 갱신 |
+| 5 | LLM이 Area MDX를 읽고 프로젝트 전체상 파악 | MDX를 md처럼 읽어서 레이어·모듈·관계·갭 파악 가능 | ✅ MD 파일이므로 직접 읽기 가능 |
+| 6 | ⬜ 빈칸 모듈의 L3 열기 | 개념 소개 + "미구현" + 왜 필요한지가 보임. 빈 페이지가 아님 | ✅ `docs/2-areas/axes/trigger-popup.md` (⬜ 예시) |
 
 상태: 🟢
 

@@ -19,11 +19,11 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `PageStoreInspector.tsx` | Split Inspector 메인 페이지. useEngine으로 공유 engine 생성. 3패널 레이아웃(좌: editor, 우: inspector, 하: log) | |
-| `storeToTree.ts` | NormalizedData → NormalizedData 변환 함수. 실제 store를 "entities/relationships" 트리 구조의 store로 매핑하여 TreeGrid로 렌더링 가능하게 함 | |
-| 삭제: `PageStoreExplorer.tsx` | Split Inspector로 대체 | |
-| 삭제: `PageStoreOperations.tsx` | operation 로그 패널로 대체 | |
-| 변경: `App.tsx` routeConfig | store 그룹 items를 inspector 1개로 변경. basePath → `/store/inspector` | |
+| `PageStoreInspector.tsx` | Split Inspector 메인 페이지. useEngine으로 공유 engine 생성. 3패널 레이아웃(좌: editor, 우: inspector, 하: log) | `src/pages/PageStoreInspector.tsx`::`export default function PageStoreInspector` |
+| `storeToTree.ts` | NormalizedData → NormalizedData 변환 함수. 실제 store를 "entities/relationships" 트리 구조의 store로 매핑하여 TreeGrid로 렌더링 가능하게 함 | `src/interactive-os/core/storeToTree.ts`::`export function storeToTree` |
+| 삭제: `PageStoreExplorer.tsx` | Split Inspector로 대체 | ✅ 삭제 확인 — src/에 없음 |
+| 삭제: `PageStoreOperations.tsx` | operation 로그 패널로 대체 | ✅ 삭제 확인 — src/에 없음 |
+| 변경: `App.tsx` routeConfig | store 그룹 items를 inspector 1개로 변경. basePath → `/store/inspector` | `src/routeConfig.ts` — basePath: `/internals/store/inspector`, component: PageStoreInspector |
 
 ### 레이아웃 구조
 
@@ -171,22 +171,22 @@ useEngine(sampleData, plugins, { logger: captureLogger })
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①M3 실시간 반영 | Editor에서 Enter로 노드 생성 | Inspector entities/에 새 엔티티 출현 + relationships/ 해당 부모 children 배열에 새 ID 추가 | |
-| V2 | ①M3 실시간 반영 | Editor에서 Del로 노드 삭제 | Inspector entities/에서 해당 엔티티 사라짐 + relationships/ 정리 | |
-| V3 | ①M3 실시간 반영 | Editor에서 Alt+↓로 노드 이동 | Inspector relationships/ 해당 부모 children 배열 순서 변경 | |
-| V4 | ①M3 메타 엔티티 | Editor에서 ↑↓로 포커스 이동 | Inspector __focus__.focusedId 값이 새 ID로 변경 | |
-| V5 | ①M4 operation 로그 | Editor에서 Enter(create) | Log 패널에 crud:create 항목 추가 + addEntity diff 표시 | |
-| V6 | ①M4 operation 로그 | Editor에서 ⌘Z(undo) | Log 패널에 history:undo 항목 추가 | 🔀 실제로는 history:__restore가 로그됨 — history 미들웨어가 undo를 인터셉트하여 __restore로 변환 후 dispatch |
-| V7 | ④E1 빈 store | Editor에서 모든 노드 삭제 | Inspector entities/ 비어있음, relationships/ROOT→[] 표시. Editor 포커스 없음 | |
-| V8 | ④E4 패널 전환 | Tab으로 Editor→Inspector 이동 | Editor inactive cursor(background만), Inspector 포커스 활성(outline) | |
-| V9 | ④E5 로그 제한 | 50개 이상 조작 수행 | Log에 최근 50개만 표시, 오래된 항목 제거됨 | |
-| V10 | ④E6 batch | Editor에서 서브트리 있는 노드 삭제 | Log에 부모 커맨드 + 들여쓰기된 자식 커맨드 표시 | |
+| V1 | ①M3 실시간 반영 | Editor에서 Enter로 노드 생성 | Inspector entities/에 새 엔티티 출현 + relationships/ 해당 부모 children 배열에 새 ID 추가 | `store-inspector.integration.test.tsx`::`V1: Enter on editor node creates node → inspector entity count increases` |
+| V2 | ①M3 실시간 반영 | Editor에서 Del로 노드 삭제 | Inspector entities/에서 해당 엔티티 사라짐 + relationships/ 정리 | `store-inspector.integration.test.tsx`::`V2: Delete on editor node removes node → inspector entity count decreases` |
+| V3 | ①M3 실시간 반영 | Editor에서 Alt+↓로 노드 이동 | Inspector relationships/ 해당 부모 children 배열 순서 변경 | `store-inspector.integration.test.tsx`::`V3: Alt+ArrowDown moves node → inspector relationships text changes` |
+| V4 | ①M3 메타 엔티티 | Editor에서 ↑↓로 포커스 이동 | Inspector __focus__.focusedId 값이 새 ID로 변경 | `store-inspector.integration.test.tsx`::`V4: ArrowDown in editor changes focus → inspector __focus__ value changes` |
+| V5 | ①M4 operation 로그 | Editor에서 Enter(create) | Log 패널에 crud:create 항목 추가 + addEntity diff 표시 | `store-inspector.integration.test.tsx`::`V5: Enter (create) → log contains "crud:create"` |
+| V6 | ①M4 operation 로그 | Editor에서 ⌘Z(undo) | Log 패널에 history:undo 항목 추가 | `store-inspector.integration.test.tsx`::`V6: Ctrl+Z (undo) → log contains "history:__restore"` 🔀 실제로는 history:__restore가 로그됨 |
+| V7 | ④E1 빈 store | Editor에서 모든 노드 삭제 | Inspector entities/ 비어있음, relationships/ROOT→[] 표시. Editor 포커스 없음 | `store-inspector.integration.test.tsx`::`V7: Deleting all root nodes → inspector still renders (no crash), shows empty/meta state` |
+| V8 | ④E4 패널 전환 | Tab으로 Editor→Inspector 이동 | Editor inactive cursor(background만), Inspector 포커스 활성(outline) | `store-inspector.integration.test.tsx`::`V8: Tab from editor → focus leaves editor container` |
+| V9 | ④E5 로그 제한 | 50개 이상 조작 수행 | Log에 최근 50개만 표시, 오래된 항목 제거됨 | `store-inspector.integration.test.tsx`::`V9: 30+ create operations → log entries ≤ 50 (capped)` |
+| V10 | ④E6 batch | Editor에서 서브트리 있는 노드 삭제 | Log에 부모 커맨드 + 들여쓰기된 자식 커맨드 표시 | `store-inspector.integration.test.tsx`::`V10: Delete node with children → log contains "crud:delete"` |
 
 ### 테스트 분류
 
 | 종류 | 대상 | 방법 |
 |------|------|------|
-| unit | storeToTree 변환 함수 | 입력 NormalizedData → 출력 NormalizedData 구조 검증 |
+| unit | storeToTree 변환 함수 | `storeToTree.test.ts` — 7 tests (구조/meta/빈 store 등) |
 | 통합 | V1~V4 패널 연동 | userEvent로 Editor 키보드 조작 → Inspector DOM 상태 검증 |
 | 통합 | V5~V6 로그 | userEvent로 Editor 조작 → Log 영역 텍스트 검증 |
 | 통합 | V8 패널 전환 | userEvent.tab() → data-focused 속성 확인 |

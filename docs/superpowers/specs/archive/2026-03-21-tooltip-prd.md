@@ -41,8 +41,8 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `src/interactive-os/ui/Tooltip.tsx` | `<Tooltip content={string}>` 컴포넌트. cloneElement로 trigger에 `interestfor` + `aria-describedby` 주입. useId()로 ID 생성 | ✅ 일치 |
-| `src/interactive-os/ui/Tooltip.css` | tooltip 스타일. CSS Anchor Positioning으로 trigger 아래 배치. 디자인 토큰 사용 (`var(--surface-3)` + `var(--shadow-md)` elevation 쌍, `var(--text-primary)` 등) | ✅ 일치 + flip-block fallback 추가 |
+| `src/interactive-os/ui/Tooltip.tsx` | `<Tooltip content={string}>` 컴포넌트. cloneElement로 trigger에 `interestfor` + `aria-describedby` 주입. useId()로 ID 생성 | ✅ `Tooltip.tsx::Tooltip` |
+| `src/interactive-os/ui/Tooltip.css` | tooltip 스타일. CSS Anchor Positioning으로 trigger 아래 배치. 디자인 토큰 사용 (`var(--surface-3)` + `var(--shadow-md)` elevation 쌍, `var(--text-primary)` 등) | ✅ `Tooltip.module.css` (CSS Modules로 전환) |
 
 ### 컴포넌트 API
 
@@ -98,8 +98,8 @@ interface TooltipProps {
 
 | # | 시나리오 | 예상 결과 | 역PRD |
 |---|---------|----------|-------|
-| 1 | `<Tooltip content="저장"><button>💾</button></Tooltip>` 렌더 | trigger에 `interestfor`, `aria-describedby` 속성. sibling에 `popover="hint"`, `role="tooltip"`, 동일 `id` | ✅ 테스트 #1 |
-| 2 | content="" 빈 문자열 | tooltip span 렌더 안 됨. trigger에 interestfor/aria-describedby 없음 | ✅ 테스트 #2 |
+| 1 | `<Tooltip content="저장"><button>💾</button></Tooltip>` 렌더 | trigger에 `interestfor`, `aria-describedby` 속성. sibling에 `popover="hint"`, `role="tooltip"`, 동일 `id` | ✅ `tooltip.test.tsx::trigger와 tooltip을 동일 id로 연결하고 popover="hint"를 렌더한다` |
+| 2 | content="" 빈 문자열 | tooltip span 렌더 안 됨. trigger에 interestfor/aria-describedby 없음 | ✅ `tooltip.test.tsx::content가 빈 문자열이면 tooltip을 렌더하지 않는다` |
 | 3 | 브라우저에서 trigger hover | tooltip 표시됨 (브라우저 내장 delay 후) | /reproduce 대상 (jsdom 미지원) |
 | 4 | tooltip 표시 상태에서 Escape | tooltip 숨김 | /reproduce 대상 |
 | 5 | 키보드로 trigger focus | tooltip 표시 | /reproduce 대상 |

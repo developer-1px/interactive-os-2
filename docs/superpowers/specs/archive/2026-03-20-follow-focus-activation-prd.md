@@ -64,6 +64,19 @@
 
 - `App.tsx` — ActivityBar를 toolbar behavior로 변경, theme 버튼을 store에 포함, onActivate 콜백으로 라우트/테마 분기
 
+### 역PRD: 산출물 ↔ 코드 매핑
+
+| 산출물 | 역PRD (실제 코드) |
+|---|---|
+| AriaBehavior.followFocus 필드 | `src/interactive-os/behaviors/types.ts::AriaBehavior.followFocus` (L87) |
+| AriaProps.onActivate 콜백 | `src/interactive-os/components/aria.tsx::AriaProps.onActivate` (L20) |
+| useAria — onActivate 전달, followFocus 판정 | `src/interactive-os/hooks/useAria.ts::useAria` |
+| useAriaView — followFocus 판정 로직 | `src/interactive-os/hooks/useAriaView.ts` |
+| keymapHelpers — followFocus 통합 | `src/interactive-os/hooks/keymapHelpers.ts` |
+| tabs.followFocus=true | `src/interactive-os/behaviors/tabs.ts::tabs` — composePattern에서 activate({ followFocus: true }) |
+| toolbar.followFocus 미설정 | `src/interactive-os/behaviors/toolbar.ts::toolbar` |
+| App ActivityBar onActivate | `src/AppShell.tsx` (L187: `onActivate={handleActivityBarActivate}`) |
+
 상태: 🟢
 
 ## 4. 경계
@@ -101,6 +114,19 @@
 | 7 | ActivityBar: theme 버튼에 ↓ 도달 | 포커스만 이동, 라우트/테마 변경 없음 |
 | 8 | ActivityBar: theme 버튼에서 Enter | 테마 토글 |
 | 9 | ActivityBar: Tab 키 | 컨테이너 밖으로 이동 (Tab stop 1개 확인) |
+
+### 역PRD: 검증 ↔ 테스트 매핑
+
+| # | 테스트 파일 :: 테스트명 |
+|---|---|
+| 1 | `src/interactive-os/__tests__/follow-focus.test.tsx::followFocus + onActivate > followFocus=true with onActivate > calls onActivate when focus moves to a followFocus item (PRD검증#1)` |
+| 2 | `src/interactive-os/__tests__/follow-focus.test.tsx::followFocus + onActivate > followFocus=true with onActivate > does NOT call onActivate when focus moves to entity.data.followFocus=false (PRD검증#2)` |
+| 3 | `src/interactive-os/__tests__/follow-focus.test.tsx::followFocus + onActivate > followFocus=true with onActivate > calls onActivate on Enter even for followFocus=false items (PRD검증#3)` |
+| 4 | `src/interactive-os/__tests__/follow-focus.test.tsx::followFocus + onActivate > tabs behavior has followFocus=true by default > tabs preset includes followFocus=true (PRD검증#4)` |
+| 4 | `src/interactive-os/__tests__/follow-focus.test.tsx::followFocus + onActivate > tabs behavior has followFocus=true by default > calls onActivate on focus change for tabs (PRD검증#4)` |
+| 5 | `src/interactive-os/__tests__/follow-focus.test.tsx::followFocus + onActivate > onActivate not registered > uses default activate() when onActivate is not provided (PRD검증#5)` |
+| 6–8 | `src/interactive-os/__tests__/activitybar-focus.test.tsx` (ActivityBar 라우트/포커스 통합) |
+| 9 | `src/interactive-os/__tests__/follow-focus.test.tsx::followFocus + onActivate > Tab stop count > entire container is a single tab stop (PRD검증#9)` |
 
 상태: 🟢
 
