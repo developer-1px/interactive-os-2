@@ -2,9 +2,9 @@ import { useCallback, useMemo, useState, useRef } from 'react'
 import '../../styles/cms.css'
 import { useResizer } from '../../hooks/useResizer'
 import '../../styles/resizer.css'
-import CmsTopToolbar from './CmsTopToolbar'
 import type { ViewportSize } from './CmsViewportWrapper'
 import CmsViewportWrapper from './CmsViewportWrapper'
+import CmsViewportBar from './CmsViewportBar'
 import CmsHamburgerDrawer from './CmsHamburgerDrawer'
 import CmsCanvas from './CmsCanvas'
 import CmsSidebar from './CmsSidebar'
@@ -84,19 +84,21 @@ export default function CmsLayout() {
 
   return (
     <div className="cms-layout">
-      <CmsTopToolbar
-        onHamburgerClick={() => setDrawerOpen(true)}
-        locale={locale}
-        onLocaleChange={setLocale}
-        viewport={viewport}
-        onViewportChange={setViewport}
-        onPresent={() => setPresenting(true)}
-        hamburgerRef={hamburgerRef}
-        i18nSheetOpen={i18nSheetOpen}
-        onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
-      />
       <div className="cms-body">
-        <CmsSidebar engine={engine} store={store} locale={locale} activeSectionId={activeSectionId} plugins={sharedPlugins} onActivateTabItem={handleActivateTabItem} style={{ width: sidebarResizer.size }} />
+        <CmsSidebar
+          engine={engine}
+          store={store}
+          locale={locale}
+          activeSectionId={activeSectionId}
+          plugins={sharedPlugins}
+          onActivateTabItem={handleActivateTabItem}
+          style={{ width: sidebarResizer.size }}
+          onHamburgerClick={() => setDrawerOpen(true)}
+          onLocaleChange={setLocale}
+          hamburgerRef={hamburgerRef}
+          i18nSheetOpen={i18nSheetOpen}
+          onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
+        />
         <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
         <div className="cms-canvas-area">
           <CmsViewportWrapper viewport={viewport}>
@@ -113,6 +115,7 @@ export default function CmsLayout() {
           style={{ width: detailResizer.size }}
         />
       </div>
+      <CmsViewportBar viewport={viewport} onViewportChange={setViewport} onPresent={() => setPresenting(true)} hidden={presenting} />
       <CmsFloatingToolbar store={store} focusedId={canvasFocusedId} dispatch={(cmd) => engine.dispatch(cmd)} hidden={presenting} />
       {drawerOpen && (
         <CmsHamburgerDrawer
