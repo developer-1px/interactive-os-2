@@ -73,6 +73,8 @@ export interface AxisConfig {
   focusStrategy: FocusStrategy
   tabFocusStrategy: FocusStrategy
   expandable: boolean
+  /** When true, useAria creates __expanded__ entity at init so getVisibleNodes gates child visibility. Set by expand axis. */
+  expandTracking: boolean
   selectionMode: SelectionMode
   selectOnClick: boolean
   activateOnClick: boolean

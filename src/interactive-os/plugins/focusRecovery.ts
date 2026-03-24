@@ -20,7 +20,10 @@ export const spatialReachable: IsReachable = () => true
  * Default tree reachability: all ancestors must be expanded.
  */
 function treeReachable(store: NormalizedData, nodeId: string): boolean {
-  const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
+  const expandedEntity = store.entities[EXPANDED_ID]
+  // No expand tracking → all nodes are reachable (no gating)
+  if (!expandedEntity) return getEntity(store, nodeId) != null
+  const expandedIds = (expandedEntity.expandedIds as string[]) ?? []
 
   let current = nodeId
   while (true) {

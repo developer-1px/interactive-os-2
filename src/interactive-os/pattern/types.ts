@@ -24,6 +24,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   focusStrategy: FocusStrategy
   /** When true, all nodes are expandable regardless of children. Used by accordion, disclosure. */
   expandable?: boolean
+  /** When true, useAria creates __expanded__ entity at init for getVisibleNodes gating. Set by expand axis. */
+  expandTracking?: boolean
   /** Selection mode: 'single' replaces selection, 'multiple' toggles independently. Default: 'multiple' */
   selectionMode?: SelectionMode
   /** When true, clicking a node selects it. Shift+Click = range, Ctrl/Cmd+Click = toggle. Auto-set by select() axis. */

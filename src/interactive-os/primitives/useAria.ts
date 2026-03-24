@@ -88,6 +88,16 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
     engineCallbacksMap.set(created, bag)
 
+    // If pattern uses expand axis (expandTracking), ensure __expanded__ entity exists
+    // so getVisibleNodes activates gating (default-collapsed for tree/accordion).
+    // Patterns without expand axis leave the entity absent → all children visible.
+    if ((behavior.expandTracking || behavior.expandable) && !data.entities[EXPANDED_ID]) {
+      created.syncStore({
+        entities: { ...created.getStore().entities, [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [] } },
+        relationships: created.getStore().relationships,
+      })
+    }
+
     const externalFocus = (data.entities[FOCUS_ID]?.focusedId as string) ?? ''
     const focusTarget = (externalFocus && data.entities[externalFocus])
       ? externalFocus
