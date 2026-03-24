@@ -5,13 +5,13 @@ import type { NormalizedData } from '../interactive-os/core/types'
 export function makeListBoxData(): NormalizedData {
   return createStore({
     entities: {
-      apple: { id: 'apple', data: { label: 'Apple' } },
-      banana: { id: 'banana', data: { label: 'Banana' } },
-      cherry: { id: 'cherry', data: { label: 'Cherry' } },
-      date: { id: 'date', data: { label: 'Date' } },
-      elderberry: { id: 'elderberry', data: { label: 'Elderberry' } },
+      recent: { id: 'recent', data: { label: 'Deploy v2.4.1 to staging' } },
+      review: { id: 'review', data: { label: 'PR #287 approved by jkim' } },
+      merge: { id: 'merge', data: { label: 'Merged feature/auth-flow' } },
+      alert: { id: 'alert', data: { label: 'CI pipeline failed on main' } },
+      resolve: { id: 'resolve', data: { label: 'Resolved: memory leak in worker' } },
     },
-    relationships: { [ROOT_ID]: ['apple', 'banana', 'cherry', 'date', 'elderberry'] },
+    relationships: { [ROOT_ID]: ['recent', 'review', 'merge', 'alert', 'resolve'] },
   })
 }
 
@@ -38,9 +38,9 @@ export function makeTreeGridData(): NormalizedData {
 export function makeAccordionData(): NormalizedData {
   return createStore({
     entities: {
-      q1: { id: 'q1', data: { label: 'What is interactive-os?' } },
-      q2: { id: 'q2', data: { label: 'How does the store work?' } },
-      q3: { id: 'q3', data: { label: 'What are behaviors?' } },
+      q1: { id: 'q1', data: { label: 'How does the store work?' } },
+      q2: { id: 'q2', data: { label: 'What are behaviors?' } },
+      q3: { id: 'q3', data: { label: 'How do plugins extend axes?' } },
     },
     relationships: { [ROOT_ID]: ['q1', 'q2', 'q3'] },
   })
@@ -50,7 +50,7 @@ export function makeAlertDialogData(): NormalizedData {
   return createStore({
     entities: {
       message: { id: 'message', data: { label: 'Are you sure you want to delete this item?' } },
-      confirm: { id: 'confirm', data: { label: 'Confirm' } },
+      confirm: { id: 'confirm', data: { label: 'Delete' } },
       cancel: { id: 'cancel', data: { label: 'Cancel' } },
     },
     relationships: { [ROOT_ID]: ['message', 'confirm', 'cancel'] },
@@ -61,10 +61,10 @@ export function makeTabListData(): NormalizedData {
   return createStore({
     entities: {
       overview: { id: 'overview', data: { label: 'Overview' } },
-      api: { id: 'api', data: { label: 'API' } },
-      examples: { id: 'examples', data: { label: 'Examples' } },
+      activity: { id: 'activity', data: { label: 'Activity' } },
+      settings: { id: 'settings', data: { label: 'Settings' } },
     },
-    relationships: { [ROOT_ID]: ['overview', 'api', 'examples'] },
+    relationships: { [ROOT_ID]: ['overview', 'activity', 'settings'] },
   })
 }
 
@@ -91,13 +91,13 @@ export function makeToggleGroupData(): NormalizedData {
 export function makeComboboxData(): NormalizedData {
   return createStore({
     entities: {
-      red: { id: 'red', data: { label: 'Red' } },
-      green: { id: 'green', data: { label: 'Green' } },
-      blue: { id: 'blue', data: { label: 'Blue' } },
-      yellow: { id: 'yellow', data: { label: 'Yellow' } },
-      purple: { id: 'purple', data: { label: 'Purple' } },
+      bug: { id: 'bug', data: { label: 'Bug' } },
+      feature: { id: 'feature', data: { label: 'Feature' } },
+      docs: { id: 'docs', data: { label: 'Documentation' } },
+      refactor: { id: 'refactor', data: { label: 'Refactor' } },
+      perf: { id: 'perf', data: { label: 'Performance' } },
     },
-    relationships: { [ROOT_ID]: ['red', 'green', 'blue', 'yellow', 'purple'] },
+    relationships: { [ROOT_ID]: ['bug', 'feature', 'docs', 'refactor', 'perf'] },
   })
 }
 
@@ -137,9 +137,9 @@ export function makeDisclosureGroupData(): NormalizedData {
 export function makeGridData(): NormalizedData {
   return createStore({
     entities: {
-      r1: { id: 'r1', data: { cells: ['Alice', 'Engineer', 'NYC'] } },
-      r2: { id: 'r2', data: { cells: ['Bob', 'Designer', 'SF'] } },
-      r3: { id: 'r3', data: { cells: ['Carol', 'PM', 'London'] } },
+      r1: { id: 'r1', data: { cells: ['AUTH-142', 'Login timeout on Safari', 'Critical'] } },
+      r2: { id: 'r2', data: { cells: ['UI-891', 'Dark mode contrast', 'Medium'] } },
+      r3: { id: 'r3', data: { cells: ['API-356', 'Rate limit exceeded', 'High'] } },
     },
     relationships: { [ROOT_ID]: ['r1', 'r2', 'r3'] },
   })
@@ -151,10 +151,10 @@ export function makeKanbanData(): NormalizedData {
       todo: { id: 'todo', data: { title: 'To Do' } },
       doing: { id: 'doing', data: { title: 'In Progress' } },
       done: { id: 'done', data: { title: 'Done' } },
-      t1: { id: 't1', data: { title: 'Design mockups' } },
-      t2: { id: 't2', data: { title: 'Write tests' } },
-      t3: { id: 't3', data: { title: 'Implement API' } },
-      t4: { id: 't4', data: { title: 'Deploy v1' } },
+      t1: { id: 't1', data: { title: 'Migrate auth to OAuth 2.1' } },
+      t2: { id: 't2', data: { title: 'Add rate limiting middleware' } },
+      t3: { id: 't3', data: { title: 'Implement SSE for notifications' } },
+      t4: { id: 't4', data: { title: 'Deploy v2.4.1' } },
     },
     relationships: {
       [ROOT_ID]: ['todo', 'doing', 'done'],
@@ -209,11 +209,11 @@ export function makeSpinbuttonData(): NormalizedData {
 export function makeSwitchGroupData(): NormalizedData {
   return createStore({
     entities: {
-      wifi: { id: 'wifi', data: { label: 'Wi-Fi' } },
-      bluetooth: { id: 'bluetooth', data: { label: 'Bluetooth' } },
-      airplane: { id: 'airplane', data: { label: 'Airplane Mode' } },
+      notifications: { id: 'notifications', data: { label: 'Push notifications' } },
+      sounds: { id: 'sounds', data: { label: 'Sound effects' } },
+      analytics: { id: 'analytics', data: { label: 'Usage analytics' } },
     },
-    relationships: { [ROOT_ID]: ['wifi', 'bluetooth', 'airplane'] },
+    relationships: { [ROOT_ID]: ['notifications', 'sounds', 'analytics'] },
   })
 }
 
@@ -232,13 +232,13 @@ export function makeNavListData(): NormalizedData {
   return createStore({
     entities: {
       home: { id: 'home', data: { label: 'Home' } },
-      products: { id: 'products', data: { label: 'Products' } },
-      about: { id: 'about', data: { label: 'About' } },
+      projects: { id: 'projects', data: { label: 'Projects' } },
+      members: { id: 'members', data: { label: 'Members' } },
       settings: { id: 'settings', data: { label: 'Settings' } },
-      help: { id: 'help', data: { label: 'Help' } },
+      help: { id: 'help', data: { label: 'Help & Feedback' } },
     },
     relationships: {
-      [ROOT_ID]: ['home', 'products', 'about', 'settings', 'help'],
+      [ROOT_ID]: ['home', 'projects', 'members', 'settings', 'help'],
     },
   })
 }
@@ -248,7 +248,7 @@ export function makeTreeViewData(): NormalizedData {
     entities: {
       docs: { id: 'docs', data: { name: 'docs' } },
       readme: { id: 'readme', data: { name: 'README.md' } },
-      guide: { id: 'guide', data: { name: 'guide.md' } },
+      guide: { id: 'guide', data: { name: 'getting-started.md' } },
       api: { id: 'api', data: { name: 'api' } },
       ref: { id: 'ref', data: { name: 'reference.md' } },
     },
