@@ -1,12 +1,12 @@
 /* ══════════════════════════════════════════════
-   CMS Landing Sections — Content Design System
+   CMS Landing — Editorial / Magazine
    ══════════════════════════════════════════════
    Uses ONLY --landing-* tokens.
-   Zero references to app tokens (--surface-*, --text-*, etc.).
-   ② 2026-03-24-cms-landing-prd.md
+   No cards. No borders. No shadows. No icons.
+   Typography + whitespace + asymmetry.
 */
 
-/* ── Page container ── */
+/* ── Page ── */
 
 .cmsLanding {
   min-height: 100vh;
@@ -26,10 +26,10 @@
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
   font-weight: var(--landing-weight-label);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--landing-text-accent);
-  margin: 0 0 12px;
+  color: var(--landing-text-muted);
+  margin: 0 0 24px;
 }
 
 .cmsSectionTitle {
@@ -39,54 +39,52 @@
   letter-spacing: -0.03em;
   line-height: var(--landing-leading-tight);
   color: var(--landing-text-heading);
-  margin: 0 0 12px;
+  margin: 0 0 20px;
+  font-style: italic;
 }
 
 .cmsSectionDesc {
   font-size: var(--landing-size-body);
   font-weight: var(--landing-weight-body);
-  color: var(--landing-text-muted);
-  margin: 0 0 var(--landing-space-section-sm);
-  max-width: 480px;
+  color: var(--landing-text-body);
+  margin: 0;
+  max-width: 440px;
   line-height: var(--landing-leading-relaxed);
   white-space: pre-line;
 }
 
 /* ══════════════════════════════
-   Hero — full-bleed, centered
+   Hero — full viewport, left-aligned
    ══════════════════════════════ */
 
 .cmsHero {
-  padding: 96px var(--landing-space-inline) 80px;
-  background: var(--landing-bg-section);
+  min-height: 90vh;
+  padding: var(--landing-space-section) var(--landing-space-inline);
+  padding-top: 20vh;
+  background: var(--landing-bg-page);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+  max-width: var(--landing-space-content-max);
+  margin: 0 auto;
 }
 
 .cmsHeroBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
   font-weight: var(--landing-weight-label);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--landing-text-accent);
-  background: var(--landing-accent-dim);
-  border: 1px solid var(--landing-accent-mid);
-  padding: 6px 20px;
-  border-radius: var(--landing-radius-badge);
-  margin-bottom: 32px;
+  color: var(--landing-text-muted);
+  margin-bottom: 40px;
+  border: none;
+  background: none;
+  padding: 0;
 }
 
 .cmsHeroBadgeDot {
-  width: 6px;
-  height: 6px;
-  background: var(--landing-accent);
-  border-radius: 50%;
+  display: none;
 }
 
 .cmsHeroTitle {
@@ -95,111 +93,108 @@
   font-weight: var(--landing-weight-display);
   letter-spacing: -0.04em;
   line-height: var(--landing-leading-tight);
-  margin: 0 0 24px;
+  margin: 0 0 48px;
   color: var(--landing-text-heading);
+  max-width: 10ch;
 }
 
 .cmsHeroSubtitle {
   font-size: var(--landing-size-subtitle);
   font-weight: var(--landing-weight-body);
   line-height: var(--landing-leading-relaxed);
-  color: var(--landing-text-muted);
-  margin: 0 0 40px;
-  max-width: 520px;
+  color: var(--landing-text-body);
+  margin: 0 0 64px;
+  max-width: 36ch;
 }
 
 .cmsHeroActions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 32px;
 }
 
 .cmsHeroCta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--landing-font-body);
-  font-size: var(--landing-size-body);
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-caption);
   font-weight: 600;
-  color: var(--landing-text-on-accent);
-  background: var(--landing-accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--landing-text-heading);
+  background: none;
   border: none;
-  padding: 14px 28px;
-  border-radius: var(--landing-radius-card-sm);
+  border-bottom: 1px solid var(--landing-text-heading);
+  padding: 0 0 4px;
   cursor: pointer;
 }
 
 .cmsHeroCtaSecondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--landing-font-body);
-  font-size: var(--landing-size-body);
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-caption);
   font-weight: 500;
-  color: var(--landing-text-body);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--landing-text-muted);
   background: none;
-  border: 1px solid var(--landing-border-default);
-  padding: 13px 26px;
-  border-radius: var(--landing-radius-card-sm);
+  border: none;
+  padding: 0;
   cursor: pointer;
 }
 
 /* ══════════════════════════════
-   Stats — 1 large + 3 small (Apple card mix)
+   Stats — oversized numbers, right-aligned
    ══════════════════════════════ */
 
 .cmsStats {
-  padding: 0;
+  padding: var(--landing-space-section) var(--landing-space-inline);
   background: var(--landing-bg-page);
+  border-top: var(--landing-rule);
 }
 
 .cmsStatsItems {
   max-width: var(--landing-space-content-max);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: var(--landing-space-card-gap);
-  padding: var(--landing-space-section-sm) var(--landing-space-inline);
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(40px, 6vw, 100px);
 }
 
 .cmsStat {
-  text-align: center;
-  padding: var(--landing-space-card-padding);
-  background: var(--landing-bg-card);
-  border: 1px solid var(--landing-border-subtle);
-  border-radius: var(--landing-radius-card-sm);
-  box-shadow: var(--landing-shadow-card);
+  text-align: right;
 }
 
 .cmsStatFocused {
-  border-color: var(--landing-accent);
-  box-shadow: 0 0 0 1px var(--landing-accent);
+  color: var(--landing-text-heading);
 }
 
 .cmsStatValue {
   font-family: var(--landing-font-display);
-  font-size: var(--landing-size-title);
-  font-weight: var(--landing-weight-display);
+  font-size: clamp(48px, 6vw, 96px);
+  font-weight: 900;
   color: var(--landing-text-heading);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
+  line-height: 1;
   display: block;
 }
 
 .cmsStatLabel {
-  font-size: var(--landing-size-caption);
-  font-weight: var(--landing-weight-caption);
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-label);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
   color: var(--landing-text-muted);
-  margin-top: 4px;
+  margin-top: 8px;
   display: block;
 }
 
 /* ══════════════════════════════
-   Features — 1 full-width + 2 half (Apple style)
+   Features — text blocks, no cards, alternating sides
    ══════════════════════════════ */
 
 .cmsFeatures {
-  background: var(--landing-bg-section);
   padding: var(--landing-space-section) var(--landing-space-inline);
+  background: var(--landing-bg-page);
+  border-top: var(--landing-rule);
 }
 
 .cmsFeatures > .cmsSectionLabel,
@@ -214,65 +209,58 @@
   max-width: var(--landing-space-content-max);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--landing-space-card-gap);
+  grid-template-columns: 1fr 1fr;
+  gap: var(--landing-space-section-sm) clamp(40px, 8vw, 160px);
 }
 
-/* First card spans full width */
-.cmsFeaturesGrid > :first-child {
-  grid-column: 1 / -1;
+/* Odd items left, even items right — creates asymmetric rhythm */
+.cmsFeaturesGrid > :nth-child(even) {
+  padding-top: var(--landing-space-section-sm);
 }
 
 .cmsFeatureCard {
-  padding: var(--landing-space-card-padding);
-  background: var(--landing-bg-card);
-  border: 1px solid var(--landing-border-subtle);
-  border-radius: var(--landing-radius-card);
-  box-shadow: var(--landing-shadow-card);
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .cmsFeatureCardFocused {
-  border-color: var(--landing-accent);
-  box-shadow: 0 0 0 1px var(--landing-accent);
+  border-left: 2px solid var(--landing-text-heading);
+  padding-left: 20px;
 }
 
 .cmsFeatureCardIcon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--landing-accent-dim);
-  border: 1px solid var(--landing-accent-mid);
-  border-radius: var(--landing-radius-icon);
-  color: var(--landing-accent);
-  margin-bottom: 20px;
-  font-size: 20px;
+  display: none;
 }
 
 .cmsFeatureCardTitle {
   font-family: var(--landing-font-display);
-  font-size: var(--landing-size-subtitle);
+  font-size: var(--landing-size-title);
   font-weight: var(--landing-weight-title);
   color: var(--landing-text-heading);
-  margin: 0 0 8px;
+  margin: 0 0 16px;
   letter-spacing: -0.02em;
+  line-height: var(--landing-leading-tight);
+  font-style: italic;
 }
 
 .cmsFeatureCardDesc {
   font-size: var(--landing-size-body);
-  color: var(--landing-text-muted);
-  line-height: var(--landing-leading-normal);
+  color: var(--landing-text-body);
+  line-height: var(--landing-leading-relaxed);
   margin: 0;
+  max-width: 32ch;
 }
 
 /* ══════════════════════════════
-   Workflow — horizontal timeline, bigger padding
+   Workflow — left-aligned, vertical, oversized numbers
    ══════════════════════════════ */
 
 .cmsHow {
-  background: var(--landing-bg-page);
   padding: var(--landing-space-section) var(--landing-space-inline);
+  background: var(--landing-bg-page);
+  border-top: var(--landing-rule);
 }
 
 .cmsHow > .cmsSectionLabel,
@@ -286,19 +274,22 @@
 .cmsHowSteps {
   max-width: var(--landing-space-content-max);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 0;
-  border: 1px solid var(--landing-border-subtle);
-  border-radius: var(--landing-radius-card);
-  overflow: hidden;
-  background: var(--landing-bg-section);
+  border: none;
+  border-radius: 0;
+  background: transparent;
 }
 
 .cmsStep {
-  position: relative;
-  padding: 32px var(--landing-space-card-padding);
-  border-right: 1px solid var(--landing-border-subtle);
+  display: grid;
+  grid-template-columns: clamp(60px, 8vw, 120px) 1fr;
+  gap: 24px;
+  align-items: baseline;
+  padding: 32px 0;
+  border-top: var(--landing-rule);
+  border-right: none;
 }
 
 .cmsStep:last-child {
@@ -306,42 +297,48 @@
 }
 
 .cmsStepFocused {
-  background: var(--landing-accent-dim);
+  background: transparent;
+  border-left: 2px solid var(--landing-text-heading);
+  padding-left: 20px;
 }
 
 .cmsStepNumber {
-  font-family: var(--landing-font-mono);
-  font-size: var(--landing-size-label);
-  font-weight: 700;
-  color: var(--landing-accent);
-  letter-spacing: 0.08em;
+  font-family: var(--landing-font-display);
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 900;
+  color: var(--landing-text-muted);
   line-height: 1;
-  margin-bottom: 16px;
   display: block;
+  margin: 0;
+  letter-spacing: -0.04em;
 }
 
 .cmsStepTitle {
   font-family: var(--landing-font-display);
-  font-size: var(--landing-size-body);
+  font-size: var(--landing-size-subtitle);
   font-weight: var(--landing-weight-title);
   color: var(--landing-text-heading);
   margin: 0 0 8px;
+  font-style: italic;
 }
 
 .cmsStepDesc {
-  font-size: var(--landing-size-caption);
-  color: var(--landing-text-muted);
-  line-height: var(--landing-leading-normal);
+  font-size: var(--landing-size-body);
+  color: var(--landing-text-body);
+  line-height: var(--landing-leading-relaxed);
   margin: 0;
+  max-width: 36ch;
+  grid-column: 2;
 }
 
 /* ══════════════════════════════
-   Patterns — size-mixed grid (some 2x span)
+   Patterns — flowing text list, no grid, no icons
    ══════════════════════════════ */
 
 .cmsPatterns {
-  background: var(--landing-bg-section);
   padding: var(--landing-space-section) var(--landing-space-inline);
+  background: var(--landing-bg-page);
+  border-top: var(--landing-rule);
 }
 
 .cmsPatterns > .cmsSectionLabel,
@@ -355,82 +352,81 @@
 .cmsPatternsGrid {
   max-width: var(--landing-space-content-max);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--landing-space-card-gap);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
 }
 
-/* Every 4th pattern spans 2 columns for visual rhythm */
 .cmsPatternsGrid > :nth-child(4n+1) {
-  grid-column: span 2;
+  grid-column: unset;
 }
 
 .cmsPattern {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: var(--landing-bg-card);
-  border: 1px solid var(--landing-border-subtle);
-  border-radius: var(--landing-radius-card-sm);
-  box-shadow: var(--landing-shadow-card);
+  display: inline;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Patterns rendered as flowing comma-separated serif text */
+.cmsPattern::after {
+  content: ',\00a0\00a0';
+  color: var(--landing-text-muted);
+}
+
+.cmsPattern:last-child::after {
+  content: '.';
 }
 
 .cmsPatternFocused {
-  border-color: var(--landing-accent);
-  background: var(--landing-accent-dim);
+  border-bottom: 1px solid var(--landing-text-heading);
+  background: transparent;
 }
 
 .cmsPatternIcon {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--landing-accent-dim);
-  border: 1px solid var(--landing-accent-mid);
-  border-radius: 8px;
-  color: var(--landing-accent);
-  flex-shrink: 0;
+  display: none;
 }
 
 .cmsPatternName {
-  font-family: var(--landing-font-mono);
-  font-size: var(--landing-size-caption);
-  font-weight: 600;
-  color: var(--landing-text-body);
+  font-family: var(--landing-font-display);
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 700;
+  color: var(--landing-text-heading);
+  font-style: italic;
 }
 
 /* ══════════════════════════════
-   Footer — centered brand
+   Footer — minimal, left-aligned
    ══════════════════════════════ */
 
 .cmsFooter {
-  padding: 40px var(--landing-space-inline);
+  padding: var(--landing-space-section-sm) var(--landing-space-inline);
   background: var(--landing-bg-page);
+  border-top: var(--landing-rule);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  max-width: var(--landing-space-content-max);
+  margin: 0 auto;
 }
 
 .cmsFooterBrand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .cmsFooterLogo {
-  width: 8px;
-  height: 8px;
-  background: var(--landing-accent);
-  border-radius: 3px;
+  display: none;
 }
 
 .cmsFooterName {
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-label);
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--landing-text-muted);
 }
@@ -438,71 +434,78 @@
 .cmsFooterCopy {
   font-size: var(--landing-size-label);
   color: var(--landing-text-muted);
-  margin-left: 4px;
+  margin-left: 8px;
 }
 
 .cmsFooterLinks {
   display: flex;
-  gap: 20px;
-  margin-left: 32px;
+  gap: 24px;
+  margin-left: auto;
 }
 
 .cmsFooterLink {
   font-family: var(--landing-font-mono);
   font-size: var(--landing-size-caption);
   font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--landing-text-muted);
   text-decoration: none;
   cursor: pointer;
 }
 
 /* ══════════════════════════════
-   Tab Group — landing-token based
+   Tab Group — editorial style
    ══════════════════════════════ */
 
 .cmsTabGroup {
-  margin: 40px 0;
+  margin: var(--landing-space-section) 0;
 }
 
 .cmsTabGroupFocused {
-  outline: 2px solid var(--landing-accent);
-  outline-offset: 4px;
-  border-radius: var(--landing-radius-card);
+  outline: 1px solid var(--landing-text-muted);
+  outline-offset: 8px;
 }
 
 .cmsTablist {
   display: flex;
-  justify-content: center;
-  gap: 6px;
-  padding: 4px;
-  margin-bottom: 24px;
-  background: var(--landing-bg-section);
-  border-radius: var(--landing-radius-badge);
-  width: fit-content;
-  margin-inline: auto;
+  gap: 32px;
+  padding: 0;
+  margin-bottom: var(--landing-space-section-sm);
+  background: none;
+  border-radius: 0;
+  border-bottom: var(--landing-rule);
+  width: auto;
+  margin-inline: var(--landing-space-inline);
+  max-width: var(--landing-space-content-max);
 }
 
 .cmsTabItem {
-  padding: 8px 20px;
-  font-family: var(--landing-font-body);
-  font-size: var(--landing-size-body);
+  padding: 12px 0;
+  font-family: var(--landing-font-mono);
+  font-size: var(--landing-size-caption);
   font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
   color: var(--landing-text-muted);
   background: none;
   border: none;
-  border-radius: var(--landing-radius-badge);
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
   cursor: pointer;
+  margin-bottom: -1px;
 }
 
 .cmsTabItemActive {
   color: var(--landing-text-heading);
-  background: var(--landing-bg-card);
-  box-shadow: var(--landing-shadow-card);
+  border-bottom-color: var(--landing-text-heading);
+  background: none;
+  box-shadow: none;
 }
 
 .cmsTabItemFocused {
-  outline: 2px solid var(--landing-accent);
-  outline-offset: -2px;
+  outline: 1px solid var(--landing-text-muted);
+  outline-offset: 2px;
 }
 
 .cmsTabPanel {
@@ -510,28 +513,20 @@
 }
 
 /* ══════════════════════════════
-   Responsive — mobile 1-col fallback
+   Responsive
    ══════════════════════════════ */
 
 @media (max-width: 768px) {
-  .cmsHeroTitle { font-size: 36px; }
-  .cmsHeroSubtitle { font-size: 18px; }
-  .cmsSectionTitle { font-size: 28px; }
-
-  .cmsStatsItems { grid-template-columns: repeat(2, 1fr); }
+  .cmsHeroTitle { max-width: 100%; }
   .cmsFeaturesGrid { grid-template-columns: 1fr; }
-  .cmsFeaturesGrid > :first-child { grid-column: 1; }
-  .cmsHowSteps { grid-template-columns: repeat(2, 1fr); }
-  .cmsStep { border-bottom: 1px solid var(--landing-border-subtle); }
-  .cmsStep:nth-child(2) { border-right: none; }
-  .cmsPatternsGrid { grid-template-columns: repeat(2, 1fr); }
-  .cmsPatternsGrid > :nth-child(4n+1) { grid-column: span 1; }
+  .cmsFeaturesGrid > :nth-child(even) { padding-top: 0; }
+  .cmsStatsItems { flex-direction: column; align-items: flex-end; gap: 40px; }
+  .cmsStep { grid-template-columns: 60px 1fr; }
 }
 
 @media (max-width: 480px) {
-  .cmsStatsItems { grid-template-columns: 1fr; }
-  .cmsHowSteps { grid-template-columns: 1fr; }
-  .cmsStep { border-right: none; }
-  .cmsPatternsGrid { grid-template-columns: 1fr; }
-  .cmsHeroActions { flex-direction: column; }
+  .cmsHero { min-height: 70vh; padding-top: 15vh; }
+  .cmsTablist { flex-direction: column; gap: 8px; border-bottom: none; }
+  .cmsTabItem { border-bottom: none; border-left: 2px solid transparent; padding: 8px 12px; }
+  .cmsTabItemActive { border-left-color: var(--landing-text-heading); border-bottom-color: transparent; }
 }
