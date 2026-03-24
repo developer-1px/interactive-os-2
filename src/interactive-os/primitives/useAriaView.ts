@@ -60,6 +60,7 @@ export interface UseAriaViewOptions {
   nodeIdAttr?: string
   isKeyMapOnly?: boolean
   autoFocus?: boolean
+  disabled?: boolean
 }
 
 export interface UseAriaViewReturn {
@@ -74,6 +75,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     engine, store, behavior, plugins = [], keyMap: keyMapOverrides,
     onActivate, focusedId, selectedIdSet, expandedIds,
     nodeIdAttr = 'data-node-id', isKeyMapOnly = false, autoFocus = true,
+    disabled = false,
   } = options
 
   const onActivateRef = useRef(onActivate)
@@ -247,10 +249,12 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   // ── containerProps ──
 
   const containerProps = useMemo((): Record<string, unknown> => {
+    if (disabled) {
+      return { inert: true }
+    }
     const clipboardProps: Record<string, unknown> = pluginClipboardHandlers
       ? { onCopy: handleClipboardEvent, onCut: handleClipboardEvent, onPaste: handleClipboardEvent }
       : {}
-
     if (isKeyMapOnly) {
       return {
         onKeyDown: (event: KeyboardEvent) => {
@@ -289,11 +293,12 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       },
       ...clipboardProps,
     }
-  }, [isKeyMapOnly, behavior.focusStrategy.type, focusedId, handleKeyDown, pluginClipboardHandlers, handleClipboardEvent, nodeIdAttr])
+  }, [disabled, isKeyMapOnly, behavior.focusStrategy.type, focusedId, handleKeyDown, pluginClipboardHandlers, handleClipboardEvent, nodeIdAttr])
 
   // ── DOM focus sync ──
 
   useEffect(() => {
+    if (disabled) return
     if (isKeyMapOnly) return
     if (!focusedId) return
     if (behavior.focusStrategy.type === 'aria-activedescendant') return
@@ -305,7 +310,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     if (!ownsActiveFocus && !focusIsOrphaned) return
     if (focusIsOrphaned && !autoFocus) return
     el.focus({ preventScroll: false })
-  }, [isKeyMapOnly, focusedId, behavior.focusStrategy.type, nodeIdAttr, autoFocus])
+  }, [disabled, isKeyMapOnly, focusedId, behavior.focusStrategy.type, nodeIdAttr, autoFocus])
 
   return { getNodeProps, getNodeState, containerProps, behaviorCtxOptions }
 }

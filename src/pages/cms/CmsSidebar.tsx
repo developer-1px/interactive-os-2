@@ -353,7 +353,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
                   scrollToSection(sectionId)
                 }}
               >
-                <div className="cms-sidebar__thumb-inner cms-landing">
+                <div className="cms-sidebar__thumb-inner cms-landing" inert>
                   <SectionThumbnail data={store} sectionId={sectionId} locale={locale} />
                 </div>
                 <span className="cms-sidebar__thumb-index">{index + 1}</span>

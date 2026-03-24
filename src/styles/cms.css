@@ -77,7 +77,6 @@
 .cms-sidebar__thumb-inner {
   zoom: var(--thumb-zoom, 0.1);
   width: 1200px;
-  pointer-events: none;
 }
 .cms-sidebar__thumb-index {
   position: absolute; bottom: 2px; right: var(--space-xs);
