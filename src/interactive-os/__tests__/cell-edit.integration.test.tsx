@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createStore, getEntity } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
+import { GRID_COL_ID } from '../plugins/core'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
@@ -204,5 +205,88 @@ describe('cellEdit plugin integration', () => {
     act(() => row1.focus())
     await user.keyboard('{Delete}')
     expect(container.querySelectorAll('[role="row"]')).toHaveLength(1)
+  })
+})
+
+describe('enterContinue prop', () => {
+  beforeEach(() => resetClipboard())
+
+  function StatefulEditableGrid({ initialData }: { initialData: NormalizedData }) {
+    const [data, setData] = useState(initialData)
+    const dataRef = useRef(data)
+    useEffect(() => { dataRef.current = data })
+    const plugins = [core(), crud(), rename(), dnd(), history(), focusRecovery(), clipboard(), cellEdit()]
+    const behavior = gridBehavior({ columns: 3, edit: true })
+    return (
+      <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="Editable Grid">
+        <Aria.Item render={(props, node, state) => {
+          const cells = (node.data as any)?.cells as string[] ?? []
+          const focusedColIdx = (dataRef.current.entities[GRID_COL_ID]?.colIndex as number) ?? 0
+          return (
+            <div {...props}>
+              {cells.map((cell, i) => (
+                <Aria.Cell key={i} index={i}>
+                  {state.focused && i === focusedColIdx
+                    ? (
+                      <Aria.Editable field={`cells.${i}`} enterContinue allowEmpty>
+                        <span data-testid={`cell-${node.id}-${i}`}>{cell}</span>
+                      </Aria.Editable>
+                    )
+                    : <span data-testid={`cell-${node.id}-${i}`}>{cell}</span>
+                  }
+                </Aria.Cell>
+              ))}
+            </div>
+          )
+        }} />
+      </Aria>
+    )
+  }
+
+  // V4: 2026-03-25-cell-edit-plugin-prd.md
+  it('Enter in edit mode confirms and moves to next row', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<StatefulEditableGrid initialData={fixtureStore()} />)
+    const row1 = container.querySelector('[data-node-id="row-1"]') as HTMLElement
+    act(() => row1.focus())
+    // Enter edit mode via F2
+    await user.keyboard('{F2}')
+    // Should be in rename mode
+    expect(container.querySelector('[data-renaming]')).not.toBeNull()
+    // Type new value and confirm with Enter
+    await user.keyboard('new value{Enter}')
+    // Wait for setTimeout
+    await act(async () => { await new Promise((r) => setTimeout(r, 10)) })
+    // Should have moved to row-2
+    expect(getFocusedRowId(container)).toBe('row-2')
+    // Should NOT be in rename mode (cell mode)
+    expect(container.querySelector('[data-renaming]')).toBeNull()
+  })
+
+  // V5: 2026-03-25-cell-edit-plugin-prd.md
+  it('Shift+Enter in edit mode confirms and moves to previous row', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<StatefulEditableGrid initialData={fixtureStore()} />)
+    const row2 = container.querySelector('[data-node-id="row-2"]') as HTMLElement
+    act(() => row2.focus())
+    await user.keyboard('{F2}')
+    await user.keyboard('changed{Shift>}{Enter}{/Shift}')
+    await act(async () => { await new Promise((r) => setTimeout(r, 10)) })
+    expect(getFocusedRowId(container)).toBe('row-1')
+    expect(container.querySelector('[data-renaming]')).toBeNull()
+  })
+
+  // V8: 2026-03-25-cell-edit-plugin-prd.md
+  it('Enter at last row confirms without moving', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<StatefulEditableGrid initialData={fixtureStore()} />)
+    const row2 = container.querySelector('[data-node-id="row-2"]') as HTMLElement
+    act(() => row2.focus())
+    await user.keyboard('{F2}')
+    await user.keyboard('edited{Enter}')
+    await act(async () => { await new Promise((r) => setTimeout(r, 10)) })
+    // Still on last row (row-2), focusNext returns same node
+    expect(getFocusedRowId(container)).toBe('row-2')
+    expect(container.querySelector('[data-renaming]')).toBeNull()
   })
 })
