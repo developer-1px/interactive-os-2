@@ -33,3 +33,4 @@
 - [ ] [P1] clipboard-overwrite 테스트 충돌 — Enter keyMap 추가로 1개 실패, 병합 시 해결 필요 — 출처: i18n DataTable Enter 추가 (2026-03-23)
 - [ ] [P2] natural-tab-order zone active zone 테스트 — 코드상 동작하지만 전용 테스트 미작성. 사용처 생길 때 함께 추가 — 출처: docs/0-inbox/34-[retro]active-zone.md (2026-03-24)
 - [x] [P1] trap 축 이름 재검토 → dismiss()로 rename 완료 — tab 전략 축 도입 후 trap(Escape 닫기, 포커스 복원)과 tab trap 전략이 이름 충돌. rename 또는 책임 재분배 필요 — 출처: CMS tab flow discussion (2026-03-24)
+- [ ] [P1] NavList group 지원 — role="group"으로 카테고리 그룹핑 + 단일 포커스. 현재는 Aria + navlist behavior 직접 사용으로 우회 — 출처: UI docs sidebar discussion (2026-03-24)

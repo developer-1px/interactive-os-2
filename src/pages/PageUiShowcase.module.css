@@ -57,6 +57,21 @@
   padding: var(--space-xs) var(--space-md);
 }
 
+/* --- Nav items (Aria.Item rendered) --- */
+
+.uiNavItem {
+  padding: var(--space-xs) var(--space-md) var(--space-xs) var(--space-lg);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  cursor: default;
+  user-select: none;
+}
+
+.uiNavItemActive {
+  color: var(--text-bright);
+  background: var(--primary-dim);
+}
+
 /* --- Content area --- */
 
 .uiContent {
