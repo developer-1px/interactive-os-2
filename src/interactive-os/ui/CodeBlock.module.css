@@ -1,7 +1,7 @@
 .codeBlock {
   overflow: auto;
   font-size: var(--text-md);
-  line-height: 1.6;
+  line-height: var(--leading-code);
 }
 
 .codeBlockLoading {
@@ -61,7 +61,7 @@
 }
 
 :global(.code-line--edited) {
-  background: rgba(229, 163, 58, 0.08) !important;
-  border-left: 2px solid #e5a33a;
+  background: color-mix(in srgb, var(--amber) 12%, transparent) !important;
+  border-left: 2px solid var(--amber);
   padding-left: var(--space-sm) !important;
 }

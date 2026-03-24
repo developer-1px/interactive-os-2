@@ -14,7 +14,7 @@
 .box {
   width: 360px;
   background: var(--surface-overlay);
-  box-shadow: var(--surface-4-shadow);
+  box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-subtle);
   border-radius: calc(var(--radius) + 2px);
 }
@@ -31,7 +31,7 @@
   padding: var(--space-md) var(--space-lg);
   font-size: var(--text-sm);
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: var(--leading-snug);
 }
 
 .footer {
