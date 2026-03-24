@@ -1,3 +1,4 @@
+import React from 'react'
 import type { NodeState } from '../interactive-os/pattern/types'
 import {
   Folder, FolderOpen, FileText, FileCode, FileJson, FileType,
@@ -24,8 +25,8 @@ function FileIcon({ name }: { name: string }) {
   }
 }
 
-export function RenderTreeItem(props: { node: Record<string, unknown>; state: NodeState } & Record<string, unknown>) {
-  const { node, state, ...rest } = props
+export function RenderTreeItem(props: { node: Record<string, unknown>; state: NodeState; toggleProps?: React.HTMLAttributes<HTMLElement> } & Record<string, unknown>) {
+  const { node, state, toggleProps, ...rest } = props
   const d = node.data as Record<string, unknown>
   const isFolder = d?.type === 'folder'
   const indent = ((state.level ?? 1) - 1) * 18
@@ -41,7 +42,7 @@ export function RenderTreeItem(props: { node: Record<string, unknown>; state: No
 
   return (
     <div {...rest as Record<string, unknown>} className={cls} style={{ paddingLeft: 14 + indent }}>
-      <span className="tree-node__chevron">
+      <span className="tree-node__chevron" {...toggleProps}>
         {isFolder
           ? (state.expanded
             ? <ChevronDown size={12} />

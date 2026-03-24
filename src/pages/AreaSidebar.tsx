@@ -104,10 +104,10 @@ export function AreaSidebar() {
     navigate(`/internals/area/${nodeId}`)
   }, [navigate])
 
-  const renderItem = useCallback((props: Record<string, unknown>, node: Record<string, unknown>, state: NodeState) => {
+  const renderItem = useCallback((_props: Record<string, unknown>, node: Record<string, unknown>, state: NodeState) => {
     const hasChildren = state.expanded !== undefined
     return (
-      <span {...props} className="item-inner">
+      <span className="item-inner">
         <span className="item-chevron--tree">
           {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
         </span>

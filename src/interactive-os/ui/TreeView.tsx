@@ -4,23 +4,27 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { useTreeView } from './useTreeView'
-import { core } from '../plugins/core'
+import { core, expandCommands } from '../plugins/core'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
 import styles from './TreeView.module.css'
+
+export interface TreeItemRenderProps {
+  toggleProps?: React.HTMLAttributes<HTMLElement>
+}
 
 interface TreeViewProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
+  renderItem?: (props: TreeItemRenderProps, item: Record<string, unknown>, state: NodeState) => React.ReactElement
   followFocus?: boolean
   initialFocus?: string
   'aria-label'?: string
 }
 
-const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
+const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
     ?? (node.data as Record<string, unknown>)?.name as string
     ?? node.id as string
@@ -28,7 +32,7 @@ const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, node: Reco
   const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
   return (
     <div className={cls}>
-      <span className={styles.chevron}>{hasChildren ? (state.expanded ? '▾' : '▸') : ''}</span>
+      <span className={styles.chevron} {...props.toggleProps}>{hasChildren ? (state.expanded ? '▾' : '▸') : ''}</span>
       <span>{label}</span>
     </div>
   )
@@ -64,9 +68,14 @@ export function TreeView({
       const state = tv.getItemState(id)
       const props = tv.getItemProps(id)
       const children = getChildren(store, id)
+      const renderProps: TreeItemRenderProps = {
+        toggleProps: children.length > 0
+          ? { onClick: (e: React.MouseEvent) => { e.preventDefault(); tv.dispatch(expandCommands.toggleExpand(id)) } }
+          : undefined,
+      }
       return (
         <div key={id} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-          {renderItem({} as React.HTMLAttributes<HTMLElement>, entity, state)}
+          {renderItem(renderProps, entity, state)}
           {state.expanded && children.length > 0 && (
             <div role="group">
               {renderNodes(id)}
