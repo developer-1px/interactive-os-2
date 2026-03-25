@@ -80,9 +80,9 @@ export function makeToggleData(): NormalizedData {
 export function makeToggleGroupData(): NormalizedData {
   return createStore({
     entities: {
-      bold: { id: 'bold', data: { label: 'Bold' } },
-      italic: { id: 'italic', data: { label: 'Italic' } },
-      underline: { id: 'underline', data: { label: 'Underline' } },
+      bold: { id: 'bold', data: { label: 'Bold', icon: 'bold' } },
+      italic: { id: 'italic', data: { label: 'Italic', icon: 'italic' } },
+      underline: { id: 'underline', data: { label: 'Underline', icon: 'underline' } },
     },
     relationships: { [ROOT_ID]: ['bold', 'italic', 'underline'] },
   })
@@ -220,9 +220,9 @@ export function makeSwitchGroupData(): NormalizedData {
 export function makeToolbarData(): NormalizedData {
   return createStore({
     entities: {
-      bold: { id: 'bold', data: { label: 'Bold' } },
-      italic: { id: 'italic', data: { label: 'Italic' } },
-      underline: { id: 'underline', data: { label: 'Underline' } },
+      bold: { id: 'bold', data: { label: 'Bold', icon: 'bold' } },
+      italic: { id: 'italic', data: { label: 'Italic', icon: 'italic' } },
+      underline: { id: 'underline', data: { label: 'Underline', icon: 'underline' } },
     },
     relationships: { [ROOT_ID]: ['bold', 'italic', 'underline'] },
   })
