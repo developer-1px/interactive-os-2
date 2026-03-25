@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Up, Down } from '../kbdIcons'
 import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
@@ -47,10 +48,10 @@ export default function SelectDemo() {
       </div>
       <div className="page-keys">
         <kbd>Space</kbd> <span className="key-hint">toggle select</span>{' '}
-        <kbd>↑↓</kbd> <span className="key-hint">navigate</span>
+        <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>
         {extended && mode === 'multiple' && (
           <>
-            {' '}<kbd>Shift+↑↓</kbd> <span className="key-hint">extend range</span>{' '}
+            {' '}<kbd>⇧<Up /><Down /></kbd> <span className="key-hint">extend range</span>{' '}
             <kbd>Shift+Home/End</kbd> <span className="key-hint">extend to boundary</span>
           </>
         )}

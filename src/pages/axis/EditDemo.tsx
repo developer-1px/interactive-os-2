@@ -11,6 +11,7 @@ import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
 import { rename } from '../../interactive-os/plugins/rename'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import type { NodeState } from '../../interactive-os/pattern/types'
+import { Up, Down, Left, Right } from '../kbdIcons'
 import { createStore } from '../../interactive-os/store/createStore'
 import { ROOT_ID } from '../../interactive-os/store/types'
 
@@ -76,9 +77,9 @@ export default function EditDemo() {
       <div className="page-keys">
         <kbd>F2</kbd> <span className="key-hint">rename</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">rename</span>{' '}
-        <kbd>Delete</kbd> <span className="key-hint">delete</span>{' '}
-        <kbd>Alt+↑↓</kbd> <span className="key-hint">move</span>{' '}
-        {tree && <><kbd>Alt+←→</kbd> <span className="key-hint">indent</span>{' '}</>}
+        <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
+        <kbd>Alt+<Up /><Down /></kbd> <span className="key-hint">move</span>{' '}
+        {tree && <><kbd>Alt+<Left /><Right /></kbd> <span className="key-hint">indent</span>{' '}</>}
         {replaceMode && <><kbd>a-z</kbd> <span className="key-hint">replace</span>{' '}</>}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>

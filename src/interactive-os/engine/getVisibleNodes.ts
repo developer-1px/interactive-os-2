@@ -26,9 +26,16 @@ export function getVisibleNodes(engine: CommandEngine): string[] {
       if (searchFilterText && !matchesSearchFilter(store.entities[childId], searchFilterText)) {
         continue // skip this node entirely (don't push, don't walk children)
       }
-      visible.push(childId)
-      if (!expandedIds || expandedIds.includes(childId)) {
+      const grandChildren = getChildren(store, childId)
+      const isContainer = grandChildren.length > 0
+      if (isContainer && !expandedEntity) {
+        // No expand axis → container nodes (groups) are not focusable, only walk into them
         walk(childId)
+      } else {
+        visible.push(childId)
+        if (!expandedIds || expandedIds.includes(childId)) {
+          walk(childId)
+        }
       }
     }
   }

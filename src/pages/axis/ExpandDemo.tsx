@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
+import { Up, Down, Left, Right } from '../kbdIcons'
 import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
@@ -61,9 +63,9 @@ export default function ExpandDemo() {
       <div className="page-keys">
         {mode === 'arrow' ? (
           <>
-            <kbd>→</kbd> <span className="key-hint">expand / enter child</span>{' '}
-            <kbd>←</kbd> <span className="key-hint">collapse / exit to parent</span>{' '}
-            <kbd>↑↓</kbd> <span className="key-hint">navigate</span>
+            <kbd><Right /></kbd> <span className="key-hint">expand / enter child</span>{' '}
+            <kbd><Left /></kbd> <span className="key-hint">collapse / exit to parent</span>{' '}
+            <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>
           </>
         ) : (
           <>
@@ -88,7 +90,7 @@ export default function ExpandDemo() {
               <div {...props} className={cls} style={indent ? { paddingLeft: indent } : undefined}>
                 {mode === 'arrow' && state.expanded !== undefined && (
                   <span style={{ display: 'inline-block', width: 16, opacity: 0.5 }}>
-                    {state.expanded ? '▾' : '▸'}
+                    {state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                   </span>
                 )}
                 {d?.label as string}

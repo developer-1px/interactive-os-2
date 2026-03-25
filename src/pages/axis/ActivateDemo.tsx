@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { Up, Down } from '../kbdIcons'
 import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
@@ -55,7 +56,7 @@ export default function ActivateDemo() {
       <div className="page-keys">
         <kbd>Enter</kbd> <span className="key-hint">activate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">activate</span>{' '}
-        <kbd>↑↓</kbd> <span className="key-hint">navigate</span>
+        <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>
         {followFocus && <span className="key-hint" style={{ opacity: 0.7 }}> + auto-activate on focus</span>}
         {onClick && <span className="key-hint" style={{ opacity: 0.7 }}> + click activates</span>}
       </div>

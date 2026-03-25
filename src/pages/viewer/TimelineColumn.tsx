@@ -5,9 +5,11 @@ import {
   Pencil, Search, FilePlus, Loader, X,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
-import { useVirtualScroll } from './useVirtualScroll'
-import { groupEvents, type TimelineEvent, type ToolGroup } from './groupEvents'
+import { groupEvents, type TimelineEvent, type ToolGroup, type DisplayItem } from './groupEvents'
 import { subscribeTimeline } from './timelineSSE'
+import { useStreamFeed } from '../../interactive-os/ui/useStreamFeed'
+import { StreamFeed, StreamCursor } from '../../interactive-os/ui/StreamFeed'
+import { useTypewriter } from '../../interactive-os/ui/useTypewriter'
 import Markdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
@@ -20,6 +22,16 @@ interface TimelineColumnProps {
   onClose: () => void
   onFileClick: (filePath: string, editRanges?: string[]) => void
   onModifiedFilesChange?: (files: string[]) => void
+}
+
+// --- Pacing delays by item type ---
+
+function getItemDelay(item: DisplayItem): number {
+  if (item.type === 'assistant') return 400
+  if (item.type === 'tool_group') return 150
+  if (item.type === 'user') return 0
+  // tool_use, tool_result
+  return 100
 }
 
 // --- Helpers ---
@@ -53,8 +65,6 @@ function EventIcon({ evt }: { evt: TimelineEvent }) {
 
 // --- File path detection in markdown text ---
 
-// Matches relative file paths with extensions (e.g. docs/foo/bar.md, src/App.tsx)
-// Excludes URLs (http://, https://) and bare filenames without directory
 const FILE_PATH_RE = /(?<![a-zA-Z0-9:/.])([a-zA-Z._][a-zA-Z0-9._-]*\/[a-zA-Z0-9._\-/]+\.[a-zA-Z0-9]+)/g
 
 function splitByFilePaths(text: string, onFileClick: (absPath: string) => void): ReactNode[] {
@@ -82,7 +92,6 @@ function splitByFilePaths(text: string, onFileClick: (absPath: string) => void):
 
 function createMarkdownComponents(onFileClick: (absPath: string) => void): Components {
   return {
-    // Override text rendering inside paragraphs, list items, etc.
     p({ children }) {
       return <p>{processChildren(children, onFileClick)}</p>
     },
@@ -92,9 +101,7 @@ function createMarkdownComponents(onFileClick: (absPath: string) => void): Compo
     td({ children }) {
       return <td>{processChildren(children, onFileClick)}</td>
     },
-    // Inline code: detect file paths
     code({ children, className }) {
-      // Skip code blocks (they have a className like language-*)
       if (className) return <code className={className}>{children}</code>
       const text = typeof children === 'string' ? children : ''
       if (text && FILE_PATH_RE.test(text)) {
@@ -127,17 +134,19 @@ function processChildren(children: ReactNode, onFileClick: (absPath: string) => 
 
 // --- Timeline item (memoized) ---
 
-const TimelineItem = memo(function TimelineItem({ evt, onFileClick }: { evt: TimelineEvent; onFileClick: (absPath: string) => void }) {
+const TimelineItem = memo(function TimelineItem({ evt, onFileClick, isLatest }: { evt: TimelineEvent; onFileClick: (absPath: string) => void; isLatest?: boolean }) {
   if (evt.type === 'assistant') {
-    return (
-      <div className={`${styles.tcItem} ${styles.tcAssistant}`}>
-        <span className={styles.tcText}>
-          {evt.text
-            ? <Markdown remarkPlugins={[remarkGfm, remarkBreaks]} components={createMarkdownComponents(onFileClick)}>{evt.text}</Markdown>
-            : eventLabel(evt)}
-        </span>
-      </div>
-    )
+    return isLatest && evt.text
+      ? <AssistantTypewriter text={evt.text} onFileClick={onFileClick} />
+      : (
+        <div className={`${styles.tcItem} ${styles.tcAssistant}`}>
+          <span className={styles.tcText}>
+            {evt.text
+              ? <Markdown remarkPlugins={[remarkGfm, remarkBreaks]} components={createMarkdownComponents(onFileClick)}>{evt.text}</Markdown>
+              : eventLabel(evt)}
+          </span>
+        </div>
+      )
   }
 
   return (
@@ -147,27 +156,101 @@ const TimelineItem = memo(function TimelineItem({ evt, onFileClick }: { evt: Tim
   )
 })
 
+function AssistantTypewriter({ text, onFileClick }: { text: string; onFileClick: (absPath: string) => void }) {
+  const { displayed, done } = useTypewriter(text, true, 120, 1, 'line')
+  return (
+    <div className={`${styles.tcItem} ${styles.tcAssistant}`}>
+      <span className={styles.tcText}>
+        <Markdown remarkPlugins={[remarkGfm, remarkBreaks]} components={createMarkdownComponents(onFileClick)}>{displayed}</Markdown>
+        {!done && <StreamCursor />}
+      </span>
+    </div>
+  )
+}
+
+// --- Rich Tool Preview ---
+
+function ToolCodePreview({ code, maxLines = 8 }: { code: string; maxLines?: number }) {
+  const lines = code.split('\n')
+  const truncated = lines.length > maxLines
+  const display = truncated ? lines.slice(0, maxLines).join('\n') : code
+  return (
+    <div className={styles.tcCodePreview}>
+      <pre>{display}</pre>
+      {truncated && <div className={styles.tcCodeFade}>+{lines.length - maxLines} lines</div>}
+    </div>
+  )
+}
+
 const ToolGroupCard = memo(function ToolGroupCard({ group, onClick }: { group: ToolGroup; onClick: (evt: TimelineEvent) => void }) {
   return (
     <div className={styles.tcToolGroup}>
       {group.events.map((evt, i) => {
         const toolClass = styles[`tc${evt.tool ?? ''}`] ?? ''
+        const hasPreview = (evt.tool === 'Edit' || evt.tool === 'Write') && evt.editNew
         return (
-          <div
-            key={`${evt.ts}-${i}`}
-            className={`${styles.tcToolRow} ${toolClass}${evt.filePath ? ` ${styles.tcFile}` : ''}${i < group.events.length - 1 ? ` ${styles.tcToolDivider}` : ''}`}
-            onClick={() => onClick(evt)}
-          >
-            <span className={styles.tcIcon}>
-              <EventIcon evt={evt} />
-            </span>
-            <span className={styles.tcText}>{eventLabel(evt)}</span>
+          <div key={`${evt.ts}-${i}`}>
+            <div
+              className={`${styles.tcToolRow} ${toolClass}${evt.filePath ? ` ${styles.tcFile}` : ''}${!hasPreview && i < group.events.length - 1 ? ` ${styles.tcToolDivider}` : ''}`}
+              onClick={() => onClick(evt)}
+            >
+              <span className={styles.tcIcon}>
+                <EventIcon evt={evt} />
+              </span>
+              <span className={styles.tcText}>{eventLabel(evt)}</span>
+            </div>
+            {hasPreview && (
+              <div className={i < group.events.length - 1 ? styles.tcToolDivider : undefined}>
+                <ToolCodePreview code={evt.editNew!} />
+              </div>
+            )}
           </div>
         )
       })}
     </div>
   )
 })
+
+// --- Pacing hook: reveal items progressively ---
+
+function usePacedReveal(displayItems: DisplayItem[], isInitialLoad: boolean) {
+  const [revealedCount, setRevealedCount] = useState(0)
+  const prevLenRef = useRef(0)
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+
+  useEffect(() => {
+    const total = displayItems.length
+    const prev = prevLenRef.current
+    prevLenRef.current = total
+
+    // Initial load or fewer items (reload) — show all immediately
+    if (isInitialLoad || total <= prev || prev === 0) {
+      queueMicrotask(() => setRevealedCount(total))
+      return
+    }
+
+    // New items arrived — pace them
+    const newItems = displayItems.slice(prev)
+    let accDelay = 0
+
+    newItems.forEach((item, i) => {
+      accDelay += getItemDelay(item)
+      const target = prev + i + 1
+      const timerId = setTimeout(() => setRevealedCount(target), accDelay)
+      timersRef.current.push(timerId)
+    })
+
+    return () => {
+      for (const id of timersRef.current) clearTimeout(id)
+      timersRef.current = []
+    }
+  }, [displayItems, isInitialLoad])
+
+  const isPacing = revealedCount < displayItems.length
+  const visibleItems = displayItems.slice(0, revealedCount)
+
+  return { visibleItems, isPacing }
+}
 
 // --- Component ---
 
@@ -178,8 +261,8 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   const [timeline, setTimeline] = useState<TimelineEvent[]>([])
   const [fetchError, setFetchError] = useState<string | null>(null)
   const [initialLoading, setInitialLoading] = useState(true)
-  const totalRef = useRef(0)        // total events on server
-  const loadedFromRef = useRef(0)   // how far back we've loaded (server index)
+  const totalRef = useRef(0)
+  const loadedFromRef = useRef(0)
   const loadingMoreRef = useRef(false)
 
   // Track editRanges per file for onFileClick
@@ -223,7 +306,6 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }, 3000)
   }, [])
 
-  // Derive status from incoming events
   const updateStatusFromEvent = useCallback((evt: TimelineEvent) => {
     if (evt.type === 'user') {
       markRunning()
@@ -234,7 +316,6 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }
   }, [markRunning, scheduleIdle])
 
-  // Set initial status from loaded timeline
   useEffect(() => {
     if (!isLive) {
       queueMicrotask(() => setAgentStatus('done'))
@@ -248,17 +329,72 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
       queueMicrotask(() => { setAgentStatus('idle'); setRunStartTs(null) })
     }
     return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current) }
-  }, [isLive]) // eslint-disable-line react-hooks/exhaustive-deps -- initial status only
+  }, [isLive]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // --- Group events for display ---
   const displayItems = useMemo(() => groupEvents(timeline), [timeline])
 
-  // --- Virtual scroll ---
-  const { containerRef, totalHeight, visibleRange, offsetTop, measureItem, recalc } = useVirtualScroll({
-    itemCount: displayItems.length,
-    estimatedItemHeight: 40,
-    overscan: 10,
-  })
+  // --- Paced reveal (live events get delays, initial load is immediate) ---
+  const { visibleItems, isPacing } = usePacedReveal(displayItems, initialLoading)
+
+  // --- StreamFeed for entry animation ---
+  const { feedRef } = useStreamFeed<DisplayItem>()
+
+  // --- Smart auto-scroll ---
+  // Debounced: waits 250ms after last item before scrolling (lets animation settle)
+  // Respects user scroll position
+  const prevVisibleLenRef = useRef(0)
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const userScrolledUpRef = useRef(false)
+
+  // Track if user scrolled up
+  useEffect(() => {
+    const el = feedRef.current
+    if (!el) return
+    const onScroll = () => {
+      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 60
+      userScrolledUpRef.current = !nearBottom
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [feedRef])
+
+  useEffect(() => {
+    const el = feedRef.current
+    if (!el || visibleItems.length === 0) return
+
+    const newLen = visibleItems.length
+    const prevLen = prevVisibleLenRef.current
+    prevVisibleLenRef.current = newLen
+
+    if (newLen <= prevLen) return
+
+    // Initial load: instant scroll, no debounce
+    if (prevLen === 0) {
+      requestAnimationFrame(() => {
+        el.scrollTo({ top: el.scrollHeight, behavior: 'instant' })
+      })
+      return
+    }
+
+    // User scrolled up: don't auto-scroll
+    if (userScrolledUpRef.current) return
+
+    // Debounce: wait for pacing + animation to settle before scrolling
+    if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current)
+    scrollTimerRef.current = setTimeout(() => {
+      scrollTimerRef.current = null
+      if (userScrolledUpRef.current) return
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+    }, 250)
+  }, [visibleItems, feedRef])
+
+  // Cleanup scroll timer
+  useEffect(() => {
+    return () => {
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current)
+    }
+  }, [])
 
   // --- Initial timeline fetch (tail only) ---
   useEffect(() => {
@@ -295,9 +431,8 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
       .finally(() => { loadingMoreRef.current = false })
   }, [sessionId, trackEditRanges])
 
-  // Detect scroll near top → load more
   useEffect(() => {
-    const el = containerRef.current
+    const el = feedRef.current
     if (!el) return
     const handleScroll = () => {
       if (el.scrollTop < 200 && loadedFromRef.current > 0) {
@@ -306,7 +441,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }
     el.addEventListener('scroll', handleScroll, { passive: true })
     return () => el.removeEventListener('scroll', handleScroll)
-  }, [containerRef, loadOlder])
+  }, [feedRef, loadOlder])
 
   // --- SSE via shared multiplexed connection ---
   useEffect(() => {
@@ -337,56 +472,6 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }
   }, [isLive, sessionId, trackEditRanges, updateStatusFromEvent])
 
-  // --- Smart scroll ---
-  const prevLengthRef = useRef(0)
-  const initialLoadRef = useRef(true)
-
-  const scrollToBottom = useCallback(() => {
-    const el = containerRef.current
-    if (!el) return
-    // Multi-pass: scroll, recalc (renders new items), scroll again with correct heights
-    requestAnimationFrame(() => {
-      el.scrollTo(0, el.scrollHeight)
-      recalc()
-      requestAnimationFrame(() => {
-        el.scrollTo(0, el.scrollHeight)
-        recalc()
-        // Third pass for items that just got measured
-        requestAnimationFrame(() => {
-          el.scrollTo(0, el.scrollHeight)
-          recalc()
-        })
-      })
-    })
-  }, [containerRef, recalc])
-
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el || displayItems.length === 0) return
-
-    if (initialLoadRef.current) {
-      initialLoadRef.current = false
-      prevLengthRef.current = displayItems.length
-      // Use scrollToIndex to reliably reach the bottom
-      scrollToBottom()
-      return
-    }
-
-    const prevLen = prevLengthRef.current
-    const newLen = displayItems.length
-
-    if (newLen > prevLen && prevLen > 0) {
-      const isAppend = displayItems[newLen - 1] !== displayItems[prevLen - 1]
-      if (!isAppend) {
-        prevLengthRef.current = newLen
-        return
-      }
-    }
-
-    prevLengthRef.current = newLen
-    scrollToBottom()
-  }, [displayItems, containerRef, scrollToBottom])
-
   // --- File click handler ---
   const handleTimelineClick = useCallback((evt: TimelineEvent) => {
     if (evt.filePath) {
@@ -395,17 +480,12 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }
   }, [onFileClick])
 
-  // Ref callback to measure each rendered item
-  const makeMeasureRef = useCallback(
-    (index: number) => (node: HTMLDivElement | null) => {
-      if (!node) return
-      const h = node.getBoundingClientRect().height
-      if (h > 0) measureItem(index, h)
-    },
-    [measureItem],
-  )
+  // Streaming: agent is running OR pacing queue is draining
+  const showStreaming = (isLive && agentStatus === 'running') || isPacing
 
-  const contentHeight = totalHeight
+  // Streaming label based on what the agent is doing
+  const lastVisible = visibleItems[visibleItems.length - 1]
+  const streamingLabel = lastVisible?.type === 'tool_group' ? 'Executing' : 'Thinking'
 
   return (
     <div className={styles.tc}>
@@ -421,38 +501,36 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
         )}
         <button className={styles.tcClose} onClick={onClose}><X size={14} /></button>
       </div>
-      <div className={styles.tcBody} ref={containerRef}>
-        {fetchError ? (
-          <div className={styles.tcEmpty}>Failed to load: {fetchError}</div>
-        ) : initialLoading ? (
-          <div className={styles.tcLoading}>
-            <Loader size={14} className={styles.tcLoadingSpinner} />
-            <span>Loading timeline...</span>
-          </div>
-        ) : displayItems.length === 0 ? (
-          <div className={styles.tcEmpty}>Waiting for agent activity...</div>
-        ) : (
-          <div style={{ height: contentHeight, position: 'relative' }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, transform: `translateY(${offsetTop}px)` }}>
-              {displayItems.slice(visibleRange.start, visibleRange.end).map((item, i) => {
-                const actualIndex = visibleRange.start + i
-                if (item.type === 'tool_group') {
-                  return (
-                    <div key={`grp-${item.events[0].ts}-${actualIndex}`} ref={makeMeasureRef(actualIndex)}>
-                      <ToolGroupCard group={item} onClick={handleTimelineClick} />
-                    </div>
-                  )
-                }
-                return (
-                  <div key={`${item.ts}-${actualIndex}`} ref={makeMeasureRef(actualIndex)} className={item.type === 'user' ? styles.tcUserWrap : undefined}>
-                    <TimelineItem evt={item} onFileClick={onFileClick} />
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
-      </div>
+
+      {fetchError ? (
+        <div className={styles.tcEmpty}>Failed to load: {fetchError}</div>
+      ) : initialLoading ? (
+        <div className={styles.tcLoading}>
+          <Loader size={14} className={styles.tcLoadingSpinner} />
+          <span>Loading timeline...</span>
+        </div>
+      ) : visibleItems.length === 0 ? (
+        <div className={styles.tcEmpty}>Waiting for agent activity...</div>
+      ) : (
+        <StreamFeed
+          items={visibleItems}
+          feedRef={feedRef}
+          isStreaming={showStreaming}
+          streamingLabel={streamingLabel}
+          className={styles.tcBody}
+          renderItem={(item, _i, { isLatest }) => {
+            if (item.type === 'tool_group') {
+              return <ToolGroupCard group={item} onClick={handleTimelineClick} />
+            }
+            return (
+              <div className={item.type === 'user' ? styles.tcUserWrap : undefined}>
+                <TimelineItem evt={item} onFileClick={onFileClick} isLatest={isLatest && item.type === 'assistant'} />
+              </div>
+            )
+          }}
+        />
+      )}
+
       {isLive && agentStatus === 'running' && (
         <AgentRunningBar startTs={runStartTs} />
       )}
@@ -482,9 +560,6 @@ function AgentRunningBar({ startTs }: { startTs: number | null }) {
   )
 }
 
-// const CHANNEL_URL = 'http://127.0.0.1:8788'
-
- 
 function ChatInput({ sessionId: _sessionId }: { sessionId: string }) {
   const [text, setText] = useState('')
   const ref = useRef<HTMLTextAreaElement>(null)
@@ -502,4 +577,3 @@ function ChatInput({ sessionId: _sessionId }: { sessionId: string }) {
     </div>
   )
 }
-

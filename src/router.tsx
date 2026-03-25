@@ -49,6 +49,7 @@ export const router = createBrowserRouter([
       { path: '/viewer/*', lazy: () => import('./pages/PageViewer').then(m => ({ Component: m.default })) },
       { path: '/agent/*', lazy: () => import('./pages/PageAgentViewer').then(m => ({ Component: m.default })) },
       { path: '/i18n', lazy: () => import('./pages/PageI18nEditor').then(m => ({ Component: m.default })) },
+      { path: '/incident', lazy: () => import('./pages/PageIncidentInterface').then(m => ({ Component: m.default })) },
       { path: '/internals/theme', lazy: () => import('./pages/PageThemeCreator').then(m => ({ Component: m.default })) },
 
       {

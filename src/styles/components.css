@@ -441,7 +441,6 @@
 
 :where([data-aria-container] .item-chevron--tree) {
   width: var(--icon-sm);
-  opacity: 0.5;
   flex-shrink: 0;
 }
 
@@ -462,12 +461,12 @@
   transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
 }
 
-:where([aria-selected="true"] .item-indicator--checkbox) {
+:where([data-aria-container] [aria-selected="true"] .item-indicator--checkbox) {
   border-color: var(--tone-primary-base);
   background: var(--tone-primary-base);
 }
 
-:where(.item-indicator--checkbox-icon) {
+:where([data-aria-container] .item-indicator--checkbox-icon) {
   width: var(--icon-sm);
   height: var(--icon-sm);
   color: var(--tone-primary-foreground);
@@ -486,11 +485,11 @@
   transition: border-color var(--motion-instant-duration);
 }
 
-:where([aria-checked="true"] .item-indicator--radio) {
+:where([data-aria-container] [aria-checked="true"] .item-indicator--radio) {
   border-color: var(--tone-primary-base);
 }
 
-:where(.item-indicator--radio-dot) {
+:where([data-aria-container] .item-indicator--radio-dot) {
   width: var(--space-sm);
   height: var(--space-sm);
   border-radius: 50%;
@@ -510,12 +509,12 @@
               border-color var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-:where([aria-checked="true"] .item-indicator--switch) {
+:where([data-aria-container] [aria-checked="true"] .item-indicator--switch) {
   background: var(--tone-primary-base);
   border-color: var(--tone-primary-base);
 }
 
-:where(.item-indicator--switch-thumb) {
+:where([data-aria-container] .item-indicator--switch-thumb) {
   position: absolute;
   top: 2px;
   left: 2px;
@@ -528,7 +527,7 @@
               background var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-:where([aria-checked="true"] .item-indicator--switch-thumb) {
+:where([data-aria-container] [aria-checked="true"] .item-indicator--switch-thumb) {
   background: var(--tone-primary-foreground);
   transform: translateX(var(--space-lg));
 }
@@ -539,7 +538,7 @@
   font-size: var(--type-body-size);
 }
 
-:where([aria-checked="true"] .item-indicator--toggle) {
+:where([data-aria-container] [aria-checked="true"] .item-indicator--toggle) {
   color: var(--tone-success-base);
 }
 
@@ -548,6 +547,6 @@
   color: var(--text-muted);
 }
 
-:where([aria-selected="true"] .item-indicator--toggle-group) {
+:where([data-aria-container] [aria-selected="true"] .item-indicator--toggle-group) {
   color: var(--tone-primary-base);
 }
