@@ -15,6 +15,7 @@ import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { routeConfig } from './routeConfig'
 
+import './styles/palette.css'       // L0: OKLCH color palette
 import './styles/reset.css'        // L1: Browser initialization
 import './styles/tokens.css'       // L2: Design token values
 import './styles/structure.css'    // L2.5: Atomic layout classes

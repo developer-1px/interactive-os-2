@@ -1,0 +1,53 @@
+/* ═══════════════════════════════════════════
+   L0 Palette — OKLCH color definitions ONLY
+   ═══════════════════════════════════════════
+   Changes when: brand colors change.
+   Single responsibility: raw color palette.
+   No semantic meaning — just "what colors exist".
+   All values in oklch() for perceptual uniformity.
+
+   Hue 90° = warm neutral (stone)
+   Each accent family holds its own hue.
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* ── Stone: warm neutral (hue 90°) ──
+     Lightness만 변하고 hue/chroma 고정 → 톤 일관성 보장.
+     400/500은 text hierarchy AA 달성을 위해 조정됨. */
+
+  --stone-0:   oklch(100%   0       0);     /* #FFFFFF — pure white, achromatic */
+  --stone-50:  oklch(98%    0.005   90);
+  --stone-100: oklch(94.8%  0.010   90);
+  --stone-200: oklch(92%    0.012   90);
+  --stone-300: oklch(86.6%  0.013   90);
+  --stone-400: oklch(73%    0.012   90);    /* text-muted(dark), border-strong(light) */
+  --stone-500: oklch(51%    0.009   90);    /* text-muted(light) — 4.5:1+ on stone-200 */
+  --stone-600: oklch(47%    0.008   90);    /* text-secondary(light) */
+  --stone-700: oklch(35.9%  0.006   90);
+  --stone-800: oklch(29%    0.006   90);
+  --stone-850: oklch(25.3%  0.005   90);
+  --stone-900: oklch(21.4%  0.004   90);
+  --stone-950: oklch(16.3%  0.003   90);
+
+  /* ── Blue: primary accent (hue 246°–255°) ── */
+  --blue-50:  oklch(96.1%  0.015  250);
+  --blue-100: oklch(91.1%  0.034  250);
+  --blue-200: oklch(82.2%  0.070  250);
+  --blue-400: oklch(67.4%  0.128  246);
+  --blue-500: oklch(60.6%  0.155  252);
+  --blue-600: oklch(50.9%  0.139  253);
+  --blue-700: oklch(43.6%  0.119  253);
+  --blue-900: oklch(32.2%  0.090  255);
+
+  /* ── Red: destructive (hue 19°–23°) ── */
+  --red-400: oklch(70.1%  0.157  19);
+  --red-500: oklch(62.6%  0.193  23);
+
+  /* ── Green: success (hue 158°–159°) ── */
+  --green-400: oklch(73.5%  0.136  159);
+  --green-500: oklch(64.1%  0.133  158);
+
+  /* ── Amber: warning (hue 81°–83°) ── */
+  --amber-400: oklch(80.4%  0.156  83);
+  --amber-500: oklch(73.7%  0.132  81);
+}

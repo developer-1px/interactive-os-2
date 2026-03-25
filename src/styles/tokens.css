@@ -1,47 +1,17 @@
 /* ═══════════════════════════════════════════
-   L2 Tokens — Design value declarations ONLY
+   L2 Tokens — Semantic design value declarations
    ═══════════════════════════════════════════
    Changes when: design system values change.
    Single responsibility: :root variable declarations + theme overrides.
-   No selectors, no rules — only values. */
+   No selectors, no rules — only values.
+   Raw palette is in palette.css (L0). */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap');
 
 :root {
-  /* ══ Tier 1: Palette (warm neutral — claude.ai 실측 기반) ══
-     zinc(cool) → stone(warm)으로 전환. 모든 semantic 토큰이 여기 매핑. */
-
-  --stone-0:   #FFFFFF;
-  --stone-50:  #FAF9F5;
-  --stone-100: #F0EEE6;
-  --stone-200: #E8E6DC;
-  --stone-300: #D5D3C9;
-  --stone-400: #A19F97;
-  --stone-500: #73726C;
-  --stone-600: #5C5B56;
-  --stone-700: #3D3D3A;
-  --stone-800: #2D2B28;
-  --stone-850: #242220;
-  --stone-900: #1A1918;
-  --stone-950: #0E0E0D;
-
-  --blue-50:  #EBF3FC;
-  --blue-100: #D1E4F8;
-  --blue-200: #A3C9F1;
-  --blue-400: #4A9DE0;
-  --blue-500: #2C84DB;
-  --blue-600: #1B67B2;
-  --blue-700: #155290;
-  --blue-900: #0D3360;
-
-  --red-400:   #F07178;
-  --red-500:   #E5484D;
-  --green-400: #4CC38A;
-  --green-500: #30A46C;
-  --amber-400: #F0B429;
-  --amber-500: #D4A037;
-
-  /* ══ Tier 2: Semantic (dark default) ══ */
+  /* ══ Semantic tokens (dark default) ══
+     All color values reference palette.css variables.
+     No hex/rgb/oklch literals here — palette is the single source. */
 
   /* ── Surface ── */
   --surface-base:     var(--stone-950);
@@ -57,39 +27,41 @@
   --shadow-md: 0 2px 6px rgba(0,0,0,0.2), 0 0 1px rgba(0,0,0,0.15);
   --shadow-lg: 0 4px 16px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.15);
 
-  /* ── Text color: 4-level hierarchy ── */
+  /* ── Text color: 4-level hierarchy ──
+     All 4 levels pass WCAG AA (4.5:1+) on every surface including overlay.
+     bright/primary = AAA, secondary/muted = AA. */
   --text-bright:    var(--stone-0);
   --text-primary:   var(--stone-100);
-  --text-secondary: var(--stone-400);
-  --text-muted:     var(--stone-600);
+  --text-secondary: var(--stone-300);
+  --text-muted:     var(--stone-400);
 
   /* ── Border ── */
   --border-subtle:  var(--stone-800);
   --border-default: var(--stone-700);
   --border-strong:  var(--stone-600);
 
-  /* ── Tone: 의미 색상 번들 (base + hover + dim + mid + bright + foreground)
-     모든 tone이 같은 축 구조. dim/mid/bright = 배경 tint 3단계. ── */
+  /* ── Tone: semantic color bundles (base + hover + dim + mid + bright + foreground)
+     All tones share the same axis structure. dim/mid/bright = background tint 3 levels. ── */
   --tone-primary-base:       var(--blue-500);
   --tone-primary-hover:      var(--blue-400);
-  --tone-primary-dim:        #1A2A3A;
-  --tone-primary-mid:        #1E3348;
-  --tone-primary-bright:     #243D55;
+  --tone-primary-dim:        oklch(28%  0.037  250);
+  --tone-primary-mid:        oklch(31%  0.047  250);
+  --tone-primary-bright:     oklch(35%  0.052  249);
   --tone-primary-foreground: var(--stone-0);
 
   --tone-destructive-base:       var(--red-500);
   --tone-destructive-hover:      var(--red-400);
-  --tone-destructive-dim:        #3A1A1A;
+  --tone-destructive-dim:        oklch(26%  0.051  21);
   --tone-destructive-foreground: var(--stone-0);
 
   --tone-success-base:       var(--green-500);
   --tone-success-hover:      var(--green-400);
-  --tone-success-dim:        #1A2E22;
+  --tone-success-dim:        oklch(28%  0.034  157);
   --tone-success-foreground: var(--stone-0);
 
   --tone-warning-base:       var(--amber-500);
   --tone-warning-hover:      var(--amber-400);
-  --tone-warning-dim:        #2E2A1A;
+  --tone-warning-dim:        oklch(28%  0.028  90);
   --tone-warning-foreground: var(--stone-950);
 
   --tone-neutral-base:       var(--stone-500);
@@ -105,8 +77,8 @@
   /* ── Indicator ── */
   --indicator-width: 2px;
 
-  /* ── Selection ── */
-  --selection: var(--tone-primary-dim);
+  /* ── Selection (warm tint — same hue as stone palette) ── */
+  --selection: oklch(27%  0.020  90);
 
   /* ── Interactive ── */
   --bg-hover:  var(--stone-800);
@@ -180,15 +152,15 @@
   --switch-height:  20px;
 
   /* ── File type colors ── */
-  --file-folder: #B8923A;
-  --file-ts:     #2B6DB5;
-  --file-js:     #C4B53E;
-  --file-json:   #8A7035;
-  --file-md:     #4578A3;
-  --file-css:    #5C3091;
-  --file-sh:     #3F8A1F;
-  --file-img:    #C44A6E;
-  --file-config: #73726C;
+  --file-folder: oklch(67%  0.040  250);
+  --file-ts:     oklch(62%  0.070  250);
+  --file-js:     oklch(67%  0.080  130);
+  --file-json:   oklch(62%  0.025  250);
+  --file-md:     oklch(62%  0.055  240);
+  --file-css:    oklch(57%  0.080  300);
+  --file-sh:     oklch(62%  0.065  160);
+  --file-img:    oklch(57%  0.070  350);
+  --file-config: oklch(58%  0.020  250);
 
   /* ── Motion bundle: duration + easing (claude.ai 실측)
      property는 독립. duration과 easing이 세트. ── */
@@ -200,16 +172,15 @@
   --dialog-backdrop: rgba(0, 0, 0, 0.5);
 }
 
-/* ══ Light theme (claude.ai 실측값 직접 매핑) ══ */
+/* ══ Light theme — warm stone palette (cool gray 제거, 팔레트 통일) ══ */
 
 [data-theme="light"] {
-  /* ── Surface ── */
-  /* 크림 원본 (stone warm neutral):
-  --surface-base:     var(--stone-50);
-  --surface-sunken:   var(--stone-100); */
-  --surface-base:     #F8F9FA;
-  --surface-sunken:   #F0F1F3;
-  --surface-default:  var(--stone-0);
+  /* ── Surface: warm stone 팔레트 참조 (하드코딩 제거) ──
+     default도 stone-50으로 — pure white(C=0)와 cream(C=0.01) 사이
+     색온도 점프를 완화. raised/overlay만 pure white. */
+  --surface-base:     var(--stone-100);
+  --surface-sunken:   var(--stone-200);
+  --surface-default:  var(--stone-50);
   --surface-raised:   var(--stone-0);
   --surface-overlay:  var(--stone-0);
   --surface-outlined: transparent;
@@ -219,18 +190,16 @@
   --shadow-md: 0 2px 6px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.06);
   --shadow-lg: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
 
+  /* ── Text: stone 팔레트 참조 (하드코딩 제거) ── */
   --text-bright:    var(--stone-950);
   --text-primary:   var(--stone-900);
-  --text-secondary: var(--stone-500);
-  --text-muted:     var(--stone-400);
+  --text-secondary: var(--stone-600);
+  --text-muted:     var(--stone-500);
 
-  /* 크림 원본:
+  /* ── Border: stone 팔레트 참조 (하드코딩 제거) ── */
   --border-subtle:  var(--stone-200);
   --border-default: var(--stone-300);
-  --border-strong:  var(--stone-400); */
-  --border-subtle:  #E2E3E7;
-  --border-default: #D1D3D8;
-  --border-strong:  #A0A3AB;
+  --border-strong:  var(--stone-400);
 
   /* ── Tone (light) ── */
   --tone-primary-base:   var(--blue-600);
@@ -239,17 +208,17 @@
   --tone-primary-mid:    var(--blue-100);
   --tone-primary-bright: var(--blue-200);
 
-  --tone-destructive-base:  #DC3545;
-  --tone-destructive-hover: #C82333;
-  --tone-destructive-dim:   #FDF0F0;
+  --tone-destructive-base:  oklch(59.2%  0.202  21);
+  --tone-destructive-hover: oklch(53%    0.200  21);
+  --tone-destructive-dim:   oklch(96.5%  0.014  17);
 
-  --tone-success-base:  #2E8B57;
-  --tone-success-hover: #267A4B;
-  --tone-success-dim:   #F0FDF5;
+  --tone-success-base:  oklch(56.9%  0.119  155);
+  --tone-success-hover: oklch(51%    0.119  155);
+  --tone-success-dim:   oklch(98.2%  0.017  159);
 
-  --tone-warning-base:       #B8860B;
-  --tone-warning-hover:      #A07608;
-  --tone-warning-dim:        #FEFCE8;
+  --tone-warning-base:       oklch(65.2%  0.132  82);
+  --tone-warning-hover:      oklch(59%    0.132  82);
+  --tone-warning-dim:        oklch(98.7%  0.026  102);
   --tone-warning-foreground: var(--stone-950);
 
   --tone-neutral-base:  var(--stone-500);
@@ -260,27 +229,23 @@
   --focus:      var(--blue-500);
   --focus-idle: var(--bg-hover);
 
-  /* ── Selection ── */
-  --selection: var(--tone-primary-dim);
+  /* ── Selection (warm tint) ── */
+  --selection: oklch(94%  0.020  90);
 
-  /* ── Interactive ── */
-  /* 크림 원본:
+  /* ── Interactive: stone 팔레트 참조 (하드코딩 제거) ── */
   --bg-hover:  var(--stone-100);
-  --bg-active: var(--stone-200); */
-  --bg-hover:  #ECEDF0;
-  --bg-active: #E2E3E7;
+  --bg-active: var(--stone-200);
 
-  /* ── File type colors (lower saturation for light bg) ── */
-  --file-folder: #9A7A30;
-  --file-ts:     #245C99;
-  --file-js:     #9E9133;
-  --file-json:   #73602E;
-  --file-md:     #3A6488;
-  --file-css:    #4D2878;
-  --file-sh:     #35751A;
-  --file-img:    #A33F5D;
-  --file-config: #5C5B56;
+  /* ── File type colors (same hues, adjusted L for light bg contrast) ── */
+  --file-folder: oklch(55%  0.040  250);
+  --file-ts:     oklch(50%  0.070  250);
+  --file-js:     oklch(55%  0.080  130);
+  --file-json:   oklch(50%  0.025  250);
+  --file-md:     oklch(50%  0.055  240);
+  --file-css:    oklch(45%  0.080  300);
+  --file-sh:     oklch(50%  0.065  160);
+  --file-img:    oklch(45%  0.070  350);
+  --file-config: oklch(46%  0.020  250);
 
   --dialog-backdrop: rgba(0, 0, 0, 0.2);
 }
-
