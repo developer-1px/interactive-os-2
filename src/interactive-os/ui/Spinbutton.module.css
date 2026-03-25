@@ -60,11 +60,6 @@
   background: var(--tone-primary-bright);
 }
 
-.spinbuttonBtn[aria-disabled] {
-  opacity: 0.35;
-  cursor: default;
-  pointer-events: none;
-}
 
 .spinbuttonBtnDec {
   border-right: 1px solid var(--border-default);
