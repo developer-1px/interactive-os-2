@@ -7,7 +7,6 @@ import PageHistoryDemo from './pages/PageHistoryDemo'
 import PageDnd from './pages/PageDnd'
 import PageTypeahead from './pages/PageTypeahead'
 import PageRename from './pages/PageRename'
-import PageAriaComponent from './pages/PageAriaComponent'
 import PageCell from './pages/PageCell'
 import PageHooks from './pages/PageHooks'
 import PageStoreInspector from './pages/PageStoreInspector'
@@ -94,7 +93,7 @@ export const routeConfig: RouteGroup[] = [
     icon: Box,
     basePath: '/internals/primitives/aria',
     items: [
-      { path: 'aria', label: 'Aria', status: 'ready', component: PageAriaComponent },
+      { path: 'aria', label: 'Aria', status: 'ready', component: PageAreaViewer },
       { path: 'cell', label: 'Cell', status: 'ready', component: PageCell },
       { path: 'hooks', label: 'Hooks', status: 'ready', component: PageHooks },
     ],
