@@ -60,7 +60,7 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight | Integrated | — |
-| useAria · useAriaZone · useControlledAria | Integrated | disabled 옵션 추가 (inert + focus sync 스킵). lastActiveContainer 싱글턴 미구현 (소비자 필요 시 추가) |
+| useAria · useAriaZone · useControlledAria | Integrated | disabled 옵션 추가 (inert + focus sync 스킵). lastActiveContainer 싱글턴 미구현 (소비자 필요 시 추가). keyMap-only 경로 실전 검증 완료 (CmsLayout Mod+\\) |
 | useKeyboard · useSpatialNav | Integrated | — |
 | useResizer · useVirtualScroll | Validated | — |
 | *가상화 (10k+ 노드)* | Concept | — |

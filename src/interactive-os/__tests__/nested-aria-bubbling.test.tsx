@@ -8,6 +8,7 @@ import { ROOT_ID } from '../store/types'
 import { core } from '../plugins/core'
 import type { Command } from '../engine/types'
 import type { PatternContext } from '../pattern/types'
+import { matchKeyEvent } from '../primitives/useKeyboard'
 
 function fixtureData() {
   return {
@@ -59,6 +60,11 @@ describe('Nested Aria bubbling', () => {
 
     // ArrowDown은 listbox가 처리 → preventDefault → 부모 스킵
     expect(document.querySelector('[data-testid="root"]')!.hasAttribute('data-opened')).toBe(false)
+  })
+
+  it('matchKeyEvent handles backslash combo', () => {
+    const event = new KeyboardEvent('keydown', { key: '\\', metaKey: true })
+    expect(matchKeyEvent(event, 'Meta+\\')).toBe(true)
   })
 
   it('keyMap-only Aria (no behavior) renders without role/tabIndex', () => {
