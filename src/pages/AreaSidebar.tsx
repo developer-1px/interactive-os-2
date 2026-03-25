@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { TreeView } from '../interactive-os/ui/TreeView'
 import type { TreeItemRenderProps } from '../interactive-os/ui/TreeView'
@@ -108,9 +109,9 @@ export function AreaSidebar() {
   const renderItem = useCallback((_props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState) => {
     const hasChildren = state.expanded !== undefined
     return (
-      <span className="item-inner">
+      <span className="inline-flex items-center gap-sm">
         <span className="item-chevron--tree">
-          {hasChildren ? (state.expanded ? '▾' : '▸') : ''}
+          {hasChildren ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
         </span>
         <span>{(node.data as Record<string, unknown>)?.name as string}</span>
       </span>
