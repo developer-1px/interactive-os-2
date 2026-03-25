@@ -12,7 +12,7 @@ import { ROOT_ID } from './interactive-os/store/types'
 import type { AriaPattern, NodeState } from './interactive-os/pattern/types'
 import type { NormalizedData } from './interactive-os/store/types'
 import { Tooltip } from './interactive-os/ui/Tooltip'
-import { ReproRecorderOverlay } from './interactive-os/devtools/ReproRecorderOverlay'
+import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { routeConfig } from './routeConfig'
 
 import './styles/tokens.css'

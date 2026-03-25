@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../interactive-os/store/types'
 import { components } from './showcaseRegistry'
-import { TestRunnerPanel } from '../testRunner/TestRunnerPanel'
+import { TestRunnerPanel } from '../devtools/testRunner/TestRunnerPanel'
 
 export function ShowcaseDemo({ slug }: { slug?: string }) {
   const entry = components.find((c) => c.slug === slug)
