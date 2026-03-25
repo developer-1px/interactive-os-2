@@ -23,12 +23,6 @@
    // ② 2026-03-25-css-writing-rules-prd.md
 */
 
-/* ── Container: inset padding for breathing room ── */
-
-:where([data-aria-container]) {
-  padding: var(--space-sm);
-}
-
 /* ── Common interactive item base ── */
 
 :where([data-aria-container] [role="option"]),
