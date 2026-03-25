@@ -1,4 +1,5 @@
 import React from 'react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -23,7 +24,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <div {...props} className={cls}>
       <span>{label}</span>
-      <span className={styles.chevron}>{state.expanded ? '−' : '+'}</span>
+      <span className={styles.chevron}>{state.expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}</span>
     </div>
   )
 }

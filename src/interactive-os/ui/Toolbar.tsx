@@ -34,7 +34,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const cls = styles.toolbarBtn + (state.focused ? ' ' + styles.toolbarBtnFocused : '') + (state.selected ? ' ' + styles.toolbarBtnSelected : '')
   return (
     <span {...props} className={cls} aria-label={Icon ? label : undefined}>
-      {Icon ? <Icon size={16} /> : label}
+      {Icon ? <Icon size={18} /> : label}
     </span>
   )
 }

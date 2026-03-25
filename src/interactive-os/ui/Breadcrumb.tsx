@@ -8,7 +8,7 @@ export function Breadcrumb({ path, root }: { path: string; root: string }) {
     <div className={styles.breadcrumb}>
       {segments.map((seg, i) => (
         <span key={i}>
-          {i > 0 && <ChevronRight size={10} className={styles.sep} />}
+          {i > 0 && <ChevronRight size={12} className={styles.sep} />}
           <span className={i === segments.length - 1 ? styles.current : styles.segment}>{seg}</span>
         </span>
       ))}

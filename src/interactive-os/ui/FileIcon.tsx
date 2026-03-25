@@ -4,7 +4,7 @@ import {
 } from 'lucide-react'
 import styles from './FileIcon.module.css'
 
-const ICON_SIZE = 12
+const ICON_SIZE = 16
 
 export function FileIcon({ name, type, expanded }: { name: string; type: string; expanded?: boolean }) {
   if (type === 'directory') {

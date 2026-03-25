@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react'
+import { Minus, Plus } from 'lucide-react'
 import styles from './Spinbutton.module.css'
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -135,7 +136,7 @@ export function Spinbutton({
             aria-disabled={atMin || undefined}
             onClick={handleDecrement}
           >
-            −
+            <Minus size={16} />
           </button>
           {editing ? (
             <input
@@ -166,7 +167,7 @@ export function Spinbutton({
             aria-disabled={atMax || undefined}
             onClick={handleIncrement}
           >
-            +
+            <Plus size={16} />
           </button>
         </div>
       </div>

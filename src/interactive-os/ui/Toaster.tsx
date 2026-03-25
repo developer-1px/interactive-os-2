@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import type { ReactNode } from 'react'
+import { X } from 'lucide-react'
 import type { Toaster as ToasterInstance, ToastData } from './createToaster'
 import styles from './Toaster.module.css'
 
@@ -43,7 +44,7 @@ function ToastItem({
         onClick={() => onDismiss(toast.id)}
         aria-label="Dismiss"
       >
-        ×
+        <X size={16} />
       </button>
     </div>
   )

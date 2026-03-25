@@ -1,4 +1,5 @@
 import React from 'react'
+import { CircleDot, Circle } from 'lucide-react'
 
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -24,7 +25,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const indCls = state.selected ? styles.indicatorSelected : styles.indicator
   return (
     <div {...props} className={cls}>
-      <span className={indCls}>{state.selected ? '●' : '○'}</span>
+      <span className={indCls}>{state.selected ? <CircleDot size={18} /> : <Circle size={18} />}</span>
       <span>{label}</span>
     </div>
   )
