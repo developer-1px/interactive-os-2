@@ -42,14 +42,12 @@ export default function CmsLayout() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [i18nSheetOpen, setI18nSheetOpen] = useState(false)
   const [presenting, setPresenting] = useState(false)
-  const presentingRef = useRef(false)
-  presentingRef.current = presenting
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
 
   const cmsGlobalKeyMap = useMemo(() => ({
-    'Mod+\\': () => { if (!presentingRef.current) setPresenting(true) },
+    'Mod+\\': () => { setPresenting(prev => !prev) },
   }), [])
 
   const sidebarResizer = useResizer({
