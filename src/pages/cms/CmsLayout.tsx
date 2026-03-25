@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
+import { useCallback, useMemo, useState, useRef } from 'react'
 import '../../styles/cms.css'
 import '../../styles/landingTokens.css'
 import { useResizer } from '../../hooks/useResizer'
@@ -25,7 +25,7 @@ import { ROOT_ID } from '../../interactive-os/store/types'
 import type { Plugin } from '../../interactive-os/plugins/types'
 import { childRules, nodeSchemas } from './cms-schema'
 import { zodSchema } from '../../interactive-os/plugins/zodSchema'
-import { findMatchingKey } from '../../interactive-os/primitives/useKeyboard'
+import { AriaRoute } from '../../interactive-os/primitives/AriaRoute'
 
 const sharedPlugins: Plugin[] = [
   history(),
@@ -48,19 +48,9 @@ export default function CmsLayout() {
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
 
-  const cmsGlobalShortcuts = useMemo((): Record<string, () => void> => ({
+  const cmsGlobalKeyMap = useMemo(() => ({
     'Mod+\\': () => { if (!presentingRef.current) setPresenting(true) },
   }), [])
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.defaultPrevented) return
-      const match = findMatchingKey(e, cmsGlobalShortcuts)
-      if (match) cmsGlobalShortcuts[match]()
-    }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [cmsGlobalShortcuts])
 
   const sidebarResizer = useResizer({
     defaultSize: 120, minSize: 80, maxSize: 300, step: 10,
@@ -101,6 +91,7 @@ export default function CmsLayout() {
   }, [canvasFocusedId, sidebarSections])
 
   return (
+    <AriaRoute keyMap={cmsGlobalKeyMap}>
     <div className="cms-layout">
       <div className="cms-body">
         <CmsSidebar
@@ -153,5 +144,6 @@ export default function CmsLayout() {
         />
       )}
     </div>
+    </AriaRoute>
   )
 }
