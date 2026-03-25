@@ -440,7 +440,7 @@
 }
 
 :where([data-aria-container] .item-chevron--tree) {
-  width: 16px;
+  width: var(--icon-sm);
   opacity: 0.5;
   flex-shrink: 0;
 }
