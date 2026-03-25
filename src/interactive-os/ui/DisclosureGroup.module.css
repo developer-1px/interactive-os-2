@@ -1,9 +1,0 @@
-/* --- DisclosureGroup --- */
-
-.chevron {
-  width: var(--icon-xs);
-  flex-shrink: 0;
-  text-align: center;
-  font-size: var(--type-body-size);
-  color: var(--text-muted);
-}

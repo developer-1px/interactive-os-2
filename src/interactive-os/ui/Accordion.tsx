@@ -7,7 +7,6 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { accordion } from '../pattern/accordion'
 import { core } from '../plugins/core'
-import styles from './Accordion.module.css'
 
 interface AccordionProps {
   data: NormalizedData
@@ -23,7 +22,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <div {...props} className="flex-row items-center justify-between">
       <span>{label}</span>
-      <span className={styles.chevron}>{state.expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}</span>
+      <span className="item-chevron">{state.expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}</span>
     </div>
   )
 }

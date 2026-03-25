@@ -1,0 +1,121 @@
+/* StreamFeed — streaming feed container
+   ② 2026-03-25-stream-feed-prd.md */
+
+/* --- Wrapper: positions FAB relative to feed --- */
+
+.feedWrapper {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Container: :where() for specificity 0 defaults --- */
+
+:where(.feed) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1;
+}
+
+/* --- Entry animation --- */
+
+.entry {
+  animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-sm));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Streaming indicator --- */
+
+.streaming {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
+}
+
+.streamingDot {
+  width: 6px;
+  height: 6px;
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-pill-radius);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.streamingLabel {
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+}
+
+.streamingTime {
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* --- Scroll to bottom FAB --- */
+
+.scrollFab {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  border-radius: var(--shape-pill-radius);
+  color: var(--text-secondary);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+  transition:
+    background var(--motion-instant-duration) var(--motion-instant-easing),
+    color var(--motion-instant-duration) var(--motion-instant-easing);
+  animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
+  z-index: 1;
+}
+
+.scrollFab:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* --- Stream cursor (blinking caret) --- */
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--tone-primary-base);
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
