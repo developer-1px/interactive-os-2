@@ -13,6 +13,7 @@ import type { AriaPattern, NodeState } from './interactive-os/pattern/types'
 import type { NormalizedData } from './interactive-os/store/types'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './interactive-os/devtools/ReproRecorderOverlay'
+import { AriaRouteProvider } from './interactive-os/primitives/AriaRoute'
 import { routeConfig } from './routeConfig'
 
 import './styles/tokens.css'
@@ -207,7 +208,9 @@ export default function AppShell() {
           </div>
         </Aria>
       </nav>
-      <Outlet />
+      <AriaRouteProvider>
+        <Outlet />
+      </AriaRouteProvider>
       <FileViewerModal
         filePath={previewFile?.path ?? null}
         highlightLines={previewFile?.line ? new Set([previewFile.line]) : undefined}
