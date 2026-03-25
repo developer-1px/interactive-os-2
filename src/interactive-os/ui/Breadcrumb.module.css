@@ -1,10 +1,7 @@
 .breadcrumb {
-  display: flex;
-  align-items: center;
   gap: 1px;
   font-size: var(--type-body-size);
   color: var(--text-muted);
-  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }

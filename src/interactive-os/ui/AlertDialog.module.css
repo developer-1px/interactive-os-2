@@ -6,9 +6,6 @@
   background: var(--dialog-backdrop);
   /* backdrop-filter has no design token — intentional raw value */
   backdrop-filter: blur(3px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 100;
 }
 
@@ -42,9 +39,6 @@
   padding: var(--space-sm) var(--space-lg);
   border-top: 1px solid var(--border-subtle);
   background: var(--surface-base);
-  display: flex;
-  gap: var(--space-sm);
-  justify-content: flex-end;
 }
 
 .destructive {

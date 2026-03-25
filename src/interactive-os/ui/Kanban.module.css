@@ -1,9 +1,6 @@
 /* --- Kanban Board --- */
 
 .board {
-  display: flex;
-  gap: var(--space-md);
-  overflow-x: auto;
   padding: var(--space-xs);
 }
 
@@ -16,9 +13,6 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-xl-radius);
   padding: var(--space-sm);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
 }
 
 /* ── Column header ── */
@@ -29,9 +23,6 @@
   letter-spacing: 0.05em;
   color: var(--text-secondary);
   padding: var(--space-xs) var(--space-sm);
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
   border-radius: var(--shape-md-radius);
 }
 

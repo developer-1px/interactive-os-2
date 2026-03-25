@@ -81,13 +81,13 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
-    <dialog ref={dialogRef} className={styles.fvmDialog} onClick={handleBackdropClick}>
-      <div className={styles.fvmModal} onClick={e => e.stopPropagation()}>
-        <div className={styles.fvmHeader}>
+    <dialog ref={dialogRef} className={`items-center justify-center ${styles.fvmDialog}`} onClick={handleBackdropClick}>
+      <div className={`flex-col overflow-hidden ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
+        <div className={`flex-row items-center justify-between shrink-0 ${styles.fvmHeader}`}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
-          <div className={styles.fvmHeaderRight}>
+          <div className="flex-row items-center gap-sm">
             {filePath && (
-              <div className={styles.fvmMeta}>
+              <div className={`flex-row items-center gap-xs ${styles.fvmMeta}`}>
                 <FileIcon name={filename} type="file" />
                 <span>{ext.toUpperCase()}</span>
                 {!isImage && lineCount > 0 && (
@@ -104,10 +104,10 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 )}
               </div>
             )}
-            <button className={styles.fvmClose} onClick={onClose}>&times;</button>
+            <button className={`flex-row items-center justify-center ${styles.fvmClose}`} onClick={onClose}>&times;</button>
           </div>
         </div>
-        <div className={styles.fvmBody}>
+        <div className={`flex-1 overflow-auto ${styles.fvmBody}`}>
           {error ? (
             <div className={styles.fvmError}>File not found</div>
           ) : isImage ? (

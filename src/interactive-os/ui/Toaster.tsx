@@ -32,15 +32,15 @@ function ToastItem({
   onDismiss: (id: string) => void
 }): ReactNode {
   return (
-    <div className={styles.toast} data-variant={toast.variant ?? 'default'}>
-      <div className={styles.content}>
+    <div className={`flex-row items-start gap-sm ${styles.toast}`} data-variant={toast.variant ?? 'default'}>
+      <div className="flex-1 min-w-0">
         <div className={styles.title}>{toast.title}</div>
         {toast.description && (
           <div className={styles.description}>{toast.description}</div>
         )}
       </div>
       <button
-        className={styles.dismiss}
+        className={`flex-row items-center justify-center shrink-0 ${styles.dismiss}`}
         onClick={() => onDismiss(toast.id)}
         aria-label="Dismiss"
       >

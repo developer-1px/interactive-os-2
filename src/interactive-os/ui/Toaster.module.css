@@ -12,9 +12,6 @@
 
 .toast {
   pointer-events: auto;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
   background: var(--surface-default);
   border: 1px solid var(--border-subtle);
@@ -34,11 +31,6 @@
   border-color: var(--tone-destructive-base);
 }
 
-.content {
-  flex: 1;
-  min-width: 0;
-}
-
 .title {
   font-weight: var(--weight-medium);
 }
@@ -50,13 +42,9 @@
 }
 
 .dismiss {
-  flex-shrink: 0;
   padding: 0;
   width: var(--space-xl);
   height: var(--space-xl);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: none;
   border: none;
   border-radius: var(--shape-md-radius);

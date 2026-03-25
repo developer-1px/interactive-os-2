@@ -5,9 +5,6 @@
 }
 
 .toolbar-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   min-width: var(--space-2xl);
   min-height: var(--space-2xl);
   padding: var(--shape-xs-py) var(--shape-xs-px);

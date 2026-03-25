@@ -10,8 +10,6 @@
 
 .fvmDialog[open] {
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .fvmDialog::backdrop {
@@ -23,33 +21,16 @@
   height: 85vh;
   background: var(--surface-default);
   border-radius: var(--shape-xl-radius);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   box-shadow: var(--shadow-lg);
 }
 
 .fvmHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   height: 36px;
   padding: 0 var(--space-lg);
-  flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.fvmHeaderRight {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
 .fvmMeta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-
   font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
@@ -67,9 +48,6 @@
 }
 
 .fvmClose {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 28px;
   height: 28px;
   background: none;
@@ -86,8 +64,6 @@
 }
 
 .fvmBody {
-  flex: 1;
-  overflow: auto;
   min-height: 0;
 }
 

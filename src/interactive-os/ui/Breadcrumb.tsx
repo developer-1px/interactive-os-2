@@ -5,7 +5,7 @@ export function Breadcrumb({ path, root }: { path: string; root: string }) {
   const relative = path.startsWith(root) ? path.slice(root.length + 1) : path
   const segments = relative.split('/')
   return (
-    <div className={styles.breadcrumb}>
+    <div className={`flex-row items-center overflow-hidden ${styles.breadcrumb}`}>
       {segments.map((seg, i) => (
         <span key={i}>
           {i > 0 && <ChevronRight size={12} className={styles.sep} />}

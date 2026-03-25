@@ -42,5 +42,4 @@
   border-radius: var(--shape-xl-radius);
   box-shadow: var(--shadow-lg);
   margin-top: var(--space-xs);
-  overflow: hidden;
 }

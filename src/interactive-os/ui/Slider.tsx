@@ -50,7 +50,7 @@ export function Slider({
     const label = (item.data as Record<string, unknown>)?.label as string ?? item.id as string
 
     return (
-      <div className={styles.sliderItem} data-focused={state.focused || undefined}>
+      <div className={`flex-row items-center gap-md ${styles.sliderItem}`} data-focused={state.focused || undefined}>
         {label && <span className={styles.sliderLabel}>{label}</span>}
         <div className={styles.sliderTrack} ref={trackRef} onClick={handleTrackClick}>
           <div className={styles.sliderFill} style={{ width: `${pct}%` }} />

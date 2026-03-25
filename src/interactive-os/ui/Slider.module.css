@@ -1,9 +1,6 @@
 /* --- Slider --- */
 
 .sliderItem {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
   padding: var(--space-sm) var(--space-md);
 }
 
