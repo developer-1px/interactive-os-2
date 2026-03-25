@@ -65,9 +65,12 @@
 
 /* Expanded treeitem: transparent layout container.
    First child (label row) takes over visual responsibility.
-   Uses :first-child to be renderItem-agnostic (.item-inner or custom). */
+   Uses :first-child to be renderItem-agnostic (any inline-flex row or custom). */
 :where([data-aria-container] [role="treeitem"][aria-expanded="true"]) {
   padding: 0;
+  /* !important: expanded treeitem은 투명 컨테이너 — :first-child가 시각 책임.
+     같은 파일의 :active/selected 규칙이 여기 적용되면 안 됨.
+     :where() 체계에서 specificity 구분이 불가하므로 !important로 강제. */
   background: transparent !important;
   outline: none !important;
 }
@@ -422,18 +425,7 @@
   transition: color 0.1s, border-color 0.1s;
 }
 
-/* ── Default renderItem inner wrapper ── */
-
-:where([data-aria-container] .item-inner) {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-:where([data-aria-container] .item-spread) {
-  justify-content: space-between;
-  width: 100%;
-}
+/* ── Item part classes (item-{part} convention, design tokens only) ── */
 
 :where([data-aria-container] .item-chevron) {
   opacity: 0.5;
@@ -443,10 +435,4 @@
   width: 16px;
   opacity: 0.5;
   flex-shrink: 0;
-}
-
-/* ── Radio-specific gap ── */
-
-:where([role="radio"] .item-inner) {
-  gap: var(--space-sm);
 }

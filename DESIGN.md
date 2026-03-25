@@ -196,19 +196,50 @@ tokens.css 4→8→12→16→24→32→40은 충분. claude.ai도 비슷한 scal
 | 5 | `app.css` | 앱 컴포넌트 스타일 | (0,1,0)+ |
 | 6 | `*.module.css` | 컴포넌트별 디자인 + 토큰 | (0,1,0)+ |
 
-### structure.css — 닫힌 체계
+### structure.css — atomic class (닫힌 체계)
 
 - Tailwind 네이밍 (de facto 표준, LLM/사람 모두 즉시 인식)
-- **수치 없는** 속성만: `flex-row`, `items-center`, `overflow-hidden` 등
-- gap, padding, width, height = 수치 → CSS 파일에서 토큰으로
+- 수치 없는 레이아웃 속성 + 토큰 고정 스케일(gap-xs~gap-3xl)
 - 정의된 class만 사용 가능. JIT 없음, escape hatch 없음
 - 부족하면 class를 추가 (토큰처럼 스케일 확장)
 
-### components.css — :where() 기본값
+### components.css — ARIA 상태 스타일 (:where() 기본값)
 
 - 모든 셀렉터를 `:where()`로 래핑 → specificity (0,0,0)
 - "기본값 제공자" 역할 — module.css의 아무 셀렉터도 이김
-- ARIA 상태(hover, focus, selected, disabled) + 구조 기본값
+- **ARIA 상태만** 제공 (hover, focus, selected, disabled)
+- 구조는 제공하지 않음 — 소비자가 atomic class로 조립
+
+### component class convention — `item-{part}`
+
+components.css에서 className으로 제공하는 class의 네이밍 규칙.
+daisyUI `{component}-{part}` 패턴 참조.
+
+**2단 게이트 (class 생성 판단):**
+
+```
+class를 만들려 한다
+  ├─ atomic으로 100% 표현 가능? → class 만들지 않음
+  └─ 디자인 토큰 포함 (color, opacity, size 등)?
+      → item-{part} 패턴으로 생성
+```
+
+**part는 역할 어휘 (key pool):**
+
+| key | 역할 | 예시 |
+|-----|------|------|
+| chevron | 펼침/접힘 표시 아이콘 | `item-chevron`, `item-chevron--tree` |
+| indicator | 상태 표시 (radio, checkbox) | `item-indicator` |
+| icon | 장식 아이콘 | `item-icon` |
+| badge | 숫자/상태 뱃지 | `item-badge` |
+| shortcut | 키보드 단축키 힌트 | `item-shortcut` |
+| description | 보조 텍스트 | `item-description` |
+| label | 라벨 텍스트 | `item-label` |
+
+**variant → BEM modifier:** `item-{part}--{variant}` (예: `item-chevron--tree`)
+
+**금지 어휘:** inner, wrapper, container, box, section, area — 구조/위치 이름.
+역할을 말하지 않는 이름은 만들 수 없다.
 
 ### 금지 목록
 
@@ -219,6 +250,7 @@ tokens.css 4→8→12→16→24→32→40은 충분. claude.ai도 비슷한 scal
 | module.css에 display:flex/grid | structure.css atomic class | 구조는 DOM과 co-locate |
 | components.css에 :where() 없는 셀렉터 | :where() 래핑 | specificity 군비경쟁 방지 |
 | palette 직접 참조 (--blue-600) | semantic 토큰 (--tone-primary-base) | 테마 독립성 |
+| 구조/위치 이름의 class (inner, wrapper) | atomic class 조합 | 역할을 말하지 않음 |
 
 ---
 
