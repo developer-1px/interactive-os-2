@@ -19,6 +19,13 @@
   line-height: var(--landing-type-body-lh);
 }
 
+/* Option wrappers act as layout containers — cards provide their own padding */
+.cmsLanding [role="option"] {
+  padding: 0;
+  border-radius: 0;
+  outline: none;
+}
+
 /* ══════════════════════════════
    Shared section header — type 번들
    ══════════════════════════════ */

@@ -10,12 +10,14 @@
   justify-content: center;
   min-width: var(--space-2xl);
   min-height: var(--space-2xl);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
   color: var(--text-secondary);
   background: transparent;
   border: none;
-  border-radius: var(--shape-md-radius);
+  border-radius: var(--shape-xs-radius);
   cursor: pointer;
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing), color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
 .toolbar-btn-focused {
