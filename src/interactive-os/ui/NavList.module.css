@@ -1,23 +1,6 @@
 /* --- NavList --- */
 
-.item {
-  padding: var(--space-xs) var(--space-md);
-  font-size: var(--type-body-size);
-  border-radius: var(--shape-md-radius);
-  cursor: pointer;
-  user-select: none;
-}
-
-.itemFocused {
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
-}
-
-.group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
+.group { /* anchor for sibling selector */ }
 
 .group + .group {
   padding-top: var(--space-lg);

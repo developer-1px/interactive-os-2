@@ -21,7 +21,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
-  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
+  const cls = 'flex-row items-center gap-xs' + (state.selected ? ' ' + styles.itemSelected : '')
   const indCls = state.selected ? styles.indicatorSelected : styles.indicator
   return (
     <div {...props} className={cls}>

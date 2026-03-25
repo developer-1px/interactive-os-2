@@ -19,6 +19,10 @@
   white-space: normal;
   word-wrap: break-word;
 
+  transition:
+    opacity var(--motion-enter-duration) var(--motion-enter-easing),
+    transform var(--motion-enter-duration) var(--motion-enter-easing);
+
   /* popover reset */
   inset: unset;
 }

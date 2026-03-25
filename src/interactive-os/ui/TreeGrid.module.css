@@ -1,33 +1,5 @@
 /* --- TreeGrid --- */
 
-.item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--type-body-size);
-  border-radius: var(--shape-md-radius);
-  cursor: default;
-  user-select: none;
-}
-
-.item:hover {
-  background: var(--bg-hover);
-}
-
-.itemFocused {
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
-}
-
-.itemSelected {
-  background: var(--selection);
-}
-
-.itemFocused.itemSelected {
-  background: var(--tone-primary-dim);
-}
-
 .chevron {
   width: var(--icon-xs);
   flex-shrink: 0;

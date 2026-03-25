@@ -7,7 +7,6 @@ import type { Command } from '../engine/types'
 import { useTabList } from './useTabList'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
-import styles from './TabList.module.css'
 
 interface TabListProps {
   data: NormalizedData
@@ -21,12 +20,11 @@ interface TabListProps {
   'aria-label'?: string
 }
 
-const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, state: NodeState): React.ReactElement => {
+const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, _state: NodeState): React.ReactElement => {
   const label = (tab.data as Record<string, unknown>)?.label as string
     ?? (tab.data as Record<string, unknown>)?.name as string
     ?? tab.id as string
-  const cls = styles.tab + (state.focused ? ' ' + styles.tabFocused : '') + (state.selected ? ' ' + styles.tabSelected : '')
-  return <span className={cls}>{label}</span>
+  return <span>{label}</span>
 }
 
 export function TabList({

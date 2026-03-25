@@ -27,7 +27,7 @@
   border: 1px solid var(--border-default);
   border-radius: var(--shape-md-radius);
   overflow: hidden;
-  transition: border-color 0.12s, box-shadow 0.12s;
+  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing), box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
 [data-focused] .spinbuttonGroup {
@@ -47,7 +47,7 @@
   font-size: var(--type-page-size);
   font-weight: var(--weight-regular);
   cursor: pointer;
-  transition: background 0.1s;
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
   -webkit-user-select: none;
   user-select: none;
 }
@@ -99,6 +99,14 @@
   text-align: center;
   font-variant-numeric: tabular-nums;
   outline: none;
+}
+
+.spinbuttonInput:focus {
+  border-color: var(--focus);
+}
+
+.spinbuttonInput::placeholder {
+  color: var(--text-muted);
 }
 
 /* Error state */
