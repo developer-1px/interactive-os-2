@@ -6,7 +6,7 @@ import {
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import { groupEvents, type TimelineEvent, type ToolGroup, type DisplayItem } from './groupEvents'
-import { subscribeTimeline } from './timelineSSE'
+import { connectSession, disconnectSession, useTimeline, useSessionMeta, loadOlder, canLoadMore, getEditRanges } from './viewerStore'
 import { useStreamFeed } from '../../interactive-os/ui/useStreamFeed'
 import { StreamFeed, StreamCursor } from '../../interactive-os/ui/StreamFeed'
 import { useTypewriter } from '../../interactive-os/ui/useTypewriter'
@@ -21,7 +21,6 @@ interface TimelineColumnProps {
   isLive: boolean
   onClose: () => void
   onFileClick: (filePath: string, editRanges?: string[]) => void
-  onModifiedFilesChange?: (files: string[]) => void
 }
 
 // --- Pacing delays by item type ---
@@ -254,82 +253,15 @@ function usePacedReveal(displayItems: DisplayItem[], isInitialLoad: boolean) {
 
 // --- Component ---
 
-const INITIAL_TAIL = 80
-const LOAD_MORE_CHUNK = 100
-
-export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFileClick, onModifiedFilesChange }: TimelineColumnProps) {
-  const [timeline, setTimeline] = useState<TimelineEvent[]>([])
-  const [fetchError, setFetchError] = useState<string | null>(null)
-  const [initialLoading, setInitialLoading] = useState(true)
-  const totalRef = useRef(0)
-  const loadedFromRef = useRef(0)
-  const loadingMoreRef = useRef(false)
-
-  // Track editRanges per file for onFileClick
-  const editRangesRef = useRef<Map<string, string[]>>(new Map())
-
-  const trackEditRanges = useCallback((events: TimelineEvent[]) => {
-    let changed = false
-    for (const evt of events) {
-      if (evt.type !== 'tool_use') continue
-      if ((evt.tool === 'Edit' || evt.tool === 'Write') && evt.filePath && evt.editNew) {
-        const existing = editRangesRef.current.get(evt.filePath)
-        if (existing) {
-          existing.push(evt.editNew)
-        } else {
-          editRangesRef.current.set(evt.filePath, [evt.editNew])
-          changed = true
-        }
-      }
-    }
-    if (changed && onModifiedFilesChange) {
-      onModifiedFilesChange([...editRangesRef.current.keys()])
-    }
-  }, [onModifiedFilesChange])
-
-  // --- Agent status: running / idle / done ---
-  const [agentStatus, setAgentStatus] = useState<'running' | 'idle' | 'done'>(isLive ? 'idle' : 'done')
-  const [runStartTs, setRunStartTs] = useState<number | null>(null)
-  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const markRunning = useCallback(() => {
-    setAgentStatus('running')
-    setRunStartTs(prev => prev ?? Date.now())
-    if (idleTimerRef.current) { clearTimeout(idleTimerRef.current); idleTimerRef.current = null }
-  }, [])
-
-  const scheduleIdle = useCallback(() => {
-    if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
-    idleTimerRef.current = setTimeout(() => {
-      setAgentStatus('idle')
-      setRunStartTs(null)
-    }, 3000)
-  }, [])
-
-  const updateStatusFromEvent = useCallback((evt: TimelineEvent) => {
-    if (evt.type === 'user') {
-      markRunning()
-    } else if (evt.type === 'tool_use' || evt.type === 'tool_result') {
-      markRunning()
-    } else if (evt.type === 'assistant') {
-      scheduleIdle()
-    }
-  }, [markRunning, scheduleIdle])
-
+export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFileClick }: TimelineColumnProps) {
+  // --- Store connection ---
   useEffect(() => {
-    if (!isLive) {
-      queueMicrotask(() => setAgentStatus('done'))
-      return
-    }
-    if (timeline.length === 0) return
-    const last = timeline[timeline.length - 1]
-    if (last.type === 'user' || last.type === 'tool_use' || last.type === 'tool_result') {
-      queueMicrotask(() => markRunning())
-    } else {
-      queueMicrotask(() => { setAgentStatus('idle'); setRunStartTs(null) })
-    }
-    return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current) }
-  }, [isLive]) // eslint-disable-line react-hooks/exhaustive-deps
+    connectSession(sessionId, isLive)
+    return () => disconnectSession(sessionId)
+  }, [sessionId, isLive])
+
+  const timeline = useTimeline(sessionId)
+  const { agentStatus, runStartTs, fetchError, initialLoading } = useSessionMeta(sessionId)
 
   // --- Group events for display ---
   const displayItems = useMemo(() => groupEvents(timeline), [timeline])
@@ -341,8 +273,6 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   const { feedRef } = useStreamFeed<DisplayItem>()
 
   // --- Smart auto-scroll ---
-  // Debounced: waits 250ms after last item before scrolling (lets animation settle)
-  // Respects user scroll position
   const prevVisibleLenRef = useRef(0)
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const userScrolledUpRef = useRef(false)
@@ -396,89 +326,26 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     }
   }, [])
 
-  // --- Initial timeline fetch (tail only) ---
-  useEffect(() => {
-    fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}&tail=${INITIAL_TAIL}`)
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
-      .then((data: { events: TimelineEvent[]; total: number }) => {
-        editRangesRef.current = new Map()
-        trackEditRanges(data.events)
-        setTimeline(data.events)
-        totalRef.current = data.total
-        loadedFromRef.current = Math.max(0, data.total - data.events.length)
-        setFetchError(null)
-        setInitialLoading(false)
-      })
-      .catch(e => { setFetchError(e.message); setInitialLoading(false) })
-  }, [sessionId, trackEditRanges])
-
   // --- Load older events on scroll-up ---
-  const loadOlder = useCallback(() => {
-    if (loadingMoreRef.current || loadedFromRef.current <= 0) return
-    loadingMoreRef.current = true
-
-    const before = loadedFromRef.current
-    fetch(`/api/agent-ops/timeline?session=${encodeURIComponent(sessionId)}&tail=${LOAD_MORE_CHUNK}&before=${before}`)
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
-      .then((data: { events: TimelineEvent[]; total: number }) => {
-        if (data.events.length > 0) {
-          trackEditRanges(data.events)
-          setTimeline(prev => [...data.events, ...prev])
-          loadedFromRef.current = Math.max(0, before - data.events.length)
-        }
-      })
-      .catch(() => { loadedFromRef.current = 0 })
-      .finally(() => { loadingMoreRef.current = false })
-  }, [sessionId, trackEditRanges])
-
   useEffect(() => {
     const el = feedRef.current
     if (!el) return
     const handleScroll = () => {
-      if (el.scrollTop < 200 && loadedFromRef.current > 0) {
-        loadOlder()
+      if (el.scrollTop < 200 && canLoadMore(sessionId)) {
+        loadOlder(sessionId)
       }
     }
     el.addEventListener('scroll', handleScroll, { passive: true })
     return () => el.removeEventListener('scroll', handleScroll)
-  }, [feedRef, loadOlder])
-
-  // --- SSE via shared multiplexed connection ---
-  useEffect(() => {
-    if (!isLive) return
-
-    let pendingEvents: TimelineEvent[] = []
-    let rafId = 0
-
-    function flushPending() {
-      rafId = 0
-      if (pendingEvents.length === 0) return
-      const batch = pendingEvents
-      pendingEvents = []
-      trackEditRanges(batch)
-      setTimeline(prev => [...prev, ...batch])
-      totalRef.current += batch.length
-    }
-
-    const unsubscribe = subscribeTimeline(sessionId, (evt) => {
-      pendingEvents.push(evt)
-      updateStatusFromEvent(evt)
-      if (!rafId) rafId = requestAnimationFrame(flushPending)
-    })
-
-    return () => {
-      unsubscribe()
-      if (rafId) cancelAnimationFrame(rafId)
-    }
-  }, [isLive, sessionId, trackEditRanges, updateStatusFromEvent])
+  }, [feedRef, sessionId])
 
   // --- File click handler ---
   const handleTimelineClick = useCallback((evt: TimelineEvent) => {
     if (evt.filePath) {
-      const ranges = editRangesRef.current.get(evt.filePath)
+      const ranges = getEditRanges(sessionId, evt.filePath)
       onFileClick(evt.filePath, ranges)
     }
-  }, [onFileClick])
+  }, [sessionId, onFileClick])
 
   // Streaming: agent is running OR pacing queue is draining
   const showStreaming = (isLive && agentStatus === 'running') || isPacing
