@@ -1,0 +1,37 @@
+/* ═══════════════════════════════════════════
+   L3 Surface — Elevation/depth/distinction policy
+   ═══════════════════════════════════════════
+   Changes when: surface/depth policy changes.
+   Single responsibility: data-surface attribute → bg + border + shadow bundle.
+   base/sunken/default: bg only.
+   raised/overlay: bg + border + shadow.
+   outlined: transparent bg + border (inherits parent bg). */
+
+[data-surface="base"] {
+  background: var(--surface-base);
+}
+
+[data-surface="sunken"] {
+  background: var(--surface-sunken);
+}
+
+[data-surface="default"] {
+  background: var(--surface-default);
+}
+
+[data-surface="raised"] {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+[data-surface="overlay"] {
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-lg);
+}
+
+[data-surface="outlined"] {
+  background: transparent;
+  border: 1px solid var(--border-default);
+}
