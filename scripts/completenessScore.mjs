@@ -32,9 +32,7 @@ function readFile(path) {
   return existsSync(path) ? readFileSync(path, 'utf-8') : ''
 }
 
-const interactiveCss = readFile(join(STYLES_DIR, 'interactive.css'))
-const componentsCss = readFile(join(STYLES_DIR, 'components.css'))
-const globalCss = interactiveCss || componentsCss
+const globalCss = readFile(join(STYLES_DIR, 'interactive.css'))
 
 const PATTERN_DIR = join(process.cwd(), 'src/interactive-os/pattern')
 

@@ -1,3 +1,10 @@
+/* ═══════════════════════════════════════════
+   L2 Tokens — Design value declarations ONLY
+   ═══════════════════════════════════════════
+   Changes when: design system values change.
+   Single responsibility: :root variable declarations + theme overrides.
+   No selectors, no rules — only values. */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap');
 
 :root {
@@ -277,104 +284,3 @@
   --dialog-backdrop: rgba(0, 0, 0, 0.2);
 }
 
-/* ══ Surface bundles ══
-   data-surface attribute applies bg + border + shadow as a unit.
-   base/sunken/default: bg only.
-   raised/overlay: bg + border + shadow.
-   outlined: transparent bg + border (inherits parent bg). */
-
-[data-surface="base"] {
-  background: var(--surface-base);
-}
-
-[data-surface="sunken"] {
-  background: var(--surface-sunken);
-}
-
-[data-surface="default"] {
-  background: var(--surface-default);
-}
-
-[data-surface="raised"] {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-xs);
-}
-
-[data-surface="overlay"] {
-  background: var(--surface-overlay);
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-lg);
-}
-
-[data-surface="outlined"] {
-  background: transparent;
-  border: 1px solid var(--border-default);
-}
-
-/* ══ Global resets ══ */
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  overflow: hidden;
-  background: var(--surface-base);
-  color: var(--text-primary);
-  font-family: var(--sans);
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-book);
-  line-height: var(--leading-normal);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-p {
-  margin: 0;
-}
-
-#root {
-  max-width: 100%;
-  margin: 0 auto;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  border: none;
-  text-align: left;
-}
-
-*:focus-visible {
-  outline: var(--focus-ring) solid var(--focus);
-  outline-offset: calc(-1 * var(--focus-ring));
-}
-
-/* ══ Scrollbar (WebKit) ══ */
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-default);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--border-strong);
-}
-
-/* ══ Reduced motion ══ */
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-  }
-}

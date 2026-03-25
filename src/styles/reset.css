@@ -1,0 +1,70 @@
+/* ═══════════════════════════════════════════
+   L1 Reset — Browser initialization + HTML type baselines
+   ═══════════════════════════════════════════
+   Changes when: browser default policy changes.
+   Single responsibility: normalize browser environment. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--surface-base);
+  color: var(--text-primary);
+  font-family: var(--sans);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-book);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+p {
+  margin: 0;
+}
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  border: none;
+  text-align: left;
+}
+
+*:focus-visible {
+  outline: var(--focus-ring) solid var(--focus);
+  outline-offset: calc(-1 * var(--focus-ring));
+}
+
+/* ── Scrollbar (WebKit) ── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

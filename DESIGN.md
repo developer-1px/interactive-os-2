@@ -163,10 +163,34 @@ tokens.css 4→8→12→16→24→32→40은 충분. claude.ai도 비슷한 scal
 
 ---
 
-## 3. CSS 작성 판단 흐름
+## 3. CSS Layers — SRP 기반 스타일링 프로토콜
 
-> CSS 속성을 **구조**와 **디자인**으로 분류한다.
-> 구조 = DOM과 co-locate (인지 부하 감소), 디자인 = 토큰 기반 CSS 파일 (시스템 일관성).
+> 각 CSS 파일/레이어는 **변경 이유가 단 하나**여야 한다 (Single Responsibility Principle).
+> 파일명 = 레이어 = 책임. 다음 LLM 세션이 파일명만 보고 "여기에 이걸 쓰면 된다"를 즉시 판단.
+
+### 6레이어 스택
+
+```
+Global ──────────────────────────────
+  L1  reset.css        브라우저 초기화 + HTML type 기본값
+  L2  tokens.css       디자인 값 선언 (:root 변수 + 테마 override)
+      structure.css    수치 없는 atomic layout class (닫힌 체계)
+  L3  surface.css      면/깊이/구분 정책 ([data-surface] 번들)
+  L4  interactive.css  인터랙션 정책 (hover, focus, disabled, selected...)
+
+Local ───────────────────────────────
+  L5  *.module.css     컴포넌트 고유 형태 (Structure)
+  L6  *.module.css     컴포넌트 변형 (Variant — tone/size)
+```
+
+| Layer | 파일 | 변경 이유 (단 하나) | specificity |
+|-------|------|-------------------|-------------|
+| L1 | `reset.css` | 브라우저 기본값 정책이 바뀔 때 | 기본 |
+| L2 | `tokens.css` | 디자인 시스템 값이 바뀔 때 | — (값만) |
+| — | `structure.css` | atomic layout class가 필요할 때 | (0,1,0) |
+| L3 | `surface.css` | 면/깊이 정책이 바뀔 때 | (0,1,0) |
+| L4 | `interactive.css` | 사용자 입력 반응 정책이 바뀔 때 | (0,0,0) `:where()` |
+| L5+L6 | `*.module.css` | 이 컴포넌트의 형태/변형이 바뀔 때 | (0,1,0)+ |
 
 ### 판단 플로우
 
@@ -180,21 +204,73 @@ tokens.css 4→8→12→16→24→32→40은 충분. claude.ai도 비슷한 scal
   │  → CSS 파일 (module.css 또는 글로벌) + 토큰 필수
   │
   └─ ARIA 상태 (hover, focus, selected, disabled)?
-     → components.css 기본값 확인
+     → interactive.css 기본값 확인
        ├─ 기본값 충분 → 그대로 사용
        └─ 커스텀 필요 → module.css에서 override (:where() 덕에 바로 이김)
 ```
 
-### CSS 파일 스택
+### 컴포넌트 분류와 필수 상태
 
-| 순서 | 파일 | 역할 | specificity |
-|------|------|------|-------------|
-| 1 | `tokens.css` | 토큰 값 SSOT | — |
-| 2 | `structure.css` | 수치 없는 atomic layout class | (0,1,0) |
-| 3 | `components.css` | ARIA 기본 스타일 (`:where()` 래핑) | (0,0,0) |
-| 4 | `layout.css` | 앱 레이아웃 (sidebar, page) | (0,1,0)+ |
-| 5 | `app.css` | 앱 컴포넌트 스타일 | (0,1,0)+ |
-| 6 | `*.module.css` | 컴포넌트별 디자인 + 토큰 | (0,1,0)+ |
+| 분류 | 예시 | 필수 상태 | 담당 레이어 |
+|------|------|-----------|------------|
+| **Action** | Button, Toggle, Switch | hover, active, focus, disabled, tone variant | L4 + L6 |
+| **Collection** | ListBox, TreeGrid, Menu, Tabs | hover, focus(bg), selected, disabled item | L4 전담 |
+| **Input** | TextInput, Checkbox, Radio, Slider | hover, focus(ring), disabled, invalid, readonly | L4 + L5 |
+| **Overlay** | Dialog, AlertDialog, Tooltip | surface bundle, enter/exit motion, backdrop | L3 + L4 |
+| **Static** | Separator, Progress | 없음 또는 최소 | L5만 |
+
+### `--_` Scoped Property 패턴
+
+**문제:** Button hover가 `var(--tone-primary-hover)`를 써야 한다. tone은 L6(Variant)이고 hover는 L4(Interactive) — SRP 충돌.
+
+**해결:** L6이 값을 선언하고, L4가 상태 전환만 소유한다.
+
+```css
+/* L6: Variant — hover 시 쓸 값을 선언 (module.css) */
+.primary {
+  --_bg: var(--tone-primary-base);
+  --_bg-hover: var(--tone-primary-hover);
+  --_fg: var(--tone-primary-foreground);
+  background: var(--_bg);
+  color: var(--_fg);
+}
+
+/* L4: Interactive — 상태 전환 타이밍만 소유 (interactive.css) */
+button:hover { background: var(--_bg-hover); }
+```
+
+**원칙:** 상태 전환 타이밍은 L4, 시각적 값은 L6. `--_` 접두사로 스코프.
+
+### module.css 작성 규칙
+
+module.css에는 **Structure(L5) + Variant(L6)만** 작성한다. 상태 스타일은 금지.
+
+```css
+/* Button.module.css — Structure + Variant만 */
+
+/* L5: Structure */
+.root {
+  border-radius: var(--shape-md-radius);
+  padding: var(--shape-md-py) var(--shape-md-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+/* L6: Variant */
+.primary {
+  --_bg: var(--tone-primary-base);
+  --_bg-hover: var(--tone-primary-hover);
+  --_fg: var(--tone-primary-foreground);
+  background: var(--_bg);
+  color: var(--_fg);
+}
+
+/* ❌ 금지 — 아래는 L4 Interactive의 책임 */
+/* .root:hover { } */
+/* .root:focus { } */
+/* .root:disabled { } */
+```
 
 ### structure.css — atomic class (닫힌 체계)
 
@@ -203,16 +279,16 @@ tokens.css 4→8→12→16→24→32→40은 충분. claude.ai도 비슷한 scal
 - 정의된 class만 사용 가능. JIT 없음, escape hatch 없음
 - 부족하면 class를 추가 (토큰처럼 스케일 확장)
 
-### components.css — ARIA 상태 스타일 (:where() 기본값)
+### interactive.css — ARIA 인터랙션 정책 (:where() 기본값)
 
 - 모든 셀렉터를 `:where()`로 래핑 → specificity (0,0,0)
 - "기본값 제공자" 역할 — module.css의 아무 셀렉터도 이김
-- **ARIA 상태만** 제공 (hover, focus, selected, disabled)
-- 구조는 제공하지 않음 — 소비자가 atomic class로 조립
+- **상태 + ARIA 컴포넌트 구조** 제공 (hover, focus, selected, disabled, item parts, grid, tree depth)
+- Focus rule (Apple HIG): Collection 아이템 = bg highlight, 독립 요소 = outline ring
 
 ### component class convention — `item-{part}`
 
-components.css에서 className으로 제공하는 class의 네이밍 규칙.
+interactive.css에서 className으로 제공하는 class의 네이밍 규칙.
 daisyUI `{component}-{part}` 패턴 참조.
 
 **2단 게이트 (class 생성 판단):**
@@ -248,7 +324,8 @@ class를 만들려 한다
 | raw 수치 (6px, #fff) | 토큰 (var(--space-sm)) | 디자인 시스템 일관성 |
 | margin | gap | 부모가 간격 제어 |
 | module.css에 display:flex/grid | structure.css atomic class | 구조는 DOM과 co-locate |
-| components.css에 :where() 없는 셀렉터 | :where() 래핑 | specificity 군비경쟁 방지 |
+| module.css에 :hover/:focus/:disabled | interactive.css에 위임 | L4 SRP — 상태는 글로벌 정책 |
+| interactive.css에 :where() 없는 셀렉터 | :where() 래핑 | specificity 군비경쟁 방지 |
 | palette 직접 참조 (--blue-600) | semantic 토큰 (--tone-primary-base) | 테마 독립성 |
 | 구조/위치 이름의 class (inner, wrapper) | atomic class 조합 | 역할을 말하지 않음 |
 

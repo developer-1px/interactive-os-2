@@ -15,6 +15,9 @@ import { join } from 'node:path'
 
 const baseUrl = process.env.BASE_URL || 'http://localhost:5173'
 
+const globalInteractiveCssPath = join(process.cwd(), 'src/styles/interactive.css')
+const globalInteractiveCss = existsSync(globalInteractiveCssPath) ? readFileSync(globalInteractiveCssPath, 'utf-8') : ''
+
 const chromePaths = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
@@ -362,12 +365,9 @@ async function checkHoverViaCSS(cssResults) {
   const uiDir = join(process.cwd(), 'src/interactive-os/ui')
   const hoverResults = {}
 
-  // Also check global components.css which has role-based :hover rules
-  const globalCss = join(process.cwd(), 'src/styles/components.css')
-  const globalContent = existsSync(globalCss) ? readFileSync(globalCss, 'utf-8') : ''
   // Roles covered by global :hover rules
   const globalHoverRoles = new Set()
-  const globalHoverMatch = globalContent.matchAll(/\[role="(\w+)"\]:hover/g)
+  const globalHoverMatch = globalInteractiveCss.matchAll(/\[role="(\w+)"\]:hover/g)
   for (const m of globalHoverMatch) {
     globalHoverRoles.add(m[1])
   }
@@ -480,12 +480,10 @@ async function main() {
       focusVisible: data.focusVisible.fail === 0 && data.focusVisible.pass > 0 ? 'PASS' : data.focusVisible.pass === 0 && data.focusVisible.fail === 0 ? 'SKIP' : 'FAIL',
     }
 
-    // focusVisible fallback: if components.css has :focus rules for the roles, treat as PASS
+    // focusVisible fallback: if interactive.css has :focus rules for the roles, treat as PASS
     // (runtime focus() can't trigger engine-managed data-focused attributes)
     const cssComps = cardToCssComponents[cardName] || []
     if (comp.focusVisible === 'FAIL') {
-      const globalCssPath = join(process.cwd(), 'src/styles/components.css')
-      const globalCss = existsSync(globalCssPath) ? readFileSync(globalCssPath, 'utf-8') : ''
       const componentRoles = {
         TabList: ['tab'], Combobox: ['option'], Grid: ['row'],
         NavList: ['option'], ListBox: ['option'], MenuList: ['menuitem'],
@@ -496,7 +494,7 @@ async function main() {
         Toggle: ['switch'], ToggleGroup: ['button'],
       }
       const roles = cssComps.flatMap(c => componentRoles[c] || [])
-      const hasFocusRule = roles.some(r => new RegExp(`\\[role="${r}"\\]:focus`).test(globalCss))
+      const hasFocusRule = roles.some(r => new RegExp(`\\[role="${r}"\\]:focus`).test(globalInteractiveCss))
       if (hasFocusRule) {
         comp.focusVisible = 'PASS'
         delete comp.details?.focusVisible

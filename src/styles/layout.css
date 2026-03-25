@@ -109,6 +109,11 @@
 .page-content > *,
 .sidebar-layout > * {
   min-width: 0;
+  min-height: 0;
+}
+
+.page-content > * {
+  flex: 1;
 }
 
 .page {
@@ -179,7 +184,7 @@
   background: var(--bg-hover);
 }
 
-/* sidebar-link active/focus state handled by components.css ARIA selectors */
+/* sidebar-link active/focus state handled by interactive.css ARIA selectors */
 
 .badge-wip {
   font-family: var(--mono);

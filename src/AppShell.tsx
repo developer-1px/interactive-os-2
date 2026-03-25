@@ -15,11 +15,13 @@ import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { routeConfig } from './routeConfig'
 
-import './styles/tokens.css'
-import './styles/structure.css'
-import './styles/components.css'
-import './styles/layout.css'
-import './styles/app.css'
+import './styles/reset.css'        // L1: Browser initialization
+import './styles/tokens.css'       // L2: Design token values
+import './styles/structure.css'    // L2.5: Atomic layout classes
+import './styles/surface.css'      // L3: Surface elevation bundles
+import './styles/interactive.css'  // L4: Interaction policy (hover, focus, disabled...)
+import './styles/layout.css'       // App layout (sidebar, page grid)
+import './styles/app.css'          // App-level utilities
 
 // --- Vertical toolbar behavior ---
 
