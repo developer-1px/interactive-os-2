@@ -209,7 +209,9 @@ export default function AppShell() {
           </div>
         </Aria>
       </nav>
-      <Outlet />
+      <div className="page-content">
+        <Outlet />
+      </div>
       <FileViewerModal
         filePath={previewFile?.path ?? null}
         highlightLines={previewFile?.line ? new Set([previewFile.line]) : undefined}
