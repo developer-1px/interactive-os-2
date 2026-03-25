@@ -52,10 +52,62 @@
   flex-wrap: wrap;
 }
 
+/* Expandable treeitems: disable bg transition to prevent flash
+   during the handoff between treeitem ↔ :first-child */
+[data-aria-container] [role="treeitem"][aria-expanded] {
+  transition: none;
+}
+
+/* Expanded treeitem: transparent layout container.
+   First child (label row) takes over visual responsibility.
+   Uses :first-child to be renderItem-agnostic (.item-inner or custom). */
+[data-aria-container] [role="treeitem"][aria-expanded="true"] {
+  padding: 0;
+  background: transparent !important;
+  outline: none !important;
+}
+
+[data-aria-container] [role="treeitem"][aria-expanded="true"] > :first-child {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--shape-md-radius);
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+/* Expanded treeitem: redirect hover to label row */
+[data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"]:hover > :first-child {
+  background: var(--bg-hover);
+}
+
+/* Expanded treeitem: redirect focus (active) to label row */
+[data-aria-container]:focus-within [role="treeitem"][aria-expanded="true"]:focus > :first-child,
+[data-aria-container]:focus-within [role="treeitem"][aria-expanded="true"][data-focused] > :first-child {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+  outline-color: var(--focus);
+}
+
+/* Expanded treeitem: redirect focus (idle) to label row */
+[data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"]:focus > :first-child,
+[data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"][data-focused] > :first-child {
+  background: var(--focus-idle);
+}
+
+/* Expanded treeitem: redirect active press to label row */
+[data-aria-container] [role="treeitem"][aria-expanded="true"]:active > :first-child {
+  background: var(--tone-primary-bright);
+}
+
 /* Nested group wraps below the item label */
 [data-aria-container] [role="treeitem"] > [role="group"] {
   flex-basis: 100%;
-  padding: 0;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  /* padding-left preserved — tree indentation uses it */
 }
 
 /* Accordion heading */
@@ -210,6 +262,40 @@
 [data-aria-container]:focus-within [aria-selected="true"][data-focused],
 [data-aria-container]:focus-within [aria-checked="true"][data-focused] {
   outline-color: var(--focus);
+}
+
+/* ── Disabled ── */
+
+[data-aria-container] [aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Disabled + Selected: preserve selection tint, apply dimming */
+[data-aria-container] [aria-disabled="true"][aria-selected="true"],
+[data-aria-container] [aria-disabled="true"][aria-checked="true"] {
+  background: var(--selection);
+  opacity: 0.4;
+}
+
+/* Standalone disabled (buttons, inputs outside collections) */
+:disabled,
+[aria-disabled="true"]:not([role="option"]):not([role="treeitem"]):not([role="menuitem"]):not([role="tab"]):not([role="row"]):not([role="radio"]):not([role="switch"]) {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── Invalid (input error state) ── */
+
+[aria-invalid="true"] {
+  border-color: var(--tone-destructive-base);
+}
+
+[aria-invalid="true"]:focus {
+  border-color: var(--tone-destructive-base);
+  outline-color: var(--tone-destructive-base);
 }
 
 /* ── Expanded chevron rotation ── */
