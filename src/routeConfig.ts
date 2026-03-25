@@ -1,15 +1,7 @@
 import { Database, Cog, Axe, Puzzle, Box, Layers, BookOpen } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-import PageCrud from './pages/PageCrud'
-import PageClipboard from './pages/PageClipboard'
-import PageHistoryDemo from './pages/PageHistoryDemo'
-import PageDnd from './pages/PageDnd'
-import PageTypeahead from './pages/PageTypeahead'
-import PageRename from './pages/PageRename'
 import PageStoreInspector from './pages/PageStoreInspector'
-import PageEngineCommand from './pages/PageEngineCommand'
-import PageEngineDiff from './pages/PageEngineDiff'
 import PageAreaViewer from './pages/PageAreaViewer'
 
 export interface RouteItem {
@@ -44,8 +36,8 @@ export const routeConfig: RouteGroup[] = [
     icon: Cog,
     basePath: '/internals/engine/command',
     items: [
-      { path: 'command', label: 'Command', status: 'ready', component: PageEngineCommand },
-      { path: 'diff', label: 'Diff', status: 'ready', component: PageEngineDiff },
+      { path: 'command', label: 'Command', status: 'ready', component: PageAreaViewer },
+      { path: 'diff', label: 'Diff', status: 'ready', component: PageAreaViewer },
     ],
   },
   {
@@ -54,12 +46,12 @@ export const routeConfig: RouteGroup[] = [
     icon: Puzzle,
     basePath: '/internals/plugins/crud',
     items: [
-      { path: 'crud', label: 'CRUD', status: 'ready', component: PageCrud },
-      { path: 'clipboard', label: 'Clipboard', status: 'ready', component: PageClipboard },
-      { path: 'history', label: 'History', status: 'ready', component: PageHistoryDemo },
-      { path: 'dnd', label: 'DnD', status: 'ready', component: PageDnd },
-      { path: 'rename', label: 'Rename', status: 'ready', component: PageRename },
-      { path: 'typeahead', label: 'Typeahead', status: 'ready', component: PageTypeahead },
+      { path: 'crud', label: 'CRUD', status: 'ready', component: PageAreaViewer },
+      { path: 'clipboard', label: 'Clipboard', status: 'ready', component: PageAreaViewer },
+      { path: 'history', label: 'History', status: 'ready', component: PageAreaViewer },
+      { path: 'dnd', label: 'DnD', status: 'ready', component: PageAreaViewer },
+      { path: 'rename', label: 'Rename', status: 'ready', component: PageAreaViewer },
+      { path: 'typeahead', label: 'Typeahead', status: 'ready', component: PageAreaViewer },
     ],
   },
   {
@@ -68,12 +60,12 @@ export const routeConfig: RouteGroup[] = [
     icon: Axe,
     basePath: '/internals/axis/navigate',
     items: [
-      { path: 'navigate', label: 'navigate()', status: 'ready', md: 'axis/navigate' },
-      { path: 'select', label: 'select()', status: 'ready', md: 'axis/select' },
-      { path: 'activate', label: 'activate()', status: 'ready', md: 'axis/activate' },
-      { path: 'expand', label: 'expand()', status: 'ready', md: 'axis/expand' },
-      { path: 'dismiss', label: 'dismiss()', status: 'ready', md: 'axis/dismiss' },
-      { path: 'tab', label: 'tab()', status: 'ready', md: 'axis/tab' },
+      { path: 'navigate', label: 'navigate()', status: 'ready', component: PageAreaViewer },
+      { path: 'select', label: 'select()', status: 'ready', component: PageAreaViewer },
+      { path: 'activate', label: 'activate()', status: 'ready', component: PageAreaViewer },
+      { path: 'expand', label: 'expand()', status: 'ready', component: PageAreaViewer },
+      { path: 'dismiss', label: 'dismiss()', status: 'ready', component: PageAreaViewer },
+      { path: 'tab', label: 'tab()', status: 'ready', component: PageAreaViewer },
     ],
   },
   {
@@ -82,7 +74,7 @@ export const routeConfig: RouteGroup[] = [
     icon: Layers,
     basePath: '/internals/pattern/edit',
     items: [
-      { path: 'edit', label: 'edit()', status: 'ready', md: 'pattern/edit' },
+      { path: 'edit', label: 'edit()', status: 'ready', component: PageAreaViewer },
     ],
   },
   {

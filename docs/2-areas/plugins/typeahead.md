@@ -2,6 +2,10 @@
 
 > APG 표준 type-a-character: 문자 입력 시 해당 항목으로 포커스 이동
 
+```tsx render
+<TypeaheadDemo />
+```
+
 ## 커맨드
 
 (없음 — typeahead는 커맨드를 추가하지 않고 `onUnhandledKey` 로 동작)
