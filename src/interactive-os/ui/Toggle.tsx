@@ -15,15 +15,14 @@ interface ToggleProps {
   renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
-  const checked = state.expanded ?? false
   return (
     <div {...props} className="flex-row items-center justify-between">
       <span>{label}</span>
-      <span className={checked ? styles.indicatorOn : styles.indicator}>{checked ? 'On' : 'Off'}</span>
+      <span className="item-indicator--toggle">On</span>
     </div>
   )
 }
