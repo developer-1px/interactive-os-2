@@ -2,13 +2,13 @@
 
 .root {
   grid-column: 2 / -1;
-  padding: var(--space-2xl) var(--space-2xl) var(--space-3xl);
+  padding: var(--space-3xl) var(--space-2xl) 80px;
   overflow-y: auto;
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3xl);
+  gap: 56px;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 /* ══ Page headings ══ */
@@ -36,7 +36,7 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xl);
+  gap: var(--space-3xl);
 }
 
 .specimen {
@@ -46,11 +46,11 @@
 }
 
 .specimenTitle {
-  font-size: var(--type-section-size);
-  font-weight: var(--type-section-weight);
-  font-family: var(--type-section-family);
-  line-height: var(--type-section-line-height);
-  color: var(--text-secondary);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   margin: 0;
 }
 
@@ -58,21 +58,32 @@
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   color: var(--text-muted);
-  margin: 0;
+  margin: var(--space-lg) 0 0;
 }
 
-/* ── Swatch row (shared horizontal layout) ── */
+/* ── Shared ── */
 
-.swatchRow {
-  display: flex;
-  gap: var(--space-lg);
-  flex-wrap: wrap;
+.swatchRow6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-md);
+}
+
+.swatchRow5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-md);
+}
+
+.swatchRow3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
 }
 
 .swatchItem {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--space-xs);
 }
 
@@ -88,20 +99,18 @@
   color: var(--text-muted);
 }
 
-/* ── Surface specimen ── */
+/* ── Surface ── */
 
 .surfaceSwatch {
-  width: 64px;
-  height: 64px;
+  aspect-ratio: 1.4;
   border-radius: var(--shape-sm-radius);
   border: 1px solid var(--border-subtle);
 }
 
-/* ── Shape specimen ── */
+/* ── Shape ── */
 
 .shapeBox {
-  min-width: 48px;
-  min-height: 48px;
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,104 +120,104 @@
   color: var(--text-primary);
 }
 
-/* ── Type specimen ── */
+/* ── Type ── */
 
 .typeStack {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 0;
 }
 
 .typeRow {
   display: flex;
   align-items: baseline;
-  gap: var(--space-xl);
+  justify-content: space-between;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.typeRow:first-child {
+  padding-top: 0;
 }
 
 .typeSample {
   color: var(--text-primary);
-  min-width: 200px;
 }
 
-/* ── Tone specimen ── */
+/* ── Tone ── */
 
 .toneGrid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
+  display: grid;
+  grid-template-columns: 88px repeat(6, 1fr);
+  gap: var(--space-sm);
+  align-items: center;
 }
 
 .toneHeaderRow {
-  display: flex;
-  gap: var(--space-xs);
+  display: contents;
 }
 
 .toneCorner {
-  width: 80px;
-  flex-shrink: 0;
+  /* grid cell */
 }
 
 .toneHeader {
-  width: 40px;
-  text-align: center;
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
+  text-align: center;
+  padding-bottom: var(--space-xs);
 }
 
 .toneRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
+  display: contents;
 }
 
 .toneRowLabel {
-  width: 80px;
-  flex-shrink: 0;
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
 }
 
 .toneCell {
-  width: 40px;
   display: flex;
   justify-content: center;
 }
 
 .toneSwatch {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 100%;
+  height: 36px;
+  border-radius: var(--shape-xs-radius);
   border: 1px solid var(--border-subtle);
 }
 
 .toneEmpty {
   font-size: var(--type-caption-size);
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ── Motion specimen ── */
+/* ── Motion ── */
 
 .motionTrack {
-  width: 120px;
-  height: 32px;
+  height: 40px;
   background: var(--surface-sunken);
   border-radius: var(--shape-sm-radius);
-  position: relative;
   cursor: pointer;
   overflow: hidden;
 }
 
 .motionBox {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   background: var(--tone-primary-base);
   border-radius: var(--shape-xs-radius);
   transition-property: transform;
 }
 
-/* ── Independent axes specimens ── */
+/* ── Independent axes ── */
 
 .weightSample {
   font-size: var(--type-page-size);
@@ -218,7 +227,6 @@
 .leadingSample {
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
-  width: 80px;
 }
 
 .colorSample {
@@ -227,8 +235,7 @@
 }
 
 .borderSwatch {
-  width: 48px;
-  height: 48px;
+  aspect-ratio: 1.4;
   border: 2px solid;
   border-radius: var(--shape-sm-radius);
 }
@@ -236,7 +243,7 @@
 .spacingRow {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
 }
 
 .spacingItem {
@@ -246,13 +253,13 @@
 }
 
 .spacingBar {
-  height: 8px;
+  height: 10px;
   background: var(--tone-primary-base);
   border-radius: var(--shape-xs-radius);
   min-width: 4px;
 }
 
-/* ══ Scenario cards (unchanged layout) ══ */
+/* ══ Scenario cards ══ */
 
 .grid {
   display: grid;
@@ -286,8 +293,6 @@
   flex: 1;
   min-width: 0;
 }
-
-/* ── Toast trigger ── */
 
 .toastTrigger {
   padding: var(--space-xs) var(--space-md);
