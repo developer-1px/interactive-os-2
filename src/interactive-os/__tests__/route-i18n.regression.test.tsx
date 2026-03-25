@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Grid } from '../ui/Grid'
@@ -114,6 +114,42 @@ function getVisibleRowCount(container: HTMLElement): number {
 
 describe('Route /i18n — i18n Editor user scenarios', () => {
   beforeEach(() => resetClipboard())
+
+  describe('Scenario: gridcell 클릭 후 키보드 동작', () => {
+    it('셀(gridcell) 포커스 후 ArrowDown으로 행 이동', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<I18nEditor initialData={makeI18nData()} />)
+
+      // 셀(gridcell)에 직접 포커스 — 브라우저에서 셀 클릭 시와 동일
+      const firstRowCells = container.querySelectorAll('[data-node-id="row-1"] [role="gridcell"]')
+      act(() => (firstRowCells[1] as HTMLElement).focus())
+
+      // 셀이 포커스를 받으면 row의 onFocus가 버블링으로 focusedId를 갱신해야 한다
+      expect(getFocusedRowId(container)).toBe('row-1')
+
+      // ArrowDown — 셀에서 버블된 keydown이 row에서 처리되어야 한다
+      await user.keyboard('{ArrowDown}')
+      expect(getFocusedRowId(container)).toBe('row-2')
+    })
+
+    it('셀(gridcell) 포커스 후 ArrowRight로 열 이동', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<I18nEditor initialData={makeI18nData()} />)
+
+      const firstRowCells = container.querySelectorAll('[data-node-id="row-1"] [role="gridcell"]')
+      act(() => (firstRowCells[0] as HTMLElement).focus())
+
+      expect(getFocusedRowId(container)).toBe('row-1')
+
+      // ArrowRight로 열 이동
+      await user.keyboard('{ArrowRight}')
+
+      // col 1(ko)이 활성 셀이어야 한다
+      const focusedRow = container.querySelector('[role="row"][tabindex="0"]')
+      const cells = focusedRow?.querySelectorAll('[role="gridcell"]')
+      expect(cells?.[1]?.getAttribute('tabindex')).toBe('0')
+    })
+  })
 
   describe('Scenario: 번역가가 빈 셀을 찾아 번역을 입력한다', () => {
     it('ArrowDown으로 행 이동 → ArrowRight로 빈 EN 열 이동 → F2 편집 → Enter 확인', async () => {

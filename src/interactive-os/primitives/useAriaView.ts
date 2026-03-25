@@ -226,7 +226,12 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       }
 
       baseProps.onFocus = (event: FocusEvent) => {
-        if (event.target !== event.currentTarget) return
+        if (event.target !== event.currentTarget) {
+          const target = event.target as HTMLElement
+          // Allow focus from non-item children (e.g. gridcells),
+          // but ignore focus from nested node-items.
+          if (target.closest(`[${nodeIdAttr}]`) !== event.currentTarget) return
+        }
         if (id !== focusedId) {
           engine.dispatch(focusCommands.setFocus(id))
         }
@@ -236,7 +241,14 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         baseProps.tabIndex = behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
         baseProps.onKeyDown = (event: KeyboardEvent) => {
           if (event.defaultPrevented) return
-          if (event.target !== event.currentTarget) return
+          if (event.target !== event.currentTarget) {
+            const target = event.target as HTMLElement
+            // Allow bubbled events from non-item children (e.g. gridcells),
+            // but reject events from nested node-items (separate keyboard owners).
+            if (target.closest(`[${nodeIdAttr}]`) !== event.currentTarget) return
+            // Don't intercept keys meant for editable children (contentEditable, input).
+            if (isEditableElement(target)) return
+          }
           handleKeyDown(event)
         }
       }
