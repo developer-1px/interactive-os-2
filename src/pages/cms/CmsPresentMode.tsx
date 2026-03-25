@@ -22,6 +22,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
 
   const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
     Escape: () => { onExit() },
+    'Mod+\\': () => { onExit() },
   }), [onExit])
 
   const { containerProps } = useAria({

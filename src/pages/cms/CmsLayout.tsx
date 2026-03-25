@@ -25,6 +25,12 @@ import { ROOT_ID } from '../../interactive-os/store/types'
 import type { Plugin } from '../../interactive-os/plugins/types'
 import { childRules, nodeSchemas } from './cms-schema'
 import { zodSchema } from '../../interactive-os/plugins/zodSchema'
+import { useAria } from '../../interactive-os/primitives/useAria'
+import type { KeyMap } from '../../interactive-os/axis/types'
+
+import type { NormalizedData } from '../../interactive-os/store/types'
+
+const EMPTY_DATA: NormalizedData = { entities: {}, relationships: { [ROOT_ID]: [] } }
 
 const sharedPlugins: Plugin[] = [
   history(),
@@ -41,9 +47,20 @@ export default function CmsLayout() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [i18nSheetOpen, setI18nSheetOpen] = useState(false)
   const [presenting, setPresenting] = useState(false)
+  const presentingRef = useRef(false)
+  presentingRef.current = presenting
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
+
+  const cmsGlobalKeyMap = useMemo((): KeyMap => ({
+    'Mod+\\': () => { if (!presentingRef.current) setPresenting(true) },
+  }), [])
+
+  const { containerProps: globalKeyMapProps } = useAria({
+    data: EMPTY_DATA,
+    keyMap: cmsGlobalKeyMap,
+  })
 
   const sidebarResizer = useResizer({
     defaultSize: 120, minSize: 80, maxSize: 300, step: 10,
@@ -84,7 +101,7 @@ export default function CmsLayout() {
   }, [canvasFocusedId, sidebarSections])
 
   return (
-    <div className="cms-layout">
+    <div className="cms-layout" {...(globalKeyMapProps as React.HTMLAttributes<HTMLDivElement>)}>
       <div className="cms-body">
         <CmsSidebar
           engine={engine}

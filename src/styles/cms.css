@@ -63,10 +63,11 @@
 }
 .cms-sidebar__list:focus { outline: none; }
 
-.cms-sidebar__thumb {
+.cms-sidebar__list .cms-sidebar__thumb {
   width: 100%;
   border-radius: var(--shape-md-radius);
   border: 2px solid transparent;
+  padding: 0;
   cursor: pointer; position: relative;
   background: var(--surface-default);
   flex-shrink: 0;
