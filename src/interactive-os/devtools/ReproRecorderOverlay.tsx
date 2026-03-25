@@ -53,17 +53,14 @@ export function ReproRecorderOverlay() {
       setRecording(false)
       clearInterval(intervalRef.current)
       setElapsed(0)
-      const json = JSON.stringify(data, null, 2)
-      navigator.clipboard.writeText(json).then(() => {
+      navigator.clipboard.writeText(data.text).then(() => {
         console.log(
-          '%c■ REC STOP %c %d events captured (%d input, %d state, %d console) — copied to clipboard',
+          '%c■ REC STOP %c %d events — copied to clipboard (LLM-readable text)',
           'background:#ef4444;color:#fff;padding:2px 6px;border-radius:3px;font-weight:bold',
           '',
           data.meta.eventCount,
-          data.meta.channels.input,
-          data.meta.channels.state,
-          data.meta.channels.console,
         )
+        console.log(data.text)
       })
     } else {
       recorder.start()
