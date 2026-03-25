@@ -9,6 +9,8 @@ import EditDemo from './axis/EditDemo'
 import { ShowcaseDemo } from './ShowcaseDemo'
 import { ApgKeyboardTable } from './ApgKeyboardTable'
 import AriaListboxDemo from './AriaListboxDemo'
+import CellGridDemo from './CellGridDemo'
+import HooksListDemo from './HooksListDemo'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mdComponents: Record<string, ComponentType<any>> = {
@@ -22,4 +24,6 @@ export const mdComponents: Record<string, ComponentType<any>> = {
   ShowcaseDemo,
   ApgKeyboardTable,
   AriaListboxDemo,
+  CellGridDemo,
+  HooksListDemo,
 }

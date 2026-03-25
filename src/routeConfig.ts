@@ -7,8 +7,6 @@ import PageHistoryDemo from './pages/PageHistoryDemo'
 import PageDnd from './pages/PageDnd'
 import PageTypeahead from './pages/PageTypeahead'
 import PageRename from './pages/PageRename'
-import PageCell from './pages/PageCell'
-import PageHooks from './pages/PageHooks'
 import PageStoreInspector from './pages/PageStoreInspector'
 import PageEngineCommand from './pages/PageEngineCommand'
 import PageEngineDiff from './pages/PageEngineDiff'
@@ -94,8 +92,8 @@ export const routeConfig: RouteGroup[] = [
     basePath: '/internals/primitives/aria',
     items: [
       { path: 'aria', label: 'Aria', status: 'ready', component: PageAreaViewer },
-      { path: 'cell', label: 'Cell', status: 'ready', component: PageCell },
-      { path: 'hooks', label: 'Hooks', status: 'ready', component: PageHooks },
+      { path: 'cell', label: 'Cell', status: 'ready', component: PageAreaViewer },
+      { path: 'hooks', label: 'Hooks', status: 'ready', component: PageAreaViewer },
     ],
   },
   {
