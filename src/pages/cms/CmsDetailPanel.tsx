@@ -9,24 +9,50 @@ import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
 import { CMS_ICONS, CMS_ICON_MAP } from './cmsIcons'
 import { CmsIcon } from './cms-renderers'
+import { LOCALES } from './cms-types'
+import { Sheet } from 'lucide-react'
 
 interface CmsDetailPanelProps {
   engine: CommandEngine
   store: NormalizedData
   focusedNodeId: string
   locale: Locale
+  onLocaleChange: (locale: Locale) => void
+  i18nSheetOpen: boolean
+  onI18nSheetToggle: () => void
   style?: React.CSSProperties
 }
 
-export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, style }: CmsDetailPanelProps) {
+export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, onLocaleChange, i18nSheetOpen, onI18nSheetToggle, style }: CmsDetailPanelProps) {
   const groups = useMemo(
     () => focusedNodeId ? collectEditableGroups(store, focusedNodeId, locale) : [],
     [store, focusedNodeId, locale],
   )
 
+  const localeBar = (
+    <div className="cms-detail-panel__locale-bar">
+      <select
+        className="cms-detail-panel__locale"
+        value={locale}
+        onChange={e => onLocaleChange(e.target.value as Locale)}
+      >
+        {LOCALES.map(l => <option key={l} value={l}>{l}</option>)}
+      </select>
+      <button
+        className={`cms-detail-panel__i18n-btn${i18nSheetOpen ? ' cms-detail-panel__i18n-btn--active' : ''}`}
+        onClick={onI18nSheetToggle}
+        title="Translation sheet"
+        type="button"
+      >
+        <Sheet size={14} />
+      </button>
+    </div>
+  )
+
   if (groups.length === 0) {
     return (
       <div className="cms-detail-panel" style={style}>
+        {localeBar}
         <div className="cms-detail-panel__empty">
           {focusedNodeId ? 'No editable fields' : 'Select a node'}
         </div>
@@ -39,6 +65,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, s
     const data = (entity?.data ?? {}) as Record<string, unknown>
     return (
       <div className="cms-detail-panel" style={style}>
+        {localeBar}
         <div className="cms-detail-panel__header">
           <span className="cms-detail-panel__type">{data.type as string}</span>
         </div>
@@ -60,6 +87,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, s
 
   return (
     <div className="cms-detail-panel" style={style}>
+      {localeBar}
       <div className="cms-detail-panel__groups">
         {groups.map((group) => (
           <DetailGroup
