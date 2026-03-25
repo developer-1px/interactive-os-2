@@ -1,82 +1,264 @@
+/* ② 2026-03-25-design-primitives-preview-prd.md */
+
 .root {
   grid-column: 2 / -1;
-  display: flex;
-  height: 100%;
-  overflow: hidden;
-}
-
-/* ══ Controls panel ══ */
-
-.controls {
-  width: 240px;
-  flex-shrink: 0;
-  padding: var(--space-xl) var(--space-lg);
+  padding: var(--space-2xl) var(--space-2xl) var(--space-3xl);
   overflow-y: auto;
-  background: var(--surface-sunken);
-  border-right: 1px solid var(--border-subtle);
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  gap: var(--space-3xl);
+}
+
+/* ══ Page headings ══ */
+
+.pageTitle {
+  font-size: var(--type-page-size);
+  font-weight: var(--type-page-weight);
+  font-family: var(--type-page-family);
+  line-height: var(--type-page-line-height);
+  color: var(--text-bright);
+  margin: 0;
+}
+
+.sectionHeading {
+  font-size: var(--type-section-size);
+  font-weight: var(--type-section-weight);
+  font-family: var(--type-section-family);
+  line-height: var(--type-section-line-height);
+  color: var(--text-bright);
+  margin: 0;
+}
+
+/* ══ Specimens ══ */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+.specimen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.specimenTitle {
+  font-size: var(--type-section-size);
+  font-weight: var(--type-section-weight);
+  font-family: var(--type-section-family);
+  line-height: var(--type-section-line-height);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.subTitle {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Swatch row (shared horizontal layout) ── */
+
+.swatchRow {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.swatchItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.swatchLabel {
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  color: var(--text-secondary);
+}
+
+.swatchMeta {
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+}
+
+/* ── Surface specimen ── */
+
+.surfaceSwatch {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--shape-sm-radius);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ── Shape specimen ── */
+
+.shapeBox {
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  font-size: var(--type-body-size);
+  color: var(--text-primary);
+}
+
+/* ── Type specimen ── */
+
+.typeStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.typeRow {
+  display: flex;
+  align-items: baseline;
   gap: var(--space-xl);
 }
 
-.section {
+.typeSample {
+  color: var(--text-primary);
+  min-width: 200px;
+}
+
+/* ── Tone specimen ── */
+
+.toneGrid {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
 }
 
-.heading {
-  font-family: var(--sans);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-muted);
-  margin: 0;
-  padding: 0;
+.toneHeaderRow {
+  display: flex;
+  gap: var(--space-xs);
 }
 
-.tokenRow {
+.toneCorner {
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.toneHeader {
+  width: 40px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+}
+
+.toneRow {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-xs);
-  border-radius: var(--shape-xs-radius);
+  gap: var(--space-xs);
 }
 
-.tokenRow:hover {
-  background: var(--bg-hover);
-}
-
-.label {
+.toneRowLabel {
+  width: 80px;
+  flex-shrink: 0;
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
-  flex: 1;
 }
 
-.hex {
-  width: 64px;
+.toneCell {
+  width: 40px;
+  display: flex;
+  justify-content: center;
 }
 
-.valueInput {
+.toneSwatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+}
+
+.toneEmpty {
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+}
+
+/* ── Motion specimen ── */
+
+.motionTrack {
+  width: 120px;
+  height: 32px;
+  background: var(--surface-sunken);
+  border-radius: var(--shape-sm-radius);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.motionBox {
+  width: 32px;
+  height: 32px;
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-xs-radius);
+  transition-property: transform;
+}
+
+/* ── Independent axes specimens ── */
+
+.weightSample {
+  font-size: var(--type-page-size);
+  color: var(--text-primary);
+}
+
+.leadingSample {
+  font-size: var(--type-caption-size);
+  color: var(--text-secondary);
+  width: 80px;
+}
+
+.colorSample {
+  font-size: var(--type-page-size);
+  font-weight: var(--weight-semi);
+}
+
+.borderSwatch {
   width: 48px;
+  height: 48px;
+  border: 2px solid;
+  border-radius: var(--shape-sm-radius);
 }
 
-/* ══ Preview panel ══ */
-
-.preview {
-  flex: 1;
-  padding: var(--space-2xl);
-  overflow-y: auto;
+.spacingRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
+
+.spacingItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.spacingBar {
+  height: 8px;
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-xs-radius);
+  min-width: 4px;
+}
+
+/* ══ Scenario cards (unchanged layout) ══ */
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-xl);
-  max-width: 1200px;
 }
-
-/* ── Scenario card ── */
 
 .card {
   border-radius: var(--shape-xl-radius);
@@ -105,7 +287,7 @@
   min-width: 0;
 }
 
-/* ── Toast trigger (minimal) ── */
+/* ── Toast trigger ── */
 
 .toastTrigger {
   padding: var(--space-xs) var(--space-md);

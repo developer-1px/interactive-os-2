@@ -1,7 +1,7 @@
+// ② 2026-03-25-design-primitives-preview-prd.md
 import { useState, useCallback } from 'react'
 import styles from './PageThemeCreator.module.css'
 import { Button } from '../interactive-os/ui/Button'
-import { ColorInput } from '../interactive-os/ui/ColorInput'
 import { TextInput } from '../interactive-os/ui/TextInput'
 import { Accordion } from '../interactive-os/ui/Accordion'
 import { Breadcrumb } from '../interactive-os/ui/Breadcrumb'
@@ -38,42 +38,262 @@ import {
   makeTreeViewData,
 } from './showcaseFixtures'
 
-/* ── Token definitions ── */
+/* ══ Specimen data ══ */
 
-interface TokenControl {
-  variable: string
-  label: string
-  defaultValue: string
-  type: 'color' | 'text'
+const surfaceLevels = ['base', 'sunken', 'default', 'raised', 'overlay', 'outlined'] as const
+
+const shapeLevels = [
+  { name: 'xs', radius: '6px', py: '6px', px: '12px' },
+  { name: 'sm', radius: '6px', py: '6px', px: '16px' },
+  { name: 'md', radius: '10px', py: '0', px: '12px' },
+  { name: 'lg', radius: '12px', py: '20px', px: '20px' },
+  { name: 'xl', radius: '20px', py: '24px', px: '24px' },
+  { name: 'pill', radius: '9999px' },
+] as const
+
+const typeLevels = [
+  { name: 'hero', desc: '40 · 330 · Serif · 1.5' },
+  { name: 'display', desc: '32 · 400 · Serif · 1.3' },
+  { name: 'page', desc: '24 · 500 · Serif · 1.3' },
+  { name: 'section', desc: '16 · 600 · Sans · 1.4' },
+  { name: 'body', desc: '14 · 430 · Sans · 1.4' },
+  { name: 'caption', desc: '12 · 430 · Sans · 1.33' },
+] as const
+
+const toneNames = ['primary', 'destructive', 'success', 'warning', 'neutral'] as const
+const toneAxes = ['base', 'hover', 'dim', 'mid', 'bright', 'foreground'] as const
+const toneHasMidBright = new Set(['primary'])
+
+const motionLevels = [
+  { name: 'instant', desc: '75ms' },
+  { name: 'normal', desc: '150ms' },
+  { name: 'enter', desc: '150ms (decel)' },
+] as const
+
+const weightLevels = [
+  { name: 'light', value: 330 },
+  { name: 'regular', value: 400 },
+  { name: 'book', value: 430 },
+  { name: 'medium', value: 500 },
+  { name: 'semi', value: 600 },
+] as const
+
+const leadingLevels = [
+  { name: 'tight', value: 1.3 },
+  { name: 'snug', value: 1.4 },
+  { name: 'normal', value: 1.5 },
+  { name: 'relaxed', value: 1.75 },
+  { name: 'code', value: 1.6 },
+] as const
+
+const textColorLevels = ['bright', 'primary', 'secondary', 'muted'] as const
+const borderLevels = ['subtle', 'default', 'strong'] as const
+const spacingLevels = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as const
+
+/* ══ Specimens ══ */
+
+function SurfaceSpecimen() {
+  return (
+    <div className={styles.specimen}>
+      <h3 className={styles.specimenTitle}>Surface</h3>
+      <div className={styles.swatchRow}>
+        {surfaceLevels.map(level => (
+          <div key={level} className={styles.swatchItem}>
+            <div className={styles.surfaceSwatch} data-surface={level} />
+            <span className={styles.swatchLabel}>{level}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
-const surfaceTokens: TokenControl[] = [
-  { variable: '--surface-base', label: 'base', defaultValue: '#09090B', type: 'color' },
-  { variable: '--surface-sunken', label: 'sunken', defaultValue: '#18181B', type: 'color' },
-  { variable: '--surface-default', label: 'default', defaultValue: '#1F1F23', type: 'color' },
-  { variable: '--surface-raised', label: 'raised', defaultValue: '#27272A', type: 'color' },
-  { variable: '--surface-overlay', label: 'overlay', defaultValue: '#3F3F46', type: 'color' },
-]
-
-const semanticTokens: TokenControl[] = [
-  { variable: '--tone-primary-base', label: 'primary', defaultValue: '#2C84DB', type: 'color' },
-  { variable: '--focus', label: 'focus', defaultValue: '#4A9DE0', type: 'color' },
-  { variable: '--focus-idle', label: 'focus idle', defaultValue: '#2D2B28', type: 'color' },
-  { variable: '--selection', label: 'selection', defaultValue: '#1A2A3A', type: 'color' },
-  { variable: '--tone-destructive-base', label: 'destructive', defaultValue: '#E5484D', type: 'color' },
-]
-
-const layoutTokens: TokenControl[] = [
-  { variable: '--shape-xl-radius', label: 'radius', defaultValue: '20px', type: 'text' },
-]
-
-const allTokens = [...surfaceTokens, ...semanticTokens, ...layoutTokens]
-
-function getComputedToken(variable: string): string {
-  return getComputedStyle(document.documentElement).getPropertyValue(variable).trim()
+function ShapeSpecimen() {
+  return (
+    <div className={styles.specimen}>
+      <h3 className={styles.specimenTitle}>Shape</h3>
+      <div className={styles.swatchRow}>
+        {shapeLevels.map(level => (
+          <div key={level.name} className={styles.swatchItem}>
+            <div
+              className={styles.shapeBox}
+              style={{
+                borderRadius: `var(--shape-${level.name}-radius)`,
+                ...('py' in level ? { padding: `var(--shape-${level.name}-py) var(--shape-${level.name}-px)` } : {}),
+              }}
+            >
+              Aa
+            </div>
+            <span className={styles.swatchLabel}>{level.name}</span>
+            <span className={styles.swatchMeta}>{level.radius}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
-/* ── Scenario cards ── */
+function TypeSpecimen() {
+  return (
+    <div className={styles.specimen}>
+      <h3 className={styles.specimenTitle}>Type</h3>
+      <div className={styles.typeStack}>
+        {typeLevels.map(level => (
+          <div key={level.name} className={styles.typeRow}>
+            <span
+              className={styles.typeSample}
+              style={{
+                fontSize: `var(--type-${level.name}-size)`,
+                fontWeight: `var(--type-${level.name}-weight)`,
+                fontFamily: `var(--type-${level.name}-family)`,
+                lineHeight: `var(--type-${level.name}-line-height)`,
+              }}
+            >
+              {level.name}
+            </span>
+            <span className={styles.swatchMeta}>{level.desc}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ToneSpecimen() {
+  return (
+    <div className={styles.specimen}>
+      <h3 className={styles.specimenTitle}>Tone</h3>
+      <div className={styles.toneGrid}>
+        <div className={styles.toneHeaderRow}>
+          <span className={styles.toneCorner} />
+          {toneAxes.map(axis => (
+            <span key={axis} className={styles.toneHeader}>{axis}</span>
+          ))}
+        </div>
+        {toneNames.map(tone => (
+          <div key={tone} className={styles.toneRow}>
+            <span className={styles.toneRowLabel}>{tone}</span>
+            {toneAxes.map(axis => {
+              const hasTone = axis !== 'mid' && axis !== 'bright' || toneHasMidBright.has(tone)
+              return (
+                <span key={axis} className={styles.toneCell}>
+                  {hasTone ? (
+                    <span
+                      className={styles.toneSwatch}
+                      style={{ background: `var(--tone-${tone}-${axis})` }}
+                    />
+                  ) : (
+                    <span className={styles.toneEmpty}>—</span>
+                  )}
+                </span>
+              )
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function MotionSpecimen() {
+  const [active, setActive] = useState<string | null>(null)
+
+  const handleClick = useCallback((name: string) => {
+    setActive(name)
+    setTimeout(() => setActive(null), 600)
+  }, [])
+
+  return (
+    <div className={styles.specimen}>
+      <h3 className={styles.specimenTitle}>Motion</h3>
+      <div className={styles.swatchRow}>
+        {motionLevels.map(level => (
+          <div key={level.name} className={styles.swatchItem}>
+            <div
+              className={styles.motionTrack}
+              onClick={() => handleClick(level.name)}
+            >
+              <div
+                className={styles.motionBox}
+                style={{
+                  transitionDuration: `var(--motion-${level.name}-duration)`,
+                  transitionTimingFunction: `var(--motion-${level.name}-easing)`,
+                  transform: active === level.name ? 'translateX(80px)' : 'translateX(0)',
+                }}
+              />
+            </div>
+            <span className={styles.swatchLabel}>{level.name}</span>
+            <span className={styles.swatchMeta}>{level.desc}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function IndependentAxesSpecimen() {
+  return (
+    <div className={styles.specimen}>
+      <h3 className={styles.specimenTitle}>Independent Axes</h3>
+
+      <h4 className={styles.subTitle}>Weight</h4>
+      <div className={styles.swatchRow}>
+        {weightLevels.map(w => (
+          <div key={w.name} className={styles.swatchItem}>
+            <span className={styles.weightSample} style={{ fontWeight: `var(--weight-${w.name})` }}>Ag</span>
+            <span className={styles.swatchLabel}>{w.name}</span>
+            <span className={styles.swatchMeta}>{w.value}</span>
+          </div>
+        ))}
+      </div>
+
+      <h4 className={styles.subTitle}>Line-height</h4>
+      <div className={styles.swatchRow}>
+        {leadingLevels.map(l => (
+          <div key={l.name} className={styles.swatchItem}>
+            <span className={styles.leadingSample} style={{ lineHeight: `var(--leading-${l.name})` }}>
+              Line 1<br />Line 2<br />Line 3
+            </span>
+            <span className={styles.swatchLabel}>{l.name}</span>
+            <span className={styles.swatchMeta}>{l.value}</span>
+          </div>
+        ))}
+      </div>
+
+      <h4 className={styles.subTitle}>Text Color</h4>
+      <div className={styles.swatchRow}>
+        {textColorLevels.map(level => (
+          <div key={level} className={styles.swatchItem}>
+            <span className={styles.colorSample} style={{ color: `var(--text-${level})` }}>Aa</span>
+            <span className={styles.swatchLabel}>{level}</span>
+          </div>
+        ))}
+      </div>
+
+      <h4 className={styles.subTitle}>Border</h4>
+      <div className={styles.swatchRow}>
+        {borderLevels.map(level => (
+          <div key={level} className={styles.swatchItem}>
+            <div className={styles.borderSwatch} style={{ borderColor: `var(--border-${level})` }} />
+            <span className={styles.swatchLabel}>{level}</span>
+          </div>
+        ))}
+      </div>
+
+      <h4 className={styles.subTitle}>Spacing</h4>
+      <div className={styles.spacingRow}>
+        {spacingLevels.map(level => (
+          <div key={level} className={styles.spacingItem}>
+            <div className={styles.spacingBar} style={{ width: `var(--space-${level})` }} />
+            <span className={styles.swatchLabel}>{level}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Scenario cards (unchanged) ══ */
 
 const noop = () => {}
 const demoToaster = createToaster({ duration: 3000, maxToasts: 3 })
@@ -253,100 +473,36 @@ function FormCard() {
   )
 }
 
-/* ── Main ── */
+/* ══ Main ══ */
 
 export default function PageThemeCreator() {
-  const [values, setValues] = useState<Record<string, string>>(() => {
-    const initial: Record<string, string> = {}
-    for (const token of allTokens) {
-      const computed = getComputedToken(token.variable)
-      initial[token.variable] = computed || token.defaultValue
-    }
-    return initial
-  })
-
-  const handleChange = useCallback((variable: string, value: string) => {
-    document.documentElement.style.setProperty(variable, value)
-    setValues(prev => ({ ...prev, [variable]: value }))
-  }, [])
-
-  const handleReset = useCallback(() => {
-    for (const token of allTokens) {
-      document.documentElement.style.removeProperty(token.variable)
-    }
-    const fresh: Record<string, string> = {}
-    for (const token of allTokens) {
-      const computed = getComputedToken(token.variable)
-      fresh[token.variable] = computed || token.defaultValue
-    }
-    setValues(fresh)
-  }, [])
-
-  const renderTokenRow = (token: TokenControl) => (
-    <div key={token.variable} className={styles.tokenRow}>
-      {token.type === 'color' ? (
-        <>
-          <ColorInput
-            value={values[token.variable]}
-            onChange={e => handleChange(token.variable, e.target.value)}
-          />
-          <span className={styles.label}>{token.label}</span>
-          <TextInput
-            className={styles.hex}
-            value={values[token.variable]}
-            onChange={e => handleChange(token.variable, e.target.value)}
-            align="right"
-          />
-        </>
-      ) : (
-        <>
-          <span className={styles.label}>{token.label}</span>
-          <TextInput
-            className={styles.valueInput}
-            value={values[token.variable]}
-            onChange={e => handleChange(token.variable, e.target.value)}
-            align="right"
-          />
-        </>
-      )}
-    </div>
-  )
-
   return (
-    <div className={styles.root}>
-      <div className={styles.controls}>
-        <div className={styles.section}>
-          <span className={styles.heading}>Surface</span>
-          {surfaceTokens.map(renderTokenRow)}
-        </div>
+    <div className={styles.root} data-surface="base">
+      <h2 className={styles.pageTitle}>Design System</h2>
 
-        <div className={styles.section}>
-          <span className={styles.heading}>Color</span>
-          {semanticTokens.map(renderTokenRow)}
-        </div>
+      <section className={styles.section}>
+        <SurfaceSpecimen />
+        <ShapeSpecimen />
+        <TypeSpecimen />
+        <ToneSpecimen />
+        <MotionSpecimen />
+        <IndependentAxesSpecimen />
+      </section>
 
-        <div className={styles.section}>
-          <span className={styles.heading}>Layout</span>
-          {layoutTokens.map(renderTokenRow)}
-        </div>
+      <h2 className={styles.sectionHeading} id="components">Components</h2>
 
-        <Button variant="ghost" onClick={handleReset}>Reset to defaults</Button>
-      </div>
-
-      <div className={styles.preview} data-surface="base">
-        <div className={styles.grid}>
-          <BoardCard />
-          <PreferencesCard />
-          <DataViewCard />
-          <ExplorerCard />
-          <HierarchyCard />
-          <InputGroupCard />
-          <SidebarCard />
-          <ActionsCard />
-          <ConfirmCard />
-          <MenuCard />
-          <FormCard />
-        </div>
+      <div className={styles.grid}>
+        <BoardCard />
+        <PreferencesCard />
+        <DataViewCard />
+        <ExplorerCard />
+        <HierarchyCard />
+        <InputGroupCard />
+        <SidebarCard />
+        <ActionsCard />
+        <ConfirmCard />
+        <MenuCard />
+        <FormCard />
       </div>
     </div>
   )
