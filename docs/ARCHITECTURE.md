@@ -167,12 +167,22 @@ graph TB
     end
   end
 
+  subgraph DT["Devtools — cross-cutting · devtools/"]
+    direction LR
+    dt_rec["REC — ARIA tree 스냅샷 재현 녹화"]
+    dt_insp["Inspector — Store 라이브 탐색"]
+    dt_test["Test Runner — 브라우저 vitest"]
+  end
+
   L7 --> L6
   L6 --> L5
   L5 --> L4
   L4 --> L3
   L3 --> L2
   L2 --> L1
+  DT -.->|observes| L1
+  DT -.->|observes| L2
+  DT -.->|observes| L7
 
   style L7 fill:#fff8f0,stroke:#a85,stroke-width:2px
   style L6 fill:#fff8f0,stroke:#a85,stroke-width:2px
@@ -185,6 +195,7 @@ graph TB
   style L5_GAP fill:#fff3f3,stroke:#e55
   style L3_GAP fill:#fff3f3,stroke:#e55
   style L1_GAP fill:#fff3f3,stroke:#e55
+  style DT fill:#f5f0ff,stroke:#85a,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
 ## Layer Summary
@@ -199,6 +210,7 @@ graph TB
 | 🟠 | L6 Primitives | `primitives/` | 9 | Aria 컴포넌트 + hook + 레지스트리 | ❌ (React) |
 | 🟠 | L7 UI | `ui/` | 35 | 표준 UI 완성품 (15종+) | ❌ (React) |
 | 🔴 | 각 레이어 GAP | — | — | 안개 영역 | — |
+| ⚙️ | Devtools (cross-cutting) | `devtools/` | 11 | REC · Inspector · Test Runner | ❌ (브라우저) |
 
 **의존 방향:** L7 → L6 → L5 → L4 → L3 → L2 → L1 (단방향, 하위 레이어는 상위를 모름)
 
