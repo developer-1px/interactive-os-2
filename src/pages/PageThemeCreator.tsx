@@ -96,7 +96,7 @@ function SurfaceSpecimen() {
   return (
     <div className={styles.specimen}>
       <h3 className={styles.specimenTitle}>Surface</h3>
-      <div className={styles.swatchRow}>
+      <div className={styles.swatchRow6}>
         {surfaceLevels.map(level => (
           <div key={level} className={styles.swatchItem}>
             <div className={styles.surfaceSwatch} data-surface={level} />
@@ -112,7 +112,7 @@ function ShapeSpecimen() {
   return (
     <div className={styles.specimen}>
       <h3 className={styles.specimenTitle}>Shape</h3>
-      <div className={styles.swatchRow}>
+      <div className={styles.swatchRow6}>
         {shapeLevels.map(level => (
           <div key={level.name} className={styles.swatchItem}>
             <div
@@ -206,7 +206,7 @@ function MotionSpecimen() {
   return (
     <div className={styles.specimen}>
       <h3 className={styles.specimenTitle}>Motion</h3>
-      <div className={styles.swatchRow}>
+      <div className={styles.swatchRow3}>
         {motionLevels.map(level => (
           <div key={level.name} className={styles.swatchItem}>
             <div
@@ -218,7 +218,7 @@ function MotionSpecimen() {
                 style={{
                   transitionDuration: `var(--motion-${level.name}-duration)`,
                   transitionTimingFunction: `var(--motion-${level.name}-easing)`,
-                  transform: active === level.name ? 'translateX(80px)' : 'translateX(0)',
+                  transform: active === level.name ? 'translateX(calc(100% - 48px))' : 'translateX(0)',
                 }}
               />
             </div>
@@ -237,7 +237,7 @@ function IndependentAxesSpecimen() {
       <h3 className={styles.specimenTitle}>Independent Axes</h3>
 
       <h4 className={styles.subTitle}>Weight</h4>
-      <div className={styles.swatchRow}>
+      <div className={styles.swatchRow5}>
         {weightLevels.map(w => (
           <div key={w.name} className={styles.swatchItem}>
             <span className={styles.weightSample} style={{ fontWeight: `var(--weight-${w.name})` }}>Ag</span>
@@ -248,7 +248,7 @@ function IndependentAxesSpecimen() {
       </div>
 
       <h4 className={styles.subTitle}>Line-height</h4>
-      <div className={styles.swatchRow}>
+      <div className={styles.swatchRow5}>
         {leadingLevels.map(l => (
           <div key={l.name} className={styles.swatchItem}>
             <span className={styles.leadingSample} style={{ lineHeight: `var(--leading-${l.name})` }}>
@@ -261,7 +261,7 @@ function IndependentAxesSpecimen() {
       </div>
 
       <h4 className={styles.subTitle}>Text Color</h4>
-      <div className={styles.swatchRow}>
+      <div className={styles.swatchRow6}>
         {textColorLevels.map(level => (
           <div key={level} className={styles.swatchItem}>
             <span className={styles.colorSample} style={{ color: `var(--text-${level})` }}>Aa</span>
@@ -271,7 +271,7 @@ function IndependentAxesSpecimen() {
       </div>
 
       <h4 className={styles.subTitle}>Border</h4>
-      <div className={styles.swatchRow}>
+      <div className={styles.swatchRow3}>
         {borderLevels.map(level => (
           <div key={level} className={styles.swatchItem}>
             <div className={styles.borderSwatch} style={{ borderColor: `var(--border-${level})` }} />
