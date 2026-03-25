@@ -1,0 +1,62 @@
+/* ═══════════════════════════════════════════
+   Structure — value-free atomic layout classes
+   ═══════════════════════════════════════════
+   Closed system: only these classes exist. No JIT, no escape hatch.
+   Tailwind naming convention (de facto standard).
+   Values (gap, padding, width) belong in CSS files with tokens.
+
+   // ② 2026-03-25-css-writing-rules-prd.md
+*/
+
+/* ── Direction ── */
+.flex-row      { display: flex; }
+.flex-col      { display: flex; flex-direction: column; }
+.flex-wrap     { flex-wrap: wrap; }
+.inline-flex   { display: inline-flex; }
+.grid          { display: grid; }
+.inline-grid   { display: inline-grid; }
+
+/* ── Alignment ── */
+.items-center    { align-items: center; }
+.items-start     { align-items: flex-start; }
+.items-end       { align-items: flex-end; }
+.items-stretch   { align-items: stretch; }
+.items-baseline  { align-items: baseline; }
+.justify-center  { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-end     { justify-content: flex-end; }
+
+/* ── Sizing ── */
+.flex-1   { flex: 1; }
+.shrink-0 { flex-shrink: 0; }
+.min-w-0  { min-width: 0; }
+
+/* ── Overflow ── */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto   { overflow: auto; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+
+/* ── Text ── */
+.truncate     { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.text-center  { text-align: center; }
+.text-right   { text-align: right; }
+.whitespace-nowrap { white-space: nowrap; }
+
+/* ── Position ── */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.sticky   { position: sticky; }
+
+/* ── Visibility ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px; /* stylelint-disable-line — WCAG screen-reader hide technique */
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

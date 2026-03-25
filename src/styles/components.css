@@ -5,6 +5,9 @@
    rendered by <Aria>. No className needed.
    Scoped under [data-aria-container] to prevent role collisions.
 
+   All selectors wrapped in :where() → specificity (0,0,0).
+   Any module.css selector can override these defaults.
+
    Focus rule (Apple HIG convention):
      [data-aria-container] 안의 자식 → background highlight (컬렉션 커서)
      독립 요소 (*:focus-visible)      → outline ring (standalone)
@@ -12,23 +15,25 @@
    Focus states:
      idle   = container 비활성 → var(--focus-idle) background, no outline
      active = container :focus-within → var(--tone-primary-dim) background + var(--focus) outline
+
+   // ② 2026-03-25-css-writing-rules-prd.md
 */
 
 /* ── Container: inset padding for breathing room ── */
 
-[data-aria-container] {
+:where([data-aria-container]) {
   padding: var(--space-sm);
 }
 
 /* ── Common interactive item base ── */
 
-[data-aria-container] [role="option"],
-[data-aria-container] [role="treeitem"],
-[data-aria-container] [role="tab"],
-[data-aria-container] [role="menuitem"],
-[data-aria-container] [role="radio"],
-[data-aria-container] [role="switch"],
-[data-aria-container] [role="row"] {
+:where([data-aria-container] [role="option"]),
+:where([data-aria-container] [role="treeitem"]),
+:where([data-aria-container] [role="tab"]),
+:where([data-aria-container] [role="menuitem"]),
+:where([data-aria-container] [role="radio"]),
+:where([data-aria-container] [role="switch"]),
+:where([data-aria-container] [role="row"]) {
   padding: var(--space-sm) var(--space-md);
   cursor: pointer;
   user-select: none;
@@ -42,32 +47,32 @@
 }
 
 /* Tree/treegrid: slightly denser + row layout */
-[data-aria-container] [role="treeitem"],
-[data-aria-container] [role="row"] {
+:where([data-aria-container] [role="treeitem"]),
+:where([data-aria-container] [role="row"]) {
   padding: var(--space-xs) var(--space-md);
   display: flex;
 }
 
-[data-aria-container] [role="treeitem"] {
+:where([data-aria-container] [role="treeitem"]) {
   flex-wrap: wrap;
 }
 
 /* Expandable treeitems: disable bg transition to prevent flash
    during the handoff between treeitem ↔ :first-child */
-[data-aria-container] [role="treeitem"][aria-expanded] {
+:where([data-aria-container] [role="treeitem"][aria-expanded]) {
   transition: none;
 }
 
 /* Expanded treeitem: transparent layout container.
    First child (label row) takes over visual responsibility.
    Uses :first-child to be renderItem-agnostic (.item-inner or custom). */
-[data-aria-container] [role="treeitem"][aria-expanded="true"] {
+:where([data-aria-container] [role="treeitem"][aria-expanded="true"]) {
   padding: 0;
   background: transparent !important;
   outline: none !important;
 }
 
-[data-aria-container] [role="treeitem"][aria-expanded="true"] > :first-child {
+:where([data-aria-container] [role="treeitem"][aria-expanded="true"] > :first-child) {
   display: flex;
   align-items: center;
   width: 100%;
@@ -78,31 +83,31 @@
 }
 
 /* Expanded treeitem: redirect hover to label row */
-[data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"]:hover > :first-child {
+:where([data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"]:hover > :first-child) {
   background: var(--bg-hover);
 }
 
 /* Expanded treeitem: redirect focus (active) to label row */
-[data-aria-container]:focus-within [role="treeitem"][aria-expanded="true"]:focus > :first-child,
-[data-aria-container]:focus-within [role="treeitem"][aria-expanded="true"][data-focused] > :first-child {
+:where([data-aria-container]:focus-within [role="treeitem"][aria-expanded="true"]:focus > :first-child),
+:where([data-aria-container]:focus-within [role="treeitem"][aria-expanded="true"][data-focused] > :first-child) {
   background: var(--tone-primary-dim);
   color: var(--text-bright);
   outline-color: var(--focus);
 }
 
 /* Expanded treeitem: redirect focus (idle) to label row */
-[data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"]:focus > :first-child,
-[data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"][data-focused] > :first-child {
+:where([data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"]:focus > :first-child),
+:where([data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"][data-focused] > :first-child) {
   background: var(--focus-idle);
 }
 
 /* Expanded treeitem: redirect active press to label row */
-[data-aria-container] [role="treeitem"][aria-expanded="true"]:active > :first-child {
+:where([data-aria-container] [role="treeitem"][aria-expanded="true"]:active > :first-child) {
   background: var(--tone-primary-bright);
 }
 
 /* Nested group wraps below the item label */
-[data-aria-container] [role="treeitem"] > [role="group"] {
+:where([data-aria-container] [role="treeitem"] > [role="group"]) {
   flex-basis: 100%;
   padding-top: 0;
   padding-right: 0;
@@ -111,7 +116,7 @@
 }
 
 /* Accordion heading */
-[data-aria-container] [role="heading"] {
+:where([data-aria-container] [role="heading"]) {
   padding: var(--space-sm) var(--space-md);
   cursor: pointer;
   user-select: none;
@@ -124,7 +129,7 @@
 }
 
 /* Disclosure button */
-[data-aria-container] [role="group"] > [role="button"] {
+:where([data-aria-container] [role="group"] > [role="button"]) {
   padding: var(--space-sm) var(--space-md);
   cursor: pointer;
   user-select: none;
@@ -138,63 +143,63 @@
 }
 
 /* Icon-only button: equal padding, square aspect */
-[data-aria-container] [role="option"]:has(> svg:only-child),
-[data-aria-container] [role="button"]:has(> svg:only-child) {
+:where([data-aria-container] [role="option"]:has(> svg:only-child)),
+:where([data-aria-container] [role="button"]:has(> svg:only-child)) {
   padding: var(--space-sm);
   aspect-ratio: 1;
 }
 
 /* ── Hover (suppressed when focus is active via :focus-within) ── */
 
-[data-aria-container]:not(:focus-within) [role="option"]:hover,
-[data-aria-container]:not(:focus-within) [role="treeitem"]:hover,
-[data-aria-container]:not(:focus-within) [role="menuitem"]:hover,
-[data-aria-container]:not(:focus-within) [role="radio"]:hover,
-[data-aria-container]:not(:focus-within) [role="switch"]:hover,
-[data-aria-container]:not(:focus-within) [role="row"]:hover,
-[data-aria-container]:not(:focus-within) [role="heading"]:hover,
-[data-aria-container]:not(:focus-within) [role="group"] > [role="button"]:hover {
+:where([data-aria-container]:not(:focus-within) [role="option"]:hover),
+:where([data-aria-container]:not(:focus-within) [role="treeitem"]:hover),
+:where([data-aria-container]:not(:focus-within) [role="menuitem"]:hover),
+:where([data-aria-container]:not(:focus-within) [role="radio"]:hover),
+:where([data-aria-container]:not(:focus-within) [role="switch"]:hover),
+:where([data-aria-container]:not(:focus-within) [role="row"]:hover),
+:where([data-aria-container]:not(:focus-within) [role="heading"]:hover),
+:where([data-aria-container]:not(:focus-within) [role="group"] > [role="button"]:hover) {
   background: var(--bg-hover);
 }
 
 /* Tabs: no background hover, use subtle text change */
-[data-aria-container]:not(:focus-within) [role="tab"]:hover {
+:where([data-aria-container]:not(:focus-within) [role="tab"]:hover) {
   color: var(--text-secondary);
 }
 
 /* ── Focused: idle (roving-tabindex — container NOT active) ── */
 /* Background only, gray tone — "cursor was here" */
 
-[data-aria-container]:not(:focus-within) [role="option"]:focus,
-[data-aria-container]:not(:focus-within) [role="treeitem"]:focus,
-[data-aria-container]:not(:focus-within) [role="menuitem"]:focus,
-[data-aria-container]:not(:focus-within) [role="radio"]:focus,
-[data-aria-container]:not(:focus-within) [role="switch"]:focus,
-[data-aria-container]:not(:focus-within) [role="row"]:focus,
-[data-aria-container]:not(:focus-within) [role="heading"]:focus,
-[data-aria-container]:not(:focus-within) [role="group"] > [role="button"]:focus {
+:where([data-aria-container]:not(:focus-within) [role="option"]:focus),
+:where([data-aria-container]:not(:focus-within) [role="treeitem"]:focus),
+:where([data-aria-container]:not(:focus-within) [role="menuitem"]:focus),
+:where([data-aria-container]:not(:focus-within) [role="radio"]:focus),
+:where([data-aria-container]:not(:focus-within) [role="switch"]:focus),
+:where([data-aria-container]:not(:focus-within) [role="row"]:focus),
+:where([data-aria-container]:not(:focus-within) [role="heading"]:focus),
+:where([data-aria-container]:not(:focus-within) [role="group"] > [role="button"]:focus) {
   background: var(--focus-idle);
 }
 
 /* ── Focused: active (roving-tabindex — container HAS focus) ── */
 /* Background highlight + outline ring */
 
-[data-aria-container]:focus-within [role="option"]:focus,
-[data-aria-container]:focus-within [role="treeitem"]:focus,
-[data-aria-container]:focus-within [role="menuitem"]:focus,
-[data-aria-container]:focus-within [role="radio"]:focus,
-[data-aria-container]:focus-within [role="switch"]:focus,
-[data-aria-container]:focus-within [role="row"]:focus,
-[data-aria-container]:focus-within [role="heading"]:focus,
-[data-aria-container]:focus-within [role="group"] > [role="button"]:focus {
+:where([data-aria-container]:focus-within [role="option"]:focus),
+:where([data-aria-container]:focus-within [role="treeitem"]:focus),
+:where([data-aria-container]:focus-within [role="menuitem"]:focus),
+:where([data-aria-container]:focus-within [role="radio"]:focus),
+:where([data-aria-container]:focus-within [role="switch"]:focus),
+:where([data-aria-container]:focus-within [role="row"]:focus),
+:where([data-aria-container]:focus-within [role="heading"]:focus),
+:where([data-aria-container]:focus-within [role="group"] > [role="button"]:focus) {
   background: var(--tone-primary-dim);
   color: var(--text-bright);
   outline-color: var(--focus);
 }
 
 /* Tabs: focused uses accent bottom border (exception — no background) */
-[data-aria-container] [role="tab"]:focus,
-[data-aria-container] [role="tab"][data-focused] {
+:where([data-aria-container] [role="tab"]:focus),
+:where([data-aria-container] [role="tab"][data-focused]) {
   color: var(--tone-primary-base);
   border-bottom-color: var(--tone-primary-base);
   font-weight: var(--weight-semi);
@@ -204,12 +209,12 @@
 /* ── Focused (aria-activedescendant — data-focused) ── */
 /* Idle: gray background only (restore cursor position) */
 
-[data-aria-container] [data-focused] {
+:where([data-aria-container] [data-focused]) {
   background: var(--focus-idle);
 }
 
 /* Active: background highlight + outline ring */
-[data-aria-container]:focus-within [data-focused] {
+:where([data-aria-container]:focus-within [data-focused]) {
   background: var(--tone-primary-dim);
   color: var(--text-bright);
   outline-color: var(--focus);
@@ -217,25 +222,25 @@
 
 /* ── Active (press feedback) ── */
 
-[data-aria-container] [role="option"]:active,
-[data-aria-container] [role="treeitem"]:active,
-[data-aria-container] [role="menuitem"]:active,
-[data-aria-container] [role="radio"]:active,
-[data-aria-container] [role="switch"]:active,
-[data-aria-container] [role="row"]:active,
-[data-aria-container] [role="heading"]:active,
-[data-aria-container] [role="group"] > [role="button"]:active {
+:where([data-aria-container] [role="option"]:active),
+:where([data-aria-container] [role="treeitem"]:active),
+:where([data-aria-container] [role="menuitem"]:active),
+:where([data-aria-container] [role="radio"]:active),
+:where([data-aria-container] [role="switch"]:active),
+:where([data-aria-container] [role="row"]:active),
+:where([data-aria-container] [role="heading"]:active),
+:where([data-aria-container] [role="group"] > [role="button"]:active) {
   background: var(--tone-primary-bright);
 }
 
 /* ── Selected ── */
 
-[data-aria-container] [aria-selected="true"] {
+:where([data-aria-container] [aria-selected="true"]) {
   background: var(--selection);
 }
 
 /* Tab selected uses accent border, not background */
-[data-aria-container] [role="tab"][aria-selected="true"] {
+:where([data-aria-container] [role="tab"][aria-selected="true"]) {
   color: var(--tone-primary-base);
   border-bottom-color: var(--tone-primary-base);
   font-weight: var(--weight-semi);
@@ -244,44 +249,44 @@
 
 /* ── Checked (radio, switch) ── */
 
-[data-aria-container] [aria-checked="true"] {
+:where([data-aria-container] [aria-checked="true"]) {
   background: var(--selection);
 }
 
 /* ── Focused + Selected compound ── */
 /* Selected background preserved; outline only when container active */
 
-[data-aria-container] [aria-selected="true"]:focus,
-[data-aria-container] [aria-checked="true"]:focus,
-[data-aria-container] [aria-selected="true"][data-focused],
-[data-aria-container] [aria-checked="true"][data-focused] {
+:where([data-aria-container] [aria-selected="true"]:focus),
+:where([data-aria-container] [aria-checked="true"]:focus),
+:where([data-aria-container] [aria-selected="true"][data-focused]),
+:where([data-aria-container] [aria-checked="true"][data-focused]) {
   background: var(--selection);
   color: var(--text-bright);
 }
 
-[data-aria-container]:focus-within [aria-selected="true"][data-focused],
-[data-aria-container]:focus-within [aria-checked="true"][data-focused] {
+:where([data-aria-container]:focus-within [aria-selected="true"][data-focused]),
+:where([data-aria-container]:focus-within [aria-checked="true"][data-focused]) {
   outline-color: var(--focus);
 }
 
 /* ── Disabled ── */
 
-[data-aria-container] [aria-disabled="true"] {
+:where([data-aria-container] [aria-disabled="true"]) {
   opacity: 0.4;
   pointer-events: none;
   cursor: default;
 }
 
 /* Disabled + Selected: preserve selection tint, apply dimming */
-[data-aria-container] [aria-disabled="true"][aria-selected="true"],
-[data-aria-container] [aria-disabled="true"][aria-checked="true"] {
+:where([data-aria-container] [aria-disabled="true"][aria-selected="true"]),
+:where([data-aria-container] [aria-disabled="true"][aria-checked="true"]) {
   background: var(--selection);
   opacity: 0.4;
 }
 
 /* Standalone disabled (buttons, inputs outside collections) */
-:disabled,
-[aria-disabled="true"]:not([role="option"]):not([role="treeitem"]):not([role="menuitem"]):not([role="tab"]):not([role="row"]):not([role="radio"]):not([role="switch"]) {
+:where(:disabled),
+:where([aria-disabled="true"]:not([role="option"]):not([role="treeitem"]):not([role="menuitem"]):not([role="tab"]):not([role="row"]):not([role="radio"]):not([role="switch"])) {
   opacity: 0.4;
   pointer-events: none;
   cursor: default;
@@ -289,42 +294,42 @@
 
 /* ── Invalid (input error state) ── */
 
-[aria-invalid="true"] {
+:where([aria-invalid="true"]) {
   border-color: var(--tone-destructive-base);
 }
 
-[aria-invalid="true"]:focus {
+:where([aria-invalid="true"]:focus) {
   border-color: var(--tone-destructive-base);
   outline-color: var(--tone-destructive-base);
 }
 
 /* ── Expanded chevron rotation ── */
 
-[data-aria-container] [aria-expanded="true"] > .chevron,
-[data-aria-container] [aria-expanded="true"] > * > .chevron {
+:where([data-aria-container] [aria-expanded="true"] > .chevron),
+:where([data-aria-container] [aria-expanded="true"] > * > .chevron) {
   transform: rotate(90deg);
 }
 
 /* ── Tree depth indentation ── */
 
 /* Tree: nested DOM — group-based indentation (each nesting level adds one increment) */
-[role="tree"] [role="group"] { padding-left: var(--space-lg); }
+:where([role="tree"] [role="group"]) { padding-left: var(--space-lg); }
 
 /* Treegrid: flat DOM — absolute aria-level-based indentation */
-[role="treegrid"] [aria-level="1"] { padding-left: var(--space-sm); }
-[role="treegrid"] [aria-level="2"] { padding-left: var(--space-xl); }
-[role="treegrid"] [aria-level="3"] { padding-left: var(--space-3xl); }
-[role="treegrid"] [aria-level="4"] { padding-left: 56px; }
-[role="treegrid"] [aria-level="5"] { padding-left: 72px; }
-[role="treegrid"] [aria-level="6"] { padding-left: 88px; }
-[role="treegrid"] [aria-level="7"] { padding-left: 104px; }
-[role="treegrid"] [aria-level="8"] { padding-left: 120px; }
-[role="treegrid"] [aria-level="9"] { padding-left: 136px; }
-[role="treegrid"] [aria-level="10"] { padding-left: 152px; }
+:where([role="treegrid"] [aria-level="1"]) { padding-left: var(--space-sm); }
+:where([role="treegrid"] [aria-level="2"]) { padding-left: var(--space-xl); }
+:where([role="treegrid"] [aria-level="3"]) { padding-left: var(--space-3xl); }
+:where([role="treegrid"] [aria-level="4"]) { padding-left: 56px; }
+:where([role="treegrid"] [aria-level="5"]) { padding-left: 72px; }
+:where([role="treegrid"] [aria-level="6"]) { padding-left: 88px; }
+:where([role="treegrid"] [aria-level="7"]) { padding-left: 104px; }
+:where([role="treegrid"] [aria-level="8"]) { padding-left: 120px; }
+:where([role="treegrid"] [aria-level="9"]) { padding-left: 136px; }
+:where([role="treegrid"] [aria-level="10"]) { padding-left: 152px; }
 
 /* ── Grid table (subgrid layout) ── */
 
-.grid-table {
+:where(.grid-table) {
   display: grid;
   grid-template-columns: var(--grid-columns, repeat(var(--grid-col-count, 4), 1fr));
   width: 100%;
@@ -332,7 +337,7 @@
 
 /* ── Grid header ── */
 
-.grid-header {
+:where(.grid-header) {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
@@ -340,7 +345,7 @@
   background: var(--surface-sunken);
 }
 
-.grid-header-cell {
+:where(.grid-header-cell) {
   padding: var(--space-md);
   min-width: 80px;
   font-weight: var(--weight-semi);
@@ -351,13 +356,13 @@
   border-right: 1px solid var(--border-subtle);
 }
 
-.grid-header-cell:last-child {
+:where(.grid-header-cell:last-child) {
   border-right: none;
 }
 
 /* ── Grid body (Aria container) ── */
 
-.grid-table > [data-aria-container] {
+:where(.grid-table > [data-aria-container]) {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
@@ -365,13 +370,13 @@
 
 /* ── Grid row ── */
 
-.grid-table [role="row"] {
+:where(.grid-table [role="row"]) {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
 }
 
-.grid-table [role="row"] .grid-row {
+:where(.grid-table [role="row"] .grid-row) {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
@@ -379,7 +384,7 @@
 
 /* ── Grid cell ── */
 
-[data-aria-container] [role="gridcell"] {
+:where([data-aria-container] [role="gridcell"]) {
   display: flex;
   align-items: center;
   padding: var(--space-sm) var(--space-md);
@@ -389,11 +394,11 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-[data-aria-container] [role="gridcell"]:last-child {
+:where([data-aria-container] [role="gridcell"]:last-child) {
   border-right: none;
 }
 
-[data-aria-container] [role="gridcell"][tabindex="0"] {
+:where([data-aria-container] [role="gridcell"][tabindex="0"]) {
   outline: 1px solid var(--focus);
   outline-offset: -1px;
   background: var(--tone-primary-dim);
@@ -401,11 +406,11 @@
 
 /* ── Tab-specific: horizontal + bottom border ── */
 
-[data-aria-container][role="tablist"] {
+:where([data-aria-container][role="tablist"]) {
   padding: 0;
 }
 
-[data-aria-container][role="tablist"] [role="tab"] {
+:where([data-aria-container][role="tablist"] [role="tab"]) {
   display: inline-flex;
   align-items: center;
   padding: var(--space-sm) var(--space-lg);
@@ -419,22 +424,22 @@
 
 /* ── Default renderItem inner wrapper ── */
 
-[data-aria-container] .item-inner {
+:where([data-aria-container] .item-inner) {
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
 }
 
-[data-aria-container] .item-spread {
+:where([data-aria-container] .item-spread) {
   justify-content: space-between;
   width: 100%;
 }
 
-[data-aria-container] .item-chevron {
+:where([data-aria-container] .item-chevron) {
   opacity: 0.5;
 }
 
-[data-aria-container] .item-chevron--tree {
+:where([data-aria-container] .item-chevron--tree) {
   width: 16px;
   opacity: 0.5;
   flex-shrink: 0;
@@ -442,6 +447,6 @@
 
 /* ── Radio-specific gap ── */
 
-:where([role="radio"]) .item-inner {
+:where([role="radio"] .item-inner) {
   gap: var(--space-sm);
 }

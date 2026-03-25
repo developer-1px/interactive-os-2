@@ -16,6 +16,7 @@ import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { routeConfig } from './routeConfig'
 
 import './styles/tokens.css'
+import './styles/structure.css'
 import './styles/components.css'
 import './styles/layout.css'
 import './styles/app.css'

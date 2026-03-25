@@ -163,7 +163,67 @@ tokens.css 4→8→12→16→24→32→40은 충분. claude.ai도 비슷한 scal
 
 ---
 
-## 3. 조합 규칙 (Composition Rules)
+## 3. CSS 작성 판단 흐름
+
+> CSS 속성을 **구조**와 **디자인**으로 분류한다.
+> 구조 = DOM과 co-locate (인지 부하 감소), 디자인 = 토큰 기반 CSS 파일 (시스템 일관성).
+
+### 판단 플로우
+
+```
+속성을 쓰려 한다
+  ├─ display, flex-direction, align-items, justify-content,
+  │  flex-wrap, flex-shrink, overflow, position?
+  │  → structure.css atomic class (className에서 사용)
+  │
+  ├─ color, background, font, spacing, border, shadow, radius?
+  │  → CSS 파일 (module.css 또는 글로벌) + 토큰 필수
+  │
+  └─ ARIA 상태 (hover, focus, selected, disabled)?
+     → components.css 기본값 확인
+       ├─ 기본값 충분 → 그대로 사용
+       └─ 커스텀 필요 → module.css에서 override (:where() 덕에 바로 이김)
+```
+
+### CSS 파일 스택
+
+| 순서 | 파일 | 역할 | specificity |
+|------|------|------|-------------|
+| 1 | `tokens.css` | 토큰 값 SSOT | — |
+| 2 | `structure.css` | 수치 없는 atomic layout class | (0,1,0) |
+| 3 | `components.css` | ARIA 기본 스타일 (`:where()` 래핑) | (0,0,0) |
+| 4 | `layout.css` | 앱 레이아웃 (sidebar, page) | (0,1,0)+ |
+| 5 | `app.css` | 앱 컴포넌트 스타일 | (0,1,0)+ |
+| 6 | `*.module.css` | 컴포넌트별 디자인 + 토큰 | (0,1,0)+ |
+
+### structure.css — 닫힌 체계
+
+- Tailwind 네이밍 (de facto 표준, LLM/사람 모두 즉시 인식)
+- **수치 없는** 속성만: `flex-row`, `items-center`, `overflow-hidden` 등
+- gap, padding, width, height = 수치 → CSS 파일에서 토큰으로
+- 정의된 class만 사용 가능. JIT 없음, escape hatch 없음
+- 부족하면 class를 추가 (토큰처럼 스케일 확장)
+
+### components.css — :where() 기본값
+
+- 모든 셀렉터를 `:where()`로 래핑 → specificity (0,0,0)
+- "기본값 제공자" 역할 — module.css의 아무 셀렉터도 이김
+- ARIA 상태(hover, focus, selected, disabled) + 구조 기본값
+
+### 금지 목록
+
+| 금지 | 대신 | 이유 |
+|------|------|------|
+| raw 수치 (6px, #fff) | 토큰 (var(--space-sm)) | 디자인 시스템 일관성 |
+| margin | gap | 부모가 간격 제어 |
+| module.css에 display:flex/grid | structure.css atomic class | 구조는 DOM과 co-locate |
+| components.css에 :where() 없는 셀렉터 | :where() 래핑 | specificity 군비경쟁 방지 |
+| palette 직접 참조 (--blue-600) | semantic 토큰 (--tone-primary-base) | 테마 독립성 |
+
+---
+
+## 4. 조합 규칙 (Composition Rules)
+
 
 토큰으로 해결 안 되는, "어떻게 조합하는가"의 규칙.
 
@@ -262,7 +322,7 @@ column(세로 배치): gap: var(--space-xl)  /* 24px — 섹션 간 분리 */
 
 ---
 
-## 4. 적용 우선순위
+## 5. 적용 우선순위
 
 1. **Color palette warm 전환** — zinc → warm neutral (light theme 먼저)
 2. **Typography scale 재조정** — body 구간 압축 + hero 점프
