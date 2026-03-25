@@ -110,7 +110,7 @@ export function AreaSidebar() {
     const hasChildren = state.expanded !== undefined
     return (
       <span className="inline-flex items-center gap-sm">
-        <span className="item-chevron--tree">
+        <span className="item-chevron item-chevron--tree">
           {hasChildren ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
         </span>
         <span>{(node.data as Record<string, unknown>)?.name as string}</span>

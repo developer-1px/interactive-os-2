@@ -249,7 +249,7 @@ export default function PageAgentViewer() {
               <div className={styles.avGroupLabel}>활성 ({activeSessions.length})</div>
               {activeSessions.map(s => (
                 <div key={s.id} className={styles.avSessionItem}>
-                  <span className={styles.avSessionLive}>●</span>
+                  <span className={styles.avSessionLive}><Circle size={8} fill="currentColor" /></span>
                   <span className={styles.avSessionLabel}>{s.label}</span>
                 </div>
               ))}

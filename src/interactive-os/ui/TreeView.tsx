@@ -32,7 +32,7 @@ const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unkn
   const hasChildren = state.expanded !== undefined
   return (
     <div className="inline-flex items-center gap-xs">
-      <span className="item-chevron--tree" {...props.toggleProps}>{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
+      <span className="item-chevron item-chevron--tree" {...props.toggleProps}>{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
       <span>{label}</span>
     </div>
   )

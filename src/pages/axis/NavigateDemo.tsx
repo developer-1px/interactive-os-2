@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Up, Down, Left, Right } from '../kbdIcons'
 import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
@@ -66,8 +67,8 @@ export default function NavigateDemo() {
       <div className="page-keys">
         {mode === 'grid' ? (
           <>
-            <kbd>↑↓</kbd> <span className="key-hint">row</span>{' '}
-            <kbd>←→</kbd> <span className="key-hint">col</span>{' '}
+            <kbd><Up /><Down /></kbd> <span className="key-hint">row</span>{' '}
+            <kbd><Left /><Right /></kbd> <span className="key-hint">col</span>{' '}
             <kbd>Home/End</kbd> <span className="key-hint">col bounds</span>{' '}
             <kbd>⌘Home/End</kbd> <span className="key-hint">row bounds</span>
             {tabCycle && (
@@ -79,22 +80,22 @@ export default function NavigateDemo() {
           </>
         ) : orientation === 'vertical' ? (
           <>
-            <kbd>↑</kbd> <span className="key-hint">prev</span>{' '}
-            <kbd>↓</kbd> <span className="key-hint">next</span>{' '}
+            <kbd><Up /></kbd> <span className="key-hint">prev</span>{' '}
+            <kbd><Down /></kbd> <span className="key-hint">next</span>{' '}
             <kbd>Home</kbd> <span className="key-hint">first</span>{' '}
             <kbd>End</kbd> <span className="key-hint">last</span>
           </>
         ) : orientation === 'horizontal' ? (
           <>
-            <kbd>←</kbd> <span className="key-hint">prev</span>{' '}
-            <kbd>→</kbd> <span className="key-hint">next</span>{' '}
+            <kbd><Left /></kbd> <span className="key-hint">prev</span>{' '}
+            <kbd><Right /></kbd> <span className="key-hint">next</span>{' '}
             <kbd>Home</kbd> <span className="key-hint">first</span>{' '}
             <kbd>End</kbd> <span className="key-hint">last</span>
           </>
         ) : (
           <>
-            <kbd>↑←</kbd> <span className="key-hint">prev</span>{' '}
-            <kbd>↓→</kbd> <span className="key-hint">next</span>
+            <kbd><Up /><Left /></kbd> <span className="key-hint">prev</span>{' '}
+            <kbd><Down /><Right /></kbd> <span className="key-hint">next</span>
           </>
         )}
       </div>

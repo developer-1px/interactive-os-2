@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Up, Down } from '../kbdIcons'
 import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { tab } from '../../interactive-os/axis/tab'
@@ -50,7 +51,7 @@ export default function TabDemo() {
         ) : (
           <>
             <kbd>Tab</kbd> <span className="key-hint">exit zone</span>{' '}
-            <kbd>↑↓</kbd> <span className="key-hint">navigate (roving)</span>
+            <kbd><Up /><Down /></kbd> <span className="key-hint">navigate (roving)</span>
           </>
         )}
       </div>
