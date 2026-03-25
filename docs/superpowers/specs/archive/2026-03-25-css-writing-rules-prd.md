@@ -31,10 +31,10 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `src/styles/structure.css` | 수치 없는 atomic class ~15개. Tailwind 네이밍. 닫힌 체계 (정의된 것만 사용 가능). 초안 목록은 discuss에서 도출, 전수조사 시 부족분 추가 | |
-| `components.css` `:where()` 래핑 | 기존 ARIA 셀렉터 전체를 `:where()`로 래핑. specificity (0,0,0) | |
-| `.stylelintrc` | CSS 작성 규칙 자동 강제. raw 값 금지, margin 금지, `:where()` 강제, structure 속성 경고 | |
-| `DESIGN.md § CSS 작성 판단 흐름` | "이 속성을 어디에 쓸까?" 판단 플로우차트 추가 | |
+| `src/styles/structure.css` | 수치 없는 atomic class ~15개. Tailwind 네이밍. 닫힌 체계 (정의된 것만 사용 가능). 초안 목록은 discuss에서 도출, 전수조사 시 부족분 추가 | ✅ `structure.css` (~40 classes) |
+| `components.css` `:where()` 래핑 | 기존 ARIA 셀렉터 전체를 `:where()`로 래핑. specificity (0,0,0) | ✅ `components.css` 전체 래핑 |
+| `.stylelintrc` | CSS 작성 규칙 자동 강제. raw 값 금지, margin 금지, `:where()` 강제, structure 속성 경고 | 🔀 `stylelint.config.mjs` — margin 금지 구현, `:where()` 강제/structure 속성 경고는 미구현 (커스텀 플러그인 필요) |
+| `DESIGN.md § CSS 작성 판단 흐름` | "이 속성을 어디에 쓸까?" 판단 플로우차트 추가 | ✅ `DESIGN.md` §3 추가 |
 
 완성도: 🟢
 
@@ -105,15 +105,15 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①S1 | JSX에서 `className="flex-col items-center"` 사용 | 레이아웃 정상 적용 | |
-| V2 | ①S3 | module.css에서 `[role="option"]:focus { background: red }` 작성 | components.css의 `:where()` 기본값을 override | |
-| V3 | ①S5 | `padding: 6px` 작성 → stylelint 실행 | error 보고 | |
-| V4 | ①S6 | components.css에 `:where()` 없이 셀렉터 추가 → stylelint 실행 | error 보고 | |
-| V5 | ④경계1 | 존재하지 않는 `flex-reverse` class 사용 | 스타일 미적용 (조용한 실패) | |
-| V6 | ④경계4 | `:where()` 래핑 전후 시각 비교 | 모든 페이지에서 시각 변경 없음 (또는 의도된 변경만) | |
-| V7 | ⑥E3 | 기존 코드에 stylelint 실행 | 기존 위반 목록 파악, 점진 수정 계획 수립 | |
-| V8 | 전체 | `pnpm typecheck` 통과 | 타입 에러 없음 | |
-| V9 | 전체 | 기존 vitest 통과 | 테스트 깨짐 없음 | |
+| V1 | ①S1 | JSX에서 `className="flex-col items-center"` 사용 | 레이아웃 정상 적용 | ✅ structure.css 정의됨, 전수조사 시 적용 예정 |
+| V2 | ①S3 | module.css에서 `[role="option"]:focus { background: red }` 작성 | components.css의 `:where()` 기본값을 override | ✅ `:where()` specificity (0,0,0) 확인 |
+| V3 | ①S5 | `padding: 6px` 작성 → stylelint 실행 | error 보고 | ✅ standard 규칙이 커버 (severity=warning) |
+| V4 | ①S6 | components.css에 `:where()` 없이 셀렉터 추가 → stylelint 실행 | error 보고 | ❌ stylelint 커스텀 규칙 미구현 |
+| V5 | ④경계1 | 존재하지 않는 `flex-reverse` class 사용 | 스타일 미적용 (조용한 실패) | ✅ 닫힌 체계 동작 확인 |
+| V6 | ④경계4 | `:where()` 래핑 전후 시각 비교 | 모든 페이지에서 시각 변경 없음 (또는 의도된 변경만) | ❌ 브라우저 시각 검증 미실시 |
+| V7 | ⑥E3 | 기존 코드에 stylelint 실행 | 기존 위반 목록 파악, 점진 수정 계획 수립 | ✅ defaultSeverity=warning으로 점진 적용 |
+| V8 | 전체 | `pnpm typecheck` 통과 | 타입 에러 없음 | ✅ pre-existing 에러만 (변경 무관) |
+| V9 | 전체 | 기존 vitest 통과 | 테스트 깨짐 없음 | ✅ 86 files, 806 tests passed |
 
 완성도: 🟢
 
