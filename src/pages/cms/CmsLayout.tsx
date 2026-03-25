@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import '../../styles/cms.css'
 import '../../styles/landingTokens.css'
 import { useResizer } from '../../hooks/useResizer'
@@ -25,12 +25,7 @@ import { ROOT_ID } from '../../interactive-os/store/types'
 import type { Plugin } from '../../interactive-os/plugins/types'
 import { childRules, nodeSchemas } from './cms-schema'
 import { zodSchema } from '../../interactive-os/plugins/zodSchema'
-import { useAria } from '../../interactive-os/primitives/useAria'
-import type { KeyMap } from '../../interactive-os/axis/types'
-
-import type { NormalizedData } from '../../interactive-os/store/types'
-
-const EMPTY_DATA: NormalizedData = { entities: {}, relationships: { [ROOT_ID]: [] } }
+import { findMatchingKey } from '../../interactive-os/primitives/useKeyboard'
 
 const sharedPlugins: Plugin[] = [
   history(),
@@ -49,19 +44,23 @@ export default function CmsLayout() {
   const [presenting, setPresenting] = useState(false)
   const presentingRef = useRef(false)
   presentingRef.current = presenting
-  const layoutRef = useRef<HTMLDivElement>(null)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
 
-  const cmsGlobalKeyMap = useMemo((): KeyMap => ({
+  const cmsGlobalShortcuts = useMemo((): Record<string, () => void> => ({
     'Mod+\\': () => { if (!presentingRef.current) setPresenting(true) },
   }), [])
 
-  const { containerProps: globalKeyMapProps } = useAria({
-    data: EMPTY_DATA,
-    keyMap: cmsGlobalKeyMap,
-  })
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return
+      const match = findMatchingKey(e, cmsGlobalShortcuts)
+      if (match) cmsGlobalShortcuts[match]()
+    }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [cmsGlobalShortcuts])
 
   const sidebarResizer = useResizer({
     defaultSize: 120, minSize: 80, maxSize: 300, step: 10,
@@ -102,7 +101,7 @@ export default function CmsLayout() {
   }, [canvasFocusedId, sidebarSections])
 
   return (
-    <div className="cms-layout" ref={layoutRef} tabIndex={-1} {...(globalKeyMapProps as React.HTMLAttributes<HTMLDivElement>)}>
+    <div className="cms-layout">
       <div className="cms-body">
         <CmsSidebar
           engine={engine}
@@ -150,7 +149,7 @@ export default function CmsLayout() {
         <CmsPresentMode
           data={store}
           locale={locale}
-          onExit={() => { setPresenting(false); layoutRef.current?.focus() }}
+          onExit={() => setPresenting(false)}
         />
       )}
     </div>
