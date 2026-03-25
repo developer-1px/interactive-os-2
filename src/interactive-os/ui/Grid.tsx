@@ -15,6 +15,7 @@ interface ColumnDef {
   key: string
   header: string
   field?: string
+  width?: string
 }
 
 interface GridProps {
@@ -69,8 +70,14 @@ export function Grid({
   )
 
   const gridStyle = React.useMemo(
-    () => ({ '--grid-col-count': columns.length } as React.CSSProperties),
-    [columns.length],
+    () => {
+      const hasCustomWidth = columns.some(c => c.width)
+      if (hasCustomWidth) {
+        return { '--grid-columns': columns.map(c => c.width ?? '1fr').join(' ') } as React.CSSProperties
+      }
+      return { '--grid-col-count': columns.length } as React.CSSProperties
+    },
+    [columns],
   )
 
   const renderRow = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {

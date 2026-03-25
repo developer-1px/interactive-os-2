@@ -57,7 +57,7 @@ export default function PageI18nEditor() {
   }
 
   return (
-    <div style={{ padding: 'var(--space-6, 24px)', maxWidth: 960, margin: '0 auto' }}>
+    <div style={{ padding: 'var(--space-lg)', gridColumn: '2 / -1', overflow: 'auto' }}>
       <div className="page-header">
         <h2 className="page-title">i18n Editor</h2>
         <p className="page-desc">
@@ -69,13 +69,13 @@ export default function PageI18nEditor() {
         <kbd>Shift+Enter</kbd> <span className="key-hint">위 이동</span>{' '}
         <kbd>F2</kbd> <span className="key-hint">편집</span>{' '}
         <kbd>Tab</kbd> <span className="key-hint">다음 셀 편집</span>{' '}
-        <kbd>Delete</kbd> <span className="key-hint">셀 클리어</span>{' '}
+        <kbd>Del</kbd> <span className="key-hint">셀 클리어</span>{' '}
         <kbd>⌘X/C/V</kbd> <span className="key-hint">셀 클립보드</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘F</kbd> <span className="key-hint">검색</span>
       </div>
-      <div className="demo-section">
-        <div style={{ border: '1px solid var(--border, #e0e0e0)', borderRadius: 8, overflow: 'hidden' }}>
+      <div>
+        <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 'var(--shape-md-radius)', overflow: 'hidden' }}>
           <Grid
             data={data}
             columns={I18N_COLUMNS}

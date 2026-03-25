@@ -326,7 +326,8 @@
 
 .grid-table {
   display: grid;
-  grid-template-columns: repeat(var(--grid-col-count, 4), 1fr);
+  grid-template-columns: var(--grid-columns, repeat(var(--grid-col-count, 4), 1fr));
+  width: 100%;
 }
 
 /* ── Grid header ── */
