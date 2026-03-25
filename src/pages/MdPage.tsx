@@ -5,7 +5,9 @@ import rehypeRaw from 'rehype-raw'
 import remarkRender from './remarkRender'
 import { parseJsx } from './parseJsx'
 import { mdComponents } from './mdComponents'
-import areaStyles from './AreaViewer.module.css'
+import { MermaidBlock } from './MermaidBlock'
+import { CodeBlock } from '../interactive-os/ui/CodeBlock'
+import markdownStyles from '../interactive-os/ui/MarkdownViewer.module.css'
 
 interface MdPageProps {
   md: string
@@ -58,7 +60,7 @@ export default function MdPage({ md }: MdPageProps) {
   const content = mod.default
 
   return (
-    <div className={areaStyles.root}>
+    <div className={markdownStyles.markdown}>
       <Markdown
         remarkPlugins={[remarkGfm, remarkRender]}
         rehypePlugins={[rehypeRaw]}
@@ -71,6 +73,20 @@ export default function MdPage({ md }: MdPageProps) {
               return <RenderBlock>{decoded}</RenderBlock>
             }
             return <div {...rest}>{children}</div>
+          },
+          code({ className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className ?? '')
+            const codeStr = String(children).replace(/\n$/, '')
+
+            if (match?.[1] === 'mermaid') {
+              return <MermaidBlock code={codeStr} />
+            }
+
+            if (match) {
+              return <CodeBlock code={codeStr} filename={`x.${match[1]}`} />
+            }
+
+            return <code className={className} {...props}>{children}</code>
           },
         }}
       >
