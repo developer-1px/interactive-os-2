@@ -408,7 +408,7 @@ kbd {
 }
 
 .tree-node__chevron {
-  width: 14px;
+  width: var(--icon-xs);
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;

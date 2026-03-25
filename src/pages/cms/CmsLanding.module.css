@@ -547,8 +547,8 @@
 
 .cmsShowcaseItemIcon {
   /* 인라인 — 라벨과 같은 행에 배치 (cmsShowcaseItemLabel 앞) */
-  width: 16px;
-  height: 16px;
+  width: var(--landing-icon-sm, 16px);
+  height: var(--landing-icon-sm, 16px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
