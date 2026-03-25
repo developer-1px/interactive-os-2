@@ -428,7 +428,15 @@
 /* ── Item part classes (item-{part} convention, design tokens only) ── */
 
 :where([data-aria-container] .item-chevron) {
+  color: var(--text-muted);
+  font-size: var(--type-body-size);
   opacity: 0.5;
+}
+
+:where([data-aria-container] .item-chevron--expand) {
+  width: var(--icon-xs);
+  flex-shrink: 0;
+  text-align: center;
 }
 
 :where([data-aria-container] .item-chevron--tree) {

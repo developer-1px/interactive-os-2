@@ -7,7 +7,6 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { disclosure } from '../pattern/disclosure'
 import { core } from '../plugins/core'
-import styles from './DisclosureGroup.module.css'
 
 interface DisclosureGroupProps {
   data: NormalizedData
@@ -22,7 +21,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? item.id as string
   return (
     <div {...props} className="flex-row items-center gap-xs">
-      <span className={styles.chevron}>{state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}</span>
+      <span className="item-chevron item-chevron--expand">{state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}</span>
       <span>{label}</span>
     </div>
   )

@@ -9,7 +9,6 @@ import { treegrid } from '../pattern/treegrid'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
 import { replaceEditPlugin } from '../pattern/edit'
-import styles from './TreeGrid.module.css'
 
 interface TreeGridProps {
   id?: string
@@ -27,7 +26,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Recor
   const hasChildren = state.expanded !== undefined
   return (
     <div {...props} className="flex-row items-center gap-xs">
-      <span className={styles.chevron}>{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
+      <span className="item-chevron item-chevron--expand">{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
       <span>{label}</span>
     </div>
   )
