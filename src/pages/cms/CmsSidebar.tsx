@@ -1,6 +1,5 @@
 import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type React from 'react'
-import { Menu, Sheet } from 'lucide-react'
 import { getChildren } from '../../interactive-os/store/createStore'
 import { ROOT_ID } from '../../interactive-os/store/types'
 import type { NormalizedData } from '../../interactive-os/store/types'
@@ -15,7 +14,6 @@ import { templateToCommand } from './cms-templates'
 import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
 import { collectSections, getRootAncestor, getTabItemAncestor } from './collectSections'
 import type { LocaleMap } from './cms-types'
-import { LOCALES } from './cms-types'
 import { useAriaZone } from '../../interactive-os/primitives/useAriaZone'
 import { listbox } from '../../interactive-os/pattern/listbox'
 import { focusCommands } from '../../interactive-os/plugins/core'
@@ -32,11 +30,6 @@ interface CmsSidebarProps {
   plugins?: Plugin[]
   onActivateTabItem?: (tabItemId: string) => void
   style?: React.CSSProperties
-  onHamburgerClick: () => void
-  onLocaleChange: (locale: Locale) => void
-  hamburgerRef: React.RefObject<HTMLButtonElement | null>
-  i18nSheetOpen: boolean
-  onI18nSheetToggle: () => void
 }
 
 // ── Thumbnail renderer (read-only mini preview) ──
@@ -175,7 +168,7 @@ function computeSectionGrouping(sectionIds: string[], store: NormalizedData, loc
 
 // ── CmsSidebar ──
 
-export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins, onActivateTabItem, style, onHamburgerClick, onLocaleChange, hamburgerRef, i18nSheetOpen, onI18nSheetToggle }: CmsSidebarProps) {
+export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins, onActivateTabItem, style }: CmsSidebarProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
@@ -302,26 +295,6 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
 
   return (
     <aside className="cms-sidebar" aria-label="Sections" style={style}>
-      <div className="cms-sidebar__header">
-        <button ref={hamburgerRef} className="cms-sidebar__header-btn" onClick={onHamburgerClick} title="Menu" type="button">
-          <Menu size={16} />
-        </button>
-        <select
-          className="cms-sidebar__locale"
-          value={locale}
-          onChange={e => onLocaleChange(e.target.value as Locale)}
-        >
-          {LOCALES.map(l => <option key={l} value={l}>{l}</option>)}
-        </select>
-        <button
-          className={`cms-sidebar__header-btn${i18nSheetOpen ? ' cms-sidebar__header-btn--active' : ''}`}
-          onClick={onI18nSheetToggle}
-          title="Translation sheet"
-          type="button"
-        >
-          <Sheet size={16} />
-        </button>
-      </div>
       <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
             const elements: React.ReactNode[] = []

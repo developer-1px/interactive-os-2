@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, useRef } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import '../../styles/cms.css'
 import '../../styles/landingTokens.css'
 import { useResizer } from '../../hooks/useResizer'
@@ -6,7 +6,6 @@ import '../../styles/resizer.css'
 import type { ViewportSize } from './CmsViewportWrapper'
 import CmsViewportWrapper from './CmsViewportWrapper'
 import CmsViewportBar from './CmsViewportBar'
-import CmsHamburgerDrawer from './CmsHamburgerDrawer'
 import CmsCanvas from './CmsCanvas'
 import CmsSidebar from './CmsSidebar'
 import CmsFloatingToolbar from './CmsFloatingToolbar'
@@ -39,10 +38,8 @@ export default function CmsLayout() {
   const { engine, store } = useEngine({ data: persistedData, plugins: sharedPlugins, onChange: setPersistedData })
   const [locale, setLocale] = useState<Locale>('ko')
   const [viewport, setViewport] = useState<ViewportSize>('desktop')
-  const [drawerOpen, setDrawerOpen] = useState(false)
   const [i18nSheetOpen, setI18nSheetOpen] = useState(false)
   const [presenting, setPresenting] = useState(false)
-  const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
 
@@ -100,11 +97,6 @@ export default function CmsLayout() {
           plugins={sharedPlugins}
           onActivateTabItem={handleActivateTabItem}
           style={{ width: sidebarResizer.size }}
-          onHamburgerClick={() => setDrawerOpen(true)}
-          onLocaleChange={setLocale}
-          hamburgerRef={hamburgerRef}
-          i18nSheetOpen={i18nSheetOpen}
-          onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
         />
         <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
         <div className="cms-canvas-area">
@@ -119,21 +111,14 @@ export default function CmsLayout() {
           store={store}
           focusedNodeId={canvasFocusedId}
           locale={locale}
+          onLocaleChange={setLocale}
+          i18nSheetOpen={i18nSheetOpen}
+          onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
           style={{ width: detailResizer.size }}
         />
       </div>
       <CmsViewportBar viewport={viewport} onViewportChange={setViewport} onPresent={() => setPresenting(true)} hidden={presenting} />
       <CmsFloatingToolbar store={store} focusedId={canvasFocusedId} dispatch={(cmd) => engine.dispatch(cmd)} hidden={presenting} />
-      {drawerOpen && (
-        <CmsHamburgerDrawer
-          open={drawerOpen}
-          onClose={() => {
-            setDrawerOpen(false)
-            hamburgerRef.current?.focus()
-          }}
-          hamburgerRef={hamburgerRef}
-        />
-      )}
       {presenting && (
         <CmsPresentMode
           data={store}
