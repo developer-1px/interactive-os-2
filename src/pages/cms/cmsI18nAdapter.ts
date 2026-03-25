@@ -4,7 +4,7 @@ import { localeFieldsOf } from './cms-schema'
 import { LOCALES } from './cms-types'
 import type { LocaleMap } from './cms-types'
 
-export const I18N_COLUMNS = [
+export const I18N_COLUMNS: { key: string; header: string; width?: string }[] = [
   { key: 'key', header: 'KEY', width: '200px' },
   ...LOCALES.map(l => ({ key: l, header: l.toUpperCase() })),
 ]
