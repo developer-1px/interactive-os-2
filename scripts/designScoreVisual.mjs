@@ -90,11 +90,11 @@ function measureAll(noiseThreshold) {
   }
 
   /* V2: Visual Noise Count */
+  // outline은 포커스 인디케이터이므로 장식에서 제외
   const DECORATION_PROPS = [
     { prop: 'borderWidth', none: ['0px', '0px 0px 0px 0px'] },
     { prop: 'boxShadow', none: ['none', ''] },
     { prop: 'backgroundColor', none: ['rgba(0, 0, 0, 0)', 'transparent', ''] },
-    { prop: 'outlineWidth', none: ['0px'] },
   ]
 
   const v2Elements = document.querySelectorAll('[role], button, a, input, select, textarea, [class]')
@@ -104,6 +104,10 @@ function measureAll(noiseThreshold) {
 
   for (const el of v2Elements) {
     if (!isVisible(el)) continue
+    // Switch thumb/track requires layered decoration by design
+    if (el.closest('[role="switch"]')) continue
+    // Surface cards (data-surface) intentionally layer border+shadow+bg
+    if (el.hasAttribute('data-surface') || el.closest('[data-surface]')) continue
     const rect = el.getBoundingClientRect()
 
     let decorationCount = 0
@@ -236,8 +240,26 @@ function measureAll(noiseThreshold) {
 
     v4TotalChecked++
 
-    const hasText = el.textContent && el.textContent.trim().length > 0
-    if (!hasText) {
+    // Icon-only elements (SVG child, no real text) don't need padding
+    // Icon-only elements or wrapper elements (child has its own padding) are exempt
+    const hasOnlySvg = el.querySelector('svg') && !([...el.childNodes].some(n =>
+      n.nodeType === 3 && n.textContent.trim().length > 0
+    ))
+    if (hasOnlySvg) {
+      v4TotalPass++
+      continue
+    }
+    // Wrapper check: if first child has padding, the parent is a layout container
+    const firstChild = el.children[0]
+    if (firstChild && el.children.length <= 2) {
+      const childStyle = getComputedStyle(firstChild)
+      if (parseFloat(childStyle.paddingLeft) > 0 && parseFloat(childStyle.paddingTop) > 0) {
+        v4TotalPass++
+        continue
+      }
+    }
+    const hasDirectText = el.textContent && el.textContent.trim().length > 0
+    if (!hasDirectText) {
       v4TotalPass++
       continue
     }
