@@ -20,9 +20,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
-  const cls = styles.header + (state.focused ? ' ' + styles.headerFocused : '')
   return (
-    <div {...props} className={cls}>
+    <div {...props} className="flex-row items-center justify-between">
       <span>{label}</span>
       <span className={styles.chevron}>{state.expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}</span>
     </div>

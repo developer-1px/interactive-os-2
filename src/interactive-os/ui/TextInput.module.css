@@ -4,10 +4,11 @@
   color: var(--text-primary);
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xs-radius);
+  height: var(--input-height);
+  border-radius: var(--shape-md-radius);
   padding: var(--space-xs) var(--space-sm);
   outline: none;
-  transition: border-color var(--motion-instant-duration);
+  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
 .input:focus {

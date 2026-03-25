@@ -15,6 +15,7 @@ export interface UseTreeViewOptions {
   onActivate?: (nodeId: string) => void
   initialFocus?: string
   followFocus?: boolean
+  selectable?: boolean
   'aria-label'?: string
 }
 
@@ -44,8 +45,12 @@ function toTreeViewReturn(aria: UseAriaReturn, ariaLabel?: string): UseTreeViewR
 }
 
 export function useTreeView(options: UseTreeViewOptions): UseTreeViewReturn {
-  const { data, plugins = [core()], keyMap, onChange, onActivate, initialFocus, followFocus, 'aria-label': ariaLabel } = options
-  const behavior = followFocus ? { ...tree, followFocus: true } : tree
+  const { data, plugins = [core()], keyMap, onChange, onActivate, initialFocus, followFocus, selectable = false, 'aria-label': ariaLabel } = options
+  let behavior = followFocus ? { ...tree, followFocus: true } : tree
+  if (!selectable) {
+    const { Space: _space, ...rest } = behavior.keyMap
+    behavior = { ...behavior, keyMap: rest, config: { ...behavior.config, selectionMode: undefined, selectOnClick: false } }
+  }
   const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, initialFocus })
   return toTreeViewReturn(aria, ariaLabel)
 }

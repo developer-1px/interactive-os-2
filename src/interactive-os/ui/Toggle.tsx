@@ -20,9 +20,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
   const checked = state.expanded ?? false
-  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '')
   return (
-    <div {...props} className={cls}>
+    <div {...props} className="flex-row items-center justify-between">
       <span>{label}</span>
       <span className={checked ? styles.indicatorOn : styles.indicator}>{checked ? 'On' : 'Off'}</span>
     </div>

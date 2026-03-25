@@ -25,9 +25,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Recor
     ?? (node.data as Record<string, unknown>)?.name as string
     ?? node.id as string
   const hasChildren = state.expanded !== undefined
-  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
   return (
-    <div {...props} className={cls}>
+    <div {...props} className="flex-row items-center gap-xs">
       <span className={styles.chevron}>{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
       <span>{label}</span>
     </div>

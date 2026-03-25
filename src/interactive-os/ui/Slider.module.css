@@ -44,7 +44,7 @@
   border-radius: 50%;
   background: var(--tone-primary-base);
   transform: translate(-50%, -50%);
-  transition: box-shadow 0.12s;
+  transition: box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
 [data-focused] .sliderThumb {

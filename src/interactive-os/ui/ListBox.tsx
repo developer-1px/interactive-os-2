@@ -22,8 +22,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
-  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
-  return <div {...props} className={cls}>{label}</div>
+  return <div {...props} className={state.selected ? styles.itemSelected : undefined}>{label}</div>
 }
 
 export function ListBox({

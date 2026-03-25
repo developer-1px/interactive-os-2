@@ -20,12 +20,11 @@ interface NavListProps {
   'aria-label'?: string
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
-  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '')
-  return <div {...props} className={cls}>{label}</div>
+  return <div {...props}>{label}</div>
 }
 
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (
@@ -94,7 +93,7 @@ export function NavList({
         if (isGroup(entity)) {
           const groupChildren = getChildren(store, id)
           return (
-            <div key={id} role="group" aria-label={getLabel(entity)} className={styles.group}>
+            <div key={id} role="group" aria-label={getLabel(entity)} className={`flex-col gap-xs ${styles.group}`}>
               {renderGroupLabel(getLabel(entity))}
               {renderItems(groupChildren)}
             </div>
