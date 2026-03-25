@@ -57,10 +57,10 @@ describe('PageI18nEditor', () => {
       const { container } = render(<PageI18nEditor />)
       const headers = container.querySelectorAll('.grid-header-cell')
       expect(headers.length).toBe(4)
-      expect(headers[0]?.textContent).toBe('Key')
-      expect(headers[1]?.textContent).toBe('ko')
-      expect(headers[2]?.textContent).toBe('en')
-      expect(headers[3]?.textContent).toBe('ja')
+      expect(headers[0]?.textContent).toBe('KEY')
+      expect(headers[1]?.textContent).toBe('KO')
+      expect(headers[2]?.textContent).toBe('EN')
+      expect(headers[3]?.textContent).toBe('JA')
     })
 
     it('renders all CMS translatable fields as rows', () => {
