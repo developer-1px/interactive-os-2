@@ -7,6 +7,7 @@ import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
 import { TimelineColumn } from './viewer/TimelineColumn'
+import { useAllModifiedFiles } from './viewer/viewerStore'
 import { FileViewerModal } from '../interactive-os/ui/FileViewerModal'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
@@ -99,11 +100,10 @@ function buildFilesStore(files: string[]): NormalizedData {
 
 // --- Resizable Column ---
 
-function ResizableColumn({ session, onClose, onFileClick, onModifiedFilesChange }: {
+function ResizableColumn({ session, onClose, onFileClick }: {
   session: SessionInfo
   onClose: () => void
   onFileClick: (path: string, ranges?: string[]) => void
-  onModifiedFilesChange?: (files: string[]) => void
 }) {
   const resizer = useResizer({
     defaultSize: 420, minSize: 280, maxSize: 800, step: 10,
@@ -119,7 +119,6 @@ function ResizableColumn({ session, onClose, onFileClick, onModifiedFilesChange 
           isLive={session.active}
           onClose={onClose}
           onFileClick={onFileClick}
-          onModifiedFilesChange={onModifiedFilesChange}
         />
       </div>
       <div className="resizer-handle" aria-label={`Resize ${session.label}`} {...resizer.separatorProps} />
@@ -132,7 +131,6 @@ function ResizableColumn({ session, onClose, onFileClick, onModifiedFilesChange 
 export default function PageAgentViewer() {
   const [sessions, setSessions] = useState<SessionInfo[]>([])
   const [columnOrder, setColumnOrderRaw] = useState<string[]>(loadColumnOrder)
-  const [modifiedFiles, setModifiedFiles] = useState<Map<string, string[]>>(new Map())
 
   const updateColumnOrder = useCallback((updater: (prev: string[]) => string[]) => {
     setColumnOrderRaw(prev => {
@@ -188,24 +186,9 @@ export default function PageAgentViewer() {
     setModalFile({ path: filePath, editRanges })
   }, [])
 
-  // Collect all modified files across active sessions
-  const allModifiedFiles = useMemo(() => {
-    const allFiles = new Set<string>()
-    for (const files of modifiedFiles.values()) {
-      for (const f of files) allFiles.add(f)
-    }
-    return [...allFiles].sort()
-  }, [modifiedFiles])
-
+  // Modified files from store (aggregated across all sessions)
+  const allModifiedFiles = useAllModifiedFiles()
   const filesStore = useMemo(() => buildFilesStore(allModifiedFiles), [allModifiedFiles])
-
-  const handleModifiedFilesChange = useCallback((sessionId: string) => (files: string[]) => {
-    setModifiedFiles(prev => {
-      const next = new Map(prev)
-      next.set(sessionId, files)
-      return next
-    })
-  }, [])
 
   const handleFileActivate = useCallback((nodeId: string) => {
     const path = nodeId.replace('file-', '')
@@ -290,7 +273,6 @@ export default function PageAgentViewer() {
                   isLive={session.active}
                   onClose={() => updateColumnOrder(prev => prev.filter(id => id !== session.id))}
                   onFileClick={handleFileClick}
-                  onModifiedFilesChange={handleModifiedFilesChange(session.id)}
                 />
               </div>
             ) : (
@@ -299,7 +281,6 @@ export default function PageAgentViewer() {
                 session={session}
                 onClose={() => updateColumnOrder(prev => prev.filter(id => id !== session.id))}
                 onFileClick={handleFileClick}
-                onModifiedFilesChange={handleModifiedFilesChange(session.id)}
               />
             )
           })
