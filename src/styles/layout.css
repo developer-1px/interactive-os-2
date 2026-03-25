@@ -202,6 +202,8 @@
 
 /* Outlet wrapper — ActivityBar 옆의 콘텐츠 영역 */
 .page-content {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   overflow: hidden;
 }
