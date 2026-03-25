@@ -99,7 +99,17 @@
 
 /* ═══════════════════════════════════════════
    Layout — page, sidebar, content
-   ═══════════════════════════════════════════ */
+   ═══════════════════════════════════════════
+   Parent-enforced layout: 부모가 크기를 정하고 자식은 그 안에서 분할.
+   flex 자식의 min-width:auto 기본값을 0으로 override하여
+   콘텐츠가 부모를 밀지 못하게 한다. Content는 이걸 몰라도 됨.
+*/
+
+.page > *,
+.page-content > *,
+.sidebar-layout > * {
+  min-width: 0;
+}
 
 .page {
   display: flex;
@@ -111,7 +121,6 @@
 .sidebar-layout {
   display: flex;
   flex: 1;
-  min-width: 0;
   overflow: hidden;
 }
 
@@ -185,17 +194,14 @@
 
 .content {
   flex: 1;
-  min-width: 0;
   padding: var(--space-2xl) var(--space-3xl);
   background: var(--surface-default);
   box-shadow: var(--shadow-md);
   overflow-y: auto;
 }
 
-
 /* Outlet wrapper — ActivityBar 옆의 콘텐츠 영역 */
 .page-content {
   flex: 1;
-  min-width: 0;
   overflow: hidden;
 }
