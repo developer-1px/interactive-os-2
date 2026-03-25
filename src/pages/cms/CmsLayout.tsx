@@ -49,6 +49,7 @@ export default function CmsLayout() {
   const [presenting, setPresenting] = useState(false)
   const presentingRef = useRef(false)
   presentingRef.current = presenting
+  const layoutRef = useRef<HTMLDivElement>(null)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
@@ -101,7 +102,7 @@ export default function CmsLayout() {
   }, [canvasFocusedId, sidebarSections])
 
   return (
-    <div className="cms-layout" {...(globalKeyMapProps as React.HTMLAttributes<HTMLDivElement>)}>
+    <div className="cms-layout" ref={layoutRef} tabIndex={-1} {...(globalKeyMapProps as React.HTMLAttributes<HTMLDivElement>)}>
       <div className="cms-body">
         <CmsSidebar
           engine={engine}
@@ -149,7 +150,7 @@ export default function CmsLayout() {
         <CmsPresentMode
           data={store}
           locale={locale}
-          onExit={() => setPresenting(false)}
+          onExit={() => { setPresenting(false); layoutRef.current?.focus() }}
         />
       )}
     </div>
