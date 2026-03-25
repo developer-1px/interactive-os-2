@@ -1,9 +1,11 @@
 /* ═══════════════════════════════════════════
-   Structure — value-free atomic layout classes
+   Structure — atomic layout classes (closed system)
    ═══════════════════════════════════════════
    Closed system: only these classes exist. No JIT, no escape hatch.
    Tailwind naming convention (de facto standard).
-   Values (gap, padding, width) belong in CSS files with tokens.
+
+   Includes: value-free layout props + token-bound gap scale.
+   Gap is included because the token scale is fixed (7 values).
 
    // ② 2026-03-25-css-writing-rules-prd.md
 */
@@ -25,6 +27,15 @@
 .justify-center  { justify-content: center; }
 .justify-between { justify-content: space-between; }
 .justify-end     { justify-content: flex-end; }
+
+/* ── Gap (token-bound, 7 values) ── */
+.gap-xs  { gap: var(--space-xs); }
+.gap-sm  { gap: var(--space-sm); }
+.gap-md  { gap: var(--space-md); }
+.gap-lg  { gap: var(--space-lg); }
+.gap-xl  { gap: var(--space-xl); }
+.gap-2xl { gap: var(--space-2xl); }
+.gap-3xl { gap: var(--space-3xl); }
 
 /* ── Sizing ── */
 .flex-1   { flex: 1; }
