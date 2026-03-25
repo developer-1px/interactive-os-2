@@ -193,8 +193,8 @@
 }
 
 
-/* Outlet 자식은 flex:1로 나머지 공간을 채운다 */
-.page > :not(.activity-bar):not(nav) {
+/* Outlet wrapper — ActivityBar 옆의 콘텐츠 영역 */
+.page-content {
   flex: 1;
   min-width: 0;
   overflow: hidden;
