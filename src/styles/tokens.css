@@ -156,11 +156,11 @@
   --space-3xl: 40px;
 
   /* ── Icon ── */
-  --icon-xs:  12px;
-  --icon-sm:  14px;
-  --icon-md:  16px;
+  --icon-xs:  14px;
+  --icon-sm:  16px;
+  --icon-md:  18px;
   --icon-lg:  24px;
-  --icon-stroke: 1.5;
+  --icon-stroke: 1.75;
 
   /* ── Component specs (claude.ai 실측) ── */
   --input-height:   44px;
@@ -197,8 +197,11 @@
 
 [data-theme="light"] {
   /* ── Surface ── */
+  /* 크림 원본 (stone warm neutral):
   --surface-base:     var(--stone-50);
-  --surface-sunken:   var(--stone-100);
+  --surface-sunken:   var(--stone-100); */
+  --surface-base:     #F8F9FA;
+  --surface-sunken:   #F0F1F3;
   --surface-default:  var(--stone-0);
   --surface-raised:   var(--stone-0);
   --surface-overlay:  var(--stone-0);
@@ -214,9 +217,13 @@
   --text-secondary: var(--stone-500);
   --text-muted:     var(--stone-400);
 
+  /* 크림 원본:
   --border-subtle:  var(--stone-200);
   --border-default: var(--stone-300);
-  --border-strong:  var(--stone-400);
+  --border-strong:  var(--stone-400); */
+  --border-subtle:  #E2E3E7;
+  --border-default: #D1D3D8;
+  --border-strong:  #A0A3AB;
 
   /* ── Tone (light) ── */
   --tone-primary-base:   var(--blue-600);
@@ -250,8 +257,11 @@
   --selection: var(--tone-primary-dim);
 
   /* ── Interactive ── */
+  /* 크림 원본:
   --bg-hover:  var(--stone-100);
-  --bg-active: var(--stone-200);
+  --bg-active: var(--stone-200); */
+  --bg-hover:  #ECEDF0;
+  --bg-active: #E2E3E7;
 
   /* ── File type colors (lower saturation for light bg) ── */
   --file-folder: #9A7A30;

@@ -1,4 +1,5 @@
 import React from 'react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -20,6 +21,7 @@ interface TreeViewProps {
   onActivate?: (nodeId: string) => void
   renderItem?: (props: TreeItemRenderProps, item: Record<string, unknown>, state: NodeState) => React.ReactElement
   followFocus?: boolean
+  selectable?: boolean
   initialFocus?: string
   'aria-label'?: string
 }
@@ -32,7 +34,7 @@ const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unkn
   const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
   return (
     <div className={cls}>
-      <span className={styles.chevron} {...props.toggleProps}>{hasChildren ? (state.expanded ? '▾' : '▸') : ''}</span>
+      <span className={styles.chevron} {...props.toggleProps}>{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
       <span>{label}</span>
     </div>
   )
@@ -45,6 +47,7 @@ export function TreeView({
   onActivate,
   renderItem = defaultRenderItem,
   followFocus,
+  selectable,
   initialFocus,
   'aria-label': ariaLabel,
 }: TreeViewProps) {
@@ -54,6 +57,7 @@ export function TreeView({
     onChange,
     onActivate,
     followFocus,
+    selectable,
     initialFocus,
     'aria-label': ariaLabel,
   })

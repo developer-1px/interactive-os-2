@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import { X } from 'lucide-react'
 import styles from './Combobox.module.css'
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -285,7 +286,7 @@ export function Combobox({
                   onClick={() => removeToken(id)}
                   aria-label={`Remove ${getLabel(id)}`}
                 >
-                  ×
+                  <X size={14} />
                 </button>
               </span>
             ))}
