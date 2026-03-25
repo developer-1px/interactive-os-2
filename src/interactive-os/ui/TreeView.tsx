@@ -8,7 +8,6 @@ import { useTreeView } from './useTreeView'
 import { core, expandCommands } from '../plugins/core'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
-import styles from './TreeView.module.css'
 
 export interface TreeItemRenderProps {
   toggleProps?: React.HTMLAttributes<HTMLElement>
@@ -31,10 +30,9 @@ const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unkn
     ?? (node.data as Record<string, unknown>)?.name as string
     ?? node.id as string
   const hasChildren = state.expanded !== undefined
-  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '') + (state.selected ? ' ' + styles.itemSelected : '')
   return (
-    <div className={cls}>
-      <span className={styles.chevron} {...props.toggleProps}>{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
+    <div className="item-inner gap-xs">
+      <span className="item-chevron--tree" {...props.toggleProps}>{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
       <span>{label}</span>
     </div>
   )
