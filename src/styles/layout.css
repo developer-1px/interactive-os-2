@@ -102,14 +102,22 @@
    ═══════════════════════════════════════════ */
 
 .page {
-  display: grid;
-  grid-template-columns: 48px 192px 1fr;
+  display: flex;
   height: 100svh;
   overflow: hidden;
   background: var(--surface-base);
 }
 
+.sidebar-layout {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .sidebar {
+  width: 192px;
+  flex-shrink: 0;
   background: var(--surface-sunken);
   border-right: 1px solid var(--border-subtle);
   padding: var(--space-md) 0;
@@ -176,6 +184,7 @@
 }
 
 .content {
+  flex: 1;
   min-width: 0;
   padding: var(--space-2xl) var(--space-3xl);
   background: var(--surface-default);
@@ -184,15 +193,9 @@
 }
 
 
-/* sidebar 없을 때 content가 2번째 자식 → 2열부터 끝까지 */
-.content:nth-child(2) {
-  grid-column: 2 / -1;
-}
-
-/* Aria 래퍼가 page grid 자식일 때 → 2열부터 끝까지 + flex column */
-.page > [data-aria-container]:not([role]) {
-  grid-column: 2 / -1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+/* Outlet 자식은 flex:1로 나머지 공간을 채운다 */
+.page > :not(.activity-bar):not(nav) {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
