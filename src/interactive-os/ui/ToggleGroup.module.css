@@ -1,13 +1,3 @@
 /* --- ToggleGroup --- */
-
-.itemSelected {
-  font-weight: var(--weight-semi);
-}
-
-.indicator {
-  color: var(--text-muted);
-}
-
-.indicatorSelected {
-  color: var(--tone-primary-base);
-}
+/* Indicator styles moved to components.css (item-indicator--toggle-group) */
+/* itemSelected font-weight moved to components.css [aria-selected] */

@@ -1,13 +1,5 @@
 /* --- Toggle --- */
-
-.indicator {
-  color: var(--text-muted);
-  font-size: var(--type-body-size);
-}
-
-.indicatorOn {
-  color: var(--tone-success-base);
-}
+/* Indicator styles moved to components.css (item-indicator--toggle) */
 
 .destructive {
   background: var(--tone-destructive-base);

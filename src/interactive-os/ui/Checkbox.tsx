@@ -6,7 +6,6 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/switch'
 import { core } from '../plugins/core'
-import styles from './Checkbox.module.css'
 
 interface CheckboxProps {
   data: NormalizedData
@@ -17,7 +16,7 @@ interface CheckboxProps {
 
 function CheckIcon() {
   return (
-    <svg className={styles.checkIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="item-indicator--checkbox-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 6 9 17l-5-5" />
     </svg>
   )
@@ -30,7 +29,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const checked = state.expanded ?? false
   return (
     <div {...props} className="flex-row items-center gap-sm">
-      <span className={checked ? styles.boxChecked : styles.box}>
+      <span className="item-indicator--checkbox">
         {checked && <CheckIcon />}
       </span>
       <span>{label}</span>
