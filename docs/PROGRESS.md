@@ -84,6 +84,7 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | Vitest (808 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+| Design Lint (8 rules · browser-injectable · Playwright CI) | Validated | 신규 관계 규칙(internal≤external, depth-inversion) false positive 튜닝 필요 |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
 | pnpm health | Validated | — |
