@@ -9,7 +9,7 @@ Drop in a behavior preset and get keyboard interaction automatically.
 
 ## Usage
 
-```ts
+```tsx
 <Aria
   behavior={listbox}     // ARIA pattern preset
   data={store}           // NormalizedData

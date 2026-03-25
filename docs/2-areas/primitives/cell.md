@@ -8,7 +8,7 @@ Multi-column grid support. Each row can contain multiple cells with independent 
 
 ## Usage
 
-```ts
+```tsx
 import { Aria } from 'interactive-os/primitives/aria'
 import { grid } from 'interactive-os/pattern/grid'
 
