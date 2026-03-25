@@ -2,6 +2,10 @@
 
 > undo/redo 스택을 관리하는 히스토리 플러그인
 
+```tsx render
+<HistoryDemo />
+```
+
 ## 커맨드
 
 | 커맨드 | 설명 |

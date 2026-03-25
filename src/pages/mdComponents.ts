@@ -11,6 +11,14 @@ import { ApgKeyboardTable } from './ApgKeyboardTable'
 import AriaListboxDemo from './AriaListboxDemo'
 import CellGridDemo from './CellGridDemo'
 import HooksListDemo from './HooksListDemo'
+import EngineCommandDemo from './EngineCommandDemo'
+import EngineDiffDemo from './EngineDiffDemo'
+import CrudDemo from './CrudDemo'
+import ClipboardDemo from './ClipboardDemo'
+import HistoryDemo from './HistoryDemo'
+import DndDemo from './DndDemo'
+import RenameDemo from './RenameDemo'
+import TypeaheadDemo from './TypeaheadDemo'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mdComponents: Record<string, ComponentType<any>> = {
@@ -26,4 +34,12 @@ export const mdComponents: Record<string, ComponentType<any>> = {
   AriaListboxDemo,
   CellGridDemo,
   HooksListDemo,
+  EngineCommandDemo,
+  EngineDiffDemo,
+  CrudDemo,
+  ClipboardDemo,
+  HistoryDemo,
+  DndDemo,
+  RenameDemo,
+  TypeaheadDemo,
 }
