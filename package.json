@@ -224,7 +224,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "health": "bash scripts/health.sh",
-    "score:design": "node scripts/designScore.mjs"
+    "score:design": "node scripts/designScore.mjs",
+    "score:design-visual": "node scripts/designScoreVisual.mjs",
+    "score:completeness": "node scripts/completenessScore.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
