@@ -17,11 +17,11 @@ export function browserTestPlugin(): Plugin {
       const transformed = code
         .replace(
           /from\s+(["'])vitest\1/g,
-          "from '/src/testRunner/vitestShim'",
+          "from '/src/devtools/testRunner/vitestShim'",
         )
         .replace(
           /from\s+(["'])@testing-library\/react\1/g,
-          "from '/src/testRunner/rtlShim'",
+          "from '/src/devtools/testRunner/rtlShim'",
         )
 
       return transformed !== code ? { code: transformed, map: null } : null

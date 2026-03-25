@@ -20,7 +20,7 @@
  *   const data = rec.stop()
  */
 
-import type { LogEntry, Logger } from '../engine/dispatchLogger'
+import type { LogEntry, Logger } from '../../interactive-os/engine/dispatchLogger'
 
 // ---- Types ----
 

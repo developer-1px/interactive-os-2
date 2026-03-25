@@ -1,10 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { CircleCheck, CircleX, Circle, Play } from 'lucide-react'
 import { runTest, demoTest, type RunTestResult, type TestResult } from './runTest'
 
 function StatusIcon({ status }: { status: 'pass' | 'fail' | 'pending' }) {
-  if (status === 'pass') return <span style={{ color: 'var(--tone-success-base)' }}>●</span>
-  if (status === 'fail') return <span style={{ color: 'var(--red)' }}>●</span>
-  return <span style={{ color: 'var(--text-muted)' }}>○</span>
+  if (status === 'pass') return <span style={{ color: 'var(--tone-success-base)' }}><CircleCheck size={14} /></span>
+  if (status === 'fail') return <span style={{ color: 'var(--red)' }}><CircleX size={14} /></span>
+  return <span style={{ color: 'var(--text-muted)' }}><Circle size={14} /></span>
 }
 
 function ResultItem({ result }: { result: TestResult }) {
@@ -148,7 +149,7 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
             onClick={run}
             disabled={state === 'running'}
           >
-            {state === 'running' ? 'Running...' : '▶ Run Test'}
+            {state === 'running' ? 'Running...' : <><Play size={14} /> Run Test</>}
           </button>
         </div>
 

@@ -1,22 +1,22 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
-import { Up, Down, Left, Right } from './kbdIcons'
-import type { NormalizedData } from '../interactive-os/store/types'
-import type { Command } from '../interactive-os/engine/types'
-import type { Plugin } from '../interactive-os/plugins/types'
-import type { PatternContext, NodeState } from '../interactive-os/pattern/types'
-import type { LogEntry } from '../interactive-os/engine/dispatchLogger'
-import { Aria } from '../interactive-os/primitives/aria'
-import { TreeView } from '../interactive-os/ui/TreeView'
-import type { TreeItemRenderProps } from '../interactive-os/ui/TreeView'
-import { tree } from '../interactive-os/pattern/tree'
-import { core } from '../interactive-os/plugins/core'
-import { history } from '../interactive-os/plugins/history'
-import { crud, crudCommands } from '../interactive-os/plugins/crud'
-import { dnd, dndCommands } from '../interactive-os/plugins/dnd'
-import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
-import { storeToTree } from '../interactive-os/store/storeToTree'
-import { treeData } from './shared-tree-data'
+import { Up, Down, Left, Right } from '../../pages/kbdIcons'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import type { Command } from '../../interactive-os/engine/types'
+import type { Plugin } from '../../interactive-os/plugins/types'
+import type { PatternContext, NodeState } from '../../interactive-os/pattern/types'
+import type { LogEntry } from '../../interactive-os/engine/dispatchLogger'
+import { Aria } from '../../interactive-os/primitives/aria'
+import { TreeView } from '../../interactive-os/ui/TreeView'
+import type { TreeItemRenderProps } from '../../interactive-os/ui/TreeView'
+import { tree } from '../../interactive-os/pattern/tree'
+import { core } from '../../interactive-os/plugins/core'
+import { history } from '../../interactive-os/plugins/history'
+import { crud, crudCommands } from '../../interactive-os/plugins/crud'
+import { dnd, dndCommands } from '../../interactive-os/plugins/dnd'
+import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
+import { storeToTree } from '../../interactive-os/store/storeToTree'
+import { treeData } from '../../pages/shared-tree-data'
 import styles from './PageStoreInspector.module.css'
 
 // --- Stateless module-level constants ---
@@ -165,7 +165,7 @@ function formatDiffSummary(entry: LogEntry): string {
 
 // --- Page component ---
 
-export default function StoreInspectorDemo() {
+export default function PageStoreInspector() {
   const [data, setData] = useState<NormalizedData>(treeData)
   const [log, setLog] = useState<LogEntry[]>([])
   const logRef = useRef<HTMLDivElement>(null)
@@ -187,7 +187,14 @@ export default function StoreInspectorDemo() {
   }, [log])
 
   return (
-    <>
+    <div>
+      <div className="page-header">
+        <h2 className="page-title">Store Inspector</h2>
+        <p className="page-desc">
+          Live view of NormalizedData structure. Editor (left) uses treegrid + crud + dnd + history.
+          Inspector (right) shows the raw store via storeToTree transform. Log (bottom) captures dispatched commands.
+        </p>
+      </div>
       <div className="page-keys">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd><Left /><Right /></kbd> <span className="key-hint">expand/collapse</span>{' '}
@@ -254,6 +261,6 @@ export default function StoreInspectorDemo() {
 
         </div>
       </div>
-    </>
+    </div>
   )
 }

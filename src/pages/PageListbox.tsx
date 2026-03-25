@@ -1,4 +1,4 @@
-import { TestRunnerPanel } from '../testRunner/TestRunnerPanel'
+import { TestRunnerPanel } from '../devtools/testRunner/TestRunnerPanel'
 
 export default function PageListbox() {
   return (

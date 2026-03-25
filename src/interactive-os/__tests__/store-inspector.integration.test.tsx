@@ -8,7 +8,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import PageStoreInspector from '../../pages/PageStoreInspector'
+import PageStoreInspector from '../../devtools/inspector/PageStoreInspector'
 
 // ---- helpers ----------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-import { Database, Cog, Axe, Puzzle, Box, Layers, BookOpen } from 'lucide-react'
+import { Database, Cog, Axe, Puzzle, Box, Layers, BookOpen, Wrench } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import PageAreaViewer from './pages/PageAreaViewer'
@@ -85,6 +85,17 @@ export const routeConfig: RouteGroup[] = [
       { path: 'aria', label: 'Aria', status: 'ready', component: PageAreaViewer },
       { path: 'cell', label: 'Cell', status: 'ready', component: PageAreaViewer },
       { path: 'hooks', label: 'Hooks', status: 'ready', component: PageAreaViewer },
+    ],
+  },
+  {
+    id: 'devtools',
+    label: 'Devtools',
+    icon: Wrench,
+    basePath: '/devtools/rec',
+    items: [
+      { path: 'rec', label: 'REC', status: 'ready', component: PageAreaViewer },
+      { path: 'inspector', label: 'Inspector', status: 'ready', component: PageAreaViewer },
+      { path: 'test-runner', label: 'Test Runner', status: 'ready', component: PageAreaViewer },
     ],
   },
   {
