@@ -49,7 +49,7 @@ export function useTreeView(options: UseTreeViewOptions): UseTreeViewReturn {
   let behavior = followFocus ? { ...tree, followFocus: true } : tree
   if (!selectable) {
     const { Space: _space, ...rest } = behavior.keyMap
-    behavior = { ...behavior, keyMap: rest, config: { ...behavior.config, selectionMode: undefined, selectOnClick: false } }
+    behavior = { ...behavior, keyMap: rest, selectionMode: undefined, selectOnClick: false }
   }
   const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, initialFocus })
   return toTreeViewReturn(aria, ariaLabel)
