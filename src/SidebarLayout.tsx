@@ -90,7 +90,7 @@ export default function SidebarLayout() {
   const activeItemPath = pathname.slice(('/' + activeGroup.id + '/').length)
 
   return (
-    <>
+    <div className="sidebar-layout">
       {activeGroup.id === 'internals/area'
         ? <AreaSidebar />
         : <Sidebar activeGroup={activeGroup} activeItemPath={activeItemPath} />
@@ -98,6 +98,6 @@ export default function SidebarLayout() {
       <main className="content">
         <Outlet />
       </main>
-    </>
+    </div>
   )
 }

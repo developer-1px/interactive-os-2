@@ -57,7 +57,7 @@ export default function PageI18nEditor() {
   }
 
   return (
-    <div style={{ padding: 'var(--space-lg)', gridColumn: '2 / -1', overflow: 'auto' }}>
+    <div style={{ padding: 'var(--space-lg)', overflow: 'auto' }}>
       <div className="page-header">
         <h2 className="page-title">i18n Editor</h2>
         <p className="page-desc">
