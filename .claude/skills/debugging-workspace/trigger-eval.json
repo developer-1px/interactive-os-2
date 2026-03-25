@@ -1,0 +1,22 @@
+[
+  {"query": "NavList 사이드바에서 ArrowDown 누르면 다음 항목으로 안 넘어가. /ui/NavList 페이지에서 확인해봐", "should_trigger": true},
+  {"query": "tree에서 노드 expand하고 collapse하면 포커스가 이상한 데로 가. focusRecovery가 잘못된 노드로 복구하는 것 같아", "should_trigger": true},
+  {"query": "안 돼 왜이러지 grid에서 Tab 누르면 다음 셀로 안 가고 페이지 밖으로 나가버려", "should_trigger": true},
+  {"query": "CMS 랜딩에서 섹션 삭제하면 하얀 화면 나와. Delete 3번 연타하면 크래시", "should_trigger": true},
+  {"query": "vitest 돌리면 navlist.integration.test.tsx에서 ArrowDown moves focus 테스트가 실패해", "should_trigger": true},
+  {"query": "이거 왜 이러지? combobox에서 타이핑하면 리스트가 안 열려. 어제까지 됐었는데", "should_trigger": true},
+  {"query": "방금 구현한 slider가 실제 브라우저에서 동작하는지 확인해봐. 키보드로 값 변경되는지", "should_trigger": true},
+  {"query": "accordion에서 Enter로 섹션 열면 aria-expanded가 true로 안 바뀌어. 접근성 트리에서 확인 필요", "should_trigger": true},
+  {"query": "이벤트 레코더가 ArrowDown을 못 잡는 것 같은데, 실제로 동작은 하는 것 같아. 도구 문제인지 코드 문제인지 모르겠어", "should_trigger": true},
+  {"query": "수정해줘 kanban에서 드래그앤드롭 후 포커스가 사라져. 원래 있던 카드로 돌아와야 하는데", "should_trigger": true},
+  {"query": "NavList 컴포넌트를 새로 만들어줘. 키보드 네비게이션이랑 followFocus activation 지원해야 해", "should_trigger": false},
+  {"query": "useAria hook의 설계를 설명해줘. 왜 engine과 view를 분리했는지 궁금해", "should_trigger": false},
+  {"query": "CMS 랜딩 페이지 디자인을 바꾸고 싶어. 색상이랑 간격을 조정하고 싶은데", "should_trigger": false},
+  {"query": "getVisibleNodes 함수가 어떤 역할을 하는지 문서로 정리해줘", "should_trigger": false},
+  {"query": "tree-view 패턴에 selection 축을 추가하고 싶어. Shift+ArrowDown으로 범위 선택", "should_trigger": false},
+  {"query": "이 프로젝트의 아키텍처를 리팩토링하자. behavior를 pattern으로 rename하고 싶어", "should_trigger": false},
+  {"query": "커밋하고 PR 만들어줘. 방금 작업한 것들 정리해서", "should_trigger": false},
+  {"query": "테스트 커버리지를 올려야 해. navlist 데모 컴포넌트에 분기 커버리지 추가해줘", "should_trigger": false},
+  {"query": "PROGRESS.md에 새로 추가한 모듈 행을 갱신해줘", "should_trigger": false},
+  {"query": "디자인 토큰 점수를 올리자. pnpm score:design 돌려서 위반 항목 수정", "should_trigger": false}
+]
