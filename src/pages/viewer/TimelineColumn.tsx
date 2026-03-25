@@ -2,7 +2,7 @@ import styles from './TimelineColumn.module.css'
 import { useState, useEffect, useRef, useCallback, useMemo, memo, type ReactNode } from 'react'
 import {
   Circle, FileText, Terminal,
-  Pencil, Search, FilePlus, Loader,
+  Pencil, Search, FilePlus, Loader, X,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import { useVirtualScroll } from './useVirtualScroll'
@@ -177,6 +177,7 @@ const LOAD_MORE_CHUNK = 100
 export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFileClick, onModifiedFilesChange }: TimelineColumnProps) {
   const [timeline, setTimeline] = useState<TimelineEvent[]>([])
   const [fetchError, setFetchError] = useState<string | null>(null)
+  const [initialLoading, setInitialLoading] = useState(true)
   const totalRef = useRef(0)        // total events on server
   const loadedFromRef = useRef(0)   // how far back we've loaded (server index)
   const loadingMoreRef = useRef(false)
@@ -270,8 +271,9 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
         totalRef.current = data.total
         loadedFromRef.current = Math.max(0, data.total - data.events.length)
         setFetchError(null)
+        setInitialLoading(false)
       })
-      .catch(e => setFetchError(e.message))
+      .catch(e => { setFetchError(e.message); setInitialLoading(false) })
   }, [sessionId, trackEditRanges])
 
   // --- Load older events on scroll-up ---
@@ -409,7 +411,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
     <div className={styles.tc}>
       <div className={`${styles.tcHeader} ${isLive && agentStatus === 'idle' ? styles.tcHeaderIdle : ''}`}>
         {isLive && (
-          <span className={agentStatus === 'idle' ? styles.tcIdle : styles.tcLive}>●</span>
+          <span className={agentStatus === 'idle' ? styles.tcIdle : styles.tcLive}><Circle size={8} fill="currentColor" /></span>
         )}
         <span className={styles.tcLabel}>{sessionLabel}</span>
         {isLive && (
@@ -417,11 +419,16 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
             {agentStatus === 'running' ? '진행중' : agentStatus === 'idle' ? '입력 대기' : ''}
           </span>
         )}
-        <button className={styles.tcClose} onClick={onClose}>×</button>
+        <button className={styles.tcClose} onClick={onClose}><X size={14} /></button>
       </div>
       <div className={styles.tcBody} ref={containerRef}>
         {fetchError ? (
           <div className={styles.tcEmpty}>Failed to load: {fetchError}</div>
+        ) : initialLoading ? (
+          <div className={styles.tcLoading}>
+            <Loader size={14} className={styles.tcLoadingSpinner} />
+            <span>Loading timeline...</span>
+          </div>
         ) : displayItems.length === 0 ? (
           <div className={styles.tcEmpty}>Waiting for agent activity...</div>
         ) : (
