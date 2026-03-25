@@ -80,7 +80,8 @@
 .scrollFab {
   position: absolute;
   bottom: var(--space-md);
-  right: var(--space-md);
+  left: 50%;
+  transform: translateX(-50%);
   width: 32px;
   height: 32px;
   display: flex;

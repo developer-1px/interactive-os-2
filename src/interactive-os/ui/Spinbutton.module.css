@@ -7,9 +7,6 @@
   --_value-min-w: calc(var(--space-lg) * 3);       /* 48px */
   --_ring-spread: 2px;
 
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
   padding: var(--space-sm) var(--space-md);
 }
 
@@ -22,8 +19,6 @@
 
 /* Unified group: − [value] + with single focus ring */
 .spinbuttonGroup {
-  display: inline-flex;
-  align-items: stretch;
   border: 1px solid var(--border-default);
   border-radius: var(--shape-md-radius);
   overflow: hidden;
@@ -37,9 +32,6 @@
 }
 
 .spinbuttonBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: var(--_btn-w);
   border: none;
   background: var(--bg-hover);
@@ -70,9 +62,6 @@
 }
 
 .spinbuttonValue {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-md);
   font-size: var(--type-body-size);

@@ -125,12 +125,12 @@ export function Spinbutton({
     }
 
     return (
-      <div className={styles.spinbuttonItem} data-focused={state.focused || undefined}>
+      <div className={`flex-row items-center gap-md ${styles.spinbuttonItem}`} data-focused={state.focused || undefined}>
         {itemLabel && <span className={styles.spinbuttonLabel}>{itemLabel}</span>}
-        <div className={styles.spinbuttonGroup} data-invalid={invalid || undefined}>
+        <div className={`inline-flex items-stretch ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
           <button
             type="button"
-            className={`${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
+            className={`flex-row items-center justify-center ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
             aria-disabled={atMin || undefined}
@@ -152,7 +152,7 @@ export function Spinbutton({
             />
           ) : (
             <div
-              className={styles.spinbuttonValue}
+              className={`flex-row items-center justify-center ${styles.spinbuttonValue}`}
               onClick={startEditing}
               onDoubleClick={startEditing}
             >
@@ -161,7 +161,7 @@ export function Spinbutton({
           )}
           <button
             type="button"
-            className={`${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
+            className={`flex-row items-center justify-center ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}
             aria-disabled={atMax || undefined}

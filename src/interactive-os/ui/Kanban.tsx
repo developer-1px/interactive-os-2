@@ -43,7 +43,7 @@ export function Kanban({
         role={kanbanBehavior.role}
         aria-label={ariaLabel}
         data-aria-container=""
-        className={styles.board}
+        className={`flex-row gap-md overflow-x-auto ${styles.board}`}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       >
         {columns.map((colId) => {
@@ -55,11 +55,11 @@ export function Kanban({
           const colTitle = (colEntity.data as Record<string, unknown>)?.title as string ?? ''
 
           return (
-            <div key={colId} className={styles.column}>
+            <div key={colId} className={`flex-col gap-xs ${styles.column}`}>
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className={styles.columnHeader}
+                className={`flex-row items-center gap-sm ${styles.columnHeader}`}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
               >
                 <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>

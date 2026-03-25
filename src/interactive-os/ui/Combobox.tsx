@@ -275,7 +275,7 @@ export function Combobox({
   return (
     <div>
       {mode === 'multiple' && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
+        <div className="flex-row flex-wrap gap-xs items-center">
           <div role="list">
             {aria.selected.map((id) => (
               <span key={id} data-combobox-token role="listitem">
@@ -319,7 +319,7 @@ export function Combobox({
       />
       )}
       {isOpen && (
-        <div className={styles.comboDropdown} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div className={`${styles.comboDropdown} overflow-hidden`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? (
             rootChildren.map(groupId => {
               const group = originalStore.entities[groupId]
