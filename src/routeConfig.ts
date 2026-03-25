@@ -1,7 +1,6 @@
 import { Database, Cog, Axe, Puzzle, Box, Layers, BookOpen } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-import PageStoreInspector from './pages/PageStoreInspector'
 import PageAreaViewer from './pages/PageAreaViewer'
 
 export interface RouteItem {
@@ -27,7 +26,7 @@ export const routeConfig: RouteGroup[] = [
     icon: Database,
     basePath: '/internals/store/inspector',
     items: [
-      { path: 'inspector', label: 'Inspector', status: 'ready', component: PageStoreInspector },
+      { path: 'inspector', label: 'Inspector', status: 'ready', component: PageAreaViewer },
     ],
   },
   {

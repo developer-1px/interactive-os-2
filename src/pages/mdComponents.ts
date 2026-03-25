@@ -19,6 +19,7 @@ import HistoryDemo from './HistoryDemo'
 import DndDemo from './DndDemo'
 import RenameDemo from './RenameDemo'
 import TypeaheadDemo from './TypeaheadDemo'
+import StoreInspectorDemo from './StoreInspectorDemo'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mdComponents: Record<string, ComponentType<any>> = {
@@ -42,4 +43,5 @@ export const mdComponents: Record<string, ComponentType<any>> = {
   DndDemo,
   RenameDemo,
   TypeaheadDemo,
+  StoreInspectorDemo,
 }
