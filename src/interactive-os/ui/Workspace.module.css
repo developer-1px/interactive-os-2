@@ -1,0 +1,22 @@
+/* ② 2026-03-26-workspace-containers-prd.md */
+
+.workspace {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.workspaceContent {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: var(--space-sm);
+  color: var(--text-muted);
+}
