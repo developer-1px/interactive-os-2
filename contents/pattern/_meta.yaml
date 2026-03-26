@@ -1,0 +1,23 @@
+label: Pattern
+description: Axis를 조합하여 완성된 ARIA 패턴을 구성한다.
+order:
+  - listbox
+  - treegrid
+  - tree
+  - grid
+  - menu
+  - menubar
+  - tabs
+  - accordion
+  - disclosure
+  - dialog
+  - alertdialog
+  - combobox
+  - radiogroup
+  - toolbar
+  - switch
+  - slider
+  - spinbutton
+  - kanban
+  - spatial
+  - edit

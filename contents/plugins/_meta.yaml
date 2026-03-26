@@ -1,0 +1,14 @@
+label: Plugins
+description: Pattern에 교차 관심사를 주입하는 확장.
+order:
+  - core
+  - crud
+  - clipboard
+  - history
+  - focusRecovery
+  - rename
+  - typeahead
+  - dnd
+  - combobox
+  - spatial
+  - useSpatialNav

@@ -228,7 +228,8 @@
     "score:design": "node scripts/designScore.mjs",
     "score:design-visual": "node scripts/designScoreVisual.mjs",
     "score:completeness": "node scripts/completenessScore.mjs",
-    "lint:design": "node scripts/designLintRunner.mjs"
+    "lint:design": "node scripts/designLintRunner.mjs",
+    "check:contents": "node scripts/checkContentsIsomorphism.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

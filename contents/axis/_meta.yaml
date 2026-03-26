@@ -1,0 +1,11 @@
+label: Axis
+description: ARIA 인터랙션의 단일 축. 하나의 행동 차원.
+order:
+  - navigate
+  - select
+  - activate
+  - expand
+  - dismiss
+  - tab
+  - trigger-popup
+  - value
