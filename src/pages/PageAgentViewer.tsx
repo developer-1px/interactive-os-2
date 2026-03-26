@@ -1,16 +1,20 @@
 import styles from './PageAgentViewer.module.css'
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { Circle, FileText, Code } from 'lucide-react'
 import { NavList } from '../interactive-os/ui/NavList'
-import { createStore } from '../interactive-os/store/createStore'
+import { createStore, getChildren, getEntityData } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
 import { TimelineColumn } from './viewer/TimelineColumn'
 import { useAllModifiedFiles } from './viewer/viewerStore'
-import { FileViewerModal } from '../interactive-os/ui/FileViewerModal'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
+import { Workspace } from '../interactive-os/ui/Workspace'
+import { createWorkspace, workspaceCommands } from '../interactive-os/plugins/workspaceStore'
+import type { TabData } from '../interactive-os/plugins/workspaceStore'
+import { CodeBlock } from '../interactive-os/ui/CodeBlock'
+import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
 
 // --- Types ---
 
@@ -19,21 +23,6 @@ interface SessionInfo {
   mtime: number
   label: string
   active: boolean
-}
-
-// --- Constants ---
-
-const STORAGE_KEY = 'agent-viewer-columns'
-
-function loadColumnOrder(): string[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
-  } catch { return [] }
-}
-
-function saveColumnOrder(order: string[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(order))
 }
 
 // --- Helpers ---
@@ -98,48 +87,54 @@ function buildFilesStore(files: string[]): NormalizedData {
   return createStore({ entities: {}, relationships: { [ROOT_ID]: [] } })
 }
 
-// --- Resizable Column ---
+async function fetchFile(path: string): Promise<string> {
+  const res = await fetch(`/api/fs/file?path=${encodeURIComponent(path)}`)
+  return res.text()
+}
 
-function ResizableColumn({ session, onClose, onFileClick }: {
-  session: SessionInfo
-  onClose: () => void
-  onFileClick: (path: string, ranges?: string[]) => void
-}) {
-  const resizer = useResizer({
-    defaultSize: 420, minSize: 280, maxSize: 800, step: 10,
-    storageKey: `agent-col-${session.id}`,
-  })
+// --- FilePanel ---
+
+function FilePanel({ path }: { path: string }) {
+  const [content, setContent] = useState('')
+  const bodyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    bodyRef.current?.scrollTo(0, 0)
+    fetchFile(path).then(setContent)
+  }, [path])
+
+  const filename = path.split('/').pop() ?? ''
+  const isMarkdown = filename.endsWith('.md')
 
   return (
-    <>
-      <div style={{ width: resizer.size, flexShrink: 0, height: '100%' }}>
-        <TimelineColumn
-          sessionId={session.id}
-          sessionLabel={session.label}
-          isLive={session.active}
-          onClose={onClose}
-          onFileClick={onFileClick}
-        />
-      </div>
-      <div className="resizer-handle" aria-label={`Resize ${session.label}`} {...resizer.separatorProps} />
-    </>
+    <div ref={bodyRef} className={styles.avFilePanel}>
+      {isMarkdown
+        ? <MarkdownViewer content={content} />
+        : <CodeBlock code={content} filename={filename} variant="flush" />
+      }
+    </div>
   )
+}
+
+// --- Workspace helpers ---
+
+function findTabgroup(store: NormalizedData, parentId: string): string | undefined {
+  for (const id of getChildren(store, parentId)) {
+    const data = getEntityData<{ type: string }>(store, id)
+    if (data?.type === 'tabgroup') return id
+    if (data?.type === 'split') {
+      const found = findTabgroup(store, id)
+      if (found) return found
+    }
+  }
+  return undefined
 }
 
 // --- Main Component ---
 
 export default function PageAgentViewer() {
   const [sessions, setSessions] = useState<SessionInfo[]>([])
-  const [columnOrder, setColumnOrderRaw] = useState<string[]>(loadColumnOrder)
-
-  const updateColumnOrder = useCallback((updater: (prev: string[]) => string[]) => {
-    setColumnOrderRaw(prev => {
-      const next = updater(prev)
-      if (next !== prev) saveColumnOrder(next)
-      return next
-    })
-  }, [])
-  const [modalFile, setModalFile] = useState<{ path: string; editRanges?: string[] } | null>(null)
+  const [workspaceStore, setWorkspaceStore] = useState(() => createWorkspace())
   const [loading, setLoading] = useState(true)
 
   const sessionsResizer = useResizer({
@@ -147,24 +142,30 @@ export default function PageAgentViewer() {
     storageKey: 'agent-sessions-width',
   })
 
-  // Session list polling — active only, auto-append to columns
+  // Session list polling — active only, auto-append as workspace tabs
   useEffect(() => {
     const handleSessions = (fetched: SessionInfo[]) => {
       setSessions(fetched)
       if (fetched.length === 0) return
 
-      const sessionIds = new Set(fetched.map(s => s.id))
-      const activeIds = new Set(fetched.filter(s => s.active).map(s => s.id))
+      setWorkspaceStore(prev => {
+        const tgId = findTabgroup(prev, ROOT_ID)
+        if (!tgId) return prev
 
-      updateColumnOrder(prev => {
-        const kept = prev.filter(id => sessionIds.has(id))
-        const keptSet = new Set(kept)
-        const appended = [...activeIds].filter(id => !keptSet.has(id))
-        const next = [...kept, ...appended]
-        if (next.length !== prev.length || next.some((id, i) => id !== prev[i])) {
-          return next
+        let store = prev
+        const existingTabIds = getChildren(store, tgId)
+
+        for (const session of fetched.filter(s => s.active)) {
+          const tabId = `session-${session.id}`
+          const exists = existingTabIds.includes(tabId)
+          if (!exists) {
+            store = workspaceCommands.addTab(tgId, {
+              id: tabId,
+              data: { type: 'tab', label: session.label, contentType: 'timeline', contentRef: session.id } as TabData,
+            }).execute(store)
+          }
         }
-        return prev
+        return store
       })
     }
 
@@ -173,17 +174,32 @@ export default function PageAgentViewer() {
     fetchSessions()
     const interval = setInterval(fetchSessions, 5000)
     return () => clearInterval(interval)
-  }, [updateColumnOrder])
+  }, [])
 
   const sessionMap = useMemo(() => new Map(sessions.map(s => [s.id, s])), [sessions])
   const activeSessions = useMemo(() => sessions.filter(s => s.active), [sessions])
 
-  const displayColumns = columnOrder
-    .map(id => sessionMap.get(id))
-    .filter((s): s is SessionInfo => s != null && s.active)
+  const handleFileClick = useCallback((filePath: string, _editRanges?: string[]) => {
+    setWorkspaceStore(prev => {
+      const tgId = findTabgroup(prev, ROOT_ID)
+      if (!tgId) return prev
 
-  const handleFileClick = useCallback((filePath: string, editRanges?: string[]) => {
-    setModalFile({ path: filePath, editRanges })
+      const tabIds = getChildren(prev, tgId)
+      const existingTab = tabIds.find(id => {
+        const data = getEntityData(prev, id) as TabData | undefined
+        return data?.contentRef === filePath
+      })
+
+      if (existingTab) {
+        return workspaceCommands.setActiveTab(tgId, existingTab).execute(prev)
+      }
+
+      const filename = filePath.split('/').pop() ?? filePath
+      return workspaceCommands.addTab(tgId, {
+        id: `file-${filePath}`,
+        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath } as TabData,
+      }).execute(prev)
+    })
   }, [])
 
   // Modified files from store (aggregated across all sessions)
@@ -203,10 +219,31 @@ export default function PageAgentViewer() {
     return (
       <div {...props} className={cls}>
         {isMd ? <FileText size={12} /> : <Code size={12} />}
-        <span>{label}</span>
+        <span className="truncate">{label}</span>
       </div>
     )
   }, [])
+
+  const renderPanel = useCallback((tab: Entity) => {
+    const tabData = tab.data as unknown as TabData
+    if (tabData.contentType === 'timeline') {
+      const session = sessionMap.get(tabData.contentRef)
+      if (!session) return null
+      return (
+        <TimelineColumn
+          sessionId={session.id}
+          sessionLabel={session.label}
+          isLive={session.active}
+          onClose={() => {}}
+          onFileClick={handleFileClick}
+        />
+      )
+    }
+    if (tabData.contentType === 'file') {
+      return <FilePanel path={tabData.contentRef} />
+    }
+    return null
+  }, [sessionMap, handleFileClick])
 
   if (loading) {
     return (
@@ -233,7 +270,7 @@ export default function PageAgentViewer() {
               {activeSessions.map(s => (
                 <div key={s.id} className={styles.avSessionItem}>
                   <span className={styles.avSessionLive}><Circle size={8} fill="currentColor" /></span>
-                  <span className={styles.avSessionLabel}>{s.label}</span>
+                  <span className={`${styles.avSessionLabel} truncate`}>{s.label}</span>
                 </div>
               ))}
             </div>
@@ -255,44 +292,10 @@ export default function PageAgentViewer() {
         </>
       )}
 
-      {/* Timeline columns */}
+      {/* Workspace panels */}
       <div className={styles.avColumns}>
-        {displayColumns.length === 0 ? (
-          <div className={styles.avEmpty}>
-            <Circle size={24} className={styles.avEmptyIcon} />
-            <span>활성 세션 없음</span>
-          </div>
-        ) : (
-          displayColumns.map((session, i) => {
-            const isLast = i === displayColumns.length - 1
-            return isLast ? (
-              <div key={session.id} style={{ flex: 1, minWidth: 280, height: '100%' }}>
-                <TimelineColumn
-                  sessionId={session.id}
-                  sessionLabel={session.label}
-                  isLive={session.active}
-                  onClose={() => updateColumnOrder(prev => prev.filter(id => id !== session.id))}
-                  onFileClick={handleFileClick}
-                />
-              </div>
-            ) : (
-              <ResizableColumn
-                key={session.id}
-                session={session}
-                onClose={() => updateColumnOrder(prev => prev.filter(id => id !== session.id))}
-                onFileClick={handleFileClick}
-              />
-            )
-          })
-        )}
+        <Workspace data={workspaceStore} onChange={setWorkspaceStore} renderPanel={renderPanel} />
       </div>
-
-      {/* File viewer modal */}
-      <FileViewerModal
-        filePath={modalFile?.path ?? null}
-        editRanges={modalFile?.editRanges}
-        onClose={() => setModalFile(null)}
-      />
     </div>
   )
 }

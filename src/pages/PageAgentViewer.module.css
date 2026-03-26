@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
-   Agent Viewer — multi-column layout
-   Left: active sessions + modified files, Center: timeline columns
+   Agent Viewer — sidebar + workspace tabs
+   Left: active sessions + modified files, Center: workspace (tabs/splits)
    ═══════════════════════════════════════════ */
 
 /* --- Layout --- */
@@ -71,12 +71,6 @@
   flex-shrink: 0;
 }
 
-.avSessionLabel {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 /* --- Modified files section --- */
 
 .avFilesSection {
@@ -94,10 +88,8 @@
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
   cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
+
 
 .avFileItem:hover {
   background: var(--bg-hover);
@@ -109,34 +101,20 @@
   color: var(--text-bright);
 }
 
-/* --- Timeline columns --- */
+/* --- Workspace area --- */
 
 .avColumns {
   display: flex;
   flex: 1;
   min-width: 0;
   min-height: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
 }
 
-/* --- Empty/waiting state --- */
+/* --- File panel --- */
 
-.avEmpty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-md);
+.avFilePanel {
   height: 100%;
-  width: 100%;
-  color: var(--text-muted);
-
-  font-size: var(--type-body-size);
-}
-
-.avEmptyIcon {
-  opacity: 0.2;
+  overflow: auto;
 }
 
 /* --- Loading --- */
