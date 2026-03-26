@@ -3,10 +3,10 @@ order:
   - vision
   - store
   - engine
-  - primitives
   - axis
   - pattern
   - plugins
+  - primitives
   - ui
   - devtools
 

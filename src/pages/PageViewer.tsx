@@ -294,7 +294,7 @@ export default function PageViewer() {
       const tgId = findTabgroup(prev)
       if (!tgId) return prev
 
-      let store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
+      const store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
 
       const newSplitId = getChildren(store, ROOT_ID).find(id =>
         (getEntityData<{ type: string }>(store, id))?.type === 'split'
