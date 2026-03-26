@@ -1,8 +1,8 @@
 import type { Entity } from '../store/types'
-import type { Command, Middleware } from '../engine/types'
+import type { Command, Middleware, VisibilityFilter } from '../engine/types'
 import type { AriaPattern, NodeState } from './types'
 import type { PatternContext, FocusStrategy, KeyMap, Axis, AxisConfig, StructuredAxis } from '../axis/types'
-import { extractKeyMap, extractConfig, extractMiddleware } from '../axis/types'
+import { extractKeyMap, extractConfig, extractMiddleware, extractVisibilityFilter } from '../axis/types'
 
 export type { Axis, StructuredAxis, KeyMap, AxisConfig }
 
@@ -78,6 +78,13 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
           next,
         )
 
+  // Collect visibility filters from axes
+  const visibilityFilters: VisibilityFilter[] = []
+  for (const axis of axes) {
+    const vf = extractVisibilityFilter(axis)
+    if (vf) visibilityFilters.push(vf)
+  }
+
   // Build behavior
   if (isIdentity(config)) {
     // v2 Identity path
@@ -99,6 +106,7 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
       ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
       keyMap,
       ...(composedMiddleware && { middleware: composedMiddleware }),
+      ...(visibilityFilters.length > 0 && { visibilityFilters }),
     }
   }
 
@@ -119,5 +127,6 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
     ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
     keyMap,
     ...(composedMiddleware && { middleware: composedMiddleware }),
+    ...(visibilityFilters.length > 0 && { visibilityFilters }),
   }
 }

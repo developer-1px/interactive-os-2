@@ -1,12 +1,13 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 import type { Command } from '../engine/types'
-import type { Middleware } from '../engine/types'
+import type { Middleware, VisibilityFilter } from '../engine/types'
 
-export type { Command, Middleware }
+export type { Command, Middleware, VisibilityFilter }
 
 export interface Plugin {
   name?: string
   middleware?: Middleware
+  visibilityFilter?: VisibilityFilter
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: Record<string, (...args: any[]) => Command>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,5 +1,5 @@
 // ② 2026-03-25-search-plugin-prd.md
-import type { Command } from '../engine/types'
+import type { Command, VisibilityFilter } from '../engine/types'
 import type { Plugin } from './types'
 import { definePlugin } from './definePlugin'
 import type { Entity } from '../store/types'
@@ -77,6 +77,15 @@ export const searchCommands = {
   },
 }
 
+const searchVisibilityFilter: VisibilityFilter = {
+  shouldShow(nodeId, store) {
+    const searchEntity = store.entities[SEARCH_ID] as Record<string, unknown> | undefined
+    const filterText = (searchEntity?.filterText as string) ?? ''
+    if (!filterText) return true
+    return matchesSearchFilter(store.entities[nodeId], filterText)
+  },
+}
+
 export function search(): Plugin {
   return definePlugin({
     name: 'search',
@@ -88,5 +97,6 @@ export function search(): Plugin {
     keyMap: {
       'Mod+F': () => searchCommands.activateSearch(),
     },
+    visibilityFilter: searchVisibilityFilter,
   })
 }

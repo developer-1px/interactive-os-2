@@ -1,7 +1,8 @@
-import type { Command, Middleware, Plugin } from './types'
+import type { Command, Middleware, VisibilityFilter, Plugin } from './types'
 
 export interface PluginConfig {
   name: string
+  visibilityFilter?: VisibilityFilter
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: Record<string, (...args: any[]) => any>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,7 +30,7 @@ function composeMiddlewares(middlewares: Middleware[]): Middleware {
 }
 
 export function definePlugin(config: PluginConfig): Plugin {
-  const { name, commands, keyMap, middleware, onUnhandledKey, intercepts, requires, onCopy, onCut, onPaste } = config
+  const { name, commands, keyMap, middleware, onUnhandledKey, intercepts, requires, onCopy, onCut, onPaste, visibilityFilter } = config
 
   const middlewares: Middleware[] = []
   for (const dep of requires ?? []) {
@@ -47,5 +48,6 @@ export function definePlugin(config: PluginConfig): Plugin {
     onCopy,
     onCut,
     onPaste,
+    visibilityFilter,
   }
 }
