@@ -45,17 +45,17 @@ export default function EditDemo() {
           'aria-selected': String(state.selected),
         }),
       },
-      edit({ tree }),
       navigate({ orientation: 'vertical' }),
     ),
-    [tree],
+    [],
   )
 
   const plugins = React.useMemo(
-    () => replaceMode
-      ? [crud(), rename(), history(), focusRecovery(), replacePlugin]
-      : [crud(), rename(), history(), focusRecovery()],
-    [replaceMode],
+    () => {
+      const base = [edit({ tree }), crud(), rename(), history(), focusRecovery()]
+      return replaceMode ? [...base, replacePlugin] : base
+    },
+    [replaceMode, tree],
   )
 
   const handleReset = () => setData(makeData())

@@ -15,6 +15,7 @@ import { rename } from '../plugins/rename'
 import { dnd } from '../plugins/dnd'
 import { focusRecovery } from '../plugins/focusRecovery'
 import { cellEdit } from '../plugins/cellEdit'
+import { edit } from '../plugins/edit'
 import { Aria } from '../primitives/aria'
 import { grid as gridBehavior } from '../pattern/examples/grid'
 
@@ -113,9 +114,10 @@ function StatefulCellEditGrid({ initialData, withCellEdit = true }: { initialDat
     history(),
     focusRecovery(),
     clipboard(),
+    edit(),
     ...(withCellEdit ? [cellEdit()] : []),
   ]
-  const behavior = gridBehavior({ columns: 3, edit: true })
+  const behavior = gridBehavior({ columns: 3 })
   return (
     <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="Test Grid">
       <Aria.Item render={(props, node, _state: NodeState) => {
@@ -212,8 +214,8 @@ describe('enterContinue prop', () => {
     const [data, setData] = useState(initialData)
     const dataRef = useRef(data)
     useEffect(() => { dataRef.current = data })
-    const plugins = [crud(), rename(), dnd(), history(), focusRecovery(), clipboard(), cellEdit()]
-    const behavior = gridBehavior({ columns: 3, edit: true })
+    const plugins = [crud(), rename(), dnd(), history(), focusRecovery(), clipboard(), edit(), cellEdit()]
+    const behavior = gridBehavior({ columns: 3 })
     return (
       <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="Editable Grid">
         <Aria.Item render={(props, node, state) => {

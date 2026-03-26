@@ -1,10 +1,6 @@
 import type { AriaPattern, NodeState } from '../types'
-import type { Axis } from '../composePattern'
 import type { PatternContext } from '../../axis/types'
 import { composePattern } from '../composePattern'
-import { comboboxCommands } from '../../plugins/combobox'
-import { selectionCommands } from '../../axis/select'
-import { createBatchCommand } from '../../engine/types'
 
 export interface ComboboxOptions {
   selectionMode?: 'single' | 'multiple'
@@ -13,47 +9,8 @@ export interface ComboboxOptions {
 export function combobox(options?: ComboboxOptions): AriaPattern {
   const selectionMode = options?.selectionMode ?? 'single'
 
-  function getIsOpen(ctx: PatternContext): boolean {
-    const comboboxEntity = ctx.getEntity('__combobox__')
-    return (comboboxEntity as Record<string, unknown> | undefined)?.isOpen === true
-  }
-
-  const popupToggle: Axis = {
-    ArrowDown: (ctx: PatternContext) => {
-      if (!getIsOpen(ctx)) {
-        ctx.dispatch(comboboxCommands.open())
-        return ctx.focusFirst()
-      }
-      return undefined // fallback to nav
-    },
-    Enter: (ctx: PatternContext) => {
-      const isOpen = getIsOpen(ctx)
-      if (isOpen) {
-        if (selectionMode === 'multiple') {
-          return ctx.toggleSelect()
-        }
-        return createBatchCommand([
-          selectionCommands.select(ctx.focused),
-          comboboxCommands.close(),
-        ])
-      }
-      return comboboxCommands.open()
-    },
-    Escape: () => comboboxCommands.close(),
-    Backspace: (ctx: PatternContext) => {
-      if (selectionMode !== 'multiple') return undefined
-      const entity = ctx.getEntity('__combobox__')
-      const filterText = (entity as Record<string, unknown> | undefined)?.filterText ?? ''
-      if (filterText !== '') return undefined
-      const selected = ctx.selected
-      if (selected.length > 0) {
-        return selectionCommands.toggleSelect(selected[selected.length - 1])
-      }
-      return undefined
-    },
-  }
-
-  const navV: Axis = {
+  // APG combobox pattern: navigation only, open/close is combobox plugin's responsibility
+  const navV = {
     ArrowDown: (ctx: PatternContext) => ctx.focusNext(),
     ArrowUp: (ctx: PatternContext) => ctx.focusPrev(),
     Home: (ctx: PatternContext) => ctx.focusFirst(),
@@ -70,7 +27,6 @@ export function combobox(options?: ComboboxOptions): AriaPattern {
         'aria-selected': String(state.selected),
       }),
     },
-    popupToggle,
     navV,
   )
 }

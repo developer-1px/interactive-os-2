@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { edit, replaceEditPlugin } from '../plugins/edit'
-import { extractKeyMap } from '../axis/types'
 
-describe('edit axis', () => {
+describe('edit plugin', () => {
   it('returns F2, Enter, Delete, Alt+Arrow keyMap by default', () => {
-    const axis = edit()
-    const km = extractKeyMap(axis)
+    const plugin = edit()
+    const km = plugin.keyMap!
     expect(km).toHaveProperty('F2')
     expect(km).toHaveProperty('Enter')
     expect(km).toHaveProperty('Delete')
@@ -15,8 +14,8 @@ describe('edit axis', () => {
   })
 
   it('includes tree movement keys when tree option is true', () => {
-    const axis = edit({ tree: true })
-    const km = extractKeyMap(axis)
+    const plugin = edit({ tree: true })
+    const km = plugin.keyMap!
     expect(km).toHaveProperty('Alt+ArrowLeft')
     expect(km).toHaveProperty('Alt+ArrowRight')
   })

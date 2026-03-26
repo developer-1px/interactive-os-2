@@ -36,3 +36,23 @@ export interface VisibilityFilter {
   /** false면 이 노드의 자식을 walk하지 않음 */
   shouldDescend?(nodeId: string, store: NormalizedData): boolean
 }
+
+/** Plugin 인터페이스 — engine이 소비하는 계약 */
+export interface Plugin {
+  name?: string
+  middleware?: Middleware
+  visibilityFilter?: VisibilityFilter
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  commands?: Record<string, (...args: any[]) => Command>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  keyMap?: Record<string, (ctx: any) => Command | void>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onUnhandledKey?: (event: KeyboardEvent, engine: any) => boolean
+  intercepts?: readonly string[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onCopy?: (ctx: any) => Command | void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onCut?: (ctx: any) => Command | void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onPaste?: (ctx: any) => Command | void
+}

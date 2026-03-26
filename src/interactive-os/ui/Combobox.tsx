@@ -72,7 +72,7 @@ function restoreGroups(flatStore: NormalizedData, originalStore: NormalizedData)
 
 export function Combobox({
   data,
-  plugins = [comboboxPlugin()],
+  plugins,
   onChange,
   renderItem,
   placeholder = 'Select...',
@@ -80,6 +80,7 @@ export function Combobox({
   selectionMode,
   creatable = false,
 }: ComboboxProps) {
+  const effectivePlugins = plugins ?? [comboboxPlugin({ selectionMode })]
   const [createOptionFocused, setCreateOptionFocused] = useState(false)
   const originalStore = data
   const rootChildren = getChildren(originalStore, ROOT_ID)
@@ -106,7 +107,7 @@ export function Combobox({
   const aria = useAria({
     behavior: comboboxBehavior({ selectionMode }),
     data: behaviorData,
-    plugins,
+    plugins: effectivePlugins,
     onChange: handleChange,
   })
 
