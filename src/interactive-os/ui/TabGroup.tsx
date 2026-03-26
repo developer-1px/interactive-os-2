@@ -88,9 +88,12 @@ export function TabGroup({
           const entity = store.entities[id]
           if (!entity) return null
           const itemProps = tl.getItemProps(id)
-          const label = (entity.data as Record<string, unknown>)?.label as string ?? id
+          const entityData = entity.data as Record<string, unknown>
+          const label = entityData?.label as string ?? id
+          const isPreview = entityData?.preview === true
+          const tabClass = isPreview ? `${styles.tab} ${styles.tabPreview}` : styles.tab
           return (
-            <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={styles.tab}>
+            <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
               <span>{label}</span>
               <button
                 className={styles.tabClose}

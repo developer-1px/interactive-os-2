@@ -25,6 +25,10 @@
   color: var(--text-secondary);
 }
 
+.tabPreview {
+  font-style: italic;
+}
+
 .tabClose {
   display: flex;
   align-items: center;

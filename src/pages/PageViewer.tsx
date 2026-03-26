@@ -9,7 +9,7 @@ import { TreeView } from '../interactive-os/ui/TreeView'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
 import { core, FOCUS_ID } from '../interactive-os/plugins/core'
-import { createStore } from '../interactive-os/store/createStore'
+import { createStore, getChildren, getEntityData, updateEntityData, removeEntity } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { Plugin } from '../interactive-os/plugins/types'
@@ -21,7 +21,7 @@ import { Breadcrumb } from '../interactive-os/ui/Breadcrumb'
 import { QuickOpen } from './viewer/QuickOpen'
 import { DEFAULT_ROOT, type FileNodeData } from './viewer/types'
 import { Workspace } from '../interactive-os/ui/Workspace'
-import { createWorkspace, findTabgroup, openTab } from '../interactive-os/plugins/workspaceStore'
+import { createWorkspace, workspaceCommands, findTabgroup, openTab } from '../interactive-os/plugins/workspaceStore'
 import type { TabData } from '../interactive-os/plugins/workspaceStore'
 
 // --- Types ---
@@ -168,34 +168,86 @@ export default function PageViewer() {
     })
   }, [])
 
-  const selectFile = useCallback((filePath: string) => {
+  const PREVIEW_TAB_ID = '__preview__'
+
+  // followFocus → preview tab 교체 (화살표 이동)
+  const previewFile = useCallback((filePath: string) => {
     setWorkspaceStore(prev => {
       const tgId = findTabgroup(prev)
       if (!tgId) return prev
 
+      const tabIds = getChildren(prev, tgId)
       const filename = filePath.split('/').pop() ?? filePath
-      return openTab(prev, tgId, filePath, () => ({
-        id: `tab-${filePath}`,
-        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath } as TabData,
-      }))
-    })
 
+      // 이미 영구 탭으로 열려있으면 활성화만
+      const permanent = tabIds.find(id => {
+        if (id === PREVIEW_TAB_ID) return false
+        return (getEntityData<TabData>(prev, id))?.contentRef === filePath
+      })
+      if (permanent) {
+        return workspaceCommands.setActiveTab(tgId, permanent).execute(prev)
+      }
+
+      // preview 탭이 이미 있으면 내용 교체, 없으면 생성
+      if (tabIds.includes(PREVIEW_TAB_ID)) {
+        let store = updateEntityData(prev, PREVIEW_TAB_ID, { label: filename, contentRef: filePath })
+        return workspaceCommands.setActiveTab(tgId, PREVIEW_TAB_ID).execute(store)
+      }
+      return workspaceCommands.addTab(tgId, {
+        id: PREVIEW_TAB_ID,
+        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath, preview: true },
+      }).execute(prev)
+    })
     navigate(filePathToUrlPath(filePath), { replace: true })
   }, [navigate])
 
-  // focus 이동은 트리 내부 상태만 갱신, 탭은 열지 않음
-  const handleChange = useCallback((_newStore: NormalizedData) => {
-    // TreeView 내부 상태(expand/collapse, focus) 반영용
-  }, [])
+  // Enter/클릭 → 영구 탭으로 열기
+  const pinFile = useCallback((filePath: string) => {
+    setWorkspaceStore(prev => {
+      const tgId = findTabgroup(prev)
+      if (!tgId) return prev
 
-  // Enter/클릭 시에만 탭 열기
+      const tabIds = getChildren(prev, tgId)
+      const filename = filePath.split('/').pop() ?? filePath
+
+      // preview 탭이 이 파일을 보여주고 있으면 → 영구 탭으로 승격
+      if (tabIds.includes(PREVIEW_TAB_ID)) {
+        const previewData = getEntityData<TabData>(prev, PREVIEW_TAB_ID)
+        if (previewData?.contentRef === filePath) {
+          let store = removeEntity(prev, PREVIEW_TAB_ID)
+          return workspaceCommands.addTab(tgId, {
+            id: `tab-${filePath}`,
+            data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
+          }).execute(store)
+        }
+      }
+
+      // 아니면 일반 openTab (중복 방지)
+      return openTab(prev, tgId, filePath, () => ({
+        id: `tab-${filePath}`,
+        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
+      }))
+    })
+    navigate(filePathToUrlPath(filePath), { replace: true })
+  }, [navigate])
+
+  // followFocus: 트리 포커스 이동 시 preview
+  const handleChange = useCallback((newStore: NormalizedData) => {
+    const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
+    const entity = newStore.entities[focusedId]
+    if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
+      previewFile((entity.data as unknown as FileNodeData).path)
+    }
+  }, [previewFile])
+
+  // Enter → 영구 탭
   const handleActivate = useCallback((nodeId: string) => {
     if (!initialStore) return
     const entity = initialStore.entities[nodeId]
     if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
-      selectFile((entity.data as unknown as FileNodeData).path)
+      pinFile((entity.data as unknown as FileNodeData).path)
     }
-  }, [initialStore, selectFile])
+  }, [initialStore, pinFile])
 
   const handleWorkspaceChange = useCallback((newStore: NormalizedData) => {
     setWorkspaceStore(newStore)
@@ -317,7 +369,7 @@ export default function PageViewer() {
         <QuickOpen
           fileStore={initialStore}
           root={DEFAULT_ROOT}
-          onSelect={selectFile}
+          onSelect={pinFile}
           onClose={() => setQuickOpenVisible(false)}
         />
       )}
