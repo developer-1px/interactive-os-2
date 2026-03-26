@@ -212,6 +212,10 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
       baseProps.onClick = (event: MouseEvent) => {
         if (event.defaultPrevented) return
+        // Guard against bubbled clicks from nested treeitems
+        const target = event.target as HTMLElement
+        const closestItem = target.closest(`[${nodeIdAttr}]`)
+        if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
         if (behavior.activateOnClick) {
           const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
           if (hasModifier) return

@@ -197,6 +197,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
         baseProps.onClick = (event: MouseEvent) => {
           if (event.defaultPrevented) return
+          // Guard against bubbled clicks from nested treeitems
+          const target = event.target as HTMLElement
+          const closestItem = target.closest(`[data-node-id]`)
+          if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
 
           if (event.shiftKey && behavior.selectionMode === 'multiple') {
             if (pointerDownCtxRef.current) {

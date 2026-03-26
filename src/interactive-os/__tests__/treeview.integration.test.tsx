@@ -176,6 +176,35 @@ describe('TreeView', () => {
     expect(screen.getByTestId('activated').textContent).toBe('a')
   })
 
+  it('click on child folder does not collapse parent (bubbling guard)', async () => {
+    const nestedData = createStore({
+      entities: {
+        parent: { id: 'parent', data: { name: 'Parent' } },
+        child: { id: 'child', data: { name: 'Child Folder' } },
+        leaf: { id: 'leaf', data: { name: 'Leaf' } },
+      },
+      relationships: {
+        [ROOT_ID]: ['parent'],
+        parent: ['child'],
+        child: ['leaf'],
+      },
+    })
+    const user = userEvent.setup()
+    const { container } = render(
+      <TreeViewWithActivatedDisplay data={nestedData} aria-label="Test tree" />
+    )
+
+    // Expand parent
+    await user.click(getNodeEl(container, 'parent')!)
+    expect(getNodeEl(container, 'parent')!.getAttribute('aria-expanded')).toBe('true')
+    expect(getNodeEl(container, 'child')).not.toBeNull()
+
+    // Click nested child folder — parent must stay expanded
+    await user.click(getNodeEl(container, 'child')!)
+    expect(getNodeEl(container, 'child')!.getAttribute('aria-expanded')).toBe('true')
+    expect(getNodeEl(container, 'parent')!.getAttribute('aria-expanded')).toBe('true')
+  })
+
   // V2: 2026-03-26-treeview-click-expand-prd.md
   it('click on expanded folder with onActivate collapses and activates', async () => {
     const user = userEvent.setup()
