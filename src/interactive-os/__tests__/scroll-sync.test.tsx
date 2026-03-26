@@ -6,11 +6,10 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
+import { listbox } from '../pattern/examples/listbox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 
 function fixtureStore(): NormalizedData {
   return createStore({
@@ -29,7 +28,7 @@ describe('scroll sync', () => {
   it('adjusts container scrollTop when focused item is below viewport', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -62,7 +61,7 @@ describe('scroll sync', () => {
   it('does not scroll outer containers', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />

@@ -8,12 +8,12 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
-import { tree } from '../pattern/tree'
+import { listbox } from '../pattern/examples/listbox'
+import { tree } from '../pattern/examples/tree'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core, focusCommands } from '../plugins/core'
+import { focusCommands } from '../axis/navigate'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import { createPatternContext } from '../pattern/createPatternContext'
 
@@ -43,7 +43,7 @@ describe('extended selection — listbox', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -186,7 +186,7 @@ describe('extended selection — tree', () => {
   it('Shift+ArrowDown selects range in tree', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={tree} data={fixtureStore()} plugins={[core()]}>
+      <Aria behavior={tree} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />

@@ -13,7 +13,6 @@ import { TreeGrid } from '../ui/TreeGrid'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import { crud } from '../plugins/crud'
 import { clipboard, resetClipboard } from '../plugins/clipboard'
 import { history } from '../plugins/history'
@@ -38,7 +37,7 @@ function fixtureData(): NormalizedData {
   })
 }
 
-const plugins = [core(), crud(), clipboard(), dnd(), history(), focusRecovery()]
+const plugins = [crud(), clipboard(), dnd(), history(), focusRecovery()]
 
 function renderTree(data: NormalizedData, onChange?: (d: NormalizedData) => void) {
   return render(

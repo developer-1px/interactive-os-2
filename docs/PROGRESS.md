@@ -20,11 +20,10 @@
 | dispatch + middleware | Integrated | — |
 | Dispatch Logger | Validated | — |
 
-## Plugins (L5 · 10종)
+## Plugins (L5 · 9종)
 
 | Plugin | Maturity | Gaps |
 |--------|----------|------|
-| core (focus · selection · expand) | Integrated | — |
 | focusRecovery | Integrated | — |
 | history | Integrated | delta-based undo/redo, navigation skip 구현. command grouping 미구현 |
 | crud | Integrated | — |
@@ -39,20 +38,21 @@
 | definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires. 전 플러그인 전환 완료 |
 | *permissions* | Concept | 예제만 존재 |
 
-## Axis (L3 · 7축)
+## Axis (L3 · 7축 + commands)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| 7축 (navigation · selection · expand · focus · tab · value · edit) | Integrated | — |
+| 7축 (navigation · selection · expand · activate · tab · value · dismiss) | Integrated | — |
+| commands (focus · selection · expand · gridCol · value) | Integrated | core()에서 흡수, 각 axis가 commands+entities 소유 |
 
 ## Pattern (L4)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| composePattern | Integrated | — |
+| composePattern | Integrated | keyMap + config + middleware 합성 |
 | edit | Integrated | — |
 | pointer interaction | Integrated | — |
-| 17 presets (listbox~spinbutton) | Integrated | — |
+| examples/ (17 APG presets) | Integrated | pattern/examples/로 분리, APG 레퍼런스 구현 |
 | *menubar* | Concept | 다계층 keyMap 필요 |
 
 ## Primitives (L6)

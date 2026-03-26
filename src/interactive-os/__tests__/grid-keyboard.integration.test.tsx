@@ -10,12 +10,11 @@ import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
 import { Grid } from '../ui/Grid'
-import { grid } from '../pattern/grid'
+import { grid } from '../pattern/examples/grid'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
-import { core } from '../plugins/core'
 import { crud } from '../plugins/crud'
 import { rename } from '../plugins/rename'
 import { dnd } from '../plugins/dnd'
@@ -36,7 +35,8 @@ function fixtureData(): NormalizedData {
 
 const behavior = grid({ columns: 3 })
 const tabCycleBehavior = grid({ columns: 3, tabCycle: true })
-const plugins = [core()]
+import type { Plugin } from '../plugins/types'
+const plugins: Plugin[] = []
 
 function renderGrid(data: NormalizedData, opts?: { tabCycle?: boolean }) {
   const b = opts?.tabCycle ? tabCycleBehavior : behavior
@@ -328,7 +328,7 @@ describe('Tab cell cycle (tabCycle: true)', () => {
 
 // --- enableEditing tests via Grid component ---
 
-const editingPlugins = [core(), crud(), rename(), dnd(), history(), focusRecovery()]
+const editingPlugins = [crud(), rename(), dnd(), history(), focusRecovery()]
 const columnDefs = [
   { key: 'name', header: 'Name', field: 'name' },
   { key: 'age', header: 'Age', field: 'age' },

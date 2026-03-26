@@ -6,7 +6,6 @@ import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
 import { Up, Down } from './kbdIcons'
-import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { rename } from '../interactive-os/plugins/rename'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
@@ -24,7 +23,7 @@ const bookmarkData = createStore({
   },
 })
 
-const plugins = [core(), rename(), history(), focusRecovery()]
+const plugins = [rename(), history(), focusRecovery()]
 
 export default function RenameDemo() {
   const [data, setData] = useState<NormalizedData>(bookmarkData)

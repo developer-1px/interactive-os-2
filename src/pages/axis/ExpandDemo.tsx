@@ -5,7 +5,6 @@ import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
 import { expand } from '../../interactive-os/axis/expand'
-import { core } from '../../interactive-os/plugins/core'
 import { spatial } from '../../interactive-os/plugins/spatial'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
 import type { Entity, NormalizedData } from '../../interactive-os/store/types'
@@ -14,8 +13,8 @@ import { axisTreeData } from './axis-demo-data'
 
 type ExpandMode = 'arrow' | 'enter-esc'
 
-const pluginsArrow = [core(), focusRecovery()]
-const pluginsEnterEsc = [core(), spatial(), focusRecovery()]
+const pluginsArrow = [focusRecovery()]
+const pluginsEnterEsc = [spatial(), focusRecovery()]
 
 export default function ExpandDemo() {
   const [mode, setMode] = useState<ExpandMode>('arrow')

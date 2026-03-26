@@ -21,6 +21,11 @@
   border-radius: var(--shape-xl-radius);
 }
 
+.codeBlockFlush :global(.shiki) {
+  border: none;
+  border-radius: 0;
+}
+
 .codeBlock :global(.shiki) code {
   display: block;
 }

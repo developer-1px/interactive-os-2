@@ -5,7 +5,6 @@ import { Combobox } from '../ui/Combobox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import { combobox as comboboxPlugin } from '../plugins/combobox'
 import type { NodeState } from '../pattern/types'
 import { useState } from 'react'
@@ -25,7 +24,7 @@ function CreatableHarness() {
   return (
     <Combobox
       data={data}
-      plugins={[core(), comboboxPlugin()]}
+      plugins={[comboboxPlugin()]}
       placeholder="Pick or create..."
       editable
       creatable

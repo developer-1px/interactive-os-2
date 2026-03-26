@@ -6,7 +6,7 @@ import { renameCommands, RENAME_ID } from './rename'
 import { dndCommands } from '../plugins/dnd'
 import { isPrintableKey } from '../plugins/typeahead'
 import type { CommandEngine } from '../engine/createCommandEngine'
-import { FOCUS_ID } from '../plugins/core'
+import { FOCUS_ID } from '../axis/navigate'
 
 interface EditOptions {
   /** Add Alt+Left/Right for tree indent/outdent */

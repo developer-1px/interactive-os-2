@@ -1,9 +1,9 @@
-import type { NodeState } from './types'
-import type { Entity } from '../store/types'
-import { composePattern } from './composePattern'
-import { activate } from '../axis/activate'
-import { expand } from '../axis/expand'
-import { navigate } from '../axis/navigate'
+import type { NodeState } from '../types'
+import type { Entity } from '../../store/types'
+import { composePattern } from '../composePattern'
+import { activate } from '../../axis/activate'
+import { expand } from '../../axis/expand'
+import { navigate } from '../../axis/navigate'
 
 export const menu = composePattern(
   {

@@ -5,8 +5,9 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { useAria } from '../primitives/useAria'
-import { combobox as comboboxBehavior } from '../pattern/combobox'
-import { core, selectionCommands, focusCommands } from '../plugins/core'
+import { combobox as comboboxBehavior } from '../pattern/examples/combobox'
+import { selectionCommands } from '../axis/select'
+import { focusCommands } from '../axis/navigate'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
 import { ROOT_ID } from '../store/types'
 import { createBatchCommand } from '../engine/types'
@@ -71,7 +72,7 @@ function restoreGroups(flatStore: NormalizedData, originalStore: NormalizedData)
 
 export function Combobox({
   data,
-  plugins = [core(), comboboxPlugin()],
+  plugins = [comboboxPlugin()],
   onChange,
   renderItem,
   placeholder = 'Select...',

@@ -4,13 +4,12 @@ import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
 import { activate } from '../../interactive-os/axis/activate'
-import { core } from '../../interactive-os/plugins/core'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import type { NodeState } from '../../interactive-os/pattern/types'
 import { axisListData } from './axis-demo-data'
 
-const plugins = [core(), focusRecovery()]
+const plugins = [focusRecovery()]
 
 export default function ActivateDemo() {
   const [onClick, setOnClick] = useState(false)

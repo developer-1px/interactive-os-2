@@ -2,7 +2,8 @@
 import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
 import type { PatternContext, FocusStrategy, SelectionMode } from '../axis/types'
-import type { ValueRange } from '../plugins/core'
+import type { ValueRange } from '../axis/value'
+import type { Middleware } from '../engine/types'
 
 export interface NodeState {
   focused: boolean
@@ -40,6 +41,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   colCount?: number
   /** Value range for continuous-value widgets (slider, spinbutton). */
   valueRange?: ValueRange
+  /** Middleware composed from axes (e.g. anchorResetMiddleware from select axis) */
+  middleware?: Middleware
   ariaAttributes: (node: Entity, state: TState) => Record<string, string>
 }
 

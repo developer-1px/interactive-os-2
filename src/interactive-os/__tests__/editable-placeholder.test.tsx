@@ -2,15 +2,14 @@ import { describe, it, expect } from 'vitest'
 import { render, fireEvent, act } from '@testing-library/react'
 import { useState } from 'react'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
-import { core } from '../plugins/core'
+import { listbox } from '../pattern/examples/listbox'
 import { rename, renameCommands } from '../plugins/rename'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 
-const plugins = [core(), rename()]
+const plugins = [rename()]
 
 function TestListBox({ initialData, keyMap }: {
   initialData: NormalizedData

@@ -9,11 +9,10 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { alertdialog } from '../pattern/alertdialog'
+import { alertdialog } from '../pattern/examples/alertdialog'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
@@ -35,7 +34,7 @@ function fixtureData(): NormalizedData {
 
 function renderAlertDialog(data: NormalizedData) {
   return render(
-    <Aria behavior={alertdialog} data={data} plugins={[core()]}>
+    <Aria behavior={alertdialog} data={data} plugins={[]}>
       <Aria.Item
         render={(props, node, state: NodeState) => (
           <span {...props} data-testid={`node-${node.id}`} data-focused={state.focused} data-expanded={state.expanded}>

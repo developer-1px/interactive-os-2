@@ -4,7 +4,7 @@ import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Grid } from '../ui/Grid'
 import { Aria } from '../primitives/aria'
-import { GRID_COL_ID, core } from '../plugins/core'
+import { GRID_COL_ID } from '../axis/navigate'
 import { crud } from '../plugins/crud'
 import { rename } from '../plugins/rename'
 import { dnd } from '../plugins/dnd'
@@ -44,7 +44,7 @@ function makeI18nData(): NormalizedData {
   })
 }
 
-const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
+const plugins = [crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
 function I18nEditor({ initialData }: { initialData: NormalizedData }) {
   const [data, setData] = useState(initialData)

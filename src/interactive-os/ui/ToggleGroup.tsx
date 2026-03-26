@@ -5,8 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { toolbar } from '../pattern/toolbar'
-import { core } from '../plugins/core'
+import { toolbar } from '../pattern/examples/toolbar'
 
 interface ToggleGroupProps {
   data: NormalizedData
@@ -30,7 +29,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 
 export function ToggleGroup({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   renderItem = defaultRenderItem,
   orientation: _orientation = 'horizontal',

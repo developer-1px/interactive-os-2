@@ -8,11 +8,10 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { toolbar } from '../pattern/toolbar'
+import { toolbar } from '../pattern/examples/toolbar'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
@@ -30,7 +29,7 @@ function fixtureData(): NormalizedData {
 
 function renderToolbar(data: NormalizedData) {
   return render(
-    <Aria behavior={toolbar} data={data} plugins={[core()]}>
+    <Aria behavior={toolbar} data={data} plugins={[]}>
       <Aria.Item
         render={(props, node, state: NodeState) => (
           <span {...props} data-testid={`btn-${node.id}`} data-focused={state.focused} data-selected={state.selected}>

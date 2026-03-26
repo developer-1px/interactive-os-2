@@ -11,7 +11,6 @@ import { MenuList } from '../ui/MenuList'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
@@ -37,7 +36,7 @@ function renderMenu(data: NormalizedData) {
   return render(
     <MenuList
       data={data}
-      plugins={[core()]}
+      plugins={[]}
       renderItem={(props, item, state: NodeState) => (
         <span {...props} data-testid={`item-${item.id}`} data-focused={state.focused} data-selected={state.selected}>
           {(item.data as Record<string, unknown>)?.name as string}

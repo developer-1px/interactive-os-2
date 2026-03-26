@@ -5,7 +5,6 @@ import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
-import { core } from '../interactive-os/plugins/core'
 
 const hookData = createStore({
   entities: {
@@ -31,7 +30,7 @@ export default function HooksListDemo() {
         <ListBox
           data={data}
           onChange={setData}
-          plugins={[core()]}
+          plugins={[]}
           renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [

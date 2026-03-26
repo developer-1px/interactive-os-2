@@ -36,7 +36,6 @@
 .ghost {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
-  font-family: var(--sans);
   font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-muted);

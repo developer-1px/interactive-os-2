@@ -1,5 +1,105 @@
 import type { AxisConfig, KeyMap } from './types'
+import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
+import type { NormalizedData } from '../store/types'
+
+// ② 2026-03-26-core-absorption-prd.md
+export const EXPANDED_ID = '__expanded__'
+
+function getExpandedIds(store: NormalizedData): string[] {
+  return (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
+}
+
+export const expandCommands = {
+  expand(nodeId: string): Command {
+    return {
+      type: 'core:expand',
+      payload: { nodeId },
+      execute(store) {
+        const current = getExpandedIds(store)
+        if (current.includes(nodeId)) return store
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [...current, nodeId] },
+          },
+        }
+      },
+      undo(store) {
+        const current = getExpandedIds(store)
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: current.filter((id) => id !== nodeId) },
+          },
+        }
+      },
+    }
+  },
+
+  collapse(nodeId: string): Command {
+    return {
+      type: 'core:collapse',
+      payload: { nodeId },
+      execute(store) {
+        const current = getExpandedIds(store)
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: current.filter((id) => id !== nodeId) },
+          },
+        }
+      },
+      undo(store) {
+        const current = getExpandedIds(store)
+        if (current.includes(nodeId)) return store
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [...current, nodeId] },
+          },
+        }
+      },
+    }
+  },
+
+  toggleExpand(nodeId: string): Command {
+    return {
+      type: 'core:toggle-expand',
+      payload: { nodeId },
+      execute(store) {
+        const current = getExpandedIds(store)
+        const expandedIds = current.includes(nodeId)
+          ? current.filter((id) => id !== nodeId)
+          : [...current, nodeId]
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds },
+          },
+        }
+      },
+      undo(store) {
+        const current = getExpandedIds(store)
+        const expandedIds = current.includes(nodeId)
+          ? current.filter((id) => id !== nodeId)
+          : [...current, nodeId]
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds },
+          },
+        }
+      },
+    }
+  },
+}
 
 interface ExpandOptions {
   mode?: 'arrow' | 'enter-esc'

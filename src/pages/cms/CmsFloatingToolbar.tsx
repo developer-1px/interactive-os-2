@@ -10,9 +10,8 @@ import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
 import { cmsCanDelete } from './cms-schema'
 import type { PatternContext } from '../../interactive-os/pattern/types'
-import { toolbar } from '../../interactive-os/pattern/toolbar'
+import { toolbar } from '../../interactive-os/pattern/examples/toolbar'
 import { useAria } from '../../interactive-os/primitives/useAria'
-import { core } from '../../interactive-os/plugins/core'
 
 interface CmsFloatingToolbarProps {
   store: NormalizedData
@@ -84,7 +83,7 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
   const aria = useAria({
     behavior: toolbar,
     data: toolbarData,
-    plugins: [core()],
+    plugins: [],
     keyMap,
     onActivate: (actionId) => {
       if (!focusedId || disabled) return

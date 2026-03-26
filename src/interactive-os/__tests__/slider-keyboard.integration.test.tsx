@@ -9,11 +9,10 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import { Aria } from '../primitives/aria'
-import { slider } from '../pattern/slider'
+import { slider } from '../pattern/examples/slider'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import { history } from '../plugins/history'
 
 function fixtureData(): NormalizedData {
@@ -29,7 +28,7 @@ function fixtureData(): NormalizedData {
 
 const sliderBehavior = slider({ min: 0, max: 100, step: 1 })
 
-function renderSlider(data: NormalizedData, plugins = [core(), history()]) {
+function renderSlider(data: NormalizedData, plugins = [history()]) {
   return render(
     <Aria behavior={sliderBehavior} data={data} plugins={plugins}>
       <Aria.Item render={(props, item, _state) => (
@@ -187,7 +186,7 @@ describe('Slider keyboard integration', () => {
       const user = userEvent.setup()
       const onChange = vi.fn()
       const { container } = render(
-        <Aria behavior={sliderBehavior} data={fixtureData()} plugins={[core()]} onChange={onChange}>
+        <Aria behavior={sliderBehavior} data={fixtureData()} plugins={[]} onChange={onChange}>
           <Aria.Item render={(props, item, _state) => (
             <span {...props}>{(item.data as Record<string, unknown>)?.label as string}</span>
           )} />

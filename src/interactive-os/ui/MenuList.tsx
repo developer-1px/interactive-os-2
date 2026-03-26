@@ -5,8 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { menu } from '../pattern/menu'
-import { core } from '../plugins/core'
+import { menu } from '../pattern/examples/menu'
 
 interface MenuListProps {
   data: NormalizedData
@@ -31,7 +30,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 
 export function MenuList({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   renderItem = defaultRenderItem,
 }: MenuListProps) {

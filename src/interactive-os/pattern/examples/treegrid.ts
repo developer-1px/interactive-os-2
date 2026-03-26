@@ -1,11 +1,11 @@
-import type { NodeState } from './types'
-import type { Entity } from '../store/types'
-import { composePattern } from './composePattern'
-import { select } from '../axis/select'
-import { activate } from '../axis/activate'
-import { expand } from '../axis/expand'
-import { navigate } from '../axis/navigate'
-import { edit as editAxis } from '../plugins/edit'
+import type { NodeState } from '../types'
+import type { Entity } from '../../store/types'
+import { composePattern } from '../composePattern'
+import { select } from '../../axis/select'
+import { activate } from '../../axis/activate'
+import { expand } from '../../axis/expand'
+import { navigate } from '../../axis/navigate'
+import { edit as editAxis } from '../../plugins/edit'
 
 export function treegrid(options?: { edit?: boolean }) {
   const axes = [

@@ -1,6 +1,6 @@
-import type { NodeState } from './types'
-import { composePattern } from './composePattern'
-import { activate } from '../axis/activate'
+import type { NodeState } from '../types'
+import { composePattern } from '../composePattern'
+import { activate } from '../../axis/activate'
 
 export const switchPattern = composePattern(
   {

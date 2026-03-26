@@ -8,13 +8,12 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { toolbar } from '../pattern/toolbar'
-import { listbox } from '../pattern/listbox'
+import { toolbar } from '../pattern/examples/toolbar'
+import { listbox } from '../pattern/examples/listbox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { PatternContext, NodeState } from '../pattern/types'
-import { core } from '../plugins/core'
 
 function toolbarData(): NormalizedData {
   return createStore({
@@ -49,7 +48,7 @@ describe('Active Zone', () => {
   it('pointerdown on empty area focuses the focusedId item', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={toolbar} data={toolbarData()} plugins={[core()]} aria-label="toolbar" autoFocus={false}>
+      <Aria behavior={toolbar} data={toolbarData()} plugins={[]} aria-label="toolbar" autoFocus={false}>
         <div role="separator" data-testid="separator" style={{ height: 10 }} />
         <Aria.Item render={renderItem} />
       </Aria>,
@@ -70,7 +69,7 @@ describe('Active Zone', () => {
   it('keyboard works after empty area activation', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={toolbar} data={toolbarData()} plugins={[core()]} aria-label="toolbar" autoFocus={false}>
+      <Aria behavior={toolbar} data={toolbarData()} plugins={[]} aria-label="toolbar" autoFocus={false}>
         <div role="separator" data-testid="separator" style={{ height: 10 }} />
         <Aria.Item render={renderItem} />
       </Aria>,
@@ -88,10 +87,10 @@ describe('Active Zone', () => {
     const user = userEvent.setup()
     const { container } = render(
       <div>
-        <Aria behavior={toolbar} data={toolbarData()} plugins={[core()]} aria-label="toolbar" autoFocus={false}>
+        <Aria behavior={toolbar} data={toolbarData()} plugins={[]} aria-label="toolbar" autoFocus={false}>
           <Aria.Item render={renderItem} />
         </Aria>
-        <Aria behavior={listbox()} data={listboxData()} plugins={[core()]} aria-label="listbox" autoFocus={false}>
+        <Aria behavior={listbox()} data={listboxData()} plugins={[]} aria-label="listbox" autoFocus={false}>
           <div data-testid="list-empty" style={{ height: 10 }} />
           <Aria.Item render={renderItem} />
         </Aria>
@@ -114,7 +113,7 @@ describe('Active Zone', () => {
   it('pointerdown recovers focus after body loss', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={toolbar} data={toolbarData()} plugins={[core()]} aria-label="toolbar" autoFocus={false}>
+      <Aria behavior={toolbar} data={toolbarData()} plugins={[]} aria-label="toolbar" autoFocus={false}>
         <div data-testid="gap" style={{ height: 10 }} />
         <Aria.Item render={renderItem} />
       </Aria>,
@@ -143,7 +142,7 @@ describe('Active Zone', () => {
       relationships: { [ROOT_ID]: [] },
     })
     const { container } = render(
-      <Aria behavior={toolbar} data={emptyData} plugins={[core()]} aria-label="empty-toolbar" autoFocus={false}>
+      <Aria behavior={toolbar} data={emptyData} plugins={[]} aria-label="empty-toolbar" autoFocus={false}>
         <div data-testid="empty-gap" style={{ height: 10 }} />
       </Aria>,
     )
@@ -159,9 +158,9 @@ describe('Active Zone', () => {
   it('nested: inner zone empty area activates only inner zone', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={toolbar} data={toolbarData()} plugins={[core()]} aria-label="outer" autoFocus={false}>
+      <Aria behavior={toolbar} data={toolbarData()} plugins={[]} aria-label="outer" autoFocus={false}>
         <Aria.Item render={renderItem} />
-        <Aria behavior={listbox()} data={listboxData()} plugins={[core()]} aria-label="inner" autoFocus={false}>
+        <Aria behavior={listbox()} data={listboxData()} plugins={[]} aria-label="inner" autoFocus={false}>
           <div data-testid="inner-gap" style={{ height: 10 }} />
           <Aria.Item render={renderItem} />
         </Aria>
@@ -200,7 +199,7 @@ describe('Active Zone', () => {
   it('autoFocus=false zone still responds to explicit click', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={toolbar} data={toolbarData()} plugins={[core()]} aria-label="no-auto" autoFocus={false}>
+      <Aria behavior={toolbar} data={toolbarData()} plugins={[]} aria-label="no-auto" autoFocus={false}>
         <div data-testid="no-auto-gap" style={{ height: 10 }} />
         <Aria.Item render={renderItem} />
       </Aria>,

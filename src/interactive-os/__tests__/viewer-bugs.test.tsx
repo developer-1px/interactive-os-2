@@ -6,8 +6,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { tree } from '../pattern/tree'
-import { core } from '../plugins/core'
+import { tree } from '../pattern/examples/tree'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -44,7 +43,7 @@ function ViewerTree({ onSelect }: { onSelect?: (path: string) => void }) {
   }
 
   return (
-    <Aria behavior={tree} data={store} plugins={[core()]} onChange={handleChange} aria-label="File tree">
+    <Aria behavior={tree} data={store} plugins={[]} onChange={handleChange} aria-label="File tree">
       <Aria.Item render={(props, node, state) => {
         const data = node.data as { name: string; type: string }
         return (

@@ -5,8 +5,7 @@ import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
 import type { PatternContext, NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { grid as gridBehavior } from '../pattern/grid'
-import { core } from '../plugins/core'
+import { grid as gridBehavior } from '../pattern/examples/grid'
 import { cellEdit } from '../plugins/cellEdit'
 import { search } from '../plugins/search'
 import { replaceEditPlugin } from '../plugins/edit'
@@ -39,7 +38,7 @@ const defaultRenderCell = (props: React.HTMLAttributes<HTMLElement>, value: unkn
   <span {...props}>{String(value ?? '')}</span>
 )
 
-const defaultPlugins: Plugin[] = [core()]
+const defaultPlugins: Plugin[] = []
 
 export function Grid({
   data,

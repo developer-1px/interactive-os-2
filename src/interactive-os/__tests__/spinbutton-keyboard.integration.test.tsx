@@ -3,11 +3,10 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import { Aria } from '../primitives/aria'
-import { spinbutton } from '../pattern/spinbutton'
+import { spinbutton } from '../pattern/examples/spinbutton'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 
 function fixtureData(): NormalizedData {
   return createStore({
@@ -24,7 +23,7 @@ const spinBehavior = spinbutton({ min: 0, max: 10, step: 1 })
 
 function renderSpinbutton(data: NormalizedData) {
   return render(
-    <Aria behavior={spinBehavior} data={data} plugins={[core()]}>
+    <Aria behavior={spinBehavior} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state) => (
         <span {...props}>{(item.data as Record<string, unknown>)?.label as string}</span>
       )} />

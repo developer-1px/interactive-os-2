@@ -63,13 +63,11 @@
 }
 
 .streamingLabel {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
 .streamingTime {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   opacity: 0.6;

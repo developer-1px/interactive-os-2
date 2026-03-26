@@ -6,7 +6,6 @@ import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
-import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
 import { clipboard, getCutSourceIds } from '../interactive-os/plugins/clipboard'
@@ -30,7 +29,7 @@ const colorData = createStore({
   },
 })
 
-const plugins = [core(), crud(), clipboard(), history(), focusRecovery()]
+const plugins = [crud(), clipboard(), history(), focusRecovery()]
 
 export default function ClipboardDemo() {
   const [data, setData] = useState<NormalizedData>(colorData)

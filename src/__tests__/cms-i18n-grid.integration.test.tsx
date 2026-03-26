@@ -11,7 +11,7 @@ import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Grid } from '../interactive-os/ui/Grid'
 import { Aria } from '../interactive-os/primitives/aria'
-import { core, GRID_COL_ID } from '../interactive-os/plugins/core'
+import { GRID_COL_ID } from '../interactive-os/axis/navigate'
 import { rename } from '../interactive-os/plugins/rename'
 import { history } from '../interactive-os/plugins/history'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
@@ -38,7 +38,7 @@ function cmsFixture(): NormalizedData {
   })
 }
 
-const plugins = [core(), rename(), history(), focusRecovery()]
+const plugins = [rename(), history(), focusRecovery()]
 
 /**
  * Renders a single Aria.Editable per row (the focused column only)

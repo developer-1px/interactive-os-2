@@ -5,13 +5,12 @@ import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { tab } from '../../interactive-os/axis/tab'
 import type { TabStrategy } from '../../interactive-os/axis/tab'
 import { navigate } from '../../interactive-os/axis/navigate'
-import { core } from '../../interactive-os/plugins/core'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import type { NodeState } from '../../interactive-os/pattern/types'
 import { axisListData } from './axis-demo-data'
 
-const plugins = [core(), focusRecovery()]
+const plugins = [focusRecovery()]
 
 export default function TabDemo() {
   const [strategy, setStrategy] = useState<TabStrategy>('escape')

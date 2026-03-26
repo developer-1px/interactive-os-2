@@ -9,8 +9,7 @@ import type { LogEntry } from '../../interactive-os/engine/dispatchLogger'
 import { Aria } from '../../interactive-os/primitives/aria'
 import { TreeView } from '../../interactive-os/ui/TreeView'
 import type { TreeItemRenderProps } from '../../interactive-os/ui/TreeView'
-import { tree } from '../../interactive-os/pattern/tree'
-import { core } from '../../interactive-os/plugins/core'
+import { tree } from '../../interactive-os/pattern/examples/tree'
 import { history } from '../../interactive-os/plugins/history'
 import { crud, crudCommands } from '../../interactive-os/plugins/crud'
 import { dnd, dndCommands } from '../../interactive-os/plugins/dnd'
@@ -21,7 +20,7 @@ import styles from './PageStoreInspector.module.css'
 
 // --- Stateless module-level constants ---
 
-const inspectorPlugins: Plugin[] = [core()]
+const inspectorPlugins: Plugin[] = []
 
 const editorKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
   'Delete': (ctx) => crudCommands.remove(ctx.focused),
@@ -41,7 +40,7 @@ function makeEditorPlugins(): { plugins: Plugin[]; keyMap: Record<string, (ctx: 
     },
   }
   return {
-    plugins: [core(), crud(), dnd(), history(), focusRecovery()],
+    plugins: [crud(), dnd(), history(), focusRecovery()],
     keyMap: { ...editorKeyMap, ...createKeyMap },
   }
 }

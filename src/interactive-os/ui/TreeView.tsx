@@ -5,7 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { useTreeView } from './useTreeView'
-import { core, expandCommands } from '../plugins/core'
+import { expandCommands } from '../axis/expand'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
 
@@ -40,7 +40,7 @@ const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unkn
 
 export function TreeView({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   onActivate,
   renderItem = defaultRenderItem,

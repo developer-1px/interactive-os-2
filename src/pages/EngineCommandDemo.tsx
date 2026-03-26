@@ -7,7 +7,6 @@ import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { Command, Middleware } from '../interactive-os/engine/types'
 import type { NodeState } from '../interactive-os/pattern/types'
-import { core } from '../interactive-os/plugins/core'
 import { crud } from '../interactive-os/plugins/crud'
 import { history } from '../interactive-os/plugins/history'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
@@ -73,7 +72,7 @@ function createPlugins(
     name: 'trace:focusRecovery',
     middleware: createTracingMiddleware('focusRecovery', traceBox),
   })
-  return [recorder, core(), crud(), traceHistory, history(), traceFocusRecovery, focusRecovery()]
+  return [recorder, crud(), traceHistory, history(), traceFocusRecovery, focusRecovery()]
 }
 
 export default function EngineCommandDemo() {

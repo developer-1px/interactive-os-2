@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
+import { listbox } from '../pattern/examples/listbox'
 import { ROOT_ID } from '../store/types'
 
 const behavior = listbox()

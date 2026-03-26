@@ -7,7 +7,6 @@ import type { NormalizedData } from '../interactive-os/store/types'
 import type { StoreDiff } from '../interactive-os/store/computeStoreDiff'
 import { computeStoreDiff, applyDelta } from '../interactive-os/store/computeStoreDiff'
 import type { NodeState } from '../interactive-os/pattern/types'
-import { core } from '../interactive-os/plugins/core'
 import { crud } from '../interactive-os/plugins/crud'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 import { summarizeValue } from '../interactive-os/engine/dispatchLogger'
@@ -51,7 +50,7 @@ export default function EngineDiffDemo() {
   const [entries, setEntries] = useState<DiffEntry[]>([])
   const [selection, setSelection] = useState<{ seq: number; reversed: boolean } | null>(null)
   const seqRef = useRef(0)
-  const [plugins] = useState(() => [core(), crud(), focusRecovery()])
+  const [plugins] = useState(() => [crud(), focusRecovery()])
   const prevRef = useRef<NormalizedData>(initialData)
 
   const selectedEntry = selection ? entries.find((e) => e.seq === selection.seq) ?? null : null
