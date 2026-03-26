@@ -9,29 +9,67 @@ import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
 
-// --- Build tree data from glob keys ---
+// --- Build tree data from contents/ + _meta.yaml ---
 
-const mdModules = import.meta.glob('/docs/2-areas/**/*.md', { query: '?raw' })
+const mdModules = import.meta.glob('/contents/**/*.md', { query: '?raw' })
 
-const L2_ORDER = ['vision', 'overview', 'core', 'axes', 'patterns', 'plugins', 'hooks', 'ui']
+const metaModules = import.meta.glob<{ default: string }>('/contents/**/_meta.yaml', {
+  query: '?raw',
+  eager: true,
+})
 
-const L2_LABELS: Record<string, string> = {
-  vision: 'Vision',
-  overview: 'Overview',
-  core: 'Core',
-  axes: 'Axes',
-  patterns: 'Patterns',
-  plugins: 'Plugins',
-  hooks: 'Hooks',
-  ui: 'UI',
+interface MetaYaml {
+  label?: string
+  order?: string[]
+}
+
+function parseMeta(raw: string): MetaYaml {
+  const result: MetaYaml = {}
+  const lines = raw.split('\n')
+  let inOrder = false
+
+  for (const line of lines) {
+    const labelMatch = line.match(/^label:\s*(.+)/)
+    if (labelMatch) {
+      result.label = labelMatch[1].trim()
+      inOrder = false
+      continue
+    }
+    if (line.match(/^order:\s*$/)) {
+      inOrder = true
+      result.order = []
+      continue
+    }
+    if (inOrder) {
+      const itemMatch = line.match(/^\s+-\s+(.+)/)
+      if (itemMatch) {
+        result.order!.push(itemMatch[1].trim())
+      } else if (!line.match(/^\s*$/)) {
+        inOrder = false
+      }
+    }
+  }
+  return result
+}
+
+function getLayerMeta(layer: string): MetaYaml {
+  const key = `/contents/${layer}/_meta.yaml`
+  const mod = metaModules[key]
+  if (!mod) return {}
+  return parseMeta(mod.default)
+}
+
+function getRootOrder(): string[] {
+  const mod = metaModules['/contents/_meta.yaml']
+  if (!mod) return []
+  return parseMeta(mod.default).order ?? []
 }
 
 function buildAreaTree(): NormalizedData {
   // Parse glob keys into { l2, l3? } entries
   const entries: { l2: string; l3?: string; path: string }[] = []
   for (const key of Object.keys(mdModules)) {
-    // key: /docs/2-areas/axes.md or /docs/2-areas/axes/navigate.md
-    const match = key.match(/^\/docs\/2-areas\/(.+)\.md$/)
+    const match = key.match(/^\/contents\/(.+)\.md$/)
     if (!match) continue
     const segments = match[1].split('/')
     if (segments.length === 1) {
@@ -41,23 +79,38 @@ function buildAreaTree(): NormalizedData {
     }
   }
 
+  const rootOrder = getRootOrder()
   const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
   const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
 
-  // Add L2 nodes in fixed order
-  for (const l2 of L2_ORDER) {
-    entities[l2] = { id: l2, data: { name: L2_LABELS[l2] || l2 } }
+  // Collect all known L2 keys from entries
+  const knownL2 = new Set(entries.map((e) => e.l2))
+
+  // Use root order, then append any L2 not in order
+  const orderedL2 = [...rootOrder.filter((l2) => knownL2.has(l2))]
+  for (const l2 of knownL2) {
+    if (!orderedL2.includes(l2)) orderedL2.push(l2)
+  }
+
+  for (const l2 of orderedL2) {
+    const meta = getLayerMeta(l2)
+    entities[l2] = { id: l2, data: { name: meta.label || l2 } }
     relationships[ROOT_ID].push(l2)
 
-    // Collect L3 children for this L2, sorted alphabetically
-    const children = entries
+    // Collect L3 children, ordered by _meta.yaml then alphabetical fallback
+    const allChildren = entries
       .filter((e) => e.l2 === l2 && e.l3)
       .map((e) => e.l3!)
-      .sort()
 
-    if (children.length > 0) {
-      relationships[l2] = children.map((c) => `${l2}/${c}`)
-      for (const child of children) {
+    const metaOrder = meta.order ?? []
+    const ordered = [...metaOrder.filter((c) => allChildren.includes(c))]
+    for (const c of allChildren.sort()) {
+      if (!ordered.includes(c)) ordered.push(c)
+    }
+
+    if (ordered.length > 0) {
+      relationships[l2] = ordered.map((c) => `${l2}/${c}`)
+      for (const child of ordered) {
         const id = `${l2}/${child}`
         entities[id] = { id, data: { name: child } }
       }
@@ -75,7 +128,7 @@ export function AreaSidebar() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  // Extract current path segments: /internals/area/axes/navigate → "axes/navigate"
+  // Extract current path segments: /internals/area/axis/navigate → "axis/navigate"
   const currentPath = pathname.replace(/^\/internals\/area\/?/, '') || 'overview'
   const currentL2 = currentPath.split('/')[0]
 

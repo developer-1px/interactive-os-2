@@ -13,7 +13,7 @@ interface MdPageProps {
   md: string
 }
 
-const mdModules = import.meta.glob<{ default: string }>('/docs/2-areas/**/*.md', {
+const mdModules = import.meta.glob<{ default: string }>('/contents/**/*.md', {
   query: '?raw',
   eager: true,
 })
@@ -50,7 +50,7 @@ function RenderBlock({ children }: { children: string }) {
 }
 
 export default function MdPage({ md }: MdPageProps) {
-  const mdPath = `/docs/2-areas/${md}.md`
+  const mdPath = `/contents/${md}.md`
   const mod = mdModules[mdPath]
 
   if (!mod) {

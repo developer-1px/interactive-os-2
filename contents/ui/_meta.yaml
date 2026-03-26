@@ -1,0 +1,26 @@
+label: UI
+description: Pattern 기반 완성품 UI 컴포넌트.
+order:
+  - ListBox
+  - TreeGrid
+  - TreeView
+  - Grid
+  - MenuList
+  - NavList
+  - TabList
+  - Accordion
+  - DisclosureGroup
+  - Dialog
+  - AlertDialog
+  - Combobox
+  - RadioGroup
+  - Toolbar
+  - Toggle
+  - ToggleGroup
+  - SwitchGroup
+  - Checkbox
+  - Slider
+  - Spinbutton
+  - Kanban
+  - Tooltip
+  - Toaster

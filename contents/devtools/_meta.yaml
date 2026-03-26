@@ -1,0 +1,6 @@
+label: Devtools
+description: 개발/디버깅 도구.
+order:
+  - rec
+  - inspector
+  - testRunner

@@ -1,0 +1,21 @@
+order:
+  - overview
+  - vision
+  - axis
+  - pattern
+  - plugins
+  - primitives
+  - engine
+  - store
+  - ui
+  - devtools
+
+srcMap:
+  axis: src/interactive-os/axis
+  pattern: src/interactive-os/pattern
+  plugins: src/interactive-os/plugins
+  primitives: src/interactive-os/primitives
+  engine: src/interactive-os/engine
+  store: src/interactive-os/store
+  ui: src/interactive-os/ui
+  devtools: src/devtools

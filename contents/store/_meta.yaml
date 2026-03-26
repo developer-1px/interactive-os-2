@@ -1,0 +1,6 @@
+label: Store
+description: 정규화된 트리 데이터 저장소.
+order:
+  - createStore
+  - types
+  - inspector
