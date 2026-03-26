@@ -1,3 +1,8 @@
+/* ── TabGroup — JetBrains Islands style ──
+   Active tab: rounded pill bg (island), content와 자연스럽게 연결
+   Inactive tab: 투명 bg, dimmed text
+   Preview tab: italic label */
+
 .tabGroup {
   display: flex;
   flex-direction: column;
@@ -8,46 +13,67 @@
 .tabBar {
   display: flex;
   flex-shrink: 0;
-  gap: var(--space-xs);
-  padding-inline: var(--space-sm);
-  border-block-end: 1px solid var(--border-default);
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-sm);
   background: var(--surface-sunken);
   overflow-x: auto;
 }
 
+/* ── Tab (inactive) ── */
 .tab {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
   padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--shape-sm-radius);
   cursor: pointer;
   white-space: nowrap;
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  transition:
+    background var(--motion-instant-duration) var(--motion-instant-easing),
+    color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
+.tab:hover {
+  color: var(--text-secondary);
+  background: var(--surface-default);
+}
+
+/* ── Tab (active = island) ── */
+.tab[aria-selected="true"] {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+/* ── Preview tab ── */
 .tabPreview {
   font-style: italic;
 }
 
+/* ── Close button ── */
 .tabClose {
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--shape-xs-radius);
-  padding: var(--space-xs);
+  padding: var(--space-2xs);
   opacity: 0;
+  color: var(--text-muted);
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
 .tab:hover .tabClose,
 .tab[aria-selected="true"] .tabClose {
-  opacity: 1;
+  opacity: 0.6;
 }
 
 .tabClose:hover {
-  background: var(--surface-raised);
+  opacity: 1;
+  background: var(--surface-overlay);
 }
 
+/* ── Tab panel ── */
 .tabPanel {
   flex: 1;
   min-height: 0;
