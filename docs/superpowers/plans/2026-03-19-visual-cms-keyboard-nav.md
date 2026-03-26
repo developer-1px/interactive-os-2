@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, interactive-os (spatial behavior, useSpatialNav, core plugin, spatial plugin), Vitest + @testing-library/react
 
-**PRD:** `docs/superpowers/specs/2026-03-19-visual-cms-keyboard-nav-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-19-visual-cms-keyboard-nav-prd.md`
 
 **핵심 렌더링 전략:** `<Aria.Node>`는 expanded 상태에 따라 자식 렌더링을 gate하므로 사용하지 않는다. 대신 `useAria` 직접 호출 + 전체 store tree를 재귀적으로 렌더링하는 커스텀 `CmsNodeRenderer` 사용. 모든 깊이의 노드가 항상 DOM에 존재하고, `useSpatialNav`는 현재 `__spatial_parent__`의 자식만 rect를 수집한다.
 

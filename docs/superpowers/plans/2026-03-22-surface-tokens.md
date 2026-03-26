@@ -8,7 +8,7 @@
 
 **Tech Stack:** CSS custom properties, `data-*` attribute selectors
 
-**PRD:** `docs/superpowers/specs/2026-03-22-surface-tokens-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-surface-tokens-prd.md`
 
 ---
 

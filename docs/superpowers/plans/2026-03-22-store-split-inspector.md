@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, interactive-os (Aria component, TreeGrid, behaviors, plugins), Vitest + @testing-library
 
-**PRD:** `docs/superpowers/specs/2026-03-22-store-split-inspector-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-store-split-inspector-prd.md`
 
 ---
 

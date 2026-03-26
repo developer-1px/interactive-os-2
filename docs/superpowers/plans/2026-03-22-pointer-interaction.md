@@ -14,7 +14,7 @@
 
 **Tech Stack:** React, TypeScript, @testing-library/react, userEvent
 
-**PRD:** `docs/superpowers/specs/2026-03-22-pointer-interaction-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-pointer-interaction-prd.md`
 
 ---
 

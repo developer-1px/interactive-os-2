@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript, React, vitest, @testing-library/react, userEvent
 
-**PRD:** `docs/superpowers/specs/2026-03-25-search-plugin-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-25-search-plugin-prd.md`
 
 **핵심 메커니즘:**
 - Mod+F → `activateSearch()` command → `__search__.active = true` (filterText 유지) → `Aria.Search` useEffect가 input.focus()

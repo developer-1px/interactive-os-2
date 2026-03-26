@@ -52,7 +52,7 @@ PRD를 채우다가 **범위를 넘어가는 요구사항**을 만나면:
 
 ## Step 1: 빈 표로 PRD 파일 생성
 
-`docs/superpowers/specs/YYYY-MM-DD-<feature>-prd.md`에 빈 표를 만든다.
+`docs/superpowers/prds/YYYY-MM-DD-<feature>-prd.md`에 빈 표를 만든다.
 
 파일명에 `-prd` 접미사를 붙여 design 문서와 구분한다.
 

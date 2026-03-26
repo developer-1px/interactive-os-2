@@ -1,7 +1,7 @@
 # Retro: CMS Landing 독립 디자인 시스템 — 2026-03-24
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-24-cms-landing-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-24-cms-landing-prd.md
 - **Design Spec:** docs/superpowers/specs/2026-03-24-cms-landing-design.md
 - **Diff 범위:** HEAD~1..HEAD
 - **커밋 수:** 1

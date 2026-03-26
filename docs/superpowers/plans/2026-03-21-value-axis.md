@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript, React, Vitest, @testing-library/react, userEvent
 
-**PRD:** `docs/superpowers/specs/2026-03-21-value-axis-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-21-value-axis-prd.md`
 
 ---
 

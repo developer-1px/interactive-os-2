@@ -1,7 +1,7 @@
 # Retro: cellEdit Plugin — 2026-03-25
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-25-cell-edit-plugin-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-25-cell-edit-plugin-prd.md
 - **Diff 범위:** e495881~1..e495881
 - **커밋 수:** 1
 - **변경 파일:** 8

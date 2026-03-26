@@ -8,7 +8,7 @@
 
 **Tech Stack:** `@mdx-js/rollup`, `remark-gfm` (이미 설치됨), Vite, React, react-router-dom
 
-**Spec:** `docs/superpowers/specs/2026-03-21-area-mdx-docs-prd.md`
+**Spec:** `docs/superpowers/prds/2026-03-21-area-mdx-docs-prd.md`
 
 ---
 
@@ -340,7 +340,7 @@ import NavigateDemo from '../../../src/pages/axis/NavigateDemo'
 
 ## 관련
 
-- [behavior-axis-decomposition-prd](/docs/superpowers/specs/2026-03-20-behavior-axis-decomposition-prd.md)
+- [behavior-axis-decomposition-prd](/docs/superpowers/prds/2026-03-20-behavior-axis-decomposition-prd.md)
 - 사용 패턴: listbox, tree, treegrid, grid, menu, toolbar, tabs, radiogroup, combobox
 ```
 

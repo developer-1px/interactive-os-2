@@ -1,7 +1,7 @@
 # Retro: Grid 범용화 + CMS i18n Table — 2026-03-23
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-22-grid-i18n-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-22-grid-i18n-prd.md
 - **Diff 범위:** 99f028f..67ce904
 - **커밋 수:** 5 (Grid 관련)
 - **변경 파일:** 7 (src 6 + css 1)

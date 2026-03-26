@@ -8,7 +8,7 @@
 
 **Tech Stack:** Vitest, @testing-library/react, userEvent, jsdom
 
-**PRD:** `docs/superpowers/specs/2026-03-21-test-lightweight-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-21-test-lightweight-prd.md`
 
 **금지 사항 (PRD §5):**
 - unit 케이스를 1:1로 통합에 옮기지 않는다 — 통합 미커버만 선별 추가

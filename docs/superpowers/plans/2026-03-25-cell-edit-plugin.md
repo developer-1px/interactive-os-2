@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript, React, vitest, @testing-library/react, userEvent
 
-**PRD:** `docs/superpowers/specs/2026-03-25-cell-edit-plugin-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-25-cell-edit-plugin-prd.md`
 
 **KeyMap priority (중요):** `keyMapOverrides(컴포넌트) > pluginKeyMaps > behavior.keyMap(축)`. cellEdit plugin keyMap이 pluginKeyMaps 레벨이므로 axis keyMap(edit 축)을 자동 shadow한다.
 

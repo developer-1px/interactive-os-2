@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, CSS Modules, Shiki (CodeBlock), Lucide icons (FileIcon, Breadcrumb)
 
-**PRD:** `docs/superpowers/specs/2026-03-23-viewer-parts-extraction-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-23-viewer-parts-extraction-prd.md`
 
 ---
 

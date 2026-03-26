@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, CSS Modules, Vite plugin (server middleware), SSE, virtual scroll (직접 구현 또는 경량 라이브러리)
 
-**PRD:** `docs/superpowers/specs/2026-03-22-agent-viewer-multiview-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-agent-viewer-multiview-prd.md`
 
 ---
 

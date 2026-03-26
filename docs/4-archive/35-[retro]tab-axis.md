@@ -1,7 +1,7 @@
 # Retro: tab-axis — 2026-03-24
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-24-tab-axis-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-24-tab-axis-prd.md
 - **Diff 범위:** 547a20e~1..4c1125f (7 커밋)
 - **커밋 수:** 7
 - **변경 파일:** 10

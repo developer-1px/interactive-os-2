@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, interactive-os (useAriaZone, rename plugin, Aria.Editable), CSS Grid
 
-**PRD:** `docs/superpowers/specs/2026-03-21-cms-inline-edit-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-21-cms-inline-edit-prd.md`
 
 ---
 

@@ -1,7 +1,7 @@
 # Retro: definePlugin — 2026-03-23
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-23-define-plugin-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-23-define-plugin-prd.md
 - **Diff 범위:** b460764 (단일 커밋)
 - **커밋 수:** 1
 - **변경 파일:** 24

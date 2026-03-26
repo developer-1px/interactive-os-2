@@ -11,7 +11,7 @@ description: 자율 실행 오케스트레이터. 상황 판단하여 Plan → E
 
 대화에 이미 discussion/PRD/요청이 있으면 바로 상황 판단으로 넘어간다. **컨텍스트가 없으면**(새 세션에서 "/go"만 입력) 아래 순서로 탐색한다:
 
-1. **활성 PRD** — `docs/superpowers/specs/*-prd.md` 중 역PRD 열이 비어있는(= 아직 구현/retro 안 된) PRD를 찾는다. 역PRD가 채워져 있으면 이미 완료된 것이므로 제외.
+1. **활성 PRD** — `docs/superpowers/prds/*-prd.md` 중 역PRD 열이 비어있는(= 아직 구현/retro 안 된) PRD를 찾는다. 역PRD가 채워져 있으면 이미 완료된 것이므로 제외.
    - 1개 → 해당 PRD 기반으로 자동 진행
    - 여러 개 → 날짜 순서대로 처리 (가장 오래된 것 먼저)
 2. **백로그** — `/backlog list`로 처리 가능한 항목이 있는지

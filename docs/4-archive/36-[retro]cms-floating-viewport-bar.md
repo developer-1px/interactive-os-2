@@ -1,7 +1,7 @@
 # Retro: CMS Floating Viewport Bar — 2026-03-24
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-24-cms-floating-viewport-bar-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-24-cms-floating-viewport-bar-prd.md
 - **Diff 범위:** 5cd7cc5..8b0482c
 - **커밋 수:** 1
 - **변경 파일:** 5 (신규 1, 수정 3, 삭제 1)

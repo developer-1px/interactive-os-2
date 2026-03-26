@@ -1,7 +1,7 @@
 # Retro: CMS Field Type System — 2026-03-24
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-24-cms-field-type-system-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-24-cms-field-type-system-prd.md
 - **Diff 범위:** aeee153 (단일 커밋)
 - **커밋 수:** 1
 - **변경 파일:** 6 (cms-schema.ts, CmsDetailPanel.tsx, cms.css, PageVisualCms.module.css, + 테스트 2개)

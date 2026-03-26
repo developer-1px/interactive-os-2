@@ -1,7 +1,7 @@
 # Retro: Active Zone — 2026-03-24
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-23-active-zone-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-23-active-zone-prd.md
 - **Diff 범위:** a122b3e..40ee513
 - **커밋 수:** 1
 - **변경 파일:** 4 (useAriaView.ts, activeZone.integration.test.tsx, active-zone-prd.md, PROGRESS.md)

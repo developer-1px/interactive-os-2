@@ -1,7 +1,7 @@
 # Retro: History Delta-Based Undo/Redo — 2026-03-23
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-23-history-delta-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-23-history-delta-prd.md
 - **Diff 범위:** 38fc271..HEAD
 - **커밋 수:** 6 (코드 4 + docs 2)
 - **변경 파일:** 4 (computeStoreDiff.ts, dispatchLogger.ts, history.ts, treegrid/dispatch-logger tests)

@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, interactive-os engine (useAria, plugins, commands), CSS modules, vitest + @testing-library/react + userEvent
 
-**PRD:** `docs/superpowers/specs/2026-03-26-workspace-containers-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-26-workspace-containers-prd.md`
 
 **Descoped (follow-up PRD):**
 - V4/V5 — Cmd+Option+Arrow pane navigation requires focused-pane tracking + Aria Zone per pane
