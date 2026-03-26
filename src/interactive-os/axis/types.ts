@@ -78,6 +78,8 @@ export interface AxisConfig {
   selectionMode: SelectionMode
   selectOnClick: boolean
   activateOnClick: boolean
+  /** When true, clicking a parent node toggles expand even when onActivate is provided. Default: true. Set by activate({ expandOnClick }). */
+  expandOnParentClick: boolean
   followFocus: boolean
   colCount: number
   valueRange: ValueRange
