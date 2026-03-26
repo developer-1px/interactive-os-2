@@ -2,11 +2,16 @@
 /**
  * Design Score Visual — 렌더링 후 미감 규칙 측정 (Playwright runner)
  *
- * Usage: node scripts/designScoreVisual.mjs
+ * Usage:
+ *   node scripts/designScoreVisual.mjs                    # 전 라우트
+ *   node scripts/designScoreVisual.mjs /ui/listbox        # 특정 경로
+ *   node scripts/designScoreVisual.mjs /ui/listbox /ui/grid  # 여러 경로
+ *   node scripts/designScoreVisual.mjs ui                 # "ui" 포함 라우트만
+ *
  * Requires: dev server running at localhost:5173
  *
  * 규칙은 designLintRules.mjs에서 가져온다 (단일 소스).
- * 이 파일은 Playwright로 전 라우트를 순회하며 JSON을 출력하는 runner.
+ * 이 파일은 Playwright로 라우트를 순회하며 JSON을 출력하는 runner.
  */
 import puppeteer from 'puppeteer-core'
 import { existsSync, readFileSync } from 'node:fs'
@@ -48,6 +53,22 @@ const routes = [
   { path: '/internals/theme', label: 'Theme' },
 ]
 
+/* ── Route filtering ── */
+
+const args = process.argv.slice(2)
+
+function filterRoutes(allRoutes, filters) {
+  if (filters.length === 0) return allRoutes
+  return allRoutes.filter(r =>
+    filters.some(f => {
+      // Exact path match: /ui/listbox
+      if (f.startsWith('/')) return r.path === f
+      // Substring match on path or label: "ui", "listbox", "CMS"
+      return r.path.toLowerCase().includes(f.toLowerCase()) || r.label.toLowerCase().includes(f.toLowerCase())
+    })
+  )
+}
+
 /* ── Main ── */
 
 async function main() {
@@ -74,9 +95,17 @@ async function main() {
     process.exit(1)
   }
 
+  const targetRoutes = filterRoutes(routes, args)
+  if (targetRoutes.length === 0) {
+    console.error(`No routes matched: ${args.join(', ')}`)
+    console.error(`Available: ${routes.map(r => r.path).join(', ')}`)
+    await browser.close()
+    process.exit(1)
+  }
+
   const output = { routes: {}, summary: { total: 0, pass: 0 } }
 
-  for (const route of routes) {
+  for (const route of targetRoutes) {
     try {
       await page.goto(`${baseUrl}${route.path}`, { waitUntil: 'networkidle0', timeout: 10000 })
       await new Promise(r => setTimeout(r, 300))
@@ -120,7 +149,7 @@ async function main() {
     output.summary.pass += summary.passedRules
   }
 
-  output.summary.routes = `${Object.keys(output.routes).length}/${routes.length}`
+  output.summary.routes = `${Object.keys(output.routes).length}/${targetRoutes.length}`
   output.summary.score = output.summary.total > 0
     ? `${((output.summary.pass / output.summary.total) * 100).toFixed(1)}%`
     : '0%'

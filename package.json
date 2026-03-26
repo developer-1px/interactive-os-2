@@ -228,7 +228,7 @@
     "score:design": "node scripts/designScore.mjs",
     "score:design-visual": "node scripts/designScoreVisual.mjs",
     "score:completeness": "node scripts/completenessScore.mjs",
-    "lint:design": "node scripts/designScoreVisual.mjs | node scripts/designLintReport.mjs"
+    "lint:design": "node scripts/designLintRunner.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
