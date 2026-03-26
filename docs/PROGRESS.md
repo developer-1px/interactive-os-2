@@ -20,7 +20,7 @@
 | dispatch + middleware | Integrated | — |
 | Dispatch Logger | Validated | — |
 
-## Plugins (L3 · 10종)
+## Plugins (L5 · 10종)
 
 | Plugin | Maturity | Gaps |
 |--------|----------|------|
@@ -39,13 +39,13 @@
 | definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires. 전 플러그인 전환 완료 |
 | *permissions* | Concept | 예제만 존재 |
 
-## Axis (L4 · 7축)
+## Axis (L3 · 7축)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | 7축 (navigation · selection · expand · focus · tab · value · edit) | Integrated | — |
 
-## Pattern (L5)
+## Pattern (L4)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|

@@ -70,9 +70,9 @@ const LAYER_ICONS: Record<string, LucideIcon> = {
 const LAYER_LABELS: Record<string, string> = {
   store: 'L1 Store',
   engine: 'L2 Engine',
-  axis: 'L4 Axis',
-  pattern: 'L5 Pattern',
-  plugins: 'L3 Plugins',
+  axis: 'L3 Axis',
+  pattern: 'L4 Pattern',
+  plugins: 'L5 Plugins',
   primitives: 'L6 Primitives',
   ui: 'L7 UI',
 }
