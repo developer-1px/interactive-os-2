@@ -183,13 +183,19 @@ export default function PageViewer() {
     navigate(filePathToUrlPath(filePath), { replace: true })
   }, [navigate])
 
-  const handleChange = useCallback((newStore: NormalizedData) => {
-    const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
-    const entity = newStore.entities[focusedId]
+  // focus 이동은 트리 내부 상태만 갱신, 탭은 열지 않음
+  const handleChange = useCallback((_newStore: NormalizedData) => {
+    // TreeView 내부 상태(expand/collapse, focus) 반영용
+  }, [])
+
+  // Enter/클릭 시에만 탭 열기
+  const handleActivate = useCallback((nodeId: string) => {
+    if (!initialStore) return
+    const entity = initialStore.entities[nodeId]
     if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
       selectFile((entity.data as unknown as FileNodeData).path)
     }
-  }, [selectFile])
+  }, [initialStore, selectFile])
 
   const handleWorkspaceChange = useCallback((newStore: NormalizedData) => {
     setWorkspaceStore(newStore)
@@ -244,6 +250,7 @@ export default function PageViewer() {
               data={initialStore}
               plugins={[core()]}
               onChange={handleChange}
+              onActivate={handleActivate}
               aria-label="File tree"
               renderItem={(props, node, state) => {
                 const data = node.data as FileNodeData
