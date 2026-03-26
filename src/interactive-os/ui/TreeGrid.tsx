@@ -7,7 +7,7 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { treegrid } from '../pattern/examples/treegrid'
 import { history } from '../plugins/history'
-import { replaceEditPlugin } from '../plugins/edit'
+import { edit, replaceEditPlugin } from '../plugins/edit'
 
 interface TreeGridProps {
   id?: string
@@ -40,12 +40,12 @@ export function TreeGrid({
   enableEditing = false,
 }: TreeGridProps) {
   const behavior = React.useMemo(
-    () => treegrid({ edit: enableEditing }),
-    [enableEditing],
+    () => treegrid(),
+    [],
   )
 
   const mergedPlugins = React.useMemo(
-    () => enableEditing ? [...plugins, replaceEditPlugin()] : plugins,
+    () => enableEditing ? [...plugins, edit({ tree: true }), replaceEditPlugin()] : plugins,
     [plugins, enableEditing],
   )
 

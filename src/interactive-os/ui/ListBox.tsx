@@ -6,7 +6,7 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { listbox } from '../pattern/examples/listbox'
 import { history } from '../plugins/history'
-import { replaceEditPlugin } from '../plugins/edit'
+import { edit, replaceEditPlugin } from '../plugins/edit'
 import styles from './ListBox.module.css'
 
 interface ListBoxProps {
@@ -32,12 +32,12 @@ export function ListBox({
   enableEditing = false,
 }: ListBoxProps) {
   const behavior = React.useMemo(
-    () => listbox({ edit: enableEditing }),
-    [enableEditing],
+    () => listbox(),
+    [],
   )
 
   const mergedPlugins = React.useMemo(
-    () => enableEditing ? [...plugins, replaceEditPlugin()] : plugins,
+    () => enableEditing ? [...plugins, edit(), replaceEditPlugin()] : plugins,
     [plugins, enableEditing],
   )
 

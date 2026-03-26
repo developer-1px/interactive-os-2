@@ -1,6 +1,6 @@
-import type { StructuredAxis } from '../pattern/composePattern'
 import type { PatternContext } from '../axis/types'
 import type { Plugin } from './types'
+import { definePlugin } from './definePlugin'
 import { crudCommands } from './crud'
 import { renameCommands, RENAME_ID } from './rename'
 import { dndCommands } from '../plugins/dnd'
@@ -13,8 +13,9 @@ interface EditOptions {
   tree?: boolean
 }
 
-export function edit(options?: EditOptions): StructuredAxis {
-  const keyMap: StructuredAxis['keyMap'] = {
+export function edit(options?: EditOptions): Plugin {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const keyMap: Record<string, (ctx: any) => any> = {
     'F2': (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
     'Enter': (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
     'Delete': (ctx: PatternContext) => crudCommands.remove(ctx.focused),
@@ -27,7 +28,7 @@ export function edit(options?: EditOptions): StructuredAxis {
     keyMap['Alt+ArrowRight'] = (ctx: PatternContext) => dndCommands.moveIn(ctx.focused)
   }
 
-  return { keyMap }
+  return definePlugin({ name: 'edit', keyMap })
 }
 
 /** Printable-key -> replace-mode rename plugin. Add to plugins array when editing is enabled. */

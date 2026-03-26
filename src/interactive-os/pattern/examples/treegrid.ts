@@ -5,16 +5,8 @@ import { select } from '../../axis/select'
 import { activate } from '../../axis/activate'
 import { expand } from '../../axis/expand'
 import { navigate } from '../../axis/navigate'
-import { edit as editAxis } from '../../plugins/edit'
 
-export function treegrid(options?: { edit?: boolean }) {
-  const axes = [
-    ...(options?.edit ? [editAxis({ tree: true })] : []),
-    select({ mode: 'multiple', extended: true }),
-    activate({ onClick: true }),
-    expand({ mode: 'arrow' }),
-    navigate({ orientation: 'vertical' }),
-  ]
+export function treegrid() {
   return composePattern(
     {
       role: 'treegrid',
@@ -34,6 +26,9 @@ export function treegrid(options?: { edit?: boolean }) {
         return attrs
       },
     },
-    ...axes,
+    select({ mode: 'multiple', extended: true }),
+    activate({ onClick: true }),
+    expand({ mode: 'arrow' }),
+    navigate({ orientation: 'vertical' }),
   )
 }

@@ -8,7 +8,7 @@ import { Aria } from '../primitives/aria'
 import { grid as gridBehavior } from '../pattern/examples/grid'
 import { cellEdit } from '../plugins/cellEdit'
 import { search } from '../plugins/search'
-import { replaceEditPlugin } from '../plugins/edit'
+import { edit, replaceEditPlugin } from '../plugins/edit'
 
 interface ColumnDef {
   key: string
@@ -54,14 +54,14 @@ export function Grid({
   'aria-label': ariaLabel,
 }: GridProps) {
   const behavior = React.useMemo(
-    () => gridBehavior({ columns: columns.length, tabCycle, edit: enableEditing }),
-    [columns.length, tabCycle, enableEditing],
+    () => gridBehavior({ columns: columns.length, tabCycle }),
+    [columns.length, tabCycle],
   )
 
   const mergedPlugins = React.useMemo(
     () => {
       const result = [...plugins]
-      if (enableEditing) { result.push(replaceEditPlugin(), cellEdit()) }
+      if (enableEditing) { result.push(edit(), replaceEditPlugin(), cellEdit()) }
       if (searchable) { result.push(search()) }
       return result
     },

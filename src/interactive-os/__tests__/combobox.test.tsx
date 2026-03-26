@@ -59,7 +59,7 @@ function ControlledCombobox({
   return (
     <Combobox
       data={data}
-      plugins={[comboboxPlugin()]}
+      plugins={[comboboxPlugin({ selectionMode })]}
       onChange={setData}
       placeholder="Pick..."
       selectionMode={selectionMode}

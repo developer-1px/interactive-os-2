@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
+import type { Plugin } from './types'
 import { createCommandEngine } from './createCommandEngine'
 import type { CommandEngine } from './createCommandEngine'
 
