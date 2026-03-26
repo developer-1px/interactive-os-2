@@ -9,7 +9,7 @@ import { TreeView } from '../interactive-os/ui/TreeView'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
 import { core, FOCUS_ID } from '../interactive-os/plugins/core'
-import { createStore, getChildren, getEntityData, updateEntityData, removeEntity, addEntity } from '../interactive-os/store/createStore'
+import { createStore, getChildren, getEntityData, updateEntityData, addEntity } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { Plugin } from '../interactive-os/plugins/types'
@@ -21,7 +21,7 @@ import { Breadcrumb } from '../interactive-os/ui/Breadcrumb'
 import { QuickOpen } from './viewer/QuickOpen'
 import { DEFAULT_ROOT, type FileNodeData } from './viewer/types'
 import { Workspace } from '../interactive-os/ui/Workspace'
-import { createWorkspace, workspaceCommands, findTabgroup, openTab } from '../interactive-os/plugins/workspaceStore'
+import { createWorkspace, workspaceCommands, findTabgroup } from '../interactive-os/plugins/workspaceStore'
 import type { TabData } from '../interactive-os/plugins/workspaceStore'
 
 // --- Types ---
@@ -201,7 +201,7 @@ export default function PageViewer() {
     navigate(filePathToUrlPath(filePath), { replace: true })
   }, [navigate])
 
-  // Enter/클릭 → 영구 탭으로 열기
+  // Enter → preview 유지 + 영구 탭을 preview 왼쪽에 insert + focus는 preview에 복귀
   const pinFile = useCallback((filePath: string) => {
     setWorkspaceStore(prev => {
       const tgId = findTabgroup(prev)
@@ -209,24 +209,27 @@ export default function PageViewer() {
 
       const tabIds = getChildren(prev, tgId)
       const filename = filePath.split('/').pop() ?? filePath
+      const permanentId = `tab-${filePath}`
 
-      // preview 탭이 이 파일을 보여주고 있으면 → 영구 탭으로 승격
-      if (tabIds.includes(PREVIEW_TAB_ID)) {
-        const previewData = getEntityData<TabData>(prev, PREVIEW_TAB_ID)
-        if (previewData?.contentRef === filePath) {
-          const store = removeEntity(prev, PREVIEW_TAB_ID)
-          return workspaceCommands.addTab(tgId, {
-            id: `tab-${filePath}`,
-            data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
-          }).execute(store)
-        }
+      // 이미 영구 탭으로 열려있으면 스킵
+      if (tabIds.includes(permanentId)) return prev
+
+      // preview 탭의 위치를 찾아서 그 앞에 insert
+      const previewIndex = tabIds.indexOf(PREVIEW_TAB_ID)
+      const insertIndex = previewIndex >= 0 ? previewIndex : tabIds.length
+
+      // 영구 탭을 preview 앞에 insert (addEntity with index)
+      let store = addEntity(prev, {
+        id: permanentId,
+        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
+      }, tgId, insertIndex)
+
+      // activeTabId를 preview로 유지 (focus 복귀)
+      if (previewIndex >= 0) {
+        store = updateEntityData(store, tgId, { activeTabId: PREVIEW_TAB_ID })
       }
 
-      // 아니면 일반 openTab (중복 방지)
-      return openTab(prev, tgId, filePath, () => ({
-        id: `tab-${filePath}`,
-        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
-      }))
+      return store
     })
     navigate(filePathToUrlPath(filePath), { replace: true })
   }, [navigate])
