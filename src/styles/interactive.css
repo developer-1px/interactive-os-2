@@ -103,7 +103,7 @@
 }
 
 /* Expanded treeitem: redirect active press to label row */
-:where([data-aria-container] [role="treeitem"][aria-expanded="true"]:active > :first-child) {
+:where([data-aria-container] [role="treeitem"][aria-expanded="true"]:active:not(:has([role="treeitem"]:active)) > :first-child) {
   background: var(--tone-primary-bright);
 }
 
@@ -224,8 +224,8 @@
 /* ── Active (press feedback) ── */
 
 :where([data-aria-container] [role="option"]:active),
-:where([data-aria-container] [role="treeitem"]:active),
-:where([data-aria-container] [role="menuitem"]:active),
+:where([data-aria-container] [role="treeitem"]:active:not(:has([role="treeitem"]:active))),
+:where([data-aria-container] [role="menuitem"]:active:not(:has([role="menuitem"]:active))),
 :where([data-aria-container] [role="radio"]:active),
 :where([data-aria-container] [role="switch"]:active),
 :where([data-aria-container] [role="row"]:active),
