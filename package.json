@@ -229,7 +229,8 @@
     "score:design-visual": "node scripts/designScoreVisual.mjs",
     "score:completeness": "node scripts/completenessScore.mjs",
     "lint:design": "node scripts/designLintRunner.mjs",
-    "check:contents": "node scripts/checkContentsIsomorphism.mjs"
+    "check:contents": "node scripts/checkContentsIsomorphism.mjs",
+    "check:deps": "depcruise src/interactive-os --config .dependency-cruiser.cjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -246,6 +247,7 @@
     "@vitejs/plugin-react": "^6.0.0",
     "@vitest/coverage-v8": "^4.1.1",
     "axe-core": "^4.11.1",
+    "dependency-cruiser": "^17.3.9",
     "eslint": "^10.1.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
