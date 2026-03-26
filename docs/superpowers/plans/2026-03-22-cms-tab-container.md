@@ -10,7 +10,7 @@
 
 **Tech Stack:** Zod (schema), React (rendering), interactive-os spatial behavior (navigation), vitest + @testing-library/react + userEvent (testing)
 
-**PRD:** `docs/superpowers/specs/2026-03-22-cms-tab-container-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-cms-tab-container-prd.md`
 
 **Out of scope (backlog):** Present mode tab rendering — requires separate CmsPresentMode.tsx changes. File as backlog after this implementation.
 

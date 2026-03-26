@@ -1,7 +1,7 @@
 /**
  * Integration test: Active Zone — pointerdown on empty area activates zone
  *
- * PRD: docs/superpowers/specs/2026-03-23-active-zone-prd.md
+ * PRD: docs/superpowers/prds/2026-03-23-active-zone-prd.md
  * Tests V1~V7: empty area click → focusedId gets DOM focus, nested guard, edge cases.
  */
 import { describe, it, expect } from 'vitest'

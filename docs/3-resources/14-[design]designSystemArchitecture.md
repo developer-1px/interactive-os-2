@@ -262,7 +262,7 @@ flowchart TD
 
 ### 참고 자료
 
-- **Surface Token PRD**: `docs/superpowers/specs/2026-03-22-surface-tokens-prd.md`
+- **Surface Token PRD**: `docs/superpowers/prds/2026-03-22-surface-tokens-prd.md`
 - **UI 컴포넌트 디자인 스펙**: `docs/superpowers/specs/2026-03-22-ui-components-design.md`
 - **Surface 네이밍 리서치**: `docs/3-resources/surfaceElevationNaming.md`
 - **Focus Token 회고**: `docs/0-inbox/19-[retro]focus-token-system.md`

@@ -8,7 +8,7 @@
 
 **Tech Stack:** React hooks, TypeScript, vitest + @testing-library/react + userEvent
 
-**PRD:** `docs/superpowers/specs/2026-03-22-spatial-cross-boundary-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-spatial-cross-boundary-prd.md`
 
 ---
 

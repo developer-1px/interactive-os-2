@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, react-router-dom, interactive-os (behaviors + plugins), CSS custom properties, Lucide icons
 
-**Specs:** `docs/superpowers/specs/2026-03-19-visual-cms-service-prd.md` (main) + 5 sub-PRDs
+**Specs:** `docs/superpowers/prds/2026-03-19-visual-cms-service-prd.md` (main) + 5 sub-PRDs
 
 ---
 

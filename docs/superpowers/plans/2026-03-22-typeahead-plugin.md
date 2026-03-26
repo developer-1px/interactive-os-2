@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript, React, Vitest, @testing-library/react, @testing-library/user-event
 
-**PRD:** `docs/superpowers/specs/2026-03-22-typeahead-plugin-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-typeahead-plugin-prd.md`
 
 ---
 

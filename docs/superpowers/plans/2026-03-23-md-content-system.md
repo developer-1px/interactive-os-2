@@ -8,7 +8,7 @@
 
 **Tech Stack:** react-markdown (v10.1.0, 이미 설치), remark-gfm (이미 설치), Vite `?raw` import
 
-**PRD:** `docs/superpowers/specs/2026-03-23-md-content-system-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-23-md-content-system-prd.md`
 
 ---
 

@@ -1,7 +1,7 @@
 # Retro: Grid 샘플 보강 — 2026-03-23
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-23-grid-sample-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-23-grid-sample-prd.md
 - **Diff 범위:** b7f05ca..1a9679e
 - **커밋 수:** 1
 - **변경 파일:** 4 (shared-grid-data, PageGrid, PageGridCollection, components.css)

@@ -8,7 +8,7 @@
 
 **Tech Stack:** React hook, pointer events, CSS custom properties, localStorage, vitest + @testing-library
 
-**PRD:** `docs/superpowers/specs/2026-03-22-panel-resizer-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-panel-resizer-prd.md`
 
 ---
 

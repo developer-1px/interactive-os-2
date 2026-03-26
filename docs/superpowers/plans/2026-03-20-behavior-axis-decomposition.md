@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript, React, Vitest
 
-**Spec:** `docs/superpowers/specs/2026-03-20-behavior-axis-decomposition-prd.md`
+**Spec:** `docs/superpowers/prds/2026-03-20-behavior-axis-decomposition-prd.md`
 
 ---
 

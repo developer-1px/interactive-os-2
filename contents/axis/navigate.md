@@ -36,5 +36,5 @@
 
 ## 관련
 
-- [behavior-axis-decomposition-prd](/docs/superpowers/specs/2026-03-20-behavior-axis-decomposition-prd.md)
+- [behavior-axis-decomposition-prd](/docs/superpowers/prds/2026-03-20-behavior-axis-decomposition-prd.md)
 - 사용 패턴: listbox, tree, treegrid, grid, menu, toolbar, tabs, radiogroup, combobox

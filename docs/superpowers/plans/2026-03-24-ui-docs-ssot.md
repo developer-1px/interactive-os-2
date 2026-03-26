@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, react-markdown, MdPage, showcaseRegistry, ApgKeyboardTable
 
-**Spec:** `docs/superpowers/specs/2026-03-24-ui-docs-ssot-prd.md`
+**Spec:** `docs/superpowers/prds/2026-03-24-ui-docs-ssot-prd.md`
 
 ---
 

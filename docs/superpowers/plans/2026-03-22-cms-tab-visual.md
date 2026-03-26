@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, CSS (design tokens), interactive-os (getChildren, getParent)
 
-**PRD:** `docs/superpowers/specs/2026-03-22-cms-tab-visual-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-cms-tab-visual-prd.md`
 
 ---
 

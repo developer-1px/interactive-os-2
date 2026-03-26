@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, TypeScript, Vitest, @testing-library/react, userEvent
 
-**PRD:** `docs/superpowers/specs/2026-03-22-aria-item-parent-prop-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-22-aria-item-parent-prop-prd.md`
 
 ---
 

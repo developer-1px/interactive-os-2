@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, TypeScript, Vitest, @testing-library/react, userEvent
 
-**PRD:** `docs/superpowers/specs/2026-03-21-nested-aria-bubbling-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-21-nested-aria-bubbling-prd.md`
 
 ---
 

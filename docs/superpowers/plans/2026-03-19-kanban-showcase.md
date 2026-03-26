@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, TypeScript, Vitest, interactive-os (behaviors, plugins, `<Aria>` component)
 
-**Spec:** `docs/superpowers/specs/2026-03-19-kanban-showcase-prd.md`
+**Spec:** `docs/superpowers/prds/2026-03-19-kanban-showcase-prd.md`
 
 ---
 

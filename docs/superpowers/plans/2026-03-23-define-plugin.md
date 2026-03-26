@@ -1,6 +1,6 @@
 # definePlugin Plan
 
-> PRD: docs/superpowers/specs/2026-03-23-define-plugin-prd.md
+> PRD: docs/superpowers/prds/2026-03-23-define-plugin-prd.md
 
 ## Tasks
 

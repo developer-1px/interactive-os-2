@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript, Vitest
 
-**PRD:** `docs/superpowers/specs/2026-03-21-dispatch-logger-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-21-dispatch-logger-prd.md`
 
 ---
 

@@ -8,7 +8,7 @@
 
 **Tech Stack:** React, interactive-os (behaviors/axes/hooks/plugins), CSS Modules with Surface tokens
 
-**PRD:** `docs/superpowers/specs/2026-03-23-sidebar-ui-sdk-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-23-sidebar-ui-sdk-prd.md`
 
 ---
 

@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript, Vitest, happy-dom
 
-**PRD:** `docs/superpowers/specs/2026-03-23-history-delta-prd.md`
+**PRD:** `docs/superpowers/prds/2026-03-23-history-delta-prd.md`
 
 ---
 

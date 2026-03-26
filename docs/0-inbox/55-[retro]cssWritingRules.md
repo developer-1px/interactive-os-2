@@ -1,7 +1,7 @@
 # Retro: CSS Writing Rules — 2026-03-25
 
 ## 비교 기준
-- **PRD:** docs/superpowers/specs/2026-03-25-css-writing-rules-prd.md
+- **PRD:** docs/superpowers/prds/2026-03-25-css-writing-rules-prd.md
 - **Diff 범위:** cb0336d (단일 커밋)
 - **변경 파일:** 8
 
