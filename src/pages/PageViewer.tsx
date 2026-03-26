@@ -190,7 +190,7 @@ export default function PageViewer() {
 
       // preview 탭이 이미 있으면 내용 교체, 없으면 생성
       if (tabIds.includes(PREVIEW_TAB_ID)) {
-        let store = updateEntityData(prev, PREVIEW_TAB_ID, { label: filename, contentRef: filePath })
+        const store = updateEntityData(prev, PREVIEW_TAB_ID, { label: filename, contentRef: filePath })
         return workspaceCommands.setActiveTab(tgId, PREVIEW_TAB_ID).execute(store)
       }
       return workspaceCommands.addTab(tgId, {
@@ -214,7 +214,7 @@ export default function PageViewer() {
       if (tabIds.includes(PREVIEW_TAB_ID)) {
         const previewData = getEntityData<TabData>(prev, PREVIEW_TAB_ID)
         if (previewData?.contentRef === filePath) {
-          let store = removeEntity(prev, PREVIEW_TAB_ID)
+          const store = removeEntity(prev, PREVIEW_TAB_ID)
           return workspaceCommands.addTab(tgId, {
             id: `tab-${filePath}`,
             data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },

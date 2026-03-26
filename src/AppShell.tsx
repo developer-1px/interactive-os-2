@@ -1,6 +1,10 @@
+// ② 2026-03-26-unified-navigation-prd.md
 import { useState, useCallback, useMemo, useEffect, type HTMLAttributes } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Sun, Moon, Presentation, Component, Eye, Activity, Palette, ShieldAlert, Languages } from 'lucide-react'
+import {
+  Sun, Moon, Presentation, Component, Eye, Activity, Palette, ShieldAlert, Languages,
+  Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText,
+} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import { Aria } from './interactive-os/primitives/aria'
@@ -13,7 +17,6 @@ import type { AriaPattern, NodeState } from './interactive-os/pattern/types'
 import type { NormalizedData } from './interactive-os/store/types'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
-import { routeConfig } from './routeConfig'
 
 import './styles/palette.css'       // L0: OKLCH color palette
 import './styles/reset.css'        // L1: Browser initialization
@@ -23,6 +26,46 @@ import './styles/surface.css'      // L3: Surface elevation bundles
 import './styles/interactive.css'  // L4: Interaction policy (hover, focus, disabled...)
 import './styles/layout.css'       // App layout (sidebar, page grid)
 import './styles/app.css'          // App-level utilities
+
+// --- contents/_meta.yaml auto-import ---
+
+const metaModules = import.meta.glob<{ default: string }>('/contents/_meta.yaml', {
+  query: '?raw',
+  eager: true,
+})
+
+function parseRootMetaOrder(): string[] {
+  const mod = metaModules['/contents/_meta.yaml']
+  if (!mod) return []
+  const order: string[] = []
+  let inOrder = false
+  for (const line of mod.default.split('\n')) {
+    if (line.match(/^order:\s*$/)) { inOrder = true; continue }
+    if (inOrder) {
+      const m = line.match(/^\s+-\s+(.+)/)
+      if (m) order.push(m[1].trim())
+      else if (!line.match(/^\s*$/)) break
+    }
+  }
+  return order
+}
+
+const contentsOrder = parseRootMetaOrder()
+
+// --- Layer icon mapping ---
+
+const LAYER_ICONS: Record<string, LucideIcon> = {
+  overview: BookOpen,
+  vision: Lightbulb,
+  store: Database,
+  engine: Cog,
+  primitives: Box,
+  axis: Axe,
+  pattern: Layers,
+  plugins: Puzzle,
+  ui: Component,
+  devtools: Wrench,
+}
 
 // --- Vertical toolbar behavior ---
 
@@ -62,29 +105,29 @@ interface NavItem {
   path: string
 }
 
-const externalNavItems: NavItem[] = [
+const appNavItems: NavItem[] = [
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'i18n', label: 'i18n', icon: Languages, path: '/i18n' },
-  { id: 'ui-showcase', label: 'UI', icon: Component, path: '/ui' },
+  { id: 'ui-showcase', label: 'UI Showcase', icon: Eye, path: '/ui' },
   { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
   { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
   { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
 ]
 
-const internalNavItems: NavItem[] = routeConfig.map((g) => ({
-  id: g.id,
-  label: g.label,
-  icon: g.icon,
-  path: g.basePath,
+const internalsNavItems: NavItem[] = contentsOrder.map((layer) => ({
+  id: `internals/${layer}`,
+  label: layer.charAt(0).toUpperCase() + layer.slice(1),
+  icon: LAYER_ICONS[layer] ?? FileText,
+  path: `/internals/${layer}`,
 }))
 
-const navItems: NavItem[] = [...externalNavItems, ...internalNavItems]
+const navItems: NavItem[] = [...appNavItems, ...internalsNavItems]
 
 // --- Pre-computed stores ---
 
-const EXTERNAL_IDS = externalNavItems.map((n) => n.id)
-const INTERNAL_IDS = internalNavItems.map((n) => n.id)
+const APP_IDS = appNavItems.map((n) => n.id)
+const INTERNALS_IDS = internalsNavItems.map((n) => n.id)
 const UTIL_IDS = ['theme']
 
 const activityBarStore = toStore([
@@ -111,10 +154,17 @@ const renderNavItem = (props: HTMLAttributes<HTMLElement>, node: Record<string, 
 // --- URL → store focus ID ---
 
 function resolveActivityBarFocusId(pathname: string): string | undefined {
-  const activeGroup = routeConfig.find((g) => pathname.startsWith('/' + g.id))
-  if (activeGroup) return activeGroup.id
+  // Check internals layers
+  if (pathname.startsWith('/internals/')) {
+    const rest = pathname.slice('/internals/'.length)
+    const layer = rest.split('/')[0]
+    if (layer && layer !== 'theme') {
+      return `internals/${layer}`
+    }
+  }
 
-  const sorted = [...externalNavItems].sort((a, b) => b.path.length - a.path.length)
+  // Check app nav items (longest path match first)
+  const sorted = [...appNavItems].sort((a, b) => b.path.length - a.path.length)
   for (const nav of sorted) {
     if (nav.path === '/') {
       if (pathname === '/') return nav.id
@@ -189,15 +239,15 @@ export default function AppShell() {
           data={activityBarData}
           plugins={[core()]}
           onActivate={handleActivityBarActivate}
-          aria-label="Layer navigation"
+          aria-label="Navigation"
           autoFocus={false}
         >
-          <div role="group" aria-label="External">
-            <Aria.Item asChild ids={EXTERNAL_IDS} render={renderNavItem} />
+          <div role="group" aria-label="Apps">
+            <Aria.Item asChild ids={APP_IDS} render={renderNavItem} />
           </div>
           <div role="separator" className="activity-bar__separator" />
-          <div role="group" aria-label="Internal">
-            <Aria.Item asChild ids={INTERNAL_IDS} render={renderNavItem} />
+          <div role="group" aria-label="Internals">
+            <Aria.Item asChild ids={INTERNALS_IDS} render={renderNavItem} />
           </div>
           <div role="group" aria-label="Util" className="activity-bar__util">
             <Aria.Item asChild ids={UTIL_IDS} render={(props, _node, state) => {
