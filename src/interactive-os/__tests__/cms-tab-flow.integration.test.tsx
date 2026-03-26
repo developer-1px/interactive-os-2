@@ -4,7 +4,7 @@ import CmsLayout from '../../pages/cms/CmsLayout'
 import { resetCmsData } from '../../pages/cms/cms-state'
 import { listbox } from '../pattern/listbox'
 import { tree } from '../pattern/tree'
-import { spatial } from '../pattern/spatial'
+import { spatial } from '../misc/spatial'
 
 /**
  * jsdom limitation: actual Tab DFS ordering and zone escape cannot be tested
