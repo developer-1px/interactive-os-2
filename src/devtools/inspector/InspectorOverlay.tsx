@@ -1,12 +1,13 @@
+// ② 2026-03-26-component-inspector-drag-select-prd.md
 import React, { useCallback, useEffect, useState } from "react";
-import { getComponentStack, getDebugSource, getOSComponentType } from "./utils";
+import { getComponentStack, getDebugSource, getOSComponentType } from "./inspectorUtils";
 
 const COLORS = {
-  margin: "rgba(245, 158, 11, 0.3)", // Amber-500 (Warm)
-  padding: "rgba(16, 185, 129, 0.3)", // Emerald-500 (Fresh)
-  content: "rgba(59, 130, 246, 0.3)", // Blue-500 (Clear)
-  border: "rgba(250, 204, 21, 0.3)", // Yellow-400 (Bright)
-  gap: "rgba(139, 92, 246, 0.3)", // Violet-500 (Distinct)
+  margin: "rgba(245, 158, 11, 0.3)",
+  padding: "rgba(16, 185, 129, 0.3)",
+  content: "rgba(59, 130, 246, 0.3)",
+  border: "rgba(250, 204, 21, 0.3)",
+  gap: "rgba(139, 92, 246, 0.3)",
 };
 
 interface BoxModel {
@@ -259,31 +260,31 @@ export const InspectorOverlay: React.FC<{
 
   if (!targetBox) return null;
 
-  const { top, left, width, height, gaps, rowGap, colGap } = targetBox;
+  const { top, left, width, height, gaps: gapsList, rowGap, colGap } = targetBox;
   const marginTopH = targetBox.marginTop;
   const marginBottomH = targetBox.marginBottom;
   const marginLeftW = targetBox.marginLeft;
   const marginRightW = targetBox.marginRight;
 
-  const borderTop = targetBox.borderTop;
-  const borderLeft = targetBox.borderLeft;
-  const borderRight = targetBox.borderRight;
-  const borderBottom = targetBox.borderBottom;
+  const borderTopW = targetBox.borderTop;
+  const borderLeftW = targetBox.borderLeft;
+  const borderRightW = targetBox.borderRight;
+  const borderBottomW = targetBox.borderBottom;
 
-  const paddingBoxTop = top + borderTop;
-  const paddingBoxLeft = left + borderLeft;
-  const paddingBoxWidth = width - borderLeft - borderRight;
-  const paddingBoxHeight = height - borderTop - borderBottom;
+  const paddingBoxTop = top + borderTopW;
+  const paddingBoxLeft = left + borderLeftW;
+  const paddingBoxWidth = width - borderLeftW - borderRightW;
+  const paddingBoxHeight = height - borderTopW - borderBottomW;
 
-  const paddingTop = targetBox.paddingTop;
-  const paddingLeft = targetBox.paddingLeft;
-  const paddingRight = targetBox.paddingRight;
-  const paddingBottom = targetBox.paddingBottom;
+  const paddingTopV = targetBox.paddingTop;
+  const paddingLeftV = targetBox.paddingLeft;
+  const paddingRightV = targetBox.paddingRight;
+  const paddingBottomV = targetBox.paddingBottom;
 
-  const contentBoxTop = paddingBoxTop + paddingTop;
-  const contentBoxLeft = paddingBoxLeft + paddingLeft;
-  const contentBoxWidth = paddingBoxWidth - paddingLeft - paddingRight;
-  const contentBoxHeight = paddingBoxHeight - paddingTop - paddingBottom;
+  const contentBoxTop = paddingBoxTop + paddingTopV;
+  const contentBoxLeft = paddingBoxLeft + paddingLeftV;
+  const contentBoxWidth = paddingBoxWidth - paddingLeftV - paddingRightV;
+  const contentBoxHeight = paddingBoxHeight - paddingTopV - paddingBottomV;
 
   const dims = `${Math.round(width)} × ${Math.round(height)}`;
 
@@ -301,15 +302,15 @@ export const InspectorOverlay: React.FC<{
   }
 
   let padInfo = "";
-  if (paddingTop + paddingRight + paddingBottom + paddingLeft > 0) {
+  if (paddingTopV + paddingRightV + paddingBottomV + paddingLeftV > 0) {
     if (
-      paddingTop === paddingRight &&
-      paddingTop === paddingBottom &&
-      paddingTop === paddingLeft
+      paddingTopV === paddingRightV &&
+      paddingTopV === paddingBottomV &&
+      paddingTopV === paddingLeftV
     ) {
-      padInfo = `p: ${paddingTop}`;
+      padInfo = `p: ${paddingTopV}`;
     } else {
-      padInfo = `p: ${paddingTop} ${paddingRight} ${paddingBottom} ${paddingLeft}`;
+      padInfo = `p: ${paddingTopV} ${paddingRightV} ${paddingBottomV} ${paddingLeftV}`;
     }
   }
 
@@ -335,85 +336,42 @@ export const InspectorOverlay: React.FC<{
     >
       {/* Margins */}
       {marginTopH > 0 && (
-        <Box
-          top={top - marginTopH}
-          left={left}
-          width={width}
-          height={marginTopH}
-          bg={COLORS.margin}
-        />
+        <Box top={top - marginTopH} left={left} width={width} height={marginTopH} bg={COLORS.margin} />
       )}
       {marginBottomH > 0 && (
-        <Box
-          top={top + height}
-          left={left}
-          width={width}
-          height={marginBottomH}
-          bg={COLORS.margin}
-        />
+        <Box top={top + height} left={left} width={width} height={marginBottomH} bg={COLORS.margin} />
       )}
       {marginLeftW > 0 && (
-        <Box
-          top={top - marginTopH}
-          left={left - marginLeftW}
-          width={marginLeftW}
-          height={height + marginTopH + marginBottomH}
-          bg={COLORS.margin}
-        />
+        <Box top={top - marginTopH} left={left - marginLeftW} width={marginLeftW} height={height + marginTopH + marginBottomH} bg={COLORS.margin} />
       )}
       {marginRightW > 0 && (
-        <Box
-          top={top - marginTopH}
-          left={left + width}
-          width={marginRightW}
-          height={height + marginTopH + marginBottomH}
-          bg={COLORS.margin}
-        />
+        <Box top={top - marginTopH} left={left + width} width={marginRightW} height={height + marginTopH + marginBottomH} bg={COLORS.margin} />
       )}
 
       {/* Border Box */}
       <Box
-        top={top}
-        left={left}
-        width={width}
-        height={height}
-        bg={COLORS.border}
-        borderRadius={targetBox.borderRadius}
+        top={top} left={left} width={width} height={height}
+        bg={COLORS.border} borderRadius={targetBox.borderRadius}
         border={locked ? "2px solid #EF4444" : undefined}
       />
 
       {/* Padding Box */}
       {paddingBoxWidth > 0 && paddingBoxHeight > 0 && (
-        <Box
-          top={paddingBoxTop}
-          left={paddingBoxLeft}
-          width={paddingBoxWidth}
-          height={paddingBoxHeight}
-          bg={COLORS.padding}
-        />
+        <Box top={paddingBoxTop} left={paddingBoxLeft} width={paddingBoxWidth} height={paddingBoxHeight} bg={COLORS.padding} />
       )}
 
       {/* Content Box */}
       {contentBoxWidth > 0 && contentBoxHeight > 0 && (
-        <Box
-          top={contentBoxTop}
-          left={contentBoxLeft}
-          width={contentBoxWidth}
-          height={contentBoxHeight}
-          bg={COLORS.content}
-        />
+        <Box top={contentBoxTop} left={contentBoxLeft} width={contentBoxWidth} height={contentBoxHeight} bg={COLORS.content} />
       )}
 
       {/* Gaps */}
-      {gaps?.map((g, i) => (
+      {gapsList?.map((g, i) => (
         <div
           key={`gap-${i}`}
           style={{
             position: "absolute",
-            top: g.top,
-            left: g.left,
-            width: g.width,
-            height: g.height,
+            top: g.top, left: g.left, width: g.width, height: g.height,
             backgroundColor: COLORS.gap,
             backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.2) 2px, rgba(255,255,255,0.2) 4px)`,
             pointerEvents: "none",
@@ -426,10 +384,9 @@ export const InspectorOverlay: React.FC<{
       <div
         style={{
           position: "absolute",
-          top:
-            top - (componentStack.length > 0 ? 76 : 58) > 0
-              ? top - (componentStack.length > 0 ? 76 : 58)
-              : top + height + 8,
+          top: top - (componentStack.length > 0 ? 76 : 58) > 0
+            ? top - (componentStack.length > 0 ? 76 : 58)
+            : top + height + 8,
           left: left,
           background: "rgba(23, 23, 23, 0.95)",
           color: "#fff",
@@ -438,41 +395,21 @@ export const InspectorOverlay: React.FC<{
           fontSize: "12px",
           fontFamily: "Inter, system-ui, sans-serif",
           fontWeight: 500,
-          boxShadow:
-            "0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)",
           display: "flex",
           flexDirection: "column",
           gap: "4px",
           zIndex: 100001,
           backdropFilter: "blur(8px)",
-          border: locked
-            ? "1px solid #EF4444"
-            : "1px solid rgba(255,255,255,0.1)",
+          border: locked ? "1px solid #EF4444" : "1px solid rgba(255,255,255,0.1)",
           whiteSpace: "nowrap",
           pointerEvents: locked ? "auto" : "none",
         }}
       >
         {/* Header Row */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "8px",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
           {fileInfo && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "#60A5FA",
-                fontWeight: 600,
-                fontSize: "11px",
-                opacity: 0.9,
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#60A5FA", fontWeight: 600, fontSize: "11px", opacity: 0.9 }}>
               <span
                 style={{ cursor: locked ? "pointer" : "default", textDecoration: locked ? "underline" : "none" }}
                 onMouseDown={(e) => {
@@ -493,8 +430,7 @@ export const InspectorOverlay: React.FC<{
                     color: loc > 200 ? "#EF4444" : "#94A3B8",
                     fontSize: "10px",
                     fontWeight: loc > 200 ? 700 : 400,
-                    background:
-                      loc > 200 ? "rgba(239, 68, 68, 0.1)" : "transparent",
+                    background: loc > 200 ? "rgba(239, 68, 68, 0.1)" : "transparent",
                     padding: loc > 200 ? "1px 4px" : "0",
                     borderRadius: "4px",
                   }}
@@ -507,19 +443,13 @@ export const InspectorOverlay: React.FC<{
           {locked && (
             <span
               style={{
-                color: "#EF4444",
-                fontWeight: 700,
-                fontSize: "10px",
-                background: "rgba(239, 68, 68, 0.15)",
-                padding: "2px 6px",
-                borderRadius: "4px",
-                border: "1px solid rgba(239, 68, 68, 0.3)",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
+                color: "#EF4444", fontWeight: 700, fontSize: "10px",
+                background: "rgba(239, 68, 68, 0.15)", padding: "2px 6px",
+                borderRadius: "4px", border: "1px solid rgba(239, 68, 68, 0.3)",
+                display: "flex", alignItems: "center", gap: "4px",
               }}
             >
-              🔒 LOCKED
+              LOCKED
             </span>
           )}
         </div>
@@ -528,107 +458,47 @@ export const InspectorOverlay: React.FC<{
           {targetName && (
             <>
               <span style={{ color: "#e5e5e5" }}>{targetName}</span>
-              <span
-                style={{
-                  width: "1px",
-                  height: "12px",
-                  background: "rgba(255,255,255,0.2)",
-                }}
-              />
+              <span style={{ width: "1px", height: "12px", background: "rgba(255,255,255,0.2)" }} />
             </>
           )}
           {(() => {
             const osType = getOSComponentType(activeElement);
             if (!osType) return null;
-            const colors: Record<string, string> = {
-              Zone: "#3B82F6",
-              Item: "#10B981",
-              Field: "#8B5CF6",
-              Trigger: "#F59E0B",
-            };
+            const colors: Record<string, string> = { Zone: "#3B82F6", Item: "#10B981", Field: "#8B5CF6", Trigger: "#F59E0B" };
             return (
               <>
-                <span
-                  style={{
-                    color: colors[osType],
-                    fontWeight: 700,
-                    fontSize: "10px",
-                    background: `${colors[osType]}20`,
-                    padding: "2px 6px",
-                    borderRadius: "4px",
-                  }}
-                >
+                <span style={{ color: colors[osType], fontWeight: 700, fontSize: "10px", background: `${colors[osType]}20`, padding: "2px 6px", borderRadius: "4px" }}>
                   {osType}
                 </span>
-                <span
-                  style={{
-                    width: "1px",
-                    height: "12px",
-                    background: "rgba(255,255,255,0.2)",
-                  }}
-                />
+                <span style={{ width: "1px", height: "12px", background: "rgba(255,255,255,0.2)" }} />
               </>
             );
           })()}
-          <span style={{ color: "#fbbf24", fontWeight: 600 }}>
-            {targetBox.display}
-          </span>
-          <span
-            style={{
-              width: "1px",
-              height: "12px",
-              background: "rgba(255,255,255,0.2)",
-            }}
-          />
+          <span style={{ color: "#fbbf24", fontWeight: 600 }}>{targetBox.display}</span>
+          <span style={{ width: "1px", height: "12px", background: "rgba(255,255,255,0.2)" }} />
           <span>{dims}</span>
           {mInfo && (
             <>
-              <span
-                style={{
-                  width: "1px",
-                  height: "12px",
-                  background: "rgba(255,255,255,0.2)",
-                }}
-              />
+              <span style={{ width: "1px", height: "12px", background: "rgba(255,255,255,0.2)" }} />
               <span style={{ color: "#F59E0B" }}>{mInfo}</span>
             </>
           )}
           {padInfo && (
             <>
-              <span
-                style={{
-                  width: "1px",
-                  height: "12px",
-                  background: "rgba(255,255,255,0.2)",
-                }}
-              />
+              <span style={{ width: "1px", height: "12px", background: "rgba(255,255,255,0.2)" }} />
               <span style={{ color: "#34D399" }}>{padInfo}</span>
             </>
           )}
           {gapInfo && (
             <>
-              <span
-                style={{
-                  width: "1px",
-                  height: "12px",
-                  background: "rgba(255,255,255,0.2)",
-                }}
-              />
+              <span style={{ width: "1px", height: "12px", background: "rgba(255,255,255,0.2)" }} />
               <span style={{ color: "#A78BFA" }}>{gapInfo}</span>
             </>
           )}
           {targetBox.borderRadius && targetBox.borderRadius !== "0px" && (
             <>
-              <span
-                style={{
-                  width: "1px",
-                  height: "12px",
-                  background: "rgba(255,255,255,0.2)",
-                }}
-              />
-              <span style={{ color: "#F472B6" }}>
-                r: {targetBox.borderRadius}
-              </span>
+              <span style={{ width: "1px", height: "12px", background: "rgba(255,255,255,0.2)" }} />
+              <span style={{ color: "#F472B6" }}>r: {targetBox.borderRadius}</span>
             </>
           )}
         </div>
@@ -636,15 +506,11 @@ export const InspectorOverlay: React.FC<{
         {componentStack.length > 0 && (
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-              fontSize: "10px",
-              color: "#9ca3af",
+              display: "flex", alignItems: "center", gap: "4px",
+              fontSize: "10px", color: "#9ca3af",
               borderTop: "1px solid rgba(255,255,255,0.1)",
-              paddingTop: "4px",
-              marginTop: "2px",
-              pointerEvents: "auto", // Allow clicking the breadcrumbs
+              paddingTop: "4px", marginTop: "2px",
+              pointerEvents: "auto",
             }}
           >
             {(!isExpanded && componentStack.length > 3
@@ -672,10 +538,3 @@ export const InspectorOverlay: React.FC<{
     </div>
   );
 };
-
- 
-function _getFileInfo(element: HTMLElement): string | null {
-  const source = getDebugSource(element);
-  if (!source) return null;
-  return `${source.fileName}:${source.lineNumber}`;
-}

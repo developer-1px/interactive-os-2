@@ -1,12 +1,13 @@
+// ② 2026-03-26-component-inspector-drag-select-prd.md
 import type React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   getAllOSComponents,
   getDebugSource,
   type OSComponentInfo,
-} from "./utils";
-import "./DebugManager.css";
+} from "./inspectorUtils";
 import { InspectorOverlay } from "./InspectorOverlay";
+import { MarqueeSelect } from "./MarqueeSelect";
 
 const OS_COLORS: Record<string, string> = {
   Zone: "rgba(59, 130, 246, 0.6)",
@@ -15,23 +16,51 @@ const OS_COLORS: Record<string, string> = {
   Trigger: "rgba(245, 158, 11, 0.6)",
 };
 
-export const DebugManager: React.FC = () => {
-  const [isInspectorActive, setIsInspectorActive] = useState(false);
-  const [hoveredElement, setHoveredElement] = useState<HTMLElement | null>(
-    null,
-  );
+const TOAST_STYLES: React.CSSProperties = {
+  position: "fixed",
+  bottom: 24,
+  right: 24,
+  background: "#1f2937",
+  color: "white",
+  padding: "12px 20px",
+  borderRadius: "8px",
+  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+  fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+  fontSize: "11px",
+  zIndex: 100004,
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
+};
+
+// Inject debug-mode-active cursor style once
+const STYLE_ID = "component-inspector-style";
+function ensureStyle() {
+  if (document.getElementById(STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = STYLE_ID;
+  style.textContent = "body.debug-mode-active { cursor: crosshair; }";
+  document.head.appendChild(style);
+}
+
+export function ComponentInspector() {
+  useEffect(ensureStyle, []);
+  const [isActive, setIsActive] = useState(false);
+  const [hoveredElement, setHoveredElement] = useState<HTMLElement | null>(null);
   const [lockedElement, setLockedElement] = useState<HTMLElement | null>(null);
   const [traversalHistory, setTraversalHistory] = useState<HTMLElement[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [osComponents, setOsComponents] = useState<OSComponentInfo[]>([]);
+  const [marqueePreview, setMarqueePreview] = useState<HTMLElement | null>(null);
+  // Flag to suppress click after marquee drag — set by MarqueeSelect, consumed by click handler
+  const suppressClickRef = useRef(false);
+  // Flag to suppress hover tracking during marquee drag
+  const isDraggingRef = useRef(false);
 
   const copyElementSource = useCallback((element: HTMLElement) => {
     let current = element;
-    let source: {
-      fileName: string;
-      lineNumber: number;
-      columnNumber: number;
-    } | null = null;
+    let source: { fileName: string; lineNumber: number; columnNumber: number } | null = null;
 
     while (current && current !== document.body) {
       source = getDebugSource(current);
@@ -43,34 +72,31 @@ export const DebugManager: React.FC = () => {
       const { fileName, lineNumber, columnNumber } = source;
       const textToCopy = `${fileName}:${lineNumber}:${columnNumber}`;
       navigator.clipboard.writeText(textToCopy);
-      setToastMessage(
-        `Locked & Copied: ${fileName}:${lineNumber}:${columnNumber}`,
-      );
+      setToastMessage(`Locked & Copied: ${fileName}:${lineNumber}:${columnNumber}`);
     } else {
       setToastMessage("Locked (No source found)");
     }
   }, []);
 
-  // Track hovered element globally
+  // Track hovered element
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isInspectorActive) return;
+      if (!isActive) return;
+      // Don't update hover target during marquee drag
+      if (isDraggingRef.current) return;
 
-      let target = document.elementFromPoint(
-        e.clientX,
-        e.clientY,
-      ) as HTMLElement;
+      let target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
       if (
         !target ||
         target === document.body ||
         target.closest("#inspector-overlay-root") ||
-        target.closest(".debug-toast")
+        target.closest("#marquee-candidate-list") ||
+        target.closest("#component-inspector-toast")
       ) {
         setHoveredElement(null);
         return;
       }
 
-      // Snap to SVG if inside one
       const svgRoot = target.closest("svg");
       if (svgRoot) {
         target = svgRoot as unknown as HTMLElement;
@@ -79,31 +105,32 @@ export const DebugManager: React.FC = () => {
       setHoveredElement(target);
     };
 
-    if (isInspectorActive) {
+    if (isActive) {
       window.addEventListener("mousemove", handleMouseMove, true);
     }
     return () => window.removeEventListener("mousemove", handleMouseMove, true);
-  }, [isInspectorActive]);
+  }, [isActive]);
 
-  // Key Event Handling (Toggles + Traversal)
+  // Key handling (toggle + traversal)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Shift+Cmd+D: Toggle Inspector
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "d") {
         e.preventDefault();
-        setIsInspectorActive((prev) => {
+        setIsActive((prev) => {
           if (!prev) {
             setToastMessage("Inspector Mode ON");
           } else {
             setLockedElement(null);
             setTraversalHistory([]);
+            setMarqueePreview(null);
           }
           return !prev;
         });
         return;
       }
 
-      if (!isInspectorActive) return;
+      if (!isActive) return;
 
       // Cmd+Up: Traverse to parent
       if ((e.metaKey || e.ctrlKey) && e.key === "ArrowUp") {
@@ -131,87 +158,88 @@ export const DebugManager: React.FC = () => {
       }
 
       if (e.key === "Escape") {
-        setLockedElement(null);
-        setTraversalHistory([]);
-        setIsInspectorActive(false);
+        // Only deactivate if no locked element (otherwise just unlock)
+        if (lockedElement) {
+          setLockedElement(null);
+          setTraversalHistory([]);
+          setToastMessage("Unlocked");
+        } else {
+          setIsActive(false);
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    isInspectorActive,
-    lockedElement,
-    hoveredElement,
-    traversalHistory,
-    copyElementSource,
-  ]);
+  }, [isActive, lockedElement, hoveredElement, traversalHistory, copyElementSource]);
 
-  // Manage Body Class and Click Interception
+  // Body class + click interception
   useEffect(() => {
-    if (isInspectorActive) {
+    if (isActive) {
       document.body.classList.add("debug-mode-active");
     } else {
       document.body.classList.remove("debug-mode-active");
     }
 
     const handleClick = (e: MouseEvent) => {
-      if (!isInspectorActive) return;
+      if (!isActive) return;
+
+      // Don't intercept clicks on the candidate list
+      const target = e.target as HTMLElement;
+      if (target.closest("#marquee-candidate-list")) return;
+
+      // Skip click if MarqueeSelect just handled a drag
+      if (suppressClickRef.current) {
+        suppressClickRef.current = false;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
 
       e.preventDefault();
       e.stopPropagation();
 
-      // If we clicked a valid element (that is currently hovered)
       if (hoveredElement) {
-        // Toggle lock if clicking the same element
         if (lockedElement === hoveredElement) {
           setLockedElement(null);
           setToastMessage("Unlocked");
         } else {
-          // Lock new element
           setLockedElement(hoveredElement);
-          setTraversalHistory([]); // Clear traversal history on fresh click
+          setTraversalHistory([]);
           copyElementSource(hoveredElement);
         }
       } else {
-        // Clicked outside or on overlay -> Unlock
         setLockedElement(null);
         setToastMessage("Unlocked");
       }
     };
 
-    if (isInspectorActive) {
+    if (isActive) {
       window.addEventListener("click", handleClick, true);
     }
 
     return () => {
       window.removeEventListener("click", handleClick, true);
     };
-  }, [isInspectorActive, hoveredElement, lockedElement, copyElementSource]);
+  }, [isActive, hoveredElement, lockedElement, copyElementSource]);
 
-  // Toast Auto-dismiss
+  // Toast auto-dismiss
   useEffect(() => {
     if (toastMessage) {
-      const timer = setTimeout(() => {
-        setToastMessage(null);
-      }, 2000);
+      const timer = setTimeout(() => setToastMessage(null), 2000);
       return () => clearTimeout(timer);
     }
   }, [toastMessage]);
 
-  // Scan OS components when inspector is active
+  // Scan OS components
   useEffect(() => {
-    if (!isInspectorActive) return;
+    if (!isActive) return;
 
     const update = () => setOsComponents(getAllOSComponents());
-    // Defer initial update to avoid synchronous setState in effect
     const rafId = requestAnimationFrame(update);
 
-    // Refresh on scroll/resize
     window.addEventListener("scroll", update, true);
     window.addEventListener("resize", update, true);
-
-    // Periodic refresh for dynamic content
     const interval = setInterval(update, 500);
 
     return () => {
@@ -221,11 +249,22 @@ export const DebugManager: React.FC = () => {
       clearInterval(interval);
       setOsComponents([]);
     };
-  }, [isInspectorActive]);
+  }, [isActive]);
 
-  const activeElement = lockedElement || hoveredElement;
+  // Listen for marquee preview events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { element: HTMLElement | null };
+      setMarqueePreview(detail?.element || null);
+    };
+    window.addEventListener("inspector:marquee-preview", handler);
+    return () => window.removeEventListener("inspector:marquee-preview", handler);
+  }, []);
 
-  // ── Bridge to Inspector Panel via CustomEvent ──
+  // Determine active element for overlay: marquee preview > locked > hovered
+  const activeElement = marqueePreview || lockedElement || hoveredElement;
+
+  // Bridge to Inspector Panel via CustomEvent
   useEffect(() => {
     window.dispatchEvent(
       new CustomEvent("inspector:element-selected", {
@@ -237,15 +276,27 @@ export const DebugManager: React.FC = () => {
   useEffect(() => {
     window.dispatchEvent(
       new CustomEvent("inspector:active-changed", {
-        detail: { active: isInspectorActive },
+        detail: { active: isActive },
       }),
     );
-  }, [isInspectorActive]);
+  }, [isActive]);
+
+  // Marquee select handler
+  const handleMarqueeSelect = useCallback((element: HTMLElement) => {
+    setLockedElement(element);
+    setTraversalHistory([]);
+    setMarqueePreview(null);
+    copyElementSource(element);
+  }, [copyElementSource]);
+
+  const handleMarqueeCancel = useCallback(() => {
+    setMarqueePreview(null);
+  }, []);
 
   return (
     <>
       {/* OS Component Outlines */}
-      {isInspectorActive &&
+      {isActive &&
         osComponents.map((comp, i) => (
           <div
             key={`os-outline-${i}`}
@@ -262,15 +313,28 @@ export const DebugManager: React.FC = () => {
             }}
           />
         ))}
-      {isInspectorActive && (
-        <InspectorOverlay activeElement={activeElement} locked={!!lockedElement} />
+
+      {/* Box model overlay */}
+      {isActive && (
+        <InspectorOverlay activeElement={activeElement} locked={!!lockedElement && !marqueePreview} />
       )}
+
+      {/* Marquee selection */}
+      <MarqueeSelect
+        active={isActive && !lockedElement}
+        onSelect={handleMarqueeSelect}
+        onCancel={handleMarqueeCancel}
+        onDragStart={() => { isDraggingRef.current = true; }}
+        onDragEnd={() => { isDraggingRef.current = false; suppressClickRef.current = true; }}
+      />
+
+      {/* Toast */}
       {toastMessage && (
-        <div className="debug-toast">
-          <span className="debug-toast-icon" />
+        <div id="component-inspector-toast" style={TOAST_STYLES}>
+          <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", backgroundColor: "#22c55e" }} />
           {toastMessage}
         </div>
       )}
     </>
   );
-};
+}

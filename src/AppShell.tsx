@@ -17,6 +17,7 @@ import type { AriaPattern, NodeState } from './interactive-os/pattern/types'
 import type { NormalizedData } from './interactive-os/store/types'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
+import { ComponentInspector } from './devtools/inspector/ComponentInspector'
 
 import './styles/palette.css'       // L0: OKLCH color palette
 import './styles/reset.css'        // L1: Browser initialization
@@ -281,6 +282,7 @@ export default function AppShell() {
         highlightLines={previewFile?.line ? new Set([previewFile.line]) : undefined}
         onClose={() => setPreviewFile(null)}
       />
+      <ComponentInspector />
     </div>
   )
 }

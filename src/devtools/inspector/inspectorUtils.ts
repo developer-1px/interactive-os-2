@@ -1,3 +1,4 @@
+// ② 2026-03-26-component-inspector-drag-select-prd.md
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // ── Fiber helpers (React internals, dev-only) ──
@@ -115,27 +116,29 @@ export function getAllOSComponents(): OSComponentInfo[] {
   const seen = new Set<HTMLElement>();
 
   const walkDOM = (node: HTMLElement) => {
-    if (!node || node === document.body) return;
+    if (!node) return;
 
     if (
       node.id === "inspector-overlay-root" ||
-      node.id === "vite-plugin-component-inspector-root"
+      node.id === "component-inspector-root"
     )
       return;
 
-    const fiber = getFiber(node);
+    if (node !== document.body) {
+      const fiber = getFiber(node);
 
-    if (fiber) {
-      const name = getFiberComponentName(fiber);
+      if (fiber) {
+        const name = getFiberComponentName(fiber);
 
-      for (const [pattern, osType] of Object.entries(OS_COMPONENT_PATTERNS)) {
-        if (name === pattern && !seen.has(node)) {
-          seen.add(node);
-          const rect = getElementRect(node);
-          if (rect.width > 0 && rect.height > 0) {
-            results.push({ type: osType, rect });
+        for (const [pattern, osType] of Object.entries(OS_COMPONENT_PATTERNS)) {
+          if (name === pattern && !seen.has(node)) {
+            seen.add(node);
+            const rect = getElementRect(node);
+            if (rect.width > 0 && rect.height > 0) {
+              results.push({ type: osType, rect });
+            }
+            break;
           }
-          break;
         }
       }
     }
@@ -149,7 +152,7 @@ export function getAllOSComponents(): OSComponentInfo[] {
   return results;
 }
 
-function getElementRect(element: HTMLElement): DOMRect {
+export function getElementRect(element: HTMLElement): DOMRect {
   const styles = window.getComputedStyle(element);
   let rect = element.getBoundingClientRect();
 
@@ -181,4 +184,81 @@ function getElementRect(element: HTMLElement): DOMRect {
   }
 
   return rect;
+}
+
+/** Collect all inspectable elements whose bounding rect intersects a given rectangle */
+export function getElementsInRect(
+  rect: { top: number; left: number; width: number; height: number },
+): HTMLElement[] {
+  const results: HTMLElement[] = [];
+  const rectRight = rect.left + rect.width;
+  const rectBottom = rect.top + rect.height;
+
+  const walkDOM = (node: HTMLElement) => {
+    if (!node) return;
+    if (
+      node.id === "inspector-overlay-root" ||
+      node.id === "component-inspector-root"
+    )
+      return;
+
+    if (node !== document.body) {
+      const elRect = node.getBoundingClientRect();
+
+      // Skip zero-size elements but still walk children for display:contents
+      if (elRect.width === 0 && elRect.height === 0) {
+        for (const child of Array.from(node.children) as HTMLElement[]) {
+          walkDOM(child);
+        }
+        return;
+      }
+
+      // Intersection test (viewport coordinates)
+      const intersects =
+        elRect.left < rectRight &&
+        elRect.right > rect.left &&
+        elRect.top < rectBottom &&
+        elRect.bottom > rect.top;
+
+      if (intersects) {
+        const hasPrimitive = node.hasAttribute("data-primitive");
+        const hasInspectorLine = node.hasAttribute("data-inspector-line");
+        const osType = getOSComponentType(node);
+
+        if (hasPrimitive || hasInspectorLine || osType) {
+          results.push(node);
+        }
+      }
+    }
+
+    for (const child of Array.from(node.children) as HTMLElement[]) {
+      walkDOM(child);
+    }
+  };
+
+  walkDOM(document.body);
+  return results;
+}
+
+/** Generate a display label for an element in the candidate list */
+export function getElementLabel(el: HTMLElement): string {
+  const primitive = el.getAttribute("data-primitive");
+  const osType = getOSComponentType(el);
+  const source = getDebugSource(el);
+
+  const parts: string[] = [];
+  if (primitive) parts.push(primitive);
+  if (osType && osType !== primitive) parts.push(`[${osType}]`);
+  if (source) parts.push(`${source.fileName}:${source.lineNumber}`);
+
+  if (parts.length === 0) {
+    // Fallback: tag name + class
+    const tag = el.tagName.toLowerCase();
+    const cls = el.className && typeof el.className === 'string'
+      ? `.${el.className.split(' ').filter(Boolean).slice(0, 2).join('.')}`
+      : '';
+    parts.push(`${tag}${cls}`);
+  }
+
+  return parts.join(' — ');
 }

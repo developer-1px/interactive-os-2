@@ -55,22 +55,13 @@ export function inspectorPlugin(): Plugin {
       })
     },
 
-    transformIndexHtml() {
-      return [
-        {
-          tag: 'script',
-          attrs: { type: 'module', src: '/vite-plugins/component-inspector/ui/client.tsx' },
-          injectTo: 'body',
-        },
-      ]
-    },
-
     transform: {
       order: 'pre',
       handler(code, id) {
         if (id.includes('node_modules')) return
         if (!/\.[tj]sx$/.test(id)) return
         if (id.includes('vite-plugins/component-inspector')) return
+        if (id.includes('src/devtools/inspector')) return
 
         const relativePath = path.relative(root, id)
         const totalLines = code.split('\n').length
