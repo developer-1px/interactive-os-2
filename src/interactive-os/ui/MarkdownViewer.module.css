@@ -1,16 +1,18 @@
 /* ═══════════════════════════════════════════
-   Markdown prose — refined-documentation
-   Key: 14px body, 1.7 line-height, 400 weight,
-   Minor Third (×1.2) scale, unified with UI tokens
+   Markdown prose — bundle-aligned
+   Type/Shape/Surface 번들 완전 준수.
+   em margin은 prose 비례 리듬 예외.
    ═══════════════════════════════════════════ */
 
 .markdown {
   margin: 0 auto;
-  padding: var(--space-2xl) 48px;
+  padding: var(--space-2xl) var(--space-3xl);
   font-size: var(--type-body-size);
-  font-weight: var(--weight-regular);
+  font-weight: var(--type-body-weight);
+  font-family: var(--type-body-family);
+  line-height: var(--leading-relaxed); /* prose override: 본문보다 넓은 행간 */
+  letter-spacing: var(--type-body-letter-spacing);
   color: var(--text-primary);
-  line-height: var(--leading-relaxed);
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -35,41 +37,46 @@
 
 .markdown h1 {
   font-size: var(--type-hero-size);
-  font-weight: var(--weight-semi);
+  font-weight: var(--type-hero-weight);
+  font-family: var(--type-hero-family);
+  line-height: var(--type-hero-line-height);
+  letter-spacing: var(--type-hero-letter-spacing);
   color: var(--text-bright);
   margin: 2.5em 0 0.6em;
   padding-bottom: 0.3em;
   border-bottom: 1px solid var(--border-subtle);
-  line-height: var(--leading-tight);
-  letter-spacing: -0.02em;
 }
 
 .markdown h2 {
   font-size: var(--type-display-size);
-  font-weight: var(--weight-semi);
+  font-weight: var(--type-display-weight);
+  font-family: var(--type-display-family);
+  line-height: var(--type-display-line-height);
+  letter-spacing: var(--type-display-letter-spacing);
   color: var(--text-bright);
   margin: 2em 0 0.5em;
   padding-bottom: 0.25em;
   border-bottom: 1px solid var(--border-subtle);
-  line-height: var(--leading-tight);
-  letter-spacing: -0.02em;
 }
 
 .markdown h3 {
   font-size: var(--type-page-size);
-  font-weight: var(--weight-semi);
+  font-weight: var(--type-page-weight);
+  font-family: var(--type-page-family);
+  line-height: var(--type-page-line-height);
+  letter-spacing: var(--type-page-letter-spacing);
   color: var(--text-bright);
   margin: 1.6em 0 0.4em;
-  line-height: var(--leading-tight);
-  letter-spacing: -0.01em;
 }
 
 .markdown h4 {
   font-size: var(--type-section-size);
-  font-weight: var(--weight-semi);
+  font-weight: var(--type-section-weight);
+  font-family: var(--type-section-family);
+  line-height: var(--type-section-line-height);
+  letter-spacing: var(--type-section-letter-spacing);
   color: var(--text-secondary);
   margin: 1.2em 0 0.3em;
-  line-height: var(--leading-snug);
 }
 
 .markdown p {
@@ -80,7 +87,7 @@
   font-family: var(--mono);
   font-size: var(--type-body-size);
   background: var(--surface-base);
-  padding: 2px var(--space-sm);
+  padding: var(--space-inline-code) var(--space-xs);
   border-radius: var(--shape-xs-radius);
   border: 1px solid var(--border-subtle);
 }
@@ -90,8 +97,8 @@
 .markdown pre {
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xl-radius);
-  padding: var(--space-lg) var(--space-xl);
+  border-radius: var(--shape-lg-radius);
+  padding: var(--shape-lg-py) var(--shape-lg-px);
   overflow-x: auto;
   margin: 1.5em 0;
 }
@@ -135,11 +142,10 @@
 
 .markdown blockquote {
   margin: 1.2em 0;
-  padding: 0.6em 1em;
-  border-left: 3px solid var(--tone-primary-mid);
+  padding: var(--shape-lg-py) var(--shape-lg-px);
+  background: var(--surface-sunken);
+  border-radius: var(--shape-lg-radius);
   color: var(--text-secondary);
-  background: var(--tone-primary-dim);
-  border-radius: 0 var(--shape-xl-radius) var(--shape-xl-radius) 0;
 }
 
 .markdown blockquote > *:first-child {
@@ -186,7 +192,7 @@
 
 .markdown img {
   max-width: 100%;
-  border-radius: var(--shape-xl-radius);
+  border-radius: var(--shape-lg-radius);
 }
 
 /* Mermaid diagrams: full width */
