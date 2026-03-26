@@ -1,0 +1,51 @@
+.tabGroup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tabBar {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-xs);
+  padding-inline: var(--space-sm);
+  border-block-end: 1px solid var(--border-default);
+  background: var(--surface-sunken);
+  overflow-x: auto;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.tabClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--shape-xs-radius);
+  padding: var(--space-xs);
+  opacity: 0;
+  transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.tab:hover .tabClose,
+.tab[aria-selected="true"] .tabClose {
+  opacity: 1;
+}
+
+.tabClose:hover {
+  background: var(--surface-raised);
+}
+
+.tabPanel {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
