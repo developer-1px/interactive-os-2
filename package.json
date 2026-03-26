@@ -227,7 +227,8 @@
     "health": "bash scripts/health.sh",
     "score:design": "node scripts/designScore.mjs",
     "score:design-visual": "node scripts/designScoreVisual.mjs",
-    "score:completeness": "node scripts/completenessScore.mjs"
+    "score:completeness": "node scripts/completenessScore.mjs",
+    "lint:design": "node scripts/designScoreVisual.mjs | node scripts/designLintReport.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
