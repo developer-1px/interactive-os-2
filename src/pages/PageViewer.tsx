@@ -329,11 +329,74 @@ export default function PageViewer() {
   const openInNewPaneRef = useRef(openInNewPane)
   useEffect(() => { openInNewPaneRef.current = openInNewPane }, [openInNewPane])
 
+  // Cmd+D → 현재 active 탭을 새 panel에 복제
+  const duplicatePane = useCallback(() => {
+    setWorkspaceStore(prev => {
+      const tgId = findTabgroup(prev)
+      if (!tgId) return prev
+
+      const tgData = getEntityData<{ activeTabId?: string }>(prev, tgId)
+      const activeId = tgData?.activeTabId
+      if (!activeId) return prev
+
+      const tabData = getEntityData<TabData>(prev, activeId)
+      if (!tabData?.contentRef) return prev
+
+      const filename = tabData.contentRef.split('/').pop() ?? tabData.contentRef
+      const newTabId = `tab-dup-${Date.now()}`
+
+      const rootChildren = getChildren(prev, ROOT_ID)
+      const existingSplitId = rootChildren.find(id =>
+        (getEntityData<{ type: string }>(prev, id))?.type === 'split'
+      )
+
+      if (existingSplitId) {
+        const newTgId = `tg-${Date.now()}`
+        let store = addEntity(prev, {
+          id: newTgId,
+          data: { type: 'tabgroup', activeTabId: newTabId },
+        }, existingSplitId)
+
+        const newChildren = getChildren(store, existingSplitId)
+        const equalSize = 1 / newChildren.length
+        store = updateEntityData(store, existingSplitId, { sizes: newChildren.map(() => equalSize) })
+
+        return workspaceCommands.addTab(newTgId, {
+          id: newTabId,
+          data: { type: 'tab', label: filename, contentType: tabData.contentType, contentRef: tabData.contentRef },
+        }).execute(store)
+      }
+
+      // split 없으면 새로 만들기
+      let store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
+      const newSplitId = getChildren(store, ROOT_ID).find(id =>
+        (getEntityData<{ type: string }>(store, id))?.type === 'split'
+      )
+      if (!newSplitId) return store
+
+      const splitChildren = getChildren(store, newSplitId)
+      const lastTg = splitChildren[splitChildren.length - 1]
+      if (!lastTg) return store
+
+      return workspaceCommands.addTab(lastTg, {
+        id: newTabId,
+        data: { type: 'tab', label: filename, contentType: tabData.contentType, contentRef: tabData.contentRef },
+      }).execute(store)
+    })
+  }, [])
+
+  const duplicatePaneRef = useRef(duplicatePane)
+  useEffect(() => { duplicatePaneRef.current = duplicatePane }, [duplicatePane])
+
   const quickOpenKeyMap = useMemo(() => ({
     'Meta+p': () => { setQuickOpenVisibleRef.current(true); return undefined },
     'Meta+Enter': () => {
       const path = focusedFileRef.current
       if (path) openInNewPaneRef.current(path)
+      return undefined
+    },
+    'Meta+d': () => {
+      duplicatePaneRef.current()
       return undefined
     },
   }), [])
