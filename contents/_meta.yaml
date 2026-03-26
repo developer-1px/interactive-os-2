@@ -10,6 +10,8 @@ order:
   - ui
   - devtools
 
+# L1 Store → L2 Engine → L3 Axis → L4 Pattern → L5 Plugins → L6 Primitives → L7 UI
+
 srcMap:
   axis: src/interactive-os/axis
   pattern: src/interactive-os/pattern
