@@ -8,9 +8,9 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
-import { tree } from '../pattern/tree'
-import { grid } from '../pattern/grid'
+import { listbox } from '../pattern/examples/listbox'
+import { tree } from '../pattern/examples/tree'
+import { grid } from '../pattern/examples/grid'
 import { composePattern } from '../pattern/composePattern'
 import { select } from '../axis/select'
 import { activate } from '../axis/activate'
@@ -19,7 +19,6 @@ import { navigate } from '../axis/navigate'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 
 function fixtureStore(): NormalizedData {
   return createStore({
@@ -58,7 +57,7 @@ describe('pointer interaction — listbox click selection', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -122,7 +121,7 @@ describe('pointer interaction — tree click', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={tree} data={treeFixtureStore()} plugins={[core()]}>
+      <Aria behavior={tree} data={treeFixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -155,7 +154,7 @@ describe('pointer interaction — tree click (second suite)', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={tree} data={treeFixtureStore()} plugins={[core()]}>
+      <Aria behavior={tree} data={treeFixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -185,7 +184,7 @@ describe('pointer interaction — tree click with expandOnClick: false', () => {
     const user = userEvent.setup()
     const activated: string[] = []
     const result = render(
-      <Aria behavior={navTree} data={treeFixtureStore()} plugins={[core()]} onActivate={(id) => activated.push(id)}>
+      <Aria behavior={navTree} data={treeFixtureStore()} plugins={[]} onActivate={(id) => activated.push(id)}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -212,7 +211,7 @@ describe('pointer interaction — edge cases', () => {
     )
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={singleListbox} data={fixtureStore()} plugins={[core()]}>
+      <Aria behavior={singleListbox} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -228,7 +227,7 @@ describe('pointer interaction — edge cases', () => {
   it('click followed by keyboard Shift+Arrow still works', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={listbox()} data={fixtureStore()} plugins={[core()]}>
+      <Aria behavior={listbox()} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -256,7 +255,7 @@ describe('pointer interaction — grid click', () => {
   it('click on grid row selects it', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={grid({ columns: 1 })} data={gridFixtureStore()} plugins={[core()]}>
+      <Aria behavior={grid({ columns: 1 })} data={gridFixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { name: string } }).data.name}</span>
         )} />
@@ -269,7 +268,7 @@ describe('pointer interaction — grid click', () => {
   it('click on another row replaces selection', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={grid({ columns: 1 })} data={gridFixtureStore()} plugins={[core()]}>
+      <Aria behavior={grid({ columns: 1 })} data={gridFixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { name: string } }).data.name}</span>
         )} />
@@ -293,7 +292,7 @@ describe('pointer interaction — disabled node', () => {
     })
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={listbox()} data={data} plugins={[core()]}>
+      <Aria behavior={listbox()} data={data} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />

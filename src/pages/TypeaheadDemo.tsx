@@ -5,7 +5,6 @@ import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
-import { core } from '../interactive-os/plugins/core'
 import { typeahead } from '../interactive-os/plugins/typeahead'
 
 const fruitData = createStore({
@@ -51,7 +50,7 @@ const fruitData = createStore({
 const getLabel = (entity: Entity) =>
   (entity.data as Record<string, unknown>)?.label as string ?? ''
 
-const plugins = [core(), typeahead({ getLabel })]
+const plugins = [typeahead({ getLabel })]
 
 export default function TypeaheadDemo() {
   const [data] = useState<NormalizedData>(fruitData)

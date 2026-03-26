@@ -8,7 +8,6 @@ import { Combobox } from '../ui/Combobox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import { combobox as comboboxPlugin } from '../plugins/combobox'
 
 function fixtureData(): NormalizedData {
@@ -28,7 +27,7 @@ describe('combobox click interaction', () => {
     const { container } = render(
       <Combobox
         data={fixtureData()}
-        plugins={[core(), comboboxPlugin()]}
+        plugins={[comboboxPlugin()]}
         placeholder="Pick a fruit..."
         renderItem={(props, item, _state) => <span {...props}>{(item.data as { label: string }).label}</span>}
       />
@@ -43,7 +42,7 @@ describe('combobox click interaction', () => {
     const { container } = render(
       <Combobox
         data={fixtureData()}
-        plugins={[core(), comboboxPlugin()]}
+        plugins={[comboboxPlugin()]}
         placeholder="Pick a fruit..."
         renderItem={(props, item, _state) => <span {...props}>{(item.data as { label: string }).label}</span>}
       />
@@ -60,7 +59,7 @@ describe('combobox click interaction', () => {
     const { container } = render(
       <Combobox
         data={fixtureData()}
-        plugins={[core(), comboboxPlugin()]}
+        plugins={[comboboxPlugin()]}
         placeholder="Pick..."
         selectionMode="multiple"
         renderItem={(props, item, _state) => <span {...props}>{(item.data as { label: string }).label}</span>}

@@ -5,8 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { accordion } from '../pattern/accordion'
-import { core } from '../plugins/core'
+import { accordion } from '../pattern/examples/accordion'
 
 interface AccordionProps {
   data: NormalizedData
@@ -29,7 +28,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 
 export function Accordion({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   renderItem = defaultRenderItem,
 }: AccordionProps) {

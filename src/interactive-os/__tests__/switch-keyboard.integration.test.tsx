@@ -11,7 +11,6 @@ import { SwitchGroup } from '../ui/SwitchGroup'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
@@ -31,7 +30,7 @@ function renderSwitch(data: NormalizedData) {
   return render(
     <SwitchGroup
       data={data}
-      plugins={[core()]}
+      plugins={[]}
       renderItem={(props, item, state: NodeState) => (
         <span
           {...props}

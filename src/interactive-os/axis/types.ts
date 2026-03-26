@@ -2,7 +2,8 @@
 // axis가 계약을 정의, pattern이 구현
 import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
-import type { ValueRange } from '../plugins/core'
+import type { ValueRange } from './value'
+import type { Middleware } from '../engine/types'
 
 export type SelectionMode = 'single' | 'multiple'
 
@@ -88,6 +89,7 @@ export interface AxisConfig {
 export interface StructuredAxis {
   keyMap: KeyMap
   config?: Partial<AxisConfig>
+  middleware?: Middleware
 }
 
 // Axis can be either a plain KeyMap (v1 compat) or a structured object
@@ -103,4 +105,8 @@ export function extractKeyMap(axis: Axis): KeyMap {
 
 export function extractConfig(axis: Axis): Partial<AxisConfig> | undefined {
   return isStructuredAxis(axis) ? axis.config : undefined
+}
+
+export function extractMiddleware(axis: Axis): Middleware | undefined {
+  return isStructuredAxis(axis) ? axis.middleware : undefined
 }

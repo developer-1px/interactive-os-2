@@ -6,7 +6,6 @@ import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
 import { Up, Down, Left, Right } from './kbdIcons'
-import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { dnd } from '../interactive-os/plugins/dnd'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
@@ -30,7 +29,7 @@ const kanbanData = createStore({
   },
 })
 
-const plugins = [core(), dnd(), history(), focusRecovery()]
+const plugins = [dnd(), history(), focusRecovery()]
 
 export default function DndDemo() {
   const [data, setData] = useState<NormalizedData>(kanbanData)

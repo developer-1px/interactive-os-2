@@ -2,10 +2,9 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
 import type { NodeState, PatternContext } from '../pattern/types'
-import { tabs } from '../pattern/tabs'
+import { tabs } from '../pattern/examples/tabs'
 import { useAria } from '../primitives/useAria'
 import type { UseAriaReturn } from '../primitives/useAria'
-import { core } from '../plugins/core'
 import { history } from '../plugins/history'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands } from '../plugins/rename'
@@ -56,7 +55,7 @@ function toTabListReturn(aria: UseAriaReturn, ariaLabel?: string): UseTabListRet
 }
 
 export function useTabList(options: UseTabListOptions): UseTabListReturn {
-  const { data, plugins = [core(), ...(options.enableEditing ? [history()] : [])], keyMap, onChange, onActivate, initialFocus, enableEditing = false, 'aria-label': ariaLabel } = options
+  const { data, plugins = [...(options.enableEditing ? [history()] : [])], keyMap, onChange, onActivate, initialFocus, enableEditing = false, 'aria-label': ariaLabel } = options
   const mergedKeyMap = enableEditing ? { ...editingKeyMap, ...keyMap } : keyMap
   const aria = useAria({ behavior: tabs, data, plugins, keyMap: mergedKeyMap, onChange, onActivate, initialFocus })
   return toTabListReturn(aria, ariaLabel)

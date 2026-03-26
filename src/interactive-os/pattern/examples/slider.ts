@@ -1,7 +1,7 @@
-import type { Entity } from '../store/types'
-import type { NodeState } from './types'
-import { composePattern } from './composePattern'
-import { value } from '../axis/value'
+import type { Entity } from '../../store/types'
+import type { NodeState } from '../types'
+import { composePattern } from '../composePattern'
+import { value } from '../../axis/value'
 
 interface SliderOptions {
   min: number

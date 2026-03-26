@@ -4,9 +4,9 @@ import type { TemplateType } from './cms-templates'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import type { Command } from '../../interactive-os/engine/types'
 import type { PatternContext } from '../../interactive-os/pattern/types'
-import { listbox } from '../../interactive-os/pattern/listbox'
+import { listbox } from '../../interactive-os/pattern/examples/listbox'
 import { useAria } from '../../interactive-os/primitives/useAria'
-import { core, focusCommands } from '../../interactive-os/plugins/core'
+import { focusCommands } from '../../interactive-os/axis/navigate'
 
 const pickerData: NormalizedData = {
   entities: Object.fromEntries(
@@ -38,7 +38,7 @@ function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps,
   const aria = useAria({
     behavior,
     data: pickerData,
-    plugins: [core()],
+    plugins: [],
     keyMap,
     onActivate: (nodeId) => {
       onSelect(nodeId as TemplateType)

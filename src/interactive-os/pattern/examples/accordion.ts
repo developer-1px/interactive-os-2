@@ -1,7 +1,7 @@
-import type { NodeState } from './types'
-import { composePattern } from './composePattern'
-import { activate } from '../axis/activate'
-import { navigate } from '../axis/navigate'
+import type { NodeState } from '../types'
+import { composePattern } from '../composePattern'
+import { activate } from '../../axis/activate'
+import { navigate } from '../../axis/navigate'
 
 export const accordion = composePattern(
   {

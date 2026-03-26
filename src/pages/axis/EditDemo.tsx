@@ -4,7 +4,6 @@ import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
 import { edit } from '../../interactive-os/plugins/edit'
 import { replaceEditPlugin } from '../../interactive-os/plugins/edit'
-import { core } from '../../interactive-os/plugins/core'
 import { crud } from '../../interactive-os/plugins/crud'
 import { history } from '../../interactive-os/plugins/history'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
@@ -54,8 +53,8 @@ export default function EditDemo() {
 
   const plugins = React.useMemo(
     () => replaceMode
-      ? [core(), crud(), rename(), history(), focusRecovery(), replacePlugin]
-      : [core(), crud(), rename(), history(), focusRecovery()],
+      ? [crud(), rename(), history(), focusRecovery(), replacePlugin]
+      : [crud(), rename(), history(), focusRecovery()],
     [replaceMode],
   )
 

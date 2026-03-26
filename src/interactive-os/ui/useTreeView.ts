@@ -2,10 +2,9 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
 import type { NodeState, PatternContext } from '../pattern/types'
-import { tree } from '../pattern/tree'
+import { tree } from '../pattern/examples/tree'
 import { useAria } from '../primitives/useAria'
 import type { UseAriaReturn } from '../primitives/useAria'
-import { core } from '../plugins/core'
 
 export interface UseTreeViewOptions {
   data: NormalizedData
@@ -45,7 +44,7 @@ function toTreeViewReturn(aria: UseAriaReturn, ariaLabel?: string): UseTreeViewR
 }
 
 export function useTreeView(options: UseTreeViewOptions): UseTreeViewReturn {
-  const { data, plugins = [core()], keyMap, onChange, onActivate, initialFocus, followFocus, selectable = false, 'aria-label': ariaLabel } = options
+  const { data, plugins = [], keyMap, onChange, onActivate, initialFocus, followFocus, selectable = false, 'aria-label': ariaLabel } = options
   let behavior = followFocus ? { ...tree, followFocus: true } : tree
   if (!selectable) {
     const { Space: _space, ...rest } = behavior.keyMap

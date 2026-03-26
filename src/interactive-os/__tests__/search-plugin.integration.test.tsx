@@ -6,10 +6,9 @@ import userEvent from '@testing-library/user-event'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
-import { core } from '../plugins/core'
 import { search, searchCommands, SEARCH_ID, matchesSearchFilter } from '../plugins/search'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
+import { listbox } from '../pattern/examples/listbox'
 import type { NormalizedData } from '../store/types'
 
 function fixtureStore() {
@@ -24,9 +23,8 @@ function fixtureStore() {
 }
 
 function createEngine(store = fixtureStore()) {
-  const corePlugin = core()
   const searchPlugin = search()
-  const middlewares = [corePlugin, searchPlugin]
+  const middlewares = [searchPlugin]
     .map((p) => p.middleware)
     .filter((m): m is NonNullable<typeof m> => m != null)
   return createCommandEngine(store, middlewares, () => {}, { logger: false })
@@ -152,7 +150,7 @@ function fixtureData() {
 function SearchableList() {
   const [data, setData] = useState<NormalizedData>(fixtureData())
   return (
-    <Aria behavior={listbox()} data={data} plugins={[core(), search()]} onChange={setData} aria-label="Test">
+    <Aria behavior={listbox()} data={data} plugins={[search()]} onChange={setData} aria-label="Test">
       <Aria.Search placeholder="Search..." />
       <Aria.Item render={(props, node) => (
         <div {...props} data-testid={`item-${(node.data as { label?: string })?.label}`}>

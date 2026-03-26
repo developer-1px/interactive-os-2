@@ -205,12 +205,12 @@ function trackEditRanges(session: SessionState, events: TimelineEvent[]) {
   let newFile = false
   for (const evt of events) {
     if (evt.type !== 'tool_use') continue
-    if ((evt.tool === 'Edit' || evt.tool === 'Write') && evt.filePath && evt.editNew) {
+    if ((evt.tool === 'Edit' || evt.tool === 'Write') && evt.filePath) {
       const existing = session.editRanges.get(evt.filePath)
       if (existing) {
-        existing.push(evt.editNew)
+        if (evt.editNew) existing.push(evt.editNew)
       } else {
-        session.editRanges.set(evt.filePath, [evt.editNew])
+        session.editRanges.set(evt.filePath, evt.editNew ? [evt.editNew] : [])
         newFile = true
       }
     }

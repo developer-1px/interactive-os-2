@@ -8,12 +8,12 @@ import { Aria } from '../interactive-os/primitives/aria'
 import { TreeView } from '../interactive-os/ui/TreeView'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
-import { core, FOCUS_ID } from '../interactive-os/plugins/core'
+import { FOCUS_ID } from '../interactive-os/axis/navigate'
 import { createStore, getChildren, getEntityData, updateEntityData, addEntity } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { Plugin } from '../interactive-os/plugins/types'
-import { EXPANDED_ID } from '../interactive-os/plugins/core'
+import { EXPANDED_ID } from '../interactive-os/axis/expand'
 import { CodeBlock } from '../interactive-os/ui/CodeBlock'
 import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
 import { FileIcon } from '../interactive-os/ui/FileIcon'
@@ -367,7 +367,7 @@ export default function PageViewer() {
       }
 
       // split 없으면 새로 만들기
-      let store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
+      const store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
       const newSplitId = getChildren(store, ROOT_ID).find(id =>
         (getEntityData<{ type: string }>(store, id))?.type === 'split'
       )
@@ -425,7 +425,7 @@ export default function PageViewer() {
           <div className={styles.vwTreeBody}>
             <TreeView
               data={initialStore}
-              plugins={[core()]}
+              plugins={[]}
               onChange={handleChange}
               onActivate={handleActivate}
               aria-label="File tree"

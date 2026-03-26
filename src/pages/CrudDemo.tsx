@@ -7,7 +7,7 @@ import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { Plugin } from '../interactive-os/plugins/types'
 import type { PatternContext, NodeState } from '../interactive-os/pattern/types'
-import { core, FOCUS_ID } from '../interactive-os/plugins/core'
+import { FOCUS_ID } from '../interactive-os/axis/navigate'
 import { history } from '../interactive-os/plugins/history'
 import { crud, crudCommands } from '../interactive-os/plugins/crud'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
@@ -69,7 +69,7 @@ const createPlugin: Plugin = {
   },
 }
 
-const plugins = [core(), crud(), createPlugin, history(), focusRecovery()]
+const plugins = [crud(), createPlugin, history(), focusRecovery()]
 
 export default function CrudDemo() {
   const [data, setData] = useState<NormalizedData>(treeData)

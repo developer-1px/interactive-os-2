@@ -4,7 +4,7 @@ import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import type { PatternContext } from '../axis/types'
-import { focusCommands } from './core'
+import { focusCommands } from '../axis/navigate'
 import { getSpatialParentId, spatialCommands } from './spatial'
 import { getChildren, getParent } from '../store/createStore'
 

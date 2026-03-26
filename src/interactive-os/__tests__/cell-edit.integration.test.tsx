@@ -4,20 +4,19 @@ import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createStore, getEntity } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
-import { GRID_COL_ID } from '../plugins/core'
+import { GRID_COL_ID } from '../axis/navigate'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import { clipboardCommands, resetClipboard, clipboard } from '../plugins/clipboard'
 import { history, historyCommands } from '../plugins/history'
-import { core } from '../plugins/core'
 import { crud } from '../plugins/crud'
 import { rename } from '../plugins/rename'
 import { dnd } from '../plugins/dnd'
 import { focusRecovery } from '../plugins/focusRecovery'
 import { cellEdit } from '../plugins/cellEdit'
 import { Aria } from '../primitives/aria'
-import { grid as gridBehavior } from '../pattern/grid'
+import { grid as gridBehavior } from '../pattern/examples/grid'
 
 function fixtureStore() {
   return createStore({
@@ -30,10 +29,9 @@ function fixtureStore() {
 }
 
 function createEngine(store = fixtureStore()) {
-  const corePlugin = core()
   const clipboardPlugin = clipboard()
   const historyPlugin = history()
-  const middlewares = [corePlugin, clipboardPlugin, historyPlugin]
+  const middlewares = [clipboardPlugin, historyPlugin]
     .map((p) => p.middleware)
     .filter((m): m is NonNullable<typeof m> => m != null)
   return createCommandEngine(store, middlewares, vi.fn(), { logger: false })
@@ -109,7 +107,6 @@ function getFocusedRowId(container: HTMLElement): string | null {
 function StatefulCellEditGrid({ initialData, withCellEdit = true }: { initialData: NormalizedData; withCellEdit?: boolean }) {
   const [data, setData] = useState(initialData)
   const plugins = [
-    core(),
     crud(),
     rename(),
     dnd(),
@@ -215,7 +212,7 @@ describe('enterContinue prop', () => {
     const [data, setData] = useState(initialData)
     const dataRef = useRef(data)
     useEffect(() => { dataRef.current = data })
-    const plugins = [core(), crud(), rename(), dnd(), history(), focusRecovery(), clipboard(), cellEdit()]
+    const plugins = [crud(), rename(), dnd(), history(), focusRecovery(), clipboard(), cellEdit()]
     const behavior = gridBehavior({ columns: 3, edit: true })
     return (
       <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="Editable Grid">

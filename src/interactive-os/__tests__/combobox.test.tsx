@@ -13,7 +13,6 @@ import { Combobox } from '../ui/Combobox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import { combobox as comboboxPlugin } from '../plugins/combobox'
 import type { NodeState } from '../pattern/types'
 
@@ -60,7 +59,7 @@ function ControlledCombobox({
   return (
     <Combobox
       data={data}
-      plugins={[core(), comboboxPlugin()]}
+      plugins={[comboboxPlugin()]}
       onChange={setData}
       placeholder="Pick..."
       selectionMode={selectionMode}
@@ -276,7 +275,7 @@ function ControlledGroupedCombobox() {
   return (
     <Combobox
       data={data}
-      plugins={[core(), comboboxPlugin()]}
+      plugins={[comboboxPlugin()]}
       onChange={setData}
       placeholder="Pick..."
       renderItem={renderItem}
@@ -351,7 +350,7 @@ function ControlledCreatableCombobox({
   return (
     <Combobox
       data={data}
-      plugins={[core(), comboboxPlugin()]}
+      plugins={[comboboxPlugin()]}
       onChange={handleChange}
       placeholder="Pick..."
       editable

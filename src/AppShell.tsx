@@ -8,8 +8,8 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 import { Aria } from './interactive-os/primitives/aria'
-import { toolbar } from './interactive-os/pattern/toolbar'
-import { core, FOCUS_ID } from './interactive-os/plugins/core'
+import { toolbar } from './interactive-os/pattern/examples/toolbar'
+import { FOCUS_ID } from './interactive-os/axis/navigate'
 import { FileViewerModal } from './interactive-os/ui/FileViewerModal'
 import { createStore } from './interactive-os/store/createStore'
 import { ROOT_ID } from './interactive-os/store/types'
@@ -247,7 +247,7 @@ export default function AppShell() {
         <Aria
           behavior={verticalToolbar}
           data={activityBarData}
-          plugins={[core()]}
+          plugins={[]}
           onActivate={handleActivityBarActivate}
           aria-label="Navigation"
           autoFocus={false}

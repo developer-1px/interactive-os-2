@@ -4,8 +4,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { alertdialog } from '../pattern/alertdialog'
-import { core } from '../plugins/core'
+import { alertdialog } from '../pattern/examples/alertdialog'
 import styles from './AlertDialog.module.css'
 
 interface AlertDialogProps {
@@ -25,7 +24,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 
 export function AlertDialog({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   renderItem = defaultRenderItem,
 }: AlertDialogProps) {

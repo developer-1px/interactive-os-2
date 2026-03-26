@@ -3,9 +3,8 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
+import { listbox } from '../pattern/examples/listbox'
 import { ROOT_ID } from '../store/types'
-import { core } from '../plugins/core'
 import type { Command } from '../engine/types'
 import type { PatternContext } from '../pattern/types'
 import { matchKeyEvent } from '../primitives/useKeyboard'
@@ -30,7 +29,7 @@ function NestedAriaHarness({ parentKey }: { parentKey: string }) {
         data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
         plugins={[]}
       >
-        <Aria behavior={listbox()} data={fixtureData()} plugins={[core()]} aria-label="inner">
+        <Aria behavior={listbox()} data={fixtureData()} plugins={[]} aria-label="inner">
           <Aria.Item render={(props, node, _state) => <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>} />
         </Aria>
       </Aria>

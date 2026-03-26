@@ -2,14 +2,13 @@ import { useMemo, useRef, useCallback, useEffect } from 'react'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import type { CommandEngine } from '../../interactive-os/engine/createCommandEngine'
 import { Grid } from '../../interactive-os/ui/Grid'
-import { core } from '../../interactive-os/plugins/core'
 import { rename } from '../../interactive-os/plugins/rename'
 import { renameCommands } from '../../interactive-os/plugins/rename'
 import { history } from '../../interactive-os/plugins/history'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
 import { translatableEntriesToGrid, I18N_COLUMNS, diffGridChanges } from './cmsI18nAdapter'
 
-const plugins = [core(), rename(), history(), focusRecovery()]
+const plugins = [rename(), history(), focusRecovery()]
 
 interface CmsI18nSheetProps {
   engine: CommandEngine

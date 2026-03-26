@@ -7,7 +7,7 @@ import type { NormalizedData } from '../store/types'
 import type { LogEntry } from '../engine/dispatchLogger'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import { createStore } from '../store/createStore'
-import { focusCommands } from '../plugins/core'
+import { focusCommands } from '../axis/navigate'
 import { createBatchCommand } from '../engine/types'
 import type { Command } from '../engine/types'
 

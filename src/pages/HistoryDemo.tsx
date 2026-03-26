@@ -6,7 +6,6 @@ import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
-import { core } from '../interactive-os/plugins/core'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
 import { clipboard } from '../interactive-os/plugins/clipboard'
@@ -28,7 +27,7 @@ const noteData = createStore({
   },
 })
 
-const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
+const plugins = [crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
 export default function HistoryDemo() {
   const [data, setData] = useState<NormalizedData>(noteData)

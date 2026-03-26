@@ -2,7 +2,7 @@ import styles from './TimelineColumn.module.css'
 import { useState, useEffect, useRef, useCallback, useMemo, memo, type ReactNode } from 'react'
 import {
   Circle, FileText, Terminal,
-  Pencil, Search, FilePlus, Loader, X,
+  Pencil, Search, FilePlus, Loader, X, Zap,
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import { groupEvents, type TimelineEvent, type ToolGroup, type DisplayItem } from './groupEvents'
@@ -48,6 +48,7 @@ function eventLabel(evt: TimelineEvent): string {
   if (evt.tool === 'Bash') return `$ ${evt.text ?? ''}`
   if (evt.tool === 'Grep') return `grep "${evt.text ?? ''}"`
   if (evt.tool === 'Glob') return `glob "${evt.text ?? ''}"`
+  if (evt.tool === 'Skill') return `/${evt.text ?? 'skill'}`
   return evt.tool ?? evt.type
 }
 
@@ -59,6 +60,7 @@ function EventIcon({ evt }: { evt: TimelineEvent }) {
   if (evt.tool === 'Write') return <FilePlus size={12} />
   if (evt.tool === 'Bash') return <Terminal size={12} />
   if (evt.tool === 'Grep' || evt.tool === 'Glob') return <Search size={12} />
+  if (evt.tool === 'Skill') return <Zap size={12} />
   return <Circle size={12} />
 }
 
@@ -261,7 +263,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   }, [sessionId, isLive])
 
   const timeline = useTimeline(sessionId)
-  const { agentStatus, runStartTs, fetchError, initialLoading } = useSessionMeta(sessionId)
+  const { agentStatus, fetchError, initialLoading } = useSessionMeta(sessionId)
 
   // --- Group events for display ---
   const displayItems = useMemo(() => groupEvents(timeline), [timeline])
@@ -360,7 +362,7 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
         {isLive && (
           <span className={agentStatus === 'idle' ? styles.tcIdle : styles.tcLive}><Circle size={8} fill="currentColor" /></span>
         )}
-        <span className={styles.tcLabel}>{sessionLabel}</span>
+        <span className={`${styles.tcLabel} truncate`}>{sessionLabel}</span>
         {isLive && (
           <span className={styles.tcHeaderStatus}>
             {agentStatus === 'running' ? '진행중' : agentStatus === 'idle' ? '입력 대기' : ''}
@@ -398,31 +400,9 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
         />
       )}
 
-      {isLive && agentStatus === 'running' && (
-        <AgentRunningBar startTs={runStartTs} />
-      )}
       {isLive && agentStatus === 'idle' && (
         <ChatInput sessionId={sessionId} />
       )}
-    </div>
-  )
-}
-
-function AgentRunningBar({ startTs }: { startTs: number | null }) {
-  const [elapsed, setElapsed] = useState(() => startTs != null ? Math.floor((Date.now() - startTs) / 1000) : 0)
-
-  useEffect(() => {
-    if (startTs == null) return
-    const id = setInterval(() => {
-      setElapsed(Math.floor((Date.now() - startTs) / 1000))
-    }, 1000)
-    return () => clearInterval(id)
-  }, [startTs])
-
-  return (
-    <div className={styles.tcStatus}>
-      <Loader size={12} className={styles.tcStatusSpinner} />
-      <span>Running {elapsed}s</span>
     </div>
   )
 }

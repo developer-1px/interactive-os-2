@@ -1,8 +1,8 @@
-import type { NodeState } from './types'
-import { composePattern } from './composePattern'
-import { select } from '../axis/select'
-import { activate } from '../axis/activate'
-import { navigate } from '../axis/navigate'
+import type { NodeState } from '../types'
+import { composePattern } from '../composePattern'
+import { select } from '../../axis/select'
+import { activate } from '../../axis/activate'
+import { navigate } from '../../axis/navigate'
 
 export const tabs = composePattern(
   {

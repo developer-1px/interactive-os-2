@@ -12,7 +12,6 @@ import { Combobox } from '../ui/Combobox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import { combobox as comboboxPlugin } from '../plugins/combobox'
 import type { NodeState } from '../pattern/types'
 
@@ -34,7 +33,7 @@ function renderCombobox(data: NormalizedData) {
   return render(
     <Combobox
       data={data}
-      plugins={[core(), comboboxPlugin()]}
+      plugins={[comboboxPlugin()]}
       placeholder="Pick a fruit..."
       renderItem={(props, item, state: NodeState) => (
         <span
@@ -257,7 +256,7 @@ describe('Combobox keyboard integration', () => {
       const { container } = render(
         <Combobox
           data={fixtureData()}
-          plugins={[core(), comboboxPlugin()]}
+          plugins={[comboboxPlugin()]}
           placeholder="Type..."
           editable
           renderItem={(props, item, state: NodeState) => (

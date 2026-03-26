@@ -6,8 +6,8 @@ import { createStore, getChildren } from '../../interactive-os/store/createStore
 import { ROOT_ID } from '../../interactive-os/store/types'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import { createBatchCommand } from '../../interactive-os/engine/types'
-import { core, selectionCommands } from '../../interactive-os/plugins/core'
-import { combobox } from '../../interactive-os/pattern/combobox'
+import { selectionCommands } from '../../interactive-os/axis/select'
+import { combobox } from '../../interactive-os/pattern/examples/combobox'
 import { combobox as comboboxPlugin, comboboxCommands } from '../../interactive-os/plugins/combobox'
 import { FileIcon } from '../../interactive-os/ui/FileIcon'
 import type { FileNodeData } from './types'
@@ -99,7 +99,7 @@ export function QuickOpen({
   const aria = useAria({
     behavior: combobox(),
     data: comboboxData,
-    plugins: [core(), comboboxPlugin()],
+    plugins: [comboboxPlugin()],
     onChange: handleChange,
   })
 
@@ -157,7 +157,7 @@ export function QuickOpen({
                 >
                   <FileIcon name={fileData.name} type="file" />
                   <span className={styles.qoItemName}>{fileData.name}</span>
-                  <span className={styles.qoItemPath}>{fileData.relativePath}</span>
+                  <span className={`${styles.qoItemPath} truncate`}>{fileData.relativePath}</span>
                 </div>
               )
             })}

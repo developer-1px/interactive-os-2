@@ -19,7 +19,7 @@ import { render, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Grid } from '../interactive-os/ui/Grid'
 import { Aria } from '../interactive-os/primitives/aria'
-import { core, GRID_COL_ID } from '../interactive-os/plugins/core'
+import { GRID_COL_ID } from '../interactive-os/axis/navigate'
 import { rename } from '../interactive-os/plugins/rename'
 import { history } from '../interactive-os/plugins/history'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
@@ -27,7 +27,7 @@ import { clipboard, resetClipboard } from '../interactive-os/plugins/clipboard'
 import { i18nColumns, i18nInitialData } from '../pages/sharedI18nData'
 import type { NormalizedData as _NormalizedData } from '../interactive-os/store/types'
 
-const plugins = [core(), rename(), history(), focusRecovery(), clipboard()]
+const plugins = [rename(), history(), focusRecovery(), clipboard()]
 
 /**
  * Stateful wrapper rendering Grid with i18n sample data.

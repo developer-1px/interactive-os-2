@@ -9,12 +9,11 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ListBox } from '../ui/ListBox'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
+import { listbox } from '../pattern/examples/listbox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData, Entity } from '../store/types'
 import type { Command } from '../engine/types'
-import { core } from '../plugins/core'
 import { rename, renameCommands } from '../plugins/rename'
 import { typeahead, resetTypeahead } from '../plugins/typeahead'
 import type { PatternContext, NodeState } from '../pattern/types'
@@ -44,7 +43,7 @@ function renderListBox(data: NormalizedData, opts?: { enableEditing?: boolean })
   return render(
     <ListBox
       data={data}
-      plugins={[core(), typeahead({ getLabel, timeout: TEST_TIMEOUT })]}
+      plugins={[typeahead({ getLabel, timeout: TEST_TIMEOUT })]}
       enableEditing={opts?.enableEditing}
       renderItem={(props, item, _state: NodeState) => (
         <span {...props}>{(item.data as Record<string, unknown>)?.name as string}</span>
@@ -175,7 +174,7 @@ describe('Typeahead keyboard integration', () => {
       <Aria
         behavior={listbox()}
         data={data}
-        plugins={[core(), rename(), typeahead({ getLabel })]}
+        plugins={[rename(), typeahead({ getLabel })]}
         keyMap={editKeyMap}
       >
         <Aria.Item render={(props, node: Record<string, unknown>, _state: NodeState) => (
@@ -213,7 +212,7 @@ describe('Typeahead keyboard integration', () => {
     const { container } = render(
       <ListBox
         data={emptyData}
-        plugins={[core(), typeahead({ getLabel })]}
+        plugins={[typeahead({ getLabel })]}
       />
     )
 

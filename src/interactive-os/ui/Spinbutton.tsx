@@ -5,8 +5,8 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { spinbutton } from '../pattern/spinbutton'
-import { core, valueCommands } from '../plugins/core'
+import { spinbutton } from '../pattern/examples/spinbutton'
+import { valueCommands } from '../axis/value'
 import { history } from '../plugins/history'
 import { getAriaActions } from '../primitives/ariaRegistry'
 
@@ -29,7 +29,7 @@ export function Spinbutton({
   min,
   max,
   step,
-  plugins = [core(), history()],
+  plugins = [history()],
   onChange,
   label,
 }: SpinbuttonProps) {

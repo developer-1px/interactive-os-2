@@ -4,8 +4,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { switchPattern } from '../pattern/switch'
-import { core } from '../plugins/core'
+import { switchPattern } from '../pattern/examples/switch'
 
 interface ToggleProps {
   data: NormalizedData
@@ -29,7 +28,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 
 export function Toggle({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   renderItem = defaultRenderItem,
 }: ToggleProps) {

@@ -1,7 +1,8 @@
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
 import type { CommandEngine } from './createCommandEngine'
-import { EXPANDED_ID } from '../plugins/core'
+// ② 2026-03-26-core-absorption-prd.md
+import { EXPANDED_ID } from '../axis/expand'
 import { SEARCH_ID, matchesSearchFilter } from '../plugins/search'
 
 /**

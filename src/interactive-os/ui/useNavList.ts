@@ -5,7 +5,6 @@ import type { NodeState, PatternContext } from '../pattern/types'
 import { navlist } from '../misc/navlist'
 import { useAria } from '../primitives/useAria'
 import type { UseAriaReturn } from '../primitives/useAria'
-import { core } from '../plugins/core'
 
 export interface UseNavListOptions {
   data: NormalizedData
@@ -44,7 +43,7 @@ function toNavListReturn(aria: UseAriaReturn, ariaLabel?: string): UseNavListRet
 }
 
 export function useNavList(options: UseNavListOptions): UseNavListReturn {
-  const { data, plugins = [core()], keyMap, onChange, onActivate, initialFocus, 'aria-label': ariaLabel } = options
+  const { data, plugins = [], keyMap, onChange, onActivate, initialFocus, 'aria-label': ariaLabel } = options
   const aria = useAria({ behavior: navlist, data, plugins, keyMap, onChange, onActivate, initialFocus })
   return toNavListReturn(aria, ariaLabel)
 }

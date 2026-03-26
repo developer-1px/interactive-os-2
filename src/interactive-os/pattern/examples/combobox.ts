@@ -1,10 +1,10 @@
-import type { AriaPattern, NodeState } from './types'
-import type { Axis } from './composePattern'
-import type { PatternContext } from '../axis/types'
-import { composePattern } from './composePattern'
-import { comboboxCommands } from '../plugins/combobox'
-import { selectionCommands } from '../plugins/core'
-import { createBatchCommand } from '../engine/types'
+import type { AriaPattern, NodeState } from '../types'
+import type { Axis } from '../composePattern'
+import type { PatternContext } from '../../axis/types'
+import { composePattern } from '../composePattern'
+import { comboboxCommands } from '../../plugins/combobox'
+import { selectionCommands } from '../../axis/select'
+import { createBatchCommand } from '../../engine/types'
 
 export interface ComboboxOptions {
   selectionMode?: 'single' | 'multiple'

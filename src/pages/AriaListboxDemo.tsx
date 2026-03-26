@@ -1,12 +1,11 @@
 import { useState, useMemo } from 'react'
 import { Up, Down } from './kbdIcons'
 import { Aria } from '../interactive-os/primitives/aria'
-import { listbox } from '../interactive-os/pattern/listbox'
+import { listbox } from '../interactive-os/pattern/examples/listbox'
 import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
-import { core } from '../interactive-os/plugins/core'
 
 const demoData = createStore({
   entities: {
@@ -34,7 +33,7 @@ export default function AriaListboxDemo() {
         <Aria
           behavior={behavior}
           data={data}
-          plugins={[core()]}
+          plugins={[]}
           onChange={setData}
           aria-label="Fruit picker"
         >

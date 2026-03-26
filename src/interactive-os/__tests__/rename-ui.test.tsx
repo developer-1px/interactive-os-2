@@ -2,8 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, fireEvent, act } from '@testing-library/react'
 import { useState, useEffect } from 'react'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
-import { core } from '../plugins/core'
+import { listbox } from '../pattern/examples/listbox'
 import { history } from '../plugins/history'
 import { rename, renameCommands } from '../plugins/rename'
 import { createStore } from '../store/createStore'
@@ -20,7 +19,7 @@ const initialStore = createStore({
   relationships: { [ROOT_ID]: ['a', 'b', 'c'] },
 })
 
-const plugins = [core(), rename(), history()]
+const plugins = [rename(), history()]
 
 function TestListBox({ initialData, keyMap, allowEmpty }: { initialData?: NormalizedData; keyMap?: Record<string, (ctx: import('../axis/types').PatternContext) => import('../engine/types').Command | void>; allowEmpty?: boolean }) {
   const [data, setData] = useState(initialData ?? initialStore)
@@ -205,7 +204,7 @@ describe('Rename UI', () => {
       function NoRenameListBox() {
         const [data, setData] = useState(initialStore)
         return (
-          <Aria behavior={listbox()} data={data} plugins={[core()]} onChange={setData}>
+          <Aria behavior={listbox()} data={data} plugins={[]} onChange={setData}>
             <Aria.Item render={(props, node: Record<string, unknown>, _state) => (
               <Aria.Editable {...props} field="label">
                 <span>{(node.data as Record<string, unknown>)?.label as string}</span>

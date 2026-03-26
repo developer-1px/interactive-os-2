@@ -4,8 +4,8 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { slider } from '../pattern/slider'
-import { core, valueCommands } from '../plugins/core'
+import { slider } from '../pattern/examples/slider'
+import { valueCommands } from '../axis/value'
 import { history } from '../plugins/history'
 import { getAriaActions } from '../primitives/ariaRegistry'
 
@@ -27,7 +27,7 @@ export function Slider({
   min,
   max,
   step,
-  plugins = [core(), history()],
+  plugins = [history()],
   onChange,
 }: SliderProps) {
   const id = React.useRef(idProp ?? `slider-${++sliderIdCounter}`).current

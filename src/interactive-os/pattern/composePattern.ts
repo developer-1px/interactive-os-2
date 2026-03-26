@@ -1,8 +1,8 @@
 import type { Entity } from '../store/types'
-import type { Command } from '../engine/types'
+import type { Command, Middleware } from '../engine/types'
 import type { AriaPattern, NodeState } from './types'
 import type { PatternContext, FocusStrategy, KeyMap, Axis, AxisConfig, StructuredAxis } from '../axis/types'
-import { extractKeyMap, extractConfig } from '../axis/types'
+import { extractKeyMap, extractConfig, extractMiddleware } from '../axis/types'
 
 export type { Axis, StructuredAxis, KeyMap, AxisConfig }
 
@@ -62,6 +62,22 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
     }
   }
 
+  // ② 2026-03-26-core-absorption-prd.md
+  // Merge middlewares from axes
+  const middlewares: Middleware[] = []
+  for (const axis of axes) {
+    const mw = extractMiddleware(axis)
+    if (mw) middlewares.push(mw)
+  }
+  const composedMiddleware: Middleware | undefined = middlewares.length === 0
+    ? undefined
+    : middlewares.length === 1
+      ? middlewares[0]
+      : (next: (command: Command) => void) => middlewares.reduceRight(
+          (acc, mw) => mw(acc),
+          next,
+        )
+
   // Build behavior
   if (isIdentity(config)) {
     // v2 Identity path
@@ -82,6 +98,7 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
       ...(mergedConfig.colCount !== undefined && { colCount: mergedConfig.colCount }),
       ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
       keyMap,
+      ...(composedMiddleware && { middleware: composedMiddleware }),
     }
   }
 
@@ -101,5 +118,6 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
     ...(mergedConfig.colCount !== undefined && { colCount: mergedConfig.colCount }),
     ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
     keyMap,
+    ...(composedMiddleware && { middleware: composedMiddleware }),
   }
 }

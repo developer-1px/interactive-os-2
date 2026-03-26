@@ -7,7 +7,6 @@ import { useAria } from '../primitives/useAria'
 import { AriaInternalContext } from '../primitives/AriaInternalContext'
 import { AriaItemContext, Aria } from '../primitives/aria'
 import { kanban as kanbanBehavior } from './kanbanPreset'
-import { core } from '../plugins/core'
 import { getChildren, getEntity } from '../store/createStore'
 
 interface KanbanProps {
@@ -29,7 +28,7 @@ function FocusDiv({ focused, children, ...props }: { focused: boolean; children:
 
 export function Kanban({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   'aria-label': ariaLabel,
 }: KanbanProps) {

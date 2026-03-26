@@ -8,7 +8,7 @@ import { Aria } from '../../primitives/aria'
 import { spatial } from '../../misc/spatial'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { core, EXPANDED_ID } from '../../plugins/core'
+import { EXPANDED_ID } from '../../axis/expand'
 
 function spatialFixture() {
   return createStore({
@@ -47,7 +47,7 @@ describe('spatial behavior — Enter/Escape drill-in/out', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={spatial} data={spatialFixtureExpanded()} plugins={[core()]}>
+      <Aria behavior={spatial} data={spatialFixtureExpanded()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused} data-selected={state.selected}>
             {(node as { data: { label: string } }).data.label}
@@ -126,7 +126,7 @@ describe('spatial behavior — Space, Home, End', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={spatial} data={spatialFixture()} plugins={[core()]}>
+      <Aria behavior={spatial} data={spatialFixture()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused} data-selected={state.selected}>
             {(node as { data: { label: string } }).data.label}

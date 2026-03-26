@@ -1,5 +1,4 @@
 .input {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-primary);
   background: var(--surface-base);

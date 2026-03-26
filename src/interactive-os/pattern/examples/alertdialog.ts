@@ -1,6 +1,6 @@
-import type { NodeState } from './types'
-import { composePattern } from './composePattern'
-import { dismiss } from '../axis/dismiss'
+import type { NodeState } from '../types'
+import { composePattern } from '../composePattern'
+import { dismiss } from '../../axis/dismiss'
 
 export const alertdialog = composePattern(
   {

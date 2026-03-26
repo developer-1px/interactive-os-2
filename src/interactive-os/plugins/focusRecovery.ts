@@ -3,7 +3,7 @@ import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import { getChildren, getParent, getEntity } from '../store/createStore'
 import { definePlugin } from './definePlugin'
-import { focusCommands } from './core'
+import { focusCommands } from '../axis/navigate'
 
 const FOCUS_ID = '__focus__'
 const EXPANDED_ID = '__expanded__'

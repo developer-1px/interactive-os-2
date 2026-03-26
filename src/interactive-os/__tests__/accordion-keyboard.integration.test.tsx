@@ -11,7 +11,6 @@ import { Accordion } from '../ui/Accordion'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { core } from '../plugins/core'
 import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
@@ -50,7 +49,7 @@ function renderAccordion(data: NormalizedData) {
   return render(
     <Accordion
       data={data}
-      plugins={[core()]}
+      plugins={[]}
       renderItem={(props, item, state: NodeState) => (
         <span {...props} data-testid={`section-${item.id}`} data-focused={state.focused} data-expanded={state.expanded}>
           {(item.data as Record<string, unknown>)?.name as string}
@@ -200,7 +199,7 @@ describe('Accordion keyboard integration', () => {
       const { container } = render(
         <Accordion
           data={leafFixtureData()}
-          plugins={[core()]}
+          plugins={[]}
           renderItem={(props, item, state: NodeState) => (
             <span {...props} data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
               {(item.data as Record<string, unknown>)?.name as string}
@@ -221,7 +220,7 @@ describe('Accordion keyboard integration', () => {
       const { container } = render(
         <Accordion
           data={leafFixtureData()}
-          plugins={[core()]}
+          plugins={[]}
           renderItem={(props, item, state: NodeState) => (
             <span {...props} data-testid={`leaf-${item.id}`} data-expanded={state.expanded}>
               {(item.data as Record<string, unknown>)?.name as string}

@@ -4,7 +4,6 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { useNavList } from './useNavList'
-import { core } from '../plugins/core'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
 import styles from './NavList.module.css'
@@ -43,7 +42,7 @@ function getLabel(entity: Record<string, unknown>): string {
 
 export function NavList({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   onActivate,
   renderItem = defaultRenderItem,

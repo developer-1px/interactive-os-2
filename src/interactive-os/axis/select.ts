@@ -1,12 +1,186 @@
 import type { AxisConfig, KeyMap } from './types'
 import type { SelectionMode } from './types'
+import type { Command, Middleware } from '../engine/types'
+import type { NormalizedData } from '../store/types'
+
+// ② 2026-03-26-core-absorption-prd.md
+export const SELECTION_ID = '__selection__'
+export const SELECTION_ANCHOR_ID = '__selection_anchor__'
+
+function getSelectedIds(store: NormalizedData): string[] {
+  return (store.entities[SELECTION_ID]?.selectedIds as string[]) ?? []
+}
+
+export const selectionCommands = {
+  select(nodeId: string): Command {
+    return selectionCommands.selectRange([nodeId])
+  },
+
+  toggleSelect(nodeId: string): Command {
+    return {
+      type: 'core:toggle-select',
+      payload: { nodeId },
+      execute(store) {
+        const current = getSelectedIds(store)
+        const selectedIds = current.includes(nodeId)
+          ? current.filter((id) => id !== nodeId)
+          : [...current, nodeId]
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ID]: { id: SELECTION_ID, selectedIds },
+          },
+        }
+      },
+      undo(store) {
+        const current = getSelectedIds(store)
+        const selectedIds = current.includes(nodeId)
+          ? current.filter((id) => id !== nodeId)
+          : [...current, nodeId]
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ID]: { id: SELECTION_ID, selectedIds },
+          },
+        }
+      },
+    }
+  },
+
+  setAnchor(nodeId: string): Command {
+    let previousAnchor: string | undefined
+    return {
+      type: 'core:set-anchor',
+      payload: { nodeId },
+      execute(store) {
+        previousAnchor = store.entities[SELECTION_ANCHOR_ID]?.anchorId as string | undefined
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ANCHOR_ID]: { id: SELECTION_ANCHOR_ID, anchorId: nodeId },
+          },
+        }
+      },
+      undo(store) {
+        if (previousAnchor === undefined) {
+          const { [SELECTION_ANCHOR_ID]: _removed, ...rest } = store.entities
+          void _removed
+          return { ...store, entities: rest }
+        }
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ANCHOR_ID]: { id: SELECTION_ANCHOR_ID, anchorId: previousAnchor },
+          },
+        }
+      },
+    }
+  },
+
+  selectRange(nodeIds: string[]): Command {
+    let previousSelectedIds: string[] | undefined
+    return {
+      type: 'core:select-range',
+      payload: { nodeIds },
+      execute(store) {
+        previousSelectedIds = getSelectedIds(store)
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ID]: { id: SELECTION_ID, selectedIds: nodeIds },
+          },
+        }
+      },
+      undo(store) {
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ID]: { id: SELECTION_ID, selectedIds: previousSelectedIds ?? [] },
+          },
+        }
+      },
+    }
+  },
+
+  clearAnchor(): Command {
+    let previousAnchor: string | undefined
+    return {
+      type: 'core:clear-anchor',
+      payload: null,
+      execute(store) {
+        previousAnchor = store.entities[SELECTION_ANCHOR_ID]?.anchorId as string | undefined
+        if (!previousAnchor) return store
+        const { [SELECTION_ANCHOR_ID]: _removed, ...rest } = store.entities
+        void _removed
+        return { ...store, entities: rest }
+      },
+      undo(store) {
+        if (!previousAnchor) return store
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ANCHOR_ID]: { id: SELECTION_ANCHOR_ID, anchorId: previousAnchor },
+          },
+        }
+      },
+    }
+  },
+
+  clearSelection(): Command {
+    let previousSelectedIds: string[] | undefined
+    return {
+      type: 'core:clear-selection',
+      payload: null,
+      execute(store) {
+        previousSelectedIds = getSelectedIds(store)
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ID]: { id: SELECTION_ID, selectedIds: [] },
+          },
+        }
+      },
+      undo(store) {
+        return {
+          ...store,
+          entities: {
+            ...store.entities,
+            [SELECTION_ID]: { id: SELECTION_ID, selectedIds: previousSelectedIds ?? [] },
+          },
+        }
+      },
+    }
+  },
+}
+
+/**
+ * Middleware that clears the selection anchor when a standalone focus command fires.
+ * This ensures Shift+Arrow starts fresh after normal navigation.
+ * Batch commands (used by extendSelection) are exempt — the anchor persists within a batch.
+ */
+function anchorResetMiddleware(): Middleware {
+  return (next) => (command) => {
+    next(command)
+    if (command.type === 'core:focus') {
+      next(selectionCommands.clearAnchor())
+    }
+  }
+}
 
 interface SelectOptions {
   mode?: SelectionMode  // 'single' | 'multiple', default 'multiple'
   extended?: boolean     // add Shift combos, only when mode='multiple'
 }
 
-export function select(options?: SelectOptions): { keyMap: KeyMap; config: Partial<AxisConfig> } {
+export function select(options?: SelectOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; middleware?: Middleware } {
   const mode = options?.mode ?? 'multiple'
   const extended = options?.extended && mode === 'multiple'
 
@@ -21,5 +195,5 @@ export function select(options?: SelectOptions): { keyMap: KeyMap; config: Parti
     keyMap['Shift+End'] = (ctx) => ctx.extendSelection('last')
   }
 
-  return { keyMap, config: { selectionMode: mode, selectOnClick: true } }
+  return { keyMap, config: { selectionMode: mode, selectOnClick: true }, middleware: anchorResetMiddleware() }
 }

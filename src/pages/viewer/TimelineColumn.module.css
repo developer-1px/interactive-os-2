@@ -5,7 +5,7 @@
   flex: 1;
   height: 100%;
   min-height: 0;
-  background: var(--surface-sunken);
+  background: var(--surface-default);
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border-subtle);
@@ -27,9 +27,6 @@
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   color: var(--text-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .tcHeaderIdle {
@@ -67,8 +64,8 @@
 
 .tcClose {
   margin-left: auto;
-  width: 20px;
-  height: 20px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   background: none;
   border: none;
   border-radius: var(--shape-xs-radius);
@@ -196,7 +193,7 @@
   align-items: baseline;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--type-body-size);
+  font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
 }
@@ -221,6 +218,7 @@
   position: relative;
   padding: var(--space-xs) var(--space-md);
   background: var(--surface-sunken);
+  border-radius: 0 0 var(--shape-xl-radius) var(--shape-xl-radius);
   max-height: 160px;
   overflow: hidden;
 }
@@ -311,11 +309,11 @@
 /* Inline code */
 .tcText :global(code) {
   font-family: var(--mono);
-  font-size: 0.88em;
+  font-size: var(--type-caption-size);
   color: var(--tone-primary-hover);
   background: var(--tone-primary-dim);
-  padding: 0.1em 0.3em;
-  border-radius: 3px;
+  padding: 1px var(--space-xs);
+  border-radius: var(--shape-xs-radius);
 }
 .tcText :global(pre) :global(code) {
   color: inherit;
@@ -345,30 +343,6 @@
 }
 .tcFilePath:hover {
   text-decoration-color: var(--tone-primary-base);
-}
-
-/* Status bar */
-
-.tcStatus {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  border-top: 1px solid var(--border-subtle);
-  flex-shrink: 0;
-  font-size: var(--type-body-size);
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.tcStatusSpinner {
-  animation: spin 1.5s linear infinite;
-  color: var(--tone-success-base);
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 
 /* Chat input */

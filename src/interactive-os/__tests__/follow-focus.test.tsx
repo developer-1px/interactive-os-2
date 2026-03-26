@@ -7,13 +7,12 @@ import { describe, it, expect, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { toolbar } from '../pattern/toolbar'
-import { tabs } from '../pattern/tabs'
+import { toolbar } from '../pattern/examples/toolbar'
+import { tabs } from '../pattern/examples/tabs'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { AriaPattern, NodeState } from '../pattern/types'
-import { core } from '../plugins/core'
 
 function fixtureData(): NormalizedData {
   return createStore({
@@ -61,7 +60,7 @@ function renderWithActivate(
   onActivate: (id: string) => void,
 ) {
   return render(
-    <Aria behavior={behavior} data={data} plugins={[core()]} onActivate={onActivate}>
+    <Aria behavior={behavior} data={data} plugins={[]} onActivate={onActivate}>
       <Aria.Item
         render={(props, node, state: NodeState) => (
           <span {...props} data-testid={`item-${node.id}`} data-focused={state.focused}>
@@ -160,7 +159,7 @@ describe('followFocus + onActivate', () => {
     it('uses default activate() when onActivate is not provided (PRD검증#5)', async () => {
       const user = userEvent.setup()
       const { container } = render(
-        <Aria behavior={toolbar} data={fixtureDataAllFollowFocus()} plugins={[core()]}>
+        <Aria behavior={toolbar} data={fixtureDataAllFollowFocus()} plugins={[]}>
           <Aria.Item
             render={(props, node, state: NodeState) => (
               <span {...props} data-testid={`item-${node.id}`} data-selected={state.selected}>

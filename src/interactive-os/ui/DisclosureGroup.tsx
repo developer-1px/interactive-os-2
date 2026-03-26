@@ -5,8 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { disclosure } from '../pattern/disclosure'
-import { core } from '../plugins/core'
+import { disclosure } from '../pattern/examples/disclosure'
 
 interface DisclosureGroupProps {
   data: NormalizedData
@@ -29,7 +28,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 
 export function DisclosureGroup({
   data,
-  plugins = [core()],
+  plugins = [],
   onChange,
   renderItem = defaultRenderItem,
 }: DisclosureGroupProps) {

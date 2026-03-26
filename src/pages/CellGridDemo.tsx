@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { Up, Down, Left, Right } from './kbdIcons'
 import { Aria } from '../interactive-os/primitives/aria'
-import { grid } from '../interactive-os/pattern/grid'
+import { grid } from '../interactive-os/pattern/examples/grid'
 import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
-import { core } from '../interactive-os/plugins/core'
 
 const gridData = createStore({
   entities: {
@@ -38,7 +37,7 @@ export default function CellGridDemo() {
           <span>Role</span>
           <span>Focusable</span>
         </div>
-        <Aria behavior={grid({ columns: 3 })} data={data} plugins={[core()]} onChange={setData} aria-label="ARIA elements">
+        <Aria behavior={grid({ columns: 3 })} data={data} plugins={[]} onChange={setData} aria-label="ARIA elements">
           <Aria.Item render={(props, node: Record<string, unknown>, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = [

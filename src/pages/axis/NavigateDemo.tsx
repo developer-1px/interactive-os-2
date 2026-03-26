@@ -3,7 +3,6 @@ import { Up, Down, Left, Right } from '../kbdIcons'
 import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
-import { core } from '../../interactive-os/plugins/core'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import type { NodeState } from '../../interactive-os/pattern/types'
@@ -12,7 +11,7 @@ import { axisListData, axisGridData, axisGridColumns } from './axis-demo-data'
 type Orientation = 'vertical' | 'horizontal' | 'both'
 type Mode = 'list' | 'grid'
 
-const plugins = [core(), focusRecovery()]
+const plugins = [focusRecovery()]
 
 export default function NavigateDemo() {
   const [orientation, setOrientation] = useState<Orientation>('vertical')

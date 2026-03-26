@@ -5,8 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { treegrid } from '../pattern/treegrid'
-import { core } from '../plugins/core'
+import { treegrid } from '../pattern/examples/treegrid'
 import { history } from '../plugins/history'
 import { replaceEditPlugin } from '../plugins/edit'
 
@@ -35,7 +34,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Recor
 export function TreeGrid({
   id,
   data,
-  plugins = [core(), history()],
+  plugins = [history()],
   onChange,
   renderItem = defaultRenderItem,
   enableEditing = false,

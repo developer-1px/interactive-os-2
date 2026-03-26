@@ -62,7 +62,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
@@ -73,7 +72,6 @@
 }
 
 .panelEmpty {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   padding: var(--space-sm) 0;
@@ -92,14 +90,12 @@
 }
 
 .liveValue {
-  font-family: var(--mono);
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 
 .liveLabel {
-  font-family: var(--mono);
   font-size: 10px;
   color: var(--text-muted);
 }
@@ -112,14 +108,12 @@
 }
 
 .panelCauseTitle {
-  font-family: var(--mono);
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 
 .panelCauseDesc {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   width: 100%;
@@ -159,7 +153,6 @@
   border: 1px solid var(--border-default);
   border-radius: var(--shape-md-radius);
   color: var(--text-primary);
-  font-family: var(--sans);
   font-size: var(--type-body-size);
   outline: none;
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
@@ -215,14 +208,12 @@
 }
 
 .systemLabel {
-  font-family: var(--sans);
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--tone-destructive-hover);
 }
 
 .systemDetail {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   display: block;
@@ -257,7 +248,6 @@
 }
 
 .agentLabel {
-  font-family: var(--sans);
   font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
@@ -315,14 +305,12 @@
 }
 
 .statValue {
-  font-family: var(--mono);
   font-size: var(--type-section-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 
 .statLabel {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
@@ -384,21 +372,18 @@
 .causeBody { flex: 1; min-width: 0; }
 
 .causeTitle {
-  font-family: var(--sans);
   font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
 }
 
 .causeDesc {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   margin-top: 2px;
 }
 
 .causeBadge {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   color: var(--tone-destructive-hover);
@@ -431,14 +416,12 @@
 }
 
 .similarId {
-  font-family: var(--mono);
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 
 .matchBadge {
-  font-family: var(--mono);
   font-size: 10px;
   font-weight: var(--weight-semi);
   color: var(--tone-primary-base);
@@ -448,14 +431,12 @@
 }
 
 .similarTime {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   margin-left: auto;
 }
 
 .similarBody {
-  font-family: var(--sans);
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
   margin-bottom: var(--space-sm);
@@ -465,7 +446,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  font-family: var(--sans);
   font-size: var(--type-caption-size);
   color: var(--tone-success-hover);
   background: var(--tone-success-dim);
@@ -495,8 +475,8 @@
 .svcWarn { border-color: var(--tone-warning-base); background: var(--tone-warning-dim); color: var(--tone-warning-hover); }
 .svcOk { color: var(--text-muted); }
 
-.svcName { font-family: var(--mono); font-size: var(--type-caption-size); font-weight: var(--weight-medium); flex: 1; }
-.svcStatus { font-family: var(--mono); font-size: 10px; opacity: 0.7; }
+.svcName { font-size: var(--type-caption-size); font-weight: var(--weight-medium); flex: 1; }
+.svcStatus { font-size: 10px; opacity: 0.7; }
 
 /* --- Action buttons --- */
 
@@ -516,7 +496,6 @@
   border: 1px solid var(--border-default);
   border-radius: var(--shape-md-radius);
   color: var(--text-primary);
-  font-family: var(--sans);
   font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   cursor: pointer;
@@ -561,7 +540,6 @@
 }
 
 .userLabel {
-  font-family: var(--sans);
   font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
@@ -599,9 +577,6 @@
 
 .toolArgs {
   color: var(--text-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Cursor moved to StreamFeed.module.css */
@@ -612,7 +587,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  font-family: var(--mono);
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);

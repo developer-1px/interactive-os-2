@@ -4,8 +4,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/listbox'
-import { core } from '../plugins/core'
+import { listbox } from '../pattern/examples/listbox'
 import { history } from '../plugins/history'
 import { replaceEditPlugin } from '../plugins/edit'
 import styles from './ListBox.module.css'
@@ -27,7 +26,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 
 export function ListBox({
   data,
-  plugins = [core(), history()],
+  plugins = [history()],
   onChange,
   renderItem = defaultRenderItem,
   enableEditing = false,

@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import type { NormalizedData } from '../interactive-os/store/types'
 import { Grid } from '../interactive-os/ui/Grid'
 import { Aria } from '../interactive-os/primitives/aria'
-import { core, GRID_COL_ID } from '../interactive-os/plugins/core'
+import { GRID_COL_ID } from '../interactive-os/axis/navigate'
 import { rename } from '../interactive-os/plugins/rename'
 import { history } from '../interactive-os/plugins/history'
 import { crud } from '../interactive-os/plugins/crud'
@@ -13,7 +13,7 @@ import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
 import { translatableEntriesToGrid, I18N_COLUMNS } from './cms/cmsI18nAdapter'
 import { cmsStore } from './cms/cms-store'
 
-const plugins = [core(), crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
+const plugins = [crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
 export default function PageI18nEditor() {
   const gridData = React.useMemo(() => translatableEntriesToGrid(cmsStore), [])

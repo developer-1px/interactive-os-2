@@ -241,7 +241,7 @@ export default function PageIncidentInterface() {
                   <div className={styles.toolMsg}>
                     <Zap size={10} />
                     <span className={styles.toolName}>{msg.toolName}</span>
-                    <span className={styles.toolArgs}>{msg.text}</span>
+                    <span className={`${styles.toolArgs} truncate`}>{msg.text}</span>
                   </div>
                 )
               }

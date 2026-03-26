@@ -9,7 +9,10 @@ import type { AriaPattern, NodeState } from '../pattern/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren, getEntityData } from '../store/createStore'
-import { focusCommands, selectionCommands, expandCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, VALUE_ID } from '../plugins/core'
+import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
+import { selectionCommands, SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
+import { expandCommands, EXPANDED_ID } from '../axis/expand'
+import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
 import type { PatternContextOptions } from '../pattern/createPatternContext'
@@ -67,9 +70,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   const [engine] = useState(() => {
     const bag: EngineCallbacks = { onActivate, behavior, prevFocus: '' }
 
-    const middlewares = plugins
-      .map((p) => p.middleware)
-      .filter((m): m is NonNullable<typeof m> => m != null)
+    const middlewares = [
+      behavior.middleware,
+      ...plugins.map((p) => p.middleware),
+    ].filter((m): m is NonNullable<typeof m> => m != null)
 
     let initializing = true
     const created = createCommandEngine(data, middlewares, (newStore) => {
