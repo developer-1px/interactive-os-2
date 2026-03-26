@@ -1,12 +1,12 @@
 order:
   - overview
   - vision
+  - store
+  - engine
+  - primitives
   - axis
   - pattern
   - plugins
-  - primitives
-  - engine
-  - store
   - ui
   - devtools
 

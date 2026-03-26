@@ -4,7 +4,7 @@ import { composePattern } from './composePattern'
 import { select } from '../axis/select'
 import { activate } from '../axis/activate'
 import { navigate } from '../axis/navigate'
-import { edit as editAxis } from './edit'
+import { edit as editAxis } from '../plugins/edit'
 
 export function listbox(options?: { edit?: boolean }) {
   const axes = [
