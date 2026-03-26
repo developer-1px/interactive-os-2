@@ -5,7 +5,7 @@
 }
 
 .codeBlockLoading {
-  padding: var(--space-lg) var(--space-xl);
+  padding: var(--shape-xl-py) var(--shape-xl-px);
   background: var(--surface-base);
   border-radius: var(--shape-xl-radius);
   font-family: var(--mono);

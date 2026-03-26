@@ -16,7 +16,7 @@ export function Toaster({ toaster }: ToasterProps): ReactNode {
   )
 
   return (
-    <div aria-live="polite" aria-atomic="false" className={styles.container}>
+    <div aria-live="polite" aria-atomic="false" className={`flex-col-reverse ${styles.container}`}>
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onDismiss={toaster.dismiss} />
       ))}
@@ -41,6 +41,7 @@ function ToastItem({
       </div>
       <button
         className={`flex-row items-center justify-center shrink-0 ${styles.dismiss}`}
+        data-surface="action"
         onClick={() => onDismiss(toast.id)}
         aria-label="Dismiss"
       >

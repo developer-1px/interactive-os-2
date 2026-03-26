@@ -1,76 +1,57 @@
-/* --- Buttons --- */
+/* ── Button — 3-block recipe ──
+   // ② 2026-03-26-component-styling-rules-prd.md */
 
-.accent {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
-  padding: var(--space-sm) var(--space-lg);
-  background: var(--tone-primary-base);
-  color: var(--tone-primary-foreground);
-  border: none;
+/* ═══ Block 1: base ═══ */
+.root {
   border-radius: var(--shape-xl-radius);
-  cursor: pointer;
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing), transform var(--motion-instant-duration) var(--motion-instant-easing);
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
+              transform var(--motion-instant-duration) var(--motion-instant-easing);
+  background: var(--_bg);
+  color: var(--_fg);
 }
 
-.accent:hover {
-  background: var(--tone-primary-hover);
-}
-
-.accent:active {
-  transform: scale(0.98);
+/* ═══ Block 2: variant — --_ values only ═══ */
+.accent {
+  --_bg: var(--tone-primary-base);
+  --_bg-hover: var(--tone-primary-hover);
+  --_fg: var(--tone-primary-foreground);
+  font-weight: var(--weight-semi);
 }
 
 .dialog {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
-  padding: var(--space-xs) var(--space-md);
-  background: var(--surface-default);
-  color: var(--text-secondary);
+  --_bg: var(--surface-default);
+  --_bg-hover: var(--bg-hover);
+  --_fg: var(--text-secondary);
   border: 1px solid var(--border-default);
-  border-radius: var(--shape-xl-radius);
-  cursor: pointer;
-  outline: none;
-  transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
+  font-weight: var(--weight-medium);
 }
 
 .ghost {
-  width: 100%;
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
-  color: var(--text-muted);
-  background: transparent;
+  --_bg: transparent;
+  --_bg-hover: var(--bg-hover);
+  --_fg: var(--text-muted);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-md-radius);
-  cursor: pointer;
-  transition: background var(--motion-instant-duration), color var(--motion-instant-duration);
-}
-
-.ghost:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-  border-color: var(--border-default);
+  width: 100%;
 }
 
 .destructive {
-  font-size: var(--type-body-size);
+  --_bg: var(--tone-destructive-base);
+  --_bg-hover: var(--tone-destructive-hover);
+  --_fg: var(--tone-destructive-foreground);
   font-weight: var(--weight-semi);
-  padding: var(--space-sm) var(--space-lg);
-  background: var(--tone-destructive-base);
-  color: var(--tone-destructive-foreground);
-  border: none;
-  border-radius: var(--shape-xl-radius);
-  cursor: pointer;
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing), transform var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
+/* ═══ Block 3: size ═══ */
 .sm {
-  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--shape-xs-radius);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-caption-size);
 }
 
 .lg {
-  padding: var(--space-md) var(--space-xl);
+  padding: var(--shape-lg-py) var(--shape-lg-px);
   font-size: var(--type-section-size);
 }
-

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ChevronRight, ChevronDown, Circle, Search,
 } from 'lucide-react'
-import { Aria } from '../interactive-os/primitives/aria'
+import { AriaRoute } from '../interactive-os/primitives/AriaRoute'
 import { TreeView } from '../interactive-os/ui/TreeView'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
@@ -12,7 +12,6 @@ import { FOCUS_ID } from '../interactive-os/axis/navigate'
 import { createStore, getChildren, getEntityData, updateEntityData, addEntity } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
-import type { Plugin } from '../interactive-os/plugins/types'
 import { EXPANDED_ID } from '../interactive-os/axis/expand'
 import { CodeBlock } from '../interactive-os/ui/CodeBlock'
 import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
@@ -133,8 +132,6 @@ function FilePanel({ path }: { path: string }) {
 
 // --- Constants ---
 
-const EMPTY_STORE = createStore({ entities: {}, relationships: { [ROOT_ID]: [] } })
-const EMPTY_PLUGINS: Plugin[] = []
 
 // --- Main component ---
 
@@ -388,15 +385,13 @@ export default function PageViewer() {
   useEffect(() => { duplicatePaneRef.current = duplicatePane }, [duplicatePane])
 
   const quickOpenKeyMap = useMemo(() => ({
-    'Meta+p': () => { setQuickOpenVisibleRef.current(true); return undefined },
+    'Meta+p': () => { setQuickOpenVisibleRef.current(true) },
     'Meta+Enter': () => {
       const path = focusedFileRef.current
       if (path) openInNewPaneRef.current(path)
-      return undefined
     },
     'Meta+d': () => {
       duplicatePaneRef.current()
-      return undefined
     },
   }), [])
 
@@ -411,11 +406,7 @@ export default function PageViewer() {
   }
 
   return (
-    <Aria
-      keyMap={quickOpenKeyMap}
-      data={EMPTY_STORE}
-      plugins={EMPTY_PLUGINS}
-    >
+    <AriaRoute keyMap={quickOpenKeyMap}>
     <div className={styles.vw}>
       {/* Tree panel (sidebar) */}
         <div className={styles.vwTree} style={{ width: treeResizer.size }}>
@@ -488,6 +479,6 @@ export default function PageViewer() {
         />
       )}
     </div>
-    </Aria>
+    </AriaRoute>
   )
 }

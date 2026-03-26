@@ -48,7 +48,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
   if (entityData.type === 'tabgroup') {
     const tabIds = getChildren(data, nodeId)
     if (tabIds.length === 0) {
-      return <div className={styles.empty}>No open tabs</div>
+      return <div className={`flex-row items-center justify-center ${styles.empty}`}>No open tabs</div>
     }
 
     return (
@@ -89,14 +89,14 @@ export function Workspace({
 
   if (rootChildren.length === 0) {
     return (
-      <div className={styles.workspace} aria-label={ariaLabel}>
-        <div className={styles.empty}>No open tabs</div>
+      <div className={`flex-col ${styles.workspace}`} aria-label={ariaLabel}>
+        <div className={`flex-row items-center justify-center ${styles.empty}`}>No open tabs</div>
       </div>
     )
   }
 
   return (
-    <div className={styles.workspace} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
+    <div className={`flex-col ${styles.workspace}`} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
       <div className={styles.workspaceContent}>
         {rootChildren.map((id) => (
           <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} renderPanel={renderPanel} />

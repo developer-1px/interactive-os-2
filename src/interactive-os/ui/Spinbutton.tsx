@@ -130,6 +130,7 @@ export function Spinbutton({
         <div className={`inline-flex items-stretch ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
           <button
             type="button"
+            data-surface="action"
             className={`flex-row items-center justify-center ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
@@ -161,6 +162,7 @@ export function Spinbutton({
           )}
           <button
             type="button"
+            data-surface="action"
             className={`flex-row items-center justify-center ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}

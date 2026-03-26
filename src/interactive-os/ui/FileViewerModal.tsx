@@ -82,7 +82,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
 
   return (
     <dialog ref={dialogRef} className={`items-center justify-center ${styles.fvmDialog}`} onClick={handleBackdropClick}>
-      <div className={`flex-col overflow-hidden ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
+      <div className={`flex-col overflow-hidden ${styles.fvmModal}`} data-surface="overlay" onClick={e => e.stopPropagation()}>
         <div className={`flex-row items-center justify-between shrink-0 ${styles.fvmHeader}`}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className="flex-row items-center gap-sm">
@@ -104,7 +104,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 )}
               </div>
             )}
-            <button className={`flex-row items-center justify-center ${styles.fvmClose}`} onClick={onClose}>&times;</button>
+            <button className={`flex-row items-center justify-center ${styles.fvmClose}`} data-surface="action" onClick={onClose}>&times;</button>
           </div>
         </div>
         <div className={`flex-1 overflow-auto ${styles.fvmBody}`}>

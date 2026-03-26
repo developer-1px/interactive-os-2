@@ -13,6 +13,7 @@
 /* ── Direction ── */
 .flex-row      { display: flex; }
 .flex-col      { display: flex; flex-direction: column; }
+.flex-col-reverse { display: flex; flex-direction: column-reverse; }
 .flex-wrap     { flex-wrap: wrap; }
 .inline-flex   { display: inline-flex; }
 .grid          { display: grid; }

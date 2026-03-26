@@ -60,8 +60,8 @@
   gap: var(--space-xs);
   background: var(--surface-base);
   border: 1px solid var(--border-default);
-  border-radius: var(--shape-xl-radius);
-  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--shape-xs-radius);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   cursor: pointer;
   font-size: var(--type-caption-size);
 
@@ -323,7 +323,7 @@
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-xs-radius);
-  padding: 2px var(--space-sm);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   line-height: var(--leading-snug);
 }
 

@@ -3,8 +3,6 @@
   bottom: var(--space-lg);
   right: var(--space-lg);
   z-index: 9999;
-  display: flex;
-  flex-direction: column-reverse;
   gap: var(--space-sm);
   max-width: var(--overlay-width);
   pointer-events: none;
@@ -36,7 +34,6 @@
 }
 
 .description {
-  margin-top: var(--space-xs);
   color: var(--text-secondary);
   font-size: var(--type-body-size);
 }
@@ -45,17 +42,14 @@
   padding: 0;
   width: var(--space-xl);
   height: var(--space-xl);
-  background: none;
+  --_bg: transparent;
+  --_bg-hover: var(--bg-hover);
+  background: var(--_bg);
   border: none;
   border-radius: var(--shape-md-radius);
   color: var(--text-secondary);
   font-size: var(--type-body-size);
   cursor: pointer;
-}
-
-.dismiss:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
 }
 
 @keyframes slideIn {

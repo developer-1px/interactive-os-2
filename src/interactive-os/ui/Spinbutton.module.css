@@ -34,7 +34,9 @@
 .spinbuttonBtn {
   width: var(--_btn-w);
   border: none;
-  background: var(--bg-hover);
+  --_bg: var(--bg-hover);
+  --_bg-hover: var(--bg-active);
+  background: var(--_bg);
   color: var(--text-primary);
   font-size: var(--type-page-size);
   font-weight: var(--weight-regular);
@@ -42,14 +44,6 @@
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
   -webkit-user-select: none;
   user-select: none;
-}
-
-.spinbuttonBtn:hover {
-  background: var(--bg-active);
-}
-
-.spinbuttonBtn:active {
-  background: var(--tone-primary-bright);
 }
 
 
@@ -83,10 +77,6 @@
   text-align: center;
   font-variant-numeric: tabular-nums;
   outline: none;
-}
-
-.spinbuttonInput:focus {
-  border-color: var(--focus);
 }
 
 .spinbuttonInput::placeholder {

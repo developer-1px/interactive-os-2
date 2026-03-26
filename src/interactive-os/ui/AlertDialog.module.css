@@ -21,7 +21,7 @@
 }
 
 .header {
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-md) var(--space-lg); /* no matching shape bundle */
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
@@ -29,14 +29,14 @@
 }
 
 .body {
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-md) var(--space-lg); /* no matching shape bundle */
   font-size: var(--type-body-size);
   color: var(--text-secondary);
   line-height: var(--leading-snug);
 }
 
 .footer {
-  padding: var(--space-sm) var(--space-lg);
+  padding: var(--shape-sm-py) var(--shape-sm-px);
   border-top: 1px solid var(--border-subtle);
   background: var(--surface-base);
 }

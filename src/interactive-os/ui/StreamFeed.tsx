@@ -56,7 +56,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={styles.scrollFab} onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`flex-row items-center justify-center ${styles.scrollFab}`} data-surface="action" onClick={scrollToBottom} aria-label="Scroll to bottom">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -68,10 +68,10 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
 
 export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streamingLabel, className }: StreamFeedProps<T>) {
   return (
-    <div className={styles.feedWrapper}>
+    <div className={`flex-col ${styles.feedWrapper}`}>
       <div
         ref={feedRef}
-        className={`${styles.feed}${className ? ` ${className}` : ''}`}
+        className={`flex-col ${styles.feed}${className ? ` ${className}` : ''}`}
         role="feed"
       >
         {items.map((item, i) => (
@@ -80,7 +80,7 @@ export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streami
           </div>
         ))}
         {isStreaming && (
-          <div className={styles.streaming}>
+          <div className={`flex-row items-center ${styles.streaming}`}>
             <span className={styles.streamingDot} />
             <span className={styles.streamingLabel}>{streamingLabel ?? 'Thinking'}</span>
             <StreamingTimer />

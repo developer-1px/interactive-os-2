@@ -12,7 +12,7 @@
   background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-xl-radius);
-  padding: var(--space-sm);
+  padding: var(--shape-xl-py) var(--shape-xl-px);
 }
 
 /* ── Column header ── */
@@ -22,15 +22,8 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-secondary);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--shape-md-radius);
-}
-
-.columnHeader:focus {
-  outline: 1px solid var(--focus);
-  outline-offset: -1px;
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  border-radius: var(--shape-xs-radius);
 }
 
 .columnCount {
@@ -46,30 +39,10 @@
   background: var(--surface-default);
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-xl-radius);
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--shape-xl-py) var(--shape-xl-px);
   font-size: var(--type-body-size);
   line-height: var(--leading-snug);
   cursor: default;
-}
-
-.card:hover {
-  background: var(--bg-hover);
-}
-
-.card:focus {
-  outline: 1px solid var(--focus);
-  outline-offset: -1px;
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
-}
-
-.card[aria-selected="true"] {
-  background: var(--selection);
-}
-
-.card[aria-selected="true"]:focus {
-  background: var(--selection);
-  outline: 1px solid var(--focus);
 }
 
 /* ── Editable card title ── */
