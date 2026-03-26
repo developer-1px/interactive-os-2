@@ -1,6 +1,6 @@
-import type { NodeState } from './types'
+import type { NodeState } from '../pattern/types'
 import type { Entity } from '../store/types'
-import { composePattern } from './composePattern'
+import { composePattern } from '../pattern/composePattern'
 import { activate } from '../axis/activate'
 import { navigate } from '../axis/navigate'
 

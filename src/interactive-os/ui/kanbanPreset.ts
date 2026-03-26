@@ -1,4 +1,4 @@
-import type { PatternContext } from './types'
+import type { PatternContext } from '../pattern/types'
 import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import { ROOT_ID } from '../store/types'
@@ -7,7 +7,7 @@ import { historyCommands } from '../plugins/history'
 import { dndCommands } from '../plugins/dnd'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands } from '../plugins/rename'
-import { composePattern, type Axis } from './composePattern'
+import { composePattern, type Axis } from '../pattern/composePattern'
 
 // ── Shared helpers ──
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer } from 'react'
 import { useAriaZone } from '../../interactive-os/primitives/useAriaZone'
-import { spatial } from '../../interactive-os/pattern/spatial'
+import { spatial } from '../../interactive-os/misc/spatial'
 import { useSpatialNav } from '../../interactive-os/plugins/useSpatialNav'
 import { focusCommands } from '../../interactive-os/plugins/core'
 import { crudCommands } from '../../interactive-os/plugins/crud'

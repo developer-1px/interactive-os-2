@@ -6,7 +6,7 @@ import { ROOT_ID } from '../store/types'
 import { useAria } from '../primitives/useAria'
 import { AriaInternalContext } from '../primitives/AriaInternalContext'
 import { AriaItemContext, Aria } from '../primitives/aria'
-import { kanban as kanbanBehavior } from '../pattern/kanban'
+import { kanban as kanbanBehavior } from './kanbanPreset'
 import { core } from '../plugins/core'
 import { getChildren, getEntity } from '../store/createStore'
 
