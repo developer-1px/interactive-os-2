@@ -91,9 +91,6 @@ const ALLOWED = new Set([
   'engine→plugins/types',
   // getVisibleNodes가 expand 상태를 읽어야 함
   'engine→axis',
-  // createPatternContext가 선택적 plugin의 commands 사용
-  'pattern→plugins/spatial',
-  'pattern→plugins/rename',
   // APG examples가 선택적 plugin 사용 (edit, combobox)
   'pattern/examples→plugins',
   // getVisibleNodes가 search 필터 사용

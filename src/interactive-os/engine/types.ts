@@ -45,7 +45,7 @@ export interface Plugin {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: Record<string, (...args: any[]) => Command>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  keyMap?: Record<string, (ctx: any) => Command | void>
+  keyMap?: Record<string, (ctx: any, original?: () => Command | void) => Command | void>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUnhandledKey?: (event: KeyboardEvent, engine: any) => boolean
   intercepts?: readonly string[]
