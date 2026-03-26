@@ -185,6 +185,7 @@ export function SplitPane({
           aria-label={`Resize pane ${i + 1}`}
           tabIndex={0}
           className={`${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
+          data-surface="action"
           onKeyDown={(e) => handleKeyDown(i, e)}
           onPointerDown={(e) => handlePointerDown(i, e)}
         />,
@@ -195,7 +196,7 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={`${styles.splitPane} ${!isHorizontal ? styles.splitPaneVertical : ''}`}
+      className={`${isHorizontal ? 'flex-row' : 'flex-col'} ${styles.splitPane}`}
     >
       {elements}
     </div>

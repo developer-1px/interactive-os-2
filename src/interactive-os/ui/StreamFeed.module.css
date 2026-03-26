@@ -7,15 +7,11 @@
   position: relative;
   flex: 1;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 /* --- Container: :where() for specificity 0 defaults --- */
 
 :where(.feed) {
-  display: flex;
-  flex-direction: column;
   gap: var(--space-lg);
   overflow-y: auto;
   min-height: 0;
@@ -42,8 +38,6 @@
 /* --- Streaming indicator --- */
 
 .streaming {
-  display: flex;
-  align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
@@ -82,10 +76,9 @@
   transform: translateX(-50%);
   width: 32px;
   height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--surface-overlay);
+  --_bg: var(--surface-overlay);
+  --_bg-hover: var(--bg-hover);
+  background: var(--_bg);
   border: 1px solid var(--border-default);
   border-radius: var(--shape-pill-radius);
   color: var(--text-secondary);
@@ -96,11 +89,6 @@
     color var(--motion-instant-duration) var(--motion-instant-easing);
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
   z-index: 1;
-}
-
-.scrollFab:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
 }
 
 /* --- Stream cursor (blinking caret) --- */

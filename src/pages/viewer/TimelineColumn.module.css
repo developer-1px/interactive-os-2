@@ -157,7 +157,7 @@
   display: flex;
   width: fit-content;
   margin: 0 var(--space-sm) var(--space-sm) auto;
-  padding: var(--space-sm) var(--space-lg);
+  padding: var(--shape-sm-py) var(--shape-sm-px);
   max-width: 720px;
   color: var(--text-primary);
   font-weight: var(--weight-medium);
@@ -192,7 +192,7 @@
   grid-template-columns: var(--icon-sm) 1fr;
   align-items: baseline;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
@@ -312,7 +312,7 @@
   font-size: var(--type-caption-size);
   color: var(--tone-primary-hover);
   background: var(--tone-primary-dim);
-  padding: 1px var(--space-xs);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
 }
 .tcText :global(pre) :global(code) {
@@ -360,7 +360,7 @@
   resize: none;
   border: 1px solid var(--border-default);
   border-radius: var(--shape-xl-radius);
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--shape-xl-py) var(--shape-xl-px);
   font-size: var(--type-body-size);
   line-height: var(--leading-snug);
   font-family: inherit;

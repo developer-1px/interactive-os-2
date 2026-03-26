@@ -1,14 +1,9 @@
-/* SplitPane — ratio-based resizable split container */
+/* SplitPane — ratio-based resizable split container
+   // ② 2026-03-26-component-styling-rules-prd.md */
 
 .splitPane {
-  display: flex;
-  flex-direction: row;
   height: 100%;
   overflow: hidden;
-}
-
-.splitPaneVertical {
-  flex-direction: column;
 }
 
 .pane {
@@ -19,14 +14,10 @@
 
 .separator {
   flex-shrink: 0;
-  background: var(--border-default);
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-.separator:hover,
-.separator:focus-visible {
-  background: var(--focus);
-  outline: none;
+  --_bg: var(--border-default);
+  --_bg-hover: var(--focus);
+  background: var(--_bg);
 }
 
 .separatorH {

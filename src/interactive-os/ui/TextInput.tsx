@@ -9,6 +9,7 @@ export function TextInput({ align = 'left', className, style, ...props }: TextIn
   return (
     <input
       type="text"
+      data-surface="input"
       className={`${styles.input}${className ? ` ${className}` : ''}`}
       style={{ textAlign: align, ...style }}
       {...props}

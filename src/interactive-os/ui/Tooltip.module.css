@@ -4,13 +4,13 @@
   position-try-fallbacks: flip-block;
   margin: 0;
   margin-top: var(--space-xs);
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   max-width: calc(var(--space-3xl) * 6);
 
   background: var(--surface-raised);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-md-radius);
+  border-radius: var(--shape-xs-radius);
 
   color: var(--text-primary);
   font-size: var(--type-body-size);

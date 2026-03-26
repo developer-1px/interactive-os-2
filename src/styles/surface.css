@@ -1,37 +1,33 @@
 /* ═══════════════════════════════════════════
-   L3 Surface — Elevation/depth/distinction policy
+   L3 Surface — Interaction mode policy
    ═══════════════════════════════════════════
-   Changes when: surface/depth policy changes.
-   Single responsibility: data-surface attribute → bg + border + shadow bundle.
-   base/sunken/default: bg only.
-   raised/overlay: bg + border + shadow.
-   outlined: transparent bg + border (inherits parent bg). */
+   Changes when: interaction mode policy changes.
+   Single responsibility: data-surface attribute → border + shadow bundle + interaction mode declaration.
 
-[data-surface="base"] {
-  background: var(--surface-base);
+   4 modes: action (Button, Toggle), input (TextInput, Select), display (Card, Badge), overlay (Dialog).
+   bg is NOT provided here — variant --_bg handles depth.
+   State transitions are in interactive.css [data-surface] section.
+
+   // ② 2026-03-26-component-styling-rules-prd.md
+*/
+
+/* action: no border, no shadow — face itself is the action target */
+[data-surface="action"] {
+  border: none;
+  cursor: pointer;
 }
 
-[data-surface="sunken"] {
-  background: var(--surface-sunken);
+/* input: border defines identity, no shadow */
+[data-surface="input"] {
+  border: 1px solid var(--_border, var(--border-default));
+  outline: none;
 }
 
-[data-surface="default"] {
-  background: var(--surface-default);
-}
+/* display: no interaction states — border/shadow optional via variant */
+/* (intentionally empty — variant handles everything) */
 
-[data-surface="raised"] {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-xs);
-}
-
+/* overlay: floating layer — border + shadow for depth */
 [data-surface="overlay"] {
-  background: var(--surface-overlay);
   border: 1px solid var(--border-default);
   box-shadow: var(--shadow-lg);
-}
-
-[data-surface="outlined"] {
-  background: transparent;
-  border: 1px solid var(--border-default);
 }

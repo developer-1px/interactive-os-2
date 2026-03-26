@@ -548,3 +548,58 @@
 :where([data-aria-container] [aria-selected="true"] .item-indicator--toggle-group) {
   color: var(--tone-primary-base);
 }
+
+/* ═══════════════════════════════════════════
+   Standalone component state transitions ([data-surface])
+   ═══════════════════════════════════════════
+   Complement to [data-aria-container] collection states above.
+   Collection items use [data-aria-container], standalone components use [data-surface].
+   Never apply both to the same element.
+
+   // ② 2026-03-26-component-styling-rules-prd.md
+*/
+
+/* ── Action surface: hover → bg, active → bg, focus → ring, disabled ── */
+
+:where([data-surface="action"]:hover) {
+  background: var(--_bg-hover);
+}
+
+:where([data-surface="action"]:active) {
+  background: var(--_bg-active, var(--_bg-hover));
+}
+
+:where([data-surface="action"]:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+:where([data-surface="action"]:disabled),
+:where([data-surface="action"][aria-disabled="true"]) {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── Input surface: focus → border, invalid → border, disabled ── */
+
+:where([data-surface="input"]:focus) {
+  border-color: var(--_border-focus, var(--focus));
+}
+
+:where([data-surface="input"][aria-invalid="true"]) {
+  border-color: var(--_border-invalid, var(--tone-destructive-base));
+}
+
+:where([data-surface="input"]:disabled),
+:where([data-surface="input"][aria-disabled="true"]) {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── Overlay surface: enter motion ── */
+
+:where([data-surface="overlay"]) {
+  transition: opacity var(--motion-enter-duration) var(--motion-enter-easing);
+}

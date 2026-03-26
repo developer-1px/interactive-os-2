@@ -82,8 +82,8 @@ export function TabGroup({
   const activeEntity = data.entities[activeTabId]
 
   return (
-    <div className={styles.tabGroup}>
-      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={styles.tabBar}>
+    <div className={`flex-col ${styles.tabGroup}`}>
+      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`flex-row shrink-0 ${styles.tabBar}`}>
         {childIds.map((id) => {
           const entity = store.entities[id]
           if (!entity) return null
@@ -91,12 +91,13 @@ export function TabGroup({
           const entityData = entity.data as Record<string, unknown>
           const label = entityData?.label as string ?? id
           const isPreview = entityData?.preview === true
-          const tabClass = isPreview ? `${styles.tab} ${styles.tabPreview}` : styles.tab
+          const tabClass = isPreview ? `inline-flex items-center ${styles.tab} ${styles.tabPreview}` : `inline-flex items-center ${styles.tab}`
           return (
-            <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
+            <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass} data-surface="action">
               <span>{label}</span>
               <button
-                className={styles.tabClose}
+                className={`flex-row items-center justify-center ${styles.tabClose}`}
+                data-surface="action"
                 aria-label={`Close ${label}`}
                 tabIndex={-1}
                 onClick={(e) => handleClose(e, id)}

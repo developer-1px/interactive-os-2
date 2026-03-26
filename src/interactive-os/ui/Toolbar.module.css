@@ -1,7 +1,7 @@
 /* --- Toolbar --- */
 
 .toolbar-card {
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--space-xs) var(--space-sm); /* no matching shape bundle */
 }
 
 .toolbar-btn {

@@ -294,6 +294,7 @@ export function Combobox({
             ))}
           </div>
           <input
+            data-surface="input"
             className={styles.comboInput}
             role="combobox"
             aria-expanded={isOpen}
@@ -308,6 +309,7 @@ export function Combobox({
       )}
       {mode !== 'multiple' && (
       <input
+        data-surface="input"
         className={styles.comboInput}
         role="combobox"
         aria-expanded={isOpen}
@@ -321,7 +323,7 @@ export function Combobox({
       />
       )}
       {isOpen && (
-        <div className={`${styles.comboDropdown} overflow-hidden`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div data-surface="overlay" className={`${styles.comboDropdown} overflow-hidden`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? (
             rootChildren.map(groupId => {
               const group = originalStore.entities[groupId]

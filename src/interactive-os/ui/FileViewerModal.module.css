@@ -50,17 +50,14 @@
 .fvmClose {
   width: 28px;
   height: 28px;
-  background: none;
+  --_bg: transparent;
+  --_bg-hover: var(--bg-hover);
+  background: var(--_bg);
   border: none;
   border-radius: var(--shape-xl-radius);
   color: var(--text-secondary);
   cursor: pointer;
   font-size: var(--type-section-size);
-  transition: background 0.1s;
-}
-.fvmClose:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
 }
 
 .fvmBody {

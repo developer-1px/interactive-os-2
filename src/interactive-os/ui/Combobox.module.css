@@ -1,4 +1,5 @@
-/* --- Combobox --- */
+/* ── Combobox ──
+   // ② 2026-03-26-component-styling-rules-prd.md */
 
 .comboItem {
   padding: var(--space-sm) var(--space-md);
@@ -15,31 +16,27 @@
   font-weight: var(--weight-semi);
 }
 
+/* ═══ Input ═══ */
 .comboInput {
   width: 100%;
   height: var(--input-height);
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--shape-sm-py) var(--shape-sm-px);
   font-size: var(--type-body-size);
   color: var(--text-primary);
-  background: var(--surface-default);
-  border: 1px solid var(--border-default);
+  background: var(--_bg, var(--surface-default));
   border-radius: var(--shape-xl-radius);
-  outline: none;
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
+  --_border-focus: var(--tone-primary-base);
 }
-
-.comboInput:focus {
-  border-color: var(--tone-primary-base);
-}
+/* :focus → data-surface="input" */
 
 .comboInput::placeholder {
   color: var(--text-muted);
 }
 
+/* ═══ Dropdown ═══ */
 .comboDropdown {
-  background: var(--surface-overlay);
-  border: 1px solid var(--border-default);
   border-radius: var(--shape-xl-radius);
-  box-shadow: var(--shadow-lg);
   margin-top: var(--space-xs);
 }
+/* bg/border/shadow → data-surface="overlay" */

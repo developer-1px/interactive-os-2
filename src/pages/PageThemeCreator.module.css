@@ -69,6 +69,12 @@
   gap: var(--space-md);
 }
 
+.swatchRow4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+}
+
 .swatchRow5 {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -267,8 +273,10 @@
 
 .card {
   border-radius: var(--shape-xl-radius);
-  padding: var(--space-lg);
+  padding: var(--shape-xl-py) var(--shape-xl-px);
+  background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
 }
 
 .cardWide {
@@ -293,12 +301,12 @@
 }
 
 .toastTrigger {
-  padding: var(--space-xs) var(--space-md);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
   background: var(--surface-raised);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-md-radius);
+  border-radius: var(--shape-xs-radius);
   cursor: pointer;
   align-self: flex-start;
 }

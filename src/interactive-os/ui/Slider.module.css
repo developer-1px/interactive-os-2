@@ -1,7 +1,7 @@
 /* --- Slider --- */
 
 .sliderItem {
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
 }
 
 .sliderLabel {

@@ -1,9 +1,7 @@
-/* ② 2026-03-26-workspace-containers-prd.md */
+/* ② 2026-03-26-component-styling-rules-prd.md */
 
 .workspace {
   height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .workspaceContent {
@@ -13,9 +11,6 @@
 }
 
 .empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100%;
   gap: var(--space-sm);
   color: var(--text-muted);

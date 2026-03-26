@@ -18,9 +18,9 @@
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   line-height: var(--leading-normal);
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
   background: var(--surface-sunken);
-  border-radius: var(--shape-md-radius);
+  border-radius: var(--shape-xs-radius);
 }
 
 .logEntry {

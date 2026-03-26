@@ -1,18 +1,17 @@
+/* ── TextInput — 3-block recipe ──
+   // ② 2026-03-26-component-styling-rules-prd.md */
+
+/* ═══ Block 1: base ═══ */
 .input {
   font-size: var(--type-caption-size);
   color: var(--text-primary);
-  background: var(--surface-base);
-  border: 1px solid var(--border-subtle);
+  background: var(--_bg, var(--surface-base));
   height: var(--input-height);
   border-radius: var(--shape-md-radius);
-  padding: var(--space-xs) var(--space-sm);
-  outline: none;
+  padding: var(--shape-md-py) var(--shape-md-px);
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
-
-.input:focus {
-  border-color: var(--focus);
-}
+/* :focus → data-surface="input" provides via interactive.css */
 
 .input::placeholder {
   color: var(--text-muted);

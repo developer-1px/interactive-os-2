@@ -21,32 +21,28 @@ description: DESIGN.md 번들 체계 안에서 CSS를 작성한다. 컴포넌트
 
 CSS를 작성하거나 수정하기 전에 DESIGN.md를 읽고, 아래 5개 번들을 하나씩 확인한다.
 
-### 1. Surface — 이 요소의 시각적 계층은?
+### 1. Surface — 이 요소의 인터랙션 모드는?
 
 ```
-질문: 이 요소가 base/sunken/default/raised/overlay/outlined 중 어디에 있는가?
+질문: 이 요소가 action/input/display/overlay 중 어디인가?
 ```
 
-| 레벨 | 언제 | bg | border | shadow |
-|---|---|---|---|---|
-| base | 페이지/사이드바 배경 | surface-base | — | — |
-| sunken | 움푹 들어간 영역 | surface-sunken | — | — |
-| default | 콘텐츠 영역, Input bg | surface-default | — | — |
-| raised | 카드, Composer | surface-raised | border-subtle | shadow-float |
-| overlay | 드롭다운, 다이얼로그 | surface-overlay | border-default | shadow-lg |
-| outlined | 부모 bg 상속 + 선 | transparent | border-default | — |
+| 모드 | 언제 | border | shadow | 상태 (interactive.css) |
+|------|------|--------|--------|---------------------|
+| action | Button, Toggle, Link | none | none | hover→bg, active→bg, focus→ring, disabled |
+| input | TextInput, Select, Textarea | border-default | none | focus→border, invalid→border, disabled |
+| display | Card, Badge, 정보 표시 | optional (variant) | optional (variant) | 없음 |
+| overlay | Dialog, Dropdown, Tooltip | border-default | shadow-lg | enter motion |
 
 ```css
-/* ✅ 번들로 사용 */
-[data-surface="raised"] { /* bg + border + shadow 자동 적용 */ }
+/* ✅ data-surface로 선언 — 상태가 자동 제공 */
+<button data-surface="action" className={styles.accent}>
 
-/* ❌ 개별 조합 금지 */
-background: var(--surface-raised);
-border: 1px solid var(--border-subtle);
-box-shadow: var(--shadow-float);
+/* ❌ module.css에 :hover/:focus 직접 작성 */
+.accent:hover { background: ... }
 ```
 
-surface는 `data-surface` 속성으로 적용하는 것이 원칙. CSS에서 직접 조합하지 않는다.
+bg(배경)는 surface가 아니라 **variant의 --_bg**가 결정한다. depth는 variant의 책임.
 
 ### 2. Shape — 이 요소의 크기급은?
 
@@ -162,6 +158,25 @@ transition: color var(--motion-instant-duration) var(--motion-normal-easing);
 9. **액션은 오른쪽 끝** — 라벨 좌측, 버튼/스위치 우측
 10. **Gap 기본값** — row 12px, column 24px
 
+## module.css 3블록 레시피
+
+독립 컴포넌트의 module.css는 3블록 순서로 작성한다:
+
+| 블록 | 내용 | 규칙 |
+|------|------|------|
+| **Block 1: base** (.root) | 공유 형태 + `background: var(--_bg); color: var(--_fg);` | 번들 세트로. 상태 없음 |
+| **Block 2: variant** | `--_bg`, `--_bg-hover`, `--_fg` 등 --_ 값만 | background/color 직접 금지 |
+| **Block 3: size** | shape+type 번들 override | 번들 세트로 교체 |
+
+```css
+/* Block 1 */
+.root { background: var(--_bg); color: var(--_fg); border-radius: var(--shape-md-radius); ... }
+/* Block 2 */
+.accent { --_bg: var(--tone-primary-base); --_bg-hover: var(--tone-primary-hover); --_fg: var(--tone-primary-foreground); }
+/* Block 3 */
+.sm { border-radius: var(--shape-xs-radius); padding: var(--shape-xs-py) var(--shape-xs-px); }
+```
+
 ## CSS 작성 워크플로우
 
 1. DESIGN.md 읽기
@@ -182,3 +197,6 @@ transition: color var(--motion-instant-duration) var(--motion-normal-easing);
 | `background: var(--tone-primary)` + `color: var(--text-primary)` | tone: primary tone이면 foreground도 primary에서 | `--tone-primary-foreground` |
 | `transition: 0.15s ease` | motion: ease가 아니라 specific cubic-bezier 사용 | `--motion-normal-*` |
 | `background: #FAF9F5` | raw 색상값 | `var(--surface-base)` 또는 palette 토큰 |
+| `.accent:hover { background: ... }` | module.css에 상태 스타일 | data-surface가 상태 제공. --_bg-hover로 값만 선언 |
+| `background: var(--tone-primary-base)` in variant | variant에 bg 직접 작성 | `--_bg: var(--tone-primary-base)` |
+| `--space-sm` for padding with `--shape-md-radius` | shape 번들 불일치 | 같은 레벨의 --shape-*-py/px 사용 |
