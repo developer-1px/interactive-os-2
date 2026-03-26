@@ -2,7 +2,7 @@ import styles from './PageAgentViewer.module.css'
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { Circle, FileText, Code } from 'lucide-react'
 import { NavList } from '../interactive-os/ui/NavList'
-import { createStore, getChildren, getEntityData } from '../interactive-os/store/createStore'
+import { createStore, getChildren } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
@@ -11,7 +11,7 @@ import { useAllModifiedFiles } from './viewer/viewerStore'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
 import { Workspace } from '../interactive-os/ui/Workspace'
-import { createWorkspace, workspaceCommands } from '../interactive-os/plugins/workspaceStore'
+import { createWorkspace, workspaceCommands, findTabgroup, openTab } from '../interactive-os/plugins/workspaceStore'
 import type { TabData } from '../interactive-os/plugins/workspaceStore'
 import { CodeBlock } from '../interactive-os/ui/CodeBlock'
 import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
@@ -116,19 +116,6 @@ function FilePanel({ path }: { path: string }) {
   )
 }
 
-// --- Workspace helpers ---
-
-function findTabgroup(store: NormalizedData, parentId: string): string | undefined {
-  for (const id of getChildren(store, parentId)) {
-    const data = getEntityData<{ type: string }>(store, id)
-    if (data?.type === 'tabgroup') return id
-    if (data?.type === 'split') {
-      const found = findTabgroup(store, id)
-      if (found) return found
-    }
-  }
-  return undefined
-}
 
 // --- Main Component ---
 
@@ -149,7 +136,7 @@ export default function PageAgentViewer() {
       if (fetched.length === 0) return
 
       setWorkspaceStore(prev => {
-        const tgId = findTabgroup(prev, ROOT_ID)
+        const tgId = findTabgroup(prev)
         if (!tgId) return prev
 
         let store = prev
@@ -181,24 +168,14 @@ export default function PageAgentViewer() {
 
   const handleFileClick = useCallback((filePath: string, _editRanges?: string[]) => {
     setWorkspaceStore(prev => {
-      const tgId = findTabgroup(prev, ROOT_ID)
+      const tgId = findTabgroup(prev)
       if (!tgId) return prev
 
-      const tabIds = getChildren(prev, tgId)
-      const existingTab = tabIds.find(id => {
-        const data = getEntityData(prev, id) as TabData | undefined
-        return data?.contentRef === filePath
-      })
-
-      if (existingTab) {
-        return workspaceCommands.setActiveTab(tgId, existingTab).execute(prev)
-      }
-
       const filename = filePath.split('/').pop() ?? filePath
-      return workspaceCommands.addTab(tgId, {
+      return openTab(prev, tgId, filePath, () => ({
         id: `file-${filePath}`,
         data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath } as TabData,
-      }).execute(prev)
+      }))
     })
   }, [])
 

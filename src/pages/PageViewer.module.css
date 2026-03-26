@@ -202,33 +202,6 @@
   min-width: 0;
 }
 
-/* --- Diagram panel (right) --- */
-
-.vw-content__graph {
-  width: 380px;
-  min-width: 280px;
-  overflow: auto;
-  padding: var(--space-xl);
-  border-left: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: start;
-  justify-content: center;
-}
-
-.vw-dep-graph {
-  flex: 1;
-  overflow: auto;
-}
-
-.vw-dep-graph svg {
-  max-width: 100%;
-  height: auto;
-}
-
-.vw-dep-graph .node {
-  cursor: pointer;
-}
-
 .vw-content__meta {
   display: flex;
   align-items: center;
@@ -389,9 +362,6 @@
   color: var(--text-muted);
   font-family: var(--mono);
   font-size: var(--type-caption-size);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   margin-left: auto;
 }
 

@@ -5,7 +5,7 @@ import type { NormalizedData, Entity } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import { getChildren, getEntityData } from '../store/createStore'
 import type { SplitData } from '../plugins/workspaceStore'
-import { workspaceCommands } from '../plugins/workspaceStore'
+import { workspaceCommands, findTabgroup } from '../plugins/workspaceStore'
 import { SplitPane } from './SplitPane'
 import { TabGroup } from './TabGroup'
 import styles from './Workspace.module.css'
@@ -15,18 +15,6 @@ interface WorkspaceProps {
   onChange: (data: NormalizedData) => void
   renderPanel: (tab: Entity) => React.ReactNode
   'aria-label'?: string
-}
-
-function findActivePane(data: NormalizedData, nodeId: string): string | undefined {
-  const entityData = getEntityData<{ type: string }>(data, nodeId)
-  if (entityData?.type === 'tabgroup') return nodeId
-
-  const children = getChildren(data, nodeId)
-  for (const childId of children) {
-    const found = findActivePane(data, childId)
-    if (found) return found
-  }
-  return undefined
 }
 
 interface WorkspaceNodeProps {
@@ -89,7 +77,7 @@ export function Workspace({
     (e: React.KeyboardEvent) => {
       if (e.key === '\\' && e.metaKey) {
         e.preventDefault()
-        const activePaneId = findActivePane(data, ROOT_ID)
+        const activePaneId = findTabgroup(data)
         if (!activePaneId) return
 
         const direction = e.shiftKey ? 'vertical' : 'horizontal'

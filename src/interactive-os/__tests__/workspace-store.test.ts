@@ -151,7 +151,7 @@ describe('workspaceCommands.removeTab', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
     const tab1: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
-    let s = workspaceCommands.addTab(tgId, tab1).execute(store)
+    const s = workspaceCommands.addTab(tgId, tab1).execute(store)
 
     const cmd = workspaceCommands.removeTab('tab-1')
     const after = cmd.execute(s)

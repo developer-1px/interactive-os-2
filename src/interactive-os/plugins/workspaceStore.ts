@@ -269,6 +269,39 @@ export function deserializeWorkspace(json: string): NormalizedData {
   }
 }
 
+// ── Helpers ────────────────────────────────────────────
+
+/** Walk workspace tree and return the first tabgroup entity id found. */
+export function findTabgroup(store: NormalizedData, parentId: string = ROOT_ID): string | undefined {
+  for (const childId of getChildren(store, parentId)) {
+    const data = getEntityData<{ type: string }>(store, childId)
+    if (data?.type === 'tabgroup') return childId
+    if (data?.type === 'split') {
+      const found = findTabgroup(store, childId)
+      if (found) return found
+    }
+  }
+  return undefined
+}
+
+/** Open a tab by contentRef — activate existing or create new. */
+export function openTab(
+  store: NormalizedData,
+  tabgroupId: string,
+  contentRef: string,
+  createTab: () => Entity,
+): NormalizedData {
+  const tabIds = getChildren(store, tabgroupId)
+  const existing = tabIds.find(id => {
+    const data = getEntityData<TabData>(store, id)
+    return data?.contentRef === contentRef
+  })
+  if (existing) {
+    return workspaceCommands.setActiveTab(tabgroupId, existing).execute(store)
+  }
+  return workspaceCommands.addTab(tabgroupId, createTab()).execute(store)
+}
+
 // ── Plugin ─────────────────────────────────────────────
 
 export function workspace() {

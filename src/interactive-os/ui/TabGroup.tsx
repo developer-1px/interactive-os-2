@@ -1,5 +1,5 @@
 // ② 2026-03-26-workspace-containers-prd.md
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { X } from 'lucide-react'
 
 import type { NormalizedData, Entity } from '../store/types'
@@ -45,31 +45,27 @@ export function TabGroup({
     return createStore({ entities, relationships: { [ROOT_ID]: tabIds } })
   }, [data, tabIds])
 
-  const handleActivate = (nodeId: string) => {
+  const handleActivate = useCallback((nodeId: string) => {
     if (!onChange) return
-    const cmd = workspaceCommands.setActiveTab(tabgroupId, nodeId)
-    onChange(cmd.execute(data))
-  }
+    onChange(workspaceCommands.setActiveTab(tabgroupId, nodeId).execute(data))
+  }, [onChange, tabgroupId, data])
 
-  const handleClose = (e: React.MouseEvent, tabId: string) => {
+  const handleClose = useCallback((e: React.MouseEvent, tabId: string) => {
     e.preventDefault()
     e.stopPropagation()
     if (!onChange) return
-    const cmd = workspaceCommands.removeTab(tabId)
-    onChange(cmd.execute(data))
-  }
+    onChange(workspaceCommands.removeTab(tabId).execute(data))
+  }, [onChange, data])
 
-  const closeKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
+  const closeKeyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
     'Delete': (ctx) => {
-      if (!onChange) return
-      onChange(workspaceCommands.removeTab(ctx.focused).execute(data))
+      onChange?.(workspaceCommands.removeTab(ctx.focused).execute(data))
     },
     'Meta+w': (ctx) => {
-      if (!onChange) return
-      onChange(workspaceCommands.removeTab(ctx.focused).execute(data))
+      onChange?.(workspaceCommands.removeTab(ctx.focused).execute(data))
     },
     ...keyMap,
-  }
+  }), [keyMap, onChange, data])
 
   const tl = useTabList({
     data: tabStore,

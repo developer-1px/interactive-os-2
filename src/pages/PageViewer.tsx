@@ -2,7 +2,7 @@ import styles from './PageViewer.module.css'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  FileText, ChevronRight, ChevronDown, Circle, PanelLeft, Search,
+  ChevronRight, ChevronDown, Circle, PanelLeft, Search,
 } from 'lucide-react'
 import { Aria } from '../interactive-os/primitives/aria'
 import { TreeView } from '../interactive-os/ui/TreeView'
@@ -15,12 +15,14 @@ import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { Plugin } from '../interactive-os/plugins/types'
 import { EXPANDED_ID } from '../interactive-os/plugins/core'
 import { CodeBlock } from '../interactive-os/ui/CodeBlock'
-import { ExportDiagram } from './viewer/ExportDiagram'
 import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
 import { FileIcon } from '../interactive-os/ui/FileIcon'
 import { Breadcrumb } from '../interactive-os/ui/Breadcrumb'
 import { QuickOpen } from './viewer/QuickOpen'
 import { DEFAULT_ROOT, type FileNodeData } from './viewer/types'
+import { Workspace } from '../interactive-os/ui/Workspace'
+import { createWorkspace, findTabgroup, openTab } from '../interactive-os/plugins/workspaceStore'
+import type { TabData } from '../interactive-os/plugins/workspaceStore'
 
 // --- Types ---
 
@@ -41,11 +43,6 @@ async function fetchTree(root: string): Promise<TreeNode[]> {
 async function fetchFile(path: string): Promise<string> {
   const res = await fetch(`/api/fs/file?path=${encodeURIComponent(path)}`)
   return res.text()
-}
-
-function isSourceFile(filename: string): boolean {
-  const ext = filename.split('.').pop() ?? ''
-  return ['ts', 'tsx', 'js', 'jsx'].includes(ext)
 }
 
 // --- Convert tree to normalized store ---
@@ -110,6 +107,30 @@ function withInitialFileSelected(store: NormalizedData, filePath: string): Norma
   }
 }
 
+// --- FilePanel ---
+
+function FilePanel({ path }: { path: string }) {
+  const [content, setContent] = useState('')
+  const bodyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    bodyRef.current?.scrollTo(0, 0)
+    fetchFile(path).then(setContent)
+  }, [path])
+
+  const filename = path.split('/').pop() ?? ''
+  const isMarkdown = filename.endsWith('.md')
+
+  return (
+    <div ref={bodyRef} className={styles.vwContentCode}>
+      {isMarkdown
+        ? <MarkdownViewer content={content} />
+        : <CodeBlock code={content} filename={filename} variant="flush" />
+      }
+    </div>
+  )
+}
+
 // --- Constants ---
 
 const EMPTY_STORE = createStore({ entities: {}, relationships: { [ROOT_ID]: [] } })
@@ -123,16 +144,14 @@ export default function PageViewer() {
   const urlFilePath = useMemo(() => urlPathToFilePath(pathname), [pathname])
 
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
-  const [fileContent, setFileContent] = useState('')
   const [loading, setLoading] = useState(true)
   const [treeCollapsed, setTreeCollapsed] = useState(false)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
+  const [workspaceStore, setWorkspaceStore] = useState(() => createWorkspace())
   const treeResizer = useResizer({
     defaultSize: 280, minSize: 180, maxSize: 480, step: 10,
     storageKey: 'viewer-tree-width',
   })
-  const loadedFileRef = useRef<string | null>(null)
-  const contentBodyRef = useRef<HTMLDivElement>(null)
 
   // selectedFile은 URL에서 파생 (single source of truth)
   const selectedFile = urlFilePath && initialStore?.entities[urlFilePath] ? urlFilePath : null
@@ -149,16 +168,18 @@ export default function PageViewer() {
     })
   }, [])
 
-  // selectedFile 변경 → 파일 콘텐츠 로드
-  useEffect(() => {
-    if (!selectedFile) return
-    if (selectedFile === loadedFileRef.current) return
-    loadedFileRef.current = selectedFile
-    contentBodyRef.current?.scrollTo(0, 0)
-    fetchFile(selectedFile).then(setFileContent)
-  }, [selectedFile])
-
   const selectFile = useCallback((filePath: string) => {
+    setWorkspaceStore(prev => {
+      const tgId = findTabgroup(prev)
+      if (!tgId) return prev
+
+      const filename = filePath.split('/').pop() ?? filePath
+      return openTab(prev, tgId, filePath, () => ({
+        id: `tab-${filePath}`,
+        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath } as TabData,
+      }))
+    })
+
     navigate(filePathToUrlPath(filePath), { replace: true })
   }, [navigate])
 
@@ -169,6 +190,16 @@ export default function PageViewer() {
       selectFile((entity.data as unknown as FileNodeData).path)
     }
   }, [selectFile])
+
+  const handleWorkspaceChange = useCallback((newStore: NormalizedData) => {
+    setWorkspaceStore(newStore)
+  }, [])
+
+  const renderPanel = useCallback((tab: Entity) => {
+    const tabData = tab.data as unknown as TabData
+    if (!tabData?.contentRef) return null
+    return <FilePanel path={tabData.contentRef} />
+  }, [])
 
   const setQuickOpenVisibleRef = useRef(setQuickOpenVisible)
   useEffect(() => { setQuickOpenVisibleRef.current = setQuickOpenVisible }, [setQuickOpenVisible])
@@ -186,11 +217,6 @@ export default function PageViewer() {
       </div>
     )
   }
-
-  const filename = selectedFile?.split('/').pop() ?? ''
-  const isMarkdown = filename.endsWith('.md')
-  const ext = filename.split('.').pop() ?? ''
-  const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
     <Aria
@@ -262,14 +288,6 @@ export default function PageViewer() {
             {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
           </div>
           <div className={styles.vwContentHeaderRight}>
-            {selectedFile && (
-              <div className={styles.vwContentMeta}>
-                <FileIcon name={filename} type="file" />
-                <span>{ext.toUpperCase()}</span>
-                <span className={styles.vwContentMetaSep} />
-                <span>{lineCount} lines</span>
-              </div>
-            )}
             <button
               className={styles.vwStatusbarBtn}
               onClick={() => setQuickOpenVisible(true)}
@@ -279,26 +297,12 @@ export default function PageViewer() {
             </button>
           </div>
         </div>
-        {selectedFile ? (
-          <div className={styles.vwContentBody}>
-            <div className={styles.vwContentCode} ref={contentBodyRef}>
-              {isMarkdown
-                ? <MarkdownViewer content={fileContent} />
-                : <CodeBlock code={fileContent} filename={filename} />
-              }
-            </div>
-            {!isMarkdown && isSourceFile(filename) && (
-              <div className={styles.vwContentGraph}>
-                <ExportDiagram filePath={selectedFile} />
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className={styles.vwEmpty}>
-            <FileText size={24} className={styles.vwEmptyIcon} />
-            <span>Select a file to view</span>
-          </div>
-        )}
+        <Workspace
+          data={workspaceStore}
+          onChange={handleWorkspaceChange}
+          renderPanel={renderPanel}
+          aria-label="File workspace"
+        />
       </div>
 
       {/* Quick Open overlay */}
