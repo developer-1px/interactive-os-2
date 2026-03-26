@@ -8,7 +8,7 @@ import { Aria } from '../primitives/aria'
 import { treegrid } from '../pattern/treegrid'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
-import { replaceEditPlugin } from '../pattern/edit'
+import { replaceEditPlugin } from '../plugins/edit'
 
 interface TreeGridProps {
   id?: string

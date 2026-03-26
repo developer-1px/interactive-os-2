@@ -7,7 +7,7 @@ import { Aria } from '../primitives/aria'
 import { listbox } from '../pattern/listbox'
 import { core } from '../plugins/core'
 import { history } from '../plugins/history'
-import { replaceEditPlugin } from '../pattern/edit'
+import { replaceEditPlugin } from '../plugins/edit'
 import styles from './ListBox.module.css'
 
 interface ListBoxProps {

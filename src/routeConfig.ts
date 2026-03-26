@@ -71,10 +71,8 @@ export const routeConfig: RouteGroup[] = [
     id: 'internals/pattern',
     label: 'Pattern',
     icon: Layers,
-    basePath: '/internals/pattern/edit',
-    items: [
-      { path: 'edit', label: 'edit()', status: 'ready', component: PageAreaViewer },
-    ],
+    basePath: '/internals/pattern',
+    items: [],
   },
   {
     id: 'internals/primitives',

@@ -5,7 +5,7 @@ import { select } from '../axis/select'
 import { activate } from '../axis/activate'
 import { expand } from '../axis/expand'
 import { navigate } from '../axis/navigate'
-import { edit as editAxis } from './edit'
+import { edit as editAxis } from '../plugins/edit'
 
 export function treegrid(options?: { edit?: boolean }) {
   const axes = [

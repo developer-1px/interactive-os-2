@@ -9,7 +9,7 @@ import { grid as gridBehavior } from '../pattern/grid'
 import { core } from '../plugins/core'
 import { cellEdit } from '../plugins/cellEdit'
 import { search } from '../plugins/search'
-import { replaceEditPlugin } from '../pattern/edit'
+import { replaceEditPlugin } from '../plugins/edit'
 
 interface ColumnDef {
   key: string

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { edit, replaceEditPlugin } from '../pattern/edit'
+import { edit, replaceEditPlugin } from '../plugins/edit'
 import { extractKeyMap } from '../axis/types'
 
 describe('edit axis', () => {
