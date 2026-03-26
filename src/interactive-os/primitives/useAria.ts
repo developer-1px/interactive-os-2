@@ -9,7 +9,7 @@ import type { AriaPattern, NodeState } from '../pattern/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren, getEntityData } from '../store/createStore'
-import { focusCommands, selectionCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, VALUE_ID } from '../plugins/core'
+import { focusCommands, selectionCommands, expandCommands, FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, VALUE_ID } from '../plugins/core'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
 import type { PatternContextOptions } from '../pattern/createPatternContext'
@@ -215,8 +215,17 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           // Activate on click (skip when modifier keys held)
           const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
           if (behavior.activateOnClick && !hasModifier) {
-            if (engineCallbacksMap.get(engine)?.onActivate) {
-              engineCallbacksMap.get(engine)!.onActivate!(id)
+            const cb = engineCallbacksMap.get(engine)
+            if (cb?.onActivate) {
+              // ② 2026-03-26-treeview-click-expand-prd.md
+              // APG File Directory: click on parent = expand toggle + select
+              if (behavior.expandOnParentClick !== false) {
+                const children = getChildren(engine.getStore(), id)
+                if (children.length > 0) {
+                  engine.dispatch(expandCommands.toggleExpand(id))
+                }
+              }
+              cb.onActivate(id)
             } else {
               const ctx = createPatternContext(engine, behaviorCtxOptions as PatternContextOptions)
               const command = ctx.activate()
@@ -229,7 +238,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
       return baseProps
     },
-    [view, isKeyMapOnly, behavior.selectOnClick, behavior.activateOnClick, behavior.selectionMode, engine, behaviorCtxOptions],
+    [view, isKeyMapOnly, behavior.selectOnClick, behavior.activateOnClick, behavior.expandOnParentClick, behavior.selectionMode, engine, behaviorCtxOptions],
   )
 
   const dispatch = useCallback(

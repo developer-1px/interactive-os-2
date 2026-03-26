@@ -6,7 +6,7 @@ import type { Plugin } from '../plugins/types'
 import type { AriaPattern, NodeState } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren, getParent, getEntity } from '../store/createStore'
-import { focusCommands, VALUE_ID } from '../plugins/core'
+import { focusCommands, expandCommands, VALUE_ID } from '../plugins/core'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
 import { findMatchingKey } from './useKeyboard'
@@ -216,6 +216,13 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
           if (hasModifier) return
           if (onActivateRef.current) {
+            // ② 2026-03-26-treeview-click-expand-prd.md
+            if (behavior.expandOnParentClick !== false) {
+              const children = getChildren(engine.getStore(), id)
+              if (children.length > 0) {
+                engine.dispatch(expandCommands.toggleExpand(id))
+              }
+            }
             onActivateRef.current(id)
           } else {
             const ctx = createPatternContext(engine, behaviorCtxOptions)

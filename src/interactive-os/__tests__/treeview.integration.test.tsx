@@ -82,8 +82,7 @@ describe('TreeView', () => {
 
     expect(getNodeEl(container, 'a/1')).toBeNull()
     await user.click(getNodeEl(container, 'a')!)
-    // After click, ArrowRight to expand (click focuses, then expand)
-    await user.keyboard('{ArrowRight}')
+    // click on parent directly expands (ctx.activate → toggleExpand)
     expect(getNodeEl(container, 'a/1')).not.toBeNull()
   })
 
@@ -162,6 +161,62 @@ describe('TreeView', () => {
     const customs = screen.getAllByTestId('custom')
     expect(customs.length).toBeGreaterThan(0)
     expect(customs[0].textContent).toBe('Folder A!')
+  })
+
+  // V1: 2026-03-26-treeview-click-expand-prd.md
+  it('click on collapsed folder with onActivate expands and activates', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <TreeViewWithActivatedDisplay data={makeTreeData()} aria-label="Test tree" />
+    )
+
+    expect(getNodeEl(container, 'a/1')).toBeNull()
+    await user.click(getNodeEl(container, 'a')!)
+    expect(getNodeEl(container, 'a')!.getAttribute('aria-expanded')).toBe('true')
+    expect(screen.getByTestId('activated').textContent).toBe('a')
+  })
+
+  // V2: 2026-03-26-treeview-click-expand-prd.md
+  it('click on expanded folder with onActivate collapses and activates', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <TreeViewWithActivatedDisplay data={makeTreeData()} aria-label="Test tree" />
+    )
+
+    // Expand first
+    getNodeEl(container, 'a')!.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(getNodeEl(container, 'a')!.getAttribute('aria-expanded')).toBe('true')
+
+    // Click to collapse
+    await user.click(getNodeEl(container, 'a')!)
+    expect(getNodeEl(container, 'a')!.getAttribute('aria-expanded')).toBe('false')
+    expect(screen.getByTestId('activated').textContent).toBe('a')
+  })
+
+  // V3: 2026-03-26-treeview-click-expand-prd.md
+  it('click on leaf with onActivate activates without expand', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <TreeViewWithActivatedDisplay data={makeTreeData()} aria-label="Test tree" />
+    )
+
+    await user.click(getNodeEl(container, 'c')!)
+    expect(screen.getByTestId('activated').textContent).toBe('c')
+    expect(getNodeEl(container, 'c')!.hasAttribute('aria-expanded')).toBe(false)
+  })
+
+  // V4: 2026-03-26-treeview-click-expand-prd.md
+  it('Enter on collapsed folder with onActivate activates without expand', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <TreeViewWithActivatedDisplay data={makeTreeData()} aria-label="Test tree" />
+    )
+
+    getNodeEl(container, 'a')!.focus()
+    await user.keyboard('{Enter}')
+    expect(screen.getByTestId('activated').textContent).toBe('a')
+    expect(getNodeEl(container, 'a')!.getAttribute('aria-expanded')).toBe('false')
   })
 
   it('renders empty tree without error', () => {

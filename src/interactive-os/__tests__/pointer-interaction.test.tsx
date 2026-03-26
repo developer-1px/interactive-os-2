@@ -14,6 +14,7 @@ import { grid } from '../pattern/grid'
 import { composePattern } from '../pattern/composePattern'
 import { select } from '../axis/select'
 import { activate } from '../axis/activate'
+import { expand } from '../axis/expand'
 import { navigate } from '../axis/navigate'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
@@ -168,6 +169,36 @@ describe('pointer interaction — tree click (second suite)', () => {
     await user.click(getNode(container, 'folder'))
     expect(getNode(container, 'folder').getAttribute('aria-expanded')).toBe('true')
     expect(getSelected(container)).toEqual(['folder'])
+  })
+})
+
+// V5: 2026-03-26-treeview-click-expand-prd.md
+describe('pointer interaction — tree click with expandOnClick: false', () => {
+  function setup() {
+    const navTree = composePattern(
+      { role: 'tree', childRole: 'treeitem', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected), ...(s.expanded !== undefined && { 'aria-expanded': String(s.expanded) }) }) },
+      select({ mode: 'single' }),
+      activate({ onClick: true, expandOnClick: false }),
+      expand({ mode: 'arrow' }),
+      navigate({ orientation: 'vertical' }),
+    )
+    const user = userEvent.setup()
+    const activated: string[] = []
+    const result = render(
+      <Aria behavior={navTree} data={treeFixtureStore()} plugins={[core()]} onActivate={(id) => activated.push(id)}>
+        <Aria.Item render={(props, node, state) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+        )} />
+      </Aria>
+    )
+    return { user, container: result.container as HTMLElement, activated }
+  }
+
+  it('click on parent does not expand when expandOnClick is false', async () => {
+    const { user, container, activated } = setup()
+    await user.click(getNode(container, 'folder'))
+    expect(getNode(container, 'folder').getAttribute('aria-expanded')).toBe('false')
+    expect(activated).toEqual(['folder'])
   })
 })
 
