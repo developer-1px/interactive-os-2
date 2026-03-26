@@ -1,0 +1,40 @@
+/* SplitPane — ratio-based resizable split container */
+
+.splitPane {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow: hidden;
+}
+
+.splitPaneVertical {
+  flex-direction: column;
+}
+
+.pane {
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+
+.separator {
+  flex-shrink: 0;
+  background: var(--border-default);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.separator:hover,
+.separator:focus-visible {
+  background: var(--focus);
+  outline: none;
+}
+
+.separatorH {
+  width: var(--space-xs);
+  cursor: col-resize;
+}
+
+.separatorV {
+  height: var(--space-xs);
+  cursor: row-resize;
+}
