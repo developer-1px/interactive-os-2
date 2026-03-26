@@ -231,12 +231,19 @@ export default function PageViewer() {
     navigate(filePathToUrlPath(filePath), { replace: true })
   }, [navigate])
 
+  // 현재 트리에서 포커스된 파일 경로를 추적 (keyMap에서 참조)
+  const focusedFileRef = useRef<string | null>(null)
+
   // followFocus: 트리 포커스 이동 시 preview
   const handleChange = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
     const entity = newStore.entities[focusedId]
     if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
-      previewFile((entity.data as unknown as FileNodeData).path)
+      const path = (entity.data as unknown as FileNodeData).path
+      focusedFileRef.current = path
+      previewFile(path)
+    } else {
+      focusedFileRef.current = null
     }
   }, [previewFile])
 
@@ -248,6 +255,36 @@ export default function PageViewer() {
       pinFile((entity.data as unknown as FileNodeData).path)
     }
   }, [initialStore, pinFile])
+
+  // Cmd+Enter → 새 panel에서 열기 (split + 새 tabgroup에 탭 추가)
+  const openInNewPane = useCallback((filePath: string) => {
+    setWorkspaceStore(prev => {
+      const tgId = findTabgroup(prev)
+      if (!tgId) return prev
+
+      // 현재 pane을 split
+      let store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
+
+      // split 후 새로 생긴 tabgroup 찾기 (tgId의 형제)
+      const splitId = getChildren(store, ROOT_ID).find(id =>
+        (getEntityData<{ type: string }>(store, id))?.type === 'split'
+      )
+      if (!splitId) return store
+
+      const splitChildren = getChildren(store, splitId)
+      const newTgId = splitChildren.find(id => id !== tgId)
+      if (!newTgId) return store
+
+      const filename = filePath.split('/').pop() ?? filePath
+      store = workspaceCommands.addTab(newTgId, {
+        id: `tab-${filePath}`,
+        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
+      }).execute(store)
+
+      return store
+    })
+    navigate(filePathToUrlPath(filePath), { replace: true })
+  }, [navigate])
 
   const handleWorkspaceChange = useCallback((newStore: NormalizedData) => {
     setWorkspaceStore(newStore)
@@ -262,8 +299,16 @@ export default function PageViewer() {
   const setQuickOpenVisibleRef = useRef(setQuickOpenVisible)
   useEffect(() => { setQuickOpenVisibleRef.current = setQuickOpenVisible }, [setQuickOpenVisible])
 
+  const openInNewPaneRef = useRef(openInNewPane)
+  useEffect(() => { openInNewPaneRef.current = openInNewPane }, [openInNewPane])
+
   const quickOpenKeyMap = useMemo(() => ({
     'Meta+p': () => { setQuickOpenVisibleRef.current(true); return undefined },
+    'Meta+Enter': () => {
+      const path = focusedFileRef.current
+      if (path) openInNewPaneRef.current(path)
+      return undefined
+    },
   }), [])
 
 
