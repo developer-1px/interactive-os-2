@@ -2,7 +2,7 @@ import styles from './PageViewer.module.css'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  ChevronRight, ChevronDown, Circle, PanelLeft, Search,
+  ChevronRight, ChevronDown, Circle, Search,
 } from 'lucide-react'
 import { Aria } from '../interactive-os/primitives/aria'
 import { TreeView } from '../interactive-os/ui/TreeView'
@@ -145,7 +145,6 @@ export default function PageViewer() {
 
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [treeCollapsed, setTreeCollapsed] = useState(false)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
   const [workspaceStore, setWorkspaceStore] = useState(() => createWorkspace())
   const treeResizer = useResizer({
@@ -419,18 +418,9 @@ export default function PageViewer() {
     >
     <div className={styles.vw}>
       {/* Tree panel (sidebar) */}
-      {!treeCollapsed && (
-        <>
         <div className={styles.vwTree} style={{ width: treeResizer.size }}>
           <div className={styles.vwTreeHeader}>
             <span className={styles.vwTreeHeaderTitle}>Explorer</span>
-            <button
-              className={styles.vwStatusbarBtn}
-              onClick={() => setTreeCollapsed(true)}
-              title="Hide explorer"
-            >
-              <PanelLeft size={12} />
-            </button>
           </div>
           <div className={styles.vwTreeBody}>
             <TreeView
@@ -463,22 +453,11 @@ export default function PageViewer() {
           </div>
         </div>
         <div className="resizer-handle" aria-label="Resize explorer" {...treeResizer.separatorProps} />
-        </>
-      )}
 
       {/* Content panel */}
       <div className={styles.vwContent}>
         <div className={styles.vwContentHeader}>
           <div className={styles.vwContentHeaderLeft}>
-            {treeCollapsed && (
-              <button
-                className={styles.vwStatusbarBtn}
-                onClick={() => setTreeCollapsed(false)}
-                title="Show explorer"
-              >
-                <PanelLeft size={12} />
-              </button>
-            )}
             {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
           </div>
           <div className={styles.vwContentHeaderRight}>
