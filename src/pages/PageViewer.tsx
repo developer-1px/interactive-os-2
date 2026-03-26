@@ -9,7 +9,7 @@ import { TreeView } from '../interactive-os/ui/TreeView'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
 import { core, FOCUS_ID } from '../interactive-os/plugins/core'
-import { createStore, getChildren, getEntityData, updateEntityData, removeEntity } from '../interactive-os/store/createStore'
+import { createStore, getChildren, getEntityData, updateEntityData, removeEntity, addEntity } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { Plugin } from '../interactive-os/plugins/types'
@@ -256,32 +256,56 @@ export default function PageViewer() {
     }
   }, [initialStore, pinFile])
 
-  // Cmd+Enter → 새 panel에서 열기 (split + 새 tabgroup에 탭 추가)
+  // Cmd+Enter → 매번 새 pane을 추가하여 파일 열기
+  // 이미 split이 있으면 같은 레벨에 pane 추가 (중첩 방지)
   const openInNewPane = useCallback((filePath: string) => {
     setWorkspaceStore(prev => {
+      const filename = filePath.split('/').pop() ?? filePath
+      const newTgId = `tg-${Date.now()}`
+      const tabId = `tab-${filePath}`
+
+      const rootChildren = getChildren(prev, ROOT_ID)
+      const existingSplitId = rootChildren.find(id =>
+        (getEntityData<{ type: string }>(prev, id))?.type === 'split'
+      )
+
+      if (existingSplitId) {
+        // 기존 split에 새 tabgroup 추가 + sizes 균등 재분배
+        let store = addEntity(prev, {
+          id: newTgId,
+          data: { type: 'tabgroup', activeTabId: tabId },
+        }, existingSplitId)
+
+        const newChildren = getChildren(store, existingSplitId)
+        const equalSize = 1 / newChildren.length
+        const newSizes = newChildren.map(() => equalSize)
+        store = updateEntityData(store, existingSplitId, { sizes: newSizes })
+
+        return workspaceCommands.addTab(newTgId, {
+          id: tabId,
+          data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
+        }).execute(store)
+      }
+
+      // split 없으면 첫 tabgroup을 split
       const tgId = findTabgroup(prev)
       if (!tgId) return prev
 
-      // 현재 pane을 split
       let store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
 
-      // split 후 새로 생긴 tabgroup 찾기 (tgId의 형제)
-      const splitId = getChildren(store, ROOT_ID).find(id =>
+      const newSplitId = getChildren(store, ROOT_ID).find(id =>
         (getEntityData<{ type: string }>(store, id))?.type === 'split'
       )
-      if (!splitId) return store
+      if (!newSplitId) return store
 
-      const splitChildren = getChildren(store, splitId)
-      const newTgId = splitChildren.find(id => id !== tgId)
-      if (!newTgId) return store
+      const splitChildren = getChildren(store, newSplitId)
+      const lastTg = splitChildren[splitChildren.length - 1]
+      if (!lastTg) return store
 
-      const filename = filePath.split('/').pop() ?? filePath
-      store = workspaceCommands.addTab(newTgId, {
-        id: `tab-${filePath}`,
+      return workspaceCommands.addTab(lastTg, {
+        id: tabId,
         data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
       }).execute(store)
-
-      return store
     })
     navigate(filePathToUrlPath(filePath), { replace: true })
   }, [navigate])
