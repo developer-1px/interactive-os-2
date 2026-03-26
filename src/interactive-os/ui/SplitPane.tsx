@@ -35,18 +35,13 @@ export function SplitPane({
       const increaseKey = isHorizontal ? 'ArrowRight' : 'ArrowDown'
       const decreaseKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp'
 
-      let delta = 0
-      if (e.key === increaseKey) {
-        delta = STEP
-      } else if (e.key === decreaseKey) {
-        delta = -STEP
-      } else if (e.key === 'Home') {
-        delta = minRatio - sizes[index]
-      } else if (e.key === 'End') {
-        delta = (1 - minRatio) - sizes[index]
-      } else {
-        return
-      }
+      const delta =
+        e.key === increaseKey ? STEP
+        : e.key === decreaseKey ? -STEP
+        : e.key === 'Home' ? minRatio - sizes[index]
+        : e.key === 'End' ? (1 - minRatio) - sizes[index]
+        : null
+      if (delta === null) return
 
       e.preventDefault()
       const newSizes = [...sizes]
