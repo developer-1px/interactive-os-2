@@ -15,15 +15,25 @@ import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
 
 type KeyMapHandler = (ctx: ReturnType<typeof createPatternContext>) => Command | void
+type PluginKeyMapHandler = (ctx: ReturnType<typeof createPatternContext>, original?: () => Command | void) => Command | void
 type ClipboardHandler = KeyMapHandler
+
+function wrapWithOriginal(inner: KeyMapHandler, outer: PluginKeyMapHandler): KeyMapHandler {
+  return (ctx) => outer(ctx, () => inner(ctx))
+}
 
 // ── Plugin handler extraction (pure) ──
 
-export function collectPluginKeyMaps(plugins: Plugin[]): Record<string, KeyMapHandler> | undefined {
+export function collectPluginKeyMaps(plugins: Plugin[]): Record<string, PluginKeyMapHandler> | undefined {
   if (!plugins.length) return undefined
-  const merged: Record<string, KeyMapHandler> = {}
+  const merged: Record<string, PluginKeyMapHandler> = {}
   for (const p of plugins) {
-    if (p.keyMap) Object.assign(merged, p.keyMap)
+    if (p.keyMap) {
+      for (const [key, handler] of Object.entries(p.keyMap)) {
+        const prev = merged[key]
+        merged[key] = prev ? wrapWithOriginal(prev as KeyMapHandler, handler) : handler
+      }
+    }
   }
   return Object.keys(merged).length > 0 ? merged : undefined
 }
@@ -91,10 +101,17 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     pluginClipboardHandlers: collectPluginClipboardHandlers(plugins),
   }), [plugins])
 
-  const mergedKeyMap = useMemo(
-    () => ({ ...behavior.keyMap, ...pluginKeyMaps, ...keyMapOverrides }),
-    [behavior.keyMap, pluginKeyMaps, keyMapOverrides],
-  )
+  const mergedKeyMap = useMemo(() => {
+    const base: Record<string, KeyMapHandler> = { ...behavior.keyMap }
+    if (pluginKeyMaps) {
+      for (const [key, handler] of Object.entries(pluginKeyMaps)) {
+        const behaviorHandler = base[key]
+        base[key] = behaviorHandler ? wrapWithOriginal(behaviorHandler, handler) : handler as KeyMapHandler
+      }
+    }
+    if (keyMapOverrides) Object.assign(base, keyMapOverrides)
+    return base
+  }, [behavior.keyMap, pluginKeyMaps, keyMapOverrides])
 
   // ── Behavior context options ──
 

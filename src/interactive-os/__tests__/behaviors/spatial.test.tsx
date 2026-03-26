@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../../primitives/aria'
-import { spatial } from '../../misc/spatial'
+import { spatial, spatialPlugin } from '../../misc/spatial'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
@@ -47,7 +47,7 @@ describe('spatial behavior — Enter/Escape drill-in/out', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={spatial} data={spatialFixtureExpanded()} plugins={[]}>
+      <Aria behavior={spatial} data={spatialFixtureExpanded()} plugins={[spatialPlugin()]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused} data-selected={state.selected}>
             {(node as { data: { label: string } }).data.label}

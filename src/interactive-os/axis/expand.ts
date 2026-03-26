@@ -1,6 +1,5 @@
 import type { AxisConfig, KeyMap } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
-import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 
 // ② 2026-03-26-core-absorption-prd.md
@@ -118,20 +117,11 @@ export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Parti
   const mode = options?.mode ?? 'arrow'
 
   if (mode === 'enter-esc') {
+    // ② 2026-03-26-plugin-keymap-original-prd.md
+    // expand 본연 동작만 — spatial/rename은 plugin keyMap에서 original 패턴으로 override
     const keyMap: KeyMap = {
-      Enter: (ctx) => {
-        const children = ctx.getChildren(ctx.focused)
-        if (children.length > 0) {
-          return createBatchCommand([
-            ctx.enterChild(ctx.focused),
-            ctx.focusChild(),
-          ])
-        }
-        return ctx.startRename(ctx.focused)
-      },
-      Escape: (ctx) => {
-        return ctx.exitToParent()
-      },
+      Enter: (ctx) => ctx.activate(),
+      Escape: (ctx) => (ctx.isExpanded ? ctx.collapse() : ctx.focusParent()),
     }
     return { keyMap, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
   }

@@ -13,8 +13,6 @@ import { selectionCommands, SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/se
 import { expandCommands, EXPANDED_ID } from '../axis/expand'
 import { valueCommands, VALUE_ID } from '../axis/value'
 import type { ValueRange } from '../axis/value'
-import { spatialCommands, SPATIAL_PARENT_ID } from '../plugins/spatial'
-import { renameCommands } from '../plugins/rename'
 
 function getFocusedId(engine: CommandEngine): string {
   return (engine.getStore().entities[FOCUS_ID]?.focusedId as string) ?? ''
@@ -206,24 +204,6 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
       commands.push(focusCommands.setFocus(targetId))
       commands.push(selectionCommands.selectRange(rangeIds))
       return createBatchCommand(commands)
-    },
-
-    enterChild(parentId: string): Command {
-      return spatialCommands.enterChild(parentId)
-    },
-
-    exitToParent(): Command | undefined {
-      const spatialParent = getEntity(store, SPATIAL_PARENT_ID)
-      const parentId = spatialParent?.parentId as string | undefined
-      if (!parentId || parentId === ROOT_ID) return undefined
-      return createBatchCommand([
-        spatialCommands.exitToParent(),
-        focusCommands.setFocus(parentId),
-      ])
-    },
-
-    startRename(nodeId: string): Command {
-      return renameCommands.startRename(nodeId)
     },
 
     dispatch(command: Command): void {
