@@ -59,12 +59,22 @@ const LAYER_ICONS: Record<string, LucideIcon> = {
   vision: Lightbulb,
   store: Database,
   engine: Cog,
-  primitives: Box,
   axis: Axe,
   pattern: Layers,
   plugins: Puzzle,
+  primitives: Box,
   ui: Component,
   devtools: Wrench,
+}
+
+const LAYER_LABELS: Record<string, string> = {
+  store: 'L1 Store',
+  engine: 'L2 Engine',
+  axis: 'L4 Axis',
+  pattern: 'L5 Pattern',
+  plugins: 'L3 Plugins',
+  primitives: 'L6 Primitives',
+  ui: 'L7 UI',
 }
 
 // --- Vertical toolbar behavior ---
@@ -117,7 +127,7 @@ const appNavItems: NavItem[] = [
 
 const internalsNavItems: NavItem[] = contentsOrder.map((layer) => ({
   id: `internals/${layer}`,
-  label: layer.charAt(0).toUpperCase() + layer.slice(1),
+  label: LAYER_LABELS[layer] ?? layer.charAt(0).toUpperCase() + layer.slice(1),
   icon: LAYER_ICONS[layer] ?? FileText,
   path: `/internals/${layer}`,
 }))
