@@ -2,7 +2,7 @@
 import { useState, useCallback, useMemo, useEffect, type HTMLAttributes } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
-  Sun, Moon, Presentation, Component, Eye, Activity, Palette, ShieldAlert, Languages,
+  Sun, Moon, Presentation, Component, Eye, FolderCode, Activity, Palette, ShieldAlert, Languages,
   Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -119,7 +119,7 @@ const appNavItems: NavItem[] = [
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'i18n', label: 'i18n', icon: Languages, path: '/i18n' },
   { id: 'ui-showcase', label: 'UI Showcase', icon: Eye, path: '/ui' },
-  { id: 'viewer', label: 'Viewer', icon: Eye, path: '/viewer' },
+  { id: 'viewer', label: 'Viewer', icon: FolderCode, path: '/viewer' },
   { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
   { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
