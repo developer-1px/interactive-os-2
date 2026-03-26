@@ -3,7 +3,7 @@
 import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
 import type { ValueRange } from './value'
-import type { Middleware } from '../engine/types'
+import type { Middleware, VisibilityFilter } from '../engine/types'
 
 export type SelectionMode = 'single' | 'multiple'
 
@@ -90,6 +90,7 @@ export interface StructuredAxis {
   keyMap: KeyMap
   config?: Partial<AxisConfig>
   middleware?: Middleware
+  visibilityFilter?: VisibilityFilter
 }
 
 // Axis can be either a plain KeyMap (v1 compat) or a structured object
@@ -109,4 +110,8 @@ export function extractConfig(axis: Axis): Partial<AxisConfig> | undefined {
 
 export function extractMiddleware(axis: Axis): Middleware | undefined {
   return isStructuredAxis(axis) ? axis.middleware : undefined
+}
+
+export function extractVisibilityFilter(axis: Axis): VisibilityFilter | undefined {
+  return isStructuredAxis(axis) ? axis.visibilityFilter : undefined
 }

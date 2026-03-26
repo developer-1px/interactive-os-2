@@ -1,40 +1,42 @@
 import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 import { getChildren } from '../store/createStore'
-import type { CommandEngine } from './createCommandEngine'
-// ② 2026-03-26-core-absorption-prd.md
-import { EXPANDED_ID } from '../axis/expand'
-import { SEARCH_ID, matchesSearchFilter } from '../plugins/search'
+import type { VisibilityFilter } from './types'
 
 /**
  * Build flat list of visible node IDs by depth-first walk from __root__.
  *
- * Gating rule: if __expanded__ entity exists, only descend into expanded nodes.
- * If __expanded__ entity is absent (pattern doesn't use expand axis), walk all children.
+ * Visibility is determined by filters declared by axes/plugins:
+ * - shouldShow(nodeId, store) → false = skip this node entirely
+ * - shouldDescend(nodeId, store) → false = don't walk children
  *
- * Search rule: if __search__.filterText is set, skip nodes that don't match.
+ * When no filters are provided, all nodes are visible.
+ * Container nodes (nodes with children) without expand filter are
+ * not focusable — only their children are walked into.
  */
-export function getVisibleNodes(engine: CommandEngine): string[] {
-  const store = engine.getStore()
-  const expandedEntity = store.entities[EXPANDED_ID]
-  const expandedIds = expandedEntity ? (expandedEntity.expandedIds as string[]) ?? [] : null
-  const searchEntity = store.entities[SEARCH_ID] as Record<string, unknown> | undefined
-  const searchFilterText = (searchEntity?.filterText as string) ?? ''
+export function getVisibleNodes(store: NormalizedData, filters?: VisibilityFilter[]): string[] {
   const visible: string[] = []
+  const hasDescendFilter = filters?.some(f => f.shouldDescend) ?? false
 
   const walk = (parentId: string) => {
     const children = getChildren(store, parentId)
     for (const childId of children) {
-      if (searchFilterText && !matchesSearchFilter(store.entities[childId], searchFilterText)) {
-        continue // skip this node entirely (don't push, don't walk children)
+      // shouldShow: if any filter says no, skip entirely
+      if (filters?.some(f => f.shouldShow && !f.shouldShow(childId, store))) {
+        continue
       }
+
       const grandChildren = getChildren(store, childId)
       const isContainer = grandChildren.length > 0
-      if (isContainer && !expandedEntity) {
-        // No expand axis → container nodes (groups) are not focusable, only walk into them
+
+      if (isContainer && !hasDescendFilter) {
+        // No descend filter → container nodes (groups) are not focusable, only walk into them
         walk(childId)
       } else {
         visible.push(childId)
-        if (!expandedIds || expandedIds.includes(childId)) {
+        // shouldDescend: if any filter says no, don't walk children
+        const shouldDescend = !filters?.some(f => f.shouldDescend && !f.shouldDescend(childId, store))
+        if (shouldDescend) {
           walk(childId)
         }
       }

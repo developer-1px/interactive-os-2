@@ -7,7 +7,7 @@ import type { AriaPattern, NodeState } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren, getParent, getEntity } from '../store/createStore'
 import { focusCommands } from '../axis/navigate'
-import { expandCommands } from '../axis/expand'
+import { expandCommands, expandVisibilityFilter } from '../axis/expand'
 import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
@@ -69,7 +69,7 @@ export interface UseAriaViewReturn {
   getNodeProps: (id: string) => Record<string, unknown>
   getNodeState: (id: string) => NodeState
   containerProps: Record<string, unknown>
-  behaviorCtxOptions: { expandable?: boolean; selectionMode?: string; colCount?: number; valueRange?: { min: number; max: number; step?: number } }
+  behaviorCtxOptions: { expandable?: boolean; selectionMode?: string; colCount?: number; valueRange?: { min: number; max: number; step?: number }; visibilityFilters?: import('../engine/types').VisibilityFilter[] }
 }
 
 export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
@@ -98,14 +98,28 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
   // ── Behavior context options ──
 
+  // Collect visibility filters from behavior (axes) + plugins
+  const allVisibilityFilters = useMemo(() => {
+    const filters = [...(behavior.visibilityFilters ?? [])]
+    // expandTracking/expandable without explicit expand axis → add expand filter
+    if ((behavior.expandTracking || behavior.expandable) && !filters.some(f => f.shouldDescend)) {
+      filters.push(expandVisibilityFilter)
+    }
+    for (const p of plugins) {
+      if (p.visibilityFilter) filters.push(p.visibilityFilter)
+    }
+    return filters.length > 0 ? filters : undefined
+  }, [behavior.visibilityFilters, behavior.expandTracking, behavior.expandable, plugins])
+
   const behaviorCtxOptions = useMemo(
     () => ({
       expandable: behavior.expandable,
       selectionMode: behavior.selectionMode,
       colCount: behavior.colCount,
       valueRange: behavior.valueRange,
+      visibilityFilters: allVisibilityFilters,
     }),
-    [behavior.expandable, behavior.selectionMode, behavior.colCount, behavior.valueRange],
+    [behavior.expandable, behavior.selectionMode, behavior.colCount, behavior.valueRange, allVisibilityFilters],
   )
 
   // ── getNodeState ──

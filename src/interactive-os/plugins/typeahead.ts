@@ -104,7 +104,7 @@ export function typeahead(options: TypeaheadOptions) {
       const store = engine.getStore()
       const focusedId = (store.entities[FOCUS_ID]?.focusedId as string) ?? ''
 
-      const visibleIds = getVisibleNodes(engine)
+      const visibleIds = getVisibleNodes(store)
       const nodes: TypeaheadNode[] = []
       for (const id of visibleIds) {
         const entity = store.entities[id]

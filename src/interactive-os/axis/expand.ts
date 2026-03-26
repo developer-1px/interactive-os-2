@@ -1,5 +1,5 @@
 import type { AxisConfig, KeyMap } from './types'
-import type { Command } from '../engine/types'
+import type { Command, VisibilityFilter } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 
@@ -105,7 +105,16 @@ interface ExpandOptions {
   mode?: 'arrow' | 'enter-esc'
 }
 
-export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Partial<AxisConfig> } {
+export const expandVisibilityFilter: VisibilityFilter = {
+  shouldDescend(nodeId, store) {
+    const entity = store.entities[EXPANDED_ID]
+    if (!entity) return true // no expand axis → walk all
+    const ids = (entity.expandedIds as string[]) ?? []
+    return ids.includes(nodeId)
+  },
+}
+
+export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; visibilityFilter: VisibilityFilter } {
   const mode = options?.mode ?? 'arrow'
 
   if (mode === 'enter-esc') {
@@ -124,7 +133,7 @@ export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Parti
         return ctx.exitToParent()
       },
     }
-    return { keyMap, config: { expandTracking: true } }
+    return { keyMap, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
   }
 
   // mode === 'arrow' (default)
@@ -132,5 +141,5 @@ export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Parti
     ArrowRight: (ctx) => (ctx.isExpanded ? ctx.focusChild() : ctx.expand()),
     ArrowLeft: (ctx) => (ctx.isExpanded ? ctx.collapse() : ctx.focusParent()),
   }
-  return { keyMap, config: { expandTracking: true } }
+  return { keyMap, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
 }

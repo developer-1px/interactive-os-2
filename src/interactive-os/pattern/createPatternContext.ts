@@ -4,6 +4,7 @@ import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getVisibleNodes } from '../engine/getVisibleNodes'
+import type { VisibilityFilter } from '../engine/types'
 import type { PatternContext, GridNav, SelectionMode, ValueNav } from './types'
 import { getEntity, getChildren, getParent } from '../store/createStore'
 // ② 2026-03-26-core-absorption-prd.md
@@ -33,6 +34,7 @@ export interface PatternContextOptions {
   selectionMode?: SelectionMode
   colCount?: number
   valueRange?: ValueRange
+  visibilityFilters?: VisibilityFilter[]
 }
 
 export function createPatternContext(engine: CommandEngine, options?: PatternContextOptions): PatternContext {
@@ -42,7 +44,7 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
   // Lazy-cached visible nodes — computed at most once per context
   let _visibleNodes: string[] | null = null
   const visibleNodes = (): string[] => {
-    if (!_visibleNodes) _visibleNodes = getVisibleNodes(engine)
+    if (!_visibleNodes) _visibleNodes = getVisibleNodes(store, options?.visibilityFilters)
     return _visibleNodes
   }
 
