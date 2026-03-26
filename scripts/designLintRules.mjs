@@ -382,6 +382,143 @@ export function runDesignLint(root, options) {
       },
     },
 
+    // ── inline-raw-value ──
+    // inline style에 디자인 속성의 raw 값이 있으면 위반
+    {
+      id: 'inline-raw-value',
+      severity: 'error',
+      run(c) {
+        const DESIGN_PROPS = ['color', 'background', 'background-color', 'border', 'border-color', 'border-width', 'border-radius', 'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'gap', 'row-gap', 'column-gap', 'font-size', 'font-weight', 'font-family', 'line-height', 'box-shadow', 'outline', 'outline-color', 'outline-width', 'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height']
+
+        function isExempt(value) {
+          const v = value.trim()
+          if (/^var\(--/.test(v)) return true
+          if (/^calc\(/.test(v) && /var\(--/.test(v)) return true
+          const SAFE = ['0', '0px', '0%', 'none', 'inherit', 'initial', 'unset', 'revert', 'transparent', 'currentColor', 'currentcolor', 'auto', 'normal', '100%', '50%']
+          if (SAFE.includes(v)) return true
+          if (/^-?\d+(\.\d+)?$/.test(v)) return true  // unitless (font-weight, line-height, flex)
+          if (v === '1px' || v === '-1px') return true
+          return false
+        }
+
+        const all = c.root.querySelectorAll('*')
+        let checked = 0, passed = 0
+
+        for (const el of all) {
+          if (!el.style || el.style.length === 0) continue
+          if (c.shouldSkip(el)) continue
+
+          let hasDesignProp = false
+          let hasViolation = false
+          const rawProps = []
+
+          for (const prop of DESIGN_PROPS) {
+            const value = el.style.getPropertyValue(prop)
+            if (!value) continue
+            hasDesignProp = true
+            if (!isExempt(value)) {
+              hasViolation = true
+              rawProps.push(`${prop}: ${value}`)
+            }
+          }
+
+          if (!hasDesignProp) continue
+          checked++
+
+          if (!hasViolation) {
+            passed++
+          } else {
+            c.addViolation(this.id, el, `Inline style with raw design values`, 'var(--token) or exempt value', rawProps.slice(0, 3).join('; ') + (rawProps.length > 3 ? ` (+${rawProps.length - 3} more)` : ''), this.severity)
+          }
+        }
+        return { checked, passed }
+      },
+    },
+
+    // ── stylesheet-raw-value ──
+    // 같은 origin stylesheet에서 디자인 속성에 raw 값이 있으면 위반
+    {
+      id: 'stylesheet-raw-value',
+      severity: 'warning',
+      run(c) {
+        const DESIGN_PROPS = ['color', 'background', 'background-color', 'border', 'border-color', 'border-width', 'border-radius', 'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'gap', 'row-gap', 'column-gap', 'font-size', 'font-weight', 'font-family', 'line-height', 'box-shadow', 'outline', 'outline-color', 'outline-width', 'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height']
+
+        function isExempt(value) {
+          const v = value.trim()
+          if (/^var\(--/.test(v)) return true
+          if (/^calc\(/.test(v) && /var\(--/.test(v)) return true
+          const SAFE = ['0', '0px', '0%', 'none', 'inherit', 'initial', 'unset', 'revert', 'transparent', 'currentColor', 'currentcolor', 'auto', 'normal', '100%', '50%']
+          if (SAFE.includes(v)) return true
+          if (/^-?\d+(\.\d+)?$/.test(v)) return true
+          if (v === '1px' || v === '-1px') return true
+          return false
+        }
+
+        function parseShorthand(value) {
+          const parts = []
+          let depth = 0, current = ''
+          for (const ch of value) {
+            if (ch === '(') depth++
+            if (ch === ')') depth--
+            if (ch === ' ' && depth === 0) { if (current.trim()) parts.push(current.trim()); current = '' }
+            else current += ch
+          }
+          if (current.trim()) parts.push(current.trim())
+          return parts
+        }
+
+        let checked = 0, passed = 0
+
+        for (const sheet of document.styleSheets) {
+          let rules
+          try { rules = sheet.cssRules || sheet.rules } catch { continue } // cross-origin skip
+
+          for (const rule of rules) {
+            if (rule.type !== 1) continue // CSSStyleRule only
+            const style = rule.style
+            if (!style) continue
+
+            // Skip reset/normalize layers
+            const selector = rule.selectorText || ''
+            if (selector === '*' || selector === 'html' || selector === 'body' || selector.startsWith(':root') || selector.startsWith(':where')) continue
+
+            let hasDesignProp = false
+            let hasViolation = false
+            const rawProps = []
+
+            for (const prop of DESIGN_PROPS) {
+              const value = style.getPropertyValue(prop)
+              if (!value) continue
+              hasDesignProp = true
+
+              // Check shorthand parts individually
+              const parts = parseShorthand(value)
+              for (const part of parts) {
+                if (!isExempt(part)) {
+                  // Skip CSS keywords (solid, dashed, sans-serif, etc.)
+                  if (/^[a-z-]+$/.test(part) && !/px|em|rem|%|vw|vh/.test(part)) continue
+                  hasViolation = true
+                  rawProps.push(`${prop}: ${value}`)
+                  break
+                }
+              }
+            }
+
+            if (!hasDesignProp) continue
+            checked++
+
+            if (!hasViolation) {
+              passed++
+            } else {
+              // Use root as element since CSS rules aren't tied to specific elements
+              c.addViolation(this.id, c.root, `Rule "${selector}" has raw design values`, 'var(--token) or exempt value', rawProps.slice(0, 3).join('; ') + (rawProps.length > 3 ? ` (+${rawProps.length - 3} more)` : ''), this.severity)
+            }
+          }
+        }
+        return { checked, passed }
+      },
+    },
+
   ] // ← 새 규칙은 여기에 객체를 추가하면 됨
 
   // ════════════════════════════════════════════════════
