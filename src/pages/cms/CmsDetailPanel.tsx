@@ -10,7 +10,7 @@ import type { Locale, LocaleMap } from './cms-types'
 import { CMS_ICONS, CMS_ICON_MAP } from './cmsIcons'
 import { CmsIcon } from './cms-renderers'
 import { LOCALES } from './cms-types'
-import { Sheet } from 'lucide-react'
+import { Sheet, ImagePlus, X } from 'lucide-react'
 
 interface CmsDetailPanelProps {
   engine: CommandEngine
@@ -188,6 +188,7 @@ function DetailField(props: DetailFieldProps) {
     case 'long-text': return <LongTextField {...props} />
     case 'url': return <UrlField {...props} />
     case 'icon': return <IconField {...props} />
+    case 'image': return <ImageField {...props} />
     default: return <ShortTextField {...props} />
   }
 }
@@ -261,6 +262,83 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
         onFocus={handleFocus}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
+      />
+    </div>
+  )
+}
+
+function ImageField({ entry, store, engine }: DetailFieldProps) {
+  const entity = store.entities[entry.nodeId]
+  const data = (entity?.data ?? {}) as Record<string, unknown>
+  const currentSrc = (data[entry.field] as string) ?? ''
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !file.type.startsWith('image/')) return
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string
+      engine.dispatch(renameCommands.confirmRename(entry.nodeId, entry.field, dataUrl))
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }, [entry.nodeId, entry.field, engine])
+
+  const handleRemove = useCallback(() => {
+    engine.dispatch(renameCommands.confirmRename(entry.nodeId, entry.field, ''))
+  }, [entry.nodeId, entry.field, engine])
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      fileRef.current?.click()
+    }
+  }, [])
+
+  return (
+    <div className="cms-detail-field">
+      <label className="cms-detail-field__label">{entry.label}</label>
+      {currentSrc ? (
+        <div className="cms-image-field__preview-wrap">
+          <img src={currentSrc} alt="" className="cms-image-field__preview" />
+          <div className="cms-image-field__actions">
+            <button
+              type="button"
+              className="cms-image-field__action"
+              onClick={() => fileRef.current?.click()}
+              title="Replace"
+            >
+              <ImagePlus size={14} />
+            </button>
+            <button
+              type="button"
+              className="cms-image-field__action"
+              onClick={handleRemove}
+              title="Remove"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="cms-image-field__placeholder"
+          onClick={() => fileRef.current?.click()}
+          onKeyDown={handleKeyDown}
+        >
+          <ImagePlus size={20} />
+          <span>Select image</span>
+        </button>
+      )}
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="cms-image-field__input"
       />
     </div>
   )

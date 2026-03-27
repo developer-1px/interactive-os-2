@@ -14,8 +14,8 @@ import type { Locale, LocaleMap } from './cms-types'
 
 // ── Field types ──
 
-const FIELD_TYPES = new Set(['short-text', 'long-text', 'url', 'icon'] as const)
-export type FieldType = 'short-text' | 'long-text' | 'url' | 'icon'
+const FIELD_TYPES = new Set(['short-text', 'long-text', 'url', 'icon', 'image'] as const)
+export type FieldType = 'short-text' | 'long-text' | 'url' | 'icon' | 'image'
 
 // ── Locale map ──
 
@@ -52,7 +52,7 @@ export const nodeSchemas = {
   // ② 2026-03-24-cms-editorial-content-prd.md
   'value-item':     z.object({ type: z.literal('value-item'),    icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.describe('Title'), desc: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Description') }),
   'quote':          z.object({ type: z.literal('quote'),          text: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Quote'), attribution: localeMapSchema.describe('Attribution') }),
-  'article':        z.object({ type: z.literal('article'),        icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.describe('Title'), category: localeMapSchema.describe('Category'), readTime: z.string().describe('Read Time') }),
+  'article':        z.object({ type: z.literal('article'),        image: z.string().meta({ fieldType: 'image' }).describe('Thumbnail'), icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.describe('Title'), category: localeMapSchema.describe('Category'), readTime: z.string().describe('Read Time') }),
   'showcase-item':  z.object({ type: z.literal('showcase-item'),  icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
   'stat-card':      z.object({ type: z.literal('stat-card'),      value: z.string().describe('Value'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
   'section-cta':    z.object({ type: z.literal('section-cta'),    label: localeMapSchema.describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),

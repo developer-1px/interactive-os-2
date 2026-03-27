@@ -100,11 +100,11 @@ export const cmsStore = createStore({
     // ── Journal ──
     'journal-title': { id: 'journal-title', data: { type: 'section-title', value: localeMap('From the docs') } },
 
-    'article-start':    { id: 'article-start',    data: { type: 'article', icon: 'file',     title: localeMap('Getting Started'),                              category: localeMap('Guides'),       readTime: '5 min' } },
-    'article-concepts': { id: 'article-concepts', data: { type: 'article', icon: 'layers',   title: localeMap('7 Layers: Store to UI'),                        category: localeMap('Architecture'), readTime: '10 min' } },
-    'article-keyboard': { id: 'article-keyboard', data: { type: 'article', icon: 'keyboard', title: localeMap('Keyboard Interaction Tables'),                   category: localeMap('Reference'),    readTime: '—' } },
-    'article-plugins':  { id: 'article-plugins',  data: { type: 'article', icon: 'cog',      title: localeMap('Plugin System: definePlugin & Middleware'),      category: localeMap('Deep Dive'),     readTime: '8 min' } },
-    'article-axes':     { id: 'article-axes',     data: { type: 'article', icon: 'compass',  title: localeMap('Axis Decomposition: 7 Atoms of Interaction'),   category: localeMap('Deep Dive'),     readTime: '12 min' } },
+    'article-start':    { id: 'article-start',    data: { type: 'article', image: '', icon: 'file',     title: localeMap('Getting Started'),                              category: localeMap('Guides'),       readTime: '5 min' } },
+    'article-concepts': { id: 'article-concepts', data: { type: 'article', image: '', icon: 'layers',   title: localeMap('7 Layers: Store to UI'),                        category: localeMap('Architecture'), readTime: '10 min' } },
+    'article-keyboard': { id: 'article-keyboard', data: { type: 'article', image: '', icon: 'keyboard', title: localeMap('Keyboard Interaction Tables'),                   category: localeMap('Reference'),    readTime: '—' } },
+    'article-plugins':  { id: 'article-plugins',  data: { type: 'article', image: '', icon: 'cog',      title: localeMap('Plugin System: definePlugin & Middleware'),      category: localeMap('Deep Dive'),     readTime: '8 min' } },
+    'article-axes':     { id: 'article-axes',     data: { type: 'article', image: '', icon: 'compass',  title: localeMap('Axis Decomposition: 7 Atoms of Interaction'),   category: localeMap('Deep Dive'),     readTime: '12 min' } },
 
     // ── Testimonial ──
     'testimonial-quote': { id: 'testimonial-quote', data: { type: 'quote', text: localeMap('The cost of accessibility\nhas been hiding its value.\nWhen the cost is zero,\nevery interface is accessible.'), attribution: localeMap('interactive-os') } },

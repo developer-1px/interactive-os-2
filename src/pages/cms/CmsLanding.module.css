@@ -662,6 +662,14 @@
   flex-shrink: 0;
 }
 
+.cmsArticleImage {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--landing-shape-xs-r);
+  flex-shrink: 0;
+}
+
 .cmsArticleBody {
   display: flex;
   flex-direction: column;
