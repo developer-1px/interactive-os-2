@@ -503,17 +503,31 @@ export function agentOpsPlugin(): Plugin {
               permissionMode: 'acceptEdits',
             })
 
-            // Stream in background — uses wsBroadcast so all tabs see responses
+            // sessionId is only available after receiving the first stream message.
+            // The stream loop resolves this promise once sessionId is accessible.
+            let resolveSessionId: (id: string) => void
+            const sessionIdReady = new Promise<string>(r => { resolveSessionId = r })
+
+            // Stream in background
             ;(async () => {
               let currentText = ''
+              let idResolved = false
               try {
                 for await (const sdkMsg of session.stream()) {
-                  const sid = session.sessionId
-                  handleSdkMessage(sid, sdkMsg, wsBroadcast, () => currentText, (t) => { currentText = t })
+                  if (!idResolved) {
+                    try {
+                      resolveSessionId!(session.sessionId)
+                      idResolved = true
+                    } catch { /* sessionId not yet available, keep iterating */ }
+                  }
+                  if (idResolved) {
+                    handleSdkMessage(session.sessionId, sdkMsg, wsBroadcast, () => currentText, (t) => { currentText = t })
+                  }
                 }
               } catch (e) {
-                const sid = chatSessions.has(session.sessionId) ? session.sessionId : ''
-                if (sid) {
+                let sid = ''
+                try { sid = session.sessionId } catch { /* not available */ }
+                if (sid && chatSessions.has(sid)) {
                   const errMsg: ChatWsServerMessage = { type: 'session-error', sessionId: sid, error: String(e) }
                   wsBroadcast('chat:server', errMsg)
                   chatSessions.delete(sid)
@@ -521,9 +535,7 @@ export function agentOpsPlugin(): Plugin {
               }
             })()
 
-            // SDK populates sessionId asynchronously after first stream event
-            await new Promise(r => setTimeout(r, 800))
-            const sessionId = session.sessionId
+            const sessionId = await sessionIdReady
             chatSessions.set(sessionId, session)
 
             reply('chat:server', { type: 'session-created', sessionId } satisfies ChatWsServerMessage)
