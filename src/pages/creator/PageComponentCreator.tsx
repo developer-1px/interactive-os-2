@@ -10,14 +10,7 @@ import { ComponentChat } from './ComponentChat'
 import { SourceViewer } from './SourceViewer'
 import styles from './PageComponentCreator.module.css'
 
-type RightTab = 'preview' | 'tsx' | 'css' | 'chat'
-
-const RIGHT_TABS: { id: RightTab; label: string }[] = [
-  { id: 'preview', label: 'Preview' },
-  { id: 'tsx', label: 'TSX' },
-  { id: 'css', label: 'CSS' },
-  { id: 'chat', label: 'Chat' },
-]
+type SourceTab = 'tsx' | 'css'
 
 export default function PageComponentCreator() {
   const { pathname } = useLocation()
@@ -38,20 +31,22 @@ export default function PageComponentCreator() {
     [navigate],
   )
 
-  const [splitSizes, setSplitSizes] = useState([0.5, 0.5])
-  const [rightTab, setRightTab] = useState<RightTab>('preview')
+  // Split states
+  const [mainSplit, setMainSplit] = useState([0.5, 0.5])     // Canvas | Right
+  const [rightSplit, setRightSplit] = useState([0.65, 0.35])  // Code | Chat
+  const [sourceTab, setSourceTab] = useState<SourceTab>('tsx')
 
   return (
     <div className={`flex-col ${styles.page}`}>
-      {/* Body: Canvas | Right Panel */}
+      {/* Body: Canvas | (Code / Chat) */}
       <div className={`flex-row ${styles.body}`}>
-        <SplitPane direction="horizontal" sizes={splitSizes} onResize={setSplitSizes}>
-          {/* Left: Canvas — always shows component */}
+        <SplitPane direction="horizontal" sizes={mainSplit} onResize={setMainSplit}>
+          {/* ── Primary pane: Canvas (항상 보임) ── */}
           <div className={`flex-col ${styles.canvasPane}`}>
-            <div className={styles.canvasPaneHeader}>
-              <span className={styles.canvasPaneTitle}>{selectedName || 'Select'}</span>
+            <div className={`flex-row items-center ${styles.paneHeader}`}>
+              <span className={styles.paneTitle}>{selectedName || 'Select'}</span>
               {selectedEntry && (
-                <span className={styles.canvasPaneMeta}>
+                <span className={styles.paneMeta}>
                   {selectedEntry.variants.length} variants · {selectedEntry.sizes.length} sizes
                   {selectedEntry.tokens.shape && ` · shape:${selectedEntry.tokens.shape}`}
                 </span>
@@ -60,59 +55,58 @@ export default function PageComponentCreator() {
             {selectedEntry ? (
               <ComponentCanvas entry={selectedEntry} />
             ) : (
-              <div className={`flex-row items-center justify-center flex-1 ${styles.canvasEmpty}`}>
+              <div className={`flex-row items-center justify-center flex-1 ${styles.emptyState}`}>
                 컴포넌트를 선택하세요
               </div>
             )}
           </div>
 
-          {/* Right: Tabbed panel — Preview/TSX/CSS/Chat */}
+          {/* ── Right: Code / Chat (세로 split) ── */}
           <div className={`flex-col ${styles.rightPane}`}>
-            {/* Tab bar */}
-            <div className={`flex-row shrink-0 items-center ${styles.rightTabBar}`}>
-              {RIGHT_TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  data-surface="action"
-                  className={`${styles.rightTab}${rightTab === tab.id ? ` ${styles.rightTabActive}` : ''}`}
-                  onClick={() => setRightTab(tab.id)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Tab content */}
-            <div className={`flex-col flex-1 min-w-0 ${styles.rightContent}`}>
-              {rightTab === 'preview' && selectedEntry && (
-                <ComponentCanvas entry={selectedEntry} />
-              )}
-              {rightTab === 'tsx' && selectedEntry && (
-                <SourceViewer entry={selectedEntry} activeTab="tsx" />
-              )}
-              {rightTab === 'css' && selectedEntry && (
-                <SourceViewer entry={selectedEntry} activeTab="css" />
-              )}
-              {rightTab === 'chat' && (
-                <ComponentChat entry={selectedEntry ?? null} />
-              )}
-              {!selectedEntry && (
-                <div className={`flex-row items-center justify-center flex-1 ${styles.canvasEmpty}`}>
-                  컴포넌트를 선택하세요
+            <SplitPane direction="vertical" sizes={rightSplit} onResize={setRightSplit}>
+              {/* Secondary pane: Source code [TSX | CSS] 탭 */}
+              <div className={`flex-col ${styles.codePane}`}>
+                <div className={`flex-row items-center ${styles.paneHeader}`}>
+                  <button
+                    data-surface="action"
+                    className={`${styles.sourceTab}${sourceTab === 'tsx' ? ` ${styles.sourceTabActive}` : ''}`}
+                    onClick={() => setSourceTab('tsx')}
+                  >
+                    TSX
+                  </button>
+                  <button
+                    data-surface="action"
+                    className={`${styles.sourceTab}${sourceTab === 'css' ? ` ${styles.sourceTabActive}` : ''}`}
+                    onClick={() => setSourceTab('css')}
+                  >
+                    CSS
+                  </button>
                 </div>
-              )}
-            </div>
+                <div className={`flex-1 overflow-auto ${styles.codeContent}`}>
+                  {selectedEntry ? (
+                    <SourceViewer entry={selectedEntry} activeTab={sourceTab} />
+                  ) : (
+                    <div className={`flex-row items-center justify-center flex-1 ${styles.emptyState}`}>
+                      컴포넌트를 선택하세요
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Tertiary pane: Chat (항상 보임) */}
+              <ComponentChat entry={selectedEntry ?? null} />
+            </SplitPane>
           </div>
         </SplitPane>
       </div>
 
-      {/* Bottom: Component tabs */}
-      <div className={`flex-row shrink-0 items-center ${styles.tabs}`}>
+      {/* Nav bar: Component tabs */}
+      <div className={`flex-row shrink-0 items-center ${styles.navBar}`}>
         {componentRegistry.map((entry) => (
           <button
             key={entry.name}
             data-surface="action"
-            className={`${styles.tab}${entry.name === selectedName ? ` ${styles.tabActive}` : ''}`}
+            className={`${styles.navTab}${entry.name === selectedName ? ` ${styles.navTabActive}` : ''}`}
             onClick={() => handleSelectComponent(entry.name)}
           >
             {entry.name}
