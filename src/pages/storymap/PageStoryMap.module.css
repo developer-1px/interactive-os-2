@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════
    StoryMap — Jeff Patton 2D layout
+   Story-per-column, horizontal scroll
    ═══════════════════════════════════════════ */
 
 /* --- base --- */
@@ -35,40 +36,22 @@
   padding: var(--space-xl);
 }
 
-.smGrid {
+/* --- need group: spans all its stories horizontally --- */
+
+.smMap {
   display: flex;
   gap: var(--space-lg);
+  width: max-content;
   align-items: flex-start;
 }
 
-/* --- persona row --- */
-
-.smPersona {
+.smNeedGroup {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-medium);
-  color: var(--text-secondary);
 }
 
-.smPersona__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--icon-lg);
-  height: var(--icon-lg);
-  border-radius: 50%;
-  background: var(--tone-primary-dim);
-  color: var(--tone-primary-base);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-}
-
-/* --- need header --- */
-
-.smNeed {
+.smNeedHeader {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
@@ -80,9 +63,43 @@
   color: var(--text-primary);
 }
 
-.smNeed__id {
+.smNeedHeader__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
+}
+
+.smPersonaBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  border-radius: 50%;
+  background: var(--surface-base);
+  color: var(--tone-primary-base);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+}
+
+/* --- stories row: horizontal within a need group --- */
+
+.smStoriesRow {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-start;
+}
+
+/* --- story column: story card + features stacked vertically --- */
+
+.smStoryCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 0 0 220px;
+  min-width: 0;
 }
 
 /* --- story card --- */
@@ -173,43 +190,7 @@
   color: var(--text-muted);
 }
 
-/* --- story column (groups story + its features vertically) --- */
-
-.smColumn {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  flex: 0 0 260px;
-  min-width: 0;
-}
-
-/* --- release divider --- */
-
-.smRelease {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-sm) 0;
-}
-
-.smRelease__label {
-  flex-shrink: 0;
-  padding: var(--space-xs) var(--space-md);
-  background: var(--tone-warning-dim);
-  border-radius: var(--shape-xs-radius);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-primary);
-}
-
-.smRelease__line {
-  flex: 1;
-  height: 1px;
-  background: var(--border-default);
-  border-style: dashed;
-}
-
-/* --- links (on card click) --- */
+/* --- links --- */
 
 .smLinks {
   display: flex;
