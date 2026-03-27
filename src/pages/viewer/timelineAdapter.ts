@@ -1,6 +1,6 @@
 // ② 2026-03-27-chat-module-prd.md
 import { groupEvents, type TimelineEvent, type ToolGroup, type DisplayItem } from './groupEvents'
-import type { ChatMessage, ChatBlock } from '../../interactive-os/ui/chat/types'
+import type { ChatMessage, ChatBlock, DataBlock } from '../../interactive-os/ui/chat/types'
 
 /**
  * Converts raw TimelineEvent[] to ChatMessage[].
@@ -48,6 +48,6 @@ function toolGroupToMessage(group: ToolGroup): ChatMessage {
     id: `tg-${firstTs}`,
     role: 'assistant',
     ts: new Date(firstTs).getTime(),
-    blocks: [{ type: 'tool_group', data: group } as ChatBlock],
+    blocks: [{ type: 'tool_group', data: group } satisfies DataBlock as ChatBlock],
   }
 }
