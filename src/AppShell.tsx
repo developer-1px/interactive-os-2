@@ -2,7 +2,7 @@
 import { useState, useCallback, useMemo, useEffect, type HTMLAttributes } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
-  Sun, Moon, Presentation, Component, Eye, FolderCode, Activity, Palette, ShieldAlert, Languages,
+  Sun, Moon, Presentation, Component, Eye, FolderCode, Activity, Palette, ShieldAlert, Languages, Map,
   Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -125,6 +125,7 @@ const appNavItems: NavItem[] = [
   { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
   { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
+  { id: 'storymap', label: 'Story Map', icon: Map, path: '/storymap' },
 ]
 
 const internalsNavItems: NavItem[] = contentsOrder.map((layer) => ({
