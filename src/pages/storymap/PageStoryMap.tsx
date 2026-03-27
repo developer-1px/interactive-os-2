@@ -52,41 +52,34 @@ function FeatureCard({ feature }: { feature: Feature }) {
   )
 }
 
-function NeedColumn({ need, releaseStories }: { need: Need; releaseStories: Set<string> }) {
+function StoryColumn({ story }: { story: Story }) {
+  return (
+    <div className={css.smStoryCol}>
+      <StoryCard story={story} />
+      {story.features.map(f => (
+        <FeatureCard key={f.id} feature={f} />
+      ))}
+    </div>
+  )
+}
+
+function NeedGroup({ need }: { need: Need }) {
   const persona = need.persona === 'admin' ? '관' : '디'
 
-  const inRelease = need.stories.filter(s => releaseStories.has(s.id))
-  const rest = need.stories.filter(s => !releaseStories.has(s.id))
-
   return (
-    <div className={css.smColumn}>
-      <div className={css.smPersona}>
-        <span className={css.smPersona__badge}>{persona}</span>
-        {need.persona}
-      </div>
-
-      <div className={css.smNeed}>
-        <div className={css.smNeed__id}>{need.id}</div>
+    <div className={css.smNeedGroup}>
+      <div className={css.smNeedHeader}>
+        <div className={css.smNeedHeader__top}>
+          <span className={css.smPersonaBadge}>{persona}</span>
+          {need.id} · {need.persona}
+        </div>
         {need.need}
       </div>
-
-      {inRelease.map(story => (
-        <div key={story.id} className={css.smColumn}>
-          <StoryCard story={story} />
-          {story.features.map(f => (
-            <FeatureCard key={f.id} feature={f} />
-          ))}
-        </div>
-      ))}
-
-      {rest.map(story => (
-        <div key={story.id} className={css.smColumn}>
-          <StoryCard story={story} />
-          {story.features.map(f => (
-            <FeatureCard key={f.id} feature={f} />
-          ))}
-        </div>
-      ))}
+      <div className={css.smStoriesRow}>
+        {need.stories.map(story => (
+          <StoryColumn key={story.id} story={story} />
+        ))}
+      </div>
     </div>
   )
 }
@@ -94,45 +87,25 @@ function NeedColumn({ need, releaseStories }: { need: Need; releaseStories: Set<
 export default function PageStoryMap() {
   const data = useMemo(() => parseStoryMap(storiesRaw), [])
 
-  const firstRelease = data.releases[0]
-  const releaseStories = useMemo(
-    () => new Set(firstRelease?.stories ?? []),
-    [firstRelease],
-  )
-
   return (
     <div className={css.sm}>
       <div className={css.smHeader}>
         <span className={css.smHeader__title}>USER STORY MAP</span>
         <div className={css.smLegend}>
           <div className={css.smLegend__item}>
-            <span
-              className={`${css.smStory__status} ${css['smStory__status--pending']}`}
-            />
+            <span className={`${css.smStory__status} ${css['smStory__status--pending']}`} />
             pending
           </div>
           <div className={css.smLegend__item}>
-            <span
-              className={`${css.smStory__status} ${css['smStory__status--done']}`}
-            />
+            <span className={`${css.smStory__status} ${css['smStory__status--done']}`} />
             done
           </div>
-          {data.screens.map(s => (
-            <div key={s.id} className={css.smLegend__item}>
-              <span className={css.smFeature__screenTag}>{s.id}</span>
-              {s.name}
-            </div>
-          ))}
         </div>
       </div>
       <div className={css.smBody}>
-        <div className={css.smGrid}>
+        <div className={css.smMap}>
           {data.needs.map(need => (
-            <NeedColumn
-              key={need.id}
-              need={need}
-              releaseStories={releaseStories}
-            />
+            <NeedGroup key={need.id} need={need} />
           ))}
         </div>
       </div>
