@@ -127,12 +127,6 @@ export default function PageComponentCreator() {
         <div className={`flex-col ${styles.canvasPane}`}>
           <div className={`flex-row items-center ${styles.paneHeader}`}>
             <span className={styles.paneTitle}>{selectedName || 'Select'}</span>
-            {selectedEntry && (
-              <span className={styles.paneMeta}>
-                {selectedEntry.variants.length} variants · {selectedEntry.sizes.length} sizes
-                {selectedEntry.tokens.shape && ` · shape:${selectedEntry.tokens.shape}`}
-              </span>
-            )}
           </div>
           {selectedEntry ? (
             <ComponentCanvas entry={selectedEntry} />

@@ -9,13 +9,7 @@ interface ComponentCanvasProps {
   entry: RegistryEntry
 }
 
-/**
- * Renders a variant × size matrix of the selected component.
- * If no variants → single "default" row.
- * If no sizes → single "base" column.
- */
 export function ComponentCanvas({ entry }: ComponentCanvasProps) {
-  // React.lazy per entry — Suspense handles loading
   const LazyComponent = useMemo(
     () => React.lazy(async () => {
       const Component = await entry.loadComponent()
@@ -25,60 +19,16 @@ export function ComponentCanvas({ entry }: ComponentCanvasProps) {
   )
 
   return (
-    <Suspense fallback={<div className={`flex-row items-center justify-center ${styles.canvasEmpty}`}>Loading...</div>}>
-      <CanvasMatrix entry={entry} Component={LazyComponent} />
+    <Suspense fallback={<div className={`flex-row items-center justify-center flex-1`}>Loading...</div>}>
+      <div className={styles.canvas}>
+        <ComponentInstance Component={LazyComponent} name={entry.name} />
+      </div>
     </Suspense>
-  )
-}
-
-interface CanvasMatrixProps {
-  entry: RegistryEntry
-  Component: React.ComponentType<Record<string, unknown>>
-}
-
-function CanvasMatrix({ entry, Component }: CanvasMatrixProps) {
-
-  const variants = entry.variants.length > 0 ? entry.variants : ['default']
-  const sizes = entry.sizes.length > 0 ? entry.sizes : ['base']
-
-  // CSS Grid: 1 label column + N size columns
-  const gridColumns = `auto ${sizes.map(() => '1fr').join(' ')}`
-
-  return (
-    <div
-      className={styles.canvas}
-      style={{ display: 'grid', gridTemplateColumns: gridColumns, alignItems: 'center', alignContent: 'start' } as React.CSSProperties}
-    >
-      {/* Header row: empty label cell + size labels */}
-      <div className={styles.matrixLabel} />
-      {sizes.map((size) => (
-        <div key={size} className={styles.matrixColLabel}>{size}</div>
-      ))}
-
-      {/* Variant rows: label + cells */}
-      {variants.map((variant) => (
-        <React.Fragment key={variant}>
-          <div className={styles.matrixLabel}>{variant}</div>
-          {sizes.map((size) => (
-            <div key={`${variant}-${size}`} className={styles.matrixCell}>
-              <ComponentInstance
-                Component={Component}
-                variant={variant === 'default' ? undefined : variant}
-                size={size === 'base' ? undefined : size}
-                name={entry.name}
-              />
-            </div>
-          ))}
-        </React.Fragment>
-      ))}
-    </div>
   )
 }
 
 interface ComponentInstanceProps {
   Component: React.ComponentType<Record<string, unknown>>
-  variant?: string
-  size?: string
   name: string
 }
 
@@ -104,23 +54,14 @@ const NEEDS_DATA = new Set([
   'AlertDialog', 'Kanban', 'Slider', 'Spinbutton', 'Combobox',
 ])
 
-/** Render a single component instance with variant + size props */
-function ComponentInstance({ Component, variant, size, name }: ComponentInstanceProps) {
+function ComponentInstance({ Component, name }: ComponentInstanceProps) {
   const props: Record<string, unknown> = {
     ...(DEFAULT_PROPS[name] ?? {}),
   }
 
-  if (variant) props.variant = variant
-  if (size) props.size = size
-
-  // Inject sample data for Aria-based components
   if (NEEDS_DATA.has(name)) {
     props.data = getSampleData(name)
   }
 
-  return (
-    <div className={styles.instanceWrap}>
-      <Component {...props} />
-    </div>
-  )
+  return <Component {...props} />
 }
