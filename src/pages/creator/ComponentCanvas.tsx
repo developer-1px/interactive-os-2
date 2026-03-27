@@ -41,19 +41,23 @@ function CanvasMatrix({ entry, Component }: CanvasMatrixProps) {
   const variants = entry.variants.length > 0 ? entry.variants : ['default']
   const sizes = entry.sizes.length > 0 ? entry.sizes : ['base']
 
-  return (
-    <div className={`flex-col gap-xl ${styles.canvas}`}>
-      {/* Header row: size labels */}
-      <div className={`flex-row gap-lg items-end ${styles.matrixHeader}`}>
-        <div className={styles.matrixLabel} />
-        {sizes.map((size) => (
-          <div key={size} className={styles.matrixColLabel}>{size}</div>
-        ))}
-      </div>
+  // CSS Grid: 1 label column + N size columns
+  const gridColumns = `auto ${sizes.map(() => '1fr').join(' ')}`
 
-      {/* Variant rows */}
+  return (
+    <div
+      className={styles.canvas}
+      style={{ display: 'grid', gridTemplateColumns: gridColumns, alignItems: 'center', alignContent: 'start' } as React.CSSProperties}
+    >
+      {/* Header row: empty label cell + size labels */}
+      <div className={styles.matrixLabel} />
+      {sizes.map((size) => (
+        <div key={size} className={styles.matrixColLabel}>{size}</div>
+      ))}
+
+      {/* Variant rows: label + cells */}
       {variants.map((variant) => (
-        <div key={variant} className={`flex-row gap-lg items-center ${styles.matrixRow}`}>
+        <React.Fragment key={variant}>
           <div className={styles.matrixLabel}>{variant}</div>
           {sizes.map((size) => (
             <div key={`${variant}-${size}`} className={styles.matrixCell}>
@@ -65,7 +69,7 @@ function CanvasMatrix({ entry, Component }: CanvasMatrixProps) {
               />
             </div>
           ))}
-        </div>
+        </React.Fragment>
       ))}
     </div>
   )

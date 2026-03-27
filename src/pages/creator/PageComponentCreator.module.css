@@ -22,6 +22,7 @@
   border-bottom: 1px solid var(--border-subtle);
   gap: var(--space-2xs);
   font-size: var(--type-caption-size);
+  height: var(--space-2xl);
 }
 
 .paneTitle {
@@ -40,10 +41,11 @@
 }
 
 .canvas {
-  padding: var(--space-xl);
+  padding: var(--space-lg);
   overflow: auto;
   flex: 1;
   min-height: 0;
+  gap: var(--space-md);
 }
 
 .emptyState {
@@ -51,31 +53,23 @@
   font-size: var(--type-body-size);
 }
 
-.matrixHeader {
-  padding-left: calc(var(--space-3xl) * 2);
-}
-
 .matrixColLabel {
-  min-width: calc(var(--space-3xl) * 3);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-.matrixRow {
-  min-height: var(--space-3xl);
+  padding: var(--space-xs) var(--space-sm);
 }
 
 .matrixLabel {
-  min-width: calc(var(--space-3xl) * 2);
   font-size: var(--type-caption-size);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
+  padding: var(--space-xs) var(--space-sm);
+  text-align: right;
 }
 
 .matrixCell {
-  min-width: calc(var(--space-3xl) * 3);
   padding: var(--space-sm);
 }
 
@@ -100,7 +94,6 @@
   border-radius: var(--shape-xs-radius);
   font-size: var(--type-caption-size);
   font-weight: var(--type-caption-weight);
-  min-height: var(--space-2xl);
   color: var(--text-muted);
   --_bg: transparent;
   --_bg-hover: var(--surface-default);

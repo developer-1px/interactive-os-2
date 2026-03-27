@@ -520,6 +520,206 @@ export function runDesignLint(root, options) {
       },
     },
 
+    // ── sibling-height-mismatch ──
+    // 같은 부모의 동급 자식 중, 비슷한 역할의 요소가 다른 height면 위반
+    {
+      id: 'sibling-height-mismatch',
+      severity: 'error',
+      run(c) {
+        // Find split containers (flex-row or flex-col with multiple visible children)
+        const containers = c.root.querySelectorAll('[class*="splitPane"], [class*="SplitPane"], [class*="body"], [class*="page"]')
+        let checked = 0, passed = 0
+
+        for (const container of containers) {
+          if (c.shouldSkip(container)) continue
+          const children = [...container.children].filter(ch => c.isVisible(ch))
+          if (children.length < 2) continue
+
+          // Compare "header-like" children across sibling panes
+          // Header = first child with bg that's shorter than 60px
+          const headers = []
+          for (const child of children) {
+            const firstChild = child.querySelector('[class*="Header"], [class*="header"], [class*="tabBar"], [class*="TabBar"], [class*="paneHeader"]')
+            if (firstChild && c.isVisible(firstChild)) {
+              headers.push({ el: firstChild, height: Math.round(firstChild.getBoundingClientRect().height) })
+            }
+          }
+
+          if (headers.length < 2) continue
+          checked++
+
+          const heights = [...new Set(headers.map(h => h.height))]
+          if (heights.length <= 1) {
+            passed++
+          } else {
+            c.addViolation(this.id, headers[0].el,
+              `Sibling pane headers have different heights: ${headers.map(h => h.height + 'px').join(' vs ')}`,
+              'same height across sibling pane headers',
+              headers.map(h => h.height + 'px').join(' vs '),
+              this.severity)
+          }
+        }
+        return { checked, passed }
+      },
+    },
+
+    // ── same-role-different-appearance ──
+    // 같은 role의 요소가 fontSize, height, padding이 다르면 위반 (spacing 확장)
+    {
+      id: 'same-role-different-appearance',
+      severity: 'warning',
+      run(c) {
+        const roleMap = new Map()
+        const SKIP_ROLES = ['presentation', 'none', 'group', 'region', 'separator']
+
+        for (const el of c.root.querySelectorAll('[role]')) {
+          if (c.shouldSkip(el)) continue
+          const role = el.getAttribute('role')
+          if (!role || SKIP_ROLES.includes(role)) continue
+
+          const style = getComputedStyle(el)
+          const rect = el.getBoundingClientRect()
+          const signature = [
+            Math.round(parseFloat(style.fontSize)),
+            Math.round(rect.height),
+            Math.round(c.parseSpacing(style, 'paddingTop')),
+            Math.round(c.parseSpacing(style, 'paddingRight')),
+          ].join('/')
+
+          if (!roleMap.has(role)) roleMap.set(role, { signatures: new Map(), elements: [] })
+          const entry = roleMap.get(role)
+          entry.signatures.set(signature, (entry.signatures.get(signature) || 0) + 1)
+          entry.elements.push({ el, signature })
+        }
+
+        let checked = 0, passed = 0
+        for (const [role, { signatures, elements }] of roleMap) {
+          if (elements.length < 2) continue
+          checked++
+          if (signatures.size <= 1) {
+            passed++
+          } else {
+            // Find the dominant signature
+            let maxCount = 0, dominant = ''
+            for (const [sig, count] of signatures) { if (count > maxCount) { maxCount = count; dominant = sig } }
+            const outliers = elements.filter(e => e.signature !== dominant)
+            c.addViolation(this.id, outliers[0]?.el || elements[0].el,
+              `role="${role}": ${signatures.size} appearance variants across ${elements.length} elements (fontSize/height/padding)`,
+              'consistent appearance for same role',
+              [...signatures.keys()].join(' vs '),
+              this.severity)
+          }
+        }
+        return { checked, passed }
+      },
+    },
+
+    // ── column-alignment-drift ──
+    // 같은 부모의 자식 행들에서, 같은 열 인덱스의 X좌표가 다르면 위반
+    {
+      id: 'column-alignment-drift',
+      severity: 'error',
+      run(c) {
+        const TOLERANCE = 4 // px
+        // Find grid-like containers: display:grid, or flex with repeating row structure
+        const containers = c.root.querySelectorAll('*')
+        let checked = 0, passed = 0
+
+        for (const container of containers) {
+          if (c.shouldSkip(container)) continue
+          const style = getComputedStyle(container)
+          const isGrid = style.display === 'grid' || style.display === 'inline-grid'
+
+          if (!isGrid) continue
+
+          const children = [...container.children].filter(ch => c.isVisible(ch))
+          if (children.length < 4) continue // Need at least 2 rows × 2 cols
+
+          // Get grid template to determine column count
+          const cols = style.gridTemplateColumns.split(/\s+/).filter(Boolean).length
+          if (cols < 2) continue
+
+          // Group children into rows
+          const rows = []
+          for (let i = 0; i < children.length; i += cols) {
+            rows.push(children.slice(i, i + cols))
+          }
+          if (rows.length < 2) continue
+
+          // Compare X positions column by column
+          for (let col = 0; col < cols; col++) {
+            const xPositions = rows
+              .map(row => row[col])
+              .filter(Boolean)
+              .map(el => Math.round(el.getBoundingClientRect().left))
+
+            if (xPositions.length < 2) continue
+            checked++
+
+            const minX = Math.min(...xPositions)
+            const maxX = Math.max(...xPositions)
+            if (maxX - minX <= TOLERANCE) {
+              passed++
+            } else {
+              c.addViolation(this.id, rows[0][col] || container,
+                `Column ${col} has ${maxX - minX}px X-position drift across ${xPositions.length} rows`,
+                `X drift ≤ ${TOLERANCE}px`,
+                `drift: ${maxX - minX}px (${xPositions.join(', ')})`,
+                this.severity)
+            }
+          }
+        }
+        return { checked, passed }
+      },
+    },
+
+    // ── wasted-space ──
+    // 컨테이너의 콘텐츠가 면적의 일정 비율 미만이면 위반
+    {
+      id: 'wasted-space',
+      severity: 'warning',
+      run(c) {
+        const MIN_CONTENT_RATIO = 0.15
+        const MIN_CONTAINER_AREA = 200 * 200 // 40000px² — 작은 컨테이너 무시
+        const candidates = c.root.querySelectorAll('[class*="canvas"], [class*="Canvas"], [class*="content"], [class*="Content"], [class*="panel"], [class*="Panel"], [class*="pane"], [class*="Pane"]')
+        let checked = 0, passed = 0
+
+        for (const container of candidates) {
+          if (c.shouldSkip(container)) continue
+          const containerRect = container.getBoundingClientRect()
+          const containerArea = containerRect.width * containerRect.height
+          if (containerArea < MIN_CONTAINER_AREA) continue
+
+          // Calculate total content area from visible children
+          const children = [...container.children].filter(ch => c.isVisible(ch))
+          if (children.length === 0) continue
+
+          let contentArea = 0
+          for (const child of children) {
+            const childRect = child.getBoundingClientRect()
+            // Only count area within the container bounds
+            const overlapW = Math.min(childRect.right, containerRect.right) - Math.max(childRect.left, containerRect.left)
+            const overlapH = Math.min(childRect.bottom, containerRect.bottom) - Math.max(childRect.top, containerRect.top)
+            if (overlapW > 0 && overlapH > 0) contentArea += overlapW * overlapH
+          }
+
+          const ratio = contentArea / containerArea
+          checked++
+
+          if (ratio >= MIN_CONTENT_RATIO) {
+            passed++
+          } else {
+            c.addViolation(this.id, container,
+              `Content fills only ${(ratio * 100).toFixed(1)}% of container (${Math.round(containerRect.width)}×${Math.round(containerRect.height)}px)`,
+              `content ratio ≥ ${(MIN_CONTENT_RATIO * 100)}%`,
+              `${(ratio * 100).toFixed(1)}%`,
+              this.severity)
+          }
+        }
+        return { checked, passed }
+      },
+    },
+
   ] // ← 새 규칙은 여기에 객체를 추가하면 됨
 
   // ════════════════════════════════════════════════════
