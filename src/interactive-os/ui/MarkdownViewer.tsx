@@ -4,9 +4,11 @@ import remarkBreaks from 'remark-breaks'
 import rehypeRaw from 'rehype-raw'
 import { MermaidBlock } from '../../pages/MermaidBlock'
 import { CodeBlock } from './CodeBlock'
-import styles from './MarkdownViewer.module.css'
+import defaultStyles from './MarkdownViewer.module.css'
 
-export function MarkdownViewer({ content }: { content: string }) {
+export type MarkdownStyles = typeof defaultStyles
+
+export function MarkdownViewer({ content, styles = defaultStyles }: { content: string; styles?: MarkdownStyles }) {
   return (
     <div className={styles.markdown}>
       <Markdown
