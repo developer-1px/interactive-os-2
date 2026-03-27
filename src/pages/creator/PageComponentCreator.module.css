@@ -1,0 +1,158 @@
+/* ── Component Creator ──
+   // ② 2026-03-27-component-creator-prd.md */
+
+/* ── Page layout ── */
+.page {
+  height: 100%;
+  overflow: hidden;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Component tabs (bottom) ── */
+.tabs {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  background: var(--surface-sunken);
+  overflow-x: auto;
+  gap: var(--space-2xs);
+}
+
+.tab {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  border-radius: var(--shape-sm-radius);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  white-space: nowrap;
+  color: var(--text-muted);
+  --_bg: transparent;
+  --_bg-hover: var(--surface-default);
+  background: var(--_bg);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
+              color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.tabActive {
+  --_bg: var(--surface-raised);
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+/* ── Canvas ── */
+.canvas {
+  padding: var(--space-xl);
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.canvasEmpty {
+  height: 100%;
+  color: var(--text-muted);
+  font-size: var(--type-body-size);
+}
+
+.matrixHeader {
+  padding-left: calc(var(--space-3xl) * 2);
+}
+
+.matrixColLabel {
+  min-width: calc(var(--space-3xl) * 3);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.matrixRow {
+  min-height: var(--space-3xl);
+}
+
+.matrixLabel {
+  min-width: calc(var(--space-3xl) * 2);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+}
+
+.matrixCell {
+  min-width: calc(var(--space-3xl) * 3);
+  padding: var(--space-sm);
+}
+
+.instanceWrap {
+  display: inline-block;
+}
+
+/* ── Chat ── */
+.chat {
+  height: 100%;
+  border-left: 1px solid var(--border-subtle);
+}
+
+.chatContext {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--type-caption-size);
+}
+
+.chatContextLabel {
+  font-weight: var(--weight-semi);
+  color: var(--text-primary);
+}
+
+.chatContextMeta {
+  color: var(--text-muted);
+  margin-left: var(--space-sm);
+}
+
+.chatMessages {
+  padding: var(--space-md);
+}
+
+.chatEmpty {
+  color: var(--text-muted);
+  font-size: var(--type-body-size);
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.chatBubble {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  border-radius: var(--shape-sm-radius);
+  font-size: var(--type-body-size);
+  line-height: var(--leading-snug);
+  white-space: pre-wrap;
+  max-width: 85%;
+}
+
+.chatBubbleUser {
+  align-self: flex-end;
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+}
+
+.chatBubbleAssistant {
+  align-self: flex-start;
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+.chatInputWrap {
+  padding: var(--space-sm);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.chatInput {
+  width: 100%;
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  border-radius: var(--shape-sm-radius);
+  font-size: var(--type-body-size);
+  color: var(--text-primary);
+  background: var(--surface-default);
+  resize: none;
+  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
+}
