@@ -1,7 +1,10 @@
 /* ── Component Creator ──
-   // ② 2026-03-27-component-creator-prd.md */
+   // ② 2026-03-27-component-creator-prd.md
 
-/* ── Page layout ── */
+   Layout: Canvas(primary) | Code(secondary) / Chat(tertiary)
+   Pane = 동시에 봐야 하는 것, Tab = 배타적 전환 */
+
+/* ── Page ── */
 .page {
   height: 100%;
   overflow: hidden;
@@ -12,95 +15,30 @@
   min-height: 0;
 }
 
-/* ── Component tabs (bottom) ── */
-.tabs {
+/* ── Shared pane header ── */
+.paneHeader {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   background: var(--surface-sunken);
-  overflow-x: auto;
+  border-bottom: 1px solid var(--border-subtle);
   gap: var(--space-2xs);
-}
-
-.tab {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  border-radius: var(--shape-sm-radius);
   font-size: var(--type-caption-size);
-  font-weight: var(--type-caption-weight);
-  white-space: nowrap;
-  color: var(--text-muted);
-  --_bg: transparent;
-  --_bg-hover: var(--surface-default);
-  background: var(--_bg);
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
-              color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
-.tabActive {
-  --_bg: var(--surface-raised);
+.paneTitle {
+  font-weight: var(--weight-semi);
   color: var(--text-primary);
-  font-weight: var(--weight-medium);
 }
 
-/* ── Canvas pane (left) ── */
+.paneMeta {
+  color: var(--text-muted);
+}
+
+/* ── Primary: Canvas ── */
 .canvasPane {
   height: 100%;
   overflow: hidden;
 }
 
-.canvasPaneHeader {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  background: var(--surface-sunken);
-  border-bottom: 1px solid var(--border-subtle);
-  font-size: var(--type-caption-size);
-}
-
-.canvasPaneTitle {
-  font-weight: var(--weight-semi);
-  color: var(--text-primary);
-}
-
-.canvasPaneMeta {
-  color: var(--text-muted);
-  margin-left: var(--space-sm);
-}
-
-/* ── Right pane (tabbed) ── */
-.rightPane {
-  height: 100%;
-  overflow: hidden;
-  border-left: 1px solid var(--border-subtle);
-}
-
-.rightTabBar {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  background: var(--surface-sunken);
-  border-bottom: 1px solid var(--border-subtle);
-  gap: var(--space-2xs);
-}
-
-.rightTab {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  border-radius: var(--shape-xs-radius);
-  font-size: var(--type-caption-size);
-  font-weight: var(--type-caption-weight);
-  color: var(--text-muted);
-  --_bg: transparent;
-  --_bg-hover: var(--surface-default);
-  background: var(--_bg);
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
-              color var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-.rightTabActive {
-  --_bg: var(--surface-raised);
-  color: var(--text-primary);
-  font-weight: var(--weight-medium);
-}
-
-.rightContent {
-  overflow: auto;
-}
-
-/* ── Canvas ── */
 .canvas {
   padding: var(--space-xl);
   overflow: auto;
@@ -108,8 +46,7 @@
   min-height: 0;
 }
 
-.canvasEmpty {
-  height: 100%;
+.emptyState {
   color: var(--text-muted);
   font-size: var(--type-body-size);
 }
@@ -146,9 +83,45 @@
   display: inline-block;
 }
 
-/* ── Chat ── */
+/* ── Right pane container ── */
+.rightPane {
+  height: 100%;
+  overflow: hidden;
+  border-left: 1px solid var(--border-subtle);
+}
+
+/* ── Secondary: Code [TSX | CSS] ── */
+.codePane {
+  overflow: hidden;
+}
+
+.sourceTab {
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  border-radius: var(--shape-xs-radius);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  color: var(--text-muted);
+  --_bg: transparent;
+  --_bg-hover: var(--surface-default);
+  background: var(--_bg);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
+              color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.sourceTabActive {
+  --_bg: var(--surface-raised);
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+.codeContent {
+  min-height: 0;
+}
+
+/* ── Tertiary: Chat ── */
 .chat {
   height: 100%;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .chatContext {
@@ -214,4 +187,32 @@
   background: var(--surface-default);
   resize: none;
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+/* ── Nav bar (bottom) ── */
+.navBar {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  background: var(--surface-sunken);
+  overflow-x: auto;
+  gap: var(--space-2xs);
+}
+
+.navTab {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  border-radius: var(--shape-sm-radius);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  white-space: nowrap;
+  color: var(--text-muted);
+  --_bg: transparent;
+  --_bg-hover: var(--surface-default);
+  background: var(--_bg);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
+              color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.navTabActive {
+  --_bg: var(--surface-raised);
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
 }
