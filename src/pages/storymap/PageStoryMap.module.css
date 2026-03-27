@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
-   StoryMap — Jeff Patton 2D layout
-   Story-per-column, horizontal scroll
+   StoryMap — Jeff Patton 2D subgrid layout
+   Story-per-column, aligned rows, horizontal scroll
    ═══════════════════════════════════════════ */
 
 /* --- base --- */
@@ -36,22 +36,19 @@
   padding: var(--space-xl);
 }
 
-/* --- need group: spans all its stories horizontally --- */
+/* --- flat grid: columns = stories, rows = [need-header] [story+features] --- */
 
 .smMap {
-  display: flex;
-  gap: var(--space-lg);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-sm);
   width: max-content;
-  align-items: flex-start;
 }
 
-.smNeedGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
+/* --- need header: spans its story columns, row 1 --- */
 
 .smNeedHeader {
+  grid-row: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
@@ -84,22 +81,14 @@
   font-weight: var(--weight-semi);
 }
 
-/* --- stories row: horizontal within a need group --- */
-
-.smStoriesRow {
-  display: flex;
-  gap: var(--space-sm);
-  align-items: flex-start;
-}
-
-/* --- story column: story card + features stacked vertically --- */
+/* --- story column: row 2, flex column for story card + features --- */
 
 .smStoryCol {
+  grid-row: 2;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  flex: 0 0 220px;
-  min-width: 0;
+  align-self: start;
 }
 
 /* --- story card --- */
