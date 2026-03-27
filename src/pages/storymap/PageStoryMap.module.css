@@ -64,7 +64,6 @@
   gap: var(--space-xs);
   padding: var(--space-sm) var(--space-md);
   background: var(--tone-primary-dim);
-  border-radius: var(--shape-sm-radius);
   font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-primary);
@@ -109,22 +108,23 @@
 .smStoryCol > :nth-child(5) { grid-row: 9; }
 .smStoryCol > :nth-child(6) { grid-row: 11; }
 
-/* --- story card --- */
+/* --- story card (post-it) --- */
 
 .smStory {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-sm-radius);
+  padding: var(--space-md);
+  aspect-ratio: 1;
+  background: var(--tone-warning-dim);
+  border: none;
+  box-shadow: var(--shadow-xs);
   cursor: default;
-  transition: border-color var(--motion-normal-duration) var(--motion-normal-easing);
+  transition: box-shadow var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
 .smStory:hover {
-  border-color: var(--border-default);
+  box-shadow: var(--shadow-sm);
 }
 
 .smStory__header {
@@ -147,9 +147,9 @@
   background: var(--tone-destructive-base);
 }
 
-/* --- status: active = 좌측 bar --- */
+/* --- status: active = 좌측 bar (inset shadow) --- */
 .smStory[data-status="active"] {
-  border-left: var(--indicator-width) solid var(--tone-primary-base);
+  box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base), var(--shadow-xs);
 }
 
 /* --- status: done = 컬럼 전체 후퇴 --- */
@@ -157,9 +157,9 @@
   opacity: 0.45;
 }
 
-/* --- status: blocked = 카드 border hint --- */
+/* --- status: blocked = 좌측 destructive bar (inset shadow) --- */
 .smStory[data-status="blocked"] {
-  border-left: var(--indicator-width) solid var(--tone-destructive-base);
+  box-shadow: inset var(--indicator-width) 0 0 var(--tone-destructive-base), var(--shadow-xs);
 }
 
 .smStory__text {
@@ -168,16 +168,16 @@
   line-height: var(--leading-snug);
 }
 
-/* --- feature card --- */
+/* --- feature card (post-it, 작은) --- */
 
 .smFeature {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   padding: var(--space-xs) var(--space-sm);
-  background: var(--surface-default);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xs-radius);
+  background: var(--surface-raised);
+  border: none;
+  box-shadow: var(--shadow-xs);
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
   line-height: var(--leading-snug);
@@ -199,7 +199,7 @@
 .smFeature__screenTag {
   padding: var(--space-inline-code) var(--space-xs);
   background: var(--tone-neutral-dim);
-  border-radius: var(--shape-xs-radius);
+  border-radius: 0;
   font-size: var(--type-caption-size);
   font-weight: var(--weight-medium);
   color: var(--text-muted);
@@ -216,7 +216,7 @@
 .smLinks__item {
   padding: var(--space-inline-code) var(--space-sm);
   background: var(--tone-primary-dim);
-  border-radius: var(--shape-xs-radius);
+  border-radius: 0;
   font-size: var(--type-caption-size);
   color: var(--tone-primary-base);
   text-decoration: none;
@@ -253,6 +253,6 @@
   width: var(--icon-xs);
   height: var(--icon-xs);
   background: var(--text-muted);
-  border-radius: var(--shape-xs-radius);
+  border-radius: 0;
   opacity: 0.45;
 }
