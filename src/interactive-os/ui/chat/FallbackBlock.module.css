@@ -1,0 +1,9 @@
+/* FallbackBlock — unknown block type safety net
+   ② 2026-03-27-chat-module-prd.md */
+
+.fallback {
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  padding: var(--space-xs);
+}

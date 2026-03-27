@@ -1,0 +1,30 @@
+/* ChatFeed — chat message bubbles
+   ② 2026-03-27-chat-module-prd.md */
+
+/* --- Message wrapper --- */
+
+.chatMessage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-width: 720px;
+}
+
+/* --- User bubble --- */
+
+.chatUser {
+  width: fit-content;
+  margin-left: auto;
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+  background: var(--tone-primary-dim);
+  border-radius: 16px 16px 4px 16px;
+}
+
+/* --- Assistant bubble --- */
+
+.chatAssistant {
+  padding: var(--space-xs) var(--space-md);
+  color: var(--text-primary);
+}
