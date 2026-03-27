@@ -1,0 +1,266 @@
+# Visual CMS — User Story Map
+# SSOT for story map visualization. stories.md is kept for human reading.
+
+personas:
+  - id: admin
+    name: 관리자
+    description: 개발자 없이 콘텐츠를 관리하는 사람
+  - id: designer
+    name: 디자이너
+    description: 섹션 템플릿을 만들고 등록하는 사람
+
+needs:
+  - id: N1
+    persona: admin
+    need: 콘텐츠를 편집하기 원한다
+    description: 개발자 없이 텍스트/이미지 교체
+    stories:
+      - id: S1
+        story: 편집할 페이지를 선택할 수 있다
+        acceptance: 페이지 목록이 보이고, 선택하면 섹션 구성이 표시된다
+        status: pending
+        links: []
+        features:
+          - id: F1
+            feature: 페이지 목록 표시 (썸네일 포함)
+            screens: [W1]
+          - id: F2
+            feature: 페이지 선택 시 섹션 구성 로드
+            screens: [W1, W2]
+      - id: S2
+        story: 섹션의 텍스트를 교체할 수 있다
+        acceptance: 텍스트 필드를 선택하고 내용 변경. plain text만, 서식 불가
+        status: pending
+        links: []
+        features:
+          - id: F3
+            feature: 텍스트 필드 선택 (클릭/키보드 네비게이션)
+            screens: [W2]
+          - id: F4
+            feature: 캔버스에서 인라인 텍스트 편집 (Enter/F2로 진입)
+            screens: [W2]
+          - id: F5
+            feature: 상세 패널에서 텍스트 편집 (폼 방식)
+            screens: [W3]
+      - id: S3
+        story: 섹션의 이미지를 교체할 수 있다
+        acceptance: 이미지 필드를 선택하고 다른 이미지로 교체
+        status: pending
+        links: []
+        features:
+          - id: F6
+            feature: 아이콘 필드 선택
+            screens: [W2]
+          - id: F7
+            feature: 아이콘 선택 그리드에서 교체
+            screens: [W3]
+      - id: S12
+        story: 페이지의 메타 정보(SEO, URL, OG)를 편집할 수 있다
+        acceptance: 메타 필드를 수정하면 프리뷰/배포에 반영
+        status: pending
+        links: []
+        features:
+          - id: F25
+            feature: 페이지 메타 필드 편집 (SEO, URL, OG)
+            screens: [W3]
+      - id: S14
+        story: 편집 작업을 되돌리거나 다시 실행할 수 있다
+        acceptance: 실행취소/다시실행으로 실수 복구
+        status: pending
+        links: []
+        features:
+          - id: F30
+            feature: 실행취소 (Cmd+Z)
+            screens: [W2]
+          - id: F31
+            feature: 다시실행 (Cmd+Shift+Z)
+            screens: [W2]
+      - id: S15
+        story: 노드를 복사하여 붙여넣을 수 있다
+        acceptance: 같은 타입끼리만 붙여넣기 가능
+        status: pending
+        links: []
+        features:
+          - id: F32
+            feature: 복사 (Cmd+C) / 잘라내기 (Cmd+X)
+            screens: [W2]
+          - id: F33
+            feature: 붙여넣기 (Cmd+V) — 호환 타입만 허용
+            screens: [W2]
+
+  - id: N2
+    persona: admin
+    need: 페이지 구조를 변경하기 원한다
+    description: 개발자 없이 섹션 추가/삭제/순서변경
+    stories:
+      - id: S4
+        story: 템플릿에서 새 섹션을 골라 추가할 수 있다
+        acceptance: 템플릿 목록에서 선택, 원하는 위치에 삽입
+        status: pending
+        links: []
+        features:
+          - id: F8
+            feature: 섹션 추가 버튼 ([+])
+            screens: [W1]
+          - id: F9
+            feature: 템플릿 목록에서 유형 선택
+            screens: [W7]
+          - id: F10
+            feature: 선택한 위치에 새 섹션 삽입
+            screens: [W1, W2]
+      - id: S5
+        story: 섹션을 삭제할 수 있다
+        acceptance: 선택한 섹션 제거, 실수 방지 확인
+        status: pending
+        links: []
+        features:
+          - id: F11
+            feature: 섹션 삭제 (Delete 키 또는 툴바)
+            screens: [W2, W5]
+          - id: F12
+            feature: 최소 1개 섹션 유지 (삭제 차단)
+            screens: [W2]
+      - id: S6
+        story: 섹션 순서를 변경할 수 있다
+        acceptance: 드래그 또는 키보드로 섹션 위치 이동
+        status: pending
+        links: []
+        features:
+          - id: F13
+            feature: 키보드로 섹션 순서 변경 (Cmd+↑↓)
+            screens: [W1, W2]
+          - id: F14
+            feature: 플로팅 툴바에서 순서 변경 (↑↓ 버튼)
+            screens: [W5]
+      - id: S13
+        story: 섹션 내 아이템(카드, 항목 등)을 추가/삭제/순서변경할 수 있다
+        acceptance: 컬렉션 아이템 CRUD. 슬롯(고정 구조)은 변경 불가
+        status: pending
+        links: []
+        features:
+          - id: F26
+            feature: 컬렉션 아이템 추가 ([+ 추가] 버튼)
+            screens: [W5]
+          - id: F27
+            feature: 컬렉션 아이템 삭제 (Delete 키 또는 툴바)
+            screens: [W2, W5]
+          - id: F28
+            feature: 컬렉션 아이템 순서 변경 (Cmd+↑↓)
+            screens: [W2, W5]
+          - id: F29
+            feature: 아이템 복제 (Cmd+D)
+            screens: [W2, W5]
+
+  - id: N3
+    persona: admin
+    need: 변경 결과를 확인하고 배포하기 원한다
+    description: 개발자 없이 프리뷰 + 라이브 반영
+    stories:
+      - id: S7
+        story: 변경 결과를 프리뷰로 확인할 수 있다
+        acceptance: 데스크톱/모바일 뷰포트 전환 가능
+        status: pending
+        links: []
+        features:
+          - id: F15
+            feature: 뷰포트 전환 (모바일 375px / 태블릿 768px / 데스크톱 100%)
+            screens: [W4]
+          - id: F16
+            feature: 프레젠트 모드 (크롬 숨기고 풀스크린 프리뷰)
+            screens: [W4, W8]
+      - id: S8
+        story: 변경사항을 라이브에 배포할 수 있다
+        acceptance: 변경 전/후 diff 확인 후 원클릭 배포
+        status: pending
+        links: []
+        features:
+          - id: F17
+            feature: 변경 전/후 diff 확인
+            screens: []
+          - id: F18
+            feature: 원클릭 배포
+            screens: []
+
+  - id: N4
+    persona: admin
+    need: 다국어 콘텐츠를 관리하기 원한다
+    description: 개발자 없이 언어별 콘텐츠 전환
+    stories:
+      - id: S9
+        story: 언어를 전환하여 해당 언어의 콘텐츠를 편집할 수 있다
+        acceptance: 언어 드롭다운 선택 → 해당 언어 콘텐츠 표시 및 편집
+        status: pending
+        links: []
+        features:
+          - id: F19
+            feature: 언어 드롭다운 전환
+            screens: [W4, W3]
+          - id: F20
+            feature: 전환된 언어로 콘텐츠 즉시 반영
+            screens: [W2, W3]
+          - id: F21
+            feature: 번역 시트 (모든 필드의 다국어 값 표로 관리)
+            screens: [W6]
+
+  - id: N5
+    persona: designer
+    need: 섹션 템플릿을 등록하기 원한다
+    description: 만든 디자인을 관리자가 쓸 수 있게 등록
+    stories:
+      - id: S10
+        story: 완성된 섹션 디자인을 템플릿으로 등록할 수 있다
+        acceptance: 등록된 템플릿이 관리자의 템플릿 목록에 나타남
+        status: pending
+        links: []
+        features:
+          - id: F22
+            feature: 섹션 템플릿 정의 및 등록
+            screens: []
+
+  - id: N6
+    persona: designer
+    need: 등록한 템플릿이 그대로 유지되기 원한다
+    description: 관리자가 디자인을 깨뜨리지 못하는 보장
+    stories:
+      - id: S11
+        story: 관리자가 편집할 때 디자인(레이아웃/색상/폰트)은 변경되지 않는다
+        acceptance: 편집 가능 영역이 콘텐츠 필드로만 제한됨
+        status: pending
+        links: []
+        features:
+          - id: F23
+            feature: 편집 가능 영역을 콘텐츠 필드로만 제한
+            screens: [W2]
+          - id: F24
+            feature: 슬롯 구조 보호 (고정 자식의 삭제/추가/재배치 차단)
+            screens: [W2]
+
+screens:
+  - id: W1
+    name: 섹션 사이드바
+  - id: W2
+    name: 캔버스
+  - id: W3
+    name: 상세 패널
+  - id: W4
+    name: 상단 툴바
+  - id: W5
+    name: 플로팅 툴바
+  - id: W6
+    name: 번역 시트
+  - id: W7
+    name: 템플릿 선택
+  - id: W8
+    name: 프레젠트 모드
+
+releases:
+  - id: R1
+    name: MVP
+    description: 콘텐츠 편집 + 구조 변경 기본
+    stories: [S1, S2, S3, S4, S5, S6, S11, S14, S15]
+  - id: R2
+    name: 프리뷰 & 배포
+    stories: [S7, S8, S12, S13]
+  - id: R3
+    name: 다국어 & 템플릿
+    stories: [S9, S10]
