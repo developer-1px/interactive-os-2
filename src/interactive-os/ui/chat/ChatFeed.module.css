@@ -19,7 +19,7 @@
   color: var(--text-primary);
   font-weight: var(--weight-medium);
   background: var(--tone-primary-dim);
-  border-radius: 16px 16px 4px 16px;
+  border-radius: var(--shape-xl-radius) var(--shape-xl-radius) var(--shape-xs-radius) var(--shape-xl-radius);
 }
 
 /* --- Assistant bubble --- */
