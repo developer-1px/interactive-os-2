@@ -130,6 +130,27 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
           <LocalizedText value={data.label as LocaleMap} locale={locale} /> <ArrowRight size={14} />
         </a>
       )
+    // ── Image blocks ──
+    case 'hero-image': {
+      const src = data.src as string
+      return src
+        ? <img src={src} alt={localized(data.alt as string | LocaleMap, locale).text} className={s.cmsHeroImage} />
+        : <div className={s.cmsHeroImagePlaceholder} />
+    }
+    case 'image-card':
+      return null
+    case 'gallery-item': {
+      const gSrc = data.image as string
+      return (
+        <div className={s.cmsGalleryItemContent}>
+          {gSrc
+            ? <img src={gSrc} alt="" className={s.cmsGalleryItemImage} />
+            : <div className={s.cmsGalleryItemPlaceholder} />
+          }
+          <span className={s.cmsGalleryItemCaption}><LocalizedText value={data.caption as string | LocaleMap} locale={locale} /></span>
+        </div>
+      )
+    }
     default:
       return null
   }
@@ -149,6 +170,7 @@ export function getSectionClassName(variant: string): string {
     case 'testimonial': return s.cmsTestimonial
     case 'cta':         return s.cmsCta
     case 'footer':      return s.cmsFooter
+    case 'gallery':     return s.cmsGallery
     default: return ''
   }
 }
@@ -198,6 +220,9 @@ export function getNodeClassName(data: Record<string, string>, state: NodeState)
     case 'showcase-item': return fc(s.cmsShowcaseItem, s.cmsShowcaseItemFocused, f)
     case 'stat-card':     return fc(s.cmsStatCard, s.cmsStatCardFocused, f)
     case 'section-cta':   return fc(s.cmsSectionCta, s.cmsSectionCtaFocused, f)
+    case 'hero-image':    return s.cmsHeroImageWrap
+    case 'image-card':    return fc(s.cmsImageCard, s.cmsImageCardFocused, f)
+    case 'gallery-item':  return fc(s.cmsGalleryItem, s.cmsGalleryItemFocused, f)
     default: return ''
   }
 }
@@ -212,6 +237,7 @@ export function getChildrenContainerClassName(data: Record<string, string>): str
     case 'manifesto': return s.cmsManifestoValues
     case 'showcase': return s.cmsShowcaseGrid
     case 'journal': return s.cmsJournalList
+    case 'gallery': return s.cmsGalleryGrid
     default: return undefined
   }
 }

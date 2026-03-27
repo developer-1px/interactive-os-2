@@ -4,7 +4,7 @@ import { createBatchCommand } from '../../interactive-os/engine/types'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { localeMap } from './cms-types'
 
-export type SectionVariant = 'hero' | 'manifesto' | 'features' | 'patterns' | 'showcase' | 'journal' | 'testimonial' | 'cta' | 'footer'
+export type SectionVariant = 'hero' | 'manifesto' | 'features' | 'patterns' | 'showcase' | 'journal' | 'testimonial' | 'cta' | 'footer' | 'gallery'
 export type TemplateType = SectionVariant | 'tab-group'
 
 interface TemplateVariant {
@@ -23,6 +23,7 @@ export const TEMPLATE_VARIANTS: TemplateVariant[] = [
   { id: 'testimonial', label: 'Testimonial', icon: 'quote' },
   { id: 'cta',         label: 'CTA',         icon: 'zap' },
   { id: 'footer',      label: 'Footer',      icon: 'arrow-right' },
+  { id: 'gallery',     label: 'Gallery',     icon: 'image' },
   { id: 'tab-group',   label: 'Tab Group',   icon: 'paneltop' },
 ]
 
@@ -49,6 +50,7 @@ function createHero(): SectionTemplate {
   const titleId = uid('hero-title')
   const subtitleId = uid('hero-subtitle')
   const ctaId = uid('hero-cta')
+  const imageId = uid('hero-image')
 
   return {
     rootId,
@@ -58,9 +60,10 @@ function createHero(): SectionTemplate {
       [titleId]:    entity(titleId,    { type: 'text', role: 'hero-title', value: localeMap("Accessibility shouldn't be the thing you add last.") }),
       [subtitleId]: entity(subtitleId, { type: 'text', role: 'hero-subtitle', value: localeMap('키보드 인터랙션, ARIA 역할, 포커스 관리 — 이 모든 것이 설계의 첫 번째 결정이 되는 엔진.') }),
       [ctaId]:      entity(ctaId,      { type: 'cta', primary: localeMap('Get Started'), secondary: localeMap('View on GitHub') }),
+      [imageId]:    entity(imageId,    { type: 'hero-image', src: '', alt: localeMap('Hero banner') }),
     },
     relationships: {
-      [rootId]: [badgeId, titleId, subtitleId, ctaId],
+      [rootId]: [badgeId, titleId, subtitleId, ctaId, imageId],
     },
   }
 }
@@ -317,6 +320,36 @@ function createFooter(): SectionTemplate {
   }
 }
 
+// ── Gallery ──
+
+function createGallery(): SectionTemplate {
+  const rootId  = uid('gallery')
+  const titleId = uid('gallery-title')
+
+  const items = [
+    { slug: 'item-1', caption: 'Image 1' },
+    { slug: 'item-2', caption: 'Image 2' },
+    { slug: 'item-3', caption: 'Image 3' },
+    { slug: 'item-4', caption: 'Image 4' },
+  ]
+
+  const entities: SectionTemplate['entities'] = {
+    [rootId]:  entity(rootId,  { type: 'section', variant: 'gallery' }),
+    [titleId]: entity(titleId, { type: 'section-title', value: localeMap('Gallery') }),
+  }
+  const relationships: SectionTemplate['relationships'] = {}
+  const childIds: string[] = [titleId]
+
+  for (const item of items) {
+    const id = uid(`gallery-${item.slug}`)
+    entities[id] = entity(id, { type: 'gallery-item', image: '', caption: localeMap(item.caption) })
+    childIds.push(id)
+  }
+
+  relationships[rootId] = childIds
+  return { rootId, entities, relationships }
+}
+
 // ── Tab Group ──
 
 function createTabGroup(): SectionTemplate {
@@ -358,6 +391,7 @@ function createTemplate(variant: TemplateType): SectionTemplate {
     case 'testimonial': return createTestimonial()
     case 'cta':         return createCta()
     case 'footer':      return createFooter()
+    case 'gallery':     return createGallery()
     case 'tab-group':   return createTabGroup()
   }
 }
