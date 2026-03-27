@@ -7,21 +7,21 @@ import storiesRaw from '../../../docs/2-areas/apps/cms/stories.yaml?raw'
 
 function StoryCard({ story }: { story: Story }) {
   return (
-    <div className={css['sm-story']}>
-      <div className={css['sm-story__header']}>
-        <span className={css['sm-story__id']}>{story.id}</span>
+    <div className={css.smStory}>
+      <div className={css.smStory__header}>
+        <span className={css.smStory__id}>{story.id}</span>
         <span
-          className={`${css['sm-story__status']} ${css[`sm-story__status--${story.status}`]}`}
+          className={`${css.smStory__status} ${story.status === 'done' ? css['smStory__status--done'] : css['smStory__status--pending']}`}
         />
       </div>
-      <div className={css['sm-story__text']}>{story.story}</div>
+      <div className={css.smStory__text}>{story.story}</div>
       {story.links.length > 0 && (
-        <div className={css['sm-links']}>
+        <div className={css.smLinks}>
           {story.links.map(link => (
             <a
               key={link.url}
               href={link.url}
-              className={css['sm-links__item']}
+              className={css.smLinks__item}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -36,13 +36,15 @@ function StoryCard({ story }: { story: Story }) {
 
 function FeatureCard({ feature }: { feature: Feature }) {
   return (
-    <div className={css['sm-feature']}>
-      <span className={css['sm-feature__id']}>{feature.id}</span>
-      {feature.feature}
+    <div className={css.smFeature}>
+      <div className={css.smFeature__text}>
+        <span className={css.smFeature__id}>{feature.id}</span>
+        {feature.feature}
+      </div>
       {feature.screens.length > 0 && (
-        <div className={css['sm-feature__screens']}>
+        <div className={css.smFeature__screens}>
           {feature.screens.map(s => (
-            <span key={s} className={css['sm-feature__screen-tag']}>{s}</span>
+            <span key={s} className={css.smFeature__screenTag}>{s}</span>
           ))}
         </div>
       )}
@@ -57,19 +59,19 @@ function NeedColumn({ need, releaseStories }: { need: Need; releaseStories: Set<
   const rest = need.stories.filter(s => !releaseStories.has(s.id))
 
   return (
-    <div className={css['sm-column']}>
-      <div className={css['sm-persona']}>
-        <span className={css['sm-persona__badge']}>{persona}</span>
+    <div className={css.smColumn}>
+      <div className={css.smPersona}>
+        <span className={css.smPersona__badge}>{persona}</span>
         {need.persona}
       </div>
 
-      <div className={css['sm-need']}>
-        <div className={css['sm-need__id']}>{need.id}</div>
+      <div className={css.smNeed}>
+        <div className={css.smNeed__id}>{need.id}</div>
         {need.need}
       </div>
 
       {inRelease.map(story => (
-        <div key={story.id} className={css['sm-column']}>
+        <div key={story.id} className={css.smColumn}>
           <StoryCard story={story} />
           {story.features.map(f => (
             <FeatureCard key={f.id} feature={f} />
@@ -78,7 +80,7 @@ function NeedColumn({ need, releaseStories }: { need: Need; releaseStories: Set<
       ))}
 
       {rest.map(story => (
-        <div key={story.id} className={css['sm-column']}>
+        <div key={story.id} className={css.smColumn}>
           <StoryCard story={story} />
           {story.features.map(f => (
             <FeatureCard key={f.id} feature={f} />
@@ -100,31 +102,31 @@ export default function PageStoryMap() {
 
   return (
     <div className={css.sm}>
-      <div className={css['sm-header']}>
-        <span className={css['sm-header__title']}>USER STORY MAP</span>
-        <div className={css['sm-legend']}>
-          <div className={css['sm-legend__item']}>
+      <div className={css.smHeader}>
+        <span className={css.smHeader__title}>USER STORY MAP</span>
+        <div className={css.smLegend}>
+          <div className={css.smLegend__item}>
             <span
-              className={`${css['sm-story__status']} ${css['sm-story__status--pending']}`}
+              className={`${css.smStory__status} ${css['smStory__status--pending']}`}
             />
             pending
           </div>
-          <div className={css['sm-legend__item']}>
+          <div className={css.smLegend__item}>
             <span
-              className={`${css['sm-story__status']} ${css['sm-story__status--done']}`}
+              className={`${css.smStory__status} ${css['smStory__status--done']}`}
             />
             done
           </div>
           {data.screens.map(s => (
-            <div key={s.id} className={css['sm-legend__item']}>
-              <span className={css['sm-feature__screen-tag']}>{s.id}</span>
+            <div key={s.id} className={css.smLegend__item}>
+              <span className={css.smFeature__screenTag}>{s.id}</span>
               {s.name}
             </div>
           ))}
         </div>
       </div>
-      <div className={css['sm-body']}>
-        <div className={css['sm-grid']}>
+      <div className={css.smBody}>
+        <div className={css.smGrid}>
           {data.needs.map(need => (
             <NeedColumn
               key={need.id}
