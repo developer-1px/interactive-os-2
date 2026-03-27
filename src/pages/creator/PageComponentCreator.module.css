@@ -30,9 +30,6 @@
   color: var(--text-primary);
 }
 
-.paneMeta {
-  color: var(--text-muted);
-}
 
 /* ── Primary: Canvas ── */
 .canvasPane {
@@ -41,40 +38,18 @@
 }
 
 .canvas {
-  padding: var(--space-lg);
-  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
   min-height: 0;
-  gap: var(--space-md);
+  padding: var(--space-lg);
+  overflow: auto;
 }
 
 .emptyState {
   color: var(--text-muted);
   font-size: var(--type-body-size);
-}
-
-.matrixColLabel {
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: var(--space-xs) var(--space-sm);
-}
-
-.matrixLabel {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-medium);
-  color: var(--text-secondary);
-  padding: var(--space-xs) var(--space-sm);
-  text-align: right;
-}
-
-.matrixCell {
-  padding: var(--space-sm);
-}
-
-.instanceWrap {
-  display: inline-block;
 }
 
 /* ── Right pane container ── */
