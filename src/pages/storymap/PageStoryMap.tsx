@@ -52,40 +52,23 @@ function FeatureCard({ feature }: { feature: Feature }) {
   )
 }
 
-function StoryColumn({ story }: { story: Story }) {
-  return (
-    <div className={css.smStoryCol}>
-      <StoryCard story={story} />
-      {story.features.map(f => (
-        <FeatureCard key={f.id} feature={f} />
-      ))}
-    </div>
-  )
-}
-
-function NeedGroup({ need }: { need: Need }) {
-  const persona = need.persona === 'admin' ? '관' : '디'
-
-  return (
-    <div className={css.smNeedGroup}>
-      <div className={css.smNeedHeader}>
-        <div className={css.smNeedHeader__top}>
-          <span className={css.smPersonaBadge}>{persona}</span>
-          {need.id} · {need.persona}
-        </div>
-        {need.need}
-      </div>
-      <div className={css.smStoriesRow}>
-        {need.stories.map(story => (
-          <StoryColumn key={story.id} story={story} />
-        ))}
-      </div>
-    </div>
-  )
+/** Compute column start index for each need */
+function useColumnLayout(needs: Need[]) {
+  return useMemo(() => {
+    const layout: { need: Need; colStart: number; span: number }[] = []
+    let col = 1
+    for (const need of needs) {
+      const span = need.stories.length
+      layout.push({ need, colStart: col, span })
+      col += span
+    }
+    return { layout, totalColumns: col - 1 }
+  }, [needs])
 }
 
 export default function PageStoryMap() {
   const data = useMemo(() => parseStoryMap(storiesRaw), [])
+  const { layout, totalColumns } = useColumnLayout(data.needs)
 
   return (
     <div className={css.sm}>
@@ -103,10 +86,43 @@ export default function PageStoryMap() {
         </div>
       </div>
       <div className={css.smBody}>
-        <div className={css.smMap}>
-          {data.needs.map(need => (
-            <NeedGroup key={need.id} need={need} />
-          ))}
+        <div
+          className={css.smMap}
+          style={{ gridTemplateColumns: `repeat(${totalColumns}, 220px)` }}
+        >
+          {/* Row 1: Need headers spanning their story columns */}
+          {layout.map(({ need, colStart, span }) => {
+            const persona = need.persona === 'admin' ? '관' : '디'
+            return (
+              <div
+                key={need.id}
+                className={css.smNeedHeader}
+                style={{ gridColumn: `${colStart} / span ${span}` }}
+              >
+                <div className={css.smNeedHeader__top}>
+                  <span className={css.smPersonaBadge}>{persona}</span>
+                  {need.id} · {need.persona}
+                </div>
+                {need.need}
+              </div>
+            )
+          })}
+
+          {/* Row 2+: Story columns with features */}
+          {layout.flatMap(({ need, colStart }) =>
+            need.stories.map((story, i) => (
+              <div
+                key={story.id}
+                className={css.smStoryCol}
+                style={{ gridColumn: colStart + i }}
+              >
+                <StoryCard story={story} />
+                {story.features.map(f => (
+                  <FeatureCard key={f.id} feature={f} />
+                ))}
+              </div>
+            )),
+          )}
         </div>
       </div>
     </div>
