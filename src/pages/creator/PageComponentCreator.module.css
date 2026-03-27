@@ -115,7 +115,7 @@
 /* ── Tertiary: Chat ── */
 .chat {
   height: 100%;
-  border-top: 1px solid var(--border-subtle);
+  border-left: 1px solid var(--border-subtle);
 }
 
 .chatContext {
