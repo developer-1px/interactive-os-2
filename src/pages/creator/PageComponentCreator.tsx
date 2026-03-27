@@ -61,9 +61,9 @@ export default function PageComponentCreator() {
             )}
           </div>
 
-          {/* ── Right: Code / Chat (세로 split) ── */}
+          {/* ── Right: Code | Chat (가로 split) ── */}
           <div className={`flex-col ${styles.rightPane}`}>
-            <SplitPane direction="vertical" sizes={rightSplit} onResize={setRightSplit}>
+            <SplitPane direction="horizontal" sizes={rightSplit} onResize={setRightSplit}>
               {/* Secondary pane: Source code [TSX | CSS] 탭 */}
               <div className={`flex-col ${styles.codePane}`}>
                 <div className={`flex-row items-center ${styles.paneHeader}`}>
