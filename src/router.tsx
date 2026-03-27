@@ -15,6 +15,7 @@ export const router = createBrowserRouter([
       { path: '/i18n', lazy: () => import('./pages/PageI18nEditor').then(m => ({ Component: m.default })) },
       { path: '/incident', lazy: () => import('./pages/PageIncidentInterface').then(m => ({ Component: m.default })) },
       { path: '/internals/theme', lazy: () => import('./pages/PageThemeCreator').then(m => ({ Component: m.default })) },
+      { path: '/creator/*', lazy: () => import('./pages/creator/PageComponentCreator').then(m => ({ Component: m.default })) },
 
       {
         path: '/internals/*',
