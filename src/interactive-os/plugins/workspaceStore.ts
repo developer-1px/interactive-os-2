@@ -302,6 +302,89 @@ export function openTab(
   return workspaceCommands.addTab(tabgroupId, createTab()).execute(store)
 }
 
+/** Split a tabgroup and add a tab to the new pane. Returns updated store. */
+export function splitAndAddTab(
+  store: NormalizedData,
+  tabgroupId: string,
+  direction: 'horizontal' | 'vertical',
+  tab: Entity,
+): NormalizedData {
+  const ws = workspaceCommands.splitPane(tabgroupId, direction).execute(store)
+  const parentId = getParent(ws, tabgroupId) ?? ROOT_ID
+  const siblings = getChildren(ws, parentId)
+  const newTgId = siblings[siblings.length - 1]
+  if (!newTgId || newTgId === tabgroupId) return ws
+  return workspaceCommands.addTab(newTgId, tab).execute(ws)
+}
+
+// ── Sync ──────────────────────────────────────────────
+
+/** Collect all tab contentRefs from workspace. Returns contentRef → tabId map. */
+export function collectContentRefs(
+  store: NormalizedData,
+  filter?: (tabData: Record<string, unknown>) => boolean,
+): Map<string, string> {
+  const refs = new Map<string, string>() // contentRef → tabId
+  for (const [id, entity] of Object.entries(store.entities)) {
+    const d = entity.data as Record<string, unknown> | undefined
+    if (d?.type === 'tab' && typeof d.contentRef === 'string') {
+      if (!filter || filter(d)) {
+        refs.set(d.contentRef, id)
+      }
+    }
+  }
+  return refs
+}
+
+export interface ExternalItem {
+  id: string
+}
+
+// ② 2026-03-28-workspace-sync-prd.md
+/**
+ * Sync workspace tabs with an external items array.
+ * - New items → addTab to first tabgroup
+ * - Removed items → removeTab (with split collapse)
+ * - Layout (splits, sizes, tab order) preserved
+ * - Returns same reference if no changes needed
+ * - Optional filter: only manage tabs matching the predicate (others untouched)
+ */
+export function syncFromExternal<T extends ExternalItem>(
+  store: NormalizedData,
+  items: T[],
+  toTab: (item: T) => Entity,
+  filter?: (tabData: Record<string, unknown>) => boolean,
+): NormalizedData {
+  const existingRefs = collectContentRefs(store, filter)
+  const itemRefs = new Set(items.map(item => item.id))
+
+  const toAdd = items.filter(item => !existingRefs.has(item.id))
+  const toRemove = [...existingRefs.entries()].filter(([ref]) => !itemRefs.has(ref))
+
+  if (toAdd.length === 0 && toRemove.length === 0) {
+    return store
+  }
+
+  let s = store
+
+  // Remove tabs for items no longer in external list
+  for (const [, tabId] of toRemove) {
+    s = workspaceCommands.removeTab(tabId).execute(s)
+  }
+
+  // Add tabs for new external items — resolve tabgroup once before loop
+  if (toAdd.length > 0) {
+    const tgId = findTabgroup(s)
+    if (tgId) {
+      for (const item of toAdd) {
+        s = workspaceCommands.addTab(tgId, toTab(item)).execute(s)
+      }
+    }
+  }
+
+  return s
+}
+
 // ── Plugin ─────────────────────────────────────────────
 
 export function workspace() {

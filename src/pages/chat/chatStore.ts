@@ -68,6 +68,15 @@ function notify() {
   for (const cb of S.subs) cb()
 }
 
+// --- ID mapping: local ↔ server ---
+
+const localToServer = new Map<string, string>()
+const serverToLocal = new Map<string, string>()
+
+function resolveLocal(serverSessionId: string): string {
+  return serverToLocal.get(serverSessionId) ?? serverSessionId
+}
+
 // --- WS connection ---
 
 function setupWs() {
@@ -80,31 +89,30 @@ function setupWs() {
     } catch { return }
 
     if (msg.type === 'session-created') {
-      S.sessions.set(msg.sessionId, {
-        id: msg.sessionId,
-        messages: [],
-        state: 'idle',
-        streamingText: '',
-      })
-      S.activeSessionId = msg.sessionId
-      notify()
+      // Map local session to server SDK session ID
+      const local = S.sessions.get(msg.localId)
+      if (local) {
+        localToServer.set(msg.localId, msg.sessionId)
+        serverToLocal.set(msg.sessionId, msg.localId)
+      }
       return
     }
 
     if (msg.type === 'assistant-text') {
-      const session = S.sessions.get(msg.sessionId)
+      const localId = resolveLocal(msg.sessionId)
+      const session = S.sessions.get(localId)
       if (!session) return
-      // Replace session object for referential change detection
-      S.sessions.set(msg.sessionId, { ...session, streamingText: session.streamingText + msg.text })
+      S.sessions.set(localId, { ...session, streamingText: session.streamingText + msg.text })
       notify()
       return
     }
 
     if (msg.type === 'assistant-done') {
-      const session = S.sessions.get(msg.sessionId)
+      const localId = resolveLocal(msg.sessionId)
+      const session = S.sessions.get(localId)
       if (!session) return
       if (session.streamingText) {
-        S.sessions.set(msg.sessionId, {
+        S.sessions.set(localId, {
           ...session,
           messages: [...session.messages, {
             id: `assistant-${Date.now()}`,
@@ -120,19 +128,24 @@ function setupWs() {
     }
 
     if (msg.type === 'state-changed') {
-      const session = S.sessions.get(msg.sessionId)
+      const localId = resolveLocal(msg.sessionId)
+      const session = S.sessions.get(localId)
       if (session) {
-        S.sessions.set(msg.sessionId, { ...session, state: msg.state })
+        S.sessions.set(localId, { ...session, state: msg.state })
         notify()
       }
       return
     }
 
     if (msg.type === 'session-closed') {
-      S.sessions.delete(msg.sessionId)
-      if (S.activeSessionId === msg.sessionId) {
+      const localId = resolveLocal(msg.sessionId)
+      if (!S.sessions.has(localId)) return // already closed locally
+      S.sessions.delete(localId)
+      if (S.activeSessionId === localId) {
         S.activeSessionId = S.sessions.size > 0 ? S.sessions.keys().next().value ?? null : null
       }
+      localToServer.delete(localId)
+      serverToLocal.delete(msg.sessionId)
       notify()
       return
     }
@@ -153,12 +166,28 @@ setupWs()
 // --- Actions ---
 
 function wsSend(msg: ChatWsClientMessage) {
-  if (!import.meta.hot) return
+  if (!import.meta.hot) {
+    console.warn('[chat] import.meta.hot not available — WS disabled')
+    return
+  }
+  console.log('[chat] sending:', msg.type)
   import.meta.hot.send('chat:client', msg)
 }
 
-export function createSession() {
-  wsSend({ type: 'create-session' })
+let sessionCounter = 0
+
+export function createSession(): string {
+  const localId = `session-${++sessionCounter}-${Date.now().toString(36)}`
+  S.sessions.set(localId, {
+    id: localId,
+    messages: [],
+    state: 'idle',
+    streamingText: '',
+  })
+  S.activeSessionId = localId
+  notify()
+  wsSend({ type: 'create-session', localId })
+  return localId
 }
 
 export function sendMessage(sessionId: string, text: string) {
@@ -176,11 +205,26 @@ export function sendMessage(sessionId: string, text: string) {
   })
   notify()
 
-  wsSend({ type: 'send-message', sessionId, text })
+  const serverId = localToServer.get(sessionId)
+  if (serverId) {
+    wsSend({ type: 'send-message', sessionId: serverId, text })
+  }
 }
 
 export function closeSession(sessionId: string) {
-  wsSend({ type: 'close-session', sessionId })
+  const serverId = localToServer.get(sessionId)
+  S.sessions.delete(sessionId)
+  if (S.activeSessionId === sessionId) {
+    S.activeSessionId = S.sessions.size > 0 ? S.sessions.keys().next().value ?? null : null
+  }
+  if (serverId) {
+    localToServer.delete(sessionId)
+    serverToLocal.delete(serverId)
+  }
+  notify()
+  if (serverId) {
+    wsSend({ type: 'close-session', sessionId: serverId })
+  }
 }
 
 export function setActiveSession(sessionId: string) {
@@ -196,6 +240,10 @@ export function useActiveSession(): ChatSession | null {
 
 export function useChatSessions(): ChatSession[] {
   return useSyncExternalStore(subscribe, () => S.sessionsSnapshot)
+}
+
+export function useChatSession(sessionId: string): ChatSession | null {
+  return useSyncExternalStore(subscribe, () => S.sessions.get(sessionId) ?? null)
 }
 
 export type { ChatSession }

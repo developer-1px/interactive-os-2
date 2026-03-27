@@ -1,8 +1,9 @@
+// ② 2026-03-28-workspace-sync-prd.md
 import styles from './PageAgentViewer.module.css'
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { Circle, FileText, Code } from 'lucide-react'
 import { NavList } from '../interactive-os/ui/NavList'
-import { createStore, getChildren } from '../interactive-os/store/createStore'
+import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
@@ -10,11 +11,21 @@ import { TimelineColumn } from './viewer/TimelineColumn'
 import { useAllModifiedFiles } from './viewer/viewerStore'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
-import { Workspace } from '../interactive-os/ui/Workspace'
-import { createWorkspace, workspaceCommands, findTabgroup, openTab } from '../interactive-os/plugins/workspaceStore'
-import type { TabData } from '../interactive-os/plugins/workspaceStore'
+import { useLayoutKeys } from '../hooks/useLayoutKeys'
 import { CodeBlock } from '../interactive-os/ui/CodeBlock'
 import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
+import { Workspace } from '../interactive-os/ui/Workspace'
+import {
+  createWorkspace,
+  workspaceCommands,
+  findTabgroup,
+  syncFromExternal,
+  splitAndAddTab,
+  openTab,
+  collectContentRefs,
+} from '../interactive-os/plugins/workspaceStore'
+import type { TabData } from '../interactive-os/plugins/workspaceStore'
+import { getEntityData } from '../interactive-os/store/createStore'
 
 // --- Types ---
 
@@ -116,48 +127,37 @@ function FilePanel({ path }: { path: string }) {
   )
 }
 
+// --- Tab converters ---
+
+function sessionToTab(session: SessionInfo): Entity {
+  return {
+    id: `tab-session-${session.id}`,
+    data: { type: 'tab', label: session.label, contentType: 'timeline', contentRef: session.id },
+  }
+}
+
+const isSessionTab = (d: Record<string, unknown>) => d.contentType === 'timeline'
 
 // --- Main Component ---
 
 export default function PageAgentViewer() {
   const [sessions, setSessions] = useState<SessionInfo[]>([])
-  const [workspaceStore, setWorkspaceStore] = useState(() => createWorkspace())
+  const [dismissedSessions, setDismissedSessions] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
+
+  // Workspace state — sync sessions as external items
+  const [wsBase, setWsBase] = useState(() => createWorkspace())
+  const wsDataRef = useRef<NormalizedData>(wsBase)
 
   const sessionsResizer = useResizer({
     defaultSize: 200, minSize: 120, maxSize: 360, step: 10,
     storageKey: 'agent-sessions-width',
   })
 
-  // Session list polling — active only, auto-append as workspace tabs
+  // Session list polling
   useEffect(() => {
-    const handleSessions = (fetched: SessionInfo[]) => {
-      setSessions(fetched)
-      if (fetched.length === 0) return
-
-      setWorkspaceStore(prev => {
-        const tgId = findTabgroup(prev)
-        if (!tgId) return prev
-
-        let store = prev
-        const existingTabIds = getChildren(store, tgId)
-
-        for (const session of fetched.filter(s => s.active)) {
-          const tabId = `session-${session.id}`
-          const exists = existingTabIds.includes(tabId)
-          if (!exists) {
-            store = workspaceCommands.addTab(tgId, {
-              id: tabId,
-              data: { type: 'tab', label: session.label, contentType: 'timeline', contentRef: session.id } as TabData,
-            }).execute(store)
-          }
-        }
-        return store
-      })
-    }
-
     const fetchSessions = () =>
-      fetch('/api/agent-ops/sessions').then(r => r.json()).then(handleSessions).finally(() => setLoading(false))
+      fetch('/api/agent-ops/sessions').then(r => r.json()).then(setSessions).finally(() => setLoading(false))
     fetchSessions()
     const interval = setInterval(fetchSessions, 5000)
     return () => clearInterval(interval)
@@ -166,20 +166,48 @@ export default function PageAgentViewer() {
   const sessionMap = useMemo(() => new Map(sessions.map(s => [s.id, s])), [sessions])
   const activeSessions = useMemo(() => sessions.filter(s => s.active), [sessions])
 
+  // Sync active sessions → workspace tabs (filtered by contentType 'timeline')
+  const syncableSessions = useMemo(
+    () => activeSessions.filter(s => !dismissedSessions.has(s.id)),
+    [activeSessions, dismissedSessions],
+  )
+
+  const wsData = useMemo(
+    () => syncFromExternal(wsBase, syncableSessions, sessionToTab, isSessionTab),
+    [wsBase, syncableSessions],
+  )
+
+  useEffect(() => { wsDataRef.current = wsData }, [wsData])
+
+  // File click → add tab directly via openTab
   const handleFileClick = useCallback((filePath: string, _editRanges?: string[]) => {
-    setWorkspaceStore(prev => {
+    setWsBase(prev => {
       const tgId = findTabgroup(prev)
       if (!tgId) return prev
-
       const filename = filePath.split('/').pop() ?? filePath
       return openTab(prev, tgId, filePath, () => ({
-        id: `file-${filePath}`,
-        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath } as TabData,
+        id: `tab-file-${Date.now()}`,
+        data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
       }))
     })
   }, [])
 
-  // Modified files from store (aggregated across all sessions)
+  // Workspace onChange: detect tab removal
+  const handleWorkspaceChange = useCallback((newData: NormalizedData) => {
+    const oldRefs = collectContentRefs(wsDataRef.current)
+    const newRefs = collectContentRefs(newData)
+    for (const [ref, tabId] of oldRefs) {
+      if (!newRefs.has(ref)) {
+        const entity = wsDataRef.current.entities[tabId]
+        const d = entity?.data as Record<string, unknown> | undefined
+        if (d?.contentType === 'timeline') {
+          setDismissedSessions(prev => new Set([...prev, ref]))
+        }
+      }
+    }
+    setWsBase(newData)
+  }, [])
+
   const allModifiedFiles = useAllModifiedFiles()
   const filesStore = useMemo(() => buildFilesStore(allModifiedFiles), [allModifiedFiles])
 
@@ -201,8 +229,31 @@ export default function PageAgentViewer() {
     )
   }, [])
 
+  // Layout keys: split duplicates active tab
+  const layoutHandlers = useMemo(() => ({
+    splitH: () => {
+      setWsBase(prev => {
+        const tgId = findTabgroup(prev)
+        if (!tgId) return prev
+        const tgData = getEntityData<{ activeTabId?: string }>(prev, tgId)
+        const activeId = tgData?.activeTabId
+        if (!activeId) return prev
+        const tabData = getEntityData<TabData>(prev, activeId)
+        if (!tabData?.contentRef) return prev
+
+        return splitAndAddTab(prev, tgId, 'horizontal', {
+          id: `tab-dup-${Date.now()}`,
+          data: { type: 'tab', label: tabData.label ?? '', contentType: tabData.contentType, contentRef: tabData.contentRef },
+        })
+      })
+    },
+  }), [])
+  const { onKeyDown: handleLayoutKeyDown } = useLayoutKeys(layoutHandlers)
+
+  // Render panel for each tab
   const renderPanel = useCallback((tab: Entity) => {
     const tabData = tab.data as unknown as TabData
+    if (!tabData?.contentRef) return null
     if (tabData.contentType === 'timeline') {
       const session = sessionMap.get(tabData.contentRef)
       if (!session) return null
@@ -211,7 +262,7 @@ export default function PageAgentViewer() {
           sessionId={session.id}
           sessionLabel={session.label}
           isLive={session.active}
-          onClose={() => {}}
+          onClose={() => setWsBase(prev => workspaceCommands.removeTab(tab.id).execute(prev))}
           onFileClick={handleFileClick}
         />
       )
@@ -232,7 +283,7 @@ export default function PageAgentViewer() {
   }
 
   return (
-    <div className={styles.av}>
+    <div className={styles.av} onKeyDown={handleLayoutKeyDown}>
       {/* Sessions + Files panel */}
       {activeSessions.length > 0 && (
         <>
@@ -269,9 +320,14 @@ export default function PageAgentViewer() {
         </>
       )}
 
-      {/* Workspace panels */}
+      {/* Workspace */}
       <div className={styles.avColumns}>
-        <Workspace data={workspaceStore} onChange={setWorkspaceStore} renderPanel={renderPanel} />
+        <Workspace
+          data={wsData}
+          onChange={handleWorkspaceChange}
+          renderPanel={renderPanel}
+          aria-label="Agent workspace"
+        />
       </div>
     </div>
   )
