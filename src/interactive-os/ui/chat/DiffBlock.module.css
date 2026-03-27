@@ -1,0 +1,50 @@
+/* DiffBlock — side-by-side diff display
+   ② 2026-03-27-chat-module-prd.md */
+
+.diff {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-md-radius);
+  overflow: hidden;
+}
+
+.diffHeader {
+  padding: var(--space-xs) var(--space-sm);
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.diffBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.diffPane {
+  overflow-x: auto;
+  min-width: 0;
+}
+
+.diffPane + .diffPane {
+  border-left: 1px solid var(--border-subtle);
+}
+
+.diffCode {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  line-height: var(--leading-snug);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.diffLineOld {
+  padding: 0 var(--space-sm);
+  background: var(--tone-destructive-dim);
+}
+
+.diffLineNew {
+  padding: 0 var(--space-sm);
+  background: var(--tone-success-dim);
+}

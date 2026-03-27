@@ -75,6 +75,7 @@
 | Kanban · Slider · Spinbutton | Integrated | CSS module 완비 |
 | Checkbox · Toggle · ToggleGroup · AlertDialog | Integrated | CSS module 완비, testPath 미연결(4종) |
 | Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음, Toaster testPath 없음 |
+| chat/ (ChatFeed · ChatInput · TextBlock · CodeBlock · DiffBlock) | Prototype | 블록 렌더러 OCP, agent viewer 포팅 완료. 인터랙티브 블록(storeKey) 미실전 검증 |
 | *Select* | — | Combobox 래퍼, 미구현 |
 | *ContextMenu* | — | MenuList + popover, 미구현 |
 | *DatePicker* | — | Grid + value + popover, 미구현 |
@@ -83,7 +84,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Vitest (808 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+| Vitest (859 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
 | Design Lint (8 rules · browser-injectable · Playwright CI) | Validated | 신규 관계 규칙(internal≤external, depth-inversion) false positive 튜닝 필요 |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |

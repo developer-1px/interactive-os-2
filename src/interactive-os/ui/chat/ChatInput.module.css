@@ -1,0 +1,37 @@
+/* ChatInput — message input area
+   ② 2026-03-27-chat-module-prd.md */
+
+.chatInput {
+  display: flex;
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.chatInput textarea {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--border-default);
+  border-radius: var(--shape-xl-radius);
+  padding: var(--shape-xl-py) var(--shape-xl-px);
+  font-size: var(--type-body-size);
+  line-height: var(--leading-snug);
+  font-family: inherit;
+  background: var(--surface-base);
+  color: var(--text-primary);
+  outline: none;
+  max-height: 120px;
+}
+
+.chatInput textarea:focus {
+  border-color: var(--tone-primary-base);
+}
+
+.chatInput textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.chatInput textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
