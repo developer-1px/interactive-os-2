@@ -175,8 +175,7 @@
 }
 
 .smFeature__text {
-  display: flex;
-  gap: var(--space-xs);
+  color: var(--text-secondary);
 }
 
 .smFeature__id {

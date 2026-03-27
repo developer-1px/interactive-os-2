@@ -37,10 +37,8 @@ function StoryCard({ story }: { story: Story }) {
 function FeatureCard({ feature }: { feature: Feature }) {
   return (
     <div className={css.smFeature}>
-      <div className={css.smFeature__text}>
-        <span className={css.smFeature__id}>{feature.id}</span>
-        {feature.feature}
-      </div>
+      <span className={css.smFeature__id}>{feature.id}</span>
+      <div className={css.smFeature__text}>{feature.feature}</div>
       {feature.screens.length > 0 && (
         <div className={css.smFeature__screens}>
           {feature.screens.map(s => (
