@@ -36,14 +36,22 @@
   padding: var(--space-xl);
 }
 
-/* --- flat grid: columns = stories, rows = [need-header] [story] [feature*N] --- */
-
-/* row 1 = need header, row 2 = story, row 3~7 = features (빈 행은 0으로 축소) */
+/* --- flat grid: spacer rows로 위계별 간격 분리 ---
+   N→S: --space-lg (16)  |  S→F: --space-md (12)  |  F↔F: --space-sm (8)
+   content rows = odd (1,3,5...), gap rows = even (2,4,6...)              */
 
 .smMap {
   display: grid;
-  grid-template-rows: auto repeat(6, auto);
-  gap: var(--space-sm);
+  grid-template-rows:
+    auto var(--space-lg)                    /* need header + N→S gap */
+    auto var(--space-md)                    /* story + S→F gap */
+    auto var(--space-sm)                    /* f1 + F↔F gap */
+    auto var(--space-sm)                    /* f2 + F↔F gap */
+    auto var(--space-sm)                    /* f3 + F↔F gap */
+    auto var(--space-sm)                    /* f4 + F↔F gap */
+    auto;                                   /* f5 */
+
+  gap: 0 var(--space-sm);
   width: max-content;
 }
 
@@ -83,15 +91,23 @@
   font-weight: var(--weight-semi);
 }
 
-/* --- story column: spans row 2..end, subgrid aligns story + feature rows --- */
+/* --- story column: spans row 3..end, subgrid + nth-child skips gap rows --- */
 
 .smStoryCol {
-  grid-row: 2 / -1;
+  grid-row: 3 / -1;
   display: grid;
   grid-template-rows: subgrid;
-  gap: var(--space-sm);
+  row-gap: 0;
   align-content: start;
 }
+
+/* content rows are odd in subgrid (1,3,5,7,9,11), gap rows are even */
+.smStoryCol > :nth-child(1) { grid-row: 1; }
+.smStoryCol > :nth-child(2) { grid-row: 3; }
+.smStoryCol > :nth-child(3) { grid-row: 5; }
+.smStoryCol > :nth-child(4) { grid-row: 7; }
+.smStoryCol > :nth-child(5) { grid-row: 9; }
+.smStoryCol > :nth-child(6) { grid-row: 11; }
 
 /* --- story card --- */
 
