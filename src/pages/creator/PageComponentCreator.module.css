@@ -40,6 +40,66 @@
   font-weight: var(--weight-medium);
 }
 
+/* ── Canvas pane (left) ── */
+.canvasPane {
+  height: 100%;
+  overflow: hidden;
+}
+
+.canvasPaneHeader {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--type-caption-size);
+}
+
+.canvasPaneTitle {
+  font-weight: var(--weight-semi);
+  color: var(--text-primary);
+}
+
+.canvasPaneMeta {
+  color: var(--text-muted);
+  margin-left: var(--space-sm);
+}
+
+/* ── Right pane (tabbed) ── */
+.rightPane {
+  height: 100%;
+  overflow: hidden;
+  border-left: 1px solid var(--border-subtle);
+}
+
+.rightTabBar {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
+  gap: var(--space-2xs);
+}
+
+.rightTab {
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  border-radius: var(--shape-xs-radius);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-caption-weight);
+  color: var(--text-muted);
+  --_bg: transparent;
+  --_bg-hover: var(--surface-default);
+  background: var(--_bg);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
+              color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.rightTabActive {
+  --_bg: var(--surface-raised);
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+.rightContent {
+  overflow: auto;
+}
+
 /* ── Canvas ── */
 .canvas {
   padding: var(--space-xl);
@@ -89,7 +149,6 @@
 /* ── Chat ── */
 .chat {
   height: 100%;
-  border-left: 1px solid var(--border-subtle);
 }
 
 .chatContext {
