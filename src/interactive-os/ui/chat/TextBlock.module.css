@@ -1,0 +1,159 @@
+/* TextBlock — chat-compact markdown theme
+   ② 2026-03-27-chat-module-prd.md
+   문서용(MarkdownViewer.module.css)과 동일 키(.markdown),
+   채팅 맥락에 맞게 간격 축소·heading 억제. */
+
+.markdown {
+  font-size: var(--type-body-size);
+  line-height: var(--leading-relaxed);
+  color: inherit;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.markdown > *:first-child {
+  margin-top: 0;
+}
+
+.markdown > *:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Headings: 크기 억제, 간격 축소 ── */
+
+.markdown h1,
+.markdown h2 {
+  font-weight: var(--weight-semi);
+  color: var(--text-bright);
+  margin: 0.8em 0 0.3em;
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  font-weight: var(--weight-semi);
+  color: var(--text-bright);
+  margin: 0.6em 0 0.2em;
+}
+
+/* ── Text ── */
+
+.markdown p {
+  margin: 0.3em 0;
+}
+
+.markdown strong {
+  font-weight: var(--weight-semi);
+  color: var(--text-bright);
+}
+
+.markdown em {
+  font-style: italic;
+}
+
+/* ── Lists ── */
+
+.markdown ul,
+.markdown ol {
+  padding-left: 1.3em;
+  margin: 0.3em 0;
+}
+
+.markdown li {
+  margin: 0.15em 0;
+}
+
+.markdown li::marker {
+  color: var(--text-muted);
+}
+
+/* ── Code ── */
+
+.markdown pre {
+  margin: 0.5em 0;
+  padding: 0.5em 0.7em;
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-md-radius);
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  line-height: var(--leading-snug);
+  white-space: pre;
+}
+
+.markdown pre:has(:global(.shiki)) {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.markdown code {
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  color: var(--tone-primary-hover);
+  background: var(--tone-primary-dim);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  border-radius: var(--shape-xs-radius);
+}
+
+.markdown pre code {
+  color: inherit;
+  background: none;
+  padding: 0;
+  border: none;
+}
+
+/* ── Table ── */
+
+.markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.4em 0;
+}
+
+.markdown th {
+  padding: 0.3em 0.5em;
+  border-bottom: 2px solid var(--border-default);
+  font-weight: var(--weight-semi);
+  color: var(--text-bright);
+  text-align: left;
+}
+
+.markdown td {
+  padding: 0.25em 0.5em;
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: left;
+}
+
+/* ── Block elements ── */
+
+.markdown blockquote {
+  margin: 0.3em 0;
+  padding-left: 0.7em;
+  border-left: 3px solid var(--tone-primary-base);
+  color: var(--text-secondary);
+}
+
+.markdown hr {
+  border: none;
+  border-top: 1px solid var(--border-default);
+  margin: 0.5em 0;
+}
+
+.markdown img {
+  max-width: 100%;
+  border-radius: var(--shape-xs-radius);
+}
+
+.markdown a {
+  color: var(--tone-primary-base);
+}
+
+.markdown input[type="checkbox"] {
+  margin-right: 0.4em;
+  vertical-align: middle;
+}

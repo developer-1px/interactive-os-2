@@ -25,10 +25,6 @@
   border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
 }
 
-.chatUser :global(p:last-child) {
-  margin-bottom: 0;
-}
-
 /* --- Assistant bubble --- */
 
 .chatAssistant {
