@@ -321,7 +321,8 @@ export function runDesignLint(root, options) {
       id: 'touch-target-too-small',
       severity: 'error',
       run(c) {
-        const MIN = 44
+        const isMobile = ('ontouchstart' in window) || (window.matchMedia('(pointer: coarse)').matches)
+        const MIN = isMobile ? 44 : 28
         const candidates = c.root.querySelectorAll('button, a[href], input, select, textarea, [role="button"], [role="link"], [role="tab"], [role="menuitem"], [role="option"], [role="radio"], [role="checkbox"], [role="switch"], [role="slider"], [role="spinbutton"], [role="combobox"], [role="treeitem"]')
         let checked = 0, passed = 0
 

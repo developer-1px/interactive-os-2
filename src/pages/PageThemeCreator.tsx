@@ -303,7 +303,7 @@ const toastVariants: Array<'default' | 'success' | 'error'> = ['default', 'succe
 function BoardCard() {
   const [data, setData] = useState(makeKanbanData)
   return (
-    <div className={`${styles.card} ${styles.cardWide}`}>
+    <div className={`${styles.card} ${styles.cardWide}`} data-surface="display">
       <Kanban data={data} onChange={setData} aria-label="Project board" />
     </div>
   )
@@ -315,7 +315,7 @@ function PreferencesCard() {
   const [sliderData, setSliderData] = useState(makeSliderData)
   const [checkboxData, setCheckboxData] = useState(makeCheckboxData)
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <div className={styles.stack}>
         <SwitchGroup data={switchData} onChange={setSwitchData} />
         <RadioGroup data={radioData} onChange={setRadioData} />
@@ -331,7 +331,7 @@ function DataViewCard() {
   const [tabData, setTabData] = useState(makeTabListData)
   const [comboData, setComboData] = useState(makeComboboxData)
   return (
-    <div className={`${styles.card} ${styles.cardWide}`}>
+    <div className={`${styles.card} ${styles.cardWide}`} data-surface="display">
       <div className={styles.stack}>
         <div className={styles.row}>
           <TabList data={tabData} onChange={setTabData} />
@@ -358,7 +358,7 @@ function ExplorerCard() {
   const [treeData, setTreeData] = useState(makeTreeViewData)
   const [toolbarData, setToolbarData] = useState(makeToolbarData)
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <div className={styles.stack}>
         <Toolbar data={toolbarData} onChange={setToolbarData} />
         <TreeView data={treeData} onChange={setTreeData} />
@@ -370,7 +370,7 @@ function ExplorerCard() {
 function HierarchyCard() {
   const [data, setData] = useState(makeTreeGridData)
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <TreeGrid data={data} onChange={setData} />
     </div>
   )
@@ -381,7 +381,7 @@ function InputGroupCard() {
   const [toggleData, setToggleData] = useState(makeToggleData)
   const [groupData, setGroupData] = useState(makeToggleGroupData)
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <div className={styles.stack}>
         <Spinbutton data={spinData} onChange={setSpinData} min={0} max={99} step={1} />
         <Toggle data={toggleData} onChange={setToggleData} />
@@ -395,7 +395,7 @@ function SidebarCard() {
   const [navData, setNavData] = useState(makeNavListData)
   const [accordionData, setAccordionData] = useState(makeAccordionData)
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <div className={styles.stack}>
         <NavList data={navData} onChange={setNavData} onActivate={noop} />
         <Accordion data={accordionData} onChange={setAccordionData} />
@@ -407,7 +407,7 @@ function SidebarCard() {
 function ActionsCard() {
   const [listData, setListData] = useState(makeListBoxData)
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <div className={styles.stack}>
         <Tooltip content="Cycles through default, success, and error variants">
           <button
@@ -436,7 +436,7 @@ function ConfirmCard() {
   const [dialogData, setDialogData] = useState(makeDialogData)
   const [alertData, setAlertData] = useState(makeAlertDialogData)
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <div className={styles.stack}>
         <Dialog data={dialogData} onChange={setDialogData} />
         <AlertDialog data={alertData} onChange={setAlertData} />
@@ -449,7 +449,7 @@ function MenuCard() {
   const [disclosureData, setDisclosureData] = useState(makeDisclosureGroupData)
   const [menuData, setMenuData] = useState(makeMenuListData)
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <div className={styles.stack}>
         <DisclosureGroup data={disclosureData} onChange={setDisclosureData} />
         <MenuList data={menuData} onChange={setMenuData} />
@@ -460,7 +460,7 @@ function MenuCard() {
 
 function FormCard() {
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-surface="display">
       <div className={styles.stack}>
         <Breadcrumb path="src/interactive-os/ui/Button.tsx" root="src" />
         <TextInput placeholder="Search components..." />

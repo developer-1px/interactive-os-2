@@ -100,6 +100,7 @@
   border-radius: var(--shape-xs-radius);
   font-size: var(--type-caption-size);
   font-weight: var(--type-caption-weight);
+  min-height: var(--space-2xl);
   color: var(--text-muted);
   --_bg: transparent;
   --_bg-hover: var(--surface-default);
@@ -202,6 +203,7 @@
   border-radius: var(--shape-sm-radius);
   font-size: var(--type-caption-size);
   font-weight: var(--type-caption-weight);
+  min-height: var(--space-2xl);
   white-space: nowrap;
   color: var(--text-muted);
   --_bg: transparent;
