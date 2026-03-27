@@ -36,11 +36,13 @@
   padding: var(--space-xl);
 }
 
-/* --- flat grid: columns = stories, rows = [need-header] [story+features] --- */
+/* --- flat grid: columns = stories, rows = [need-header] [story] [feature*N] --- */
+
+/* row 1 = need header, row 2 = story, row 3~7 = features (빈 행은 0으로 축소) */
 
 .smMap {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto repeat(6, auto);
   gap: var(--space-sm);
   width: max-content;
 }
@@ -81,14 +83,14 @@
   font-weight: var(--weight-semi);
 }
 
-/* --- story column: row 2, flex column for story card + features --- */
+/* --- story column: spans row 2..end, subgrid aligns story + feature rows --- */
 
 .smStoryCol {
-  grid-row: 2;
-  display: flex;
-  flex-direction: column;
+  grid-row: 2 / -1;
+  display: grid;
+  grid-template-rows: subgrid;
   gap: var(--space-sm);
-  align-self: start;
+  align-content: start;
 }
 
 /* --- story card --- */
