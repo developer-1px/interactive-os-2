@@ -91,10 +91,14 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
           <cite className={s.cmsQuoteAttribution}>— <LocalizedText value={data.attribution as LocaleMap} locale={locale} /></cite>
         </blockquote>
       )
-    case 'article':
+    case 'article': {
+      const articleImage = data.image as string
       return (
         <div className={s.cmsArticleContent}>
-          <div className={s.cmsArticleIcon}><CmsIcon name={data.icon as string} size={20} /></div>
+          {articleImage
+            ? <img src={articleImage} alt="" className={s.cmsArticleImage} />
+            : <div className={s.cmsArticleIcon}><CmsIcon name={data.icon as string} size={20} /></div>
+          }
           <div className={s.cmsArticleBody}>
             <h3 className={s.cmsArticleTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
             <span className={s.cmsArticleMeta}>
@@ -103,6 +107,7 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
           </div>
         </div>
       )
+    }
     case 'showcase-item':
       return (
         <div className={s.cmsShowcaseItemContent}>

@@ -244,7 +244,7 @@ function createJournal(): SectionTemplate {
 
   for (const a of articles) {
     const id = uid(`article-${a.slug}`)
-    entities[id] = entity(id, { type: 'article', icon: a.icon, title: localeMap(a.title), category: localeMap(a.category), readTime: a.readTime })
+    entities[id] = entity(id, { type: 'article', image: '', icon: a.icon, title: localeMap(a.title), category: localeMap(a.category), readTime: a.readTime })
     childIds.push(id)
   }
 
