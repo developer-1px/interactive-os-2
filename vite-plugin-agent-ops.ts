@@ -481,15 +481,19 @@ export function agentOpsPlugin(): Plugin {
 
       const chatSessions = new Map<string, SDKSession>()
 
-      const wsSend = (event: string, data: unknown) => {
+      // Broadcast to all connected clients (Phase A: single client)
+      const wsBroadcast = (event: string, data: unknown) => {
         server.ws.send(event, data)
       }
 
-      server.ws.on('chat:client', async (data: unknown) => {
+      server.ws.on('chat:client', async (data: unknown, client: { send: (event: string, payload?: unknown) => void }) => {
         let msg: ChatWsClientMessage
         try {
           msg = (typeof data === 'string' ? JSON.parse(data) : data) as ChatWsClientMessage
         } catch { return }
+
+        // Reply helper — sends to the requesting client
+        const reply = (event: string, payload: unknown) => client.send(event, payload)
 
         if (msg.type === 'create-session') {
           try {
@@ -499,35 +503,32 @@ export function agentOpsPlugin(): Plugin {
               permissionMode: 'acceptEdits',
             })
 
-            // Stream in background
+            // Stream in background — uses wsBroadcast so all tabs see responses
             ;(async () => {
               let currentText = ''
               try {
                 for await (const sdkMsg of session.stream()) {
                   const sid = session.sessionId
-                  handleSdkMessage(sid, sdkMsg, wsSend, () => currentText, (t) => { currentText = t })
+                  handleSdkMessage(sid, sdkMsg, wsBroadcast, () => currentText, (t) => { currentText = t })
                 }
               } catch (e) {
-                // Stream ended (session closed or crashed)
                 const sid = chatSessions.has(session.sessionId) ? session.sessionId : ''
                 if (sid) {
-                  const reply: ChatWsServerMessage = { type: 'session-error', sessionId: sid, error: String(e) }
-                  wsSend('chat:server', reply)
+                  const errMsg: ChatWsServerMessage = { type: 'session-error', sessionId: sid, error: String(e) }
+                  wsBroadcast('chat:server', errMsg)
                   chatSessions.delete(sid)
                 }
               }
             })()
 
-            // Wait for sessionId to be available
+            // SDK populates sessionId asynchronously after first stream event
             await new Promise(r => setTimeout(r, 800))
             const sessionId = session.sessionId
             chatSessions.set(sessionId, session)
 
-            const reply: ChatWsServerMessage = { type: 'session-created', sessionId }
-            wsSend('chat:server', reply)
+            reply('chat:server', { type: 'session-created', sessionId } satisfies ChatWsServerMessage)
           } catch (e) {
-            const reply: ChatWsServerMessage = { type: 'create-failed', error: String(e) }
-            wsSend('chat:server', reply)
+            reply('chat:server', { type: 'create-failed', error: String(e) } satisfies ChatWsServerMessage)
           }
           return
         }
@@ -535,15 +536,13 @@ export function agentOpsPlugin(): Plugin {
         if (msg.type === 'send-message') {
           const session = chatSessions.get(msg.sessionId)
           if (!session) {
-            const reply: ChatWsServerMessage = { type: 'session-error', sessionId: msg.sessionId, error: 'Session not found' }
-            wsSend('chat:server', reply)
+            reply('chat:server', { type: 'session-error', sessionId: msg.sessionId, error: 'Session not found' } satisfies ChatWsServerMessage)
             return
           }
           try {
             await session.send(msg.text)
           } catch (e) {
-            const reply: ChatWsServerMessage = { type: 'session-error', sessionId: msg.sessionId, error: String(e) }
-            wsSend('chat:server', reply)
+            reply('chat:server', { type: 'session-error', sessionId: msg.sessionId, error: String(e) } satisfies ChatWsServerMessage)
           }
           return
         }
@@ -553,8 +552,7 @@ export function agentOpsPlugin(): Plugin {
           if (session) {
             session.close()
             chatSessions.delete(msg.sessionId)
-            const reply: ChatWsServerMessage = { type: 'session-closed', sessionId: msg.sessionId }
-            wsSend('chat:server', reply)
+            reply('chat:server', { type: 'session-closed', sessionId: msg.sessionId } satisfies ChatWsServerMessage)
           }
         }
       })
