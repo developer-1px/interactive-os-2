@@ -8,103 +8,21 @@ import { AriaRoute } from '../interactive-os/primitives/AriaRoute'
 import { TreeView } from '../interactive-os/ui/TreeView'
 import { useResizer } from '../hooks/useResizer'
 import '../styles/resizer.css'
-import { FOCUS_ID } from '../interactive-os/axis/navigate'
-import { createStore, getChildren, getEntityData, updateEntityData, addEntity } from '../interactive-os/store/createStore'
+import { getChildren, getEntityData, updateEntityData, addEntity } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData, Entity } from '../interactive-os/store/types'
-import { EXPANDED_ID } from '../interactive-os/axis/expand'
 import { CodeBlock } from '../interactive-os/ui/CodeBlock'
 import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
 import { FileIcon } from '../interactive-os/ui/FileIcon'
 import { Breadcrumb } from '../interactive-os/ui/Breadcrumb'
 import { QuickOpen } from './viewer/QuickOpen'
 import { DEFAULT_ROOT, type FileNodeData } from './viewer/types'
+import { fetchTree, fetchFile } from './viewer/fsClient'
+import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelected } from './viewer/treeTransform'
 import { Workspace } from '../interactive-os/ui/Workspace'
 import { createWorkspace, workspaceCommands, findTabgroup } from '../interactive-os/plugins/workspaceStore'
 import type { TabData } from '../interactive-os/plugins/workspaceStore'
-
-// --- Types ---
-
-interface TreeNode {
-  id: string
-  name: string
-  type: 'file' | 'directory'
-  children?: TreeNode[]
-}
-
-// --- Data fetching ---
-
-async function fetchTree(root: string): Promise<TreeNode[]> {
-  const res = await fetch(`/api/fs/tree?root=${encodeURIComponent(root)}`)
-  return res.json()
-}
-
-async function fetchFile(path: string): Promise<string> {
-  const res = await fetch(`/api/fs/file?path=${encodeURIComponent(path)}`)
-  return res.text()
-}
-
-// --- Convert tree to normalized store ---
-
-function treeToStore(nodes: TreeNode[]): NormalizedData {
-  const entities: Record<string, Entity> = {}
-  const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
-
-  function walk(items: TreeNode[], parentId: string) {
-    for (const node of items) {
-      entities[node.id] = { id: node.id, data: { name: node.name, type: node.type, path: node.id } }
-      if (!relationships[parentId]) relationships[parentId] = []
-      relationships[parentId].push(node.id)
-      if (node.children && node.children.length > 0) {
-        walk(node.children, node.id)
-      }
-    }
-  }
-
-  walk(nodes, ROOT_ID)
-  return createStore({ entities, relationships })
-}
-
-// --- URL ↔ file path helpers ---
-
-function urlPathToFilePath(pathname: string): string | null {
-  const relative = pathname.replace(/^\/viewer\/?/, '')
-  if (!relative) return null
-  return `${DEFAULT_ROOT}/${relative}`
-}
-
-function filePathToUrlPath(filePath: string): string {
-  const relative = filePath.startsWith(DEFAULT_ROOT + '/')
-    ? filePath.slice(DEFAULT_ROOT.length + 1)
-    : filePath
-  return `/viewer/${relative}`
-}
-
-function getAncestorIds(filePath: string, store: NormalizedData): string[] {
-  const ancestors: string[] = []
-  const parts = filePath.split('/')
-  for (let i = 1; i < parts.length; i++) {
-    const ancestorPath = parts.slice(0, i).join('/')
-    if (store.entities[ancestorPath]) {
-      ancestors.push(ancestorPath)
-    }
-  }
-  return ancestors
-}
-
-function withInitialFileSelected(store: NormalizedData, filePath: string): NormalizedData {
-  const ancestors = getAncestorIds(filePath, store)
-  const existing = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
-  const merged = [...new Set([...existing, ...ancestors])]
-  return {
-    ...store,
-    entities: {
-      ...store.entities,
-      [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: merged },
-      [FOCUS_ID]: { id: FOCUS_ID, focusedId: filePath },
-    },
-  }
-}
+import { useLayoutKeys } from '../hooks/useLayoutKeys'
 
 // --- FilePanel ---
 
@@ -138,7 +56,7 @@ function FilePanel({ path }: { path: string }) {
 export default function PageViewer() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const urlFilePath = useMemo(() => urlPathToFilePath(pathname), [pathname])
+  const urlFilePath = useMemo(() => urlPathToFilePath(pathname, 'viewer', DEFAULT_ROOT), [pathname])
 
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -153,7 +71,7 @@ export default function PageViewer() {
   const selectedFile = urlFilePath && initialStore?.entities[urlFilePath] ? urlFilePath : null
 
   useEffect(() => {
-    const initialFilePath = urlPathToFilePath(window.location.pathname)
+    const initialFilePath = urlPathToFilePath(window.location.pathname, 'viewer', DEFAULT_ROOT)
     fetchTree(DEFAULT_ROOT).then((tree) => {
       let store = treeToStore(tree)
       if (initialFilePath && store.entities[initialFilePath]) {
@@ -194,7 +112,7 @@ export default function PageViewer() {
         data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath, preview: true },
       }).execute(prev)
     })
-    navigate(filePathToUrlPath(filePath), { replace: true })
+    navigate(filePathToUrlPath(filePath, 'viewer', DEFAULT_ROOT), { replace: true })
   }, [navigate])
 
   // Enter → preview 유지 + 영구 탭을 preview 왼쪽에 insert + focus는 preview에 복귀
@@ -227,7 +145,7 @@ export default function PageViewer() {
 
       return store
     })
-    navigate(filePathToUrlPath(filePath), { replace: true })
+    navigate(filePathToUrlPath(filePath, 'viewer', DEFAULT_ROOT), { replace: true })
   }, [navigate])
 
   // 현재 트리에서 포커스된 파일 경로를 추적 (keyMap에서 참조)
@@ -306,7 +224,7 @@ export default function PageViewer() {
         data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
       }).execute(store)
     })
-    navigate(filePathToUrlPath(filePath), { replace: true })
+    navigate(filePathToUrlPath(filePath, 'viewer', DEFAULT_ROOT), { replace: true })
   }, [navigate])
 
   const handleWorkspaceChange = useCallback((newStore: NormalizedData) => {
@@ -390,10 +308,14 @@ export default function PageViewer() {
       const path = focusedFileRef.current
       if (path) openInNewPaneRef.current(path)
     },
-    'Meta+d': () => {
-      duplicatePaneRef.current()
-    },
   }), [])
+
+  const viewerLayoutHandlers = useMemo(() => ({
+    splitH: () => { duplicatePaneRef.current() },
+    splitV: () => { duplicatePaneRef.current() },
+  }), [])
+
+  const { onKeyDown: handleLayoutKeyDown } = useLayoutKeys(viewerLayoutHandlers)
 
 
   if (loading || !initialStore) {
@@ -407,7 +329,7 @@ export default function PageViewer() {
 
   return (
     <AriaRoute keyMap={quickOpenKeyMap}>
-    <div className={styles.vw}>
+    <div className={styles.vw} onKeyDown={handleLayoutKeyDown}>
       {/* Tree panel (sidebar) */}
         <div className={styles.vwTree} style={{ width: treeResizer.size }}>
           <div className={styles.vwTreeHeader}>
