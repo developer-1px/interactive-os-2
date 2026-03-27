@@ -12,6 +12,7 @@ export const router = createBrowserRouter([
       { path: '/ui/*', lazy: () => import('./pages/PageUiShowcase').then(m => ({ Component: m.default })) },
       { path: '/viewer/*', lazy: () => import('./pages/PageViewer').then(m => ({ Component: m.default })) },
       { path: '/agent/*', lazy: () => import('./pages/PageAgentViewer').then(m => ({ Component: m.default })) },
+      { path: '/chat', lazy: () => import('./pages/chat/PageAgentChat').then(m => ({ Component: m.default })) },
       { path: '/i18n', lazy: () => import('./pages/PageI18nEditor').then(m => ({ Component: m.default })) },
       { path: '/incident', lazy: () => import('./pages/PageIncidentInterface').then(m => ({ Component: m.default })) },
       { path: '/internals/theme', lazy: () => import('./pages/PageThemeCreator').then(m => ({ Component: m.default })) },

@@ -1,0 +1,169 @@
+/* ═══════════════════════════════════════════
+   Agent Chat — sidebar + chat area
+   Left: session list, Center: chat feed + input
+   ═══════════════════════════════════════════ */
+
+/* --- Layout --- */
+
+.chat {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  grid-column: 2 / -1;
+}
+
+/* --- Sidebar --- */
+
+.chatSidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: var(--surface-sunken);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.chatSidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 var(--space-md);
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chatNewBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.chatNewBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-bright);
+}
+
+/* --- Session list --- */
+
+.chatSessionList {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xs) 0;
+}
+
+.chatSessionItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--type-body-size);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.chatSessionItem:hover {
+  background: var(--bg-hover);
+}
+
+.chatSessionActive {
+  background: var(--bg-active);
+  color: var(--text-bright);
+}
+
+.chatRunning {
+  color: var(--tone-success-base);
+}
+
+.chatIdle {
+  color: var(--text-muted);
+}
+
+.chatCloseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+}
+
+.chatSessionItem:hover .chatCloseBtn {
+  opacity: 1;
+}
+
+.chatCloseBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-bright);
+}
+
+.chatEmpty {
+  padding: var(--space-md);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* --- Main chat area --- */
+
+.chatMain {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.chatFeed {
+  flex: 1;
+  min-height: 0;
+}
+
+/* --- Welcome screen --- */
+
+.chatWelcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: var(--space-md);
+  color: var(--text-muted);
+}
+
+.chatStartBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--type-body-size);
+}
+
+.chatStartBtn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
