@@ -1,7 +1,7 @@
 // ② 2026-03-28-workspace-sync-prd.md
 
 import { useState, useMemo, useCallback } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import { componentRegistry, type RegistryEntry } from './componentRegistry'
 import { ComponentCanvas } from './ComponentCanvas'
@@ -95,14 +95,16 @@ function createCreatorWorkspace(): NormalizedData {
 
 // --- Component ---
 
+function nameFromParams(params: Record<string, string | undefined>): string {
+  const segment = (params['*'] ?? '').split('/')[0]
+  return componentRegistry.find((e) => e.name === segment)?.name ?? componentRegistry[0]?.name ?? ''
+}
+
 export default function PageComponentCreator() {
-  const { pathname } = useLocation()
+  const params = useParams()
   const navigate = useNavigate()
 
-  const selectedName = useMemo(() => {
-    const segment = pathname.replace(/^\/creator\/?/, '').split('/')[0]
-    return componentRegistry.find((e) => e.name === segment)?.name ?? componentRegistry[0]?.name ?? ''
-  }, [pathname])
+  const [selectedName, setSelectedName] = useState(() => nameFromParams(params))
 
   const selectedEntry: RegistryEntry | undefined = useMemo(
     () => componentRegistry.find((e) => e.name === selectedName),
@@ -110,7 +112,10 @@ export default function PageComponentCreator() {
   )
 
   const handleSelectComponent = useCallback(
-    (name: string) => navigate(`/creator/${name}`),
+    (name: string) => {
+      setSelectedName(name)
+      navigate(`/creator/${name}`)
+    },
     [navigate],
   )
 
