@@ -280,6 +280,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
     "fuse.js": "^7.1.0",
+    "yaml": "^2.8.3",
     "zod": "^4.3.6"
   },
   "knip": {
