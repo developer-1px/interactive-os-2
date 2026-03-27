@@ -124,6 +124,7 @@ const appNavItems: NavItem[] = [
   { id: 'agent', label: 'Agent', icon: Activity, path: '/agent' },
   { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
+  { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
 ]
 
 const internalsNavItems: NavItem[] = contentsOrder.map((layer) => ({
