@@ -14,17 +14,26 @@
 
 .chatUser {
   width: fit-content;
+  max-width: 80%;
   margin-left: auto;
-  padding: var(--shape-sm-py) var(--shape-sm-px);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  line-height: var(--leading-relaxed);
   color: var(--text-primary);
   font-weight: var(--weight-medium);
   background: var(--tone-primary-dim);
-  border-radius: var(--shape-xl-radius) var(--shape-xl-radius) var(--shape-xs-radius) var(--shape-xl-radius);
+  border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
+}
+
+.chatUser :global(p:last-child) {
+  margin-bottom: 0;
 }
 
 /* --- Assistant bubble --- */
 
 .chatAssistant {
   padding: var(--space-xs) var(--space-md);
+  font-size: var(--type-body-size);
+  line-height: var(--leading-relaxed);
   color: var(--text-primary);
 }
