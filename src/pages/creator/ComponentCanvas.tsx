@@ -2,6 +2,7 @@
 
 import React, { Suspense, useMemo } from 'react'
 import type { RegistryEntry } from './componentRegistry'
+import { getSampleData } from './sampleData'
 import styles from './PageComponentCreator.module.css'
 
 interface ComponentCanvasProps {
@@ -77,20 +78,40 @@ interface ComponentInstanceProps {
   name: string
 }
 
+/** Default props by component name — sensible defaults for Canvas rendering */
+const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
+  Button: { children: 'Button' },
+  TextInput: { placeholder: 'Type here...' },
+  Combobox: { placeholder: 'Search...' },
+  Slider: { min: 0, max: 100, step: 1 },
+  Spinbutton: { min: 0, max: 100, step: 1, label: 'Value' },
+  Grid: { columns: [
+    { key: 'name', label: 'Name' },
+    { key: 'role', label: 'Role' },
+    { key: 'status', label: 'Status' },
+  ]},
+}
+
+/** Components that need NormalizedData (Aria-based) */
+const NEEDS_DATA = new Set([
+  'Accordion', 'Checkbox', 'Dialog', 'DisclosureGroup', 'Grid',
+  'ListBox', 'MenuList', 'NavList', 'RadioGroup', 'SwitchGroup',
+  'TabList', 'Toggle', 'ToggleGroup', 'TreeGrid', 'TreeView',
+  'AlertDialog', 'Kanban', 'Slider', 'Spinbutton', 'Combobox',
+])
+
 /** Render a single component instance with variant + size props */
 function ComponentInstance({ Component, variant, size, name }: ComponentInstanceProps) {
-  // Build props based on component type
-  const props: Record<string, unknown> = {}
+  const props: Record<string, unknown> = {
+    ...(DEFAULT_PROPS[name] ?? {}),
+  }
 
   if (variant) props.variant = variant
   if (size) props.size = size
 
-  // Provide sensible defaults for common props
-  if (name === 'Button' || name === 'Toggle') {
-    props.children = name
-  }
-  if (name === 'TextInput') {
-    props.placeholder = 'Type here...'
+  // Inject sample data for Aria-based components
+  if (NEEDS_DATA.has(name)) {
+    props.data = getSampleData(name)
   }
 
   return (
