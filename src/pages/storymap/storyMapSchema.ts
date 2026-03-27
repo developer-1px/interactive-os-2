@@ -18,7 +18,7 @@ const storySchema = z.object({
   id: z.string(),
   story: z.string(),
   acceptance: z.string(),
-  status: z.enum(['pending', 'done']),
+  status: z.enum(['pending', 'active', 'done', 'blocked']),
   links: z.array(linkSchema).default([]),
   features: z.array(featureSchema),
 })
