@@ -915,4 +915,99 @@
 @media (max-width: 480px) {
   .cmsHero { min-height: auto; padding-top: 12vh; }
   .cmsPatternsGrid { grid-template-columns: 1fr 1fr; }
+  .cmsGalleryGrid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ══════════════════════════════
+   Hero Image — 배너 이미지
+   ══════════════════════════════ */
+
+.cmsHeroImageWrap {
+  width: 100%;
+  max-width: var(--landing-space-content);
+  margin-top: var(--landing-space-block);
+}
+
+.cmsHeroImage {
+  width: 100%;
+  border-radius: var(--landing-shape-lg-r);
+  object-fit: cover;
+  max-height: 400px;
+}
+
+.cmsHeroImagePlaceholder {
+  width: 100%;
+  height: 200px;
+  border-radius: var(--landing-shape-lg-r);
+  background: var(--landing-tone-neutral-dim);
+  border: 1px dashed var(--landing-surface-outlined-border);
+}
+
+/* ══════════════════════════════
+   Image Card — 이미지 + 텍스트 카드
+   ══════════════════════════════ */
+
+.cmsImageCard {
+  background: var(--landing-surface-card);
+  border: 1px solid var(--landing-surface-outlined-border);
+  border-radius: var(--landing-shape-lg-r);
+  overflow: hidden;
+}
+
+.cmsImageCardFocused {
+  border-color: var(--landing-tone-neutral-dim);
+  box-shadow: 0 0 0 2px var(--landing-tone-neutral-dim);
+}
+
+/* ══════════════════════════════
+   Gallery — 이미지 그리드 섹션
+   ══════════════════════════════ */
+
+.cmsGallery {
+  padding: var(--landing-space-section) var(--landing-space-inline);
+  background: var(--landing-surface-base);
+}
+
+.cmsGalleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--landing-space-block);
+  max-width: var(--landing-space-content);
+  margin: 0 auto;
+}
+
+.cmsGalleryItem {
+  border-radius: var(--landing-shape-lg-r);
+  overflow: hidden;
+  background: var(--landing-surface-card);
+  border: 1px solid var(--landing-surface-outlined-border);
+}
+
+.cmsGalleryItemFocused {
+  border-color: var(--landing-tone-neutral-dim);
+  box-shadow: 0 0 0 2px var(--landing-tone-neutral-dim);
+}
+
+.cmsGalleryItemContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.cmsGalleryItemImage {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.cmsGalleryItemPlaceholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--landing-tone-neutral-dim);
+}
+
+.cmsGalleryItemCaption {
+  padding: var(--landing-space-item) var(--landing-space-inline-sm);
+  font-family: var(--landing-type-label-family);
+  font-size: var(--landing-type-label-size);
+  color: var(--landing-text-secondary);
 }

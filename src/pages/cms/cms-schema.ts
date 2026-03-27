@@ -56,6 +56,10 @@ export const nodeSchemas = {
   'showcase-item':  z.object({ type: z.literal('showcase-item'),  icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
   'stat-card':      z.object({ type: z.literal('stat-card'),      value: z.string().describe('Value'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
   'section-cta':    z.object({ type: z.literal('section-cta'),    label: localeMapSchema.describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),
+  // ② 2026-03-27-cms-image-field-prd.md
+  'hero-image':     z.object({ type: z.literal('hero-image'),     src: z.string().meta({ fieldType: 'image' }).describe('Banner Image'), alt: localeMapSchema.describe('Alt Text') }),
+  'image-card':     z.object({ type: z.literal('image-card') }),
+  'gallery-item':   z.object({ type: z.literal('gallery-item'),   image: z.string().meta({ fieldType: 'image' }).describe('Image'), caption: localeMapSchema.describe('Caption') }),
 } as const
 
 // ── Children rules ──
@@ -63,17 +67,18 @@ export const nodeSchemas = {
 export const childRules: Record<string, z.ZodType> = {
   // Collections (z.array): children can be added/removed/reordered
   section: z.array(z.discriminatedUnion('type', [
-    nodeSchemas.card, nodeSchemas.stat, nodeSchemas.step, nodeSchemas.pattern,
+    nodeSchemas.card, nodeSchemas['image-card'], nodeSchemas.stat, nodeSchemas.step, nodeSchemas.pattern,
     nodeSchemas.badge, nodeSchemas.text, nodeSchemas.cta,
     nodeSchemas['section-label'], nodeSchemas['section-title'], nodeSchemas['section-desc'],
-    nodeSchemas.icon, nodeSchemas.link, nodeSchemas.brand, nodeSchemas.links,
+    nodeSchemas.icon, nodeSchemas['hero-image'], nodeSchemas.link, nodeSchemas.brand, nodeSchemas.links,
     nodeSchemas['value-item'], nodeSchemas.quote, nodeSchemas.article, nodeSchemas['showcase-item'],
-    nodeSchemas['stat-card'], nodeSchemas['section-cta'],
+    nodeSchemas['stat-card'], nodeSchemas['section-cta'], nodeSchemas['gallery-item'],
   ])),
   links: z.array(z.discriminatedUnion('type', [nodeSchemas.link])),
   'tab-group': z.array(z.discriminatedUnion('type', [nodeSchemas['tab-item']])),
   // Slots (non-array): fixed structure, children cannot be deleted
   card:  z.discriminatedUnion('type', [nodeSchemas.icon, nodeSchemas.text]),
+  'image-card': z.discriminatedUnion('type', [nodeSchemas['hero-image'], nodeSchemas.text]),
   step:  z.discriminatedUnion('type', [nodeSchemas['step-num'], nodeSchemas.text]),
   stat:  z.discriminatedUnion('type', [nodeSchemas['stat-value'], nodeSchemas.text]),
   'tab-item':  z.discriminatedUnion('type', [nodeSchemas['tab-panel']]),
