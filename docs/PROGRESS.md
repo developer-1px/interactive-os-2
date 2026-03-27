@@ -101,6 +101,7 @@
 | CMS (canvas · sidebar · i18n · detail panel · tabs · field types) | Validated | paste overwrite, viewer channel 미구현 |
 | CMS Landing Tokens (landingTokens.css · CmsLanding.module.css) | Integrated | editorial 9섹션(hero→manifesto→features→patterns→showcase→journal→testimonial→cta→footer), 4 신규 노드타입 |
 | Agent Viewer (multi-session · virtual scroll · HMR-safe store) | Validated | viewer channel disabled |
+| Agent Chat (Agent SDK · WebSocket · session lifecycle) | Prototype | Phase A: 텍스트 채팅. Phase B/C: tool UI, permission |
 | Devtools (REC · Inspector · Test Runner) | Integrated | 크로스커팅 도메인 독립, /devtools/* 라우트, ARIA tree 스냅샷 REC |
 | Inspector · Command · Diff | Validated | — |
 | Showcase (Plugin · Axis · Area) | Validated | Pattern/Collection → /ui 흡수 완료 |

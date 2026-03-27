@@ -2,6 +2,47 @@ import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import type { Plugin } from 'vite'
+import type { SDKSession, SDKMessage } from '@anthropic-ai/claude-agent-sdk'
+import type { ChatWsClientMessage, ChatWsServerMessage } from './src/pages/chat/chatWsProtocol'
+
+// --- Chat mode: SDK message handler ---
+
+function handleSdkMessage(
+  sessionId: string,
+  sdkMsg: SDKMessage,
+  wsSend: (event: string, data: unknown) => void,
+  getText: () => string,
+  setText: (t: string) => void,
+) {
+  // Streaming token
+  if (sdkMsg.type === 'stream_event') {
+    const evt = sdkMsg.event
+    if (evt.type === 'content_block_delta' && 'delta' in evt) {
+      const delta = evt.delta as { type: string; text?: string }
+      if (delta.type === 'text_delta' && delta.text) {
+        setText(getText() + delta.text)
+        const reply: ChatWsServerMessage = { type: 'assistant-text', sessionId, text: delta.text }
+        wsSend('chat:server', reply)
+      }
+    }
+    return
+  }
+
+  // Complete assistant message — flush
+  if (sdkMsg.type === 'assistant') {
+    setText('')
+    const reply: ChatWsServerMessage = { type: 'assistant-done', sessionId }
+    wsSend('chat:server', reply)
+    return
+  }
+
+  // Session state change
+  if (sdkMsg.type === 'system' && 'subtype' in sdkMsg && (sdkMsg as Record<string, unknown>).subtype === 'session_state_changed') {
+    const state = (sdkMsg as { state: 'idle' | 'running' | 'requires_action' }).state
+    const reply: ChatWsServerMessage = { type: 'state-changed', sessionId, state }
+    wsSend('chat:server', reply)
+  }
+}
 
 // --- Types for parsed transcript events ---
 
@@ -59,28 +100,21 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
     ]
     if (dropPatterns.some(p => p.test(text))) return []
 
-    // Detect system-injected content → collapse to "..."
-    // Real user input: short, conversational, no markdown structure
+    // Detect system-injected content → drop entirely (shown as tool_use instead)
     const isInjected =
       // Skill bodies / system prompts
       text.startsWith('Base directory for this skill:') ||
       text.startsWith('Launching skill:') ||
       text.startsWith('ARGUMENTS:') ||
-      text.startsWith('## ') ||
       text.startsWith('This skill') ||
       // Long structured content (skills, agent results, hook output)
       (text.length > 300 && /^#{1,4} /m.test(text)) ||
       // Agent subagent results
       (text.length > 500)
 
-    if (isInjected) {
-      // Extract first meaningful line as hint, collapse rest
-      const firstLine = text.split('\n').find(l => l.trim().length > 3)?.trim() ?? ''
-      const hint = firstLine.length > 60 ? firstLine.slice(0, 60) + '…' : firstLine
-      events.push({ type: 'user', ts, text: hint ? `… ${hint}` : '…' })
-    } else {
-      events.push({ type: 'user', ts, text })
-    }
+    if (isInjected) return []
+
+    events.push({ type: 'user', ts, text })
   }
 
   if (type === 'assistant') {
@@ -117,6 +151,9 @@ function parseTranscriptLine(raw: string): TimelineEvent[] {
         }
         if (name === 'Glob' || name === 'Grep') {
           evt.text = input.pattern as string
+        }
+        if (name === 'Skill') {
+          evt.text = input.skill as string
         }
 
         events.push(evt)
@@ -440,9 +477,95 @@ export function agentOpsPlugin(): Plugin {
         next()
       })
 
+      // --- Chat mode: Agent SDK session management via Vite WS ---
+
+      const chatSessions = new Map<string, SDKSession>()
+
+      const wsSend = (event: string, data: unknown) => {
+        server.ws.send(event, data)
+      }
+
+      server.ws.on('chat:client', async (data: unknown) => {
+        let msg: ChatWsClientMessage
+        try {
+          msg = (typeof data === 'string' ? JSON.parse(data) : data) as ChatWsClientMessage
+        } catch { return }
+
+        if (msg.type === 'create-session') {
+          try {
+            const { unstable_v2_createSession } = await import('@anthropic-ai/claude-agent-sdk')
+            const session = unstable_v2_createSession({
+              model: 'claude-sonnet-4-6',
+              permissionMode: 'acceptEdits',
+            })
+
+            // Stream in background
+            ;(async () => {
+              let currentText = ''
+              try {
+                for await (const sdkMsg of session.stream()) {
+                  const sid = session.sessionId
+                  handleSdkMessage(sid, sdkMsg, wsSend, () => currentText, (t) => { currentText = t })
+                }
+              } catch (e) {
+                // Stream ended (session closed or crashed)
+                const sid = chatSessions.has(session.sessionId) ? session.sessionId : ''
+                if (sid) {
+                  const reply: ChatWsServerMessage = { type: 'session-error', sessionId: sid, error: String(e) }
+                  wsSend('chat:server', reply)
+                  chatSessions.delete(sid)
+                }
+              }
+            })()
+
+            // Wait for sessionId to be available
+            await new Promise(r => setTimeout(r, 800))
+            const sessionId = session.sessionId
+            chatSessions.set(sessionId, session)
+
+            const reply: ChatWsServerMessage = { type: 'session-created', sessionId }
+            wsSend('chat:server', reply)
+          } catch (e) {
+            const reply: ChatWsServerMessage = { type: 'create-failed', error: String(e) }
+            wsSend('chat:server', reply)
+          }
+          return
+        }
+
+        if (msg.type === 'send-message') {
+          const session = chatSessions.get(msg.sessionId)
+          if (!session) {
+            const reply: ChatWsServerMessage = { type: 'session-error', sessionId: msg.sessionId, error: 'Session not found' }
+            wsSend('chat:server', reply)
+            return
+          }
+          try {
+            await session.send(msg.text)
+          } catch (e) {
+            const reply: ChatWsServerMessage = { type: 'session-error', sessionId: msg.sessionId, error: String(e) }
+            wsSend('chat:server', reply)
+          }
+          return
+        }
+
+        if (msg.type === 'close-session') {
+          const session = chatSessions.get(msg.sessionId)
+          if (session) {
+            session.close()
+            chatSessions.delete(msg.sessionId)
+            const reply: ChatWsServerMessage = { type: 'session-closed', sessionId: msg.sessionId }
+            wsSend('chat:server', reply)
+          }
+        }
+      })
+
       // Cleanup
       const origClose = server.close.bind(server)
       server.close = async () => {
+        for (const [id, session] of chatSessions) {
+          session.close()
+          chatSessions.delete(id)
+        }
         return origClose()
       }
     },
