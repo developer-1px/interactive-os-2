@@ -2,11 +2,17 @@
 
 /**
  * Auto-discover UI components from ui/ directory.
- * Uses Vite's import.meta.glob to find all module.css + tsx pairs.
- * Parses module.css with parseComponentCSS to extract ComponentMeta.
+ * Uses Vite's import.meta.glob to find all TSX files (primary).
+ * If a matching module.css exists, parses it for ComponentMeta.
+ * Components without CSS get an empty meta (no variants/sizes).
  */
 
 import { parseComponentCSS, type ComponentMeta } from './parseComponentCSS'
+
+// Glob all tsx component modules (lazy for tree-shaking)
+const tsxModules = import.meta.glob<{ [key: string]: React.ComponentType<Record<string, unknown>> }>(
+  '../../interactive-os/ui/*.tsx',
+)
 
 // Glob all module.css files as raw strings (eager for instant access)
 const cssModules = import.meta.glob<string>(
@@ -14,42 +20,44 @@ const cssModules = import.meta.glob<string>(
   { query: '?raw', import: 'default', eager: true },
 )
 
-// Glob all tsx component modules (lazy for tree-shaking)
-const tsxModules = import.meta.glob<{ [key: string]: React.ComponentType<Record<string, unknown>> }>(
-  '../../interactive-os/ui/*.tsx',
-)
-
-/** Extract component name from file path: .../Button.module.css → "Button" */
+/** Extract component name from file path: .../Button.tsx → "Button" */
 function nameFromPath(path: string): string {
   const filename = path.split('/').pop() ?? ''
   return filename.replace(/\.(module\.css|tsx)$/, '')
 }
 
 export interface RegistryEntry extends ComponentMeta {
-  cssPath: string
+  cssPath: string | null
   tsxPath: string
   loadComponent: () => Promise<React.ComponentType<Record<string, unknown>>>
 }
 
-/** Build registry from glob results */
+// Skip hook/utility files that aren't renderable components
+const SKIP_PREFIXES = ['use', 'create']
+
+/** Build registry from TSX glob (primary), enrich with CSS when available */
 function buildRegistry(): RegistryEntry[] {
   const entries: RegistryEntry[] = []
 
-  for (const [cssPath, rawCSS] of Object.entries(cssModules)) {
-    const name = nameFromPath(cssPath)
-    const tsxPath = cssPath.replace('.module.css', '.tsx')
+  for (const [tsxPath, loader] of Object.entries(tsxModules)) {
+    const name = nameFromPath(tsxPath)
 
-    // Skip if no matching TSX file
-    if (!tsxModules[tsxPath]) continue
+    // Skip hooks and factory functions
+    if (SKIP_PREFIXES.some((p) => name.startsWith(p))) continue
 
-    const meta = parseComponentCSS(rawCSS, name)
+    const cssPath = tsxPath.replace('.tsx', '.module.css')
+    const rawCSS = cssModules[cssPath] ?? null
+
+    const meta: ComponentMeta = rawCSS
+      ? parseComponentCSS(rawCSS, name)
+      : { name, base: 'root', variants: [], sizes: [], tokens: { shape: null, type: null, motion: null } }
 
     entries.push({
       ...meta,
-      cssPath,
+      cssPath: rawCSS ? cssPath : null,
       tsxPath,
       loadComponent: async () => {
-        const mod = await tsxModules[tsxPath]()
+        const mod = await loader()
         // Return the named export matching the component name, or first export
         return (mod[name] ?? Object.values(mod)[0]) as React.ComponentType<Record<string, unknown>>
       },
