@@ -18,7 +18,7 @@ needs:
       - id: S1
         story: 편집할 페이지를 선택할 수 있다
         acceptance: 페이지 목록이 보이고, 선택하면 섹션 구성이 표시된다
-        status: pending
+        status: done
         links: []
         features:
           - id: F1
@@ -30,7 +30,7 @@ needs:
       - id: S2
         story: 섹션의 텍스트를 교체할 수 있다
         acceptance: 텍스트 필드를 선택하고 내용 변경. plain text만, 서식 불가
-        status: pending
+        status: active
         links: []
         features:
           - id: F3
@@ -96,7 +96,7 @@ needs:
       - id: S4
         story: 템플릿에서 새 섹션을 골라 추가할 수 있다
         acceptance: 템플릿 목록에서 선택, 원하는 위치에 삽입
-        status: pending
+        status: blocked
         links: []
         features:
           - id: F8

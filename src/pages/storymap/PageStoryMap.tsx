@@ -7,12 +7,12 @@ import storiesRaw from '../../../docs/2-areas/apps/cms/stories.yaml?raw'
 
 function StoryCard({ story }: { story: Story }) {
   return (
-    <div className={css.smStory}>
+    <div className={css.smStory} data-status={story.status}>
       <div className={css.smStory__header}>
         <span className={css.smStory__id}>{story.id}</span>
-        <span
-          className={`${css.smStory__status} ${story.status === 'done' ? css['smStory__status--done'] : css['smStory__status--pending']}`}
-        />
+        {story.status === 'blocked' && (
+          <span className={css.smStory__blocked} />
+        )}
       </div>
       <div className={css.smStory__text}>{story.story}</div>
       {story.links.length > 0 && (
@@ -73,13 +73,18 @@ export default function PageStoryMap() {
       <div className={css.smHeader}>
         <span className={css.smHeader__title}>USER STORY MAP</span>
         <div className={css.smLegend}>
+          <div className={css.smLegend__item}>pending</div>
           <div className={css.smLegend__item}>
-            <span className={`${css.smStory__status} ${css['smStory__status--pending']}`} />
-            pending
+            <span className={css.smLegend__bar} />
+            active
           </div>
           <div className={css.smLegend__item}>
-            <span className={`${css.smStory__status} ${css['smStory__status--done']}`} />
+            <span className={css.smLegend__done} />
             done
+          </div>
+          <div className={css.smLegend__item}>
+            <span className={css.smStory__blocked} />
+            blocked
           </div>
         </div>
       </div>
@@ -112,6 +117,7 @@ export default function PageStoryMap() {
               <div
                 key={story.id}
                 className={css.smStoryCol}
+                data-status={story.status}
                 style={{ gridColumn: colStart + i }}
               >
                 <StoryCard story={story} />

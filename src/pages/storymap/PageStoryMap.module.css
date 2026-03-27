@@ -138,19 +138,28 @@
   color: var(--text-muted);
 }
 
-.smStory__status {
+/* blocked dot — destructive, S 카드 ID 옆 */
+.smStory__blocked {
   width: var(--space-sm);
   height: var(--space-sm);
   border-radius: 50%;
   flex-shrink: 0;
+  background: var(--tone-destructive-base);
 }
 
-.smStory__status--pending {
-  background: var(--border-default);
+/* --- status: active = 좌측 bar --- */
+.smStory[data-status="active"] {
+  border-left: var(--indicator-width) solid var(--tone-primary-base);
 }
 
-.smStory__status--done {
-  background: var(--tone-success-base);
+/* --- status: done = 컬럼 전체 후퇴 --- */
+.smStoryCol[data-status="done"] {
+  opacity: 0.45;
+}
+
+/* --- status: blocked = 카드 border hint --- */
+.smStory[data-status="blocked"] {
+  border-left: var(--indicator-width) solid var(--tone-destructive-base);
 }
 
 .smStory__text {
@@ -231,4 +240,19 @@
   gap: var(--space-xs);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
+}
+
+.smLegend__bar {
+  width: var(--indicator-width);
+  height: var(--icon-xs);
+  background: var(--tone-primary-base);
+  border-radius: 1px;
+}
+
+.smLegend__done {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+  background: var(--text-muted);
+  border-radius: var(--shape-xs-radius);
+  opacity: 0.45;
 }
