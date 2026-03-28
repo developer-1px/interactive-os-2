@@ -11,6 +11,7 @@ import { getEntity, getChildren, getParent } from '../store/createStore'
 import { focusCommands, FOCUS_ID, gridColCommands, GRID_COL_ID } from '../axis/navigate'
 import { selectionCommands, SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
 import { expandCommands, EXPANDED_ID } from '../axis/expand'
+import { checkedCommands, CHECKED_ID } from '../axis/checked'
 import { valueCommands, VALUE_ID } from '../axis/value'
 import type { ValueRange } from '../axis/value'
 
@@ -27,11 +28,17 @@ function isExpanded(engine: CommandEngine, nodeId: string): boolean {
   return expandedIds.includes(nodeId)
 }
 
+function isChecked(engine: CommandEngine, nodeId: string): boolean {
+  const checkedIds = (engine.getStore().entities[CHECKED_ID]?.checkedIds as string[]) ?? []
+  return checkedIds.includes(nodeId)
+}
+
 export interface PatternContextOptions {
   expandable?: boolean
   selectionMode?: SelectionMode
   colCount?: number
   valueRange?: ValueRange
+  checkedTracking?: boolean
   visibilityFilters?: VisibilityFilter[]
 }
 
@@ -79,6 +86,7 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
     focused: focusedId,
     selected: getSelectedIds(engine),
     isExpanded: isExpanded(engine, focusedId),
+    isChecked: isChecked(engine, focusedId),
 
     focusNext(options?: { wrap?: boolean }): Command {
       const visible = visibleNodes()
@@ -136,8 +144,13 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
 
     activate(): Command {
       const children = getChildren(store, focusedId)
+      if (options?.checkedTracking) return checkedCommands.toggleCheck(focusedId)
       if (children.length > 0 || options?.expandable) return expandCommands.toggleExpand(focusedId)
       return selectionCommands.select(focusedId)
+    },
+
+    toggleCheck(): Command {
+      return checkedCommands.toggleCheck(focusedId)
     },
 
     toggleSelect(): Command {
