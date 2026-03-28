@@ -99,123 +99,110 @@ export interface KanbanBuildOptions {
   columnOrder?: string[]
 }
 
+/** 디렉토리를 정렬하는 공통 로직 */
+function sortDirs(fsStore: NormalizedData, dirIds: string[], order?: string[]): string[] {
+  return [...dirIds].sort((a, b) => {
+    const aName = getEntityData<FsEntityData>(fsStore, a)?.name ?? ''
+    const bName = getEntityData<FsEntityData>(fsStore, b)?.name ?? ''
+    if (order) {
+      const aIdx = order.indexOf(aName)
+      const bIdx = order.indexOf(bName)
+      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx
+      if (aIdx !== -1) return -1
+      if (bIdx !== -1) return 1
+    }
+    const aUnder = aName.startsWith('__')
+    const bUnder = bName.startsWith('__')
+    if (aUnder !== bUnder) return aUnder ? 1 : -1
+    return aName.localeCompare(bName)
+  })
+}
+
 export function buildKanbanStore(fsStore: NormalizedData, folderId: string, options?: KanbanBuildOptions): NormalizedData {
-  let store = createStore()
+  const entities: Record<string, { id: string; data?: Record<string, unknown> }> = {}
+  const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
+  let topIndex = 0
 
-  const children = getChildren(fsStore, folderId)
-  const subDirs = children.filter((id) => {
-    const data = getEntityData<FsEntityData>(fsStore, id)
-    return data?.type === 'directory'
-  })
-  const directFiles = children.filter((id) => {
-    const data = getEntityData<FsEntityData>(fsStore, id)
-    return data?.type === 'file'
-  })
+  /**
+   * 재귀적으로 폴더를 컬럼으로 풀어낸다.
+   * 하위 폴더를 만나면 카드 대신 부모 컬럼 바로 뒤에 새 컬럼 추가.
+   * prefix: 넘버링 접두사 (예: "4", "4-1")
+   */
+  function addFolder(dirId: string, prefix: string) {
+    const dirData = getEntityData<FsEntityData>(fsStore, dirId)
+    if (!dirData) return
 
-  // Sort directories by columnOrder (if provided), then alphabetical
-  const order = options?.columnOrder
-  const sortedDirs = order
-    ? [...subDirs].sort((a, b) => {
-        const aName = getEntityData<FsEntityData>(fsStore, a)?.name ?? ''
-        const bName = getEntityData<FsEntityData>(fsStore, b)?.name ?? ''
-        const aIdx = order.indexOf(aName)
-        const bIdx = order.indexOf(bName)
-        if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx
-        if (aIdx !== -1) return -1
-        if (bIdx !== -1) return 1
-        // __ 접두사 폴더는 맨 뒤
-        const aUnder = aName.startsWith('__')
-        const bUnder = bName.startsWith('__')
-        if (aUnder !== bUnder) return aUnder ? 1 : -1
-        return aName.localeCompare(bName)
-      })
-    : [...subDirs].sort((a, b) => {
-        const aName = getEntityData<FsEntityData>(fsStore, a)?.name ?? ''
-        const bName = getEntityData<FsEntityData>(fsStore, b)?.name ?? ''
-        const aUnder = aName.startsWith('__')
-        const bUnder = bName.startsWith('__')
-        if (aUnder !== bUnder) return aUnder ? 1 : -1
-        return aName.localeCompare(bName)
-      })
+    const colId = `col:${dirId}`
+    const title = `${prefix}. ${dirData.name}`
+    entities[colId] = { id: colId, data: { title, sourceId: dirId } }
+    relationships[ROOT_ID].push(colId)
+    relationships[colId] = []
 
-  // Add directory columns with numbering
-  sortedDirs.forEach((subDirId, index) => {
-    const subDirData = getEntityData<FsEntityData>(fsStore, subDirId)
-    if (!subDirData) return
+    // 파일만 카드로 추가 (폴더는 별도 컬럼으로 전개)
+    const children = getChildren(fsStore, dirId)
+    const files = sortCards(fsStore, children.filter((id) => {
+      const d = getEntityData<FsEntityData>(fsStore, id)
+      return d?.type === 'file'
+    }))
 
-    const colId = `col:${subDirId}`
-    const numberedTitle = `${index + 1}. ${subDirData.name}`
-    store = {
-      entities: {
-        ...store.entities,
-        [colId]: { id: colId, data: { title: numberedTitle, sourceId: subDirId } },
-      },
-      relationships: {
-        ...store.relationships,
-        [ROOT_ID]: [...(store.relationships[ROOT_ID] ?? []), colId],
-        [colId]: [],
-      },
-    }
-
-    // Add cards for each direct child of this subdir (types.ts first)
-    const subChildren = sortCards(fsStore, getChildren(fsStore, subDirId))
-    for (const childId of subChildren) {
-      const childData = getEntityData<FsEntityData>(fsStore, childId)
-      if (!childData) continue
-
-      const cardTitle = childData.type === 'directory' ? `/${childData.name}` : childData.name
-      const cardId = `card:${childId}`
-      store = {
-        entities: {
-          ...store.entities,
-          [cardId]: {
-            id: cardId,
-            data: { title: cardTitle, sourceId: childId, sourceType: childData.type },
-          },
-        },
-        relationships: {
-          ...store.relationships,
-          [colId]: [...(store.relationships[colId] ?? []), cardId],
-        },
-      }
-    }
-  })
-
-  // Add (files) column if there are direct files or no subdirs
-  if (directFiles.length > 0 || subDirs.length === 0) {
-    const filesColId = 'col:__files__'
-    store = {
-      entities: {
-        ...store.entities,
-        [filesColId]: { id: filesColId, data: { title: '(files)', sourceId: folderId } },
-      },
-      relationships: {
-        ...store.relationships,
-        [ROOT_ID]: [...(store.relationships[ROOT_ID] ?? []), filesColId],
-        [filesColId]: [],
-      },
-    }
-
-    for (const fileId of sortCards(fsStore, directFiles)) {
+    for (const fileId of files) {
       const fileData = getEntityData<FsEntityData>(fsStore, fileId)
       if (!fileData) continue
-
       const cardId = `card:${fileId}`
-      store = {
-        entities: {
-          ...store.entities,
-          [cardId]: {
-            id: cardId,
-            data: { title: fileData.name, sourceId: fileId, sourceType: fileData.type },
-          },
-        },
-        relationships: {
-          ...store.relationships,
-          [filesColId]: [...(store.relationships[filesColId] ?? []), cardId],
-        },
+      entities[cardId] = {
+        id: cardId,
+        data: { title: fileData.name, sourceId: fileId, sourceType: 'file' },
       }
+      relationships[colId].push(cardId)
+    }
+
+    // 하위 폴더 → 재귀적으로 컬럼 추가 (부모 바로 뒤)
+    const subDirs = children.filter((id) => {
+      const d = getEntityData<FsEntityData>(fsStore, id)
+      return d?.type === 'directory'
+    })
+    const sorted = sortDirs(fsStore, subDirs)
+    sorted.forEach((subId, i) => {
+      addFolder(subId, `${prefix}-${i + 1}`)
+    })
+  }
+
+  // 1단 하위 폴더를 정렬하고 재귀 전개
+  const topChildren = getChildren(fsStore, folderId)
+  const topDirs = topChildren.filter((id) => {
+    const d = getEntityData<FsEntityData>(fsStore, id)
+    return d?.type === 'directory'
+  })
+  const topFiles = topChildren.filter((id) => {
+    const d = getEntityData<FsEntityData>(fsStore, id)
+    return d?.type === 'file'
+  })
+
+  const sortedTopDirs = sortDirs(fsStore, topDirs, options?.columnOrder)
+
+  for (const dirId of sortedTopDirs) {
+    topIndex++
+    addFolder(dirId, String(topIndex))
+  }
+
+  // 루트 파일 → (files) 컬럼
+  if (topFiles.length > 0 || sortedTopDirs.length === 0) {
+    const filesColId = 'col:__files__'
+    entities[filesColId] = { id: filesColId, data: { title: '(files)', sourceId: folderId } }
+    relationships[ROOT_ID].push(filesColId)
+    relationships[filesColId] = []
+
+    for (const fileId of sortCards(fsStore, topFiles)) {
+      const fileData = getEntityData<FsEntityData>(fsStore, fileId)
+      if (!fileData) continue
+      const cardId = `card:${fileId}`
+      entities[cardId] = {
+        id: cardId,
+        data: { title: fileData.name, sourceId: fileId, sourceType: 'file' },
+      }
+      relationships[filesColId].push(cardId)
     }
   }
 
-  return store
+  return createStore({ entities, relationships })
 }
