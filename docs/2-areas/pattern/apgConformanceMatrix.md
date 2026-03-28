@@ -163,9 +163,9 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 48 | Color Viewer Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-color-viewer/) | `pattern/examples/slider.ts` | 🟢 | — |
-| 49 | Rating Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-rating/) | — | ⬜ | — |
+| 49 | Rating Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-rating/) | `pattern/examples/slider.ts` | 🟢 | — |
 | 50 | Media Seek Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-seek/) | — | ⬜ | — |
-| 51 | Vertical Temperature Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-temperature/) | — | ⬜ | — |
+| 51 | Vertical Temperature Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-temperature/) | `pattern/examples/slider.ts` | 🟢 | orientation param 추가 |
 
 ### Slider (Multi-Thumb)
 
