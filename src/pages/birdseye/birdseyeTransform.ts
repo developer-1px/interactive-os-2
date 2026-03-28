@@ -73,7 +73,7 @@ export function buildNavStore(fsStore: NormalizedData): NormalizedData {
  * - 선택 폴더 직하 파일 → "(files)" 컬럼 (col:__files__)
  * - 하위 디렉토리가 없으면 단일 (files) 컬럼
  */
-/** types.ts → 맨 위, __ 접두사 → 맨 뒤, 나머지 알파벳순 */
+/** 폴더 먼저, types.ts 맨 위, index.ts 맨 아래, 나머지 알파벳순 */
 function sortCards(fsStore: NormalizedData, ids: string[]): string[] {
   return [...ids].sort((a, b) => {
     const aData = getEntityData<FsEntityData>(fsStore, a)
@@ -84,11 +84,14 @@ function sortCards(fsStore: NormalizedData, ids: string[]): string[] {
     const aDir = aData?.type === 'directory'
     const bDir = bData?.type === 'directory'
     if (aDir !== bDir) return aDir ? -1 : 1
-    // 파일끼리: types.ts/types.tsx 맨 위
+    // 파일끼리: types.ts 맨 위, index.ts 맨 아래
     if (!aDir && !bDir) {
       const aTypes = /^types\.[^.]+$/.test(aName)
       const bTypes = /^types\.[^.]+$/.test(bName)
       if (aTypes !== bTypes) return aTypes ? -1 : 1
+      const aIndex = /^index\.[^.]+$/.test(aName)
+      const bIndex = /^index\.[^.]+$/.test(bName)
+      if (aIndex !== bIndex) return aIndex ? 1 : -1
     }
     return aName.localeCompare(bName)
   })
