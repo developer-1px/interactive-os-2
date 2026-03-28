@@ -137,8 +137,9 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       colCount: behavior.colCount,
       valueRange: behavior.valueRange,
       visibilityFilters: allVisibilityFilters,
+      popupType: behavior.popupType,
     }),
-    [behavior.expandable, behavior.checkedTracking, behavior.selectionMode, behavior.colCount, behavior.valueRange, allVisibilityFilters],
+    [behavior.expandable, behavior.checkedTracking, behavior.selectionMode, behavior.colCount, behavior.valueRange, allVisibilityFilters, behavior.popupType],
   )
 
   // ── getNodeState ──
@@ -183,12 +184,18 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           if (checkedCount === children.length) return true
           return 'mixed' as const
         })() : undefined,
+        open: behavior.popupType ? (() => {
+          const popupEntity = store.entities['__popup__'] as Record<string, unknown> | undefined
+          const isOpen = (popupEntity?.isOpen as boolean) ?? false
+          const triggerId = (popupEntity?.triggerId as string) ?? ''
+          return triggerId === id ? isOpen : undefined
+        })() : undefined,
         level: level + 1,
         renaming,
         ...(behavior.valueRange && { valueCurrent: (valueMeta?.value as number) ?? behavior.valueRange.min }),
       }
     },
-    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, behavior.expandable, behavior.checkedTracking, renameEntity, valueMeta, behavior.valueRange],
+    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, behavior.expandable, behavior.checkedTracking, behavior.popupType, renameEntity, valueMeta, behavior.valueRange],
   )
 
   // ── Event handlers ──
@@ -253,6 +260,12 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           : (behavior.childRole ?? 'row'),
         [nodeIdAttr]: id,
         ...ariaAttrs,
+      }
+
+      // Popup axis: auto-generate aria-haspopup and aria-expanded for trigger nodes
+      if (behavior.popupType && state.open !== undefined) {
+        baseProps['aria-haspopup'] = behavior.popupType
+        baseProps['aria-expanded'] = String(state.open)
       }
 
       if (state.focused) baseProps['data-focused'] = ''
