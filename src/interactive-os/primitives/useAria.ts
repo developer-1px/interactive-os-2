@@ -12,6 +12,7 @@ import { getChildren } from '../store/createStore'
 import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
 import { selectionCommands, SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
 import { expandCommands, EXPANDED_ID } from '../axis/expand'
+import { CHECKED_ID } from '../axis/checked'
 import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
@@ -22,7 +23,7 @@ type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; behavior: Ari
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
-const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID, '__search__'])
+const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, CHECKED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID, '__search__'])
 
 const EMPTY_BEHAVIOR: AriaPattern = {
   role: '',
@@ -104,6 +105,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         relationships: created.getStore().relationships,
       })
     }
+    if (behavior.checkedTracking && !data.entities[CHECKED_ID]) {
+      created.syncStore({
+        entities: { ...created.getStore().entities, [CHECKED_ID]: { id: CHECKED_ID, checkedIds: [] } },
+        relationships: created.getStore().relationships,
+      })
+    }
 
     const externalFocus = (data.entities[FOCUS_ID]?.focusedId as string) ?? ''
     const focusTarget = (externalFocus && data.entities[externalFocus])
@@ -177,6 +184,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     () => (store.entities['__expanded__']?.expandedIds as string[]) ?? [],
     [store]
   )
+  const checkedIds = useMemo(
+    () => (store.entities[CHECKED_ID]?.checkedIds as string[]) ?? [],
+    [store]
+  )
 
   const isKeyMapOnly = behavior === EMPTY_BEHAVIOR
 
@@ -184,7 +195,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
   const view = useAriaView({
     engine, store, behavior, plugins, keyMap: keyMapOverrides,
-    onActivate, focusedId, selectedIdSet, expandedIds,
+    onActivate, focusedId, selectedIdSet, expandedIds, checkedIds,
     isKeyMapOnly, autoFocus, disabled,
   })
 
