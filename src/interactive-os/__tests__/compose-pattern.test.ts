@@ -10,9 +10,7 @@ import { select } from '../axis/select'
 function makeCmd(type: string): Command {
   return {
     type,
-    payload: null,
     execute: (s) => s,
-    undo: (s) => s,
   }
 }
 
