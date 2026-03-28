@@ -100,7 +100,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 25 | Data Grid | [example](https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/data-grids/) | `pattern/examples/grid.ts` | 🟢 | — |
-| 26 | Layout Grid | [example](https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/layout-grids/) | — | ⬜ | — |
+| 26 | Layout Grid | [example](https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/layout-grids/) | `pattern/examples/grid.ts` | 🟢 | — |
 
 ### Landmarks
 
@@ -141,7 +141,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 41 | Actions Menu Button Using element.focus() | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions/) | `pattern/examples/menu.ts` | 🟢 | — |
-| 42 | Actions Menu Button Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions-active-descendant/) | — | ⬜ | — |
+| 42 | Actions Menu Button Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions-active-descendant/) | `pattern/examples/menuActivedescendant.ts` | 🟢 | — |
 | 43 | Navigation Menu Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/) | `pattern/examples/menu.ts` | 🟢 | — |
 
 ### Meter
@@ -155,7 +155,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 45 | Radio Group Using Roving tabindex | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio/) | `pattern/examples/radiogroup.ts` | 🟢 | — |
-| 46 | Radio Group Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-activedescendant/) | — | ⬜ | — |
+| 46 | Radio Group Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-activedescendant/) | `pattern/examples/radiogroupActivedescendant.ts` | 🟢 | — |
 | 47 | Rating Radio Group | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-rating/) | `pattern/examples/radiogroup.ts` | 🟢 | — |
 
 ### Slider
@@ -255,9 +255,9 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 전체 APG example (크롤링) | 68 |
 | 범위 제외 (Landmarks 8 + Tooltip 1 + Deprecated 2) | 11 |
 | 대상 example | 57 + 1 experimental |
-| pattern/examples/ 매핑 | 22 |
-| 미착수 (매핑 없음) | 20 |
-| 적합성 검증 완료 | 36 |
+| pattern/examples/ 매핑 | 24 |
+| 미착수 (매핑 없음) | 17 |
+| 적합성 검증 완료 | 39 |
 
 ## os 갭 레지스트리
 
