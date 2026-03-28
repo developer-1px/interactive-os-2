@@ -67,7 +67,7 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   visibilityFilters?: VisibilityFilter[]
   /** Declarative click bindings from unified inputMap — 'Click', 'Shift+Click', 'Mod+Click' etc. */
   clickMap?: Record<string, (ctx: PatternContext) => Command | void>
-  ariaAttributes: (node: Entity, state: TState) => Record<string, string>
+  ariaAttributes?: (node: Entity, state: TState) => Record<string, string>
 }
 
 // Re-export axis types for convenience (pattern consumers often need both)

@@ -255,7 +255,17 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       if (isKeyMapOnly) return {}
       const state = getNodeState(id)
       const entity = getEntity(store, id) ?? { id }
-      const ariaAttrs = pattern.ariaAttributes(entity, state)
+      // State-derived ARIA — auto-generated from axis state, pattern ariaAttributes can override
+      const autoAria: Record<string, string> = {}
+      if (state.expanded !== undefined) autoAria['aria-expanded'] = String(state.expanded)
+      if (state.selected) autoAria['aria-selected'] = 'true'
+      if (state.checked !== undefined) autoAria['aria-checked'] = String(state.checked)
+      if (pattern.popupType && state.open !== undefined) {
+        autoAria['aria-haspopup'] = pattern.popupType
+        autoAria['aria-expanded'] = String(state.open)
+      }
+
+      const ariaAttrs = pattern.ariaAttributes?.(entity, state)
       const isActivedescendant = pattern.focusStrategy.type === 'aria-activedescendant'
 
       const baseProps: Record<string, unknown> = {
@@ -263,13 +273,8 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           ? pattern.childRole(entity, state)
           : (pattern.childRole ?? 'row'),
         [nodeIdAttr]: id,
+        ...autoAria,
         ...ariaAttrs,
-      }
-
-      // Popup axis: auto-generate aria-haspopup and aria-expanded for trigger nodes
-      if (pattern.popupType && state.open !== undefined) {
-        baseProps['aria-haspopup'] = pattern.popupType
-        baseProps['aria-expanded'] = String(state.open)
       }
 
       if (state.focused) baseProps['data-focused'] = ''
