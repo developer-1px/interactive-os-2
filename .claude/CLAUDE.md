@@ -63,6 +63,10 @@ store → engine → axis → pattern → primitives → ui → pages
 - **커밋 전**: `/simplify` 필수.
 - **`docs/3-resources/` 파일명**: `{순번}-[{태그}]{제목}.md`. 순번 = 폴더 마지막 번호 + 1.
 - **`docs/PROGRESS.md`**: concept map. 모듈 추가/삭제 시 갱신, Maturity/Gaps는 /retrospect 시.
+- **os 기반 개발 (필수)**:
+  - UI → `src/interactive-os/ui/` 기존 완성품 사용. 없으면 ui/에 먼저 만들고 pages에서 import. pages/에서 useAria/useAriaZone 직접 사용 금지.
+  - 키바인딩 → KeyMap 선언. addEventListener('keydown'/'keyup') 금지.
+  - 상태/CRUD → store command + plugin. 직접 state 조작 금지.
 
 ## 테스트 실패 시 원복 정책
 

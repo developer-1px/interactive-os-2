@@ -3,9 +3,31 @@
     "context7@claude-plugins-official": true
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardBash.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardFilename.mjs",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
-        "matcher": "Read|Edit|Write",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",

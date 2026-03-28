@@ -11,7 +11,7 @@ import { combobox } from '../../interactive-os/pattern/examples/combobox'
 import { combobox as comboboxPlugin, comboboxCommands } from '../../interactive-os/plugins/combobox'
 import { FileIcon } from '../../interactive-os/ui/FileIcon'
 import type { FileNodeData } from './types'
-import styles from '../PageViewer.module.css'
+import styles from './QuickOpen.module.css'
 
 // --- Flatten file entities for search ---
 
@@ -119,13 +119,13 @@ export function QuickOpen({
   }, [onClose])
 
   return (
-    <div className={styles.qoBackdrop} onClick={handleBackdropClick}>
-      <div className={styles.qoDialog} aria-label="Quick Open">
-        <div className={styles.qoInputRow}>
-          <Search size={12} className={styles.qoInputIcon} />
+    <div className={styles.backdrop} onClick={handleBackdropClick}>
+      <div className={styles.dialog} aria-label="Quick Open">
+        <div className={styles.inputRow}>
+          <Search size={16} className={styles.inputIcon} />
           <input
             ref={inputRef}
-            className={styles.qoInput}
+            className={styles.input}
             type="text"
             placeholder="파일 검색..."
             value={query}
@@ -133,10 +133,10 @@ export function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className={styles.qoShortcut}>ESC</kbd>
+          <kbd className={styles.shortcut}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
-          <div className={styles.qoResults} onMouseDown={e => e.preventDefault()}>
+          <div className={styles.results} onMouseDown={e => e.preventDefault()}>
             {children.map(childId => {
               const entity = store.entities[childId]
               if (!entity) return null
@@ -147,7 +147,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`${styles.qoItem}${state.focused ? ` ${styles.qoItemFocused}` : ''}`}
+                  className={`${styles.item}${state.focused ? ` ${styles.itemFocused}` : ''}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),
@@ -155,15 +155,19 @@ export function QuickOpen({
                     ]))
                   }}
                 >
-                  <FileIcon name={fileData.name} type="file" />
-                  <span className={styles.qoItemName}>{fileData.name}</span>
-                  <span className={`${styles.qoItemPath} truncate`}>{fileData.relativePath}</span>
+                  <span className={styles.itemIcon}>
+                    <FileIcon name={fileData.name} type="file" />
+                  </span>
+                  <span className={styles.itemText}>
+                    <span className={styles.itemName}>{fileData.name}</span>
+                    <span className={styles.itemPath}>{fileData.relativePath}</span>
+                  </span>
                 </div>
               )
             })}
           </div>
         ) : (
-          <div className={styles.qoEmpty}>일치하는 파일이 없습니다</div>
+          <div className={styles.empty}>일치하는 파일이 없습니다</div>
         )}
       </div>
     </div>

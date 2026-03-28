@@ -3,14 +3,14 @@
 // --- Client → Server ---
 
 export type ChatWsClientMessage =
-  | { type: 'create-session' }
+  | { type: 'create-session'; localId: string }
   | { type: 'send-message'; sessionId: string; text: string }
   | { type: 'close-session'; sessionId: string }
 
 // --- Server → Client ---
 
 export type ChatWsServerMessage =
-  | { type: 'session-created'; sessionId: string }
+  | { type: 'session-created'; sessionId: string; localId: string }
   | { type: 'session-closed'; sessionId: string }
   | { type: 'session-error'; sessionId: string; error: string }
   | { type: 'create-failed'; error: string }

@@ -35,6 +35,9 @@ p {
   text-align: left;
 }
 
+/* ── Icons: flex-shrink 방지 (글로벌) ── */
+.lucide { flex-shrink: 0; }
+
 *:focus-visible {
   outline: var(--focus-ring) solid var(--focus);
   outline-offset: calc(-1 * var(--focus-ring));

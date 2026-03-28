@@ -28,12 +28,31 @@ function handleSdkMessage(
     return
   }
 
-  // Complete assistant message — flush
+  // Complete assistant message — extract text if not already streamed via stream_event
   if (sdkMsg.type === 'assistant') {
+    if (!getText()) {
+      // Non-streaming mode: text arrives in the assistant message itself
+      const msg = (sdkMsg as { message?: { content?: unknown[] } }).message
+      if (msg?.content) {
+        for (const block of msg.content) {
+          if (typeof block === 'object' && block !== null) {
+            const b = block as { type?: string; text?: string }
+            if (b.type === 'text' && b.text) {
+              wsSend('chat:server', { type: 'assistant-text', sessionId, text: b.text } satisfies ChatWsServerMessage)
+            }
+          }
+        }
+      }
+    }
     setText('')
-    const reply: ChatWsServerMessage = { type: 'assistant-done', sessionId }
-    wsSend('chat:server', reply)
+    wsSend('chat:server', { type: 'assistant-done', sessionId } satisfies ChatWsServerMessage)
     return
+  }
+
+  // Init — log skills to diagnose local skill loading
+  if (sdkMsg.type === 'system' && (sdkMsg as Record<string, unknown>).subtype === 'init') {
+    console.log('[SDK init] skills:', (sdkMsg as Record<string, unknown>).skills)
+    console.log('[SDK init] slash_commands:', (sdkMsg as Record<string, unknown>).slash_commands)
   }
 
   // Session state change
@@ -483,10 +502,10 @@ export function agentOpsPlugin(): Plugin {
 
       // Broadcast to all connected clients (Phase A: single client)
       const wsBroadcast = (event: string, data: unknown) => {
-        server.ws.send(event, data)
+        server.hot.send(event, data)
       }
 
-      server.ws.on('chat:client', async (data: unknown, client: { send: (event: string, payload?: unknown) => void }) => {
+      server.hot.on('chat:client', async (data: unknown, client: { send: (event: string, payload?: unknown) => void }) => {
         let msg: ChatWsClientMessage
         try {
           msg = (typeof data === 'string' ? JSON.parse(data) : data) as ChatWsClientMessage
@@ -498,47 +517,18 @@ export function agentOpsPlugin(): Plugin {
         if (msg.type === 'create-session') {
           try {
             const { unstable_v2_createSession } = await import('@anthropic-ai/claude-agent-sdk')
+            const { randomUUID } = await import('node:crypto')
             const session = unstable_v2_createSession({
               model: 'claude-sonnet-4-6',
               permissionMode: 'acceptEdits',
+              includePartialMessages: true,
             })
 
-            // sessionId is only available after receiving the first stream message.
-            // The stream loop resolves this promise once sessionId is accessible.
-            let resolveSessionId: (id: string) => void
-            const sessionIdReady = new Promise<string>(r => { resolveSessionId = r })
-
-            // Stream in background
-            ;(async () => {
-              let currentText = ''
-              let idResolved = false
-              try {
-                for await (const sdkMsg of session.stream()) {
-                  if (!idResolved) {
-                    try {
-                      resolveSessionId!(session.sessionId)
-                      idResolved = true
-                    } catch { /* sessionId not yet available, keep iterating */ }
-                  }
-                  if (idResolved) {
-                    handleSdkMessage(session.sessionId, sdkMsg, wsBroadcast, () => currentText, (t) => { currentText = t })
-                  }
-                }
-              } catch (e) {
-                let sid = ''
-                try { sid = session.sessionId } catch { /* not available */ }
-                if (sid && chatSessions.has(sid)) {
-                  const errMsg: ChatWsServerMessage = { type: 'session-error', sessionId: sid, error: String(e) }
-                  wsBroadcast('chat:server', errMsg)
-                  chatSessions.delete(sid)
-                }
-              }
-            })()
-
-            const sessionId = await sessionIdReady
+            // session.sessionId throws until first message — use our own UUID for routing
+            const sessionId = randomUUID()
             chatSessions.set(sessionId, session)
+            reply('chat:server', { type: 'session-created', sessionId, localId: msg.localId } satisfies ChatWsServerMessage)
 
-            reply('chat:server', { type: 'session-created', sessionId } satisfies ChatWsServerMessage)
           } catch (e) {
             reply('chat:server', { type: 'create-failed', error: String(e) } satisfies ChatWsServerMessage)
           }
@@ -546,16 +536,26 @@ export function agentOpsPlugin(): Plugin {
         }
 
         if (msg.type === 'send-message') {
-          const session = chatSessions.get(msg.sessionId)
+          const sessionId = msg.sessionId
+          const session = chatSessions.get(sessionId)
           if (!session) {
-            reply('chat:server', { type: 'session-error', sessionId: msg.sessionId, error: 'Session not found' } satisfies ChatWsServerMessage)
+            reply('chat:server', { type: 'session-error', sessionId, error: 'Session not found' } satisfies ChatWsServerMessage)
             return
           }
-          try {
-            await session.send(msg.text)
-          } catch (e) {
-            reply('chat:server', { type: 'session-error', sessionId: msg.sessionId, error: String(e) } satisfies ChatWsServerMessage)
-          }
+          // Run one turn: send → stream → done
+          ;(async () => {
+            let currentText = ''
+            try {
+              await session.send(msg.text)
+              for await (const sdkMsg of session.stream()) {
+                handleSdkMessage(sessionId, sdkMsg, wsBroadcast, () => currentText, (t) => { currentText = t })
+              }
+            } catch (e) {
+              if (chatSessions.has(sessionId)) {
+                wsBroadcast('chat:server', { type: 'session-error', sessionId, error: String(e) } satisfies ChatWsServerMessage)
+              }
+            }
+          })()
           return
         }
 
