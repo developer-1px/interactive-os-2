@@ -41,9 +41,6 @@ function getContainer(container: HTMLElement): HTMLElement {
   return container.querySelector('[role="menu"]')!
 }
 
-function getNode(container: HTMLElement, id: string): HTMLElement | null {
-  return container.querySelector(`[data-node-id="${id}"]`)
-}
 
 // ---------------------------------------------------------------------------
 // 1. ARIA Structure — activedescendant

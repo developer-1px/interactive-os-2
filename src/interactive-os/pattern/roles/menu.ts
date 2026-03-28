@@ -1,14 +1,15 @@
 import type { NodeState } from '../types'
 import type { Entity } from '../../store/types'
 import { composePattern } from '../composePattern'
-import { activate } from '../../axis/activate'
-import { expand } from '../../axis/expand'
-import { navigate } from '../../axis/navigate'
+import { activateConfig, activateHandler } from '../../axis/activate'
+import { expandConfig, expandOrFocusChild, collapseOrFocusParent } from '../../axis/expand'
+import { focusFirst, focusLast } from '../../axis/navigate'
 
 export const menu = composePattern(
   {
     role: 'menu',
     childRole: 'menuitem',
+    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
     ariaAttributes: (_node: Entity, state: NodeState) => {
       const attrs: Record<string, string> = {}
       if (state.expanded !== undefined) {
@@ -17,7 +18,21 @@ export const menu = composePattern(
       return attrs
     },
   },
-  activate({ onClick: true }),
-  expand({ mode: 'arrow' }),
-  navigate({ orientation: 'vertical', wrap: true }),
+  activateConfig(),
+  expandConfig(),
+  {
+    // Navigation — vertical wrap
+    ArrowDown: (ctx) => ctx.focusNext({ wrap: true }),
+    ArrowUp: (ctx) => ctx.focusPrev({ wrap: true }),
+    Home: focusFirst,
+    End: focusLast,
+
+    // Expand — arrow mode
+    ArrowRight: expandOrFocusChild,
+    ArrowLeft: collapseOrFocusParent,
+
+    // Activation
+    Enter: activateHandler,
+    Space: activateHandler,
+  },
 )

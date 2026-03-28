@@ -1,15 +1,19 @@
 import type { NodeState } from '../types'
 import type { Entity } from '../../store/types'
+import type { AxisConfig, KeyMap } from '../../axis/types'
 import { composePattern } from '../composePattern'
-import { select } from '../../axis/select'
-import { activate } from '../../axis/activate'
-import { expand } from '../../axis/expand'
-import { navigate } from '../../axis/navigate'
+import { selectConfig, toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast } from '../../axis/select'
+import { activateConfig, activateHandler } from '../../axis/activate'
+import { expandConfig, expandOrFocusChild, collapseOrFocusParent } from '../../axis/expand'
+import { focusNext, focusPrev, focusFirst, focusLast } from '../../axis/navigate'
+
+const selectOnClick: { keyMap: KeyMap; config: Partial<AxisConfig> } = { keyMap: {}, config: { selectOnClick: true } }
 
 export const tree = composePattern(
   {
     role: 'tree',
     childRole: 'treeitem',
+    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
     ariaAttributes: (_node: Entity, state: NodeState) => {
       const attrs: Record<string, string> = {
         'aria-selected': String(state.selected),
@@ -25,8 +29,29 @@ export const tree = composePattern(
       return attrs
     },
   },
-  select({ mode: 'multiple', extended: true }),
-  activate({ onClick: true }),
-  expand({ mode: 'arrow' }),
-  navigate({ orientation: 'vertical' }),
+  selectConfig({ mode: 'multiple' }),
+  selectOnClick,
+  activateConfig(),
+  expandConfig(),
+  {
+    // Navigation — vertical
+    ArrowDown: focusNext,
+    ArrowUp: focusPrev,
+    Home: focusFirst,
+    End: focusLast,
+
+    // Expand — arrow mode
+    ArrowRight: expandOrFocusChild,
+    ArrowLeft: collapseOrFocusParent,
+
+    // Selection
+    Space: toggleSelect,
+    'Shift+ArrowDown': extendSelectionNext,
+    'Shift+ArrowUp': extendSelectionPrev,
+    'Shift+Home': extendSelectionFirst,
+    'Shift+End': extendSelectionLast,
+
+    // Activation
+    Enter: activateHandler,
+  },
 )

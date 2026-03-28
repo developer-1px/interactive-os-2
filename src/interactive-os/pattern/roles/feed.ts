@@ -6,24 +6,18 @@
  * Feed uses Page Down/Page Up to move between articles.
  * Arrow keys are intentionally NOT captured — they scroll within an article.
  */
-import type { Axis } from '../../axis/types'
 import { composePattern } from '../composePattern'
-
-const feedAxis: Axis = {
-  keyMap: {
-    PageDown: (ctx) => ctx.focusNext(),
-    PageUp: (ctx) => ctx.focusPrev(),
-  },
-  config: {
-    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
-  },
-}
+import { focusNext, focusPrev } from '../../axis/navigate'
 
 export const feed = composePattern(
   {
     role: 'feed',
     childRole: 'article',
+    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
     ariaAttributes: () => ({}),
   },
-  feedAxis,
+  {
+    PageDown: focusNext,
+    PageUp: focusPrev,
+  },
 )

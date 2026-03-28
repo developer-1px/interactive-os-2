@@ -1,5 +1,5 @@
 import { composePattern } from '../composePattern'
-import { activate } from '../../axis/activate'
+import { activateHandler } from '../../axis/activate'
 
 // APG Link: Enter activates. Natural tab order.
 export const link = composePattern(
@@ -8,5 +8,9 @@ export const link = composePattern(
     childRole: 'link',
     ariaAttributes: () => ({}),
   },
-  activate({ onClick: true }),
+  {
+    Enter: activateHandler,
+    Space: activateHandler,
+    Click: activateHandler,
+  },
 )

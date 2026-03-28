@@ -1,7 +1,7 @@
 import type { Entity } from '../../store/types'
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { value } from '../../axis/value'
+import { incrementHandler, decrementHandler, incrementBig, decrementBig, setToMin, setToMax } from '../../axis/value'
 
 interface SliderOptions {
   min: number
@@ -17,6 +17,7 @@ export function slider(options: SliderOptions) {
     {
       role: 'none',
       childRole: 'slider',
+      valueRange: { min, max, step },
       ariaAttributes: (node: Entity, state: NodeState) => ({
         'aria-valuenow': String(state.valueCurrent ?? min),
         'aria-valuemin': String(min),
@@ -26,6 +27,17 @@ export function slider(options: SliderOptions) {
           : {}),
       }),
     },
-    value({ min, max, step, orientation }),
+    {
+      ArrowUp: incrementHandler,
+      ArrowDown: decrementHandler,
+      ...(orientation === 'horizontal' && {
+        ArrowRight: incrementHandler,
+        ArrowLeft: decrementHandler,
+      }),
+      Home: setToMin,
+      End: setToMax,
+      PageUp: incrementBig,
+      PageDown: decrementBig,
+    },
   )
 }
