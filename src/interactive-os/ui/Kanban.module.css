@@ -80,10 +80,6 @@
   text-transform: none;
   letter-spacing: 0;
   padding: var(--space-xs) 0;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: var(--surface-sunken);
 }
 
 .board[data-compact] .card {
