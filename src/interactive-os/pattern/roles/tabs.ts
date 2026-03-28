@@ -11,6 +11,8 @@ export const tabs = composePattern(
     ariaAttributes: (_node, state: NodeState) => ({
       'aria-selected': String(state.selected),
     }),
+    panelRole: 'tabpanel',
+    panelVisibility: 'selected',
   },
   select({ mode: 'single', selectionFollowsFocus: true }),
   activate({ onClick: true, activationFollowsSelection: true }),
