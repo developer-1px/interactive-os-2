@@ -5,20 +5,13 @@ import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/examples/switch'
+import { CheckIndicator } from './indicators'
 
 interface CheckboxProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
-}
-
-function CheckIcon() {
-  return (
-    <svg className="item-indicator--checkbox-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
-  )
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
@@ -28,9 +21,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const checked = state.expanded ?? false
   return (
     <div {...props} className="flex-row items-center gap-sm">
-      <span className="item-indicator--checkbox">
-        {checked && <CheckIcon />}
-      </span>
+      <CheckIndicator checked={checked} />
       <span>{label}</span>
     </div>
   )

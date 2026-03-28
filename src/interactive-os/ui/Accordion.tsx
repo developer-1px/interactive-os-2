@@ -1,11 +1,12 @@
 import React from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ExpandIndicator } from './indicators'
 
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { accordion } from '../pattern/examples/accordion'
+import styles from './Accordion.module.css'
 
 interface AccordionProps {
   data: NormalizedData
@@ -18,10 +19,22 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
+  const isGroup = state.level === 1
+
+  if (isGroup) {
+    return (
+      <div {...props} className={styles.header}>
+        <span>{label}</span>
+        <span className={`${styles.chevron} ${state.expanded ? styles.chevronExpanded : ''}`}>
+          <ExpandIndicator />
+        </span>
+      </div>
+    )
+  }
+
   return (
-    <div {...props} className="flex-row items-center justify-between">
+    <div {...props} className={styles.item}>
       <span>{label}</span>
-      <span className="item-chevron">{state.expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}</span>
     </div>
   )
 }
@@ -33,7 +46,7 @@ export function Accordion({
   renderItem = defaultRenderItem,
 }: AccordionProps) {
   return (
-    <Aria behavior={accordion} data={data} plugins={plugins} onChange={onChange}>
+    <Aria behavior={accordion} data={data} plugins={plugins} onChange={onChange} className={styles.root}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

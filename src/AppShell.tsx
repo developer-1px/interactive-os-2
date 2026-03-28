@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo, useEffect, type HTMLAttributes } from '
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Activity, Palette, ShieldAlert, Languages, Map,
-  Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText,
+  MessageSquare, Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -25,6 +25,7 @@ import './styles/tokens.css'       // L2: Design token values
 import './styles/structure.css'    // L2.5: Atomic layout classes
 import './styles/surface.css'      // L3: Surface elevation bundles
 import './styles/interactive.css'  // L4: Interaction policy (hover, focus, disabled...)
+import './interactive-os/ui/indicators/indicators.css'  // L4: Indicator part classes
 import './styles/layout.css'       // App layout (sidebar, page grid)
 import './styles/app.css'          // App-level utilities
 
@@ -126,6 +127,7 @@ const appNavItems: NavItem[] = [
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
   { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
   { id: 'storymap', label: 'Story Map', icon: Map, path: '/storymap' },
+  { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
 ]
 
 const internalsNavItems: NavItem[] = contentsOrder.map((layer) => ({

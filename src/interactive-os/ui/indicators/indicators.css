@@ -1,0 +1,152 @@
+/* ═══════════════════════════════════════════
+   Indicator part classes (item-indicator--* convention)
+   ARIA attributes drive state — no JS class toggle needed.
+   All values: design tokens only, no raw numbers.
+   Specificity 0 via :where() — module.css overrides freely.
+   ═══════════════════════════════════════════ */
+
+/* ── Chevron ── */
+
+:where([data-aria-container] .item-chevron) {
+  color: var(--text-muted);
+  font-size: var(--type-body-size);
+  opacity: 0.5;
+}
+
+:where([data-aria-container] .item-chevron--expand) {
+  width: var(--icon-xs);
+  flex-shrink: 0;
+  text-align: center;
+}
+
+:where([data-aria-container] .item-chevron--tree) {
+  width: var(--icon-sm);
+  flex-shrink: 0;
+}
+
+/* ── Checkbox indicator (square) ── */
+
+:where([data-aria-container] .item-indicator--checkbox) {
+  flex-shrink: 0;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border: 1px solid var(--border-default);
+  border-radius: var(--shape-xs-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
+}
+
+:where([data-aria-container] [aria-selected="true"] .item-indicator--checkbox) {
+  border-color: var(--tone-primary-base);
+  background: var(--tone-primary-base);
+}
+
+:where([data-aria-container] .item-indicator--checkbox-icon) {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  color: var(--tone-primary-foreground);
+}
+
+/* ── Radio indicator (circle + dot) ── */
+
+:where([data-aria-container] .item-indicator--radio) {
+  flex-shrink: 0;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border: 1px solid var(--border-default);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--motion-instant-duration);
+}
+
+:where([data-aria-container] [aria-checked="true"] .item-indicator--radio) {
+  border-color: var(--tone-primary-base);
+}
+
+:where([data-aria-container] .item-indicator--radio-dot) {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: 50%;
+  background: var(--tone-primary-base);
+}
+
+/* ── Switch indicator (track + thumb) ── */
+
+:where([data-aria-container] .item-indicator--switch) {
+  flex-shrink: 0;
+  width: var(--switch-width);
+  height: var(--switch-height);
+  border-radius: var(--shape-pill-radius);
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  position: relative;
+  transition: background var(--motion-normal-duration) var(--motion-normal-easing),
+              border-color var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+:where([data-aria-container] [aria-checked="true"] .item-indicator--switch) {
+  background: var(--tone-primary-base);
+  border-color: var(--tone-primary-base);
+}
+
+:where([data-aria-container] .item-indicator--switch-thumb) {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  border-radius: 50%;
+  background: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--motion-normal-duration) var(--motion-normal-easing),
+              background var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+:where([data-aria-container] [aria-checked="true"] .item-indicator--switch-thumb) {
+  background: var(--tone-primary-foreground);
+  transform: translateX(var(--space-lg));
+}
+
+/* ── Toggle text indicator (On/Off) ── */
+
+:where([data-aria-container] .item-indicator--toggle) {
+  color: var(--text-muted);
+  font-size: var(--type-body-size);
+}
+
+:where([data-aria-container] [aria-checked="true"] .item-indicator--toggle) {
+  color: var(--tone-success-base);
+}
+
+/* ── ToggleGroup text indicator ── */
+
+:where([data-aria-container] .item-indicator--toggle-group) {
+  color: var(--text-muted);
+}
+
+:where([data-aria-container] [aria-selected="true"] .item-indicator--toggle-group) {
+  color: var(--tone-primary-base);
+}
+
+/* ── Separator indicator ── */
+
+:where(.item-indicator--separator) {
+  flex-shrink: 0;
+  background: var(--border-subtle);
+}
+
+:where(.item-indicator--separator[aria-orientation="horizontal"]),
+:where(.item-indicator--separator:not([aria-orientation])) {
+  height: 1px;
+  width: 100%;
+}
+
+:where(.item-indicator--separator[aria-orientation="vertical"]) {
+  width: 1px;
+  align-self: stretch;
+}
