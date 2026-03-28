@@ -30,7 +30,8 @@
 | cellEdit | Integrated | Google Sheets 2모드: Delete→셀 클리어, Enter→행 이동, Mod+X/C/V 셀 클립보드 |
 | search | Integrated | Mod+F 검색, Aria.Search input + Aria.SearchHighlight mark. getVisibleNodes 필터. Grid searchable prop |
 | clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료, cutCellValue/clearCellValue 추가 |
-| zodSchema | Integrated | Zod childRules → canAccept/canDelete 자동 파생, middleware 기반 |
+| zodSchema | Integrated | Zod childRules → canAccept/canDelete 자동 파생, middleware 기반. ZodSchema 타입 export |
+| form | Prototype | Zod entityRules 기반 값 검증, __errors__/__touched__ 메타 엔티티, submit/reset/touch 커맨드 |
 | rename | Integrated | — |
 | dnd | Integrated | — |
 | spatial | Integrated | — |
@@ -75,6 +76,7 @@
 | Combobox · RadioGroup · SwitchGroup | Integrated | CSS module 완비 |
 | Kanban · Slider · Spinbutton | Integrated | CSS module 완비 |
 | Checkbox · Toggle · ToggleGroup · AlertDialog | Integrated | CSS module 완비, testPath 미연결(4종) |
+| Form | Prototype | Zod 기반 폼 검증 UI, listbox 패턴 + form 플러그인 |
 | SpatialView | Validated | 읽기 전용 공간 탐색 컨테이너. spatialViewPreset + useSpatialNav. storymap에서 검증 |
 | Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음, Toaster testPath 없음 |
 | chat/ (ChatFeed · ChatInput · TextBlock · CodeBlock · DiffBlock) | Prototype | 블록 렌더러 OCP, agent viewer 포팅 완료. 인터랙티브 블록(storeKey) 미실전 검증 |

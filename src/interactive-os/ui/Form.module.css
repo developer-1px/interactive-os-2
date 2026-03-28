@@ -1,0 +1,20 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.value {
+  font-size: var(--font-size-md);
+}
+
+.error {
+  font-size: var(--font-size-xs);
+  color: var(--tone-destructive-base);
+}

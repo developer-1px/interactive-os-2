@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② 2026-03-25-registry-md-ssot-prd.md
+import { z } from 'zod'
 import type { NormalizedData } from '../interactive-os/store/types'
 
 import { Accordion } from '../interactive-os/ui/Accordion'
@@ -23,6 +24,7 @@ import { ToggleGroup } from '../interactive-os/ui/ToggleGroup'
 import { Toolbar } from '../interactive-os/ui/Toolbar'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
 import { TreeView } from '../interactive-os/ui/TreeView'
+import { Form } from '../interactive-os/ui/Form'
 import { Toaster } from '../interactive-os/ui/Toaster'
 import { createToaster } from '../interactive-os/ui/createToaster'
 
@@ -32,6 +34,7 @@ import {
   makeListBoxData, makeMenuListData, makeNavListData, makeRadioGroupData, makeSliderData,
   makeSpinbuttonData, makeSwitchGroupData, makeTabListData, makeToggleData,
   makeToggleGroupData, makeToolbarData, makeTreeGridData, makeTreeViewData,
+  makeFormData,
 } from './showcaseFixtures'
 
 // --- Toast demo ---
@@ -103,6 +106,25 @@ export const components: ComponentEntry[] = [
     makeData: makeDialogData,
     render: (data, onChange) => <Dialog data={data} onChange={onChange} />,
     testPath: 'src/interactive-os/__tests__/dialog-keyboard.integration.test',
+  },
+  {
+    slug: 'form',
+    makeData: makeFormData,
+    render: (data, onChange) => (
+      <Form
+        data={data}
+        onChange={onChange}
+        entityRules={{
+          field: z.object({
+            type: z.literal('field'),
+            label: z.string(),
+            value: z.string().min(1, 'Required'),
+          }),
+        }}
+        aria-label="Demo form"
+      />
+    ),
+    testPath: 'src/interactive-os/__tests__/form-validation.integration.test',
   },
   {
     slug: 'grid',

@@ -259,3 +259,14 @@ export function makeTreeViewData(): NormalizedData {
     },
   })
 }
+
+export function makeFormData(): NormalizedData {
+  return createStore({
+    entities: {
+      name: { id: 'name', data: { type: 'field', label: 'Name', value: '' } },
+      email: { id: 'email', data: { type: 'field', label: 'Email', value: '' } },
+      age: { id: 'age', data: { type: 'field', label: 'Age', value: '' } },
+    },
+    relationships: { [ROOT_ID]: ['name', 'email', 'age'] },
+  })
+}
