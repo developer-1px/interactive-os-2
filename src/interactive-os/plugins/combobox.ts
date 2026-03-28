@@ -8,7 +8,6 @@ export const comboboxCommands = {
   open(): Command {
     return {
       type: 'combobox:open',
-      payload: null,
       execute(store) {
         return {
           ...store,
@@ -24,7 +23,6 @@ export const comboboxCommands = {
   close(): Command {
     return {
       type: 'combobox:close',
-      payload: null,
       execute(store) {
         return {
           ...store,
