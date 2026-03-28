@@ -257,6 +257,10 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
       return getChildren(store, id)
     },
 
+    getParent(id: string): string | undefined {
+      return getParent(store, id)
+    },
+
     grid,
     value,
   }

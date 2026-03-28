@@ -133,8 +133,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 39 | Editor Menubar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-editor/) | — | ⛔ | multi-zone (horizontal bar + vertical submenus) |
-| 40 | Navigation Menubar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/) | — | ⛔ | multi-zone (horizontal bar + vertical submenus) |
+| 39 | Editor Menubar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-editor/) | `pattern/roles/menubar.ts` | 🟡 | 구조 동일, menuitemradio/menuitemcheckbox 미구현 |
+| 40 | Navigation Menubar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/) | `pattern/roles/menubar.ts` | 🟢 | — |
 
 ### Menu Button
 
@@ -255,11 +255,11 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 전체 APG example (크롤링) | 68 |
 | 범위 제외 (Landmarks 8 + Tooltip 1 + Deprecated 2) | 11 |
 | 대상 example | 57 + 1 experimental |
-| pattern/roles/ 매핑 | 29 |
+| pattern/roles/ 매핑 | 30 |
 | 미착수 (매핑 없음) | 0 |
-| 적합성 검증 완료 (🟢) | 47 |
-| 부분 적합 (🟡) | 2 |
-| os 갭으로 불가 (⛔) | 10 |
+| 적합성 검증 완료 (🟢) | 48 |
+| 부분 적합 (🟡) | 3 |
+| os 갭으로 불가 (⛔) | 8 |
 
 ## os 갭 레지스트리
 
@@ -273,4 +273,5 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 4 | ~~Combobox `aria-activedescendant` 잔존~~ — **해소됨**: close()가 focus 클리어 | Combobox (#11) | combobox plugin | ✅ 해소 |
 | 5 | ~~`aria-checked="mixed"` tri-state 미지원~~ — **해소됨**: checked axis 신설, mixed 파생 로직 | Checkbox Mixed (#10) | checked axis | ✅ 해소 |
 | 6 | ~~heterogeneous childRole 미지원~~ — **해소됨**: childRole 함수 확장 `(entity, state) => string` | Listbox Grouped (#38), Table (#57, #58) | pattern/composePattern | ✅ 해소 |
-| 7 | multi-zone 미지원 — 하나의 위젯에 여러 독립 focus zone 조합 불가 | Carousel (#7, #8), Combobox Grid (#15), Date Picker (#16, #18), Listbox Rearrangeable (#37), Menubar (#39, #40), Multi-Thumb Slider (#52), Tabs Actions (E1) | composePattern / useAriaZone | ⛔ 미해소 |
+| 7 | multi-zone 미지원 — 하나의 위젯에 여러 독립 focus zone 조합 불가 | Carousel (#7, #8), Combobox Grid (#15), Date Picker (#16, #18), Listbox Rearrangeable (#37), Multi-Thumb Slider (#52), Tabs Actions (E1) | composePattern / useAriaZone | ⛔ 미해소 |
+| 8 | ~~Menubar multi-zone~~ — **해소됨**: expand axis + custom handlers로 single-pattern 구현 (multi-zone 아님, level 전환) | Menubar (#39, #40) | expand axis + menubar.ts | ✅ 해소 |

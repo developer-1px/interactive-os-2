@@ -53,7 +53,7 @@
 | edit | Integrated | — |
 | pointer interaction | Integrated | — |
 | examples/ (17 APG presets) | Integrated | pattern/roles/로 분리, APG 레퍼런스 구현 |
-| *menubar* | Concept | 다계층 keyMap 필요 |
+| menubar | Integrated | expand axis + custom handlers, multi-zone 아님 |
 
 ## Primitives (L6)
 
@@ -112,6 +112,6 @@
 
 | Done | Not yet |
 |------|---------|
-| Accordion · Alert Dialog · Combobox · Dialog · Disclosure · Grid · Listbox · Menu · Radio Group · Slider · Spinbutton · Switch · Tabs · Toolbar · Tree · Treegrid | Menubar · Carousel · Feed |
+| Accordion · Alert Dialog · Combobox · Dialog · Disclosure · Grid · Listbox · Menu · Menubar · Radio Group · Slider · Spinbutton · Switch · Tabs · Toolbar · Tree · Treegrid | Carousel · Feed |
 
 *Tooltip: native popover, Window Splitter: useResizer — engine 밖 독립*
