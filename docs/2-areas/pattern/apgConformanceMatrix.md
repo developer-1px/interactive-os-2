@@ -65,7 +65,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 11 | Select-Only Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) | `pattern/examples/combobox.ts` | ⬜ | — |
+| 11 | Select-Only Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) | `pattern/examples/combobox.ts` | 🟡 | aria-activedescendant focus strategy correct; minor gap: `aria-activedescendant` persists on input when dropdown closed (APG expects absent). |
 | 12 | Editable Combobox without Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-none/) | — | ⬜ | — |
 | 13 | Editable Combobox With List Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/) | — | ⬜ | — |
 | 14 | Editable Combobox With Both List and Inline Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-both/) | — | ⬜ | — |
@@ -257,7 +257,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 대상 example | 57 + 1 experimental |
 | 기존 pattern/examples/ 매핑 | 16 |
 | 미착수 (매핑 없음) | 41 |
-| 적합성 검증 완료 | 11 |
+| 적합성 검증 완료 | 12 |
 
 ## os 갭 레지스트리
 
