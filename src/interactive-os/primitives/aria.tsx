@@ -8,11 +8,13 @@ import type { AriaPattern, PatternContext, NodeState } from '../pattern/types'
 import { useAria } from './useAria'
 import { AriaInternalContext } from './AriaInternalContext'
 import { getChildren } from '../store/createStore'
-import { FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
+import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
 import { EXPANDED_ID } from '../axis/expand'
 import { renameCommands, RENAME_ID } from '../plugins/rename'
 import { registerAria, unregisterAria } from './ariaRegistry'
 import { SEARCH_ID, searchCommands, matchesSearchFilter } from '../plugins/search'
+import { createPatternContext } from '../pattern/createPatternContext'
+import { findMatchingKey } from './useKeyboard'
 
 interface AriaProps {
   id?: string
@@ -384,6 +386,85 @@ function AriaPanel({ render }: AriaPanelProps) {
   )
 }
 
+interface AriaTriggerProps {
+  render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
+}
+
+function AriaTrigger({ render }: AriaTriggerProps) {
+  const aria = React.useContext(AriaInternalContext)
+  if (!aria) throw new Error('<Aria.Trigger> must be inside <Aria>')
+  const store = aria.getStore()
+  const behavior = aria.behavior
+
+  // Trigger = first root child that has children (popup parent)
+  const rootChildren = getChildren(store, ROOT_ID)
+  const triggerId = rootChildren.find((id) => getChildren(store, id).length > 0)
+  if (!triggerId) return null
+
+  const entity = store.entities[triggerId]
+  if (!entity) return null
+
+  const state = aria.getNodeState(triggerId)
+  const isOpen = state.open ?? false
+
+  // Build a minimal engine-like object for createPatternContext
+  const engineLike = {
+    dispatch: aria.dispatch,
+    getStore: aria.getStore,
+    syncStore: () => { /* unused by createPatternContext */ },
+  }
+
+  const makeCtx = () => createPatternContext(engineLike, {
+    visibilityFilters: behavior?.visibilityFilters,
+    popupType: behavior?.popupType,
+  })
+
+  const props: React.HTMLAttributes<HTMLElement> & Record<string, unknown> = {
+    'data-node-id': triggerId,
+    tabIndex: 0,
+    ...(behavior?.popupType && { 'aria-haspopup': behavior.popupType }),
+    'aria-expanded': isOpen,
+    onKeyDown: (event: React.KeyboardEvent) => {
+      if (event.defaultPrevented) return
+      const triggerKeyMap = behavior?.triggerKeyMap
+      if (!triggerKeyMap) return
+
+      const nativeEvent = event.nativeEvent
+      const matchedKey = findMatchingKey(nativeEvent, triggerKeyMap)
+      if (!matchedKey) return
+
+      event.preventDefault()
+      event.stopPropagation()
+
+      const ctx = makeCtx()
+      const handler = triggerKeyMap[matchedKey]
+      if (!handler) return
+      const command = handler(ctx)
+      if (command) aria.dispatch(command)
+    },
+    onClick: (event: React.MouseEvent) => {
+      if (event.defaultPrevented) return
+      event.stopPropagation()
+
+      const ctx = makeCtx()
+      const command = isOpen ? ctx.close() : ctx.open()
+      if (command) aria.dispatch(command)
+    },
+    onFocus: () => {
+      const currentStore = aria.getStore()
+      const currentFocusedId = (currentStore.entities[FOCUS_ID]?.focusedId as string) ?? ''
+      if (triggerId !== currentFocusedId) {
+        aria.dispatch(focusCommands.setFocus(triggerId))
+      }
+    },
+  }
+
+  return cloneElement(
+    render(props as React.HTMLAttributes<HTMLElement>, entity, state) as React.ReactElement<Record<string, unknown>>,
+    { key: `trigger-${triggerId}` },
+  )
+}
+
 function AriaSearch({ placeholder, className }: { placeholder?: string; className?: string }) {
   const ariaCtx = React.useContext(AriaInternalContext)
   if (!ariaCtx) throw new Error('<Aria.Search> must be inside <Aria>')
@@ -474,4 +555,4 @@ function AriaSearchHighlight({ children }: { children: React.ReactNode }) {
 
 export { AriaItemContext }
 // eslint-disable-next-line react-refresh/only-export-components
-export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Panel: AriaPanel, Editable: AriaEditable, Search: AriaSearch, SearchHighlight: AriaSearchHighlight })
+export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Panel: AriaPanel, Trigger: AriaTrigger, Editable: AriaEditable, Search: AriaSearch, SearchHighlight: AriaSearchHighlight })
