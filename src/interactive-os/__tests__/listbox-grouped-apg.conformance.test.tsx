@@ -11,7 +11,6 @@ import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
-import { EXPANDED_ID } from '../axis/expand'
 
 // ---------------------------------------------------------------------------
 // Fixtures — groups with options
@@ -33,14 +32,7 @@ function fixtureData(): NormalizedData {
       vegs: ['carrot', 'pea'],
     },
   })
-  // Pre-expand groups so children are visible
-  return {
-    ...store,
-    entities: {
-      ...store.entities,
-      [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: ['fruits', 'vegs'] },
-    },
-  }
+  return store
 }
 
 // ---------------------------------------------------------------------------

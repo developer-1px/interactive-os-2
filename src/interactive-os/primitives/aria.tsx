@@ -108,7 +108,9 @@ function AriaItem({ ids, render }: AriaItemProps) {
       {(aria) => {
         if (!aria) throw new Error('<Aria.Item> must be inside <Aria>')
         const store = aria.getStore()
-        const expandedIds = (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
+        const expandEntity = store.entities[EXPANDED_ID]
+        // No expand entity → all containers open (matches expand axis shouldDescend)
+        const expandedIds = expandEntity ? ((expandEntity.expandedIds as string[]) ?? []) : null
 
         const renderNode = (childId: string): ReactNode | null => {
           const entity = store.entities[childId]
@@ -128,7 +130,7 @@ function AriaItem({ ids, render }: AriaItemProps) {
             if (!node) continue
             nodes.push(node)
             const hasChildren = getChildren(store, childId).length > 0
-            const isExpanded = expandedIds.includes(childId)
+            const isExpanded = expandedIds === null || expandedIds.includes(childId)
             if (hasChildren && isExpanded) {
               nodes.push(...renderNodes(childId))
             }
