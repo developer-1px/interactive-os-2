@@ -184,8 +184,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 54 | Switch | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch/) | `pattern/examples/switch.ts` | 🟢 | — |
-| 55 | Switch Using HTML Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-button/) | — | ⬜ | — |
-| 56 | Switch Using HTML Checkbox Input | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/) | — | ⬜ | — |
+| 55 | Switch Using HTML Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-button/) | `pattern/examples/switch.ts` | 🟢 | — |
+| 56 | Switch Using HTML Checkbox Input | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/) | `pattern/examples/switch.ts` | 🟢 | HTML element 차이, 패턴 동일 |
 
 ### Table
 
