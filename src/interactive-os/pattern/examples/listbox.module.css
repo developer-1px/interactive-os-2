@@ -59,3 +59,62 @@
   background: var(--selection);
   outline: var(--focus-ring) solid var(--focus);
 }
+
+.check {
+  font-size: var(--type-caption-size);
+  color: var(--tone-primary-base);
+}
+
+/* ── rearrangeable (dual listbox + toolbar) ── */
+
+.rearrangeable {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.listboxZone {
+  flex: 1;
+  min-width: 0;
+}
+
+.zoneLabel {
+  display: block;
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-top: var(--space-xl);
+}
+
+.toolbarButton {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  font-size: var(--type-caption-size);
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--surface-default);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-xs-radius);
+  cursor: default;
+  white-space: nowrap;
+}
+
+.toolbarButton:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.toolbarButton:focus {
+  border-color: var(--focus);
+  outline: none;
+}
+
+.toolbarButton:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
