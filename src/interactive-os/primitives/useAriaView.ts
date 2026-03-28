@@ -264,10 +264,14 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         autoAria['aria-haspopup'] = pattern.popupType
         autoAria['aria-expanded'] = String(state.open)
       }
-      // Structural ARIA — position in set (only for multi-item collections)
+      // Structural ARIA — position in set
       if (state.siblingCount > 1) {
         autoAria['aria-posinset'] = String(state.index + 1)
         autoAria['aria-setsize'] = String(state.siblingCount)
+      }
+      // aria-level for hierarchical patterns (tree, treegrid) — any node in an expandable pattern
+      if ((pattern.expandTracking || pattern.expandable) && state.level !== undefined) {
+        autoAria['aria-level'] = String(state.level)
       }
       if (pattern.colCount) autoAria['aria-rowindex'] = String(state.index + 1)
 
