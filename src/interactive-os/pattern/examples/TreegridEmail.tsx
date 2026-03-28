@@ -6,6 +6,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { treegrid } from '../../pattern/roles/treegrid'
 import { EXPANDED_ID } from '../../axis/expand'
+import { GRID_COL_ID } from '../../axis/navigate'
 import styles from './treegrid.module.css'
 
 // APG #66: Treegrid Email Inbox
@@ -51,6 +52,7 @@ const data: NormalizedData = createStore({
       ),
     ),
     [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: ['thread-1'] },
+    [GRID_COL_ID]: { id: GRID_COL_ID, colIndex: -1 },  // APG: rows focused first
   },
   relationships: {
     [ROOT_ID]: threads.map(t => t.id),
@@ -80,19 +82,25 @@ const renderRow = (
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >
-      <span className={styles.indicator} aria-hidden="true">
-        {isThread ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
-      </span>
-      <span className={styles.subject}>{subject}</span>
-      <span className={styles.summary}>{summary}</span>
-      <span className={styles.sender}>{sender}</span>
+      <Aria.Cell index={0}>
+        <span className={styles.indicator} aria-hidden="true">
+          {isThread ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
+        </span>
+        <span className={styles.subject}>{subject}</span>
+      </Aria.Cell>
+      <Aria.Cell index={1}>
+        <span className={styles.summary}>{summary}</span>
+      </Aria.Cell>
+      <Aria.Cell index={2}>
+        <span className={styles.sender}>{sender}</span>
+      </Aria.Cell>
     </div>
   )
 }
 
 export function TreegridEmail() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => treegrid(), [])
+  const pattern = useMemo(() => treegrid(3), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
