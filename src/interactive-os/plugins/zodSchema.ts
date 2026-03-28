@@ -57,7 +57,7 @@ export function zodSchema(options: ZodSchemaOptions) {
   return definePlugin({
     name: 'zodSchema',
     intercepts: [PASTE, CUT],
-    middleware: (next: (command: Command) => void) => (command: Command) => {
+    middleware: (next: (command: Command) => void, _getStore) => (command: Command) => {
       if (command.type === PASTE) {
         const payload = command.payload as { targetId: string }
         next(clipboardCommands.paste(payload.targetId, canAccept))

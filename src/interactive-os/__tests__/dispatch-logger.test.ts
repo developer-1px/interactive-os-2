@@ -9,7 +9,7 @@ import { createCommandEngine } from '../engine/createCommandEngine'
 import { createStore } from '../store/createStore'
 import { focusCommands } from '../axis/navigate'
 import { createBatchCommand } from '../engine/types'
-import type { Command } from '../engine/types'
+import type { Command, CommandHandler } from '../engine/types'
 
 describe('computeStoreDiff', () => {
   const base: NormalizedData = {
@@ -333,7 +333,7 @@ describe('defaultLogger', () => {
 })
 
 describe('engine logger integration', () => {
-  function setup(logger: (entry: LogEntry) => void) {
+  function setup(logger: (entry: LogEntry) => void, extraRegistry?: Map<string, CommandHandler>) {
     const store = createStore({
       entities: {
         item1: { id: 'item1', data: { name: 'A' } },
@@ -341,7 +341,12 @@ describe('engine logger integration', () => {
       },
       relationships: { __root__: ['item1', 'item2'] },
     })
-    return createCommandEngine(store, [], () => {}, { logger })
+    const registry = new Map<string, CommandHandler>()
+    registry.set(focusCommands.setFocus.type, focusCommands.setFocus.handler as CommandHandler)
+    if (extraRegistry) {
+      for (const [k, v] of extraRegistry) registry.set(k, v)
+    }
+    return createCommandEngine(store, [], registry, () => {}, { logger })
   }
 
   it('logs single command with seq, type, payload, diff', () => {
@@ -425,12 +430,13 @@ describe('engine logger integration', () => {
 
   it('logs error command with error field', () => {
     const entries: LogEntry[] = []
-    const engine = setup((e) => entries.push(e))
+    const badRegistry = new Map<string, CommandHandler>()
+    badRegistry.set('bad:command', () => { throw new Error('Boom') })
+    const engine = setup((e) => entries.push(e), badRegistry)
 
     const badCommand: Command = {
       type: 'bad:command',
       payload: {},
-      execute() { throw new Error('Boom') },
     }
     engine.dispatch(badCommand)
 
@@ -442,8 +448,10 @@ describe('engine logger integration', () => {
   it('does not log when logger is false', () => {
     const entries: LogEntry[] = []
     const store = createStore({ entities: {}, relationships: { __root__: [] } })
-    const engine = createCommandEngine(store, [], () => {}, { logger: false })
-    const engineWithLogger = createCommandEngine(store, [], () => {}, { logger: (e) => entries.push(e) })
+    const focusRegistry = new Map<string, CommandHandler>()
+    focusRegistry.set(focusCommands.setFocus.type, focusCommands.setFocus.handler as CommandHandler)
+    const engine = createCommandEngine(store, [], focusRegistry, () => {}, { logger: false })
+    const engineWithLogger = createCommandEngine(store, [], new Map(focusRegistry), () => {}, { logger: (e) => entries.push(e) })
 
     engine.dispatch(focusCommands.setFocus('x'))
     expect(entries).toHaveLength(0)
