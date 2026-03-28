@@ -1,7 +1,7 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
-import type { PatternContext, FocusStrategy, SelectionMode } from '../axis/types'
+import type { PatternContext, FocusStrategy, SelectionMode, ClickMap } from '../axis/types'
 import type { ValueRange } from '../axis/value'
 import type { Middleware, VisibilityFilter } from '../engine/types'
 
@@ -53,6 +53,14 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   popupType?: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
   /** When true, popup is modal (aria-modal="true", focus trap). */
   popupModal?: boolean
+  /** Panel role — when set, Aria.Panel renders with this ARIA role (tabpanel, region). */
+  panelRole?: string
+  /** Panel visibility condition — 'selected' for tabs, 'expanded' for accordion. */
+  panelVisibility?: 'selected' | 'expanded'
+  /** Trigger-specific keyMap — Aria.Trigger binds these instead of the main keyMap. */
+  triggerKeyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  /** Trigger-specific clickMap — modifier → handler for Aria.Trigger clicks. */
+  triggerClickMap?: Partial<ClickMap>
   /** Middleware composed from axes (e.g. anchorResetMiddleware from select axis) */
   middleware?: Middleware
   /** Visibility filters from axes — getVisibleNodes applies these generically */
@@ -61,4 +69,4 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
 }
 
 // Re-export axis types for convenience (pattern consumers often need both)
-export type { PatternContext, FocusStrategy, SelectionMode, GridNav, ValueNav } from '../axis/types'
+export type { PatternContext, FocusStrategy, SelectionMode, GridNav, ValueNav, ClickMap } from '../axis/types'

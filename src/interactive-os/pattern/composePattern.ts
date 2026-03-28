@@ -10,6 +10,11 @@ export interface Identity {
   role: string
   childRole?: string | ((entity: Entity, state: NodeState) => string)
   ariaAttributes: (node: Entity, state: NodeState) => Record<string, string>
+  // ② 2026-03-28-aria-panel-trigger-prd.md
+  panelRole?: string
+  panelVisibility?: 'selected' | 'expanded'
+  triggerKeyMap?: Record<string, (ctx: import('../axis/types').PatternContext) => import('../engine/types').Command | void>
+  triggerClickMap?: Partial<import('../axis/types').ClickMap>
 }
 
 // v1 backward compatibility
@@ -109,6 +114,10 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
       ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
       ...(mergedConfig.popupType !== undefined && { popupType: mergedConfig.popupType }),
       ...(mergedConfig.popupModal !== undefined && { popupModal: mergedConfig.popupModal }),
+      ...(config.panelRole !== undefined && { panelRole: config.panelRole }),
+      ...(config.panelVisibility !== undefined && { panelVisibility: config.panelVisibility }),
+      ...(config.triggerKeyMap !== undefined && { triggerKeyMap: config.triggerKeyMap }),
+      ...(config.triggerClickMap !== undefined && { triggerClickMap: config.triggerClickMap }),
       keyMap,
       ...(composedMiddleware && { middleware: composedMiddleware }),
       ...(visibilityFilters.length > 0 && { visibilityFilters }),
