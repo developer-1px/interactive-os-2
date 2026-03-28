@@ -1,24 +1,13 @@
 import type { AriaPattern, NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { gridNav, focusNext, focusPrev, focusFirst, focusLast, focusNextCol, focusPrevCol, focusFirstCol, focusLastCol, gridTabCycleNext, gridTabCyclePrev } from '../../axis/navigate'
-import { selectConfig, toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused } from '../../axis/select'
+import { focusNext, focusPrev, focusFirst, focusLast, focusNextCol, focusPrevCol, focusFirstCol, focusLastCol, gridTabCycleNext, gridTabCyclePrev } from '../../axis/navigate'
+import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectionCommands } from '../../axis/select'
 import type { PatternContext } from '../../axis/types'
 import type { Command } from '../../engine/types'
 import { createBatchCommand } from '../../engine/types'
-import { selectionCommands } from '../../axis/select'
 
 // APG Grid — https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
-const gridIdentity = {
-  role: 'grid',
-  childRole: 'row',
-  ariaAttributes: (_node: unknown, state: NodeState) => ({
-    'aria-rowindex': String(state.index + 1),
-    'aria-selected': String(state.selected),
-  }),
-}
-
-// Click handlers — select the clicked node, anchor for shift
 const selectAndAnchor = (ctx: PatternContext): Command =>
   createBatchCommand([
     selectionCommands.select(ctx.focused),
@@ -26,14 +15,20 @@ const selectAndAnchor = (ctx: PatternContext): Command =>
   ])
 
 // ── Data Grid ──
-// APG §Keyboard: cell-level arrows, Home/End per row, Ctrl+Home/End absolute
-// APG §Selection: Shift+Arrow extends, Shift+Click range, Ctrl+Click toggle
 
 export function grid(options: { columns: number; tabCycle?: boolean }): AriaPattern {
   return composePattern(
-    gridIdentity,
-    gridNav(options.columns),
-    selectConfig({ mode: 'multiple' }),
+    {
+      role: 'grid',
+      childRole: 'row',
+      focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
+      selectionMode: 'multiple',
+      colCount: options.columns,
+      ariaAttributes: (_node: unknown, state: NodeState) => ({
+        'aria-rowindex': String(state.index + 1),
+        'aria-selected': String(state.selected),
+      }),
+    },
     {
       // Navigation — APG §1 Data Grid
       ArrowRight: focusNextCol,
@@ -69,14 +64,19 @@ export function grid(options: { columns: number; tabCycle?: boolean }): AriaPatt
 }
 
 // ── Layout Grid ──
-// Wrapping navigation: arrows wrap across rows/columns
-// Home/End → first/last cell in grid (not just row)
 
 export function layoutGrid(options: { columns: number }): AriaPattern {
   return composePattern(
-    gridIdentity,
-    gridNav(options.columns),
-    selectConfig(),
+    {
+      role: 'grid',
+      childRole: 'row',
+      focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
+      colCount: options.columns,
+      ariaAttributes: (_node: unknown, state: NodeState) => ({
+        'aria-rowindex': String(state.index + 1),
+        'aria-selected': String(state.selected),
+      }),
+    },
     {
       // Navigation — APG §3 Layout Grid (wrapping)
       ArrowRight: (ctx: PatternContext) => ctx.grid?.focusNextCol() ?? focusNext(ctx),
@@ -85,9 +85,6 @@ export function layoutGrid(options: { columns: number }): AriaPattern {
       ArrowUp: focusPrev,
       Home: focusFirst,
       End: focusLast,
-
-      // Selection
-      Space: toggleSelect,
 
       // Pointer
       Click: selectAndAnchor,
