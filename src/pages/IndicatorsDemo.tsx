@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { ExpandIndicator, CheckIndicator, RadioIndicator, SwitchIndicator, SeparatorIndicator, IndeterminateIndicator, SortIndicator } from '../interactive-os/ui/indicators'
+import {
+  ExpandIndicator, CheckIndicator, RadioIndicator, SwitchIndicator,
+  SeparatorIndicator, IndeterminateIndicator, SortIndicator,
+  SpinnerIndicator, ProgressIndicator, SkeletonIndicator, StatusIndicator,
+  PageIndicator, DirectionIndicator, StepIndicator,
+  BadgeIndicator, OverflowIndicator, GripIndicator, TreeConnector,
+} from '../interactive-os/ui/indicators'
 import styles from './IndicatorsDemo.module.css'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -195,6 +201,134 @@ function SortSection() {
   )
 }
 
+function SpinnerSection() {
+  return (
+    <Section title="Spinner">
+      <Row label="sm"><SpinnerIndicator size="sm" /></Row>
+      <Row label="md"><SpinnerIndicator /></Row>
+      <Row label="lg"><SpinnerIndicator size="lg" /></Row>
+    </Section>
+  )
+}
+
+function ProgressSection() {
+  const [value, setValue] = useState(60)
+  return (
+    <Section title="Progress">
+      <Row label="0%"><ProgressIndicator value={0} /></Row>
+      <Row label="60%"><ProgressIndicator value={60} /></Row>
+      <Row label="100%"><ProgressIndicator value={100} /></Row>
+      <Row label="interactive">
+        <div className={styles.interactiveTarget} onClick={() => setValue(v => v >= 100 ? 0 : v + 20)}>
+          <span className={styles.stateLabel}>{value}%</span>
+        </div>
+        <ProgressIndicator value={value} />
+      </Row>
+    </Section>
+  )
+}
+
+function SkeletonSection() {
+  return (
+    <Section title="Skeleton">
+      <Row label="text"><SkeletonIndicator width="60%" height="var(--space-md)" /></Row>
+      <Row label="avatar"><SkeletonIndicator width="var(--space-2xl)" height="var(--space-2xl)" /></Row>
+      <Row label="block"><SkeletonIndicator width="100%" height="var(--space-3xl)" /></Row>
+    </Section>
+  )
+}
+
+function StatusSection() {
+  return (
+    <Section title="Status">
+      <Row label="success"><StatusIndicator tone="success" /></Row>
+      <Row label="error"><StatusIndicator tone="error" /></Row>
+      <Row label="warning"><StatusIndicator tone="warning" /></Row>
+      <Row label="info"><StatusIndicator tone="info" /></Row>
+    </Section>
+  )
+}
+
+function PageSection() {
+  const [current, setCurrent] = useState(0)
+  return (
+    <Section title="Page">
+      <Row label="5 dots, #2"><PageIndicator total={5} current={2} /></Row>
+      <Row label="3 dots, #0"><PageIndicator total={3} current={0} /></Row>
+      <Row label="interactive">
+        <div className={styles.interactiveTarget} onClick={() => setCurrent(c => (c + 1) % 5)}>
+          <PageIndicator total={5} current={current} />
+          <span className={styles.stateLabel}>page {current + 1}</span>
+        </div>
+      </Row>
+    </Section>
+  )
+}
+
+function DirectionSection() {
+  return (
+    <Section title="Direction">
+      <Row label="prev"><DirectionIndicator direction="prev" /></Row>
+      <Row label="next"><DirectionIndicator direction="next" /></Row>
+    </Section>
+  )
+}
+
+function StepSection() {
+  return (
+    <Section title="Step">
+      <Row label="step 1"><StepIndicator step={1} /></Row>
+      <Row label="step 2"><StepIndicator step={2} /></Row>
+      <Row label="completed"><StepIndicator step={1} completed /></Row>
+      <Row label="sequence">
+        <StepIndicator step={1} completed />
+        <StepIndicator step={2} completed />
+        <StepIndicator step={3} />
+      </Row>
+    </Section>
+  )
+}
+
+function BadgeSection() {
+  return (
+    <Section title="Badge">
+      <Row label="count=3"><BadgeIndicator count={3} /></Row>
+      <Row label="count=42"><BadgeIndicator count={42} /></Row>
+      <Row label="count=100"><BadgeIndicator count={100} /></Row>
+      <Row label="count=0"><BadgeIndicator count={0} /><span className={styles.stateLabel}>(hidden)</span></Row>
+    </Section>
+  )
+}
+
+function OverflowSection() {
+  return (
+    <Section title="Overflow">
+      <Row label="count=3"><OverflowIndicator count={3} /></Row>
+      <Row label="count=12"><OverflowIndicator count={12} /></Row>
+      <Row label="count=0"><OverflowIndicator count={0} /><span className={styles.stateLabel}>(hidden)</span></Row>
+    </Section>
+  )
+}
+
+function GripSection() {
+  return (
+    <Section title="Grip">
+      <Row label="vertical"><GripIndicator /></Row>
+      <Row label="horizontal"><GripIndicator orientation="horizontal" /></Row>
+    </Section>
+  )
+}
+
+function TreeConnectorSection() {
+  return (
+    <Section title="Tree Connector">
+      <Row label="level=1"><TreeConnector level={1} /></Row>
+      <Row label="isLast"><TreeConnector level={1} isLast /></Row>
+      <Row label="level=0"><TreeConnector level={0} /><span className={styles.stateLabel}>(hidden)</span></Row>
+    </Section>
+  )
+}
+
 export default function IndicatorsDemo() {
   return (
     <div className={styles.root}>
@@ -204,6 +338,17 @@ export default function IndicatorsDemo() {
       <RadioSection />
       <SwitchSection />
       <SortSection />
+      <SpinnerSection />
+      <ProgressSection />
+      <SkeletonSection />
+      <StatusSection />
+      <PageSection />
+      <DirectionSection />
+      <StepSection />
+      <BadgeSection />
+      <OverflowSection />
+      <GripSection />
+      <TreeConnectorSection />
       <SeparatorSection />
     </div>
   )

@@ -155,6 +155,199 @@
   color: var(--tone-primary-base);
 }
 
+/* ── Spinner indicator ── */
+
+@keyframes indicator-spin {
+  to { transform: rotate(360deg); }
+}
+
+:where(.item-indicator--spinner) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tone-primary-base);
+  animation: indicator-spin var(--motion-slow-duration, 0.8s) linear infinite;
+}
+
+:where(.item-indicator--spinner-sm) { font-size: var(--icon-sm); }
+:where(.item-indicator--spinner-md) { font-size: var(--icon-md); }
+:where(.item-indicator--spinner-lg) { font-size: var(--icon-lg, var(--space-2xl)); }
+
+/* ── Progress indicator ── */
+
+:where(.item-indicator--progress) {
+  width: 100%;
+  height: var(--space-xs);
+  background: var(--surface-overlay);
+  border-radius: var(--shape-pill-radius);
+  overflow: hidden;
+}
+
+:where(.item-indicator--progress-fill) {
+  height: 100%;
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-pill-radius);
+  transition: width var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+/* ── Skeleton indicator ── */
+
+@keyframes indicator-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+:where(.item-indicator--skeleton) {
+  border-radius: var(--shape-xs-radius);
+  background: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-hover) 50%,
+    var(--surface-overlay) 75%
+  );
+  background-size: 200% 100%;
+  animation: indicator-shimmer 1.5s ease-in-out infinite;
+}
+
+/* ── Status indicator ── */
+
+:where(.item-indicator--status) {
+  display: inline-block;
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+:where(.item-indicator--status-success) { background: var(--tone-success-base); }
+:where(.item-indicator--status-error) { background: var(--tone-destructive-base); }
+:where(.item-indicator--status-warning) { background: var(--tone-warning-base, #f59e0b); }
+:where(.item-indicator--status-info) { background: var(--tone-primary-base); }
+
+/* ── Page indicator (pagination dots) ── */
+
+:where(.item-indicator--page) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+:where(.item-indicator--page-dot) {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: 50%;
+  background: var(--border-default);
+  transition: background var(--motion-instant-duration);
+}
+
+:where(.item-indicator--page-dot-active) {
+  background: var(--tone-primary-base);
+}
+
+/* ── Direction indicator ── */
+
+:where(.item-indicator--direction) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--type-body-size);
+  color: var(--text-muted);
+}
+
+/* ── Step indicator ── */
+
+:where(.item-indicator--step) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-md);
+  height: var(--icon-md);
+  border-radius: 50%;
+  border: 1px solid var(--border-default);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+:where(.item-indicator--step-completed) {
+  background: var(--tone-primary-base);
+  border-color: var(--tone-primary-base);
+  color: var(--tone-primary-foreground);
+}
+
+/* ── Badge indicator ── */
+
+:where(.item-indicator--badge) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--icon-sm);
+  height: var(--icon-sm);
+  padding: 0 var(--space-xs);
+  border-radius: var(--shape-pill-radius);
+  background: var(--tone-destructive-base);
+  color: var(--tone-primary-foreground);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── Overflow indicator ── */
+
+:where(.item-indicator--overflow) {
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Grip indicator ── */
+
+:where(.item-indicator--grip) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: var(--type-body-size);
+  cursor: grab;
+}
+
+/* ── Tree connector ── */
+
+:where(.item-indicator--tree-connector) {
+  display: inline-block;
+  width: var(--space-lg);
+  height: 100%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+:where(.item-indicator--tree-connector)::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-subtle);
+}
+
+:where(.item-indicator--tree-connector)::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 50%;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+:where(.item-indicator--tree-connector-last)::before {
+  bottom: 50%;
+}
+
 /* ── Separator indicator ── */
 
 :where(.item-indicator--separator) {
