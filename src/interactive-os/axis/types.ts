@@ -69,6 +69,8 @@ export interface AxisConfig {
   expandable: boolean
   /** When true, useAria creates __expanded__ entity at init so getVisibleNodes gates child visibility. Set by expand axis. */
   expandTracking: boolean
+  /** When true, useAria creates __checked__ entity at init. Set by checked axis. */
+  checkedTracking: boolean
   selectionMode: SelectionMode
   selectOnClick: boolean
   activateOnClick: boolean
