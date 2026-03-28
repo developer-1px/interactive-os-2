@@ -248,7 +248,9 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       const isActivedescendant = behavior.focusStrategy.type === 'aria-activedescendant'
 
       const baseProps: Record<string, unknown> = {
-        role: behavior.childRole ?? 'row',
+        role: typeof behavior.childRole === 'function'
+          ? behavior.childRole(entity, state)
+          : (behavior.childRole ?? 'row'),
         [nodeIdAttr]: id,
         ...ariaAttrs,
       }

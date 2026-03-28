@@ -21,7 +21,7 @@ export interface NodeState {
 export interface AriaPattern<TState extends NodeState = NodeState> {
   role: string
   /** ARIA role for each node element. Defaults to the behavior's childRole or 'row'. */
-  childRole?: string
+  childRole?: string | ((entity: Entity, state: NodeState) => string)
   keyMap: Record<string, (ctx: PatternContext) => Command | void>
   focusStrategy: FocusStrategy
   /** When true, all nodes are expandable regardless of children. Used by accordion, disclosure. */
