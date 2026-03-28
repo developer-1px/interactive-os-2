@@ -37,6 +37,7 @@ export interface PatternContext {
   focused: string
   selected: string[]
   isExpanded: boolean
+  isChecked: boolean
 
   focusNext(options?: { wrap?: boolean }): Command
   focusPrev(options?: { wrap?: boolean }): Command
@@ -48,6 +49,7 @@ export interface PatternContext {
   expand(): Command
   collapse(): Command
   activate(): Command
+  toggleCheck(): Command
   toggleSelect(): Command
   extendSelection(direction: 'next' | 'prev' | 'first' | 'last'): Command
   extendSelectionTo(targetId: string, navigableIds?: string[]): Command
