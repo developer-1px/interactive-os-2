@@ -7,10 +7,11 @@ interface SliderOptions {
   min: number
   max: number
   step: number
+  orientation?: 'horizontal' | 'vertical'
 }
 
 export function slider(options: SliderOptions) {
-  const { min, max, step } = options
+  const { min, max, step, orientation = 'horizontal' } = options
 
   return composePattern(
     {
@@ -25,6 +26,6 @@ export function slider(options: SliderOptions) {
           : {}),
       }),
     },
-    value({ min, max, step, orientation: 'horizontal' }),
+    value({ min, max, step, orientation }),
   )
 }
