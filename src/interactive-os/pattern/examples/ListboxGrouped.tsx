@@ -41,6 +41,7 @@ const data: NormalizedData = createStore({
   },
 })
 
+// APG: group label + options
 const renderItem = (
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
@@ -50,9 +51,11 @@ const renderItem = (
   const isGroup = (state.level ?? 1) === 1
 
   if (isGroup) {
+    // APG: role="group" with aria-labelledby pointing to the label span
+    const labelId = `group-label-${node.id}`
     return (
-      <div {...props} className={styles.groupLabel}>
-        {label}
+      <div {...props} aria-labelledby={labelId} className={styles.groupLabel}>
+        <span id={labelId}>{label}</span>
       </div>
     )
   }
