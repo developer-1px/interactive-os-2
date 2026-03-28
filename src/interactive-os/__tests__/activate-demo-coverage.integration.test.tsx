@@ -50,14 +50,14 @@ describe('ActivateDemo coverage', () => {
     })
   })
 
-  describe('followFocus option', () => {
-    it('navigation auto-activates when followFocus enabled', async () => {
+  describe('selectionFollowsFocus option', () => {
+    it('navigation auto-activates when selectionFollowsFocus enabled', async () => {
       const user = userEvent.setup()
       render(<ActivateDemo />)
 
-      // Enable followFocus
+      // Enable selectionFollowsFocus
       const checkboxes = document.querySelectorAll('input[type="checkbox"]')
-      await user.click(checkboxes[1]!) // followFocus checkbox
+      await user.click(checkboxes[1]!) // selectionFollowsFocus checkbox
 
       const listbox = screen.getByRole('listbox')
       await user.click(listbox.querySelector('[data-node-id]')!)

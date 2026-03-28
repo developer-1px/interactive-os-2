@@ -12,7 +12,7 @@ export const radiogroup = composePattern(
       'aria-checked': String(state.selected),
     }),
   },
-  select({ mode: 'single' }),
+  select({ mode: 'single', selectionFollowsFocus: true }),
   activate({ onClick: true }),
   navigate({ orientation: 'both', wrap: true }),
 )

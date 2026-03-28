@@ -12,7 +12,7 @@ export const tabs = composePattern(
       'aria-selected': String(state.selected),
     }),
   },
-  select({ mode: 'single' }),
-  activate({ onClick: true, followFocus: true }),
+  select({ mode: 'single', selectionFollowsFocus: true }),
+  activate({ onClick: true, activationFollowsSelection: true }),
   navigate({ orientation: 'horizontal' }),
 )

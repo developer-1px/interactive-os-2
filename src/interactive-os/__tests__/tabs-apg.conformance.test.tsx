@@ -125,20 +125,17 @@ describe('APG Tabs — Keyboard Interaction', () => {
       expect(getFocusedNodeId(container)).toBe('security')
     })
 
-    // NOTE: APG Automatic Activation requires ArrowRight to auto-select (followFocus).
-    // This impl wires followFocus only via external onActivate callback; without it,
-    // arrow keys move focus but do not auto-select (gap vs APG tabs-automatic).
-    it('ArrowRight moves focus without auto-selecting (impl gap vs APG automatic tabs)', async () => {
+    // APG Automatic Activation: selectionFollowsFocus middleware auto-selects on focus change
+    it('ArrowRight auto-selects (APG selectionFollowsFocus)', async () => {
       const user = userEvent.setup()
       const { container } = renderTabList(fixtureData())
 
       getNode(container, 'general')!.focus()
       await user.keyboard('{ArrowRight}')
 
-      // Focus moved
+      // Focus moved AND aria-selected auto-set (selectionFollowsFocus)
       expect(getFocusedNodeId(container)).toBe('security')
-      // But aria-selected stays false without explicit activation
-      expect(getNode(container, 'security')?.getAttribute('aria-selected')).toBe('false')
+      expect(getNode(container, 'security')?.getAttribute('aria-selected')).toBe('true')
     })
 
     it('ArrowRight at last tab does not wrap (no wrap)', async () => {
@@ -164,7 +161,8 @@ describe('APG Tabs — Keyboard Interaction', () => {
       expect(getFocusedNodeId(container)).toBe('general')
     })
 
-    it('ArrowLeft moves focus without auto-selecting (same gap)', async () => {
+    // APG Automatic Activation: selectionFollowsFocus middleware auto-selects on focus change
+    it('ArrowLeft auto-selects (APG selectionFollowsFocus)', async () => {
       const user = userEvent.setup()
       const { container } = renderTabList(fixtureData())
 
@@ -172,7 +170,7 @@ describe('APG Tabs — Keyboard Interaction', () => {
       await user.keyboard('{ArrowLeft}')
 
       expect(getFocusedNodeId(container)).toBe('general')
-      expect(getNode(container, 'general')?.getAttribute('aria-selected')).toBe('false')
+      expect(getNode(container, 'general')?.getAttribute('aria-selected')).toBe('true')
     })
   })
 

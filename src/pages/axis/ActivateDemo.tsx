@@ -4,6 +4,7 @@ import { Aria } from '../../interactive-os/primitives/aria'
 import { composePattern } from '../../interactive-os/pattern/composePattern'
 import { navigate } from '../../interactive-os/axis/navigate'
 import { activate } from '../../interactive-os/axis/activate'
+import { select } from '../../interactive-os/axis/select'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import type { NodeState } from '../../interactive-os/pattern/types'
@@ -13,7 +14,7 @@ const plugins = [focusRecovery()]
 
 export default function ActivateDemo() {
   const [onClick, setOnClick] = useState(false)
-  const [followFocus, setFollowFocus] = useState(false)
+  const [selectionFollowsFocus, setSelectionFollowsFocus] = useState(false)
   const [toggleExpand, setToggleExpand] = useState(false)
   const [data, setData] = useState<NormalizedData>(axisListData)
   const [lastActivated, setLastActivated] = useState<string | null>(null)
@@ -28,7 +29,8 @@ export default function ActivateDemo() {
         return attrs
       },
     },
-    activate({ onClick, followFocus, toggleExpand }),
+    ...(selectionFollowsFocus ? [select({ mode: 'single', selectionFollowsFocus: true })] : []),
+    activate({ onClick, activationFollowsSelection: selectionFollowsFocus, toggleExpand }),
     navigate({ orientation: 'vertical' }),
   )
 
@@ -44,8 +46,8 @@ export default function ActivateDemo() {
           {' '}onClick
         </label>
         <label style={{ marginRight: 12 }}>
-          <input type="checkbox" checked={followFocus} onChange={(e) => setFollowFocus(e.target.checked)} />
-          {' '}followFocus
+          <input type="checkbox" checked={selectionFollowsFocus} onChange={(e) => setSelectionFollowsFocus(e.target.checked)} />
+          {' '}selectionFollowsFocus
         </label>
         <label>
           <input type="checkbox" checked={toggleExpand} onChange={(e) => setToggleExpand(e.target.checked)} />
@@ -56,7 +58,7 @@ export default function ActivateDemo() {
         <kbd>Enter</kbd> <span className="key-hint">activate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">activate</span>{' '}
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>
-        {followFocus && <span className="key-hint" style={{ opacity: 0.7 }}> + auto-activate on focus</span>}
+        {selectionFollowsFocus && <span className="key-hint" style={{ opacity: 0.7 }}> + auto-activate on focus</span>}
         {onClick && <span className="key-hint" style={{ opacity: 0.7 }}> + click activates</span>}
       </div>
       {lastActivated && (

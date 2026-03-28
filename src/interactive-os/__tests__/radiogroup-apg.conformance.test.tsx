@@ -91,10 +91,11 @@ describe('APG RadioGroup — ARIA Tree Structure', () => {
     expect(allTabindexNeg1.length).toBeGreaterThanOrEqual(2)
   })
 
-  it('aria-checked=false on unselected radio', () => {
+  it('initially focused radio has aria-checked=true (selectionFollowsFocus)', () => {
     const { container } = renderRadioGroup(fixtureData())
     const small = getNode(container, 'small')
-    expect(small?.getAttribute('aria-checked')).toBe('false')
+    // selectionFollowsFocus auto-selects the initially focused radio
+    expect(small?.getAttribute('aria-checked')).toBe('true')
   })
 
   it('aria-checked=true on selected radio', async () => {
@@ -131,19 +132,18 @@ describe('APG RadioGroup — Keyboard Interaction', () => {
       expect(getFocusedNodeId(container)).toBe('medium')
     })
 
-    // NOTE: APG requires selection follows focus, but this impl requires explicit Space.
-    // Arrow keys only move focus; aria-checked is NOT auto-set on ArrowDown (gap).
-    it('ArrowDown moves focus but does not auto-select (impl gap vs APG followFocus)', async () => {
+    // APG: selection follows focus — ArrowDown auto-selects
+    it('ArrowDown moves focus and auto-selects (APG selectionFollowsFocus)', async () => {
       const user = userEvent.setup()
       const { container } = renderRadioGroup(fixtureData())
 
       getNode(container, 'small')!.focus()
       await user.keyboard('{ArrowDown}')
 
-      // Focus moved, but aria-checked stays false until Space/click
+      // Focus moved AND aria-checked auto-set (selectionFollowsFocus)
       expect(getFocusedNodeId(container)).toBe('medium')
       const medium = getNode(container, 'medium')
-      expect(medium?.getAttribute('aria-checked')).toBe('false')
+      expect(medium?.getAttribute('aria-checked')).toBe('true')
     })
 
     it('ArrowDown from last item wraps to first', async () => {

@@ -1,6 +1,7 @@
 import type { NodeState } from '../pattern/types'
 import type { Entity } from '../store/types'
 import { composePattern } from '../pattern/composePattern'
+import { select } from '../axis/select'
 import { activate } from '../axis/activate'
 import { navigate } from '../axis/navigate'
 
@@ -14,7 +15,8 @@ const base = composePattern(
       'aria-setsize': String(state.siblingCount),
     }),
   },
-  activate({ onClick: true, followFocus: true }),
+  select({ mode: 'single', selectionFollowsFocus: true }),
+  activate({ onClick: true, activationFollowsSelection: true }),
   navigate({ orientation: 'vertical' }),
 )
 

@@ -110,7 +110,8 @@ describe('composePattern', () => {
       expandable: true,
       selectionMode: 'multiple',
       activateOnClick: true,
-      followFocus: false,
+      selectionFollowsFocus: false,
+      activationFollowsSelection: false,
       colCount: 1,
       ariaAttributes: () => ({ 'aria-expanded': 'false' }),
     }
@@ -123,7 +124,8 @@ describe('composePattern', () => {
     expect(behavior.expandable).toBe(true)
     expect(behavior.selectionMode).toBe('multiple')
     expect(behavior.activateOnClick).toBe(true)
-    expect(behavior.followFocus).toBe(false)
+    expect(behavior.selectionFollowsFocus).toBe(false)
+    expect(behavior.activationFollowsSelection).toBe(false)
     expect(behavior.colCount).toBe(1)
   })
 

@@ -6,7 +6,7 @@ import { ROOT_ID } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { AriaPattern } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
-import { getChildren, getEntityData } from '../store/createStore'
+import { getChildren } from '../store/createStore'
 import { createPatternContext } from '../pattern/createPatternContext'
 import { isVisible, findFallbackFocus, detectNewVisibleEntities } from '../plugins/focusRecovery'
 import type { IsReachable } from '../plugins/focusRecovery'
@@ -118,7 +118,6 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
   onActivateRef.current = onActivate
   const behaviorRef = useRef(behavior)
   behaviorRef.current = behavior
-  const prevFocusRef = useRef(viewState.focusedId)
   const viewStateRef = useRef(viewState)
   viewStateRef.current = viewState
 
@@ -176,9 +175,16 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
         if (META_COMMAND_TYPES.has(command.type)) {
           setViewState(prev => {
             const next = applyMetaCommand(prev, command)
-            return command.type === 'core:focus'
-              ? { ...next, selectionAnchor: '' }
-              : next
+            if (command.type === 'core:focus') {
+              const withAnchorReset = { ...next, selectionAnchor: '' }
+              // selectionFollowsFocus: auto-select focused node (standalone focus only, not batch)
+              if (behaviorRef.current.selectionFollowsFocus) {
+                const nodeId = (command.payload as { nodeId: string }).nodeId
+                return { ...withAnchorReset, selectedIds: [nodeId] }
+              }
+              return withAnchorReset
+            }
+            return next
           })
           return
         }
@@ -214,18 +220,18 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
   const { focusedId, selectedIds, expandedIds } = viewState
   const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds])
 
-  // ── followFocus ──
+  // ── activationFollowsSelection ──
+
+  const prevSelectedIdsRef = useRef<string[]>(selectedIds)
 
   useEffect(() => {
-    if (!focusedId || focusedId === prevFocusRef.current) return
-    prevFocusRef.current = focusedId
-    if (behaviorRef.current.followFocus && onActivateRef.current) {
-      const entityData = getEntityData<{ followFocus?: boolean }>(store, focusedId)
-      if (entityData?.followFocus !== false) {
-        onActivateRef.current(focusedId)
-      }
-    }
-  }, [focusedId, store])
+    const prev = prevSelectedIdsRef.current
+    prevSelectedIdsRef.current = selectedIds
+    if (prev === selectedIds) return
+    if (!behaviorRef.current.activationFollowsSelection || !onActivateRef.current) return
+    if (selectedIds.length === 0) return
+    onActivateRef.current(selectedIds[selectedIds.length - 1]!)
+  }, [selectedIds])
 
   // ── Shared view logic ──
 

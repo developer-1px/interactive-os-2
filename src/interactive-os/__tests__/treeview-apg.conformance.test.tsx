@@ -64,7 +64,7 @@ function getFocusedNodeId(container: HTMLElement): string | null {
   return focused?.getAttribute('data-node-id') ?? null
 }
 
-function TreeViewWithActivatedDisplay(props: { data: NormalizedData; followFocus?: boolean; 'aria-label': string }) {
+function TreeViewWithActivatedDisplay(props: { data: NormalizedData; selectionFollowsFocus?: boolean; 'aria-label': string }) {
   const [activated, setActivated] = useState('')
   return (
     <>
@@ -457,14 +457,14 @@ describe('APG TreeView — Nested Click Bubbling Guard', () => {
 })
 
 // ---------------------------------------------------------------------------
-// 8. followFocus
+// 8. selectionFollowsFocus + activationFollowsSelection
 // ---------------------------------------------------------------------------
 
-describe('APG TreeView — followFocus', () => {
-  it('followFocus + onActivate: moving focus triggers onActivate', async () => {
+describe('APG TreeView — selectionFollowsFocus', () => {
+  it('selectionFollowsFocus + onActivate: moving focus triggers onActivate', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <TreeViewWithActivatedDisplay data={makeTreeData()} followFocus aria-label="File Tree" />,
+      <TreeViewWithActivatedDisplay data={makeTreeData()} selectionFollowsFocus aria-label="File Tree" />,
     )
 
     getNodeEl(container, 'a')!.focus()

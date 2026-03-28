@@ -3,6 +3,7 @@ import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
 import type { NodeState, PatternContext } from '../pattern/types'
 import { tree } from '../pattern/examples/tree'
+import { selectionFollowsFocusMiddleware } from '../axis/select'
 import { useAria } from '../primitives/useAria'
 import type { UseAriaReturn } from '../primitives/useAria'
 
@@ -13,7 +14,7 @@ export interface UseTreeViewOptions {
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   initialFocus?: string
-  followFocus?: boolean
+  selectionFollowsFocus?: boolean
   selectable?: boolean
   'aria-label'?: string
 }
@@ -44,8 +45,10 @@ function toTreeViewReturn(aria: UseAriaReturn, ariaLabel?: string): UseTreeViewR
 }
 
 export function useTreeView(options: UseTreeViewOptions): UseTreeViewReturn {
-  const { data, plugins = [], keyMap, onChange, onActivate, initialFocus, followFocus, selectable = false, 'aria-label': ariaLabel } = options
-  let behavior = followFocus ? { ...tree, followFocus: true } : tree
+  const { data, plugins = [], keyMap, onChange, onActivate, initialFocus, selectionFollowsFocus, selectable = false, 'aria-label': ariaLabel } = options
+  let behavior = selectionFollowsFocus
+    ? { ...tree, selectionFollowsFocus: true, activationFollowsSelection: true, middleware: selectionFollowsFocusMiddleware() }
+    : tree
   if (!selectable) {
     const { Space: _space, ...rest } = behavior.keyMap
     behavior = { ...behavior, keyMap: rest, selectionMode: undefined, selectOnClick: false }

@@ -164,7 +164,7 @@ export function AreaSidebar({ layer }: { layer: string }) {
       <div className="sidebar-section-title">{tree!.label}</div>
       <TreeView
         data={sidebarData}
-        followFocus
+        selectionFollowsFocus
         onActivate={handleActivate}
         renderItem={renderItem}
         aria-label={`${tree!.label} documentation`}

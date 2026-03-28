@@ -35,8 +35,10 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   activateOnClick?: boolean
   /** When true, clicking a parent node toggles expand even when onActivate is provided. Default: true (APG File Directory). */
   expandOnParentClick?: boolean
-  /** When true, focus change auto-triggers onActivate. Per-item opt-out via entity.data.followFocus=false. */
-  followFocus?: boolean
+  /** When true, focus change auto-selects (select axis middleware). APG "selection follows focus". */
+  selectionFollowsFocus?: boolean
+  /** When true, selection change calls onActivate (useAria/useAriaZone). Chain: selection → onActivate. */
+  activationFollowsSelection?: boolean
   /** Number of columns for grid navigation. When > 1, PatternContext.grid is populated. */
   colCount?: number
   /** Value range for continuous-value widgets (slider, spinbutton). */
