@@ -1,6 +1,6 @@
 // ② 2026-03-27-birdseye-view-prd.md
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { SplitPane } from '../../interactive-os/ui/SplitPane'
 import type { PaneSize } from '../../interactive-os/ui/SplitPane'
 import { TreeView } from '../../interactive-os/ui/TreeView'
@@ -50,6 +50,7 @@ function useDebounce<T>(value: T, delay: number): T {
 
 export default function BirdseyeLayout() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [fsStore, setFsStore] = useState<NormalizedData | null>(null)
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
   const [sizes, setSizes] = useState<PaneSize[]>([0.15, 'flex', 0.35])
@@ -79,15 +80,24 @@ export default function BirdseyeLayout() {
   // Debounced focus — 250ms
   const debouncedCardId = useDebounce(focusedCardId, 250)
 
-  // 1. fs tree 로드
+  // 1. fs tree 로드 (URL의 folder 파라미터 우선)
   useEffect(() => {
     fetchTree(DEFAULT_ROOT).then((tree) => {
       const store = treeToStore(tree)
       setFsStore(store)
-      const nav = buildNavStore(store)
-      const firstId = findFirstNavItem(nav)
-      if (firstId) setSelectedFolderId(firstId)
+      const folderFromUrl = searchParams.get('folder')
+      const resolvedFolder = folderFromUrl && store.entities[`${DEFAULT_ROOT}/${folderFromUrl}`]
+        ? `${DEFAULT_ROOT}/${folderFromUrl}`
+        : null
+      if (resolvedFolder) {
+        setSelectedFolderId(resolvedFolder)
+      } else {
+        const nav = buildNavStore(store)
+        const firstId = findFirstNavItem(nav)
+        if (firstId) setSelectedFolderId(firstId)
+      }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 2. NavList store
@@ -132,13 +142,20 @@ export default function BirdseyeLayout() {
     })
   }, [debouncedCardId, kanbanStore])
 
-  // NavList 항목 선택
-  const handleNavActivate = useCallback((nodeId: string) => {
+  // 폴더 선택 + URL 동기화
+  const selectFolder = useCallback((nodeId: string) => {
     setSelectedFolderId(nodeId)
+    const relative = nodeId.startsWith(DEFAULT_ROOT + '/') ? nodeId.slice(DEFAULT_ROOT.length + 1) : nodeId
+    setSearchParams({ folder: relative }, { replace: true })
+  }, [setSearchParams])
+
+  // TreeView 항목 선택
+  const handleNavActivate = useCallback((nodeId: string) => {
+    selectFolder(nodeId)
     setFocusedCardId(null)
     setViewerCode(null)
     setViewerFilename('')
-  }, [])
+  }, [selectFolder])
 
   // Kanban 카드 활성화 (Enter/더블클릭)
   const handleKanbanActivate = useCallback(
@@ -148,7 +165,7 @@ export default function BirdseyeLayout() {
       if (!cardData) return
 
       if (cardData.sourceType === 'directory') {
-        setSelectedFolderId(cardData.sourceId)
+        selectFolder(cardData.sourceId)
       } else {
         const relative = cardData.sourceId.startsWith(DEFAULT_ROOT + '/')
           ? cardData.sourceId.slice(DEFAULT_ROOT.length + 1)
@@ -156,7 +173,7 @@ export default function BirdseyeLayout() {
         navigate(`/viewer/${relative}`)
       }
     },
-    [kanbanStore, navigate],
+    [kanbanStore, navigate, selectFolder],
   )
 
   // QuickOpen에서 파일 선택 → 코드뷰어에 표시
