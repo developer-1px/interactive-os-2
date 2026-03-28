@@ -1,0 +1,75 @@
+/* ② 2026-03-28-overlay-core-layer-prd.md
+   Overlay common CSS — surface + shape + motion bundles */
+
+/* ── Modal (dialog) ── */
+
+.overlay-modal::backdrop {
+  background: var(--dialog-backdrop);
+  backdrop-filter: blur(3px);
+}
+
+.overlay-modal {
+  background: var(--surface-overlay);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-xl-radius);
+
+  max-width: var(--overlay-width);
+  max-height: 85dvh;
+  overflow-y: auto;
+
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--motion-enter-duration) var(--motion-enter-easing),
+    transform var(--motion-enter-duration) var(--motion-enter-easing);
+}
+
+.overlay-modal[open] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Popup (popover="auto") ── */
+
+.overlay-popup {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+
+  background: var(--surface-overlay);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-lg-radius);
+
+  max-height: 70dvh;
+  overflow-y: auto;
+
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity var(--motion-enter-duration) var(--motion-enter-easing),
+    transform var(--motion-enter-duration) var(--motion-enter-easing);
+
+  /* popover reset */
+  inset: unset;
+}
+
+.overlay-popup:popover-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Anchor positioning defaults ── */
+
+.overlay-anchored {
+  position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+}
+
+/* ── Safari anchor fallback ── */
+
+@supports not (anchor-name: --x) {
+  .overlay-anchored {
+    position: fixed;
+  }
+}
