@@ -141,18 +141,19 @@ function AriaItem({ ids, render }: AriaItemProps) {
             const hasChildren = getChildren(store, childId).length > 0
             const isExpanded = expandedIds === null || expandedIds.includes(childId)
 
-            // Non-expandable container (group): wrap children inside container node
-            // expandedIds === null means no expand tracking → always-open groups
+            // Container node with 4-arg render: wrap children inside container node
             // render.length >= 4: opt-in — only when render callback declares children param
-            if (hasChildren && expandedIds === null && render.length >= 4) {
-              const childNodes = renderNodes(childId)
+            // expandedIds === null → always-open groups (listbox-grouped)
+            // expandedIds !== null → expandable containers: children only when expanded (menubar, tree)
+            if (hasChildren && render.length >= 4) {
+              const childNodes = isExpanded ? renderNodes(childId) : undefined
               nodes.push(
                 <AriaItemNode key={childId} childId={childId} render={render}>
                   {childNodes}
                 </AriaItemNode>,
               )
             } else {
-              // Leaf, expandable container, or collapsed: flat rendering (existing behavior)
+              // Leaf, or 3-arg render: flat rendering (existing behavior)
               nodes.push(
                 <AriaItemNode key={childId} childId={childId} render={render} />,
               )
