@@ -35,6 +35,7 @@ import { MenuActions } from '../interactive-os/pattern/examples/MenuActions'
 import { MenuActivedescendant } from '../interactive-os/pattern/examples/MenuActivedescendant'
 import { MenuNavigation } from '../interactive-os/pattern/examples/MenuNavigation'
 import { MenubarNavigation } from '../interactive-os/pattern/examples/MenubarNavigation'
+import { DatePickerCombobox } from '../interactive-os/pattern/examples/DatePickerCombobox'
 import { Toolbar } from '../interactive-os/pattern/examples/Toolbar'
 import { TreeFile } from '../interactive-os/pattern/examples/TreeFile'
 import { TreegridEmail } from '../interactive-os/pattern/examples/TreegridEmail'
@@ -94,6 +95,7 @@ export const mdComponents: Record<string, ComponentType<any>> = {
   MenuActivedescendant,
   MenuNavigation,
   MenubarNavigation,
+  DatePickerCombobox,
   Toolbar,
   TreeFile,
   TreegridEmail,

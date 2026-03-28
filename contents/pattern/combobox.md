@@ -10,6 +10,12 @@
 <ComboboxSelectOnly />
 ```
 
+### #16 Date Picker Combobox
+
+```tsx render
+<DatePickerCombobox />
+```
+
 ## 스펙
 
 | 속성 | 값 |
