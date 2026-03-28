@@ -76,6 +76,18 @@ export interface NavigateOptions {
   grid?: { columns: number; tabCycle?: boolean }
 }
 
+// ② 2026-03-28-axis-handlers-export-prd.md
+export const focusNext = (ctx: PatternContext): Command => ctx.focusNext()
+export const focusPrev = (ctx: PatternContext): Command => ctx.focusPrev()
+export const focusFirst = (ctx: PatternContext): Command => ctx.focusFirst()
+export const focusLast = (ctx: PatternContext): Command => ctx.focusLast()
+export const focusParent = (ctx: PatternContext): Command => ctx.focusParent()
+export const focusChild = (ctx: PatternContext): Command => ctx.focusChild()
+export const focusNextCol = (ctx: PatternContext): Command | void => ctx.grid?.focusNextCol()
+export const focusPrevCol = (ctx: PatternContext): Command | void => ctx.grid?.focusPrevCol()
+export const focusFirstCol = (ctx: PatternContext): Command | void => ctx.grid?.focusFirstCol()
+export const focusLastCol = (ctx: PatternContext): Command | void => ctx.grid?.focusLastCol()
+
 export function navigate(options?: NavigateOptions): { keyMap: KeyMap; config: Partial<AxisConfig> } {
   const wrap = options?.wrap
   const wrapOpts = wrap ? { wrap: true as const } : undefined

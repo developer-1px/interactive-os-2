@@ -92,6 +92,14 @@ export const valueCommands = {
   },
 }
 
+// ② 2026-03-28-axis-handlers-export-prd.md
+export const incrementHandler = (ctx: PatternContext): Command | void => ctx.value?.increment()
+export const decrementHandler = (ctx: PatternContext): Command | void => ctx.value?.decrement()
+export const incrementBig = (ctx: PatternContext): Command | void => ctx.value?.increment(ctx.value.step * 10)
+export const decrementBig = (ctx: PatternContext): Command | void => ctx.value?.decrement(ctx.value.step * 10)
+export const setToMin = (ctx: PatternContext): Command | void => ctx.value?.setToMin()
+export const setToMax = (ctx: PatternContext): Command | void => ctx.value?.setToMax()
+
 interface ValueOptions {
   min: number
   max: number
@@ -106,16 +114,16 @@ export function value(options: ValueOptions): { keyMap: KeyMap; config: Partial<
   const keyMap: KeyMap = {
     PageUp: (ctx: PatternContext) => ctx.value?.increment(bigStep),
     PageDown: (ctx: PatternContext) => ctx.value?.decrement(bigStep),
-    Home: (ctx: PatternContext) => ctx.value?.setToMin(),
-    End: (ctx: PatternContext) => ctx.value?.setToMax(),
+    Home: setToMin,
+    End: setToMax,
   }
 
-  keyMap['ArrowUp'] = (ctx: PatternContext) => ctx.value?.increment()
-  keyMap['ArrowDown'] = (ctx: PatternContext) => ctx.value?.decrement()
+  keyMap['ArrowUp'] = incrementHandler
+  keyMap['ArrowDown'] = decrementHandler
 
   if (orientation === 'horizontal') {
-    keyMap['ArrowRight'] = (ctx: PatternContext) => ctx.value?.increment()
-    keyMap['ArrowLeft'] = (ctx: PatternContext) => ctx.value?.decrement()
+    keyMap['ArrowRight'] = incrementHandler
+    keyMap['ArrowLeft'] = decrementHandler
   }
 
   return {

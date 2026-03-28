@@ -1,4 +1,8 @@
-import type { AxisConfig, KeyMap } from './types'
+import type { AxisConfig, KeyMap, PatternContext } from './types'
+import type { Command } from '../engine/types'
+
+// ② 2026-03-28-axis-handlers-export-prd.md
+export const activateHandler = (ctx: PatternContext): Command => ctx.activate()
 
 interface ActivateOptions {
   onClick?: boolean
@@ -11,8 +15,8 @@ interface ActivateOptions {
 // ② 2026-03-26-treeview-click-expand-prd.md
 export function activate(options?: ActivateOptions): { keyMap: KeyMap; config: Partial<AxisConfig> } {
   const keyMap: KeyMap = {
-    Enter: (ctx) => ctx.activate(),
-    Space: (ctx) => ctx.activate(),
+    Enter: activateHandler,
+    Space: activateHandler,
   }
 
   const config: Partial<AxisConfig> = {}

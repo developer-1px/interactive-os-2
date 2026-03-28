@@ -190,6 +190,13 @@ export function selectionFollowsFocusMiddleware(): Middleware {
   }
 }
 
+// ② 2026-03-28-axis-handlers-export-prd.md
+export const toggleSelect = (ctx: import('./types').PatternContext): Command => ctx.toggleSelect()
+export const extendSelectionNext = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('next')
+export const extendSelectionPrev = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('prev')
+export const extendSelectionFirst = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('first')
+export const extendSelectionLast = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('last')
+
 interface SelectOptions {
   mode?: SelectionMode  // 'single' | 'multiple', default 'multiple'
   extended?: boolean     // add Shift combos, only when mode='multiple'
@@ -201,14 +208,14 @@ export function select(options?: SelectOptions): { keyMap: KeyMap; config: Parti
   const extended = options?.extended && mode === 'multiple'
 
   const keyMap: KeyMap = {
-    Space: (ctx) => ctx.toggleSelect(),
+    Space: toggleSelect,
   }
 
   if (extended) {
-    keyMap['Shift+ArrowDown'] = (ctx) => ctx.extendSelection('next')
-    keyMap['Shift+ArrowUp'] = (ctx) => ctx.extendSelection('prev')
-    keyMap['Shift+Home'] = (ctx) => ctx.extendSelection('first')
-    keyMap['Shift+End'] = (ctx) => ctx.extendSelection('last')
+    keyMap['Shift+ArrowDown'] = extendSelectionNext
+    keyMap['Shift+ArrowUp'] = extendSelectionPrev
+    keyMap['Shift+Home'] = extendSelectionFirst
+    keyMap['Shift+End'] = extendSelectionLast
   }
 
   const middlewares: Middleware[] = [anchorResetMiddleware()]
