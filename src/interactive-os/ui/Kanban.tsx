@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 import styles from './Kanban.module.css'
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import { ROOT_ID } from '../store/types'
 import { useAria } from '../primitives/useAria'
+import { FOCUS_ID } from '../axis/navigate'
 import { AriaInternalContext } from '../primitives/AriaInternalContext'
 import { AriaItemContext, Aria } from '../primitives/aria'
 import { kanban as kanbanBehavior } from './kanbanPreset'
@@ -14,6 +15,7 @@ interface KanbanProps {
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
+  onFocusChange?: (nodeId: string | null) => void
   compact?: boolean
   'aria-label'?: string
 }
@@ -33,12 +35,17 @@ export function Kanban({
   plugins = [],
   onChange,
   onActivate,
+  onFocusChange,
   compact = false,
   'aria-label': ariaLabel,
 }: KanbanProps) {
   const aria = useAria({ behavior: kanbanBehavior, data, plugins, onChange, onActivate })
   const store = aria.getStore()
   const columns = getChildren(store, ROOT_ID)
+
+  const focusedId = (store.entities[FOCUS_ID] as Record<string, unknown>)?.focusedId as string | undefined ?? null
+  const stableFocusChange = useCallback((id: string | null) => { onFocusChange?.(id) }, [onFocusChange])
+  useEffect(() => { stableFocusChange(focusedId) }, [focusedId, stableFocusChange])
 
   return (
     <AriaInternalContext.Provider value={{ ...aria, behavior: kanbanBehavior }}>

@@ -1,13 +1,14 @@
 // ② 2026-03-27-birdseye-view-prd.md
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SplitPane } from '../../interactive-os/ui/SplitPane'
 import { NavList } from '../../interactive-os/ui/NavList'
 import { Kanban } from '../../interactive-os/ui/Kanban'
+import { CodeBlock } from '../../interactive-os/ui/CodeBlock'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import { getEntityData } from '../../interactive-os/store/createStore'
 import { DEFAULT_ROOT } from '../viewer/types'
-import { fetchTree } from '../viewer/fsClient'
+import { fetchTree, fetchFile } from '../viewer/fsClient'
 import { treeToStore } from '../viewer/treeTransform'
 import { buildNavStore, buildKanbanStore } from './birdseyeTransform'
 import styles from './BirdseyeLayout.module.css'
@@ -15,14 +16,12 @@ import styles from './BirdseyeLayout.module.css'
 function findFirstNavItem(navStore: NormalizedData): string | null {
   const rootChildren = navStore.relationships['__root__'] ?? []
 
-  // src/ 그룹을 우선 선택 (개발 조감도의 주 대상)
   const srcGroup = rootChildren.find((id) => {
     const data = getEntityData<{ label: string }>(navStore, id)
     return data?.label === 'src'
   })
   if (srcGroup) {
     const srcChildren = navStore.relationships[srcGroup] ?? []
-    // interactive-os 또는 pages를 우선 선택
     const preferred = srcChildren.find((id) => {
       const data = getEntityData<{ label: string }>(navStore, id)
       return data?.label === 'interactive-os' || data?.label === 'pages'
@@ -31,7 +30,6 @@ function findFirstNavItem(navStore: NormalizedData): string | null {
     if (srcChildren.length > 0) return srcChildren[0]!
   }
 
-  // fallback: 첫 번째 비어있지 않은 그룹
   for (const groupId of rootChildren) {
     const groupChildren = navStore.relationships[groupId] ?? []
     if (groupChildren.length > 0) return groupChildren[0]!
@@ -39,39 +37,82 @@ function findFirstNavItem(navStore: NormalizedData): string | null {
   return null
 }
 
+/** Debounce hook — returns the value after it settles for `delay` ms */
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(timer)
+  }, [value, delay])
+  return debounced
+}
+
 export default function BirdseyeLayout() {
   const navigate = useNavigate()
   const [fsStore, setFsStore] = useState<NormalizedData | null>(null)
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
-  const [sizes, setSizes] = useState([0.18, 0.82])
+  const [sizes, setSizes] = useState([0.15, 0.50, 0.35])
+
+  // Code viewer state
+  const [focusedCardId, setFocusedCardId] = useState<string | null>(null)
+  const [viewerCode, setViewerCode] = useState<string | null>(null)
+  const [viewerFilename, setViewerFilename] = useState<string>('')
+  const fetchRef = useRef(0)
+
+  // Debounced focus — 250ms
+  const debouncedCardId = useDebounce(focusedCardId, 250)
 
   // 1. fs tree 로드
   useEffect(() => {
     fetchTree(DEFAULT_ROOT).then((tree) => {
       const store = treeToStore(tree)
       setFsStore(store)
-      // 초기 선택: 첫 번째 NavList 항목
       const nav = buildNavStore(store)
       const firstId = findFirstNavItem(nav)
       if (firstId) setSelectedFolderId(firstId)
     })
   }, [])
 
-  // 2. NavList store (memo)
+  // 2. NavList store
   const navStore = useMemo(() => (fsStore ? buildNavStore(fsStore) : null), [fsStore])
 
-  // 3. Kanban store (선택 폴더 기준, memo)
+  // 3. Kanban store
   const kanbanStore = useMemo(
     () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId) : null),
     [fsStore, selectedFolderId],
   )
 
-  // NavList 항목 선택 → 폴더 변경
+  // 4. Debounced focus → fetch file content
+  useEffect(() => {
+    if (!debouncedCardId || !kanbanStore) {
+      setViewerCode(null)
+      setViewerFilename('')
+      return
+    }
+
+    const cardData = getEntityData<{ sourceId: string; sourceType: string; title: string }>(kanbanStore, debouncedCardId)
+    if (!cardData || cardData.sourceType !== 'file') {
+      setViewerCode(null)
+      setViewerFilename('')
+      return
+    }
+
+    const token = ++fetchRef.current
+    setViewerFilename(cardData.title)
+    fetchFile(cardData.sourceId).then((content) => {
+      if (fetchRef.current === token) setViewerCode(content)
+    })
+  }, [debouncedCardId, kanbanStore])
+
+  // NavList 항목 선택
   const handleNavActivate = useCallback((nodeId: string) => {
     setSelectedFolderId(nodeId)
+    setFocusedCardId(null)
+    setViewerCode(null)
+    setViewerFilename('')
   }, [])
 
-  // Kanban 카드 활성화
+  // Kanban 카드 활성화 (Enter/더블클릭)
   const handleKanbanActivate = useCallback(
     (cardId: string) => {
       if (!kanbanStore) return
@@ -79,18 +120,23 @@ export default function BirdseyeLayout() {
       if (!cardData) return
 
       if (cardData.sourceType === 'directory') {
-        setSelectedFolderId(cardData.sourceId) // drill-down
+        setSelectedFolderId(cardData.sourceId)
       } else {
         const relative = cardData.sourceId.startsWith(DEFAULT_ROOT + '/')
           ? cardData.sourceId.slice(DEFAULT_ROOT.length + 1)
           : cardData.sourceId
-        navigate(`/viewer/${relative}`) // 파일 → Viewer로
+        navigate(`/viewer/${relative}`)
       }
     },
     [kanbanStore, navigate],
   )
 
-  // 선택된 폴더 이름 (헤더용)
+  // Kanban 포커스 변경
+  const handleFocusChange = useCallback((nodeId: string | null) => {
+    setFocusedCardId(nodeId)
+  }, [])
+
+  // 선택된 폴더 이름
   const selectedName = useMemo(() => {
     if (!fsStore || !selectedFolderId) return ''
     const data = getEntityData<{ name: string }>(fsStore, selectedFolderId)
@@ -102,7 +148,7 @@ export default function BirdseyeLayout() {
   }
 
   return (
-    <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.12}>
+    <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.08}>
       {/* 좌: NavList */}
       <div className={styles.sidebar}>
         <div className={styles.sidebarHeader}>Birdseye</div>
@@ -116,7 +162,7 @@ export default function BirdseyeLayout() {
         </div>
       </div>
 
-      {/* 우: Kanban */}
+      {/* 중: Kanban */}
       <div className={styles.board}>
         <div className={styles.boardHeader}>{selectedName}</div>
         {kanbanStore && (
@@ -125,11 +171,26 @@ export default function BirdseyeLayout() {
               key={selectedFolderId}
               data={kanbanStore}
               onActivate={handleKanbanActivate}
+              onFocusChange={handleFocusChange}
               compact
               aria-label={`${selectedName} contents`}
             />
           </div>
         )}
+      </div>
+
+      {/* 우: Code Viewer */}
+      <div className={styles.viewer}>
+        <div className={styles.viewerHeader}>{viewerFilename}</div>
+        <div className={styles.viewerBody}>
+          {viewerCode !== null ? (
+            <CodeBlock code={viewerCode} filename={viewerFilename} variant="flush" />
+          ) : (
+            <div className={styles.viewerEmpty}>
+              {focusedCardId ? '' : 'Select a file to preview'}
+            </div>
+          )}
+        </div>
       </div>
     </SplitPane>
   )
