@@ -274,24 +274,24 @@ describe('APG Menubar — Submenu Navigation', () => {
 // ---------------------------------------------------------------------------
 
 describe('APG Menubar — Cross-submenu Navigation', () => {
-  it('ArrowRight in submenu closes current and opens next menubar submenu', async () => {
+  it('ArrowRight in submenu: focus goes to next MENUBAR item (submenu open, not entered)', async () => {
     const user = userEvent.setup()
     const { container } = renderMenubar(fixtureData())
     getNode(container, 'about').focus()
     await user.keyboard('{ArrowDown}') // open about → overview
-    await user.keyboard('{ArrowRight}') // close about, open admissions → apply
-    expect(focused()).toBe('apply')
+    await user.keyboard('{ArrowRight}') // close about, focus admissions (submenu open)
+    expect(focused()).toBe('admissions')
     expect(getNode(container, 'about').getAttribute('aria-expanded')).toBe('false')
     expect(getNode(container, 'admissions').getAttribute('aria-expanded')).toBe('true')
   })
 
-  it('ArrowLeft in submenu closes current and opens previous menubar submenu', async () => {
+  it('ArrowLeft in submenu: focus goes to previous MENUBAR item (submenu open, not entered)', async () => {
     const user = userEvent.setup()
     const { container } = renderMenubar(fixtureData())
     getNode(container, 'admissions').focus()
     await user.keyboard('{ArrowDown}') // open admissions → apply
-    await user.keyboard('{ArrowLeft}') // close admissions, open about → last item (facts)
-    expect(focused()).toBe('facts')
+    await user.keyboard('{ArrowLeft}') // close admissions, focus about (submenu open)
+    expect(focused()).toBe('about')
     expect(getNode(container, 'admissions').getAttribute('aria-expanded')).toBe('false')
     expect(getNode(container, 'about').getAttribute('aria-expanded')).toBe('true')
   })
@@ -301,27 +301,20 @@ describe('APG Menubar — Cross-submenu Navigation', () => {
     const { container } = renderMenubar(fixtureData())
     getNode(container, 'academics').focus()
     await user.keyboard('{ArrowDown}') // open academics → courses
-    await user.keyboard('{ArrowRight}') // close academics, open about → overview
-    expect(focused()).toBe('overview')
+    await user.keyboard('{ArrowRight}') // close academics, focus about (submenu open)
+    expect(focused()).toBe('about')
     expect(getNode(container, 'academics').getAttribute('aria-expanded')).toBe('false')
     expect(getNode(container, 'about').getAttribute('aria-expanded')).toBe('true')
   })
 
-  it('ArrowRight/Left on menubar with open submenu moves and opens new submenu', async () => {
+  it('ArrowDown from menubar item with open submenu enters submenu', async () => {
     const user = userEvent.setup()
     const { container } = renderMenubar(fixtureData())
     getNode(container, 'about').focus()
-    await user.keyboard('{ArrowDown}') // open about submenu
-    await user.keyboard('{Escape}')    // close, focus about
-    // Now about is on menubar level but submenu was just closed
-    // Re-open with ArrowDown
-    await user.keyboard('{ArrowDown}') // open about → overview
-    // ArrowRight on menubar with submenu open → advance + open
-    await user.keyboard('{Escape}')
-    expect(focused()).toBe('about')
-    await user.keyboard('{ArrowDown}') // re-open about
-    // We're in submenu now, ArrowRight should advance
-    await user.keyboard('{ArrowRight}')
+    await user.keyboard('{ArrowDown}') // open about, focus overview
+    await user.keyboard('{ArrowRight}') // close about, focus admissions (submenu open)
+    expect(focused()).toBe('admissions')
+    await user.keyboard('{ArrowDown}') // enter admissions submenu → apply
     expect(focused()).toBe('apply')
   })
 })
@@ -382,7 +375,7 @@ describe('APG Menubar — Nested Submenus', () => {
     expect(focused()).toBe('history')
   })
 
-  it('ArrowRight in nested submenu leaf advances to next menubar item', async () => {
+  it('ArrowRight in nested submenu leaf: focus goes to next MENUBAR item', async () => {
     const user = userEvent.setup()
     const { container } = renderMenubar(fixtureData())
     getNode(container, 'about').focus()
@@ -390,8 +383,8 @@ describe('APG Menubar — Nested Submenus', () => {
     await user.keyboard('{ArrowDown}')  // → admin
     await user.keyboard('{ArrowDown}')  // → facts
     await user.keyboard('{ArrowRight}') // → history (nested)
-    await user.keyboard('{ArrowRight}') // history has no children → advance to admissions
-    expect(focused()).toBe('apply')
+    await user.keyboard('{ArrowRight}') // history has no children → focus admissions (submenu open)
+    expect(focused()).toBe('admissions')
     expect(getNode(container, 'about').getAttribute('aria-expanded')).toBe('false')
     expect(getNode(container, 'admissions').getAttribute('aria-expanded')).toBe('true')
   })
