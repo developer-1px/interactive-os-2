@@ -1,122 +1,117 @@
 // ② 2026-03-27-birdseye-view-prd.md
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Circle } from 'lucide-react'
-import { useResizer } from '../../hooks/useResizer'
-import '../../styles/resizer.css'
-import { DEFAULT_ROOT, type FileNodeData } from '../viewer/types'
+import { SplitPane } from '../../interactive-os/ui/SplitPane'
+import { NavList } from '../../interactive-os/ui/NavList'
+import { Kanban } from '../../interactive-os/ui/Kanban'
+import type { NormalizedData } from '../../interactive-os/store/types'
+import { getEntityData } from '../../interactive-os/store/createStore'
+import { DEFAULT_ROOT } from '../viewer/types'
 import { fetchTree } from '../viewer/fsClient'
 import { treeToStore } from '../viewer/treeTransform'
-import type { NormalizedData } from '../../interactive-os/store/types'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import { getChildren, getEntityData } from '../../interactive-os/store/createStore'
-import BirdseyeSidebar from './BirdseyeSidebar'
-import BirdseyeBoard from './BirdseyeBoard'
+import { buildNavStore, buildKanbanStore } from './birdseyeTransform'
 import styles from './BirdseyeLayout.module.css'
 
-import type { NavGroup } from './BirdseyeSidebar'
-
-function buildNavGroups(store: NormalizedData): NavGroup[] {
-  const rootChildren = getChildren(store, ROOT_ID)
-  const groups: NavGroup[] = []
-
-  for (const dirId of rootChildren) {
-    const data = getEntityData<FileNodeData>(store, dirId)
-    if (!data || data.type !== 'directory') continue
-
-    const subDirs = getChildren(store, dirId)
-      .filter(childId => {
-        const cd = getEntityData<FileNodeData>(store, childId)
-        return cd?.type === 'directory'
-      })
-      .map(childId => {
-        const cd = getEntityData<FileNodeData>(store, childId)!
-        return { id: childId, name: cd.name }
-      })
-
-    if (subDirs.length > 0) {
-      groups.push({ groupId: dirId, groupName: data.name, items: subDirs })
-    }
+function findFirstNavItem(navStore: NormalizedData): string | null {
+  const rootChildren = navStore.relationships['__root__'] ?? []
+  for (const groupId of rootChildren) {
+    const groupChildren = navStore.relationships[groupId] ?? []
+    if (groupChildren.length > 0) return groupChildren[0]!
   }
-
-  return groups
+  return null
 }
 
 export default function BirdseyeLayout() {
   const navigate = useNavigate()
-  const [store, setStore] = useState<NormalizedData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [fsStore, setFsStore] = useState<NormalizedData | null>(null)
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
+  const [sizes, setSizes] = useState([0.18, 0.82])
 
-  const sidebarResizer = useResizer({
-    defaultSize: 200, minSize: 140, maxSize: 360, step: 10,
-    storageKey: 'birdseye-sidebar-width',
-  })
-
+  // 1. fs tree 로드
   useEffect(() => {
     fetchTree(DEFAULT_ROOT).then((tree) => {
-      const s = treeToStore(tree)
-      setStore(s)
-      setLoading(false)
-      const groups = buildNavGroups(s)
-      const first = groups[0]?.items[0]
-      if (first) setSelectedFolderId(first.id)
+      const store = treeToStore(tree)
+      setFsStore(store)
+      // 초기 선택: 첫 번째 NavList 항목
+      const nav = buildNavStore(store)
+      const firstId = findFirstNavItem(nav)
+      if (firstId) setSelectedFolderId(firstId)
     })
   }, [])
 
-  const navGroups = useMemo(() => store ? buildNavGroups(store) : [], [store])
+  // 2. NavList store (memo)
+  const navStore = useMemo(() => (fsStore ? buildNavStore(fsStore) : null), [fsStore])
 
-  const handleSelectFolder = useCallback((folderId: string) => {
-    setSelectedFolderId(folderId)
+  // 3. Kanban store (선택 폴더 기준, memo)
+  const kanbanStore = useMemo(
+    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId) : null),
+    [fsStore, selectedFolderId],
+  )
+
+  // NavList 항목 선택 → 폴더 변경
+  const handleNavActivate = useCallback((nodeId: string) => {
+    setSelectedFolderId(nodeId)
   }, [])
 
-  const handleActivateFile = useCallback((filePath: string) => {
-    const relative = filePath.startsWith(DEFAULT_ROOT + '/')
-      ? filePath.slice(DEFAULT_ROOT.length + 1)
-      : filePath
-    navigate(`/viewer/${relative}`)
-  }, [navigate])
+  // Kanban 카드 활성화
+  const handleKanbanActivate = useCallback(
+    (cardId: string) => {
+      if (!kanbanStore) return
+      const cardData = getEntityData<{ sourceId: string; sourceType: string }>(kanbanStore, cardId)
+      if (!cardData) return
 
-  if (loading || !store) {
-    return (
-      <div className={styles['be-loading']}>
-        <Circle size={12} className={styles['be-loading__spinner']} />
-        <span>Loading project...</span>
-      </div>
-    )
+      if (cardData.sourceType === 'directory') {
+        setSelectedFolderId(cardData.sourceId) // drill-down
+      } else {
+        const relative = cardData.sourceId.startsWith(DEFAULT_ROOT + '/')
+          ? cardData.sourceId.slice(DEFAULT_ROOT.length + 1)
+          : cardData.sourceId
+        navigate(`/viewer/${relative}`) // 파일 → Viewer로
+      }
+    },
+    [kanbanStore, navigate],
+  )
+
+  // 선택된 폴더 이름 (헤더용)
+  const selectedName = useMemo(() => {
+    if (!fsStore || !selectedFolderId) return ''
+    const data = getEntityData<{ name: string }>(fsStore, selectedFolderId)
+    return data?.name ?? ''
+  }, [fsStore, selectedFolderId])
+
+  if (!fsStore || !navStore) {
+    return <div className={styles.loading}>Loading project...</div>
   }
 
-  const selectedName = selectedFolderId
-    ? getEntityData<FileNodeData>(store, selectedFolderId)?.name ?? ''
-    : ''
-
   return (
-    <div className={styles.be}>
-      <div className={styles['be-sidebar']} style={{ width: sidebarResizer.size }}>
-        <div className={styles['be-sidebar__header']}>
-          <span className={styles['be-sidebar__header-title']}>Birdseye</span>
-        </div>
-        <div className={styles['be-sidebar__body']}>
-          <BirdseyeSidebar
-            groups={navGroups}
-            selectedId={selectedFolderId}
-            onSelect={handleSelectFolder}
+    <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.12}>
+      {/* 좌: NavList */}
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>Birdseye</div>
+        <div className={styles.sidebarBody}>
+          <NavList
+            data={navStore}
+            onActivate={handleNavActivate}
+            initialFocus={selectedFolderId ?? undefined}
+            aria-label="Folder navigation"
           />
         </div>
       </div>
-      <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
-      <div className={styles['be-board']}>
-        <div className={styles['be-board__header']}>
-          <span className={styles['be-board__header-title']}>{selectedName}</span>
-        </div>
-        <BirdseyeBoard
-          key={selectedFolderId}
-          store={store}
-          selectedFolderId={selectedFolderId}
-          onActivateFile={handleActivateFile}
-          onDrillDown={handleSelectFolder}
-        />
+
+      {/* 우: Kanban */}
+      <div className={styles.board}>
+        <div className={styles.boardHeader}>{selectedName}</div>
+        {kanbanStore && (
+          <div className={styles.boardBody}>
+            <Kanban
+              key={selectedFolderId}
+              data={kanbanStore}
+              onActivate={handleKanbanActivate}
+              aria-label={`${selectedName} contents`}
+            />
+          </div>
+        )}
       </div>
-    </div>
+    </SplitPane>
   )
 }
