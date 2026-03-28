@@ -51,6 +51,46 @@
   overflow: hidden;
 }
 
+/* --- viewer --- */
+
+.viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface-base);
+  border-left: 1px solid var(--border-subtle);
+}
+
+.viewerHeader {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 var(--space-lg);
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  font-family: var(--type-mono);
+}
+
+.viewerBody {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.viewerEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: var(--type-caption-size);
+}
+
+/* --- loading --- */
+
 .loading {
   display: flex;
   align-items: center;
