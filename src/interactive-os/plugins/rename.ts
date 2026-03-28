@@ -24,18 +24,11 @@ export const renameCommands = {
           },
         }
       },
-      undo(store) {
-        const { [RENAME_ID]: _removed, ...rest } = store.entities
-        void _removed
-        return { ...store, entities: rest }
-      },
     }
   },
 
   confirmRename(nodeId: string, field: string, newValue: unknown): Command {
-    let previousValue: unknown
-
-    // Dot-path support: "cells.2" → update array element at index 2
+    // Dot-path support: "cells.2" -> update array element at index 2
     const dotIdx = field.indexOf('.')
     const isArrayPath = dotIdx > 0
     const arrayField = isArrayPath ? field.slice(0, dotIdx) : field
@@ -50,11 +43,9 @@ export const renameCommands = {
         let updateData: Record<string, unknown>
         if (isArrayPath) {
           const arr = [...((entity?.data?.[arrayField] as unknown[]) ?? [])]
-          previousValue = arr[arrayIndex]
           arr[arrayIndex] = newValue
           updateData = { [arrayField]: arr }
         } else {
-          previousValue = entity?.data?.[field]
           updateData = { [field]: newValue }
         }
 
@@ -64,28 +55,6 @@ export const renameCommands = {
           entities: {
             ...result.entities,
             [RENAME_ID]: { id: RENAME_ID, nodeId, active: false },
-          },
-        }
-        return result
-      },
-      undo(store) {
-        const entity = getEntity(store, nodeId)
-
-        let updateData: Record<string, unknown>
-        if (isArrayPath) {
-          const arr = [...((entity?.data?.[arrayField] as unknown[]) ?? [])]
-          arr[arrayIndex] = previousValue
-          updateData = { [arrayField]: arr }
-        } else {
-          updateData = { [field]: previousValue }
-        }
-
-        let result = updateEntityData(store, nodeId, updateData)
-        result = {
-          ...result,
-          entities: {
-            ...result.entities,
-            [RENAME_ID]: { id: RENAME_ID, nodeId, active: true },
           },
         }
         return result
@@ -106,19 +75,6 @@ export const renameCommands = {
               ...store.entities[RENAME_ID],
               id: RENAME_ID,
               active: false,
-            },
-          },
-        }
-      },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [RENAME_ID]: {
-              ...store.entities[RENAME_ID],
-              id: RENAME_ID,
-              active: true,
             },
           },
         }
