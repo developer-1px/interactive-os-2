@@ -271,6 +271,13 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
             if (command) engine.dispatch(command)
           }
         }
+        if (behavior.checkOnClick) {
+          const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
+          if (hasModifier) return
+          const ctx = createPatternContext(engine, behaviorCtxOptions)
+          const command = ctx.toggleCheck()
+          if (command) engine.dispatch(command)
+        }
       }
 
       baseProps.onFocus = (event: FocusEvent) => {

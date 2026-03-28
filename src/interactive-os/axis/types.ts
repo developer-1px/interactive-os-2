@@ -76,6 +76,8 @@ export interface AxisConfig {
   selectionMode: SelectionMode
   selectOnClick: boolean
   activateOnClick: boolean
+  /** When true, clicking a node calls toggleCheck(). Set by checked axis. */
+  checkOnClick: boolean
   /** When true, clicking a parent node toggles expand even when onActivate is provided. Default: true. Set by activate({ expandOnClick }). */
   expandOnParentClick: boolean
   selectionFollowsFocus: boolean

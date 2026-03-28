@@ -44,7 +44,7 @@ function renderSwitch(data: NormalizedData) {
           {...props}
           data-testid={`switch-${item.id}`}
           data-focused={state.focused}
-          data-checked={state.expanded}
+          data-checked={state.checked}
         >
           {(item.data as Record<string, unknown>)?.label as string}
         </span>

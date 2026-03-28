@@ -104,5 +104,5 @@ export function checked(): { keyMap: KeyMap; config: Partial<AxisConfig> } {
     Enter: (ctx) => ctx.toggleCheck(),
     Space: (ctx) => ctx.toggleCheck(),
   }
-  return { keyMap, config: { checkedTracking: true } }
+  return { keyMap, config: { checkedTracking: true, checkOnClick: true } }
 }
