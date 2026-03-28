@@ -205,7 +205,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 61 | Toolbar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/) | `pattern/examples/toolbar.ts` | ⬜ | — |
+| 61 | Toolbar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/) | `pattern/examples/toolbar.ts` | 🟡 | `navigate()` 기본값이 wrap 없음 — APG는 ArrowRight/Left 끝에서 wrap 요구. `navigate({ wrap: true })`로 수정 가능 |
 
 ### Tooltip
 
@@ -257,7 +257,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 대상 example | 57 + 1 experimental |
 | 기존 pattern/examples/ 매핑 | 16 |
 | 미착수 (매핑 없음) | 41 |
-| 적합성 검증 완료 | 6 |
+| 적합성 검증 완료 | 7 |
 
 ## os 갭 레지스트리
 
@@ -265,4 +265,4 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | 갭 | 관련 example | 영향 axis/plugin | 상태 |
 |---|-----|-------------|------------------|------|
-| — | — | — | — | — |
+| 1 | `navigate()` 기본값 wrap=false — APG Toolbar는 끝에서 wrap 요구 | Toolbar (#61) | navigate axis `wrap` option | `navigate({ wrap: true })`로 해결 가능 |
