@@ -1,16 +1,15 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import Fuse from 'fuse.js'
 import { Search } from 'lucide-react'
-import { useAria } from '../../interactive-os/primitives/useAria'
-import { createStore, getChildren } from '../../interactive-os/store/createStore'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import type { NormalizedData } from '../../interactive-os/store/types'
-import { createBatchCommand } from '../../interactive-os/engine/types'
-import { selectionCommands } from '../../interactive-os/axis/select'
-import { combobox } from '../../interactive-os/pattern/examples/combobox'
-import { combobox as comboboxPlugin, comboboxCommands } from '../../interactive-os/plugins/combobox'
-import { FileIcon } from '../../interactive-os/ui/FileIcon'
-import type { FileNodeData } from './types'
+import { useAria } from '../primitives/useAria'
+import { createStore, getChildren } from '../store/createStore'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
+import { createBatchCommand } from '../engine/types'
+import { selectionCommands } from '../axis/select'
+import { combobox } from '../pattern/examples/combobox'
+import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
+import { FileIcon } from './FileIcon'
 import styles from './QuickOpen.module.css'
 
 // --- Flatten file entities for search ---
@@ -26,7 +25,7 @@ function flattenFiles(store: NormalizedData, root: string): FileEntry[] {
   const files: FileEntry[] = []
   for (const entity of Object.values(store.entities)) {
     if (!entity.data) continue
-    const data = entity.data as unknown as FileNodeData
+    const data = entity.data as unknown as { name: string; type: string; path: string }
     if (data.type === 'file') {
       files.push({
         id: entity.id,

@@ -6,6 +6,7 @@ import type { PaneSize } from '../../interactive-os/ui/SplitPane'
 import { TreeView } from '../../interactive-os/ui/TreeView'
 import { Kanban } from '../../interactive-os/ui/Kanban'
 import { CodeBlock } from '../../interactive-os/ui/CodeBlock'
+import { QuickOpen } from '../../interactive-os/ui/QuickOpen'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import { getEntityData } from '../../interactive-os/store/createStore'
 import { DEFAULT_ROOT } from '../viewer/types'
@@ -61,6 +62,19 @@ export default function BirdseyeLayout() {
 
   // Column order from _meta.yaml
   const [kanbanOptions, setKanbanOptions] = useState<KanbanBuildOptions>({})
+
+  // QuickOpen (Cmd+P)
+  const [quickOpenVisible, setQuickOpenVisible] = useState(false)
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'p') {
+        e.preventDefault()
+        setQuickOpenVisible(true)
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
   // Debounced focus — 250ms
   const debouncedCardId = useDebounce(focusedCardId, 250)
@@ -145,6 +159,16 @@ export default function BirdseyeLayout() {
     [kanbanStore, navigate],
   )
 
+  // QuickOpen에서 파일 선택 → 코드뷰어에 표시
+  const handleQuickOpenSelect = useCallback((filePath: string) => {
+    const name = filePath.split('/').pop() ?? ''
+    setViewerFilename(name)
+    const token = ++fetchRef.current
+    fetchFile(filePath).then((content) => {
+      if (fetchRef.current === token) setViewerCode(content)
+    })
+  }, [])
+
   // Kanban 포커스 변경
   const handleFocusChange = useCallback((nodeId: string | null) => {
     setFocusedCardId(nodeId)
@@ -161,7 +185,7 @@ export default function BirdseyeLayout() {
     return <div className={styles.loading}>Loading project...</div>
   }
 
-  return (
+  return (<>
     <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.08}>
       {/* 좌: TreeView (폴더 전용) */}
       <div className={styles.sidebar}>
@@ -207,5 +231,15 @@ export default function BirdseyeLayout() {
         </div>
       </div>
     </SplitPane>
+
+    {quickOpenVisible && fsStore && (
+      <QuickOpen
+        fileStore={fsStore}
+        root={DEFAULT_ROOT}
+        onSelect={handleQuickOpenSelect}
+        onClose={() => setQuickOpenVisible(false)}
+      />
+    )}
+  </>
   )
 }
