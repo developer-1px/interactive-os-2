@@ -203,3 +203,43 @@ describe('APG Slider Vertical Temperature (#51) — Keyboard', () => {
     expect(getValueNow(container, 'temp')).toBe('100')
   })
 })
+
+// ---------------------------------------------------------------------------
+// 3. Media Seek Slider (#50) — horizontal, 0-100, step=1
+// ---------------------------------------------------------------------------
+
+describe('APG Slider Media Seek (#50) — ARIA Structure', () => {
+  it('has role="slider"', () => {
+    const seekData = createStore({
+      entities: { seek: { id: 'seek', data: { label: 'Media Seek', value: 0 } } },
+      relationships: { [ROOT_ID]: ['seek'] },
+    })
+    const { container } = renderSlider(seekData, { min: 0, max: 100, step: 1 })
+    expect(container.querySelector('[role="slider"]')).not.toBeNull()
+  })
+
+  it('has correct value range', () => {
+    const seekData = createStore({
+      entities: { seek: { id: 'seek', data: { label: 'Media Seek', value: 0 } } },
+      relationships: { [ROOT_ID]: ['seek'] },
+    })
+    const { container } = renderSlider(seekData, { min: 0, max: 100, step: 1 })
+    const node = getNode(container, 'seek')!
+    expect(node.getAttribute('aria-valuemin')).toBe('0')
+    expect(node.getAttribute('aria-valuemax')).toBe('100')
+  })
+})
+
+describe('APG Slider Media Seek (#50) — Keyboard', () => {
+  it('ArrowRight increments', async () => {
+    const user = userEvent.setup()
+    const seekData = createStore({
+      entities: { seek: { id: 'seek', data: { label: 'Media Seek', value: 0 } } },
+      relationships: { [ROOT_ID]: ['seek'] },
+    })
+    const { container } = renderSlider(seekData, { min: 0, max: 100, step: 1 })
+    getNode(container, 'seek')!.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(getValueNow(container, 'seek')).toBe('1')
+  })
+})
