@@ -55,44 +55,34 @@ function buildFixtureStore(): NormalizedData {
 }
 
 describe('buildNavStore', () => {
-  it('루트 디렉토리를 그룹으로, 2depth 디렉토리를 항목으로 생성한다', () => {
+  it('재귀적 폴더 트리를 생성한다 (파일 제외, 폴더만)', () => {
     const fsStore = buildFixtureStore()
     const navStore = buildNavStore(fsStore)
 
-    // ROOT has 2 groups
+    // ROOT has 2 folders
     const rootChildren = getChildren(navStore, ROOT_ID)
     expect(rootChildren).toHaveLength(2)
-    expect(rootChildren).toContain('group:src')
-    expect(rootChildren).toContain('group:docs')
+    expect(rootChildren).toContain('src')
+    expect(rootChildren).toContain('docs')
 
-    // group entities have correct data
-    const srcGroup = getEntityData<{ type: string; label: string }>(navStore, 'group:src')
-    expect(srcGroup).toEqual({ type: 'group', label: 'src' })
+    // src has 2 child dirs (pages, utils)
+    const srcChildren = getChildren(navStore, 'src')
+    expect(srcChildren).toHaveLength(2)
+    expect(srcChildren).toContain('src/pages')
+    expect(srcChildren).toContain('src/utils')
 
-    const docsGroup = getEntityData<{ type: string; label: string }>(navStore, 'group:docs')
-    expect(docsGroup).toEqual({ type: 'group', label: 'docs' })
+    // docs has 1 child dir (guide)
+    const docsChildren = getChildren(navStore, 'docs')
+    expect(docsChildren).toHaveLength(1)
+    expect(docsChildren).toContain('docs/guide')
 
-    // src group has 2 items (pages, utils) — files excluded
-    const srcItems = getChildren(navStore, 'group:src')
-    expect(srcItems).toHaveLength(2)
-    expect(srcItems).toContain('src/pages')
-    expect(srcItems).toContain('src/utils')
-
-    // docs group has 1 item (guide)
-    const docsItems = getChildren(navStore, 'group:docs')
-    expect(docsItems).toHaveLength(1)
-    expect(docsItems).toContain('docs/guide')
-
-    // item entities have correct data
+    // entity data
     const pagesItem = getEntityData<{ label: string; sourceId: string }>(navStore, 'src/pages')
-    expect(pagesItem).toEqual({ label: 'pages', sourceId: 'src/pages' })
-
-    const guideItem = getEntityData<{ label: string; sourceId: string }>(navStore, 'docs/guide')
-    expect(guideItem).toEqual({ label: 'guide', sourceId: 'docs/guide' })
+    expect(pagesItem?.label).toBe('pages')
+    expect(pagesItem?.sourceId).toBe('src/pages')
   })
 
-  it('하위 디렉토리가 없는 루트 디렉토리도 빈 그룹으로 포함한다', () => {
-    // Build a store where a root dir has only files
+  it('하위 디렉토리가 없는 폴더는 leaf 노드로 포함한다', () => {
     let store = createStore()
     store = {
       entities: {
@@ -109,10 +99,11 @@ describe('buildNavStore', () => {
 
     const navStore = buildNavStore(store)
     const rootChildren = getChildren(navStore, ROOT_ID)
-    expect(rootChildren).toContain('group:assets')
+    expect(rootChildren).toContain('assets')
 
-    const assetsItems = getChildren(navStore, 'group:assets')
-    expect(assetsItems).toHaveLength(0)
+    // leaf — no children in nav store
+    const assetsChildren = getChildren(navStore, 'assets')
+    expect(assetsChildren).toHaveLength(0)
   })
 })
 

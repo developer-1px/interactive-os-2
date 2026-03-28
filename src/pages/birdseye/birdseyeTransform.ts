@@ -15,53 +15,35 @@ type FsEntityData = {
  * 파일은 제외. 하위 디렉토리가 없는 루트 디렉토리는 빈 그룹으로 포함.
  */
 export function buildNavStore(fsStore: NormalizedData): NormalizedData {
-  let store = createStore()
+  const entities: Record<string, { id: string; data?: Record<string, unknown> }> = {}
+  const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
 
-  const rootDirIds = getChildren(fsStore, ROOT_ID).filter((id) => {
+  function addDir(dirId: string, parentId: string) {
+    const data = getEntityData<FsEntityData>(fsStore, dirId)
+    if (!data) return
+
+    entities[dirId] = { id: dirId, data: { label: data.name, name: data.name, sourceId: dirId } }
+    relationships[parentId].push(dirId)
+
+    const childDirs = getChildren(fsStore, dirId).filter((id) => {
+      const d = getEntityData<FsEntityData>(fsStore, id)
+      return d?.type === 'directory'
+    })
+
+    if (childDirs.length > 0) {
+      relationships[dirId] = []
+      for (const childId of childDirs) addDir(childId, dirId)
+    }
+  }
+
+  const rootDirs = getChildren(fsStore, ROOT_ID).filter((id) => {
     const data = getEntityData<FsEntityData>(fsStore, id)
     return data?.type === 'directory' && !data.name.startsWith('.')
   })
 
-  for (const dirId of rootDirIds) {
-    const dirData = getEntityData<FsEntityData>(fsStore, dirId)
-    if (!dirData) continue
+  for (const dirId of rootDirs) addDir(dirId, ROOT_ID)
 
-    const groupId = `group:${dirId}`
-    store = {
-      entities: {
-        ...store.entities,
-        [groupId]: { id: groupId, data: { type: 'group', label: dirData.name } },
-      },
-      relationships: {
-        ...store.relationships,
-        [ROOT_ID]: [...(store.relationships[ROOT_ID] ?? []), groupId],
-        [groupId]: [],
-      },
-    }
-
-    const subDirIds = getChildren(fsStore, dirId).filter((childId) => {
-      const childData = getEntityData<FsEntityData>(fsStore, childId)
-      return childData?.type === 'directory'
-    })
-
-    for (const subDirId of subDirIds) {
-      const subDirData = getEntityData<FsEntityData>(fsStore, subDirId)
-      if (!subDirData) continue
-
-      store = {
-        entities: {
-          ...store.entities,
-          [subDirId]: { id: subDirId, data: { label: subDirData.name, sourceId: subDirId } },
-        },
-        relationships: {
-          ...store.relationships,
-          [groupId]: [...(store.relationships[groupId] ?? []), subDirId],
-        },
-      }
-    }
-  }
-
-  return store
+  return createStore({ entities, relationships })
 }
 
 /**
