@@ -1,6 +1,6 @@
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { dismiss } from '../../axis/dismiss'
+import { dismissHandler } from '../../axis/dismiss'
 
 export const alertdialog = composePattern(
   {
@@ -14,5 +14,7 @@ export const alertdialog = composePattern(
       return attrs
     },
   },
-  dismiss(),
+  {
+    Escape: dismissHandler,
+  },
 )

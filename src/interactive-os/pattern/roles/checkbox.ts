@@ -1,6 +1,6 @@
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { checked } from '../../axis/checked'
+import { toggleCheckHandler } from '../../axis/checked'
 
 // ② 2026-03-28-checked-axis-childrole-prd.md
 // APG Checkbox (Two-State): Space/Enter toggles, Tab navigates (natural tab order)
@@ -9,9 +9,14 @@ export const checkbox = composePattern(
   {
     role: 'group',
     childRole: 'checkbox',
+    checkedTracking: true,
     ariaAttributes: (_node, state: NodeState) => ({
       'aria-checked': String(state.checked ?? false),
     }),
   },
-  checked(),
+  {
+    Enter: toggleCheckHandler,
+    Space: toggleCheckHandler,
+    Click: toggleCheckHandler,
+  },
 )

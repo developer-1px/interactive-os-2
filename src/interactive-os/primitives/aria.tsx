@@ -18,6 +18,7 @@ import { findMatchingKey } from './useKeyboard'
 
 interface AriaProps {
   id?: string
+  as?: React.ElementType
   pattern?: AriaPattern
   data: NormalizedData
   plugins: Plugin[]
@@ -25,6 +26,7 @@ interface AriaProps {
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   'aria-label'?: string
+  'aria-labelledby'?: string
   logger?: import('../engine/dispatchLogger').EngineOptions['logger']
   autoFocus?: boolean
   disabled?: boolean
@@ -47,7 +49,7 @@ const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; 
 /** Sentinel to detect whether <Aria.Panel> is a child of <Aria> */
 const ARIA_PANEL_TYPE = Symbol('AriaPanel')
 
-function AriaRoot({ id, pattern, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, autoFocus, disabled, children }: AriaProps) {
+function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, logger, autoFocus, disabled, children }: AriaProps) {
   const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, logger, autoFocus, disabled })
 
   useEffect(() => {
@@ -64,16 +66,17 @@ function AriaRoot({ id, pattern, data, plugins, keyMap, onChange, onActivate, 'a
   const orientation = pattern?.focusStrategy?.orientation
   return (
     <AriaInternalContext.Provider value={{ ...aria, pattern, hasPanels }}>
-      <div
+      <Component
         role={role}
         aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
         aria-orientation={role && ROLES_WITH_ORIENTATION.has(role) && orientation !== 'both' ? orientation : undefined}
         style={orientation === 'horizontal' ? horizontalStyle : undefined}
         data-aria-container=""
-        {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
+        {...(aria.containerProps as React.HTMLAttributes<HTMLElement>)}
       >
         {children}
-      </div>
+      </Component>
     </AriaInternalContext.Provider>
   )
 }

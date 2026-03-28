@@ -12,7 +12,6 @@ import { dismissHandler } from '../axis/dismiss'
 import { toggleCheckHandler } from '../axis/checked'
 import { openPopup, closePopup, openAndFocusFirst, openAndFocusLast } from '../axis/popup'
 import { focusNextWrap, focusPrevWrap } from '../axis/tab'
-import { navigate } from '../axis/navigate'
 import { composePattern } from '../pattern/composePattern'
 
 function makeCmd(type: string): Command {
@@ -43,6 +42,7 @@ const mockCtx: PatternContext = {
   dispatch: vi.fn(),
   getEntity: () => undefined,
   getChildren: () => [],
+  getParent: () => undefined,
 }
 
 describe('axis handler exports', () => {
@@ -117,6 +117,7 @@ describe('axis handler exports', () => {
         focusPrevCol: () => makeCmd('focusPrevCol'),
         focusFirstCol: () => makeCmd('focusFirstCol'),
         focusLastCol: () => makeCmd('focusLastCol'),
+        focusRow: () => makeCmd('focusRow'),
       },
     }
     expect(focusNextCol(gridCtx)).toMatchObject({ type: 'focusNextCol' })

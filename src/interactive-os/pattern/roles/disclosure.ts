@@ -1,6 +1,6 @@
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { activate } from '../../axis/activate'
+import { activateHandler } from '../../axis/activate'
 
 export const disclosure = composePattern(
   {
@@ -14,5 +14,10 @@ export const disclosure = composePattern(
       return attrs
     },
   },
-  activate({ onClick: true, toggleExpand: true }),
+  { keyMap: {}, config: { activateOnClick: true, expandOnParentClick: true, expandable: true } },
+  {
+    // Activation
+    Enter: activateHandler,
+    Space: activateHandler,
+  },
 )

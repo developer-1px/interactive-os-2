@@ -1,7 +1,7 @@
 import type { Entity } from '../../store/types'
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { value } from '../../axis/value'
+import { incrementHandler, decrementHandler, incrementBig, decrementBig, setToMin, setToMax } from '../../axis/value'
 
 interface SpinbuttonOptions {
   min: number
@@ -16,6 +16,7 @@ export function spinbutton(options: SpinbuttonOptions) {
     {
       role: 'none',
       childRole: 'spinbutton',
+      valueRange: { min, max, step },
       ariaAttributes: (node: Entity, state: NodeState) => ({
         'aria-valuenow': String(state.valueCurrent ?? min),
         'aria-valuemin': String(min),
@@ -25,6 +26,13 @@ export function spinbutton(options: SpinbuttonOptions) {
           : {}),
       }),
     },
-    value({ min, max, step, orientation: 'vertical' }),
+    {
+      ArrowUp: incrementHandler,
+      ArrowDown: decrementHandler,
+      Home: setToMin,
+      End: setToMax,
+      PageUp: incrementBig,
+      PageDown: decrementBig,
+    },
   )
 }

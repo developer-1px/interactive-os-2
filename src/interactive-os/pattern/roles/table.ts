@@ -2,7 +2,7 @@
 import type { Entity } from '../../store/types'
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { expand } from '../../axis/expand'
+import { expandConfig } from '../../axis/expand'
 
 const ROLE_BY_LEVEL: Record<number, string> = {
   1: 'rowgroup',
@@ -12,7 +12,7 @@ const ROLE_BY_LEVEL: Record<number, string> = {
 
 // APG Table: static table with rowgroup > row > cell hierarchy
 // Table is non-interactive (natural-tab-order, no keyboard navigation)
-// Uses expand() axis to enable visibility gating for nested levels
+// Uses expandConfig() for visibility gating for nested levels
 export const table = composePattern(
   {
     role: 'table',
@@ -20,5 +20,5 @@ export const table = composePattern(
       ROLE_BY_LEVEL[state.level ?? 1] ?? 'cell',
     ariaAttributes: () => ({}),
   },
-  expand(),
+  expandConfig(),
 )

@@ -1,18 +1,12 @@
 import type { NodeState, AriaPattern } from '../types'
 import type { Entity } from '../../store/types'
-import type { PatternContext } from '../../axis/types'
 import { composePattern } from '../composePattern'
-import { activate } from '../../axis/activate'
-import { expand } from '../../axis/expand'
+import { activateConfig, activateHandler } from '../../axis/activate'
+import { expandConfig, expandOrFocusChild, collapseOrFocusParent } from '../../axis/expand'
+import { focusFirst, focusLast } from '../../axis/navigate'
 
 // APG Menu Button using aria-activedescendant: container holds focus,
 // aria-activedescendant points to focused menuitem.
-const navVerticalWrap = {
-  ArrowDown: (ctx: PatternContext) => ctx.focusNext({ wrap: true }),
-  ArrowUp: (ctx: PatternContext) => ctx.focusPrev({ wrap: true }),
-  Home: (ctx: PatternContext) => ctx.focusFirst(),
-  End: (ctx: PatternContext) => ctx.focusLast(),
-}
 
 export const menuActivedescendant: AriaPattern = composePattern(
   {
@@ -27,7 +21,21 @@ export const menuActivedescendant: AriaPattern = composePattern(
       return attrs
     },
   },
-  activate({ onClick: true }),
-  expand({ mode: 'arrow' }),
-  navVerticalWrap,
+  activateConfig(),
+  expandConfig(),
+  {
+    // Navigation — vertical wrap
+    ArrowDown: (ctx) => ctx.focusNext({ wrap: true }),
+    ArrowUp: (ctx) => ctx.focusPrev({ wrap: true }),
+    Home: focusFirst,
+    End: focusLast,
+
+    // Expand — arrow mode
+    ArrowRight: expandOrFocusChild,
+    ArrowLeft: collapseOrFocusParent,
+
+    // Activation
+    Enter: activateHandler,
+    Space: activateHandler,
+  },
 )

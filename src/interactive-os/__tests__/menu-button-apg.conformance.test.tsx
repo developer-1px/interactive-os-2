@@ -6,7 +6,6 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import React from 'react'
 import { menuButton } from '../pattern/roles/menuButton'
 import { useAria } from '../primitives/useAria'
 import { createStore } from '../store/createStore'
