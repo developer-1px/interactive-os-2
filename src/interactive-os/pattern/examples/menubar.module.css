@@ -1,4 +1,29 @@
-/* ── base ── */
+/* ── demo wrapper ── */
+
+.demo {
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-sm-radius);
+}
+
+.header {
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--tone-primary-dim);
+  text-align: center;
+}
+
+.title {
+  font-size: var(--type-heading-size);
+  font-weight: var(--type-heading-weight);
+  color: var(--text-bright);
+}
+
+.tagline {
+  font-size: var(--type-body-size);
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* ── menubar container ── */
 
 .wrapper [role='menubar'] {
   display: flex;
@@ -8,8 +33,15 @@
   padding: 0;
   margin: 0;
   background: var(--surface-raised);
-  border-radius: var(--shape-sm-radius);
+  border-bottom: var(--border-width) solid var(--border-default);
 }
+
+.wrapper [role='menubar']:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+/* ── menubar item ── */
 
 .item {
   position: relative;
@@ -28,7 +60,10 @@
   cursor: default;
   white-space: nowrap;
   outline: 1px solid transparent;
+  border: 2px solid transparent;
 }
+
+/* ── submenu panel ── */
 
 .submenu {
   position: absolute;
@@ -38,34 +73,28 @@
   min-width: 180px;
   background: var(--surface-overlay);
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-sm-radius);
+  border-radius: var(--shape-xs-radius);
   box-shadow: var(--shadow-md);
   z-index: 1;
 }
 
-/* top-level submenu drops below bar */
 .submenuRoot {
   composes: submenu;
   top: 100%;
   left: 0;
 }
 
-/* nested submenu opens to the right */
 .submenuNested {
   composes: submenu;
   top: calc(var(--space-xs) * -1);
   left: 100%;
 }
 
-.indicator {
-  font-size: 10px;
-  color: var(--text-muted);
-}
-
 /* ── variant: state ── */
 
 .link:is([data-focused='true']) {
   background: var(--bg-hover);
+  border-color: var(--focus);
 }
 
 .link:is([aria-expanded='true']) {
