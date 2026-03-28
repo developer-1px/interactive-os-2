@@ -16,6 +16,7 @@ import { dnd } from '../plugins/dnd'
 import { focusRecovery } from '../plugins/focusRecovery'
 import { cellEdit } from '../plugins/cellEdit'
 import { edit } from '../plugins/edit'
+import type { CommandHandler } from '../engine/types'
 import { Aria } from '../primitives/aria'
 import { grid as gridBehavior } from '../pattern/roles/grid'
 
@@ -32,10 +33,19 @@ function fixtureStore() {
 function createEngine(store = fixtureStore()) {
   const clipboardPlugin = clipboard()
   const historyPlugin = history()
-  const middlewares = [clipboardPlugin, historyPlugin]
+  const plugins = [clipboardPlugin, historyPlugin]
+  const middlewares = plugins
     .map((p) => p.middleware)
     .filter((m): m is NonNullable<typeof m> => m != null)
-  return createCommandEngine(store, middlewares, vi.fn(), { logger: false })
+  const registry = new Map<string, CommandHandler>()
+  for (const plugin of plugins) {
+    for (const creator of Object.values(plugin.commands ?? {})) {
+      if ('type' in creator && 'handler' in creator) {
+        registry.set(creator.type as string, creator.handler as CommandHandler)
+      }
+    }
+  }
+  return createCommandEngine(store, middlewares, registry, vi.fn(), { logger: false })
 }
 
 describe('clearCellValue', () => {

@@ -142,21 +142,20 @@ export function Combobox({
   const effectiveCreateFocused = showCreateOption && createOptionFocused
 
   const handleCreate = (label: string) => {
-    const createCmd = comboboxCommands.create(label)
-    // Execute create command to get the new ID deterministically
-    const newStore = createCmd.execute(store)
+    // Reduce locally to discover the new ID deterministically
+    const newStore = comboboxCommands.create.reduce(store, label)
     const newChildren = getChildren(newStore, ROOT_ID)
     const newId = newChildren[newChildren.length - 1]!
 
     if (mode === 'multiple') {
       aria.dispatch(createBatchCommand([
-        createCmd,
+        comboboxCommands.create(label),
         selectionCommands.toggleSelect(newId),
         comboboxCommands.setFilter(''),
       ]))
     } else {
       aria.dispatch(createBatchCommand([
-        createCmd,
+        comboboxCommands.create(label),
         selectionCommands.select(newId),
         comboboxCommands.close(),
         comboboxCommands.setFilter(''),

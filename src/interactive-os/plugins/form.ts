@@ -2,6 +2,7 @@ import type { Command } from '../engine/types'
 import { getEntity } from '../store/createStore'
 import type { NormalizedData } from '../store/types'
 import { definePlugin } from './definePlugin'
+import { defineCommands } from '../engine/defineCommand'
 import type { ZodSchema } from './zodSchema'
 
 export const ERRORS_ID = '__errors__'
@@ -91,119 +92,74 @@ export function hasFormErrors(store: NormalizedData): boolean {
   return Object.keys(errors).length > 0
 }
 
-export const formCommands = {
+export const formCommands = defineCommands({
   /** Mark a node (or specific field) as touched */
-  touch(nodeId: string, field?: string): Command {
-    return {
-      type: 'form:touch',
-      payload: { nodeId, field },
-      execute(store) {
-        const existing = store.entities[TOUCHED_ID]
-        const touched = {
-          ...((existing?.touched as Record<string, string[]>) ?? {}),
-        }
-        if (field) {
-          const fields = touched[nodeId] ? [...touched[nodeId]] : []
-          if (!fields.includes(field)) fields.push(field)
-          touched[nodeId] = fields
-        } else {
-          touched[nodeId] = ['__all__']
-        }
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [TOUCHED_ID]: { id: TOUCHED_ID, touched },
-          },
-        }
-      },
-    }
+  touch: {
+    type: 'form:touch' as const,
+    create: (nodeId: string, field?: string) => ({ nodeId, field }),
+    handler: (store, { nodeId, field }: { nodeId: string; field?: string }) => {
+      const existing = store.entities[TOUCHED_ID]
+      const touched = {
+        ...((existing?.touched as Record<string, string[]>) ?? {}),
+      }
+      if (field) {
+        const fields = touched[nodeId] ? [...touched[nodeId]] : []
+        if (!fields.includes(field)) fields.push(field)
+        touched[nodeId] = fields
+      } else {
+        touched[nodeId] = ['__all__']
+      }
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [TOUCHED_ID]: { id: TOUCHED_ID, touched },
+        },
+      }
+    },
   },
 
   /** Submit: validate all, mark all as touched, return errors or clean store */
-  submit(entityRules: Record<string, ZodSchema>): Command {
-    return {
-      type: 'form:submit',
-      execute(store) {
-        // Validate all entities
-        const allErrors = validateAllEntities(store, entityRules)
+  submit: {
+    type: 'form:submit' as const,
+    create: (entityRules: Record<string, ZodSchema>) => ({ entityRules }),
+    handler: (store, { entityRules }: { entityRules: Record<string, ZodSchema> }) => {
+      const allErrors = validateAllEntities(store, entityRules)
 
-        // Mark all validated entities as touched
-        const touched: Record<string, string[]> = {}
-        for (const id of Object.keys(store.entities)) {
-          if (id.startsWith('__')) continue
-          touched[id] = ['__all__']
-        }
+      const touched: Record<string, string[]> = {}
+      for (const id of Object.keys(store.entities)) {
+        if (id.startsWith('__')) continue
+        touched[id] = ['__all__']
+      }
 
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [ERRORS_ID]: { id: ERRORS_ID, errors: allErrors },
-            [TOUCHED_ID]: { id: TOUCHED_ID, touched },
-          },
-        }
-      },
-    }
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [ERRORS_ID]: { id: ERRORS_ID, errors: allErrors },
+          [TOUCHED_ID]: { id: TOUCHED_ID, touched },
+        },
+      }
+    },
   },
 
   /** Clear all form state (errors + touched) */
-  reset(): Command {
-    return {
-      type: 'form:reset',
-      execute(store) {
-        const { [ERRORS_ID]: _e, [TOUCHED_ID]: _t, ...rest } = store.entities
-        return { ...store, entities: rest }
-      },
-    }
+  reset: {
+    type: 'form:reset' as const,
+    create: () => ({}),
+    handler: (store) => {
+      const { [ERRORS_ID]: _e, [TOUCHED_ID]: _t, ...rest } = store.entities
+      return { ...store, entities: rest }
+    },
   },
-}
-
-export function form(options: FormOptions) {
-  const { entityRules } = options
-
-  return definePlugin({
-    name: 'form',
-    commands: {
-      touch: formCommands.touch,
-      submit: () => formCommands.submit(entityRules),
-      reset: formCommands.reset,
-    },
-    middleware: (next: (command: Command) => void) => (command: Command) => {
-      // Skip re-entry from our own validation commands
-      if (command.type === 'form:validate') {
-        next(command)
-        return
-      }
-
-      // Execute the command first
-      next(command)
-
-      // After any rename:confirm or data update, re-validate the affected entity
-      if (
-        command.type === 'rename:confirm' ||
-        command.type === 'updateEntityData'
-      ) {
-        const payload = command.payload as { nodeId?: string } | undefined
-        const nodeId = payload?.nodeId
-        if (nodeId) {
-          // Dispatch a validation-only command
-          next(createValidateCommand(nodeId, entityRules))
-        }
-      }
-    },
-  })
-}
+})
 
 /** Internal command: validate a single entity and update __errors__ */
-function createValidateCommand(
-  nodeId: string,
-  entityRules: Record<string, ZodSchema>,
-): Command {
-  return {
-    type: 'form:validate',
-    payload: { nodeId },
-    execute(store) {
+const _formInternal = defineCommands({
+  validate: {
+    type: 'form:validate' as const,
+    create: (nodeId: string, entityRules: Record<string, ZodSchema>) => ({ nodeId, entityRules }),
+    handler: (store, { nodeId, entityRules }: { nodeId: string; entityRules: Record<string, ZodSchema> }) => {
       const entity = getEntity(store, nodeId)
       const entityData = entity?.data as Record<string, unknown> | undefined
       const errors = validateEntity(entityData, entityRules)
@@ -225,5 +181,41 @@ function createValidateCommand(
         },
       }
     },
-  }
+  },
+})
+
+export function form(options: FormOptions) {
+  const { entityRules } = options
+
+  return definePlugin({
+    name: 'form',
+    commands: {
+      touch: formCommands.touch,
+      submit: () => formCommands.submit(entityRules),
+      reset: formCommands.reset,
+    },
+    middleware: (next: (command: Command) => void, _getStore) => (command: Command) => {
+      // Skip re-entry from our own validation commands
+      if (command.type === 'form:validate') {
+        next(command)
+        return
+      }
+
+      // Execute the command first
+      next(command)
+
+      // After any rename:confirm or data update, re-validate the affected entity
+      if (
+        command.type === 'rename:confirm' ||
+        command.type === 'updateEntityData'
+      ) {
+        const payload = command.payload as { nodeId?: string } | undefined
+        const nodeId = payload?.nodeId
+        if (nodeId) {
+          // Dispatch a validation-only command
+          next(_formInternal.validate(nodeId, entityRules))
+        }
+      }
+    },
+  })
 }

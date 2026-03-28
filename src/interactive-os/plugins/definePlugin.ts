@@ -1,4 +1,5 @@
 import type { Command, Middleware, VisibilityFilter, Plugin } from './types'
+import type { NormalizedData } from '../store/types'
 
 export interface PluginConfig {
   name: string
@@ -23,8 +24,8 @@ export interface PluginConfig {
 
 function composeMiddlewares(middlewares: Middleware[]): Middleware {
   if (middlewares.length === 1) return middlewares[0]!
-  return (next: (command: Command) => void) => middlewares.reduceRight(
-    (acc, mw) => mw(acc),
+  return (next: (command: Command) => void, getStore: () => NormalizedData) => middlewares.reduceRight(
+    (acc, mw) => mw(acc, getStore),
     next,
   )
 }

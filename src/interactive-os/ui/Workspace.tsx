@@ -35,7 +35,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
     const childIds = getChildren(data, nodeId)
 
     const handleResize = (sizes: PaneSize[]) => {
-      onChange(workspaceCommands.resize(nodeId, sizes).execute(data))
+      onChange(workspaceCommands.resize.reduce(data, nodeId, sizes))
     }
 
     return (
@@ -83,7 +83,7 @@ export function Workspace({
     const activeId = tgData?.activeTabId ?? ''
     const idx = tabIds.indexOf(activeId)
     const nextIdx = (idx + offset + tabIds.length) % tabIds.length
-    if (tabIds[nextIdx]) onChange(workspaceCommands.setActiveTab(tgId, tabIds[nextIdx]).execute(data))
+    if (tabIds[nextIdx]) onChange(workspaceCommands.setActiveTab.reduce(data, tgId, tabIds[nextIdx]))
   }, [data, onChange])
 
   const layoutHandlers = useMemo(() => ({
@@ -92,7 +92,7 @@ export function Workspace({
       if (!tgId) return
       const tgData = getEntityData<TabGroupData>(data, tgId)
       const activeId = tgData?.activeTabId
-      if (activeId) onChange(workspaceCommands.removeTab(activeId).execute(data))
+      if (activeId) onChange(workspaceCommands.removeTab.reduce(data, activeId))
     },
     prevTab: () => switchTab(-1),
     nextTab: () => switchTab(1),

@@ -262,7 +262,7 @@ export default function PageAgentViewer() {
           sessionId={session.id}
           sessionLabel={session.label}
           isLive={session.active}
-          onClose={() => setWsBase(prev => workspaceCommands.removeTab(tab.id).execute(prev))}
+          onClose={() => setWsBase(prev => workspaceCommands.removeTab.reduce(prev, tab.id))}
           onFileClick={handleFileClick}
         />
       )

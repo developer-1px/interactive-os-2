@@ -8,6 +8,7 @@ import { crudCommands } from '../plugins/crud'
 import { history, historyCommands } from '../plugins/history'
 import { zodSchema } from '../plugins/zodSchema'
 import { childRules, nodeSchemas, cmsCanDelete } from '../../pages/cms/cms-schema'
+import type { CommandHandler } from '../engine/types'
 
 /**
  * CMS-like fixture:
@@ -55,12 +56,28 @@ function createEngine() {
   const clipboardPlugin = clipboard()
   const zodSchemaPlugin = zodSchema({ childRules, rootTypes: [nodeSchemas.section, nodeSchemas['tab-group']] })
   // zodSchema intercepts first → history wraps the replaced command for undo
-  const middlewares = [zodSchemaPlugin, historyPlugin, clipboardPlugin]
+  const plugins = [zodSchemaPlugin, historyPlugin, clipboardPlugin]
+  const middlewares = plugins
     .map((p) => p.middleware)
     .filter((m): m is NonNullable<typeof m> => m != null)
+  const registry = new Map<string, CommandHandler>()
+  for (const plugin of plugins) {
+    for (const creator of Object.values(plugin.commands ?? {})) {
+      if ('type' in creator && 'handler' in creator) {
+        registry.set(creator.type as string, creator.handler as CommandHandler)
+      }
+    }
+  }
+  // Register axis commands used directly in tests
+  for (const creator of Object.values(crudCommands)) {
+    if (creator != null && 'type' in creator && 'handler' in creator) {
+      registry.set(creator.type as string, creator.handler as CommandHandler)
+    }
+  }
   return createCommandEngine(
     fixtureStore(),
     middlewares,
+    registry,
     vi.fn(),
     { logger: false },
   )
@@ -140,9 +157,16 @@ describe('clipboard paste overwrite', () => {
   it('supports boolean canAccept for backward compatibility', () => {
     resetClipboard()
     clipboard({ canAccept: () => true })
+    const booleanRegistry = new Map<string, CommandHandler>()
+    for (const creator of Object.values(clipboardCommands)) {
+      if (creator != null && 'type' in creator && 'handler' in creator) {
+        booleanRegistry.set(creator.type as string, creator.handler as CommandHandler)
+      }
+    }
     const booleanEngine = createCommandEngine(
       fixtureStore(),
       [history().middleware!],
+      booleanRegistry,
       vi.fn(),
       { logger: false },
     )

@@ -1,11 +1,11 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 import type { NormalizedData } from '../store/types'
 
+// ② 2026-03-29-engine-handler-registry-prd.md
 export interface Command {
   type: string
   payload?: unknown
   meta?: boolean
-  execute(store: NormalizedData): NormalizedData
 }
 
 export interface BatchCommand extends Command {
@@ -17,13 +17,15 @@ export function createBatchCommand(cmds: Command[]): BatchCommand {
   return {
     type: 'batch',
     commands: cmds,
-    execute: (store: NormalizedData): NormalizedData =>
-      cmds.reduce((s, c) => c.execute(s), store),
   }
 }
 
+/** Handler function type for command registry */
+export type CommandHandler = (store: NormalizedData, payload?: unknown) => NormalizedData
+
 export type Middleware = (
-  next: (command: Command) => void
+  next: (command: Command) => void,
+  getStore: () => NormalizedData
 ) => (command: Command) => void
 
 /** Visibility filter — axis/plugin이 선언, getVisibleNodes가 소비 */

@@ -48,8 +48,7 @@ function fixtureData(): NormalizedData {
 describe('Form Plugin — Validation', () => {
   it('submit command populates __errors__ for invalid entities', () => {
     const store = fixtureData()
-    const cmd = formCommands.submit(entityRules)
-    const result = cmd.execute(store)
+    const result = formCommands.submit.reduce(store, entityRules)
 
     const errors = getFormErrors(result)
     // name: empty value → Required
@@ -64,8 +63,7 @@ describe('Form Plugin — Validation', () => {
 
   it('submit command marks all entities as touched', () => {
     const store = fixtureData()
-    const cmd = formCommands.submit(entityRules)
-    const result = cmd.execute(store)
+    const result = formCommands.submit.reduce(store, entityRules)
 
     const touchedEntity = result.entities[TOUCHED_ID]
     expect(touchedEntity).toBeDefined()
@@ -77,8 +75,7 @@ describe('Form Plugin — Validation', () => {
 
   it('hasFormErrors returns true when errors exist', () => {
     const store = fixtureData()
-    const cmd = formCommands.submit(entityRules)
-    const result = cmd.execute(store)
+    const result = formCommands.submit.reduce(store, entityRules)
     expect(hasFormErrors(result)).toBe(true)
   })
 
@@ -89,23 +86,21 @@ describe('Form Plugin — Validation', () => {
       },
       relationships: { [ROOT_ID]: ['bio'] },
     })
-    const cmd = formCommands.submit(entityRules)
-    const result = cmd.execute(store)
+    const result = formCommands.submit.reduce(store, entityRules)
     expect(hasFormErrors(result)).toBe(false)
   })
 
   it('getFieldErrors returns undefined for valid entity', () => {
     const store = fixtureData()
-    const cmd = formCommands.submit(entityRules)
-    const result = cmd.execute(store)
+    const result = formCommands.submit.reduce(store, entityRules)
     expect(getFieldErrors(result, 'bio')).toBeUndefined()
   })
 
   it('reset command clears errors and touched', () => {
     const store = fixtureData()
-    let result = formCommands.submit(entityRules).execute(store)
+    let result = formCommands.submit.reduce(store, entityRules)
     expect(hasFormErrors(result)).toBe(true)
-    result = formCommands.reset().execute(result)
+    result = formCommands.reset.reduce(result)
     expect(result.entities[ERRORS_ID]).toBeUndefined()
     expect(result.entities[TOUCHED_ID]).toBeUndefined()
   })
@@ -118,14 +113,14 @@ describe('Form Plugin — Validation', () => {
 describe('Form Plugin — Touch', () => {
   it('touch marks a specific field', () => {
     const store = fixtureData()
-    const result = formCommands.touch('name', 'value').execute(store)
+    const result = formCommands.touch.reduce(store, 'name', 'value')
     const touched = result.entities[TOUCHED_ID]!.touched as Record<string, string[]>
     expect(touched.name).toContain('value')
   })
 
   it('touch without field marks entire node', () => {
     const store = fixtureData()
-    const result = formCommands.touch('name').execute(store)
+    const result = formCommands.touch.reduce(store, 'name')
     const touched = result.entities[TOUCHED_ID]!.touched as Record<string, string[]>
     expect(touched.name).toContain('__all__')
   })
@@ -144,8 +139,7 @@ describe('Form Plugin — Middleware auto-validation', () => {
       relationships: { [ROOT_ID]: ['name'] },
     })
 
-    const cmd = formCommands.submit(entityRules)
-    const result = cmd.execute(store)
+    const result = formCommands.submit.reduce(store, entityRules)
     expect(hasFormErrors(result)).toBe(false)
   })
 })

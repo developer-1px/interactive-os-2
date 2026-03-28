@@ -96,7 +96,7 @@ export const selectionCommands = {
  * Batch commands (used by extendSelection) are exempt — the anchor persists within a batch.
  */
 function anchorResetMiddleware(): Middleware {
-  return (next) => (command) => {
+  return (next, _getStore) => (command) => {
     next(command)
     if (command.type === 'core:focus') {
       next(selectionCommands.clearAnchor())
@@ -110,7 +110,7 @@ function anchorResetMiddleware(): Middleware {
  * APG "selection follows focus": RadioGroup, Tabs automatic.
  */
 export function selectionFollowsFocusMiddleware(): Middleware {
-  return (next) => (command) => {
+  return (next, _getStore) => (command) => {
     next(command)
     if (command.type === 'core:focus') {
       const nodeId = (command.payload as { nodeId: string }).nodeId
@@ -136,7 +136,7 @@ export function selectConfig(options?: SelectOptions): { keyMap: KeyMap; config:
   }
   const middleware: Middleware = middlewares.length === 1
     ? middlewares[0]!
-    : (next) => middlewares.reduceRight<(command: Command) => void>((acc, mw) => mw(acc), next)
+    : (next, getStore) => middlewares.reduceRight<(command: Command) => void>((acc, mw) => mw(acc, getStore), next)
 
   return {
     keyMap: {},
@@ -176,9 +176,9 @@ export function select(options?: SelectOptions): { keyMap: KeyMap; config: Parti
 
   const middleware: Middleware = middlewares.length === 1
     ? middlewares[0]!
-    : (next) => {
+    : (next, getStore) => {
         const chain = middlewares.reduceRight<(command: Command) => void>(
-          (acc, mw) => mw(acc),
+          (acc, mw) => mw(acc, getStore),
           next,
         )
         return chain

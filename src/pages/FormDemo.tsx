@@ -47,7 +47,7 @@ export default function FormDemo() {
   const handleChange = (nodeId: string, value: string) => {
     let next = updateEntityData(store, nodeId, { value })
     // Touch the field on change
-    next = formCommands.touch(nodeId, 'value').execute(next)
+    next = formCommands.touch.reduce(next, nodeId, 'value')
     // Validate this field (simulate middleware: run validate after data change)
     const entity = next.entities[nodeId]
     const entityData = entity?.data as Record<string, unknown> | undefined
@@ -79,7 +79,7 @@ export default function FormDemo() {
   }
 
   const handleSubmit = () => {
-    const next = formCommands.submit(entityRules).execute(store)
+    const next = formCommands.submit.reduce(store, entityRules)
     setStore(next)
     if (!hasFormErrors(next)) {
       setSubmitted(true)

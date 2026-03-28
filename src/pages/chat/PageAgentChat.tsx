@@ -88,7 +88,7 @@ export default function PageAgentChat() {
         if (d?.type === 'tabgroup') {
           const children = getChildren(prev, id)
           if (children.includes(tabId)) {
-            return workspaceCommands.setActiveTab(id, tabId).execute(prev)
+            return workspaceCommands.setActiveTab.reduce(prev, id, tabId)
           }
         }
       }

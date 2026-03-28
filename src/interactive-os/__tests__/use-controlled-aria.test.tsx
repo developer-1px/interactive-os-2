@@ -18,7 +18,7 @@ function fixtureStore(): NormalizedData {
     relationships: { [ROOT_ID]: ['a', 'b'] },
   })
   // Pre-set focus on first item
-  return focusCommands.setFocus('a').execute(store)
+  return focusCommands.setFocus.reduce(store, 'a')
 }
 
 function TestComponent({ store, onDispatch }: { store: NormalizedData; onDispatch: (cmd: Command) => void }) {
@@ -61,7 +61,7 @@ describe('useControlledAria', () => {
     expect(container.querySelector('[data-testid="a"]')?.getAttribute('data-focused')).toBe('true')
 
     // Re-render with focus moved to 'b'
-    const newStore = focusCommands.setFocus('b').execute(fixtureStore())
+    const newStore = focusCommands.setFocus.reduce(fixtureStore(), 'b')
     rerender(<TestComponent store={newStore} onDispatch={onDispatch} />)
 
     expect(container.querySelector('[data-testid="b"]')?.getAttribute('data-focused')).toBe('true')

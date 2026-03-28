@@ -99,18 +99,21 @@ export default function PageViewer() {
         return (getEntityData<TabData>(prev, id))?.contentRef === filePath
       })
       if (permanent) {
-        return workspaceCommands.setActiveTab(tgId, permanent).execute(prev)
+        return workspaceCommands.setActiveTab.reduce(prev, tgId, permanent)
       }
 
       // preview 탭이 이미 있으면 내용 교체, 없으면 생성
       if (tabIds.includes(PREVIEW_TAB_ID)) {
         const store = updateEntityData(prev, PREVIEW_TAB_ID, { label: filename, contentRef: filePath })
-        return workspaceCommands.setActiveTab(tgId, PREVIEW_TAB_ID).execute(store)
+        return workspaceCommands.setActiveTab.reduce(store, tgId, PREVIEW_TAB_ID)
       }
-      return workspaceCommands.addTab(tgId, {
+      const tab = {
         id: PREVIEW_TAB_ID,
         data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath, preview: true },
-      }).execute(prev)
+      }
+      let store2 = workspaceCommands.createTab.reduce(prev, tgId, tab)
+      store2 = workspaceCommands.setActiveTab.reduce(store2, tgId, tab.id)
+      return store2
     })
     navigate(filePathToUrlPath(filePath, 'viewer', DEFAULT_ROOT), { replace: true })
   }, [navigate])
@@ -198,17 +201,20 @@ export default function PageViewer() {
         const newSizes = newChildren.map(() => equalSize)
         store = updateEntityData(store, existingSplitId, { sizes: newSizes })
 
-        return workspaceCommands.addTab(newTgId, {
+        const tab = {
           id: tabId,
           data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
-        }).execute(store)
+        }
+        let s = workspaceCommands.createTab.reduce(store, newTgId, tab)
+        s = workspaceCommands.setActiveTab.reduce(s, newTgId, tab.id)
+        return s
       }
 
       // split 없으면 첫 tabgroup을 split
       const tgId = findTabgroup(prev)
       if (!tgId) return prev
 
-      const store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
+      const store = workspaceCommands.splitPane.reduce(prev, tgId, 'horizontal')
 
       const newSplitId = getChildren(store, ROOT_ID).find(id =>
         (getEntityData<{ type: string }>(store, id))?.type === 'split'
@@ -219,10 +225,13 @@ export default function PageViewer() {
       const lastTg = splitChildren[splitChildren.length - 1]
       if (!lastTg) return store
 
-      return workspaceCommands.addTab(lastTg, {
+      const tab2 = {
         id: tabId,
         data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
-      }).execute(store)
+      }
+      let s2 = workspaceCommands.createTab.reduce(store, lastTg, tab2)
+      s2 = workspaceCommands.setActiveTab.reduce(s2, lastTg, tab2.id)
+      return s2
     })
     navigate(filePathToUrlPath(filePath, 'viewer', DEFAULT_ROOT), { replace: true })
   }, [navigate])
@@ -275,14 +284,17 @@ export default function PageViewer() {
         const equalSize = 1 / newChildren.length
         store = updateEntityData(store, existingSplitId, { sizes: newChildren.map(() => equalSize) })
 
-        return workspaceCommands.addTab(newTgId, {
+        const tab = {
           id: newTabId,
           data: { type: 'tab', label: filename, contentType: tabData.contentType, contentRef: tabData.contentRef },
-        }).execute(store)
+        }
+        let s = workspaceCommands.createTab.reduce(store, newTgId, tab)
+        s = workspaceCommands.setActiveTab.reduce(s, newTgId, tab.id)
+        return s
       }
 
       // split 없으면 새로 만들기
-      const store = workspaceCommands.splitPane(tgId, 'horizontal').execute(prev)
+      const store = workspaceCommands.splitPane.reduce(prev, tgId, 'horizontal')
       const newSplitId = getChildren(store, ROOT_ID).find(id =>
         (getEntityData<{ type: string }>(store, id))?.type === 'split'
       )
@@ -292,10 +304,13 @@ export default function PageViewer() {
       const lastTg = splitChildren[splitChildren.length - 1]
       if (!lastTg) return store
 
-      return workspaceCommands.addTab(lastTg, {
+      const tab2 = {
         id: newTabId,
         data: { type: 'tab', label: filename, contentType: tabData.contentType, contentRef: tabData.contentRef },
-      }).execute(store)
+      }
+      let s2 = workspaceCommands.createTab.reduce(store, lastTg, tab2)
+      s2 = workspaceCommands.setActiveTab.reduce(s2, lastTg, tab2.id)
+      return s2
     })
   }, [])
 

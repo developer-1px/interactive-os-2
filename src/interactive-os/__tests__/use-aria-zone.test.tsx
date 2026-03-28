@@ -6,7 +6,7 @@ import { useAriaZone } from '../primitives/useAriaZone'
 import { listbox } from '../pattern/roles/listbox'
 import { history } from '../plugins/history'
 import { focusCommands } from '../axis/navigate'
-import { crudCommands } from '../plugins/crud'
+import { crudCommands, crud } from '../plugins/crud'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -118,7 +118,7 @@ describe('useAriaZone', () => {
   it('two zones share engine — data command visible in both', () => {
     const holder = { dispatchA: null as null | ((cmd: Command) => void) }
     function App() {
-      const { engine, store } = useEngine({ data: testStore, plugins })
+      const { engine, store } = useEngine({ data: testStore, plugins: [history(), crud()] })
       const zoneA = useAriaZone({ engine, store, pattern: listbox(), scope: 'za' })
       useAriaZone({ engine, store, pattern: listbox(), scope: 'zb' })
       // eslint-disable-next-line react-hooks/immutability

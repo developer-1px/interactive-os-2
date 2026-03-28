@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import type { EngineOptions } from '../engine/dispatchLogger'
-import type { Command } from '../engine/types'
+import type { Command, CommandHandler } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
@@ -9,12 +9,12 @@ import type { AriaPattern, NodeState } from '../pattern/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren } from '../store/createStore'
-import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
+import { focusCommands, gridColCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
 import { selectionCommands, SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
 import { expandCommands, EXPANDED_ID } from '../axis/expand'
-import { CHECKED_ID } from '../axis/checked'
-import { POPUP_ID } from '../axis/popup'
-import { VALUE_ID } from '../axis/value'
+import { checkedCommands, CHECKED_ID } from '../axis/checked'
+import { popupCommands, POPUP_ID } from '../axis/popup'
+import { valueCommands, VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
 import { ERRORS_ID, TOUCHED_ID } from '../plugins/form'
 import { createPatternContext } from '../pattern/createPatternContext'
@@ -78,8 +78,27 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       ...plugins.map((p) => p.middleware),
     ].filter((m): m is NonNullable<typeof m> => m != null)
 
+    // Build handler registry from core axes + pattern + plugins
+    const registry = new Map<string, CommandHandler>()
+    // Register core axis commands
+    const axisCommandSets = [focusCommands, gridColCommands, selectionCommands, expandCommands, checkedCommands, popupCommands, valueCommands]
+    for (const cmdSet of axisCommandSets) {
+      for (const creator of Object.values(cmdSet)) {
+        if (creator != null && 'type' in creator && 'handler' in creator) {
+          registry.set(creator.type as string, creator.handler as CommandHandler)
+        }
+      }
+    }
+    for (const plugin of plugins) {
+      for (const creator of Object.values(plugin.commands ?? {})) {
+        if ('type' in creator && 'handler' in creator) {
+          registry.set(creator.type as string, creator.handler as CommandHandler)
+        }
+      }
+    }
+
     let initializing = true
-    const created = createCommandEngine(data, middlewares, (newStore) => {
+    const created = createCommandEngine(data, middlewares, registry, (newStore) => {
       if (initializing) return
       const cb = engineCallbacksMap.get(created)!
       const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''

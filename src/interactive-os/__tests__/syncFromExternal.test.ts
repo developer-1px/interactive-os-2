@@ -57,14 +57,16 @@ describe('syncFromExternal', () => {
     let ws = createWorkspace()
     const tgId = findTabgroup(ws)!
 
-    ws = workspaceCommands.addTab(tgId, {
+    ws = workspaceCommands.createTab.reduce(ws, tgId, {
       id: 'tab-s1',
       data: { type: 'tab', label: 'S1', contentType: 'test', contentRef: 'session-1' },
-    }).execute(ws)
-    ws = workspaceCommands.addTab(tgId, {
+    })
+    ws = workspaceCommands.setActiveTab.reduce(ws, tgId, 'tab-s1')
+    ws = workspaceCommands.createTab.reduce(ws, tgId, {
       id: 'tab-s2',
       data: { type: 'tab', label: 'S2', contentType: 'test', contentRef: 'session-2' },
-    }).execute(ws)
+    })
+    ws = workspaceCommands.setActiveTab.reduce(ws, tgId, 'tab-s2')
 
     // Remove session-1 from external
     const result = syncFromExternal(ws, [{ id: 'session-2' }], toTab)
@@ -101,11 +103,12 @@ describe('syncFromExternal', () => {
     const tgId = findTabgroup(ws)!
 
     // Add a tab, then split
-    ws = workspaceCommands.addTab(tgId, {
+    ws = workspaceCommands.createTab.reduce(ws, tgId, {
       id: 'tab-a',
       data: { type: 'tab', label: 'A', contentType: 'test', contentRef: 'a' },
-    }).execute(ws)
-    ws = workspaceCommands.splitPane(tgId, 'horizontal').execute(ws)
+    })
+    ws = workspaceCommands.setActiveTab.reduce(ws, tgId, 'tab-a')
+    ws = workspaceCommands.splitPane.reduce(ws, tgId, 'horizontal')
 
     // Find the new tabgroup and add a tab
     const rootChildren = getChildren(ws, ROOT_ID)
@@ -115,10 +118,11 @@ describe('syncFromExternal', () => {
     const splitChildren = getChildren(ws, splitId)
     const newTgId = splitChildren[splitChildren.length - 1]!
 
-    ws = workspaceCommands.addTab(newTgId, {
+    ws = workspaceCommands.createTab.reduce(ws, newTgId, {
       id: 'tab-b',
       data: { type: 'tab', label: 'B', contentType: 'test', contentRef: 'b' },
-    }).execute(ws)
+    })
+    ws = workspaceCommands.setActiveTab.reduce(ws, newTgId, 'tab-b')
 
     // Remove item 'b' → should collapse split
     const result = syncFromExternal(ws, [{ id: 'a' }], toTab)
@@ -145,10 +149,11 @@ describe('syncFromExternal', () => {
   it('V6: no-change sync returns same reference', () => {
     let ws = createWorkspace()
     const tgId = findTabgroup(ws)!
-    ws = workspaceCommands.addTab(tgId, {
+    ws = workspaceCommands.createTab.reduce(ws, tgId, {
       id: 'tab-x',
       data: { type: 'tab', label: 'X', contentType: 'test', contentRef: 'x' },
-    }).execute(ws)
+    })
+    ws = workspaceCommands.setActiveTab.reduce(ws, tgId, 'tab-x')
 
     const result = syncFromExternal(ws, [{ id: 'x' }], toTab)
     expect(result).toBe(ws)

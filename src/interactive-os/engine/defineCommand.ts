@@ -1,4 +1,4 @@
-// ② 2026-03-29-define-command-prd.md
+// ② 2026-03-29-engine-handler-registry-prd.md
 import type { NormalizedData } from '../store/types'
 import type { Command } from './types'
 
@@ -12,7 +12,11 @@ export function defineCommand<T extends string, A extends unknown[], P>(
     create: (...args: A) => P
     handler: (store: NormalizedData, payload: P) => NormalizedData
   },
-): ((...args: A) => Command) & { readonly type: T; readonly handler: (store: NormalizedData, payload: P) => NormalizedData }
+): ((...args: A) => Command) & {
+  readonly type: T
+  readonly handler: (store: NormalizedData, payload: P) => NormalizedData
+  readonly reduce: (store: NormalizedData, ...args: A) => NormalizedData
+}
 
 /** Without create (no args) */
 export function defineCommand<T extends string>(
@@ -21,7 +25,11 @@ export function defineCommand<T extends string>(
     meta?: boolean
     handler: (store: NormalizedData) => NormalizedData
   },
-): (() => Command) & { readonly type: T; readonly handler: (store: NormalizedData) => NormalizedData }
+): (() => Command) & {
+  readonly type: T
+  readonly handler: (store: NormalizedData) => NormalizedData
+  readonly reduce: (store: NormalizedData) => NormalizedData
+}
 
 /** Implementation */
 export function defineCommand(
@@ -40,13 +48,15 @@ export function defineCommand(
       type,
       payload,
       meta,
-      execute: (store: NormalizedData): NormalizedData =>
-        create ? handler(store, payload) : (handler as (s: NormalizedData) => NormalizedData)(store),
     } as Command
   }
 
   creator.type = type
   creator.handler = handler
+  creator.reduce = (store: NormalizedData, ...args: unknown[]) => {
+    const payload = create ? create(...args) : undefined
+    return create ? handler(store, payload) : (handler as (s: NormalizedData) => NormalizedData)(store)
+  }
 
   return creator
 }
@@ -62,8 +72,16 @@ type CommandDef = {
 }
 
 type InferCreator<D> = D extends { create: (...args: infer A) => infer P }
-  ? ((...args: A) => Command) & { readonly type: string; readonly handler: (store: NormalizedData, payload: P) => NormalizedData }
-  : (() => Command) & { readonly type: string; readonly handler: (store: NormalizedData) => NormalizedData }
+  ? ((...args: A) => Command) & {
+      readonly type: string
+      readonly handler: (store: NormalizedData, payload: P) => NormalizedData
+      readonly reduce: (store: NormalizedData, ...args: A) => NormalizedData
+    }
+  : (() => Command) & {
+      readonly type: string
+      readonly handler: (store: NormalizedData) => NormalizedData
+      readonly reduce: (store: NormalizedData) => NormalizedData
+    }
 
 export function defineCommands<D extends Record<string, CommandDef>>(
   defs: D,
