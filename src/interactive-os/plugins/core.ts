@@ -10,31 +10,15 @@ export const GRID_COL_ID = '__grid_col__'
 
 export const focusCommands = {
   setFocus(nodeId: string): Command {
-    let previousFocusedId: string | undefined
     return {
       type: 'core:focus',
       payload: { nodeId },
       execute(store) {
-        previousFocusedId = store.entities[FOCUS_ID]?.focusedId as string | undefined
         return {
           ...store,
           entities: {
             ...store.entities,
             [FOCUS_ID]: { id: FOCUS_ID, focusedId: nodeId },
-          },
-        }
-      },
-      undo(store) {
-        if (previousFocusedId === undefined) {
-          const { [FOCUS_ID]: _removed, ...rest } = store.entities
-          void _removed
-          return { ...store, entities: rest }
-        }
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [FOCUS_ID]: { id: FOCUS_ID, focusedId: previousFocusedId },
           },
         }
       },
@@ -68,29 +52,14 @@ export const selectionCommands = {
           },
         }
       },
-      undo(store) {
-        const current = getSelectedIds(store)
-        const selectedIds = current.includes(nodeId)
-          ? current.filter((id) => id !== nodeId)
-          : [...current, nodeId]
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ID]: { id: SELECTION_ID, selectedIds },
-          },
-        }
-      },
     }
   },
 
   setAnchor(nodeId: string): Command {
-    let previousAnchor: string | undefined
     return {
       type: 'core:set-anchor',
       payload: { nodeId },
       execute(store) {
-        previousAnchor = store.entities[SELECTION_ANCHOR_ID]?.anchorId as string | undefined
         return {
           ...store,
           entities: {
@@ -99,30 +68,14 @@ export const selectionCommands = {
           },
         }
       },
-      undo(store) {
-        if (previousAnchor === undefined) {
-          const { [SELECTION_ANCHOR_ID]: _removed, ...rest } = store.entities
-          void _removed
-          return { ...store, entities: rest }
-        }
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ANCHOR_ID]: { id: SELECTION_ANCHOR_ID, anchorId: previousAnchor },
-          },
-        }
-      },
     }
   },
 
   selectRange(nodeIds: string[]): Command {
-    let previousSelectedIds: string[] | undefined
     return {
       type: 'core:select-range',
       payload: { nodeIds },
       execute(store) {
-        previousSelectedIds = getSelectedIds(store)
         return {
           ...store,
           entities: {
@@ -131,64 +84,32 @@ export const selectionCommands = {
           },
         }
       },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ID]: { id: SELECTION_ID, selectedIds: previousSelectedIds ?? [] },
-          },
-        }
-      },
     }
   },
 
   clearAnchor(): Command {
-    let previousAnchor: string | undefined
     return {
       type: 'core:clear-anchor',
       payload: null,
       execute(store) {
-        previousAnchor = store.entities[SELECTION_ANCHOR_ID]?.anchorId as string | undefined
-        if (!previousAnchor) return store
+        if (!store.entities[SELECTION_ANCHOR_ID]) return store
         const { [SELECTION_ANCHOR_ID]: _removed, ...rest } = store.entities
         void _removed
         return { ...store, entities: rest }
-      },
-      undo(store) {
-        if (!previousAnchor) return store
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ANCHOR_ID]: { id: SELECTION_ANCHOR_ID, anchorId: previousAnchor },
-          },
-        }
       },
     }
   },
 
   clearSelection(): Command {
-    let previousSelectedIds: string[] | undefined
     return {
       type: 'core:clear-selection',
       payload: null,
       execute(store) {
-        previousSelectedIds = getSelectedIds(store)
         return {
           ...store,
           entities: {
             ...store.entities,
             [SELECTION_ID]: { id: SELECTION_ID, selectedIds: [] },
-          },
-        }
-      },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ID]: { id: SELECTION_ID, selectedIds: previousSelectedIds ?? [] },
           },
         }
       },
@@ -216,16 +137,6 @@ export const expandCommands = {
           },
         }
       },
-      undo(store) {
-        const current = getExpandedIds(store)
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: current.filter((id) => id !== nodeId) },
-          },
-        }
-      },
     }
   },
 
@@ -240,17 +151,6 @@ export const expandCommands = {
           entities: {
             ...store.entities,
             [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: current.filter((id) => id !== nodeId) },
-          },
-        }
-      },
-      undo(store) {
-        const current = getExpandedIds(store)
-        if (current.includes(nodeId)) return store
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [...current, nodeId] },
           },
         }
       },
@@ -274,45 +174,21 @@ export const expandCommands = {
           },
         }
       },
-      undo(store) {
-        const current = getExpandedIds(store)
-        const expandedIds = current.includes(nodeId)
-          ? current.filter((id) => id !== nodeId)
-          : [...current, nodeId]
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds },
-          },
-        }
-      },
     }
   },
 }
 
 export const gridColCommands = {
   setColIndex(colIndex: number): Command {
-    let prev: number | undefined
     return {
       type: 'core:set-col-index',
       payload: { colIndex },
       execute(store) {
-        prev = store.entities[GRID_COL_ID]?.colIndex as number ?? 0
         return {
           ...store,
           entities: {
             ...store.entities,
             [GRID_COL_ID]: { id: GRID_COL_ID, colIndex },
-          },
-        }
-      },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [GRID_COL_ID]: { id: GRID_COL_ID, colIndex: prev ?? 0 },
           },
         }
       },
@@ -343,13 +219,11 @@ function roundToStep(value: number, step: number): number {
 
 export const valueCommands = {
   setValue(value: number, range: ValueRange): Command {
-    let prev: number | undefined
     const clamped = clamp(roundToStep(value, range.step), range.min, range.max)
     return {
       type: 'core:set-value',
       payload: { value: clamped },
       execute(store) {
-        prev = (store.entities[VALUE_ID] as Record<string, unknown>)?.value as number | undefined
         return {
           ...store,
           entities: {
@@ -358,46 +232,21 @@ export const valueCommands = {
           },
         }
       },
-      undo(store) {
-        if (prev === undefined) {
-          const { [VALUE_ID]: _removed, ...rest } = store.entities
-          void _removed
-          return { ...store, entities: rest }
-        }
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [VALUE_ID]: { id: VALUE_ID, value: prev, min: range.min, max: range.max, step: range.step },
-          },
-        }
-      },
     }
   },
 
   increment(step: number, range: ValueRange): Command {
-    const store_ref = { prev: 0 }
     return {
       type: 'core:increment-value',
       payload: { step },
       execute(store) {
         const current = ((store.entities[VALUE_ID] as Record<string, unknown>)?.value as number) ?? range.min
-        store_ref.prev = current
         const next = clamp(roundToStep(current + step, range.step), range.min, range.max)
         return {
           ...store,
           entities: {
             ...store.entities,
             [VALUE_ID]: { id: VALUE_ID, value: next, min: range.min, max: range.max, step: range.step },
-          },
-        }
-      },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [VALUE_ID]: { id: VALUE_ID, value: store_ref.prev, min: range.min, max: range.max, step: range.step },
           },
         }
       },

@@ -44,7 +44,7 @@ describe('useSpatialNav — keyMap structure', () => {
   it('Shift+Arrow handler is no-op when no rects available (jsdom)', () => {
     const { result } = renderHook(() => useSpatialNav('#root', store))
 
-    const extendSelectionTo = vi.fn(() => ({ type: 'test', payload: null, execute: (s: NormalizedData) => s, undo: (s: NormalizedData) => s }))
+    const extendSelectionTo = vi.fn(() => ({ type: 'test', payload: null, execute: (s: NormalizedData) => s }))
     const ctx = {
       focused: 'a',
       extendSelectionTo,
