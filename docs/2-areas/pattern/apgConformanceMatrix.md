@@ -58,7 +58,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 9 | Checkbox (Two State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox/) | — | ⬜ | — |
+| 9 | Checkbox (Two State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox/) | `pattern/examples/checkbox.ts` | 🟢 | — |
 | 10 | Checkbox (Mixed-State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox-mixed/) | — | ⬜ | — |
 
 ### Combobox
