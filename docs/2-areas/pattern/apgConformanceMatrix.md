@@ -177,7 +177,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 53 | Quantity Spin Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/quantity-spinbutton/) | `pattern/examples/spinbutton.ts` | ⬜ | — |
+| 53 | Quantity Spin Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/quantity-spinbutton/) | `pattern/examples/spinbutton.ts` | 🟢 | — |
 
 ### Switch
 
@@ -257,7 +257,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 대상 example | 57 + 1 experimental |
 | 기존 pattern/examples/ 매핑 | 16 |
 | 미착수 (매핑 없음) | 41 |
-| 적합성 검증 완료 | 9 |
+| 적합성 검증 완료 | 10 |
 
 ## os 갭 레지스트리
 
