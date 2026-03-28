@@ -4,7 +4,7 @@
 
 .activity-bar {
   width: 48px;
-  background: var(--surface-base);
+  background: var(--surface-sunken);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -149,7 +149,6 @@
 }
 
 .sidebar-section-title {
-  font-family: var(--sans);
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   letter-spacing: 0.02em;
@@ -170,7 +169,6 @@
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
   margin: 1px var(--space-sm);
-  font-family: var(--sans);
   font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
@@ -187,7 +185,6 @@
 /* sidebar-link active/focus state handled by interactive.css ARIA selectors */
 
 .badge-wip {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   color: var(--text-muted);

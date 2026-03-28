@@ -1,0 +1,48 @@
+/* ── Block 1: base ── */
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  font-family: var(--type-body-family);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.header + .panel {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+.chevronExpanded {
+  transform: rotate(90deg);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  padding-left: var(--space-2xl);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  font-family: var(--type-body-family);
+  line-height: var(--type-body-line-height);
+  color: var(--text-secondary);
+}

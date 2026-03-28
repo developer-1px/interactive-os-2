@@ -3,9 +3,15 @@
 
 .chatInput {
   display: flex;
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-sm) var(--space-3xl);
   border-top: 1px solid var(--border-subtle);
   flex-shrink: 0;
+}
+
+.chatInput > * {
+  max-width: 720px;
+  width: 100%;
+  margin-inline: auto;
 }
 
 .chatInput textarea {

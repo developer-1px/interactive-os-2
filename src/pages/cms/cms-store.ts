@@ -21,6 +21,7 @@ export const cmsStore = createStore({
     'hero-title':    { id: 'hero-title',    data: { type: 'text', role: 'hero-title', value: localeMap("Accessibility shouldn't be\nthe thing you add last.") } },
     'hero-subtitle': { id: 'hero-subtitle', data: { type: 'text', role: 'hero-subtitle', value: localeMap('Keyboard, focus, CRUD, clipboard, undo, drag & drop — everything you used to build from scratch, in one plugin.') } },
     'hero-cta':      { id: 'hero-cta',      data: { type: 'cta', primary: localeMap('Get Started'), secondary: localeMap('View on GitHub') } },
+    'hero-image':    { id: 'hero-image',   data: { type: 'hero-image', src: '', alt: localeMap('Hero banner') } },
 
     // ── Manifesto ──
     'manifesto-title':    { id: 'manifesto-title',    data: { type: 'section-title', value: localeMap('Built for keyboards,\ndesigned for everyone.') } },
@@ -121,11 +122,19 @@ export const cmsStore = createStore({
     'footer-link-github': { id: 'footer-link-github', data: { type: 'link', label: localeMap('GitHub'),        href: '#github' } },
     'footer-link-npm':    { id: 'footer-link-npm',    data: { type: 'link', label: localeMap('npm'),           href: '#npm' } },
     'footer-link-api':    { id: 'footer-link-api',    data: { type: 'link', label: localeMap('API Reference'), href: '#api' } },
+
+    // ── Gallery ──
+    gallery:         { id: 'gallery',         data: { type: 'section', variant: 'gallery' } },
+    'gallery-title': { id: 'gallery-title',   data: { type: 'section-title', value: localeMap('Gallery') } },
+    'gallery-1':     { id: 'gallery-1',       data: { type: 'gallery-item', image: '', caption: localeMap('Screenshot 1') } },
+    'gallery-2':     { id: 'gallery-2',       data: { type: 'gallery-item', image: '', caption: localeMap('Screenshot 2') } },
+    'gallery-3':     { id: 'gallery-3',       data: { type: 'gallery-item', image: '', caption: localeMap('Screenshot 3') } },
+    'gallery-4':     { id: 'gallery-4',       data: { type: 'gallery-item', image: '', caption: localeMap('Screenshot 4') } },
   },
   relationships: {
-    [ROOT_ID]: ['hero', 'manifesto', 'features', 'patterns', 'showcase', 'journal', 'testimonial', 'cta', 'footer'],
+    [ROOT_ID]: ['hero', 'manifesto', 'features', 'patterns', 'showcase', 'journal', 'gallery', 'testimonial', 'cta', 'footer'],
 
-    hero:        ['hero-badge', 'hero-title', 'hero-subtitle', 'hero-cta'],
+    hero:        ['hero-badge', 'hero-title', 'hero-subtitle', 'hero-cta', 'hero-image'],
     manifesto:   ['manifesto-title', 'manifesto-keyboard', 'manifesto-a11y', 'manifesto-headless'],
     features:    ['features-label', 'features-title', 'features-desc', 'features-cta', 'stat-tests', 'stat-patterns', 'stat-plugins', 'card-store', 'card-engine', 'card-behavior', 'card-keyboard'],
     'card-store':    ['card-store-icon',    'card-store-title',    'card-store-desc'],
@@ -142,6 +151,7 @@ export const cmsStore = createStore({
     testimonial: ['testimonial-quote'],
     cta:         ['cta-title', 'cta-buttons'],
     footer:      ['footer-brand', 'footer-tagline', 'footer-links'],
+    gallery:     ['gallery-title', 'gallery-1', 'gallery-2', 'gallery-3', 'gallery-4'],
     'footer-links': ['footer-link-docs', 'footer-link-github', 'footer-link-npm', 'footer-link-api'],
   },
 })

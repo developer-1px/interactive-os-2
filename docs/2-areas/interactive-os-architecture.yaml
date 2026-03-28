@@ -1,0 +1,397 @@
+# interactive-os — Architecture Map
+# SSOT for architecture visualization. PROGRESS.md is kept for human reading.
+# Status: done = Integrated, active = Validated/Prototype, pending = Concept/未구현
+
+personas:
+  - id: library
+    name: interactive-os
+    description: ARIA keyboard/focus/CRUD React headless framework
+
+needs:
+  - id: N1
+    persona: library
+    need: Store (L1)
+    description: NormalizedData — 노드 플랫 맵 + 루트 ID 배열
+    stories:
+      - id: S1
+        story: NormalizedData
+        acceptance: 플랫 맵 + 루트 ID 배열, Command 패턴 불변 업데이트
+        status: done
+        links: []
+        features:
+          - id: F1
+            feature: storeToTree 변환
+            screens: []
+          - id: F2
+            feature: computeStoreDiff
+            screens: []
+          - id: F3
+            feature: 직렬화
+            screens: [pending]
+
+  - id: N2
+    persona: library
+    need: Engine (L2)
+    description: Command dispatch + middleware, Plugin 합성, getVisibleNodes 순회
+    stories:
+      - id: S2
+        story: dispatch + middleware
+        acceptance: Command 실행/undo/redo, Plugin 합성
+        status: done
+        links: []
+        features:
+          - id: F4
+            feature: Command 실행/undo/redo
+            screens: []
+          - id: F5
+            feature: Plugin 합성
+            screens: []
+          - id: F6
+            feature: getVisibleNodes 순회
+            screens: []
+      - id: S3
+        story: Dispatch Logger
+        acceptance: 디스패치 로그 추적
+        status: active
+        links: []
+        features: []
+
+  - id: N3
+    persona: library
+    need: Axis (L3)
+    description: 7축 — navigate/select/expand/activate/dismiss/tab/value
+    stories:
+      - id: S4
+        story: 7축
+        acceptance: navigation · selection · expand · activate · tab · value · dismiss
+        status: done
+        links: []
+        features:
+          - id: F7
+            feature: navigation — 포커스 이동
+            screens: []
+          - id: F8
+            feature: selection — 단일/확장 선택
+            screens: []
+          - id: F9
+            feature: expand — 트리 펼침/접기
+            screens: []
+          - id: F10
+            feature: activate — Enter/Space 실행
+            screens: []
+          - id: F11
+            feature: tab — 탭 전환
+            screens: []
+          - id: F12
+            feature: value — 연속값 (Slider/Spinbutton)
+            screens: []
+          - id: F13
+            feature: dismiss — Escape 닫기
+            screens: []
+      - id: S5
+        story: commands
+        acceptance: focus · selection · expand · gridCol · value — core()에서 흡수
+        status: done
+        links: []
+        features:
+          - id: F14
+            feature: 각 axis가 commands + entities 소유
+            screens: []
+
+  - id: N4
+    persona: library
+    need: Pattern (L4)
+    description: composePattern — axis 조합으로 APG 패턴 생성
+    stories:
+      - id: S6
+        story: composePattern
+        acceptance: keyMap + config + middleware 합성
+        status: done
+        links: []
+        features:
+          - id: F15
+            feature: keyMap 합성
+            screens: []
+          - id: F16
+            feature: config 합성
+            screens: []
+          - id: F17
+            feature: middleware 합성
+            screens: []
+      - id: S7
+        story: edit
+        acceptance: 인라인 편집 모드
+        status: done
+        links: []
+        features: []
+      - id: S8
+        story: pointer interaction
+        acceptance: 클릭/드래그 인터랙션
+        status: done
+        links: []
+        features: []
+      - id: S9
+        story: examples/ (17 APG presets)
+        acceptance: pattern/examples/로 분리, APG 레퍼런스 구현
+        status: done
+        links: []
+        features:
+          - id: F18
+            feature: "완료: Accordion · AlertDialog · Combobox · Dialog · Disclosure · Grid · Listbox · Menu · RadioGroup · Slider · Spinbutton · Switch · Tabs · Toolbar · Tree · Treegrid"
+            screens: []
+          - id: F19
+            feature: "미구현: Menubar · Carousel · Feed"
+            screens: [pending]
+      - id: S10
+        story: menubar
+        acceptance: 다계층 keyMap 필요
+        status: pending
+        links: []
+        features: []
+
+  - id: N5
+    persona: library
+    need: Plugin (L5)
+    description: definePlugin — 9종 + 팩토리
+    stories:
+      - id: S11
+        story: definePlugin
+        acceptance: "Plugin 팩토리: name, intercepts, requires"
+        status: done
+        links: []
+        features: []
+      - id: S12
+        story: focusRecovery
+        acceptance: CRUD 후 포커스 자동 복구
+        status: done
+        links: []
+        features: []
+      - id: S13
+        story: history
+        acceptance: delta-based undo/redo, navigation skip
+        status: done
+        links: []
+        features:
+          - id: F20
+            feature: delta-based undo/redo
+            screens: []
+          - id: F21
+            feature: navigation skip
+            screens: []
+          - id: F22
+            feature: command grouping
+            screens: [pending]
+      - id: S14
+        story: crud
+        acceptance: 생성/삭제/이동
+        status: done
+        links: []
+        features: []
+      - id: S15
+        story: cellEdit
+        acceptance: "Google Sheets 2모드: Delete→셀 클리어, Enter→행 이동"
+        status: done
+        links: []
+        features:
+          - id: F23
+            feature: Delete → 셀 클리어
+            screens: []
+          - id: F24
+            feature: Enter → 행 이동
+            screens: []
+          - id: F25
+            feature: Mod+X/C/V 셀 클립보드
+            screens: []
+      - id: S16
+        story: search
+        acceptance: "Mod+F 검색, Aria.Search + SearchHighlight"
+        status: done
+        links: []
+        features:
+          - id: F26
+            feature: Aria.Search input + Aria.SearchHighlight mark
+            screens: []
+          - id: F27
+            feature: getVisibleNodes 필터
+            screens: []
+          - id: F28
+            feature: Grid searchable prop
+            screens: []
+      - id: S17
+        story: clipboard
+        acceptance: canAccept 인자화, keyMap→native event 전환
+        status: done
+        links: []
+        features:
+          - id: F29
+            feature: TYPE 상수
+            screens: []
+          - id: F30
+            feature: cutCellValue / clearCellValue
+            screens: []
+      - id: S18
+        story: zodSchema
+        acceptance: Zod childRules → canAccept/canDelete 자동 파생
+        status: done
+        links: []
+        features: []
+      - id: S19
+        story: rename
+        acceptance: 인라인 이름 변경
+        status: done
+        links: []
+        features: []
+      - id: S20
+        story: dnd
+        acceptance: 드래그 앤 드롭
+        status: done
+        links: []
+        features: []
+      - id: S21
+        story: spatial
+        acceptance: TV리모컨 공간 네비게이션
+        status: done
+        links: []
+        features: []
+      - id: S22
+        story: typeahead
+        acceptance: 타이핑으로 항목 점프
+        status: done
+        links: []
+        features: []
+      - id: S23
+        story: permissions
+        acceptance: 권한 기반 명령 제어
+        status: pending
+        links: []
+        features: []
+
+  - id: N6
+    persona: library
+    need: Primitives (L6)
+    description: useAria, useAriaZone, Aria.tsx — React 바인딩
+    stories:
+      - id: S24
+        story: Aria 컴포넌트
+        acceptance: Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight
+        status: done
+        links: []
+        features: []
+      - id: S25
+        story: useAria · useAriaZone · useControlledAria
+        acceptance: engine + pattern 연결, disabled 옵션, keyMap-only 경로
+        status: done
+        links: []
+        features:
+          - id: F31
+            feature: disabled 옵션 (inert + focus sync 스킵)
+            screens: []
+          - id: F32
+            feature: keyMap-only 경로
+            screens: []
+          - id: F33
+            feature: lastActiveContainer 싱글턴
+            screens: [pending]
+      - id: S26
+        story: useKeyboard · useSpatialNav
+        acceptance: 키보드/공간 네비게이션 훅
+        status: done
+        links: []
+        features: []
+      - id: S27
+        story: useResizer · useVirtualScroll
+        acceptance: 리사이저, 가상 스크롤
+        status: active
+        links: []
+        features: []
+      - id: S28
+        story: 가상화 (10k+ 노드)
+        acceptance: 대규모 노드 퍼포먼스
+        status: pending
+        links: []
+        features: []
+
+  - id: N7
+    persona: library
+    need: UI (L7)
+    description: 완성품 컴포넌트 — useAria 기반 headless
+    stories:
+      - id: S29
+        story: Navigation 컴포넌트
+        acceptance: TreeGrid · ListBox · TabList · Grid
+        status: done
+        links: []
+        features: []
+      - id: S30
+        story: Disclosure 컴포넌트
+        acceptance: Accordion · MenuList · DisclosureGroup
+        status: done
+        links: []
+        features: []
+      - id: S31
+        story: Input 컴포넌트
+        acceptance: Combobox · RadioGroup · SwitchGroup
+        status: done
+        links: []
+        features: []
+      - id: S32
+        story: Collection 컴포넌트
+        acceptance: Kanban · Slider · Spinbutton
+        status: done
+        links: []
+        features: []
+      - id: S33
+        story: Utility 컴포넌트
+        acceptance: Checkbox · Toggle · ToggleGroup · AlertDialog
+        status: done
+        links: []
+        features:
+          - id: F34
+            feature: testPath 미연결 (4종)
+            screens: [pending]
+      - id: S34
+        story: Toaster · Tooltip
+        acceptance: 알림, 툴팁
+        status: active
+        links: []
+        features:
+          - id: F35
+            feature: Tooltip 데모 페이지
+            screens: [pending]
+          - id: F36
+            feature: Toaster testPath
+            screens: [pending]
+      - id: S35
+        story: chat/
+        acceptance: ChatFeed · ChatInput · TextBlock · CodeBlock · DiffBlock
+        status: active
+        links: []
+        features:
+          - id: F37
+            feature: 블록 렌더러 OCP
+            screens: []
+          - id: F38
+            feature: 인터랙티브 블록 (storeKey)
+            screens: [pending]
+      - id: S36
+        story: Select
+        acceptance: Combobox 래퍼
+        status: pending
+        links: []
+        features: []
+      - id: S37
+        story: ContextMenu
+        acceptance: MenuList + popover
+        status: pending
+        links: []
+        features: []
+      - id: S38
+        story: DatePicker
+        acceptance: Grid + value + popover
+        status: pending
+        links: []
+        features: []
+
+screens: []
+
+releases: []

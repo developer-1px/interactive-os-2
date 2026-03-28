@@ -1,5 +1,5 @@
 // ② 2026-03-27-chat-module-prd.md
-import { memo, useMemo, type ReactNode } from 'react'
+import { memo, useEffect, useRef, useMemo, type ReactNode } from 'react'
 import { StreamFeed } from '../StreamFeed'
 import { useStreamFeed } from '../useStreamFeed'
 import { FallbackBlock } from './FallbackBlock'
@@ -69,6 +69,27 @@ export function ChatFeed({
   )
 
   const { feedRef } = useStreamFeed<ChatMessage>()
+
+  // Auto-scroll on new messages and streaming text
+  const userScrolledUpRef = useRef(false)
+
+  useEffect(() => {
+    const el = feedRef.current
+    if (!el) return
+    const onScroll = () => {
+      userScrolledUpRef.current = el.scrollHeight - el.scrollTop - el.clientHeight > 40
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [feedRef])
+
+  useEffect(() => {
+    const el = feedRef.current
+    if (!el || userScrolledUpRef.current) return
+    requestAnimationFrame(() => {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+    })
+  }, [messages, feedRef])
 
   return (
     <StreamFeed

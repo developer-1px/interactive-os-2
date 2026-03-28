@@ -6,6 +6,8 @@
 /* --- base --- */
 
 .sm {
+  --_col-width: var(--storymap-col-width);
+
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -16,18 +18,17 @@
 .smHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 36px;
+  height: var(--toolbar-height);
   padding: 0 var(--space-lg);
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
-.smHeader__title {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  letter-spacing: 0.02em;
-  color: var(--text-muted);
+.smHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  min-width: 0;
 }
 
 .smBody {
@@ -69,7 +70,7 @@
   color: var(--text-primary);
 }
 
-.smNeedHeader__top {
+.smNeedHeaderTop {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -127,19 +128,19 @@
   box-shadow: var(--shadow-sm);
 }
 
-.smStory__header {
+.smStoryHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.smStory__id {
+.smStoryId {
   font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
 /* blocked dot — destructive, S 카드 ID 옆 */
-.smStory__blocked {
+.smStoryBlocked {
   width: var(--space-sm);
   height: var(--space-sm);
   border-radius: 50%;
@@ -147,22 +148,32 @@
   background: var(--tone-destructive-base);
 }
 
-/* --- status: active = 좌측 bar (inset shadow) --- */
+/* --- status variants: 배경색 + 좌측 bar로 상태 구분 --- */
+
 .smStory[data-status="active"] {
+  background: var(--tone-primary-dim);
   box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base), var(--shadow-xs);
 }
 
-/* --- status: done = 컬럼 전체 후퇴 --- */
-.smStoryCol[data-status="done"] {
-  opacity: 0.45;
+.smStory[data-status="done"] {
+  background: var(--tone-success-dim);
 }
 
-/* --- status: blocked = 좌측 destructive bar (inset shadow) --- */
+.smStory[data-status="done"] .smStoryText {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+
+.smStoryCol[data-status="done"] {
+  opacity: 0.4;
+}
+
 .smStory[data-status="blocked"] {
+  background: var(--tone-destructive-dim);
   box-shadow: inset var(--indicator-width) 0 0 var(--tone-destructive-base), var(--shadow-xs);
 }
 
-.smStory__text {
+.smStoryText {
   font-size: var(--type-body-size);
   color: var(--text-primary);
   line-height: var(--leading-snug);
@@ -183,20 +194,20 @@
   line-height: var(--leading-snug);
 }
 
-.smFeature__text {
+.smFeatureText {
   color: var(--text-secondary);
 }
 
-.smFeature__id {
+.smFeatureId {
   color: var(--text-muted);
 }
 
-.smFeature__screens {
+.smFeatureScreens {
   display: flex;
   gap: var(--space-xs);
 }
 
-.smFeature__screenTag {
+.smFeatureScreenTag {
   padding: var(--space-inline-code) var(--space-xs);
   background: var(--tone-neutral-dim);
   border-radius: 0;
@@ -213,7 +224,7 @@
   flex-wrap: wrap;
 }
 
-.smLinks__item {
+.smLinksItem {
   padding: var(--space-inline-code) var(--space-sm);
   background: var(--tone-primary-dim);
   border-radius: 0;
@@ -222,8 +233,22 @@
   text-decoration: none;
 }
 
-.smLinks__item:hover {
+.smLinksItem:hover {
   background: var(--tone-primary-mid);
+}
+
+/* --- feature cards inherit column status color --- */
+.smStoryCol[data-status="active"] .smFeature  { background: var(--tone-primary-dim); }
+.smStoryCol[data-status="blocked"] .smFeature { background: var(--tone-destructive-dim); }
+
+/* --- focus: bg highlight for spatial nav --- */
+
+.smStory[data-focused] {
+  box-shadow: 0 0 0 var(--indicator-width) var(--tone-primary-base), var(--shadow-xs);
+}
+
+.smFeature[data-focused] {
+  box-shadow: 0 0 0 var(--indicator-width) var(--tone-primary-base), var(--shadow-xs);
 }
 
 /* --- legend --- */
@@ -231,10 +256,11 @@
 .smLegend {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: var(--space-md);
+  flex-shrink: 0;
 }
 
-.smLegend__item {
+.smLegendItem {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
@@ -242,17 +268,15 @@
   color: var(--text-muted);
 }
 
-.smLegend__bar {
-  width: var(--indicator-width);
-  height: var(--icon-xs);
-  background: var(--tone-primary-base);
-  border-radius: 1px;
+.smLegendSwatch {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  border-radius: var(--shape-xs-radius);
+  flex-shrink: 0;
+  border: var(--border-width) solid var(--border-subtle);
 }
 
-.smLegend__done {
-  width: var(--icon-xs);
-  height: var(--icon-xs);
-  background: var(--text-muted);
-  border-radius: 0;
-  opacity: 0.45;
-}
+.smLegendSwatch[data-status="pending"]  { background: var(--tone-warning-dim); }
+.smLegendSwatch[data-status="active"]   { background: var(--tone-primary-base); }
+.smLegendSwatch[data-status="done"]     { background: var(--tone-success-base); opacity: 0.55; }
+.smLegendSwatch[data-status="blocked"]  { background: var(--tone-destructive-base); }
