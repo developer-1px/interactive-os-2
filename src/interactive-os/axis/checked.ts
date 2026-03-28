@@ -24,16 +24,6 @@ export const checkedCommands = {
           },
         }
       },
-      undo(store) {
-        const current = getCheckedIds(store)
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [CHECKED_ID]: { id: CHECKED_ID, checkedIds: current.filter((id) => id !== nodeId) },
-          },
-        }
-      },
     }
   },
 
@@ -51,17 +41,6 @@ export const checkedCommands = {
           },
         }
       },
-      undo(store) {
-        const current = getCheckedIds(store)
-        if (current.includes(nodeId)) return store
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [CHECKED_ID]: { id: CHECKED_ID, checkedIds: [...current, nodeId] },
-          },
-        }
-      },
     }
   },
 
@@ -70,19 +49,6 @@ export const checkedCommands = {
       type: 'core:toggle-check',
       payload: { nodeId },
       execute(store) {
-        const current = getCheckedIds(store)
-        const checkedIds = current.includes(nodeId)
-          ? current.filter((id) => id !== nodeId)
-          : [...current, nodeId]
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [CHECKED_ID]: { id: CHECKED_ID, checkedIds },
-          },
-        }
-      },
-      undo(store) {
         const current = getCheckedIds(store)
         const checkedIds = current.includes(nodeId)
           ? current.filter((id) => id !== nodeId)

@@ -33,29 +33,14 @@ export const selectionCommands = {
           },
         }
       },
-      undo(store) {
-        const current = getSelectedIds(store)
-        const selectedIds = current.includes(nodeId)
-          ? current.filter((id) => id !== nodeId)
-          : [...current, nodeId]
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ID]: { id: SELECTION_ID, selectedIds },
-          },
-        }
-      },
     }
   },
 
   setAnchor(nodeId: string): Command {
-    let previousAnchor: string | undefined
     return {
       type: 'core:set-anchor',
       payload: { nodeId },
       execute(store) {
-        previousAnchor = store.entities[SELECTION_ANCHOR_ID]?.anchorId as string | undefined
         return {
           ...store,
           entities: {
@@ -64,30 +49,14 @@ export const selectionCommands = {
           },
         }
       },
-      undo(store) {
-        if (previousAnchor === undefined) {
-          const { [SELECTION_ANCHOR_ID]: _removed, ...rest } = store.entities
-          void _removed
-          return { ...store, entities: rest }
-        }
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ANCHOR_ID]: { id: SELECTION_ANCHOR_ID, anchorId: previousAnchor },
-          },
-        }
-      },
     }
   },
 
   selectRange(nodeIds: string[]): Command {
-    let previousSelectedIds: string[] | undefined
     return {
       type: 'core:select-range',
       payload: { nodeIds },
       execute(store) {
-        previousSelectedIds = getSelectedIds(store)
         return {
           ...store,
           entities: {
@@ -96,64 +65,33 @@ export const selectionCommands = {
           },
         }
       },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ID]: { id: SELECTION_ID, selectedIds: previousSelectedIds ?? [] },
-          },
-        }
-      },
     }
   },
 
   clearAnchor(): Command {
-    let previousAnchor: string | undefined
     return {
       type: 'core:clear-anchor',
       payload: null,
       execute(store) {
-        previousAnchor = store.entities[SELECTION_ANCHOR_ID]?.anchorId as string | undefined
-        if (!previousAnchor) return store
+        const prev = store.entities[SELECTION_ANCHOR_ID]?.anchorId as string | undefined
+        if (!prev) return store
         const { [SELECTION_ANCHOR_ID]: _removed, ...rest } = store.entities
         void _removed
         return { ...store, entities: rest }
-      },
-      undo(store) {
-        if (!previousAnchor) return store
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ANCHOR_ID]: { id: SELECTION_ANCHOR_ID, anchorId: previousAnchor },
-          },
-        }
       },
     }
   },
 
   clearSelection(): Command {
-    let previousSelectedIds: string[] | undefined
     return {
       type: 'core:clear-selection',
       payload: null,
       execute(store) {
-        previousSelectedIds = getSelectedIds(store)
         return {
           ...store,
           entities: {
             ...store.entities,
             [SELECTION_ID]: { id: SELECTION_ID, selectedIds: [] },
-          },
-        }
-      },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SELECTION_ID]: { id: SELECTION_ID, selectedIds: previousSelectedIds ?? [] },
           },
         }
       },

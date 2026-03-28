@@ -59,13 +59,6 @@ export function createWorkspace(): NormalizedData {
 
 // ── Internal helpers ───────────────────────────────────
 
-function snapshotStore(store: NormalizedData): NormalizedData {
-  return {
-    entities: { ...store.entities },
-    relationships: { ...store.relationships },
-  }
-}
-
 function closePaneInternal(store: NormalizedData, paneId: string): NormalizedData {
   let s = removeEntity(store, paneId)
 
@@ -95,33 +88,21 @@ function closePaneInternal(store: NormalizedData, paneId: string): NormalizedDat
 
 export const workspaceCommands = {
   setActiveTab(tabgroupId: string, tabId: string): Command {
-    let prevActiveTabId: string | undefined
-
     return {
       type: 'workspace:setActiveTab',
       payload: { tabgroupId, tabId },
       execute(store) {
-        prevActiveTabId = getEntityData<TabGroupData>(store, tabgroupId)?.activeTabId
         return updateEntityData(store, tabgroupId, { activeTabId: tabId })
-      },
-      undo(store) {
-        return updateEntityData(store, tabgroupId, { activeTabId: prevActiveTabId ?? '' })
       },
     }
   },
 
   resize(splitId: string, sizes: PaneSize[]): Command {
-    let prevSizes: PaneSize[] | undefined
-
     return {
       type: 'workspace:resize',
       payload: { splitId, sizes },
       execute(store) {
-        prevSizes = getEntityData<SplitData>(store, splitId)?.sizes
         return updateEntityData(store, splitId, { sizes })
-      },
-      undo(store) {
-        return updateEntityData(store, splitId, { sizes: prevSizes ?? [] })
       },
     }
   },
@@ -133,9 +114,6 @@ export const workspaceCommands = {
       execute(store) {
         return addEntity(store, tab, tabgroupId)
       },
-      undo(store) {
-        return removeEntity(store, tab.id)
-      },
     }
 
     const activateCmd = workspaceCommands.setActiveTab(tabgroupId, tab.id)
@@ -144,14 +122,10 @@ export const workspaceCommands = {
   },
 
   removeTab(tabId: string): Command {
-    let snapshot: NormalizedData | null = null
-
     return {
       type: 'workspace:removeTab',
       payload: { tabId },
       execute(store) {
-        snapshot = snapshotStore(store)
-
         const parentId = getParent(store, tabId)
         if (!parentId) return removeEntity(store, tabId)
 
@@ -162,10 +136,8 @@ export const workspaceCommands = {
 
         const remainingSiblings = getChildren(s, parentId)
         if (remainingSiblings.length === 0) {
-          // Last tab — close the pane
           s = closePaneInternal(s, parentId)
         } else {
-          // Activate adjacent: prefer next, fallback prev
           const nextTab = idx < remainingSiblings.length
             ? remainingSiblings[idx]!
             : remainingSiblings[remainingSiblings.length - 1]!
@@ -174,68 +146,45 @@ export const workspaceCommands = {
 
         return s
       },
-      undo(store) {
-        return snapshot ?? store
-      },
     }
   },
 
   splitPane(paneId: string, direction: 'horizontal' | 'vertical'): Command {
-    let snapshot: NormalizedData | null = null
-    let splitId: string | undefined
-    let newTgId: string | undefined
-
     return {
       type: 'workspace:splitPane',
       payload: { paneId, direction },
       execute(store) {
-        snapshot = snapshotStore(store)
-
         const parentId = getParent(store, paneId) ?? ROOT_ID
         const siblings = getChildren(store, parentId)
         const paneIndex = siblings.indexOf(paneId)
 
-        // Create split entity
-        splitId = uid('split')
+        const splitId = uid('split')
         const split: Entity = {
           id: splitId,
           data: { type: 'split', direction, sizes: [0.5, 'flex'] } as SplitData,
         }
 
-        // Create new empty tabgroup
-        newTgId = uid('tg')
+        const newTgId = uid('tg')
         const newTg: Entity = {
           id: newTgId,
           data: { type: 'tabgroup', activeTabId: '' } as TabGroupData,
         }
 
-        // Add split at pane's position in parent
         let s = addEntity(store, split, parentId, paneIndex)
-        // Move existing pane under split
         s = moveNode(s, paneId, splitId, 0)
-        // Add new tabgroup as second child of split
         s = addEntity(s, newTg, splitId)
 
         return s
-      },
-      undo(store) {
-        return snapshot ?? store
       },
     }
   },
 
   closePane(paneId: string): Command {
-    let snapshot: NormalizedData | null = null
-
     return {
       type: 'workspace:closePane',
       payload: { paneId },
       execute(store) {
-        snapshot = snapshotStore(store)
         return closePaneInternal(store, paneId)
-      },
-      undo(store) {
-        return snapshot ?? store
       },
     }
   },
