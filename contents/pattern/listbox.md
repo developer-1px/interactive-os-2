@@ -16,6 +16,12 @@
 <ListboxGrouped />
 ```
 
+### #37 Listbox with Rearrangeable Options
+
+```tsx render
+<ListboxRearrangeable />
+```
+
 ## 스펙
 
 | 속성 | 값 |

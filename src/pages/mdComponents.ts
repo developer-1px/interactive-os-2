@@ -36,6 +36,7 @@ import { MenuActivedescendant } from '../interactive-os/pattern/examples/MenuAct
 import { MenuNavigation } from '../interactive-os/pattern/examples/MenuNavigation'
 import { MenubarNavigation } from '../interactive-os/pattern/examples/MenubarNavigation'
 import { DatePickerCombobox } from '../interactive-os/pattern/examples/DatePickerCombobox'
+import { ListboxRearrangeable } from '../interactive-os/pattern/examples/ListboxRearrangeable'
 import { CarouselPrevNext } from '../interactive-os/pattern/examples/CarouselPrevNext'
 import { CarouselTabs } from '../interactive-os/pattern/examples/CarouselTabs'
 import { Toolbar } from '../interactive-os/pattern/examples/Toolbar'
@@ -98,6 +99,7 @@ export const mdComponents: Record<string, ComponentType<any>> = {
   MenuNavigation,
   MenubarNavigation,
   DatePickerCombobox,
+  ListboxRearrangeable,
   CarouselPrevNext,
   CarouselTabs,
   Toolbar,
