@@ -24,6 +24,9 @@ const META_COMMAND_TYPES = new Set([
   'core:expand',
   'core:collapse',
   'core:toggle-expand',
+  'core:check',
+  'core:uncheck',
+  'core:toggle-check',
   'core:set-col-index',
 ])
 
@@ -47,6 +50,7 @@ interface ZoneViewState {
   selectedIds: string[]
   selectionAnchor: string
   expandedIds: string[]
+  checkedIds: string[]
   gridCol: number
 }
 
@@ -83,6 +87,20 @@ function applyMetaCommand(state: ZoneViewState, command: Command): ZoneViewState
         ? { ...state, expandedIds: state.expandedIds.filter(x => x !== id) }
         : { ...state, expandedIds: [...state.expandedIds, id] }
     }
+    case 'core:check': {
+      const id = p.nodeId as string
+      return state.checkedIds.includes(id) ? state : { ...state, checkedIds: [...state.checkedIds, id] }
+    }
+    case 'core:uncheck': {
+      const id = p.nodeId as string
+      return { ...state, checkedIds: state.checkedIds.filter(x => x !== id) }
+    }
+    case 'core:toggle-check': {
+      const id = p.nodeId as string
+      return state.checkedIds.includes(id)
+        ? { ...state, checkedIds: state.checkedIds.filter(x => x !== id) }
+        : { ...state, checkedIds: [...state.checkedIds, id] }
+    }
     case 'core:set-col-index':
       return { ...state, gridCol: p.colIndex as number }
     default:
@@ -110,6 +128,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
       selectedIds: [],
       selectionAnchor: '',
       expandedIds: [],
+      checkedIds: [],
       gridCol: 0,
     }
   })
@@ -134,6 +153,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
           __selection__: { id: '__selection__', selectedIds: vs.selectedIds },
           __selection_anchor__: { id: '__selection_anchor__', anchorId: vs.selectionAnchor },
           __expanded__: { id: '__expanded__', expandedIds: vs.expandedIds },
+          __checked__: { id: '__checked__', checkedIds: vs.checkedIds },
           __grid_col__: { id: '__grid_col__', colIndex: vs.gridCol },
         },
         relationships: realStore.relationships,
@@ -217,7 +237,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
 
   // ── Derived state ──
 
-  const { focusedId, selectedIds, expandedIds } = viewState
+  const { focusedId, selectedIds, expandedIds, checkedIds } = viewState
   const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds])
 
   // ── activationFollowsSelection ──
@@ -245,6 +265,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     focusedId,
     selectedIdSet,
     expandedIds,
+    checkedIds,
     nodeIdAttr: `data-${scope}-id`,
     disabled,
   })

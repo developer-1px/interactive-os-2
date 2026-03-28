@@ -69,6 +69,7 @@ export interface UseAriaViewOptions {
   focusedId: string
   selectedIdSet: Set<string>
   expandedIds: string[]
+  checkedIds: string[]
   nodeIdAttr?: string
   isKeyMapOnly?: boolean
   autoFocus?: boolean
@@ -85,7 +86,7 @@ export interface UseAriaViewReturn {
 export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   const {
     engine, store, behavior, plugins = [], keyMap: keyMapOverrides,
-    onActivate, focusedId, selectedIdSet, expandedIds,
+    onActivate, focusedId, selectedIdSet, expandedIds, checkedIds,
     nodeIdAttr = 'data-node-id', isKeyMapOnly = false, autoFocus = true,
     disabled = false,
   } = options
@@ -131,17 +132,19 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   const behaviorCtxOptions = useMemo(
     () => ({
       expandable: behavior.expandable,
+      checkedTracking: behavior.checkedTracking,
       selectionMode: behavior.selectionMode,
       colCount: behavior.colCount,
       valueRange: behavior.valueRange,
       visibilityFilters: allVisibilityFilters,
     }),
-    [behavior.expandable, behavior.selectionMode, behavior.colCount, behavior.valueRange, allVisibilityFilters],
+    [behavior.expandable, behavior.checkedTracking, behavior.selectionMode, behavior.colCount, behavior.valueRange, allVisibilityFilters],
   )
 
   // ── getNodeState ──
 
   const expandedIdSet = useMemo(() => new Set(expandedIds), [expandedIds])
+  const checkedIdSet = useMemo(() => new Set(checkedIds), [checkedIds])
   const renameEntity = store.entities[RENAME_ID]
   const valueMeta = behavior.valueRange ? store.entities[VALUE_ID] as Record<string, unknown> | undefined : undefined
 
@@ -171,12 +174,13 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         index: siblings.indexOf(id),
         siblingCount: siblings.length,
         expanded: isExpandable ? expandedIdSet.has(id) : undefined,
+        checked: behavior.checkedTracking ? checkedIdSet.has(id) : undefined,
         level: level + 1,
         renaming,
         ...(behavior.valueRange && { valueCurrent: (valueMeta?.value as number) ?? behavior.valueRange.min }),
       }
     },
-    [store, focusedId, selectedIdSet, expandedIdSet, behavior.expandable, renameEntity, valueMeta, behavior.valueRange],
+    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, behavior.expandable, behavior.checkedTracking, renameEntity, valueMeta, behavior.valueRange],
   )
 
   // ── Event handlers ──
