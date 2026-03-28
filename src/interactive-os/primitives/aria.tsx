@@ -31,10 +31,11 @@ interface AriaProps {
   children: ReactNode
 }
 
+// ② 2026-03-28-aria-item-children-prd.md
 interface AriaItemProps {
   ids?: string[]
   asChild?: boolean
-  render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
+  render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState, children?: ReactNode) => ReactElement
 }
 
 const horizontalStyle = { display: 'flex' } as const
@@ -94,7 +95,8 @@ function useFocusScroll(focused: boolean) {
   return ref
 }
 
-function AriaItemNode({ childId, render }: { childId: string; render: AriaItemProps['render'] }) {
+// ② 2026-03-28-aria-item-children-prd.md
+function AriaItemNode({ childId, render, children }: { childId: string; render: AriaItemProps['render']; children?: ReactNode }) {
   const aria = React.useContext(AriaInternalContext)
   if (!aria) throw new Error('<Aria.Item> must be inside <Aria>')
   const store = aria.getStore()
@@ -111,7 +113,7 @@ function AriaItemNode({ childId, render }: { childId: string; render: AriaItemPr
 
   return (
     <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
-      {cloneElement(render(props, entity, state) as React.ReactElement<Record<string, unknown>>, { key: childId, ref: scrollRef })}
+      {cloneElement(render(props, entity, state, children) as React.ReactElement<Record<string, unknown>>, { key: childId, ref: scrollRef })}
     </AriaItemContext.Provider>
   )
 }
@@ -126,34 +128,46 @@ function AriaItem({ ids, render }: AriaItemProps) {
         // No expand entity → all containers open (matches expand axis shouldDescend)
         const expandedIds = expandEntity ? ((expandEntity.expandedIds as string[]) ?? []) : null
 
-        const renderNode = (childId: string): ReactNode | null => {
-          const entity = store.entities[childId]
-          if (!entity) return null
-          return <AriaItemNode key={childId} childId={childId} render={render} />
-        }
-
         const searchEntity = store.entities[SEARCH_ID] as Record<string, unknown> | undefined
         const filterText = (searchEntity?.filterText as string) ?? ''
 
+        // ② 2026-03-28-aria-item-children-prd.md
         const renderNodes = (parentId: string): ReactNode[] => {
-          const children = getChildren(store, parentId)
+          const childIds = getChildren(store, parentId)
           const nodes: ReactNode[] = []
-          for (const childId of children) {
+          for (const childId of childIds) {
             if (filterText && !matchesSearchFilter(store.entities[childId], filterText)) continue
-            const node = renderNode(childId)
-            if (!node) continue
-            nodes.push(node)
+            if (!store.entities[childId]) continue
             const hasChildren = getChildren(store, childId).length > 0
             const isExpanded = expandedIds === null || expandedIds.includes(childId)
-            if (hasChildren && isExpanded) {
-              nodes.push(...renderNodes(childId))
+
+            // Non-expandable container (group): wrap children inside container node
+            // expandedIds === null means no expand tracking → always-open groups
+            // render.length >= 4: opt-in — only when render callback declares children param
+            if (hasChildren && expandedIds === null && render.length >= 4) {
+              const childNodes = renderNodes(childId)
+              nodes.push(
+                <AriaItemNode key={childId} childId={childId} render={render}>
+                  {childNodes}
+                </AriaItemNode>,
+              )
+            } else {
+              // Leaf, expandable container, or collapsed: flat rendering (existing behavior)
+              nodes.push(
+                <AriaItemNode key={childId} childId={childId} render={render} />,
+              )
+              if (hasChildren && isExpanded) {
+                nodes.push(...renderNodes(childId))
+              }
             }
           }
           return nodes
         }
         // ids mode: flat rendering only (no recursion into children). See PRD F4.
         if (ids) {
-          return <>{ids.filter(id => !filterText || matchesSearchFilter(store.entities[id], filterText)).map(id => renderNode(id)).filter(Boolean)}</>
+          return <>{ids.filter(id => !filterText || matchesSearchFilter(store.entities[id], filterText)).map(id =>
+            store.entities[id] ? <AriaItemNode key={id} childId={id} render={render} /> : null,
+          ).filter(Boolean)}</>
         }
         return <>{renderNodes(ROOT_ID)}</>
       }}

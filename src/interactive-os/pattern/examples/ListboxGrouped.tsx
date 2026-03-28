@@ -41,33 +41,37 @@ const data: NormalizedData = createStore({
   },
 })
 
-// APG: group label + options
+// APG #38: group label (role="presentation") + options inside ul[role="group"]
+// https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-grouped/
 const renderItem = (
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
   state: NodeState,
+  children?: React.ReactNode,
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
-  const isGroup = (state.level ?? 1) === 1
 
-  if (isGroup) {
-    // APG: role="group" with aria-labelledby pointing to the label span
+  if (children) {
+    // Container node → APG: ul[role="group"] wrapper with presentation label
     const labelId = `group-label-${node.id}`
     return (
-      <div {...props} aria-labelledby={labelId} className={styles.groupLabel}>
-        <span id={labelId}>{label}</span>
-      </div>
+      <ul {...props} aria-labelledby={labelId} className={styles.groupOptions}>
+        <li role="presentation" id={labelId} className={styles.groupLabel}>
+          {label}
+        </li>
+        {children}
+      </ul>
     )
   }
 
   return (
-    <div
+    <li
       {...props}
       className={styles.option}
       data-focused={state.focused || undefined}
     >
       {label}
-    </div>
+    </li>
   )
 }
 
