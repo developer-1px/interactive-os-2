@@ -14,6 +14,7 @@ export interface GridNav {
   focusPrevCol(): Command
   focusFirstCol(): Command
   focusLastCol(): Command
+  focusRow(): Command
 }
 
 export interface ValueNav {

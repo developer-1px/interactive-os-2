@@ -71,6 +71,7 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
       focusPrevCol: () => gridColCommands.setColIndex(Math.max(currentCol - 1, 0)),
       focusFirstCol: () => gridColCommands.setColIndex(0),
       focusLastCol: () => gridColCommands.setColIndex(colCount - 1),
+      focusRow: () => gridColCommands.setColIndex(-1),
     }
   })() : undefined
 

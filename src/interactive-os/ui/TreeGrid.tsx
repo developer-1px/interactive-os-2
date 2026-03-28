@@ -16,6 +16,7 @@ interface TreeGridProps {
   onChange?: (data: NormalizedData) => void
   renderItem?: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => React.ReactElement
   enableEditing?: boolean
+  columns?: number
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
@@ -38,10 +39,11 @@ export function TreeGrid({
   onChange,
   renderItem = defaultRenderItem,
   enableEditing = false,
+  columns,
 }: TreeGridProps) {
   const pattern = React.useMemo(
-    () => treegrid(),
-    [],
+    () => columns ? treegrid(columns) : treegrid(1),
+    [columns],
   )
 
   const mergedPlugins = React.useMemo(
