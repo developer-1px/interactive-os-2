@@ -68,12 +68,12 @@ const renderPanel = (
 
 export function TabsAutomatic() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => tabs, [])
+  const pattern = useMemo(() => tabs, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

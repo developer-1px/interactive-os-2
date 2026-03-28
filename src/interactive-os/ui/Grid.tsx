@@ -53,7 +53,7 @@ export function Grid({
   keyMap,
   'aria-label': ariaLabel,
 }: GridProps) {
-  const behavior = React.useMemo(
+  const pattern = React.useMemo(
     () => gridBehavior({ columns: columns.length, tabCycle }),
     [columns.length, tabCycle],
   )
@@ -102,7 +102,7 @@ export function Grid({
         </div>
       )}
       <Aria
-        behavior={behavior}
+        pattern={pattern}
         data={data}
         plugins={mergedPlugins}
         onChange={onChange}

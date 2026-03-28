@@ -108,7 +108,7 @@ function createFeatures(): SectionTemplate {
   const cards = [
     { slug: 'store',    icon: 'database', title: 'Normalized Store',     desc: '엔티티와 관계를 정규화 트리로 관리. O(1) 조회, 불변 업데이트, 부모-자식 순회.' },
     { slug: 'engine',   icon: 'cog',      title: 'Command Engine',       desc: '모든 변경은 커맨드. 미들웨어 파이프라인으로 유효성 검증, 로깅, undo/redo.' },
-    { slug: 'behavior', icon: 'shield',   title: '16 ARIA Behaviors',    desc: 'Treegrid, listbox, tabs, combobox — 프리셋 하나로 역할, 상태, 키 바인딩 완성.' },
+    { slug: 'pattern', icon: 'shield',   title: '16 ARIA Behaviors',    desc: 'Treegrid, listbox, tabs, combobox — 프리셋 하나로 역할, 상태, 키 바인딩 완성.' },
     { slug: 'keyboard', icon: 'keyboard', title: 'Keyboard Interaction', desc: '로빙 탭인덱스, 방향키 탐색, 공간 내비게이션, 플랫폼 인식 단축키.' },
   ]
 

@@ -31,7 +31,7 @@ export function ListBox({
   renderItem = defaultRenderItem,
   enableEditing = false,
 }: ListBoxProps) {
-  const behavior = React.useMemo(
+  const pattern = React.useMemo(
     () => listbox(),
     [],
   )
@@ -43,7 +43,7 @@ export function ListBox({
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={data}
       plugins={mergedPlugins}
       onChange={onChange}

@@ -1,12 +1,12 @@
 ---
 last_commit: 3cb927f4a34cb541fa2ea88f52e2077ac491cb02
-last_updated: 2026-03-24
+last_updated: 2026-03-28
 ---
 
 ## Verbs
 | fragment | count | roles | identifiers |
 |----------|-------|-------|-------------|
-| create | 15 | factory | createStore, createCommandEngine, createBehaviorContext, createRecorder, createBatchCommand, createToaster, createReproRecorder, createFruitStore, createGroupedStore |
+| create | 13 | factory | createStore, createCommandEngine, createBatchCommand, createToaster, createReproRecorder, createFruitStore, createGroupedStore |
 | get | 21 | lookup: getEntity, getChildren, getParent, getEntityData, getFocusedId, getNodeState; traverse: getVisibleNodes, getRootAncestor, getTabItemAncestor; derive: getNodeClassName, getSectionClassName, getChildrenContainerClassName, getNodeTag, getNodeProps, getAriaActions; extract: getEditableFields, getRowMetadata, getFileExt, getCutSourceIds, getSpatialParentId; type: GetLabelFn |
 | add | 1 | store mutation | addEntity |
 | remove | 1 | store mutation | removeEntity |
@@ -22,7 +22,6 @@ last_updated: 2026-03-24
 | expand | 2 | command | expand, expandCommands |
 | collapse | 1 | command | collapse |
 | activate | 3 | command | activate, onActivate, activateOnClick |
-| follow | 1 | flag | followFocus |
 | dispatch | 2 | engine | dispatch, dispatchKeyAction |
 | start | 1 | command | startRename |
 | confirm | 1 | command | confirmRename |
@@ -52,10 +51,8 @@ last_updated: 2026-03-24
 | compose | 2 | function composition | composePattern, composeMiddlewares |
 | apply | 1 | command | applyMetaCommand |
 | sync | 1 | I/O | syncStore |
-| nav | 4 | axis label | navV, navH, navVhUniform, navGrid |
 | collect | 6 | array traverse + merge | collectSections, collectEditableGroups, collectPluginKeyMaps, collectPluginUnhandledKeyHandlers, collectPluginClipboardHandlers |
 | detect | 1 | change detection | detectNewVisibleEntities |
-| extract | 2 | pick subset | extractConfig, extractKeyMap |
 | register | 1 | registry | registerAria |
 | unregister | 1 | registry | unregisterAria |
 | render | 2 | React render | RenderTreeItem, comboboxRenderItem |
@@ -74,8 +71,7 @@ last_updated: 2026-03-24
 | entity | 7 | Entity, getEntity, addEntity, removeEntity, updateEntity, getEntityData, updateEntityData |
 | command | 10 | Command, BatchCommand, CommandEngine, createCommandEngine, createBatchCommand, templateToCommand, redoCommand, undoCommand |
 | engine | 12 | CommandEngine, createCommandEngine, useEngine, EngineOptions, UseEngineOptions, UseEngineReturn |
-| behavior | 6 | AriaBehavior, BehaviorContext, createBehaviorContext, BehaviorContextOptions, switchBehavior |
-| context | 7 | BehaviorContext, createBehaviorContext, AriaInternalContext, AriaInternalContextValue, BehaviorContextOptions |
+| context | 4 | PatternContext, PatternContextOptions, AriaInternalContext, AriaInternalContextValue |
 | plugin | 5 | Plugin, PluginConfig, definePlugin, replaceEditPlugin, collectPlugin* |
 | middleware | 2 | Middleware, composeMiddlewares |
 | node | 8 | NodeState, moveNode, insertNode, FileNodeData, getNodeClassName, getNodeTag, NodeContent, TypeaheadNode |
@@ -90,8 +86,7 @@ last_updated: 2026-03-24
 | slider | 8 | slider (behavior factory), Slider (UI), apgSlider, makeSliderData |
 | spinbutton | 8 | spinbutton (behavior factory), Spinbutton (UI), apgSpinbutton, makeSpinbuttonData |
 | key | 7 | KeyCombo, findMatchingKey, parseKeyCombo, dispatchKeyAction, extractKeyMap, matchKeyEvent, isPrintableKey |
-| recorder | 6 | createRecorder, createReproRecorder, ReproRecorderOverlay |
-| snapshot | 1 | ReplaySnapshot |
+| recorder | 2 | createReproRecorder, ReproRecorderOverlay |
 | adapter | 3 | TransformAdapter, fileTreeAdapter, cmsI18nAdapter |
 | data | 42 | NormalizedData, getEntityData, updateEntityData, ApgPatternData, ToastData, FileNodeData, ... (shared data files) |
 | clipboard | 7 | clipboardCommands, resetClipboard, ClipboardOptions, CanAcceptFn, CanAcceptResult, CanDeleteFn |
@@ -115,7 +110,7 @@ last_updated: 2026-03-24
 | schema | 3 | localeMapSchema, nodeSchemas, childRules |
 | mermaid | 1 | MermaidBlock |
 | table | 2 | ApgKeyboardTable |
-| axis | 14 | Axis (type), navV, navH, navVhUniform, navGrid, depthArrow, depthEnterEsc, selectToggle, selectExtended, activate, activateFollowFocus, focusTrap, value, edit |
+| axis | 8 | Axis (type), navigate, select, expand, activate, dismiss, tab, value, edit, checked, popup |
 | zone | 3 | useAriaZone, UseAriaZoneOptions |
 | view | 3 | useAriaView, UseAriaViewOptions, UseAriaViewReturn |
 | column | 2 | columnOrder, TimelineColumn |
@@ -124,13 +119,12 @@ last_updated: 2026-03-24
 | component | 3 | ComponentEntry, PageAriaComponent |
 | fixture | 20 | showcaseFixtures.ts (makeXxxData factories) |
 | scope | 1 | UseAriaZoneOptions.scope |
-| depth | 3 | depthArrow, depthEnterEsc, clearCursorsAtDepth |
+| depth | 1 | clearCursorsAtDepth |
 | cursor | 1 | stickyCursorRef (보관된 이전 위치 ≠ focus. focus=현재 활성, cursor=이전 보관) |
 | direction | 1 | Direction (type) |
 | group | 22 | findAdjacentGroup, ToolGroup, ToolGroupCard, groupEvents, EditableGroup, EditableGroupEntry, DisclosureGroup, RadioGroup, SwitchGroup, ToggleGroup, RouteGroup |
 | display | 1 | DisplayItem |
 | result | 2 | SpatialNavResult, CanAcceptResult |
-| trap | 4 | focusTrap, trap (axis), PageTrap |
 | keymap | 1 | keymap-helpers (file) |
 | toast | 1 | ToastData |
 | toaster | 6 | createToaster, Toaster, ToasterOptions |
@@ -152,7 +146,7 @@ last_updated: 2026-03-24
 | tabs | 7 | tabs (behavior), TabList (UI), apgTabs, makeTabListData |
 | registry | 2 | ariaRegistry, showcaseRegistry |
 | root | 3 | ROOT_ID, DEFAULT_ROOT, getRootAncestor |
-| repro | 4 | createReproRecorder, ReproRecorderOverlay |
+| repro | 2 | createReproRecorder, ReproRecorderOverlay |
 | overlay | 2 | ReproRecorderOverlay |
 | resizer | 2 | useResizer |
 | diagram | 2 | ExportDiagram |
@@ -160,7 +154,7 @@ last_updated: 2026-03-24
 | route | 3 | RouteItem, RouteGroup, routeConfig |
 | shell | 1 | AppShell |
 | timeline | 4 | TimelineColumn, TimelineEvent, TimelineItem, TimelineItems |
-| switch | 8 | switchBehavior, SwitchGroup, apgSwitch, makeSwitchGroupData |
+| switch | 7 | SwitchGroup, apgSwitch, makeSwitchGroupData |
 | radio | 6 | RadioGroup, apgRadioGroup, makeRadioGroupData |
 | listbox | 7 | listbox (behavior), ListBox (UI), apgListbox |
 | navlist | 5 | navlist (behavior), NavList (UI), useNavList, UseNavListOptions, UseNavListReturn |
@@ -180,7 +174,6 @@ last_updated: 2026-03-24
 | raw | 1 | RawEvent |
 | matching | 1 | findMatchingKey |
 | editable | 7 | isEditableElement, CmsInlineEditable, EditableGroup, EditableGroupEntry, collectEditableGroups, getEditableFields, AriaEditable |
-| uniform | 1 | navVhUniform |
 | extended | 1 | selectExtended |
 | meta | 1 | META_COMMAND_TYPES |
 | sticky | 1 | stickyCursorRef |
@@ -188,7 +181,6 @@ last_updated: 2026-03-24
 | visible | 3 | isVisible, getVisibleNodes, detectNewVisibleEntities |
 | reachable | 2 | IsReachable, spatialReachable |
 | printable | 1 | isPrintableKey |
-| structured | 2 | StructuredAxis, isStructuredAxis |
 | grouped | 1 | createGroupedStore |
 | localized | 1 | localized (cms-types) |
 | initial | 2 | gridInitialData, kanbanInitialData |
@@ -205,8 +197,8 @@ last_updated: 2026-03-24
 | fragment | count | rule | identifiers |
 |----------|-------|------|-------------|
 | Commands | 12+ | `Record<string, CommandFactory>` — command group | focusCommands, selectionCommands, clipboardCommands, renameCommands, expandCommands, gridColCommands, valueCommands, spatialCommands, comboboxCommands, dndCommands, historyCommands, crudCommands |
-| Options | 13 | ⚠️ mixed: all-optional config AND hook params with required fields | BehaviorContextOptions ✓, EditOptions ✓, ClipboardOptions ✓, ComboboxOptions ✓, FocusRecoveryOptions ✓, NavigateOptions ✓, ToasterOptions ✓, TypeaheadOptions ✓, UseAriaOptions ✗, UseAriaZoneOptions ✗, UseControlledAriaOptions ✗, UseEngineOptions ✗, UseAriaViewOptions ✗ |
-| Data | 42+ | fixture suffix OK, type suffix = noise | makeTreeGridData (OK), NormalizedData (noise), FileNodeData (noise), ApgPatternData (noise) |
+| Options | 11 | **Rule**: `Options` = all-optional config bag. Hook params with required fields use hook name prefix (`UseAriaOptions`). | EditOptions ✓, ClipboardOptions ✓, ComboboxOptions ✓, FocusRecoveryOptions ✓, NavigateOptions ✓, ToasterOptions ✓, TypeaheadOptions ✓, PatternContextOptions ✓, UseAriaOptions (hook), UseAriaZoneOptions (hook), UseAriaViewOptions (hook) |
+| Data | 42+ | **Rule**: fixture `makeXxxData` = OK. Type suffix `Data` = noise (avoid in new types). Existing: NormalizedData, ApgPatternData (legacy, don't rename). | makeTreeGridData (OK), NormalizedData (legacy), ApgPatternData (legacy) |
 | ID | 9 | store state slot identifier (SCREAMING_SNAKE) | FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, GRID_COL_ID, ROOT_ID, RENAME_ID, VALUE_ID, EXPANDED_ID, SPATIAL_PARENT_ID |
 | Return | 3 | hook return type | UseEngineReturn, UseAriaViewReturn, UseNavListReturn |
 | Props | 1 | component props | AriaItemProps |
@@ -225,11 +217,10 @@ last_updated: 2026-03-24
 | make | create | make = fixture/demo data factory, create = runtime instance factory |
 | load/save | get/set | load/save = localStorage I/O, get/set = in-memory state |
 | cursor | focus | cursor=보관된 이전 위치, focus=현재 활성 노드 |
-| switchBehavior | — | `switch` is JS reserved word; unavoidable exception |
 | collect | get | collect = 배열 순회/병합 (collectSections, collectPlugin*), get = 단건 조회 |
 | register | add | registerAria = 글로벌 레지스트리, addEntity = store |
 | detect | find | detectNewVisibleEntities = 변경 감지, find = 조건 검색 |
-| navigate | nav | navigate = axis 함수 (full word), nav = 타입 접미사/축약 |
+| navigate | — | navigate = axis 함수 (full word). nav* prefix 제거됨 |
 | replace | remove | replaceEditPlugin = swap, removeEntity = delete — distinct |
 
 ## Role Map

@@ -44,7 +44,7 @@ function renderSplitter(
   options: { min: number; max: number; step: number; orientation?: 'horizontal' | 'vertical' },
 ) {
   return render(
-    <Aria behavior={windowSplitter(options)} data={data} plugins={[]}>
+    <Aria pattern={windowSplitter(options)} data={data} plugins={[]}>
       <Aria.Item
         render={(props, item, _state: NodeState) => (
           <div {...props} data-testid={`splitter-${item.id}`} />

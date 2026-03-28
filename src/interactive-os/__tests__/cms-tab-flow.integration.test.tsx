@@ -30,8 +30,8 @@ describe('CMS tab flow (natural-tab-order)', () => {
 
 describe('V4 regression: existing behaviors retain roving-tabindex', () => {
   it('listbox uses roving-tabindex', () => {
-    const behavior = listbox()
-    expect(behavior.focusStrategy.type).toBe('roving-tabindex')
+    const pattern = listbox()
+    expect(pattern.focusStrategy.type).toBe('roving-tabindex')
   })
 
   it('tree uses roving-tabindex', () => {

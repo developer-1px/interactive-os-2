@@ -1,5 +1,5 @@
 /**
- * Integration test: spatial behavior — Space, Home, End keyMap
+ * Integration test: spatial pattern — Space, Home, End keyMap
  */
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
@@ -43,11 +43,11 @@ function getFocused(container: HTMLElement): string {
   return container.querySelector('[tabindex="0"][data-node-id]')?.getAttribute('data-node-id') ?? ''
 }
 
-describe('spatial behavior — Enter/Escape drill-in/out', () => {
+describe('spatial pattern — Enter/Escape drill-in/out', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={spatial} data={spatialFixtureExpanded()} plugins={[spatialPlugin()]}>
+      <Aria pattern={spatial} data={spatialFixtureExpanded()} plugins={[spatialPlugin()]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused} data-selected={state.selected}>
             {(node as { data: { label: string } }).data.label}
@@ -122,11 +122,11 @@ describe('spatial behavior — Enter/Escape drill-in/out', () => {
   })
 })
 
-describe('spatial behavior — Space, Home, End', () => {
+describe('spatial pattern — Space, Home, End', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={spatial} data={spatialFixture()} plugins={[]}>
+      <Aria pattern={spatial} data={spatialFixture()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused} data-selected={state.selected}>
             {(node as { data: { label: string } }).data.label}

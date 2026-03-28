@@ -38,7 +38,7 @@ function fixtureData(): NormalizedData {
 // ---------------------------------------------------------------------------
 
 function TestMenuButton({ data, onActivate }: { data: NormalizedData; onActivate?: (id: string) => void }) {
-  const aria = useAria({ data, behavior: menuButton, onActivate })
+  const aria = useAria({ data, pattern: menuButton, onActivate })
   const store = aria.getStore()
   const popupEntity = store.entities[POPUP_ID] as Record<string, unknown> | undefined
   const isOpen = (popupEntity?.isOpen as boolean) ?? false

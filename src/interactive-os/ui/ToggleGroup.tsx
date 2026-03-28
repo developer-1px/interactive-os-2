@@ -36,7 +36,7 @@ export function ToggleGroup({
 }: ToggleGroupProps) {
   return (
     <Aria
-      behavior={toolbar}
+      pattern={toolbar}
       data={data}
       plugins={plugins}
       onChange={onChange}

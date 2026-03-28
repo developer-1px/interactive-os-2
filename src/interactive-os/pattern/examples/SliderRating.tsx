@@ -44,12 +44,12 @@ const renderSlider = (
 
 export function SliderRating() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => slider({ min: 0, max: 10, step: 1 }), [])
+  const pattern = useMemo(() => slider({ min: 0, max: 10, step: 1 }), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

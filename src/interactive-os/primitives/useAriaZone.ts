@@ -36,7 +36,7 @@ const META_COMMAND_TYPES = new Set([
 export interface UseAriaZoneOptions {
   engine: CommandEngine
   store: NormalizedData
-  behavior: AriaPattern
+  pattern: AriaPattern
   scope: string
   plugins?: Plugin[]
   keyMap?: Record<string, (ctx: ReturnType<typeof createPatternContext>) => Command | void>
@@ -123,7 +123,7 @@ function applyMetaCommand(state: ZoneViewState, command: Command): ZoneViewState
 
 export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
   const {
-    engine, store, behavior, scope,
+    engine, store, pattern, scope,
     plugins: zonePlugins,
     keyMap: keyMapOverrides,
     onActivate, initialFocus,
@@ -148,8 +148,8 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
 
   const onActivateRef = useRef(onActivate)
   onActivateRef.current = onActivate
-  const behaviorRef = useRef(behavior)
-  behaviorRef.current = behavior
+  const patternRef = useRef(pattern)
+  patternRef.current = pattern
   const viewStateRef = useRef(viewState)
   viewStateRef.current = viewState
 
@@ -212,7 +212,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
             if (command.type === 'core:focus') {
               const withAnchorReset = { ...next, selectionAnchor: '' }
               // selectionFollowsFocus: auto-select focused node (standalone focus only, not batch)
-              if (behaviorRef.current.selectionFollowsFocus) {
+              if (patternRef.current.selectionFollowsFocus) {
                 const nodeId = (command.payload as { nodeId: string }).nodeId
                 return { ...withAnchorReset, selectedIds: [nodeId] }
               }
@@ -262,7 +262,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     const prev = prevSelectedIdsRef.current
     prevSelectedIdsRef.current = selectedIds
     if (prev === selectedIds) return
-    if (!behaviorRef.current.activationFollowsSelection || !onActivateRef.current) return
+    if (!patternRef.current.activationFollowsSelection || !onActivateRef.current) return
     if (selectedIds.length === 0) return
     onActivateRef.current(selectedIds[selectedIds.length - 1]!)
   }, [selectedIds])
@@ -272,7 +272,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
   const view = useAriaView({
     engine: virtualEngine,
     store,
-    behavior,
+    pattern,
     plugins: zonePlugins,
     keyMap: keyMapOverrides,
     onActivate,

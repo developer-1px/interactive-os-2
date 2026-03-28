@@ -60,7 +60,7 @@ function ViewerTreeExact() {
   if (loading || !store) return <div>Loading...</div>
 
   return (
-    <Aria behavior={tree} data={store} plugins={[]} onChange={handleChange} aria-label="File tree">
+    <Aria pattern={tree} data={store} plugins={[]} onChange={handleChange} aria-label="File tree">
       <Aria.Item render={(props, node, state) => {
         const data = node.data as { name: string; type: string }
         return (

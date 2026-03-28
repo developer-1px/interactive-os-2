@@ -34,7 +34,7 @@ export function Spinbutton({
   label,
 }: SpinbuttonProps) {
   const stableId = React.useMemo(() => id ?? `spinbutton-${++spinIdCounter}`, [id])
-  const behavior = React.useMemo(() => spinbutton({ min, max, step }), [min, max, step])
+  const pattern = React.useMemo(() => spinbutton({ min, max, step }), [min, max, step])
   const range = React.useMemo(() => ({ min, max, step }), [min, max, step])
   const [editing, setEditing] = useState(false)
   const [editValue, setEditValue] = useState('')
@@ -177,7 +177,7 @@ export function Spinbutton({
   }
 
   return (
-    <Aria id={stableId} behavior={behavior} data={data} plugins={plugins} onChange={onChange}>
+    <Aria id={stableId} pattern={pattern} data={data} plugins={plugins} onChange={onChange}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

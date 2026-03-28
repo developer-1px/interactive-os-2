@@ -37,7 +37,7 @@ function fixtureData(): NormalizedData {
 
 function renderSwitch(data: NormalizedData) {
   return render(
-    <Aria behavior={switchPattern} data={data} plugins={[]}>
+    <Aria pattern={switchPattern} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`sw-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

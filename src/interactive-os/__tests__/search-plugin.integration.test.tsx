@@ -150,7 +150,7 @@ function fixtureData() {
 function SearchableList() {
   const [data, setData] = useState<NormalizedData>(fixtureData())
   return (
-    <Aria behavior={listbox()} data={data} plugins={[search()]} onChange={setData} aria-label="Test">
+    <Aria pattern={listbox()} data={data} plugins={[search()]} onChange={setData} aria-label="Test">
       <Aria.Search placeholder="Search..." />
       <Aria.Item render={(props, node) => (
         <div {...props} data-testid={`item-${(node.data as { label?: string })?.label}`}>

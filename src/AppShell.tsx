@@ -80,7 +80,7 @@ const LAYER_LABELS: Record<string, string> = {
   ui: 'L7 UI',
 }
 
-// --- Vertical toolbar behavior ---
+// --- Vertical toolbar pattern ---
 
 const verticalToolbar: AriaPattern = {
   ...toolbar,
@@ -253,7 +253,7 @@ export default function AppShell() {
           <div className="logo-mark" />
         </div>
         <Aria
-          behavior={verticalToolbar}
+          pattern={verticalToolbar}
           data={activityBarData}
           plugins={[]}
           onActivate={handleActivityBarActivate}

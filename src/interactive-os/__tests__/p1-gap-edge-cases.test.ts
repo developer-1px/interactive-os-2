@@ -25,7 +25,7 @@ describe('external data sync: focused item removed', () => {
     const onChange = vi.fn()
 
     const { result, rerender } = renderHook(
-      ({ data }) => useAria({ behavior: listbox(), data, plugins: [], onChange }),
+      ({ data }) => useAria({ pattern: listbox(), data, plugins: [], onChange }),
       { initialProps: { data: store1 } },
     )
 
@@ -54,7 +54,7 @@ describe('external data sync: selected items removed', () => {
     const onChange = vi.fn()
 
     const { result, rerender } = renderHook(
-      ({ data }) => useAria({ behavior: listbox(), data, plugins: [], onChange }),
+      ({ data }) => useAria({ pattern: listbox(), data, plugins: [], onChange }),
       { initialProps: { data: store1 } },
     )
 
@@ -82,7 +82,7 @@ describe('external data sync: relationships change, entities same', () => {
     const onChange = vi.fn()
 
     const { result, rerender } = renderHook(
-      ({ data }) => useAria({ behavior: listbox(), data, plugins: [], onChange }),
+      ({ data }) => useAria({ pattern: listbox(), data, plugins: [], onChange }),
       { initialProps: { data: store1 } },
     )
 
@@ -100,7 +100,7 @@ describe('external data sync: rapid consecutive updates', () => {
     const onChange = vi.fn()
 
     const { result, rerender } = renderHook(
-      ({ data }) => useAria({ behavior: listbox(), data, plugins: [], onChange }),
+      ({ data }) => useAria({ pattern: listbox(), data, plugins: [], onChange }),
       { initialProps: { data: store1 } },
     )
 
@@ -121,7 +121,7 @@ describe('external data sync + internal mutation', () => {
 
     const { result, rerender } = renderHook(
       ({ data }) => useAria({
-        behavior: listbox(),
+        pattern: listbox(),
         data,
         plugins: [history()],
         onChange,
@@ -162,7 +162,7 @@ describe('initialFocus: nested entity (not ROOT child)', () => {
 
     const { result } = renderHook(() =>
       useAria({
-        behavior: listbox(),
+        pattern: listbox(),
         data: store,
         plugins: [],
         onChange,
@@ -181,7 +181,7 @@ describe('initialFocus: empty store', () => {
 
     const { result } = renderHook(() =>
       useAria({
-        behavior: listbox(),
+        pattern: listbox(),
         data: store,
         plugins: [],
         onChange,
@@ -209,7 +209,7 @@ describe('syncStore: user entity with __ prefix', () => {
     const onChange = vi.fn()
 
     const { result, rerender } = renderHook(
-      ({ data }) => useAria({ behavior: listbox(), data, plugins: [], onChange }),
+      ({ data }) => useAria({ pattern: listbox(), data, plugins: [], onChange }),
       { initialProps: { data: store1 } },
     )
 

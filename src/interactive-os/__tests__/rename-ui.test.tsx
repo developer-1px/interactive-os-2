@@ -24,7 +24,7 @@ const plugins = [rename(), history()]
 function TestListBox({ initialData, keyMap, allowEmpty }: { initialData?: NormalizedData; keyMap?: Record<string, (ctx: import('../axis/types').PatternContext) => import('../engine/types').Command | void>; allowEmpty?: boolean }) {
   const [data, setData] = useState(initialData ?? initialStore)
   return (
-    <Aria behavior={listbox()} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
+    <Aria pattern={listbox()} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
       <Aria.Item render={(props, node: Record<string, unknown>, _state: NodeState) => (
         <div {...props} data-testid={`item-${node.id}`}>
           <Aria.Editable field="label" allowEmpty={allowEmpty}>
@@ -147,7 +147,7 @@ describe('Rename UI', () => {
     })
   })
 
-  describe('blur behavior', () => {
+  describe('blur pattern', () => {
     it('blur confirms rename', () => {
       const { container } = setupWithKeyMap()
       const firstNode = container.querySelector('[data-node-id="a"]')!
@@ -204,7 +204,7 @@ describe('Rename UI', () => {
       function NoRenameListBox() {
         const [data, setData] = useState(initialStore)
         return (
-          <Aria behavior={listbox()} data={data} plugins={[]} onChange={setData}>
+          <Aria pattern={listbox()} data={data} plugins={[]} onChange={setData}>
             <Aria.Item render={(props, node: Record<string, unknown>, _state) => (
               <Aria.Editable {...props} field="label">
                 <span>{(node.data as Record<string, unknown>)?.label as string}</span>
@@ -287,7 +287,7 @@ describe('Rename UI', () => {
             renameCommands.startRename('a', { replace: true, initialChar: 'a' }),
         }
         return (
-          <Aria behavior={listbox()} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
+          <Aria pattern={listbox()} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
             <Aria.Item render={(props, node: Record<string, unknown>, _state) => (
               <div {...props} data-testid={`item-${node.id}`}>
                 <Aria.Editable field="label">
@@ -360,7 +360,7 @@ describe('Rename UI', () => {
       editable.textContent = ''
       act(() => { fireEvent.keyDown(editable, { key: 'Enter' }) })
 
-      // Original value restored (cancel behavior)
+      // Original value restored (cancel pattern)
       expect(container.querySelector('[data-testid="item-a"]')!.textContent).toContain('Alpha')
     })
 

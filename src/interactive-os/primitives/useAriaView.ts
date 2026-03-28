@@ -62,7 +62,7 @@ export function collectPluginClipboardHandlers(plugins: Plugin[]) {
 export interface UseAriaViewOptions {
   engine: CommandEngine
   store: NormalizedData
-  behavior: AriaPattern
+  pattern: AriaPattern
   plugins?: Plugin[]
   keyMap?: Record<string, KeyMapHandler>
   onActivate?: (nodeId: string) => void
@@ -80,12 +80,12 @@ export interface UseAriaViewReturn {
   getNodeProps: (id: string) => Record<string, unknown>
   getNodeState: (id: string) => NodeState
   containerProps: Record<string, unknown>
-  behaviorCtxOptions: { expandable?: boolean; selectionMode?: string; colCount?: number; valueRange?: { min: number; max: number; step?: number }; visibilityFilters?: import('../engine/types').VisibilityFilter[] }
+  patternCtxOptions: { expandable?: boolean; selectionMode?: string; colCount?: number; valueRange?: { min: number; max: number; step?: number }; visibilityFilters?: import('../engine/types').VisibilityFilter[] }
 }
 
 export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   const {
-    engine, store, behavior, plugins = [], keyMap: keyMapOverrides,
+    engine, store, pattern, plugins = [], keyMap: keyMapOverrides,
     onActivate, focusedId, selectedIdSet, expandedIds, checkedIds,
     nodeIdAttr = 'data-node-id', isKeyMapOnly = false, autoFocus = true,
     disabled = false,
@@ -103,43 +103,43 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   }), [plugins])
 
   const mergedKeyMap = useMemo(() => {
-    const base: Record<string, KeyMapHandler> = { ...behavior.keyMap }
+    const base: Record<string, KeyMapHandler> = { ...pattern.keyMap }
     if (pluginKeyMaps) {
       for (const [key, handler] of Object.entries(pluginKeyMaps)) {
-        const behaviorHandler = base[key]
-        base[key] = behaviorHandler ? wrapWithOriginal(behaviorHandler, handler) : handler as KeyMapHandler
+        const patternHandler = base[key]
+        base[key] = patternHandler ? wrapWithOriginal(patternHandler, handler) : handler as KeyMapHandler
       }
     }
     if (keyMapOverrides) Object.assign(base, keyMapOverrides)
     return base
-  }, [behavior.keyMap, pluginKeyMaps, keyMapOverrides])
+  }, [pattern.keyMap, pluginKeyMaps, keyMapOverrides])
 
   // ── Behavior context options ──
 
-  // Collect visibility filters from behavior (axes) + plugins
+  // Collect visibility filters from pattern (axes) + plugins
   const allVisibilityFilters = useMemo(() => {
-    const filters = [...(behavior.visibilityFilters ?? [])]
+    const filters = [...(pattern.visibilityFilters ?? [])]
     // expandTracking/expandable without explicit expand axis → add expand filter
-    if ((behavior.expandTracking || behavior.expandable) && !filters.some(f => f.shouldDescend)) {
+    if ((pattern.expandTracking || pattern.expandable) && !filters.some(f => f.shouldDescend)) {
       filters.push(expandVisibilityFilter)
     }
     for (const p of plugins) {
       if (p.visibilityFilter) filters.push(p.visibilityFilter)
     }
     return filters.length > 0 ? filters : undefined
-  }, [behavior.visibilityFilters, behavior.expandTracking, behavior.expandable, plugins])
+  }, [pattern.visibilityFilters, pattern.expandTracking, pattern.expandable, plugins])
 
-  const behaviorCtxOptions = useMemo(
+  const patternCtxOptions = useMemo(
     () => ({
-      expandable: behavior.expandable,
-      checkedTracking: behavior.checkedTracking,
-      selectionMode: behavior.selectionMode,
-      colCount: behavior.colCount,
-      valueRange: behavior.valueRange,
+      expandable: pattern.expandable,
+      checkedTracking: pattern.checkedTracking,
+      selectionMode: pattern.selectionMode,
+      colCount: pattern.colCount,
+      valueRange: pattern.valueRange,
       visibilityFilters: allVisibilityFilters,
-      popupType: behavior.popupType,
+      popupType: pattern.popupType,
     }),
-    [behavior.expandable, behavior.checkedTracking, behavior.selectionMode, behavior.colCount, behavior.valueRange, allVisibilityFilters, behavior.popupType],
+    [pattern.expandable, pattern.checkedTracking, pattern.selectionMode, pattern.colCount, pattern.valueRange, allVisibilityFilters, pattern.popupType],
   )
 
   // ── getNodeState ──
@@ -147,7 +147,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   const expandedIdSet = useMemo(() => new Set(expandedIds), [expandedIds])
   const checkedIdSet = useMemo(() => new Set(checkedIds), [checkedIds])
   const renameEntity = store.entities[RENAME_ID]
-  const valueMeta = behavior.valueRange ? store.entities[VALUE_ID] as Record<string, unknown> | undefined : undefined
+  const valueMeta = pattern.valueRange ? store.entities[VALUE_ID] as Record<string, unknown> | undefined : undefined
 
   const getNodeState = useCallback(
     (id: string): NodeState => {
@@ -165,7 +165,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         current = parent
       }
 
-      const isExpandable = hasChildren || (behavior.expandable ?? false) || (behavior.panelVisibility === 'expanded')
+      const isExpandable = hasChildren || (pattern.expandable ?? false) || (pattern.panelVisibility === 'expanded')
       const renaming = !!(renameEntity?.active && renameEntity?.nodeId === id)
 
       return {
@@ -175,7 +175,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         index: siblings.indexOf(id),
         siblingCount: siblings.length,
         expanded: isExpandable ? expandedIdSet.has(id) : undefined,
-        checked: behavior.checkedTracking ? (() => {
+        checked: pattern.checkedTracking ? (() => {
           const directChecked = checkedIdSet.has(id)
           const children = getChildren(store, id)
           if (children.length === 0) return directChecked
@@ -184,7 +184,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           if (checkedCount === children.length) return true
           return 'mixed' as const
         })() : undefined,
-        open: behavior.popupType ? (() => {
+        open: pattern.popupType ? (() => {
           const popupEntity = store.entities['__popup__'] as Record<string, unknown> | undefined
           const isOpen = (popupEntity?.isOpen as boolean) ?? false
           const triggerId = (popupEntity?.triggerId as string) ?? ''
@@ -196,10 +196,10 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         })() : undefined,
         level: level + 1,
         renaming,
-        ...(behavior.valueRange && { valueCurrent: (valueMeta?.value as number) ?? behavior.valueRange.min }),
+        ...(pattern.valueRange && { valueCurrent: (valueMeta?.value as number) ?? pattern.valueRange.min }),
       }
     },
-    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, behavior.expandable, behavior.panelVisibility, behavior.checkedTracking, behavior.popupType, renameEntity, valueMeta, behavior.valueRange],
+    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, pattern.expandable, pattern.panelVisibility, pattern.checkedTracking, pattern.popupType, renameEntity, valueMeta, pattern.valueRange],
   )
 
   // ── Event handlers ──
@@ -210,7 +210,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       if (!pluginClipboardHandlers) return
       if (isEditableElement(event.target as Element)) return
 
-      const ctx = createPatternContext(engine, behaviorCtxOptions)
+      const ctx = createPatternContext(engine, patternCtxOptions)
       let handler: ClipboardHandler | undefined
       switch (event.type) {
         case 'copy': handler = pluginClipboardHandlers.onCopy; break
@@ -224,14 +224,14 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         event.preventDefault()
       }
     },
-    [pluginClipboardHandlers, engine, behaviorCtxOptions],
+    [pluginClipboardHandlers, engine, patternCtxOptions],
   )
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       const matchedKey = findMatchingKey(event, mergedKeyMap)
       if (matchedKey) {
-        const ctx = createPatternContext(engine, behaviorCtxOptions)
+        const ctx = createPatternContext(engine, patternCtxOptions)
         const handler = mergedKeyMap[matchedKey]
         if (!handler) return
         const handled = dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
@@ -245,7 +245,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         }
       }
     },
-    [mergedKeyMap, engine, behaviorCtxOptions, pluginUnhandledKeyHandlers],
+    [mergedKeyMap, engine, patternCtxOptions, pluginUnhandledKeyHandlers],
   )
 
   // ── getNodeProps ──
@@ -255,20 +255,20 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       if (isKeyMapOnly) return {}
       const state = getNodeState(id)
       const entity = getEntity(store, id) ?? { id }
-      const ariaAttrs = behavior.ariaAttributes(entity, state)
-      const isActivedescendant = behavior.focusStrategy.type === 'aria-activedescendant'
+      const ariaAttrs = pattern.ariaAttributes(entity, state)
+      const isActivedescendant = pattern.focusStrategy.type === 'aria-activedescendant'
 
       const baseProps: Record<string, unknown> = {
-        role: typeof behavior.childRole === 'function'
-          ? behavior.childRole(entity, state)
-          : (behavior.childRole ?? 'row'),
+        role: typeof pattern.childRole === 'function'
+          ? pattern.childRole(entity, state)
+          : (pattern.childRole ?? 'row'),
         [nodeIdAttr]: id,
         ...ariaAttrs,
       }
 
       // Popup axis: auto-generate aria-haspopup and aria-expanded for trigger nodes
-      if (behavior.popupType && state.open !== undefined) {
-        baseProps['aria-haspopup'] = behavior.popupType
+      if (pattern.popupType && state.open !== undefined) {
+        baseProps['aria-haspopup'] = pattern.popupType
         baseProps['aria-expanded'] = String(state.open)
       }
 
@@ -280,12 +280,12 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         const target = event.target as HTMLElement
         const closestItem = target.closest(`[${nodeIdAttr}]`)
         if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
-        if (behavior.activateOnClick) {
+        if (pattern.activateOnClick) {
           const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
           if (hasModifier) return
           if (onActivateRef.current) {
             // ② 2026-03-26-treeview-click-expand-prd.md
-            if (behavior.expandOnParentClick !== false) {
+            if (pattern.expandOnParentClick !== false) {
               const children = getChildren(engine.getStore(), id)
               if (children.length > 0) {
                 engine.dispatch(expandCommands.toggleExpand(id))
@@ -293,15 +293,15 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
             }
             onActivateRef.current(id)
           } else {
-            const ctx = createPatternContext(engine, behaviorCtxOptions)
+            const ctx = createPatternContext(engine, patternCtxOptions)
             const command = ctx.activate()
             if (command) engine.dispatch(command)
           }
         }
-        if (behavior.checkOnClick) {
+        if (pattern.checkOnClick) {
           const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
           if (hasModifier) return
-          const ctx = createPatternContext(engine, behaviorCtxOptions)
+          const ctx = createPatternContext(engine, patternCtxOptions)
           const command = ctx.toggleCheck()
           if (command) engine.dispatch(command)
         }
@@ -320,7 +320,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       }
 
       if (!isActivedescendant) {
-        baseProps.tabIndex = behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
+        baseProps.tabIndex = pattern.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
         baseProps.onKeyDown = (event: KeyboardEvent) => {
           if (event.defaultPrevented) return
           if (event.target !== event.currentTarget) {
@@ -337,7 +337,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
       return baseProps
     },
-    [store, behavior, isKeyMapOnly, engine, focusedId, getNodeState, handleKeyDown, behaviorCtxOptions, nodeIdAttr],
+    [store, pattern, isKeyMapOnly, engine, focusedId, getNodeState, handleKeyDown, patternCtxOptions, nodeIdAttr],
   )
 
   // ── containerProps ──
@@ -358,7 +358,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         ...clipboardProps,
       }
     }
-    if (behavior.focusStrategy.type !== 'aria-activedescendant') {
+    if (pattern.focusStrategy.type !== 'aria-activedescendant') {
       return {
         tabIndex: -1,
         onPointerDown: (event: PointerEvent) => {
@@ -387,7 +387,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       },
       ...clipboardProps,
     }
-  }, [disabled, isKeyMapOnly, behavior.focusStrategy.type, focusedId, handleKeyDown, pluginClipboardHandlers, handleClipboardEvent, nodeIdAttr])
+  }, [disabled, isKeyMapOnly, pattern.focusStrategy.type, focusedId, handleKeyDown, pluginClipboardHandlers, handleClipboardEvent, nodeIdAttr])
 
   // ── DOM focus sync ──
 
@@ -395,7 +395,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     if (disabled) return
     if (isKeyMapOnly) return
     if (!focusedId) return
-    if (behavior.focusStrategy.type === 'aria-activedescendant') return
+    if (pattern.focusStrategy.type === 'aria-activedescendant') return
     const el = document.querySelector<HTMLElement>(`[${nodeIdAttr}="${focusedId}"]`)
     if (!el || el === document.activeElement) return
     const container = el.closest('[data-aria-container]')
@@ -406,7 +406,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     // Don't steal focus from editable elements inside the container (e.g., search input)
     if (ownsActiveFocus && isEditableElement(document.activeElement as Element)) return
     el.focus({ preventScroll: false })
-  }, [disabled, isKeyMapOnly, focusedId, behavior.focusStrategy.type, nodeIdAttr, autoFocus])
+  }, [disabled, isKeyMapOnly, focusedId, pattern.focusStrategy.type, nodeIdAttr, autoFocus])
 
-  return { getNodeProps, getNodeState, containerProps, behaviorCtxOptions }
+  return { getNodeProps, getNodeState, containerProps, patternCtxOptions }
 }

@@ -30,7 +30,7 @@ export function findTypeaheadMatch(
   const isMultiChar = search.length > 1
 
   // For multi-char buffer, search from the start (narrowing, not cycling)
-  // For single-char, search from AFTER current focus (cycling behavior)
+  // For single-char, search from AFTER current focus (cycling pattern)
   let startIdx = 0
   if (!isMultiChar && currentFocusId) {
     const currentIdx = nodes.findIndex((n) => n.id === currentFocusId)

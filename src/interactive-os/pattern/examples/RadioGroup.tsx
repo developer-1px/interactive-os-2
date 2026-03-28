@@ -47,12 +47,12 @@ const renderRadio = (
 
 export function RadioGroup() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => radiogroup, [])
+  const pattern = useMemo(() => radiogroup, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

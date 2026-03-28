@@ -76,12 +76,12 @@ const renderCheckbox = (
 
 export function CheckboxMixed() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => checkboxMixed, [])
+  const pattern = useMemo(() => checkboxMixed, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

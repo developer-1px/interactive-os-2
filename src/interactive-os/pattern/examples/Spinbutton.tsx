@@ -40,12 +40,12 @@ const renderSpinbutton = (
 
 export function Spinbutton() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => spinbutton({ min: 0, max: 50, step: 1 }), [])
+  const pattern = useMemo(() => spinbutton({ min: 0, max: 50, step: 1 }), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

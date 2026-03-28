@@ -1,7 +1,7 @@
 // ② 2026-03-28-checked-axis-childrole-prd.md
 import type { Entity } from '../../store/types'
 import type { NodeState } from '../types'
-import type { StructuredAxis } from '../../axis/types'
+import type { Axis } from '../../axis/types'
 import { composePattern } from '../composePattern'
 import { checked } from '../../axis/checked'
 import { navigate } from '../../axis/navigate'
@@ -12,7 +12,7 @@ import { navigate } from '../../axis/navigate'
 //
 // alwaysDescend: VisibilityFilter that makes container nodes focusable and always shows their children.
 // Required because without a shouldDescend filter, getVisibleNodes skips container nodes entirely.
-const alwaysDescend: StructuredAxis = {
+const alwaysDescend: Axis = {
   keyMap: {},
   visibilityFilter: {
     shouldDescend: () => true,

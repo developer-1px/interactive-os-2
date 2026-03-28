@@ -34,7 +34,7 @@ export function Checkbox({
   renderItem = defaultRenderItem,
 }: CheckboxProps) {
   return (
-    <Aria behavior={switchPattern} data={data} plugins={plugins} onChange={onChange}>
+    <Aria pattern={switchPattern} data={data} plugins={plugins} onChange={onChange}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

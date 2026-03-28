@@ -41,7 +41,7 @@ function fixtureData(): NormalizedData {
 
 function renderGrouped(data: NormalizedData) {
   return render(
-    <Aria behavior={listboxGrouped} data={data} plugins={[]}>
+    <Aria pattern={listboxGrouped} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`item-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

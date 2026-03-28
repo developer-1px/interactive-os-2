@@ -39,7 +39,7 @@ export function TreeGrid({
   renderItem = defaultRenderItem,
   enableEditing = false,
 }: TreeGridProps) {
-  const behavior = React.useMemo(
+  const pattern = React.useMemo(
     () => treegrid(),
     [],
   )
@@ -52,7 +52,7 @@ export function TreeGrid({
   return (
     <Aria
       id={id}
-      behavior={behavior}
+      pattern={pattern}
       data={data}
       plugins={mergedPlugins}
       onChange={onChange}

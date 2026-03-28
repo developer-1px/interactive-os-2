@@ -13,7 +13,7 @@ export default function DismissDemo() {
   const [escape, setEscape] = useState(true)
   const [data, setData] = useState<NormalizedData>(axisListData)
 
-  const behavior = composePattern(
+  const pattern = composePattern(
     {
       role: 'dialog',
       childRole: 'group',
@@ -38,7 +38,7 @@ export default function DismissDemo() {
         )}
       </div>
       <div className="card">
-        <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="dismiss demo">
+        <Aria pattern={pattern} data={data} plugins={plugins} onChange={setData} aria-label="dismiss demo">
           <Aria.Item render={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')

@@ -43,12 +43,12 @@ const renderItem = (
 
 export function MenuActivedescendant() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => menuActivedescendant, [])
+  const pattern = useMemo(() => menuActivedescendant, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

@@ -15,7 +15,7 @@ export interface Identity {
   checkedTracking?: boolean
   selectionMode?: import('../axis/types').SelectionMode
   colCount?: number
-  valueRange?: import('./types').ValueRange
+  valueRange?: import('../axis/value').ValueRange
   popupType?: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
   popupModal?: boolean
   // ② 2026-03-28-aria-panel-trigger-prd.md
@@ -77,10 +77,18 @@ function mergeKeyMaps(keyMaps: KeyMap[], baseKeyMap?: KeyMap): KeyMap {
   return result
 }
 
+function isStructured(axis: Axis): axis is { keyMap: KeyMap; config?: Partial<AxisConfig>; middleware?: Middleware; visibilityFilter?: VisibilityFilter } {
+  return 'keyMap' in axis
+}
+
+function getKeyMap(axis: Axis): KeyMap {
+  return isStructured(axis) ? axis.keyMap : axis
+}
+
 function mergeAxisConfigs(axes: Axis[]): Partial<AxisConfig> {
   const merged: Partial<AxisConfig> = {}
   for (const axis of axes) {
-    if (axis.config) Object.assign(merged, axis.config)
+    if (isStructured(axis) && axis.config) Object.assign(merged, axis.config)
   }
   return merged
 }
@@ -98,7 +106,7 @@ function collectMiddlewares(axes: Axis[], base?: Middleware): Middleware | undef
   const middlewares: Middleware[] = []
   if (base) middlewares.push(base)
   for (const axis of axes) {
-    if (axis.middleware) middlewares.push(axis.middleware)
+    if (isStructured(axis) && axis.middleware) middlewares.push(axis.middleware)
   }
   return composeMiddlewares(middlewares)
 }
@@ -106,7 +114,7 @@ function collectMiddlewares(axes: Axis[], base?: Middleware): Middleware | undef
 function collectVisibilityFilters(axes: Axis[], base: VisibilityFilter[] = []): VisibilityFilter[] {
   const filters = [...base]
   for (const axis of axes) {
-    if (axis.visibilityFilter) filters.push(axis.visibilityFilter)
+    if (isStructured(axis) && axis.visibilityFilter) filters.push(axis.visibilityFilter)
   }
   return filters
 }
@@ -137,7 +145,7 @@ function assembleResult(
   middleware: Middleware | undefined,
   visibilityFilters: VisibilityFilter[],
   baseClickMap?: KeyMap,
-): Partial<AriaPattern> {
+): Pick<AriaPattern, 'keyMap'> & Partial<AriaPattern> {
   const { keyMap, clickMap: axisClickMap } = splitInputMap(fullMap)
   const clickMap = (baseClickMap || Object.keys(axisClickMap).length > 0)
     ? { ...baseClickMap, ...axisClickMap }
@@ -175,7 +183,7 @@ export function composePattern(config: Identity | AriaPattern, ...rawAxes: (Axis
   // AriaPattern base path — pattern-on-pattern recursive override
   if (isAriaPattern(config)) {
     const { keyMap: baseKM, clickMap: baseCM, middleware: baseMW, visibilityFilters: baseVF, ...baseProps } = config
-    const axisKeyMaps = axes.map(a => a.keyMap)
+    const axisKeyMaps = axes.map(getKeyMap)
     const mergedConfig = mergeAxisConfigs(axes)
 
     return {
@@ -191,7 +199,7 @@ export function composePattern(config: Identity | AriaPattern, ...rawAxes: (Axis
   }
 
   // Identity path
-  const axisKeyMaps = axes.map(a => a.keyMap)
+  const axisKeyMaps = axes.map(getKeyMap)
   const keyMap = mergeKeyMaps(axisKeyMaps)
   const mergedConfig = mergeAxisConfigs(axes)
   const middleware = collectMiddlewares(axes)

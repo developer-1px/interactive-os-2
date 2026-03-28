@@ -1,7 +1,7 @@
 /**
  * Unit tests: Combobox multi-select mode + grouping support
  *
- * Tests the combobox behavior factory for single and multi selection modes,
+ * Tests the combobox pattern factory for single and multi selection modes,
  * and group header rendering with keyboard navigation that skips group headers.
  * Uses the Combobox UI component with controlled state via onChange.
  */
@@ -68,7 +68,7 @@ function ControlledCombobox({
   )
 }
 
-describe('Combobox behavior factory', () => {
+describe('Combobox pattern factory', () => {
   describe('single select mode (default)', () => {
     it('Enter selects focused option and closes dropdown', async () => {
       const user = userEvent.setup()
@@ -88,7 +88,7 @@ describe('Combobox behavior factory', () => {
       expect(input.value).toBe('Banana')
     })
 
-    it('Enter when closed opens dropdown (existing behavior preserved)', async () => {
+    it('Enter when closed opens dropdown (existing pattern preserved)', async () => {
       const user = userEvent.setup()
       const { container } = render(<ControlledCombobox selectionMode="single" />)
       const input = getInput(container)

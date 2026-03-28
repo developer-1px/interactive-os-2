@@ -20,7 +20,7 @@ import { createPatternContext } from '../pattern/createPatternContext'
 import type { PatternContextOptions } from '../pattern/createPatternContext'
 import { useAriaView } from './useAriaView'
 
-type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; behavior: AriaPattern; prevFocus: string; prevSelectedIds: string[] }
+type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; pattern: AriaPattern; prevFocus: string; prevSelectedIds: string[] }
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
@@ -34,7 +34,7 @@ const EMPTY_BEHAVIOR: AriaPattern = {
 }
 
 export interface UseAriaOptions {
-  behavior?: AriaPattern
+  pattern?: AriaPattern
   data: NormalizedData
   plugins?: Plugin[]
   keyMap?: Record<string, (ctx: ReturnType<typeof createPatternContext>) => Command | void>
@@ -61,7 +61,7 @@ export interface UseAriaReturn {
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { behavior = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus, logger, autoFocus = true, disabled = false } = options
+  const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus, logger, autoFocus = true, disabled = false } = options
   const [, forceRender] = useState(0)
   const pointerDownCtxRef = useRef<ReturnType<typeof createPatternContext> | null>(null)
 
@@ -70,10 +70,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   // initializer owns it without capturing any React ref.
 
   const [engine] = useState(() => {
-    const bag: EngineCallbacks = { onActivate, behavior, prevFocus: '', prevSelectedIds: [] }
+    const bag: EngineCallbacks = { onActivate, pattern, prevFocus: '', prevSelectedIds: [] }
 
     const middlewares = [
-      behavior.middleware,
+      pattern.middleware,
       ...plugins.map((p) => p.middleware),
     ].filter((m): m is NonNullable<typeof m> => m != null)
 
@@ -83,7 +83,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       const cb = engineCallbacksMap.get(created)!
       const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
       // activationFollowsSelection: selection change → onActivate
-      if (cb.behavior.activationFollowsSelection && cb.onActivate) {
+      if (cb.pattern.activationFollowsSelection && cb.onActivate) {
         const newSelArr = (newStore.entities[SELECTION_ID]?.selectedIds as string[]) ?? []
         if (newSelArr.length > 0 && newSelArr !== cb.prevSelectedIds) {
           cb.onActivate(newSelArr[newSelArr.length - 1]!)
@@ -100,19 +100,19 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     // If pattern uses expand axis (expandTracking), ensure __expanded__ entity exists
     // so getVisibleNodes activates gating (default-collapsed for tree/accordion).
     // Patterns without expand axis leave the entity absent → all children visible.
-    if ((behavior.expandTracking || behavior.expandable) && !data.entities[EXPANDED_ID]) {
+    if ((pattern.expandTracking || pattern.expandable) && !data.entities[EXPANDED_ID]) {
       created.syncStore({
         entities: { ...created.getStore().entities, [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [] } },
         relationships: created.getStore().relationships,
       })
     }
-    if (behavior.checkedTracking && !data.entities[CHECKED_ID]) {
+    if (pattern.checkedTracking && !data.entities[CHECKED_ID]) {
       created.syncStore({
         entities: { ...created.getStore().entities, [CHECKED_ID]: { id: CHECKED_ID, checkedIds: [] } },
         relationships: created.getStore().relationships,
       })
     }
-    if (behavior.popupType && !data.entities[POPUP_ID]) {
+    if (pattern.popupType && !data.entities[POPUP_ID]) {
       created.syncStore({
         entities: { ...created.getStore().entities, [POPUP_ID]: { id: POPUP_ID, isOpen: false, triggerId: '' } },
         relationships: created.getStore().relationships,
@@ -137,7 +137,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   useEffect(() => {
     const cb = engineCallbacksMap.get(engine)!
     cb.onActivate = onActivate
-    cb.behavior = behavior
+    cb.pattern = pattern
   })
 
   // ── ② External data sync (useAria-only) ──
@@ -196,19 +196,19 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     [store]
   )
 
-  const isKeyMapOnly = behavior === EMPTY_BEHAVIOR
+  const isKeyMapOnly = pattern === EMPTY_BEHAVIOR
 
   // ── ③④⑤⑥⑦ Shared view logic ──
 
   const view = useAriaView({
-    engine, store, behavior, plugins, keyMap: keyMapOverrides,
+    engine, store, pattern, plugins, keyMap: keyMapOverrides,
     onActivate, focusedId, selectedIdSet, expandedIds, checkedIds,
     isKeyMapOnly, autoFocus, disabled,
   })
 
   // ── Pointer selection overlay (useAria-only) ──
 
-  const { behaviorCtxOptions } = view
+  const { patternCtxOptions } = view
 
   const getNodeProps = useCallback(
     (id: string): Record<string, unknown> => {
@@ -216,11 +216,11 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       if (isKeyMapOnly) return baseProps
 
       // Declarative clickMap path — pattern owns pointer bindings
-      if (behavior.clickMap) {
-        const clickMap = behavior.clickMap
+      if (pattern.clickMap) {
+        const clickMap = pattern.clickMap
 
         baseProps.onPointerDown = () => {
-          pointerDownCtxRef.current = createPatternContext(engine, behaviorCtxOptions as PatternContextOptions)
+          pointerDownCtxRef.current = createPatternContext(engine, patternCtxOptions as PatternContextOptions)
         }
 
         baseProps.onClick = (event: MouseEvent) => {
@@ -241,7 +241,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
             // Use pointerDown ctx for shift (anchor-aware), fresh ctx otherwise
             const ctx = (key === 'Shift+Click' && pointerDownCtxRef.current)
               ? pointerDownCtxRef.current
-              : createPatternContext(engine, { ...behaviorCtxOptions as PatternContextOptions, overrideFocused: id })
+              : createPatternContext(engine, { ...patternCtxOptions as PatternContextOptions, overrideFocused: id })
             const command = handler(ctx)
             if (command) engine.dispatch(command)
           }
@@ -252,11 +252,11 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       }
 
       // Legacy boolean flag path — backward compatible
-      if (!behavior.selectOnClick && !behavior.activateOnClick) return baseProps
+      if (!pattern.selectOnClick && !pattern.activateOnClick) return baseProps
 
-      if (behavior.selectOnClick) {
+      if (pattern.selectOnClick) {
         baseProps.onPointerDown = () => {
-          pointerDownCtxRef.current = createPatternContext(engine, behaviorCtxOptions as PatternContextOptions)
+          pointerDownCtxRef.current = createPatternContext(engine, patternCtxOptions as PatternContextOptions)
         }
 
         baseProps.onClick = (event: MouseEvent) => {
@@ -265,11 +265,11 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           const closestItem = target.closest(`[data-node-id]`)
           if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
 
-          if (event.shiftKey && behavior.selectionMode === 'multiple') {
+          if (event.shiftKey && pattern.selectionMode === 'multiple') {
             if (pointerDownCtxRef.current) {
               engine.dispatch(pointerDownCtxRef.current.extendSelectionTo(id))
             }
-          } else if ((event.ctrlKey || event.metaKey) && behavior.selectionMode === 'multiple') {
+          } else if ((event.ctrlKey || event.metaKey) && pattern.selectionMode === 'multiple') {
             engine.dispatch(selectionCommands.toggleSelect(id))
           } else {
             engine.dispatch(createBatchCommand([
@@ -280,10 +280,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           pointerDownCtxRef.current = null
 
           const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
-          if (behavior.activateOnClick && !hasModifier) {
+          if (pattern.activateOnClick && !hasModifier) {
             const cb = engineCallbacksMap.get(engine)
             if (cb?.onActivate) {
-              if (behavior.expandOnParentClick !== false) {
+              if (pattern.expandOnParentClick !== false) {
                 const children = getChildren(engine.getStore(), id)
                 if (children.length > 0) {
                   engine.dispatch(expandCommands.toggleExpand(id))
@@ -291,7 +291,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
               }
               cb.onActivate(id)
             } else {
-              const ctx = createPatternContext(engine, behaviorCtxOptions as PatternContextOptions)
+              const ctx = createPatternContext(engine, patternCtxOptions as PatternContextOptions)
               const command = ctx.activate()
               if (command) engine.dispatch(command)
             }
@@ -301,7 +301,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
       return baseProps
     },
-    [view, isKeyMapOnly, behavior.clickMap, behavior.selectOnClick, behavior.activateOnClick, behavior.expandOnParentClick, behavior.selectionMode, engine, behaviorCtxOptions],
+    [view, isKeyMapOnly, pattern.clickMap, pattern.selectOnClick, pattern.activateOnClick, pattern.expandOnParentClick, pattern.selectionMode, engine, patternCtxOptions],
   )
 
   const dispatch = useCallback(

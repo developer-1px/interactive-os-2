@@ -21,7 +21,7 @@ function fixtureData() {
 describe('<Aria> compound component', () => {
   it('renders nodes with Aria.Item render slot', () => {
     render(
-      <Aria behavior={tree} data={fixtureData()} plugins={[]}>
+      <Aria pattern={tree} data={fixtureData()} plugins={[]}>
         <Aria.Item render={(props, node, _state) => <span {...props}>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
@@ -30,7 +30,7 @@ describe('<Aria> compound component', () => {
 
   it('applies ARIA role to the container', () => {
     const { container } = render(
-      <Aria behavior={tree} data={fixtureData()} plugins={[]}>
+      <Aria pattern={tree} data={fixtureData()} plugins={[]}>
         <Aria.Item render={(props, node, _state) => <span {...props}>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
@@ -40,7 +40,7 @@ describe('<Aria> compound component', () => {
 
   it('applies aria attributes to nodes', () => {
     const { container } = render(
-      <Aria behavior={tree} data={fixtureData()} plugins={[]}>
+      <Aria pattern={tree} data={fixtureData()} plugins={[]}>
         <Aria.Item render={(props, node, _state) => <span {...props}>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )
@@ -52,7 +52,7 @@ describe('<Aria> compound component', () => {
 
   it('first node has tabIndex 0, others have -1', () => {
     const { container } = render(
-      <Aria behavior={tree} data={fixtureData()} plugins={[]}>
+      <Aria pattern={tree} data={fixtureData()} plugins={[]}>
         <Aria.Item render={(props, node, _state) => <span {...props}>{(node.data as Record<string, unknown>)?.name as string}</span>} />
       </Aria>
     )

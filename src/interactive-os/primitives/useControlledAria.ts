@@ -12,14 +12,14 @@ import { findMatchingKey } from './useKeyboard'
 import type { UseAriaReturn } from './useAria'
 
 export interface UseControlledAriaOptions {
-  behavior: AriaPattern
+  pattern: AriaPattern
   store: NormalizedData
   plugins?: Plugin[]
   onDispatch: (command: Command) => void
 }
 
 export function useControlledAria(options: UseControlledAriaOptions): UseAriaReturn {
-  const { behavior, store, onDispatch } = options
+  const { pattern, store, onDispatch } = options
 
   // Minimal virtual engine adapter — no internal state
   const virtualEngine = useMemo<CommandEngine>(
@@ -68,7 +68,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
         current = parent
       }
 
-      const isExpandable = hasChildren || (behavior.expandable ?? false)
+      const isExpandable = hasChildren || (pattern.expandable ?? false)
 
       return {
         focused: id === focusedId,
@@ -80,37 +80,37 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
         level: level + 1,
       }
     },
-    [store, focusedId, selectedIdSet, expandedIds, behavior.expandable]
+    [store, focusedId, selectedIdSet, expandedIds, pattern.expandable]
   )
 
-  const behaviorCtxOptions = useMemo(
+  const patternCtxOptions = useMemo(
     () => ({
-      expandable: behavior.expandable,
-      selectionMode: behavior.selectionMode,
-      colCount: behavior.colCount,
+      expandable: pattern.expandable,
+      selectionMode: pattern.selectionMode,
+      colCount: pattern.colCount,
     }),
-    [behavior.expandable, behavior.selectionMode, behavior.colCount]
+    [pattern.expandable, pattern.selectionMode, pattern.colCount]
   )
 
   const mergedKeyMap = useMemo(
-    () => ({ ...behavior.keyMap }),
-    [behavior.keyMap]
+    () => ({ ...pattern.keyMap }),
+    [pattern.keyMap]
   )
 
   const getNodeProps = useCallback(
     (id: string): Record<string, unknown> => {
       const state = getNodeState(id)
       const entity = getEntity(store, id) ?? { id }
-      const ariaAttrs = behavior.ariaAttributes(entity, state)
-      const isActivedescendant = behavior.focusStrategy.type === 'aria-activedescendant'
+      const ariaAttrs = pattern.ariaAttributes(entity, state)
+      const isActivedescendant = pattern.focusStrategy.type === 'aria-activedescendant'
 
       const baseProps: Record<string, unknown> = {
-        role: behavior.childRole ?? 'row',
+        role: pattern.childRole ?? 'row',
         'data-node-id': id,
         ...ariaAttrs,
         onClick: () => {
-          if (behavior.activateOnClick) {
-            const ctx = createPatternContext(virtualEngine, behaviorCtxOptions)
+          if (pattern.activateOnClick) {
+            const ctx = createPatternContext(virtualEngine, patternCtxOptions)
             const command = ctx.activate()
             if (command) onDispatch(command)
           }
@@ -123,11 +123,11 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
       }
 
       if (!isActivedescendant) {
-        baseProps.tabIndex = behavior.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
+        baseProps.tabIndex = pattern.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
         baseProps.onKeyDown = (event: KeyboardEvent) => {
           const matchedKey = findMatchingKey(event, mergedKeyMap)
           if (!matchedKey) return
-          const ctx = createPatternContext(virtualEngine, behaviorCtxOptions)
+          const ctx = createPatternContext(virtualEngine, patternCtxOptions)
           const handler = mergedKeyMap[matchedKey]
           if (!handler) return
           const command = handler(ctx)
@@ -138,18 +138,18 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
 
       return baseProps
     },
-    [store, behavior, mergedKeyMap, virtualEngine, focusedId, getNodeState, behaviorCtxOptions, onDispatch]
+    [store, pattern, mergedKeyMap, virtualEngine, focusedId, getNodeState, patternCtxOptions, onDispatch]
   )
 
   const containerProps = useMemo((): Record<string, unknown> => {
-    if (behavior.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1 }
+    if (pattern.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1 }
     return {
       tabIndex: 0,
       'aria-activedescendant': focusedId || undefined,
       onKeyDown: (event: KeyboardEvent) => {
         const matchedKey = findMatchingKey(event, mergedKeyMap)
         if (!matchedKey) return
-        const ctx = createPatternContext(virtualEngine, behaviorCtxOptions)
+        const ctx = createPatternContext(virtualEngine, patternCtxOptions)
         const handler = mergedKeyMap[matchedKey]
         if (!handler) return
         const command = handler(ctx)
@@ -157,19 +157,19 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
         event.preventDefault()
       },
     }
-  }, [behavior.focusStrategy.type, focusedId, mergedKeyMap, virtualEngine, behaviorCtxOptions, onDispatch])
+  }, [pattern.focusStrategy.type, focusedId, mergedKeyMap, virtualEngine, patternCtxOptions, onDispatch])
 
   // Sync DOM focus with data focus (skip for aria-activedescendant — container holds focus)
   // Only move DOM focus if this widget already owns it (prevents stealing focus from other widgets)
   useEffect(() => {
     if (!focusedId) return
-    if (behavior.focusStrategy.type === 'aria-activedescendant') return
+    if (pattern.focusStrategy.type === 'aria-activedescendant') return
     const el = document.querySelector<HTMLElement>(`[data-node-id="${focusedId}"]`)
     if (!el || el === document.activeElement) return
-    const container = el.closest(`[role="${behavior.role}"]`)
+    const container = el.closest(`[role="${pattern.role}"]`)
     if (!container?.contains(document.activeElement)) return
     el.focus({ preventScroll: false })
-  }, [focusedId, behavior.focusStrategy.type, behavior.role])
+  }, [focusedId, pattern.focusStrategy.type, pattern.role])
 
   return {
     dispatch,

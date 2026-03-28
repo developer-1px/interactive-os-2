@@ -41,7 +41,7 @@ export function Kanban({
 }: KanbanProps) {
   // onActivate가 있으면 Enter를 activate로 override (기본은 rename)
   const keyMap = useMemo(() => onActivate ? { Enter: (ctx: { activate: () => void }) => ctx.activate() } : undefined, [onActivate])
-  const aria = useAria({ behavior: kanbanBehavior, data, plugins, keyMap, onChange, onActivate })
+  const aria = useAria({ pattern: kanbanBehavior, data, plugins, keyMap, onChange, onActivate })
   const store = aria.getStore()
   const columns = getChildren(store, ROOT_ID)
 
@@ -50,7 +50,7 @@ export function Kanban({
   useEffect(() => { stableFocusChange(focusedId) }, [focusedId, stableFocusChange])
 
   return (
-    <AriaInternalContext.Provider value={{ ...aria, behavior: kanbanBehavior }}>
+    <AriaInternalContext.Provider value={{ ...aria, pattern: kanbanBehavior }}>
       <div
         role={kanbanBehavior.role}
         aria-label={ariaLabel}

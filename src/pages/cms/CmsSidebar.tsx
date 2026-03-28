@@ -250,7 +250,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   const aria = useAriaZone({
     engine,
     store,
-    behavior: sidebarBehavior,
+    pattern: sidebarBehavior,
     scope: 'sidebar',
     plugins,
     keyMap: sidebarKeyMap,

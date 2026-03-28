@@ -81,7 +81,7 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
   }), [])
 
   const aria = useAria({
-    behavior: toolbar,
+    pattern: toolbar,
     data: toolbarData,
     plugins: [],
     keyMap,

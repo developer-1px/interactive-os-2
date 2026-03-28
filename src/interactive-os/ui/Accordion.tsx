@@ -46,7 +46,7 @@ export function Accordion({
   renderItem = defaultRenderItem,
 }: AccordionProps) {
   return (
-    <Aria behavior={accordion} data={data} plugins={plugins} onChange={onChange} className={styles.root}>
+    <Aria pattern={accordion} data={data} plugins={plugins} onChange={onChange} className={styles.root}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

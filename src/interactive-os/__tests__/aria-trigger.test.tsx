@@ -15,7 +15,7 @@ import { navigate } from '../axis/navigate'
 const pop = popup({ type: 'menu' })
 const nav = navigate({ orientation: 'vertical', wrap: true })
 
-// Trigger uses popup axis's own keyMap entries for open behavior
+// Trigger uses popup axis's own keyMap entries for open pattern
 const testMenuButton = composePattern(
   {
     role: 'menu',
@@ -54,10 +54,10 @@ const renderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<strin
 
 function TestMenuButton() {
   const [store, setStore] = useState(fixtureData())
-  const behavior = useMemo(() => testMenuButton, [])
+  const pattern = useMemo(() => testMenuButton, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
   return (
-    <Aria behavior={behavior} data={store} plugins={[]} onChange={onChange} aria-label="Actions">
+    <Aria pattern={pattern} data={store} plugins={[]} onChange={onChange} aria-label="Actions">
       <Aria.Trigger render={renderTrigger} />
       <Aria.Item render={renderItem} />
     </Aria>

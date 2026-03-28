@@ -169,7 +169,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
   const aria = useAriaZone({
     engine,
     store,
-    behavior: cmsBehavior,
+    pattern: cmsBehavior,
     scope: 'cms',
     plugins,
     keyMap: mergedKeyMap,

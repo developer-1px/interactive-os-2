@@ -33,7 +33,7 @@ export function SpatialView({
   const spatialNav = useSpatialNav(CONTAINER_SELECTOR, data)
 
   const aria = useAria({
-    behavior: spatialView,
+    pattern: spatialView,
     data,
     keyMap: spatialNav.keyMap,
   })

@@ -5,7 +5,7 @@ import { Aria } from '../primitives/aria'
 import { listbox } from '../pattern/roles/listbox'
 import { ROOT_ID } from '../store/types'
 
-const behavior = listbox()
+const pattern = listbox()
 
 function fixtureData() {
   return {
@@ -27,7 +27,7 @@ function renderItem(props: React.HTMLAttributes<HTMLElement>, node: Record<strin
 describe('disabled', () => {
   it('applies inert to the container when disabled', () => {
     const { container } = render(
-      <Aria behavior={behavior} data={fixtureData()} plugins={[]} disabled>
+      <Aria pattern={pattern} data={fixtureData()} plugins={[]} disabled>
         <Aria.Item render={renderItem} />
       </Aria>
     )
@@ -37,7 +37,7 @@ describe('disabled', () => {
 
   it('does not apply inert when not disabled', () => {
     const { container } = render(
-      <Aria behavior={behavior} data={fixtureData()} plugins={[]}>
+      <Aria pattern={pattern} data={fixtureData()} plugins={[]}>
         <Aria.Item render={renderItem} />
       </Aria>
     )
@@ -48,7 +48,7 @@ describe('disabled', () => {
   it('keyboard navigation does not move focus when disabled', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={behavior} data={fixtureData()} plugins={[]} disabled>
+      <Aria pattern={pattern} data={fixtureData()} plugins={[]} disabled>
         <Aria.Item render={renderItem} />
       </Aria>
     )
@@ -64,7 +64,7 @@ describe('disabled', () => {
 
   it('removes inert when disabled transitions to false', () => {
     const { container, rerender } = render(
-      <Aria behavior={behavior} data={fixtureData()} plugins={[]} disabled>
+      <Aria pattern={pattern} data={fixtureData()} plugins={[]} disabled>
         <Aria.Item render={renderItem} />
       </Aria>
     )
@@ -72,7 +72,7 @@ describe('disabled', () => {
     expect(el.hasAttribute('inert')).toBe(true)
 
     rerender(
-      <Aria behavior={behavior} data={fixtureData()} plugins={[]}>
+      <Aria pattern={pattern} data={fixtureData()} plugins={[]}>
         <Aria.Item render={renderItem} />
       </Aria>
     )

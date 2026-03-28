@@ -1,10 +1,16 @@
 /* ── base ── */
 
-.header {
+.heading {
+  margin: 0;
+}
+
+.trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   padding: var(--shape-sm-py) var(--shape-sm-px);
+  font: inherit;
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-primary);
@@ -14,9 +20,8 @@
   outline: none;
 }
 
-.indicator {
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
+.title {
+  text-align: start;
 }
 
 .panel {
@@ -29,12 +34,48 @@
   border-top: none;
 }
 
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+}
+
+.label {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-primary);
+}
+
+.input {
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font: inherit;
+  font-size: var(--type-body-size);
+  color: var(--text-primary);
+  background: var(--surface-default);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--focus-ring);
+}
+
 /* ── variant: state ── */
 
-.header[aria-expanded='true'] {
+.trigger[aria-expanded='true'] {
   border-bottom-color: transparent;
 }
 
-.header:is([data-focused='true']) {
+.trigger:is([data-focused]) {
   background: var(--bg-hover);
 }

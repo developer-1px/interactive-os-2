@@ -99,13 +99,13 @@ export function Combobox({
   }, [data])
 
   // When grouped, intercept onChange to restore group structure before propagating up.
-  // The behavior engine operates on a flat store; callers expect the grouped structure.
+  // The pattern engine operates on a flat store; callers expect the grouped structure.
   const handleChange = isGrouped && onChange
     ? (flatStore: NormalizedData) => onChange(restoreGroups(flatStore, originalStore))
     : onChange
 
   const aria = useAria({
-    behavior: comboboxBehavior({ selectionMode }),
+    pattern: comboboxBehavior({ selectionMode }),
     data: behaviorData,
     plugins: effectivePlugins,
     onChange: handleChange,
@@ -221,7 +221,7 @@ export function Combobox({
     ? (isOpen ? filterText : selectedLabel)
     : selectedLabel
 
-  // Wrap the behavior's onKeyDown to intercept create option navigation
+  // Wrap the pattern's onKeyDown to intercept create option navigation
   const behaviorOnKeyDown = (aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>).onKeyDown
   const wrappedOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (showCreateOption) {
@@ -240,7 +240,7 @@ export function Combobox({
           return
         }
         if (e.key === 'Escape') {
-          // Fall through to behavior's Escape handler
+          // Fall through to pattern's Escape handler
         } else {
           // For all other keys when create option is focused, let the browser handle
           return

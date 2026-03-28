@@ -84,12 +84,12 @@ const renderTreeitem = (
 
 export function TreeFile() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => tree, [])
+  const pattern = useMemo(() => tree, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

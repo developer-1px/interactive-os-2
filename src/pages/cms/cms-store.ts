@@ -44,10 +44,10 @@ export const cmsStore = createStore({
     'card-engine-title':   { id: 'card-engine-title',   data: { type: 'text', role: 'title', value: localeMap('Command Engine') } },
     'card-engine-desc':    { id: 'card-engine-desc',    data: { type: 'text', role: 'desc', value: localeMap('Every user action is a Command with execute(). Middleware intercepts every dispatch — history diffs, focus recovery, schema validation, all automatic.') } },
 
-    'card-behavior':       { id: 'card-behavior',       data: { type: 'card' } },
-    'card-behavior-icon':  { id: 'card-behavior-icon',  data: { type: 'icon', value: 'shield' } },
-    'card-behavior-title': { id: 'card-behavior-title', data: { type: 'text', role: 'title', value: localeMap('7 Axes, 17 Patterns') } },
-    'card-behavior-desc':  { id: 'card-behavior-desc',  data: { type: 'text', role: 'desc', value: localeMap('navigate, select, expand, activate, tab, value, edit — combine atomic axes to compose any ARIA pattern from treegrid to spinbutton. New patterns are just axis declarations.') } },
+    'card-pattern':       { id: 'card-pattern',       data: { type: 'card' } },
+    'card-pattern-icon':  { id: 'card-pattern-icon',  data: { type: 'icon', value: 'shield' } },
+    'card-pattern-title': { id: 'card-pattern-title', data: { type: 'text', role: 'title', value: localeMap('7 Axes, 17 Patterns') } },
+    'card-pattern-desc':  { id: 'card-pattern-desc',  data: { type: 'text', role: 'desc', value: localeMap('navigate, select, expand, activate, tab, value, edit — combine atomic axes to compose any ARIA pattern from treegrid to spinbutton. New patterns are just axis declarations.') } },
 
     'card-keyboard':       { id: 'card-keyboard',       data: { type: 'card' } },
     'card-keyboard-icon':  { id: 'card-keyboard-icon',  data: { type: 'icon', value: 'keyboard' } },
@@ -136,10 +136,10 @@ export const cmsStore = createStore({
 
     hero:        ['hero-badge', 'hero-title', 'hero-subtitle', 'hero-cta', 'hero-image'],
     manifesto:   ['manifesto-title', 'manifesto-keyboard', 'manifesto-a11y', 'manifesto-headless'],
-    features:    ['features-label', 'features-title', 'features-desc', 'features-cta', 'stat-tests', 'stat-patterns', 'stat-plugins', 'card-store', 'card-engine', 'card-behavior', 'card-keyboard'],
+    features:    ['features-label', 'features-title', 'features-desc', 'features-cta', 'stat-tests', 'stat-patterns', 'stat-plugins', 'card-store', 'card-engine', 'card-pattern', 'card-keyboard'],
     'card-store':    ['card-store-icon',    'card-store-title',    'card-store-desc'],
     'card-engine':   ['card-engine-icon',   'card-engine-title',   'card-engine-desc'],
-    'card-behavior': ['card-behavior-icon', 'card-behavior-title', 'card-behavior-desc'],
+    'card-pattern': ['card-pattern-icon', 'card-pattern-title', 'card-pattern-desc'],
     'card-keyboard': ['card-keyboard-icon', 'card-keyboard-title', 'card-keyboard-desc'],
     patterns:    ['patterns-label', 'patterns-title', 'patterns-desc', 'patterns-cta',
       'pat-treegrid', 'pat-listbox', 'pat-tabs', 'pat-combobox', 'pat-grid', 'pat-menu', 'pat-dialog',

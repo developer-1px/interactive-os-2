@@ -35,7 +35,7 @@ function fixtureData(): NormalizedData {
 
 function renderButton(data: NormalizedData) {
   return render(
-    <Aria behavior={buttonToggle} data={data} plugins={[]}>
+    <Aria pattern={buttonToggle} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`btn-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

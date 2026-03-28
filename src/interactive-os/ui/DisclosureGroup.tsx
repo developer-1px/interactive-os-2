@@ -33,7 +33,7 @@ export function DisclosureGroup({
   renderItem = defaultRenderItem,
 }: DisclosureGroupProps) {
   return (
-    <Aria behavior={disclosure} data={data} plugins={plugins} onChange={onChange}>
+    <Aria pattern={disclosure} data={data} plugins={plugins} onChange={onChange}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

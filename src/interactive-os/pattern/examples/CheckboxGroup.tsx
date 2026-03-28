@@ -50,12 +50,12 @@ const renderCheckbox = (
 
 export function CheckboxGroup() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => checkbox, [])
+  const pattern = useMemo(() => checkbox, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

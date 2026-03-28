@@ -33,10 +33,10 @@ function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps,
     Escape: () => { onClose() },
   }), [onClose])
 
-  const behavior = useMemo(() => listbox(), [])
+  const pattern = useMemo(() => listbox(), [])
 
   const aria = useAria({
-    behavior,
+    pattern,
     data: pickerData,
     plugins: [],
     keyMap,

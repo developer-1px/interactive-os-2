@@ -48,7 +48,7 @@ function BrokenViewer() {
 
   return (
     <div>
-      <Aria behavior={tree} data={store} plugins={[]} onChange={handleChange} aria-label="tree">
+      <Aria pattern={tree} data={store} plugins={[]} onChange={handleChange} aria-label="tree">
         <Aria.Item render={(props, node, state) => {
           const data = node.data as { name: string }
           return <span {...props} data-focused={state.focused}>{data.name}</span>
@@ -75,7 +75,7 @@ function FixedViewer() {
 
   return (
     <div>
-      <Aria behavior={tree} data={initialStore} plugins={[]} onChange={handleChange} aria-label="tree">
+      <Aria pattern={tree} data={initialStore} plugins={[]} onChange={handleChange} aria-label="tree">
         <Aria.Item render={(props, node, state) => {
           const data = node.data as { name: string }
           return <span {...props} data-focused={state.focused}>{data.name}</span>
@@ -122,7 +122,7 @@ describe('viewer focus loss — reproduction', () => {
     // In the broken pattern, ArrowDown may not work because focus was lost
     // The focused node might still be a.ts (ArrowDown had no effect)
     // or it could be b.ts if React reconciliation preserved focus
-    // We document the actual behavior:
+    // We document the actual pattern:
     console.log('Broken pattern — focused after ArrowDown:', focusedAfterArrowDown)
   })
 

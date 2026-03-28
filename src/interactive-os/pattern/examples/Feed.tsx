@@ -46,12 +46,12 @@ const renderArticle = (
 
 export function Feed() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => feed, [])
+  const pattern = useMemo(() => feed, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

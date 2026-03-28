@@ -44,6 +44,6 @@ function toNavListReturn(aria: UseAriaReturn, ariaLabel?: string): UseNavListRet
 
 export function useNavList(options: UseNavListOptions): UseNavListReturn {
   const { data, plugins = [], keyMap, onChange, onActivate, initialFocus, 'aria-label': ariaLabel } = options
-  const aria = useAria({ behavior: navlist, data, plugins, keyMap, onChange, onActivate, initialFocus })
+  const aria = useAria({ pattern: navlist, data, plugins, keyMap, onChange, onActivate, initialFocus })
   return toNavListReturn(aria, ariaLabel)
 }

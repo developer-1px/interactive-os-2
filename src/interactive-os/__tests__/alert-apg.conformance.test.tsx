@@ -23,7 +23,7 @@ function fixtureData(): NormalizedData {
 
 function renderAlert(data: NormalizedData) {
   return render(
-    <Aria behavior={alert} data={data} plugins={[]}>
+    <Aria pattern={alert} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props}>{(item.data as Record<string, unknown>)?.text as string}</span>
       )} />

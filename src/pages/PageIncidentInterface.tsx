@@ -287,7 +287,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
   selectedId: string | null
   onSelect: (id: string) => void
 }) {
-  const behavior = useMemo(() => listbox(), [])
+  const pattern = useMemo(() => listbox(), [])
   const data = useMemo(() => buildTimelineData(events, visibleCount), [events, visibleCount])
 
   const renderItem = useCallback((
@@ -332,7 +332,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
       </div>
       {visibleCount > 0 ? (
         <Aria
-          behavior={behavior}
+          pattern={pattern}
           data={data}
           plugins={[]}
           aria-label="Incident timeline"

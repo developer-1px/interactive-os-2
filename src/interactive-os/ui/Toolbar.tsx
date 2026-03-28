@@ -58,7 +58,7 @@ export function Toolbar({
 }: ToolbarProps) {
   return (
     <Aria
-      behavior={toolbar}
+      pattern={toolbar}
       data={data}
       plugins={plugins}
       onChange={onChange}
