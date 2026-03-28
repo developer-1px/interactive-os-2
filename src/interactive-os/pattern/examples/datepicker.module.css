@@ -1,0 +1,178 @@
+/* ── datepicker wrapper ── */
+
+.datepicker {
+  position: relative;
+  display: inline-block;
+}
+
+.label {
+  display: block;
+  font-size: var(--type-body-size);
+  font-weight: var(--type-label-weight);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+/* ── combobox input + trigger ── */
+
+.comboboxGroup {
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--surface-default);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-xs-radius) 0 0 var(--shape-xs-radius);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--focus);
+}
+
+.triggerButton {
+  display: flex;
+  align-items: center;
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  color: var(--text-secondary);
+  background: var(--surface-default);
+  border: var(--border-width) solid var(--border-default);
+  border-left: none;
+  border-radius: 0 var(--shape-xs-radius) var(--shape-xs-radius) 0;
+  cursor: default;
+}
+
+/* ── dialog ── */
+
+.dialog {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  margin-top: var(--space-xs);
+  padding: var(--space-sm);
+  background: var(--surface-overlay);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-sm-radius);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── nav bar (month/year buttons) ── */
+
+.navBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--text-secondary);
+  background: transparent;
+  border: var(--border-width) solid transparent;
+  border-radius: var(--shape-xs-radius);
+  cursor: default;
+}
+
+.navButton:hover {
+  background: var(--bg-hover);
+}
+
+.navButton:focus {
+  border-color: var(--focus);
+  outline: none;
+}
+
+.monthYear {
+  flex: 1;
+  text-align: center;
+  font-size: var(--type-body-size);
+  font-weight: var(--type-label-weight);
+  color: var(--text-primary);
+}
+
+/* ── calendar grid ── */
+
+.grid {
+  border-collapse: collapse;
+  margin-bottom: var(--space-sm);
+}
+
+.dayHeader {
+  padding: var(--space-xs);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-label-weight);
+  color: var(--text-muted);
+  text-align: center;
+  width: 36px;
+}
+
+.day {
+  width: 36px;
+  height: 36px;
+  text-align: center;
+  font-size: var(--type-body-size);
+  color: var(--text-primary);
+  cursor: default;
+  border-radius: var(--shape-xs-radius);
+  border: 2px solid transparent;
+  outline: none;
+}
+
+/* ── variant: state ── */
+
+.day:is([data-outside]) {
+  color: var(--text-muted);
+}
+
+.day:focus {
+  border-color: var(--focus);
+}
+
+.day:is([data-focused='true']):focus {
+  background: var(--bg-hover);
+}
+
+.day:is([data-selected='true']) {
+  background: var(--tone-primary-base);
+  color: var(--tone-primary-foreground);
+}
+
+/* ── action buttons ── */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.actionButton {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--surface-default);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-xs-radius);
+  cursor: default;
+}
+
+.actionButton:hover {
+  background: var(--bg-hover);
+}
+
+.actionButton:focus {
+  border-color: var(--focus);
+  outline: none;
+}
