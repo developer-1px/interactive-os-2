@@ -59,7 +59,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 9 | Checkbox (Two State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox/) | `pattern/examples/checkbox.ts` | 🟢 | — |
-| 10 | Checkbox (Mixed-State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox-mixed/) | — | ⛔ | tri-state (true/false/mixed) 미지원 — expand axis는 boolean만 |
+| 10 | Checkbox (Mixed-State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox-mixed/) | `pattern/examples/checkboxMixed.ts` | 🟢 | — |
 
 ### Combobox
 
@@ -127,7 +127,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 |---|-------------|----------|-----------|------|----|
 | 36 | Scrollable Listbox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-scrollable/) | `pattern/examples/listbox.ts` | 🟢 | — |
 | 37 | Listboxes with Rearrangeable Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-rearrangeable/) | — | ⛔ | multi-zone (dual listbox + toolbar + move commands) |
-| 38 | Listbox with Grouped Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-grouped/) | — | ⛔ | heterogeneous childRole (listbox>group>option) 미지원 — childRole 단일값 |
+| 38 | Listbox with Grouped Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-grouped/) | `pattern/examples/listboxGrouped.ts` | 🟢 | — |
 
 ### Menu and Menubar
 
@@ -191,8 +191,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 57 | Table | [example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/table/) | — | ⛔ | heterogeneous childRole (table>rowgroup>row>cell) 미지원 |
-| 58 | Sortable Table | [example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) | — | ⛔ | 동일 갭 + 정렬 상태 관리 |
+| 57 | Table | [example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/table/) | `pattern/examples/table.ts` | 🟢 | — |
+| 58 | Sortable Table | [example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) | `pattern/examples/table.ts` | 🟡 | 구조 동일, aria-sort 상태 관리 미구현 |
 
 ### Tabs
 
@@ -257,9 +257,9 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 대상 example | 57 + 1 experimental |
 | pattern/examples/ 매핑 | 29 |
 | 미착수 (매핑 없음) | 0 |
-| 적합성 검증 완료 (🟢) | 44 |
-| 부분 적합 (🟡) | 1 |
-| os 갭으로 불가 (⛔) | 13 |
+| 적합성 검증 완료 (🟢) | 47 |
+| 부분 적합 (🟡) | 2 |
+| os 갭으로 불가 (⛔) | 10 |
 
 ## os 갭 레지스트리
 
@@ -271,6 +271,6 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 2 | ~~`navigate()` wrap=false~~ — **해소됨**: `navigate({ wrap: true })` 적용 | Menu Button (#41) | navigate axis | ✅ 해소 |
 | 3 | ~~`followFocus`가 외부 콜백만 호출~~ — **해소됨**: `selectionFollowsFocus` middleware가 focus→selection 자동 동기화 | RadioGroup (#45), Tabs (#59) | `select({ selectionFollowsFocus: true })` | ✅ 해소 |
 | 4 | ~~Combobox `aria-activedescendant` 잔존~~ — **해소됨**: close()가 focus 클리어 | Combobox (#11) | combobox plugin | ✅ 해소 |
-| 5 | `aria-checked="mixed"` tri-state 미지원 — expand axis는 boolean만 | Checkbox Mixed (#10) | expand axis | ⛔ 미해소 |
-| 6 | heterogeneous childRole 미지원 — childRole이 단일 값, 레벨별 다른 role 불가 | Listbox Grouped (#38), Table (#57, #58) | pattern/composePattern | ⛔ 미해소 |
+| 5 | ~~`aria-checked="mixed"` tri-state 미지원~~ — **해소됨**: checked axis 신설, mixed 파생 로직 | Checkbox Mixed (#10) | checked axis | ✅ 해소 |
+| 6 | ~~heterogeneous childRole 미지원~~ — **해소됨**: childRole 함수 확장 `(entity, state) => string` | Listbox Grouped (#38), Table (#57, #58) | pattern/composePattern | ✅ 해소 |
 | 7 | multi-zone 미지원 — 하나의 위젯에 여러 독립 focus zone 조합 불가 | Carousel (#7, #8), Combobox Grid (#15), Date Picker (#16, #18), Listbox Rearrangeable (#37), Menubar (#39, #40), Multi-Thumb Slider (#52), Tabs Actions (E1) | composePattern / useAriaZone | ⛔ 미해소 |
