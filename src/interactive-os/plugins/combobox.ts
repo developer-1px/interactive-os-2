@@ -1,83 +1,66 @@
-import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import { ROOT_ID } from '../store/types'
 import { definePlugin } from './definePlugin'
+import { defineCommands } from '../engine/defineCommand'
 import { selectionCommands } from '../axis/select'
 
 const COMBOBOX_ID = '__combobox__'
 
-export const comboboxCommands = {
-  open(): Command {
-    return {
-      type: 'combobox:open',
-      payload: null,
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: true },
-          },
-        }
+export const comboboxCommands = defineCommands({
+  open: {
+    type: 'combobox:open' as const,
+    handler: (store) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: true },
       },
-    }
+    }),
   },
 
-  close(): Command {
-    return {
-      type: 'combobox:close',
-      payload: null,
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: false },
-            // Clear focus so aria-activedescendant is absent when closed (APG requirement)
-            __focus__: { id: '__focus__', focusedId: '' },
-          },
-        }
+  close: {
+    type: 'combobox:close' as const,
+    handler: (store) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: false },
+        __focus__: { id: '__focus__', focusedId: '' },
       },
-    }
+    }),
   },
 
-  setFilter(text: string): Command {
-    return {
-      type: 'combobox:set-filter',
-      payload: { text },
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, filterText: text },
-          },
-        }
+  setFilter: {
+    type: 'combobox:set-filter' as const,
+    create: (text: string) => ({ text }),
+    handler: (store, { text }) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, filterText: text },
       },
-    }
+    }),
   },
 
-  create(label: string): Command {
-    const id = `created-${label.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`
-    return {
-      type: 'combobox:create',
-      payload: { label },
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [id]: { id, data: { label } },
-          },
-          relationships: {
-            ...store.relationships,
-            [ROOT_ID]: [...(store.relationships[ROOT_ID] ?? []), id],
-          },
-        }
+  create: {
+    type: 'combobox:create' as const,
+    create: (label: string) => {
+      const id = `created-${label.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`
+      return { label, id }
+    },
+    handler: (store, { label, id }) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [id]: { id, data: { label } },
       },
-    }
+      relationships: {
+        ...store.relationships,
+        [ROOT_ID]: [...(store.relationships[ROOT_ID] ?? []), id],
+      },
+    }),
   },
-}
+})
 
 export function combobox(options?: { selectionMode?: 'single' | 'multiple' }) {
   const selectionMode = options?.selectionMode ?? 'single'

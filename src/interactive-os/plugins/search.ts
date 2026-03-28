@@ -1,7 +1,8 @@
 // ② 2026-03-25-search-plugin-prd.md
-import type { Command, VisibilityFilter } from '../engine/types'
+import type { VisibilityFilter } from '../engine/types'
 import type { Plugin } from './types'
 import { definePlugin } from './definePlugin'
+import { defineCommands } from '../engine/defineCommand'
 import type { Entity } from '../store/types'
 
 export const SEARCH_ID = '__search__'
@@ -23,56 +24,44 @@ export function matchesSearchFilter(entity: Entity | undefined, filterText: stri
   return false
 }
 
-export const searchCommands = {
-  activateSearch(): Command {
-    return {
-      type: 'search:activate',
-      payload: null,
-      execute(store) {
-        const existing = store.entities[SEARCH_ID] as Record<string, unknown> | undefined
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SEARCH_ID]: { id: SEARCH_ID, filterText: existing?.filterText ?? '', active: true },
-          },
-        }
-      },
-    }
+export const searchCommands = defineCommands({
+  activateSearch: {
+    type: 'search:activate' as const,
+    handler: (store) => {
+      const existing = store.entities[SEARCH_ID] as Record<string, unknown> | undefined
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [SEARCH_ID]: { id: SEARCH_ID, filterText: existing?.filterText ?? '', active: true },
+        },
+      }
+    },
   },
 
-  setFilter(text: string): Command {
-    return {
-      type: 'search:setFilter',
-      payload: { text },
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SEARCH_ID]: { id: SEARCH_ID, filterText: text, active: true },
-          },
-        }
+  setFilter: {
+    type: 'search:setFilter' as const,
+    create: (text: string) => ({ text }),
+    handler: (store, { text }) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [SEARCH_ID]: { id: SEARCH_ID, filterText: text, active: true },
       },
-    }
+    }),
   },
 
-  clearFilter(): Command {
-    return {
-      type: 'search:clearFilter',
-      payload: null,
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [SEARCH_ID]: { id: SEARCH_ID, filterText: '', active: false },
-          },
-        }
+  clearFilter: {
+    type: 'search:clearFilter' as const,
+    handler: (store) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [SEARCH_ID]: { id: SEARCH_ID, filterText: '', active: false },
       },
-    }
+    }),
   },
-}
+})
 
 const searchVisibilityFilter: VisibilityFilter = {
   shouldShow(nodeId, store) {

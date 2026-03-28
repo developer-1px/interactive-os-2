@@ -18,6 +18,7 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | dispatch + middleware | Integrated | — |
+| defineCommand | Integrated | Phase 2: engine handler registry 전환 |
 | Dispatch Logger | Validated | — |
 
 ## Plugins (L5 · 9종)

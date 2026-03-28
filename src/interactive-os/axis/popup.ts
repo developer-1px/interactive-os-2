@@ -1,9 +1,10 @@
-// ② 2026-03-28-popup-axis-prd.md
+// ② 2026-03-29-define-command-prd.md
 import type { AxisConfig, KeyMap } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { focusCommands } from './navigate'
+import { defineCommands } from '../engine/defineCommand'
 
 export const POPUP_ID = '__popup__'
 
@@ -20,41 +21,39 @@ export function getPopupEntity(store: NormalizedData): PopupEntity {
   }
 }
 
-export const popupCommands = {
-  open(triggerId: string): Command {
-    return {
-      type: 'core:open',
-      payload: { triggerId },
-      execute(store) {
-        const current = getPopupEntity(store)
-        if (current.isOpen && current.triggerId === triggerId) return store
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [POPUP_ID]: { id: POPUP_ID, isOpen: true, triggerId },
-          },
-        }
-      },
-    }
+export const popupCommands = defineCommands({
+  open: {
+    type: 'core:open' as const,
+    meta: true,
+    create: (triggerId: string) => ({ triggerId }),
+    handler: (store, { triggerId }) => {
+      const current = getPopupEntity(store)
+      if (current.isOpen && current.triggerId === triggerId) return store
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [POPUP_ID]: { id: POPUP_ID, isOpen: true, triggerId },
+        },
+      }
+    },
   },
 
-  close(): Command {
-    return {
-      type: 'core:close',
-      execute(store) {
-        const current = getPopupEntity(store)
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [POPUP_ID]: { id: POPUP_ID, isOpen: false, triggerId: current.triggerId },
-          },
-        }
-      },
-    }
+  close: {
+    type: 'core:close' as const,
+    meta: true,
+    handler: (store) => {
+      const current = getPopupEntity(store)
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [POPUP_ID]: { id: POPUP_ID, isOpen: false, triggerId: current.triggerId },
+        },
+      }
+    },
   },
-}
+})
 
 export type PopupType = 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
 

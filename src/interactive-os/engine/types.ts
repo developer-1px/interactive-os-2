@@ -4,6 +4,7 @@ import type { NormalizedData } from '../store/types'
 export interface Command {
   type: string
   payload?: unknown
+  meta?: boolean
   execute(store: NormalizedData): NormalizedData
 }
 

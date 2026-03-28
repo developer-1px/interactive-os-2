@@ -14,6 +14,7 @@ import {
   moveNode,
 } from '../store/createStore'
 import { definePlugin } from './definePlugin'
+import { defineCommands } from '../engine/defineCommand'
 import { focusRecovery } from './focusRecovery'
 import type { PaneSize } from '../store/types'
 
@@ -86,108 +87,82 @@ function closePaneInternal(store: NormalizedData, paneId: string): NormalizedDat
 
 // ── Commands ───────────────────────────────────────────
 
+const _workspaceCommands = defineCommands({
+  setActiveTab: {
+    type: 'workspace:setActiveTab' as const,
+    create: (tabgroupId: string, tabId: string) => ({ tabgroupId, tabId }),
+    handler: (store, { tabgroupId, tabId }) => updateEntityData(store, tabgroupId, { activeTabId: tabId }),
+  },
+
+  resize: {
+    type: 'workspace:resize' as const,
+    create: (splitId: string, sizes: PaneSize[]) => ({ splitId, sizes }),
+    handler: (store, { splitId, sizes }) => updateEntityData(store, splitId, { sizes }),
+  },
+
+  createTab: {
+    type: 'workspace:createTab' as const,
+    create: (tabgroupId: string, tab: Entity) => ({ tabgroupId, tab }),
+    handler: (store, { tabgroupId, tab }) => addEntity(store, tab, tabgroupId),
+  },
+
+  removeTab: {
+    type: 'workspace:removeTab' as const,
+    create: (tabId: string) => ({ tabId }),
+    handler: (store, { tabId }) => {
+      const parentId = getParent(store, tabId)
+      if (!parentId) return removeEntity(store, tabId)
+      const siblings = getChildren(store, parentId)
+      const idx = siblings.indexOf(tabId)
+      let s = removeEntity(store, tabId)
+      const remainingSiblings = getChildren(s, parentId)
+      if (remainingSiblings.length === 0) {
+        s = closePaneInternal(s, parentId)
+      } else {
+        const nextTab = idx < remainingSiblings.length
+          ? remainingSiblings[idx]!
+          : remainingSiblings[remainingSiblings.length - 1]!
+        s = updateEntityData(s, parentId, { activeTabId: nextTab })
+      }
+      return s
+    },
+  },
+
+  splitPane: {
+    type: 'workspace:splitPane' as const,
+    create: (paneId: string, direction: 'horizontal' | 'vertical') => ({ paneId, direction }),
+    handler: (store, { paneId, direction }) => {
+      const parentId = getParent(store, paneId) ?? ROOT_ID
+      const siblings = getChildren(store, parentId)
+      const paneIndex = siblings.indexOf(paneId)
+      const splitId = uid('split')
+      const split: Entity = {
+        id: splitId,
+        data: { type: 'split', direction, sizes: [0.5, 'flex'] } as SplitData,
+      }
+      const newTgId = uid('tg')
+      const newTg: Entity = {
+        id: newTgId,
+        data: { type: 'tabgroup', activeTabId: '' } as TabGroupData,
+      }
+      let s = addEntity(store, split, parentId, paneIndex)
+      s = moveNode(s, paneId, splitId, 0)
+      s = addEntity(s, newTg, splitId)
+      return s
+    },
+  },
+
+  closePane: {
+    type: 'workspace:closePane' as const,
+    create: (paneId: string) => ({ paneId }),
+    handler: (store, { paneId }) => closePaneInternal(store, paneId),
+  },
+})
+
 export const workspaceCommands = {
-  setActiveTab(tabgroupId: string, tabId: string): Command {
-    return {
-      type: 'workspace:setActiveTab',
-      payload: { tabgroupId, tabId },
-      execute(store) {
-        return updateEntityData(store, tabgroupId, { activeTabId: tabId })
-      },
-    }
-  },
-
-  resize(splitId: string, sizes: PaneSize[]): Command {
-    return {
-      type: 'workspace:resize',
-      payload: { splitId, sizes },
-      execute(store) {
-        return updateEntityData(store, splitId, { sizes })
-      },
-    }
-  },
-
-  addTab(tabgroupId: string, tab: Entity): Command {
-    const createCmd: Command = {
-      type: 'workspace:createTab',
-      payload: { tabgroupId, tab },
-      execute(store) {
-        return addEntity(store, tab, tabgroupId)
-      },
-    }
-
-    const activateCmd = workspaceCommands.setActiveTab(tabgroupId, tab.id)
-
-    return createBatchCommand([createCmd, activateCmd])
-  },
-
-  removeTab(tabId: string): Command {
-    return {
-      type: 'workspace:removeTab',
-      payload: { tabId },
-      execute(store) {
-        const parentId = getParent(store, tabId)
-        if (!parentId) return removeEntity(store, tabId)
-
-        const siblings = getChildren(store, parentId)
-        const idx = siblings.indexOf(tabId)
-
-        let s = removeEntity(store, tabId)
-
-        const remainingSiblings = getChildren(s, parentId)
-        if (remainingSiblings.length === 0) {
-          s = closePaneInternal(s, parentId)
-        } else {
-          const nextTab = idx < remainingSiblings.length
-            ? remainingSiblings[idx]!
-            : remainingSiblings[remainingSiblings.length - 1]!
-          s = updateEntityData(s, parentId, { activeTabId: nextTab })
-        }
-
-        return s
-      },
-    }
-  },
-
-  splitPane(paneId: string, direction: 'horizontal' | 'vertical'): Command {
-    return {
-      type: 'workspace:splitPane',
-      payload: { paneId, direction },
-      execute(store) {
-        const parentId = getParent(store, paneId) ?? ROOT_ID
-        const siblings = getChildren(store, parentId)
-        const paneIndex = siblings.indexOf(paneId)
-
-        const splitId = uid('split')
-        const split: Entity = {
-          id: splitId,
-          data: { type: 'split', direction, sizes: [0.5, 'flex'] } as SplitData,
-        }
-
-        const newTgId = uid('tg')
-        const newTg: Entity = {
-          id: newTgId,
-          data: { type: 'tabgroup', activeTabId: '' } as TabGroupData,
-        }
-
-        let s = addEntity(store, split, parentId, paneIndex)
-        s = moveNode(s, paneId, splitId, 0)
-        s = addEntity(s, newTg, splitId)
-
-        return s
-      },
-    }
-  },
-
-  closePane(paneId: string): Command {
-    return {
-      type: 'workspace:closePane',
-      payload: { paneId },
-      execute(store) {
-        return closePaneInternal(store, paneId)
-      },
-    }
-  },
+  ..._workspaceCommands,
+  addTab: (tabgroupId: string, tab: Entity): Command =>
+    createBatchCommand([_workspaceCommands.createTab(tabgroupId, tab), _workspaceCommands.setActiveTab(tabgroupId, tab.id)]),
 }
 
 // ── Serialization ──────────────────────────────────────

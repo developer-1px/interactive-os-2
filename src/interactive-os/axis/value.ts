@@ -1,8 +1,9 @@
 import type { AxisConfig, KeyMap } from './types'
 import type { PatternContext } from './types'
 import type { Command } from '../engine/types'
+import { defineCommands } from '../engine/defineCommand'
 
-// ② 2026-03-26-core-absorption-prd.md
+// ② 2026-03-29-define-command-prd.md
 export const VALUE_ID = '__value__'
 
 export interface ValueRange {
@@ -24,45 +25,44 @@ function roundToStep(v: number, step: number): number {
   return Number(v.toFixed(precision))
 }
 
+const _valueCommands = defineCommands({
+  setValue: {
+    type: 'core:set-value' as const,
+    create: (v: number, range: ValueRange) => {
+      const clamped = clamp(roundToStep(v, range.step), range.min, range.max)
+      return { value: clamped, min: range.min, max: range.max, step: range.step }
+    },
+    handler: (store, { value, min, max, step }) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [VALUE_ID]: { id: VALUE_ID, value, min, max, step },
+      },
+    }),
+  },
+
+  increment: {
+    type: 'core:increment-value' as const,
+    create: (step: number, range: ValueRange) => ({ step, min: range.min, max: range.max, rangeStep: range.step }),
+    handler: (store, { step, min, max, rangeStep }) => {
+      const current = ((store.entities[VALUE_ID] as Record<string, unknown>)?.value as number) ?? min
+      const next = clamp(roundToStep(current + step, rangeStep), min, max)
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [VALUE_ID]: { id: VALUE_ID, value: next, min, max, step: rangeStep },
+        },
+      }
+    },
+  },
+})
+
+/** Composed: defineCommands + sugar delegators */
 export const valueCommands = {
-  setValue(v: number, range: ValueRange): Command {
-    const clamped = clamp(roundToStep(v, range.step), range.min, range.max)
-    return {
-      type: 'core:set-value',
-      payload: { value: clamped },
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [VALUE_ID]: { id: VALUE_ID, value: clamped, min: range.min, max: range.max, step: range.step },
-          },
-        }
-      },
-    }
-  },
-
-  increment(step: number, range: ValueRange): Command {
-    return {
-      type: 'core:increment-value',
-      payload: { step },
-      execute(store) {
-        const current = ((store.entities[VALUE_ID] as Record<string, unknown>)?.value as number) ?? range.min
-        const next = clamp(roundToStep(current + step, range.step), range.min, range.max)
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [VALUE_ID]: { id: VALUE_ID, value: next, min: range.min, max: range.max, step: range.step },
-          },
-        }
-      },
-    }
-  },
-
-  decrement(step: number, range: ValueRange): Command {
-    return valueCommands.increment(-step, range)
-  },
+  ..._valueCommands,
+  /** Sugar: decrement = increment(-step, range) */
+  decrement: (step: number, range: ValueRange): Command => _valueCommands.increment(-step, range),
 }
 
 // ② 2026-03-28-axis-handlers-export-prd.md
