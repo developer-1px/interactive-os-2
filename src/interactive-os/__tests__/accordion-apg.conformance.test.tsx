@@ -90,8 +90,8 @@ function getNode(container: HTMLElement, id: string): HTMLElement | null {
   return container.querySelector(`[data-node-id="${id}"]`)
 }
 
-function getFocusedNodeId(container: HTMLElement): string | null {
-  const focused = container.querySelector('[tabindex="0"]')
+function getFocusedNodeId(_container: HTMLElement): string | null {
+  const focused = document.activeElement
   return focused?.getAttribute('data-node-id') ?? null
 }
 
@@ -143,16 +143,13 @@ describe('APG Accordion — Aria Tree Structure', () => {
     expect(getFocusedNodeId(container)).toBe('section1')
   })
 
-  it('only the focused heading has tabindex=0 (roving tabindex)', async () => {
-    const user = userEvent.setup()
+  it('all headings have tabindex=0 (natural tab order — APG accordion)', () => {
     const { container } = renderAccordion(fixtureData())
 
-    getNode(container, 'section1')!.focus()
-    await user.keyboard('{ArrowDown}')
-
-    const allTabindex0 = container.querySelectorAll('[tabindex="0"]')
-    expect(allTabindex0).toHaveLength(1)
-    expect(allTabindex0[0].getAttribute('data-node-id')).toBe('section2')
+    const headings = container.querySelectorAll('[data-node-id]')
+    for (const heading of headings) {
+      expect(heading.getAttribute('tabindex')).toBe('0')
+    }
   })
 
   it('captureAriaTree snapshot includes aria-expanded attribute', () => {
