@@ -6,6 +6,7 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { radiogroup } from '../pattern/roles/radiogroup'
 import { RadioIndicator } from './indicators'
+import styles from './RadioGroup.module.css'
 
 interface RadioGroupProps {
   data: NormalizedData
@@ -14,14 +15,14 @@ interface RadioGroupProps {
   renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = (item.data as Record<string, unknown>)?.label as string
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
   return (
-    <div {...props} className="flex-row items-center gap-sm">
+    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
       <RadioIndicator />
-      <span>{label}</span>
+      <span className={styles.label}>{label}</span>
     </div>
   )
 }

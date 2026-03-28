@@ -5,6 +5,7 @@ import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/roles/switch'
+import styles from './Toggle.module.css'
 
 interface ToggleProps {
   data: NormalizedData
@@ -19,9 +20,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? item.id as string
   const checked = state.expanded ?? false
   return (
-    <div {...props} className="flex-row items-center justify-between">
-      <span>{label}</span>
-      <span className="item-indicator--toggle">{checked ? 'On' : 'Off'}</span>
+    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
+      <span className={styles.label}>{label}</span>
+      <span className={styles.status} data-checked={checked || undefined}>{checked ? 'On' : 'Off'}</span>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/roles/switch'
 import { CheckIndicator } from './indicators'
+import styles from './Checkbox.module.css'
 
 interface CheckboxProps {
   data: NormalizedData
@@ -20,9 +21,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? item.id as string
   const checked = state.expanded ?? false
   return (
-    <div {...props} className="flex-row items-center gap-sm">
+    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
       <CheckIndicator checked={checked} />
-      <span>{label}</span>
+      <span className={styles.label}>{label}</span>
     </div>
   )
 }

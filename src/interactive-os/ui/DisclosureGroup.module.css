@@ -1,0 +1,15 @@
+/* ── DisclosureGroup — 3-block recipe ── */
+
+/* ═══ Block 1: base ═══ */
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-primary);
+  user-select: none;
+}

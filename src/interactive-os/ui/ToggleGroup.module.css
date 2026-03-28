@@ -1,0 +1,25 @@
+/* ── ToggleGroup — 3-block recipe ── */
+
+/* ═══ Block 1: base ═══ */
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.indicator[data-selected='true'] {
+  color: var(--tone-primary-base);
+}
+
+.label {
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  color: var(--text-primary);
+  user-select: none;
+}
