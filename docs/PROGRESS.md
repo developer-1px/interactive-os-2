@@ -72,11 +72,11 @@
 | Component | Maturity | Gaps |
 |-----------|----------|------|
 | indicators/ (Expand·Check·Radio·Switch·Separator) | Validated | 5/18 완료, Phase 2~3 미착수 |
-| TreeGrid · ListBox · TabList · Grid | Integrated | CSS module 완비 |
-| Accordion · MenuList · DisclosureGroup | Integrated | CSS module 완비 |
-| Combobox · RadioGroup · SwitchGroup | Integrated | CSS module 완비 |
+| TreeGrid · ListBox · TabList · Grid | Integrated | v3 구조화(module.css + parts + data-*). ListBox 완료, 나머지 기존 완비 |
+| Accordion · MenuList · DisclosureGroup | Integrated | v3 구조화 완료(module.css + parts + data-*) |
+| Combobox · RadioGroup · SwitchGroup | Integrated | v3 구조화 완료(module.css + parts + data-*) |
 | Kanban · Slider · Spinbutton | Integrated | CSS module 완비 |
-| Checkbox · Toggle · ToggleGroup · AlertDialog | Integrated | CSS module 완비, testPath 미연결(4종) |
+| Checkbox · Toggle · ToggleGroup · AlertDialog | Integrated | v3 구조화 완료(Checkbox·Toggle·ToggleGroup), testPath 미연결(4종) |
 | Form | Prototype | Zod 기반 폼 검증 UI, listbox 패턴 + form 플러그인 |
 | SpatialView | Validated | 읽기 전용 공간 탐색 컨테이너. spatialViewPreset + useSpatialNav. storymap에서 검증 |
 | Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음, Toaster testPath 없음 |

@@ -1,4 +1,4 @@
-/* ── ListBox — 3-block recipe ── */
+/* ── RadioGroup — 3-block recipe ── */
 
 /* ═══ Block 1: base ═══ */
 .item {
@@ -12,9 +12,4 @@
   font-weight: var(--type-body-weight);
   color: var(--text-primary);
   user-select: none;
-}
-
-/* ═══ Block 2: variant — state ═══ */
-.item[data-selected='true'] .label {
-  font-weight: var(--weight-semi);
 }

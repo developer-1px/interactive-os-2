@@ -1,10 +1,10 @@
-/* ── ListBox — 3-block recipe ── */
+/* ── Toggle — 3-block recipe ── */
 
 /* ═══ Block 1: base ═══ */
 .item {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  justify-content: space-between;
 }
 
 .label {
@@ -14,7 +14,12 @@
   user-select: none;
 }
 
-/* ═══ Block 2: variant — state ═══ */
-.item[data-selected='true'] .label {
+.status {
+  font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
+  color: var(--text-muted);
+}
+
+.status[data-checked='true'] {
+  color: var(--tone-success-base);
 }

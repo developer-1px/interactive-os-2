@@ -6,6 +6,7 @@ import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { menu } from '../pattern/roles/menu'
+import styles from './MenuList.module.css'
 
 interface MenuListProps {
   data: NormalizedData
@@ -19,10 +20,12 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
   return (
-    <div {...props} className="flex-row items-center justify-between">
-      <span>{label}</span>
+    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
+      <span className={styles.label}>{label}</span>
       {state.expanded !== undefined && (
-        <ExpandIndicator expanded={state.expanded} />
+        <span className={styles.indicator}>
+          <ExpandIndicator expanded={state.expanded} />
+        </span>
       )}
     </div>
   )

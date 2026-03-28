@@ -6,6 +6,7 @@ import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
+import styles from './ToggleGroup.module.css'
 
 interface ToggleGroupProps {
   data: NormalizedData
@@ -20,9 +21,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
   return (
-    <div {...props} className="flex-row items-center gap-xs">
-      <span className="item-indicator--toggle-group">{state.selected ? <CircleDot size={18} /> : <Circle size={18} />}</span>
-      <span>{label}</span>
+    <div {...props} className={styles.item} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
+      <span className={styles.indicator} data-selected={state.selected || undefined}>{state.selected ? <CircleDot size={18} /> : <Circle size={18} />}</span>
+      <span className={styles.label}>{label}</span>
     </div>
   )
 }

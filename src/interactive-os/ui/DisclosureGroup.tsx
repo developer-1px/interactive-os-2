@@ -6,6 +6,7 @@ import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { disclosure } from '../pattern/roles/disclosure'
+import styles from './DisclosureGroup.module.css'
 
 interface DisclosureGroupProps {
   data: NormalizedData
@@ -19,9 +20,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? (item.data as Record<string, unknown>)?.name as string
     ?? item.id as string
   return (
-    <div {...props} className="flex-row items-center gap-xs">
+    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
       <ExpandIndicator expanded={state.expanded} />
-      <span>{label}</span>
+      <span className={styles.label}>{label}</span>
     </div>
   )
 }
