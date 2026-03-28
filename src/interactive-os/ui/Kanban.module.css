@@ -87,3 +87,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ── Focus/Selection — override .card background ── */
+
+.card[data-focused] {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+}
+
+.card[aria-selected="true"] {
+  background: var(--selection);
+  color: var(--text-bright);
+}

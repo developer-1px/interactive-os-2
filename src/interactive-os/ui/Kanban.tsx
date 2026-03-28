@@ -27,7 +27,7 @@ function FocusDiv({ focused, children, ...props }: { focused: boolean; children:
       ref.current.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
     }
   }, [focused])
-  return <div ref={ref} {...props}>{children}</div>
+  return <div ref={ref} data-focused={focused || undefined} {...props}>{children}</div>
 }
 
 export function Kanban({
