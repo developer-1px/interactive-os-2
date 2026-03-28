@@ -41,3 +41,6 @@
 - [ ] [P1] Engine 확장: query/mutation/subscription — command 외 서버 데이터 레이어. Gen UI 채팅 블록이 서버 데이터를 fetch→store 주입하려면 필요. ui/chat 완성 후 착수. 상세: memory/project_engine_query_mutation_sub.md — 출처: 채팅 모듈 discussion (2026-03-27)
 - [ ] [P1] Viewer 기능 복원 — ChatFeed 포팅 시 소실: 파일 경로 클릭(splitByFilePaths), loadOlder 무한 스크롤, 타입별 차등 페이싱(usePacedReveal), 타이프라이터 — 출처: docs/0-inbox/60-[retro]chatModule.md (2026-03-27)
 - [ ] [P2] 코어 포인터 드래그 primitive — SplitPane.tsx의 startDrag를 engine 레이어로 추출. 두 번째 소비자(Slider/reorder/kanban) 출현 시 실행. 현재 SplitPane.tsx에 경계 분리 완료 — 출처: SplitPane resize discussion (2026-03-28)
+- [ ] [P1] form plugin: submit-on-Enter — Aria onActivate에서 dispatch 접근 불가, keyMap plugin으로 해결 필요 — 출처: form plugin retro (2026-03-29)
+- [ ] [P2] form plugin: 미들웨어 체인 통합 테스트 — engine 수준에서 rename:confirm 후 __errors__ 자동 갱신 검증 — 출처: form plugin retro (2026-03-29)
+- [ ] [P2] Form.tsx 정리 — FormDemo로 대체됨, Aria.Editable 의존은 부적절. 삭제 또는 input 기반 재구현 — 출처: form plugin retro (2026-03-29)
