@@ -12,5 +12,5 @@ export const toolbar = composePattern(
     }),
   },
   activate({ onClick: true }),
-  navigate({ orientation: 'horizontal' }),
+  navigate({ orientation: 'horizontal', wrap: true }),
 )

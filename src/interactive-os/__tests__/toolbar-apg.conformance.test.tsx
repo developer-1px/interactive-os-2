@@ -122,8 +122,15 @@ describe('APG Toolbar — Keyboard Navigation', () => {
       expect(getFocusedNodeId(container)).toBe('italic')
     })
 
-    // NOTE: APG requires wrap-around (last→first), but toolbar pattern uses navigate()
-    // without wrap:true option. Gap logged in matrix row #61.
+    it('ArrowRight wraps from last to first (APG circular)', async () => {
+      const user = userEvent.setup()
+      const { container } = renderToolbar(fixtureData())
+
+      getNode(container, 'underline')!.focus()
+      await user.keyboard('{ArrowRight}')
+
+      expect(getFocusedNodeId(container)).toBe('bold')
+    })
   })
 
   describe('ArrowLeft', () => {
@@ -137,8 +144,15 @@ describe('APG Toolbar — Keyboard Navigation', () => {
       expect(getFocusedNodeId(container)).toBe('bold')
     })
 
-    // NOTE: APG requires wrap-around (first→last), but toolbar pattern uses navigate()
-    // without wrap:true option. Gap logged in matrix row #61.
+    it('ArrowLeft wraps from first to last (APG circular)', async () => {
+      const user = userEvent.setup()
+      const { container } = renderToolbar(fixtureData())
+
+      getNode(container, 'bold')!.focus()
+      await user.keyboard('{ArrowLeft}')
+
+      expect(getFocusedNodeId(container)).toBe('underline')
+    })
   })
 
   describe('Home', () => {
