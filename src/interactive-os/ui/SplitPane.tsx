@@ -94,54 +94,17 @@ export function SplitPane({
       const dimension = isHorizontal ? rect.width : rect.height
       const startPos = isHorizontal ? e.clientX : e.clientY
 
-      const leftIdx = index
-      const rightIdx = index + 1
-      const leftIsFlex = sizes[leftIdx] === 'flex'
-      const rightIsFlex = sizes[rightIdx] === 'flex'
-
-      const panes = container.querySelectorAll<HTMLElement>(`.${styles.pane}`)
-      const leftPane = panes[leftIdx]
-      const rightPane = panes[rightIdx]
-
-      let latestSizes = sizes
-
       const onPointerMove = (moveEvent: PointerEvent) => {
         const currentPos = isHorizontal ? moveEvent.clientX : moveEvent.clientY
         const deltaRatio = (currentPos - startPos) / dimension
-
-        latestSizes = applyDelta(sizes, leftIdx, rightIdx, deltaRatio, minRatio)
-
-        // Direct DOM update for smooth drag (bypass React re-render)
-        const prop = isHorizontal ? 'width' : 'height'
-        if (!leftIsFlex && leftPane) {
-          leftPane.style[prop] = `${(latestSizes[leftIdx] as number) * 100}%`
-        }
-        if (!rightIsFlex && rightPane) {
-          rightPane.style[prop] = `${(latestSizes[rightIdx] as number) * 100}%`
-          // Override flex:1 on last pane if it's a non-flex fallback
-          if (rightIdx === sizes.length - 1) {
-            rightPane.style.flex = '0 0 auto'
-          }
-        }
-
-        if (latestSizes[leftIdx] !== 'flex') {
-          target.setAttribute('aria-valuenow', String(Math.round((latestSizes[leftIdx] as number) * 100)))
-        }
+        onResize(applyDelta(sizes, index, index + 1, deltaRatio, minRatio))
       }
 
       const cleanup = () => {
         document.removeEventListener('pointermove', onPointerMove)
-
-        // Reset inline styles so React controls them again
-        const prop = isHorizontal ? 'width' : 'height'
-        if (leftPane) { leftPane.style[prop] = '' }
-        if (rightPane) { rightPane.style[prop] = ''; rightPane.style.flex = '' }
-
-        onResize(latestSizes)
       }
 
       document.addEventListener('pointermove', onPointerMove)
-      // lostpointercapture fires on pointerup, unmount, and programmatic release
       target.addEventListener('lostpointercapture', cleanup, { once: true })
     },
     [direction, sizes, onResize, minRatio],
