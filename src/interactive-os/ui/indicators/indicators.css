@@ -8,6 +8,9 @@
 /* ── Chevron ── */
 
 :where([data-aria-container] .item-chevron) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-muted);
   font-size: var(--type-body-size);
   opacity: 0.5;
