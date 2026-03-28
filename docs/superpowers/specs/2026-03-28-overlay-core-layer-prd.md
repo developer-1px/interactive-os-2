@@ -17,7 +17,8 @@
 |---|-------|------|------|-------|
 | S1 | AlertDialog가 열려 있다 | 사용자가 AlertDialog 안의 버튼으로 확인 Menu를 연다 | Menu가 AlertDialog 위에 표시되고, Escape는 Menu만 닫는다 | |
 | S2 | Menu(popup)가 열려 있다 | 사용자가 Menu 밖 영역을 클릭한다 | Menu가 닫히고, 클릭 대상이 다른 인터랙티브 요소면 그 요소가 활성화된다 | |
-| S3 | Dialog(modal)가 열려 있다 | 사용자가 backdrop을 클릭한다 | Dialog는 닫히지 않는다 (modal은 backdrop click dismiss 없음) | |
+| S3a | Dialog(modal, dismissOnBackdrop=true)가 열려 있다 | 사용자가 backdrop을 클릭한다 | Dialog가 닫히고, 포커스가 트리거로 복원된다 | |
+| S3b | AlertDialog(modal, dismissOnBackdrop=false)가 열려 있다 | 사용자가 backdrop을 클릭한다 | AlertDialog는 닫히지 않는다 (확인 행위 강제) | |
 | S4 | Combobox의 dropdown(popup)이 열려 있다 | 사용자가 Escape를 누른다 | dropdown만 닫히고, input에 포커스가 유지된다 | |
 | S5 | 트리거 버튼이 포커스되어 있다 | 사용자가 Enter/Space를 누른다 | 연결된 popup이 열리고, popup 첫 항목에 포커스가 이동한다 | |
 | S6 | Menu(popup)가 열려 있다 | 사용자가 Tab을 누른다 | Menu가 닫히고 포커스가 트리거 다음 tabbable 요소로 이동한다 | |
