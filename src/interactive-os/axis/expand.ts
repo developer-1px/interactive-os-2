@@ -100,6 +100,14 @@ export const expandCommands = {
   },
 }
 
+// ② 2026-03-28-axis-handlers-export-prd.md
+export const expandHandler = (ctx: import('./types').PatternContext): Command => ctx.expand()
+export const collapseHandler = (ctx: import('./types').PatternContext): Command => ctx.collapse()
+export const expandOrFocusChild = (ctx: import('./types').PatternContext): Command =>
+  ctx.isExpanded ? ctx.focusChild() : ctx.expand()
+export const collapseOrFocusParent = (ctx: import('./types').PatternContext): Command =>
+  ctx.isExpanded ? ctx.collapse() : ctx.focusParent()
+
 interface ExpandOptions {
   mode?: 'arrow' | 'enter-esc'
 }
@@ -128,8 +136,8 @@ export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Parti
 
   // mode === 'arrow' (default)
   const keyMap: KeyMap = {
-    ArrowRight: (ctx) => (ctx.isExpanded ? ctx.focusChild() : ctx.expand()),
-    ArrowLeft: (ctx) => (ctx.isExpanded ? ctx.collapse() : ctx.focusParent()),
+    ArrowRight: expandOrFocusChild,
+    ArrowLeft: collapseOrFocusParent,
   }
   return { keyMap, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
 }

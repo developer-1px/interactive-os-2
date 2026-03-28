@@ -76,78 +76,73 @@ export const popupVisibilityFilter: VisibilityFilter = {
   },
 }
 
+function readPopup(ctx: Parameters<KeyMap[string]>[0]): PopupEntity {
+  const entity = ctx.getEntity(POPUP_ID)
+  return {
+    isOpen: (entity?.isOpen as boolean) ?? false,
+    triggerId: entity?.triggerId as string | undefined,
+  }
+}
+
+// ② 2026-03-28-axis-handlers-export-prd.md
+export const openPopup = (ctx: Parameters<KeyMap[string]>[0]): Command | void => {
+  const { isOpen } = readPopup(ctx)
+  const children = ctx.getChildren(ctx.focused)
+  if (!isOpen && children.length > 0) {
+    return createBatchCommand([
+      popupCommands.open(ctx.focused),
+      focusCommands.setFocus(children[0]),
+    ])
+  }
+  return undefined
+}
+
+export const closePopup = (ctx: Parameters<KeyMap[string]>[0]): Command | void => {
+  const { isOpen, triggerId } = readPopup(ctx)
+  if (isOpen) {
+    if (triggerId) {
+      return createBatchCommand([
+        popupCommands.close(),
+        focusCommands.setFocus(triggerId),
+      ])
+    }
+    return popupCommands.close()
+  }
+  return undefined
+}
+
+export const openAndFocusFirst = (ctx: Parameters<KeyMap[string]>[0]): Command | void => {
+  const children = ctx.getChildren(ctx.focused)
+  if (children.length > 0) {
+    return createBatchCommand([
+      popupCommands.open(ctx.focused),
+      focusCommands.setFocus(children[0]),
+    ])
+  }
+  return undefined
+}
+
+export const openAndFocusLast = (ctx: Parameters<KeyMap[string]>[0]): Command | void => {
+  const children = ctx.getChildren(ctx.focused)
+  if (children.length > 0) {
+    return createBatchCommand([
+      popupCommands.open(ctx.focused),
+      focusCommands.setFocus(children[children.length - 1]),
+    ])
+  }
+  return undefined
+}
+
 export function popup(options: PopupOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; visibilityFilter: VisibilityFilter } {
   const { type, modal } = options
 
-  function readPopup(ctx: Parameters<KeyMap[string]>[0]): PopupEntity {
-    const entity = ctx.getEntity(POPUP_ID)
-    return {
-      isOpen: (entity?.isOpen as boolean) ?? false,
-      triggerId: entity?.triggerId as string | undefined,
-    }
-  }
-
   const keyMap: KeyMap = {
-    Enter(ctx) {
-      const { isOpen } = readPopup(ctx)
-      const children = ctx.getChildren(ctx.focused)
-      if (!isOpen && children.length > 0) {
-        return createBatchCommand([
-          popupCommands.open(ctx.focused),
-          focusCommands.setFocus(children[0]),
-        ])
-      }
-      return undefined
-    },
-
-    Space(ctx) {
-      const { isOpen } = readPopup(ctx)
-      const children = ctx.getChildren(ctx.focused)
-      if (!isOpen && children.length > 0) {
-        return createBatchCommand([
-          popupCommands.open(ctx.focused),
-          focusCommands.setFocus(children[0]),
-        ])
-      }
-      return undefined
-    },
-
-    Escape(ctx) {
-      const { isOpen, triggerId } = readPopup(ctx)
-      if (isOpen) {
-        if (triggerId) {
-          return createBatchCommand([
-            popupCommands.close(),
-            focusCommands.setFocus(triggerId),
-          ])
-        }
-        return popupCommands.close()
-      }
-      return undefined
-    },
-
+    Enter: openPopup,
+    Space: openPopup,
+    Escape: closePopup,
     ...(type === 'menu' && {
-      ArrowDown(ctx) {
-        const children = ctx.getChildren(ctx.focused)
-        if (children.length > 0) {
-          return createBatchCommand([
-            popupCommands.open(ctx.focused),
-            focusCommands.setFocus(children[0]),
-          ])
-        }
-        return undefined
-      },
-
-      ArrowUp(ctx) {
-        const children = ctx.getChildren(ctx.focused)
-        if (children.length > 0) {
-          return createBatchCommand([
-            popupCommands.open(ctx.focused),
-            focusCommands.setFocus(children[children.length - 1]),
-          ])
-        }
-        return undefined
-      },
+      ArrowDown: openAndFocusFirst,
+      ArrowUp: openAndFocusLast,
     }),
   }
 
