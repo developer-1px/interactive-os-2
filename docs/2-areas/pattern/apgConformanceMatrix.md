@@ -162,7 +162,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 48 | Color Viewer Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-color-viewer/) | `pattern/examples/slider.ts` | ⬜ | — |
+| 48 | Color Viewer Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-color-viewer/) | `pattern/examples/slider.ts` | 🟢 | — |
 | 49 | Rating Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-rating/) | — | ⬜ | — |
 | 50 | Media Seek Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-seek/) | — | ⬜ | — |
 | 51 | Vertical Temperature Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-temperature/) | — | ⬜ | — |
@@ -257,7 +257,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 대상 example | 57 + 1 experimental |
 | 기존 pattern/examples/ 매핑 | 16 |
 | 미착수 (매핑 없음) | 41 |
-| 적합성 검증 완료 | 7 |
+| 적합성 검증 완료 | 8 |
 
 ## os 갭 레지스트리
 
