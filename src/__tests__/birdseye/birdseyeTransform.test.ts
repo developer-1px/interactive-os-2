@@ -130,7 +130,7 @@ describe('buildKanbanStore', () => {
 
     // column entities have correct data
     const pagesCol = getEntityData<{ title: string; sourceId: string }>(kanbanStore, 'col:src/pages')
-    expect(pagesCol).toEqual({ title: 'pages', sourceId: 'src/pages' })
+    expect(pagesCol).toEqual({ title: '1. pages', sourceId: 'src/pages' })
 
     // pages column has 2 cards (Home.tsx, About.tsx)
     const pageCards = getChildren(kanbanStore, 'col:src/pages')
