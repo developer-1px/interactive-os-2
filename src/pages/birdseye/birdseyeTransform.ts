@@ -73,6 +73,25 @@ export function buildNavStore(fsStore: NormalizedData): NormalizedData {
  * - 선택 폴더 직하 파일 → "(files)" 컬럼 (col:__files__)
  * - 하위 디렉토리가 없으면 단일 (files) 컬럼
  */
+/** types.ts → 맨 위, __ 접두사 → 맨 뒤, 나머지 알파벳순 */
+function sortCards(fsStore: NormalizedData, ids: string[]): string[] {
+  return [...ids].sort((a, b) => {
+    const aData = getEntityData<FsEntityData>(fsStore, a)
+    const bData = getEntityData<FsEntityData>(fsStore, b)
+    const aName = aData?.name ?? ''
+    const bName = bData?.name ?? ''
+    // types.ts/types.tsx 맨 위
+    const aTypes = /^types\.[^.]+$/.test(aName)
+    const bTypes = /^types\.[^.]+$/.test(bName)
+    if (aTypes !== bTypes) return aTypes ? -1 : 1
+    // 폴더 먼저
+    const aDir = aData?.type === 'directory'
+    const bDir = bData?.type === 'directory'
+    if (aDir !== bDir) return aDir ? -1 : 1
+    return aName.localeCompare(bName)
+  })
+}
+
 export interface KanbanBuildOptions {
   /** 컬럼 정렬 순서. 이름 배열. 목록에 없는 폴더는 뒤에 알파벳순으로 붙는다. */
   columnOrder?: string[]
@@ -136,8 +155,8 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
       },
     }
 
-    // Add cards for each direct child of this subdir
-    const subChildren = getChildren(fsStore, subDirId)
+    // Add cards for each direct child of this subdir (types.ts first)
+    const subChildren = sortCards(fsStore, getChildren(fsStore, subDirId))
     for (const childId of subChildren) {
       const childData = getEntityData<FsEntityData>(fsStore, childId)
       if (!childData) continue
@@ -175,7 +194,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
       },
     }
 
-    for (const fileId of directFiles) {
+    for (const fileId of sortCards(fsStore, directFiles)) {
       const fileData = getEntityData<FsEntityData>(fsStore, fileId)
       if (!fileData) continue
 
