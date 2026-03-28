@@ -65,6 +65,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   middleware?: Middleware
   /** Visibility filters from axes — getVisibleNodes applies these generically */
   visibilityFilters?: VisibilityFilter[]
+  /** Declarative click bindings from unified inputMap — 'Click', 'Shift+Click', 'Mod+Click' etc. */
+  clickMap?: Record<string, (ctx: PatternContext) => Command | void>
   ariaAttributes: (node: Entity, state: TState) => Record<string, string>
 }
 

@@ -88,6 +88,47 @@ export const focusPrevCol = (ctx: PatternContext): Command | void => ctx.grid?.f
 export const focusFirstCol = (ctx: PatternContext): Command | void => ctx.grid?.focusFirstCol()
 export const focusLastCol = (ctx: PatternContext): Command | void => ctx.grid?.focusLastCol()
 
+/** Config-only: provides focusStrategy + colCount, no keyMap. Pattern declares bindings. */
+export function gridNav(columns: number): { keyMap: KeyMap; config: Partial<AxisConfig> } {
+  return {
+    keyMap: {},
+    config: {
+      focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
+      colCount: columns,
+    },
+  }
+}
+
+/** Config-only: provides focusStrategy, no keyMap. Pattern declares bindings. */
+export function rovingTabindex(orientation: 'vertical' | 'horizontal' | 'both' = 'vertical'): { keyMap: KeyMap; config: Partial<AxisConfig> } {
+  return {
+    keyMap: {},
+    config: {
+      focusStrategy: { type: 'roving-tabindex', orientation },
+    },
+  }
+}
+
+export const gridTabCycleNext = (ctx: PatternContext): Command | void => {
+  const g = ctx.grid
+  if (!g) return
+  const atLastCol = g.colIndex >= g.colCount - 1
+  if (!atLastCol) return g.focusNextCol()
+  const nextRowCmd = ctx.focusNext()
+  if ((nextRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
+  return createBatchCommand([nextRowCmd, g.focusFirstCol()])
+}
+
+export const gridTabCyclePrev = (ctx: PatternContext): Command | void => {
+  const g = ctx.grid
+  if (!g) return
+  const atFirstCol = g.colIndex <= 0
+  if (!atFirstCol) return g.focusPrevCol()
+  const prevRowCmd = ctx.focusPrev()
+  if ((prevRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
+  return createBatchCommand([prevRowCmd, g.focusLastCol()])
+}
+
 export function navigate(options?: NavigateOptions): { keyMap: KeyMap; config: Partial<AxisConfig> } {
   const wrap = options?.wrap
   const wrapOpts = wrap ? { wrap: true as const } : undefined

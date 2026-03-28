@@ -214,6 +214,44 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     (id: string): Record<string, unknown> => {
       const baseProps = view.getNodeProps(id)
       if (isKeyMapOnly) return baseProps
+
+      // Declarative clickMap path — pattern owns pointer bindings
+      if (behavior.clickMap) {
+        const clickMap = behavior.clickMap
+
+        baseProps.onPointerDown = () => {
+          pointerDownCtxRef.current = createPatternContext(engine, behaviorCtxOptions as PatternContextOptions)
+        }
+
+        baseProps.onClick = (event: MouseEvent) => {
+          if (event.defaultPrevented) return
+          const target = event.target as HTMLElement
+          const closestItem = target.closest(`[data-node-id]`)
+          if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
+
+          // Resolve modifier key to canonical string
+          let key: string
+          if (event.shiftKey) key = 'Shift+Click'
+          else if (event.ctrlKey || event.metaKey) key = 'Mod+Click'
+          else if (event.altKey) key = 'Alt+Click'
+          else key = 'Click'
+
+          const handler = clickMap[key]
+          if (handler) {
+            // Use pointerDown ctx for shift (anchor-aware), fresh ctx otherwise
+            const ctx = (key === 'Shift+Click' && pointerDownCtxRef.current)
+              ? pointerDownCtxRef.current
+              : createPatternContext(engine, { ...behaviorCtxOptions as PatternContextOptions, overrideFocused: id })
+            const command = handler(ctx)
+            if (command) engine.dispatch(command)
+          }
+          pointerDownCtxRef.current = null
+        }
+
+        return baseProps
+      }
+
+      // Legacy boolean flag path — backward compatible
       if (!behavior.selectOnClick && !behavior.activateOnClick) return baseProps
 
       if (behavior.selectOnClick) {
@@ -223,7 +261,6 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
         baseProps.onClick = (event: MouseEvent) => {
           if (event.defaultPrevented) return
-          // Guard against bubbled clicks from nested treeitems
           const target = event.target as HTMLElement
           const closestItem = target.closest(`[data-node-id]`)
           if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
@@ -242,13 +279,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           }
           pointerDownCtxRef.current = null
 
-          // Activate on click (skip when modifier keys held)
           const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
           if (behavior.activateOnClick && !hasModifier) {
             const cb = engineCallbacksMap.get(engine)
             if (cb?.onActivate) {
-              // ② 2026-03-26-treeview-click-expand-prd.md
-              // APG File Directory: click on parent = expand toggle + select
               if (behavior.expandOnParentClick !== false) {
                 const children = getChildren(engine.getStore(), id)
                 if (children.length > 0) {
@@ -264,11 +298,10 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           }
         }
       }
-      // If only activateOnClick (no selectOnClick), the base onClick from view already handles it
 
       return baseProps
     },
-    [view, isKeyMapOnly, behavior.selectOnClick, behavior.activateOnClick, behavior.expandOnParentClick, behavior.selectionMode, engine, behaviorCtxOptions],
+    [view, isKeyMapOnly, behavior.clickMap, behavior.selectOnClick, behavior.activateOnClick, behavior.expandOnParentClick, behavior.selectionMode, engine, behaviorCtxOptions],
   )
 
   const dispatch = useCallback(

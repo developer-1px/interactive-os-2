@@ -196,6 +196,28 @@ export const extendSelectionNext = (ctx: import('./types').PatternContext): Comm
 export const extendSelectionPrev = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('prev')
 export const extendSelectionFirst = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('first')
 export const extendSelectionLast = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('last')
+export const extendSelectionToFocused = (ctx: import('./types').PatternContext): Command => ctx.extendSelectionTo(ctx.focused)
+
+/** Config-only: provides selectionMode + middleware, no keyMap. Pattern declares bindings. */
+export function selectConfig(options?: SelectOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; middleware?: Middleware } {
+  const mode = options?.mode ?? 'multiple'
+  const middlewares: Middleware[] = [anchorResetMiddleware()]
+  if (options?.selectionFollowsFocus) {
+    middlewares.push(selectionFollowsFocusMiddleware())
+  }
+  const middleware: Middleware = middlewares.length === 1
+    ? middlewares[0]!
+    : (next) => middlewares.reduceRight<(command: Command) => void>((acc, mw) => mw(acc), next)
+
+  return {
+    keyMap: {},
+    config: {
+      selectionMode: mode,
+      ...(options?.selectionFollowsFocus && { selectionFollowsFocus: true }),
+    },
+    middleware,
+  }
+}
 
 interface SelectOptions {
   mode?: SelectionMode  // 'single' | 'multiple', default 'multiple'

@@ -13,6 +13,7 @@ import { toggleCheckHandler } from '../axis/checked'
 import { openPopup, closePopup, openAndFocusFirst, openAndFocusLast } from '../axis/popup'
 import { focusNextWrap, focusPrevWrap } from '../axis/tab'
 import { navigate } from '../axis/navigate'
+import { composePattern } from '../pattern/composePattern'
 
 function makeCmd(type: string): Command {
   return { type, execute: (s) => s }
@@ -177,5 +178,66 @@ describe('axis handler exports', () => {
     const exp = expand()
     expect(exp.keyMap['ArrowRight']).toBe(expandOrFocusChild)
     expect(exp.keyMap['ArrowLeft']).toBe(collapseOrFocusParent)
+  })
+})
+
+describe('unified inputMap — Click canonical strings', () => {
+  const identity = {
+    role: 'listbox',
+    ariaAttributes: () => ({}),
+  }
+
+  it('Click bindings are extracted to clickMap', () => {
+    const pattern = composePattern(identity, {
+      ArrowDown: focusNext,
+      Click: toggleSelect,
+      'Shift+Click': extendSelectionNext,
+      'Mod+Click': toggleSelect,
+    })
+
+    // keyMap only has keyboard bindings
+    expect(pattern.keyMap['ArrowDown']).toBe(focusNext)
+    expect(pattern.keyMap['Click']).toBeUndefined()
+    expect(pattern.keyMap['Shift+Click']).toBeUndefined()
+
+    // clickMap has pointer bindings
+    expect(pattern.clickMap).toBeDefined()
+    expect(pattern.clickMap!['Click']).toBe(toggleSelect)
+    expect(pattern.clickMap!['Shift+Click']).toBe(extendSelectionNext)
+    expect(pattern.clickMap!['Mod+Click']).toBe(toggleSelect)
+  })
+
+  it('no Click bindings → clickMap is undefined', () => {
+    const pattern = composePattern(identity, {
+      ArrowDown: focusNext,
+      Space: toggleSelect,
+    })
+
+    expect(pattern.clickMap).toBeUndefined()
+  })
+
+  it('Click bindings merge across axes', () => {
+    const pattern = composePattern(
+      identity,
+      { Click: activateHandler } as Record<string, (ctx: PatternContext) => Command | void>,
+      { 'Shift+Click': extendSelectionNext },
+    )
+
+    expect(pattern.clickMap!['Click']).toBe(activateHandler)
+    expect(pattern.clickMap!['Shift+Click']).toBe(extendSelectionNext)
+  })
+
+  it('AriaPattern base preserves clickMap through recursive override', () => {
+    const base = composePattern(identity, {
+      ArrowDown: focusNext,
+      Click: toggleSelect,
+    })
+
+    const extended = composePattern(base, {
+      'Mod+Click': activateHandler,
+    } as Record<string, (ctx: PatternContext) => Command | void>)
+
+    expect(extended.clickMap!['Click']).toBe(toggleSelect)
+    expect(extended.clickMap!['Mod+Click']).toBe(activateHandler)
   })
 })
