@@ -174,7 +174,15 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         index: siblings.indexOf(id),
         siblingCount: siblings.length,
         expanded: isExpandable ? expandedIdSet.has(id) : undefined,
-        checked: behavior.checkedTracking ? checkedIdSet.has(id) : undefined,
+        checked: behavior.checkedTracking ? (() => {
+          const directChecked = checkedIdSet.has(id)
+          const children = getChildren(store, id)
+          if (children.length === 0) return directChecked
+          const checkedCount = children.filter(c => checkedIdSet.has(c)).length
+          if (checkedCount === 0) return false
+          if (checkedCount === children.length) return true
+          return 'mixed' as const
+        })() : undefined,
         level: level + 1,
         renaming,
         ...(behavior.valueRange && { valueCurrent: (valueMeta?.value as number) ?? behavior.valueRange.min }),
