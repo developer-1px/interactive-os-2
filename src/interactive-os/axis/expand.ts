@@ -103,6 +103,8 @@ export const expandCommands = {
 // ② 2026-03-28-axis-handlers-export-prd.md
 export const expandHandler = (ctx: import('./types').PatternContext): Command => ctx.expand()
 export const collapseHandler = (ctx: import('./types').PatternContext): Command => ctx.collapse()
+export const toggleExpand = (ctx: import('./types').PatternContext): Command =>
+  ctx.isExpanded ? ctx.collapse() : ctx.expand()
 export const expandOrFocusChild = (ctx: import('./types').PatternContext): Command =>
   ctx.isExpanded ? ctx.focusChild() : ctx.expand()
 export const collapseOrFocusParent = (ctx: import('./types').PatternContext): Command =>
