@@ -53,3 +53,37 @@
   padding: 0 calc(var(--space-xs) / 2);
   min-width: var(--space-3xl);
 }
+
+/* ══ Compact variant ══ */
+
+.board[data-compact] {
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+}
+
+.board[data-compact] .column {
+  min-width: var(--space-3xl);
+  max-width: none;
+  flex: 0 0 auto;
+  width: 200px;
+  border-radius: var(--shape-sm-radius);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.board[data-compact] .columnHeader {
+  font-size: var(--type-caption-size);
+  text-transform: none;
+  letter-spacing: 0;
+  padding: var(--space-xs) 0;
+}
+
+.board[data-compact] .card {
+  padding: var(--space-xs) var(--space-sm);
+  border: none;
+  border-radius: var(--shape-xs-radius);
+  font-size: var(--type-caption-size);
+  line-height: var(--leading-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

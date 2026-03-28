@@ -22,6 +22,12 @@ function findFirstNavItem(navStore: NormalizedData): string | null {
   })
   if (srcGroup) {
     const srcChildren = navStore.relationships[srcGroup] ?? []
+    // interactive-os 또는 pages를 우선 선택
+    const preferred = srcChildren.find((id) => {
+      const data = getEntityData<{ label: string }>(navStore, id)
+      return data?.label === 'interactive-os' || data?.label === 'pages'
+    })
+    if (preferred) return preferred
     if (srcChildren.length > 0) return srcChildren[0]!
   }
 
@@ -119,6 +125,7 @@ export default function BirdseyeLayout() {
               key={selectedFolderId}
               data={kanbanStore}
               onActivate={handleKanbanActivate}
+              compact
               aria-label={`${selectedName} contents`}
             />
           </div>
