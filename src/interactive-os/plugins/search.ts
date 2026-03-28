@@ -27,7 +27,6 @@ export const searchCommands = {
   activateSearch(): Command {
     return {
       type: 'search:activate',
-      payload: null,
       execute(store) {
         const existing = store.entities[SEARCH_ID] as Record<string, unknown> | undefined
         return {
@@ -60,7 +59,6 @@ export const searchCommands = {
   clearFilter(): Command {
     return {
       type: 'search:clearFilter',
-      payload: null,
       execute(store) {
         return {
           ...store,
