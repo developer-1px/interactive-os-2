@@ -1,4 +1,4 @@
-import type { AriaPattern, NodeState } from '../types'
+import type { AriaPattern } from '../types'
 import { composePattern } from '../composePattern'
 import { expandVisibilityFilter, toggleExpand } from '../../axis/expand'
 import { focusNext, focusPrev, focusFirst, focusLast } from '../../axis/navigate'
@@ -14,10 +14,6 @@ export const accordion: AriaPattern = composePattern(
     visibilityFilter: expandVisibilityFilter,
     panelRole: 'region',
     panelVisibility: 'expanded',
-    ariaAttributes: (_node, state: NodeState) => {
-      if (state.expanded !== undefined) return { 'aria-expanded': String(state.expanded) }
-      return {}
-    },
   },
   {
     Enter: toggleExpand,

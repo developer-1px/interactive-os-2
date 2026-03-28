@@ -8,7 +8,7 @@ export type { Axis, KeyMap, AxisConfig }
 export interface Identity {
   role: string
   childRole?: string | ((entity: Entity, state: NodeState) => string)
-  ariaAttributes: (node: Entity, state: NodeState) => Record<string, string>
+  ariaAttributes?: (node: Entity, state: NodeState) => Record<string, string>
   // Structural config — declared directly, no config function needed
   focusStrategy?: FocusStrategy
   expandTracking?: boolean
@@ -164,7 +164,7 @@ function assembleResult(
 
 // ② 2026-03-28-compose-pattern-recursive-prd.md
 function isAriaPattern(first: Identity | AriaPattern): first is AriaPattern {
-  return 'role' in first && 'keyMap' in first && 'ariaAttributes' in first
+  return 'role' in first && 'keyMap' in first && 'focusStrategy' in first
 }
 
 /** Plain inputMap (flat Record<string, handler>) — no keyMap wrapper */
