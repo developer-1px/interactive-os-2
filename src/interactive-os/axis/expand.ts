@@ -108,6 +108,11 @@ export const expandOrFocusChild = (ctx: import('./types').PatternContext): Comma
 export const collapseOrFocusParent = (ctx: import('./types').PatternContext): Command =>
   ctx.isExpanded ? ctx.collapse() : ctx.focusParent()
 
+/** Config-only: provides expandTracking + visibilityFilter, no keyMap. Pattern declares bindings. */
+export function expandConfig(): { keyMap: KeyMap; config: Partial<AxisConfig>; visibilityFilter: VisibilityFilter } {
+  return { keyMap: {}, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
+}
+
 interface ExpandOptions {
   mode?: 'arrow' | 'enter-esc'
 }

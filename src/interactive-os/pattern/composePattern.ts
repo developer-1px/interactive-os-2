@@ -27,6 +27,25 @@ const DEFAULT_FOCUS_STRATEGY: FocusStrategy = {
 
 // ── Shared helpers ──
 
+const CLICK_RE = /(?:^|[+])Click$/
+
+function isClickBinding(key: string): boolean {
+  return CLICK_RE.test(key)
+}
+
+function splitInputMap(inputMap: KeyMap): { keyMap: KeyMap; clickMap: KeyMap } {
+  const keyMap: KeyMap = {}
+  const clickMap: KeyMap = {}
+  for (const key of Object.keys(inputMap)) {
+    if (isClickBinding(key)) {
+      clickMap[key] = inputMap[key]
+    } else {
+      keyMap[key] = inputMap[key]
+    }
+  }
+  return { keyMap, clickMap }
+}
+
 function mergeKeyMaps(keyMaps: KeyMap[], baseKeyMap?: KeyMap): KeyMap {
   const allKeys = new Set(keyMaps.flatMap(Object.keys))
   if (baseKeyMap) for (const key of Object.keys(baseKeyMap)) allKeys.add(key)
@@ -111,12 +130,18 @@ function applyAxisConfig(mergedConfig: Partial<AxisConfig>): Partial<AriaPattern
 }
 
 function assembleResult(
-  keyMap: KeyMap,
+  fullMap: KeyMap,
   middleware: Middleware | undefined,
   visibilityFilters: VisibilityFilter[],
+  baseClickMap?: KeyMap,
 ): Partial<AriaPattern> {
+  const { keyMap, clickMap: axisClickMap } = splitInputMap(fullMap)
+  const clickMap = (baseClickMap || Object.keys(axisClickMap).length > 0)
+    ? { ...baseClickMap, ...axisClickMap }
+    : undefined
   return {
     keyMap,
+    ...(clickMap && { clickMap }),
     ...(middleware && { middleware }),
     ...(visibilityFilters.length > 0 && { visibilityFilters }),
   }
@@ -138,7 +163,7 @@ function isIdentity(first: Identity | PatternConfig): first is Identity {
 export function composePattern(config: Identity | PatternConfig | AriaPattern, ...axes: Axis[]): AriaPattern {
   // AriaPattern base path — pattern-on-pattern recursive override
   if (isAriaPattern(config)) {
-    const { keyMap: baseKM, middleware: baseMW, visibilityFilters: baseVF, ...baseProps } = config
+    const { keyMap: baseKM, clickMap: baseCM, middleware: baseMW, visibilityFilters: baseVF, ...baseProps } = config
     const axisKeyMaps = axes.map(extractKeyMap)
     const mergedConfig = mergeAxisConfigs(axes)
 
@@ -149,6 +174,7 @@ export function composePattern(config: Identity | PatternConfig | AriaPattern, .
         mergeKeyMaps(axisKeyMaps, baseKM),
         collectMiddlewares(axes, baseMW),
         collectVisibilityFilters(axes, baseVF),
+        baseCM,
       ),
     }
   }

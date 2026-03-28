@@ -46,11 +46,13 @@ export interface PatternContextOptions {
   checkedTracking?: boolean
   visibilityFilters?: VisibilityFilter[]
   popupType?: string
+  /** Override focused node — used by clickMap to set ctx.focused to the clicked node */
+  overrideFocused?: string
 }
 
 export function createPatternContext(engine: CommandEngine, options?: PatternContextOptions): PatternContext {
   const store = engine.getStore()
-  const focusedId = getFocusedId(engine)
+  const focusedId = options?.overrideFocused ?? getFocusedId(engine)
 
   // Lazy-cached visible nodes — computed at most once per context
   let _visibleNodes: string[] | null = null
