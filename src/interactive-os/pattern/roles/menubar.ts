@@ -80,7 +80,8 @@ function findRootAncestor(ctx: PatternContext): string {
   return current
 }
 
-/** Close all submenus, advance to next/prev menubar item, open its submenu. */
+/** Close all submenus, advance to next/prev menubar item, open its submenu.
+ *  APG: focus stays on the menubar item (submenu is open but not focused into). */
 function advanceMenubar(ctx: PatternContext, direction: 1 | -1): Command {
   const roots = ctx.getChildren(ROOT_ID)
   const expanded = getExpandedSet(ctx)
@@ -93,15 +94,12 @@ function advanceMenubar(ctx: PatternContext, direction: 1 | -1): Command {
     commands.push(expandCommands.collapse(id))
   }
 
+  // Open submenu but keep focus on the menubar item (APG behavior)
   const nextChildren = ctx.getChildren(next)
   if (nextChildren.length > 0) {
     commands.push(expandCommands.expand(next))
-    commands.push(focusCommands.setFocus(
-      direction === 1 ? nextChildren[0]! : nextChildren[nextChildren.length - 1]!,
-    ))
-  } else {
-    commands.push(focusCommands.setFocus(next))
   }
+  commands.push(focusCommands.setFocus(next))
   return createBatchCommand(commands)
 }
 
