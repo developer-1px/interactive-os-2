@@ -7,13 +7,16 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { menubar } from '../../pattern/roles/menubar'
+import { ExpandIndicator } from '../../ui/indicators'
 import styles from './menubar.module.css'
 
-// APG #39/#40: Navigation Menubar
+// APG #40: Navigation Menubar
 // https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/
 
 const data: NormalizedData = createStore({
   entities: {
+    home: { id: 'home', data: { label: 'Home' } },
+
     about: { id: 'about', data: { label: 'About' } },
     overview: { id: 'overview', data: { label: 'Overview' } },
     admin: { id: 'admin', data: { label: 'Administration' } },
@@ -36,7 +39,7 @@ const data: NormalizedData = createStore({
     [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [] },
   },
   relationships: {
-    [ROOT_ID]: ['about', 'admissions', 'academics'],
+    [ROOT_ID]: ['home', 'about', 'admissions', 'academics'],
     about: ['overview', 'admin', 'facts', 'tours'],
     facts: ['history', 'stats'],
     admissions: ['apply', 'tuition', 'signing', 'visit'],
@@ -64,8 +67,8 @@ const renderItem = (
           data-focused={state.focused || undefined}
           onClick={e => e.preventDefault()}
         >
-          {label}
-          {hasChildren && <span className={styles.indicator} aria-hidden="true">{isRoot ? '\u25BE' : '\u25B8'}</span>}
+          <span>{label}</span>
+          <ExpandIndicator expanded={state.expanded} />
         </a>
         <ul
           role="menu"
@@ -87,8 +90,8 @@ const renderItem = (
         data-focused={state.focused || undefined}
         onClick={e => e.preventDefault()}
       >
-        {label}
-        {hasChildren && <span className={styles.indicator} aria-hidden="true">{isRoot ? '\u25BE' : '\u25B8'}</span>}
+        <span>{label}</span>
+        {hasChildren && <ExpandIndicator expanded={state.expanded} />}
       </a>
     </li>
   )
@@ -99,16 +102,22 @@ export function MenubarNavigation() {
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <nav className={styles.wrapper}>
-      <Aria
-        pattern={menubar}
-        data={store}
-        plugins={[]}
-        onChange={onChange}
-        aria-label="Mythical University"
-      >
-        <Aria.Item render={renderItem} />
-      </Aria>
-    </nav>
+    <div className={styles.demo}>
+      <header className={styles.header}>
+        <div className={styles.title}>Mythical University</div>
+        <div className={styles.tagline}>Using a Menubar for navigation links</div>
+      </header>
+      <nav className={styles.wrapper}>
+        <Aria
+          pattern={menubar}
+          data={store}
+          plugins={[]}
+          onChange={onChange}
+          aria-label="Mythical University"
+        >
+          <Aria.Item render={renderItem} />
+        </Aria>
+      </nav>
+    </div>
   )
 }
