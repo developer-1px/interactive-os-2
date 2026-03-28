@@ -48,6 +48,22 @@ Checkbox
 
 ---
 
+## IndeterminateIndicator
+
+Dash (−) mark inside a checkbox container for partial selection state.
+
+### Props
+
+| prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| className | string | — | 추가 CSS 클래스 |
+
+### Used by
+
+Checkbox (group partial selection)
+
+---
+
 ## RadioIndicator
 
 Circle with inner dot, driven by ARIA parent state.
@@ -94,3 +110,20 @@ Visual divider line (horizontal or vertical).
 ### Used by
 
 Breadcrumb, Menu, Toolbar
+
+---
+
+## SortIndicator
+
+Arrow indicating sort direction on table/grid headers.
+
+### Props
+
+| prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| direction | 'ascending' \| 'descending' | undefined | 정렬 방향. undefined이면 미정렬(양방향 암시) |
+| className | string | — | 추가 CSS 클래스 |
+
+### Used by
+
+Grid, Table header
