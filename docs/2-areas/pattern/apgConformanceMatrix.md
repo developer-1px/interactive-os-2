@@ -86,8 +86,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 19 | Disclosure (Show/Hide) Card | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-card/) | `pattern/examples/disclosure.ts` | 🟢 | — |
 | 20 | Disclosure (Show/Hide) for FAQ | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-faq/) | `pattern/examples/disclosure.ts` | 🟢 | — |
 | 21 | Disclosure (Show/Hide) for Image Description | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-image-description/) | `pattern/examples/disclosure.ts` | 🟢 | — |
-| 22 | Disclosure Navigation Menu with Top-Level Links | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/) | — | ⬜ | — |
-| 23 | Disclosure Navigation Menu | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) | — | ⬜ | — |
+| 22 | Disclosure Navigation Menu with Top-Level Links | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/) | `pattern/examples/disclosure.ts` | 🟢 | — |
+| 23 | Disclosure Navigation Menu | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) | `pattern/examples/disclosure.ts` | 🟢 | — |
 
 ### Feed
 
@@ -142,7 +142,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 |---|-------------|----------|-----------|------|----|
 | 41 | Actions Menu Button Using element.focus() | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions/) | `pattern/examples/menu.ts` | 🟢 | — |
 | 42 | Actions Menu Button Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions-active-descendant/) | — | ⬜ | — |
-| 43 | Navigation Menu Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/) | — | ⬜ | — |
+| 43 | Navigation Menu Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/) | `pattern/examples/menu.ts` | 🟢 | — |
 
 ### Meter
 
@@ -156,7 +156,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 |---|-------------|----------|-----------|------|----|
 | 45 | Radio Group Using Roving tabindex | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio/) | `pattern/examples/radiogroup.ts` | 🟢 | — |
 | 46 | Radio Group Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-activedescendant/) | — | ⬜ | — |
-| 47 | Rating Radio Group | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-rating/) | — | ⬜ | — |
+| 47 | Rating Radio Group | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-rating/) | `pattern/examples/radiogroup.ts` | 🟢 | — |
 
 ### Slider
 
@@ -164,7 +164,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 |---|-------------|----------|-----------|------|----|
 | 48 | Color Viewer Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-color-viewer/) | `pattern/examples/slider.ts` | 🟢 | — |
 | 49 | Rating Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-rating/) | `pattern/examples/slider.ts` | 🟢 | — |
-| 50 | Media Seek Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-seek/) | — | ⬜ | — |
+| 50 | Media Seek Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-seek/) | `pattern/examples/slider.ts` | 🟢 | — |
 | 51 | Vertical Temperature Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-temperature/) | `pattern/examples/slider.ts` | 🟢 | orientation param 추가 |
 
 ### Slider (Multi-Thumb)
@@ -218,8 +218,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 63 | File Directory Treeview Using Computed Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1a/) | `pattern/examples/tree.ts` | 🟢 | — |
-| 64 | File Directory Treeview Using Declared Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1b/) | — | ⬜ | — |
-| 65 | Navigation Treeview | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-navigation/) | — | ⬜ | — |
+| 64 | File Directory Treeview Using Declared Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1b/) | `pattern/examples/tree.ts` | 🟢 | — |
+| 65 | Navigation Treeview | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-navigation/) | `pattern/examples/tree.ts` | 🟢 | — |
 
 ### Treegrid
 
@@ -255,9 +255,9 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 전체 APG example (크롤링) | 68 |
 | 범위 제외 (Landmarks 8 + Tooltip 1 + Deprecated 2) | 11 |
 | 대상 example | 57 + 1 experimental |
-| 기존 pattern/examples/ 매핑 | 16 |
-| 미착수 (매핑 없음) | 41 |
-| 적합성 검증 완료 | 16 |
+| pattern/examples/ 매핑 | 19 |
+| 미착수 (매핑 없음) | 24 |
+| 적합성 검증 완료 | 33 |
 
 ## os 갭 레지스트리
 

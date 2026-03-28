@@ -175,3 +175,77 @@ describe('APG Disclosure Image Description — Keyboard', () => {
     expect(isExpanded(container, 'img1')).toBe(true)
   })
 })
+
+// ---------------------------------------------------------------------------
+// 3. Disclosure Navigation Hybrid (#22)
+// ---------------------------------------------------------------------------
+
+describe('APG Disclosure Navigation Hybrid (#22) — ARIA Structure', () => {
+  it('role hierarchy: group > button', () => {
+    const navData = createStore({
+      entities: {
+        home: { id: 'home', data: { name: 'Home' } },
+        about: { id: 'about', data: { name: 'About' } },
+        shop: { id: 'shop', data: { name: 'Shop' } },
+      },
+      relationships: { [ROOT_ID]: ['home', 'about', 'shop'] },
+    })
+    const { container } = renderDisclosure(navData)
+    const hierarchy = extractRoleHierarchy(container)
+    expect(hierarchy).toContain('group')
+    expect(hierarchy).toContain('button')
+  })
+})
+
+describe('APG Disclosure Navigation Hybrid (#22) — Keyboard', () => {
+  it('Enter toggles navigation disclosure', async () => {
+    const user = userEvent.setup()
+    const navData = createStore({
+      entities: {
+        home: { id: 'home', data: { name: 'Home' } },
+        about: { id: 'about', data: { name: 'About' } },
+      },
+      relationships: { [ROOT_ID]: ['home', 'about'] },
+    })
+    const { container } = renderDisclosure(navData)
+    getNode(container, 'home')!.focus()
+    await user.keyboard('{Enter}')
+    expect(isExpanded(container, 'home')).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// 4. Disclosure Navigation (#23)
+// ---------------------------------------------------------------------------
+
+describe('APG Disclosure Navigation (#23) — ARIA Structure', () => {
+  it('role hierarchy matches disclosure', () => {
+    const navOnlyData = createStore({
+      entities: {
+        rec: { id: 'rec', data: { name: 'Recreation' } },
+        park: { id: 'park', data: { name: 'Parks' } },
+      },
+      relationships: { [ROOT_ID]: ['rec', 'park'] },
+    })
+    const { container } = renderDisclosure(navOnlyData)
+    const hierarchy = extractRoleHierarchy(container)
+    expect(hierarchy).toContain('group')
+    expect(hierarchy).toContain('button')
+  })
+})
+
+describe('APG Disclosure Navigation (#23) — Keyboard', () => {
+  it('Space toggles navigation disclosure', async () => {
+    const user = userEvent.setup()
+    const navOnlyData = createStore({
+      entities: {
+        rec: { id: 'rec', data: { name: 'Recreation' } },
+      },
+      relationships: { [ROOT_ID]: ['rec'] },
+    })
+    const { container } = renderDisclosure(navOnlyData)
+    getNode(container, 'rec')!.focus()
+    await user.keyboard('{ }')
+    expect(isExpanded(container, 'rec')).toBe(true)
+  })
+})
