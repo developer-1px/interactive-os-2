@@ -7,7 +7,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { menubar } from '../../pattern/roles/menubar'
-import { ExpandIndicator } from '../../ui/indicators'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import styles from './menubar.module.css'
 
 // APG #40: Navigation Menubar
@@ -68,7 +68,9 @@ const renderItem = (
           onClick={e => e.preventDefault()}
         >
           <span>{label}</span>
-          <ExpandIndicator expanded={state.expanded} />
+          <span className={styles.indicator} aria-hidden="true">
+            {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
+          </span>
         </a>
         <ul
           role="menu"
@@ -92,7 +94,11 @@ const renderItem = (
         onClick={e => e.preventDefault()}
       >
         <span>{label}</span>
-        {hasChildren && <ExpandIndicator expanded={state.expanded} />}
+        {hasChildren && (
+          <span className={styles.indicator} aria-hidden="true">
+            {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
+          </span>
+        )}
       </a>
     </li>
   )
