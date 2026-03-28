@@ -19,6 +19,7 @@ import HistoryDemo from './HistoryDemo'
 import DndDemo from './DndDemo'
 import RenameDemo from './RenameDemo'
 import TypeaheadDemo from './TypeaheadDemo'
+import FormDemo from './FormDemo'
 import StoreInspectorDemo from '../devtools/inspector/StoreInspectorDemo'
 import IndicatorsDemo from './IndicatorsDemo'
 import { PatternDemo } from '../interactive-os/ui/PatternDemo'
@@ -77,6 +78,7 @@ export const mdComponents: Record<string, ComponentType<any>> = {
   DndDemo,
   RenameDemo,
   TypeaheadDemo,
+  FormDemo,
   StoreInspectorDemo,
   IndicatorsDemo,
   PatternDemo,

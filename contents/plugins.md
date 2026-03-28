@@ -16,6 +16,8 @@
 | spatial | `spatial()` | spatialParent, spatialChild | `SPATIAL_PARENT_ID`, `spatialCommands` | 🟢 |
 | combobox | `combobox()` | filter, selectOption | `comboboxCommands` | 🟢 |
 | typeahead | `typeahead()` | (없음 — onUnhandledKey) | `findTypeaheadMatch`, `isPrintableKey` | 🟢 |
+| form | `form({ entityRules })` | submit, touch, reset | `ERRORS_ID`, `TOUCHED_ID`, `formCommands` | 🟡 prototype |
+| zodSchema | `zodSchema({ childRules })` | (미들웨어만) | `ZodSchema` type export | 🟢 |
 
 ## 설계 원칙
 
@@ -36,8 +38,43 @@ clipboard, rename, dnd (crud 위에 구축)
 focusRecovery (CRUD 후 포커스 복구)
 
 spatial, combobox, typeahead (독립)
+
+zodSchema (Zod 스키마 SSOT)
+  ├─ clipboard (구조 검증 — canAccept/canDelete)
+  └─ form (값 검증 — __errors__/__touched__)
+```
+
+## form 플러그인
+
+> Entity = 폼. 별도 폼 모델 없이, 정규화 엔티티의 data가 곧 폼 필드.
+
+**미들웨어**: `rename:confirm` / `updateEntityData` 후 자동 Zod 검증 → `__errors__` 메타 엔티티 갱신
+
+**커맨드**:
+- `formCommands.submit(entityRules)` — 전체 검증 + 전체 touched 마킹
+- `formCommands.touch(nodeId, field?)` — 개별 touched
+- `formCommands.reset()` — errors + touched 초기화
+
+**헬퍼**: `getFormErrors(store)`, `getFieldErrors(store, id)`, `isTouched(store, id, field?)`, `hasFormErrors(store)`
+
+**검증 타이밍**: validate는 항상 (미들웨어), 표시는 touched 이후 (뷰의 관심사)
+
+```tsx
+import { form } from 'interactive-os/plugins/form'
+import { z } from 'zod'
+
+const entityRules = {
+  field: z.object({ type: z.literal('field'), label: z.string(), value: z.string().min(1, 'Required') }),
+}
+
+// 플러그인으로 등록
+form({ entityRules })
+```
+
+```tsx render
+<FormDemo />
 ```
 
 ## 갭
 
-(없음 — 현재 10개 플러그인으로 안정)
+- form: submit-on-Enter 미연결 (Aria dispatch 접근 경로 필요)
