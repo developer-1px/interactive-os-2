@@ -128,12 +128,13 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
    * 하위 폴더를 만나면 카드 대신 부모 컬럼 바로 뒤에 새 컬럼 추가.
    * prefix: 넘버링 접두사 (예: "4", "4-1")
    */
-  function addFolder(dirId: string, prefix: string) {
+  function addFolder(dirId: string, prefix: string, pathPrefix: string) {
     const dirData = getEntityData<FsEntityData>(fsStore, dirId)
     if (!dirData) return
 
     const colId = `col:${dirId}`
-    const title = `${prefix}. ${dirData.name}`
+    const path = pathPrefix ? `${pathPrefix}/${dirData.name}` : dirData.name
+    const title = `${prefix}. /${path}`
     entities[colId] = { id: colId, data: { title, sourceId: dirId } }
     relationships[ROOT_ID].push(colId)
     relationships[colId] = []
@@ -163,7 +164,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
     })
     const sorted = sortDirs(fsStore, subDirs)
     sorted.forEach((subId, i) => {
-      addFolder(subId, `${prefix}-${i + 1}`)
+      addFolder(subId, `${prefix}-${i + 1}`, path)
     })
   }
 
@@ -182,7 +183,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
 
   for (const dirId of sortedTopDirs) {
     topIndex++
-    addFolder(dirId, String(topIndex))
+    addFolder(dirId, String(topIndex), '')
   }
 
   // 루트 파일 → (files) 컬럼
