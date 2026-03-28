@@ -16,6 +16,7 @@ import { CHECKED_ID } from '../axis/checked'
 import { POPUP_ID } from '../axis/popup'
 import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
+import { ERRORS_ID, TOUCHED_ID } from '../plugins/form'
 import { createPatternContext } from '../pattern/createPatternContext'
 import type { PatternContextOptions } from '../pattern/createPatternContext'
 import { useAriaView } from './useAriaView'
@@ -24,7 +25,7 @@ type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; pattern: Aria
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
-const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, CHECKED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID, '__search__', POPUP_ID])
+const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, CHECKED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID, '__search__', POPUP_ID, ERRORS_ID, TOUCHED_ID])
 
 const EMPTY_BEHAVIOR: AriaPattern = {
   role: '',
@@ -118,7 +119,6 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         relationships: created.getStore().relationships,
       })
     }
-
     const externalFocus = (data.entities[FOCUS_ID]?.focusedId as string) ?? ''
     const focusTarget = (externalFocus && data.entities[externalFocus])
       ? externalFocus

@@ -4,7 +4,8 @@ import { definePlugin } from './definePlugin'
 import { PASTE, CUT, clipboardCommands } from './clipboard'
 import type { CanAcceptFn, CanDeleteFn } from './clipboard'
 
-type ZodSchema = z.ZodType & { safeParse(data: unknown): { success: boolean } }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ZodSchema = z.ZodType<any, any>
 
 function deriveCanAccept(
   childRules: Record<string, ZodSchema>,
