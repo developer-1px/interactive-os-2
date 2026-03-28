@@ -5,7 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { accordion } from '../pattern/examples/accordion'
+import { accordion } from '../pattern/roles/accordion'
 import styles from './Accordion.module.css'
 
 interface AccordionProps {

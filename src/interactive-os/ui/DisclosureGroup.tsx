@@ -5,7 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { disclosure } from '../pattern/examples/disclosure'
+import { disclosure } from '../pattern/roles/disclosure'
 
 interface DisclosureGroupProps {
   data: NormalizedData

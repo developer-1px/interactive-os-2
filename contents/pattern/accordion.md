@@ -2,6 +2,12 @@
 
 > 섹션을 접고 펼 수 있는 아코디언
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="accordion" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

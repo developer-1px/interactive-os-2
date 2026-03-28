@@ -132,7 +132,7 @@ needs:
         features: []
       - id: S9
         story: examples/ (17 APG presets)
-        acceptance: pattern/examples/로 분리, APG 레퍼런스 구현
+        acceptance: pattern/roles/로 분리, APG 레퍼런스 구현
         status: done
         links: []
         features:

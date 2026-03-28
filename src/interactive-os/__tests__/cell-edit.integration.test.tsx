@@ -17,7 +17,7 @@ import { focusRecovery } from '../plugins/focusRecovery'
 import { cellEdit } from '../plugins/cellEdit'
 import { edit } from '../plugins/edit'
 import { Aria } from '../primitives/aria'
-import { grid as gridBehavior } from '../pattern/examples/grid'
+import { grid as gridBehavior } from '../pattern/roles/grid'
 
 function fixtureStore() {
   return createStore({

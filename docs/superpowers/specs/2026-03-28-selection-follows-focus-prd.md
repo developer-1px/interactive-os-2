@@ -33,8 +33,8 @@
 | `primitives/useAria.ts` 수정 | 기존 followFocus 로직(83-88줄) 제거. `activationFollowsSelection` 로직 추가: `__selection__` 변경 감지 시 `onActivate` 호출 | |
 | `primitives/useAriaZone.ts` 수정 | 동일하게 followFocus 로직 제거, activationFollowsSelection 로직 추가 | |
 | `primitives/keymapHelpers.ts` 수정 | `ctx.activate()` 가로채기 로직은 유지 — activation은 여전히 Enter/Space/click에서 외부 콜백으로 라우팅 | |
-| `pattern/examples/tabs.ts` 수정 | `activate({ followFocus: true })` → `select({ mode: 'single', selectionFollowsFocus: true })` + `activate({ activationFollowsSelection: true })` | |
-| `pattern/examples/radiogroup.ts` 수정 | `select({ mode: 'single', selectionFollowsFocus: true })` 추가. activate는 `activationFollowsSelection` 불필요 (외부 행동 없음) | |
+| `pattern/roles/tabs.ts` 수정 | `activate({ followFocus: true })` → `select({ mode: 'single', selectionFollowsFocus: true })` + `activate({ activationFollowsSelection: true })` | |
+| `pattern/roles/radiogroup.ts` 수정 | `select({ mode: 'single', selectionFollowsFocus: true })` 추가. activate는 `activationFollowsSelection` 불필요 (외부 행동 없음) | |
 | 소비처 전환 (AppShell, PageViewer, AreaSidebar, ActivateDemo, misc/navlist, ui/TreeView, ui/useTreeView) | `followFocus: true` → `selectionFollowsFocus: true` + `activationFollowsSelection: true` | |
 | 기존 `follow-focus.test.tsx` 재작성 | 새 옵션 기반으로 테스트 전환 | |
 | APG conformance tests 갱신 | RadioGroup, Tabs 🟡 → 🟢 | |

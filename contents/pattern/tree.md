@@ -2,6 +2,12 @@
 
 > 계층 구조를 탐색하는 트리 뷰
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="tree-view" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

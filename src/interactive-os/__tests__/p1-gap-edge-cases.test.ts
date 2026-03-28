@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useAria } from '../primitives/useAria'
-import { listbox } from '../pattern/examples/listbox'
+import { listbox } from '../pattern/roles/listbox'
 import { focusCommands } from '../axis/navigate'
 import { selectionCommands } from '../axis/select'
 import { history } from '../plugins/history'

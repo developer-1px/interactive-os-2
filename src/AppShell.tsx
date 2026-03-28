@@ -8,7 +8,7 @@ import {
 import type { LucideIcon } from 'lucide-react'
 
 import { Aria } from './interactive-os/primitives/aria'
-import { toolbar } from './interactive-os/pattern/examples/toolbar'
+import { toolbar } from './interactive-os/pattern/roles/toolbar'
 import { FOCUS_ID } from './interactive-os/axis/navigate'
 import { FileViewerModal } from './interactive-os/ui/FileViewerModal'
 import { createStore } from './interactive-os/store/createStore'

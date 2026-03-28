@@ -5,7 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { toolbar } from '../pattern/examples/toolbar'
+import { toolbar } from '../pattern/roles/toolbar'
 
 interface ToggleGroupProps {
   data: NormalizedData

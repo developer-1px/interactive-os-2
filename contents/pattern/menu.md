@@ -2,6 +2,18 @@
 
 > 동작 목록을 제공하는 수직 메뉴
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="menu-list" />
+```
+
+### Menu (activedescendant)
+
+```tsx render
+<PatternDemo example="menuActivedescendant" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

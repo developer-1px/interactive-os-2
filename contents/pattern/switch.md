@@ -2,6 +2,12 @@
 
 > 켜기/끄기 토글 스위치 그룹
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="switch-group" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

@@ -16,9 +16,9 @@
 
 | File | Action | Responsibility |
 |------|--------|---------------|
-| `src/interactive-os/pattern/examples/tabsManual.ts` | Create | Manual activation tabs pattern |
-| `src/interactive-os/pattern/examples/checkbox.ts` | Create | Checkbox toggle pattern (role=group > checkbox) |
-| `src/interactive-os/pattern/examples/buttonToggle.ts` | Create | Toggle button pattern (aria-pressed) |
+| `src/interactive-os/pattern/roles/tabsManual.ts` | Create | Manual activation tabs pattern |
+| `src/interactive-os/pattern/roles/checkbox.ts` | Create | Checkbox toggle pattern (role=group > checkbox) |
+| `src/interactive-os/pattern/roles/buttonToggle.ts` | Create | Toggle button pattern (aria-pressed) |
 | `src/interactive-os/__tests__/tabs-manual-apg.conformance.test.tsx` | Create | APG #60 conformance |
 | `src/interactive-os/__tests__/checkbox-apg.conformance.test.tsx` | Create | APG #9 conformance |
 | `src/interactive-os/__tests__/button-apg.conformance.test.tsx` | Create | APG #5, #6 conformance |
@@ -35,13 +35,13 @@
 > Key difference from automatic tabs (#59): Arrow keys move focus but do NOT change selection. Enter/Space activates.
 
 **Files:**
-- Create: `src/interactive-os/pattern/examples/tabsManual.ts`
+- Create: `src/interactive-os/pattern/roles/tabsManual.ts`
 - Create: `src/interactive-os/__tests__/tabs-manual-apg.conformance.test.tsx`
 
 - [ ] **Step 1: Create `tabsManual` pattern**
 
 ```typescript
-// src/interactive-os/pattern/examples/tabsManual.ts
+// src/interactive-os/pattern/roles/tabsManual.ts
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
 import { select } from '../../axis/select'
@@ -77,7 +77,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { tabsManual } from '../pattern/examples/tabsManual'
+import { tabsManual } from '../pattern/roles/tabsManual'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -281,13 +281,13 @@ Expected: All tests pass
 
 In `docs/2-areas/pattern/apgConformanceMatrix.md`, update row #60:
 ```
-| 60 | Tabs with Manual Activation | [example](...) | `pattern/examples/tabsManual.ts` | 🟢 | — |
+| 60 | Tabs with Manual Activation | [example](...) | `pattern/roles/tabsManual.ts` | 🟢 | — |
 ```
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/interactive-os/pattern/examples/tabsManual.ts \
+git add src/interactive-os/pattern/roles/tabsManual.ts \
         src/interactive-os/__tests__/tabs-manual-apg.conformance.test.tsx \
         docs/2-areas/pattern/apgConformanceMatrix.md
 git commit -m "feat(apg): Tabs Manual Activation conformance (#60)"
@@ -301,13 +301,13 @@ git commit -m "feat(apg): Tabs Manual Activation conformance (#60)"
 > Space toggles aria-checked. Tab navigates between checkboxes (natural tab order, not arrows).
 
 **Files:**
-- Create: `src/interactive-os/pattern/examples/checkbox.ts`
+- Create: `src/interactive-os/pattern/roles/checkbox.ts`
 - Create: `src/interactive-os/__tests__/checkbox-apg.conformance.test.tsx`
 
 - [ ] **Step 1: Create `checkbox` pattern**
 
 ```typescript
-// src/interactive-os/pattern/examples/checkbox.ts
+// src/interactive-os/pattern/roles/checkbox.ts
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
 import { activate } from '../../axis/activate'
@@ -339,7 +339,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { checkbox } from '../pattern/examples/checkbox'
+import { checkbox } from '../pattern/roles/checkbox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -489,13 +489,13 @@ Expected: All tests pass
 
 In `docs/2-areas/pattern/apgConformanceMatrix.md`, update row #9:
 ```
-| 9 | Checkbox (Two State) | [example](...) | `pattern/examples/checkbox.ts` | 🟢 | — |
+| 9 | Checkbox (Two State) | [example](...) | `pattern/roles/checkbox.ts` | 🟢 | — |
 ```
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/interactive-os/pattern/examples/checkbox.ts \
+git add src/interactive-os/pattern/roles/checkbox.ts \
         src/interactive-os/__tests__/checkbox-apg.conformance.test.tsx \
         docs/2-areas/pattern/apgConformanceMatrix.md
 git commit -m "feat(apg): Checkbox Two-State conformance (#9)"
@@ -511,13 +511,13 @@ git commit -m "feat(apg): Checkbox Two-State conformance (#9)"
 > Both examples share the same pattern — #6 differs only in HTML attribute method (IDL vs content).
 
 **Files:**
-- Create: `src/interactive-os/pattern/examples/buttonToggle.ts`
+- Create: `src/interactive-os/pattern/roles/buttonToggle.ts`
 - Create: `src/interactive-os/__tests__/button-apg.conformance.test.tsx`
 
 - [ ] **Step 1: Create `buttonToggle` pattern**
 
 ```typescript
-// src/interactive-os/pattern/examples/buttonToggle.ts
+// src/interactive-os/pattern/roles/buttonToggle.ts
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
 import { activate } from '../../axis/activate'
@@ -550,7 +550,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { buttonToggle } from '../pattern/examples/buttonToggle'
+import { buttonToggle } from '../pattern/roles/buttonToggle'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -673,14 +673,14 @@ Expected: All tests pass
 
 In `docs/2-areas/pattern/apgConformanceMatrix.md`, update rows #5, #6:
 ```
-| 5 | Button | [example](...) | `pattern/examples/buttonToggle.ts` | 🟢 | — |
-| 6 | Button (IDL Version) | [example](...) | `pattern/examples/buttonToggle.ts` | 🟢 | IDL=content attribute 차이, 패턴 동일 |
+| 5 | Button | [example](...) | `pattern/roles/buttonToggle.ts` | 🟢 | — |
+| 6 | Button (IDL Version) | [example](...) | `pattern/roles/buttonToggle.ts` | 🟢 | IDL=content attribute 차이, 패턴 동일 |
 ```
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/interactive-os/pattern/examples/buttonToggle.ts \
+git add src/interactive-os/pattern/roles/buttonToggle.ts \
         src/interactive-os/__tests__/button-apg.conformance.test.tsx \
         docs/2-areas/pattern/apgConformanceMatrix.md
 git commit -m "feat(apg): Button toggle conformance (#5, #6)"
@@ -712,7 +712,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { disclosure } from '../pattern/examples/disclosure'
+import { disclosure } from '../pattern/roles/disclosure'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -890,8 +890,8 @@ Expected: All tests pass
 
 In `docs/2-areas/pattern/apgConformanceMatrix.md`, update rows #20, #21:
 ```
-| 20 | Disclosure (Show/Hide) for FAQ | [example](...) | `pattern/examples/disclosure.ts` | 🟢 | — |
-| 21 | Disclosure (Show/Hide) for Image Description | [example](...) | `pattern/examples/disclosure.ts` | 🟢 | — |
+| 20 | Disclosure (Show/Hide) for FAQ | [example](...) | `pattern/roles/disclosure.ts` | 🟢 | — |
+| 21 | Disclosure (Show/Hide) for Image Description | [example](...) | `pattern/roles/disclosure.ts` | 🟢 | — |
 ```
 
 - [ ] **Step 4: Commit**
@@ -928,7 +928,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { switchPattern } from '../pattern/examples/switch'
+import { switchPattern } from '../pattern/roles/switch'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -1065,8 +1065,8 @@ Expected: All tests pass
 
 In `docs/2-areas/pattern/apgConformanceMatrix.md`, update rows #55, #56:
 ```
-| 55 | Switch Using HTML Button | [example](...) | `pattern/examples/switch.ts` | 🟢 | — |
-| 56 | Switch Using HTML Checkbox Input | [example](...) | `pattern/examples/switch.ts` | 🟢 | HTML element 차이만, 패턴 동일 |
+| 55 | Switch Using HTML Button | [example](...) | `pattern/roles/switch.ts` | 🟢 | — |
+| 56 | Switch Using HTML Checkbox Input | [example](...) | `pattern/roles/switch.ts` | 🟢 | HTML element 차이만, 패턴 동일 |
 ```
 
 - [ ] **Step 4: Commit**
@@ -1104,7 +1104,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
-import { slider } from '../pattern/examples/slider'
+import { slider } from '../pattern/roles/slider'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -1292,7 +1292,7 @@ Expected: Rating tests pass. Vertical test may fail (→ gap).
 The existing `slider()` hardcodes `orientation: 'horizontal'`. Add an optional `orientation` parameter:
 
 ```typescript
-// Modify: src/interactive-os/pattern/examples/slider.ts
+// Modify: src/interactive-os/pattern/roles/slider.ts
 interface SliderOptions {
   min: number
   max: number
@@ -1332,15 +1332,15 @@ Expected: All pass (existing slider test + new variants)
 
 In `docs/2-areas/pattern/apgConformanceMatrix.md`, update rows #49, #51:
 ```
-| 49 | Rating Slider | [example](...) | `pattern/examples/slider.ts` | 🟢 | — |
-| 51 | Vertical Temperature Slider | [example](...) | `pattern/examples/slider.ts` | 🟢 | orientation param 추가 |
+| 49 | Rating Slider | [example](...) | `pattern/roles/slider.ts` | 🟢 | — |
+| 51 | Vertical Temperature Slider | [example](...) | `pattern/roles/slider.ts` | 🟢 | orientation param 추가 |
 ```
 
 - [ ] **Step 6: Commit**
 
 ```bash
 git add src/interactive-os/__tests__/slider-variants-apg.conformance.test.tsx \
-        src/interactive-os/pattern/examples/slider.ts \
+        src/interactive-os/pattern/roles/slider.ts \
         docs/2-areas/pattern/apgConformanceMatrix.md
 git commit -m "feat(apg): Slider Rating + Vertical conformance (#49, #51)"
 ```

@@ -45,8 +45,8 @@ import { composePattern } from '../pattern/composePattern'
 import { select } from '../axis/select'
 import { activate } from '../axis/activate'
 import { navigate } from '../axis/navigate'
-import { tabs } from '../pattern/examples/tabs'
-import { radiogroup } from '../pattern/examples/radiogroup'
+import { tabs } from '../pattern/roles/tabs'
+import { radiogroup } from '../pattern/roles/radiogroup'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -649,12 +649,12 @@ Remove `prevFocusRef` if it's only used in the followFocus block (line 121). Che
 ### Task 4: Pattern Examples — tabs + radiogroup
 
 **Files:**
-- Modify: `src/interactive-os/pattern/examples/tabs.ts`
-- Modify: `src/interactive-os/pattern/examples/radiogroup.ts`
+- Modify: `src/interactive-os/pattern/roles/tabs.ts`
+- Modify: `src/interactive-os/pattern/roles/radiogroup.ts`
 
 - [ ] **Step 1: Update tabs.ts**
 
-Replace entire `src/interactive-os/pattern/examples/tabs.ts`:
+Replace entire `src/interactive-os/pattern/roles/tabs.ts`:
 
 ```typescript
 import type { NodeState } from '../types'
@@ -679,7 +679,7 @@ export const tabs = composePattern(
 
 - [ ] **Step 2: Update radiogroup.ts**
 
-Replace entire `src/interactive-os/pattern/examples/radiogroup.ts`:
+Replace entire `src/interactive-os/pattern/roles/radiogroup.ts`:
 
 ```typescript
 import type { NodeState } from '../types'
@@ -1130,8 +1130,8 @@ git add \
   src/interactive-os/pattern/composePattern.ts \
   src/interactive-os/primitives/useAria.ts \
   src/interactive-os/primitives/useAriaZone.ts \
-  src/interactive-os/pattern/examples/tabs.ts \
-  src/interactive-os/pattern/examples/radiogroup.ts \
+  src/interactive-os/pattern/roles/tabs.ts \
+  src/interactive-os/pattern/roles/radiogroup.ts \
   src/AppShell.tsx \
   src/interactive-os/ui/TreeView.tsx \
   src/interactive-os/ui/useTreeView.ts \

@@ -2,6 +2,12 @@
 
 > 포커스를 가두는 모달/비모달 대화 상자
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="dialog" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

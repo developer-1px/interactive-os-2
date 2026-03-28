@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Up, Down } from './kbdIcons'
 import { Aria } from '../interactive-os/primitives/aria'
-import { listbox } from '../interactive-os/pattern/examples/listbox'
+import { listbox } from '../interactive-os/pattern/roles/listbox'
 import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'

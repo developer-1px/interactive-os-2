@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Up, Down, Left, Right } from './kbdIcons'
 import { Aria } from '../interactive-os/primitives/aria'
-import { grid } from '../interactive-os/pattern/examples/grid'
+import { grid } from '../interactive-os/pattern/roles/grid'
 import { createStore } from '../interactive-os/store/createStore'
 import { ROOT_ID } from '../interactive-os/store/types'
 import type { NormalizedData } from '../interactive-os/store/types'

@@ -2,6 +2,12 @@
 
 > 콘텐츠를 보이거나 숨기는 디스클로저 그룹
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="disclosure-group" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

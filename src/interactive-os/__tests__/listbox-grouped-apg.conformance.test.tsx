@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import { Aria } from '../primitives/aria'
-import { listboxGrouped } from '../pattern/examples/listboxGrouped'
+import { listboxGrouped } from '../pattern/roles/listboxGrouped'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'

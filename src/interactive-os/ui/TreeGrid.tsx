@@ -5,7 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { treegrid } from '../pattern/examples/treegrid'
+import { treegrid } from '../pattern/roles/treegrid'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
 

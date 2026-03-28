@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Aria } from '../primitives/aria'
-import { tree } from '../pattern/examples/tree'
+import { tree } from '../pattern/roles/tree'
 import { ROOT_ID } from '../store/types'
 
 function fixtureData() {

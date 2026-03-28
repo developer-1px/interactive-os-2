@@ -2,6 +2,12 @@
 
 > 연속 값 조작. `slider({ min, max, step })` → horizontal value 축.
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="slider" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

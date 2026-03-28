@@ -4,7 +4,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { dialog } from '../pattern/examples/dialog'
+import { dialog } from '../pattern/roles/dialog'
 
 interface DialogProps {
   data: NormalizedData

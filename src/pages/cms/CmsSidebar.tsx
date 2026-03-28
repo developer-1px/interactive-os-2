@@ -15,7 +15,7 @@ import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContaine
 import { collectSections, getRootAncestor, getTabItemAncestor } from './collectSections'
 import type { LocaleMap } from './cms-types'
 import { useAriaZone } from '../../interactive-os/primitives/useAriaZone'
-import { listbox } from '../../interactive-os/pattern/examples/listbox'
+import { listbox } from '../../interactive-os/pattern/roles/listbox'
 import { focusCommands } from '../../interactive-os/axis/navigate'
 import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
