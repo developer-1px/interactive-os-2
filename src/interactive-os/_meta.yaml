@@ -1,0 +1,8 @@
+order:
+  - store
+  - engine
+  - axis
+  - pattern
+  - plugins
+  - primitives
+  - ui

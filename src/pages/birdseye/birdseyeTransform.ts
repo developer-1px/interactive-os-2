@@ -73,7 +73,12 @@ export function buildNavStore(fsStore: NormalizedData): NormalizedData {
  * - 선택 폴더 직하 파일 → "(files)" 컬럼 (col:__files__)
  * - 하위 디렉토리가 없으면 단일 (files) 컬럼
  */
-export function buildKanbanStore(fsStore: NormalizedData, folderId: string): NormalizedData {
+export interface KanbanBuildOptions {
+  /** 컬럼 정렬 순서. 이름 배열. 목록에 없는 폴더는 뒤에 알파벳순으로 붙는다. */
+  columnOrder?: string[]
+}
+
+export function buildKanbanStore(fsStore: NormalizedData, folderId: string, options?: KanbanBuildOptions): NormalizedData {
   let store = createStore()
 
   const children = getChildren(fsStore, folderId)
@@ -86,16 +91,32 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string): Nor
     return data?.type === 'file'
   })
 
-  // Add directory columns
-  for (const subDirId of subDirs) {
+  // Sort directories by columnOrder (if provided), then alphabetical
+  const order = options?.columnOrder
+  const sortedDirs = order
+    ? [...subDirs].sort((a, b) => {
+        const aName = getEntityData<FsEntityData>(fsStore, a)?.name ?? ''
+        const bName = getEntityData<FsEntityData>(fsStore, b)?.name ?? ''
+        const aIdx = order.indexOf(aName)
+        const bIdx = order.indexOf(bName)
+        if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx
+        if (aIdx !== -1) return -1
+        if (bIdx !== -1) return 1
+        return aName.localeCompare(bName)
+      })
+    : subDirs
+
+  // Add directory columns with numbering
+  sortedDirs.forEach((subDirId, index) => {
     const subDirData = getEntityData<FsEntityData>(fsStore, subDirId)
-    if (!subDirData) continue
+    if (!subDirData) return
 
     const colId = `col:${subDirId}`
+    const numberedTitle = `${index + 1}. ${subDirData.name}`
     store = {
       entities: {
         ...store.entities,
-        [colId]: { id: colId, data: { title: subDirData.name, sourceId: subDirId } },
+        [colId]: { id: colId, data: { title: numberedTitle, sourceId: subDirId } },
       },
       relationships: {
         ...store.relationships,
@@ -110,13 +131,14 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string): Nor
       const childData = getEntityData<FsEntityData>(fsStore, childId)
       if (!childData) continue
 
+      const cardTitle = childData.type === 'directory' ? `/${childData.name}` : childData.name
       const cardId = `card:${childId}`
       store = {
         entities: {
           ...store.entities,
           [cardId]: {
             id: cardId,
-            data: { title: childData.name, sourceId: childId, sourceType: childData.type },
+            data: { title: cardTitle, sourceId: childId, sourceType: childData.type },
           },
         },
         relationships: {
@@ -125,7 +147,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string): Nor
         },
       }
     }
-  }
+  })
 
   // Add (files) column if there are direct files or no subdirs
   if (directFiles.length > 0 || subDirs.length === 0) {

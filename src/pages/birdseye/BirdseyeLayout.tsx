@@ -10,7 +10,9 @@ import { getEntityData } from '../../interactive-os/store/createStore'
 import { DEFAULT_ROOT } from '../viewer/types'
 import { fetchTree, fetchFile } from '../viewer/fsClient'
 import { treeToStore } from '../viewer/treeTransform'
+import { parse as parseYaml } from 'yaml'
 import { buildNavStore, buildKanbanStore } from './birdseyeTransform'
+import type { KanbanBuildOptions } from './birdseyeTransform'
 import styles from './BirdseyeLayout.module.css'
 
 function findFirstNavItem(navStore: NormalizedData): string | null {
@@ -59,6 +61,9 @@ export default function BirdseyeLayout() {
   const [viewerFilename, setViewerFilename] = useState<string>('')
   const fetchRef = useRef(0)
 
+  // Column order from _meta.yaml
+  const [kanbanOptions, setKanbanOptions] = useState<KanbanBuildOptions>({})
+
   // Debounced focus — 250ms
   const debouncedCardId = useDebounce(focusedCardId, 250)
 
@@ -76,10 +81,21 @@ export default function BirdseyeLayout() {
   // 2. NavList store
   const navStore = useMemo(() => (fsStore ? buildNavStore(fsStore) : null), [fsStore])
 
+  // 2.5. 폴더 안에 _meta.yaml이 있으면 order 사용, 없으면 알파벳순
+  useEffect(() => {
+    if (!selectedFolderId) return
+    fetchFile(`${selectedFolderId}/_meta.yaml`)
+      .then((raw) => {
+        const meta = parseYaml(raw) as { order?: string[] }
+        setKanbanOptions(Array.isArray(meta?.order) ? { columnOrder: meta.order } : {})
+      })
+      .catch(() => setKanbanOptions({}))
+  }, [selectedFolderId])
+
   // 3. Kanban store
   const kanbanStore = useMemo(
-    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId) : null),
-    [fsStore, selectedFolderId],
+    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId, kanbanOptions) : null),
+    [fsStore, selectedFolderId, kanbanOptions],
   )
 
   // 4. Debounced focus → fetch file content
