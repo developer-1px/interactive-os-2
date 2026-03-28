@@ -238,11 +238,13 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
           const handler = clickMap[key]
           if (handler) {
-            // Use pointerDown ctx for shift (anchor-aware), fresh ctx otherwise
-            const ctx = (key === 'Shift+Click' && pointerDownCtxRef.current)
+            // Shift+Click: use pointerDown ctx (anchor captured before focus moves) with clicked node as target
+            const baseCtx = (key === 'Shift+Click' && pointerDownCtxRef.current)
               ? pointerDownCtxRef.current
-              : createPatternContext(engine, { ...patternCtxOptions as PatternContextOptions, overrideFocused: id })
-            const command = handler(ctx)
+              : createPatternContext(engine, { ...patternCtxOptions as PatternContextOptions })
+            // Override focused to the clicked node so handler can use ctx.focused as target
+            const ctx = { ...baseCtx, focused: id }
+            const command = handler(ctx as typeof baseCtx)
             if (command) engine.dispatch(command)
           }
           pointerDownCtxRef.current = null
