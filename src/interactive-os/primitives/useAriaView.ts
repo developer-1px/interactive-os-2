@@ -188,7 +188,11 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           const popupEntity = store.entities['__popup__'] as Record<string, unknown> | undefined
           const isOpen = (popupEntity?.isOpen as boolean) ?? false
           const triggerId = (popupEntity?.triggerId as string) ?? ''
-          return triggerId === id ? isOpen : undefined
+          // Active trigger: show current open state
+          if (triggerId === id) return isOpen
+          // Potential trigger: node with children gets open=false (enables aria-haspopup)
+          if (hasChildren) return false
+          return undefined
         })() : undefined,
         level: level + 1,
         renaming,
