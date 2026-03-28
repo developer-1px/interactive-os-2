@@ -14,6 +14,8 @@ export const accordion = composePattern(
       }
       return attrs
     },
+    panelRole: 'region',
+    panelVisibility: 'expanded',
   },
   activate({ onClick: true, toggleExpand: true }),
   navigate({ orientation: 'vertical' }),

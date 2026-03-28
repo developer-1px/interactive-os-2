@@ -6,13 +6,21 @@ import { popup } from '../../axis/popup'
 import { navigate } from '../../axis/navigate'
 import { activate } from '../../axis/activate'
 
+const pop = popup({ type: 'menu' })
+
 export const menuButton = composePattern(
   {
     role: 'menu',
     childRole: 'menuitem',
     ariaAttributes: (_node: Entity, _state: NodeState) => ({}),
+    triggerKeyMap: {
+      Enter: pop.keyMap.Enter,
+      Space: pop.keyMap.Space,
+      ArrowDown: pop.keyMap.ArrowDown,
+      ArrowUp: pop.keyMap.ArrowUp,
+    },
   },
-  popup({ type: 'menu' }),
+  pop,
   navigate({ orientation: 'vertical', wrap: true }),
   activate({ onClick: true }),
 )

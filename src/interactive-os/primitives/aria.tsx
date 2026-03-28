@@ -43,6 +43,9 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
+/** Sentinel to detect whether <Aria.Panel> is a child of <Aria> */
+const ARIA_PANEL_TYPE = Symbol('AriaPanel')
+
 function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, autoFocus, disabled, children }: AriaProps) {
   const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, logger, autoFocus, disabled })
 
@@ -52,10 +55,14 @@ function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, '
     return () => unregisterAria(id)
   }, [id, aria.dispatch, aria.getStore])
 
+  const hasPanels = React.Children.toArray(children).some(
+    (child) => React.isValidElement(child) && (child.type as { _ariaPanelType?: symbol })._ariaPanelType === ARIA_PANEL_TYPE
+  )
+
   const role = behavior?.role || undefined
   const orientation = behavior?.focusStrategy?.orientation
   return (
-    <AriaInternalContext.Provider value={{ ...aria, behavior }}>
+    <AriaInternalContext.Provider value={{ ...aria, behavior, hasPanels }}>
       <div
         role={role}
         aria-label={ariaLabel}
@@ -98,7 +105,7 @@ function AriaItemNode({ childId, render }: { childId: string; render: AriaItemPr
   const props = aria.getNodeProps(childId) as React.HTMLAttributes<HTMLElement>
 
   // ② 2026-03-28-aria-panel-trigger-prd.md — Panel cross-reference
-  if (aria.behavior?.panelRole) {
+  if (aria.behavior?.panelRole && aria.hasPanels) {
     (props as Record<string, unknown>)['aria-controls'] = `panel-${childId}`
   }
 
@@ -385,6 +392,7 @@ function AriaPanel({ render }: AriaPanelProps) {
     </AriaInternalContext.Consumer>
   )
 }
+;(AriaPanel as { _ariaPanelType?: symbol })._ariaPanelType = ARIA_PANEL_TYPE
 
 interface AriaTriggerProps {
   render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
