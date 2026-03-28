@@ -115,7 +115,7 @@
 
 :where([data-aria-container] [aria-checked="true"] .item-indicator--switch-thumb) {
   background: var(--tone-primary-foreground);
-  transform: translateX(var(--space-lg));
+  transform: translateX(calc(var(--switch-width) - var(--icon-sm) - 6px));
 }
 
 /* ── Toggle text indicator (On/Off) ── */

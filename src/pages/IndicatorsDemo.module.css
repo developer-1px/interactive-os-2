@@ -59,6 +59,15 @@
   background: var(--selection);
 }
 
+/* interactive.css [aria-checked="true"] 배경 차단 — 데모에서는 indicator 자체만 상태 표현 */
+.interactiveTarget[aria-checked] {
+  background: transparent;
+}
+
+.interactiveTarget[aria-checked]:hover {
+  background: var(--selection);
+}
+
 .stateLabel {
   font-size: var(--type-caption-size);
   font-family: var(--type-mono-family);
