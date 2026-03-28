@@ -30,7 +30,7 @@ export interface ValueNav {
 
 export interface FocusStrategy {
   type: 'roving-tabindex' | 'aria-activedescendant' | 'natural-tab-order'
-  orientation: 'vertical' | 'horizontal' | 'both'
+  orientation?: 'vertical' | 'horizontal' | 'both'
 }
 
 export interface PatternContext {

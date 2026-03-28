@@ -18,6 +18,8 @@ export interface Identity {
   valueRange?: import('../axis/value').ValueRange
   popupType?: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
   popupModal?: boolean
+  visibilityFilter?: VisibilityFilter
+  middleware?: Middleware
   // ② 2026-03-28-aria-panel-trigger-prd.md
   panelRole?: string
   panelVisibility?: 'selected' | 'expanded'
@@ -202,8 +204,9 @@ export function composePattern(config: Identity | AriaPattern, ...rawAxes: (Axis
   const axisKeyMaps = axes.map(getKeyMap)
   const keyMap = mergeKeyMaps(axisKeyMaps)
   const mergedConfig = mergeAxisConfigs(axes)
-  const middleware = collectMiddlewares(axes)
-  const visibilityFilters = collectVisibilityFilters(axes)
+  const middleware = collectMiddlewares(axes, config.middleware)
+  const baseFilters = config.visibilityFilter ? [config.visibilityFilter] : []
+  const visibilityFilters = collectVisibilityFilters(axes, baseFilters)
   // Identity config > axis config > default
   const focusStrategy = config.focusStrategy ?? mergedConfig.tabFocusStrategy ?? mergedConfig.focusStrategy ?? DEFAULT_FOCUS_STRATEGY
 
