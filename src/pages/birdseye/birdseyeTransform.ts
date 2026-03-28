@@ -19,7 +19,7 @@ export function buildNavStore(fsStore: NormalizedData): NormalizedData {
 
   const rootDirIds = getChildren(fsStore, ROOT_ID).filter((id) => {
     const data = getEntityData<FsEntityData>(fsStore, id)
-    return data?.type === 'directory'
+    return data?.type === 'directory' && !data.name.startsWith('.')
   })
 
   for (const dirId of rootDirIds) {

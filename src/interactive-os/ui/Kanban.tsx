@@ -14,6 +14,7 @@ interface KanbanProps {
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
+  compact?: boolean
   'aria-label'?: string
 }
 
@@ -32,6 +33,7 @@ export function Kanban({
   plugins = [],
   onChange,
   onActivate,
+  compact = false,
   'aria-label': ariaLabel,
 }: KanbanProps) {
   const aria = useAria({ behavior: kanbanBehavior, data, plugins, onChange, onActivate })
@@ -45,6 +47,7 @@ export function Kanban({
         aria-label={ariaLabel}
         data-aria-container=""
         className={`flex-row gap-md overflow-x-auto ${styles.board}`}
+        data-compact={compact || undefined}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       >
         {columns.map((colId) => {
