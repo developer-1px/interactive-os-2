@@ -74,6 +74,7 @@ const renderItem = (
           role="menu"
           aria-label={label}
           className={isRoot ? styles.submenuRoot : styles.submenuNested}
+          style={{ display: state.expanded ? undefined : 'none' }}
         >
           {children}
         </ul>
