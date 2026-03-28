@@ -14,6 +14,18 @@ import styles from './BirdseyeLayout.module.css'
 
 function findFirstNavItem(navStore: NormalizedData): string | null {
   const rootChildren = navStore.relationships['__root__'] ?? []
+
+  // src/ 그룹을 우선 선택 (개발 조감도의 주 대상)
+  const srcGroup = rootChildren.find((id) => {
+    const data = getEntityData<{ label: string }>(navStore, id)
+    return data?.label === 'src'
+  })
+  if (srcGroup) {
+    const srcChildren = navStore.relationships[srcGroup] ?? []
+    if (srcChildren.length > 0) return srcChildren[0]!
+  }
+
+  // fallback: 첫 번째 비어있지 않은 그룹
   for (const groupId of rootChildren) {
     const groupChildren = navStore.relationships[groupId] ?? []
     if (groupChildren.length > 0) return groupChildren[0]!

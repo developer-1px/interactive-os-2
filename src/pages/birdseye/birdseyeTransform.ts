@@ -2,7 +2,7 @@ import type { NormalizedData } from '../../interactive-os/store/types'
 import { ROOT_ID } from '../../interactive-os/store/types'
 import { createStore, getChildren, getEntityData } from '../../interactive-os/store/createStore'
 
-interface FsEntityData {
+type FsEntityData = {
   name: string
   type: 'file' | 'directory'
   path: string
