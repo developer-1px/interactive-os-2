@@ -1,4 +1,4 @@
-// ② 2026-03-25-search-plugin-prd.md
+// (2) 2026-03-25-search-plugin-prd.md
 import type { Command } from '../engine/types'
 import type { Plugin } from './types'
 import { definePlugin } from './definePlugin'
@@ -38,7 +38,6 @@ export const searchCommands = {
           },
         }
       },
-      undo(store) { return store },
     }
   },
 
@@ -55,7 +54,6 @@ export const searchCommands = {
           },
         }
       },
-      undo(store) { return store },
     }
   },
 
@@ -72,7 +70,6 @@ export const searchCommands = {
           },
         }
       },
-      undo(store) { return store },
     }
   },
 }
