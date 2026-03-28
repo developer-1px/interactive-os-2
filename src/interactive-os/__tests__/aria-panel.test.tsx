@@ -12,6 +12,7 @@ import { composePattern } from '../pattern/composePattern'
 import { select } from '../axis/select'
 import { navigate } from '../axis/navigate'
 import { expand, EXPANDED_ID } from '../axis/expand'
+import { listbox } from '../pattern/roles/listbox'
 
 // Minimal tabs-like pattern for testing
 const testTabs = composePattern(
@@ -168,5 +169,34 @@ describe('Aria.Panel (expanded visibility)', () => {
 
     const panel1 = container.querySelector('#panel-h1')!
     expect(panel1.getAttribute('aria-labelledby')).toBe('h1')
+  })
+})
+
+// V5: 2026-03-28-aria-panel-trigger-prd.md
+describe('backward compatibility', () => {
+  it('listbox pattern without Panel works unchanged', () => {
+    const data = createStore({
+      entities: {
+        a: { id: 'a', data: { label: 'A' } },
+        b: { id: 'b', data: { label: 'B' } },
+      },
+      relationships: { [ROOT_ID]: ['a', 'b'] },
+    })
+
+    function TestListbox() {
+      const [store, setStore] = useState(data)
+      const behavior = useMemo(() => listbox(), [])
+      const onChange = useCallback((next: NormalizedData) => setStore(next), [])
+      return (
+        <Aria behavior={behavior} data={store} plugins={[]} onChange={onChange} aria-label="Test">
+          <Aria.Item render={(props, node) => <div {...props}>{(node.data as Record<string, unknown>).label as string}</div>} />
+        </Aria>
+      )
+    }
+
+    const { container } = render(<TestListbox />)
+    expect(container.querySelectorAll('[role="option"]').length).toBe(2)
+    // No panels, no errors
+    expect(container.querySelectorAll('[role="tabpanel"]').length).toBe(0)
   })
 })
