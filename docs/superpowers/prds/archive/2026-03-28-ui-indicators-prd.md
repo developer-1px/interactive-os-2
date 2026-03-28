@@ -15,10 +15,10 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| M1 | 새 UI 완성품을 만들고 있다 | expand/collapse가 필요하다 | `ExpandIndicator`를 import하면 chevron이 동작한다 — 직접 lucide import/조건 분기 불필요 | |
-| M2 | 기존 TreeView의 chevron 디자인을 바꾸고 싶다 | ExpandIndicator의 CSS를 수정한다 | 6개 사용처가 동시에 반영된다 | |
-| M3 | indicator 전체 상태 조합을 검토하고 싶다 | `/ui/indicators`로 이동한다 | 18개 indicator × 상태 조합이 grid로 나열된다 | |
-| M4 | 디자인 토큰을 변경했다 | indicator가 토큰을 참조한다 | 토큰 변경이 모든 indicator에 즉시 반영된다 | |
+| M1 | 새 UI 완성품을 만들고 있다 | expand/collapse가 필요하다 | `ExpandIndicator`를 import하면 chevron이 동작한다 — 직접 lucide import/조건 분기 불필요 | ✅ `ExpandIndicator.tsx::ExpandIndicator` — 5개 완성품에서 사용 중 |
+| M2 | 기존 TreeView의 chevron 디자인을 바꾸고 싶다 | ExpandIndicator의 CSS를 수정한다 | 6개 사용처가 동시에 반영된다 | ✅ `indicators.css` 단일 소스, 5개 사용처 반영 |
+| M3 | indicator 전체 상태 조합을 검토하고 싶다 | `/ui/indicators`로 이동한다 | 18개 indicator × 상태 조합이 grid로 나열된다 | 🔀 5개만 표시 (Phase 1 범위), 상태 조합 grid 아닌 props 문서 |
+| M4 | 디자인 토큰을 변경했다 | indicator가 토큰을 참조한다 | 토큰 변경이 모든 indicator에 즉시 반영된다 | ✅ CSS 전부 토큰 참조 (2px 제외) |
 
 완성도: 🟢
 
@@ -30,29 +30,29 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `ui/indicators/ExpandIndicator.tsx` | chevron 회전. expanded + hasChildren props | |
-| `ui/indicators/CheckIndicator.tsx` | 체크마크 SVG. checked prop | |
-| `ui/indicators/RadioIndicator.tsx` | radio dot. CSS-only, ARIA 부모 상태 반응 | |
-| `ui/indicators/SwitchIndicator.tsx` | track + thumb. CSS-only, ARIA 부모 상태 반응 | |
-| `ui/indicators/IndeterminateIndicator.tsx` | 부분 선택 (−) 마크. checked prop | |
-| `ui/indicators/SortIndicator.tsx` | 정렬 방향 ↑↓. direction prop | |
-| `ui/indicators/SpinnerIndicator.tsx` | 회전 로딩 원. size prop | |
-| `ui/indicators/ProgressIndicator.tsx` | determinate 진행 bar. value/max props | |
-| `ui/indicators/SkeletonIndicator.tsx` | shimmer placeholder. width/height props | |
-| `ui/indicators/StatusIndicator.tsx` | success/error/warning/info dot. tone prop | |
-| `ui/indicators/PageIndicator.tsx` | 페이지네이션 dot. total/current props | |
-| `ui/indicators/DirectionIndicator.tsx` | prev/next 화살표. direction prop | |
-| `ui/indicators/StepIndicator.tsx` | 스텝 번호 원 + 완료 체크. step/completed props | |
-| `ui/indicators/SeparatorIndicator.tsx` | 구분선/구분 기호. orientation prop | |
-| `ui/indicators/BadgeIndicator.tsx` | 숫자 카운트 원. count prop | |
-| `ui/indicators/OverflowIndicator.tsx` | "+N" 잘림 표시. count prop | |
-| `ui/indicators/GripIndicator.tsx` | ⋮⋮ 드래그 핸들. orientation prop | |
-| `ui/indicators/TreeConnector.tsx` | 수직/수평 계층 연결선. level/isLast props | |
-| `ui/indicators/index.ts` | barrel export | |
-| `ui/indicators/indicators.css` | 기존 interactive.css에서 indicator CSS 이동 + 신규 | |
-| `src/pages/uiCategories.ts` | 'Indicators' 카테고리 추가 | |
-| `contents/ui/Indicators.md` | showcase 콘텐츠 (데모 + props 문서) | |
-| `docs/2-areas/ui/indicators.md` | Area 진척 문서 (이미 생성됨) | |
+| `ui/indicators/ExpandIndicator.tsx` | chevron 회전. expanded + hasChildren props | ✅ `ExpandIndicator.tsx::ExpandIndicator` |
+| `ui/indicators/CheckIndicator.tsx` | 체크마크 SVG. checked prop | ✅ `CheckIndicator.tsx::CheckIndicator` |
+| `ui/indicators/RadioIndicator.tsx` | radio dot. CSS-only, ARIA 부모 상태 반응 | ✅ `RadioIndicator.tsx::RadioIndicator` |
+| `ui/indicators/SwitchIndicator.tsx` | track + thumb. CSS-only, ARIA 부모 상태 반응 | ✅ `SwitchIndicator.tsx::SwitchIndicator` |
+| `ui/indicators/IndeterminateIndicator.tsx` | 부분 선택 (−) 마크. checked prop | ❌ Phase 2 |
+| `ui/indicators/SortIndicator.tsx` | 정렬 방향 ↑↓. direction prop | ❌ Phase 2 |
+| `ui/indicators/SpinnerIndicator.tsx` | 회전 로딩 원. size prop | ❌ Phase 3 |
+| `ui/indicators/ProgressIndicator.tsx` | determinate 진행 bar. value/max props | ❌ Phase 3 |
+| `ui/indicators/SkeletonIndicator.tsx` | shimmer placeholder. width/height props | ❌ Phase 3 |
+| `ui/indicators/StatusIndicator.tsx` | success/error/warning/info dot. tone prop | ❌ Phase 3 |
+| `ui/indicators/PageIndicator.tsx` | 페이지네이션 dot. total/current props | ❌ Phase 3 |
+| `ui/indicators/DirectionIndicator.tsx` | prev/next 화살표. direction prop | ❌ Phase 3 |
+| `ui/indicators/StepIndicator.tsx` | 스텝 번호 원 + 완료 체크. step/completed props | ❌ Phase 3 |
+| `ui/indicators/SeparatorIndicator.tsx` | 구분선/구분 기호. orientation prop | ✅ `SeparatorIndicator.tsx::SeparatorIndicator` |
+| `ui/indicators/BadgeIndicator.tsx` | 숫자 카운트 원. count prop | ❌ Phase 3 |
+| `ui/indicators/OverflowIndicator.tsx` | "+N" 잘림 표시. count prop | ❌ Phase 3 |
+| `ui/indicators/GripIndicator.tsx` | ⋮⋮ 드래그 핸들. orientation prop | ❌ Phase 3 |
+| `ui/indicators/TreeConnector.tsx` | 수직/수평 계층 연결선. level/isLast props | ❌ Phase 3 |
+| `ui/indicators/index.ts` | barrel export | ✅ `index.ts` |
+| `ui/indicators/indicators.css` | 기존 interactive.css에서 indicator CSS 이동 + 신규 | ✅ `indicators.css` |
+| `src/pages/uiCategories.ts` | 'Indicators' 카테고리 추가 | ✅ `uiCategories.ts` |
+| `contents/ui/Indicators.md` | showcase 콘텐츠 (데모 + props 문서) | ✅ `contents/ui/Indicators.md` |
+| `docs/2-areas/ui/indicators.md` | Area 진척 문서 (이미 생성됨) | ✅ `docs/2-areas/ui/indicators.md` |
 
 ### 의존 관계
 
@@ -139,10 +139,10 @@ contents/ui/Indicators.md  ← showcase 콘텐츠
 
 | # | 원칙 (출처) | 관련 항목 | 위반 여부 | 위반 시 수정 | 역PRD |
 |---|------------|----------|----------|------------|-------|
-| P1 | 토큰 전용 — 모든 디자인 수치는 토큰 (feedback) | ③ 전체 | 준수 | — | |
-| P2 | item-{part} 역할 어휘 (feedback) | ② 산출물 CSS class | 준수 — 기존 `item-chevron`, `item-indicator--*` 유지 | — | |
-| P3 | :where() 래핑 — ARIA 공통 스타일 specificity 0 (feedback) | ② indicators.css | 준수 — interactive.css에서 이동 시 :where() 유지 | — | |
-| P4 | engine 밖 — indicator는 비-인터랙티브 (discuss 제약) | ③ 전체 | 준수 — useAria/engine 사용 안 함 | — | |
+| P1 | 토큰 전용 — 모든 디자인 수치는 토큰 (feedback) | ③ 전체 | 준수 | — | 🔀 switch thumb `top:2px; left:2px` raw 값 잔존 (기존 코드 그대로 이관) |
+| P2 | item-{part} 역할 어휘 (feedback) | ② 산출물 CSS class | 준수 — 기존 `item-chevron`, `item-indicator--*` 유지 | — | ✅ |
+| P3 | :where() 래핑 — ARIA 공통 스타일 specificity 0 (feedback) | ② indicators.css | 준수 — interactive.css에서 이동 시 :where() 유지 | — | ✅ |
+| P4 | engine 밖 — indicator는 비-인터랙티브 (discuss 제약) | ③ 전체 | 준수 — useAria/engine 사용 안 함 | — | ✅ |
 | P5 | ARIA 표준 이름 우선 (feedback) | ② 이름 | 검토 필요 — ExpandIndicator는 ARIA에 없는 이름 | ExpandIndicator → `aria-expanded`에서 파생, disclosure indicator가 더 정확할 수 있음 (?) | |
 | P6 | module.css 3블록 (feedback) | ② indicators.css | N/A — indicator는 공유 CSS이므로 module.css 아닌 공유 CSS | — | |
 | P7 | 같은 역할 = 같은 디자인 (feedback) | ③ 6개 chevron 사용처 | 준수 — 추출 후 단일 소스 | — | |
