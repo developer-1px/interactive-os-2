@@ -44,8 +44,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 5 | Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button/) | — | ⬜ | — |
-| 6 | Button (IDL Version) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button_idl/) | — | ⬜ | — |
+| 5 | Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button/) | `pattern/examples/buttonToggle.ts` | 🟢 | — |
+| 6 | Button (IDL Version) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button_idl/) | `pattern/examples/buttonToggle.ts` | 🟢 | IDL=content attribute 차이, 패턴 동일 |
 
 ### Carousel
 
