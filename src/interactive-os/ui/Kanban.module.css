@@ -59,6 +59,8 @@
 .board[data-compact] {
   gap: var(--space-sm);
   padding: var(--space-sm);
+  height: 100%;
+  align-items: stretch;
 }
 
 .board[data-compact] .column {
@@ -68,6 +70,8 @@
   width: 200px;
   border-radius: var(--shape-sm-radius);
   padding: var(--space-xs) var(--space-sm);
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 .board[data-compact] .columnHeader {
@@ -75,6 +79,10 @@
   text-transform: none;
   letter-spacing: 0;
   padding: var(--space-xs) 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-sunken);
 }
 
 .board[data-compact] .card {
