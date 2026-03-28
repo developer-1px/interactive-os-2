@@ -62,6 +62,7 @@ export interface PatternContext {
 
   getEntity(id: string): Entity | undefined
   getChildren(id: string): string[]
+  getParent(id: string): string | undefined
 
   grid?: GridNav
   value?: ValueNav
