@@ -175,9 +175,25 @@ function anchorResetMiddleware(): Middleware {
   }
 }
 
+/**
+ * Middleware: auto-select the focused node on standalone focus commands.
+ * Batch commands (e.g. extendSelection) are exempt — they manage selection themselves.
+ * APG "selection follows focus": RadioGroup, Tabs automatic.
+ */
+export function selectionFollowsFocusMiddleware(): Middleware {
+  return (next) => (command) => {
+    next(command)
+    if (command.type === 'core:focus') {
+      const nodeId = (command.payload as { nodeId: string }).nodeId
+      next(selectionCommands.select(nodeId))
+    }
+  }
+}
+
 interface SelectOptions {
   mode?: SelectionMode  // 'single' | 'multiple', default 'multiple'
   extended?: boolean     // add Shift combos, only when mode='multiple'
+  selectionFollowsFocus?: boolean
 }
 
 export function select(options?: SelectOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; middleware?: Middleware } {
@@ -195,5 +211,28 @@ export function select(options?: SelectOptions): { keyMap: KeyMap; config: Parti
     keyMap['Shift+End'] = (ctx) => ctx.extendSelection('last')
   }
 
-  return { keyMap, config: { selectionMode: mode, selectOnClick: true }, middleware: anchorResetMiddleware() }
+  const middlewares: Middleware[] = [anchorResetMiddleware()]
+  if (options?.selectionFollowsFocus) {
+    middlewares.push(selectionFollowsFocusMiddleware())
+  }
+
+  const middleware: Middleware = middlewares.length === 1
+    ? middlewares[0]!
+    : (next) => {
+        const chain = middlewares.reduceRight<(command: Command) => void>(
+          (acc, mw) => mw(acc),
+          next,
+        )
+        return chain
+      }
+
+  return {
+    keyMap,
+    config: {
+      selectionMode: mode,
+      selectOnClick: true,
+      ...(options?.selectionFollowsFocus && { selectionFollowsFocus: true }),
+    },
+    middleware,
+  }
 }

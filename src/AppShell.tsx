@@ -15,6 +15,7 @@ import { createStore } from './interactive-os/store/createStore'
 import { ROOT_ID } from './interactive-os/store/types'
 import type { AriaPattern, NodeState } from './interactive-os/pattern/types'
 import type { NormalizedData } from './interactive-os/store/types'
+import { selectionFollowsFocusMiddleware } from './interactive-os/axis/select'
 import { Tooltip } from './interactive-os/ui/Tooltip'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { ComponentInspector } from './devtools/inspector/ComponentInspector'
@@ -92,7 +93,9 @@ const verticalToolbar: AriaPattern = {
     Space: (ctx) => ctx.activate(),
   },
   focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
-  followFocus: true,
+  selectionFollowsFocus: true,
+  activationFollowsSelection: true,
+  middleware: selectionFollowsFocusMiddleware(),
 }
 
 // --- Helper ---
@@ -147,7 +150,7 @@ const UTIL_IDS = ['theme']
 
 const activityBarStore = toStore([
   ...navItems.map((n) => ({ id: n.id, label: n.label })),
-  { id: 'theme', label: 'Theme', followFocus: false },
+  { id: 'theme', label: 'Theme' },
 ])
 
 const navPaths = Object.fromEntries(navItems.map((n) => [n.id, n.path]))

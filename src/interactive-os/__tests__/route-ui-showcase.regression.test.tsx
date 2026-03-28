@@ -50,7 +50,7 @@ describe('Route /ui/* — PageUiShowcase sidebar', () => {
    * Date: 2026-03-25
    *
    * Root cause: getVisibleNodes included group container entities in visible list.
-   * When focusNext moved to the group entity, followFocus fired onActivate with
+   * When focusNext moved to the group entity, activationFollowsSelection fired onActivate with
    * the group label (not a valid slug), causing URL fallback to reset focus to
    * the first item — appearing as a loop.
    *

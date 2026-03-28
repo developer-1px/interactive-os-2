@@ -154,7 +154,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 45 | Radio Group Using Roving tabindex | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio/) | `pattern/examples/radiogroup.ts` | 🟡 | APG requires selection follows focus (ArrowKey auto-selects); impl requires explicit Space/click. Test documents gap. |
+| 45 | Radio Group Using Roving tabindex | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio/) | `pattern/examples/radiogroup.ts` | 🟢 | — |
 | 46 | Radio Group Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-activedescendant/) | — | ⬜ | — |
 | 47 | Rating Radio Group | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-rating/) | — | ⬜ | — |
 
@@ -198,7 +198,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 59 | Tabs with Automatic Activation | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/) | `pattern/examples/tabs.ts` | 🟡 | APG requires selection follows focus (arrow keys auto-activate); impl requires Enter/Space or click. `followFocus` only fires external `onActivate`, not internal select. |
+| 59 | Tabs with Automatic Activation | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/) | `pattern/examples/tabs.ts` | 🟢 | — |
 | 60 | Tabs with Manual Activation | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-manual/) | — | ⬜ | — |
 
 ### Toolbar
@@ -267,3 +267,5 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 |---|-----|-------------|------------------|------|
 | 1 | `navigate()` 기본값 wrap=false — APG Toolbar는 끝에서 wrap 요구 | Toolbar (#61) | navigate axis `wrap` option | `navigate({ wrap: true })`로 해결 가능 |
 | 2 | `navigate()` 기본값 wrap=false — APG Menu는 끝에서 circular wrap 요구 | Menu Button (#41) | navigate axis `wrap` option | `navigate({ wrap: true })`로 해결 가능 |
+| 3 | ~~`followFocus`가 외부 콜백만 호출~~ — **해소됨**: `selectionFollowsFocus` middleware가 focus→selection 자동 동기화 | RadioGroup (#45), Tabs (#59) | `select({ selectionFollowsFocus: true })` | ✅ 해소 |
+| 4 | Combobox `aria-activedescendant`가 dropdown 닫힐 때 잔존 | Combobox (#11) | combobox plugin | 닫힐 때 activedescendant 제거 로직 추가 필요 |

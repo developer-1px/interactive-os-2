@@ -8,7 +8,7 @@ import type { Plugin } from '../plugins/types'
 import type { AriaPattern, NodeState } from '../pattern/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import type { CommandEngine } from '../engine/createCommandEngine'
-import { getChildren, getEntityData } from '../store/createStore'
+import { getChildren } from '../store/createStore'
 import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
 import { selectionCommands, SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
 import { expandCommands, EXPANDED_ID } from '../axis/expand'
@@ -18,7 +18,7 @@ import { createPatternContext } from '../pattern/createPatternContext'
 import type { PatternContextOptions } from '../pattern/createPatternContext'
 import { useAriaView } from './useAriaView'
 
-type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; behavior: AriaPattern; prevFocus: string }
+type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; behavior: AriaPattern; prevFocus: string; prevSelectedIds: string[] }
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
@@ -68,7 +68,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   // initializer owns it without capturing any React ref.
 
   const [engine] = useState(() => {
-    const bag: EngineCallbacks = { onActivate, behavior, prevFocus: '' }
+    const bag: EngineCallbacks = { onActivate, behavior, prevFocus: '', prevSelectedIds: [] }
 
     const middlewares = [
       behavior.middleware,
@@ -80,11 +80,13 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       if (initializing) return
       const cb = engineCallbacksMap.get(created)!
       const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
-      if (cb.behavior.followFocus && cb.onActivate && newFocusedId && newFocusedId !== cb.prevFocus) {
-        const entityData = getEntityData<{ followFocus?: boolean }>(newStore, newFocusedId)
-        if (entityData?.followFocus !== false) {
-          cb.onActivate(newFocusedId)
+      // activationFollowsSelection: selection change → onActivate
+      if (cb.behavior.activationFollowsSelection && cb.onActivate) {
+        const newSelArr = (newStore.entities[SELECTION_ID]?.selectedIds as string[]) ?? []
+        if (newSelArr.length > 0 && newSelArr !== cb.prevSelectedIds) {
+          cb.onActivate(newSelArr[newSelArr.length - 1]!)
         }
+        cb.prevSelectedIds = newSelArr
       }
       cb.prevFocus = newFocusedId
       onChange?.(newStore)
@@ -114,6 +116,8 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       created.dispatch(focusCommands.setFocus(focusTarget))
     }
     initializing = false
+    // Initialize prevSelectedIds to post-init state so mount doesn't trigger onActivate
+    bag.prevSelectedIds = (created.getStore().entities[SELECTION_ID]?.selectedIds as string[]) ?? []
     return created
   })
   useEffect(() => {

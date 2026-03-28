@@ -38,7 +38,7 @@ function TabListWithActivatedDisplay({ data, ...rest }: { data: NormalizedData; 
 }
 
 describe('TabList', () => {
-  it('ArrowRight moves to next tab and activates it (followFocus)', async () => {
+  it('ArrowRight moves to next tab and activates it (selectionFollowsFocus + activationFollowsSelection)', async () => {
     const user = userEvent.setup()
     const { container } = render(<TabListWithActivatedDisplay data={makeTabData(['Alpha', 'Beta', 'Gamma'])} aria-label="Test tabs" />)
 
