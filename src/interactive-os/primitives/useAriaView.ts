@@ -369,6 +369,8 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           if (target.closest('[data-aria-container]') !== container) return
           // If click was on an Item, onFocus will handle it
           if (target.closest(`[${nodeIdAttr}]`)) return
+          // If click was inside a Panel (region/tabpanel), let native focus work
+          if (target.closest('[role="region"], [role="tabpanel"]')) return
           // preventDefault stops browser from focusing the tabIndex=-1 container
           event.preventDefault()
           const el = container.querySelector<HTMLElement>(`[${nodeIdAttr}="${focusedId}"]`)
