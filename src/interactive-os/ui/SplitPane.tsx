@@ -1,16 +1,55 @@
-// ② 2026-03-26-workspace-containers-prd.md
+// ② 2026-03-28-splitpane-resize-prd.md
 import React, { useRef, useCallback, Children } from 'react'
+import type { PaneSize } from '../store/types'
 import styles from './SplitPane.module.css'
+
+export type { PaneSize }
 
 interface SplitPaneProps {
   direction: 'horizontal' | 'vertical'
-  sizes: number[]
-  onResize: (sizes: number[]) => void
+  sizes: PaneSize[]
+  onResize: (sizes: PaneSize[]) => void
   children: React.ReactNode
   minRatio?: number
 }
 
 const STEP = 0.02
+
+/** Find the index of the 'flex' entry, falling back to last pane */
+function flexIndex(sizes: PaneSize[]): number {
+  const idx = sizes.indexOf('flex')
+  return idx >= 0 ? idx : sizes.length - 1
+}
+
+/** Apply a delta to the panes adjacent to a separator, respecting flex */
+function applyDelta(
+  sizes: PaneSize[], leftIdx: number, rightIdx: number,
+  delta: number, minRatio: number,
+): PaneSize[] {
+  const newSizes = [...sizes]
+  const leftIsFlex = sizes[leftIdx] === 'flex'
+  const rightIsFlex = sizes[rightIdx] === 'flex'
+
+  if (leftIsFlex && rightIsFlex) return newSizes
+
+  if (leftIsFlex) {
+    const cur = sizes[rightIdx] as number
+    newSizes[rightIdx] = Math.max(minRatio, Math.min(1 - minRatio, cur - delta))
+  } else if (rightIsFlex) {
+    const cur = sizes[leftIdx] as number
+    newSizes[leftIdx] = Math.max(minRatio, Math.min(1 - minRatio, cur + delta))
+  } else {
+    const leftVal = sizes[leftIdx] as number
+    const rightVal = sizes[rightIdx] as number
+    const pairSum = leftVal + rightVal
+    let newLeft = leftVal + delta
+    newLeft = Math.max(minRatio, Math.min(pairSum - minRatio, newLeft))
+    newSizes[leftIdx] = newLeft
+    newSizes[rightIdx] = pairSum - newLeft
+  }
+
+  return newSizes
+}
 
 export function SplitPane({
   direction,
@@ -22,13 +61,6 @@ export function SplitPane({
   const containerRef = useRef<HTMLDivElement>(null)
   const childArray = Children.toArray(children)
 
-  const clampSizes = useCallback(
-    (newSizes: number[]): number[] => {
-      return newSizes.map((s) => Math.max(minRatio, Math.min(1 - minRatio, s)))
-    },
-    [minRatio],
-  )
-
   const handleKeyDown = useCallback(
     (index: number, e: React.KeyboardEvent) => {
       const isHorizontal = direction === 'horizontal'
@@ -38,23 +70,15 @@ export function SplitPane({
       const delta =
         e.key === increaseKey ? STEP
         : e.key === decreaseKey ? -STEP
-        : e.key === 'Home' ? minRatio - sizes[index]
-        : e.key === 'End' ? (1 - minRatio) - sizes[index]
+        : e.key === 'Home' ? -(1 - minRatio)
+        : e.key === 'End' ? (1 - minRatio)
         : null
       if (delta === null) return
 
       e.preventDefault()
-      const newSizes = [...sizes]
-      newSizes[index] = sizes[index] + delta
-      newSizes[index + 1] = sizes[index + 1] - delta
-      const clamped = clampSizes(newSizes)
-      // Re-normalize so the pair sums to the same total
-      const pairSum = sizes[index] + sizes[index + 1]
-      clamped[index] = Math.max(minRatio, Math.min(pairSum - minRatio, clamped[index]))
-      clamped[index + 1] = pairSum - clamped[index]
-      onResize(clamped)
+      onResize(applyDelta(sizes, index, index + 1, delta, minRatio))
     },
-    [direction, sizes, onResize, minRatio, clampSizes],
+    [direction, sizes, onResize, minRatio],
   )
 
   const handlePointerDown = useCallback(
@@ -69,81 +93,56 @@ export function SplitPane({
       const isHorizontal = direction === 'horizontal'
       const dimension = isHorizontal ? rect.width : rect.height
       const startPos = isHorizontal ? e.clientX : e.clientY
-      const startRatioLeft = sizes[index]
-      const startRatioRight = sizes[index + 1]
-      const pairSum = startRatioLeft + startRatioRight
 
-      // Get pane elements for direct DOM updates during drag
+      const leftIdx = index
+      const rightIdx = index + 1
+      const leftIsFlex = sizes[leftIdx] === 'flex'
+      const rightIsFlex = sizes[rightIdx] === 'flex'
+
       const panes = container.querySelectorAll<HTMLElement>(`.${styles.pane}`)
-      const leftPane = panes[index]
-      const rightPane = panes[index + 1]
+      const leftPane = panes[leftIdx]
+      const rightPane = panes[rightIdx]
 
-      let currentLeft = startRatioLeft
-      let currentRight = startRatioRight
+      let latestSizes = sizes
 
       const onPointerMove = (moveEvent: PointerEvent) => {
         const currentPos = isHorizontal ? moveEvent.clientX : moveEvent.clientY
-        const deltaPx = currentPos - startPos
-        const deltaRatio = deltaPx / dimension
+        const deltaRatio = (currentPos - startPos) / dimension
 
-        let newLeft = startRatioLeft + deltaRatio
-        let newRight = startRatioRight - deltaRatio
+        latestSizes = applyDelta(sizes, leftIdx, rightIdx, deltaRatio, minRatio)
 
-        // Clamp
-        if (newLeft < minRatio) {
-          newLeft = minRatio
-          newRight = pairSum - minRatio
+        // Direct DOM update for smooth drag (bypass React re-render)
+        const prop = isHorizontal ? 'width' : 'height'
+        if (!leftIsFlex && leftPane) {
+          leftPane.style[prop] = `${(latestSizes[leftIdx] as number) * 100}%`
         }
-        if (newRight < minRatio) {
-          newRight = minRatio
-          newLeft = pairSum - minRatio
-        }
-
-        currentLeft = newLeft
-        currentRight = newRight
-
-        // Direct DOM update for smooth performance
-        if (leftPane) {
-          const prop = isHorizontal ? 'width' : 'height'
-          leftPane.style[prop] = `${newLeft * 100}%`
-        }
-        if (rightPane) {
-          const prop = isHorizontal ? 'width' : 'height'
-          rightPane.style[prop] = `${newRight * 100}%`
-          // Remove flex:1 override during drag if it's the last pane
-          if (index + 1 === sizes.length - 1) {
+        if (!rightIsFlex && rightPane) {
+          rightPane.style[prop] = `${(latestSizes[rightIdx] as number) * 100}%`
+          // Override flex:1 on last pane if it's a non-flex fallback
+          if (rightIdx === sizes.length - 1) {
             rightPane.style.flex = '0 0 auto'
           }
         }
 
-        // Update aria-valuenow on the separator
-        target.setAttribute('aria-valuenow', String(Math.round(currentLeft * 100)))
+        if (latestSizes[leftIdx] !== 'flex') {
+          target.setAttribute('aria-valuenow', String(Math.round((latestSizes[leftIdx] as number) * 100)))
+        }
       }
 
-      const onPointerUp = () => {
-        target.releasePointerCapture(e.pointerId)
+      const cleanup = () => {
         document.removeEventListener('pointermove', onPointerMove)
-        document.removeEventListener('pointerup', onPointerUp)
 
         // Reset inline styles so React controls them again
-        if (leftPane) {
-          leftPane.style.width = ''
-          leftPane.style.height = ''
-        }
-        if (rightPane) {
-          rightPane.style.width = ''
-          rightPane.style.height = ''
-          rightPane.style.flex = ''
-        }
+        const prop = isHorizontal ? 'width' : 'height'
+        if (leftPane) { leftPane.style[prop] = '' }
+        if (rightPane) { rightPane.style[prop] = ''; rightPane.style.flex = '' }
 
-        const newSizes = [...sizes]
-        newSizes[index] = currentLeft
-        newSizes[index + 1] = currentRight
-        onResize(newSizes)
+        onResize(latestSizes)
       }
 
       document.addEventListener('pointermove', onPointerMove)
-      document.addEventListener('pointerup', onPointerUp)
+      // lostpointercapture fires on pointerup, unmount, and programmatic release
+      target.addEventListener('lostpointercapture', cleanup, { once: true })
     },
     [direction, sizes, onResize, minRatio],
   )
@@ -155,16 +154,17 @@ export function SplitPane({
 
   const isHorizontal = direction === 'horizontal'
   const separatorOrientation = isHorizontal ? 'vertical' : 'horizontal'
+  const fi = flexIndex(sizes)
 
   const elements: React.ReactNode[] = []
 
   childArray.forEach((child, i) => {
-    const isLast = i === childArray.length - 1
-    const sizeStyle = isLast
+    const isFlex = i === fi
+    const sizeStyle = isFlex
       ? { flex: 1 }
       : isHorizontal
-        ? { width: `${sizes[i] * 100}%` }
-        : { height: `${sizes[i] * 100}%` }
+        ? { width: `${(sizes[i] as number) * 100}%` }
+        : { height: `${(sizes[i] as number) * 100}%` }
 
     elements.push(
       <div key={`pane-${i}`} className={styles.pane} style={sizeStyle}>
@@ -172,8 +172,8 @@ export function SplitPane({
       </div>,
     )
 
-    if (!isLast) {
-      const valueNow = Math.round(sizes[i] * 100)
+    if (i < childArray.length - 1) {
+      const valueNow = sizes[i] === 'flex' ? 0 : Math.round((sizes[i] as number) * 100)
       elements.push(
         <div
           key={`sep-${i}`}

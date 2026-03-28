@@ -1,13 +1,15 @@
 // ② 2026-03-26-workspace-containers-prd.md
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 import type { NormalizedData, Entity } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import { getChildren, getEntityData } from '../store/createStore'
-import type { SplitData } from '../plugins/workspaceStore'
+import type { SplitData, TabGroupData } from '../plugins/workspaceStore'
 import { workspaceCommands, findTabgroup } from '../plugins/workspaceStore'
 import { SplitPane } from './SplitPane'
+import type { PaneSize } from './SplitPane'
 import { TabGroup } from './TabGroup'
+import { useLayoutKeys } from '../../hooks/useLayoutKeys'
 import styles from './Workspace.module.css'
 
 interface WorkspaceProps {
@@ -32,7 +34,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
     const splitData = entityData as unknown as SplitData
     const childIds = getChildren(data, nodeId)
 
-    const handleResize = (sizes: number[]) => {
+    const handleResize = (sizes: PaneSize[]) => {
       onChange(workspaceCommands.resize(nodeId, sizes).execute(data))
     }
 
@@ -73,19 +75,30 @@ export function Workspace({
 }: WorkspaceProps) {
   const rootChildren = getChildren(data, ROOT_ID)
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === '\\' && e.metaKey) {
-        e.preventDefault()
-        const activePaneId = findTabgroup(data)
-        if (!activePaneId) return
+  const switchTab = useCallback((offset: 1 | -1) => {
+    const tgId = findTabgroup(data)
+    if (!tgId) return
+    const tabIds = getChildren(data, tgId)
+    const tgData = getEntityData<TabGroupData>(data, tgId)
+    const activeId = tgData?.activeTabId ?? ''
+    const idx = tabIds.indexOf(activeId)
+    const nextIdx = (idx + offset + tabIds.length) % tabIds.length
+    if (tabIds[nextIdx]) onChange(workspaceCommands.setActiveTab(tgId, tabIds[nextIdx]).execute(data))
+  }, [data, onChange])
 
-        const direction = e.shiftKey ? 'vertical' : 'horizontal'
-        onChange(workspaceCommands.splitPane(activePaneId, direction).execute(data))
-      }
+  const layoutHandlers = useMemo(() => ({
+    close: () => {
+      const tgId = findTabgroup(data)
+      if (!tgId) return
+      const tgData = getEntityData<TabGroupData>(data, tgId)
+      const activeId = tgData?.activeTabId
+      if (activeId) onChange(workspaceCommands.removeTab(activeId).execute(data))
     },
-    [data, onChange],
-  )
+    prevTab: () => switchTab(-1),
+    nextTab: () => switchTab(1),
+  }), [data, onChange, switchTab])
+
+  const { onKeyDown: handleKeyDown } = useLayoutKeys(layoutHandlers)
 
   if (rootChildren.length === 0) {
     return (
