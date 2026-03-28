@@ -2,6 +2,18 @@
 
 > 단일/다중 선택 가능한 수직 옵션 목록
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="listbox" />
+```
+
+### Listbox Grouped
+
+```tsx render
+<PatternDemo example="listboxGrouped" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

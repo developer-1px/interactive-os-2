@@ -10,7 +10,7 @@ import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
 import { cmsCanDelete } from './cms-schema'
 import type { PatternContext } from '../../interactive-os/pattern/types'
-import { toolbar } from '../../interactive-os/pattern/examples/toolbar'
+import { toolbar } from '../../interactive-os/pattern/roles/toolbar'
 import { useAria } from '../../interactive-os/primitives/useAria'
 
 interface CmsFloatingToolbarProps {

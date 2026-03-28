@@ -52,7 +52,7 @@
 | composePattern | Integrated | keyMap + config + middleware 합성 |
 | edit | Integrated | — |
 | pointer interaction | Integrated | — |
-| examples/ (17 APG presets) | Integrated | pattern/examples/로 분리, APG 레퍼런스 구현 |
+| examples/ (17 APG presets) | Integrated | pattern/roles/로 분리, APG 레퍼런스 구현 |
 | *menubar* | Concept | 다계층 keyMap 필요 |
 
 ## Primitives (L6)

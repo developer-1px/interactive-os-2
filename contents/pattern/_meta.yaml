@@ -16,5 +16,13 @@ order:
   - radiogroup
   - toolbar
   - switch
+  - checkbox
+  - buttonToggle
   - slider
   - spinbutton
+  - table
+  - feed
+  - link
+  - alert
+  - meter
+  - windowSplitter

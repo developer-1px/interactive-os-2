@@ -4,7 +4,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { radiogroup } from '../pattern/examples/radiogroup'
+import { radiogroup } from '../pattern/roles/radiogroup'
 import { RadioIndicator } from './indicators'
 
 interface RadioGroupProps {

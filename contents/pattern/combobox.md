@@ -2,6 +2,12 @@
 
 > 텍스트 입력 + 팝업 옵션 목록 결합 콤보박스
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="combobox" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

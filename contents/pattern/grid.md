@@ -2,6 +2,12 @@
 
 > 행과 열로 구성된 2D 그리드 탐색
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="grid" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

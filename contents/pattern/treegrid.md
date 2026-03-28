@@ -2,6 +2,12 @@
 
 > 계층 구조 + 셀 탐색이 결합된 트리 그리드
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="tree-grid" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

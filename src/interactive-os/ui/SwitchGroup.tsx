@@ -4,7 +4,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { switchPattern } from '../pattern/examples/switch'
+import { switchPattern } from '../pattern/roles/switch'
 import { SwitchIndicator } from './indicators'
 
 interface SwitchGroupProps {

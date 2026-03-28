@@ -1,6 +1,6 @@
 # APG Conformance Matrix
 
-APG(WAI-ARIA Authoring Practices Guide) 전체 example과 우리 pattern/examples/ 매핑.
+APG(WAI-ARIA Authoring Practices Guide) 전체 example과 우리 pattern/roles/ 매핑.
 CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 기준.
 
 > Source: https://www.w3.org/WAI/ARIA/apg/example-index/
@@ -20,19 +20,19 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 1 | Accordion | [example](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/examples/accordion/) | `pattern/examples/accordion.ts` | 🟢 | — |
+| 1 | Accordion | [example](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/examples/accordion/) | `pattern/roles/accordion.ts` | 🟢 | — |
 
 ### Alert
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 2 | Alert | [example](https://www.w3.org/WAI/ARIA/apg/patterns/alert/examples/alert/) | `pattern/examples/alert.ts` | 🟢 | — |
+| 2 | Alert | [example](https://www.w3.org/WAI/ARIA/apg/patterns/alert/examples/alert/) | `pattern/roles/alert.ts` | 🟢 | — |
 
 ### Alert Dialog
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 3 | Alert Dialog | [example](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/examples/alertdialog/) | `pattern/examples/alertdialog.ts` | 🟢 | — |
+| 3 | Alert Dialog | [example](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/examples/alertdialog/) | `pattern/roles/alertdialog.ts` | 🟢 | — |
 
 ### Breadcrumb
 
@@ -44,8 +44,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 5 | Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button/) | `pattern/examples/buttonToggle.ts` | 🟢 | — |
-| 6 | Button (IDL Version) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button_idl/) | `pattern/examples/buttonToggle.ts` | 🟢 | IDL=content attribute 차이, 패턴 동일 |
+| 5 | Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button/) | `pattern/roles/buttonToggle.ts` | 🟢 | — |
+| 6 | Button (IDL Version) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/button/examples/button_idl/) | `pattern/roles/buttonToggle.ts` | 🟢 | IDL=content attribute 차이, 패턴 동일 |
 
 ### Carousel
 
@@ -58,17 +58,17 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 9 | Checkbox (Two State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox/) | `pattern/examples/checkbox.ts` | 🟢 | — |
-| 10 | Checkbox (Mixed-State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox-mixed/) | `pattern/examples/checkboxMixed.ts` | 🟢 | — |
+| 9 | Checkbox (Two State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox/) | `pattern/roles/checkbox.ts` | 🟢 | — |
+| 10 | Checkbox (Mixed-State) | [example](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox-mixed/) | `pattern/roles/checkboxMixed.ts` | 🟢 | — |
 
 ### Combobox
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 11 | Select-Only Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) | `pattern/examples/combobox.ts` | 🟢 | — |
-| 12 | Editable Combobox without Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-none/) | `pattern/examples/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
-| 13 | Editable Combobox With List Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/) | `pattern/examples/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
-| 14 | Editable Combobox With Both List and Inline Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-both/) | `pattern/examples/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
+| 11 | Select-Only Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) | `pattern/roles/combobox.ts` | 🟢 | — |
+| 12 | Editable Combobox without Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-none/) | `pattern/roles/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
+| 13 | Editable Combobox With List Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/) | `pattern/roles/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
+| 14 | Editable Combobox With Both List and Inline Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-both/) | `pattern/roles/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
 | 15 | Editable Combobox with Grid Popup | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/grid-combo/) | — | ⛔ | multi-zone (combobox input + grid popup) |
 | 16 | Date Picker Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-datepicker/) | — | ⛔ | multi-zone (combobox + calendar grid dialog) |
 
@@ -76,31 +76,31 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 17 | Modal Dialog | [example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/dialog/) | `pattern/examples/dialog.ts` | 🟢 | — |
+| 17 | Modal Dialog | [example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/dialog/) | `pattern/roles/dialog.ts` | 🟢 | — |
 | 18 | Date Picker Dialog | [example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) | — | ⛔ | multi-zone (dialog + calendar grid + navigation buttons) |
 
 ### Disclosure
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 19 | Disclosure (Show/Hide) Card | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-card/) | `pattern/examples/disclosure.ts` | 🟢 | — |
-| 20 | Disclosure (Show/Hide) for FAQ | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-faq/) | `pattern/examples/disclosure.ts` | 🟢 | — |
-| 21 | Disclosure (Show/Hide) for Image Description | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-image-description/) | `pattern/examples/disclosure.ts` | 🟢 | — |
-| 22 | Disclosure Navigation Menu with Top-Level Links | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/) | `pattern/examples/disclosure.ts` | 🟢 | — |
-| 23 | Disclosure Navigation Menu | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) | `pattern/examples/disclosure.ts` | 🟢 | — |
+| 19 | Disclosure (Show/Hide) Card | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-card/) | `pattern/roles/disclosure.ts` | 🟢 | — |
+| 20 | Disclosure (Show/Hide) for FAQ | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-faq/) | `pattern/roles/disclosure.ts` | 🟢 | — |
+| 21 | Disclosure (Show/Hide) for Image Description | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-image-description/) | `pattern/roles/disclosure.ts` | 🟢 | — |
+| 22 | Disclosure Navigation Menu with Top-Level Links | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/) | `pattern/roles/disclosure.ts` | 🟢 | — |
+| 23 | Disclosure Navigation Menu | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) | `pattern/roles/disclosure.ts` | 🟢 | — |
 
 ### Feed
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 24 | Infinite Scrolling Feed | [example](https://www.w3.org/WAI/ARIA/apg/patterns/feed/examples/feed/) | `pattern/examples/feed.ts` | 🟢 | — |
+| 24 | Infinite Scrolling Feed | [example](https://www.w3.org/WAI/ARIA/apg/patterns/feed/examples/feed/) | `pattern/roles/feed.ts` | 🟢 | — |
 
 ### Grid
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 25 | Data Grid | [example](https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/data-grids/) | `pattern/examples/grid.ts` | 🟢 | — |
-| 26 | Layout Grid | [example](https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/layout-grids/) | `pattern/examples/grid.ts` | 🟢 | — |
+| 25 | Data Grid | [example](https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/data-grids/) | `pattern/roles/grid.ts` | 🟢 | — |
+| 26 | Layout Grid | [example](https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/layout-grids/) | `pattern/roles/grid.ts` | 🟢 | — |
 
 ### Landmarks
 
@@ -119,15 +119,15 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 35 | Link | [example](https://www.w3.org/WAI/ARIA/apg/patterns/link/examples/link/) | `pattern/examples/link.ts` | 🟢 | — |
+| 35 | Link | [example](https://www.w3.org/WAI/ARIA/apg/patterns/link/examples/link/) | `pattern/roles/link.ts` | 🟢 | — |
 
 ### Listbox
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 36 | Scrollable Listbox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-scrollable/) | `pattern/examples/listbox.ts` | 🟢 | — |
+| 36 | Scrollable Listbox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-scrollable/) | `pattern/roles/listbox.ts` | 🟢 | — |
 | 37 | Listboxes with Rearrangeable Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-rearrangeable/) | — | ⛔ | multi-zone (dual listbox + toolbar + move commands) |
-| 38 | Listbox with Grouped Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-grouped/) | `pattern/examples/listboxGrouped.ts` | 🟢 | — |
+| 38 | Listbox with Grouped Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-grouped/) | `pattern/roles/listboxGrouped.ts` | 🟢 | — |
 
 ### Menu and Menubar
 
@@ -140,32 +140,32 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 41 | Actions Menu Button Using element.focus() | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions/) | `pattern/examples/menu.ts` | 🟢 | — |
-| 42 | Actions Menu Button Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions-active-descendant/) | `pattern/examples/menuActivedescendant.ts` | 🟢 | — |
-| 43 | Navigation Menu Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/) | `pattern/examples/menu.ts` | 🟢 | — |
+| 41 | Actions Menu Button Using element.focus() | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions/) | `pattern/roles/menu.ts` | 🟢 | — |
+| 42 | Actions Menu Button Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions-active-descendant/) | `pattern/roles/menuActivedescendant.ts` | 🟢 | — |
+| 43 | Navigation Menu Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/) | `pattern/roles/menu.ts` | 🟢 | — |
 
 ### Meter
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 44 | Meter | [example](https://www.w3.org/WAI/ARIA/apg/patterns/meter/examples/meter/) | `pattern/examples/meter.ts` | 🟢 | — |
+| 44 | Meter | [example](https://www.w3.org/WAI/ARIA/apg/patterns/meter/examples/meter/) | `pattern/roles/meter.ts` | 🟢 | — |
 
 ### Radio Group
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 45 | Radio Group Using Roving tabindex | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio/) | `pattern/examples/radiogroup.ts` | 🟢 | — |
-| 46 | Radio Group Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-activedescendant/) | `pattern/examples/radiogroupActivedescendant.ts` | 🟢 | — |
-| 47 | Rating Radio Group | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-rating/) | `pattern/examples/radiogroup.ts` | 🟢 | — |
+| 45 | Radio Group Using Roving tabindex | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio/) | `pattern/roles/radiogroup.ts` | 🟢 | — |
+| 46 | Radio Group Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-activedescendant/) | `pattern/roles/radiogroupActivedescendant.ts` | 🟢 | — |
+| 47 | Rating Radio Group | [example](https://www.w3.org/WAI/ARIA/apg/patterns/radio/examples/radio-rating/) | `pattern/roles/radiogroup.ts` | 🟢 | — |
 
 ### Slider
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 48 | Color Viewer Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-color-viewer/) | `pattern/examples/slider.ts` | 🟢 | — |
-| 49 | Rating Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-rating/) | `pattern/examples/slider.ts` | 🟢 | — |
-| 50 | Media Seek Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-seek/) | `pattern/examples/slider.ts` | 🟢 | — |
-| 51 | Vertical Temperature Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-temperature/) | `pattern/examples/slider.ts` | 🟢 | orientation param 추가 |
+| 48 | Color Viewer Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-color-viewer/) | `pattern/roles/slider.ts` | 🟢 | — |
+| 49 | Rating Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-rating/) | `pattern/roles/slider.ts` | 🟢 | — |
+| 50 | Media Seek Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-seek/) | `pattern/roles/slider.ts` | 🟢 | — |
+| 51 | Vertical Temperature Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-temperature/) | `pattern/roles/slider.ts` | 🟢 | orientation param 추가 |
 
 ### Slider (Multi-Thumb)
 
@@ -177,35 +177,35 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 53 | Quantity Spin Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/quantity-spinbutton/) | `pattern/examples/spinbutton.ts` | 🟢 | — |
+| 53 | Quantity Spin Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/quantity-spinbutton/) | `pattern/roles/spinbutton.ts` | 🟢 | — |
 
 ### Switch
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 54 | Switch | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch/) | `pattern/examples/switch.ts` | 🟢 | — |
-| 55 | Switch Using HTML Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-button/) | `pattern/examples/switch.ts` | 🟢 | — |
-| 56 | Switch Using HTML Checkbox Input | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/) | `pattern/examples/switch.ts` | 🟢 | HTML element 차이, 패턴 동일 |
+| 54 | Switch | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch/) | `pattern/roles/switch.ts` | 🟢 | — |
+| 55 | Switch Using HTML Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-button/) | `pattern/roles/switch.ts` | 🟢 | — |
+| 56 | Switch Using HTML Checkbox Input | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/) | `pattern/roles/switch.ts` | 🟢 | HTML element 차이, 패턴 동일 |
 
 ### Table
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 57 | Table | [example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/table/) | `pattern/examples/table.ts` | 🟢 | — |
-| 58 | Sortable Table | [example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) | `pattern/examples/table.ts` | 🟡 | 구조 동일, aria-sort 상태 관리 미구현 |
+| 57 | Table | [example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/table/) | `pattern/roles/table.ts` | 🟢 | — |
+| 58 | Sortable Table | [example](https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/) | `pattern/roles/table.ts` | 🟡 | 구조 동일, aria-sort 상태 관리 미구현 |
 
 ### Tabs
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 59 | Tabs with Automatic Activation | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/) | `pattern/examples/tabs.ts` | 🟢 | — |
-| 60 | Tabs with Manual Activation | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-manual/) | `pattern/examples/tabsManual.ts` | 🟢 | — |
+| 59 | Tabs with Automatic Activation | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/) | `pattern/roles/tabs.ts` | 🟢 | — |
+| 60 | Tabs with Manual Activation | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-manual/) | `pattern/roles/tabsManual.ts` | 🟢 | — |
 
 ### Toolbar
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 61 | Toolbar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/) | `pattern/examples/toolbar.ts` | 🟢 | — |
+| 61 | Toolbar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/) | `pattern/roles/toolbar.ts` | 🟢 | — |
 
 ### Tooltip
 
@@ -217,21 +217,21 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 63 | File Directory Treeview Using Computed Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1a/) | `pattern/examples/tree.ts` | 🟢 | — |
-| 64 | File Directory Treeview Using Declared Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1b/) | `pattern/examples/tree.ts` | 🟢 | — |
-| 65 | Navigation Treeview | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-navigation/) | `pattern/examples/tree.ts` | 🟢 | — |
+| 63 | File Directory Treeview Using Computed Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1a/) | `pattern/roles/tree.ts` | 🟢 | — |
+| 64 | File Directory Treeview Using Declared Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1b/) | `pattern/roles/tree.ts` | 🟢 | — |
+| 65 | Navigation Treeview | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-navigation/) | `pattern/roles/tree.ts` | 🟢 | — |
 
 ### Treegrid
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 66 | Treegrid Email Inbox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/examples/treegrid-1/) | `pattern/examples/treegrid.ts` | 🟢 | — |
+| 66 | Treegrid Email Inbox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/examples/treegrid-1/) | `pattern/roles/treegrid.ts` | 🟢 | — |
 
 ### Window Splitter
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 67 | Window Splitter | (APG example 없음, [pattern만](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)) | `pattern/examples/windowSplitter.ts` | 🟢 | — |
+| 67 | Window Splitter | (APG example 없음, [pattern만](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)) | `pattern/roles/windowSplitter.ts` | 🟢 | — |
 
 ### Deprecated (참고용)
 
@@ -255,7 +255,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 전체 APG example (크롤링) | 68 |
 | 범위 제외 (Landmarks 8 + Tooltip 1 + Deprecated 2) | 11 |
 | 대상 example | 57 + 1 experimental |
-| pattern/examples/ 매핑 | 29 |
+| pattern/roles/ 매핑 | 29 |
 | 미착수 (매핑 없음) | 0 |
 | 적합성 검증 완료 (🟢) | 47 |
 | 부분 적합 (🟡) | 2 |

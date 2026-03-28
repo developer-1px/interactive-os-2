@@ -6,7 +6,7 @@
 
 ### WHY
 
-- **Impact**: 16개 pattern/examples/가 있지만 APG와 실제로 일치하는지 검증된 적 없다. 뭘 했고 뭘 안 했는지 기록이 없어 매번 전수조사를 해야 한다. 나머지 42개는 아예 없다.
+- **Impact**: 16개 pattern/roles/가 있지만 APG와 실제로 일치하는지 검증된 적 없다. 뭘 했고 뭘 안 했는지 기록이 없어 매번 전수조사를 해야 한다. 나머지 42개는 아예 없다.
 - **Forces**: 58개 대상 example의 볼륨이 크고 복잡도가 다르다 + composePattern만 사용해야 하는 제약 + 날코딩 금지 + os의 axis/plugin 체계가 APG 전체를 커버하는지 미검증
 - **Decision**: 기존 16개 적합성 검증을 먼저 하고, 나머지 42개를 포팅한다. APG HTML의 aria tree와 우리 aria tree를 비교하고, keyboard interaction을 integration test로 검증한다. 갭 발견 시 레지스트리에 기록하고 넘어간다. 기각: "처음부터 순서대로" — 기존 것의 갭을 먼저 발견해야 같은 실수 반복 방지. "갭 발견 시 즉시 os 수정" — 전체 지도를 먼저 그리는 것이 우선.
 - **Non-Goals**: CSS 포팅 안 함. os 갭 즉시 수정 안 함 (기록만). Deprecated example (D1, D2) 포팅 안 함. Landmarks 8개 + Tooltip 포팅 안 함 (engine 불필요).
@@ -15,7 +15,7 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| S1 | 기존 accordion.ts가 pattern/examples/에 있고, ui/Accordion.tsx가 있다 | 적합성 검증을 실행한다 | APG Accordion example과 동일한 aria tree 구조 + 동일한 키보드 동작이 테스트로 증명된다 | |
+| S1 | 기존 accordion.ts가 pattern/roles/에 있고, ui/Accordion.tsx가 있다 | 적합성 검증을 실행한다 | APG Accordion example과 동일한 aria tree 구조 + 동일한 키보드 동작이 테스트로 증명된다 | |
 | S2 | APG에 Listbox with Grouped Options example이 있지만 우리는 없다 | 해당 example을 포팅한다 | composePattern 조합으로 ui/ 컴포넌트가 만들어지고, aria tree + 키보드 테스트가 통과한다 | |
 | S3 | 포팅 중 composePattern으로 표현 불가한 APG 동작을 만난다 | 갭을 발견한다 | 매트릭스에 ⛔ 표시 + 갭 레지스트리에 영향 axis/plugin과 함께 기록된다. 날코딩으로 우회하지 않는다 | |
 | S4 | 다음 세션에서 진척을 확인하고 싶다 | 매트릭스를 본다 | 58개 example 각각의 상태(⬜/🔨/🟢/🟡/⛔)와 갭이 한 눈에 보인다 | |
@@ -29,7 +29,7 @@
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
 | `docs/2-areas/pattern/apgConformanceMatrix.md` | 전수 추적 SSOT. 68개 전체 + APG 링크 + 상태 + 갭. 이미 생성 완료 | |
-| `pattern/examples/{pattern}.ts` | composePattern 호출. role 계층이 다르면 별도 파일 (예: `listbox.ts` vs `listboxGrouped.ts`). 같은 role 계층에서 ui 조합만 다르면 같은 pattern 파일 | |
+| `pattern/roles/{pattern}.ts` | composePattern 호출. role 계층이 다르면 별도 파일 (예: `listbox.ts` vs `listboxGrouped.ts`). 같은 role 계층에서 ui 조합만 다르면 같은 pattern 파일 | |
 | `ui/{Component}.tsx` | Aria + pattern 조합 컴포넌트. 기존 것 재사용 + 신규 | |
 | `__tests__/{pattern}-apg.conformance.test.tsx` | APG 적합성 테스트 = showcase 데모를 겸한다. example별 aria tree 스냅샷 + keyboard interaction 검증. 기존 `*-keyboard.integration.test.tsx`의 역할을 흡수 | |
 
@@ -38,7 +38,7 @@
 ```
 apgConformanceMatrix.md (추적)
   ↓ 참조
-pattern/examples/{name}.ts (composePattern 선언)
+pattern/roles/{name}.ts (composePattern 선언)
   ↓ import
 ui/{Name}.tsx (렌더링 컴포넌트)
   ↓ import
@@ -67,7 +67,7 @@ apgConformanceMatrix.md (상태 갱신)
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
 | APG example 페이지 | aria tree 미확인 | APG 페이지의 role 계층 + aria-* 속성을 기준선으로 기록 | APG가 ARIA 구현의 표준 레퍼런스이므로 | 기준 aria tree 확보 | |
-| 기준 aria tree | composePattern 미작성 또는 기존 | pattern/examples/에서 composePattern 호출로 동일 구조 선언 | composePattern이 axis 조합으로 role+aria-*를 선언하므로 | pattern 파일 완성 | |
+| 기준 aria tree | composePattern 미작성 또는 기존 | pattern/roles/에서 composePattern 호출로 동일 구조 선언 | composePattern이 axis 조합으로 role+aria-*를 선언하므로 | pattern 파일 완성 | |
 | pattern 파일 | ui 컴포넌트 미작성 또는 기존 | ui/ 컴포넌트가 Aria + pattern으로 렌더링 | ui 컴포넌트는 pattern을 Aria에 전달하여 DOM을 생성하므로 | 렌더 가능한 컴포넌트 | |
 | 렌더된 컴포넌트 | 테스트 미작성 | conformance test에서 (1) aria tree 스냅샷 비교 (2) 키보드 인터랙션 검증 | serializeAriaNode로 추출한 tree가 APG 기준선과 구조적으로 동일해야 적합 | 🟢 또는 🟡/⛔ + 갭 기록 | |
 
@@ -133,7 +133,7 @@ apgConformanceMatrix.md (상태 갱신)
 | # | 이 기능이 건드리는 기존 것 | 예상 부작용 | 심각도 | 대응 | 역PRD |
 |---|------------------------|-----------|--------|------|-------|
 | B1 | 기존 `*-keyboard.integration.test.tsx` 16개 | conformance test가 흡수하면서 삭제 대상 | 중 | conformance test가 기존 test의 케이스를 포함하는지 확인 후 교체. 커버리지 누락 없이 전환 | |
-| B2 | 기존 `pattern/examples/*.ts` 16개 | 적합성 검증 과정에서 수정될 수 있음 | 중 | 수정 시 기존 integration test가 회귀 감지 | |
+| B2 | 기존 `pattern/roles/*.ts` 16개 | 적합성 검증 과정에서 수정될 수 있음 | 중 | 수정 시 기존 integration test가 회귀 감지 | |
 | B3 | 기존 `ui/*.tsx` 컴포넌트 | 새 APG 변형 지원을 위해 props 추가 가능 | 중 | 기존 API 유지, 옵셔널 props로 확장 | |
 | B4 | 매트릭스 파일이 커질 수 있음 | 68행 + 갭 레지스트리 — 관리 부담 | 낮 | 패턴별 섹션 분리로 충분히 관리 가능 | |
 

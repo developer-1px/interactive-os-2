@@ -2,6 +2,18 @@
 
 > 하나만 선택 가능한 라디오 버튼 그룹
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="radio-group" />
+```
+
+### Radio Group (activedescendant)
+
+```tsx render
+<PatternDemo example="radiogroupActivedescendant" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

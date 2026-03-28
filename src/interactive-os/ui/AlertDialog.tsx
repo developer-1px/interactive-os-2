@@ -4,7 +4,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { alertdialog } from '../pattern/examples/alertdialog'
+import { alertdialog } from '../pattern/roles/alertdialog'
 import styles from './AlertDialog.module.css'
 
 interface AlertDialogProps {

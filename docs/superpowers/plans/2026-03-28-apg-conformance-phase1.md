@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 기존 16개 pattern/examples/의 APG 적합성을 검증하고, conformance test로 기존 keyboard integration test를 흡수한다.
+**Goal:** 기존 16개 pattern/roles/의 APG 적합성을 검증하고, conformance test로 기존 keyboard integration test를 흡수한다.
 
 **Architecture:** APG example 페이지의 aria tree 기준선을 test fixture로 정의하고, serializeAriaNode 기반의 aria tree 스냅샷 + userEvent keyboard 검증을 하나의 conformance test 파일에 통합한다. 기존 `*-keyboard.integration.test.tsx`는 conformance test가 모든 케이스를 커버한 후 삭제한다.
 
@@ -389,7 +389,7 @@ Expected: All PASS (no regression)
 
 In `docs/2-areas/pattern/apgConformanceMatrix.md`, update Accordion row:
 ```
-| 1 | Accordion | [example](...) | `pattern/examples/accordion.ts` | 🟢 | — |
+| 1 | Accordion | [example](...) | `pattern/roles/accordion.ts` | 🟢 | — |
 ```
 
 - [ ] **Step 6: Commit**

@@ -2,6 +2,18 @@
 
 > 수평 탭으로 패널을 전환하는 탭 리스트
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="tab-list" />
+```
+
+### Tabs Manual
+
+```tsx render
+<PatternDemo example="tabsManual" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

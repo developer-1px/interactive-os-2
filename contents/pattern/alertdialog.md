@@ -2,6 +2,12 @@
 
 > 확인이 필요한 긴급 모달 대화 상자
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="alert-dialog" />
+```
+
 ## 스펙
 
 | 속성 | 값 |

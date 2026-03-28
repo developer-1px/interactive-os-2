@@ -6,7 +6,7 @@ import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
 import type { PatternContext, NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { toolbar } from '../pattern/examples/toolbar'
+import { toolbar } from '../pattern/roles/toolbar'
 import styles from './Toolbar.module.css'
 
 const iconMap: Record<string, LucideIcon> = {

@@ -11,7 +11,7 @@ import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
-import { alertdialog } from '../pattern/examples/alertdialog'
+import { alertdialog } from '../pattern/roles/alertdialog'
 import { captureAriaTree } from './helpers/ariaTreeSnapshot'
 
 // ---------------------------------------------------------------------------

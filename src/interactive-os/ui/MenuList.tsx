@@ -5,7 +5,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { menu } from '../pattern/examples/menu'
+import { menu } from '../pattern/roles/menu'
 
 interface MenuListProps {
   data: NormalizedData

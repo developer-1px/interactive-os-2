@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import { Aria } from '../primitives/aria'
-import { meter } from '../pattern/examples/meter'
+import { meter } from '../pattern/roles/meter'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'

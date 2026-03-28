@@ -8,7 +8,7 @@ import { ROOT_ID } from '../store/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import { search, searchCommands, SEARCH_ID, matchesSearchFilter } from '../plugins/search'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/examples/listbox'
+import { listbox } from '../pattern/roles/listbox'
 import type { NormalizedData } from '../store/types'
 
 function fixtureStore() {

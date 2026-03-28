@@ -12,7 +12,7 @@ import { StreamFeed, StreamCursor } from '../interactive-os/ui/StreamFeed'
 import type { NormalizedData } from '../interactive-os/store/types'
 import type { NodeState } from '../interactive-os/pattern/types'
 import { Aria } from '../interactive-os/primitives/aria'
-import { listbox } from '../interactive-os/pattern/examples/listbox'
+import { listbox } from '../interactive-os/pattern/roles/listbox'
 
 // ═══════════════════════════════════════════
 // Mock data

@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import CmsLayout from '../../pages/cms/CmsLayout'
 import { resetCmsData } from '../../pages/cms/cms-state'
-import { listbox } from '../pattern/examples/listbox'
-import { tree } from '../pattern/examples/tree'
+import { listbox } from '../pattern/roles/listbox'
+import { tree } from '../pattern/roles/tree'
 import { spatial } from '../misc/spatial'
 
 /**

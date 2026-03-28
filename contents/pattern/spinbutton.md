@@ -2,6 +2,12 @@
 
 > 숫자 값 입력. `spinbutton({ min, max, step })` → vertical value 축 + 직접 입력 + ▲▼ 버튼.
 
+## Demo
+
+```tsx render
+<ShowcaseDemo slug="spinbutton" />
+```
+
 ## 스펙
 
 | 속성 | 값 |
