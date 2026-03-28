@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { menu } from '../../pattern/roles/menu'
+import { menuButton } from '../../pattern/roles/menuButton'
 import styles from './menu.module.css'
 
 // APG #41: Actions Menu Button Using element.focus()
@@ -18,11 +18,30 @@ const items = [
 ]
 
 const data: NormalizedData = createStore({
-  entities: Object.fromEntries(
-    items.map(item => [item.id, { id: item.id, data: { label: item.label } }]),
-  ),
-  relationships: { [ROOT_ID]: items.map(item => item.id) },
+  entities: {
+    actions: { id: 'actions', data: { label: 'Actions' } },
+    ...Object.fromEntries(
+      items.map(item => [item.id, { id: item.id, data: { label: item.label } }]),
+    ),
+  },
+  relationships: {
+    [ROOT_ID]: ['actions'],
+    actions: items.map(item => item.id),
+  },
 })
+
+const renderTrigger = (
+  props: React.HTMLAttributes<HTMLElement>,
+  node: Record<string, unknown>,
+  _state: NodeState,
+): React.ReactElement => {
+  const label = (node.data as Record<string, unknown>)?.label as string
+  return (
+    <button {...props} className={styles.trigger} type="button">
+      {label} ▾
+    </button>
+  )
+}
 
 const renderItem = (
   props: React.HTMLAttributes<HTMLElement>,
@@ -43,7 +62,7 @@ const renderItem = (
 
 export function MenuActions() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => menu, [])
+  const behavior = useMemo(() => menuButton, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
@@ -54,6 +73,7 @@ export function MenuActions() {
       onChange={onChange}
       aria-label="Actions"
     >
+      <Aria.Trigger render={renderTrigger} />
       <Aria.Item render={renderItem} />
     </Aria>
   )

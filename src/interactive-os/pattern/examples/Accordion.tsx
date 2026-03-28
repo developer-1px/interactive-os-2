@@ -15,21 +15,18 @@ const sections = [
   {
     id: 'personal-information',
     label: 'Personal Information',
-    contentId: 'personal-information-content',
     content:
       'Provide your name, email, phone number, and any other personal details required for identification.',
   },
   {
     id: 'billing-address',
     label: 'Billing Address',
-    contentId: 'billing-address-content',
     content:
       'Enter the address associated with your payment method including street address, city, state, and zip code.',
   },
   {
     id: 'shipping-address',
     label: 'Shipping Address',
-    contentId: 'shipping-address-content',
     content:
       'Provide the address where you would like your order delivered. This may differ from your billing address.',
   },
@@ -38,50 +35,44 @@ const sections = [
 const data: NormalizedData = createStore({
   entities: {
     ...Object.fromEntries(
-      sections.map(s => [s.id, { id: s.id, data: { label: s.label } }]),
-    ),
-    ...Object.fromEntries(
-      sections.map(s => [
-        s.contentId,
-        { id: s.contentId, data: { label: s.content } },
-      ]),
+      sections.map(s => [s.id, { id: s.id, data: { label: s.label, content: s.content } }]),
     ),
     [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: ['personal-information'] },
   },
   relationships: {
     [ROOT_ID]: sections.map(s => s.id),
-    ...Object.fromEntries(
-      sections.map(s => [s.id, [s.contentId]]),
-    ),
   },
 })
 
-const renderItem = (
+const renderHeader = (
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
   state: NodeState,
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
-  const isHeader = (state.level ?? 1) === 1
+  return (
+    <div
+      {...props}
+      className={styles.header}
+      data-focused={state.focused || undefined}
+    >
+      <span>{label}</span>
+      <span className={styles.indicator} aria-hidden="true">
+        {state.expanded ? '\u25B2' : '\u25BC'}
+      </span>
+    </div>
+  )
+}
 
-  if (isHeader) {
-    return (
-      <div
-        {...props}
-        className={styles.header}
-        data-focused={state.focused || undefined}
-      >
-        <span>{label}</span>
-        <span className={styles.indicator} aria-hidden="true">
-          {state.expanded ? '\u25B2' : '\u25BC'}
-        </span>
-      </div>
-    )
-  }
-
+const renderRegion = (
+  props: React.HTMLAttributes<HTMLElement>,
+  node: Record<string, unknown>,
+  _state: NodeState,
+): React.ReactElement => {
+  const content = (node.data as Record<string, unknown>)?.content as string
   return (
     <div {...props} className={styles.panel}>
-      {label}
+      {content}
     </div>
   )
 }
@@ -99,7 +90,8 @@ export function Accordion() {
       onChange={onChange}
       aria-label="Accordion Example"
     >
-      <Aria.Item render={renderItem} />
+      <Aria.Item render={renderHeader} />
+      <Aria.Panel render={renderRegion} />
     </Aria>
   )
 }

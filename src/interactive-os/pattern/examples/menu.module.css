@@ -16,3 +16,18 @@
 .menuitem:is([data-focused='true']) {
   background: var(--bg-hover);
 }
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  background: var(--surface-default);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-sm-r);
+  cursor: default;
+}
