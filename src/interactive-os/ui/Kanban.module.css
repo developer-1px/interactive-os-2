@@ -61,6 +61,7 @@
   padding: var(--space-sm);
   height: 100%;
   align-items: stretch;
+  overflow: auto hidden;
 }
 
 .board[data-compact] .column {
@@ -94,6 +95,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 
 /* ── Focus/Selection — override .card background ── */
