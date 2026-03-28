@@ -84,8 +84,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 19 | Disclosure (Show/Hide) Card | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-card/) | `pattern/examples/disclosure.ts` | 🟢 | — |
-| 20 | Disclosure (Show/Hide) for FAQ | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-faq/) | — | ⬜ | — |
-| 21 | Disclosure (Show/Hide) for Image Description | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-image-description/) | — | ⬜ | — |
+| 20 | Disclosure (Show/Hide) for FAQ | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-faq/) | `pattern/examples/disclosure.ts` | 🟢 | — |
+| 21 | Disclosure (Show/Hide) for Image Description | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-image-description/) | `pattern/examples/disclosure.ts` | 🟢 | — |
 | 22 | Disclosure Navigation Menu with Top-Level Links | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/) | — | ⬜ | — |
 | 23 | Disclosure Navigation Menu | [example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) | — | ⬜ | — |
 
