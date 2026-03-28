@@ -1,6 +1,6 @@
 // ② 2026-03-28-popup-axis-prd.md
 import type { AxisConfig, KeyMap } from './types'
-import type { Command } from '../engine/types'
+import type { Command, VisibilityFilter } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { focusCommands } from './navigate'
@@ -63,7 +63,20 @@ export interface PopupOptions {
   modal?: boolean
 }
 
-export function popup(options: PopupOptions): { keyMap: KeyMap; config: Partial<AxisConfig> } {
+export const popupVisibilityFilter: VisibilityFilter = {
+  shouldDescend(nodeId, store) {
+    const entity = store.entities[POPUP_ID]
+    if (!entity) return false // no popup entity → don't walk children
+    const isOpen = (entity.isOpen as boolean) ?? false
+    const triggerId = (entity.triggerId as string) ?? ''
+    // Only descend into the trigger's children when popup is open
+    if (nodeId === triggerId) return isOpen
+    // Non-trigger containers: don't descend (popup owns the tree)
+    return false
+  },
+}
+
+export function popup(options: PopupOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; visibilityFilter: VisibilityFilter } {
   const { type, modal } = options
 
   function readPopup(ctx: Parameters<KeyMap[string]>[0]): PopupEntity {
@@ -143,5 +156,5 @@ export function popup(options: PopupOptions): { keyMap: KeyMap; config: Partial<
     ...(modal && { popupModal: true }),
   } as Partial<AxisConfig>
 
-  return { keyMap, config }
+  return { keyMap, config, visibilityFilter: popupVisibilityFilter }
 }
