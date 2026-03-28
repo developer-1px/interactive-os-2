@@ -68,6 +68,9 @@ export interface PatternContext {
 
 export type KeyMap = Record<string, (ctx: PatternContext) => Command | void>
 
+/** Modifier-keyed click handler map for declarative click binding. Keys: 'default' | 'shift' | 'ctrl' | 'meta' | 'alt'. */
+export type ClickMap = Record<string, (ctx: PatternContext) => Command | void>
+
 export interface AxisConfig {
   focusStrategy: FocusStrategy
   tabFocusStrategy: FocusStrategy
