@@ -27,7 +27,7 @@
 | S9 | popup이 뷰포트 하단에 가까운 트리거에 연결되어 있다 | popup이 열린다 | CSS Anchor Positioning의 flip-block으로 위쪽에 표시된다 | |
 | S10 | Dialog(modal)가 열려 있다 | Dialog가 닫힌다 | 포커스가 원래 트리거 요소로 복원된다 | |
 
-완성도: 🟡
+완성도: 🟢
 
 ## ② 산출물
 
@@ -35,9 +35,37 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| — | — | |
+| `overlay/types.ts` | `OverlayType("modal"\|"popup"\|"hint")`, `OverlayOptions`, `OverlayHandle(open/close/toggle/isOpen)` 타입 정의 | |
+| `overlay/layerStack.ts` | 전역 오버레이 스택. 등록/해제, 최상위 판별, Escape 라우팅 | |
+| `overlay/useOverlay.ts` | 핵심 훅. type별 렌더 전략 분기(dialog.showModal / popover=auto / popover=hint), 포커스 복원, backdrop click 처리 | |
+| `overlay/useAnchorPosition.ts` | CSS Anchor Positioning 유틸 훅. anchor-name 설정 + position-area/fallback 생성. Safari JS fallback 포함 | |
+| `axis/dismiss.ts` (확장) | 기존 Escape 전용 → `clickOutside`, `focusOut` 옵션 추가. layerStack 연동으로 최상위만 수신 | |
+| `axis/triggerPopup.ts` (신규) | trigger↔popup 축. 트리거 이벤트(click/hover/focus/manual) → overlay open. ARIA 속성 자동 생성(aria-haspopup, aria-expanded, aria-controls) | |
+| `overlay/overlay.css` | 오버레이 공통 CSS. `::backdrop` 스타일, anchor positioning 기본값, enter/exit transition, Safari `@supports` fallback | |
 
-완성도: 🔴  ← ① 🟢 후 착수
+### 관계
+
+```
+triggerPopup(axis) ──opens──▶ useOverlay(hook)
+                                 │
+                    ┌────────────┼────────────┐
+                    ▼            ▼            ▼
+               modal         popup         hint
+            <dialog>      popover=auto  popover=hint
+                    │            │
+                    ▼            ▼
+              layerStack ◀── dismiss(axis, 확장)
+                                 │
+                                 ▼
+                        useAnchorPosition
+```
+
+- `triggerPopup`은 Aria 축 → 기존 composePattern에 합성 가능
+- `useOverlay`는 Aria 엔진 밖 — DOM 렌더링 전담, command/store 무관
+- `layerStack`은 모듈 스코프 싱글턴 — useOverlay가 mount/unmount 시 자동 등록/해제
+- `dismiss` 확장은 기존 Escape keyMap 유지 + 새 옵션은 useOverlay가 DOM 이벤트로 처리 (축은 키보드만, DOM dismiss는 훅이 담당)
+
+완성도: 🟡
 
 ## ③ 인터페이스
 
@@ -89,4 +117,4 @@
 
 ---
 
-**전체 완성도:** 🟡 1/8 (① 초안)
+**전체 완성도:** 🟡 2/8 (① 🟢, ② 초안)
