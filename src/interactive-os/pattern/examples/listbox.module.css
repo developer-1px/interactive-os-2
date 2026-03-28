@@ -27,12 +27,16 @@
 }
 
 .groupLabel {
-  padding: var(--space-sm) var(--shape-xs-px) var(--space-xs);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  padding: var(--space-xs) var(--shape-xs-px);
+  font-size: var(--type-label-size);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.groupLabel + .groupLabel,
+.option + .groupLabel {
+  margin-top: var(--space-lg);
 }
 
 .groupOptions {
