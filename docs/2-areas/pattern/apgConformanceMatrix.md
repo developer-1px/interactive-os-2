@@ -26,7 +26,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 2 | Alert | [example](https://www.w3.org/WAI/ARIA/apg/patterns/alert/examples/alert/) | — | ⬜ | — |
+| 2 | Alert | [example](https://www.w3.org/WAI/ARIA/apg/patterns/alert/examples/alert/) | `pattern/examples/alert.ts` | 🟢 | — |
 
 ### Alert Dialog
 
@@ -38,7 +38,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 4 | Breadcrumb | [example](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/examples/breadcrumb/) | — | ⬜ | — |
+| 4 | Breadcrumb | [example](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/examples/breadcrumb/) | — | 🟡 | 기존 static HTML, nav[aria-label] 미적용 |
 
 ### Button
 
@@ -119,7 +119,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 35 | Link | [example](https://www.w3.org/WAI/ARIA/apg/patterns/link/examples/link/) | — | ⬜ | — |
+| 35 | Link | [example](https://www.w3.org/WAI/ARIA/apg/patterns/link/examples/link/) | `pattern/examples/link.ts` | 🟢 | — |
 
 ### Listbox
 
@@ -148,7 +148,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 44 | Meter | [example](https://www.w3.org/WAI/ARIA/apg/patterns/meter/examples/meter/) | — | ⬜ | — |
+| 44 | Meter | [example](https://www.w3.org/WAI/ARIA/apg/patterns/meter/examples/meter/) | `pattern/examples/meter.ts` | 🟢 | — |
 
 ### Radio Group
 
@@ -255,9 +255,9 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 전체 APG example (크롤링) | 68 |
 | 범위 제외 (Landmarks 8 + Tooltip 1 + Deprecated 2) | 11 |
 | 대상 example | 57 + 1 experimental |
-| pattern/examples/ 매핑 | 19 |
-| 미착수 (매핑 없음) | 24 |
-| 적합성 검증 완료 | 33 |
+| pattern/examples/ 매핑 | 22 |
+| 미착수 (매핑 없음) | 20 |
+| 적합성 검증 완료 | 36 |
 
 ## os 갭 레지스트리
 
