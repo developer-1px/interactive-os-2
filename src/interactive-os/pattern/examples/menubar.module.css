@@ -59,8 +59,13 @@
   text-decoration: none;
   cursor: default;
   white-space: nowrap;
-  outline: 1px solid transparent;
+  outline: none;
   border: 2px solid transparent;
+}
+
+.indicator {
+  display: flex;
+  color: var(--text-muted);
 }
 
 /* ── submenu panel ── */
@@ -78,7 +83,6 @@
   z-index: 1;
 }
 
-
 .submenuRoot {
   composes: submenu;
   top: 100%;
@@ -93,9 +97,14 @@
 
 /* ── variant: state ── */
 
-.link:is([data-focused='true']) {
-  background: var(--bg-hover);
+/* Focus ring only when element actually has DOM focus */
+.link:focus {
   border-color: var(--focus);
+}
+
+/* Background highlight when focused (keyboard navigation) */
+.link:is([data-focused='true']):focus {
+  background: var(--bg-hover);
 }
 
 .link:is([aria-expanded='true']) {
