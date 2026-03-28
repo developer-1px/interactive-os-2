@@ -205,8 +205,8 @@ triggerPopup(axis) ──opens──▶ useOverlay(hook)
 | V16 | ③ ARIA | trigger에 popup 연결 | aria-haspopup, aria-controls 존재, 열림 시 aria-expanded=true | |
 | V17 | ③ Tab-modal | modal 내에서 Tab | 포커스가 modal 밖으로 나가지 않음 (focus trap) | |
 
-완성도: 🟡
+완성도: 🟢
 
 ---
 
-**전체 완성도:** 🟡 7/8 (①~⑦ 🟢, ⑧ 대기)
+**전체 완성도:** 🟢 8/8
