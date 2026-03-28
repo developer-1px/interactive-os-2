@@ -6,6 +6,7 @@ export type { Command, Middleware }
 
 export interface Plugin {
   name?: string
+  requires?: Plugin[]
   middleware?: Middleware
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: Record<string, (...args: any[]) => Command>
