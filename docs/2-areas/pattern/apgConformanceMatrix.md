@@ -51,8 +51,8 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 7 | Auto-Rotating Image Carousel with Buttons for Slide Control | [example](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/) | — | ⬜ | — |
-| 8 | Auto-Rotating Image Carousel with Tabs for Slide Control | [example](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-2-tablist/) | — | ⬜ | — |
+| 7 | Auto-Rotating Image Carousel with Buttons for Slide Control | [example](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/) | — | ⛔ | multi-zone (prev/next 버튼 + slide 컨테이너 + live region) |
+| 8 | Auto-Rotating Image Carousel with Tabs for Slide Control | [example](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-2-tablist/) | — | ⛔ | multi-zone (tablist + slide 컨테이너 + auto-rotation) |
 
 ### Checkbox
 
@@ -66,18 +66,18 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 11 | Select-Only Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) | `pattern/examples/combobox.ts` | 🟢 | — |
-| 12 | Editable Combobox without Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-none/) | — | ⬜ | — |
-| 13 | Editable Combobox With List Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/) | — | ⬜ | — |
-| 14 | Editable Combobox With Both List and Inline Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-both/) | — | ⬜ | — |
-| 15 | Editable Combobox with Grid Popup | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/grid-combo/) | — | ⬜ | — |
-| 16 | Date Picker Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-datepicker/) | — | ⬜ | — |
+| 12 | Editable Combobox without Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-none/) | `pattern/examples/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
+| 13 | Editable Combobox With List Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/) | `pattern/examples/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
+| 14 | Editable Combobox With Both List and Inline Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-both/) | `pattern/examples/combobox.ts` | 🟢 | autocomplete 모드는 plugin 옵션, pattern 동일 |
+| 15 | Editable Combobox with Grid Popup | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/grid-combo/) | — | ⛔ | multi-zone (combobox input + grid popup) |
+| 16 | Date Picker Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-datepicker/) | — | ⛔ | multi-zone (combobox + calendar grid dialog) |
 
 ### Dialog (Modal)
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 17 | Modal Dialog | [example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/dialog/) | `pattern/examples/dialog.ts` | 🟢 | — |
-| 18 | Date Picker Dialog | [example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) | — | ⬜ | — |
+| 18 | Date Picker Dialog | [example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) | — | ⛔ | multi-zone (dialog + calendar grid + navigation buttons) |
 
 ### Disclosure
 
@@ -93,7 +93,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 24 | Infinite Scrolling Feed | [example](https://www.w3.org/WAI/ARIA/apg/patterns/feed/examples/feed/) | — | ⬜ | — |
+| 24 | Infinite Scrolling Feed | [example](https://www.w3.org/WAI/ARIA/apg/patterns/feed/examples/feed/) | `pattern/examples/feed.ts` | 🟢 | — |
 
 ### Grid
 
@@ -126,15 +126,15 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
 | 36 | Scrollable Listbox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-scrollable/) | `pattern/examples/listbox.ts` | 🟢 | — |
-| 37 | Listboxes with Rearrangeable Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-rearrangeable/) | — | ⬜ | — |
+| 37 | Listboxes with Rearrangeable Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-rearrangeable/) | — | ⛔ | multi-zone (dual listbox + toolbar + move commands) |
 | 38 | Listbox with Grouped Options | [example](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-grouped/) | — | ⛔ | heterogeneous childRole (listbox>group>option) 미지원 — childRole 단일값 |
 
 ### Menu and Menubar
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 39 | Editor Menubar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-editor/) | — | ⬜ | — |
-| 40 | Navigation Menubar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/) | — | ⬜ | — |
+| 39 | Editor Menubar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-editor/) | — | ⛔ | multi-zone (horizontal bar + vertical submenus) |
+| 40 | Navigation Menubar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/) | — | ⛔ | multi-zone (horizontal bar + vertical submenus) |
 
 ### Menu Button
 
@@ -171,7 +171,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 52 | Horizontal Multi-Thumb Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/examples/slider-multithumb/) | — | ⬜ | — |
+| 52 | Horizontal Multi-Thumb Slider | [example](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/examples/slider-multithumb/) | — | ⛔ | multi-zone (복수 독립 slider thumb, 상호 제약) |
 
 ### Spinbutton
 
@@ -231,7 +231,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 67 | Window Splitter | (APG example 없음, [pattern만](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)) | — | ⬜ | — |
+| 67 | Window Splitter | (APG example 없음, [pattern만](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/)) | `pattern/examples/windowSplitter.ts` | 🟢 | — |
 
 ### Deprecated (참고용)
 
@@ -244,7 +244,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 상태 | 비고 |
 |---|-------------|----------|------|------|
-| E1 | Tabs with Action Buttons | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-actions/) | ⬜ | APG experimental |
+| E1 | Tabs with Action Buttons | [example](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-actions/) | ⛔ | multi-zone (tablist + action toolbar), APG experimental |
 
 ---
 
@@ -255,10 +255,11 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 전체 APG example (크롤링) | 68 |
 | 범위 제외 (Landmarks 8 + Tooltip 1 + Deprecated 2) | 11 |
 | 대상 example | 57 + 1 experimental |
-| pattern/examples/ 매핑 | 24 |
-| 미착수 (매핑 없음) | 13 |
-| 적합성 검증 완료 | 39 |
-| os 갭으로 불가 (⛔) | 4 |
+| pattern/examples/ 매핑 | 29 |
+| 미착수 (매핑 없음) | 0 |
+| 적합성 검증 완료 (🟢) | 44 |
+| 부분 적합 (🟡) | 1 |
+| os 갭으로 불가 (⛔) | 13 |
 
 ## os 갭 레지스트리
 
@@ -272,3 +273,4 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 4 | ~~Combobox `aria-activedescendant` 잔존~~ — **해소됨**: close()가 focus 클리어 | Combobox (#11) | combobox plugin | ✅ 해소 |
 | 5 | `aria-checked="mixed"` tri-state 미지원 — expand axis는 boolean만 | Checkbox Mixed (#10) | expand axis | ⛔ 미해소 |
 | 6 | heterogeneous childRole 미지원 — childRole이 단일 값, 레벨별 다른 role 불가 | Listbox Grouped (#38), Table (#57, #58) | pattern/composePattern | ⛔ 미해소 |
+| 7 | multi-zone 미지원 — 하나의 위젯에 여러 독립 focus zone 조합 불가 | Carousel (#7, #8), Combobox Grid (#15), Date Picker (#16, #18), Listbox Rearrangeable (#37), Menubar (#39, #40), Multi-Thumb Slider (#52), Tabs Actions (E1) | composePattern / useAriaZone | ⛔ 미해소 |
