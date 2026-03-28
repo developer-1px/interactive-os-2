@@ -65,15 +65,67 @@ triggerPopup(axis) ──opens──▶ useOverlay(hook)
 - `layerStack`은 모듈 스코프 싱글턴 — useOverlay가 mount/unmount 시 자동 등록/해제
 - `dismiss` 확장은 기존 Escape keyMap 유지 + 새 옵션은 useOverlay가 DOM 이벤트로 처리 (축은 키보드만, DOM dismiss는 훅이 담당)
 
-완성도: 🟡
+완성도: 🟢
 
 ## ③ 인터페이스
 
+### 트리거 → 오버레이 열기 (triggerPopup axis)
+
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
-| — | — | — | — | — | |
+| Enter/Space | trigger 포커스, overlay 닫힘 | overlay 열림, popup 첫 항목 포커스 | APG: button이 popup을 제어할 때 Enter/Space로 토글 (S5) | overlay 열림, trigger에 aria-expanded=true | |
+| ArrowDown | trigger 포커스, overlay 닫힘, openOn=click | overlay 열림, popup 첫 항목 포커스 | APG combobox/menu-button: ArrowDown이 드롭다운을 열고 첫 항목으로 이동 | overlay 열림 | |
+| ArrowUp | trigger 포커스, overlay 닫힘, openOn=click | overlay 열림, popup 마지막 항목 포커스 | APG menu-button: ArrowUp은 마지막 항목으로 — 역방향 탐색 의도 | overlay 열림 | |
+| Click | trigger 위, overlay 닫힘, openOn=click | overlay 열림 | 직접 조작: 클릭은 가장 기본적인 트리거 행위 | overlay 열림, trigger에 aria-expanded=true | |
+| Hover in | trigger 위, overlay 닫힘, openOn=hover | 300ms 딜레이 후 overlay 열림 | 즉시 열면 의도치 않은 표시 빈발 — 딜레이가 의도적 hover를 필터링 (hint/tooltip) | overlay 열림 | |
+| Focus in | trigger 위, overlay 닫힘, openOn=focus | overlay 열림 | 키보드 사용자에게 hover 등가 경험 제공 (tooltip) | overlay 열림 | |
 
-완성도: 🔴  ← ② 🟢 후 착수
+### 오버레이 닫기 (dismiss 확장 + useOverlay)
+
+| 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
+|------|----------|------|-------------------|----------|-------|
+| Escape | overlay 열림 (스택 최상위) | 최상위 overlay만 닫힘, 포커스 복원 | layerStack이 최상위만 Escape 수신 — 중첩 시 한 겹씩 벗겨짐 (S1, S4) | 스택에서 제거, 포커스 → 트리거 or 이전 overlay | |
+| Escape | overlay 열림 (스택 최상위 아님) | 무시 | 하위 overlay가 Escape를 소비하면 안 됨 — 최상위 우선 원칙 | 변화 없음 | |
+| Click outside | popup 열림 | popup 닫힘, 클릭 대상 활성화 | popover="auto"의 light dismiss — 브라우저 네이티브 동작 (S2) | popup 스택에서 제거 | |
+| Click outside | modal(Dialog, dismissOnBackdrop=true) 열림 | Dialog 닫힘, 포커스 복원 | FileViewerModal 패턴 계승 — 정보성 modal은 backdrop click으로 닫을 수 있어야 (S3a) | modal 닫힘 | |
+| Click outside | modal(AlertDialog, dismissOnBackdrop=false) 열림 | 무시 | 확인 행위 강제 — 실수로 닫히면 안 되는 중요 결정 (S3b) | 변화 없음 | |
+| Tab | popup 열림 | popup 닫힘, 포커스 → 트리거 다음 tabbable | popup은 focus trap 아님 — Tab은 자연스러운 탈출 수단 (S6) | popup 스택에서 제거 | |
+| Tab | modal 열림 | 포커스 trap 내 순환 | modal은 뒤 콘텐츠 inert — Tab이 탈출하면 접근성 위반 | modal 내 포커스 순환 | |
+| Hover out | hint 열림, openOn=hover | 딜레이 후 hint 닫힘 | 커서가 벗어나면 hint 불필요 — 브라우저 hint 동작 위임 (S7) | hint 닫힘 | |
+| Blur | hint 열림, openOn=focus | hint 닫힘 | 포커스 이탈 = hover out 등가 — 키보드 사용자 일관성 | hint 닫힘 | |
+
+### 포커스 복원 (useOverlay)
+
+| 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
+|------|----------|------|-------------------|----------|-------|
+| overlay 닫힘 | trigger 존재 | 포커스 → trigger | APG: overlay 닫힐 때 포커스는 호출 원점으로 — 사용자 위치 감각 유지 (S10) | trigger 포커스 | |
+| overlay 닫힘 | trigger가 DOM에서 제거됨 | 포커스 → body 또는 가장 가까운 focusable | trigger 소멸 시 포커스 유실 방지 — focusRecovery 플러그인 패턴과 동일 | fallback 포커스 | |
+
+### ARIA 속성 자동 생성 (triggerPopup axis)
+
+| 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
+|------|----------|------|-------------------|----------|-------|
+| overlay mount | trigger + content 연결 | trigger에 aria-haspopup, aria-controls 설정 | 스크린리더가 "이 버튼은 popup을 가짐"을 알려야 — APG 필수 속성 | trigger에 ARIA 속성 부여 | |
+| overlay open | trigger 연결됨 | aria-expanded=true | 스크린리더에게 popup 열림 상태 전달 | trigger aria-expanded=true | |
+| overlay close | trigger 연결됨 | aria-expanded=false | 닫힘 상태 전달 | trigger aria-expanded=false | |
+
+### 키보드/마우스 체크리스트
+
+- [x] ↑ 키: ArrowUp → popup 열기 (마지막 항목 포커스)
+- [x] ↓ 키: ArrowDown → popup 열기 (첫 항목 포커스)
+- [x] ← 키: N/A (overlay 자체에는 해당 없음, 내부 콘텐츠는 기존 축이 담당)
+- [x] → 키: N/A (동상)
+- [x] Enter: trigger → popup 열기
+- [x] Escape: 최상위 overlay 닫기
+- [x] Space: trigger → popup 열기
+- [x] Tab: popup 닫기 + 포커스 이동 / modal 내 순환
+- [x] Home/End: N/A (overlay 레이어에서는 해당 없음)
+- [x] Cmd/Ctrl 조합: N/A
+- [x] 클릭: trigger click → 열기, click-outside → popup 닫기, backdrop click → modal 옵션
+- [x] 더블클릭: N/A
+- [x] 이벤트 버블링: 중첩 overlay 내부 클릭이 외부 overlay의 click-outside로 전파되면 안 됨 — layerStack이 자식 overlay 클릭을 필터링
+
+완성도: 🟡
 
 ## ④ 경계
 
@@ -117,4 +169,4 @@ triggerPopup(axis) ──opens──▶ useOverlay(hook)
 
 ---
 
-**전체 완성도:** 🟡 2/8 (① 🟢, ② 초안)
+**전체 완성도:** 🟡 3/8 (①② 🟢, ③ 초안)
