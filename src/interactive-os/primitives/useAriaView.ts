@@ -258,12 +258,18 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       // State-derived ARIA — auto-generated from axis state, pattern ariaAttributes can override
       const autoAria: Record<string, string> = {}
       if (state.expanded !== undefined) autoAria['aria-expanded'] = String(state.expanded)
-      if (state.selected) autoAria['aria-selected'] = 'true'
+      if (pattern.selectionMode) autoAria['aria-selected'] = String(state.selected)
       if (state.checked !== undefined) autoAria['aria-checked'] = String(state.checked)
       if (pattern.popupType && state.open !== undefined) {
         autoAria['aria-haspopup'] = pattern.popupType
         autoAria['aria-expanded'] = String(state.open)
       }
+      // Structural ARIA — position in set (only for multi-item collections)
+      if (state.siblingCount > 1) {
+        autoAria['aria-posinset'] = String(state.index + 1)
+        autoAria['aria-setsize'] = String(state.siblingCount)
+      }
+      if (pattern.colCount) autoAria['aria-rowindex'] = String(state.index + 1)
 
       const ariaAttrs = pattern.ariaAttributes?.(entity, state)
       const isActivedescendant = pattern.focusStrategy.type === 'aria-activedescendant'

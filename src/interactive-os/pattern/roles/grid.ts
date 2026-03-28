@@ -1,4 +1,4 @@
-import type { AriaPattern, NodeState } from '../types'
+import type { AriaPattern } from '../types'
 import { composePattern } from '../composePattern'
 import { focusNext, focusPrev, focusFirst, focusLast, focusNextCol, focusPrevCol, focusFirstCol, focusLastCol, gridTabCycleNext, gridTabCyclePrev } from '../../axis/navigate'
 import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectionCommands } from '../../axis/select'
@@ -24,10 +24,6 @@ export function grid(options: { columns: number; tabCycle?: boolean }): AriaPatt
       focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
       selectionMode: 'multiple',
       colCount: options.columns,
-      ariaAttributes: (_node: unknown, state: NodeState) => ({
-        'aria-rowindex': String(state.index + 1),
-        'aria-selected': String(state.selected),
-      }),
     },
     {
       // Navigation — APG §1 Data Grid
@@ -72,10 +68,6 @@ export function layoutGrid(options: { columns: number }): AriaPattern {
       childRole: 'row',
       focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
       colCount: options.columns,
-      ariaAttributes: (_node: unknown, state: NodeState) => ({
-        'aria-rowindex': String(state.index + 1),
-        'aria-selected': String(state.selected),
-      }),
     },
     {
       // Navigation — APG §3 Layout Grid (wrapping)

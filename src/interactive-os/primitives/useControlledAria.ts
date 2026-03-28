@@ -101,7 +101,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
     (id: string): Record<string, unknown> => {
       const state = getNodeState(id)
       const entity = getEntity(store, id) ?? { id }
-      const ariaAttrs = pattern.ariaAttributes(entity, state)
+      const ariaAttrs = pattern.ariaAttributes?.(entity, state)
       const isActivedescendant = pattern.focusStrategy.type === 'aria-activedescendant'
 
       const baseProps: Record<string, unknown> = {
