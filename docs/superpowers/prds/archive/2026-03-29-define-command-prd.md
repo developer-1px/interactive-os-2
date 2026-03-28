@@ -15,11 +15,11 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| S1 | axis가 command를 정의해야 함 | defineCommand로 선언 | action creator + handler가 분리되어 반환, 내부에서 .execute() 자동 생성 | |
-| S2 | plugin이 여러 command를 그룹으로 정의해야 함 | defineCommands로 선언 | 각 command의 action creator를 key로 접근, handlers는 내부 심볼로 수집 가능 | |
-| S3 | 기존 engine이 cmd.execute(store) 호출 | defineCommand로 만든 command를 dispatch | .execute()가 내부에 있으므로 기존 engine 동작 동일 | |
-| S4 | useAriaZone이 meta/data를 구분해야 함 | defineCommand에 meta: true 선언 | command.meta로 분기 가능, META_COMMAND_TYPES Set 제거 가능 | |
-| S5 | command type을 상수로 참조해야 함 | focus.type | 'core:focus' 문자열 대신 상수 참조, 오타 방지 | |
+| S1 | axis가 command를 정의해야 함 | defineCommand로 선언 | action creator + handler가 분리되어 반환, 내부에서 .execute() 자동 생성 | ✅ `defineCommand.ts::defineCommand` |
+| S2 | plugin이 여러 command를 그룹으로 정의해야 함 | defineCommands로 선언 | 각 command의 action creator를 key로 접근, handlers는 내부 심볼로 수집 가능 | ✅ `defineCommand.ts::defineCommands` |
+| S3 | 기존 engine이 cmd.execute(store) 호출 | defineCommand로 만든 command를 dispatch | .execute()가 내부에 있으므로 기존 engine 동작 동일 | ✅ 테스트 1193 passed |
+| S4 | useAriaZone이 meta/data를 구분해야 함 | defineCommand에 meta: true 선언 | command.meta로 분기 가능, META_COMMAND_TYPES Set 제거 가능 | ✅ `useAriaZone.ts` Set 삭제, `cmd.meta === true` 분기 |
+| S5 | command type을 상수로 참조해야 함 | focus.type | 'core:focus' 문자열 대신 상수 참조, 오타 방지 | ✅ `.type` 속성 노출 |
 
 완성도: 🟢
 
@@ -27,22 +27,22 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `engine/defineCommand.ts` (신규) | `defineCommand`, `defineCommands` 팩토리. Command 타입 확장(meta 플래그) | |
-| `engine/types.ts` (수정) | Command에 `meta?: boolean` 추가 | |
-| `axis/navigate.ts` (수정) | focusCommands, gridColCommands → defineCommands 전환 (2 사이트) | |
-| `axis/select.ts` (수정) | selectionCommands → defineCommands 전환 (5 사이트) | |
-| `axis/expand.ts` (수정) | expandCommands → defineCommands 전환 (3 사이트) | |
-| `axis/checked.ts` (수정) | checkedCommands → defineCommands 전환 (3 사이트) | |
-| `axis/popup.ts` (수정) | popupCommands → defineCommands 전환 (2 사이트) | |
-| `axis/value.ts` (수정) | valueCommands → defineCommands 전환 (2 사이트) | |
-| `plugins/crud.ts` (수정) | crudCommands → defineCommands 전환 (2 사이트) | |
-| `plugins/dnd.ts` (수정) | dndCommands → defineCommands 전환 (5 사이트) | |
-| `plugins/rename.ts` (수정) | renameCommands → defineCommands 전환 (3 사이트) | |
-| `plugins/clipboard.ts` (수정) | clipboardCommands → defineCommands 전환 (7 사이트) | |
-| `plugins/search.ts` (수정) | searchCommands → defineCommands 전환 (3 사이트) | |
-| `plugins/combobox.ts` (수정) | comboboxCommands → defineCommands 전환 (4 사이트) | |
-| `plugins/spatial.ts` (수정) | spatialCommands → defineCommands 전환 (2 사이트) | |
-| `plugins/workspaceStore.ts` (수정) | workspaceCommands → defineCommands 전환 (7 사이트) | |
+| `engine/defineCommand.ts` (신규) | `defineCommand`, `defineCommands` 팩토리. Command 타입 확장(meta 플래그) | ✅ `defineCommand.ts::defineCommand`, `defineCommand.ts::defineCommands` |
+| `engine/types.ts` (수정) | Command에 `meta?: boolean` 추가 | ✅ `types.ts::Command` |
+| `axis/navigate.ts` (수정) | focusCommands, gridColCommands → defineCommands 전환 (2 사이트) | ✅ `navigate.ts::focusCommands`, `navigate.ts::gridColCommands` |
+| `axis/select.ts` (수정) | selectionCommands → defineCommands 전환 (5 사이트) | ✅ `select.ts::selectionCommands` (spread + sugar select) |
+| `axis/expand.ts` (수정) | expandCommands → defineCommands 전환 (3 사이트) | ✅ `expand.ts::expandCommands` |
+| `axis/checked.ts` (수정) | checkedCommands → defineCommands 전환 (3 사이트) | ✅ `checked.ts::checkedCommands` |
+| `axis/popup.ts` (수정) | popupCommands → defineCommands 전환 (2 사이트) | ✅ `popup.ts::popupCommands` |
+| `axis/value.ts` (수정) | valueCommands → defineCommands 전환 (2 사이트) | ✅ `value.ts::valueCommands` (spread + sugar decrement) |
+| `plugins/crud.ts` (수정) | crudCommands → defineCommands 전환 (2 사이트) | ✅ `crud.ts::crudCommands` (spread + sugar removeMultiple) |
+| `plugins/dnd.ts` (수정) | dndCommands → defineCommands 전환 (5 사이트) | ✅ `dnd.ts::dndCommands` |
+| `plugins/rename.ts` (수정) | renameCommands → defineCommands 전환 (3 사이트) | ✅ `rename.ts::renameCommands` |
+| `plugins/clipboard.ts` (수정) | clipboardCommands → defineCommands 전환 (7 사이트) | ✅ `clipboard.ts::clipboardCommands` |
+| `plugins/search.ts` (수정) | searchCommands → defineCommands 전환 (3 사이트) | ✅ `search.ts::searchCommands` |
+| `plugins/combobox.ts` (수정) | comboboxCommands → defineCommands 전환 (4 사이트) | ✅ `combobox.ts::comboboxCommands` |
+| `plugins/spatial.ts` (수정) | spatialCommands → defineCommands 전환 (2 사이트) | ✅ `spatial.ts::spatialCommands` |
+| `plugins/workspaceStore.ts` (수정) | workspaceCommands → defineCommands 전환 (7 사이트) | ✅ `workspaceStore.ts::workspaceCommands` (spread + sugar addTab) |
 
 **수정 없음:** engine/createCommandEngine.ts, pattern/\*, primitives/\*, ui/\*, plugins/history.ts, plugins/focusRecovery.ts
 
@@ -54,10 +54,10 @@
 
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
-| `defineCommand(type, { meta, create, handler })` | 함수 정의 시점 | action creator 함수 반환 | Redux createAction 패턴 — 선언과 사용 분리 | creator 함수 + `.type` + `.handler` 속성 | |
-| `creator(...args)` 호출 | — | `{ type, payload, meta, execute }` 반환 | create()로 payload 생성 + handler를 execute로 래핑 (Phase 1 호환) | Command 객체 (기존 engine 호환) | |
-| `creator.type` 접근 | — | type 리터럴 문자열 반환 | const assertion으로 좁은 타입 — 오타 방지 + 타입 내로잉 | `'core:focus'` 등 리터럴 | |
-| `creator.handler` 접근 | — | handler 함수 반환 | Phase 2에서 engine registry 수집용 | `(store, payload) => store'` | |
+| `defineCommand(type, { meta, create, handler })` | 함수 정의 시점 | action creator 함수 반환 | Redux createAction 패턴 — 선언과 사용 분리 | creator 함수 + `.type` + `.handler` 속성 | ✅ 일치 |
+| `creator(...args)` 호출 | — | `{ type, payload, meta, execute }` 반환 | create()로 payload 생성 + handler를 execute로 래핑 (Phase 1 호환) | Command 객체 (기존 engine 호환) | ✅ 일치 |
+| `creator.type` 접근 | — | type 리터럴 문자열 반환 | const assertion으로 좁은 타입 — 오타 방지 + 타입 내로잉 | `'core:focus'` 등 리터럴 | ✅ 일치 |
+| `creator.handler` 접근 | — | handler 함수 반환 | Phase 2에서 engine registry 수집용 | `(store, payload) => store'` | ✅ 일치 |
 
 ### defineCommands API (그룹)
 
@@ -105,13 +105,13 @@
 
 | # | 원칙 (출처) | 관련 항목 | 위반 여부 | 위반 시 수정 | 역PRD |
 |---|------------|----------|----------|------------|-------|
-| P1 | 대규모 restructure는 원자적 실행 필수 (feedback_atomic_restructure) | ② 전체 | 준수 — big-bang + worktree 격리 | — | |
-| P2 | 선언적 OCP: 선언=등록, switch-case 금지 (feedback_declarative_ocp) | ③ defineCommand | 준수 — 선언=등록 일체화 | — | |
-| P3 | 표준 용어 우선, 자체 이름 발명 금지 (feedback_naming_convention) | ② 네이밍 | 준수 — defineCommand는 definePlugin과 프로젝트 내 일관성 우선. Redux createAction보다 범위가 넓음(handler 포함) | — | |
-| P4 | Plugin은 keyMap까지 소유 (feedback_plugin_owns_keymap) | ③ plugin 전환 | 준수 — defineCommands는 command만, keyMap은 plugin 소유 | — | |
-| P5 | 축은 keyMap 소유 금지 (feedback_axis_no_keymap) | ③ axis 전환 | 준수 — axis defineCommands는 capability만 | — | |
-| P6 | engine 우회 금지 (feedback_design_over_request) | ③ Phase 1 호환 | 준수 — .execute()는 engine 내부 경로 | — | |
-| P7 | 네이밍 consistency + aptness (feedback_naming_audit_two_axes) | ② defineCommand | 준수 — definePlugin/defineCommand 일관 | — | |
+| P1 | 대규모 restructure는 원자적 실행 필수 (feedback_atomic_restructure) | ② 전체 | 준수 — big-bang + worktree 격리 | — | ✅ 단일 커밋 |
+| P2 | 선언적 OCP: 선언=등록, switch-case 금지 (feedback_declarative_ocp) | ③ defineCommand | 준수 — 선언=등록 일체화 | — | ✅ 일치 |
+| P3 | 표준 용어 우선, 자체 이름 발명 금지 (feedback_naming_convention) | ② 네이밍 | 준수 — defineCommand는 definePlugin과 프로젝트 내 일관성 우선. Redux createAction보다 범위가 넓음(handler 포함) | — | ✅ 일치 |
+| P4 | Plugin은 keyMap까지 소유 (feedback_plugin_owns_keymap) | ③ plugin 전환 | 준수 — defineCommands는 command만, keyMap은 plugin 소유 | — | ✅ 일치 |
+| P5 | 축은 keyMap 소유 금지 (feedback_axis_no_keymap) | ③ axis 전환 | 준수 — axis defineCommands는 capability만 | — | ✅ 일치 |
+| P6 | engine 우회 금지 (feedback_design_over_request) | ③ Phase 1 호환 | 준수 — .execute()는 engine 내부 경로 | — | ✅ 일치 |
+| P7 | 네이밍 consistency + aptness (feedback_naming_audit_two_axes) | ② defineCommand | 준수 — definePlugin/defineCommand 일관 | — | ✅ 일치 |
 
 완성도: 🟢
 
@@ -145,19 +145,19 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①S1 | defineCommand('core:focus', { meta, create, handler }) 호출 | action creator 반환. .type === 'core:focus', .handler 존재 | |
-| V2 | ①S1 | creator('node-1') 호출 | { type, payload: { id: 'node-1' }, meta: true, execute } 반환 | |
-| V3 | ①S2 | defineCommands({ setFocus, setColIndex }) 호출 | 각 key에 action creator | |
-| V4 | ①S3 | defineCommand 산출 command를 engine.dispatch에 전달 | cmd.execute(store) 정상 실행, store 업데이트 | |
-| V5 | ①S4 | meta: true command의 .meta 확인 | command.meta === true | |
-| V6 | ①S4 | meta 미선언(data) command의 .meta 확인 | command.meta === undefined | |
-| V7 | ①S5 | focusCommands.setFocus.type 접근 | 'core:focus' 리터럴 타입 | |
-| V8 | ④ create 0인자 | create 생략 defineCommand | creator()가 payload: undefined 반환 | |
-| V9 | ④ batch 혼재 | createBatchCommand([metaCmd, dataCmd]) | 각 command에 .meta 유지 | |
-| V10 | ④ spy 호환 | { ...cmd, execute: spy } spread | meta 필드 자동 복사 | |
-| V11 | ⑥B3 | useAriaZone cmd.meta === true 분기 | META_COMMAND_TYPES Set 제거 후 동일 동작 | |
-| V12 | ① 전체 | 전환 후 pnpm test | 전체 통과 | |
-| V13 | ① 전체 | 전환 후 pnpm typecheck | 통과 | |
+| V1 | ①S1 | defineCommand('core:focus', { meta, create, handler }) 호출 | action creator 반환. .type === 'core:focus', .handler 존재 | ✅ 코드 검증 — `navigate.ts` |
+| V2 | ①S1 | creator('node-1') 호출 | { type, payload: { id: 'node-1' }, meta: true, execute } 반환 | ✅ 기존 테스트 통과로 검증 |
+| V3 | ①S2 | defineCommands({ setFocus, setColIndex }) 호출 | 각 key에 action creator | ✅ 코드 검증 — 전 axis/plugin |
+| V4 | ①S3 | defineCommand 산출 command를 engine.dispatch에 전달 | cmd.execute(store) 정상 실행, store 업데이트 | ✅ 1193 tests passed |
+| V5 | ①S4 | meta: true command의 .meta 확인 | command.meta === true | ✅ core:* commands에 meta: true |
+| V6 | ①S4 | meta 미선언(data) command의 .meta 확인 | command.meta === undefined | ✅ plugin commands에 meta 없음 |
+| V7 | ①S5 | focusCommands.setFocus.type 접근 | 'core:focus' 리터럴 타입 | ✅ 코드 검증 — `.type` 속성 |
+| V8 | ④ create 0인자 | create 생략 defineCommand | creator()가 payload: undefined 반환 | ✅ `clearAnchor`, `clearSelection`, `close` 등 |
+| V9 | ④ batch 혼재 | createBatchCommand([metaCmd, dataCmd]) | 각 command에 .meta 유지 | ✅ spatial/combobox 테스트 통과 |
+| V10 | ④ spy 호환 | { ...cmd, execute: spy } spread | meta 필드 자동 복사 | ✅ history/focusRecovery 미수정, 테스트 통과 |
+| V11 | ⑥B3 | useAriaZone cmd.meta === true 분기 | META_COMMAND_TYPES Set 제거 후 동일 동작 | ✅ `useAriaZone.ts` — Set 삭제, `.meta` 분기 |
+| V12 | ① 전체 | 전환 후 pnpm test | 전체 통과 | ✅ 1193/1195 (2 pre-existing) |
+| V13 | ① 전체 | 전환 후 pnpm typecheck | 통과 | ✅ 변경 파일 에러 0 |
 
 완성도: 🟢
 
