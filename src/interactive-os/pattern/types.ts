@@ -12,6 +12,7 @@ export interface NodeState {
   index: number
   siblingCount: number
   expanded?: boolean
+  checked?: boolean | 'mixed'
   level?: number
   valueCurrent?: number
   [key: string]: unknown
@@ -27,6 +28,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   expandable?: boolean
   /** When true, useAria creates __expanded__ entity at init for getVisibleNodes gating. Set by expand axis. */
   expandTracking?: boolean
+  /** When true, useAria creates __checked__ entity at init. Set by checked axis. */
+  checkedTracking?: boolean
   /** Selection mode: 'single' replaces selection, 'multiple' toggles independently. Default: 'multiple' */
   selectionMode?: SelectionMode
   /** When true, clicking a node selects it. Shift+Click = range, Ctrl/Cmd+Click = toggle. Auto-set by select() axis. */
