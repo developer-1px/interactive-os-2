@@ -165,7 +165,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         current = parent
       }
 
-      const isExpandable = hasChildren || (behavior.expandable ?? false)
+      const isExpandable = hasChildren || (behavior.expandable ?? false) || (behavior.panelVisibility === 'expanded')
       const renaming = !!(renameEntity?.active && renameEntity?.nodeId === id)
 
       return {
@@ -199,7 +199,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         ...(behavior.valueRange && { valueCurrent: (valueMeta?.value as number) ?? behavior.valueRange.min }),
       }
     },
-    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, behavior.expandable, behavior.checkedTracking, behavior.popupType, renameEntity, valueMeta, behavior.valueRange],
+    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, behavior.expandable, behavior.panelVisibility, behavior.checkedTracking, behavior.popupType, renameEntity, valueMeta, behavior.valueRange],
   )
 
   // ── Event handlers ──
