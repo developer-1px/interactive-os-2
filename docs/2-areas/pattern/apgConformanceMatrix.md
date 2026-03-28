@@ -183,7 +183,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 54 | Switch | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch/) | `pattern/examples/switch.ts` | ⬜ | — |
+| 54 | Switch | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch/) | `pattern/examples/switch.ts` | 🟢 | — |
 | 55 | Switch Using HTML Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-button/) | — | ⬜ | — |
 | 56 | Switch Using HTML Checkbox Input | [example](https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/) | — | ⬜ | — |
 
@@ -257,7 +257,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 대상 example | 57 + 1 experimental |
 | 기존 pattern/examples/ 매핑 | 16 |
 | 미착수 (매핑 없음) | 41 |
-| 적합성 검증 완료 | 5 |
+| 적합성 검증 완료 | 6 |
 
 ## os 갭 레지스트리
 
