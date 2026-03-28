@@ -2,14 +2,11 @@
 /**
  * APG Pattern: Window Splitter
  * https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/
- *
- * A window splitter is a movable separator between two panels.
- * Uses the value axis to handle Arrow/Home/End key interactions.
  */
 import type { Entity } from '../../store/types'
 import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { value } from '../../axis/value'
+import { incrementHandler, decrementHandler, setToMin, setToMax } from '../../axis/value'
 
 interface WindowSplitterOptions {
   min: number
@@ -25,6 +22,8 @@ export function windowSplitter(options: WindowSplitterOptions) {
     {
       role: 'none',
       childRole: 'separator',
+      focusStrategy: { type: 'roving-tabindex', orientation },
+      valueRange: { min, max, step },
       ariaAttributes: (node: Entity, state: NodeState) => ({
         'aria-valuenow': String(state.valueCurrent ?? min),
         'aria-valuemin': String(min),
@@ -35,6 +34,12 @@ export function windowSplitter(options: WindowSplitterOptions) {
           : {}),
       }),
     },
-    value({ min, max, step, orientation }),
+    {
+      ...(orientation === 'horizontal'
+        ? { ArrowRight: incrementHandler, ArrowLeft: decrementHandler }
+        : { ArrowUp: incrementHandler, ArrowDown: decrementHandler }),
+      Home: setToMin,
+      End: setToMax,
+    },
   )
 }
