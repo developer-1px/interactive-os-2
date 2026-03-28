@@ -2,46 +2,41 @@ import type { PatternContext } from './types'
 import type { AxisConfig, KeyMap } from './types'
 import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
+import { defineCommands } from '../engine/defineCommand'
 
-// ② 2026-03-26-core-absorption-prd.md
+// ② 2026-03-29-define-command-prd.md
 export const FOCUS_ID = '__focus__'
 export const GRID_COL_ID = '__grid_col__'
 
-export const focusCommands = {
-  setFocus(nodeId: string): Command {
-    return {
-      type: 'core:focus',
-      payload: { nodeId },
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [FOCUS_ID]: { id: FOCUS_ID, focusedId: nodeId },
-          },
-        }
+export const focusCommands = defineCommands({
+  setFocus: {
+    type: 'core:focus' as const,
+    meta: true,
+    create: (nodeId: string) => ({ nodeId }),
+    handler: (store, { nodeId }) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [FOCUS_ID]: { id: FOCUS_ID, focusedId: nodeId },
       },
-    }
+    }),
   },
-}
+})
 
-export const gridColCommands = {
-  setColIndex(colIndex: number): Command {
-    return {
-      type: 'core:set-col-index',
-      payload: { colIndex },
-      execute(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [GRID_COL_ID]: { id: GRID_COL_ID, colIndex },
-          },
-        }
+export const gridColCommands = defineCommands({
+  setColIndex: {
+    type: 'core:set-col-index' as const,
+    meta: true,
+    create: (colIndex: number) => ({ colIndex }),
+    handler: (store, { colIndex }) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [GRID_COL_ID]: { id: GRID_COL_ID, colIndex },
       },
-    }
+    }),
   },
-}
+})
 
 export interface NavigateOptions {
   orientation?: 'vertical' | 'horizontal' | 'both'

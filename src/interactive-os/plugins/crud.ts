@@ -6,32 +6,25 @@ import { addEntity, removeEntity } from '../store/createStore'
 import { definePlugin } from './definePlugin'
 import { focusRecovery } from './focusRecovery'
 import type { IsReachable } from './focusRecovery'
+import { defineCommands } from '../engine/defineCommand'
+
+const _crudCommands = defineCommands({
+  create: {
+    type: 'crud:create' as const,
+    create: (entity: Entity, parentId: string = ROOT_ID, index?: number) => ({ entity, parentId, index }),
+    handler: (store, { entity, parentId, index }) => addEntity(store, entity, parentId, index),
+  },
+
+  remove: {
+    type: 'crud:delete' as const,
+    create: (nodeId: string) => ({ nodeId }),
+    handler: (store, { nodeId }) => removeEntity(store, nodeId),
+  },
+})
 
 export const crudCommands = {
-  create(entity: Entity, parentId: string = ROOT_ID, index?: number): Command {
-    return {
-      type: 'crud:create',
-      payload: { entity, parentId, index },
-      execute(store) {
-        return addEntity(store, entity, parentId, index)
-      },
-    }
-  },
-
-  remove(nodeId: string): Command {
-    return {
-      type: 'crud:delete',
-      payload: { nodeId },
-      execute(store) {
-        return removeEntity(store, nodeId)
-      },
-    }
-  },
-
-  removeMultiple(nodeIds: string[]): Command {
-    const commands = nodeIds.map((id) => crudCommands.remove(id))
-    return createBatchCommand(commands)
-  },
+  ..._crudCommands,
+  removeMultiple: (nodeIds: string[]): Command => createBatchCommand(nodeIds.map((id) => _crudCommands.remove(id))),
 }
 
 export interface CrudOptions {

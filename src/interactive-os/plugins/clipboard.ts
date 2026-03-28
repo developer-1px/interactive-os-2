@@ -1,4 +1,3 @@
-import type { Command } from '../engine/types'
 import type { Entity, NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import {
@@ -10,6 +9,7 @@ import {
   updateEntityData,
 } from '../store/createStore'
 import { definePlugin } from './definePlugin'
+import { defineCommands } from '../engine/defineCommand'
 
 interface ClipboardEntry {
   entity: Entity
@@ -193,156 +193,134 @@ function getCells(store: NormalizedData, nodeId: string): string[] {
   return [...(((entity?.data as Record<string, unknown>)?.cells as unknown[]) ?? [])] as string[]
 }
 
-export const clipboardCommands = {
-  copyCellValue(nodeId: string, colIndex: number): Command {
-    return {
-      type: COPY_CELL,
-      payload: { nodeId, colIndex },
-      execute(store) {
-        cellValueBuffer = getCells(store, nodeId)[colIndex] ?? ''
-        return store
-      },
-    }
+export const clipboardCommands = defineCommands({
+  copyCellValue: {
+    type: COPY_CELL,
+    create: (nodeId: string, colIndex: number) => ({ nodeId, colIndex }),
+    handler: (store, { nodeId, colIndex }) => {
+      cellValueBuffer = getCells(store, nodeId)[colIndex] ?? ''
+      return store
+    },
   },
 
-  clearCellValue(nodeId: string, colIndex: number): Command {
-    return {
-      type: CLEAR_CELL,
-      payload: { nodeId, colIndex },
-      execute(store) {
-        const cells = getCells(store, nodeId)
-        if ((cells[colIndex] ?? '') === '') return store
-        cells[colIndex] = ''
-        return updateEntityData(store, nodeId, { cells })
-      },
-    }
+  clearCellValue: {
+    type: CLEAR_CELL,
+    create: (nodeId: string, colIndex: number) => ({ nodeId, colIndex }),
+    handler: (store, { nodeId, colIndex }) => {
+      const cells = getCells(store, nodeId)
+      if ((cells[colIndex] ?? '') === '') return store
+      cells[colIndex] = ''
+      return updateEntityData(store, nodeId, { cells })
+    },
   },
 
-  cutCellValue(nodeId: string, colIndex: number): Command {
-    return {
-      type: CUT_CELL,
-      payload: { nodeId, colIndex },
-      execute(store) {
-        const cells = getCells(store, nodeId)
-        cellValueBuffer = cells[colIndex] ?? ''
-        cells[colIndex] = ''
-        return updateEntityData(store, nodeId, { cells })
-      },
-    }
+  cutCellValue: {
+    type: CUT_CELL,
+    create: (nodeId: string, colIndex: number) => ({ nodeId, colIndex }),
+    handler: (store, { nodeId, colIndex }) => {
+      const cells = getCells(store, nodeId)
+      cellValueBuffer = cells[colIndex] ?? ''
+      cells[colIndex] = ''
+      return updateEntityData(store, nodeId, { cells })
+    },
   },
 
-  pasteCellValue(nodeId: string, colIndex: number): Command {
-    return {
-      type: PASTE_CELL,
-      payload: { nodeId, colIndex },
-      execute(store) {
-        if (cellValueBuffer === '') return store
-        const cells = getCells(store, nodeId)
-        cells[colIndex] = cellValueBuffer
-        return updateEntityData(store, nodeId, { cells })
-      },
-    }
+  pasteCellValue: {
+    type: PASTE_CELL,
+    create: (nodeId: string, colIndex: number) => ({ nodeId, colIndex }),
+    handler: (store, { nodeId, colIndex }) => {
+      if (cellValueBuffer === '') return store
+      const cells = getCells(store, nodeId)
+      cells[colIndex] = cellValueBuffer
+      return updateEntityData(store, nodeId, { cells })
+    },
   },
 
-  copy(nodeIds: string[]): Command {
-    return {
-      type: COPY,
-      payload: { nodeIds },
-      execute(store) {
-        clipboardBuffer = nodeIds.map((id) => collectSubtree(store, id))
-        clipboardMode = 'copy'
-        cutSourceIds = []
-        return store
-      },
-    }
+  copy: {
+    type: COPY,
+    create: (nodeIds: string[]) => ({ nodeIds }),
+    handler: (store, { nodeIds }) => {
+      clipboardBuffer = (nodeIds as string[]).map((id: string) => collectSubtree(store, id))
+      clipboardMode = 'copy'
+      cutSourceIds = []
+      return store
+    },
   },
 
-  cut(nodeIds: string[], canDeleteFn?: CanDeleteFn): Command {
-    return {
-      type: CUT,
-      payload: { nodeIds },
-      execute(store) {
-        const deletable = nodeIds.filter((id) => canDeleteNode(store, id, canDeleteFn))
-        if (deletable.length === 0) return store
-
-        clipboardBuffer = deletable.map((id) => collectSubtree(store, id))
-        clipboardMode = 'cut'
-        cutSourceIds = [...deletable]
-        return store
-      },
-    }
+  cut: {
+    type: CUT,
+    create: (nodeIds: string[], canDeleteFn?: CanDeleteFn) => ({ nodeIds, canDeleteFn }),
+    handler: (store, { nodeIds, canDeleteFn }) => {
+      const deletable = (nodeIds as string[]).filter((id: string) => canDeleteNode(store, id, canDeleteFn as CanDeleteFn | undefined))
+      if (deletable.length === 0) return store
+      clipboardBuffer = deletable.map((id: string) => collectSubtree(store, id))
+      clipboardMode = 'cut'
+      cutSourceIds = [...deletable]
+      return store
+    },
   },
 
-  paste(targetId: string, canAcceptFn?: CanAcceptFn): Command {
-    let buffer: ClipboardEntry[] = []
-    let mode: 'copy' | 'cut' = 'copy'
-    let sourceIds: string[] = []
+  paste: {
+    type: PASTE,
+    create: (targetId: string, canAcceptFn?: CanAcceptFn) => ({ targetId, canAcceptFn }),
+    handler: (store, { targetId, canAcceptFn }) => {
+      const buffer = [...clipboardBuffer]
+      const mode = clipboardMode
+      const sourceIds = [...cutSourceIds]
 
-    return {
-      type: PASTE,
-      payload: { targetId },
-      execute(store) {
-        buffer = [...clipboardBuffer]
-        mode = clipboardMode
-        sourceIds = [...cutSourceIds]
+      if (buffer.length === 0) return store
 
-        if (buffer.length === 0) return store
+      const childData = buffer[0]!.entity.data as Record<string, unknown> | undefined
+      const { pasteInto, insertIndex: initialInsertIndex, mode: pasteMode } = findPasteTarget(store, targetId, childData, canAcceptFn)
 
-        const childData = buffer[0]!.entity.data as Record<string, unknown> | undefined
-        const { pasteInto, insertIndex: initialInsertIndex, mode: pasteMode } = findPasteTarget(store, targetId, childData, canAcceptFn)
+      if (pasteMode === 'overwrite') {
+        if (!childData) return store
+        const fields = extractOverwriteFields(childData)
+        if (Object.keys(fields).length === 0) return store
+        return updateEntityData(store, targetId, fields)
+      }
 
-        // Overwrite mode
-        if (pasteMode === 'overwrite') {
-          if (!childData) return store
-          const fields = extractOverwriteFields(childData)
-          if (Object.keys(fields).length === 0) return store
+      let insertIndex = initialInsertIndex
+      let result = store
 
-          return updateEntityData(store, targetId, fields)
+      if (mode === 'cut') {
+        for (const id of sourceIds) {
+          result = removeEntity(result, id)
         }
-
-        // Insert mode
-        let insertIndex = initialInsertIndex
-        let result = store
-
-        if (mode === 'cut') {
-          for (const id of sourceIds) {
-            result = removeEntity(result, id)
-          }
-          if (insertIndex !== undefined) {
-            const siblings = getChildren(result, pasteInto)
-            let refNode = targetId
-            if (canAcceptFn && pasteInto !== getParent(store, targetId)) {
-              let current = targetId
-              let parent = getParent(store, current)
-              while (parent && parent !== pasteInto) {
-                current = parent
-                parent = getParent(store, current)
-              }
-              refNode = current
+        if (insertIndex !== undefined) {
+          const siblings = getChildren(result, pasteInto)
+          let refNode = targetId
+          if (canAcceptFn && pasteInto !== getParent(store, targetId)) {
+            let current = targetId
+            let parent = getParent(store, current)
+            while (parent && parent !== pasteInto) {
+              current = parent
+              parent = getParent(store, current)
             }
-            const targetPos = siblings.indexOf(refNode)
-            insertIndex = targetPos >= 0 ? targetPos + 1 : undefined
+            refNode = current
           }
-          for (let i = 0; i < buffer.length; i++) {
-            const entry = buffer[i]!
-            const idx = insertIndex !== undefined ? insertIndex + i : undefined
-            result = insertClipboardEntry(result, entry, pasteInto, false, idx)
-          }
-          clipboardBuffer = []
-          cutSourceIds = []
-        } else {
-          for (let i = 0; i < buffer.length; i++) {
-            const entry = buffer[i]!
-            const idx = insertIndex !== undefined ? insertIndex + i : undefined
-            result = insertClipboardEntry(result, entry, pasteInto, true, idx)
-          }
+          const targetPos = siblings.indexOf(refNode)
+          insertIndex = targetPos >= 0 ? targetPos + 1 : undefined
         }
+        for (let i = 0; i < buffer.length; i++) {
+          const entry = buffer[i]!
+          const idx = insertIndex !== undefined ? insertIndex + i : undefined
+          result = insertClipboardEntry(result, entry, pasteInto, false, idx)
+        }
+        clipboardBuffer = []
+        cutSourceIds = []
+      } else {
+        for (let i = 0; i < buffer.length; i++) {
+          const entry = buffer[i]!
+          const idx = insertIndex !== undefined ? insertIndex + i : undefined
+          result = insertClipboardEntry(result, entry, pasteInto, true, idx)
+        }
+      }
 
-        return result
-      },
-    }
+      return result
+    },
   },
-}
+})
 
 export interface ClipboardOptions {
   /** @deprecated Use zodSchema() plugin instead. */

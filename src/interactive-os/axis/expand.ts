@@ -1,70 +1,68 @@
 import type { AxisConfig, KeyMap } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
 import type { NormalizedData } from '../store/types'
+import { defineCommands } from '../engine/defineCommand'
 
-// ② 2026-03-26-core-absorption-prd.md
+// ② 2026-03-29-define-command-prd.md
 export const EXPANDED_ID = '__expanded__'
 
 function getExpandedIds(store: NormalizedData): string[] {
   return (store.entities[EXPANDED_ID]?.expandedIds as string[]) ?? []
 }
 
-export const expandCommands = {
-  expand(nodeId: string): Command {
-    return {
-      type: 'core:expand',
-      payload: { nodeId },
-      execute(store) {
-        const current = getExpandedIds(store)
-        if (current.includes(nodeId)) return store
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [...current, nodeId] },
-          },
-        }
-      },
-    }
+export const expandCommands = defineCommands({
+  expand: {
+    type: 'core:expand' as const,
+    meta: true,
+    create: (nodeId: string) => ({ nodeId }),
+    handler: (store, { nodeId }) => {
+      const current = getExpandedIds(store)
+      if (current.includes(nodeId)) return store
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [...current, nodeId] },
+        },
+      }
+    },
   },
 
-  collapse(nodeId: string): Command {
-    return {
-      type: 'core:collapse',
-      payload: { nodeId },
-      execute(store) {
-        const current = getExpandedIds(store)
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: current.filter((id) => id !== nodeId) },
-          },
-        }
-      },
-    }
+  collapse: {
+    type: 'core:collapse' as const,
+    meta: true,
+    create: (nodeId: string) => ({ nodeId }),
+    handler: (store, { nodeId }) => {
+      const current = getExpandedIds(store)
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: current.filter((id) => id !== nodeId) },
+        },
+      }
+    },
   },
 
-  toggleExpand(nodeId: string): Command {
-    return {
-      type: 'core:toggle-expand',
-      payload: { nodeId },
-      execute(store) {
-        const current = getExpandedIds(store)
-        const expandedIds = current.includes(nodeId)
-          ? current.filter((id) => id !== nodeId)
-          : [...current, nodeId]
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds },
-          },
-        }
-      },
-    }
+  toggleExpand: {
+    type: 'core:toggle-expand' as const,
+    meta: true,
+    create: (nodeId: string) => ({ nodeId }),
+    handler: (store, { nodeId }) => {
+      const current = getExpandedIds(store)
+      const expandedIds = current.includes(nodeId)
+        ? current.filter((id) => id !== nodeId)
+        : [...current, nodeId]
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds },
+        },
+      }
+    },
   },
-}
+})
 
 // ② 2026-03-28-axis-handlers-export-prd.md
 export const expandHandler = (ctx: import('./types').PatternContext): Command => ctx.expand()

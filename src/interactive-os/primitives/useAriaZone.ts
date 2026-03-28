@@ -14,24 +14,7 @@ import type { IsReachable } from '../plugins/focusRecovery'
 import type { UseAriaReturn } from './useAria'
 import { useAriaView } from './useAriaView'
 
-/** Command types that update zone-local view state (not shared engine data). */
-const META_COMMAND_TYPES = new Set([
-  'core:focus',
-  'core:toggle-select',
-  'core:select-range',
-  'core:set-anchor',
-  'core:clear-anchor',
-  'core:clear-selection',
-  'core:expand',
-  'core:collapse',
-  'core:toggle-expand',
-  'core:check',
-  'core:uncheck',
-  'core:toggle-check',
-  'core:set-col-index',
-  'core:open',
-  'core:close',
-])
+/** Meta commands: identified by command.meta flag (set by defineCommand) */
 
 export interface UseAriaZoneOptions {
   engine: CommandEngine
@@ -181,7 +164,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
           const metaCmds: Command[] = []
           const dataCmds: Command[] = []
           for (const sub of (command as { commands: Command[] }).commands) {
-            if (META_COMMAND_TYPES.has(sub.type)) metaCmds.push(sub)
+            if (sub.meta === true) metaCmds.push(sub)
             else dataCmds.push(sub)
           }
           if (metaCmds.length > 0) {
@@ -206,7 +189,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
           return
         }
 
-        if (META_COMMAND_TYPES.has(command.type)) {
+        if (command.meta === true) {
           setViewState(prev => {
             const next = applyMetaCommand(prev, command)
             if (command.type === 'core:focus') {
