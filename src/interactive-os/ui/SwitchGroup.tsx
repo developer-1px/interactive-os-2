@@ -5,6 +5,7 @@ import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/examples/switch'
+import { SwitchIndicator } from './indicators'
 
 interface SwitchGroupProps {
   data: NormalizedData
@@ -20,9 +21,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <div {...props} className="flex-row items-center justify-between">
       <span>{label}</span>
-      <span className="item-indicator--switch">
-        <span className="item-indicator--switch-thumb" />
-      </span>
+      <SwitchIndicator />
     </div>
   )
 }

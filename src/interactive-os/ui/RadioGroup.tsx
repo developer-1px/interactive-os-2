@@ -5,6 +5,7 @@ import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { radiogroup } from '../pattern/examples/radiogroup'
+import { RadioIndicator } from './indicators'
 
 interface RadioGroupProps {
   data: NormalizedData
@@ -19,9 +20,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? item.id as string
   return (
     <div {...props} className="flex-row items-center gap-sm">
-      <span className="item-indicator--radio">
-        <span className="item-indicator--radio-dot" />
-      </span>
+      <RadioIndicator />
       <span>{label}</span>
     </div>
   )

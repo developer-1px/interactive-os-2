@@ -65,15 +65,17 @@
 | useResizer · useVirtualScroll | Validated | — |
 | *가상화 (10k+ 노드)* | Concept | — |
 
-## UI (L7 · 15종)
+## UI (L7 · 15종 + indicators)
 
 | Component | Maturity | Gaps |
 |-----------|----------|------|
+| indicators/ (Expand·Check·Radio·Switch·Separator) | Validated | 5/18 완료, Phase 2~3 미착수 |
 | TreeGrid · ListBox · TabList · Grid | Integrated | CSS module 완비 |
 | Accordion · MenuList · DisclosureGroup | Integrated | CSS module 완비 |
 | Combobox · RadioGroup · SwitchGroup | Integrated | CSS module 완비 |
 | Kanban · Slider · Spinbutton | Integrated | CSS module 완비 |
 | Checkbox · Toggle · ToggleGroup · AlertDialog | Integrated | CSS module 완비, testPath 미연결(4종) |
+| SpatialView | Validated | 읽기 전용 공간 탐색 컨테이너. spatialViewPreset + useSpatialNav. storymap에서 검증 |
 | Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음, Toaster testPath 없음 |
 | chat/ (ChatFeed · ChatInput · TextBlock · CodeBlock · DiffBlock) | Prototype | 블록 렌더러 OCP, agent viewer 포팅 완료. 인터랙티브 블록(storeKey) 미실전 검증 |
 | *Select* | — | Combobox 래퍼, 미구현 |

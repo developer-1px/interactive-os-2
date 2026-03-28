@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ExpandIndicator } from './indicators'
 
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -32,7 +32,7 @@ const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unkn
   const hasChildren = state.expanded !== undefined
   return (
     <div className="inline-flex items-center gap-xs">
-      <span className="item-chevron item-chevron--tree" {...props.toggleProps}>{hasChildren ? (state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />) : ''}</span>
+      <span {...props.toggleProps}><ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" /></span>
       <span>{label}</span>
     </div>
   )

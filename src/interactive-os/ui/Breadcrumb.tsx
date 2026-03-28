@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react'
+import { SeparatorIndicator } from './indicators'
 import styles from './Breadcrumb.module.css'
 
 export function Breadcrumb({ path, root }: { path: string; root: string }) {
@@ -8,7 +8,7 @@ export function Breadcrumb({ path, root }: { path: string; root: string }) {
     <div className={`flex-row items-center overflow-hidden ${styles.breadcrumb}`}>
       {segments.map((seg, i) => (
         <span key={i}>
-          {i > 0 && <ChevronRight size={12} className={styles.sep} />}
+          {i > 0 && <SeparatorIndicator orientation="vertical" className={styles.sep} />}
           <span className={i === segments.length - 1 ? styles.current : styles.segment}>{seg}</span>
         </span>
       ))}

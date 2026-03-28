@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ExpandIndicator } from './indicators'
 
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -20,7 +20,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     ?? item.id as string
   return (
     <div {...props} className="flex-row items-center gap-xs">
-      <span className="item-chevron item-chevron--expand">{state.expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}</span>
+      <ExpandIndicator expanded={state.expanded} />
       <span>{label}</span>
     </div>
   )

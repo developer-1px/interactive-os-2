@@ -26,6 +26,10 @@ export const uiCategories: UiCategory[] = [
     label: 'Feedback',
     slugs: ['dialog', 'alert-dialog', 'toaster', 'tooltip'],
   },
+  {
+    label: 'Indicators',
+    slugs: ['indicators'],
+  },
 ]
 
 export const slugToMdFile: Record<string, string> = {
@@ -52,4 +56,5 @@ export const slugToMdFile: Record<string, string> = {
   'tooltip': 'Tooltip',
   'tree-grid': 'TreeGrid',
   'tree-view': 'TreeView',
+  'indicators': 'Indicators',
 }
