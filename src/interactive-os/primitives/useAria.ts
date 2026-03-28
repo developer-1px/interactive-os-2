@@ -13,6 +13,7 @@ import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
 import { selectionCommands, SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
 import { expandCommands, EXPANDED_ID } from '../axis/expand'
 import { CHECKED_ID } from '../axis/checked'
+import { POPUP_ID } from '../axis/popup'
 import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
@@ -23,7 +24,7 @@ type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; behavior: Ari
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
-const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, CHECKED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID, '__search__'])
+const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, CHECKED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID, '__search__', POPUP_ID])
 
 const EMPTY_BEHAVIOR: AriaPattern = {
   role: '',
@@ -108,6 +109,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     if (behavior.checkedTracking && !data.entities[CHECKED_ID]) {
       created.syncStore({
         entities: { ...created.getStore().entities, [CHECKED_ID]: { id: CHECKED_ID, checkedIds: [] } },
+        relationships: created.getStore().relationships,
+      })
+    }
+    if (behavior.popupType && !data.entities[POPUP_ID]) {
+      created.syncStore({
+        entities: { ...created.getStore().entities, [POPUP_ID]: { id: POPUP_ID, isOpen: false, triggerId: '' } },
         relationships: created.getStore().relationships,
       })
     }

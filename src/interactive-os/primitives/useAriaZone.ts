@@ -8,6 +8,7 @@ import type { AriaPattern } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren } from '../store/createStore'
 import { createPatternContext } from '../pattern/createPatternContext'
+import { POPUP_ID } from '../axis/popup'
 import { isVisible, findFallbackFocus, detectNewVisibleEntities } from '../plugins/focusRecovery'
 import type { IsReachable } from '../plugins/focusRecovery'
 import type { UseAriaReturn } from './useAria'
@@ -28,6 +29,8 @@ const META_COMMAND_TYPES = new Set([
   'core:uncheck',
   'core:toggle-check',
   'core:set-col-index',
+  'core:open',
+  'core:close',
 ])
 
 export interface UseAriaZoneOptions {
@@ -52,6 +55,8 @@ interface ZoneViewState {
   expandedIds: string[]
   checkedIds: string[]
   gridCol: number
+  popupIsOpen: boolean
+  popupTriggerId: string
 }
 
 function applyMetaCommand(state: ZoneViewState, command: Command): ZoneViewState {
@@ -103,6 +108,12 @@ function applyMetaCommand(state: ZoneViewState, command: Command): ZoneViewState
     }
     case 'core:set-col-index':
       return { ...state, gridCol: p.colIndex as number }
+    case 'core:open': {
+      const { triggerId } = command.payload as { triggerId: string }
+      return { ...state, popupIsOpen: true, popupTriggerId: triggerId }
+    }
+    case 'core:close':
+      return { ...state, popupIsOpen: false }
     default:
       return state
   }
@@ -130,6 +141,8 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
       expandedIds: [],
       checkedIds: [],
       gridCol: 0,
+      popupIsOpen: false,
+      popupTriggerId: '',
     }
   })
 
@@ -155,6 +168,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
           __expanded__: { id: '__expanded__', expandedIds: vs.expandedIds },
           __checked__: { id: '__checked__', checkedIds: vs.checkedIds },
           __grid_col__: { id: '__grid_col__', colIndex: vs.gridCol },
+          [POPUP_ID]: { id: POPUP_ID, isOpen: vs.popupIsOpen, triggerId: vs.popupTriggerId },
         },
         relationships: realStore.relationships,
       }
