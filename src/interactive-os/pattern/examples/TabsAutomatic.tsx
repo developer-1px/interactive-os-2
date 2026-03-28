@@ -11,14 +11,26 @@ import styles from './tabs.module.css'
 // https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
 
 const items = [
-  { id: 'nils-frahm', label: 'Nils Frahm' },
-  { id: 'agnes-obel', label: 'Agnes Obel' },
-  { id: 'joke', label: 'Joke' },
+  {
+    id: 'nils-frahm',
+    label: 'Nils Frahm',
+    content: 'Nils Frahm is a German musician, composer and record producer based in Berlin.',
+  },
+  {
+    id: 'agnes-obel',
+    label: 'Agnes Obel',
+    content: 'Agnes Caroline Thaarup Obel is a Danish singer/songwriter.',
+  },
+  {
+    id: 'joke',
+    label: 'Joke',
+    content: 'Fear of towels is known as textophobia.',
+  },
 ]
 
 const data: NormalizedData = createStore({
   entities: Object.fromEntries(
-    items.map(item => [item.id, { id: item.id, data: { label: item.label } }]),
+    items.map(item => [item.id, { id: item.id, data: { label: item.label, content: item.content } }]),
   ),
   relationships: { [ROOT_ID]: items.map(item => item.id) },
 })
@@ -41,6 +53,19 @@ const renderTab = (
   )
 }
 
+const renderPanel = (
+  props: React.HTMLAttributes<HTMLElement>,
+  node: Record<string, unknown>,
+  _state: NodeState,
+): React.ReactElement => {
+  const content = (node.data as Record<string, unknown>)?.content as string
+  return (
+    <div {...props} className={styles.panel}>
+      <p>{content}</p>
+    </div>
+  )
+}
+
 export function TabsAutomatic() {
   const [store, setStore] = useState<NormalizedData>(data)
   const behavior = useMemo(() => tabs, [])
@@ -55,6 +80,7 @@ export function TabsAutomatic() {
       aria-label="Entertainment"
     >
       <Aria.Item render={renderTab} />
+      <Aria.Panel render={renderPanel} />
     </Aria>
   )
 }
