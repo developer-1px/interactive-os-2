@@ -135,8 +135,7 @@ function SeparatorSection() {
           <SeparatorIndicator orientation="horizontal" />
         </div>
       </Row>
-      <div className={styles.separatorRow}>
-        <span className={styles.label}>vertical</span>
+      <Row label="vertical">
         <div className={styles.value} style={{ height: 'var(--space-3xl)' }}>
           <span className={styles.stateLabel}>A</span>
           <SeparatorIndicator orientation="vertical" />
@@ -144,7 +143,7 @@ function SeparatorSection() {
           <SeparatorIndicator orientation="vertical" />
           <span className={styles.stateLabel}>C</span>
         </div>
-      </div>
+      </Row>
     </Section>
   )
 }

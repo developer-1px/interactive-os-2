@@ -56,21 +56,13 @@
 }
 
 .interactiveTarget:hover {
-  background: var(--surface-hover);
+  background: var(--selection);
 }
 
 .stateLabel {
   font-size: var(--type-caption-size);
   font-family: var(--type-mono-family);
   color: var(--text-secondary);
-}
-
-/* ── Separator row (full-width line) ── */
-.separatorRow {
-  display: flex;
-  align-items: center;
-  min-height: var(--space-2xl);
-  gap: var(--space-md);
 }
 
 .separatorFill {
