@@ -333,3 +333,179 @@ describe('v2 structured axis', () => {
     expect(behavior.focusStrategy).toEqual({ type: 'roving-tabindex', orientation: 'vertical' })
   })
 })
+
+describe('AriaPattern base (recursive override)', () => {
+  const identity: Identity = {
+    role: 'tree',
+    childRole: 'treeitem',
+    ariaAttributes: () => ({ 'aria-expanded': 'false' }),
+  }
+
+  function makeBasePattern() {
+    return composePattern(identity, {
+      keyMap: {
+        ArrowDown: (ctx) => ctx.focusNext(),
+        Enter: (ctx) => ctx.expand(),
+      },
+      config: {
+        focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+        expandable: true,
+      },
+    } satisfies StructuredAxis)
+  }
+
+  // V1: 2026-03-28-compose-pattern-recursive-prd.md
+  it('AriaPattern base + axis — merges keyMap, preserves role', () => {
+    const base = makeBasePattern()
+    const popupAxis: StructuredAxis = {
+      keyMap: { Escape: (ctx) => ctx.close() },
+      config: { popupType: 'menu' },
+    }
+
+    const result = composePattern(base, popupAxis)
+
+    expect(result.role).toBe('tree')
+    expect(result.childRole).toBe('treeitem')
+    expect(result.keyMap['ArrowDown'](mockCtx)).toMatchObject({ type: 'focusNext' })
+    expect(result.keyMap['Escape'](mockCtx)).toMatchObject({ type: 'close' })
+    expect(result.popupType).toBe('menu')
+    expect(result.expandable).toBe(true)
+  })
+
+  // V2: 2026-03-28-compose-pattern-recursive-prd.md
+  it('axis handler takes priority over base on same key (chain-of-responsibility)', () => {
+    const base = makeBasePattern()
+    const overrideAxis: KeyMap = {
+      Enter: (ctx) => ctx.activate(),
+    }
+
+    const result = composePattern(base, overrideAxis)
+
+    expect(result.keyMap['Enter'](mockCtx)).toMatchObject({ type: 'activate' })
+  })
+
+  // V2 supplement: void falls through to base
+  it('axis void handler falls through to base handler', () => {
+    const base = makeBasePattern()
+    const overrideAxis: KeyMap = {
+      Enter: () => undefined,
+    }
+
+    const result = composePattern(base, overrideAxis)
+
+    expect(result.keyMap['Enter'](mockCtx)).toMatchObject({ type: 'expand' })
+  })
+
+  // V3: 2026-03-28-compose-pattern-recursive-prd.md
+  it('existing Identity + axes call works unchanged (backward compat)', () => {
+    const behavior = composePattern(identity, {
+      ArrowDown: (ctx) => ctx.focusNext(),
+    })
+
+    expect(behavior.role).toBe('tree')
+    expect(behavior.keyMap['ArrowDown'](mockCtx)).toMatchObject({ type: 'focusNext' })
+  })
+
+  // V4: 2026-03-28-compose-pattern-recursive-prd.md
+  it('3-level recursive composition works', () => {
+    const level1 = makeBasePattern()
+    const level2 = composePattern(level1, {
+      Space: (ctx) => ctx.toggleSelect(),
+    } satisfies KeyMap)
+    const level3 = composePattern(level2, {
+      Escape: (ctx) => ctx.close(),
+    } satisfies KeyMap)
+
+    expect(level3.role).toBe('tree')
+    expect(level3.keyMap['ArrowDown'](mockCtx)).toMatchObject({ type: 'focusNext' })
+    expect(level3.keyMap['Space'](mockCtx)).toMatchObject({ type: 'toggleSelect' })
+    expect(level3.keyMap['Escape'](mockCtx)).toMatchObject({ type: 'close' })
+    expect(level3.expandable).toBe(true)
+  })
+
+  // V5: 2026-03-28-compose-pattern-recursive-prd.md
+  it('base middleware + axis middleware — base innermost', () => {
+    const calls: string[] = []
+    const baseMw = (next: (cmd: Command) => void) => (cmd: Command) => {
+      calls.push('base')
+      next(cmd)
+    }
+    const axisMw = (next: (cmd: Command) => void) => (cmd: Command) => {
+      calls.push('axis')
+      next(cmd)
+    }
+
+    const baseWithMw = composePattern(identity, {
+      keyMap: {},
+      middleware: baseMw,
+    } satisfies StructuredAxis)
+
+    const result = composePattern(baseWithMw, {
+      keyMap: {},
+      middleware: axisMw,
+    } satisfies StructuredAxis)
+
+    // Execute middleware chain
+    result.middleware!((cmd) => { calls.push('final') })(makeCmd('test'))
+
+    // reduceRight: base pushed first → base is outer wrapper, axis is inner
+    expect(calls).toEqual(['base', 'axis', 'final'])
+  })
+
+  // V6: 2026-03-28-compose-pattern-recursive-prd.md
+  it('base visibilityFilters + axis filters — concatenated', () => {
+    const baseFilter = () => true
+    const axisFilter = () => false
+
+    const baseWithFilter = composePattern(identity, {
+      keyMap: {},
+      visibilityFilter: baseFilter,
+    } satisfies StructuredAxis)
+
+    const result = composePattern(baseWithFilter, {
+      keyMap: {},
+      visibilityFilter: axisFilter,
+    } satisfies StructuredAxis)
+
+    expect(result.visibilityFilters).toHaveLength(2)
+    expect(result.visibilityFilters![0]).toBe(baseFilter)
+    expect(result.visibilityFilters![1]).toBe(axisFilter)
+  })
+
+  // V7: 2026-03-28-compose-pattern-recursive-prd.md
+  it('axis config overrides base config', () => {
+    const base = makeBasePattern()
+    expect(base.expandable).toBe(true)
+
+    const result = composePattern(base, {
+      keyMap: {},
+      config: { expandable: false },
+    } satisfies StructuredAxis)
+
+    expect(result.expandable).toBe(false)
+  })
+
+  // V8: 2026-03-28-compose-pattern-recursive-prd.md
+  it('isAriaPattern does not misidentify StructuredAxis', () => {
+    const structured: StructuredAxis = {
+      keyMap: { ArrowDown: (ctx) => ctx.focusNext() },
+      config: { expandable: true },
+    }
+
+    // StructuredAxis passed as axis (not base) should work as before
+    const result = composePattern(identity, structured)
+    expect(result.role).toBe('tree')
+    expect(result.keyMap['ArrowDown'](mockCtx)).toMatchObject({ type: 'focusNext' })
+  })
+
+  it('zero axes with AriaPattern base — identity operation', () => {
+    const base = makeBasePattern()
+    const result = composePattern(base)
+
+    expect(result.role).toBe(base.role)
+    expect(result.childRole).toBe(base.childRole)
+    expect(result.focusStrategy).toEqual(base.focusStrategy)
+    expect(result.expandable).toBe(base.expandable)
+    expect(Object.keys(result.keyMap)).toEqual(Object.keys(base.keyMap))
+  })
+})

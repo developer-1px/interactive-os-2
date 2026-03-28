@@ -25,114 +25,77 @@ const DEFAULT_FOCUS_STRATEGY: FocusStrategy = {
   orientation: 'vertical',
 }
 
-function isIdentity(first: Identity | PatternConfig): first is Identity {
-  return !('focusStrategy' in first)
-}
+// ── Shared helpers ──
 
-export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]): AriaPattern {
-  // Merge keyMaps from all axes
-  const allKeys = new Set<string>()
-  const keyMaps = axes.map(extractKeyMap)
-  for (const km of keyMaps) {
-    for (const key of Object.keys(km)) {
-      allKeys.add(key)
-    }
-  }
+function mergeKeyMaps(keyMaps: KeyMap[], baseKeyMap?: KeyMap): KeyMap {
+  const allKeys = new Set(keyMaps.flatMap(Object.keys))
+  if (baseKeyMap) for (const key of Object.keys(baseKeyMap)) allKeys.add(key)
 
-  const keyMap: KeyMap = {}
+  const result: KeyMap = {}
   for (const key of allKeys) {
-    const handlers = keyMaps.map((km) => km[key]).filter(Boolean)
+    const axisHandlers = keyMaps.map((km) => km[key]).filter(Boolean)
+    const baseHandler = baseKeyMap?.[key]
+    const handlers = baseHandler ? [...axisHandlers, baseHandler] : axisHandlers
 
     if (handlers.length === 1) {
-      keyMap[key] = handlers[0]
-    } else {
-      keyMap[key] = (ctx: PatternContext): Command | void => {
+      result[key] = handlers[0]
+    } else if (handlers.length > 1) {
+      result[key] = (ctx: PatternContext): Command | void => {
         for (const handler of handlers) {
-          const result = handler(ctx)
-          if (result !== undefined) {
-            return result
-          }
+          const r = handler(ctx)
+          if (r !== undefined) return r
         }
         return undefined
       }
     }
   }
+  return result
+}
 
-  // Merge config from structured axes (later overwrites earlier)
-  let mergedConfig: Partial<AxisConfig> = {}
+function mergeAxisConfigs(axes: Axis[]): Partial<AxisConfig> {
+  const merged: Partial<AxisConfig> = {}
   for (const axis of axes) {
-    const axisConfig = extractConfig(axis)
-    if (axisConfig) {
-      mergedConfig = { ...mergedConfig, ...axisConfig }
-    }
+    const c = extractConfig(axis)
+    if (c) Object.assign(merged, c)
   }
+  return merged
+}
 
-  // ② 2026-03-26-core-absorption-prd.md
-  // Merge middlewares from axes
+function composeMiddlewares(middlewares: Middleware[]): Middleware | undefined {
+  if (middlewares.length === 0) return undefined
+  if (middlewares.length === 1) return middlewares[0]
+  return (next: (command: Command) => void) => middlewares.reduceRight(
+    (acc, mw) => mw(acc),
+    next,
+  )
+}
+
+function collectMiddlewares(axes: Axis[], base?: Middleware): Middleware | undefined {
   const middlewares: Middleware[] = []
+  if (base) middlewares.push(base)
   for (const axis of axes) {
     const mw = extractMiddleware(axis)
     if (mw) middlewares.push(mw)
   }
-  const composedMiddleware: Middleware | undefined = middlewares.length === 0
-    ? undefined
-    : middlewares.length === 1
-      ? middlewares[0]
-      : (next: (command: Command) => void) => middlewares.reduceRight(
-          (acc, mw) => mw(acc),
-          next,
-        )
+  return composeMiddlewares(middlewares)
+}
 
-  // Collect visibility filters from axes
-  const visibilityFilters: VisibilityFilter[] = []
+function collectVisibilityFilters(axes: Axis[], base: VisibilityFilter[] = []): VisibilityFilter[] {
+  const filters = [...base]
   for (const axis of axes) {
     const vf = extractVisibilityFilter(axis)
-    if (vf) visibilityFilters.push(vf)
+    if (vf) filters.push(vf)
   }
+  return filters
+}
 
-  // Build behavior
-  if (isIdentity(config)) {
-    // v2 Identity path
-    const focusStrategy = mergedConfig.tabFocusStrategy ?? mergedConfig.focusStrategy ?? DEFAULT_FOCUS_STRATEGY
-
-    return {
-      role: config.role,
-      childRole: config.childRole,
-      ariaAttributes: config.ariaAttributes,
-      focusStrategy,
-      ...(mergedConfig.expandable !== undefined && { expandable: mergedConfig.expandable }),
-      ...(mergedConfig.expandTracking !== undefined && { expandTracking: mergedConfig.expandTracking }),
-      ...(mergedConfig.checkedTracking !== undefined && { checkedTracking: mergedConfig.checkedTracking }),
-      ...(mergedConfig.selectionMode !== undefined && { selectionMode: mergedConfig.selectionMode }),
-      ...(mergedConfig.selectOnClick !== undefined && { selectOnClick: mergedConfig.selectOnClick }),
-      ...(mergedConfig.activateOnClick !== undefined && { activateOnClick: mergedConfig.activateOnClick }),
-      ...(mergedConfig.checkOnClick !== undefined && { checkOnClick: mergedConfig.checkOnClick }),
-      ...(mergedConfig.expandOnParentClick !== undefined && { expandOnParentClick: mergedConfig.expandOnParentClick }),
-      ...(mergedConfig.selectionFollowsFocus !== undefined && { selectionFollowsFocus: mergedConfig.selectionFollowsFocus }),
-      ...(mergedConfig.activationFollowsSelection !== undefined && { activationFollowsSelection: mergedConfig.activationFollowsSelection }),
-      ...(mergedConfig.colCount !== undefined && { colCount: mergedConfig.colCount }),
-      ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
-      ...(mergedConfig.popupType !== undefined && { popupType: mergedConfig.popupType }),
-      ...(mergedConfig.popupModal !== undefined && { popupModal: mergedConfig.popupModal }),
-      ...(config.panelRole !== undefined && { panelRole: config.panelRole }),
-      ...(config.panelVisibility !== undefined && { panelVisibility: config.panelVisibility }),
-      ...(config.triggerKeyMap !== undefined && { triggerKeyMap: config.triggerKeyMap }),
-      ...(config.triggerClickMap !== undefined && { triggerClickMap: config.triggerClickMap }),
-      keyMap,
-      ...(composedMiddleware && { middleware: composedMiddleware }),
-      ...(visibilityFilters.length > 0 && { visibilityFilters }),
-    }
-  }
-
-  // v1 PatternConfig path — backward compatible
-  // PatternConfig fields take precedence as base, axis config can override
+function applyAxisConfig(mergedConfig: Partial<AxisConfig>): Partial<AriaPattern> {
   return {
-    ...(config as PatternConfig),
     ...(mergedConfig.focusStrategy !== undefined && { focusStrategy: mergedConfig.focusStrategy }),
     ...(mergedConfig.tabFocusStrategy !== undefined && { focusStrategy: mergedConfig.tabFocusStrategy }),
     ...(mergedConfig.expandable !== undefined && { expandable: mergedConfig.expandable }),
-      ...(mergedConfig.expandTracking !== undefined && { expandTracking: mergedConfig.expandTracking }),
-      ...(mergedConfig.checkedTracking !== undefined && { checkedTracking: mergedConfig.checkedTracking }),
+    ...(mergedConfig.expandTracking !== undefined && { expandTracking: mergedConfig.expandTracking }),
+    ...(mergedConfig.checkedTracking !== undefined && { checkedTracking: mergedConfig.checkedTracking }),
     ...(mergedConfig.selectionMode !== undefined && { selectionMode: mergedConfig.selectionMode }),
     ...(mergedConfig.selectOnClick !== undefined && { selectOnClick: mergedConfig.selectOnClick }),
     ...(mergedConfig.activateOnClick !== undefined && { activateOnClick: mergedConfig.activateOnClick }),
@@ -144,8 +107,80 @@ export function composePattern(config: Identity | PatternConfig, ...axes: Axis[]
     ...(mergedConfig.valueRange !== undefined && { valueRange: mergedConfig.valueRange }),
     ...(mergedConfig.popupType !== undefined && { popupType: mergedConfig.popupType }),
     ...(mergedConfig.popupModal !== undefined && { popupModal: mergedConfig.popupModal }),
+  }
+}
+
+function assembleResult(
+  keyMap: KeyMap,
+  middleware: Middleware | undefined,
+  visibilityFilters: VisibilityFilter[],
+): Partial<AriaPattern> {
+  return {
     keyMap,
-    ...(composedMiddleware && { middleware: composedMiddleware }),
+    ...(middleware && { middleware }),
     ...(visibilityFilters.length > 0 && { visibilityFilters }),
+  }
+}
+
+// ── Type guards ──
+
+// ② 2026-03-28-compose-pattern-recursive-prd.md
+function isAriaPattern(first: Identity | PatternConfig | AriaPattern): first is AriaPattern {
+  return 'role' in first && 'keyMap' in first && 'ariaAttributes' in first
+}
+
+function isIdentity(first: Identity | PatternConfig): first is Identity {
+  return !('focusStrategy' in first)
+}
+
+// ── Main ──
+
+export function composePattern(config: Identity | PatternConfig | AriaPattern, ...axes: Axis[]): AriaPattern {
+  // AriaPattern base path — pattern-on-pattern recursive override
+  if (isAriaPattern(config)) {
+    const { keyMap: baseKM, middleware: baseMW, visibilityFilters: baseVF, ...baseProps } = config
+    const axisKeyMaps = axes.map(extractKeyMap)
+    const mergedConfig = mergeAxisConfigs(axes)
+
+    return {
+      ...baseProps,
+      ...applyAxisConfig(mergedConfig),
+      ...assembleResult(
+        mergeKeyMaps(axisKeyMaps, baseKM),
+        collectMiddlewares(axes, baseMW),
+        collectVisibilityFilters(axes, baseVF),
+      ),
+    }
+  }
+
+  // Identity / PatternConfig paths
+  const axisKeyMaps = axes.map(extractKeyMap)
+  const keyMap = mergeKeyMaps(axisKeyMaps)
+  const mergedConfig = mergeAxisConfigs(axes)
+  const middleware = collectMiddlewares(axes)
+  const visibilityFilters = collectVisibilityFilters(axes)
+
+  if (isIdentity(config)) {
+    const focusStrategy = mergedConfig.tabFocusStrategy ?? mergedConfig.focusStrategy ?? DEFAULT_FOCUS_STRATEGY
+
+    return {
+      role: config.role,
+      childRole: config.childRole,
+      ariaAttributes: config.ariaAttributes,
+      focusStrategy,
+      ...applyAxisConfig(mergedConfig),
+      ...(config.panelRole !== undefined && { panelRole: config.panelRole }),
+      ...(config.panelVisibility !== undefined && { panelVisibility: config.panelVisibility }),
+      ...(config.triggerKeyMap !== undefined && { triggerKeyMap: config.triggerKeyMap }),
+      ...(config.triggerClickMap !== undefined && { triggerClickMap: config.triggerClickMap }),
+      ...assembleResult(keyMap, middleware, visibilityFilters),
+    }
+  }
+
+  // v1 PatternConfig path — backward compatible
+  return {
+    ...(config as PatternConfig),
+    ...applyAxisConfig(mergedConfig),
+    ...assembleResult(keyMap, middleware, visibilityFilters),
   }
 }
