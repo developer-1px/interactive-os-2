@@ -24,8 +24,8 @@
 | 2 | CheckIndicator | 체크 마크 | 추출 완료 | Checkbox | 🟢 |
 | 3 | RadioIndicator | 라디오 dot filled/empty | 추출 완료 | RadioGroup | 🟢 |
 | 4 | SwitchIndicator | track + thumb 토글 | 추출 완료 | SwitchGroup | 🟢 |
-| 5 | IndeterminateIndicator | 부분 선택 (−) | 미구현 | Checkbox (group) | ⬜ |
-| 6 | SortIndicator | 정렬 방향 ↑↓ | 미구현 | Grid, Table 헤더 | ⬜ |
+| 5 | IndeterminateIndicator | 부분 선택 (−) | 신규 구현 | Checkbox (group) | 🟢 |
+| 6 | SortIndicator | 정렬 방향 ↑↓ | 신규 구현 | Grid, Table 헤더 | 🟢 |
 
 ### Feedback — 피드백/진행
 
@@ -57,9 +57,9 @@
 ## 현황 요약
 
 ```
-추출 대상 (기존 중복):  5/6  완료   (Toggle은 Phase 2)
-신규 구현:              0/12 완료
-총:                     5/18 완료 (28%)
+추출 대상 (기존 중복):  5/6  완료   (Toggle은 Phase 3)
+신규 구현:              2/12 완료   (Indeterminate, Sort)
+총:                     7/18 완료 (39%)
 ```
 
 ## 설계 원칙

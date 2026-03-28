@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ExpandIndicator, CheckIndicator, RadioIndicator, SwitchIndicator, SeparatorIndicator } from '../interactive-os/ui/indicators'
+import { ExpandIndicator, CheckIndicator, RadioIndicator, SwitchIndicator, SeparatorIndicator, IndeterminateIndicator, SortIndicator } from '../interactive-os/ui/indicators'
 import styles from './IndicatorsDemo.module.css'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -150,13 +150,60 @@ function SeparatorSection() {
   )
 }
 
+function IndeterminateSection() {
+  return (
+    <Section title="Indeterminate">
+      <div data-aria-container="">
+        <Row label="default">
+          <span aria-selected="true"><IndeterminateIndicator /></span>
+        </Row>
+        <Row label="vs check">
+          <span aria-selected="true"><CheckIndicator checked={true} /></span>
+          <span aria-selected="true"><IndeterminateIndicator /></span>
+          <CheckIndicator checked={false} />
+        </Row>
+      </div>
+    </Section>
+  )
+}
+
+function SortSection() {
+  const [dir, setDir] = useState<'ascending' | 'descending' | undefined>(undefined)
+  return (
+    <Section title="Sort">
+      <div data-aria-container="">
+        <Row label="none">
+          <SortIndicator />
+        </Row>
+        <Row label="ascending">
+          <span aria-sort="ascending"><SortIndicator direction="ascending" /></span>
+        </Row>
+        <Row label="descending">
+          <span aria-sort="descending"><SortIndicator direction="descending" /></span>
+        </Row>
+        <Row label="interactive">
+          <div
+            className={styles.interactiveTarget}
+            onClick={() => setDir(d => d === undefined ? 'ascending' : d === 'ascending' ? 'descending' : undefined)}
+          >
+            <SortIndicator direction={dir} />
+            <span className={styles.stateLabel}>{dir ?? 'none'}</span>
+          </div>
+        </Row>
+      </div>
+    </Section>
+  )
+}
+
 export default function IndicatorsDemo() {
   return (
     <div className={styles.root}>
       <ExpandSection />
       <CheckSection />
+      <IndeterminateSection />
       <RadioSection />
       <SwitchSection />
+      <SortSection />
       <SeparatorSection />
     </div>
   )
