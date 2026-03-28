@@ -1,0 +1,73 @@
+/* ── base ── */
+
+.wrapper [role='menubar'] {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: var(--surface-raised);
+  border-radius: var(--shape-sm-radius);
+}
+
+.item {
+  position: relative;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: default;
+  white-space: nowrap;
+  outline: 1px solid transparent;
+}
+
+.submenu {
+  position: absolute;
+  list-style: none;
+  padding: var(--space-xs) 0;
+  margin: 0;
+  min-width: 180px;
+  background: var(--surface-overlay);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-sm-radius);
+  box-shadow: var(--shadow-md);
+  z-index: 1;
+}
+
+/* top-level submenu drops below bar */
+.submenuRoot {
+  composes: submenu;
+  top: 100%;
+  left: 0;
+}
+
+/* nested submenu opens to the right */
+.submenuNested {
+  composes: submenu;
+  top: calc(var(--space-xs) * -1);
+  left: 100%;
+}
+
+.indicator {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ── variant: state ── */
+
+.link:is([data-focused='true']) {
+  background: var(--bg-hover);
+}
+
+.link:is([aria-expanded='true']) {
+  background: var(--bg-hover);
+}

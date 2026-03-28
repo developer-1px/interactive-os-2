@@ -7,7 +7,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { menubar } from '../../pattern/roles/menubar'
-import styles from './menu.module.css'
+import styles from './menubar.module.css'
 
 // APG #39/#40: Navigation Menubar
 // https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/
@@ -52,28 +52,25 @@ const renderItem = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   const isRoot = state.level === 1
+  const hasChildren = state.expanded !== undefined
 
   if (children) {
-    // Container with submenu
     return (
-      <li role="none" style={{ position: 'relative' }}>
+      <li role="none" className={styles.item}>
         <a
           {...props}
           href="#"
-          className={styles.menuitem}
+          className={styles.link}
           data-focused={state.focused || undefined}
           onClick={e => e.preventDefault()}
         >
           {label}
+          {hasChildren && <span className={styles.indicator} aria-hidden="true">{isRoot ? '\u25BE' : '\u25B8'}</span>}
         </a>
         <ul
           role="menu"
           aria-label={label}
-          style={{
-            position: isRoot ? 'absolute' : undefined,
-            left: isRoot ? 0 : '100%',
-            top: isRoot ? '100%' : 0,
-          }}
+          className={isRoot ? styles.submenuRoot : styles.submenuNested}
         >
           {children}
         </ul>
@@ -81,17 +78,17 @@ const renderItem = (
     )
   }
 
-  // Leaf item
   return (
-    <li role="none">
+    <li role="none" className={styles.item}>
       <a
         {...props}
         href="#"
-        className={styles.menuitem}
+        className={styles.link}
         data-focused={state.focused || undefined}
         onClick={e => e.preventDefault()}
       >
         {label}
+        {hasChildren && <span className={styles.indicator} aria-hidden="true">{isRoot ? '\u25BE' : '\u25B8'}</span>}
       </a>
     </li>
   )
@@ -99,13 +96,12 @@ const renderItem = (
 
 export function MenubarNavigation() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = menubar
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <nav>
+    <nav className={styles.wrapper}>
       <Aria
-        pattern={pattern}
+        pattern={menubar}
         data={store}
         plugins={[]}
         onChange={onChange}
