@@ -73,6 +73,12 @@
   height: var(--space-sm);
   border-radius: 50%;
   background: var(--tone-primary-base);
+  transform: scale(0);
+  transition: transform var(--motion-instant-duration);
+}
+
+:where([data-aria-container] [aria-checked="true"] .item-indicator--radio-dot) {
+  transform: scale(1);
 }
 
 /* ── Switch indicator (track + thumb) ── */

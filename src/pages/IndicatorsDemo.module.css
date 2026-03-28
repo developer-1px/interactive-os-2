@@ -1,0 +1,78 @@
+/* ── Block 1: base ── */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.sectionTitle {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  font-family: var(--type-body-family);
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle);
+  margin: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  min-height: var(--space-2xl);
+  gap: var(--space-md);
+}
+
+.label {
+  font-size: var(--type-caption-size);
+  font-family: var(--type-mono-family);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.value {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.interactiveTarget {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--shape-sm-radius);
+  cursor: pointer;
+  transition: background var(--motion-instant-duration);
+  user-select: none;
+}
+
+.interactiveTarget:hover {
+  background: var(--surface-hover);
+}
+
+.stateLabel {
+  font-size: var(--type-caption-size);
+  font-family: var(--type-mono-family);
+  color: var(--text-secondary);
+}
+
+/* ── Separator row (full-width line) ── */
+.separatorRow {
+  display: flex;
+  align-items: center;
+  min-height: var(--space-2xl);
+  gap: var(--space-md);
+}
+
+.separatorFill {
+  flex: 1;
+}
