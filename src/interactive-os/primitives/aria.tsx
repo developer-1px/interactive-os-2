@@ -95,6 +95,11 @@ function AriaItemNode({ childId, render }: { childId: string; render: AriaItemPr
   if (!entity) return null
   const props = aria.getNodeProps(childId) as React.HTMLAttributes<HTMLElement>
 
+  // ② 2026-03-28-aria-panel-trigger-prd.md — Panel cross-reference
+  if (aria.behavior?.panelRole) {
+    (props as Record<string, unknown>)['aria-controls'] = `panel-${childId}`
+  }
+
   return (
     <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
       {cloneElement(render(props, entity, state) as React.ReactElement<Record<string, unknown>>, { key: childId, ref: scrollRef })}
@@ -317,6 +322,68 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
   )
 }
 
+interface AriaPanelProps {
+  render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
+}
+
+function AriaPanelNode({ childId, render, panelRole, panelVisibility }: {
+  childId: string
+  render: AriaPanelProps['render']
+  panelRole: string
+  panelVisibility: 'selected' | 'expanded'
+}) {
+  const aria = React.useContext(AriaInternalContext)
+  if (!aria) return null
+  const store = aria.getStore()
+  const entity = store.entities[childId]
+  if (!entity) return null
+
+  const state = aria.getNodeState(childId)
+  const panelId = `panel-${childId}`
+  const isVisible = panelVisibility === 'selected' ? state.selected
+    : panelVisibility === 'expanded' ? state.expanded
+    : false
+
+  const props: React.HTMLAttributes<HTMLElement> = {
+    role: panelRole,
+    id: panelId,
+    'aria-labelledby': childId,
+    ...(isVisible ? {} : { hidden: true }),
+  }
+
+  return cloneElement(
+    render(props, entity, state) as React.ReactElement<Record<string, unknown>>,
+    { key: panelId },
+  )
+}
+
+function AriaPanel({ render }: AriaPanelProps) {
+  return (
+    <AriaInternalContext.Consumer>
+      {(aria) => {
+        if (!aria) throw new Error('<Aria.Panel> must be inside <Aria>')
+        const behavior = aria.behavior
+        if (!behavior?.panelRole || !behavior?.panelVisibility) return null
+        const store = aria.getStore()
+        const children = getChildren(store, ROOT_ID)
+        return (
+          <>
+            {children.map((childId) => (
+              <AriaPanelNode
+                key={childId}
+                childId={childId}
+                render={render}
+                panelRole={behavior.panelRole!}
+                panelVisibility={behavior.panelVisibility!}
+              />
+            ))}
+          </>
+        )
+      }}
+    </AriaInternalContext.Consumer>
+  )
+}
+
 function AriaSearch({ placeholder, className }: { placeholder?: string; className?: string }) {
   const ariaCtx = React.useContext(AriaInternalContext)
   if (!ariaCtx) throw new Error('<Aria.Search> must be inside <Aria>')
@@ -407,4 +474,4 @@ function AriaSearchHighlight({ children }: { children: React.ReactNode }) {
 
 export { AriaItemContext }
 // eslint-disable-next-line react-refresh/only-export-components
-export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Editable: AriaEditable, Search: AriaSearch, SearchHighlight: AriaSearchHighlight })
+export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Panel: AriaPanel, Editable: AriaEditable, Search: AriaSearch, SearchHighlight: AriaSearchHighlight })
