@@ -99,6 +99,7 @@
   --type-section-size: 16px;    --type-section-weight: 600;  --type-section-family: var(--sans); --type-section-line-height: 1.4;  --type-section-letter-spacing: 0em;
   --type-body-size: 14px;       --type-body-weight: 430;    --type-body-family: var(--sans); --type-body-line-height: 1.4;  --type-body-letter-spacing: 0em;
   --type-caption-size: 12px;    --type-caption-weight: 430;  --type-caption-family: var(--sans); --type-caption-line-height: 1.33;  --type-caption-letter-spacing: 0em;
+  --type-code-size: 12px;       --type-code-weight: 400;     --type-code-family: var(--mono); --type-code-line-height: 1.5;   --type-code-letter-spacing: 0em;
 
   /* ── Independent axes: weight
      type 번들과 독립적으로 사용. 버튼·배지 등 텍스트 계층과 무관한 요소용. ── */
@@ -135,6 +136,9 @@
   --space-2xl: 32px;
   --space-3xl: 40px;
 
+  /* ── Border ── */
+  --border-width: 1px;
+
   /* ── Icon ── */
   --icon-xs:  14px;
   --icon-sm:  16px;
@@ -143,11 +147,13 @@
   --icon-stroke: 1.75;
 
   /* ── Component specs (claude.ai 실측) ── */
+  --toolbar-height: 36px;
   --input-height:   44px;
   --input-padding-x: 12px;
   --input-radius:   var(--shape-md-radius);
   --sidebar-width:  288px;
   --sidebar-item-height: 32px;
+  --storymap-col-width: 220px;
   --overlay-width:  360px;
   --switch-width:   36px;
   --switch-height:  20px;
