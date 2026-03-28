@@ -1,195 +1,61 @@
-/* Birdseye — kanban overview layout */
+/* Birdseye — SplitPane + NavList + Kanban layout */
 
-.be {
-  display: flex;
-  height: 100%;
-  min-height: 0;
-}
-
-.be-sidebar {
-  flex-shrink: 0;
-  background: var(--surface-sunken);
+.sidebar {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  background: var(--surface-sunken);
 }
 
-.be-sidebar__header {
+.sidebarHeader {
   display: flex;
   align-items: center;
   height: 36px;
   padding: 0 var(--space-md);
   flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
-}
-
-.be-sidebar__header-title {
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   letter-spacing: 0.02em;
   color: var(--text-muted);
 }
 
-.be-sidebar__body {
+.sidebarBody {
   flex: 1;
   overflow: hidden auto;
   padding: var(--space-xs) 0;
 }
 
-.be-board {
-  flex: 1;
+.board {
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
+  height: 100%;
   background: var(--surface-default);
 }
 
-.be-board__header {
+.boardHeader {
   display: flex;
   align-items: center;
   height: 36px;
   padding: 0 var(--space-lg);
   flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
-}
-
-.be-board__header-title {
   font-size: var(--type-caption-size);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
 }
 
-.be-board__canvas {
+.boardBody {
   flex: 1;
-  display: flex;
-  gap: var(--space-xs);
-  overflow: auto hidden;
-  padding: var(--space-md);
-}
-
-.be-column {
-  flex-shrink: 0;
-  width: 200px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.be-column__header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-muted);
-}
-
-.be-column__header svg {
-  color: var(--file-folder);
-  flex-shrink: 0;
-}
-
-.be-column__count {
-  color: var(--text-muted);
-  font-weight: var(--weight-regular);
-}
-
-.be-column__body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  overflow-y: auto;
-}
-
-.be-card {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--shape-xs-radius);
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
-  cursor: default;
-  white-space: nowrap;
+  min-height: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.be-card:hover {
-  background: var(--bg-hover);
-}
-
-.be-card[data-focused="true"] {
-  background: var(--selection);
-  color: var(--text-primary);
-}
-
-.be-card__name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.be-card--dir {
-  font-weight: var(--weight-medium);
-}
-
-.be-nav-group {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  letter-spacing: 0.02em;
-  color: var(--text-muted);
-  padding: var(--space-sm) var(--space-md) var(--space-xs);
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  cursor: default;
-}
-
-.be-nav-group svg {
-  flex-shrink: 0;
-  color: var(--text-muted);
-}
-
-.be-nav-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-md) var(--space-xs) var(--space-xl);
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: default;
-  border-radius: var(--shape-xs-radius);
-}
-
-.be-nav-item:hover {
-  background: var(--bg-hover);
-}
-
-.be-nav-item[aria-selected="true"] {
-  background: var(--selection);
-  color: var(--text-primary);
-}
-
-.be-loading {
+.loading {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm);
   height: 100svh;
   color: var(--text-muted);
   font-size: var(--type-body-size);
-}
-
-.be-loading__spinner {
-  animation: be-spin 1.2s linear infinite;
-  opacity: 0.4;
-}
-
-@keyframes be-spin {
-  to { transform: rotate(360deg); }
 }
