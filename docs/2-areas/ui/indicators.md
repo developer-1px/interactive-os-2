@@ -31,35 +31,35 @@
 
 | # | Indicator | 역할 | 현재 상태 | 사용처 | 진척 |
 |---|-----------|------|-----------|--------|------|
-| 7 | SpinnerIndicator | 회전 로딩 | 미구현 | 범용 | ⬜ |
-| 8 | ProgressIndicator | determinate 진행 bar | 미구현 | 범용 | ⬜ |
-| 9 | SkeletonIndicator | shimmer placeholder | 미구현 | 범용 | ⬜ |
-| 10 | StatusIndicator | success/error/warning dot | 미구현 | 범용 | ⬜ |
+| 7 | SpinnerIndicator | 회전 로딩 | 신규 구현 | 범용 | 🟢 |
+| 8 | ProgressIndicator | determinate 진행 bar | 신규 구현 | 범용 | 🟢 |
+| 9 | SkeletonIndicator | shimmer placeholder | 신규 구현 | 범용 | 🟢 |
+| 10 | StatusIndicator | success/error/warning dot | 신규 구현 | 범용 | 🟢 |
 
 ### Navigation — 탐색 보조
 
 | # | Indicator | 역할 | 현재 상태 | 사용처 | 진척 |
 |---|-----------|------|-----------|--------|------|
-| 11 | PageIndicator | 페이지네이션 dot/번호 | 미구현 | Pagination, Carousel | ⬜ |
-| 12 | DirectionIndicator | prev/next 방향 화살표 | 미구현 | Carousel, Pagination | ⬜ |
-| 13 | StepIndicator | 스텝 번호 원 + 완료 체크 | 미구현 | Stepper | ⬜ |
+| 11 | PageIndicator | 페이지네이션 dot/번호 | 신규 구현 | Pagination, Carousel | 🟢 |
+| 12 | DirectionIndicator | prev/next 방향 화살표 | 신규 구현 | Carousel, Pagination | 🟢 |
+| 13 | StepIndicator | 스텝 번호 원 + 완료 체크 | 신규 구현 | Stepper | 🟢 |
 | 14 | SeparatorIndicator | 구분선/구분 기호 | 추출 완료 | Breadcrumb, Menu, Toolbar | 🟢 |
 
 ### Annotation — 부가 정보
 
 | # | Indicator | 역할 | 현재 상태 | 사용처 | 진척 |
 |---|-----------|------|-----------|--------|------|
-| 15 | BadgeIndicator | 숫자 카운트 원 | 미구현 | Tab, NavItem | ⬜ |
-| 16 | OverflowIndicator | "... +N" 잘림 표시 | 미구현 | TabList, Breadcrumb | ⬜ |
-| 17 | GripIndicator | ⋮⋮ 드래그 핸들 | 미구현 | Kanban, sortable list | ⬜ |
-| 18 | TreeConnector | 수직/수평 계층 연결선 | 미구현 | TreeView, TreeGrid | ⬜ |
+| 15 | BadgeIndicator | 숫자 카운트 원 | 신규 구현 | Tab, NavItem | 🟢 |
+| 16 | OverflowIndicator | "... +N" 잘림 표시 | 신규 구현 | TabList, Breadcrumb | 🟢 |
+| 17 | GripIndicator | ⋮⋮ 드래그 핸들 | 신규 구현 | Kanban, sortable list | 🟢 |
+| 18 | TreeConnector | 수직/수평 계층 연결선 | 신규 구현 | TreeView, TreeGrid | 🟢 |
 
 ## 현황 요약
 
 ```
-추출 대상 (기존 중복):  5/6  완료   (Toggle은 Phase 3)
-신규 구현:              2/12 완료   (Indeterminate, Sort)
-총:                     7/18 완료 (39%)
+추출 대상 (기존 중복):  5/6  완료   (Toggle은 별도)
+신규 구현:             13/13 완료
+총:                    18/18 완료 (100%)
 ```
 
 ## 설계 원칙
