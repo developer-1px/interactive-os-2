@@ -133,4 +133,49 @@ describe('APG Listbox Grouped — children render', () => {
     expect(container.querySelectorAll('ul[role="group"]').length).toBe(0)
     expect(getNode(container, 'apple')).not.toBeNull()
   })
+
+  // V5: 2026-03-28-aria-item-children-prd.md — ids mode flat
+  it('ids mode renders flat without children', () => {
+    const data = fixtureData()
+    const { container } = render(
+      <Aria pattern={listboxGrouped} data={data} plugins={[]} aria-label="Test">
+        <Aria.Item ids={['apple', 'banana']} render={(props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState, children?: ReactNode) => {
+          if (children) return <ul {...props}>{children}</ul>
+          return <li {...props}>{(item.data as Record<string, unknown>)?.name as string}</li>
+        }} />
+      </Aria>,
+    )
+    // ids mode: no group wrappers, flat rendering
+    expect(container.querySelectorAll('ul[role="group"]').length).toBe(0)
+    expect(container.querySelectorAll('[role="option"]').length).toBe(2)
+  })
+
+  // V6: 2026-03-28-aria-item-children-prd.md — nested groups
+  it('nested containers each get children recursively', () => {
+    const nestedData = createStore({
+      entities: {
+        g1: { id: 'g1', data: { name: 'G1' } },
+        g1a: { id: 'g1a', data: { name: 'G1A' } },
+        item1: { id: 'item1', data: { name: 'Item1' } },
+      },
+      relationships: {
+        [ROOT_ID]: ['g1'],
+        g1: ['g1a'],
+        g1a: ['item1'],
+      },
+    })
+    const { container } = render(
+      <Aria pattern={listboxGrouped} data={nestedData} plugins={[]} aria-label="Nested">
+        <Aria.Item render={(props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState, children?: ReactNode) => {
+          if (children) return <div {...props} data-group>{children}</div>
+          return <div {...props}>{(item.data as Record<string, unknown>)?.name as string}</div>
+        }} />
+      </Aria>,
+    )
+    // Two nested group wrappers
+    const groups = container.querySelectorAll('[data-group]')
+    expect(groups.length).toBe(2) // g1 and g1a
+    // item1 is inside the innermost group
+    expect(getNode(container, 'item1')).not.toBeNull()
+  })
 })
