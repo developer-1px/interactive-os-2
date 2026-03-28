@@ -102,9 +102,20 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
         if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx
         if (aIdx !== -1) return -1
         if (bIdx !== -1) return 1
+        // __ 접두사 폴더는 맨 뒤
+        const aUnder = aName.startsWith('__')
+        const bUnder = bName.startsWith('__')
+        if (aUnder !== bUnder) return aUnder ? 1 : -1
         return aName.localeCompare(bName)
       })
-    : subDirs
+    : [...subDirs].sort((a, b) => {
+        const aName = getEntityData<FsEntityData>(fsStore, a)?.name ?? ''
+        const bName = getEntityData<FsEntityData>(fsStore, b)?.name ?? ''
+        const aUnder = aName.startsWith('__')
+        const bUnder = bName.startsWith('__')
+        if (aUnder !== bUnder) return aUnder ? 1 : -1
+        return aName.localeCompare(bName)
+      })
 
   // Add directory columns with numbering
   sortedDirs.forEach((subDirId, index) => {
