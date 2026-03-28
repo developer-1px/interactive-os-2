@@ -217,7 +217,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 63 | File Directory Treeview Using Computed Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1a/) | `pattern/examples/tree.ts` | ⬜ | — |
+| 63 | File Directory Treeview Using Computed Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1a/) | `pattern/examples/tree.ts` | 🟢 | — |
 | 64 | File Directory Treeview Using Declared Properties | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1b/) | — | ⬜ | — |
 | 65 | Navigation Treeview | [example](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-navigation/) | — | ⬜ | — |
 
@@ -257,7 +257,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 | 대상 example | 57 + 1 experimental |
 | 기존 pattern/examples/ 매핑 | 16 |
 | 미착수 (매핑 없음) | 41 |
-| 적합성 검증 완료 | 14 |
+| 적합성 검증 완료 | 15 |
 
 ## os 갭 레지스트리
 
