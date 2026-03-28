@@ -39,11 +39,13 @@
 | definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires. 전 플러그인 전환 완료 |
 | *permissions* | Concept | 예제만 존재 |
 
-## Axis (L4 · 7축)
+## Axis (L4 · 9축)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | 7축 (navigation · selection · expand · focus · tab · value · edit) | Integrated | — |
+| dismiss (확장: clickOutside · focusOut 선언) | Prototype | DOM 이벤트 처리는 useOverlay 위임, 축은 선언만 |
+| triggerPopup | Prototype | click/hover/focus/manual 트리거 → ARIA 연결 미완 (axis 레벨 keyMap만 구현) |
 
 ## Pattern (L5)
 
@@ -54,6 +56,16 @@
 | pointer interaction | Integrated | — |
 | 17 presets (listbox~spinbutton) | Integrated | — |
 | *menubar* | Concept | 다계층 keyMap 필요 |
+
+## Overlay (L5.5)
+
+| Module | Maturity | Gaps |
+|--------|----------|------|
+| types (OverlayType · OverlayOptions · OverlayHandle) | Prototype | — |
+| layerStack | Prototype | — |
+| useOverlay | Prototype | modal(dialog) + popup(popover) + hint. 기존 UI 컴포넌트 마이그레이션 미시작 |
+| useAnchorPosition | Prototype | CSS Anchor Positioning + Safari JS fallback. Tooltip 통합 미완 |
+| overlay.css | Prototype | surface+shape+motion 번들 적용. /design-implement 미실행 |
 
 ## Primitives (L6)
 
@@ -83,7 +95,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Vitest (808 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+| Vitest (824 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
 | Design Lint (8 rules · browser-injectable · Playwright CI) | Validated | 신규 관계 규칙(internal≤external, depth-inversion) false positive 튜닝 필요 |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
