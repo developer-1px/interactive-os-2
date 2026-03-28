@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SplitPane } from '../../interactive-os/ui/SplitPane'
 import type { PaneSize } from '../../interactive-os/ui/SplitPane'
-import { NavList } from '../../interactive-os/ui/NavList'
+import { TreeView } from '../../interactive-os/ui/TreeView'
 import { Kanban } from '../../interactive-os/ui/Kanban'
 import { CodeBlock } from '../../interactive-os/ui/CodeBlock'
 import type { NormalizedData } from '../../interactive-os/store/types'
@@ -19,23 +19,20 @@ import styles from './BirdseyeLayout.module.css'
 function findFirstNavItem(navStore: NormalizedData): string | null {
   const rootChildren = navStore.relationships['__root__'] ?? []
 
-  const srcGroup = rootChildren.find((id) => {
+  // src/ 폴더를 찾고, 그 안에서 interactive-os 또는 pages 우선
+  const srcId = rootChildren.find((id) => {
     const data = getEntityData<{ label: string }>(navStore, id)
     return data?.label === 'src'
   })
-  if (srcGroup) {
-    const srcChildren = navStore.relationships[srcGroup] ?? []
+  if (srcId) {
+    const srcChildren = navStore.relationships[srcId] ?? []
     const preferred = srcChildren.find((id) => {
       const data = getEntityData<{ label: string }>(navStore, id)
       return data?.label === 'interactive-os' || data?.label === 'pages'
     })
     if (preferred) return preferred
     if (srcChildren.length > 0) return srcChildren[0]!
-  }
-
-  for (const groupId of rootChildren) {
-    const groupChildren = navStore.relationships[groupId] ?? []
-    if (groupChildren.length > 0) return groupChildren[0]!
+    return srcId
   }
   return null
 }
@@ -166,11 +163,11 @@ export default function BirdseyeLayout() {
 
   return (
     <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.08}>
-      {/* 좌: NavList */}
+      {/* 좌: TreeView (폴더 전용) */}
       <div className={styles.sidebar}>
         <div className={styles.sidebarHeader}>Birdseye</div>
         <div className={styles.sidebarBody}>
-          <NavList
+          <TreeView
             data={navStore}
             onActivate={handleNavActivate}
             initialFocus={selectedFolderId ?? undefined}

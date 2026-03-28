@@ -64,11 +64,11 @@ describe('workspaceCommands.resize', () => {
     const withSplit = splitCmd.execute(store)
     const splitId = getChildren(withSplit, ROOT_ID)[0]!
     const splitData = getEntityData<SplitData>(withSplit, splitId)
-    expect(splitData?.sizes).toEqual([0.5, 0.5])
+    expect(splitData?.sizes).toEqual([0.5, 'flex'])
 
-    const resizeCmd = workspaceCommands.resize(splitId, [0.3, 0.7])
+    const resizeCmd = workspaceCommands.resize(splitId, [0.3, 'flex'])
     const resized = resizeCmd.execute(withSplit)
-    expect(getEntityData<SplitData>(resized, splitId)?.sizes).toEqual([0.3, 0.7])
+    expect(getEntityData<SplitData>(resized, splitId)?.sizes).toEqual([0.3, 'flex'])
   })
 
   it('undo restores previous sizes', () => {
@@ -77,10 +77,10 @@ describe('workspaceCommands.resize', () => {
     const withSplit = workspaceCommands.splitPane(tgId, 'horizontal').execute(store)
     const splitId = getChildren(withSplit, ROOT_ID)[0]!
 
-    const resizeCmd = workspaceCommands.resize(splitId, [0.3, 0.7])
+    const resizeCmd = workspaceCommands.resize(splitId, [0.3, 'flex'])
     const resized = resizeCmd.execute(withSplit)
     const restored = resizeCmd.undo(resized)
-    expect(getEntityData<SplitData>(restored, splitId)?.sizes).toEqual([0.5, 0.5])
+    expect(getEntityData<SplitData>(restored, splitId)?.sizes).toEqual([0.5, 'flex'])
   })
 })
 
@@ -191,7 +191,7 @@ describe('workspaceCommands.splitPane', () => {
     const splitData = getEntityData<SplitData>(after, splitId)
     expect(splitData?.type).toBe('split')
     expect(splitData?.direction).toBe('horizontal')
-    expect(splitData?.sizes).toEqual([0.5, 0.5])
+    expect(splitData?.sizes).toEqual([0.5, 'flex'])
 
     // Split should have 2 children: original tabgroup + new tabgroup
     const splitChildren = getChildren(after, splitId)

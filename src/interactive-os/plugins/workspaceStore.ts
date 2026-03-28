@@ -15,13 +15,14 @@ import {
 } from '../store/createStore'
 import { definePlugin } from './definePlugin'
 import { focusRecovery } from './focusRecovery'
+import type { PaneSize } from '../store/types'
 
 // ── Types ──────────────────────────────────────────────
 
 export interface SplitData extends Record<string, unknown> {
   type: 'split'
   direction: 'horizontal' | 'vertical'
-  sizes: number[]
+  sizes: PaneSize[]
 }
 
 export interface TabGroupData extends Record<string, unknown> {
@@ -109,8 +110,8 @@ export const workspaceCommands = {
     }
   },
 
-  resize(splitId: string, sizes: number[]): Command {
-    let prevSizes: number[] | undefined
+  resize(splitId: string, sizes: PaneSize[]): Command {
+    let prevSizes: PaneSize[] | undefined
 
     return {
       type: 'workspace:resize',
@@ -198,7 +199,7 @@ export const workspaceCommands = {
         splitId = uid('split')
         const split: Entity = {
           id: splitId,
-          data: { type: 'split', direction, sizes: [0.5, 0.5] } as SplitData,
+          data: { type: 'split', direction, sizes: [0.5, 'flex'] } as SplitData,
         }
 
         // Create new empty tabgroup
