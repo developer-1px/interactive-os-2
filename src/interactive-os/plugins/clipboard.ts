@@ -20,7 +20,7 @@ interface ClipboardEntry {
  *  - 'insert': add as new child (collection)
  *  - 'overwrite': replace editable fields of existing node (slot)
  *  - false: reject paste
- *  - boolean backward compat: true → 'insert', false → false */
+ *  - boolean backward compat: true -> 'insert', false -> false */
 export type CanAcceptResult = 'insert' | 'overwrite' | boolean
 
 /** Schema-based paste routing: can parentData accept childData as a child? */
@@ -35,7 +35,7 @@ export type CanDeleteFn = (
   parentData: Record<string, unknown> | undefined,
 ) => boolean
 
-// ── Command TYPE constants ──
+// -- Command TYPE constants --
 
 export const COPY = 'clipboard:copy' as const
 export const CUT = 'clipboard:cut' as const
@@ -45,19 +45,19 @@ export const PASTE_CELL = 'clipboard:pasteCellValue' as const
 export const CLEAR_CELL = 'clipboard:clearCellValue' as const
 export const CUT_CELL = 'clipboard:cutCellValue' as const
 
-// ── Module-level clipboard data (shared — OS clipboard model) ──
+// -- Module-level clipboard data (shared -- OS clipboard model) --
 
 let clipboardBuffer: ClipboardEntry[] = []
 let clipboardMode: 'copy' | 'cut' = 'copy'
 let cutSourceIds: string[] = []
 let cellValueBuffer: string = ''
 
-/** Read-only access to cut source IDs — for UI cut-state styling */
+/** Read-only access to cut source IDs -- for UI cut-state styling */
 export function getCutSourceIds(): readonly string[] {
   return cutSourceIds
 }
 
-/** Reset clipboard state — use in tests to isolate state between cases */
+/** Reset clipboard state -- use in tests to isolate state between cases */
 export function resetClipboard(): void {
   clipboardBuffer = []
   clipboardMode = 'copy'
@@ -99,7 +99,7 @@ function insertClipboardEntry(
   return result
 }
 
-/** Normalize CanAcceptResult: true → 'insert', false → false */
+/** Normalize CanAcceptResult: true -> 'insert', false -> false */
 function normalizeAcceptResult(result: CanAcceptResult): 'insert' | 'overwrite' | false {
   if (result === true) return 'insert'
   if (result === false) return false
@@ -119,7 +119,7 @@ function canDeleteNode(store: NormalizedData, nodeId: string, canDeleteFn?: CanD
  * Find the paste target for a given node.
  *
  * With canAccept: walk up from targetId until an ancestor accepts the child type.
- * Without canAccept: container (has relationships) → inside, leaf → sibling.
+ * Without canAccept: container (has relationships) -> inside, leaf -> sibling.
  *
  * Returns mode to distinguish insert vs overwrite.
  */
@@ -160,7 +160,7 @@ function findPasteTarget(
     return { pasteInto: ROOT_ID, insertIndex: undefined, mode: 'insert' }
   }
 
-  // Default: container → inside, leaf → sibling after
+  // Default: container -> inside, leaf -> sibling after
   const isContainer = targetId in store.relationships
   const pasteInto = isContainer
     ? targetId
@@ -202,65 +202,43 @@ export const clipboardCommands = {
         cellValueBuffer = getCells(store, nodeId)[colIndex] ?? ''
         return store
       },
-      undo(store) { return store },
     }
   },
 
   clearCellValue(nodeId: string, colIndex: number): Command {
-    let previousValue: string = ''
     return {
       type: CLEAR_CELL,
       payload: { nodeId, colIndex },
       execute(store) {
         const cells = getCells(store, nodeId)
-        previousValue = cells[colIndex] ?? ''
-        if (previousValue === '') return store
+        if ((cells[colIndex] ?? '') === '') return store
         cells[colIndex] = ''
-        return updateEntityData(store, nodeId, { cells })
-      },
-      undo(store) {
-        const cells = getCells(store, nodeId)
-        cells[colIndex] = previousValue
         return updateEntityData(store, nodeId, { cells })
       },
     }
   },
 
   cutCellValue(nodeId: string, colIndex: number): Command {
-    let previousValue: string = ''
     return {
       type: CUT_CELL,
       payload: { nodeId, colIndex },
       execute(store) {
         const cells = getCells(store, nodeId)
-        previousValue = cells[colIndex] ?? ''
-        cellValueBuffer = previousValue
+        cellValueBuffer = cells[colIndex] ?? ''
         cells[colIndex] = ''
-        return updateEntityData(store, nodeId, { cells })
-      },
-      undo(store) {
-        const cells = getCells(store, nodeId)
-        cells[colIndex] = previousValue
         return updateEntityData(store, nodeId, { cells })
       },
     }
   },
 
   pasteCellValue(nodeId: string, colIndex: number): Command {
-    let previousValue: string = ''
     return {
       type: PASTE_CELL,
       payload: { nodeId, colIndex },
       execute(store) {
         if (cellValueBuffer === '') return store
         const cells = getCells(store, nodeId)
-        previousValue = cells[colIndex] ?? ''
         cells[colIndex] = cellValueBuffer
-        return updateEntityData(store, nodeId, { cells })
-      },
-      undo(store) {
-        const cells = getCells(store, nodeId)
-        cells[colIndex] = previousValue
         return updateEntityData(store, nodeId, { cells })
       },
     }
@@ -276,7 +254,6 @@ export const clipboardCommands = {
         cutSourceIds = []
         return store
       },
-      undo(store) { return store },
     }
   },
 
@@ -293,7 +270,6 @@ export const clipboardCommands = {
         cutSourceIds = [...deletable]
         return store
       },
-      undo(store) { return store },
     }
   },
 
@@ -301,8 +277,6 @@ export const clipboardCommands = {
     let buffer: ClipboardEntry[] = []
     let mode: 'copy' | 'cut' = 'copy'
     let sourceIds: string[] = []
-    const pastedIds: string[] = []
-    let overwriteSnapshot: { nodeId: string; oldData: Record<string, unknown> } | null = null
 
     return {
       type: PASTE,
@@ -322,12 +296,6 @@ export const clipboardCommands = {
           if (!childData) return store
           const fields = extractOverwriteFields(childData)
           if (Object.keys(fields).length === 0) return store
-
-          const existing = getEntity(store, targetId)
-          overwriteSnapshot = {
-            nodeId: targetId,
-            oldData: { ...(existing?.data as Record<string, unknown> ?? {}) },
-          }
 
           return updateEntityData(store, targetId, fields)
         }
@@ -359,7 +327,6 @@ export const clipboardCommands = {
             const entry = buffer[i]!
             const idx = insertIndex !== undefined ? insertIndex + i : undefined
             result = insertClipboardEntry(result, entry, pasteInto, false, idx)
-            pastedIds.push(entry.entity.id)
           }
           clipboardBuffer = []
           cutSourceIds = []
@@ -367,36 +334,7 @@ export const clipboardCommands = {
           for (let i = 0; i < buffer.length; i++) {
             const entry = buffer[i]!
             const idx = insertIndex !== undefined ? insertIndex + i : undefined
-            const beforeIds = new Set(Object.keys(result.entities))
             result = insertClipboardEntry(result, entry, pasteInto, true, idx)
-            const afterIds = Object.keys(result.entities)
-            for (const id of afterIds) {
-              if (!beforeIds.has(id)) pastedIds.push(id)
-            }
-          }
-        }
-
-        return result
-      },
-      undo(store) {
-        if (overwriteSnapshot) {
-          return updateEntityData(store, overwriteSnapshot.nodeId, overwriteSnapshot.oldData)
-        }
-
-        if (pastedIds.length === 0) return store
-
-        let result = store
-
-        if (mode === 'cut') {
-          for (const id of pastedIds) {
-            result = removeEntity(result, id)
-          }
-          for (const entry of buffer) {
-            result = insertClipboardEntry(result, entry, ROOT_ID, false)
-          }
-        } else {
-          for (const id of pastedIds) {
-            result = removeEntity(result, id)
           }
         }
 

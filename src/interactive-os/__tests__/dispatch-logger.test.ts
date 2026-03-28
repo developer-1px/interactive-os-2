@@ -431,7 +431,6 @@ describe('engine logger integration', () => {
       type: 'bad:command',
       payload: {},
       execute() { throw new Error('Boom') },
-      undo(s) { return s },
     }
     engine.dispatch(badCommand)
 

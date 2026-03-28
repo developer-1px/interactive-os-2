@@ -3,9 +3,8 @@ import type { NormalizedData } from '../store/types'
 
 export interface Command {
   type: string
-  payload: unknown
+  payload?: unknown
   execute(store: NormalizedData): NormalizedData
-  undo(store: NormalizedData): NormalizedData
 }
 
 export interface BatchCommand extends Command {
@@ -16,12 +15,9 @@ export interface BatchCommand extends Command {
 export function createBatchCommand(cmds: Command[]): BatchCommand {
   return {
     type: 'batch',
-    payload: null,
     commands: cmds,
     execute: (store: NormalizedData): NormalizedData =>
       cmds.reduce((s, c) => c.execute(s), store),
-    undo: (store: NormalizedData): NormalizedData =>
-      [...cmds].reverse().reduce((s, c) => c.undo(s), store),
   }
 }
 

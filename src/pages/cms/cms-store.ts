@@ -42,7 +42,7 @@ export const cmsStore = createStore({
     'card-engine':         { id: 'card-engine',         data: { type: 'card' } },
     'card-engine-icon':    { id: 'card-engine-icon',    data: { type: 'icon', value: 'cog' } },
     'card-engine-title':   { id: 'card-engine-title',   data: { type: 'text', role: 'title', value: localeMap('Command Engine') } },
-    'card-engine-desc':    { id: 'card-engine-desc',    data: { type: 'text', role: 'desc', value: localeMap('Every user action is a Command with execute() and undo(). Middleware intercepts every dispatch — history snapshots, focus recovery, schema validation, all automatic.') } },
+    'card-engine-desc':    { id: 'card-engine-desc',    data: { type: 'text', role: 'desc', value: localeMap('Every user action is a Command with execute(). Middleware intercepts every dispatch — history diffs, focus recovery, schema validation, all automatic.') } },
 
     'card-behavior':       { id: 'card-behavior',       data: { type: 'card' } },
     'card-behavior-icon':  { id: 'card-behavior-icon',  data: { type: 'icon', value: 'shield' } },
