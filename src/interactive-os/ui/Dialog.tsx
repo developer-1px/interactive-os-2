@@ -27,7 +27,7 @@ export function Dialog({
   renderItem = defaultRenderItem,
 }: DialogProps) {
   return (
-    <Aria behavior={dialog} data={data} plugins={plugins} onChange={onChange}>
+    <Aria pattern={dialog} data={data} plugins={plugins} onChange={onChange}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

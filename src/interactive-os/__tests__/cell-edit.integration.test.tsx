@@ -117,9 +117,9 @@ function StatefulCellEditGrid({ initialData, withCellEdit = true }: { initialDat
     edit(),
     ...(withCellEdit ? [cellEdit()] : []),
   ]
-  const behavior = gridBehavior({ columns: 3 })
+  const pattern = gridBehavior({ columns: 3 })
   return (
-    <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="Test Grid">
+    <Aria pattern={pattern} data={data} plugins={plugins} onChange={setData} aria-label="Test Grid">
       <Aria.Item render={(props, node, _state: NodeState) => {
         const cells = ((node.data as Record<string, unknown>)?.cells as string[]) ?? []
         return (
@@ -215,9 +215,9 @@ describe('enterContinue prop', () => {
     const dataRef = useRef(data)
     useEffect(() => { dataRef.current = data })
     const plugins = [crud(), rename(), dnd(), history(), focusRecovery(), clipboard(), edit(), cellEdit()]
-    const behavior = gridBehavior({ columns: 3 })
+    const pattern = gridBehavior({ columns: 3 })
     return (
-      <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="Editable Grid">
+      <Aria pattern={pattern} data={data} plugins={plugins} onChange={setData} aria-label="Editable Grid">
         <Aria.Item render={(props, node, state) => {
           const cells = ((node.data as Record<string, unknown>)?.cells as string[]) ?? []
           const focusedColIdx = (dataRef.current.entities[GRID_COL_ID]?.colIndex as number) ?? 0

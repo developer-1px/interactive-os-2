@@ -219,7 +219,7 @@ describe('unified inputMap — Click canonical strings', () => {
   it('Click bindings merge across axes', () => {
     const pattern = composePattern(
       identity,
-      { Click: activateHandler } as Record<string, (ctx: PatternContext) => Command | void>,
+      { Click: activateHandler },
       { 'Shift+Click': extendSelectionNext },
     )
 

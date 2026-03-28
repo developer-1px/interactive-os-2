@@ -32,7 +32,7 @@ export function Slider({
 }: SliderProps) {
   const id = React.useRef(idProp ?? `slider-${++sliderIdCounter}`).current
   const trackRef = React.useRef<HTMLDivElement>(null)
-  const behavior = React.useMemo(() => slider({ min, max, step }), [min, max, step])
+  const pattern = React.useMemo(() => slider({ min, max, step }), [min, max, step])
 
   const handleTrackClick = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const track = trackRef.current
@@ -62,7 +62,7 @@ export function Slider({
   }
 
   return (
-    <Aria id={id} behavior={behavior} data={data} plugins={plugins} onChange={onChange}>
+    <Aria id={id} pattern={pattern} data={data} plugins={plugins} onChange={onChange}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

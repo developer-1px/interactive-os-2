@@ -36,7 +36,7 @@ export default function EditDemo() {
   const [replaceMode, setReplaceMode] = useState(true)
   const [data, setData] = useState<NormalizedData>(makeData)
 
-  const behavior = React.useMemo(
+  const pattern = React.useMemo(
     () => composePattern(
       {
         role: 'listbox',
@@ -83,7 +83,7 @@ export default function EditDemo() {
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
       <div className="card">
-        <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="edit demo">
+        <Aria pattern={pattern} data={data} plugins={plugins} onChange={setData} aria-label="edit demo">
           <Aria.Item render={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')

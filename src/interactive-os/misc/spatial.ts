@@ -9,7 +9,7 @@ import { select } from '../axis/select'
 import { activate } from '../axis/activate'
 import { expand } from '../axis/expand'
 
-// Re-export spatial plugin for consumers that use this behavior
+// Re-export spatial plugin for consumers that use this pattern
 export { spatial as spatialPlugin } from '../plugins/spatial'
 
 const spatialNav: Axis = {

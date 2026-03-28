@@ -67,7 +67,7 @@ export function QuickOpen({
     return fuse.search(query).slice(0, MAX_RESULTS).map(r => r.item)
   }, [query, fuse, files])
 
-  // Convert Fuse.js results to NormalizedData for the combobox behavior
+  // Convert Fuse.js results to NormalizedData for the combobox pattern
   const comboboxData = useMemo(() => createStore({
     entities: Object.fromEntries(results.map(f => [f.id, { id: f.id, data: f as unknown as Record<string, unknown> }])),
     relationships: { [ROOT_ID]: results.map(f => f.id) },
@@ -96,7 +96,7 @@ export function QuickOpen({
   }, [])
 
   const aria = useAria({
-    behavior: combobox(),
+    pattern: combobox(),
     data: comboboxData,
     plugins: [comboboxPlugin()],
     onChange: handleChange,

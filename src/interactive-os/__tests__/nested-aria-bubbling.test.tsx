@@ -19,7 +19,7 @@ function fixtureData() {
   }
 }
 
-/** keyMap-only parent Aria (no behavior) wrapping a listbox child */
+/** keyMap-only parent Aria (no pattern) wrapping a listbox child */
 function NestedAriaHarness({ parentKey }: { parentKey: string }) {
   const [opened, setOpened] = useState(false)
   return (
@@ -29,7 +29,7 @@ function NestedAriaHarness({ parentKey }: { parentKey: string }) {
         data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
         plugins={[]}
       >
-        <Aria behavior={listbox()} data={fixtureData()} plugins={[]} aria-label="inner">
+        <Aria pattern={listbox()} data={fixtureData()} plugins={[]} aria-label="inner">
           <Aria.Item render={(props, node, _state) => <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>} />
         </Aria>
       </Aria>
@@ -66,7 +66,7 @@ describe('Nested Aria bubbling', () => {
     expect(matchKeyEvent(event, 'Meta+\\')).toBe(true)
   })
 
-  it('keyMap-only Aria (no behavior) renders without role/tabIndex', () => {
+  it('keyMap-only Aria (no pattern) renders without role/tabIndex', () => {
     const { container } = render(
       <Aria
         keyMap={{ 'Meta+k': (() => undefined) as (ctx: PatternContext) => Command | void }}

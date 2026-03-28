@@ -51,7 +51,7 @@ function fixtureData(): NormalizedData {
 
 function renderTable(data: NormalizedData) {
   return render(
-    <Aria behavior={table} data={data} plugins={[]}>
+    <Aria pattern={table} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`item-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

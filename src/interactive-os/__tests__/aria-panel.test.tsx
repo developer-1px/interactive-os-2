@@ -50,10 +50,10 @@ const renderPanel = (props: React.HTMLAttributes<HTMLElement>, node: Record<stri
 
 function TestTabs() {
   const [store, setStore] = useState(fixtureData())
-  const behavior = useMemo(() => testTabs, [])
+  const pattern = useMemo(() => testTabs, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
   return (
-    <Aria behavior={behavior} data={store} plugins={[]} onChange={onChange} aria-label="Test Tabs">
+    <Aria pattern={pattern} data={store} plugins={[]} onChange={onChange} aria-label="Test Tabs">
       <Aria.Item render={renderTab} />
       <Aria.Panel render={renderPanel} />
     </Aria>
@@ -140,10 +140,10 @@ const renderRegion = (props: React.HTMLAttributes<HTMLElement>, node: Record<str
 
 function TestAccordion() {
   const [store, setStore] = useState(accordionData())
-  const behavior = useMemo(() => testAccordion, [])
+  const pattern = useMemo(() => testAccordion, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
   return (
-    <Aria behavior={behavior} data={store} plugins={[]} onChange={onChange} aria-label="Test Accordion">
+    <Aria pattern={pattern} data={store} plugins={[]} onChange={onChange} aria-label="Test Accordion">
       <Aria.Item render={renderHeader} />
       <Aria.Panel render={renderRegion} />
     </Aria>
@@ -185,10 +185,10 @@ describe('backward compatibility', () => {
 
     function TestListbox() {
       const [store, setStore] = useState(data)
-      const behavior = useMemo(() => listbox(), [])
+      const pattern = useMemo(() => listbox(), [])
       const onChange = useCallback((next: NormalizedData) => setStore(next), [])
       return (
-        <Aria behavior={behavior} data={store} plugins={[]} onChange={onChange} aria-label="Test">
+        <Aria pattern={pattern} data={store} plugins={[]} onChange={onChange} aria-label="Test">
           <Aria.Item render={(props, node) => <div {...props}>{(node.data as Record<string, unknown>).label as string}</div>} />
         </Aria>
       )

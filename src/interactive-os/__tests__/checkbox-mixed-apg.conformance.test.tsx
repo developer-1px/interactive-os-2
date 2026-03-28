@@ -47,7 +47,7 @@ function fixtureData(): NormalizedData {
 
 function renderMixed(data: NormalizedData) {
   return render(
-    <Aria behavior={checkboxMixed} data={data} plugins={[]}>
+    <Aria pattern={checkboxMixed} data={data} plugins={[]}>
       <Aria.Item render={(props, item, state: NodeState) => (
         <span
           {...props}

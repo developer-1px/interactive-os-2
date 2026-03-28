@@ -211,7 +211,7 @@ export default function PageStoreInspector() {
           <div className={styles.panel}>
             <div className={styles.panelLabel}>Editor</div>
             <Aria
-              behavior={tree}
+              pattern={tree}
               data={data}
               plugins={editor.plugins}
               keyMap={editor.keyMap}

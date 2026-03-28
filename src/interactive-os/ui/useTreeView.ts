@@ -46,13 +46,13 @@ function toTreeViewReturn(aria: UseAriaReturn, ariaLabel?: string): UseTreeViewR
 
 export function useTreeView(options: UseTreeViewOptions): UseTreeViewReturn {
   const { data, plugins = [], keyMap, onChange, onActivate, initialFocus, selectionFollowsFocus, selectable = false, 'aria-label': ariaLabel } = options
-  let behavior = selectionFollowsFocus
+  let pattern = selectionFollowsFocus
     ? { ...tree, selectionFollowsFocus: true, activationFollowsSelection: true, middleware: selectionFollowsFocusMiddleware() }
     : tree
   if (!selectable) {
-    const { Space: _space, ...rest } = behavior.keyMap
-    behavior = { ...behavior, keyMap: rest, selectionMode: undefined, selectOnClick: false }
+    const { Space: _space, ...rest } = pattern.keyMap
+    pattern = { ...pattern, keyMap: rest, selectionMode: undefined, selectOnClick: false }
   }
-  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, initialFocus })
+  const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, initialFocus })
   return toTreeViewReturn(aria, ariaLabel)
 }

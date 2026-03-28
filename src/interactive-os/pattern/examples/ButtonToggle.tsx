@@ -42,12 +42,12 @@ const renderButton = (
 
 export function ButtonToggle() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => buttonToggle, [])
+  const pattern = useMemo(() => buttonToggle, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

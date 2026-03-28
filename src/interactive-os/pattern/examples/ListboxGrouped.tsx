@@ -70,12 +70,12 @@ const renderItem = (
 
 export function ListboxGrouped() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => listboxGrouped, [])
+  const pattern = useMemo(() => listboxGrouped, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

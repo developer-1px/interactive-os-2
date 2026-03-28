@@ -42,12 +42,12 @@ const renderItem = (
 
 export function MenuNavigation() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => menu, [])
+  const pattern = useMemo(() => menu, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

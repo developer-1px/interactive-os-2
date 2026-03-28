@@ -35,7 +35,7 @@ function fixtureData(): NormalizedData {
 
 function renderTree(data: NormalizedData) {
   return render(
-    <Aria behavior={tree} data={data} plugins={[]}>
+    <Aria pattern={tree} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`node-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

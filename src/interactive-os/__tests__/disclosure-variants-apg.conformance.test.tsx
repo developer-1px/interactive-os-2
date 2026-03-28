@@ -50,7 +50,7 @@ function imageData(): NormalizedData {
 
 function renderDisclosure(data: NormalizedData) {
   return render(
-    <Aria behavior={disclosure} data={data} plugins={[]}>
+    <Aria pattern={disclosure} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`disc-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

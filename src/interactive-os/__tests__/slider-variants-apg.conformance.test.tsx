@@ -42,7 +42,7 @@ function temperatureData(): NormalizedData {
 
 function renderSlider(data: NormalizedData, options: { min: number; max: number; step: number; orientation?: 'horizontal' | 'vertical' }) {
   return render(
-    <Aria behavior={slider(options)} data={data} plugins={[]}>
+    <Aria pattern={slider(options)} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`slider-${item.id}`}>
           {(item.data as Record<string, unknown>)?.label as string}

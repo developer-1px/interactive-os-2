@@ -43,7 +43,7 @@ describe('extended selection — listbox', () => {
   function setup() {
     const user = userEvent.setup()
     const result = render(
-      <Aria behavior={listbox()} data={fixtureStore()} plugins={[]}>
+      <Aria pattern={listbox()} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />
@@ -186,7 +186,7 @@ describe('extended selection — tree', () => {
   it('Shift+ArrowDown selects range in tree', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={tree} data={fixtureStore()} plugins={[]}>
+      <Aria pattern={tree} data={fixtureStore()} plugins={[]}>
         <Aria.Item render={(props, node, state) => (
           <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
         )} />

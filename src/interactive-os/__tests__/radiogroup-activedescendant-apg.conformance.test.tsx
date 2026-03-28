@@ -27,7 +27,7 @@ function fixtureData(): NormalizedData {
 
 function renderRadio(data: NormalizedData) {
   return render(
-    <Aria behavior={radiogroupActivedescendant} data={data} plugins={[]}>
+    <Aria pattern={radiogroupActivedescendant} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`radio-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

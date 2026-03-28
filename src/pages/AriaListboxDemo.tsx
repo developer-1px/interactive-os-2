@@ -21,7 +21,7 @@ const demoData = createStore({
 
 export default function AriaListboxDemo() {
   const [data, setData] = useState<NormalizedData>(demoData)
-  const behavior = useMemo(() => listbox(), [])
+  const pattern = useMemo(() => listbox(), [])
 
   return (
     <>
@@ -31,7 +31,7 @@ export default function AriaListboxDemo() {
       </div>
       <div className="card">
         <Aria
-          behavior={behavior}
+          pattern={pattern}
           data={data}
           plugins={[]}
           onChange={setData}

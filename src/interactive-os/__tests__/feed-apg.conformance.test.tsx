@@ -26,7 +26,7 @@ function fixtureData(): NormalizedData {
 
 function renderFeed(data: NormalizedData) {
   return render(
-    <Aria behavior={feed} data={data} plugins={[]}>
+    <Aria pattern={feed} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <div {...props} data-testid={`article-${item.id}`}>
           {(item.data as Record<string, unknown>)?.title as string}

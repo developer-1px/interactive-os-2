@@ -22,7 +22,7 @@ describe('CMS Detail Panel', () => {
     const { container } = render(<CmsLayout />)
     const panel = container.querySelector('.cms-detail-panel')
     expect(panel).not.toBeNull()
-    // Spatial behavior auto-focuses first section (hero) which has child fields
+    // Spatial pattern auto-focuses first section (hero) which has child fields
     const inputs = panel!.querySelectorAll('input')
     expect(inputs.length).toBeGreaterThan(0)
   })

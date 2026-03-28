@@ -18,7 +18,7 @@ import { findMatchingKey } from './useKeyboard'
 
 interface AriaProps {
   id?: string
-  behavior?: AriaPattern
+  pattern?: AriaPattern
   data: NormalizedData
   plugins: Plugin[]
   keyMap?: Record<string, (ctx: PatternContext) => Command | void>
@@ -46,8 +46,8 @@ const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; 
 /** Sentinel to detect whether <Aria.Panel> is a child of <Aria> */
 const ARIA_PANEL_TYPE = Symbol('AriaPanel')
 
-function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, autoFocus, disabled, children }: AriaProps) {
-  const aria = useAria({ behavior, data, plugins, keyMap, onChange, onActivate, logger, autoFocus, disabled })
+function AriaRoot({ id, pattern, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, logger, autoFocus, disabled, children }: AriaProps) {
+  const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, logger, autoFocus, disabled })
 
   useEffect(() => {
     if (!id) return
@@ -59,10 +59,10 @@ function AriaRoot({ id, behavior, data, plugins, keyMap, onChange, onActivate, '
     (child) => React.isValidElement(child) && (child.type as { _ariaPanelType?: symbol })._ariaPanelType === ARIA_PANEL_TYPE
   )
 
-  const role = behavior?.role || undefined
-  const orientation = behavior?.focusStrategy?.orientation
+  const role = pattern?.role || undefined
+  const orientation = pattern?.focusStrategy?.orientation
   return (
-    <AriaInternalContext.Provider value={{ ...aria, behavior, hasPanels }}>
+    <AriaInternalContext.Provider value={{ ...aria, pattern, hasPanels }}>
       <div
         role={role}
         aria-label={ariaLabel}
@@ -105,7 +105,7 @@ function AriaItemNode({ childId, render }: { childId: string; render: AriaItemPr
   const props = aria.getNodeProps(childId) as React.HTMLAttributes<HTMLElement>
 
   // ② 2026-03-28-aria-panel-trigger-prd.md — Panel cross-reference
-  if (aria.behavior?.panelRole && aria.hasPanels) {
+  if (aria.pattern?.panelRole && aria.hasPanels) {
     (props as Record<string, unknown>)['aria-controls'] = `panel-${childId}`
   }
 
@@ -332,6 +332,7 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
 }
 
 interface AriaPanelProps {
+  ids?: string[]
   render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
 }
 
@@ -366,15 +367,15 @@ function AriaPanelNode({ childId, render, panelRole, panelVisibility }: {
   )
 }
 
-function AriaPanel({ render }: AriaPanelProps) {
+function AriaPanel({ ids, render }: AriaPanelProps) {
   return (
     <AriaInternalContext.Consumer>
       {(aria) => {
         if (!aria) throw new Error('<Aria.Panel> must be inside <Aria>')
-        const behavior = aria.behavior
-        if (!behavior?.panelRole || !behavior?.panelVisibility) return null
+        const pattern = aria.pattern
+        if (!pattern?.panelRole || !pattern?.panelVisibility) return null
         const store = aria.getStore()
-        const children = getChildren(store, ROOT_ID)
+        const children = ids ?? getChildren(store, ROOT_ID)
         return (
           <>
             {children.map((childId) => (
@@ -382,8 +383,8 @@ function AriaPanel({ render }: AriaPanelProps) {
                 key={childId}
                 childId={childId}
                 render={render}
-                panelRole={behavior.panelRole!}
-                panelVisibility={behavior.panelVisibility!}
+                panelRole={pattern.panelRole!}
+                panelVisibility={pattern.panelVisibility!}
               />
             ))}
           </>
@@ -402,7 +403,7 @@ function AriaTrigger({ render }: AriaTriggerProps) {
   const aria = React.useContext(AriaInternalContext)
   if (!aria) throw new Error('<Aria.Trigger> must be inside <Aria>')
   const store = aria.getStore()
-  const behavior = aria.behavior
+  const pattern = aria.pattern
 
   // Trigger = first root child that has children (popup parent)
   const rootChildren = getChildren(store, ROOT_ID)
@@ -423,18 +424,18 @@ function AriaTrigger({ render }: AriaTriggerProps) {
   }
 
   const makeCtx = () => createPatternContext(engineLike, {
-    visibilityFilters: behavior?.visibilityFilters,
-    popupType: behavior?.popupType,
+    visibilityFilters: pattern?.visibilityFilters,
+    popupType: pattern?.popupType,
   })
 
   const props: React.HTMLAttributes<HTMLElement> & Record<string, unknown> = {
     'data-node-id': triggerId,
     tabIndex: 0,
-    ...(behavior?.popupType && { 'aria-haspopup': behavior.popupType }),
+    ...(pattern?.popupType && { 'aria-haspopup': pattern.popupType }),
     'aria-expanded': isOpen,
     onKeyDown: (event: React.KeyboardEvent) => {
       if (event.defaultPrevented) return
-      const triggerKeyMap = behavior?.triggerKeyMap
+      const triggerKeyMap = pattern?.triggerKeyMap
       if (!triggerKeyMap) return
 
       const nativeEvent = event.nativeEvent

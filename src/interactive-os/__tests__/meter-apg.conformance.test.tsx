@@ -23,7 +23,7 @@ function fixtureData(): NormalizedData {
 
 function renderMeter(data: NormalizedData) {
   return render(
-    <Aria behavior={meter} data={data} plugins={[]}>
+    <Aria pattern={meter} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`meter-${item.id}`}>
           {String((item.data as Record<string, unknown>)?.value)}%

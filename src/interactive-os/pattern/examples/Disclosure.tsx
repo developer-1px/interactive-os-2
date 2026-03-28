@@ -88,12 +88,12 @@ const renderItem = (
 
 export function Disclosure() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => disclosure, [])
+  const pattern = useMemo(() => disclosure, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

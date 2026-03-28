@@ -29,7 +29,7 @@ function fixtureData(): NormalizedData {
 
 function renderMenu(data: NormalizedData) {
   return render(
-    <Aria behavior={menu} data={data} plugins={[]}>
+    <Aria pattern={menu} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`link-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

@@ -34,7 +34,7 @@ const sliderBehavior = slider({ min: 0, max: 100, step: 1 })
 
 function renderSlider(data: NormalizedData, plugins = [history()]) {
   return render(
-    <Aria behavior={sliderBehavior} data={data} plugins={plugins}>
+    <Aria pattern={sliderBehavior} data={data} plugins={plugins}>
       <Aria.Item
         render={(props, item, _state) => (
           <span {...props} data-testid="slider-thumb">

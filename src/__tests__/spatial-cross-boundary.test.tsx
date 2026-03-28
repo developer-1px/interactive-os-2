@@ -149,7 +149,7 @@ function TestCanvas({ data, activeRectMap }: { data: NormalizedData; activeRectM
   const aria = useAriaZone({
     engine,
     store,
-    behavior: spatial,
+    pattern: spatial,
     scope: 'test',
     keyMap: testKeyMap,
     isReachable: spatialReachable,

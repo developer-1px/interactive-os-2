@@ -172,7 +172,7 @@ describe('Typeahead keyboard integration', () => {
 
     const { container } = render(
       <Aria
-        behavior={listbox()}
+        pattern={listbox()}
         data={data}
         plugins={[rename(), typeahead({ getLabel })]}
         keyMap={editKeyMap}

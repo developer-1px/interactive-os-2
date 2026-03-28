@@ -6,10 +6,10 @@
  * Feed uses Page Down/Page Up to move between articles.
  * Arrow keys are intentionally NOT captured — they scroll within an article.
  */
-import type { StructuredAxis } from '../../axis/types'
+import type { Axis } from '../../axis/types'
 import { composePattern } from '../composePattern'
 
-const feedAxis: StructuredAxis = {
+const feedAxis: Axis = {
   keyMap: {
     PageDown: (ctx) => ctx.focusNext(),
     PageUp: (ctx) => ctx.focusPrev(),

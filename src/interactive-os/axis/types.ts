@@ -96,32 +96,10 @@ export interface AxisConfig {
   popupModal: boolean
 }
 
-export interface StructuredAxis {
+/** Axis: plain inputMap (key/click bindings) or structured object with config/middleware. */
+export type Axis = KeyMap | {
   keyMap: KeyMap
   config?: Partial<AxisConfig>
   middleware?: Middleware
   visibilityFilter?: VisibilityFilter
-}
-
-// Axis can be either a plain KeyMap (v1 compat) or a structured object
-export type Axis = KeyMap | StructuredAxis
-
-export function isStructuredAxis(axis: Axis): axis is StructuredAxis {
-  return 'keyMap' in axis && typeof axis.keyMap === 'object' && !('execute' in axis.keyMap)
-}
-
-export function extractKeyMap(axis: Axis): KeyMap {
-  return isStructuredAxis(axis) ? axis.keyMap : axis
-}
-
-export function extractConfig(axis: Axis): Partial<AxisConfig> | undefined {
-  return isStructuredAxis(axis) ? axis.config : undefined
-}
-
-export function extractMiddleware(axis: Axis): Middleware | undefined {
-  return isStructuredAxis(axis) ? axis.middleware : undefined
-}
-
-export function extractVisibilityFilter(axis: Axis): VisibilityFilter | undefined {
-  return isStructuredAxis(axis) ? axis.visibilityFilter : undefined
 }

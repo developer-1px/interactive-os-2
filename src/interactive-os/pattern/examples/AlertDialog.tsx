@@ -61,12 +61,12 @@ const renderItem = (
 
 export function AlertDialog() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => alertdialog, [])
+  const pattern = useMemo(() => alertdialog, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

@@ -33,7 +33,7 @@ export function SwitchGroup({
   renderItem = defaultRenderItem,
 }: SwitchGroupProps) {
   return (
-    <Aria behavior={switchPattern} data={data} plugins={plugins} onChange={onChange}>
+    <Aria pattern={switchPattern} data={data} plugins={plugins} onChange={onChange}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

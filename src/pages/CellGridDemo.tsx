@@ -37,7 +37,7 @@ export default function CellGridDemo() {
           <span>Role</span>
           <span>Focusable</span>
         </div>
-        <Aria behavior={grid({ columns: 3 })} data={data} plugins={[]} onChange={setData} aria-label="ARIA elements">
+        <Aria pattern={grid({ columns: 3 })} data={data} plugins={[]} onChange={setData} aria-label="ARIA elements">
           <Aria.Item render={(props, node: Record<string, unknown>, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = [

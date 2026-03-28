@@ -40,7 +40,7 @@ const verticalToolbar: AriaPattern = {
 describe('Aria.Item ids prop', () => {
   it('renders only specified ids', () => {
     const { queryByTestId } = render(
-      <Aria behavior={toolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={toolbar} data={fixtureData()} plugins={[]}>
         <Aria.Item ids={['a', 'c']} render={renderItem} />
       </Aria>,
     )
@@ -52,7 +52,7 @@ describe('Aria.Item ids prop', () => {
 
   it('renders in ids array order', () => {
     const { container } = render(
-      <Aria behavior={toolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={toolbar} data={fixtureData()} plugins={[]}>
         <Aria.Item ids={['c', 'a']} render={renderItem} />
       </Aria>,
     )
@@ -63,7 +63,7 @@ describe('Aria.Item ids prop', () => {
 
   it('skips ids not in store', () => {
     const { queryByTestId } = render(
-      <Aria behavior={toolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={toolbar} data={fixtureData()} plugins={[]}>
         <Aria.Item ids={['a', 'nonexistent', 'b']} render={renderItem} />
       </Aria>,
     )
@@ -74,7 +74,7 @@ describe('Aria.Item ids prop', () => {
 
   it('renders empty when ids is empty array', () => {
     const { container } = render(
-      <Aria behavior={toolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={toolbar} data={fixtureData()} plugins={[]}>
         <Aria.Item ids={[]} render={renderItem} />
       </Aria>,
     )
@@ -83,7 +83,7 @@ describe('Aria.Item ids prop', () => {
 
   it('renders all from ROOT when ids is not specified (backward compat)', () => {
     const { queryByTestId } = render(
-      <Aria behavior={toolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={toolbar} data={fixtureData()} plugins={[]}>
         <Aria.Item render={renderItem} />
       </Aria>,
     )
@@ -98,7 +98,7 @@ describe('Aria.Item ids — keyboard navigation', () => {
   it('navigates across multiple Aria.Items with ids in flat order (horizontal)', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={toolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={toolbar} data={fixtureData()} plugins={[]}>
         <div role="group">
           <Aria.Item ids={['a', 'b']} render={renderItem} />
         </div>
@@ -126,7 +126,7 @@ describe('Aria.Item ids — keyboard navigation', () => {
   it('vertical toolbar: ArrowDown/Up navigates across groups', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={verticalToolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={verticalToolbar} data={fixtureData()} plugins={[]}>
         <div role="group">
           <Aria.Item ids={['a', 'b']} render={renderItem} />
         </div>
@@ -153,7 +153,7 @@ describe('Aria.Item ids — keyboard navigation', () => {
   it('Home/End works across groups', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={toolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={toolbar} data={fixtureData()} plugins={[]}>
         <div role="group">
           <Aria.Item ids={['a', 'b']} render={renderItem} />
         </div>
@@ -184,7 +184,7 @@ describe('Aria.Item ids — keyboard navigation', () => {
       relationships: { [ROOT_ID]: ['a', 'c', 'd'] },
     })
     const { container } = render(
-      <Aria behavior={toolbar} data={data} plugins={[]}>
+      <Aria pattern={toolbar} data={data} plugins={[]}>
         <Aria.Item ids={['a', 'b', 'c', 'd']} render={renderItem} />
       </Aria>,
     )
@@ -202,7 +202,7 @@ describe('Aria.Item ids — keyboard navigation', () => {
   it('separator click does not move focus (V7)', async () => {
     const user = userEvent.setup()
     const { container } = render(
-      <Aria behavior={toolbar} data={fixtureData()} plugins={[]}>
+      <Aria pattern={toolbar} data={fixtureData()} plugins={[]}>
         <div role="group">
           <Aria.Item ids={['a', 'b']} render={renderItem} />
         </div>

@@ -47,12 +47,12 @@ const renderRadio = (
 
 export function RadioGroupActivedescendant() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => radiogroupActivedescendant, [])
+  const pattern = useMemo(() => radiogroupActivedescendant, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

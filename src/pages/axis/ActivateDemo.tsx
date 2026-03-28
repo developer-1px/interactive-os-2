@@ -19,7 +19,7 @@ export default function ActivateDemo() {
   const [data, setData] = useState<NormalizedData>(axisListData)
   const [lastActivated, setLastActivated] = useState<string | null>(null)
 
-  const behavior = composePattern(
+  const pattern = composePattern(
     {
       role: 'listbox',
       childRole: 'option',
@@ -67,7 +67,7 @@ export default function ActivateDemo() {
         </div>
       )}
       <div className="card">
-        <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} onActivate={handleActivate} aria-label="activate demo">
+        <Aria pattern={pattern} data={data} plugins={plugins} onChange={setData} onActivate={handleActivate} aria-label="activate demo">
           <Aria.Item render={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')

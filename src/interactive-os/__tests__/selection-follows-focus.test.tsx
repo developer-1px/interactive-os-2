@@ -81,7 +81,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
     it('Arrow key changes aria-checked when selectionFollowsFocus is true', async () => {
       const user = userEvent.setup()
       const { container } = render(
-        <Aria behavior={selectionOnly} data={fixtureData()} plugins={[]}>
+        <Aria pattern={selectionOnly} data={fixtureData()} plugins={[]}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -99,7 +99,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
     it('Home/End changes selection when selectionFollowsFocus is true', async () => {
       const user = userEvent.setup()
       const { container } = render(
-        <Aria behavior={bothOptions} data={fixtureData()} plugins={[]}>
+        <Aria pattern={bothOptions} data={fixtureData()} plugins={[]}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -118,7 +118,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(
-        <Aria behavior={bothOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={bothOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -136,7 +136,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(
-        <Aria behavior={selectionOnly} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={selectionOnly} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -153,7 +153,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
     it('does NOT call onActivate on initial mount', () => {
       const onActivate = vi.fn()
       render(
-        <Aria behavior={bothOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={bothOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -163,12 +163,12 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
     })
   })
 
-  describe('both options OFF → existing behavior preserved', () => {
+  describe('both options OFF → existing pattern preserved', () => {
     it('Arrow key moves focus only, no selection change', async () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(
-        <Aria behavior={noOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={noOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -189,7 +189,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(
-        <Aria behavior={noOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={noOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -206,7 +206,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(
-        <Aria behavior={noOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={noOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -235,7 +235,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(
-        <Aria behavior={tabs} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={tabs} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -254,7 +254,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(
-        <Aria behavior={radiogroup} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={radiogroup} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />
@@ -275,7 +275,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(
-        <Aria behavior={bothOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
+        <Aria pattern={bothOptions} data={fixtureData()} plugins={[]} onActivate={onActivate}>
           <Aria.Item render={(props, node, _state: NodeState) => (
             <span {...props}>{(node.data as Record<string, unknown>)?.label as string}</span>
           )} />

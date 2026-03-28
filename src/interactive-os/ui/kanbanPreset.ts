@@ -41,7 +41,7 @@ function focusInColumn(ctx: PatternContext, columnId: string, targetIndex: numbe
   return focusCommands.setFocus(cards[clamped]!)
 }
 
-// ── Axis: inline selectToggle (no selectionMode on this behavior) ──
+// ── Axis: inline selectToggle (no selectionMode on this pattern) ──
 
 const selectToggle: Axis = {
   Space: (ctx: PatternContext) => ctx.toggleSelect(),
@@ -134,7 +134,7 @@ const kanbanEditing: Axis = {
 
 // ── Axis: plugin keybindings (CRUD, rename, clipboard, history, DnD) ──
 // NOTE: Ideally these belong at the component level (useAria keyMap override),
-// but existing tests validate at the behavior level. Kept here for backward compat.
+// but existing tests validate at the pattern level. Kept here for backward compat.
 
 const kanbanPlugins: Axis = {
   Delete: (ctx: PatternContext) => crudCommands.remove(ctx.focused),
@@ -161,7 +161,7 @@ const kanbanPlugins: Axis = {
   F2: (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
 
   // Mod+C/X/V → clipboard plugin keyMap
-  // Mod+Z/Shift+Z kept here because kanban's cross-column move needs undo at behavior level
+  // Mod+Z/Shift+Z kept here because kanban's cross-column move needs undo at pattern level
   'Mod+Z': () => historyCommands.undo(),
   'Mod+Shift+Z': () => historyCommands.redo(),
 
@@ -205,7 +205,7 @@ const kanbanPlugins: Axis = {
   'Alt+ArrowDown': (ctx: PatternContext) => dndCommands.moveDown(ctx.focused),
 }
 
-// ── Compose all axes into the behavior ──
+// ── Compose all axes into the pattern ──
 
 export const kanban = composePattern(
   {

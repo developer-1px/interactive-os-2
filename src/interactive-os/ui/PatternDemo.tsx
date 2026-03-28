@@ -140,12 +140,12 @@ export function PatternDemo({ example }: { example: string }) {
 function PatternDemoInner({ entry }: { entry: PatternEntry }) {
   const [data, setData] = useState(() => entry.data)
   const onChange = useCallback((next: NormalizedData) => setData(next), [])
-  const behavior = useMemo(() => entry.pattern, [entry.pattern])
+  const pattern = useMemo(() => entry.pattern, [entry.pattern])
 
   return (
     <div className={styles.container}>
       <Aria
-        behavior={behavior}
+        pattern={pattern}
         data={data}
         plugins={[]}
         onChange={onChange}

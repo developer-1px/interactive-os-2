@@ -62,12 +62,12 @@ const renderItem = (
 
 export function MenuActions() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => menuButton, [])
+  const pattern = useMemo(() => menuButton, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

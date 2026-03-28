@@ -49,12 +49,12 @@ const renderOption = (
 
 export function ComboboxSelectOnly() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => combobox(), [])
+  const pattern = useMemo(() => combobox(), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

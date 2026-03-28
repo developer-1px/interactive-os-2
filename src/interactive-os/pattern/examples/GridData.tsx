@@ -52,12 +52,12 @@ const renderCell = (
 
 export function GridData() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => grid({ columns }), [])
+  const pattern = useMemo(() => grid({ columns }), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

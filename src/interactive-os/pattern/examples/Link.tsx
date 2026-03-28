@@ -46,12 +46,12 @@ const renderLink = (
 
 export function Link() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const behavior = useMemo(() => link, [])
+  const pattern = useMemo(() => link, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
     <Aria
-      behavior={behavior}
+      pattern={pattern}
       data={store}
       plugins={[]}
       onChange={onChange}

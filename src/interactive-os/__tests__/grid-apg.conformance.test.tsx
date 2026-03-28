@@ -39,7 +39,7 @@ function fixtureData(): NormalizedData {
   })
 }
 
-const behavior = grid({ columns: 3 })
+const pattern = grid({ columns: 3 })
 const tabCycleBehavior = grid({ columns: 3, tabCycle: true })
 const plugins: Plugin[] = []
 
@@ -48,9 +48,9 @@ const plugins: Plugin[] = []
 // ---------------------------------------------------------------------------
 
 function renderGrid(data: NormalizedData, opts?: { tabCycle?: boolean }) {
-  const b = opts?.tabCycle ? tabCycleBehavior : behavior
+  const b = opts?.tabCycle ? tabCycleBehavior : pattern
   return render(
-    <Aria behavior={b} data={data} plugins={plugins} aria-label="Employees">
+    <Aria pattern={b} data={data} plugins={plugins} aria-label="Employees">
       <Aria.Item
         render={(props, node: Record<string, unknown>, state: NodeState) => {
           const cells = (node.data as Record<string, unknown>)?.cells as string[]

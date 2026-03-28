@@ -216,7 +216,7 @@ export const apgCombobox: ApgPatternData = {
   url: 'https://www.w3.org/WAI/ARIA/apg/patterns/combobox/',
   entries: [
     { key: 'Tab', description: 'The combobox is in the page Tab sequence.' },
-    { key: 'Down Arrow', description: 'If the popup is available, moves focus into the popup: If the autocomplete behavior automatically selected a suggestion before Down Arrow was pressed, focus is placed on the suggestion following the automatically selected suggestion. Otherwise, places focus on the first focusable element in the popup.' },
+    { key: 'Down Arrow', description: 'If the popup is available, moves focus into the popup: If the autocomplete pattern automatically selected a suggestion before Down Arrow was pressed, focus is placed on the suggestion following the automatically selected suggestion. Otherwise, places focus on the first focusable element in the popup.' },
     { key: 'Up Arrow (Optional)', description: 'If the popup is available, places focus on the last focusable element in the popup.' },
     { key: 'Escape', description: 'Dismisses the popup if it is visible. Optionally, if the popup is hidden before Escape is pressed, clears the combobox.' },
     { key: 'Enter', description: 'If the combobox is editable and an autocomplete suggestion is selected in the popup, accepts the suggestion either by placing the input cursor at the end of the accepted value in the combobox or by performing a default action on the value.' },

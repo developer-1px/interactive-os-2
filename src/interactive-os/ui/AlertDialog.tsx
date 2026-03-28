@@ -29,7 +29,7 @@ export function AlertDialog({
   renderItem = defaultRenderItem,
 }: AlertDialogProps) {
   return (
-    <Aria behavior={alertdialog} data={data} plugins={plugins} onChange={onChange}>
+    <Aria pattern={alertdialog} data={data} plugins={plugins} onChange={onChange}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

@@ -37,7 +37,7 @@ function fixtureData(): NormalizedData {
 
 function renderCheckbox(data: NormalizedData) {
   return render(
-    <Aria behavior={checkbox} data={data} plugins={[]}>
+    <Aria pattern={checkbox} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`cb-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

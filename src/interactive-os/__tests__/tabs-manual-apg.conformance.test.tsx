@@ -37,7 +37,7 @@ function fixtureData(): NormalizedData {
 
 function renderTabs(data: NormalizedData) {
   return render(
-    <Aria behavior={tabsManual} data={data} plugins={[]}>
+    <Aria pattern={tabsManual} data={data} plugins={[]}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`tab-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}

@@ -16,7 +16,7 @@ export default function TabDemo() {
   const [strategy, setStrategy] = useState<TabStrategy>('escape')
   const [data, setData] = useState<NormalizedData>(axisListData)
 
-  const behavior = composePattern(
+  const pattern = composePattern(
     { role: 'listbox', childRole: 'option', ariaAttributes: () => ({}) },
     tab(strategy),
     navigate({ orientation: 'vertical' }),
@@ -55,7 +55,7 @@ export default function TabDemo() {
         )}
       </div>
       <div className="card">
-        <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="tab demo">
+        <Aria pattern={pattern} data={data} plugins={plugins} onChange={setData} aria-label="tab demo">
           <Aria.Item render={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')

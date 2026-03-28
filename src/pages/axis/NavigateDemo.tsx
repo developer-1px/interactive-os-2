@@ -21,7 +21,7 @@ export default function NavigateDemo() {
   const [data, setData] = useState<NormalizedData>(axisListData)
   const [gridData, setGridData] = useState<NormalizedData>(axisGridData)
 
-  const behavior = mode === 'grid'
+  const pattern = mode === 'grid'
     ? composePattern(
         { role: 'grid', childRole: 'row', ariaAttributes: () => ({}) },
         navigate({ grid: { columns: 3, tabCycle } }),
@@ -110,7 +110,7 @@ export default function NavigateDemo() {
                 </tr>
               </thead>
             </table>
-            <Aria behavior={behavior} data={gridData} plugins={plugins} onChange={setGridData} aria-label="navigate grid demo">
+            <Aria pattern={pattern} data={gridData} plugins={plugins} onChange={setGridData} aria-label="navigate grid demo">
               <Aria.Item render={(props, node, state: NodeState) => {
                 const cells = (node.data as Record<string, unknown>)?.cells as string[]
                 const cls = ['grid-row', state.focused && 'grid-row--focused'].filter(Boolean).join(' ')
@@ -125,7 +125,7 @@ export default function NavigateDemo() {
             </Aria>
           </>
         ) : (
-          <Aria behavior={behavior} data={data} plugins={plugins} onChange={setData} aria-label="navigate demo">
+          <Aria pattern={pattern} data={data} plugins={plugins} onChange={setData} aria-label="navigate demo">
             <Aria.Item render={(props, node, state: NodeState) => {
               const d = node.data as Record<string, unknown>
               const cls = ['list-item', state.focused && 'list-item--focused'].filter(Boolean).join(' ')

@@ -20,7 +20,7 @@ export default function ExpandDemo() {
   const [mode, setMode] = useState<ExpandMode>('arrow')
   const [data, setData] = useState<NormalizedData>(axisTreeData)
 
-  const behavior = mode === 'arrow'
+  const pattern = mode === 'arrow'
     ? composePattern(
         {
           role: 'tree',
@@ -75,7 +75,7 @@ export default function ExpandDemo() {
       </div>
       <div className="card">
         <Aria
-          behavior={behavior}
+          pattern={pattern}
           data={data}
           plugins={mode === 'arrow' ? pluginsArrow : pluginsEnterEsc}
           onChange={setData}
