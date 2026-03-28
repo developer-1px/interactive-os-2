@@ -176,9 +176,17 @@ describe('APG Combobox — aria-activedescendant Focus Strategy', () => {
     expect(getInput(container).getAttribute('aria-activedescendant')).toBe('apple')
   })
 
-  // NOTE: APG spec expects aria-activedescendant absent when closed.
-  // Impl keeps focusedId in store even when dropdown closed, so attribute may persist.
-  // This is a minor gap; the listbox is not rendered so AT won't find the referenced element.
+  it('aria-activedescendant is absent when dropdown is closed (APG requirement)', async () => {
+    const user = userEvent.setup()
+    const { container } = renderCombobox(fixtureData())
+    const input = getInput(container)
+    input.focus()
+    await user.keyboard('{ArrowDown}') // open
+    expect(input.getAttribute('aria-activedescendant')).toBe('apple')
+
+    await user.keyboard('{Escape}') // close
+    expect(input.getAttribute('aria-activedescendant')).toBeNull()
+  })
 })
 
 // ---------------------------------------------------------------------------

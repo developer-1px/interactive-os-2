@@ -166,17 +166,14 @@ describe('APG Menu — Keyboard: Vertical Navigation', () => {
     expect(getFocusedNodeId(container)).toBe('edit')
   })
 
-  it('GAP: ArrowDown at last item does NOT wrap (APG requires circular navigation)', async () => {
-    // APG spec: Down Arrow at last item wraps to first item
-    // Our navigate() does not wrap — gap exists, needs navigate({ wrap: true })
+  it('ArrowDown wraps from last to first (APG circular)', async () => {
     const user = userEvent.setup()
     const { container } = renderMenu(fixtureData())
 
     getNode(container, 'help')!.focus()
     await user.keyboard('{ArrowDown}')
 
-    // Stays at last item instead of wrapping — documented gap
-    expect(getFocusedNodeId(container)).toBe('help')
+    expect(getFocusedNodeId(container)).toBe('file')
   })
 
   it('ArrowUp moves focus to previous item', async () => {
@@ -189,17 +186,14 @@ describe('APG Menu — Keyboard: Vertical Navigation', () => {
     expect(getFocusedNodeId(container)).toBe('file')
   })
 
-  it('GAP: ArrowUp at first item does NOT wrap (APG requires circular navigation)', async () => {
-    // APG spec: Up Arrow at first item wraps to last item
-    // Our navigate() does not wrap — gap exists, needs navigate({ wrap: true })
+  it('ArrowUp wraps from first to last (APG circular)', async () => {
     const user = userEvent.setup()
     const { container } = renderMenu(fixtureData())
 
     getNode(container, 'file')!.focus()
     await user.keyboard('{ArrowUp}')
 
-    // Stays at first item instead of wrapping — documented gap
-    expect(getFocusedNodeId(container)).toBe('file')
+    expect(getFocusedNodeId(container)).toBe('help')
   })
 
   it('Home moves focus to first item', async () => {

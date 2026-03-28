@@ -19,5 +19,5 @@ export const menu = composePattern(
   },
   activate({ onClick: true }),
   expand({ mode: 'arrow' }),
-  navigate({ orientation: 'vertical' }),
+  navigate({ orientation: 'vertical', wrap: true }),
 )

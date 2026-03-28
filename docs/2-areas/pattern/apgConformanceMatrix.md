@@ -65,7 +65,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 11 | Select-Only Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) | `pattern/examples/combobox.ts` | 🟡 | aria-activedescendant focus strategy correct; minor gap: `aria-activedescendant` persists on input when dropdown closed (APG expects absent). |
+| 11 | Select-Only Combobox | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) | `pattern/examples/combobox.ts` | 🟢 | — |
 | 12 | Editable Combobox without Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-none/) | — | ⬜ | — |
 | 13 | Editable Combobox With List Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/) | — | ⬜ | — |
 | 14 | Editable Combobox With Both List and Inline Autocomplete | [example](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-both/) | — | ⬜ | — |
@@ -140,7 +140,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 41 | Actions Menu Button Using element.focus() | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions/) | `pattern/examples/menu.ts` | 🟡 | APG requires circular wrap (ArrowDown/Up at boundary wraps); `navigate()` defaults to no-wrap. Documented as GAP in test. |
+| 41 | Actions Menu Button Using element.focus() | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions/) | `pattern/examples/menu.ts` | 🟢 | — |
 | 42 | Actions Menu Button Using aria-activedescendant | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions-active-descendant/) | — | ⬜ | — |
 | 43 | Navigation Menu Button | [example](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/) | — | ⬜ | — |
 
@@ -205,7 +205,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | APG Example | APG Link | 우리 파일 | 상태 | 갭 |
 |---|-------------|----------|-----------|------|----|
-| 61 | Toolbar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/) | `pattern/examples/toolbar.ts` | 🟡 | `navigate()` 기본값이 wrap 없음 — APG는 ArrowRight/Left 끝에서 wrap 요구. `navigate({ wrap: true })`로 수정 가능 |
+| 61 | Toolbar | [example](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/) | `pattern/examples/toolbar.ts` | 🟢 | — |
 
 ### Tooltip
 
@@ -265,7 +265,7 @@ CSS 제외, 콘텐츠 구조 + 키보드 인터랙션 + aria-* 속성 동일성 
 
 | # | 갭 | 관련 example | 영향 axis/plugin | 상태 |
 |---|-----|-------------|------------------|------|
-| 1 | `navigate()` 기본값 wrap=false — APG Toolbar는 끝에서 wrap 요구 | Toolbar (#61) | navigate axis `wrap` option | `navigate({ wrap: true })`로 해결 가능 |
-| 2 | `navigate()` 기본값 wrap=false — APG Menu는 끝에서 circular wrap 요구 | Menu Button (#41) | navigate axis `wrap` option | `navigate({ wrap: true })`로 해결 가능 |
+| 1 | ~~`navigate()` wrap=false~~ — **해소됨**: `navigate({ wrap: true })` 적용 | Toolbar (#61) | navigate axis | ✅ 해소 |
+| 2 | ~~`navigate()` wrap=false~~ — **해소됨**: `navigate({ wrap: true })` 적용 | Menu Button (#41) | navigate axis | ✅ 해소 |
 | 3 | ~~`followFocus`가 외부 콜백만 호출~~ — **해소됨**: `selectionFollowsFocus` middleware가 focus→selection 자동 동기화 | RadioGroup (#45), Tabs (#59) | `select({ selectionFollowsFocus: true })` | ✅ 해소 |
-| 4 | Combobox `aria-activedescendant`가 dropdown 닫힐 때 잔존 | Combobox (#11) | combobox plugin | 닫힐 때 activedescendant 제거 로직 추가 필요 |
+| 4 | ~~Combobox `aria-activedescendant` 잔존~~ — **해소됨**: close()가 focus 클리어 | Combobox (#11) | combobox plugin | ✅ 해소 |

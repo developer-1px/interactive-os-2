@@ -44,16 +44,20 @@ export const comboboxCommands = {
 
   close(): Command {
     let prevOpen: boolean
+    let prevFocusedId: string
     return {
       type: 'combobox:close',
       payload: null,
       execute(store) {
         prevOpen = getComboboxState(store).isOpen
+        prevFocusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
         return {
           ...store,
           entities: {
             ...store.entities,
             [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: false },
+            // Clear focus so aria-activedescendant is absent when closed (APG requirement)
+            __focus__: { id: '__focus__', focusedId: '' },
           },
         }
       },
@@ -63,6 +67,7 @@ export const comboboxCommands = {
           entities: {
             ...store.entities,
             [COMBOBOX_ID]: { ...store.entities[COMBOBOX_ID], id: COMBOBOX_ID, isOpen: prevOpen },
+            __focus__: { id: '__focus__', focusedId: prevFocusedId },
           },
         }
       },
