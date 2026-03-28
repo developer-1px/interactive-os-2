@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SplitPane } from '../../interactive-os/ui/SplitPane'
+import type { PaneSize } from '../../interactive-os/ui/SplitPane'
 import { NavList } from '../../interactive-os/ui/NavList'
 import { Kanban } from '../../interactive-os/ui/Kanban'
 import { CodeBlock } from '../../interactive-os/ui/CodeBlock'
@@ -53,7 +54,7 @@ export default function BirdseyeLayout() {
   const navigate = useNavigate()
   const [fsStore, setFsStore] = useState<NormalizedData | null>(null)
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
-  const [sizes, setSizes] = useState([0.15, 0.50, 0.35])
+  const [sizes, setSizes] = useState<PaneSize[]>([0.15, 'flex', 0.35])
 
   // Code viewer state
   const [focusedCardId, setFocusedCardId] = useState<string | null>(null)

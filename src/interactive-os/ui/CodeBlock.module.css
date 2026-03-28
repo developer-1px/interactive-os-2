@@ -1,6 +1,6 @@
 .codeBlock {
   overflow: auto;
-  font-size: var(--type-body-size);
+  font-size: var(--type-caption-size);
   line-height: var(--leading-code);
 }
 
@@ -9,7 +9,7 @@
   background: var(--surface-base);
   border-radius: var(--shape-xl-radius);
   font-family: var(--mono);
-  font-size: var(--type-body-size);
+  font-size: var(--type-caption-size);
 }
 
 .codeBlock :global(.shiki) {
@@ -44,7 +44,7 @@
   padding-right: 1em;
   text-align: right;
   color: var(--text-muted);
-  font-size: var(--type-body-size);
+  font-size: var(--type-caption-size);
   user-select: none;
   opacity: 0.5;
 }
