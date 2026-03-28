@@ -13,6 +13,7 @@ interface KanbanProps {
   data: NormalizedData
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
+  onActivate?: (nodeId: string) => void
   'aria-label'?: string
 }
 
@@ -30,9 +31,10 @@ export function Kanban({
   data,
   plugins = [],
   onChange,
+  onActivate,
   'aria-label': ariaLabel,
 }: KanbanProps) {
-  const aria = useAria({ behavior: kanbanBehavior, data, plugins, onChange })
+  const aria = useAria({ behavior: kanbanBehavior, data, plugins, onChange, onActivate })
   const store = aria.getStore()
   const columns = getChildren(store, ROOT_ID)
 
