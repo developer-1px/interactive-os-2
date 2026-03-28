@@ -123,17 +123,26 @@ triggerPopup(axis) ──opens──▶ useOverlay(hook)
 - [x] Cmd/Ctrl 조합: N/A
 - [x] 클릭: trigger click → 열기, click-outside → popup 닫기, backdrop click → modal 옵션
 - [x] 더블클릭: N/A
-- [x] 이벤트 버블링: 중첩 overlay 내부 클릭이 외부 overlay의 click-outside로 전파되면 안 됨 — layerStack이 자식 overlay 클릭을 필터링
+- [x] 이벤트 버블링: 중첩 overlay 내부 클릭이 외부 overlay의 click-outside로 전파되면 안 됨 — popover="auto" 네이티브 light dismiss가 처리, 추가 JS 불필요
 
-완성도: 🟡
+완성도: 🟢
 
 ## ④ 경계
 
-| 극단 조건 | 현재 상태 | 왜 이렇게 동작해야 하는가 | 예상 동작 | 결과 상태 | 역PRD |
-|----------|----------|------------------------|----------|----------|-------|
-| — | — | — | — | — | |
+| # | 극단 조건 | 현재 상태 | 왜 이렇게 동작해야 하는가 | 예상 동작 | 결과 상태 | 역PRD |
+|---|----------|----------|------------------------|----------|----------|-------|
+| E1 | 3중 중첩: Dialog → Menu → Tooltip | 3개 overlay 스택 | 각 overlay가 독립 top-layer 엔트리 — 브라우저가 순서 보장. Escape는 LIFO로 한 겹씩 | Escape 3번 → Tooltip → Menu → Dialog 순서로 닫힘 | 스택 비움, 최초 trigger 포커스 | |
+| E2 | trigger가 DOM에서 제거된 후 overlay 닫힘 | overlay 열림, trigger unmount | 포커스 유실 시 스크린리더 사용자가 현재 위치를 잃음 — body fallback으로 최소 안전망 | 포커스 → document.body 또는 가장 가까운 focusable 조상 | overlay 닫힘, fallback 포커스 | |
+| E3 | 같은 trigger로 overlay를 빠르게 열기/닫기 반복 | overlay 전환 중 | showModal/showPopover가 이미 열린 상태에서 재호출 시 예외 — isOpen 가드 필수 | 이미 열려있으면 open 무시, 이미 닫혀있으면 close 무시 | 상태 유지 (멱등) | |
+| E4 | popover="auto" 지원 안 하는 브라우저 | 구형 브라우저 | popover API 미지원 시 top-layer 불가 — graceful degradation으로 inline 렌더 + fixed position fallback | `@supports not (popover: auto)` → fixed position + z-index 토큰 fallback | 기능 저하 허용, 접근성 유지 | |
+| E5 | CSS Anchor Positioning 미지원 (Safari) | popup 열림, 앵커 필요 | 앵커 없으면 popup이 뷰포트 중앙이나 엉뚱한 곳에 표시 — 최소 JS fallback으로 trigger 아래 배치 | getBoundingClientRect 기반 top/left 계산, flip은 viewport 교차 감지 | 위치 정확도 약간 저하, 기본 동작 유지 | |
+| E6 | viewport가 매우 작아서 popup이 어디에도 안 들어감 | popup 열림, 뷰포트 < popup 크기 | popup이 잘려도 스크롤 가능해야 — overflow hidden이면 콘텐츠 접근 불가 | popup에 max-height: 뷰포트 기준 + overflow-y: auto | popup 스크롤 가능 | |
+| E7 | modal 열림 중 뒤 콘텐츠에서 포커스 시도 (스크립트) | modal 열림, inert 적용 | dialog.showModal()이 inert 자동 적용 — JS로 강제 focus해도 브라우저가 차단 | 포커스 modal 내부에 유지 | 변화 없음 | |
+| E8 | SSR/hydration 환경 | 서버 렌더링 | showModal/showPopover는 클라이언트 전용 API — 서버에서 호출 시 에러 | overlay 렌더를 useEffect 내에서만 실행, 서버에서는 닫힌 상태 렌더 | hydration 불일치 없음 | |
+| E9 | overlay 안에서 또 다른 modal 열기 (modal 중첩) | modal A 열림 | dialog.showModal() 중첩 호출 가능 — 각각 독립 top-layer 엔트리, 이전 modal은 새 modal의 뒤로 | 새 modal이 최상위, Escape → 새 modal 닫힘 → 이전 modal 복원 | 스택 LIFO 유지 | |
+| E10 | overlay 열림 중 window resize로 앵커 위치 변경 | popup 열림, 앵커 위치 이동 | CSS Anchor Positioning은 자동 추적 — JS fallback에서는 resize/scroll 이벤트로 재계산 필요 | popup 위치 자동 갱신 | popup이 앵커 따라감 | |
 
-완성도: 🔴  ← ③ 🟢 후 착수
+완성도: 🟡
 
 ## ⑤ 원칙 대조
 
@@ -169,4 +178,4 @@ triggerPopup(axis) ──opens──▶ useOverlay(hook)
 
 ---
 
-**전체 완성도:** 🟡 3/8 (①② 🟢, ③ 초안)
+**전체 완성도:** 🟡 4/8 (①②③ 🟢, ④ 초안)
