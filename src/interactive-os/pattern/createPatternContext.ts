@@ -14,6 +14,7 @@ import { expandCommands, EXPANDED_ID } from '../axis/expand'
 import { checkedCommands, CHECKED_ID } from '../axis/checked'
 import { valueCommands, VALUE_ID } from '../axis/value'
 import type { ValueRange } from '../axis/value'
+import { popupCommands, POPUP_ID } from '../axis/popup'
 
 function getFocusedId(engine: CommandEngine): string {
   return (engine.getStore().entities[FOCUS_ID]?.focusedId as string) ?? ''
@@ -33,6 +34,10 @@ function isChecked(engine: CommandEngine, nodeId: string): boolean {
   return checkedIds.includes(nodeId)
 }
 
+function isPopupOpen(engine: CommandEngine): boolean {
+  return (engine.getStore().entities[POPUP_ID]?.isOpen as boolean) ?? false
+}
+
 export interface PatternContextOptions {
   expandable?: boolean
   selectionMode?: SelectionMode
@@ -40,6 +45,7 @@ export interface PatternContextOptions {
   valueRange?: ValueRange
   checkedTracking?: boolean
   visibilityFilters?: VisibilityFilter[]
+  popupType?: string
 }
 
 export function createPatternContext(engine: CommandEngine, options?: PatternContextOptions): PatternContext {
@@ -87,6 +93,7 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
     selected: getSelectedIds(engine),
     isExpanded: isExpanded(engine, focusedId),
     isChecked: isChecked(engine, focusedId),
+    isOpen: isPopupOpen(engine),
 
     focusNext(options?: { wrap?: boolean }): Command {
       const visible = visibleNodes()
@@ -151,6 +158,22 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
 
     toggleCheck(): Command {
       return checkedCommands.toggleCheck(focusedId)
+    },
+
+    open(): Command {
+      const children = getChildren(store, focusedId)
+      const cmds: Command[] = [popupCommands.open(focusedId)]
+      if (children.length > 0) cmds.push(focusCommands.setFocus(children[0]!))
+      return createBatchCommand(cmds)
+    },
+
+    close(): Command {
+      const popupEntity = store.entities[POPUP_ID] as Record<string, unknown> | undefined
+      const triggerId = (popupEntity?.triggerId as string) ?? focusedId
+      return createBatchCommand([
+        popupCommands.close(),
+        focusCommands.setFocus(triggerId),
+      ])
     },
 
     toggleSelect(): Command {
