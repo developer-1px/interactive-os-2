@@ -24,25 +24,27 @@ function ExpandSection() {
   const [expanded, setExpanded] = useState(false)
   return (
     <Section title="Expand">
-      <Row label="expanded=false">
-        <ExpandIndicator expanded={false} />
-      </Row>
-      <Row label="expanded=true">
-        <ExpandIndicator expanded={true} />
-      </Row>
-      <Row label="hasChildren=false">
-        <ExpandIndicator hasChildren={false} />
-      </Row>
-      <Row label="variant=tree">
-        <ExpandIndicator expanded={false} variant="tree" />
-        <ExpandIndicator expanded={true} variant="tree" />
-      </Row>
-      <Row label="interactive">
-        <div className={styles.interactiveTarget} onClick={() => setExpanded(!expanded)}>
-          <ExpandIndicator expanded={expanded} />
-          <span className={styles.stateLabel}>{expanded ? 'expanded' : 'collapsed'}</span>
-        </div>
-      </Row>
+      <div data-aria-container="">
+        <Row label="expanded=false">
+          <ExpandIndicator expanded={false} />
+        </Row>
+        <Row label="expanded=true">
+          <ExpandIndicator expanded={true} />
+        </Row>
+        <Row label="hasChildren=false">
+          <ExpandIndicator hasChildren={false} />
+        </Row>
+        <Row label="variant=tree">
+          <ExpandIndicator expanded={false} variant="tree" />
+          <ExpandIndicator expanded={true} variant="tree" />
+        </Row>
+        <Row label="interactive">
+          <div className={styles.interactiveTarget} onClick={() => setExpanded(!expanded)}>
+            <ExpandIndicator expanded={expanded} />
+            <span className={styles.stateLabel}>{expanded ? 'expanded' : 'collapsed'}</span>
+          </div>
+        </Row>
+      </div>
     </Section>
   )
 }
@@ -110,7 +112,7 @@ function SwitchSection() {
           <SwitchIndicator />
         </Row>
         <Row label="on">
-          <div aria-checked="true" style={{ display: 'inline-flex' }}><SwitchIndicator /></div>
+          <div className={styles.ariaCheckedWrapper} aria-checked="true"><SwitchIndicator /></div>
         </Row>
         <Row label="interactive">
           <div
@@ -136,7 +138,7 @@ function SeparatorSection() {
         </div>
       </Row>
       <Row label="vertical">
-        <div className={styles.value} style={{ height: 'var(--space-3xl)' }}>
+        <div className={styles.verticalSeparatorDemo}>
           <span className={styles.stateLabel}>A</span>
           <SeparatorIndicator orientation="vertical" />
           <span className={styles.stateLabel}>B</span>

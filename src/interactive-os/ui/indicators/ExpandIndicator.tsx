@@ -20,7 +20,7 @@ export function ExpandIndicator({
   return (
     <span className={classes}>
       {hasChildren
-        ? (expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />)
+        ? (expanded ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />)
         : ''}
     </span>
   )

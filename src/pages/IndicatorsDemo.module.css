@@ -25,7 +25,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 16ch 1fr;
   align-items: center;
   min-height: var(--space-2xl);
   gap: var(--space-md);
@@ -76,4 +76,15 @@
 
 .separatorFill {
   flex: 1;
+}
+
+.ariaCheckedWrapper {
+  display: inline-flex;
+}
+
+.verticalSeparatorDemo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  height: var(--space-3xl);
 }
