@@ -8,7 +8,7 @@ export type { Axis, StructuredAxis, KeyMap, AxisConfig }
 
 export interface Identity {
   role: string
-  childRole?: string
+  childRole?: string | ((entity: Entity, state: NodeState) => string)
   ariaAttributes: (node: Entity, state: NodeState) => Record<string, string>
 }
 
