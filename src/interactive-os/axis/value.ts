@@ -26,13 +26,11 @@ function roundToStep(v: number, step: number): number {
 
 export const valueCommands = {
   setValue(v: number, range: ValueRange): Command {
-    let prev: number | undefined
     const clamped = clamp(roundToStep(v, range.step), range.min, range.max)
     return {
       type: 'core:set-value',
       payload: { value: clamped },
       execute(store) {
-        prev = (store.entities[VALUE_ID] as Record<string, unknown>)?.value as number | undefined
         return {
           ...store,
           entities: {
@@ -41,46 +39,21 @@ export const valueCommands = {
           },
         }
       },
-      undo(store) {
-        if (prev === undefined) {
-          const { [VALUE_ID]: _removed, ...rest } = store.entities
-          void _removed
-          return { ...store, entities: rest }
-        }
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [VALUE_ID]: { id: VALUE_ID, value: prev, min: range.min, max: range.max, step: range.step },
-          },
-        }
-      },
     }
   },
 
   increment(step: number, range: ValueRange): Command {
-    const store_ref = { prev: 0 }
     return {
       type: 'core:increment-value',
       payload: { step },
       execute(store) {
         const current = ((store.entities[VALUE_ID] as Record<string, unknown>)?.value as number) ?? range.min
-        store_ref.prev = current
         const next = clamp(roundToStep(current + step, range.step), range.min, range.max)
         return {
           ...store,
           entities: {
             ...store.entities,
             [VALUE_ID]: { id: VALUE_ID, value: next, min: range.min, max: range.max, step: range.step },
-          },
-        }
-      },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [VALUE_ID]: { id: VALUE_ID, value: store_ref.prev, min: range.min, max: range.max, step: range.step },
           },
         }
       },

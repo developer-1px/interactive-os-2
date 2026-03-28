@@ -9,31 +9,15 @@ export const GRID_COL_ID = '__grid_col__'
 
 export const focusCommands = {
   setFocus(nodeId: string): Command {
-    let previousFocusedId: string | undefined
     return {
       type: 'core:focus',
       payload: { nodeId },
       execute(store) {
-        previousFocusedId = store.entities[FOCUS_ID]?.focusedId as string | undefined
         return {
           ...store,
           entities: {
             ...store.entities,
             [FOCUS_ID]: { id: FOCUS_ID, focusedId: nodeId },
-          },
-        }
-      },
-      undo(store) {
-        if (previousFocusedId === undefined) {
-          const { [FOCUS_ID]: _removed, ...rest } = store.entities
-          void _removed
-          return { ...store, entities: rest }
-        }
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [FOCUS_ID]: { id: FOCUS_ID, focusedId: previousFocusedId },
           },
         }
       },
@@ -43,26 +27,15 @@ export const focusCommands = {
 
 export const gridColCommands = {
   setColIndex(colIndex: number): Command {
-    let prev: number | undefined
     return {
       type: 'core:set-col-index',
       payload: { colIndex },
       execute(store) {
-        prev = store.entities[GRID_COL_ID]?.colIndex as number ?? 0
         return {
           ...store,
           entities: {
             ...store.entities,
             [GRID_COL_ID]: { id: GRID_COL_ID, colIndex },
-          },
-        }
-      },
-      undo(store) {
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [GRID_COL_ID]: { id: GRID_COL_ID, colIndex: prev ?? 0 },
           },
         }
       },

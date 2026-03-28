@@ -25,16 +25,6 @@ export const expandCommands = {
           },
         }
       },
-      undo(store) {
-        const current = getExpandedIds(store)
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: current.filter((id) => id !== nodeId) },
-          },
-        }
-      },
     }
   },
 
@@ -52,17 +42,6 @@ export const expandCommands = {
           },
         }
       },
-      undo(store) {
-        const current = getExpandedIds(store)
-        if (current.includes(nodeId)) return store
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [...current, nodeId] },
-          },
-        }
-      },
     }
   },
 
@@ -71,19 +50,6 @@ export const expandCommands = {
       type: 'core:toggle-expand',
       payload: { nodeId },
       execute(store) {
-        const current = getExpandedIds(store)
-        const expandedIds = current.includes(nodeId)
-          ? current.filter((id) => id !== nodeId)
-          : [...current, nodeId]
-        return {
-          ...store,
-          entities: {
-            ...store.entities,
-            [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds },
-          },
-        }
-      },
-      undo(store) {
         const current = getExpandedIds(store)
         const expandedIds = current.includes(nodeId)
           ? current.filter((id) => id !== nodeId)

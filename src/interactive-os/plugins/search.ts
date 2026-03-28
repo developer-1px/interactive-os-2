@@ -38,7 +38,6 @@ export const searchCommands = {
           },
         }
       },
-      undo(store) { return store },
     }
   },
 
@@ -55,7 +54,6 @@ export const searchCommands = {
           },
         }
       },
-      undo(store) { return store },
     }
   },
 
@@ -72,7 +70,6 @@ export const searchCommands = {
           },
         }
       },
-      undo(store) { return store },
     }
   },
 }

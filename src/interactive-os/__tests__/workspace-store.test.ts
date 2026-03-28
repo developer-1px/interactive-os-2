@@ -42,16 +42,6 @@ describe('workspaceCommands.setActiveTab', () => {
     const data = getEntityData<TabGroupData>(after, tgId)
     expect(data?.activeTabId).toBe('tab-1')
   })
-
-  it('undo restores previous activeTabId', () => {
-    const store = createWorkspace()
-    const tgId = getChildren(store, ROOT_ID)[0]!
-    const cmd = workspaceCommands.setActiveTab(tgId, 'tab-1')
-    const after = cmd.execute(store)
-    const restored = cmd.undo(after)
-    const data = getEntityData<TabGroupData>(restored, tgId)
-    expect(data?.activeTabId).toBe('')
-  })
 })
 
 // V6: 2026-03-26-workspace-containers-prd.md
@@ -59,7 +49,6 @@ describe('workspaceCommands.resize', () => {
   it('updates sizes on a split entity', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
-    // First create a split
     const splitCmd = workspaceCommands.splitPane(tgId, 'horizontal')
     const withSplit = splitCmd.execute(store)
     const splitId = getChildren(withSplit, ROOT_ID)[0]!
@@ -69,18 +58,6 @@ describe('workspaceCommands.resize', () => {
     const resizeCmd = workspaceCommands.resize(splitId, [0.3, 'flex'])
     const resized = resizeCmd.execute(withSplit)
     expect(getEntityData<SplitData>(resized, splitId)?.sizes).toEqual([0.3, 'flex'])
-  })
-
-  it('undo restores previous sizes', () => {
-    const store = createWorkspace()
-    const tgId = getChildren(store, ROOT_ID)[0]!
-    const withSplit = workspaceCommands.splitPane(tgId, 'horizontal').execute(store)
-    const splitId = getChildren(withSplit, ROOT_ID)[0]!
-
-    const resizeCmd = workspaceCommands.resize(splitId, [0.3, 'flex'])
-    const resized = resizeCmd.execute(withSplit)
-    const restored = resizeCmd.undo(resized)
-    expect(getEntityData<SplitData>(restored, splitId)?.sizes).toEqual([0.5, 'flex'])
   })
 })
 
@@ -93,24 +70,9 @@ describe('workspaceCommands.addTab', () => {
     const cmd = workspaceCommands.addTab(tgId, tab)
     const after = cmd.execute(store)
 
-    // Tab exists as child of tabgroup
     expect(getChildren(after, tgId)).toContain('tab-1')
-    // Tab is active
     expect(getEntityData<TabGroupData>(after, tgId)?.activeTabId).toBe('tab-1')
-    // Tab data is correct
     expect(getEntityData<TabData>(after, 'tab-1')?.label).toBe('File.ts')
-  })
-
-  it('undo removes tab and restores previous activeTabId', () => {
-    const store = createWorkspace()
-    const tgId = getChildren(store, ROOT_ID)[0]!
-    const tab: Entity = { id: 'tab-1', data: { type: 'tab', label: 'File.ts', contentType: 'editor', contentRef: '/file.ts' } }
-    const cmd = workspaceCommands.addTab(tgId, tab)
-    const after = cmd.execute(store)
-    const restored = cmd.undo(after)
-
-    expect(getChildren(restored, tgId)).not.toContain('tab-1')
-    expect(getEntityData<TabGroupData>(restored, tgId)?.activeTabId).toBe('')
   })
 })
 
@@ -126,7 +88,6 @@ describe('workspaceCommands.removeTab', () => {
     s = workspaceCommands.addTab(tgId, tab2).execute(s)
     s = workspaceCommands.addTab(tgId, tab3).execute(s)
 
-    // Remove middle tab → next (tab-3) becomes active
     const cmd = workspaceCommands.removeTab('tab-2')
     const after = cmd.execute(s)
     expect(getChildren(after, tgId)).not.toContain('tab-2')
@@ -141,7 +102,6 @@ describe('workspaceCommands.removeTab', () => {
     let s = workspaceCommands.addTab(tgId, tab1).execute(store)
     s = workspaceCommands.addTab(tgId, tab2).execute(s)
 
-    // Remove last tab → prev (tab-1) becomes active
     const cmd = workspaceCommands.removeTab('tab-2')
     const after = cmd.execute(s)
     expect(getEntityData<TabGroupData>(after, tgId)?.activeTabId).toBe('tab-1')
@@ -155,23 +115,7 @@ describe('workspaceCommands.removeTab', () => {
 
     const cmd = workspaceCommands.removeTab('tab-1')
     const after = cmd.execute(s)
-    // Tabgroup should be removed
     expect(getChildren(after, ROOT_ID)).not.toContain(tgId)
-  })
-
-  it('undo restores the tab and state', () => {
-    const store = createWorkspace()
-    const tgId = getChildren(store, ROOT_ID)[0]!
-    const tab1: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
-    const tab2: Entity = { id: 'tab-2', data: { type: 'tab', label: 'B', contentType: 'editor', contentRef: '/b' } }
-    let s = workspaceCommands.addTab(tgId, tab1).execute(store)
-    s = workspaceCommands.addTab(tgId, tab2).execute(s)
-
-    const cmd = workspaceCommands.removeTab('tab-1')
-    const after = cmd.execute(s)
-    const restored = cmd.undo(after)
-    expect(getChildren(restored, tgId)).toContain('tab-1')
-    expect(getEntityData<TabGroupData>(restored, tgId)?.activeTabId).toBe('tab-2')
   })
 })
 
@@ -184,7 +128,6 @@ describe('workspaceCommands.splitPane', () => {
     const cmd = workspaceCommands.splitPane(tgId, 'horizontal')
     const after = cmd.execute(store)
 
-    // ROOT should now have a split, not the tabgroup directly
     const rootChildren = getChildren(after, ROOT_ID)
     expect(rootChildren).toHaveLength(1)
     const splitId = rootChildren[0]!
@@ -193,24 +136,11 @@ describe('workspaceCommands.splitPane', () => {
     expect(splitData?.direction).toBe('horizontal')
     expect(splitData?.sizes).toEqual([0.5, 'flex'])
 
-    // Split should have 2 children: original tabgroup + new tabgroup
     const splitChildren = getChildren(after, splitId)
     expect(splitChildren).toHaveLength(2)
     expect(splitChildren[0]).toBe(tgId)
     const newTgData = getEntityData<TabGroupData>(after, splitChildren[1]!)
     expect(newTgData?.type).toBe('tabgroup')
-  })
-
-  it('undo restores original structure', () => {
-    const store = createWorkspace()
-    const tgId = getChildren(store, ROOT_ID)[0]!
-
-    const cmd = workspaceCommands.splitPane(tgId, 'vertical')
-    const after = cmd.execute(store)
-    const restored = cmd.undo(after)
-
-    expect(getChildren(restored, ROOT_ID)).toEqual([tgId])
-    expect(getEntityData<TabGroupData>(restored, tgId)?.type).toBe('tabgroup')
   })
 })
 
@@ -220,7 +150,6 @@ describe('workspaceCommands.closePane', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
 
-    // Split first, then close the new tabgroup
     const splitCmd = workspaceCommands.splitPane(tgId, 'horizontal')
     const withSplit = splitCmd.execute(store)
     const splitId = getChildren(withSplit, ROOT_ID)[0]!
@@ -229,27 +158,8 @@ describe('workspaceCommands.closePane', () => {
     const closeCmd = workspaceCommands.closePane(newTgId)
     const after = closeCmd.execute(withSplit)
 
-    // Split should be collapsed — original tabgroup back under ROOT
     expect(getChildren(after, ROOT_ID)).toEqual([tgId])
     expect(after.entities[splitId]).toBeUndefined()
-  })
-
-  it('undo restores removed pane and split', () => {
-    const store = createWorkspace()
-    const tgId = getChildren(store, ROOT_ID)[0]!
-
-    const withSplit = workspaceCommands.splitPane(tgId, 'horizontal').execute(store)
-    const splitId = getChildren(withSplit, ROOT_ID)[0]!
-    const newTgId = getChildren(withSplit, splitId)[1]!
-
-    const closeCmd = workspaceCommands.closePane(newTgId)
-    const after = closeCmd.execute(withSplit)
-    const restored = closeCmd.undo(after)
-
-    // Split should be back
-    const restoredSplitId = getChildren(restored, ROOT_ID)[0]!
-    expect(getEntityData<SplitData>(restored, restoredSplitId)?.type).toBe('split')
-    expect(getChildren(restored, restoredSplitId)).toHaveLength(2)
   })
 })
 
