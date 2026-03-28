@@ -36,6 +36,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   selectOnClick?: boolean
   /** When true, clicking a node calls activate(). Used by most behaviors except treegrid/dialog. */
   activateOnClick?: boolean
+  /** When true, clicking a node calls toggleCheck(). Set by checked axis. */
+  checkOnClick?: boolean
   /** When true, clicking a parent node toggles expand even when onActivate is provided. Default: true (APG File Directory). */
   expandOnParentClick?: boolean
   /** When true, focus change auto-selects (select axis middleware). APG "selection follows focus". */
