@@ -65,7 +65,6 @@ export const renameCommands = {
   cancelRename(): Command {
     return {
       type: 'rename:cancel',
-      payload: null,
       execute(store) {
         return {
           ...store,

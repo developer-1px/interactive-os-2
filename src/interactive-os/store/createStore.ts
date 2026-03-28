@@ -98,12 +98,6 @@ export function moveNode(
   return { ...store, relationships }
 }
 
-export function insertNode(
-  store: NormalizedData, entity: Entity, parentId: string, index: number
-): NormalizedData {
-  return addEntity(store, entity, parentId, index)
-}
-
 export function getEntityData<T extends Record<string, unknown>>(
   store: NormalizedData, id: string
 ): T | undefined {

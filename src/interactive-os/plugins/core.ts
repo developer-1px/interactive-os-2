@@ -90,7 +90,6 @@ export const selectionCommands = {
   clearAnchor(): Command {
     return {
       type: 'core:clear-anchor',
-      payload: null,
       execute(store) {
         if (!store.entities[SELECTION_ANCHOR_ID]) return store
         const { [SELECTION_ANCHOR_ID]: _removed, ...rest } = store.entities
@@ -103,7 +102,6 @@ export const selectionCommands = {
   clearSelection(): Command {
     return {
       type: 'core:clear-selection',
-      payload: null,
       execute(store) {
         return {
           ...store,

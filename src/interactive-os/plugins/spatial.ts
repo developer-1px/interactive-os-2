@@ -30,7 +30,6 @@ export const spatialCommands = {
   exitToParent(): Command {
     return {
       type: 'spatial:exit-to-parent',
-      payload: null,
       execute(store) {
         const currentParentId = getSpatialParentId(store)
         if (currentParentId === ROOT_ID) return store
