@@ -201,7 +201,7 @@ export default function BirdseyeLayout() {
             <CodeBlock code={viewerCode} filename={viewerFilename} variant="flush" />
           ) : (
             <div className={styles.viewerEmpty}>
-              {focusedCardId ? '' : 'Select a file to preview'}
+              {focusedCardId ? '' : 'Navigate to a file to preview source'}
             </div>
           )}
         </div>

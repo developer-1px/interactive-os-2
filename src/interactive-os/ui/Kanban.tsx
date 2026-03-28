@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react'
+import React, { useRef, useEffect, useCallback, useMemo } from 'react'
 import styles from './Kanban.module.css'
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -39,7 +39,9 @@ export function Kanban({
   compact = false,
   'aria-label': ariaLabel,
 }: KanbanProps) {
-  const aria = useAria({ behavior: kanbanBehavior, data, plugins, onChange, onActivate })
+  // onActivate가 있으면 Enter를 activate로 override (기본은 rename)
+  const keyMap = useMemo(() => onActivate ? { Enter: (ctx: { activate: () => void }) => ctx.activate() } : undefined, [onActivate])
+  const aria = useAria({ behavior: kanbanBehavior, data, plugins, keyMap, onChange, onActivate })
   const store = aria.getStore()
   const columns = getChildren(store, ROOT_ID)
 
