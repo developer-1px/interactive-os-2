@@ -38,6 +38,7 @@ export interface PatternContext {
   selected: string[]
   isExpanded: boolean
   isChecked: boolean
+  isOpen: boolean
 
   focusNext(options?: { wrap?: boolean }): Command
   focusPrev(options?: { wrap?: boolean }): Command
@@ -50,6 +51,8 @@ export interface PatternContext {
   collapse(): Command
   activate(): Command
   toggleCheck(): Command
+  open(): Command
+  close(): Command
   toggleSelect(): Command
   extendSelection(direction: 'next' | 'prev' | 'first' | 'last'): Command
   extendSelectionTo(targetId: string, navigableIds?: string[]): Command
@@ -84,6 +87,10 @@ export interface AxisConfig {
   activationFollowsSelection: boolean
   colCount: number
   valueRange: ValueRange
+  /** Popup type — when set, trigger gets aria-haspopup and popup behavior. Set by popup axis. */
+  popupType: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
+  /** When true, popup is modal (focus trap, aria-modal). Set by popup axis. */
+  popupModal: boolean
 }
 
 export interface StructuredAxis {

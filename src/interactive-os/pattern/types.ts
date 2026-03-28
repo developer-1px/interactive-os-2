@@ -15,6 +15,7 @@ export interface NodeState {
   checked?: boolean | 'mixed'
   level?: number
   valueCurrent?: number
+  open?: boolean
   [key: string]: unknown
 }
 
@@ -48,6 +49,10 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   colCount?: number
   /** Value range for continuous-value widgets (slider, spinbutton). */
   valueRange?: ValueRange
+  /** Popup type — when set, trigger node gets aria-haspopup automatically. */
+  popupType?: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
+  /** When true, popup is modal (aria-modal="true", focus trap). */
+  popupModal?: boolean
   /** Middleware composed from axes (e.g. anchorResetMiddleware from select axis) */
   middleware?: Middleware
   /** Visibility filters from axes — getVisibleNodes applies these generically */
