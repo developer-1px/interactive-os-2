@@ -1,0 +1,57 @@
+/* ── base ── */
+
+.cell {
+  display: flex;
+  align-items: center;
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  cursor: default;
+  outline: none;
+  border-bottom: var(--border-width) solid var(--border-default);
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--shape-md-py) var(--shape-md-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  background: var(--surface-sunken);
+  border-radius: var(--shape-md-radius);
+  cursor: default;
+  outline: none;
+}
+
+/* ── variant: state ── */
+
+.cell[aria-selected='true'] {
+  background: var(--selection);
+}
+
+.cell:is([data-focused='true']) {
+  background: var(--bg-hover);
+}
+
+.cell:is([data-focused='true'][aria-selected='true']) {
+  background: var(--selection);
+  outline: var(--focus-ring) solid var(--focus);
+}
+
+.tile[aria-selected='true'] {
+  background: var(--selection);
+}
+
+.tile:is([data-focused='true']) {
+  background: var(--bg-hover);
+}
+
+.tile:is([data-focused='true'][aria-selected='true']) {
+  background: var(--selection);
+  outline: var(--focus-ring) solid var(--focus);
+}

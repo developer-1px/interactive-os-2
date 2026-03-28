@@ -2,10 +2,12 @@
 
 > 계층 구조 + 셀 탐색이 결합된 트리 그리드
 
-## Demo
+## APG Examples
+
+### #66 Treegrid Email Inbox
 
 ```tsx render
-<ShowcaseDemo slug="tree-grid" />
+<TreegridEmail />
 ```
 
 ## 스펙

@@ -2,10 +2,18 @@
 
 > 행과 열로 구성된 2D 그리드 탐색
 
-## Demo
+## APG Examples
+
+### #25 Data Grid
 
 ```tsx render
-<ShowcaseDemo slug="grid" />
+<GridData />
+```
+
+### #26 Layout Grid
+
+```tsx render
+<GridLayout />
 ```
 
 ## 스펙

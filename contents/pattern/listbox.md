@@ -2,16 +2,18 @@
 
 > 단일/다중 선택 가능한 수직 옵션 목록
 
-## Demo
+## APG Examples
+
+### #36 Scrollable Listbox
 
 ```tsx render
-<ShowcaseDemo slug="listbox" />
+<ListboxScrollable />
 ```
 
-### Listbox Grouped
+### #38 Listbox with Grouped Options
 
 ```tsx render
-<PatternDemo example="listboxGrouped" />
+<ListboxGrouped />
 ```
 
 ## 스펙

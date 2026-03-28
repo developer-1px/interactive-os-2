@@ -2,10 +2,12 @@
 
 > 텍스트 입력 + 팝업 옵션 목록 결합 콤보박스
 
-## Demo
+## APG Examples
+
+### #11 Select-Only Combobox
 
 ```tsx render
-<ShowcaseDemo slug="combobox" />
+<ComboboxSelectOnly />
 ```
 
 ## 스펙

@@ -2,10 +2,12 @@
 
 > Enter/Space로 aria-pressed 토글. 자연 탭 순서.
 
-## Demo
+## APG Examples
+
+### #5 Button (Toggle)
 
 ```tsx render
-<ShowcaseDemo slug="toggle" />
+<ButtonToggle />
 ```
 
 ## 스펙

@@ -1,0 +1,30 @@
+/* ── base ── */
+
+.article {
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-sm-radius);
+  margin-bottom: var(--space-sm);
+  outline: none;
+}
+
+.title {
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.body {
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── variant: state ── */
+
+.article:is([data-focused='true']) {
+  background: var(--bg-hover);
+}

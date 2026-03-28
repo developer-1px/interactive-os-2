@@ -1,0 +1,18 @@
+/* ── base ── */
+
+.menuitem {
+  display: flex;
+  align-items: center;
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  cursor: default;
+}
+
+/* ── variant: state ── */
+
+.menuitem:is([data-focused='true']) {
+  background: var(--bg-hover);
+}

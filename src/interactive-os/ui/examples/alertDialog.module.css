@@ -1,0 +1,30 @@
+/* ── base ── */
+
+.dialog {
+  padding: var(--shape-md-py) var(--shape-md-px);
+  background: var(--surface-raised);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-md-radius);
+  outline: none;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--type-heading-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-primary);
+}
+
+.message {
+  padding: var(--shape-sm-py) var(--shape-md-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-secondary);
+}
+
+/* ── variant: state ── */
+
+.dialog:is([data-focused='true']) {
+  outline: var(--focus-ring) solid var(--focus);
+}

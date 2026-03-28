@@ -2,16 +2,18 @@
 
 > 하나만 선택 가능한 라디오 버튼 그룹
 
-## Demo
+## APG Examples
+
+### #45 Radio Group (Roving tabindex)
 
 ```tsx render
-<ShowcaseDemo slug="radio-group" />
+<RadioGroup />
 ```
 
-### Radio Group (activedescendant)
+### #46 Radio Group (activedescendant)
 
 ```tsx render
-<PatternDemo example="radiogroupActivedescendant" />
+<RadioGroupActivedescendant />
 ```
 
 ## 스펙

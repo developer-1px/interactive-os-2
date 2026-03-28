@@ -2,16 +2,24 @@
 
 > 동작 목록을 제공하는 수직 메뉴
 
-## Demo
+## APG Examples
+
+### #41 Actions Menu Button
 
 ```tsx render
-<ShowcaseDemo slug="menu-list" />
+<MenuActions />
 ```
 
-### Menu (activedescendant)
+### #42 Actions Menu Button (activedescendant)
 
 ```tsx render
-<PatternDemo example="menuActivedescendant" />
+<MenuActivedescendant />
+```
+
+### #43 Navigation Menu Button
+
+```tsx render
+<MenuNavigation />
 ```
 
 ## 스펙

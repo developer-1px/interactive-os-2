@@ -1,0 +1,35 @@
+/* ── base ── */
+
+.treeitem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  cursor: default;
+  white-space: nowrap;
+  outline: none;
+}
+
+.indicator {
+  font-size: var(--type-caption-size);
+  color: var(--text-secondary);
+}
+
+/* ── variant: state ── */
+
+.treeitem[aria-selected='true'] {
+  background: var(--selection);
+}
+
+.treeitem:is([data-focused='true']) {
+  background: var(--bg-hover);
+}
+
+.treeitem:is([data-focused='true'][aria-selected='true']) {
+  background: var(--selection);
+  outline: var(--focus-ring) solid var(--focus);
+}

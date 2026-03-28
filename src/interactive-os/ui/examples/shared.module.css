@@ -1,0 +1,118 @@
+/* ── APG Example 공통 베이스 ── */
+
+/* 인터랙티브 아이템 베이스 */
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  cursor: default;
+}
+
+/* 큰 패딩 아이템 (accordion header, disclosure button, feed article 등) */
+.itemLg {
+  composes: item;
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+}
+
+/* ── 상태: focus ── */
+
+.focusBg:is([data-focused='true']) {
+  background: var(--bg-hover);
+}
+
+.focusRing:is([data-focused='true']) {
+  outline: var(--focus-ring) solid var(--focus);
+}
+
+/* ── 상태: selection ── */
+
+.selected[aria-selected='true'] {
+  background: var(--selection);
+}
+
+.selectedFocused:is([data-focused='true'][aria-selected='true']) {
+  background: var(--selection);
+  outline: var(--focus-ring) solid var(--focus);
+}
+
+/* ── 상태: checked indicator (checkbox, radio) ── */
+
+.indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-md);
+  height: var(--space-md);
+  border: var(--border-width) solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.indicatorRound {
+  composes: indicator;
+  border-radius: 50%;
+}
+
+.indicatorSquare {
+  composes: indicator;
+  border-radius: var(--shape-xs-radius);
+  font-size: var(--type-caption-size);
+}
+
+.indicator[data-checked='true'],
+.indicator[data-mixed='true'] {
+  border-color: var(--focus);
+  background: var(--focus);
+  color: var(--text-on-fill);
+}
+
+/* ── 컨테이너 ── */
+
+.container {
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-md-radius);
+  background: var(--surface-sunken);
+  padding: var(--space-xs) 0;
+  outline: none;
+}
+
+.container:focus-within {
+  outline: var(--focus-ring) solid var(--focus);
+}
+
+/* ── 라벨/캡션 ── */
+
+.label {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.valueLabel {
+  min-width: var(--space-xl);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+/* ── 트랙 (slider, meter) ── */
+
+.track {
+  flex: 1;
+  height: var(--space-xs);
+  background: var(--surface-sunken);
+  border-radius: var(--shape-xs-radius);
+  position: relative;
+}
+
+.trackFill {
+  height: 100%;
+  background: var(--focus);
+  border-radius: var(--shape-xs-radius);
+}

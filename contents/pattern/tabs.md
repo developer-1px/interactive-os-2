@@ -2,16 +2,18 @@
 
 > 수평 탭으로 패널을 전환하는 탭 리스트
 
-## Demo
+## APG Examples
+
+### #59 Tabs with Automatic Activation
 
 ```tsx render
-<ShowcaseDemo slug="tab-list" />
+<TabsAutomatic />
 ```
 
-### Tabs Manual
+### #60 Tabs with Manual Activation
 
 ```tsx render
-<PatternDemo example="tabsManual" />
+<TabsManual />
 ```
 
 ## 스펙

@@ -2,10 +2,12 @@
 
 > 숫자 값 입력. `spinbutton({ min, max, step })` → vertical value 축 + 직접 입력 + ▲▼ 버튼.
 
-## Demo
+## APG Examples
+
+### #53 Spinbutton
 
 ```tsx render
-<ShowcaseDemo slug="spinbutton" />
+<Spinbutton />
 ```
 
 ## 스펙

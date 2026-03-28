@@ -1,0 +1,23 @@
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  color: var(--text-primary);
+  background: var(--bg-muted);
+  border-radius: var(--shape-sm-radius);
+  border: var(--border-width) solid var(--border-default);
+  cursor: default;
+}
+
+.toggleButton:is([data-focused='true']) {
+  outline: var(--focus-ring-width) solid var(--focus);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.toggleButton[data-pressed='true'] {
+  background: var(--focus);
+  color: var(--text-on-fill);
+  border-color: var(--focus);
+}

@@ -2,10 +2,12 @@
 
 > Enter로 활성화. 자연 탭 순서.
 
-## Demo
+## APG Examples
+
+### #35 Link
 
 ```tsx render
-<PatternDemo example="link" />
+<Link />
 ```
 
 ## 스펙

@@ -2,10 +2,12 @@
 
 > Page Down/Page Up으로 아티클 간 이동. 화살표 키는 스크롤용.
 
-## Demo
+## APG Examples
+
+### #24 Infinite Scrolling Feed
 
 ```tsx render
-<PatternDemo example="feed" />
+<Feed />
 ```
 
 ## 스펙

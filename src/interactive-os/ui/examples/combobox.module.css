@@ -1,0 +1,21 @@
+/* ── base ── */
+
+.option {
+  display: flex;
+  align-items: center;
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  color: var(--text-primary);
+  cursor: default;
+}
+
+/* ── variant: state ── */
+
+.option:is([data-focused='true']) {
+  background: var(--bg-hover);
+}
+
+.option:is([data-selected='true']) {
+  font-weight: var(--weight-semi);
+  color: var(--focus);
+}
