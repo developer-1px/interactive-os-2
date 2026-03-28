@@ -12,7 +12,6 @@ function makeCmd(type: string): Command {
     type,
     payload: null,
     execute: (s) => s,
-    undo: (s) => s,
   }
 }
 

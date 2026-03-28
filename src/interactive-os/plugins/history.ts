@@ -24,11 +24,11 @@ function isContentDiff(d: StoreDiff): boolean {
 }
 
 export function undoCommand(): Command {
-  return { type: 'history:undo', payload: null, execute: (s) => s, undo: (s) => s }
+  return { type: 'history:undo', payload: null, execute: (s) => s }
 }
 
 export function redoCommand(): Command {
-  return { type: 'history:redo', payload: null, execute: (s) => s, undo: (s) => s }
+  return { type: 'history:redo', payload: null, execute: (s) => s }
 }
 
 export const historyCommands = { undo: undoCommand, redo: redoCommand }
@@ -44,12 +44,12 @@ export function history() {
         const diffs = past.pop()
         if (!diffs) return
         future.push(diffs)
-        next({ type: 'history:__restore', payload: null, execute: (store: NormalizedData) => applyDelta(store, diffs, 'reverse'), undo: (s: NormalizedData) => s })
+        next({ type: 'history:__restore', payload: null, execute: (store: NormalizedData) => applyDelta(store, diffs, 'reverse') })
       } else if (command.type === 'history:redo') {
         const diffs = future.pop()
         if (!diffs) return
         past.push(diffs)
-        next({ type: 'history:__restore', payload: null, execute: (store: NormalizedData) => applyDelta(store, diffs, 'forward'), undo: (s: NormalizedData) => s })
+        next({ type: 'history:__restore', payload: null, execute: (store: NormalizedData) => applyDelta(store, diffs, 'forward') })
       } else if (command.type === 'history:__restore') {
         next(command)
       } else {
