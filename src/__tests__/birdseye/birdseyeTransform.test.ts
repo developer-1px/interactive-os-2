@@ -171,11 +171,6 @@ describe('buildKanbanStore', () => {
       sourceType: 'file',
     })
 
-    const pagesCard = getEntityData<{ title: string; sourceId: string; sourceType: string }>(
-      kanbanStore, 'card:src/pages'
-    )
-    // src/pages is a directory inside pages column — check utils column instead
-    // Actually, cards are direct children of the selected folder's subdirs
     // utils column has math.ts
     const mathCard = getEntityData<{ title: string; sourceId: string; sourceType: string }>(
       kanbanStore, 'card:src/utils/math.ts'
