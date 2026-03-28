@@ -14,7 +14,7 @@ export const accordion: AriaPattern = composePattern(
   {
     role: 'region',
     childRole: 'heading',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
+    focusStrategy: { type: 'natural-tab-order', orientation: 'vertical' },
     expandTracking: true,
     panelRole: 'region',
     panelVisibility: 'expanded',
