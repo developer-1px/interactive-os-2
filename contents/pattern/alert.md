@@ -2,10 +2,12 @@
 
 > role="alert" 라이브 리전. 키보드 인터랙션 없음.
 
-## Demo
+## APG Examples
+
+### #2 Alert
 
 ```tsx render
-<PatternDemo example="alert" />
+<Alert />
 ```
 
 ## 스펙

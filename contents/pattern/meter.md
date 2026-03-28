@@ -2,10 +2,12 @@
 
 > 표시 전용 값 인디케이터. 키보드 인터랙션 없음.
 
-## Demo
+## APG Examples
+
+### #44 Meter
 
 ```tsx render
-<PatternDemo example="meter" />
+<Meter />
 ```
 
 ## 스펙

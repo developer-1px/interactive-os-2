@@ -1,0 +1,28 @@
+/* ── base ── */
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  color: var(--focus);
+  cursor: pointer;
+  outline: none;
+}
+
+.label {
+  text-decoration: underline;
+}
+
+.url {
+  font-size: var(--type-caption-size);
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+/* ── variant: state ── */
+
+.link:is([data-focused='true']) {
+  background: var(--bg-hover);
+}

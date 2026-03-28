@@ -2,10 +2,12 @@
 
 > 섹션을 접고 펼 수 있는 아코디언
 
-## Demo
+## APG Examples
+
+### #1 Accordion
 
 ```tsx render
-<ShowcaseDemo slug="accordion" />
+<Accordion />
 ```
 
 ## 스펙

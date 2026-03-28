@@ -1,0 +1,27 @@
+/* ── base ── */
+
+.rowgroup {
+  display: contents;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.headerCell {
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-primary);
+  background: var(--surface-sunken);
+  border-bottom: var(--border-width) solid var(--border-default);
+}
+
+.cell {
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  color: var(--text-primary);
+  border-bottom: var(--border-width) solid var(--border-default);
+}

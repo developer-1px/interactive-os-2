@@ -1,0 +1,21 @@
+/* ── base ── */
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  background: var(--surface-sunken);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-sm-radius);
+}
+
+.icon {
+  font-size: var(--type-heading-size);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}

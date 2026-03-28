@@ -2,10 +2,12 @@
 
 > 두 패널 사이의 이동 가능한 구분선. value 축 사용.
 
-## Demo
+## APG Examples
+
+### #67 Window Splitter
 
 ```tsx render
-<PatternDemo example="windowSplitter" />
+<WindowSplitter />
 ```
 
 ## 스펙

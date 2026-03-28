@@ -2,10 +2,12 @@
 
 > 켜기/끄기 토글 스위치 그룹
 
-## Demo
+## APG Examples
+
+### #54 Switch
 
 ```tsx render
-<ShowcaseDemo slug="switch-group" />
+<SwitchGroup />
 ```
 
 ## 스펙

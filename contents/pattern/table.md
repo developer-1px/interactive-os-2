@@ -2,10 +2,12 @@
 
 > 정적 테이블. rowgroup > row > cell 3단 계층. 비인터랙티브.
 
-## Demo
+## APG Examples
+
+### #57 Table
 
 ```tsx render
-<PatternDemo example="table" />
+<Table />
 ```
 
 ## 스펙

@@ -2,18 +2,20 @@
 
 > Space/Enter로 체크 토글. 자연 탭 순서.
 
-## Demo
+## APG Examples
+
+### #9 Checkbox (Two State)
 
 ```tsx render
-<ShowcaseDemo slug="checkbox" />
+<CheckboxGroup />
 ```
 
-### Checkbox Mixed-State
+### #10 Checkbox (Mixed-State)
 
 부모가 자식의 집계 상태 반영 (true/false/mixed).
 
 ```tsx render
-<PatternDemo example="checkboxMixed" />
+<CheckboxMixed />
 ```
 
 ## 스펙

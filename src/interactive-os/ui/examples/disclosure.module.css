@@ -1,0 +1,40 @@
+/* ── base ── */
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-primary);
+  background: var(--surface-sunken);
+  border: var(--border-width) solid var(--border-default);
+  cursor: default;
+  outline: none;
+}
+
+.indicator {
+  font-size: var(--type-caption-size);
+  color: var(--text-secondary);
+}
+
+.panel {
+  padding: var(--shape-sm-py) var(--shape-sm-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-secondary);
+  border: var(--border-width) solid var(--border-default);
+  border-top: none;
+}
+
+/* ── variant: state ── */
+
+.button[aria-expanded='true'] {
+  border-bottom-color: transparent;
+}
+
+.button:is([data-focused='true']) {
+  background: var(--bg-hover);
+}

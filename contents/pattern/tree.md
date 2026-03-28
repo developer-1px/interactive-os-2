@@ -2,10 +2,12 @@
 
 > 계층 구조를 탐색하는 트리 뷰
 
-## Demo
+## APG Examples
+
+### #63 File Directory Treeview
 
 ```tsx render
-<ShowcaseDemo slug="tree-view" />
+<TreeFile />
 ```
 
 ## 스펙

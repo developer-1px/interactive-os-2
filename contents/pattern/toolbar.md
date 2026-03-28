@@ -2,10 +2,12 @@
 
 > 수평 배치된 도구 버튼 모음
 
-## Demo
+## APG Examples
+
+### #61 Toolbar
 
 ```tsx render
-<ShowcaseDemo slug="toolbar" />
+<Toolbar />
 ```
 
 ## 스펙

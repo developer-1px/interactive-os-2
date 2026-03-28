@@ -2,10 +2,12 @@
 
 > 콘텐츠를 보이거나 숨기는 디스클로저 그룹
 
-## Demo
+## APG Examples
+
+### #19 Disclosure (Show/Hide)
 
 ```tsx render
-<ShowcaseDemo slug="disclosure-group" />
+<Disclosure />
 ```
 
 ## 스펙

@@ -1,0 +1,55 @@
+/* ── base ── */
+
+.listbox {
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-md-radius);
+  background: var(--surface-sunken);
+  padding: var(--space-xs) 0;
+  max-height: 240px;
+  overflow-y: auto;
+  outline: none;
+}
+
+.listbox:focus-within {
+  outline: var(--focus-ring) solid var(--focus);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  color: var(--text-primary);
+  cursor: default;
+}
+
+.groupLabel {
+  padding: var(--space-sm) var(--shape-xs-px) var(--space-xs);
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.groupOptions {
+  padding: 0;
+}
+
+/* ── variant: state ── */
+
+.option[aria-selected='true'] {
+  background: var(--selection);
+}
+
+.option:is([data-focused='true']) {
+  background: var(--bg-hover);
+}
+
+.option:is([data-focused='true'][aria-selected='true']) {
+  background: var(--selection);
+  outline: var(--focus-ring) solid var(--focus);
+}

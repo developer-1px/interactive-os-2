@@ -1,0 +1,34 @@
+/* ── base ── */
+
+.container {
+  display: flex;
+  height: var(--space-5xl);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-sm-radius);
+}
+
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.panelLabel {
+  font-size: var(--type-body-size);
+  color: var(--text-secondary);
+}
+
+.splitter {
+  width: var(--space-xs);
+  background: var(--border-default);
+  cursor: col-resize;
+  flex-shrink: 0;
+  outline: none;
+}
+
+/* ── variant: state ── */
+
+.splitter:is([data-focused='true']) {
+  background: var(--focus);
+}

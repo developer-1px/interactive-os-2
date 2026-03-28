@@ -2,10 +2,12 @@
 
 > 확인이 필요한 긴급 모달 대화 상자
 
-## Demo
+## APG Examples
+
+### #3 Alert Dialog
 
 ```tsx render
-<ShowcaseDemo slug="alert-dialog" />
+<AlertDialog />
 ```
 
 ## 스펙

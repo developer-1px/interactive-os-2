@@ -2,10 +2,18 @@
 
 > 연속 값 조작. `slider({ min, max, step })` → horizontal value 축.
 
-## Demo
+## APG Examples
+
+### #48 Color Viewer Slider
 
 ```tsx render
-<ShowcaseDemo slug="slider" />
+<SliderColorViewer />
+```
+
+### #49 Rating Slider
+
+```tsx render
+<SliderRating />
 ```
 
 ## 스펙
