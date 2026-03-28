@@ -2,6 +2,12 @@
 
 > Non-interactive visual elements that visualize state inside UI finished products. Always consumed by a parent component — never used standalone.
 
+## Demo
+
+```tsx render
+<IndicatorsDemo />
+```
+
 ## Location
 
 `interactive-os/ui/indicators/`
