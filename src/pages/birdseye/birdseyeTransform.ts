@@ -117,32 +117,36 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
     const dirData = getEntityData<FsEntityData>(fsStore, dirId)
     if (!dirData) return
 
-    const colId = `col:${dirId}`
     const path = pathPrefix ? `${pathPrefix}/${dirData.name}` : dirData.name
-    const title = `${prefix}. /${path}`
-    entities[colId] = { id: colId, data: { title, sourceId: dirId } }
-    relationships[ROOT_ID].push(colId)
-    relationships[colId] = []
-
-    // 파일만 카드로 추가 (폴더는 별도 컬럼으로 전개)
     const children = getChildren(fsStore, dirId)
+
+    // 파일만 추출
     const files = sortCards(fsStore, children.filter((id) => {
       const d = getEntityData<FsEntityData>(fsStore, id)
       return d?.type === 'file'
     }))
 
-    for (const fileId of files) {
-      const fileData = getEntityData<FsEntityData>(fsStore, fileId)
-      if (!fileData) continue
-      const cardId = `card:${fileId}`
-      entities[cardId] = {
-        id: cardId,
-        data: { title: fileData.name, sourceId: fileId, sourceType: 'file' },
+    // 파일이 있을 때만 컬럼 생성
+    if (files.length > 0) {
+      const colId = `col:${dirId}`
+      const title = `${prefix}. /${path}`
+      entities[colId] = { id: colId, data: { title, sourceId: dirId } }
+      relationships[ROOT_ID].push(colId)
+      relationships[colId] = []
+
+      for (const fileId of files) {
+        const fileData = getEntityData<FsEntityData>(fsStore, fileId)
+        if (!fileData) continue
+        const cardId = `card:${fileId}`
+        entities[cardId] = {
+          id: cardId,
+          data: { title: fileData.name, sourceId: fileId, sourceType: 'file' },
+        }
+        relationships[colId].push(cardId)
       }
-      relationships[colId].push(cardId)
     }
 
-    // 하위 폴더 → 재귀적으로 컬럼 추가 (부모 바로 뒤)
+    // 하위 폴더 → 재귀적으로 컬럼 추가 (파일 유무와 무관하게 항상 재귀)
     const subDirs = children.filter((id) => {
       const d = getEntityData<FsEntityData>(fsStore, id)
       return d?.type === 'directory'
@@ -172,7 +176,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
   }
 
   // 루트 파일 → (files) 컬럼
-  if (topFiles.length > 0 || sortedTopDirs.length === 0) {
+  if (topFiles.length > 0) {
     const filesColId = 'col:__files__'
     entities[filesColId] = { id: filesColId, data: { title: '(files)', sourceId: folderId } }
     relationships[ROOT_ID].push(filesColId)
