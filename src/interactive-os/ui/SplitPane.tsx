@@ -51,6 +51,31 @@ function applyDelta(
   return newSizes
 }
 
+/** Pointer drag lifecycle: capture → move(delta) → cleanup */
+function startDrag(
+  target: HTMLElement,
+  pointerId: number,
+  onMove: (delta: { x: number; y: number }) => void,
+) {
+  target.setPointerCapture(pointerId)
+  const startX = target.getBoundingClientRect().left + target.getBoundingClientRect().width / 2
+  const startY = target.getBoundingClientRect().top + target.getBoundingClientRect().height / 2
+
+  // Use the actual pointer position from the first move as baseline
+  let baseX: number | null = null
+  let baseY: number | null = null
+
+  const handleMove = (e: PointerEvent) => {
+    if (baseX === null) { baseX = e.clientX; baseY = e.clientY }
+    onMove({ x: e.clientX - baseX, y: e.clientY - baseY! })
+  }
+
+  document.addEventListener('pointermove', handleMove)
+  target.addEventListener('lostpointercapture', () => {
+    document.removeEventListener('pointermove', handleMove)
+  }, { once: true })
+}
+
 export function SplitPane({
   direction,
   sizes,
@@ -86,26 +111,13 @@ export function SplitPane({
       const container = containerRef.current
       if (!container) return
 
-      const target = e.currentTarget as HTMLElement
-      target.setPointerCapture(e.pointerId)
-
-      const rect = container.getBoundingClientRect()
       const isHorizontal = direction === 'horizontal'
-      const dimension = isHorizontal ? rect.width : rect.height
-      const startPos = isHorizontal ? e.clientX : e.clientY
+      const dimension = isHorizontal ? container.getBoundingClientRect().width : container.getBoundingClientRect().height
 
-      const onPointerMove = (moveEvent: PointerEvent) => {
-        const currentPos = isHorizontal ? moveEvent.clientX : moveEvent.clientY
-        const deltaRatio = (currentPos - startPos) / dimension
+      startDrag(e.currentTarget as HTMLElement, e.pointerId, (delta) => {
+        const deltaRatio = (isHorizontal ? delta.x : delta.y) / dimension
         onResize(applyDelta(sizes, index, index + 1, deltaRatio, minRatio))
-      }
-
-      const cleanup = () => {
-        document.removeEventListener('pointermove', onPointerMove)
-      }
-
-      document.addEventListener('pointermove', onPointerMove)
-      target.addEventListener('lostpointercapture', cleanup, { once: true })
+      })
     },
     [direction, sizes, onResize, minRatio],
   )
