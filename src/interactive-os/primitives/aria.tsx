@@ -143,10 +143,10 @@ function AriaItem({ ids, render }: AriaItemProps) {
 
             // Container node with 4-arg render: wrap children inside container node
             // render.length >= 4: opt-in — only when render callback declares children param
-            // expandedIds === null → always-open groups (listbox-grouped)
-            // expandedIds !== null → expandable containers: children only when expanded (menubar, tree)
+            // Children always rendered in DOM (APG pattern: display:none/block toggle)
+            // so focus targets exist before expand animation completes
             if (hasChildren && render.length >= 4) {
-              const childNodes = isExpanded ? renderNodes(childId) : undefined
+              const childNodes = renderNodes(childId)
               nodes.push(
                 <AriaItemNode key={childId} childId={childId} render={render}>
                   {childNodes}

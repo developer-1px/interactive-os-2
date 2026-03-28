@@ -87,11 +87,11 @@ describe('APG Menubar — ARIA Structure', () => {
     expect(container.querySelector('[role="menubar"]')).not.toBeNull()
   })
 
-  it('all items have role="menuitem"', () => {
+  it('all items have role="menuitem" (APG: all in DOM, submenus hidden via display:none)', () => {
     const { container } = renderMenubar(fixtureData())
-    // Only root items visible initially (submenus collapsed)
+    // APG pattern: all menuitems always in DOM, submenus toggled via display
     const items = container.querySelectorAll('[role="menuitem"]')
-    expect(items.length).toBe(3) // about, admissions, academics
+    expect(items.length).toBe(11) // all items including submenu items
   })
 
   it('items with children get aria-expanded="false"', () => {
