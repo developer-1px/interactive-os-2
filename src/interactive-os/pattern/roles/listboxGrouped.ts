@@ -5,10 +5,11 @@ import { composePattern } from '../composePattern'
 import { navigate } from '../../axis/navigate'
 import { select } from '../../axis/select'
 import { activate } from '../../axis/activate'
-import { expand } from '../../axis/expand'
 
 // APG Listbox with Grouped Options
 // Groups at level 1 (role="group"), options at level 2+ (role="option")
+// Groups are structural containers (not expandable parents) — no expand axis.
+// getVisibleNodes automatically skips containers without descend filters.
 export const listboxGrouped = composePattern(
   {
     role: 'listbox',
@@ -21,5 +22,4 @@ export const listboxGrouped = composePattern(
   navigate({ wrap: true }),
   select({ mode: 'single' }),
   activate({ onClick: true }),
-  expand(),
 )

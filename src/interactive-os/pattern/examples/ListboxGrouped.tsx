@@ -5,7 +5,6 @@ import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { listboxGrouped } from '../../pattern/roles/listboxGrouped'
-import { EXPANDED_ID } from '../../axis/expand'
 import styles from './listbox.module.css'
 
 // APG #38: Listbox with Grouped Options — "Choose your animal sidekick"
@@ -30,7 +29,6 @@ const data: NormalizedData = createStore({
         }),
       ),
     ),
-    [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: groups.map(g => g.id) },
   },
   relationships: {
     [ROOT_ID]: groups.map(g => g.id),
