@@ -1,8 +1,10 @@
+import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getVisibleNodes } from '../engine/getVisibleNodes'
 import type { VisibilityFilter } from '../engine/types'
 import type { PatternContext, CtxFactory } from './types'
+import { getEntity, getChildren, getParent } from '../store/createStore'
 import { FOCUS_ID } from '../axis/navigate'
 import { defineCommands } from '../engine/defineCommand'
 
@@ -27,24 +29,30 @@ export interface PatternContextOptions {
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 export function createPatternContext(engine: CommandEngine, options?: PatternContextOptions): PatternContext {
+  const store = engine.getStore()
   const focusedId = options?.overrideFocused ?? getFocusedId(engine)
 
   let _visibleNodes: string[] | null = null
   const visibleNodes = (): string[] => {
-    if (!_visibleNodes) _visibleNodes = getVisibleNodes(engine.getStore(), options?.visibilityFilters)
+    if (!_visibleNodes) _visibleNodes = getVisibleNodes(store, options?.visibilityFilters)
     return _visibleNodes
   }
 
-  // Pure merge — all capabilities come from ctxFactories (navigate, selected, expanded, etc.)
-  const merged = (options?.ctxFactories ?? []).reduce<Record<string, unknown>>((acc, factory) => {
+  // Axis capabilities from ctxFactories (navigate, selected, expanded, etc.)
+  const axisNamespaces = (options?.ctxFactories ?? []).reduce<Record<string, unknown>>((acc, factory) => {
     return { ...acc, ...factory(engine, focusedId, visibleNodes) }
   }, {})
 
   return {
-    // activate — always present (pure event, not an axis)
-    activate(): Command {
-      return activateCommands.activate(focusedId)
-    },
-    ...merged,
+    // ── Infrastructure (always present) ──
+    focused: focusedId,
+    activate: () => activateCommands.activate(focusedId),
+    dispatch: (command: Command) => engine.dispatch(command),
+    getEntity: (id: string): Entity | undefined => getEntity(store, id),
+    getChildren: (id: string): string[] => getChildren(store, id),
+    getParent: (id: string): string | undefined => getParent(store, id),
+
+    // ── Axis capabilities (from ctxFactories) ──
+    ...axisNamespaces,
   } as PatternContext
 }

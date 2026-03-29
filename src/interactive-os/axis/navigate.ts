@@ -3,7 +3,7 @@ import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import { defineCommands } from '../engine/defineCommand'
 import { ROOT_ID } from '../store/types'
-import { getEntity, getChildren, getParent } from '../store/createStore'
+import { getChildren, getParent } from '../store/createStore'
 
 // ② 2026-03-29-define-command-prd.md
 export const FOCUS_ID = '__focus__'
@@ -62,11 +62,11 @@ export function gridCtx(
 export type NavigateType = 'vertical' | 'horizontal' | 'both' | 'activedescendant' | 'natural'
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
+// Navigate ctxFactory — focus movement methods only (store infra is in createPatternContext)
 function navigateCtxFactory(): CtxFactory {
   return (engine, focusedId, visibleNodes) => {
     const store = engine.getStore()
     return {
-      focused: focusedId,
       focusNext(opts?: { wrap?: boolean }): Command {
         const visible = visibleNodes()
         const idx = visible.indexOf(focusedId)
@@ -106,18 +106,6 @@ function navigateCtxFactory(): CtxFactory {
         const children = getChildren(store, focusedId)
         if (children.length === 0) return focusCommands.setFocus(focusedId)
         return focusCommands.setFocus(children[0]!)
-      },
-      dispatch(command: Command): void {
-        engine.dispatch(command)
-      },
-      getEntity(id: string) {
-        return getEntity(store, id)
-      },
-      getChildren(id: string) {
-        return getChildren(store, id)
-      },
-      getParent(id: string) {
-        return getParent(store, id)
       },
     }
   }
