@@ -188,80 +188,121 @@ interface Identity3 {
 
 type Handler = (ctx: PatternContext) => Command | void
 
+// Extract AriaPattern metadata from __axisType brands (transitional — auto-ARIA will replace)
+function extractAxisMetadata(axes: (Axis | InputMap)[]): Record<string, unknown> {
+  const meta: Record<string, unknown> = {}
+  for (const axis of axes) {
+    const a = axis as Record<string, unknown>
+    switch (a.__axisType) {
+      case 'navigate': {
+        const navType = a.__navType as string
+        if (navType === 'activedescendant') {
+          meta['focusStrategy'] = { type: 'aria-activedescendant', orientation: 'vertical' }
+        } else if (navType === 'natural') {
+          meta['focusStrategy'] = { type: 'natural-tab-order', orientation: 'vertical' }
+        } else {
+          meta['focusStrategy'] = { type: 'roving-tabindex', orientation: navType }
+        }
+        break
+      }
+      case 'selected':
+        meta['selectionMode'] = a.__mode
+        if (a.__followFocus) meta['selectionFollowsFocus'] = true
+        break
+      case 'expanded':
+        meta['expandable'] = true
+        break
+      case 'popup':
+        meta['popupType'] = a.__popupType
+        if (a.__popupModal) meta['popupModal'] = true
+        break
+      case 'value':
+        meta['valueRange'] = a.range
+        break
+      case 'grid':
+        meta['colCount'] = a.columns
+        break
+    }
+  }
+  return meta
+}
+
 // ── Main ──
 
-export function composePattern(identity: Identity3, required: (Axis | InputMap)[], keyMap: Record<string, Handler>): AriaPattern
-export function composePattern(base: AriaPattern, required: (Axis | InputMap)[], keyMap: Record<string, Handler>): AriaPattern
-export function composePattern(config: Identity | AriaPattern, ...rawAxes: (Axis | InputMap)[]): AriaPattern
 export function composePattern(config: Identity | AriaPattern | Identity3, ...rest: unknown[]): AriaPattern {
-  // 3-arg form: (identity/base, required[], keyMap)
+  // ── 3-arg form: composePattern(identity|base, required[], keyMap) ──
   if (rest.length === 2 && Array.isArray(rest[0])) {
     const required = rest[0] as (Axis | InputMap)[]
     const keyMap = rest[1] as Record<string, Handler>
+    const axes = required.map(normalizeAxis)
 
-    // Extract AriaPattern metadata from axis __axisType brands (transitional — auto-ARIA will replace)
-    const axisMetadata: Record<string, unknown> = {}
-    for (const axis of required) {
-      const a = axis as Record<string, unknown>
-      switch (a.__axisType) {
-        case 'navigate': {
-          const navType = a.__navType as string
-          if (navType === 'activedescendant') {
-            axisMetadata['focusStrategy'] = { type: 'aria-activedescendant', orientation: 'vertical' }
-          } else if (navType === 'natural') {
-            axisMetadata['focusStrategy'] = { type: 'natural-tab-order', orientation: 'vertical' }
-          } else {
-            axisMetadata['focusStrategy'] = { type: 'roving-tabindex', orientation: navType }
-          }
-          break
-        }
-        case 'selected':
-          axisMetadata['selectionMode'] = a.__mode
-          if (a.__followFocus) axisMetadata['selectionFollowsFocus'] = true
-          break
-        case 'expanded':
-          axisMetadata['expandable'] = true
-          break
-        case 'checked':
-          // checkedTracking is derived from entity presence in useAriaView
-          break
-        case 'popup':
-          axisMetadata['popupType'] = a.__popupType
-          if (a.__popupModal) axisMetadata['popupModal'] = true
-          break
-        case 'value':
-          axisMetadata['valueRange'] = a.range
-          break
-        case 'grid':
-          axisMetadata['colCount'] = a.columns
-          break
+    // AriaPattern base → decorator path
+    if ('keyMap' in config) {
+      const base = config as AriaPattern
+      const { keyMap: baseKM, clickMap: baseCM, middleware: baseMW, visibilityFilters: baseVF, requiredEntities: baseEntities, ...baseProps } = base
+      const entities = collectEntities(axes)
+      const mergedEntities = baseEntities ? [...baseEntities] : []
+      const seen = new Set(mergedEntities.map(e => e.id))
+      for (const e of entities) { if (!seen.has(e.id)) { seen.add(e.id); mergedEntities.push(e) } }
+      const baseFactories = base.ctxFactories ?? []
+      const mergedFactories = [...baseFactories, ...collectCtxFactories(axes)]
+      const axisMeta = extractAxisMetadata(required)
+
+      return {
+        ...baseProps,
+        ...axisMeta,
+        ...(mergedEntities.length > 0 && { requiredEntities: mergedEntities }),
+        ...(mergedFactories.length > 0 && { ctxFactories: mergedFactories }),
+        ...assembleResult(
+          mergeKeyMaps([{ keyMap } as unknown as KeyMap, ...axes.map(getKeyMap)].slice(0, 1).concat(axes.map(getKeyMap)), baseKM),
+          collectMiddlewares(axes, baseMW),
+          collectVisibilityFilters(axes, baseVF),
+          baseCM,
+        ),
       }
     }
 
-    // Panel metadata from Identity3
+    // Identity3 → direct AriaPattern construction
     const id3 = config as Identity3
+    const axisMeta = extractAxisMetadata(required)
+    const entities = collectEntities(axes)
+    const ctxFactories = collectCtxFactories(axes)
+    const middleware = collectMiddlewares(axes)
+    const visibilityFilters = collectVisibilityFilters(axes)
+    const focusStrategy = (axisMeta['focusStrategy'] as FocusStrategy) ?? DEFAULT_FOCUS_STRATEGY
+
+    // Panel
     if (id3.panel) {
       const hasExpanded = required.some(a => (a as Record<string, unknown>).__axisType === 'expanded')
-      axisMetadata['panelRole'] = id3.panel
-      axisMetadata['panelVisibility'] = hasExpanded ? 'expanded' : 'selected'
+      axisMeta['panelRole'] = id3.panel
+      axisMeta['panelVisibility'] = hasExpanded ? 'expanded' : 'selected'
     }
 
-    // Delegate to variadic form: axes from required + keyMap as InputMap
-    if (isAriaPattern(config as Identity | AriaPattern)) {
-      return composePattern(config as AriaPattern, ...required, keyMap as InputMap)
-    }
+    const { keyMap: splitKey, clickMap } = splitInputMap(keyMap)
 
-    // Build Identity from Identity3 + axis metadata
-    const fullIdentity: Identity = {
-      role: (config as Identity3).role,
-      childRole: (config as Identity3).childRole,
-      ...axisMetadata,
-    }
-
-    return composePattern(fullIdentity, ...required, keyMap as InputMap)
+    return {
+      role: id3.role,
+      childRole: id3.childRole,
+      focusStrategy,
+      ...(axisMeta['selectionMode'] !== undefined && { selectionMode: axisMeta['selectionMode'] }),
+      ...(axisMeta['expandable'] !== undefined && { expandable: axisMeta['expandable'] }),
+      ...(axisMeta['popupType'] !== undefined && { popupType: axisMeta['popupType'] }),
+      ...(axisMeta['popupModal'] !== undefined && { popupModal: axisMeta['popupModal'] }),
+      ...(axisMeta['valueRange'] !== undefined && { valueRange: axisMeta['valueRange'] }),
+      ...(axisMeta['colCount'] !== undefined && { colCount: axisMeta['colCount'] }),
+      ...(axisMeta['panelRole'] !== undefined && { panelRole: axisMeta['panelRole'] }),
+      ...(axisMeta['panelVisibility'] !== undefined && { panelVisibility: axisMeta['panelVisibility'] }),
+      ...(axisMeta['selectionFollowsFocus'] !== undefined && { selectionFollowsFocus: axisMeta['selectionFollowsFocus'] }),
+      keyMap: mergeKeyMaps(axes.map(getKeyMap).concat([splitKey])),
+      ...(Object.keys(clickMap).length > 0 && { clickMap }),
+      ...(middleware && { middleware }),
+      ...(visibilityFilters.length > 0 && { visibilityFilters }),
+      ...(entities.length > 0 && { requiredEntities: entities }),
+      ...(ctxFactories.length > 0 && { ctxFactories }),
+    } as AriaPattern
   }
 
-  // Variadic form (legacy): composePattern(config, ...axes)
+  // ── Variadic form (legacy + decorator): composePattern(config, ...axes) ──
   const rawAxes = rest as (Axis | InputMap)[]
   const config_ = config as Identity | AriaPattern
   const axes = rawAxes.map(normalizeAxis)
