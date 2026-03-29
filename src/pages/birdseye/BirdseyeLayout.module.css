@@ -59,6 +59,20 @@
   gap: var(--space-xs);
 }
 
+.legend > span {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.legend > span:hover {
+  opacity: 1;
+}
+
+.legend > span[data-active] {
+  opacity: 1;
+  color: var(--text-bright);
+}
+
 .legend > span::before {
   content: '';
   width: 3px;
@@ -71,6 +85,15 @@
 .legend > span[data-ext="css"]::before { background: var(--tone-destructive-base); }
 .legend > span[data-ext="md"]::before { background: var(--tone-positive-base); }
 .legend > span[data-ext="yaml"]::before { background: var(--tone-warning-base); }
+
+.legendHint {
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  opacity: 0.5;
+  border-left: 1px solid var(--border-subtle);
+  padding-left: var(--space-sm);
+  cursor: default;
+}
 
 .boardBody {
   flex: 1;

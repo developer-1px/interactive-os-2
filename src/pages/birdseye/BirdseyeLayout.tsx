@@ -52,6 +52,9 @@ export default function BirdseyeLayout() {
   // Dependency counts (import/importedBy per file)
   const [depCounts, setDepCounts] = useState<DepCounts | null>(null)
 
+  // Extension filter (null = show all)
+  const [extFilter, setExtFilter] = useState<string | null>(null)
+
   // QuickOpen (Cmd+P)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
   useEffect(() => {
@@ -105,8 +108,8 @@ export default function BirdseyeLayout() {
 
   // 3. Kanban store
   const kanbanStore = useMemo(
-    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId, { ...kanbanOptions, depCounts: depCounts ?? undefined }) : null),
-    [fsStore, selectedFolderId, kanbanOptions, depCounts],
+    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId, { ...kanbanOptions, depCounts: depCounts ?? undefined, extFilter: extFilter ?? undefined }) : null),
+    [fsStore, selectedFolderId, kanbanOptions, depCounts, extFilter],
   )
 
   // 4. Debounced focus → fetch file content
@@ -220,11 +223,15 @@ export default function BirdseyeLayout() {
         <div className={styles.boardHeader}>
           <span>{selectedName}</span>
           <span className={styles.legend}>
-            <span data-ext="ts">.ts</span>
-            <span data-ext="tsx">.tsx</span>
-            <span data-ext="css">.css</span>
-            <span data-ext="md">.md</span>
-            <span data-ext="yaml">.yaml</span>
+            {['ts', 'tsx', 'css', 'md', 'yaml'].map((ext) => (
+              <span
+                key={ext}
+                data-ext={ext}
+                data-active={extFilter === ext || undefined}
+                onClick={() => setExtFilter(extFilter === ext ? null : ext)}
+              >.{ext}</span>
+            ))}
+            <span className={styles.legendHint} title="↑ = imported by N files, ↓ = imports N files">↑imported ↓imports</span>
           </span>
         </div>
         {kanbanStore && Object.keys(kanbanStore.relationships).length > 1 ? (

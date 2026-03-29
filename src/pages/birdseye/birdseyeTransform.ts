@@ -85,6 +85,8 @@ export interface KanbanBuildOptions {
   columnOrder?: string[]
   /** 파일별 import/importedBy 카운트 */
   depCounts?: Record<string, { imports: number; importedBy: number }>
+  /** 확장자 필터. 설정 시 해당 확장자 파일만 표시 */
+  extFilter?: string
 }
 
 /** 디렉토리를 정렬하는 공통 로직 */
@@ -152,10 +154,14 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
     const path = pathPrefix ? `${pathPrefix}/${dirData.name}` : dirData.name
     const children = getChildren(fsStore, dirId)
 
-    // 파일만 추출
+    // 파일만 추출 (extFilter 적용)
     const files = sortCards(fsStore, children.filter((id) => {
       const d = getEntityData<FsEntityData>(fsStore, id)
-      return d?.type === 'file'
+      if (d?.type !== 'file') return false
+      if (options?.extFilter && d.name.includes('.')) {
+        return d.name.split('.').pop() === options.extFilter
+      }
+      return true
     }))
 
     // 파일이 있을 때만 컬럼 생성
@@ -204,7 +210,11 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
   })
   const topFiles = topChildren.filter((id) => {
     const d = getEntityData<FsEntityData>(fsStore, id)
-    return d?.type === 'file'
+    if (d?.type !== 'file') return false
+    if (options?.extFilter && d.name.includes('.')) {
+      return d.name.split('.').pop() === options.extFilter
+    }
+    return true
   })
 
   const sortedTopDirs = sortDirs(fsStore, topDirs, options?.columnOrder)
