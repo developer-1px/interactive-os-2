@@ -1,4 +1,4 @@
-import type { Entity } from '../store/types'
+import type { Entity, NormalizedData } from '../store/types'
 import type { Command, Middleware, VisibilityFilter } from '../engine/types'
 import type { AriaPattern, NodeState } from './types'
 import type { PatternContext, FocusStrategy, KeyMap, Axis, AxisConfig } from '../axis/types'
@@ -98,8 +98,8 @@ function mergeAxisConfigs(axes: Axis[]): Partial<AxisConfig> {
 function composeMiddlewares(middlewares: Middleware[]): Middleware | undefined {
   if (middlewares.length === 0) return undefined
   if (middlewares.length === 1) return middlewares[0]
-  return (next: (command: Command) => void) => middlewares.reduceRight(
-    (acc, mw) => mw(acc),
+  return (next: (command: Command) => void, getStore: () => NormalizedData) => middlewares.reduceRight(
+    (acc, mw) => mw(acc, getStore),
     next,
   )
 }

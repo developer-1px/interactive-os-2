@@ -10,7 +10,7 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | NormalizedData | Integrated | 직렬화 미구현 |
-| storeToTree | Integrated | — |
+| storeToInspectorTree | Integrated | — |
 | computeStoreDiff | Integrated | — |
 
 ## Engine (L2)

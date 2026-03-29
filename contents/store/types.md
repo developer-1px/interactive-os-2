@@ -1,18 +1,15 @@
 # types
 
-> 핵심 타입 정의. Entity, NormalizedData, Command, Plugin.
+> Store 레이어 핵심 타입. 데이터 모델과 변환 인터페이스.
 
 ## 주요 타입
 
 | 타입 | 설명 |
 |------|------|
-| `Entity<T>` | `{ id, data }` — 모든 데이터의 단위 |
+| `Entity<T>` | `{ id, data?, [key]: unknown }` — 모든 데이터의 단위. 제네릭 T로 data 타입 지정 |
 | `NormalizedData` | `{ entities, relationships }` — 트리 구조의 정규화 저장 |
-| `Command` | `{ name, execute(store), undo() }` — 순수 함수로 상태 변환 |
-| `BatchCommand` | 여러 Command를 원자적으로 실행 |
-| `Plugin` | `{ name, middlewares?, commands?, keyMap? }` — 미들웨어 + 커맨드 확장 |
-| `Middleware` | `(next) => (command, store) => store` — 커맨드 인터셉터 체인 |
-| `TransformAdapter<T>` | 외부 ↔ 내부 데이터 양방향 변환 |
+| `PaneSize` | `number \| 'flex'` — 분할 레이아웃 패널 크기 (비율 또는 flex) |
+| `TransformAdapter<T>` | 외부 ↔ NormalizedData 양방향 변환 어댑터 |
 
 ## 핵심 상수
 
@@ -22,6 +19,6 @@
 
 ## 설계 원칙
 
-- Command는 first-class 불변 객체 (메서드가 아님)
-- 각 Command가 자체 undo 스냅샷을 캡처
-- Middleware로 플러그인이 커맨드 실행 전후에 개입
+- Entity는 open interface (`[key: string]: unknown`) — 메타 엔티티가 임의 필드 저장
+- NormalizedData = 2-table 정규화: entities(플랫 맵) + relationships(부모→자식 배열)
+- TransformAdapter로 외부 데이터 형식과 디커플링

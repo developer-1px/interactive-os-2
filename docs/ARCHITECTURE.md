@@ -152,7 +152,7 @@ graph TB
     end
     subgraph L1_read["읽기"]
       store_get["getEntity · getEntityData · getChildren · getParent"]
-      store_tree["storeToTree — flat → tree 변환"]
+      store_tree["storeToInspectorTree — flat → tree 변환"]
     end
     subgraph L1_write["쓰기"]
       store_add["addEntity · removeEntity"]

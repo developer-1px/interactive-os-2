@@ -37,8 +37,7 @@ describe('workspaceCommands.setActiveTab', () => {
   it('sets activeTabId on tabgroup', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
-    const cmd = workspaceCommands.setActiveTab(tgId, 'tab-1')
-    const after = cmd.execute(store)
+    const after = workspaceCommands.setActiveTab.reduce(store, tgId, 'tab-1')
     const data = getEntityData<TabGroupData>(after, tgId)
     expect(data?.activeTabId).toBe('tab-1')
   })
@@ -49,14 +48,12 @@ describe('workspaceCommands.resize', () => {
   it('updates sizes on a split entity', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
-    const splitCmd = workspaceCommands.splitPane(tgId, 'horizontal')
-    const withSplit = splitCmd.execute(store)
+    const withSplit = workspaceCommands.splitPane.reduce(store, tgId, 'horizontal')
     const splitId = getChildren(withSplit, ROOT_ID)[0]!
     const splitData = getEntityData<SplitData>(withSplit, splitId)
     expect(splitData?.sizes).toEqual([0.5, 'flex'])
 
-    const resizeCmd = workspaceCommands.resize(splitId, [0.3, 'flex'])
-    const resized = resizeCmd.execute(withSplit)
+    const resized = workspaceCommands.resize.reduce(withSplit, splitId, [0.3, 'flex'])
     expect(getEntityData<SplitData>(resized, splitId)?.sizes).toEqual([0.3, 'flex'])
   })
 })
@@ -67,8 +64,8 @@ describe('workspaceCommands.addTab', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
     const tab: Entity = { id: 'tab-1', data: { type: 'tab', label: 'File.ts', contentType: 'editor', contentRef: '/file.ts' } }
-    const cmd = workspaceCommands.addTab(tgId, tab)
-    const after = cmd.execute(store)
+    let after = workspaceCommands.createTab.reduce(store, tgId, tab)
+    after = workspaceCommands.setActiveTab.reduce(after, tgId, tab.id)
 
     expect(getChildren(after, tgId)).toContain('tab-1')
     expect(getEntityData<TabGroupData>(after, tgId)?.activeTabId).toBe('tab-1')
@@ -84,12 +81,14 @@ describe('workspaceCommands.removeTab', () => {
     const tab1: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
     const tab2: Entity = { id: 'tab-2', data: { type: 'tab', label: 'B', contentType: 'editor', contentRef: '/b' } }
     const tab3: Entity = { id: 'tab-3', data: { type: 'tab', label: 'C', contentType: 'editor', contentRef: '/c' } }
-    let s = workspaceCommands.addTab(tgId, tab1).execute(store)
-    s = workspaceCommands.addTab(tgId, tab2).execute(s)
-    s = workspaceCommands.addTab(tgId, tab3).execute(s)
+    let s = workspaceCommands.createTab.reduce(store, tgId, tab1)
+    s = workspaceCommands.setActiveTab.reduce(s, tgId, tab1.id)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab2)
+    s = workspaceCommands.setActiveTab.reduce(s, tgId, tab2.id)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab3)
+    s = workspaceCommands.setActiveTab.reduce(s, tgId, tab3.id)
 
-    const cmd = workspaceCommands.removeTab('tab-2')
-    const after = cmd.execute(s)
+    const after = workspaceCommands.removeTab.reduce(s, 'tab-2')
     expect(getChildren(after, tgId)).not.toContain('tab-2')
     expect(getEntityData<TabGroupData>(after, tgId)?.activeTabId).toBe('tab-3')
   })
@@ -99,11 +98,12 @@ describe('workspaceCommands.removeTab', () => {
     const tgId = getChildren(store, ROOT_ID)[0]!
     const tab1: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
     const tab2: Entity = { id: 'tab-2', data: { type: 'tab', label: 'B', contentType: 'editor', contentRef: '/b' } }
-    let s = workspaceCommands.addTab(tgId, tab1).execute(store)
-    s = workspaceCommands.addTab(tgId, tab2).execute(s)
+    let s = workspaceCommands.createTab.reduce(store, tgId, tab1)
+    s = workspaceCommands.setActiveTab.reduce(s, tgId, tab1.id)
+    s = workspaceCommands.createTab.reduce(s, tgId, tab2)
+    s = workspaceCommands.setActiveTab.reduce(s, tgId, tab2.id)
 
-    const cmd = workspaceCommands.removeTab('tab-2')
-    const after = cmd.execute(s)
+    const after = workspaceCommands.removeTab.reduce(s, 'tab-2')
     expect(getEntityData<TabGroupData>(after, tgId)?.activeTabId).toBe('tab-1')
   })
 
@@ -111,10 +111,10 @@ describe('workspaceCommands.removeTab', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
     const tab1: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
-    const s = workspaceCommands.addTab(tgId, tab1).execute(store)
+    let s = workspaceCommands.createTab.reduce(store, tgId, tab1)
+    s = workspaceCommands.setActiveTab.reduce(s, tgId, tab1.id)
 
-    const cmd = workspaceCommands.removeTab('tab-1')
-    const after = cmd.execute(s)
+    const after = workspaceCommands.removeTab.reduce(s, 'tab-1')
     expect(getChildren(after, ROOT_ID)).not.toContain(tgId)
   })
 })
@@ -125,8 +125,7 @@ describe('workspaceCommands.splitPane', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
 
-    const cmd = workspaceCommands.splitPane(tgId, 'horizontal')
-    const after = cmd.execute(store)
+    const after = workspaceCommands.splitPane.reduce(store, tgId, 'horizontal')
 
     const rootChildren = getChildren(after, ROOT_ID)
     expect(rootChildren).toHaveLength(1)
@@ -150,13 +149,11 @@ describe('workspaceCommands.closePane', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
 
-    const splitCmd = workspaceCommands.splitPane(tgId, 'horizontal')
-    const withSplit = splitCmd.execute(store)
+    const withSplit = workspaceCommands.splitPane.reduce(store, tgId, 'horizontal')
     const splitId = getChildren(withSplit, ROOT_ID)[0]!
     const newTgId = getChildren(withSplit, splitId)[1]!
 
-    const closeCmd = workspaceCommands.closePane(newTgId)
-    const after = closeCmd.execute(withSplit)
+    const after = workspaceCommands.closePane.reduce(withSplit, newTgId)
 
     expect(getChildren(after, ROOT_ID)).toEqual([tgId])
     expect(after.entities[splitId]).toBeUndefined()
@@ -178,7 +175,8 @@ describe('serialization', () => {
     const store = createWorkspace()
     const tgId = getChildren(store, ROOT_ID)[0]!
     const tab: Entity = { id: 'tab-1', data: { type: 'tab', label: 'A', contentType: 'editor', contentRef: '/a' } }
-    const withTab = workspaceCommands.addTab(tgId, tab).execute(store)
+    let withTab = workspaceCommands.createTab.reduce(store, tgId, tab)
+    withTab = workspaceCommands.setActiveTab.reduce(withTab, tgId, tab.id)
 
     const json = serializeWorkspace(withTab)
     const restored = deserializeWorkspace(json)

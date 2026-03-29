@@ -140,30 +140,17 @@ export function focusRecovery(options?: FocusRecoveryOptions) {
 
   return definePlugin({
     name: 'focusRecovery',
-    middleware: (next: (command: Command) => void) => (command: Command) => {
+    middleware: (next: (command: Command) => void, getStore: () => NormalizedData) => (command: Command) => {
       if (command.type === 'core:focus') {
         next(command)
         return
       }
 
-      let storeBefore: NormalizedData | null = null
-      let storeAfter: NormalizedData | null = null
+      const before = getStore()
+      next(command)
+      const after = getStore()
 
-      const wrappedCommand: Command = {
-        ...command,
-        execute(store) {
-          storeBefore = store
-          const result = command.execute(store)
-          storeAfter = result
-          return result
-        },
-      }
-
-      next(wrappedCommand)
-
-      if (!storeBefore || !storeAfter) return
-      const before = storeBefore as NormalizedData
-      const after = storeAfter as NormalizedData
+      if (before === after) return
 
       // New visible entities → focus the first one (top-level result)
       const newVisibleIds = detectNewVisibleEntities(before, after, reachable)

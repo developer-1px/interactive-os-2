@@ -1,8 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import type { NormalizedData } from '../store/types'
-import type { Plugin } from './types'
+import type { Plugin, CommandHandler } from './types'
 import { createCommandEngine } from './createCommandEngine'
 import type { CommandEngine } from './createCommandEngine'
+import { focusCommands, gridColCommands } from '../axis/navigate'
+import { selectionCommands } from '../axis/select'
+import { expandCommands } from '../axis/expand'
+import { checkedCommands } from '../axis/checked'
+import { popupCommands } from '../axis/popup'
+import { valueCommands } from '../axis/value'
 
 export interface UseEngineOptions {
   data: NormalizedData
@@ -39,8 +45,26 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
       .map((p) => p.middleware)
       .filter((m): m is NonNullable<typeof m> => m != null)
 
+    // Build handler registry from core axes + plugin commands
+    const registry = new Map<string, CommandHandler>()
+    const axisCommandSets = [focusCommands, gridColCommands, selectionCommands, expandCommands, checkedCommands, popupCommands, valueCommands]
+    for (const cmdSet of axisCommandSets) {
+      for (const creator of Object.values(cmdSet)) {
+        if (creator != null && 'type' in creator && 'handler' in creator) {
+          registry.set(creator.type as string, creator.handler as CommandHandler)
+        }
+      }
+    }
+    for (const plugin of plugins) {
+      for (const creator of Object.values(plugin.commands ?? {})) {
+        if ('type' in creator && 'handler' in creator) {
+          registry.set(creator.type as string, creator.handler as CommandHandler)
+        }
+      }
+    }
+
     // eslint-disable-next-line react-hooks/refs
-    engineRef.current = createCommandEngine(data, middlewares, (newStore) => {
+    engineRef.current = createCommandEngine(data, middlewares, registry, (newStore) => {
       onChangeRef.current?.(newStore)
       forceRender((n) => n + 1)
     })
