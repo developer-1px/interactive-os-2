@@ -14,12 +14,12 @@ export function treegrid(columns: number): AriaPattern {
   const nav = navigate('vertical')
   const sel = selected('multiple')
   const exp = expanded()
-  const g = gridAxis(columns)
+  const g = gridAxis(columns, { initialColIndex: -1 })
 
-  // APG: "If a row is focused and expanded, focuses the first cell."
+  // APG: row mode (-1) → expand or focusChild; cell mode (0+) → next col
   const arrowRight = (ctx: PatternContext): Command | void => {
     if (ctx.grid && ctx.grid.colIndex >= 0) return ctx.grid.focusNextCol()
-    if (ctx.expanded?.is) return ctx.grid ? ctx.grid.focusFirstCol() : ctx.focusChild()
+    if (ctx.expanded?.is) return ctx.focusChild()
     return ctx.expanded?.set(true)
   }
 
