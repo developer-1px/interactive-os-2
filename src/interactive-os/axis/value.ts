@@ -1,4 +1,4 @@
-import type { PatternContext } from './types'
+import type { PatternContext, CtxFactory } from './types'
 import type { Command } from '../engine/types'
 import { defineCommands } from '../engine/defineCommand'
 
@@ -64,7 +64,54 @@ export const valueCommands = {
   decrement: (step: number, range: ValueRange): Command => _valueCommands.increment(-step, range),
 }
 
-// ② 2026-03-28-axis-handlers-export-prd.md
+// ② 2026-03-29-ctx-axis-namespace-prd.md
+export function valueCtx(
+  engine: import('../engine/createCommandEngine').CommandEngine,
+  _focusedId: string,
+  range: ValueRange,
+): import('./types').ValueNav {
+  const store = engine.getStore()
+  const currentValue = ((store.entities[VALUE_ID] as Record<string, unknown>)?.value as number) ?? range.min
+  return {
+    current: currentValue,
+    min: range.min,
+    max: range.max,
+    step: range.step,
+    increment: (s?: number) => valueCommands.increment(s ?? range.step, range),
+    decrement: (s?: number) => valueCommands.decrement(s ?? range.step, range),
+    setToMin: () => valueCommands.setValue(range.min, range),
+    setToMax: () => valueCommands.setValue(range.max, range),
+    setValue: (v: number) => valueCommands.setValue(v, range),
+  }
+}
+
+// ② 2026-03-29-compose-pattern-3arg-prd.md
+export function value(range: ValueRange) {
+  const increment = (ctx: PatternContext): Command | void => ctx.value?.increment()
+  const decrement = (ctx: PatternContext): Command | void => ctx.value?.decrement()
+  const incrementBig_ = (ctx: PatternContext): Command | void => ctx.value?.increment(ctx.value.step * 10)
+  const decrementBig_ = (ctx: PatternContext): Command | void => ctx.value?.decrement(ctx.value.step * 10)
+  const setToMin_ = (ctx: PatternContext): Command | void => ctx.value?.setToMin()
+  const setToMax_ = (ctx: PatternContext): Command | void => ctx.value?.setToMax()
+
+  return {
+    keyMap: {} as Record<string, never>,
+    __axisType: 'value' as const,
+    range,
+    ctxFactory: ((engine, focusedId) => ({
+      value: valueCtx(engine, focusedId, range),
+    })) as CtxFactory,
+    // handlers
+    increment,
+    decrement,
+    incrementBig: incrementBig_,
+    decrementBig: decrementBig_,
+    setToMin: setToMin_,
+    setToMax: setToMax_,
+  }
+}
+
+// ② 2026-03-28-axis-handlers-export-prd.md (legacy)
 export const incrementHandler = (ctx: PatternContext): Command | void => ctx.value?.increment()
 export const decrementHandler = (ctx: PatternContext): Command | void => ctx.value?.decrement()
 export const incrementBig = (ctx: PatternContext): Command | void => ctx.value?.increment(ctx.value.step * 10)

@@ -1,45 +1,24 @@
-// V1: 2026-03-28-apg-conformance-prd.md
-/**
- * APG Pattern: Window Splitter
- * https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/
- */
-import type { Entity } from '../../store/types'
-import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { incrementHandler, decrementHandler, setToMin, setToMax } from '../../axis/value'
+import { value } from '../../axis/value'
+import { navigate } from '../../axis/navigate'
 
-interface WindowSplitterOptions {
-  min: number
-  max: number
-  step: number
-  orientation?: 'horizontal' | 'vertical'
-}
+// APG Window Splitter — "A movable separator between two sections."
+interface WindowSplitterOptions { min: number; max: number; step: number; orientation?: 'horizontal' | 'vertical' }
 
 export function windowSplitter(options: WindowSplitterOptions) {
   const { min, max, step, orientation = 'horizontal' } = options
+  const nav = navigate(orientation)
+  const val = value({ min, max, step })
 
   return composePattern(
-    {
-      role: 'none',
-      childRole: 'separator',
-      focusStrategy: { type: 'roving-tabindex', orientation },
-      valueRange: { min, max, step },
-      ariaAttributes: (node: Entity, state: NodeState) => ({
-        'aria-valuenow': String(state.valueCurrent ?? min),
-        'aria-valuemin': String(min),
-        'aria-valuemax': String(max),
-        'aria-orientation': orientation,
-        ...((node.data as Record<string, unknown>)?.label
-          ? { 'aria-label': String((node.data as Record<string, unknown>).label) }
-          : {}),
-      }),
-    },
+    { role: 'none', childRole: 'separator' },
+    [nav, val],
     {
       ...(orientation === 'horizontal'
-        ? { ArrowRight: incrementHandler, ArrowLeft: decrementHandler }
-        : { ArrowUp: incrementHandler, ArrowDown: decrementHandler }),
-      Home: setToMin,
-      End: setToMax,
+        ? { ArrowRight: val.increment, ArrowLeft: val.decrement }
+        : { ArrowUp: val.increment, ArrowDown: val.decrement }),
+      Home: val.setToMin,
+      End: val.setToMax,
     },
   )
 }

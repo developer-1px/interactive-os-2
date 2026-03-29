@@ -1,23 +1,17 @@
-import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { activateHandler } from '../../axis/activate'
+import { expanded } from '../../axis/expand'
+import { navigate } from '../../axis/navigate'
+
+// APG Disclosure — "Enables content to be either collapsed or expanded."
+const nav = navigate('natural')
+const exp = expanded()
 
 export const disclosure = composePattern(
+  { role: 'group', childRole: 'button' },
+  [nav, exp],
   {
-    role: 'group',
-    childRole: 'button',
-    ariaAttributes: (_node, state: NodeState) => {
-      const attrs: Record<string, string> = {}
-      if (state.expanded !== undefined) {
-        attrs['aria-expanded'] = String(state.expanded)
-      }
-      return attrs
-    },
-  },
-  { keyMap: {}, config: { activateOnClick: true, expandOnParentClick: true, expandable: true } },
-  {
-    // Activation
-    Enter: activateHandler,
-    Space: activateHandler,
+    Enter: exp.toggle,
+    Space: exp.toggle,
+    Click: exp.toggle,
   },
 )

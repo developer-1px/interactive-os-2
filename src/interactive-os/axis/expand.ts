@@ -1,4 +1,4 @@
-import type { AxisConfig, KeyMap, PatternContext } from './types'
+import type { PatternContext, EntityDecl } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -65,18 +65,62 @@ export const expandCommands = defineCommands({
 })
 
 // ② 2026-03-28-axis-handlers-export-prd.md
-export const expandHandler = (ctx: PatternContext): Command => ctx.expand()
-export const collapseHandler = (ctx: PatternContext): Command => ctx.collapse()
-export const toggleExpand = (ctx: PatternContext): Command =>
-  ctx.isExpanded ? ctx.collapse() : ctx.expand()
+export const expandHandler = (ctx: PatternContext): Command => ctx.expanded!.set(true)
+export const collapseHandler = (ctx: PatternContext): Command => ctx.expanded!.set(false)
+export const toggleExpand = (ctx: PatternContext): Command => ctx.expanded!.toggle()
 export const expandOrFocusChild = (ctx: PatternContext): Command =>
-  ctx.isExpanded ? ctx.focusChild() : ctx.expand()
+  ctx.expanded!.is ? ctx.focusChild() : ctx.expanded!.set(true)
 export const collapseOrFocusParent = (ctx: PatternContext): Command =>
-  ctx.isExpanded ? ctx.collapse() : ctx.focusParent()
+  ctx.expanded!.is ? ctx.expanded!.set(false) : ctx.focusParent()
 
-/** Config-only: provides expandTracking + visibilityFilter, no keyMap. Pattern declares bindings. */
-export function expandConfig(): { keyMap: KeyMap; config: Partial<AxisConfig>; visibilityFilter: VisibilityFilter } {
-  return { keyMap: {}, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
+// ② 2026-03-29-ctx-axis-namespace-prd.md
+export function expandedCtx(
+  engine: import('../engine/createCommandEngine').CommandEngine,
+  focusedId: string,
+): import('./types').ExpandedNav {
+  const store = engine.getStore()
+  const expandedIds = getExpandedIds(store)
+  const is = expandedIds.includes(focusedId)
+  return {
+    is,
+    set: (value: boolean) => value ? expandCommands.expand(focusedId) : expandCommands.collapse(focusedId),
+    toggle: () => expandCommands.toggleExpand(focusedId),
+  }
+}
+
+// ② 2026-03-29-compose-pattern-3arg-prd.md
+export function expanded() {
+  const config = expandConfig()
+
+  const toggle = (ctx: PatternContext): Command | void => ctx.expanded?.toggle()
+  const set = (value: boolean) => (ctx: PatternContext): Command | void => ctx.expanded?.set(value)
+  const expandOrFocusChild_ = (ctx: PatternContext): Command | void =>
+    ctx.expanded ? (ctx.expanded.is ? ctx.focusChild() : ctx.expanded.set(true)) : undefined
+  const collapseOrFocusParent_ = (ctx: PatternContext): Command | void =>
+    ctx.expanded ? (ctx.expanded.is ? ctx.expanded.set(false) : ctx.focusParent()) : undefined
+
+  return {
+    ...config,
+    __axisType: 'expanded' as const,
+    toggle,
+    set,
+    expand: set(true),
+    collapse: set(false),
+    expandOrFocusChild: expandOrFocusChild_,
+    collapseOrFocusParent: collapseOrFocusParent_,
+  }
+}
+
+// legacy — expanded() 전환 후 제거
+export function expandConfig(): { keyMap: Record<string, never>; entities: EntityDecl[]; visibilityFilter: VisibilityFilter; ctxFactory: import('./types').CtxFactory } {
+  return {
+    keyMap: {},
+    entities: [{ id: EXPANDED_ID, default: { expandedIds: [] } }],
+    visibilityFilter: expandVisibilityFilter,
+    ctxFactory: (engine, focusedId) => ({
+      expanded: expandedCtx(engine, focusedId),
+    }),
+  }
 }
 
 export const expandVisibilityFilter: VisibilityFilter = {
@@ -87,4 +131,3 @@ export const expandVisibilityFilter: VisibilityFilter = {
     return ids.includes(nodeId)
   },
 }
-

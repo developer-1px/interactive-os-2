@@ -1,4 +1,4 @@
-import type { PatternContext } from './types'
+import type { PatternContext, EntityDecl } from './types'
 import type { Command } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -65,5 +65,35 @@ export const checkedCommands = defineCommands({
 })
 
 // ② 2026-03-28-axis-handlers-export-prd.md
-export const toggleCheckHandler = (ctx: PatternContext): Command => ctx.toggleCheck()
+export const toggleCheckHandler = (ctx: PatternContext): Command => ctx.checked!.toggle()
 
+// ② 2026-03-29-ctx-axis-namespace-prd.md
+export function checkedCtx(
+  engine: import('../engine/createCommandEngine').CommandEngine,
+  focusedId: string,
+): import('./types').CheckedNav {
+  const store = engine.getStore()
+  const checkedIds = getCheckedIds(store)
+  return {
+    is: checkedIds.includes(focusedId),
+    toggle: () => checkedCommands.toggleCheck(focusedId),
+  }
+}
+
+// ② 2026-03-29-compose-pattern-3arg-prd.md
+export function checked() {
+  const config = checkedConfig()
+  const toggle = (ctx: PatternContext): Command | void => ctx.checked?.toggle()
+  return { ...config, __axisType: 'checked' as const, toggle }
+}
+
+// legacy — checked() 전환 후 제거
+export function checkedConfig(): { keyMap: Record<string, never>; entities: EntityDecl[]; ctxFactory: import('./types').CtxFactory } {
+  return {
+    keyMap: {},
+    entities: [{ id: CHECKED_ID, default: { checkedIds: [] } }],
+    ctxFactory: (engine, focusedId) => ({
+      checked: checkedCtx(engine, focusedId),
+    }),
+  }
+}

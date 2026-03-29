@@ -1,30 +1,21 @@
-import type { NodeState, AriaPattern } from '../types'
+import type { AriaPattern } from '../types'
 import { composePattern } from '../composePattern'
-import { selectConfig } from '../../axis/select'
+import { selected } from '../../axis/select'
+import { navigate } from '../../axis/navigate'
 
-// APG Radio Group using aria-activedescendant: container holds focus,
-// aria-activedescendant points to checked radio. Arrows move + select.
-// Note: select({ selectOnClick }) handles click selection; activate() not needed.
+// APG Radio Group (aria-activedescendant variant)
+const nav = navigate('activedescendant')
+const sel = selected('single', { followFocus: true })
+
 export const radiogroupActivedescendant: AriaPattern = composePattern(
+  { role: 'radiogroup', childRole: 'radio' },
+  [nav, sel],
   {
-    role: 'radiogroup',
-    childRole: 'radio',
-    focusStrategy: { type: 'aria-activedescendant', orientation: 'both' },
-    selectionMode: 'single',
-    ariaAttributes: (_node, state: NodeState) => ({
-      'aria-checked': String(state.selected),
-    }),
-  },
-  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
-  { keyMap: {}, config: { selectOnClick: true } },
-  {
-    // Navigation — both orientations, wrap
-    ArrowDown: (ctx) => ctx.focusNext({ wrap: true }),
-    ArrowUp: (ctx) => ctx.focusPrev({ wrap: true }),
-    ArrowRight: (ctx) => ctx.focusNext({ wrap: true }),
-    ArrowLeft: (ctx) => ctx.focusPrev({ wrap: true }),
-
-    // Selection (from select axis)
-    Space: (ctx) => ctx.toggleSelect(),
+    ArrowDown: nav.nextWrap,
+    ArrowUp: nav.prevWrap,
+    ArrowRight: nav.nextWrap,
+    ArrowLeft: nav.prevWrap,
+    Space: sel.toggle,
+    Click: sel.selectAndAnchor,
   },
 )

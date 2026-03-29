@@ -1,5 +1,5 @@
 // ② 2026-03-29-define-command-prd.md
-import type { PatternContext } from './types'
+import type { PatternContext, EntityDecl } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
@@ -13,7 +13,7 @@ interface PopupEntity {
   triggerId: string | undefined
 }
 
-export function getPopupEntity(store: NormalizedData): PopupEntity {
+function getPopupEntity(store: NormalizedData): PopupEntity {
   const entity = store.entities[POPUP_ID]
   return {
     isOpen: (entity?.isOpen as boolean) ?? false,
@@ -54,8 +54,6 @@ export const popupCommands = defineCommands({
     },
   },
 })
-
-export type PopupType = 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
 
 export const popupVisibilityFilter: VisibilityFilter = {
   shouldDescend(nodeId, store) {
@@ -127,3 +125,71 @@ export const openAndFocusLast = (ctx: PatternContext): Command | void => {
   return undefined
 }
 
+// ② 2026-03-29-ctx-axis-namespace-prd.md
+export function popupCtx(
+  engine: import('../engine/createCommandEngine').CommandEngine,
+  focusedId: string,
+): import('./types').PopupNav {
+  const store = engine.getStore()
+  const { isOpen, triggerId } = getPopupEntity(store)
+  const children = store.relationships[focusedId] ?? []
+  return {
+    isOpen,
+    open(): Command {
+      const cmds: Command[] = [popupCommands.open(focusedId)]
+      if (children.length > 0) cmds.push(focusCommands.setFocus(children[0]!))
+      return createBatchCommand(cmds)
+    },
+    close(): Command {
+      const target = triggerId ?? focusedId
+      return createBatchCommand([popupCommands.close(), focusCommands.setFocus(target)])
+    },
+  }
+}
+
+// ② 2026-03-29-compose-pattern-3arg-prd.md
+import { activateHandler } from './activate'
+
+export function popup(type: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog', opts?: { modal?: boolean }) {
+  const config = popupConfig()
+
+  const open_ = (ctx: PatternContext): Command | void => openPopup(ctx)
+  const close_ = (ctx: PatternContext): Command | void => closePopup(ctx)
+  const openOrActivate_ = (ctx: PatternContext): Command | void => openPopup(ctx) ?? activateHandler(ctx)
+  const openFirstOrFocusNext_ = (ctx: PatternContext): Command | void =>
+    openAndFocusFirst(ctx) ?? ctx.focusNext({ wrap: true })
+  const openLastOrFocusPrev_ = (ctx: PatternContext): Command | void =>
+    openAndFocusLast(ctx) ?? ctx.focusPrev({ wrap: true })
+
+  return {
+    ...config,
+    __axisType: 'popup' as const,
+    __popupType: type,
+    __popupModal: opts?.modal,
+    // handlers
+    open: open_,
+    close: close_,
+    openOrActivate: openOrActivate_,
+    openFirstOrFocusNext: openFirstOrFocusNext_,
+    openLastOrFocusPrev: openLastOrFocusPrev_,
+    // trigger preset
+    triggerKeys: {
+      Enter: open_,
+      Space: open_,
+      ArrowDown: (ctx: PatternContext): Command | void => openAndFocusFirst(ctx),
+      ArrowUp: (ctx: PatternContext): Command | void => openAndFocusLast(ctx),
+    } as Record<string, (ctx: PatternContext) => Command | void>,
+  }
+}
+
+// legacy — popup() 전환 후 제거
+export function popupConfig(): { keyMap: Record<string, never>; entities: EntityDecl[]; visibilityFilter: VisibilityFilter; ctxFactory: import('./types').CtxFactory } {
+  return {
+    keyMap: {},
+    entities: [{ id: POPUP_ID, default: { isOpen: false, triggerId: '' } }],
+    visibilityFilter: popupVisibilityFilter,
+    ctxFactory: (engine, focusedId) => ({
+      popup: popupCtx(engine, focusedId),
+    }),
+  }
+}

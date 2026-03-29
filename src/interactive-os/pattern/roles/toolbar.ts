@@ -1,27 +1,20 @@
-import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
+import { navigate } from '../../axis/navigate'
 import { activateHandler } from '../../axis/activate'
-import { focusFirst, focusLast } from '../../axis/navigate'
+
+// APG Toolbar — "A container for grouping a set of controls."
+const nav = navigate('horizontal')
 
 export const toolbar = composePattern(
+  { role: 'toolbar', childRole: 'button' },
+  [nav],
   {
-    role: 'toolbar',
-    childRole: 'button',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'horizontal' },
-    ariaAttributes: (_node, state: NodeState) => ({
-      'aria-pressed': String(state.selected),
-    }),
-  },
-  { keyMap: {}, config: { activateOnClick: true, expandOnParentClick: true } },
-  {
-    // Navigation — horizontal, wrap
-    ArrowRight: (ctx) => ctx.focusNext({ wrap: true }),
-    ArrowLeft: (ctx) => ctx.focusPrev({ wrap: true }),
-    Home: focusFirst,
-    End: focusLast,
-
-    // Activation
+    ArrowRight: nav.nextWrap,
+    ArrowLeft: nav.prevWrap,
+    Home: nav.first,
+    End: nav.last,
     Enter: activateHandler,
     Space: activateHandler,
+    Click: activateHandler,
   },
 )
