@@ -39,15 +39,28 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   )
 }
 
+const defaultRenderPanel = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
+  const label = (item.data as Record<string, unknown>)?.label as string
+    ?? (item.data as Record<string, unknown>)?.name as string
+    ?? item.id as string
+  return (
+    <div {...props} className={styles.panel}>
+      <span>{label} content</span>
+    </div>
+  )
+}
+
 export function Accordion({
   data,
   plugins = [],
   onChange,
   renderItem = defaultRenderItem,
-}: AccordionProps) {
+  renderPanel = defaultRenderPanel,
+}: AccordionProps & { renderPanel?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement }) {
   return (
     <Aria pattern={accordion} data={data} plugins={plugins} onChange={onChange} className={styles.root}>
       <Aria.Item render={renderItem} />
+      <Aria.Panel render={renderPanel} />
     </Aria>
   )
 }
