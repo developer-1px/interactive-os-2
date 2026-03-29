@@ -9,12 +9,16 @@ import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 import { composePattern } from '../pattern/composePattern'
-import { selectConfig } from '../axis/select'
-import { focusNext, focusPrev, focusFirst, focusLast } from '../axis/navigate'
-import { expandConfig, expandOrFocusChild, collapseOrFocusParent, EXPANDED_ID } from '../axis/expand'
+import { navigate } from '../axis/navigate'
+import { selected } from '../axis/select'
+import { expanded, EXPANDED_ID } from '../axis/expand'
 import { listbox } from '../pattern/roles/listbox'
 
 // Minimal tabs-like pattern for testing
+const nav = navigate('horizontal')
+const sel = selected('single', { followFocus: true })
+const exp = expanded()
+
 const testTabs = composePattern(
   {
     role: 'tablist',
@@ -25,12 +29,13 @@ const testTabs = composePattern(
     panelRole: 'tabpanel',
     panelVisibility: 'selected',
   },
-  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
+  nav,
+  sel,
   {
-    ArrowLeft: focusPrev,
-    ArrowRight: focusNext,
-    Home: focusFirst,
-    End: focusLast,
+    ArrowLeft: nav.prev,
+    ArrowRight: nav.next,
+    Home: nav.first,
+    End: nav.last,
   },
 )
 
@@ -53,6 +58,7 @@ const renderPanel = (props: React.HTMLAttributes<HTMLElement>, node: Record<stri
   <div {...props}>{(node.data as Record<string, unknown>).content as string}</div>
 )
 
+// @test-harness
 function TestTabs() {
   const [store, setStore] = useState(fixtureData())
   const pattern = useMemo(() => testTabs, [])
@@ -121,14 +127,15 @@ const testAccordion = composePattern(
     panelRole: 'region',
     panelVisibility: 'expanded',
   },
-  expandConfig(),
+  nav,
+  exp,
   {
-    ArrowRight: expandOrFocusChild,
-    ArrowLeft: collapseOrFocusParent,
-    ArrowDown: focusNext,
-    ArrowUp: focusPrev,
-    Home: focusFirst,
-    End: focusLast,
+    ArrowRight: exp.expandOrFocusChild,
+    ArrowLeft: exp.collapseOrFocusParent,
+    ArrowDown: nav.next,
+    ArrowUp: nav.prev,
+    Home: nav.first,
+    End: nav.last,
   },
 )
 
@@ -150,6 +157,7 @@ const renderRegion = (props: React.HTMLAttributes<HTMLElement>, node: Record<str
   <div {...props}>{(node.data as Record<string, unknown>).content as string}</div>
 )
 
+// @test-harness
 function TestAccordion() {
   const [store, setStore] = useState(accordionData())
   const pattern = useMemo(() => testAccordion, [])
@@ -195,6 +203,7 @@ describe('backward compatibility', () => {
       relationships: { [ROOT_ID]: ['a', 'b'] },
     })
 
+    // @test-harness
     function TestListbox() {
       const [store, setStore] = useState(data)
       const pattern = useMemo(() => listbox(), [])

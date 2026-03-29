@@ -12,10 +12,10 @@ import { listbox } from '../pattern/roles/listbox'
 import { tree } from '../pattern/roles/tree'
 import { grid } from '../pattern/roles/grid'
 import { composePattern } from '../pattern/composePattern'
-import { selectConfig, selectAndAnchor } from '../axis/select'
+import { selected } from '../axis/select'
 import { activateHandler } from '../axis/activate'
-import { expandConfig, expandOrFocusChild, collapseOrFocusParent } from '../axis/expand'
-import { focusNext, focusPrev, focusFirst, focusLast } from '../axis/navigate'
+import { expanded } from '../axis/expand'
+import { navigate } from '../axis/navigate'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -169,17 +169,21 @@ describe('pointer interaction — tree click (second suite)', () => {
 // V5: 2026-03-29-axis-config-removal-prd.md
 describe('pointer interaction — tree click with activateHandler', () => {
   function setup() {
+    const nav = navigate('vertical')
+    const sel = selected('single')
+    const exp = expanded()
     const navTree = composePattern(
       { role: 'tree', childRole: 'treeitem', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected), ...(s.expanded !== undefined && { 'aria-expanded': String(s.expanded) }) }) },
-      selectConfig({ mode: 'single' }),
-      expandConfig(),
+      nav,
+      sel,
+      exp,
       {
-        ArrowRight: expandOrFocusChild,
-        ArrowLeft: collapseOrFocusParent,
-        ArrowDown: focusNext,
-        ArrowUp: focusPrev,
-        Home: focusFirst,
-        End: focusLast,
+        ArrowRight: exp.expandOrFocusChild,
+        ArrowLeft: exp.collapseOrFocusParent,
+        ArrowDown: nav.next,
+        ArrowUp: nav.prev,
+        Home: nav.first,
+        End: nav.last,
         Enter: activateHandler,
         Space: activateHandler,
         Click: activateHandler,
@@ -215,19 +219,22 @@ describe('pointer interaction — tree click with activateHandler', () => {
 
 describe('pointer interaction — edge cases', () => {
   it('Shift+Click on single-select listbox acts as normal click (no range)', async () => {
+    const nav = navigate('vertical')
+    const sel = selected('single')
     const singleListbox = composePattern(
       { role: 'listbox', childRole: 'option', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected) }) },
-      selectConfig({ mode: 'single' }),
+      nav,
+      sel,
       {
-        ArrowDown: focusNext,
-        ArrowUp: focusPrev,
-        Home: focusFirst,
-        End: focusLast,
+        ArrowDown: nav.next,
+        ArrowUp: nav.prev,
+        Home: nav.first,
+        End: nav.last,
         Enter: activateHandler,
         Space: activateHandler,
-        Click: selectAndAnchor,
-        'Shift+Click': selectAndAnchor,
-        'Mod+Click': selectAndAnchor,
+        Click: sel.selectAndAnchor,
+        'Shift+Click': sel.selectAndAnchor,
+        'Mod+Click': sel.selectAndAnchor,
       },
     )
     const user = userEvent.setup()
