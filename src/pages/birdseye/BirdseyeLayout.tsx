@@ -160,6 +160,7 @@ export default function BirdseyeLayout() {
   // 폴더 선택 + URL 동기화
   const selectFolder = useCallback((nodeId: string) => {
     setSelectedFolderId(nodeId)
+    setExtFilter(null)
     const relative = nodeId.startsWith(DEFAULT_ROOT + '/') ? nodeId.slice(DEFAULT_ROOT.length + 1) : nodeId
     setSearchParams({ folder: relative }, { replace: true })
   }, [setSearchParams])
@@ -264,7 +265,7 @@ export default function BirdseyeLayout() {
             />
           </div>
         ) : (
-          <div className={styles.viewerEmpty}>No source files in this folder</div>
+          <div className={styles.viewerEmpty}>{extFilter ? `No .${extFilter} files in this folder` : 'No source files in this folder'}</div>
         )}
       </div>
 
