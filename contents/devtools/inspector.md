@@ -11,7 +11,7 @@
 | 패널 | 역할 |
 |------|------|
 | Editor (좌) | TreeGrid + CRUD + DnD + History로 데이터 조작 |
-| Inspector (우) | storeToTree 변환 결과 실시간 표시 |
+| Inspector (우) | storeToInspectorTree 변환 결과 실시간 표시 |
 | Log (하) | dispatch된 Command 로그 |
 
 ## 파일

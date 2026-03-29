@@ -8,7 +8,7 @@
 |------|----------|------|------|
 | types | `Entity`, `NormalizedData`, `ROOT_ID`, `TransformAdapter` | 핵심 타입 정의 | 🟢 |
 | createStore | `createStore()` | 정규화 데이터 store 생성, CRUD 연산 | 🟢 |
-| storeToTree | `storeToTree()` | flat → tree 변환 | 🟢 |
+| storeToInspectorTree | `storeToInspectorTree()` | flat → tree 변환 | 🟢 |
 | computeStoreDiff | `computeStoreDiff()` | 변경 감지 | 🟢 |
 
 ## 핵심 개념

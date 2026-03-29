@@ -114,14 +114,16 @@ export function applyDelta(
 
     // Meta entity field diff (path like "__focus__.focusedId")
     if (diff.path.includes('.')) {
-      const [entityId, field] = diff.path.split('.')
-      const entity = entities[entityId!] ?? { id: entityId! }
+      const dotIdx = diff.path.indexOf('.')
+      const entityId = diff.path.slice(0, dotIdx)
+      const field = diff.path.slice(dotIdx + 1)
+      const entity = entities[entityId] ?? { id: entityId }
       if (effectiveKind === 'removed') {
-        const { [field!]: _removedField, ...rest } = entity
+        const { [field]: _removedField, ...rest } = entity
         void _removedField
-        entities = { ...entities, [entityId!]: { ...rest, id: entityId! } as Entity }
+        entities = { ...entities, [entityId]: { ...rest, id: entityId } as Entity }
       } else {
-        entities = { ...entities, [entityId!]: { ...entity, [field!]: value } }
+        entities = { ...entities, [entityId]: { ...entity, [field]: value } }
       }
       continue
     }

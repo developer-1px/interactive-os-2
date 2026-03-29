@@ -14,7 +14,7 @@ import { history } from '../../interactive-os/plugins/history'
 import { crud, crudCommands } from '../../interactive-os/plugins/crud'
 import { dnd, dndCommands } from '../../interactive-os/plugins/dnd'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
-import { storeToTree } from '../../interactive-os/store/storeToTree'
+import { storeToInspectorTree } from '../../interactive-os/store/storeToInspectorTree'
 import { treeData } from '../../pages/shared-tree-data'
 import styles from './PageStoreInspector.module.css'
 
@@ -177,7 +177,7 @@ export default function PageStoreInspector() {
     })
   }, [])
 
-  const inspectorData = useMemo(() => storeToTree(data), [data])
+  const inspectorData = useMemo(() => storeToInspectorTree(data), [data])
 
   // Auto-scroll log to bottom
   useEffect(() => {
@@ -191,7 +191,7 @@ export default function PageStoreInspector() {
         <h2 className="page-title">Store Inspector</h2>
         <p className="page-desc">
           Live view of NormalizedData structure. Editor (left) uses treegrid + crud + dnd + history.
-          Inspector (right) shows the raw store via storeToTree transform. Log (bottom) captures dispatched commands.
+          Inspector (right) shows the raw store via storeToInspectorTree transform. Log (bottom) captures dispatched commands.
         </p>
       </div>
       <div className="page-keys">
