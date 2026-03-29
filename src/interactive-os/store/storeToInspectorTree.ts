@@ -1,7 +1,7 @@
 import type { NormalizedData, Entity } from './types'
 import { ROOT_ID } from './types'
 
-export function storeToTree(source: NormalizedData): NormalizedData {
+export function storeToInspectorTree(source: NormalizedData): NormalizedData {
   const entities: Record<string, Entity> = {}
   const relationships: Record<string, string[]> = {}
 

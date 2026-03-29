@@ -67,7 +67,7 @@ last_updated: 2026-03-28
 ## Nouns
 | fragment | count | identifiers |
 |----------|-------|-------------|
-| store | 13 | createStore, NormalizedData, cmsStore, computeStoreDiff, createFruitStore, createGroupedStore, storeToTree |
+| store | 13 | createStore, NormalizedData, cmsStore, computeStoreDiff, createFruitStore, createGroupedStore, storeToInspectorTree |
 | entity | 7 | Entity, getEntity, addEntity, removeEntity, updateEntity, getEntityData, updateEntityData |
 | command | 10 | Command, BatchCommand, CommandEngine, createCommandEngine, createBatchCommand, templateToCommand, redoCommand, undoCommand |
 | engine | 12 | CommandEngine, createCommandEngine, useEngine, EngineOptions, UseEngineOptions, UseEngineReturn |
@@ -99,7 +99,7 @@ last_updated: 2026-03-28
 | item | 4 | AriaItem (component), AriaItemProps, AriaItemContext, comboboxRenderItem, RenderTreeItem |
 | recovery | 3 | focusRecovery, FocusRecoveryOptions |
 | spatial | 10 | spatial (behavior), spatial (plugin), spatialCommands, SPATIAL_PARENT_ID, getSpatialParentId, useSpatialNav, SpatialNavResult, findNearest, findAdjacentGroup, spatialReachable |
-| tree | 23 | tree (behavior), TreeView (UI), storeToTree, TreeGrid, treeData, RenderTreeItem, SharedTreeComponents |
+| tree | 23 | tree (behavior), TreeView (UI), storeToInspectorTree, TreeGrid, treeData, RenderTreeItem, SharedTreeComponents |
 | apg | 21 | ApgKeyboardEntry, ApgPatternData, ApgKeyboardTable, apgAccordion, ... (all APG pattern data) |
 | keyboard | 4 | ApgKeyboardEntry, ApgKeyboardTable, useKeyboard |
 | pattern | 4 | ApgPatternData, composePattern, PatternConfig |

@@ -16,7 +16,7 @@ export function getChildren(store: NormalizedData, parentId: string): string[] {
   return store.relationships[parentId] ?? []
 }
 
-// TODO: O(n*m) — for large stores, consider adding a reverse index (childId → parentId)
+/** O(n) where n = total children across all relationship entries. No reverse index — sufficient for current store sizes. */
 export function getParent(store: NormalizedData, nodeId: string): string | undefined {
   for (const [parentId, children] of Object.entries(store.relationships)) {
     if (children.includes(nodeId)) return parentId
@@ -72,27 +72,25 @@ export function updateEntity(
   }
 }
 
+/** @param index — insertion index in the target's children list (after removing nodeId if same parent). */
 export function moveNode(
   store: NormalizedData, nodeId: string, newParentId: string, index?: number
 ): NormalizedData {
   const oldParentId = getParent(store, nodeId)
   if (!oldParentId) return store
 
+  const isSameParent = oldParentId === newParentId
   const oldChildren = getChildren(store, oldParentId).filter((id) => id !== nodeId)
-  const newChildren = getChildren(store, newParentId)
-  const insertAt = index !== undefined ? index : newChildren.length
-
-  const updatedNewChildren = oldParentId === newParentId
-    ? (() => {
-        const without = oldChildren
-        return [...without.slice(0, insertAt), nodeId, ...without.slice(insertAt)]
-      })()
-    : [...newChildren.slice(0, insertAt), nodeId, ...newChildren.slice(insertAt)]
+  const targetChildren = isSameParent
+    ? oldChildren
+    : getChildren(store, newParentId)
+  const insertAt = index !== undefined ? index : targetChildren.length
+  const updatedTarget = [...targetChildren.slice(0, insertAt), nodeId, ...targetChildren.slice(insertAt)]
 
   const relationships = {
     ...store.relationships,
-    [oldParentId]: oldParentId === newParentId ? updatedNewChildren : oldChildren,
-    ...(oldParentId !== newParentId ? { [newParentId]: updatedNewChildren } : {}),
+    [oldParentId]: isSameParent ? updatedTarget : oldChildren,
+    ...(isSameParent ? {} : { [newParentId]: updatedTarget }),
   }
 
   return { ...store, relationships }

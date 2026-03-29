@@ -20,7 +20,7 @@ needs:
         links: []
         features:
           - id: F1
-            feature: storeToTree 변환
+            feature: storeToInspectorTree 변환
             screens: []
           - id: F2
             feature: computeStoreDiff
