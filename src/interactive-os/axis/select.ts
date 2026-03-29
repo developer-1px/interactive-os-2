@@ -213,6 +213,12 @@ export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; at
       selectionMode: mode,
       ...(opts?.followFocus && { selectionFollowsFocus: true }),
     },
+    ariaGen: ((s, _e, role) => {
+      const attr = (role === 'radio' || role === 'menuitemradio')
+        ? 'aria-checked'
+        : role === 'button' ? 'aria-pressed' : 'aria-selected'
+      return { [attr]: String(s.selected ?? false) }
+    }) as import('./types').AriaGen,
     // handlers
     toggle,
     extendNext,

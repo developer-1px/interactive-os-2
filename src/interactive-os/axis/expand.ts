@@ -97,6 +97,12 @@ export function expanded(opts?: { allExpandable?: boolean }) {
       expanded: expandedCtx(engine, focusedId),
     })) as import('./types').CtxFactory,
     meta: opts?.allExpandable ? { expandable: true } : {},
+    ariaGen: ((s) => {
+      const result: Record<string, string> = {}
+      if (s.expanded !== undefined) result['aria-expanded'] = String(s.expanded)
+      if (s.level !== undefined) result['aria-level'] = String(s.level)
+      return result
+    }) as import('./types').AriaGen,
     toggle,
     set,
     expand: set(true),

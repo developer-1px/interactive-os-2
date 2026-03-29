@@ -172,6 +172,7 @@ export function grid(columns: number) {
   return {
     keyMap: {} as Record<string, never>,
     meta: { colCount: columns },
+    ariaGen: ((s) => ({ 'aria-rowindex': String((s.index as number ?? 0) + 1) })) as import('./types').AriaGen,
     ctxFactory: ((engine, focusedId) => ({
       grid: gridCtx(engine, focusedId, columns),
     })) as CtxFactory,

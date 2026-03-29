@@ -87,6 +87,11 @@ export function checked() {
     ctxFactory: ((engine, focusedId) => ({
       checked: checkedCtx(engine, focusedId),
     })) as import('./types').CtxFactory,
+    ariaGen: ((s, _e, role) => {
+      if (s.checked === undefined) return {}
+      const attr = role === 'button' ? 'aria-pressed' : 'aria-checked'
+      return { [attr]: String(s.checked) }
+    }) as import('./types').AriaGen,
     toggle,
   }
 }

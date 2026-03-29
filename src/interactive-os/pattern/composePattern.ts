@@ -1,7 +1,7 @@
 import type { Entity, NormalizedData } from '../store/types'
 import type { Command, Middleware, VisibilityFilter } from '../engine/types'
 import type { AriaPattern, NodeState } from './types'
-import type { PatternContext, FocusStrategy, KeyMap, Axis, EntityDecl, CtxFactory } from '../axis/types'
+import type { PatternContext, FocusStrategy, KeyMap, Axis, EntityDecl, CtxFactory, AriaGen } from '../axis/types'
 
 export interface Identity {
   role: string
@@ -110,6 +110,14 @@ function collectVisibilityFilters(axes: Axis[]): VisibilityFilter[] {
   return filters
 }
 
+function collectAriaGens(axes: Axis[]): AriaGen[] {
+  const gens: AriaGen[] = []
+  for (const axis of axes) {
+    if (isStructured(axis) && axis.ariaGen) gens.push(axis.ariaGen)
+  }
+  return gens
+}
+
 function collectMeta(axes: Axis[]): Record<string, unknown> {
   const meta: Record<string, unknown> = {}
   for (const axis of axes) {
@@ -129,6 +137,7 @@ export function composePattern(
   const { keyMap, clickMap } = splitInputMap(inputMap)
   const entities = collectEntities(required)
   const ctxFactories = collectCtxFactories(required)
+  const ariaGens = collectAriaGens(required)
   const middleware = collectMiddlewares(required)
   const visibilityFilters = collectVisibilityFilters(required)
   const focusStrategy = (meta.focusStrategy as FocusStrategy) ?? DEFAULT_FOCUS_STRATEGY
@@ -159,5 +168,6 @@ export function composePattern(
     ...(visibilityFilters.length > 0 && { visibilityFilters }),
     ...(entities.length > 0 && { requiredEntities: entities }),
     ...(ctxFactories.length > 0 && { ctxFactories }),
+    ...(ariaGens.length > 0 && { ariaGens }),
   } as AriaPattern
 }

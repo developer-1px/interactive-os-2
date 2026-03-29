@@ -103,6 +103,13 @@ export interface EntityDecl {
 /** Factory that creates an axis namespace on PatternContext. Called by createPatternContext. */
 export type CtxFactory = (engine: import('../engine/createCommandEngine').CommandEngine, focusedId: string, visibleNodes: () => string[]) => Record<string, unknown>
 
+/** Per-node ARIA attribute generator. Called during render for each visible node. */
+export type AriaGen = (
+  state: Record<string, unknown>,
+  entity: Record<string, unknown>,
+  childRole: string,
+) => Record<string, string>
+
 /** Axis: plain inputMap (key/click bindings) or structured object with entities/middleware/visibilityFilter/ctxFactory. */
 export type Axis = KeyMap | {
   keyMap: KeyMap
@@ -112,4 +119,6 @@ export type Axis = KeyMap | {
   ctxFactory?: CtxFactory
   /** AriaPattern contributions — composePattern spreads these into the result. OCP: no switch-case. */
   meta?: Record<string, unknown>
+  /** Per-node ARIA generation — axis declares how its state maps to aria-* attributes. */
+  ariaGen?: AriaGen
 }
