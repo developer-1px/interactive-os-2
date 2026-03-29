@@ -233,7 +233,16 @@ export default function BirdseyeLayout() {
 
       {/* 중: Kanban */}
       <div className={styles.board}>
-        <div className={styles.boardHeader}>{selectedName}</div>
+        <div className={styles.boardHeader}>
+          <span>{selectedName}</span>
+          <span className={styles.legend}>
+            <span data-ext="ts">.ts</span>
+            <span data-ext="tsx">.tsx</span>
+            <span data-ext="css">.css</span>
+            <span data-ext="md">.md</span>
+            <span data-ext="yaml">.yaml</span>
+          </span>
+        </div>
         {kanbanStore && (
           <div className={styles.boardBody}>
             <Kanban
