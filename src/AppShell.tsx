@@ -83,7 +83,7 @@ const LAYER_LABELS: Record<string, string> = {
 // --- Vertical toolbar pattern ---
 
 const verticalToolbar: AriaPattern = {
-  ...toolbar,
+  ...toolbar(),
   keyMap: {
     ArrowDown: (ctx) => ctx.focusNext(),
     ArrowUp: (ctx) => ctx.focusPrev(),

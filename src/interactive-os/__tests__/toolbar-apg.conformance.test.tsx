@@ -2,11 +2,16 @@
 /**
  * APG Conformance: Toolbar
  * https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/
+ *
+ * Two variants:
+ * - Action toolbar: Enter/Space/Click → activate (no aria-pressed)
+ * - Toggle toolbar: Enter/Space/Click → toggle checked (aria-pressed)
  */
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Toolbar } from '../ui/Toolbar'
+import { Aria } from '../primitives/aria'
+import { toolbar } from '../pattern/roles/toolbar'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -34,22 +39,27 @@ function fixtureData(): NormalizedData {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function renderToolbar(data: NormalizedData) {
+function renderActionToolbar(data: NormalizedData, onActivate?: (id: string) => void) {
   return render(
-    <Toolbar
-      data={data}
-      plugins={[]}
-      renderItem={(props, item, state: NodeState) => (
-        <span
-          {...props}
-          data-testid={`btn-${item.id}`}
-          data-focused={state.focused}
-          data-selected={state.selected}
-        >
+    <Aria pattern={toolbar()} data={data} plugins={[]} onActivate={onActivate}>
+      <Aria.Item render={(props, item, state: NodeState) => (
+        <span {...props} data-testid={`btn-${item.id}`} data-focused={state.focused}>
           {(item.data as Record<string, unknown>)?.name as string}
         </span>
-      )}
-    />,
+      )} />
+    </Aria>,
+  )
+}
+
+function renderToggleToolbar(data: NormalizedData) {
+  return render(
+    <Aria pattern={toolbar({ toggle: true })} data={data} plugins={[]}>
+      <Aria.Item render={(props, item, state: NodeState) => (
+        <span {...props} data-testid={`btn-${item.id}`} data-focused={state.focused} data-checked={state.checked}>
+          {(item.data as Record<string, unknown>)?.name as string}
+        </span>
+      )} />
+    </Aria>,
   )
 }
 
@@ -68,39 +78,27 @@ function getFocusedNodeId(container: HTMLElement): string | null {
 
 describe('APG Toolbar — ARIA Structure', () => {
   it('role hierarchy: toolbar > button items', () => {
-    const { container } = renderToolbar(fixtureData())
+    const { container } = renderActionToolbar(fixtureData())
     const hierarchy = extractRoleHierarchy(container)
     expect(hierarchy).toContain('toolbar')
     expect(hierarchy).toContain('button')
   })
 
   it('initial focus lands on first button (tabindex=0)', () => {
-    const { container } = renderToolbar(fixtureData())
+    const { container } = renderActionToolbar(fixtureData())
     expect(getFocusedNodeId(container)).toBe('bold')
   })
 
   it('only focused button has tabindex=0 (roving tabindex)', () => {
-    const { container } = renderToolbar(fixtureData())
+    const { container } = renderActionToolbar(fixtureData())
     const allTabindex0 = container.querySelectorAll('[tabindex="0"]')
     expect(allTabindex0).toHaveLength(1)
   })
 
-  it('aria-pressed is false initially', () => {
-    const { container } = renderToolbar(fixtureData())
-    const bold = getNode(container, 'bold')
-    expect(bold?.getAttribute('aria-pressed')).toBe('false')
-  })
-
-  it('captureAriaTree includes aria-pressed attribute', () => {
-    const { container } = renderToolbar(fixtureData())
-    const tree = captureAriaTree(container)
-    expect(tree).toContain('pressed=false')
-  })
-
   it('aria-orientation is horizontal', () => {
-    const { container } = renderToolbar(fixtureData())
-    const toolbar = container.querySelector('[role="toolbar"]')
-    expect(toolbar?.getAttribute('aria-orientation')).toBe('horizontal')
+    const { container } = renderActionToolbar(fixtureData())
+    const tb = container.querySelector('[role="toolbar"]')
+    expect(tb?.getAttribute('aria-orientation')).toBe('horizontal')
   })
 })
 
@@ -109,117 +107,145 @@ describe('APG Toolbar — ARIA Structure', () => {
 // ---------------------------------------------------------------------------
 
 describe('APG Toolbar — Keyboard Navigation', () => {
-  describe('ArrowRight', () => {
-    it('ArrowRight moves focus to next button', async () => {
-      const user = userEvent.setup()
-      const { container } = renderToolbar(fixtureData())
+  it('ArrowRight moves focus to next button', async () => {
+    const user = userEvent.setup()
+    const { container } = renderActionToolbar(fixtureData())
 
-      expect(getFocusedNodeId(container)).toBe('bold')
+    getNode(container, 'bold')!.focus()
+    await user.keyboard('{ArrowRight}')
 
-      getNode(container, 'bold')!.focus()
-      await user.keyboard('{ArrowRight}')
-
-      expect(getFocusedNodeId(container)).toBe('italic')
-    })
-
-    it('ArrowRight wraps from last to first (APG circular)', async () => {
-      const user = userEvent.setup()
-      const { container } = renderToolbar(fixtureData())
-
-      getNode(container, 'underline')!.focus()
-      await user.keyboard('{ArrowRight}')
-
-      expect(getFocusedNodeId(container)).toBe('bold')
-    })
+    expect(getFocusedNodeId(container)).toBe('italic')
   })
 
-  describe('ArrowLeft', () => {
-    it('ArrowLeft moves focus to previous button', async () => {
-      const user = userEvent.setup()
-      const { container } = renderToolbar(fixtureData())
+  it('ArrowRight wraps from last to first (APG circular)', async () => {
+    const user = userEvent.setup()
+    const { container } = renderActionToolbar(fixtureData())
 
-      getNode(container, 'italic')!.focus()
-      await user.keyboard('{ArrowLeft}')
+    getNode(container, 'underline')!.focus()
+    await user.keyboard('{ArrowRight}')
 
-      expect(getFocusedNodeId(container)).toBe('bold')
-    })
-
-    it('ArrowLeft wraps from first to last (APG circular)', async () => {
-      const user = userEvent.setup()
-      const { container } = renderToolbar(fixtureData())
-
-      getNode(container, 'bold')!.focus()
-      await user.keyboard('{ArrowLeft}')
-
-      expect(getFocusedNodeId(container)).toBe('underline')
-    })
+    expect(getFocusedNodeId(container)).toBe('bold')
   })
 
-  describe('Home', () => {
-    it('Home moves focus to first button', async () => {
-      const user = userEvent.setup()
-      const { container } = renderToolbar(fixtureData())
+  it('ArrowLeft moves focus to previous button', async () => {
+    const user = userEvent.setup()
+    const { container } = renderActionToolbar(fixtureData())
 
-      getNode(container, 'underline')!.focus()
-      await user.keyboard('{Home}')
+    getNode(container, 'italic')!.focus()
+    await user.keyboard('{ArrowLeft}')
 
-      expect(getFocusedNodeId(container)).toBe('bold')
-    })
+    expect(getFocusedNodeId(container)).toBe('bold')
   })
 
-  describe('End', () => {
-    it('End moves focus to last button', async () => {
-      const user = userEvent.setup()
-      const { container } = renderToolbar(fixtureData())
+  it('ArrowLeft wraps from first to last (APG circular)', async () => {
+    const user = userEvent.setup()
+    const { container } = renderActionToolbar(fixtureData())
 
-      getNode(container, 'bold')!.focus()
-      await user.keyboard('{End}')
+    getNode(container, 'bold')!.focus()
+    await user.keyboard('{ArrowLeft}')
 
-      expect(getFocusedNodeId(container)).toBe('underline')
-    })
+    expect(getFocusedNodeId(container)).toBe('underline')
+  })
+
+  it('Home moves focus to first button', async () => {
+    const user = userEvent.setup()
+    const { container } = renderActionToolbar(fixtureData())
+
+    getNode(container, 'underline')!.focus()
+    await user.keyboard('{Home}')
+
+    expect(getFocusedNodeId(container)).toBe('bold')
+  })
+
+  it('End moves focus to last button', async () => {
+    const user = userEvent.setup()
+    const { container } = renderActionToolbar(fixtureData())
+
+    getNode(container, 'bold')!.focus()
+    await user.keyboard('{End}')
+
+    expect(getFocusedNodeId(container)).toBe('underline')
   })
 })
 
 // ---------------------------------------------------------------------------
-// 3. Activation
+// 3. Action Toolbar — Activation
 // ---------------------------------------------------------------------------
 
-describe('APG Toolbar — Activation', () => {
-  it('Enter activates (selects) focused button', async () => {
+describe('APG Toolbar — Action: Activation', () => {
+  it('action toolbar buttons have no aria-pressed', () => {
+    const { container } = renderActionToolbar(fixtureData())
+    const bold = getNode(container, 'bold')
+    expect(bold?.getAttribute('aria-pressed')).toBeNull()
+  })
+
+  it('Enter fires onActivate', async () => {
     const user = userEvent.setup()
-    const { container } = renderToolbar(fixtureData())
+    const activated: string[] = []
+    const { container } = renderActionToolbar(fixtureData(), (id) => activated.push(id))
 
     getNode(container, 'bold')!.focus()
     await user.keyboard('{Enter}')
 
-    const testNode = container.querySelector('[data-testid="btn-bold"]')
-    expect(testNode?.getAttribute('data-selected')).toBe('true')
-  })
-
-  it('Space activates (selects) focused button', async () => {
-    const user = userEvent.setup()
-    const { container } = renderToolbar(fixtureData())
-
-    getNode(container, 'italic')!.focus()
-    await user.keyboard('{ }')
-
-    const testNode = container.querySelector('[data-testid="btn-italic"]')
-    expect(testNode?.getAttribute('data-selected')).toBe('true')
+    expect(activated).toContain('bold')
   })
 })
 
 // ---------------------------------------------------------------------------
-// 4. Click Interaction
+// 4. Toggle Toolbar — aria-pressed
 // ---------------------------------------------------------------------------
 
-describe('APG Toolbar — Click Interaction', () => {
-  it('clicking a button selects it', async () => {
+describe('APG Toolbar — Toggle: aria-pressed', () => {
+  it('aria-pressed is false initially', () => {
+    const { container } = renderToggleToolbar(fixtureData())
+    const bold = getNode(container, 'bold')
+    expect(bold?.getAttribute('aria-pressed')).toBe('false')
+  })
+
+  it('captureAriaTree includes aria-pressed attribute', () => {
+    const { container } = renderToggleToolbar(fixtureData())
+    const tree = captureAriaTree(container)
+    expect(tree).toContain('pressed=false')
+  })
+
+  it('Enter toggles aria-pressed to true', async () => {
     const user = userEvent.setup()
-    const { container } = renderToolbar(fixtureData())
+    const { container } = renderToggleToolbar(fixtureData())
+
+    getNode(container, 'bold')!.focus()
+    await user.keyboard('{Enter}')
+
+    expect(getNode(container, 'bold')?.getAttribute('aria-pressed')).toBe('true')
+  })
+
+  it('Space toggles aria-pressed to true', async () => {
+    const user = userEvent.setup()
+    const { container } = renderToggleToolbar(fixtureData())
+
+    getNode(container, 'italic')!.focus()
+    await user.keyboard('{ }')
+
+    expect(getNode(container, 'italic')?.getAttribute('aria-pressed')).toBe('true')
+  })
+
+  it('clicking a button toggles aria-pressed', async () => {
+    const user = userEvent.setup()
+    const { container } = renderToggleToolbar(fixtureData())
 
     await user.click(getNode(container, 'italic')!)
 
-    const testNode = container.querySelector('[data-testid="btn-italic"]')
-    expect(testNode?.getAttribute('data-selected')).toBe('true')
+    expect(getNode(container, 'italic')?.getAttribute('aria-pressed')).toBe('true')
+  })
+
+  it('toggling twice returns to false', async () => {
+    const user = userEvent.setup()
+    const { container } = renderToggleToolbar(fixtureData())
+
+    getNode(container, 'bold')!.focus()
+    await user.keyboard('{Enter}')
+    expect(getNode(container, 'bold')?.getAttribute('aria-pressed')).toBe('true')
+
+    await user.keyboard('{Enter}')
+    expect(getNode(container, 'bold')?.getAttribute('aria-pressed')).toBe('false')
   })
 })
