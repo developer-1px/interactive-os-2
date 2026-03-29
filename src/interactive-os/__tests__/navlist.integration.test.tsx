@@ -27,6 +27,7 @@ function getFocusedNodeId(container: HTMLElement): string | null {
   return focused?.getAttribute('data-node-id') ?? null
 }
 
+// @test-harness
 function NavListWithActivatedDisplay({ data, ...rest }: { data: NormalizedData; 'aria-label': string }) {
   const [activated, setActivated] = useState('')
   return (
@@ -104,6 +105,7 @@ describe('NavList', () => {
 
   it('syncs focus when data changes with new FOCUS_ID', async () => {
     const user = userEvent.setup()
+    // @test-harness
     function ExternalSync() {
       const [data, setData] = useState(makeNavData(['Alpha', 'Beta', 'Gamma']))
       return (

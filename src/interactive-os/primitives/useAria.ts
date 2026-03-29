@@ -169,6 +169,15 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       mergedEntities[FOCUS_ID] = { id: FOCUS_ID, ...focusMeta, focusedId: fallback }
     }
 
+    // selectionFollowsFocus: external focus change → auto-sync selection
+    // syncStore bypasses middleware, so we replicate the middleware effect here
+    if (externalFocusChanged && pattern.selectionFollowsFocus) {
+      const newFocusedId = (mergedEntities[FOCUS_ID] as { focusedId?: string })?.focusedId
+      if (newFocusedId) {
+        mergedEntities[SELECTION_ID] = { id: SELECTION_ID, selectedIds: [newFocusedId] }
+      }
+    }
+
     const selectionMeta = mergedEntities[SELECTION_ID] as { selectedIds?: string[] } | undefined
     if (selectionMeta?.selectedIds) {
       const cleaned = selectionMeta.selectedIds.filter(id => id in data.entities)
