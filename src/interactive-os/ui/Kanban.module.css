@@ -68,7 +68,7 @@
   min-width: var(--space-3xl);
   max-width: none;
   flex: 0 0 auto;
-  width: 200px;
+  width: 240px;
   border-radius: var(--shape-sm-radius);
   padding: var(--space-xs) var(--space-sm);
   overflow-y: auto;
@@ -80,6 +80,9 @@
   text-transform: none;
   letter-spacing: 0;
   padding: var(--space-xs) 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .board[data-compact] .card {
@@ -111,16 +114,16 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Extension color indicator (left border) ── */
+/* ── Extension color indicator (inset shadow, border:none 호환) ── */
 
-.board[data-compact] .card[data-ext="ts"] { border-left: 2px solid var(--primary); }
-.board[data-compact] .card[data-ext="tsx"] { border-left: 2px solid var(--focus); }
-.board[data-compact] .card[data-ext="css"] { border-left: 2px solid var(--destructive); }
+.board[data-compact] .card[data-ext="ts"] { box-shadow: inset 3px 0 0 var(--tone-primary-base); }
+.board[data-compact] .card[data-ext="tsx"] { box-shadow: inset 3px 0 0 var(--focus); }
+.board[data-compact] .card[data-ext="css"] { box-shadow: inset 3px 0 0 var(--tone-destructive-base); }
 .board[data-compact] .card[data-ext="md"],
-.board[data-compact] .card[data-ext="mdx"] { border-left: 2px solid var(--tone-positive-base); }
+.board[data-compact] .card[data-ext="mdx"] { box-shadow: inset 3px 0 0 var(--tone-positive-base); }
 .board[data-compact] .card[data-ext="json"],
 .board[data-compact] .card[data-ext="yaml"],
-.board[data-compact] .card[data-ext="yml"] { border-left: 2px solid var(--tone-warning-base); }
+.board[data-compact] .card[data-ext="yml"] { box-shadow: inset 3px 0 0 var(--tone-warning-base); }
 
 /* ── Weight hints (LOC-based file size indicator) ── */
 
