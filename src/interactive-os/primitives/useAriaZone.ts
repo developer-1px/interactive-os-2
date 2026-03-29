@@ -234,7 +234,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
 
   // ── Derived state ──
 
-  const { focusedId, selectedIds, expandedIds, checkedIds } = viewState
+  const { focusedId, selectedIds } = viewState
   const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds])
 
   // ── activationFollowsSelection ──
@@ -261,8 +261,6 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     onActivate,
     focusedId,
     selectedIdSet,
-    expandedIds,
-    checkedIds,
     nodeIdAttr: `data-${scope}-id`,
     disabled,
   })

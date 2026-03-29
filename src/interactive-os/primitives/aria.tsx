@@ -443,7 +443,7 @@ function AriaTrigger({ render }: AriaTriggerProps) {
 
   const makeCtx = () => createPatternContext(engineLike, {
     visibilityFilters: pattern?.visibilityFilters,
-    popupType: pattern?.popupType,
+    ctxFactories: pattern?.ctxFactories,
   })
 
   const props: React.HTMLAttributes<HTMLElement> & Record<string, unknown> = {
@@ -474,7 +474,7 @@ function AriaTrigger({ render }: AriaTriggerProps) {
       event.stopPropagation()
 
       const ctx = makeCtx()
-      const command = isOpen ? ctx.close() : ctx.open()
+      const command = isOpen ? ctx.popup!.close() : ctx.popup!.open()
       if (command) aria.dispatch(command)
     },
     onFocus: () => {
