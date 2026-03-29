@@ -20,23 +20,7 @@ import styles from './BirdseyeLayout.module.css'
 
 function findFirstNavItem(navStore: NormalizedData): string | null {
   const rootChildren = navStore.relationships['__root__'] ?? []
-
-  // src/ 폴더를 찾고, 그 안에서 interactive-os 또는 pages 우선
-  const srcId = rootChildren.find((id) => {
-    const data = getEntityData<{ label: string }>(navStore, id)
-    return data?.label === 'src'
-  })
-  if (srcId) {
-    const srcChildren = navStore.relationships[srcId] ?? []
-    const preferred = srcChildren.find((id) => {
-      const data = getEntityData<{ label: string }>(navStore, id)
-      return data?.label === 'interactive-os' || data?.label === 'pages'
-    })
-    if (preferred) return preferred
-    if (srcChildren.length > 0) return srcChildren[0]!
-    return srcId
-  }
-  return null
+  return rootChildren[0] ?? null
 }
 
 /** Debounce hook — returns the value after it settles for `delay` ms */
@@ -243,7 +227,7 @@ export default function BirdseyeLayout() {
             <span data-ext="yaml">.yaml</span>
           </span>
         </div>
-        {kanbanStore && (
+        {kanbanStore && Object.keys(kanbanStore.relationships).length > 1 ? (
           <div className={styles.boardBody}>
             <Kanban
               key={selectedFolderId}
@@ -254,6 +238,8 @@ export default function BirdseyeLayout() {
               aria-label={`${selectedName} contents`}
             />
           </div>
+        ) : (
+          <div className={styles.viewerEmpty}>No source files in this folder</div>
         )}
       </div>
 
