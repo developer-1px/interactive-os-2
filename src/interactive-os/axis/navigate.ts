@@ -61,6 +61,12 @@ export function gridCtx(
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 export type NavigateType = 'vertical' | 'horizontal' | 'both' | 'activedescendant' | 'natural'
 
+function toFocusStrategy(type: NavigateType): import('./types').FocusStrategy {
+  if (type === 'activedescendant') return { type: 'aria-activedescendant', orientation: 'vertical' }
+  if (type === 'natural') return { type: 'natural-tab-order', orientation: 'vertical' }
+  return { type: 'roving-tabindex', orientation: type }
+}
+
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 // Navigate ctxFactory — focus movement methods only (store infra is in createPatternContext)
 function navigateCtxFactory(): CtxFactory {
@@ -124,8 +130,7 @@ export function navigate(type: NavigateType = 'vertical') {
   return {
     keyMap: {} as Record<string, never>,
     ctxFactory: navigateCtxFactory(),
-    __axisType: 'navigate' as const,
-    __navType: type,
+    meta: { focusStrategy: toFocusStrategy(type) },
     // handlers
     next,
     prev,
@@ -166,8 +171,7 @@ export function grid(columns: number) {
 
   return {
     keyMap: {} as Record<string, never>,
-    __axisType: 'grid' as const,
-    columns,
+    meta: { colCount: columns },
     ctxFactory: ((engine, focusedId) => ({
       grid: gridCtx(engine, focusedId, columns),
     })) as CtxFactory,

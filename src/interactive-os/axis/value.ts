@@ -96,8 +96,7 @@ export function value(range: ValueRange) {
 
   return {
     keyMap: {} as Record<string, never>,
-    __axisType: 'value' as const,
-    range,
+    meta: { valueRange: range },
     ctxFactory: ((engine, focusedId) => ({
       value: valueCtx(engine, focusedId, range),
     })) as CtxFactory,

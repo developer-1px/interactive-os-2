@@ -209,9 +209,10 @@ export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; at
     ctxFactory: ((engine, focusedId, visibleNodes) => ({
       selected: selectedCtx(engine, focusedId, visibleNodes, mode),
     })) as import('./types').CtxFactory,
-    __axisType: 'selected' as const,
-    __mode: mode,
-    __followFocus: opts?.followFocus,
+    meta: {
+      selectionMode: mode,
+      ...(opts?.followFocus && { selectionFollowsFocus: true }),
+    },
     // handlers
     toggle,
     extendNext,
