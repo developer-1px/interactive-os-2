@@ -4,7 +4,7 @@ import { navigate } from '../../axis/navigate'
 
 // APG Disclosure — "Enables content to be either collapsed or expanded."
 const nav = navigate('natural')
-const exp = expanded()
+const exp = expanded({ allExpandable: true })
 
 export const disclosure = composePattern(
   { role: 'group', childRole: 'button' },
