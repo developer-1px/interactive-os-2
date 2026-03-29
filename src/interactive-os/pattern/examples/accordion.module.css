@@ -17,7 +17,8 @@
   background: var(--surface-sunken);
   border: var(--border-width) solid var(--border-default);
   cursor: default;
-  outline: none;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
 }
 
 .title {
@@ -63,7 +64,8 @@
   background: var(--surface-default);
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--radius-sm);
-  outline: none;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
 }
 
 .input:focus {
@@ -78,4 +80,5 @@
 
 .trigger:is([data-focused]) {
   background: var(--bg-hover);
+  outline-color: var(--focus);
 }

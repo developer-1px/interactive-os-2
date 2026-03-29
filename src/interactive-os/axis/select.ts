@@ -1,6 +1,6 @@
-import type { AxisConfig, KeyMap } from './types'
+import type { AxisConfig, KeyMap, PatternContext } from './types'
 import type { SelectionMode } from './types'
-import type { Command, Middleware } from '../engine/types'
+import { type Command, type Middleware, createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
 
@@ -90,6 +90,9 @@ export const selectionCommands = {
   select: (nodeId: string): Command => _selectionCommands.selectRange([nodeId]),
 }
 
+export const selectAndAnchor = (ctx: PatternContext): Command =>
+  createBatchCommand([selectionCommands.select(ctx.focused), selectionCommands.setAnchor(ctx.focused)])
+
 /**
  * Middleware that clears the selection anchor when a standalone focus command fires.
  * This ensures Shift+Arrow starts fresh after normal navigation.
@@ -120,12 +123,17 @@ export function selectionFollowsFocusMiddleware(): Middleware {
 }
 
 // ② 2026-03-28-axis-handlers-export-prd.md
-export const toggleSelect = (ctx: import('./types').PatternContext): Command => ctx.toggleSelect()
-export const extendSelectionNext = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('next')
-export const extendSelectionPrev = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('prev')
-export const extendSelectionFirst = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('first')
-export const extendSelectionLast = (ctx: import('./types').PatternContext): Command => ctx.extendSelection('last')
-export const extendSelectionToFocused = (ctx: import('./types').PatternContext): Command => ctx.extendSelectionTo(ctx.focused)
+export const toggleSelect = (ctx: PatternContext): Command => ctx.toggleSelect()
+export const extendSelectionNext = (ctx: PatternContext): Command => ctx.extendSelection('next')
+export const extendSelectionPrev = (ctx: PatternContext): Command => ctx.extendSelection('prev')
+export const extendSelectionFirst = (ctx: PatternContext): Command => ctx.extendSelection('first')
+export const extendSelectionLast = (ctx: PatternContext): Command => ctx.extendSelection('last')
+export const extendSelectionToFocused = (ctx: PatternContext): Command => ctx.extendSelectionTo(ctx.focused)
+
+interface SelectOptions {
+  mode?: SelectionMode
+  selectionFollowsFocus?: boolean
+}
 
 /** Config-only: provides selectionMode + middleware, no keyMap. Pattern declares bindings. */
 export function selectConfig(options?: SelectOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; middleware?: Middleware } {
@@ -148,49 +156,3 @@ export function selectConfig(options?: SelectOptions): { keyMap: KeyMap; config:
   }
 }
 
-interface SelectOptions {
-  mode?: SelectionMode  // 'single' | 'multiple', default 'multiple'
-  extended?: boolean     // add Shift combos, only when mode='multiple'
-  selectionFollowsFocus?: boolean
-}
-
-export function select(options?: SelectOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; middleware?: Middleware } {
-  const mode = options?.mode ?? 'multiple'
-  const extended = options?.extended && mode === 'multiple'
-
-  const keyMap: KeyMap = {
-    Space: toggleSelect,
-  }
-
-  if (extended) {
-    keyMap['Shift+ArrowDown'] = extendSelectionNext
-    keyMap['Shift+ArrowUp'] = extendSelectionPrev
-    keyMap['Shift+Home'] = extendSelectionFirst
-    keyMap['Shift+End'] = extendSelectionLast
-  }
-
-  const middlewares: Middleware[] = [anchorResetMiddleware()]
-  if (options?.selectionFollowsFocus) {
-    middlewares.push(selectionFollowsFocusMiddleware())
-  }
-
-  const middleware: Middleware = middlewares.length === 1
-    ? middlewares[0]!
-    : (next) => {
-        const chain = middlewares.reduceRight<(command: Command) => void>(
-          (acc, mw) => mw(acc),
-          next,
-        )
-        return chain
-      }
-
-  return {
-    keyMap,
-    config: {
-      selectionMode: mode,
-      selectOnClick: true,
-      ...(options?.selectionFollowsFocus && { selectionFollowsFocus: true }),
-    },
-    middleware,
-  }
-}

@@ -4,8 +4,8 @@ import type { PatternContext } from '../axis/types'
 import type { Command } from '../engine/types'
 
 import { focusNext, focusPrev, focusFirst, focusLast, focusParent, focusChild, focusNextCol, focusPrevCol, focusFirstCol, focusLastCol } from '../axis/navigate'
-import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, select } from '../axis/select'
-import { expandHandler, collapseHandler, expandOrFocusChild, collapseOrFocusParent, expand } from '../axis/expand'
+import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast } from '../axis/select'
+import { expandHandler, collapseHandler, expandOrFocusChild, collapseOrFocusParent } from '../axis/expand'
 import { activateHandler } from '../axis/activate'
 import { incrementHandler, decrementHandler, incrementBig, decrementBig, setToMin, setToMax } from '../axis/value'
 import { dismissHandler } from '../axis/dismiss'
@@ -169,17 +169,6 @@ describe('axis handler exports', () => {
     expect(openAndFocusLast(mockCtx)).toBeUndefined()
   })
 
-  // V7: 2026-03-28-axis-handlers-export-prd.md
-  it('select() keyMap references exported handler (rewire)', () => {
-    const sel = select()
-    expect(sel.keyMap['Space']).toBe(toggleSelect)
-  })
-
-  it('expand() keyMap references exported handlers (rewire)', () => {
-    const exp = expand()
-    expect(exp.keyMap['ArrowRight']).toBe(expandOrFocusChild)
-    expect(exp.keyMap['ArrowLeft']).toBe(collapseOrFocusParent)
-  })
 })
 
 describe('unified inputMap — Click canonical strings', () => {

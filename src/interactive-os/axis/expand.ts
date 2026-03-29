@@ -1,4 +1,4 @@
-import type { AxisConfig, KeyMap } from './types'
+import type { AxisConfig, KeyMap, PatternContext } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -65,22 +65,18 @@ export const expandCommands = defineCommands({
 })
 
 // ② 2026-03-28-axis-handlers-export-prd.md
-export const expandHandler = (ctx: import('./types').PatternContext): Command => ctx.expand()
-export const collapseHandler = (ctx: import('./types').PatternContext): Command => ctx.collapse()
-export const toggleExpand = (ctx: import('./types').PatternContext): Command =>
+export const expandHandler = (ctx: PatternContext): Command => ctx.expand()
+export const collapseHandler = (ctx: PatternContext): Command => ctx.collapse()
+export const toggleExpand = (ctx: PatternContext): Command =>
   ctx.isExpanded ? ctx.collapse() : ctx.expand()
-export const expandOrFocusChild = (ctx: import('./types').PatternContext): Command =>
+export const expandOrFocusChild = (ctx: PatternContext): Command =>
   ctx.isExpanded ? ctx.focusChild() : ctx.expand()
-export const collapseOrFocusParent = (ctx: import('./types').PatternContext): Command =>
+export const collapseOrFocusParent = (ctx: PatternContext): Command =>
   ctx.isExpanded ? ctx.collapse() : ctx.focusParent()
 
 /** Config-only: provides expandTracking + visibilityFilter, no keyMap. Pattern declares bindings. */
 export function expandConfig(): { keyMap: KeyMap; config: Partial<AxisConfig>; visibilityFilter: VisibilityFilter } {
   return { keyMap: {}, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
-}
-
-interface ExpandOptions {
-  mode?: 'arrow' | 'enter-esc'
 }
 
 export const expandVisibilityFilter: VisibilityFilter = {
@@ -92,23 +88,3 @@ export const expandVisibilityFilter: VisibilityFilter = {
   },
 }
 
-export function expand(options?: ExpandOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; visibilityFilter: VisibilityFilter } {
-  const mode = options?.mode ?? 'arrow'
-
-  if (mode === 'enter-esc') {
-    // ② 2026-03-26-plugin-keymap-original-prd.md
-    // expand 본연 동작만 — spatial/rename은 plugin keyMap에서 original 패턴으로 override
-    const keyMap: KeyMap = {
-      Enter: (ctx) => ctx.activate(),
-      Escape: (ctx) => (ctx.isExpanded ? ctx.collapse() : ctx.focusParent()),
-    }
-    return { keyMap, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
-  }
-
-  // mode === 'arrow' (default)
-  const keyMap: KeyMap = {
-    ArrowRight: expandOrFocusChild,
-    ArrowLeft: collapseOrFocusParent,
-  }
-  return { keyMap, config: { expandTracking: true }, visibilityFilter: expandVisibilityFilter }
-}

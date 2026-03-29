@@ -11,9 +11,9 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
 import { composePattern } from '../pattern/composePattern'
-import { select } from '../axis/select'
-import { activate } from '../axis/activate'
-import { navigate } from '../axis/navigate'
+import { selectConfig } from '../axis/select'
+import { activateConfig, activateHandler } from '../axis/activate'
+import { focusNext, focusPrev, focusFirst, focusLast } from '../axis/navigate'
 import { tabs } from '../pattern/roles/tabs'
 import { radiogroup } from '../pattern/roles/radiogroup'
 import { createStore } from '../store/createStore'
@@ -42,9 +42,17 @@ const bothOptions = composePattern(
       'aria-pressed': String(state.selected),
     }),
   },
-  select({ mode: 'single', selectionFollowsFocus: true }),
-  activate({ onClick: true, activationFollowsSelection: true }),
-  navigate({ orientation: 'vertical' }),
+  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
+  activateConfig(),
+  { keyMap: {}, config: { activationFollowsSelection: true } },
+  {
+    ArrowDown: focusNext,
+    ArrowUp: focusPrev,
+    Home: focusFirst,
+    End: focusLast,
+    Enter: activateHandler,
+    Space: activateHandler,
+  },
 )
 
 const selectionOnly = composePattern(
@@ -55,9 +63,16 @@ const selectionOnly = composePattern(
       'aria-checked': String(state.selected),
     }),
   },
-  select({ mode: 'single', selectionFollowsFocus: true }),
-  activate({ onClick: true }),
-  navigate({ orientation: 'both', wrap: true }),
+  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
+  activateConfig(),
+  {
+    ArrowDown: focusNext,
+    ArrowUp: focusPrev,
+    ArrowRight: focusNext,
+    ArrowLeft: focusPrev,
+    Enter: activateHandler,
+    Space: activateHandler,
+  },
 )
 
 const noOptions = composePattern(
@@ -68,8 +83,15 @@ const noOptions = composePattern(
       'aria-pressed': String(state.selected),
     }),
   },
-  activate({ onClick: true }),
-  navigate({ orientation: 'horizontal' }),
+  activateConfig(),
+  {
+    ArrowRight: focusNext,
+    ArrowLeft: focusPrev,
+    Home: focusFirst,
+    End: focusLast,
+    Enter: activateHandler,
+    Space: activateHandler,
+  },
 )
 
 function getNode(container: HTMLElement, id: string): HTMLElement {

@@ -1,4 +1,3 @@
-import type { AxisConfig, KeyMap } from './types'
 import type { PatternContext } from './types'
 import type { Command } from '../engine/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -73,36 +72,3 @@ export const decrementBig = (ctx: PatternContext): Command | void => ctx.value?.
 export const setToMin = (ctx: PatternContext): Command | void => ctx.value?.setToMin()
 export const setToMax = (ctx: PatternContext): Command | void => ctx.value?.setToMax()
 
-interface ValueOptions {
-  min: number
-  max: number
-  step: number
-  orientation?: 'horizontal' | 'vertical'
-}
-
-export function value(options: ValueOptions): { keyMap: KeyMap; config: Partial<AxisConfig> } {
-  const { min, max, step, orientation = 'horizontal' } = options
-  const bigStep = step * 10
-
-  const keyMap: KeyMap = {
-    PageUp: (ctx: PatternContext) => ctx.value?.increment(bigStep),
-    PageDown: (ctx: PatternContext) => ctx.value?.decrement(bigStep),
-    Home: setToMin,
-    End: setToMax,
-  }
-
-  keyMap['ArrowUp'] = incrementHandler
-  keyMap['ArrowDown'] = decrementHandler
-
-  if (orientation === 'horizontal') {
-    keyMap['ArrowRight'] = incrementHandler
-    keyMap['ArrowLeft'] = decrementHandler
-  }
-
-  return {
-    keyMap,
-    config: {
-      valueRange: { min, max, step },
-    },
-  }
-}

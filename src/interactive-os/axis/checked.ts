@@ -1,4 +1,4 @@
-import type { AxisConfig, KeyMap } from './types'
+import type { PatternContext } from './types'
 import type { Command } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -65,12 +65,5 @@ export const checkedCommands = defineCommands({
 })
 
 // ② 2026-03-28-axis-handlers-export-prd.md
-export const toggleCheckHandler = (ctx: import('./types').PatternContext): Command => ctx.toggleCheck()
+export const toggleCheckHandler = (ctx: PatternContext): Command => ctx.toggleCheck()
 
-export function checked(): { keyMap: KeyMap; config: Partial<AxisConfig> } {
-  const keyMap: KeyMap = {
-    Enter: toggleCheckHandler,
-    Space: toggleCheckHandler,
-  }
-  return { keyMap, config: { checkedTracking: true, checkOnClick: true } }
-}

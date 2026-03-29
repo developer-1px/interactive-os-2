@@ -9,26 +9,38 @@ import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 import { composePattern } from '../pattern/composePattern'
-import { popup } from '../axis/popup'
-import { navigate } from '../axis/navigate'
+import { openPopup, closePopup, openAndFocusFirst, openAndFocusLast, popupVisibilityFilter } from '../axis/popup'
+import { focusFirst, focusLast } from '../axis/navigate'
+import type { PatternContext } from '../axis/types'
+import type { Command } from '../engine/types'
 
-const pop = popup({ type: 'menu' })
-const nav = navigate({ orientation: 'vertical', wrap: true })
+const openFirstOrFocusNext = (ctx: PatternContext): Command | void =>
+  openAndFocusFirst(ctx) ?? ctx.focusNext({ wrap: true })
+const openLastOrFocusPrev = (ctx: PatternContext): Command | void =>
+  openAndFocusLast(ctx) ?? ctx.focusPrev({ wrap: true })
 
-// Trigger uses popup axis's own keyMap entries for open pattern
 const testMenuButton = composePattern(
   {
     role: 'menu',
     childRole: 'menuitem',
     ariaAttributes: () => ({}),
+    popupType: 'menu',
+    visibilityFilter: popupVisibilityFilter,
     triggerKeyMap: {
-      Enter: pop.keyMap.Enter!,
-      ' ': pop.keyMap.Space!,
-      ArrowDown: pop.keyMap.ArrowDown!,
+      Enter: openPopup,
+      ' ': openPopup,
+      ArrowDown: openAndFocusFirst,
     },
   },
-  pop,
-  nav,
+  {
+    Enter: openPopup,
+    Space: openPopup,
+    Escape: closePopup,
+    ArrowDown: openFirstOrFocusNext,
+    ArrowUp: openLastOrFocusPrev,
+    Home: focusFirst,
+    End: focusLast,
+  },
 )
 
 function fixtureData(): NormalizedData {

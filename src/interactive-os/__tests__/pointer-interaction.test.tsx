@@ -12,10 +12,10 @@ import { listbox } from '../pattern/roles/listbox'
 import { tree } from '../pattern/roles/tree'
 import { grid } from '../pattern/roles/grid'
 import { composePattern } from '../pattern/composePattern'
-import { select } from '../axis/select'
-import { activate } from '../axis/activate'
-import { expand } from '../axis/expand'
-import { navigate } from '../axis/navigate'
+import { selectConfig, selectAndAnchor } from '../axis/select'
+import { activateConfig, activateHandler } from '../axis/activate'
+import { expandConfig, expandOrFocusChild, collapseOrFocusParent } from '../axis/expand'
+import { focusNext, focusPrev, focusFirst, focusLast } from '../axis/navigate'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -176,10 +176,19 @@ describe('pointer interaction — tree click with expandOnClick: false', () => {
   function setup() {
     const navTree = composePattern(
       { role: 'tree', childRole: 'treeitem', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected), ...(s.expanded !== undefined && { 'aria-expanded': String(s.expanded) }) }) },
-      select({ mode: 'single' }),
-      activate({ onClick: true, expandOnClick: false }),
-      expand({ mode: 'arrow' }),
-      navigate({ orientation: 'vertical' }),
+      selectConfig({ mode: 'single' }),
+      activateConfig({ expandOnClick: false }),
+      expandConfig(),
+      {
+        ArrowRight: expandOrFocusChild,
+        ArrowLeft: collapseOrFocusParent,
+        ArrowDown: focusNext,
+        ArrowUp: focusPrev,
+        Home: focusFirst,
+        End: focusLast,
+        Enter: activateHandler,
+        Space: activateHandler,
+      },
     )
     const user = userEvent.setup()
     const activated: string[] = []
@@ -205,9 +214,19 @@ describe('pointer interaction — edge cases', () => {
   it('Shift+Click on single-select listbox acts as normal click (no range)', async () => {
     const singleListbox = composePattern(
       { role: 'listbox', childRole: 'option', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected) }) },
-      select({ mode: 'single' }),
-      activate({ onClick: true }),
-      navigate({ orientation: 'vertical' }),
+      selectConfig({ mode: 'single' }),
+      activateConfig(),
+      {
+        ArrowDown: focusNext,
+        ArrowUp: focusPrev,
+        Home: focusFirst,
+        End: focusLast,
+        Enter: activateHandler,
+        Space: activateHandler,
+        Click: selectAndAnchor,
+        'Shift+Click': selectAndAnchor,
+        'Mod+Click': selectAndAnchor,
+      },
     )
     const user = userEvent.setup()
     const { container } = render(

@@ -6,18 +6,10 @@ import { focusCommands, focusNext, focusPrev, focusFirst, focusLast } from '../a
 import { composePattern } from '../pattern/composePattern'
 import { selectConfig } from '../axis/select'
 import { expandConfig } from '../axis/expand'
-import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectionCommands } from '../axis/select'
-import type { Command } from '../engine/types'
-import { createBatchCommand } from '../engine/types'
+import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectAndAnchor } from '../axis/select'
 
 // Re-export spatial plugin for consumers that use this pattern
 export { spatial as spatialPlugin } from '../plugins/spatial'
-
-const selectAndAnchor = (ctx: PatternContext): Command =>
-  createBatchCommand([
-    selectionCommands.select(ctx.focused),
-    selectionCommands.setAnchor(ctx.focused),
-  ])
 
 export const spatial: AriaPattern = composePattern(
   {

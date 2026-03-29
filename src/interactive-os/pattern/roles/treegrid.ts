@@ -1,23 +1,16 @@
 import type { AriaPattern } from '../types'
 import { composePattern } from '../composePattern'
 import { focusNext, focusPrev, gridTabCycleNext, gridTabCyclePrev } from '../../axis/navigate'
-import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectionCommands } from '../../axis/select'
+import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectAndAnchor } from '../../axis/select'
 import { selectConfig } from '../../axis/select'
 import { expandConfig } from '../../axis/expand'
 import { activateHandler } from '../../axis/activate'
 import type { PatternContext } from '../../axis/types'
 import type { Command } from '../../engine/types'
-import { createBatchCommand } from '../../engine/types'
 
 // APG Treegrid — https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/examples/treegrid-1/
 // Hierarchical data grid: row focus ↔ cell focus mode + tree expand/collapse + selection
 // 3 navigation models — this implements "Rows first, cells reachable"
-
-const selectAndAnchor = (ctx: PatternContext): Command =>
-  createBatchCommand([
-    selectionCommands.select(ctx.focused),
-    selectionCommands.setAnchor(ctx.focused),
-  ])
 
 // ── Row ↔ Cell mode handlers (APG §Keyboard) ──
 
