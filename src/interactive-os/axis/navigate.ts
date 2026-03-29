@@ -194,36 +194,3 @@ export function grid(columns: number) {
   }
 }
 
-// ② 2026-03-28-axis-handlers-export-prd.md (legacy — navigate() 전환 후 제거)
-export const focusNext = (ctx: PatternContext): Command => ctx.focusNext()
-export const focusPrev = (ctx: PatternContext): Command => ctx.focusPrev()
-export const focusFirst = (ctx: PatternContext): Command => ctx.focusFirst()
-export const focusLast = (ctx: PatternContext): Command => ctx.focusLast()
-export const focusParent = (ctx: PatternContext): Command => ctx.focusParent()
-export const focusChild = (ctx: PatternContext): Command => ctx.focusChild()
-export const focusNextCol = (ctx: PatternContext): Command | void => ctx.grid?.focusNextCol()
-export const focusPrevCol = (ctx: PatternContext): Command | void => ctx.grid?.focusPrevCol()
-export const focusFirstCol = (ctx: PatternContext): Command | void => ctx.grid?.focusFirstCol()
-export const focusLastCol = (ctx: PatternContext): Command | void => ctx.grid?.focusLastCol()
-export const focusNextWrap = (ctx: PatternContext): Command => ctx.focusNext({ wrap: true })
-export const focusPrevWrap = (ctx: PatternContext): Command => ctx.focusPrev({ wrap: true })
-
-export const gridTabCycleNext = (ctx: PatternContext): Command | void => {
-  const g = ctx.grid
-  if (!g) return
-  const atLastCol = g.colIndex >= g.colCount - 1
-  if (!atLastCol) return g.focusNextCol()
-  const nextRowCmd = ctx.focusNext()
-  if ((nextRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
-  return createBatchCommand([nextRowCmd, g.focusFirstCol()])
-}
-
-export const gridTabCyclePrev = (ctx: PatternContext): Command | void => {
-  const g = ctx.grid
-  if (!g) return
-  const atFirstCol = g.colIndex <= 0
-  if (!atFirstCol) return g.focusPrevCol()
-  const prevRowCmd = ctx.focusPrev()
-  if ((prevRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
-  return createBatchCommand([prevRowCmd, g.focusLastCol()])
-}
