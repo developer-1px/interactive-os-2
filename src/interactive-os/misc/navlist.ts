@@ -4,7 +4,7 @@ import { navigate } from '../axis/navigate'
 import { activateHandler } from '../axis/activate'
 
 const nav = navigate('vertical')
-const sel = selected('single', { followFocus: true })
+const sel = selected('single', { followFocus: true, activateOnSelect: true })
 
 const base = composePattern(
   { role: 'listbox', childRole: 'option' },

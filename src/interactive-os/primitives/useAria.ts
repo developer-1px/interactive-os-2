@@ -210,10 +210,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
   // ── Pointer selection overlay (useAria-only) ──
 
-  const { patternCtxOptions } = view
-
-  const onActivateRef = useRef(onActivate)
-  useEffect(() => { onActivateRef.current = onActivate })
+  const { patternCtxOptions, observedEngine } = view
 
   const getNodeProps = useCallback(
     (id: string): Record<string, unknown> => {
@@ -225,7 +222,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         const clickMap = pattern.clickMap
 
         baseProps.onPointerDown = () => {
-          pointerDownCtxRef.current = createPatternContext(engine, patternCtxOptions as PatternContextOptions)
+          pointerDownCtxRef.current = createPatternContext(observedEngine, patternCtxOptions as PatternContextOptions)
         }
 
         baseProps.onClick = (event: MouseEvent) => {
@@ -234,7 +231,6 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           const closestItem = target.closest(`[data-node-id]`)
           if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
 
-          // Resolve modifier key to canonical string
           let key: string
           if (event.shiftKey) key = 'Shift+Click'
           else if (event.ctrlKey || event.metaKey) key = 'Mod+Click'
@@ -243,13 +239,11 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
           const handler = clickMap[key]
           if (handler) {
-            // Shift+Click: use pointerDown ctx (anchor captured before focus moves) with clicked node as target
             const baseCtx = (key === 'Shift+Click' && pointerDownCtxRef.current)
               ? pointerDownCtxRef.current
-              : createPatternContext(engine, { ...patternCtxOptions as PatternContextOptions })
-            // Override focused to the clicked node so handler can use ctx.focused as target
+              : createPatternContext(observedEngine, { ...patternCtxOptions as PatternContextOptions })
             const ctx = { ...baseCtx, focused: id }
-            dispatchKeyAction(ctx, handler as (c: typeof ctx) => Command | void, engine, onActivateRef.current)
+            dispatchKeyAction(ctx, handler as (c: typeof ctx) => Command | void, observedEngine)
           }
           pointerDownCtxRef.current = null
         }
@@ -259,12 +253,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
       return baseProps
     },
-    [view, isKeyMapOnly, pattern.clickMap, engine, patternCtxOptions],
+    [view, isKeyMapOnly, pattern.clickMap, observedEngine, patternCtxOptions],
   )
 
   const dispatch = useCallback(
-    (command: Command) => engine.dispatch(command),
-    [engine]
+    (command: Command) => observedEngine.dispatch(command),
+    [observedEngine]
   )
 
   return {
