@@ -1,38 +1,24 @@
-import type { Entity } from '../../store/types'
-import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { incrementHandler, decrementHandler, incrementBig, decrementBig, setToMin, setToMax } from '../../axis/value'
+import { value } from '../../axis/value'
+import { navigate } from '../../axis/navigate'
 
-interface SpinbuttonOptions {
-  min: number
-  max: number
-  step: number
-}
+// APG Spinbutton — "A rangeable input for numeric values."
+interface SpinbuttonOptions { min: number; max: number; step: number }
 
 export function spinbutton(options: SpinbuttonOptions) {
-  const { min, max, step } = options
+  const nav = navigate('natural')
+  const val = value(options)
 
   return composePattern(
+    { role: 'none', childRole: 'spinbutton' },
+    [nav, val],
     {
-      role: 'none',
-      childRole: 'spinbutton',
-      valueRange: { min, max, step },
-      ariaAttributes: (node: Entity, state: NodeState) => ({
-        'aria-valuenow': String(state.valueCurrent ?? min),
-        'aria-valuemin': String(min),
-        'aria-valuemax': String(max),
-        ...((node.data as Record<string, unknown>)?.label
-          ? { 'aria-label': String((node.data as Record<string, unknown>).label) }
-          : {}),
-      }),
-    },
-    {
-      ArrowUp: incrementHandler,
-      ArrowDown: decrementHandler,
-      Home: setToMin,
-      End: setToMax,
-      PageUp: incrementBig,
-      PageDown: decrementBig,
+      ArrowUp: val.increment,
+      ArrowDown: val.decrement,
+      Home: val.setToMin,
+      End: val.setToMax,
+      PageUp: val.incrementBig,
+      PageDown: val.decrementBig,
     },
   )
 }

@@ -1,27 +1,22 @@
 import type { AriaPattern } from '../types'
 import { composePattern } from '../composePattern'
-import { expandVisibilityFilter, toggleExpand } from '../../axis/expand'
-import { focusNext, focusPrev, focusFirst, focusLast } from '../../axis/navigate'
+import { expanded } from '../../axis/expand'
+import { navigate } from '../../axis/navigate'
 
-// APG Accordion — https://www.w3.org/WAI/ARIA/apg/patterns/accordion/examples/accordion/
+// APG Accordion — "Vertically stacked set of interactive headings."
+const nav = navigate('natural')
+const exp = expanded()
 
 export const accordion: AriaPattern = composePattern(
+  { role: 'none', childRole: 'heading', panel: 'region' },
+  [nav, exp],
   {
-    role: 'region',
-    childRole: 'heading',
-    focusStrategy: { type: 'natural-tab-order' },
-    expandTracking: true,
-    visibilityFilter: expandVisibilityFilter,
-    panelRole: 'region',
-    panelVisibility: 'expanded',
-  },
-  {
-    Enter: toggleExpand,
-    Space: toggleExpand,
-    ArrowDown: focusNext,
-    ArrowUp: focusPrev,
-    Home: focusFirst,
-    End: focusLast,
-    Click: toggleExpand,
+    Enter: exp.toggle,
+    Space: exp.toggle,
+    ArrowDown: nav.next,
+    ArrowUp: nav.prev,
+    Home: nav.first,
+    End: nav.last,
+    Click: exp.toggle,
   },
 )

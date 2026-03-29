@@ -1,6 +1,7 @@
-import type { AxisConfig, KeyMap, PatternContext } from './types'
+import type { PatternContext, EntityDecl } from './types'
 import type { SelectionMode } from './types'
 import { type Command, type Middleware, createBatchCommand } from '../engine/types'
+import { focusCommands } from './navigate'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
 
@@ -123,21 +124,121 @@ export function selectionFollowsFocusMiddleware(): Middleware {
 }
 
 // ② 2026-03-28-axis-handlers-export-prd.md
-export const toggleSelect = (ctx: PatternContext): Command => ctx.toggleSelect()
-export const extendSelectionNext = (ctx: PatternContext): Command => ctx.extendSelection('next')
-export const extendSelectionPrev = (ctx: PatternContext): Command => ctx.extendSelection('prev')
-export const extendSelectionFirst = (ctx: PatternContext): Command => ctx.extendSelection('first')
-export const extendSelectionLast = (ctx: PatternContext): Command => ctx.extendSelection('last')
-export const extendSelectionToFocused = (ctx: PatternContext): Command => ctx.extendSelectionTo(ctx.focused)
+export const toggleSelect = (ctx: PatternContext): Command => ctx.selected!.toggle()
+export const extendSelectionNext = (ctx: PatternContext): Command => ctx.selected!.extend('next')
+export const extendSelectionPrev = (ctx: PatternContext): Command => ctx.selected!.extend('prev')
+export const extendSelectionFirst = (ctx: PatternContext): Command => ctx.selected!.extend('first')
+export const extendSelectionLast = (ctx: PatternContext): Command => ctx.selected!.extend('last')
+export const extendSelectionToFocused = (ctx: PatternContext): Command => ctx.selected!.extendTo(ctx.focused)
 
 interface SelectOptions {
   mode?: SelectionMode
   selectionFollowsFocus?: boolean
 }
 
-/** Config-only: provides selectionMode + middleware, no keyMap. Pattern declares bindings. */
-export function selectConfig(options?: SelectOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; middleware?: Middleware } {
-  const mode = options?.mode ?? 'multiple'
+// ② 2026-03-29-ctx-axis-namespace-prd.md
+export function selectedCtx(
+  engine: import('../engine/createCommandEngine').CommandEngine,
+  focusedId: string,
+  visibleNodes: () => string[],
+  mode?: SelectionMode,
+): import('./types').SelectedNav {
+  const store = engine.getStore()
+  const ids = getSelectedIds(store)
+  return {
+    ids,
+    toggle: () => mode === 'single'
+      ? selectionCommands.select(focusedId)
+      : selectionCommands.toggleSelect(focusedId),
+    range: (nodeIds: string[]) => selectionCommands.selectRange(nodeIds),
+    extend(direction: 'next' | 'prev' | 'first' | 'last'): Command {
+      const visible = visibleNodes()
+      const idx = visible.indexOf(focusedId)
+      let targetId: string
+      switch (direction) {
+        case 'next': targetId = visible[idx + 1] ?? focusedId; break
+        case 'prev': targetId = visible[idx - 1] ?? focusedId; break
+        case 'first': targetId = visible[0] ?? focusedId; break
+        case 'last': targetId = visible[visible.length - 1] ?? focusedId; break
+      }
+      if (mode === 'single') return focusCommands.setFocus(targetId)
+      const anchorId = (store.entities[SELECTION_ANCHOR_ID]?.anchorId as string) ?? focusedId
+      const anchorIdx = visible.indexOf(anchorId)
+      const targetIdx = visible.indexOf(targetId)
+      const start = Math.min(anchorIdx, targetIdx)
+      const end = Math.max(anchorIdx, targetIdx)
+      const rangeIds = visible.slice(start, end + 1)
+      const commands: Command[] = []
+      if (!store.entities[SELECTION_ANCHOR_ID]) {
+        commands.push(selectionCommands.setAnchor(focusedId))
+      }
+      commands.push(focusCommands.setFocus(targetId))
+      commands.push(selectionCommands.selectRange(rangeIds))
+      return createBatchCommand(commands)
+    },
+    extendTo(targetId: string, navigableIds?: string[]): Command {
+      const nodeList = navigableIds ?? visibleNodes()
+      const anchorId = (store.entities[SELECTION_ANCHOR_ID]?.anchorId as string) ?? focusedId
+      const anchorIdx = nodeList.indexOf(anchorId)
+      const targetIdx = nodeList.indexOf(targetId)
+      if (targetIdx === -1) return focusCommands.setFocus(focusedId)
+      const start = Math.min(anchorIdx, targetIdx)
+      const end = Math.max(anchorIdx, targetIdx)
+      const rangeIds = nodeList.slice(start, end + 1)
+      const commands: Command[] = []
+      if (!store.entities[SELECTION_ANCHOR_ID]) {
+        commands.push(selectionCommands.setAnchor(focusedId))
+      }
+      commands.push(focusCommands.setFocus(targetId))
+      commands.push(selectionCommands.selectRange(rangeIds))
+      return createBatchCommand(commands)
+    },
+  }
+}
+
+// ② 2026-03-29-compose-pattern-3arg-prd.md
+export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; attribute?: string }) {
+  const config = selectConfig({ mode, selectionFollowsFocus: opts?.followFocus })
+
+  const toggle = (ctx: PatternContext): Command | void => ctx.selected?.toggle()
+  const extendNext = (ctx: PatternContext): Command | void => ctx.selected?.extend('next')
+  const extendPrev = (ctx: PatternContext): Command | void => ctx.selected?.extend('prev')
+  const extendFirst = (ctx: PatternContext): Command | void => ctx.selected?.extend('first')
+  const extendLast = (ctx: PatternContext): Command | void => ctx.selected?.extend('last')
+  const _selectAndAnchor = (ctx: PatternContext): Command =>
+    createBatchCommand([selectionCommands.select(ctx.focused), selectionCommands.setAnchor(ctx.focused)])
+  const extendToFocused = (ctx: PatternContext): Command | void => ctx.selected?.extendTo(ctx.focused)
+
+  return {
+    ...config,
+    __axisType: 'selected' as const,
+    __mode: mode,
+    __followFocus: opts?.followFocus,
+    // handlers
+    toggle,
+    extendNext,
+    extendPrev,
+    extendFirst,
+    extendLast,
+    selectAndAnchor: _selectAndAnchor,
+    extendToFocused,
+    // preset keyMap fragments
+    keys: {
+      'Shift+ArrowDown': extendNext,
+      'Shift+ArrowUp': extendPrev,
+      'Shift+Home': extendFirst,
+      'Shift+End': extendLast,
+    } as Record<string, (ctx: PatternContext) => Command | void>,
+    clickKeys: {
+      Click: _selectAndAnchor,
+      'Shift+Click': extendToFocused,
+      'Mod+Click': toggle,
+    } as Record<string, (ctx: PatternContext) => Command | void>,
+  }
+}
+
+// ② 2026-03-29-axis-config-removal-prd.md (legacy — selected() 전환 후 제거)
+export function selectConfig(options?: SelectOptions): { keyMap: Record<string, never>; entities: EntityDecl[]; middleware?: Middleware; ctxFactory: import('./types').CtxFactory } {
   const middlewares: Middleware[] = [anchorResetMiddleware()]
   if (options?.selectionFollowsFocus) {
     middlewares.push(selectionFollowsFocusMiddleware())
@@ -148,11 +249,14 @@ export function selectConfig(options?: SelectOptions): { keyMap: KeyMap; config:
 
   return {
     keyMap: {},
-    config: {
-      selectionMode: mode,
-      ...(options?.selectionFollowsFocus && { selectionFollowsFocus: true }),
-    },
+    entities: [
+      { id: SELECTION_ID, default: { selectedIds: [] } },
+      // SELECTION_ANCHOR_ID is NOT seeded — it's created on-demand by setAnchor.
+      // Seeding it causes extendSelection to skip setAnchor (entity exists but has no anchorId).
+    ],
     middleware,
+    ctxFactory: (engine, focusedId, visibleNodes) => ({
+      selected: selectedCtx(engine, focusedId, visibleNodes, options?.mode),
+    }),
   }
 }
-

@@ -1,20 +1,15 @@
-import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { dismissHandler } from '../../axis/dismiss'
+import { popup } from '../../axis/popup'
+import { navigate } from '../../axis/navigate'
+
+// APG Dialog (Modal) — "A window overlaid on the primary window."
+const nav = navigate('natural')
+const pop = popup('dialog', { modal: true })
 
 export const dialog = composePattern(
+  { role: 'dialog', childRole: 'group' },
+  [nav, pop],
   {
-    role: 'dialog',
-    childRole: 'group',
-    ariaAttributes: (_node, state: NodeState) => {
-      const attrs: Record<string, string> = {}
-      if (state.expanded !== undefined) {
-        attrs['aria-expanded'] = String(state.expanded)
-      }
-      return attrs
-    },
-  },
-  {
-    Escape: dismissHandler,
+    Escape: pop.close,
   },
 )

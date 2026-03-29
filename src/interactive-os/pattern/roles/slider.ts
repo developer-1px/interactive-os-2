@@ -1,43 +1,29 @@
-import type { Entity } from '../../store/types'
-import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { incrementHandler, decrementHandler, incrementBig, decrementBig, setToMin, setToMax } from '../../axis/value'
+import { value } from '../../axis/value'
+import { navigate } from '../../axis/navigate'
 
-interface SliderOptions {
-  min: number
-  max: number
-  step: number
-  orientation?: 'horizontal' | 'vertical'
-}
+// APG Slider — "An input where the user selects a value from within a given range."
+interface SliderOptions { min: number; max: number; step: number; orientation?: 'horizontal' | 'vertical' }
 
 export function slider(options: SliderOptions) {
   const { min, max, step, orientation = 'horizontal' } = options
+  const nav = navigate('natural')
+  const val = value({ min, max, step })
 
   return composePattern(
+    { role: 'none', childRole: 'slider' },
+    [nav, val],
     {
-      role: 'none',
-      childRole: 'slider',
-      valueRange: { min, max, step },
-      ariaAttributes: (node: Entity, state: NodeState) => ({
-        'aria-valuenow': String(state.valueCurrent ?? min),
-        'aria-valuemin': String(min),
-        'aria-valuemax': String(max),
-        ...((node.data as Record<string, unknown>)?.label
-          ? { 'aria-label': String((node.data as Record<string, unknown>).label) }
-          : {}),
-      }),
-    },
-    {
-      ArrowUp: incrementHandler,
-      ArrowDown: decrementHandler,
+      ArrowUp: val.increment,
+      ArrowDown: val.decrement,
       ...(orientation === 'horizontal' && {
-        ArrowRight: incrementHandler,
-        ArrowLeft: decrementHandler,
+        ArrowRight: val.increment,
+        ArrowLeft: val.decrement,
       }),
-      Home: setToMin,
-      End: setToMax,
-      PageUp: incrementBig,
-      PageDown: decrementBig,
+      Home: val.setToMin,
+      End: val.setToMax,
+      PageUp: val.incrementBig,
+      PageDown: val.decrementBig,
     },
   )
 }

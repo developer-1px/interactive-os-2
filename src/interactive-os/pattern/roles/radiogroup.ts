@@ -1,31 +1,23 @@
-import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { selectConfig } from '../../axis/select'
+import { selected } from '../../axis/select'
+import { navigate } from '../../axis/navigate'
 import { activateHandler } from '../../axis/activate'
 
+// APG Radio Group — "Only one radio button in a group can be checked at a time."
+// selection follows focus, all arrows wrap
+const nav = navigate('both')
+const sel = selected('single', { followFocus: true })
+
 export const radiogroup = composePattern(
+  { role: 'radiogroup', childRole: 'radio' },
+  [nav, sel],
   {
-    role: 'radiogroup',
-    childRole: 'radio',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
-    selectionMode: 'single',
-    ariaAttributes: (_node, state: NodeState) => ({
-      'aria-checked': String(state.selected),
-    }),
-  },
-  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
-  { keyMap: {}, config: { selectOnClick: true, activateOnClick: true, expandOnParentClick: true } },
-  {
-    // Navigation — both orientations, wrap
-    ArrowDown: (ctx) => ctx.focusNext({ wrap: true }),
-    ArrowUp: (ctx) => ctx.focusPrev({ wrap: true }),
-    ArrowRight: (ctx) => ctx.focusNext({ wrap: true }),
-    ArrowLeft: (ctx) => ctx.focusPrev({ wrap: true }),
-
-    // Selection (from select axis)
-    Space: (ctx) => ctx.toggleSelect(),
-
-    // Activation
+    ArrowDown: nav.nextWrap,
+    ArrowUp: nav.prevWrap,
+    ArrowRight: nav.nextWrap,
+    ArrowLeft: nav.prevWrap,
+    Space: sel.toggle,
     Enter: activateHandler,
+    Click: sel.selectAndAnchor,
   },
 )

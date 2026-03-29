@@ -1,34 +1,22 @@
-import type { NodeState } from '../types'
 import { composePattern } from '../composePattern'
-import { selectConfig } from '../../axis/select'
+import { selected } from '../../axis/select'
+import { navigate } from '../../axis/navigate'
 import { activateHandler } from '../../axis/activate'
-import { focusNext, focusPrev, focusFirst, focusLast } from '../../axis/navigate'
 
-// APG Tabs with Manual Activation: Arrow keys move focus only, Enter/Space selects
-// Contrast with `tabs` (automatic) which has selectionFollowsFocus + activationFollowsSelection
+// APG Tabs (manual activation) — "selection does NOT follow focus"
+const nav = navigate('horizontal')
+const sel = selected('single')
+
 export const tabsManual = composePattern(
+  { role: 'tablist', childRole: 'tab', panel: 'tabpanel' },
+  [nav, sel],
   {
-    role: 'tablist',
-    childRole: 'tab',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'horizontal' },
-    selectionMode: 'single',
-    ariaAttributes: (_node, state: NodeState) => ({
-      'aria-selected': String(state.selected),
-    }),
-  },
-  selectConfig({ mode: 'single' }),
-  { keyMap: {}, config: { selectOnClick: true, activateOnClick: true, expandOnParentClick: true } },
-  {
-    // Navigation — horizontal
-    ArrowRight: focusNext,
-    ArrowLeft: focusPrev,
-    Home: focusFirst,
-    End: focusLast,
-
-    // Selection (from select axis)
-    Space: (ctx) => ctx.toggleSelect(),
-
-    // Activation
+    ArrowRight: nav.next,
+    ArrowLeft: nav.prev,
+    Home: nav.first,
+    End: nav.last,
+    Space: sel.toggle,
     Enter: activateHandler,
+    Click: sel.selectAndAnchor,
   },
 )

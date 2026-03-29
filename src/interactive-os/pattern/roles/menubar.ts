@@ -2,8 +2,8 @@ import type { PatternContext } from '../../axis/types'
 import type { Command } from '../../engine/types'
 import { createBatchCommand } from '../../engine/types'
 import { composePattern } from '../composePattern'
-import { expandConfig, expandCommands, EXPANDED_ID } from '../../axis/expand'
-import { focusCommands } from '../../axis/navigate'
+import { expanded, expandCommands, EXPANDED_ID } from '../../axis/expand'
+import { navigate, focusCommands } from '../../axis/navigate'
 import { activateHandler } from '../../axis/activate'
 import { ROOT_ID } from '../../store/types'
 
@@ -209,13 +209,12 @@ const end = (ctx: PatternContext): Command => {
 
 // ── Pattern ──
 
+const nav = navigate('horizontal')
+const exp = expanded()
+
 export const menubar = composePattern(
-  {
-    role: 'menubar',
-    childRole: 'menuitem',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'horizontal' },
-  },
-  expandConfig(),
+  { role: 'menubar', childRole: 'menuitem' },
+  [nav, exp],
   {
     ArrowRight: arrowRight,
     ArrowLeft: arrowLeft,

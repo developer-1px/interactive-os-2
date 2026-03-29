@@ -1,33 +1,24 @@
-import type { NodeState } from '../pattern/types'
-import type { Entity } from '../store/types'
 import { composePattern } from '../pattern/composePattern'
-import { selectConfig } from '../axis/select'
+import { selected } from '../axis/select'
+import { navigate } from '../axis/navigate'
 import { activateHandler } from '../axis/activate'
-import { focusNext, focusPrev, focusFirst, focusLast } from '../axis/navigate'
+
+const nav = navigate('vertical')
+const sel = selected('single', { followFocus: true })
 
 const base = composePattern(
+  { role: 'listbox', childRole: 'option' },
+  [nav, sel],
   {
-    role: 'listbox',
-    childRole: 'option',
-    focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
-    ariaAttributes: (_node: Entity, state: NodeState) => ({
-      'aria-selected': String(state.focused),
-      'aria-posinset': String(state.index + 1),
-      'aria-setsize': String(state.siblingCount),
-    }),
-  },
-  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
-  { keyMap: {}, config: { activateOnClick: true, activationFollowsSelection: true } },
-  {
-    ArrowDown: focusNext,
-    ArrowUp: focusPrev,
-    Home: focusFirst,
-    End: focusLast,
+    ArrowDown: nav.next,
+    ArrowUp: nav.prev,
+    Home: nav.first,
+    End: nav.last,
     Enter: activateHandler,
-    Click: activateHandler,
+    Click: sel.selectAndAnchor,
   },
 )
 
-// Remove Space key — NavList is activation-only, Space is for selection (ListBox)
+// Remove Space key — NavList is activation-only
 const { Space: _space, ...keyMap } = base.keyMap
 export const navlist = { ...base, keyMap }

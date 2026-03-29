@@ -1,79 +1,54 @@
 import type { AriaPattern } from '../types'
 import { composePattern } from '../composePattern'
-import { focusNext, focusPrev, focusFirst, focusLast, focusNextCol, focusPrevCol, focusFirstCol, focusLastCol, gridTabCycleNext, gridTabCyclePrev } from '../../axis/navigate'
-import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectAndAnchor } from '../../axis/select'
-import type { PatternContext } from '../../axis/types'
+import { navigate, grid as gridAxis } from '../../axis/navigate'
+import { selected } from '../../axis/select'
 
-// APG Grid — https://www.w3.org/WAI/ARIA/apg/patterns/grid/
-
-// ── Data Grid ──
+// APG Grid — "Interactive tabular data and layout containers."
 
 export function grid(options: { columns: number; tabCycle?: boolean }): AriaPattern {
+  const nav = navigate('both')
+  const sel = selected('multiple')
+  const g = gridAxis(options.columns)
+
   return composePattern(
+    { role: 'grid', childRole: 'row' },
+    [nav, sel, g],
     {
-      role: 'grid',
-      childRole: 'row',
-      focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
-      selectionMode: 'multiple',
-      colCount: options.columns,
-    },
-    {
-      // Navigation — APG §1 Data Grid
-      ArrowRight: focusNextCol,
-      ArrowLeft: focusPrevCol,
-      ArrowDown: focusNext,
-      ArrowUp: focusPrev,
-      Home: focusFirstCol,
-      End: focusLastCol,
-      'Mod+Home': focusFirst,
-      'Mod+End': focusLast,
-
-      // Tab cycling (optional)
+      ArrowRight: g.focusNextCol,
+      ArrowLeft: g.focusPrevCol,
+      ArrowDown: nav.next,
+      ArrowUp: nav.prev,
+      Home: g.focusFirstCol,
+      End: g.focusLastCol,
+      'Mod+Home': nav.first,
+      'Mod+End': nav.last,
       ...(options.tabCycle && {
-        Tab: gridTabCycleNext,
-        'Shift+Tab': gridTabCyclePrev,
+        Tab: g.tabCycleNext,
+        'Shift+Tab': g.tabCyclePrev,
       }),
-
-      // Selection — APG §2
-      Space: toggleSelect,
-      'Shift+ArrowDown': extendSelectionNext,
-      'Shift+ArrowUp': extendSelectionPrev,
-      'Shift+ArrowRight': extendSelectionNext,
-      'Shift+ArrowLeft': extendSelectionPrev,
-      'Shift+Home': extendSelectionFirst,
-      'Shift+End': extendSelectionLast,
-
-      // Pointer
-      Click: selectAndAnchor,
-      'Shift+Click': extendSelectionToFocused,
-      'Mod+Click': toggleSelect,
+      Space: sel.toggle,
+      ...sel.keys,
+      ...sel.clickKeys,
     },
   )
 }
 
-// ── Layout Grid ──
-
 export function layoutGrid(options: { columns: number }): AriaPattern {
-  return composePattern(
-    {
-      role: 'grid',
-      childRole: 'row',
-      focusStrategy: { type: 'roving-tabindex', orientation: 'both' },
-      colCount: options.columns,
-    },
-    {
-      // Navigation — APG §3 Layout Grid (wrapping)
-      ArrowRight: (ctx: PatternContext) => ctx.grid?.focusNextCol() ?? focusNext(ctx),
-      ArrowLeft: (ctx: PatternContext) => ctx.grid?.focusPrevCol() ?? focusPrev(ctx),
-      ArrowDown: focusNext,
-      ArrowUp: focusPrev,
-      Home: focusFirst,
-      End: focusLast,
+  const nav = navigate('both')
+  const g = gridAxis(options.columns)
+  const sel = selected('multiple')
 
-      // Pointer
-      Click: selectAndAnchor,
-      'Shift+Click': extendSelectionToFocused,
-      'Mod+Click': toggleSelect,
+  return composePattern(
+    { role: 'grid', childRole: 'row' },
+    [nav, g, sel],
+    {
+      ArrowRight: g.focusNextCol,
+      ArrowLeft: g.focusPrevCol,
+      ArrowDown: nav.next,
+      ArrowUp: nav.prev,
+      Home: nav.first,
+      End: nav.last,
+      ...sel.clickKeys,
     },
   )
 }
