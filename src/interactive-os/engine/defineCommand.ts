@@ -55,7 +55,7 @@ export function defineCommand(
   creator.handler = handler
   creator.reduce = (store: NormalizedData, ...args: unknown[]) => {
     const payload = create ? create(...args) : undefined
-    return create ? handler(store, payload) : (handler as (s: NormalizedData) => NormalizedData)(store)
+    return handler(store, payload)
   }
 
   return creator
