@@ -87,7 +87,6 @@ export function checked() {
     ctxFactory: ((engine, focusedId) => ({
       checked: checkedCtx(engine, focusedId),
     })) as import('./types').CtxFactory,
-    meta: {},
     toggle,
   }
 }

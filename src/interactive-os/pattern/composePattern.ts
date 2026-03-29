@@ -1,5 +1,4 @@
-import type { NormalizedData } from '../store/types'
-import type { Entity } from '../store/types'
+import type { Entity, NormalizedData } from '../store/types'
 import type { Command, Middleware, VisibilityFilter } from '../engine/types'
 import type { AriaPattern, NodeState } from './types'
 import type { PatternContext, FocusStrategy, KeyMap, Axis, EntityDecl, CtxFactory } from '../axis/types'
@@ -16,8 +15,6 @@ const DEFAULT_FOCUS_STRATEGY: FocusStrategy = {
   type: 'natural-tab-order',
   orientation: 'vertical',
 }
-
-// ── Helpers ──
 
 const CLICK_RE = /(?:^|[+])Click$/
 
@@ -123,8 +120,6 @@ function collectMeta(axes: Axis[]): Record<string, unknown> {
   return meta
 }
 
-// ── Main ──
-
 export function composePattern(
   config: Identity,
   required: Axis[],
@@ -138,7 +133,6 @@ export function composePattern(
   const visibilityFilters = collectVisibilityFilters(required)
   const focusStrategy = (meta.focusStrategy as FocusStrategy) ?? DEFAULT_FOCUS_STRATEGY
 
-  // Panel inference from identity
   if (config.panel) {
     meta.panelRole = config.panel
     meta.panelVisibility = meta.expandable ? 'expanded' : 'selected'
