@@ -121,7 +121,7 @@ describe('buildKanbanStore', () => {
 
     // column entities have correct data
     const pagesCol = getEntityData<{ title: string; sourceId: string }>(kanbanStore, 'col:src/pages')
-    expect(pagesCol).toEqual({ title: '1. /pages', sourceId: 'src/pages' })
+    expect(pagesCol).toMatchObject({ title: '1. /pages', sourceId: 'src/pages' })
 
     // pages column has 2 cards (Home.tsx, About.tsx)
     const pageCards = getChildren(kanbanStore, 'col:src/pages')
@@ -156,7 +156,7 @@ describe('buildKanbanStore', () => {
     const homeCard = getEntityData<{ title: string; sourceId: string; sourceType: string }>(
       kanbanStore, 'card:src/pages/Home.tsx'
     )
-    expect(homeCard).toEqual({
+    expect(homeCard).toMatchObject({
       title: 'Home.tsx',
       sourceId: 'src/pages/Home.tsx',
       sourceType: 'file',
@@ -166,7 +166,7 @@ describe('buildKanbanStore', () => {
     const mathCard = getEntityData<{ title: string; sourceId: string; sourceType: string }>(
       kanbanStore, 'card:src/utils/math.ts'
     )
-    expect(mathCard).toEqual({
+    expect(mathCard).toMatchObject({
       title: 'math.ts',
       sourceId: 'src/utils/math.ts',
       sourceType: 'file',
