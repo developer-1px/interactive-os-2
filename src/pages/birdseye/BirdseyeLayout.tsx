@@ -135,8 +135,15 @@ export default function BirdseyeLayout() {
       return
     }
 
+    // 카드가 속한 컬럼의 제목을 찾기
+    const parentCol = Object.entries(kanbanStore.relationships).find(
+      ([, children]) => children.includes(debouncedCardId),
+    )
+    const colTitle = parentCol
+      ? (getEntityData<{ title: string }>(kanbanStore, parentCol[0])?.title ?? '')
+      : ''
     const token = ++fetchRef.current
-    setViewerFilename(cardData.title)
+    setViewerFilename(colTitle ? `${colTitle} > ${cardData.title}` : cardData.title)
     fetchFile(cardData.sourceId).then((content) => {
       if (fetchRef.current === token) setViewerCode(content)
     })
@@ -211,6 +218,7 @@ export default function BirdseyeLayout() {
           <TreeView
             data={navStore}
             onActivate={handleNavActivate}
+            activateOnClick
             initialFocus={selectedFolderId ?? undefined}
             aria-label="Folder navigation"
           />

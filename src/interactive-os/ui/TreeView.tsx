@@ -21,6 +21,7 @@ interface TreeViewProps {
   renderItem?: (props: TreeItemRenderProps, item: Record<string, unknown>, state: NodeState) => React.ReactElement
   selectionFollowsFocus?: boolean
   selectable?: boolean
+  activateOnClick?: boolean
   initialFocus?: string
   'aria-label'?: string
 }
@@ -46,6 +47,7 @@ export function TreeView({
   renderItem = defaultRenderItem,
   selectionFollowsFocus,
   selectable,
+  activateOnClick,
   initialFocus,
   'aria-label': ariaLabel,
 }: TreeViewProps) {
@@ -56,6 +58,7 @@ export function TreeView({
     onActivate,
     selectionFollowsFocus,
     selectable,
+    activateOnClick,
     initialFocus,
     'aria-label': ariaLabel,
   })

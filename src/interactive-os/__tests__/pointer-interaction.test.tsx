@@ -13,7 +13,7 @@ import { tree } from '../pattern/roles/tree'
 import { grid } from '../pattern/roles/grid'
 import { composePattern } from '../pattern/composePattern'
 import { selectConfig, selectAndAnchor } from '../axis/select'
-import { activateConfig, activateHandler } from '../axis/activate'
+import { activateHandler } from '../axis/activate'
 import { expandConfig, expandOrFocusChild, collapseOrFocusParent } from '../axis/expand'
 import { focusNext, focusPrev, focusFirst, focusLast } from '../axis/navigate'
 import { createStore } from '../store/createStore'
@@ -130,23 +130,18 @@ describe('pointer interaction — tree click', () => {
     return { user, container: result.container as HTMLElement }
   }
 
-  it('click on folder expands it', async () => {
-    const { user, container } = setup()
-    await user.click(getNode(container, 'folder'))
-    expect(getNode(container, 'folder').getAttribute('aria-expanded')).toBe('true')
-  })
-
-  it('click on folder also selects it', async () => {
+  it('click on folder selects it (Click: selectAndAnchor does not expand)', async () => {
     const { user, container } = setup()
     await user.click(getNode(container, 'folder'))
     expect(getSelected(container)).toEqual(['folder'])
+    // selectAndAnchor only selects, does not toggle expand
+    expect(getNode(container, 'folder').getAttribute('aria-expanded')).toBe('false')
   })
 
-  it('click on leaf node selects it (no expand attr change)', async () => {
+  it('click on leaf node selects it', async () => {
     const { user, container } = setup()
     await user.click(getNode(container, 'file1'))
     expect(getSelected(container)).toEqual(['file1'])
-    expect(getNode(container, 'file1').hasAttribute('aria-expanded')).toBe(false)
   })
 })
 
@@ -163,21 +158,20 @@ describe('pointer interaction — tree click (second suite)', () => {
     return { user, container: result.container as HTMLElement }
   }
 
-  it('click on folder row expands and selects it', async () => {
+  it('click on folder row selects it (no expand)', async () => {
     const { user, container } = setup()
     await user.click(getNode(container, 'folder'))
-    expect(getNode(container, 'folder').getAttribute('aria-expanded')).toBe('true')
+    expect(getNode(container, 'folder').getAttribute('aria-expanded')).toBe('false')
     expect(getSelected(container)).toEqual(['folder'])
   })
 })
 
-// V5: 2026-03-26-treeview-click-expand-prd.md
-describe('pointer interaction — tree click with expandOnClick: false', () => {
+// V5: 2026-03-29-axis-config-removal-prd.md
+describe('pointer interaction — tree click with activateHandler', () => {
   function setup() {
     const navTree = composePattern(
       { role: 'tree', childRole: 'treeitem', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected), ...(s.expanded !== undefined && { 'aria-expanded': String(s.expanded) }) }) },
       selectConfig({ mode: 'single' }),
-      activateConfig({ expandOnClick: false }),
       expandConfig(),
       {
         ArrowRight: expandOrFocusChild,
@@ -188,6 +182,7 @@ describe('pointer interaction — tree click with expandOnClick: false', () => {
         End: focusLast,
         Enter: activateHandler,
         Space: activateHandler,
+        Click: activateHandler,
       },
     )
     const user = userEvent.setup()
@@ -202,11 +197,19 @@ describe('pointer interaction — tree click with expandOnClick: false', () => {
     return { user, container: result.container as HTMLElement, activated }
   }
 
-  it('click on parent does not expand when expandOnClick is false', async () => {
+  it('click on parent with onActivate fires callback instead of expand', async () => {
     const { user, container, activated } = setup()
     await user.click(getNode(container, 'folder'))
+    // activateHandler → ctx.activate() intercepted by onActivate (consistent with Enter key)
+    expect(activated).toContain('folder')
     expect(getNode(container, 'folder').getAttribute('aria-expanded')).toBe('false')
-    expect(activated).toEqual(['folder'])
+  })
+
+  it('click on leaf fires onActivate', async () => {
+    const { user, container, activated } = setup()
+    await user.click(getNode(container, 'file1'))
+    // activateHandler → ctx.activate() intercepted by onActivate (consistent with Enter key)
+    expect(activated).toContain('file1')
   })
 })
 
@@ -215,7 +218,6 @@ describe('pointer interaction — edge cases', () => {
     const singleListbox = composePattern(
       { role: 'listbox', childRole: 'option', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected) }) },
       selectConfig({ mode: 'single' }),
-      activateConfig(),
       {
         ArrowDown: focusNext,
         ArrowUp: focusPrev,

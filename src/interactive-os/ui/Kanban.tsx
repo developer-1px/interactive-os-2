@@ -87,17 +87,21 @@ export function Kanban({
                 if (!cardEntity) return null
                 const cardState = aria.getNodeState(cardId)
                 const cardProps = aria.getNodeProps(cardId)
-                const cardTitle = (cardEntity.data as Record<string, unknown>)?.title as string ?? ''
+                const cardData = cardEntity.data as Record<string, unknown> | undefined
+                const cardTitle = cardData?.title as string ?? ''
+                const cardSubtitle = cardData?.subtitle as string | undefined
 
                 return (
                   <FocusDiv
                     key={cardId}
                     focused={cardState.focused}
                     className={styles.card}
+                    title={cardTitle}
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
                       <Aria.Editable field="title">{cardTitle}</Aria.Editable>
+                      {cardSubtitle && <span className={styles.cardSubtitle}>{cardSubtitle}</span>}
                     </AriaItemContext.Provider>
                   </FocusDiv>
                 )

@@ -6,6 +6,7 @@ interface TreeNode {
   id: string
   name: string
   type: 'file' | 'directory'
+  loc?: number
   children?: TreeNode[]
 }
 
@@ -39,7 +40,13 @@ function buildTree(dirPath: string): TreeNode[] {
         children: buildTree(fullPath),
       })
     } else {
-      nodes.push({ id: fullPath, name: entry.name, type: 'file' })
+      const ext = path.extname(entry.name)
+      const isText = SOURCE_EXTS.has(ext) || ['.css', '.json', '.md', '.yaml', '.yml', '.html', '.svg', '.mdx'].includes(ext)
+      let loc: number | undefined
+      if (isText) {
+        try { loc = fs.readFileSync(fullPath, 'utf-8').split('\n').length } catch { /* binary or unreadable */ }
+      }
+      nodes.push({ id: fullPath, name: entry.name, type: 'file', ...(loc != null && { loc }) })
     }
   }
 

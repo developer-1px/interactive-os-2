@@ -94,6 +94,23 @@
   flex-shrink: 0;
 }
 
+/* ── Card subtitle ── */
+.cardSubtitle {
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+}
+
+.board[data-compact] .card {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.board[data-compact] .cardSubtitle {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
 /* ── Focus/Selection — override .card background ── */
 
 .card[data-focused] {

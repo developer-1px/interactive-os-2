@@ -6,6 +6,7 @@ type FsEntityData = {
   name: string
   type: 'file' | 'directory'
   path: string
+  loc?: number
 }
 
 /**
@@ -103,6 +104,10 @@ function sortDirs(fsStore: NormalizedData, dirIds: string[], order?: string[]): 
   })
 }
 
+function formatLoc(loc: number): string {
+  return `${loc}L`
+}
+
 export function buildKanbanStore(fsStore: NormalizedData, folderId: string, options?: KanbanBuildOptions): NormalizedData {
   const entities: Record<string, { id: string; data?: Record<string, unknown> }> = {}
   const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
@@ -140,7 +145,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
         const cardId = `card:${fileId}`
         entities[cardId] = {
           id: cardId,
-          data: { title: fileData.name, sourceId: fileId, sourceType: 'file' },
+          data: { title: fileData.name, sourceId: fileId, sourceType: 'file', ...(fileData.loc != null && { loc: fileData.loc, subtitle: formatLoc(fileData.loc) }) },
         }
         relationships[colId].push(cardId)
       }
@@ -188,7 +193,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
       const cardId = `card:${fileId}`
       entities[cardId] = {
         id: cardId,
-        data: { title: fileData.name, sourceId: fileId, sourceType: 'file' },
+        data: { title: fileData.name, sourceId: fileId, sourceType: 'file', ...(fileData.loc != null && { loc: fileData.loc, subtitle: formatLoc(fileData.loc) }) },
       }
       relationships[filesColId].push(cardId)
     }
