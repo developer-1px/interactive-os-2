@@ -111,11 +111,4 @@ export function value(range: ValueRange) {
   }
 }
 
-// ② 2026-03-28-axis-handlers-export-prd.md (legacy)
-export const incrementHandler = (ctx: PatternContext): Command | void => ctx.value?.increment()
-export const decrementHandler = (ctx: PatternContext): Command | void => ctx.value?.decrement()
-export const incrementBig = (ctx: PatternContext): Command | void => ctx.value?.increment(ctx.value.step * 10)
-export const decrementBig = (ctx: PatternContext): Command | void => ctx.value?.decrement(ctx.value.step * 10)
-export const setToMin = (ctx: PatternContext): Command | void => ctx.value?.setToMin()
-export const setToMax = (ctx: PatternContext): Command | void => ctx.value?.setToMax()
 

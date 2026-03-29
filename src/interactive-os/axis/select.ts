@@ -123,18 +123,7 @@ export function selectionFollowsFocusMiddleware(): Middleware {
   }
 }
 
-// ② 2026-03-28-axis-handlers-export-prd.md
-export const toggleSelect = (ctx: PatternContext): Command => ctx.selected!.toggle()
-export const extendSelectionNext = (ctx: PatternContext): Command => ctx.selected!.extend('next')
-export const extendSelectionPrev = (ctx: PatternContext): Command => ctx.selected!.extend('prev')
-export const extendSelectionFirst = (ctx: PatternContext): Command => ctx.selected!.extend('first')
-export const extendSelectionLast = (ctx: PatternContext): Command => ctx.selected!.extend('last')
-export const extendSelectionToFocused = (ctx: PatternContext): Command => ctx.selected!.extendTo(ctx.focused)
 
-interface SelectOptions {
-  mode?: SelectionMode
-  selectionFollowsFocus?: boolean
-}
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function selectedCtx(
@@ -198,7 +187,11 @@ export function selectedCtx(
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; attribute?: string }) {
-  const config = selectConfig({ mode, selectionFollowsFocus: opts?.followFocus })
+  const middlewares: Middleware[] = [anchorResetMiddleware()]
+  if (opts?.followFocus) middlewares.push(selectionFollowsFocusMiddleware())
+  const middleware: Middleware = middlewares.length === 1
+    ? middlewares[0]!
+    : (next, getStore) => middlewares.reduceRight<(command: Command) => void>((acc, mw) => mw(acc, getStore), next)
 
   const toggle = (ctx: PatternContext): Command | void => ctx.selected?.toggle()
   const extendNext = (ctx: PatternContext): Command | void => ctx.selected?.extend('next')
@@ -210,7 +203,12 @@ export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; at
   const extendToFocused = (ctx: PatternContext): Command | void => ctx.selected?.extendTo(ctx.focused)
 
   return {
-    ...config,
+    keyMap: {} as Record<string, never>,
+    entities: [{ id: SELECTION_ID, default: { selectedIds: [] } }] as EntityDecl[],
+    middleware,
+    ctxFactory: ((engine, focusedId, visibleNodes) => ({
+      selected: selectedCtx(engine, focusedId, visibleNodes, mode),
+    })) as import('./types').CtxFactory,
     __axisType: 'selected' as const,
     __mode: mode,
     __followFocus: opts?.followFocus,
@@ -237,26 +235,3 @@ export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; at
   }
 }
 
-// ② 2026-03-29-axis-config-removal-prd.md (legacy — selected() 전환 후 제거)
-export function selectConfig(options?: SelectOptions): { keyMap: Record<string, never>; entities: EntityDecl[]; middleware?: Middleware; ctxFactory: import('./types').CtxFactory } {
-  const middlewares: Middleware[] = [anchorResetMiddleware()]
-  if (options?.selectionFollowsFocus) {
-    middlewares.push(selectionFollowsFocusMiddleware())
-  }
-  const middleware: Middleware = middlewares.length === 1
-    ? middlewares[0]!
-    : (next, getStore) => middlewares.reduceRight<(command: Command) => void>((acc, mw) => mw(acc, getStore), next)
-
-  return {
-    keyMap: {},
-    entities: [
-      { id: SELECTION_ID, default: { selectedIds: [] } },
-      // SELECTION_ANCHOR_ID is NOT seeded — it's created on-demand by setAnchor.
-      // Seeding it causes extendSelection to skip setAnchor (entity exists but has no anchorId).
-    ],
-    middleware,
-    ctxFactory: (engine, focusedId, visibleNodes) => ({
-      selected: selectedCtx(engine, focusedId, visibleNodes, options?.mode),
-    }),
-  }
-}

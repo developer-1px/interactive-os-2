@@ -64,8 +64,6 @@ export const checkedCommands = defineCommands({
   },
 })
 
-// ② 2026-03-28-axis-handlers-export-prd.md
-export const toggleCheckHandler = (ctx: PatternContext): Command => ctx.checked!.toggle()
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function checkedCtx(
@@ -82,18 +80,14 @@ export function checkedCtx(
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 export function checked() {
-  const config = checkedConfig()
   const toggle = (ctx: PatternContext): Command | void => ctx.checked?.toggle()
-  return { ...config, __axisType: 'checked' as const, toggle }
-}
-
-// legacy — checked() 전환 후 제거
-export function checkedConfig(): { keyMap: Record<string, never>; entities: EntityDecl[]; ctxFactory: import('./types').CtxFactory } {
   return {
-    keyMap: {},
-    entities: [{ id: CHECKED_ID, default: { checkedIds: [] } }],
-    ctxFactory: (engine, focusedId) => ({
+    keyMap: {} as Record<string, never>,
+    entities: [{ id: CHECKED_ID, default: { checkedIds: [] } }] as EntityDecl[],
+    ctxFactory: ((engine, focusedId) => ({
       checked: checkedCtx(engine, focusedId),
-    }),
+    })) as import('./types').CtxFactory,
+    __axisType: 'checked' as const,
+    toggle,
   }
 }

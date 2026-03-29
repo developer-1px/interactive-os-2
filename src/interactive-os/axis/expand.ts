@@ -64,14 +64,6 @@ export const expandCommands = defineCommands({
   },
 })
 
-// ② 2026-03-28-axis-handlers-export-prd.md
-export const expandHandler = (ctx: PatternContext): Command => ctx.expanded!.set(true)
-export const collapseHandler = (ctx: PatternContext): Command => ctx.expanded!.set(false)
-export const toggleExpand = (ctx: PatternContext): Command => ctx.expanded!.toggle()
-export const expandOrFocusChild = (ctx: PatternContext): Command =>
-  ctx.expanded!.is ? ctx.focusChild() : ctx.expanded!.set(true)
-export const collapseOrFocusParent = (ctx: PatternContext): Command =>
-  ctx.expanded!.is ? ctx.expanded!.set(false) : ctx.focusParent()
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function expandedCtx(
@@ -90,8 +82,6 @@ export function expandedCtx(
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 export function expanded() {
-  const config = expandConfig()
-
   const toggle = (ctx: PatternContext): Command | void => ctx.expanded?.toggle()
   const set = (value: boolean) => (ctx: PatternContext): Command | void => ctx.expanded?.set(value)
   const expandOrFocusChild_ = (ctx: PatternContext): Command | void =>
@@ -100,7 +90,12 @@ export function expanded() {
     ctx.expanded ? (ctx.expanded.is ? ctx.expanded.set(false) : ctx.focusParent()) : undefined
 
   return {
-    ...config,
+    keyMap: {} as Record<string, never>,
+    entities: [{ id: EXPANDED_ID, default: { expandedIds: [] } }] as EntityDecl[],
+    visibilityFilter: expandVisibilityFilter,
+    ctxFactory: ((engine, focusedId) => ({
+      expanded: expandedCtx(engine, focusedId),
+    })) as import('./types').CtxFactory,
     __axisType: 'expanded' as const,
     toggle,
     set,
@@ -108,18 +103,6 @@ export function expanded() {
     collapse: set(false),
     expandOrFocusChild: expandOrFocusChild_,
     collapseOrFocusParent: collapseOrFocusParent_,
-  }
-}
-
-// legacy — expanded() 전환 후 제거
-export function expandConfig(): { keyMap: Record<string, never>; entities: EntityDecl[]; visibilityFilter: VisibilityFilter; ctxFactory: import('./types').CtxFactory } {
-  return {
-    keyMap: {},
-    entities: [{ id: EXPANDED_ID, default: { expandedIds: [] } }],
-    visibilityFilter: expandVisibilityFilter,
-    ctxFactory: (engine, focusedId) => ({
-      expanded: expandedCtx(engine, focusedId),
-    }),
   }
 }
 
