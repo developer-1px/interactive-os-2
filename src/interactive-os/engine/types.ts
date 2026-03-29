@@ -2,6 +2,14 @@
 import type { NormalizedData } from '../store/types'
 
 // ② 2026-03-29-engine-handler-registry-prd.md
+
+export interface CommandEngine {
+  dispatch(command: Command): void
+  getStore(): NormalizedData
+  /** Replace internal store with external data (for controlled/sync scenarios) */
+  syncStore(newStore: NormalizedData): void
+}
+
 export interface Command {
   type: string
   payload?: unknown
@@ -34,6 +42,28 @@ export interface VisibilityFilter {
   shouldShow?(nodeId: string, store: NormalizedData): boolean
   /** false면 이 노드의 자식을 walk하지 않음 */
   shouldDescend?(nodeId: string, store: NormalizedData): boolean
+}
+
+export interface EngineOptions {
+  logger?: boolean | ((entry: import('./logger').LogEntry) => void)
+}
+
+export function isBatchCommand(cmd: Command): cmd is BatchCommand {
+  return cmd.type === 'batch' && 'commands' in cmd
+}
+
+/** Build a handler registry from command sets (axes, plugins, etc.) */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function buildRegistry(...sources: Record<string, any>[]): Map<string, CommandHandler> {
+  const registry = new Map<string, CommandHandler>()
+  for (const source of sources) {
+    for (const creator of Object.values(source)) {
+      if (creator != null && 'type' in creator && 'handler' in creator) {
+        registry.set(creator.type as string, creator.handler as CommandHandler)
+      }
+    }
+  }
+  return registry
 }
 
 /** Plugin 인터페이스 — engine이 소비하는 계약 */

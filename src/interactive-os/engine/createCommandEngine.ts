@@ -1,16 +1,11 @@
 // ② 2026-03-29-engine-handler-registry-prd.md
-import type { Command, Middleware, BatchCommand, CommandHandler } from './types'
+import type { Command, Middleware, BatchCommand, CommandHandler, CommandEngine, EngineOptions } from './types'
+import { isBatchCommand } from './types'
+export type { CommandEngine } from './types'
 import type { NormalizedData } from '../store/types'
 import { computeStoreDiff } from '../store/computeStoreDiff'
-import type { LogEntry, Logger, EngineOptions } from './dispatchLogger'
-import { defaultLogger, isBatchCommand } from './dispatchLogger'
-
-export interface CommandEngine {
-  dispatch(command: Command): void
-  getStore(): NormalizedData
-  /** Replace internal store with external data (for controlled/sync scenarios) */
-  syncStore(newStore: NormalizedData): void
-}
+import type { LogEntry, Logger } from './logger'
+import { defaultLogger } from './logger'
 
 export function createCommandEngine(
   initialStore: NormalizedData,

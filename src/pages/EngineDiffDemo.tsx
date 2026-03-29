@@ -9,7 +9,7 @@ import { computeStoreDiff, applyDelta } from '../interactive-os/store/computeSto
 import type { NodeState } from '../interactive-os/pattern/types'
 import { crud } from '../interactive-os/plugins/crud'
 import { focusRecovery } from '../interactive-os/plugins/focusRecovery'
-import { summarizeValue } from '../interactive-os/engine/dispatchLogger'
+import { summarizeValue } from '../interactive-os/engine/logger'
 
 interface DiffEntry {
   seq: number
