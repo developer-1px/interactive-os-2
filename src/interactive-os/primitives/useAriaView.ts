@@ -80,6 +80,7 @@ export interface UseAriaViewReturn {
   getNodeState: (id: string) => NodeState
   containerProps: Record<string, unknown>
   patternCtxOptions: { expandable?: boolean; selectionMode?: string; colCount?: number; valueRange?: { min: number; max: number; step?: number }; visibilityFilters?: import('../engine/types').VisibilityFilter[] }
+  observedEngine: CommandEngine
 }
 
 export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
@@ -92,6 +93,25 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
   const onActivateRef = useRef(onActivate)
   useEffect(() => { onActivateRef.current = onActivate })
+
+  // Wrap engine dispatch to observe core:activate commands → fire onActivate callback
+  const observedEngine = useMemo((): CommandEngine => ({
+    ...engine,
+    dispatch: (command: Command) => {
+      engine.dispatch(command)
+      // After dispatch, check for activate in the command (including batch)
+      const check = (cmd: Command) => {
+        if (cmd.type === 'core:activate') {
+          const nodeId = (cmd.payload as { nodeId?: string })?.nodeId
+          if (nodeId && onActivateRef.current) onActivateRef.current(nodeId)
+        }
+        if (cmd.type === '__batch__' && 'commands' in cmd) {
+          for (const sub of (cmd as { commands: Command[] }).commands) check(sub)
+        }
+      }
+      check(command)
+    },
+  }), [engine])
 
   // ── Plugin handlers ──
 
@@ -210,7 +230,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       if (!pluginClipboardHandlers) return
       if (isEditableElement(event.target as Element)) return
 
-      const ctx = createPatternContext(engine, patternCtxOptions)
+      const ctx = createPatternContext(observedEngine, patternCtxOptions)
       let handler: ClipboardHandler | undefined
       switch (event.type) {
         case 'copy': handler = pluginClipboardHandlers.onCopy; break
@@ -220,32 +240,32 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       if (!handler) return
       const command = handler(ctx)
       if (command) {
-        engine.dispatch(command)
+        observedEngine.dispatch(command)
         event.preventDefault()
       }
     },
-    [pluginClipboardHandlers, engine, patternCtxOptions],
+    [pluginClipboardHandlers, observedEngine, patternCtxOptions],
   )
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       const matchedKey = findMatchingKey(event, mergedKeyMap)
       if (matchedKey) {
-        const ctx = createPatternContext(engine, patternCtxOptions)
+        const ctx = createPatternContext(observedEngine, patternCtxOptions)
         const handler = mergedKeyMap[matchedKey]
         if (!handler) return
-        const handled = dispatchKeyAction(ctx, handler, engine, onActivateRef.current)
+        const handled = dispatchKeyAction(ctx, handler, observedEngine)
         if (handled) event.preventDefault()
       } else if (pluginUnhandledKeyHandlers) {
         for (const h of pluginUnhandledKeyHandlers) {
-          if (h(event, engine)) {
+          if (h(event, observedEngine)) {
             event.preventDefault()
             break
           }
         }
       }
     },
-    [mergedKeyMap, engine, patternCtxOptions, pluginUnhandledKeyHandlers],
+    [mergedKeyMap, observedEngine, patternCtxOptions, pluginUnhandledKeyHandlers],
   )
 
   // ── getNodeProps ──
@@ -295,7 +315,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           if (target.closest(`[${nodeIdAttr}]`) !== event.currentTarget) return
         }
         if (id !== focusedId) {
-          engine.dispatch(focusCommands.setFocus(id))
+          observedEngine.dispatch(focusCommands.setFocus(id))
         }
       }
 
@@ -317,7 +337,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
       return baseProps
     },
-    [store, pattern, isKeyMapOnly, engine, focusedId, getNodeState, handleKeyDown, patternCtxOptions, nodeIdAttr],
+    [store, pattern, isKeyMapOnly, observedEngine, focusedId, getNodeState, handleKeyDown, patternCtxOptions, nodeIdAttr],
   )
 
   // ── containerProps ──
@@ -390,5 +410,5 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     el.focus({ preventScroll: false })
   }, [disabled, isKeyMapOnly, focusedId, pattern.focusStrategy.type, nodeIdAttr, autoFocus])
 
-  return { getNodeProps, getNodeState, containerProps, patternCtxOptions }
+  return { getNodeProps, getNodeState, containerProps, patternCtxOptions, observedEngine }
 }

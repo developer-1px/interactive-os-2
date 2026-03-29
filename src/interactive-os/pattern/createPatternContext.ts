@@ -6,20 +6,11 @@ import type { VisibilityFilter } from '../engine/types'
 import type { PatternContext, CtxFactory } from './types'
 import { getEntity, getChildren, getParent } from '../store/createStore'
 import { FOCUS_ID } from '../axis/navigate'
-import { defineCommands } from '../engine/defineCommand'
+import { activateCommands } from '../axis/activate'
 
 function getFocusedId(engine: CommandEngine): string {
   return (engine.getStore().entities[FOCUS_ID]?.focusedId as string) ?? ''
 }
-
-// ② 2026-03-29-compose-pattern-3arg-prd.md
-const activateCommands = defineCommands({
-  activate: {
-    type: 'core:activate' as const,
-    create: (nodeId: string) => ({ nodeId }),
-    handler: (store) => store,
-  },
-})
 
 export interface PatternContextOptions {
   visibilityFilters?: VisibilityFilter[]

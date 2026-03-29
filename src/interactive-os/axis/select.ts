@@ -2,6 +2,7 @@ import type { PatternContext, EntityDecl } from './types'
 import type { SelectionMode } from './types'
 import { type Command, type Middleware, createBatchCommand } from '../engine/types'
 import { focusCommands } from './navigate'
+import { activateCommands } from './activate'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
 
@@ -113,12 +114,15 @@ function anchorResetMiddleware(): Middleware {
  * Batch commands (e.g. extendSelection) are exempt — they manage selection themselves.
  * APG "selection follows focus": RadioGroup, Tabs automatic.
  */
-export function selectionFollowsFocusMiddleware(): Middleware {
+export function selectionFollowsFocusMiddleware(activateOnSelect?: boolean): Middleware {
   return (next, _getStore) => (command) => {
     next(command)
     if (command.type === 'core:focus') {
       const nodeId = (command.payload as { nodeId: string }).nodeId
       next(selectionCommands.select(nodeId))
+      if (activateOnSelect) {
+        next(activateCommands.activate(nodeId))
+      }
     }
   }
 }
@@ -186,9 +190,9 @@ export function selectedCtx(
 }
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
-export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; attribute?: string }) {
+export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; activateOnSelect?: boolean }) {
   const middlewares: Middleware[] = [anchorResetMiddleware()]
-  if (opts?.followFocus) middlewares.push(selectionFollowsFocusMiddleware())
+  if (opts?.followFocus) middlewares.push(selectionFollowsFocusMiddleware(opts?.activateOnSelect))
   const middleware: Middleware = middlewares.length === 1
     ? middlewares[0]!
     : (next, getStore) => middlewares.reduceRight<(command: Command) => void>((acc, mw) => mw(acc, getStore), next)
@@ -212,6 +216,7 @@ export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; at
     meta: {
       selectionMode: mode,
       ...(opts?.followFocus && { selectionFollowsFocus: true }),
+      ...(opts?.activateOnSelect && { activationFollowsSelection: true }),
     },
     ariaGen: ((s, _e, role) => {
       const attr = (role === 'radio' || role === 'menuitemradio')
