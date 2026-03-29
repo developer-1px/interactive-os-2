@@ -9,9 +9,9 @@ import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 import { composePattern } from '../pattern/composePattern'
-import { select } from '../axis/select'
-import { navigate } from '../axis/navigate'
-import { expand, EXPANDED_ID } from '../axis/expand'
+import { selectConfig } from '../axis/select'
+import { focusNext, focusPrev, focusFirst, focusLast } from '../axis/navigate'
+import { expandConfig, expandOrFocusChild, collapseOrFocusParent, EXPANDED_ID } from '../axis/expand'
 import { listbox } from '../pattern/roles/listbox'
 
 // Minimal tabs-like pattern for testing
@@ -25,8 +25,13 @@ const testTabs = composePattern(
     panelRole: 'tabpanel',
     panelVisibility: 'selected',
   },
-  select({ mode: 'single', selectionFollowsFocus: true }),
-  navigate({ orientation: 'horizontal' }),
+  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
+  {
+    ArrowLeft: focusPrev,
+    ArrowRight: focusNext,
+    Home: focusFirst,
+    End: focusLast,
+  },
 )
 
 function fixtureData(): NormalizedData {
@@ -116,8 +121,15 @@ const testAccordion = composePattern(
     panelRole: 'region',
     panelVisibility: 'expanded',
   },
-  expand(),
-  navigate({ orientation: 'vertical' }),
+  expandConfig(),
+  {
+    ArrowRight: expandOrFocusChild,
+    ArrowLeft: collapseOrFocusParent,
+    ArrowDown: focusNext,
+    ArrowUp: focusPrev,
+    Home: focusFirst,
+    End: focusLast,
+  },
 )
 
 function accordionData(): NormalizedData {

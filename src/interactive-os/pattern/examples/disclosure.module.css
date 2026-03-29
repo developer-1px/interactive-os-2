@@ -11,7 +11,8 @@
   background: var(--surface-sunken);
   border: var(--border-width) solid var(--border-default);
   cursor: default;
-  outline: none;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
 }
 
 .indicator {
@@ -37,4 +38,5 @@
 
 .button:is([data-focused='true']) {
   background: var(--bg-hover);
+  outline-color: var(--focus);
 }

@@ -1,18 +1,10 @@
 import type { AriaPattern } from '../types'
 import { composePattern } from '../composePattern'
 import { focusNext, focusPrev, focusFirst, focusLast, focusNextCol, focusPrevCol, focusFirstCol, focusLastCol, gridTabCycleNext, gridTabCyclePrev } from '../../axis/navigate'
-import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectionCommands } from '../../axis/select'
+import { toggleSelect, extendSelectionNext, extendSelectionPrev, extendSelectionFirst, extendSelectionLast, extendSelectionToFocused, selectAndAnchor } from '../../axis/select'
 import type { PatternContext } from '../../axis/types'
-import type { Command } from '../../engine/types'
-import { createBatchCommand } from '../../engine/types'
 
 // APG Grid — https://www.w3.org/WAI/ARIA/apg/patterns/grid/
-
-const selectAndAnchor = (ctx: PatternContext): Command =>
-  createBatchCommand([
-    selectionCommands.select(ctx.focused),
-    selectionCommands.setAnchor(ctx.focused),
-  ])
 
 // ── Data Grid ──
 

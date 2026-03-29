@@ -3,17 +3,15 @@ order:
   - vision
   - store
   - engine
-  - axis
   - pattern
   - plugins
   - primitives
   - ui
   - devtools
 
-# L1 Store → L2 Engine → L3 Axis → L4 Pattern → L5 Plugins → L6 Primitives → L7 UI
+# L1 Store → L2 Engine → L3 Pattern → L4 Plugins → L5 Primitives → L6 UI
 
 srcMap:
-  axis: src/interactive-os/axis
   pattern: src/interactive-os/pattern
   plugins: src/interactive-os/plugins
   primitives: src/interactive-os/primitives

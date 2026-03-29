@@ -1,5 +1,5 @@
 // ② 2026-03-29-define-command-prd.md
-import type { AxisConfig, KeyMap } from './types'
+import type { PatternContext } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
@@ -57,11 +57,6 @@ export const popupCommands = defineCommands({
 
 export type PopupType = 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
 
-export interface PopupOptions {
-  type: PopupType
-  modal?: boolean
-}
-
 export const popupVisibilityFilter: VisibilityFilter = {
   shouldDescend(nodeId, store) {
     const entity = store.entities[POPUP_ID]
@@ -75,7 +70,7 @@ export const popupVisibilityFilter: VisibilityFilter = {
   },
 }
 
-function readPopup(ctx: Parameters<KeyMap[string]>[0]): PopupEntity {
+function readPopup(ctx: PatternContext): PopupEntity {
   const entity = ctx.getEntity(POPUP_ID)
   return {
     isOpen: (entity?.isOpen as boolean) ?? false,
@@ -84,7 +79,7 @@ function readPopup(ctx: Parameters<KeyMap[string]>[0]): PopupEntity {
 }
 
 // ② 2026-03-28-axis-handlers-export-prd.md
-export const openPopup = (ctx: Parameters<KeyMap[string]>[0]): Command | void => {
+export const openPopup = (ctx: PatternContext): Command | void => {
   const { isOpen } = readPopup(ctx)
   const children = ctx.getChildren(ctx.focused)
   if (!isOpen && children.length > 0) {
@@ -96,7 +91,7 @@ export const openPopup = (ctx: Parameters<KeyMap[string]>[0]): Command | void =>
   return undefined
 }
 
-export const closePopup = (ctx: Parameters<KeyMap[string]>[0]): Command | void => {
+export const closePopup = (ctx: PatternContext): Command | void => {
   const { isOpen, triggerId } = readPopup(ctx)
   if (isOpen) {
     if (triggerId) {
@@ -110,7 +105,7 @@ export const closePopup = (ctx: Parameters<KeyMap[string]>[0]): Command | void =
   return undefined
 }
 
-export const openAndFocusFirst = (ctx: Parameters<KeyMap[string]>[0]): Command | void => {
+export const openAndFocusFirst = (ctx: PatternContext): Command | void => {
   const children = ctx.getChildren(ctx.focused)
   if (children.length > 0) {
     return createBatchCommand([
@@ -121,7 +116,7 @@ export const openAndFocusFirst = (ctx: Parameters<KeyMap[string]>[0]): Command |
   return undefined
 }
 
-export const openAndFocusLast = (ctx: Parameters<KeyMap[string]>[0]): Command | void => {
+export const openAndFocusLast = (ctx: PatternContext): Command | void => {
   const children = ctx.getChildren(ctx.focused)
   if (children.length > 0) {
     return createBatchCommand([
@@ -132,23 +127,3 @@ export const openAndFocusLast = (ctx: Parameters<KeyMap[string]>[0]): Command | 
   return undefined
 }
 
-export function popup(options: PopupOptions): { keyMap: KeyMap; config: Partial<AxisConfig>; visibilityFilter: VisibilityFilter } {
-  const { type, modal } = options
-
-  const keyMap: KeyMap = {
-    Enter: openPopup,
-    Space: openPopup,
-    Escape: closePopup,
-    ...(type === 'menu' && {
-      ArrowDown: openAndFocusFirst,
-      ArrowUp: openAndFocusLast,
-    }),
-  }
-
-  const config = {
-    popupType: type,
-    ...(modal && { popupModal: true }),
-  } as Partial<AxisConfig>
-
-  return { keyMap, config, visibilityFilter: popupVisibilityFilter }
-}
