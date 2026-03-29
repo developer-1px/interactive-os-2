@@ -1,14 +1,15 @@
 import type { PatternContext } from '../pattern/types'
 import type { Command } from '../engine/types'
+import type { Axis } from '../axis/types'
 import { createBatchCommand } from '../engine/types'
 import { ROOT_ID } from '../store/types'
-import { focusCommands } from '../axis/navigate'
-import { selectionCommands } from '../axis/select'
+import { navigate, focusCommands } from '../axis/navigate'
+import { selected, selectionCommands } from '../axis/select'
 import { historyCommands } from '../plugins/history'
 import { dndCommands } from '../plugins/dnd'
 import { crudCommands } from '../plugins/crud'
 import { renameCommands } from '../plugins/rename'
-import { composePattern, type Axis } from '../pattern/composePattern'
+import { composePattern } from '../pattern/composePattern'
 
 // ── Shared helpers ──
 
@@ -41,11 +42,8 @@ function focusInColumn(ctx: PatternContext, columnId: string, targetIndex: numbe
   return focusCommands.setFocus(cards[clamped]!)
 }
 
-// ── Axis: inline selectToggle (no selectionMode on this pattern) ──
-
-const selectToggle: Axis = {
-  Space: (ctx: PatternContext) => ctx.toggleSelect(),
-}
+const nav = navigate('vertical')
+const sel = selected('multiple')
 
 // ── Axis: column-aware vertical navigation ──
 
@@ -128,7 +126,7 @@ const kanbanEditing: Axis = {
   },
 
   Escape(ctx: PatternContext) {
-    if (ctx.selected.length > 0) return selectionCommands.clearSelection()
+    if (ctx.selected!.ids.length > 0) return selectionCommands.clearSelection()
   },
 }
 
@@ -171,8 +169,8 @@ const kanbanPlugins: Axis = {
     const columns = ctx.getChildren(ROOT_ID)
     if (info.columnIndex >= columns.length - 1) return
     const targetCol = columns[info.columnIndex + 1]!
-    if (ctx.selected.length > 1) {
-      const cmds = ctx.selected.map((id: string) => {
+    if (ctx.selected!.ids.length > 1) {
+      const cmds = ctx.selected!.ids.map((id: string) => {
         const ci = findCardInfoFor(ctx, id)
         if (!ci || ci.cardIndex === -1) return null
         return dndCommands.moveTo(id, targetCol, Math.min(ci.cardIndex, ctx.getChildren(targetCol).length))
@@ -189,8 +187,8 @@ const kanbanPlugins: Axis = {
     const columns = ctx.getChildren(ROOT_ID)
     if (info.columnIndex <= 0) return
     const targetCol = columns[info.columnIndex - 1]!
-    if (ctx.selected.length > 1) {
-      const cmds = ctx.selected.map((id: string) => {
+    if (ctx.selected!.ids.length > 1) {
+      const cmds = ctx.selected!.ids.map((id: string) => {
         const ci = findCardInfoFor(ctx, id)
         if (!ci || ci.cardIndex === -1) return null
         return dndCommands.moveTo(id, targetCol, Math.min(ci.cardIndex, ctx.getChildren(targetCol).length))
@@ -217,10 +215,6 @@ export const kanban = composePattern(
       'aria-selected': String(state.selected),
     }),
   },
-  { keyMap: {}, config: { focusStrategy: { type: 'roving-tabindex', orientation: 'both' } } },
-  selectToggle,
-  kanbanEditing,
-  kanbanCrossH,
-  kanbanNavV,
-  kanbanPlugins,
+  [nav, sel, kanbanEditing, kanbanCrossH, kanbanNavV, kanbanPlugins],
+  { Space: sel.toggle },
 )

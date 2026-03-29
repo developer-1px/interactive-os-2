@@ -2,7 +2,6 @@
 // axis가 계약을 정의, pattern이 구현
 import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
-import type { ValueRange } from './value'
 import type { Middleware, VisibilityFilter } from '../engine/types'
 
 export type SelectionMode = 'single' | 'multiple'
@@ -34,36 +33,57 @@ export interface FocusStrategy {
   orientation?: 'vertical' | 'horizontal' | 'both'
 }
 
-export interface PatternContext {
-  focused: string
-  selected: string[]
-  isExpanded: boolean
-  isChecked: boolean
-  isOpen: boolean
+// ② 2026-03-29-ctx-axis-namespace-prd.md
+/** aria-selected 변화 범주 */
+export interface SelectedNav {
+  ids: string[]
+  toggle(): Command
+  range(ids: string[]): Command
+  extend(direction: 'next' | 'prev' | 'first' | 'last'): Command
+  extendTo(targetId: string, navigableIds?: string[]): Command
+}
 
+/** aria-expanded 변화 범주 */
+export interface ExpandedNav {
+  is: boolean
+  set(value: boolean): Command
+  toggle(): Command
+}
+
+/** aria-checked / aria-pressed 변화 범주 */
+export interface CheckedNav {
+  is: boolean
+  toggle(): Command
+}
+
+/** popup open/close 변화 범주 (aria-expanded + focus 복합) */
+export interface PopupNav {
+  isOpen: boolean
+  open(): Command
+  close(): Command
+}
+
+// ② 2026-03-29-ctx-axis-namespace-prd.md
+export interface PatternContext {
+  // ── Base (focus + store access + activate event) ──
+  focused: string
   focusNext(options?: { wrap?: boolean }): Command
   focusPrev(options?: { wrap?: boolean }): Command
   focusFirst(): Command
   focusLast(): Command
   focusParent(): Command
   focusChild(): Command
-
-  expand(): Command
-  collapse(): Command
   activate(): Command
-  toggleCheck(): Command
-  open(): Command
-  close(): Command
-  toggleSelect(): Command
-  extendSelection(direction: 'next' | 'prev' | 'first' | 'last'): Command
-  extendSelectionTo(targetId: string, navigableIds?: string[]): Command
-
   dispatch(command: Command): void
-
   getEntity(id: string): Entity | undefined
   getChildren(id: string): string[]
   getParent(id: string): string | undefined
 
+  // ── aria-* 변화 범주 namespace (optional) ──
+  selected?: SelectedNav
+  expanded?: ExpandedNav
+  checked?: CheckedNav
+  popup?: PopupNav
   grid?: GridNav
   value?: ValueNav
 }
@@ -73,35 +93,23 @@ export type KeyMap = Record<string, (ctx: PatternContext) => Command | void>
 /** Modifier-keyed click handler map for declarative click binding. Keys: 'default' | 'shift' | 'ctrl' | 'meta' | 'alt'. */
 export type ClickMap = Record<string, (ctx: PatternContext) => Command | void>
 
-export interface AxisConfig {
-  focusStrategy: FocusStrategy
-  tabFocusStrategy: FocusStrategy
-  expandable: boolean
-  /** When true, useAria creates __expanded__ entity at init so getVisibleNodes gates child visibility. Set by expand axis. */
-  expandTracking: boolean
-  /** When true, useAria creates __checked__ entity at init. Set by checked axis. */
-  checkedTracking: boolean
-  selectionMode: SelectionMode
-  selectOnClick: boolean
-  activateOnClick: boolean
-  /** When true, clicking a node calls toggleCheck(). Set by checked axis. */
-  checkOnClick: boolean
-  /** When true, clicking a parent node toggles expand even when onActivate is provided. Default: true. Set by activate({ expandOnClick }). */
-  expandOnParentClick: boolean
-  selectionFollowsFocus: boolean
-  activationFollowsSelection: boolean
-  colCount: number
-  valueRange: ValueRange
-  /** Popup type — when set, trigger gets aria-haspopup and popup behavior. Set by popup axis. */
-  popupType: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog'
-  /** When true, popup is modal (focus trap, aria-modal). Set by popup axis. */
-  popupModal: boolean
+// ② 2026-03-29-axis-config-removal-prd.md
+/** Declarative entity requirement — axis declares what meta-entities it needs in the store. */
+export interface EntityDecl {
+  id: string
+  default: Record<string, unknown>
 }
 
-/** Axis: plain inputMap (key/click bindings) or structured object with config/middleware. */
+/** Factory that creates an axis namespace on PatternContext. Called by createPatternContext. */
+export type CtxFactory = (engine: import('../engine/createCommandEngine').CommandEngine, focusedId: string, visibleNodes: () => string[]) => Record<string, unknown>
+
+/** Axis: plain inputMap (key/click bindings) or structured object with entities/middleware/visibilityFilter/ctxFactory. */
 export type Axis = KeyMap | {
   keyMap: KeyMap
-  config?: Partial<AxisConfig>
+  entities?: EntityDecl[]
   middleware?: Middleware
   visibilityFilter?: VisibilityFilter
+  ctxFactory?: CtxFactory
+  /** AriaPattern contributions — composePattern spreads these into the result. OCP: no switch-case. */
+  meta?: Record<string, unknown>
 }

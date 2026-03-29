@@ -1,12 +1,15 @@
 import { composePattern } from '../pattern/composePattern'
+import { navigate } from '../axis/navigate'
 import type { NodeState } from '../pattern/types'
 import type { Entity } from '../store/types'
 
 /**
  * Read-only spatial navigation pattern.
- * No axes — useSpatialNav injects arrow key handlers externally.
- * Only provides roving-tabindex focus management.
+ * useSpatialNav injects arrow key handlers externally.
+ * navigate('both') provides roving-tabindex focus management.
  */
+const nav = navigate('both')
+
 export const spatialView = composePattern(
   {
     role: 'group',
@@ -16,5 +19,6 @@ export const spatialView = composePattern(
       'aria-setsize': String(state.siblingCount),
     }),
   },
-  { keyMap: {}, config: { focusStrategy: { type: 'roving-tabindex', orientation: 'both' } } },
+  [nav],
+  {},
 )

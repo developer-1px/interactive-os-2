@@ -96,7 +96,7 @@ export function expanded() {
     ctxFactory: ((engine, focusedId) => ({
       expanded: expandedCtx(engine, focusedId),
     })) as import('./types').CtxFactory,
-    __axisType: 'expanded' as const,
+    meta: { expandable: true },
     toggle,
     set,
     expand: set(true),

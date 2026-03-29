@@ -146,9 +146,10 @@ export function popup(type: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog', opt
     ctxFactory: ((engine, focusedId) => ({
       popup: popupCtx(engine, focusedId),
     })) as CtxFactory,
-    __axisType: 'popup' as const,
-    __popupType: type,
-    __popupModal: opts?.modal,
+    meta: {
+      popupType: type,
+      ...(opts?.modal && { popupModal: true }),
+    },
     // handlers
     open: open_,
     close: close_,
