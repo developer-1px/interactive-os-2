@@ -1,13 +1,13 @@
 import { composePattern } from '../composePattern'
+import { navigate } from '../../axis/navigate'
 import { activateHandler } from '../../axis/activate'
 
-// APG Link: Enter activates. Natural tab order.
+// APG Link — Enter activates. Natural tab order.
+const nav = navigate('natural')
+
 export const link = composePattern(
-  {
-    role: 'none',
-    childRole: 'link',
-    ariaAttributes: () => ({}),
-  },
+  { role: 'none', childRole: 'link' },
+  [nav],
   {
     Enter: activateHandler,
     Space: activateHandler,
