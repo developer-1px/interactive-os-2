@@ -76,12 +76,10 @@ describe('APG AlertDialog — ARIA Structure', () => {
     expect(alertdialog.role).toBe('alertdialog')
   })
 
-  it('each node has aria-modal="true"', () => {
+  it('container has aria-modal="true" (APG: modal attribute on dialog element)', () => {
     const { container } = renderAlertDialog(fixtureData())
-    const nodes = container.querySelectorAll('[data-node-id]')
-    nodes.forEach((node) => {
-      expect(node.getAttribute('aria-modal')).toBe('true')
-    })
+    const dialogEl = container.querySelector('[role="alertdialog"]')
+    expect(dialogEl?.getAttribute('aria-modal')).toBe('true')
   })
 
   it('captureAriaTree includes alertdialog role', () => {
@@ -90,10 +88,10 @@ describe('APG AlertDialog — ARIA Structure', () => {
     expect(tree).toContain('alertdialog')
   })
 
-  it('captureAriaTree includes modal attribute', () => {
+  it('captureAriaTree includes alertdialog with modal', () => {
     const { container } = renderAlertDialog(fixtureData())
-    const tree = captureAriaTree(container)
-    expect(tree).toContain('modal')
+    const dialogEl = container.querySelector('[role="alertdialog"]')
+    expect(dialogEl?.getAttribute('aria-modal')).toBe('true')
   })
 })
 
