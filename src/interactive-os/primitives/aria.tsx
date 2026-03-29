@@ -10,6 +10,7 @@ import { AriaInternalContext } from './AriaInternalContext'
 import { getChildren } from '../store/createStore'
 import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
 import { EXPANDED_ID } from '../axis/expand'
+import { POPUP_ID } from '../axis/popup'
 import { renameCommands, RENAME_ID } from '../plugins/rename'
 import { registerAria, unregisterAria } from './ariaRegistry'
 import { SEARCH_ID, searchCommands, matchesSearchFilter } from '../plugins/search'
@@ -71,6 +72,7 @@ function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, o
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-orientation={role && ROLES_WITH_ORIENTATION.has(role) && orientation !== 'both' ? orientation : undefined}
+        aria-modal={pattern?.popupModal ? 'true' : undefined}
         style={orientation === 'horizontal' ? horizontalStyle : undefined}
         data-aria-container=""
         {...(aria.containerProps as React.HTMLAttributes<HTMLElement>)}
@@ -131,6 +133,11 @@ function AriaItem({ ids, render }: AriaItemProps) {
         // No expand entity → all containers open (matches expand axis shouldDescend)
         const expandedIds = expandEntity ? ((expandEntity.expandedIds as string[]) ?? []) : null
 
+        // Popup visibility: when popup axis is present, only descend into trigger's children when open
+        const popupEntity = store.entities[POPUP_ID]
+        const popupTriggerId = (popupEntity?.triggerId as string) ?? ''
+        const popupIsOpen = (popupEntity?.isOpen as boolean) ?? false
+
         const searchEntity = store.entities[SEARCH_ID] as Record<string, unknown> | undefined
         const filterText = (searchEntity?.filterText as string) ?? ''
 
@@ -142,7 +149,9 @@ function AriaItem({ ids, render }: AriaItemProps) {
             if (filterText && !matchesSearchFilter(store.entities[childId], filterText)) continue
             if (!store.entities[childId]) continue
             const hasChildren = getChildren(store, childId).length > 0
-            const isExpanded = expandedIds === null || expandedIds.includes(childId)
+            // Popup gating: if popup entity exists, only show children of the open trigger
+            const isPopupVisible = !popupEntity || (popupTriggerId === childId && popupIsOpen)
+            const isExpanded = (expandedIds === null || expandedIds.includes(childId)) && isPopupVisible
 
             // Container node with 4-arg render: wrap children inside container node
             // render.length >= 4: opt-in — only when render callback declares children param
