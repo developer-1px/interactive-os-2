@@ -1,4 +1,3 @@
-import type { Command, BatchCommand } from './types'
 import type { StoreDiff } from '../store/computeStoreDiff'
 
 export interface LogEntry {
@@ -11,10 +10,6 @@ export interface LogEntry {
 }
 
 export type Logger = (entry: LogEntry) => void
-
-export interface EngineOptions {
-  logger?: boolean | Logger
-}
 
 function truncatePayload(payload: unknown): string {
   const str = JSON.stringify(payload)
@@ -54,6 +49,3 @@ export const defaultLogger: Logger = (entry) => {
   console.log(`${prefix} ${entry.type} | ${truncatePayload(entry.payload)} | ${formatDiff(entry.diff)}`)
 }
 
-export function isBatchCommand(cmd: Command): cmd is BatchCommand {
-  return cmd.type === 'batch' && 'commands' in cmd
-}

@@ -12,7 +12,7 @@ import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobo
 import { ROOT_ID } from '../store/types'
 import { createBatchCommand } from '../engine/types'
 import { getChildren } from '../store/createStore'
-import { mergeProps } from '../engine/mergeProps'
+import { mergeProps } from '../primitives/mergeProps'
 
 const CREATE_SENTINEL = '__create_option__'
 

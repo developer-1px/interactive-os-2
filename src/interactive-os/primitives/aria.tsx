@@ -27,7 +27,7 @@ interface AriaProps {
   onActivate?: (nodeId: string) => void
   'aria-label'?: string
   'aria-labelledby'?: string
-  logger?: import('../engine/dispatchLogger').EngineOptions['logger']
+  logger?: import('../engine/types').EngineOptions['logger']
   autoFocus?: boolean
   disabled?: boolean
   children: ReactNode
