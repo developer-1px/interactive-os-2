@@ -97,6 +97,11 @@ export function value(range: ValueRange) {
   return {
     keyMap: {} as Record<string, never>,
     meta: { valueRange: range },
+    ariaGen: ((s) => ({
+      'aria-valuenow': String(s.valueCurrent ?? range.min),
+      'aria-valuemin': String(range.min),
+      'aria-valuemax': String(range.max),
+    })) as import('./types').AriaGen,
     ctxFactory: ((engine, focusedId) => ({
       value: valueCtx(engine, focusedId, range),
     })) as CtxFactory,

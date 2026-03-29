@@ -7,7 +7,6 @@ import type { AriaPattern, NodeState } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren, getParent, getEntity } from '../store/createStore'
 import { focusCommands } from '../axis/navigate'
-import { EXPANDED_ID } from '../axis/expand'
 import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
@@ -256,50 +255,21 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       if (isKeyMapOnly) return {}
       const state = getNodeState(id)
       const entity = getEntity(store, id) ?? { id }
-      // State-derived ARIA — auto-generated from axis state, pattern ariaAttributes can override
+      const resolvedRole = typeof pattern.childRole === 'function'
+        ? pattern.childRole(entity, state)
+        : (pattern.childRole ?? '')
+
+      // Axis-declared ARIA — each axis generates its own aria-* attributes (OCP)
       const autoAria: Record<string, string> = {}
-      if (state.expanded !== undefined) autoAria['aria-expanded'] = String(state.expanded)
-      if (pattern.selectionMode) {
-        const resolvedRole = typeof pattern.childRole === 'function'
-          ? pattern.childRole(entity, state)
-          : (pattern.childRole ?? '')
-        // APG: radio/menuitemradio → aria-checked, toggle button → aria-pressed, others → aria-selected
-        const selAttr = (resolvedRole === 'radio' || resolvedRole === 'menuitemradio')
-          ? 'aria-checked'
-          : resolvedRole === 'button'
-            ? 'aria-pressed'
-            : 'aria-selected'
-        autoAria[selAttr] = String(state.selected)
+      for (const gen of pattern.ariaGens ?? []) {
+        Object.assign(autoAria, gen(state as Record<string, unknown>, entity as Record<string, unknown>, resolvedRole))
       }
-      if (state.checked !== undefined) {
-        const resolvedRole = typeof pattern.childRole === 'function'
-          ? pattern.childRole(entity, state)
-          : (pattern.childRole ?? '')
-        const checkedAttr = resolvedRole === 'button' ? 'aria-pressed' : 'aria-checked'
-        autoAria[checkedAttr] = String(state.checked)
-      }
-      if (pattern.popupType && state.open !== undefined) {
-        autoAria['aria-haspopup'] = pattern.popupType
-        autoAria['aria-expanded'] = String(state.open)
-      }
-      // Structural ARIA — position in set
+
+      // Structural ARIA — universal, not axis-specific
       if (state.siblingCount > 1) {
         autoAria['aria-posinset'] = String(state.index + 1)
         autoAria['aria-setsize'] = String(state.siblingCount)
       }
-      // aria-level for hierarchical patterns (tree, treegrid) — any node in an expandable pattern
-      if ((store.entities[EXPANDED_ID] || pattern.expandable) && state.level !== undefined) {
-        autoAria['aria-level'] = String(state.level)
-      }
-      if (pattern.colCount) autoAria['aria-rowindex'] = String(state.index + 1)
-      // Value auto-ARIA — slider, spinbutton, separator (window splitter)
-      if (pattern.valueRange) {
-        autoAria['aria-valuenow'] = String(state.valueCurrent ?? pattern.valueRange.min)
-        autoAria['aria-valuemin'] = String(pattern.valueRange.min)
-        autoAria['aria-valuemax'] = String(pattern.valueRange.max)
-      }
-
-      // aria-label from entity data — universal
       const label = (entity.data as Record<string, unknown>)?.label
       if (typeof label === 'string' && label) autoAria['aria-label'] = label
 

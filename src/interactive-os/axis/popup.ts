@@ -150,6 +150,10 @@ export function popup(type: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog', opt
       popupType: type,
       ...(opts?.modal && { popupModal: true }),
     },
+    ariaGen: ((s) => {
+      if (s.open === undefined) return {}
+      return { 'aria-haspopup': type, 'aria-expanded': String(s.open) }
+    }) as import('./types').AriaGen,
     // handlers
     open: open_,
     close: close_,

@@ -1,7 +1,7 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
-import type { PatternContext, FocusStrategy, SelectionMode, ClickMap } from '../axis/types'
+import type { PatternContext, FocusStrategy, SelectionMode, ClickMap, EntityDecl, CtxFactory } from '../axis/types'
 import type { ValueRange } from '../axis/value'
 import type { Middleware, VisibilityFilter } from '../engine/types'
 
@@ -19,32 +19,16 @@ export interface NodeState {
   [key: string]: unknown
 }
 
+// ② 2026-03-29-axis-config-removal-prd.md
 export interface AriaPattern<TState extends NodeState = NodeState> {
   role: string
-  /** ARIA role for each node element. Defaults to the behavior's childRole or 'row'. */
   childRole?: string | ((entity: Entity, state: NodeState) => string)
   keyMap: Record<string, (ctx: PatternContext) => Command | void>
   focusStrategy: FocusStrategy
   /** When true, all nodes are expandable regardless of children. Used by accordion, disclosure. */
   expandable?: boolean
-  /** When true, useAria creates __expanded__ entity at init for getVisibleNodes gating. Set by expand axis. */
-  expandTracking?: boolean
-  /** When true, useAria creates __checked__ entity at init. Set by checked axis. */
-  checkedTracking?: boolean
-  /** Selection mode: 'single' replaces selection, 'multiple' toggles independently. Default: 'multiple' */
+  /** Selection mode: 'single' replaces selection, 'multiple' toggles independently. */
   selectionMode?: SelectionMode
-  /** When true, clicking a node selects it. Shift+Click = range, Ctrl/Cmd+Click = toggle. Auto-set by select() axis. */
-  selectOnClick?: boolean
-  /** When true, clicking a node calls activate(). Used by most behaviors except treegrid/dialog. */
-  activateOnClick?: boolean
-  /** When true, clicking a node calls toggleCheck(). Set by checked axis. */
-  checkOnClick?: boolean
-  /** When true, clicking a parent node toggles expand even when onActivate is provided. Default: true (APG File Directory). */
-  expandOnParentClick?: boolean
-  /** When true, focus change auto-selects (select axis middleware). APG "selection follows focus". */
-  selectionFollowsFocus?: boolean
-  /** When true, selection change calls onActivate (useAria/useAriaZone). Chain: selection → onActivate. */
-  activationFollowsSelection?: boolean
   /** Number of columns for grid navigation. When > 1, PatternContext.grid is populated. */
   colCount?: number
   /** Value range for continuous-value widgets (slider, spinbutton). */
@@ -68,7 +52,16 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   /** Declarative click bindings from unified inputMap — 'Click', 'Shift+Click', 'Mod+Click' etc. */
   clickMap?: Record<string, (ctx: PatternContext) => Command | void>
   ariaAttributes?: (node: Entity, state: TState) => Record<string, string>
+  /** Meta-entities that must exist in the store for this pattern to work. Axes declare these. */
+  requiredEntities?: EntityDecl[]
+  /** Ctx factories from axes — createPatternContext calls these to populate namespace properties. */
+  ctxFactories?: CtxFactory[]
+  /** Per-node ARIA generators from axes — useAriaView calls these to produce aria-* attributes. OCP. */
+  ariaGens?: import('../axis/types').AriaGen[]
+  // Metadata — not used for behavior dispatch, only for external queries (e.g. tests)
+  selectionFollowsFocus?: boolean
+  activationFollowsSelection?: boolean
 }
 
 // Re-export axis types for convenience (pattern consumers often need both)
-export type { PatternContext, FocusStrategy, SelectionMode, GridNav, ValueNav, ClickMap } from '../axis/types'
+export type { PatternContext, FocusStrategy, SelectionMode, GridNav, ValueNav, ClickMap, EntityDecl, CtxFactory } from '../axis/types'
