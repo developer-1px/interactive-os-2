@@ -11,7 +11,11 @@ export function windowSplitter(options: WindowSplitterOptions) {
   const val = value({ min, max, step })
 
   return composePattern(
-    { role: 'none', childRole: 'separator' },
+    {
+      role: 'none',
+      childRole: 'separator',
+      ariaAttributes: () => ({ 'aria-orientation': orientation }),
+    },
     [nav, val],
     {
       ...(orientation === 'horizontal'

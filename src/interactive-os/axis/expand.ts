@@ -81,7 +81,7 @@ export function expandedCtx(
 }
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
-export function expanded() {
+export function expanded(opts?: { allExpandable?: boolean }) {
   const toggle = (ctx: PatternContext): Command | void => ctx.expanded?.toggle()
   const set = (value: boolean) => (ctx: PatternContext): Command | void => ctx.expanded?.set(value)
   const expandOrFocusChild_ = (ctx: PatternContext): Command | void =>
@@ -96,7 +96,7 @@ export function expanded() {
     ctxFactory: ((engine, focusedId) => ({
       expanded: expandedCtx(engine, focusedId),
     })) as import('./types').CtxFactory,
-    meta: { expandable: true },
+    meta: opts?.allExpandable ? { expandable: true } : {},
     toggle,
     set,
     expand: set(true),

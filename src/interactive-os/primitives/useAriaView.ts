@@ -7,7 +7,7 @@ import type { AriaPattern, NodeState } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren, getParent, getEntity } from '../store/createStore'
 import { focusCommands } from '../axis/navigate'
-import { expandCommands, expandVisibilityFilter } from '../axis/expand'
+import { EXPANDED_ID } from '../axis/expand'
 import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
@@ -119,27 +119,26 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   // Collect visibility filters from pattern (axes) + plugins
   const allVisibilityFilters = useMemo(() => {
     const filters = [...(pattern.visibilityFilters ?? [])]
-    // expandTracking/expandable without explicit expand axis → add expand filter
-    if ((pattern.expandTracking || pattern.expandable) && !filters.some(f => f.shouldDescend)) {
-      filters.push(expandVisibilityFilter)
-    }
     for (const p of plugins) {
       if (p.visibilityFilter) filters.push(p.visibilityFilter)
     }
     return filters.length > 0 ? filters : undefined
-  }, [pattern.visibilityFilters, pattern.expandTracking, pattern.expandable, plugins])
+  }, [pattern.visibilityFilters, plugins])
+
+  const hasCheckedEntity = !!store.entities['__checked__']
 
   const patternCtxOptions = useMemo(
     () => ({
       expandable: pattern.expandable,
-      checkedTracking: pattern.checkedTracking,
+      checkedTracking: hasCheckedEntity,
       selectionMode: pattern.selectionMode,
       colCount: pattern.colCount,
       valueRange: pattern.valueRange,
       visibilityFilters: allVisibilityFilters,
       popupType: pattern.popupType,
+      ctxFactories: pattern.ctxFactories,
     }),
-    [pattern.expandable, pattern.checkedTracking, pattern.selectionMode, pattern.colCount, pattern.valueRange, allVisibilityFilters, pattern.popupType],
+    [pattern.expandable, hasCheckedEntity, pattern.selectionMode, pattern.colCount, pattern.valueRange, allVisibilityFilters, pattern.popupType, pattern.ctxFactories],
   )
 
   // ── getNodeState ──
@@ -165,6 +164,8 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         current = parent
       }
 
+      // expandable: true (disclosure/accordion) → all nodes get aria-expanded
+      // expandable: undefined (tree/menu) → only nodes with children get aria-expanded
       const isExpandable = hasChildren || (pattern.expandable ?? false) || (pattern.panelVisibility === 'expanded')
       const renaming = !!(renameEntity?.active && renameEntity?.nodeId === id)
 
@@ -175,7 +176,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         index: siblings.indexOf(id),
         siblingCount: siblings.length,
         expanded: isExpandable ? expandedIdSet.has(id) : undefined,
-        checked: pattern.checkedTracking ? (() => {
+        checked: hasCheckedEntity ? (() => {
           const directChecked = checkedIdSet.has(id)
           const children = getChildren(store, id)
           if (children.length === 0) return directChecked
@@ -199,7 +200,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         ...(pattern.valueRange && { valueCurrent: (valueMeta?.value as number) ?? pattern.valueRange.min }),
       }
     },
-    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, pattern.expandable, pattern.panelVisibility, pattern.checkedTracking, pattern.popupType, renameEntity, valueMeta, pattern.valueRange],
+    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, pattern.expandable, pattern.panelVisibility, hasCheckedEntity, pattern.popupType, renameEntity, valueMeta, pattern.valueRange],
   )
 
   // ── Event handlers ──
@@ -258,8 +259,25 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       // State-derived ARIA — auto-generated from axis state, pattern ariaAttributes can override
       const autoAria: Record<string, string> = {}
       if (state.expanded !== undefined) autoAria['aria-expanded'] = String(state.expanded)
-      if (pattern.selectionMode) autoAria['aria-selected'] = String(state.selected)
-      if (state.checked !== undefined) autoAria['aria-checked'] = String(state.checked)
+      if (pattern.selectionMode) {
+        const resolvedRole = typeof pattern.childRole === 'function'
+          ? pattern.childRole(entity, state)
+          : (pattern.childRole ?? '')
+        // APG: radio/menuitemradio → aria-checked, toggle button → aria-pressed, others → aria-selected
+        const selAttr = (resolvedRole === 'radio' || resolvedRole === 'menuitemradio')
+          ? 'aria-checked'
+          : resolvedRole === 'button'
+            ? 'aria-pressed'
+            : 'aria-selected'
+        autoAria[selAttr] = String(state.selected)
+      }
+      if (state.checked !== undefined) {
+        const resolvedRole = typeof pattern.childRole === 'function'
+          ? pattern.childRole(entity, state)
+          : (pattern.childRole ?? '')
+        const checkedAttr = resolvedRole === 'button' ? 'aria-pressed' : 'aria-checked'
+        autoAria[checkedAttr] = String(state.checked)
+      }
       if (pattern.popupType && state.open !== undefined) {
         autoAria['aria-haspopup'] = pattern.popupType
         autoAria['aria-expanded'] = String(state.open)
@@ -270,10 +288,20 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         autoAria['aria-setsize'] = String(state.siblingCount)
       }
       // aria-level for hierarchical patterns (tree, treegrid) — any node in an expandable pattern
-      if ((pattern.expandTracking || pattern.expandable) && state.level !== undefined) {
+      if ((store.entities[EXPANDED_ID] || pattern.expandable) && state.level !== undefined) {
         autoAria['aria-level'] = String(state.level)
       }
       if (pattern.colCount) autoAria['aria-rowindex'] = String(state.index + 1)
+      // Value auto-ARIA — slider, spinbutton, separator (window splitter)
+      if (pattern.valueRange) {
+        autoAria['aria-valuenow'] = String(state.valueCurrent ?? pattern.valueRange.min)
+        autoAria['aria-valuemin'] = String(pattern.valueRange.min)
+        autoAria['aria-valuemax'] = String(pattern.valueRange.max)
+      }
+
+      // aria-label from entity data — universal
+      const label = (entity.data as Record<string, unknown>)?.label
+      if (typeof label === 'string' && label) autoAria['aria-label'] = label
 
       const ariaAttrs = pattern.ariaAttributes?.(entity, state)
       const isActivedescendant = pattern.focusStrategy.type === 'aria-activedescendant'
@@ -288,39 +316,6 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       }
 
       if (state.focused) baseProps['data-focused'] = ''
-
-      baseProps.onClick = (event: MouseEvent) => {
-        if (event.defaultPrevented) return
-        // Guard against bubbled clicks from nested treeitems
-        const target = event.target as HTMLElement
-        const closestItem = target.closest(`[${nodeIdAttr}]`)
-        if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
-        if (pattern.activateOnClick) {
-          const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
-          if (hasModifier) return
-          if (onActivateRef.current) {
-            // ② 2026-03-26-treeview-click-expand-prd.md
-            if (pattern.expandOnParentClick !== false) {
-              const children = getChildren(engine.getStore(), id)
-              if (children.length > 0) {
-                engine.dispatch(expandCommands.toggleExpand(id))
-              }
-            }
-            onActivateRef.current(id)
-          } else {
-            const ctx = createPatternContext(engine, patternCtxOptions)
-            const command = ctx.activate()
-            if (command) engine.dispatch(command)
-          }
-        }
-        if (pattern.checkOnClick) {
-          const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
-          if (hasModifier) return
-          const ctx = createPatternContext(engine, patternCtxOptions)
-          const command = ctx.toggleCheck()
-          if (command) engine.dispatch(command)
-        }
-      }
 
       baseProps.onFocus = (event: FocusEvent) => {
         if (event.target !== event.currentTarget) {
