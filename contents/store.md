@@ -6,10 +6,10 @@
 
 | 모듈 | 함수/타입 | 역할 | 상태 |
 |------|----------|------|------|
-| types | `Entity`, `NormalizedData`, `ROOT_ID`, `TransformAdapter` | 핵심 타입 정의 | 🟢 |
+| types | `Entity`, `NormalizedData`, `ROOT_ID`, `PaneSize`, `TransformAdapter` | 핵심 타입 정의 | 🟢 |
 | createStore | `createStore()` | 정규화 데이터 store 생성, CRUD 연산 | 🟢 |
 | storeToInspectorTree | `storeToInspectorTree()` | flat → tree 변환 | 🟢 |
-| computeStoreDiff | `computeStoreDiff()` | 변경 감지 | 🟢 |
+| computeStoreDiff | `computeStoreDiff()`, `applyDelta()` | 변경 감지 + 양방향 적용 (undo/redo 기반) | 🟢 |
 
 ## 핵심 개념
 
