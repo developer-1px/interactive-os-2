@@ -57,11 +57,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-}
-
-.legend > span {
   cursor: pointer;
   opacity: 0.6;
+  padding: var(--space-xs) var(--space-xs);
+  border-radius: var(--shape-xs-radius);
 }
 
 .legend > span:hover {
@@ -71,6 +70,9 @@
 .legend > span[data-active] {
   opacity: 1;
   color: var(--text-bright);
+  background: var(--surface-sunken);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--shape-xs-radius);
 }
 
 .legend > span::before {
@@ -89,10 +91,11 @@
 .legendHint {
   font-size: var(--type-caption-size);
   color: var(--text-muted);
-  opacity: 0.5;
+  opacity: 0.4;
   border-left: 1px solid var(--border-subtle);
   padding-left: var(--space-sm);
   cursor: default;
+  pointer-events: none;
 }
 
 .boardBody {
