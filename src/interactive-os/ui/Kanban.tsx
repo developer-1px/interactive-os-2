@@ -75,6 +75,7 @@ export function Kanban({
               <FocusDiv
                 focused={colState.focused}
                 className={`flex-row items-center gap-sm ${styles.columnHeader}`}
+                title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
               >
                 <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>
@@ -92,6 +93,7 @@ export function Kanban({
                 const cardData = cardEntity.data as Record<string, unknown> | undefined
                 const cardTitle = cardData?.title as string ?? ''
                 const cardSubtitle = cardData?.subtitle as string | undefined
+                const cardTooltip = cardData?.tooltip as string | undefined
                 const cardWeight = cardData?.weight as string | undefined
                 const cardExt = cardData?.ext as string | undefined
 
@@ -100,7 +102,7 @@ export function Kanban({
                     key={cardId}
                     focused={cardState.focused}
                     className={styles.card}
-                    title={cardTitle}
+                    title={cardTooltip ?? cardTitle}
                     data-weight={cardWeight || undefined}
                     data-ext={cardExt || undefined}
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}

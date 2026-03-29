@@ -117,6 +117,17 @@ function buildSubtitle(loc: number | undefined, deps: { imports: number; importe
   return parts.length > 0 ? parts.join(' ') : undefined
 }
 
+/** 카드 tooltip: 파일명 + LOC/deps 설명 */
+function buildTooltip(name: string, loc: number | undefined, deps: { imports: number; importedBy: number } | undefined): string {
+  const lines = [name]
+  if (loc != null) lines.push(`${loc} lines`)
+  if (deps) {
+    if (deps.importedBy > 0) lines.push(`↑ ${deps.importedBy} files import this`)
+    if (deps.imports > 0) lines.push(`↓ imports ${deps.imports} files`)
+  }
+  return lines.join('\n')
+}
+
 /** 파일 크기 구간: compact 카드 시각 힌트용 */
 function locWeight(loc: number): 'sm' | 'md' | 'lg' | undefined {
   if (loc >= 300) return 'lg'
@@ -167,6 +178,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
             ext: fileData.name.includes('.') ? fileData.name.split('.').pop() : undefined,
             ...(fileData.loc != null && { loc: fileData.loc, weight: locWeight(fileData.loc) }),
             subtitle: buildSubtitle(fileData.loc, options?.depCounts?.[fileId]),
+            tooltip: buildTooltip(fileData.name, fileData.loc, options?.depCounts?.[fileId]),
           },
         }
         relationships[colId].push(cardId)

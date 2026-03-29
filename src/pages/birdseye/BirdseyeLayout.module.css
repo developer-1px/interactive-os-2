@@ -45,6 +45,33 @@
   color: var(--text-secondary);
 }
 
+.legend {
+  display: flex;
+  gap: var(--space-sm);
+  margin-left: auto;
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+}
+
+.legend > span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.legend > span::before {
+  content: '';
+  width: 3px;
+  height: 12px;
+  border-radius: 1px;
+}
+
+.legend > span[data-ext="ts"]::before { background: var(--tone-primary-base); }
+.legend > span[data-ext="tsx"]::before { background: var(--focus); }
+.legend > span[data-ext="css"]::before { background: var(--tone-destructive-base); }
+.legend > span[data-ext="md"]::before { background: var(--tone-positive-base); }
+.legend > span[data-ext="yaml"]::before { background: var(--tone-warning-base); }
+
 .boardBody {
   flex: 1;
   min-height: 0;
