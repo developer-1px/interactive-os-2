@@ -46,6 +46,17 @@
             "timeout": 3000
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkTestComponents.mjs",
+            "timeout": 5000,
+            "statusMessage": "Checking test components..."
+          }
+        ]
       }
     ]
   }
