@@ -76,37 +76,28 @@ export function createCommandEngine(
     }
   }
 
-  /** Execute a single command via registry lookup */
-  const executeOne = (cmd: Command): NormalizedData => {
-    const handler = registry.get(cmd.type)
-    if (!handler) {
-      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
-        console.warn(`[engine] No handler registered for command type "${cmd.type}"`)
-      }
-      return store
-    }
-    return handler(store, cmd.payload)
-  }
-
-  /** Execute a command (handles batch recursively) */
-  const executeCommand = (command: Command): NormalizedData => {
+  /** Resolve a command (or batch) into the next store — pure, no closure mutation */
+  const resolve = (s: NormalizedData, command: Command): NormalizedData => {
     if (isBatchCommand(command)) {
-      let s = store
       for (const sub of (command as BatchCommand).commands) {
-        store = s
-        s = isBatchCommand(sub)
-          ? executeCommand(sub)
-          : executeOne(sub)
+        s = resolve(s, sub)
       }
       return s
     }
-    return executeOne(command)
+    const handler = registry.get(command.type)
+    if (!handler) {
+      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+        console.warn(`[engine] No handler registered for command type "${command.type}"`)
+      }
+      return s
+    }
+    return handler(s, command.payload)
   }
 
   const executor = (command: Command) => {
     const prev = store
     try {
-      store = executeCommand(command)
+      store = resolve(prev, command)
     } catch (error) {
       store = prev
       logCommand(command, prev, prev, undefined, error instanceof Error ? error.message : String(error))
