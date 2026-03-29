@@ -193,8 +193,9 @@ export default function BirdseyeLayout() {
     })
   }, [])
 
-  // Kanban 포커스 변경
+  // Kanban 포커스 변경 — col: 접두사면 컬럼 헤더이므로 카드 id 유지
   const handleFocusChange = useCallback((nodeId: string | null) => {
+    if (nodeId?.startsWith('col:')) return
     setFocusedCardId(nodeId)
   }, [])
 
