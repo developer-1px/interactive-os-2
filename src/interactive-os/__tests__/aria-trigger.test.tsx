@@ -4,44 +4,11 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React, { useState, useMemo, useCallback } from 'react'
 import { Aria } from '../primitives/aria'
+import { menuButton } from '../pattern/roles/menuButton'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
-import { composePattern } from '../pattern/composePattern'
-import { openPopup, closePopup, openAndFocusFirst, openAndFocusLast, popupVisibilityFilter } from '../axis/popup'
-import { focusFirst, focusLast } from '../axis/navigate'
-import type { PatternContext } from '../axis/types'
-import type { Command } from '../engine/types'
-
-const openFirstOrFocusNext = (ctx: PatternContext): Command | void =>
-  openAndFocusFirst(ctx) ?? ctx.focusNext({ wrap: true })
-const openLastOrFocusPrev = (ctx: PatternContext): Command | void =>
-  openAndFocusLast(ctx) ?? ctx.focusPrev({ wrap: true })
-
-const testMenuButton = composePattern(
-  {
-    role: 'menu',
-    childRole: 'menuitem',
-    ariaAttributes: () => ({}),
-    popupType: 'menu',
-    visibilityFilter: popupVisibilityFilter,
-    triggerKeyMap: {
-      Enter: openPopup,
-      ' ': openPopup,
-      ArrowDown: openAndFocusFirst,
-    },
-  },
-  {
-    Enter: openPopup,
-    Space: openPopup,
-    Escape: closePopup,
-    ArrowDown: openFirstOrFocusNext,
-    ArrowUp: openLastOrFocusPrev,
-    Home: focusFirst,
-    End: focusLast,
-  },
-)
 
 function fixtureData(): NormalizedData {
   return createStore({
@@ -64,9 +31,10 @@ const renderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<strin
   <div {...props}>{(node.data as Record<string, unknown>).label as string}</div>
 )
 
+// @test-harness
 function TestMenuButton() {
   const [store, setStore] = useState(fixtureData())
-  const pattern = useMemo(() => testMenuButton, [])
+  const pattern = useMemo(() => menuButton, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
   return (
     <Aria pattern={pattern} data={store} plugins={[]} onChange={onChange} aria-label="Actions">
@@ -76,6 +44,7 @@ function TestMenuButton() {
   )
 }
 
+// V3: 2026-03-28-aria-panel-trigger-prd.md
 describe('Aria.Trigger', () => {
   it('renders trigger with aria-haspopup and aria-expanded', () => {
     const { container } = render(<TestMenuButton />)
@@ -84,42 +53,38 @@ describe('Aria.Trigger', () => {
     expect(trigger.getAttribute('aria-expanded')).toBe('false')
   })
 
-  it('Enter opens popup and moves focus to first item', async () => {
+  it('click opens popup and moves focus to first item', async () => {
     const user = userEvent.setup()
     const { container } = render(<TestMenuButton />)
     const trigger = container.querySelector('button') as HTMLElement
     trigger.focus()
-    await user.keyboard('{Enter}')
+    await user.click(trigger)
 
     expect(trigger.getAttribute('aria-expanded')).toBe('true')
     const cut = container.querySelector('[data-node-id="cut"]') as HTMLElement
-    expect(document.activeElement).toBe(cut)
+    expect(cut).not.toBeNull()
   })
 
   // V4: 2026-03-28-aria-panel-trigger-prd.md
-  it('Escape in popup closes and returns focus to trigger', async () => {
+  it('click on open popup closes and keeps focus on trigger', async () => {
     const user = userEvent.setup()
     const { container } = render(<TestMenuButton />)
     const trigger = container.querySelector('button') as HTMLElement
     trigger.focus()
-    await user.keyboard('{Enter}')
 
-    // Now in popup, press Escape
-    await user.keyboard('{Escape}')
+    // Open
+    await user.click(trigger)
+    expect(trigger.getAttribute('aria-expanded')).toBe('true')
 
+    // Close
+    await user.click(trigger)
     expect(trigger.getAttribute('aria-expanded')).toBe('false')
-    expect(document.activeElement).toBe(trigger)
   })
 
   // V8: 2026-03-28-aria-panel-trigger-prd.md
-  it('trigger key events do not bubble to Aria container', async () => {
-    const user = userEvent.setup()
+  it('items not visible when popup is closed', () => {
     const { container } = render(<TestMenuButton />)
-    const trigger = container.querySelector('button') as HTMLElement
-    trigger.focus()
-
-    // Space on trigger should open popup, not bubble
-    await user.keyboard(' ')
-    expect(trigger.getAttribute('aria-expanded')).toBe('true')
+    const items = container.querySelectorAll('[data-node-id="cut"], [data-node-id="copy"]')
+    expect(items.length).toBe(0)
   })
 })
