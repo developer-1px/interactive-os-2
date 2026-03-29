@@ -44,9 +44,10 @@ export function gridCtx(
   engine: import('../engine/createCommandEngine').CommandEngine,
   _focusedId: string,
   colCount: number,
+  initialColIndex = 0,
 ): import('./types').GridNav {
   const store = engine.getStore()
-  const currentCol = (store.entities[GRID_COL_ID]?.colIndex as number) ?? 0
+  const currentCol = (store.entities[GRID_COL_ID]?.colIndex as number) ?? initialColIndex
   return {
     colIndex: currentCol,
     colCount,
@@ -144,7 +145,9 @@ export function navigate(type: NavigateType = 'vertical') {
 }
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
-export function grid(columns: number) {
+export function grid(columns: number, opts?: { initialColIndex?: number }) {
+  const initialCol = opts?.initialColIndex ?? 0
+
   const focusNextCol_ = (ctx: PatternContext): Command | void => ctx.grid?.focusNextCol()
   const focusPrevCol_ = (ctx: PatternContext): Command | void => ctx.grid?.focusPrevCol()
   const focusFirstCol_ = (ctx: PatternContext): Command | void => ctx.grid?.focusFirstCol()
@@ -171,10 +174,11 @@ export function grid(columns: number) {
 
   return {
     keyMap: {} as Record<string, never>,
+    entities: [{ id: GRID_COL_ID, default: { colIndex: initialCol } }] as import('./types').EntityDecl[],
     meta: { colCount: columns },
     ariaGen: ((s) => ({ 'aria-rowindex': String((s.index as number ?? 0) + 1) })) as import('./types').AriaGen,
     ctxFactory: ((engine, focusedId) => ({
-      grid: gridCtx(engine, focusedId, columns),
+      grid: gridCtx(engine, focusedId, columns, initialCol),
     })) as CtxFactory,
     // handlers
     focusNextCol: focusNextCol_,
