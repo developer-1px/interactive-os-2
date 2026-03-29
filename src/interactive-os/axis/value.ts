@@ -97,6 +97,10 @@ export function value(range: ValueRange) {
   return {
     keyMap: {} as Record<string, never>,
     meta: { valueRange: range },
+    stateGen: ((_id, store) => {
+      const valueMeta = store.entities[VALUE_ID] as Record<string, unknown> | undefined
+      return { valueCurrent: (valueMeta?.value as number) ?? range.min }
+    }) as import('./types').StateGen,
     ariaGen: ((s) => ({
       'aria-valuenow': String(s.valueCurrent ?? range.min),
       'aria-valuemin': String(range.min),

@@ -92,10 +92,22 @@ function getChangedFiles(base: string): string[] {
 }
 
 function main() {
-  // Default: diff against HEAD (staged + unstaged changes)
-  // Pass a base ref as argument: npx tsx scripts/collectDiffSymbols.ts main
+  // Usage: npx tsx scripts/collectDiffSymbols.ts [base] [scope...]
+  // base: git ref (default: HEAD)
+  // scope: path prefixes to include (default: all src/)
+  // Examples:
+  //   npx tsx scripts/collectDiffSymbols.ts main src/interactive-os/axis src/interactive-os/pattern
+  //   npx tsx scripts/collectDiffSymbols.ts HEAD src/interactive-os/
   const base = process.argv[2] || "HEAD";
-  const files = getChangedFiles(base);
+  const scopes = process.argv.slice(3);
+  let files = getChangedFiles(base);
+
+  if (scopes.length > 0) {
+    files = files.filter((f) => {
+      const rel = path.relative(PROJECT_ROOT, f);
+      return scopes.some((s) => rel.startsWith(s));
+    });
+  }
 
   if (files.length === 0) {
     console.log("No changed .ts/.tsx files found.");

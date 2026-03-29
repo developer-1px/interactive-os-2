@@ -366,7 +366,20 @@ function buildTypeOrbit(
 // --- Output ---
 
 function main() {
-  const sourceFiles = parseSourceFiles();
+  // Usage: npx tsx scripts/namingReport.ts [scope...]
+  // scope: path prefixes to include (default: all src/)
+  // Examples:
+  //   npx tsx scripts/namingReport.ts src/interactive-os/axis src/interactive-os/pattern
+  //   npx tsx scripts/namingReport.ts src/interactive-os/
+  const scopes = process.argv.slice(2);
+  let sourceFiles = parseSourceFiles();
+
+  if (scopes.length > 0) {
+    sourceFiles = sourceFiles.filter(({ file }) => {
+      const rel = path.relative(PROJECT_ROOT, file);
+      return scopes.some((s) => rel.startsWith(s));
+    });
+  }
   const fragments = buildFragmentDictionary(sourceFiles);
   const returnVariance = buildReturnTypeVariance(sourceFiles);
   const orbit = buildTypeOrbit(sourceFiles);

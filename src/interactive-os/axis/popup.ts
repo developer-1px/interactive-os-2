@@ -150,6 +150,12 @@ export function popup(type: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog', opt
       popupType: type,
       ...(opts?.modal && { popupModal: true }),
     },
+    stateGen: ((id, store, children) => {
+      const { isOpen, triggerId } = getPopupEntity(store)
+      if (triggerId === id) return { open: isOpen }
+      if (children.length > 0) return { open: false }
+      return {}
+    }) as import('./types').StateGen,
     ariaGen: ((s) => {
       if (s.open === undefined) return {}
       return { 'aria-haspopup': type, 'aria-expanded': String(s.open) }

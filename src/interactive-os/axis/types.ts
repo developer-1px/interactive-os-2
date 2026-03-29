@@ -110,6 +110,14 @@ export type AriaGen = (
   childRole: string,
 ) => Record<string, string>
 
+/** Per-node state contributor. Axis declares how its store data maps to NodeState fields. */
+export type StateGen = (
+  id: string,
+  store: import('../store/types').NormalizedData,
+  children: string[],
+  meta: Record<string, unknown>,
+) => Record<string, unknown>
+
 /** Axis: plain inputMap (key/click bindings) or structured object with entities/middleware/visibilityFilter/ctxFactory. */
 export type Axis = KeyMap | {
   keyMap: KeyMap
@@ -121,4 +129,6 @@ export type Axis = KeyMap | {
   meta?: Record<string, unknown>
   /** Per-node ARIA generation — axis declares how its state maps to aria-* attributes. */
   ariaGen?: AriaGen
+  /** Per-node state generation — axis declares how its store data maps to NodeState fields. */
+  stateGen?: StateGen
 }

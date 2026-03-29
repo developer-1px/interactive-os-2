@@ -58,6 +58,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   ctxFactories?: CtxFactory[]
   /** Per-node ARIA generators from axes — useAriaView calls these to produce aria-* attributes. OCP. */
   ariaGens?: import('../axis/types').AriaGen[]
+  /** Per-node state generators from axes — useAriaView calls these to populate NodeState. OCP. */
+  stateGens?: import('../axis/types').StateGen[]
   // Metadata — not used for behavior dispatch, only for external queries (e.g. tests)
   selectionFollowsFocus?: boolean
   activationFollowsSelection?: boolean

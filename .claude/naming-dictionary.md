@@ -1,6 +1,6 @@
 ---
-last_commit: 3cb927f4a34cb541fa2ea88f52e2077ac491cb02
-last_updated: 2026-03-28
+last_commit: e8bef92b43e7764e5762588d7ca16b3e810ac3fa
+last_updated: 2026-03-29
 ---
 
 ## Verbs
@@ -14,14 +14,15 @@ last_updated: 2026-03-28
 | move | 5 | command | moveNode, moveUp, moveDown, moveOut, moveIn |
 | insert | 1 | command | insertNode |
 | set | 5 | state assignment | setFocus, setAnchor, setGridCol, setFilter, setValue |
-| toggle | 4 | command | toggleSelect, toggleExpand, toggleTheme |
-| select | 3 | command | select, selectRange, selectAll |
+| toggle | 4 | command | toggleSelect, toggleExpand, toggleTheme, toggleCheck |
+| select | 4 | command | select, selectRange, selectAll, selectAndAnchor |
 | clear | 2 | command | clearSelection, clearCursorsAtDepth |
 | extend | 1 | command | extendSelection |
 | focus | 8 | command | focusNext, focusPrev, focusFirst, focusLast, focusParent, focusChild, focusCommands, focusRecovery |
 | expand | 2 | command | expand, expandCommands |
 | collapse | 1 | command | collapse |
-| activate | 3 | command | activate, onActivate, activateOnClick |
+| activate | 4 | command | activate, activateCommands, activateHandler, onActivate |
+| dismiss | 1 | axis handler | dismissHandler |
 | dispatch | 2 | engine | dispatch, dispatchKeyAction |
 | start | 1 | command | startRename |
 | confirm | 1 | command | confirmRename |
@@ -51,18 +52,25 @@ last_updated: 2026-03-28
 | compose | 2 | function composition | composePattern, composeMiddlewares |
 | apply | 1 | command | applyMetaCommand |
 | sync | 1 | I/O | syncStore |
-| collect | 6 | array traverse + merge | collectSections, collectEditableGroups, collectPluginKeyMaps, collectPluginUnhandledKeyHandlers, collectPluginClipboardHandlers |
+| collect | 9 | array traverse + merge | collectSections, collectEditableGroups, collectPluginKeyMaps, collectPluginUnhandledKeyHandlers, collectPluginClipboardHandlers, collectEntities, collectCtxFactories, collectAriaGens, collectMeta |
 | detect | 1 | change detection | detectNewVisibleEntities |
 | register | 1 | registry | registerAria |
 | unregister | 1 | registry | unregisterAria |
 | render | 2 | React render | RenderTreeItem, comboboxRenderItem |
 | navigate | 1 | axis function | navigate |
-| define | 1 | factory | definePlugin |
+| define | 2 | factory | definePlugin, defineCommands |
 | replace | 1 | swap | replaceEditPlugin |
-| merge | 1 | object merge | mergeProps |
+| merge | 2 | object merge | mergeProps, mergeKeyMaps |
 | edit | 1 | axis factory | edit |
 | event | 1 | label | eventLabel |
 | rel | 1 | derive | relPath |
+| split | 1 | transform | splitInputMap |
+| checked | 1 | axis factory | checked |
+| selected | 1 | axis factory | selected |
+| expanded | 1 | axis factory | expanded |
+| popup | 1 | axis factory | popup |
+| value | 1 | axis factory | value |
+| grid | 1 | axis factory | grid |
 
 ## Nouns
 | fragment | count | identifiers |
@@ -79,40 +87,38 @@ last_updated: 2026-03-28
 | parent | 3 | getParent, getSpatialParentId, SPATIAL_PARENT_ID |
 | focus | 7 | FOCUS_ID, focusCommands, FocusStrategy, focusRecovery, FocusRecoveryOptions, findFallbackFocus |
 | selection | 4 | SELECTION_ID, SELECTION_ANCHOR_ID, selectionCommands, SelectionMode |
-| anchor | 1 | SELECTION_ANCHOR_ID, setAnchor |
+| anchor | 2 | SELECTION_ANCHOR_ID, setAnchor, selectAndAnchor |
 | state | 1 | NodeState |
-| grid | 28 | GridNav, GRID_COL_ID, gridColCommands, grid (behavior), navGrid, gridColumns, gridInitialData, PageGrid, TreeGrid, translatableEntriesToGrid, editingKeyMap |
-| value | 7 | VALUE_ID, ValueRange, valueCommands, ValueNav, value (axis), valueCurrent |
-| slider | 8 | slider (behavior factory), Slider (UI), apgSlider, makeSliderData |
-| spinbutton | 8 | spinbutton (behavior factory), Spinbutton (UI), apgSpinbutton, makeSpinbuttonData |
-| key | 7 | KeyCombo, findMatchingKey, parseKeyCombo, dispatchKeyAction, extractKeyMap, matchKeyEvent, isPrintableKey |
+| grid | 28 | GridNav, GRID_COL_ID, gridColCommands, grid (axis), gridCtx, gridColumns, gridInitialData, PageGrid, TreeGrid |
+| value | 8 | VALUE_ID, ValueRange, valueCommands, ValueNav, value (axis), valueCtx, valueCurrent |
+| slider | 8 | slider (pattern), Slider (UI), apgSlider, makeSliderData |
+| spinbutton | 8 | spinbutton (pattern), Spinbutton (UI), apgSpinbutton, makeSpinbuttonData |
+| key | 7 | KeyCombo, findMatchingKey, parseKeyCombo, dispatchKeyAction, matchKeyEvent, isPrintableKey |
 | recorder | 2 | createReproRecorder, ReproRecorderOverlay |
 | adapter | 3 | TransformAdapter, fileTreeAdapter, cmsI18nAdapter |
-| data | 42 | NormalizedData, getEntityData, updateEntityData, ApgPatternData, ToastData, FileNodeData, ... (shared data files) |
+| data | 42 | NormalizedData, getEntityData, updateEntityData, ApgPatternData, ToastData, FileNodeData, ... |
 | clipboard | 7 | clipboardCommands, resetClipboard, ClipboardOptions, CanAcceptFn, CanAcceptResult, CanDeleteFn |
 | rename | 6 | renameCommands, startRename, confirmRename, cancelRename, RENAME_ID |
-| combobox | 15 | comboboxCommands, combobox (behavior), Combobox (UI), ComboboxOptions, comboboxRenderItem |
+| combobox | 15 | comboboxCommands, combobox (pattern), Combobox (UI), ComboboxOptions, comboboxRenderItem |
 | history | 7 | historyCommands, history (plugin) |
 | crud | 7 | crudCommands, crud (plugin), PageCrud, PageTabsCrud |
 | dnd | 5 | dndCommands, dnd (plugin), PageDnd |
-| aria | 25 | Aria, AriaInternalContext, AriaBehavior, useAria, useAriaZone, useAriaView, AriaActions, registerAria, unregisterAria, AriaEditable, AriaCell |
+| aria | 28 | Aria, AriaInternalContext, AriaGen, AriaPattern, useAria, useAriaZone, useAriaView, AriaActions, registerAria, unregisterAria |
 | item | 4 | AriaItem (component), AriaItemProps, AriaItemContext, comboboxRenderItem, RenderTreeItem |
 | recovery | 3 | focusRecovery, FocusRecoveryOptions |
-| spatial | 10 | spatial (behavior), spatial (plugin), spatialCommands, SPATIAL_PARENT_ID, getSpatialParentId, useSpatialNav, SpatialNavResult, findNearest, findAdjacentGroup, spatialReachable |
-| tree | 23 | tree (behavior), TreeView (UI), storeToInspectorTree, TreeGrid, treeData, RenderTreeItem, SharedTreeComponents |
-| apg | 21 | ApgKeyboardEntry, ApgPatternData, ApgKeyboardTable, apgAccordion, ... (all APG pattern data) |
+| spatial | 10 | spatial (pattern), spatial (plugin), spatialCommands, SPATIAL_PARENT_ID, getSpatialParentId, useSpatialNav |
+| tree | 23 | tree (pattern), TreeView (UI), storeToInspectorTree, TreeGrid, treeData, RenderTreeItem |
+| apg | 21 | ApgKeyboardEntry, ApgPatternData, ApgKeyboardTable, apgAccordion, ... |
 | keyboard | 4 | ApgKeyboardEntry, ApgKeyboardTable, useKeyboard |
-| pattern | 4 | ApgPatternData, composePattern, PatternConfig |
-| entry | 4 | ApgKeyboardEntry, LogEntry, ComponentEntry, EditableGroupEntry |
-| diff | 3 | StoreDiff, computeStoreDiff |
-| logger | 3 | Logger, defaultLogger, dispatchLogger |
-| field | 3 | EditableField, fieldsOf, getEditableFields, localeFieldsOf |
-| schema | 3 | localeMapSchema, nodeSchemas, childRules |
-| mermaid | 1 | MermaidBlock |
-| table | 2 | ApgKeyboardTable |
-| axis | 8 | Axis (type), navigate, select, expand, activate, dismiss, tab, value, edit, checked, popup |
+| pattern | 9 | AriaPattern, composePattern, PatternContext, PatternContextOptions, switchPattern |
+| axis | 8 | Axis (type), navigate, selected, expanded, checked, popup, value, grid |
+| identity | 1 | Identity (composePattern 1st arg type) |
 | zone | 3 | useAriaZone, UseAriaZoneOptions |
-| view | 3 | useAriaView, UseAriaViewOptions, UseAriaViewReturn |
+| view | 4 | useAriaView, UseAriaViewOptions, UseAriaViewReturn, observedEngine |
+| nav | 6 | CheckedNav, ExpandedNav, GridNav, PopupNav, SelectedNav, ValueNav |
+| gen | 1 | AriaGen |
+| meta | 1 | Axis.meta (Record<string, unknown>) |
+| ctx | 6 | checkedCtx, expandedCtx, selectedCtx, popupCtx, gridCtx, valueCtx |
 | column | 2 | columnOrder, TimelineColumn |
 | order | 1 | columnOrder |
 | session | 2 | SessionInfo, sessionMap |
@@ -120,108 +126,96 @@ last_updated: 2026-03-28
 | fixture | 20 | showcaseFixtures.ts (makeXxxData factories) |
 | scope | 1 | UseAriaZoneOptions.scope |
 | depth | 1 | clearCursorsAtDepth |
-| cursor | 1 | stickyCursorRef (보관된 이전 위치 ≠ focus. focus=현재 활성, cursor=이전 보관) |
+| cursor | 1 | stickyCursorRef |
 | direction | 1 | Direction (type) |
-| group | 22 | findAdjacentGroup, ToolGroup, ToolGroupCard, groupEvents, EditableGroup, EditableGroupEntry, DisclosureGroup, RadioGroup, SwitchGroup, ToggleGroup, RouteGroup |
+| group | 22 | findAdjacentGroup, ToolGroup, RadioGroup, SwitchGroup, ToggleGroup |
 | display | 1 | DisplayItem |
 | result | 2 | SpatialNavResult, CanAcceptResult |
-| keymap | 1 | keymap-helpers (file) |
 | toast | 1 | ToastData |
 | toaster | 6 | createToaster, Toaster, ToasterOptions |
 | typeahead | 8 | typeahead (plugin), TypeaheadNode, TypeaheadOptions, findTypeaheadMatch, resetTypeahead |
 | locale | 4 | Locale, localeFieldsOf, localeMap, LocaleMap, LOCALES |
 | template | 5 | CmsTemplatePicker, TEMPLATE_VARIANTS, templateToCommand, TemplateType |
-| toolbar | 12 | toolbar (behavior), Toolbar (UI), CmsFloatingToolbar, CmsTopToolbar, makeToolbarData |
+| toolbar | 12 | toolbar (pattern), Toolbar (UI), CmsFloatingToolbar, CmsTopToolbar, makeToolbarData |
 | viewport | 3 | CmsViewportWrapper, ViewportSize |
-| sidebar | 5 | AreaSidebar, CmsSidebar, SidebarLayout, sidebarStore, sidebarStores |
-| drawer | 2 | CmsHamburgerDrawer |
+| sidebar | 5 | AreaSidebar, CmsSidebar, SidebarLayout, sidebarStore |
 | panel | 2 | CmsDetailPanel |
 | modal | 2 | FileViewerModal |
-| dialog | 14 | dialog (behavior), Dialog (UI), AlertDialog, apgDialog, apgAlertDialog |
-| disclosure | 8 | disclosure (behavior), DisclosureGroup (UI), apgDisclosure, makeDisclosureGroupData |
-| kanban | 9 | kanban (behavior), Kanban (UI), kanbanInitialData, makeKanbanData |
-| menu | 8 | menu (behavior), MenuList (UI), apgMenu, makeMenuListData |
+| dialog | 14 | dialog (pattern), Dialog (UI), AlertDialog, apgDialog |
+| disclosure | 8 | disclosure (pattern), DisclosureGroup (UI), apgDisclosure |
+| kanban | 9 | kanban (pattern), Kanban (UI), kanbanInitialData |
+| menu | 8 | menu (pattern), MenuList (UI), apgMenu |
 | checkbox | 3 | Checkbox (UI), makeCheckboxData |
-| toggle | 6 | Toggle (UI), ToggleGroup (UI), makeToggleData, makeToggleGroupData |
-| tabs | 7 | tabs (behavior), TabList (UI), apgTabs, makeTabListData |
-| registry | 2 | ariaRegistry, showcaseRegistry |
+| toggle | 6 | Toggle (UI), ToggleGroup (UI), makeToggleData |
+| tabs | 7 | tabs (pattern), TabList (UI), apgTabs |
+| registry | 2 | ariaRegistry, coreRegistry |
 | root | 3 | ROOT_ID, DEFAULT_ROOT, getRootAncestor |
 | repro | 2 | createReproRecorder, ReproRecorderOverlay |
 | overlay | 2 | ReproRecorderOverlay |
 | resizer | 2 | useResizer |
 | diagram | 2 | ExportDiagram |
-| viewer | 13 | PageViewer, MarkdownViewer, MdxViewer, FileViewerModal, PageAgentViewer, PageAreaViewer |
+| viewer | 13 | PageViewer, MarkdownViewer, FileViewerModal, PageAgentViewer |
 | route | 3 | RouteItem, RouteGroup, routeConfig |
 | shell | 1 | AppShell |
-| timeline | 4 | TimelineColumn, TimelineEvent, TimelineItem, TimelineItems |
-| switch | 7 | SwitchGroup, apgSwitch, makeSwitchGroupData |
-| radio | 6 | RadioGroup, apgRadioGroup, makeRadioGroupData |
-| listbox | 7 | listbox (behavior), ListBox (UI), apgListbox |
-| navlist | 5 | navlist (behavior), NavList (UI), useNavList, UseNavListOptions, UseNavListReturn |
-| present | 1 | CmsPresentMode |
+| timeline | 4 | TimelineColumn, TimelineEvent, TimelineItem |
+| switch | 7 | SwitchGroup, apgSwitch |
+| radio | 6 | RadioGroup, apgRadioGroup |
+| listbox | 7 | listbox (pattern), ListBox (UI), apgListbox |
+| navlist | 5 | navlist (misc pattern), NavList (UI), useNavList |
 
 ## Adjectives
 | fragment | count | identifiers |
 |----------|-------|-------------|
 | normalized | 1 | NormalizedData |
 | focused | 1 | NodeState.focused |
-| selected | 1 | NodeState.selected |
+| selected | 3 | NodeState.selected, selected (axis factory), selectedCtx |
 | disabled | 1 | NodeState.disabled |
-| expanded | 2 | NodeState.expanded, EXPANDED_ID |
+| expanded | 3 | NodeState.expanded, EXPANDED_ID, expanded (axis factory), expandedCtx |
 | internal | 1 | AriaInternalContext |
 | controlled | 1 | useControlledAria |
 | batch | 2 | BatchCommand, createBatchCommand |
-| raw | 1 | RawEvent |
-| matching | 1 | findMatchingKey |
-| editable | 7 | isEditableElement, CmsInlineEditable, EditableGroup, EditableGroupEntry, collectEditableGroups, getEditableFields, AriaEditable |
-| extended | 1 | selectExtended |
-| meta | 1 | META_COMMAND_TYPES |
-| sticky | 1 | stickyCursorRef |
-| adjacent | 1 | findAdjacentGroup |
+| editable | 7 | isEditableElement, EditableGroup, EditableGroupEntry, collectEditableGroups, getEditableFields, AriaEditable |
 | visible | 3 | isVisible, getVisibleNodes, detectNewVisibleEntities |
 | reachable | 2 | IsReachable, spatialReachable |
-| printable | 1 | isPrintableKey |
+| observed | 1 | observedEngine |
 | grouped | 1 | createGroupedStore |
-| localized | 1 | localized (cms-types) |
-| initial | 2 | gridInitialData, kanbanInitialData |
 | shared | 6 | SharedTreeComponents, shared-*-data files |
-| floating | 2 | CmsFloatingToolbar |
 | virtual | 2 | useVirtualScroll |
-| quick | 2 | QuickOpen |
-| default | 2 | DEFAULT_ROOT, defaultLogger |
-| inline | 2 | CmsInlineEditable |
-| active | 2 | activeGroup, activeItemPath |
-| vertical | 1 | verticalToolbar |
 
 ## Postfixes
 | fragment | count | rule | identifiers |
 |----------|-------|------|-------------|
-| Commands | 12+ | `Record<string, CommandFactory>` — command group | focusCommands, selectionCommands, clipboardCommands, renameCommands, expandCommands, gridColCommands, valueCommands, spatialCommands, comboboxCommands, dndCommands, historyCommands, crudCommands |
-| Options | 11 | **Rule**: `Options` = all-optional config bag. Hook params with required fields use hook name prefix (`UseAriaOptions`). | EditOptions ✓, ClipboardOptions ✓, ComboboxOptions ✓, FocusRecoveryOptions ✓, NavigateOptions ✓, ToasterOptions ✓, TypeaheadOptions ✓, PatternContextOptions ✓, UseAriaOptions (hook), UseAriaZoneOptions (hook), UseAriaViewOptions (hook) |
-| Data | 42+ | **Rule**: fixture `makeXxxData` = OK. Type suffix `Data` = noise (avoid in new types). Existing: NormalizedData, ApgPatternData (legacy, don't rename). | makeTreeGridData (OK), NormalizedData (legacy), ApgPatternData (legacy) |
-| ID | 9 | store state slot identifier (SCREAMING_SNAKE) | FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, GRID_COL_ID, ROOT_ID, RENAME_ID, VALUE_ID, EXPANDED_ID, SPATIAL_PARENT_ID |
+| Commands | 13 | `Record<string, CommandFactory>` — command group | focusCommands, selectionCommands, clipboardCommands, renameCommands, expandCommands, gridColCommands, valueCommands, spatialCommands, comboboxCommands, dndCommands, historyCommands, crudCommands, activateCommands, checkedCommands, popupCommands |
+| Options | 11 | **Rule**: `Options` = config bag. Hook params use hook name prefix. | EditOptions ✓, ClipboardOptions ✓, ComboboxOptions ✓, FocusRecoveryOptions ✓, PatternContextOptions ✓, UseAriaOptions (hook), UseAriaZoneOptions (hook), UseAriaViewOptions (hook) |
+| Data | 42+ | **Rule**: fixture `makeXxxData` = OK. Type suffix `Data` = noise. | makeTreeGridData (OK), NormalizedData (legacy) |
+| ID | 10 | store state slot identifier (SCREAMING_SNAKE) | FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, GRID_COL_ID, ROOT_ID, RENAME_ID, VALUE_ID, EXPANDED_ID, SPATIAL_PARENT_ID, POPUP_ID, CHECKED_ID |
 | Return | 3 | hook return type | UseEngineReturn, UseAriaViewReturn, UseNavListReturn |
 | Props | 1 | component props | AriaItemProps |
+| Nav | 6 | **Rule**: axis 런타임 조작 인터페이스 (PatternContext에 주입되는 namespace) | CheckedNav, ExpandedNav, GridNav, PopupNav, SelectedNav, ValueNav |
+| Ctx | 6 | **Rule**: Nav 인스턴스를 만드는 factory 함수 (내부 전용) | checkedCtx, expandedCtx, selectedCtx, popupCtx, gridCtx, valueCtx |
+| Gen | 1 | per-node ARIA attribute generator | AriaGen |
+| Handler | 2 | standalone axis handler (inputMap에 직접 바인딩) | activateHandler, dismissHandler |
+| Filter | 2 | VisibilityFilter factory | expandVisibilityFilter, popupVisibilityFilter |
 
 ## Synonym Map
 | canonical | known synonyms | notes |
 |-----------|---------------|-------|
-| create | define (plugin factory) | createStore (runtime), definePlugin (config→Plugin) — both are factories but define emphasizes declarative config |
+| create | define (plugin/command factory) | createStore (runtime), definePlugin/defineCommands (config→instance) |
 | get | find (search context) | get=lookup, find=search/traverse — boundary defined |
-| remove | delete (command type only) | removeEntity (store API), `crud:delete` (command type string) — different layers |
-| update | set (focus/grid state) | updateEntity (data mutation), setFocus/setGridCol (state assignment) — semantically distinct |
-| children | items (routeConfig only) | getChildren (store API), items (routeConfig) — different domains |
-| pattern | navigation (deprecated) | route group renamed to 'pattern' per ARIA terminology |
+| remove | delete (command type only) | removeEntity (store API), `crud:delete` (command type string) |
+| update | set (focus/grid state) | updateEntity (data mutation), setFocus/setGridCol (state assignment) |
+| children | items (routeConfig only) | getChildren (store API), items (routeConfig) |
 | node | item (component layer) | node = store/data layer, item = component API (Aria.Item) |
-| compose | merge | composeMiddlewares (function composition, reduceRight), mergeProps (object merge, spread) — distinct operations |
+| compose | merge | composeMiddlewares (function composition), mergeProps/mergeKeyMaps (object merge) |
 | make | create | make = fixture/demo data factory, create = runtime instance factory |
 | load/save | get/set | load/save = localStorage I/O, get/set = in-memory state |
 | cursor | focus | cursor=보관된 이전 위치, focus=현재 활성 노드 |
-| collect | get | collect = 배열 순회/병합 (collectSections, collectPlugin*), get = 단건 조회 |
+| collect | get | collect = 배열 순회/병합, get = 단건 조회 |
 | register | add | registerAria = 글로벌 레지스트리, addEntity = store |
 | detect | find | detectNewVisibleEntities = 변경 감지, find = 조건 검색 |
-| navigate | — | navigate = axis 함수 (full word). nav* prefix 제거됨 |
-| replace | remove | replaceEditPlugin = swap, removeEntity = delete — distinct |
+| navigate | — | navigate = axis 함수 (full word) |
+| replace | remove | replaceEditPlugin = swap, removeEntity = delete |
+| Nav | Ctx | Nav = 타입(인터페이스), Ctx = factory 함수. 같은 대상의 타입/생성자 |
 
 ## Role Map
 | fragment | role | recommended verb | examples |
@@ -230,6 +224,14 @@ last_updated: 2026-03-28
 | get | traverse (walk tree + filter/collect) | find | getVisibleNodes → findVisibleNodes, getRootAncestor → resolveRootAncestor |
 | get | derive (compute string/object from inputs) | get (React convention) | getNodeClassName, getSectionClassName, getNodeProps |
 | get | extract (pick subset from object) | get or extract | getEditableFields, getRowMetadata, getFileExt |
+| collect | axis merge (composePattern 내부) | collect | collectEntities, collectCtxFactories, collectAriaGens, collectMeta, collectMiddlewares, collectVisibilityFilters |
+| collect | plugin merge (useAriaView 내부) | collect | collectPluginKeyMaps, collectPluginUnhandledKeyHandlers, collectPluginClipboardHandlers |
+
+## Aptness Flags (review 필요)
+| # | 항목 | 심각도 | 설명 |
+|---|------|--------|------|
+| 1 | `Nav` postfix | 🟡 | 5가지 다른 구조(boolean toggle, set operation, open/close, numeric, grid)를 커버. "Nav"가 navigation이 아닌 용도로도 쓰임 |
+| 2 | `Identity` | 🟡 | APG 표준에 없는 용어. composePattern 3인자가 APG Roles/States/Keyboard 1:1이면 `Roles`가 더 apt |
 
 ## File Naming Rule
 - **파일명 = 주 export 식별자** — `useAria.ts` → `export function useAria`, `TreeGrid.tsx` → `export function TreeGrid`
