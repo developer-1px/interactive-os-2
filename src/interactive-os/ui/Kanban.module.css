@@ -111,6 +111,17 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ── Extension color indicator (left border) ── */
+
+.board[data-compact] .card[data-ext="ts"] { border-left: 2px solid var(--primary); }
+.board[data-compact] .card[data-ext="tsx"] { border-left: 2px solid var(--focus); }
+.board[data-compact] .card[data-ext="css"] { border-left: 2px solid var(--destructive); }
+.board[data-compact] .card[data-ext="md"],
+.board[data-compact] .card[data-ext="mdx"] { border-left: 2px solid var(--tone-positive-base); }
+.board[data-compact] .card[data-ext="json"],
+.board[data-compact] .card[data-ext="yaml"],
+.board[data-compact] .card[data-ext="yml"] { border-left: 2px solid var(--tone-warning-base); }
+
 /* ── Weight hints (LOC-based file size indicator) ── */
 
 .board[data-compact] .card[data-weight="md"] {

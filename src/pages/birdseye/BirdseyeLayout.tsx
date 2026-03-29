@@ -10,7 +10,8 @@ import { QuickOpen } from '../../interactive-os/ui/QuickOpen'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import { getEntityData } from '../../interactive-os/store/createStore'
 import { DEFAULT_ROOT } from '../viewer/types'
-import { fetchTree, fetchFile } from '../viewer/fsClient'
+import { fetchTree, fetchFile, fetchDepCounts } from '../viewer/fsClient'
+import type { DepCounts } from '../viewer/fsClient'
 import { treeToStore } from '../viewer/treeTransform'
 import { parse as parseYaml } from 'yaml'
 import { buildNavStore, buildKanbanStore } from './birdseyeTransform'
@@ -64,6 +65,9 @@ export default function BirdseyeLayout() {
   // Column order from _meta.yaml
   const [kanbanOptions, setKanbanOptions] = useState<KanbanBuildOptions>({})
 
+  // Dependency counts (import/importedBy per file)
+  const [depCounts, setDepCounts] = useState<DepCounts | null>(null)
+
   // QuickOpen (Cmd+P)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
   useEffect(() => {
@@ -80,11 +84,12 @@ export default function BirdseyeLayout() {
   // Debounced focus — 250ms
   const debouncedCardId = useDebounce(focusedCardId, 250)
 
-  // 1. fs tree 로드 (URL의 folder 파라미터 우선)
+  // 1. fs tree + dep counts 로드
   useEffect(() => {
-    fetchTree(DEFAULT_ROOT).then((tree) => {
+    Promise.all([fetchTree(DEFAULT_ROOT), fetchDepCounts(DEFAULT_ROOT)]).then(([tree, deps]) => {
       const store = treeToStore(tree)
       setFsStore(store)
+      setDepCounts(deps)
       const folderFromUrl = searchParams.get('folder')
       const resolvedFolder = folderFromUrl && store.entities[`${DEFAULT_ROOT}/${folderFromUrl}`]
         ? `${DEFAULT_ROOT}/${folderFromUrl}`
@@ -116,8 +121,8 @@ export default function BirdseyeLayout() {
 
   // 3. Kanban store
   const kanbanStore = useMemo(
-    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId, kanbanOptions) : null),
-    [fsStore, selectedFolderId, kanbanOptions],
+    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId, { ...kanbanOptions, depCounts: depCounts ?? undefined }) : null),
+    [fsStore, selectedFolderId, kanbanOptions, depCounts],
   )
 
   // 4. Debounced focus → fetch file content

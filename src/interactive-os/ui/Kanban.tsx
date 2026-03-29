@@ -93,6 +93,7 @@ export function Kanban({
                 const cardTitle = cardData?.title as string ?? ''
                 const cardSubtitle = cardData?.subtitle as string | undefined
                 const cardWeight = cardData?.weight as string | undefined
+                const cardExt = cardData?.ext as string | undefined
 
                 return (
                   <FocusDiv
@@ -101,6 +102,7 @@ export function Kanban({
                     className={styles.card}
                     title={cardTitle}
                     data-weight={cardWeight || undefined}
+                    data-ext={cardExt || undefined}
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
