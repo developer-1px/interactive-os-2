@@ -11,9 +11,9 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
 import { composePattern } from '../pattern/composePattern'
-import { selectConfig } from '../axis/select'
-import { activateConfig, activateHandler } from '../axis/activate'
-import { focusNext, focusPrev, focusFirst, focusLast } from '../axis/navigate'
+import { selected } from '../axis/select'
+import { activateHandler } from '../axis/activate'
+import { navigate } from '../axis/navigate'
 import { tabs } from '../pattern/roles/tabs'
 import { radiogroup } from '../pattern/roles/radiogroup'
 import { createStore } from '../store/createStore'
@@ -34,6 +34,10 @@ function fixtureData(): NormalizedData {
   })
 }
 
+const nav = navigate('vertical')
+const navH = navigate('horizontal')
+const selFollow = selected('single', { followFocus: true })
+
 const bothOptions = composePattern(
   {
     role: 'toolbar',
@@ -41,17 +45,18 @@ const bothOptions = composePattern(
     ariaAttributes: (_node, state: NodeState) => ({
       'aria-pressed': String(state.selected),
     }),
+    activationFollowsSelection: true,
   },
-  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
-  activateConfig(),
-  { keyMap: {}, config: { activationFollowsSelection: true } },
+  nav,
+  selFollow,
   {
-    ArrowDown: focusNext,
-    ArrowUp: focusPrev,
-    Home: focusFirst,
-    End: focusLast,
+    ArrowDown: nav.next,
+    ArrowUp: nav.prev,
+    Home: nav.first,
+    End: nav.last,
     Enter: activateHandler,
     Space: activateHandler,
+    Click: selFollow.selectAndAnchor,
   },
 )
 
@@ -63,13 +68,13 @@ const selectionOnly = composePattern(
       'aria-checked': String(state.selected),
     }),
   },
-  selectConfig({ mode: 'single', selectionFollowsFocus: true }),
-  activateConfig(),
+  nav,
+  selFollow,
   {
-    ArrowDown: focusNext,
-    ArrowUp: focusPrev,
-    ArrowRight: focusNext,
-    ArrowLeft: focusPrev,
+    ArrowDown: nav.next,
+    ArrowUp: nav.prev,
+    ArrowRight: navH.next,
+    ArrowLeft: navH.prev,
     Enter: activateHandler,
     Space: activateHandler,
   },
@@ -83,12 +88,12 @@ const noOptions = composePattern(
       'aria-pressed': String(state.selected),
     }),
   },
-  activateConfig(),
+  navH,
   {
-    ArrowRight: focusNext,
-    ArrowLeft: focusPrev,
-    Home: focusFirst,
-    End: focusLast,
+    ArrowRight: navH.next,
+    ArrowLeft: navH.prev,
+    Home: navH.first,
+    End: navH.last,
     Enter: activateHandler,
     Space: activateHandler,
   },
@@ -293,7 +298,7 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
   })
 
   describe('click activation', () => {
-    it('click calls onActivate when activateOnClick is true', async () => {
+    it('click calls onActivate when activationFollowsSelection is true', async () => {
       const user = userEvent.setup()
       const onActivate = vi.fn()
       const { container } = render(

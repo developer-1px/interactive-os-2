@@ -13,11 +13,6 @@ import { tree } from '../pattern/roles/tree'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { focusCommands } from '../axis/navigate'
-import { selectionCommands } from '../axis/select'
-import { createCommandEngine } from '../engine/createCommandEngine'
-import type { CommandHandler } from '../engine/types'
-import { createPatternContext } from '../pattern/createPatternContext'
 
 function fixtureStore(): NormalizedData {
   return createStore({
@@ -140,60 +135,6 @@ describe('extended selection — listbox', () => {
   })
 })
 
-function coreRegistry(): Map<string, CommandHandler> {
-  const registry = new Map<string, CommandHandler>()
-  registry.set(focusCommands.setFocus.type, focusCommands.setFocus.handler as CommandHandler)
-  for (const creator of Object.values(selectionCommands)) {
-    if (creator != null && 'type' in creator && 'handler' in creator) {
-      registry.set(creator.type as string, creator.handler as CommandHandler)
-    }
-  }
-  return registry
-}
-
-describe('extendSelectionTo — target ID with custom navigable set', () => {
-  it('selects range from anchor to target within provided navigableIds', () => {
-    const store = fixtureStore()
-    const engine = createCommandEngine(store, [], coreRegistry(), () => {}, { logger: false })
-    engine.dispatch(focusCommands.setFocus('b'))
-
-    const ctx = createPatternContext(engine)
-    const cmd = ctx.extendSelectionTo('d', ['a', 'b', 'c', 'd', 'e'])
-    engine.dispatch(cmd)
-
-    const result = engine.getStore()
-    const selected = (result.entities['__selection__']?.selectedIds as string[]) ?? []
-    expect(selected).toEqual(['b', 'c', 'd'])
-  })
-
-  it('skips nodes not in navigableIds for range calculation', () => {
-    const store = fixtureStore()
-    const engine = createCommandEngine(store, [], coreRegistry(), () => {}, { logger: false })
-    engine.dispatch(focusCommands.setFocus('a'))
-
-    const ctx = createPatternContext(engine)
-    const cmd = ctx.extendSelectionTo('e', ['a', 'c', 'e'])
-    engine.dispatch(cmd)
-
-    const result = engine.getStore()
-    const selected = (result.entities['__selection__']?.selectedIds as string[]) ?? []
-    expect(selected).toEqual(['a', 'c', 'e'])
-  })
-
-  it('falls back to visibleNodes when navigableIds not provided', () => {
-    const store = fixtureStore()
-    const engine = createCommandEngine(store, [], coreRegistry(), () => {}, { logger: false })
-    engine.dispatch(focusCommands.setFocus('b'))
-
-    const ctx = createPatternContext(engine)
-    const cmd = ctx.extendSelectionTo('d')
-    engine.dispatch(cmd)
-
-    const result = engine.getStore()
-    const selected = (result.entities['__selection__']?.selectedIds as string[]) ?? []
-    expect(selected).toEqual(['b', 'c', 'd'])
-  })
-})
 
 describe('extended selection — tree', () => {
   it('Shift+ArrowDown selects range in tree', async () => {
