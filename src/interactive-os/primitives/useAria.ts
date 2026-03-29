@@ -189,22 +189,13 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     return new Set(ids)
   }, [store])
   const selectedIds = useMemo(() => Array.from(selectedIdSet), [selectedIdSet])
-  const expandedIds = useMemo(
-    () => (store.entities['__expanded__']?.expandedIds as string[]) ?? [],
-    [store]
-  )
-  const checkedIds = useMemo(
-    () => (store.entities[CHECKED_ID]?.checkedIds as string[]) ?? [],
-    [store]
-  )
-
   const isKeyMapOnly = pattern === EMPTY_BEHAVIOR
 
   // ── ③④⑤⑥⑦ Shared view logic ──
 
   const view = useAriaView({
     engine, store, pattern, plugins, keyMap: keyMapOverrides,
-    onActivate, focusedId, selectedIdSet, expandedIds, checkedIds,
+    onActivate, focusedId, selectedIdSet,
     isKeyMapOnly, autoFocus, disabled,
   })
 

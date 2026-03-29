@@ -42,22 +42,25 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
 
   const selectedIds = useMemo(() => Array.from(selectedIdSet), [selectedIdSet])
 
-  const expandedIds = useMemo(
-    () => (store.entities['__expanded__']?.expandedIds as string[]) ?? [],
-    [store]
-  )
-
   const dispatch = useCallback(
     (command: Command) => onDispatch(command),
     [onDispatch]
   )
+
+  // Collect pattern meta for stateGen context
+  const patternMeta = useMemo((): Record<string, unknown> => ({
+    expandable: pattern.expandable,
+    panelVisibility: pattern.panelVisibility,
+    popupType: pattern.popupType,
+    selectionMode: pattern.selectionMode,
+    colCount: pattern.colCount,
+  }), [pattern.expandable, pattern.panelVisibility, pattern.popupType, pattern.selectionMode, pattern.colCount])
 
   const getNodeState = useCallback(
     (id: string): NodeState => {
       const parentId = getParent(store, id)
       const siblings = parentId ? getChildren(store, parentId) : []
       const children = getChildren(store, id)
-      const hasChildren = children.length > 0
 
       let level = 0
       let current = id
@@ -68,28 +71,30 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
         current = parent
       }
 
-      const isExpandable = hasChildren || (pattern.expandable ?? false)
-
-      return {
+      const state: NodeState = {
         focused: id === focusedId,
         selected: selectedIdSet.has(id),
         disabled: false,
         index: siblings.indexOf(id),
         siblingCount: siblings.length,
-        expanded: isExpandable ? expandedIds.includes(id) : undefined,
         level: level + 1,
       }
+
+      for (const gen of pattern.stateGens ?? []) {
+        Object.assign(state, gen(id, store, children, patternMeta))
+      }
+
+      return state
     },
-    [store, focusedId, selectedIdSet, expandedIds, pattern.expandable]
+    [store, focusedId, selectedIdSet, pattern.stateGens, patternMeta]
   )
 
   const patternCtxOptions = useMemo(
     () => ({
-      expandable: pattern.expandable,
-      selectionMode: pattern.selectionMode,
-      colCount: pattern.colCount,
+      visibilityFilters: pattern.visibilityFilters,
+      ctxFactories: pattern.ctxFactories,
     }),
-    [pattern.expandable, pattern.selectionMode, pattern.colCount]
+    [pattern.visibilityFilters, pattern.ctxFactories]
   )
 
   const mergedKeyMap = useMemo(
@@ -101,17 +106,32 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
     (id: string): Record<string, unknown> => {
       const state = getNodeState(id)
       const entity = getEntity(store, id) ?? { id }
+      const resolvedRole = typeof pattern.childRole === 'function'
+        ? pattern.childRole(entity, state)
+        : (pattern.childRole ?? '')
+
+      // Axis-declared ARIA (OCP)
+      const autoAria: Record<string, string> = {}
+      for (const gen of pattern.ariaGens ?? []) {
+        Object.assign(autoAria, gen(state as Record<string, unknown>, entity as Record<string, unknown>, resolvedRole))
+      }
+      if (state.siblingCount > 1) {
+        autoAria['aria-posinset'] = String(state.index + 1)
+        autoAria['aria-setsize'] = String(state.siblingCount)
+      }
+
       const ariaAttrs = pattern.ariaAttributes?.(entity, state)
       const isActivedescendant = pattern.focusStrategy.type === 'aria-activedescendant'
 
       const baseProps: Record<string, unknown> = {
-        role: pattern.childRole ?? 'row',
+        role: resolvedRole || 'row',
         'data-node-id': id,
+        ...autoAria,
         ...ariaAttrs,
         onClick: () => {
-          if (pattern.activateOnClick) {
+          if (pattern.clickMap?.['Click']) {
             const ctx = createPatternContext(virtualEngine, patternCtxOptions)
-            const command = ctx.activate()
+            const command = pattern.clickMap['Click'](ctx)
             if (command) onDispatch(command)
           }
         },

@@ -66,8 +66,6 @@ export interface UseAriaViewOptions {
   onActivate?: (nodeId: string) => void
   focusedId: string
   selectedIdSet: Set<string>
-  expandedIds: string[]
-  checkedIds: string[]
   nodeIdAttr?: string
   isKeyMapOnly?: boolean
   autoFocus?: boolean
@@ -78,7 +76,7 @@ export interface UseAriaViewReturn {
   getNodeProps: (id: string) => Record<string, unknown>
   getNodeState: (id: string) => NodeState
   containerProps: Record<string, unknown>
-  patternCtxOptions: { expandable?: boolean; selectionMode?: string; colCount?: number; valueRange?: { min: number; max: number; step?: number }; visibilityFilters?: import('../engine/types').VisibilityFilter[] }
+  patternCtxOptions: { visibilityFilters?: import('../engine/types').VisibilityFilter[]; ctxFactories?: import('../axis/types').CtxFactory[] }
   observedEngine: CommandEngine
 }
 
@@ -143,20 +141,12 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     return filters.length > 0 ? filters : undefined
   }, [pattern.visibilityFilters, plugins])
 
-  const hasCheckedEntity = !!store.entities['__checked__']
-
   const patternCtxOptions = useMemo(
     () => ({
-      expandable: pattern.expandable,
-      checkedTracking: hasCheckedEntity,
-      selectionMode: pattern.selectionMode,
-      colCount: pattern.colCount,
-      valueRange: pattern.valueRange,
       visibilityFilters: allVisibilityFilters,
-      popupType: pattern.popupType,
       ctxFactories: pattern.ctxFactories,
     }),
-    [pattern.expandable, hasCheckedEntity, pattern.selectionMode, pattern.colCount, pattern.valueRange, allVisibilityFilters, pattern.popupType, pattern.ctxFactories],
+    [allVisibilityFilters, pattern.ctxFactories],
   )
 
   // ── getNodeState (OCP — axes declare stateGen, no if-else) ──
