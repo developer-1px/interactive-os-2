@@ -60,7 +60,7 @@
   gap: var(--space-sm);
   padding: var(--space-sm);
   height: 100%;
-  align-items: stretch;
+  align-items: flex-start;
   overflow: auto hidden;
 }
 
