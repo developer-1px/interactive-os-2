@@ -83,6 +83,8 @@ function sortCards(fsStore: NormalizedData, ids: string[]): string[] {
 export interface KanbanBuildOptions {
   /** 컬럼 정렬 순서. 이름 배열. 목록에 없는 폴더는 뒤에 알파벳순으로 붙는다. */
   columnOrder?: string[]
+  /** 파일별 import/importedBy 카운트 */
+  depCounts?: Record<string, { imports: number; importedBy: number }>
 }
 
 /** 디렉토리를 정렬하는 공통 로직 */
@@ -104,8 +106,15 @@ function sortDirs(fsStore: NormalizedData, dirIds: string[], order?: string[]): 
   })
 }
 
-function formatLoc(loc: number): string {
-  return `${loc}L`
+/** 파일 메타 subtitle 구성: LOC + deps */
+function buildSubtitle(loc: number | undefined, deps: { imports: number; importedBy: number } | undefined): string | undefined {
+  const parts: string[] = []
+  if (loc != null) parts.push(`${loc}L`)
+  if (deps) {
+    if (deps.importedBy > 0) parts.push(`↑${deps.importedBy}`)
+    if (deps.imports > 0) parts.push(`↓${deps.imports}`)
+  }
+  return parts.length > 0 ? parts.join(' ') : undefined
 }
 
 /** 파일 크기 구간: compact 카드 시각 힌트용 */
@@ -153,7 +162,12 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
         const cardId = `card:${fileId}`
         entities[cardId] = {
           id: cardId,
-          data: { title: fileData.name, sourceId: fileId, sourceType: 'file', ...(fileData.loc != null && { loc: fileData.loc, subtitle: formatLoc(fileData.loc), weight: locWeight(fileData.loc) }) },
+          data: {
+            title: fileData.name, sourceId: fileId, sourceType: 'file',
+            ext: fileData.name.includes('.') ? fileData.name.split('.').pop() : undefined,
+            ...(fileData.loc != null && { loc: fileData.loc, weight: locWeight(fileData.loc) }),
+            subtitle: buildSubtitle(fileData.loc, options?.depCounts?.[fileId]),
+          },
         }
         relationships[colId].push(cardId)
       }
@@ -202,7 +216,12 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
       const cardId = `card:${fileId}`
       entities[cardId] = {
         id: cardId,
-        data: { title: fileData.name, sourceId: fileId, sourceType: 'file', ...(fileData.loc != null && { loc: fileData.loc, subtitle: formatLoc(fileData.loc) }) },
+        data: {
+            title: fileData.name, sourceId: fileId, sourceType: 'file',
+            ext: fileData.name.includes('.') ? fileData.name.split('.').pop() : undefined,
+            ...(fileData.loc != null && { loc: fileData.loc, weight: locWeight(fileData.loc) }),
+            subtitle: buildSubtitle(fileData.loc, options?.depCounts?.[fileId]),
+          },
       }
       relationships[filesColId].push(cardId)
     }

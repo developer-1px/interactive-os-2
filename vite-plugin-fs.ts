@@ -389,6 +389,24 @@ export function fsPlugin(): Plugin {
           return
         }
 
+        if (url.pathname === '/api/fs/dep-counts') {
+          const root = url.searchParams.get('root') ?? path.resolve('.')
+          if (!forwardCache || !reverseCache || cacheProjectRoot !== root) {
+            buildCaches(root)
+          }
+          const counts: Record<string, { imports: number; importedBy: number }> = {}
+          for (const [file, deps] of forwardCache!) {
+            counts[file] = { imports: deps.length, importedBy: reverseCache!.get(file)?.length ?? 0 }
+          }
+          // Also add files that are only imported (no forward entries)
+          for (const [file, consumers] of reverseCache!) {
+            if (!counts[file]) counts[file] = { imports: 0, importedBy: consumers.length }
+          }
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify(counts))
+          return
+        }
+
         if (url.pathname === '/api/fs/file') {
           const filePath = url.searchParams.get('path')
           if (!filePath || !fs.existsSync(filePath)) {

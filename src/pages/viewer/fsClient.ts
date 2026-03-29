@@ -15,3 +15,10 @@ export async function fetchFile(path: string): Promise<string> {
   const res = await fetch(`/api/fs/file?path=${encodeURIComponent(path)}`)
   return res.text()
 }
+
+export type DepCounts = Record<string, { imports: number; importedBy: number }>
+
+export async function fetchDepCounts(root: string): Promise<DepCounts> {
+  const res = await fetch(`/api/fs/dep-counts?root=${encodeURIComponent(root)}`)
+  return res.json()
+}
