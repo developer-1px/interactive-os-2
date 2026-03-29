@@ -2,6 +2,7 @@ export interface TreeNode {
   id: string
   name: string
   type: 'file' | 'directory'
+  loc?: number
   children?: TreeNode[]
 }
 

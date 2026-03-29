@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import type { Command, EngineOptions } from '../engine/types'
-import { buildRegistry, createBatchCommand } from '../engine/types'
+import { buildRegistry } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -10,8 +10,8 @@ import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren } from '../store/createStore'
 import { coreRegistry } from '../axis/coreCommands'
 import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
-import { selectionCommands, SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
-import { expandCommands, EXPANDED_ID } from '../axis/expand'
+import { SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
+import { EXPANDED_ID } from '../axis/expand'
 import { CHECKED_ID } from '../axis/checked'
 import { POPUP_ID } from '../axis/popup'
 import { VALUE_ID } from '../axis/value'
@@ -20,6 +20,7 @@ import { ERRORS_ID, TOUCHED_ID } from '../plugins/form'
 import { createPatternContext } from '../pattern/createPatternContext'
 import type { PatternContextOptions } from '../pattern/createPatternContext'
 import { useAriaView } from './useAriaView'
+import { dispatchKeyAction } from './keymapHelpers'
 
 type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; pattern: AriaPattern; prevFocus: string; prevSelectedIds: string[] }
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
@@ -105,26 +106,19 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
     engineCallbacksMap.set(created, bag)
 
-    // If pattern uses expand axis (expandTracking), ensure __expanded__ entity exists
-    // so getVisibleNodes activates gating (default-collapsed for tree/accordion).
-    // Patterns without expand axis leave the entity absent → all children visible.
-    if ((pattern.expandTracking || pattern.expandable) && !data.entities[EXPANDED_ID]) {
-      created.syncStore({
-        entities: { ...created.getStore().entities, [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [] } },
-        relationships: created.getStore().relationships,
-      })
-    }
-    if (pattern.checkedTracking && !data.entities[CHECKED_ID]) {
-      created.syncStore({
-        entities: { ...created.getStore().entities, [CHECKED_ID]: { id: CHECKED_ID, checkedIds: [] } },
-        relationships: created.getStore().relationships,
-      })
-    }
-    if (pattern.popupType && !data.entities[POPUP_ID]) {
-      created.syncStore({
-        entities: { ...created.getStore().entities, [POPUP_ID]: { id: POPUP_ID, isOpen: false, triggerId: '' } },
-        relationships: created.getStore().relationships,
-      })
+    // Initialize required entities declared by axes (expand, checked, popup, etc.)
+    if (pattern.requiredEntities) {
+      const currentEntities = created.getStore().entities
+      let merged: typeof currentEntities | undefined
+      for (const decl of pattern.requiredEntities) {
+        if (!currentEntities[decl.id]) {
+          if (!merged) merged = { ...currentEntities }
+          merged[decl.id] = { id: decl.id, ...decl.default }
+        }
+      }
+      if (merged) {
+        created.syncStore({ entities: merged, relationships: created.getStore().relationships })
+      }
     }
     const externalFocus = (data.entities[FOCUS_ID]?.focusedId as string) ?? ''
     const focusTarget = (externalFocus && data.entities[externalFocus])
@@ -142,7 +136,8 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     return created
   })
   useEffect(() => {
-    const cb = engineCallbacksMap.get(engine)!
+    const cb = engineCallbacksMap.get(engine)
+    if (!cb) return
     cb.onActivate = onActivate
     cb.pattern = pattern
   })
@@ -217,6 +212,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
   const { patternCtxOptions } = view
 
+  const onActivateRef = useRef(onActivate)
+  useEffect(() => { onActivateRef.current = onActivate })
+
   const getNodeProps = useCallback(
     (id: string): Record<string, unknown> => {
       const baseProps = view.getNodeProps(id)
@@ -251,8 +249,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
               : createPatternContext(engine, { ...patternCtxOptions as PatternContextOptions })
             // Override focused to the clicked node so handler can use ctx.focused as target
             const ctx = { ...baseCtx, focused: id }
-            const command = handler(ctx as typeof baseCtx)
-            if (command) engine.dispatch(command)
+            dispatchKeyAction(ctx, handler as (c: typeof ctx) => Command | void, engine, onActivateRef.current)
           }
           pointerDownCtxRef.current = null
         }
@@ -260,57 +257,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         return baseProps
       }
 
-      // Legacy boolean flag path — backward compatible
-      if (!pattern.selectOnClick && !pattern.activateOnClick) return baseProps
-
-      if (pattern.selectOnClick) {
-        baseProps.onPointerDown = () => {
-          pointerDownCtxRef.current = createPatternContext(engine, patternCtxOptions as PatternContextOptions)
-        }
-
-        baseProps.onClick = (event: MouseEvent) => {
-          if (event.defaultPrevented) return
-          const target = event.target as HTMLElement
-          const closestItem = target.closest(`[data-node-id]`)
-          if (closestItem && closestItem !== (event.currentTarget as HTMLElement)) return
-
-          if (event.shiftKey && pattern.selectionMode === 'multiple') {
-            if (pointerDownCtxRef.current) {
-              engine.dispatch(pointerDownCtxRef.current.extendSelectionTo(id))
-            }
-          } else if ((event.ctrlKey || event.metaKey) && pattern.selectionMode === 'multiple') {
-            engine.dispatch(selectionCommands.toggleSelect(id))
-          } else {
-            engine.dispatch(createBatchCommand([
-              selectionCommands.select(id),
-              selectionCommands.setAnchor(id),
-            ]))
-          }
-          pointerDownCtxRef.current = null
-
-          const hasModifier = event.shiftKey || event.ctrlKey || event.metaKey
-          if (pattern.activateOnClick && !hasModifier) {
-            const cb = engineCallbacksMap.get(engine)
-            if (cb?.onActivate) {
-              if (pattern.expandOnParentClick !== false) {
-                const children = getChildren(engine.getStore(), id)
-                if (children.length > 0) {
-                  engine.dispatch(expandCommands.toggleExpand(id))
-                }
-              }
-              cb.onActivate(id)
-            } else {
-              const ctx = createPatternContext(engine, patternCtxOptions as PatternContextOptions)
-              const command = ctx.activate()
-              if (command) engine.dispatch(command)
-            }
-          }
-        }
-      }
-
       return baseProps
     },
-    [view, isKeyMapOnly, pattern.clickMap, pattern.selectOnClick, pattern.activateOnClick, pattern.expandOnParentClick, pattern.selectionMode, engine, patternCtxOptions],
+    [view, isKeyMapOnly, pattern.clickMap, engine, patternCtxOptions],
   )
 
   const dispatch = useCallback(
