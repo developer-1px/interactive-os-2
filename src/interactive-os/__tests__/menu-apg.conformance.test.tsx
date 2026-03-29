@@ -6,7 +6,8 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MenuList } from '../ui/MenuList'
+import { Aria } from '../primitives/aria'
+import { menu } from '../pattern/roles/menu'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -53,22 +54,19 @@ function flatFixtureData(): NormalizedData {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function renderMenu(data: NormalizedData) {
+function renderMenu(data: NormalizedData, onActivate?: (id: string) => void) {
   return render(
-    <MenuList
-      data={data}
-      plugins={[]}
-      renderItem={(props, item, state: NodeState) => (
+    <Aria pattern={menu} data={data} plugins={[]} onActivate={onActivate}>
+      <Aria.Item render={(props, item, state: NodeState) => (
         <span
           {...props}
           data-testid={`item-${item.id}`}
           data-focused={state.focused}
-          data-selected={state.selected}
         >
           {(item.data as Record<string, unknown>)?.name as string}
         </span>
-      )}
-    />,
+      )} />
+    </Aria>,
   )
 }
 
@@ -310,15 +308,15 @@ describe('APG Menu — Keyboard: Submenu Expand/Collapse', () => {
 // ---------------------------------------------------------------------------
 
 describe('APG Menu — Keyboard: Activation', () => {
-  it('Enter on leaf item selects it (activates action)', async () => {
+  it('Enter on leaf item fires onActivate', async () => {
     const user = userEvent.setup()
-    const { container } = renderMenu(fixtureData())
+    const activated: string[] = []
+    const { container } = renderMenu(fixtureData(), (id) => activated.push(id))
 
     getNode(container, 'help')!.focus()
     await user.keyboard('{Enter}')
 
-    const testNode = container.querySelector('[data-testid="item-help"]')
-    expect(testNode?.getAttribute('data-selected')).toBe('true')
+    expect(activated).toContain('help')
   })
 })
 
@@ -338,13 +336,13 @@ describe('APG Menu — Click Interaction', () => {
     expect(getAllVisibleNodeIds(container)).toContain('open')
   })
 
-  it('clicking a leaf item selects it', async () => {
+  it('clicking a leaf item fires onActivate', async () => {
     const user = userEvent.setup()
-    const { container } = renderMenu(fixtureData())
+    const activated: string[] = []
+    const { container } = renderMenu(fixtureData(), (id) => activated.push(id))
 
     await user.click(getNode(container, 'help')!)
 
-    const testNode = container.querySelector('[data-testid="item-help"]')
-    expect(testNode?.getAttribute('data-selected')).toBe('true')
+    expect(activated).toContain('help')
   })
 })

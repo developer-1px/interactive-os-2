@@ -173,10 +173,8 @@ describe('pointer interaction — tree click with activateHandler', () => {
     const sel = selected('single')
     const exp = expanded()
     const navTree = composePattern(
-      { role: 'tree', childRole: 'treeitem', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected), ...(s.expanded !== undefined && { 'aria-expanded': String(s.expanded) }) }) },
-      nav,
-      sel,
-      exp,
+      { role: 'tree', childRole: 'treeitem' },
+      [nav, sel, exp],
       {
         ArrowRight: exp.expandOrFocusChild,
         ArrowLeft: exp.collapseOrFocusParent,
@@ -222,9 +220,8 @@ describe('pointer interaction — edge cases', () => {
     const nav = navigate('vertical')
     const sel = selected('single')
     const singleListbox = composePattern(
-      { role: 'listbox', childRole: 'option', ariaAttributes: (_n, s) => ({ 'aria-selected': String(s.selected) }) },
-      nav,
-      sel,
+      { role: 'listbox', childRole: 'option' },
+      [nav, sel],
       {
         ArrowDown: nav.next,
         ArrowUp: nav.prev,
