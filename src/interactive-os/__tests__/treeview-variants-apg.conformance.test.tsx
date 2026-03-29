@@ -33,9 +33,9 @@ function fixtureData(): NormalizedData {
   })
 }
 
-function renderTree(data: NormalizedData) {
+function renderTree(data: NormalizedData, onActivate?: (id: string) => void) {
   return render(
-    <Aria pattern={tree} data={data} plugins={[]}>
+    <Aria pattern={tree} data={data} plugins={[]} onActivate={onActivate}>
       <Aria.Item render={(props, item, _state: NodeState) => (
         <span {...props} data-testid={`node-${item.id}`}>
           {(item.data as Record<string, unknown>)?.name as string}
@@ -130,14 +130,15 @@ describe('APG Navigation Treeview (#65) — ARIA Structure', () => {
 })
 
 describe('APG Navigation Treeview (#65) — Keyboard', () => {
-  it('Enter selects leaf item (navigation action)', async () => {
+  it('Enter fires onActivate on leaf item (navigation action)', async () => {
     const user = userEvent.setup()
-    const { container } = renderTree(fixtureData())
+    const activated: string[] = []
+    const { container } = renderTree(fixtureData(), (id) => activated.push(id))
     // Expand projects first
     getNode(container, 'projects')!.focus()
     await user.keyboard('{ArrowRight}') // expand
     await user.keyboard('{ArrowRight}') // focus proj1
     await user.keyboard('{Enter}')
-    expect(getNode(container, 'proj1')?.getAttribute('aria-selected')).toBe('true')
+    expect(activated).toContain('proj1')
   })
 })

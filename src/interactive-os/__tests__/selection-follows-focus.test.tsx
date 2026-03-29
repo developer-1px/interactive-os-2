@@ -36,19 +36,12 @@ function fixtureData(): NormalizedData {
 
 const nav = navigate('vertical')
 const navH = navigate('horizontal')
+const selFollowAndActivate = selected('single', { followFocus: true, activateOnSelect: true })
 const selFollow = selected('single', { followFocus: true })
 
 const bothOptions = composePattern(
-  {
-    role: 'toolbar',
-    childRole: 'button',
-    ariaAttributes: (_node, state: NodeState) => ({
-      'aria-pressed': String(state.selected),
-    }),
-    activationFollowsSelection: true,
-  },
-  nav,
-  selFollow,
+  { role: 'toolbar', childRole: 'button' },
+  [nav, selFollowAndActivate],
   {
     ArrowDown: nav.next,
     ArrowUp: nav.prev,
@@ -56,20 +49,13 @@ const bothOptions = composePattern(
     End: nav.last,
     Enter: activateHandler,
     Space: activateHandler,
-    Click: selFollow.selectAndAnchor,
+    Click: selFollowAndActivate.selectAndAnchor,
   },
 )
 
 const selectionOnly = composePattern(
-  {
-    role: 'radiogroup',
-    childRole: 'radio',
-    ariaAttributes: (_node, state: NodeState) => ({
-      'aria-checked': String(state.selected),
-    }),
-  },
-  nav,
-  selFollow,
+  { role: 'radiogroup', childRole: 'radio' },
+  [nav, selFollow],
   {
     ArrowDown: nav.next,
     ArrowUp: nav.prev,
@@ -81,14 +67,8 @@ const selectionOnly = composePattern(
 )
 
 const noOptions = composePattern(
-  {
-    role: 'toolbar',
-    childRole: 'button',
-    ariaAttributes: (_node, state: NodeState) => ({
-      'aria-pressed': String(state.selected),
-    }),
-  },
-  navH,
+  { role: 'toolbar', childRole: 'button' },
+  [navH],
   {
     ArrowRight: navH.next,
     ArrowLeft: navH.prev,
@@ -207,7 +187,8 @@ describe('selectionFollowsFocus + activationFollowsSelection', () => {
 
       await user.keyboard('{ArrowRight}')
       expect(onActivate).not.toHaveBeenCalled()
-      expect(getNode(container, 'b').getAttribute('aria-pressed')).toBe('false')
+      // noOptions has no selected axis, so aria-pressed is not generated
+      expect(getNode(container, 'b').getAttribute('aria-pressed')).toBeNull()
     })
   })
 

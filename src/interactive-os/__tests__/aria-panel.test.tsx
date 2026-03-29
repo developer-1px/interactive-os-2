@@ -20,17 +20,8 @@ const sel = selected('single', { followFocus: true })
 const exp = expanded()
 
 const testTabs = composePattern(
-  {
-    role: 'tablist',
-    childRole: 'tab',
-    ariaAttributes: (_node, state: NodeState) => ({
-      'aria-selected': String(state.selected),
-    }),
-    panelRole: 'tabpanel',
-    panelVisibility: 'selected',
-  },
-  nav,
-  sel,
+  { role: 'tablist', childRole: 'tab', panel: 'tabpanel' },
+  [nav, sel],
   {
     ArrowLeft: nav.prev,
     ArrowRight: nav.next,
@@ -117,18 +108,8 @@ describe('Aria.Panel', () => {
 
 // V2: 2026-03-28-aria-panel-trigger-prd.md
 const testAccordion = composePattern(
-  {
-    role: 'region',
-    childRole: 'heading',
-    ariaAttributes: (_node, state: NodeState) => {
-      if (state.expanded !== undefined) return { 'aria-expanded': String(state.expanded) }
-      return {}
-    },
-    panelRole: 'region',
-    panelVisibility: 'expanded',
-  },
-  nav,
-  exp,
+  { role: 'region', childRole: 'heading', panel: 'region' },
+  [nav, exp],
   {
     ArrowRight: exp.expandOrFocusChild,
     ArrowLeft: exp.collapseOrFocusParent,
