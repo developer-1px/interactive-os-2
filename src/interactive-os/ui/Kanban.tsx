@@ -16,6 +16,8 @@ interface KanbanProps {
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   onFocusChange?: (nodeId: string | null) => void
+  highlightUp?: Set<string>
+  highlightDown?: Set<string>
   compact?: boolean
   'aria-label'?: string
 }
@@ -36,6 +38,8 @@ export function Kanban({
   onChange,
   onActivate,
   onFocusChange,
+  highlightUp,
+  highlightDown,
   compact = false,
   'aria-label': ariaLabel,
 }: KanbanProps) {
@@ -96,6 +100,7 @@ export function Kanban({
                 const cardTooltip = cardData?.tooltip as string | undefined
                 const cardWeight = cardData?.weight as string | undefined
                 const cardExt = cardData?.ext as string | undefined
+                const hlDir = highlightUp?.has(cardId) ? 'up' : highlightDown?.has(cardId) ? 'down' : undefined
 
                 return (
                   <FocusDiv
@@ -105,6 +110,7 @@ export function Kanban({
                     title={cardTooltip ?? cardTitle}
                     data-weight={cardWeight || undefined}
                     data-ext={cardExt || undefined}
+                    data-highlight={hlDir}
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>

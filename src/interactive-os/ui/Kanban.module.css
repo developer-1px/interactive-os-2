@@ -136,6 +136,18 @@
   color: var(--text-bright);
 }
 
+/* ── Dependency highlight ── */
+
+.card[data-highlight="up"] {
+  background: color-mix(in srgb, var(--tone-positive-base) 15%, var(--surface-default));
+  box-shadow: inset 3px 0 0 var(--tone-positive-base);
+}
+
+.card[data-highlight="down"] {
+  background: color-mix(in srgb, var(--tone-primary-base) 15%, var(--surface-default));
+  box-shadow: inset 3px 0 0 var(--tone-primary-base);
+}
+
 /* ── Focus/Selection — override .card background ── */
 
 .card[data-focused] {

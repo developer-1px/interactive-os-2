@@ -46,6 +46,9 @@ export default function BirdseyeLayout() {
   const [viewerFilename, setViewerFilename] = useState<string>('')
   const fetchRef = useRef(0)
 
+  // Dependency highlight — files that import/are imported by focused file
+  const [depHighlight, setDepHighlight] = useState<{ importedBy: Set<string>; imports: Set<string> } | null>(null)
+
   // Column order from _meta.yaml
   const [kanbanOptions, setKanbanOptions] = useState<KanbanBuildOptions>({})
 
@@ -117,6 +120,7 @@ export default function BirdseyeLayout() {
     if (!debouncedCardId || !kanbanStore) {
       setViewerCode(null)
       setViewerFilename('')
+      setDepHighlight(null)
       return
     }
 
@@ -139,6 +143,18 @@ export default function BirdseyeLayout() {
     fetchFile(cardData.sourceId).then((content) => {
       if (fetchRef.current === token) setViewerCode(content)
     })
+    // Fetch dependency graph for highlight
+    fetch(`/api/fs/imports?path=${encodeURIComponent(cardData.sourceId)}&root=${encodeURIComponent(DEFAULT_ROOT)}`)
+      .then((r) => r.json())
+      .then((data: { imports: { path: string }[]; importedBy: { path: string }[] }) => {
+        if (fetchRef.current === token) {
+          setDepHighlight({
+            importedBy: new Set(data.importedBy.map((d) => `card:${d.path}`)),
+            imports: new Set(data.imports.map((d) => `card:${d.path}`)),
+          })
+        }
+      })
+      .catch(() => setDepHighlight(null))
   }, [debouncedCardId, kanbanStore])
 
   // 폴더 선택 + URL 동기화
@@ -241,6 +257,8 @@ export default function BirdseyeLayout() {
               data={kanbanStore}
               onActivate={handleKanbanActivate}
               onFocusChange={handleFocusChange}
+              highlightUp={depHighlight?.importedBy}
+              highlightDown={depHighlight?.imports}
               compact
               aria-label={`${selectedName} contents`}
             />
