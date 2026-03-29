@@ -153,7 +153,9 @@ export function composePattern(
 
   if (config.panel) {
     meta.panelRole = config.panel
-    meta.panelVisibility = meta.expandable ? 'expanded' : 'selected'
+    // Auto-determine: if expand axis is present (has EXPANDED_ID entity), use 'expanded'
+    const hasExpandAxis = entities.some(e => e.id === '__expanded__')
+    meta.panelVisibility = (meta.expandable || hasExpandAxis) ? 'expanded' : 'selected'
   }
 
   return {
