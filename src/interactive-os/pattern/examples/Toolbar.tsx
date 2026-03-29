@@ -48,7 +48,7 @@ const renderButton = (
 
 export function Toolbar() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => toolbar, [])
+  const pattern = useMemo(() => toolbar(), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
