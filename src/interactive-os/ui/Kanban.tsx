@@ -61,6 +61,7 @@ export function Kanban({
         data-aria-container=""
         className={`flex-row gap-md overflow-x-auto ${styles.board}`}
         data-compact={compact || undefined}
+        data-has-highlight={(highlightUp?.size || highlightDown?.size) ? '' : undefined}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       >
         {columns.map((colId) => {
