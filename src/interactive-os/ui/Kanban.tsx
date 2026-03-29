@@ -65,7 +65,9 @@ export function Kanban({
           const colState = aria.getNodeState(colId)
           const colProps = aria.getNodeProps(colId)
           const cards = getChildren(store, colId)
-          const colTitle = (colEntity.data as Record<string, unknown>)?.title as string ?? ''
+          const colData = colEntity.data as Record<string, unknown> | undefined
+          const colTitle = colData?.title as string ?? ''
+          const totalLoc = colData?.totalLoc as number | undefined
 
           return (
             <div key={colId} className={`flex-col gap-xs ${styles.column}`}>
@@ -77,7 +79,7 @@ export function Kanban({
               >
                 <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>
                   <span>{colTitle}</span>
-                  <span className={styles.columnCount}>{cards.length}</span>
+                  <span className={styles.columnCount}>{cards.length}{totalLoc != null && totalLoc > 0 ? ` · ${totalLoc}L` : ''}</span>
                 </AriaItemContext.Provider>
               </FocusDiv>
 
@@ -90,6 +92,7 @@ export function Kanban({
                 const cardData = cardEntity.data as Record<string, unknown> | undefined
                 const cardTitle = cardData?.title as string ?? ''
                 const cardSubtitle = cardData?.subtitle as string | undefined
+                const cardWeight = cardData?.weight as string | undefined
 
                 return (
                   <FocusDiv
@@ -97,10 +100,11 @@ export function Kanban({
                     focused={cardState.focused}
                     className={styles.card}
                     title={cardTitle}
+                    data-weight={cardWeight || undefined}
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
-                      <Aria.Editable field="title">{cardTitle}</Aria.Editable>
+                      <span className={styles.cardTitle}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
                       {cardSubtitle && <span className={styles.cardSubtitle}>{cardSubtitle}</span>}
                     </AriaItemContext.Provider>
                   </FocusDiv>

@@ -108,6 +108,13 @@ function formatLoc(loc: number): string {
   return `${loc}L`
 }
 
+/** 파일 크기 구간: compact 카드 시각 힌트용 */
+function locWeight(loc: number): 'sm' | 'md' | 'lg' | undefined {
+  if (loc >= 300) return 'lg'
+  if (loc >= 100) return 'md'
+  return undefined
+}
+
 export function buildKanbanStore(fsStore: NormalizedData, folderId: string, options?: KanbanBuildOptions): NormalizedData {
   const entities: Record<string, { id: string; data?: Record<string, unknown> }> = {}
   const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
@@ -135,7 +142,8 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
     if (files.length > 0) {
       const colId = `col:${dirId}`
       const title = `${prefix}. /${path}`
-      entities[colId] = { id: colId, data: { title, sourceId: dirId } }
+      const totalLoc = files.reduce((sum, id) => sum + (getEntityData<FsEntityData>(fsStore, id)?.loc ?? 0), 0)
+      entities[colId] = { id: colId, data: { title, sourceId: dirId, totalLoc } }
       relationships[ROOT_ID].push(colId)
       relationships[colId] = []
 
@@ -145,7 +153,7 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
         const cardId = `card:${fileId}`
         entities[cardId] = {
           id: cardId,
-          data: { title: fileData.name, sourceId: fileId, sourceType: 'file', ...(fileData.loc != null && { loc: fileData.loc, subtitle: formatLoc(fileData.loc) }) },
+          data: { title: fileData.name, sourceId: fileId, sourceType: 'file', ...(fileData.loc != null && { loc: fileData.loc, subtitle: formatLoc(fileData.loc), weight: locWeight(fileData.loc) }) },
         }
         relationships[colId].push(cardId)
       }
@@ -183,7 +191,8 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
   // 루트 파일 → (files) 컬럼
   if (topFiles.length > 0) {
     const filesColId = 'col:__files__'
-    entities[filesColId] = { id: filesColId, data: { title: '(files)', sourceId: folderId } }
+    const filesTotalLoc = topFiles.reduce((sum, id) => sum + (getEntityData<FsEntityData>(fsStore, id)?.loc ?? 0), 0)
+    entities[filesColId] = { id: filesColId, data: { title: '(files)', sourceId: folderId, totalLoc: filesTotalLoc } }
     relationships[ROOT_ID].push(filesColId)
     relationships[filesColId] = []
 
