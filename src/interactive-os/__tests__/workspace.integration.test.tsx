@@ -25,7 +25,8 @@ describe('Workspace', () => {
       id: 'tab-1',
       data: { type: 'tab', label: 'Hello', contentType: 'file', contentRef: 'hello.ts' } as TabData,
     }
-    data = workspaceCommands.addTab(tgId, tab).execute(data)
+    data = workspaceCommands.createTab.reduce(data, tgId, tab)
+    data = workspaceCommands.setActiveTab.reduce(data, tgId, tab.id)
 
     render(
       <Workspace
@@ -51,10 +52,11 @@ describe('Workspace', () => {
       id: 'tab-1',
       data: { type: 'tab', label: 'Left', contentType: 'file', contentRef: 'left.ts' } as TabData,
     }
-    data = workspaceCommands.addTab(tgId, tab1).execute(data)
+    data = workspaceCommands.createTab.reduce(data, tgId, tab1)
+    data = workspaceCommands.setActiveTab.reduce(data, tgId, tab1.id)
 
     // Split the pane
-    data = workspaceCommands.splitPane(tgId, 'horizontal').execute(data)
+    data = workspaceCommands.splitPane.reduce(data, tgId, 'horizontal')
 
     // Find the new tabgroup (second child of the split)
     const splitId = getChildren(data, ROOT_ID)[0]!
@@ -66,7 +68,8 @@ describe('Workspace', () => {
       id: 'tab-2',
       data: { type: 'tab', label: 'Right', contentType: 'file', contentRef: 'right.ts' } as TabData,
     }
-    data = workspaceCommands.addTab(newTgId, tab2).execute(data)
+    data = workspaceCommands.createTab.reduce(data, newTgId, tab2)
+    data = workspaceCommands.setActiveTab.reduce(data, newTgId, tab2.id)
 
     render(
       <Workspace

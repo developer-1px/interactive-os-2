@@ -47,22 +47,22 @@ export function TabGroup({
 
   const handleActivate = useCallback((nodeId: string) => {
     if (!onChange) return
-    onChange(workspaceCommands.setActiveTab(tabgroupId, nodeId).execute(data))
+    onChange(workspaceCommands.setActiveTab.reduce(data, tabgroupId, nodeId))
   }, [onChange, tabgroupId, data])
 
   const handleClose = useCallback((e: React.MouseEvent, tabId: string) => {
     e.preventDefault()
     e.stopPropagation()
     if (!onChange) return
-    onChange(workspaceCommands.removeTab(tabId).execute(data))
+    onChange(workspaceCommands.removeTab.reduce(data, tabId))
   }, [onChange, data])
 
   const closeKeyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
     'Delete': (ctx) => {
-      onChange?.(workspaceCommands.removeTab(ctx.focused).execute(data))
+      onChange?.(workspaceCommands.removeTab.reduce(data, ctx.focused))
     },
     'Meta+w': (ctx) => {
-      onChange?.(workspaceCommands.removeTab(ctx.focused).execute(data))
+      onChange?.(workspaceCommands.removeTab.reduce(data, ctx.focused))
     },
     ...keyMap,
   }), [keyMap, onChange, data])

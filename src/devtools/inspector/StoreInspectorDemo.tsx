@@ -14,7 +14,7 @@ import { history } from '../../interactive-os/plugins/history'
 import { crud, crudCommands } from '../../interactive-os/plugins/crud'
 import { dnd, dndCommands } from '../../interactive-os/plugins/dnd'
 import { focusRecovery } from '../../interactive-os/plugins/focusRecovery'
-import { storeToTree } from '../../interactive-os/store/storeToTree'
+import { storeToInspectorTree } from '../../interactive-os/store/storeToInspectorTree'
 import { treeData } from '../../pages/shared-tree-data'
 import styles from './PageStoreInspector.module.css'
 
@@ -177,7 +177,7 @@ export default function StoreInspectorDemo() {
     })
   }, [])
 
-  const inspectorData = useMemo(() => storeToTree(data), [data])
+  const inspectorData = useMemo(() => storeToInspectorTree(data), [data])
 
   // Auto-scroll log to bottom
   useEffect(() => {

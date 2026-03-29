@@ -222,9 +222,12 @@ export function openTab(
     return data?.contentRef === contentRef
   })
   if (existing) {
-    return workspaceCommands.setActiveTab(tabgroupId, existing).execute(store)
+    return _workspaceCommands.setActiveTab.reduce(store, tabgroupId, existing)
   }
-  return workspaceCommands.addTab(tabgroupId, createTab()).execute(store)
+  const tab = createTab()
+  let s = _workspaceCommands.createTab.reduce(store, tabgroupId, tab)
+  s = _workspaceCommands.setActiveTab.reduce(s, tabgroupId, tab.id)
+  return s
 }
 
 /** Split a tabgroup and add a tab to the new pane. Returns updated store. */
@@ -234,12 +237,14 @@ export function splitAndAddTab(
   direction: 'horizontal' | 'vertical',
   tab: Entity,
 ): NormalizedData {
-  const ws = workspaceCommands.splitPane(tabgroupId, direction).execute(store)
+  const ws = workspaceCommands.splitPane.reduce(store, tabgroupId, direction)
   const parentId = getParent(ws, tabgroupId) ?? ROOT_ID
   const siblings = getChildren(ws, parentId)
   const newTgId = siblings[siblings.length - 1]
   if (!newTgId || newTgId === tabgroupId) return ws
-  return workspaceCommands.addTab(newTgId, tab).execute(ws)
+  let s = _workspaceCommands.createTab.reduce(ws, newTgId, tab)
+  s = _workspaceCommands.setActiveTab.reduce(s, newTgId, tab.id)
+  return s
 }
 
 // ── Sync ──────────────────────────────────────────────
@@ -294,7 +299,7 @@ export function syncFromExternal<T extends ExternalItem>(
 
   // Remove tabs for items no longer in external list
   for (const [, tabId] of toRemove) {
-    s = workspaceCommands.removeTab(tabId).execute(s)
+    s = workspaceCommands.removeTab.reduce(s, tabId)
   }
 
   // Add tabs for new external items — resolve tabgroup once before loop
@@ -302,7 +307,10 @@ export function syncFromExternal<T extends ExternalItem>(
     const tgId = findTabgroup(s)
     if (tgId) {
       for (const item of toAdd) {
-        s = workspaceCommands.addTab(tgId, toTab(item)).execute(s)
+        const tab = toTab(item)
+        let s2 = _workspaceCommands.createTab.reduce(s, tgId, tab)
+        s2 = _workspaceCommands.setActiveTab.reduce(s2, tgId, tab.id)
+        s = s2
       }
     }
   }

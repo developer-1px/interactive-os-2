@@ -15,7 +15,7 @@ import { focusNextWrap, focusPrevWrap } from '../axis/tab'
 import { composePattern } from '../pattern/composePattern'
 
 function makeCmd(type: string): Command {
-  return { type, execute: (s) => s }
+  return { type }
 }
 
 const mockCtx: PatternContext = {

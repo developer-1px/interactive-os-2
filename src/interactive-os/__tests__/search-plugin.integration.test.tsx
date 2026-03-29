@@ -27,7 +27,13 @@ function createEngine(store = fixtureStore()) {
   const middlewares = [searchPlugin]
     .map((p) => p.middleware)
     .filter((m): m is NonNullable<typeof m> => m != null)
-  return createCommandEngine(store, middlewares, () => {}, { logger: false })
+  const registry = new Map<string, import('../engine/types').CommandHandler>()
+  for (const creator of Object.values(searchPlugin.commands ?? {})) {
+    if ('type' in creator && 'handler' in creator) {
+      registry.set(creator.type as string, creator.handler as import('../engine/types').CommandHandler)
+    }
+  }
+  return createCommandEngine(store, middlewares, registry, () => {}, { logger: false })
 }
 
 // ── searchCommands unit tests ─────────────────────────────────────────────

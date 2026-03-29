@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import { createStore, getChildren, getEntity } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
+import type { CommandHandler } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import { focusCommands } from '../axis/navigate'
 import { crudCommands } from '../plugins/crud'
@@ -75,7 +76,7 @@ describe('findFallbackFocus with custom isReachable', () => {
   it('finds next sibling in spatial model (no expand needed)', () => {
     const storeBefore = fixtureStore()
     // Remove card1 from store
-    const storeAfter = crudCommands.remove('card1').execute(storeBefore)
+    const storeAfter = crudCommands.remove.reduce(storeBefore, 'card1')
 
     const fallback = findFallbackFocus(storeBefore, storeAfter, 'card1', spatialReachable)
     expect(fallback).toBe('card2')
@@ -83,7 +84,7 @@ describe('findFallbackFocus with custom isReachable', () => {
 
   it('finds previous sibling when last child deleted in spatial model', () => {
     const storeBefore = fixtureStore()
-    const storeAfter = crudCommands.remove('card2').execute(storeBefore)
+    const storeAfter = crudCommands.remove.reduce(storeBefore, 'card2')
 
     const fallback = findFallbackFocus(storeBefore, storeAfter, 'card2', spatialReachable)
     expect(fallback).toBe('card1')
@@ -91,7 +92,7 @@ describe('findFallbackFocus with custom isReachable', () => {
 
   it('finds parent when only child deleted in spatial model', () => {
     const storeBefore = fixtureStore()
-    const storeAfter = crudCommands.remove('card3').execute(storeBefore)
+    const storeAfter = crudCommands.remove.reduce(storeBefore, 'card3')
 
     const fallback = findFallbackFocus(storeBefore, storeAfter, 'card3', spatialReachable)
     expect(fallback).toBe('section2')
@@ -101,9 +102,7 @@ describe('findFallbackFocus with custom isReachable', () => {
 describe('detectNewVisibleEntities with custom isReachable', () => {
   it('detects newly created node in spatial model (no expand needed)', () => {
     const storeBefore = fixtureStore()
-    const storeAfter = crudCommands
-      .create({ id: 'card4', data: { name: 'Card 4', type: 'card' } }, 'section1')
-      .execute(storeBefore)
+    const storeAfter = crudCommands.create.reduce(storeBefore, { id: 'card4', data: { name: 'Card 4', type: 'card' } }, 'section1')
 
     const newEntities = detectNewVisibleEntities(storeBefore, storeAfter, spatialReachable)
     expect(newEntities).toContain('card4')
@@ -120,9 +119,32 @@ describe('focusRecovery plugin with isReachable (spatial model)', () => {
   function setup() {
     const historyPlugin = history()
     const recoveryPlugin = focusRecovery({ isReachable: spatialReachable })
+    const plugins = [historyPlugin, recoveryPlugin]
+
+    // Build handler registry from plugin commands + axis commands
+    const registry = new Map<string, CommandHandler>()
+    for (const plugin of plugins) {
+      for (const creator of Object.values(plugin.commands ?? {})) {
+        if ('type' in creator && 'handler' in creator) {
+          registry.set(creator.type as string, creator.handler as CommandHandler)
+        }
+      }
+    }
+    // Register axis commands used in tests
+    registry.set(focusCommands.setFocus.type, focusCommands.setFocus.handler as CommandHandler)
+    registry.set(crudCommands.create.type, crudCommands.create.handler as CommandHandler)
+    registry.set(crudCommands.remove.type, crudCommands.remove.handler as CommandHandler)
+    // Register clipboard command handlers
+    for (const creator of Object.values(clipboardCommands)) {
+      if ('type' in creator && 'handler' in creator) {
+        registry.set(creator.type as string, creator.handler as CommandHandler)
+      }
+    }
+
     const engine = createCommandEngine(
       fixtureStore(),
       [historyPlugin.middleware!, recoveryPlugin.middleware!],
+      registry,
       vi.fn(),
       { logger: false }
     )

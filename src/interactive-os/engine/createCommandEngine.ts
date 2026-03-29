@@ -1,4 +1,5 @@
-import type { Command, Middleware, BatchCommand } from './types'
+// ② 2026-03-29-engine-handler-registry-prd.md
+import type { Command, Middleware, BatchCommand, CommandHandler } from './types'
 import type { NormalizedData } from '../store/types'
 import { computeStoreDiff } from '../store/computeStoreDiff'
 import type { LogEntry, Logger, EngineOptions } from './dispatchLogger'
@@ -14,6 +15,7 @@ export interface CommandEngine {
 export function createCommandEngine(
   initialStore: NormalizedData,
   middlewares: Middleware[],
+  registry: Map<string, CommandHandler>,
   onStoreChange: (store: NormalizedData) => void,
   options?: EngineOptions
 ): CommandEngine {
@@ -74,10 +76,37 @@ export function createCommandEngine(
     }
   }
 
+  /** Execute a single command via registry lookup */
+  const executeOne = (cmd: Command): NormalizedData => {
+    const handler = registry.get(cmd.type)
+    if (!handler) {
+      if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+        console.warn(`[engine] No handler registered for command type "${cmd.type}"`)
+      }
+      return store
+    }
+    return handler(store, cmd.payload)
+  }
+
+  /** Execute a command (handles batch recursively) */
+  const executeCommand = (command: Command): NormalizedData => {
+    if (isBatchCommand(command)) {
+      let s = store
+      for (const sub of (command as BatchCommand).commands) {
+        store = s
+        s = isBatchCommand(sub)
+          ? executeCommand(sub)
+          : executeOne(sub)
+      }
+      return s
+    }
+    return executeOne(command)
+  }
+
   const executor = (command: Command) => {
     const prev = store
     try {
-      store = command.execute(store)
+      store = executeCommand(command)
     } catch (error) {
       store = prev
       logCommand(command, prev, prev, undefined, error instanceof Error ? error.message : String(error))
@@ -89,14 +118,16 @@ export function createCommandEngine(
     }
   }
 
+  const getStore = () => store
+
   const chain = middlewares.reduceRight<(command: Command) => void>(
-    (next, mw) => mw(next),
+    (next, mw) => mw(next, getStore),
     executor
   )
 
   return {
     dispatch: (command) => chain(command),
-    getStore: () => store,
+    getStore,
     syncStore: (newStore: NormalizedData) => {
       // Silently replace internal store — no onStoreChange callback
       // This is for external data sync, not internal mutations
