@@ -97,6 +97,11 @@ export function expanded(opts?: { allExpandable?: boolean }) {
       expanded: expandedCtx(engine, focusedId),
     })) as import('./types').CtxFactory,
     meta: opts?.allExpandable ? { expandable: true } : {},
+    stateGen: ((id, store, children, meta) => {
+      const expandedIds = getExpandedIds(store)
+      const isExpandable = children.length > 0 || (meta.expandable as boolean) || (meta.panelVisibility === 'expanded')
+      return isExpandable ? { expanded: expandedIds.includes(id) } : {}
+    }) as import('./types').StateGen,
     ariaGen: ((s) => {
       const result: Record<string, string> = {}
       if (s.expanded !== undefined) result['aria-expanded'] = String(s.expanded)

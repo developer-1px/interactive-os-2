@@ -7,7 +7,6 @@ import type { AriaPattern, NodeState } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren, getParent, getEntity } from '../store/createStore'
 import { focusCommands } from '../axis/navigate'
-import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
 import { findMatchingKey } from './useKeyboard'
@@ -86,7 +85,7 @@ export interface UseAriaViewReturn {
 export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   const {
     engine, store, pattern, plugins = [], keyMap: keyMapOverrides,
-    onActivate, focusedId, selectedIdSet, expandedIds, checkedIds,
+    onActivate, focusedId, selectedIdSet,
     nodeIdAttr = 'data-node-id', isKeyMapOnly = false, autoFocus = true,
     disabled = false,
   } = options
@@ -160,19 +159,24 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     [pattern.expandable, hasCheckedEntity, pattern.selectionMode, pattern.colCount, pattern.valueRange, allVisibilityFilters, pattern.popupType, pattern.ctxFactories],
   )
 
-  // ── getNodeState ──
+  // ── getNodeState (OCP — axes declare stateGen, no if-else) ──
 
-  const expandedIdSet = useMemo(() => new Set(expandedIds), [expandedIds])
-  const checkedIdSet = useMemo(() => new Set(checkedIds), [checkedIds])
   const renameEntity = store.entities[RENAME_ID]
-  const valueMeta = pattern.valueRange ? store.entities[VALUE_ID] as Record<string, unknown> | undefined : undefined
+
+  // Collect pattern meta for stateGen context
+  const patternMeta = useMemo((): Record<string, unknown> => ({
+    expandable: pattern.expandable,
+    panelVisibility: pattern.panelVisibility,
+    popupType: pattern.popupType,
+    selectionMode: pattern.selectionMode,
+    colCount: pattern.colCount,
+  }), [pattern.expandable, pattern.panelVisibility, pattern.popupType, pattern.selectionMode, pattern.colCount])
 
   const getNodeState = useCallback(
     (id: string): NodeState => {
       const parentId = getParent(store, id)
       const siblings = parentId ? getChildren(store, parentId) : []
       const children = getChildren(store, id)
-      const hasChildren = children.length > 0
 
       let level = 0
       let current = id
@@ -183,43 +187,27 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         current = parent
       }
 
-      // expandable: true (disclosure/accordion) → all nodes get aria-expanded
-      // expandable: undefined (tree/menu) → only nodes with children get aria-expanded
-      const isExpandable = hasChildren || (pattern.expandable ?? false) || (pattern.panelVisibility === 'expanded')
       const renaming = !!(renameEntity?.active && renameEntity?.nodeId === id)
 
-      return {
+      // Base state — infrastructure, always present
+      const state: NodeState = {
         focused: id === focusedId,
         selected: selectedIdSet.has(id),
         disabled: false,
         index: siblings.indexOf(id),
         siblingCount: siblings.length,
-        expanded: isExpandable ? expandedIdSet.has(id) : undefined,
-        checked: hasCheckedEntity ? (() => {
-          const directChecked = checkedIdSet.has(id)
-          const children = getChildren(store, id)
-          if (children.length === 0) return directChecked
-          const checkedCount = children.filter(c => checkedIdSet.has(c)).length
-          if (checkedCount === 0) return false
-          if (checkedCount === children.length) return true
-          return 'mixed' as const
-        })() : undefined,
-        open: pattern.popupType ? (() => {
-          const popupEntity = store.entities['__popup__'] as Record<string, unknown> | undefined
-          const isOpen = (popupEntity?.isOpen as boolean) ?? false
-          const triggerId = (popupEntity?.triggerId as string) ?? ''
-          // Active trigger: show current open state
-          if (triggerId === id) return isOpen
-          // Potential trigger: node with children gets open=false (enables aria-haspopup)
-          if (hasChildren) return false
-          return undefined
-        })() : undefined,
         level: level + 1,
         renaming,
-        ...(pattern.valueRange && { valueCurrent: (valueMeta?.value as number) ?? pattern.valueRange.min }),
       }
+
+      // Axis-contributed state — each axis populates its own fields (OCP)
+      for (const gen of pattern.stateGens ?? []) {
+        Object.assign(state, gen(id, store, children, patternMeta))
+      }
+
+      return state
     },
-    [store, focusedId, selectedIdSet, expandedIdSet, checkedIdSet, pattern.expandable, pattern.panelVisibility, hasCheckedEntity, pattern.popupType, renameEntity, valueMeta, pattern.valueRange],
+    [store, focusedId, selectedIdSet, renameEntity, pattern.stateGens, patternMeta],
   )
 
   // ── Event handlers ──
