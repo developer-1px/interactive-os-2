@@ -66,6 +66,16 @@ export function buildRegistry(...sources: Record<string, any>[]): Map<string, Co
   return registry
 }
 
+/** Renderer 모듈 — Plugin이 optional로 제공하는 렌더링 확장 */
+export interface RendererModule {
+  /** 노드 렌더러. null 반환 시 다음 renderer로 fallback */
+  renderItem?: (
+    props: Record<string, unknown>,
+    item: Record<string, unknown>,
+    state: Record<string, unknown>,
+  ) => unknown
+}
+
 /** Plugin 인터페이스 — engine이 소비하는 계약 */
 export interface Plugin {
   name?: string
@@ -84,4 +94,6 @@ export interface Plugin {
   onCut?: (ctx: any) => Command | void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPaste?: (ctx: any) => Command | void
+  /** Write OS 확장팩의 optional renderer — behavior + 렌더링을 자급자족 */
+  renderer?: RendererModule
 }

@@ -1,20 +1,17 @@
 import React from 'react'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { listbox } from '../pattern/roles/listbox'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
+import { search } from '../plugins/search'
 import styles from './ListBox.module.css'
 
-interface ListBoxProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
+interface ListBoxProps extends AriaComponentProps {
   enableEditing?: boolean
+  searchable?: boolean
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
@@ -34,6 +31,7 @@ export function ListBox({
   onChange,
   renderItem = defaultRenderItem,
   enableEditing = false,
+  searchable = false,
 }: ListBoxProps) {
   const pattern = React.useMemo(
     () => listbox(),
@@ -41,8 +39,13 @@ export function ListBox({
   )
 
   const mergedPlugins = React.useMemo(
-    () => enableEditing ? [...plugins, edit(), replaceEditPlugin()] : plugins,
-    [plugins, enableEditing],
+    () => {
+      const result = [...plugins]
+      if (enableEditing) { result.push(edit(), replaceEditPlugin()) }
+      if (searchable) { result.push(search()) }
+      return result
+    },
+    [plugins, enableEditing, searchable],
   )
 
   return (
@@ -52,6 +55,7 @@ export function ListBox({
       plugins={mergedPlugins}
       onChange={onChange}
     >
+      {searchable && <Aria.Search placeholder="Search..." />}
       <Aria.Item render={renderItem} />
     </Aria>
   )

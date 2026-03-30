@@ -1,23 +1,16 @@
 import React from 'react'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState, PatternContext } from '../pattern/types'
 import type { Command } from '../engine/types'
+import type { AriaComponentProps } from './types'
 import { useTabList } from './useTabList'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
 
-interface TabListProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  onActivate?: (nodeId: string) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, state: NodeState) => React.ReactElement
+interface TabListProps extends AriaComponentProps {
   enableEditing?: boolean
   keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   initialFocus?: string
-  'aria-label'?: string
 }
 
 const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, _state: NodeState): React.ReactElement => {

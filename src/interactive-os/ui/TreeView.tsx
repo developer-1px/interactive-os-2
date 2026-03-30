@@ -1,9 +1,8 @@
 import React from 'react'
 import { ExpandIndicator } from './indicators'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
 import { useTreeView } from './useTreeView'
 import { expandCommands } from '../axis/expand'
 import { ROOT_ID } from '../store/types'
@@ -13,17 +12,12 @@ export interface TreeItemRenderProps {
   toggleProps?: React.HTMLAttributes<HTMLElement>
 }
 
-interface TreeViewProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  onActivate?: (nodeId: string) => void
+interface TreeViewProps extends Omit<AriaComponentProps, 'renderItem'> {
   renderItem?: (props: TreeItemRenderProps, item: Record<string, unknown>, state: NodeState) => React.ReactElement
   selectionFollowsFocus?: boolean
   selectable?: boolean
   activateOnClick?: boolean
   initialFocus?: string
-  'aria-label'?: string
 }
 
 const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
