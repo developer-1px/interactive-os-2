@@ -50,15 +50,32 @@ function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4)
 }
 
-// ② 2026-03-30-composer-ghost-text-prd.md
-const NO_MATCH = { ghostText: '', commandHighlight: 0 } as const
+// --- Slash command matching ---
+
 const EMPTY_COMMANDS: string[] = []
 
-function useCommandMatch(commands: string[], text: string) {
+function useSlashSuggestions(commands: string[], text: string, dismissed: boolean) {
+  const sorted = useMemo(() => [...commands].sort(), [commands])
+
+  const matches = useMemo(() => {
+    if (dismissed || !text.startsWith('/')) return EMPTY_COMMANDS
+
+    const firstLine = text.split('\n')[0]
+    const spaceIdx = firstLine.indexOf(' ', 1)
+    if (spaceIdx > 0) return EMPTY_COMMANDS // has args — no suggestions
+
+    const typedCmd = firstLine.slice(1)
+    return sorted.filter(cmd => cmd.startsWith(typedCmd) && cmd !== typedCmd)
+  }, [sorted, text, dismissed])
+
+  return matches
+}
+
+function useCommandHighlight(commands: string[], text: string) {
   const sorted = useMemo(() => [...commands].sort(), [commands])
 
   return useMemo(() => {
-    if (!text.startsWith('/')) return NO_MATCH
+    if (!text.startsWith('/')) return 0
 
     const firstLine = text.split('\n')[0]
     const spaceIdx = firstLine.indexOf(' ', 1)
@@ -66,16 +83,12 @@ function useCommandMatch(commands: string[], text: string) {
     const hasArgs = spaceIdx > 0
 
     const match = sorted.find(cmd => cmd.startsWith(typedCmd))
-    if (!match) return NO_MATCH
+    if (!match) return 0
 
     const isExact = typedCmd === match
-    const highlightLen = hasArgs
+    return hasArgs
       ? 1 + (isExact ? match.length : typedCmd.length)
       : 1 + typedCmd.length
-
-    const ghostText = (!hasArgs && !isExact) ? match.slice(typedCmd.length) : ''
-
-    return { ghostText, commandHighlight: highlightLen }
   }, [sorted, text])
 }
 
@@ -83,15 +96,20 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
   const session = useChatSession(sessionId)
   const composerRef = useRef<ComposerHandle>(null)
   const [inputText, setInputText] = useState('')
-  const [ghostDismissed, setGhostDismissed] = useState(false)
+  const [dismissed, setDismissed] = useState(false)
+  const [selectedIdx, setSelectedIdx] = useState(0)
 
   const isRunning = session?.state === 'running'
   const elapsed = useElapsed(isRunning)
 
   const commands = session?.commands ?? EMPTY_COMMANDS
-  const match = useCommandMatch(commands, inputText)
-  const ghostText = ghostDismissed ? '' : match.ghostText
-  const commandHighlight = match.commandHighlight
+  const suggestions = useSlashSuggestions(commands, inputText, dismissed)
+  const commandHighlight = useCommandHighlight(commands, inputText)
+
+  // Ghost text = remainder of the currently selected suggestion
+  const selectedCmd = suggestions[selectedIdx]
+  const typedCmd = inputText.startsWith('/') ? inputText.slice(1) : ''
+  const ghostText = selectedCmd ? selectedCmd.slice(typedCmd.length) : ''
 
   const handleSubmit = useCallback((text: string) => {
     if (text === '/clear') {
@@ -108,19 +126,28 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
 
   const handleTextChange = useCallback((text: string) => {
     setInputText(text)
-    setGhostDismissed(false)
+    setDismissed(false)
+    setSelectedIdx(0)
   }, [])
 
-  const handleGhostAccept = useCallback(() => {
-    if (!ghostText) return
-    const newText = inputText + ghostText
+  const acceptSuggestion = useCallback(() => {
+    if (!selectedCmd) return
+    const newText = '/' + selectedCmd
     composerRef.current?.setText(newText)
     setInputText(newText)
-  }, [ghostText, inputText])
+    setDismissed(true)
+  }, [selectedCmd])
 
-  const handleGhostDismiss = useCallback(() => {
-    setGhostDismissed(true)
+  const handleDismiss = useCallback(() => {
+    setDismissed(true)
   }, [])
+
+  const handleSuggestionNav = useCallback((direction: 'up' | 'down') => {
+    setSelectedIdx(prev => {
+      if (direction === 'down') return prev < suggestions.length - 1 ? prev + 1 : 0
+      return prev > 0 ? prev - 1 : suggestions.length - 1
+    })
+  }, [suggestions.length])
 
   const messages: ChatMessage[] = useMemo(() => {
     if (!session) return []
@@ -176,9 +203,13 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
           ghostText={ghostText}
           commandHighlight={commandHighlight}
           overlayText={inputText}
-          onGhostAccept={handleGhostAccept}
-          onGhostDismiss={handleGhostDismiss}
+          suggestions={suggestions}
+          selectedSuggestion={selectedIdx}
+          onGhostAccept={acceptSuggestion}
+          onGhostDismiss={handleDismiss}
           onTextChange={handleTextChange}
+          onSuggestionNav={handleSuggestionNav}
+          onSuggestionSelect={acceptSuggestion}
         />
         <div className={styles.chatStatusBar}>
           <span>{session.model || 'connecting...'}</span>
