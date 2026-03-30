@@ -42,31 +42,25 @@ const renderTab = (
   node: Record<string, unknown>,
   state: NodeState,
 ): React.ReactElement => {
-  const label = (node.data as Record<string, unknown>)?.label as string
-  return (
-    <button
-      {...props}
-      className={styles.tab}
-      data-focused={state.focused || undefined}
-      data-selected={state.selected || undefined}
-    >
-      {label}
-    </button>
-  )
-}
-
-const renderPanel = (
-  props: React.HTMLAttributes<HTMLElement>,
-  node: Record<string, unknown>,
-  _state: NodeState,
-): React.ReactElement => {
   const data = node.data as Record<string, unknown>
   const label = data?.label as string
   const desc = data?.desc as string
   return (
-    <div {...props} className={styles.slide} aria-roledescription="slide">
-      <h3 className={styles.slideTitle}>{label}</h3>
-      <p className={styles.slideDesc}>{desc}</p>
+    <div>
+      <button
+        {...props}
+        className={styles.tab}
+        data-focused={state.focused || undefined}
+        data-selected={state.selected || undefined}
+      >
+        {label}
+      </button>
+      {state.slotProps && (
+        <div {...state.slotProps} className={styles.slide} aria-roledescription="slide">
+          <h3 className={styles.slideTitle}>{label}</h3>
+          <p className={styles.slideDesc}>{desc}</p>
+        </div>
+      )}
     </div>
   )
 }
@@ -154,7 +148,6 @@ export function CarouselTabs() {
           aria-label="Slides"
         >
           <Aria.Item render={renderTab} />
-          <Aria.Panel render={renderPanel} />
         </Aria>
       </div>
 

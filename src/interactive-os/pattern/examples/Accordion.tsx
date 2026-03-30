@@ -38,41 +38,42 @@ function Field({ label, id, type = 'text' }: { label: string; id: string; type?:
   )
 }
 
-const panelContent: Record<string, React.ReactNode> = {
+const panels: Record<string, React.ReactNode> = {
   'personal-information': (
-    <>
+    <fieldset className={styles.fieldset}>
       <Field label="Name" id="cufc1" />
       <Field label="Email" id="cufc2" type="email" />
       <Field label="Phone" id="cufc3" type="tel" />
       <Field label="Extension" id="cufc4" />
       <Field label="Country" id="cufc5" />
       <Field label="City/Province" id="cufc6" />
-    </>
+    </fieldset>
   ),
   'billing-address': (
-    <>
+    <fieldset className={styles.fieldset}>
       <Field label="Address 1" id="b-add1" />
       <Field label="Address 2" id="b-add2" />
       <Field label="City" id="b-city" />
       <Field label="State" id="b-state" />
       <Field label="Zip Code" id="b-zip" />
-    </>
+    </fieldset>
   ),
   'shipping-address': (
-    <>
+    <fieldset className={styles.fieldset}>
       <Field label="Address 1" id="s-add1" />
       <Field label="Address 2" id="s-add2" />
       <Field label="City" id="s-city" />
       <Field label="State" id="s-state" />
       <Field label="Zip Code" id="s-zip" />
-    </>
+    </fieldset>
   ),
 }
 
 // APG: h3 > button structure
 // props contains: role, data-node-id, tabIndex, onKeyDown, onFocus, onClick, aria-expanded, aria-controls
 // button gets interactive props, h3 provides heading semantics
-const renderHeader = (
+// state.slotProps provides role="region", aria-labelledby, hidden for panel
+const renderItem = (
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
   state: NodeState,
@@ -80,34 +81,25 @@ const renderHeader = (
   const { role: _role, ...buttonProps } = props as Record<string, unknown>
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <h3 className={styles.heading}>
-      <button
-        {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-        id={node.id as string}
-        className={styles.trigger}
-        type="button"
-        data-focused={state.focused || undefined}
-      >
-        <span className={styles.title}>{label}</span>
-        <ExpandIndicator expanded={state.expanded === true} />
-      </button>
-    </h3>
+    <div>
+      <h3 className={styles.heading}>
+        <button
+          {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+          id={node.id as string}
+          className={styles.trigger}
+          type="button"
+          data-focused={state.focused || undefined}
+        >
+          <span className={styles.title}>{label}</span>
+          <ExpandIndicator expanded={state.expanded === true} />
+        </button>
+      </h3>
+      <div {...state.slotProps} className={styles.panel}>
+        {panels[node.id as string]}
+      </div>
+    </div>
   )
 }
-
-// APG: div[role="region"][aria-labelledby] — Panel auto-generates these
-// render receives node.id → panelContent map provides the form fields
-const renderRegion = (
-  props: React.HTMLAttributes<HTMLElement>,
-  node: Record<string, unknown>,
-  _state: NodeState,
-): React.ReactElement => (
-  <div {...props} className={styles.panel}>
-    <fieldset className={styles.fieldset}>
-      {panelContent[node.id as string]}
-    </fieldset>
-  </div>
-)
 
 export function Accordion() {
   const [store, setStore] = useState<NormalizedData>(data)
@@ -117,8 +109,7 @@ export function Accordion() {
     <AccordionUI
       data={store}
       onChange={onChange}
-      renderItem={renderHeader}
-      renderPanel={renderRegion}
+      renderItem={renderItem}
       aria-label="Accordion Example"
     />
   )

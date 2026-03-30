@@ -1,4 +1,5 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
+import type React from 'react'
 import type { Entity } from '../store/types'
 import type { Command } from '../engine/types'
 import type { PatternContext, FocusStrategy, SelectionMode, ClickMap, EntityDecl, CtxFactory } from '../axis/types'
@@ -16,6 +17,8 @@ export interface NodeState {
   level?: number
   valueCurrent?: number
   open?: boolean
+  /** Slot ARIA props — generated when pattern has panelRole (accordion, tabs). Spread onto slot container. */
+  slotProps?: React.HTMLAttributes<HTMLElement>
   [key: string]: unknown
 }
 

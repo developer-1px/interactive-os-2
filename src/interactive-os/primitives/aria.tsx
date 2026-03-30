@@ -8,14 +8,12 @@ import type { AriaPattern, PatternContext, NodeState } from '../pattern/types'
 import { useAria } from './useAria'
 import { AriaInternalContext } from './AriaInternalContext'
 import { getChildren } from '../store/createStore'
-import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
+import { FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
 import { EXPANDED_ID } from '../axis/expand'
 import { POPUP_ID } from '../axis/popup'
 import { renameCommands, RENAME_ID } from '../plugins/rename'
 import { registerAria, unregisterAria } from './ariaRegistry'
 import { SEARCH_ID, searchCommands, matchesSearchFilter } from '../plugins/search'
-import { createPatternContext } from '../pattern/createPatternContext'
-import { findMatchingKey } from './useKeyboard'
 
 interface AriaProps {
   id?: string
@@ -47,9 +45,6 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
-/** Sentinel to detect whether <Aria.Panel> is a child of <Aria> */
-const ARIA_PANEL_TYPE = Symbol('AriaPanel')
-
 function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, logger, autoFocus, disabled, children }: AriaProps) {
   const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, logger, autoFocus, disabled })
 
@@ -59,14 +54,10 @@ function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, o
     return () => unregisterAria(id)
   }, [id, aria.dispatch, aria.getStore])
 
-  const hasPanels = React.Children.toArray(children).some(
-    (child) => React.isValidElement(child) && (child.type as { _ariaPanelType?: symbol })._ariaPanelType === ARIA_PANEL_TYPE
-  )
-
   const role = pattern?.role || undefined
   const orientation = pattern?.focusStrategy?.orientation
   return (
-    <AriaInternalContext.Provider value={{ ...aria, pattern, hasPanels }}>
+    <AriaInternalContext.Provider value={{ ...aria, pattern }}>
       <Component
         role={role}
         aria-label={ariaLabel}
@@ -111,8 +102,8 @@ function AriaItemNode({ childId, render, children }: { childId: string; render: 
   if (!entity) return null
   const props = aria.getNodeProps(childId) as React.HTMLAttributes<HTMLElement>
 
-  // ② 2026-03-28-aria-panel-trigger-prd.md — Panel cross-reference
-  if (aria.pattern?.panelRole && aria.hasPanels) {
+  // aria-controls → panel slot: when pattern has panelRole, link item to its panel
+  if (aria.pattern?.panelRole) {
     (props as Record<string, unknown>)['aria-controls'] = `panel-${childId}`
   }
 
@@ -358,149 +349,6 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
   )
 }
 
-interface AriaPanelProps {
-  ids?: string[]
-  render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
-}
-
-function AriaPanelNode({ childId, render, panelRole, panelVisibility }: {
-  childId: string
-  render: AriaPanelProps['render']
-  panelRole: string
-  panelVisibility: 'selected' | 'expanded'
-}) {
-  const aria = React.useContext(AriaInternalContext)
-  if (!aria) return null
-  const store = aria.getStore()
-  const entity = store.entities[childId]
-  if (!entity) return null
-
-  const state = aria.getNodeState(childId)
-  const panelId = `panel-${childId}`
-  const isVisible = panelVisibility === 'selected' ? state.selected
-    : panelVisibility === 'expanded' ? state.expanded
-    : false
-
-  const props: React.HTMLAttributes<HTMLElement> = {
-    role: panelRole,
-    id: panelId,
-    'aria-labelledby': childId,
-    ...(isVisible ? {} : { hidden: true }),
-  }
-
-  return cloneElement(
-    render(props, entity, state) as React.ReactElement<Record<string, unknown>>,
-    { key: panelId },
-  )
-}
-
-function AriaPanel({ ids, render }: AriaPanelProps) {
-  return (
-    <AriaInternalContext.Consumer>
-      {(aria) => {
-        if (!aria) throw new Error('<Aria.Panel> must be inside <Aria>')
-        const pattern = aria.pattern
-        if (!pattern?.panelRole || !pattern?.panelVisibility) return null
-        const store = aria.getStore()
-        const children = ids ?? getChildren(store, ROOT_ID)
-        return (
-          <>
-            {children.map((childId) => (
-              <AriaPanelNode
-                key={childId}
-                childId={childId}
-                render={render}
-                panelRole={pattern.panelRole!}
-                panelVisibility={pattern.panelVisibility!}
-              />
-            ))}
-          </>
-        )
-      }}
-    </AriaInternalContext.Consumer>
-  )
-}
-;(AriaPanel as { _ariaPanelType?: symbol })._ariaPanelType = ARIA_PANEL_TYPE
-
-interface AriaTriggerProps {
-  render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
-}
-
-function AriaTrigger({ render }: AriaTriggerProps) {
-  const aria = React.useContext(AriaInternalContext)
-  if (!aria) throw new Error('<Aria.Trigger> must be inside <Aria>')
-  const store = aria.getStore()
-  const pattern = aria.pattern
-
-  // Trigger = first root child that has children (popup parent)
-  const rootChildren = getChildren(store, ROOT_ID)
-  const triggerId = rootChildren.find((id) => getChildren(store, id).length > 0)
-  if (!triggerId) return null
-
-  const entity = store.entities[triggerId]
-  if (!entity) return null
-
-  const state = aria.getNodeState(triggerId)
-  const isOpen = state.open ?? false
-
-  // Build a minimal engine-like object for createPatternContext
-  const engineLike = {
-    dispatch: aria.dispatch,
-    getStore: aria.getStore,
-    syncStore: () => { /* unused by createPatternContext */ },
-  }
-
-  const makeCtx = () => createPatternContext(engineLike, {
-    visibilityFilters: pattern?.visibilityFilters,
-    ctxFactories: pattern?.ctxFactories,
-  })
-
-  const props: React.HTMLAttributes<HTMLElement> & Record<string, unknown> = {
-    'data-node-id': triggerId,
-    tabIndex: 0,
-    ...(pattern?.popupType && { 'aria-haspopup': pattern.popupType }),
-    'aria-expanded': isOpen,
-    onKeyDown: (event: React.KeyboardEvent) => {
-      if (event.defaultPrevented) return
-      const triggerKeyMap = pattern?.triggerKeyMap
-      if (!triggerKeyMap) return
-
-      const nativeEvent = event.nativeEvent
-      const matchedKey = findMatchingKey(nativeEvent, triggerKeyMap)
-      if (!matchedKey) return
-
-      event.preventDefault()
-      event.stopPropagation()
-
-      const ctx = makeCtx()
-      const handler = triggerKeyMap[matchedKey]
-      if (!handler) return
-      const command = handler(ctx)
-      if (command) aria.dispatch(command)
-    },
-    onClick: (event: React.MouseEvent) => {
-      if (event.defaultPrevented) return
-      event.stopPropagation()
-
-      const ctx = makeCtx()
-      const command = isOpen ? ctx.popup!.close() : ctx.popup!.open()
-      if (command) aria.dispatch(command)
-    },
-    onFocus: () => {
-      const currentStore = aria.getStore()
-      const currentFocusedId = (currentStore.entities[FOCUS_ID]?.focusedId as string) ?? ''
-      if (triggerId !== currentFocusedId) {
-        aria.dispatch(focusCommands.setFocus(triggerId))
-      }
-    },
-  }
-
-  return cloneElement(
-    render(props as React.HTMLAttributes<HTMLElement>, entity, state) as React.ReactElement<Record<string, unknown>>,
-    { key: `trigger-${triggerId}` },
-  )
-}
-
 function AriaSearch({ placeholder, className }: { placeholder?: string; className?: string }) {
   const ariaCtx = React.useContext(AriaInternalContext)
   if (!ariaCtx) throw new Error('<Aria.Search> must be inside <Aria>')
@@ -591,4 +439,4 @@ function AriaSearchHighlight({ children }: { children: React.ReactNode }) {
 
 export { AriaItemContext }
 // eslint-disable-next-line react-refresh/only-export-components
-export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Panel: AriaPanel, Trigger: AriaTrigger, Editable: AriaEditable, Search: AriaSearch, SearchHighlight: AriaSearchHighlight })
+export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Editable: AriaEditable, Search: AriaSearch, SearchHighlight: AriaSearchHighlight })
