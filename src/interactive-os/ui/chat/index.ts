@@ -2,7 +2,7 @@
 export { ChatFeed } from './ChatFeed'
 export type { ChatFeedProps } from './ChatFeed'
 export { Composer } from '../Composer'
-export type { ComposerProps } from '../Composer'
+export type { ComposerProps, ComposerHandle } from '../Composer'
 export { TextBlock } from './TextBlock'
 export { StreamingTextBlock } from './StreamingTextBlock'
 export { ChatCodeBlock } from './ChatCodeBlock'

@@ -23,6 +23,8 @@ interface ChatSession {
   thinkingText: string
   usage: TurnUsage | null
   sdkSessionId: string
+  model: string
+  commands: string[]
 }
 
 // --- Session helpers (SSOT for defaults + patch) ---
@@ -30,7 +32,7 @@ interface ChatSession {
 function defaultSession(id: string, overrides?: Partial<ChatSession>): ChatSession {
   return {
     id, messages: [], state: 'idle', activity: 'idle',
-    streamingText: '', thinkingText: '', usage: null, sdkSessionId: '',
+    streamingText: '', thinkingText: '', usage: null, sdkSessionId: '', model: '', commands: [],
     ...overrides,
   }
 }
@@ -81,13 +83,13 @@ interface ChatStoreState {
 
 const STORAGE_KEY = 'chat-sessions'
 
-interface PersistedSession { id: string; messages: ChatMessage[]; sdkSessionId: string }
+interface PersistedSession { id: string; messages: ChatMessage[]; sdkSessionId: string; model: string }
 
 function persist() {
   const data: PersistedSession[] = []
   for (const session of S.sessions.values()) {
     if (!session.sdkSessionId) continue
-    data.push({ id: session.id, messages: session.messages, sdkSessionId: session.sdkSessionId })
+    data.push({ id: session.id, messages: session.messages, sdkSessionId: session.sdkSessionId, model: session.model })
   }
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ activeSessionId: S.activeSessionId, sessions: data }))
@@ -289,6 +291,9 @@ const sdkHandlers: Record<string, (id: string, msg: SdkMsg) => void> = {
   },
 
   system(id, msg) {
+    if (msg.subtype === 'init' && msg.model) {
+      patch(id, { model: msg.model as string })
+    }
     if (msg.subtype === 'session_state_changed') {
       patch(id, { state: msg.state as ChatSession['state'] })
     }
@@ -326,7 +331,11 @@ function setupWs() {
     }
 
     if (t === 'session-ready') {
-      patch(resolveLocal(sid), { sdkSessionId: msg.sdkSessionId as string })
+      const commands = msg.commands as string[] | undefined
+      patch(resolveLocal(sid), {
+        sdkSessionId: msg.sdkSessionId as string,
+        ...(commands ? { commands } : {}),
+      })
       return
     }
 
@@ -391,7 +400,7 @@ function restoreSessions() {
   if (!persisted || persisted.sessions.length === 0) return
 
   for (const ps of persisted.sessions) {
-    S.sessions.set(ps.id, defaultSession(ps.id, { messages: ps.messages, sdkSessionId: ps.sdkSessionId }))
+    S.sessions.set(ps.id, defaultSession(ps.id, { messages: ps.messages, sdkSessionId: ps.sdkSessionId, model: ps.model || '' }))
     wsSend({ type: 'resume-session', localId: ps.id, sdkSessionId: ps.sdkSessionId })
   }
   S.activeSessionId = persisted.activeSessionId && S.sessions.has(persisted.activeSessionId)
@@ -445,6 +454,12 @@ export function sendMessage(sessionId: string, text: string) {
       unsub()
     }
   })
+}
+
+export function setModel(sessionId: string, model: string | undefined) {
+  const serverId = localToServer.get(sessionId)
+  if (serverId) wsSend({ type: 'set-model', sessionId: serverId, model })
+  if (model) patch(sessionId, { model })
 }
 
 export function interruptSession(sessionId: string) {

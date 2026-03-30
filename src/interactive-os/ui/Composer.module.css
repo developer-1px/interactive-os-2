@@ -1,43 +1,87 @@
-/* ChatInput — message input area
-   ② 2026-03-27-chat-module-prd.md */
+/* Composer — multiline input with Enter-to-submit */
 
-.chatInput {
+.composer {
   display: flex;
-  padding: var(--space-sm) var(--space-3xl);
-  border-top: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
 
-.chatInput > * {
-  max-width: 720px;
-  width: 100%;
-  margin-inline: auto;
-}
+/* --- Editable wrapper --- */
 
-.chatInput textarea {
+.inputWrap {
   flex: 1;
-  resize: none;
   border: 1px solid var(--border-default);
-  border-radius: var(--shape-xl-radius);
-  padding: var(--shape-xl-py) var(--shape-xl-px);
-  font-size: var(--type-body-size);
-  line-height: var(--leading-snug);
-  font-family: inherit;
+  border-radius: var(--shape-md-radius);
   background: var(--surface-base);
-  color: var(--text-primary);
-  outline: none;
-  max-height: 120px;
+  transition:
+    border-color var(--motion-instant-duration) var(--motion-instant-easing),
+    box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
-.chatInput textarea:focus {
+.inputWrap:focus-within {
   border-color: var(--tone-primary-base);
 }
 
-.chatInput textarea::placeholder {
-  color: var(--text-muted);
+.inputWrap[data-disabled] {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
-.chatInput textarea:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+/* --- Editor area (position context for overlay) --- */
+
+.editorArea {
+  position: relative;
+}
+
+/* --- Editable content --- */
+
+.editor {
+  min-height: calc(var(--leading-snug) * 1em + var(--shape-sm-py) * 2);
+  overflow-y: auto;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--type-body-size);
+  line-height: var(--leading-snug);
+  font-family: inherit;
+  color: var(--text-primary);
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.editor[data-overlay] {
+  color: transparent;
+  caret-color: var(--text-primary);
+}
+
+/* --- Placeholder via :empty --- */
+
+.editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* --- Ghost text overlay --- */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--type-body-size);
+  line-height: var(--leading-snug);
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+  pointer-events: none;
+}
+
+.commandMatch {
+  color: var(--tone-primary-base);
+}
+
+.overlayNormal {
+  color: var(--text-primary);
+}
+
+.ghost {
+  color: var(--text-muted);
 }
