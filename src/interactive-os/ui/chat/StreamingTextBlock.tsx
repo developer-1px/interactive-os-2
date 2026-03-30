@@ -13,12 +13,15 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
   const pendingRef = useRef('')
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const cursorRef = useRef<HTMLDivElement | null>(null)
+
   const flush = useCallback(() => {
     if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null }
     if (!pendingRef.current) return
     displayedRef.current += pendingRef.current
     pendingRef.current = ''
     setDisplayed(displayedRef.current)
+    cursorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [])
 
   useEffect(() => {
@@ -43,5 +46,10 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
 
   if (!displayed) return null
 
-  return <div className={styles.streaming}>{displayed}</div>
+  return (
+    <div className={styles.streaming}>
+      {displayed}
+      <div ref={cursorRef} />
+    </div>
+  )
 }
