@@ -126,23 +126,77 @@
 /* --- Main chat area (single pane) --- */
 
 .chatMain {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
+  height: 100%;
+  max-width: 860px;
+  margin-inline: auto;
+  width: 100%;
 }
 
 .chatFeed {
-  flex: 1;
-  min-height: 0;
-  padding: var(--space-xl) var(--space-3xl);
+  padding: var(--space-xl) var(--space-lg);
 }
 
-.chatFeed > * {
-  max-width: 720px;
-  width: 100%;
-  margin-inline: auto;
+/* --- Composer (flex-pinned to bottom) --- */
+
+.chatComposer {
+  padding: 0 var(--space-lg) var(--space-md);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.chatDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--shape-pill-radius);
+  background: var(--tone-primary-base);
+  animation: pulse var(--motion-pulse-period) ease-in-out infinite;
+}
+
+/* --- Activity bar (above composer, running only) --- */
+
+.chatActivityBar {
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--type-caption-size);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.chatStopBtn {
+  margin-left: auto;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--border-subtle);
+  background: none;
+  color: var(--text-secondary);
+  font-size: var(--type-caption-size);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.chatStopBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-bright);
+  border-color: var(--border-default);
+}
+
+/* --- Info bar (below composer, always) --- */
+
+.chatStatusBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--type-caption-size);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chatHint {
+  margin-left: auto;
+  font-family: var(--mono);
 }
 
 /* --- Welcome screen --- */
