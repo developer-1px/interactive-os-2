@@ -57,18 +57,16 @@ const EMPTY_COMMANDS: string[] = []
 function useSlashSuggestions(commands: string[], text: string, dismissed: boolean) {
   const sorted = useMemo(() => [...commands].sort(), [commands])
 
-  const matches = useMemo(() => {
+  return useMemo(() => {
     if (dismissed || !text.startsWith('/')) return EMPTY_COMMANDS
 
     const firstLine = text.split('\n')[0]
     const spaceIdx = firstLine.indexOf(' ', 1)
-    if (spaceIdx > 0) return EMPTY_COMMANDS // has args — no suggestions
+    if (spaceIdx > 0) return EMPTY_COMMANDS
 
     const typedCmd = firstLine.slice(1)
     return sorted.filter(cmd => cmd.startsWith(typedCmd) && cmd !== typedCmd)
   }, [sorted, text, dismissed])
-
-  return matches
 }
 
 function useCommandHighlight(commands: string[], text: string) {
@@ -97,7 +95,6 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
   const composerRef = useRef<ComposerHandle>(null)
   const [inputText, setInputText] = useState('')
   const [dismissed, setDismissed] = useState(false)
-  const [selectedIdx, setSelectedIdx] = useState(0)
 
   const isRunning = session?.state === 'running'
   const elapsed = useElapsed(isRunning)
@@ -105,11 +102,6 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
   const commands = session?.commands ?? EMPTY_COMMANDS
   const suggestions = useSlashSuggestions(commands, inputText, dismissed)
   const commandHighlight = useCommandHighlight(commands, inputText)
-
-  // Ghost text = remainder of the currently selected suggestion
-  const selectedCmd = suggestions[selectedIdx]
-  const typedCmd = inputText.startsWith('/') ? inputText.slice(1) : ''
-  const ghostText = selectedCmd ? selectedCmd.slice(typedCmd.length) : ''
 
   const handleSubmit = useCallback((text: string) => {
     if (text === '/clear') {
@@ -127,27 +119,18 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
   const handleTextChange = useCallback((text: string) => {
     setInputText(text)
     setDismissed(false)
-    setSelectedIdx(0)
   }, [])
 
-  const acceptSuggestion = useCallback(() => {
-    if (!selectedCmd) return
-    const newText = '/' + selectedCmd
+  const handleCommandSelect = useCallback((cmd: string) => {
+    const newText = '/' + cmd
     composerRef.current?.setText(newText)
     setInputText(newText)
     setDismissed(true)
-  }, [selectedCmd])
+  }, [])
 
   const handleDismiss = useCallback(() => {
     setDismissed(true)
   }, [])
-
-  const handleSuggestionNav = useCallback((direction: 'up' | 'down') => {
-    setSelectedIdx(prev => {
-      if (direction === 'down') return prev < suggestions.length - 1 ? prev + 1 : 0
-      return prev > 0 ? prev - 1 : suggestions.length - 1
-    })
-  }, [suggestions.length])
 
   const messages: ChatMessage[] = useMemo(() => {
     if (!session) return []
@@ -200,16 +183,12 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
           onSubmit={handleSubmit}
           disabled={isRunning}
           placeholder="Send a message..."
-          ghostText={ghostText}
           commandHighlight={commandHighlight}
           overlayText={inputText}
           suggestions={suggestions}
-          selectedSuggestion={selectedIdx}
-          onGhostAccept={acceptSuggestion}
-          onGhostDismiss={handleDismiss}
+          onCommandSelect={handleCommandSelect}
+          onDismiss={handleDismiss}
           onTextChange={handleTextChange}
-          onSuggestionNav={handleSuggestionNav}
-          onSuggestionSelect={acceptSuggestion}
         />
         <div className={styles.chatStatusBar}>
           <span>{session.model || 'connecting...'}</span>

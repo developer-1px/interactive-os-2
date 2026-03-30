@@ -1,21 +1,22 @@
 // ② 2026-03-30-composer-ghost-text-prd.md
-import { useRef, useCallback, useEffect, useImperativeHandle, forwardRef } from 'react'
+import { useRef, useCallback, useEffect, useImperativeHandle, forwardRef, useMemo } from 'react'
 import styles from './Composer.module.css'
+import { useAria } from '../primitives/useAria'
+import { combobox as comboboxPattern } from '../pattern/roles/combobox'
+import { focusCommands } from '../axis/navigate'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 
 export interface ComposerProps {
   onSubmit?: (text: string) => void
   disabled?: boolean
   placeholder?: string
-  ghostText?: string
   commandHighlight?: number
   overlayText?: string
   suggestions?: string[]
-  selectedSuggestion?: number
-  onGhostAccept?: () => void
-  onGhostDismiss?: () => void
+  onCommandSelect?: (cmd: string) => void
+  onDismiss?: () => void
   onTextChange?: (text: string) => void
-  onSuggestionNav?: (direction: 'up' | 'down') => void
-  onSuggestionSelect?: () => void
 }
 
 export interface ComposerHandle {
@@ -23,13 +24,21 @@ export interface ComposerHandle {
   getText: () => string
 }
 
+function suggestionsToData(items: string[]): NormalizedData {
+  const entities: Record<string, { id: string; data: { label: string } }> = {}
+  for (const cmd of items) {
+    entities[cmd] = { id: cmd, data: { label: cmd } }
+  }
+  return { entities, relationships: { [ROOT_ID]: items } }
+}
+
+const EMPTY_DATA: NormalizedData = { entities: {}, relationships: { [ROOT_ID]: [] } }
+
 export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Composer(
   {
     onSubmit, disabled, placeholder = 'Send a message...',
-    ghostText, commandHighlight = 0, overlayText = '',
-    suggestions, selectedSuggestion = -1,
-    onGhostAccept, onGhostDismiss, onTextChange,
-    onSuggestionNav, onSuggestionSelect,
+    commandHighlight = 0, overlayText = '',
+    suggestions, onCommandSelect, onDismiss, onTextChange,
   },
   fwdRef,
 ) {
@@ -64,32 +73,54 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     if (!isComposingRef.current) onTextChange?.(getText())
   }, [getText, onTextChange])
 
-  const hasSuggestions = suggestions && suggestions.length > 0
+  // --- os combobox for suggestion popup ---
+
+  const hasSuggestions = !!suggestions && suggestions.length > 0
+  const data = useMemo(() => hasSuggestions ? suggestionsToData(suggestions!) : EMPTY_DATA, [suggestions, hasSuggestions])
+
+  const aria = useAria({
+    pattern: comboboxPattern({ selectionMode: 'single' }),
+    data,
+    autoFocus: false,
+  })
+
+  // Focus first suggestion when list appears or changes
+  const prevSuggestionsRef = useRef<string[] | undefined>(undefined)
+  useEffect(() => {
+    if (hasSuggestions && suggestions !== prevSuggestionsRef.current) {
+      aria.dispatch(focusCommands.setFocus(suggestions![0]))
+    }
+    prevSuggestionsRef.current = suggestions
+  }, [suggestions, hasSuggestions, aria])
+
+  const focusedCmd = aria.focused
+  const typedCmd = overlayText.startsWith('/') ? overlayText.slice(1) : ''
+  const ghostText = (hasSuggestions && focusedCmd && focusedCmd.startsWith(typedCmd))
+    ? focusedCmd.slice(typedCmd.length)
+    : ''
+
+  // Merge pattern keydown with our handlers
+  const patternKeyDown = (aria.containerProps as Record<string, unknown>).onKeyDown as ((e: React.KeyboardEvent) => void) | undefined
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    // Suggestion navigation takes priority when popup is open
     if (hasSuggestions) {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        onSuggestionNav?.('down')
-        return
-      }
-      if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        onSuggestionNav?.('up')
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Home' || e.key === 'End') {
+        // Let pattern handle navigation
+        patternKeyDown?.(e)
         return
       }
       if (e.key === 'Tab' || (e.key === 'Enter' && !e.shiftKey && !isComposingRef.current)) {
         e.preventDefault()
-        onSuggestionSelect?.()
+        if (focusedCmd) onCommandSelect?.(focusedCmd)
         return
       }
       if (e.key === 'Escape') {
-        onGhostDismiss?.()
+        onDismiss?.()
         return
       }
     }
 
+    // Normal Composer handlers (no popup)
     if (e.key === 'Enter' && !e.shiftKey && !isComposingRef.current) {
       e.preventDefault()
       const trimmed = getText().trim()
@@ -99,14 +130,14 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         onTextChange?.('')
       }
     }
-    if (e.key === 'Tab' && ghostText && onGhostAccept) {
+    if (e.key === 'Tab' && ghostText && onCommandSelect && focusedCmd) {
       e.preventDefault()
-      onGhostAccept()
+      onCommandSelect(focusedCmd)
     }
-    if (e.key === 'Escape' && ghostText && onGhostDismiss) {
-      onGhostDismiss()
+    if (e.key === 'Escape' && ghostText && onDismiss) {
+      onDismiss()
     }
-  }, [getText, clear, onSubmit, disabled, ghostText, hasSuggestions, onGhostAccept, onGhostDismiss, onTextChange, onSuggestionNav, onSuggestionSelect])
+  }, [getText, clear, onSubmit, disabled, hasSuggestions, ghostText, focusedCmd, patternKeyDown, onCommandSelect, onDismiss, onTextChange])
 
   const handleCompositionStart = useCallback(() => { isComposingRef.current = true }, [])
   const handleCompositionEnd = useCallback(() => {
@@ -121,17 +152,23 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
       <div className={styles.inputWrap} data-disabled={disabled || undefined}>
         {hasSuggestions && (
           <ul className={styles.suggestionList} role="listbox" aria-label="Command suggestions">
-            {suggestions.map((cmd, i) => (
-              <li
-                key={cmd}
-                role="option"
-                aria-selected={i === selectedSuggestion}
-                className={styles.suggestionItem}
-                data-selected={i === selectedSuggestion || undefined}
-              >
-                /{cmd}
-              </li>
-            ))}
+            {suggestions!.map(cmd => {
+              const nodeProps = aria.getNodeProps(cmd) as Record<string, unknown>
+              const state = aria.getNodeState(cmd)
+              return (
+                <li
+                  key={cmd}
+                  ref={state.focused ? el => el?.scrollIntoView({ block: 'nearest' }) : undefined}
+                  role="option"
+                  aria-selected={state.focused}
+                  className={styles.suggestionItem}
+                  data-selected={state.focused || undefined}
+                  data-node-id={nodeProps['data-node-id'] as string}
+                >
+                  /{cmd}
+                </li>
+              )
+            })}
           </ul>
         )}
         <div className={styles.editorArea}>
@@ -144,7 +181,6 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             aria-label={placeholder}
             data-placeholder={placeholder}
             data-overlay={hasOverlay || undefined}
-            aria-activedescendant={hasSuggestions && selectedSuggestion >= 0 ? `suggestion-${selectedSuggestion}` : undefined}
             onKeyDown={handleKeyDown}
             onInput={fireTextChange}
             onCompositionStart={handleCompositionStart}

@@ -217,34 +217,30 @@ describe('Composer — submit (V10)', () => {
 import type { StoreBlock } from '../interactive-os/ui/chat/types'
 
 // V1: 2026-03-30-composer-ghost-text-prd.md
-describe('Composer — ghost text autocomplete', () => {
-  it('renders overlay with command highlight and ghost text', () => {
+describe('Composer — slash command autocomplete (os-based)', () => {
+  it('renders suggestion popup with listbox when suggestions provided', () => {
     const { container } = render(
-      <Composer
-        ghostText="cuss"
-        commandHighlight={4}
-        overlayText="/dis"
-      />,
+      <Composer suggestions={['discuss', 'doubt']} overlayText="/d" />,
     )
 
-    const overlay = container.querySelector('[aria-hidden="true"]') as HTMLElement
-    expect(overlay).toBeTruthy()
+    const listbox = container.querySelector('[role="listbox"]') as HTMLElement
+    expect(listbox).toBeTruthy()
 
-    const spans = overlay.querySelectorAll('span')
-    expect(spans[0].textContent).toBe('/dis')
-    expect(spans[1].textContent).toBe('cuss')
+    const options = listbox.querySelectorAll('[role="option"]')
+    expect(options).toHaveLength(2)
+    expect(options[0].textContent).toBe('/discuss')
+    expect(options[1].textContent).toBe('/doubt')
   })
 
   // V2: 2026-03-30-composer-ghost-text-prd.md
-  it('Tab accepts ghost text via onGhostAccept', async () => {
+  it('Tab selects focused suggestion via onCommandSelect', async () => {
     const user = userEvent.setup()
-    let accepted = false
+    let selected = ''
     render(
       <Composer
-        ghostText="cuss"
-        commandHighlight={4}
-        overlayText="/dis"
-        onGhostAccept={() => { accepted = true }}
+        suggestions={['discuss', 'doubt']}
+        overlayText="/d"
+        onCommandSelect={(cmd) => { selected = cmd }}
       />,
     )
 
@@ -252,53 +248,66 @@ describe('Composer — ghost text autocomplete', () => {
     await user.click(textbox)
     await user.keyboard('{Tab}')
 
-    expect(accepted).toBe(true)
+    expect(selected).toBe('discuss')
   })
 
   // V3: 2026-03-30-composer-ghost-text-prd.md
-  it('Tab without ghost does not prevent default', async () => {
+  it('Tab without suggestions does not fire onCommandSelect', async () => {
     const user = userEvent.setup()
-    let accepted = false
+    let selected = ''
     render(
-      <Composer
-        onGhostAccept={() => { accepted = true }}
-      />,
+      <Composer onCommandSelect={(cmd) => { selected = cmd }} />,
     )
 
     const textbox = screen.getByRole('textbox')
     await user.click(textbox)
     await user.keyboard('{Tab}')
 
-    expect(accepted).toBe(false)
+    expect(selected).toBe('')
   })
 
-  // V9: 2026-03-30-composer-ghost-text-prd.md
-  it('Enter submits normally, ignoring ghost', async () => {
+  it('ArrowDown navigates to next suggestion', async () => {
     const user = userEvent.setup()
-    let submitted = ''
+    let selected = ''
     render(
       <Composer
-        onSubmit={(t) => { submitted = t }}
-        ghostText="cuss"
-        commandHighlight={4}
-        overlayText="/dis"
+        suggestions={['discuss', 'doubt']}
+        overlayText="/d"
+        onCommandSelect={(cmd) => { selected = cmd }}
       />,
     )
 
     const textbox = screen.getByRole('textbox')
     await user.click(textbox)
-    await user.type(textbox, '/dis{Enter}')
+    await user.keyboard('{ArrowDown}')
+    await user.keyboard('{Tab}')
 
-    expect(submitted).toBe('/dis')
+    expect(selected).toBe('doubt')
+  })
+
+  // V9: 2026-03-30-composer-ghost-text-prd.md
+  it('Enter selects suggestion when popup is open', async () => {
+    const user = userEvent.setup()
+    let selected = ''
+    render(
+      <Composer
+        suggestions={['discuss']}
+        overlayText="/dis"
+        onCommandSelect={(cmd) => { selected = cmd }}
+      />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    await user.click(textbox)
+    await user.keyboard('{Enter}')
+
+    expect(selected).toBe('discuss')
   })
 
   // V5: 2026-03-30-composer-ghost-text-prd.md
   it('renders command highlight with args portion in normal color', () => {
     const { container } = render(
-      <Composer
-        commandHighlight={8}
-        overlayText="/discuss hello"
-      />,
+      <Composer commandHighlight={8} overlayText="/discuss hello" />,
     )
 
     const overlay = container.querySelector('[aria-hidden="true"]') as HTMLElement
@@ -323,22 +332,21 @@ describe('Composer — ghost text autocomplete', () => {
     expect(changed).toBe('/dis')
   })
 
-  it('hides overlay when no ghost and no highlight', () => {
+  it('hides overlay when no suggestions and no highlight', () => {
     const { container } = render(<Composer />)
     const overlay = container.querySelector('[aria-hidden="true"]')
     expect(overlay).toBeNull()
   })
 
   // V10: 2026-03-30-composer-ghost-text-prd.md
-  it('Escape dismisses ghost via onGhostDismiss', async () => {
+  it('Escape dismisses suggestions via onDismiss', async () => {
     const user = userEvent.setup()
     let dismissed = false
     render(
       <Composer
-        ghostText="cuss"
-        commandHighlight={4}
+        suggestions={['discuss']}
         overlayText="/dis"
-        onGhostDismiss={() => { dismissed = true }}
+        onDismiss={() => { dismissed = true }}
       />,
     )
 
@@ -351,8 +359,8 @@ describe('Composer — ghost text autocomplete', () => {
 
   // V7: 2026-03-30-composer-ghost-text-prd.md
   it('disabled state shows no overlay', () => {
-    const { container } = render(
-      <Composer disabled ghostText="cuss" commandHighlight={4} overlayText="/dis" />,
+    render(
+      <Composer disabled commandHighlight={4} overlayText="/dis" />,
     )
 
     const textbox = screen.getByRole('textbox')
