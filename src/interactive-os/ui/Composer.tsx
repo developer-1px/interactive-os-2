@@ -79,7 +79,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     fireTextChange()
   }, [fireTextChange])
 
-  const hasOverlay = commandHighlight > 0 || !!ghostText
+  const hasOverlay = !disabled && (commandHighlight > 0 || !!ghostText)
 
   return (
     <div className={styles.composer}>
