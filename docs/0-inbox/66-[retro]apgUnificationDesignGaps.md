@@ -77,10 +77,10 @@ AriaComponentProps에 `className`과 `onFocusChange`가 정의되어 있지만, 
 |-----|------|------|
 | Gap 1 (pattern variant) | ✅ 원칙 확인 | 99a29d6 |
 | Gap 2 (popup 충돌) | ✅ Panel/Trigger 제거, state.slotProps 도입 | b260574 |
-| Gap 3 (composite) | 미착수 — 별도 사이클 | — |
+| Gap 3 (composite) | ✅ DatePicker ui/ 완성품 (useEngine+useAriaZone 조합). Carousel 2종은 비-ARIA/실전빈도 낮아 제외 | — |
 | Gap 4 (onFocusChange) | ✅ useAria에 onFocusChange 추가 | b260574 |
 | Gap 5 (dependency-cruiser) | ✅ 해결 완료 | 99a29d6 |
 
 ## 남은 행동
 
-1. **Gap 3 (composite)** — DatePicker를 여러 ui/ 완성품 조합으로 만드는 PRD
+모든 갭 해결 완료. Carousel 2종(CarouselTabs, CarouselPrevNext)은 실전 빈도 낮아 의도적 제외.
