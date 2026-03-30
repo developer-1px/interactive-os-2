@@ -2,66 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import type { Plugin } from 'vite'
-import type { SDKSession, SDKMessage } from '@anthropic-ai/claude-agent-sdk'
-import type { ChatWsClientMessage, ChatWsServerMessage } from './src/pages/chat/chatWsProtocol'
-
-// --- Chat mode: SDK message handler ---
-
-function handleSdkMessage(
-  sessionId: string,
-  sdkMsg: SDKMessage,
-  wsSend: (event: string, data: unknown) => void,
-  getText: () => string,
-  setText: (t: string) => void,
-) {
-  // Streaming token
-  if (sdkMsg.type === 'stream_event') {
-    const evt = sdkMsg.event
-    if (evt.type === 'content_block_delta' && 'delta' in evt) {
-      const delta = evt.delta as { type: string; text?: string }
-      if (delta.type === 'text_delta' && delta.text) {
-        setText(getText() + delta.text)
-        const reply: ChatWsServerMessage = { type: 'assistant-text', sessionId, text: delta.text }
-        wsSend('chat:server', reply)
-      }
-    }
-    return
-  }
-
-  // Complete assistant message — extract text if not already streamed via stream_event
-  if (sdkMsg.type === 'assistant') {
-    if (!getText()) {
-      // Non-streaming mode: text arrives in the assistant message itself
-      const msg = (sdkMsg as { message?: { content?: unknown[] } }).message
-      if (msg?.content) {
-        for (const block of msg.content) {
-          if (typeof block === 'object' && block !== null) {
-            const b = block as { type?: string; text?: string }
-            if (b.type === 'text' && b.text) {
-              wsSend('chat:server', { type: 'assistant-text', sessionId, text: b.text } satisfies ChatWsServerMessage)
-            }
-          }
-        }
-      }
-    }
-    setText('')
-    wsSend('chat:server', { type: 'assistant-done', sessionId } satisfies ChatWsServerMessage)
-    return
-  }
-
-  // Init — log skills to diagnose local skill loading
-  if (sdkMsg.type === 'system' && (sdkMsg as Record<string, unknown>).subtype === 'init') {
-    console.log('[SDK init] skills:', (sdkMsg as Record<string, unknown>).skills)
-    console.log('[SDK init] slash_commands:', (sdkMsg as Record<string, unknown>).slash_commands)
-  }
-
-  // Session state change
-  if (sdkMsg.type === 'system' && 'subtype' in sdkMsg && (sdkMsg as Record<string, unknown>).subtype === 'session_state_changed') {
-    const state = (sdkMsg as { state: 'idle' | 'running' | 'requires_action' }).state
-    const reply: ChatWsServerMessage = { type: 'state-changed', sessionId, state }
-    wsSend('chat:server', reply)
-  }
-}
+import type { ChatWsClientMessage } from './src/pages/chat/chatWsProtocol'
 
 // --- Types for parsed transcript events ---
 
@@ -496,13 +437,77 @@ export function agentOpsPlugin(): Plugin {
         next()
       })
 
-      // --- Chat mode: Agent SDK session management via Vite WS ---
+      // --- Chat mode: v1 query() API with skills/plugins support ---
+      // configureServer runs once at startup — Maps survive HMR (only client modules reload).
+      // v1 query() is stateless per-turn: each turn creates a new query() with resume option.
 
-      const chatSessions = new Map<string, SDKSession>()
+      // Shared SDK options for all sessions
+      const chatSdkOptions = {
+        model: 'claude-sonnet-4-6',
+        permissionMode: 'acceptEdits' as const,
+        cwd: process.cwd(),
+        settingSources: ['user' as const, 'project' as const],
+        allowedTools: ['Skill', 'Read', 'Grep', 'Glob', 'Bash', 'Write', 'Edit', 'Agent', 'WebSearch', 'WebFetch'],
+        includePartialMessages: true,
+        thinking: { type: 'adaptive' as const },
+      }
+
+      // Active queries (for abort) and session state
+      const chatAbortControllers = new Map<string, AbortController>()
+      const chatSessionCommands = new Map<string, Set<string>>()
+      // Maps our routing ID → SDK session ID (for resume across turns and restarts)
+      const chatSdkSessionIds = new Map<string, string>()
 
       // Broadcast to all connected clients (Phase A: single client)
       const wsBroadcast = (event: string, data: unknown) => {
         server.hot.send(event, data)
+      }
+
+      // Run one turn of query() — bypass SDK messages to client
+      async function runQueryTurn(sessionId: string, prompt: string, resumeId?: string) {
+        const { query } = await import('@anthropic-ai/claude-agent-sdk')
+        const ac = new AbortController()
+        const options = resumeId
+          ? { ...chatSdkOptions, resume: resumeId, abortController: ac }
+          : { ...chatSdkOptions, abortController: ac }
+        const q = query({ prompt, options })
+        chatAbortControllers.set(sessionId, ac)
+        try {
+          for await (const sdkMsg of q) {
+            // Server-only: extract init data for slash command validation + session ID
+            if (sdkMsg.type === 'system') {
+              const raw = sdkMsg as Record<string, unknown>
+              if (raw.subtype === 'init') {
+                const commands = raw.slash_commands as string[] | undefined
+                const sdkSid = raw.session_id as string | undefined
+                if (commands) chatSessionCommands.set(sessionId, new Set(commands))
+                if (sdkSid) {
+                  chatSdkSessionIds.set(sessionId, sdkSid)
+                  wsBroadcast('chat:server', { type: 'session-ready', sessionId, sdkSessionId: sdkSid })
+                }
+              }
+            }
+            // Bypass: forward all SDK messages as-is
+            if (sdkMsg.type === 'stream_event') {
+              const evt = (sdkMsg as { event?: { type?: string; content_block?: { type?: string; name?: string } } }).event
+              const detail = evt?.type === 'content_block_start' && evt.content_block
+                ? `${evt.type} [${evt.content_block.type}${evt.content_block.name ? ':' + evt.content_block.name : ''}]`
+                : evt?.type ?? ''
+              console.log('[SDK →]', sdkMsg.type, detail)
+            } else {
+              console.log('[SDK →]', sdkMsg.type, 'subtype' in sdkMsg ? (sdkMsg as Record<string, unknown>).subtype : '')
+            }
+            wsBroadcast('chat:server', { type: 'sdk', sessionId, msg: sdkMsg as { type: string } })
+          }
+        } catch (e) {
+          if (ac.signal.aborted) {
+            wsBroadcast('chat:server', { type: 'session-interrupted', sessionId })
+          } else {
+            wsBroadcast('chat:server', { type: 'session-error', sessionId, error: String(e) })
+          }
+        } finally {
+          chatAbortControllers.delete(sessionId)
+        }
       }
 
       server.hot.on('chat:client', async (data: unknown, client: { send: (event: string, payload?: unknown) => void }) => {
@@ -516,66 +521,86 @@ export function agentOpsPlugin(): Plugin {
 
         if (msg.type === 'create-session') {
           try {
-            const { unstable_v2_createSession } = await import('@anthropic-ai/claude-agent-sdk')
             const { randomUUID } = await import('node:crypto')
-            const session = unstable_v2_createSession({
-              model: 'claude-sonnet-4-6',
-              permissionMode: 'acceptEdits',
-              includePartialMessages: true,
-            })
-
-            // session.sessionId throws until first message — use our own UUID for routing
             const sessionId = randomUUID()
-            chatSessions.set(sessionId, session)
-            reply('chat:server', { type: 'session-created', sessionId, localId: msg.localId } satisfies ChatWsServerMessage)
-
+            reply('chat:server', { type: 'session-created', sessionId, localId: msg.localId })
           } catch (e) {
-            reply('chat:server', { type: 'create-failed', error: String(e) } satisfies ChatWsServerMessage)
+            reply('chat:server', { type: 'create-failed', error: String(e) })
           }
           return
         }
 
         if (msg.type === 'send-message') {
           const sessionId = msg.sessionId
-          const session = chatSessions.get(sessionId)
-          if (!session) {
-            reply('chat:server', { type: 'session-error', sessionId, error: 'Session not found' } satisfies ChatWsServerMessage)
+          // Validate slash commands before sending to SDK
+          const slashMatch = msg.text.match(/^\/(\S+)/)
+          if (slashMatch) {
+            const known = chatSessionCommands.get(sessionId)
+            if (known && !known.has(slashMatch[1])) {
+              wsBroadcast('chat:server', {
+                type: 'system-message', sessionId,
+                text: `Unknown command: /${slashMatch[1]}. Available: ${[...known].map(c => '/' + c).join(', ')}`,
+              })
+              return
+            }
+          }
+          // Run one turn via query() — resume if we have a previous SDK session ID
+          const resumeId = chatSdkSessionIds.get(sessionId)
+          runQueryTurn(sessionId, msg.text, resumeId)
+          return
+        }
+
+        if (msg.type === 'resume-session') {
+          const { localId, sdkSessionId } = msg
+          // Check if we already track this SDK session
+          let existingRouteId: string | undefined
+          for (const [routeId, sdkSid] of chatSdkSessionIds) {
+            if (sdkSid === sdkSessionId) {
+              existingRouteId = routeId
+              break
+            }
+          }
+          if (existingRouteId) {
+            reply('chat:server', { type: 'session-created', sessionId: existingRouteId, localId })
+            reply('chat:server', { type: 'session-ready', sessionId: existingRouteId, sdkSessionId })
             return
           }
-          // Run one turn: send → stream → done
-          ;(async () => {
-            let currentText = ''
-            try {
-              await session.send(msg.text)
-              for await (const sdkMsg of session.stream()) {
-                handleSdkMessage(sessionId, sdkMsg, wsBroadcast, () => currentText, (t) => { currentText = t })
-              }
-            } catch (e) {
-              if (chatSessions.has(sessionId)) {
-                wsBroadcast('chat:server', { type: 'session-error', sessionId, error: String(e) } satisfies ChatWsServerMessage)
-              }
-            }
-          })()
+          // New routing ID, store the SDK session ID for future resume
+          try {
+            const { randomUUID } = await import('node:crypto')
+            const sessionId = randomUUID()
+            chatSdkSessionIds.set(sessionId, sdkSessionId)
+            reply('chat:server', { type: 'session-created', sessionId, localId })
+            reply('chat:server', { type: 'session-ready', sessionId, sdkSessionId })
+          } catch (e) {
+            reply('chat:server', { type: 'resume-failed', localId, error: String(e) })
+          }
+          return
+        }
+
+        if (msg.type === 'interrupt-session') {
+          const ac = chatAbortControllers.get(msg.sessionId)
+          if (ac) ac.abort()
           return
         }
 
         if (msg.type === 'close-session') {
-          const session = chatSessions.get(msg.sessionId)
-          if (session) {
-            session.close()
-            chatSessions.delete(msg.sessionId)
-            reply('chat:server', { type: 'session-closed', sessionId: msg.sessionId } satisfies ChatWsServerMessage)
+          const ac = chatAbortControllers.get(msg.sessionId)
+          if (ac) {
+            ac.abort()
+            chatAbortControllers.delete(msg.sessionId)
           }
+          chatSessionCommands.delete(msg.sessionId)
+          chatSdkSessionIds.delete(msg.sessionId)
+          reply('chat:server', { type: 'session-closed', sessionId: msg.sessionId })
         }
       })
 
       // Cleanup
       const origClose = server.close.bind(server)
       server.close = async () => {
-        for (const [id, session] of chatSessions) {
-          session.close()
-          chatSessions.delete(id)
-        }
+        for (const [, ac] of chatAbortControllers) ac.abort()
+        chatAbortControllers.clear()
         return origClose()
       }
     },
