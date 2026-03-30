@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './Slider.module.css'
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
+import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { slider } from '../pattern/roles/slider'
@@ -11,14 +11,11 @@ import { getAriaActions } from '../primitives/ariaRegistry'
 
 let sliderIdCounter = 0
 
-interface SliderProps {
+interface SliderProps extends AriaComponentProps {
   id?: string
-  data: NormalizedData
   min: number
   max: number
   step: number
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
 }
 
 export function Slider({
@@ -47,7 +44,7 @@ export function Slider({
   const renderItem = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
     const current = state.valueCurrent ?? min
     const pct = max > min ? ((current - min) / (max - min)) * 100 : 0
-    const label = (item.data as Record<string, unknown>)?.label as string ?? item.id as string
+    const label = getNodeLabel(item)
 
     return (
       <div className={`flex-row items-center gap-md ${styles.sliderItem}`} data-focused={state.focused || undefined}>

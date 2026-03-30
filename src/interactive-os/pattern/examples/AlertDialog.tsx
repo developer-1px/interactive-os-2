@@ -1,11 +1,10 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { alertdialog } from '../../pattern/roles/alertdialog'
 import { EXPANDED_ID } from '../../axis/expand'
+import { AlertDialog as AlertDialogUI } from '../../ui/AlertDialog'
 import styles from './alertDialog.module.css'
 
 // APG #3: Alert Dialog
@@ -61,18 +60,14 @@ const renderItem = (
 
 export function AlertDialog() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => alertdialog, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <AlertDialogUI
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderItem}
       aria-label="Discard Changes"
-    >
-      <Aria.Item render={renderItem} />
-    </Aria>
+    />
   )
 }

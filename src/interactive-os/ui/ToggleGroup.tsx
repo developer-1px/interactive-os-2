@@ -1,25 +1,21 @@
 import React from 'react'
 import { CircleDot, Circle } from 'lucide-react'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
 import styles from './ToggleGroup.module.css'
 
-interface ToggleGroupProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
+const toggleGroupPattern = toolbar({ toggle: true })
+
+interface ToggleGroupProps extends AriaComponentProps {
   orientation?: 'horizontal' | 'vertical'
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
+  const label = getNodeLabel(item)
   return (
     <div {...props} className={styles.item} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
       <span className={styles.indicator} data-selected={state.selected || undefined}>{state.selected ? <CircleDot size={18} /> : <Circle size={18} />}</span>
@@ -37,7 +33,7 @@ export function ToggleGroup({
 }: ToggleGroupProps) {
   return (
     <Aria
-      pattern={toolbar({ toggle: true })}
+      pattern={toggleGroupPattern}
       data={data}
       plugins={plugins}
       onChange={onChange}

@@ -1,34 +1,34 @@
 import React from 'react'
 
-import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
+import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { switchPattern } from '../pattern/roles/switch'
-import { SwitchIndicator } from './indicators'
-import styles from './SwitchGroup.module.css'
+import { radiogroupActivedescendant } from '../pattern/roles/radiogroupActivedescendant'
+import { RadioIndicator } from './indicators'
+import styles from './RadioGroup.module.css'
 
-type SwitchGroupProps = AriaComponentProps
+type RadioGroupActivedescendantProps = AriaComponentProps
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
     <div {...props} className={styles.item} data-focused={state.focused || undefined}>
+      <RadioIndicator />
       <span className={styles.label}>{label}</span>
-      <SwitchIndicator />
     </div>
   )
 }
 
-export function SwitchGroup({
+export function RadioGroupActivedescendant({
   data,
   plugins = [],
   onChange,
   renderItem = defaultRenderItem,
   'aria-label': ariaLabel,
-}: SwitchGroupProps) {
+}: RadioGroupActivedescendantProps) {
   return (
-    <Aria pattern={switchPattern} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
+    <Aria pattern={radiogroupActivedescendant} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

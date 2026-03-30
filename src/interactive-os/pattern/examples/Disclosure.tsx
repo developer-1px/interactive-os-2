@@ -1,11 +1,10 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { disclosure } from '../../pattern/roles/disclosure'
 import { EXPANDED_ID } from '../../axis/expand'
+import { DisclosureGroup } from '../../ui/DisclosureGroup'
 import styles from './disclosure.module.css'
 
 // APG #19: Disclosure (Show/Hide)
@@ -88,18 +87,14 @@ const renderItem = (
 
 export function Disclosure() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => disclosure, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <DisclosureGroup
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderItem}
       aria-label="Disclosure Example"
-    >
-      <Aria.Item render={renderItem} />
-    </Aria>
+    />
   )
 }

@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { menu } from '../../pattern/roles/menu'
+import { MenuList } from '../../ui/MenuList'
 import styles from './menu.module.css'
 
 // APG #43: Navigation Menu Button
@@ -23,7 +22,7 @@ const data: NormalizedData = createStore({
   relationships: { [ROOT_ID]: items.map(item => item.id) },
 })
 
-const renderItem = (
+const renderMenuItem = (
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
   state: NodeState,
@@ -42,18 +41,14 @@ const renderItem = (
 
 export function MenuNavigation() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => menu, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <MenuList
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderMenuItem}
       aria-label="Navigation"
-    >
-      <Aria.Item render={renderItem} />
-    </Aria>
+    />
   )
 }

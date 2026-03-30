@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { switchPattern } from '../../pattern/roles/switch'
+import { SwitchGroup as SwitchGroupUI } from '../../ui/SwitchGroup'
 import styles from './switch.module.css'
 
 // APG #54: Switch
@@ -48,18 +47,14 @@ const renderSwitch = (
 
 export function SwitchGroup() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => switchPattern, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <SwitchGroupUI
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderSwitch}
       aria-label="Notification Settings"
-    >
-      <Aria.Item render={renderSwitch} />
-    </Aria>
+    />
   )
 }

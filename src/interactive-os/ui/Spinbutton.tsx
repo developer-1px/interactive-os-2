@@ -1,9 +1,9 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { Minus, Plus } from 'lucide-react'
 import styles from './Spinbutton.module.css'
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { spinbutton } from '../pattern/roles/spinbutton'
 import { valueCommands } from '../axis/value'
@@ -12,14 +12,11 @@ import { getAriaActions } from '../primitives/ariaRegistry'
 
 let spinIdCounter = 0
 
-interface SpinbuttonProps {
+interface SpinbuttonProps extends AriaComponentProps {
   id?: string
-  data: NormalizedData
   min: number
   max: number
   step: number
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
   label?: string
 }
 
@@ -74,7 +71,7 @@ export function Spinbutton({
 
   const renderItem = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
     const current = state.valueCurrent ?? min
-    const itemLabel = label ?? (item.data as Record<string, unknown>)?.label as string ?? item.id as string
+    const itemLabel = label ?? getNodeLabel(item)
     const atMin = current <= min
     const atMax = current >= max
 

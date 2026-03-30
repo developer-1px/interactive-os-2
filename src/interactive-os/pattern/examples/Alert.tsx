@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { alert } from '../../pattern/roles/alert'
+import { Alert as AlertComponent } from '../../ui/Alert'
 import styles from './alert.module.css'
 
 // APG #2: Alert
@@ -50,18 +49,14 @@ const renderAlert = (
 
 export function Alert() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => alert, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <AlertComponent
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderAlert}
       aria-label="Alerts"
-    >
-      <Aria.Item render={renderAlert} />
-    </Aria>
+    />
   )
 }

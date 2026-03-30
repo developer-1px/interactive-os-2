@@ -3,6 +3,7 @@ import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
 import type { NodeState, PatternContext } from '../pattern/types'
 import { tabs } from '../pattern/roles/tabs'
+import { tabsManual } from '../pattern/roles/tabsManual'
 import { useAria } from '../primitives/useAria'
 import type { UseAriaReturn } from '../primitives/useAria'
 import { history } from '../plugins/history'
@@ -25,6 +26,8 @@ export interface UseTabListOptions {
   onActivate?: (nodeId: string) => void
   initialFocus?: string
   enableEditing?: boolean
+  /** When true, uses tabsManual pattern (selection does NOT follow focus). Default: false (automatic). */
+  manual?: boolean
   'aria-label'?: string
 }
 
@@ -55,8 +58,9 @@ function toTabListReturn(aria: UseAriaReturn, ariaLabel?: string): UseTabListRet
 }
 
 export function useTabList(options: UseTabListOptions): UseTabListReturn {
-  const { data, plugins = [...(options.enableEditing ? [history()] : [])], keyMap, onChange, onActivate, initialFocus, enableEditing = false, 'aria-label': ariaLabel } = options
+  const { data, plugins = [...(options.enableEditing ? [history()] : [])], keyMap, onChange, onActivate, initialFocus, enableEditing = false, manual = false, 'aria-label': ariaLabel } = options
   const mergedKeyMap = enableEditing ? { ...editingKeyMap, ...keyMap } : keyMap
-  const aria = useAria({ pattern: tabs, data, plugins, keyMap: mergedKeyMap, onChange, onActivate, initialFocus })
+  const pattern = manual ? tabsManual : tabs
+  const aria = useAria({ pattern, data, plugins, keyMap: mergedKeyMap, onChange, onActivate, initialFocus })
   return toTabListReturn(aria, ariaLabel)
 }

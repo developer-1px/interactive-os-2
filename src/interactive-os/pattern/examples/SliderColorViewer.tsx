@@ -1,11 +1,8 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
-import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { slider } from '../../pattern/roles/slider'
-import styles from './slider.module.css'
+import { Slider } from '../../ui/Slider'
 
 // APG #48: Color Viewer Slider
 // https://www.w3.org/WAI/ARIA/apg/patterns/slider/examples/slider-color-viewer/
@@ -23,45 +20,19 @@ const data: NormalizedData = createStore({
   relationships: { [ROOT_ID]: channels.map(c => c.id) },
 })
 
-const renderSlider = (
-  props: React.HTMLAttributes<HTMLElement>,
-  node: Record<string, unknown>,
-  state: NodeState,
-): React.ReactElement => {
-  const nodeData = node.data as Record<string, unknown>
-  const label = nodeData?.label as string
-  const current = (state.valueCurrent as number) ?? 128
-  const pct = (current / 255) * 100
-
-  return (
-    <div
-      {...props}
-      className={styles.slider}
-      data-focused={state.focused || undefined}
-    >
-      <span className={styles.label}>{label}</span>
-      <span className={styles.track}>
-        <span className={styles.fill} style={{ width: `${pct}%` }} />
-      </span>
-      <span className={styles.valueLabel}>{current}</span>
-    </div>
-  )
-}
-
 export function SliderColorViewer() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => slider({ min: 0, max: 255, step: 1 }), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <Slider
       data={store}
+      min={0}
+      max={255}
+      step={1}
       plugins={[]}
       onChange={onChange}
       aria-label="Color Viewer"
-    >
-      <Aria.Item render={renderSlider} />
-    </Aria>
+    />
   )
 }

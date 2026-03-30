@@ -1,10 +1,8 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
-import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { grid } from '../../pattern/roles/grid'
+import { Grid } from '../../ui/Grid'
 import styles from './grid.module.css'
 
 // APG #25: Data Grid
@@ -18,52 +16,46 @@ const rows = [
   { day: 'Friday', time: '3:00 PM', event: 'Sprint Retro' },
 ]
 
-const columns = 3
-
-const cells = rows.flatMap((row, ri) => [
-  { id: `cell-${ri}-0`, label: row.day },
-  { id: `cell-${ri}-1`, label: row.time },
-  { id: `cell-${ri}-2`, label: row.event },
-])
+const columns = [
+  { key: 'day', header: 'Day' },
+  { key: 'time', header: 'Time' },
+  { key: 'event', header: 'Event' },
+]
 
 const data: NormalizedData = createStore({
   entities: Object.fromEntries(
-    cells.map(c => [c.id, { id: c.id, data: { label: c.label } }]),
+    rows.map((row, ri) => [
+      `row-${ri}`,
+      { id: `row-${ri}`, data: { cells: [row.day, row.time, row.event] } },
+    ]),
   ),
-  relationships: { [ROOT_ID]: cells.map(c => c.id) },
+  relationships: { [ROOT_ID]: rows.map((_, ri) => `row-${ri}`) },
 })
 
 const renderCell = (
   props: React.HTMLAttributes<HTMLElement>,
-  node: Record<string, unknown>,
-  state: NodeState,
+  value: unknown,
 ): React.ReactElement => {
-  const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <div
-      {...props}
-      className={styles.cell}
-      data-focused={state.focused || undefined}
-    >
-      {label}
+    <div {...props} className={styles.cell}>
+      {String(value ?? '')}
     </div>
   )
 }
 
 export function GridData() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => grid({ columns }), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <Grid
       data={store}
+      columns={columns}
       plugins={[]}
       onChange={onChange}
+      renderCell={renderCell}
+      header
       aria-label="Schedule"
-    >
-      <Aria.Item render={renderCell} />
-    </Aria>
+    />
   )
 }

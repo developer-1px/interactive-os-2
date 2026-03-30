@@ -1,13 +1,9 @@
 import { useState, useCallback } from 'react'
-import type { ReactNode } from 'react'
 import type { NormalizedData } from '../../store/types'
-import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
-import { menubar } from '../../pattern/roles/menubar'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { Menubar } from '../../ui/Menubar'
 import styles from './menubar.module.css'
 
 // APG #40: Navigation Menubar
@@ -47,63 +43,6 @@ const data: NormalizedData = createStore({
   },
 })
 
-const renderItem = (
-  props: React.HTMLAttributes<HTMLElement>,
-  node: Record<string, unknown>,
-  state: NodeState,
-  children?: ReactNode,
-): React.ReactElement => {
-  const label = (node.data as Record<string, unknown>)?.label as string
-  const isRoot = state.level === 1
-  const hasChildren = state.expanded !== undefined
-
-  if (children) {
-    return (
-      <li role="none" className={styles.item}>
-        <a
-          {...props}
-          href="#"
-          className={styles.link}
-          data-focused={state.focused || undefined}
-          onClick={e => e.preventDefault()}
-        >
-          <span>{label}</span>
-          <span className={styles.indicator} aria-hidden="true">
-            {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
-          </span>
-        </a>
-        <ul
-          role="menu"
-          aria-label={label}
-          className={isRoot ? styles.submenuRoot : styles.submenuNested}
-          style={{ display: state.expanded ? undefined : 'none' }}
-        >
-          {children}
-        </ul>
-      </li>
-    )
-  }
-
-  return (
-    <li role="none" className={styles.item}>
-      <a
-        {...props}
-        href="#"
-        className={styles.link}
-        data-focused={state.focused || undefined}
-        onClick={e => e.preventDefault()}
-      >
-        <span>{label}</span>
-        {hasChildren && (
-          <span className={styles.indicator} aria-hidden="true">
-            {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
-          </span>
-        )}
-      </a>
-    </li>
-  )
-}
-
 export function MenubarNavigation() {
   const [store, setStore] = useState<NormalizedData>(data)
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
@@ -115,15 +54,11 @@ export function MenubarNavigation() {
         <div className={styles.tagline}>Using a Menubar for navigation links</div>
       </header>
       <nav className={styles.wrapper}>
-        <Aria
-          pattern={menubar}
+        <Menubar
           data={store}
-          plugins={[]}
           onChange={onChange}
           aria-label="Mythical University"
-        >
-          <Aria.Item render={renderItem} />
-        </Aria>
+        />
       </nav>
     </div>
   )

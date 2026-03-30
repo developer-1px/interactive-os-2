@@ -3,12 +3,12 @@ import React from 'react'
 
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { listboxGrouped } from '../pattern/roles/listboxGrouped'
 import styles from './ListBox.module.css'
 
-interface ListBoxGroupedProps extends AriaComponentProps {
-}
+type ListBoxGroupedProps = AriaComponentProps
 
 const defaultRenderItem = (
   props: React.HTMLAttributes<HTMLElement>,
@@ -16,9 +16,7 @@ const defaultRenderItem = (
   state: NodeState,
   children?: React.ReactNode,
 ): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
+  const label = getNodeLabel(item)
 
   if (children) {
     const labelId = `group-label-${item.id}`

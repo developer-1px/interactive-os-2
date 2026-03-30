@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { menuButton } from '../../pattern/roles/menuButton'
+import { MenuButton } from '../../ui/MenuButton'
 import styles from './menu.module.css'
 
 // APG #41: Actions Menu Button Using element.focus()
@@ -33,7 +32,7 @@ const data: NormalizedData = createStore({
 const renderTrigger = (
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
-  _state: NodeState,
+  _state: NodeState & { isOpen: boolean },
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
@@ -43,7 +42,7 @@ const renderTrigger = (
   )
 }
 
-const renderItem = (
+const renderMenuItem = (
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
   state: NodeState,
@@ -62,19 +61,15 @@ const renderItem = (
 
 export function MenuActions() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => menuButton, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <MenuButton
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderTrigger={renderTrigger}
+      renderItem={renderMenuItem}
       aria-label="Actions"
-    >
-      <Aria.Trigger render={renderTrigger} />
-      <Aria.Item render={renderItem} />
-    </Aria>
+    />
   )
 }

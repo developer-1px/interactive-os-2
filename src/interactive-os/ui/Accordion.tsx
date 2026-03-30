@@ -1,24 +1,19 @@
 import React from 'react'
 import { ExpandIndicator } from './indicators'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { accordion } from '../pattern/roles/accordion'
 import styles from './Accordion.module.css'
 
-interface AccordionProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
+interface AccordionProps extends AriaComponentProps {
+  renderPanel?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
+  const label = getNodeLabel(item)
   const isGroup = state.level === 1
 
   if (isGroup) {
@@ -40,9 +35,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 }
 
 const defaultRenderPanel = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
+  const label = getNodeLabel(item)
   return (
     <div {...props} className={styles.panel}>
       <span>{label} content</span>
@@ -56,11 +49,15 @@ export function Accordion({
   onChange,
   renderItem = defaultRenderItem,
   renderPanel = defaultRenderPanel,
-}: AccordionProps & { renderPanel?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement }) {
+  className,
+  'aria-label': ariaLabel,
+}: AccordionProps) {
   return (
-    <Aria pattern={accordion} data={data} plugins={plugins} onChange={onChange} className={styles.root}>
-      <Aria.Item render={renderItem} />
-      <Aria.Panel render={renderPanel} />
-    </Aria>
+    <div className={className ?? styles.root}>
+      <Aria pattern={accordion} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
+        <Aria.Item render={renderItem} />
+        <Aria.Panel render={renderPanel} />
+      </Aria>
+    </div>
   )
 }

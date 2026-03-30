@@ -1,29 +1,31 @@
 import React from 'react'
 
-import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
+import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
-import { alertdialog } from '../pattern/roles/alertdialog'
-import styles from './AlertDialog.module.css'
+import { menuActivedescendant } from '../pattern/roles/menuActivedescendant'
 
-type AlertDialogProps = AriaComponentProps
+type MenuActivedescendantProps = AriaComponentProps
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
-  const cls = styles.item + (state.focused ? ' ' + styles.itemFocused : '')
-  return <div {...props} className={cls}>{label}</div>
+  return (
+    <div {...props} data-focused={state.focused || undefined}>
+      {label}
+    </div>
+  )
 }
 
-export function AlertDialog({
+export function MenuActivedescendant({
   data,
   plugins = [],
   onChange,
   renderItem = defaultRenderItem,
   'aria-label': ariaLabel,
-}: AlertDialogProps) {
+}: MenuActivedescendantProps) {
   return (
-    <Aria pattern={alertdialog} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
+    <Aria pattern={menuActivedescendant} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

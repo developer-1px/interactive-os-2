@@ -1,11 +1,10 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { table } from '../../pattern/roles/table'
 import { EXPANDED_ID } from '../../axis/expand'
+import { Table as TableComponent } from '../../ui/Table'
 import styles from './table.module.css'
 
 // APG #57: Table
@@ -94,18 +93,14 @@ const renderItem = (
 
 export function Table() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => table, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <TableComponent
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderItem}
       aria-label="Students"
-    >
-      <Aria.Item render={renderItem} />
-    </Aria>
+    />
   )
 }

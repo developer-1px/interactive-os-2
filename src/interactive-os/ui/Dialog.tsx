@@ -3,6 +3,7 @@ import React from 'react'
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { dialog } from '../pattern/roles/dialog'
 
@@ -14,9 +15,7 @@ interface DialogProps {
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
+  const label = getNodeLabel(item)
   return <div {...props}>{label}</div>
 }
 

@@ -1,20 +1,15 @@
 import React from 'react'
 import { ExpandIndicator } from './indicators'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { treegrid } from '../pattern/roles/treegrid'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
 
-interface TreeGridProps {
+interface TreeGridProps extends AriaComponentProps {
   id?: string
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => React.ReactElement
   enableEditing?: boolean
   columns?: number
 }
@@ -40,6 +35,7 @@ export function TreeGrid({
   renderItem = defaultRenderItem,
   enableEditing = false,
   columns,
+  'aria-label': ariaLabel,
 }: TreeGridProps) {
   const pattern = React.useMemo(
     () => columns ? treegrid(columns) : treegrid(1),
@@ -58,6 +54,7 @@ export function TreeGrid({
       data={data}
       plugins={mergedPlugins}
       onChange={onChange}
+      aria-label={ariaLabel}
     >
       <Aria.Item render={renderItem} />
     </Aria>
