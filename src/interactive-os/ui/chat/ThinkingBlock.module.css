@@ -1,0 +1,45 @@
+/* ThinkingBlock — collapsible thinking content */
+
+.thinking {
+  font-size: var(--type-caption-size);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-sm-radius);
+  overflow: hidden;
+}
+
+.thinkingSummary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+.thinkingSummary::marker,
+.thinkingSummary::-webkit-details-marker {
+  display: none;
+}
+
+.thinkingLabel {
+  font-weight: var(--weight-semi);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.thinkingPreview {
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.thinkingContent {
+  padding: var(--space-xs) var(--space-sm);
+  border-top: 1px solid var(--border-subtle);
+  overflow-y: auto;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
