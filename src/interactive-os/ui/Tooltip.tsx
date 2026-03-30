@@ -37,6 +37,7 @@ export function Tooltip({ content, children }: TooltipProps): ReactNode {
   }
 
   const child = Children.only(children) as ReactElement
+  const childProps = (child as ReactElement<Record<string, unknown>>).props as Record<string, unknown>
 
   return (
     <>
@@ -46,8 +47,12 @@ export function Tooltip({ content, children }: TooltipProps): ReactNode {
         'aria-describedby': id,
         onMouseEnter: show,
         onMouseLeave: hide,
-        onFocus: show,
-        onBlur: hide,
+        onFocus: childProps.onFocus
+          ? (e: unknown) => { (childProps.onFocus as (e: unknown) => void)(e); show() }
+          : show,
+        onBlur: childProps.onBlur
+          ? (e: unknown) => { (childProps.onBlur as (e: unknown) => void)(e); hide() }
+          : hide,
       })}
       <span
         ref={tooltipRef}
