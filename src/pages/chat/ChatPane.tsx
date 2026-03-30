@@ -68,11 +68,11 @@ function useCommandMatch(commands: string[], text: string) {
     const match = sorted.find(cmd => cmd.startsWith(typedCmd))
     if (!match) return NO_MATCH
 
+    const isExact = typedCmd === match
     const highlightLen = hasArgs
-      ? 1 + match.length
+      ? 1 + (isExact ? match.length : typedCmd.length)
       : 1 + typedCmd.length
 
-    const isExact = typedCmd === match
     const ghostText = (!hasArgs && !isExact) ? match.slice(typedCmd.length) : ''
 
     return { ghostText, commandHighlight: highlightLen }
