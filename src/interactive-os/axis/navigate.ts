@@ -60,11 +60,17 @@ export function gridCtx(
 }
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
-export type NavigateType = 'vertical' | 'horizontal' | 'both' | 'activedescendant' | 'natural'
+// ② 2026-03-30-spatial-navigate-prd.md
+export type NavigateType = 'vertical' | 'horizontal' | 'both' | 'activedescendant' | 'natural' | 'spatial'
+
+export interface SpatialOptions {
+  selector: string | (() => string)
+}
 
 function toFocusStrategy(type: NavigateType): import('./types').FocusStrategy {
   if (type === 'activedescendant') return { type: 'aria-activedescendant', orientation: 'vertical' }
   if (type === 'natural') return { type: 'natural-tab-order', orientation: 'vertical' }
+  if (type === 'spatial') return { type: 'roving-tabindex', orientation: 'both' }
   return { type: 'roving-tabindex', orientation: type }
 }
 
@@ -118,7 +124,8 @@ function navigateCtxFactory(): CtxFactory {
   }
 }
 
-export function navigate(type: NavigateType = 'vertical') {
+// ② 2026-03-30-spatial-navigate-prd.md
+export function navigate(type: NavigateType = 'vertical', opts?: SpatialOptions) {
   const next = (ctx: PatternContext): Command => ctx.focusNext()
   const prev = (ctx: PatternContext): Command => ctx.focusPrev()
   const first = (ctx: PatternContext): Command => ctx.focusFirst()
@@ -128,11 +135,22 @@ export function navigate(type: NavigateType = 'vertical') {
   const nextWrap = (ctx: PatternContext): Command => ctx.focusNext({ wrap: true })
   const prevWrap = (ctx: PatternContext): Command => ctx.focusPrev({ wrap: true })
 
+  // Spatial directional handlers — delegate to ctx.spatialMove (provided by useSpatialBridge)
+  const up = (ctx: PatternContext): Command | void => ctx.spatialMove?.('ArrowUp')
+  const down = (ctx: PatternContext): Command | void => ctx.spatialMove?.('ArrowDown')
+  const left = (ctx: PatternContext): Command | void => ctx.spatialMove?.('ArrowLeft')
+  const right = (ctx: PatternContext): Command | void => ctx.spatialMove?.('ArrowRight')
+
+  const isSpatial = type === 'spatial'
+  const meta: Record<string, unknown> = isSpatial
+    ? { focusStrategy: { type: 'roving-tabindex' as const, orientation: 'both' as const }, spatialSelector: opts?.selector }
+    : { focusStrategy: toFocusStrategy(type) }
+
   return {
     keyMap: {} as Record<string, never>,
     ctxFactory: navigateCtxFactory(),
-    meta: { focusStrategy: toFocusStrategy(type) },
-    // handlers
+    meta,
+    // 1D handlers
     next,
     prev,
     first,
@@ -141,6 +159,11 @@ export function navigate(type: NavigateType = 'vertical') {
     child,
     nextWrap,
     prevWrap,
+    // spatial 2D handlers
+    up,
+    down,
+    left,
+    right,
   }
 }
 

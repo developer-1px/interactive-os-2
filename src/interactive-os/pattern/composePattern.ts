@@ -173,6 +173,7 @@ export function composePattern(
     ...(meta.panelVisibility !== undefined && { panelVisibility: meta.panelVisibility }),
     ...(meta.selectionFollowsFocus !== undefined && { selectionFollowsFocus: meta.selectionFollowsFocus }),
     ...(meta.activationFollowsSelection !== undefined && { activationFollowsSelection: meta.activationFollowsSelection }),
+    ...(meta.spatialSelector !== undefined && { spatialSelector: meta.spatialSelector }),
     keyMap: mergeKeyMaps(required.map(getKeyMap).concat([keyMap])),
     ...(Object.keys(clickMap).length > 0 && { clickMap }),
     ...(middleware && { middleware }),

@@ -86,6 +86,9 @@ export interface PatternContext {
   popup?: PopupNav
   grid?: GridNav
   value?: ValueNav
+
+  // ── spatial navigation (provided by useSpatialBridge when strategy='spatial') ──
+  spatialMove?: (dir: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') => import('../engine/types').Command | void
 }
 
 export type KeyMap = Record<string, (ctx: PatternContext) => Command | void>
