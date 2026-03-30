@@ -54,7 +54,7 @@
 | composePattern | Integrated | keyMap + config + middleware 합성 |
 | edit | Integrated | — |
 | pointer interaction | Integrated | — |
-| examples/ (36 APG presets) | Integrated | 33/36 ui/ 소비 구조 전환 완료. 3종 미전환(CarouselTabs·DatePicker·CarouselPrevNext = composite/비-ARIA) |
+| examples/ (36 APG presets) | Integrated | 34/36 ui/ 소비 구조 전환 완료. 2종 미전환(CarouselTabs·CarouselPrevNext = carousel/비-ARIA, 실전 빈도 낮아 제외) |
 | menubar | Integrated | expand axis + custom handlers, multi-zone 아님 |
 
 ## Primitives (L6)
@@ -88,7 +88,7 @@
 | chat/ (ChatFeed · Composer · TextBlock · CodeBlock · DiffBlock) | Prototype | 블록 렌더러 OCP, agent viewer 포팅 완료. Composer ghost text autocomplete (slash command). 인터랙티브 블록(storeKey) 미실전 검증 |
 | *Select* | — | Combobox 래퍼, 미구현 |
 | *ContextMenu* | — | MenuList + popover, 미구현 |
-| *DatePicker* | — | Grid + value + popover, 미구현 |
+| **DatePicker · CalendarGrid** | Validated | 첫 composite ui/ 완성품. useEngine + useAriaZone(calendarGrid) + dialog focus trap. Gap 3 해소 |
 
 ## Infra
 

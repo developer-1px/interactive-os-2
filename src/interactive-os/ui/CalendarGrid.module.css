@@ -1,0 +1,41 @@
+/* ── base ── */
+
+.grid {
+  border-collapse: collapse;
+}
+
+.dayHeader {
+  padding: var(--space-xs);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-label-weight);
+  color: var(--text-muted);
+  text-align: center;
+  width: 36px;
+}
+
+.day {
+  width: 36px;
+  height: 36px;
+  text-align: center;
+  font-size: var(--type-body-size);
+  color: var(--text-primary);
+  cursor: default;
+  border-radius: var(--shape-xs-radius);
+  border: 2px solid transparent;
+  outline: none;
+}
+
+/* ── variant: state ── */
+
+.day:is([data-outside]) {
+  color: var(--text-muted);
+}
+
+.day:is([data-focused='true']) {
+  background: var(--bg-hover);
+}
+
+.day:is([data-selected='true']) {
+  background: var(--tone-primary-base);
+  color: var(--tone-primary-foreground);
+}
