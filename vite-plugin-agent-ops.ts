@@ -2,7 +2,6 @@ import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import type { Plugin } from 'vite'
-import type { ChatWsClientMessage } from './src/pages/chat/chatWsProtocol'
 
 // --- Types for parsed transcript events ---
 
@@ -442,8 +441,7 @@ export function agentOpsPlugin(): Plugin {
       // v1 query() is stateless per-turn: each turn creates a new query() with resume option.
 
       // Shared SDK options for all sessions
-      const chatSdkOptions = {
-        model: 'claude-sonnet-4-6',
+      const chatSdkBaseOptions = {
         permissionMode: 'acceptEdits' as const,
         cwd: process.cwd(),
         settingSources: ['user' as const, 'project' as const],
@@ -457,6 +455,8 @@ export function agentOpsPlugin(): Plugin {
       const chatSessionCommands = new Map<string, Set<string>>()
       // Maps our routing ID → SDK session ID (for resume across turns and restarts)
       const chatSdkSessionIds = new Map<string, string>()
+      // Per-session model override (undefined = SDK default/auto)
+      const chatSessionModels = new Map<string, string>()
 
       // Broadcast to all connected clients (Phase A: single client)
       const wsBroadcast = (event: string, data: unknown) => {
@@ -467,9 +467,13 @@ export function agentOpsPlugin(): Plugin {
       async function runQueryTurn(sessionId: string, prompt: string, resumeId?: string) {
         const { query } = await import('@anthropic-ai/claude-agent-sdk')
         const ac = new AbortController()
-        const options = resumeId
-          ? { ...chatSdkOptions, resume: resumeId, abortController: ac }
-          : { ...chatSdkOptions, abortController: ac }
+        const model = chatSessionModels.get(sessionId)
+        const options = {
+          ...chatSdkBaseOptions,
+          ...(model ? { model } : {}),
+          ...(resumeId ? { resume: resumeId } : {}),
+          abortController: ac,
+        }
         const q = query({ prompt, options })
         chatAbortControllers.set(sessionId, ac)
         try {
@@ -483,7 +487,11 @@ export function agentOpsPlugin(): Plugin {
                 if (commands) chatSessionCommands.set(sessionId, new Set(commands))
                 if (sdkSid) {
                   chatSdkSessionIds.set(sessionId, sdkSid)
-                  wsBroadcast('chat:server', { type: 'session-ready', sessionId, sdkSessionId: sdkSid })
+                  const cmds = chatSessionCommands.get(sessionId)
+                  wsBroadcast('chat:server', {
+                    type: 'session-ready', sessionId, sdkSessionId: sdkSid,
+                    ...(cmds ? { commands: [...cmds] } : {}),
+                  })
                 }
               }
             }
@@ -511,47 +519,47 @@ export function agentOpsPlugin(): Plugin {
       }
 
       server.hot.on('chat:client', async (data: unknown, client: { send: (event: string, payload?: unknown) => void }) => {
-        let msg: ChatWsClientMessage
+        let raw: Record<string, unknown>
         try {
-          msg = (typeof data === 'string' ? JSON.parse(data) : data) as ChatWsClientMessage
+          raw = (typeof data === 'string' ? JSON.parse(data) : data) as Record<string, unknown>
         } catch { return }
+        const t = raw.type as string
+        const sid = raw.sessionId as string
 
-        // Reply helper — sends to the requesting client
         const reply = (event: string, payload: unknown) => client.send(event, payload)
 
-        if (msg.type === 'create-session') {
+        if (t === 'create-session') {
           try {
             const { randomUUID } = await import('node:crypto')
             const sessionId = randomUUID()
-            reply('chat:server', { type: 'session-created', sessionId, localId: msg.localId })
+            reply('chat:server', { type: 'session-created', sessionId, localId: raw.localId as string })
           } catch (e) {
             reply('chat:server', { type: 'create-failed', error: String(e) })
           }
           return
         }
 
-        if (msg.type === 'send-message') {
-          const sessionId = msg.sessionId
-          // Validate slash commands before sending to SDK
-          const slashMatch = msg.text.match(/^\/(\S+)/)
+        if (t === 'send-message') {
+          const text = raw.text as string
+          const slashMatch = text.match(/^\/(\S+)/)
           if (slashMatch) {
-            const known = chatSessionCommands.get(sessionId)
+            const known = chatSessionCommands.get(sid)
             if (known && !known.has(slashMatch[1])) {
               wsBroadcast('chat:server', {
-                type: 'system-message', sessionId,
+                type: 'system-message', sessionId: sid,
                 text: `Unknown command: /${slashMatch[1]}. Available: ${[...known].map(c => '/' + c).join(', ')}`,
               })
               return
             }
           }
-          // Run one turn via query() — resume if we have a previous SDK session ID
-          const resumeId = chatSdkSessionIds.get(sessionId)
-          runQueryTurn(sessionId, msg.text, resumeId)
+          const resumeId = chatSdkSessionIds.get(sid)
+          runQueryTurn(sid, text, resumeId)
           return
         }
 
-        if (msg.type === 'resume-session') {
-          const { localId, sdkSessionId } = msg
+        if (t === 'resume-session') {
+          const localId = raw.localId as string
+          const sdkSessionId = raw.sdkSessionId as string
           // Check if we already track this SDK session
           let existingRouteId: string | undefined
           for (const [routeId, sdkSid] of chatSdkSessionIds) {
@@ -561,8 +569,9 @@ export function agentOpsPlugin(): Plugin {
             }
           }
           if (existingRouteId) {
+            const cmds = chatSessionCommands.get(existingRouteId)
             reply('chat:server', { type: 'session-created', sessionId: existingRouteId, localId })
-            reply('chat:server', { type: 'session-ready', sessionId: existingRouteId, sdkSessionId })
+            reply('chat:server', { type: 'session-ready', sessionId: existingRouteId, sdkSessionId, ...(cmds ? { commands: [...cmds] } : {}) })
             return
           }
           // New routing ID, store the SDK session ID for future resume
@@ -578,21 +587,29 @@ export function agentOpsPlugin(): Plugin {
           return
         }
 
-        if (msg.type === 'interrupt-session') {
-          const ac = chatAbortControllers.get(msg.sessionId)
+        if (t === 'set-model') {
+          const model = raw.model as string | undefined
+          if (model) chatSessionModels.set(sid, model)
+          else chatSessionModels.delete(sid)
+          return
+        }
+
+        if (t === 'interrupt-session') {
+          const ac = chatAbortControllers.get(sid)
           if (ac) ac.abort()
           return
         }
 
-        if (msg.type === 'close-session') {
-          const ac = chatAbortControllers.get(msg.sessionId)
+        if (t === 'close-session') {
+          const ac = chatAbortControllers.get(sid)
           if (ac) {
             ac.abort()
-            chatAbortControllers.delete(msg.sessionId)
+            chatAbortControllers.delete(sid)
           }
-          chatSessionCommands.delete(msg.sessionId)
-          chatSdkSessionIds.delete(msg.sessionId)
-          reply('chat:server', { type: 'session-closed', sessionId: msg.sessionId })
+          chatSessionCommands.delete(sid)
+          chatSdkSessionIds.delete(sid)
+          chatSessionModels.delete(sid)
+          reply('chat:server', { type: 'session-closed', sessionId: sid })
         }
       })
 

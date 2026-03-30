@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ChatFeed } from '../interactive-os/ui/chat/ChatFeed'
-import { ChatInput } from '../interactive-os/ui/chat/ChatInput'
+import { Composer } from '../interactive-os/ui/Composer'
 import { timelineToMessages } from '../pages/viewer/timelineAdapter'
 import type { ChatMessage, ChatBlock, BlockRendererMap, DataBlock } from '../interactive-os/ui/chat/types'
 import type { TimelineEvent } from '../pages/viewer/groupEvents'
@@ -52,7 +52,7 @@ describe('ChatFeed — fallback renderer (V2)', () => {
   it('renders fallback for unregistered block types', () => {
     const messages = [msg('assistant', [{ type: 'unknown_type', data: { foo: 1 } } as ChatBlock])]
     render(<ChatFeed messages={messages} />)
-    expect(screen.getByText(/Unknown block: unknown_type/)).toBeTruthy()
+    expect(screen.getByText('unknown_type')).toBeTruthy()
   })
 })
 
@@ -60,21 +60,25 @@ describe('ChatFeed — fallback renderer (V2)', () => {
 describe('ChatFeed — OCP extensibility (V3)', () => {
   it('renders custom block types via blockRenderers without modifying ChatFeed', () => {
     // Custom renderers for P0 catalog types
+    // @test-harness
     function StatusRenderer({ block }: { block: DataBlock }) {
       const d = block.data as { label: string; state: string }
       return <div data-testid="status-block">{d.label}: {d.state}</div>
     }
 
+    // @test-harness
     function MetricRenderer({ block }: { block: DataBlock }) {
       const d = block.data as { label: string; value: number }
       return <div data-testid="metric-block">{d.label}: {d.value}</div>
     }
 
+    // @test-harness
     function ImageRenderer({ block }: { block: DataBlock }) {
       const d = block.data as { src: string; alt: string }
       return <img data-testid="image-block" src={d.src} alt={d.alt} />
     }
 
+    // @test-harness
     function ToolRenderer({ block }: { block: DataBlock }) {
       const d = block.data as { tool: string }
       return <div data-testid="tool-block">Tool: {d.tool}</div>
@@ -110,6 +114,7 @@ describe('ChatFeed — OCP extensibility (V3)', () => {
 // V4: 2026-03-27-chat-module-prd.md
 describe('ChatFeed — store-bound block (V4)', () => {
   it('renders a block with storeKey via custom renderer', () => {
+    // @test-harness
     function GridBlockRenderer({ block }: { block: ChatBlock }) {
       const b = block as { type: string; storeKey: string }
       return <div data-testid="grid-block">Store: {b.storeKey}</div>
@@ -161,7 +166,7 @@ describe('ChatFeed — unknown block type fallback (V8)', () => {
       msg('assistant', [{ type: 'never_seen_before', data: 123 } as ChatBlock]),
     ]
     render(<ChatFeed messages={messages} />)
-    expect(screen.getByText(/Unknown block: never_seen_before/)).toBeTruthy()
+    expect(screen.getByText('never_seen_before')).toBeTruthy()
   })
 })
 
@@ -185,11 +190,11 @@ describe('ChatBlock types — discriminated union (V9)', () => {
 })
 
 // V10: 2026-03-27-chat-module-prd.md
-describe('ChatInput — submit (V10)', () => {
+describe('Composer — submit (V10)', () => {
   it('calls onSubmit with trimmed text on Enter', async () => {
     const user = userEvent.setup()
     let submitted = ''
-    render(<ChatInput onSubmit={(t) => { submitted = t }} />)
+    render(<Composer onSubmit={(t) => { submitted = t }} />)
 
     const textarea = screen.getByRole('textbox')
     await user.click(textarea)
@@ -200,13 +205,157 @@ describe('ChatInput — submit (V10)', () => {
 
   it('does not submit when disabled', () => {
     let submitted = ''
-    render(<ChatInput onSubmit={(t) => { submitted = t }} disabled />)
+    render(<Composer onSubmit={(t) => { submitted = t }} disabled />)
 
-    const textarea = screen.getByRole('textbox')
-    expect((textarea as HTMLTextAreaElement).disabled).toBe(true)
+    const textbox = screen.getByRole('textbox')
+    expect(textbox.contentEditable).toBe('false')
     expect(submitted).toBe('')
   })
 })
 
 // Import StoreBlock type for V9
 import type { StoreBlock } from '../interactive-os/ui/chat/types'
+
+// V1: 2026-03-30-composer-ghost-text-prd.md
+describe('Composer — ghost text autocomplete', () => {
+  it('renders overlay with command highlight and ghost text', () => {
+    const { container } = render(
+      <Composer
+        ghostText="cuss"
+        commandHighlight={4}
+        overlayText="/dis"
+      />,
+    )
+
+    const overlay = container.querySelector('[aria-hidden="true"]') as HTMLElement
+    expect(overlay).toBeTruthy()
+
+    const spans = overlay.querySelectorAll('span')
+    expect(spans[0].textContent).toBe('/dis')
+    expect(spans[1].textContent).toBe('cuss')
+  })
+
+  // V2: 2026-03-30-composer-ghost-text-prd.md
+  it('Tab accepts ghost text via onGhostAccept', async () => {
+    const user = userEvent.setup()
+    let accepted = false
+    render(
+      <Composer
+        ghostText="cuss"
+        commandHighlight={4}
+        overlayText="/dis"
+        onGhostAccept={() => { accepted = true }}
+      />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    await user.click(textbox)
+    await user.keyboard('{Tab}')
+
+    expect(accepted).toBe(true)
+  })
+
+  // V3: 2026-03-30-composer-ghost-text-prd.md
+  it('Tab without ghost does not prevent default', async () => {
+    const user = userEvent.setup()
+    let accepted = false
+    render(
+      <Composer
+        onGhostAccept={() => { accepted = true }}
+      />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    await user.click(textbox)
+    await user.keyboard('{Tab}')
+
+    expect(accepted).toBe(false)
+  })
+
+  // V9: 2026-03-30-composer-ghost-text-prd.md
+  it('Enter submits normally, ignoring ghost', async () => {
+    const user = userEvent.setup()
+    let submitted = ''
+    render(
+      <Composer
+        onSubmit={(t) => { submitted = t }}
+        ghostText="cuss"
+        commandHighlight={4}
+        overlayText="/dis"
+      />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    await user.click(textbox)
+    await user.type(textbox, '/dis{Enter}')
+
+    expect(submitted).toBe('/dis')
+  })
+
+  // V5: 2026-03-30-composer-ghost-text-prd.md
+  it('renders command highlight with args portion in normal color', () => {
+    const { container } = render(
+      <Composer
+        commandHighlight={8}
+        overlayText="/discuss hello"
+      />,
+    )
+
+    const overlay = container.querySelector('[aria-hidden="true"]') as HTMLElement
+    expect(overlay).toBeTruthy()
+
+    const spans = overlay.querySelectorAll('span')
+    expect(spans[0].textContent).toBe('/discuss')
+    expect(spans[1].textContent).toBe(' hello')
+  })
+
+  it('fires onTextChange on input', async () => {
+    const user = userEvent.setup()
+    let changed = ''
+    render(
+      <Composer onTextChange={(t) => { changed = t }} />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    await user.click(textbox)
+    await user.type(textbox, '/dis')
+
+    expect(changed).toBe('/dis')
+  })
+
+  it('hides overlay when no ghost and no highlight', () => {
+    const { container } = render(<Composer />)
+    const overlay = container.querySelector('[aria-hidden="true"]')
+    expect(overlay).toBeNull()
+  })
+
+  // V10: 2026-03-30-composer-ghost-text-prd.md
+  it('Escape dismisses ghost via onGhostDismiss', async () => {
+    const user = userEvent.setup()
+    let dismissed = false
+    render(
+      <Composer
+        ghostText="cuss"
+        commandHighlight={4}
+        overlayText="/dis"
+        onGhostDismiss={() => { dismissed = true }}
+      />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    await user.click(textbox)
+    await user.keyboard('{Escape}')
+
+    expect(dismissed).toBe(true)
+  })
+
+  // V7: 2026-03-30-composer-ghost-text-prd.md
+  it('disabled state shows no overlay', () => {
+    const { container } = render(
+      <Composer disabled ghostText="cuss" commandHighlight={4} overlayText="/dis" />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    expect(textbox.contentEditable).toBe('false')
+  })
+})

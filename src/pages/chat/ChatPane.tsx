@@ -2,6 +2,7 @@
 import { useCallback, useMemo, useState, useEffect, useRef } from 'react'
 import { ChatFeed } from '../../interactive-os/ui/chat/ChatFeed'
 import { Composer } from '../../interactive-os/ui/Composer'
+import type { ComposerHandle } from '../../interactive-os/ui/Composer'
 import { ThinkingBlock } from '../../interactive-os/ui/chat/ThinkingBlock'
 import { ToolSummaryBlock, ToolResultBlock } from '../../interactive-os/ui/chat/ToolSummaryBlock'
 import { StreamingTextBlock } from '../../interactive-os/ui/chat/StreamingTextBlock'
@@ -49,8 +50,48 @@ function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4)
 }
 
+// ② 2026-03-30-composer-ghost-text-prd.md
+const NO_MATCH = { ghostText: '', commandHighlight: 0 } as const
+const EMPTY_COMMANDS: string[] = []
+
+function useCommandMatch(commands: string[], text: string) {
+  const sorted = useMemo(() => [...commands].sort(), [commands])
+
+  return useMemo(() => {
+    if (!text.startsWith('/')) return NO_MATCH
+
+    const firstLine = text.split('\n')[0]
+    const spaceIdx = firstLine.indexOf(' ', 1)
+    const typedCmd = spaceIdx > 0 ? firstLine.slice(1, spaceIdx) : firstLine.slice(1)
+    const hasArgs = spaceIdx > 0
+
+    const match = sorted.find(cmd => cmd.startsWith(typedCmd))
+    if (!match) return NO_MATCH
+
+    const highlightLen = hasArgs
+      ? 1 + match.length
+      : 1 + typedCmd.length
+
+    const isExact = typedCmd === match
+    const ghostText = (!hasArgs && !isExact) ? match.slice(typedCmd.length) : ''
+
+    return { ghostText, commandHighlight: highlightLen }
+  }, [sorted, text])
+}
+
 export function ChatPane({ sessionId }: { sessionId: string }) {
   const session = useChatSession(sessionId)
+  const composerRef = useRef<ComposerHandle>(null)
+  const [inputText, setInputText] = useState('')
+  const [ghostDismissed, setGhostDismissed] = useState(false)
+
+  const isRunning = session?.state === 'running'
+  const elapsed = useElapsed(isRunning)
+
+  const commands = session?.commands ?? EMPTY_COMMANDS
+  const match = useCommandMatch(commands, inputText)
+  const ghostText = ghostDismissed ? '' : match.ghostText
+  const commandHighlight = match.commandHighlight
 
   const handleSubmit = useCallback((text: string) => {
     if (text === '/clear') {
@@ -58,14 +99,28 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
       return
     }
     sendMessage(sessionId, text)
+    setInputText('')
   }, [sessionId])
 
   const handleInterrupt = useCallback(() => {
     interruptSession(sessionId)
   }, [sessionId])
 
-  const isRunning = session?.state === 'running'
-  const elapsed = useElapsed(isRunning)
+  const handleTextChange = useCallback((text: string) => {
+    setInputText(text)
+    setGhostDismissed(false)
+  }, [])
+
+  const handleGhostAccept = useCallback(() => {
+    if (!ghostText) return
+    const newText = inputText + ghostText
+    composerRef.current?.setText(newText)
+    setInputText(newText)
+  }, [ghostText, inputText])
+
+  const handleGhostDismiss = useCallback(() => {
+    setGhostDismissed(true)
+  }, [])
 
   const messages: ChatMessage[] = useMemo(() => {
     if (!session) return []
@@ -114,19 +169,25 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
           </div>
         )}
         <Composer
+          ref={composerRef}
           onSubmit={handleSubmit}
           disabled={isRunning}
           placeholder="Send a message..."
+          ghostText={ghostText}
+          commandHighlight={commandHighlight}
+          overlayText={inputText}
+          onGhostAccept={handleGhostAccept}
+          onGhostDismiss={handleGhostDismiss}
+          onTextChange={handleTextChange}
         />
         <div className={styles.chatStatusBar}>
-          {usage ? (
+          <span>{session.model || 'connecting...'}</span>
+          {usage && (
             <>
               <span>{formatTokens(usage.input)} in · {formatTokens(usage.output)} out</span>
               <span>${usage.costUsd.toFixed(4)}</span>
               <span>{(usage.durationMs / 1000).toFixed(1)}s</span>
             </>
-          ) : (
-            <span>claude-sonnet-4-6</span>
           )}
           <span className={styles.chatHint}>/clear to reset</span>
         </div>
