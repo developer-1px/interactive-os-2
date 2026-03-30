@@ -6,6 +6,7 @@ import type { NodeState } from '../pattern/types'
 import { useNavList } from './useNavList'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
+import { getNodeLabel } from './types'
 import styles from './NavList.module.css'
 
 interface NavListProps {
@@ -20,9 +21,7 @@ interface NavListProps {
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
+  const label = getNodeLabel(item)
   return <div {...props}>{label}</div>
 }
 

@@ -2,8 +2,9 @@ import React, { useState, useMemo } from 'react'
 import { X } from 'lucide-react'
 import styles from './Combobox.module.css'
 import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import { useAria } from '../primitives/useAria'
 import { combobox as comboboxBehavior } from '../pattern/roles/combobox'
 import { selectionCommands } from '../axis/select'
@@ -16,11 +17,7 @@ import { mergeProps } from '../primitives/mergeProps'
 
 const CREATE_SENTINEL = '__create_option__'
 
-interface ComboboxProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
+interface ComboboxProps extends AriaComponentProps {
   placeholder?: string
   editable?: boolean
   selectionMode?: 'single' | 'multiple'
@@ -185,7 +182,7 @@ export function Combobox({
 
   const defaultRender = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
     <div {...props} className={`${styles.comboItem}${state.focused ? ` ${styles.comboItemFocused}` : ''}${state.selected ? ` ${styles.comboItemSelected}` : ''}`}>
-      {(item.data as Record<string, unknown>)?.label as string ?? item.id}
+      {getNodeLabel(item)}
     </div>
   )
 

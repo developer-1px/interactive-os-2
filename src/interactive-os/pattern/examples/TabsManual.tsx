@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
+import { TabList } from '../../ui/TabList'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { tabsManual } from '../../pattern/roles/tabsManual'
 import styles from './tabs.module.css'
 
 // APG #60: Tabs with Manual Activation
@@ -43,18 +42,16 @@ const renderTab = (
 
 export function TabsManual() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => tabsManual, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <TabList
       data={store}
       plugins={[]}
       onChange={onChange}
+      renderItem={renderTab}
+      manual
       aria-label="Entertainment"
-    >
-      <Aria.Item render={renderTab} />
-    </Aria>
+    />
   )
 }

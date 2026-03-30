@@ -30,6 +30,13 @@ export interface AriaComponentProps {
   'aria-label'?: string
 }
 
+/** Extract display label from a normalized entity */
+export function getNodeLabel(item: Record<string, unknown>): string {
+  return (item.data as Record<string, unknown>)?.label as string
+    ?? (item.data as Record<string, unknown>)?.name as string
+    ?? item.id as string
+}
+
 /**
  * Renderer 합성: user > plugin(뒤→앞) > default.
  * Plugin renderer는 null 반환 시 다음 레이어로 fallback.

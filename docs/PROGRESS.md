@@ -54,7 +54,7 @@
 | composePattern | Integrated | keyMap + config + middleware 합성 |
 | edit | Integrated | — |
 | pointer interaction | Integrated | — |
-| examples/ (17 APG presets) | Integrated | pattern/roles/로 분리, APG 레퍼런스 구현 |
+| examples/ (36 APG presets) | Integrated | 33/36 ui/ 소비 구조 전환 완료. 3종 미전환(CarouselTabs·DatePicker·CarouselPrevNext = composite/비-ARIA) |
 | menubar | Integrated | expand axis + custom handlers, multi-zone 아님 |
 
 ## Primitives (L6)
@@ -72,13 +72,16 @@
 | Component | Maturity | Gaps |
 |-----------|----------|------|
 | indicators/ (Expand·Check·Radio·Switch·Separator) | Validated | 5/18 완료, Phase 2~3 미착수 |
-| **AriaComponentProps** (공통 인터페이스) | Validated | data/plugins/renderItem/onChange/onActivate/onFocusChange/className. mergeRenderers (fallback chain). Plugin.renderer 슬롯 |
-| **ListBoxGrouped** | Validated | listboxGrouped pattern 기반 별도 완성품. 동적 childRole(group/option) |
-| TreeGrid · ListBox · TabList · Grid | Integrated | v3 구조화(module.css + parts + data-*). ListBox 완료, 나머지 기존 완비 |
-| Accordion · MenuList · DisclosureGroup | Integrated | v3 구조화 완료(module.css + parts + data-*) |
-| Combobox · RadioGroup · SwitchGroup | Integrated | v3 구조화 완료(module.css + parts + data-*) |
-| Kanban · Slider · Spinbutton | Integrated | CSS module 완비 |
-| Checkbox · Toggle · ToggleGroup · AlertDialog | Integrated | v3 구조화 완료(Checkbox·Toggle·ToggleGroup), testPath 미연결(4종) |
+| **AriaComponentProps** (공통 인터페이스) | Integrated | data/plugins/renderItem/onChange/onActivate/onFocusChange/className. mergeRenderers, getNodeLabel. 전 ui/ 컴포넌트 통일 완료 |
+| **ListBoxGrouped** | Integrated | listboxGrouped pattern 기반 별도 완성품. 동적 childRole(group/option) |
+| TreeGrid · ListBox · TabList · Grid | Integrated | AriaComponentProps 통일, TabList manual prop 추가 |
+| Accordion · MenuList · DisclosureGroup | Integrated | AriaComponentProps 통일 |
+| Combobox · RadioGroup · SwitchGroup | Integrated | AriaComponentProps 통일 |
+| Kanban · Slider · Spinbutton | Integrated | AriaComponentProps 통일 |
+| Checkbox · Toggle · ToggleGroup · AlertDialog | Integrated | AriaComponentProps 통일 |
+| MenuButton · Menubar · Toolbar | Integrated | AriaComponentProps 통일. MenuButton useAria 직접 사용 (popup 패턴) |
+| Alert · Link · Meter · Feed · Table · WindowSplitter | Validated | 신규 ui/ 완성품. 단순 패턴 래핑 |
+| ButtonToggle · CheckboxMixed · RadioGroupActivedescendant · MenuActivedescendant | Validated | pattern variant별 별도 완성품 (Pattern=identity 원칙) |
 | Form | Prototype | Zod 기반 폼 검증 UI, listbox 패턴 + form 플러그인 |
 | SpatialView | Validated | 읽기 전용 공간 탐색 컨테이너. spatialViewPreset + useSpatialNav. storymap에서 검증 |
 | Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음, Toaster testPath 없음 |

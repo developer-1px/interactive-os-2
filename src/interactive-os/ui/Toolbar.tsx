@@ -1,13 +1,15 @@
 import React from 'react'
 import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Undo, Redo, Copy, Scissors, Clipboard, Trash2, Plus, Minus, Search, Settings, type LucideIcon } from 'lucide-react'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
 import type { PatternContext, NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
+import { getNodeLabel } from './types'
 import styles from './Toolbar.module.css'
+
+const toolbarPattern = toolbar()
 
 const iconMap: Record<string, LucideIcon> = {
   bold: Bold, italic: Italic, underline: Underline,
@@ -16,19 +18,13 @@ const iconMap: Record<string, LucideIcon> = {
   delete: Trash2, add: Plus, remove: Minus, search: Search, settings: Settings,
 }
 
-interface ToolbarProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  onActivate?: (nodeId: string) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
+interface ToolbarProps extends AriaComponentProps {
   orientation?: 'horizontal' | 'vertical'
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const data = item.data as Record<string, unknown> | undefined
-  const label = data?.label as string ?? data?.name as string ?? item.id as string
-  const iconKey = data?.icon as string | undefined
+  const label = getNodeLabel(item)
+  const iconKey = (item.data as Record<string, unknown>)?.icon as string | undefined
   const Icon = iconKey ? iconMap[iconKey] : undefined
   const cls = 'inline-flex items-center justify-center ' + styles.toolbarBtn + (state.focused ? ' ' + styles.toolbarBtnFocused : '') + (state.selected ? ' ' + styles.toolbarBtnSelected : '')
   return (
@@ -58,7 +54,7 @@ export function Toolbar({
 }: ToolbarProps) {
   return (
     <Aria
-      pattern={toolbar()}
+      pattern={toolbarPattern}
       data={data}
       plugins={plugins}
       onChange={onChange}

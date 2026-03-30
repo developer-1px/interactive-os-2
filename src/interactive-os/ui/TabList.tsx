@@ -11,6 +11,8 @@ interface TabListProps extends AriaComponentProps {
   enableEditing?: boolean
   keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   initialFocus?: string
+  /** When true, uses tabsManual pattern (selection does NOT follow focus). */
+  manual?: boolean
 }
 
 const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, _state: NodeState): React.ReactElement => {
@@ -29,6 +31,7 @@ export function TabList({
   enableEditing = false,
   keyMap,
   initialFocus,
+  manual = false,
   'aria-label': ariaLabel,
 }: TabListProps) {
   const tl = useTabList({
@@ -39,6 +42,7 @@ export function TabList({
     enableEditing,
     keyMap,
     initialFocus,
+    manual,
     'aria-label': ariaLabel,
   })
 

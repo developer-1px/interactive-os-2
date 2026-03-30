@@ -1,25 +1,18 @@
 import React from 'react'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
-import { switchPattern } from '../pattern/roles/switch'
+import { checkbox } from '../pattern/roles/checkbox'
 import { CheckIndicator } from './indicators'
 import styles from './Checkbox.module.css'
 
-interface CheckboxProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
-}
+type CheckboxProps = AriaComponentProps
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
-  const checked = state.expanded ?? false
+  const label = getNodeLabel(item)
+  const checked = state.checked === true
   return (
     <div {...props} className={styles.item} data-focused={state.focused || undefined}>
       <CheckIndicator checked={checked} />
@@ -33,9 +26,10 @@ export function Checkbox({
   plugins = [],
   onChange,
   renderItem = defaultRenderItem,
+  'aria-label': ariaLabel,
 }: CheckboxProps) {
   return (
-    <Aria pattern={switchPattern} data={data} plugins={plugins} onChange={onChange}>
+    <Aria pattern={checkbox} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
       <Aria.Item render={renderItem} />
     </Aria>
   )

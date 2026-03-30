@@ -2,6 +2,7 @@ import React from 'react'
 
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { listbox } from '../pattern/roles/listbox'
 import { history } from '../plugins/history'
@@ -9,15 +10,15 @@ import { edit, replaceEditPlugin } from '../plugins/edit'
 import { search } from '../plugins/search'
 import styles from './ListBox.module.css'
 
+const listboxPattern = listbox()
+
 interface ListBoxProps extends AriaComponentProps {
   enableEditing?: boolean
   searchable?: boolean
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
+  const label = getNodeLabel(item)
   return (
     <div {...props} className={styles.item} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
       <span className={styles.label}>{label}</span>
@@ -33,11 +34,6 @@ export function ListBox({
   enableEditing = false,
   searchable = false,
 }: ListBoxProps) {
-  const pattern = React.useMemo(
-    () => listbox(),
-    [],
-  )
-
   const mergedPlugins = React.useMemo(
     () => {
       const result = [...plugins]
@@ -50,7 +46,7 @@ export function ListBox({
 
   return (
     <Aria
-      pattern={pattern}
+      pattern={listboxPattern}
       data={data}
       plugins={mergedPlugins}
       onChange={onChange}

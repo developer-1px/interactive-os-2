@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { radiogroup } from '../../pattern/roles/radiogroup'
+import { RadioGroup as RadioGroupUI } from '../../ui/RadioGroup'
 import styles from './radiogroup.module.css'
 
 // APG #45: Radio Group Using Roving tabindex
@@ -47,18 +46,14 @@ const renderRadio = (
 
 export function RadioGroup() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => radiogroup, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <RadioGroupUI
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderRadio}
       aria-label="Pizza Crust"
-    >
-      <Aria.Item render={renderRadio} />
-    </Aria>
+    />
   )
 }

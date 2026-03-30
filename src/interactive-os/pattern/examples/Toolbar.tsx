@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { toolbar } from '../../pattern/roles/toolbar'
+import { Toolbar as ToolbarUI } from '../../ui/Toolbar'
 import styles from './toolbar.module.css'
 
 // APG #61: Toolbar
@@ -48,18 +47,14 @@ const renderButton = (
 
 export function Toolbar() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => toolbar(), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <ToolbarUI
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderButton}
       aria-label="Text Formatting"
-    >
-      <Aria.Item render={renderButton} />
-    </Aria>
+    />
   )
 }

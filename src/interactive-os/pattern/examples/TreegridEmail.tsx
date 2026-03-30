@@ -1,12 +1,12 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { treegrid } from '../../pattern/roles/treegrid'
 import { EXPANDED_ID } from '../../axis/expand'
 import { GRID_COL_ID } from '../../axis/navigate'
+import { Aria } from '../../primitives/aria'
+import { TreeGrid } from '../../ui/TreeGrid'
 import styles from './treegrid.module.css'
 
 // APG #66: Treegrid Email Inbox
@@ -100,18 +100,16 @@ const renderRow = (
 
 export function TreegridEmail() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => treegrid(3), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <TreeGrid
       data={store}
       plugins={[]}
       onChange={onChange}
+      renderItem={renderRow}
+      columns={3}
       aria-label="Inbox"
-    >
-      <Aria.Item render={renderRow} />
-    </Aria>
+    />
   )
 }

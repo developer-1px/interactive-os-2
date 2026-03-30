@@ -1,11 +1,11 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
+import type { TreeItemRenderProps } from '../../ui/TreeView'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { tree } from '../../pattern/roles/tree'
 import { EXPANDED_ID } from '../../axis/expand'
+import { TreeView } from '../../ui/TreeView'
 import styles from './tree.module.css'
 
 // APG #63: File Directory Treeview
@@ -60,7 +60,7 @@ const data: NormalizedData = createStore({
 })
 
 const renderTreeitem = (
-  props: React.HTMLAttributes<HTMLElement>,
+  props: TreeItemRenderProps,
   node: Record<string, unknown>,
   state: NodeState,
 ): React.ReactElement => {
@@ -69,12 +69,11 @@ const renderTreeitem = (
 
   return (
     <div
-      {...props}
       className={styles.treeitem}
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >
-      <span className={styles.indicator} aria-hidden="true">
+      <span {...props.toggleProps} className={styles.indicator} aria-hidden="true">
         {isFolder ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
       </span>
       <span>{label}</span>
@@ -84,18 +83,15 @@ const renderTreeitem = (
 
 export function TreeFile() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => tree, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <TreeView
       data={store}
       plugins={[]}
       onChange={onChange}
+      renderItem={renderTreeitem}
       aria-label="File Directory"
-    >
-      <Aria.Item render={renderTreeitem} />
-    </Aria>
+    />
   )
 }

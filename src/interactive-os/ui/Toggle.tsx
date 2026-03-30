@@ -1,23 +1,16 @@
 import React from 'react'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
+import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/roles/switch'
 import styles from './Toggle.module.css'
 
-interface ToggleProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
-}
+type ToggleProps = AriaComponentProps
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-    ?? (item.data as Record<string, unknown>)?.name as string
-    ?? item.id as string
+  const label = getNodeLabel(item)
   const checked = state.expanded ?? false
   return (
     <div {...props} className={styles.item} data-focused={state.focused || undefined}>

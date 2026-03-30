@@ -1,11 +1,10 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { accordion } from '../../pattern/roles/accordion'
 import { EXPANDED_ID } from '../../axis/expand'
+import { Accordion as AccordionUI } from '../../ui/Accordion'
 import { ExpandIndicator } from '../../ui/indicators'
 import styles from './accordion.module.css'
 
@@ -112,23 +111,15 @@ const renderRegion = (
 
 export function Accordion() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => accordion, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <AccordionUI
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderHeader}
+      renderPanel={renderRegion}
       aria-label="Accordion Example"
-    >
-      {sections.map(s => (
-        <React.Fragment key={s.id}>
-          <Aria.Item ids={[s.id]} render={renderHeader} />
-          <Aria.Panel ids={[s.id]} render={renderRegion} />
-        </React.Fragment>
-      ))}
-    </Aria>
+    />
   )
 }

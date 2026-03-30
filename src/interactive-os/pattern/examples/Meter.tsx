@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { meter } from '../../pattern/roles/meter'
+import { Meter as MeterComponent } from '../../ui/Meter'
 import styles from './meter.module.css'
 
 // APG #44: Meter
@@ -43,18 +42,14 @@ const renderMeter = (
 
 export function Meter() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => meter, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <MeterComponent
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderMeter}
       aria-label="System Metrics"
-    >
-      <Aria.Item render={renderMeter} />
-    </Aria>
+    />
   )
 }

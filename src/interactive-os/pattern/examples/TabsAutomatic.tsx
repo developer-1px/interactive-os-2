@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
+import { TabList } from '../../ui/TabList'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { tabs } from '../../pattern/roles/tabs'
 import styles from './tabs.module.css'
 
 // APG #59: Tabs with Automatic Activation
@@ -53,34 +52,17 @@ const renderTab = (
   )
 }
 
-const renderPanel = (
-  props: React.HTMLAttributes<HTMLElement>,
-  node: Record<string, unknown>,
-  _state: NodeState,
-): React.ReactElement => {
-  const content = (node.data as Record<string, unknown>)?.content as string
-  return (
-    <div {...props} className={styles.panel}>
-      <p>{content}</p>
-    </div>
-  )
-}
-
 export function TabsAutomatic() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => tabs, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <TabList
       data={store}
       plugins={[]}
       onChange={onChange}
+      renderItem={renderTab}
       aria-label="Entertainment"
-    >
-      <Aria.Item render={renderTab} />
-      <Aria.Panel render={renderPanel} />
-    </Aria>
+    />
   )
 }

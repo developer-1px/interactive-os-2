@@ -30,7 +30,7 @@ module.exports = {
     {
       name: 'no-layer-violation',
       severity: 'error',
-      from: { path: '^src/interactive-os/pattern/' },
+      from: { path: '^src/interactive-os/pattern/', pathNot: '^src/interactive-os/pattern/examples/' },
       to: { path: '^src/interactive-os/(plugins|misc|primitives|ui)/' },
     },
     {

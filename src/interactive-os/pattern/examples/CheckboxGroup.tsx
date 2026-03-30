@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { checkbox } from '../../pattern/roles/checkbox'
+import { Checkbox } from '../../ui/Checkbox'
 import styles from './checkbox.module.css'
 
 // APG #9: Checkbox (Two State)
@@ -50,18 +49,14 @@ const renderCheckbox = (
 
 export function CheckboxGroup() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => checkbox, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <Checkbox
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderCheckbox}
       aria-label="Sandwich Condiments"
-    >
-      <Aria.Item render={renderCheckbox} />
-    </Aria>
+    />
   )
 }

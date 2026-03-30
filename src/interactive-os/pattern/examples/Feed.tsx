@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { feed } from '../../pattern/roles/feed'
+import { Feed as FeedComponent } from '../../ui/Feed'
 import styles from './feed.module.css'
 
 // APG #24: Feed
@@ -46,18 +45,14 @@ const renderArticle = (
 
 export function Feed() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => feed, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <FeedComponent
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderArticle}
       aria-label="Articles"
-    >
-      <Aria.Item render={renderArticle} />
-    </Aria>
+    />
   )
 }

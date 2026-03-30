@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { combobox } from '../../pattern/roles/combobox'
+import { Combobox } from '../../ui/Combobox'
 import styles from './combobox.module.css'
 
 // APG #11: Select-Only Combobox
@@ -49,18 +48,15 @@ const renderOption = (
 
 export function ComboboxSelectOnly() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => combobox(), [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <Combobox
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderOption}
+      plugins={[]}
       aria-label="Choose a Fruit"
-    >
-      <Aria.Item render={renderOption} />
-    </Aria>
+    />
   )
 }

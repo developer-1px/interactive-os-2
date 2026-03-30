@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { link } from '../../pattern/roles/link'
+import { Link as LinkComponent } from '../../ui/Link'
 import styles from './link.module.css'
 
 // APG #35: Link
@@ -46,18 +45,14 @@ const renderLink = (
 
 export function Link() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => link, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <LinkComponent
       data={store}
-      plugins={[]}
       onChange={onChange}
+      renderItem={renderLink}
       aria-label="Navigation Links"
-    >
-      <Aria.Item render={renderLink} />
-    </Aria>
+    />
   )
 }
