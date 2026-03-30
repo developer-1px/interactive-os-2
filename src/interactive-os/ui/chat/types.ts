@@ -14,6 +14,7 @@ export interface ChatMessage {
 
 export type ChatBlock =
   | TextBlock
+  | StreamingTextBlock
   | CodeBlock
   | DiffBlock
   | DataBlock
@@ -22,6 +23,12 @@ export type ChatBlock =
 /** Markdown text */
 export interface TextBlock {
   type: 'text'
+  content: string
+}
+
+/** Plain text rendered during active streaming — no markdown parsing */
+export interface StreamingTextBlock {
+  type: 'streaming_text'
   content: string
 }
 
