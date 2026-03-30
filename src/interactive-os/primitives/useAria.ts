@@ -241,8 +241,8 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           if (handler) {
             const baseCtx = (key === 'Shift+Click' && pointerDownCtxRef.current)
               ? pointerDownCtxRef.current
-              : createPatternContext(observedEngine, { ...patternCtxOptions as PatternContextOptions })
-            const ctx = { ...baseCtx, focused: id }
+              : createPatternContext(observedEngine, { ...patternCtxOptions as PatternContextOptions, overrideFocused: id })
+            const ctx = baseCtx.focused === id ? baseCtx : { ...baseCtx, focused: id }
             dispatchKeyAction(ctx, handler as (c: typeof ctx) => Command | void, observedEngine)
           }
           pointerDownCtxRef.current = null
