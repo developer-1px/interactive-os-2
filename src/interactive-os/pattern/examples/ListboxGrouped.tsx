@@ -1,10 +1,9 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import { listboxGrouped } from '../../pattern/roles/listboxGrouped'
+import { ListBoxGrouped } from '../../ui/ListBoxGrouped'
 import styles from './listbox.module.css'
 
 // APG #38: Listbox with Grouped Options — "Choose your animal sidekick"
@@ -41,8 +40,6 @@ const data: NormalizedData = createStore({
   },
 })
 
-// APG #38: group label (role="presentation") + options inside ul[role="group"]
-// https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-grouped/
 const renderItem = (
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
@@ -52,7 +49,6 @@ const renderItem = (
   const label = (node.data as Record<string, unknown>)?.label as string
 
   if (children) {
-    // Container node → APG: ul[role="group"] wrapper with presentation label
     const labelId = `group-label-${node.id}`
     return (
       <ul {...props} aria-labelledby={labelId} className={styles.groupOptions}>
@@ -77,18 +73,15 @@ const renderItem = (
 
 export function ListboxGrouped() {
   const [store, setStore] = useState<NormalizedData>(data)
-  const pattern = useMemo(() => listboxGrouped, [])
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <Aria
-      pattern={pattern}
+    <ListBoxGrouped
       data={store}
       plugins={[]}
       onChange={onChange}
+      renderItem={renderItem}
       aria-label="Choose your animal sidekick"
-    >
-      <Aria.Item render={renderItem} />
-    </Aria>
+    />
   )
 }

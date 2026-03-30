@@ -1,16 +1,15 @@
-import { useState, useMemo, useCallback, useRef } from 'react'
+import React, { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import { Aria } from '../../primitives/aria'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { SELECTION_ID } from '../../axis/select'
-import { listbox } from '../../pattern/roles/listbox'
+import { ListBox } from '../../ui/ListBox'
 import styles from './listbox.module.css'
 
 // APG #37: Listbox with Rearrangeable Options (Example 2 — Multi-Select)
 // https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-rearrangeable/
-// Two independent Aria listboxes + toolbar, items move between them
+// Two independent ListBox instances + toolbar, items move between them
 
 interface Item {
   id: string
@@ -40,61 +39,53 @@ function buildListboxStore(ids: string[]): NormalizedData {
   return createStore({ entities, relationships: { [ROOT_ID]: ids } })
 }
 
-const multiSelectListbox = listbox()
+const renderOption = (
+  props: React.HTMLAttributes<HTMLElement>,
+  node: Record<string, unknown>,
+  state: NodeState,
+): React.ReactElement => {
+  const label = (node.data as Record<string, unknown>)?.label as string
+  return (
+    <div
+      {...props}
+      className={styles.option}
+      data-focused={state.focused || undefined}
+      data-selected={state.selected || undefined}
+    >
+      {state.selected && <span aria-hidden="true" className={styles.check}>✓</span>}
+      {label}
+    </div>
+  )
+}
 
 function ListboxZone({
   label,
   ids,
   onSelectionChange,
-  listboxRef,
 }: {
   label: string
   ids: string[]
   onSelectionChange: (selectedIds: string[]) => void
-  listboxRef: React.RefObject<HTMLDivElement | null>
 }) {
-  const store = useMemo(() => buildListboxStore(ids), [ids])
+  const store = React.useMemo(() => buildListboxStore(ids), [ids])
 
   const onChange = useCallback((nextStore: NormalizedData) => {
     const selectedIds = (nextStore.entities[SELECTION_ID]?.selectedIds as string[]) ?? []
     onSelectionChange(selectedIds)
   }, [onSelectionChange])
 
-  const renderOption = useCallback((
-    props: React.HTMLAttributes<HTMLElement>,
-    node: Record<string, unknown>,
-    state: NodeState,
-  ): React.ReactElement => {
-    const nodeLabel = (node.data as Record<string, unknown>)?.label as string
-    return (
-      <div
-        {...props}
-        className={styles.option}
-        data-focused={state.focused || undefined}
-        data-selected={state.selected || undefined}
-      >
-        {state.selected && <span aria-hidden="true" className={styles.check}>✓</span>}
-        {nodeLabel}
-      </div>
-    )
-  }, [])
-
   return (
     <div className={styles.listboxZone}>
       <span className={styles.zoneLabel} id={`label-${label.toLowerCase().replace(/\s/g, '-')}`}>
         {label}
       </span>
-      <div ref={listboxRef}>
-        <Aria
-          pattern={multiSelectListbox}
-          data={store}
-          plugins={[]}
-          onChange={onChange}
-          aria-labelledby={`label-${label.toLowerCase().replace(/\s/g, '-')}`}
-        >
-          <Aria.Item render={renderOption} />
-        </Aria>
-      </div>
+      <ListBox
+        data={store}
+        plugins={[]}
+        onChange={onChange}
+        renderItem={renderOption}
+        aria-label={label}
+      />
     </div>
   )
 }
@@ -108,9 +99,6 @@ export function ListboxRearrangeable() {
   )
   const [availableSelected, setAvailableSelected] = useState<string[]>([])
   const [chosenSelected, setChosenSelected] = useState<string[]>([])
-
-  const availableRef = useRef<HTMLDivElement>(null)
-  const chosenRef = useRef<HTMLDivElement>(null)
 
   const addToChosen = useCallback(() => {
     if (availableSelected.length === 0) return
@@ -132,7 +120,6 @@ export function ListboxRearrangeable() {
         label="Available upgrades"
         ids={availableIds}
         onSelectionChange={setAvailableSelected}
-        listboxRef={availableRef}
       />
 
       <div role="toolbar" aria-label="Actions" className={styles.toolbar}>
@@ -158,7 +145,6 @@ export function ListboxRearrangeable() {
         label="Chosen upgrades"
         ids={chosenIds}
         onSelectionChange={setChosenSelected}
-        listboxRef={chosenRef}
       />
     </div>
   )
