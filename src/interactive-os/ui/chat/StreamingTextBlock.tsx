@@ -21,7 +21,12 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
     displayedRef.current += pendingRef.current
     pendingRef.current = ''
     setDisplayed(displayedRef.current)
-    cursorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+
+    const cursor = cursorRef.current
+    if (!cursor) return
+    const feed = cursor.closest('[role="feed"]') as HTMLElement | null
+    const nearBottom = !feed || feed.scrollHeight - feed.scrollTop - feed.clientHeight <= 40
+    if (nearBottom) cursor.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [])
 
   useEffect(() => {
