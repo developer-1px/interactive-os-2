@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildNavStore, buildKanbanStore } from '../../pages/birdseye/birdseyeTransform'
+import { buildNavStore, buildKanbanStore, topoSortDirs } from '../../pages/birdseye/birdseyeTransform'
 import { createStore, getChildren, getEntityData } from '../../interactive-os/store/createStore'
 import { ROOT_ID } from '../../interactive-os/store/types'
 import type { NormalizedData } from '../../interactive-os/store/types'
@@ -191,5 +191,38 @@ describe('buildKanbanStore', () => {
     const fileCards = getChildren(kanbanStore, 'col:__files__')
     expect(fileCards).toHaveLength(1)
     expect(fileCards).toContain('card:docs/README.md')
+  })
+})
+
+describe('topoSortDirs', () => {
+  it('sorts directories by dependency order (depended-on first)', () => {
+    // edges: ui→primitives, primitives→pattern, pattern→axis, axis→engine, engine→store
+    const edges = [
+      { from: 'ui', to: 'primitives' },
+      { from: 'primitives', to: 'pattern' },
+      { from: 'pattern', to: 'axis' },
+      { from: 'axis', to: 'engine' },
+      { from: 'engine', to: 'store' },
+    ]
+    const dirs = ['axis', 'engine', 'pattern', 'primitives', 'store', 'ui']
+    const result = topoSortDirs(dirs, edges)
+    expect(result).toEqual(['store', 'engine', 'axis', 'pattern', 'primitives', 'ui'])
+  })
+
+  it('handles cycles gracefully (falls back to alphabetical for cycle members)', () => {
+    const edges = [
+      { from: 'a', to: 'b' },
+      { from: 'b', to: 'a' }, // cycle
+      { from: 'c', to: 'a' },
+    ]
+    const dirs = ['a', 'b', 'c']
+    const result = topoSortDirs(dirs, edges)
+    // a,b are in a cycle — their relative order is alphabetical. c depends on a so comes after.
+    expect(result).toEqual(['a', 'b', 'c'])
+  })
+
+  it('returns alphabetical when no edges', () => {
+    const result = topoSortDirs(['z', 'a', 'm'], [])
+    expect(result).toEqual(['a', 'm', 'z'])
   })
 })

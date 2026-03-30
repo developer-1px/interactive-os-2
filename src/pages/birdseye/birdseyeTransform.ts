@@ -87,6 +87,8 @@ export interface KanbanBuildOptions {
   depCounts?: Record<string, { imports: number; importedBy: number }>
   /** 확장자 필터. 설정 시 해당 확장자 파일만 표시 */
   extFilter?: string
+  /** 폴더 간 의존 edge 목록 — columnOrder가 없을 때 위상 정렬에 사용 */
+  folderEdges?: { from: string; to: string }[]
 }
 
 /** 디렉토리를 정렬하는 공통 로직 */
@@ -108,15 +110,9 @@ function sortDirs(fsStore: NormalizedData, dirIds: string[], order?: string[]): 
   })
 }
 
-/** 파일 메타 subtitle 구성: LOC + deps */
-function buildSubtitle(loc: number | undefined, deps: { imports: number; importedBy: number } | undefined): string | undefined {
-  const parts: string[] = []
-  if (loc != null) parts.push(`${loc}L`)
-  if (deps) {
-    if (deps.importedBy > 0) parts.push(`↑${deps.importedBy}`)
-    if (deps.imports > 0) parts.push(`↓${deps.imports}`)
-  }
-  return parts.length > 0 ? parts.join(' ') : undefined
+/** 파일 메타 subtitle 구성: LOC only (deps는 별도 depUp/depDown 필드) */
+function buildSubtitle(loc: number | undefined): string | undefined {
+  return loc != null ? `${loc}L` : undefined
 }
 
 /** 카드 tooltip: 파일명 + LOC/deps 설명 */
@@ -135,6 +131,41 @@ function locWeight(loc: number): 'sm' | 'md' | 'lg' | undefined {
   if (loc >= 300) return 'lg'
   if (loc >= 100) return 'md'
   return undefined
+}
+
+// ② 2026-03-30-birdseye-improve-prd.md
+/** 폴더 간 의존 그래프에서 위상 정렬. 의존되는 폴더(기반)가 앞에 온다. */
+export function topoSortDirs(dirs: string[], edges: { from: string; to: string }[]): string[] {
+  const inDegree = new Map<string, number>()
+  const graph = new Map<string, string[]>()
+  for (const d of dirs) {
+    inDegree.set(d, 0)
+    graph.set(d, [])
+  }
+  for (const { from, to } of edges) {
+    if (!graph.has(to) || !inDegree.has(from)) continue
+    graph.get(to)!.push(from) // to → from (to가 기반, from이 소비)
+    inDegree.set(from, (inDegree.get(from) ?? 0) + 1)
+  }
+  // Kahn's algorithm
+  const queue = dirs.filter(d => inDegree.get(d) === 0).sort()
+  const result: string[] = []
+  while (queue.length > 0) {
+    const node = queue.shift()!
+    result.push(node)
+    for (const neighbor of graph.get(node) ?? []) {
+      const deg = (inDegree.get(neighbor) ?? 1) - 1
+      inDegree.set(neighbor, deg)
+      if (deg === 0) {
+        // 삽입 정렬로 알파벳 순서 유지
+        const idx = queue.findIndex(q => q.localeCompare(neighbor) > 0)
+        queue.splice(idx === -1 ? queue.length : idx, 0, neighbor)
+      }
+    }
+  }
+  // 사이클에 갇힌 노드는 알파벳순으로 추가
+  const remaining = dirs.filter(d => !result.includes(d)).sort()
+  return [...result, ...remaining]
 }
 
 export function buildKanbanStore(fsStore: NormalizedData, folderId: string, options?: KanbanBuildOptions): NormalizedData {
@@ -183,7 +214,9 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
             title: fileData.name, sourceId: fileId, sourceType: 'file',
             ext: fileData.name.includes('.') ? fileData.name.split('.').pop() : undefined,
             ...(fileData.loc != null && { loc: fileData.loc, weight: locWeight(fileData.loc) }),
-            subtitle: buildSubtitle(fileData.loc, options?.depCounts?.[fileId]),
+            subtitle: buildSubtitle(fileData.loc),
+            depUp: options?.depCounts?.[fileId]?.importedBy,
+            depDown: options?.depCounts?.[fileId]?.imports,
             tooltip: buildTooltip(fileData.name, fileData.loc, options?.depCounts?.[fileId]),
           },
         }
@@ -217,7 +250,12 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
     return true
   })
 
-  const sortedTopDirs = sortDirs(fsStore, topDirs, options?.columnOrder)
+  let columnOrder = options?.columnOrder
+  if (!columnOrder && options?.folderEdges) {
+    const dirNames = topDirs.map(id => getEntityData<FsEntityData>(fsStore, id)?.name).filter(Boolean) as string[]
+    columnOrder = topoSortDirs(dirNames, options.folderEdges)
+  }
+  const sortedTopDirs = sortDirs(fsStore, topDirs, columnOrder)
 
   for (const dirId of sortedTopDirs) {
     topIndex++
@@ -242,7 +280,9 @@ export function buildKanbanStore(fsStore: NormalizedData, folderId: string, opti
             title: fileData.name, sourceId: fileId, sourceType: 'file',
             ext: fileData.name.includes('.') ? fileData.name.split('.').pop() : undefined,
             ...(fileData.loc != null && { loc: fileData.loc, weight: locWeight(fileData.loc) }),
-            subtitle: buildSubtitle(fileData.loc, options?.depCounts?.[fileId]),
+            subtitle: buildSubtitle(fileData.loc),
+            depUp: options?.depCounts?.[fileId]?.importedBy,
+            depDown: options?.depCounts?.[fileId]?.imports,
           },
       }
       relationships[filesColId].push(cardId)

@@ -22,3 +22,13 @@ export async function fetchDepCounts(root: string): Promise<DepCounts> {
   const res = await fetch(`/api/fs/dep-counts?root=${encodeURIComponent(root)}`)
   return res.json()
 }
+
+export interface FolderDeps {
+  dirs: string[]
+  edges: { from: string; to: string }[]
+}
+
+export async function fetchFolderDeps(root: string, folder: string): Promise<FolderDeps> {
+  const res = await fetch(`/api/fs/folder-deps?root=${encodeURIComponent(root)}&folder=${encodeURIComponent(folder)}`)
+  return res.json()
+}

@@ -5,18 +5,48 @@ import { SplitPane } from '../../interactive-os/ui/SplitPane'
 import type { PaneSize } from '../../interactive-os/ui/SplitPane'
 import { TreeView } from '../../interactive-os/ui/TreeView'
 import { Kanban } from '../../interactive-os/ui/Kanban'
+import { Treemap } from '../../interactive-os/ui/Treemap'
 import { CodeBlock } from '../../interactive-os/ui/CodeBlock'
 import { QuickOpen } from '../../interactive-os/ui/QuickOpen'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import { getEntityData } from '../../interactive-os/store/createStore'
 import { DEFAULT_ROOT } from '../viewer/types'
-import { fetchTree, fetchFile, fetchDepCounts } from '../viewer/fsClient'
-import type { DepCounts } from '../viewer/fsClient'
+import { fetchTree, fetchFile, fetchDepCounts, fetchFolderDeps } from '../viewer/fsClient'
+import type { DepCounts, FolderDeps } from '../viewer/fsClient'
 import { treeToStore } from '../viewer/treeTransform'
 import { parse as parseYaml } from 'yaml'
 import { buildNavStore, buildKanbanStore } from './birdseyeTransform'
 import type { KanbanBuildOptions } from './birdseyeTransform'
 import styles from './BirdseyeLayout.module.css'
+
+/** 파일 경로를 레이어(폴더)별로 그룹핑 */
+function groupByLayer(paths: string[], root: string): { layer: string; files: { name: string; fullPath: string }[] }[] {
+  const groups = new Map<string, { name: string; fullPath: string }[]>()
+  for (const p of paths) {
+    const rel = p.startsWith(root + '/') ? p.slice(root.length + 1) : p
+    const parts = rel.split('/')
+    const fileName = parts.pop() ?? rel
+    const layer = parts.join('/') || '(root)'
+    const list = groups.get(layer)
+    const entry = { name: fileName, fullPath: p }
+    if (list) list.push(entry)
+    else groups.set(layer, [entry])
+  }
+  return Array.from(groups.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([layer, files]) => ({ layer, files: files.sort((a, b) => a.name.localeCompare(b.name)) }))
+}
+
+/** Overlay를 anchor 요소의 중앙에 맞추되 viewport 밖으로 안 나가게 */
+function calcOverlayPos(anchor: HTMLElement, overlay: HTMLElement, gap = 8): { top: number; left: number } {
+  const rect = anchor.getBoundingClientRect()
+  const overlayH = overlay.offsetHeight
+  const overlayW = overlay.offsetWidth
+  const cardCenter = rect.top + rect.height / 2
+  const top = Math.min(Math.max(gap, cardCenter - overlayH / 2), window.innerHeight - overlayH - gap)
+  const left = Math.min(rect.right + gap, window.innerWidth - overlayW - gap)
+  return { top, left }
+}
 
 function findFirstNavItem(navStore: NormalizedData): string | null {
   const rootChildren = navStore.relationships['__root__'] ?? []
@@ -38,16 +68,21 @@ export default function BirdseyeLayout() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [fsStore, setFsStore] = useState<NormalizedData | null>(null)
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
-  const [sizes, setSizes] = useState<PaneSize[]>([0.15, 'flex', 0.35])
+  const [sizes, setSizes] = useState<PaneSize[]>([0.15, 'flex'])
 
   // Code viewer state
   const [focusedCardId, setFocusedCardId] = useState<string | null>(null)
   const [viewerCode, setViewerCode] = useState<string | null>(null)
   const [viewerFilename, setViewerFilename] = useState<string>('')
   const fetchRef = useRef(0)
+  const [overlayPos, setOverlayPos] = useState<{ top: number; left: number } | null>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
 
   // Dependency highlight — files that import/are imported by focused file
   const [depHighlight, setDepHighlight] = useState<{ importedBy: Set<string>; imports: Set<string> } | null>(null)
+
+  // Raw dependency paths for viewer panel
+  const [depList, setDepList] = useState<{ importedBy: string[]; imports: string[] } | null>(null)
 
   // Column order from _meta.yaml
   const [kanbanOptions, setKanbanOptions] = useState<KanbanBuildOptions>({})
@@ -55,8 +90,16 @@ export default function BirdseyeLayout() {
   // Dependency counts (import/importedBy per file)
   const [depCounts, setDepCounts] = useState<DepCounts | null>(null)
 
+  // Folder-level dependency edges (for topological column ordering)
+  const [folderDeps, setFolderDeps] = useState<FolderDeps | null>(null)
+
   // Extension filter (null = show all)
   const [extFilter, setExtFilter] = useState<string | null>(null)
+
+  // View mode toggle (kanban vs treemap)
+  const [viewMode, setViewMode] = useState<'kanban' | 'treemap'>('kanban')
+  const treemapContainerRef = useRef<HTMLDivElement>(null)
+  const [treemapSize, setTreemapSize] = useState({ width: 800, height: 600 })
 
   // QuickOpen (Cmd+P)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
@@ -109,10 +152,34 @@ export default function BirdseyeLayout() {
       .catch(() => setKanbanOptions({}))
   }, [selectedFolderId])
 
+  // 2.6. 폴더 간 의존 edge fetch (위상 정렬용)
+  useEffect(() => {
+    if (!selectedFolderId) return
+    fetchFolderDeps(DEFAULT_ROOT, selectedFolderId)
+      .then(setFolderDeps)
+      .catch(() => setFolderDeps(null))
+  }, [selectedFolderId])
+
+  // 2.7. Treemap container size measurement
+  useEffect(() => {
+    const el = treemapContainerRef.current
+    if (!el || viewMode !== 'treemap') return
+    const ro = new ResizeObserver(([entry]) => {
+      setTreemapSize({ width: entry.contentRect.width, height: entry.contentRect.height })
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [viewMode])
+
   // 3. Kanban store
   const kanbanStore = useMemo(
-    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId, { ...kanbanOptions, depCounts: depCounts ?? undefined, extFilter: extFilter ?? undefined }) : null),
-    [fsStore, selectedFolderId, kanbanOptions, depCounts, extFilter],
+    () => (fsStore && selectedFolderId ? buildKanbanStore(fsStore, selectedFolderId, {
+      ...kanbanOptions,
+      depCounts: depCounts ?? undefined,
+      extFilter: extFilter ?? undefined,
+      folderEdges: kanbanOptions.columnOrder ? undefined : folderDeps?.edges,
+    }) : null),
+    [fsStore, selectedFolderId, kanbanOptions, depCounts, extFilter, folderDeps],
   )
 
   // 4. Debounced focus → fetch file content
@@ -121,10 +188,23 @@ export default function BirdseyeLayout() {
       setViewerCode(null)
       setViewerFilename('')
       setDepHighlight(null)
+      setDepList(null)
+      setOverlayPos(null)
       return
     }
 
     const cardData = getEntityData<{ sourceId: string; sourceType: string; title: string }>(kanbanStore, debouncedCardId)
+
+    // 포커스 카드의 DOM 위치 → overlay 위치 (카드 우측에 붙임)
+    if (cardData) {
+      const sourceId = cardData.sourceId
+      requestAnimationFrame(() => {
+        const cardEl = document.querySelector(`[data-source="${CSS.escape(sourceId)}"]`) as HTMLElement | null
+        if (cardEl && overlayRef.current) {
+          setOverlayPos(calcOverlayPos(cardEl, overlayRef.current))
+        }
+      })
+    }
     if (!cardData || cardData.sourceType !== 'file') {
       setViewerCode(null)
       setViewerFilename('')
@@ -143,7 +223,7 @@ export default function BirdseyeLayout() {
     fetchFile(cardData.sourceId).then((content) => {
       if (fetchRef.current === token) setViewerCode(content)
     })
-    // Fetch dependency graph for highlight
+    // Fetch dependency graph for highlight + list
     fetch(`/api/fs/imports?path=${encodeURIComponent(cardData.sourceId)}&root=${encodeURIComponent(DEFAULT_ROOT)}`)
       .then((r) => r.json())
       .then((data: { imports: { path: string }[]; importedBy: { path: string }[] }) => {
@@ -152,9 +232,13 @@ export default function BirdseyeLayout() {
             importedBy: new Set(data.importedBy.map((d) => `card:${d.path}`)),
             imports: new Set(data.imports.map((d) => `card:${d.path}`)),
           })
+          setDepList({
+            importedBy: data.importedBy.map((d) => d.path),
+            imports: data.imports.map((d) => d.path),
+          })
         }
       })
-      .catch(() => setDepHighlight(null))
+      .catch(() => { setDepHighlight(null); setDepList(null) })
   }, [debouncedCardId, kanbanStore])
 
   // 폴더 선택 + URL 동기화
@@ -162,7 +246,7 @@ export default function BirdseyeLayout() {
     setSelectedFolderId(nodeId)
     setExtFilter(null)
     const relative = nodeId.startsWith(DEFAULT_ROOT + '/') ? nodeId.slice(DEFAULT_ROOT.length + 1) : nodeId
-    setSearchParams({ folder: relative }, { replace: true })
+    setSearchParams({ folder: relative })
   }, [setSearchParams])
 
   // TreeView 항목 선택
@@ -192,15 +276,35 @@ export default function BirdseyeLayout() {
     [kanbanStore, navigate, selectFolder],
   )
 
-  // QuickOpen에서 파일 선택 → 코드뷰어에 표시
+  // QuickOpen에서 파일 선택 → 해당 폴더 칸반으로 이동 + 카드 포커스
   const handleQuickOpenSelect = useCallback((filePath: string) => {
+    // 파일의 부모 폴더를 찾아서 칸반 이동
+    const parts = filePath.split('/')
+    parts.pop() // 파일명 제거
+    while (parts.length > 0) {
+      const dirPath = parts.join('/')
+      if (fsStore?.entities[dirPath]) {
+        selectFolder(dirPath)
+        // 폴더 전환 후 해당 카드에 포커스 (다음 렌더 사이클에서)
+        requestAnimationFrame(() => {
+          const cardEl = document.querySelector(`[data-source="${CSS.escape(filePath)}"]`) as HTMLElement | null
+          if (cardEl) {
+            cardEl.focus()
+            cardEl.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+          }
+        })
+        return
+      }
+      parts.pop()
+    }
+    // fallback: 폴더를 못 찾으면 기존 동작 (코드만 표시)
     const name = filePath.split('/').pop() ?? ''
     setViewerFilename(name)
     const token = ++fetchRef.current
     fetchFile(filePath).then((content) => {
       if (fetchRef.current === token) setViewerCode(content)
     })
-  }, [])
+  }, [fsStore, selectFolder])
 
   // Kanban 포커스 변경 — col: 접두사면 컬럼 헤더이므로 카드 id 유지
   const handleFocusChange = useCallback((nodeId: string | null) => {
@@ -208,12 +312,52 @@ export default function BirdseyeLayout() {
     setFocusedCardId(nodeId)
   }, [])
 
+  // Dep walking — dep 항목 클릭 시 해당 파일로 kanban 점프
+  const handleDepJump = useCallback((filePath: string) => {
+    // 현재 kanban에 카드가 있으면 DOM에서 찾아 포커스
+    const el = document.querySelector(`[data-source="${CSS.escape(filePath)}"]`) as HTMLElement | null
+    if (el) {
+      el.focus()
+      el.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+      return
+    }
+    // 다른 폴더에 있으면 → 상위 폴더로 이동
+    const parts = filePath.split('/')
+    parts.pop()
+    while (parts.length > 0) {
+      const dirPath = parts.join('/')
+      if (fsStore?.entities[dirPath]) {
+        selectFolder(dirPath)
+        return
+      }
+      parts.pop()
+    }
+  }, [fsStore, selectFolder])
+
   // 선택된 폴더 이름
   const selectedName = useMemo(() => {
     if (!fsStore || !selectedFolderId) return ''
     const data = getEntityData<{ name: string }>(fsStore, selectedFolderId)
     return data?.name ?? ''
   }, [fsStore, selectedFolderId])
+
+  // Breadcrumb segments (path from DEFAULT_ROOT)
+  const breadcrumbs = useMemo(() => {
+    if (!selectedFolderId || !fsStore) return []
+    const rel = selectedFolderId.startsWith(DEFAULT_ROOT + '/')
+      ? selectedFolderId.slice(DEFAULT_ROOT.length + 1)
+      : selectedFolderId
+    const parts = rel.split('/')
+    const segments: { label: string; id: string }[] = []
+    let accumulated = DEFAULT_ROOT
+    for (const part of parts) {
+      accumulated = `${accumulated}/${part}`
+      if (fsStore.entities[accumulated]) {
+        segments.push({ label: part, id: accumulated })
+      }
+    }
+    return segments
+  }, [selectedFolderId, fsStore])
 
   if (!fsStore || !navStore) {
     return <div className={styles.loading}>Loading project...</div>
@@ -238,7 +382,17 @@ export default function BirdseyeLayout() {
       {/* 중: Kanban */}
       <div className={styles.board}>
         <div className={styles.boardHeader}>
-          <span>{selectedName}</span>
+          <span className={styles.breadcrumb}>
+            {breadcrumbs.map((seg, i) => (
+              <span key={seg.id}>
+                {i > 0 && <span className={styles.breadcrumbSep}>/</span>}
+                {i < breadcrumbs.length - 1
+                  ? <button className={styles.breadcrumbLink} onClick={() => selectFolder(seg.id)}>{seg.label}</button>
+                  : <span>{seg.label}</span>
+                }
+              </span>
+            ))}
+          </span>
           <span className={styles.legend}>
             {['ts', 'tsx', 'css', 'md', 'yaml'].map((ext) => (
               <span
@@ -249,40 +403,100 @@ export default function BirdseyeLayout() {
               >.{ext}</span>
             ))}
             <span className={styles.legendHint} title="↑ = imported by N files, ↓ = imports N files">↑imported ↓imports</span>
+            <span className={styles.legendHint} data-weight-legend="" title="300+ lines — complexity signal">300L+</span>
+            <button
+              className={styles.viewToggle}
+              onClick={() => setViewMode(v => v === 'kanban' ? 'treemap' : 'kanban')}
+              title={viewMode === 'kanban' ? 'Treemap view' : 'Kanban view'}
+            >
+              {viewMode === 'kanban' ? '\u25A6' : '\u2630'}
+            </button>
           </span>
         </div>
         {kanbanStore && Object.keys(kanbanStore.relationships).length > 1 ? (
-          <div className={styles.boardBody}>
-            <Kanban
-              key={selectedFolderId}
-              data={kanbanStore}
-              onActivate={handleKanbanActivate}
-              onFocusChange={handleFocusChange}
-              highlightUp={depHighlight?.importedBy}
-              highlightDown={depHighlight?.imports}
-              compact
-              aria-label={`${selectedName} contents`}
-            />
-          </div>
+          viewMode === 'kanban' ? (
+            <div className={styles.boardBody}>
+              <Kanban
+                key={selectedFolderId}
+                data={kanbanStore}
+                onActivate={handleKanbanActivate}
+                onFocusChange={handleFocusChange}
+                highlightUp={depHighlight?.importedBy}
+                highlightDown={depHighlight?.imports}
+                compact
+                aria-label={`${selectedName} contents`}
+              />
+            </div>
+          ) : (
+            <div className={styles.boardBody} ref={treemapContainerRef}>
+              <Treemap
+                data={kanbanStore}
+                width={treemapSize.width}
+                height={treemapSize.height}
+                onActivate={(cardId) => {
+                  setViewMode('kanban')
+                  setFocusedCardId(cardId)
+                }}
+                aria-label={`${selectedName} treemap`}
+              />
+            </div>
+          )
         ) : (
           <div className={styles.viewerEmpty}>{extFilter ? `No .${extFilter} files in this folder` : 'No source files in this folder'}</div>
         )}
       </div>
 
-      {/* 우: Code Viewer */}
-      <div className={styles.viewer}>
-        <div className={styles.viewerHeader}>{viewerFilename}</div>
-        <div className={styles.viewerBody}>
-          {viewerCode !== null ? (
-            <CodeBlock code={viewerCode} filename={viewerFilename} variant="flush" />
-          ) : (
-            <div className={styles.viewerEmpty}>
-              {focusedCardId ? '' : 'Navigate to a file to preview source'}
+    </SplitPane>
+
+    {/* Floating overlay viewer */}
+    {viewerCode !== null && (
+      <div ref={overlayRef} className={styles.overlay} style={overlayPos ? { top: overlayPos.top, left: overlayPos.left, right: 'auto' } : undefined}>
+        <div className={styles.overlayHeader}>{viewerFilename}</div>
+        <div className={styles.overlayBody}>
+          {depList && (depList.importedBy.length > 0 || depList.imports.length > 0) && (
+            <div className={styles.depList}>
+              {depList.importedBy.length > 0 && (
+                <details>
+                  <summary className={styles.depSummary}>
+                    <span className={styles.depDot} data-dir="up" />
+                    → Used by {depList.importedBy.length} files
+                  </summary>
+                  <div className={styles.depGroups}>
+                    {groupByLayer(depList.importedBy, DEFAULT_ROOT).map(({ layer, files }) => (
+                      <details key={layer} open={files.length <= 5} className={styles.depGroup}>
+                        <summary className={styles.depGroupSummary}>{layer} <span className={styles.depGroupCount}>({files.length})</span></summary>
+                        <ul className={styles.depFiles}>
+                          {files.map((f) => <li key={f.fullPath}><button className={styles.depJump} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
+                        </ul>
+                      </details>
+                    ))}
+                  </div>
+                </details>
+              )}
+              {depList.imports.length > 0 && (
+                <details>
+                  <summary className={styles.depSummary}>
+                    <span className={styles.depDot} data-dir="down" />
+                    ← Depends on {depList.imports.length} files
+                  </summary>
+                  <div className={styles.depGroups}>
+                    {groupByLayer(depList.imports, DEFAULT_ROOT).map(({ layer, files }) => (
+                      <details key={layer} open={files.length <= 5} className={styles.depGroup}>
+                        <summary className={styles.depGroupSummary}>{layer} <span className={styles.depGroupCount}>({files.length})</span></summary>
+                        <ul className={styles.depFiles}>
+                          {files.map((f) => <li key={f.fullPath}><button className={styles.depJump} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
+                        </ul>
+                      </details>
+                    ))}
+                  </div>
+                </details>
+              )}
             </div>
           )}
+          <CodeBlock code={viewerCode} filename={viewerFilename} variant="flush" />
         </div>
       </div>
-    </SplitPane>
+    )}
 
     {quickOpenVisible && fsStore && (
       <QuickOpen
