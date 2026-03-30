@@ -9,9 +9,13 @@ export interface ComposerProps {
   ghostText?: string
   commandHighlight?: number
   overlayText?: string
+  suggestions?: string[]
+  selectedSuggestion?: number
   onGhostAccept?: () => void
   onGhostDismiss?: () => void
   onTextChange?: (text: string) => void
+  onSuggestionNav?: (direction: 'up' | 'down') => void
+  onSuggestionSelect?: () => void
 }
 
 export interface ComposerHandle {
@@ -20,7 +24,13 @@ export interface ComposerHandle {
 }
 
 export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Composer(
-  { onSubmit, disabled, placeholder = 'Send a message...', ghostText, commandHighlight = 0, overlayText = '', onGhostAccept, onGhostDismiss, onTextChange },
+  {
+    onSubmit, disabled, placeholder = 'Send a message...',
+    ghostText, commandHighlight = 0, overlayText = '',
+    suggestions, selectedSuggestion = -1,
+    onGhostAccept, onGhostDismiss, onTextChange,
+    onSuggestionNav, onSuggestionSelect,
+  },
   fwdRef,
 ) {
   const ref = useRef<HTMLDivElement>(null)
@@ -54,7 +64,32 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     if (!isComposingRef.current) onTextChange?.(getText())
   }, [getText, onTextChange])
 
+  const hasSuggestions = suggestions && suggestions.length > 0
+
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Suggestion navigation takes priority when popup is open
+    if (hasSuggestions) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        onSuggestionNav?.('down')
+        return
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        onSuggestionNav?.('up')
+        return
+      }
+      if (e.key === 'Tab' || (e.key === 'Enter' && !e.shiftKey && !isComposingRef.current)) {
+        e.preventDefault()
+        onSuggestionSelect?.()
+        return
+      }
+      if (e.key === 'Escape') {
+        onGhostDismiss?.()
+        return
+      }
+    }
+
     if (e.key === 'Enter' && !e.shiftKey && !isComposingRef.current) {
       e.preventDefault()
       const trimmed = getText().trim()
@@ -71,7 +106,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     if (e.key === 'Escape' && ghostText && onGhostDismiss) {
       onGhostDismiss()
     }
-  }, [getText, clear, onSubmit, disabled, ghostText, onGhostAccept, onGhostDismiss, onTextChange])
+  }, [getText, clear, onSubmit, disabled, ghostText, hasSuggestions, onGhostAccept, onGhostDismiss, onTextChange, onSuggestionNav, onSuggestionSelect])
 
   const handleCompositionStart = useCallback(() => { isComposingRef.current = true }, [])
   const handleCompositionEnd = useCallback(() => {
@@ -84,6 +119,21 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   return (
     <div className={styles.composer}>
       <div className={styles.inputWrap} data-disabled={disabled || undefined}>
+        {hasSuggestions && (
+          <ul className={styles.suggestionList} role="listbox" aria-label="Command suggestions">
+            {suggestions.map((cmd, i) => (
+              <li
+                key={cmd}
+                role="option"
+                aria-selected={i === selectedSuggestion}
+                className={styles.suggestionItem}
+                data-selected={i === selectedSuggestion || undefined}
+              >
+                /{cmd}
+              </li>
+            ))}
+          </ul>
+        )}
         <div className={styles.editorArea}>
           <div
             ref={ref}
@@ -94,6 +144,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             aria-label={placeholder}
             data-placeholder={placeholder}
             data-overlay={hasOverlay || undefined}
+            aria-activedescendant={hasSuggestions && selectedSuggestion >= 0 ? `suggestion-${selectedSuggestion}` : undefined}
             onKeyDown={handleKeyDown}
             onInput={fireTextChange}
             onCompositionStart={handleCompositionStart}

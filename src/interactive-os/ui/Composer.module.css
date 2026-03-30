@@ -9,6 +9,7 @@
 
 .inputWrap {
   flex: 1;
+  position: relative;
   border: 1px solid var(--border-default);
   border-radius: var(--shape-md-radius);
   background: var(--surface-base);
@@ -84,4 +85,41 @@
 
 .ghost {
   color: var(--text-muted);
+}
+
+/* --- Suggestion popup (above input, Slack-style) --- */
+
+.suggestionList {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: var(--space-xs) 0;
+  list-style: none;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-md-radius);
+  box-shadow: var(--shadow-md);
+  max-height: calc(var(--type-body-size) * var(--leading-snug) * 8 + var(--space-xs) * 2);
+  overflow-y: auto;
+  z-index: 1;
+}
+
+.suggestionItem {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--type-body-size);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.suggestionItem:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.suggestionItem[data-selected] {
+  background: var(--bg-active);
+  color: var(--text-bright);
 }
