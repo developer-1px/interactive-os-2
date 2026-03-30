@@ -9,8 +9,6 @@ import { valueCommands } from '../axis/value'
 import { history } from '../plugins/history'
 import { getAriaActions } from '../primitives/ariaRegistry'
 
-let sliderIdCounter = 0
-
 interface SliderProps extends AriaComponentProps {
   id?: string
   min: number
@@ -27,7 +25,8 @@ export function Slider({
   plugins = [history()],
   onChange,
 }: SliderProps) {
-  const id = React.useRef(idProp ?? `slider-${++sliderIdCounter}`).current
+  const reactId = React.useId()
+  const id = idProp ?? reactId
   const trackRef = React.useRef<HTMLDivElement>(null)
   const pattern = React.useMemo(() => slider({ min, max, step }), [min, max, step])
 

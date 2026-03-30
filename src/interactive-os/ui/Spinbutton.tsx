@@ -10,8 +10,6 @@ import { valueCommands } from '../axis/value'
 import { history } from '../plugins/history'
 import { getAriaActions } from '../primitives/ariaRegistry'
 
-let spinIdCounter = 0
-
 interface SpinbuttonProps extends AriaComponentProps {
   id?: string
   min: number
@@ -30,7 +28,8 @@ export function Spinbutton({
   onChange,
   label,
 }: SpinbuttonProps) {
-  const stableId = React.useMemo(() => id ?? `spinbutton-${++spinIdCounter}`, [id])
+  const reactId = React.useId()
+  const stableId = id ?? reactId
   const pattern = React.useMemo(() => spinbutton({ min, max, step }), [min, max, step])
   const range = React.useMemo(() => ({ min, max, step }), [min, max, step])
   const [editing, setEditing] = useState(false)

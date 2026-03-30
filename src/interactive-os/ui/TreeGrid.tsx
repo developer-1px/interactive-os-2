@@ -27,6 +27,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Recor
   )
 }
 
+// Re-export Cell for grid consumers (e.g. TreegridEmail)
+export const Cell = Aria.Cell
+
 export function TreeGrid({
   id,
   data,
