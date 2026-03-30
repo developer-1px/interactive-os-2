@@ -15,10 +15,10 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| M1 | TreeView가 기본 렌더러로 폴더를 표시 중 | 소비자가 노드를 커스텀 아이콘+라벨로 바꾸고 싶다 | renderNode prop으로 교체, useAria까지 안 내려감 | |
-| M2 | ListBox가 기본 plugins 없이 읽기 전용 | 소비자가 Ctrl+C 복사와 Ctrl+Z 히스토리를 추가하고 싶다 | plugins={[clipboard(), history()]}로 조합 | |
-| M3 | Grid가 기본 렌더러 사용 중 | rename plugin 활성 시 편집 중인 노드가 input으로 바뀌어야 한다 | rename plugin의 renderer가 자동 적용 (plugin이 renderer를 가져옴) | |
-| M4 | CMS Canvas가 현재 useAriaZone 직접 사용 | 공통 인터페이스로 마이그레이션 | plugins + renderNode로 동일 기능, useAriaZone 직접 사용 제거 | |
+| M1 | TreeView가 기본 렌더러로 폴더를 표시 중 | 소비자가 노드를 커스텀 아이콘+라벨로 바꾸고 싶다 | renderNode prop으로 교체, useAria까지 안 내려감 | ✅ AriaComponentProps.renderItem 제공 |
+| M2 | ListBox가 기본 plugins 없이 읽기 전용 | 소비자가 Ctrl+C 복사와 Ctrl+Z 히스토리를 추가하고 싶다 | plugins={[clipboard(), history()]}로 조합 | ✅ AriaComponentProps.plugins 제공 |
+| M3 | Grid가 기본 렌더러 사용 중 | rename plugin 활성 시 편집 중인 노드가 input으로 바뀌어야 한다 | rename plugin의 renderer가 자동 적용 (plugin이 renderer를 가져옴) | ✅ Plugin.renderer 슬롯 존재, rename에 미적용 (후속) |
+| M4 | CMS Canvas가 현재 useAriaZone 직접 사용 | 공통 인터페이스로 마이그레이션 | plugins + renderNode로 동일 기능, useAriaZone 직접 사용 제거 | ⑥-3 별도 PRD로 분리 |
 
 완성도: 🟢
 
@@ -28,15 +28,15 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `AriaComponentProps` | 공통 props 타입: `store, onChange, plugins, renderNode, onActivate, onFocusChange, className` | |
-| `RendererModule` | renderer 모듈 타입: `{ node: (node, state, nodeProps) => ReactNode \| null }`. null = fallback | |
-| `Plugin.renderer` | 기존 `definePlugin`에 optional `renderer: RendererModule` 슬롯 추가 | |
-| `mergeRenderers` | renderer 합성 함수: `(default, ...pluginRenderers, userRenderer) → final`. null fallback chain | |
-| `TreeView` 리팩터 | 공통 인터페이스 적용. 내부 pattern 고정, plugins/renderNode 주입 가능 | |
-| `ListBox` 리팩터 | 동일 | |
-| `Grid` 리팩터 | 동일 + 고유 prop `columns` | |
-| `Kanban` 리팩터 | 동일 + 고유 props | |
-| `TabList` 리팩터 | 동일 + 고유 prop `orientation` | |
+| `AriaComponentProps` | 공통 props 타입: `store, onChange, plugins, renderNode, onActivate, onFocusChange, className` | ✅ `types.ts::AriaComponentProps` |
+| `RendererModule` | renderer 모듈 타입: `{ node: (node, state, nodeProps) => ReactNode \| null }`. null = fallback | ✅ `engine/types.ts::RendererModule` |
+| `Plugin.renderer` | 기존 `definePlugin`에 optional `renderer: RendererModule` 슬롯 추가 | ✅ `engine/types.ts::Plugin.renderer` |
+| `mergeRenderers` | renderer 합성 함수: `(default, ...pluginRenderers, userRenderer) → final`. null fallback chain | ✅ `types.ts::mergeRenderers` |
+| `TreeView` 리팩터 | 공통 인터페이스 적용. 내부 pattern 고정, plugins/renderNode 주입 가능 | ✅ `TreeView.tsx` extends Omit<AriaComponentProps, 'renderItem'> |
+| `ListBox` 리팩터 | 동일 | ✅ `ListBox.tsx` extends AriaComponentProps |
+| `Grid` 리팩터 | 동일 + 고유 prop `columns` | ✅ `Grid.tsx` extends Omit<AriaComponentProps, 'renderItem'> |
+| `Kanban` 리팩터 | 동일 + 고유 props | ✅ `Kanban.tsx` extends AriaComponentProps |
+| `TabList` 리팩터 | 동일 + 고유 prop `orientation` | ✅ `TabList.tsx` extends AriaComponentProps |
 
 - 핵심 신규: `AriaComponentProps`, `RendererModule`, `Plugin.renderer`, `mergeRenderers` (4개)
 - 리팩터: 기존 UI 완성품에 공통 인터페이스 적용
@@ -114,14 +114,14 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | ①-M1 | TreeView에 renderNode로 커스텀 노드 전달 | 커스텀 렌더러로 표시, aria-* props 정상 전달 | |
-| V2 | ①-M2 | ListBox에 plugins={[clipboard(), history()]} 전달 | Ctrl+C/V 복사, Ctrl+Z 되돌리기 동작 | |
-| V3 | ①-M3 | rename plugin 장착 후 F2 → 편집 모드 | plugin renderer 자동 적용, input 표시 | |
-| V4 | ①-M1+M3 | renderNode + rename plugin 동시 | 일반=사용자 렌더러, renaming=rename renderer (사용자 null 시) | |
-| V5 | ④-1 | 두 plugin이 같은 키 등록 | 배열 뒤쪽 plugin handler 실행 | |
-| V6 | ④-2 | 두 plugin renderer 충돌 | 배열 뒤쪽 우선, null이면 앞쪽 fallback | |
-| V7 | ④-4 | plugins 미지정 | 읽기 전용, 탐색만 가능 | |
-| V8 | ④-5 | 빈 store 전달 | 빈 컨테이너 렌더, 에러 없음 | |
+| V1 | ①-M1 | TreeView에 renderNode로 커스텀 노드 전달 | 커스텀 렌더러로 표시, aria-* props 정상 전달 | ❌ 테스트 없음 (타입 인터페이스, 후속 통합 테스트에서 커버) |
+| V2 | ①-M2 | ListBox에 plugins={[clipboard(), history()]} 전달 | Ctrl+C/V 복사, Ctrl+Z 되돌리기 동작 | ❌ 테스트 없음 (기존 plugin 동작, 인터페이스 변경만) |
+| V3 | ①-M3 | rename plugin 장착 후 F2 → 편집 모드 | plugin renderer 자동 적용, input 표시 | ❌ 미구현 — rename plugin에 renderer 미추가 (후속) |
+| V4 | ①-M1+M3 | renderNode + rename plugin 동시 | 일반=사용자 렌더러, renaming=rename renderer (사용자 null 시) | ❌ V3 의존 |
+| V5 | ④-1 | 두 plugin이 같은 키 등록 | 배열 뒤쪽 plugin handler 실행 | ✅ 기존 engine 동작, 변경 없음 |
+| V6 | ④-2 | 두 plugin renderer 충돌 | 배열 뒤쪽 우선, null이면 앞쪽 fallback | ❌ 테스트 없음 (mergeRenderers unit 테스트 후속) |
+| V7 | ④-4 | plugins 미지정 | 읽기 전용, 탐색만 가능 | ✅ 기존 동작, 변경 없음 |
+| V8 | ④-5 | 빈 store 전달 | 빈 컨테이너 렌더, 에러 없음 | ✅ 기존 동작, 변경 없음 |
 
 완성도: 🟢
 
@@ -131,4 +131,4 @@
 
 ---
 
-**전체 완성도:** 🟡 1/8
+**역PRD 요약:** ② 산출물 9/9 ✅, ⑧ 검증 3/8 ✅ (V3,V4 미구현 — rename renderer 후속, V1,V2,V6 테스트 후속)
