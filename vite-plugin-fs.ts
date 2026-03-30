@@ -407,6 +407,53 @@ export function fsPlugin(): Plugin {
           return
         }
 
+        if (url.pathname === '/api/fs/folder-deps') {
+          const root = url.searchParams.get('root') ?? path.resolve('.')
+          const folder = url.searchParams.get('folder')
+          if (!folder) {
+            res.statusCode = 400
+            res.end(JSON.stringify({ error: 'folder param required' }))
+            return
+          }
+          if (!forwardCache || !reverseCache || cacheProjectRoot !== root) {
+            buildCaches(root)
+          }
+          // 폴더의 직접 자식 디렉토리 목록
+          const folderPath = path.resolve(folder)
+          const childDirs = new Set<string>()
+          for (const [file] of forwardCache!) {
+            if (file.startsWith(folderPath + '/')) {
+              const rel = file.slice(folderPath.length + 1)
+              const firstDir = rel.split('/')[0]
+              if (rel.includes('/')) childDirs.add(firstDir)
+            }
+          }
+          // 디렉토리 간 의존 방향 집계: { from: dirName, to: dirName }[]
+          const edges: { from: string; to: string }[] = []
+          const edgeSet = new Set<string>()
+          for (const [file, deps] of forwardCache!) {
+            if (!file.startsWith(folderPath + '/')) continue
+            const fileRel = file.slice(folderPath.length + 1)
+            const fileDir = fileRel.split('/')[0]
+            if (!fileRel.includes('/')) continue // 루트 파일 제외
+            for (const dep of deps) {
+              if (!dep.startsWith(folderPath + '/')) continue
+              const depRel = dep.slice(folderPath.length + 1)
+              const depDir = depRel.split('/')[0]
+              if (!depRel.includes('/')) continue
+              if (fileDir === depDir) continue // 같은 폴더 내 의존 제외
+              const key = `${fileDir}->${depDir}`
+              if (!edgeSet.has(key)) {
+                edgeSet.add(key)
+                edges.push({ from: fileDir, to: depDir })
+              }
+            }
+          }
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ dirs: [...childDirs], edges }))
+          return
+        }
+
         if (url.pathname === '/api/fs/file') {
           const filePath = url.searchParams.get('path')
           if (!filePath || !fs.existsSync(filePath)) {

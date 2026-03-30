@@ -1,0 +1,64 @@
+/* --- Treemap --- */
+
+/* ── base ── */
+
+.treemap {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--shape-sm-radius);
+}
+
+.block {
+  position: absolute;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-default);
+  cursor: pointer;
+  overflow: hidden;
+  padding: var(--space-xs);
+  display: flex;
+  align-items: flex-end;
+  transition: background var(--motion-duration-fast) var(--motion-easing-default);
+}
+
+.block:hover {
+  background: var(--surface-hover);
+}
+
+.block:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+/* ── ext color bar (top edge) ── */
+
+.block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--space-xs);
+  background: var(--_bar, var(--tone-neutral-subtle));
+}
+
+.block[data-ext="ts"] { --_bar: var(--tone-primary-base); }
+.block[data-ext="tsx"] { --_bar: var(--focus); }
+.block[data-ext="css"] { --_bar: var(--tone-destructive-base); }
+.block[data-ext="md"],
+.block[data-ext="mdx"] { --_bar: var(--tone-positive-base); }
+.block[data-ext="json"],
+.block[data-ext="yaml"],
+.block[data-ext="yml"] { --_bar: var(--tone-warning-base); }
+
+/* ── label ── */
+
+.blockLabel {
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-leading);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}

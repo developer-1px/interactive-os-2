@@ -75,6 +75,7 @@
   max-height: 100%;
 }
 
+
 .board[data-compact] .columnHeader {
   font-size: var(--type-caption-size);
   text-transform: none;
@@ -83,6 +84,19 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
+}
+
+.board[data-compact] .columnHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: calc(var(--_loc-ratio, 0) * 100%);
+  background: var(--tone-primary-dim);
+  border-radius: 1px;
+  opacity: 0.6;
 }
 
 .board[data-compact] .card {
@@ -134,6 +148,27 @@
 .board[data-compact] .card[data-weight="lg"] {
   font-weight: var(--weight-semi);
   color: var(--text-bright);
+  background: color-mix(in srgb, var(--tone-warning-base) 12%, var(--surface-default));
+}
+
+/* ── Hub indicator (high importedBy — load-bearing files) ── */
+
+.board[data-compact] .card[data-hub] {
+  border-inline-start-width: var(--space-xs);
+  border-inline-start-color: var(--tone-info-base);
+  background: color-mix(in srgb, var(--tone-info-base) 6%, var(--surface-default));
+}
+
+/* ── Dependency count colors in subtitle ── */
+
+.depUp {
+  color: var(--tone-positive-base);
+  font-weight: var(--weight-medium);
+}
+
+.depDown {
+  color: var(--tone-primary-base);
+  font-weight: var(--weight-medium);
 }
 
 /* ── Dependency highlight — dim unrelated, brighten related ── */
