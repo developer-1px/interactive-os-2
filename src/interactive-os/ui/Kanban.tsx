@@ -1,8 +1,7 @@
-import React, { useRef, useEffect, useCallback, useMemo } from 'react'
+import React, { useRef, useEffect, useMemo } from 'react'
 import styles from './Kanban.module.css'
 import { ROOT_ID } from '../store/types'
 import { useAria } from '../primitives/useAria'
-import { FOCUS_ID } from '../axis/navigate'
 import { AriaInternalContext } from '../primitives/AriaInternalContext'
 import { AriaItemContext, Aria } from '../primitives/aria'
 import { kanban as kanbanBehavior } from './kanbanPreset'
@@ -38,7 +37,7 @@ export function Kanban({
 }: KanbanProps) {
   // onActivate가 있으면 Enter를 activate로 override (기본은 rename)
   const keyMap = useMemo(() => onActivate ? { Enter: (ctx: { activate: () => void }) => ctx.activate() } : undefined, [onActivate])
-  const aria = useAria({ pattern: kanbanBehavior, data, plugins, keyMap, onChange, onActivate })
+  const aria = useAria({ pattern: kanbanBehavior, data, plugins, keyMap, onChange, onActivate, onFocusChange })
   const store = aria.getStore()
   const columns = getChildren(store, ROOT_ID)
 
@@ -51,10 +50,6 @@ export function Kanban({
     }
     return max
   }, [store, columns])
-
-  const focusedId = (store.entities[FOCUS_ID] as Record<string, unknown>)?.focusedId as string | undefined ?? null
-  const stableFocusChange = useCallback((id: string | null) => { onFocusChange?.(id) }, [onFocusChange])
-  useEffect(() => { stableFocusChange(focusedId) }, [focusedId, stableFocusChange])
 
   return (
     <AriaInternalContext.Provider value={{ ...aria, pattern: kanbanBehavior }}>

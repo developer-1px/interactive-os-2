@@ -59,14 +59,21 @@ function renderAccordion(data: NormalizedData) {
       data={data}
       plugins={[]}
       renderItem={(props, item, state: NodeState) => (
-        <span
-          {...props}
-          data-testid={`section-${item.id}`}
-          data-focused={state.focused}
-          data-expanded={state.expanded}
-        >
-          {(item.data as Record<string, unknown>)?.name as string}
-        </span>
+        <div>
+          <span
+            {...props}
+            data-testid={`section-${item.id}`}
+            data-focused={state.focused}
+            data-expanded={state.expanded}
+          >
+            {(item.data as Record<string, unknown>)?.name as string}
+          </span>
+          {state.slotProps && (
+            <div {...state.slotProps}>
+              {(item.data as Record<string, unknown>)?.name as string} content
+            </div>
+          )}
+        </div>
       )}
     />,
   )

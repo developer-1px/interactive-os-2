@@ -202,6 +202,19 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         Object.assign(state, gen(id, store, children, patternMeta))
       }
 
+      // Slot props — when pattern declares panelRole, generate ARIA attributes for slot container
+      if (pattern.panelRole) {
+        const isVisible = pattern.panelVisibility === 'selected' ? state.selected
+          : pattern.panelVisibility === 'expanded' ? state.expanded
+          : false
+        state.slotProps = {
+          role: pattern.panelRole,
+          id: `panel-${id}`,
+          'aria-labelledby': id,
+          ...(isVisible ? {} : { hidden: true }),
+        }
+      }
+
       return state
     },
     [store, focusedId, selectedIdSet, renameEntity, pattern.stateGens, patternMeta],

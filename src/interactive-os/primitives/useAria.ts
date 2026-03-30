@@ -22,7 +22,7 @@ import type { PatternContextOptions } from '../pattern/createPatternContext'
 import { useAriaView } from './useAriaView'
 import { dispatchKeyAction } from './keymapHelpers'
 
-type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; pattern: AriaPattern; prevFocus: string; prevSelectedIds: string[] }
+type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; onFocusChange: UseAriaOptions['onFocusChange']; pattern: AriaPattern; prevFocus: string; prevSelectedIds: string[] }
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
@@ -42,6 +42,7 @@ export interface UseAriaOptions {
   keyMap?: Record<string, (ctx: ReturnType<typeof createPatternContext>) => Command | void>
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
+  onFocusChange?: (nodeId: string | null) => void
   /** Focus this node on mount instead of the first child */
   initialFocus?: string
   /** Logger for engine dispatch events */
@@ -63,7 +64,7 @@ export interface UseAriaReturn {
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, initialFocus, logger, autoFocus = true, disabled = false } = options
+  const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, onFocusChange, initialFocus, logger, autoFocus = true, disabled = false } = options
   const [, forceRender] = useState(0)
   const pointerDownCtxRef = useRef<ReturnType<typeof createPatternContext> | null>(null)
 
@@ -72,7 +73,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   // initializer owns it without capturing any React ref.
 
   const [engine] = useState(() => {
-    const bag: EngineCallbacks = { onActivate, pattern, prevFocus: '', prevSelectedIds: [] }
+    const bag: EngineCallbacks = { onActivate, onFocusChange, pattern, prevFocus: '', prevSelectedIds: [] }
 
     const middlewares = [
       pattern.middleware,
@@ -98,6 +99,9 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
           cb.onActivate(newSelArr[newSelArr.length - 1]!)
         }
         cb.prevSelectedIds = newSelArr
+      }
+      if (newFocusedId !== cb.prevFocus && cb.onFocusChange) {
+        cb.onFocusChange(newFocusedId || null)
       }
       cb.prevFocus = newFocusedId
       onChange?.(newStore)
@@ -139,6 +143,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     const cb = engineCallbacksMap.get(engine)
     if (!cb) return
     cb.onActivate = onActivate
+    cb.onFocusChange = onFocusChange
     cb.pattern = pattern
   })
 
