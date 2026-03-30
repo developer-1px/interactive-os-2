@@ -1,6 +1,6 @@
 import React from 'react'
 
-import type { Command } from '../engine/types'
+import type { Command, Plugin } from '../engine/types'
 import type { PatternContext, NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
