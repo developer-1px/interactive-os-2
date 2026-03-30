@@ -5,8 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { GRID_COL_ID } from '../../axis/navigate'
-import { Aria } from '../../primitives/aria'
-import { TreeGrid } from '../../ui/TreeGrid'
+import { TreeGrid, Cell } from '../../ui/TreeGrid'
 import styles from './treegrid.module.css'
 
 // APG #66: Treegrid Email Inbox
@@ -82,18 +81,18 @@ const renderRow = (
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >
-      <Aria.Cell index={0}>
+      <Cell index={0}>
         <span className={styles.indicator} aria-hidden="true">
           {isThread ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
         </span>
         <span className={styles.subject}>{subject}</span>
-      </Aria.Cell>
-      <Aria.Cell index={1}>
+      </Cell>
+      <Cell index={1}>
         <span className={styles.summary}>{summary}</span>
-      </Aria.Cell>
-      <Aria.Cell index={2}>
+      </Cell>
+      <Cell index={2}>
         <span className={styles.sender}>{sender}</span>
-      </Aria.Cell>
+      </Cell>
     </div>
   )
 }
