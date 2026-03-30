@@ -1,7 +1,5 @@
 import React, { useRef, useEffect, useCallback, useMemo } from 'react'
 import styles from './Kanban.module.css'
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import { ROOT_ID } from '../store/types'
 import { useAria } from '../primitives/useAria'
 import { FOCUS_ID } from '../axis/navigate'
@@ -9,17 +7,12 @@ import { AriaInternalContext } from '../primitives/AriaInternalContext'
 import { AriaItemContext, Aria } from '../primitives/aria'
 import { kanban as kanbanBehavior } from './kanbanPreset'
 import { getChildren, getEntity } from '../store/createStore'
+import type { AriaComponentProps } from './types'
 
-interface KanbanProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  onActivate?: (nodeId: string) => void
-  onFocusChange?: (nodeId: string | null) => void
+interface KanbanProps extends AriaComponentProps {
   highlightUp?: Set<string>
   highlightDown?: Set<string>
   compact?: boolean
-  'aria-label'?: string
 }
 
 function FocusDiv({ focused, children, ...props }: { focused: boolean; children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
@@ -49,6 +42,16 @@ export function Kanban({
   const store = aria.getStore()
   const columns = getChildren(store, ROOT_ID)
 
+  // Column LOC ratios for visual bar
+  const maxColLoc = useMemo(() => {
+    let max = 0
+    for (const colId of columns) {
+      const loc = (getEntity(store, colId)?.data as Record<string, unknown> | undefined)?.totalLoc as number | undefined
+      if (loc && loc > max) max = loc
+    }
+    return max
+  }, [store, columns])
+
   const focusedId = (store.entities[FOCUS_ID] as Record<string, unknown>)?.focusedId as string | undefined ?? null
   const stableFocusChange = useCallback((id: string | null) => { onFocusChange?.(id) }, [onFocusChange])
   useEffect(() => { stableFocusChange(focusedId) }, [focusedId, stableFocusChange])
@@ -74,6 +77,8 @@ export function Kanban({
           const colTitle = colData?.title as string ?? ''
           const totalLoc = colData?.totalLoc as number | undefined
 
+          const locRatio = totalLoc && maxColLoc ? totalLoc / maxColLoc : 0
+
           return (
             <div key={colId} className={`flex-col gap-xs ${styles.column}`}>
               {/* Column header */}
@@ -81,6 +86,7 @@ export function Kanban({
                 focused={colState.focused}
                 className={`flex-row items-center gap-sm ${styles.columnHeader}`}
                 title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
+                style={locRatio > 0 ? { '--_loc-ratio': locRatio } as React.CSSProperties : undefined}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
               >
                 <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>
@@ -101,22 +107,33 @@ export function Kanban({
                 const cardTooltip = cardData?.tooltip as string | undefined
                 const cardWeight = cardData?.weight as string | undefined
                 const cardExt = cardData?.ext as string | undefined
+                const cardDepUp = cardData?.depUp as number | undefined
+                const cardDepDown = cardData?.depDown as number | undefined
                 const hlDir = highlightUp?.has(cardId) ? 'up' : highlightDown?.has(cardId) ? 'down' : undefined
+                const isHub = cardDepUp != null && cardDepUp >= 20
 
                 return (
                   <FocusDiv
                     key={cardId}
                     focused={cardState.focused}
                     className={styles.card}
+                    data-hub={isHub || undefined}
                     title={cardTooltip ?? cardTitle}
                     data-weight={cardWeight || undefined}
                     data-ext={cardExt || undefined}
                     data-highlight={hlDir}
+                    data-source={(cardData?.sourceId as string) || undefined}
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
                       <span className={styles.cardTitle}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
-                      {cardSubtitle && <span className={styles.cardSubtitle}>{cardSubtitle}</span>}
+                      {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
+                        <span className={styles.cardSubtitle}>
+                          {cardSubtitle}
+                          {cardDepUp != null && cardDepUp > 0 && <span className={styles.depUp}> ↑{cardDepUp}</span>}
+                          {cardDepDown != null && cardDepDown > 0 && <span className={styles.depDown}> ↓{cardDepDown}</span>}
+                        </span>
+                      )}
                     </AriaItemContext.Provider>
                   </FocusDiv>
                 )

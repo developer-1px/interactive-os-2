@@ -72,6 +72,7 @@
 | Component | Maturity | Gaps |
 |-----------|----------|------|
 | indicators/ (Expand·Check·Radio·Switch·Separator) | Validated | 5/18 완료, Phase 2~3 미착수 |
+| **AriaComponentProps** (공통 인터페이스) | Validated | data/plugins/renderItem/onChange/onActivate/onFocusChange/className. mergeRenderers (fallback chain). Plugin.renderer 슬롯 |
 | TreeGrid · ListBox · TabList · Grid | Integrated | v3 구조화(module.css + parts + data-*). ListBox 완료, 나머지 기존 완비 |
 | Accordion · MenuList · DisclosureGroup | Integrated | v3 구조화 완료(module.css + parts + data-*) |
 | Combobox · RadioGroup · SwitchGroup | Integrated | v3 구조화 완료(module.css + parts + data-*) |

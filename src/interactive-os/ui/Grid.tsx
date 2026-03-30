@@ -1,9 +1,8 @@
 import React from 'react'
 
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
 import type { PatternContext, NodeState } from '../pattern/types'
+import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { grid as gridBehavior } from '../pattern/roles/grid'
 import { cellEdit } from '../plugins/cellEdit'
@@ -17,11 +16,8 @@ interface ColumnDef {
   width?: string
 }
 
-interface GridProps {
-  data: NormalizedData
+interface GridProps extends Omit<AriaComponentProps, 'renderItem'> {
   columns: ColumnDef[]
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
   renderCell?: (props: React.HTMLAttributes<HTMLElement>, value: unknown, column: ColumnDef, state: NodeState) => React.ReactElement
   enableEditing?: boolean
   /** Enable Ctrl+F search with inline filter */
@@ -31,7 +27,6 @@ interface GridProps {
   /** Render column headers inside the grid-table container (subgrid-aligned) */
   header?: boolean
   keyMap?: Record<string, (ctx: PatternContext) => Command | void>
-  'aria-label'?: string
 }
 
 const defaultRenderCell = (props: React.HTMLAttributes<HTMLElement>, value: unknown, _column: ColumnDef, _state: NodeState): React.ReactElement => (
