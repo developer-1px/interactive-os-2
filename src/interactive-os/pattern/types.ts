@@ -60,6 +60,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   ariaGens?: import('../axis/types').AriaGen[]
   /** Per-node state generators from axes — useAriaView calls these to populate NodeState. OCP. */
   stateGens?: import('../axis/types').StateGen[]
+  /** Spatial navigation selector — when set, useAriaView activates DOM-based spatial bridge. */
+  spatialSelector?: string | (() => string)
   // Metadata — not used for behavior dispatch, only for external queries (e.g. tests)
   selectionFollowsFocus?: boolean
   activationFollowsSelection?: boolean

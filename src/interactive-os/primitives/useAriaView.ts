@@ -11,6 +11,7 @@ import { RENAME_ID } from '../plugins/rename'
 import { createPatternContext } from '../pattern/createPatternContext'
 import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
+import { useSpatialBridge } from './useSpatialBridge'
 
 type KeyMapHandler = (ctx: ReturnType<typeof createPatternContext>) => Command | void
 type PluginKeyMapHandler = (ctx: ReturnType<typeof createPatternContext>, original?: () => Command | void) => Command | void
@@ -141,12 +142,18 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     return filters.length > 0 ? filters : undefined
   }, [pattern.visibilityFilters, plugins])
 
+  // ── Spatial bridge (always called — hooks rules) ──
+  const spatialSelector = pattern.spatialSelector as string | (() => string) | undefined
+  const spatialCtxFactory = useSpatialBridge(spatialSelector, nodeIdAttr)
+
   const patternCtxOptions = useMemo(
     () => ({
       visibilityFilters: allVisibilityFilters,
-      ctxFactories: pattern.ctxFactories,
+      ctxFactories: spatialCtxFactory
+        ? [...(pattern.ctxFactories ?? []), spatialCtxFactory]
+        : pattern.ctxFactories,
     }),
-    [allVisibilityFilters, pattern.ctxFactories],
+    [allVisibilityFilters, pattern.ctxFactories, spatialCtxFactory],
   )
 
   // ── getNodeState (OCP — axes declare stateGen, no if-else) ──
