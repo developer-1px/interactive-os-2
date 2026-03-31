@@ -72,7 +72,7 @@ const cmsKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
 }
 
 export default function CmsCanvas({ engine, store, locale, onFocusChange, plugins, activeTabMap: activeTabMapProp, onActivateTabItem }: CmsCanvasProps) {
-  'use no memo' // useAriaZone reads internal refs during render (getNodeProps/getNodeState), which is intentional but incompatible with React Compiler
+  'use no memo' // useAriaZone reads internal refs during render (getNodeProps), which is intentional but incompatible with React Compiler
   const spatialNav = useSpatialNav('[data-cms-root]', store, 'cms')
 
   // Merge spatial nav + CMS CRUD keyMap (CRUD takes precedence for Mod+ combos)
