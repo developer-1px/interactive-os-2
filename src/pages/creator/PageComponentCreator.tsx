@@ -8,6 +8,7 @@ import { ComponentCanvas } from './ComponentCanvas'
 import { ComponentChat } from './ComponentChat'
 import { SourceViewer } from './SourceViewer'
 import { Workspace } from '../../interactive-os/ui/Workspace'
+import { TabList } from '../../interactive-os/ui/TabList'
 import { addEntity } from '../../interactive-os/store/createStore'
 import { createStore } from '../../interactive-os/store/createStore'
 import { ROOT_ID } from '../../interactive-os/store/types'
@@ -93,7 +94,15 @@ function createCreatorWorkspace(): NormalizedData {
   return s
 }
 
-// --- Component ---
+// --- Component nav data ---
+
+const componentNavData: NormalizedData = (() => {
+  let s = createStore()
+  for (const entry of componentRegistry) {
+    s = addEntity(s, { id: entry.name, data: { label: entry.name } }, ROOT_ID)
+  }
+  return s
+})()
 
 function nameFromParams(params: Record<string, string | undefined>): string {
   const segment = (params['*'] ?? '').split('/')[0]
@@ -168,17 +177,14 @@ export default function PageComponentCreator() {
       </div>
 
       {/* Nav bar: Component tabs */}
-      <div className={`flex-row shrink-0 items-center overflow-x-auto ${styles.navBar}`}>
-        {componentRegistry.map((entry) => (
-          <button
-            key={entry.name}
-            data-surface="action"
-            className={`${styles.navTab} whitespace-nowrap${entry.name === selectedName ? ` ${styles.navTabActive}` : ''}`}
-            onClick={() => handleSelectComponent(entry.name)}
-          >
-            {entry.name}
-          </button>
-        ))}
+      <div className={`shrink-0 overflow-x-auto ${styles.navBar}`}>
+        <TabList
+          data={componentNavData}
+          plugins={[]}
+          onActivate={handleSelectComponent}
+          initialFocus={selectedName}
+          aria-label="Component list"
+        />
       </div>
     </div>
   )

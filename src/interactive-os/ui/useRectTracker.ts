@@ -73,7 +73,7 @@ export function useRectTracker(options: UseRectTrackerOptions) {
   // Single stable rAF loop — reads refs, no dependency churn
   useEffect(() => {
     function tick() {
-      const container = containerRef.current
+      const container = containerRef?.current
       if (!container) {
         if (prevRef.current.length > 0) {
           prevRef.current = EMPTY
