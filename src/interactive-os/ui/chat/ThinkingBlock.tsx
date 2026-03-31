@@ -1,4 +1,5 @@
-import { useState } from 'react'
+// ② 2026-03-31-chat-perf-prd.md
+import { memo, useState } from 'react'
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { MarkdownViewer } from '../MarkdownViewer'
 import { useChatFeatures } from './chatFeatures'
@@ -6,7 +7,7 @@ import chatStyles from './TextBlock.module.css'
 import styles from './ThinkingBlock.module.css'
 import type { DataBlock } from './types'
 
-export function ThinkingBlock({ block }: { block: DataBlock }) {
+export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: DataBlock }) {
   const { expandByDefault } = useChatFeatures()
   const [open, setOpen] = useState(expandByDefault)
   const text = block.data as string
@@ -24,4 +25,4 @@ export function ThinkingBlock({ block }: { block: DataBlock }) {
       </div>
     </details>
   )
-}
+})

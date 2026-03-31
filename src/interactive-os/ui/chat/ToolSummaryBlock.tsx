@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   FileText, Terminal, Pencil, FilePlus,
   Search, Zap, Wrench, Globe,
@@ -14,6 +14,21 @@ const toolIcons: Record<string, typeof Wrench> = {
   Read: FileText, Edit: Pencil, Write: FilePlus,
   Bash: Terminal, Grep: Search, Glob: Search,
   Skill: Zap, WebSearch: Globe, WebFetch: Globe,
+}
+
+function FilePathLink({ path, children }: { path: string; children: React.ReactNode }) {
+  const open = () => window.dispatchEvent(new CustomEvent('inspector:open-source', { detail: { fileName: path } }))
+  return (
+    <span
+      className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolDetail} ${styles.filePathLink}`}
+      role="button"
+      tabIndex={0}
+      onClick={(e) => { e.preventDefault(); e.stopPropagation(); open() }}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open() } }}
+    >
+      {children}
+    </span>
+  )
 }
 
 function formatInput(input: unknown): string {
@@ -116,17 +131,17 @@ function formatReadRange(input: Record<string, unknown>, lineCount: number): str
 
 export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolResult?: DataBlock }) {
   const { expandByDefault } = useChatFeatures()
-  const { name, detail, input } = getToolMeta(toolUse)
+  const { name, detail, input } = useMemo(() => getToolMeta(toolUse), [toolUse])
   const Icon = toolIcons[name] ?? Wrench
 
-  const text = toolResult ? extractResultText(toolResult) : ''
-  const lines = text ? text.split('\n') : []
+  const text = useMemo(() => toolResult ? extractResultText(toolResult) : '', [toolResult])
+  const lines = useMemo(() => text ? text.split('\n') : [], [text])
   const isLong = lines.length > 3 || text.length > 200
 
   // Read/Edit/Write → code highlight by file extension
   const isCodeResult = (name === 'Read' || name === 'Edit' || name === 'Write') && !!input.file_path
   const filename = isCodeResult ? String(input.file_path).split('/').pop() ?? 'file.txt' : ''
-  const codeText = isCodeResult ? stripLineNumbers(text) : text
+  const codeText = useMemo(() => isCodeResult ? stripLineNumbers(text) : text, [isCodeResult, text])
 
   // Read: 1-tier collapsible (header=toggle), default collapsed
   const isRead = name === 'Read'
@@ -140,7 +155,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <details className={`overflow-hidden ${styles.toolGroup}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
         <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupSummary}`}>
           <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
-          <Icon size={12} /> <span className={styles.toolName}>{name}</span> <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolDetail}`}>{label}</span>
+          <Icon size={12} /> <span className={styles.toolName}>{name}</span> <FilePathLink path={String(input.file_path)}>{label}</FilePathLink>
         </summary>
         <div className={`overflow-auto ${styles.toolGroupCode}`}>
           <CodeBlock code={codeText} filename={filename} variant="compact" />
@@ -158,7 +173,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <details className={`overflow-hidden ${styles.toolGroup}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
         <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupSummary}`}>
           <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
-          <Icon size={12} /> <span className={styles.toolName}>{name}</span> <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolDetail}`}>{detail}</span>
+          <Icon size={12} /> <span className={styles.toolName}>{name}</span> <FilePathLink path={String(input.file_path)}>{detail}</FilePathLink>
         </summary>
         <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string, filePath }} />
       </details>

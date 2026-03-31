@@ -67,15 +67,6 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
 // --- StreamFeed ---
 
 export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streamingLabel, className }: StreamFeedProps<T>) {
-  // DEBUG: HMR scroll diagnosis — remove after investigation
-  useEffect(() => {
-    console.log('[StreamFeed] mount')
-    return () => console.log('[StreamFeed] unmount')
-  }, [])
-  useEffect(() => {
-    const el = feedRef.current
-    if (el) console.log('[StreamFeed] render — scrollTop:', el.scrollTop)
-  })
   return (
     <div className={`flex-col flex-1 min-h-0 relative`}>
       <div
