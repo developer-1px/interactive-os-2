@@ -153,6 +153,48 @@ export function getEditableFields(data: Record<string, unknown>): EditableField[
   return type ? fieldsOf(type) : []
 }
 
+/** Check if a node type should have its editable fields expanded into slot entities. */
+export function isSlotExpandable(type: string): boolean {
+  const fields = fieldsOf(type)
+  return fields.length >= 2
+}
+
+/** Expand an entity's editable fields into slot child entities.
+ *  Returns { strippedData, slotEntities, slotMap } or null if not expandable.
+ *  - localeMap fields → text entity with role=fieldName
+ *  - string + icon meta → icon entity
+ *  - other string → stat-value entity */
+export function expandEntitySlots(entityId: string, data: Record<string, unknown>): {
+  slotEntities: Record<string, { id: string; data: Record<string, unknown> }>
+  slotMap: Record<string, string>
+} | null {
+  const type = data.type as string | undefined
+  if (!type) return null
+  const fields = fieldsOf(type)
+  if (fields.length < 2) return null
+
+  // Keep parent data intact — NodeContent still renders from it.
+  // Slots are for navigation/editing, not rendering.
+
+  const slotEntities: Record<string, { id: string; data: Record<string, unknown> }> = {}
+  const slotMap: Record<string, string> = {}
+
+  for (const f of fields) {
+    const childId = `${entityId}-${f.field}`
+    slotMap[f.field] = childId
+
+    if (f.isLocaleMap) {
+      slotEntities[childId] = { id: childId, data: { type: 'text', role: f.field, value: data[f.field] } }
+    } else if (f.fieldType === 'icon') {
+      slotEntities[childId] = { id: childId, data: { type: 'icon', value: data[f.field] } }
+    } else {
+      slotEntities[childId] = { id: childId, data: { type: 'stat-value', value: data[f.field] } }
+    }
+  }
+
+  return { slotEntities, slotMap }
+}
+
 // ── Derived: localeFieldsOf (i18n translatable fields) ──
 
 export function localeFieldsOf(type: string): string[] {

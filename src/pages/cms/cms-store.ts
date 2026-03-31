@@ -1,9 +1,32 @@
 // ② 2026-03-24-cms-editorial-content-prd.md
 import { createStore } from '../../interactive-os/store/createStore'
 import { ROOT_ID } from '../../interactive-os/store/types'
+import type { NormalizedData } from '../../interactive-os/store/types'
 import { localeMap } from './cms-types'
+import { expandEntitySlots } from './cms-schema'
 
-export const cmsStore = createStore({
+/** Post-process store: expand flat composite entities into slot children. */
+function expandAllSlots(store: NormalizedData): NormalizedData {
+  const entities = { ...store.entities }
+  const slots: Record<string, Record<string, string>> = { ...store.slots }
+
+  for (const [id, entity] of Object.entries(store.entities)) {
+    if (!entity.data) continue
+    const result = expandEntitySlots(id, entity.data as Record<string, unknown>)
+    if (!result) continue
+
+    // Add slot child entities (parent data kept intact for rendering)
+    for (const [childId, childEntity] of Object.entries(result.slotEntities)) {
+      entities[childId] = childEntity
+    }
+    // Register slot map
+    slots[id] = result.slotMap
+  }
+
+  return { ...store, entities, slots }
+}
+
+const rawStore = createStore({
   entities: {
     // ── Sections ──
     hero:        { id: 'hero',        data: { type: 'section', variant: 'hero' } },
@@ -155,3 +178,5 @@ export const cmsStore = createStore({
     'footer-links': ['footer-link-docs', 'footer-link-github', 'footer-link-npm', 'footer-link-api'],
   },
 })
+
+export const cmsStore = expandAllSlots(rawStore)
