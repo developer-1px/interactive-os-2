@@ -53,6 +53,7 @@ export const spatialCommands = defineCommands({
 export function spatial() {
   return definePlugin({
     name: 'spatial',
+    commands: spatialCommands,
     keyMap: {
       Enter: (ctx: PatternContext, original?: () => Command | void) => {
         const kids = ctx.getChildren(ctx.focused)
