@@ -4,7 +4,6 @@ import { createElement } from 'react'
 import { ChevronRight, ArrowRight } from 'lucide-react'
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
-import type { NodeState } from '../../interactive-os/pattern/types'
 import s from './CmsLanding.module.css'
 import { CMS_ICON_MAP } from './cmsIcons'
 
@@ -175,20 +174,14 @@ export function getSectionClassName(variant: string): string {
   }
 }
 
-/** Combine base class with optional focused class */
-function fc(base: string, focused: string | undefined, isFocused: boolean): string {
-  return isFocused && focused ? `${base} ${focused}` : base
-}
-
-export function getNodeClassName(data: Record<string, string>, state: NodeState): string {
-  const f = state.focused
+export function getNodeClassName(data: Record<string, string>): string {
   switch (data.type) {
     case 'section':
       return getSectionClassName(data.variant)
-    case 'stat':         return fc(s.cmsStat, s.cmsStatFocused, f)
-    case 'card':         return fc(s.cmsFeatureCard, s.cmsFeatureCardFocused, f)
-    case 'step':         return fc(s.cmsStep, s.cmsStepFocused, f)
-    case 'pattern':      return fc(s.cmsPattern, s.cmsPatternFocused, f)
+    case 'stat':         return s.cmsStat
+    case 'card':         return s.cmsFeatureCard
+    case 'step':         return s.cmsStep
+    case 'pattern':      return s.cmsPattern
     case 'step-num':     return s.cmsStepNumber
     case 'stat-value':   return s.cmsStatValue
     case 'text': {
@@ -211,18 +204,18 @@ export function getNodeClassName(data: Record<string, string>, state: NodeState)
     case 'brand':         return s.cmsFooterBrand
     case 'links':         return s.cmsFooterLinks
     case 'link':          return ''
-    case 'tab-group':     return fc(s.cmsTabGroup, s.cmsTabGroupFocused, f)
-    case 'tab-item':      return fc(s.cmsTabItem, s.cmsTabItemFocused, f)
+    case 'tab-group':     return s.cmsTabGroup
+    case 'tab-item':      return s.cmsTabItem
     case 'tab-panel':     return s.cmsTabPanel
-    case 'value-item':    return fc(s.cmsValueItem, s.cmsValueItemFocused, f)
-    case 'quote':         return fc(s.cmsQuote, s.cmsQuoteFocused, f)
-    case 'article':       return fc(s.cmsArticle, s.cmsArticleFocused, f)
-    case 'showcase-item': return fc(s.cmsShowcaseItem, s.cmsShowcaseItemFocused, f)
-    case 'stat-card':     return fc(s.cmsStatCard, s.cmsStatCardFocused, f)
-    case 'section-cta':   return fc(s.cmsSectionCta, s.cmsSectionCtaFocused, f)
+    case 'value-item':    return s.cmsValueItem
+    case 'quote':         return s.cmsQuote
+    case 'article':       return s.cmsArticle
+    case 'showcase-item': return s.cmsShowcaseItem
+    case 'stat-card':     return s.cmsStatCard
+    case 'section-cta':   return s.cmsSectionCta
     case 'hero-image':    return s.cmsHeroImageWrap
-    case 'image-card':    return fc(s.cmsImageCard, s.cmsImageCardFocused, f)
-    case 'gallery-item':  return fc(s.cmsGalleryItem, s.cmsGalleryItemFocused, f)
+    case 'image-card':    return s.cmsImageCard
+    case 'gallery-item':  return s.cmsGalleryItem
     default: return ''
   }
 }

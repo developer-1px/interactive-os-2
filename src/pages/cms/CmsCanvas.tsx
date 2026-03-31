@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { useAriaZone } from '../../interactive-os/primitives/useAriaZone'
 import { spatial } from '../../interactive-os/misc/spatial'
 import { useSpatialNav } from '../../interactive-os/plugins/useSpatialNav'
@@ -21,6 +21,7 @@ import type { Locale } from './cms-types'
 import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getEditableFields } from './cms-renderers'
 import { CmsInlineEditable } from './CmsInlineEditable'
 import { cmsCanDelete } from './cms-schema'
+import { SelectionOverlay } from '../../interactive-os/ui/SelectionOverlay'
 import landingStyles from './CmsLanding.module.css'
 
 interface CmsCanvasProps {
@@ -251,7 +252,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     const entity = currentStore.entities[nodeId]
     if (!entity) return null
 
-    const state = aria.getNodeState(nodeId)
     const props = aria.getNodeProps(nodeId)
     const children = getChildren(currentStore, nodeId)
     const d = (entity.data ?? {}) as Record<string, unknown>
@@ -268,7 +268,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     void _
 
     const ds = d as Record<string, string>
-    const className = getNodeClassName(ds, state)
+    const className = getNodeClassName(ds)
     const Tag = getNodeTag(ds) as React.ElementType
 
     // For section nodes, render section header + children container
@@ -334,7 +334,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
             {tabItems.map(tabId => {
               const tabEntity = currentStore.entities[tabId]
               if (!tabEntity) return null
-              const tabState = aria.getNodeState(tabId)
               const tabProps = aria.getNodeProps(tabId)
               const tabData = (tabEntity.data ?? {}) as Record<string, unknown>
               const isActive = tabId === activeTabId
@@ -351,7 +350,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
                   onKeyDown={tkd as React.KeyboardEventHandler}
                   onFocus={tf as React.FocusEventHandler}
                   onClick={(e) => handleNodeClick(tabId, e)}
-                  className={`${getNodeClassName(tabData as Record<string, string>, tabState)}${isActive ? ` ${landingStyles.cmsTabItemActive}` : ''}`}
+                  className={`${getNodeClassName(tabData as Record<string, string>)}${isActive ? ` ${landingStyles.cmsTabItemActive}` : ''}`}
                 >
                   <CmsInlineEditable
                     nodeId={tabId}
@@ -371,7 +370,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
             const panelEntity = currentStore.entities[panelId]
             if (!panelEntity) return null
             const panelProps = aria.getNodeProps(panelId)
-            const panelState = aria.getNodeState(panelId)
             const panelData = (panelEntity.data ?? {}) as Record<string, unknown>
             const { onClick: _panelClick, onKeyDown: pkd, onFocus: pf, tabIndex: pti, role: _pr, ...panelRest } = panelProps as Record<string, unknown>
             void _panelClick; void _pr
@@ -386,7 +384,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
                 onKeyDown={pkd as React.KeyboardEventHandler}
                 onFocus={pf as React.FocusEventHandler}
                 onClick={(e) => handleNodeClick(panelId, e)}
-                className={getNodeClassName(panelData as Record<string, string>, panelState)}
+                className={getNodeClassName(panelData as Record<string, string>)}
               >
                 {panelSections.map(sectionId => renderNode(sectionId))}
               </div>
@@ -438,9 +436,26 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     )
   }
 
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const labelFn = useCallback((id: string) => {
+    const store = aria.getStore()
+    const entity = store.entities[id]
+    if (!entity) return ''
+    const d = (entity.data ?? {}) as Record<string, string>
+    return d.type ?? ''
+  }, [aria])
+
   return (
-    <div className={`cms-landing ${landingStyles.cmsLanding}`} data-cms-root data-aria-container="">
+    <div ref={containerRef} className={`cms-landing ${landingStyles.cmsLanding}`} data-cms-root data-aria-container="" style={{ position: 'relative' }}>
       {getChildren(currentStore, ROOT_ID).map(id => renderNode(id))}
+      <SelectionOverlay
+        containerRef={containerRef}
+        focusedId={aria.focused}
+        selectedIds={aria.selected}
+        nodeIdAttr="data-cms-id"
+        labelFn={labelFn}
+      />
     </div>
   )
 }
