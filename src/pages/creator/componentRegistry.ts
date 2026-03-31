@@ -34,6 +34,11 @@ export interface RegistryEntry extends ComponentMeta {
 
 // Skip hook/utility files that aren't renderable components
 const SKIP_PREFIXES = ['use', 'create']
+// Skip utility/container components that can't render standalone (need external refs, special wiring, etc.)
+const SKIP_NAMES = new Set([
+  'SelectionOverlay', 'Workspace', 'SplitPane', 'FileViewerModal', 'WindowSplitter',
+  'PatternDemo', 'QuickOpen', 'Toaster', 'Tooltip',
+])
 
 /** Build registry from TSX glob (primary), enrich with CSS when available */
 function buildRegistry(): RegistryEntry[] {
@@ -42,8 +47,9 @@ function buildRegistry(): RegistryEntry[] {
   for (const [tsxPath, loader] of Object.entries(tsxModules)) {
     const name = nameFromPath(tsxPath)
 
-    // Skip hooks and factory functions
+    // Skip hooks, factory functions, and non-standalone components
     if (SKIP_PREFIXES.some((p) => name.startsWith(p))) continue
+    if (SKIP_NAMES.has(name)) continue
 
     const cssPath = tsxPath.replace('.tsx', '.module.css')
     const rawCSS = cssModules[cssPath] ?? null

@@ -2,6 +2,7 @@ import { SeparatorIndicator } from './indicators'
 import styles from './Breadcrumb.module.css'
 
 export function Breadcrumb({ path, root }: { path: string; root: string }) {
+  if (!path) return null
   const relative = path.startsWith(root) ? path.slice(root.length + 1) : path
   const segments = relative.split('/')
   return (

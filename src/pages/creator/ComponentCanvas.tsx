@@ -1,6 +1,7 @@
 // ② 2026-03-27-component-creator-prd.md
 
-import React, { Suspense, useMemo } from 'react'
+import React, { Component, Suspense, useMemo } from 'react'
+import type { ErrorInfo, ReactNode } from 'react'
 import type { RegistryEntry } from './componentRegistry'
 import { getSampleData } from './sampleData'
 import styles from './PageComponentCreator.module.css'
@@ -46,22 +47,33 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
   ]},
 }
 
-/** Components that need NormalizedData (Aria-based) */
-const NEEDS_DATA = new Set([
-  'Accordion', 'Checkbox', 'Dialog', 'DisclosureGroup', 'Grid',
-  'ListBox', 'MenuList', 'NavList', 'RadioGroup', 'SwitchGroup',
-  'TabList', 'Toggle', 'ToggleGroup', 'TreeGrid', 'TreeView',
-  'AlertDialog', 'Kanban', 'Slider', 'Spinbutton', 'Combobox',
+/** Components that do NOT need NormalizedData (non-Aria simple components) */
+const SKIP_DATA = new Set([
+  'Breadcrumb', 'Button', 'TextInput',
 ])
 
-function ComponentInstance({ Component, name }: ComponentInstanceProps) {
+class CanvasErrorBoundary extends Component<{ name: string; children: ReactNode }, { error: string | null }> {
+  state = { error: null as string | null }
+  static getDerivedStateFromError(err: Error) { return { error: err.message } }
+  componentDidCatch(err: Error, info: ErrorInfo) { console.warn(`[Creator] ${this.props.name}:`, err, info) }
+  render() {
+    if (this.state.error) return <div className={styles.canvasError}>Cannot preview: {this.state.error}</div>
+    return this.props.children
+  }
+}
+
+function ComponentInstance({ Component: Comp, name }: ComponentInstanceProps) {
   const props: Record<string, unknown> = {
     ...(DEFAULT_PROPS[name] ?? {}),
   }
 
-  if (NEEDS_DATA.has(name)) {
+  if (!SKIP_DATA.has(name)) {
     props.data = getSampleData(name)
   }
 
-  return <Component {...props} />
+  return (
+    <CanvasErrorBoundary name={name}>
+      <Comp {...props} />
+    </CanvasErrorBoundary>
+  )
 }
