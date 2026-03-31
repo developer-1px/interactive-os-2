@@ -63,6 +63,13 @@ export function spatial() {
             focusCommands.setFocus(kids[0]!),
           ])
         }
+        const slotKids = ctx.getSlotChildren(ctx.focused)
+        if (slotKids.length > 0) {
+          return createBatchCommand([
+            spatialCommands.enterChild(ctx.focused),
+            focusCommands.setFocus(slotKids[0]!),
+          ])
+        }
         return original?.()
       },
       Escape: (ctx: PatternContext, original?: () => Command | void) => {

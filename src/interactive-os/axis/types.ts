@@ -77,6 +77,7 @@ export interface PatternContext {
   dispatch(command: Command): void
   getEntity(id: string): Entity | undefined
   getChildren(id: string): string[]
+  getSlotChildren(id: string): string[]
   getParent(id: string): string | undefined
 
   // ── aria-* 변화 범주 namespace (optional) ──

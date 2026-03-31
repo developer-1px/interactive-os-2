@@ -7,7 +7,7 @@ import { crudCommands } from '../../interactive-os/plugins/crud'
 import { dndCommands } from '../../interactive-os/plugins/dnd'
 import { clipboardCommands } from '../../interactive-os/plugins/clipboard'
 import { spatialCommands, getSpatialParentId, SPATIAL_PARENT_ID } from '../../interactive-os/plugins/spatial'
-import { getChildren, getParent } from '../../interactive-os/store/createStore'
+import { getChildren, getSlotChildren, getParent } from '../../interactive-os/store/createStore'
 import { ROOT_ID } from '../../interactive-os/store/types'
 import type { NormalizedData } from '../../interactive-os/store/types'
 import { createBatchCommand } from '../../interactive-os/engine/types'
@@ -115,14 +115,17 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       },
       Enter: (ctx: PatternContext) => {
         const children = ctx.getChildren(ctx.focused)
-        if (children.length === 0) {
-          // Guard: only start rename if node has editable text fields
+        const slotKids = ctx.getSlotChildren(ctx.focused)
+        if (children.length === 0 && slotKids.length === 0) {
+          // Leaf node: rename only if exactly 1 editable field (single text prop)
           const entity = ctx.getEntity(ctx.focused)
           const data = (entity?.data ?? {}) as Record<string, unknown>
           const fields = getEditableFields(data)
-          if (fields.length === 0) return
+          if (fields.length !== 1) return
           return renameCommands.startRename(ctx.focused)
         }
+        // Prefer slot children for drill down when no array children
+        const drillTarget = children.length > 0 ? children : slotKids
 
         // Tab-item: Enter goes through panel to its first section
         const entity = ctx.getEntity(ctx.focused)
@@ -143,7 +146,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         // Container node → enterChild (spatial depth navigation)
         return createBatchCommand([
           spatialCommands.enterChild(ctx.focused),
-          focusCommands.setFocus(children[0]),
+          focusCommands.setFocus(drillTarget[0]),
         ])
       },
       Escape: (ctx: PatternContext) => {

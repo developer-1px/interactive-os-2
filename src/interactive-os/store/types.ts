@@ -5,9 +5,12 @@ export interface Entity<T extends Record<string, unknown> = Record<string, unkno
   [key: string]: unknown
 }
 
+// ② 2026-03-31-store-slots-prd.md
 export interface NormalizedData {
   entities: Record<string, Entity>
   relationships: Record<string, string[]>
+  /** Named fixed-structure slots: parentId → { slotName → childId }. Object semantics — no CRUD, edit only. */
+  slots?: Record<string, Record<string, string>>
 }
 
 export const ROOT_ID = '__root__' as const
