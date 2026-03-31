@@ -10,12 +10,20 @@
    // ② 2026-03-25-css-writing-rules-prd.md
 */
 
-/* ── Direction ── */
+/* ── Display ── */
+.block         { display: block; }
+.inline-block  { display: inline-block; }
+.hidden        { display: none; }
+.contents      { display: contents; }
+
+/* ── Flex ── */
 .flex-row      { display: flex; }
 .flex-col      { display: flex; flex-direction: column; }
 .flex-col-reverse { display: flex; flex-direction: column-reverse; }
 .flex-wrap     { flex-wrap: wrap; }
 .inline-flex   { display: inline-flex; }
+
+/* ── Grid ── */
 .grid          { display: grid; }
 .inline-grid   { display: inline-grid; }
 
@@ -42,23 +50,43 @@
 .flex-1   { flex: 1; }
 .shrink-0 { flex-shrink: 0; }
 .min-w-0  { min-width: 0; }
+.min-h-0  { min-height: 0; }
+.h-full   { height: 100%; }
+.w-full   { width: 100%; }
 
 /* ── Overflow ── */
-.overflow-hidden { overflow: hidden; }
-.overflow-auto   { overflow: auto; }
-.overflow-x-auto { overflow-x: auto; }
-.overflow-y-auto { overflow-y: auto; }
+.overflow-hidden   { overflow: hidden; }
+.overflow-auto     { overflow: auto; }
+.overflow-x-hidden { overflow-x: hidden; }
+.overflow-x-auto   { overflow-x: auto; }
+.overflow-y-auto   { overflow-y: auto; }
 
 /* ── Text ── */
-.truncate     { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.text-center  { text-align: center; }
-.text-right   { text-align: right; }
+.truncate      { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.text-left     { text-align: left; }
+.text-center   { text-align: center; }
+.text-right    { text-align: right; }
 .whitespace-nowrap { white-space: nowrap; }
+.no-underline  { text-decoration: none; }
+.align-middle  { vertical-align: middle; }
+.align-baseline { vertical-align: baseline; }
 
 /* ── Position ── */
 .relative { position: relative; }
 .absolute { position: absolute; }
+.fixed    { position: fixed; }
 .sticky   { position: sticky; }
+.inset-0  { inset: 0; }
+
+/* ── Interactive ── */
+.cursor-pointer      { cursor: pointer; }
+.pointer-events-none { pointer-events: none; }
+
+/* ── Reset ── */
+.border-none  { border: none; }
+.outline-none { outline: none; }
+.list-none    { list-style: none; }
+.object-cover { object-fit: cover; }
 
 /* ── Visibility ── */
 .sr-only {

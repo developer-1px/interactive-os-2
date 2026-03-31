@@ -1,17 +1,6 @@
 /* ② 2026-03-26-component-styling-rules-prd.md */
 
-.workspace {
-  height: 100%;
-}
-
-.workspaceContent {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
 .empty {
-  height: 100%;
   gap: var(--space-sm);
   color: var(--text-muted);
 }

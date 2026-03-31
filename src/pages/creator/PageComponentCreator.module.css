@@ -4,17 +4,6 @@
    Layout: Canvas(primary) | Code(secondary) / Chat(tertiary)
    Pane = 동시에 봐야 하는 것, Tab = 배타적 전환 */
 
-/* ── Page ── */
-.page {
-  height: 100%;
-  overflow: hidden;
-}
-
-.body {
-  flex: 1;
-  min-height: 0;
-}
-
 /* ── Shared pane header ── */
 .paneHeader {
   padding: var(--shape-xs-py) var(--shape-sm-px);
@@ -30,21 +19,10 @@
   color: var(--text-primary);
 }
 
-
 /* ── Primary: Canvas ── */
-.canvasPane {
-  height: 100%;
-  overflow: hidden;
-}
 
 .canvas {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  min-height: 0;
   padding: var(--space-lg);
-  overflow: auto;
 }
 
 .emptyState {
@@ -54,15 +32,10 @@
 
 /* ── Right pane container ── */
 .rightPane {
-  height: 100%;
-  overflow: hidden;
   border-left: 1px solid var(--border-subtle);
 }
 
 /* ── Secondary: Code [TSX | CSS] ── */
-.codePane {
-  overflow: hidden;
-}
 
 .sourceTab {
   padding: var(--shape-xs-py) var(--shape-xs-px);
@@ -83,13 +56,8 @@
   font-weight: var(--weight-medium);
 }
 
-.codeContent {
-  min-height: 0;
-}
-
 /* ── Tertiary: Chat ── */
 .chat {
-  height: 100%;
   border-left: 1px solid var(--border-subtle);
 }
 
@@ -118,7 +86,6 @@
   color: var(--text-muted);
   font-size: var(--type-body-size);
   padding: var(--space-xl);
-  text-align: center;
 }
 
 .chatBubble {
@@ -148,7 +115,6 @@
 }
 
 .chatInput {
-  width: 100%;
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border-radius: var(--shape-sm-radius);
   font-size: var(--type-body-size);
@@ -162,7 +128,6 @@
 .navBar {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   background: var(--surface-sunken);
-  overflow-x: auto;
   gap: var(--space-2xs);
 }
 
@@ -172,7 +137,6 @@
   font-size: var(--type-caption-size);
   font-weight: var(--type-caption-weight);
   min-height: var(--space-2xl);
-  white-space: nowrap;
   color: var(--text-muted);
   --_bg: transparent;
   --_bg-hover: var(--surface-default);

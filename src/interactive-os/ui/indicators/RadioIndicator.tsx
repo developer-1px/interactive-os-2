@@ -4,7 +4,7 @@ interface RadioIndicatorProps {
 }
 
 export function RadioIndicator({ className }: RadioIndicatorProps) {
-  const classes = ['item-indicator--radio', className].filter(Boolean).join(' ')
+  const classes = ['shrink-0 flex-row items-center justify-center', 'item-indicator--radio', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       <span className="item-indicator--radio-dot" />

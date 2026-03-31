@@ -30,12 +30,12 @@ const renderMeter = (
   void state
 
   return (
-    <div {...props} className={styles.meter}>
+    <div {...props} className={`${styles.meter} flex-row items-center`}>
       <span className={styles.label}>{label}</span>
-      <span className={styles.track}>
-        <span className={styles.fill} style={{ width: `${pct}%` }} />
+      <span className={`${styles.track} flex-1 relative`}>
+        <span className={`${styles.fill} h-full`} style={{ width: `${pct}%` }} />
       </span>
-      <span className={styles.valueLabel}>{value}%</span>
+      <span className={`${styles.valueLabel} text-right`}>{value}%</span>
     </div>
   )
 }

@@ -32,11 +32,11 @@ const renderCheckbox = (
   return (
     <div
       {...props}
-      className={styles.checkbox}
+      className={`${styles.checkbox} flex-row items-center`}
       data-focused={state.focused || undefined}
     >
       <span
-        className={styles.checkIndicator}
+        className={`${styles.checkIndicator} inline-flex items-center justify-center`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >

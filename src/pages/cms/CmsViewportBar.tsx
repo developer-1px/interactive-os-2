@@ -13,12 +13,12 @@ export default function CmsViewportBar({ viewport, onViewportChange, onPresent, 
   if (hidden) return null
 
   return (
-    <div className="cms-viewport-bar" aria-label="Viewport controls">
+    <div className="cms-viewport-bar fixed flex-row items-center" aria-label="Viewport controls">
       {([['mobile', Smartphone], ['tablet', Tablet], ['desktop', Monitor]] as const).map(([v, Icon]) => (
         <button
           key={v}
           type="button"
-          className={`cms-floating-toolbar__btn${viewport === v ? ' cms-floating-toolbar__btn--active' : ''}`}
+          className={`cms-floating-toolbar__btn flex-row items-center justify-center border-none cursor-pointer whitespace-nowrap${viewport === v ? ' cms-floating-toolbar__btn--active' : ''}`}
           onClick={() => onViewportChange(v as ViewportSize)}
           title={v}
         >
@@ -26,7 +26,7 @@ export default function CmsViewportBar({ viewport, onViewportChange, onPresent, 
         </button>
       ))}
       <div className="cms-floating-toolbar__sep" />
-      <button className="cms-floating-toolbar__btn" onClick={onPresent} title="Present" type="button">
+      <button className="cms-floating-toolbar__btn flex-row items-center justify-center border-none cursor-pointer whitespace-nowrap" onClick={onPresent} title="Present" type="button">
         <Play size={16} />
       </button>
     </div>

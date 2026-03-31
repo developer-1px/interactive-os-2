@@ -293,21 +293,21 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   }, [aria.focused])
 
   return (
-    <aside className="cms-sidebar" aria-label="Sections" style={style}>
-      <div className="cms-sidebar__list" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onFocus={handleContainerFocus}>
+    <aside className="cms-sidebar shrink-0 flex-col overflow-hidden" aria-label="Sections" style={style}>
+      <div className="cms-sidebar__list flex-1 flex-col overflow-y-auto" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
             const elements: React.ReactNode[] = []
 
             if (showSepStart) {
-              elements.push(<div key={`sep-start-${rootAncestor}`} className="cms-sidebar__group-sep" />)
+              elements.push(<div key={`sep-start-${rootAncestor}`} className="cms-sidebar__group-sep pointer-events-none" />)
             }
             if (showSepEnd && prevRootAncestorForSepEnd) {
-              elements.push(<div key={`sep-end-${prevRootAncestorForSepEnd}`} className="cms-sidebar__group-sep" />)
+              elements.push(<div key={`sep-end-${prevRootAncestorForSepEnd}`} className="cms-sidebar__group-sep pointer-events-none" />)
             }
 
             if (showLabel && tabItemId) {
               elements.push(
-                <div key={`label-${tabItemId}`} className={`cms-sidebar__group-label${tabItemId === activeTabItemId ? ' cms-sidebar__group-label--active' : ''}`}>
+                <div key={`label-${tabItemId}`} className={`cms-sidebar__group-label pointer-events-none${tabItemId === activeTabItemId ? ' cms-sidebar__group-label--active' : ''}`}>
                   {labelText}
                 </div>
               )
@@ -319,7 +319,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
               <div
                 key={sectionId}
                 {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                className={`cms-sidebar__thumb${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
+                className={`cms-sidebar__thumb w-full cursor-pointer relative shrink-0${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
                 onClick={() => {
                   aria.dispatch(focusCommands.setFocus(sectionId))
                   scrollToSection(sectionId)
@@ -328,18 +328,18 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
                 <div className="cms-sidebar__thumb-inner cms-landing" inert>
                   <SectionThumbnail data={store} sectionId={sectionId} locale={locale} />
                 </div>
-                <span className="cms-sidebar__thumb-index">{index + 1}</span>
+                <span className="absolute cms-sidebar__thumb-index">{index + 1}</span>
               </div>
             )
 
             return elements
           })}
       </div>
-      <div className="cms-sidebar__add-area">
+      <div className="relative shrink-0">
         <button
           ref={addBtnRef}
           type="button"
-          className="cms-sidebar__add-btn"
+          className="cms-sidebar__add-btn flex-row items-center justify-center cursor-pointer"
           aria-label="Add section"
           onClick={() => setPickerOpen(o => !o)}
         >

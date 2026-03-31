@@ -1,22 +1,16 @@
 /* ── base ── */
 
 .cell {
-  display: flex;
-  align-items: center;
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
   font-weight: var(--type-body-weight);
   line-height: var(--type-body-line-height);
   color: var(--text-primary);
   cursor: default;
-  outline: none;
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
 .tile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: var(--shape-md-py) var(--shape-md-px);
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
@@ -25,7 +19,6 @@
   background: var(--surface-sunken);
   border-radius: var(--shape-md-radius);
   cursor: default;
-  outline: none;
 }
 
 /* ── variant: state ── */

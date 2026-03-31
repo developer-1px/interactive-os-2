@@ -41,7 +41,7 @@ const renderTile = (
   value: unknown,
 ): React.ReactElement => {
   return (
-    <div {...props} className={styles.tile}>
+    <div {...props} className={`${styles.tile} flex-row items-center justify-center outline-none`}>
       {String(value ?? '')}
     </div>
   )

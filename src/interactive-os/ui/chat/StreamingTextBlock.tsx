@@ -1,7 +1,8 @@
 // ② 2026-03-30-streaming-text-block-prd.md
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { MarkdownViewer } from '../MarkdownViewer'
+import chatStyles from './TextBlock.module.css'
 import type { StreamingTextBlock as StreamingTextBlockType } from './types'
-import styles from './StreamingTextBlock.module.css'
 
 const FLUSH_TIMEOUT_MS = 200
 
@@ -52,8 +53,8 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
   if (!displayed) return null
 
   return (
-    <div className={styles.streaming}>
-      {displayed}
+    <div>
+      <MarkdownViewer content={displayed} styles={chatStyles} codeVariant="compact" />
       <div ref={cursorRef} />
     </div>
   )

@@ -37,7 +37,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={styles.option}
+      className={`${styles.option} flex-row items-center`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

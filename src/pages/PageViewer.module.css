@@ -5,16 +5,7 @@
 
 /* --- Viewer layout --- */
 
-.vw {
-  display: flex;
-  height: 100%;
-  min-height: 0;
-}
-
 .vw-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   gap: var(--space-sm);
   height: 100svh;
   color: var(--text-muted);
@@ -34,16 +25,11 @@
 /* --- Shared header bar --- */
 
 .vw-statusbar__btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 24px;
   height: 24px;
   background: none;
-  border: none;
   border-radius: var(--shape-xl-radius);
   color: var(--text-secondary);
-  cursor: pointer;
   transition: background 0.1s, color 0.1s;
 }
 
@@ -55,14 +41,11 @@
 /* --- Rec button --- */
 
 .vw-rec {
-  display: flex;
-  align-items: center;
   gap: var(--space-xs);
   background: var(--surface-base);
   border: 1px solid var(--border-default);
   border-radius: var(--shape-xs-radius);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  cursor: pointer;
   font-size: var(--type-caption-size);
 
   font-weight: var(--weight-medium);
@@ -102,55 +85,36 @@
 /* --- Tree panel (sidebar) --- */
 
 .vw-tree {
-  flex-shrink: 0;
   background: var(--surface-sunken);
-  display: flex;
-  flex-direction: column;
 }
 
 .vw-tree__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   height: 36px;
   padding: 0 var(--space-md);
-  flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .vw-tree__header-title {
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-normal);
   color: var(--text-muted);
 }
 
 .vw-tree__body {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
   padding: var(--space-xs) 0;
 }
 
 .vw-tree__item {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
   gap: var(--space-xs);
-  white-space: nowrap;
 }
 
 .vw-tree__chevron {
   width: var(--icon-xs);
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   color: var(--text-muted);
 }
 
 .vw-tree__name {
-  overflow: hidden;
   text-overflow: ellipsis;
   color: var(--text-secondary);
 }
@@ -163,53 +127,26 @@
 /* --- Content panel --- */
 
 .vw-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
   background: var(--surface-default);
 }
 
 .vw-content__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   height: 36px;
   padding: 0 var(--space-lg);
-  flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .vw-content__header-left,
 .vw-content__header-right {
-  display: flex;
-  align-items: center;
   gap: var(--space-sm);
 }
 
-.vw-content__body {
-  flex: 1;
-  display: flex;
-  min-height: 0;
-}
-
-/* --- Code panel (left) --- */
-
-.vw-content__code {
-  flex: 1;
-  overflow: auto;
-  min-width: 0;
-}
 
 .vw-content__meta {
-  display: flex;
-  align-items: center;
   gap: var(--space-xs);
 
   font-size: var(--type-caption-size);
   color: var(--text-muted);
-  flex-shrink: 0;
 }
 
 .vw-content__meta svg {
@@ -228,12 +165,7 @@
 /* --- Empty state --- */
 
 .vw-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   gap: var(--space-md);
-  height: 100%;
   color: var(--text-muted);
 
   font-size: var(--type-body-size);

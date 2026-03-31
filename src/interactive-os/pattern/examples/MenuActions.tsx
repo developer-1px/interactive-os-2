@@ -36,7 +36,7 @@ const renderTrigger = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <button {...props} className={styles.trigger} type="button">
+    <button {...props} className={`${styles.trigger} inline-flex items-center`} type="button">
       {label} ▾
     </button>
   )
@@ -51,7 +51,7 @@ const renderMenuItem = (
   return (
     <div
       {...props}
-      className={styles.menuitem}
+      className={`${styles.menuitem} flex-row items-center`}
       data-focused={state.focused || undefined}
     >
       {label}

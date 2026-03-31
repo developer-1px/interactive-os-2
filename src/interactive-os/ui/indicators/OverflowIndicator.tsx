@@ -6,6 +6,6 @@ interface OverflowIndicatorProps {
 
 export function OverflowIndicator({ count, className }: OverflowIndicatorProps) {
   if (count <= 0) return null
-  const classes = ['item-indicator--overflow', className].filter(Boolean).join(' ')
+  const classes = ['whitespace-nowrap shrink-0', 'item-indicator--overflow', className].filter(Boolean).join(' ')
   return <span className={classes}>+{count}</span>
 }

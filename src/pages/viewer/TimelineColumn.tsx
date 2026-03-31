@@ -5,7 +5,7 @@ import { Circle, Loader, X } from 'lucide-react'
 import { connectSession, disconnectSession, useTimeline, useSessionMeta } from './viewerStore'
 import { timelineToMessages } from './timelineAdapter'
 import { ChatFeed } from '../../interactive-os/ui/chat/ChatFeed'
-import { ChatInput } from '../../interactive-os/ui/chat/ChatInput'
+import { Composer } from '../../interactive-os/ui/Composer'
 import { ToolGroupBlock } from './ToolGroupBlock'
 import type { BlockRendererMap } from '../../interactive-os/ui/chat/types'
 
@@ -40,41 +40,41 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
   const streamingLabel = 'Thinking'
 
   return (
-    <div className={styles.tc}>
-      <div className={`${styles.tcHeader} ${isLive && agentStatus === 'idle' ? styles.tcHeaderIdle : ''}`}>
+    <div className={`${styles.tc} flex-col flex-1 h-full min-h-0`}>
+      <div className={`${styles.tcHeader} flex-row items-center shrink-0 ${isLive && agentStatus === 'idle' ? styles.tcHeaderIdle : ''}`}>
         {isLive && (
-          <span className={agentStatus === 'idle' ? styles.tcIdle : styles.tcLive}><Circle size={8} fill="currentColor" /></span>
+          <span className={`${agentStatus === 'idle' ? styles.tcIdle : styles.tcLive} shrink-0`}><Circle size={8} fill="currentColor" /></span>
         )}
         <span className={`${styles.tcLabel} truncate`}>{sessionLabel}</span>
         {isLive && (
-          <span className={styles.tcHeaderStatus}>
+          <span className={`${styles.tcHeaderStatus} shrink-0`}>
             {agentStatus === 'running' ? '진행중' : agentStatus === 'idle' ? '입력 대기' : ''}
           </span>
         )}
-        <button className={styles.tcClose} onClick={onClose}><X size={14} /></button>
+        <button className={`${styles.tcClose} border-none cursor-pointer`} onClick={onClose}><X size={14} /></button>
       </div>
 
       {fetchError ? (
-        <div className={styles.tcEmpty}>Failed to load: {fetchError}</div>
+        <div className={`${styles.tcEmpty} text-center`}>Failed to load: {fetchError}</div>
       ) : initialLoading ? (
-        <div className={styles.tcLoading}>
+        <div className={`${styles.tcLoading} flex-row items-center justify-center`}>
           <Loader size={14} className={styles.tcLoadingSpinner} />
           <span>Loading timeline...</span>
         </div>
       ) : messages.length === 0 ? (
-        <div className={styles.tcEmpty}>Waiting for agent activity...</div>
+        <div className={`${styles.tcEmpty} text-center`}>Waiting for agent activity...</div>
       ) : (
         <ChatFeed
           messages={messages}
           blockRenderers={viewerRenderers}
           isStreaming={showStreaming}
           streamingLabel={streamingLabel}
-          className={styles.tcBody}
+          className={`${styles.tcBody} flex-1 overflow-y-auto overflow-x-hidden`}
         />
       )}
 
       {isLive && agentStatus === 'idle' && (
-        <ChatInput disabled placeholder="Send a message... (channel 미연결)" />
+        <Composer disabled placeholder="Send a message... (channel 미연결)" />
       )}
     </div>
   )

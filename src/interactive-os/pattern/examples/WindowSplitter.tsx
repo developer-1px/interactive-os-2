@@ -25,16 +25,16 @@ const renderSplitter = (
   void node
 
   return (
-    <div className={styles.container}>
-      <div className={styles.panel} style={{ flexBasis: `${current}%` }}>
+    <div className={`${styles.container} flex-row`}>
+      <div className={`${styles.panel} flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${current}%` }}>
         <p className={styles.panelLabel}>Panel 1</p>
       </div>
       <div
         {...props}
-        className={styles.splitter}
+        className={`${styles.splitter} shrink-0 outline-none`}
         data-focused={state.focused || undefined}
       />
-      <div className={styles.panel} style={{ flexBasis: `${100 - current}%` }}>
+      <div className={`${styles.panel} flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${100 - current}%` }}>
         <p className={styles.panelLabel}>Panel 2</p>
       </div>
     </div>

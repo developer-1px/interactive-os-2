@@ -6,10 +6,6 @@
 /* --- Layout --- */
 
 .av {
-  display: flex;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
   grid-column: 2 / -1;
 }
 
@@ -17,77 +13,60 @@
 /* --- Sessions panel --- */
 
 .avSessions {
-  flex-shrink: 0;
   background: var(--surface-sunken);
-  display: flex;
-  flex-direction: column;
   border-right: 1px solid var(--border-subtle);
 }
 
 .avSessionsHeader {
-  display: flex;
-  align-items: center;
   height: 36px;
   padding: 0 var(--space-md);
-  flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .avSessionsTitle {
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
 .avSessionList {
-  flex-shrink: 0;
   padding: var(--space-xs) 0;
 }
 
 .avGroupLabel {
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--text-muted);
   padding: var(--space-sm) var(--space-md) var(--space-xs);
 }
 
 .avSessionItem {
-  display: flex;
-  align-items: center;
   gap: var(--space-xs);
-  white-space: nowrap;
-  padding: 2px var(--space-md);
+  padding: var(--space-inline-code) var(--space-md);
   font-size: var(--type-body-size);
   color: var(--text-secondary);
 }
 
 .avSessionLive {
-  color: #4ade80;
+  color: var(--tone-success-base);
   font-size: 8px;
-  flex-shrink: 0;
 }
 
 /* --- Modified files section --- */
 
 .avFilesSection {
   border-top: 1px solid var(--border-subtle);
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
 }
 
 .avFileItem {
-  display: flex;
-  align-items: center;
   gap: var(--space-xs);
-  padding: 3px var(--space-md);
+  padding: var(--space-xs) var(--space-md);
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
-  cursor: pointer;
 }
 
 
@@ -103,54 +82,27 @@
 
 /* --- Splitpane workspace --- */
 
-.avColumns {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-}
-
-.avPane {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-}
 
 .avPaneHeader {
-  display: flex;
-  align-items: center;
   height: 32px;
   padding: 0 var(--space-md);
-  flex-shrink: 0;
   background: var(--surface-default);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .avPaneLabel {
-  flex: 1;
-  min-width: 0;
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   color: var(--text-secondary);
-  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .avPaneClose {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 20px;
   height: 20px;
-  flex-shrink: 0;
   background: transparent;
-  border: none;
   border-radius: var(--shape-xs-radius);
   color: var(--text-muted);
-  cursor: pointer;
 }
 
 .avPaneClose:hover {
@@ -159,29 +111,17 @@
 }
 
 .avEmpty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
   color: var(--text-muted);
   font-size: var(--type-body-size);
 }
 
 /* --- File panel --- */
 
-.avFilePanel {
-  height: 100%;
-  overflow: auto;
-}
 
 /* --- Loading --- */
 
 .avLoading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   gap: var(--space-sm);
-  height: 100%;
   color: var(--text-muted);
 
   font-size: var(--type-body-size);

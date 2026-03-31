@@ -1,8 +1,6 @@
 /* --- AlertDialog --- */
 
 .backdrop {
-  position: fixed;
-  inset: 0;
   background: var(--dialog-backdrop);
   /* backdrop-filter has no design token — intentional raw value */
   backdrop-filter: blur(3px);

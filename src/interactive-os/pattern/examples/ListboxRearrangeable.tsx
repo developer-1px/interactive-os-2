@@ -48,7 +48,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={styles.option}
+      className={`${styles.option} flex-row items-center`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
@@ -75,8 +75,8 @@ function ListboxZone({
   }, [onSelectionChange])
 
   return (
-    <div className={styles.listboxZone}>
-      <span className={styles.zoneLabel} id={`label-${label.toLowerCase().replace(/\s/g, '-')}`}>
+    <div className="flex-1 min-w-0">
+      <span className={`${styles.zoneLabel} block`} id={`label-${label.toLowerCase().replace(/\s/g, '-')}`}>
         {label}
       </span>
       <ListBox
@@ -115,16 +115,16 @@ export function ListboxRearrangeable() {
   }, [chosenSelected])
 
   return (
-    <div className={styles.rearrangeable}>
+    <div className={`${styles.rearrangeable} flex-row items-start`}>
       <ListboxZone
         label="Available upgrades"
         ids={availableIds}
         onSelectionChange={setAvailableSelected}
       />
 
-      <div role="toolbar" aria-label="Actions" className={styles.toolbar}>
+      <div role="toolbar" aria-label="Actions" className={`${styles.toolbar} flex-col`}>
         <button
-          className={styles.toolbarButton}
+          className={`${styles.toolbarButton} whitespace-nowrap`}
           aria-keyshortcuts="Enter"
           disabled={availableSelected.length === 0}
           onClick={addToChosen}
@@ -132,7 +132,7 @@ export function ListboxRearrangeable() {
           Add →
         </button>
         <button
-          className={styles.toolbarButton}
+          className={`${styles.toolbarButton} whitespace-nowrap`}
           aria-keyshortcuts="Delete"
           disabled={chosenSelected.length === 0}
           onClick={removeFromChosen}

@@ -51,7 +51,7 @@ const renderItem = (
   if (children) {
     const labelId = `group-label-${node.id}`
     return (
-      <ul {...props} aria-labelledby={labelId} className={styles.groupOptions}>
+      <ul {...props} aria-labelledby={labelId} className={`${styles.groupOptions} list-none`}>
         <li role="presentation" id={labelId} className={styles.groupLabel}>
           {label}
         </li>
@@ -63,7 +63,7 @@ const renderItem = (
   return (
     <li
       {...props}
-      className={styles.option}
+      className={`${styles.option} flex-row items-center`}
       data-focused={state.focused || undefined}
     >
       {label}

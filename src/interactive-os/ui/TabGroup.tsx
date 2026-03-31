@@ -81,9 +81,11 @@ export function TabGroup({
 
   const activeEntity = data.entities[activeTabId]
 
+  const showTabBar = childIds.length > 1
+
   return (
-    <div className={`flex-col ${styles.tabGroup}`}>
-      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`flex-row shrink-0 ${styles.tabBar}`}>
+    <div className={`flex-col h-full overflow-hidden`}>
+      {showTabBar && <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`flex-row shrink-0 overflow-x-auto ${styles.tabBar}`}>
         {childIds.map((id) => {
           const entity = store.entities[id]
           if (!entity) return null
@@ -91,7 +93,7 @@ export function TabGroup({
           const entityData = entity.data as Record<string, unknown>
           const label = entityData?.label as string ?? id
           const isPreview = entityData?.preview === true
-          const tabClass = isPreview ? `inline-flex items-center ${styles.tab} ${styles.tabPreview}` : `inline-flex items-center ${styles.tab}`
+          const tabClass = isPreview ? `inline-flex items-center whitespace-nowrap ${styles.tab} ${styles.tabPreview}` : `inline-flex items-center whitespace-nowrap ${styles.tab}`
           return (
             <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass} data-surface="action">
               <span>{label}</span>
@@ -108,8 +110,8 @@ export function TabGroup({
             </div>
           )
         })}
-      </div>
-      <div role="tabpanel" className={styles.tabPanel}>
+      </div>}
+      <div role="tabpanel" className="flex-col flex-1 min-h-0 overflow-hidden">
         {activeEntity ? renderPanel(activeEntity) : null}
       </div>
     </div>

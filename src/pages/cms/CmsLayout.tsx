@@ -89,8 +89,8 @@ export default function CmsLayout() {
 
   return (
     <AriaRoute keyMap={cmsGlobalKeyMap}>
-    <div className="cms-layout">
-      <div className="cms-body">
+    <div className="cms-layout flex-col flex-1 min-h-0">
+      <div className="flex-row flex-1 min-h-0">
         <CmsSidebar
           engine={engine}
           store={store}
@@ -101,7 +101,7 @@ export default function CmsLayout() {
           style={{ width: sidebarResizer.size }}
         />
         <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
-        <div className="cms-canvas-area">
+        <div className="flex-1 relative overflow-y-auto">
           <CmsViewportWrapper viewport={viewport}>
             <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} activeTabMap={activeTabMap} onActivateTabItem={handleActivateTabItem} />
           </CmsViewportWrapper>

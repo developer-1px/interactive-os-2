@@ -8,7 +8,7 @@ interface SpinnerIndicatorProps {
 
 export function SpinnerIndicator({ size = 'md', className }: SpinnerIndicatorProps) {
   const sizeClass = `item-indicator--spinner-${size}`
-  const classes = ['item-indicator--spinner', sizeClass, className].filter(Boolean).join(' ')
+  const classes = ['inline-flex items-center justify-center', 'item-indicator--spinner', sizeClass, className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       <Loader2 size="1em" />

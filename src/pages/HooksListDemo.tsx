@@ -22,11 +22,11 @@ export default function HooksListDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <ListBox
           data={data}
           onChange={setData}
@@ -34,7 +34,7 @@ export default function HooksListDemo() {
           renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [
-              'list-item',
+              'list-item flex-row items-center justify-between',
               state.focused && 'list-item--focused',
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')

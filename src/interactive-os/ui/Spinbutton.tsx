@@ -123,11 +123,11 @@ export function Spinbutton({
     return (
       <div className={`flex-row items-center gap-md ${styles.spinbuttonItem}`} data-focused={state.focused || undefined}>
         {itemLabel && <span className={styles.spinbuttonLabel}>{itemLabel}</span>}
-        <div className={`inline-flex items-stretch ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
+        <div className={`inline-flex items-stretch overflow-hidden ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
           <button
             type="button"
             data-surface="action"
-            className={`flex-row items-center justify-center ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
+            className={`flex-row items-center justify-center border-none cursor-pointer ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
             aria-disabled={atMin || undefined}
@@ -138,7 +138,7 @@ export function Spinbutton({
           {editing ? (
             <input
               ref={inputRef}
-              className={styles.spinbuttonInput}
+              className={`border-none outline-none text-center ${styles.spinbuttonInput}`}
               type="text"
               inputMode="numeric"
               value={editValue}
@@ -149,7 +149,7 @@ export function Spinbutton({
             />
           ) : (
             <div
-              className={`flex-row items-center justify-center ${styles.spinbuttonValue}`}
+              className={`flex-row items-center justify-center text-center ${styles.spinbuttonValue}`}
               onClick={startEditing}
               onDoubleClick={startEditing}
             >
@@ -159,7 +159,7 @@ export function Spinbutton({
           <button
             type="button"
             data-surface="action"
-            className={`flex-row items-center justify-center ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
+            className={`flex-row items-center justify-center border-none cursor-pointer ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}
             aria-disabled={atMax || undefined}

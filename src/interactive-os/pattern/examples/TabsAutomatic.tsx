@@ -43,7 +43,7 @@ const renderTab = (
   return (
     <div
       {...props}
-      className={styles.tab}
+      className={`${styles.tab} inline-flex items-center`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

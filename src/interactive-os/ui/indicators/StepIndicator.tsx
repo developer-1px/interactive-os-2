@@ -9,6 +9,7 @@ interface StepIndicatorProps {
 
 export function StepIndicator({ step, completed, className }: StepIndicatorProps) {
   const classes = [
+    'inline-flex items-center justify-center shrink-0',
     'item-indicator--step',
     completed ? 'item-indicator--step-completed' : '',
     className,

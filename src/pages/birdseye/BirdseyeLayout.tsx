@@ -360,15 +360,15 @@ export default function BirdseyeLayout() {
   }, [selectedFolderId, fsStore])
 
   if (!fsStore || !navStore) {
-    return <div className={styles.loading}>Loading project...</div>
+    return <div className={`${styles.loading} flex-row items-center justify-center h-full`}>Loading project...</div>
   }
 
   return (<>
     <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.08}>
       {/* 좌: TreeView (폴더 전용) */}
-      <div className={styles.sidebar}>
-        <div className={styles.sidebarHeader}>Birdseye</div>
-        <div className={styles.sidebarBody}>
+      <div className={`${styles.sidebar} flex-col h-full`}>
+        <div className={`${styles.sidebarHeader} flex-row items-center shrink-0`}>Birdseye</div>
+        <div className={`${styles.sidebarBody} flex-1`}>
           <TreeView
             data={navStore}
             onActivate={handleNavActivate}
@@ -380,20 +380,20 @@ export default function BirdseyeLayout() {
       </div>
 
       {/* 중: Kanban */}
-      <div className={styles.board}>
-        <div className={styles.boardHeader}>
-          <span className={styles.breadcrumb}>
+      <div className={`${styles.board} flex-col h-full`}>
+        <div className={`${styles.boardHeader} flex-row items-center shrink-0`}>
+          <span className={`${styles.breadcrumb} flex-row items-center`}>
             {breadcrumbs.map((seg, i) => (
               <span key={seg.id}>
                 {i > 0 && <span className={styles.breadcrumbSep}>/</span>}
                 {i < breadcrumbs.length - 1
-                  ? <button className={styles.breadcrumbLink} onClick={() => selectFolder(seg.id)}>{seg.label}</button>
+                  ? <button className={`${styles.breadcrumbLink} cursor-pointer`} onClick={() => selectFolder(seg.id)}>{seg.label}</button>
                   : <span>{seg.label}</span>
                 }
               </span>
             ))}
           </span>
-          <span className={styles.legend}>
+          <span className={`${styles.legend} flex-row`}>
             {['ts', 'tsx', 'css', 'md', 'yaml'].map((ext) => (
               <span
                 key={ext}
@@ -402,10 +402,10 @@ export default function BirdseyeLayout() {
                 onClick={() => setExtFilter(extFilter === ext ? null : ext)}
               >.{ext}</span>
             ))}
-            <span className={styles.legendHint} title="↑ = imported by N files, ↓ = imports N files">↑imported ↓imports</span>
-            <span className={styles.legendHint} data-weight-legend="" title="300+ lines — complexity signal">300L+</span>
+            <span className={`${styles.legendHint} pointer-events-none`} title="↑ = imported by N files, ↓ = imports N files">↑imported ↓imports</span>
+            <span className={`${styles.legendHint} pointer-events-none`} data-weight-legend="" title="300+ lines — complexity signal">300L+</span>
             <button
-              className={styles.viewToggle}
+              className={`${styles.viewToggle} flex-row items-center justify-center cursor-pointer`}
               onClick={() => setViewMode(v => v === 'kanban' ? 'treemap' : 'kanban')}
               title={viewMode === 'kanban' ? 'Treemap view' : 'Kanban view'}
             >
@@ -415,7 +415,7 @@ export default function BirdseyeLayout() {
         </div>
         {kanbanStore && Object.keys(kanbanStore.relationships).length > 1 ? (
           viewMode === 'kanban' ? (
-            <div className={styles.boardBody}>
+            <div className="flex-1 min-h-0 overflow-hidden">
               <Kanban
                 key={selectedFolderId}
                 data={kanbanStore}
@@ -428,7 +428,7 @@ export default function BirdseyeLayout() {
               />
             </div>
           ) : (
-            <div className={styles.boardBody} ref={treemapContainerRef}>
+            <div className="flex-1 min-h-0 overflow-hidden" ref={treemapContainerRef}>
               <Treemap
                 data={kanbanStore}
                 width={treemapSize.width}
@@ -442,7 +442,7 @@ export default function BirdseyeLayout() {
             </div>
           )
         ) : (
-          <div className={styles.viewerEmpty}>{extFilter ? `No .${extFilter} files in this folder` : 'No source files in this folder'}</div>
+          <div className={`${styles.viewerEmpty} flex-row items-center justify-center h-full`}>{extFilter ? `No .${extFilter} files in this folder` : 'No source files in this folder'}</div>
         )}
       </div>
 
@@ -450,23 +450,23 @@ export default function BirdseyeLayout() {
 
     {/* Floating overlay viewer */}
     {viewerCode !== null && (
-      <div ref={overlayRef} className={styles.overlay} style={overlayPos ? { top: overlayPos.top, left: overlayPos.left, right: 'auto' } : undefined}>
-        <div className={styles.overlayHeader}>{viewerFilename}</div>
-        <div className={styles.overlayBody}>
+      <div ref={overlayRef} className={`${styles.overlay} fixed flex-col`} style={overlayPos ? { top: overlayPos.top, left: overlayPos.left, right: 'auto' } : undefined}>
+        <div className={`${styles.overlayHeader} flex-row items-center shrink-0`}>{viewerFilename}</div>
+        <div className="flex-1 min-h-0 overflow-auto">
           {depList && (depList.importedBy.length > 0 || depList.imports.length > 0) && (
             <div className={styles.depList}>
               {depList.importedBy.length > 0 && (
                 <details>
-                  <summary className={styles.depSummary}>
-                    <span className={styles.depDot} data-dir="up" />
+                  <summary className={`${styles.depSummary} flex-row items-center cursor-pointer list-none`}>
+                    <span className={`${styles.depDot} shrink-0`} data-dir="up" />
                     → Used by {depList.importedBy.length} files
                   </summary>
                   <div className={styles.depGroups}>
                     {groupByLayer(depList.importedBy, DEFAULT_ROOT).map(({ layer, files }) => (
                       <details key={layer} open={files.length <= 5} className={styles.depGroup}>
-                        <summary className={styles.depGroupSummary}>{layer} <span className={styles.depGroupCount}>({files.length})</span></summary>
-                        <ul className={styles.depFiles}>
-                          {files.map((f) => <li key={f.fullPath}><button className={styles.depJump} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
+                        <summary className={`${styles.depGroupSummary} cursor-pointer list-none`}>{layer} <span className={styles.depGroupCount}>({files.length})</span></summary>
+                        <ul className={`${styles.depFiles} list-none`}>
+                          {files.map((f) => <li key={f.fullPath}><button className={`${styles.depJump} block w-full whitespace-nowrap overflow-hidden cursor-pointer`} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
                         </ul>
                       </details>
                     ))}
@@ -475,16 +475,16 @@ export default function BirdseyeLayout() {
               )}
               {depList.imports.length > 0 && (
                 <details>
-                  <summary className={styles.depSummary}>
-                    <span className={styles.depDot} data-dir="down" />
+                  <summary className={`${styles.depSummary} flex-row items-center cursor-pointer list-none`}>
+                    <span className={`${styles.depDot} shrink-0`} data-dir="down" />
                     ← Depends on {depList.imports.length} files
                   </summary>
                   <div className={styles.depGroups}>
                     {groupByLayer(depList.imports, DEFAULT_ROOT).map(({ layer, files }) => (
                       <details key={layer} open={files.length <= 5} className={styles.depGroup}>
-                        <summary className={styles.depGroupSummary}>{layer} <span className={styles.depGroupCount}>({files.length})</span></summary>
-                        <ul className={styles.depFiles}>
-                          {files.map((f) => <li key={f.fullPath}><button className={styles.depJump} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
+                        <summary className={`${styles.depGroupSummary} cursor-pointer list-none`}>{layer} <span className={styles.depGroupCount}>({files.length})</span></summary>
+                        <ul className={`${styles.depFiles} list-none`}>
+                          {files.map((f) => <li key={f.fullPath}><button className={`${styles.depJump} block w-full whitespace-nowrap overflow-hidden cursor-pointer`} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
                         </ul>
                       </details>
                     ))}

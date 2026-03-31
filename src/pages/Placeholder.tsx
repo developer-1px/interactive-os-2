@@ -1,6 +1,6 @@
 function Placeholder({ group, label }: { group: string; label: string }) {
   return (
-    <div className="wip-placeholder">
+    <div className="wip-placeholder text-center">
       <div style={{ marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
         {group}
       </div>

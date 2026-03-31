@@ -43,9 +43,9 @@ function ToolCodePreview({ code, maxLines = 8 }: { code: string; maxLines?: numb
   const truncated = lines.length > maxLines
   const display = truncated ? lines.slice(0, maxLines).join('\n') : code
   return (
-    <div className={styles.tcCodePreview}>
+    <div className={`${styles.tcCodePreview} relative overflow-hidden`}>
       <pre>{display}</pre>
-      {truncated && <div className={styles.tcCodeFade}>+{lines.length - maxLines} lines</div>}
+      {truncated && <div className={`${styles.tcCodeFade} absolute text-right`}>+{lines.length - maxLines} lines</div>}
     </div>
   )
 }
@@ -55,20 +55,20 @@ function ToolCodePreview({ code, maxLines = 8 }: { code: string; maxLines?: numb
 export const ToolGroupBlock = memo(function ToolGroupBlock({ block }: { block: DataBlock }) {
   const group = block.data as ToolGroup
   return (
-    <div className={styles.tcToolGroup}>
+    <div className={`${styles.tcToolGroup} overflow-hidden`}>
       {group.events.map((evt, i) => {
         const toolClass = styles[`tc${evt.tool ?? ''}`] ?? ''
         const hasPreview = (evt.tool === 'Edit' || evt.tool === 'Write') && evt.editNew
         return (
           <div key={`${evt.ts}-${i}`}>
             <div
-              className={`${styles.tcToolRow} ${toolClass}${evt.filePath ? ` ${styles.tcFile}` : ''
+              className={`${styles.tcToolRow} grid items-baseline ${toolClass}${evt.filePath ? ` ${styles.tcFile} cursor-pointer` : ''
                 }${!hasPreview && i < group.events.length - 1 ? ` ${styles.tcToolDivider}` : ''}`}
             >
-              <span className={styles.tcIcon}>
+              <span className={`${styles.tcIcon} flex-row items-center justify-center shrink-0`}>
                 <EventIcon evt={evt} />
               </span>
-              <span className={styles.tcText}>{eventLabel(evt)}</span>
+              <span className={`${styles.tcText} overflow-hidden min-w-0`}>{eventLabel(evt)}</span>
             </div>
             {hasPreview && (
               <div className={i < group.events.length - 1 ? styles.tcToolDivider : undefined}>

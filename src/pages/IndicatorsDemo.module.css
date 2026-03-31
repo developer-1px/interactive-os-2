@@ -16,7 +16,7 @@
   font-weight: var(--weight-semi);
   font-family: var(--type-body-family);
   color: var(--text-primary);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   padding-bottom: var(--space-xs);
   border-bottom: 1px solid var(--border-subtle);
@@ -74,13 +74,9 @@
   color: var(--text-secondary);
 }
 
-.separatorFill {
-  flex: 1;
-}
+.separatorFill { flex: 1; }
 
-.ariaCheckedWrapper {
-  display: inline-flex;
-}
+.ariaCheckedWrapper { display: inline-flex; }
 
 .verticalSeparatorDemo {
   display: flex;

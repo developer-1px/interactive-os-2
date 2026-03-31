@@ -31,14 +31,14 @@ export default function CmsI18nSheet({ engine, store, open }: CmsI18nSheetProps)
   if (!open) return null
 
   return (
-    <div className="cms-i18n-sheet">
-      <div className="cms-i18n-sheet__header">
+    <div className="cms-i18n-sheet absolute flex-col">
+      <div className="cms-i18n-sheet__header flex-row items-center shrink-0">
         i18n — Translation Sheet
       </div>
-      <div className="cms-i18n-sheet__grid">
-        <div className="cms-i18n-sheet__col-headers">
+      <div className="cms-i18n-sheet__grid flex-1 overflow-auto">
+        <div className="cms-i18n-sheet__col-headers flex-row sticky">
           {I18N_COLUMNS.map(col => (
-            <div key={col.key} className="cms-i18n-sheet__col-header">{col.header}</div>
+            <div key={col.key} className="cms-i18n-sheet__col-header flex-1">{col.header}</div>
           ))}
         </div>
         <Grid

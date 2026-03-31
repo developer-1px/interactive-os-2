@@ -1,0 +1,132 @@
+/* ToolSummaryBlock + ToolResultBlock + ToolGroup
+   Icon alignment via --chat-indent + absolute positioning. */
+
+/* --- Shared: icon row pattern --- */
+
+.iconRow {
+  padding-left: var(--chat-indent);
+  min-height: var(--icon-sm);
+  font-size: var(--type-caption-size);
+  color: var(--text-secondary);
+}
+
+.iconRow > .rowIcon {
+  left: 0;
+  width: var(--icon-sm);
+  color: var(--text-muted);
+}
+
+.toolName {
+  font-weight: var(--weight-semi);
+}
+
+.toolDetail {
+  color: var(--text-muted);
+  font-family: var(--mono);
+  text-overflow: ellipsis;
+}
+
+/* --- Standalone tool use row --- */
+
+.toolRow {
+  composes: iconRow;
+  padding-top: var(--shape-xs-py);
+  padding-bottom: var(--shape-xs-py);
+  padding-right: var(--space-sm);
+}
+
+/* --- Standalone tool result --- */
+
+.toolResult {
+  padding: var(--shape-xs-py) var(--space-sm) var(--shape-xs-py) var(--chat-indent);
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  line-height: var(--leading-snug);
+  color: var(--text-muted);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.toolResultSummary {
+  composes: iconRow;
+  padding-top: var(--shape-xs-py);
+  padding-bottom: var(--shape-xs-py);
+  padding-right: var(--space-sm);
+  font-family: var(--mono);
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.toolResultSummary::marker,
+.toolResultSummary::-webkit-details-marker {
+  display: none;
+}
+
+.toolResultPreview {
+  text-overflow: ellipsis;
+}
+
+/* ═══ ToolGroup: bordered card ═══ */
+
+.toolGroup {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-md-radius);
+}
+
+/* Read: 1-tier summary — same icon row pattern */
+
+.toolGroupSummary {
+  composes: iconRow;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
+  user-select: none;
+}
+
+.toolGroupSummary::marker,
+.toolGroupSummary::-webkit-details-marker {
+  display: none;
+}
+
+/* Other tools: header — same icon row pattern */
+
+.toolGroupHeader {
+  composes: iconRow;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
+}
+
+/* --- Result areas --- */
+
+.toolGroupResult {
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  line-height: var(--leading-snug);
+  color: var(--text-muted);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.toolGroupCode {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.toolGroupCode > div :global(.shiki) {
+  border: none;
+  border-radius: 0;
+}
+
+.toolGroupResultSummary {
+  composes: iconRow;
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--mono);
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.toolGroupResultSummary::marker,
+.toolGroupResultSummary::-webkit-details-marker {
+  display: none;
+}

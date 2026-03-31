@@ -46,7 +46,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
   }
 
   return (
-    <div className={`flex-col ${styles.chat}`}>
+    <div className={`flex-col h-full ${styles.chat}`}>
       {/* Context bar */}
       {entry && (
         <div className={styles.chatContext}>
@@ -62,7 +62,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       {/* Messages */}
       <div className={`flex-col gap-sm overflow-y-auto flex-1 ${styles.chatMessages}`}>
         {messages.length === 0 && (
-          <div className={styles.chatEmpty}>
+          <div className={`${styles.chatEmpty} text-center`}>
             {entry
               ? `"${entry.name}의 tone을 바꿔줘" 같은 요청을 입력하세요`
               : '컴포넌트를 선택하세요'}
@@ -81,7 +81,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       {/* Input */}
       <div className={styles.chatInputWrap}>
         <textarea
-          className={styles.chatInput}
+          className={`${styles.chatInput} w-full`}
           data-surface="input"
           placeholder={entry ? `${entry.name} 수정 요청...` : 'dev-channel 미연결'}
           value={input}

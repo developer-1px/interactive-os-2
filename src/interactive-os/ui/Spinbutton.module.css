@@ -21,7 +21,6 @@
 .spinbuttonGroup {
   border: 1px solid var(--border-default);
   border-radius: var(--shape-md-radius);
-  overflow: hidden;
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing), box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
@@ -33,14 +32,12 @@
 
 .spinbuttonBtn {
   width: var(--_btn-w);
-  border: none;
   --_bg: var(--bg-hover);
   --_bg-hover: var(--bg-active);
   background: var(--_bg);
   color: var(--text-primary);
   font-size: var(--type-page-size);
   font-weight: var(--weight-regular);
-  cursor: pointer;
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
   -webkit-user-select: none;
   user-select: none;
@@ -61,7 +58,6 @@
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-primary);
-  text-align: center;
   font-variant-numeric: tabular-nums;
   cursor: text;
 }
@@ -69,14 +65,11 @@
 .spinbuttonInput {
   width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-sm);
-  border: none;
   background: transparent;
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   color: var(--text-primary);
-  text-align: center;
   font-variant-numeric: tabular-nums;
-  outline: none;
 }
 
 .spinbuttonInput::placeholder {

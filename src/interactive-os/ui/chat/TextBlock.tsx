@@ -4,5 +4,5 @@ import chatStyles from './TextBlock.module.css'
 import type { TextBlock as TextBlockType } from './types'
 
 export function TextBlock({ block }: { block: TextBlockType }) {
-  return <MarkdownViewer content={block.content} styles={chatStyles} />
+  return <MarkdownViewer content={block.content} styles={chatStyles} codeVariant="compact" />
 }

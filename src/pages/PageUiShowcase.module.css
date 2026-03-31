@@ -2,12 +2,7 @@
    UI Showcase — component docs page
    ═══════════════════════════════════════════ */
 
-.uiPage {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-  grid-column: 2 / -1;
-}
+.uiPage { grid-column: 2 / -1; }
 
 /* --- Sidebar --- */
 
@@ -15,48 +10,33 @@
   width: 240px;
   min-width: 200px;
   background: var(--surface-sunken);
-  display: flex;
-  flex-direction: column;
   border-right: 1px solid var(--border-subtle);
 }
 
 .uiSidebarHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   height: 36px;
   padding: 0 var(--space-md);
-  flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .uiSidebarTitle {
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
 .uiSidebarBody {
-  flex: 1;
-  overflow-y: auto;
   padding: var(--space-sm) 0;
 }
 
 /* --- Content area --- */
 
 .uiContent {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
   background: var(--surface-default);
 }
 
 .uiContentBody {
-  flex: 1;
-  overflow-y: auto;
   padding: var(--space-2xl) 48px;
 }

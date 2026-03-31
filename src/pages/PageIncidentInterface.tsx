@@ -60,10 +60,10 @@ const TIMELINE_EVENTS: TimelineEvent[] = [
 function BlockLog() {
   return (
     <div className={styles.block}>
-      <div className={styles.logLines}>
-        <div className={styles.logLine}><span className={styles.logTime}>14:35:12</span><span className={styles.logError}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
-        <div className={styles.logLine}><span className={styles.logTime}>14:35:13</span><span className={styles.logError}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
-        <div className={styles.logLine}><span className={styles.logTime}>14:35:14</span><span className={styles.logWarn}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
+      <div className={`${styles.logLines} flex-col overflow-x-auto`}>
+        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:12</span><span className={styles.logError}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
+        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:13</span><span className={styles.logError}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
+        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:14</span><span className={styles.logWarn}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
       </div>
     </div>
   )
@@ -72,10 +72,10 @@ function BlockLog() {
 function BlockMetric() {
   return (
     <div className={styles.block}>
-      <div className={styles.metricGrid}>
-        <div className={styles.stat}><div className={styles.statValue}>50/50</div><div className={styles.statLabel}>connections</div><div className={styles.barTrack}><div className={styles.barFillBad} style={{ width: '100%' }} /></div></div>
-        <div className={styles.stat}><div className={styles.statValue}>23</div><div className={styles.statLabel}>pending</div><div className={styles.barTrack}><div className={styles.barFillWarn} style={{ width: '46%' }} /></div></div>
-        <div className={styles.stat}><div className={styles.statValue}>2.4s</div><div className={styles.statLabel}>p99 latency</div><div className={styles.barTrack}><div className={styles.barFillBad} style={{ width: '80%' }} /></div></div>
+      <div className={`${styles.metricGrid} grid`}>
+        <div className={`${styles.stat} flex-col`}><div className={styles.statValue}>50/50</div><div className={styles.statLabel}>connections</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillBad} h-full`} style={{ width: '100%' }} /></div></div>
+        <div className={`${styles.stat} flex-col`}><div className={styles.statValue}>23</div><div className={styles.statLabel}>pending</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillWarn} h-full`} style={{ width: '46%' }} /></div></div>
+        <div className={`${styles.stat} flex-col`}><div className={styles.statValue}>2.4s</div><div className={styles.statLabel}>p99 latency</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillBad} h-full`} style={{ width: '80%' }} /></div></div>
       </div>
     </div>
   )
@@ -84,21 +84,21 @@ function BlockMetric() {
 function BlockCause() {
   return (
     <div className={styles.block}>
-      <div className={styles.causeChain}>
-        <div className={styles.causeNode}>
-          <div className={`${styles.causeIcon} ${styles.causeIconBad}`}><GitCommit size={12} /></div>
-          <div className={styles.causeBody}><div className={styles.causeTitle}>PR #3421 — config cleanup</div><div className={styles.causeDesc}>pool_size: 100 → 50</div></div>
-          <div className={styles.causeBadge}>87%</div>
+      <div className={`${styles.causeChain} flex-col`}>
+        <div className={`${styles.causeNode} flex-row items-start`}>
+          <div className={`${styles.causeIcon} flex-row items-center justify-center shrink-0 ${styles.causeIconBad}`}><GitCommit size={12} /></div>
+          <div className="flex-1 min-w-0"><div className={styles.causeTitle}>PR #3421 — config cleanup</div><div className={styles.causeDesc}>pool_size: 100 → 50</div></div>
+          <div className={`${styles.causeBadge} whitespace-nowrap`}>87%</div>
         </div>
-        <div className={styles.causeArrow}><ChevronDown size={12} /></div>
-        <div className={styles.causeNode}>
-          <div className={`${styles.causeIcon} ${styles.causeIconWarn}`}><Database size={12} /></div>
-          <div className={styles.causeBody}><div className={styles.causeTitle}>DB pool 고갈</div><div className={styles.causeDesc}>max=50, 동시 요청 처리 불가</div></div>
+        <div className={`${styles.causeArrow} text-center`}><ChevronDown size={12} /></div>
+        <div className={`${styles.causeNode} flex-row items-start`}>
+          <div className={`${styles.causeIcon} flex-row items-center justify-center shrink-0 ${styles.causeIconWarn}`}><Database size={12} /></div>
+          <div className="flex-1 min-w-0"><div className={styles.causeTitle}>DB pool 고갈</div><div className={styles.causeDesc}>max=50, 동시 요청 처리 불가</div></div>
         </div>
-        <div className={styles.causeArrow}><ChevronDown size={12} /></div>
-        <div className={styles.causeNode}>
-          <div className={`${styles.causeIcon} ${styles.causeIconBad}`}><AlertTriangle size={12} /></div>
-          <div className={styles.causeBody}><div className={styles.causeTitle}>p99 2.4s → 3개 서비스 전파</div></div>
+        <div className={`${styles.causeArrow} text-center`}><ChevronDown size={12} /></div>
+        <div className={`${styles.causeNode} flex-row items-start`}>
+          <div className={`${styles.causeIcon} flex-row items-center justify-center shrink-0 ${styles.causeIconBad}`}><AlertTriangle size={12} /></div>
+          <div className="flex-1 min-w-0"><div className={styles.causeTitle}>p99 2.4s → 3개 서비스 전파</div></div>
         </div>
       </div>
     </div>
@@ -109,9 +109,9 @@ function BlockSimilar() {
   return (
     <div className={styles.block}>
       <div className={styles.similarCard}>
-        <div className={styles.similarHeader}><span className={styles.similarId}>INC-847</span><span className={styles.matchBadge}>92%</span><span className={styles.similarTime}>2주 전</span></div>
+        <div className={`${styles.similarHeader} flex-row items-center`}><span className={styles.similarId}>INC-847</span><span className={styles.matchBadge}>92%</span><span className={styles.similarTime}>2주 전</span></div>
         <div className={styles.similarBody}>동일: DB pool exhaustion after config change</div>
-        <div className={styles.similarResolution}><CheckCircle size={12} /><span>해결: pool_size 50→200 (PR #2891) — 3분 정상화</span></div>
+        <div className={`${styles.similarResolution} flex-row items-center`}><CheckCircle size={12} /><span>해결: pool_size 50→200 (PR #2891) — 3분 정상화</span></div>
       </div>
     </div>
   )
@@ -130,9 +130,9 @@ const BLAST_CLS = { bad: styles.svcBad, warn: styles.svcWarn, ok: styles.svcOk }
 function BlockBlast() {
   return (
     <div className={styles.block}>
-      <div className={styles.svcList}>
+      <div className={`${styles.svcList} flex-col`}>
         {BLAST_SERVICES.map((s, i) => (
-          <div key={i} className={`${styles.svcItem} ${BLAST_CLS[s.state]}`}><Server size={12} /><span className={styles.svcName}>{s.name}</span><span className={styles.svcStatus}>{s.status}</span></div>
+          <div key={i} className={`${styles.svcItem} flex-row items-center ${BLAST_CLS[s.state]}`}><Server size={12} /><span className={`${styles.svcName} flex-1`}>{s.name}</span><span className={styles.svcStatus}>{s.status}</span></div>
         ))}
       </div>
     </div>
@@ -141,11 +141,11 @@ function BlockBlast() {
 
 function BlockActions() {
   return (
-    <div className={styles.actionList}>
-      <button className={`${styles.action} ${styles.actionPrimary}`}><RotateCcw size={14} />Revert PR #3421<kbd>1</kbd></button>
-      <button className={styles.action}><Play size={14} />Rollback v2.14.2<kbd>2</kbd></button>
-      <button className={styles.action}><Terminal size={14} />Scale pool → 200<kbd>3</kbd></button>
-      <button className={styles.action}><ArrowRight size={14} />Runbook<kbd>4</kbd></button>
+    <div className={`${styles.actionList} flex-row flex-wrap`}>
+      <button className={`${styles.action} flex-row items-center cursor-pointer ${styles.actionPrimary}`}><RotateCcw size={14} />Revert PR #3421<kbd>1</kbd></button>
+      <button className={`${styles.action} flex-row items-center cursor-pointer`}><Play size={14} />Rollback v2.14.2<kbd>2</kbd></button>
+      <button className={`${styles.action} flex-row items-center cursor-pointer`}><Terminal size={14} />Scale pool → 200<kbd>3</kbd></button>
+      <button className={`${styles.action} flex-row items-center cursor-pointer`}><ArrowRight size={14} />Runbook<kbd>4</kbd></button>
     </div>
   )
 }
@@ -188,9 +188,9 @@ const SEQUENCE: SequenceItem<Msg>[] = MESSAGES.map(msg => ({ data: msg, delay: m
 function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   const { displayed, done } = useTypewriter(msg.text, active)
   return (
-    <div className={styles.agentMsg}>
-      <div className={styles.avatar}><Bot size={14} /></div>
-      <div className={styles.bubble}>
+    <div className={`${styles.agentMsg} flex-row items-start`}>
+      <div className={`${styles.avatar} flex-row items-center justify-center shrink-0`}><Bot size={14} /></div>
+      <div className={`${styles.bubble} flex-1 min-w-0`}>
         <div className={styles.agentLabel}>
           {displayed}
           {!done && <StreamCursor />}
@@ -228,23 +228,23 @@ function MonitoringBar({ services, selectedIndex, onSelect }: {
   onSelect: (i: number) => void
 }) {
   return (
-    <div className={styles.monitorBar} role="toolbar" aria-label="Service monitoring">
-      <div className={styles.monitorLabel}><Activity size={12} /><span>Monitor</span></div>
-      <div className={styles.monitorServices}>
+    <div className={`${styles.monitorBar} flex-row items-center`} role="toolbar" aria-label="Service monitoring">
+      <div className={`${styles.monitorLabel} flex-row items-center shrink-0`}><Activity size={12} /><span>Monitor</span></div>
+      <div className={`${styles.monitorServices} flex-row items-center flex-1 min-w-0 overflow-x-auto`}>
         {services.map((svc, i) => (
           <button
             key={svc.name}
-            className={`${styles.monitorItem} ${i === selectedIndex ? styles.monitorItemActive : ''}`}
+            className={`${styles.monitorItem} flex-row items-center cursor-pointer whitespace-nowrap ${i === selectedIndex ? styles.monitorItemActive : ''}`}
             onClick={() => onSelect(i)}
             aria-pressed={i === selectedIndex}
           >
-            <span className={`${styles.indicator} ${STATUS_CLS[svc.status]}`} />
+            <span className={`${styles.indicator} shrink-0 ${STATUS_CLS[svc.status]}`} />
             <span className={styles.monitorName}>{svc.name}</span>
             <span className={styles.monitorLatency}>{svc.latency}</span>
           </button>
         ))}
       </div>
-      <div className={styles.monitorMeta}>
+      <div className={`${styles.monitorMeta} flex-row items-center shrink-0`}>
         <span className={styles.monitorMetaItem}>INC-1284</span>
         <span className={`${styles.monitorMetaItem} ${styles.monitorMetaLive}`}>REC</span>
       </div>
@@ -301,20 +301,20 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
     return (
       <div
         {...props}
-        className={`${styles.timelineItem} ${SEVERITY_CLS[ev.severity]} ${isSelected ? styles.timelineItemSelected : ''} ${state.focused ? styles.timelineItemFocused : ''}`}
+        className={`${styles.timelineItem} flex-row items-start cursor-pointer ${SEVERITY_CLS[ev.severity]} ${isSelected ? styles.timelineItemSelected : ''} ${state.focused ? styles.timelineItemFocused : ''}`}
         onClick={(e) => {
           props.onClick?.(e)
           onSelect(node.id as string)
         }}
       >
-        <div className={styles.timelineTime}>{ev.time}</div>
-        <div className={styles.timelineDot}>
-          <span className={`${styles.dot} ${SEVERITY_CLS[ev.severity]}`} />
-          <span className={styles.dotLine} />
+        <div className={`${styles.timelineTime} shrink-0`}>{ev.time}</div>
+        <div className={`${styles.timelineDot} flex-col items-center shrink-0`}>
+          <span className={`${styles.dot} shrink-0 ${SEVERITY_CLS[ev.severity]}`} />
+          <span className={`${styles.dotLine} flex-1`} />
         </div>
-        <div className={styles.timelineContent}>
-          <div className={styles.timelineIcon}>{EVENT_ICON[ev.type]}</div>
-          <div className={styles.timelineBody}>
+        <div className={`${styles.timelineContent} flex-row flex-1 min-w-0`}>
+          <div className={`${styles.timelineIcon} shrink-0`}>{EVENT_ICON[ev.type]}</div>
+          <div className="flex-1 min-w-0">
             <div className={styles.timelineTitle}>{ev.title}</div>
             <div className={styles.timelineDetail}>{ev.detail}</div>
           </div>
@@ -324,8 +324,8 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
   }, [selectedId, onSelect])
 
   return (
-    <div className={styles.timelinePanel}>
-      <div className={styles.panelHeader}>
+    <div className={`${styles.timelinePanel} flex-col shrink-0`}>
+      <div className={`${styles.panelHeader} flex-row items-center shrink-0`}>
         <Clock size={12} />
         <span>Timeline</span>
         <span className={styles.panelCount}>{visibleCount}/{events.length}</span>
@@ -341,7 +341,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
           <Aria.Item render={renderItem} />
         </Aria>
       ) : (
-        <div className={styles.panelEmpty}>이벤트 수집 중...</div>
+        <div className={`${styles.panelEmpty} text-center`}>이벤트 수집 중...</div>
       )}
     </div>
   )
@@ -367,37 +367,37 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
   const event = selectedEventId ? TIMELINE_EVENTS.find(e => e.id === selectedEventId) : null
 
   return (
-    <div className={styles.capturePanel}>
-      <div className={styles.panelHeader}>
+    <div className={`${styles.capturePanel} flex-1 flex-col min-w-0`}>
+      <div className={`${styles.panelHeader} flex-row items-center shrink-0`}>
         <Image size={12} />
         <span>Capture</span>
         {event && <span className={styles.panelCount}>{event.time}</span>}
       </div>
       {capture ? (
-        <div className={styles.captureBody}>
-          <div className={styles.captureComparison}>
-            <div className={styles.captureCard}>
-              <div className={styles.captureLabel}>Before</div>
-              <div className={styles.capturePreview}>
+        <div className={`${styles.captureBody} flex-1 flex-col min-h-0`}>
+          <div className={`${styles.captureComparison} grid flex-1 min-h-0`}>
+            <div className={`${styles.captureCard} flex-col min-h-0`}>
+              <div className={`${styles.captureLabel} shrink-0`}>Before</div>
+              <div className={`${styles.capturePreview} flex-1 flex-col items-center justify-center`}>
                 <Eye size={16} />
-                <span className={styles.captureText}>{capture.before}</span>
+                <span className={`${styles.captureText} text-center`}>{capture.before}</span>
               </div>
             </div>
-            <div className={styles.captureCard}>
-              <div className={styles.captureLabel}>After</div>
-              <div className={`${styles.capturePreview} ${styles.captureChanged}`}>
+            <div className={`${styles.captureCard} flex-col min-h-0`}>
+              <div className={`${styles.captureLabel} shrink-0`}>After</div>
+              <div className={`${styles.capturePreview} flex-1 flex-col items-center justify-center ${styles.captureChanged}`}>
                 <Eye size={16} />
-                <span className={styles.captureText}>{capture.after}</span>
+                <span className={`${styles.captureText} text-center`}>{capture.after}</span>
               </div>
             </div>
           </div>
-          <div className={styles.captureAi}>
-            <Bot size={12} />
+          <div className={`${styles.captureAi} flex-row items-start shrink-0`}>
+            <Bot size={12} className="shrink-0" />
             <span>{capture.aiNote}</span>
           </div>
         </div>
       ) : (
-        <div className={styles.captureEmpty}>
+        <div className={`${styles.captureEmpty} flex-1 flex-col items-center justify-center`}>
           <Eye size={24} />
           <span>타임라인에서 이벤트를 선택하세요</span>
           <kbd>↑↓</kbd>
@@ -460,7 +460,7 @@ export default function PageIncidentInterface() {
   if (initialEventId && !selectedEvent) setSelectedEvent(initialEventId)
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} grid h-full overflow-hidden`}>
       {/* Zone 1: Monitoring Bar */}
       <MonitoringBar
         services={SERVICES}
@@ -469,7 +469,7 @@ export default function PageIncidentInterface() {
       />
 
       {/* Zone 2: Workspace (Timeline + Capture + Chat) */}
-      <div className={styles.workspace}>
+      <div className="flex-row min-h-0">
         <TimelinePanel
           events={TIMELINE_EVENTS}
           visibleCount={timelineVisible}
@@ -478,11 +478,11 @@ export default function PageIncidentInterface() {
         />
         <CapturePanel selectedEventId={selectedEvent} />
 
-        <div className={styles.chatZone}>
-          <div className={styles.chatHeader}>
+        <div className={`${styles.chatZone} flex-col shrink-0`}>
+          <div className={`${styles.chatHeader} flex-row items-center shrink-0`}>
             <Bot size={12} />
             <span>AI Analysis</span>
-            <span className={styles.chatElapsed}>
+            <span className={`${styles.chatElapsed} flex-row items-center`}>
               {endTime
                 ? <><CheckCircle size={10} /><span>{((endTime - (startTime ?? 0)) / 1000).toFixed(1)}s</span></>
                 : startTime
@@ -495,22 +495,22 @@ export default function PageIncidentInterface() {
             items={items}
             feedRef={feedRef}
             isStreaming={isStreaming}
-            className={styles.messages}
+            className={`${styles.messages} flex-1 flex-col min-h-0 overflow-y-auto`}
             renderItem={(msg) => {
               if (msg.type === 'user') {
                 return (
-                  <div className={styles.userMsg}>
-                    <div className={styles.bubble}>
+                  <div className={`${styles.userMsg} flex-row items-start justify-end`}>
+                    <div className={`${styles.bubble} flex-1 min-w-0`}>
                       <div className={styles.userLabel}>{msg.text}</div>
                     </div>
-                    <div className={styles.userAvatar}><User size={14} /></div>
+                    <div className={`${styles.userAvatar} flex-row items-center justify-center shrink-0`}><User size={14} /></div>
                   </div>
                 )
               }
               if (msg.type === 'system') {
                 return (
                   <div className={styles.systemMsg}>
-                    <div className={styles.bubble}>
+                    <div className={`${styles.bubble} flex-1 min-w-0`}>
                       <div className={styles.systemLabel}>{msg.text}</div>
                     </div>
                   </div>
@@ -518,7 +518,7 @@ export default function PageIncidentInterface() {
               }
               if (msg.type === 'tool') {
                 return (
-                  <div className={styles.toolMsg}>
+                  <div className={`${styles.toolMsg} flex-row items-center`}>
                     <Zap size={10} />
                     <span className={styles.toolName}>{msg.toolName}</span>
                     <span className={`${styles.toolArgs} truncate`}>{msg.text}</span>
@@ -528,9 +528,9 @@ export default function PageIncidentInterface() {
               return <AgentMessage msg={msg} active={true} />
             }}
           />
-          <div className={styles.inputBar}>
-            <input className={styles.input} placeholder="AI에게 질문하세요..." disabled={isStreaming} />
-            <button className={styles.sendBtn} disabled={isStreaming} onClick={handleReplay}>
+          <div className={`${styles.inputBar} flex-row items-center shrink-0`}>
+            <input className={`${styles.input} flex-1 outline-none`} placeholder="AI에게 질문하세요..." disabled={isStreaming} />
+            <button className={`${styles.sendBtn} flex-row items-center justify-center border-none cursor-pointer`} disabled={isStreaming} onClick={handleReplay}>
               {isStreaming ? <Loader size={14} className={styles.spinner} /> : <Send size={14} />}
             </button>
           </div>

@@ -48,11 +48,11 @@ export function Slider({
     return (
       <div className={`flex-row items-center gap-md ${styles.sliderItem}`} data-focused={state.focused || undefined}>
         {label && <span className={styles.sliderLabel}>{label}</span>}
-        <div className={styles.sliderTrack} ref={trackRef} onClick={handleTrackClick}>
-          <div className={styles.sliderFill} style={{ width: `${pct}%` }} />
-          <div className={styles.sliderThumb} style={{ left: `${pct}%` }} />
+        <div className={`relative flex-1 ${styles.sliderTrack}`} ref={trackRef} onClick={handleTrackClick}>
+          <div className={`absolute h-full pointer-events-none ${styles.sliderFill}`} style={{ width: `${pct}%` }} />
+          <div className={`absolute ${styles.sliderThumb}`} style={{ left: `${pct}%` }} />
         </div>
-        <span className={styles.sliderValue}>{current}</span>
+        <span className={`text-right ${styles.sliderValue}`}>{current}</span>
       </div>
     )
   }

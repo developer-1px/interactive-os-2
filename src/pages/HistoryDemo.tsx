@@ -34,7 +34,7 @@ export default function HistoryDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}
@@ -42,7 +42,7 @@ export default function HistoryDemo() {
         <kbd>F2</kbd> <span className="key-hint">rename</span>{' '}
         <kbd>Alt+<Up /><Down /></kbd> <span className="key-hint">reorder</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <ListBox
           data={data}
           onChange={setData}
@@ -51,7 +51,7 @@ export default function HistoryDemo() {
           renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [
-              'list-item',
+              'list-item flex-row items-center justify-between',
               state.focused && 'list-item--focused',
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')

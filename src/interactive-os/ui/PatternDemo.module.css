@@ -13,8 +13,6 @@
   font-weight: var(--type-body-weight);
   line-height: var(--type-body-line-height);
   color: var(--text-primary);
-  display: flex;
-  align-items: center;
   gap: var(--space-sm);
   cursor: default;
 }
@@ -37,7 +35,6 @@
   font-weight: var(--type-caption-weight);
   color: var(--text-muted);
   margin-left: auto;
-  flex-shrink: 0;
 }
 
 .header {
@@ -46,7 +43,7 @@
   color: var(--text-secondary);
   padding: var(--space-xs) var(--shape-xs-px);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wide);
 }
 
 .nested {
@@ -54,15 +51,12 @@
 }
 
 .valueTrack {
-  width: 100%;
   height: var(--space-sm);
   background: var(--surface-raised);
   border-radius: var(--shape-pill-radius);
-  position: relative;
 }
 
 .valueThumb {
-  position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
   width: var(--space-lg);
@@ -79,6 +73,5 @@
 .valueLabel {
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
-  text-align: center;
   padding-top: var(--space-xs);
 }

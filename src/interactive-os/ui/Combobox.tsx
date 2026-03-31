@@ -291,7 +291,7 @@ export function Combobox({
           </div>
           <input
             data-surface="input"
-            className={styles.comboInput}
+            className={`w-full ${styles.comboInput}`}
             role="combobox"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -306,7 +306,7 @@ export function Combobox({
       {mode !== 'multiple' && (
       <input
         data-surface="input"
-        className={styles.comboInput}
+        className={`w-full ${styles.comboInput}`}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"

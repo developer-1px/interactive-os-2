@@ -2,8 +2,6 @@
 
 /* ═══ Block 1: base ═══ */
 .item {
-  display: flex;
-  align-items: center;
   gap: var(--space-xs);
 }
 

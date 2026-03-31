@@ -118,7 +118,7 @@ function FilePanel({ path }: { path: string }) {
   const isMarkdown = filename.endsWith('.md')
 
   return (
-    <div ref={bodyRef} className={styles.avFilePanel}>
+    <div ref={bodyRef} className="h-full overflow-auto">
       {isMarkdown
         ? <MarkdownViewer content={content} />
         : <CodeBlock code={content} filename={filename} variant="flush" />
@@ -220,7 +220,7 @@ export default function PageAgentViewer() {
     const data = item.data as Record<string, unknown>
     const label = data.label as string
     const isMd = isMdFile(data.path as string)
-    const cls = styles.avFileItem + (state.focused ? ' ' + styles.avFileItemFocused : '')
+    const cls = `${styles.avFileItem} flex-row items-center cursor-pointer` + (state.focused ? ' ' + styles.avFileItemFocused : '')
     return (
       <div {...props} className={cls}>
         {isMd ? <FileText size={12} /> : <Code size={12} />}
@@ -275,7 +275,7 @@ export default function PageAgentViewer() {
 
   if (loading) {
     return (
-      <div className={styles.avLoading}>
+      <div className={`${styles.avLoading} flex-row items-center justify-center h-full`}>
         <Circle size={12} />
         <span>Connecting to agent...</span>
       </div>
@@ -283,21 +283,21 @@ export default function PageAgentViewer() {
   }
 
   return (
-    <div className={styles.av} onKeyDown={handleLayoutKeyDown}>
+    <div className={`${styles.av} flex-row h-full min-h-0 overflow-hidden`} onKeyDown={handleLayoutKeyDown}>
       {/* Sessions + Files panel */}
       {activeSessions.length > 0 && (
         <>
-          <div className={styles.avSessions} style={{ width: sessionsResizer.size }}>
-            <div className={styles.avSessionsHeader}>
+          <div className={`${styles.avSessions} flex-col shrink-0`} style={{ width: sessionsResizer.size }}>
+            <div className={`${styles.avSessionsHeader} flex-row items-center shrink-0`}>
               <span className={styles.avSessionsTitle}>Agent</span>
             </div>
 
             {/* Active sessions */}
-            <div className={styles.avSessionList}>
+            <div className={`${styles.avSessionList} shrink-0`}>
               <div className={styles.avGroupLabel}>활성 ({activeSessions.length})</div>
               {activeSessions.map(s => (
-                <div key={s.id} className={styles.avSessionItem}>
-                  <span className={styles.avSessionLive}><Circle size={8} fill="currentColor" /></span>
+                <div key={s.id} className={`${styles.avSessionItem} flex-row items-center whitespace-nowrap`}>
+                  <span className={`${styles.avSessionLive} shrink-0`}><Circle size={8} fill="currentColor" /></span>
                   <span className={`${styles.avSessionLabel} truncate`}>{s.label}</span>
                 </div>
               ))}
@@ -305,7 +305,7 @@ export default function PageAgentViewer() {
 
             {/* Modified files */}
             {allModifiedFiles.length > 0 && (
-              <div className={styles.avFilesSection}>
+              <div className={`${styles.avFilesSection} flex-1 overflow-y-auto min-h-0`}>
                 <div className={styles.avGroupLabel}>수정 파일 ({allModifiedFiles.length})</div>
                 <NavList
                   data={filesStore}
@@ -321,7 +321,7 @@ export default function PageAgentViewer() {
       )}
 
       {/* Workspace */}
-      <div className={styles.avColumns}>
+      <div className="flex-row flex-1 min-w-0 min-h-0">
         <Workspace
           data={wsData}
           onChange={handleWorkspaceChange}

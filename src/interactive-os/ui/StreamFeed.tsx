@@ -30,7 +30,7 @@ function StreamingTimer() {
 // --- StreamCursor (export for renderItem use) ---
 
 export function StreamCursor() {
-  return <span className={styles.cursor} />
+  return <span className={`inline-block ${styles.cursor}`} />
 }
 
 // --- ScrollToBottom FAB ---
@@ -42,7 +42,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
     const el = feedRef.current
     if (!el) return
     const onScroll = () => {
-      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 60
+      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 40
       setVisible(!nearBottom)
     }
     el.addEventListener('scroll', onScroll, { passive: true })
@@ -56,7 +56,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`flex-row items-center justify-center ${styles.scrollFab}`} data-surface="action" onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`flex-row items-center justify-center absolute cursor-pointer ${styles.scrollFab}`} data-surface="action" onClick={scrollToBottom} aria-label="Scroll to bottom">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -67,15 +67,24 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
 // --- StreamFeed ---
 
 export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streamingLabel, className }: StreamFeedProps<T>) {
+  // DEBUG: HMR scroll diagnosis — remove after investigation
+  useEffect(() => {
+    console.log('[StreamFeed] mount')
+    return () => console.log('[StreamFeed] unmount')
+  }, [])
+  useEffect(() => {
+    const el = feedRef.current
+    if (el) console.log('[StreamFeed] render — scrollTop:', el.scrollTop)
+  })
   return (
-    <div className={`flex-col ${styles.feedWrapper}`}>
+    <div className={`flex-col flex-1 min-h-0 relative`}>
       <div
         ref={feedRef}
-        className={`flex-col ${styles.feed}${className ? ` ${className}` : ''}`}
+        className={`flex-col flex-1 min-h-0 overflow-y-auto ${styles.feed}${className ? ` ${className}` : ''}`}
         role="feed"
       >
         {items.map((item, i) => (
-          <div key={i} className={styles.entry}>
+          <div key={i} className={`min-w-0 ${styles.entry}`}>
             {renderItem(item, i, { isLatest: i === items.length - 1 })}
           </div>
         ))}

@@ -77,21 +77,21 @@ const renderRow = (
   return (
     <div
       {...props}
-      className={styles.row}
+      className={`${styles.row} flex-row items-center whitespace-nowrap outline-none`}
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >
       <Cell index={0}>
-        <span className={styles.indicator} aria-hidden="true">
+        <span className={`${styles.indicator} shrink-0`} aria-hidden="true">
           {isThread ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
         </span>
-        <span className={styles.subject}>{subject}</span>
+        <span className={`${styles.subject} flex-1 overflow-hidden`}>{subject}</span>
       </Cell>
       <Cell index={1}>
-        <span className={styles.summary}>{summary}</span>
+        <span className={`${styles.summary} overflow-hidden`}>{summary}</span>
       </Cell>
       <Cell index={2}>
-        <span className={styles.sender}>{sender}</span>
+        <span className={`${styles.sender} shrink-0`}>{sender}</span>
       </Cell>
     </div>
   )

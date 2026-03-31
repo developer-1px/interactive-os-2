@@ -8,6 +8,7 @@ interface TreeConnectorProps {
 export function TreeConnector({ level, isLast, className }: TreeConnectorProps) {
   if (level <= 0) return null
   const classes = [
+    'inline-block h-full relative shrink-0',
     'item-indicator--tree-connector',
     isLast ? 'item-indicator--tree-connector-last' : '',
     className,

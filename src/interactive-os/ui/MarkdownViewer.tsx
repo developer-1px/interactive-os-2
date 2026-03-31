@@ -7,8 +7,9 @@ import { CodeBlock } from './CodeBlock'
 import defaultStyles from './MarkdownViewer.module.css'
 
 export type MarkdownStyles = typeof defaultStyles
+export type CodeVariant = 'bordered' | 'flush' | 'compact'
 
-export function MarkdownViewer({ content, styles = defaultStyles }: { content: string; styles?: MarkdownStyles }) {
+export function MarkdownViewer({ content, styles = defaultStyles, codeVariant }: { content: string; styles?: MarkdownStyles; codeVariant?: CodeVariant }) {
   return (
     <div className={styles.markdown}>
       <Markdown
@@ -25,7 +26,7 @@ export function MarkdownViewer({ content, styles = defaultStyles }: { content: s
             }
 
             if (match) {
-              return <CodeBlock code={codeStr} filename={`x.${match[1]}`} />
+              return <CodeBlock code={codeStr} filename={`x.${match[1]}`} variant={codeVariant} />
             }
 
             return <code className={className} {...props}>{children}</code>

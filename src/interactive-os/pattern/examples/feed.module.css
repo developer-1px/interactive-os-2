@@ -5,7 +5,6 @@
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--shape-sm-radius);
   margin-bottom: var(--space-sm);
-  outline: none;
 }
 
 .title {

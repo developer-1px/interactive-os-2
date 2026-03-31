@@ -34,7 +34,7 @@ const renderArticle = (
   return (
     <div
       {...props}
-      className={styles.article}
+      className={`${styles.article} outline-none`}
       data-focused={state.focused || undefined}
     >
       <h3 className={styles.title}>{label}</h3>

@@ -39,8 +39,8 @@ describe('SelectionOverlay on CMS', () => {
     expect(cmsRoot).not.toBeNull()
 
     // The overlay div should exist (even if no visible rects due to jsdom 0×0 getBoundingClientRect)
-    // position:relative on container is required for overlay positioning
-    expect(cmsRoot!.getAttribute('style')).toContain('position: relative')
+    // position:relative on container is required for overlay positioning (via atomic class)
+    expect(cmsRoot!.classList.contains('relative')).toBe(true)
   })
 
   it('getNodeClassName returns class without state dependency', () => {

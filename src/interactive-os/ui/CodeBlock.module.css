@@ -1,5 +1,4 @@
 .codeBlock {
-  overflow: auto;
   font-size: var(--type-code-size);
   line-height: var(--leading-code);
 }
@@ -21,6 +20,16 @@
   border-radius: var(--shape-xl-radius);
 }
 
+.codeBlockCompact :global(.shiki) {
+  border-radius: var(--shape-md-radius);
+  padding: var(--space-md) 0;
+}
+
+.codeBlockCompact :global(.shiki .line)::before {
+  width: 2.5em;
+  padding-right: 0.75em;
+}
+
 .codeBlockFlush :global(.shiki) {
   border: none;
   border-radius: 0;
@@ -31,9 +40,10 @@
 }
 
 .codeBlock :global(.shiki .line) {
-  display: inline-block;
-  width: 100%;
+  display: block;
   padding: 0 var(--space-lg) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .codeBlock :global(.shiki .line)::before {
@@ -46,12 +56,12 @@
   color: var(--text-muted);
   font-size: var(--type-code-size);
   user-select: none;
-  opacity: 0.5;
+  opacity: 0.65;
 }
 
 :global(.code-token) {
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: var(--space-inline-code);
   transition: background 0.1s;
 }
 
@@ -62,7 +72,7 @@
 :global(.code-token--highlighted) {
   background: var(--tone-primary-mid) !important;
   outline: 1px solid var(--tone-primary-bright);
-  border-radius: 2px;
+  border-radius: var(--space-inline-code);
 }
 
 :global(.code-line--edited) {

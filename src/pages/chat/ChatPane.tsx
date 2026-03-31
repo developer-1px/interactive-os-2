@@ -173,7 +173,7 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
             <span>{label}</span>
             <span>{elapsed}s</span>
             {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}
-            <button className={styles.chatStopBtn} onClick={handleInterrupt} aria-label="Stop">
+            <button className={`${styles.chatStopBtn} cursor-pointer`} onClick={handleInterrupt} aria-label="Stop">
               Stop
             </button>
           </div>
@@ -190,7 +190,7 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
           onDismiss={handleDismiss}
           onTextChange={handleTextChange}
         />
-        <div className={styles.chatStatusBar}>
+        <div className={`${styles.chatStatusBar} flex-row items-center`}>
           <span>{session.model || 'connecting...'}</span>
           {usage && (
             <>

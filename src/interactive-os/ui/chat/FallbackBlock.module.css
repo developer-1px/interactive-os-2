@@ -1,9 +1,30 @@
-/* FallbackBlock — unknown block type safety net
-   ② 2026-03-27-chat-module-prd.md */
+/* FallbackBlock — unknown block type with JSON dump */
 
 .fallback {
-  font-family: var(--mono);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
-  padding: var(--space-xs);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--shape-md-radius);
+}
+
+.fallbackSummary {
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  user-select: none;
+  font-family: var(--mono);
+}
+
+.fallbackSummary::marker,
+.fallbackSummary::-webkit-details-marker {
+  display: none;
+}
+
+.fallbackPre {
+  padding: var(--space-xs) var(--space-sm);
+  border-top: 1px dashed var(--border-subtle);
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  line-height: var(--leading-snug);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }

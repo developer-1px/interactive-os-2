@@ -30,14 +30,14 @@ export default function RenameDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>F2</kbd> <span className="key-hint">rename</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">confirm</span>{' '}
         <kbd>Esc</kbd> <span className="key-hint">cancel</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <ListBox
           data={data}
           onChange={setData}
@@ -46,7 +46,7 @@ export default function RenameDemo() {
           renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [
-              'list-item',
+              'list-item flex-row items-center justify-between',
               state.focused && 'list-item--focused',
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')

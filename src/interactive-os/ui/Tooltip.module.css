@@ -1,5 +1,4 @@
 .tooltip {
-  position: fixed;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block;
   margin: 0;

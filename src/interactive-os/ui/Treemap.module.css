@@ -3,20 +3,13 @@
 /* ── base ── */
 
 .treemap {
-  position: relative;
-  overflow: hidden;
   border-radius: var(--shape-sm-radius);
 }
 
 .block {
-  position: absolute;
   border: 1px solid var(--border-subtle);
   background: var(--surface-default);
-  cursor: pointer;
-  overflow: hidden;
   padding: var(--space-xs);
-  display: flex;
-  align-items: flex-end;
   transition: background var(--motion-duration-fast) var(--motion-easing-default);
 }
 
@@ -57,8 +50,6 @@
   font-size: var(--type-caption-size);
   line-height: var(--type-caption-leading);
   color: var(--text-secondary);
-  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
   max-width: 100%;
 }

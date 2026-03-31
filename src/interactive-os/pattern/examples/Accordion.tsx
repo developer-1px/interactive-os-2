@@ -31,7 +31,7 @@ const data: NormalizedData = createStore({
 
 function Field({ label, id, type = 'text' }: { label: string; id: string; type?: string }) {
   return (
-    <div className={styles.field}>
+    <div className={`${styles.field} flex-col`}>
       <label htmlFor={id} className={styles.label}>{label}</label>
       <input id={id} type={type} className={styles.input} />
     </div>
@@ -40,7 +40,7 @@ function Field({ label, id, type = 'text' }: { label: string; id: string; type?:
 
 const panels: Record<string, React.ReactNode> = {
   'personal-information': (
-    <fieldset className={styles.fieldset}>
+    <fieldset className={`${styles.fieldset} flex-col border-none`}>
       <Field label="Name" id="cufc1" />
       <Field label="Email" id="cufc2" type="email" />
       <Field label="Phone" id="cufc3" type="tel" />
@@ -50,7 +50,7 @@ const panels: Record<string, React.ReactNode> = {
     </fieldset>
   ),
   'billing-address': (
-    <fieldset className={styles.fieldset}>
+    <fieldset className={`${styles.fieldset} flex-col border-none`}>
       <Field label="Address 1" id="b-add1" />
       <Field label="Address 2" id="b-add2" />
       <Field label="City" id="b-city" />
@@ -59,7 +59,7 @@ const panels: Record<string, React.ReactNode> = {
     </fieldset>
   ),
   'shipping-address': (
-    <fieldset className={styles.fieldset}>
+    <fieldset className={`${styles.fieldset} flex-col border-none`}>
       <Field label="Address 1" id="s-add1" />
       <Field label="Address 2" id="s-add2" />
       <Field label="City" id="s-city" />
@@ -86,7 +86,7 @@ const renderItem = (
         <button
           {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
           id={node.id as string}
-          className={styles.trigger}
+          className={`${styles.trigger} flex-row items-center justify-between w-full`}
           type="button"
           data-focused={state.focused || undefined}
         >

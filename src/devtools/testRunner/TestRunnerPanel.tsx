@@ -123,9 +123,9 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
     <div>
       {headless
         ? <div ref={hiddenAreaRef} style={{ display: 'none' }} />
-        : <div className="card" ref={renderAreaRef} style={{ minHeight: 60, padding: 12, marginBottom: 16, display: ready ? undefined : 'none' }} />
+        : <div className="card overflow-hidden" ref={renderAreaRef} style={{ minHeight: 60, padding: 12, marginBottom: 16, display: ready ? undefined : 'none' }} />
       }
-      <div className="card" style={{ padding: 16, display: ready ? undefined : 'none' }}>
+      <div className="card overflow-hidden" style={{ padding: 16, display: ready ? undefined : 'none' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: ready ? 12 : 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ fontFamily: 'var(--mono)', fontWeight: 700 }}>

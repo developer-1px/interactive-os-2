@@ -38,7 +38,7 @@ const defaultRenderField = (
   const fieldError = errors?.value
 
   return (
-    <div {...props} className={styles.field}>
+    <div {...props} className={`flex-col ${styles.field}`}>
       <span className={styles.label}>{label}</span>
       <span className={styles.value}>
         <Aria.Editable field="value" placeholder="Enter value...">

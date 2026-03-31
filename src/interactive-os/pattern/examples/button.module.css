@@ -1,7 +1,4 @@
 .toggleButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   padding: var(--shape-sm-py) var(--shape-sm-px);
   font-size: var(--type-body-size);
   color: var(--text-primary);

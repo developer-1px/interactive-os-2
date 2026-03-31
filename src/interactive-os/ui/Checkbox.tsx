@@ -14,7 +14,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const checked = state.checked === true
   return (
-    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
+    <div {...props} className={`flex-row items-center ${styles.item}`} data-focused={state.focused || undefined}>
       <CheckIndicator checked={checked} />
       <span className={styles.label}>{label}</span>
     </div>

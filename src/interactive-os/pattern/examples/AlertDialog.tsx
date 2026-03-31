@@ -43,7 +43,7 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={styles.dialog}
+        className={`${styles.dialog} outline-none`}
         data-focused={state.focused || undefined}
       >
         <h2 className={styles.title}>{label}</h2>

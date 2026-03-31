@@ -5,7 +5,6 @@
   background: var(--surface-raised);
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--shape-md-radius);
-  outline: none;
 }
 
 .title {

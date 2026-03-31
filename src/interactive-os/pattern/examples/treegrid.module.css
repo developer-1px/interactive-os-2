@@ -1,8 +1,6 @@
 /* ── base ── */
 
 .row {
-  display: flex;
-  align-items: center;
   gap: var(--space-sm);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
@@ -10,33 +8,26 @@
   line-height: var(--type-body-line-height);
   color: var(--text-primary);
   cursor: default;
-  white-space: nowrap;
-  outline: none;
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
 .indicator {
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
-  flex-shrink: 0;
 }
 
 .subject {
-  flex: 1;
   font-weight: var(--weight-semi);
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .summary {
   flex: 2;
   color: var(--text-secondary);
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .sender {
-  flex-shrink: 0;
   color: var(--text-secondary);
   font-size: var(--type-caption-size);
 }

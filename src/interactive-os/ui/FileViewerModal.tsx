@@ -81,7 +81,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
-    <dialog ref={dialogRef} className={`items-center justify-center ${styles.fvmDialog}`} onClick={handleBackdropClick}>
+    <dialog ref={dialogRef} className={`items-center justify-center border-none ${styles.fvmDialog}`} onClick={handleBackdropClick}>
       <div className={`flex-col overflow-hidden ${styles.fvmModal}`} data-surface="overlay" onClick={e => e.stopPropagation()}>
         <div className={`flex-row items-center justify-between shrink-0 ${styles.fvmHeader}`}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
@@ -104,14 +104,14 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 )}
               </div>
             )}
-            <button className={`flex-row items-center justify-center ${styles.fvmClose}`} data-surface="action" onClick={onClose}>&times;</button>
+            <button className={`flex-row items-center justify-center border-none cursor-pointer ${styles.fvmClose}`} data-surface="action" onClick={onClose}>&times;</button>
           </div>
         </div>
-        <div className={`flex-1 overflow-auto ${styles.fvmBody}`}>
+        <div className={"flex-1 overflow-auto min-h-0"}>
           {error ? (
             <div className={styles.fvmError}>File not found</div>
           ) : isImage ? (
-            <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className={styles.fvmImage} />
+            <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className={`block ${styles.fvmImage}`} />
           ) : isMarkdown ? (
             <MarkdownViewer content={fileContent} />
           ) : (

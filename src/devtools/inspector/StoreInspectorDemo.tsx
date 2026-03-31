@@ -187,7 +187,7 @@ export default function StoreInspectorDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd><Left /><Right /></kbd> <span className="key-hint">expand/collapse</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">create child</span>{' '}
@@ -197,11 +197,11 @@ export default function StoreInspectorDemo() {
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
 
-      <div className="card">
-        <div className={styles.splitContainer}>
+      <div className="card overflow-hidden">
+        <div className={`${styles.splitContainer} grid`}>
 
           {/* Editor panel */}
-          <div className={styles.panel}>
+          <div className="min-h-0 overflow-auto">
             <div className={styles.panelLabel}>Editor</div>
             <Aria
               pattern={tree}
@@ -217,7 +217,7 @@ export default function StoreInspectorDemo() {
           </div>
 
           {/* Inspector panel */}
-          <div className={styles.panel}>
+          <div className="min-h-0 overflow-auto">
             <div className={styles.panelLabel}>Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}
@@ -229,7 +229,7 @@ export default function StoreInspectorDemo() {
 
           {/* Log panel */}
           <div
-            className={styles.logPanel}
+            className={`${styles.logPanel} overflow-y-auto`}
             ref={logRef}
             aria-label="Operation Log"
           >
@@ -240,7 +240,7 @@ export default function StoreInspectorDemo() {
               log.map((entry) => (
                 <div
                   key={entry.seq}
-                  className={styles.logEntry}
+                  className={`${styles.logEntry} whitespace-nowrap`}
                   {...(entry.parent != null ? { 'data-batch-child': '' } : {})}
                 >
                   <span style={{ opacity: 0.5 }}>#{entry.seq}</span>{' '}

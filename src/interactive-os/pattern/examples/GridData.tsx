@@ -37,7 +37,7 @@ const renderCell = (
   value: unknown,
 ): React.ReactElement => {
   return (
-    <div {...props} className={styles.cell}>
+    <div {...props} className={`${styles.cell} flex-row items-center outline-none`}>
       {String(value ?? '')}
     </div>
   )

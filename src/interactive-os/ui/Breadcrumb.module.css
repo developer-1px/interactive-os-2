@@ -1,15 +1,13 @@
 .breadcrumb {
-  gap: 1px;
+  gap: var(--border-width);
   font-size: var(--type-body-size);
   color: var(--text-muted);
-  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .sep {
   margin: 0 var(--space-xs);
   opacity: 0.4;
-  flex-shrink: 0;
 }
 
 .segment {

@@ -78,6 +78,14 @@
   --landing-type-label-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace;
   --landing-type-label-lh:     1.3;
 
+  /* ═══ Letter-spacing (독립 축) ═══ */
+  --landing-tracking-tight:  -0.035em;
+  --landing-tracking-snug:   -0.025em;
+  --landing-tracking-normal: -0.01em;
+  --landing-tracking-wide:    0.06em;
+  --landing-tracking-wider:   0.08em;
+  --landing-tracking-widest:  0.12em;
+
   /* ═══ Shape 번들 (radius + padding) ═══ */
   --landing-shape-xs-r: 6px;   --landing-shape-xs-py: 6px;   --landing-shape-xs-px: 12px;
   --landing-shape-sm-r: 6px;   --landing-shape-sm-py: 8px;   --landing-shape-sm-px: 20px;
@@ -169,6 +177,14 @@
   --landing-type-label-weight: 600;
   --landing-type-label-family: 'SF Mono', 'Cascadia Code', ui-monospace, monospace;
   --landing-type-label-lh:     1.3;
+
+  /* ═══ Letter-spacing (독립 축) ═══ */
+  --landing-tracking-tight:  -0.035em;
+  --landing-tracking-snug:   -0.025em;
+  --landing-tracking-normal: -0.01em;
+  --landing-tracking-wide:    0.06em;
+  --landing-tracking-wider:   0.08em;
+  --landing-tracking-widest:  0.12em;
 
   /* ═══ Shape 번들 ═══ */
   --landing-shape-xs-r: 6px;   --landing-shape-xs-py: 6px;   --landing-shape-xs-px: 12px;

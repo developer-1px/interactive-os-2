@@ -2,8 +2,6 @@
 
 /* 인터랙티브 아이템 베이스 */
 .item {
-  display: flex;
-  align-items: center;
   gap: var(--space-sm);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
@@ -43,13 +41,9 @@
 /* ── 상태: checked indicator (checkbox, radio) ── */
 
 .indicator {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: var(--space-md);
   height: var(--space-md);
   border: var(--border-width) solid var(--border-default);
-  flex-shrink: 0;
 }
 
 .indicatorRound {
@@ -77,7 +71,6 @@
   border-radius: var(--shape-md-radius);
   background: var(--surface-sunken);
   padding: var(--space-xs) 0;
-  outline: none;
 }
 
 .container:focus-within {
@@ -91,12 +84,11 @@
   font-weight: var(--weight-semi);
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wide);
 }
 
 .valueLabel {
   min-width: var(--space-xl);
-  text-align: right;
   font-variant-numeric: tabular-nums;
   color: var(--text-secondary);
 }
@@ -104,15 +96,12 @@
 /* ── 트랙 (slider, meter) ── */
 
 .track {
-  flex: 1;
   height: var(--space-xs);
   background: var(--surface-sunken);
   border-radius: var(--shape-xs-radius);
-  position: relative;
 }
 
 .trackFill {
-  height: 100%;
   background: var(--focus);
   border-radius: var(--shape-xs-radius);
 }

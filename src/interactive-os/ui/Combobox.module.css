@@ -18,7 +18,6 @@
 
 /* ═══ Input ═══ */
 .comboInput {
-  width: 100%;
   height: var(--input-height);
   padding: var(--shape-sm-py) var(--shape-sm-px);
   font-size: var(--type-body-size);

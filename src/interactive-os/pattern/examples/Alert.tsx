@@ -38,8 +38,8 @@ const renderAlert = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <div {...props} className={styles.alert}>
-      <span className={styles.icon} aria-hidden="true">
+    <div {...props} className={`${styles.alert} flex-row items-center`}>
+      <span className={`${styles.icon} shrink-0`} aria-hidden="true">
         &#9432;
       </span>
       <span>{label}</span>

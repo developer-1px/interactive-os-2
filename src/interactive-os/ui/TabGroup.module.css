@@ -1,16 +1,10 @@
 /* ── TabGroup — JetBrains Islands style ──
    // ② 2026-03-26-component-styling-rules-prd.md */
 
-.tabGroup {
-  height: 100%;
-  overflow: hidden;
-}
-
 .tabBar {
   gap: var(--space-2xs);
   padding: var(--space-2xs) var(--space-sm);
   background: var(--surface-sunken);
-  overflow-x: auto;
 }
 
 /* ── Tab ── */
@@ -18,7 +12,6 @@
   gap: var(--space-xs);
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border-radius: var(--shape-sm-radius);
-  white-space: nowrap;
   transition:
     background var(--motion-instant-duration) var(--motion-instant-easing),
     color var(--motion-instant-duration) var(--motion-instant-easing);
@@ -54,9 +47,3 @@
   opacity: 0.6;
 }
 
-/* ── Tab panel ── */
-.tabPanel {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-}

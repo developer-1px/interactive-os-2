@@ -72,12 +72,12 @@ const renderItem = (
   // level 1 = rowgroup, level 2 = row, level 3 = cell
   if (level === 1) {
     // rowgroup: invisible wrapper
-    return <div {...props} className={styles.rowgroup} />
+    return <div {...props} className="contents" />
   }
 
   if (level === 2) {
     // row: grid row container
-    return <div {...props} className={styles.row} />
+    return <div {...props} className={`${styles.row} grid`} />
   }
 
   // cell

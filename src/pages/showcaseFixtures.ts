@@ -270,3 +270,19 @@ export function makeFormData(): NormalizedData {
     relationships: { [ROOT_ID]: ['name', 'email', 'age'] },
   })
 }
+
+export function makeMenuButtonData(): NormalizedData {
+  return createStore({
+    entities: {
+      actions: { id: 'actions', data: { name: 'Actions' } },
+      cut: { id: 'cut', data: { name: 'Cut' } },
+      copy: { id: 'copy', data: { name: 'Copy' } },
+      paste: { id: 'paste', data: { name: 'Paste' } },
+      selectAll: { id: 'selectAll', data: { name: 'Select All' } },
+    },
+    relationships: {
+      [ROOT_ID]: ['actions'],
+      actions: ['cut', 'copy', 'paste', 'selectAll'],
+    },
+  })
+}

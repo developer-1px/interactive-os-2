@@ -1,8 +1,6 @@
 /* ── base ── */
 
 .treeitem {
-  display: flex;
-  align-items: center;
   gap: var(--space-xs);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
@@ -10,8 +8,6 @@
   line-height: var(--type-body-line-height);
   color: var(--text-primary);
   cursor: default;
-  white-space: nowrap;
-  outline: none;
 }
 
 .indicator {

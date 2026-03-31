@@ -30,16 +30,16 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
   )
 
   const localeBar = (
-    <div className="cms-detail-panel__locale-bar">
+    <div className="cms-detail-panel__locale-bar flex-row items-center shrink-0">
       <select
-        className="cms-detail-panel__locale"
+        className="cms-detail-panel__locale flex-1 cursor-pointer min-w-0"
         value={locale}
         onChange={e => onLocaleChange(e.target.value as Locale)}
       >
         {LOCALES.map(l => <option key={l} value={l}>{l}</option>)}
       </select>
       <button
-        className={`cms-detail-panel__i18n-btn${i18nSheetOpen ? ' cms-detail-panel__i18n-btn--active' : ''}`}
+        className={`cms-detail-panel__i18n-btn flex-row items-center justify-center border-none cursor-pointer${i18nSheetOpen ? ' cms-detail-panel__i18n-btn--active' : ''}`}
         onClick={onI18nSheetToggle}
         title="Translation sheet"
         type="button"
@@ -51,9 +51,9 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
 
   if (groups.length === 0) {
     return (
-      <div className="cms-detail-panel" style={style}>
+      <div className="cms-detail-panel shrink-0 flex-col overflow-y-auto" style={style}>
         {localeBar}
-        <div className="cms-detail-panel__empty">
+        <div className="cms-detail-panel__empty text-center">
           {focusedNodeId ? 'No editable fields' : 'Select a node'}
         </div>
       </div>
@@ -64,12 +64,12 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
     const entity = store.entities[focusedNodeId]
     const data = (entity?.data ?? {}) as Record<string, unknown>
     return (
-      <div className="cms-detail-panel" style={style}>
+      <div className="cms-detail-panel shrink-0 flex-col overflow-y-auto" style={style}>
         {localeBar}
         <div className="cms-detail-panel__header">
           <span className="cms-detail-panel__type">{data.type as string}</span>
         </div>
-        <div className="cms-detail-panel__fields">
+        <div className="cms-detail-panel__fields flex-col">
           {groups[0].entries.map((entry) => (
             <DetailField
               key={`${entry.nodeId}-${entry.field}`}
@@ -86,7 +86,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
   }
 
   return (
-    <div className="cms-detail-panel" style={style}>
+    <div className="cms-detail-panel shrink-0 flex-col overflow-y-auto" style={style}>
       {localeBar}
       <div className="cms-detail-panel__groups">
         {groups.map((group) => (
@@ -197,11 +197,11 @@ function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
   const { elRef, displayValue, handleFocus, handleCommit, commitOnEnter } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
 
   return (
-    <div className="cms-detail-field">
+    <div className="cms-detail-field flex-col">
       <label className="cms-detail-field__label">{entry.label}</label>
       <input
         ref={elRef}
-        className="cms-detail-field__input"
+        className="cms-detail-field__input w-full outline-none"
         type="text"
         defaultValue={displayValue}
         onFocus={handleFocus}
@@ -216,11 +216,11 @@ function LongTextField({ entry, store, locale, engine }: DetailFieldProps) {
   const { elRef, displayValue, handleFocus, handleCommit } = useFieldCommit<HTMLTextAreaElement>(entry, store, locale, engine)
 
   return (
-    <div className="cms-detail-field">
+    <div className="cms-detail-field flex-col">
       <label className="cms-detail-field__label">{entry.label}</label>
       <textarea
         ref={elRef}
-        className="cms-detail-field__textarea"
+        className="cms-detail-field__textarea w-full outline-none"
         defaultValue={displayValue}
         rows={4}
         onFocus={handleFocus}
@@ -252,11 +252,11 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
   }, [handleBlur])
 
   return (
-    <div className="cms-detail-field">
+    <div className="cms-detail-field flex-col">
       <label className="cms-detail-field__label">{entry.label}</label>
       <input
         ref={elRef}
-        className={`cms-detail-field__input${invalid ? ' cms-detail-field__input--invalid' : ''}`}
+        className={`cms-detail-field__input w-full outline-none${invalid ? ' cms-detail-field__input--invalid' : ''}`}
         type="url"
         defaultValue={displayValue}
         onFocus={handleFocus}
@@ -298,15 +298,15 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
   }, [])
 
   return (
-    <div className="cms-detail-field">
+    <div className="cms-detail-field flex-col">
       <label className="cms-detail-field__label">{entry.label}</label>
       {currentSrc ? (
-        <div className="cms-image-field__preview-wrap">
-          <img src={currentSrc} alt="" className="cms-image-field__preview" />
-          <div className="cms-image-field__actions">
+        <div className="relative">
+          <img src={currentSrc} alt="" className="cms-image-field__preview w-full object-cover" />
+          <div className="cms-image-field__actions absolute flex-row">
             <button
               type="button"
-              className="cms-image-field__action"
+              className="cms-image-field__action flex-row items-center justify-center border-none cursor-pointer"
               onClick={() => fileRef.current?.click()}
               title="Replace"
             >
@@ -314,7 +314,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
             </button>
             <button
               type="button"
-              className="cms-image-field__action"
+              className="cms-image-field__action flex-row items-center justify-center border-none cursor-pointer"
               onClick={handleRemove}
               title="Remove"
             >
@@ -325,7 +325,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
       ) : (
         <button
           type="button"
-          className="cms-image-field__placeholder"
+          className="cms-image-field__placeholder flex-col items-center justify-center w-full cursor-pointer"
           onClick={() => fileRef.current?.click()}
           onKeyDown={handleKeyDown}
         >
@@ -338,7 +338,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
         type="file"
         accept="image/*"
         onChange={handleFileChange}
-        className="cms-image-field__input"
+        className="hidden"
       />
     </div>
   )
@@ -359,23 +359,23 @@ function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) 
   const hasIcon = CMS_ICON_MAP.has(currentValue)
 
   return (
-    <div className="cms-detail-field">
+    <div className="cms-detail-field flex-col">
       <label className="cms-detail-field__label">{entry.label}</label>
       <button
         type="button"
-        className={`cms-icon-field__current${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
+        className={`cms-icon-field__current flex-row items-center cursor-pointer${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
         onClick={() => setExpanded(v => !v)}
       >
         <CmsIcon name={currentValue} size={16} />
         <span>{currentValue || 'none'}</span>
       </button>
       {expanded && (
-        <div className="cms-icon-field__grid">
+        <div className="cms-icon-field__grid grid">
           {CMS_ICONS.map(({ key, Icon }) => (
             <button
               key={key}
               type="button"
-              className={`cms-icon-field__option${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
+              className={`cms-icon-field__option flex-row items-center justify-center cursor-pointer${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
               title={key}
               onClick={() => handleSelect(key)}
             >

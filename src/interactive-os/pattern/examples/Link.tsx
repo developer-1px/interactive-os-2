@@ -34,11 +34,11 @@ const renderLink = (
   return (
     <div
       {...props}
-      className={styles.link}
+      className={`${styles.link} flex-row items-center cursor-pointer outline-none`}
       data-focused={state.focused || undefined}
     >
       <span className={styles.label}>{label}</span>
-      <span className={styles.url}>{href}</span>
+      <span className={`${styles.url} no-underline`}>{href}</span>
     </div>
   )
 }

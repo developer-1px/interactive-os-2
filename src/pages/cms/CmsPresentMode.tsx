@@ -79,13 +79,13 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
 
   return (
     <div
-      className="cms-present"
+      className="cms-present fixed inset-0 overflow-y-auto cursor-pointer"
       ref={containerRef}
       tabIndex={-1}
       onClick={onExit}
       {...(containerProps as React.HTMLAttributes<HTMLDivElement>)}
     >
-      <div className={`cms-landing ${cmsStyles.cmsLanding}`}>
+      <div className={`cms-landing ${cmsStyles.cmsLanding} w-full overflow-x-hidden`}>
         {getChildren(data, ROOT_ID).map(id => renderNode(id))}
       </div>
     </div>

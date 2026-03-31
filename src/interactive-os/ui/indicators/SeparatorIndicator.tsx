@@ -5,7 +5,8 @@ interface SeparatorIndicatorProps {
 }
 
 export function SeparatorIndicator({ orientation = 'horizontal', className }: SeparatorIndicatorProps) {
-  const classes = ['item-indicator--separator', className].filter(Boolean).join(' ')
+  const isHorizontal = orientation === 'horizontal'
+  const classes = [`shrink-0${isHorizontal ? ' w-full' : ''}`, 'item-indicator--separator', className].filter(Boolean).join(' ')
   return (
     <div
       role="separator"

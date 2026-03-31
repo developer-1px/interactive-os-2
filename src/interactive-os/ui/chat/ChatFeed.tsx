@@ -1,12 +1,13 @@
 // ② 2026-03-27-chat-module-prd.md
-import { memo, useEffect, useRef, useMemo, type ReactNode } from 'react'
+import { memo, useEffect, useMemo, type ReactNode } from 'react'
 import { StreamFeed } from '../StreamFeed'
 import { useStreamFeed } from '../useStreamFeed'
 import { FallbackBlock } from './FallbackBlock'
 import { TextBlock } from './TextBlock'
 import { ChatCodeBlock } from './ChatCodeBlock'
 import { DiffBlock } from './DiffBlock'
-import type { ChatMessage, ChatBlock, BlockRendererMap } from './types'
+import { ToolGroup } from './ToolSummaryBlock'
+import type { ChatMessage, ChatBlock, DataBlock, BlockRendererMap } from './types'
 import styles from './ChatFeed.module.css'
 
 // --- Default renderers (implementation set A: text/code/diff) ---
@@ -27,6 +28,43 @@ export interface ChatFeedProps {
   className?: string
 }
 
+// --- Group tool_use + tool_result pairs from system messages ---
+
+type GroupedBlock =
+  | { kind: 'single'; block: ChatBlock }
+  | { kind: 'tool_group'; toolUse: DataBlock; toolResult?: DataBlock }
+
+function groupSystemBlocks(blocks: ChatBlock[]): GroupedBlock[] {
+  const uses: DataBlock[] = []
+  const results: DataBlock[] = []
+  const others: ChatBlock[] = []
+
+  for (const block of blocks) {
+    if (block.type === 'tool_use') uses.push(block as DataBlock)
+    else if (block.type === 'tool_result') results.push(block as DataBlock)
+    else others.push(block)
+  }
+
+  const groups: GroupedBlock[] = []
+
+  // Pair tool_use[i] with result[i]
+  for (let i = 0; i < uses.length; i++) {
+    groups.push({ kind: 'tool_group', toolUse: uses[i], toolResult: results[i] })
+  }
+
+  // Orphan results (more results than uses)
+  for (let i = uses.length; i < results.length; i++) {
+    groups.push({ kind: 'single', block: results[i] })
+  }
+
+  // Other blocks
+  for (const block of others) {
+    groups.push({ kind: 'single', block })
+  }
+
+  return groups
+}
+
 // --- Message bubble (memoized) ---
 
 const MessageBubble = memo(function MessageBubble({
@@ -36,7 +74,25 @@ const MessageBubble = memo(function MessageBubble({
   message: ChatMessage
   renderers: BlockRendererMap
 }) {
-  const roleClass = message.role === 'user' ? styles.chatUser : styles.chatAssistant
+  const roleClass = message.role === 'user'
+    ? styles.chatUser
+    : message.role === 'system'
+      ? `overflow-hidden ${styles.chatSystem}`
+      : styles.chatAssistant
+
+  // System messages: group tool_use + tool_result pairs
+  if (message.role === 'system') {
+    const groups = groupSystemBlocks(message.blocks)
+    return (
+      <div className={`flex-col ${styles.chatMessage} ${roleClass}`}>
+        {groups.map((g, i) =>
+          g.kind === 'tool_group'
+            ? <ToolGroup key={i} toolUse={g.toolUse} toolResult={g.toolResult} />
+            : <BlockDispatch key={i} block={g.block} renderers={renderers} />
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className={`${styles.chatMessage} ${roleClass}`}>
@@ -68,28 +124,10 @@ export function ChatFeed({
     [blockRenderers],
   )
 
-  const { feedRef } = useStreamFeed<ChatMessage>()
+  const { feedRef, scrollIfAtBottom } = useStreamFeed<ChatMessage>()
 
-  // Auto-scroll on new messages and streaming text
-  const userScrolledUpRef = useRef(false)
-
-  useEffect(() => {
-    const el = feedRef.current
-    if (!el) return
-    const onScroll = () => {
-      userScrolledUpRef.current = el.scrollHeight - el.scrollTop - el.clientHeight > 40
-    }
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
-  }, [feedRef])
-
-  useEffect(() => {
-    const el = feedRef.current
-    if (!el || userScrolledUpRef.current) return
-    requestAnimationFrame(() => {
-      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
-    })
-  }, [messages, feedRef])
+  // Auto-scroll on external message changes — delegated to useStreamFeed
+  useEffect(() => { scrollIfAtBottom() }, [messages, scrollIfAtBottom])
 
   return (
     <StreamFeed

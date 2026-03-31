@@ -103,10 +103,11 @@ function getStateLabel(state: NodeState): string | null {
 }
 
 function getItemClass(state: NodeState): string {
-  if (state.focused && state.selected) return `${styles.item} ${styles.itemFocusedSelected}`
-  if (state.focused) return `${styles.item} ${styles.itemFocused}`
-  if (state.selected) return `${styles.item} ${styles.itemSelected}`
-  return styles.item
+  const base = `flex-row items-center ${styles.item}`
+  if (state.focused && state.selected) return `${base} ${styles.itemFocusedSelected}`
+  if (state.focused) return `${base} ${styles.itemFocused}`
+  if (state.selected) return `${base} ${styles.itemSelected}`
+  return base
 }
 
 const defaultRender = (
@@ -122,7 +123,7 @@ const defaultRender = (
   return (
     <div {...props} className={getItemClass(state)} style={indent}>
       <span>{label}</span>
-      {stateLabel && <span className={styles.badge}>{stateLabel}</span>}
+      {stateLabel && <span className={`shrink-0 ${styles.badge}`}>{stateLabel}</span>}
     </div>
   )
 }

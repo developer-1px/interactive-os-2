@@ -49,7 +49,7 @@ export function MenubarNavigation() {
 
   return (
     <div className={styles.demo}>
-      <header className={styles.header}>
+      <header className={`${styles.header} text-center`}>
         <div className={styles.title}>Mythical University</div>
         <div className={styles.tagline}>Using a Menubar for navigation links</div>
       </header>

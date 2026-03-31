@@ -84,7 +84,7 @@ export default function CrudDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd><Left /><Right /></kbd> <span className="key-hint">expand</span>{' '}
         <kbd>N</kbd> <span className="key-hint">create</span>{' '}
@@ -94,7 +94,7 @@ export default function CrudDemo() {
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
         <button type="button" onClick={handleCreate} style={{ marginLeft: 'var(--space-sm)', fontSize: '0.85em' }}>+ Add item</button>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <TreeGrid
           id="crud"
           data={data}
@@ -107,14 +107,14 @@ export default function CrudDemo() {
             const indent = ((state.level ?? 1) - 1) * 18
 
             const cls = [
-              'tree-node',
+              'tree-node flex-row items-center',
               state.focused && 'tree-node--focused',
               state.selected && !state.focused && 'tree-node--selected',
             ].filter(Boolean).join(' ')
 
             return (
               <div {...props} className={cls} style={{ paddingLeft: 14 + indent }}>
-                <span className="tree-node__chevron">
+                <span className="tree-node__chevron shrink-0 inline-flex items-center justify-center">
                   {isGroup ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
                 </span>
                 <span className="tree-node__name" style={{ fontWeight: isGroup ? 600 : 400 }}>

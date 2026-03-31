@@ -7,7 +7,7 @@ interface SortIndicatorProps {
 }
 
 export function SortIndicator({ direction, className }: SortIndicatorProps) {
-  const classes = ['item-indicator--sort', className].filter(Boolean).join(' ')
+  const classes = ['shrink-0 flex-row items-center justify-center', 'item-indicator--sort', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       {direction === 'ascending' && <ArrowUp size="1em" />}

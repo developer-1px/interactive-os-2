@@ -1,11 +1,6 @@
 /* ── base ── */
 
-.rowgroup {
-  display: contents;
-}
-
 .row {
-  display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
 
