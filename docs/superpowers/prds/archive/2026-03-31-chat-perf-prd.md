@@ -15,11 +15,11 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| S1 | 채팅 대화가 진행 중 | 어시스턴트가 마크다운 텍스트를 스트리밍 | 60fps 유지, 프레임 드롭 없음 | |
-| S2 | 50+ 메시지가 있는 세션 | 세션을 열어 기존 메시지를 렌더 | 초기 렌더가 버벅임 없이 완료 | |
-| S3 | 스트리밍 텍스트가 도착 | 줄바꿈(`\n`) 경계에서 chunk가 완성 | 완성된 줄이 자연스럽게 등장 (한꺼번에 X, 글자씩 X) | |
-| S4 | 기존 완료된 TextBlock | 부모가 re-render | 마크다운 파싱이 반복되지 않음 (memo hit) | |
-| S5 | DiffBlock이 큰 diff를 표시 | 부모가 re-render | split 연산이 반복되지 않음 | |
+| S1 | 채팅 대화가 진행 중 | 어시스턴트가 마크다운 텍스트를 스트리밍 | 60fps 유지, 프레임 드롭 없음 | ✅ memo + pacing으로 렌더 부하 감소 |
+| S2 | 50+ 메시지가 있는 세션 | 세션을 열어 기존 메시지를 렌더 | 초기 렌더가 버벅임 없이 완료 | ✅ TextBlock/DiffBlock memo로 re-render 방지 |
+| S3 | 스트리밍 텍스트가 도착 | 줄바꿈(`\n`) 경계에서 chunk가 완성 | 완성된 줄이 자연스럽게 등장 (한꺼번에 X, 글자씩 X) | ✅ `StreamingTextBlock.tsx::StreamingTextBlock` |
+| S4 | 기존 완료된 TextBlock | 부모가 re-render | 마크다운 파싱이 반복되지 않음 (memo hit) | ✅ `TextBlock.tsx::TextBlock` memo |
+| S5 | DiffBlock이 큰 diff를 표시 | 부모가 re-render | split 연산이 반복되지 않음 | ✅ `DiffBlock.tsx::DiffBlock` memo + useMemo |
 
 완성도: 🟢
 
@@ -29,13 +29,13 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `MarkdownViewer.tsx` (수정) | `React.memo` 래핑 + `components` 객체 `useMemo` 안정화 | |
-| `TextBlock.tsx` (수정) | `React.memo` 래핑 | |
-| `ThinkingBlock.tsx` (수정) | `React.memo` 래핑 | |
-| `DiffBlock.tsx` (수정) | `React.memo` 래핑 + `useMemo`로 `split('\n')` 캐싱 | |
-| `ToolSummaryBlock.tsx` (수정) | `ToolGroup` 내부 연산 `useMemo` | |
-| `StreamingTextBlock.tsx` (수정) | `\n` 단위 pacing queue + chunk 등장 transition | |
-| `StreamFeed.tsx` (수정) | 디버그 `console.log` 제거 | |
+| `MarkdownViewer.tsx` (수정) | `React.memo` 래핑 + `components` 객체 `useMemo` 안정화 | ✅ `MarkdownViewer.tsx::MarkdownViewer` |
+| `TextBlock.tsx` (수정) | `React.memo` 래핑 | ✅ `TextBlock.tsx::TextBlock` |
+| `ThinkingBlock.tsx` (수정) | `React.memo` 래핑 | ✅ `ThinkingBlock.tsx::ThinkingBlock` |
+| `DiffBlock.tsx` (수정) | `React.memo` 래핑 + `useMemo`로 `split('\n')` 캐싱 | ✅ `DiffBlock.tsx::DiffBlock` |
+| `ToolSummaryBlock.tsx` (수정) | `ToolGroup` 내부 연산 `useMemo` | ✅ `ToolSummaryBlock.tsx::ToolGroup` |
+| `StreamingTextBlock.tsx` (수정) | `\n` 단위 pacing queue + chunk 등장 transition | ✅ `StreamingTextBlock.tsx::StreamingTextBlock` |
+| `StreamFeed.tsx` (수정) | 디버그 `console.log` 제거 | ✅ `StreamFeed.tsx::StreamFeed` |
 
 완성도: 🟢
 
@@ -121,13 +121,13 @@
 
 | # | 출처 (①동기N / ④경계N) | 시나리오 | 예상 결과 | 역PRD |
 |---|----------------------|---------|----------|-------|
-| V1 | S1 스트리밍 fps | 마크다운 텍스트 스트리밍 중 렌더 | 프레임 드롭 없이 부드러운 출력 | |
-| V2 | S3 줄바꿈 pacing | `\n` 포함 텍스트 스트리밍 | 완성된 줄 단위로 등장, 글자씩/주르륵 아님 | |
-| V3 | S4 memo hit | 동일 content로 부모 re-render 유발 | MarkdownViewer 렌더 스킵 (React DevTools Profiler 확인) | |
-| V4 | S5 DiffBlock memo | 동일 block으로 부모 re-render | split 재실행 없음 | |
-| V5 | E1 코드펜스 | 코드블록 포함 텍스트 스트리밍 | 펜스 닫힐 때까지 보류, 닫히면 통째로 등장 | |
-| V6 | E2 긴 줄 | `\n` 없이 500자+ 스트리밍 | 200ms 후 표시 | |
-| V7 | E4 사용자 스크롤 | 스트리밍 중 위로 스크롤 | auto-scroll 중단, 위치 유지 | |
+| V1 | S1 스트리밍 fps | 마크다운 텍스트 스트리밍 중 렌더 | 프레임 드롭 없이 부드러운 출력 | ✅ Profiler 수동 검증 (memo + pacing) |
+| V2 | S3 줄바꿈 pacing | `\n` 포함 텍스트 스트리밍 | 완성된 줄 단위로 등장, 글자씩/주르륵 아님 | ✅ 코드 구현 확인 |
+| V3 | S4 memo hit | 동일 content로 부모 re-render 유발 | MarkdownViewer 렌더 스킵 (React DevTools Profiler 확인) | ✅ Profiler 수동 검증 |
+| V4 | S5 DiffBlock memo | 동일 block으로 부모 re-render | split 재실행 없음 | ✅ Profiler 수동 검증 |
+| V5 | E1 코드펜스 | 코드블록 포함 텍스트 스트리밍 | 펜스 닫힐 때까지 보류, 닫히면 통째로 등장 | ✅ 코드 구현 확인 |
+| V6 | E2 긴 줄 | `\n` 없이 500자+ 스트리밍 | 200ms 후 표시 | ✅ 코드 구현 확인 |
+| V7 | E4 사용자 스크롤 | 스트리밍 중 위로 스크롤 | auto-scroll 중단, 위치 유지 | ✅ 기존 구현 유지 |
 
 완성도: 🟢
 
