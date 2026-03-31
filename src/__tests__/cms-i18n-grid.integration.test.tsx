@@ -45,6 +45,7 @@ const plugins = [rename(), history(), focusRecovery()]
  * to avoid focus-competition between multiple editables.
  * This mirrors the production pattern from grid-keyboard tests.
  */
+// @test-harness
 function StatefulI18nGrid() {
   const [data, setData] = useState(() => translatableEntriesToGrid(cmsFixture()))
   const dataRef = useRef(data)

@@ -76,6 +76,7 @@ function getAllVisibleNodeIds(container: HTMLElement): string[] {
   return Array.from(nodes).map((n) => n.getAttribute('data-node-id')!).filter(Boolean)
 }
 
+// @test-harness
 function StatefulTree() {
   const [data, setData] = useState(fixtureData())
   return (

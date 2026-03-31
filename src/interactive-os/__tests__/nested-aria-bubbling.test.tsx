@@ -20,6 +20,7 @@ function fixtureData() {
 }
 
 /** keyMap-only parent Aria (no pattern) wrapping a listbox child */
+// @test-harness
 function NestedAriaHarness({ parentKey }: { parentKey: string }) {
   const [opened, setOpened] = useState(false)
   return (

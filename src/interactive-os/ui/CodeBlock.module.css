@@ -36,7 +36,8 @@
 }
 
 .codeBlock :global(.shiki) code {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 .codeBlock :global(.shiki .line) {

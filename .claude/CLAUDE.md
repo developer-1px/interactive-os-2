@@ -57,6 +57,7 @@ store → engine → axis → pattern → primitives → ui → pages
 
 ## 규칙
 
+- **타입 import**: `import type { Foo }` 또는 `import { type Foo, bar }` 사용. 함수 시그니처에 `import('...')` 인라인 타입 금지.
 - **파일명** = 주 export 식별자 (`useAria.ts` → `export function useAria`). multi-export는 camelCase. kebab-case 금지. rename 시 `git mv`.
 - **테스트**: 계산은 unit, 인터랙션은 통합(`user.keyboard()` → DOM/ARIA 상태 검증). mock 호출 검증(`toHaveBeenCalled`) 금지.
 - **CSS**: `/design-implement` 필수. `frontend-design` 스킬 금지.

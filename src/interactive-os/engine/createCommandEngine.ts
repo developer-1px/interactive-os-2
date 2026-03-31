@@ -89,7 +89,10 @@ export function createCommandEngine(
     return handler(s, command.payload)
   }
 
+  let _execCount = 0
   const executor = (command: Command) => {
+    _execCount++
+    if (_execCount > 1000) { console.error('[engine] executor loop detected, count:', _execCount, 'cmd:', command.type); return }
     const prev = store
     try {
       store = resolve(prev, command)

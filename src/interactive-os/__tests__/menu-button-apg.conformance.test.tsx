@@ -6,12 +6,10 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { menuButton } from '../pattern/roles/menuButton'
-import { useAria } from '../primitives/useAria'
+import { MenuButton } from '../ui/MenuButton'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import { POPUP_ID } from '../axis/popup'
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -33,39 +31,11 @@ function fixtureData(): NormalizedData {
 }
 
 // ---------------------------------------------------------------------------
-// Test component
-// ---------------------------------------------------------------------------
-
-function TestMenuButton({ data, onActivate }: { data: NormalizedData; onActivate?: (id: string) => void }) {
-  const aria = useAria({ data, pattern: menuButton, onActivate })
-  const store = aria.getStore()
-  const popupEntity = store.entities[POPUP_ID] as Record<string, unknown> | undefined
-  const isOpen = (popupEntity?.isOpen as boolean) ?? false
-  const triggerId = (popupEntity?.triggerId as string) ?? ''
-  const showChildren = isOpen && triggerId === 'actions'
-
-  return (
-    <div {...aria.containerProps} data-aria-container="">
-      <div {...aria.getNodeProps('actions')} data-testid="trigger">
-        Actions
-      </div>
-      {showChildren && (
-        <>
-          <div {...aria.getNodeProps('cut')} data-testid="cut">Cut</div>
-          <div {...aria.getNodeProps('copy')} data-testid="copy">Copy</div>
-          <div {...aria.getNodeProps('paste')} data-testid="paste">Paste</div>
-        </>
-      )}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
 function renderMenuButton(data?: NormalizedData) {
-  return render(<TestMenuButton data={data ?? fixtureData()} />)
+  return render(<MenuButton data={data ?? fixtureData()} />)
 }
 
 function getNode(container: HTMLElement, id: string): HTMLElement | null {

@@ -154,30 +154,39 @@
   font-variant-numeric: tabular-nums;
 }
 
+.chatInputRow > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+
 .chatStopBtn {
-  margin-left: auto;
-  padding: var(--space-xs) var(--space-sm);
-  border: 1px solid var(--border-subtle);
+  width: 36px;
+  height: 36px;
   background: none;
-  color: var(--text-secondary);
-  font-size: var(--type-caption-size);
-  border-radius: var(--radius-sm);
+  border: none;
+  box-shadow: none;
+  color: var(--tone-destructive-base);
+  border-radius: var(--shape-md-radius);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
 .chatStopBtn:hover {
-  background: var(--bg-hover);
-  color: var(--text-bright);
-  border-color: var(--border-default);
+  background: var(--tone-destructive-dim);
 }
 
 /* --- Info bar (below composer, always) --- */
 
 .chatStatusBar {
-  gap: var(--space-sm);
+  gap: var(--space-md);
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
+}
+
+.chatStatusBar > :first-child {
+  color: var(--text-secondary);
+  font-weight: var(--weight-medium);
 }
 
 .chatHint {

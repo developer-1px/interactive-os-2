@@ -11,9 +11,9 @@ export default function InternalsLayout() {
   const layer = rest.split('/')[0]
 
   return (
-    <div className="sidebar-layout">
+    <div className="sidebar-layout flex-row flex-1 overflow-hidden">
       <AreaSidebar layer={layer} />
-      <main className="content">
+      <main className="content flex-1 overflow-y-auto">
         <PageAreaViewer />
       </main>
     </div>

@@ -27,6 +27,7 @@ function getFocusedNodeId(container: HTMLElement): string | null {
   return focused?.getAttribute('data-node-id') ?? null
 }
 
+// @test-harness
 function TabListWithActivatedDisplay({ data, ...rest }: { data: NormalizedData; 'aria-label': string }) {
   const [activated, setActivated] = useState('')
   return (

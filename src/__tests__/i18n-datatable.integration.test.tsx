@@ -34,6 +34,7 @@ const plugins = [rename(), history(), focusRecovery(), clipboard()]
  * Column 0 (key) is read-only. Columns 1-3 (ko, en, ja) are editable via Aria.Editable.
  * enableEditing + tabCycle enabled for Tab continuation testing.
  */
+// @test-harness
 function I18nGrid() {
   const [data, setData] = useState(() => i18nInitialData)
   const dataRef = useRef(data)

@@ -32,7 +32,7 @@ function makeStore(): NormalizedData {
   })
 }
 
-// BROKEN pattern: onChange calls setStore (was the viewer bug)
+// @test-harness — regression test: documents broken vs fixed Aria integration pattern
 function BrokenViewer() {
   const [store, setStore] = useState(makeStore)
   const [selected, setSelected] = useState<string | null>(null)
@@ -59,7 +59,7 @@ function BrokenViewer() {
   )
 }
 
-// FIXED pattern: onChange does NOT call setStore
+// @test-harness
 function FixedViewer() {
   const [selected, setSelected] = useState<string | null>(null)
   const [initialStore] = useState(makeStore)

@@ -90,15 +90,23 @@ PRD가 있는 사이클에서 코드/테스트를 작성할 때, 양방향 추�
 - 수정 사항 없으면 → Step 4로
 - 수정 발생 → Step 1 재검증 → Step 4로 (Step 3 재진입 안 함)
 
-### Step 4: Code Review (1회)
+### Step 4: /screen-test — 제품 통합 테스트 승격 (1회)
+- 이번 변경이 영향 주는 **핵심 user journey**를 식별한다
+- 해당 journey에 대한 화면 수준 테스트(`route-*.screen.test.tsx`)가 있는지 확인한다
+- 없으면 → `/screen-test` 스킬로 작성 (user input → 화면 변화 검증, 코드 구조 무관)
+- 있으면 → 이번 변경으로 기존 테스트가 커버하는지 확인
+- 개발 중 TDD(메커니즘 검증)와 별개 단계 — 여기서 만드는 건 요구사항 검증
+- 테스트 추가 시 → Step 1 재검증
+
+### Step 5: Code Review (1회)
 - `superpowers:requesting-code-review` 호출 (서브에이전트)
 - 피드백 있으면 반영 후 Step 1 재검증
 - 남은 이슈가 있으면 커밋 메시지에 기록
 
-### Step 5: PROGRESS.md 업데이트 (있으면)
+### Step 6: PROGRESS.md 업데이트 (있으면)
 - `docs/PROGRESS.md`가 존재하면 완료 항목 반영. 없으면 스킵.
 
-### Step 6: 커밋
+### Step 7: 커밋
 - 변경사항 커밋
 
 ## Phase: Retrospect (PRD가 있을 때만)

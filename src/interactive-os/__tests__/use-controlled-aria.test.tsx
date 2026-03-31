@@ -21,6 +21,7 @@ function fixtureStore(): NormalizedData {
   return focusCommands.setFocus.reduce(store, 'a')
 }
 
+// @test-harness
 function TestComponent({ store, onDispatch }: { store: NormalizedData; onDispatch: (cmd: Command) => void }) {
   const aria = useControlledAria({ pattern: listbox(), store, onDispatch })
   return (

@@ -350,10 +350,10 @@ export function clipboard(options?: ClipboardOptions) {
       [CLEAR_CELL]: clipboardCommands.clearCellValue,
       [CUT_CELL]: clipboardCommands.cutCellValue,
     },
-    onCopy: (ctx: { focused: string; selected: string[] }) =>
-      clipboardCommands.copy(ctx.selected.length > 0 ? ctx.selected : [ctx.focused]),
-    onCut: (ctx: { focused: string; selected: string[] }) =>
-      clipboardCommands.cut(ctx.selected.length > 0 ? ctx.selected : [ctx.focused], boundCanDelete),
+    onCopy: (ctx: { focused: string; selected?: { ids: string[] } }) =>
+      clipboardCommands.copy((ctx.selected?.ids.length ?? 0) > 0 ? ctx.selected!.ids : [ctx.focused]),
+    onCut: (ctx: { focused: string; selected?: { ids: string[] } }) =>
+      clipboardCommands.cut((ctx.selected?.ids.length ?? 0) > 0 ? ctx.selected!.ids : [ctx.focused], boundCanDelete),
     onPaste: (ctx: { focused: string }) =>
       clipboardCommands.paste(ctx.focused, boundCanAccept),
   })

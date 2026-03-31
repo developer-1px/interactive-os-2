@@ -17,6 +17,7 @@
 
 .fvmModal {
   width: 85vw;
+  max-width: 960px;
   height: 85vh;
   background: var(--surface-default);
   border-radius: var(--shape-xl-radius);

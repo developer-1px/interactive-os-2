@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo, useEffect, type HTMLAttributes } from '
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Activity, Palette, ShieldAlert, Languages, Map,
-  MessageSquare, Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText, Bird,
+  MessageSquare, Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText, Bird, BookText,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -131,6 +131,7 @@ const appNavItems: NavItem[] = [
   { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
   { id: 'storymap', label: 'Story Map', icon: Map, path: '/storymap' },
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
+  { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'birdseye', label: 'Birdseye', icon: Bird, path: '/birdseye' },
 ]
 
@@ -163,7 +164,7 @@ const renderNavItem = (props: HTMLAttributes<HTMLElement>, node: Record<string, 
   const Icon = nav.icon
   return (
     <Tooltip content={nav.label}>
-      <div {...props} className={`activity-bar__item${state.focused ? ' activity-bar__item--active' : ''}`}>
+      <div {...props} className={`activity-bar__item flex-row items-center justify-center no-underline relative${state.focused ? ' activity-bar__item--active' : ''}`}>
         <Icon size={16} />
       </div>
     </Tooltip>
@@ -247,10 +248,10 @@ export default function AppShell() {
   }, [navigate])
 
   return (
-    <div className="page">
+    <div className="page flex-row overflow-hidden">
       <ReproRecorderOverlay />
-      <nav className="activity-bar">
-        <div className="activity-bar__logo">
+      <nav className="activity-bar flex-col items-center overflow-x-hidden overflow-y-auto">
+        <div className="activity-bar__logo flex-row items-center justify-center">
           <div className="logo-mark" />
         </div>
         <Aria
@@ -273,7 +274,7 @@ export default function AppShell() {
               const ThemeIcon = theme === 'dark' ? Sun : Moon
               return (
                 <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
-                  <div {...props} className={`activity-bar__item activity-bar__theme-toggle${state.focused ? ' activity-bar__item--active' : ''}`}>
+                  <div {...props} className={`activity-bar__item flex-row items-center justify-center no-underline relative activity-bar__theme-toggle border-none cursor-pointer${state.focused ? ' activity-bar__item--active' : ''}`}>
                     <ThemeIcon size={16} />
                   </div>
                 </Tooltip>
@@ -282,7 +283,7 @@ export default function AppShell() {
           </div>
         </Aria>
       </nav>
-      <div className="page-content">
+      <div className="page-content flex-col flex-1 overflow-hidden">
         <Outlet />
       </div>
       <FileViewerModal

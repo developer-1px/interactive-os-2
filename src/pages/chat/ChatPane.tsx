@@ -173,23 +173,29 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
             <span>{label}</span>
             <span>{elapsed}s</span>
             {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}
-            <button className={`${styles.chatStopBtn} cursor-pointer`} onClick={handleInterrupt} aria-label="Stop">
-              Stop
-            </button>
           </div>
         )}
-        <Composer
-          ref={composerRef}
-          onSubmit={handleSubmit}
-          disabled={isRunning}
-          placeholder="Send a message..."
-          commandHighlight={commandHighlight}
-          overlayText={inputText}
-          suggestions={suggestions}
-          onCommandSelect={handleCommandSelect}
-          onDismiss={handleDismiss}
-          onTextChange={handleTextChange}
-        />
+        <div className={`flex-row items-end ${styles.chatInputRow}`}>
+          <Composer
+            ref={composerRef}
+            onSubmit={handleSubmit}
+            disabled={isRunning}
+            placeholder="Send a message..."
+            commandHighlight={commandHighlight}
+            overlayText={inputText}
+            suggestions={suggestions}
+            onCommandSelect={handleCommandSelect}
+            onDismiss={handleDismiss}
+            onTextChange={handleTextChange}
+          />
+          {isRunning && (
+            <button className={`flex-row items-center justify-center shrink-0 cursor-pointer ${styles.chatStopBtn}`} onClick={handleInterrupt} aria-label="Stop">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+                <rect width="10" height="10" rx="2" />
+              </svg>
+            </button>
+          )}
+        </div>
         <div className={`${styles.chatStatusBar} flex-row items-center`}>
           <span>{session.model || 'connecting...'}</span>
           {usage && (

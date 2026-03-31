@@ -213,6 +213,29 @@
   color: var(--text-bright);
 }
 
+/* ── Clickable file path in inline code ── */
+
+.fileLink {
+  cursor: pointer;
+  color: var(--tone-primary-base);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.15em; /* prose 비례 리듬 예외 */
+  transition:
+    text-decoration-color var(--motion-instant-duration) var(--motion-instant-easing),
+    background var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.fileLink:hover {
+  text-decoration-color: var(--tone-primary-base);
+  background: var(--bg-hover);
+}
+
+.fileLink:focus-visible {
+  outline: var(--focus-ring) solid var(--focus);
+  outline-offset: var(--focus-ring);
+}
+
 .markdown input[type="checkbox"] {
   margin-right: 0.4em;
   vertical-align: middle;

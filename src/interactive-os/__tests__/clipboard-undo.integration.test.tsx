@@ -44,6 +44,7 @@ const renderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<strin
   </span>
 )
 
+// @test-harness
 function StatefulList() {
   const [data, setData] = useState(fixtureData())
   return (
