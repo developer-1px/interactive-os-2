@@ -416,6 +416,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     }
 
     // Leaf / generic nodes
+    const slotKids = getSlotChildren(currentStore, nodeId)
     return (
       <Tag
         key={nodeId}
@@ -435,6 +436,22 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           store={currentStore}
         />
         {children.length > 0 && children.map(childId => renderNode(childId))}
+        {slotKids.length > 0 && slotKids.map(childId => {
+          const slotProps = aria.getNodeProps(childId)
+          const { onClick: _sc, onKeyDown: skd, onFocus: sf, tabIndex: sti, role: _sr, ...slotRest } = slotProps as Record<string, unknown>
+          void _sc; void _sr
+          return (
+            <div
+              key={childId}
+              {...(slotRest as React.HTMLAttributes<HTMLDivElement>)}
+              tabIndex={sti as number}
+              onKeyDown={skd as React.KeyboardEventHandler}
+              onFocus={sf as React.FocusEventHandler}
+              onClick={(e: React.MouseEvent) => handleNodeClick(childId, e)}
+              className="sr-only"
+            />
+          )
+        })}
       </Tag>
     )
   }
