@@ -89,6 +89,7 @@
 | *Select* | — | Combobox 래퍼, 미구현 |
 | *ContextMenu* | — | MenuList + popover, 미구현 |
 | **DatePicker · CalendarGrid** | Validated | 첫 composite ui/ 완성품. useEngine + useAriaZone(calendarGrid) + dialog focus trap. Gap 3 해소 |
+| **SelectionOverlay** | Validated | 범용 selection overlay. useRectTracker(rAF) + 포커스/호버/멀티셀렉션 rect + 라벨. CMS Focused CSS 12개 제거 |
 
 ## Infra
 

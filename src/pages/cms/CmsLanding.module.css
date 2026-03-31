@@ -36,7 +36,7 @@
   font-size: var(--landing-type-label-size);
   font-weight: var(--landing-type-label-weight);
   line-height: var(--landing-type-label-lh);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--landing-tracking-widest);
   text-transform: uppercase;
   color: var(--landing-text-muted);
   margin: 0 0 var(--landing-space-gap-row);
@@ -48,7 +48,7 @@
   font-size: var(--landing-type-page-size);
   font-weight: var(--landing-type-page-weight);
   line-height: var(--landing-type-page-lh);
-  letter-spacing: -0.025em;
+  letter-spacing: var(--landing-tracking-snug);
   color: var(--landing-text-bright);
   margin: 0 0 var(--landing-space-gap-col);
   white-space: pre-line;
@@ -59,7 +59,7 @@
   font-family: var(--landing-type-body-family);
   font-size: var(--landing-type-body-size);
   font-weight: var(--landing-type-body-weight);
-  line-height: 1.7;
+  line-height: var(--leading-relaxed);
   color: var(--landing-text-muted);
   margin: 0 0 var(--landing-space-section-sm);
   max-width: 560px;
@@ -88,7 +88,7 @@
   font-size: var(--landing-type-label-size);
   font-weight: var(--landing-type-label-weight);
   line-height: var(--landing-type-label-lh);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--landing-tracking-widest);
   text-transform: uppercase;
   color: var(--landing-text-muted);
   /* surface-outlined */
@@ -97,7 +97,7 @@
   /* shape-pill (badge 전용) */
   border-radius: var(--landing-radius-pill);
   padding: var(--landing-shape-xs-py) var(--landing-shape-xs-px);
-  margin-bottom: 32px;
+  margin-bottom: var(--space-2xl);
   display: inline-flex;
   align-items: center;
   gap: var(--landing-space-gap-row);
@@ -117,8 +117,8 @@
   font-size: var(--landing-type-hero-size);
   font-weight: var(--landing-type-hero-weight);
   line-height: var(--landing-type-hero-lh);
-  letter-spacing: -0.035em;
-  margin: 0 0 32px;
+  letter-spacing: var(--landing-tracking-tight);
+  margin: 0 0 var(--space-2xl);
   color: var(--landing-text-bright);
   max-width: 16ch;
   white-space: pre-line;
@@ -129,9 +129,9 @@
   font-family: var(--landing-type-section-family);
   font-size: var(--landing-type-section-size);
   font-weight: var(--landing-type-body-weight);
-  line-height: 1.7;
+  line-height: var(--leading-relaxed);
   color: var(--landing-text-muted);
-  margin: 0 0 48px;
+  margin: 0 0 var(--landing-space-block, 48px);
   max-width: 52ch;
 }
 
@@ -218,11 +218,6 @@
   padding: var(--landing-space-gap-col) 0 0;
 }
 
-.cmsValueItemFocused {
-  background: var(--landing-tone-neutral-dim);
-  border-radius: var(--landing-shape-sm-r);
-  padding: var(--landing-space-gap-col) var(--landing-shape-sm-px);
-}
 
 .cmsValueItemContent {
   display: flex;
@@ -243,7 +238,7 @@
   line-height: var(--landing-type-section-lh);
   color: var(--landing-text-bright);
   margin: 0;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--landing-tracking-normal);
 }
 
 .cmsValueItemDesc {
@@ -251,7 +246,7 @@
   font-family: var(--landing-type-body-family);
   font-size: var(--landing-type-body-size);
   font-weight: var(--landing-type-body-weight);
-  line-height: 1.7;
+  line-height: var(--leading-relaxed);
   color: var(--landing-text-secondary);
   margin: 0;
 }
@@ -307,9 +302,6 @@
   padding: var(--landing-shape-lg-py) var(--landing-shape-lg-px);
 }
 
-.cmsFeatureCardFocused {
-  border-color: var(--landing-text-bright);
-}
 
 .cmsFeatureCardIcon {
   width: 36px;
@@ -330,8 +322,8 @@
   font-weight: var(--landing-type-section-weight);
   line-height: var(--landing-type-section-lh);
   color: var(--landing-text-bright);
-  margin: 0 0 8px;
-  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-sm);
+  letter-spacing: var(--landing-tracking-normal);
 }
 
 .cmsFeatureCardDesc {
@@ -339,7 +331,7 @@
   font-family: var(--landing-type-body-family);
   font-size: var(--landing-type-body-size);
   font-weight: var(--landing-type-body-weight);
-  line-height: 1.7;
+  line-height: var(--leading-relaxed);
   color: var(--landing-text-secondary);
   margin: 0;
 }
@@ -363,9 +355,6 @@
   border-color: var(--landing-text-muted);
 }
 
-.cmsStatCardFocused {
-  border-color: var(--landing-text-bright);
-}
 
 .cmsStatCardContent {
   display: flex;
@@ -379,7 +368,7 @@
   font-size: var(--landing-type-page-size);
   font-weight: var(--landing-type-page-weight);
   line-height: var(--landing-type-page-lh);
-  letter-spacing: -0.02em;
+  letter-spacing: var(--type-display-letter-spacing);
   color: var(--landing-text-bright);
 }
 
@@ -389,7 +378,7 @@
   font-size: var(--landing-type-label-size);
   font-weight: var(--landing-type-label-weight);
   line-height: var(--landing-type-label-lh);
-  letter-spacing: 0.12em;
+  letter-spacing: var(--landing-tracking-widest);
   text-transform: uppercase;
   color: var(--landing-text-bright);
 }
@@ -414,11 +403,6 @@
   margin-right: auto;
 }
 
-.cmsSectionCtaFocused {
-  outline: 1px solid var(--landing-text-muted);
-  outline-offset: var(--landing-shape-xs-py);
-  border-radius: var(--landing-shape-xs-r);
-}
 
 .cmsSectionCtaLink {
   /* type-caption 번들 */
@@ -477,9 +461,6 @@
   border-color: var(--landing-text-muted);
 }
 
-.cmsPatternFocused {
-  border-color: var(--landing-text-bright);
-}
 
 .cmsPatternIcon {
   width: 28px;
@@ -535,9 +516,6 @@
   border-left-color: var(--landing-text-muted);
 }
 
-.cmsShowcaseItemFocused {
-  border-left-color: var(--landing-text-bright);
-}
 
 .cmsShowcaseItemContent {
   display: flex;
@@ -565,7 +543,7 @@
   font-weight: var(--landing-type-section-weight);
   line-height: var(--landing-type-section-lh);
   color: var(--landing-text-bright);
-  letter-spacing: -0.01em;
+  letter-spacing: var(--landing-tracking-normal);
   /* 아이콘과 인라인 흐름 */
   display: inline;
 }
@@ -627,7 +605,7 @@
 }
 
 .cmsArticle {
-  padding: 20px 0;
+  padding: var(--shape-lg-py) 0;
   border-top: var(--landing-rule);
 }
 
@@ -636,12 +614,6 @@
   display: none;
 }
 
-.cmsArticleFocused {
-  background: var(--landing-tone-neutral-dim);
-  border-radius: var(--landing-shape-xs-r);
-  padding: 20px var(--landing-shape-sm-px);
-  margin: 0 calc(-1 * var(--landing-shape-sm-px));
-}
 
 .cmsArticleContent {
   display: flex;
@@ -673,7 +645,7 @@
 .cmsArticleBody {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-inline-code);
 }
 
 .cmsArticleTitle {
@@ -692,7 +664,7 @@
   font-size: var(--landing-type-label-size);
   font-weight: var(--landing-type-body-weight);
   line-height: var(--landing-type-label-lh);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--landing-tracking-wide);
   text-transform: uppercase;
   color: var(--landing-text-muted);
 }
@@ -714,17 +686,12 @@
   text-align: center;
 }
 
-.cmsQuoteFocused {
-  background: var(--landing-tone-neutral-dim);
-  border-radius: var(--landing-shape-lg-r);
-  padding: 32px;
-}
 
 .cmsQuoteContent { margin: 0; padding: 0; border: none; }
 
 .cmsQuoteMark {
   font-family: var(--landing-type-hero-family);
-  font-size: 64px;
+  font-size: var(--landing-type-hero-size);
   font-weight: var(--landing-type-hero-weight);
   color: var(--landing-text-muted);
   line-height: 0.5;
@@ -738,10 +705,10 @@
   font-family: var(--landing-type-page-family);
   font-size: clamp(24px, 3.5vw, 36px);
   font-weight: var(--landing-type-page-weight);
-  line-height: 1.4;
-  letter-spacing: -0.02em;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--type-display-letter-spacing);
   color: var(--landing-text-bright);
-  margin: 0 0 32px;
+  margin: 0 0 var(--space-2xl);
   white-space: pre-line;
 }
 
@@ -750,7 +717,7 @@
   font-family: var(--landing-type-label-family);
   font-size: var(--landing-type-caption-size);
   font-weight: var(--landing-type-section-weight);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--landing-tracking-wider);
   text-transform: uppercase;
   color: var(--landing-text-muted);
   font-style: normal;
@@ -773,7 +740,7 @@
   /* hero급으로 확대 */
   font-size: clamp(40px, 5vw, 56px);
   font-weight: var(--landing-type-hero-weight);
-  letter-spacing: -0.035em;
+  letter-spacing: var(--landing-tracking-tight);
   max-width: 18ch;
 }
 
@@ -807,7 +774,7 @@
   font-size: var(--landing-type-label-size);
   font-weight: var(--landing-type-label-weight);
   line-height: var(--landing-type-label-lh);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--landing-tracking-widest);
   text-transform: uppercase;
   color: var(--landing-text-muted);
 }
@@ -815,7 +782,7 @@
 .cmsFooterCopy {
   font-size: var(--landing-type-label-size);
   color: var(--landing-text-muted);
-  margin-left: 8px;
+  margin-left: var(--space-sm);
 }
 
 .cmsFooterTagline {
@@ -853,10 +820,6 @@
 
 .cmsTabGroup { margin: var(--landing-space-section) 0; }
 
-.cmsTabGroupFocused {
-  outline: 1px solid var(--landing-text-muted);
-  outline-offset: 8px;
-}
 
 .cmsTablist {
   display: flex;
@@ -892,10 +855,6 @@
   background: var(--landing-tone-neutral-dim);
 }
 
-.cmsTabItemFocused {
-  outline: 1px solid var(--landing-text-muted);
-  outline-offset: -1px;
-}
 
 .cmsTabPanel { padding: 0; }
 
@@ -954,10 +913,6 @@
   overflow: hidden;
 }
 
-.cmsImageCardFocused {
-  border-color: var(--landing-tone-neutral-dim);
-  box-shadow: 0 0 0 2px var(--landing-tone-neutral-dim);
-}
 
 /* ══════════════════════════════
    Gallery — 이미지 그리드 섹션
@@ -983,10 +938,6 @@
   border: 1px solid var(--landing-surface-outlined-border);
 }
 
-.cmsGalleryItemFocused {
-  border-color: var(--landing-tone-neutral-dim);
-  box-shadow: 0 0 0 2px var(--landing-tone-neutral-dim);
-}
 
 .cmsGalleryItemContent {
   display: flex;
