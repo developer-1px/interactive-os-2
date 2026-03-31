@@ -41,21 +41,21 @@ function toSpatialStore(map: StoryMap): NormalizedData {
 
 function StoryCard({ story, focused }: { story: Story; focused: boolean }) {
   return (
-    <div className={css.smStory} data-status={story.status} data-focused={focused || undefined}>
-      <div className={css.smStoryHeader}>
+    <div className={`${css.smStory} flex-col border-none`} data-status={story.status} data-focused={focused || undefined}>
+      <div className="flex-row items-center justify-between">
         <span className={css.smStoryId}>{story.id}</span>
         {story.status === 'blocked' && (
-          <span className={css.smStoryBlocked} />
+          <span className={`${css.smStoryBlocked} shrink-0`} />
         )}
       </div>
       <div className={css.smStoryText}>{story.story}</div>
       {story.links.length > 0 && (
-        <div className={css.smLinks}>
+        <div className={`${css.smLinks} flex-row flex-wrap`}>
           {story.links.map(link => (
             <a
               key={link.url}
               href={link.url}
-              className={css.smLinksItem}
+              className={`${css.smLinksItem} no-underline`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -70,11 +70,11 @@ function StoryCard({ story, focused }: { story: Story; focused: boolean }) {
 
 function FeatureCard({ feature, focused }: { feature: Feature; focused: boolean }) {
   return (
-    <div className={css.smFeature} data-focused={focused || undefined}>
+    <div className={`${css.smFeature} flex-col border-none`} data-focused={focused || undefined}>
       <span className={css.smFeatureId}>{feature.id}</span>
       <div className={css.smFeatureText}>{feature.feature}</div>
       {feature.screens.length > 0 && (
-        <div className={css.smFeatureScreens}>
+        <div className={`${css.smFeatureScreens} flex-row`}>
           {feature.screens.map(s => (
             <span key={s} className={css.smFeatureScreenTag}>{s}</span>
           ))}
@@ -110,30 +110,30 @@ export default function PageStoryMap() {
   }, [])
 
   return (
-    <div className={css.sm}>
-      <div className={css.smHeader}>
-        <div className={css.smHeaderLeft}>
+    <div className={`${css.sm} flex-col h-full overflow-hidden`}>
+      <div className={`${css.smHeader} flex-row items-center shrink-0`}>
+        <div className={`${css.smHeaderLeft} flex-row items-center min-w-0`}>
           <TabList
             data={tabStore}
             onActivate={handleActivate}
             initialFocus={sourceId}
             aria-label="Story map source"
           />
-          <div className={css.smLegend} role="list" aria-label="Status legend">
+          <div className={`${css.smLegend} flex-row items-center shrink-0`} role="list" aria-label="Status legend">
             {(['pending', 'active', 'done', 'blocked'] as const).map(status => (
-              <div key={status} className={css.smLegendItem} role="listitem">
-                <span className={css.smLegendSwatch} data-status={status} />
+              <div key={status} className={`${css.smLegendItem} flex-row items-center`} role="listitem">
+                <span className={`${css.smLegendSwatch} shrink-0`} data-status={status} />
                 {status}
               </div>
             ))}
           </div>
         </div>
       </div>
-      <div className={css.smBody}>
+      <div className={`${css.smBody} flex-1 overflow-auto`}>
         <SpatialView data={spatialStore} aria-label="Story map">
           {({ getNodeProps, getNodeState }) => (
             <div
-              className={css.smMap}
+              className={`${css.smMap} grid`}
               style={{ gridTemplateColumns: `repeat(${totalColumns}, var(--_col-width))` }}
             >
               {/* Row 1: Need headers spanning their story columns */}
@@ -143,11 +143,11 @@ export default function PageStoryMap() {
                 return (
                   <div
                     key={need.id}
-                    className={css.smNeedHeader}
+                    className={`${css.smNeedHeader} flex-col`}
                     style={{ gridColumn: `${colStart} / span ${span}` }}
                   >
-                    <div className={css.smNeedHeaderTop}>
-                      <span className={css.smPersonaBadge}>{persona}</span>
+                    <div className={`${css.smNeedHeaderTop} flex-row items-center`}>
+                      <span className={`${css.smPersonaBadge} inline-flex items-center justify-center`}>{persona}</span>
                       {need.id} · {need.persona}
                     </div>
                     {need.need}
@@ -160,7 +160,7 @@ export default function PageStoryMap() {
                 need.stories.map((story, i) => (
                   <div
                     key={story.id}
-                    className={css.smStoryCol}
+                    className={`${css.smStoryCol} grid`}
                     data-status={story.status}
                     style={{ gridColumn: colStart + i }}
                   >

@@ -8,7 +8,7 @@ interface PageIndicatorProps {
 export function PageIndicator({ total, current, className }: PageIndicatorProps) {
   if (total <= 0) return null
   const clamped = Math.min(Math.max(0, current), total - 1)
-  const classes = ['item-indicator--page', className].filter(Boolean).join(' ')
+  const classes = ['inline-flex items-center', 'item-indicator--page', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       {Array.from({ length: total }, (_, i) => (

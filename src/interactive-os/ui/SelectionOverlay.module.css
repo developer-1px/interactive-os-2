@@ -1,29 +1,18 @@
 /* ── base ── */
 
-.overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
 .rect {
-  position: absolute;
   border-radius: var(--shape-xs-radius);
   transition: opacity var(--motion-instant-duration);
 }
 
 .label {
-  position: absolute;
   font-size: var(--type-caption-size);
   font-weight: var(--type-caption-weight);
   font-family: var(--type-caption-family);
   line-height: var(--type-caption-line-height);
   letter-spacing: var(--type-caption-letter-spacing);
-  white-space: nowrap;
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--shape-xs-radius);
-  pointer-events: none;
 }
 
 /* ── variant: kind ── */

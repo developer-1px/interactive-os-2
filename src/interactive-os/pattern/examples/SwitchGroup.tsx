@@ -30,16 +30,16 @@ const renderSwitch = (
   return (
     <div
       {...props}
-      className={styles.switchItem}
+      className={`${styles.switchItem} flex-row items-center justify-between`}
       data-focused={state.focused || undefined}
     >
-      <span className={styles.label}>{label}</span>
+      <span className={`${styles.label} flex-1`}>{label}</span>
       <span
-        className={styles.track}
+        className={`${styles.track} inline-flex items-center`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >
-        <span className={styles.thumb} />
+        <span className={`${styles.thumb} block`} />
       </span>
     </div>
   )

@@ -14,27 +14,21 @@
 .sliderTrack {
   --slider-track-height: var(--shape-xs-radius);
 
-  position: relative;
-  flex: 1;
   height: var(--slider-track-height);
   background: var(--border-default);
   border-radius: calc(var(--slider-track-height) / 2);
 }
 
 .sliderFill {
-  position: absolute;
   left: 0;
   top: 0;
-  height: 100%;
   background: var(--tone-primary-base);
   border-radius: calc(var(--slider-track-height) / 2);
-  pointer-events: none;
 }
 
 .sliderThumb {
   --slider-thumb-size: var(--icon-md);
 
-  position: absolute;
   top: 50%;
   width: var(--slider-thumb-size);
   height: var(--slider-thumb-size);
@@ -54,6 +48,5 @@
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
   min-width: var(--space-2xl);
-  text-align: right;
   font-variant-numeric: tabular-nums;
 }

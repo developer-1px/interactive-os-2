@@ -1,5 +1,4 @@
 .icon {
-  flex-shrink: 0;
   margin-right: var(--space-xs);
   opacity: 0.55;
   color: var(--text-secondary);

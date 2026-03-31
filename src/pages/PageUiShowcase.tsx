@@ -60,12 +60,12 @@ export default function PageUiShowcase() {
   const mdFile = slugToMdFile[activeSlug]
 
   return (
-    <div className={styles.uiPage}>
-      <nav className={styles.uiSidebar}>
-        <div className={styles.uiSidebarHeader}>
+    <div className={`${styles.uiPage} flex-row flex-1 min-h-0`}>
+      <nav className={`${styles.uiSidebar} flex-col`}>
+        <div className={`${styles.uiSidebarHeader} flex-row items-center justify-between shrink-0`}>
           <span className={styles.uiSidebarTitle}>UI Components</span>
         </div>
-        <div className={styles.uiSidebarBody}>
+        <div className={`${styles.uiSidebarBody} flex-1 overflow-y-auto`}>
           <NavList
             data={sidebarData}
             onActivate={handleActivate}
@@ -73,8 +73,8 @@ export default function PageUiShowcase() {
           />
         </div>
       </nav>
-      <div className={styles.uiContent}>
-        <div className={styles.uiContentBody}>
+      <div className={`${styles.uiContent} flex-col flex-1 min-w-0 overflow-hidden`}>
+        <div className={`${styles.uiContentBody} flex-1 overflow-y-auto`}>
           {mdFile ? (
             <MdPage key={activeSlug} md={`ui/${mdFile}`} />
           ) : (

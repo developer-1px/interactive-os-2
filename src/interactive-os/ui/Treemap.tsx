@@ -139,7 +139,7 @@ export function Treemap({ data, width, height, onActivate, 'aria-label': ariaLab
 
   return (
     <div
-      className={styles.treemap}
+      className={`relative overflow-hidden ${styles.treemap}`}
       style={{ width, height }}
       aria-label={ariaLabel}
       role="group"
@@ -150,13 +150,13 @@ export function Treemap({ data, width, height, onActivate, 'aria-label': ariaLab
         return (
           <button
             key={r.id}
-            className={styles.block}
+            className={`absolute overflow-hidden flex-row items-end cursor-pointer ${styles.block}`}
             data-ext={item?.ext}
             style={{ left: r.x, top: r.y, width: r.w, height: r.h }}
             title={`${item?.colTitle} > ${item?.title} (${item?.value}L)`}
             onClick={() => handleClick(r.id)}
           >
-            {showLabel && <span className={styles.blockLabel}>{item?.title}</span>}
+            {showLabel && <span className={`overflow-hidden whitespace-nowrap ${styles.blockLabel}`}>{item?.title}</span>}
           </button>
         )
       })}

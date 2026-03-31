@@ -1,6 +1,4 @@
 .radio {
-  display: flex;
-  align-items: center;
   gap: var(--space-sm);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
@@ -13,9 +11,6 @@
 }
 
 .indicator {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: var(--space-md);
   height: var(--space-md);
   border-radius: 50%;

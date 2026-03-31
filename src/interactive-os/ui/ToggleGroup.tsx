@@ -17,8 +17,8 @@ interface ToggleGroupProps extends AriaComponentProps {
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={styles.item} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
-      <span className={styles.indicator} data-selected={state.selected || undefined}>{state.selected ? <CircleDot size={18} /> : <Circle size={18} />}</span>
+    <div {...props} className={`flex-row items-center ${styles.item}`} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
+      <span className={`flex-row items-center ${styles.indicator}`} data-selected={state.selected || undefined}>{state.selected ? <CircleDot size={18} /> : <Circle size={18} />}</span>
       <span className={styles.label}>{label}</span>
     </div>
   )

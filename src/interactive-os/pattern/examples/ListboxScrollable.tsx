@@ -34,7 +34,7 @@ export function ListboxScrollable() {
       plugins={[]}
       onChange={onChange}
       aria-label="Choose your favorite transuranic element"
-      className={styles.listbox}
+      className={`${styles.listbox} overflow-y-auto outline-none`}
     />
   )
 }

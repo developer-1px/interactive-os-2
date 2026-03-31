@@ -36,7 +36,7 @@ export default function ClipboardDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd><Left /><Right /></kbd> <span className="key-hint">expand</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
@@ -45,7 +45,7 @@ export default function ClipboardDemo() {
         <kbd>⌘V</kbd> <span className="key-hint">paste</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <TreeGrid
           data={data}
           onChange={setData}
@@ -58,14 +58,14 @@ export default function ClipboardDemo() {
             const indent = ((state.level ?? 1) - 1) * 18
 
             const cls = [
-              'tree-node',
+              'tree-node flex-row items-center',
               state.focused && 'tree-node--focused',
               state.selected && !state.focused && 'tree-node--selected',
             ].filter(Boolean).join(' ')
 
             return (
               <div {...props} className={cls} style={{ paddingLeft: 14 + indent, opacity: isCut ? 0.4 : 1 }}>
-                <span className="tree-node__chevron">
+                <span className="tree-node__chevron shrink-0 inline-flex items-center justify-center">
                   {isGroup ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
                 </span>
                 {!isGroup && !!(d?.hex) && (

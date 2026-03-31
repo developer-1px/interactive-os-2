@@ -118,13 +118,13 @@ export function QuickOpen({
   }, [onClose])
 
   return (
-    <div className={styles.backdrop} onClick={handleBackdropClick}>
-      <div className={styles.dialog} aria-label="Quick Open">
-        <div className={styles.inputRow}>
-          <Search size={16} className={styles.inputIcon} />
+    <div className={`fixed inset-0 flex-row justify-center ${styles.backdrop}`} onClick={handleBackdropClick}>
+      <div className={`flex-col overflow-hidden ${styles.dialog}`} aria-label="Quick Open">
+        <div className={`flex-row items-center ${styles.inputRow}`}>
+          <Search size={16} className={`shrink-0 ${styles.inputIcon}`} />
           <input
             ref={inputRef}
-            className={styles.input}
+            className={`flex-1 border-none outline-none ${styles.input}`}
             type="text"
             placeholder="파일 검색..."
             value={query}
@@ -132,10 +132,10 @@ export function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className={styles.shortcut}>ESC</kbd>
+          <kbd className={`shrink-0 ${styles.shortcut}`}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
-          <div className={styles.results} onMouseDown={e => e.preventDefault()}>
+          <div className={`flex-1 overflow-y-auto ${styles.results}`} onMouseDown={e => e.preventDefault()}>
             {children.map(childId => {
               const entity = store.entities[childId]
               if (!entity) return null
@@ -146,7 +146,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`${styles.item}${state.focused ? ` ${styles.itemFocused}` : ''}`}
+                  className={`flex-row items-center ${styles.item}${state.focused ? ` ${styles.itemFocused}` : ''}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),
@@ -154,19 +154,19 @@ export function QuickOpen({
                     ]))
                   }}
                 >
-                  <span className={styles.itemIcon}>
+                  <span className={"shrink-0"}>
                     <FileIcon name={fileData.name} type="file" />
                   </span>
-                  <span className={styles.itemText}>
-                    <span className={styles.itemName}>{fileData.name}</span>
-                    <span className={styles.itemPath}>{fileData.relativePath}</span>
+                  <span className={`flex-col flex-1 min-w-0 ${styles.itemText}`}>
+                    <span className={`whitespace-nowrap overflow-hidden ${styles.itemName}`}>{fileData.name}</span>
+                    <span className={`whitespace-nowrap overflow-hidden ${styles.itemPath}`}>{fileData.relativePath}</span>
                   </span>
                 </div>
               )
             })}
           </div>
         ) : (
-          <div className={styles.empty}>일치하는 파일이 없습니다</div>
+          <div className={`flex-row items-center justify-center ${styles.empty}`}>일치하는 파일이 없습니다</div>
         )}
       </div>
     </div>

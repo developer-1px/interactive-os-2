@@ -1,6 +1,4 @@
 .field {
-  display: flex;
-  flex-direction: column;
   gap: var(--space-xs);
   padding: var(--space-sm) var(--space-md);
 }

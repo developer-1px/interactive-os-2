@@ -4,5 +4,5 @@ import type { CodeBlock as CodeBlockType } from './types'
 
 export function ChatCodeBlock({ block }: { block: CodeBlockType }) {
   const filename = block.filename ?? `snippet.${block.language ?? 'txt'}`
-  return <BaseCodeBlock code={block.content} filename={filename} />
+  return <BaseCodeBlock code={block.content} filename={filename} variant="compact" />
 }

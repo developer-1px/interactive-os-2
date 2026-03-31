@@ -67,7 +67,7 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={styles.button}
+        className={`${styles.button} flex-row items-center`}
         data-focused={state.focused || undefined}
       >
         <span className={styles.indicator} aria-hidden="true">

@@ -1,11 +1,9 @@
 .container {
-  position: fixed;
   bottom: var(--space-lg);
   right: var(--space-lg);
   z-index: 9999;
   gap: var(--space-sm);
   max-width: var(--overlay-width);
-  pointer-events: none;
 }
 
 .toast {
@@ -45,11 +43,9 @@
   --_bg: transparent;
   --_bg-hover: var(--bg-hover);
   background: var(--_bg);
-  border: none;
   border-radius: var(--shape-md-radius);
   color: var(--text-secondary);
   font-size: var(--type-body-size);
-  cursor: pointer;
 }
 
 @keyframes slideIn {

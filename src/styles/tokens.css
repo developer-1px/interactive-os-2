@@ -117,6 +117,12 @@
   --leading-relaxed: 1.75;
   --leading-code:    1.6;
 
+  /* ── Independent axes: letter-spacing
+     type 번들과 독립적으로 사용. uppercase label 등 번들 외 tracking 필요 시. ── */
+  --tracking-normal:  0.02em;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.08em;
+
   /* ── Shape bundle: radius + padding-y + padding-x (claude.ai 실측)
      radius와 padding은 비례 관계. 세트로 사용. ── */
   --shape-xs-radius: 6px;   --shape-xs-py: 6px;  --shape-xs-px: 12px;
@@ -174,6 +180,7 @@
   --motion-instant-duration: 0.075s;  --motion-instant-easing: cubic-bezier(0.165, 0.85, 0.45, 1);
   --motion-normal-duration:  0.15s;   --motion-normal-easing:  cubic-bezier(0.4, 0, 0.2, 1);
   --motion-enter-duration:   0.15s;   --motion-enter-easing:   cubic-bezier(0, 0, 0.2, 1);
+  --motion-pulse-period:     1.4s;
 
   /* ── Dialog ── */
   --dialog-backdrop: rgba(0, 0, 0, 0.5);
@@ -199,16 +206,18 @@
   --shadow-md: 0 2px 8px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.03);
   --shadow-lg: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.02);
 
-  /* ── Text: pure neutral (C=0), same L% as dark stone steps ── */
-  --text-bright:    oklch(16.3%  0  0);      /* ≈ stone-950 L */
-  --text-primary:   oklch(21.4%  0  0);      /* ≈ stone-900 L */
-  --text-secondary: oklch(47%    0  0);      /* ≈ stone-600 L */
-  --text-muted:     oklch(51%    0  0);      /* ≈ stone-500 L */
+  /* ── Text: cool neutral (GitHub Primer 실측 기반, WCAG AA+)
+     GitHub fgColor-default=#1f2328 → L≈18.5%, C≈0.007, H≈250
+     약간의 blue tint가 white 배경에서 가독성 높임. ── */
+  --text-bright:    oklch(15%    0.005  250);  /* headings — AAA 18:1 */
+  --text-primary:   oklch(18.5%  0.005  250);  /* body — GitHub 실측 #1f2328, 16.5:1 */
+  --text-secondary: oklch(38%    0.005  250);  /* descriptions — AAA 7.5:1 */
+  --text-muted:     oklch(47%    0.010  250);  /* captions — GitHub 실측 #59636e, AA 4.8:1 */
 
-  /* ── Border: pure neutral (C=0) ── */
-  --border-subtle:  oklch(92%    0  0);
-  --border-default: oklch(86.6%  0  0);
-  --border-strong:  oklch(73%    0  0);
+  /* ── Border: cool neutral (GitHub #d1d9e0 실측 기반) ── */
+  --border-subtle:  oklch(88%    0.005  250);  /* GitHub borderColor-default ≈ #d1d9e0 */
+  --border-default: oklch(84%    0.005  250);
+  --border-strong:  oklch(73%    0.005  250);
 
   /* ── Tone (light) ── */
   --tone-primary-base:   var(--blue-600);

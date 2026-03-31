@@ -26,11 +26,11 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       return <LocalizedText value={data.value as string | LocaleMap} locale={locale} />
     case 'cta':
       return (
-        <div className={s.cmsHeroActions}>
-          <button type="button" className={s.cmsHeroCta}>
+        <div className={`${s.cmsHeroActions} flex-row items-center`}>
+          <button type="button" className={`${s.cmsHeroCta} inline-flex items-center border-none cursor-pointer`}>
             <LocalizedText value={data.primary as string | LocaleMap} locale={locale} /> <ArrowRight size={16} />
           </button>
-          <button type="button" className={s.cmsHeroCtaSecondary}>
+          <button type="button" className={`${s.cmsHeroCtaSecondary} inline-flex items-center cursor-pointer`}>
             <LocalizedText value={data.secondary as string | LocaleMap} locale={locale} /> <ChevronRight size={16} />
           </button>
         </div>
@@ -48,20 +48,20 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
     case 'pattern':
       return (
         <>
-          <div className={s.cmsPatternIcon}><CmsIcon name={data.icon as string} size={12} /></div>
+          <div className={`${s.cmsPatternIcon} flex-row items-center justify-center shrink-0`}><CmsIcon name={data.icon as string} size={12} /></div>
           <span className={s.cmsPatternName}><LocalizedText value={data.name as string | LocaleMap} locale={locale} /></span>
         </>
       )
     case 'brand':
       return (
         <>
-          <div className={s.cmsFooterLogo} />
+          <div className="hidden" />
           <span className={s.cmsFooterName}><LocalizedText value={data.name as string | LocaleMap} locale={locale} /></span>
           <span className={s.cmsFooterCopy}>{data.license as string} License</span>
         </>
       )
     case 'badge':
-      return <><span className={s.cmsHeroBadgeDot} /><LocalizedText value={data.value as string | LocaleMap} locale={locale} /></>
+      return <><span className={`${s.cmsHeroBadgeDot} inline-block`} /><LocalizedText value={data.value as string | LocaleMap} locale={locale} /></>
     case 'section-label':
     case 'section-title':
     case 'section-desc':
@@ -69,23 +69,23 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
     case 'links':
       return null
     case 'link':
-      return <a className={s.cmsFooterLink} href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>
+      return <a className={`${s.cmsFooterLink} no-underline cursor-pointer`} href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>
     case 'tab-item':
       return <LocalizedText value={data.label as LocaleMap} locale={locale} />
 
     // ── Editorial section types ──
     case 'value-item':
       return (
-        <div className={s.cmsValueItemContent}>
-          <div className={s.cmsValueItemIcon}><CmsIcon name={data.icon as string} size={24} /></div>
+        <div className={`${s.cmsValueItemContent} flex-col`}>
+          <div className="hidden"><CmsIcon name={data.icon as string} size={24} /></div>
           <h3 className={s.cmsValueItemTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
           <p className={s.cmsValueItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></p>
         </div>
       )
     case 'quote':
       return (
-        <blockquote className={s.cmsQuoteContent}>
-          <span className={s.cmsQuoteMark}>"</span>
+        <blockquote className={`${s.cmsQuoteContent} border-none`}>
+          <span className={`${s.cmsQuoteMark} block`}>"</span>
           <p className={s.cmsQuoteText}><LocalizedText value={data.text as LocaleMap} locale={locale} /></p>
           <cite className={s.cmsQuoteAttribution}>— <LocalizedText value={data.attribution as LocaleMap} locale={locale} /></cite>
         </blockquote>
@@ -93,12 +93,12 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
     case 'article': {
       const articleImage = data.image as string
       return (
-        <div className={s.cmsArticleContent}>
+        <div className={`${s.cmsArticleContent} flex-row items-center`}>
           {articleImage
-            ? <img src={articleImage} alt="" className={s.cmsArticleImage} />
-            : <div className={s.cmsArticleIcon}><CmsIcon name={data.icon as string} size={20} /></div>
+            ? <img src={articleImage} alt="" className={`${s.cmsArticleImage} object-cover shrink-0`} />
+            : <div className={`${s.cmsArticleIcon} flex-row items-center justify-center shrink-0`}><CmsIcon name={data.icon as string} size={20} /></div>
           }
-          <div className={s.cmsArticleBody}>
+          <div className={`${s.cmsArticleBody} flex-col`}>
             <h3 className={s.cmsArticleTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
             <span className={s.cmsArticleMeta}>
               <LocalizedText value={data.category as LocaleMap} locale={locale} /> · {data.readTime as string}
@@ -109,15 +109,15 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
     }
     case 'showcase-item':
       return (
-        <div className={s.cmsShowcaseItemContent}>
-          <div className={s.cmsShowcaseItemIcon}><CmsIcon name={data.icon as string} size={20} /></div>
+        <div className={`${s.cmsShowcaseItemContent} flex-col`}>
+          <div className={`${s.cmsShowcaseItemIcon} inline-flex items-center justify-center`}><CmsIcon name={data.icon as string} size={20} /></div>
           <span className={s.cmsShowcaseItemLabel}><LocalizedText value={data.label as LocaleMap} locale={locale} /></span>
           <span className={s.cmsShowcaseItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
         </div>
       )
     case 'stat-card':
       return (
-        <div className={s.cmsStatCardContent}>
+        <div className={`${s.cmsStatCardContent} flex-col`}>
           <span className={s.cmsStatCardValue}>{data.value as string}</span>
           <span className={s.cmsStatCardLabel}><LocalizedText value={data.label as LocaleMap} locale={locale} /></span>
           <span className={s.cmsStatCardDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
@@ -125,7 +125,7 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
       )
     case 'section-cta':
       return (
-        <a className={s.cmsSectionCtaLink} href={data.href as string}>
+        <a className={`${s.cmsSectionCtaLink} inline-flex items-center no-underline cursor-pointer`} href={data.href as string}>
           <LocalizedText value={data.label as LocaleMap} locale={locale} /> <ArrowRight size={14} />
         </a>
       )
@@ -133,18 +133,18 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
     case 'hero-image': {
       const src = data.src as string
       return src
-        ? <img src={src} alt={localized(data.alt as string | LocaleMap, locale).text} className={s.cmsHeroImage} />
-        : <div className={s.cmsHeroImagePlaceholder} />
+        ? <img src={src} alt={localized(data.alt as string | LocaleMap, locale).text} className={`${s.cmsHeroImage} w-full object-cover`} />
+        : <div className={`${s.cmsHeroImagePlaceholder} w-full`} />
     }
     case 'image-card':
       return null
     case 'gallery-item': {
       const gSrc = data.image as string
       return (
-        <div className={s.cmsGalleryItemContent}>
+        <div className="flex-col">
           {gSrc
-            ? <img src={gSrc} alt="" className={s.cmsGalleryItemImage} />
-            : <div className={s.cmsGalleryItemPlaceholder} />
+            ? <img src={gSrc} alt="" className={`${s.cmsGalleryItemImage} w-full object-cover`} />
+            : <div className={`${s.cmsGalleryItemPlaceholder} w-full`} />
           }
           <span className={s.cmsGalleryItemCaption}><LocalizedText value={data.caption as string | LocaleMap} locale={locale} /></span>
         </div>
@@ -160,15 +160,15 @@ export function NodeContent({ data, locale }: { data: Record<string, unknown>; l
 
 export function getSectionClassName(variant: string): string {
   switch (variant) {
-    case 'hero':        return s.cmsHero
+    case 'hero':        return `${s.cmsHero} flex-col items-center text-center`
     case 'manifesto':   return s.cmsManifesto
     case 'features':    return s.cmsFeatures
     case 'patterns':    return s.cmsPatterns
     case 'showcase':    return s.cmsShowcase
     case 'journal':     return s.cmsJournal
-    case 'testimonial': return s.cmsTestimonial
-    case 'cta':         return s.cmsCta
-    case 'footer':      return s.cmsFooter
+    case 'testimonial': return `${s.cmsTestimonial} flex-row justify-center`
+    case 'cta':         return `${s.cmsCta} flex-col items-center text-center`
+    case 'footer':      return `${s.cmsFooter} flex-row flex-wrap items-baseline`
     case 'gallery':     return s.cmsGallery
     default: return ''
   }
@@ -181,7 +181,7 @@ export function getNodeClassName(data: Record<string, string>): string {
     case 'stat':         return s.cmsStat
     case 'card':         return s.cmsFeatureCard
     case 'step':         return s.cmsStep
-    case 'pattern':      return s.cmsPattern
+    case 'pattern':      return `${s.cmsPattern} flex-row items-center`
     case 'step-num':     return s.cmsStepNumber
     case 'stat-value':   return s.cmsStatValue
     case 'text': {
@@ -198,24 +198,24 @@ export function getNodeClassName(data: Record<string, string>): string {
     case 'section-label': return s.cmsSectionLabel
     case 'section-title': return s.cmsSectionTitle
     case 'section-desc':  return s.cmsSectionDesc
-    case 'badge':         return s.cmsHeroBadge
+    case 'badge':         return `${s.cmsHeroBadge} inline-flex items-center`
     case 'cta':           return ''
-    case 'icon':          return s.cmsFeatureCardIcon
-    case 'brand':         return s.cmsFooterBrand
-    case 'links':         return s.cmsFooterLinks
+    case 'icon':          return `${s.cmsFeatureCardIcon} flex-row items-center justify-center`
+    case 'brand':         return `${s.cmsFooterBrand} flex-row items-baseline`
+    case 'links':         return `${s.cmsFooterLinks} flex-row`
     case 'link':          return ''
     case 'tab-group':     return s.cmsTabGroup
-    case 'tab-item':      return s.cmsTabItem
+    case 'tab-item':      return `${s.cmsTabItem} border-none cursor-pointer`
     case 'tab-panel':     return s.cmsTabPanel
     case 'value-item':    return s.cmsValueItem
-    case 'quote':         return s.cmsQuote
+    case 'quote':         return `${s.cmsQuote} w-full text-center`
     case 'article':       return s.cmsArticle
     case 'showcase-item': return s.cmsShowcaseItem
     case 'stat-card':     return s.cmsStatCard
-    case 'section-cta':   return s.cmsSectionCta
-    case 'hero-image':    return s.cmsHeroImageWrap
-    case 'image-card':    return s.cmsImageCard
-    case 'gallery-item':  return s.cmsGalleryItem
+    case 'section-cta':   return `${s.cmsSectionCta} flex-row`
+    case 'hero-image':    return `${s.cmsHeroImageWrap} w-full`
+    case 'image-card':    return `${s.cmsImageCard} overflow-hidden`
+    case 'gallery-item':  return `${s.cmsGalleryItem} overflow-hidden`
     default: return ''
   }
 }
@@ -225,12 +225,12 @@ export const HEADER_TYPES = new Set(['section-label', 'section-title', 'section-
 
 export function getChildrenContainerClassName(data: Record<string, string>): string | undefined {
   switch (data.variant) {
-    case 'features': return s.cmsFeaturesGrid
-    case 'patterns': return s.cmsPatternsGrid
-    case 'manifesto': return s.cmsManifestoValues
-    case 'showcase': return s.cmsShowcaseGrid
-    case 'journal': return s.cmsJournalList
-    case 'gallery': return s.cmsGalleryGrid
+    case 'features': return `${s.cmsFeaturesGrid} grid`
+    case 'patterns': return `${s.cmsPatternsGrid} grid`
+    case 'manifesto': return `${s.cmsManifestoValues} grid`
+    case 'showcase': return `${s.cmsShowcaseGrid} grid`
+    case 'journal': return `${s.cmsJournalList} flex-col`
+    case 'gallery': return `${s.cmsGalleryGrid} grid`
     default: return undefined
   }
 }

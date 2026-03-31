@@ -20,7 +20,7 @@
   font-weight: var(--weight-semi);
   font-size: var(--type-body-size);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wide);
   color: var(--text-secondary);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
@@ -95,7 +95,7 @@
   height: 2px;
   width: calc(var(--_loc-ratio, 0) * 100%);
   background: var(--tone-primary-dim);
-  border-radius: 1px;
+  border-radius: var(--border-width);
   opacity: 0.6;
 }
 
@@ -112,18 +112,12 @@
 }
 
 /* ── Card title (truncate) ── */
-.cardTitle {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  min-width: 0;
-}
+.cardTitle { text-overflow: ellipsis; }
 
 /* ── Card subtitle (LOC etc.) ── */
 .cardSubtitle {
   font-size: var(--type-caption-size);
   color: var(--text-muted);
-  flex-shrink: 0;
   margin-left: auto;
   font-variant-numeric: tabular-nums;
 }

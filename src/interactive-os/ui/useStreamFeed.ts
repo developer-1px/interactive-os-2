@@ -40,6 +40,8 @@ export interface UseStreamFeedReturn<T> {
   addItems: (items: T[]) => void
   replay: () => void
   clear: () => void
+  /** Scroll to bottom if user hasn't scrolled up. Call on external data changes. */
+  scrollIfAtBottom: () => void
   /** Number of items waiting in the pacing queue */
   queueSize: number
 }
@@ -100,11 +102,15 @@ export function useStreamFeed<T>(options: UseStreamFeedOptions<T> = {}): UseStre
   }, [])
 
   // Track user scroll position
+  // wasNearBottomRef captures the state BEFORE content changes push the user away from bottom
+  const wasNearBottomRef = useRef(true)
   useEffect(() => {
     const el = feedRef.current
     if (!el) return
     const onScroll = () => {
-      userScrolledUpRef.current = !isNearBottom(el, bottomThreshold)
+      const near = isNearBottom(el, bottomThreshold)
+      userScrolledUpRef.current = !near
+      wasNearBottomRef.current = near
     }
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => el.removeEventListener('scroll', onScroll)
@@ -115,7 +121,7 @@ export function useStreamFeed<T>(options: UseStreamFeedOptions<T> = {}): UseStre
     if (!pendingScrollRef.current) return
     pendingScrollRef.current = false
 
-    if (userScrolledUpRef.current) return
+    if (!wasNearBottomRef.current) return
 
     const el = feedRef.current
     if (!el) return
@@ -221,5 +227,18 @@ export function useStreamFeed<T>(options: UseStreamFeedOptions<T> = {}): UseStre
     return clearTimers
   }, [replay, clearTimers])
 
-  return { items, isStreaming, feedRef, addItem, addItems, replay, clear, queueSize }
+  const scrollIfAtBottom = useCallback(() => {
+    const el = feedRef.current
+    // DEBUG: auto-scroll diagnosis
+    if (el) console.log('[scrollIfAtBottom] wasNearBottom:', wasNearBottomRef.current, 'scrollTop:', el.scrollTop, 'scrollHeight:', el.scrollHeight, 'clientHeight:', el.clientHeight)
+    if (!wasNearBottomRef.current) return
+    if (!el) return
+    if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
+    rafIdRef.current = requestAnimationFrame(() => {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+      rafIdRef.current = 0
+    })
+  }, [])
+
+  return { items, isStreaming, feedRef, addItem, addItems, replay, clear, scrollIfAtBottom, queueSize }
 }

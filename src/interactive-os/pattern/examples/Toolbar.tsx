@@ -37,7 +37,7 @@ const renderButton = (
   return (
     <div
       {...props}
-      className={styles.button}
+      className={`${styles.button} inline-flex items-center justify-center`}
       data-focused={state.focused || undefined}
     >
       {label}

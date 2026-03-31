@@ -25,13 +25,13 @@ export default function CellGridDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">row</span>{' '}
         <kbd><Left /><Right /></kbd> <span className="key-hint">cell</span>{' '}
         <kbd>Home</kbd> <span className="key-hint">first cell</span>{' '}
         <kbd>End</kbd> <span className="key-hint">last cell</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <div className="grid-header" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0, borderBottom: '1px solid var(--border-default)', padding: 'var(--space-xs) var(--space-md)', fontSize: 'var(--type-caption-size)', opacity: 0.6 }}>
           <span>Element</span>
           <span>Role</span>

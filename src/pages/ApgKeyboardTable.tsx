@@ -16,7 +16,7 @@ export function ApgKeyboardTable(props: ApgKeyboardTableProps) {
 function ApgKeyboardTableInner({ pattern, url, entries }: ApgPatternData) {
   return (
     <div className="apg-table-wrap">
-      <table className="apg-table">
+      <table className="apg-table w-full">
         <thead>
           <tr>
             <th>Key</th>

@@ -53,7 +53,7 @@ function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps,
 
   return (
     <div
-      className="cms-template-picker"
+      className="cms-template-picker absolute"
       ref={listRef}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) onClose()
@@ -67,7 +67,7 @@ function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps,
             <div
               key={v.id}
               {...(props as React.HTMLAttributes<HTMLDivElement>)}
-              className={`cms-template-picker__item${state.focused ? ' cms-template-picker__item--focused' : ''}`}
+              className={`cms-template-picker__item flex-row items-center cursor-pointer${state.focused ? ' cms-template-picker__item--focused' : ''}`}
               onPointerEnter={() => aria.dispatch(focusCommands.setFocus(v.id))}
             >
               {v.label}

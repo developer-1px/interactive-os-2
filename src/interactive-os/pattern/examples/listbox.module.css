@@ -6,8 +6,6 @@
   background: var(--surface-sunken);
   padding: var(--space-xs) 0;
   max-height: 240px;
-  overflow-y: auto;
-  outline: none;
 }
 
 .listbox:focus-within {
@@ -15,8 +13,6 @@
 }
 
 .option {
-  display: flex;
-  align-items: center;
   gap: var(--space-sm);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
@@ -31,7 +27,7 @@
   font-size: var(--type-label-size);
   font-weight: var(--weight-bold);
   color: var(--text-primary);
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-normal);
 }
 
 .groupLabel + .groupLabel,
@@ -39,11 +35,7 @@
   margin-top: var(--space-lg);
 }
 
-.groupOptions {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
+.groupOptions { padding: 0; margin: 0; }
 
 /* ── variant: state ── */
 
@@ -68,18 +60,10 @@
 /* ── rearrangeable (dual listbox + toolbar) ── */
 
 .rearrangeable {
-  display: flex;
-  align-items: flex-start;
   gap: var(--space-md);
 }
 
-.listboxZone {
-  flex: 1;
-  min-width: 0;
-}
-
 .zoneLabel {
-  display: block;
   font-size: var(--type-label-size);
   font-weight: var(--type-label-weight);
   color: var(--text-primary);
@@ -87,8 +71,6 @@
 }
 
 .toolbar {
-  display: flex;
-  flex-direction: column;
   gap: var(--space-xs);
   padding-top: var(--space-xl);
 }
@@ -102,7 +84,6 @@
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--shape-xs-radius);
   cursor: default;
-  white-space: nowrap;
 }
 
 .toolbarButton:hover:not(:disabled) {

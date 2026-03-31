@@ -4,10 +4,10 @@ interface SwitchIndicatorProps {
 }
 
 export function SwitchIndicator({ className }: SwitchIndicatorProps) {
-  const classes = ['item-indicator--switch', className].filter(Boolean).join(' ')
+  const classes = ['shrink-0 relative', 'item-indicator--switch', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
-      <span className="item-indicator--switch-thumb" />
+      <span className="absolute item-indicator--switch-thumb" />
     </span>
   )
 }

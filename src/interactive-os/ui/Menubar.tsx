@@ -27,23 +27,23 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
 
   if (children) {
     return (
-      <li role="none" className={styles.item}>
+      <li role="none" className={"relative"}>
         <a
           {...props}
           href="#"
-          className={styles.link}
+          className={`flex-row items-center no-underline whitespace-nowrap outline-none ${styles.link}`}
           data-focused={state.focused || undefined}
           onClick={e => e.preventDefault()}
         >
           <span>{label}</span>
-          <span className={styles.indicator} aria-hidden="true">
+          <span className={`flex-row ${styles.indicator}`} aria-hidden="true">
             {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
           </span>
         </a>
         <ul
           role="menu"
           aria-label={label}
-          className={isRoot ? styles.submenuRoot : styles.submenuNested}
+          className={`absolute list-none ${isRoot ? styles.submenuRoot : styles.submenuNested}`}
           style={{ display: state.expanded ? undefined : 'none' }}
         >
           {children}
@@ -53,17 +53,17 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
   }
 
   return (
-    <li role="none" className={styles.item}>
+    <li role="none" className={"relative"}>
       <a
         {...props}
         href="#"
-        className={styles.link}
+        className={`flex-row items-center no-underline whitespace-nowrap outline-none ${styles.link}`}
         data-focused={state.focused || undefined}
         onClick={e => e.preventDefault()}
       >
         <span>{label}</span>
         {hasChildren && (
-          <span className={styles.indicator} aria-hidden="true">
+          <span className={`flex-row ${styles.indicator}`} aria-hidden="true">
             {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
           </span>
         )}

@@ -260,8 +260,8 @@ export function DatePicker({
   }, [cells, focusDayIndex, onChange, closeDialog])
 
   return (
-    <div className={styles.datepicker}>
-      <div className={styles.comboboxGroup}>
+    <div className={"relative inline-block"}>
+      <div className={"flex-row items-center"}>
         <input
           ref={inputRef}
           role="combobox"
@@ -269,7 +269,7 @@ export function DatePicker({
           aria-expanded={isOpen}
           aria-label={ariaLabel}
           aria-autocomplete="none"
-          className={styles.input}
+          className={`outline-none ${styles.input}`}
           type="text"
           readOnly
           value={value ? formatDate(value) : ''}
@@ -278,7 +278,7 @@ export function DatePicker({
           onKeyDown={(e) => { if (e.key === 'ArrowDown') { e.preventDefault(); openDialog() } }}
         />
         <button
-          className={styles.triggerButton}
+          className={`flex-row items-center ${styles.triggerButton}`}
           aria-label="Choose Date"
           tabIndex={-1}
           onClick={() => isOpen ? closeDialog() : openDialog()}
@@ -294,21 +294,21 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={styles.dialog}
+          className={`absolute ${styles.dialog}`}
           onKeyDown={handleDialogKeyDown}
         >
-          <div className={styles.navBar}>
-            <button className={styles.navButton} aria-label="Previous Year" onClick={() => setYear(y => y - 1)}>
+          <div className={`flex-row items-center ${styles.navBar}`}>
+            <button className={`flex-row items-center justify-center ${styles.navButton}`} aria-label="Previous Year" onClick={() => setYear(y => y - 1)}>
               <ChevronsLeft size="1em" />
             </button>
-            <button className={styles.navButton} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
+            <button className={`flex-row items-center justify-center ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
               <ChevronLeft size="1em" />
             </button>
-            <span className={styles.monthYear} aria-live="polite">{MONTHS[month]} {year}</span>
-            <button className={styles.navButton} aria-label="Next Month" onClick={() => changeMonth(1)}>
+            <span className={`flex-1 text-center ${styles.monthYear}`} aria-live="polite">{MONTHS[month]} {year}</span>
+            <button className={`flex-row items-center justify-center ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
               <ChevronRight size="1em" />
             </button>
-            <button className={styles.navButton} aria-label="Next Year" onClick={() => setYear(y => y + 1)}>
+            <button className={`flex-row items-center justify-center ${styles.navButton}`} aria-label="Next Year" onClick={() => setYear(y => y + 1)}>
               <ChevronsRight size="1em" />
             </button>
           </div>
@@ -324,7 +324,7 @@ export function DatePicker({
             />
           </div>
 
-          <div className={styles.actions}>
+          <div className={`flex-row justify-end ${styles.actions}`}>
             <button className={styles.actionButton} onClick={() => closeDialog()}>Cancel</button>
             <button className={styles.actionButton} onClick={confirmFocused}>OK</button>
           </div>

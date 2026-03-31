@@ -69,7 +69,7 @@ const renderTreeitem = (
 
   return (
     <div
-      className={styles.treeitem}
+      className={`${styles.treeitem} flex-row items-center whitespace-nowrap outline-none`}
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >

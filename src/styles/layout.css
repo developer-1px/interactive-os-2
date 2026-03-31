@@ -5,45 +5,32 @@
 .activity-bar {
   width: 48px;
   background: var(--surface-sunken);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 6px 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  gap: 1px;
+  padding: var(--shape-xs-py) 0;
+  gap: var(--border-width);
 }
 
 .activity-bar__logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 48px;
   height: 36px;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-xs);
 }
 
 .activity-bar__logo .logo-mark {
   width: 10px;
   height: 10px;
   background: var(--blue-500);
-  border-radius: 3px;
+  border-radius: var(--space-inline-code);
   box-shadow: 0 0 8px var(--tone-primary-bright);
 }
 
 .activity-bar__theme-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 32px;
   height: 32px;
   background: none;
-  border: none;
   border-radius: var(--shape-xl-radius);
   color: var(--text-muted);
-  cursor: pointer;
   transition: color 0.12s, background 0.12s;
-  margin-bottom: 6px;
+  margin-bottom: var(--shape-xs-py);
 }
 
 .activity-bar__theme-toggle:hover {
@@ -52,16 +39,11 @@
 }
 
 .activity-bar__item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 36px;
   height: 36px;
   color: var(--text-muted);
-  text-decoration: none;
   border-radius: var(--shape-xl-radius);
   transition: color 0.12s, background 0.12s;
-  position: relative;
 }
 
 .activity-bar__item:hover {
@@ -90,7 +72,7 @@
   width: 16px;
   height: 1px;
   background: var(--border-subtle);
-  margin: 4px auto;
+  margin: var(--space-xs) auto;
 }
 
 .activity-bar__util {
@@ -105,37 +87,20 @@
    콘텐츠가 부모를 밀지 못하게 한다. Content는 이걸 몰라도 됨.
 */
 
-.page > *,
-.page-content > *,
-.sidebar-layout > * {
-  min-width: 0;
-  min-height: 0;
-}
+.page > *, .page-content > *, .sidebar-layout > * { min-width: 0; min-height: 0; }
 
-.page-content > * {
-  flex: 1;
-}
+.page-content > * { flex: 1; }
 
 .page {
-  display: flex;
   height: 100svh;
-  overflow: hidden;
   background: var(--surface-base);
-}
-
-.sidebar-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
 }
 
 .sidebar {
   width: 192px;
-  flex-shrink: 0;
   background: var(--surface-sunken);
   border-right: 1px solid var(--border-subtle);
   padding: var(--space-md) 0;
-  overflow-y: auto;
 }
 
 .sidebar-header {
@@ -151,28 +116,20 @@
 .sidebar-section-title {
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-normal);
   color: var(--text-muted);
   padding: var(--space-md) var(--space-md) var(--space-xs);
   margin-bottom: 0;
 }
 
-.sidebar-nav {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+.sidebar-nav { padding: 0; margin: 0; }
 
 .sidebar-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
-  margin: 1px var(--space-sm);
+  margin: var(--border-width) var(--space-sm);
   font-size: var(--type-body-size);
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
-  text-decoration: none;
   transition: color 0.08s, background 0.08s;
   border-radius: var(--shape-md-radius);
 }
@@ -189,23 +146,15 @@
   font-weight: var(--weight-semi);
   color: var(--text-muted);
   background: var(--surface-base);
-  padding: 1px 5px;
+  padding: var(--border-width) var(--space-xs);
   border-radius: var(--shape-xl-radius);
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tracking-normal);
 }
 
 .content {
-  flex: 1;
   padding: var(--space-2xl) var(--space-3xl);
   background: var(--surface-default);
   box-shadow: var(--shadow-md);
-  overflow-y: auto;
 }
 
 /* Outlet wrapper — ActivityBar 옆의 콘텐츠 영역 */
-.page-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}

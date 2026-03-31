@@ -148,10 +148,10 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const hasOverlay = !disabled && (commandHighlight > 0 || !!ghostText)
 
   return (
-    <div className={styles.composer}>
-      <div className={styles.inputWrap} data-disabled={disabled || undefined}>
+    <div className={"flex-row shrink-0"}>
+      <div className={`flex-1 relative ${styles.inputWrap}`} data-disabled={disabled || undefined}>
         {hasSuggestions && (
-          <ul className={styles.suggestionList} role="listbox" aria-label="Command suggestions">
+          <ul className={`absolute list-none overflow-y-auto ${styles.suggestionList}`} role="listbox" aria-label="Command suggestions">
             {suggestions!.map(cmd => {
               const nodeProps = aria.getNodeProps(cmd) as Record<string, unknown>
               const state = aria.getNodeState(cmd)
@@ -161,7 +161,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
                   ref={state.focused ? el => el?.scrollIntoView({ block: 'nearest' }) : undefined}
                   role="option"
                   aria-selected={state.focused}
-                  className={styles.suggestionItem}
+                  className={`cursor-pointer ${styles.suggestionItem}`}
                   data-selected={state.focused || undefined}
                   data-node-id={nodeProps['data-node-id'] as string}
                 >
@@ -171,10 +171,10 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             })}
           </ul>
         )}
-        <div className={styles.editorArea}>
+        <div className={"relative"}>
           <div
             ref={ref}
-            className={styles.editor}
+            className={`overflow-y-auto outline-none ${styles.editor}`}
             contentEditable={!disabled}
             role="textbox"
             aria-multiline="true"
@@ -188,7 +188,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             suppressContentEditableWarning
           />
           {hasOverlay && (
-            <div className={styles.overlay} aria-hidden="true">
+            <div className={`absolute inset-0 pointer-events-none ${styles.overlay}`} aria-hidden="true">
               {commandHighlight > 0 && (
                 <span className={styles.commandMatch}>{overlayText.slice(0, commandHighlight)}</span>
               )}

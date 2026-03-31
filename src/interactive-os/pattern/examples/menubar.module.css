@@ -8,7 +8,6 @@
 .header {
   padding: var(--space-xl) var(--space-lg);
   background: var(--tone-primary-dim);
-  text-align: center;
 }
 
 .title {
@@ -43,36 +42,24 @@
 
 /* ── menubar item ── */
 
-.item {
-  position: relative;
-}
-
 .link {
-  display: flex;
-  align-items: center;
   gap: var(--space-xs);
   padding: var(--shape-xs-py) var(--shape-sm-px);
   font-size: var(--type-body-size);
   font-weight: var(--type-body-weight);
   line-height: var(--type-body-line-height);
   color: var(--text-primary);
-  text-decoration: none;
   cursor: default;
-  white-space: nowrap;
-  outline: none;
   border: 2px solid transparent;
 }
 
 .indicator {
-  display: flex;
   color: var(--text-muted);
 }
 
 /* ── submenu panel ── */
 
 .submenu {
-  position: absolute;
-  list-style: none;
   padding: var(--space-xs) 0;
   margin: 0;
   min-width: 180px;

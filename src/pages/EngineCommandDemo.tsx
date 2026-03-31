@@ -87,14 +87,14 @@ export default function EngineCommandDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}
         <kbd>Del</kbd> <span className="key-hint">delete</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <ListBox
           data={data}
           onChange={setData}
@@ -102,7 +102,7 @@ export default function EngineCommandDemo() {
           renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [
-              'list-item',
+              'list-item flex-row items-center justify-between',
               state.focused && 'list-item--focused',
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')

@@ -1,8 +1,6 @@
 /* ── base ── */
 
 .option {
-  display: flex;
-  align-items: center;
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
   color: var(--text-primary);

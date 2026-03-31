@@ -1,20 +1,13 @@
 .splitContainer {
-  display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
   gap: var(--space-md);
   min-height: 400px;
 }
 
-.panel {
-  min-height: 0;
-  overflow: auto;
-}
-
 .logPanel {
   grid-column: 1 / -1;
   max-height: 200px;
-  overflow-y: auto;
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   line-height: var(--leading-normal);
@@ -24,7 +17,6 @@
 }
 
 .logEntry {
-  white-space: nowrap;
   opacity: 0.9;
 }
 
@@ -40,7 +32,7 @@
 .panelLabel {
   font-size: var(--type-caption-size);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--tracking-wide);
   opacity: 0.5;
   margin-bottom: var(--space-sm);
 }

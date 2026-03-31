@@ -59,7 +59,7 @@ export function Tooltip({ content, children }: TooltipProps): ReactNode {
         id={id}
         popover="hint"
         role="tooltip"
-        className={styles.tooltip}
+        className={`fixed ${styles.tooltip}`}
         style={{ positionAnchor: anchorName } as CSSProperties}
       >
         {content}

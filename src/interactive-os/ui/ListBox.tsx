@@ -20,7 +20,7 @@ interface ListBoxProps extends AriaComponentProps {
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={styles.item} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
+    <div {...props} className={`flex-row items-center ${styles.item}`} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
       <span className={styles.label}>{label}</span>
     </div>
   )

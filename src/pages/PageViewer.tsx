@@ -39,7 +39,7 @@ function FilePanel({ path }: { path: string }) {
   const isMarkdown = filename.endsWith('.md')
 
   return (
-    <div ref={bodyRef} className={styles.vwContentCode}>
+    <div ref={bodyRef} className="flex-1 overflow-auto min-w-0">
       {isMarkdown
         ? <MarkdownViewer content={content} />
         : <CodeBlock code={content} filename={filename} variant="flush" />
@@ -335,7 +335,7 @@ export default function PageViewer() {
 
   if (loading || !initialStore) {
     return (
-      <div className={styles.vwLoading}>
+      <div className={`${styles.vwLoading} flex-row items-center justify-center`}>
         <Circle size={12} className={styles.vwLoadingSpinner} />
         <span>Loading project...</span>
       </div>
@@ -344,13 +344,13 @@ export default function PageViewer() {
 
   return (
     <AriaRoute keyMap={quickOpenKeyMap}>
-    <div className={styles.vw} onKeyDown={handleLayoutKeyDown}>
+    <div className="flex-row h-full min-h-0" onKeyDown={handleLayoutKeyDown}>
       {/* Tree panel (sidebar) */}
-        <div className={styles.vwTree} style={{ width: treeResizer.size }}>
-          <div className={styles.vwTreeHeader}>
+        <div className={`${styles.vwTree} flex-col shrink-0`} style={{ width: treeResizer.size }}>
+          <div className={`${styles.vwTreeHeader} flex-row items-center justify-between shrink-0`}>
             <span className={styles.vwTreeHeaderTitle}>Explorer</span>
           </div>
-          <div className={styles.vwTreeBody}>
+          <div className={`${styles.vwTreeBody} flex-1 overflow-y-auto overflow-x-hidden`}>
             <TreeView
               data={initialStore}
               plugins={[]}
@@ -360,18 +360,18 @@ export default function PageViewer() {
               renderItem={(props, node, state) => {
                 const data = node.data as FileNodeData
                 return (
-                  <div className={styles.vwTreeItem}>
+                  <div className={`${styles.vwTreeItem} flex-row items-center whitespace-nowrap`}>
                     {data.type === 'directory' ? (
-                      <span className={styles.vwTreeChevron} {...props.toggleProps}>
+                      <span className={`${styles.vwTreeChevron} inline-flex items-center justify-center shrink-0`} {...props.toggleProps}>
                         {state.expanded
                           ? <ChevronDown size={12} />
                           : <ChevronRight size={12} />}
                       </span>
                     ) : (
-                      <span className={styles.vwTreeChevron} />
+                      <span className={`${styles.vwTreeChevron} inline-flex items-center justify-center shrink-0`} />
                     )}
                     <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
-                    <span className={`${styles.vwTreeName}${data.type === 'directory' ? ` ${styles.vwTreeNameDir}` : ''}`}>
+                    <span className={`${styles.vwTreeName} overflow-hidden${data.type === 'directory' ? ` ${styles.vwTreeNameDir}` : ''}`}>
                       {data.name}
                     </span>
                   </div>
@@ -383,14 +383,14 @@ export default function PageViewer() {
         <div className="resizer-handle" aria-label="Resize explorer" {...treeResizer.separatorProps} />
 
       {/* Content panel */}
-      <div className={styles.vwContent}>
-        <div className={styles.vwContentHeader}>
-          <div className={styles.vwContentHeaderLeft}>
+      <div className={`${styles.vwContent} flex-col flex-1 min-w-0 overflow-hidden`}>
+        <div className={`${styles.vwContentHeader} flex-row items-center justify-between shrink-0`}>
+          <div className={`${styles.vwContentHeaderLeft} flex-row items-center`}>
             {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
           </div>
-          <div className={styles.vwContentHeaderRight}>
+          <div className={`${styles.vwContentHeaderRight} flex-row items-center`}>
             <button
-              className={styles.vwStatusbarBtn}
+              className={`${styles.vwStatusbarBtn} flex-row items-center justify-center border-none cursor-pointer`}
               onClick={() => setQuickOpenVisible(true)}
               title="Quick Open (Cmd+P)"
             >

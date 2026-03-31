@@ -1,20 +1,11 @@
 /* ── Block 1: base ── */
-.root {
-  display: flex;
-  flex-direction: column;
-}
-
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: var(--shape-sm-py) var(--shape-sm-px);
   font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
   font-family: var(--type-body-family);
   line-height: var(--type-body-line-height);
   color: var(--text-primary);
-  cursor: pointer;
   user-select: none;
 }
 
@@ -24,17 +15,11 @@
 
 .chevron {
   color: var(--text-muted);
-  flex-shrink: 0;
   transition: transform var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
 .chevronExpanded {
   transform: rotate(90deg);
-}
-
-.panel {
-  display: flex;
-  flex-direction: column;
 }
 
 .item {

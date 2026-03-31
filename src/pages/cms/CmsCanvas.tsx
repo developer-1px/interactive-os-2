@@ -330,7 +330,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           onClick={(e) => handleNodeClick(nodeId, e)}
           className={className}
         >
-          <div className={landingStyles.cmsTablist} role="tablist">
+          <div className={`${landingStyles.cmsTablist} flex-row`} role="tablist">
             {tabItems.map(tabId => {
               const tabEntity = currentStore.entities[tabId]
               if (!tabEntity) return null
@@ -447,7 +447,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
   }, [aria])
 
   return (
-    <div ref={containerRef} className={`cms-landing ${landingStyles.cmsLanding}`} data-cms-root data-aria-container="" style={{ position: 'relative' }}>
+    <div ref={containerRef} className={`cms-landing ${landingStyles.cmsLanding} w-full overflow-x-hidden relative`} data-cms-root data-aria-container="">
       {getChildren(currentStore, ROOT_ID).map(id => renderNode(id))}
       <SelectionOverlay
         containerRef={containerRef}

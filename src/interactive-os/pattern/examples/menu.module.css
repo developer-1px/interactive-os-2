@@ -1,8 +1,6 @@
 /* ── base ── */
 
 .menuitem {
-  display: flex;
-  align-items: center;
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-size: var(--type-body-size);
   font-weight: var(--type-body-weight);
@@ -18,8 +16,6 @@
 }
 
 .trigger {
-  display: inline-flex;
-  align-items: center;
   gap: var(--space-xs);
   padding: var(--shape-xs-py) var(--shape-sm-px);
   font-size: var(--type-body-size);

@@ -1,12 +1,6 @@
 /* StreamFeed — streaming feed container
    ② 2026-03-25-stream-feed-prd.md */
 
-/* --- Wrapper: positions FAB relative to feed --- */
-
-.feedWrapper {
-  position: relative;
-}
-
 /* --- Container: :where() for specificity 0 defaults --- */
 
 :where(.feed) {
@@ -16,7 +10,6 @@
 /* --- Entry animation --- */
 
 .entry {
-  min-width: 0;
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
 }
 
@@ -66,7 +59,6 @@
 /* --- Scroll to bottom FAB --- */
 
 .scrollFab {
-  position: absolute;
   bottom: var(--space-md);
   left: 50%;
   transform: translateX(-50%);
@@ -78,8 +70,7 @@
   border: 1px solid var(--border-default);
   border-radius: var(--shape-pill-radius);
   color: var(--text-secondary);
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+  box-shadow: var(--shadow-md);
   transition:
     background var(--motion-instant-duration) var(--motion-instant-easing),
     color var(--motion-instant-duration) var(--motion-instant-easing);
@@ -90,7 +81,6 @@
 /* --- Stream cursor (blinking caret) --- */
 
 .cursor {
-  display: inline-block;
   width: 2px;
   height: 1em;
   background: var(--tone-primary-base);

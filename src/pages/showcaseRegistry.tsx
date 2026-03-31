@@ -25,6 +25,7 @@ import { Toolbar } from '../interactive-os/ui/Toolbar'
 import { TreeGrid } from '../interactive-os/ui/TreeGrid'
 import { TreeView } from '../interactive-os/ui/TreeView'
 import { Form } from '../interactive-os/ui/Form'
+import { MenuButton } from '../interactive-os/ui/MenuButton'
 import { Toaster } from '../interactive-os/ui/Toaster'
 import { createToaster } from '../interactive-os/ui/createToaster'
 
@@ -34,7 +35,7 @@ import {
   makeListBoxData, makeMenuListData, makeNavListData, makeRadioGroupData, makeSliderData,
   makeSpinbuttonData, makeSwitchGroupData, makeTabListData, makeToggleData,
   makeToggleGroupData, makeToolbarData, makeTreeGridData, makeTreeViewData,
-  makeFormData,
+  makeFormData, makeMenuButtonData,
 } from './showcaseFixtures'
 
 // --- Toast demo ---
@@ -154,6 +155,12 @@ export const components: ComponentEntry[] = [
     makeData: makeListBoxData,
     render: (data, onChange) => <ListBox data={data} onChange={onChange} />,
     testPath: 'src/interactive-os/__tests__/listbox-keyboard.integration.test',
+  },
+  {
+    slug: 'menu-button',
+    makeData: makeMenuButtonData,
+    render: (data, onChange) => <MenuButton data={data} onChange={onChange} />,
+    testPath: 'src/interactive-os/__tests__/menu-button-apg.conformance.test',
   },
   {
     slug: 'menu-list',

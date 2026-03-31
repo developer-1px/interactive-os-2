@@ -13,10 +13,10 @@ type MenuListProps = AriaComponentProps
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
+    <div {...props} className={"flex-row items-center justify-between"} data-focused={state.focused || undefined}>
       <span className={styles.label}>{label}</span>
       {state.expanded !== undefined && (
-        <span className={styles.indicator}>
+        <span className={`flex-row items-center ${styles.indicator}`}>
           <ExpandIndicator expanded={state.expanded} />
         </span>
       )}

@@ -1,8 +1,6 @@
 /* ── base ── */
 
 .tab {
-  display: inline-flex;
-  align-items: center;
   padding: var(--shape-xs-py) var(--shape-sm-px);
   font-size: var(--type-body-size);
   font-weight: var(--type-body-weight);

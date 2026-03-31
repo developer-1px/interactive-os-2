@@ -59,24 +59,24 @@ export function CarouselPrevNext() {
       ref={containerRef}
       aria-roledescription="carousel"
       aria-label="Highlighted features"
-      className={styles.carousel}
+      className={`${styles.carousel} overflow-hidden`}
       onFocus={onFocusIn}
       onBlur={onFocusOut}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className={styles.controls}>
+      <div className={`${styles.controls} flex-row justify-end`}>
         <button
-          className={styles.rotationButton}
+          className={`${styles.rotationButton} flex-row items-center justify-center`}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
           {isRotating ? <Pause size="1em" /> : <Play size="1em" />}
         </button>
-        <button className={styles.rotationButton} aria-label="Previous Slide" onClick={prev}>
+        <button className={`${styles.rotationButton} flex-row items-center justify-center`} aria-label="Previous Slide" onClick={prev}>
           <ChevronLeft size="1em" />
         </button>
-        <button className={styles.rotationButton} aria-label="Next Slide" onClick={next}>
+        <button className={`${styles.rotationButton} flex-row items-center justify-center`} aria-label="Next Slide" onClick={next}>
           <ChevronRight size="1em" />
         </button>
       </div>
@@ -93,7 +93,7 @@ export function CarouselPrevNext() {
         </div>
       </div>
 
-      <div className={styles.indicator} aria-hidden="true">
+      <div className={`${styles.indicator} text-center`} aria-hidden="true">
         {currentIndex + 1} / {slides.length}
       </div>
     </section>

@@ -49,7 +49,7 @@ const renderTab = (
     <div>
       <button
         {...props}
-        className={styles.tab}
+        className={`${styles.tab} outline-none`}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
       >
@@ -120,15 +120,15 @@ export function CarouselTabs() {
       ref={containerRef}
       aria-roledescription="carousel"
       aria-label="Highlighted features"
-      className={styles.carousel}
+      className={`${styles.carousel} overflow-hidden`}
       onFocus={onFocusIn}
       onBlur={onFocusOut}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className={styles.controls}>
+      <div className={`${styles.controls} flex-row justify-end`}>
         <button
-          className={styles.rotationButton}
+          className={`${styles.rotationButton} flex-row items-center justify-center`}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
@@ -151,7 +151,7 @@ export function CarouselTabs() {
         </Aria>
       </div>
 
-      <div className={styles.indicator} aria-hidden="true">
+      <div className={`${styles.indicator} text-center`} aria-hidden="true">
         {slideIndex} / {slides.length}
       </div>
     </section>

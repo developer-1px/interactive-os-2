@@ -7,7 +7,7 @@ interface GripIndicatorProps {
 }
 
 export function GripIndicator({ orientation = 'vertical', className }: GripIndicatorProps) {
-  const classes = ['item-indicator--grip', className].filter(Boolean).join(' ')
+  const classes = ['inline-flex items-center justify-center', 'item-indicator--grip', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       {orientation === 'vertical' ? <GripVertical size="1em" /> : <GripHorizontal size="1em" />}

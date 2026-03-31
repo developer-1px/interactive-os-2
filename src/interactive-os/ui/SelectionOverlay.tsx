@@ -31,13 +31,13 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
   if (rects.length === 0) return null
 
   return (
-    <div className={s.overlay}>
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {rects.map((tr) => {
         const label = labelFn?.(tr.id, tr)
         return (
           <div
             key={`${tr.kind}-${tr.id}`}
-            className={`${s.rect} ${kindClass[tr.kind]}`}
+            className={`absolute ${s.rect} ${kindClass[tr.kind]}`}
             style={{
               left: tr.x,
               top: tr.y,
@@ -47,7 +47,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
           >
             {label && (
               <div
-                className={s.label}
+                className={`absolute whitespace-nowrap pointer-events-none ${s.label}`}
                 style={{ bottom: '100%', left: 0 }}
               >
                 {label}

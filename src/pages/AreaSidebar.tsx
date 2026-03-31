@@ -129,7 +129,7 @@ export function AreaSidebar({ layer }: { layer: string }) {
     const hasChildren = state.expanded !== undefined
     return (
       <span className="inline-flex items-center gap-sm">
-        <span className="item-chevron item-chevron--tree">
+        <span className="inline-flex items-center justify-center shrink-0 item-chevron item-chevron--tree">
           {hasChildren ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
         </span>
         <span>{(node.data as Record<string, unknown>)?.name as string}</span>
@@ -140,26 +140,26 @@ export function AreaSidebar({ layer }: { layer: string }) {
   if (!sidebarData) {
     // No L3 items for this layer — no sidebar
     return (
-      <nav className="sidebar">
+      <nav className="sidebar shrink-0 overflow-y-auto">
         <div className="sidebar-header">
-          <div className="logo">
+          <div className="logo flex-row items-center">
             <div className="logo-mark" />
             <h1>interactive-os</h1>
           </div>
-          <span className="version">v0.1.0</span>
+          <span className="version inline-block align-middle">v0.1.0</span>
         </div>
       </nav>
     )
   }
 
   return (
-    <nav className="sidebar">
+    <nav className="sidebar shrink-0 overflow-y-auto">
       <div className="sidebar-header">
-        <div className="logo">
+        <div className="logo flex-row items-center">
           <div className="logo-mark" />
           <h1>interactive-os</h1>
         </div>
-        <span className="version">v0.1.0</span>
+        <span className="version inline-block align-middle">v0.1.0</span>
       </div>
       <div className="sidebar-section-title">{tree!.label}</div>
       <TreeView

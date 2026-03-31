@@ -11,9 +11,7 @@
   font-size: var(--type-body-size);
   color: var(--text-secondary);
   background: transparent;
-  border: none;
   border-radius: var(--shape-xs-radius);
-  cursor: pointer;
   transition: background var(--motion-instant-duration) var(--motion-instant-easing), color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 

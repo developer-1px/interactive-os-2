@@ -1,13 +1,16 @@
 /* ChatFeed — chat message bubbles
    ② 2026-03-27-chat-module-prd.md */
 
+/* --- Shared indent for icon alignment --- */
+
+:root {
+  --chat-indent: calc(var(--icon-sm) + var(--space-sm));
+}
+
 /* --- Message wrapper --- */
 
 .chatMessage {
-  display: flex;
-  flex-direction: column;
   gap: var(--space-xs);
-  max-width: 720px;
 }
 
 /* --- User bubble --- */
@@ -25,10 +28,19 @@
   border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
 }
 
+/* --- System (tool use, results, errors) --- */
+
+.chatSystem {
+  font-size: var(--type-caption-size);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
 /* --- Assistant bubble --- */
 
 .chatAssistant {
-  padding: var(--space-xs) var(--space-md);
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
   font-size: var(--type-body-size);
   line-height: var(--leading-relaxed);
   color: var(--text-primary);

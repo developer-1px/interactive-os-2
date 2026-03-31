@@ -41,7 +41,7 @@ const EXT_TO_LANG: Record<string, string> = {
   sh: 'bash', bash: 'bash', py: 'python', md: 'markdown',
 }
 
-export function CodeBlock({ code, filename, highlightLines, variant = 'bordered' }: { code: string; filename: string; highlightLines?: Set<number>; variant?: 'bordered' | 'flush' }) {
+export function CodeBlock({ code, filename, highlightLines, variant = 'bordered' }: { code: string; filename: string; highlightLines?: Set<number>; variant?: 'bordered' | 'flush' | 'compact' }) {
   const [html, setHtml] = useState('')
   const [highlightToken, setHighlightToken] = useState<string | null>(null)
   const currentTheme = useShikiTheme()
@@ -100,7 +100,11 @@ export function CodeBlock({ code, filename, highlightLines, variant = 'bordered'
     }
   }, [highlightToken, html])
 
-  const cls = variant === 'flush' ? `${styles.codeBlock} ${styles.codeBlockFlush}` : styles.codeBlock
+  const cls = variant === 'flush'
+    ? `overflow-hidden ${styles.codeBlock} ${styles.codeBlockFlush}`
+    : variant === 'compact'
+      ? `overflow-hidden ${styles.codeBlock} ${styles.codeBlockCompact}`
+      : `overflow-hidden ${styles.codeBlock}`
   if (!html) return <pre className={`${cls} ${styles.codeBlockLoading}`}><code>{code}</code></pre>
   return (
     <div

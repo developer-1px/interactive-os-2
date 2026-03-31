@@ -1,12 +1,10 @@
 /* ── datepicker wrapper ── */
 
 .datepicker {
-  position: relative;
-  display: inline-block;
+  font-size: var(--type-body-size);
 }
 
 .label {
-  display: block;
   font-size: var(--type-body-size);
   font-weight: var(--type-label-weight);
   color: var(--text-primary);
@@ -14,11 +12,6 @@
 }
 
 /* ── combobox input + trigger ── */
-
-.comboboxGroup {
-  display: flex;
-  align-items: center;
-}
 
 .input {
   padding: var(--shape-xs-py) var(--shape-sm-px);
@@ -28,7 +21,6 @@
   background: var(--surface-default);
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--shape-xs-radius) 0 0 var(--shape-xs-radius);
-  outline: none;
 }
 
 .input:focus {
@@ -36,8 +28,6 @@
 }
 
 .triggerButton {
-  display: flex;
-  align-items: center;
   padding: var(--shape-xs-py) var(--shape-xs-px);
   color: var(--text-secondary);
   background: var(--surface-default);
@@ -50,7 +40,6 @@
 /* ── dialog ── */
 
 .dialog {
-  position: absolute;
   top: 100%;
   left: 0;
   z-index: 10;
@@ -65,16 +54,11 @@
 /* ── nav bar (month/year buttons) ── */
 
 .navBar {
-  display: flex;
-  align-items: center;
   gap: var(--space-xs);
   margin-bottom: var(--space-sm);
 }
 
 .navButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 28px;
   height: 28px;
   padding: 0;
@@ -95,8 +79,6 @@
 }
 
 .monthYear {
-  flex: 1;
-  text-align: center;
   font-size: var(--type-body-size);
   font-weight: var(--type-label-weight);
   color: var(--text-primary);
@@ -114,20 +96,17 @@
   font-size: var(--type-caption-size);
   font-weight: var(--type-label-weight);
   color: var(--text-muted);
-  text-align: center;
   width: 36px;
 }
 
 .day {
   width: 36px;
   height: 36px;
-  text-align: center;
   font-size: var(--type-body-size);
   color: var(--text-primary);
   cursor: default;
   border-radius: var(--shape-xs-radius);
   border: 2px solid transparent;
-  outline: none;
 }
 
 /* ── variant: state ── */
@@ -152,8 +131,6 @@
 /* ── action buttons ── */
 
 .actions {
-  display: flex;
-  justify-content: flex-end;
   gap: var(--space-sm);
 }
 

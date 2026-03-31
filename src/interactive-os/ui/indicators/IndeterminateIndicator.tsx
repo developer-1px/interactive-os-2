@@ -10,7 +10,7 @@ const dashIcon = (
 )
 
 export function IndeterminateIndicator({ className }: IndeterminateIndicatorProps) {
-  const classes = ['item-indicator--checkbox', className].filter(Boolean).join(' ')
+  const classes = ['shrink-0 flex-row items-center justify-center', 'item-indicator--checkbox', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       {dashIcon}

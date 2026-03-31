@@ -7,7 +7,7 @@ interface DirectionIndicatorProps {
 }
 
 export function DirectionIndicator({ direction, className }: DirectionIndicatorProps) {
-  const classes = ['item-indicator--direction', className].filter(Boolean).join(' ')
+  const classes = ['inline-flex items-center justify-center', 'item-indicator--direction', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       {direction === 'prev' ? <ChevronLeft size="1em" /> : <ChevronRight size="1em" />}

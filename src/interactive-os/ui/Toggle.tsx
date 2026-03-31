@@ -13,7 +13,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const checked = state.expanded ?? false
   return (
-    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
+    <div {...props} className={"flex-row items-center justify-between"} data-focused={state.focused || undefined}>
       <span className={styles.label}>{label}</span>
       <span className={styles.status} data-checked={checked || undefined}>{checked ? 'On' : 'Off'}</span>
     </div>

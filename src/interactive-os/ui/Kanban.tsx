@@ -121,9 +121,9 @@ export function Kanban({
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
-                      <span className={styles.cardTitle}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
+                      <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.cardTitle}`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
                       {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
-                        <span className={styles.cardSubtitle}>
+                        <span className={`shrink-0 ${styles.cardSubtitle}`}>
                           {cardSubtitle}
                           {cardDepUp != null && cardDepUp > 0 && <span className={styles.depUp}> ↑{cardDepUp}</span>}
                           {cardDepDown != null && cardDepDown > 0 && <span className={styles.depDown}> ↓{cardDepDown}</span>}

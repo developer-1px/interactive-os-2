@@ -142,7 +142,7 @@ export function SplitPane({
         : { height: `${(sizes[i] as number) * 100}%` }
 
     elements.push(
-      <div key={`pane-${i}`} className={styles.pane} style={sizeStyle}>
+      <div key={`pane-${i}`} className={"flex-col overflow-hidden min-w-0 min-h-0 h-full"} style={sizeStyle}>
         {child}
       </div>,
     )
@@ -159,7 +159,7 @@ export function SplitPane({
           aria-valuemax={Math.round((1 - minRatio) * 100)}
           aria-label={`Resize pane ${i + 1}`}
           tabIndex={0}
-          className={`${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
+          className={`shrink-0 ${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
           data-surface="action"
           onKeyDown={(e) => handleKeyDown(i, e)}
           onPointerDown={(e) => handlePointerDown(i, e)}
@@ -171,7 +171,7 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={`${isHorizontal ? 'flex-row' : 'flex-col'} ${styles.splitPane}`}
+      className={`${isHorizontal ? 'flex-row' : 'flex-col'} h-full overflow-hidden`}
     >
       {elements}
     </div>

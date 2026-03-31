@@ -23,7 +23,7 @@ type SourceTab = 'tsx' | 'css'
 function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
   const [sourceTab, setSourceTab] = useState<SourceTab>('tsx')
   return (
-    <div className={`flex-col ${styles.codePane}`}>
+    <div className="flex-col overflow-hidden">
       <div className={`flex-row items-center ${styles.paneHeader}`}>
         <button
           data-surface="action"
@@ -40,7 +40,7 @@ function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
           CSS
         </button>
       </div>
-      <div className={`flex-1 overflow-auto ${styles.codeContent}`}>
+      <div className="flex-1 overflow-auto min-h-0">
         {entry ? (
           <SourceViewer entry={entry} activeTab={sourceTab} />
         ) : (
@@ -129,7 +129,7 @@ export default function PageComponentCreator() {
 
     if (tabData.contentType === 'canvas') {
       return (
-        <div className={`flex-col ${styles.canvasPane}`}>
+        <div className="flex-col h-full overflow-hidden">
           <div className={`flex-row items-center ${styles.paneHeader}`}>
             <span className={styles.paneTitle}>{selectedName || 'Select'}</span>
           </div>
@@ -156,9 +156,9 @@ export default function PageComponentCreator() {
   }, [selectedName, selectedEntry])
 
   return (
-    <div className={`flex-col ${styles.page}`} onKeyDown={handleLayoutKeyDown}>
+    <div className="flex-col h-full overflow-hidden" onKeyDown={handleLayoutKeyDown}>
       {/* Body: Workspace */}
-      <div className={`flex-row ${styles.body}`}>
+      <div className="flex-row flex-1 min-h-0">
         <Workspace
           data={wsData}
           onChange={setWsData}
@@ -168,12 +168,12 @@ export default function PageComponentCreator() {
       </div>
 
       {/* Nav bar: Component tabs */}
-      <div className={`flex-row shrink-0 items-center ${styles.navBar}`}>
+      <div className={`flex-row shrink-0 items-center overflow-x-auto ${styles.navBar}`}>
         {componentRegistry.map((entry) => (
           <button
             key={entry.name}
             data-surface="action"
-            className={`${styles.navTab}${entry.name === selectedName ? ` ${styles.navTabActive}` : ''}`}
+            className={`${styles.navTab} whitespace-nowrap${entry.name === selectedName ? ` ${styles.navTabActive}` : ''}`}
             onClick={() => handleSelectComponent(entry.name)}
           >
             {entry.name}

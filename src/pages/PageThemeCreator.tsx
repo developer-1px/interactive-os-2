@@ -94,11 +94,11 @@ const spacingLevels = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as const
 
 function SurfaceSpecimen() {
   return (
-    <div className={styles.specimen}>
+    <div className={`${styles.specimen} flex-col`}>
       <h3 className={styles.specimenTitle}>Surface</h3>
       <div className={styles.swatchRow4}>
         {surfaceModes.map(mode => (
-          <div key={mode} className={styles.swatchItem}>
+          <div key={mode} className={`${styles.swatchItem} flex-col`}>
             <div className={styles.surfaceSwatch} data-surface={mode} />
             <span className={styles.swatchLabel}>{mode}</span>
           </div>
@@ -110,11 +110,11 @@ function SurfaceSpecimen() {
 
 function ShapeSpecimen() {
   return (
-    <div className={styles.specimen}>
+    <div className={`${styles.specimen} flex-col`}>
       <h3 className={styles.specimenTitle}>Shape</h3>
       <div className={styles.swatchRow6}>
         {shapeLevels.map(level => (
-          <div key={level.name} className={styles.swatchItem}>
+          <div key={level.name} className={`${styles.swatchItem} flex-col`}>
             <div
               className={styles.shapeBox}
               style={{
@@ -135,11 +135,11 @@ function ShapeSpecimen() {
 
 function TypeSpecimen() {
   return (
-    <div className={styles.specimen}>
+    <div className={`${styles.specimen} flex-col`}>
       <h3 className={styles.specimenTitle}>Type</h3>
-      <div className={styles.typeStack}>
+      <div className={`${styles.typeStack} flex-col`}>
         {typeLevels.map(level => (
-          <div key={level.name} className={styles.typeRow}>
+          <div key={level.name} className={`${styles.typeRow} flex-row items-baseline justify-between`}>
             <span
               className={styles.typeSample}
               style={{
@@ -161,22 +161,22 @@ function TypeSpecimen() {
 
 function ToneSpecimen() {
   return (
-    <div className={styles.specimen}>
+    <div className={`${styles.specimen} flex-col`}>
       <h3 className={styles.specimenTitle}>Tone</h3>
       <div className={styles.toneGrid}>
-        <div className={styles.toneHeaderRow}>
+        <div className={`${styles.toneHeaderRow} contents`}>
           <span className={styles.toneCorner} />
           {toneAxes.map(axis => (
             <span key={axis} className={styles.toneHeader}>{axis}</span>
           ))}
         </div>
         {toneNames.map(tone => (
-          <div key={tone} className={styles.toneRow}>
+          <div key={tone} className={`${styles.toneRow} contents`}>
             <span className={styles.toneRowLabel}>{tone}</span>
             {toneAxes.map(axis => {
               const hasTone = axis !== 'mid' && axis !== 'bright' || toneHasMidBright.has(tone)
               return (
-                <span key={axis} className={styles.toneCell}>
+                <span key={axis} className="flex-row justify-center">
                   {hasTone ? (
                     <span
                       className={styles.toneSwatch}
@@ -204,11 +204,11 @@ function MotionSpecimen() {
   }, [])
 
   return (
-    <div className={styles.specimen}>
+    <div className={`${styles.specimen} flex-col`}>
       <h3 className={styles.specimenTitle}>Motion</h3>
       <div className={styles.swatchRow3}>
         {motionLevels.map(level => (
-          <div key={level.name} className={styles.swatchItem}>
+          <div key={level.name} className={`${styles.swatchItem} flex-col`}>
             <div
               className={styles.motionTrack}
               onClick={() => handleClick(level.name)}
@@ -233,13 +233,13 @@ function MotionSpecimen() {
 
 function IndependentAxesSpecimen() {
   return (
-    <div className={styles.specimen}>
+    <div className={`${styles.specimen} flex-col`}>
       <h3 className={styles.specimenTitle}>Independent Axes</h3>
 
       <h4 className={styles.subTitle}>Weight</h4>
       <div className={styles.swatchRow5}>
         {weightLevels.map(w => (
-          <div key={w.name} className={styles.swatchItem}>
+          <div key={w.name} className={`${styles.swatchItem} flex-col`}>
             <span className={styles.weightSample} style={{ fontWeight: `var(--weight-${w.name})` }}>Ag</span>
             <span className={styles.swatchLabel}>{w.name}</span>
             <span className={styles.swatchMeta}>{w.value}</span>
@@ -250,7 +250,7 @@ function IndependentAxesSpecimen() {
       <h4 className={styles.subTitle}>Line-height</h4>
       <div className={styles.swatchRow5}>
         {leadingLevels.map(l => (
-          <div key={l.name} className={styles.swatchItem}>
+          <div key={l.name} className={`${styles.swatchItem} flex-col`}>
             <span className={styles.leadingSample} style={{ lineHeight: `var(--leading-${l.name})` }}>
               Line 1<br />Line 2<br />Line 3
             </span>
@@ -263,7 +263,7 @@ function IndependentAxesSpecimen() {
       <h4 className={styles.subTitle}>Text Color</h4>
       <div className={styles.swatchRow6}>
         {textColorLevels.map(level => (
-          <div key={level} className={styles.swatchItem}>
+          <div key={level} className={`${styles.swatchItem} flex-col`}>
             <span className={styles.colorSample} style={{ color: `var(--text-${level})` }}>Aa</span>
             <span className={styles.swatchLabel}>{level}</span>
           </div>
@@ -273,7 +273,7 @@ function IndependentAxesSpecimen() {
       <h4 className={styles.subTitle}>Border</h4>
       <div className={styles.swatchRow3}>
         {borderLevels.map(level => (
-          <div key={level} className={styles.swatchItem}>
+          <div key={level} className={`${styles.swatchItem} flex-col`}>
             <div className={styles.borderSwatch} style={{ borderColor: `var(--border-${level})` }} />
             <span className={styles.swatchLabel}>{level}</span>
           </div>
@@ -477,10 +477,10 @@ function FormCard() {
 
 export default function PageThemeCreator() {
   return (
-    <div className={styles.root}>
+    <div className={`${styles.root} flex-col overflow-y-auto`}>
       <h2 className={styles.pageTitle}>Design System</h2>
 
-      <section className={styles.section}>
+      <section className={`${styles.section} flex-col`}>
         <SurfaceSpecimen />
         <ShapeSpecimen />
         <TypeSpecimen />

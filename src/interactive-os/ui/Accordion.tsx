@@ -17,14 +17,14 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   if (isGroup) {
     return (
       <div>
-        <div {...props} className={styles.header}>
+        <div {...props} className={`flex-row items-center justify-between cursor-pointer ${styles.header}`}>
           <span>{label}</span>
-          <span className={`${styles.chevron} ${state.expanded ? styles.chevronExpanded : ''}`}>
+          <span className={`shrink-0 ${styles.chevron} ${state.expanded ? styles.chevronExpanded : ''}`}>
             <ExpandIndicator />
           </span>
         </div>
         {state.slotProps && (
-          <div {...state.slotProps} className={styles.panel}>
+          <div {...state.slotProps} className="flex-col">
             <span>{label} content</span>
           </div>
         )}
@@ -48,7 +48,7 @@ export function Accordion({
   'aria-label': ariaLabel,
 }: AccordionProps) {
   return (
-    <div className={className ?? styles.root}>
+    <div className={className ?? 'flex-col'}>
       <Aria pattern={accordion} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
         <Aria.Item render={renderItem} />
       </Aria>

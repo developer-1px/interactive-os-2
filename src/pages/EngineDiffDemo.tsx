@@ -78,12 +78,12 @@ export default function EngineDiffDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}
         <kbd>Del</kbd> <span className="key-hint">delete</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <ListBox
           data={data}
           onChange={handleChange}
@@ -91,7 +91,7 @@ export default function EngineDiffDemo() {
           renderItem={(props, item, state: NodeState) => {
             const d = item.data as Record<string, unknown>
             const cls = [
-              'list-item',
+              'list-item flex-row items-center justify-between',
               state.focused && 'list-item--focused',
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')

@@ -7,19 +7,19 @@ export function DiffBlock({ block }: { block: DiffBlockType }) {
   const newLines = block.new.split('\n')
 
   return (
-    <div className={styles.diff}>
+    <div className={`overflow-hidden ${styles.diff}`}>
       {block.filePath && (
         <div className={styles.diffHeader}>{block.filePath}</div>
       )}
-      <div className={styles.diffBody}>
-        <div className={styles.diffPane}>
+      <div className={`grid ${styles.diffBody}`}>
+        <div className={`overflow-hidden min-w-0 ${styles.diffPane}`}>
           <pre className={styles.diffCode}>
             {oldLines.map((line, i) => (
               <div key={i} className={styles.diffLineOld}>{line || ' '}</div>
             ))}
           </pre>
         </div>
-        <div className={styles.diffPane}>
+        <div className={`overflow-hidden min-w-0 ${styles.diffPane}`}>
           <pre className={styles.diffCode}>
             {newLines.map((line, i) => (
               <div key={i} className={styles.diffLineNew}>{line || ' '}</div>

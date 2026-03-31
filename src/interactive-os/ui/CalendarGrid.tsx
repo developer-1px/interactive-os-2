@@ -26,7 +26,7 @@ const defaultRenderCell = (
 ): React.ReactElement => (
   <td
     {...props}
-    className={styles.day}
+    className={`text-center outline-none ${styles.day}`}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
     data-outside={!meta.isCurrentMonth || undefined}
@@ -72,7 +72,7 @@ export function CalendarGrid({
     >
       <thead>
         <tr>
-          {DAYS.map(d => <th key={d} className={styles.dayHeader} scope="col">{d}</th>)}
+          {DAYS.map(d => <th key={d} className={`text-center ${styles.dayHeader}`} scope="col">{d}</th>)}
         </tr>
       </thead>
       <tbody>

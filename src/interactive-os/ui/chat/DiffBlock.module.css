@@ -4,7 +4,6 @@
 .diff {
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-md-radius);
-  overflow: hidden;
 }
 
 .diffHeader {
@@ -17,14 +16,10 @@
 }
 
 .diffBody {
-  display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.diffPane {
-  overflow-x: auto;
-  min-width: 0;
-}
+.diffPane { }
 
 .diffPane + .diffPane {
   border-left: 1px solid var(--border-subtle);
@@ -36,7 +31,7 @@
   font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
   white-space: pre-wrap;
-  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .diffLineOld {

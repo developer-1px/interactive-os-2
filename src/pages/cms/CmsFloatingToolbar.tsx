@@ -120,7 +120,7 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
   if (hidden) return null
 
   return (
-    <div className="cms-floating-toolbar" role="toolbar" aria-label="Section actions" {...aria.containerProps}>
+    <div className="cms-floating-toolbar fixed flex-row items-center" role="toolbar" aria-label="Section actions" {...aria.containerProps}>
       {visibleActions.map((action) => {
         const props = aria.getNodeProps(action.id)
         const isDisabled = disabled || (action.id === 'delete' && isOnlySection)
@@ -129,7 +129,7 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
           <React.Fragment key={action.id}>
             <button
               {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-              className="cms-floating-toolbar__btn"
+              className="cms-floating-toolbar__btn flex-row items-center justify-center border-none cursor-pointer whitespace-nowrap"
               disabled={isDisabled}
             >
               {action.label}

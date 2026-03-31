@@ -25,11 +25,11 @@ export default function AriaListboxDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <Aria
           pattern={pattern}
           data={data}
@@ -40,7 +40,7 @@ export default function AriaListboxDemo() {
           <Aria.Item render={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = [
-              'list-item',
+              'list-item flex-row items-center justify-between',
               state.focused && 'list-item--focused',
               state.selected && !state.focused && 'list-item--selected',
             ].filter(Boolean).join(' ')

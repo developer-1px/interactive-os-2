@@ -36,7 +36,7 @@ export default function DndDemo() {
 
   return (
     <>
-      <div className="page-keys">
+      <div className="page-keys inline-flex flex-wrap items-center">
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd><Right /><Left /></kbd> <span className="key-hint">expand</span>{' '}
         <kbd>Alt+<Up /></kbd> <span className="key-hint">move up</span>{' '}
@@ -45,7 +45,7 @@ export default function DndDemo() {
         <kbd>Alt+<Right /></kbd> <span className="key-hint">move in</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
-      <div className="card">
+      <div className="card overflow-hidden">
         <TreeGrid
           data={data}
           onChange={setData}
@@ -57,14 +57,14 @@ export default function DndDemo() {
             const indent = ((state.level ?? 1) - 1) * 18
 
             const cls = [
-              'tree-node',
+              'tree-node flex-row items-center',
               state.focused && 'tree-node--focused',
               state.selected && !state.focused && 'tree-node--selected',
             ].filter(Boolean).join(' ')
 
             return (
               <div {...props} className={cls} style={{ paddingLeft: 14 + indent }}>
-                <span className="tree-node__chevron">
+                <span className="tree-node__chevron shrink-0 inline-flex items-center justify-center">
                   {isGroup ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
                 </span>
                 <span className="tree-node__name" style={{ fontWeight: isGroup ? 600 : 400 }}>

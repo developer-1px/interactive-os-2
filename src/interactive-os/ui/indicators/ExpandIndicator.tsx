@@ -15,7 +15,7 @@ export function ExpandIndicator({
   className,
 }: ExpandIndicatorProps) {
   const variantClass = variant === 'tree' ? 'item-chevron--tree' : 'item-chevron--expand'
-  const classes = ['item-chevron', variantClass, className].filter(Boolean).join(' ')
+  const classes = ['inline-flex items-center justify-center shrink-0', 'item-chevron', variantClass, variant === 'expand' ? 'text-center' : '', className].filter(Boolean).join(' ')
 
   return (
     <span className={classes}>

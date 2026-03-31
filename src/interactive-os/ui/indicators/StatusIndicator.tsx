@@ -5,6 +5,6 @@ interface StatusIndicatorProps {
 }
 
 export function StatusIndicator({ tone = 'info', className }: StatusIndicatorProps) {
-  const classes = ['item-indicator--status', `item-indicator--status-${tone}`, className].filter(Boolean).join(' ')
+  const classes = ['inline-block shrink-0', 'item-indicator--status', `item-indicator--status-${tone}`, className].filter(Boolean).join(' ')
   return <span className={classes} />
 }
