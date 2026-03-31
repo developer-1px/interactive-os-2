@@ -5,6 +5,7 @@ export function createStore(initial?: Partial<NormalizedData>): NormalizedData {
   return {
     entities: initial?.entities ?? {},
     relationships: { [ROOT_ID]: [], ...initial?.relationships },
+    slots: initial?.slots ?? {},
   }
 }
 
@@ -16,10 +17,26 @@ export function getChildren(store: NormalizedData, parentId: string): string[] {
   return store.relationships[parentId] ?? []
 }
 
-/** O(n) where n = total children across all relationship entries. No reverse index — sufficient for current store sizes. */
+/** Get named slot children as ordered array (Zod field declaration order). */
+export function getSlotChildren(store: NormalizedData, parentId: string): string[] {
+  const slotMap = store.slots?.[parentId]
+  return slotMap ? Object.values(slotMap) : []
+}
+
+/** Get the slot map for a parent: { slotName → childId }. */
+export function getSlots(store: NormalizedData, parentId: string): Record<string, string> | undefined {
+  return store.slots?.[parentId]
+}
+
+/** O(n) where n = total children across all relationship + slot entries. No reverse index — sufficient for current store sizes. */
 export function getParent(store: NormalizedData, nodeId: string): string | undefined {
   for (const [parentId, children] of Object.entries(store.relationships)) {
     if (children.includes(nodeId)) return parentId
+  }
+  if (store.slots) {
+    for (const [parentId, slotMap] of Object.entries(store.slots)) {
+      if (Object.values(slotMap).includes(nodeId)) return parentId
+    }
   }
   return undefined
 }
@@ -35,6 +52,7 @@ export function addEntity(
   return {
     entities: { ...store.entities, [entity.id]: entity },
     relationships: { ...store.relationships, [parentId]: newChildren },
+    ...(store.slots ? { slots: store.slots } : {}),
   }
 }
 
@@ -43,6 +61,7 @@ export function removeEntity(store: NormalizedData, nodeId: string): NormalizedD
   const collect = (id: string) => {
     toRemove.add(id)
     for (const childId of getChildren(store, id)) collect(childId)
+    for (const childId of getSlotChildren(store, id)) collect(childId)
   }
   collect(nodeId)
 
@@ -58,7 +77,20 @@ export function removeEntity(store: NormalizedData, nodeId: string): NormalizedD
     }
   }
 
-  return { entities, relationships }
+  const slots: Record<string, Record<string, string>> = {}
+  if (store.slots) {
+    for (const [parentId, slotMap] of Object.entries(store.slots)) {
+      if (!toRemove.has(parentId)) {
+        const filtered: Record<string, string> = {}
+        for (const [name, childId] of Object.entries(slotMap)) {
+          if (!toRemove.has(childId)) filtered[name] = childId
+        }
+        if (Object.keys(filtered).length > 0) slots[parentId] = filtered
+      }
+    }
+  }
+
+  return { entities, relationships, slots }
 }
 
 export function updateEntity(

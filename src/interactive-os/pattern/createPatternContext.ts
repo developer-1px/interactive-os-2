@@ -4,7 +4,7 @@ import type { CommandEngine } from '../engine/createCommandEngine'
 import { getVisibleNodes } from '../engine/getVisibleNodes'
 import type { VisibilityFilter } from '../engine/types'
 import type { PatternContext, CtxFactory } from './types'
-import { getEntity, getChildren, getParent } from '../store/createStore'
+import { getEntity, getChildren, getSlotChildren, getParent } from '../store/createStore'
 import { FOCUS_ID } from '../axis/navigate'
 import { activateCommands } from '../axis/activate'
 
@@ -41,6 +41,7 @@ export function createPatternContext(engine: CommandEngine, options?: PatternCon
     dispatch: (command: Command) => engine.dispatch(command),
     getEntity: (id: string): Entity | undefined => getEntity(store, id),
     getChildren: (id: string): string[] => getChildren(store, id),
+    getSlotChildren: (id: string): string[] => getSlotChildren(store, id),
     getParent: (id: string): string | undefined => getParent(store, id),
 
     // ── Axis capabilities (from ctxFactories) ──
