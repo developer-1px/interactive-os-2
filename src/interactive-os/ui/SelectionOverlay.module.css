@@ -10,7 +10,7 @@
 .rect {
   position: absolute;
   border-radius: var(--shape-xs-radius);
-  transition: opacity 0.08s;
+  transition: opacity var(--motion-instant-duration);
 }
 
 .label {
