@@ -18,6 +18,7 @@ import { useEngine } from '../../interactive-os/engine/useEngine'
 import { history } from '../../interactive-os/plugins/history'
 import { clipboard } from '../../interactive-os/plugins/clipboard'
 import { rename } from '../../interactive-os/plugins/rename'
+import { spatial } from '../../interactive-os/plugins/spatial'
 import { getParent } from '../../interactive-os/store/createStore'
 import { collectSections } from './collectSections'
 import { ROOT_ID } from '../../interactive-os/store/types'
@@ -27,6 +28,7 @@ import { zodSchema } from '../../interactive-os/plugins/zodSchema'
 import { AriaRoute } from '../../interactive-os/primitives/AriaRoute'
 
 const sharedPlugins: Plugin[] = [
+  spatial(),
   history(),
   clipboard(),
   zodSchema({ childRules, rootTypes: [nodeSchemas.section, nodeSchemas['tab-group']] }),

@@ -16,7 +16,7 @@ import { useEngine } from '../interactive-os/engine/useEngine'
 import { useAriaZone } from '../interactive-os/primitives/useAriaZone'
 import { useSpatialNav } from '../interactive-os/plugins/useSpatialNav'
 import { spatial } from '../interactive-os/misc/spatial'
-import { spatialCommands } from '../interactive-os/plugins/spatial'
+import { spatial as spatialPlugin, spatialCommands } from '../interactive-os/plugins/spatial'
 import { focusCommands } from '../interactive-os/axis/navigate'
 import { spatialReachable } from '../interactive-os/plugins/focusRecovery'
 import { createStore, getParent } from '../interactive-os/store/createStore'
@@ -119,8 +119,9 @@ const nestedRectMap: Record<string, DOMRect> = {
 
 // ── Minimal test component (mirrors CmsCanvas hook setup) ──
 
+// @test-harness
 function TestCanvas({ data, activeRectMap }: { data: NormalizedData; activeRectMap: Record<string, DOMRect> }) {
-  const { engine, store } = useEngine({ data })
+  const { engine, store } = useEngine({ data, plugins: [spatialPlugin()] })
   const spatialNav = useSpatialNav('[data-test-root]', store, 'test')
 
   const testKeyMap = useMemo(() => ({
