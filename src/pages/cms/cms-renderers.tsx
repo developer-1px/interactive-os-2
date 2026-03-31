@@ -268,4 +268,4 @@ export function getNodeTag(data: Record<string, string>): keyof React.JSX.Intrin
 
 // ── Editable fields — re-export from schema (single source of truth) ──
 
-export { getEditableFields } from './cms-schema'
+export { getEditableFields, getInlineEditableFields } from './cms-schema'

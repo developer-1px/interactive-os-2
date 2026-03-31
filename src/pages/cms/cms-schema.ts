@@ -153,17 +153,18 @@ export function getEditableFields(data: Record<string, unknown>): EditableField[
   return type ? fieldsOf(type) : []
 }
 
-/** Check if a node type should have its editable fields expanded into slot entities. */
-export function isSlotExpandable(type: string): boolean {
-  const fields = fieldsOf(type)
-  return fields.length >= 2
+/** Get only inline-editable fields (text), excluding Form-only fields (icon/image/url). */
+export function getInlineEditableFields(data: Record<string, unknown>): EditableField[] {
+  return getEditableFields(data).filter(f => !FORM_ONLY_FIELD_TYPES.has(f.fieldType))
 }
 
-/** Expand an entity's editable fields into slot child entities.
- *  Returns { strippedData, slotEntities, slotMap } or null if not expandable.
- *  - localeMap fields → text entity with role=fieldName
- *  - string + icon meta → icon entity
- *  - other string → stat-value entity */
+/** Form-only field types — not inline-editable in canvas */
+const FORM_ONLY_FIELD_TYPES = new Set<FieldType>(['icon', 'image', 'url'])
+
+/** Expand an entity's inline-editable text fields into slot child entities.
+ *  Only text fields (short-text, long-text, localeMap) become slots.
+ *  icon/image/url fields are Form-only — edited in Detail Panel.
+ *  Returns null if 0 or 1 inline-editable fields (→ rename or no-op). */
 export function expandEntitySlots(entityId: string, data: Record<string, unknown>): {
   slotEntities: Record<string, { id: string; data: Record<string, unknown> }>
   slotMap: Record<string, string>
@@ -171,22 +172,18 @@ export function expandEntitySlots(entityId: string, data: Record<string, unknown
   const type = data.type as string | undefined
   if (!type) return null
   const fields = fieldsOf(type)
-  if (fields.length < 2) return null
-
-  // Keep parent data intact — NodeContent still renders from it.
-  // Slots are for navigation/editing, not rendering.
+  const inlineFields = fields.filter(f => !FORM_ONLY_FIELD_TYPES.has(f.fieldType))
+  if (inlineFields.length < 2) return null
 
   const slotEntities: Record<string, { id: string; data: Record<string, unknown> }> = {}
   const slotMap: Record<string, string> = {}
 
-  for (const f of fields) {
+  for (const f of inlineFields) {
     const childId = `${entityId}-${f.field}`
     slotMap[f.field] = childId
 
     if (f.isLocaleMap) {
       slotEntities[childId] = { id: childId, data: { type: 'text', role: f.field, value: data[f.field] } }
-    } else if (f.fieldType === 'icon') {
-      slotEntities[childId] = { id: childId, data: { type: 'icon', value: data[f.field] } }
     } else {
       slotEntities[childId] = { id: childId, data: { type: 'stat-value', value: data[f.field] } }
     }
