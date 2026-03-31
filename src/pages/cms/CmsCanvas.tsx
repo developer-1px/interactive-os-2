@@ -18,7 +18,7 @@ import type { PatternContext } from '../../interactive-os/pattern/types'
 import { spatialReachable } from '../../interactive-os/plugins/focusRecovery'
 import { renameCommands } from '../../interactive-os/plugins/rename'
 import type { Locale } from './cms-types'
-import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getEditableFields } from './cms-renderers'
+import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getInlineEditableFields } from './cms-renderers'
 import { CmsInlineEditable } from './CmsInlineEditable'
 import { cmsCanDelete } from './cms-schema'
 import { SelectionOverlay } from '../../interactive-os/ui/SelectionOverlay'
@@ -64,8 +64,8 @@ const cmsKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
   F2: (ctx) => {
     const entity = ctx.getEntity(ctx.focused)
     const data = (entity?.data ?? {}) as Record<string, unknown>
-    const fields = getEditableFields(data)
-    if (fields.length === 0) return
+    const inlineFields = getInlineEditableFields(data)
+    if (inlineFields.length === 0) return
     return renameCommands.startRename(ctx.focused)
   },
   // Mod+C/X/V → clipboard plugin keyMap, Mod+Z → history plugin keyMap
@@ -117,11 +117,11 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         const children = ctx.getChildren(ctx.focused)
         const slotKids = ctx.getSlotChildren(ctx.focused)
         if (children.length === 0 && slotKids.length === 0) {
-          // Leaf node: rename only if exactly 1 editable field (single text prop)
+          // Leaf node: rename only if exactly 1 inline-editable text field
           const entity = ctx.getEntity(ctx.focused)
           const data = (entity?.data ?? {}) as Record<string, unknown>
-          const fields = getEditableFields(data)
-          if (fields.length !== 1) return
+          const inlineFields = getInlineEditableFields(data)
+          if (inlineFields.length !== 1) return
           return renameCommands.startRename(ctx.focused)
         }
         // Prefer slot children for drill down when no array children
