@@ -171,6 +171,7 @@ export function serializeWorkspace(store: NormalizedData): string {
   const filtered: NormalizedData = {
     entities: {},
     relationships: { ...store.relationships },
+    slots: store.slots,
   }
 
   for (const [id, entity] of Object.entries(store.entities)) {

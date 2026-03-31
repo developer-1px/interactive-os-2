@@ -121,7 +121,8 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         }
       }
       if (merged) {
-        created.syncStore({ entities: merged, relationships: created.getStore().relationships })
+        const currentStore = created.getStore()
+        created.syncStore({ entities: merged, relationships: currentStore.relationships, slots: currentStore.slots })
       }
     }
     const externalFocus = (data.entities[FOCUS_ID]?.focusedId as string) ?? ''
@@ -191,7 +192,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       }
     }
 
-    engine.syncStore({ entities: mergedEntities, relationships: data.relationships })
+    engine.syncStore({ entities: mergedEntities, relationships: data.relationships, slots: data.slots })
   }, [data, engine])
 
   // ── State derivation ──

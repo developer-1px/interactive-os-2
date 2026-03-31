@@ -154,6 +154,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
           [POPUP_ID]: { id: POPUP_ID, isOpen: vs.popupIsOpen, triggerId: vs.popupTriggerId },
         },
         relationships: realStore.relationships,
+        slots: realStore.slots,
       }
     }
 
