@@ -27,6 +27,7 @@ const plugins: Plugin[] = [history()]
 
 describe('useAriaZone', () => {
   it('initial focus on first item', () => {
+    // @test-harness
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const aria = useAriaZone({ engine, store, pattern: listbox(), scope: 'test' })
@@ -38,6 +39,7 @@ describe('useAriaZone', () => {
 
   it('dispatch setFocus updates focused', () => {
     const holder = { dispatch: null as null | ((cmd: Command) => void) }
+    // @test-harness
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const aria = useAriaZone({ engine, store, pattern: listbox(), scope: 'test' })
@@ -53,6 +55,7 @@ describe('useAriaZone', () => {
   })
 
   it('getNodeProps uses scoped data attribute', () => {
+    // @test-harness
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const aria = useAriaZone({ engine, store, pattern: listbox(), scope: 'test' })
@@ -69,6 +72,7 @@ describe('useAriaZone', () => {
 
   it('keyboard ArrowDown moves focus', async () => {
     const user = userEvent.setup()
+    // @test-harness
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const aria = useAriaZone({ engine, store, pattern: listbox(), scope: 'test' })
@@ -90,6 +94,7 @@ describe('useAriaZone', () => {
 
   it('two zones share engine — independent focus', () => {
     const holder = { dispatchA: null as null | ((cmd: Command) => void), dispatchB: null as null | ((cmd: Command) => void) }
+    // @test-harness
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins })
       const zoneA = useAriaZone({ engine, store, pattern: listbox(), scope: 'za' })
@@ -117,6 +122,7 @@ describe('useAriaZone', () => {
 
   it('two zones share engine — data command visible in both', () => {
     const holder = { dispatchA: null as null | ((cmd: Command) => void) }
+    // @test-harness
     function App() {
       const { engine, store } = useEngine({ data: testStore, plugins: [history(), crud()] })
       const zoneA = useAriaZone({ engine, store, pattern: listbox(), scope: 'za' })

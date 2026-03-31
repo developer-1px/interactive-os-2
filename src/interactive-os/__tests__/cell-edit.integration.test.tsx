@@ -115,6 +115,7 @@ function getFocusedRowId(container: HTMLElement): string | null {
   return focused?.getAttribute('data-node-id') ?? null
 }
 
+// @test-harness
 function StatefulCellEditGrid({ initialData, withCellEdit = true }: { initialData: NormalizedData; withCellEdit?: boolean }) {
   const [data, setData] = useState(initialData)
   const plugins = [
@@ -220,6 +221,7 @@ describe('cellEdit plugin integration', () => {
 describe('enterContinue prop', () => {
   beforeEach(() => resetClipboard())
 
+  // @test-harness
   function StatefulEditableGrid({ initialData }: { initialData: NormalizedData }) {
     const [data, setData] = useState(initialData)
     const dataRef = useRef(data)

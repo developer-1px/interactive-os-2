@@ -145,7 +145,8 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
 
   // Read: 1-tier collapsible (header=toggle), default collapsed
   const isRead = name === 'Read'
-  const [open, setOpen] = useState(isRead ? false : expandByDefault)
+  const isWrite = name === 'Write'
+  const [open, setOpen] = useState(isRead || isWrite ? false : expandByDefault)
 
   if (isRead && text) {
     const range = formatReadRange(input, lines.length)
@@ -159,6 +160,23 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
         </summary>
         <div className={`overflow-auto ${styles.toolGroupCode}`}>
           <CodeBlock code={codeText} filename={filename} variant="compact" />
+        </div>
+      </details>
+    )
+  }
+
+  // Write: show written content as code block (collapsible, default collapsed)
+  if (isWrite && typeof input.content === 'string') {
+    const lineCount = (input.content as string).split('\n').length
+
+    return (
+      <details className={`overflow-hidden ${styles.toolGroup}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
+        <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupSummary}`}>
+          <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
+          <Icon size={12} /> <span className={styles.toolName}>{name}</span> <FilePathLink path={String(input.file_path)}>{`${detail} (${lineCount} lines)`}</FilePathLink>
+        </summary>
+        <div className={`overflow-auto ${styles.toolGroupCode}`}>
+          <CodeBlock code={input.content as string} filename={filename} variant="compact" />
         </div>
       </details>
     )

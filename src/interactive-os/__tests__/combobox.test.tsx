@@ -50,6 +50,7 @@ function getListbox(container: HTMLElement): HTMLElement | null {
   return container.querySelector('[role="listbox"]')
 }
 
+// @test-harness
 function ControlledCombobox({
   selectionMode,
 }: {
@@ -270,6 +271,7 @@ function groupedStore(): NormalizedData {
   })
 }
 
+// @test-harness
 function ControlledGroupedCombobox() {
   const [data, setData] = useState(groupedStore)
   return (
@@ -335,6 +337,7 @@ describe('Combobox grouping support', () => {
 
 // ─── Creatable mode ───────────────────────────────────────────────────────────
 
+// @test-harness
 function ControlledCreatableCombobox({
   selectionMode,
   onChange,

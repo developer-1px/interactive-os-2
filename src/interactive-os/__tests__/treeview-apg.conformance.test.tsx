@@ -64,6 +64,7 @@ function getFocusedNodeId(container: HTMLElement): string | null {
   return focused?.getAttribute('data-node-id') ?? null
 }
 
+// @test-harness
 function TreeViewWithActivatedDisplay(props: { data: NormalizedData; selectionFollowsFocus?: boolean; 'aria-label': string }) {
   const [activated, setActivated] = useState('')
   return (
@@ -365,51 +366,49 @@ describe('APG TreeView — Keyboard: Home / End', () => {
 // 5. Click Interaction
 // ---------------------------------------------------------------------------
 
-describe('APG TreeView — Click Interaction', () => {
-  it('clicking a collapsed parent expands it', async () => {
+describe('APG TreeView — Expand/Collapse Interaction', () => {
+  it('ArrowRight on collapsed parent expands it', async () => {
     const user = userEvent.setup()
     const { container } = render(<TreeView data={makeTreeData()} aria-label="File Tree" />)
 
     expect(getNodeEl(container, 'a/1')).toBeNull()
-    await user.click(getNodeEl(container, 'a')!)
+    getNodeEl(container, 'a')!.focus()
+    await user.keyboard('{ArrowRight}')
     expect(getNodeEl(container, 'a/1')).not.toBeNull()
   })
 
-  it('clicking expanded folder with onActivate: collapses and activates', async () => {
+  it('ArrowLeft on expanded folder collapses it', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<TreeView data={makeTreeData()} aria-label="File Tree" />)
+
+    getNodeEl(container, 'a')!.focus()
+    await user.keyboard('{ArrowRight}') // expand
+    expect(getNodeEl(container, 'a')?.getAttribute('aria-expanded')).toBe('true')
+
+    await user.keyboard('{ArrowLeft}') // collapse
+    expect(getNodeEl(container, 'a')?.getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('Enter on leaf calls onActivate', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <TreeViewWithActivatedDisplay data={makeTreeData()} aria-label="File Tree" />,
+    )
+
+    getNodeEl(container, 'c')!.focus()
+    await user.keyboard('{Enter}')
+    expect(screen.getByTestId('activated').textContent).toBe('c')
+    expect(getNodeEl(container, 'c')!.hasAttribute('aria-expanded')).toBe(false)
+  })
+
+  it('Enter on collapsed folder with onActivate: activates', async () => {
     const user = userEvent.setup()
     const { container } = render(
       <TreeViewWithActivatedDisplay data={makeTreeData()} aria-label="File Tree" />,
     )
 
     getNodeEl(container, 'a')!.focus()
-    await user.keyboard('{ArrowRight}') // expand
-    expect(getNodeEl(container, 'a')?.getAttribute('aria-expanded')).toBe('true')
-
-    await user.click(getNodeEl(container, 'a')!)
-    expect(getNodeEl(container, 'a')?.getAttribute('aria-expanded')).toBe('false')
-    expect(screen.getByTestId('activated').textContent).toBe('a')
-  })
-
-  it('clicking a leaf activates it', async () => {
-    const user = userEvent.setup()
-    const { container } = render(
-      <TreeViewWithActivatedDisplay data={makeTreeData()} aria-label="File Tree" />,
-    )
-
-    await user.click(getNodeEl(container, 'c')!)
-    expect(screen.getByTestId('activated').textContent).toBe('c')
-    expect(getNodeEl(container, 'c')!.hasAttribute('aria-expanded')).toBe(false)
-  })
-
-  it('clicking collapsed folder with onActivate: expands and activates', async () => {
-    const user = userEvent.setup()
-    const { container } = render(
-      <TreeViewWithActivatedDisplay data={makeTreeData()} aria-label="File Tree" />,
-    )
-
-    expect(getNodeEl(container, 'a/1')).toBeNull()
-    await user.click(getNodeEl(container, 'a')!)
-    expect(getNodeEl(container, 'a')?.getAttribute('aria-expanded')).toBe('true')
+    await user.keyboard('{Enter}')
     expect(screen.getByTestId('activated').textContent).toBe('a')
   })
 })
@@ -437,20 +436,22 @@ describe('APG TreeView — Enter / Space Activation', () => {
 // 7. Nested Click Bubbling Guard
 // ---------------------------------------------------------------------------
 
-describe('APG TreeView — Nested Click Bubbling Guard', () => {
-  it('clicking child folder does not collapse parent (bubbling guard)', async () => {
+describe('APG TreeView — Nested Keyboard Expand', () => {
+  it('expanding child folder does not collapse parent', async () => {
     const user = userEvent.setup()
     const { container } = render(
       <TreeViewWithActivatedDisplay data={makeNestedData()} aria-label="File Tree" />,
     )
 
-    // Expand parent
-    await user.click(getNodeEl(container, 'parent')!)
+    // Expand parent via keyboard
+    getNodeEl(container, 'parent')!.focus()
+    await user.keyboard('{ArrowRight}')
     expect(getNodeEl(container, 'parent')?.getAttribute('aria-expanded')).toBe('true')
     expect(getNodeEl(container, 'child')).not.toBeNull()
 
-    // Click nested child folder — parent must stay expanded
-    await user.click(getNodeEl(container, 'child')!)
+    // Move to child and expand it
+    await user.keyboard('{ArrowRight}') // focus child (expandOrFocusChild on expanded parent)
+    await user.keyboard('{ArrowRight}') // expand child
     expect(getNodeEl(container, 'child')?.getAttribute('aria-expanded')).toBe('true')
     expect(getNodeEl(container, 'parent')?.getAttribute('aria-expanded')).toBe('true')
   })

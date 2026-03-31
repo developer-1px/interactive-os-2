@@ -19,6 +19,7 @@ function fixtureData(): NormalizedData {
   })
 }
 
+// @test-harness
 function CreatableHarness() {
   const [data, setData] = useState(fixtureData)
   return (

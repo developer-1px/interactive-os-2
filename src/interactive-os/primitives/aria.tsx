@@ -24,6 +24,7 @@ interface AriaProps {
   keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
+  onFocusChange?: (nodeId: string | null) => void
   'aria-label'?: string
   'aria-labelledby'?: string
   logger?: import('../engine/types').EngineOptions['logger']
@@ -45,8 +46,8 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
-function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, onChange, onActivate, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, logger, autoFocus, disabled, children }: AriaProps) {
-  const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, logger, autoFocus, disabled })
+function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, logger, autoFocus, disabled, children }: AriaProps) {
+  const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, logger, autoFocus, disabled })
 
   useEffect(() => {
     if (!id) return

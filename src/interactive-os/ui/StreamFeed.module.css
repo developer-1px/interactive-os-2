@@ -4,7 +4,7 @@
 /* --- Container: :where() for specificity 0 defaults --- */
 
 :where(.feed) {
-  gap: var(--space-lg);
+  gap: var(--space-xl);
 }
 
 /* --- Entry animation --- */

@@ -31,36 +31,16 @@ function openFilePreview(path: string, line?: number) {
 export const MarkdownViewer = memo(function MarkdownViewer({ content, styles = defaultStyles, codeVariant }: { content: string; styles?: MarkdownStyles; codeVariant?: CodeVariant }) {
   const components = useMemo(() => ({
     code({ className, children, ...props }: { className?: string; children?: React.ReactNode }) {
-      const match = /language-(\w+)/.exec(className ?? '')
-      const codeStr = String(children).replace(/\n$/, '')
+      const match = /language-(\w+)/.exec(className || '')
+      const lang = match?.[1]
+      const text = String(children).replace(/\n$/, '')
 
-      if (match?.[1] === 'mermaid') {
-        return <MermaidBlock code={codeStr} />
+      if (lang === 'mermaid') {
+        return <MermaidBlock chart={text} />
       }
 
-      if (match) {
-        return <CodeBlock code={codeStr} filename={`x.${match[1]}`} variant={codeVariant} />
-      }
-
-      const fileMeta = !match ? parseFilePath(codeStr) : null
-      if (fileMeta) {
-        return (
-          <code
-            className={`${className ?? ''} ${styles.fileLink}`.trim()}
-            role="button"
-            tabIndex={0}
-            onClick={() => openFilePreview(fileMeta.path, fileMeta.line)}
-            onKeyDown={(e: React.KeyboardEvent) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                openFilePreview(fileMeta.path, fileMeta.line)
-              }
-            }}
-            {...props}
-          >
-            {children}
-          </code>
-        )
+      if (lang) {
+        return <CodeBlock code={text} filename={`code.${lang}`} variant={codeVariant} />
       }
 
       return <code className={className} {...props}>{children}</code>

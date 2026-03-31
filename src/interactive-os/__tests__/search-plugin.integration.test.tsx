@@ -8,7 +8,7 @@ import { ROOT_ID } from '../store/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import { search, searchCommands, SEARCH_ID, matchesSearchFilter } from '../plugins/search'
 import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/roles/listbox'
+import { ListBox } from '../ui/ListBox'
 import type { NormalizedData } from '../store/types'
 
 function fixtureStore() {
@@ -153,19 +153,23 @@ function fixtureData() {
   })
 }
 
+// @test-harness
 function SearchableList() {
   const [data, setData] = useState<NormalizedData>(fixtureData())
   return (
-    <Aria pattern={listbox()} data={data} plugins={[search()]} onChange={setData} aria-label="Test">
-      <Aria.Search placeholder="Search..." />
-      <Aria.Item render={(props, node) => (
+    <ListBox
+      data={data}
+      plugins={[]}
+      onChange={setData}
+      searchable
+      renderItem={(props, node) => (
         <div {...props} data-testid={`item-${(node.data as { label?: string })?.label}`}>
           <Aria.SearchHighlight>
             <span>{(node.data as { label?: string })?.label as string}</span>
           </Aria.SearchHighlight>
         </div>
-      )} />
-    </Aria>
+      )}
+    />
   )
 }
 

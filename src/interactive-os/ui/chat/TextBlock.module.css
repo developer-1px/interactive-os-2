@@ -9,7 +9,7 @@
   color: inherit;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  padding: 0 var(--space-sm) 0 var(--chat-indent);
+  padding: 0 var(--space-sm);
 }
 
 .markdown > *:first-child {
@@ -26,9 +26,7 @@
 .markdown h2 {
   font-weight: var(--weight-semi);
   color: var(--text-bright);
-  margin: 0.8em 0 0.3em;
-  padding-bottom: 0.2em;
-  border-bottom: 1px solid var(--border-subtle);
+  margin: 1.2em 0 0.4em;
 }
 
 .markdown h3,
@@ -37,13 +35,13 @@
 .markdown h6 {
   font-weight: var(--weight-semi);
   color: var(--text-bright);
-  margin: 0.6em 0 0.2em;
+  margin: 1em 0 0.3em;
 }
 
 /* ── Text ── */
 
 .markdown p {
-  margin: 0.3em 0;
+  margin: 0.75em 0;
 }
 
 .markdown strong {
@@ -60,7 +58,7 @@
 .markdown ul,
 .markdown ol {
   padding-left: 1.3em;
-  margin: 0.3em 0;
+  margin: 0.5em 0;
 }
 
 .markdown li {
@@ -74,10 +72,9 @@
 /* ── Code ── */
 
 .markdown pre {
-  margin: 0.4em 0;
+  margin: 0.75em 0;
   padding: var(--space-sm) var(--space-md);
   background: var(--surface-base);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--shape-md-radius);
   overflow-x: auto;
   font-family: var(--mono);
@@ -112,14 +109,18 @@
 /* ── Table ── */
 
 .markdown table {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
-  margin: 0.4em 0;
+  margin: 0.75em 0;
+  background: var(--surface-sunken);
+  border-radius: var(--shape-md-radius);
+  overflow: hidden;
 }
 
 .markdown th {
   padding: 0.3em 0.5em;
-  border-bottom: 2px solid var(--border-default);
+  border-bottom: 1px solid var(--border-subtle);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
   text-align: left;
@@ -134,16 +135,18 @@
 /* ── Block elements ── */
 
 .markdown blockquote {
-  margin: 0.3em 0;
-  padding-left: 0.7em;
-  border-left: 3px solid var(--tone-primary-base);
+  margin: 0.75em 0;
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  background: var(--surface-sunken);
+  border-radius: var(--shape-md-radius);
   color: var(--text-secondary);
 }
 
 .markdown hr {
   border: none;
-  border-top: 1px solid var(--border-default);
-  margin: 0.5em 0;
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 1.2em 0;
 }
 
 .markdown img {

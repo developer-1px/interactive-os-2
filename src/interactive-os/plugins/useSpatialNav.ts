@@ -284,7 +284,7 @@ export function useSpatialNav(
     // Shift+Arrow handlers do NOT get cross-boundary pattern (PRD N1)
     const makeShiftHandler = (dir: Direction) => (ctx: PatternContext): Command | void => {
       const targetId = findNearest(ctx.focused, dir, rectsRef.current)
-      if (targetId) return ctx.extendSelectionTo(targetId, allowedIdsRef.current)
+      if (targetId) return ctx.selected?.extendTo(targetId, allowedIdsRef.current)
     }
 
     return {

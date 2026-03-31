@@ -46,6 +46,7 @@ function makeI18nData(): NormalizedData {
 
 const plugins = [crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
+// @test-harness
 function I18nEditor({ initialData }: { initialData: NormalizedData }) {
   const [data, setData] = useState(initialData)
   const dataRef = useRef(data)

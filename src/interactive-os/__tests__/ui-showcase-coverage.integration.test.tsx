@@ -13,6 +13,7 @@ import { components } from '../../pages/showcaseRegistry'
 import type { NormalizedData } from '../store/types'
 
 /** showcase의 render 함수를 감싸서 stateful하게 만든다 */
+// @test-harness
 function ShowcaseItem({ entry }: { entry: typeof components[number] }) {
   const [data, setData] = useState<NormalizedData>(entry.makeData())
   return <div data-testid={entry.slug}>{entry.render(data, setData)}</div>

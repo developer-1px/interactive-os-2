@@ -87,9 +87,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     const registry = buildRegistry(...pluginCommands)
     for (const [type, handler] of coreRegistry) registry.set(type, handler)
 
+    let _onChangeCount = 0
     let initializing = true
     const created = createCommandEngine(data, middlewares, registry, (newStore) => {
       if (initializing) return
+      _onChangeCount++
+      if (_onChangeCount > 500) { console.error('[useAria] onStoreChange loop detected, count:', _onChangeCount); return }
       const cb = engineCallbacksMap.get(created)!
       const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
       // activationFollowsSelection: selection change → onActivate
@@ -151,6 +154,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   // ── ② External data sync (useAria-only) ──
 
   useMemo(() => {
+    // @ts-expect-error debug counter
+    engine.__syncCount = (engine.__syncCount ?? 0) + 1
+    // @ts-expect-error debug counter
+    if (engine.__syncCount > 500) { console.error('[useAria] data sync useMemo loop, count:', engine.__syncCount); return }
+    // @ts-expect-error debug counter
+    if (engine.__syncCount > 1) { console.warn('[useAria] data sync useMemo re-run #', engine.__syncCount) }
     const currentStore = engine.getStore()
     const externalFocusChanged = FOCUS_ID in data.entities &&
       (data.entities[FOCUS_ID]?.focusedId as string) !== (currentStore.entities[FOCUS_ID]?.focusedId as string)

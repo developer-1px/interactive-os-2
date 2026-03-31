@@ -1,17 +1,17 @@
 /* ToolSummaryBlock + ToolResultBlock + ToolGroup
-   Icon alignment via --chat-indent + absolute positioning. */
+   Standard padding: icon rows use --chat-indent left, all others use --space-sm uniform. */
 
 /* --- Shared: icon row pattern --- */
 
 .iconRow {
-  padding-left: var(--chat-indent);
+  padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--chat-indent);
   min-height: var(--icon-sm);
   font-size: var(--type-caption-size);
   color: var(--text-secondary);
 }
 
 .iconRow > .rowIcon {
-  left: 0;
+  left: var(--space-sm);
   width: var(--icon-sm);
   color: var(--text-muted);
 }
@@ -26,19 +26,32 @@
   text-overflow: ellipsis;
 }
 
+.filePathLink {
+  cursor: pointer;
+  border-radius: var(--shape-xs-radius);
+  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.filePathLink:hover {
+  color: var(--tone-primary-base);
+  background: var(--bg-hover);
+}
+
+.filePathLink:focus-visible {
+  outline: var(--focus-ring) solid var(--focus);
+  outline-offset: var(--focus-ring);
+}
+
 /* --- Standalone tool use row --- */
 
 .toolRow {
   composes: iconRow;
-  padding-top: var(--shape-xs-py);
-  padding-bottom: var(--shape-xs-py);
-  padding-right: var(--space-sm);
 }
 
 /* --- Standalone tool result --- */
 
 .toolResult {
-  padding: var(--shape-xs-py) var(--space-sm) var(--shape-xs-py) var(--chat-indent);
+  padding: var(--space-sm);
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
@@ -49,9 +62,6 @@
 
 .toolResultSummary {
   composes: iconRow;
-  padding-top: var(--shape-xs-py);
-  padding-bottom: var(--shape-xs-py);
-  padding-right: var(--space-sm);
   font-family: var(--mono);
   color: var(--text-muted);
   user-select: none;
@@ -69,16 +79,17 @@
 /* ═══ ToolGroup: bordered card ═══ */
 
 .toolGroup {
+  background: var(--surface-sunken);
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-md-radius);
 }
 
-/* Read: 1-tier summary — same icon row pattern */
+/* Read/Write/Edit: 1-tier summary — icon row pattern */
 
 .toolGroupSummary {
   composes: iconRow;
   gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
+  color: var(--text-secondary);
   user-select: none;
 }
 
@@ -87,18 +98,17 @@
   display: none;
 }
 
-/* Other tools: header — same icon row pattern */
+/* Other tools: header — icon row pattern */
 
 .toolGroupHeader {
   composes: iconRow;
   gap: var(--space-sm);
-  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
 }
 
 /* --- Result areas --- */
 
 .toolGroupResult {
-  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
+  padding: var(--space-sm);
   border-top: 1px solid var(--border-subtle);
   font-family: var(--mono);
   font-size: var(--type-caption-size);
@@ -119,7 +129,6 @@
 
 .toolGroupResultSummary {
   composes: iconRow;
-  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
   border-top: 1px solid var(--border-subtle);
   font-family: var(--mono);
   color: var(--text-muted);

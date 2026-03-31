@@ -90,7 +90,7 @@ export function combobox(options?: { selectionMode?: 'single' | 'multiple' }) {
         const isOpen = (entity as Record<string, unknown> | undefined)?.isOpen === true
         if (isOpen) {
           if (selectionMode === 'multiple') {
-            return ctx.toggleSelect()
+            return ctx.selected!.toggle()
           }
           return createBatchCommand([
             selectionCommands.select(ctx.focused),
@@ -106,7 +106,7 @@ export function combobox(options?: { selectionMode?: 'single' | 'multiple' }) {
         const entity = ctx.getEntity('__combobox__')
         const filterText = (entity as Record<string, unknown> | undefined)?.filterText ?? ''
         if (filterText !== '') return undefined
-        const selected = ctx.selected
+        const selected = ctx.selected?.ids ?? []
         if (selected.length > 0) {
           return selectionCommands.toggleSelect(selected[selected.length - 1])
         }

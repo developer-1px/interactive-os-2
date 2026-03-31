@@ -455,6 +455,7 @@ function editableFixtureData(): NormalizedData {
   })
 }
 
+// @test-harness
 function StatefulEditableGrid() {
   const [data, setData] = useState(editableFixtureData())
   return (

@@ -21,6 +21,7 @@ const initialStore = createStore({
 
 const plugins = [rename(), history()]
 
+// @test-harness — rename plugin + Aria.Editable integration requires primitive access
 function TestListBox({ initialData, keyMap, allowEmpty }: { initialData?: NormalizedData; keyMap?: Record<string, (ctx: import('../axis/types').PatternContext) => import('../engine/types').Command | void>; allowEmpty?: boolean }) {
   const [data, setData] = useState(initialData ?? initialStore)
   return (
@@ -201,6 +202,7 @@ describe('Rename UI', () => {
 
   describe('graceful degradation', () => {
     it('Aria.Editable without rename plugin renders children normally', () => {
+      // @test-harness
       function NoRenameListBox() {
         const [data, setData] = useState(initialStore)
         return (
@@ -278,6 +280,7 @@ describe('Rename UI', () => {
     it('startRename with replace:true and initialChar stores them in __rename__ entity', () => {
       const capturedStoreRef = { current: null as ReturnType<typeof createStore> | null }
 
+      // @test-harness
       function StoreCapture() {
         const [data, setData] = useState(initialStore)
         useEffect(() => { capturedStoreRef.current = data })

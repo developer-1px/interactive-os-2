@@ -3,6 +3,7 @@ import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useResizer } from '../hooks/useResizer'
 
+// @test-harness
 function TestHarness(props: { defaultSize?: number; minSize?: number; maxSize?: number }) {
   const { separatorProps, size } = useResizer({
     defaultSize: props.defaultSize ?? 200,
@@ -135,6 +136,7 @@ describe('useResizer', () => {
   describe('localStorage persist', () => {
     beforeEach(() => localStorage.clear())
 
+    // @test-harness
     function PersistHarness() {
       const { separatorProps, size } = useResizer({
         defaultSize: 200, minSize: 100, maxSize: 400, storageKey: 'test-panel',

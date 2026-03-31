@@ -11,6 +11,7 @@ import type { NodeState } from '../pattern/types'
 
 const plugins = [rename()]
 
+// @test-harness
 function TestListBox({ initialData, keyMap }: {
   initialData: NormalizedData
   keyMap?: Record<string, (ctx: import('../axis/types').PatternContext) => import('../engine/types').Command | void>
@@ -45,6 +46,7 @@ describe('Aria.Editable placeholder', () => {
       entities: { a: { id: 'a', data: { label: 'Alpha' } } },
       relationships: { [ROOT_ID]: ['a'] },
     })
+    // @test-harness
     function NoPlaceholder() {
       const [data, setData] = useState(store)
       return (

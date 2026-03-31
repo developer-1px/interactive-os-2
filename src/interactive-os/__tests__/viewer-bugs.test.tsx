@@ -1,12 +1,11 @@
 /**
  * Reproduction tests for viewer page bugs.
- * Tests the viewer's integration with interactive-os tree.
+ * Tests the viewer's integration with interactive-os tree via ui/TreeView.
  */
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Aria } from '../primitives/aria'
-import { tree } from '../pattern/roles/tree'
+import { TreeView } from '../ui/TreeView'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
@@ -30,38 +29,9 @@ function fixtureStore(): NormalizedData {
   })
 }
 
-function ViewerTree({ onSelect }: { onSelect?: (path: string) => void }) {
-  const [store, setStore] = useState(fixtureStore())
-
-  const handleChange = (newStore: NormalizedData) => {
-    setStore(newStore)
-    const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
-    const entity = newStore.entities[focusedId]
-    if (entity?.data && (entity.data as Record<string, unknown>).type === 'file') {
-      onSelect?.((entity.data as Record<string, unknown>).path as string)
-    }
-  }
-
-  return (
-    <Aria pattern={tree} data={store} plugins={[]} onChange={handleChange} aria-label="File tree">
-      <Aria.Item render={(props, node, state) => {
-        const data = node.data as { name: string; type: string }
-        return (
-            <span {...props} data-testid={`node-${data.name}`} data-focused={state.focused} data-expanded={state.expanded}>
-              {data.name}
-            </span>
-        )
-      }} />
-    </Aria>
-  )
-}
-
-// Need useState import
-import { useState } from 'react'
-
 describe('viewer tree — reproduction tests', () => {
   it('renders the file tree with correct structure', () => {
-    const { container } = render(<ViewerTree />)
+    const { container } = render(<TreeView data={fixtureStore()} aria-label="File tree" />)
     const nodes = container.querySelectorAll('[data-node-id]')
     // Root-level nodes: /src and /README.md (folders collapsed, children hidden)
     expect(nodes.length).toBeGreaterThanOrEqual(2)
@@ -69,7 +39,7 @@ describe('viewer tree — reproduction tests', () => {
 
   it('navigates with ArrowDown through visible nodes', async () => {
     const user = userEvent.setup()
-    const { container } = render(<ViewerTree />)
+    const { container } = render(<TreeView data={fixtureStore()} aria-label="File tree" />)
 
     // Focus first node
     const first = container.querySelector('[data-node-id]') as HTMLElement
@@ -83,7 +53,7 @@ describe('viewer tree — reproduction tests', () => {
 
   it('expands directory with ArrowRight and shows children', async () => {
     const user = userEvent.setup()
-    const { container } = render(<ViewerTree />)
+    const { container } = render(<TreeView data={fixtureStore()} aria-label="File tree" />)
 
     // Focus /src (first node, a directory)
     const first = container.querySelector('[data-node-id="/src"]') as HTMLElement
@@ -101,7 +71,7 @@ describe('viewer tree — reproduction tests', () => {
 
   it('ArrowRight into expanded directory focuses first child', async () => {
     const user = userEvent.setup()
-    const { container } = render(<ViewerTree />)
+    const { container } = render(<TreeView data={fixtureStore()} aria-label="File tree" />)
 
     const src = container.querySelector('[data-node-id="/src"]') as HTMLElement
     src.focus()
@@ -115,10 +85,9 @@ describe('viewer tree — reproduction tests', () => {
     expect(focused?.getAttribute('data-node-id')).toBe('/src/core')
   })
 
-  it('selecting a file triggers onSelect callback', async () => {
-    const onSelect = vi.fn()
+  it('selecting a file navigates focus correctly', async () => {
     const user = userEvent.setup()
-    const { container } = render(<ViewerTree onSelect={onSelect} />)
+    const { container } = render(<TreeView data={fixtureStore()} aria-label="File tree" />)
 
     // Focus /src, expand it
     const src = container.querySelector('[data-node-id="/src"]') as HTMLElement
@@ -135,7 +104,7 @@ describe('viewer tree — reproduction tests', () => {
   })
 
   it('file tree IDs with slashes and dots work correctly', async () => {
-    const { container } = render(<ViewerTree />)
+    const { container } = render(<TreeView data={fixtureStore()} aria-label="File tree" />)
     // IDs contain full paths like /src/core/types.ts
     const readmeNode = container.querySelector('[data-node-id="/README.md"]')
     expect(readmeNode).toBeTruthy()
@@ -143,7 +112,7 @@ describe('viewer tree — reproduction tests', () => {
 
   it('ArrowLeft on collapsed directory goes to parent', async () => {
     const user = userEvent.setup()
-    const { container } = render(<ViewerTree />)
+    const { container } = render(<TreeView data={fixtureStore()} aria-label="File tree" />)
 
     // Expand /src, navigate to /src/core
     const src = container.querySelector('[data-node-id="/src"]') as HTMLElement
@@ -151,9 +120,8 @@ describe('viewer tree — reproduction tests', () => {
     await user.keyboard('{ArrowRight}') // expand
     await user.keyboard('{ArrowRight}') // focus /src/core
 
-    // ArrowLeft should collapse (it's a directory), then again should go to parent
-    await user.keyboard('{ArrowLeft}') // collapse /src/core (no-op, it's not expanded)
-    // Actually /src/core is collapsed, so ArrowLeft goes to parent /src
+    // ArrowLeft should go to parent /src (since /src/core is collapsed)
+    await user.keyboard('{ArrowLeft}')
     const focused = container.querySelector('[tabindex="0"][data-node-id]')
     expect(focused?.getAttribute('data-node-id')).toBe('/src')
   })

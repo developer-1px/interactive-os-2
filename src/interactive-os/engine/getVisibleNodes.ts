@@ -16,9 +16,12 @@ import type { VisibilityFilter } from './types'
  */
 export function getVisibleNodes(store: NormalizedData, filters?: VisibilityFilter[]): string[] {
   const visible: string[] = []
+  let _visitCount = 0
   const hasDescendFilter = filters?.some(f => f.shouldDescend) ?? false
 
   const visitChild = (childId: string) => {
+    _visitCount++
+    if (_visitCount > 5000) { console.error('[getVisibleNodes] visit loop, count:', _visitCount); return }
     if (filters?.some(f => f.shouldShow && !f.shouldShow(childId, store))) return
 
     const grandChildren = getChildren(store, childId)

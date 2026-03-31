@@ -31,7 +31,7 @@ function makeStore(): NormalizedData {
   })
 }
 
-// Exact same pattern as viewer.tsx — async load, useCallback onChange
+// @test-harness — regression test: reproduces viewer.tsx async load + useCallback pattern
 function ViewerTreeExact() {
   const [store, setStore] = useState<NormalizedData | null>(null)
   const [selectedFile, setSelectedFile] = useState<string | null>(null)

@@ -177,7 +177,10 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
       let level = 0
       let current = id
+      let _levelGuard = 0
       while (true) {
+        _levelGuard++
+        if (_levelGuard > 100) { console.error('[useAriaView] getNodeState level loop, id:', id); break }
         const parent = getParent(store, current)
         if (!parent || parent === ROOT_ID) break
         level++

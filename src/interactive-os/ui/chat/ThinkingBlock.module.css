@@ -8,13 +8,13 @@
 }
 
 .thinkingSummary {
-  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
+  padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--chat-indent);
   cursor: pointer;
   user-select: none;
 }
 
 .thinkingSummary > .thinkingChevron {
-  left: 0;
+  left: var(--space-sm);
   width: var(--icon-sm);
 }
 
@@ -34,7 +34,6 @@
 }
 
 .thinkingContent {
-  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--chat-indent);
-  border-top: 1px solid var(--border-subtle);
+  padding: 0 var(--space-sm) var(--space-sm);
   overflow-wrap: break-word;
 }
