@@ -1,10 +1,11 @@
-// ② 2026-03-27-chat-module-prd.md
+// ② 2026-03-31-chat-perf-prd.md
+import { memo, useMemo } from 'react'
 import styles from './DiffBlock.module.css'
 import type { DiffBlock as DiffBlockType } from './types'
 
-export function DiffBlock({ block }: { block: DiffBlockType }) {
-  const oldLines = block.old.split('\n')
-  const newLines = block.new.split('\n')
+export const DiffBlock = memo(function DiffBlock({ block }: { block: DiffBlockType }) {
+  const oldLines = useMemo(() => block.old.split('\n'), [block.old])
+  const newLines = useMemo(() => block.new.split('\n'), [block.new])
 
   return (
     <div className={`overflow-hidden ${styles.diff}`}>
@@ -29,4 +30,4 @@ export function DiffBlock({ block }: { block: DiffBlockType }) {
       </div>
     </div>
   )
-}
+})
