@@ -220,7 +220,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
       return state
     },
-    [store, focusedId, selectedIdSet, renameEntity, pattern.stateGens, patternMeta],
+    [store, focusedId, selectedIdSet, renameEntity, pattern.stateGens, patternMeta, pattern.panelRole, pattern.panelVisibility],
   )
 
   // ── Event handlers ──

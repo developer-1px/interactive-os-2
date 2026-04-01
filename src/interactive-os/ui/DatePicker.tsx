@@ -171,6 +171,7 @@ export function DatePicker({
     if (cell && !cell.meta.isCurrentMonth) {
       // Moved to a day outside current month — switch month
       const d = cell.meta.date
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- store subscription sync
       setYear(d.getFullYear())
       setMonth(d.getMonth())
       setFocusDayIndex(findDayIndex(d.getFullYear(), d.getMonth(), d))
@@ -288,7 +289,6 @@ export function DatePicker({
       </div>
 
       {isOpen && (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           ref={dialogRef}
           role="dialog"
@@ -313,7 +313,6 @@ export function DatePicker({
             </button>
           </div>
 
-          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div onKeyDown={handleGridContainerKeyDown}>
             <CalendarGrid
               engine={engine}

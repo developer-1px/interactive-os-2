@@ -99,7 +99,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
 
       return state
     },
-    [store, focusedId, selectedIdSet, pattern.stateGens, patternMeta]
+    [store, focusedId, selectedIdSet, pattern.stateGens, patternMeta, pattern.panelRole, pattern.panelVisibility]
   )
 
   const patternCtxOptions = useMemo(

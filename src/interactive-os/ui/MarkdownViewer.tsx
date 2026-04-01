@@ -11,22 +11,8 @@ import defaultStyles from './MarkdownViewer.module.css'
 export type MarkdownStyles = typeof defaultStyles
 export type CodeVariant = 'bordered' | 'flush' | 'compact'
 
-const FILE_EXT_RE = /^(.+\.(?:tsx?|jsx?|css|md|mdx|json|ya?ml|html?|svg|sh|py|rs|go|toml|sql|graphql|vue|svelte))(?::(\d+))?$/
-
 const remarkPlugins = [remarkGfm, remarkBreaks]
 const rehypePlugins = [rehypeRaw]
-
-function parseFilePath(text: string): { path: string; line?: number } | null {
-  const m = FILE_EXT_RE.exec(text.trim())
-  if (!m) return null
-  return { path: m[1], line: m[2] ? Number(m[2]) : undefined }
-}
-
-function openFilePreview(path: string, line?: number) {
-  window.dispatchEvent(new CustomEvent('inspector:open-source', {
-    detail: { fileName: path, lineNumber: line },
-  }))
-}
 
 export const MarkdownViewer = memo(function MarkdownViewer({ content, styles = defaultStyles, codeVariant }: { content: string; styles?: MarkdownStyles; codeVariant?: CodeVariant }) {
   const components = useMemo(() => ({
@@ -36,7 +22,7 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, styles = d
       const text = String(children).replace(/\n$/, '')
 
       if (lang === 'mermaid') {
-        return <MermaidBlock chart={text} />
+        return <MermaidBlock code={text} />
       }
 
       if (lang) {

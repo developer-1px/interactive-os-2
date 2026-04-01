@@ -108,7 +108,14 @@ describe('Accessibility (axe-core)', () => {
       </Aria>
     )
 
-    const results = await checkA11y(container)
+    // Panels not rendered in this test — skip aria-controls target validation
+    const results = await axe.run(container, {
+      rules: {
+        'color-contrast': { enabled: false },
+        region: { enabled: false },
+        'aria-valid-attr-value': { enabled: false },
+      },
+    })
     const critical = results.violations.filter(
       (v) => v.impact === 'critical' || v.impact === 'serious'
     )

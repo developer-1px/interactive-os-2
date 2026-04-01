@@ -12,7 +12,7 @@
  * NOT responsible for: cross-boundary, sticky cursor, groups, depth navigation.
  * Those are consumer-level concerns.
  */
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import type { CtxFactory } from '../axis/types'
 import type { Direction } from './spatialAlgorithm'
 import { findNearest } from './spatialAlgorithm'
@@ -25,9 +25,13 @@ export function useSpatialBridge(
   const preferredXRef = useRef<number | null>(null)
   const preferredYRef = useRef<number | null>(null)
   const selectorRef = useRef(selector)
-  selectorRef.current = selector
   const attrRef = useRef(nodeIdAttr)
-  attrRef.current = nodeIdAttr
+
+  useEffect(() => {
+    selectorRef.current = selector
+    attrRef.current = nodeIdAttr
+  })
+
 
   const factory = useCallback<CtxFactory>((_engine, focusedId) => ({
     spatialMove: (dir: Direction) => {

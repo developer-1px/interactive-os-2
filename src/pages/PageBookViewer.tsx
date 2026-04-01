@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, useLayoutEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo, useRef, useLayoutEffect } from 'react'
 import { BookOpen, List, ChevronLeft, ChevronRight, X, Columns2, Layers } from 'lucide-react'
 import { MarkdownViewer } from '../interactive-os/ui/MarkdownViewer'
 import { NavList } from '../interactive-os/ui/NavList'
@@ -337,7 +337,7 @@ export default function PageBookViewer() {
 
   // ── Spread KeyMap (os-based) ──
   const goSpreadRef = useRef(goSpread)
-  goSpreadRef.current = goSpread
+  useEffect(() => { goSpreadRef.current = goSpread })
 
   const spreadKeyMap = useMemo<Record<string, (ctx: PatternContext) => Command | void>>(() => ({
     ArrowRight: () => {
