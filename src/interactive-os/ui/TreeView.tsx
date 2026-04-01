@@ -7,6 +7,8 @@ import { useTreeView } from './useTreeView'
 import { expandCommands } from '../axis/expand'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 
 export interface TreeItemRenderProps {
   toggleProps?: React.HTMLAttributes<HTMLElement>
@@ -26,9 +28,9 @@ const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unkn
     ?? node.id as string
   const hasChildren = state.expanded !== undefined
   return (
-    <div className="inline-flex items-center gap-xs">
+    <div className={ax({ surface: 'ghost', controlSize: 'sm', layout: 'row', gap: 'xs' })}>
       <span {...props.toggleProps}><ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" /></span>
-      <span>{label}</span>
+      <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
 }
@@ -86,7 +88,7 @@ export function TreeView({
   }
 
   return (
-    <div {...(tv.rootProps as React.HTMLAttributes<HTMLDivElement>)}>
+    <div {...(tv.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={ax({ layout: 'column' })}>
       {renderNodes(ROOT_ID)}
     </div>
   )

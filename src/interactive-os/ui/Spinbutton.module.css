@@ -1,4 +1,6 @@
 /* --- Spinbutton --- */
+/* ax() handles: layout, gap, text, surface, controlSize, center */
+/* module.css: component tokens, focus ring, borders, sizing, input */
 
 /* ── Component tokens ── */
 .spinbuttonItem {

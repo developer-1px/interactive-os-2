@@ -1,12 +1,6 @@
 /* ── Block 1: base ── */
 .header {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
   font-weight: var(--weight-semi);
-  font-family: var(--type-body-family);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
-  user-select: none;
 }
 
 .header + .panel {
@@ -14,7 +8,6 @@
 }
 
 .chevron {
-  color: var(--text-muted);
   transition: transform var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
@@ -23,11 +16,5 @@
 }
 
 .item {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
   padding-left: var(--space-2xl);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  font-family: var(--type-body-family);
-  line-height: var(--type-body-line-height);
-  color: var(--text-secondary);
 }

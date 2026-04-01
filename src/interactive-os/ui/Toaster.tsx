@@ -2,7 +2,16 @@ import { useSyncExternalStore } from 'react'
 import type { ReactNode } from 'react'
 import { X } from 'lucide-react'
 import type { Toaster as ToasterInstance, ToastData } from './createToaster'
+import { ax } from '../../poc/ax'
+import type { Axes } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './Toaster.module.css'
+
+const variantTone: Record<string, Axes> = {
+  default: { surface: 'overlay' },
+  success: { surface: 'overlay', tone: 'success' },
+  error: { surface: 'overlay', tone: 'danger' },
+}
 
 interface ToasterProps {
   toaster: ToasterInstance
@@ -16,7 +25,7 @@ export function Toaster({ toaster }: ToasterProps): ReactNode {
   )
 
   return (
-    <div aria-live="polite" aria-atomic="false" className={`flex-col-reverse fixed pointer-events-none ${styles.container}`}>
+    <div aria-live="polite" aria-atomic="false" className={`${ax({ layout: 'column', gap: 'sm' })} ${styles.container}`}>
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onDismiss={toaster.dismiss} />
       ))}
@@ -31,17 +40,18 @@ function ToastItem({
   toast: ToastData
   onDismiss: (id: string) => void
 }): ReactNode {
+  const variant = toast.variant ?? 'default'
+  const axes = variantTone[variant] ?? variantTone.default
   return (
-    <div className={`flex-row items-start gap-sm ${styles.toast}`} data-variant={toast.variant ?? 'default'}>
-      <div className="flex-1 min-w-0">
-        <div className={styles.title}>{toast.title}</div>
+    <div className={`${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm' })} ${styles.toast}`} data-variant={variant}>
+      <div className={ax({ flex: '1' })}>
+        <div className={`${ax({ textStyle: 'body' })} ${styles.title}`}>{toast.title}</div>
         {toast.description && (
-          <div className={styles.description}>{toast.description}</div>
+          <div className={`${ax({ textStyle: 'body', text: 'secondary' })} ${styles.description}`}>{toast.description}</div>
         )}
       </div>
       <button
-        className={`flex-row items-center justify-center shrink-0 border-none cursor-pointer ${styles.dismiss}`}
-        data-surface="action"
+        className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm' })} ${styles.dismiss}`}
         onClick={() => onDismiss(toast.id)}
         aria-label="Dismiss"
       >

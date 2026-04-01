@@ -6,6 +6,8 @@ import { getNodeLabel } from './types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { disclosure } from '../pattern/roles/disclosure'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './DisclosureGroup.module.css'
 
 type DisclosureGroupProps = AriaComponentProps
@@ -13,9 +15,9 @@ type DisclosureGroupProps = AriaComponentProps
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={`flex-row items-center ${styles.item}`} data-focused={state.focused || undefined}>
+    <div {...props} className={`${ax({ surface: 'ghost', controlSize: 'md', gap: 'xs' })} ${styles.item}`} data-focused={state.focused || undefined}>
       <ExpandIndicator expanded={state.expanded} />
-      <span className={styles.label}>{label}</span>
+      <span className={ax({ text: state.focused ? 'bright' : 'primary' })}>{label}</span>
     </div>
   )
 }

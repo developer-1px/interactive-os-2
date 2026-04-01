@@ -1,5 +1,7 @@
 // ② 2026-03-31-chat-perf-prd.md
 import { memo, useState, useEffect, useRef } from 'react'
+import { ax } from '../../../poc/ax'
+import '../../../poc/ax.css'
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { MarkdownViewer } from '../MarkdownViewer'
 import { useChatFeatures } from './chatFeatures'
@@ -26,13 +28,13 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
   const settled = !isLatest
 
   return (
-    <details className={`overflow-hidden ${styles.thinking}${settled ? ` ${styles.settled}` : ''}`} open={open && !isLatest} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary className={`relative flex-row items-center ${styles.thinkingSummary}`}>
-        <span className={`absolute flex-row items-center justify-center ${styles.thinkingChevron}`}><ExpandIndicator variant="expand" /></span>
+    <details className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.thinking}${settled ? ` ${styles.settled}` : ''}`} open={open && !isLatest} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
+      <summary className={`${ax({ layout: 'bar' })} ${styles.thinkingSummary}`}>
+        <span className={`${ax({ layout: 'center' })} ${styles.thinkingChevron}`}><ExpandIndicator variant="expand" /></span>
         <span className={styles.thinkingLabel}>Thinking</span>
-        {(!open || isLatest) && <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.thinkingPreview}`}> {preview}…</span>}
+        {(!open || isLatest) && <span className={`${ax({ flex: '1' })} ${styles.thinkingPreview}`}> {preview}…</span>}
       </summary>
-      <div className={`overflow-y-auto ${styles.thinkingContent}`}>
+      <div className={`${ax({ layout: 'scroll' })} ${styles.thinkingContent}`}>
         <MarkdownViewer content={text} styles={chatStyles} codeVariant="compact" />
       </div>
     </details>

@@ -7,6 +7,8 @@ import { useNavList } from './useNavList'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
 import { getNodeLabel } from './types'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './NavList.module.css'
 
 interface NavListProps {
@@ -20,13 +22,18 @@ interface NavListProps {
   'aria-label'?: string
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
-  return <div {...props}>{label}</div>
+  const itemClass = ax({
+    surface: 'ghost',
+    controlSize: 'md',
+    text: (state.focused || state.active) ? 'primary' : 'secondary',
+  })
+  return <div {...props} className={`${props.className ?? ''} ${itemClass}`}>{label}</div>
 }
 
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (
-  <div className={styles.groupLabel}>{label}</div>
+  <div className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.groupLabel}`}>{label}</div>
 )
 
 function isGroup(entity: Record<string, unknown>): boolean {
@@ -91,7 +98,7 @@ export function NavList({
         if (isGroup(entity)) {
           const groupChildren = getChildren(store, id)
           return (
-            <div key={id} role="group" aria-label={getLabel(entity)} className={`flex-col gap-xs ${styles.group}`}>
+            <div key={id} role="group" aria-label={getLabel(entity)} className={`${ax({ layout: 'column', gap: 'xs' })} ${styles.group}`}>
               {renderGroupLabel(getLabel(entity))}
               {renderItems(groupChildren)}
             </div>

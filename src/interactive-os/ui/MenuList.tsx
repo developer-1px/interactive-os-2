@@ -6,17 +6,19 @@ import { getNodeLabel } from './types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { menu } from '../pattern/roles/menu'
-import styles from './MenuList.module.css'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 
 type MenuListProps = AriaComponentProps
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
+  const textColor = state.focused ? 'bright' as const : 'primary' as const
   return (
-    <div {...props} className={"flex-row items-center justify-between"} data-focused={state.focused || undefined}>
-      <span className={styles.label}>{label}</span>
+    <div {...props} className={ax({ layout: 'spread' })} data-focused={state.focused || undefined}>
+      <span className={ax({ textStyle: 'body', text: textColor })}>{label}</span>
       {state.expanded !== undefined && (
-        <span className={`flex-row items-center ${styles.indicator}`}>
+        <span className={ax({ layout: 'bar', text: 'muted' })}>
           <ExpandIndicator expanded={state.expanded} />
         </span>
       )}

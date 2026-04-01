@@ -1,15 +1,24 @@
 /* StreamFeed — streaming feed container
    ② 2026-03-25-stream-feed-prd.md */
 
+/* --- Wrapper: relative anchor for FAB --- */
+
+.wrapper {
+  min-height: 0;
+  position: relative;
+}
+
 /* --- Container: :where() for specificity 0 defaults --- */
 
 :where(.feed) {
+  min-height: 0;
   gap: var(--space-xl);
 }
 
 /* --- Entry animation --- */
 
 .entry {
+  min-width: 0;
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
 }
 

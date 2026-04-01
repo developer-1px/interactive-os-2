@@ -7,6 +7,8 @@ import { Aria } from '../primitives/aria'
 import { treegrid } from '../pattern/roles/treegrid'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 
 interface TreeGridProps extends AriaComponentProps {
   id?: string
@@ -20,9 +22,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Recor
     ?? node.id as string
   const hasChildren = state.expanded !== undefined
   return (
-    <div {...props} className="flex-row items-center gap-xs">
+    <div {...props} className={ax({ surface: 'ghost', controlSize: 'md', layout: 'bar', gap: 'xs' })}>
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-      <span>{label}</span>
+      <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
 }

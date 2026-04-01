@@ -1,22 +1,13 @@
-/* ── Menubar — 3-block recipe ── */
+/* ── Menubar — last-mile (ax() handles surface/controlSize/text) ── */
 
-/* ═══ Block 1: base ═══ */
+/* ═══ link — gap + whitespace (ax() owns display/align/font/color/cursor) ═══ */
 .link {
   gap: var(--space-xs);
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
-  cursor: default;
-  border: 2px solid transparent;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.indicator {
-  color: var(--text-muted);
-}
-
-/* ── submenu panel ── */
+/* ── submenu panel (positioning = last-mile) ── */
 
 .submenu {
   padding: var(--space-xs) 0;
@@ -41,16 +32,18 @@
   left: 100%;
 }
 
-/* ═══ Block 2: variant ═══ */
+/* ═══ variant — focused/expanded state (last-mile) ═══ */
 
-.link:focus {
-  border-color: var(--focus);
-}
-
-.link:is([data-focused='true']):focus {
+.link:is([data-focused='true']) {
   background: var(--bg-hover);
 }
 
 .link:is([aria-expanded='true']) {
   background: var(--bg-hover);
+}
+
+/* ── hidden submenu ── */
+
+[data-hidden] {
+  display: none;
 }

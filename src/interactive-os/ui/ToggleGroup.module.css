@@ -1,21 +1,7 @@
-/* ── ToggleGroup — 3-block recipe ── */
+/* ── ToggleGroup — last-mile only ── */
 
-/* ═══ Block 1: base ═══ */
-.item {
-  gap: var(--space-xs);
-}
-
-.indicator {
-  color: var(--text-muted);
-}
+.item {}
 
 .indicator[data-selected='true'] {
   color: var(--tone-primary-base);
-}
-
-.label {
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  color: var(--text-primary);
-  user-select: none;
 }

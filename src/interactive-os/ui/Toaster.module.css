@@ -1,21 +1,21 @@
+/* ── Toaster — last-mile overrides ──
+   ax() handles: layout, gap, padding, surface, tone, textStyle, text, controlSize
+   module.css handles: positioning, animation, variant border colors */
+
 .container {
+  position: fixed;
   bottom: var(--space-lg);
   right: var(--space-lg);
   z-index: 9999;
-  gap: var(--space-sm);
+  flex-direction: column-reverse;
   max-width: var(--overlay-width);
+  pointer-events: none;
 }
 
 .toast {
   pointer-events: auto;
-  padding: var(--space-sm) var(--space-md);
-  background: var(--surface-default);
-  border: 1px solid var(--border-subtle);
+  align-items: flex-start;
   border-radius: var(--shape-xl-radius);
-  box-shadow: var(--shadow-lg);
-  color: var(--text-primary);
-  font-size: var(--type-body-size);
-  line-height: var(--leading-snug);
   animation: slideIn 150ms ease-out;
 }
 
@@ -32,20 +32,11 @@
 }
 
 .description {
-  color: var(--text-secondary);
-  font-size: var(--type-body-size);
+  /* textStyle + text handled by ax() */
 }
 
 .dismiss {
-  padding: 0;
-  width: var(--space-xl);
-  height: var(--space-xl);
-  --_bg: transparent;
-  --_bg-hover: var(--bg-hover);
-  background: var(--_bg);
-  border-radius: var(--shape-md-radius);
-  color: var(--text-secondary);
-  font-size: var(--type-body-size);
+  flex-shrink: 0;
 }
 
 @keyframes slideIn {

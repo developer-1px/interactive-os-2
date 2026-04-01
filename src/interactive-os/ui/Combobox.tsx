@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { X } from 'lucide-react'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './Combobox.module.css'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
@@ -181,7 +183,11 @@ export function Combobox({
   }
 
   const defaultRender = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
-    <div {...props} className={`${styles.comboItem}${state.focused ? ` ${styles.comboItemFocused}` : ''}${state.selected ? ` ${styles.comboItemSelected}` : ''}`}>
+    <div {...props} className={[
+      ax({ surface: 'ghost', controlSize: 'md', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary' }),
+      state.focused ? styles.comboItemFocused : '',
+      state.selected ? styles.comboItemSelected : '',
+    ].filter(Boolean).join(' ')}>
       {getNodeLabel(item)}
     </div>
   )
@@ -273,7 +279,7 @@ export function Combobox({
   return (
     <div>
       {mode === 'multiple' && (
-        <div className="flex-row flex-wrap gap-xs items-center">
+        <div className={ax({ layout: 'bar', gap: 'xs' })}>
           <div role="list">
             {aria.selected.map((id) => (
               <span key={id} data-combobox-token role="listitem">
@@ -290,8 +296,7 @@ export function Combobox({
             ))}
           </div>
           <input
-            data-surface="input"
-            className={`w-full ${styles.comboInput}`}
+            className={`${ax({ surface: 'input', controlSize: 'lg', width: 'full' })} ${styles.comboInput}`}
             role="combobox"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -305,8 +310,7 @@ export function Combobox({
       )}
       {mode !== 'multiple' && (
       <input
-        data-surface="input"
-        className={`w-full ${styles.comboInput}`}
+        className={`${ax({ surface: 'input', controlSize: 'lg', width: 'full' })} ${styles.comboInput}`}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -319,7 +323,7 @@ export function Combobox({
       />
       )}
       {isOpen && (
-        <div data-surface="overlay" className={`${styles.comboDropdown} overflow-hidden`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div className={`${ax({ surface: 'overlay' })} ${styles.comboDropdown}`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? (
             rootChildren.map(groupId => {
               const group = originalStore.entities[groupId]
@@ -341,7 +345,10 @@ export function Combobox({
           {showCreateOption && (
             <div
               data-combobox-create
-              className={effectiveCreateFocused ? styles.comboItemFocused : undefined}
+              className={[
+                ax({ surface: 'ghost', controlSize: 'md', text: effectiveCreateFocused ? 'bright' : 'secondary' }),
+                effectiveCreateFocused ? styles.comboItemFocused : '',
+              ].filter(Boolean).join(' ')}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"

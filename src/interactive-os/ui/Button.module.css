@@ -1,46 +1,28 @@
-/* ── Button — 3-block recipe ──
-   // ② 2026-03-26-component-styling-rules-prd.md */
+/* ── Button — last-mile overrides ──
+   ax() handles: surface, controlSize, tone
+   module.css handles: shape overrides, variant-specific borders/weights */
 
 /* ═══ Block 1: base ═══ */
 .root {
   border-radius: var(--shape-xl-radius);
-  padding: var(--shape-sm-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
-              transform var(--motion-instant-duration) var(--motion-instant-easing);
-  background: var(--_bg);
-  color: var(--_fg);
 }
 
-/* ═══ Block 2: variant — --_ values only ═══ */
+/* ═══ Block 2: variant — last-mile only ═══ */
 .accent {
-  --_bg: var(--tone-primary-base);
-  --_bg-hover: var(--tone-primary-hover);
-  --_fg: var(--tone-primary-foreground);
   font-weight: var(--weight-semi);
 }
 
 .dialog {
-  --_bg: var(--surface-default);
-  --_bg-hover: var(--bg-hover);
-  --_fg: var(--text-secondary);
   border: 1px solid var(--border-default);
   font-weight: var(--weight-medium);
 }
 
 .ghost {
-  --_bg: transparent;
-  --_bg-hover: var(--bg-hover);
-  --_fg: var(--text-muted);
   border: 1px solid var(--border-subtle);
   width: 100%;
 }
 
 .destructive {
-  --_bg: var(--tone-destructive-base);
-  --_bg-hover: var(--tone-destructive-hover);
-  --_fg: var(--tone-destructive-foreground);
   font-weight: var(--weight-semi);
 }
 

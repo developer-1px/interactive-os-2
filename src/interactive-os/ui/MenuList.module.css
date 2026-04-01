@@ -1,12 +1,1 @@
-/* ── MenuList — 3-block recipe ── */
-
-/* ═══ Block 1: base ═══ */
-.label {
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  color: var(--text-primary);
-}
-
-.indicator {
-  color: var(--text-muted);
-}
+/* ── MenuList — last-mile only (ax() handles base) ── */

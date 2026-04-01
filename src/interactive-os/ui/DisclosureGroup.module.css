@@ -1,13 +1,6 @@
-/* ── DisclosureGroup — 3-block recipe ── */
+/* ── DisclosureGroup — last-mile only ── */
 
-/* ═══ Block 1: base ═══ */
+/* controlSize centers children; disclosure header needs left-align */
 .item {
-  gap: var(--space-xs);
-}
-
-.label {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-primary);
-  user-select: none;
+  justify-content: flex-start;
 }

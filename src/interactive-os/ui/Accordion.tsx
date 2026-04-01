@@ -6,6 +6,8 @@ import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { accordion } from '../pattern/roles/accordion'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './Accordion.module.css'
 
 type AccordionProps = AriaComponentProps
@@ -17,14 +19,14 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   if (isGroup) {
     return (
       <div>
-        <div {...props} className={`flex-row items-center justify-between cursor-pointer ${styles.header}`}>
-          <span>{label}</span>
-          <span className={`shrink-0 ${styles.chevron} ${state.expanded ? styles.chevronExpanded : ''}`}>
+        <div {...props} className={`${ax({ surface: 'ghost', controlSize: 'md', layout: 'spread' })} ${styles.header}`}>
+          <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
+          <span className={`${ax({ flex: 'none', text: 'muted' })} ${styles.chevron} ${state.expanded ? styles.chevronExpanded : ''}`}>
             <ExpandIndicator />
           </span>
         </div>
         {state.slotProps && (
-          <div {...state.slotProps} className="flex-col">
+          <div {...state.slotProps} className={ax({ layout: 'column' })}>
             <span>{label} content</span>
           </div>
         )}
@@ -33,7 +35,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   }
 
   return (
-    <div {...props} className={styles.item}>
+    <div {...props} className={`${ax({ textStyle: 'body', text: 'secondary' })} ${styles.item}`}>
       <span>{label}</span>
     </div>
   )
@@ -48,7 +50,7 @@ export function Accordion({
   'aria-label': ariaLabel,
 }: AccordionProps) {
   return (
-    <div className={className ?? 'flex-col'}>
+    <div className={className ?? ax({ layout: 'column' })}>
       <Aria pattern={accordion} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
         <Aria.Item render={renderItem} />
       </Aria>

@@ -6,7 +6,8 @@ import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { checkbox } from '../pattern/roles/checkbox'
 import { CheckIndicator } from './indicators'
-import styles from './Checkbox.module.css'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 
 type CheckboxProps = AriaComponentProps
 
@@ -14,9 +15,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const checked = state.checked === true
   return (
-    <div {...props} className={`flex-row items-center ${styles.item}`} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ layout: 'bar', surface: 'ghost', controlSize: 'md', gap: 'sm' })} data-focused={state.focused || undefined}>
       <CheckIndicator checked={checked} />
-      <span className={styles.label}>{label}</span>
+      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
 }
