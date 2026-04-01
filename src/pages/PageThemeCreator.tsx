@@ -1,106 +1,50 @@
-// ② 2026-03-25-design-primitives-preview-prd.md
-import { useState, useCallback } from 'react'
+import { type Axes, ax } from '../poc/ax'
+import '../poc/ax.css'
 import styles from './PageThemeCreator.module.css'
-import { Button } from '../interactive-os/ui/Button'
-import { TextInput } from '../interactive-os/ui/TextInput'
-import { Accordion } from '../interactive-os/ui/Accordion'
-import { Breadcrumb } from '../interactive-os/ui/Breadcrumb'
-import { AlertDialog } from '../interactive-os/ui/AlertDialog'
-import { Checkbox } from '../interactive-os/ui/Checkbox'
-import { Combobox } from '../interactive-os/ui/Combobox'
-import { Dialog } from '../interactive-os/ui/Dialog'
-import { DisclosureGroup } from '../interactive-os/ui/DisclosureGroup'
-import { Grid } from '../interactive-os/ui/Grid'
-import { Kanban } from '../interactive-os/ui/Kanban'
-import { ListBox } from '../interactive-os/ui/ListBox'
-import { MenuList } from '../interactive-os/ui/MenuList'
-import { NavList } from '../interactive-os/ui/NavList'
-import { RadioGroup } from '../interactive-os/ui/RadioGroup'
-import { Slider } from '../interactive-os/ui/Slider'
-import { Spinbutton } from '../interactive-os/ui/Spinbutton'
-import { SwitchGroup } from '../interactive-os/ui/SwitchGroup'
-import { TabList } from '../interactive-os/ui/TabList'
-import { Toggle } from '../interactive-os/ui/Toggle'
-import { ToggleGroup } from '../interactive-os/ui/ToggleGroup'
-import { Toolbar } from '../interactive-os/ui/Toolbar'
-import { TreeGrid } from '../interactive-os/ui/TreeGrid'
-import { TreeView } from '../interactive-os/ui/TreeView'
-import { Toaster } from '../interactive-os/ui/Toaster'
-import { Tooltip } from '../interactive-os/ui/Tooltip'
-import { createToaster } from '../interactive-os/ui/createToaster'
 
-import {
-  makeAccordionData, makeAlertDialogData, makeCheckboxData, makeComboboxData,
-  makeDialogData, makeDisclosureGroupData, makeGridData, makeKanbanData,
-  makeListBoxData, makeMenuListData, makeNavListData, makeRadioGroupData,
-  makeSliderData, makeSpinbuttonData, makeSwitchGroupData, makeTabListData,
-  makeToggleData, makeToggleGroupData, makeToolbarData, makeTreeGridData,
-  makeTreeViewData,
-} from './showcaseFixtures'
+/* ══ Data ══ */
 
-/* ══ Specimen data ══ */
-
-const surfaceModes = ['action', 'input', 'display', 'overlay'] as const
-
-const shapeLevels = [
-  { name: 'xs', radius: '6px', py: '6px', px: '12px' },
-  { name: 'sm', radius: '6px', py: '6px', px: '16px' },
-  { name: 'md', radius: '10px', py: '0', px: '12px' },
-  { name: 'lg', radius: '12px', py: '20px', px: '20px' },
-  { name: 'xl', radius: '20px', py: '24px', px: '24px' },
-  { name: 'pill', radius: '9999px' },
+const tones = ['accent', 'danger', 'success', 'warning', 'neutral'] as const
+const textColors = ['bright', 'primary', 'secondary', 'muted'] as const
+const surfaces = ['action', 'input', 'display', 'overlay', 'ghost'] as const
+const spacingScale = [
+  { name: 'xs', px: '4px' }, { name: 'sm', px: '8px' }, { name: 'md', px: '12px' },
+  { name: 'lg', px: '16px' }, { name: 'xl', px: '24px' },
 ] as const
-
-const typeLevels = [
-  { name: 'hero', desc: '40 · 330 · Serif · 1.5' },
-  { name: 'display', desc: '32 · 400 · Serif · 1.3' },
-  { name: 'page', desc: '24 · 500 · Serif · 1.3' },
-  { name: 'section', desc: '16 · 600 · Sans · 1.4' },
-  { name: 'body', desc: '14 · 430 · Sans · 1.4' },
-  { name: 'caption', desc: '12 · 430 · Sans · 1.33' },
+const controlSizes = [
+  { name: 'sm', h: '32px', r: '6px' },
+  { name: 'md', h: '36px', r: '8px' },
+  { name: 'lg', h: '44px', r: '10px' },
 ] as const
-
-const toneNames = ['primary', 'destructive', 'success', 'warning', 'neutral'] as const
-const toneAxes = ['base', 'hover', 'dim', 'mid', 'bright', 'foreground'] as const
-const toneHasMidBright = new Set(['primary'])
-
-const motionLevels = [
-  { name: 'instant', desc: '75ms' },
-  { name: 'normal', desc: '150ms' },
-  { name: 'enter', desc: '150ms (decel)' },
+const textStyles = [
+  { name: 'hero', desc: '40 · Serif · 330' },
+  { name: 'display', desc: '32 · Serif · 400' },
+  { name: 'page', desc: '24 · Serif · 500' },
+  { name: 'section', desc: '16 · Sans · 600' },
+  { name: 'label', desc: '16 · Sans · 430' },
+  { name: 'body', desc: '14 · Sans · 430' },
+  { name: 'caption', desc: '12 · Sans · 400' },
+  { name: 'code', desc: '12 · Mono · 400' },
 ] as const
+const layouts = ['row', 'column', 'center', 'bar', 'spread', 'stack', 'scroll'] as const
 
-const weightLevels = [
-  { name: 'light', value: 330 },
-  { name: 'regular', value: 400 },
-  { name: 'book', value: 430 },
-  { name: 'medium', value: 500 },
-  { name: 'semi', value: 600 },
-] as const
+/* ══ Section Header ══ */
 
-const leadingLevels = [
-  { name: 'tight', value: 1.3 },
-  { name: 'snug', value: 1.4 },
-  { name: 'normal', value: 1.5 },
-  { name: 'relaxed', value: 1.75 },
-  { name: 'code', value: 1.6 },
-] as const
+function SectionTitle({ children }: { children: string }) {
+  return <h3 className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.sectionLabel}`}>{children}</h3>
+}
 
-const textColorLevels = ['bright', 'primary', 'secondary', 'muted'] as const
-const borderLevels = ['subtle', 'default', 'strong'] as const
-const spacingLevels = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as const
+/* ══ Surface ══ */
 
-/* ══ Specimens ══ */
-
-function SurfaceSpecimen() {
+function SurfaceSection() {
   return (
-    <div className={`${styles.specimen} flex-col`}>
-      <h3 className={styles.specimenTitle}>Surface</h3>
-      <div className={styles.swatchRow4}>
-        {surfaceModes.map(mode => (
-          <div key={mode} className={`${styles.swatchItem} flex-col`}>
-            <div className={styles.surfaceSwatch} data-surface={mode} />
-            <span className={styles.swatchLabel}>{mode}</span>
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>SURFACE</SectionTitle>
+      <div className={styles.grid5}>
+        {surfaces.map(s => (
+          <div key={s} className={ax({ layout: 'column', gap: 'xs' })}>
+            <div className={styles.swatch} data-surface={s} />
+            <span className={`${ax({ textStyle: 'caption' })} ${styles.mono}`}>{s}</span>
           </div>
         ))}
       </div>
@@ -108,366 +52,241 @@ function SurfaceSpecimen() {
   )
 }
 
-function ShapeSpecimen() {
+/* ══ Typography ══ */
+
+function TypographySection() {
   return (
-    <div className={`${styles.specimen} flex-col`}>
-      <h3 className={styles.specimenTitle}>Shape</h3>
-      <div className={styles.swatchRow6}>
-        {shapeLevels.map(level => (
-          <div key={level.name} className={`${styles.swatchItem} flex-col`}>
-            <div
-              className={styles.shapeBox}
-              style={{
-                borderRadius: `var(--shape-${level.name}-radius)`,
-                ...('py' in level ? { padding: `var(--shape-${level.name}-py) var(--shape-${level.name}-px)` } : {}),
-              }}
-            >
-              Aa
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>TYPOGRAPHY SCALE</SectionTitle>
+      <div className={ax({ layout: 'column' })}>
+        {textStyles.map(t => (
+          <div key={t.name} className={`${ax({ layout: 'spread' })} ${styles.typeRow}`}>
+            <span className={ax({ textStyle: t.name as Axes['textStyle'], text: 'primary' })}>{t.name}</span>
+            <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.mono}`}>{t.desc}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Text Color ══ */
+
+function TextColorSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>TEXT COLOR</SectionTitle>
+      <div className={styles.grid4}>
+        {textColors.map(c => (
+          <div key={c} className={ax({ layout: 'column', gap: 'xs' })}>
+            <span className={ax({ textStyle: 'page', text: c })}>Ag</span>
+            <span className={`${ax({ textStyle: 'caption' })} ${styles.mono}`}>{c}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Spacing ══ */
+
+function SpacingSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>SPACING</SectionTitle>
+      <div className={ax({ layout: 'column', gap: 'sm' })}>
+        {spacingScale.map(s => (
+          <div key={s.name} className={ax({ layout: 'bar', gap: 'md' })}>
+            <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.mono} ${styles.spacingLabel}`}>{s.px}</span>
+            <div className={styles.spacingBar} data-size={s.name} />
+            <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.mono}`}>{s.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Control Size ══ */
+
+function ControlSizeSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>CONTROL SIZE</SectionTitle>
+      <div className={ax({ layout: 'column', gap: 'sm' })}>
+        {controlSizes.map(s => (
+          <div key={s.name} className={ax({ layout: 'bar', gap: 'md' })}>
+            <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.mono} ${styles.spacingLabel}`}>{s.name}</span>
+            <button className={ax({ surface: 'action', controlSize: s.name as Axes['controlSize'], tone: 'neutral' })}>
+              {s.h} / r{s.r}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Tone ══ */
+
+function ToneSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>TONE</SectionTitle>
+      <div className={styles.grid5}>
+        {tones.map(t => (
+          <div key={t} className={ax({ layout: 'column', gap: 'xs' })}>
+            <div className={styles.toneSwatch} data-tone={t} />
+            <span className={`${ax({ textStyle: 'caption' })} ${styles.mono}`}>{t}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Buttons — tone × state ══ */
+
+function ButtonsSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>BUTTONS</SectionTitle>
+      <div className={styles.grid4}>
+        <span />
+        <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.mono}`}>Default</span>
+        <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.mono}`}>Hover</span>
+        <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.mono}`}>Disabled</span>
+        {(['accent', 'danger', 'neutral'] as const).map(tone => (
+          <div key={tone} className="contents">
+            <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.mono}`}>{tone}</span>
+            <button className={ax({ surface: 'action', controlSize: 'md', tone })}>{tone}</button>
+            <button className={`${ax({ surface: 'action', controlSize: 'md', tone })} ${styles.hovered}`}>{tone}</button>
+            <button className={ax({ surface: 'action', controlSize: 'md', tone })} disabled>{tone}</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Inputs ══ */
+
+function InputsSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>INPUTS</SectionTitle>
+      <div className={ax({ layout: 'column', gap: 'md' })}>
+        <input className={ax({ surface: 'input', controlSize: 'lg' })} placeholder="Search invoices..." />
+        <div className={ax({ layout: 'column', gap: 'xs' })}>
+          <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Email Address</span>
+          <input className={ax({ surface: 'input', controlSize: 'lg' })} placeholder="name@company.com" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ══ Chips / Badges ══ */
+
+function ChipsSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>CHIPS</SectionTitle>
+      <div className={ax({ layout: 'row', gap: 'sm' })}>
+        <span className={ax({ surface: 'action', controlSize: 'sm', tone: 'accent', textStyle: 'caption' })}>Filter: Active</span>
+        <span className={ax({ surface: 'action', controlSize: 'sm', tone: 'neutral', textStyle: 'caption' })}>Filtered</span>
+      </div>
+      <div className={ax({ layout: 'row', gap: 'sm' })}>
+        <span className={ax({ surface: 'action', controlSize: 'sm', tone: 'warning', textStyle: 'caption' })}>Status: Pending</span>
+        <span className={ax({ surface: 'action', controlSize: 'sm', tone: 'success', textStyle: 'caption' })}>Tag: New</span>
+      </div>
+    </div>
+  )
+}
+
+/* ══ Tabs ══ */
+
+function TabsSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>TABS</SectionTitle>
+      <div className={ax({ layout: 'bar', gap: 'xs' })}>
+        {['Overview', 'Billing', 'Team'].map((t, i) => (
+          <div key={t} className={ax({ surface: 'ghost', controlSize: 'sm', text: i === 0 ? 'primary' : 'muted' })} role="tab" aria-selected={i === 0}>
+            {t}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Alerts ══ */
+
+function AlertsSection() {
+  const alerts = [
+    { tone: 'success', text: 'Changes saved.' },
+    { tone: 'accent', text: 'New feature available.' },
+    { tone: 'warning', text: 'Session expiring.' },
+    { tone: 'danger', text: 'Failed to save.' },
+  ] as const
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>ALERTS</SectionTitle>
+      <div className={ax({ layout: 'column', gap: 'sm' })}>
+        {alerts.map(a => (
+          <div key={a.tone} className={`${ax({ surface: 'display', layout: 'bar', gap: 'sm', padding: 'md' })} ${styles.alert}`} data-tone={a.tone}>
+            <span className={ax({ textStyle: 'body', text: 'primary' })}>{a.text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ══ Cards ══ */
+
+function CardsSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>CARDS</SectionTitle>
+      <div className={ax({ layout: 'row', gap: 'md' })}>
+        <div className={ax({ surface: 'display', layout: 'column', gap: 'md', padding: 'lg', width: 'sm' })}>
+          <div className={styles.cardImage} />
+          <span className={ax({ textStyle: 'section', text: 'primary' })}>Title card</span>
+          <span className={ax({ textStyle: 'body', text: 'secondary' })}>Lorem ipsum dolor sit amet, consectetur adipisicing.</span>
+          <div className={ax({ layout: 'bar', gap: 'sm' })}>
+            <button className={ax({ surface: 'action', controlSize: 'sm', tone: 'neutral' })}>Title</button>
+            <button className={ax({ surface: 'action', controlSize: 'sm', tone: 'accent' })}>Action</button>
+          </div>
+        </div>
+        <div className={ax({ surface: 'overlay', layout: 'column', gap: 'md', padding: 'lg', width: 'sm' })}>
+          <span className={ax({ textStyle: 'section', text: 'primary' })}>Overlay card</span>
+          <span className={ax({ textStyle: 'body', text: 'secondary' })}>Uses surface:overlay with shadow elevation.</span>
+          <button className={ax({ surface: 'action', controlSize: 'sm', tone: 'accent' })}>Confirm</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ══ Layout Showcase ══ */
+
+function LayoutSection() {
+  return (
+    <div className={ax({ layout: 'column', gap: 'md' })}>
+      <SectionTitle>LAYOUT</SectionTitle>
+      <div className={styles.grid4}>
+        {layouts.map(l => (
+          <div key={l} className={ax({ layout: 'column', gap: 'xs' })}>
+            <div className={`${styles.layoutBox} ${ax({ layout: l as Axes['layout'], gap: 'xs', padding: 'sm' })}`}>
+              <div className={styles.layoutChild} />
+              <div className={styles.layoutChild} />
+              <div className={styles.layoutChild} />
             </div>
-            <span className={styles.swatchLabel}>{level.name}</span>
-            <span className={styles.swatchMeta}>{level.radius}</span>
+            <span className={`${ax({ textStyle: 'caption' })} ${styles.mono}`}>{l}</span>
           </div>
         ))}
-      </div>
-    </div>
-  )
-}
-
-function TypeSpecimen() {
-  return (
-    <div className={`${styles.specimen} flex-col`}>
-      <h3 className={styles.specimenTitle}>Type</h3>
-      <div className={`${styles.typeStack} flex-col`}>
-        {typeLevels.map(level => (
-          <div key={level.name} className={`${styles.typeRow} flex-row items-baseline justify-between`}>
-            <span
-              className={styles.typeSample}
-              style={{
-                fontSize: `var(--type-${level.name}-size)`,
-                fontWeight: `var(--type-${level.name}-weight)`,
-                fontFamily: `var(--type-${level.name}-family)`,
-                lineHeight: `var(--type-${level.name}-line-height)`,
-              }}
-            >
-              {level.name}
-            </span>
-            <span className={styles.swatchMeta}>{level.desc}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ToneSpecimen() {
-  return (
-    <div className={`${styles.specimen} flex-col`}>
-      <h3 className={styles.specimenTitle}>Tone</h3>
-      <div className={styles.toneGrid}>
-        <div className={`${styles.toneHeaderRow} contents`}>
-          <span className={styles.toneCorner} />
-          {toneAxes.map(axis => (
-            <span key={axis} className={styles.toneHeader}>{axis}</span>
-          ))}
-        </div>
-        {toneNames.map(tone => (
-          <div key={tone} className={`${styles.toneRow} contents`}>
-            <span className={styles.toneRowLabel}>{tone}</span>
-            {toneAxes.map(axis => {
-              const hasTone = axis !== 'mid' && axis !== 'bright' || toneHasMidBright.has(tone)
-              return (
-                <span key={axis} className="flex-row justify-center">
-                  {hasTone ? (
-                    <span
-                      className={styles.toneSwatch}
-                      style={{ background: `var(--tone-${tone}-${axis})` }}
-                    />
-                  ) : (
-                    <span className={styles.toneEmpty}>—</span>
-                  )}
-                </span>
-              )
-            })}
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function MotionSpecimen() {
-  const [active, setActive] = useState<string | null>(null)
-
-  const handleClick = useCallback((name: string) => {
-    setActive(name)
-    setTimeout(() => setActive(null), 600)
-  }, [])
-
-  return (
-    <div className={`${styles.specimen} flex-col`}>
-      <h3 className={styles.specimenTitle}>Motion</h3>
-      <div className={styles.swatchRow3}>
-        {motionLevels.map(level => (
-          <div key={level.name} className={`${styles.swatchItem} flex-col`}>
-            <div
-              className={styles.motionTrack}
-              onClick={() => handleClick(level.name)}
-            >
-              <div
-                className={styles.motionBox}
-                style={{
-                  transitionDuration: `var(--motion-${level.name}-duration)`,
-                  transitionTimingFunction: `var(--motion-${level.name}-easing)`,
-                  transform: active === level.name ? 'translateX(calc(100% - 48px))' : 'translateX(0)',
-                }}
-              />
-            </div>
-            <span className={styles.swatchLabel}>{level.name}</span>
-            <span className={styles.swatchMeta}>{level.desc}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function IndependentAxesSpecimen() {
-  return (
-    <div className={`${styles.specimen} flex-col`}>
-      <h3 className={styles.specimenTitle}>Independent Axes</h3>
-
-      <h4 className={styles.subTitle}>Weight</h4>
-      <div className={styles.swatchRow5}>
-        {weightLevels.map(w => (
-          <div key={w.name} className={`${styles.swatchItem} flex-col`}>
-            <span className={styles.weightSample} style={{ fontWeight: `var(--weight-${w.name})` }}>Ag</span>
-            <span className={styles.swatchLabel}>{w.name}</span>
-            <span className={styles.swatchMeta}>{w.value}</span>
-          </div>
-        ))}
-      </div>
-
-      <h4 className={styles.subTitle}>Line-height</h4>
-      <div className={styles.swatchRow5}>
-        {leadingLevels.map(l => (
-          <div key={l.name} className={`${styles.swatchItem} flex-col`}>
-            <span className={styles.leadingSample} style={{ lineHeight: `var(--leading-${l.name})` }}>
-              Line 1<br />Line 2<br />Line 3
-            </span>
-            <span className={styles.swatchLabel}>{l.name}</span>
-            <span className={styles.swatchMeta}>{l.value}</span>
-          </div>
-        ))}
-      </div>
-
-      <h4 className={styles.subTitle}>Text Color</h4>
-      <div className={styles.swatchRow6}>
-        {textColorLevels.map(level => (
-          <div key={level} className={`${styles.swatchItem} flex-col`}>
-            <span className={styles.colorSample} style={{ color: `var(--text-${level})` }}>Aa</span>
-            <span className={styles.swatchLabel}>{level}</span>
-          </div>
-        ))}
-      </div>
-
-      <h4 className={styles.subTitle}>Border</h4>
-      <div className={styles.swatchRow3}>
-        {borderLevels.map(level => (
-          <div key={level} className={`${styles.swatchItem} flex-col`}>
-            <div className={styles.borderSwatch} style={{ borderColor: `var(--border-${level})` }} />
-            <span className={styles.swatchLabel}>{level}</span>
-          </div>
-        ))}
-      </div>
-
-      <h4 className={styles.subTitle}>Spacing</h4>
-      <div className={styles.spacingRow}>
-        {spacingLevels.map(level => (
-          <div key={level} className={styles.spacingItem}>
-            <div className={styles.spacingBar} style={{ width: `var(--space-${level})` }} />
-            <span className={styles.swatchLabel}>{level}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* ══ Scenario cards (unchanged) ══ */
-
-const noop = () => {}
-const demoToaster = createToaster({ duration: 3000, maxToasts: 3 })
-let toastCount = 0
-const toastVariants: Array<'default' | 'success' | 'error'> = ['default', 'success', 'error']
-
-function BoardCard() {
-  const [data, setData] = useState(makeKanbanData)
-  return (
-    <div className={`${styles.card} ${styles.cardWide}`} data-surface="display">
-      <Kanban data={data} onChange={setData} aria-label="Project board" />
-    </div>
-  )
-}
-
-function PreferencesCard() {
-  const [switchData, setSwitchData] = useState(makeSwitchGroupData)
-  const [radioData, setRadioData] = useState(makeRadioGroupData)
-  const [sliderData, setSliderData] = useState(makeSliderData)
-  const [checkboxData, setCheckboxData] = useState(makeCheckboxData)
-  return (
-    <div className={styles.card} data-surface="display">
-      <div className={styles.stack}>
-        <SwitchGroup data={switchData} onChange={setSwitchData} />
-        <RadioGroup data={radioData} onChange={setRadioData} />
-        <Slider data={sliderData} onChange={setSliderData} min={0} max={100} step={1} />
-        <Checkbox data={checkboxData} onChange={setCheckboxData} />
-      </div>
-    </div>
-  )
-}
-
-function DataViewCard() {
-  const [gridData, setGridData] = useState(makeGridData)
-  const [tabData, setTabData] = useState(makeTabListData)
-  const [comboData, setComboData] = useState(makeComboboxData)
-  return (
-    <div className={`${styles.card} ${styles.cardWide}`} data-surface="display">
-      <div className={styles.stack}>
-        <div className={styles.row}>
-          <TabList data={tabData} onChange={setTabData} />
-          <div className={styles.fill}>
-            <Combobox data={comboData} onChange={setComboData} placeholder="Filter by label..." />
-          </div>
-        </div>
-        <Grid
-          data={gridData}
-          onChange={setGridData}
-          columns={[
-            { key: 'id', header: 'ID' },
-            { key: 'title', header: 'Title' },
-            { key: 'priority', header: 'Priority' },
-          ]}
-          aria-label="Issue tracker"
-        />
-      </div>
-    </div>
-  )
-}
-
-function ExplorerCard() {
-  const [treeData, setTreeData] = useState(makeTreeViewData)
-  const [toolbarData, setToolbarData] = useState(makeToolbarData)
-  return (
-    <div className={styles.card} data-surface="display">
-      <div className={styles.stack}>
-        <Toolbar data={toolbarData} onChange={setToolbarData} />
-        <TreeView data={treeData} onChange={setTreeData} />
-      </div>
-    </div>
-  )
-}
-
-function HierarchyCard() {
-  const [data, setData] = useState(makeTreeGridData)
-  return (
-    <div className={styles.card} data-surface="display">
-      <TreeGrid data={data} onChange={setData} />
-    </div>
-  )
-}
-
-function InputGroupCard() {
-  const [spinData, setSpinData] = useState(makeSpinbuttonData)
-  const [toggleData, setToggleData] = useState(makeToggleData)
-  const [groupData, setGroupData] = useState(makeToggleGroupData)
-  return (
-    <div className={styles.card} data-surface="display">
-      <div className={styles.stack}>
-        <Spinbutton data={spinData} onChange={setSpinData} min={0} max={99} step={1} />
-        <Toggle data={toggleData} onChange={setToggleData} />
-        <ToggleGroup data={groupData} onChange={setGroupData} />
-      </div>
-    </div>
-  )
-}
-
-function SidebarCard() {
-  const [navData, setNavData] = useState(makeNavListData)
-  const [accordionData, setAccordionData] = useState(makeAccordionData)
-  return (
-    <div className={styles.card} data-surface="display">
-      <div className={styles.stack}>
-        <NavList data={navData} onChange={setNavData} onActivate={noop} />
-        <Accordion data={accordionData} onChange={setAccordionData} />
-      </div>
-    </div>
-  )
-}
-
-function ActionsCard() {
-  const [listData, setListData] = useState(makeListBoxData)
-  return (
-    <div className={styles.card} data-surface="display">
-      <div className={styles.stack}>
-        <Tooltip content="Cycles through default, success, and error variants">
-          <button
-            className={styles.toastTrigger}
-            onClick={() => {
-              const variant = toastVariants[toastCount % 3]
-              toastCount++
-              demoToaster.toast({
-                title: `Toast #${toastCount}`,
-                description: variant === 'error' ? 'Something went wrong' : variant === 'success' ? 'Operation complete' : 'Notification',
-                variant,
-              })
-            }}
-          >
-            Add Toast
-          </button>
-        </Tooltip>
-        <Toaster toaster={demoToaster} />
-        <ListBox data={listData} onChange={setListData} />
-      </div>
-    </div>
-  )
-}
-
-function ConfirmCard() {
-  const [dialogData, setDialogData] = useState(makeDialogData)
-  const [alertData, setAlertData] = useState(makeAlertDialogData)
-  return (
-    <div className={styles.card} data-surface="display">
-      <div className={styles.stack}>
-        <Dialog data={dialogData} onChange={setDialogData} />
-        <AlertDialog data={alertData} onChange={setAlertData} />
-      </div>
-    </div>
-  )
-}
-
-function MenuCard() {
-  const [disclosureData, setDisclosureData] = useState(makeDisclosureGroupData)
-  const [menuData, setMenuData] = useState(makeMenuListData)
-  return (
-    <div className={styles.card} data-surface="display">
-      <div className={styles.stack}>
-        <DisclosureGroup data={disclosureData} onChange={setDisclosureData} />
-        <MenuList data={menuData} onChange={setMenuData} />
-      </div>
-    </div>
-  )
-}
-
-function FormCard() {
-  return (
-    <div className={styles.card} data-surface="display">
-      <div className={styles.stack}>
-        <Breadcrumb path="src/interactive-os/ui/Button.tsx" root="src" />
-        <TextInput placeholder="Search components..." />
-        <div className={styles.row}>
-          <Button variant="accent">Save changes</Button>
-          <Button variant="ghost">Cancel</Button>
-        </div>
       </div>
     </div>
   )
@@ -477,32 +296,37 @@ function FormCard() {
 
 export default function PageThemeCreator() {
   return (
-    <div className={`${styles.root} flex-col overflow-y-auto`}>
-      <h2 className={styles.pageTitle}>Design System</h2>
+    <div className={`${ax({ layout: 'column', gap: 'xl', padding: 'xl' })} ${styles.root}`}>
+      <div className={ax({ layout: 'column', gap: 'xs' })}>
+        <h1 className={ax({ textStyle: 'hero', text: 'primary' })}>Axis Styleguide</h1>
+        <span className={ax({ textStyle: 'body', text: 'muted' })}>10-axis design system — claude.ai reference</span>
+      </div>
 
-      <section className={`${styles.section} flex-col`}>
-        <SurfaceSpecimen />
-        <ShapeSpecimen />
-        <TypeSpecimen />
-        <ToneSpecimen />
-        <MotionSpecimen />
-        <IndependentAxesSpecimen />
-      </section>
+      <div className={styles.pageGrid}>
+        {/* Column 1: Tokens */}
+        <div className={ax({ layout: 'column', gap: 'xl' })}>
+          <SurfaceSection />
+          <ToneSection />
+          <TextColorSection />
+          <SpacingSection />
+          <ControlSizeSection />
+        </div>
 
-      <h2 className={styles.sectionHeading} id="components">Components</h2>
+        {/* Column 2: Typography + Layout */}
+        <div className={ax({ layout: 'column', gap: 'xl' })}>
+          <TypographySection />
+          <LayoutSection />
+        </div>
 
-      <div className={styles.grid}>
-        <BoardCard />
-        <PreferencesCard />
-        <DataViewCard />
-        <ExplorerCard />
-        <HierarchyCard />
-        <InputGroupCard />
-        <SidebarCard />
-        <ActionsCard />
-        <ConfirmCard />
-        <MenuCard />
-        <FormCard />
+        {/* Column 3: Components */}
+        <div className={ax({ layout: 'column', gap: 'xl' })}>
+          <ButtonsSection />
+          <InputsSection />
+          <ChipsSection />
+          <TabsSection />
+          <AlertsSection />
+          <CardsSection />
+        </div>
       </div>
     </div>
   )
