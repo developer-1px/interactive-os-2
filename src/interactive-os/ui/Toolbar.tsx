@@ -7,6 +7,8 @@ import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
 import { getNodeLabel } from './types'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './Toolbar.module.css'
 
 const toolbarPattern = toolbar()
@@ -26,9 +28,14 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const iconKey = (item.data as Record<string, unknown>)?.icon as string | undefined
   const Icon = iconKey ? iconMap[iconKey] : undefined
-  const cls = 'inline-flex items-center justify-center border-none cursor-pointer ' + styles.toolbarBtn + (state.focused ? ' ' + styles.toolbarBtnFocused : '') + (state.selected ? ' ' + styles.toolbarBtnSelected : '')
+  const focusCls = state.focused ? styles.focused : ''
+  const selectedCls = state.selected ? styles.selected : ''
   return (
-    <span {...props} className={cls} aria-label={Icon ? label : undefined}>
+    <span
+      {...props}
+      className={`${ax({ surface: 'ghost', controlSize: 'sm' })} ${focusCls} ${selectedCls}`}
+      aria-label={Icon ? label : undefined}
+    >
       {Icon ? <Icon size={18} /> : label}
     </span>
   )

@@ -6,6 +6,8 @@ import type { NodeState } from '../pattern/types'
 import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { dialog } from '../pattern/roles/dialog'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 
 interface DialogProps {
   data: NormalizedData
@@ -14,9 +16,17 @@ interface DialogProps {
   renderItem?: (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => React.ReactElement
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState): React.ReactElement => {
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
-  return <div {...props}>{label}</div>
+  return (
+    <div
+      {...props}
+      className={ax({ surface: 'ghost', controlSize: 'md', text: state.focused ? 'primary' : 'secondary' })}
+      data-focused={state.focused || undefined}
+    >
+      {label}
+    </div>
+  )
 }
 
 export function Dialog({
