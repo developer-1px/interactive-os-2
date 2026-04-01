@@ -1,15 +1,14 @@
 /* ── MECE Axis Design System — CSS Classes ──
- * 시각 축 + 구조 축 = ~50개 클래스. 이게 전부.
+ * 시각 5축 + 구조 5축 = 10축. 이게 전부.
  * style={} 사용 금지. 모든 것을 ax()로.
- * 모든 값은 tokens.css 변수 참조.
+ * 토큰은 tokens.css 참조. claude.ai 실측 기반.
  */
 
 /* ════════════════════════════════════════════
  * Surface — "이 요소는 사용자와 어떤 관계인가"
- * 번들: border + background + cursor + 상태 정책
+ * 번들: cursor + border + background + 상태 정책
  * ════════════════════════════════════════════ */
 
-/* Action — 버튼, 토글 등 누르는 요소 */
 .sf-action {
   cursor: pointer;
   user-select: none;
@@ -18,56 +17,33 @@
   color: var(--_fg, inherit);
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
-.sf-action:hover {
-  background: var(--_bg-hover, var(--bg-hover));
-}
-.sf-action:active {
-  background: var(--_bg-active, var(--bg-active));
-}
-.sf-action:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-}
+.sf-action:hover { background: var(--_bg-hover, var(--bg-hover)); }
+.sf-action:active { background: var(--_bg-active, var(--bg-active)); }
+.sf-action:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .sf-action[aria-disabled="true"],
-.sf-action:disabled {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: default;
-}
+.sf-action:disabled { opacity: 0.4; pointer-events: none; cursor: default; }
 
-/* Input — 텍스트 입력, 콤보박스 등 데이터 입력 요소 */
 .sf-input {
   border: 1px solid var(--border-default);
   background: var(--surface-default);
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
-.sf-input:focus-within {
-  border-color: var(--focus);
-}
-.sf-input:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-}
+.sf-input:focus-within { border-color: var(--focus); }
+.sf-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .sf-input[aria-disabled="true"],
-.sf-input:disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
+.sf-input:disabled { opacity: 0.4; pointer-events: none; }
 
-/* Display — 카드, 패널 등 정보 표시 컨테이너 */
 .sf-display {
   border: 1px solid var(--border-subtle);
   background: var(--surface-default);
 }
 
-/* Overlay — 다이얼로그, 메뉴, 툴팁 등 부유 레이어 */
 .sf-overlay {
   background: var(--surface-overlay);
   box-shadow: var(--shadow-lg);
   border: none;
 }
 
-/* Ghost — 리스트 아이템, 탭, 사이드바 링크 등 */
 .sf-ghost {
   cursor: pointer;
   user-select: none;
@@ -75,110 +51,49 @@
   background: transparent;
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
-.sf-ghost:hover {
-  background: var(--bg-hover);
-}
-.sf-ghost:active {
-  background: var(--bg-active);
-}
-.sf-ghost:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: -2px;
-}
-.sf-ghost[aria-disabled="true"] {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: default;
-}
+.sf-ghost:hover { background: var(--bg-hover); }
+.sf-ghost:active { background: var(--bg-active); }
+.sf-ghost:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.sf-ghost[aria-disabled="true"] { opacity: 0.4; pointer-events: none; cursor: default; }
 
 /* ════════════════════════════════════════════
  * Control Size — "이 요소의 물리적 크기"
- * 번들: min-height + border-radius + font-size
- * Law 2: r/h ≈ 0.2
+ * 번들: display + align + justify + min-height + border-radius + font-size + padding-inline
+ * claude.ai 실측: sm=32/6, md=36/8, lg=44/10
  * ════════════════════════════════════════════ */
 
 .cs-sm {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 32px;
-  border-radius: var(--shape-xs-radius);   /* 6px  — 32 × 0.2 */
-  font-size: var(--type-caption-size);     /* 12px */
+  border-radius: 6px;
+  font-size: var(--type-caption-size);   /* 12px */
+  padding-inline: var(--space-lg);       /* 16px */
 }
 .cs-md {
   display: inline-flex;
   align-items: center;
-  min-height: var(--toolbar-height);       /* 36px */
-  border-radius: var(--shape-sm-radius);   /* 6px  — 36 × 0.2 */
-  font-size: var(--type-body-size);        /* 14px */
+  justify-content: center;
+  min-height: 36px;
+  border-radius: 8px;
+  font-size: var(--type-body-size);      /* 14px */
+  padding-inline: var(--space-lg);       /* 16px */
 }
 .cs-lg {
   display: inline-flex;
   align-items: center;
-  min-height: var(--input-height);         /* 44px */
-  border-radius: var(--shape-md-radius);   /* 10px — 44 × 0.2 */
-  font-size: var(--type-body-size);        /* 14px */
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 10px;
+  font-size: var(--type-body-size);      /* 14px */
+  padding-inline: var(--space-md);       /* 12px */
 }
-
-/* ════════════════════════════════════════════
- * Interaction — padding-x by interaction mode
- * Law 4: input(12) / nav(16) / action(20)
- * ════════════════════════════════════════════ */
-
-.ix-input  { padding-inline: var(--shape-md-px);  }  /* 12px — data entry */
-.ix-nav    { padding-inline: var(--shape-sm-px);   }  /* 16px — wayfinding */
-.ix-action { padding-inline: 20px;                 }  /* 20px — CTA */
-
-/* ════════════════════════════════════════════
- * Tone — "이 요소의 의미적 색상"
- * 번들: --_bg + --_fg + --_bg-hover + --_bg-active
- * Surface의 상태 정책이 이 변수를 소비한다
- * ════════════════════════════════════════════ */
-
-.tn-primary {
-  --_bg: var(--tone-primary-base);
-  --_fg: var(--tone-primary-foreground);
-  --_bg-hover: var(--tone-primary-hover);
-  --_bg-active: var(--tone-primary-bright);
-}
-.tn-destructive {
-  --_bg: var(--tone-destructive-base);
-  --_fg: var(--tone-destructive-foreground);
-  --_bg-hover: var(--tone-destructive-hover);
-  --_bg-active: var(--tone-destructive-dim);
-}
-.tn-success {
-  --_bg: var(--tone-success-base);
-  --_fg: var(--tone-success-foreground);
-  --_bg-hover: var(--tone-success-hover);
-  --_bg-active: var(--tone-success-dim);
-}
-.tn-warning {
-  --_bg: var(--tone-warning-base);
-  --_fg: var(--tone-warning-foreground);
-  --_bg-hover: var(--tone-warning-hover);
-  --_bg-active: var(--tone-warning-dim);
-}
-.tn-neutral {
-  --_bg: transparent;
-  --_fg: var(--text-secondary);
-  --_bg-hover: var(--bg-hover);
-  --_bg-active: var(--bg-active);
-}
-
-/* ════════════════════════════════════════════
- * Proximity — "이 요소들 사이의 관계 거리"
- * Gestalt 근접성 원리: 관계가 가까울수록 gap이 작다
- * ════════════════════════════════════════════ */
-
-.px-inline  { gap: var(--space-xs);  }  /*  4px — 아이콘↔텍스트 */
-.px-element { gap: var(--space-sm);  }  /*  8px — 형제 아이템 */
-.px-group   { gap: var(--space-md);  }  /* 12px — 블록↔블록 */
-.px-section { gap: var(--space-lg);  }  /* 16px — 섹션 */
-.px-page    { gap: var(--space-xl);  }  /* 24px — 페이지 단위 */
 
 /* ════════════════════════════════════════════
  * Text Style — 타이포그래피 번들
  * 번들: font-size + weight + family + line-height + letter-spacing
+ * claude.ai 실측: Anthropic Serif(body) / Anthropic Sans(ui)
  * ════════════════════════════════════════════ */
 
 .ts-hero {
@@ -239,8 +154,44 @@
 }
 
 /* ════════════════════════════════════════════
+ * Tone — "이 요소의 의미적 색상"
+ * 번들: --_bg + --_fg + --_bg-hover + --_bg-active
+ * Surface의 상태 정책이 이 변수를 소비
+ * ════════════════════════════════════════════ */
+
+.tn-accent {
+  --_bg: var(--tone-primary-base);
+  --_fg: var(--tone-primary-foreground);
+  --_bg-hover: var(--tone-primary-hover);
+  --_bg-active: var(--tone-primary-bright);
+}
+.tn-danger {
+  --_bg: var(--tone-destructive-base);
+  --_fg: var(--tone-destructive-foreground);
+  --_bg-hover: var(--tone-destructive-hover);
+  --_bg-active: var(--tone-destructive-dim);
+}
+.tn-success {
+  --_bg: var(--tone-success-base);
+  --_fg: var(--tone-success-foreground);
+  --_bg-hover: var(--tone-success-hover);
+  --_bg-active: var(--tone-success-dim);
+}
+.tn-warning {
+  --_bg: var(--tone-warning-base);
+  --_fg: var(--tone-warning-foreground);
+  --_bg-hover: var(--tone-warning-hover);
+  --_bg-active: var(--tone-warning-dim);
+}
+.tn-neutral {
+  --_bg: transparent;
+  --_fg: var(--text-secondary);
+  --_bg-hover: var(--bg-hover);
+  --_bg-active: var(--bg-active);
+}
+
+/* ════════════════════════════════════════════
  * Text Color — 텍스트 색상 위계 (tone과 독립)
- * 같은 body가 bright일 수도 muted일 수도 있다
  * ════════════════════════════════════════════ */
 
 .tx-bright    { color: var(--text-bright); }
@@ -249,43 +200,39 @@
 .tx-muted     { color: var(--text-muted); }
 
 /* ════════════════════════════════════════════
- * Layout — 배치 방향
+ * Layout — 역할 기반 구조 번들
+ * display + direction + align + justify + overflow
+ * claude.ai 실측: control=81% row+center+center
  * ════════════════════════════════════════════ */
 
 .ly-row    { display: flex; flex-direction: row; }
 .ly-column { display: flex; flex-direction: column; }
-.ly-grid   { display: grid; }
 .ly-center { display: flex; align-items: center; justify-content: center; }
+.ly-bar    { display: flex; flex-direction: row; align-items: center; }
+.ly-spread { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
+.ly-stack  { display: flex; flex-direction: column; }
+.ly-scroll { display: flex; flex-direction: column; overflow-y: auto; }
 
 /* ════════════════════════════════════════════
- * Align — cross-axis 정렬
+ * Gap — 간격 스케일 (claude.ai 실측: 4/8/12/16/24)
  * ════════════════════════════════════════════ */
 
-.al-start    { align-items: flex-start; }
-.al-center   { align-items: center; }
-.al-end      { align-items: flex-end; }
-.al-stretch  { align-items: stretch; }
-.al-baseline { align-items: baseline; }
+.g-xs { gap: var(--space-xs); }  /*  4px */
+.g-sm { gap: var(--space-sm); }  /*  8px */
+.g-md { gap: var(--space-md); }  /* 12px */
+.g-lg { gap: var(--space-lg); }  /* 16px */
+.g-xl { gap: var(--space-xl); }  /* 24px */
 
 /* ════════════════════════════════════════════
- * Justify — main-axis 정렬
+ * Padding — 같은 간격 스케일
  * ════════════════════════════════════════════ */
 
-.jc-start   { justify-content: flex-start; }
-.jc-center  { justify-content: center; }
-.jc-end     { justify-content: flex-end; }
-.jc-between { justify-content: space-between; }
-
-/* ════════════════════════════════════════════
- * Padding — proximity 스케일 재사용
- * ════════════════════════════════════════════ */
-
-.pd-none    { padding: 0; }
-.pd-inline  { padding: var(--space-xs); }   /*  4px */
-.pd-element { padding: var(--space-sm); }   /*  8px */
-.pd-group   { padding: var(--space-md); }   /* 12px */
-.pd-section { padding: var(--space-lg); }   /* 16px */
-.pd-page    { padding: var(--space-xl); }   /* 24px */
+.pd-none { padding: 0; }
+.pd-xs   { padding: var(--space-xs); }   /*  4px */
+.pd-sm   { padding: var(--space-sm); }   /*  8px */
+.pd-md   { padding: var(--space-md); }   /* 12px */
+.pd-lg   { padding: var(--space-lg); }   /* 16px */
+.pd-xl   { padding: var(--space-xl); }   /* 24px */
 
 /* ════════════════════════════════════════════
  * Width — 너비 제약
@@ -297,23 +244,6 @@
 .w-sm   { max-width: 200px; }
 .w-md   { max-width: 400px; }
 .w-lg   { max-width: 640px; }
-
-/* ════════════════════════════════════════════
- * Overflow
- * ════════════════════════════════════════════ */
-
-.of-hidden { overflow: hidden; }
-.of-auto   { overflow: auto; }
-.of-scroll { overflow: scroll; }
-
-/* ════════════════════════════════════════════
- * Position
- * ════════════════════════════════════════════ */
-
-.ps-relative { position: relative; }
-.ps-absolute { position: absolute; }
-.ps-fixed    { position: fixed; }
-.ps-sticky   { position: sticky; }
 
 /* ════════════════════════════════════════════
  * Flex — flex item 크기

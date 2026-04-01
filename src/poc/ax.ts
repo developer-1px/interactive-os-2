@@ -1,69 +1,61 @@
 // ── MECE Axis Design System — 순수 TypeScript ──
 //
 // ax()만 사용. style={} 금지.
-// 시각도 구조도 전부 축 값으로만 표현한다.
+// 시각 5축 + 구조 5축 = 10축. 이게 전부.
 
-// ── 축 타입 정의 ──
+// ── 시각 축 ──
 
-// 시각 축
 type Surface = 'action' | 'input' | 'display' | 'overlay' | 'ghost'
 type ControlSize = 'sm' | 'md' | 'lg'
-type Interaction = 'input' | 'nav' | 'action'
-type Tone = 'primary' | 'destructive' | 'success' | 'warning' | 'neutral'
-type Proximity = 'inline' | 'element' | 'group' | 'section' | 'page'
 type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code'
-type TextColor = 'bright' | 'primary' | 'secondary' | 'muted'
+type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
+type Text = 'bright' | 'primary' | 'secondary' | 'muted'
 
-// 구조 축
-type Layout = 'row' | 'column' | 'grid' | 'center'
-type Align = 'start' | 'center' | 'end' | 'stretch' | 'baseline'
-type Justify = 'start' | 'center' | 'end' | 'between'
-type Padding = 'none' | 'inline' | 'element' | 'group' | 'section' | 'page'
+// ── 구조 축 ──
+
+// layout: 역할 기반 구조 번들 (display + direction + align + justify + overflow)
+type Layout =
+  | 'row'     // flex row
+  | 'column'  // flex column
+  | 'center'  // flex center+center (아이콘 래퍼 등)
+  | 'bar'     // flex row + align:center (툴바, 헤더)
+  | 'spread'  // flex row + align:center + justify:space-between
+  | 'stack'   // flex column (gap은 gap 축에서)
+  | 'scroll'  // flex column + overflow:auto
+
+type Gap = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+type Padding = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 type Width = 'full' | 'auto' | 'fit' | 'sm' | 'md' | 'lg'
-type Overflow = 'hidden' | 'auto' | 'scroll'
-type Position = 'relative' | 'absolute' | 'fixed' | 'sticky'
 type Flex = 'none' | 'auto' | '1'
 
 export interface Axes {
   // 시각 축
   surface?: Surface
   controlSize?: ControlSize
-  interaction?: Interaction
-  tone?: Tone
-  proximity?: Proximity
   textStyle?: TextStyle
-  text?: TextColor
+  tone?: Tone
+  text?: Text
 
   // 구조 축
   layout?: Layout
-  align?: Align
-  justify?: Justify
+  gap?: Gap
   padding?: Padding
   width?: Width
-  overflow?: Overflow
-  position?: Position
   flex?: Flex
 }
 
 // ── className 매핑 ──
 
 const prefixes: Record<keyof Axes, string> = {
-  // 시각
   surface: 'sf',
   controlSize: 'cs',
-  interaction: 'ix',
-  tone: 'tn',
-  proximity: 'px',
   textStyle: 'ts',
+  tone: 'tn',
   text: 'tx',
-  // 구조
   layout: 'ly',
-  align: 'al',
-  justify: 'jc',
+  gap: 'g',
   padding: 'pd',
   width: 'w',
-  overflow: 'of',
-  position: 'ps',
   flex: 'fx',
 }
 
@@ -72,11 +64,11 @@ const prefixes: Record<keyof Axes, string> = {
  * style={} 대신 이것만 사용한다.
  *
  * @example
- * // 버튼
- * ax({ surface: 'action', controlSize: 'md', tone: 'primary', proximity: 'inline' })
+ * // 버튼: controlSize가 display+align+justify 소유
+ * ax({ surface: 'action', controlSize: 'md', tone: 'accent' })
  *
- * // 레이아웃 컨테이너
- * ax({ layout: 'column', proximity: 'page', padding: 'section' })
+ * // 툴바: bar = flex row + align:center
+ * ax({ layout: 'bar', gap: 'sm' })
  *
  * // 텍스트
  * ax({ textStyle: 'body', text: 'secondary' })

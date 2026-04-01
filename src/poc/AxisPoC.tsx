@@ -1,5 +1,5 @@
 // ── Axis PoC — style={} 0개. ax()만 사용. ──
-// 시각도 구조도 전부 축 값으로 표현한다.
+// 시각 5축 + 구조 5축 = 10축으로 모든 것을 표현한다.
 
 import React from 'react'
 import { ax } from './ax'
@@ -11,21 +11,15 @@ import './ax.css'
 
 function AxisButton() {
   return (
-    <button className={ax({
-      surface: 'action', controlSize: 'md', interaction: 'action',
-      tone: 'primary', proximity: 'inline',
-    })}>
+    <button className={ax({ surface: 'action', controlSize: 'md', tone: 'accent' })}>
       Axis Button
     </button>
   )
 }
 
-function AxisDestructiveButton() {
+function AxisDangerButton() {
   return (
-    <button className={ax({
-      surface: 'action', controlSize: 'md', interaction: 'action',
-      tone: 'destructive', proximity: 'inline',
-    })}>
+    <button className={ax({ surface: 'action', controlSize: 'md', tone: 'danger' })}>
       Delete
     </button>
   )
@@ -33,10 +27,7 @@ function AxisDestructiveButton() {
 
 function AxisGhostButton() {
   return (
-    <button className={ax({
-      surface: 'action', controlSize: 'sm', interaction: 'action',
-      tone: 'neutral', proximity: 'inline',
-    })}>
+    <button className={ax({ surface: 'action', controlSize: 'sm', tone: 'neutral' })}>
       Ghost
     </button>
   )
@@ -45,7 +36,7 @@ function AxisGhostButton() {
 function AxisInput() {
   return (
     <input
-      className={ax({ surface: 'input', controlSize: 'lg', interaction: 'input' })}
+      className={ax({ surface: 'input', controlSize: 'lg' })}
       placeholder="Type here..."
     />
   )
@@ -53,7 +44,7 @@ function AxisInput() {
 
 function AxisCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'display', proximity: 'group', padding: 'section' })}>
+    <div className={ax({ surface: 'display', gap: 'md', padding: 'lg' })}>
       {children}
     </div>
   )
@@ -61,9 +52,7 @@ function AxisCard({ children }: { children: React.ReactNode }) {
 
 function AxisMenuItem({ children }: { children: React.ReactNode }) {
   return (
-    <div className={ax({
-      surface: 'ghost', controlSize: 'md', interaction: 'nav', proximity: 'inline',
-    })}>
+    <div className={ax({ surface: 'ghost', controlSize: 'md' })}>
       {children}
     </div>
   )
@@ -71,7 +60,7 @@ function AxisMenuItem({ children }: { children: React.ReactNode }) {
 
 function AxisOverlay({ children }: { children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'overlay', proximity: 'element', padding: 'section' })}>
+    <div className={ax({ surface: 'overlay', gap: 'sm', padding: 'lg' })}>
       {children}
     </div>
   )
@@ -80,9 +69,7 @@ function AxisOverlay({ children }: { children: React.ReactNode }) {
 function AxisTab({ selected, children }: { selected?: boolean; children: React.ReactNode }) {
   return (
     <div
-      className={ax({
-        surface: 'ghost', controlSize: 'sm', interaction: 'nav', proximity: 'inline',
-      })}
+      className={ax({ surface: 'ghost', controlSize: 'sm' })}
       role="tab"
       aria-selected={selected}
     >
@@ -92,29 +79,29 @@ function AxisTab({ selected, children }: { selected?: boolean; children: React.R
 }
 
 // ════════════════════════════════════════════
-// 비교 데모 — style={} 0개
+// 데모 — style={} 0개
 // ════════════════════════════════════════════
 
 export function AxisPoC() {
   return (
-    <div className={ax({ layout: 'column', proximity: 'page', padding: 'page' })}>
+    <div className={ax({ layout: 'column', gap: 'xl', padding: 'xl' })}>
 
-      <section className={ax({ layout: 'column', proximity: 'element' })}>
+      <section className={ax({ layout: 'column', gap: 'sm' })}>
         <h2 className={ax({ textStyle: 'section', text: 'primary' })}>1. Tone 변형</h2>
-        <div className={ax({ layout: 'row', proximity: 'element', align: 'center' })}>
+        <div className={ax({ layout: 'bar', gap: 'sm' })}>
           <AxisButton />
-          <AxisDestructiveButton />
+          <AxisDangerButton />
           <AxisGhostButton />
         </div>
       </section>
 
-      <section className={ax({ layout: 'column', proximity: 'element' })}>
-        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>3. Input (surface:input)</h2>
+      <section className={ax({ layout: 'column', gap: 'sm' })}>
+        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>2. Input (surface:input)</h2>
         <AxisInput />
       </section>
 
-      <section className={ax({ layout: 'column', proximity: 'element' })}>
-        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>4. Menu (surface:overlay + ghost items)</h2>
+      <section className={ax({ layout: 'column', gap: 'sm' })}>
+        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>3. Menu (surface:overlay + ghost items)</h2>
         <div className={ax({ width: 'sm' })}>
           <AxisOverlay>
             <div className={ax({ layout: 'column' })}>
@@ -126,30 +113,30 @@ export function AxisPoC() {
         </div>
       </section>
 
-      <section className={ax({ layout: 'column', proximity: 'element' })}>
-        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>5. Tabs (surface:ghost + controlSize:sm)</h2>
-        <div className={ax({ layout: 'row', proximity: 'inline' })}>
+      <section className={ax({ layout: 'column', gap: 'sm' })}>
+        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>4. Tabs (surface:ghost + controlSize:sm)</h2>
+        <div className={ax({ layout: 'bar', gap: 'xs' })}>
           <AxisTab selected>Overview</AxisTab>
           <AxisTab>Settings</AxisTab>
           <AxisTab>Activity</AxisTab>
         </div>
       </section>
 
-      <section className={ax({ layout: 'column', proximity: 'element' })}>
-        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>6. Card (surface:display)</h2>
+      <section className={ax({ layout: 'column', gap: 'sm' })}>
+        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>5. Card (surface:display)</h2>
         <div className={ax({ width: 'md' })}>
           <AxisCard>
             <p className={ax({ textStyle: 'body', text: 'primary' })}>
-              이 카드는 surface:display + proximity:group 조합입니다.
-              recipe 파일 없이 축 조합만으로 만들었습니다.
+              이 카드는 surface:display + gap:md + padding:lg 조합입니다.
+              recipe 파일 없이 10축 조합만으로 만들었습니다.
             </p>
           </AxisCard>
         </div>
       </section>
 
-      <section className={ax({ layout: 'column', proximity: 'element' })}>
-        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>7. Text Styles</h2>
-        <div className={ax({ layout: 'column', proximity: 'element' })}>
+      <section className={ax({ layout: 'column', gap: 'sm' })}>
+        <h2 className={ax({ textStyle: 'section', text: 'primary' })}>6. Text Styles</h2>
+        <div className={ax({ layout: 'column', gap: 'sm' })}>
           <span className={ax({ textStyle: 'hero', text: 'primary' })}>Hero 40px</span>
           <span className={ax({ textStyle: 'display', text: 'primary' })}>Display 32px</span>
           <span className={ax({ textStyle: 'page', text: 'primary' })}>Page 24px</span>
