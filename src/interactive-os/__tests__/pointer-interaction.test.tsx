@@ -249,6 +249,38 @@ describe('pointer interaction — edge cases', () => {
     expect(getSelected(container)).toEqual(['d'])
   })
 
+  it('click sets store focus — keyboard ArrowDown starts from clicked item', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <Aria pattern={listbox()} data={fixtureStore()} plugins={[]}>
+        <Aria.Item render={(props, node, state) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+        )} />
+      </Aria>
+    )
+    await user.click(getNode(container, 'c'))
+    expect(getSelected(container)).toEqual(['c'])
+    expect(getNode(container, 'c').dataset.focused).toBe('true')
+    await user.keyboard('{ArrowDown}')
+    expect(getNode(container, 'd').dataset.focused).toBe('true')
+  })
+
+  it('click then Space toggles on clicked item, not stale focus', async () => {
+    const user = userEvent.setup()
+    const { container } = render(
+      <Aria pattern={listbox()} data={fixtureStore()} plugins={[]}>
+        <Aria.Item render={(props, node, state) => (
+          <span {...props} data-focused={state.focused}>{(node as { data: { label: string } }).data.label}</span>
+        )} />
+      </Aria>
+    )
+    await user.click(getNode(container, 'c'))
+    expect(getSelected(container)).toEqual(['c'])
+    await user.keyboard(' ')
+    // Space toggles focused item — focus is 'c' from click, so toggles 'c' off
+    expect(getSelected(container)).toEqual([])
+  })
+
   it('click followed by keyboard Shift+Arrow still works', async () => {
     const user = userEvent.setup()
     const { container } = render(
