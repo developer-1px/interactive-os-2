@@ -1,5 +1,7 @@
 // ② 2026-03-31-datepicker-composite-prd.md
 import React, { useMemo } from 'react'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './CalendarGrid.module.css'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
@@ -26,7 +28,7 @@ const defaultRenderCell = (
 ): React.ReactElement => (
   <td
     {...props}
-    className={`text-center outline-none ${styles.day}`}
+    className={`${ax({ controlSize: 'sm' })} ${styles.day}`}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
     data-outside={!meta.isCurrentMonth || undefined}
@@ -72,7 +74,7 @@ export function CalendarGrid({
     >
       <thead>
         <tr>
-          {DAYS.map(d => <th key={d} className={`text-center ${styles.dayHeader}`} scope="col">{d}</th>)}
+          {DAYS.map(d => <th key={d} className={styles.dayHeader} scope="col">{d}</th>)}
         </tr>
       </thead>
       <tbody>

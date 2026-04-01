@@ -1,6 +1,7 @@
 /* FallbackBlock — unknown block type with JSON dump */
 
 .fallback {
+  overflow: hidden;
   font-size: var(--type-caption-size);
   color: var(--text-muted);
   border: 1px dashed var(--border-subtle);
@@ -10,6 +11,7 @@
 .fallbackSummary {
   gap: var(--space-xs);
   padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
   user-select: none;
   font-family: var(--mono);
 }
@@ -20,6 +22,7 @@
 }
 
 .fallbackPre {
+  overflow-y: auto;
   padding: var(--space-xs) var(--space-sm);
   border-top: 1px dashed var(--border-subtle);
   font-family: var(--mono);

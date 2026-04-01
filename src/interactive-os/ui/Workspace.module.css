@@ -1,6 +1,18 @@
 /* ② 2026-03-26-component-styling-rules-prd.md */
 
+.root {
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .empty {
-  gap: var(--space-sm);
+  height: 100%;
   color: var(--text-muted);
 }

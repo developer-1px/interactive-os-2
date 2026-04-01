@@ -2,6 +2,7 @@
 
 .board {
   padding: var(--space-xs);
+  overflow-x: auto;
 }
 
 /* ── Column panel ── */
@@ -17,8 +18,6 @@
 
 /* ── Column header ── */
 .columnHeader {
-  font-weight: var(--weight-semi);
-  font-size: var(--type-body-size);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   color: var(--text-secondary);
@@ -27,8 +26,6 @@
 }
 
 .columnCount {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-regular);
   color: var(--text-muted);
   text-transform: none;
   letter-spacing: 0;
@@ -36,11 +33,9 @@
 
 /* ── Card ── */
 .card {
-  background: var(--surface-default);
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-xl-radius);
   padding: var(--shape-xl-py) var(--shape-xl-px);
-  font-size: var(--type-body-size);
   line-height: var(--leading-snug);
   cursor: default;
 }
@@ -112,11 +107,16 @@
 }
 
 /* ── Card title (truncate) ── */
-.cardTitle { text-overflow: ellipsis; }
+.cardTitle {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
 
 /* ── Card subtitle (LOC etc.) ── */
 .cardSubtitle {
-  font-size: var(--type-caption-size);
+  flex-shrink: 0;
   color: var(--text-muted);
   margin-left: auto;
   font-variant-numeric: tabular-nums;

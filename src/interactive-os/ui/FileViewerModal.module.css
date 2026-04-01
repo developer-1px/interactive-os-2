@@ -1,5 +1,8 @@
+/* ── last-mile: modal positioning ── */
+
 .fvmDialog {
   padding: 0;
+  border: none;
   background: transparent;
   max-width: none;
   max-height: none;
@@ -9,24 +12,31 @@
 
 .fvmDialog[open] {
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fvmDialog::backdrop {
   background: var(--dialog-backdrop);
 }
 
+/* ── last-mile: modal sizing ── */
+
 .fvmModal {
   width: 85vw;
   max-width: 960px;
   height: 85vh;
-  background: var(--surface-default);
+  overflow: hidden;
   border-radius: var(--shape-xl-radius);
   box-shadow: var(--shadow-lg);
 }
 
+/* ── last-mile: header ── */
+
 .fvmHeader {
   height: 36px;
   padding: 0 var(--space-lg);
+  flex-shrink: 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -47,18 +57,18 @@
   font-weight: var(--weight-semi);
 }
 
+/* ── last-mile: close button overrides ── */
+
 .fvmClose {
-  width: 28px;
-  height: 28px;
-  --_bg: transparent;
-  --_bg-hover: var(--bg-hover);
-  background: var(--_bg);
-  border-radius: var(--shape-xl-radius);
   color: var(--text-secondary);
   font-size: var(--type-section-size);
+  border-radius: var(--shape-xl-radius);
 }
 
+/* ── last-mile: image ── */
+
 .fvmImage {
+  display: block;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;

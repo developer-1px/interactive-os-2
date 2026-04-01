@@ -3,6 +3,8 @@ import { CodeBlock } from './CodeBlock'
 import { MarkdownViewer } from './MarkdownViewer'
 import { FileIcon } from './FileIcon'
 import { Breadcrumb } from './Breadcrumb'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './FileViewerModal.module.css'
 
 interface FileViewerModalProps {
@@ -81,13 +83,13 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
-    <dialog ref={dialogRef} className={`items-center justify-center border-none ${styles.fvmDialog}`} onClick={handleBackdropClick}>
-      <div className={`flex-col overflow-hidden ${styles.fvmModal}`} data-surface="overlay" onClick={e => e.stopPropagation()}>
-        <div className={`flex-row items-center justify-between shrink-0 ${styles.fvmHeader}`}>
+    <dialog ref={dialogRef} className={styles.fvmDialog} onClick={handleBackdropClick}>
+      <div className={`${ax({ surface: 'overlay', layout: 'column' })} ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
+        <div className={`${ax({ layout: 'spread' })} ${styles.fvmHeader}`}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
-          <div className="flex-row items-center gap-sm">
+          <div className={ax({ layout: 'bar', gap: 'sm' })}>
             {filePath && (
-              <div className={`flex-row items-center gap-xs ${styles.fvmMeta}`}>
+              <div className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.fvmMeta}`}>
                 <FileIcon name={filename} type="file" />
                 <span>{ext.toUpperCase()}</span>
                 {!isImage && lineCount > 0 && (
@@ -104,14 +106,14 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 )}
               </div>
             )}
-            <button className={`flex-row items-center justify-center border-none cursor-pointer ${styles.fvmClose}`} data-surface="action" onClick={onClose}>&times;</button>
+            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', layout: 'center' })} ${styles.fvmClose}`} onClick={onClose}>&times;</button>
           </div>
         </div>
-        <div className={"flex-1 overflow-auto min-h-0"}>
+        <div className={ax({ flex: '1', layout: 'scroll' })}>
           {error ? (
             <div className={styles.fvmError}>File not found</div>
           ) : isImage ? (
-            <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className={`block ${styles.fvmImage}`} />
+            <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className={styles.fvmImage} />
           ) : isMarkdown ? (
             <MarkdownViewer content={fileContent} />
           ) : (

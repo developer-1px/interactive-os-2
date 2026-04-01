@@ -8,6 +8,8 @@ import { DiffBlock } from './DiffBlock'
 import { ToolGroup, ToolChainGroup } from './ToolSummaryBlock'
 import { ChatFeaturesOverride } from './chatFeatures'
 import type { ChatMessage, ChatBlock, DataBlock, BlockRendererMap } from './types'
+import { ax } from '../../../poc/ax'
+import '../../../poc/ax.css'
 import styles from './ChatFeed.module.css'
 
 // --- Default renderers (implementation set A: text/code/diff) ---
@@ -118,13 +120,13 @@ const MessageBubble = memo(function MessageBubble({
   const roleClass = message.role === 'user'
     ? styles.chatUser
     : message.role === 'system'
-      ? `overflow-hidden ${styles.chatSystem}`
+      ? styles.chatSystem
       : styles.chatAssistant
 
   if (message.role === 'system') {
     const groups = groupSystemBlocks(message.blocks)
     return (
-      <div className={`flex-col ${styles.chatMessage} ${roleClass}`}>
+      <div className={`${ax({ layout: 'column' })} ${styles.chatMessage} ${roleClass}`}>
         {groups.map((g, i) => {
           if (g.kind === 'tool_chain') return <ToolChainGroup key={i} pairs={g.pairs} />
           if (g.kind === 'output') return <ToolGroup key={i} toolUse={g.pair.toolUse} toolResult={g.pair.toolResult} />

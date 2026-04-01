@@ -11,6 +11,8 @@ import type { PaneSize } from './SplitPane'
 import { TabGroup } from './TabGroup'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
 import styles from './Workspace.module.css'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 
 interface WorkspaceProps {
   data: NormalizedData
@@ -50,7 +52,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
   if (entityData.type === 'tabgroup') {
     const tabIds = getChildren(data, nodeId)
     if (tabIds.length === 0) {
-      return <div className={`flex-row items-center justify-center h-full ${styles.empty}`}>No open tabs</div>
+      return <div className={`${ax({ layout: 'center' })} ${styles.empty}`}>No open tabs</div>
     }
 
     return (
@@ -102,15 +104,15 @@ export function Workspace({
 
   if (rootChildren.length === 0) {
     return (
-      <div className={`flex-col flex-1 h-full min-w-0 min-h-0 overflow-hidden`} aria-label={ariaLabel}>
-        <div className={`flex-row items-center justify-center h-full ${styles.empty}`}>No open tabs</div>
+      <div className={`${ax({ layout: 'column', flex: '1' })} ${styles.root}`} aria-label={ariaLabel}>
+        <div className={`${ax({ layout: 'center' })} ${styles.empty}`}>No open tabs</div>
       </div>
     )
   }
 
   return (
-    <div className={`flex-col flex-1 h-full min-w-0 min-h-0 overflow-hidden`} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
-      <div className={"flex-1 min-h-0 overflow-hidden"}>
+    <div className={`${ax({ layout: 'column', flex: '1' })} ${styles.root}`} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
+      <div className={`${ax({ flex: '1' })} ${styles.inner}`}>
         {rootChildren.map((id) => (
           <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} renderPanel={renderPanel} />
         ))}

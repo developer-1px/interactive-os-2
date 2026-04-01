@@ -7,6 +7,8 @@ import { AriaItemContext, Aria } from '../primitives/aria'
 import { kanban as kanbanBehavior } from './kanbanPreset'
 import { getChildren, getEntity } from '../store/createStore'
 import type { AriaComponentProps } from './types'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 
 interface KanbanProps extends AriaComponentProps {
   highlightUp?: Set<string>
@@ -57,7 +59,7 @@ export function Kanban({
         role={kanbanBehavior.role}
         aria-label={ariaLabel}
         data-aria-container=""
-        className={`flex-row gap-md overflow-x-auto ${styles.board}`}
+        className={`${ax({ layout: 'row', gap: 'md' })} ${styles.board}`}
         data-compact={compact || undefined}
         data-has-highlight={(highlightUp?.size || highlightDown?.size) ? '' : undefined}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
@@ -75,11 +77,11 @@ export function Kanban({
           const locRatio = totalLoc && maxColLoc ? totalLoc / maxColLoc : 0
 
           return (
-            <div key={colId} className={`flex-col gap-xs ${styles.column}`}>
+            <div key={colId} className={`${ax({ layout: 'column', gap: 'xs' })} ${styles.column}`}>
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className={`flex-row items-center gap-sm ${styles.columnHeader}`}
+                className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption' })} ${styles.columnHeader}`}
                 title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
                 style={locRatio > 0 ? { '--_loc-ratio': locRatio } as React.CSSProperties : undefined}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
@@ -111,7 +113,7 @@ export function Kanban({
                   <FocusDiv
                     key={cardId}
                     focused={cardState.focused}
-                    className={styles.card}
+                    className={`${ax({ surface: 'display' })} ${styles.card}`}
                     data-hub={isHub || undefined}
                     title={cardTooltip ?? cardTitle}
                     data-weight={cardWeight || undefined}
@@ -121,9 +123,9 @@ export function Kanban({
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
-                      <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.cardTitle}`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
+                      <span className={styles.cardTitle}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
                       {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
-                        <span className={`shrink-0 ${styles.cardSubtitle}`}>
+                        <span className={styles.cardSubtitle}>
                           {cardSubtitle}
                           {cardDepUp != null && cardDepUp > 0 && <span className={styles.depUp}> ↑{cardDepUp}</span>}
                           {cardDepDown != null && cardDepDown > 0 && <span className={styles.depDown}> ↓{cardDepDown}</span>}
