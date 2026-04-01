@@ -1,12 +1,5 @@
-/* ── Toggle — 3-block recipe ── */
-
-/* ═══ Block 1: base ═══ */
-.label {
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  color: var(--text-primary);
-  user-select: none;
-}
+/* ── Toggle — last-mile only ── */
+/* ax() handles: layout, surface, controlSize, textStyle, text */
 
 .status {
   font-size: var(--type-caption-size);

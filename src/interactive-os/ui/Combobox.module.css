@@ -1,41 +1,28 @@
-/* ── Combobox ──
-   // ② 2026-03-26-component-styling-rules-prd.md */
+/* ── Combobox — last-mile only ──
+   ax() handles: surface, controlSize, layout, gap, text, width
+   module.css handles: dropdown positioning, focus/selection highlights, placeholder */
 
-.comboItem {
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--type-body-size);
-}
-
-.comboItemFocused {
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
-}
-
-.comboItemSelected {
-  background: var(--selection);
-  font-weight: var(--weight-semi);
-}
-
-/* ═══ Input ═══ */
+/* ═══ Input — last-mile ═══ */
 .comboInput {
-  height: var(--input-height);
-  padding: var(--shape-sm-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
-  color: var(--text-primary);
-  background: var(--_bg, var(--surface-default));
   border-radius: var(--shape-xl-radius);
-  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
-  --_border-focus: var(--tone-primary-base);
 }
-/* :focus → data-surface="input" */
 
 .comboInput::placeholder {
   color: var(--text-muted);
 }
 
-/* ═══ Dropdown ═══ */
+/* ═══ Dropdown — positioning ═══ */
 .comboDropdown {
   border-radius: var(--shape-xl-radius);
   margin-top: var(--space-xs);
+  overflow: hidden;
 }
-/* bg/border/shadow → data-surface="overlay" */
+
+/* ═══ Item states — highlight only ═══ */
+.comboItemFocused {
+  background: var(--tone-primary-dim);
+}
+
+.comboItemSelected {
+  background: var(--selection);
+}

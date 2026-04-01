@@ -9,6 +9,8 @@ import { createBatchCommand } from '../engine/types'
 import { selectionCommands } from '../axis/select'
 import { combobox } from '../pattern/roles/combobox'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import { FileIcon } from './FileIcon'
 import styles from './QuickOpen.module.css'
 
@@ -118,13 +120,13 @@ export function QuickOpen({
   }, [onClose])
 
   return (
-    <div className={`fixed inset-0 flex-row justify-center ${styles.backdrop}`} onClick={handleBackdropClick}>
-      <div className={`flex-col overflow-hidden ${styles.dialog}`} aria-label="Quick Open">
-        <div className={`flex-row items-center ${styles.inputRow}`}>
-          <Search size={16} className={`shrink-0 ${styles.inputIcon}`} />
+    <div className={`${ax({ surface: 'overlay', layout: 'row' })} ${styles.backdrop}`} onClick={handleBackdropClick}>
+      <div className={`${ax({ layout: 'column' })} ${styles.dialog}`} aria-label="Quick Open">
+        <div className={`${ax({ layout: 'bar', gap: 'md', padding: 'lg' })} ${styles.inputRow}`}>
+          <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
           <input
             ref={inputRef}
-            className={`flex-1 border-none outline-none ${styles.input}`}
+            className={`${ax({ surface: 'input', controlSize: 'md', flex: '1' })} ${styles.input}`}
             type="text"
             placeholder="파일 검색..."
             value={query}
@@ -132,10 +134,10 @@ export function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className={`shrink-0 ${styles.shortcut}`}>ESC</kbd>
+          <kbd className={`${ax({ textStyle: 'caption', text: 'muted', flex: 'none' })} ${styles.shortcut}`}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
-          <div className={`flex-1 overflow-y-auto ${styles.results}`} onMouseDown={e => e.preventDefault()}>
+          <div className={`${ax({ layout: 'scroll', flex: '1' })} ${styles.results}`} onMouseDown={e => e.preventDefault()}>
             {children.map(childId => {
               const entity = store.entities[childId]
               if (!entity) return null
@@ -146,7 +148,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`flex-row items-center ${styles.item}${state.focused ? ` ${styles.itemFocused}` : ''}`}
+                  className={`${ax({ surface: 'ghost', controlSize: 'md', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary' })} ${styles.item}${state.focused ? ` ${styles.itemFocused}` : ''}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),
@@ -154,19 +156,19 @@ export function QuickOpen({
                     ]))
                   }}
                 >
-                  <span className={"shrink-0"}>
+                  <span className={ax({ flex: 'none' })}>
                     <FileIcon name={fileData.name} type="file" />
                   </span>
-                  <span className={`flex-col flex-1 min-w-0 ${styles.itemText}`}>
-                    <span className={`whitespace-nowrap overflow-hidden ${styles.itemName}`}>{fileData.name}</span>
-                    <span className={`whitespace-nowrap overflow-hidden ${styles.itemPath}`}>{fileData.relativePath}</span>
+                  <span className={`${ax({ layout: 'column', flex: '1' })} ${styles.itemText}`}>
+                    <span className={`${ax({ textStyle: 'body' })} ${styles.itemName}`}>{fileData.name}</span>
+                    <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.itemPath}`}>{fileData.relativePath}</span>
                   </span>
                 </div>
               )
             })}
           </div>
         ) : (
-          <div className={`flex-row items-center justify-center ${styles.empty}`}>일치하는 파일이 없습니다</div>
+          <div className={`${ax({ layout: 'center', text: 'muted', textStyle: 'body', padding: 'xl' })} ${styles.empty}`}>일치하는 파일이 없습니다</div>
         )}
       </div>
     </div>

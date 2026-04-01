@@ -1,24 +1,17 @@
 /* ── TabGroup — JetBrains Islands style ──
    // ② 2026-03-26-component-styling-rules-prd.md */
 
+/* last-mile: tabBar background (sunken surface not in ax) */
 .tabBar {
-  gap: var(--space-2xs);
-  padding: var(--space-2xs) var(--space-sm);
+  overflow-x: auto;
+  flex-shrink: 0;
   background: var(--surface-sunken);
 }
 
-/* ── Tab ── */
+/* ── Tab — last-mile: selected state colors, preview italic ── */
 .tab {
-  gap: var(--space-xs);
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  border-radius: var(--shape-sm-radius);
-  transition:
-    background var(--motion-instant-duration) var(--motion-instant-easing),
-    color var(--motion-instant-duration) var(--motion-instant-easing);
-  --_bg: transparent;
-  --_bg-hover: var(--surface-default);
+  white-space: nowrap;
   --_fg: var(--text-muted);
-  background: var(--_bg);
   color: var(--_fg);
 }
 
@@ -31,19 +24,16 @@
   font-style: italic;
 }
 
-/* ── Close button ── */
+/* ── Close button — last-mile: opacity reveal on hover ── */
 .tabClose {
   border-radius: var(--shape-xs-radius);
   padding: var(--space-2xs);
   opacity: 0;
   color: var(--text-muted);
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
-  --_bg: transparent;
-  --_bg-hover: var(--surface-overlay);
 }
 
 .tab:hover .tabClose,
 .tab[aria-selected="true"] .tabClose {
   opacity: 0.6;
 }
-

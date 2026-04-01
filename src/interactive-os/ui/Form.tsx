@@ -10,6 +10,8 @@ import type { FormOptions } from '../plugins/form'
 import { getFieldErrors } from '../plugins/form'
 import { rename } from '../plugins/rename'
 import { edit } from '../plugins/edit'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './Form.module.css'
 
 interface FormProps {
@@ -38,14 +40,14 @@ const defaultRenderField = (
   const fieldError = errors?.value
 
   return (
-    <div {...props} className={`flex-col ${styles.field}`}>
-      <span className={styles.label}>{label}</span>
-      <span className={styles.value}>
+    <div {...props} className={`${ax({ layout: 'column', gap: 'xs', padding: 'sm' })} ${styles.field}`}>
+      <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.label}`}>{label}</span>
+      <span className={`${ax({ textStyle: 'body' })} ${styles.value}`}>
         <Aria.Editable field="value" placeholder="Enter value...">
           {value}
         </Aria.Editable>
       </span>
-      {fieldError && <span className={styles.error} role="alert">{fieldError}</span>}
+      {fieldError && <span className={`${ax({ textStyle: 'caption', tone: 'danger' })} ${styles.error}`} role="alert">{fieldError}</span>}
     </div>
   )
 }

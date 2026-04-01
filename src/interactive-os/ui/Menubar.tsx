@@ -7,6 +7,8 @@ import { getNodeLabel } from './types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { menubar } from '../pattern/roles/menubar'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './Menubar.module.css'
 
 type MenubarRenderItem = (
@@ -31,12 +33,12 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
         <a
           {...props}
           href="#"
-          className={`flex-row items-center no-underline whitespace-nowrap outline-none ${styles.link}`}
+          className={`${ax({ surface: 'ghost', controlSize: 'md', text: state.focused ? 'bright' : 'primary' })} ${styles.link}`}
           data-focused={state.focused || undefined}
           onClick={e => e.preventDefault()}
         >
           <span>{label}</span>
-          <span className={`flex-row ${styles.indicator}`} aria-hidden="true">
+          <span className={ax({ layout: 'row', text: 'muted' })} aria-hidden="true">
             {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
           </span>
         </a>
@@ -44,7 +46,7 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
           role="menu"
           aria-label={label}
           className={`absolute list-none ${isRoot ? styles.submenuRoot : styles.submenuNested}`}
-          style={{ display: state.expanded ? undefined : 'none' }}
+          data-hidden={!state.expanded || undefined}
         >
           {children}
         </ul>
@@ -57,13 +59,13 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
       <a
         {...props}
         href="#"
-        className={`flex-row items-center no-underline whitespace-nowrap outline-none ${styles.link}`}
+        className={`${ax({ surface: 'ghost', controlSize: 'md', text: state.focused ? 'bright' : 'primary' })} ${styles.link}`}
         data-focused={state.focused || undefined}
         onClick={e => e.preventDefault()}
       >
         <span>{label}</span>
         {hasChildren && (
-          <span className={`flex-row ${styles.indicator}`} aria-hidden="true">
+          <span className={ax({ layout: 'row', text: 'muted' })} aria-hidden="true">
             {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
           </span>
         )}

@@ -1,5 +1,7 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { Minus, Plus } from 'lucide-react'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './Spinbutton.module.css'
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
@@ -121,13 +123,12 @@ export function Spinbutton({
     }
 
     return (
-      <div className={`flex-row items-center gap-md ${styles.spinbuttonItem}`} data-focused={state.focused || undefined}>
+      <div className={`${ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined })} ${styles.spinbuttonItem}`} data-focused={state.focused || undefined}>
         {itemLabel && <span className={styles.spinbuttonLabel}>{itemLabel}</span>}
-        <div className={`inline-flex items-stretch overflow-hidden ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
+        <div className={`${ax({ layout: 'bar' })} ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
           <button
             type="button"
-            data-surface="action"
-            className={`flex-row items-center justify-center border-none cursor-pointer ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
+            className={`${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
             aria-disabled={atMin || undefined}
@@ -138,7 +139,7 @@ export function Spinbutton({
           {editing ? (
             <input
               ref={inputRef}
-              className={`border-none outline-none text-center ${styles.spinbuttonInput}`}
+              className={styles.spinbuttonInput}
               type="text"
               inputMode="numeric"
               value={editValue}
@@ -149,7 +150,7 @@ export function Spinbutton({
             />
           ) : (
             <div
-              className={`flex-row items-center justify-center text-center ${styles.spinbuttonValue}`}
+              className={`${ax({ layout: 'center' })} ${styles.spinbuttonValue}`}
               onClick={startEditing}
               onDoubleClick={startEditing}
             >
@@ -158,8 +159,7 @@ export function Spinbutton({
           )}
           <button
             type="button"
-            data-surface="action"
-            className={`flex-row items-center justify-center border-none cursor-pointer ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
+            className={`${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}
             aria-disabled={atMax || undefined}

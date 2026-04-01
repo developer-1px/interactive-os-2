@@ -1,13 +1,12 @@
-/* ── RadioGroup — 3-block recipe ── */
+/* ── RadioGroup — last-mile only ── */
 
-/* ═══ Block 1: base ═══ */
+/* ax()가 layout/gap/surface/controlSize/text 소유 */
+/* module.css는 라디오 indicator, checked 상태 등 ax()로 불가능한 것만 */
+
 .item {
-  gap: var(--space-sm);
+  /* last-mile: checked 상태 시각 피드백 */
 }
 
-.label {
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
+.item[aria-checked="true"] {
   color: var(--text-primary);
-  user-select: none;
 }

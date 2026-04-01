@@ -1,18 +1,10 @@
 /* Composer — multiline input with Enter-to-submit */
 
-/* --- Editable wrapper --- */
+/* --- Input wrapper — last-mile: border-radius, focus ring, disabled --- */
 
 .inputWrap {
-  border: 1px solid var(--border-default);
+  position: relative;
   border-radius: var(--shape-md-radius);
-  background: var(--surface-base);
-  transition:
-    border-color var(--motion-instant-duration) var(--motion-instant-easing),
-    box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-.inputWrap:focus-within {
-  border-color: var(--tone-primary-base);
 }
 
 .inputWrap[data-disabled] {
@@ -20,19 +12,22 @@
   pointer-events: none;
 }
 
-/* --- Editor area (position context for overlay) --- */
+/* --- Editor wrap (position context for overlay) --- */
 
-/* --- Editable content --- */
+.editorWrap {
+  position: relative;
+}
+
+/* --- Editable content — last-mile: padding, whitespace, min-height --- */
 
 .editor {
   min-height: calc(var(--leading-snug) * 1em + var(--shape-sm-py) * 2);
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--type-body-size);
   line-height: var(--leading-snug);
-  font-family: inherit;
-  color: var(--text-primary);
   white-space: pre-wrap;
   word-break: break-word;
+  overflow-y: auto;
+  outline: none;
 }
 
 .editor[data-overlay] {
@@ -48,9 +43,12 @@
   pointer-events: none;
 }
 
-/* --- Ghost text overlay --- */
+/* --- Ghost text overlay — last-mile: positioning, text sync --- */
 
 .overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   padding: var(--space-sm) var(--space-md);
   font-size: var(--type-body-size);
   line-height: var(--leading-snug);
@@ -71,27 +69,25 @@
   color: var(--text-muted);
 }
 
-/* --- Suggestion popup (above input, Slack-style) --- */
+/* --- Suggestion popup (above input, Slack-style) — last-mile --- */
 
 .suggestionList {
+  position: absolute;
   bottom: 100%;
   left: 0;
   right: 0;
   margin: 0;
-  padding: var(--space-xs) 0;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
+  list-style: none;
+  overflow-y: auto;
   border-radius: var(--shape-md-radius);
-  box-shadow: var(--shadow-md);
   max-height: calc(var(--type-body-size) * var(--leading-snug) * 8 + var(--space-xs) * 2);
   z-index: 1;
 }
 
 .suggestionItem {
   padding: var(--space-xs) var(--space-md);
-  font-size: var(--type-body-size);
+  cursor: pointer;
   line-height: var(--leading-snug);
-  color: var(--text-secondary);
 }
 
 .suggestionItem:hover {

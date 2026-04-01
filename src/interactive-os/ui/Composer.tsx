@@ -1,4 +1,6 @@
 // ② 2026-03-30-composer-ghost-text-prd.md
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import { useRef, useCallback, useEffect, useImperativeHandle, forwardRef, useMemo } from 'react'
 import styles from './Composer.module.css'
 import { useAria } from '../primitives/useAria'
@@ -148,10 +150,10 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const hasOverlay = !disabled && (commandHighlight > 0 || !!ghostText)
 
   return (
-    <div className={"flex-row shrink-0"}>
-      <div className={`flex-1 relative ${styles.inputWrap}`} data-disabled={disabled || undefined}>
+    <div className={ax({ layout: 'row', flex: 'none' })}>
+      <div className={`${ax({ surface: 'input', flex: '1' })} ${styles.inputWrap}`} data-disabled={disabled || undefined}>
         {hasSuggestions && (
-          <ul className={`absolute list-none overflow-y-auto ${styles.suggestionList}`} role="listbox" aria-label="Command suggestions">
+          <ul className={`${ax({ surface: 'overlay', padding: 'xs' })} ${styles.suggestionList}`} role="listbox" aria-label="Command suggestions">
             {suggestions!.map(cmd => {
               const nodeProps = aria.getNodeProps(cmd) as Record<string, unknown>
               const state = aria.getNodeState(cmd)
@@ -161,7 +163,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
                   ref={state.focused ? el => el?.scrollIntoView({ block: 'nearest' }) : undefined}
                   role="option"
                   aria-selected={state.focused}
-                  className={`cursor-pointer ${styles.suggestionItem}`}
+                  className={`${ax({ surface: 'ghost', textStyle: 'body', text: 'secondary' })} ${styles.suggestionItem}`}
                   data-selected={state.focused || undefined}
                   data-node-id={nodeProps['data-node-id'] as string}
                 >
@@ -171,10 +173,10 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             })}
           </ul>
         )}
-        <div className={"relative"}>
+        <div className={styles.editorWrap}>
           <div
             ref={ref}
-            className={`overflow-y-auto outline-none ${styles.editor}`}
+            className={`${ax({ textStyle: 'body', text: 'primary' })} ${styles.editor}`}
             contentEditable={!disabled}
             role="textbox"
             aria-multiline="true"
@@ -188,7 +190,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             suppressContentEditableWarning
           />
           {hasOverlay && (
-            <div className={`absolute inset-0 pointer-events-none ${styles.overlay}`} aria-hidden="true">
+            <div className={`${styles.overlay}`} aria-hidden="true">
               {commandHighlight > 0 && (
                 <span className={styles.commandMatch}>{overlayText.slice(0, commandHighlight)}</span>
               )}

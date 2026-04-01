@@ -6,6 +6,8 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { radiogroup } from '../pattern/roles/radiogroup'
 import { RadioIndicator } from './indicators'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './RadioGroup.module.css'
 
 type RadioGroupProps = AriaComponentProps
@@ -13,9 +15,9 @@ type RadioGroupProps = AriaComponentProps
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={`flex-row items-center ${styles.item}`} data-focused={state.focused || undefined}>
+    <div {...props} className={`${ax({ layout: 'bar', surface: 'ghost', controlSize: 'md', gap: 'sm' })} ${styles.item}`} data-focused={state.focused || undefined}>
       <RadioIndicator />
-      <span className={styles.label}>{label}</span>
+      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
 }

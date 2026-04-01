@@ -11,6 +11,8 @@ import { createStore, getChildren, getEntityData } from '../store/createStore'
 import { useTabList } from './useTabList'
 import { workspaceCommands } from '../plugins/workspaceStore'
 import type { TabGroupData } from '../plugins/workspaceStore'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './TabGroup.module.css'
 
 interface TabGroupProps {
@@ -84,8 +86,8 @@ export function TabGroup({
   const showTabBar = childIds.length > 1
 
   return (
-    <div className={`flex-col h-full overflow-hidden`}>
-      {showTabBar && <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`flex-row shrink-0 overflow-x-auto ${styles.tabBar}`}>
+    <div className={ax({ layout: 'column', flex: '1' })} data-full-height>
+      {showTabBar && <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${ax({ layout: 'bar', gap: 'xs', padding: 'xs' })} ${styles.tabBar}`}>
         {childIds.map((id) => {
           const entity = store.entities[id]
           if (!entity) return null
@@ -93,13 +95,14 @@ export function TabGroup({
           const entityData = entity.data as Record<string, unknown>
           const label = entityData?.label as string ?? id
           const isPreview = entityData?.preview === true
-          const tabClass = isPreview ? `inline-flex items-center whitespace-nowrap ${styles.tab} ${styles.tabPreview}` : `inline-flex items-center whitespace-nowrap ${styles.tab}`
+          const tabClass = isPreview
+            ? `${ax({ surface: 'ghost', controlSize: 'sm' })} ${styles.tab} ${styles.tabPreview}`
+            : `${ax({ surface: 'ghost', controlSize: 'sm' })} ${styles.tab}`
           return (
-            <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass} data-surface="action">
+            <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
               <span>{label}</span>
               <button
-                className={`flex-row items-center justify-center ${styles.tabClose}`}
-                data-surface="action"
+                className={`${ax({ surface: 'ghost', layout: 'center' })} ${styles.tabClose}`}
                 aria-label={`Close ${label}`}
                 tabIndex={-1}
                 onClick={(e) => handleClose(e, id)}
@@ -111,7 +114,7 @@ export function TabGroup({
           )
         })}
       </div>}
-      <div role="tabpanel" className="flex-col flex-1 min-h-0 overflow-hidden">
+      <div role="tabpanel" className={ax({ layout: 'column', flex: '1' })}>
         {activeEntity ? renderPanel(activeEntity) : null}
       </div>
     </div>

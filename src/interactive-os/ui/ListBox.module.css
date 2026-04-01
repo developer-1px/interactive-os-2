@@ -1,18 +1,6 @@
-/* ── ListBox — 3-block recipe ── */
+/* ── ListBox — module.css (ax()로 불가능한 것만) ── */
 
-/* ═══ Block 1: base ═══ */
-.item {
-  gap: var(--space-sm);
-}
-
-.label {
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  color: var(--text-primary);
-  user-select: none;
-}
-
-/* ═══ Block 2: variant — state ═══ */
-.item[data-selected='true'] .label {
+/* ═══ state — data-attr 기반 ═══ */
+.item[data-selected='true'] span {
   font-weight: var(--weight-semi);
 }

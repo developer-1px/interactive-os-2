@@ -1,4 +1,6 @@
 import React from 'react'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './Slider.module.css'
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
@@ -46,13 +48,13 @@ export function Slider({
     const label = getNodeLabel(item)
 
     return (
-      <div className={`flex-row items-center gap-md ${styles.sliderItem}`} data-focused={state.focused || undefined}>
+      <div className={`${ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined })} ${styles.sliderItem}`} data-focused={state.focused || undefined}>
         {label && <span className={styles.sliderLabel}>{label}</span>}
-        <div className={`relative flex-1 ${styles.sliderTrack}`} ref={trackRef} onClick={handleTrackClick}>
-          <div className={`absolute h-full pointer-events-none ${styles.sliderFill}`} style={{ width: `${pct}%` }} />
-          <div className={`absolute ${styles.sliderThumb}`} style={{ left: `${pct}%` }} />
+        <div className={`${ax({ flex: '1' })} ${styles.sliderTrack}`} ref={trackRef} onClick={handleTrackClick}>
+          <div className={styles.sliderFill} style={{ width: `${pct}%` }} />
+          <div className={styles.sliderThumb} style={{ left: `${pct}%` }} />
         </div>
-        <span className={`text-right ${styles.sliderValue}`}>{current}</span>
+        <span className={styles.sliderValue}>{current}</span>
       </div>
     )
   }

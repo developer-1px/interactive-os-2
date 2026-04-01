@@ -77,7 +77,12 @@ export function Grid({
   const renderRow = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
     const cells = (node.data as Record<string, unknown>)?.cells as unknown[] | undefined
     return (
-      <div className="grid-row" {...props}>
+      <div
+        className="grid-row"
+        data-focused={state.focused || undefined}
+        data-selected={state.selected || undefined}
+        {...props}
+      >
         {columns.map((col, i) => (
           <Aria.Cell key={col.key} index={i}>
             {renderCell({} as React.HTMLAttributes<HTMLElement>, cells?.[i], col, state)}

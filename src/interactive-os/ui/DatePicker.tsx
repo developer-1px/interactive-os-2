@@ -1,6 +1,8 @@
 // ② 2026-03-31-datepicker-composite-prd.md
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './DatePicker.module.css'
 import type { NormalizedData } from '../store/types'
 import { createStore } from '../store/createStore'
@@ -262,7 +264,7 @@ export function DatePicker({
 
   return (
     <div className={"relative inline-block"}>
-      <div className={"flex-row items-center"}>
+      <div className={ax({ layout: 'bar' })}>
         <input
           ref={inputRef}
           role="combobox"
@@ -270,7 +272,7 @@ export function DatePicker({
           aria-expanded={isOpen}
           aria-label={ariaLabel}
           aria-autocomplete="none"
-          className={`outline-none ${styles.input}`}
+          className={`${ax({ surface: 'input', textStyle: 'body', text: 'primary' })} ${styles.input}`}
           type="text"
           readOnly
           value={value ? formatDate(value) : ''}
@@ -279,7 +281,7 @@ export function DatePicker({
           onKeyDown={(e) => { if (e.key === 'ArrowDown') { e.preventDefault(); openDialog() } }}
         />
         <button
-          className={`flex-row items-center ${styles.triggerButton}`}
+          className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.triggerButton}`}
           aria-label="Choose Date"
           tabIndex={-1}
           onClick={() => isOpen ? closeDialog() : openDialog()}
@@ -294,21 +296,21 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`absolute ${styles.dialog}`}
+          className={`absolute ${ax({ surface: 'overlay', padding: 'sm' })} ${styles.dialog}`}
           onKeyDown={handleDialogKeyDown}
         >
-          <div className={`flex-row items-center ${styles.navBar}`}>
-            <button className={`flex-row items-center justify-center ${styles.navButton}`} aria-label="Previous Year" onClick={() => setYear(y => y - 1)}>
+          <div className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.navBar}`}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Year" onClick={() => setYear(y => y - 1)}>
               <ChevronsLeft size="1em" />
             </button>
-            <button className={`flex-row items-center justify-center ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
               <ChevronLeft size="1em" />
             </button>
-            <span className={`flex-1 text-center ${styles.monthYear}`} aria-live="polite">{MONTHS[month]} {year}</span>
-            <button className={`flex-row items-center justify-center ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
+            <span className={`${ax({ flex: '1', textStyle: 'label', text: 'primary' })} ${styles.monthYear}`} aria-live="polite">{MONTHS[month]} {year}</span>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
               <ChevronRight size="1em" />
             </button>
-            <button className={`flex-row items-center justify-center ${styles.navButton}`} aria-label="Next Year" onClick={() => setYear(y => y + 1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Year" onClick={() => setYear(y => y + 1)}>
               <ChevronsRight size="1em" />
             </button>
           </div>
@@ -323,9 +325,9 @@ export function DatePicker({
             />
           </div>
 
-          <div className={`flex-row justify-end ${styles.actions}`}>
-            <button className={styles.actionButton} onClick={() => closeDialog()}>Cancel</button>
-            <button className={styles.actionButton} onClick={confirmFocused}>OK</button>
+          <div className={`${ax({ layout: 'row', gap: 'sm' })} ${styles.actions}`}>
+            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', text: 'primary' })} ${styles.actionButton}`} onClick={() => closeDialog()}>Cancel</button>
+            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', text: 'primary' })} ${styles.actionButton}`} onClick={confirmFocused}>OK</button>
           </div>
         </div>
       )}

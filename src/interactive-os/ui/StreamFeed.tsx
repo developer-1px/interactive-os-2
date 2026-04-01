@@ -1,5 +1,7 @@
 // ② 2026-03-25-stream-feed-prd.md
 import { useState, useEffect, useCallback, type ReactNode } from 'react'
+import { ax } from '../../poc/ax'
+import '../../poc/ax.css'
 import styles from './StreamFeed.module.css'
 
 // --- Types ---
@@ -24,13 +26,13 @@ function StreamingTimer() {
     return () => clearInterval(id)
   }, [])
 
-  return <span className={styles.streamingTime}>{elapsed}s</span>
+  return <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.streamingTime}`}>{elapsed}s</span>
 }
 
 // --- StreamCursor (export for renderItem use) ---
 
 export function StreamCursor() {
-  return <span className={`inline-block ${styles.cursor}`} />
+  return <span className={styles.cursor} />
 }
 
 // --- ScrollToBottom FAB ---
@@ -56,7 +58,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`flex-row items-center justify-center absolute cursor-pointer ${styles.scrollFab}`} data-surface="action" onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`${ax({ layout: 'center', surface: 'action' })} ${styles.scrollFab}`} onClick={scrollToBottom} aria-label="Scroll to bottom">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -68,21 +70,21 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
 
 export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streamingLabel, className }: StreamFeedProps<T>) {
   return (
-    <div className={`flex-col flex-1 min-h-0 relative`}>
+    <div className={`${ax({ layout: 'column', flex: '1' })} ${styles.wrapper}`}>
       <div
         ref={feedRef}
-        className={`flex-col flex-1 min-h-0 overflow-y-auto ${styles.feed}${className ? ` ${className}` : ''}`}
+        className={`${ax({ layout: 'scroll', flex: '1' })} ${styles.feed}${className ? ` ${className}` : ''}`}
         role="feed"
       >
         {items.map((item, i) => (
-          <div key={i} className={`min-w-0 ${styles.entry}`}>
+          <div key={i} className={styles.entry}>
             {renderItem(item, i, { isLatest: i === items.length - 1 })}
           </div>
         ))}
         {isStreaming && (
-          <div className={`flex-row items-center ${styles.streaming}`}>
+          <div className={`${ax({ layout: 'bar' })} ${styles.streaming}`}>
             <span className={styles.streamingDot} />
-            <span className={styles.streamingLabel}>{streamingLabel ?? 'Thinking'}</span>
+            <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.streamingLabel}`}>{streamingLabel ?? 'Thinking'}</span>
             <StreamingTimer />
           </div>
         )}

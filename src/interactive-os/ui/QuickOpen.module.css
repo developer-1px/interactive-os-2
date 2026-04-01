@@ -1,13 +1,16 @@
 /* ═══════════════════════════════════════════
    QuickOpen — file search overlay
    Surface: overlay | Shape: xl (dialog), sm (item)
+   last-mile: positioning, animation, border, shadow
    ═══════════════════════════════════════════ */
 
-/* --- L5: Structure --- */
+/* --- last-mile: positioning & animation --- */
 
 .backdrop {
+  position: fixed;
+  inset: 0;
   z-index: 100;
-  background: var(--dialog-backdrop);
+  justify-content: center;
   padding-top: 12vh;
   animation: fade-in var(--motion-enter-duration) var(--motion-enter-easing);
 }
@@ -20,7 +23,7 @@
 .dialog {
   width: 560px;
   max-height: 520px;
-  background: var(--surface-overlay);
+  overflow: hidden;
   border: 1px solid var(--border-default);
   border-radius: var(--shape-xl-radius);
   box-shadow: var(--shadow-lg);
@@ -33,22 +36,13 @@
 }
 
 .inputRow {
-  gap: var(--space-md);
-  padding: var(--space-lg) var(--space-xl);
   border-bottom: 1px solid var(--border-subtle);
-}
-
-.inputIcon {
-  color: var(--text-muted);
 }
 
 .input {
   background: none;
-  font-size: var(--type-section-size);
-  font-weight: var(--type-section-weight);
-  font-family: var(--type-section-family);
-  line-height: var(--type-section-line-height);
-  color: var(--text-primary);
+  border: none;
+  outline: none;
   caret-color: var(--tone-primary-base);
 }
 
@@ -58,15 +52,11 @@
 }
 
 .shortcut {
-  font-size: var(--type-caption-size);
-  font-weight: var(--type-caption-weight);
-  font-family: var(--mono);
-  line-height: var(--type-caption-line-height);
-  color: var(--text-muted);
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-xs-radius);
   padding: var(--shape-xs-py) var(--shape-xs-px);
+  font-family: var(--mono);
 }
 
 .results {
@@ -74,16 +64,13 @@
 }
 
 .item {
-  gap: var(--space-md);
-  padding: var(--space-sm) var(--space-lg);
   border-radius: var(--shape-sm-radius);
   cursor: default;
   user-select: none;
-  color: var(--text-primary);
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
-/* --- L6: Variant — focused item (bg highlight, Apple HIG) --- */
+/* --- variant: focused item --- */
 
 .itemFocused {
   --_bg: var(--tone-primary-dim);
@@ -91,28 +78,22 @@
 }
 
 .itemText {
-  gap: var(--space-inline-code);
+  min-width: 0;
 }
 
 .itemName {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
-  font-family: var(--type-body-family);
-  line-height: var(--type-body-line-height);
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: var(--weight-medium);
 }
 
 .itemPath {
-  font-size: var(--type-caption-size);
-  font-weight: var(--type-caption-weight);
-  font-family: var(--type-caption-family);
-  line-height: var(--type-caption-line-height);
-  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .empty {
-  padding: var(--space-2xl);
-  font-size: var(--type-body-size);
-  color: var(--text-muted);
+  /* ax() handles layout, text, padding */
 }

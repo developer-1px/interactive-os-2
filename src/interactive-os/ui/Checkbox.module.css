@@ -1,13 +1,3 @@
-/* ── Checkbox — 3-block recipe ── */
-
-/* ═══ Block 1: base ═══ */
-.item {
-  gap: var(--space-sm);
-}
-
-.label {
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  color: var(--text-primary);
-  user-select: none;
-}
+/* ── Checkbox — last-mile only ── */
+/* ax() handles: layout, surface, controlSize, gap, textStyle, text */
+/* indicator styles live in indicators/ */
