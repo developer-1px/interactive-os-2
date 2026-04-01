@@ -1,0 +1,324 @@
+/* ── MECE Axis Design System — CSS Classes ──
+ * 시각 축 + 구조 축 = ~50개 클래스. 이게 전부.
+ * style={} 사용 금지. 모든 것을 ax()로.
+ * 모든 값은 claude.ai 실측 기반 토큰 참조.
+ */
+
+/* ════════════════════════════════════════════
+ * Surface — "이 요소는 사용자와 어떤 관계인가"
+ * 번들: display + align + border + background + cursor + 상태 정책
+ * ════════════════════════════════════════════ */
+
+/* Action — 버튼, 토글 등 누르는 요소 */
+.sf-action {
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  background: var(--_bg, transparent);
+  color: var(--_fg, inherit);
+  transition: background 0.075s cubic-bezier(0.165, 0.85, 0.45, 1);
+}
+.sf-action:hover {
+  background: var(--_bg-hover, var(--colors-bg-hover));
+}
+.sf-action:active {
+  background: var(--_bg-active, var(--colors-bg-active));
+}
+.sf-action:focus-visible {
+  outline: 2px solid var(--colors-focus);
+  outline-offset: 2px;
+}
+.sf-action[aria-disabled="true"],
+.sf-action:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* Input — 텍스트 입력, 콤보박스 등 데이터 입력 요소 */
+.sf-input {
+  border: 1px solid var(--colors-border-default);
+  background: var(--colors-surface-default);
+  transition: border-color 0.075s cubic-bezier(0.165, 0.85, 0.45, 1);
+}
+.sf-input:focus-within {
+  border-color: var(--colors-focus);
+}
+.sf-input:focus-visible {
+  outline: 2px solid var(--colors-focus);
+  outline-offset: 2px;
+}
+.sf-input[aria-disabled="true"],
+.sf-input:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Display — 카드, 패널 등 정보 표시 컨테이너 */
+.sf-display {
+  border: 1px solid var(--colors-border-subtle);
+  background: var(--colors-surface-default);
+}
+
+/* Overlay — 다이얼로그, 메뉴, 툴팁 등 부유 레이어 */
+.sf-overlay {
+  background: var(--colors-surface-overlay);
+  box-shadow: var(--shadows-lg);
+  border: none;
+}
+
+/* Ghost — 리스트 아이템, 탭, 사이드바 링크 등 */
+.sf-ghost {
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  background: transparent;
+  transition: background 0.075s cubic-bezier(0.165, 0.85, 0.45, 1);
+}
+.sf-ghost:hover {
+  background: var(--colors-bg-hover);
+}
+.sf-ghost:active {
+  background: var(--colors-bg-active);
+}
+.sf-ghost:focus-visible {
+  outline: 2px solid var(--colors-focus);
+  outline-offset: -2px;
+}
+.sf-ghost[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ════════════════════════════════════════════
+ * Control Size — "이 요소의 물리적 크기"
+ * 번들: min-height + border-radius + font-size
+ * Law 2: r/h ≈ 0.2
+ * ════════════════════════════════════════════ */
+
+.cs-sm {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--sizes-control-sm);    /* 32px */
+  border-radius: var(--radii-sm);         /* 6px  — 32 × 0.2 */
+  font-size: var(--font-sizes-caption);   /* 12px */
+}
+.cs-md {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--sizes-control-md);    /* 36px */
+  border-radius: var(--radii-md);         /* 8px  — 36 × 0.2 */
+  font-size: var(--font-sizes-body);      /* 14px */
+}
+.cs-lg {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--sizes-control-lg);    /* 44px */
+  border-radius: var(--radii-lg);         /* 10px — 44 × 0.2 */
+  font-size: var(--font-sizes-body);      /* 14px */
+}
+
+/* ════════════════════════════════════════════
+ * Interaction — padding-x by interaction mode
+ * Law 4: input(12) / nav(16) / action(20)
+ * ════════════════════════════════════════════ */
+
+.ix-input  { padding-inline: var(--spacing-px-input);  }  /* 12px — data entry */
+.ix-nav    { padding-inline: var(--spacing-px-nav);    }  /* 16px — wayfinding */
+.ix-action { padding-inline: var(--spacing-px-action); }  /* 20px — CTA */
+
+/* ════════════════════════════════════════════
+ * Tone — "이 요소의 의미적 색상"
+ * 번들: --_bg + --_fg + --_bg-hover + --_bg-active
+ * Surface의 상태 정책이 이 변수를 소비한다
+ * ════════════════════════════════════════════ */
+
+.tn-primary {
+  --_bg: var(--colors-tone-primary-base);
+  --_fg: var(--colors-tone-primary-foreground);
+  --_bg-hover: var(--colors-tone-primary-hover);
+  --_bg-active: var(--colors-tone-primary-bright);
+}
+.tn-destructive {
+  --_bg: var(--colors-tone-destructive-base);
+  --_fg: var(--colors-tone-destructive-foreground);
+  --_bg-hover: var(--colors-tone-destructive-hover);
+  --_bg-active: var(--colors-tone-destructive-dim);
+}
+.tn-success {
+  --_bg: var(--colors-tone-success-base);
+  --_fg: var(--colors-tone-success-foreground);
+  --_bg-hover: var(--colors-tone-success-hover);
+  --_bg-active: var(--colors-tone-success-dim);
+}
+.tn-warning {
+  --_bg: var(--colors-tone-warning-base);
+  --_fg: var(--colors-tone-warning-foreground);
+  --_bg-hover: var(--colors-tone-warning-hover);
+  --_bg-active: var(--colors-tone-warning-dim);
+}
+.tn-neutral {
+  --_bg: transparent;
+  --_fg: var(--colors-text-secondary);
+  --_bg-hover: var(--colors-bg-hover);
+  --_bg-active: var(--colors-bg-active);
+}
+
+/* ════════════════════════════════════════════
+ * Proximity — "이 요소들 사이의 관계 거리"
+ * Gestalt 근접성 원리: 관계가 가까울수록 gap이 작다
+ * ════════════════════════════════════════════ */
+
+.px-inline  { gap: var(--spacing-inline);  }  /*  4px — 아이콘↔텍스트 */
+.px-element { gap: var(--spacing-element); }  /*  8px — 형제 아이템 */
+.px-group   { gap: var(--spacing-group);   }  /* 12px — 블록↔블록 */
+.px-section { gap: var(--spacing-section); }  /* 16px — 섹션 */
+.px-page    { gap: var(--spacing-page);    }  /* 24px — 페이지 단위 */
+
+/* ════════════════════════════════════════════
+ * Text Style — 타이포그래피 번들
+ * 번들: font-size + weight + family + line-height + letter-spacing
+ * ════════════════════════════════════════════ */
+
+.ts-hero {
+  font-size: var(--font-sizes-hero);
+  font-weight: var(--font-weights-light);
+  font-family: var(--fonts-serif);
+  line-height: var(--line-heights-normal);
+  letter-spacing: var(--letter-spacings-tighter);
+}
+.ts-display {
+  font-size: var(--font-sizes-display);
+  font-weight: var(--font-weights-regular);
+  font-family: var(--fonts-serif);
+  line-height: var(--line-heights-tight);
+  letter-spacing: var(--letter-spacings-tighter);
+}
+.ts-page {
+  font-size: var(--font-sizes-page);
+  font-weight: var(--font-weights-medium);
+  font-family: var(--fonts-serif);
+  line-height: var(--line-heights-tight);
+  letter-spacing: var(--letter-spacings-tight);
+}
+.ts-section {
+  font-size: var(--font-sizes-section);
+  font-weight: var(--font-weights-semi);
+  font-family: var(--fonts-sans);
+  line-height: var(--line-heights-snug);
+  letter-spacing: var(--letter-spacings-normal);
+}
+.ts-label {
+  font-size: var(--font-sizes-section);
+  font-weight: var(--font-weights-book);
+  font-family: var(--fonts-sans);
+  line-height: var(--line-heights-snug);
+  letter-spacing: var(--letter-spacings-normal);
+}
+.ts-body {
+  font-size: var(--font-sizes-body);
+  font-weight: var(--font-weights-book);
+  font-family: var(--fonts-sans);
+  line-height: var(--line-heights-snug);
+  letter-spacing: var(--letter-spacings-normal);
+}
+.ts-caption {
+  font-size: var(--font-sizes-caption);
+  font-weight: var(--font-weights-book);
+  font-family: var(--fonts-sans);
+  line-height: 1.33;
+  letter-spacing: var(--letter-spacings-normal);
+}
+.ts-code {
+  font-size: var(--font-sizes-code);
+  font-weight: var(--font-weights-regular);
+  font-family: var(--fonts-mono);
+  line-height: var(--line-heights-normal);
+  letter-spacing: var(--letter-spacings-normal);
+}
+
+/* ════════════════════════════════════════════
+ * Text Color — 텍스트 색상 위계 (tone과 독립)
+ * 같은 body가 bright일 수도 muted일 수도 있다
+ * ════════════════════════════════════════════ */
+
+.tx-bright    { color: var(--colors-text-bright); }
+.tx-primary   { color: var(--colors-text-primary); }
+.tx-secondary { color: var(--colors-text-secondary); }
+.tx-muted     { color: var(--colors-text-muted); }
+
+/* ════════════════════════════════════════════
+ * Layout — 배치 방향
+ * ════════════════════════════════════════════ */
+
+.ly-row    { display: flex; flex-direction: row; }
+.ly-column { display: flex; flex-direction: column; }
+.ly-grid   { display: grid; }
+.ly-center { display: flex; align-items: center; justify-content: center; }
+
+/* ════════════════════════════════════════════
+ * Align — cross-axis 정렬
+ * ════════════════════════════════════════════ */
+
+.al-start    { align-items: flex-start; }
+.al-center   { align-items: center; }
+.al-end      { align-items: flex-end; }
+.al-stretch  { align-items: stretch; }
+.al-baseline { align-items: baseline; }
+
+/* ════════════════════════════════════════════
+ * Justify — main-axis 정렬
+ * ════════════════════════════════════════════ */
+
+.jc-start   { justify-content: flex-start; }
+.jc-center  { justify-content: center; }
+.jc-end     { justify-content: flex-end; }
+.jc-between { justify-content: space-between; }
+
+/* ════════════════════════════════════════════
+ * Padding — proximity 스케일 재사용
+ * ════════════════════════════════════════════ */
+
+.pd-none    { padding: 0; }
+.pd-inline  { padding: var(--spacing-inline); }   /*  4px */
+.pd-element { padding: var(--spacing-element); }  /*  8px */
+.pd-group   { padding: var(--spacing-group); }    /* 12px */
+.pd-section { padding: var(--spacing-section); }  /* 16px */
+.pd-page    { padding: var(--spacing-page); }     /* 24px */
+
+/* ════════════════════════════════════════════
+ * Width — 너비 제약
+ * ════════════════════════════════════════════ */
+
+.w-full { width: 100%; }
+.w-auto { width: auto; }
+.w-fit  { width: fit-content; }
+.w-sm   { max-width: 200px; }
+.w-md   { max-width: 400px; }
+.w-lg   { max-width: 640px; }
+
+/* ════════════════════════════════════════════
+ * Overflow
+ * ════════════════════════════════════════════ */
+
+.of-hidden { overflow: hidden; }
+.of-auto   { overflow: auto; }
+.of-scroll { overflow: scroll; }
+
+/* ════════════════════════════════════════════
+ * Position
+ * ════════════════════════════════════════════ */
+
+.ps-relative { position: relative; }
+.ps-absolute { position: absolute; }
+.ps-fixed    { position: fixed; }
+.ps-sticky   { position: sticky; }
+
+/* ════════════════════════════════════════════
+ * Flex — flex item 크기
+ * ════════════════════════════════════════════ */
+
+.fx-none { flex: none; }
+.fx-auto { flex: auto; }
+.fx-1    { flex: 1; }
