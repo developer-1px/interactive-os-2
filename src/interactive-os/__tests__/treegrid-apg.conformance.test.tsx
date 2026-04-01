@@ -315,7 +315,7 @@ describe('APG TreeGrid — Keyboard: Expand / Collapse', () => {
 // ---------------------------------------------------------------------------
 
 describe('APG TreeGrid — Selection', () => {
-  it('Space toggles selection on focused row', async () => {
+  it('Space deselects followFocus-selected row', async () => {
     const user = userEvent.setup()
     const { container } = renderTree(fixtureData())
 
@@ -323,26 +323,29 @@ describe('APG TreeGrid — Selection', () => {
     await user.keyboard('{ }')
 
     const testNode = container.querySelector('[data-testid="node-src"]')
-    expect(testNode?.getAttribute('data-selected')).toBe('true')
+    expect(testNode?.getAttribute('data-selected')).toBe('false')
   })
 
-  it('aria-selected=true after Space selection', async () => {
+  it('Space twice re-selects the row', async () => {
     const user = userEvent.setup()
     const { container } = renderTree(fixtureData())
 
     getNodeElement(container, 'src')!.focus()
+    await user.keyboard('{ }')
     await user.keyboard('{ }')
 
     const srcRow = getNodeElement(container, 'src')
     expect(srcRow?.getAttribute('aria-selected')).toBe('true')
   })
 
-  it('rows start with aria-selected=false', () => {
+  it('initially focused row has aria-selected=true (followFocus)', () => {
     const { container } = renderTree(fixtureData())
     const rows = container.querySelectorAll('[role="row"]')
-    rows.forEach((row) => {
-      expect(row.getAttribute('aria-selected')).toBe('false')
-    })
+    const firstRow = rows[0]
+    expect(firstRow?.getAttribute('aria-selected')).toBe('true')
+    for (let i = 1; i < rows.length; i++) {
+      expect(rows[i]?.getAttribute('aria-selected')).toBe('false')
+    }
   })
 })
 

@@ -89,9 +89,10 @@ describe('APG Listbox — Aria Tree Structure', () => {
     expect(getFocusedNodeId(container)).toBe('apple')
   })
 
-  it('all options initially have aria-selected=false', () => {
+  it('initially focused option has aria-selected=true (followFocus)', () => {
     const { container } = renderListBox(fixtureData())
-    for (const id of ['apple', 'banana', 'cherry', 'date']) {
+    expect(getNode(container, 'apple').getAttribute('aria-selected')).toBe('true')
+    for (const id of ['banana', 'cherry', 'date']) {
       expect(getNode(container, id).getAttribute('aria-selected')).toBe('false')
     }
   })
@@ -203,25 +204,25 @@ describe('APG Listbox — Keyboard Interaction', () => {
   })
 
   describe('Space — toggle selection', () => {
-    it('Space toggles selection on focused option', async () => {
+    it('Space deselects followFocus-selected option', async () => {
       const user = userEvent.setup()
       const { container } = renderListBox(fixtureData())
 
       getNode(container, 'apple').focus()
-      await user.keyboard('{ }')
-
-      expect(isSelected(container, 'apple')).toBe(true)
-    })
-
-    it('Space again deselects the option', async () => {
-      const user = userEvent.setup()
-      const { container } = renderListBox(fixtureData())
-
-      getNode(container, 'apple').focus()
-      await user.keyboard('{ }')
       await user.keyboard('{ }')
 
       expect(isSelected(container, 'apple')).toBe(false)
+    })
+
+    it('Space again re-selects the option', async () => {
+      const user = userEvent.setup()
+      const { container } = renderListBox(fixtureData())
+
+      getNode(container, 'apple').focus()
+      await user.keyboard('{ }')
+      await user.keyboard('{ }')
+
+      expect(isSelected(container, 'apple')).toBe(true)
     })
 
     it('Space selection does not move focus', async () => {
