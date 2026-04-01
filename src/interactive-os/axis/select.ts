@@ -93,12 +93,12 @@ export const selectionCommands = {
 }
 
 export const selectAndAnchor = (ctx: PatternContext): Command =>
-  createBatchCommand([selectionCommands.select(ctx.focused), selectionCommands.setAnchor(ctx.focused)])
+  createBatchCommand([focusCommands.setFocus(ctx.focused), selectionCommands.select(ctx.focused), selectionCommands.setAnchor(ctx.focused)])
 
 /**
  * Middleware that clears the selection anchor when a standalone focus command fires.
  * This ensures Shift+Arrow starts fresh after normal navigation.
- * Batch commands (used by extendSelection) are exempt — the anchor persists within a batch.
+ * Batch commands (selectAndAnchor, extendSelection) are exempt — the anchor persists within a batch.
  */
 function anchorResetMiddleware(): Middleware {
   return (next, _getStore) => (command) => {
@@ -202,8 +202,7 @@ export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; ac
   const extendPrev = (ctx: PatternContext): Command | void => ctx.selected?.extend('prev')
   const extendFirst = (ctx: PatternContext): Command | void => ctx.selected?.extend('first')
   const extendLast = (ctx: PatternContext): Command | void => ctx.selected?.extend('last')
-  const _selectAndAnchor = (ctx: PatternContext): Command =>
-    createBatchCommand([selectionCommands.select(ctx.focused), selectionCommands.setAnchor(ctx.focused)])
+  const _selectAndAnchor = selectAndAnchor
   const extendToFocused = (ctx: PatternContext): Command | void => ctx.selected?.extendTo(ctx.focused)
 
   return {

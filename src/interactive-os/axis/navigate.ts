@@ -14,13 +14,16 @@ export const focusCommands = defineCommands({
     type: 'core:focus' as const,
     meta: true,
     create: (nodeId: string) => ({ nodeId }),
-    handler: (store, { nodeId }) => ({
-      ...store,
-      entities: {
-        ...store.entities,
-        [FOCUS_ID]: { id: FOCUS_ID, focusedId: nodeId },
-      },
-    }),
+    handler: (store, { nodeId }) => {
+      if ((store.entities[FOCUS_ID] as { focusedId?: string } | undefined)?.focusedId === nodeId) return store
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [FOCUS_ID]: { id: FOCUS_ID, focusedId: nodeId },
+        },
+      }
+    },
   },
 })
 
