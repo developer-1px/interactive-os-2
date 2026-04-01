@@ -1,45 +1,6 @@
-/* --- AlertDialog --- */
-
-.backdrop {
-  background: var(--dialog-backdrop);
-  /* backdrop-filter has no design token — intentional raw value */
-  backdrop-filter: blur(3px);
-  z-index: 100;
-}
+/* ── AlertDialog — last-mile only ──
+ * ax()로 불가: backdrop blur, z-index, transition transform, overlay width */
 
 .box {
   width: var(--overlay-width);
-  background: var(--surface-overlay);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xl-radius);
-  transition:
-    opacity var(--motion-enter-duration) var(--motion-enter-easing),
-    transform var(--motion-enter-duration) var(--motion-enter-easing);
-}
-
-.header {
-  padding: var(--space-md) var(--space-lg); /* no matching shape bundle */
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-bright);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.body {
-  padding: var(--space-md) var(--space-lg); /* no matching shape bundle */
-  font-size: var(--type-body-size);
-  color: var(--text-secondary);
-  line-height: var(--leading-snug);
-}
-
-.footer {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
-  border-top: 1px solid var(--border-subtle);
-  background: var(--surface-base);
-}
-
-.destructive {
-  background: var(--tone-destructive-base);
-  color: var(--tone-destructive-foreground);
 }

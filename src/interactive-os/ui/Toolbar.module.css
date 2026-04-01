@@ -1,28 +1,14 @@
-/* --- Toolbar --- */
+/* ── Toolbar — last-mile only ──
+ * ax()로 불가: focused/selected 상태의 배경/outline (data-attr 기반) */
 
-.toolbar-card {
-  padding: var(--space-xs) var(--space-sm); /* no matching shape bundle */
-}
-
-.toolbar-btn {
-  min-width: var(--space-2xl);
-  min-height: var(--space-2xl);
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
-  color: var(--text-secondary);
-  background: transparent;
-  border-radius: var(--shape-xs-radius);
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing), color var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-.toolbar-btn-focused {
+.focused {
   background: var(--tone-primary-dim);
   color: var(--text-bright);
   outline: var(--focus-ring) solid var(--focus);
   outline-offset: calc(-1 * var(--focus-ring));
 }
 
-.toolbar-btn-selected {
+.selected {
   background: var(--selection);
   color: var(--text-bright);
 }
