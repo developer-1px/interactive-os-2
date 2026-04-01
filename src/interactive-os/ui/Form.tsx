@@ -73,7 +73,7 @@ export function Form({
   )
 
   const storeRef = React.useRef(data)
-  storeRef.current = data
+  React.useEffect(() => { storeRef.current = data })
 
   const handleChange = React.useCallback((next: NormalizedData) => {
     storeRef.current = next

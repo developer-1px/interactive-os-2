@@ -37,9 +37,7 @@ describe('Workspace', () => {
       />,
     )
 
-    // Tab header is visible
-    expect(screen.getByText('Hello')).toBeTruthy()
-    // Panel content is rendered
+    // Single tab: tab bar is hidden, but panel content is rendered
     expect(screen.getByTestId('panel-tab-1').textContent).toBe('hello.ts')
   })
 
@@ -80,10 +78,7 @@ describe('Workspace', () => {
       />,
     )
 
-    // Both tab headers visible
-    expect(screen.getByText('Left')).toBeTruthy()
-    expect(screen.getByText('Right')).toBeTruthy()
-    // Both panels rendered
+    // Single tab per group: tab bars are hidden, but panel content is rendered
     expect(screen.getByTestId('panel-tab-1').textContent).toBe('left.ts')
     expect(screen.getByTestId('panel-tab-2').textContent).toBe('right.ts')
     // Separator present

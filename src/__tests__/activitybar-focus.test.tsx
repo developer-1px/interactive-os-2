@@ -12,6 +12,7 @@ let currentPath = '/'
 // @test-harness — router location tracking requires component inside RouterProvider
 function LocationTracker() {
   const { pathname } = useLocation()
+  // eslint-disable-next-line react-hooks/globals -- test-only location tracker
   currentPath = pathname
   return null
 }

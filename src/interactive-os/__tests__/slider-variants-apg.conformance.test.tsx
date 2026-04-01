@@ -57,7 +57,7 @@ function getNode(container: HTMLElement, id: string): HTMLElement | null {
 }
 
 function getValueNow(container: HTMLElement, id: string): string | null {
-  return getNode(container, id)?.getAttribute('aria-valuenow')
+  return getNode(container, id)?.getAttribute('aria-valuenow') ?? null
 }
 
 // ---------------------------------------------------------------------------

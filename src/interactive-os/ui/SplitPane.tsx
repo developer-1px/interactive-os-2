@@ -58,8 +58,6 @@ function startDrag(
   onMove: (delta: { x: number; y: number }) => void,
 ) {
   target.setPointerCapture(pointerId)
-  const startX = target.getBoundingClientRect().left + target.getBoundingClientRect().width / 2
-  const startY = target.getBoundingClientRect().top + target.getBoundingClientRect().height / 2
 
   // Use the actual pointer position from the first move as baseline
   let baseX: number | null = null

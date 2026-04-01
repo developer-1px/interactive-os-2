@@ -35,12 +35,12 @@ function useElapsed(running: boolean): number {
   const startRef = useRef(0)
 
   useEffect(() => {
-    if (running) {
-      startRef.current = Date.now()
-      setElapsed(0)
-      const id = setInterval(() => setElapsed(Math.floor((Date.now() - startRef.current) / 1000)), 1000)
-      return () => clearInterval(id)
-    }
+    if (!running) return
+    startRef.current = Date.now()
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset on transition, not a cascading render
+    setElapsed(0)
+    const id = setInterval(() => setElapsed(Math.floor((Date.now() - startRef.current) / 1000)), 1000)
+    return () => clearInterval(id)
   }, [running])
 
   return elapsed

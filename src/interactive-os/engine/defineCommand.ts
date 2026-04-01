@@ -63,11 +63,12 @@ export function defineCommand(
 
 // ── defineCommands ─────────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CommandDef = {
   type: string
   meta?: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   create?: (...args: any[]) => any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handler: (...args: any[]) => NormalizedData
 }
 

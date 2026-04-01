@@ -28,6 +28,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Recor
 }
 
 // Re-export Cell for grid consumers (e.g. TreegridEmail)
+// eslint-disable-next-line react-refresh/only-export-components
 export const Cell = Aria.Cell
 
 export function TreeGrid({

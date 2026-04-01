@@ -19,7 +19,7 @@ const ROTATION_INTERVAL = 3000
 
 export function CarouselPrevNext() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [isRotating, setIsRotating] = useState(true)
+  const [isRotating, setIsRotating] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const [isPaused, setIsPaused] = useState(false)
   const containerRef = useRef<HTMLElement>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -46,7 +46,6 @@ export function CarouselPrevNext() {
   // Respect prefers-reduced-motion
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (mq.matches) setIsRotating(false)
     const handler = (e: MediaQueryListEvent) => { if (e.matches) setIsRotating(false) }
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)

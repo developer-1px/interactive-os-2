@@ -66,9 +66,12 @@ export function useRectTracker(options: UseRectTrackerOptions) {
   const focusedIdRef = useRef(focusedId)
   const selectedIdsRef = useRef(selectedIds)
   const nodeIdAttrRef = useRef(nodeIdAttr)
-  focusedIdRef.current = focusedId
-  selectedIdsRef.current = selectedIds
-  nodeIdAttrRef.current = nodeIdAttr
+
+  useEffect(() => {
+    focusedIdRef.current = focusedId
+    selectedIdsRef.current = selectedIds
+    nodeIdAttrRef.current = nodeIdAttr
+  })
 
   // Single stable rAF loop — reads refs, no dependency churn
   useEffect(() => {
