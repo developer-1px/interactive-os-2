@@ -6,6 +6,8 @@ import {
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { CodeBlock } from '../CodeBlock'
 import { DiffBlock } from './DiffBlock'
+import { ax } from '../../../poc/ax'
+import '../../../poc/ax.css'
 import { useChatFeatures } from './chatFeatures'
 import styles from './ToolSummaryBlock.module.css'
 import type { DataBlock } from './types'
@@ -20,7 +22,7 @@ function FilePathLink({ path, children }: { path: string; children: React.ReactN
   const open = () => window.dispatchEvent(new CustomEvent('inspector:open-source', { detail: { fileName: path } }))
   return (
     <span
-      className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolDetail} ${styles.filePathLink}`}
+      className={`${styles.toolDetail} ${styles.filePathLink}`}
       role="button"
       tabIndex={0}
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); open() }}
@@ -83,9 +85,9 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
   const Icon = toolIcons[name] ?? Wrench
 
   return (
-    <div className={`relative flex-row items-center ${styles.toolRow}`}>
-      <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><Icon size={12} /></span>
-      <span><span className={styles.toolName}>{name}</span>{detail ? ' ' : ''}<span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolDetail}`}>{detail}</span></span>
+    <div className={`${ax({ layout: 'bar' })} ${styles.toolRow}`}>
+      <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
+      <span><span className={styles.toolName}>{name}</span>{detail ? ' ' : ''}<span className={styles.toolDetail}>{detail}</span></span>
     </div>
   )
 }
@@ -113,16 +115,16 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
   const isLong = lines.length > 3 || text.length > 200
 
   if (!isLong) {
-    return <pre className={`overflow-y-auto ${styles.toolResult}`}>{text}</pre>
+    return <pre className={styles.toolResult}>{text}</pre>
   }
 
   return (
     <details open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary className={`relative flex-row items-center cursor-pointer ${styles.toolResultSummary}`}>
+      <summary className={`${ax({ layout: 'bar' })} ${styles.toolResultSummary}`}>
         <ExpandIndicator variant="expand" />
-        <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolResultPreview}`}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
+        <span className={styles.toolResultPreview}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
       </summary>
-      <pre className={`overflow-y-auto ${styles.toolResult}`}>{text}</pre>
+      <pre className={styles.toolResult}>{text}</pre>
     </details>
   )
 }
@@ -176,20 +178,20 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   } else if (isEdit && input.file_path) {
     summaryLabel = <FilePathLink path={String(input.file_path)}>{detail}</FilePathLink>
   } else {
-    summaryLabel = detail ? <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolDetail}`}>{detail}</span> : null
+    summaryLabel = detail ? <span className={styles.toolDetail}>{detail}</span> : null
   }
 
   // --- Content (no duplicate info — summary is the sole source) ---
   let content: React.ReactNode = null
   if (isRead && text) {
     content = (
-      <div className={`overflow-auto ${styles.toolGroupCode}`}>
+      <div className={styles.toolGroupCode}>
         <CodeBlock code={codeText} filename={filename} variant="compact" />
       </div>
     )
   } else if (isWrite && typeof input.content === 'string') {
     content = (
-      <div className={`overflow-auto ${styles.toolGroupCode}`}>
+      <div className={styles.toolGroupCode}>
         <CodeBlock code={input.content as string} filename={filename} variant="compact" />
       </div>
     )
@@ -198,15 +200,15 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
     )
   } else if (text) {
-    content = <pre className={`overflow-y-auto ${styles.toolGroupResult}`}>{text}</pre>
+    content = <pre className={styles.toolGroupResult}>{text}</pre>
   }
 
   // No content → non-collapsible row
   if (!content) {
     return (
-      <div className={`overflow-hidden ${styles.toolGroup}`}>
-        <div className={`relative flex-row items-center ${styles.toolGroupSummary}`}>
-          <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><Icon size={12} /></span>
+      <div className={styles.toolGroup}>
+        <div className={`${ax({ layout: 'bar' })} ${styles.toolGroupSummary}`}>
+          <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
           <span className={styles.toolName}>{name}</span> {summaryLabel}
         </div>
       </div>
@@ -214,9 +216,9 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   }
 
   return (
-    <details className={`overflow-hidden ${styles.toolGroup}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupSummary}`}>
-        <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
+    <details className={styles.toolGroup} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
+      <summary className={`${ax({ layout: 'bar' })} ${styles.toolGroupSummary}`}>
+        <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
         <Icon size={12} /> <span className={styles.toolName}>{name}</span> {summaryLabel}
       </summary>
       {content}
@@ -264,19 +266,19 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <details className={`overflow-hidden ${styles.toolChain}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary className={`relative flex-row items-center cursor-pointer ${styles.toolChainSummary}`}>
-        <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
+    <details className={styles.toolChain} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
+      <summary className={`${ax({ layout: 'bar' })} ${styles.toolChainSummary}`}>
+        <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
         <Layers size={12} /> <span className={styles.toolChainLabel}>{summary}</span>
       </summary>
-      <div className={`flex-col ${styles.toolChainContent}`}>
+      <div className={`${ax({ layout: 'column' })} ${styles.toolChainContent}`}>
         {typeGroups.map(g => {
           const Icon = toolIcons[g.name] ?? Wrench
           return (
-            <div key={g.name} className={`relative flex-row items-center ${styles.toolChainRow}`}>
-              <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><Icon size={12} /></span>
+            <div key={g.name} className={`${ax({ layout: 'bar' })} ${styles.toolChainRow}`}>
+              <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
               <span className={styles.toolName}>{g.name}</span>
-              <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolChainDetails}`}>
+              <span className={styles.toolChainDetails}>
                 {g.details.join(' · ')}
               </span>
             </div>
