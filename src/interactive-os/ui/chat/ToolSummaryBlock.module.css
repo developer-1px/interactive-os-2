@@ -84,12 +84,23 @@
   border-radius: var(--shape-md-radius);
 }
 
-/* Read/Write/Edit: 1-tier summary — icon row pattern */
+/* Consecutive tool groups: merge borders, remove inter-gap */
+.toolGroup + .toolGroup {
+  margin-top: calc(-1 * var(--space-sm));
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.toolGroup:has(+ .toolGroup) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Single summary pattern for all tools */
 
 .toolGroupSummary {
   composes: iconRow;
   gap: var(--space-xs);
-  color: var(--text-secondary);
   user-select: none;
 }
 
@@ -98,14 +109,7 @@
   display: none;
 }
 
-/* Other tools: header — icon row pattern */
-
-.toolGroupHeader {
-  composes: iconRow;
-  gap: var(--space-sm);
-}
-
-/* --- Result areas --- */
+/* --- Content areas --- */
 
 .toolGroupResult {
   padding: var(--space-sm);
@@ -127,15 +131,43 @@
   border-radius: 0;
 }
 
-.toolGroupResultSummary {
+/* ═══ ToolChainGroup: collapsible group of process tools ═══ */
+
+.toolChain {
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--shape-md-radius);
+}
+
+.toolChainSummary {
   composes: iconRow;
-  border-top: 1px solid var(--border-subtle);
-  font-family: var(--mono);
-  color: var(--text-muted);
+  gap: var(--space-xs);
   user-select: none;
 }
 
-.toolGroupResultSummary::marker,
-.toolGroupResultSummary::-webkit-details-marker {
+.toolChainSummary::marker,
+.toolChainSummary::-webkit-details-marker {
   display: none;
+}
+
+.toolChainLabel {
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+}
+
+.toolChainContent {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.toolChainRow {
+  composes: iconRow;
+  gap: var(--space-xs);
+}
+
+.toolChainDetails {
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: var(--type-caption-size);
+  text-overflow: ellipsis;
 }

@@ -14,20 +14,12 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const fenceOpenRef = useRef(false)
 
-  const cursorRef = useRef<HTMLDivElement | null>(null)
-
   const flush = useCallback(() => {
     if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null }
     if (!pendingRef.current) return
     displayedRef.current += pendingRef.current
     pendingRef.current = ''
     setDisplayed(displayedRef.current)
-
-    const cursor = cursorRef.current
-    if (!cursor) return
-    const feed = cursor.closest('[role="feed"]') as HTMLElement | null
-    const nearBottom = !feed || feed.scrollHeight - feed.scrollTop - feed.clientHeight <= 40
-    if (nearBottom) cursor.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [])
 
   useEffect(() => {
@@ -38,6 +30,7 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
       pendingRef.current = ''
       fenceOpenRef.current = false
       if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null }
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- content reset sync
       setDisplayed('')
     }
 
@@ -46,11 +39,9 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
 
     pendingRef.current += delta
 
-    // Count fences in cumulative pending to avoid chunk-boundary miscounting
     const fenceCount = (pendingRef.current.match(/^```/gm) ?? []).length
     fenceOpenRef.current = fenceCount % 2 !== 0
 
-    // Inside code fence: hold flush until fence closes
     if (fenceOpenRef.current) {
       if (!timerRef.current) {
         timerRef.current = setTimeout(flush, FLUSH_TIMEOUT_MS)
@@ -58,7 +49,6 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
       return
     }
 
-    // Fence just closed or normal text: flush completed lines
     const lastNewline = pendingRef.current.lastIndexOf('\n')
     if (lastNewline !== -1) {
       const ready = pendingRef.current.slice(0, lastNewline + 1)
@@ -69,7 +59,6 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
       return
     }
 
-    // No newline yet: defer flush
     if (!timerRef.current) {
       timerRef.current = setTimeout(flush, FLUSH_TIMEOUT_MS)
     }
@@ -81,10 +70,5 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
 
   if (!displayed) return null
 
-  return (
-    <div>
-      <MarkdownViewer content={displayed} styles={chatStyles} codeVariant="compact" />
-      <div ref={cursorRef} />
-    </div>
-  )
+  return <MarkdownViewer content={displayed} styles={chatStyles} codeVariant="compact" />
 }
