@@ -18,8 +18,8 @@
 
 /* ── Grid helpers (column counts) ── */
 
-.grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-md); }
-.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); align-items: center; }
+.grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-xs); }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-xs); align-items: center; }
 
 /* ── Section label ── */
 
