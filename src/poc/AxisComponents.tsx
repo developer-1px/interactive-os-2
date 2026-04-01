@@ -9,14 +9,13 @@ import './ax.css'
 // ════════════════════════════════════════════
 
 function Button({ tone = 'neutral' as const, size = 'md' as const, children, ...props }: {
-  tone?: 'primary' | 'destructive' | 'neutral'
+  tone?: 'accent' | 'danger' | 'neutral'
   size?: 'sm' | 'md' | 'lg'
   children: React.ReactNode
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button className={ax({
-      surface: 'action', controlSize: size, interaction: 'action',
-      tone, proximity: 'inline',
+      surface: 'action', controlSize: size, tone,
     })} {...props}>
       {children}
     </button>
@@ -29,7 +28,6 @@ function IconButton({ children, ...props }: {
   return (
     <button className={ax({
       surface: 'action', controlSize: 'sm', tone: 'neutral',
-      layout: 'center',
     })} {...props}>
       {children}
     </button>
@@ -38,10 +36,10 @@ function IconButton({ children, ...props }: {
 
 function TextInput({ label, placeholder }: { label: string; placeholder?: string }) {
   return (
-    <label className={ax({ layout: 'column', proximity: 'inline' })}>
+    <label className={ax({ layout: 'column', gap: 'xs' })}>
       <span className={ax({ textStyle: 'caption', text: 'muted' })}>{label}</span>
       <input
-        className={ax({ surface: 'input', controlSize: 'lg', interaction: 'input' })}
+        className={ax({ surface: 'input', controlSize: 'lg' })}
         placeholder={placeholder}
       />
     </label>
@@ -50,12 +48,11 @@ function TextInput({ label, placeholder }: { label: string; placeholder?: string
 
 function Badge({ children, tone = 'neutral' as const }: {
   children: React.ReactNode
-  tone?: 'primary' | 'success' | 'warning' | 'destructive' | 'neutral'
+  tone?: 'accent' | 'success' | 'warning' | 'danger' | 'neutral'
 }) {
   return (
     <span className={ax({
-      surface: 'action', controlSize: 'sm', interaction: 'input',
-      tone, textStyle: 'caption',
+      surface: 'action', controlSize: 'sm', tone, textStyle: 'caption',
     })}>
       {children}
     </span>
@@ -70,8 +67,8 @@ function NavItem({ active, children }: { active?: boolean; children: React.React
   return (
     <div
       className={ax({
-        surface: 'ghost', controlSize: 'md', interaction: 'nav',
-        proximity: 'inline', text: active ? 'primary' : 'secondary',
+        surface: 'ghost', controlSize: 'md',
+        text: active ? 'primary' : 'secondary',
       })}
       aria-current={active ? 'page' : undefined}
     >
@@ -82,7 +79,7 @@ function NavItem({ active, children }: { active?: boolean; children: React.React
 
 function Sidebar({ children }: { children: React.ReactNode }) {
   return (
-    <nav className={ax({ layout: 'column', padding: 'element', proximity: 'inline', overflow: 'auto' })}>
+    <nav className={ax({ layout: 'scroll', gap: 'xs', padding: 'sm' })}>
       {children}
     </nav>
   )
@@ -90,7 +87,7 @@ function Sidebar({ children }: { children: React.ReactNode }) {
 
 function TabBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className={ax({ layout: 'row', proximity: 'inline', padding: 'inline' })} role="tablist">
+    <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs' })} role="tablist">
       {children}
     </div>
   )
@@ -100,8 +97,8 @@ function Tab({ selected, children }: { selected?: boolean; children: React.React
   return (
     <div
       className={ax({
-        surface: 'ghost', controlSize: 'sm', interaction: 'nav',
-        proximity: 'inline', text: selected ? 'primary' : 'muted',
+        surface: 'ghost', controlSize: 'sm',
+        text: selected ? 'primary' : 'muted',
       })}
       role="tab"
       aria-selected={selected}
@@ -117,7 +114,7 @@ function Tab({ selected, children }: { selected?: boolean; children: React.React
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'display', layout: 'column', proximity: 'group', padding: 'section' })}>
+    <div className={ax({ surface: 'display', layout: 'column', gap: 'md', padding: 'lg' })}>
       <h3 className={ax({ textStyle: 'section', text: 'primary' })}>{title}</h3>
       {children}
     </div>
@@ -128,8 +125,7 @@ function ListItem({ selected, children }: { selected?: boolean; children: React.
   return (
     <div
       className={ax({
-        surface: 'ghost', controlSize: 'md', interaction: 'nav',
-        proximity: 'inline', text: 'primary',
+        surface: 'ghost', controlSize: 'md', text: 'primary',
       })}
       role="option"
       aria-selected={selected}
@@ -149,7 +145,7 @@ function ListBox({ children }: { children: React.ReactNode }) {
 
 function Toolbar({ children }: { children: React.ReactNode }) {
   return (
-    <div className={ax({ layout: 'row', proximity: 'inline', align: 'center' })} role="toolbar">
+    <div className={ax({ layout: 'bar', gap: 'xs' })} role="toolbar">
       {children}
     </div>
   )
@@ -161,12 +157,13 @@ function Dialog({ title, children, actions }: {
   actions: React.ReactNode
 }) {
   return (
-    <div className={ax({ surface: 'overlay', layout: 'column', proximity: 'section', padding: 'page', width: 'md' })}>
+    <div className={ax({ surface: 'overlay', layout: 'column', gap: 'lg', padding: 'xl', width: 'md' })}>
       <h2 className={ax({ textStyle: 'section', text: 'primary' })}>{title}</h2>
-      <div className={ax({ layout: 'column', proximity: 'group' })}>
+      <div className={ax({ layout: 'column', gap: 'md' })}>
         {children}
       </div>
-      <div className={ax({ layout: 'row', proximity: 'element', justify: 'end' })}>
+      <div className={ax({ layout: 'bar', gap: 'sm' })}>
+        <div className={ax({ flex: '1' })} />
         {actions}
       </div>
     </div>
@@ -175,7 +172,7 @@ function Dialog({ title, children, actions }: {
 
 function MenuList({ children }: { children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'overlay', layout: 'column', padding: 'inline', width: 'sm' })}>
+    <div className={ax({ surface: 'overlay', layout: 'column', padding: 'xs', width: 'sm' })}>
       {children}
     </div>
   )
@@ -184,8 +181,7 @@ function MenuList({ children }: { children: React.ReactNode }) {
 function MenuItem({ children }: { children: React.ReactNode }) {
   return (
     <div className={ax({
-      surface: 'ghost', controlSize: 'md', interaction: 'nav',
-      proximity: 'inline', text: 'primary',
+      surface: 'ghost', controlSize: 'md', text: 'primary',
     })} role="menuitem">
       {children}
     </div>
@@ -198,8 +194,8 @@ function MenuItem({ children }: { children: React.ReactNode }) {
 
 function AppHeader() {
   return (
-    <div className={ax({ layout: 'row', align: 'center', justify: 'between', padding: 'element' })}>
-      <div className={ax({ layout: 'row', proximity: 'element', align: 'center' })}>
+    <div className={ax({ layout: 'spread', padding: 'sm' })}>
+      <div className={ax({ layout: 'bar', gap: 'sm' })}>
         <span className={ax({ textStyle: 'section', text: 'primary' })}>Aria</span>
         <TabBar>
           <Tab selected>Overview</Tab>
@@ -218,12 +214,12 @@ function AppHeader() {
 function AppSidebar() {
   return (
     <Sidebar>
-      <span className={ax({ textStyle: 'caption', text: 'muted', padding: 'element' })}>Navigation</span>
+      <span className={ax({ textStyle: 'caption', text: 'muted', padding: 'sm' })}>Navigation</span>
       <NavItem active>Dashboard</NavItem>
       <NavItem>Components</NavItem>
       <NavItem>Patterns</NavItem>
       <NavItem>Tokens</NavItem>
-      <span className={ax({ textStyle: 'caption', text: 'muted', padding: 'element' })}>Tools</span>
+      <span className={ax({ textStyle: 'caption', text: 'muted', padding: 'sm' })}>Tools</span>
       <NavItem>Inspector</NavItem>
       <NavItem>Test Runner</NavItem>
     </Sidebar>
@@ -245,16 +241,16 @@ function TaskCard() {
 function StatsCard() {
   return (
     <Card title="Design System">
-      <div className={ax({ layout: 'row', proximity: 'group' })}>
-        <div className={ax({ layout: 'column', proximity: 'inline', flex: '1' })}>
-          <span className={ax({ textStyle: 'page', text: 'primary' })}>15</span>
-          <span className={ax({ textStyle: 'caption', text: 'muted' })}>Axis values</span>
+      <div className={ax({ layout: 'bar', gap: 'md' })}>
+        <div className={ax({ layout: 'column', gap: 'xs', flex: '1' })}>
+          <span className={ax({ textStyle: 'page', text: 'primary' })}>10</span>
+          <span className={ax({ textStyle: 'caption', text: 'muted' })}>Axes</span>
         </div>
-        <div className={ax({ layout: 'column', proximity: 'inline', flex: '1' })}>
-          <span className={ax({ textStyle: 'page', text: 'primary' })}>~50</span>
+        <div className={ax({ layout: 'column', gap: 'xs', flex: '1' })}>
+          <span className={ax({ textStyle: 'page', text: 'primary' })}>~40</span>
           <span className={ax({ textStyle: 'caption', text: 'muted' })}>CSS classes</span>
         </div>
-        <div className={ax({ layout: 'column', proximity: 'inline', flex: '1' })}>
+        <div className={ax({ layout: 'column', gap: 'xs', flex: '1' })}>
           <span className={ax({ textStyle: 'page', text: 'primary' })}>0</span>
           <span className={ax({ textStyle: 'caption', text: 'muted' })}>style= usage</span>
         </div>
@@ -266,18 +262,19 @@ function StatsCard() {
 function FormCard() {
   return (
     <Card title="New Component">
-      <div className={ax({ layout: 'column', proximity: 'group' })}>
+      <div className={ax({ layout: 'column', gap: 'md' })}>
         <TextInput label="Name" placeholder="e.g. TabGroup" />
         <TextInput label="Surface" placeholder="e.g. ghost" />
-        <div className={ax({ layout: 'row', proximity: 'element' })}>
-          <Badge tone="primary">Interactive</Badge>
+        <div className={ax({ layout: 'bar', gap: 'sm' })}>
+          <Badge tone="accent">Interactive</Badge>
           <Badge tone="success">Accessible</Badge>
           <Badge tone="warning">WIP</Badge>
         </div>
       </div>
-      <div className={ax({ layout: 'row', proximity: 'element', justify: 'end' })}>
+      <div className={ax({ layout: 'bar', gap: 'sm' })}>
+        <div className={ax({ flex: '1' })} />
         <Button tone="neutral">Cancel</Button>
-        <Button tone="primary">Create</Button>
+        <Button tone="accent">Create</Button>
       </div>
     </Card>
   )
@@ -289,7 +286,7 @@ function SampleDialog() {
       title="Delete Component?"
       actions={<>
         <Button tone="neutral">Cancel</Button>
-        <Button tone="destructive">Delete</Button>
+        <Button tone="danger">Delete</Button>
       </>}
     >
       <p className={ax({ textStyle: 'body', text: 'secondary' })}>
@@ -320,22 +317,22 @@ export function AxisComponents() {
       <AppHeader />
       <div className={ax({ layout: 'row', flex: '1' })}>
         <AppSidebar />
-        <main className={ax({ layout: 'column', proximity: 'page', padding: 'page', flex: '1', overflow: 'auto' })}>
+        <main className={ax({ layout: 'column', gap: 'xl', padding: 'xl', flex: '1' })}>
 
-          <div className={ax({ layout: 'column', proximity: 'element' })}>
+          <div className={ax({ layout: 'column', gap: 'sm' })}>
             <h1 className={ax({ textStyle: 'page', text: 'primary' })}>Dashboard</h1>
             <p className={ax({ textStyle: 'body', text: 'secondary' })}>
               All components below use ax() only. Zero style attributes.
             </p>
           </div>
 
-          <div className={ax({ layout: 'row', proximity: 'section' })}>
-            <div className={ax({ layout: 'column', proximity: 'section', flex: '1' })}>
+          <div className={ax({ layout: 'row', gap: 'lg' })}>
+            <div className={ax({ layout: 'column', gap: 'lg', flex: '1' })}>
               <StatsCard />
               <TaskCard />
               <FormCard />
             </div>
-            <div className={ax({ layout: 'column', proximity: 'section' })}>
+            <div className={ax({ layout: 'column', gap: 'lg' })}>
               <SampleDialog />
               <SampleMenu />
             </div>
