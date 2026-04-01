@@ -1,276 +1,111 @@
-/* ② 2026-03-25-design-primitives-preview-prd.md */
+/* ── Last-mile: ax()로 표현 불가능한 것만 ── */
 
 .root {
   grid-column: 2 / -1;
-  padding: var(--space-3xl) var(--space-2xl) 80px;
-  gap: 56px;
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding-bottom: 80px;
+  overflow-y: auto;
 }
 
-/* ══ Page headings ══ */
+/* ── Page layout: 3-column grid ── */
 
-.pageTitle {
-  font-size: var(--type-page-size);
-  font-weight: var(--type-page-weight);
-  font-family: var(--type-page-family);
-  line-height: var(--type-page-line-height);
-  color: var(--text-bright);
-  margin: 0;
-}
-
-.sectionHeading {
-  font-size: var(--type-section-size);
-  font-weight: var(--type-section-weight);
-  font-family: var(--type-section-family);
-  line-height: var(--type-section-line-height);
-  color: var(--text-bright);
-  margin: 0;
-}
-
-/* ══ Specimens ══ */
-
-.section {
-  gap: var(--space-3xl);
-}
-
-.specimen {
-  gap: var(--space-lg);
-}
-
-.specimenTitle {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-  margin: 0;
-}
-
-.subTitle {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-muted);
-  margin: var(--space-lg) 0 0;
-}
-
-/* ── Shared ── */
-
-.swatchRow6 {
+.pageGrid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: var(--space-md);
-}
-
-.swatchRow4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-md);
-}
-
-.swatchRow5 {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-md);
-}
-
-.swatchRow3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-md);
-}
-
-.swatchItem {
-  gap: var(--space-xs);
-}
-
-.swatchLabel {
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
-}
-
-.swatchMeta {
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
-}
-
-/* ── Surface ── */
-
-.surfaceSwatch {
-  aspect-ratio: 1.4;
-  border-radius: var(--shape-sm-radius);
-  border: 1px solid var(--border-subtle);
-}
-
-/* ── Shape ── */
-
-.shapeBox {
-  aspect-ratio: 1;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  font-size: var(--type-body-size);
-  color: var(--text-primary);
-}
-
-/* ── Type ── */
-
-.typeStack {
-  gap: 0;
-}
-
-.typeRow {
-  padding: var(--space-md) 0;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.typeRow:first-child {
-  padding-top: 0;
-}
-
-.typeSample {
-  color: var(--text-primary);
-}
-
-/* ── Tone ── */
-
-.toneGrid {
-  display: grid;
-  grid-template-columns: 88px repeat(6, 1fr);
-  gap: var(--space-sm);
-  align-items: center;
-}
-
-.toneHeaderRow { }
-
-.toneCorner {
-  /* grid cell */
-}
-
-.toneHeader {
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
-  text-align: center;
-  padding-bottom: var(--space-xs);
-}
-
-.toneRow { }
-
-.toneRowLabel {
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
-}
-
-.toneCell { }
-
-.toneSwatch {
-  width: 100%;
-  height: 36px;
-  border-radius: var(--shape-xs-radius);
-  border: 1px solid var(--border-subtle);
-}
-
-.toneEmpty {
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
-}
-
-/* ── Motion ── */
-
-.motionTrack {
-  height: 40px;
-  background: var(--surface-sunken);
-  border-radius: var(--shape-sm-radius);
-}
-
-.motionBox {
-  width: 40px;
-  height: 40px;
-  background: var(--tone-primary-base);
-  border-radius: var(--shape-xs-radius);
-  transition-property: transform;
-}
-
-/* ── Independent axes ── */
-
-.weightSample {
-  font-size: var(--type-page-size);
-  color: var(--text-primary);
-}
-
-.leadingSample {
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
-}
-
-.colorSample {
-  font-size: var(--type-page-size);
-  font-weight: var(--weight-semi);
-}
-
-.borderSwatch {
-  aspect-ratio: 1.4;
-  border: 2px solid;
-  border-radius: var(--shape-sm-radius);
-}
-
-.spacingRow {
-  gap: var(--space-sm);
-}
-
-.spacingItem {
-  gap: var(--space-md);
-}
-
-.spacingBar {
-  height: 10px;
-  background: var(--tone-primary-base);
-  border-radius: var(--shape-xs-radius);
-  min-width: 4px;
-}
-
-/* ══ Scenario cards ══ */
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr 1fr;
   gap: var(--space-xl);
 }
 
-.card {
-  border-radius: var(--shape-xl-radius);
-  padding: var(--shape-xl-py) var(--shape-xl-px);
-  background: var(--surface-raised);
+/* ── Grid helpers (column counts) ── */
+
+.grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-md); }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); align-items: center; }
+
+/* ── Section label ── */
+
+.sectionLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+/* ── Mono font for token names ── */
+
+.mono { font-family: var(--mono); }
+
+/* ── Swatches (dynamic token color — ax()로 불가) ── */
+
+.swatch {
+  aspect-ratio: 1.4;
+  border-radius: 8px;
   border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-xs);
+}
+.swatch[data-surface="action"]  { background: var(--bg-hover); cursor: pointer; }
+.swatch[data-surface="input"]   { background: var(--surface-default); border-color: var(--border-default); }
+.swatch[data-surface="display"] { background: var(--surface-default); }
+.swatch[data-surface="overlay"] { background: var(--surface-overlay); box-shadow: var(--shadow-lg); }
+.swatch[data-surface="ghost"]   { background: transparent; }
+
+.toneSwatch {
+  aspect-ratio: 1.4;
+  border-radius: 8px;
+}
+.toneSwatch[data-tone="accent"]  { background: var(--tone-primary-base); }
+.toneSwatch[data-tone="danger"]  { background: var(--tone-destructive-base); }
+.toneSwatch[data-tone="success"] { background: var(--tone-success-base); }
+.toneSwatch[data-tone="warning"] { background: var(--tone-warning-base); }
+.toneSwatch[data-tone="neutral"] { background: var(--bg-hover); }
+
+/* ── Spacing bars ── */
+
+.spacingLabel { min-width: 36px; text-align: right; }
+.spacingBar {
+  height: 12px;
+  background: var(--tone-primary-base);
+  border-radius: 4px;
+}
+.spacingBar[data-size="xs"] { width: var(--space-xs); }
+.spacingBar[data-size="sm"] { width: var(--space-sm); }
+.spacingBar[data-size="md"] { width: var(--space-md); }
+.spacingBar[data-size="lg"] { width: var(--space-lg); }
+.spacingBar[data-size="xl"] { width: var(--space-xl); }
+
+/* ── Typography rows ── */
+
+.typeRow { padding: var(--space-md) 0; border-bottom: 1px solid var(--border-subtle); }
+.typeRow:first-child { padding-top: 0; }
+
+/* ── Buttons hover state (pseudo-class, ax() 불가) ── */
+
+.hovered { background: var(--_bg-hover, var(--bg-hover)) !important; }
+
+/* ── Alerts tone border (동적 tone 참조) ── */
+
+.alert { border-radius: 8px; }
+.alert[data-tone="success"] { border-left: 3px solid var(--tone-success-base); }
+.alert[data-tone="accent"]  { border-left: 3px solid var(--tone-primary-base); }
+.alert[data-tone="warning"] { border-left: 3px solid var(--tone-warning-base); }
+.alert[data-tone="danger"]  { border-left: 3px solid var(--tone-destructive-base); }
+
+/* ── Card image placeholder ── */
+
+.cardImage {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, var(--surface-raised), var(--surface-overlay));
+  border-radius: 8px;
 }
 
-.cardWide {
-  grid-column: span 2;
+/* ── Layout showcase ── */
+
+.layoutBox {
+  min-height: 80px;
+  border: 1px dashed var(--border-default);
+  border-radius: 8px;
 }
-
-.stack {
-  gap: var(--space-lg);
-}
-
-.row {
-  gap: var(--space-md);
-}
-
-.fill { }
-
-.toastTrigger {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xs-radius);
-  align-self: flex-start;
-}
-
-.toastTrigger:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+.layoutChild {
+  width: 24px;
+  height: 24px;
+  background: var(--tone-primary-base);
+  border-radius: 4px;
+  flex-shrink: 0;
 }
