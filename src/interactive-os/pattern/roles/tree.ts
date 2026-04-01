@@ -6,7 +6,7 @@ import { activateHandler } from '../../axis/activate'
 
 // APG Tree View — "A hierarchical list."
 const nav = navigate('vertical')
-const sel = selected('multiple')
+const sel = selected('multiple', { followFocus: true })
 const exp = expanded()
 
 export const tree = composePattern(
@@ -22,6 +22,6 @@ export const tree = composePattern(
     Space: sel.toggle,
     Enter: activateHandler,
     ...sel.keys,
-    Click: sel.selectAndAnchor,
+    ...sel.clickKeys,
   },
 )

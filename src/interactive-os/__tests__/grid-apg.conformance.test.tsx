@@ -296,7 +296,7 @@ describe('APG Grid — Keyboard: Column Navigation', () => {
 // ---------------------------------------------------------------------------
 
 describe('APG Grid — Selection', () => {
-  it('Space toggles selection on focused row', async () => {
+  it('Space deselects followFocus-selected row', async () => {
     const user = userEvent.setup()
     const { container } = renderGrid(fixtureData())
 
@@ -304,18 +304,17 @@ describe('APG Grid — Selection', () => {
     await user.keyboard('{ }')
 
     const testRow = container.querySelector('[data-testid="row-row-1"]')
-    expect(testRow?.getAttribute('data-selected')).toBe('true')
+    expect(testRow?.getAttribute('data-selected')).toBe('false')
   })
 
-  it('rows start with aria-selected=false', () => {
+  it('initially focused row has aria-selected=true (followFocus)', () => {
     const { container } = renderGrid(fixtureData())
-    const rows = container.querySelectorAll('[role="row"]')
-    rows.forEach((row) => {
-      expect(row.getAttribute('aria-selected')).toBe('false')
-    })
+    expect(getRowElement(container, 'row-1')?.getAttribute('aria-selected')).toBe('true')
+    expect(getRowElement(container, 'row-2')?.getAttribute('aria-selected')).toBe('false')
+    expect(getRowElement(container, 'row-3')?.getAttribute('aria-selected')).toBe('false')
   })
 
-  it('aria-selected=true after Space selection', async () => {
+  it('Space on non-initial row deselects it (followFocus auto-selected)', async () => {
     const user = userEvent.setup()
     const { container } = renderGrid(fixtureData())
 
@@ -323,7 +322,7 @@ describe('APG Grid — Selection', () => {
     await user.keyboard('{ }')
 
     const row2 = getRowElement(container, 'row-2')
-    expect(row2?.getAttribute('aria-selected')).toBe('true')
+    expect(row2?.getAttribute('aria-selected')).toBe('false')
   })
 })
 

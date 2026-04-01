@@ -6,7 +6,7 @@ import { activateHandler } from '../../axis/activate'
 
 // APG Listbox — "Presents a list of options and allows a user to select one or more."
 const nav = navigate('vertical')
-const sel = selected('multiple')
+const sel = selected('multiple', { followFocus: true })
 
 export function listbox(): AriaPattern {
   return composePattern(

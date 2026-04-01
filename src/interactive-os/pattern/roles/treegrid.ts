@@ -12,7 +12,7 @@ import { activateHandler } from '../../axis/activate'
 
 export function treegrid(columns: number): AriaPattern {
   const nav = navigate('vertical')
-  const sel = selected('multiple')
+  const sel = selected('multiple', { followFocus: true })
   const exp = expanded()
   const g = gridAxis(columns, { initialColIndex: -1 })
 

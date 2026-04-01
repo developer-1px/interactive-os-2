@@ -67,6 +67,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, onFocusChange, initialFocus, logger, autoFocus = true, disabled = false } = options
   const [, forceRender] = useState(0)
   const pointerDownCtxRef = useRef<ReturnType<typeof createPatternContext> | null>(null)
+  const suppressFocusDispatchRef = useRef(false)
 
   // ── ① Engine creation (useAria-only) ──
   // Mutable callbacks bag lives inside the engine wrapper so the useState
@@ -235,9 +236,24 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       // Declarative clickMap path — pattern owns pointer bindings
       if (pattern.clickMap) {
         const clickMap = pattern.clickMap
+        const originalOnFocus = baseProps.onFocus as ((event: FocusEvent) => void) | undefined
 
         baseProps.onPointerDown = () => {
+          // Suppress onFocus standalone dispatch during click when selectionFollowsFocus
+          // is active — the click handler manages focus via batch (selectAndAnchor).
+          // Without this, onFocus fires before onClick and the followFocus middleware
+          // auto-selects, corrupting Mod+Click toggle and Shift+Click extend.
+          // Microtask resets the flag so Tab-initiated focus dispatches normally.
+          if (pattern.selectionFollowsFocus) {
+            suppressFocusDispatchRef.current = true
+            queueMicrotask(() => { suppressFocusDispatchRef.current = false })
+          }
           pointerDownCtxRef.current = createPatternContext(observedEngine, patternCtxOptions as PatternContextOptions)
+        }
+
+        baseProps.onFocus = (event: FocusEvent) => {
+          if (suppressFocusDispatchRef.current) return
+          originalOnFocus?.(event)
         }
 
         baseProps.onClick = (event: MouseEvent) => {

@@ -7,7 +7,7 @@ import { selected } from '../../axis/select'
 
 export function grid(options: { columns: number; tabCycle?: boolean }): AriaPattern {
   const nav = navigate('both')
-  const sel = selected('multiple')
+  const sel = selected('multiple', { followFocus: true })
   const g = gridAxis(options.columns)
 
   return composePattern(
@@ -36,7 +36,7 @@ export function grid(options: { columns: number; tabCycle?: boolean }): AriaPatt
 export function layoutGrid(options: { columns: number }): AriaPattern {
   const nav = navigate('both')
   const g = gridAxis(options.columns)
-  const sel = selected('multiple')
+  const sel = selected('multiple', { followFocus: true })
 
   return composePattern(
     { role: 'grid', childRole: 'row' },
