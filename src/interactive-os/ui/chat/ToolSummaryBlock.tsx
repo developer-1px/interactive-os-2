@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import {
   FileText, Terminal, Pencil, FilePlus,
-  Search, Zap, Wrench, Globe,
+  Search, Zap, Wrench, Globe, Layers,
 } from 'lucide-react'
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { CodeBlock } from '../CodeBlock'
@@ -93,8 +93,17 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
 // --- Standalone tool_result (no tool_use context) ---
 
 export function ToolResultBlock({ block }: { block: DataBlock }) {
-  const { expandByDefault } = useChatFeatures()
-  const [open, setOpen] = useState(expandByDefault)
+  const { expandByDefault, isLatest } = useChatFeatures()
+  const [open, setOpen] = useState(isLatest || expandByDefault)
+
+  const wasLatestRef = useRef(isLatest)
+  useEffect(() => {
+    if (wasLatestRef.current && !isLatest) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- live→settled transition
+      setOpen(false)
+    }
+    wasLatestRef.current = isLatest
+  }, [isLatest])
   const text = extractResultText(block)
 
   if (!text) return null
@@ -127,100 +136,153 @@ function formatReadRange(input: Record<string, unknown>, lineCount: number): str
   return `L${start}–${end} (${lineCount} lines)`
 }
 
-// --- Grouped tool_use + tool_result bordered card ---
+// --- Unified ToolGroup: single 1-tier collapsible card ---
 
 export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolResult?: DataBlock }) {
-  const { expandByDefault } = useChatFeatures()
+  const { expandByDefault, isLatest } = useChatFeatures()
   const { name, detail, input } = useMemo(() => getToolMeta(toolUse), [toolUse])
   const Icon = toolIcons[name] ?? Wrench
 
   const text = useMemo(() => toolResult ? extractResultText(toolResult) : '', [toolResult])
   const lines = useMemo(() => text ? text.split('\n') : [], [text])
-  const isLong = lines.length > 3 || text.length > 200
 
-  // Read/Edit/Write → code highlight by file extension
-  const isCodeResult = (name === 'Read' || name === 'Edit' || name === 'Write') && !!input.file_path
+  const isRead = name === 'Read'
+  const isWrite = name === 'Write'
+  const isEdit = name === 'Edit'
+  const isCodeResult = (isRead || isEdit || isWrite) && !!input.file_path
   const filename = isCodeResult ? String(input.file_path).split('/').pop() ?? 'file.txt' : ''
   const codeText = useMemo(() => isCodeResult ? stripLineNumbers(text) : text, [isCodeResult, text])
 
-  // Read: 1-tier collapsible (header=toggle), default collapsed
-  const isRead = name === 'Read'
-  const isWrite = name === 'Write'
-  const [open, setOpen] = useState(isRead || isWrite ? false : expandByDefault)
+  // Live: expanded while isLatest, collapse on settle
+  const [open, setOpen] = useState(isLatest ? true : (isRead || isWrite ? false : expandByDefault))
 
+  const wasLatestRef = useRef(isLatest)
+  useEffect(() => {
+    if (wasLatestRef.current && !isLatest) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- live→settled transition
+      setOpen(false)
+    }
+    wasLatestRef.current = isLatest
+  }, [isLatest])
+
+  // --- Summary label (single line, tool-specific) ---
+  let summaryLabel: React.ReactNode
   if (isRead && text) {
     const range = formatReadRange(input, lines.length)
-    const label = `${detail} · ${range}`
-
-    return (
-      <details className={`overflow-hidden ${styles.toolGroup}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-        <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupSummary}`}>
-          <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
-          <Icon size={12} /> <span className={styles.toolName}>{name}</span> <FilePathLink path={String(input.file_path)}>{label}</FilePathLink>
-        </summary>
-        <div className={`overflow-auto ${styles.toolGroupCode}`}>
-          <CodeBlock code={codeText} filename={filename} variant="compact" />
-        </div>
-      </details>
-    )
-  }
-
-  // Write: show written content as code block (collapsible, default collapsed)
-  if (isWrite && typeof input.content === 'string') {
+    summaryLabel = <FilePathLink path={String(input.file_path)}>{detail} · {range}</FilePathLink>
+  } else if (isWrite && typeof input.content === 'string') {
     const lineCount = (input.content as string).split('\n').length
+    summaryLabel = <FilePathLink path={String(input.file_path)}>{detail} ({lineCount} lines)</FilePathLink>
+  } else if (isEdit && input.file_path) {
+    summaryLabel = <FilePathLink path={String(input.file_path)}>{detail}</FilePathLink>
+  } else {
+    summaryLabel = detail ? <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolDetail}`}>{detail}</span> : null
+  }
 
+  // --- Content (no duplicate info — summary is the sole source) ---
+  let content: React.ReactNode = null
+  if (isRead && text) {
+    content = (
+      <div className={`overflow-auto ${styles.toolGroupCode}`}>
+        <CodeBlock code={codeText} filename={filename} variant="compact" />
+      </div>
+    )
+  } else if (isWrite && typeof input.content === 'string') {
+    content = (
+      <div className={`overflow-auto ${styles.toolGroupCode}`}>
+        <CodeBlock code={input.content as string} filename={filename} variant="compact" />
+      </div>
+    )
+  } else if (isEdit && typeof input.old_string === 'string' && typeof input.new_string === 'string') {
+    content = (
+      <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
+    )
+  } else if (text) {
+    content = <pre className={`overflow-y-auto ${styles.toolGroupResult}`}>{text}</pre>
+  }
+
+  // No content → non-collapsible row
+  if (!content) {
     return (
-      <details className={`overflow-hidden ${styles.toolGroup}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-        <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupSummary}`}>
-          <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
-          <Icon size={12} /> <span className={styles.toolName}>{name}</span> <FilePathLink path={String(input.file_path)}>{`${detail} (${lineCount} lines)`}</FilePathLink>
-        </summary>
-        <div className={`overflow-auto ${styles.toolGroupCode}`}>
-          <CodeBlock code={input.content as string} filename={filename} variant="compact" />
+      <div className={`overflow-hidden ${styles.toolGroup}`}>
+        <div className={`relative flex-row items-center ${styles.toolGroupSummary}`}>
+          <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><Icon size={12} /></span>
+          <span className={styles.toolName}>{name}</span> {summaryLabel}
         </div>
-      </details>
+      </div>
     )
   }
-
-  // Edit: show diff from old_string → new_string
-  const isEdit = name === 'Edit'
-  if (isEdit && typeof input.old_string === 'string' && typeof input.new_string === 'string') {
-    const filePath = typeof input.file_path === 'string' ? String(input.file_path).replace(/.*\/aria\//, '') : undefined
-
-    return (
-      <details className={`overflow-hidden ${styles.toolGroup}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-        <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupSummary}`}>
-          <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
-          <Icon size={12} /> <span className={styles.toolName}>{name}</span> <FilePathLink path={String(input.file_path)}>{detail}</FilePathLink>
-        </summary>
-        <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string, filePath }} />
-      </details>
-    )
-  }
-
-  // Other tools: 2-tier (header always visible, result below)
-  const preview = lines.length > 0 ? lines[0].slice(0, 120) : ''
 
   return (
-    <div className={`overflow-hidden ${styles.toolGroup}`}>
-      <div className={`relative flex-row items-center ${styles.toolGroupHeader}`}>
-        <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><Icon size={12} /></span>
-        <span className={styles.toolGroupHeaderContent}><span className={styles.toolName}>{name}</span>{detail ? ' ' : ''}<span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolDetail}`}>{detail}</span></span>
+    <details className={`overflow-hidden ${styles.toolGroup}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
+      <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupSummary}`}>
+        <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
+        <Icon size={12} /> <span className={styles.toolName}>{name}</span> {summaryLabel}
+      </summary>
+      {content}
+    </details>
+  )
+}
+
+// --- ToolChainGroup: collapsed group of process tools ---
+
+interface ToolPair { toolUse: DataBlock; toolResult?: DataBlock }
+
+interface ToolTypeGroup { name: string; details: string[] }
+
+function groupByToolType(pairs: ToolPair[]): ToolTypeGroup[] {
+  const map = new Map<string, string[]>()
+  const order: string[] = []
+  for (const pair of pairs) {
+    const { name, detail } = getToolMeta(pair.toolUse)
+    if (!map.has(name)) { map.set(name, []); order.push(name) }
+    if (detail) map.get(name)!.push(detail)
+  }
+  return order.map(name => ({ name, details: map.get(name)! }))
+}
+
+function buildChainSummary(groups: ToolTypeGroup[]): string {
+  return groups
+    .map(g => g.details.length > 1 ? `${g.name} ${g.details.length}` : g.name)
+    .join(', ')
+}
+
+export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
+  const { isLatest } = useChatFeatures()
+  const [open, setOpen] = useState(isLatest)
+
+  const wasLatestRef = useRef(isLatest)
+  useEffect(() => {
+    if (wasLatestRef.current && !isLatest) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- live→settled transition
+      setOpen(false)
+    }
+    wasLatestRef.current = isLatest
+  }, [isLatest])
+
+  const typeGroups = useMemo(() => groupByToolType(pairs), [pairs])
+  const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
+
+  return (
+    <details className={`overflow-hidden ${styles.toolChain}`} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
+      <summary className={`relative flex-row items-center cursor-pointer ${styles.toolChainSummary}`}>
+        <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
+        <Layers size={12} /> <span className={styles.toolChainLabel}>{summary}</span>
+      </summary>
+      <div className={`flex-col ${styles.toolChainContent}`}>
+        {typeGroups.map(g => {
+          const Icon = toolIcons[g.name] ?? Wrench
+          return (
+            <div key={g.name} className={`relative flex-row items-center ${styles.toolChainRow}`}>
+              <span className={`absolute flex-row items-center justify-center ${styles.rowIcon}`}><Icon size={12} /></span>
+              <span className={styles.toolName}>{g.name}</span>
+              <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolChainDetails}`}>
+                {g.details.join(' · ')}
+              </span>
+            </div>
+          )
+        })}
       </div>
-
-      {text && !isLong && (
-        <pre className={`overflow-y-auto ${styles.toolGroupResult}`}>{text}</pre>
-      )}
-
-      {text && isLong && (
-        <details open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-          <summary className={`relative flex-row items-center cursor-pointer ${styles.toolGroupResultSummary}`}>
-            <ExpandIndicator variant="expand" />
-            <span className={`overflow-hidden whitespace-nowrap min-w-0 ${styles.toolResultPreview}`}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
-          </summary>
-          <pre className={`overflow-y-auto ${styles.toolGroupResult}`}>{text}</pre>
-        </details>
-      )}
-    </div>
+    </details>
   )
 }

@@ -6,7 +6,7 @@ import {
   ArrowRight, CheckCircle, Loader, Bot, Send,
   User, Clock, Eye, Image,
 } from 'lucide-react'
-import { useStreamFeed, type SequenceItem } from '../interactive-os/ui/useStreamFeed'
+import { useStreamFeed } from '../interactive-os/ui/useStreamFeed'
 import { useTypewriter } from '../interactive-os/ui/useTypewriter'
 import { StreamFeed, StreamCursor } from '../interactive-os/ui/StreamFeed'
 import type { NormalizedData } from '../interactive-os/store/types'
@@ -179,7 +179,7 @@ const MESSAGES: Msg[] = [
   { id: 'decide', type: 'agent', text: '분석 완료. pool_size 복원으로 3분 내 정상화 예상. 행동을 선택하세요.', block: BlockActions, delay: 800 },
 ]
 
-const SEQUENCE: SequenceItem<Msg>[] = MESSAGES.map(msg => ({ data: msg, delay: msg.delay }))
+// delay is already on each Msg
 
 // ═══════════════════════════════════════════
 // Sub-components
@@ -417,11 +417,23 @@ export default function PageIncidentInterface() {
   const [selectedService, setSelectedService] = useState(0)
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null)
 
-  const { items, isStreaming, feedRef, replay } = useStreamFeed<Msg>({
-    mode: 'sequence',
-    sequence: SEQUENCE,
-    autoPlay: true,
+  const { items, isStreaming, feedRef, addItems, clear } = useStreamFeed<Msg>({
+    getDelay: (msg) => msg.delay,
   })
+
+  // Auto-play on mount
+  const didPlayRef = useRef(false)
+  useEffect(() => {
+    if (!didPlayRef.current) {
+      didPlayRef.current = true
+      addItems(MESSAGES)
+    }
+  }, [addItems])
+
+  const replay = useCallback(() => {
+    clear()
+    addItems(MESSAGES)
+  }, [clear, addItems])
 
   // Track timing
   const prevItemsLenRef = useRef(0)
