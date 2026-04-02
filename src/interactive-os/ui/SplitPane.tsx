@@ -1,8 +1,13 @@
-// ② 2026-03-28-splitpane-resize-prd.md
-import React, { useRef, useCallback, Children } from 'react'
+import React, { useRef, useState, useCallback, useMemo, useEffect, Children } from 'react'
 import type { PaneSize } from '../store/types'
+import { ROOT_ID } from '../store/types'
+import type { NormalizedData } from '../store/types'
 import styles from './SplitPane.module.css'
 import { ax } from '@styles/ax'
+import { useAria } from '../primitives/useAria'
+import { windowSplitter } from '../pattern/roles/windowSplitter'
+import { VALUE_ID } from '../axis/value'
+import { dragResize, startDragResize, registerDragCallback, unregisterDragCallback } from '../plugins/dragResize'
 
 export type { PaneSize }
 
@@ -14,7 +19,10 @@ interface SplitPaneProps {
   minRatio?: number
 }
 
-const STEP = 0.02
+// value axis range: STEP=2 out of 100 = 0.02 ratio step (matches original)
+const STEP = 2
+const VALUE_MIN = 0
+const VALUE_MAX = 100
 
 /** Find the index of the 'flex' entry, falling back to last pane */
 function flexIndex(sizes: PaneSize[]): number {
@@ -22,7 +30,7 @@ function flexIndex(sizes: PaneSize[]): number {
   return idx >= 0 ? idx : sizes.length - 1
 }
 
-/** Apply a delta to the panes adjacent to a separator, respecting flex */
+/** Apply a ratio delta to the panes adjacent to a separator */
 function applyDelta(
   sizes: PaneSize[], leftIdx: number, rightIdx: number,
   delta: number, minRatio: number,
@@ -52,27 +60,86 @@ function applyDelta(
   return newSizes
 }
 
-/** Pointer drag lifecycle: capture → move(delta) → cleanup */
-function startDrag(
-  target: HTMLElement,
-  pointerId: number,
-  onMove: (delta: { x: number; y: number }) => void,
-) {
-  target.setPointerCapture(pointerId)
-
-  // Use the actual pointer position from the first move as baseline
-  let baseX: number | null = null
-  let baseY: number | null = null
-
-  const handleMove = (e: PointerEvent) => {
-    if (baseX === null) { baseX = e.clientX; baseY = e.clientY }
-    onMove({ x: e.clientX - baseX, y: e.clientY - baseY! })
+function makeSepStore(): NormalizedData {
+  return {
+    entities: {
+      sep: { id: 'sep' },
+      [VALUE_ID]: { id: VALUE_ID, value: VALUE_MAX / 2, min: VALUE_MIN, max: VALUE_MAX, step: STEP },
+    },
+    relationships: { [ROOT_ID]: ['sep'] },
   }
+}
 
-  document.addEventListener('pointermove', handleMove)
-  target.addEventListener('lostpointercapture', () => {
-    document.removeEventListener('pointermove', handleMove)
-  }, { once: true })
+interface SplitPaneSeparatorProps {
+  index: number
+  direction: 'horizontal' | 'vertical'
+  currentRatio: number
+  minRatio: number
+  onDelta: (index: number, delta: number) => void
+  getContainer: () => HTMLElement | null
+}
+
+function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onDelta, getContainer }: SplitPaneSeparatorProps) {
+  const isHorizontal = direction === 'horizontal'
+  const range = useMemo(() => ({ min: VALUE_MIN, max: VALUE_MAX, step: STEP }), [])
+
+  // For vertical: APG says ArrowUp=increment, but SplitPane needs ArrowDown=grow top pane
+  // So we swap the key bindings for vertical orientation
+  const pattern = useMemo(() => {
+    const p = windowSplitter({ min: VALUE_MIN, max: VALUE_MAX, step: STEP, orientation: direction })
+    if (!isHorizontal) {
+      const km = { ...p.keyMap }
+      const up = km['ArrowUp']
+      const down = km['ArrowDown']
+      km['ArrowDown'] = up!
+      km['ArrowUp'] = down!
+      return { ...p, keyMap: km }
+    }
+    return p
+  }, [direction, isHorizontal])
+
+  const callbackKey = `splitpane-sep-${index}`
+  useEffect(() => {
+    registerDragCallback(callbackKey, (delta) => onDelta(index, delta))
+    return () => unregisterDragCallback(callbackKey)
+  })
+
+  const [plugin] = useState(() => dragResize({
+    orientation: direction,
+    range,
+    getContainer,
+    callbackKey,
+  }))
+
+  const initialStore = useMemo(() => makeSepStore(), [])
+
+  const aria = useAria({
+    pattern,
+    data: initialStore,
+    plugins: [plugin],
+    autoFocus: false,
+  })
+
+  const nodeProps = aria.getNodeProps('sep')
+  const nodeState = aria.getNodeState('sep')
+  const valueNow = Math.round(currentRatio * VALUE_MAX)
+
+  return (
+    <div
+      {...nodeProps as React.HTMLAttributes<HTMLElement>}
+      role="separator"
+      aria-orientation={isHorizontal ? 'vertical' : 'horizontal'}
+      aria-valuenow={valueNow}
+      aria-valuemin={Math.round(minRatio * VALUE_MAX)}
+      aria-valuemax={VALUE_MAX - Math.round(minRatio * VALUE_MAX)}
+      aria-label={`Resize pane ${index + 1}`}
+      tabIndex={0}
+      className={`shrink-0 ${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
+      data-surface="action"
+      data-focused={nodeState.focused || undefined}
+      onPointerDown={(e) => aria.dispatch(startDragResize(e.pointerId, e.currentTarget as HTMLElement))}
+    />
+  )
 }
 
 export function SplitPane({
@@ -84,42 +151,14 @@ export function SplitPane({
 }: SplitPaneProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const childArray = Children.toArray(children)
+  const getContainer = useCallback(() => containerRef.current, [])
 
-  const handleKeyDown = useCallback(
-    (index: number, e: React.KeyboardEvent) => {
-      const isHorizontal = direction === 'horizontal'
-      const increaseKey = isHorizontal ? 'ArrowRight' : 'ArrowDown'
-      const decreaseKey = isHorizontal ? 'ArrowLeft' : 'ArrowUp'
+  const sizesRef = useRef(sizes)
+  useEffect(() => { sizesRef.current = sizes })
 
-      const delta =
-        e.key === increaseKey ? STEP
-        : e.key === decreaseKey ? -STEP
-        : e.key === 'Home' ? -(1 - minRatio)
-        : e.key === 'End' ? (1 - minRatio)
-        : null
-      if (delta === null) return
-
-      e.preventDefault()
-      onResize(applyDelta(sizes, index, index + 1, delta, minRatio))
-    },
-    [direction, sizes, onResize, minRatio],
-  )
-
-  const handlePointerDown = useCallback(
-    (index: number, e: React.PointerEvent) => {
-      const container = containerRef.current
-      if (!container) return
-
-      const isHorizontal = direction === 'horizontal'
-      const dimension = isHorizontal ? container.getBoundingClientRect().width : container.getBoundingClientRect().height
-
-      startDrag(e.currentTarget as HTMLElement, e.pointerId, (delta) => {
-        const deltaRatio = (isHorizontal ? delta.x : delta.y) / dimension
-        onResize(applyDelta(sizes, index, index + 1, deltaRatio, minRatio))
-      })
-    },
-    [direction, sizes, onResize, minRatio],
-  )
+  const handleDelta = useCallback((sepIndex: number, delta: number) => {
+    onResize(applyDelta(sizesRef.current, sepIndex, sepIndex + 1, delta, minRatio))
+  }, [onResize, minRatio])
 
   // Single child or empty: render directly, no separator
   if (childArray.length <= 1) {
@@ -127,7 +166,6 @@ export function SplitPane({
   }
 
   const isHorizontal = direction === 'horizontal'
-  const separatorOrientation = isHorizontal ? 'vertical' : 'horizontal'
   const fi = flexIndex(sizes)
 
   const elements: React.ReactNode[] = []
@@ -145,21 +183,16 @@ export function SplitPane({
     )
 
     if (i < childArray.length - 1) {
-      const valueNow = sizes[i] === 'flex' ? 0 : Math.round((sizes[i] as number) * 100)
+      const currentRatio = sizes[i] === 'flex' ? 0.5 : (sizes[i] as number)
       elements.push(
-        <div
+        <SplitPaneSeparator
           key={`sep-${i}`}
-          role="separator"
-          aria-orientation={separatorOrientation}
-          aria-valuenow={valueNow}
-          aria-valuemin={Math.round(minRatio * 100)}
-          aria-valuemax={Math.round((1 - minRatio) * 100)}
-          aria-label={`Resize pane ${i + 1}`}
-          tabIndex={0}
-          className={`shrink-0 ${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
-          data-surface="action"
-          onKeyDown={(e) => handleKeyDown(i, e)}
-          onPointerDown={(e) => handlePointerDown(i, e)}
+          index={i}
+          direction={direction}
+          currentRatio={currentRatio}
+          minRatio={minRatio}
+          onDelta={handleDelta}
+          getContainer={getContainer}
         />,
       )
     }
@@ -168,7 +201,7 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={`${isHorizontal ? 'flex-row' : 'flex-col'} flex-1 min-w-0 min-h-0 overflow-hidden`}
+      className={`${isHorizontal ? ax({ layout: 'row' }) : ax({ layout: 'column' })} flex-1 min-w-0 min-h-0 overflow-hidden`}
     >
       {elements}
     </div>
