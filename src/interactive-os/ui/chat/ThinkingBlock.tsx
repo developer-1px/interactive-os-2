@@ -31,7 +31,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
     <details className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.thinking}${settled ? ` ${styles.settled}` : ''}`} open={open && !isLatest} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
       <summary className={`${ax({ layout: 'bar' })} ${styles.thinkingSummary}`}>
         <span className={`${ax({ layout: 'center' })} ${styles.thinkingChevron}`}><ExpandIndicator variant="expand" /></span>
-        <span className={styles.thinkingLabel}>Thinking</span>
+        <span className={`${ax({ weight: 'semi', text: 'muted' })}`}>Thinking</span>
         {(!open || isLatest) && <span className={`${ax({ flex: '1' })} ${styles.thinkingPreview}`}> {preview}…</span>}
       </summary>
       <div className={`${ax({ layout: 'scroll' })} ${styles.thinkingContent}`}>
