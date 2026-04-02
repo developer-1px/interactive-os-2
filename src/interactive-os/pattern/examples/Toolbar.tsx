@@ -1,4 +1,9 @@
 import { useState, useCallback } from 'react'
+import {
+  Bold, Italic, Underline,
+  AlignLeft, AlignCenter, AlignRight,
+  Copy, ClipboardPaste, Scissors,
+} from 'lucide-react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
@@ -8,6 +13,18 @@ import styles from './toolbar.module.css'
 
 // APG #61: Toolbar
 // https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/
+
+const iconMap: Record<string, React.ReactNode> = {
+  bold: <Bold size={16} />,
+  italic: <Italic size={16} />,
+  underline: <Underline size={16} />,
+  'align-left': <AlignLeft size={16} />,
+  'align-center': <AlignCenter size={16} />,
+  'align-right': <AlignRight size={16} />,
+  copy: <Copy size={16} />,
+  paste: <ClipboardPaste size={16} />,
+  cut: <Scissors size={16} />,
+}
 
 const items = [
   { id: 'bold', label: 'Bold' },
@@ -33,14 +50,16 @@ const renderButton = (
   node: Record<string, unknown>,
   state: NodeState,
 ): React.ReactElement => {
+  const id = node.id as string
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
     <div
       {...props}
       className={`${styles.button} inline-flex items-center justify-center`}
       data-focused={state.focused || undefined}
+      aria-label={label}
     >
-      {label}
+      {iconMap[id]}
     </div>
   )
 }

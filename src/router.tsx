@@ -4,6 +4,12 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import AppShell from './AppShell'
 import InternalsLayout from './InternalsLayout'
 
+// Prefetch heavy lazy chunks on idle
+const bookChunk = () => import('./pages/book/PageBookViewer')
+if (typeof requestIdleCallback !== 'undefined') {
+  requestIdleCallback(() => { bookChunk() })
+}
+
 export const router = createBrowserRouter([
   {
     element: <AppShell />,
@@ -11,7 +17,13 @@ export const router = createBrowserRouter([
       { path: '/', lazy: () => import('./pages/cms/CmsLayout').then(m => ({ Component: m.default })) },
       { path: '/ui/*', lazy: () => import('./pages/showcase/PageUiShowcase').then(m => ({ Component: m.default })) },
       { path: '/viewer/*', lazy: () => import('./pages/viewer/PageViewer').then(m => ({ Component: m.default })) },
-      { path: '/book/*', lazy: () => import('./pages/book/PageBookViewer').then(m => ({ Component: m.default })) },
+      {
+        path: '/book/*',
+        lazy: async () => {
+          const m = await bookChunk()
+          return { Component: m.default, loader: m.loader }
+        },
+      },
       { path: '/birdseye/*', lazy: () => import('./pages/birdseye/BirdseyeLayout').then(m => ({ Component: m.default })) },
 { path: '/chat', lazy: () => import('./pages/chat/PageAgentChat').then(m => ({ Component: m.default })) },
       { path: '/replay', lazy: () => import('./pages/replay/PageReplay').then(m => ({ Component: m.default })) },

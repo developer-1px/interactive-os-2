@@ -12,7 +12,6 @@ import { rename } from '../plugins/rename'
 import { edit } from '../plugins/edit'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './Form.module.css'
 
 interface FormProps {
   data: NormalizedData
@@ -40,14 +39,14 @@ const defaultRenderField = (
   const fieldError = errors?.value
 
   return (
-    <div {...props} className={`${ax({ layout: 'column', gap: 'xs', padding: 'sm' })} ${styles.field}`}>
-      <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.label}`}>{label}</span>
-      <span className={`${ax({ textStyle: 'body' })} ${styles.value}`}>
+    <div {...props} className={ax({ layout: 'column', gap: 'xs', padding: 'sm' })}>
+      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{label}</span>
+      <span className={ax({ textStyle: 'body' })}>
         <Aria.Editable field="value" placeholder="Enter value...">
           {value}
         </Aria.Editable>
       </span>
-      {fieldError && <span className={`${ax({ textStyle: 'caption', tone: 'danger' })} ${styles.error}`} role="alert">{fieldError}</span>}
+      {fieldError && <span className={ax({ textStyle: 'caption', tone: 'danger' })} role="alert">{fieldError}</span>}
     </div>
   )
 }

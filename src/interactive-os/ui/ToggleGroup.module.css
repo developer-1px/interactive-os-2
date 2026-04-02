@@ -1,5 +1,0 @@
-/* ── ToggleGroup — last-mile only ── */
-
-.indicator[data-selected='true'] {
-  color: var(--tone-primary-base);
-}

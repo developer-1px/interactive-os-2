@@ -6,16 +6,17 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { radiogroupActivedescendant } from '../pattern/roles/radiogroupActivedescendant'
 import { RadioIndicator } from './indicators'
-import styles from './RadioGroup.module.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 
 type RadioGroupActivedescendantProps = AriaComponentProps
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={styles.item} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ layout: 'bar', surface: 'ghost', controlSize: 'md', gap: 'sm', text: state.checked ? 'primary' : undefined })} data-focused={state.focused || undefined}>
       <RadioIndicator />
-      <span className={styles.label}>{label}</span>
+      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
 }
