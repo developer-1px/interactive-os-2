@@ -53,6 +53,7 @@ export function ComponentInspector() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [osComponents, setOsComponents] = useState<OSComponentInfo[]>([]);
   const [marqueePreview, setMarqueePreview] = useState<HTMLElement | null>(null);
+  const [lockPoint, setLockPoint] = useState<{ x: number; y: number } | null>(null);
   // Flag to suppress click after marquee drag — set by MarqueeSelect, consumed by click handler
   const suppressClickRef = useRef(false);
   // Flag to suppress hover tracking during marquee drag
@@ -122,6 +123,7 @@ export function ComponentInspector() {
             setToastMessage("Inspector Mode ON");
           } else {
             setLockedElement(null);
+            setLockPoint(null);
             setTraversalHistory([]);
             setMarqueePreview(null);
           }
@@ -161,6 +163,7 @@ export function ComponentInspector() {
         // Only deactivate if no locked element (otherwise just unlock)
         if (lockedElement) {
           setLockedElement(null);
+          setLockPoint(null);
           setTraversalHistory([]);
           setToastMessage("Unlocked");
         } else {
@@ -202,14 +205,17 @@ export function ComponentInspector() {
       if (hoveredElement) {
         if (lockedElement === hoveredElement) {
           setLockedElement(null);
+          setLockPoint(null);
           setToastMessage("Unlocked");
         } else {
           setLockedElement(hoveredElement);
+          setLockPoint({ x: e.clientX, y: e.clientY });
           setTraversalHistory([]);
           copyElementSource(hoveredElement);
         }
       } else {
         setLockedElement(null);
+        setLockPoint(null);
         setToastMessage("Unlocked");
       }
     };
@@ -316,7 +322,7 @@ export function ComponentInspector() {
 
       {/* Box model overlay */}
       {isActive && (
-        <InspectorOverlay activeElement={activeElement} locked={!!lockedElement && !marqueePreview} />
+        <InspectorOverlay activeElement={activeElement} locked={!!lockedElement && !marqueePreview} lockPoint={lockPoint ?? undefined} />
       )}
 
       {/* Marquee selection */}
