@@ -1,7 +1,7 @@
 // ② 2026-03-24-cms-editorial-content-prd.md
-import type { Command } from '../../interactive-os/engine/types'
-import { createBatchCommand } from '../../interactive-os/engine/types'
-import { crudCommands } from '../../interactive-os/plugins/crud'
+import type { Command } from '@os/engine/types'
+import { createBatchCommand } from '@os/engine/types'
+import { crudCommands } from '@os/plugins/crud'
 import { localeMap } from './cms-types'
 
 export type SectionVariant = 'hero' | 'manifesto' | 'features' | 'patterns' | 'showcase' | 'journal' | 'testimonial' | 'cta' | 'footer' | 'gallery'

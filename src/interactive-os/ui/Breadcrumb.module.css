@@ -1,8 +1,5 @@
 .breadcrumb {
   gap: var(--border-width);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .sep {

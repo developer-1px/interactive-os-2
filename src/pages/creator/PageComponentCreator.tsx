@@ -1,58 +1,21 @@
 // ② 2026-03-28-workspace-sync-prd.md
 
-import { useState, useMemo, useCallback } from 'react'
+import { useMemo, useCallback, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
 import { componentRegistry, type RegistryEntry } from './componentRegistry'
-import { ComponentCanvas } from './ComponentCanvas'
-import { ComponentChat } from './ComponentChat'
-import { SourceViewer } from './SourceViewer'
-import { Workspace } from '../../interactive-os/ui/Workspace'
-import { TabList } from '../../interactive-os/ui/TabList'
-import { addEntity } from '../../interactive-os/store/createStore'
-import { createStore } from '../../interactive-os/store/createStore'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import type { NormalizedData, Entity } from '../../interactive-os/store/types'
-import type { TabData } from '../../interactive-os/plugins/workspaceStore'
+import { ComponentCanvas } from './widgets/ComponentCanvas'
+import { ComponentChat } from './widgets/ComponentChat'
+import { CodePanel } from './widgets/CodePanel'
+import { Workspace } from '@os/ui/Workspace'
+import { TabList } from '@os/ui/TabList'
+import { addEntity } from '@os/store/createStore'
+import { createStore } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
+import type { NormalizedData, Entity } from '@os/store/types'
+import type { TabData } from '@os/plugins/workspaceStore'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
 import styles from './PageComponentCreator.module.css'
-
-type SourceTab = 'tsx' | 'css'
-
-// --- Code panel (owns sourceTab state internally) ---
-
-function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
-  const [sourceTab, setSourceTab] = useState<SourceTab>('tsx')
-  return (
-    <div className="flex-col overflow-hidden">
-      <div className={`flex-row items-center ${styles.paneHeader}`}>
-        <button
-          data-surface="action"
-          className={`${styles.sourceTab}${sourceTab === 'tsx' ? ` ${styles.sourceTabActive}` : ''}`}
-          onClick={() => setSourceTab('tsx')}
-        >
-          TSX
-        </button>
-        <button
-          data-surface="action"
-          className={`${styles.sourceTab}${sourceTab === 'css' ? ` ${styles.sourceTabActive}` : ''}`}
-          onClick={() => setSourceTab('css')}
-        >
-          CSS
-        </button>
-      </div>
-      <div className="flex-1 overflow-auto min-h-0">
-        {entry ? (
-          <SourceViewer entry={entry} activeTab={sourceTab} />
-        ) : (
-          <div className={`flex-row items-center justify-center flex-1 ${styles.emptyState}`}>
-            컴포넌트를 선택하세요
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
 
 // --- Fixed workspace layout ---
 

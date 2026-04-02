@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useRef } from 'react'
 import cmsStyles from './CmsLanding.module.css'
-import { getChildren } from '../../interactive-os/store/createStore'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import type { NormalizedData } from '../../interactive-os/store/types'
-import type { Command } from '../../interactive-os/engine/types'
-import type { PatternContext } from '../../interactive-os/pattern/types'
+import { getChildren } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
+import type { Command } from '@os/engine/types'
+import type { PatternContext } from '@os/pattern/types'
 import type { Locale } from './cms-types'
 import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
-import { useAria } from '../../interactive-os/primitives/useAria'
+import { useAria } from '@os/primitives/useAria'
 
 const EMPTY_DATA: NormalizedData = { entities: {}, relationships: {} }
 

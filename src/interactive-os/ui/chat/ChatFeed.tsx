@@ -8,8 +8,8 @@ import { DiffBlock } from './DiffBlock'
 import { ToolGroup, ToolChainGroup } from './ToolSummaryBlock'
 import { ChatFeaturesOverride } from './chatFeatures'
 import type { ChatMessage, ChatBlock, DataBlock, BlockRendererMap } from './types'
-import { ax } from '../../../poc/ax'
-import '../../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './ChatFeed.module.css'
 
 // --- Default renderers (implementation set A: text/code/diff) ---

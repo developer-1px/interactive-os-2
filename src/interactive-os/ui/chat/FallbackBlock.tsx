@@ -1,8 +1,8 @@
 // ② 2026-03-27-chat-module-prd.md
 import { useState } from 'react'
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
-import { ax } from '../../../poc/ax'
-import '../../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { useChatFeatures } from './chatFeatures'
 import type { ChatBlock } from './types'
 import styles from './FallbackBlock.module.css'

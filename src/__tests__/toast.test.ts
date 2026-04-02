@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { createToaster } from '../interactive-os/ui/createToaster'
+import { createToaster } from '@os/ui/createToaster'
 
 describe('createToaster', () => {
   beforeEach(() => {

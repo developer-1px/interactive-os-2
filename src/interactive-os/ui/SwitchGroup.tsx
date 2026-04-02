@@ -6,8 +6,8 @@ import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/roles/switch'
 import { SwitchIndicator } from './indicators'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './SwitchGroup.module.css'
 
 type SwitchGroupProps = AriaComponentProps

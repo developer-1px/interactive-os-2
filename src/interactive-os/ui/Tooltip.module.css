@@ -24,4 +24,6 @@
 
   /* popover reset */
   inset: unset;
+
+  pointer-events: none;
 }

@@ -11,8 +11,8 @@ import { createStore, getChildren, getEntityData } from '../store/createStore'
 import { useTabList } from './useTabList'
 import { workspaceCommands } from '../plugins/workspaceStore'
 import type { TabGroupData } from '../plugins/workspaceStore'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './TabGroup.module.css'
 
 interface TabGroupProps {
@@ -114,7 +114,7 @@ export function TabGroup({
           )
         })}
       </div>}
-      <div role="tabpanel" className={ax({ layout: 'column', flex: '1' })}>
+      <div role="tabpanel" className={ax({ layout: 'fill' })}>
         {activeEntity ? renderPanel(activeEntity) : null}
       </div>
     </div>

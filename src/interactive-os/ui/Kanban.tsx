@@ -7,8 +7,8 @@ import { AriaItemContext, Aria } from '../primitives/aria'
 import { kanban as kanbanBehavior } from './kanbanPreset'
 import { getChildren, getEntity } from '../store/createStore'
 import type { AriaComponentProps } from './types'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 
 interface KanbanProps extends AriaComponentProps {
   highlightUp?: Set<string>
@@ -123,7 +123,7 @@ export function Kanban({
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
-                      <span className={styles.cardTitle}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
+                      <span className={`${ax({ clamp: '1' })} ${styles.cardTitle}`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
                       {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
                         <span className={styles.cardSubtitle}>
                           {cardSubtitle}

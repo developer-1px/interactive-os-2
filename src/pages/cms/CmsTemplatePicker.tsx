@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { TEMPLATE_VARIANTS } from './cms-templates'
 import type { TemplateType } from './cms-templates'
-import type { NormalizedData } from '../../interactive-os/store/types'
-import type { Command } from '../../interactive-os/engine/types'
-import type { PatternContext } from '../../interactive-os/pattern/types'
-import { listbox } from '../../interactive-os/pattern/roles/listbox'
-import { useAria } from '../../interactive-os/primitives/useAria'
-import { focusCommands } from '../../interactive-os/axis/navigate'
+import type { NormalizedData } from '@os/store/types'
+import type { Command } from '@os/engine/types'
+import type { PatternContext } from '@os/pattern/types'
+import { listbox } from '@os/pattern/roles/listbox'
+import { useAria } from '@os/primitives/useAria'
+import { focusCommands } from '@os/axis/navigate'
 
 const pickerData: NormalizedData = {
   entities: Object.fromEntries(

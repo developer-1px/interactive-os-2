@@ -1,9 +1,9 @@
 import type { TreeNode } from './fsClient'
-import type { NormalizedData, Entity } from '../../interactive-os/store/types'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import { createStore } from '../../interactive-os/store/createStore'
-import { FOCUS_ID } from '../../interactive-os/axis/navigate'
-import { EXPANDED_ID } from '../../interactive-os/axis/expand'
+import type { NormalizedData, Entity } from '@os/store/types'
+import { ROOT_ID } from '@os/store/types'
+import { createStore } from '@os/store/createStore'
+import { FOCUS_ID } from '@os/axis/navigate'
+import { EXPANDED_ID } from '@os/axis/expand'
 
 export function treeToStore(nodes: TreeNode[]): NormalizedData {
   const entities: Record<string, Entity> = {}

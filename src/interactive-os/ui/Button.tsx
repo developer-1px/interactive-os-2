@@ -1,6 +1,6 @@
 import React from 'react'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './Button.module.css'
 
 type ButtonVariant = 'accent' | 'ghost' | 'dialog' | 'destructive'

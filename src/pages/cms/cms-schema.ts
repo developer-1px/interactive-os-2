@@ -6,9 +6,9 @@
  *          collectEditableGroups (container → grouped fields).
  */
 import { z } from 'zod'
-import type { CanAcceptFn, CanDeleteFn } from '../../interactive-os/plugins/clipboard'
-import type { NormalizedData } from '../../interactive-os/store/types'
-import { getChildren } from '../../interactive-os/store/createStore'
+import type { CanAcceptFn, CanDeleteFn } from '@os/plugins/clipboard'
+import type { NormalizedData } from '@os/store/types'
+import { getChildren } from '@os/store/createStore'
 import { localized } from './cms-types'
 import type { Locale, LocaleMap } from './cms-types'
 

@@ -4,10 +4,10 @@ import { useEffect, useMemo } from 'react'
 import { Circle, Loader, X } from 'lucide-react'
 import { connectSession, disconnectSession, useTimeline, useSessionMeta } from './viewerStore'
 import { timelineToMessages } from './timelineAdapter'
-import { ChatFeed } from '../../interactive-os/ui/chat/ChatFeed'
-import { Composer } from '../../interactive-os/ui/Composer'
+import { ChatFeed } from '@os/ui/chat/ChatFeed'
+import { Composer } from '@os/ui/Composer'
 import { ToolGroupBlock } from './ToolGroupBlock'
-import type { BlockRendererMap } from '../../interactive-os/ui/chat/types'
+import type { BlockRendererMap } from '@os/ui/chat/types'
 
 interface TimelineColumnProps {
   sessionId: string

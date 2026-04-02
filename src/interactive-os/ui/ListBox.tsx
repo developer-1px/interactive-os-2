@@ -8,8 +8,8 @@ import { listbox } from '../pattern/roles/listbox'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
 import { search } from '../plugins/search'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './ListBox.module.css'
 
 const listboxPattern = listbox()

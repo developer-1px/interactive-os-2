@@ -1,7 +1,7 @@
 // ── Axis Components — style={} 0개. ax()만으로 컴포넌트 디자인. ──
 
 import React from 'react'
-import { ax } from './ax'
+import { ax } from '@styles/ax'
 import './ax.css'
 
 // ════════════════════════════════════════════

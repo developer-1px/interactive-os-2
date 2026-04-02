@@ -1,7 +1,7 @@
 // ② 2026-03-26-unified-navigation-prd.md
 import { useLocation } from 'react-router-dom'
-import { AreaSidebar } from './pages/AreaSidebar'
-import PageAreaViewer from './pages/PageAreaViewer'
+import { AreaSidebar } from './pages/area/AreaSidebar'
+import PageAreaViewer from './pages/area/PageAreaViewer'
 
 export default function InternalsLayout() {
   const { pathname } = useLocation()

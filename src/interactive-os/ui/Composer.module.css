@@ -4,7 +4,6 @@
 
 .inputWrap {
   position: relative;
-  border-radius: var(--shape-md-radius);
 }
 
 .inputWrap[data-disabled] {
@@ -79,7 +78,6 @@
   margin: 0;
   list-style: none;
   overflow-y: auto;
-  border-radius: var(--shape-md-radius);
   max-height: calc(var(--type-body-size) * var(--leading-snug) * 8 + var(--space-xs) * 2);
   z-index: 1;
 }

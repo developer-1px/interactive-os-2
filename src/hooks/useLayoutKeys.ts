@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { findMatchingKey } from '../interactive-os/primitives/useKeyboard'
+import { findMatchingKey } from '@os/primitives/useKeyboard'
 
 export interface LayoutKeyHandlers {
   /** ⌘D — horizontal split (duplicate current pane) */

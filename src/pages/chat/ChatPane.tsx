@@ -1,13 +1,13 @@
 // ② 2026-03-27-claude-chat-phase-a-prd.md
 import { useCallback, useMemo, useState, useEffect, useRef } from 'react'
-import { ChatFeed } from '../../interactive-os/ui/chat/ChatFeed'
-import { Composer } from '../../interactive-os/ui/Composer'
-import type { ComposerHandle } from '../../interactive-os/ui/Composer'
-import { ThinkingBlock } from '../../interactive-os/ui/chat/ThinkingBlock'
-import { ToolSummaryBlock, ToolResultBlock } from '../../interactive-os/ui/chat/ToolSummaryBlock'
-import { StreamingTextBlock } from '../../interactive-os/ui/chat/StreamingTextBlock'
+import { ChatFeed } from '@os/ui/chat/ChatFeed'
+import { Composer } from '@os/ui/Composer'
+import type { ComposerHandle } from '@os/ui/Composer'
+import { ThinkingBlock } from '@os/ui/chat/ThinkingBlock'
+import { ToolSummaryBlock, ToolResultBlock } from '@os/ui/chat/ToolSummaryBlock'
+import { StreamingTextBlock } from '@os/ui/chat/StreamingTextBlock'
 import { sendMessage, clearSession, interruptSession, useChatSession } from './chatStore'
-import type { ChatMessage, BlockRendererMap } from '../../interactive-os/ui/chat/types'
+import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
 import styles from './PageAgentChat.module.css'
 
 const chatRenderers: BlockRendererMap = {

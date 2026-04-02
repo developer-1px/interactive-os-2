@@ -6,9 +6,9 @@
  * a few sample datasets cover every component type.
  */
 
-import { createStore } from '../../interactive-os/store/createStore'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import type { NormalizedData } from '../../interactive-os/store/types'
+import { createStore } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
 
 /** Flat list — ListBox, RadioGroup, Checkbox, MenuList, SwitchGroup, Toggle, ToggleGroup */
 export const flatList: NormalizedData = createStore({

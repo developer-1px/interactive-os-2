@@ -6,7 +6,7 @@ import {
 } from 'lucide-react'
 import { DEFAULT_ROOT } from './types'
 import type { TimelineEvent, ToolGroup } from './groupEvents'
-import type { DataBlock } from '../../interactive-os/ui/chat/types'
+import type { DataBlock } from '@os/ui/chat/types'
 import styles from './TimelineColumn.module.css'
 
 // --- Helpers ---

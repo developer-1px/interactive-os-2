@@ -2,9 +2,9 @@ import { useSyncExternalStore } from 'react'
 import type { ReactNode } from 'react'
 import { X } from 'lucide-react'
 import type { Toaster as ToasterInstance, ToastData } from './createToaster'
-import { ax } from '../../poc/ax'
-import type { Axes } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import type { Axes } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './Toaster.module.css'
 
 const variantTone: Record<string, Axes> = {

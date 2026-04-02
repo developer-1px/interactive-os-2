@@ -5,8 +5,8 @@ import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { alertdialog } from '../pattern/roles/alertdialog'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 
 type AlertDialogProps = AriaComponentProps
 

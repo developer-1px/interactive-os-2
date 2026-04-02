@@ -3,8 +3,8 @@ import { CodeBlock } from './CodeBlock'
 import { MarkdownViewer } from './MarkdownViewer'
 import { FileIcon } from './FileIcon'
 import { Breadcrumb } from './Breadcrumb'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './FileViewerModal.module.css'
 
 interface FileViewerModalProps {

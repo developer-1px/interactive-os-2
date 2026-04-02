@@ -7,8 +7,8 @@ import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
 import { getNodeLabel } from './types'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './Toolbar.module.css'
 
 const toolbarPattern = toolbar()

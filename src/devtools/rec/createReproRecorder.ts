@@ -20,7 +20,7 @@
  *   const data = rec.stop()
  */
 
-import type { LogEntry, Logger } from '../../interactive-os/engine/logger'
+import type { LogEntry, Logger } from '@os/engine/logger'
 
 // ---- Types ----
 

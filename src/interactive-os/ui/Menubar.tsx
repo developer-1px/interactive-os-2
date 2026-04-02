@@ -7,8 +7,8 @@ import { getNodeLabel } from './types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { menubar } from '../pattern/roles/menubar'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './Menubar.module.css'
 
 type MenubarRenderItem = (

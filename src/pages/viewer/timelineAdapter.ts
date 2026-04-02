@@ -1,6 +1,6 @@
 // ② 2026-03-27-chat-module-prd.md
 import { groupEvents, type TimelineEvent, type ToolGroup, type DisplayItem } from './groupEvents'
-import type { ChatMessage, ChatBlock, DataBlock } from '../../interactive-os/ui/chat/types'
+import type { ChatMessage, ChatBlock, DataBlock } from '@os/ui/chat/types'
 
 /**
  * Converts raw TimelineEvent[] to ChatMessage[].

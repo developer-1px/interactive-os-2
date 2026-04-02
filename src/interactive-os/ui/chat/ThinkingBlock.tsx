@@ -1,7 +1,7 @@
 // ② 2026-03-31-chat-perf-prd.md
 import { memo, useState, useEffect, useRef } from 'react'
-import { ax } from '../../../poc/ax'
-import '../../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { MarkdownViewer } from '../MarkdownViewer'
 import { useChatFeatures } from './chatFeatures'

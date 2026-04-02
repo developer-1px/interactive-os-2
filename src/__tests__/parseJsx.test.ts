@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseJsx } from '../pages/parseJsx'
+import { parseJsx } from '../pages/showcase/parseJsx'
 
 describe('parseJsx', () => {
   it('parses self-closing tag without props', () => {
