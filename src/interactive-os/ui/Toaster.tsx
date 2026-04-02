@@ -45,7 +45,7 @@ function ToastItem({
   return (
     <div className={`${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm' })} ${styles.toast}`} data-variant={variant}>
       <div className={ax({ flex: '1' })}>
-        <div className={`${ax({ textStyle: 'body' })} ${styles.title}`}>{toast.title}</div>
+        <div className={ax({ textStyle: 'body', weight: 'medium' })}>{toast.title}</div>
         {toast.description && (
           <div className={`${ax({ textStyle: 'body', text: 'secondary' })} ${styles.description}`}>{toast.description}</div>
         )}

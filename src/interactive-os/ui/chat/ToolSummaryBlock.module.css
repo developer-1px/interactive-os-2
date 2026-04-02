@@ -18,10 +18,6 @@
   color: var(--text-muted);
 }
 
-.toolName {
-  font-weight: var(--weight-semi);
-}
-
 .toolDetail {
   overflow: hidden;
   min-width: 0;

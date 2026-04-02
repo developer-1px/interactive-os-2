@@ -101,7 +101,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 {mergedHighlightLines.size > 0 && (
                   <>
                     <span className={styles.fvmMetaSep} />
-                    <span className={styles.fvmEditBadge}>{mergedHighlightLines.size} lines highlighted</span>
+                    <span className={ax({ text: 'warning', weight: 'semi' })}>{mergedHighlightLines.size} lines highlighted</span>
                   </>
                 )}
               </div>

@@ -148,7 +148,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`${ax({ surface: 'ghost', controlSize: 'md', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm' })} ${styles.item}${state.focused ? ` ${styles.itemFocused}` : ''}`}
+                  className={`${ax({ surface: 'ghost', controlSize: 'md', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm', state: state.focused ? 'focused' : undefined })} ${styles.item}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),
@@ -160,7 +160,7 @@ export function QuickOpen({
                     <FileIcon name={fileData.name} type="file" />
                   </span>
                   <span className={`${ax({ layout: 'column', flex: '1' })} ${styles.itemText}`}>
-                    <span className={`${ax({ textStyle: 'body', clamp: '1' })} ${styles.itemName}`}>{fileData.name}</span>
+                    <span className={ax({ textStyle: 'body', clamp: '1', weight: 'medium' })}>{fileData.name}</span>
                     <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
                   </span>
                 </div>
@@ -168,7 +168,7 @@ export function QuickOpen({
             })}
           </div>
         ) : (
-          <div className={`${ax({ layout: 'center', text: 'muted', textStyle: 'body', padding: 'xl' })} ${styles.empty}`}>일치하는 파일이 없습니다</div>
+          <div className={ax({ layout: 'center', text: 'muted', textStyle: 'body', padding: 'xl' })}>일치하는 파일이 없습니다</div>
         )}
       </div>
     </div>

@@ -23,11 +23,6 @@
   display: none;
 }
 
-.thinkingLabel {
-  font-weight: var(--weight-semi);
-  color: var(--text-muted);
-}
-
 .thinkingPreview {
   color: var(--text-muted);
   text-overflow: ellipsis;

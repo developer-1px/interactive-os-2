@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════
    QuickOpen — file search overlay
-   Surface: overlay | Shape: xl (dialog), sm (item)
-   last-mile: positioning, animation, border, shadow
+   ax() handles: surface, layout, shape, gap, padding, text, textStyle, controlSize, flex, clamp, state, weight
+   last-mile: positioning, animation, border, shadow, caret-color
    ═══════════════════════════════════════════ */
 
 /* --- last-mile: positioning & animation --- */
@@ -67,21 +67,6 @@
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
-/* --- variant: focused item --- */
-
-.itemFocused {
-  --_bg: var(--tone-primary-dim);
-  background: var(--_bg);
-}
-
 .itemText {
   min-width: 0;
-}
-
-.itemName {
-  font-weight: var(--weight-medium);
-}
-
-.empty {
-  /* ax() handles layout, text, padding */
 }

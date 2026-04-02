@@ -52,10 +52,6 @@
   margin: 0 var(--space-inline-code);
 }
 
-.fvmEditBadge {
-  color: var(--tone-warning-base);
-  font-weight: var(--weight-semi);
-}
 
 /* ── last-mile: close button overrides ── */
 

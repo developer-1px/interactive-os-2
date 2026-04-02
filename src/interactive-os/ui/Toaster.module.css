@@ -27,10 +27,6 @@
   border-color: var(--tone-destructive-base);
 }
 
-.title {
-  font-weight: var(--weight-medium);
-}
-
 .description {
   /* textStyle + text handled by ax() */
 }

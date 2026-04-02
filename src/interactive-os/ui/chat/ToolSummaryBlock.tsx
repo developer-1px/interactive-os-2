@@ -87,7 +87,7 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
   return (
     <div className={`${ax({ layout: 'bar' })} ${styles.toolRow}`}>
       <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
-      <span><span className={styles.toolName}>{name}</span>{detail ? ' ' : ''}<span className={styles.toolDetail}>{detail}</span></span>
+      <span><span className={ax({ weight: 'semi' })}>{name}</span>{detail ? ' ' : ''}<span className={styles.toolDetail}>{detail}</span></span>
     </div>
   )
 }
@@ -209,7 +209,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <div className={styles.toolGroup}>
         <div className={`${ax({ layout: 'bar' })} ${styles.toolGroupSummary}`}>
           <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
-          <span className={styles.toolName}>{name}</span> {summaryLabel}
+          <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
         </div>
       </div>
     )
@@ -219,7 +219,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
     <details className={styles.toolGroup} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
       <summary className={`${ax({ layout: 'bar' })} ${styles.toolGroupSummary}`}>
         <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
-        <Icon size={12} /> <span className={styles.toolName}>{name}</span> {summaryLabel}
+        <Icon size={12} /> <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
       </summary>
       {content}
     </details>
@@ -277,7 +277,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
           return (
             <div key={g.name} className={`${ax({ layout: 'bar' })} ${styles.toolChainRow}`}>
               <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
-              <span className={styles.toolName}>{g.name}</span>
+              <span className={ax({ weight: 'semi' })}>{g.name}</span>
               <span className={styles.toolChainDetails}>
                 {g.details.join(' · ')}
               </span>
