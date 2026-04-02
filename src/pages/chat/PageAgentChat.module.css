@@ -78,6 +78,7 @@
 /* --- Main chat area --- */
 
 .chatMain {
+  width: 100%;
   max-width: 860px;
   margin-inline: auto;
 }

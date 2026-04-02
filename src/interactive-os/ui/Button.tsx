@@ -5,11 +5,11 @@ import styles from './Button.module.css'
 
 type ButtonVariant = 'accent' | 'ghost' | 'dialog' | 'destructive'
 
-const variantTone: Record<ButtonVariant, Parameters<typeof ax>[0]> = {
-  accent: { surface: 'action', tone: 'accent' },
-  ghost: { surface: 'ghost', tone: 'neutral' },
-  dialog: { surface: 'action', tone: 'neutral' },
-  destructive: { surface: 'action', tone: 'danger' },
+const variantAxes: Record<ButtonVariant, Parameters<typeof ax>[0]> = {
+  accent: { surface: 'action', tone: 'accent', weight: 'semi' },
+  ghost: { surface: 'ghost', tone: 'neutral', width: 'full' },
+  dialog: { surface: 'action', tone: 'neutral', weight: 'medium' },
+  destructive: { surface: 'action', tone: 'danger', weight: 'semi' },
 }
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -17,10 +17,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({ variant = 'ghost', className, ...props }: ButtonProps) {
-  const axes = variantTone[variant]
+  const axes = variantAxes[variant]
   return (
     <button
-      className={`${ax({ ...axes, controlSize: 'md' })} ${styles.root} ${styles[variant]}${className ? ` ${className}` : ''}`}
+      className={`${ax({ ...axes, controlSize: 'md', shape: 'xl' })} ${styles[variant]}${className ? ` ${className}` : ''}`}
       {...props}
     />
   )

@@ -138,6 +138,18 @@ function findPasteTarget(
       const result = normalizeAcceptResult(canAcceptFn(candidateData, childData))
 
       if (result === 'overwrite' && candidate === targetId) {
+        // Only overwrite if the parent is a slot (non-collection).
+        // In collection parents (array), prefer insert as sibling.
+        const parentId = getParent(store, candidate)
+        if (parentId) {
+          const parentData = getEntity(store, parentId)?.data as Record<string, unknown> | undefined
+          const parentAccept = normalizeAcceptResult(canAcceptFn(parentData, childData))
+          if (parentAccept === 'insert') {
+            // Parent is a collection that accepts this type — skip overwrite, let walk-up find parent
+            candidate = getParent(store, candidate)
+            continue
+          }
+        }
         return { pasteInto: candidate, insertIndex: undefined, mode: 'overwrite' }
       }
 

@@ -52,7 +52,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
   if (entityData.type === 'tabgroup') {
     const tabIds = getChildren(data, nodeId)
     if (tabIds.length === 0) {
-      return <div className={`${ax({ layout: 'center' })} ${styles.empty}`}>No open tabs</div>
+      return <div className={`${ax({ layout: 'center', text: 'muted' })} ${styles.empty}`}>No open tabs</div>
     }
 
     return (
@@ -104,15 +104,15 @@ export function Workspace({
 
   if (rootChildren.length === 0) {
     return (
-      <div className={`${ax({ layout: 'column', flex: '1' })} ${styles.root}`} aria-label={ariaLabel}>
-        <div className={`${ax({ layout: 'center' })} ${styles.empty}`}>No open tabs</div>
+      <div className={`${ax({ layout: 'fill' })} ${styles.root}`} aria-label={ariaLabel}>
+        <div className={`${ax({ layout: 'center', text: 'muted' })} ${styles.empty}`}>No open tabs</div>
       </div>
     )
   }
 
   return (
-    <div className={`${ax({ layout: 'column', flex: '1' })} ${styles.root}`} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
-      <div className={`${ax({ layout: 'fill' })} ${styles.inner}`}>
+    <div className={`${ax({ layout: 'fill' })} ${styles.root}`} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
+      <div className={ax({ layout: 'fill' })}>
         {rootChildren.map((id) => (
           <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} renderPanel={renderPanel} />
         ))}

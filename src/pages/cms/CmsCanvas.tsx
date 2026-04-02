@@ -467,7 +467,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
   }, [aria])
 
   return (
-    <div ref={containerRef} className={`cms-landing ${landingStyles.cmsLanding} w-full overflow-x-hidden relative`} data-cms-root data-aria-container="">
+    <div ref={containerRef} {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} className={`cms-landing ${landingStyles.cmsLanding} w-full overflow-x-hidden relative`} data-cms-root data-aria-container="">
       {getChildren(currentStore, ROOT_ID).map(id => renderNode(id))}
       <SelectionOverlay
         containerRef={containerRef}

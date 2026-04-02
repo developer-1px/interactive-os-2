@@ -19,7 +19,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   if (isGroup) {
     return (
       <div>
-        <div {...props} className={`${ax({ surface: 'ghost', controlSize: 'md', layout: 'spread' })} ${styles.header}`}>
+        <div {...props} className={`${ax({ surface: 'ghost', controlSize: 'md', layout: 'spread', weight: 'semi' })} ${styles.header}`}>
           <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
           <span className={`${ax({ flex: 'none', text: 'muted' })} ${styles.chevron} ${state.expanded ? styles.chevronExpanded : ''}`}>
             <ExpandIndicator />

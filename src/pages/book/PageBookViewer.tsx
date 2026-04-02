@@ -6,7 +6,7 @@ import { NavList } from '@os/ui/NavList'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { ax } from '@styles/ax'
 import type { NodeState } from '@os/pattern/types'
-import { buildBook, buildTocStore } from './bookContent'
+import { buildBook, buildTocStore, type Chapter } from './bookContent'
 import styles from './PageBookViewer.module.css'
 
 // ── TOC item renderer ──
@@ -34,6 +34,28 @@ const renderTocItem = (
 
 // ── Main component ──
 
+// ── Hierarchical numbering ──
+
+function buildNumbering(chapters: Chapter[]): Map<string, string> {
+  const map = new Map<string, string>()
+  for (let ci = 0; ci < chapters.length; ci++) {
+    const ch = chapters[ci]
+    let d0 = 0
+    let d1 = 0
+    for (const page of ch.pages) {
+      if (page.depth === 0) {
+        d0++
+        d1 = 0
+        map.set(page.id, `${ci + 1}.${d0}`)
+      } else {
+        d1++
+        map.set(page.id, `${ci + 1}.${d0}.${d1}`)
+      }
+    }
+  }
+  return map
+}
+
 export default function PageBookViewer() {
   const { chapters, pages } = useMemo(() => buildBook(), [])
   const navigate = useNavigate()
@@ -44,6 +66,9 @@ export default function PageBookViewer() {
   const [chromeVisible, setChromeVisible] = useState(false)
   const pageRef = useRef<HTMLDivElement>(null)
   const viewportRef = useRef<HTMLDivElement>(null)
+
+  // ── Sidebar TOC numbering ──
+  const numbering = useMemo(() => buildNumbering(chapters), [chapters])
 
   // ── Page index lookup ──
   const pageIndexById = useMemo(() => {
@@ -145,34 +170,56 @@ export default function PageBookViewer() {
   return (
     <AriaRoute keyMap={keyMap}>
       <div className={styles.book}>
-        {/* ── Floating pill — top-left ── */}
-        <div className={`${styles.pill} ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
-          <button
-            className={styles.pillBtn}
-            onClick={() => setTocOpen(true)}
-            aria-label="Open table of contents"
-          >
-            <List size={14} />
-          </button>
-          <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{page?.chapter}</span>
-          <span className={ax({ textStyle: 'caption', text: 'secondary', clamp: '1' })}>{page?.title}</span>
-        </div>
-
-        {/* ── Page number — always visible, bottom-center ── */}
-        <div className={styles.pageNumber}>
-          <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-            {currentPage + 1}/{pages.length}
-            {totalSpreads > 1 && ` · ${spread + 1}/${totalSpreads}`}
-          </span>
-        </div>
-
-        {/* ── Progress — bottom edge ── */}
-        <div className={styles.progressBar} data-visible={chromeVisible}>
-          <div className={styles.progressFill} style={{ width: `${progressPercent}%` }} />
-        </div>
+        {/* ── Sidebar TOC ── */}
+        <nav className={styles.sidebarToc} aria-label="Table of contents">
+          {chapters.map((ch, ci) => (
+            <div key={ch.id} className={styles.sidebarGroup}>
+              <div className={ax({ textStyle: 'caption', text: 'secondary' })}>{ci + 1}.</div>
+              {ch.pages.map(p => (
+                <button
+                  key={p.id}
+                  className={`${styles.sidebarItem} ${ax({ textStyle: 'caption', text: p.id === page?.id ? 'bright' : 'muted' })}`}
+                  aria-current={p.id === page?.id ? 'page' : undefined}
+                  onClick={() => {
+                    const idx = pageIndexById.get(p.id)
+                    if (idx != null) goTo(idx)
+                  }}
+                >
+                  <span className={styles.sidebarNum}>{numbering.get(p.id)}</span>
+                  {p.title}
+                </button>
+              ))}
+            </div>
+          ))}
+        </nav>
 
         {/* ── Page content ── */}
         <div className={styles.pageArea}>
+          {/* ── Floating pill — top-left ── */}
+          <div className={`${styles.pill} ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
+            <button
+              className={styles.pillBtn}
+              onClick={() => setTocOpen(true)}
+              aria-label="Open table of contents"
+            >
+              <List size={14} />
+            </button>
+            <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{page?.chapter}</span>
+            <span className={ax({ textStyle: 'caption', text: 'secondary', clamp: '1' })}>{page?.title}</span>
+          </div>
+
+          {/* ── Page number — always visible, bottom-center ── */}
+          <div className={styles.pageNumber}>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+              {currentPage + 1}/{pages.length}
+              {totalSpreads > 1 && ` · ${spread + 1}/${totalSpreads}`}
+            </span>
+          </div>
+
+          {/* ── Progress — bottom edge ── */}
+          <div className={styles.progressBar} data-visible={chromeVisible}>
+            <div className={styles.progressFill} style={{ width: `${progressPercent}%` }} />
+          </div>
           <div className={styles.pageInset}>
             <div
               className={styles.pageViewport}
@@ -225,28 +272,28 @@ export default function PageBookViewer() {
               )}
             </div>
           </nav>
-        </div>
 
-        {/* ── Overlay TOC ── */}
-        <div className={styles.tocOverlay} data-open={tocOpen}>
-          <div className={styles.tocOverlayPanel}>
-            <div className={`${ax({ layout: 'spread', padding: 'md' })} ${styles.tocOverlayHeader}`}>
-              <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
-              <button
-                className={styles.pillBtn}
-                onClick={() => setTocOpen(false)}
-                aria-label="Close"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <div className={ax({ layout: 'scroll', padding: 'sm' })}>
-              <NavList
-                data={tocStore}
-                onActivate={handleTocActivate}
-                renderItem={renderTocItem}
-                aria-label="Table of contents"
-              />
+          {/* ── Overlay TOC ── */}
+          <div className={styles.tocOverlay} data-open={tocOpen}>
+            <div className={styles.tocOverlayPanel}>
+              <div className={`${ax({ layout: 'spread', padding: 'md' })} ${styles.tocOverlayHeader}`}>
+                <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
+                <button
+                  className={styles.pillBtn}
+                  onClick={() => setTocOpen(false)}
+                  aria-label="Close"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+              <div className={ax({ layout: 'scroll', padding: 'sm' })}>
+                <NavList
+                  data={tocStore}
+                  onActivate={handleTocActivate}
+                  renderItem={renderTocItem}
+                  aria-label="Table of contents"
+                />
+              </div>
             </div>
           </div>
         </div>

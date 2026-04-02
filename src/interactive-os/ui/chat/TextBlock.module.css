@@ -93,10 +93,10 @@
 .markdown code {
   font-family: var(--mono);
   font-size: var(--type-caption-size);
-  color: var(--tone-primary-hover);
-  background: var(--tone-primary-dim);
+  background: var(--surface-base);
   padding: 0.15em 0.35em;
   border-radius: var(--shape-xs-radius);
+  border: 1px solid var(--border-subtle);
 }
 
 .markdown pre code {

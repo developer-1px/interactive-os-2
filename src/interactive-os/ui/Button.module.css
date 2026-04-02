@@ -1,39 +1,16 @@
 /* ── Button — last-mile overrides ──
-   ax() handles: surface, controlSize, tone
-   module.css handles: shape overrides, variant-specific borders/weights */
+   ax() handles: surface, controlSize, tone, shape, width, weight
+   module.css handles: variant-specific borders */
 
-/* ═══ Block 1: base ═══ */
-.root {
-  border-radius: var(--shape-xl-radius);
-}
-
-/* ═══ Block 2: variant — last-mile only ═══ */
-.accent {
-  font-weight: var(--weight-semi);
-}
+/* ═══ variant — last-mile only ═══ */
+.accent {}
 
 .dialog {
   border: 1px solid var(--border-default);
-  font-weight: var(--weight-medium);
 }
 
 .ghost {
   border: 1px solid var(--border-subtle);
-  width: 100%;
 }
 
-.destructive {
-  font-weight: var(--weight-semi);
-}
-
-/* ═══ Block 3: size ═══ */
-.sm {
-  border-radius: var(--shape-xs-radius);
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-caption-size);
-}
-
-.lg {
-  padding: var(--shape-lg-py) var(--shape-lg-px);
-  font-size: var(--type-section-size);
-}
+.destructive {}

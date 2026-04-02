@@ -12,6 +12,7 @@ import { cmsCanDelete } from './cms-schema'
 import type { PatternContext } from '@os/pattern/types'
 import { toolbar } from '@os/pattern/roles/toolbar'
 import { useAria } from '@os/primitives/useAria'
+import { ax } from '@styles/ax'
 
 interface CmsFloatingToolbarProps {
   store: NormalizedData
@@ -120,7 +121,7 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
   if (hidden) return null
 
   return (
-    <div className="cms-floating-toolbar fixed flex-row items-center" role="toolbar" aria-label="Section actions" {...aria.containerProps}>
+    <div className={`cms-floating-toolbar ${ax({ surface: 'overlay' })} fixed flex-row items-center`} role="toolbar" aria-label="Section actions" {...aria.containerProps}>
       {visibleActions.map((action) => {
         const props = aria.getNodeProps(action.id)
         const isDisabled = disabled || (action.id === 'delete' && isOnlySection)

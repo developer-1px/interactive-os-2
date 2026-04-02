@@ -5,13 +5,18 @@
 
 // ── 시각 축 ──
 
-type Surface = 'action' | 'input' | 'display' | 'overlay' | 'ghost'
+type Surface = 'action' | 'input' | 'display' | 'overlay' | 'ghost' | 'placeholder'
 type ControlSize = 'sm' | 'md' | 'lg'
 type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code'
 type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
-type Text = 'bright' | 'primary' | 'secondary' | 'muted'
+type Text = 'bright' | 'primary' | 'secondary' | 'muted' | 'accent' | 'danger' | 'success' | 'warning'
 // shape: 비-컨트롤 요소의 border-radius (컨트롤은 controlSize가 소유)
 type Shape = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
+
+// weight: textStyle weight와 독립적인 오버라이드
+type Weight = 'medium' | 'semi' | 'bold'
+// state: surface 조립식 확장 — focused/selected 상태 시각
+type State = 'focused' | 'selected'
 
 // ── 구조 축 ──
 
@@ -40,6 +45,8 @@ export interface Axes {
   textStyle?: TextStyle
   tone?: Tone
   text?: Text
+  weight?: Weight
+  state?: State
   shape?: Shape
 
   // 구조 축
@@ -59,6 +66,8 @@ const prefixes: Record<keyof Axes, string> = {
   textStyle: 'ts',
   tone: 'tn',
   text: 'tx',
+  weight: 'wt',
+  state: 'st',
   shape: 'sh',
   layout: 'ly',
   gap: 'g',

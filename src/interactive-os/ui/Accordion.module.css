@@ -1,7 +1,5 @@
 /* ── Block 1: base ── */
-.header {
-  font-weight: var(--weight-semi);
-}
+.header {}
 
 .header + .panel {
   border-bottom: 1px solid var(--border-subtle);

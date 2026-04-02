@@ -11,6 +11,7 @@ import { CMS_ICONS, CMS_ICON_MAP } from './cmsIcons'
 import { CmsIcon } from './cms-renderers'
 import { LOCALES } from './cms-types'
 import { Sheet, ImagePlus, X } from 'lucide-react'
+import { ax } from '@styles/ax'
 
 interface CmsDetailPanelProps {
   engine: CommandEngine
@@ -32,7 +33,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
   const localeBar = (
     <div className="cms-detail-panel__locale-bar flex-row items-center shrink-0">
       <select
-        className="cms-detail-panel__locale flex-1 cursor-pointer min-w-0"
+        className={`cms-detail-panel__locale ${ax({ surface: 'input' })} flex-1 cursor-pointer min-w-0`}
         value={locale}
         onChange={e => onLocaleChange(e.target.value as Locale)}
       >
@@ -201,7 +202,7 @@ function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
       <label className="cms-detail-field__label">{entry.label}</label>
       <input
         ref={elRef}
-        className="cms-detail-field__input w-full outline-none"
+        className={`cms-detail-field__input ${ax({ surface: 'input' })} w-full outline-none`}
         type="text"
         defaultValue={displayValue}
         onFocus={handleFocus}
@@ -220,7 +221,7 @@ function LongTextField({ entry, store, locale, engine }: DetailFieldProps) {
       <label className="cms-detail-field__label">{entry.label}</label>
       <textarea
         ref={elRef}
-        className="cms-detail-field__textarea w-full outline-none"
+        className={`cms-detail-field__textarea ${ax({ surface: 'input' })} w-full outline-none`}
         defaultValue={displayValue}
         rows={4}
         onFocus={handleFocus}
@@ -256,8 +257,9 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
       <label className="cms-detail-field__label">{entry.label}</label>
       <input
         ref={elRef}
-        className={`cms-detail-field__input w-full outline-none${invalid ? ' cms-detail-field__input--invalid' : ''}`}
+        className={`cms-detail-field__input ${ax({ surface: 'input' })} w-full outline-none`}
         type="url"
+        aria-invalid={invalid || undefined}
         defaultValue={displayValue}
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -325,7 +327,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
       ) : (
         <button
           type="button"
-          className="cms-image-field__placeholder flex-col items-center justify-center w-full cursor-pointer"
+          className={`cms-image-field__placeholder ${ax({ surface: 'placeholder' })} flex-col items-center justify-center w-full`}
           onClick={() => fileRef.current?.click()}
           onKeyDown={handleKeyDown}
         >
@@ -363,7 +365,7 @@ function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) 
       <label className="cms-detail-field__label">{entry.label}</label>
       <button
         type="button"
-        className={`cms-icon-field__current flex-row items-center cursor-pointer${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
+        className={`cms-icon-field__current ${ax({ surface: 'input' })} flex-row items-center cursor-pointer${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
         onClick={() => setExpanded(v => !v)}
       >
         <CmsIcon name={currentValue} size={16} />
@@ -375,7 +377,7 @@ function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) 
             <button
               key={key}
               type="button"
-              className={`cms-icon-field__option flex-row items-center justify-center cursor-pointer${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
+              className={`cms-icon-field__option ${ax({ surface: 'ghost' })} flex-row items-center justify-center${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
               title={key}
               onClick={() => handleSelect(key)}
             >

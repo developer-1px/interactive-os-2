@@ -1,6 +1,7 @@
 // ② 2026-03-24-cms-floating-viewport-bar-prd.md
 import { Smartphone, Tablet, Monitor, Play } from 'lucide-react'
 import type { ViewportSize } from './CmsViewportWrapper'
+import { ax } from '@styles/ax'
 
 interface CmsViewportBarProps {
   viewport: ViewportSize
@@ -13,7 +14,7 @@ export default function CmsViewportBar({ viewport, onViewportChange, onPresent, 
   if (hidden) return null
 
   return (
-    <div className="cms-viewport-bar fixed flex-row items-center" aria-label="Viewport controls">
+    <div className={`cms-viewport-bar ${ax({ surface: 'overlay' })} fixed flex-row items-center`} aria-label="Viewport controls">
       {([['mobile', Smartphone], ['tablet', Tablet], ['desktop', Monitor]] as const).map(([v, Icon]) => (
         <button
           key={v}
