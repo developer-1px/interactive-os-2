@@ -59,7 +59,7 @@
   border-color: var(--tone-primary-base);
 }
 .cms-sidebar__thumb-inner {
-  zoom: var(--thumb-zoom, 0.1);
+  zoom: calc(var(--sidebar-w, 120) / 1200);
   width: 1200px;
 }
 .cms-sidebar__thumb-index {

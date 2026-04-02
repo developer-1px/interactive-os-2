@@ -3,7 +3,6 @@ import type React from 'react'
 import { getChildren } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import { createBatchCommand } from '@os/engine/types'
 import type { Command } from '@os/engine/types'
 import type { Plugin } from '@os/plugins/types'
 import type { CommandEngine } from '@os/engine/createCommandEngine'
@@ -17,9 +16,6 @@ import type { LocaleMap } from './cms-types'
 import { useAriaZone } from '@os/primitives/useAriaZone'
 import { listbox } from '@os/pattern/roles/listbox'
 import { focusCommands } from '@os/axis/navigate'
-import { crudCommands } from '@os/plugins/crud'
-import { dndCommands } from '@os/plugins/dnd'
-import { clipboardCommands } from '@os/plugins/clipboard'
 import CmsTemplatePicker from './CmsTemplatePicker'
 
 interface CmsSidebarProps {
@@ -172,20 +168,6 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   const listRef = useRef<HTMLDivElement>(null)
   const addBtnRef = useRef<HTMLButtonElement>(null)
 
-  // Sync --thumb-zoom so thumbnails scale to fill sidebar width
-  useEffect(() => {
-    const el = listRef.current
-    if (!el) return
-    const INNER_W = 1200
-    const ro = new ResizeObserver(([entry]) => {
-      const listW = entry.contentBoxSize[0].inlineSize
-      const zoom = listW / INNER_W
-      el.style.setProperty('--thumb-zoom', String(Math.min(zoom, 0.3).toFixed(4)))
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-
   const sectionIds = useMemo(() => collectSections(store, ROOT_ID), [store])
 
   const activeTabItemId = useMemo(() => {
@@ -211,12 +193,8 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [store, onActivateTabItem])
 
-  // CRUD keyMap — commands go to shared engine via zone dispatch
+  // Zone-specific keyMap — navigation is sidebar-unique (section-only), plugins handle crud/dnd/clipboard
   const sidebarKeyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => {
-    const removeSection = (ctx: PatternContext) => {
-      if (ctx.getChildren(ROOT_ID).length <= 1) return
-      return crudCommands.remove(ctx.focused)
-    }
     const navigateInSections = (ctx: PatternContext, delta: number) => {
       const idx = sectionIds.indexOf(ctx.focused)
       const next = sectionIds[idx + delta]
@@ -227,16 +205,6 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
       ArrowUp: (ctx) => navigateInSections(ctx, -1),
       Home: () => sectionIds[0] !== undefined ? focusCommands.setFocus(sectionIds[0]) : undefined,
       End: () => sectionIds[sectionIds.length - 1] !== undefined ? focusCommands.setFocus(sectionIds[sectionIds.length - 1]!) : undefined,
-      Delete: removeSection,
-      Backspace: removeSection,
-      'Mod+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-      'Mod+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
-      'Mod+D': (ctx) => {
-        return createBatchCommand([
-          clipboardCommands.copy([ctx.focused]),
-          clipboardCommands.paste(ctx.focused),
-        ])
-      },
       Enter: (ctx) => { scrollToSection(ctx.focused) },
       Escape: () => {
         ;(document.querySelector('[data-cms-root]') as HTMLElement)?.focus()
@@ -294,7 +262,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
 
   return (
     <aside className="cms-sidebar shrink-0 flex-col overflow-hidden" aria-label="Sections" style={style}>
-      <div className="cms-sidebar__list flex-1 flex-col overflow-y-auto" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" onFocus={handleContainerFocus}>
+      <div className="cms-sidebar__list flex-1 flex-col overflow-y-auto" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
             const elements: React.ReactNode[] = []
 

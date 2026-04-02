@@ -71,5 +71,9 @@ export function dnd() {
       moveIn: dndCommands.moveIn,
       moveTo: dndCommands.moveTo,
     },
+    keyMap: {
+      'Mod+ArrowUp': (ctx: { focused: string }) => dndCommands.moveUp(ctx.focused),
+      'Mod+ArrowDown': (ctx: { focused: string }) => dndCommands.moveDown(ctx.focused),
+    },
   })
 }

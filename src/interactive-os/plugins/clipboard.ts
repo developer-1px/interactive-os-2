@@ -1,3 +1,4 @@
+import type { Command } from '../engine/types'
 import type { Entity, NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import {
@@ -349,6 +350,12 @@ export function clipboard(options?: ClipboardOptions) {
       [PASTE_CELL]: clipboardCommands.pasteCellValue,
       [CLEAR_CELL]: clipboardCommands.clearCellValue,
       [CUT_CELL]: clipboardCommands.cutCellValue,
+    },
+    keyMap: {
+      'Mod+D': (ctx: { focused: string; dispatch(cmd: Command): void }) => {
+        ctx.dispatch(clipboardCommands.copy([ctx.focused]))
+        return clipboardCommands.paste(ctx.focused, boundCanAccept)
+      },
     },
     onCopy: (ctx: { focused: string; selected?: { ids: string[] } }) =>
       clipboardCommands.copy((ctx.selected?.ids.length ?? 0) > 0 ? ctx.selected!.ids : [ctx.focused]),

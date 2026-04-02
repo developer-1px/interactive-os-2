@@ -17,6 +17,8 @@ import type { Locale } from './cms-types'
 import { useEngine } from '@os/engine/useEngine'
 import { history } from '@os/plugins/history'
 import { clipboard } from '@os/plugins/clipboard'
+import { crud } from '@os/plugins/crud'
+import { dnd } from '@os/plugins/dnd'
 import { rename } from '@os/plugins/rename'
 import { spatial } from '@os/plugins/spatial'
 import { getParent } from '@os/store/createStore'
@@ -29,6 +31,8 @@ import { AriaRoute } from '@os/primitives/AriaRoute'
 
 const sharedPlugins: Plugin[] = [
   spatial(),
+  crud(),
+  dnd(),
   history(),
   clipboard(),
   zodSchema({ childRules, rootTypes: [nodeSchemas.section, nodeSchemas['tab-group']] }),
@@ -98,7 +102,7 @@ export default function CmsLayout() {
           activeSectionId={activeSectionId}
           plugins={sharedPlugins}
           onActivateTabItem={handleActivateTabItem}
-          style={{ width: sidebarResizer.size }}
+          style={{ width: sidebarResizer.size, '--sidebar-w': sidebarResizer.size } as React.CSSProperties}
         />
         <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
         <div className="flex-1 relative overflow-y-auto">

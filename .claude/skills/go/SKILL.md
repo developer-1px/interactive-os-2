@@ -47,6 +47,10 @@ description: 자율 실행 오케스트레이터. 상황 판단하여 Plan → E
 
 ## Phase: Execute
 
+### PRD 없이 시작할 때: task.md 생성
+
+PRD 없는 작업(discussion에서 바로 /go, 단순 요청 등)은 Execute 시작 전에 `docs/superpowers/tasks/{날짜}-{이름}-task.md`를 작성한다. 내용은 액션 플랜 수준 — 무엇을, 어떤 순서로, 어떤 파일을. plan보다 가볍고, 없으면 작업 추적이 안 되므로 필수.
+
 작업 규모에 따라 실행 방식을 선택한다:
 
 | 조건 | 실행 방식 |
