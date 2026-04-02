@@ -6,8 +6,8 @@ import {
 } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { TreeView } from '@os/ui/TreeView'
-import { useResizer } from '../../hooks/useResizer'
-import '../../styles/resizer.css'
+import { SplitPane } from '@os/ui/SplitPane'
+import type { PaneSize } from '@os/ui/SplitPane'
 import type { NormalizedData, Entity } from '@os/store/types'
 import { FileIcon } from '@os/ui/FileIcon'
 import { Breadcrumb } from '@os/ui/Breadcrumb'
@@ -19,9 +19,11 @@ import { Workspace } from '@os/ui/Workspace'
 import { createWorkspace } from '@os/plugins/workspaceStore'
 import type { TabData } from '@os/plugins/workspaceStore'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
-import { ax } from '@styles/ax'
 import { FilePanel } from './widgets/FilePanel'
 import { previewFileReducer, pinFileReducer, openInNewPaneReducer, duplicatePaneReducer } from './viewerWorkspace'
+
+const TREE_RATIO_KEY = 'viewer-tree-ratio'
+const DEFAULT_TREE_RATIO = 0.18
 
 export default function PageViewer() {
   const { pathname } = useLocation()
@@ -32,10 +34,16 @@ export default function PageViewer() {
   const [loading, setLoading] = useState(true)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
   const [workspaceStore, setWorkspaceStore] = useState(() => createWorkspace())
-  const treeResizer = useResizer({
-    defaultSize: 280, minSize: 180, maxSize: 480, step: 10,
-    storageKey: 'viewer-tree-width',
+
+  const [sizes, setSizes] = useState<PaneSize[]>(() => {
+    const saved = localStorage.getItem(TREE_RATIO_KEY)
+    const ratio = saved ? parseFloat(saved) : DEFAULT_TREE_RATIO
+    return [Number.isFinite(ratio) ? ratio : DEFAULT_TREE_RATIO, 'flex']
   })
+  useEffect(() => {
+    const ratio = sizes[0]
+    if (typeof ratio === 'number') localStorage.setItem(TREE_RATIO_KEY, String(ratio))
+  }, [sizes])
 
   const selectedFile = urlFilePath && initialStore?.entities[urlFilePath] ? urlFilePath : null
 
@@ -138,8 +146,9 @@ export default function PageViewer() {
   return (
     <AriaRoute keyMap={quickOpenKeyMap}>
     <div className="flex-row h-full min-h-0" onKeyDown={handleLayoutKeyDown}>
-      {/* Tree panel (sidebar) */}
-        <div className={`${styles.vwTree} flex-col shrink-0`} style={{ width: treeResizer.size }}>
+      <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
+        {/* Tree panel (sidebar) */}
+        <div className={`${styles.vwTree} flex-col h-full`}>
           <div className={`${styles.vwTreeHeader} flex-row items-center justify-between shrink-0`}>
             <span className={styles.vwTreeHeaderTitle}>Explorer</span>
           </div>
@@ -174,31 +183,31 @@ export default function PageViewer() {
             />
           </div>
         </div>
-        <div className="resizer-handle" aria-label="Resize explorer" {...treeResizer.separatorProps} />
 
-      {/* Content panel */}
-      <div className={`${styles.vwContent} ${ax({ layout: 'fill' })}`}>
-        <div className={`${styles.vwContentHeader} flex-row items-center justify-between shrink-0`}>
-          <div className={`${styles.vwContentHeaderLeft} flex-row items-center`}>
-            {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
+        {/* Content panel */}
+        <div className={`${styles.vwContent} flex-col h-full`}>
+          <div className={`${styles.vwContentHeader} flex-row items-center justify-between shrink-0`}>
+            <div className={`${styles.vwContentHeaderLeft} flex-row items-center`}>
+              {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
+            </div>
+            <div className={`${styles.vwContentHeaderRight} flex-row items-center`}>
+              <button
+                className={`${styles.vwStatusbarBtn} flex-row items-center justify-center border-none cursor-pointer`}
+                onClick={() => setQuickOpenVisible(true)}
+                title="Quick Open (Cmd+P)"
+              >
+                <Search size={12} />
+              </button>
+            </div>
           </div>
-          <div className={`${styles.vwContentHeaderRight} flex-row items-center`}>
-            <button
-              className={`${styles.vwStatusbarBtn} flex-row items-center justify-center border-none cursor-pointer`}
-              onClick={() => setQuickOpenVisible(true)}
-              title="Quick Open (Cmd+P)"
-            >
-              <Search size={12} />
-            </button>
-          </div>
+          <Workspace
+            data={workspaceStore}
+            onChange={handleWorkspaceChange}
+            renderPanel={renderPanel}
+            aria-label="File workspace"
+          />
         </div>
-        <Workspace
-          data={workspaceStore}
-          onChange={handleWorkspaceChange}
-          renderPanel={renderPanel}
-          aria-label="File workspace"
-        />
-      </div>
+      </SplitPane>
 
       {/* Quick Open overlay */}
       {quickOpenVisible && initialStore && (
