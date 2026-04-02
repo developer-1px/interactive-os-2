@@ -1,4 +1,3 @@
-import styles from './PageViewer.module.css'
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
@@ -19,6 +18,8 @@ import { Workspace } from '@os/ui/Workspace'
 import { createWorkspace } from '@os/plugins/workspaceStore'
 import type { TabData } from '@os/plugins/workspaceStore'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
+import { ax } from '@styles/ax'
+import styles from './PageViewer.module.css'
 import { FilePanel } from './widgets/FilePanel'
 import { previewFileReducer, pinFileReducer, openInNewPaneReducer, duplicatePaneReducer } from './viewerWorkspace'
 
@@ -136,7 +137,7 @@ export default function PageViewer() {
 
   if (loading || !initialStore) {
     return (
-      <div className={`${styles.vwLoading} flex-row items-center justify-center`}>
+      <div className={`${styles.vwLoading} ${ax({ layout: 'center', gap: 'sm' })}`}>
         <Circle size={12} className={styles.vwLoadingSpinner} />
         <span>Loading project...</span>
       </div>
@@ -145,15 +146,15 @@ export default function PageViewer() {
 
   return (
     <AriaRoute keyMap={quickOpenKeyMap}>
-    <div className="flex-row h-full min-h-0" onKeyDown={handleLayoutKeyDown}>
+    <div className={`${ax({ layout: 'row' })} h-full min-h-0`} onKeyDown={handleLayoutKeyDown}>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
         {/* Tree panel (sidebar) */}
-        <div className={`${styles.vwTree} flex-col h-full`}>
-          <div className={`${styles.vwTreeHeader} flex-row items-center justify-between shrink-0`}>
-            <span className={styles.vwTreeHeaderTitle}>Explorer</span>
+        <div className={styles.vwTree}>
+          <div className={`${styles.vwTreeHeader} ${ax({ layout: 'spread' })}`}>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>Explorer</span>
           </div>
           {/* @FIXME(srp): 트리 renderItem — 페이지 주입 커스터마이징 vs 별도 파일. 판단 조건: 다른 곳에서 같은 렌더러를 쓰게 되면 분리 */}
-          <div className={`${styles.vwTreeBody} flex-1 overflow-y-auto overflow-x-hidden`}>
+          <div className={`${styles.vwTreeBody} ${ax({ layout: 'scroll', flex: '1' })}`}>
             <TreeView
               data={initialStore}
               plugins={[]}
@@ -163,18 +164,18 @@ export default function PageViewer() {
               renderItem={(props, node, state) => {
                 const data = node.data as FileNodeData
                 return (
-                  <div className={`${styles.vwTreeItem} flex-row items-center whitespace-nowrap`}>
+                  <div className={ax({ layout: 'bar', gap: 'xs' })}>
                     {data.type === 'directory' ? (
-                      <span className={`${styles.vwTreeChevron} inline-flex items-center justify-center shrink-0`} {...props.toggleProps}>
+                      <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center' })}`} {...props.toggleProps}>
                         {state.expanded
                           ? <ChevronDown size={12} />
                           : <ChevronRight size={12} />}
                       </span>
                     ) : (
-                      <span className={`${styles.vwTreeChevron} inline-flex items-center justify-center shrink-0`} />
+                      <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center' })}`} />
                     )}
                     <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
-                    <span className={`${styles.vwTreeName} overflow-hidden${data.type === 'directory' ? ` ${styles.vwTreeNameDir}` : ''}`}>
+                    <span className={`${ax({ text: 'secondary', clamp: '1' })}${data.type === 'directory' ? ` ${styles.vwTreeNameDir}` : ''}`}>
                       {data.name}
                     </span>
                   </div>
@@ -185,14 +186,14 @@ export default function PageViewer() {
         </div>
 
         {/* Content panel */}
-        <div className={`${styles.vwContent} flex-col h-full`}>
-          <div className={`${styles.vwContentHeader} flex-row items-center justify-between shrink-0`}>
-            <div className={`${styles.vwContentHeaderLeft} flex-row items-center`}>
+        <div className={styles.vwContent}>
+          <div className={`${styles.vwContentHeader} ${ax({ layout: 'spread' })}`}>
+            <div className={ax({ layout: 'bar', gap: 'sm' })}>
               {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
             </div>
-            <div className={`${styles.vwContentHeaderRight} flex-row items-center`}>
+            <div className={ax({ layout: 'bar', gap: 'sm' })}>
               <button
-                className={`${styles.vwStatusbarBtn} flex-row items-center justify-center border-none cursor-pointer`}
+                className={ax({ surface: 'ghost', controlSize: 'sm' })}
                 onClick={() => setQuickOpenVisible(true)}
                 title="Quick Open (Cmd+P)"
               >

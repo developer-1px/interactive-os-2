@@ -24,19 +24,6 @@
 
 /* --- Shared header bar --- */
 
-.vw-statusbar__btn {
-  width: 24px;
-  height: 24px;
-  background: none;
-  border-radius: var(--shape-xl-radius);
-  color: var(--text-secondary);
-  transition: background 0.1s, color 0.1s;
-}
-
-.vw-statusbar__btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
 
 /* --- Rec button --- */
 
@@ -94,29 +81,14 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.vw-tree__header-title {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  letter-spacing: var(--tracking-normal);
-  color: var(--text-muted);
-}
 
 .vw-tree__body {
   padding: var(--space-xs) 0;
 }
 
-.vw-tree__item {
-  gap: var(--space-xs);
-}
-
 .vw-tree__chevron {
   width: var(--icon-xs);
   color: var(--text-muted);
-}
-
-.vw-tree__name {
-  text-overflow: ellipsis;
-  color: var(--text-secondary);
 }
 
 .vw-tree__name--dir {
@@ -135,12 +107,6 @@
   padding: 0 var(--space-lg);
   border-bottom: 1px solid var(--border-subtle);
 }
-
-.vw-content__header-left,
-.vw-content__header-right {
-  gap: var(--space-sm);
-}
-
 
 .vw-content__meta {
   gap: var(--space-xs);
