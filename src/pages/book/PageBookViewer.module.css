@@ -11,59 +11,16 @@
   --_page-padding-y: var(--space-5xl);
   --_page-col-gap: var(--space-3xl);
   --_progress-height: 2px;
+  --_chrome-duration: 600ms;
+  --_chrome-easing: cubic-bezier(0.4, 0, 0.2, 1);
 
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 1fr;
   width: 100%;
   height: 100%;
   overflow: hidden;
   background: var(--surface-base);
   color: var(--text-primary);
-}
-
-/* ── Sidebar TOC ── */
-
-.sidebarToc {
-  overflow-y: auto;
-  padding: var(--space-lg) var(--space-sm);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
-  border-right: 1px solid var(--border-subtle);
-}
-
-.sidebarGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.sidebarItem {
-  display: block;
-  width: 100%;
-  border: none;
-  background: none;
-  cursor: pointer;
-  text-align: left;
-  padding: 1px var(--space-xs);
-  font-size: 10px;
-  line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sidebarItem:hover {
-  background: var(--bg-hover);
-}
-
-.sidebarItem[aria-current="page"] {
-  background: var(--bg-active);
-}
-
-.sidebarNum {
-  opacity: 0.5;
-  margin-right: 3px;
 }
 
 /* ── Floating pill — top-left ── */
@@ -76,7 +33,7 @@
   max-width: 50%;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--motion-normal-duration) var(--motion-normal-easing);
+  transition: opacity var(--_chrome-duration) var(--_chrome-easing);
 }
 
 .pill[data-visible="true"] {
@@ -132,7 +89,7 @@
   background: var(--surface-sunken);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--motion-normal-duration) var(--motion-normal-easing);
+  transition: opacity var(--_chrome-duration) var(--_chrome-easing);
 }
 
 .progressBar[data-visible="true"] {
@@ -260,7 +217,7 @@
   padding: var(--space-lg);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--motion-normal-duration) var(--motion-normal-easing);
+  transition: opacity var(--_chrome-duration) var(--_chrome-easing);
 }
 
 .pageNav[data-visible="true"] {

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, useLayoutEffect } from 'react'
+import { useState, useCallback, useMemo, useRef, useLayoutEffect, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BookOpen, List, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
@@ -6,8 +6,22 @@ import { NavList } from '@os/ui/NavList'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { ax } from '@styles/ax'
 import type { NodeState } from '@os/pattern/types'
-import { buildBook, buildTocStore, type Chapter } from './bookContent'
+import { buildBook, buildTocStore, type BookPage, type Chapter } from './bookContent'
 import styles from './PageBookViewer.module.css'
+
+// ── Preload: cache book data so first render is instant ──
+
+let _cache: { chapters: Chapter[]; pages: BookPage[] } | null = null
+
+function getBook() {
+  if (!_cache) _cache = buildBook()
+  return _cache
+}
+
+/** Call from router loader or on link hover to warm up */
+export function loader() {
+  return getBook()
+}
 
 // ── TOC item renderer ──
 
@@ -34,30 +48,9 @@ const renderTocItem = (
 
 // ── Main component ──
 
-// ── Hierarchical numbering ──
-
-function buildNumbering(chapters: Chapter[]): Map<string, string> {
-  const map = new Map<string, string>()
-  for (let ci = 0; ci < chapters.length; ci++) {
-    const ch = chapters[ci]
-    let d0 = 0
-    let d1 = 0
-    for (const page of ch.pages) {
-      if (page.depth === 0) {
-        d0++
-        d1 = 0
-        map.set(page.id, `${ci + 1}.${d0}`)
-      } else {
-        d1++
-        map.set(page.id, `${ci + 1}.${d0}.${d1}`)
-      }
-    }
-  }
-  return map
-}
 
 export default function PageBookViewer() {
-  const { chapters, pages } = useMemo(() => buildBook(), [])
+  const { chapters, pages } = useMemo(() => getBook(), [])
   const navigate = useNavigate()
   const location = useLocation()
   const [spread, setSpread] = useState(0)
@@ -66,9 +59,44 @@ export default function PageBookViewer() {
   const [chromeVisible, setChromeVisible] = useState(false)
   const pageRef = useRef<HTMLDivElement>(null)
   const viewportRef = useRef<HTMLDivElement>(null)
+  const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  // ── Sidebar TOC numbering ──
-  const numbering = useMemo(() => buildNumbering(chapters), [chapters])
+  // ── Chrome: show on mouse near edges, hide after idle ──
+  useEffect(() => {
+    const area = viewportRef.current?.closest(`.${styles.pageArea}`) as HTMLElement | null
+    if (!area) return
+    const EDGE = 80 // px from edge to trigger
+    const HIDE_DELAY = 2500
+
+    const show = () => {
+      clearTimeout(hideTimer.current)
+      setChromeVisible(true)
+      hideTimer.current = setTimeout(() => setChromeVisible(false), HIDE_DELAY)
+    }
+
+    const handleMove = (e: MouseEvent) => {
+      const rect = area.getBoundingClientRect()
+      const nearEdge =
+        e.clientY - rect.top < EDGE ||
+        rect.bottom - e.clientY < EDGE ||
+        e.clientX - rect.left < EDGE ||
+        rect.right - e.clientX < EDGE
+      if (nearEdge) show()
+    }
+
+    const handleLeave = () => {
+      clearTimeout(hideTimer.current)
+      setChromeVisible(false)
+    }
+
+    area.addEventListener('mousemove', handleMove)
+    area.addEventListener('mouseleave', handleLeave)
+    return () => {
+      clearTimeout(hideTimer.current)
+      area.removeEventListener('mousemove', handleMove)
+      area.removeEventListener('mouseleave', handleLeave)
+    }
+  }, [])
 
   // ── Page index lookup ──
   const pageIndexById = useMemo(() => {
@@ -131,6 +159,12 @@ export default function PageBookViewer() {
         setSpread(-1) // sentinel: jump to last spread
       }
     },
+    ArrowDown: () => {
+      if (currentPage < pages.length - 1) goTo(currentPage + 1)
+    },
+    ArrowUp: () => {
+      if (currentPage > 0) goTo(currentPage - 1)
+    },
   }), [spread, totalSpreads, currentPage, pages, navigate, goTo])
 
   // When arriving from next page (spread = -1 sentinel), jump to last spread
@@ -170,29 +204,6 @@ export default function PageBookViewer() {
   return (
     <AriaRoute keyMap={keyMap}>
       <div className={styles.book}>
-        {/* ── Sidebar TOC ── */}
-        <nav className={styles.sidebarToc} aria-label="Table of contents">
-          {chapters.map((ch, ci) => (
-            <div key={ch.id} className={styles.sidebarGroup}>
-              <div className={ax({ textStyle: 'caption', text: 'secondary' })}>{ci + 1}.</div>
-              {ch.pages.map(p => (
-                <button
-                  key={p.id}
-                  className={`${styles.sidebarItem} ${ax({ textStyle: 'caption', text: p.id === page?.id ? 'bright' : 'muted' })}`}
-                  aria-current={p.id === page?.id ? 'page' : undefined}
-                  onClick={() => {
-                    const idx = pageIndexById.get(p.id)
-                    if (idx != null) goTo(idx)
-                  }}
-                >
-                  <span className={styles.sidebarNum}>{numbering.get(p.id)}</span>
-                  {p.title}
-                </button>
-              ))}
-            </div>
-          ))}
-        </nav>
-
         {/* ── Page content ── */}
         <div className={styles.pageArea}>
           {/* ── Floating pill — top-left ── */}
@@ -225,7 +236,6 @@ export default function PageBookViewer() {
               className={styles.pageViewport}
               ref={viewportRef}
               tabIndex={0}
-              onClick={() => setChromeVisible(v => !v)}
             >
               <div
                 className={styles.page}
