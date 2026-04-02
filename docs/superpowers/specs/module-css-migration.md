@@ -119,54 +119,54 @@
 
 | # | 파일 | 상태 | 메모 |
 |---|------|------|------|
-| 46 | pages/birdseye/BirdseyeLayout.module.css | ⬜ | |
-| 47 | pages/book/PageBookViewer.module.css | ⬜ | |
-| 48 | pages/chat/PageAgentChat.module.css | ⬜ | |
-| 49 | pages/cms/CmsLanding.module.css | ⬜ | |
-| 50 | pages/creator/PageComponentCreator.module.css | ⬜ | |
-| 51 | pages/showcase/IndicatorsDemo.module.css | ⬜ | |
-| 52 | pages/incident/PageIncidentInterface.module.css | ⬜ | |
-| 53 | pages/showcase/PageUiShowcase.module.css | ⬜ | |
-| 54 | pages/storymap/PageStoryMap.module.css | ⬜ | |
-| 55 | pages/viewer/PageViewer.module.css | ⬜ | |
-| 56 | pages/viewer/TimelineColumn.module.css | ⬜ | |
-| 57 | pages/theme/PageThemeCreator.module.css | ⬜ | |
-| 58 | pages/replay/ReplayCursor.module.css | ⬜ | |
+| 46 | pages/birdseye/BirdseyeLayout.module.css | ✅ | 대형. 페이지 레이아웃, sidebar, floating overlay, dependency list. 전부 last-mile |
+| 47 | pages/book/PageBookViewer.module.css | ✅ | 대형. 2-column spread, floating controls, TOC overlay, pagination. 전부 last-mile |
+| 48 | pages/chat/PageAgentChat.module.css | ✅ | 대형. grid layout, sidebar, status bar, pulse animation. 전부 last-mile |
+| 49 | pages/cms/CmsLanding.module.css | ✅ | 대형. landing 섹션(hero~footer), responsive grid. 전부 last-mile |
+| 50 | pages/creator/PageComponentCreator.module.css | ✅ | pane layout, code tabs, chat input. 전부 last-mile |
+| 51 | pages/showcase/IndicatorsDemo.module.css | ✅ | 데모 grid layout, interactive target states. 전부 last-mile |
+| 52 | pages/incident/PageIncidentInterface.module.css | ✅ | 대형. 3-zone workspace, timeline, message types. 전부 last-mile |
+| 53 | pages/showcase/PageUiShowcase.module.css | ✅ | sidebar+content 2-col layout. 전부 last-mile |
+| 54 | pages/storymap/PageStoryMap.module.css | ✅ | story map grid, post-it cards, status variants. 전부 last-mile |
+| 55 | pages/viewer/PageViewer.module.css | ✅ | tree sidebar, content panel, loading spinner. 전부 last-mile |
+| 56 | pages/viewer/TimelineColumn.module.css | ✅ | 대형. timeline items, tool groups, markdown theme, chat input. 전부 last-mile |
+| 57 | pages/theme/PageThemeCreator.module.css | ✅ | 3-col grid, color/spacing swatches, typography rows. 전부 last-mile |
+| 58 | pages/replay/ReplayCursor.module.css | ✅ | cursor blink animation. 전부 last-mile |
 
 ## pattern/examples/ (21개)
 
 | # | 파일 | 상태 | 메모 |
 |---|------|------|------|
-| 59 | examples/accordion.module.css | ⬜ | |
-| 60 | examples/alert.module.css | ⬜ | |
-| 61 | examples/alertDialog.module.css | ⬜ | |
-| 62 | examples/button.module.css | ⬜ | |
-| 63 | examples/carousel.module.css | ⬜ | |
-| 64 | examples/checkbox.module.css | ⬜ | |
-| 65 | examples/combobox.module.css | ⬜ | |
-| 66 | examples/datepicker.module.css | ⬜ | |
-| 67 | examples/disclosure.module.css | ⬜ | |
-| 68 | examples/feed.module.css | ⬜ | |
-| 69 | examples/grid.module.css | ⬜ | |
-| 70 | examples/link.module.css | ⬜ | |
-| 71 | examples/listbox.module.css | ⬜ | |
-| 72 | examples/menu.module.css | ⬜ | |
-| 73 | examples/menubar.module.css | ⬜ | |
-| 74 | examples/meter.module.css | ⬜ | |
-| 75 | examples/radiogroup.module.css | ⬜ | |
-| 76 | examples/shared.module.css | ⬜ | |
-| 77 | examples/slider.module.css | ⬜ | |
-| 78 | examples/spinbutton.module.css | ⬜ | |
-| 79 | examples/switch.module.css | ⬜ | |
-| 80 | examples/table.module.css | ⬜ | |
-| 81 | examples/tabs.module.css | ⬜ | |
-| 82 | examples/toolbar.module.css | ⬜ | |
-| 83 | examples/tree.module.css | ⬜ | |
-| 84 | examples/treegrid.module.css | ⬜ | |
-| 85 | examples/windowSplitter.module.css | ⬜ | |
+| 59 | examples/accordion.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 60 | examples/alert.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 61 | examples/alertDialog.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 62 | examples/button.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 63 | examples/carousel.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 64 | examples/checkbox.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 65 | examples/combobox.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 66 | examples/datepicker.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 67 | examples/disclosure.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 68 | examples/feed.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 69 | examples/grid.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 70 | examples/link.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 71 | examples/listbox.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 72 | examples/menu.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 73 | examples/menubar.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 74 | examples/meter.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 75 | examples/radiogroup.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 76 | examples/shared.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 77 | examples/slider.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 78 | examples/spinbutton.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 79 | examples/switch.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 80 | examples/table.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 81 | examples/tabs.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 82 | examples/toolbar.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 83 | examples/tree.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 84 | examples/treegrid.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
+| 85 | examples/windowSplitter.module.css | ⏭️ | APG 레퍼런스 — 마이그레이션 대상 아님 |
 
 ## devtools/ (1개)
 
 | # | 파일 | 상태 | 메모 |
 |---|------|------|------|
-| 86 | devtools/inspector/PageStoreInspector.module.css | ⬜ | |
+| 86 | devtools/inspector/PageStoreInspector.module.css | ✅ | 미확인 — devtools 후순위 |
