@@ -14,6 +14,7 @@ export const router = createBrowserRouter([
       { path: '/book/*', lazy: () => import('./pages/book/PageBookViewer').then(m => ({ Component: m.default })) },
       { path: '/birdseye/*', lazy: () => import('./pages/birdseye/BirdseyeLayout').then(m => ({ Component: m.default })) },
 { path: '/chat', lazy: () => import('./pages/chat/PageAgentChat').then(m => ({ Component: m.default })) },
+      { path: '/replay', lazy: () => import('./pages/replay/PageReplay').then(m => ({ Component: m.default })) },
       { path: '/storymap', lazy: () => import('./pages/storymap/PageStoryMap').then(m => ({ Component: m.default })) },
       { path: '/i18n', lazy: () => import('./pages/i18n/PageI18nEditor').then(m => ({ Component: m.default })) },
       { path: '/incident', lazy: () => import('./pages/incident/PageIncidentInterface').then(m => ({ Component: m.default })) },

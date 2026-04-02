@@ -81,3 +81,21 @@
   border-left: 2px solid var(--tone-warning-base);
   padding-left: var(--space-sm) !important;
 }
+
+:global(.code-line--selected) {
+  background: color-mix(in srgb, var(--tone-primary-base) 15%, transparent) !important;
+  border-left: 2px solid var(--tone-primary-base);
+  padding-left: var(--space-sm) !important;
+}
+
+:global(.code-line--deleted) {
+  background: color-mix(in srgb, var(--tone-danger-base) 15%, transparent) !important;
+  border-left: 2px solid var(--tone-danger-base);
+  padding-left: var(--space-sm) !important;
+}
+
+:global(.code-line--inserted) {
+  background: color-mix(in srgb, var(--tone-success-base) 15%, transparent) !important;
+  border-left: 2px solid var(--tone-success-base);
+  padding-left: var(--space-sm) !important;
+}
