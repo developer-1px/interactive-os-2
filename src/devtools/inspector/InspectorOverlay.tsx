@@ -1,6 +1,7 @@
 // ② 2026-03-26-component-inspector-drag-select-prd.md
 import React, { useCallback, useEffect, useState } from "react";
 import { getComponentStack, getDebugSource, getOSComponentType } from "./inspectorUtils";
+import { SourcePreview } from "./SourcePreview";
 
 const COLORS = {
   margin: "rgba(245, 158, 11, 0.3)",
@@ -72,7 +73,8 @@ const Box = ({
 export const InspectorOverlay: React.FC<{
   activeElement: HTMLElement | null;
   locked?: boolean;
-}> = ({ activeElement, locked }) => {
+  lockPoint?: { x: number; y: number };
+}> = ({ activeElement, locked, lockPoint }) => {
   const [targetBox, setTargetBox] = useState<BoxModel | null>(null);
   const [targetName, setTargetName] = useState<string>("");
   const [fileInfo, setFileInfo] = useState<string | null>(null);
@@ -535,6 +537,15 @@ export const InspectorOverlay: React.FC<{
           </div>
         )}
       </div>
+
+      {/* Source Preview */}
+      {locked && fileInfo && lockPoint && (
+        <SourcePreview
+          filePath={fileInfo.split(":")[0]}
+          lineNumber={parseInt(fileInfo.split(":")[1], 10)}
+          anchor={lockPoint}
+        />
+      )}
     </div>
   );
 };
