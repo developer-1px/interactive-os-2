@@ -50,10 +50,10 @@ store → engine → axis → pattern → primitives → ui → pages
 
 ### 디자인 시스템
 
-- `src/styles/tokens.css` — 토큰 SSOT
-- `DESIGN.md` — 5개 번들 조합 규칙 (surface/shape/type/tone/motion)
-- CSS 모든 수치는 토큰 필수. raw 숫자 사용 금지.
-- module.css 3블록: `base(형태+--_참조)` → `variant(--_값만)` → `size(번들override)`
+- `src/styles/ax.ts` — ax() 12축 MECE 디자인 시스템 (시각6+구조6)
+- `src/styles/axes.css` — 축별 CSS 클래스
+- `DESIGN.md` — 조합 규칙
+- **ax()만 사용**. style={} 금지. module.css는 last-mile(축에 없는 CSS)만.
 
 ## 규칙
 

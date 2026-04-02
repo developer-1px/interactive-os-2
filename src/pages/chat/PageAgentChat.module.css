@@ -1,12 +1,14 @@
 /* ═══════════════════════════════════════════
-   Agent Chat — sidebar + chat area
-   Left: session list, Center: chat feed + input
+   Agent Chat — last-mile only (ax 축 외 CSS)
    ═══════════════════════════════════════════ */
 
 /* --- Layout --- */
 
 .chat {
   grid-column: 2 / -1;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* --- Sidebar --- */
@@ -19,38 +21,23 @@
 
 .chatSidebarHeader {
   height: 36px;
-  padding: 0 var(--space-md);
+  padding-inline: var(--space-md);
   border-bottom: 1px solid var(--border-subtle);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--text-muted);
+  letter-spacing: var(--tracking-wide);
+  font-weight: var(--weight-semi);
 }
 
 .chatNewBtn {
   width: 24px;
   height: 24px;
-  background: none;
-  color: var(--text-muted);
-  border-radius: var(--radius-sm);
-}
-
-.chatNewBtn:hover {
-  background: var(--bg-hover);
-  color: var(--text-bright);
 }
 
 /* --- Session list --- */
 
-.chatSessionList {
-  padding: var(--space-xs) 0;
-}
-
 .chatSessionItem {
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-md);
-  font-size: var(--type-body-size);
+  padding-inline: var(--space-md);
+  cursor: pointer;
   color: var(--text-secondary);
 }
 
@@ -75,9 +62,6 @@
   margin-left: auto;
   width: 20px;
   height: 20px;
-  background: none;
-  color: var(--text-muted);
-  border-radius: var(--radius-sm);
   opacity: 0;
 }
 
@@ -85,36 +69,13 @@
   opacity: 1;
 }
 
-.chatCloseBtn:hover {
-  background: var(--bg-hover);
-  color: var(--text-bright);
-}
-
 /* --- File list per session --- */
 
 .chatFileList {
-  padding-left: calc(8px + var(--space-xs)); /* align with session label (circle width + gap) */
+  padding-left: calc(8px + var(--space-xs));
 }
 
-.chatFileItem {
-  gap: var(--space-xxs);
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
-  line-height: var(--leading-snug);
-}
-
-.chatFileItem > svg {
-  flex-shrink: 0;
-  opacity: 0.6;
-}
-
-.chatEmpty {
-  padding: var(--space-md);
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
-}
-
-/* --- Main chat area (single pane / welcome) --- */
+/* --- Main chat area --- */
 
 .chatMain {
   max-width: 860px;
@@ -125,7 +86,7 @@
   padding: var(--space-xl) var(--space-lg);
 }
 
-/* --- Composer (flex-pinned to bottom) --- */
+/* --- Composer --- */
 
 .chatComposer {
   padding: 0 var(--space-lg) var(--space-md);
@@ -144,13 +105,7 @@
   animation: pulse var(--motion-pulse-period) ease-in-out infinite;
 }
 
-/* --- Activity bar (above composer, running only) --- */
-
 .chatActivityBar {
-  gap: var(--space-sm);
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
@@ -159,34 +114,10 @@
   min-width: 0;
 }
 
-.chatStopBtn {
-  width: 36px;
-  height: 36px;
-  background: none;
-  border: none;
-  box-shadow: none;
-  color: var(--tone-destructive-base);
-  border-radius: var(--shape-md-radius);
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-.chatStopBtn:hover {
-  background: var(--tone-destructive-dim);
-}
-
-/* --- Info bar (below composer, always) --- */
+/* --- Status bar --- */
 
 .chatStatusBar {
-  gap: var(--space-md);
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
   font-variant-numeric: tabular-nums;
-}
-
-.chatStatusBar > :first-child {
-  color: var(--text-secondary);
-  font-weight: var(--weight-medium);
 }
 
 .chatHint {
@@ -194,21 +125,11 @@
   font-family: var(--mono);
 }
 
-/* --- Welcome screen --- */
-
-.chatWelcome {
-  gap: var(--space-md);
-  color: var(--text-muted);
-}
+/* --- Welcome --- */
 
 .chatStartBtn {
-  gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-lg);
   border: 1px solid var(--border-subtle);
   background: var(--surface-raised);
-  color: var(--text-primary);
-  border-radius: var(--radius-md);
-  font-size: var(--type-body-size);
 }
 
 .chatStartBtn:hover {

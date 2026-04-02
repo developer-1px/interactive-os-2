@@ -225,9 +225,9 @@
 
 /* ── Book markdown — no padding (viewport owns spacing) ── */
 
-.markdown {
-  composes: markdown from '@os/ui/MarkdownViewer.module.css';
+.page > div {
   padding: 0;
+  max-width: none;
 }
 
 /* ── Empty state ── */

@@ -1,9 +1,12 @@
 // ② 2026-03-31-chat-perf-prd.md
-import { memo, useMemo } from 'react'
+import { Component, createElement, memo, useMemo, type ReactNode } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
 import rehypeRaw from 'rehype-raw'
+import remarkRender from '../../pages/showcase/remarkRender'
+import { parseJsx } from '../../pages/showcase/parseJsx'
+import { mdComponents } from '../../pages/showcase/mdComponents'
 import { MermaidBlock } from '../../pages/showcase/MermaidBlock'
 import { CodeBlock } from './CodeBlock'
 import defaultStyles from './MarkdownViewer.module.css'
@@ -11,11 +14,66 @@ import defaultStyles from './MarkdownViewer.module.css'
 export type MarkdownStyles = typeof defaultStyles
 export type CodeVariant = 'bordered' | 'flush' | 'compact'
 
-const remarkPlugins = [remarkGfm, remarkBreaks]
+const remarkPlugins = [remarkGfm, remarkBreaks, remarkRender]
 const rehypePlugins = [rehypeRaw]
+
+class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
+  state = { error: null as string | null }
+  static getDerivedStateFromError(err: Error) { return { error: err.message } }
+  render() {
+    if (this.state.error) {
+      return <div style={{ color: 'var(--color-destructive)', padding: '4px 8px', fontSize: '0.85em' }}>Render error: {this.state.error}</div>
+    }
+    return this.props.children
+  }
+}
+
+function RenderBlock({ children }: { children: string }) {
+  const lines = children.trim().split('\n')
+  const elements: ReactNode[] = []
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim()
+    if (!line) continue
+    const parsed = parseJsx(line)
+    if (!parsed) {
+      elements.push(
+        <div key={i} style={{ color: 'var(--color-destructive)', padding: '4px 8px' }}>
+          Parse error: {line}
+        </div>
+      )
+      continue
+    }
+    const Component = mdComponents[parsed.name]
+    if (!Component) {
+      elements.push(
+        <div key={i} style={{ color: 'var(--color-destructive)', padding: '4px 8px' }}>
+          Unknown component: {parsed.name}
+        </div>
+      )
+      continue
+    }
+    elements.push(
+      <RenderErrorBoundary key={i}>
+        {createElement(Component, parsed.props)}
+      </RenderErrorBoundary>
+    )
+  }
+
+  return <>{elements}</>
+}
 
 export const MarkdownViewer = memo(function MarkdownViewer({ content, styles = defaultStyles, codeVariant }: { content: string; styles?: MarkdownStyles; codeVariant?: CodeVariant }) {
   const components = useMemo(() => ({
+    div(props: React.HTMLAttributes<HTMLDivElement> & { node?: unknown }) {
+      const { node: _, children, ...rest } = props
+      const dataRender = (rest as Record<string, unknown>)['data-render']
+      if (typeof dataRender === 'string') {
+        const decoded = atob(dataRender)
+        return <RenderBlock>{decoded}</RenderBlock>
+      }
+      return <div {...rest}>{children}</div>
+    },
     code({ className, children, ...props }: { className?: string; children?: React.ReactNode }) {
       const match = /language-(\w+)/.exec(className || '')
       const lang = match?.[1]

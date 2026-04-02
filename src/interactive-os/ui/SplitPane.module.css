@@ -2,18 +2,29 @@
    // ② 2026-03-26-component-styling-rules-prd.md */
 
 .separator {
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
-  --_bg: var(--border-default);
-  --_bg-hover: var(--focus);
-  background: var(--_bg);
+  background: transparent;
 }
 
 .separatorH {
-  width: var(--space-xs);
+  width: 1px;
+  border-left: 1px solid var(--border-default);
   cursor: col-resize;
+  position: relative;
+}
+.separatorH::before {
+  content: '';
+  position: absolute;
+  inset: 0 -4px;
 }
 
 .separatorV {
-  height: var(--space-xs);
+  height: 1px;
+  border-top: 1px solid var(--border-default);
   cursor: row-resize;
+  position: relative;
+}
+.separatorV::before {
+  content: '';
+  position: absolute;
+  inset: -4px 0;
 }

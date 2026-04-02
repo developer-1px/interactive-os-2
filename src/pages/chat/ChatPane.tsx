@@ -8,6 +8,7 @@ import { ToolSummaryBlock, ToolResultBlock } from '@os/ui/chat/ToolSummaryBlock'
 import { StreamingTextBlock } from '@os/ui/chat/StreamingTextBlock'
 import { sendMessage, clearSession, interruptSession, useChatSession } from './chatStore'
 import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
+import { ax } from '@styles/ax'
 import styles from './PageAgentChat.module.css'
 
 const chatRenderers: BlockRendererMap = {
@@ -159,23 +160,23 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
     : 0
 
   return (
-    <div className={`flex-col flex-1 min-w-0 min-h-0 overflow-hidden ${styles.chatMain}`}>
+    <div className={ax({ layout: 'fill' }) + ' ' + styles.chatMain}>
       <ChatFeed
         messages={messages}
         blockRenderers={chatRenderers}
         isStreaming={false}
-        className={`flex-1 min-h-0 ${styles.chatFeed}`}
+        className={ax({ flex: '1' }) + ' ' + styles.chatFeed}
       />
-      <div className={`shrink-0 ${styles.chatComposer}`}>
+      <div className={ax({ flex: 'none' }) + ' ' + styles.chatComposer}>
         {isRunning && (
-          <div className={`flex-row items-center ${styles.chatActivityBar}`}>
+          <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' ' + styles.chatActivityBar}>
             <span className={styles.chatDot} />
             <span>{label}</span>
             <span>{elapsed}s</span>
             {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}
           </div>
         )}
-        <div className={`flex-row items-end ${styles.chatInputRow}`}>
+        <div className={ax({ layout: 'bar', gap: 'sm' }) + ' ' + styles.chatInputRow}>
           <Composer
             ref={composerRef}
             onSubmit={handleSubmit}
@@ -189,15 +190,15 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
             onTextChange={handleTextChange}
           />
           {isRunning && (
-            <button className={`flex-row items-center justify-center shrink-0 cursor-pointer ${styles.chatStopBtn}`} onClick={handleInterrupt} aria-label="Stop">
+            <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'md', tone: 'danger' })} onClick={handleInterrupt} aria-label="Stop">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
                 <rect width="10" height="10" rx="2" />
               </svg>
             </button>
           )}
         </div>
-        <div className={`${styles.chatStatusBar} flex-row items-center`}>
-          <span>{session.model || 'connecting...'}</span>
+        <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' ' + styles.chatStatusBar}>
+          <span className={ax({ text: 'secondary' })}>{session.model || 'connecting...'}</span>
           {usage && (
             <>
               <span>{formatTokens(usage.input)} in · {formatTokens(usage.output)} out</span>

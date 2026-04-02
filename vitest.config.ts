@@ -1,6 +1,13 @@
 import { defineConfig } from 'vitest/config'
+import path from 'path'
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@os': path.resolve(__dirname, 'src/interactive-os'),
+      '@styles': path.resolve(__dirname, 'src/styles'),
+    },
+  },
   test: {
     globals: true,
     environment: 'happy-dom',

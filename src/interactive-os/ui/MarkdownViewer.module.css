@@ -5,13 +5,14 @@
    ═══════════════════════════════════════════ */
 
 .markdown {
+  max-width: 48rem;
   margin: 0 auto;
   padding: var(--space-2xl) var(--space-3xl);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  font-family: var(--type-body-family);
-  line-height: var(--leading-relaxed); /* prose override: 본문보다 넓은 행간 */
-  letter-spacing: var(--type-body-letter-spacing);
+  font-size: var(--type-prose-size);
+  font-weight: var(--type-prose-weight);
+  font-family: var(--type-prose-family);
+  line-height: var(--type-prose-line-height);
+  letter-spacing: var(--type-prose-letter-spacing);
   color: var(--text-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -19,20 +20,6 @@
 
 .markdown > *:first-child {
   margin-top: 0;
-}
-
-/* ── Prose elements: constrained width ── */
-
-.markdown h1,
-.markdown h2,
-.markdown h3,
-.markdown h4,
-.markdown p,
-.markdown ul,
-.markdown ol,
-.markdown blockquote,
-.markdown hr {
-  max-width: 720px;
 }
 
 .markdown h1 {
@@ -85,14 +72,11 @@
 
 .markdown code {
   font-family: var(--mono);
-  font-size: var(--type-body-size);
   background: var(--surface-base);
   padding: 0.15em 0.35em;
   border-radius: var(--shape-xs-radius);
   border: 1px solid var(--border-subtle);
 }
-
-/* ── Wide elements: use full available width ── */
 
 .markdown pre {
   background: var(--surface-base);
@@ -109,14 +93,12 @@
   background: none;
   border: none;
   padding: 0;
-  margin: 1.5em 0;
 }
 
 .markdown pre code {
   background: none;
   border: none;
   padding: 0;
-  font-size: var(--type-body-size);
   line-height: var(--leading-code);
 }
 
@@ -158,11 +140,12 @@
 }
 
 .markdown table {
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
   border-collapse: collapse;
-  font-size: var(--type-body-size);
   margin: 1.2em 0;
+  overflow-wrap: break-word;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
 }
 
 .markdown th,

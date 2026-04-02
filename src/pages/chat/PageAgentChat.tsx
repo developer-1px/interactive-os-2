@@ -29,6 +29,7 @@ import {
 } from '@os/store/createStore'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
 import type { PaneSize } from '@os/store/types'
+import { ax } from '@styles/ax'
 import styles from './PageAgentChat.module.css'
 
 // --- File extraction ---
@@ -56,9 +57,9 @@ function SessionFileList({ session }: { session: ChatSession }) {
   return (
     <div className={styles.chatFileList}>
       {files.map(f => (
-        <div key={f} className={`${styles.chatFileItem} flex-row items-center`}>
+        <div key={f} className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
           <FileText size={10} />
-          <span className="truncate">{f.split('/').pop()}</span>
+          <span className={ax({ clamp: '1' })}>{f.split('/').pop()}</span>
         </div>
       ))}
     </div>
@@ -185,26 +186,26 @@ export default function PageAgentChat() {
   }, [])
 
   return (
-    <div className={`${styles.chat} flex-row h-full min-h-0 overflow-hidden`} onKeyDown={handleLayoutKeyDown}>
-      <div className={`${styles.chatSidebar} flex-col shrink-0`}>
-        <div className={`${styles.chatSidebarHeader} flex-row items-center justify-between shrink-0`}>
+    <div className={`${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
+      <div className={ax({ layout: 'stack', flex: 'none' }) + ' ' + styles.chatSidebar}>
+        <div className={ax({ layout: 'spread', flex: 'none', textStyle: 'caption', text: 'muted' }) + ' ' + styles.chatSidebarHeader}>
           <span>Sessions</span>
-          <button className={`${styles.chatNewBtn} flex-row items-center justify-center border-none cursor-pointer`} onClick={createSession} aria-label="New session">
+          <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm' }) + ' ' + styles.chatNewBtn} onClick={createSession} aria-label="New session">
             <Plus size={14} />
           </button>
         </div>
-        <div className={`${styles.chatSessionList} flex-1 overflow-y-auto`}>
+        <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs' })}>
           {sessions.map(s => (
             <div
               key={s.id}
-              className={`${styles.chatSessionItem} flex-col cursor-pointer ${s.id === activeSessionId ? styles.chatSessionActive : ''}`}
+              className={`${ax({ layout: 'stack', gap: 'xs', padding: 'xs' })} ${styles.chatSessionItem} ${s.id === activeSessionId ? styles.chatSessionActive : ''}`}
               onClick={() => handleSidebarClick(s.id)}
             >
-              <div className="flex-row items-center">
+              <div className={ax({ layout: 'bar', gap: 'sm' })}>
                 <Circle size={8} fill="currentColor" className={s.state === 'running' ? styles.chatRunning : styles.chatIdle} />
-                <span className="truncate">{s.id.slice(0, 8)}</span>
+                <span className={ax({ clamp: '1' })}>{s.id.slice(0, 8)}</span>
                 <button
-                  className={`${styles.chatCloseBtn} flex-row items-center justify-center border-none cursor-pointer`}
+                  className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + styles.chatCloseBtn}
                   onClick={(e) => { e.stopPropagation(); closeSession(s.id) }}
                   aria-label={`Close session ${s.id.slice(0, 8)}`}
                 >
@@ -215,7 +216,7 @@ export default function PageAgentChat() {
             </div>
           ))}
           {sessions.length === 0 && (
-            <div className={`${styles.chatEmpty} text-center`}>No sessions</div>
+            <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No sessions</div>
           )}
         </div>
       </div>
@@ -228,10 +229,10 @@ export default function PageAgentChat() {
           aria-label="Chat workspace"
         />
       ) : (
-        <div className={`${styles.chatMain} flex-col flex-1 h-full min-h-0 w-full`}>
-          <div className={`${styles.chatWelcome} flex-col items-center justify-center flex-1`}>
+        <div className={ax({ layout: 'fill', width: 'full' }) + ' ' + styles.chatMain}>
+          <div className={ax({ layout: 'center', flex: '1', gap: 'md', text: 'muted' })}>
             <p>Start a new Claude Code session</p>
-            <button className={`${styles.chatStartBtn} flex-row items-center cursor-pointer`} onClick={createSession}>
+            <button className={ax({ surface: 'ghost', controlSize: 'md', layout: 'bar', gap: 'xs', text: 'primary' }) + ' ' + styles.chatStartBtn} onClick={createSession}>
               <Plus size={16} /> New Session
             </button>
           </div>

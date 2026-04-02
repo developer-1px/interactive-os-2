@@ -4,14 +4,23 @@ import { CodeBlock } from '@os/ui/CodeBlock'
 import type { RegistryEntry } from '../componentRegistry'
 import styles from '../PageComponentCreator.module.css'
 
-// Glob raw source for TSX and CSS
-const tsxSources = import.meta.glob<string>(
-  '../../interactive-os/ui/*.tsx',
-  { query: '?raw', import: 'default', eager: true },
+// Glob raw source for TSX and CSS — keyed by filename for cross-directory matching
+const tsxSources = Object.fromEntries(
+  Object.entries(
+    import.meta.glob<string>(
+      '../../../interactive-os/ui/*.tsx',
+      { query: '?raw', import: 'default', eager: true },
+    ),
+  ).map(([path, src]) => [path.split('/').pop()!, src]),
 )
-const cssSources = import.meta.glob<string>(
-  '../../interactive-os/ui/*.module.css',
-  { query: '?raw', import: 'default', eager: true },
+
+const cssSources = Object.fromEntries(
+  Object.entries(
+    import.meta.glob<string>(
+      '../../../interactive-os/ui/*.module.css',
+      { query: '?raw', import: 'default', eager: true },
+    ),
+  ).map(([path, src]) => [path.split('/').pop()!, src]),
 )
 
 interface SourceViewerProps {
@@ -21,7 +30,7 @@ interface SourceViewerProps {
 
 export function SourceViewer({ entry, activeTab }: SourceViewerProps) {
   if (activeTab === 'tsx') {
-    const source = tsxSources[entry.tsxPath] ?? ''
+    const source = tsxSources[`${entry.name}.tsx`] ?? ''
     return source
       ? <CodeBlock code={source} filename={`${entry.name}.tsx`} variant="flush" />
       : <div className={styles.canvasEmpty}>TSX source not found</div>
@@ -31,7 +40,7 @@ export function SourceViewer({ entry, activeTab }: SourceViewerProps) {
     return <div className={`flex-row items-center justify-center ${styles.canvasEmpty}`}>No CSS module</div>
   }
 
-  const source = cssSources[entry.cssPath] ?? ''
+  const source = cssSources[`${entry.name}.module.css`] ?? ''
   return source
     ? <CodeBlock code={source} filename={`${entry.name}.module.css`} variant="flush" />
     : <div className={styles.canvasEmpty}>CSS source not found</div>
