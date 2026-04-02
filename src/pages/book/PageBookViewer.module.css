@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
-   Book Viewer — ebook-style reading experience
-   Two modes: Kindle (sidebar TOC) + Apple Books (overlay TOC)
+   Book Viewer — content-first reading experience
+   Floating chrome: pill (top-left) + badge (bottom-right)
    ═══════════════════════════════════════════ */
 
 /* ── base ── */
@@ -8,13 +8,11 @@
 .book {
   --_page-col-width: 400px;
   --_page-padding-x: var(--space-5xl);
-  --_page-padding-y: var(--space-3xl);
-  --_toc-width: 280px;
-  --_header-height: 48px;
-  --_progress-height: 3px;
+  --_page-padding-y: var(--space-5xl);
+  --_page-col-gap: var(--space-3xl);
+  --_progress-height: 2px;
 
-  display: flex;
-  flex-direction: column;
+  position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -22,67 +20,77 @@
   color: var(--text-primary);
 }
 
-/* ── Header bar ── */
+/* ── Floating pill — top-left ── */
 
-.header {
-  display: flex;
-  align-items: center;
-  height: var(--_header-height);
-  padding: 0 var(--space-lg);
-  background: var(--surface-sunken);
-  border-bottom: 1px solid var(--border-subtle);
-  gap: var(--space-md);
-  flex-shrink: 0;
+.pill {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  z-index: 20;
+  max-width: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-.headerTitle {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
-  font-family: var(--type-body-family);
-  color: var(--text-bright);
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.pill[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.headerChapter {
-  font-size: var(--type-caption-size);
-  font-weight: var(--type-caption-weight);
-  font-family: var(--type-caption-family);
-  color: var(--text-muted);
-}
-
-.headerBtn {
+.pillBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border: none;
-  border-radius: var(--shape-xs-radius);
+  border-radius: var(--shape-pill-radius);
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
   flex-shrink: 0;
 }
 
-.headerBtn:hover {
+.pillBtn:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
 }
 
-.headerBtn:focus-visible {
+.pillBtn:focus-visible {
   outline: var(--focus-ring) solid var(--focus);
   outline-offset: var(--focus-ring);
 }
 
-/* ── Progress bar ── */
+/* ── Page number — always visible, bottom-center ── */
+
+.pageNumber {
+  position: absolute;
+  bottom: var(--space-sm);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  font-size: var(--type-caption-size);
+  opacity: 0.5;
+}
+
+/* ── Progress bar — bottom edge ── */
 
 .progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
   height: var(--_progress-height);
   background: var(--surface-sunken);
-  flex-shrink: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-normal-duration) var(--motion-normal-easing);
+}
+
+.progressBar[data-visible="true"] {
+  opacity: 1;
 }
 
 .progressFill {
@@ -91,37 +99,12 @@
   transition: width var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-/* ── Body layout ── */
-
-.body {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-}
-
-/* ── Kindle-style sidebar TOC ── */
-
-.tocSidebar {
-  width: var(--_toc-width);
-  border-right: 1px solid var(--border-subtle);
-  background: var(--surface-sunken);
-  overflow: hidden auto;
-  flex-shrink: 0;
-  transition: width var(--motion-normal-duration) var(--motion-normal-easing);
-}
-
-.tocSidebar[data-collapsed="true"] {
-  width: 0;
-  border-right: none;
-}
-
-/* ── Apple Books overlay TOC ── */
+/* ── Overlay TOC ── */
 
 .tocOverlay {
   position: absolute;
   inset: 0;
-  z-index: 10;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,98 +137,25 @@
 }
 
 .tocOverlayHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-lg) var(--space-xl);
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.tocOverlayTitle {
-  font-size: var(--type-page-size);
-  font-weight: var(--type-page-weight);
-  font-family: var(--type-page-family);
-  letter-spacing: var(--type-page-letter-spacing);
-  color: var(--text-bright);
-}
+/* ── TOC item indent ── */
 
-.tocOverlayBody {
-  overflow-y: auto;
-  padding: var(--space-md) 0;
-}
-
-/* ── Shared TOC items ── */
-
-.tocSection {
-  padding: var(--space-sm) var(--space-xl);
-}
-
-.tocSectionLabel {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  font-family: var(--type-caption-family);
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-  padding: var(--space-sm) 0;
-}
-
-.tocItem {
-  display: flex;
-  align-items: center;
-  padding: var(--space-sm) var(--space-xl);
-  gap: var(--space-sm);
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  width: 100%;
-  text-align: left;
-  color: var(--text-secondary);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  font-family: var(--type-body-family);
-  border-radius: 0;
-  transition:
-    background var(--motion-instant-duration) var(--motion-instant-easing),
-    color var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-.tocItem:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.tocItem[aria-current="page"] {
-  color: var(--tone-primary-base);
-  font-weight: var(--weight-medium);
-  background: var(--tone-primary-dim);
-}
-
-.tocItem:focus-visible {
-  outline: var(--focus-ring) solid var(--focus);
-  outline-offset: calc(-1 * var(--focus-ring));
-}
-
-.tocItemChild {
-  padding-left: calc(var(--space-xl) + var(--space-lg));
-  font-size: var(--type-caption-size);
-}
-
-.tocItemNumber {
-  font-size: var(--type-caption-size);
-  font-family: var(--mono);
-  color: var(--text-muted);
-  min-width: 28px;
+.tocOverlayPanel [data-indent] {
+  padding-left: var(--space-xl);
 }
 
 /* ── Page area ── */
 
 .pageArea {
-  flex: 1;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   min-width: 0;
+  position: relative;
 }
 
 /* Aria wrapper becomes a flex child — must stretch */
@@ -256,20 +166,26 @@
   flex-direction: column;
 }
 
-.pageViewport {
+.pageInset {
   flex: 1;
   overflow: hidden;
+  padding: var(--_page-padding-y) var(--_page-padding-x);
+}
+
+.pageViewport {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: none;
 }
 
 .page {
   height: 100%;
-  padding: var(--_page-padding-y) var(--_page-padding-x);
   column-count: 2;
   column-width: var(--_page-col-width);
-  column-gap: var(--space-3xl);
-  column-rule: 1px solid var(--border-subtle);
-  column-fill: auto;
-  overflow-x: hidden;
+  column-gap: var(--_page-col-gap);
+  column-fill: balance;
+  transform: translateX(calc(-1 * var(--_spread, 0) * (100% + var(--_page-col-gap))));
 }
 
 /* Prevent content from breaking across spreads */
@@ -280,112 +196,38 @@
 .page :global(ul),
 .page :global(ol) {
   break-inside: avoid;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
-/* ── Page footer nav ── */
+.page :global(th) {
+  background: var(--surface-sunken);
+}
+
+/* ── Page floating nav ── */
 
 .pageNav {
+  position: absolute;
+  inset: auto 0 0 0;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: var(--space-sm) var(--_page-padding-x);
-  border-top: 1px solid var(--border-subtle);
-  flex-shrink: 0;
-}
-
-.pageNavBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--shape-sm-py) var(--shape-sm-px);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-sm-radius);
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: var(--type-body-size);
-  font-family: var(--type-body-family);
-  cursor: pointer;
-  transition:
-    background var(--motion-instant-duration) var(--motion-instant-easing),
-    color var(--motion-instant-duration) var(--motion-instant-easing),
-    border-color var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-.pageNavBtn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-  border-color: var(--border-default);
-}
-
-.pageNavBtn:focus-visible {
-  outline: var(--focus-ring) solid var(--focus);
-  outline-offset: var(--focus-ring);
-}
-
-.pageNavBtn:disabled {
-  opacity: 0.3;
-  cursor: default;
+  padding: var(--space-lg);
+  opacity: 0;
   pointer-events: none;
+  transition: opacity var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-.pageNavLabel {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.pageNav[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.pageNavDirection {
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
-}
 
-.pageNavTitle {
-  font-weight: var(--weight-medium);
-  color: var(--text-primary);
-}
+/* ── Book markdown — no padding (viewport owns spacing) ── */
 
-/* ── Page counter ── */
-
-.pageCounter {
-  font-size: var(--type-caption-size);
-  font-family: var(--mono);
-  color: var(--text-muted);
-  letter-spacing: var(--tracking-normal);
-}
-
-/* ── Mode switcher ── */
-
-.modeSwitcher {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: 2px;
-  background: var(--surface-base);
-  border-radius: var(--shape-xs-radius);
-  border: 1px solid var(--border-subtle);
-}
-
-.modeBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 24px;
-  border: none;
-  border-radius: calc(var(--shape-xs-radius) - 2px);
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: var(--type-caption-size);
-}
-
-.modeBtn:hover {
-  color: var(--text-primary);
-}
-
-.modeBtn[aria-pressed="true"] {
-  background: var(--surface-raised);
-  color: var(--text-bright);
+.markdown {
+  composes: markdown from '@os/ui/MarkdownViewer.module.css';
+  padding: 0;
 }
 
 /* ── Empty state ── */
