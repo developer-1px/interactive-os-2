@@ -40,5 +40,9 @@ export function crud(options?: CrudOptions) {
       delete: crudCommands.remove,
       deleteMultiple: crudCommands.removeMultiple,
     },
+    keyMap: {
+      'Delete': (ctx: { focused: string }) => crudCommands.remove(ctx.focused),
+      'Backspace': (ctx: { focused: string }) => crudCommands.remove(ctx.focused),
+    },
   })
 }
