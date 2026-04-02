@@ -1,28 +1,14 @@
 /* ── Combobox — last-mile only ──
-   ax() handles: surface, controlSize, layout, gap, text, width
-   module.css handles: dropdown positioning, focus/selection highlights, placeholder */
+   ax() handles: surface, controlSize, layout, gap, text, width, shape, state
+   module.css handles: dropdown positioning, placeholder */
 
 /* ═══ Input — last-mile ═══ */
-.comboInput {
-  border-radius: var(--shape-xl-radius);
-}
-
 .comboInput::placeholder {
   color: var(--text-muted);
 }
 
 /* ═══ Dropdown — positioning ═══ */
 .comboDropdown {
-  border-radius: var(--shape-xl-radius);
   margin-top: var(--space-xs);
   overflow: hidden;
-}
-
-/* ═══ Item states — highlight only ═══ */
-.comboItemFocused {
-  background: var(--tone-primary-dim);
-}
-
-.comboItemSelected {
-  background: var(--selection);
 }

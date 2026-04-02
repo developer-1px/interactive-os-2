@@ -24,12 +24,13 @@
 .sf-action:disabled { opacity: 0.4; pointer-events: none; cursor: default; }
 
 .sf-input {
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border-subtle);
   background: var(--surface-default);
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 .sf-input:focus-within { border-color: var(--focus); }
 .sf-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sf-input[aria-invalid="true"] { border-color: var(--tone-destructive-base); }
 .sf-input[aria-disabled="true"],
 .sf-input:disabled { opacity: 0.4; pointer-events: none; }
 
@@ -41,8 +42,21 @@
 .sf-overlay {
   background: var(--surface-overlay);
   box-shadow: var(--shadow-lg);
-  border: none;
+  border: 1px solid var(--border-subtle);
 }
+
+.sf-placeholder {
+  cursor: pointer;
+  user-select: none;
+  border: 1px dashed var(--border-subtle);
+  background: transparent;
+  color: var(--text-muted);
+  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing),
+              color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+.sf-placeholder:hover { border-color: var(--tone-primary-base); color: var(--tone-primary-base); }
+.sf-placeholder:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sf-placeholder[aria-disabled="true"] { opacity: 0.4; pointer-events: none; cursor: default; }
 
 .sf-ghost {
   cursor: pointer;
@@ -198,6 +212,29 @@
 .tx-primary   { color: var(--text-primary); }
 .tx-secondary { color: var(--text-secondary); }
 .tx-muted     { color: var(--text-muted); }
+.tx-accent    { color: var(--tone-primary-base); }
+.tx-danger    { color: var(--tone-destructive-base); }
+.tx-success   { color: var(--tone-success-base); }
+.tx-warning   { color: var(--tone-warning-base); }
+
+/* ════════════════════════════════════════════
+ * Weight — textStyle weight와 독립적인 오버라이드
+ * textStyle이 font-weight를 번들하지만, 개별 요소에서
+ * weight만 바꿔야 할 때 사용 (버튼, 배지, 라벨 강조 등)
+ * ════════════════════════════════════════════ */
+
+.wt-medium { font-weight: var(--weight-medium); }
+.wt-semi   { font-weight: var(--weight-semi); }
+.wt-bold   { font-weight: 700; }
+
+/* ════════════════════════════════════════════
+ * State — surface 조립식 확장
+ * focused/selected 상태의 시각 피드백
+ * surface의 hover/active와 공존
+ * ════════════════════════════════════════════ */
+
+.st-focused  { background: var(--tone-primary-dim); outline: var(--focus-ring) solid var(--focus); outline-offset: calc(-1 * var(--focus-ring)); }
+.st-selected { background: var(--selection); }
 
 /* ════════════════════════════════════════════
  * Shape — 비-컨트롤 요소의 border-radius

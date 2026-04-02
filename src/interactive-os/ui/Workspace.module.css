@@ -1,18 +1,11 @@
 /* ② 2026-03-26-component-styling-rules-prd.md */
+/* ax() handles: layout(fill/center), flex, text */
+/* last-mile: height:100% (flex parent에서 초기 높이 확보) */
 
 .root {
   height: 100%;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.inner {
-  min-height: 0;
-  overflow: hidden;
 }
 
 .empty {
   height: 100%;
-  color: var(--text-muted);
 }

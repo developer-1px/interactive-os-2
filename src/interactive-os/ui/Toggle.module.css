@@ -1,10 +1,9 @@
 /* ── Toggle — last-mile only ── */
 /* ax() handles: layout, surface, controlSize, textStyle, text */
+/* ax() 이관: font-size → textStyle:caption, color → text:muted */
 
 .status {
-  font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
-  color: var(--text-muted);
 }
 
 .status[data-checked='true'] {

@@ -9,7 +9,6 @@ import { toolbar } from '../pattern/roles/toolbar'
 import { getNodeLabel } from './types'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './Toolbar.module.css'
 
 const toolbarPattern = toolbar()
 
@@ -28,12 +27,10 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const iconKey = (item.data as Record<string, unknown>)?.icon as string | undefined
   const Icon = iconKey ? iconMap[iconKey] : undefined
-  const focusCls = state.focused ? styles.focused : ''
-  const selectedCls = state.selected ? styles.selected : ''
   return (
     <span
       {...props}
-      className={`${ax({ surface: 'ghost', controlSize: 'sm' })} ${focusCls} ${selectedCls}`}
+      className={ax({ surface: 'ghost', controlSize: 'sm', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined })}
       aria-label={Icon ? label : undefined}
     >
       {Icon ? <Icon size={18} /> : label}

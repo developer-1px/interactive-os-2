@@ -1,6 +1,5 @@
-import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type React from 'react'
-import { getChildren } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
 import type { Command } from '@os/engine/types'
@@ -10,13 +9,14 @@ import type { PatternContext } from '@os/pattern/types'
 import type { Locale } from './cms-types'
 import type { TemplateType } from './cms-templates'
 import { templateToCommand } from './cms-templates'
-import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
 import { collectSections, getRootAncestor, getTabItemAncestor } from './collectSections'
 import type { LocaleMap } from './cms-types'
 import { useAriaZone } from '@os/primitives/useAriaZone'
 import { listbox } from '@os/pattern/roles/listbox'
 import { focusCommands } from '@os/axis/navigate'
 import CmsTemplatePicker from './CmsTemplatePicker'
+import SectionThumbnail from './SectionThumbnail'
+import { ax } from '@styles/ax'
 
 interface CmsSidebarProps {
   engine: CommandEngine
@@ -26,85 +26,6 @@ interface CmsSidebarProps {
   plugins?: Plugin[]
   onActivateTabItem?: (tabItemId: string) => void
   style?: React.CSSProperties
-}
-
-// ── Thumbnail renderer (read-only mini preview) ──
-
-function SectionThumbnail({ data, sectionId, locale }: {
-  data: NormalizedData
-  sectionId: string
-  locale: Locale
-}) {
-  const entity = data.entities[sectionId]
-  if (!entity) return null
-  const d = (entity.data ?? {}) as Record<string, string>
-  const children = getChildren(data, sectionId)
-  const className = getSectionClassName(d.variant)
-  const tag = getNodeTag(d)
-  const childrenContainerClass = getChildrenContainerClassName(d)
-
-  const headerIds: string[] = []
-  const contentIds: string[] = []
-  for (const childId of children) {
-    const childData = (data.entities[childId]?.data ?? {}) as Record<string, string>
-    if (HEADER_TYPES.has(childData.type)) {
-      headerIds.push(childId)
-    } else {
-      contentIds.push(childId)
-    }
-  }
-
-  const headerContent = headerIds.map(childId => (
-    <ThumbNode key={childId} data={data} nodeId={childId} locale={locale} />
-  ))
-  const contentContent = contentIds.map(childId => (
-    <ThumbNode key={childId} data={data} nodeId={childId} locale={locale} />
-  ))
-
-  const inner = (
-    <>
-      {headerContent}
-      {childrenContainerClass && contentIds.length > 0
-        ? <div className={childrenContainerClass}>{contentContent}</div>
-        : contentContent}
-    </>
-  )
-
-  return createElement(tag, { className, 'aria-hidden': true }, inner)
-}
-
-function ThumbNode({ data, nodeId, locale }: {
-  data: NormalizedData
-  nodeId: string
-  locale: Locale
-}) {
-  const entity = data.entities[nodeId]
-  if (!entity) return null
-  const d = (entity.data ?? {}) as Record<string, string>
-  const children = getChildren(data, nodeId)
-  const className = getNodeClassName(d)
-  const tag = getNodeTag(d)
-
-  if (d.type === 'card') {
-    return (
-      <div className={className}>
-        {children.map(childId => (
-          <ThumbNode key={childId} data={data} nodeId={childId} locale={locale} />
-        ))}
-      </div>
-    )
-  }
-
-  return createElement(
-    tag,
-    { className: className || undefined },
-    <>
-      <NodeContent data={d} locale={locale} />
-      {children.length > 0 && children.map(childId => (
-        <ThumbNode key={childId} data={data} nodeId={childId} locale={locale} />
-      ))}
-    </>,
-  )
 }
 
 // ── Section grouping (precomputed outside render to avoid mutable let in JSX) ──
@@ -307,7 +228,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
         <button
           ref={addBtnRef}
           type="button"
-          className="cms-sidebar__add-btn flex-row items-center justify-center cursor-pointer"
+          className={`cms-sidebar__add-btn ${ax({ surface: 'placeholder' })} flex-row items-center justify-center`}
           aria-label="Add section"
           onClick={() => setPickerOpen(o => !o)}
         >

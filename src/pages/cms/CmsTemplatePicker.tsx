@@ -7,6 +7,7 @@ import type { PatternContext } from '@os/pattern/types'
 import { listbox } from '@os/pattern/roles/listbox'
 import { useAria } from '@os/primitives/useAria'
 import { focusCommands } from '@os/axis/navigate'
+import { ax } from '@styles/ax'
 
 const pickerData: NormalizedData = {
   entities: Object.fromEntries(
@@ -53,7 +54,7 @@ function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps,
 
   return (
     <div
-      className="cms-template-picker absolute"
+      className={`cms-template-picker ${ax({ surface: 'overlay' })} absolute`}
       ref={listRef}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) onClose()

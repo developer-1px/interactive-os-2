@@ -9,9 +9,7 @@
   gap: var(--space-inline-code);
   padding: var(--space-xs);
   background: var(--surface-raised);
-  border: 1px solid var(--border-default);
   border-radius: var(--shape-xl-radius);
-  box-shadow: var(--shadow-md);
   z-index: 200;
 }
 
@@ -40,7 +38,7 @@
 .cms-sidebar__locale {
   font-family: var(--mono); font-size: var(--type-caption-size); font-weight: var(--weight-semi);
   color: var(--text-secondary); background: var(--surface-base);
-  border: 1px solid var(--border-subtle); border-radius: var(--shape-md-radius);
+  border-radius: var(--shape-md-radius);
   padding: var(--space-inline-code) var(--space-xs);
 }
 .cms-sidebar__list {
@@ -71,20 +69,16 @@
 /* Add section button + picker area */
 .cms-sidebar__add-btn {
   margin: var(--space-xs) var(--space-sm); padding: var(--space-xs);
-  border: 1px dashed var(--border-default);
-  border-radius: var(--shape-md-radius); background: none;
-  color: var(--text-muted);
+  border-radius: var(--shape-md-radius);
   font-size: var(--type-body-size); font-weight: var(--weight-semi);
   width: calc(100% - var(--space-lg));
-  transition: border-color var(--motion-instant-duration), color var(--motion-instant-duration);
 }
-.cms-sidebar__add-btn:hover { border-color: var(--tone-primary-base); color: var(--tone-primary-base); }
 
 /* Template picker (drop-up) */
 .cms-template-picker {
   bottom: calc(100% + var(--space-xs)); left: var(--space-xs); right: var(--space-xs);
-  background: var(--surface-raised); border: 1px solid var(--border-default);
-  border-radius: var(--shape-xl-radius); box-shadow: var(--shadow-lg);
+  background: var(--surface-raised);
+  border-radius: var(--shape-xl-radius);
   z-index: 50; padding: var(--space-xs);
 }
 .cms-template-picker:focus { outline: none; }
@@ -146,9 +140,7 @@
   gap: var(--space-inline-code);
   padding: var(--space-xs);
   background: var(--surface-raised);
-  border: 1px solid var(--border-default);
   border-radius: var(--shape-xl-radius);
-  box-shadow: var(--shadow-lg);
   z-index: 100;
 }
 .cms-floating-toolbar__btn {
@@ -240,7 +232,6 @@
   font-size: var(--type-caption-size);
   background: var(--surface-base);
   color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--shape-md-radius);
 }
 .cms-detail-panel__i18n-btn {
@@ -279,19 +270,7 @@
   font-size: var(--type-body-size);
   color: var(--text-primary);
   background: var(--surface-base);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--shape-md-radius);
-  transition: border-color var(--motion-instant-duration);
-}
-.cms-detail-field__input:focus,
-.cms-detail-field__textarea:focus {
-  border-color: var(--tone-primary-base);
-}
-.cms-detail-field__input--invalid {
-  border-color: var(--tone-destructive-base);
-}
-.cms-detail-field__input--invalid:focus {
-  border-color: var(--tone-destructive-base);
 }
 .cms-detail-field__textarea {
   resize: vertical;
@@ -304,14 +283,9 @@
   font-size: var(--type-body-size);
   color: var(--text-secondary);
   margin-bottom: var(--space-xs);
-  background: none; border: 1px solid var(--border-subtle);
+  background: none;
   border-radius: var(--shape-md-radius);
   padding: var(--space-inline-code) var(--space-sm);
-  transition: border-color var(--motion-instant-duration);
-}
-.cms-icon-field__current:hover {
-  border-color: var(--tone-primary-base);
-  color: var(--text-primary);
 }
 .cms-icon-field__current--fallback {
   font-style: italic; color: var(--text-muted);
@@ -322,18 +296,10 @@
 }
 .cms-icon-field__option {
   width: 28px; height: 28px;
-  border: 1px solid transparent;
   border-radius: var(--shape-md-radius);
-  background: none;
   color: var(--text-secondary);
-  transition: all var(--motion-instant-duration);
-}
-.cms-icon-field__option:hover {
-  background: var(--surface-hover);
-  color: var(--text-primary);
 }
 .cms-icon-field__option--selected {
-  border-color: var(--tone-primary-base);
   background: color-mix(in srgb, var(--tone-primary-base) 10%, transparent);
   color: var(--tone-primary-base);
 }
@@ -342,14 +308,8 @@
 .cms-image-field__placeholder {
   gap: var(--space-xs);
   min-height: 80px;
-  border: 1px dashed var(--border-subtle);
   border-radius: var(--shape-md-radius);
-  background: none; color: var(--text-secondary);
   font: inherit; font-size: var(--type-xs-size);
-}
-.cms-image-field__placeholder:hover {
-  border-color: var(--tone-primary-base);
-  color: var(--tone-primary-base);
 }
 .cms-image-field__preview {
   border-radius: var(--shape-md-radius);

@@ -8,14 +8,13 @@ import { switchPattern } from '../pattern/roles/switch'
 import { SwitchIndicator } from './indicators'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './SwitchGroup.module.css'
 
 type SwitchGroupProps = AriaComponentProps
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={`${ax({ layout: 'spread', surface: 'ghost', controlSize: 'md' })} ${styles.item}`} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ layout: 'spread', surface: 'ghost', controlSize: 'md', text: state.checked ? 'primary' : undefined })} data-focused={state.focused || undefined}>
       <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
       <SwitchIndicator />
     </div>
