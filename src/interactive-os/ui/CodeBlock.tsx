@@ -41,7 +41,10 @@ const EXT_TO_LANG: Record<string, string> = {
   sh: 'bash', bash: 'bash', py: 'python', md: 'markdown',
 }
 
-export function CodeBlock({ code, filename, highlightLines, variant = 'bordered' }: { code: string; filename: string; highlightLines?: Set<number>; variant?: 'bordered' | 'flush' | 'compact' }) {
+// HighlightTone: used by replay edit animation for tone-coded line highlights
+export type HighlightTone = 'edited' | 'selected' | 'deleted' | 'inserted'
+
+export function CodeBlock({ code, filename, highlightLines, variant = 'bordered' }: { code: string; filename: string; highlightLines?: Set<number> | Map<number, HighlightTone>; variant?: 'bordered' | 'flush' | 'compact' }) {
   const [html, setHtml] = useState('')
   const [highlightToken, setHighlightToken] = useState<string | null>(null)
   const currentTheme = useShikiTheme()
@@ -58,8 +61,10 @@ export function CodeBlock({ code, filename, highlightLines, variant = 'bordered'
         line(node, line) {
           node.properties['data-line'] = line
           if (highlightLines?.has(line)) {
+            const tone = highlightLines instanceof Map ? highlightLines.get(line) ?? 'edited' : 'edited'
+            const cls = `code-line--${tone}`
             const existing = (node.properties['class'] as string) ?? ''
-            node.properties['class'] = existing ? `${existing} code-line--edited` : 'code-line--edited'
+            node.properties['class'] = existing ? `${existing} ${cls}` : cls
           }
         },
         span(node) {
