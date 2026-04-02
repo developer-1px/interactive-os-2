@@ -24,8 +24,10 @@
   --stone-500: oklch(51%    0.009   90);    /* text-muted(light) — 4.5:1+ on stone-200 */
   --stone-600: oklch(47%    0.008   90);    /* text-secondary(light) */
   --stone-700: oklch(35.9%  0.006   90);
+  --stone-750: oklch(32%    0.006   90);
   --stone-800: oklch(29%    0.006   90);
   --stone-850: oklch(25.3%  0.005   90);
+  --stone-875: oklch(23.3%  0.004   90);
   --stone-900: oklch(21.4%  0.004   90);
   --stone-950: oklch(16.3%  0.003   90);
 

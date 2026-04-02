@@ -185,7 +185,7 @@ export default function PageBookViewer() {
                 key={page?.id}
                 ref={pageRef}
               >
-                {page && <MarkdownViewer content={page.content} styles={styles} />}
+                {page && <MarkdownViewer content={page.content} />}
               </div>
             </div>
           </div>

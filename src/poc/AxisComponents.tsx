@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { ax } from '@styles/ax'
-import './ax.css'
+import '@styles/ax.css'
 
 // ════════════════════════════════════════════
 // Primitives — 가장 작은 단위

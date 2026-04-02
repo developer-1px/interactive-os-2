@@ -5,9 +5,8 @@ import type { NormalizedData } from '../store/types'
 import styles from './SplitPane.module.css'
 import { ax } from '@styles/ax'
 import { useAria } from '../primitives/useAria'
-import { windowSplitter } from '../pattern/roles/windowSplitter'
-import { VALUE_ID } from '../axis/value'
-import { dragResize, startDragResize, registerDragCallback, unregisterDragCallback } from '../plugins/dragResize'
+import { composePattern } from '../pattern/composePattern'
+import { dragResize, startDragResize, keyboardResize, resizeDelta } from '../plugins/dragResize'
 
 export type { PaneSize }
 
@@ -17,12 +16,12 @@ interface SplitPaneProps {
   onResize: (sizes: PaneSize[]) => void
   children: React.ReactNode
   minRatio?: number
+  /** Pane indices that should NOT scroll (overflow:hidden). Default: all panes scroll. */
+  noScroll?: number[]
 }
 
-// value axis range: STEP=2 out of 100 = 0.02 ratio step (matches original)
-const STEP = 2
-const VALUE_MIN = 0
-const VALUE_MAX = 100
+/** Ratio delta per keyboard step */
+const STEP = 0.02
 
 /** Find the index of the 'flex' entry, falling back to last pane */
 function flexIndex(sizes: PaneSize[]): number {
@@ -62,10 +61,7 @@ function applyDelta(
 
 function makeSepStore(): NormalizedData {
   return {
-    entities: {
-      sep: { id: 'sep' },
-      [VALUE_ID]: { id: VALUE_ID, value: VALUE_MAX / 2, min: VALUE_MIN, max: VALUE_MAX, step: STEP },
-    },
+    entities: { sep: { id: 'sep' } },
     relationships: { [ROOT_ID]: ['sep'] },
   }
 }
@@ -75,54 +71,66 @@ interface SplitPaneSeparatorProps {
   direction: 'horizontal' | 'vertical'
   currentRatio: number
   minRatio: number
-  onDelta: (index: number, delta: number) => void
+  onKeyDelta: (index: number, delta: number) => void
+  onDragStart: (index: number) => void
+  onDragMove: (index: number, cumulativeDelta: number) => void
   getContainer: () => HTMLElement | null
 }
 
-function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onDelta, getContainer }: SplitPaneSeparatorProps) {
+function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onKeyDelta, onDragStart, onDragMove, getContainer }: SplitPaneSeparatorProps) {
   const isHorizontal = direction === 'horizontal'
-  const range = useMemo(() => ({ min: VALUE_MIN, max: VALUE_MAX, step: STEP }), [])
 
-  // For vertical: APG says ArrowUp=increment, but SplitPane needs ArrowDown=grow top pane
-  // So we swap the key bindings for vertical orientation
   const pattern = useMemo(() => {
-    const p = windowSplitter({ min: VALUE_MIN, max: VALUE_MAX, step: STEP, orientation: direction })
-    if (!isHorizontal) {
-      const km = { ...p.keyMap }
-      const up = km['ArrowUp']
-      const down = km['ArrowDown']
-      km['ArrowDown'] = up!
-      km['ArrowUp'] = down!
-      return { ...p, keyMap: km }
-    }
-    return p
-  }, [direction, isHorizontal])
+    const inc = () => resizeDelta(STEP)
+    const dec = () => resizeDelta(-STEP)
+    const incBig = () => resizeDelta(STEP * 10)
+    const decBig = () => resizeDelta(-STEP * 10)
 
-  const callbackKey = `splitpane-sep-${index}`
+    const keyMap: Record<string, () => ReturnType<typeof resizeDelta>> = isHorizontal
+      ? { ArrowRight: inc, ArrowLeft: dec, PageUp: decBig, PageDown: incBig }
+      : { ArrowDown: inc, ArrowUp: dec, PageUp: decBig, PageDown: incBig }
+
+    return composePattern(
+      { role: 'none', childRole: 'separator' },
+      [],
+      keyMap,
+    )
+  }, [isHorizontal])
+
+  // Stable refs so plugins always see latest callbacks
+  const onKeyDeltaRef = useRef(onKeyDelta)
+  const onDragStartRef = useRef(onDragStart)
+  const onDragMoveRef = useRef(onDragMove)
   useEffect(() => {
-    registerDragCallback(callbackKey, (delta) => onDelta(index, delta))
-    return () => unregisterDragCallback(callbackKey)
+    onKeyDeltaRef.current = onKeyDelta
+    onDragStartRef.current = onDragStart
+    onDragMoveRef.current = onDragMove
   })
 
-  const [plugin] = useState(() => dragResize({
-    orientation: direction,
-    range,
-    getContainer,
-    callbackKey,
-  }))
+  const [plugins] = useState(() => [
+    dragResize({
+      orientation: direction,
+      getContainer,
+      onDragStart: () => onDragStartRef.current(index),
+      onDragMove: (delta) => onDragMoveRef.current(index, delta),
+    }),
+    keyboardResize({
+      onDelta: (delta) => onKeyDeltaRef.current(index, delta),
+    }),
+  ])
 
   const initialStore = useMemo(() => makeSepStore(), [])
 
   const aria = useAria({
     pattern,
     data: initialStore,
-    plugins: [plugin],
+    plugins,
     autoFocus: false,
   })
 
   const nodeProps = aria.getNodeProps('sep')
   const nodeState = aria.getNodeState('sep')
-  const valueNow = Math.round(currentRatio * VALUE_MAX)
+  const valueNow = Math.round(currentRatio * 100)
 
   return (
     <div
@@ -130,14 +138,14 @@ function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onDelta,
       role="separator"
       aria-orientation={isHorizontal ? 'vertical' : 'horizontal'}
       aria-valuenow={valueNow}
-      aria-valuemin={Math.round(minRatio * VALUE_MAX)}
-      aria-valuemax={VALUE_MAX - Math.round(minRatio * VALUE_MAX)}
+      aria-valuemin={Math.round(minRatio * 100)}
+      aria-valuemax={100 - Math.round(minRatio * 100)}
       aria-label={`Resize pane ${index + 1}`}
       tabIndex={0}
       className={`shrink-0 ${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
       data-surface="action"
       data-focused={nodeState.focused || undefined}
-      onPointerDown={(e) => aria.dispatch(startDragResize(e.pointerId, e.currentTarget as HTMLElement))}
+      onPointerDown={(e) => aria.dispatch(startDragResize(e.pointerId, e.currentTarget as HTMLElement, e.clientX, e.clientY))}
     />
   )
 }
@@ -148,6 +156,7 @@ export function SplitPane({
   onResize,
   children,
   minRatio = 0.1,
+  noScroll,
 }: SplitPaneProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const childArray = Children.toArray(children)
@@ -156,11 +165,22 @@ export function SplitPane({
   const sizesRef = useRef(sizes)
   useEffect(() => { sizesRef.current = sizes })
 
-  const handleDelta = useCallback((sepIndex: number, delta: number) => {
+  const dragStartSizes = useRef<PaneSize[]>(sizes)
+
+  // Keyboard: incremental delta on current sizes
+  const handleKeyDelta = useCallback((sepIndex: number, delta: number) => {
     onResize(applyDelta(sizesRef.current, sepIndex, sepIndex + 1, delta, minRatio))
   }, [onResize, minRatio])
 
-  // Single child or empty: render directly, no separator
+  // Drag: cumulative delta on captured start sizes
+  const handleDragStart = useCallback((_sepIndex: number) => {
+    dragStartSizes.current = sizesRef.current
+  }, [])
+
+  const handleDragMove = useCallback((sepIndex: number, cumulativeDelta: number) => {
+    onResize(applyDelta(dragStartSizes.current, sepIndex, sepIndex + 1, cumulativeDelta, minRatio))
+  }, [onResize, minRatio])
+
   if (childArray.length <= 1) {
     return <>{childArray[0] ?? null}</>
   }
@@ -176,8 +196,9 @@ export function SplitPane({
       ? { flex: 1 }
       : { flex: `0 0 ${(sizes[i] as number) * 100}%` }
 
+    const paneLayout = noScroll?.includes(i) ? 'fill' : 'scroll'
     elements.push(
-      <div key={`pane-${i}`} className={ax({ layout: 'fill' })} style={sizeStyle}>
+      <div key={`pane-${i}`} className={ax({ layout: paneLayout })} style={sizeStyle}>
         {child}
       </div>,
     )
@@ -191,7 +212,9 @@ export function SplitPane({
           direction={direction}
           currentRatio={currentRatio}
           minRatio={minRatio}
-          onDelta={handleDelta}
+          onKeyDelta={handleKeyDelta}
+          onDragStart={handleDragStart}
+          onDragMove={handleDragMove}
           getContainer={getContainer}
         />,
       )
