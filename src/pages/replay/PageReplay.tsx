@@ -233,12 +233,12 @@ export default function PageReplay() {
     enqueueAll(unified)
   }, [allMessages, enqueueAll, clear])
 
-  // Auto-start
+  // Auto-start only when replay tab is active
   const startRef = useRef(startReplay)
   useEffect(() => { startRef.current = startReplay })
   useEffect(() => {
-    if (allMessages.length > 0) startRef.current()
-  }, [allMessages])
+    if (allMessages.length > 0 && rightTab === 'replay') startRef.current()
+  }, [allMessages, rightTab])
 
   // Current file content for CodeBlock
   const currentCode = activeFile ? openFiles.get(activeFile) ?? null : null
