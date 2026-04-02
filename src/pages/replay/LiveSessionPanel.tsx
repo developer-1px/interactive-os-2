@@ -1,0 +1,148 @@
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { connectSession, disconnectSession, useTimeline, useSessionMeta } from '../viewer/viewerStore'
+import { timelineToMessages } from '../viewer/timelineAdapter'
+import { ChatFeed } from '@os/ui/chat/ChatFeed'
+import type { HighlightTone } from '@os/ui/CodeBlock'
+import { ax } from '@styles/ax'
+import { useActiveSessions } from './useActiveSessions'
+import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
+import { fetchFile } from '../viewer/fsClient'
+import { chatRenderers } from './replayRenderers'
+
+interface LiveSessionPanelProps {
+  onViewerUpdate: (files: Map<string, string>, activeFile: string | null, highlights?: Map<number, HighlightTone>) => void
+}
+
+export function LiveSessionPanel({ onViewerUpdate }: LiveSessionPanelProps) {
+  const activeSessions = useActiveSessions()
+  const [userSelectedId, setUserSelectedId] = useState<string | null>(null)
+
+  const selectedId = activeSessions.length === 0
+    ? null
+    : (userSelectedId && activeSessions.find(s => s.id === userSelectedId))
+      ? userSelectedId
+      : activeSessions[0].id
+
+  return (
+    <div className={ax({ layout: 'fill' })}>
+      <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })} role="tablist">
+        {activeSessions.map(s => (
+          <button
+            key={s.id}
+            role="tab"
+            aria-selected={s.id === selectedId}
+            onClick={() => setUserSelectedId(s.id)}
+            className={ax({
+              surface: s.id === selectedId ? 'display' : 'ghost',
+              controlSize: 'sm',
+              textStyle: 'caption',
+              tone: s.id === selectedId ? 'accent' : undefined,
+            })}
+          >
+            {s.label}
+          </button>
+        ))}
+        {activeSessions.length === 0 && (
+          <span className={ax({ textStyle: 'caption', text: 'muted' })}>활성 세션 없음</span>
+        )}
+      </div>
+
+      {selectedId && (
+        <LiveFeed
+          key={selectedId}
+          sessionId={selectedId}
+          onViewerUpdate={onViewerUpdate}
+        />
+      )}
+    </div>
+  )
+}
+
+function LiveFeed({ sessionId, onViewerUpdate }: { sessionId: string; onViewerUpdate: LiveSessionPanelProps['onViewerUpdate'] }) {
+  useEffect(() => {
+    connectSession(sessionId, true)
+    return () => disconnectSession(sessionId)
+  }, [sessionId])
+
+  const timeline = useTimeline(sessionId)
+  const { agentStatus, fetchError, initialLoading } = useSessionMeta(sessionId)
+  const messages = useMemo(() => timelineToMessages(timeline), [timeline])
+
+  // Incremental file state tracking
+  const processedRef = useRef(0)
+  const fsRef = useRef(createFileState())
+  const fetchedRef = useRef(new Set<string>())
+
+  useEffect(() => {
+    if (timeline.length === 0 || timeline.length <= processedRef.current) return
+    let aborted = false
+
+    const newEvents = timeline.slice(processedRef.current)
+    processedRef.current = timeline.length
+
+    let lastFilePath: string | null = null
+    const toFetch = new Set<string>()
+
+    for (const evt of newEvents) {
+      if (evt.type !== 'tool_use' || !evt.filePath) continue
+      lastFilePath = evt.filePath
+
+      if (evt.tool === 'Read') {
+        if (!fetchedRef.current.has(evt.filePath) && !fsRef.current.files.has(evt.filePath)) {
+          toFetch.add(evt.filePath)
+        }
+      } else if (evt.tool === 'Write' && evt.editNew) {
+        applyWrite(fsRef.current, evt.filePath, evt.editNew)
+      } else if (evt.tool === 'Edit' && evt.editOld && evt.editNew) {
+        applyEdit(fsRef.current, evt.filePath, evt.editOld, evt.editNew)
+      }
+    }
+
+    function flush() {
+      if (aborted) return
+      onViewerUpdate(new Map(fsRef.current.files), lastFilePath)
+    }
+
+    if (toFetch.size > 0) {
+      Promise.all([...toFetch].map(async (p) => {
+        try {
+          const content = await fetchFile(p)
+          if (content) {
+            applyRead(fsRef.current, p, content, true)
+            fetchedRef.current.add(p)
+          }
+        } catch { /* unavailable */ }
+      })).then(flush)
+    } else if (lastFilePath) {
+      flush()
+    }
+
+    return () => { aborted = true }
+  }, [timeline, onViewerUpdate])
+
+  return (
+    <>
+      {fetchError ? (
+        <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
+          Failed to load: {fetchError}
+        </div>
+      ) : initialLoading ? (
+        <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
+          Loading...
+        </div>
+      ) : messages.length === 0 ? (
+        <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
+          에이전트 활동 대기중...
+        </div>
+      ) : (
+        <ChatFeed
+          messages={messages}
+          blockRenderers={chatRenderers}
+          isStreaming={agentStatus === 'running'}
+          streamingLabel="Thinking"
+          className={ax({ flex: '1' })}
+        />
+      )}
+    </>
+  )
+}

@@ -1,12 +1,10 @@
 // ② 2026-04-03-replay-edit-animation-prd.md
-import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import { CodeBlock, type HighlightTone } from '@os/ui/CodeBlock'
-import { ThinkingBlock } from '@os/ui/chat/ThinkingBlock'
-import { ToolSummaryBlock, ToolResultBlock } from '@os/ui/chat/ToolSummaryBlock'
-import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
+import type { ChatMessage } from '@os/ui/chat/types'
 import { useAnimationQueue } from '@os/ui/useAnimationQueue'
 import { ax } from '@styles/ax'
 import { chatReducer, toReplayDeltas, type TimedDelta } from './replayDelta'
@@ -15,15 +13,8 @@ import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
 import { fetchFile } from '../viewer/fsClient'
 import { editAnimationFrames, readFrames, writeFrames, type TimedFrame } from './editAnimation'
 import { ReplayCursor } from './ReplayCursor'
-
-const ChatPane = lazy(() => import('../chat/ChatPane').then(m => ({ default: m.ChatPane })))
-
-const chatRenderers: BlockRendererMap = {
-  thinking: ThinkingBlock,
-  tool_summary: ToolSummaryBlock,
-  tool_use: ToolSummaryBlock,
-  tool_result: ToolResultBlock,
-}
+import { LiveSessionPanel } from './LiveSessionPanel'
+import { chatRenderers } from './replayRenderers'
 
 // --- Session loading ---
 
@@ -77,16 +68,6 @@ export default function PageReplay() {
 
   // Right panel tab
   const [rightTab, setRightTab] = useState<'replay' | 'live'>('live')
-  const [liveSessionId, setLiveSessionId] = useState<string | null>(null)
-
-  // Auto-create live session on mount (live is default tab)
-  useEffect(() => {
-    if (!liveSessionId) {
-      import('../chat/chatStore').then(m => {
-        setLiveSessionId(m.createSession())
-      })
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Active file ref for content updates (avoids stale closure in onRelease)
   const activeFileRef = useRef<string | null>(null)
@@ -132,6 +113,15 @@ export default function PageReplay() {
     onRelease,
     getDelay,
   })
+
+  // Live session viewer update
+  const onViewerUpdate = useCallback((files: Map<string, string>, activeFilePath: string | null) => {
+    setOpenFiles(files)
+    setActiveFile(activeFilePath)
+    activeFileRef.current = activeFilePath
+    setHighlights(undefined)
+    setCursorLine(null)
+  }, [])
 
   // Load session
   useEffect(() => {
@@ -330,12 +320,6 @@ export default function PageReplay() {
                 activeFileRef.current = null
                 setHighlights(undefined)
                 setCursorLine(null)
-                if (!liveSessionId) {
-                  import('../chat/chatStore').then(m => {
-                    const id = m.createSession()
-                    setLiveSessionId(id)
-                  })
-                }
               }}
               className={ax({ surface: rightTab === 'live' ? 'display' : 'ghost', controlSize: 'sm', textStyle: 'caption', tone: rightTab === 'live' ? 'accent' : undefined })}
             >
@@ -382,10 +366,8 @@ export default function PageReplay() {
           )}
 
           {/* Live tab */}
-          {rightTab === 'live' && liveSessionId && (
-            <Suspense fallback={<div className={ax({ layout: 'center', flex: '1', text: 'muted' })}>Loading...</div>}>
-              <ChatPane sessionId={liveSessionId} />
-            </Suspense>
+          {rightTab === 'live' && (
+            <LiveSessionPanel onViewerUpdate={onViewerUpdate} />
           )}
         </div>
       </SplitPane>
