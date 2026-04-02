@@ -14,11 +14,11 @@
      No hex/rgb/oklch literals here — palette is the single source. */
 
   /* ── Surface ── */
-  --surface-base:     var(--stone-950);
+  --surface-base:     var(--stone-875);
   --surface-sunken:   var(--stone-900);
   --surface-default:  var(--stone-850);
   --surface-raised:   var(--stone-800);
-  --surface-overlay:  var(--stone-700);
+  --surface-overlay:  var(--stone-750);
   --surface-outlined: transparent;
 
   /* ── Shadow (xs/sm/md/lg scale) ── */
@@ -36,8 +36,8 @@
   --text-muted:     var(--stone-400);
 
   /* ── Border ── */
-  --border-subtle:  var(--stone-800);
-  --border-default: var(--stone-700);
+  --border-subtle:  var(--stone-850);
+  --border-default: var(--stone-800);
   --border-strong:  var(--stone-600);
 
   /* ── Tone: semantic color bundles (base + hover + dim + mid + bright + foreground)
@@ -141,6 +141,8 @@
   --space-xl:  24px;
   --space-2xl: 32px;
   --space-3xl: 40px;
+  --space-4xl: 48px;
+  --space-5xl: 64px;
 
   /* ── Border ── */
   --border-width: 1px;
@@ -192,12 +194,12 @@
    Surface gap과 L값은 macOS windowBg(94.3%) 실측 참조. */
 
 [data-theme="light"] {
-  /* ── Surface: pure neutral (C=0, macOS 실측) ── */
-  --surface-base:     oklch(97%    0  0);    /* page bg */
-  --surface-sunken:   oklch(97%    0  0);    /* sidebar — macOS Finder 실측 #F5F5F5 */
-  --surface-default:  oklch(100%   0  0);    /* content — pure white */
-  --surface-raised:   oklch(100%   0  0);
-  --surface-overlay:  oklch(100%   0  0);
+  /* ── Surface ── */
+  --surface-base:     var(--stone-50);     /* page bg */
+  --surface-sunken:   var(--stone-100);    /* sidebar, blockquote */
+  --surface-default:  var(--stone-0);      /* content — pure white */
+  --surface-raised:   var(--stone-0);      /* + shadow */
+  --surface-overlay:  var(--stone-0);      /* + shadow */
   --surface-outlined: transparent;
 
   /* ── Shadow: macOS 스타일 — 은은하고 넓게 퍼지는 그림자 ── */
@@ -206,18 +208,16 @@
   --shadow-md: 0 2px 8px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.03);
   --shadow-lg: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.02);
 
-  /* ── Text: cool neutral (GitHub Primer 실측 기반, WCAG AA+)
-     GitHub fgColor-default=#1f2328 → L≈18.5%, C≈0.007, H≈250
-     약간의 blue tint가 white 배경에서 가독성 높임. ── */
-  --text-bright:    oklch(15%    0.005  250);  /* headings — AAA 18:1 */
-  --text-primary:   oklch(18.5%  0.005  250);  /* body — GitHub 실측 #1f2328, 16.5:1 */
-  --text-secondary: oklch(38%    0.005  250);  /* descriptions — AAA 7.5:1 */
-  --text-muted:     oklch(47%    0.010  250);  /* captions — GitHub 실측 #59636e, AA 4.8:1 */
+  /* ── Text ── */
+  --text-bright:    var(--stone-950);
+  --text-primary:   var(--stone-900);
+  --text-secondary: var(--stone-600);
+  --text-muted:     var(--stone-500);
 
-  /* ── Border: cool neutral (GitHub #d1d9e0 실측 기반) ── */
-  --border-subtle:  oklch(88%    0.005  250);  /* GitHub borderColor-default ≈ #d1d9e0 */
-  --border-default: oklch(84%    0.005  250);
-  --border-strong:  oklch(73%    0.005  250);
+  /* ── Border ── */
+  --border-subtle:  var(--stone-300);
+  --border-default: var(--stone-400);
+  --border-strong:  var(--stone-500);
 
   /* ── Tone (light) ── */
   --tone-primary-base:   var(--blue-600);
@@ -239,9 +239,9 @@
   --tone-warning-dim:        oklch(98.7%  0.026  102);
   --tone-warning-foreground: oklch(16.3%  0  0);
 
-  --tone-neutral-base:  oklch(51%    0  0);
-  --tone-neutral-hover: oklch(47%    0  0);
-  --tone-neutral-dim:   oklch(94.8%  0  0);
+  --tone-neutral-base:  var(--stone-500);
+  --tone-neutral-hover: var(--stone-600);
+  --tone-neutral-dim:   var(--stone-100);
 
   /* ── Focus ── */
   --focus:      var(--blue-500);
@@ -250,9 +250,9 @@
   /* ── Selection (blue-100 — sunken 위에서도 구분 가능) ── */
   --selection: var(--blue-100);
 
-  /* ── Interactive: pure neutral (C=0) ── */
-  --bg-hover:  oklch(94.8%  0  0);
-  --bg-active: oklch(92%    0  0);
+  /* ── Interactive ── */
+  --bg-hover:  var(--stone-100);
+  --bg-active: var(--stone-200);
 
   /* ── File type colors (same hues, adjusted L for light bg contrast) ── */
   --file-folder: oklch(55%  0.040  250);
