@@ -2,6 +2,7 @@
 import React, { useRef, useCallback, Children } from 'react'
 import type { PaneSize } from '../store/types'
 import styles from './SplitPane.module.css'
+import { ax } from '@styles/ax'
 
 export type { PaneSize }
 
@@ -135,12 +136,10 @@ export function SplitPane({
     const isFlex = i === fi
     const sizeStyle = isFlex
       ? { flex: 1 }
-      : isHorizontal
-        ? { width: `${(sizes[i] as number) * 100}%` }
-        : { height: `${(sizes[i] as number) * 100}%` }
+      : { flex: `0 0 ${(sizes[i] as number) * 100}%` }
 
     elements.push(
-      <div key={`pane-${i}`} className={"flex-col overflow-hidden min-w-0 min-h-0 h-full"} style={sizeStyle}>
+      <div key={`pane-${i}`} className={ax({ layout: 'fill' })} style={sizeStyle}>
         {child}
       </div>,
     )
@@ -169,7 +168,7 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={`${isHorizontal ? 'flex-row' : 'flex-col'} h-full overflow-hidden`}
+      className={`${isHorizontal ? 'flex-row' : 'flex-col'} flex-1 min-w-0 min-h-0 overflow-hidden`}
     >
       {elements}
     </div>

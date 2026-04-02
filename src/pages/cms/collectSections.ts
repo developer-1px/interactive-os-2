@@ -1,6 +1,6 @@
-import { getChildren, getParent } from '../../interactive-os/store/createStore'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import type { NormalizedData } from '../../interactive-os/store/types'
+import { getChildren, getParent } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
 
 /** DFS collect all nodes with type === 'section'. Container-type agnostic. */
 export function collectSections(store: NormalizedData, parentId: string): string[] {

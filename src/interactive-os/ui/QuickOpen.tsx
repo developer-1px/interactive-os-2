@@ -9,8 +9,8 @@ import { createBatchCommand } from '../engine/types'
 import { selectionCommands } from '../axis/select'
 import { combobox } from '../pattern/roles/combobox'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { FileIcon } from './FileIcon'
 import styles from './QuickOpen.module.css'
 
@@ -121,7 +121,7 @@ export function QuickOpen({
 
   return (
     <div className={`${ax({ surface: 'overlay', layout: 'row' })} ${styles.backdrop}`} onClick={handleBackdropClick}>
-      <div className={`${ax({ layout: 'column' })} ${styles.dialog}`} aria-label="Quick Open">
+      <div className={`${ax({ layout: 'column', shape: 'xl' })} ${styles.dialog}`} aria-label="Quick Open">
         <div className={`${ax({ layout: 'bar', gap: 'md', padding: 'lg' })} ${styles.inputRow}`}>
           <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
           <input
@@ -134,7 +134,7 @@ export function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className={`${ax({ textStyle: 'caption', text: 'muted', flex: 'none' })} ${styles.shortcut}`}>ESC</kbd>
+          <kbd className={`${ax({ textStyle: 'caption', text: 'muted', flex: 'none', shape: 'sm' })} ${styles.shortcut}`}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
           <div className={`${ax({ layout: 'scroll', flex: '1' })} ${styles.results}`} onMouseDown={e => e.preventDefault()}>
@@ -148,7 +148,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`${ax({ surface: 'ghost', controlSize: 'md', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary' })} ${styles.item}${state.focused ? ` ${styles.itemFocused}` : ''}`}
+                  className={`${ax({ surface: 'ghost', controlSize: 'md', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm' })} ${styles.item}${state.focused ? ` ${styles.itemFocused}` : ''}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),
@@ -160,8 +160,8 @@ export function QuickOpen({
                     <FileIcon name={fileData.name} type="file" />
                   </span>
                   <span className={`${ax({ layout: 'column', flex: '1' })} ${styles.itemText}`}>
-                    <span className={`${ax({ textStyle: 'body' })} ${styles.itemName}`}>{fileData.name}</span>
-                    <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.itemPath}`}>{fileData.relativePath}</span>
+                    <span className={`${ax({ textStyle: 'body', clamp: '1' })} ${styles.itemName}`}>{fileData.name}</span>
+                    <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
                   </span>
                 </div>
               )

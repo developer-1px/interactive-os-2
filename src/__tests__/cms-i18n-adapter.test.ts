@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { translatableEntriesToGrid, I18N_COLUMNS, getRowMetadata, diffGridChanges } from '../pages/cms/cmsI18nAdapter'
-import { createStore } from '../interactive-os/store/createStore'
-import { ROOT_ID, type NormalizedData } from '../interactive-os/store/types'
+import { createStore } from '@os/store/createStore'
+import { ROOT_ID, type NormalizedData } from '@os/store/types'
 
 function cmsFixture(): NormalizedData {
   return createStore({

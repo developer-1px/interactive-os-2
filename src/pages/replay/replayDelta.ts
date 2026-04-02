@@ -1,5 +1,5 @@
 // ② 2026-04-01-session-replay-phase-a-prd.md
-import type { ChatMessage, TextBlock } from '../../interactive-os/ui/chat/types'
+import type { ChatMessage, TextBlock } from '@os/ui/chat/types'
 
 // --- ChatDelta: atomic state change ---
 

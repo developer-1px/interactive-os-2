@@ -7,8 +7,8 @@ import { useTreeView } from './useTreeView'
 import { expandCommands } from '../axis/expand'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 
 export interface TreeItemRenderProps {
   toggleProps?: React.HTMLAttributes<HTMLElement>

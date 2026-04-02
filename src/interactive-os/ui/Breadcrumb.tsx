@@ -1,5 +1,5 @@
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { SeparatorIndicator } from './indicators'
 import styles from './Breadcrumb.module.css'
 
@@ -8,7 +8,7 @@ export function Breadcrumb({ path, root }: { path: string; root: string }) {
   const relative = path.startsWith(root) ? path.slice(root.length + 1) : path
   const segments = relative.split('/')
   return (
-    <div className={`${ax({ layout: 'bar', textStyle: 'body', text: 'muted' })} ${styles.breadcrumb}`}>
+    <div className={`${ax({ layout: 'bar', textStyle: 'body', text: 'muted', clamp: '1' })} ${styles.breadcrumb}`}>
       {segments.map((seg, i) => (
         <span key={i}>
           {i > 0 && <SeparatorIndicator orientation="vertical" className={styles.sep} />}

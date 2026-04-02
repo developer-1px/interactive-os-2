@@ -11,8 +11,8 @@ import type { PaneSize } from './SplitPane'
 import { TabGroup } from './TabGroup'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
 import styles from './Workspace.module.css'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 
 interface WorkspaceProps {
   data: NormalizedData
@@ -112,7 +112,7 @@ export function Workspace({
 
   return (
     <div className={`${ax({ layout: 'column', flex: '1' })} ${styles.root}`} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
-      <div className={`${ax({ flex: '1' })} ${styles.inner}`}>
+      <div className={`${ax({ layout: 'fill' })} ${styles.inner}`}>
         {rootChildren.map((id) => (
           <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} renderPanel={renderPanel} />
         ))}

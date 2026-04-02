@@ -1,7 +1,7 @@
 // ② 2026-03-31-datepicker-composite-prd.md
 import React, { useMemo } from 'react'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './CalendarGrid.module.css'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'

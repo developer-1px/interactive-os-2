@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ChatFeed } from '../interactive-os/ui/chat/ChatFeed'
-import { Composer } from '../interactive-os/ui/Composer'
+import { ChatFeed } from '@os/ui/chat/ChatFeed'
+import { Composer } from '@os/ui/Composer'
 import { timelineToMessages } from '../pages/viewer/timelineAdapter'
-import type { ChatMessage, ChatBlock, BlockRendererMap, DataBlock } from '../interactive-os/ui/chat/types'
+import type { ChatMessage, ChatBlock, BlockRendererMap, DataBlock } from '@os/ui/chat/types'
 import type { TimelineEvent } from '../pages/viewer/groupEvents'
 
 // --- Helpers ---
@@ -214,7 +214,7 @@ describe('Composer — submit (V10)', () => {
 })
 
 // Import StoreBlock type for V9
-import type { StoreBlock } from '../interactive-os/ui/chat/types'
+import type { StoreBlock } from '@os/ui/chat/types'
 
 // V1: 2026-03-30-composer-ghost-text-prd.md
 describe('Composer — slash command autocomplete (os-based)', () => {

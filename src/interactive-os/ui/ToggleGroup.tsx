@@ -1,8 +1,8 @@
 import React from 'react'
 import { CircleDot, Circle } from 'lucide-react'
 
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'

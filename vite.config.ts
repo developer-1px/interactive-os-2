@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import path from 'path'
 import react from '@vitejs/plugin-react'
 import { fsPlugin } from './vite-plugin-fs'
 import { agentOpsPlugin } from './vite-plugin-agent-ops'
@@ -13,6 +14,12 @@ export default defineConfig({
     agentOpsPlugin(),
     browserTestPlugin(),
   ],
+  resolve: {
+    alias: {
+      '@os': path.resolve(__dirname, 'src/interactive-os'),
+      '@styles': path.resolve(__dirname, 'src/styles'),
+    },
+  },
   css: {
     modules: {
       localsConvention: 'camelCaseOnly',

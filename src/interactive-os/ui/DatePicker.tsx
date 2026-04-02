@@ -1,8 +1,8 @@
 // ② 2026-03-31-datepicker-composite-prd.md
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './DatePicker.module.css'
 import type { NormalizedData } from '../store/types'
 import { createStore } from '../store/createStore'

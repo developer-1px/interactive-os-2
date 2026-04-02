@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Toaster } from '../interactive-os/ui/Toaster'
-import { createToaster } from '../interactive-os/ui/createToaster'
+import { Toaster } from '@os/ui/Toaster'
+import { createToaster } from '@os/ui/createToaster'
 
 describe('Toaster component', () => {
   beforeEach(() => {

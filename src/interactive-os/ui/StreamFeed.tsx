@@ -1,7 +1,7 @@
 // ② 2026-03-25-stream-feed-prd.md
 import { useState, useEffect, useCallback, type ReactNode } from 'react'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './StreamFeed.module.css'
 
 // --- Types ---

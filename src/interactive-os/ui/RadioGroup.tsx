@@ -6,8 +6,8 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { radiogroup } from '../pattern/roles/radiogroup'
 import { RadioIndicator } from './indicators'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './RadioGroup.module.css'
 
 type RadioGroupProps = AriaComponentProps

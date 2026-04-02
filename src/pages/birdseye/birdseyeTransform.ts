@@ -1,6 +1,6 @@
-import type { NormalizedData } from '../../interactive-os/store/types'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import { createStore, getChildren, getEntityData } from '../../interactive-os/store/createStore'
+import type { NormalizedData } from '@os/store/types'
+import { ROOT_ID } from '@os/store/types'
+import { createStore, getChildren, getEntityData } from '@os/store/createStore'
 
 type FsEntityData = {
   name: string

@@ -1,7 +1,7 @@
 // ② 2026-03-24-cms-editorial-content-prd.md
-import { createStore } from '../../interactive-os/store/createStore'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import type { NormalizedData } from '../../interactive-os/store/types'
+import { createStore } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
 import { localeMap } from './cms-types'
 import { expandEntitySlots } from './cms-schema'
 

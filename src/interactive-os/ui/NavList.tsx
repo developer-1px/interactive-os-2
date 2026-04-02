@@ -7,8 +7,8 @@ import { useNavList } from './useNavList'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
 import { getNodeLabel } from './types'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './NavList.module.css'
 
 interface NavListProps {

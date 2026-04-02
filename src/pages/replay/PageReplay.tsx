@@ -1,10 +1,10 @@
 // ② 2026-04-01-session-replay-phase-a-prd.md
 import { useState, useEffect, useCallback } from 'react'
-import { ChatFeed } from '../../interactive-os/ui/chat/ChatFeed'
-import { ThinkingBlock } from '../../interactive-os/ui/chat/ThinkingBlock'
-import { ToolSummaryBlock, ToolResultBlock } from '../../interactive-os/ui/chat/ToolSummaryBlock'
-import type { ChatMessage, BlockRendererMap } from '../../interactive-os/ui/chat/types'
-import { useAnimationQueue } from '../../interactive-os/ui/useAnimationQueue'
+import { ChatFeed } from '@os/ui/chat/ChatFeed'
+import { ThinkingBlock } from '@os/ui/chat/ThinkingBlock'
+import { ToolSummaryBlock, ToolResultBlock } from '@os/ui/chat/ToolSummaryBlock'
+import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
+import { useAnimationQueue } from '@os/ui/useAnimationQueue'
 import { chatReducer, toReplayDeltas, type TimedDelta } from './replayDelta'
 
 const chatRenderers: BlockRendererMap = {

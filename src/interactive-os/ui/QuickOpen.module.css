@@ -25,7 +25,6 @@
   max-height: 520px;
   overflow: hidden;
   border: 1px solid var(--border-default);
-  border-radius: var(--shape-xl-radius);
   box-shadow: var(--shadow-lg);
   animation: slide-in var(--motion-enter-duration) var(--motion-enter-easing);
 }
@@ -54,7 +53,6 @@
 .shortcut {
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xs-radius);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   font-family: var(--mono);
 }
@@ -64,7 +62,6 @@
 }
 
 .item {
-  border-radius: var(--shape-sm-radius);
   cursor: default;
   user-select: none;
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
@@ -82,16 +79,7 @@
 }
 
 .itemName {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   font-weight: var(--weight-medium);
-}
-
-.itemPath {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .empty {

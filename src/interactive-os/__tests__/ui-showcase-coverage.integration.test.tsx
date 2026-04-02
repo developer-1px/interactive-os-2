@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { components } from '../../pages/showcaseRegistry'
+import { components } from '../../pages/showcase/showcaseRegistry'
 import type { NormalizedData } from '../store/types'
 
 /** showcase의 render 함수를 감싸서 stateful하게 만든다 */

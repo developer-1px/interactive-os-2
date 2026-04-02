@@ -1,6 +1,6 @@
 // ② 2026-03-30-composer-ghost-text-prd.md
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { useRef, useCallback, useEffect, useImperativeHandle, forwardRef, useMemo } from 'react'
 import styles from './Composer.module.css'
 import { useAria } from '../primitives/useAria'
@@ -151,9 +151,9 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
   return (
     <div className={ax({ layout: 'row', flex: 'none' })}>
-      <div className={`${ax({ surface: 'input', flex: '1' })} ${styles.inputWrap}`} data-disabled={disabled || undefined}>
+      <div className={`${ax({ surface: 'input', flex: '1', shape: 'md' })} ${styles.inputWrap}`} data-disabled={disabled || undefined}>
         {hasSuggestions && (
-          <ul className={`${ax({ surface: 'overlay', padding: 'xs' })} ${styles.suggestionList}`} role="listbox" aria-label="Command suggestions">
+          <ul className={`${ax({ surface: 'overlay', padding: 'xs', shape: 'md' })} ${styles.suggestionList}`} role="listbox" aria-label="Command suggestions">
             {suggestions!.map(cmd => {
               const nodeProps = aria.getNodeProps(cmd) as Record<string, unknown>
               const state = aria.getNodeState(cmd)

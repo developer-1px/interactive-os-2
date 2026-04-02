@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { MermaidBlock } from '../MermaidBlock'
+import { MermaidBlock } from '../showcase/MermaidBlock'
 import styles from '../PageViewer.module.css'
 
 // --- Export structure types ---

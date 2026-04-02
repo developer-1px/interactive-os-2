@@ -7,8 +7,8 @@ import { Aria } from '../primitives/aria'
 import { treegrid } from '../pattern/roles/treegrid'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 
 interface TreeGridProps extends AriaComponentProps {
   id?: string

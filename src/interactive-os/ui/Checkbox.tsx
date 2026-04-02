@@ -6,8 +6,8 @@ import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { checkbox } from '../pattern/roles/checkbox'
 import { CheckIndicator } from './indicators'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 
 type CheckboxProps = AriaComponentProps
 

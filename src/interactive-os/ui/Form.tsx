@@ -10,8 +10,8 @@ import type { FormOptions } from '../plugins/form'
 import { getFieldErrors } from '../plugins/form'
 import { rename } from '../plugins/rename'
 import { edit } from '../plugins/edit'
-import { ax } from '../../poc/ax'
-import '../../poc/ax.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './Form.module.css'
 
 interface FormProps {

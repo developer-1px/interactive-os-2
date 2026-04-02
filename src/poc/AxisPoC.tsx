@@ -2,7 +2,7 @@
 // 시각 5축 + 구조 5축 = 10축으로 모든 것을 표현한다.
 
 import React from 'react'
-import { ax } from './ax'
+import { ax } from '@styles/ax'
 import './ax.css'
 
 // ════════════════════════════════════════════

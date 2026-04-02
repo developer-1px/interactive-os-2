@@ -10,25 +10,25 @@ import {
   useChatSessions,
 } from './chatStore'
 import type { ChatSession } from './chatStore'
-import type { ChatMessage } from '../../interactive-os/ui/chat/types'
-import { Workspace } from '../../interactive-os/ui/Workspace'
+import type { ChatMessage } from '@os/ui/chat/types'
+import { Workspace } from '@os/ui/Workspace'
 import {
   createWorkspace,
   workspaceCommands,
   collectContentRefs,
   splitAndAddTab,
   findTabgroup,
-} from '../../interactive-os/plugins/workspaceStore'
-import type { TabData, SplitData } from '../../interactive-os/plugins/workspaceStore'
-import { ROOT_ID } from '../../interactive-os/store/types'
-import type { NormalizedData, Entity } from '../../interactive-os/store/types'
+} from '@os/plugins/workspaceStore'
+import type { TabData, SplitData } from '@os/plugins/workspaceStore'
+import { ROOT_ID } from '@os/store/types'
+import type { NormalizedData, Entity } from '@os/store/types'
 import {
   getChildren,
   getEntityData,
   updateEntityData,
-} from '../../interactive-os/store/createStore'
+} from '@os/store/createStore'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
-import type { PaneSize } from '../../interactive-os/store/types'
+import type { PaneSize } from '@os/store/types'
 import styles from './PageAgentChat.module.css'
 
 // --- File extraction ---

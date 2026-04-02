@@ -1,7 +1,7 @@
 // ② 2026-03-27-claude-chat-phase-a-prd.md
 import { useSyncExternalStore } from 'react'
 import type { ChatWsClientMessage } from './chatWsProtocol'
-import type { ChatMessage } from '../../interactive-os/ui/chat/types'
+import type { ChatMessage } from '@os/ui/chat/types'
 
 // --- Per-session state ---
 
