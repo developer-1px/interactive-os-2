@@ -3,7 +3,8 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
-import { CodeBlock, type HighlightTone } from '@os/ui/CodeBlock'
+import type { HighlightTone } from '@os/ui/CodeBlock'
+import { FilePreview } from '@os/ui/FilePreview'
 import type { ChatMessage } from '@os/ui/chat/types'
 import { useAnimationQueue } from '@os/ui/useAnimationQueue'
 import { ax } from '@styles/ax'
@@ -240,7 +241,7 @@ export default function PageReplay() {
     if (allMessages.length > 0 && rightTab === 'replay') startRef.current()
   }, [allMessages, rightTab])
 
-  // Current file content for CodeBlock
+  // Current file content
   const currentCode = activeFile ? openFiles.get(activeFile) ?? null : null
   const tabs = [...openFiles.keys()]
   const codeContainerRef = useRef<HTMLDivElement>(null)
@@ -259,7 +260,7 @@ export default function PageReplay() {
     <div className={ax({ layout: 'fill' })}>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes}>
         {/* Left: Code Viewer with tabs */}
-        <div className={ax({ layout: 'fill' })}>
+        <div className={`${ax({ layout: 'fill' })} min-h-0`}>
           {/* Tab bar */}
           <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })} role="tablist">
             {tabs.map(path => (
@@ -284,14 +285,13 @@ export default function PageReplay() {
           </div>
 
           {/* Code content */}
-          <div ref={codeContainerRef} className={ax({ flex: '1', layout: 'scroll' })} style={{ position: 'relative' }}>
+          <div ref={codeContainerRef} className={`${ax({ flex: '1', layout: 'scroll' })} min-h-0`} style={{ position: 'relative' }}>
             {currentCode != null ? (
               <>
-                <CodeBlock
-                  code={currentCode}
+                <FilePreview
+                  content={currentCode}
                   filename={filenameFrom(activeFile)}
                   highlightLines={highlights}
-                  variant="flush"
                 />
                 {cursorLine != null && <ReplayCursor line={cursorLine} />}
               </>

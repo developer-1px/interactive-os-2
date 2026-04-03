@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { CodeBlock } from '@os/ui/CodeBlock'
-import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { SpreadReader } from '@os/ui/SpreadReader'
+import { FilePreview } from '@os/ui/FilePreview'
+import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { fetchFile } from '../fsClient'
 import { ax } from '@styles/ax'
@@ -36,10 +36,7 @@ export function FilePanel({ path }: { path: string }) {
   return (
     <AriaRoute keyMap={keyMap}>
       <div ref={bodyRef} className={ax({ layout: 'scroll', flex: '1' })}>
-        {isMarkdown
-          ? <MarkdownViewer content={content} />
-          : <CodeBlock code={content} filename={filename} variant="flush" />
-        }
+        <FilePreview content={content} filename={filename} />
       </div>
     </AriaRoute>
   )
