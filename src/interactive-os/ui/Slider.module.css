@@ -5,8 +5,6 @@
 }
 
 .sliderLabel {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
   color: var(--text-primary);
   min-width: calc(var(--space-2xl) * 2);
 }
@@ -44,8 +42,6 @@
 }
 
 .sliderValue {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
   color: var(--text-secondary);
   min-width: var(--space-2xl);
   font-variant-numeric: tabular-nums;

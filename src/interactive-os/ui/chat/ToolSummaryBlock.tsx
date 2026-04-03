@@ -87,7 +87,7 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
   const Icon = toolIcons[name] ?? Wrench
 
   return (
-    <div className={`${ax({ layout: 'bar' })} ${styles.toolRow}`}>
+    <div className={`${ax({ layout: 'bar', textStyle: 'caption' })} ${styles.toolRow}`}>
       <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
       <span><span className={ax({ weight: 'semi' })}>{name}</span>{detail ? ' ' : ''}<span className={styles.toolDetail}>{detail}</span></span>
     </div>
@@ -119,7 +119,7 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
     <div>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar' })} ${styles.toolResultSummary}`}
+        className={`${ax({ layout: 'bar', textStyle: 'caption' })} ${styles.toolResultSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}

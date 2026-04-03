@@ -40,7 +40,7 @@ const layouts = ['row', 'column', 'center', 'bar', 'spread', 'stack', 'scroll'] 
 /* ══ Section Header ══ */
 
 function SectionTitle({ children }: { children: string }) {
-  return <h3 className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.sectionLabel}`}>{children}</h3>
+  return <h3 className={`${ax({ textStyle: 'caption', text: 'muted', weight: 'semi' })} ${styles.sectionLabel}`}>{children}</h3>
 }
 
 /* ══ Surface ══ */

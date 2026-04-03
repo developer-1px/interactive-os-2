@@ -9,9 +9,6 @@
 .item {
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
   color: var(--text-primary);
   gap: var(--space-sm);
   cursor: default;
@@ -31,19 +28,13 @@
 }
 
 .badge {
-  font-size: var(--type-caption-size);
-  font-weight: var(--type-caption-weight);
   color: var(--text-muted);
   margin-left: auto;
 }
 
 .header {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
   color: var(--text-secondary);
   padding: var(--space-xs) var(--shape-xs-px);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
 }
 
 .nested {
@@ -71,7 +62,6 @@
 }
 
 .valueLabel {
-  font-size: var(--type-caption-size);
   color: var(--text-secondary);
   padding-top: var(--space-xs);
 }

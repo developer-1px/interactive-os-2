@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import type { RegistryEntry } from '../componentRegistry'
+import { ax } from '@styles/ax'
 import styles from '../PageComponentCreator.module.css'
 
 interface ComponentChatProps {
@@ -49,8 +50,8 @@ export function ComponentChat({ entry }: ComponentChatProps) {
     <div className={`flex-col h-full ${styles.chat}`}>
       {/* Context bar */}
       {entry && (
-        <div className={styles.chatContext}>
-          <span className={styles.chatContextLabel}>{entry.name}</span>
+        <div className={`${ax({ textStyle: 'caption' })} ${styles.chatContext}`}>
+          <span className={`${ax({ weight: 'semi' })} ${styles.chatContextLabel}`}>{entry.name}</span>
           {entry.variants.length > 0 && (
             <span className={styles.chatContextMeta}>
               {entry.variants.length} variants, {entry.sizes.length} sizes
@@ -62,7 +63,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       {/* Messages */}
       <div className={`flex-col gap-sm overflow-y-auto flex-1 ${styles.chatMessages}`}>
         {messages.length === 0 && (
-          <div className={`${styles.chatEmpty} text-center`}>
+          <div className={`${ax({ textStyle: 'body' })} ${styles.chatEmpty} text-center`}>
             {entry
               ? `"${entry.name}의 tone을 바꿔줘" 같은 요청을 입력하세요`
               : '컴포넌트를 선택하세요'}
@@ -71,7 +72,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
         {messages.map((msg) => (
           <div
             key={msg.ts}
-            className={`${styles.chatBubble} ${msg.role === 'user' ? styles.chatBubbleUser : styles.chatBubbleAssistant}`}
+            className={`${ax({ textStyle: 'body' })} ${styles.chatBubble} ${msg.role === 'user' ? styles.chatBubbleUser : styles.chatBubbleAssistant}`}
           >
             {msg.content}
           </div>
@@ -81,7 +82,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       {/* Input */}
       <div className={styles.chatInputWrap}>
         <textarea
-          className={`${styles.chatInput} w-full`}
+          className={`${ax({ textStyle: 'body' })} ${styles.chatInput} w-full`}
           data-surface="input"
           placeholder={entry ? `${entry.name} 수정 요청...` : 'dev-channel 미연결'}
           value={input}

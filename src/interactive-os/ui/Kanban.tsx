@@ -127,8 +127,8 @@ export function Kanban({
                       {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
                         <span className={styles.cardSubtitle}>
                           {cardSubtitle}
-                          {cardDepUp != null && cardDepUp > 0 && <span className={styles.depUp}> ↑{cardDepUp}</span>}
-                          {cardDepDown != null && cardDepDown > 0 && <span className={styles.depDown}> ↓{cardDepDown}</span>}
+                          {cardDepUp != null && cardDepUp > 0 && <span className={`${ax({ weight: 'medium' })} ${styles.depUp}`}> ↑{cardDepUp}</span>}
+                          {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${styles.depDown}`}> ↓{cardDepDown}</span>}
                         </span>
                       )}
                     </AriaItemContext.Provider>

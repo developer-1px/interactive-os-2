@@ -179,7 +179,7 @@ export default function PageViewer() {
 
   if (loading || !initialStore) {
     return (
-      <div className={`${styles.vwLoading} ${ax({ layout: 'center', gap: 'sm' })}`}>
+      <div className={`${styles.vwLoading} ${ax({ layout: 'center', gap: 'sm', textStyle: 'body' })}`}>
         <Circle size={12} className={styles.vwLoadingSpinner} />
         <span>Loading project...</span>
       </div>
@@ -217,7 +217,7 @@ export default function PageViewer() {
                       <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center' })}`} />
                     )}
                     <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
-                    <span className={`${ax({ text: 'secondary', clamp: '1' })}${data.type === 'directory' ? ` ${styles.vwTreeNameDir}` : ''}`}>
+                    <span className={`${ax({ text: 'secondary', clamp: '1' })}${data.type === 'directory' ? ` ${ax({ weight: 'medium' })}` : ''}`}>
                       {data.name}
                     </span>
                   </div>

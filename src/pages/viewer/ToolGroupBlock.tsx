@@ -7,6 +7,7 @@ import {
 import { DEFAULT_ROOT } from './types'
 import type { TimelineEvent, ToolGroup } from './groupEvents'
 import type { DataBlock } from '@os/ui/chat/types'
+import { ax } from '@styles/ax'
 import styles from './TimelineColumn.module.css'
 
 // --- Helpers ---
@@ -62,7 +63,7 @@ export const ToolGroupBlock = memo(function ToolGroupBlock({ block }: { block: D
         return (
           <div key={`${evt.ts}-${i}`}>
             <div
-              className={`${styles.tcToolRow} grid items-baseline ${toolClass}${evt.filePath ? ` ${styles.tcFile} cursor-pointer` : ''
+              className={`${ax({ textStyle: 'caption' })} ${styles.tcToolRow} grid items-baseline ${toolClass}${evt.filePath ? ` ${styles.tcFile} cursor-pointer` : ''
                 }${!hasPreview && i < group.events.length - 1 ? ` ${styles.tcToolDivider}` : ''}`}
             >
               <span className={`${styles.tcIcon} flex-row items-center justify-center shrink-0`}>

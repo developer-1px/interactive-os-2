@@ -1,4 +1,6 @@
 import { Children, cloneElement, useId, useRef, useCallback, useEffect } from 'react'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import type { ReactElement, ReactNode, CSSProperties } from 'react'
 import styles from './Tooltip.module.css'
 
@@ -59,7 +61,7 @@ export function Tooltip({ content, children }: TooltipProps): ReactNode {
         id={id}
         popover="hint"
         role="tooltip"
-        className={`fixed ${styles.tooltip}`}
+        className={`fixed ${ax({ textStyle: 'body' })} ${styles.tooltip}`}
         style={{ positionAnchor: anchorName } as CSSProperties}
       >
         {content}

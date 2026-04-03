@@ -61,10 +61,10 @@ const TIMELINE_EVENTS: TimelineEvent[] = [
 function BlockLog() {
   return (
     <div className={styles.block}>
-      <div className={`${styles.logLines} flex-col overflow-x-auto`}>
-        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:12</span><span className={styles.logError}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
-        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:13</span><span className={styles.logError}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
-        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:14</span><span className={styles.logWarn}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
+      <div className={`${ax({ textStyle: 'code' })} ${styles.logLines} flex-col overflow-x-auto`}>
+        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:12</span><span className={`${ax({ weight: 'semi' })} ${styles.logError}`}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
+        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:13</span><span className={`${ax({ weight: 'semi' })} ${styles.logError}`}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
+        <div className={`${styles.logLine} flex-row whitespace-nowrap`}><span className={styles.logTime}>14:35:14</span><span className={`${ax({ weight: 'semi' })} ${styles.logWarn}`}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
       </div>
     </div>
   )
@@ -74,9 +74,9 @@ function BlockMetric() {
   return (
     <div className={styles.block}>
       <div className={`${styles.metricGrid} grid`}>
-        <div className={`${styles.stat} flex-col`}><div className={styles.statValue}>50/50</div><div className={styles.statLabel}>connections</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillBad} h-full`} style={{ width: '100%' }} /></div></div>
-        <div className={`${styles.stat} flex-col`}><div className={styles.statValue}>23</div><div className={styles.statLabel}>pending</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillWarn} h-full`} style={{ width: '46%' }} /></div></div>
-        <div className={`${styles.stat} flex-col`}><div className={styles.statValue}>2.4s</div><div className={styles.statLabel}>p99 latency</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillBad} h-full`} style={{ width: '80%' }} /></div></div>
+        <div className={`${styles.stat} flex-col`}><div className={`${ax({ textStyle: 'body', weight: 'semi' })} ${styles.statValue}`}>50/50</div><div className={`${ax({ textStyle: 'caption' })} ${styles.statLabel}`}>connections</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillBad} h-full`} style={{ width: '100%' }} /></div></div>
+        <div className={`${styles.stat} flex-col`}><div className={`${ax({ textStyle: 'body', weight: 'semi' })} ${styles.statValue}`}>23</div><div className={`${ax({ textStyle: 'caption' })} ${styles.statLabel}`}>pending</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillWarn} h-full`} style={{ width: '46%' }} /></div></div>
+        <div className={`${styles.stat} flex-col`}><div className={`${ax({ textStyle: 'body', weight: 'semi' })} ${styles.statValue}`}>2.4s</div><div className={`${ax({ textStyle: 'caption' })} ${styles.statLabel}`}>p99 latency</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillBad} h-full`} style={{ width: '80%' }} /></div></div>
       </div>
     </div>
   )
@@ -88,18 +88,18 @@ function BlockCause() {
       <div className={`${styles.causeChain} flex-col`}>
         <div className={`${styles.causeNode} flex-row items-start`}>
           <div className={`${styles.causeIcon} flex-row items-center justify-center shrink-0 ${styles.causeIconBad}`}><GitCommit size={12} /></div>
-          <div className="flex-1 min-w-0"><div className={styles.causeTitle}>PR #3421 — config cleanup</div><div className={styles.causeDesc}>pool_size: 100 → 50</div></div>
-          <div className={`${styles.causeBadge} whitespace-nowrap`}>87%</div>
+          <div className="flex-1 min-w-0"><div className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.causeTitle}`}>PR #3421 — config cleanup</div><div className={`${ax({ textStyle: 'caption' })} ${styles.causeDesc}`}>pool_size: 100 → 50</div></div>
+          <div className={`${ax({ textStyle: 'caption', weight: 'semi' })} ${styles.causeBadge} whitespace-nowrap`}>87%</div>
         </div>
         <div className={`${styles.causeArrow} text-center`}><ChevronDown size={12} /></div>
         <div className={`${styles.causeNode} flex-row items-start`}>
           <div className={`${styles.causeIcon} flex-row items-center justify-center shrink-0 ${styles.causeIconWarn}`}><Database size={12} /></div>
-          <div className="flex-1 min-w-0"><div className={styles.causeTitle}>DB pool 고갈</div><div className={styles.causeDesc}>max=50, 동시 요청 처리 불가</div></div>
+          <div className="flex-1 min-w-0"><div className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.causeTitle}`}>DB pool 고갈</div><div className={`${ax({ textStyle: 'caption' })} ${styles.causeDesc}`}>max=50, 동시 요청 처리 불가</div></div>
         </div>
         <div className={`${styles.causeArrow} text-center`}><ChevronDown size={12} /></div>
         <div className={`${styles.causeNode} flex-row items-start`}>
           <div className={`${styles.causeIcon} flex-row items-center justify-center shrink-0 ${styles.causeIconBad}`}><AlertTriangle size={12} /></div>
-          <div className="flex-1 min-w-0"><div className={styles.causeTitle}>p99 2.4s → 3개 서비스 전파</div></div>
+          <div className="flex-1 min-w-0"><div className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.causeTitle}`}>p99 2.4s → 3개 서비스 전파</div></div>
         </div>
       </div>
     </div>
@@ -110,9 +110,9 @@ function BlockSimilar() {
   return (
     <div className={styles.block}>
       <div className={styles.similarCard}>
-        <div className={`${styles.similarHeader} flex-row items-center`}><span className={styles.similarId}>INC-847</span><span className={styles.matchBadge}>92%</span><span className={styles.similarTime}>2주 전</span></div>
-        <div className={styles.similarBody}>동일: DB pool exhaustion after config change</div>
-        <div className={`${styles.similarResolution} flex-row items-center`}><CheckCircle size={12} /><span>해결: pool_size 50→200 (PR #2891) — 3분 정상화</span></div>
+        <div className={`${styles.similarHeader} flex-row items-center`}><span className={`${ax({ textStyle: 'caption', weight: 'semi' })} ${styles.similarId}`}>INC-847</span><span className={`${ax({ textStyle: 'caption', weight: 'semi' })} ${styles.matchBadge}`}>92%</span><span className={`${ax({ textStyle: 'caption' })} ${styles.similarTime}`}>2주 전</span></div>
+        <div className={`${ax({ textStyle: 'caption' })} ${styles.similarBody}`}>동일: DB pool exhaustion after config change</div>
+        <div className={`${ax({ textStyle: 'caption' })} ${styles.similarResolution} flex-row items-center`}><CheckCircle size={12} /><span>해결: pool_size 50→200 (PR #2891) — 3분 정상화</span></div>
       </div>
     </div>
   )
@@ -133,7 +133,7 @@ function BlockBlast() {
     <div className={styles.block}>
       <div className={`${styles.svcList} flex-col`}>
         {BLAST_SERVICES.map((s, i) => (
-          <div key={i} className={`${styles.svcItem} flex-row items-center ${BLAST_CLS[s.state]}`}><Server size={12} /><span className={`${styles.svcName} flex-1`}>{s.name}</span><span className={styles.svcStatus}>{s.status}</span></div>
+          <div key={i} className={`${ax({ textStyle: 'caption' })} ${styles.svcItem} flex-row items-center ${BLAST_CLS[s.state]}`}><Server size={12} /><span className={`${ax({ weight: 'medium' })} ${styles.svcName} flex-1`}>{s.name}</span><span className={styles.svcStatus}>{s.status}</span></div>
         ))}
       </div>
     </div>
@@ -143,10 +143,10 @@ function BlockBlast() {
 function BlockActions() {
   return (
     <div className={`${styles.actionList} flex-row flex-wrap`}>
-      <button className={`${styles.action} flex-row items-center cursor-pointer ${styles.actionPrimary}`}><RotateCcw size={14} />Revert PR #3421<kbd>1</kbd></button>
-      <button className={`${styles.action} flex-row items-center cursor-pointer`}><Play size={14} />Rollback v2.14.2<kbd>2</kbd></button>
-      <button className={`${styles.action} flex-row items-center cursor-pointer`}><Terminal size={14} />Scale pool → 200<kbd>3</kbd></button>
-      <button className={`${styles.action} flex-row items-center cursor-pointer`}><ArrowRight size={14} />Runbook<kbd>4</kbd></button>
+      <button className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.action} flex-row items-center cursor-pointer ${styles.actionPrimary}`}><RotateCcw size={14} />Revert PR #3421<kbd className={ax({ textStyle: 'code' })}>1</kbd></button>
+      <button className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.action} flex-row items-center cursor-pointer`}><Play size={14} />Rollback v2.14.2<kbd className={ax({ textStyle: 'code' })}>2</kbd></button>
+      <button className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.action} flex-row items-center cursor-pointer`}><Terminal size={14} />Scale pool → 200<kbd className={ax({ textStyle: 'code' })}>3</kbd></button>
+      <button className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.action} flex-row items-center cursor-pointer`}><ArrowRight size={14} />Runbook<kbd className={ax({ textStyle: 'code' })}>4</kbd></button>
     </div>
   )
 }
@@ -192,7 +192,7 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
     <div className={`${styles.agentMsg} flex-row items-start`}>
       <div className={`${styles.avatar} flex-row items-center justify-center shrink-0`}><Bot size={14} /></div>
       <div className={`${styles.bubble} flex-1 min-w-0`}>
-        <div className={styles.agentLabel}>
+        <div className={`${ax({ textStyle: 'caption' })} ${styles.agentLabel}`}>
           {displayed}
           {!done && <StreamCursor />}
         </div>
@@ -235,19 +235,19 @@ function MonitoringBar({ services, selectedIndex, onSelect }: {
         {services.map((svc, i) => (
           <button
             key={svc.name}
-            className={`${styles.monitorItem} flex-row items-center cursor-pointer whitespace-nowrap ${i === selectedIndex ? styles.monitorItemActive : ''}`}
+            className={`${ax({ textStyle: 'caption' })} ${styles.monitorItem} flex-row items-center cursor-pointer whitespace-nowrap ${i === selectedIndex ? styles.monitorItemActive : ''}`}
             onClick={() => onSelect(i)}
             aria-pressed={i === selectedIndex}
           >
             <span className={`${styles.indicator} shrink-0 ${STATUS_CLS[svc.status]}`} />
-            <span className={styles.monitorName}>{svc.name}</span>
-            <span className={styles.monitorLatency}>{svc.latency}</span>
+            <span className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.monitorName}`}>{svc.name}</span>
+            <span className={`${ax({ textStyle: 'code' })} ${styles.monitorLatency}`}>{svc.latency}</span>
           </button>
         ))}
       </div>
       <div className={`${styles.monitorMeta} flex-row items-center shrink-0`}>
-        <span className={styles.monitorMetaItem}>INC-1284</span>
-        <span className={`${styles.monitorMetaItem} ${styles.monitorMetaLive}`}>REC</span>
+        <span className={`${ax({ textStyle: 'code' })} ${styles.monitorMetaItem}`}>INC-1284</span>
+        <span className={`${ax({ textStyle: 'code' })} ${styles.monitorMetaItem} ${styles.monitorMetaLive}`}>REC</span>
       </div>
     </div>
   )
@@ -308,7 +308,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
           onSelect(node.id as string)
         }}
       >
-        <div className={`${styles.timelineTime} shrink-0`}>{ev.time}</div>
+        <div className={`${ax({ textStyle: 'code' })} ${styles.timelineTime} shrink-0`}>{ev.time}</div>
         <div className={`${styles.timelineDot} flex-col items-center shrink-0`}>
           <span className={`${styles.dot} shrink-0 ${SEVERITY_CLS[ev.severity]}`} />
           <span className={`${styles.dotLine} flex-1`} />
@@ -316,8 +316,8 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
         <div className={`${styles.timelineContent} flex-row flex-1 min-w-0`}>
           <div className={`${styles.timelineIcon} shrink-0`}>{EVENT_ICON[ev.type]}</div>
           <div className="flex-1 min-w-0">
-            <div className={styles.timelineTitle}>{ev.title}</div>
-            <div className={styles.timelineDetail}>{ev.detail}</div>
+            <div className={`${ax({ textStyle: 'body', weight: 'medium' })} ${styles.timelineTitle}`}>{ev.title}</div>
+            <div className={`${ax({ textStyle: 'caption' })} ${styles.timelineDetail}`}>{ev.detail}</div>
           </div>
         </div>
       </div>
@@ -329,7 +329,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
       <div className={`${ax({ textStyle: 'overline' })} ${styles.panelHeader} flex-row items-center shrink-0`}>
         <Clock size={12} />
         <span>Timeline</span>
-        <span className={styles.panelCount}>{visibleCount}/{events.length}</span>
+        <span className={`${ax({ textStyle: 'code' })} ${styles.panelCount}`}>{visibleCount}/{events.length}</span>
       </div>
       {visibleCount > 0 ? (
         <Aria
@@ -342,7 +342,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
           <Aria.Item render={renderItem} />
         </Aria>
       ) : (
-        <div className={`${styles.panelEmpty} text-center`}>이벤트 수집 중...</div>
+        <div className={`${ax({ textStyle: 'caption' })} ${styles.panelEmpty} text-center`}>이벤트 수집 중...</div>
       )}
     </div>
   )
@@ -372,7 +372,7 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
       <div className={`${ax({ textStyle: 'overline' })} ${styles.panelHeader} flex-row items-center shrink-0`}>
         <Image size={12} />
         <span>Capture</span>
-        {event && <span className={styles.panelCount}>{event.time}</span>}
+        {event && <span className={`${ax({ textStyle: 'code' })} ${styles.panelCount}`}>{event.time}</span>}
       </div>
       {capture ? (
         <div className={`${styles.captureBody} flex-1 flex-col min-h-0`}>
@@ -381,24 +381,24 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
               <div className={`${ax({ textStyle: 'overline' })} ${styles.captureLabel} shrink-0`}>Before</div>
               <div className={`${styles.capturePreview} flex-1 flex-col items-center justify-center`}>
                 <Eye size={16} />
-                <span className={`${styles.captureText} text-center`}>{capture.before}</span>
+                <span className={`${ax({ textStyle: 'code', weight: 'semi' })} ${styles.captureText} text-center`}>{capture.before}</span>
               </div>
             </div>
             <div className={`${styles.captureCard} flex-col min-h-0`}>
               <div className={`${ax({ textStyle: 'overline' })} ${styles.captureLabel} shrink-0`}>After</div>
               <div className={`${styles.capturePreview} flex-1 flex-col items-center justify-center ${styles.captureChanged}`}>
                 <Eye size={16} />
-                <span className={`${styles.captureText} text-center`}>{capture.after}</span>
+                <span className={`${ax({ textStyle: 'code', weight: 'semi' })} ${styles.captureText} text-center`}>{capture.after}</span>
               </div>
             </div>
           </div>
-          <div className={`${styles.captureAi} flex-row items-start shrink-0`}>
+          <div className={`${ax({ textStyle: 'caption' })} ${styles.captureAi} flex-row items-start shrink-0`}>
             <Bot size={12} className="shrink-0" />
             <span>{capture.aiNote}</span>
           </div>
         </div>
       ) : (
-        <div className={`${styles.captureEmpty} flex-1 flex-col items-center justify-center`}>
+        <div className={`${ax({ textStyle: 'caption' })} ${styles.captureEmpty} flex-1 flex-col items-center justify-center`}>
           <Eye size={24} />
           <span>타임라인에서 이벤트를 선택하세요</span>
           <kbd>↑↓</kbd>
@@ -495,7 +495,7 @@ export default function PageIncidentInterface() {
           <div className={`${ax({ textStyle: 'overline' })} ${styles.chatHeader} flex-row items-center shrink-0`}>
             <Bot size={12} />
             <span>AI Analysis</span>
-            <span className={`${styles.chatElapsed} flex-row items-center`}>
+            <span className={`${ax({ textStyle: 'code' })} ${styles.chatElapsed} flex-row items-center`}>
               {endTime
                 ? <><CheckCircle size={10} /><span>{((endTime - (startTime ?? 0)) / 1000).toFixed(1)}s</span></>
                 : startTime
@@ -514,7 +514,7 @@ export default function PageIncidentInterface() {
                 return (
                   <div className={`${styles.userMsg} flex-row items-start justify-end`}>
                     <div className={`${styles.bubble} flex-1 min-w-0`}>
-                      <div className={styles.userLabel}>{msg.text}</div>
+                      <div className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.userLabel}`}>{msg.text}</div>
                     </div>
                     <div className={`${styles.userAvatar} flex-row items-center justify-center shrink-0`}><User size={14} /></div>
                   </div>
@@ -524,16 +524,16 @@ export default function PageIncidentInterface() {
                 return (
                   <div className={styles.systemMsg}>
                     <div className={`${styles.bubble} flex-1 min-w-0`}>
-                      <div className={styles.systemLabel}>{msg.text}</div>
+                      <div className={`${ax({ textStyle: 'caption', weight: 'semi' })} ${styles.systemLabel}`}>{msg.text}</div>
                     </div>
                   </div>
                 )
               }
               if (msg.type === 'tool') {
                 return (
-                  <div className={`${styles.toolMsg} flex-row items-center`}>
+                  <div className={`${ax({ textStyle: 'code' })} ${styles.toolMsg} flex-row items-center`}>
                     <Zap size={10} />
-                    <span className={styles.toolName}>{msg.toolName}</span>
+                    <span className={`${ax({ weight: 'semi' })} ${styles.toolName}`}>{msg.toolName}</span>
                     <span className={`${styles.toolArgs} truncate`}>{msg.text}</span>
                   </div>
                 )
@@ -542,7 +542,7 @@ export default function PageIncidentInterface() {
             }}
           />
           <div className={`${styles.inputBar} flex-row items-center shrink-0`}>
-            <input className={`${ax({ surface: 'input' })} ${styles.input} flex-1 outline-none`} placeholder="AI에게 질문하세요..." disabled={isStreaming} />
+            <input className={`${ax({ surface: 'input', textStyle: 'body' })} ${styles.input} flex-1 outline-none`} placeholder="AI에게 질문하세요..." disabled={isStreaming} />
             <button className={`${styles.sendBtn} flex-row items-center justify-center border-none cursor-pointer`} disabled={isStreaming} onClick={handleReplay}>
               {isStreaming ? <Loader size={14} className={styles.spinner} /> : <Send size={14} />}
             </button>

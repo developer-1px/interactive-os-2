@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { RegistryEntry } from '../componentRegistry'
 import { SourceViewer } from './SourceViewer'
+import { ax } from '@styles/ax'
 import styles from '../PageComponentCreator.module.css'
 
 type SourceTab = 'tsx' | 'css'
@@ -11,17 +12,17 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
   const [sourceTab, setSourceTab] = useState<SourceTab>('tsx')
   return (
     <div className="flex-col overflow-hidden">
-      <div className={`flex-row items-center ${styles.paneHeader}`}>
+      <div className={`flex-row items-center ${ax({ textStyle: 'caption' })} ${styles.paneHeader}`}>
         <button
           data-surface="action"
-          className={`${styles.sourceTab}${sourceTab === 'tsx' ? ` ${styles.sourceTabActive}` : ''}`}
+          className={`${styles.sourceTab}${sourceTab === 'tsx' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
           onClick={() => setSourceTab('tsx')}
         >
           TSX
         </button>
         <button
           data-surface="action"
-          className={`${styles.sourceTab}${sourceTab === 'css' ? ` ${styles.sourceTabActive}` : ''}`}
+          className={`${styles.sourceTab}${sourceTab === 'css' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
           onClick={() => setSourceTab('css')}
         >
           CSS
@@ -31,7 +32,7 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
         {entry ? (
           <SourceViewer entry={entry} activeTab={sourceTab} />
         ) : (
-          <div className={`flex-row items-center justify-center flex-1 ${styles.emptyState}`}>
+          <div className={`flex-row items-center justify-center flex-1 ${ax({ textStyle: 'body' })} ${styles.emptyState}`}>
             컴포넌트를 선택하세요
           </div>
         )}

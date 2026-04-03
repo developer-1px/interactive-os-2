@@ -41,7 +41,6 @@
 }
 
 .fvmMeta {
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
@@ -57,7 +56,6 @@
 
 .fvmClose {
   color: var(--text-secondary);
-  font-size: var(--type-section-size);
   border-radius: var(--shape-xl-radius);
 }
 

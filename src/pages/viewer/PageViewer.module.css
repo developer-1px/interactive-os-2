@@ -9,8 +9,6 @@
   gap: var(--space-sm);
   height: 100svh;
   color: var(--text-muted);
-
-  font-size: var(--type-body-size);
 }
 
 .vw-loading__spinner {
@@ -33,9 +31,6 @@
   border: 1px solid var(--border-default);
   border-radius: var(--shape-xs-radius);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-caption-size);
-
-  font-weight: var(--weight-medium);
   color: var(--text-secondary);
   transition: all 0.15s;
 }
@@ -91,10 +86,6 @@
   color: var(--text-muted);
 }
 
-.vw-tree__name--dir {
-  font-weight: var(--weight-medium);
-}
-
 
 /* --- Content panel --- */
 
@@ -110,8 +101,6 @@
 
 .vw-content__meta {
   gap: var(--space-xs);
-
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
@@ -133,8 +122,6 @@
 .vw-empty {
   gap: var(--space-md);
   color: var(--text-muted);
-
-  font-size: var(--type-body-size);
 }
 
 .vw-empty__icon {

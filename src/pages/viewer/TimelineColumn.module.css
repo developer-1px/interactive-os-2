@@ -16,8 +16,6 @@
 }
 
 .tcLabel {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
   color: var(--text-muted);
 }
 
@@ -26,8 +24,6 @@
 }
 
 .tcHeaderStatus {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-medium);
   color: var(--text-muted);
 }
 
@@ -58,7 +54,6 @@
   background: none;
   border-radius: var(--shape-xs-radius);
   color: var(--text-muted);
-  font-size: var(--type-body-size);
 }
 
 .tcClose:hover {
@@ -75,14 +70,12 @@
 .tcEmpty {
   padding: var(--space-xl) var(--space-lg);
   color: var(--text-muted);
-  font-size: var(--type-body-size);
 }
 
 .tcLoading {
   gap: var(--space-sm);
   padding: var(--space-2xl) var(--space-lg);
   color: var(--text-muted);
-  font-size: var(--type-body-size);
 }
 
 .tcLoadingSpinner {
@@ -100,7 +93,6 @@
   grid-template-columns: var(--icon-sm) 1fr;
   gap: var(--space-sm);
   padding: var(--space-xs) var(--space-md);
-  font-size: var(--type-body-size);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
   max-width: 720px;
@@ -130,7 +122,6 @@
   padding: var(--shape-sm-py) var(--shape-sm-px);
   max-width: 720px;
   color: var(--text-primary);
-  font-weight: var(--weight-medium);
   background: var(--tone-primary-dim);
   border-radius: var(--space-lg) var(--space-lg) var(--space-xs) var(--space-lg);
 }
@@ -139,7 +130,6 @@
 .tcAssistant {
   display: block;
   padding: var(--space-xs) var(--space-md);
-  font-size: var(--type-body-size);
   line-height: var(--leading-relaxed);
   color: var(--text-primary);
   max-width: 720px;
@@ -160,7 +150,6 @@
   grid-template-columns: var(--icon-sm) 1fr;
   gap: var(--space-sm);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
 }
@@ -174,7 +163,7 @@
 /* Tools — icon color */
 .tcEdit .tcIcon, .tcWrite .tcIcon { color: var(--tone-warning-base); }
 .tcRead { color: var(--text-muted); }
-.tcBash { font-family: var(--mono); font-size: var(--type-body-size); }
+.tcBash { font-family: var(--mono); }
 .tcBash .tcIcon { color: var(--tone-success-base); }
 .tcGrep, .tcGlob { color: var(--text-muted); }
 

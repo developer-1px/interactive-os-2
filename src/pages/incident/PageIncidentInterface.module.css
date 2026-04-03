@@ -38,7 +38,6 @@
   border: 1px solid transparent;
   border-radius: var(--shape-xs-radius);
   color: var(--text-muted);
-  font-size: var(--type-caption-size);
   transition:
     background var(--motion-instant-duration) var(--motion-instant-easing),
     color var(--motion-instant-duration) var(--motion-instant-easing);
@@ -69,12 +68,8 @@
 .indicatorWarning { background: var(--tone-warning-base); }
 .indicatorHealthy { background: var(--tone-success-base); opacity: 0.6; }
 
-.monitorName { font-weight: var(--weight-medium); }
-
 .monitorLatency {
   color: var(--text-muted);
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
 }
 
 .monitorMeta {
@@ -82,8 +77,6 @@
 }
 
 .monitorMetaItem {
-  font-size: var(--type-caption-size);
-  font-family: var(--mono);
   color: var(--text-muted);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   background: var(--surface-sunken);
@@ -117,8 +110,6 @@
 .chatElapsed {
   margin-left: auto;
   gap: var(--space-xs);
-  font-family: var(--mono);
-  font-weight: var(--weight-normal);
   color: var(--text-muted);
 }
 
@@ -140,7 +131,6 @@
   padding: 0 var(--shape-md-px);
   border-radius: var(--shape-md-radius);
   color: var(--text-primary);
-  font-size: var(--type-body-size);
 }
 
 .input:focus { border-color: var(--tone-primary-base); }
@@ -174,14 +164,11 @@
 
 .panelCount {
   margin-left: auto;
-  font-family: var(--mono);
   color: var(--text-muted);
-  font-weight: var(--weight-normal);
 }
 
 .panelEmpty {
   padding: var(--space-xl);
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
@@ -208,8 +195,6 @@
 }
 
 .timelineTime {
-  font-size: var(--type-caption-size);
-  font-family: var(--mono);
   color: var(--text-muted);
   width: 36px;
   padding-top: 2px;
@@ -248,8 +233,6 @@
 .evWarning .timelineIcon { color: var(--tone-warning-base); }
 
 .timelineTitle {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
   color: var(--text-primary);
   line-height: var(--leading-snug);
 }
@@ -257,7 +240,6 @@
 .evCritical .timelineTitle { color: var(--tone-destructive-hover); }
 
 .timelineDetail {
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
   margin-top: 1px;
 }
@@ -304,9 +286,6 @@
 }
 
 .captureText {
-  font-family: var(--mono);
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 
@@ -319,7 +298,6 @@
   padding: var(--shape-xs-py) var(--shape-xs-px);
   background: var(--tone-primary-dim);
   border-radius: var(--shape-xs-radius);
-  font-size: var(--type-caption-size);
   color: var(--tone-primary-hover);
   line-height: var(--leading-normal);
 }
@@ -329,12 +307,9 @@
 .captureEmpty {
   gap: var(--space-md);
   color: var(--text-muted);
-  font-size: var(--type-caption-size);
 }
 
 .captureEmpty kbd {
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
   background: var(--surface-default);
   padding: var(--shape-xs-py) var(--shape-xs-px);
@@ -354,8 +329,6 @@
 }
 
 .systemLabel {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
   color: var(--tone-destructive-hover);
 }
 
@@ -374,7 +347,6 @@
 }
 
 .agentLabel {
-  font-size: var(--type-caption-size);
   color: var(--text-primary);
   line-height: var(--leading-normal);
 }
@@ -392,16 +364,14 @@
 
 .logLines {
   gap: var(--border-width);
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
   color: var(--text-secondary);
 }
 
 .logLine { gap: var(--space-sm); }
 .logTime { color: var(--text-muted); }
-.logError { color: var(--tone-destructive-base); font-weight: var(--weight-semi); }
-.logWarn { color: var(--tone-warning-base); font-weight: var(--weight-semi); }
+.logError { color: var(--tone-destructive-base); }
+.logWarn { color: var(--tone-warning-base); }
 
 /* --- Metric grid --- */
 
@@ -411,8 +381,8 @@
 }
 
 .stat { gap: var(--space-inline-code); }
-.statValue { font-size: var(--type-body-size); font-weight: var(--weight-semi); color: var(--text-bright); }
-.statLabel { font-size: var(--type-caption-size); color: var(--text-muted); }
+.statValue { color: var(--text-bright); }
+.statLabel { color: var(--text-muted); }
 
 .barTrack {
   height: 3px;
@@ -453,12 +423,10 @@
 
 .causeIconBad { background: var(--tone-destructive-dim); color: var(--tone-destructive-hover); }
 .causeIconWarn { background: var(--tone-warning-dim); color: var(--tone-warning-hover); }
-.causeTitle { font-size: var(--type-caption-size); font-weight: var(--weight-medium); color: var(--text-primary); }
-.causeDesc { font-size: var(--type-caption-size); color: var(--text-muted); }
+.causeTitle { color: var(--text-primary); }
+.causeDesc { color: var(--text-muted); }
 
 .causeBadge {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
   color: var(--tone-destructive-hover);
   background: var(--tone-destructive-dim);
   padding: var(--shape-xs-py) var(--shape-xs-px);
@@ -476,23 +444,20 @@
 }
 
 .similarHeader { gap: var(--space-sm); margin-bottom: var(--space-xs); }
-.similarId { font-size: var(--type-caption-size); font-weight: var(--weight-semi); color: var(--text-bright); }
+.similarId { color: var(--text-bright); }
 
 .matchBadge {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
   color: var(--tone-primary-base);
   background: var(--tone-primary-dim);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
 }
 
-.similarTime { font-size: var(--type-caption-size); color: var(--text-muted); margin-left: auto; }
-.similarBody { font-size: var(--type-caption-size); color: var(--text-secondary); margin-bottom: var(--space-xs); }
+.similarTime { color: var(--text-muted); margin-left: auto; }
+.similarBody { color: var(--text-secondary); margin-bottom: var(--space-xs); }
 
 .similarResolution {
   gap: var(--space-xs);
-  font-size: var(--type-caption-size);
   color: var(--tone-success-hover);
   background: var(--tone-success-dim);
   padding: var(--shape-xs-py) var(--shape-xs-px);
@@ -508,15 +473,13 @@
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
   background: var(--surface-base);
-  font-size: var(--type-caption-size);
 }
 
 .svcBad { background: var(--tone-destructive-dim); color: var(--tone-destructive-hover); }
 .svcWarn { background: var(--tone-warning-dim); color: var(--tone-warning-hover); }
 .svcOk { color: var(--text-muted); }
 
-.svcName { font-weight: var(--weight-medium); }
-.svcStatus { font-size: var(--type-caption-size); opacity: 0.5; }
+.svcStatus { opacity: 0.5; }
 
 /* --- Action buttons --- */
 
@@ -529,8 +492,6 @@
   border: 1px solid var(--border-default);
   border-radius: var(--shape-xs-radius);
   color: var(--text-primary);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-medium);
   transition:
     background var(--motion-instant-duration) var(--motion-instant-easing),
     border-color var(--motion-instant-duration) var(--motion-instant-easing);
@@ -547,8 +508,6 @@
 .actionPrimary:hover { background: var(--tone-primary-mid); border-color: var(--tone-primary-base); }
 
 .action kbd {
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
   background: var(--surface-base);
   padding: var(--shape-xs-py) var(--shape-xs-px);
@@ -568,8 +527,6 @@
 }
 
 .userLabel {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-medium);
   color: var(--text-primary);
 }
 
@@ -587,12 +544,10 @@
   gap: var(--space-xs);
   padding: var(--space-inline-code) var(--space-sm);
   margin-left: calc(20px + var(--space-sm));
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
-.toolName { color: var(--tone-primary-base); font-weight: var(--weight-semi); }
+.toolName { color: var(--tone-primary-base); }
 .toolArgs { color: var(--text-muted); }
 
 /* --- Utilities --- */

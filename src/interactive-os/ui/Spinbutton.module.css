@@ -13,8 +13,6 @@
 }
 
 .spinbuttonLabel {
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
   color: var(--text-primary);
   min-width: var(--_label-min-w);
 }
@@ -38,7 +36,6 @@
   --_bg-hover: var(--bg-active);
   background: var(--_bg);
   color: var(--text-primary);
-  font-size: var(--type-page-size);
   font-weight: var(--weight-regular);
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
   -webkit-user-select: none;
@@ -57,8 +54,6 @@
 .spinbuttonValue {
   min-width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
   cursor: text;
@@ -68,8 +63,6 @@
   width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-sm);
   background: transparent;
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }

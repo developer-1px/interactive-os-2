@@ -65,6 +65,5 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
-  font-size: var(--type-caption-size);
   opacity: 0.5;
 }

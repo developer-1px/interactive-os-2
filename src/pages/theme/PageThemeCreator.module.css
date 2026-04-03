@@ -26,7 +26,6 @@
 .sectionLabel {
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-weight: 600;
 }
 
 /* ── Mono font for token names ── */

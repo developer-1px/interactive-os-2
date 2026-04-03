@@ -7,7 +7,6 @@
   position: relative;
   padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--chat-indent);
   min-height: var(--icon-sm);
-  font-size: var(--type-caption-size);
   color: var(--text-secondary);
 }
 

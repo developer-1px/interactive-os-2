@@ -1,7 +1,6 @@
 /* ThinkingBlock — collapsible thinking content */
 
 .thinking {
-  font-size: var(--type-caption-size);
   color: var(--text-secondary);
   background: var(--surface-sunken);
   border-radius: var(--shape-md-radius);
