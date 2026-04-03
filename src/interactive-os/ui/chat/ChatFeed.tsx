@@ -1,5 +1,5 @@
 // ② 2026-03-27-chat-module-prd.md
-import { memo, useEffect, useMemo, useRef, type ReactNode } from 'react'
+import { memo, useMemo, useRef, type ReactNode } from 'react'
 import { StreamFeed } from '../StreamFeed'
 import { FallbackBlock } from './FallbackBlock'
 import { TextBlock } from './TextBlock'
@@ -8,6 +8,7 @@ import { DiffBlock } from './DiffBlock'
 import { ToolGroup, ToolChainGroup } from './ToolSummaryBlock'
 import { ChatFeaturesOverride } from './chatFeatures'
 import type { ChatMessage, ChatBlock, DataBlock, BlockRendererMap } from './types'
+import { useAutoscroll } from '../../plugins/autoscroll'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import styles from './ChatFeed.module.css'
@@ -152,85 +153,6 @@ function BlockDispatch({ block, renderers }: { block: ChatBlock; renderers: Bloc
   return <Renderer block={block} />
 }
 
-// --- Scroll controller (single source of truth) ---
-
-function useScrollController(
-  feedRef: React.RefObject<HTMLDivElement | null>,
-  merged: ChatMessage[],
-) {
-  const prevCountRef = useRef(merged.length)
-  const userScrolledUpRef = useRef(false)
-  const rafRef = useRef(0)
-
-  // Wheel → immediately disable auto-scroll & cancel pending scroll
-  useEffect(() => {
-    const el = feedRef.current
-    if (!el) return
-    const onWheel = () => {
-      userScrolledUpRef.current = true
-      if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = 0 }
-    }
-    const onScroll = () => {
-      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 40
-      if (nearBottom) userScrolledUpRef.current = false
-    }
-    el.addEventListener('wheel', onWheel, { passive: true })
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      el.removeEventListener('wheel', onWheel)
-      el.removeEventListener('scroll', onScroll)
-    }
-  }, [feedRef])
-
-  // React to message changes
-  useEffect(() => {
-    const prevCount = prevCountRef.current
-    prevCountRef.current = merged.length
-    if (merged.length <= prevCount) return
-
-    const feed = feedRef.current
-    if (!feed) return
-
-    const newMsg = merged[prevCount]
-
-    // User message → scroll to top of that message
-    if (newMsg?.role === 'user') {
-      const entries = feed.querySelectorAll('[data-feed-entry]')
-      const entry = entries[entries.length - 1] as HTMLElement | undefined
-      if (entry) {
-        requestAnimationFrame(() => {
-          entry.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        })
-      }
-      userScrolledUpRef.current = false
-      return
-    }
-
-    // Other messages: scroll if user hasn't scrolled up
-    if (userScrolledUpRef.current) return
-
-    if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    rafRef.current = requestAnimationFrame(() => {
-      // Scroll so latest content sits ~40% from top
-      const entries = feed.querySelectorAll('[data-feed-entry]')
-      const lastEntry = entries[entries.length - 1] as HTMLElement | undefined
-      if (!lastEntry) return
-      const rect = lastEntry.getBoundingClientRect()
-      const feedRect = feed.getBoundingClientRect()
-      if (rect.bottom < feedRect.bottom) return // still visible
-      const targetFromTop = feedRect.height * 0.4
-      const scrollBy = rect.bottom - feedRect.top - targetFromTop
-      feed.scrollBy({ top: scrollBy, behavior: 'smooth' })
-      rafRef.current = 0
-    })
-  }, [merged, feedRef])
-
-  // Cleanup
-  useEffect(() => {
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
-  }, [])
-}
-
 // --- ChatFeed ---
 
 export function ChatFeed({
@@ -248,7 +170,7 @@ export function ChatFeed({
   const merged = useMemo(() => mergeConsecutiveSystem(messages), [messages])
   const feedRef = useRef<HTMLDivElement | null>(null)
 
-  useScrollController(feedRef, merged)
+  useAutoscroll(feedRef)
 
   return (
     <StreamFeed

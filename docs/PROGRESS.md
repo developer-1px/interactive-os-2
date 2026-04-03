@@ -18,7 +18,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| dispatch + middleware | Integrated | — |
+| dispatch + middleware | Integrated | EffectContext: plugin DOM effect 지원 |
 | defineCommand | Integrated | Phase 2: engine handler registry 전환 |
 | Dispatch Logger | Validated | — |
 
@@ -38,7 +38,8 @@
 | dnd | Integrated | — |
 | spatial | Integrated | — |
 | typeahead | Integrated | — |
-| definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires. 전 플러그인 전환 완료 |
+| autoscroll | Prototype | MutationObserver+IntersectionObserver 기반 자동스크롤. Plugin.useEffect 첫 적용 |
+| definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires, useEffect. 전 플러그인 전환 완료 |
 | *permissions* | Concept | 예제만 존재 |
 
 ## Axis (L3 · 8축 + commands)
