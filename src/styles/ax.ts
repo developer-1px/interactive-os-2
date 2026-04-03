@@ -39,6 +39,8 @@ type Width = 'full' | 'auto' | 'fit' | 'sm' | 'md' | 'lg'
 type Flex = 'none' | 'auto' | '1'
 // clamp: 텍스트 줄 수 제한 ('1'=nowrap+ellipsis, '2'~'4'=line-clamp)
 type Clamp = '1' | '2' | '3' | '4'
+// icon: SVG 크기 (width + height)
+type Icon = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface Axes {
   // 시각 축
@@ -59,6 +61,7 @@ export interface Axes {
   width?: Width
   flex?: Flex
   clamp?: Clamp
+  icon?: Icon
 }
 
 // ── className 매핑 ──
@@ -79,6 +82,7 @@ const prefixes: Record<keyof Axes, string> = {
   width: 'w',
   flex: 'fx',
   clamp: 'cl',
+  icon: 'ic',
 }
 
 /**

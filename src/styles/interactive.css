@@ -116,39 +116,6 @@
   /* padding-left preserved — tree indentation uses it */
 }
 
-/* Accordion heading */
-:where([data-aria-container] [role="heading"]) {
-  padding: var(--space-sm) var(--space-md);
-  cursor: pointer;
-  user-select: none;
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-primary);
-  transition: background 0.08s;
-  outline: 1px solid transparent;
-  outline-offset: -1px;
-}
-
-/* Disclosure button */
-:where([data-aria-container] [role="group"] > [role="button"]) {
-  padding: var(--space-sm) var(--space-md);
-  cursor: pointer;
-  user-select: none;
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
-  color: var(--text-primary);
-  border-radius: var(--shape-md-radius);
-  transition: background 0.08s;
-  outline: 1px solid transparent;
-  outline-offset: -1px;
-}
-
-/* Icon-only button: equal padding, square aspect */
-:where([data-aria-container] [role="option"]:has(> svg:only-child)),
-:where([data-aria-container] [role="button"]:has(> svg:only-child)) {
-  padding: var(--space-sm);
-  aspect-ratio: 1;
-}
 
 /* ── Hover (suppressed when focus is active via :focus-within) ── */
 
@@ -157,9 +124,7 @@
 :where([data-aria-container]:not(:focus-within) [role="menuitem"]:hover),
 :where([data-aria-container]:not(:focus-within) [role="radio"]:hover),
 :where([data-aria-container]:not(:focus-within) [role="switch"]:hover),
-:where([data-aria-container]:not(:focus-within) [role="row"]:hover),
-:where([data-aria-container]:not(:focus-within) [role="heading"]:hover),
-:where([data-aria-container]:not(:focus-within) [role="group"] > [role="button"]:hover) {
+:where([data-aria-container]:not(:focus-within) [role="row"]:hover) {
   background: var(--bg-hover);
 }
 
@@ -176,9 +141,7 @@
 :where([data-aria-container]:not(:focus-within) [role="menuitem"]:focus),
 :where([data-aria-container]:not(:focus-within) [role="radio"]:focus),
 :where([data-aria-container]:not(:focus-within) [role="switch"]:focus),
-:where([data-aria-container]:not(:focus-within) [role="row"]:focus),
-:where([data-aria-container]:not(:focus-within) [role="heading"]:focus),
-:where([data-aria-container]:not(:focus-within) [role="group"] > [role="button"]:focus) {
+:where([data-aria-container]:not(:focus-within) [role="row"]:focus) {
   background: var(--focus-idle);
 }
 
@@ -190,9 +153,7 @@
 :where([data-aria-container]:focus-within [role="menuitem"]:focus),
 :where([data-aria-container]:focus-within [role="radio"]:focus),
 :where([data-aria-container]:focus-within [role="switch"]:focus),
-:where([data-aria-container]:focus-within [role="row"]:focus),
-:where([data-aria-container]:focus-within [role="heading"]:focus),
-:where([data-aria-container]:focus-within [role="group"] > [role="button"]:focus) {
+:where([data-aria-container]:focus-within [role="row"]:focus) {
   background: var(--tone-primary-dim);
   color: var(--text-bright);
   outline-color: var(--focus);
@@ -228,9 +189,7 @@
 :where([data-aria-container] [role="menuitem"]:active:not(:has([role="menuitem"]:active))),
 :where([data-aria-container] [role="radio"]:active),
 :where([data-aria-container] [role="switch"]:active),
-:where([data-aria-container] [role="row"]:active),
-:where([data-aria-container] [role="heading"]:active),
-:where([data-aria-container] [role="group"] > [role="button"]:active) {
+:where([data-aria-container] [role="row"]:active) {
   background: var(--tone-primary-bright);
 }
 
