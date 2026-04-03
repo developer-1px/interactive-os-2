@@ -11,7 +11,7 @@ import type { Command } from '../engine/types'
 import { ax } from '@styles/ax'
 import styles from './SpreadReader.module.css'
 
-const nav = navigate('horizontal')
+const nav = navigate('activedescendant')
 
 interface SpreadReaderProps {
   children: ReactNode
@@ -121,7 +121,7 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
   return (
     <div className={styles.root}>
       <div className={styles.inset}>
-        <div className={styles.viewport} {...aria.containerProps} tabIndex={0}>
+        <div className={styles.viewport} {...aria.containerProps}>
           <div className={styles.columns} ref={columnsRef}>
             {children}
           </div>
