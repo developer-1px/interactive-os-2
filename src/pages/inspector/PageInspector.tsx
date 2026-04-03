@@ -1,51 +1,67 @@
-import { useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import type { InspectResult } from '@os/engine/types'
-import { buildBook, buildTocStore } from '../book/bookContent'
+import { getAllAriaActions } from '@os/primitives/ariaRegistry'
 import { AppInspector } from '../../devtools/inspector/AppInspector'
 import { ax } from '@styles/ax'
 
-function buildBookInspectResult(): InspectResult {
-  const { chapters, pages } = buildBook()
-  const tocStore = buildTocStore(chapters, pages[0]?.id ?? '')
-
-  return {
-    commands: ['book:next-page', 'book:prev-page', 'book:next-spread', 'book:prev-spread'],
-    keyMap: {
-      'ArrowLeft': 'book — 이전 스프레드 (1페이지)',
-      'ArrowRight': 'book — 다음 스프레드 (1페이지)',
-      'ArrowUp': 'book — 이전 파일',
-      'ArrowDown': 'book — 다음 파일',
-    },
-    plugins: [],
-    state: tocStore,
-    extras: {
-      book: {
-        chapters: chapters.length,
-        pages: pages.length,
-        chapterLabels: chapters.map((c) => c.label),
-      },
-    },
-  }
-}
-
 export default function PageInspector() {
-  const inspectResult = useMemo(() => buildBookInspectResult(), [])
+  const [engines, setEngines] = useState<Map<string, { inspect: () => InspectResult }>>(new Map())
+  const [selectedId, setSelectedId] = useState<string>('')
+
+  useEffect(() => {
+    const update = () => {
+      const all = getAllAriaActions()
+      setEngines(new Map(all))
+      if (!selectedId && all.size > 0) {
+        setSelectedId(all.keys().next().value!)
+      }
+    }
+    update()
+    const interval = setInterval(update, 1000)
+    return () => clearInterval(interval)
+  }, [selectedId])
+
+  const selected = engines.get(selectedId)
+  const inspectResult = selected?.inspect()
+  const ids = [...engines.keys()]
 
   return (
     <div>
       <div className="page-header">
         <h2 className="page-title">App Inspector</h2>
         <p className="page-desc">
-          Book App의 전체 구성을 inspector로 탐색합니다.
-          commands, keyMap, TOC store, 챕터/페이지 메타데이터를 한눈에 확인할 수 있습니다.
+          실행 중인 Aria 인스턴스의 engine.inspect() 실시간 데이터.
+          콘솔: <code>__ARIA_ENGINES__.get('id').inspect()</code>
         </p>
       </div>
 
-      <div className={ax({ layout: 'column', gap: 'md' })}>
-        <div className="card overflow-hidden" style={{ minHeight: 500 }}>
-          <AppInspector inspectResult={inspectResult} />
+      {ids.length === 0 ? (
+        <div className={ax({ padding: 'lg', text: 'muted' })}>
+          등록된 Aria 인스턴스가 없습니다. Aria id prop이 설정된 컴포넌트를 포함하는 페이지를 열어주세요.
         </div>
-      </div>
+      ) : (
+        <div className={ax({ layout: 'column', gap: 'md' })}>
+          {ids.length > 1 && (
+            <div className={ax({ layout: 'bar', gap: 'sm' })}>
+              {ids.map((id) => (
+                <button
+                  key={id}
+                  className={ax({
+                    controlSize: 'sm',
+                    surface: id === selectedId ? 'action' : 'ghost',
+                  })}
+                  onClick={() => setSelectedId(id)}
+                >
+                  {id}
+                </button>
+              ))}
+            </div>
+          )}
+          <div className="card overflow-hidden" style={{ minHeight: 500 }}>
+            {inspectResult && <AppInspector inspectResult={inspectResult} />}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

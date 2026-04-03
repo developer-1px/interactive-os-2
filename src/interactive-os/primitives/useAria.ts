@@ -60,6 +60,7 @@ export interface UseAriaReturn {
   focused: string
   selected: string[]
   getStore(): NormalizedData
+  inspect(): import('../engine/types').InspectResult
   containerProps: Record<string, unknown>
 }
 
@@ -314,6 +315,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     focused: focusedId,
     selected: selectedIds,
     getStore: () => engine.getStore(),
+    inspect: () => engine.inspect(),
     containerProps,
   }
 }

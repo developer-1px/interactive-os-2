@@ -300,6 +300,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     focused: focusedId,
     selected: selectedIds,
     getStore: () => virtualEngine.getStore(),
+    inspect: () => virtualEngine.inspect(),
     containerProps: view.containerProps,
   }
 }
