@@ -2,37 +2,8 @@ import { useEffect, useState } from 'react'
 import type { InspectResult } from '@os/engine/types'
 import { getAllAriaActions } from '@os/primitives/ariaRegistry'
 import { AppInspector } from './AppInspector'
-
-const PANEL_STYLE: React.CSSProperties = {
-  position: 'fixed',
-  top: 48,
-  right: 8,
-  bottom: 8,
-  width: 360,
-  background: 'var(--surface-default)',
-  border: '1px solid var(--border-default)',
-  borderRadius: 8,
-  zIndex: 99999,
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-}
-
-const HEADER_STYLE: React.CSSProperties = {
-  padding: '8px 12px',
-  borderBottom: '1px solid var(--border-default)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  fontFamily: 'var(--mono)',
-  fontSize: 'var(--type-caption-size)',
-}
-
-const BODY_STYLE: React.CSSProperties = {
-  flex: 1,
-  overflow: 'auto',
-}
+import { ax } from '@styles/ax'
+import styles from './AppInspectorPanel.module.css'
 
 interface AppInspectorPanelProps {
   isOpen: boolean
@@ -65,23 +36,15 @@ export function AppInspectorPanel({ isOpen, onClose }: AppInspectorPanelProps) {
   const ids = [...engines.keys()]
 
   return (
-    <div style={PANEL_STYLE}>
-      <div style={HEADER_STYLE}>
-        <span style={{ fontWeight: 600 }}>App Inspector</span>
-        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+    <div className={`${styles.panel} ${ax({ surface: 'overlay', layout: 'column', shape: 'md' })}`}>
+      <div className={ax({ layout: 'spread', padding: 'sm', textStyle: 'caption' })}>
+        <span className={ax({ text: 'bright' })}>App Inspector</span>
+        <div className={ax({ layout: 'bar', gap: 'sm' })}>
           {ids.length > 1 && (
             <select
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
-              style={{
-                fontFamily: 'var(--mono)',
-                fontSize: 'var(--type-caption-size)',
-                background: 'var(--surface-sunken)',
-                border: '1px solid var(--border-default)',
-                borderRadius: 4,
-                padding: '2px 4px',
-                color: 'inherit',
-              }}
+              className={styles.select}
             >
               {ids.map((id) => (
                 <option key={id} value={id}>{id}</option>
@@ -89,30 +52,18 @@ export function AppInspectorPanel({ isOpen, onClose }: AppInspectorPanelProps) {
             </select>
           )}
           {ids.length === 1 && (
-            <span style={{ opacity: 0.6 }}>{selectedId}</span>
+            <span className={ax({ text: 'muted' })}>{selectedId}</span>
           )}
-          <button
-            onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'inherit',
-              cursor: 'pointer',
-              padding: '2px 6px',
-              fontSize: 14,
-              opacity: 0.6,
-            }}
-            aria-label="Close inspector"
-          >
+          <button onClick={onClose} className={styles.closeBtn} aria-label="Close inspector">
             ×
           </button>
         </div>
       </div>
-      <div style={BODY_STYLE}>
+      <div className={styles.body}>
         {inspectResult ? (
           <AppInspector inspectResult={inspectResult} />
         ) : (
-          <div style={{ padding: 16, opacity: 0.5, fontFamily: 'var(--mono)', fontSize: 'var(--type-caption-size)' }}>
+          <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
             {ids.length === 0
               ? '등록된 Aria 인스턴스 없음'
               : '선택된 인스턴스 없음'}
