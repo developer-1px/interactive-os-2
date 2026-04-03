@@ -215,6 +215,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
         }
       },
       syncStore() { /* no-op — zone doesn't own engine store */ },
+      inspect: () => engine.inspect(),
     }
 
     function runFocusRecovery(storeBefore: NormalizedData, storeAfter: NormalizedData) {

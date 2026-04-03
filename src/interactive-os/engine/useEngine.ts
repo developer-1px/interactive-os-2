@@ -63,11 +63,19 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
       }
     }
 
+    // Build merged keyMap description for inspect()
+    const mergedKeyMap: Record<string, string> = {}
+    for (const plugin of plugins) {
+      for (const key of Object.keys(plugin.keyMap ?? {})) {
+        mergedKeyMap[key] = plugin.name ?? 'anonymous'
+      }
+    }
+
     // eslint-disable-next-line react-hooks/refs
     engineRef.current = createCommandEngine(data, middlewares, registry, (newStore) => {
       onChangeRef.current?.(newStore)
       forceRender((n) => n + 1)
-    })
+    }, { keyMap: mergedKeyMap, plugins })
   }
 
   // eslint-disable-next-line react-hooks/refs

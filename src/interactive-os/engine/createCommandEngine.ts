@@ -114,13 +114,33 @@ export function createCommandEngine(
     executor
   )
 
+  const inspect = (): import('./types').InspectResult => {
+    const pluginList = options?.plugins ?? []
+    const extras: Record<string, Record<string, unknown>> = {}
+    for (const p of pluginList) {
+      if (p.name && p.inspect) {
+        try {
+          extras[p.name] = p.inspect()
+        } catch (e) {
+          extras[p.name] = { error: e instanceof Error ? e.message : String(e) }
+        }
+      }
+    }
+    return {
+      commands: [...registry.keys()],
+      keyMap: options?.keyMap ?? {},
+      plugins: pluginList.map((p) => p.name ?? 'anonymous'),
+      state: store,
+      extras,
+    }
+  }
+
   return {
     dispatch: (command) => chain(command),
     getStore,
     syncStore: (newStore: NormalizedData) => {
-      // Silently replace internal store — no onStoreChange callback
-      // This is for external data sync, not internal mutations
       store = newStore
     },
+    inspect,
   }
 }

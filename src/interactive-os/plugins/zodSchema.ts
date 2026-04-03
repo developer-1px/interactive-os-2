@@ -57,6 +57,13 @@ export function zodSchema(options: ZodSchemaOptions) {
   return definePlugin({
     name: 'zodSchema',
     intercepts: [PASTE, CUT],
+    inspect: () => ({
+      schemas: Object.keys(options.childRules),
+      childRules: Object.fromEntries(
+        Object.entries(options.childRules).map(([k, v]) => [k, v instanceof z.ZodArray ? 'collection' : 'slot']),
+      ),
+      rootTypes: options.rootTypes?.length ?? 0,
+    }),
     middleware: (next: (command: Command) => void, _getStore) => (command: Command) => {
       if (command.type === PASTE) {
         const payload = command.payload as { targetId: string }

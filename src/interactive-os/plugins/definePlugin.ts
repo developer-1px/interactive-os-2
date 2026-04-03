@@ -1,8 +1,10 @@
-import type { Command, Middleware, VisibilityFilter, Plugin } from './types'
+import type { Command, Middleware, VisibilityFilter, Plugin, EffectContext } from './types'
 import type { NormalizedData } from '../store/types'
 
 export interface PluginConfig {
   name: string
+  /** React hook body — DOM read+write만 허용, dispatch/setState 금지 */
+  useEffect?: (ctx: EffectContext) => void
   visibilityFilter?: VisibilityFilter
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: Record<string, (...args: any[]) => any>
@@ -20,6 +22,8 @@ export interface PluginConfig {
   onCut?: (ctx: any) => Command | void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPaste?: (ctx: any) => Command | void
+  /** Introspect plugin-specific data for devtools inspector */
+  inspect?: () => Record<string, unknown>
 }
 
 function composeMiddlewares(middlewares: Middleware[]): Middleware {
@@ -31,7 +35,7 @@ function composeMiddlewares(middlewares: Middleware[]): Middleware {
 }
 
 export function definePlugin(config: PluginConfig): Plugin {
-  const { name, commands, keyMap, middleware, onUnhandledKey, intercepts, requires, onCopy, onCut, onPaste, visibilityFilter } = config
+  const { name, commands, keyMap, middleware, onUnhandledKey, intercepts, requires, onCopy, onCut, onPaste, visibilityFilter, inspect, useEffect } = config
 
   const middlewares: Middleware[] = []
   for (const dep of requires ?? []) {
@@ -50,5 +54,7 @@ export function definePlugin(config: PluginConfig): Plugin {
     onCut,
     onPaste,
     visibilityFilter,
+    inspect,
+    useEffect,
   }
 }
