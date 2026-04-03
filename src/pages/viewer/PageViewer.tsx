@@ -11,6 +11,8 @@ import type { NormalizedData, Entity } from '@os/store/types'
 import { FileIcon } from '@os/ui/FileIcon'
 import { Breadcrumb } from '@os/ui/Breadcrumb'
 import { QuickOpen } from '@os/ui/QuickOpen'
+import { FOCUS_ID } from '@os/axis/navigate'
+import { EXPANDED_ID } from '@os/axis/expand'
 import { DEFAULT_ROOT, type FileNodeData } from './types'
 import { fetchTree } from './fsClient'
 import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelected } from './treeTransform'
@@ -58,6 +60,32 @@ export default function PageViewer() {
       setInitialStore(store)
       setLoading(false)
     })
+  }, [])
+
+  // Re-fetch tree on file add/remove (HMR custom event from vite-plugin-fs)
+  useEffect(() => {
+    if (!import.meta.hot) return
+    const handler = () => {
+      fetchTree(DEFAULT_ROOT).then((tree) => {
+        setInitialStore(prev => {
+          const next = treeToStore(tree)
+          if (!prev) return next
+          // Preserve expanded/focus state
+          const expanded = prev.entities[EXPANDED_ID]
+          const focus = prev.entities[FOCUS_ID]
+          return {
+            ...next,
+            entities: {
+              ...next.entities,
+              ...(expanded && { [EXPANDED_ID]: expanded }),
+              ...(focus && { [FOCUS_ID]: focus }),
+            },
+          }
+        })
+      })
+    }
+    import.meta.hot.on('fs:tree-update', handler)
+    return () => { import.meta.hot!.off('fs:tree-update', handler) }
   }, [])
 
   const previewFile = useCallback((filePath: string) => {

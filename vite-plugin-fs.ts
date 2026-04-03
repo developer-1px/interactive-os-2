@@ -347,6 +347,14 @@ export function fsPlugin(): Plugin {
         }
       })
 
+      // Notify client when files are added or removed
+      for (const event of ['add', 'unlink', 'addDir', 'unlinkDir'] as const) {
+        server.watcher.on(event, (changedPath) => {
+          if (IGNORE.has(path.basename(changedPath))) return
+          server.hot.send({ type: 'custom', event: 'fs:tree-update', data: { path: changedPath, kind: event } })
+        })
+      }
+
       server.middlewares.use((req, res, next) => {
         const url = new URL(req.url!, `http://${req.headers.host}`)
 
