@@ -24,6 +24,8 @@ import { ax } from '@styles/ax'
 import styles from './PageViewer.module.css'
 import { FilePanel } from './widgets/FilePanel'
 import { previewFileReducer, pinFileReducer, openInNewPaneReducer, duplicatePaneReducer } from './viewerWorkspace'
+import { LiveSessionPanel } from '../replay/LiveSessionPanel'
+import { useActiveSessions } from '../replay/useActiveSessions'
 
 const TREE_RATIO_KEY = 'viewer-tree-ratio'
 const DEFAULT_TREE_RATIO = 0.18
@@ -163,6 +165,17 @@ export default function PageViewer() {
 
   const { onKeyDown: handleLayoutKeyDown } = useLayoutKeys(viewerLayoutHandlers)
 
+  // Live session auto-display
+  const activeSessions = useActiveSessions()
+  const hasLiveSession = activeSessions.length > 0
+  const [liveSizes, setLiveSizes] = useState<PaneSize[]>([0.6, 0.4])
+
+  const handleViewerUpdate = useCallback((_files: Map<string, string>, activeFilePath: string | null) => {
+    if (activeFilePath) {
+      setWorkspaceStore(prev => pinFileReducer(prev, activeFilePath))
+    }
+  }, [])
+
   if (loading || !initialStore) {
     return (
       <div className={`${styles.vwLoading} ${ax({ layout: 'center', gap: 'sm' })}`}>
@@ -229,12 +242,24 @@ export default function PageViewer() {
               </button>
             </div>
           </div>
-          <Workspace
-            data={workspaceStore}
-            onChange={handleWorkspaceChange}
-            renderPanel={renderPanel}
-            aria-label="File workspace"
-          />
+          {hasLiveSession ? (
+            <SplitPane direction="vertical" sizes={liveSizes} onResize={setLiveSizes} minRatio={0.15}>
+              <Workspace
+                data={workspaceStore}
+                onChange={handleWorkspaceChange}
+                renderPanel={renderPanel}
+                aria-label="File workspace"
+              />
+              <LiveSessionPanel onViewerUpdate={handleViewerUpdate} />
+            </SplitPane>
+          ) : (
+            <Workspace
+              data={workspaceStore}
+              onChange={handleWorkspaceChange}
+              renderPanel={renderPanel}
+              aria-label="File workspace"
+            />
+          )}
         </div>
       </SplitPane>
 
