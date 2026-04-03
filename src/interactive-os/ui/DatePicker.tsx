@@ -20,7 +20,6 @@ const CALENDAR_ID = '__calendar__'
 const calendarCommands = defineCommands({
   open: {
     type: 'calendar:open' as const,
-    meta: true,
     create: (focusDayIndex: number) => ({ focusDayIndex }),
     handler: (store, { focusDayIndex }) => ({
       ...store,
@@ -32,7 +31,6 @@ const calendarCommands = defineCommands({
   },
   close: {
     type: 'calendar:close' as const,
-    meta: true,
     handler: (store) => ({
       ...store,
       entities: {
@@ -43,7 +41,7 @@ const calendarCommands = defineCommands({
   },
   setFocusDay: {
     type: 'calendar:set-focus-day' as const,
-    meta: true,
+
     create: (focusDayIndex: number) => ({ focusDayIndex }),
     handler: (store, { focusDayIndex }) => ({
       ...store,
@@ -60,13 +58,13 @@ const calendarCommands = defineCommands({
 const calendarNavCommands = defineCommands({
   changeMonth: {
     type: 'calendar:change-month' as const,
-    meta: true,
+
     create: (delta: number, resultYear: number, resultMonth: number) => ({ delta, resultYear, resultMonth }),
     handler: (store) => store, // no-op: year/month lives outside engine
   },
   changeYear: {
     type: 'calendar:change-year' as const,
-    meta: true,
+
     create: (delta: number, resultYear: number) => ({ delta, resultYear }),
     handler: (store) => store, // no-op: year/month lives outside engine
   },
