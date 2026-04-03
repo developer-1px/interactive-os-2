@@ -1,13 +1,25 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
+import type React from 'react'
 import type { NormalizedData } from '../store/types'
 
 // ② 2026-03-29-engine-handler-registry-prd.md
+
+// ② 2026-04-03-app-inspector-prd.md
+export interface InspectResult {
+  commands: string[]
+  keyMap: Record<string, string>
+  plugins: string[]
+  state: NormalizedData
+  extras: Record<string, Record<string, unknown>>
+}
 
 export interface CommandEngine {
   dispatch(command: Command): void
   getStore(): NormalizedData
   /** Replace internal store with external data (for controlled/sync scenarios) */
   syncStore(newStore: NormalizedData): void
+  /** Introspect engine capability — commands, keyMap, plugins, state, plugin extras */
+  inspect(): InspectResult
 }
 
 export interface Command {
@@ -46,6 +58,10 @@ export interface VisibilityFilter {
 
 export interface EngineOptions {
   logger?: boolean | ((entry: import('./logger').LogEntry) => void)
+  /** Merged keyMap from all plugins — for inspect() introspection */
+  keyMap?: Record<string, string>
+  /** Plugin instances — for inspect() introspection */
+  plugins?: Plugin[]
 }
 
 export function isBatchCommand(cmd: Command): cmd is BatchCommand {
@@ -76,9 +92,18 @@ export interface RendererModule {
   ) => unknown
 }
 
+// ② 2026-04-03-plugin-effect-autoscroll-prd.md
+/** Effect context — read-only, DOM-only. dispatch 접근 불가 (whitelist 타입) */
+export interface EffectContext {
+  containerRef: React.RefObject<HTMLElement | null>
+  getStore: () => NormalizedData
+}
+
 /** Plugin 인터페이스 — engine이 소비하는 계약 */
 export interface Plugin {
   name?: string
+  /** React hook body — DOM read+write만 허용, dispatch/setState 금지 */
+  useEffect?: (ctx: EffectContext) => void
   middleware?: Middleware
   visibilityFilter?: VisibilityFilter
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,4 +121,6 @@ export interface Plugin {
   onPaste?: (ctx: any) => Command | void
   /** Write OS 확장팩의 optional renderer — behavior + 렌더링을 자급자족 */
   renderer?: RendererModule
+  /** Introspect plugin-specific data for devtools inspector */
+  inspect?: () => Record<string, unknown>
 }

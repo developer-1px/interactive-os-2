@@ -46,6 +46,7 @@ export function history() {
 
   return definePlugin({
     name: 'history',
+    inspect: () => ({ undoCount: past.length, redoCount: future.length }),
     commands: {
       __restore: restoreCommand,
     },
