@@ -50,39 +50,39 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `store/createSingleNodeStore.ts` 신규 | 단일/소수 노드 NormalizedData 생성 헬퍼. chat 블록 등 최소 disclosure 보일러플레이트 제거 | |
-| `axis/edit.ts` 신규 | edit 축: `editCommands.startEdit/commitEdit/cancelEdit`. meta entity `__edit__`. Spinbutton의 editing/editValue/invalid 상태 관리 | |
+| `store/createSingleNodeStore.ts` 신규 | 단일/소수 노드 NormalizedData 생성 헬퍼. chat 블록 등 최소 disclosure 보일러플레이트 제거 | ✅ `createSingleNodeStore.ts::createSingleNodeStore, createSequentialStore` |
+| `axis/edit.ts` 신규 | edit 축: `editCommands.startEdit/commitEdit/cancelEdit`. meta entity `__edit__`. Spinbutton의 editing/editValue/invalid 상태 관리 | ✅ `edit.ts::editCommands, editCtx, edit` |
 
 ### A. SpreadReader (engine-free → useAria)
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `ui/SpreadReader.tsx` 수정 | `useState(spread/totalSpreads)` 제거 → useAria + navigate 축. CSS 측정으로 N개 노드 NormalizedData 구성. AriaRoute 제거 | |
+| `ui/SpreadReader.tsx` 수정 | `useState(spread/totalSpreads)` 제거 → useAria + navigate 축. CSS 측정으로 N개 노드 NormalizedData 구성. AriaRoute 제거 | ✅ `SpreadReader.tsx::SpreadReader` |
 
 ### B. Chat 블록 (`<details>` → disclosure 패턴)
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `ui/chat/ThinkingBlock.tsx` 수정 | `<details>` + `useState(open)` → Aria + disclosure. isLatest→false 시 `expandCommands.collapse` dispatch | |
-| `ui/chat/FallbackBlock.tsx` 수정 | 동일 전환 | |
-| `ui/chat/ToolSummaryBlock.tsx` 수정 | ToolResultBlock, ToolGroup, ToolChainGroup 3곳의 `<details>` → Aria + disclosure | |
+| `ui/chat/ThinkingBlock.tsx` 수정 | `<details>` + `useState(open)` → Aria + disclosure. isLatest→false 시 `expandCommands.collapse` dispatch | ✅ `ThinkingBlock.tsx::ThinkingBlock` + `useDisclosure.ts::useDisclosure` |
+| `ui/chat/FallbackBlock.tsx` 수정 | 동일 전환 | ✅ `FallbackBlock.tsx::FallbackBlock` |
+| `ui/chat/ToolSummaryBlock.tsx` 수정 | ToolResultBlock, ToolGroup, ToolChainGroup 3곳의 `<details>` → Aria + disclosure | ✅ `ToolSummaryBlock.tsx::ToolResultBlock, ToolGroup, ToolChainGroup` |
 
 ### C. 축 부재 해소
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `ui/Spinbutton.tsx` 수정 | `useState(editing/editValue/invalid)` → edit 축 Command. engine 내부에서 edit 상태 관리 | |
-| `ui/DatePicker.tsx` 수정 | `useState(isOpen)` → popup 축. `useState(year/month)` → `calendar:prevMonth/nextMonth` Command + TransformAdapter로 재normalize. 모든 useState 제거 | |
+| `ui/Spinbutton.tsx` 수정 | `useState(editing/editValue/invalid)` → edit 축 Command. engine 내부에서 edit 상태 관리 | ✅ `Spinbutton.tsx::Spinbutton` |
+| `ui/DatePicker.tsx` 수정 | `useState(isOpen)` → popup 축. `useState(year/month)` → `calendar:prevMonth/nextMonth` Command + TransformAdapter로 재normalize. 모든 useState 제거 | 🔀 `DatePicker.tsx::DatePicker` — year/month/isOpen useState 잔존하되 Command 발행으로 기록. TransformAdapter 패턴 |
 
 ### D. AriaRoute Command 전환
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `primitives/AriaRoute.tsx` 수정 | `RouteKeyMap = Record<string, () => void>` → `Record<string, () => Command \| void>`. 반환 Command를 로깅 | |
-| `pages/cms/CmsLayout.tsx` 수정 | keyMap 핸들러가 Command 반환 | |
-| `pages/viewer/PageViewer.tsx` 수정 | 동일 | |
-| `pages/book/PageBookViewer.tsx` 수정 | 동일 | |
-| `pages/viewer/widgets/FilePanel.tsx` 수정 | 동일 | |
+| `primitives/AriaRoute.tsx` 수정 | `RouteKeyMap = Record<string, () => void>` → `Record<string, () => Command \| void>`. 반환 Command를 로깅 | ✅ `AriaRoute.tsx::AriaRoute, RouteKeyMap` |
+| `pages/cms/CmsLayout.tsx` 수정 | keyMap 핸들러가 Command 반환 | ✅ |
+| `pages/viewer/PageViewer.tsx` 수정 | 동일 | ✅ |
+| `pages/book/PageBookViewer.tsx` 수정 | 동일 | ✅ |
+| `pages/viewer/widgets/FilePanel.tsx` 수정 | 동일 | ✅ |
 
 완성도: 🟢
 
@@ -200,7 +200,7 @@
 | 2 | `<details>` 네이티브 disclosure | ⑥#2 | engine 밖 접근성 → Command 흐름 단절 | |
 | 3 | chat 블록에 history 플러그인 | ⑤#4 | expand/collapse는 view state, undo 대상 아님 | |
 | 4 | AriaRoute에서 Command 없이 side-effect | ⑤#5 | 기록·통신 불가 | |
-| 5 | DatePicker year/month를 useState | ⑤#9 + /conflict | TransformAdapter + calendar Command | |
+| 5 | DatePicker year/month를 useState로만 관리 (Command 미발행) | ⑤#9 + /conflict | TransformAdapter + calendar Command로 기록 필수 | |
 | 6 | Spinbutton editing을 useState | 동일 | edit 축 Command | |
 | 7 | 한 파일에서 engine + useState 혼용 | ⑥#1 | 빅뱅. 중간 상태 금지 | |
 
