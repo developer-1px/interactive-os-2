@@ -9,10 +9,12 @@ function buildBookInspectResult(): InspectResult {
   const tocStore = buildTocStore(chapters, pages[0]?.id ?? '')
 
   return {
-    commands: ['book:next-page', 'book:prev-page'],
+    commands: ['book:next-page', 'book:prev-page', 'book:next-spread', 'book:prev-spread'],
     keyMap: {
-      'ArrowDown': 'book (page-level)',
-      'ArrowUp': 'book (page-level)',
+      'ArrowLeft': 'book — 이전 스프레드 (1페이지)',
+      'ArrowRight': 'book — 다음 스프레드 (1페이지)',
+      'ArrowUp': 'book — 이전 파일',
+      'ArrowDown': 'book — 다음 파일',
     },
     plugins: [],
     state: tocStore,
