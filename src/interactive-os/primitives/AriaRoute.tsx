@@ -7,7 +7,7 @@ export type RouteKeyMap = Record<string, () => Command | void>
 
 /** Route-scoped global shortcuts. Owns a document keydown listener that lives
  *  for the lifetime of the component — mount = activate, unmount = deactivate.
- *  Handlers return Command for logging/communication. void is allowed for backward compat. */
+ *  Handlers return Command for logging/communication. */
 export function AriaRoute({ keyMap, children }: { keyMap: RouteKeyMap; children: ReactNode }) {
   useEffect(() => {
     if (Object.keys(keyMap).length === 0) return
