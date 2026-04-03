@@ -1,26 +1,43 @@
+/* Tooltip — last-mile only */
+
 .tooltip {
-  position-area: bottom span-all;
-  position-try-fallbacks: flip-block;
   margin: 0;
-  margin-top: var(--space-xs);
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   max-width: calc(var(--space-3xl) * 6);
-
-  background: var(--surface-raised);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xs-radius);
-
   line-height: var(--leading-snug);
   white-space: normal;
   word-wrap: break-word;
-
   transition:
     opacity var(--motion-enter-duration) var(--motion-enter-easing),
     transform var(--motion-enter-duration) var(--motion-enter-easing);
 
   /* popover reset */
   inset: unset;
-
+  position: fixed;
   pointer-events: none;
+}
+
+/* ── Placement (CSS anchor positioning) ── */
+
+.bottom {
+  position-area: bottom span-all;
+  position-try-fallbacks: flip-block;
+  margin-top: var(--space-xs);
+}
+
+.top {
+  position-area: top span-all;
+  position-try-fallbacks: flip-block;
+  margin-bottom: var(--space-xs);
+}
+
+.right {
+  position-area: right span-all;
+  position-try-fallbacks: flip-inline;
+  margin-left: var(--space-xs);
+}
+
+.left {
+  position-area: left span-all;
+  position-try-fallbacks: flip-inline;
+  margin-right: var(--space-xs);
 }

@@ -1,15 +1,17 @@
 import { Children, cloneElement, useId, useRef, useCallback, useEffect } from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import type { ReactElement, ReactNode, CSSProperties } from 'react'
-import styles from './Tooltip.module.css'
+import s from './Tooltip.module.css'
+
+type Placement = 'top' | 'bottom' | 'left' | 'right'
 
 interface TooltipProps {
   content: string
+  placement?: Placement
   children: ReactNode
 }
 
-export function Tooltip({ content, children }: TooltipProps): ReactNode {
+export function Tooltip({ content, placement = 'bottom', children }: TooltipProps): ReactNode {
   const id = `tooltip-${useId()}`
   const anchorName = `--${id.replace(/[^a-zA-Z0-9-]/g, '')}`
   const tooltipRef = useRef<HTMLSpanElement>(null)
@@ -61,7 +63,7 @@ export function Tooltip({ content, children }: TooltipProps): ReactNode {
         id={id}
         popover="hint"
         role="tooltip"
-        className={`fixed ${ax({ textStyle: 'body', text: 'primary' })} ${styles.tooltip}`}
+        className={`${ax({ surface: 'overlay', padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'primary' })} ${s.tooltip} ${s[placement]}`}
         style={{ positionAnchor: anchorName } as CSSProperties}
       >
         {content}

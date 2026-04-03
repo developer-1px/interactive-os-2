@@ -334,3 +334,9 @@
 .cl-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .cl-3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 .cl-4 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+
+/* ── icon: SVG 크기 (width + height) ── */
+.ic-xs { width: var(--icon-xs); height: var(--icon-xs); }
+.ic-sm { width: var(--icon-sm); height: var(--icon-sm); }
+.ic-md { width: var(--icon-md); height: var(--icon-md); }
+.ic-lg { width: var(--icon-lg); height: var(--icon-lg); }

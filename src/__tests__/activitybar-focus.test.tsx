@@ -29,7 +29,7 @@ describe('ActivityBar focus on initial load', () => {
   it('/ — exactly one item has --active class', async () => {
     const { container } = renderAtPath('/')
     await waitFor(() => {
-      const activeItems = container.querySelectorAll('.activity-bar__item--active')
+      const activeItems = container.querySelectorAll('.item-indicator--active-rail')
       expect(activeItems.length).toBe(1)
     })
   })

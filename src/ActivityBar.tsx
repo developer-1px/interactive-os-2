@@ -15,6 +15,8 @@ import type { AriaPattern, NodeState } from '@os/pattern/types'
 import type { NormalizedData } from '@os/store/types'
 import { selectionFollowsFocusMiddleware } from '@os/axis/select'
 import { Tooltip } from '@os/ui/Tooltip'
+import { SeparatorIndicator } from '@os/ui/indicators'
+import { ax } from '@styles/ax'
 
 // --- contents/_meta.yaml auto-import ---
 
@@ -150,9 +152,10 @@ const renderNavItem = (props: HTMLAttributes<HTMLElement>, node: Record<string, 
   const nav = navItems.find((n) => n.id === (node.id as string))!
   const Icon = nav.icon
   return (
-    <Tooltip content={nav.label}>
-      <div {...props} className={`activity-bar__item flex-row items-center justify-center no-underline relative${state.focused ? ' activity-bar__item--active' : ''}`}>
-        <Icon size={16} />
+    <Tooltip content={nav.label} placement="right">
+      <div {...props} className={ax({ surface: 'ghost', layout: 'center', controlSize: 'md', shape: 'xl', text: state.focused ? 'bright' : 'muted' })}>
+        {state.focused && <span className="item-indicator--active-rail" />}
+        <Icon className={ax({ icon: 'sm' })} />
       </div>
     </Tooltip>
   )
@@ -212,8 +215,8 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
   }, [navigate, onThemeToggle])
 
   return (
-    <nav className="activity-bar flex-col items-center overflow-x-hidden overflow-y-auto">
-      <div className="activity-bar__logo flex-row items-center justify-center">
+    <nav className={ax({ layout: 'scroll', padding: 'xs' })}>
+      <div className={ax({ layout: 'center', controlSize: 'md' })}>
         <div className="logo-mark" />
       </div>
       <Aria
@@ -227,17 +230,19 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
         <div role="group" aria-label="Apps">
           <Aria.Item asChild ids={APP_IDS} render={renderNavItem} />
         </div>
-        <div role="separator" className="activity-bar__separator" />
+        <SeparatorIndicator />
         <div role="group" aria-label="Internals">
           <Aria.Item asChild ids={INTERNALS_IDS} render={renderNavItem} />
         </div>
-        <div role="group" aria-label="Util" className="activity-bar__util">
+        <div className={ax({ flex: '1' })} />
+        <div role="group" aria-label="Util">
           <Aria.Item asChild ids={UTIL_IDS} render={(props, _node, state) => {
             const ThemeIcon = theme === 'dark' ? Sun : Moon
             return (
-              <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
-                <div {...props} className={`activity-bar__item flex-row items-center justify-center no-underline relative activity-bar__theme-toggle border-none cursor-pointer${state.focused ? ' activity-bar__item--active' : ''}`}>
-                  <ThemeIcon size={16} />
+              <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} placement="right">
+                <div {...props} className={ax({ surface: 'ghost', layout: 'center', controlSize: 'md', shape: 'xl', text: state.focused ? 'bright' : 'muted' })}>
+                  {state.focused && <span className="item-indicator--active-rail" />}
+                  <ThemeIcon className={ax({ icon: 'sm' })} />
                 </div>
               </Tooltip>
             )

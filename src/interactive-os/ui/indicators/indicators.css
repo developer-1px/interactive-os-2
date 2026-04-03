@@ -323,3 +323,16 @@
   width: 1px;
   align-self: stretch;
 }
+
+/* ── Active rail indicator (nav sidebar) ── */
+
+:where(.item-indicator--active-rail) {
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: var(--tone-primary-base);
+  border-radius: 0 2px 2px 0;
+}
