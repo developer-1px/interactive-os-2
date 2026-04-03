@@ -88,7 +88,7 @@ export function TreeView({
   }
 
   return (
-    <div {...(tv.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={ax({ layout: 'column' })}>
+    <div {...(tv.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${ax({ layout: 'column' })} flex-1 min-h-0`}>
       {renderNodes(ROOT_ID)}
     </div>
   )
