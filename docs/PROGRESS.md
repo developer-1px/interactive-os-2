@@ -88,6 +88,7 @@
 | SpatialView | Validated | 읽기 전용 공간 탐색 컨테이너. spatialViewPreset + useSpatialNav. storymap에서 검증 |
 | Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음, Toaster testPath 없음 |
 | chat/ (ChatFeed · Composer · TextBlock · CodeBlock · DiffBlock) | Prototype | 블록 렌더러 OCP, agent viewer 포팅 완료. Composer ghost text autocomplete (slash command). 인터랙티브 블록(storeKey) 미실전 검증. **Perf:** MarkdownViewer memo화, 블록 컴포넌트 memo, StreamingTextBlock `\n` pacing + 코드펜스 보류 |
+| A2UISurface | Prototype | A2UI JSON → 우리 UI 컴포넌트 렌더링. 읽기 전용. 15/18 Basic Catalog 매핑. action 미구현 |
 | *Select* | — | Combobox 래퍼, 미구현 |
 | *ContextMenu* | — | MenuList + popover, 미구현 |
 | **DatePicker · CalendarGrid** | Validated | 첫 composite ui/ 완성품. useEngine + useAriaZone(calendarGrid) + dialog focus trap. Gap 3 해소 |
