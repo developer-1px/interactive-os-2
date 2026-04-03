@@ -50,7 +50,7 @@ export default function CmsLayout() {
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
 
   const cmsGlobalKeyMap = useMemo(() => ({
-    'Mod+\\': () => { setPresenting(prev => !prev) },
+    'Mod+\\': () => { setPresenting(prev => !prev); return { type: 'cms:toggle-present' } as const },
   }), [])
 
   const sidebarResizer = useResizer({

@@ -1,26 +1,34 @@
-// ② 2026-03-27-chat-module-prd.md
-import { useState } from 'react'
+// ② 2026-04-03-command-unification-prd.md
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { useChatFeatures } from './chatFeatures'
+import { useDisclosure } from './useDisclosure'
 import type { ChatBlock } from './types'
 import styles from './FallbackBlock.module.css'
 
 export function FallbackBlock({ block }: { block: ChatBlock }) {
   const { expandByDefault } = useChatFeatures()
-  const [open, setOpen] = useState(expandByDefault)
   const raw = 'data' in block && block.data != null
     ? JSON.stringify(block.data, null, 2)
     : null
 
+  const { expanded, toggle, toggleProps } = useDisclosure({ initialOpen: expandByDefault })
+
   return (
-    <details className={styles.fallback} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary className={`${ax({ layout: 'bar' })} ${styles.fallbackSummary}`}>
-        <ExpandIndicator variant="expand" />
+    <div className={styles.fallback}>
+      <div
+        {...toggleProps}
+        className={`${ax({ layout: 'bar' })} ${styles.fallbackSummary}`}
+        role="button"
+        aria-expanded={expanded}
+        tabIndex={0}
+        onClick={toggle}
+      >
+        <ExpandIndicator variant="expand" expanded={expanded} />
         <span>{block.type}</span>
-      </summary>
-      {raw && <pre className={styles.fallbackPre}>{raw}</pre>}
-    </details>
+      </div>
+      {expanded && raw && <pre className={styles.fallbackPre}>{raw}</pre>}
+    </div>
   )
 }

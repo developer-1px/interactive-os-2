@@ -151,10 +151,11 @@ export default function PageViewer() {
   useEffect(() => { duplicatePaneRef.current = duplicatePane }, [duplicatePane])
 
   const quickOpenKeyMap = useMemo(() => ({
-    'Meta+p': () => { setQuickOpenVisibleRef.current(true) },
+    'Meta+p': () => { setQuickOpenVisibleRef.current(true); return { type: 'viewer:quick-open' } as const },
     'Meta+Enter': () => {
       const path = focusedFileRef.current
       if (path) openInNewPaneRef.current(path)
+      return { type: 'viewer:open-in-new-pane', payload: { path: focusedFileRef.current } } as const
     },
   }), [])
 
