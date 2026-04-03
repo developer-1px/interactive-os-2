@@ -6,18 +6,18 @@ import { registerAria, unregisterAria } from './ariaRegistry'
 
 export type RouteKeyMap = Record<string, () => Command | void>
 
-/** Route-scoped global shortcuts. Owns a document keydown listener that lives
- *  for the lifetime of the component — mount = activate, unmount = deactivate.
- *  Handlers return Command for logging/communication. */
+/** key → { command: command type, owner: 소유 컴포넌트 } */
+export type RouteInspectMap = Record<string, { command: string; owner: string }>
+
 interface AriaRouteProps {
   keyMap: RouteKeyMap
   label?: string
-  /** Extra keyMap entries from child components — for inspector visibility only (no listener) */
-  inspectKeyMap?: Record<string, string>
+  /** 선언적 inspect 메타 — key별 command type과 소유자 */
+  inspectMap?: RouteInspectMap
   children: ReactNode
 }
 
-export function AriaRoute({ keyMap, label, inspectKeyMap, children }: AriaRouteProps) {
+export function AriaRoute({ keyMap, label, inspectMap, children }: AriaRouteProps) {
   useEffect(() => {
     if (Object.keys(keyMap).length === 0) return
     const handler = (e: KeyboardEvent) => {
@@ -38,21 +38,27 @@ export function AriaRoute({ keyMap, label, inspectKeyMap, children }: AriaRouteP
   // Register route-level keyMap in devtools registry
   useEffect(() => {
     const registryKey = label ? `route:${label}` : undefined
-    if (!registryKey || Object.keys(keyMap).length === 0) return
+    if (!registryKey) return
+    const commands: string[] = []
     const keyMapDesc: Record<string, string> = {}
-    for (const key of Object.keys(keyMap)) {
-      keyMapDesc[key] = label ?? 'route'
-    }
-    if (inspectKeyMap) {
-      for (const [key, owner] of Object.entries(inspectKeyMap)) {
-        keyMapDesc[key] = owner
+
+    if (inspectMap) {
+      for (const [key, meta] of Object.entries(inspectMap)) {
+        commands.push(meta.command)
+        keyMapDesc[key] = `${meta.owner} → ${meta.command}`
+      }
+    } else {
+      for (const key of Object.keys(keyMap)) {
+        commands.push(key)
+        keyMapDesc[key] = label ?? 'route'
       }
     }
+
     registerAria(registryKey, {
       dispatch: () => {},
       getStore: () => ({ entities: {}, relationships: {} }),
       inspect: () => ({
-        commands: Object.keys(keyMap),
+        commands,
         keyMap: keyMapDesc,
         plugins: [],
         state: { entities: {}, relationships: {} },
@@ -60,7 +66,7 @@ export function AriaRoute({ keyMap, label, inspectKeyMap, children }: AriaRouteP
       }),
     })
     return () => unregisterAria(registryKey)
-  }, [keyMap, label, inspectKeyMap])
+  }, [keyMap, label, inspectMap])
 
   return <>{children}</>
 }

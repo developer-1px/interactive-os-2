@@ -184,11 +184,13 @@ export default function PageBookViewer() {
     <AriaRoute
       keyMap={keyMap}
       label="Book"
-      inspectKeyMap={{
-        'ArrowLeft': 'SpreadReader — 이전 스프레드',
-        'ArrowRight': 'SpreadReader — 다음 스프레드',
-        'Home': 'SpreadReader — 첫 스프레드',
-        'End': 'SpreadReader — 마지막 스프레드',
+      inspectMap={{
+        'ArrowUp': { command: 'book:prev-page', owner: 'AriaRoute' },
+        'ArrowDown': { command: 'book:next-page', owner: 'AriaRoute' },
+        'ArrowLeft': { command: 'spread:prev', owner: 'SpreadReader' },
+        'ArrowRight': { command: 'spread:next', owner: 'SpreadReader' },
+        'Home': { command: 'spread:first', owner: 'SpreadReader' },
+        'End': { command: 'spread:last', owner: 'SpreadReader' },
       }}
     >
       <div className={`${ax({ text: 'primary' })} ${styles.book}`}>
