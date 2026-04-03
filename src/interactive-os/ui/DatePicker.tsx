@@ -4,131 +4,11 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import styles from './DatePicker.module.css'
-import type { NormalizedData } from '../store/types'
-import { createStore } from '../store/createStore'
-import { ROOT_ID } from '../store/types'
 import { FOCUS_ID } from '../axis/navigate'
-import { SELECTION_ID } from '../axis/select'
 import { useEngine } from '../engine/useEngine'
 import { CalendarGrid } from './CalendarGrid'
-import { defineCommands } from '../engine/defineCommand'
-
-// ── Calendar meta entity — isOpen + focusDayIndex in engine, year/month as TransformAdapter input ──
-
-const CALENDAR_ID = '__calendar__'
-
-const calendarCommands = defineCommands({
-  open: {
-    type: 'calendar:open' as const,
-    create: (focusDayIndex: number) => ({ focusDayIndex }),
-    handler: (store, { focusDayIndex }) => ({
-      ...store,
-      entities: {
-        ...store.entities,
-        [CALENDAR_ID]: { id: CALENDAR_ID, isOpen: true, focusDayIndex },
-      },
-    }),
-  },
-  close: {
-    type: 'calendar:close' as const,
-    handler: (store) => ({
-      ...store,
-      entities: {
-        ...store.entities,
-        [CALENDAR_ID]: { ...store.entities[CALENDAR_ID]!, id: CALENDAR_ID, isOpen: false },
-      },
-    }),
-  },
-  setFocusDay: {
-    type: 'calendar:set-focus-day' as const,
-
-    create: (focusDayIndex: number) => ({ focusDayIndex }),
-    handler: (store, { focusDayIndex }) => ({
-      ...store,
-      entities: {
-        ...store.entities,
-        [CALENDAR_ID]: { ...store.entities[CALENDAR_ID]!, id: CALENDAR_ID, focusDayIndex },
-      },
-    }),
-  },
-})
-
-// year/month changes are TransformAdapter-style: they rebuild NormalizedData.
-// These Commands are for logging only — the actual state change drives data reconstruction.
-const calendarNavCommands = defineCommands({
-  changeMonth: {
-    type: 'calendar:change-month' as const,
-
-    create: (delta: number, resultYear: number, resultMonth: number) => ({ delta, resultYear, resultMonth }),
-    handler: (store) => store, // no-op: year/month lives outside engine
-  },
-  changeYear: {
-    type: 'calendar:change-year' as const,
-
-    create: (delta: number, resultYear: number) => ({ delta, resultYear }),
-    handler: (store) => store, // no-op: year/month lives outside engine
-  },
-})
-
-// ── Calendar computation (pure) ──
-
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-interface CellMeta {
-  dayOfMonth: number
-  isCurrentMonth: boolean
-  date: Date
-}
-
-function buildCalendarCells(year: number, month: number): { id: string; meta: CellMeta }[] {
-  const firstDay = new Date(year, month, 1).getDay()
-  const startDate = new Date(year, month, 1 - firstDay)
-  const cells: { id: string; meta: CellMeta }[] = []
-  for (let i = 0; i < 42; i++) {
-    const date = new Date(startDate)
-    date.setDate(startDate.getDate() + i)
-    cells.push({
-      id: `day-${i}`,
-      meta: {
-        dayOfMonth: date.getDate(),
-        isCurrentMonth: date.getMonth() === month && date.getFullYear() === year,
-        date,
-      },
-    })
-  }
-  return cells
-}
-
-function buildGridStore(year: number, month: number, selectedDate: Date | null, focusDayIndex: number, isOpen: boolean): NormalizedData {
-  const cells = buildCalendarCells(year, month)
-  const entities: Record<string, { id: string; [key: string]: unknown }> = {}
-  for (const cell of cells) {
-    entities[cell.id] = { id: cell.id, data: { dayOfMonth: cell.meta.dayOfMonth, isCurrentMonth: cell.meta.isCurrentMonth } }
-  }
-  entities[FOCUS_ID] = { id: FOCUS_ID, focusedId: `day-${focusDayIndex}` }
-  const selectedIdx = selectedDate
-    ? cells.findIndex(c => c.meta.date.toDateString() === selectedDate.toDateString())
-    : -1
-  entities[SELECTION_ID] = { id: SELECTION_ID, selectedIds: selectedIdx >= 0 ? [`day-${selectedIdx}`] : [] }
-  entities[CALENDAR_ID] = { id: CALENDAR_ID, isOpen, focusDayIndex }
-  return createStore({ entities, relationships: { [ROOT_ID]: cells.map(c => c.id) } })
-}
-
-function findDayIndex(year: number, month: number, targetDate: Date): number {
-  const firstDay = new Date(year, month, 1).getDay()
-  const startDate = new Date(year, month, 1 - firstDay)
-  const diff = Math.round((targetDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
-  return Math.max(0, Math.min(41, diff))
-}
-
-function clampDay(year: number, month: number, day: number): number {
-  const maxDay = new Date(year, month + 1, 0).getDate()
-  return Math.min(day, maxDay)
-}
-
-function formatDate(date: Date): string {
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-}
+import { calendarCommands, calendarNavCommands } from './calendarCommands'
+import { MONTHS, buildCalendarCells, buildGridStore, findDayIndex, clampDay, formatDate } from './calendarComputation'
 
 // ── Focus trap ──
 
@@ -158,7 +38,6 @@ export function DatePicker({
   const dialogRef = useRef<HTMLDivElement>(null)
 
   // year/month are TransformAdapter inputs — they rebuild NormalizedData
-  // Stored as React state because they determine WHAT data the engine manages
   const [yearMonth, setYearMonth] = React.useState({ year: target.getFullYear(), month: target.getMonth() })
   const { year, month } = yearMonth
   const [isOpen, setIsOpen] = React.useState(false)
@@ -216,7 +95,6 @@ export function DatePicker({
       let nextYear = prev.year
       if (nextMonth < 0) { nextYear--; nextMonth = 11 }
       else if (nextMonth > 11) { nextYear++; nextMonth = 0 }
-      // Clamp focus day to new month
       const focusCell = cells[focusDayIndex]
       if (focusCell) {
         const day = clampDay(nextYear, nextMonth, focusCell.meta.date.getDate())
