@@ -32,6 +32,7 @@ export const router = createBrowserRouter([
       { path: '/incident', lazy: () => import('./pages/incident/PageIncidentInterface').then(m => ({ Component: m.default })) },
       { path: '/internals/theme', lazy: () => import('./pages/theme/PageThemeCreator').then(m => ({ Component: m.default })) },
       { path: '/creator/*', lazy: () => import('./pages/creator/PageComponentCreator').then(m => ({ Component: m.default })) },
+      { path: '/inspector', lazy: () => import('./pages/inspector/PageInspector').then(m => ({ Component: m.default })) },
       { path: '/styles/axis', lazy: () => import('./poc/AxisPoC').then(m => ({ Component: m.AxisPoC })) },
       { path: '/poc/components', lazy: () => import('./poc/AxisComponents').then(m => ({ Component: m.AxisComponents })) },
 
