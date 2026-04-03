@@ -12,6 +12,7 @@
 | NormalizedData | Integrated | 직렬화 미구현 |
 | storeToInspectorTree | Integrated | — |
 | computeStoreDiff | Integrated | — |
+| createSingleNodeStore | Integrated | 단일/순차 노드 NormalizedData 헬퍼 |
 
 ## Engine (L2)
 
@@ -40,12 +41,12 @@
 | definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires. 전 플러그인 전환 완료 |
 | *permissions* | Concept | 예제만 존재 |
 
-## Axis (L3 · 7축 + commands)
+## Axis (L3 · 8축 + commands)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| 7축 (navigation · selection · expand · activate · tab · value · dismiss) | Integrated | — |
-| commands (focus · selection · expand · gridCol · value) | Integrated | core()에서 흡수, 각 axis가 commands+entities 소유 |
+| 8축 (navigation · selection · expand · activate · tab · value · dismiss · edit) | Integrated | — |
+| commands (focus · selection · expand · gridCol · value · edit) | Integrated | core()에서 흡수, 각 axis가 commands+entities 소유 |
 
 ## Pattern (L4)
 

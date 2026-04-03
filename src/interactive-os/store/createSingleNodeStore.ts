@@ -1,6 +1,7 @@
 // ② 2026-04-03-command-unification-prd.md
-import type { NormalizedData } from './types'
 import { ROOT_ID } from './types'
+import type { NormalizedData } from './types'
+import { createStore } from './createStore'
 
 /**
  * Create a minimal NormalizedData with a single node.
@@ -8,13 +9,10 @@ import { ROOT_ID } from './types'
  * without a complex entity tree.
  */
 export function createSingleNodeStore(nodeId: string): NormalizedData {
-  return {
-    entities: {
-      [ROOT_ID]: { id: ROOT_ID },
-      [nodeId]: { id: nodeId },
-    },
+  return createStore({
+    entities: { [ROOT_ID]: { id: ROOT_ID }, [nodeId]: { id: nodeId } },
     relationships: { [ROOT_ID]: [nodeId] },
-  }
+  })
 }
 
 /**
@@ -25,8 +23,5 @@ export function createSequentialStore(prefix: string, count: number): Normalized
   const ids = Array.from({ length: count }, (_, i) => `${prefix}-${i}`)
   const entities: Record<string, { id: string }> = { [ROOT_ID]: { id: ROOT_ID } }
   for (const id of ids) entities[id] = { id }
-  return {
-    entities,
-    relationships: { [ROOT_ID]: ids },
-  }
+  return createStore({ entities, relationships: { [ROOT_ID]: ids } })
 }
