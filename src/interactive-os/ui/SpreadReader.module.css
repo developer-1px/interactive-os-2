@@ -1,0 +1,70 @@
+/* SpreadReader — column-based spread layout for reading long content */
+
+.root {
+  --_col-width: 400px;
+  --_col-gap: var(--space-3xl);
+  --_padding-x: var(--space-5xl);
+  --_padding-y: var(--space-5xl);
+
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.inset {
+  flex: 1;
+  overflow: hidden;
+  padding: var(--_padding-y) var(--_padding-x);
+}
+
+.viewport {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: none;
+}
+
+.columns {
+  height: 100%;
+  column-count: 2;
+  column-width: var(--_col-width);
+  column-gap: var(--_col-gap);
+  column-fill: balance;
+  transform: translateX(calc(-1 * var(--_spread, 0) * (100% + var(--_col-gap))));
+}
+
+/* Prevent content from breaking across spreads */
+.columns :global(pre),
+.columns :global(table),
+.columns :global(blockquote),
+.columns :global(figure),
+.columns :global(ul),
+.columns :global(ol) {
+  break-inside: avoid;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.columns :global(th) {
+  background: var(--surface-sunken);
+}
+
+/* No padding — viewport owns spacing */
+.columns > div {
+  padding: 0;
+  max-width: none;
+}
+
+/* Spread indicator */
+.indicator {
+  position: absolute;
+  bottom: var(--space-sm);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  font-size: var(--type-caption-size);
+  opacity: 0.5;
+}

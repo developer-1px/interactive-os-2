@@ -1,8 +1,9 @@
-import { useState, useCallback, useMemo, useRef, useLayoutEffect, useEffect } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BookOpen, List, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { NavList } from '@os/ui/NavList'
+import { SpreadReader } from '@os/ui/SpreadReader'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { ax } from '@styles/ax'
 import type { NodeState } from '@os/pattern/types'
@@ -57,15 +58,15 @@ export default function PageBookViewer() {
   const [totalSpreads, setTotalSpreads] = useState(1)
   const [tocOpen, setTocOpen] = useState(false)
   const [chromeVisible, setChromeVisible] = useState(false)
-  const pageRef = useRef<HTMLDivElement>(null)
-  const viewportRef = useRef<HTMLDivElement>(null)
+  const [arrivedFromNext, setArrivedFromNext] = useState(false)
+  const areaRef = useRef<HTMLDivElement>(null)
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   // ── Chrome: show on mouse near edges, hide after idle ──
   useEffect(() => {
-    const area = viewportRef.current?.closest(`.${styles.pageArea}`) as HTMLElement | null
+    const area = areaRef.current
     if (!area) return
-    const EDGE = 80 // px from edge to trigger
+    const EDGE = 80
     const HIDE_DELAY = 2500
 
     const show = () => {
@@ -116,19 +117,6 @@ export default function PageBookViewer() {
     [chapters, page?.id],
   )
 
-  // ── Spread measurement ──
-  const measureSpreads = useCallback(() => {
-    const el = pageRef.current
-    if (!el) return 1
-    const gap = parseFloat(getComputedStyle(el).columnGap) || 0
-    return Math.max(1, Math.ceil((el.scrollWidth + gap) / (el.clientWidth + gap)))
-  }, [])
-
-  useLayoutEffect(() => {
-    setTotalSpreads(measureSpreads())
-    setSpread(0)
-  }, [currentPage, measureSpreads])
-
   // ── Navigation ──
   const goTo = useCallback((index: number) => {
     if (index >= 0 && index < pages.length) {
@@ -142,46 +130,35 @@ export default function PageBookViewer() {
     if (index != null) goTo(index)
   }, [pageIndexById, goTo])
 
-  // ── AriaRoute keyMap ──
+  // ── SpreadReader callbacks ──
+  const handleNextBoundary = useCallback(() => {
+    if (currentPage < pages.length - 1) {
+      setArrivedFromNext(false)
+      goTo(currentPage + 1)
+    }
+  }, [currentPage, pages.length, goTo])
+
+  const handlePrevBoundary = useCallback(() => {
+    if (currentPage > 0) {
+      setArrivedFromNext(true)
+      navigate(`/book/${pages[currentPage - 1].id}`, { replace: true })
+    }
+  }, [currentPage, pages, navigate])
+
+  const handleSpreadChange = useCallback((s: number, total: number) => {
+    setSpread(s)
+    setTotalSpreads(total)
+  }, [])
+
+  // ── Page-level keyMap (ArrowUp/Down for page jumps) ──
   const keyMap = useMemo(() => ({
-    ArrowRight: () => {
-      if (spread < totalSpreads - 1) {
-        setSpread(s => s + 1)
-      } else if (currentPage < pages.length - 1) {
-        goTo(currentPage + 1)
-      }
-    },
-    ArrowLeft: () => {
-      if (spread > 0) {
-        setSpread(s => s - 1)
-      } else if (currentPage > 0) {
-        navigate(`/book/${pages[currentPage - 1].id}`, { replace: true })
-        setSpread(-1) // sentinel: jump to last spread
-      }
-    },
     ArrowDown: () => {
       if (currentPage < pages.length - 1) goTo(currentPage + 1)
     },
     ArrowUp: () => {
       if (currentPage > 0) goTo(currentPage - 1)
     },
-  }), [spread, totalSpreads, currentPage, pages, navigate, goTo])
-
-  // When arriving from next page (spread = -1 sentinel), jump to last spread
-  useLayoutEffect(() => {
-    if (spread === -1) {
-      const total = measureSpreads()
-      setTotalSpreads(total)
-      setSpread(total - 1)
-    }
-  }, [spread, measureSpreads])
-
-  // ── Apply spread offset via CSS custom property ──
-  useLayoutEffect(() => {
-    const el = pageRef.current
-    if (!el || spread < 0) return
-    el.style.setProperty('--_spread', String(spread))
-  }, [spread])
+  }), [currentPage, pages.length, goTo])
 
   const prevPage = pages[currentPage - 1]
   const nextPage = pages[currentPage + 1]
@@ -205,7 +182,7 @@ export default function PageBookViewer() {
     <AriaRoute keyMap={keyMap}>
       <div className={styles.book}>
         {/* ── Page content ── */}
-        <div className={styles.pageArea}>
+        <div className={styles.pageArea} ref={areaRef}>
           {/* ── Floating pill — top-left ── */}
           <div className={`${styles.pill} ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
             <button
@@ -231,21 +208,15 @@ export default function PageBookViewer() {
           <div className={styles.progressBar} data-visible={chromeVisible}>
             <div className={styles.progressFill} style={{ width: `${progressPercent}%` }} />
           </div>
-          <div className={styles.pageInset}>
-            <div
-              className={styles.pageViewport}
-              ref={viewportRef}
-              tabIndex={0}
-            >
-              <div
-                className={styles.page}
-                key={page?.id}
-                ref={pageRef}
-              >
-                {page && <MarkdownViewer content={page.content} />}
-              </div>
-            </div>
-          </div>
+          <SpreadReader
+            resetKey={page?.id}
+            initialSpread={arrivedFromNext ? 'last' : 'first'}
+            onNextBoundary={handleNextBoundary}
+            onPrevBoundary={handlePrevBoundary}
+            onSpreadChange={handleSpreadChange}
+          >
+            {page && <MarkdownViewer content={page.content} />}
+          </SpreadReader>
 
           {/* Spread / page navigation */}
           <nav className={styles.pageNav} data-visible={chromeVisible}>
@@ -253,7 +224,7 @@ export default function PageBookViewer() {
               {!isFirstSpread && (
                 <button
                   className={ax({ surface: 'overlay', controlSize: 'sm', layout: 'bar', gap: 'sm' })}
-                  onClick={() => keyMap.ArrowLeft()}
+                  onClick={() => handlePrevBoundary()}
                 >
                   <ChevronLeft size={14} />
                   {spread === 0 && prevPage && (
@@ -269,7 +240,7 @@ export default function PageBookViewer() {
               {!isLastSpread && (
                 <button
                   className={ax({ surface: 'overlay', controlSize: 'sm', layout: 'bar', gap: 'sm' })}
-                  onClick={() => keyMap.ArrowRight()}
+                  onClick={() => handleNextBoundary()}
                 >
                   {spread >= totalSpreads - 1 && nextPage && (
                     <span className={ax({ layout: 'column', gap: 'xs' })}>
