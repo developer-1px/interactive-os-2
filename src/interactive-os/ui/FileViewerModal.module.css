@@ -33,12 +33,7 @@
 
 /* ── last-mile: header ── */
 
-.fvmHeader {
-  height: 36px;
-  padding: 0 var(--space-lg);
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border-subtle);
-}
+/* fvmHeader → PanelHeader */
 
 .fvmMetaSep {
   width: 1px;

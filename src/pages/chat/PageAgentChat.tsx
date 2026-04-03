@@ -30,6 +30,7 @@ import {
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
 import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
+import { PanelHeader } from '@os/ui/PanelHeader'
 import styles from './PageAgentChat.module.css'
 
 // --- File extraction ---
@@ -188,12 +189,12 @@ export default function PageAgentChat() {
   return (
     <div className={`${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
       <div className={ax({ layout: 'stack', flex: 'none' }) + ' ' + styles.chatSidebar}>
-        <div className={ax({ layout: 'spread', flex: 'none', textStyle: 'overline', text: 'muted' }) + ' ' + styles.chatSidebarHeader}>
+        <PanelHeader axes={{ layout: 'spread' }}>
           <span>Sessions</span>
           <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm' }) + ' ' + styles.chatNewBtn} onClick={createSession} aria-label="New session">
             <Plus size={14} />
           </button>
-        </div>
+        </PanelHeader>
         <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs' })}>
           {sessions.map(s => (
             <div

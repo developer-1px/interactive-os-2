@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { SplitPane } from '@os/ui/SplitPane'
+import { PanelHeader } from '@os/ui/PanelHeader'
 import type { PaneSize } from '@os/ui/SplitPane'
 import { TreeView } from '@os/ui/TreeView'
 import { Kanban } from '@os/ui/Kanban'
@@ -368,7 +369,7 @@ export default function BirdseyeLayout() {
     <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.08}>
       {/* 좌: TreeView (폴더 전용) */}
       <div className={`${styles.sidebar} flex-col h-full`}>
-        <div className={`${ax({ text: 'muted' })} ${styles.sidebarHeader} flex-row items-center shrink-0`}>Birdseye</div>
+        <PanelHeader>Birdseye</PanelHeader>
         <div className={`${styles.sidebarBody} flex-1`}>
           <TreeView
             data={navStore}
@@ -382,7 +383,7 @@ export default function BirdseyeLayout() {
 
       {/* 중: Kanban */}
       <div className={`${styles.board} flex-col h-full`}>
-        <div className={`${ax({ text: 'secondary' })} ${styles.boardHeader} flex-row items-center shrink-0`}>
+        <PanelHeader axes={{ text: 'secondary' }}>
           <span className={`${styles.breadcrumb} flex-row items-center`}>
             {breadcrumbs.map((seg, i) => (
               <span key={seg.id}>
@@ -413,7 +414,7 @@ export default function BirdseyeLayout() {
               {viewMode === 'kanban' ? '\u25A6' : '\u2630'}
             </button>
           </span>
-        </div>
+        </PanelHeader>
         {kanbanStore && Object.keys(kanbanStore.relationships).length > 1 ? (
           viewMode === 'kanban' ? (
             <div className="flex-1 min-h-0 overflow-hidden">
@@ -452,7 +453,7 @@ export default function BirdseyeLayout() {
     {/* Floating overlay viewer */}
     {viewerCode !== null && (
       <div ref={overlayRef} className={`${styles.overlay} fixed flex-col`} style={overlayPos ? { top: overlayPos.top, left: overlayPos.left, right: 'auto' } : undefined}>
-        <div className={`${ax({ text: 'secondary' })} ${styles.overlayHeader} flex-row items-center shrink-0`}>{viewerFilename}</div>
+        <PanelHeader axes={{ textStyle: 'code', text: 'secondary' }}>{viewerFilename}</PanelHeader>
         <div className="flex-1 min-h-0 overflow-auto">
           {depList && (depList.importedBy.length > 0 || depList.imports.length > 0) && (
             <div className={`${ax({ text: 'secondary' })} ${styles.depList}`}>
