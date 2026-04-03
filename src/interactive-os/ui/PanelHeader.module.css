@@ -1,0 +1,7 @@
+/* PanelHeader — last-mile only */
+/* ax() handles: layout:bar, flex:none, textStyle:overline, text:muted, padding:md */
+
+.panelHeader {
+  height: 36px;
+  border-bottom: 1px solid var(--border-subtle);
+}

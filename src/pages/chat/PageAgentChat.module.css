@@ -19,11 +19,7 @@
   border-right: 1px solid var(--border-subtle);
 }
 
-.chatSidebarHeader {
-  height: 36px;
-  padding-inline: var(--space-md);
-  border-bottom: 1px solid var(--border-subtle);
-}
+/* chatSidebarHeader → PanelHeader */
 
 .chatNewBtn {
   width: 24px;

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { RegistryEntry } from '../componentRegistry'
 import { SourceViewer } from './SourceViewer'
 import { ax } from '@styles/ax'
+import { PanelHeader } from '@os/ui/PanelHeader'
 import styles from '../PageComponentCreator.module.css'
 
 type SourceTab = 'tsx' | 'css'
@@ -12,7 +13,7 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
   const [sourceTab, setSourceTab] = useState<SourceTab>('tsx')
   return (
     <div className="flex-col overflow-hidden">
-      <div className={`flex-row items-center ${ax({ textStyle: 'caption' })} ${styles.paneHeader}`}>
+      <PanelHeader axes={{ textStyle: 'caption' }}>
         <button
           data-surface="action"
           className={`${ax({ text: 'muted' })} ${styles.sourceTab}${sourceTab === 'tsx' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
@@ -27,7 +28,7 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
         >
           CSS
         </button>
-      </div>
+      </PanelHeader>
       <div className="flex-1 overflow-auto min-h-0">
         {entry ? (
           <SourceViewer entry={entry} activeTab={sourceTab} />

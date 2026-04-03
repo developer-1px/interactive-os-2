@@ -4,12 +4,7 @@
   background: var(--surface-sunken);
 }
 
-.sidebarHeader {
-  height: 36px;
-  padding: 0 var(--space-md);
-  border-bottom: 1px solid var(--border-subtle);
-  letter-spacing: var(--tracking-normal);
-}
+/* sidebarHeader → PanelHeader 컴포넌트로 교체 */
 
 .sidebarBody {
   overflow: hidden auto;
@@ -20,11 +15,7 @@
   background: var(--surface-default);
 }
 
-.boardHeader {
-  height: 36px;
-  padding: 0 var(--space-lg);
-  border-bottom: 1px solid var(--border-subtle);
-}
+/* boardHeader → PanelHeader 컴포넌트로 교체 */
 
 .breadcrumb {
   gap: 0;
@@ -131,14 +122,7 @@
   pointer-events: auto;
 }
 
-.overlayHeader {
-  height: 36px;
-  padding: 0 var(--space-lg);
-  border-bottom: 1px solid var(--border-subtle);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-medium);
-  font-family: var(--type-mono);
-}
+/* overlayHeader → PanelHeader axes={{ textStyle: 'code' }}로 교체 */
 
 
 .viewerEmpty {

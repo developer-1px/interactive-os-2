@@ -13,11 +13,7 @@
   border-right: 1px solid var(--border-subtle);
 }
 
-.uiSidebarHeader {
-  height: 36px;
-  padding: 0 var(--space-md);
-  border-bottom: 1px solid var(--border-subtle);
-}
+/* uiSidebarHeader → PanelHeader */
 
 .uiSidebarBody {
   padding: var(--space-sm) 0;

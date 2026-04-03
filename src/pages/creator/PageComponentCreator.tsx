@@ -16,6 +16,7 @@ import type { NormalizedData, Entity } from '@os/store/types'
 import type { TabData } from '@os/plugins/workspaceStore'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
 import { ax } from '@styles/ax'
+import { PanelHeader } from '@os/ui/PanelHeader'
 import styles from './PageComponentCreator.module.css'
 
 // --- Fixed workspace layout ---
@@ -103,9 +104,9 @@ export default function PageComponentCreator() {
     if (tabData.contentType === 'canvas') {
       return (
         <div className="flex-col h-full overflow-hidden">
-          <div className={`flex-row items-center ${ax({ textStyle: 'caption' })} ${styles.paneHeader}`}>
-            <span className={`${ax({ weight: 'semi', text: 'primary' })} ${styles.paneTitle}`}>{selectedName || 'Select'}</span>
-          </div>
+          <PanelHeader axes={{ textStyle: 'caption' }}>
+            <span className={ax({ weight: 'semi', text: 'primary' })}>{selectedName || 'Select'}</span>
+          </PanelHeader>
           {selectedEntry ? (
             <ComponentCanvas entry={selectedEntry} />
           ) : (

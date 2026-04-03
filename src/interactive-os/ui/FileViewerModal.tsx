@@ -3,6 +3,7 @@ import { CodeBlock } from './CodeBlock'
 import { MarkdownViewer } from './MarkdownViewer'
 import { FileIcon } from './FileIcon'
 import { Breadcrumb } from './Breadcrumb'
+import { PanelHeader } from './PanelHeader'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import styles from './FileViewerModal.module.css'
@@ -85,7 +86,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
   return (
     <dialog ref={dialogRef} className={styles.fvmDialog} onClick={handleBackdropClick}>
       <div className={`${ax({ surface: 'overlay', layout: 'column' })} ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
-        <div className={`${ax({ layout: 'spread' })} ${styles.fvmHeader}`}>
+        <PanelHeader axes={{ layout: 'spread' }}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
             {filePath && (
@@ -108,7 +109,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
             )}
             <button className={`${ax({ surface: 'ghost', controlSize: 'sm', layout: 'center', textStyle: 'section', text: 'secondary' })} ${styles.fvmClose}`} onClick={onClose}>&times;</button>
           </div>
-        </div>
+        </PanelHeader>
         <div className={ax({ flex: '1', layout: 'scroll' })}>
           {error ? (
             <div className={styles.fvmError}>File not found</div>

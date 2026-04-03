@@ -68,11 +68,7 @@
   background: var(--surface-sunken);
 }
 
-.vw-tree__header {
-  height: 36px;
-  padding: 0 var(--space-md);
-  border-bottom: 1px solid var(--border-subtle);
-}
+/* vw-tree__header — orphan, PanelHeader 사용 */
 
 
 .vw-tree__body {
@@ -90,11 +86,7 @@
   background: var(--surface-default);
 }
 
-.vw-content__header {
-  height: 36px;
-  padding: 0 var(--space-lg);
-  border-bottom: 1px solid var(--border-subtle);
-}
+/* vw-content__header — orphan, PanelHeader 사용 */
 
 .vw-content__meta {
   gap: var(--space-xs);

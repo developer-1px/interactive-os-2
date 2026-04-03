@@ -4,14 +4,7 @@
    Layout: Canvas(primary) | Code(secondary) / Chat(tertiary)
    Pane = 동시에 봐야 하는 것, Tab = 배타적 전환 */
 
-/* ── Shared pane header ── */
-.paneHeader {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  background: var(--surface-sunken);
-  border-bottom: 1px solid var(--border-subtle);
-  gap: var(--space-2xs);
-  height: var(--space-2xl);
-}
+/* paneHeader → PanelHeader 컴포넌트로 교체 */
 
 /* ── Primary: Canvas ── */
 
