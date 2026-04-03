@@ -181,7 +181,16 @@ export default function PageBookViewer() {
   const progressPercent = ((currentPage + 1) / pages.length) * 100
 
   return (
-    <AriaRoute keyMap={keyMap} label="Book">
+    <AriaRoute
+      keyMap={keyMap}
+      label="Book"
+      inspectKeyMap={{
+        'ArrowLeft': 'SpreadReader — 이전 스프레드',
+        'ArrowRight': 'SpreadReader — 다음 스프레드',
+        'Home': 'SpreadReader — 첫 스프레드',
+        'End': 'SpreadReader — 마지막 스프레드',
+      }}
+    >
       <div className={styles.book}>
         {/* ── Page content ── */}
         <div className={styles.pageArea} ref={areaRef}>
