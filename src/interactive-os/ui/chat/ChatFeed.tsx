@@ -119,10 +119,10 @@ const MessageBubble = memo(function MessageBubble({
   renderers: BlockRendererMap
 }) {
   const roleClass = message.role === 'user'
-    ? `${ax({ textStyle: 'body', weight: 'medium' })} ${styles.chatUser}`
+    ? `${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} ${styles.chatUser}`
     : message.role === 'system'
-      ? `${ax({ textStyle: 'caption' })} ${styles.chatSystem}`
-      : `${ax({ textStyle: 'body' })} ${styles.chatAssistant}`
+      ? `${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.chatSystem}`
+      : `${ax({ textStyle: 'body', text: 'primary' })} ${styles.chatAssistant}`
 
   if (message.role === 'system') {
     const groups = groupSystemBlocks(message.blocks)

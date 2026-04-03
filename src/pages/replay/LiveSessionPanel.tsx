@@ -8,9 +8,15 @@ import { useActiveSessions } from './useActiveSessions'
 import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
 import { fetchFile } from '../viewer/fsClient'
 import { chatRenderers } from './replayRenderers'
+import type { ViewerOverlay } from './PageReplay'
 
 interface LiveSessionPanelProps {
-  onViewerUpdate: (files: Map<string, string>, activeFile: string | null, highlights?: Map<number, HighlightTone>) => void
+  onViewerUpdate: (
+    files: Map<string, string>,
+    activeFile: string | null,
+    highlights?: Map<number, HighlightTone>,
+    overlay?: ViewerOverlay,
+  ) => void
 }
 
 export function LiveSessionPanel({ onViewerUpdate }: LiveSessionPanelProps) {
@@ -81,26 +87,57 @@ function LiveFeed({ sessionId, onViewerUpdate }: { sessionId: string; onViewerUp
     processedRef.current = timeline.length
 
     let lastFilePath: string | null = null
+    let lastHighlights: Map<number, HighlightTone> | undefined
+    let lastOverlay: ViewerOverlay = null
     const toFetch = new Set<string>()
 
-    for (const evt of newEvents) {
-      if (evt.type !== 'tool_use' || !evt.filePath) continue
-      lastFilePath = evt.filePath
+    for (let i = 0; i < newEvents.length; i++) {
+      const evt = newEvents[i]
+      if (evt.type !== 'tool_use') continue
 
-      if (evt.tool === 'Read') {
-        if (!fetchedRef.current.has(evt.filePath) && !fsRef.current.files.has(evt.filePath)) {
-          toFetch.add(evt.filePath)
+      // File tools → clear overlay, update file state
+      if (evt.filePath && (evt.tool === 'Read' || evt.tool === 'Edit' || evt.tool === 'Write')) {
+        lastFilePath = evt.filePath
+        lastHighlights = undefined
+        lastOverlay = null
+
+        if (evt.tool === 'Read') {
+          if (!fetchedRef.current.has(evt.filePath) && !fsRef.current.files.has(evt.filePath)) {
+            toFetch.add(evt.filePath)
+          }
+        } else if (evt.tool === 'Write' && evt.editNew) {
+          applyWrite(fsRef.current, evt.filePath, evt.editNew)
+        } else if (evt.tool === 'Edit' && evt.editOld && evt.editNew) {
+          const range = applyEdit(fsRef.current, evt.filePath, evt.editOld, evt.editNew)
+          if (range) {
+            const hl = new Map<number, HighlightTone>()
+            for (let line = range.newStart; line <= range.newEnd; line++) {
+              hl.set(line, 'edited')
+            }
+            lastHighlights = hl
+          }
         }
-      } else if (evt.tool === 'Write' && evt.editNew) {
-        applyWrite(fsRef.current, evt.filePath, evt.editNew)
-      } else if (evt.tool === 'Edit' && evt.editOld && evt.editNew) {
-        applyEdit(fsRef.current, evt.filePath, evt.editOld, evt.editNew)
+        continue
+      }
+
+      // Grep/Glob → search overlay
+      if (evt.tool === 'Grep' || evt.tool === 'Glob') {
+        const result = findNextResult(newEvents, i)
+        lastOverlay = { type: 'search', query: evt.text ?? '', output: result }
+        continue
+      }
+
+      // Bash → terminal overlay
+      if (evt.tool === 'Bash') {
+        const result = findNextResult(newEvents, i)
+        lastOverlay = { type: 'terminal', command: evt.text ?? '', output: result }
+        continue
       }
     }
 
     function flush() {
       if (aborted) return
-      onViewerUpdate(new Map(fsRef.current.files), lastFilePath)
+      onViewerUpdate(new Map(fsRef.current.files), lastFilePath, lastHighlights, lastOverlay)
     }
 
     if (toFetch.size > 0) {
@@ -113,7 +150,7 @@ function LiveFeed({ sessionId, onViewerUpdate }: { sessionId: string; onViewerUp
           }
         } catch { /* unavailable */ }
       })).then(flush)
-    } else if (lastFilePath) {
+    } else if (lastFilePath || lastOverlay) {
       flush()
     }
 
@@ -145,4 +182,13 @@ function LiveFeed({ sessionId, onViewerUpdate }: { sessionId: string; onViewerUp
       )}
     </>
   )
+}
+
+/** Find the next tool_result text after a tool_use at index i. */
+function findNextResult(events: { type: string; text?: string }[], i: number): string {
+  for (let j = i + 1; j < events.length; j++) {
+    if (events[j].type === 'tool_result') return events[j].text ?? ''
+    if (events[j].type === 'tool_use') break // next tool started, no result found
+  }
+  return ''
 }

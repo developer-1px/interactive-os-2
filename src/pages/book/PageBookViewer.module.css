@@ -20,7 +20,6 @@
   height: 100%;
   overflow: hidden;
   background: var(--surface-base);
-  color: var(--text-primary);
 }
 
 /* ── Floating pill — top-left ── */
@@ -50,7 +49,6 @@
   border: none;
   border-radius: var(--shape-pill-radius);
   background: transparent;
-  color: var(--text-secondary);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -241,7 +239,6 @@
   justify-content: center;
   height: 100%;
   gap: var(--space-lg);
-  color: var(--text-muted);
 }
 
 .emptyIcon {

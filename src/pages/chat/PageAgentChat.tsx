@@ -198,11 +198,11 @@ export default function PageAgentChat() {
           {sessions.map(s => (
             <div
               key={s.id}
-              className={`${ax({ layout: 'stack', gap: 'xs', padding: 'xs' })} ${styles.chatSessionItem} ${s.id === activeSessionId ? styles.chatSessionActive : ''}`}
+              className={`${ax({ layout: 'stack', gap: 'xs', padding: 'xs', text: 'secondary' })} ${styles.chatSessionItem} ${s.id === activeSessionId ? styles.chatSessionActive : ''}`}
               onClick={() => handleSidebarClick(s.id)}
             >
               <div className={ax({ layout: 'bar', gap: 'sm' })}>
-                <Circle size={8} fill="currentColor" className={s.state === 'running' ? styles.chatRunning : styles.chatIdle} />
+                <Circle size={8} fill="currentColor" className={s.state === 'running' ? ax({ text: 'success' }) : ax({ text: 'muted' })} />
                 <span className={ax({ clamp: '1' })}>{s.id.slice(0, 8)}</span>
                 <button
                   className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + styles.chatCloseBtn}

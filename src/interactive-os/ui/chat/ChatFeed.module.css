@@ -21,7 +21,6 @@
   margin-left: auto;
   padding: var(--shape-xs-py) var(--shape-xs-px);
   line-height: var(--leading-relaxed);
-  color: var(--text-primary);
   background: var(--tone-primary-dim);
   border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
 }
@@ -32,7 +31,6 @@
   overflow: hidden;
   gap: var(--space-sm);
   line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
 }
 
 /* --- Assistant bubble --- */
@@ -41,5 +39,4 @@
   gap: var(--space-sm);
   padding: var(--space-xs) 0;
   line-height: var(--leading-relaxed);
-  color: var(--text-primary);
 }

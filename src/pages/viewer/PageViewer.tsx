@@ -179,7 +179,7 @@ export default function PageViewer() {
 
   if (loading || !initialStore) {
     return (
-      <div className={`${styles.vwLoading} ${ax({ layout: 'center', gap: 'sm', textStyle: 'body' })}`}>
+      <div className={`${styles.vwLoading} ${ax({ layout: 'center', gap: 'sm', textStyle: 'body', text: 'muted' })}`}>
         <Circle size={12} className={styles.vwLoadingSpinner} />
         <span>Loading project...</span>
       </div>
@@ -208,13 +208,13 @@ export default function PageViewer() {
                 return (
                   <div className={ax({ layout: 'bar', gap: 'xs' })}>
                     {data.type === 'directory' ? (
-                      <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center' })}`} {...props.toggleProps}>
+                      <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center', text: 'muted' })}`} {...props.toggleProps}>
                         {state.expanded
                           ? <ChevronDown size={12} />
                           : <ChevronRight size={12} />}
                       </span>
                     ) : (
-                      <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center' })}`} />
+                      <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center', text: 'muted' })}`} />
                     )}
                     <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
                     <span className={`${ax({ text: 'secondary', clamp: '1' })}${data.type === 'directory' ? ` ${ax({ weight: 'medium' })}` : ''}`}>

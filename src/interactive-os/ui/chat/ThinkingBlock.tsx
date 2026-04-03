@@ -33,7 +33,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
       >
         <span className={`${ax({ layout: 'center' })} ${styles.thinkingChevron}`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
         <span className={`${ax({ weight: 'semi', text: 'muted' })}`}>Thinking</span>
-        {(!expanded || isLatest) && <span className={`${ax({ flex: '1' })} ${styles.thinkingPreview}`}> {preview}…</span>}
+        {(!expanded || isLatest) && <span className={`${ax({ flex: '1', text: 'muted' })} ${styles.thinkingPreview}`}> {preview}…</span>}
       </div>
       {expanded && !isLatest && (
         <div className={`${ax({ layout: 'scroll' })} ${styles.thinkingContent}`}>

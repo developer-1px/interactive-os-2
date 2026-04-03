@@ -29,7 +29,6 @@
   border-radius: var(--shape-xs-radius);
   padding: var(--space-2xs);
   opacity: 0;
-  color: var(--text-muted);
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
 }
 

@@ -16,7 +16,7 @@ export function FallbackBlock({ block }: { block: ChatBlock }) {
   const { expanded, toggle, toggleProps } = useDisclosure({ initialOpen: expandByDefault })
 
   return (
-    <div className={styles.fallback}>
+    <div className={`${ax({ text: 'muted' })} ${styles.fallback}`}>
       <div
         {...toggleProps}
         className={`${ax({ layout: 'bar' })} ${styles.fallbackSummary}`}

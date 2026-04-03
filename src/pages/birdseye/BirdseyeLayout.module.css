@@ -9,7 +9,6 @@
   padding: 0 var(--space-md);
   border-bottom: 1px solid var(--border-subtle);
   letter-spacing: var(--tracking-normal);
-  color: var(--text-muted);
 }
 
 .sidebarBody {
@@ -25,7 +24,6 @@
   height: 36px;
   padding: 0 var(--space-lg);
   border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
 }
 
 .breadcrumb {
@@ -33,13 +31,11 @@
 }
 
 .breadcrumbSep {
-  color: var(--text-muted);
   padding: 0 var(--space-xs);
 }
 
 .breadcrumbLink {
   all: unset;
-  color: var(--text-muted);
 }
 
 .breadcrumbLink:hover {
@@ -49,7 +45,6 @@
 .legend {
   gap: var(--space-sm);
   margin-left: auto;
-  color: var(--text-muted);
 }
 
 .legend > span {
@@ -88,7 +83,6 @@
 .legend > span[data-ext="yaml"]::before { background: var(--tone-warning-base); }
 
 .legendHint {
-  color: var(--text-muted);
   border-left: 1px solid var(--border-subtle);
   padding-left: var(--space-sm);
   cursor: default;
@@ -109,7 +103,6 @@
   width: var(--space-xl);
   height: var(--space-xl);
   border-radius: var(--shape-xs-radius);
-  color: var(--text-muted);
   border-left: 1px solid var(--border-subtle);
   margin-left: var(--space-xs);
   padding-left: var(--space-sm);
@@ -144,13 +137,11 @@
   border-bottom: 1px solid var(--border-subtle);
   font-size: var(--type-caption-size);
   font-weight: var(--weight-medium);
-  color: var(--text-secondary);
   font-family: var(--type-mono);
 }
 
 
 .viewerEmpty {
-  color: var(--text-muted);
   font-size: var(--type-caption-size);
 }
 
@@ -161,7 +152,6 @@
   border-bottom: 1px solid var(--border-subtle);
   font-size: var(--type-caption-size);
   font-family: var(--type-mono);
-  color: var(--text-secondary);
 }
 
 .depList details + details {
@@ -170,7 +160,6 @@
 
 .depSummary {
   gap: var(--space-xs);
-  color: var(--text-muted);
   font-size: var(--type-caption-size);
   padding: var(--space-xs) 0;
 }
@@ -216,7 +205,6 @@ details[open] > .depSummary::before {
 }
 
 .depGroupSummary {
-  color: var(--text-secondary);
   font-size: var(--type-caption-size);
   padding: var(--space-xs) 0;
   font-weight: var(--weight-medium);
@@ -238,7 +226,6 @@ details[open] > .depGroupSummary::before {
 }
 
 .depGroupCount {
-  color: var(--text-muted);
   font-weight: var(--weight-normal);
 }
 
@@ -254,7 +241,6 @@ details[open] > .depGroupSummary::before {
 .depJump {
   all: unset;
   padding: var(--border-width) 0;
-  color: var(--text-muted);
   text-overflow: ellipsis;
   border-radius: var(--shape-xs-radius);
 }
@@ -270,6 +256,5 @@ details[open] > .depGroupSummary::before {
 /* --- loading --- */
 
 .loading {
-  color: var(--text-muted);
   font-size: var(--type-body-size);
 }

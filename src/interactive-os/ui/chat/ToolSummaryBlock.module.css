@@ -7,7 +7,6 @@
   position: relative;
   padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--chat-indent);
   min-height: var(--icon-sm);
-  color: var(--text-secondary);
 }
 
 .iconRow > .rowIcon {
@@ -20,7 +19,6 @@
 .toolDetail {
   overflow: hidden;
   min-width: 0;
-  color: var(--text-muted);
   font-family: var(--mono);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -56,7 +54,6 @@
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
-  color: var(--text-muted);
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
@@ -65,7 +62,6 @@
   composes: iconRow;
   cursor: pointer;
   font-family: var(--mono);
-  color: var(--text-muted);
   user-select: none;
 }
 
@@ -125,7 +121,6 @@
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
-  color: var(--text-muted);
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
@@ -162,7 +157,6 @@
 }
 
 .toolChainLabel {
-  color: var(--text-muted);
   font-family: var(--mono);
   font-size: var(--type-caption-size);
 }
@@ -179,7 +173,6 @@
 .toolChainDetails {
   overflow: hidden;
   min-width: 0;
-  color: var(--text-muted);
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   white-space: nowrap;

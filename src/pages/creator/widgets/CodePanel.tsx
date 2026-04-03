@@ -15,14 +15,14 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
       <div className={`flex-row items-center ${ax({ textStyle: 'caption' })} ${styles.paneHeader}`}>
         <button
           data-surface="action"
-          className={`${styles.sourceTab}${sourceTab === 'tsx' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
+          className={`${ax({ text: 'muted' })} ${styles.sourceTab}${sourceTab === 'tsx' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
           onClick={() => setSourceTab('tsx')}
         >
           TSX
         </button>
         <button
           data-surface="action"
-          className={`${styles.sourceTab}${sourceTab === 'css' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
+          className={`${ax({ text: 'muted' })} ${styles.sourceTab}${sourceTab === 'css' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
           onClick={() => setSourceTab('css')}
         >
           CSS

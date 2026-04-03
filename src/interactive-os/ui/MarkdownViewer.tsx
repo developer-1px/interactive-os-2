@@ -1,5 +1,6 @@
 // ② 2026-03-31-chat-perf-prd.md
 import { Component, createElement, memo, useMemo, type ReactNode } from 'react'
+import { ax } from '@styles/ax'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
@@ -92,7 +93,7 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, styles = d
   }), [codeVariant, styles])
 
   return (
-    <div className={styles.markdown}>
+    <div className={`${ax({ text: 'primary' })} ${styles.markdown}`}>
       <Markdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}

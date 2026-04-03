@@ -35,7 +35,6 @@
 .chatSessionItem {
   padding-inline: var(--space-md);
   cursor: pointer;
-  color: var(--text-secondary);
 }
 
 .chatSessionItem:hover {
@@ -45,14 +44,6 @@
 .chatSessionActive {
   background: var(--bg-active);
   color: var(--text-bright);
-}
-
-.chatRunning {
-  color: var(--tone-success-base);
-}
-
-.chatIdle {
-  color: var(--text-muted);
 }
 
 .chatCloseBtn {

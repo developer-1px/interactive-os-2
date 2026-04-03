@@ -18,13 +18,11 @@
 
 /* ── Column header ── */
 .columnHeader {
-  color: var(--text-secondary);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
 }
 
 .columnCount {
-  color: var(--text-muted);
   text-transform: none;
   letter-spacing: 0;
 }
@@ -67,7 +65,6 @@
   overflow-y: auto;
   max-height: 100%;
 }
-
 
 .board[data-compact] .columnHeader {
   font-size: var(--type-caption-size);
@@ -112,7 +109,6 @@
 /* ── Card subtitle (LOC etc.) ── */
 .cardSubtitle {
   flex-shrink: 0;
-  color: var(--text-muted);
   margin-left: auto;
   font-variant-numeric: tabular-nums;
 }
@@ -152,10 +148,6 @@
 
 .depUp {
   color: var(--tone-positive-base);
-}
-
-.depDown {
-  color: var(--tone-primary-base);
 }
 
 /* ── Dependency highlight — dim unrelated, brighten related ── */

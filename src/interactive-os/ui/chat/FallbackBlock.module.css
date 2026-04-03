@@ -3,7 +3,6 @@
 .fallback {
   overflow: hidden;
   font-size: var(--type-caption-size);
-  color: var(--text-muted);
   border: 1px dashed var(--border-subtle);
   border-radius: var(--shape-md-radius);
 }

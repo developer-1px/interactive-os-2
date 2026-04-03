@@ -16,6 +16,13 @@ import { editAnimationFrames, readFrames, writeFrames, type TimedFrame } from '.
 import { ReplayCursor } from './ReplayCursor'
 import { LiveSessionPanel } from './LiveSessionPanel'
 import { chatRenderers } from './replayRenderers'
+import { SearchResults } from '@os/ui/SearchResults'
+import { TerminalOutput } from '@os/ui/TerminalOutput'
+
+export type ViewerOverlay =
+  | { type: 'search'; query: string; output: string }
+  | { type: 'terminal'; command: string; output: string }
+  | null
 
 // --- Session loading ---
 
@@ -66,6 +73,7 @@ export default function PageReplay() {
   const [highlights, setHighlights] = useState<Map<number, HighlightTone> | undefined>(undefined)
   const [cursorLine, setCursorLine] = useState<number | null>(null)
   const [sizes, setSizes] = useState<PaneSize[]>([0.7, 0.3])
+  const [overlay, setOverlay] = useState<ViewerOverlay>(null)
 
   // Right panel tab
   const [rightTab, setRightTab] = useState<'replay' | 'live'>('live')
@@ -116,12 +124,18 @@ export default function PageReplay() {
   })
 
   // Live session viewer update
-  const onViewerUpdate = useCallback((files: Map<string, string>, activeFilePath: string | null) => {
+  const onViewerUpdate = useCallback((
+    files: Map<string, string>,
+    activeFilePath: string | null,
+    hl?: Map<number, HighlightTone>,
+    newOverlay?: ViewerOverlay,
+  ) => {
     setOpenFiles(files)
     setActiveFile(activeFilePath)
     activeFileRef.current = activeFilePath
-    setHighlights(undefined)
+    setHighlights(hl ?? undefined)
     setCursorLine(null)
+    setOverlay(newOverlay ?? null)
   }, [])
 
   // Load session
@@ -286,9 +300,13 @@ export default function PageReplay() {
             )}
           </div>
 
-          {/* Code content */}
+          {/* Content: overlay (search/terminal) or code */}
           <div ref={codeContainerRef} className={`${ax({ flex: '1', layout: 'scroll' })} min-h-0`} style={{ position: 'relative' }}>
-            {currentCode != null ? (
+            {overlay?.type === 'search' ? (
+              <SearchResults query={overlay.query} output={overlay.output} />
+            ) : overlay?.type === 'terminal' ? (
+              <TerminalOutput command={overlay.command} output={overlay.output} />
+            ) : currentCode != null ? (
               <>
                 <FilePreview
                   content={currentCode}
@@ -322,6 +340,7 @@ export default function PageReplay() {
                 activeFileRef.current = null
                 setHighlights(undefined)
                 setCursorLine(null)
+                setOverlay(null)
               }}
               className={ax({ surface: rightTab === 'live' ? 'display' : 'ghost', controlSize: 'sm', textStyle: 'caption', tone: rightTab === 'live' ? 'accent' : undefined })}
             >

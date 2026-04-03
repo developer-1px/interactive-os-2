@@ -12,7 +12,6 @@
 }
 
 .sectionTitle {
-  color: var(--text-primary);
   padding-bottom: var(--space-xs);
   border-bottom: 1px solid var(--border-subtle);
   margin: 0;
@@ -27,7 +26,6 @@
 }
 
 .label {
-  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -64,7 +62,6 @@
 .stateLabel {
   font-size: var(--type-code-size);
   font-family: var(--type-code-family);
-  color: var(--text-secondary);
 }
 
 .separatorFill { flex: 1; }

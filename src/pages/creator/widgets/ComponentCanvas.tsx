@@ -4,6 +4,8 @@ import React, { Component, Suspense, useMemo } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
 import type { RegistryEntry } from '../componentRegistry'
 import { getSampleData } from '../sampleData'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from '../PageComponentCreator.module.css'
 
 interface ComponentCanvasProps {
@@ -57,7 +59,7 @@ class CanvasErrorBoundary extends Component<{ name: string; children: ReactNode 
   static getDerivedStateFromError(err: Error) { return { error: err.message } }
   componentDidCatch(err: Error, info: ErrorInfo) { console.warn(`[Creator] ${this.props.name}:`, err, info) }
   render() {
-    if (this.state.error) return <div className={styles.canvasError}>Cannot preview: {this.state.error}</div>
+    if (this.state.error) return <div className={`${ax({ text: 'muted' })} ${styles.canvasError}`}>Cannot preview: {this.state.error}</div>
     return this.props.children
   }
 }

@@ -190,9 +190,9 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   const { displayed, done } = useTypewriter(msg.text, active)
   return (
     <div className={`${styles.agentMsg} flex-row items-start`}>
-      <div className={`${styles.avatar} flex-row items-center justify-center shrink-0`}><Bot size={14} /></div>
+      <div className={`${ax({ text: 'accent' })} ${styles.avatar} flex-row items-center justify-center shrink-0`}><Bot size={14} /></div>
       <div className={`${styles.bubble} flex-1 min-w-0`}>
-        <div className={`${ax({ textStyle: 'caption' })} ${styles.agentLabel}`}>
+        <div className={`${ax({ textStyle: 'caption', text: 'primary' })} ${styles.agentLabel}`}>
           {displayed}
           {!done && <StreamCursor />}
         </div>
@@ -534,7 +534,7 @@ export default function PageIncidentInterface() {
                   <div className={`${ax({ textStyle: 'code' })} ${styles.toolMsg} flex-row items-center`}>
                     <Zap size={10} />
                     <span className={`${ax({ weight: 'semi' })} ${styles.toolName}`}>{msg.toolName}</span>
-                    <span className={`${styles.toolArgs} truncate`}>{msg.text}</span>
+                    <span className={`${ax({ text: 'muted' })} ${styles.toolArgs} truncate`}>{msg.text}</span>
                   </div>
                 )
               }

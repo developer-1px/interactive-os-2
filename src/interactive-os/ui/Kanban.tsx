@@ -81,14 +81,14 @@ export function Kanban({
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'overline' })} ${styles.columnHeader}`}
+                className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'overline', text: 'secondary' })} ${styles.columnHeader}`}
                 title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
                 style={locRatio > 0 ? { '--_loc-ratio': locRatio } as React.CSSProperties : undefined}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
               >
                 <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>
                   <span>{colTitle}</span>
-                  <span className={styles.columnCount}>{cards.length}{totalLoc != null && totalLoc > 0 ? ` · ${totalLoc}L` : ''}</span>
+                  <span className={`${ax({ text: 'muted' })} ${styles.columnCount}`}>{cards.length}{totalLoc != null && totalLoc > 0 ? ` · ${totalLoc}L` : ''}</span>
                 </AriaItemContext.Provider>
               </FocusDiv>
 
@@ -125,10 +125,10 @@ export function Kanban({
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
                       <span className={`${ax({ clamp: '1' })} ${styles.cardTitle}`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
                       {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
-                        <span className={styles.cardSubtitle}>
+                        <span className={`${ax({ text: 'muted' })} ${styles.cardSubtitle}`}>
                           {cardSubtitle}
                           {cardDepUp != null && cardDepUp > 0 && <span className={`${ax({ weight: 'medium' })} ${styles.depUp}`}> ↑{cardDepUp}</span>}
-                          {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${styles.depDown}`}> ↓{cardDepDown}</span>}
+                          {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${ax({ text: 'accent' })}`}> ↓{cardDepDown}</span>}
                         </span>
                       )}
                     </AriaItemContext.Provider>

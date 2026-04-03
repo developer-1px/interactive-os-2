@@ -44,19 +44,19 @@ function StoryCard({ story, focused }: { story: Story; focused: boolean }) {
   return (
     <div className={`${css.smStory} flex-col border-none`} data-status={story.status} data-focused={focused || undefined}>
       <div className="flex-row items-center justify-between">
-        <span className={`${ax({ textStyle: 'caption' })} ${css.smStoryId}`}>{story.id}</span>
+        <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smStoryId}`}>{story.id}</span>
         {story.status === 'blocked' && (
           <span className={`${css.smStoryBlocked} shrink-0`} />
         )}
       </div>
-      <div className={`${ax({ textStyle: 'body' })} ${css.smStoryText}`}>{story.story}</div>
+      <div className={`${ax({ textStyle: 'body', text: 'primary' })} ${css.smStoryText}`}>{story.story}</div>
       {story.links.length > 0 && (
         <div className={`${css.smLinks} flex-row flex-wrap`}>
           {story.links.map(link => (
             <a
               key={link.url}
               href={link.url}
-              className={`${ax({ textStyle: 'caption' })} ${css.smLinksItem} no-underline`}
+              className={`${ax({ textStyle: 'caption', text: 'accent' })} ${css.smLinksItem} no-underline`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -71,13 +71,13 @@ function StoryCard({ story, focused }: { story: Story; focused: boolean }) {
 
 function FeatureCard({ feature, focused }: { feature: Feature; focused: boolean }) {
   return (
-    <div className={`${ax({ textStyle: 'caption' })} ${css.smFeature} flex-col border-none`} data-focused={focused || undefined}>
-      <span className={css.smFeatureId}>{feature.id}</span>
-      <div className={css.smFeatureText}>{feature.feature}</div>
+    <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${css.smFeature} flex-col border-none`} data-focused={focused || undefined}>
+      <span className={`${ax({ text: 'muted' })} ${css.smFeatureId}`}>{feature.id}</span>
+      <div className={`${ax({ text: 'secondary' })} ${css.smFeatureText}`}>{feature.feature}</div>
       {feature.screens.length > 0 && (
         <div className={`${css.smFeatureScreens} flex-row`}>
           {feature.screens.map(s => (
-            <span key={s} className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${css.smFeatureScreenTag}`}>{s}</span>
+            <span key={s} className={`${ax({ textStyle: 'caption', weight: 'medium', text: 'muted' })} ${css.smFeatureScreenTag}`}>{s}</span>
           ))}
         </div>
       )}
@@ -122,7 +122,7 @@ export default function PageStoryMap() {
           />
           <div className={`${css.smLegend} flex-row items-center shrink-0`} role="list" aria-label="Status legend">
             {(['pending', 'active', 'done', 'blocked'] as const).map(status => (
-              <div key={status} className={`${ax({ textStyle: 'caption' })} ${css.smLegendItem} flex-row items-center`} role="listitem">
+              <div key={status} className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smLegendItem} flex-row items-center`} role="listitem">
                 <span className={`${css.smLegendSwatch} shrink-0`} data-status={status} />
                 {status}
               </div>
@@ -144,11 +144,11 @@ export default function PageStoryMap() {
                 return (
                   <div
                     key={need.id}
-                    className={`${ax({ textStyle: 'body', weight: 'medium' })} ${css.smNeedHeader} flex-col`}
+                    className={`${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} ${css.smNeedHeader} flex-col`}
                     style={{ gridColumn: `${colStart} / span ${span}` }}
                   >
-                    <div className={`${ax({ textStyle: 'caption' })} ${css.smNeedHeaderTop} flex-row items-center`}>
-                      <span className={`${ax({ textStyle: 'caption', weight: 'semi' })} ${css.smPersonaBadge} inline-flex items-center justify-center`}>{persona}</span>
+                    <div className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smNeedHeaderTop} flex-row items-center`}>
+                      <span className={`${ax({ textStyle: 'caption', weight: 'semi', text: 'accent' })} ${css.smPersonaBadge} inline-flex items-center justify-center`}>{persona}</span>
                       {need.id} · {need.persona}
                     </div>
                     {need.need}

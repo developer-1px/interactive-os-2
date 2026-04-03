@@ -361,14 +361,14 @@ export default function BirdseyeLayout() {
   }, [selectedFolderId, fsStore])
 
   if (!fsStore || !navStore) {
-    return <div className={`${styles.loading} flex-row items-center justify-center h-full`}>Loading project...</div>
+    return <div className={`${styles.loading} ${ax({ text: 'muted' })} flex-row items-center justify-center h-full`}>Loading project...</div>
   }
 
   return (<>
     <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.08}>
       {/* 좌: TreeView (폴더 전용) */}
       <div className={`${styles.sidebar} flex-col h-full`}>
-        <div className={`${styles.sidebarHeader} flex-row items-center shrink-0`}>Birdseye</div>
+        <div className={`${ax({ text: 'muted' })} ${styles.sidebarHeader} flex-row items-center shrink-0`}>Birdseye</div>
         <div className={`${styles.sidebarBody} flex-1`}>
           <TreeView
             data={navStore}
@@ -382,19 +382,19 @@ export default function BirdseyeLayout() {
 
       {/* 중: Kanban */}
       <div className={`${styles.board} flex-col h-full`}>
-        <div className={`${styles.boardHeader} flex-row items-center shrink-0`}>
+        <div className={`${ax({ text: 'secondary' })} ${styles.boardHeader} flex-row items-center shrink-0`}>
           <span className={`${styles.breadcrumb} flex-row items-center`}>
             {breadcrumbs.map((seg, i) => (
               <span key={seg.id}>
-                {i > 0 && <span className={ax({ opacity: 'faint' }) + ' ' + styles.breadcrumbSep}>/</span>}
+                {i > 0 && <span className={ax({ opacity: 'faint', text: 'muted' }) + ' ' + styles.breadcrumbSep}>/</span>}
                 {i < breadcrumbs.length - 1
-                  ? <button className={`${styles.breadcrumbLink} cursor-pointer`} onClick={() => selectFolder(seg.id)}>{seg.label}</button>
+                  ? <button className={`${ax({ text: 'muted' })} ${styles.breadcrumbLink} cursor-pointer`} onClick={() => selectFolder(seg.id)}>{seg.label}</button>
                   : <span>{seg.label}</span>
                 }
               </span>
             ))}
           </span>
-          <span className={`${styles.legend} flex-row`}>
+          <span className={`${ax({ text: 'muted' })} ${styles.legend} flex-row`}>
             {['ts', 'tsx', 'css', 'md', 'yaml'].map((ext) => (
               <span
                 key={ext}
@@ -403,10 +403,10 @@ export default function BirdseyeLayout() {
                 onClick={() => setExtFilter(extFilter === ext ? null : ext)}
               >.{ext}</span>
             ))}
-            <span className={`${ax({ opacity: 'faint' })} ${styles.legendHint} pointer-events-none`} title="↑ = imported by N files, ↓ = imports N files">↑imported ↓imports</span>
-            <span className={`${ax({ opacity: 'faint' })} ${styles.legendHint} pointer-events-none`} data-weight-legend="" title="300+ lines — complexity signal">300L+</span>
+            <span className={`${ax({ opacity: 'faint', text: 'muted' })} ${styles.legendHint} pointer-events-none`} title="↑ = imported by N files, ↓ = imports N files">↑imported ↓imports</span>
+            <span className={`${ax({ opacity: 'faint', text: 'muted' })} ${styles.legendHint} pointer-events-none`} data-weight-legend="" title="300+ lines — complexity signal">300L+</span>
             <button
-              className={`${styles.viewToggle} flex-row items-center justify-center cursor-pointer`}
+              className={`${ax({ text: 'muted' })} ${styles.viewToggle} flex-row items-center justify-center cursor-pointer`}
               onClick={() => setViewMode(v => v === 'kanban' ? 'treemap' : 'kanban')}
               title={viewMode === 'kanban' ? 'Treemap view' : 'Kanban view'}
             >
@@ -443,7 +443,7 @@ export default function BirdseyeLayout() {
             </div>
           )
         ) : (
-          <div className={`${styles.viewerEmpty} flex-row items-center justify-center h-full`}>{extFilter ? `No .${extFilter} files in this folder` : 'No source files in this folder'}</div>
+          <div className={`${ax({ text: 'muted' })} ${styles.viewerEmpty} flex-row items-center justify-center h-full`}>{extFilter ? `No .${extFilter} files in this folder` : 'No source files in this folder'}</div>
         )}
       </div>
 
@@ -452,22 +452,22 @@ export default function BirdseyeLayout() {
     {/* Floating overlay viewer */}
     {viewerCode !== null && (
       <div ref={overlayRef} className={`${styles.overlay} fixed flex-col`} style={overlayPos ? { top: overlayPos.top, left: overlayPos.left, right: 'auto' } : undefined}>
-        <div className={`${styles.overlayHeader} flex-row items-center shrink-0`}>{viewerFilename}</div>
+        <div className={`${ax({ text: 'secondary' })} ${styles.overlayHeader} flex-row items-center shrink-0`}>{viewerFilename}</div>
         <div className="flex-1 min-h-0 overflow-auto">
           {depList && (depList.importedBy.length > 0 || depList.imports.length > 0) && (
-            <div className={styles.depList}>
+            <div className={`${ax({ text: 'secondary' })} ${styles.depList}`}>
               {depList.importedBy.length > 0 && (
                 <details>
-                  <summary className={`${styles.depSummary} flex-row items-center cursor-pointer list-none`}>
+                  <summary className={`${ax({ text: 'muted' })} ${styles.depSummary} flex-row items-center cursor-pointer list-none`}>
                     <span className={`${styles.depDot} shrink-0`} data-dir="up" />
                     → Used by {depList.importedBy.length} files
                   </summary>
                   <div className={styles.depGroups}>
                     {groupByLayer(depList.importedBy, DEFAULT_ROOT).map(({ layer, files }) => (
                       <details key={layer} open={files.length <= 5} className={styles.depGroup}>
-                        <summary className={`${styles.depGroupSummary} cursor-pointer list-none`}>{layer} <span className={styles.depGroupCount}>({files.length})</span></summary>
+                        <summary className={`${ax({ text: 'secondary' })} ${styles.depGroupSummary} cursor-pointer list-none`}>{layer} <span className={`${ax({ text: 'muted' })} ${styles.depGroupCount}`}>({files.length})</span></summary>
                         <ul className={`${styles.depFiles} list-none`}>
-                          {files.map((f) => <li key={f.fullPath}><button className={`${styles.depJump} block w-full whitespace-nowrap overflow-hidden cursor-pointer`} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
+                          {files.map((f) => <li key={f.fullPath}><button className={`${ax({ text: 'muted' })} ${styles.depJump} block w-full whitespace-nowrap overflow-hidden cursor-pointer`} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
                         </ul>
                       </details>
                     ))}
@@ -476,16 +476,16 @@ export default function BirdseyeLayout() {
               )}
               {depList.imports.length > 0 && (
                 <details>
-                  <summary className={`${styles.depSummary} flex-row items-center cursor-pointer list-none`}>
+                  <summary className={`${ax({ text: 'muted' })} ${styles.depSummary} flex-row items-center cursor-pointer list-none`}>
                     <span className={`${styles.depDot} shrink-0`} data-dir="down" />
                     ← Depends on {depList.imports.length} files
                   </summary>
                   <div className={styles.depGroups}>
                     {groupByLayer(depList.imports, DEFAULT_ROOT).map(({ layer, files }) => (
                       <details key={layer} open={files.length <= 5} className={styles.depGroup}>
-                        <summary className={`${styles.depGroupSummary} cursor-pointer list-none`}>{layer} <span className={styles.depGroupCount}>({files.length})</span></summary>
+                        <summary className={`${ax({ text: 'secondary' })} ${styles.depGroupSummary} cursor-pointer list-none`}>{layer} <span className={`${ax({ text: 'muted' })} ${styles.depGroupCount}`}>({files.length})</span></summary>
                         <ul className={`${styles.depFiles} list-none`}>
-                          {files.map((f) => <li key={f.fullPath}><button className={`${styles.depJump} block w-full whitespace-nowrap overflow-hidden cursor-pointer`} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
+                          {files.map((f) => <li key={f.fullPath}><button className={`${ax({ text: 'muted' })} ${styles.depJump} block w-full whitespace-nowrap overflow-hidden cursor-pointer`} onClick={() => handleDepJump(f.fullPath)}>{f.name}</button></li>)}
                         </ul>
                       </details>
                     ))}

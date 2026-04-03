@@ -58,7 +58,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`${ax({ layout: 'center', surface: 'action' })} ${styles.scrollFab}`} onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`${ax({ layout: 'center', surface: 'action', text: 'secondary' })} ${styles.scrollFab}`} onClick={scrollToBottom} aria-label="Scroll to bottom">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>

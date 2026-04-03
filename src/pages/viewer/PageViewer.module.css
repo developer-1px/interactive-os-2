@@ -8,7 +8,6 @@
 .vw-loading {
   gap: var(--space-sm);
   height: 100svh;
-  color: var(--text-muted);
 }
 
 .vw-loading__spinner {
@@ -31,7 +30,6 @@
   border: 1px solid var(--border-default);
   border-radius: var(--shape-xs-radius);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  color: var(--text-secondary);
   transition: all 0.15s;
 }
 
@@ -83,7 +81,6 @@
 
 .vw-tree__chevron {
   width: var(--icon-xs);
-  color: var(--text-muted);
 }
 
 
@@ -101,7 +98,6 @@
 
 .vw-content__meta {
   gap: var(--space-xs);
-  color: var(--text-muted);
 }
 
 .vw-content__meta svg {
@@ -121,7 +117,6 @@
 
 .vw-empty {
   gap: var(--space-md);
-  color: var(--text-muted);
 }
 
 .vw-empty__icon {

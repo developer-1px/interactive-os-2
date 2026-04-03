@@ -120,11 +120,11 @@ export function Spinbutton({
 
     return (
       <div className={`${ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined })} ${styles.spinbuttonItem}`} data-focused={state.focused || undefined}>
-        {itemLabel && <span className={`${ax({ textStyle: 'body', weight: 'medium' })} ${styles.spinbuttonLabel}`}>{itemLabel}</span>}
+        {itemLabel && <span className={`${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} ${styles.spinbuttonLabel}`}>{itemLabel}</span>}
         <div className={`${ax({ layout: 'bar' })} ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
           <button
             type="button"
-            className={`${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
+            className={`${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page', text: 'primary' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
             aria-disabled={atMin || undefined}
@@ -135,7 +135,7 @@ export function Spinbutton({
           {editing ? (
             <input
               ref={inputRef}
-              className={`${ax({ textStyle: 'body', weight: 'semi' })} ${styles.spinbuttonInput}`}
+              className={`${ax({ textStyle: 'body', weight: 'semi', text: 'primary' })} ${styles.spinbuttonInput}`}
               type="text"
               inputMode="numeric"
               value={editValue}
@@ -146,7 +146,7 @@ export function Spinbutton({
             />
           ) : (
             <div
-              className={`${ax({ layout: 'center', textStyle: 'body', weight: 'semi' })} ${styles.spinbuttonValue}`}
+              className={`${ax({ layout: 'center', textStyle: 'body', weight: 'semi', text: 'primary' })} ${styles.spinbuttonValue}`}
               onClick={startEditing}
               onDoubleClick={startEditing}
             >
@@ -155,7 +155,7 @@ export function Spinbutton({
           )}
           <button
             type="button"
-            className={`${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
+            className={`${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page', text: 'primary' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}
             aria-disabled={atMax || undefined}

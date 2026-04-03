@@ -1,5 +1,7 @@
 // ② 2026-03-31-chat-perf-prd.md
 import { memo, useMemo } from 'react'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './DiffBlock.module.css'
 import type { DiffBlock as DiffBlockType } from './types'
 
@@ -10,7 +12,7 @@ export const DiffBlock = memo(function DiffBlock({ block }: { block: DiffBlockTy
   return (
     <div className={`overflow-hidden ${styles.diff}`}>
       {block.filePath && (
-        <div className={styles.diffHeader}>{block.filePath}</div>
+        <div className={`${ax({ text: 'secondary' })} ${styles.diffHeader}`}>{block.filePath}</div>
       )}
       <div className={`grid ${styles.diffBody}`}>
         <div className={`overflow-hidden min-w-0 ${styles.diffPane}`}>
