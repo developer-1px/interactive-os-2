@@ -9,7 +9,15 @@ export type RouteKeyMap = Record<string, () => Command | void>
 /** Route-scoped global shortcuts. Owns a document keydown listener that lives
  *  for the lifetime of the component — mount = activate, unmount = deactivate.
  *  Handlers return Command for logging/communication. */
-export function AriaRoute({ keyMap, label, children }: { keyMap: RouteKeyMap; label?: string; children: ReactNode }) {
+interface AriaRouteProps {
+  keyMap: RouteKeyMap
+  label?: string
+  /** Extra keyMap entries from child components — for inspector visibility only (no listener) */
+  inspectKeyMap?: Record<string, string>
+  children: ReactNode
+}
+
+export function AriaRoute({ keyMap, label, inspectKeyMap, children }: AriaRouteProps) {
   useEffect(() => {
     if (Object.keys(keyMap).length === 0) return
     const handler = (e: KeyboardEvent) => {
@@ -35,6 +43,11 @@ export function AriaRoute({ keyMap, label, children }: { keyMap: RouteKeyMap; la
     for (const key of Object.keys(keyMap)) {
       keyMapDesc[key] = label ?? 'route'
     }
+    if (inspectKeyMap) {
+      for (const [key, owner] of Object.entries(inspectKeyMap)) {
+        keyMapDesc[key] = owner
+      }
+    }
     registerAria(registryKey, {
       dispatch: () => {},
       getStore: () => ({ entities: {}, relationships: {} }),
@@ -50,7 +63,7 @@ export function AriaRoute({ keyMap, label, children }: { keyMap: RouteKeyMap; la
       }),
     })
     return () => unregisterAria(registryKey)
-  }, [keyMap, label])
+  }, [keyMap, label, inspectKeyMap])
 
   return <>{children}</>
 }
