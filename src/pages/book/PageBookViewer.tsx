@@ -154,9 +154,11 @@ export default function PageBookViewer() {
   const keyMap = useMemo(() => ({
     ArrowDown: () => {
       if (currentPage < pages.length - 1) goTo(currentPage + 1)
+      return { type: 'book:next-page', payload: { page: currentPage + 1 } } as const
     },
     ArrowUp: () => {
       if (currentPage > 0) goTo(currentPage - 1)
+      return { type: 'book:prev-page', payload: { page: currentPage - 1 } } as const
     },
   }), [currentPage, pages.length, goTo])
 

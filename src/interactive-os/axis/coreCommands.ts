@@ -6,6 +6,7 @@ import { expandCommands } from './expand'
 import { checkedCommands } from './checked'
 import { popupCommands } from './popup'
 import { valueCommands } from './value'
+import { editCommands } from './edit'
 
 /** All core axis command handlers as a pre-built registry */
 export const coreRegistry: Map<string, CommandHandler> = buildRegistry(
@@ -16,4 +17,5 @@ export const coreRegistry: Map<string, CommandHandler> = buildRegistry(
   checkedCommands,
   popupCommands,
   valueCommands,
+  editCommands,
 )

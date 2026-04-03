@@ -20,7 +20,7 @@ export function FilePanel({ path }: { path: string }) {
   const isMarkdown = filename.endsWith('.md')
 
   const keyMap = useMemo(() => ({
-    'Meta+b': () => { if (isMarkdown) setSpreadMode(s => !s) },
+    'Meta+b': () => { if (isMarkdown) setSpreadMode(s => !s); return { type: 'file-panel:toggle-spread' } as const },
   }), [isMarkdown])
 
   if (isMarkdown && spreadMode) {

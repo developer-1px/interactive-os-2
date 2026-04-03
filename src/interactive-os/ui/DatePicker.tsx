@@ -1,5 +1,5 @@
-// ② 2026-03-31-datepicker-composite-prd.md
-import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+// ② 2026-04-03-command-unification-prd.md
+import React, { useMemo, useCallback, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
@@ -11,6 +11,66 @@ import { FOCUS_ID } from '../axis/navigate'
 import { SELECTION_ID } from '../axis/select'
 import { useEngine } from '../engine/useEngine'
 import { CalendarGrid } from './CalendarGrid'
+import { defineCommands } from '../engine/defineCommand'
+
+// ── Calendar meta entity — isOpen + focusDayIndex in engine, year/month as TransformAdapter input ──
+
+const CALENDAR_ID = '__calendar__'
+
+const calendarCommands = defineCommands({
+  open: {
+    type: 'calendar:open' as const,
+    meta: true,
+    create: (focusDayIndex: number) => ({ focusDayIndex }),
+    handler: (store, { focusDayIndex }) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [CALENDAR_ID]: { id: CALENDAR_ID, isOpen: true, focusDayIndex },
+      },
+    }),
+  },
+  close: {
+    type: 'calendar:close' as const,
+    meta: true,
+    handler: (store) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [CALENDAR_ID]: { ...store.entities[CALENDAR_ID]!, id: CALENDAR_ID, isOpen: false },
+      },
+    }),
+  },
+  setFocusDay: {
+    type: 'calendar:set-focus-day' as const,
+    meta: true,
+    create: (focusDayIndex: number) => ({ focusDayIndex }),
+    handler: (store, { focusDayIndex }) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [CALENDAR_ID]: { ...store.entities[CALENDAR_ID]!, id: CALENDAR_ID, focusDayIndex },
+      },
+    }),
+  },
+})
+
+// year/month changes are TransformAdapter-style: they rebuild NormalizedData.
+// These Commands are for logging only — the actual state change drives data reconstruction.
+const calendarNavCommands = defineCommands({
+  changeMonth: {
+    type: 'calendar:change-month' as const,
+    meta: true,
+    create: (delta: number, resultYear: number, resultMonth: number) => ({ delta, resultYear, resultMonth }),
+    handler: (store) => store, // no-op: year/month lives outside engine
+  },
+  changeYear: {
+    type: 'calendar:change-year' as const,
+    meta: true,
+    create: (delta: number, resultYear: number) => ({ delta, resultYear }),
+    handler: (store) => store, // no-op: year/month lives outside engine
+  },
+})
 
 // ── Calendar computation (pure) ──
 
@@ -41,7 +101,7 @@ function buildCalendarCells(year: number, month: number): { id: string; meta: Ce
   return cells
 }
 
-function buildGridStore(year: number, month: number, selectedDate: Date | null, focusDayIndex: number): NormalizedData {
+function buildGridStore(year: number, month: number, selectedDate: Date | null, focusDayIndex: number, isOpen: boolean): NormalizedData {
   const cells = buildCalendarCells(year, month)
   const entities: Record<string, { id: string; [key: string]: unknown }> = {}
   for (const cell of cells) {
@@ -52,6 +112,7 @@ function buildGridStore(year: number, month: number, selectedDate: Date | null, 
     ? cells.findIndex(c => c.meta.date.toDateString() === selectedDate.toDateString())
     : -1
   entities[SELECTION_ID] = { id: SELECTION_ID, selectedIds: selectedIdx >= 0 ? [`day-${selectedIdx}`] : [] }
+  entities[CALENDAR_ID] = { id: CALENDAR_ID, isOpen, focusDayIndex }
   return createStore({ entities, relationships: { [ROOT_ID]: cells.map(c => c.id) } })
 }
 
@@ -62,13 +123,13 @@ function findDayIndex(year: number, month: number, targetDate: Date): number {
   return Math.max(0, Math.min(41, diff))
 }
 
-function formatDate(date: Date): string {
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-}
-
 function clampDay(year: number, month: number, day: number): number {
   const maxDay = new Date(year, month + 1, 0).getDate()
   return Math.min(day, maxDay)
+}
+
+function formatDate(date: Date): string {
+  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
 }
 
 // ── Focus trap ──
@@ -94,13 +155,16 @@ export function DatePicker({
 }: DatePickerProps) {
   const today = useMemo(() => new Date(), [])
   const target = value ?? today
-  const [year, setYear] = useState(target.getFullYear())
-  const [month, setMonth] = useState(target.getMonth())
-  const [isOpen, setIsOpen] = useState(false)
-  const [focusDayIndex, setFocusDayIndex] = useState(() => findDayIndex(target.getFullYear(), target.getMonth(), target))
 
   const inputRef = useRef<HTMLInputElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
+
+  // year/month are TransformAdapter inputs — they rebuild NormalizedData
+  // Stored as React state because they determine WHAT data the engine manages
+  const [yearMonth, setYearMonth] = React.useState({ year: target.getFullYear(), month: target.getMonth() })
+  const { year, month } = yearMonth
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [focusDayIndex, setFocusDayIndex] = React.useState(() => findDayIndex(target.getFullYear(), target.getMonth(), target))
 
   const cells = useMemo(() => buildCalendarCells(year, month), [year, month])
   const cellMeta = useMemo(() => {
@@ -110,44 +174,69 @@ export function DatePicker({
   }, [cells])
 
   const gridStore = useMemo(
-    () => buildGridStore(year, month, value, focusDayIndex),
-    [year, month, value, focusDayIndex],
+    () => buildGridStore(year, month, value, focusDayIndex, isOpen),
+    [year, month, value, focusDayIndex, isOpen],
   )
-  const { engine, store } = useEngine({ data: gridStore })
+
+  const calendarPlugin = useMemo(() => ({
+    name: 'calendar',
+    commands: {
+      open: calendarCommands.open,
+      close: calendarCommands.close,
+      setFocusDay: calendarCommands.setFocusDay,
+      changeMonth: calendarNavCommands.changeMonth,
+      changeYear: calendarNavCommands.changeYear,
+    },
+  }), [])
+
+  const { engine, store } = useEngine({ data: gridStore, plugins: [calendarPlugin] })
 
   // ── Dialog open/close ──
 
   const openDialog = useCallback(() => {
     const t = value ?? today
-    setYear(t.getFullYear())
-    setMonth(t.getMonth())
-    setFocusDayIndex(findDayIndex(t.getFullYear(), t.getMonth(), t))
-    setIsOpen(true)
-  }, [value, today])
+    const y = t.getFullYear()
+    const m = t.getMonth()
+    const idx = findDayIndex(y, m, t)
+    setYearMonth({ year: y, month: m }) // eslint-disable-line react-hooks/set-state-in-effect
+    setFocusDayIndex(idx) // eslint-disable-line react-hooks/set-state-in-effect
+    setIsOpen(true) // eslint-disable-line react-hooks/set-state-in-effect
+    engine.dispatch(calendarCommands.open(idx))
+  }, [engine, value, today])
 
   const closeDialog = useCallback((returnFocus = true) => {
     setIsOpen(false)
+    engine.dispatch(calendarCommands.close())
     if (returnFocus) requestAnimationFrame(() => inputRef.current?.focus())
-  }, [])
+  }, [engine])
 
   // ── Month/year navigation ──
 
   const changeMonth = useCallback((delta: number) => {
-    setMonth(prev => {
-      let next = prev + delta
-      if (next < 0) { setYear(y => y - 1); next = 11 }
-      else if (next > 11) { setYear(y => y + 1); next = 0 }
+    setYearMonth(prev => {
+      let nextMonth = prev.month + delta
+      let nextYear = prev.year
+      if (nextMonth < 0) { nextYear--; nextMonth = 11 }
+      else if (nextMonth > 11) { nextYear++; nextMonth = 0 }
       // Clamp focus day to new month
       const focusCell = cells[focusDayIndex]
       if (focusCell) {
-        const effectiveYear = delta < 0 && prev === 0 ? year - 1 : delta > 0 && prev === 11 ? year + 1 : year
-        const day = clampDay(effectiveYear, next, focusCell.meta.date.getDate())
-        const newDate = new Date(effectiveYear, next, day)
-        setFocusDayIndex(findDayIndex(effectiveYear, next, newDate))
+        const day = clampDay(nextYear, nextMonth, focusCell.meta.date.getDate())
+        const newDate = new Date(nextYear, nextMonth, day)
+        setFocusDayIndex(findDayIndex(nextYear, nextMonth, newDate))
       }
-      return next
+      engine.dispatch(calendarNavCommands.changeMonth(delta, nextYear, nextMonth))
+      return { year: nextYear, month: nextMonth }
     })
-  }, [cells, focusDayIndex, year])
+  }, [cells, focusDayIndex, engine])
+
+  const changeYear = useCallback((delta: number) => {
+    setYearMonth(prev => {
+      const nextYear = prev.year + delta
+      engine.dispatch(calendarNavCommands.changeYear(delta, nextYear))
+      return { ...prev, year: nextYear }
+    })
+  }, [engine])
 
   // ── Grid callbacks ──
 
@@ -171,11 +260,9 @@ export function DatePicker({
     const idx = parseInt(match[1]!, 10)
     const cell = cells[idx]
     if (cell && !cell.meta.isCurrentMonth) {
-      // Moved to a day outside current month — switch month
       const d = cell.meta.date
       // eslint-disable-next-line react-hooks/set-state-in-effect -- store subscription sync
-      setYear(d.getFullYear())
-      setMonth(d.getMonth())
+      setYearMonth({ year: d.getFullYear(), month: d.getMonth() })
       setFocusDayIndex(findDayIndex(d.getFullYear(), d.getMonth(), d))
     } else if (idx !== focusDayIndex) {
       setFocusDayIndex(idx)
@@ -193,13 +280,13 @@ export function DatePicker({
 
     if (e.key === 'PageUp') {
       e.preventDefault()
-      if (e.shiftKey) setYear(y => y - 1)
+      if (e.shiftKey) changeYear(-1)
       else changeMonth(-1)
       return
     }
     if (e.key === 'PageDown') {
       e.preventDefault()
-      if (e.shiftKey) setYear(y => y + 1)
+      if (e.shiftKey) changeYear(1)
       else changeMonth(1)
       return
     }
@@ -217,7 +304,7 @@ export function DatePicker({
         first.focus()
       }
     }
-  }, [closeDialog, changeMonth])
+  }, [closeDialog, changeMonth, changeYear])
 
   // ── Outside click ──
 
@@ -246,7 +333,6 @@ export function DatePicker({
   // ── Space = select without closing ──
 
   const handleGridContainerKeyDown = useCallback((e: React.KeyboardEvent) => {
-    // Space on grid: select the focused day but don't close
     if (e.key === ' ') {
       e.preventDefault()
       const cell = cells[focusDayIndex]
@@ -300,7 +386,7 @@ export function DatePicker({
           onKeyDown={handleDialogKeyDown}
         >
           <div className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.navBar}`}>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Year" onClick={() => setYear(y => y - 1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
               <ChevronsLeft size="1em" />
             </button>
             <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
@@ -310,7 +396,7 @@ export function DatePicker({
             <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
               <ChevronRight size="1em" />
             </button>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Year" onClick={() => setYear(y => y + 1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Year" onClick={() => changeYear(1)}>
               <ChevronsRight size="1em" />
             </button>
           </div>

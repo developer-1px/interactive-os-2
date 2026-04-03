@@ -63,6 +63,18 @@ export interface PopupNav {
   close(): Command
 }
 
+/** inline edit 변화 범주 */
+export interface EditNav {
+  active: boolean
+  value: string
+  invalid: boolean
+  start(initialValue: string): Command
+  update(value: string): Command
+  commit(): Command
+  cancel(): Command
+  setInvalid(invalid: boolean): Command
+}
+
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export interface PatternContext {
   // ── Base (focus + store access + activate event) ──
@@ -87,6 +99,7 @@ export interface PatternContext {
   popup?: PopupNav
   grid?: GridNav
   value?: ValueNav
+  edit?: EditNav
 
   // ── spatial navigation (provided by useSpatialBridge when strategy='spatial') ──
   spatialMove?: (dir: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') => import('../engine/types').Command | void

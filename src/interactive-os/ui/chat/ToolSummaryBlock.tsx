@@ -1,4 +1,5 @@
-import { useMemo, useState, useEffect, useRef } from 'react'
+// ② 2026-04-03-command-unification-prd.md
+import { useMemo } from 'react'
 import {
   FileText, Terminal, Pencil, FilePlus,
   Search, Zap, Wrench, Globe, Layers,
@@ -9,6 +10,7 @@ import { DiffBlock } from './DiffBlock'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { useChatFeatures } from './chatFeatures'
+import { useDisclosure } from './useDisclosure'
 import styles from './ToolSummaryBlock.module.css'
 import type { DataBlock } from './types'
 
@@ -96,16 +98,11 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
 
 export function ToolResultBlock({ block }: { block: DataBlock }) {
   const { expandByDefault, isLatest } = useChatFeatures()
-  const [open, setOpen] = useState(isLatest || expandByDefault)
+  const { expanded, toggle, toggleProps } = useDisclosure({
+    initialOpen: isLatest || expandByDefault,
+    isLatest,
+  })
 
-  const wasLatestRef = useRef(isLatest)
-  useEffect(() => {
-    if (wasLatestRef.current && !isLatest) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- live→settled transition
-      setOpen(false)
-    }
-    wasLatestRef.current = isLatest
-  }, [isLatest])
   const text = extractResultText(block)
 
   if (!text) return null
@@ -119,13 +116,20 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
   }
 
   return (
-    <details open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary className={`${ax({ layout: 'bar' })} ${styles.toolResultSummary}`}>
-        <ExpandIndicator variant="expand" />
+    <div>
+      <div
+        {...toggleProps}
+        className={`${ax({ layout: 'bar' })} ${styles.toolResultSummary}`}
+        role="button"
+        aria-expanded={expanded}
+        tabIndex={0}
+        onClick={toggle}
+      >
+        <ExpandIndicator variant="expand" expanded={expanded} />
         <span className={styles.toolResultPreview}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
-      </summary>
-      <pre className={styles.toolResult}>{text}</pre>
-    </details>
+      </div>
+      {expanded && <pre className={styles.toolResult}>{text}</pre>}
+    </div>
   )
 }
 
@@ -155,17 +159,10 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   const filename = isCodeResult ? String(input.file_path).split('/').pop() ?? 'file.txt' : ''
   const codeText = useMemo(() => isCodeResult ? stripLineNumbers(text) : text, [isCodeResult, text])
 
-  // Live: expanded while isLatest, collapse on settle
-  const [open, setOpen] = useState(isLatest ? true : (isRead || isWrite ? false : expandByDefault))
-
-  const wasLatestRef = useRef(isLatest)
-  useEffect(() => {
-    if (wasLatestRef.current && !isLatest) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- live→settled transition
-      setOpen(false)
-    }
-    wasLatestRef.current = isLatest
-  }, [isLatest])
+  const { expanded, toggle, toggleProps } = useDisclosure({
+    initialOpen: isLatest ? true : (isRead || isWrite ? false : expandByDefault),
+    isLatest,
+  })
 
   // --- Summary label (single line, tool-specific) ---
   let summaryLabel: React.ReactNode
@@ -216,13 +213,20 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   }
 
   return (
-    <details className={styles.toolGroup} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary className={`${ax({ layout: 'bar' })} ${styles.toolGroupSummary}`}>
-        <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
+    <div className={styles.toolGroup}>
+      <div
+        {...toggleProps}
+        className={`${ax({ layout: 'bar' })} ${styles.toolGroupSummary}`}
+        role="button"
+        aria-expanded={expanded}
+        tabIndex={0}
+        onClick={toggle}
+      >
+        <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
         <Icon size={12} /> <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
-      </summary>
-      {content}
-    </details>
+      </div>
+      {expanded && content}
+    </div>
   )
 }
 
@@ -251,40 +255,43 @@ function buildChainSummary(groups: ToolTypeGroup[]): string {
 
 export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const { isLatest } = useChatFeatures()
-  const [open, setOpen] = useState(isLatest)
-
-  const wasLatestRef = useRef(isLatest)
-  useEffect(() => {
-    if (wasLatestRef.current && !isLatest) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- live→settled transition
-      setOpen(false)
-    }
-    wasLatestRef.current = isLatest
-  }, [isLatest])
+  const { expanded, toggle, toggleProps } = useDisclosure({
+    initialOpen: isLatest,
+    isLatest,
+  })
 
   const typeGroups = useMemo(() => groupByToolType(pairs), [pairs])
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <details className={styles.toolChain} open={open} onToggle={e => setOpen((e.target as HTMLDetailsElement).open)}>
-      <summary className={`${ax({ layout: 'bar' })} ${styles.toolChainSummary}`}>
-        <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" /></span>
+    <div className={styles.toolChain}>
+      <div
+        {...toggleProps}
+        className={`${ax({ layout: 'bar' })} ${styles.toolChainSummary}`}
+        role="button"
+        aria-expanded={expanded}
+        tabIndex={0}
+        onClick={toggle}
+      >
+        <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
         <Layers size={12} /> <span className={styles.toolChainLabel}>{summary}</span>
-      </summary>
-      <div className={`${ax({ layout: 'column' })} ${styles.toolChainContent}`}>
-        {typeGroups.map(g => {
-          const Icon = toolIcons[g.name] ?? Wrench
-          return (
-            <div key={g.name} className={`${ax({ layout: 'bar' })} ${styles.toolChainRow}`}>
-              <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
-              <span className={ax({ weight: 'semi' })}>{g.name}</span>
-              <span className={styles.toolChainDetails}>
-                {g.details.join(' · ')}
-              </span>
-            </div>
-          )
-        })}
       </div>
-    </details>
+      {expanded && (
+        <div className={`${ax({ layout: 'column' })} ${styles.toolChainContent}`}>
+          {typeGroups.map(g => {
+            const Icon = toolIcons[g.name] ?? Wrench
+            return (
+              <div key={g.name} className={`${ax({ layout: 'bar' })} ${styles.toolChainRow}`}>
+                <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
+                <span className={ax({ weight: 'semi' })}>{g.name}</span>
+                <span className={styles.toolChainDetails}>
+                  {g.details.join(' · ')}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
   )
 }

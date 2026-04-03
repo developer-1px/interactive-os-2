@@ -1,4 +1,5 @@
-import React, { useCallback, useState, useRef } from 'react'
+// ② 2026-04-03-command-unification-prd.md
+import React, { useCallback, useRef } from 'react'
 import { Minus, Plus } from 'lucide-react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
@@ -9,6 +10,7 @@ import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { spinbutton } from '../pattern/roles/spinbutton'
 import { valueCommands } from '../axis/value'
+import { editCommands } from '../axis/edit'
 import { history } from '../plugins/history'
 import { getAriaActions } from '../primitives/ariaRegistry'
 
@@ -34,9 +36,6 @@ export function Spinbutton({
   const stableId = id ?? reactId
   const pattern = React.useMemo(() => spinbutton({ min, max, step }), [min, max, step])
   const range = React.useMemo(() => ({ min, max, step }), [min, max, step])
-  const [editing, setEditing] = useState(false)
-  const [editValue, setEditValue] = useState('')
-  const [invalid, setInvalid] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const dispatch = useCallback((cmd: ReturnType<typeof valueCommands.setValue>) => {
@@ -55,19 +54,16 @@ export function Spinbutton({
     const trimmed = raw.trim()
     if (trimmed === '') {
       dispatch(valueCommands.setValue(min, range))
-      setInvalid(false)
-      setEditing(false)
+      dispatch(editCommands.commitEdit())
       return
     }
     const parsed = Number(trimmed)
     if (isNaN(parsed)) {
-      setInvalid(true)
+      dispatch(editCommands.setEditInvalid(true))
       return
     }
-    // setValue already clamps
     dispatch(valueCommands.setValue(parsed, range))
-    setInvalid(false)
-    setEditing(false)
+    dispatch(editCommands.commitEdit())
   }, [dispatch, min, range])
 
   const renderItem = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
@@ -75,6 +71,14 @@ export function Spinbutton({
     const itemLabel = label ?? getNodeLabel(item)
     const atMin = current <= min
     const atMax = current >= max
+    const editing = (state as Record<string, unknown>).editing as boolean ?? false
+    const editValue = (state as Record<string, unknown>).editValue as string ?? ''
+    const invalid = (state as Record<string, unknown>).editInvalid as boolean ?? false
+
+    const startEditing = () => {
+      dispatch(editCommands.startEdit(state.focused ? item.id as string : '', String(current)))
+      requestAnimationFrame(() => inputRef.current?.select())
+    }
 
     const dispatchAndSync = (cmd: ReturnType<typeof valueCommands.setValue>) => {
       dispatch(cmd)
@@ -82,7 +86,7 @@ export function Spinbutton({
       requestAnimationFrame(() => {
         const store = getAriaActions(stableId)?.getStore()
         const v = (store?.entities['__value__'] as Record<string, unknown>)?.value as number | undefined
-        if (v !== undefined) setEditValue(String(v))
+        if (v !== undefined) dispatch(editCommands.updateEditValue(String(v)))
       })
     }
 
@@ -110,16 +114,8 @@ export function Spinbutton({
         commitEdit(e.currentTarget.value)
       } else if (e.key === 'Escape') {
         e.preventDefault()
-        setEditing(false)
-        setInvalid(false)
+        dispatch(editCommands.cancelEdit())
       }
-    }
-
-    const startEditing = () => {
-      setEditValue(String(current))
-      setEditing(true)
-      setInvalid(false)
-      requestAnimationFrame(() => inputRef.current?.select())
     }
 
     return (
@@ -144,7 +140,7 @@ export function Spinbutton({
               inputMode="numeric"
               value={editValue}
               aria-invalid={invalid || undefined}
-              onChange={(e) => setEditValue(e.target.value)}
+              onChange={(e) => dispatch(editCommands.updateEditValue(e.target.value))}
               onKeyDown={handleInputKeyDown}
               onBlur={(e) => commitEdit(e.target.value)}
             />

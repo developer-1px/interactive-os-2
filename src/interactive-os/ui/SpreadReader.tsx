@@ -1,7 +1,17 @@
+// ② 2026-04-03-command-unification-prd.md
 import { useState, useCallback, useRef, useLayoutEffect, useMemo, type ReactNode } from 'react'
-import { AriaRoute } from '@os/primitives/AriaRoute'
+import { composePattern } from '../pattern/composePattern'
+import { navigate } from '../axis/navigate'
+import { useAria } from '../primitives/useAria'
+import { createSequentialStore } from '../store/createSingleNodeStore'
+import { FOCUS_ID } from '../axis/navigate'
+import type { NormalizedData } from '../store/types'
+import type { PatternContext } from '../pattern/types'
+import type { Command } from '../engine/types'
 import { ax } from '@styles/ax'
 import styles from './SpreadReader.module.css'
+
+const nav = navigate('horizontal')
 
 interface SpreadReaderProps {
   children: ReactNode
@@ -18,70 +28,112 @@ interface SpreadReaderProps {
 }
 
 export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundary, onSpreadChange, initialSpread = 'first' }: SpreadReaderProps) {
-  const [spread, setSpread] = useState(0)
-  const [totalSpreads, setTotalSpreads] = useState(1)
   const columnsRef = useRef<HTMLDivElement>(null)
+  const [total, setTotal] = useState(1)
 
-  const measureSpreads = useCallback(() => {
+  // Boundary callbacks stored in ref for stable pattern reference
+  const callbacksRef = useRef({ onNextBoundary, onPrevBoundary, onSpreadChange })
+  useLayoutEffect(() => {
+    callbacksRef.current = { onNextBoundary, onPrevBoundary, onSpreadChange }
+  })
+
+  // Measure spreads in layout effect
+  useLayoutEffect(() => {
     const el = columnsRef.current
-    if (!el) return 1
+    if (!el) return
     const gap = parseFloat(getComputedStyle(el).columnGap) || 0
-    return Math.max(1, Math.ceil((el.scrollWidth + gap) / (el.clientWidth + gap)))
-  }, [])
+    const measured = Math.max(1, Math.ceil((el.scrollWidth + gap) / (el.clientWidth + gap)))
+    setTotal(measured)
+  }, [resetKey])
 
-  useLayoutEffect(() => {
-    const total = measureSpreads()
-    const s = initialSpread === 'last' ? total - 1 : 0
-    setTotalSpreads(total) // eslint-disable-line react-hooks/set-state-in-effect -- layout measurement requires synchronous setState
-    setSpread(s)
-    onSpreadChange?.(s, total)
-  }, [resetKey, measureSpreads, initialSpread]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Build pattern with boundary-aware keyMap (stable — uses ref for callbacks)
+  /* eslint-disable react-hooks/refs -- ref accessed in event handler closures, not during render */
+  const spreadPattern = useMemo(() => composePattern(
+    { role: 'none', childRole: 'none' },
+    [nav],
+    {
+      ArrowRight: (ctx: PatternContext): Command | void => {
+        const cmd = nav.next(ctx)
+        if ((cmd.payload as { nodeId?: string })?.nodeId === ctx.focused) {
+          callbacksRef.current.onNextBoundary?.()
+          return
+        }
+        return cmd
+      },
+      ArrowLeft: (ctx: PatternContext): Command | void => {
+        const cmd = nav.prev(ctx)
+        if ((cmd.payload as { nodeId?: string })?.nodeId === ctx.focused) {
+          callbacksRef.current.onPrevBoundary?.()
+          return
+        }
+        return cmd
+      },
+      Home: nav.first,
+      End: nav.last,
+    },
+  ), [])
+  /* eslint-enable react-hooks/refs */
 
+  // Build NormalizedData from measured total
+  const data: NormalizedData = useMemo(() => {
+    const store = createSequentialStore('spread', total)
+    const initial = initialSpread === 'last' ? `spread-${total - 1}` : 'spread-0'
+    return {
+      ...store,
+      entities: {
+        ...store.entities,
+        [FOCUS_ID]: { id: FOCUS_ID, focusedId: initial },
+      },
+    }
+  }, [total, resetKey, initialSpread]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const onFocusChange = useCallback((nodeId: string | null) => {
+    if (!nodeId) return
+    const match = nodeId.match(/^spread-(\d+)$/)
+    if (!match) return
+    const idx = parseInt(match[1]!, 10)
+    callbacksRef.current.onSpreadChange?.(idx, total)
+
+    // Set CSS variable for transform
+    const el = columnsRef.current
+    if (el) el.style.setProperty('--_spread', String(idx))
+  }, [total])
+
+  const aria = useAria({
+    pattern: spreadPattern,
+    data,
+    onFocusChange,
+    autoFocus: false,
+  })
+
+  // Derive spread index from focused node
+  const spreadIndex = useMemo(() => {
+    const match = aria.focused.match(/^spread-(\d+)$/)
+    return match ? parseInt(match[1]!, 10) : 0
+  }, [aria.focused])
+
+  // Set initial CSS variable
   useLayoutEffect(() => {
     const el = columnsRef.current
-    if (!el || spread < 0) return
-    el.style.setProperty('--_spread', String(spread))
-  }, [spread])
-
-  const keyMap = useMemo(() => ({
-    ArrowRight: () => {
-      if (spread < totalSpreads - 1) {
-        const next = spread + 1
-        setSpread(next)
-        onSpreadChange?.(next, totalSpreads)
-      } else {
-        onNextBoundary?.()
-      }
-    },
-    ArrowLeft: () => {
-      if (spread > 0) {
-        const prev = spread - 1
-        setSpread(prev)
-        onSpreadChange?.(prev, totalSpreads)
-      } else {
-        onPrevBoundary?.()
-      }
-    },
-  }), [totalSpreads, spread, onNextBoundary, onPrevBoundary, onSpreadChange])
+    if (el) el.style.setProperty('--_spread', String(spreadIndex))
+  }, [spreadIndex])
 
   return (
-    <AriaRoute keyMap={keyMap}>
-      <div className={styles.root}>
-        <div className={styles.inset}>
-          <div className={styles.viewport} tabIndex={0}>
-            <div className={styles.columns} ref={columnsRef}>
-              {children}
-            </div>
+    <div className={styles.root}>
+      <div className={styles.inset}>
+        <div className={styles.viewport} {...aria.containerProps} tabIndex={0}>
+          <div className={styles.columns} ref={columnsRef}>
+            {children}
           </div>
         </div>
-        {totalSpreads > 1 && (
-          <div className={styles.indicator}>
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-              {spread + 1}/{totalSpreads}
-            </span>
-          </div>
-        )}
       </div>
-    </AriaRoute>
+      {total > 1 && (
+        <div className={styles.indicator}>
+          <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+            {spreadIndex + 1}/{total}
+          </span>
+        </div>
+      )}
+    </div>
   )
 }
