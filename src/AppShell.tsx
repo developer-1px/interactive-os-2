@@ -5,6 +5,7 @@ import { Outlet } from 'react-router-dom'
 import { FileViewerModal } from '@os/ui/FileViewerModal'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { ComponentInspector } from './devtools/inspector/ComponentInspector'
+import { AppInspectorPanel } from './devtools/inspector/AppInspectorPanel'
 import { useTheme } from './hooks/useTheme'
 import { ActivityBar } from './ActivityBar'
 
@@ -47,6 +48,7 @@ export default function AppShell() {
         onClose={() => setPreviewFile(null)}
       />
       <ComponentInspector />
+      <AppInspectorPanel />
     </div>
   )
 }
