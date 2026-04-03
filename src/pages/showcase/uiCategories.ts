@@ -30,6 +30,10 @@ export const uiCategories: UiCategory[] = [
     label: 'Indicators',
     slugs: ['indicators'],
   },
+  {
+    label: 'Protocol',
+    slugs: ['a2ui-surface'],
+  },
 ]
 
 export const slugToMdFile: Record<string, string> = {
@@ -57,4 +61,5 @@ export const slugToMdFile: Record<string, string> = {
   'tree-grid': 'TreeGrid',
   'tree-view': 'TreeView',
   'indicators': 'Indicators',
+  'a2ui-surface': 'A2UISurface',
 }

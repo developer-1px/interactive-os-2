@@ -15,6 +15,7 @@ import TypeaheadDemo from './TypeaheadDemo'
 import FormDemo from './FormDemo'
 import StoreInspectorDemo from '../../devtools/inspector/StoreInspectorDemo'
 import IndicatorsDemo from './IndicatorsDemo'
+import A2UISurfaceDemo from './A2UISurfaceDemo'
 import { PatternDemo } from '@os/ui/PatternDemo'
 import { ListboxScrollable } from '@os/pattern/examples/ListboxScrollable'
 import { ListboxGrouped } from '@os/pattern/examples/ListboxGrouped'
@@ -108,4 +109,5 @@ export const mdComponents: Record<string, ComponentType<any>> = {
   Link,
   Table,
   ComboboxSelectOnly,
+  A2UISurfaceDemo,
 }
