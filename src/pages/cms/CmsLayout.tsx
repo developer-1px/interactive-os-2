@@ -92,7 +92,7 @@ export default function CmsLayout() {
   }, [canvasFocusedId, sidebarSections])
 
   return (
-    <AriaRoute keyMap={cmsGlobalKeyMap}>
+    <AriaRoute keyMap={cmsGlobalKeyMap} label="CMS">
     <div className="cms-layout flex-col flex-1 min-h-0">
       <div className="flex-row flex-1 min-h-0">
         <CmsSidebar

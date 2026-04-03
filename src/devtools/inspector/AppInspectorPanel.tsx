@@ -42,7 +42,7 @@ export function AppInspectorPanel() {
   // Shift+Cmd+I toggle
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'i') {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'e') {
         e.preventDefault()
         setIsOpen((prev) => !prev)
       }
