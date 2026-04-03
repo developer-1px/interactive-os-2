@@ -152,12 +152,10 @@
 
 .depUp {
   color: var(--tone-positive-base);
-  font-weight: var(--weight-medium);
 }
 
 .depDown {
   color: var(--tone-primary-base);
-  font-weight: var(--weight-medium);
 }
 
 /* ── Dependency highlight — dim unrelated, brighten related ── */

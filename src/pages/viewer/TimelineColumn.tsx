@@ -1,4 +1,5 @@
 // ② 2026-03-27-chat-module-prd.md
+import { ax } from '@styles/ax'
 import styles from './TimelineColumn.module.css'
 import { useEffect, useMemo } from 'react'
 import { Circle, Loader, X } from 'lucide-react'
@@ -45,24 +46,24 @@ export function TimelineColumn({ sessionId, sessionLabel, isLive, onClose, onFil
         {isLive && (
           <span className={`${agentStatus === 'idle' ? styles.tcIdle : styles.tcLive} shrink-0`}><Circle size={8} fill="currentColor" /></span>
         )}
-        <span className={`${styles.tcLabel} truncate`}>{sessionLabel}</span>
+        <span className={`${ax({ textStyle: 'caption', weight: 'semi' })} ${styles.tcLabel} truncate`}>{sessionLabel}</span>
         {isLive && (
-          <span className={`${styles.tcHeaderStatus} shrink-0`}>
+          <span className={`${ax({ textStyle: 'caption', weight: 'medium' })} ${styles.tcHeaderStatus} shrink-0`}>
             {agentStatus === 'running' ? '진행중' : agentStatus === 'idle' ? '입력 대기' : ''}
           </span>
         )}
-        <button className={`${styles.tcClose} border-none cursor-pointer`} onClick={onClose}><X size={14} /></button>
+        <button className={`${ax({ textStyle: 'body' })} ${styles.tcClose} border-none cursor-pointer`} onClick={onClose}><X size={14} /></button>
       </div>
 
       {fetchError ? (
-        <div className={`${styles.tcEmpty} text-center`}>Failed to load: {fetchError}</div>
+        <div className={`${ax({ textStyle: 'body' })} ${styles.tcEmpty} text-center`}>Failed to load: {fetchError}</div>
       ) : initialLoading ? (
-        <div className={`${styles.tcLoading} flex-row items-center justify-center`}>
+        <div className={`${ax({ textStyle: 'body' })} ${styles.tcLoading} flex-row items-center justify-center`}>
           <Loader size={14} className={styles.tcLoadingSpinner} />
           <span>Loading timeline...</span>
         </div>
       ) : messages.length === 0 ? (
-        <div className={`${styles.tcEmpty} text-center`}>Waiting for agent activity...</div>
+        <div className={`${ax({ textStyle: 'body' })} ${styles.tcEmpty} text-center`}>Waiting for agent activity...</div>
       ) : (
         <ChatFeed
           messages={messages}

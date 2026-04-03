@@ -50,14 +50,11 @@
   gap: var(--space-xs);
   padding: var(--space-sm) var(--space-md);
   background: var(--tone-primary-dim);
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
   color: var(--text-primary);
 }
 
 .smNeedHeaderTop {
   gap: var(--space-sm);
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
@@ -67,8 +64,6 @@
   border-radius: 50%;
   background: var(--surface-base);
   color: var(--tone-primary-base);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
 }
 
 /* --- story column: spans row 3..end, subgrid + nth-child skips gap rows --- */
@@ -105,7 +100,6 @@
 }
 
 .smStoryId {
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 
@@ -143,7 +137,6 @@
 }
 
 .smStoryText {
-  font-size: var(--type-body-size);
   color: var(--text-primary);
   line-height: var(--leading-snug);
 }
@@ -155,7 +148,6 @@
   padding: var(--space-xs) var(--space-sm);
   background: var(--surface-raised);
   box-shadow: var(--shadow-xs);
-  font-size: var(--type-caption-size);
   color: var(--text-secondary);
   line-height: var(--leading-snug);
 }
@@ -176,8 +168,6 @@
   padding: var(--space-inline-code) var(--space-xs);
   background: var(--tone-neutral-dim);
   border-radius: 0;
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-medium);
   color: var(--text-muted);
 }
 
@@ -191,7 +181,6 @@
   padding: var(--space-inline-code) var(--space-sm);
   background: var(--tone-primary-dim);
   border-radius: 0;
-  font-size: var(--type-caption-size);
   color: var(--tone-primary-base);
 }
 
@@ -221,7 +210,6 @@
 
 .smLegendItem {
   gap: var(--space-xs);
-  font-size: var(--type-caption-size);
   color: var(--text-muted);
 }
 

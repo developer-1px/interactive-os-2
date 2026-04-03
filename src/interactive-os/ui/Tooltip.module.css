@@ -12,8 +12,6 @@
   border-radius: var(--shape-xs-radius);
 
   color: var(--text-primary);
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-regular);
   line-height: var(--leading-snug);
   white-space: normal;
   word-wrap: break-word;

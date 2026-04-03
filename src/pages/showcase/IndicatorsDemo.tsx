@@ -21,7 +21,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className={styles.row}>
-      <span className={styles.label}>{label}</span>
+      <span className={`${ax({ textStyle: 'code' })} ${styles.label}`}>{label}</span>
       <div className={styles.value}>{children}</div>
     </div>
   )

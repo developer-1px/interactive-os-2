@@ -3,7 +3,6 @@
 
 /* ═══ Block 1: base ═══ */
 .input {
-  font-size: var(--type-caption-size);
   color: var(--text-primary);
   background: var(--_bg, var(--surface-base));
   height: var(--input-height);

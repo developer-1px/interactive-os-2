@@ -1,5 +1,7 @@
 // ② 2026-03-30-birdseye-improve-prd.md
 import { useMemo, useCallback } from 'react'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './Treemap.module.css'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
@@ -156,7 +158,7 @@ export function Treemap({ data, width, height, onActivate, 'aria-label': ariaLab
             title={`${item?.colTitle} > ${item?.title} (${item?.value}L)`}
             onClick={() => handleClick(r.id)}
           >
-            {showLabel && <span className={`overflow-hidden whitespace-nowrap ${styles.blockLabel}`}>{item?.title}</span>}
+            {showLabel && <span className={`overflow-hidden whitespace-nowrap ${ax({ textStyle: 'caption' })} ${styles.blockLabel}`}>{item?.title}</span>}
           </button>
         )
       })}

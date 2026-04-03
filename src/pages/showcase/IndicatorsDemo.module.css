@@ -27,8 +27,6 @@
 }
 
 .label {
-  font-size: var(--type-caption-size);
-  font-family: var(--type-mono-family);
   color: var(--text-muted);
   white-space: nowrap;
 }
@@ -64,8 +62,8 @@
 }
 
 .stateLabel {
-  font-size: var(--type-caption-size);
-  font-family: var(--type-mono-family);
+  font-size: var(--type-code-size);
+  font-family: var(--type-code-family);
   color: var(--text-secondary);
 }
 

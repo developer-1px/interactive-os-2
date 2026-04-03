@@ -190,7 +190,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             suppressContentEditableWarning
           />
           {hasOverlay && (
-            <div className={`${styles.overlay}`} aria-hidden="true">
+            <div className={`${ax({ textStyle: 'body' })} ${styles.overlay}`} aria-hidden="true">
               {commandHighlight > 0 && (
                 <span className={styles.commandMatch}>{overlayText.slice(0, commandHighlight)}</span>
               )}

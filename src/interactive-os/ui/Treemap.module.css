@@ -47,7 +47,6 @@
 /* ── label ── */
 
 .blockLabel {
-  font-size: var(--type-caption-size);
   line-height: var(--type-caption-leading);
   color: var(--text-secondary);
   text-overflow: ellipsis;

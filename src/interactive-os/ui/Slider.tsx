@@ -49,12 +49,12 @@ export function Slider({
 
     return (
       <div className={`${ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined })} ${styles.sliderItem}`} data-focused={state.focused || undefined}>
-        {label && <span className={styles.sliderLabel}>{label}</span>}
+        {label && <span className={`${ax({ textStyle: 'body', weight: 'medium' })} ${styles.sliderLabel}`}>{label}</span>}
         <div className={`${ax({ flex: '1' })} ${styles.sliderTrack}`} ref={trackRef} onClick={handleTrackClick}>
           <div className={styles.sliderFill} style={{ width: `${pct}%` }} />
           <div className={styles.sliderThumb} style={{ left: `${pct}%` }} />
         </div>
-        <span className={styles.sliderValue}>{current}</span>
+        <span className={`${ax({ textStyle: 'body', weight: 'medium' })} ${styles.sliderValue}`}>{current}</span>
       </div>
     )
   }

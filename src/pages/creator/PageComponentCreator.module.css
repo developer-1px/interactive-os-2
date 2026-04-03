@@ -10,12 +10,10 @@
   background: var(--surface-sunken);
   border-bottom: 1px solid var(--border-subtle);
   gap: var(--space-2xs);
-  font-size: var(--type-caption-size);
   height: var(--space-2xl);
 }
 
 .paneTitle {
-  font-weight: var(--weight-semi);
   color: var(--text-primary);
 }
 
@@ -27,12 +25,10 @@
 
 .emptyState {
   color: var(--text-muted);
-  font-size: var(--type-body-size);
 }
 
 .canvasError {
   color: var(--text-muted);
-  font-size: var(--type-body-size);
   padding: var(--space-md);
 }
 
@@ -46,7 +42,6 @@
 .sourceTab {
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
-  font-size: var(--type-caption-size);
   font-weight: var(--type-caption-weight);
   color: var(--text-muted);
   --_bg: transparent;
@@ -59,7 +54,6 @@
 .sourceTabActive {
   --_bg: var(--surface-raised);
   color: var(--text-primary);
-  font-weight: var(--weight-medium);
 }
 
 /* ── Tertiary: Chat ── */
@@ -71,11 +65,9 @@
   padding: var(--shape-xs-py) var(--shape-sm-px);
   background: var(--surface-sunken);
   border-bottom: 1px solid var(--border-subtle);
-  font-size: var(--type-caption-size);
 }
 
 .chatContextLabel {
-  font-weight: var(--weight-semi);
   color: var(--text-primary);
 }
 
@@ -90,14 +82,12 @@
 
 .chatEmpty {
   color: var(--text-muted);
-  font-size: var(--type-body-size);
   padding: var(--space-xl);
 }
 
 .chatBubble {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border-radius: var(--shape-sm-radius);
-  font-size: var(--type-body-size);
   line-height: var(--leading-snug);
   white-space: pre-wrap;
   max-width: 85%;
@@ -123,7 +113,6 @@
 .chatInput {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border-radius: var(--shape-sm-radius);
-  font-size: var(--type-body-size);
   color: var(--text-primary);
   background: var(--surface-default);
   resize: none;

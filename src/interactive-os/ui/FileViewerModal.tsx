@@ -89,7 +89,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
             {filePath && (
-              <div className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.fvmMeta}`}>
+              <div className={`${ax({ layout: 'bar', gap: 'xs', textStyle: 'caption' })} ${styles.fvmMeta}`}>
                 <FileIcon name={filename} type="file" />
                 <span>{ext.toUpperCase()}</span>
                 {!isImage && lineCount > 0 && (
@@ -106,7 +106,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 )}
               </div>
             )}
-            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', layout: 'center' })} ${styles.fvmClose}`} onClick={onClose}>&times;</button>
+            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', layout: 'center', textStyle: 'section' })} ${styles.fvmClose}`} onClick={onClose}>&times;</button>
           </div>
         </div>
         <div className={ax({ flex: '1', layout: 'scroll' })}>

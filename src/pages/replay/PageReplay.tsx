@@ -177,12 +177,14 @@ export default function PageReplay() {
 
     for (const step of toolSteps) {
       if (step.tool === 'Read' && step.filePath) {
-        // Prefer real file (raw), fallback to JSONL tool_result (cat -n format)
-        const realContent = realFiles.get(step.filePath)
-        if (realContent != null) {
-          applyRead(simFs, step.filePath, realContent, true)
-        } else if (step.result) {
+        // Prefer JSONL tool_result (session-time snapshot), fallback to real file (current disk)
+        if (step.result) {
           applyRead(simFs, step.filePath, step.result)
+        } else {
+          const realContent = realFiles.get(step.filePath)
+          if (realContent != null) {
+            applyRead(simFs, step.filePath, realContent, true)
+          }
         }
         const content = simFs.files.get(step.filePath) ?? ''
         toolAnimations.set(step.index, readFrames(step.filePath, content))

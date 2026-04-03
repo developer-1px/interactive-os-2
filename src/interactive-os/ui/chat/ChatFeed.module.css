@@ -20,10 +20,8 @@
   max-width: 80%;
   margin-left: auto;
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
   line-height: var(--leading-relaxed);
   color: var(--text-primary);
-  font-weight: var(--weight-medium);
   background: var(--tone-primary-dim);
   border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
 }
@@ -33,7 +31,6 @@
 .chatSystem {
   overflow: hidden;
   gap: var(--space-sm);
-  font-size: var(--type-caption-size);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
 }
@@ -43,7 +40,6 @@
 .chatAssistant {
   gap: var(--space-sm);
   padding: var(--space-xs) 0;
-  font-size: var(--type-body-size);
   line-height: var(--leading-relaxed);
   color: var(--text-primary);
 }

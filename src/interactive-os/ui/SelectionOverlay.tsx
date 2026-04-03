@@ -1,5 +1,7 @@
 // ② 2026-03-31-selection-overlay-prd.md
 import type { RefObject } from 'react'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { useRectTracker } from './useRectTracker'
 import type { TrackedRect } from './useRectTracker'
 import s from './SelectionOverlay.module.css'
@@ -47,7 +49,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
           >
             {label && (
               <div
-                className={`absolute whitespace-nowrap pointer-events-none ${s.label}`}
+                className={`absolute whitespace-nowrap pointer-events-none ${ax({ textStyle: 'caption' })} ${s.label}`}
                 style={{ bottom: '100%', left: 0 }}
               >
                 {label}
