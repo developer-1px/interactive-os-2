@@ -158,7 +158,7 @@ export function Treemap({ data, width, height, onActivate, 'aria-label': ariaLab
             title={`${item?.colTitle} > ${item?.title} (${item?.value}L)`}
             onClick={() => handleClick(r.id)}
           >
-            {showLabel && <span className={`overflow-hidden whitespace-nowrap ${ax({ textStyle: 'caption' })} ${styles.blockLabel}`}>{item?.title}</span>}
+            {showLabel && <span className={`overflow-hidden whitespace-nowrap ${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.blockLabel}`}>{item?.title}</span>}
           </button>
         )
       })}

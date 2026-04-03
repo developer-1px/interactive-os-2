@@ -1,0 +1,33 @@
+.root {
+  font-family: var(--font-mono);
+  background: var(--color-surface-sunken);
+}
+
+.prompt {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  padding: 8px 12px 4px;
+  position: sticky;
+  top: 0;
+  background: var(--color-surface-sunken);
+  z-index: 1;
+}
+
+.promptSymbol {
+  color: var(--color-success-base);
+  flex: none;
+}
+
+.command {
+  font-weight: 600;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.output {
+  padding: 4px 12px 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.4;
+}

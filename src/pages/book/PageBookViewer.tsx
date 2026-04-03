@@ -169,8 +169,8 @@ export default function PageBookViewer() {
 
   if (pages.length === 0) {
     return (
-      <div className={styles.book}>
-        <div className={styles.empty}>
+      <div className={`${ax({ text: 'primary' })} ${styles.book}`}>
+        <div className={`${ax({ text: 'muted' })} ${styles.empty}`}>
           <BookOpen size={48} className={styles.emptyIcon} />
           <span>No content found</span>
         </div>
@@ -191,13 +191,13 @@ export default function PageBookViewer() {
         'End': 'SpreadReader — 마지막 스프레드',
       }}
     >
-      <div className={styles.book}>
+      <div className={`${ax({ text: 'primary' })} ${styles.book}`}>
         {/* ── Page content ── */}
         <div className={styles.pageArea} ref={areaRef}>
           {/* ── Floating pill — top-left ── */}
           <div className={`${styles.pill} ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
             <button
-              className={styles.pillBtn}
+              className={`${ax({ text: 'secondary' })} ${styles.pillBtn}`}
               onClick={() => setTocOpen(true)}
               aria-label="Open table of contents"
             >
@@ -271,7 +271,7 @@ export default function PageBookViewer() {
               <div className={`${ax({ layout: 'spread', padding: 'md' })} ${styles.tocOverlayHeader}`}>
                 <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
                 <button
-                  className={styles.pillBtn}
+                  className={`${ax({ text: 'secondary' })} ${styles.pillBtn}`}
                   onClick={() => setTocOpen(false)}
                   aria-label="Close"
                 >

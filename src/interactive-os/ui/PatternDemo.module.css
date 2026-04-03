@@ -9,7 +9,6 @@
 .item {
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
-  color: var(--text-primary);
   gap: var(--space-sm);
   cursor: default;
 }
@@ -28,12 +27,10 @@
 }
 
 .badge {
-  color: var(--text-muted);
   margin-left: auto;
 }
 
 .header {
-  color: var(--text-secondary);
   padding: var(--space-xs) var(--shape-xs-px);
 }
 
@@ -62,6 +59,5 @@
 }
 
 .valueLabel {
-  color: var(--text-secondary);
   padding-top: var(--space-xs);
 }

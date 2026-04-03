@@ -1,7 +1,6 @@
 /* ThinkingBlock — collapsible thinking content */
 
 .thinking {
-  color: var(--text-secondary);
   background: var(--surface-sunken);
   border-radius: var(--shape-md-radius);
 }
@@ -23,7 +22,6 @@
 }
 
 .thinkingPreview {
-  color: var(--text-muted);
   text-overflow: ellipsis;
 }
 

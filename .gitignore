@@ -29,3 +29,4 @@ test-results
 .superpowers/
 .claude/agent-ops/
 coverage/
+docs/superpowers/specs/module-css-dump.md

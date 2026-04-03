@@ -12,7 +12,7 @@ export function TextInput({ align = 'left', className, style, ...props }: TextIn
     <input
       type="text"
       data-surface="input"
-      className={`${ax({ textStyle: 'caption' })} ${styles.input}${className ? ` ${className}` : ''}`}
+      className={`${ax({ textStyle: 'caption', text: 'primary' })} ${styles.input}${className ? ` ${className}` : ''}`}
       style={{ textAlign: align, ...style }}
       {...props}
     />

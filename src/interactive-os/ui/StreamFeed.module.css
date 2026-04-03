@@ -54,14 +54,6 @@
   50% { opacity: 1; }
 }
 
-.streamingLabel {
-  color: var(--text-muted);
-}
-
-.streamingTime {
-  color: var(--text-muted);
-}
-
 /* --- Scroll to bottom FAB --- */
 
 .scrollFab {
@@ -75,7 +67,6 @@
   background: var(--_bg);
   border: 1px solid var(--border-default);
   border-radius: var(--shape-pill-radius);
-  color: var(--text-secondary);
   box-shadow: var(--shadow-md);
   transition:
     background var(--motion-instant-duration) var(--motion-instant-easing),

@@ -55,18 +55,6 @@
   word-break: break-word;
 }
 
-.commandMatch {
-  color: var(--tone-primary-base);
-}
-
-.overlayNormal {
-  color: var(--text-primary);
-}
-
-.ghost {
-  color: var(--text-muted);
-}
-
 /* --- Suggestion popup (above input, Slack-style) — last-mile --- */
 
 .suggestionList {

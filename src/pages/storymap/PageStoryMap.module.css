@@ -50,12 +50,10 @@
   gap: var(--space-xs);
   padding: var(--space-sm) var(--space-md);
   background: var(--tone-primary-dim);
-  color: var(--text-primary);
 }
 
 .smNeedHeaderTop {
   gap: var(--space-sm);
-  color: var(--text-muted);
 }
 
 .smPersonaBadge {
@@ -63,7 +61,6 @@
   height: var(--icon-lg);
   border-radius: 50%;
   background: var(--surface-base);
-  color: var(--tone-primary-base);
 }
 
 /* --- story column: spans row 3..end, subgrid + nth-child skips gap rows --- */
@@ -97,10 +94,6 @@
 
 .smStory:hover {
   box-shadow: var(--shadow-sm);
-}
-
-.smStoryId {
-  color: var(--text-muted);
 }
 
 /* blocked dot — destructive, S 카드 ID 옆 */
@@ -137,7 +130,6 @@
 }
 
 .smStoryText {
-  color: var(--text-primary);
   line-height: var(--leading-snug);
 }
 
@@ -148,16 +140,7 @@
   padding: var(--space-xs) var(--space-sm);
   background: var(--surface-raised);
   box-shadow: var(--shadow-xs);
-  color: var(--text-secondary);
   line-height: var(--leading-snug);
-}
-
-.smFeatureText {
-  color: var(--text-secondary);
-}
-
-.smFeatureId {
-  color: var(--text-muted);
 }
 
 .smFeatureScreens {
@@ -168,7 +151,6 @@
   padding: var(--space-inline-code) var(--space-xs);
   background: var(--tone-neutral-dim);
   border-radius: 0;
-  color: var(--text-muted);
 }
 
 /* --- links --- */
@@ -181,7 +163,6 @@
   padding: var(--space-inline-code) var(--space-sm);
   background: var(--tone-primary-dim);
   border-radius: 0;
-  color: var(--tone-primary-base);
 }
 
 .smLinksItem:hover {
@@ -210,7 +191,6 @@
 
 .smLegendItem {
   gap: var(--space-xs);
-  color: var(--text-muted);
 }
 
 .smLegendSwatch {

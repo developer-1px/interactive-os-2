@@ -19,10 +19,6 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.uiSidebarTitle {
-  color: var(--text-muted);
-}
-
 .uiSidebarBody {
   padding: var(--space-sm) 0;
 }

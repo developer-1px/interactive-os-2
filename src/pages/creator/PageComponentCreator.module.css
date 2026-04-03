@@ -13,22 +13,13 @@
   height: var(--space-2xl);
 }
 
-.paneTitle {
-  color: var(--text-primary);
-}
-
 /* ── Primary: Canvas ── */
 
 .canvas {
   padding: var(--space-lg);
 }
 
-.emptyState {
-  color: var(--text-muted);
-}
-
 .canvasError {
-  color: var(--text-muted);
   padding: var(--space-md);
 }
 
@@ -43,7 +34,6 @@
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);
   font-weight: var(--type-caption-weight);
-  color: var(--text-muted);
   --_bg: transparent;
   --_bg-hover: var(--surface-default);
   background: var(--_bg);
@@ -67,12 +57,7 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.chatContextLabel {
-  color: var(--text-primary);
-}
-
 .chatContextMeta {
-  color: var(--text-muted);
   margin-left: var(--space-sm);
 }
 
@@ -81,7 +66,6 @@
 }
 
 .chatEmpty {
-  color: var(--text-muted);
   padding: var(--space-xl);
 }
 
@@ -96,13 +80,11 @@
 .chatBubbleUser {
   align-self: flex-end;
   background: var(--tone-primary-dim);
-  color: var(--text-bright);
 }
 
 .chatBubbleAssistant {
   align-self: flex-start;
   background: var(--surface-sunken);
-  color: var(--text-primary);
 }
 
 .chatInputWrap {
@@ -113,7 +95,6 @@
 .chatInput {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border-radius: var(--shape-sm-radius);
-  color: var(--text-primary);
   background: var(--surface-default);
   resize: none;
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);

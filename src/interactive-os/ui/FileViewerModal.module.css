@@ -40,10 +40,6 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.fvmMeta {
-  color: var(--text-muted);
-}
-
 .fvmMetaSep {
   width: 1px;
   height: 10px;
@@ -51,11 +47,9 @@
   margin: 0 var(--space-inline-code);
 }
 
-
 /* ── last-mile: close button overrides ── */
 
 .fvmClose {
-  color: var(--text-secondary);
   border-radius: var(--shape-xl-radius);
 }
 

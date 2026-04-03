@@ -1,7 +1,6 @@
 .icon {
   margin-right: var(--space-xs);
   opacity: 0.55;
-  color: var(--text-secondary);
 }
 
 .iconFolder { color: var(--file-folder); }

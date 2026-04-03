@@ -104,12 +104,12 @@ export default function PageComponentCreator() {
       return (
         <div className="flex-col h-full overflow-hidden">
           <div className={`flex-row items-center ${ax({ textStyle: 'caption' })} ${styles.paneHeader}`}>
-            <span className={`${ax({ weight: 'semi' })} ${styles.paneTitle}`}>{selectedName || 'Select'}</span>
+            <span className={`${ax({ weight: 'semi', text: 'primary' })} ${styles.paneTitle}`}>{selectedName || 'Select'}</span>
           </div>
           {selectedEntry ? (
             <ComponentCanvas entry={selectedEntry} />
           ) : (
-            <div className={`flex-row items-center justify-center flex-1 ${ax({ textStyle: 'body' })} ${styles.emptyState}`}>
+            <div className={`flex-row items-center justify-center flex-1 ${ax({ textStyle: 'body', text: 'muted' })} ${styles.emptyState}`}>
               컴포넌트를 선택하세요
             </div>
           )}

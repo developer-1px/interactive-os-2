@@ -12,7 +12,7 @@ import styles from './IndicatorsDemo.module.css'
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className={styles.section}>
-      <h3 className={ax({ textStyle: 'overline' }) + ' ' + styles.sectionTitle}>{title}</h3>
+      <h3 className={ax({ textStyle: 'overline', text: 'primary' }) + ' ' + styles.sectionTitle}>{title}</h3>
       {children}
     </div>
   )
@@ -21,7 +21,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className={styles.row}>
-      <span className={`${ax({ textStyle: 'code' })} ${styles.label}`}>{label}</span>
+      <span className={`${ax({ textStyle: 'code', text: 'muted' })} ${styles.label}`}>{label}</span>
       <div className={styles.value}>{children}</div>
     </div>
   )
@@ -48,7 +48,7 @@ function ExpandSection() {
         <Row label="interactive">
           <div className={styles.interactiveTarget} onClick={() => setExpanded(!expanded)}>
             <ExpandIndicator expanded={expanded} />
-            <span className={styles.stateLabel}>{expanded ? 'expanded' : 'collapsed'}</span>
+            <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>{expanded ? 'expanded' : 'collapsed'}</span>
           </div>
         </Row>
       </div>
@@ -74,7 +74,7 @@ function CheckSection() {
             onClick={() => setChecked(!checked)}
           >
             <CheckIndicator checked={checked} />
-            <span className={styles.stateLabel}>{checked ? 'checked' : 'unchecked'}</span>
+            <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>{checked ? 'checked' : 'unchecked'}</span>
           </div>
         </Row>
       </div>
@@ -128,7 +128,7 @@ function SwitchSection() {
             onClick={() => setOn(!on)}
           >
             <SwitchIndicator />
-            <span className={styles.stateLabel}>{on ? 'on' : 'off'}</span>
+            <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>{on ? 'on' : 'off'}</span>
           </div>
         </Row>
       </div>
@@ -146,11 +146,11 @@ function SeparatorSection() {
       </Row>
       <Row label="vertical">
         <div className={styles.verticalSeparatorDemo}>
-          <span className={styles.stateLabel}>A</span>
+          <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>A</span>
           <SeparatorIndicator orientation="vertical" />
-          <span className={styles.stateLabel}>B</span>
+          <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>B</span>
           <SeparatorIndicator orientation="vertical" />
-          <span className={styles.stateLabel}>C</span>
+          <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>C</span>
         </div>
       </Row>
     </Section>
@@ -194,7 +194,7 @@ function SortSection() {
             onClick={() => setDir(d => d === undefined ? 'ascending' : d === 'ascending' ? 'descending' : undefined)}
           >
             <SortIndicator direction={dir} />
-            <span className={styles.stateLabel}>{dir ?? 'none'}</span>
+            <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>{dir ?? 'none'}</span>
           </div>
         </Row>
       </div>
@@ -221,7 +221,7 @@ function ProgressSection() {
       <Row label="100%"><ProgressIndicator value={100} /></Row>
       <Row label="interactive">
         <div className={styles.interactiveTarget} onClick={() => setValue(v => v >= 100 ? 0 : v + 20)}>
-          <span className={styles.stateLabel}>{value}%</span>
+          <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>{value}%</span>
         </div>
         <ProgressIndicator value={value} />
       </Row>
@@ -259,7 +259,7 @@ function PageSection() {
       <Row label="interactive">
         <div className={styles.interactiveTarget} onClick={() => setCurrent(c => (c + 1) % 5)}>
           <PageIndicator total={5} current={current} />
-          <span className={styles.stateLabel}>page {current + 1}</span>
+          <span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>page {current + 1}</span>
         </div>
       </Row>
     </Section>
@@ -296,7 +296,7 @@ function BadgeSection() {
       <Row label="count=3"><BadgeIndicator count={3} /></Row>
       <Row label="count=42"><BadgeIndicator count={42} /></Row>
       <Row label="count=100"><BadgeIndicator count={100} /></Row>
-      <Row label="count=0"><BadgeIndicator count={0} /><span className={styles.stateLabel}>(hidden)</span></Row>
+      <Row label="count=0"><BadgeIndicator count={0} /><span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>(hidden)</span></Row>
     </Section>
   )
 }
@@ -306,7 +306,7 @@ function OverflowSection() {
     <Section title="Overflow">
       <Row label="count=3"><OverflowIndicator count={3} /></Row>
       <Row label="count=12"><OverflowIndicator count={12} /></Row>
-      <Row label="count=0"><OverflowIndicator count={0} /><span className={styles.stateLabel}>(hidden)</span></Row>
+      <Row label="count=0"><OverflowIndicator count={0} /><span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>(hidden)</span></Row>
     </Section>
   )
 }
@@ -325,7 +325,7 @@ function TreeConnectorSection() {
     <Section title="Tree Connector">
       <Row label="level=1"><TreeConnector level={1} /></Row>
       <Row label="isLast"><TreeConnector level={1} isLast /></Row>
-      <Row label="level=0"><TreeConnector level={0} /><span className={styles.stateLabel}>(hidden)</span></Row>
+      <Row label="level=0"><TreeConnector level={0} /><span className={`${ax({ text: 'secondary' })} ${styles.stateLabel}`}>(hidden)</span></Row>
     </Section>
   )
 }
