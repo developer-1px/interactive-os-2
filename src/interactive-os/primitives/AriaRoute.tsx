@@ -52,10 +52,7 @@ export function AriaRoute({ keyMap, label, inspectKeyMap, children }: AriaRouteP
       dispatch: () => {},
       getStore: () => ({ entities: {}, relationships: {} }),
       inspect: () => ({
-        commands: Object.keys(keyMap).map((k) => {
-          const cmd = keyMap[k]()
-          return cmd?.type ?? k
-        }),
+        commands: Object.keys(keyMap),
         keyMap: keyMapDesc,
         plugins: [],
         state: { entities: {}, relationships: {} },
