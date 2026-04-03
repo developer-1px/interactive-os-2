@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import type { InspectResult } from '@os/engine/types'
 import { getAllAriaActions } from '@os/primitives/ariaRegistry'
 import { AppInspector } from './AppInspector'
@@ -34,24 +34,15 @@ const BODY_STYLE: React.CSSProperties = {
   overflow: 'auto',
 }
 
-export function AppInspectorPanel() {
-  const [isOpen, setIsOpen] = useState(false)
+interface AppInspectorPanelProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export function AppInspectorPanel({ isOpen, onClose }: AppInspectorPanelProps) {
   const [engines, setEngines] = useState<Map<string, { inspect: () => InspectResult }>>(new Map())
   const [selectedId, setSelectedId] = useState('')
 
-  // Shift+Cmd+I toggle
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'e') {
-        e.preventDefault()
-        setIsOpen((prev) => !prev)
-      }
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [])
-
-  // Poll registry when open
   useEffect(() => {
     if (!isOpen) return
     const update = () => {
@@ -66,8 +57,6 @@ export function AppInspectorPanel() {
     const interval = setInterval(update, 1000)
     return () => clearInterval(interval)
   }, [isOpen])
-
-  const handleClose = useCallback(() => setIsOpen(false), [])
 
   if (!isOpen) return null
 
@@ -103,7 +92,7 @@ export function AppInspectorPanel() {
             <span style={{ opacity: 0.6 }}>{selectedId}</span>
           )}
           <button
-            onClick={handleClose}
+            onClick={onClose}
             style={{
               background: 'none',
               border: 'none',
