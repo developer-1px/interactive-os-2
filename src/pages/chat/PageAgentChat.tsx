@@ -188,7 +188,7 @@ export default function PageAgentChat() {
   return (
     <div className={`${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
       <div className={ax({ layout: 'stack', flex: 'none' }) + ' ' + styles.chatSidebar}>
-        <div className={ax({ layout: 'spread', flex: 'none', textStyle: 'caption', text: 'muted' }) + ' ' + styles.chatSidebarHeader}>
+        <div className={ax({ layout: 'spread', flex: 'none', textStyle: 'overline', text: 'muted' }) + ' ' + styles.chatSidebarHeader}>
           <span>Sessions</span>
           <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm' }) + ' ' + styles.chatNewBtn} onClick={createSession} aria-label="New session">
             <Plus size={14} />

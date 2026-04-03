@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ax } from '@styles/ax'
 import {
   ExpandIndicator, CheckIndicator, RadioIndicator, SwitchIndicator,
   SeparatorIndicator, IndeterminateIndicator, SortIndicator,
@@ -11,7 +12,7 @@ import styles from './IndicatorsDemo.module.css'
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className={styles.section}>
-      <h3 className={styles.sectionTitle}>{title}</h3>
+      <h3 className={ax({ textStyle: 'overline' }) + ' ' + styles.sectionTitle}>{title}</h3>
       {children}
     </div>
   )

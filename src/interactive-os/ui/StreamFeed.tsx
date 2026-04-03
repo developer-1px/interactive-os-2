@@ -26,7 +26,7 @@ function StreamingTimer() {
     return () => clearInterval(id)
   }, [])
 
-  return <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.streamingTime}`}>{elapsed}s</span>
+  return <span className={`${ax({ textStyle: 'caption', text: 'muted', opacity: 'dim' })} ${styles.streamingTime}`}>{elapsed}s</span>
 }
 
 // --- StreamCursor (export for renderItem use) ---

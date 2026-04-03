@@ -20,10 +20,6 @@
 }
 
 .uiSidebarTitle {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--text-muted);
 }
 

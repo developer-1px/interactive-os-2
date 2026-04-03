@@ -7,8 +7,5 @@
 }
 
 .groupLabel {
-  font-weight: var(--weight-semi);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   padding: var(--space-xs) var(--space-md);
 }

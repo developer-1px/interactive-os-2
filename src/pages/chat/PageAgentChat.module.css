@@ -23,9 +23,6 @@
   height: 36px;
   padding-inline: var(--space-md);
   border-bottom: 1px solid var(--border-subtle);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-  font-weight: var(--weight-semi);
 }
 
 .chatNewBtn {
@@ -123,7 +120,6 @@
 
 .chatHint {
   margin-left: auto;
-  font-family: var(--mono);
 }
 
 /* --- Welcome --- */

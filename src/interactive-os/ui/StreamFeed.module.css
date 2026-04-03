@@ -62,7 +62,6 @@
 .streamingTime {
   font-size: var(--type-caption-size);
   color: var(--text-muted);
-  opacity: 0.6;
 }
 
 /* --- Scroll to bottom FAB --- */

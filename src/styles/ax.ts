@@ -7,7 +7,7 @@
 
 type Surface = 'action' | 'input' | 'display' | 'overlay' | 'ghost' | 'placeholder'
 type ControlSize = 'sm' | 'md' | 'lg'
-type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code'
+type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code' | 'overline'
 type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
 type Text = 'bright' | 'primary' | 'secondary' | 'muted' | 'accent' | 'danger' | 'success' | 'warning'
 // shape: 비-컨트롤 요소의 border-radius (컨트롤은 controlSize가 소유)
@@ -17,6 +17,8 @@ type Shape = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
 type Weight = 'medium' | 'semi' | 'bold'
 // state: surface 조립식 확장 — focused/selected 상태 시각
 type State = 'focused' | 'selected'
+// opacity: 비-disabled 시각적 약화 (disabled는 surface 소관)
+type Opacity = 'dim' | 'faint' | 'hidden'
 
 // ── 구조 축 ──
 
@@ -47,6 +49,7 @@ export interface Axes {
   text?: Text
   weight?: Weight
   state?: State
+  opacity?: Opacity
   shape?: Shape
 
   // 구조 축
@@ -68,6 +71,7 @@ const prefixes: Record<keyof Axes, string> = {
   text: 'tx',
   weight: 'wt',
   state: 'st',
+  opacity: 'op',
   shape: 'sh',
   layout: 'ly',
   gap: 'g',

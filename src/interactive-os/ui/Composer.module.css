@@ -84,7 +84,6 @@
 
 .suggestionItem {
   padding: var(--space-xs) var(--space-md);
-  cursor: pointer;
   line-height: var(--leading-snug);
 }
 

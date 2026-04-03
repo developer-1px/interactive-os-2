@@ -11,7 +11,7 @@ export function Breadcrumb({ path, root }: { path: string; root: string }) {
     <div className={`${ax({ layout: 'bar', textStyle: 'body', text: 'muted', clamp: '1' })} ${styles.breadcrumb}`}>
       {segments.map((seg, i) => (
         <span key={i}>
-          {i > 0 && <SeparatorIndicator orientation="vertical" className={styles.sep} />}
+          {i > 0 && <SeparatorIndicator orientation="vertical" className={`${ax({ opacity: 'faint' })} ${styles.sep}`} />}
           <span className={i === segments.length - 1 ? ax({ text: 'primary' }) : ax({ text: 'muted' })}>{seg}</span>
         </span>
       ))}
