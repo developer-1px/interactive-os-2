@@ -18,8 +18,6 @@
 
 /* ── Column header ── */
 .columnHeader {
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   color: var(--text-secondary);
   padding: var(--shape-xs-py) var(--shape-xs-px);
   border-radius: var(--shape-xs-radius);

@@ -166,6 +166,14 @@
   line-height: var(--type-code-line-height);
   letter-spacing: var(--type-code-letter-spacing);
 }
+.ts-overline {
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-semi);
+  font-family: var(--sans);
+  line-height: var(--type-caption-line-height);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
 
 /* ════════════════════════════════════════════
  * Tone — "이 요소의 의미적 색상"
@@ -235,6 +243,15 @@
 
 .st-focused  { background: var(--tone-primary-dim); outline: var(--focus-ring) solid var(--focus); outline-offset: calc(-1 * var(--focus-ring)); }
 .st-selected { background: var(--selection); }
+
+/* ════════════════════════════════════════════
+ * Opacity — 비-disabled 시각적 약화
+ * disabled opacity는 surface가 소유 (aria-disabled/disabled)
+ * ════════════════════════════════════════════ */
+
+.op-dim    { opacity: 0.6; }
+.op-faint  { opacity: 0.4; }
+.op-hidden { opacity: 0; }
 
 /* ════════════════════════════════════════════
  * Shape — 비-컨트롤 요소의 border-radius

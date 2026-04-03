@@ -12,12 +12,7 @@
 }
 
 .sectionTitle {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  font-family: var(--type-body-family);
   color: var(--text-primary);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   padding-bottom: var(--space-xs);
   border-bottom: 1px solid var(--border-subtle);
   margin: 0;

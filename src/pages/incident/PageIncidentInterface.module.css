@@ -24,10 +24,6 @@
 
 .monitorLabel {
   gap: var(--space-xs);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   color: var(--text-muted);
 }
 
@@ -115,10 +111,6 @@
 .chatHeader {
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   color: var(--text-secondary);
 }
 
@@ -146,12 +138,9 @@
 .input {
   height: 36px;
   padding: 0 var(--shape-md-px);
-  background: var(--surface-default);
-  border: 1px solid var(--border-subtle);
   border-radius: var(--shape-md-radius);
   color: var(--text-primary);
   font-size: var(--type-body-size);
-  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
 .input:focus { border-color: var(--tone-primary-base); }
@@ -180,10 +169,6 @@
 .panelHeader {
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   color: var(--text-secondary);
 }
 
@@ -298,10 +283,6 @@
 }
 
 .captureLabel {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   color: var(--text-muted);
 }
 

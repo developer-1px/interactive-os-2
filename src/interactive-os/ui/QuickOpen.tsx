@@ -134,7 +134,7 @@ export function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className={`${ax({ textStyle: 'caption', text: 'muted', flex: 'none', shape: 'sm' })} ${styles.shortcut}`}>ESC</kbd>
+          <kbd className={`${ax({ textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm' })} ${styles.shortcut}`}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
           <div className={`${ax({ layout: 'scroll', flex: '1' })} ${styles.results}`} onMouseDown={e => e.preventDefault()}>

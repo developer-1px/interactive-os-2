@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { ax } from '@styles/ax'
 import styles from './PageIncidentInterface.module.css'
 import {
   AlertTriangle, GitCommit, Server, Database,
@@ -229,7 +230,7 @@ function MonitoringBar({ services, selectedIndex, onSelect }: {
 }) {
   return (
     <div className={`${styles.monitorBar} flex-row items-center`} role="toolbar" aria-label="Service monitoring">
-      <div className={`${styles.monitorLabel} flex-row items-center shrink-0`}><Activity size={12} /><span>Monitor</span></div>
+      <div className={`${ax({ textStyle: 'overline' })} ${styles.monitorLabel} flex-row items-center shrink-0`}><Activity size={12} /><span>Monitor</span></div>
       <div className={`${styles.monitorServices} flex-row items-center flex-1 min-w-0 overflow-x-auto`}>
         {services.map((svc, i) => (
           <button
@@ -325,7 +326,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
 
   return (
     <div className={`${styles.timelinePanel} flex-col shrink-0`}>
-      <div className={`${styles.panelHeader} flex-row items-center shrink-0`}>
+      <div className={`${ax({ textStyle: 'overline' })} ${styles.panelHeader} flex-row items-center shrink-0`}>
         <Clock size={12} />
         <span>Timeline</span>
         <span className={styles.panelCount}>{visibleCount}/{events.length}</span>
@@ -368,7 +369,7 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
 
   return (
     <div className={`${styles.capturePanel} flex-1 flex-col min-w-0`}>
-      <div className={`${styles.panelHeader} flex-row items-center shrink-0`}>
+      <div className={`${ax({ textStyle: 'overline' })} ${styles.panelHeader} flex-row items-center shrink-0`}>
         <Image size={12} />
         <span>Capture</span>
         {event && <span className={styles.panelCount}>{event.time}</span>}
@@ -377,14 +378,14 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
         <div className={`${styles.captureBody} flex-1 flex-col min-h-0`}>
           <div className={`${styles.captureComparison} grid flex-1 min-h-0`}>
             <div className={`${styles.captureCard} flex-col min-h-0`}>
-              <div className={`${styles.captureLabel} shrink-0`}>Before</div>
+              <div className={`${ax({ textStyle: 'overline' })} ${styles.captureLabel} shrink-0`}>Before</div>
               <div className={`${styles.capturePreview} flex-1 flex-col items-center justify-center`}>
                 <Eye size={16} />
                 <span className={`${styles.captureText} text-center`}>{capture.before}</span>
               </div>
             </div>
             <div className={`${styles.captureCard} flex-col min-h-0`}>
-              <div className={`${styles.captureLabel} shrink-0`}>After</div>
+              <div className={`${ax({ textStyle: 'overline' })} ${styles.captureLabel} shrink-0`}>After</div>
               <div className={`${styles.capturePreview} flex-1 flex-col items-center justify-center ${styles.captureChanged}`}>
                 <Eye size={16} />
                 <span className={`${styles.captureText} text-center`}>{capture.after}</span>
@@ -491,7 +492,7 @@ export default function PageIncidentInterface() {
         <CapturePanel selectedEventId={selectedEvent} />
 
         <div className={`${styles.chatZone} flex-col shrink-0`}>
-          <div className={`${styles.chatHeader} flex-row items-center shrink-0`}>
+          <div className={`${ax({ textStyle: 'overline' })} ${styles.chatHeader} flex-row items-center shrink-0`}>
             <Bot size={12} />
             <span>AI Analysis</span>
             <span className={`${styles.chatElapsed} flex-row items-center`}>
@@ -541,7 +542,7 @@ export default function PageIncidentInterface() {
             }}
           />
           <div className={`${styles.inputBar} flex-row items-center shrink-0`}>
-            <input className={`${styles.input} flex-1 outline-none`} placeholder="AI에게 질문하세요..." disabled={isStreaming} />
+            <input className={`${ax({ surface: 'input' })} ${styles.input} flex-1 outline-none`} placeholder="AI에게 질문하세요..." disabled={isStreaming} />
             <button className={`${styles.sendBtn} flex-row items-center justify-center border-none cursor-pointer`} disabled={isStreaming} onClick={handleReplay}>
               {isStreaming ? <Loader size={14} className={styles.spinner} /> : <Send size={14} />}
             </button>

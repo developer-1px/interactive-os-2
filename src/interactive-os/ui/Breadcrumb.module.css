@@ -5,5 +5,4 @@
 .sep {
   flex-shrink: 0;
   margin: 0 var(--space-xs);
-  opacity: 0.4;
 }

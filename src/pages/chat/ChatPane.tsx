@@ -206,7 +206,7 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
               <span>{(usage.durationMs / 1000).toFixed(1)}s</span>
             </>
           )}
-          <span className={styles.chatHint}>/clear to reset</span>
+          <span className={ax({ textStyle: 'code' }) + ' ' + styles.chatHint}>/clear to reset</span>
         </div>
       </div>
     </div>

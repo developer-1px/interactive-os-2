@@ -17,6 +17,7 @@ import { treeToStore } from '../viewer/treeTransform'
 import { parse as parseYaml } from 'yaml'
 import { buildNavStore, buildKanbanStore } from './birdseyeTransform'
 import type { KanbanBuildOptions } from './birdseyeTransform'
+import { ax } from '@styles/ax'
 import styles from './BirdseyeLayout.module.css'
 
 /** 파일 경로를 레이어(폴더)별로 그룹핑 */
@@ -385,7 +386,7 @@ export default function BirdseyeLayout() {
           <span className={`${styles.breadcrumb} flex-row items-center`}>
             {breadcrumbs.map((seg, i) => (
               <span key={seg.id}>
-                {i > 0 && <span className={styles.breadcrumbSep}>/</span>}
+                {i > 0 && <span className={ax({ opacity: 'faint' }) + ' ' + styles.breadcrumbSep}>/</span>}
                 {i < breadcrumbs.length - 1
                   ? <button className={`${styles.breadcrumbLink} cursor-pointer`} onClick={() => selectFolder(seg.id)}>{seg.label}</button>
                   : <span>{seg.label}</span>
@@ -402,8 +403,8 @@ export default function BirdseyeLayout() {
                 onClick={() => setExtFilter(extFilter === ext ? null : ext)}
               >.{ext}</span>
             ))}
-            <span className={`${styles.legendHint} pointer-events-none`} title="↑ = imported by N files, ↓ = imports N files">↑imported ↓imports</span>
-            <span className={`${styles.legendHint} pointer-events-none`} data-weight-legend="" title="300+ lines — complexity signal">300L+</span>
+            <span className={`${ax({ opacity: 'faint' })} ${styles.legendHint} pointer-events-none`} title="↑ = imported by N files, ↓ = imports N files">↑imported ↓imports</span>
+            <span className={`${ax({ opacity: 'faint' })} ${styles.legendHint} pointer-events-none`} data-weight-legend="" title="300+ lines — complexity signal">300L+</span>
             <button
               className={`${styles.viewToggle} flex-row items-center justify-center cursor-pointer`}
               onClick={() => setViewMode(v => v === 'kanban' ? 'treemap' : 'kanban')}

@@ -54,7 +54,6 @@
   background: var(--surface-base);
   border: 1px solid var(--border-subtle);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-family: var(--mono);
 }
 
 .results {
@@ -63,7 +62,6 @@
 
 .item {
   cursor: default;
-  user-select: none;
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
