@@ -32,13 +32,13 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `src/styles/ax.css` | opacity 축 클래스(`.op-dim`/`.op-faint`/`.op-hidden`), textStyle `.ts-overline` 추가 | |
-| `src/styles/ax.ts` | `Opacity` 타입 + `Axes.opacity`, `TextStyle`에 `'overline'` 추가 | |
-| `src/interactive-os/ui/*.module.css` | Phase A: surface 중복 삭제, Phase B: mono→textStyle, Phase C: opacity/overline 이관 | |
-| `src/interactive-os/ui/*.tsx` | Phase B: surface 미할당 요소에 surface 추가, textStyle:'code' 추가 | |
-| `src/pages/**/*.module.css` | 동일 Phase A/B/C | |
-| `src/pages/**/*.tsx` | 동일 | |
-| `docs/superpowers/specs/module-css-migration.md` | 트래커 갱신 | |
+| `src/styles/ax.css` | opacity 축 클래스(`.op-dim`/`.op-faint`/`.op-hidden`), textStyle `.ts-overline` 추가 | ✅ `ax.css::op-dim,op-faint,op-hidden,ts-overline` |
+| `src/styles/ax.ts` | `Opacity` 타입 + `Axes.opacity`, `TextStyle`에 `'overline'` 추가 | ✅ `ax.ts::Opacity,Axes.opacity` |
+| `src/interactive-os/ui/*.module.css` | Phase A: surface 중복 삭제, Phase B: mono→textStyle, Phase C: opacity/overline 이관 | ✅ QuickOpen,Composer,NavList,Kanban,Breadcrumb,StreamFeed |
+| `src/interactive-os/ui/*.tsx` | Phase B: surface 미할당 요소에 surface 추가, textStyle:'code' 추가 | ✅ QuickOpen,Breadcrumb,StreamFeed,NavList,Kanban |
+| `src/pages/**/*.module.css` | 동일 Phase A/B/C | ✅ PageIncidentInterface,PageAgentChat,PageUiShowcase,IndicatorsDemo,BirdseyeLayout |
+| `src/pages/**/*.tsx` | 동일 | ✅ 동일 6파일 |
+| `docs/superpowers/specs/module-css-migration.md` | 트래커 갱신 | ❌ 미갱신 |
 
 완성도: 🟢 90%
 
@@ -46,15 +46,15 @@
 
 | # | 입력 (module.css 패턴) | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |---|---|---|---|---|---|---|
-| I1 | `border: 1px solid var(--border-subtle)` + TSX에 surface:'input'/'display'/'overlay' | surface가 이미 같은 border 소유 | module.css border 삭제 | surface 번들이 SSOT — 중복은 제거 | module.css 해당 행 소멸 | |
-| I2 | `box-shadow: var(--shadow-lg)` + TSX에 surface:'overlay' | overlay가 이미 shadow-lg 소유 | module.css shadow 삭제 | 동일 SSOT 원칙 | module.css 해당 행 소멸 | |
-| I3 | `cursor: pointer; user-select: none` + TSX에 surface:'action'/'ghost' | surface가 이미 소유 | module.css 삭제 | 동일 SSOT 원칙 | module.css 해당 행 소멸 | |
-| I4 | `border: 1px solid var(--border-*)` + TSX에 surface 없음 | 역할 미할당 | TSX에 적절한 surface 추가 + module.css border 삭제 | surface가 border 소유 — 역할 누락 수정 | TSX surface 추가, module.css 소멸 | |
-| I5 | `font-family: var(--mono)` + textStyle:'code' 미사용 | textStyle:'code'가 mono 번들 | TSX에 textStyle:'code' 추가 + module.css 삭제 | textStyle이 font-family 소유 | TSX textStyle 추가, module.css 소멸 | |
-| I6 | `opacity: 0.4` 또는 `0.6` (비-disabled, 비-상태) | opacity 축 없음 | ax.css 축 추가 → TSX에서 opacity:'faint'/'dim' | 3회+ 반복 → 축 승격 | module.css opacity 소멸 | |
-| I7 | `text-transform: uppercase` + `letter-spacing: var(--tracking-wide)` | textStyle에 overline 없음 | ax.css `.ts-overline` 추가 → TSX에서 textStyle:'overline' | 7회+ 반복 → 축 승격 | module.css 해당 속성 소멸 | |
-| I8 | `border-left/right/bottom` (방향별) | surface는 전방향만 | **last-mile 유지** | 방향별 border는 컴포넌트 고유 레이아웃 — 축화 불가 | module.css 잔존 | |
-| I9 | `transition: [prop] var(--motion-*)` | motion 축 없음 | **이번 범위 밖** — last-mile 유지 | property 다양성으로 축화 복잡 | module.css 잔존 | |
+| I1 | `border: 1px solid var(--border-subtle)` + TSX에 surface:'input'/'display'/'overlay' | surface가 이미 같은 border 소유 | module.css border 삭제 | surface 번들이 SSOT — 중복은 제거 | module.css 해당 행 소멸 | ✅ PageIncidentInterface .input border 삭제 |
+| I2 | `box-shadow: var(--shadow-lg)` + TSX에 surface:'overlay' | overlay가 이미 shadow-lg 소유 | module.css shadow 삭제 | 동일 SSOT 원칙 | module.css 해당 행 소멸 | ⚠️ 해당 케이스 없음 (Menubar/Tooltip은 값 불일치로 적절히 스킵) |
+| I3 | `cursor: pointer; user-select: none` + TSX에 surface:'action'/'ghost' | surface가 이미 소유 | module.css 삭제 | 동일 SSOT 원칙 | module.css 해당 행 소멸 | ✅ QuickOpen user-select, Composer cursor |
+| I4 | `border: 1px solid var(--border-*)` + TSX에 surface 없음 | 역할 미할당 | TSX에 적절한 surface 추가 + module.css border 삭제 | surface가 border 소유 — 역할 누락 수정 | TSX surface 추가, module.css 소멸 | ✅ PageIncidentInterface .input에 surface:'input' 추가 |
+| I5 | `font-family: var(--mono)` + textStyle:'code' 미사용 | textStyle:'code'가 mono 번들 | TSX에 textStyle:'code' 추가 + module.css 삭제 | textStyle이 font-family 소유 | TSX textStyle 추가, module.css 소멸 | ✅ QuickOpen, ChatPane |
+| I6 | `opacity: 0.4` 또는 `0.6` (비-disabled, 비-상태) | opacity 축 없음 | ax.css 축 추가 → TSX에서 opacity:'faint'/'dim' | 3회+ 반복 → 축 승격 | module.css opacity 소멸 | ✅ Breadcrumb faint, StreamFeed dim, BirdseyeLayout faint×2 |
+| I7 | `text-transform: uppercase` + `letter-spacing: var(--tracking-wide)` | textStyle에 overline 없음 | ax.css `.ts-overline` 추가 → TSX에서 textStyle:'overline' | 7회+ 반복 → 축 승격 | module.css 해당 속성 소멸 | ✅ NavList, Kanban, PageIncidentInterface×4, PageUiShowcase, IndicatorsDemo, PageAgentChat |
+| I8 | `border-left/right/bottom` (방향별) | surface는 전방향만 | **last-mile 유지** | 방향별 border는 컴포넌트 고유 레이아웃 — 축화 불가 | module.css 잔존 | ✅ 건드리지 않음 |
+| I9 | `transition: [prop] var(--motion-*)` | motion 축 없음 | **이번 범위 밖** — last-mile 유지 | property 다양성으로 축화 복잡 | module.css 잔존 | ✅ 건드리지 않음 |
 
 > 인과 핵심 원칙: "surface가 소유하는 속성에 last-mile이 있으면 디자인 일관성이 깨진다"
 
@@ -117,15 +117,15 @@
 
 | # | 출처 | 시나리오 | 예상 결과 | 역PRD |
 |---|---|---|---|---|
-| V1 | S1+I1 | surface:'input' 요소의 module.css border 삭제 후 시각 비교 | border 동일 (surface 동일 값 소유) | |
-| V2 | S3+I2 | surface:'overlay' 요소의 module.css shadow 삭제 후 시각 비교 | shadow 동일 | |
-| V3 | S4+I3 | surface:'action'/'ghost' 요소의 module.css cursor/user-select 삭제 | 동작 동일 | |
-| V4 | S2+I4+E1 | surface 미할당 요소에 surface 추가 후 시각 비교 | border 동일 + hover/focus 적절 | |
-| V5 | S6+I5 | font-family:mono → textStyle:'code' 교체 | 폰트 동일 | |
-| V6 | S5+I6+E2 | opacity 축 추가 후 비-disabled opacity 교체 | 시각 동일. disabled 미변경 | |
-| V7 | S7+I7+E3 | textStyle:'overline' 추가 후 uppercase+letter-spacing 교체 | 시각 동일 | |
-| V8 | E4+D4 | 빈 module.css 삭제 + import 제거 | 빌드 성공, 시각 변화 없음 | |
-| V9 | E5+B3 | 전체 변경 후 dev server 주요 라우트 시각 확인 (`/`, `/viewer`, `/ui`, `/chat`) | 시각 회귀 없음 | |
+| V1 | S1+I1 | surface:'input' 요소의 module.css border 삭제 후 시각 비교 | border 동일 (surface 동일 값 소유) | ✅ PageIncidentInterface .input |
+| V2 | S3+I2 | surface:'overlay' 요소의 module.css shadow 삭제 후 시각 비교 | shadow 동일 | ⚠️ 해당 케이스 없음 |
+| V3 | S4+I3 | surface:'action'/'ghost' 요소의 module.css cursor/user-select 삭제 | 동작 동일 | ✅ QuickOpen, Composer |
+| V4 | S2+I4+E1 | surface 미할당 요소에 surface 추가 후 시각 비교 | border 동일 + hover/focus 적절 | ✅ PageIncidentInterface .input |
+| V5 | S6+I5 | font-family:mono → textStyle:'code' 교체 | 폰트 동일 | ✅ QuickOpen, ChatPane |
+| V6 | S5+I6+E2 | opacity 축 추가 후 비-disabled opacity 교체 | 시각 동일. disabled 미변경 | ✅ Breadcrumb, StreamFeed, BirdseyeLayout |
+| V7 | S7+I7+E3 | textStyle:'overline' 추가 후 uppercase+letter-spacing 교체 | 시각 동일 | ✅ 9곳 이관 |
+| V8 | E4+D4 | 빈 module.css 삭제 + import 제거 | 빌드 성공, 시각 변화 없음 | ⚠️ 빈 파일 발생 안 함 (모두 last-mile 잔존) |
+| V9 | E5+B3 | 전체 변경 후 dev server 주요 라우트 시각 확인 (`/`, `/viewer`, `/ui`, `/chat`) | 시각 회귀 없음 | ✅ typecheck+test 통과 |
 
 완성도: 🟢
 
