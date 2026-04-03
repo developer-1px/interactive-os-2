@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
-import type { Command, EngineOptions } from '../engine/types'
+import type { Command, EffectContext, EngineOptions } from '../engine/types'
 import { buildRegistry } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
@@ -292,6 +292,21 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     [observedEngine]
   )
 
+  // ── Plugin effects ──
+  const containerRef = useRef<HTMLElement | null>(null)
+  const effectCtx: EffectContext = useMemo(
+    () => ({ containerRef, getStore: () => engine.getStore() }),
+    [engine],
+  )
+  for (const plugin of plugins) {
+    plugin.useEffect?.(effectCtx)
+  }
+
+  const containerProps = useMemo(
+    () => ({ ...view.containerProps, ref: containerRef }),
+    [view.containerProps],
+  )
+
   return {
     dispatch,
     getNodeProps,
@@ -299,6 +314,6 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     focused: focusedId,
     selected: selectedIds,
     getStore: () => engine.getStore(),
-    containerProps: view.containerProps,
+    containerProps,
   }
 }

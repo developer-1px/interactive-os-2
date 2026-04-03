@@ -77,7 +77,7 @@ export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streami
         role="feed"
       >
         {items.map((item, i) => (
-          <div key={i} className={styles.entry}>
+          <div key={i} data-feed-entry="" className={styles.entry}>
             {renderItem(item, i, { isLatest: i === items.length - 1 })}
           </div>
         ))}
