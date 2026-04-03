@@ -212,6 +212,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
     focused: focusedId,
     selected: selectedIds,
     getStore: () => store,
+    inspect: () => virtualEngine.inspect(),
     containerProps,
   }
 }

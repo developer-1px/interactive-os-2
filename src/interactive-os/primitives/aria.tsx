@@ -49,11 +49,12 @@ const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; 
 function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, logger, autoFocus, disabled, children }: AriaProps) {
   const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, logger, autoFocus, disabled })
 
+  const registryKey = id ?? ariaLabel
   useEffect(() => {
-    if (!id) return
-    registerAria(id, { dispatch: aria.dispatch, getStore: aria.getStore })
-    return () => unregisterAria(id)
-  }, [id, aria.dispatch, aria.getStore])
+    if (!registryKey) return
+    registerAria(registryKey, { dispatch: aria.dispatch, getStore: aria.getStore, inspect: aria.inspect })
+    return () => unregisterAria(registryKey)
+  }, [registryKey, aria.dispatch, aria.getStore, aria.inspect])
 
   const role = pattern?.role || undefined
   const orientation = pattern?.focusStrategy?.orientation
