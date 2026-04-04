@@ -52,14 +52,15 @@ function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, o
   const registryKey = id ?? ariaLabel
   useEffect(() => {
     if (!registryKey) return
-    registerAria(registryKey, { dispatch: aria.dispatch, getStore: aria.getStore, inspect: aria.inspect })
+    // ② 2026-04-04-inspector-zone-keymap-prd.md
+    registerAria(registryKey, { dispatch: aria.dispatch, getStore: aria.getStore, inspect: aria.inspect, getKeyMap: aria.getKeyMap })
     return () => unregisterAria(registryKey)
-  }, [registryKey, aria.dispatch, aria.getStore, aria.inspect])
+  }, [registryKey, aria.dispatch, aria.getStore, aria.inspect, aria.getKeyMap])
 
   const role = pattern?.role || undefined
   const orientation = pattern?.focusStrategy?.orientation
   return (
-    <AriaInternalContext.Provider value={{ ...aria, pattern }}>
+    <AriaInternalContext.Provider value={{ ...aria, pattern, registryKey }}>
       <Component
         role={role}
         aria-label={ariaLabel}

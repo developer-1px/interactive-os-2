@@ -13,9 +13,11 @@ import { isVisible, findFallbackFocus, detectNewVisibleEntities } from '../plugi
 import type { IsReachable } from '../plugins/focusRecovery'
 import type { UseAriaReturn } from './useAria'
 import { useAriaView } from './useAriaView'
+import { registerAria, unregisterAria } from './ariaRegistry'
 
 /** Meta commands: identified by command.meta flag (set by defineCommand) */
 
+// ② 2026-04-04-inspector-zone-keymap-prd.md
 export interface UseAriaZoneOptions {
   engine: CommandEngine
   store: NormalizedData
@@ -27,6 +29,8 @@ export interface UseAriaZoneOptions {
   initialFocus?: string
   isReachable?: IsReachable
   disabled?: boolean
+  /** Parent Aria registry key — for inspector hierarchy */
+  parentRegistryKey?: string
 }
 
 // ── Zone-local meta-entity state ──
@@ -111,6 +115,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     keyMap: keyMapOverrides,
     onActivate, initialFocus,
     isReachable, disabled = false,
+    parentRegistryKey,
   } = options
 
   const [viewState, setViewState] = useState<ZoneViewState>(() => {
@@ -292,6 +297,18 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
     (command: Command) => virtualEngine.dispatch(command),
     [virtualEngine],
   )
+
+  // ② 2026-04-04-inspector-zone-keymap-prd.md — register zone in inspector registry
+  useEffect(() => {
+    registerAria(`zone:${scope}`, {
+      dispatch,
+      getStore: () => virtualEngine.getStore(),
+      inspect: () => virtualEngine.inspect(),
+      getKeyMap: view.getKeyMap,
+      parentId: parentRegistryKey,
+    })
+    return () => unregisterAria(`zone:${scope}`)
+  }, [scope, dispatch, virtualEngine, view.getKeyMap, parentRegistryKey])
 
   return {
     dispatch,

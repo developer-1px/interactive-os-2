@@ -62,6 +62,8 @@ export interface UseAriaReturn {
   getStore(): NormalizedData
   inspect(): import('../engine/types').InspectResult
   containerProps: Record<string, unknown>
+  /** View-level merged keyMap for inspector — key → owner string */
+  getKeyMap?: () => Record<string, string>
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
@@ -159,9 +161,14 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     // @ts-expect-error debug counter
     engine.__syncCount = (engine.__syncCount ?? 0) + 1
     // @ts-expect-error debug counter
-    if (engine.__syncCount > 500) { console.error('[useAria] data sync useMemo loop, count:', engine.__syncCount); return }
+    const _tag = `[useAria:${pattern.role || 'none'}] #${engine.__syncCount}`
+    const _entityCount = Object.keys(data.entities).filter(k => !META_ENTITY_IDS.has(k)).length
     // @ts-expect-error debug counter
-    if (engine.__syncCount > 1) { console.warn('[useAria] data sync useMemo re-run #', engine.__syncCount) }
+    if (engine.__syncCount > 500) { console.error(_tag, 'LOOP — entities:', _entityCount, 'data ref changed:', data !== engine.__prevData); return }
+    // @ts-expect-error debug counter
+    if (engine.__syncCount > 1) { console.warn(_tag, 'entities:', _entityCount, 'data ref changed:', data !== engine.__prevData) }
+    // @ts-expect-error debug counter
+    engine.__prevData = data
     const currentStore = engine.getStore()
     const externalFocusChanged = FOCUS_ID in data.entities &&
       (data.entities[FOCUS_ID]?.focusedId as string) !== (currentStore.entities[FOCUS_ID]?.focusedId as string)
@@ -317,5 +324,6 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     getStore: () => engine.getStore(),
     inspect: () => engine.inspect(),
     containerProps,
+    getKeyMap: view.getKeyMap,
   }
 }

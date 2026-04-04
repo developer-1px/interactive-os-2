@@ -1,11 +1,11 @@
 // ② 2026-03-26-unified-navigation-prd.md
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import { FileViewerModal } from '@os/ui/FileViewerModal'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { ComponentInspector } from './devtools/inspector/ComponentInspector'
-import { AppInspectorPanel } from './devtools/inspector/AppInspectorPanel'
+import { openInspectorWindow } from './devtools/inspector/openInspectorWindow'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { useTheme } from './hooks/useTheme'
 import { ActivityBar } from './ActivityBar'
@@ -24,7 +24,6 @@ export default function AppShell() {
   const { theme, toggle: toggleTheme } = useTheme()
 
   const [previewFile, setPreviewFile] = useState<{ path: string; line?: number } | null>(null)
-  const [inspectorOpen, setInspectorOpen] = useState(false)
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -37,15 +36,12 @@ export default function AppShell() {
     return () => window.removeEventListener('inspector:open-source', handler)
   }, [])
 
-  const toggleInspector = useCallback(() => setInspectorOpen((prev) => !prev), [])
-  const closeInspector = useCallback(() => setInspectorOpen(false), [])
-
   const shellKeyMap = useMemo(() => ({
     'Mod+Shift+I': () => {
-      toggleInspector()
-      return { type: 'shell:toggle-inspector' } as const
+      openInspectorWindow()
+      return { type: 'shell:open-inspector' } as const
     },
-  }), [toggleInspector])
+  }), [])
 
   return (
     <AriaRoute keyMap={shellKeyMap} label="Shell">
@@ -61,7 +57,6 @@ export default function AppShell() {
           onClose={() => setPreviewFile(null)}
         />
         <ComponentInspector />
-        <AppInspectorPanel isOpen={inspectorOpen} onClose={closeInspector} />
       </div>
     </AriaRoute>
   )

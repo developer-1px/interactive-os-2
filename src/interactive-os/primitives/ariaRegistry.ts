@@ -1,10 +1,15 @@
 import type { Command, InspectResult } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 
+// ② 2026-04-04-inspector-zone-keymap-prd.md
 export interface AriaActions {
   dispatch: (command: Command) => void
   getStore: () => NormalizedData
   inspect: () => InspectResult
+  /** View-level merged keyMap (pattern + plugin + override) — key → owner string */
+  getKeyMap?: () => Record<string, string>
+  /** Parent registry key for hierarchy display */
+  parentId?: string
 }
 
 const registry = new Map<string, AriaActions>()
