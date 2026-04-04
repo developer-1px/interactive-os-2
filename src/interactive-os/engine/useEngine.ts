@@ -64,10 +64,10 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
     }
 
     // Build merged keyMap description for inspect()
-    const mergedKeyMap: Record<string, string> = {}
+    const mergedKeyMap: Record<string, import('./types').KeyMapEntry> = {}
     for (const plugin of plugins) {
       for (const key of Object.keys(plugin.keyMap ?? {})) {
-        mergedKeyMap[key] = plugin.name ?? 'anonymous'
+        mergedKeyMap[key] = { owner: plugin.name ?? 'anonymous' }
       }
     }
 

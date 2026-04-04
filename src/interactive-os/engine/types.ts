@@ -5,9 +5,14 @@ import type { NormalizedData } from '../store/types'
 // ② 2026-03-29-engine-handler-registry-prd.md
 
 // ② 2026-04-03-app-inspector-prd.md
+export interface KeyMapEntry {
+  owner: string
+  command?: string
+}
+
 export interface InspectResult {
   commands: string[]
-  keyMap: Record<string, string>
+  keyMap: Record<string, KeyMapEntry>
   plugins: string[]
   state: NormalizedData
   extras: Record<string, Record<string, unknown>>
@@ -21,7 +26,7 @@ export interface CommandEngine {
   /** Introspect engine capability — commands, keyMap, plugins, state, plugin extras */
   inspect(): InspectResult
   /** Set keyMap description for inspect() — called by view layer after merging pattern+plugin+user keyMaps */
-  setInspectKeyMap(desc: Record<string, string>): void
+  setInspectKeyMap(desc: Record<string, KeyMapEntry>): void
 }
 
 export interface Command {
@@ -61,7 +66,7 @@ export interface VisibilityFilter {
 export interface EngineOptions {
   logger?: boolean | ((entry: import('./logger').LogEntry) => void)
   /** Merged keyMap from all plugins — for inspect() introspection */
-  keyMap?: Record<string, string>
+  keyMap?: Record<string, KeyMapEntry>
   /** Plugin instances — for inspect() introspection */
   plugins?: Plugin[]
 }

@@ -49,9 +49,10 @@ export function inspectToTree(result: InspectResult): NormalizedData {
 
   // KeyMap
   const keyMapChildren: string[] = []
-  for (const [key, owner] of Object.entries(result.keyMap)) {
+  for (const [key, entry] of Object.entries(result.keyMap)) {
     const nodeId = `_key:${key}`
-    entities[nodeId] = { id: nodeId, data: { label: key, type: 'key', value: owner } }
+    const value = entry.command ? `${entry.owner} → ${entry.command}` : entry.owner
+    entities[nodeId] = { id: nodeId, data: { label: key, type: 'key', value } }
     keyMapChildren.push(nodeId)
   }
   relationships[KEYMAP_GROUP] = keyMapChildren

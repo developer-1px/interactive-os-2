@@ -31,7 +31,7 @@ describe('engine.inspect()', () => {
       }
     }
 
-    const keyMap: Record<string, string> = { ArrowDown: 'navigate', ArrowUp: 'navigate' }
+    const keyMap: Record<string, import('../engine/types').KeyMapEntry> = { ArrowDown: { owner: 'navigate' }, ArrowUp: { owner: 'navigate' } }
     const engine = createCommandEngine(emptyStore, historyPlugin.middleware ? [historyPlugin.middleware] : [], registry, noop, {
       keyMap,
       plugins: [historyPlugin],
@@ -164,7 +164,7 @@ describe('inspectToTree', () => {
   it('V7: converts InspectResult to NormalizedData with 5 groups', () => {
     const input: InspectResult = {
       commands: ['core:focus', 'core:expand'],
-      keyMap: { ArrowDown: 'navigate' },
+      keyMap: { ArrowDown: { owner: 'navigate' } },
       plugins: ['history'],
       state: {
         entities: { a: { id: 'a', data: { label: 'A' } } },
