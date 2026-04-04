@@ -1,15 +1,15 @@
 import { composePattern } from '../composePattern'
 import { expanded } from '../../axis/expand'
 import { navigate } from '../../axis/navigate'
-import type { PatternContext } from '../../axis/types'
+import { key } from '../../axis/types'
 
 // APG Menu — "A widget that offers a list of choices to the user."
 // Enter/Space/Click: parent → expand submenu, leaf → activate action
 const nav = navigate('vertical')
 const exp = expanded()
 
-const expandOrActivate = (ctx: PatternContext) =>
-  ctx.getChildren(ctx.focused).length > 0 ? ctx.expanded!.set(true) : ctx.activate()
+const expandOrActivate = key(['core:expand', 'core:activate'], (ctx) =>
+  ctx.getChildren(ctx.focused).length > 0 ? ctx.expanded!.set(true) : ctx.activate())
 
 export const menu = composePattern(
   { role: 'menu', childRole: 'menuitem' },

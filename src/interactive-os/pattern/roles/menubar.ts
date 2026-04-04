@@ -1,4 +1,5 @@
 import type { PatternContext } from '../../axis/types'
+import { key } from '../../axis/types'
 import type { Command } from '../../engine/types'
 import { createBatchCommand } from '../../engine/types'
 import { composePattern } from '../composePattern'
@@ -116,7 +117,7 @@ function focusSubmenuSibling(ctx: PatternContext, direction: 1 | -1): Command {
 
 // APG §Menubar: Right Arrow moves to next menubar item (wraps).
 // If submenu is open, closes all and opens next item's submenu.
-const arrowRight = (ctx: PatternContext): Command | void => {
+const arrowRight = key(['core:focus', 'core:expand', 'core:collapse'], (ctx): Command | void => {
   if (isMenubarLevel(ctx)) {
     const expanded = getExpandedSet(ctx)
     const roots = ctx.getChildren(ROOT_ID)
@@ -131,11 +132,11 @@ const arrowRight = (ctx: PatternContext): Command | void => {
   }
   // Leaf → advance to next menubar item's submenu
   return advanceMenubar(ctx, 1)
-}
+})
 
 // APG §Menubar: Left Arrow moves to previous menubar item (wraps).
 // In nested submenu: close it. In top submenu: retreat menubar.
-const arrowLeft = (ctx: PatternContext): Command | void => {
+const arrowLeft = key(['core:focus', 'core:expand', 'core:collapse'], (ctx): Command | void => {
   if (isMenubarLevel(ctx)) {
     const expanded = getExpandedSet(ctx)
     const roots = ctx.getChildren(ROOT_ID)
@@ -151,10 +152,10 @@ const arrowLeft = (ctx: PatternContext): Command | void => {
   if (parentOfParent && parentOfParent !== ROOT_ID) return closeSubmenu(ctx)
   // Top-level submenu → retreat menubar
   return advanceMenubar(ctx, -1)
-}
+})
 
 // APG §Menubar: Down Arrow opens submenu, focuses first item.
-const arrowDown = (ctx: PatternContext): Command | void => {
+const arrowDown = key(['core:focus', 'core:expand'], (ctx): Command | void => {
   if (isMenubarLevel(ctx)) {
     if (ctx.getChildren(ctx.focused).length > 0) {
       return openExclusive(ctx, ctx.focused, ROOT_ID)
@@ -162,10 +163,10 @@ const arrowDown = (ctx: PatternContext): Command | void => {
     return undefined
   }
   return focusSubmenuSibling(ctx, 1)
-}
+})
 
 // APG §Menubar: Up Arrow opens submenu, focuses last item.
-const arrowUp = (ctx: PatternContext): Command | void => {
+const arrowUp = key(['core:focus', 'core:expand'], (ctx): Command | void => {
   if (isMenubarLevel(ctx)) {
     if (ctx.getChildren(ctx.focused).length > 0) {
       return openExclusive(ctx, ctx.focused, ROOT_ID, true)
@@ -173,39 +174,39 @@ const arrowUp = (ctx: PatternContext): Command | void => {
     return undefined
   }
   return focusSubmenuSibling(ctx, -1)
-}
+})
 
 // APG §Menubar: Enter/Space opens submenu or activates leaf.
-const enterSpace = (ctx: PatternContext): Command | void => {
+const enterSpace = key(['core:expand', 'core:activate'], (ctx): Command | void => {
   if (ctx.getChildren(ctx.focused).length > 0) {
     const parentId = isMenubarLevel(ctx) ? ROOT_ID : ctx.getParent(ctx.focused)!
     return openExclusive(ctx, ctx.focused, parentId)
   }
   return activateHandler(ctx)
-}
+})
 
 // APG §Menubar: Escape closes submenu, returns focus to parent.
-const escape = (ctx: PatternContext): Command | void => {
+const escape = key(['core:collapse', 'core:focus'], (ctx): Command | void => {
   if (isMenubarLevel(ctx)) return undefined
   return closeSubmenu(ctx)
-}
+})
 
 // APG §Menubar: Home/End moves to first/last item at current level.
-const home = (ctx: PatternContext): Command => {
+const home = key(['core:focus'], (ctx): Command => {
   if (isMenubarLevel(ctx)) return ctx.focusFirst()
   const parentId = ctx.getParent(ctx.focused)
   if (!parentId) return ctx.focusFirst()
   const siblings = ctx.getChildren(parentId)
   return focusCommands.setFocus(siblings[0] ?? ctx.focused)
-}
+})
 
-const end = (ctx: PatternContext): Command => {
+const end = key(['core:focus'], (ctx): Command => {
   if (isMenubarLevel(ctx)) return ctx.focusLast()
   const parentId = ctx.getParent(ctx.focused)
   if (!parentId) return ctx.focusLast()
   const siblings = ctx.getChildren(parentId)
   return focusCommands.setFocus(siblings[siblings.length - 1] ?? ctx.focused)
-}
+})
 
 // ── Pattern ──
 

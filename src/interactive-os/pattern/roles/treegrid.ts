@@ -1,11 +1,10 @@
 import type { AriaPattern } from '../types'
-import type { PatternContext } from '../../axis/types'
-import type { Command } from '../../engine/types'
 import { composePattern } from '../composePattern'
 import { navigate, grid as gridAxis } from '../../axis/navigate'
 import { selected } from '../../axis/select'
 import { expanded } from '../../axis/expand'
 import { activateHandler } from '../../axis/activate'
+import { key } from '../../axis/types'
 
 // APG Treegrid — "Hierarchical data grid."
 // Row ↔ Cell mode handlers (composite — uses exp + grid closures)
@@ -17,29 +16,29 @@ export function treegrid(columns: number): AriaPattern {
   const g = gridAxis(columns, { initialColIndex: -1 })
 
   // APG: row mode (-1) → expand or focusChild; cell mode (0+) → next col
-  const arrowRight = (ctx: PatternContext): Command | void => {
+  const arrowRight = key(['core:set-col-index', 'core:focus', 'core:expand'], (ctx) => {
     if (ctx.grid && ctx.grid.colIndex >= 0) return ctx.grid.focusNextCol()
     if (ctx.expanded?.is) return ctx.focusChild()
     return ctx.expanded?.set(true)
-  }
+  })
 
-  const arrowLeft = (ctx: PatternContext): Command | void => {
+  const arrowLeft = key(['core:set-col-index', 'core:collapse', 'core:focus'], (ctx) => {
     if (ctx.grid && ctx.grid.colIndex >= 0) {
       if (ctx.grid.colIndex === 0) return ctx.grid.focusRow()
       return ctx.grid.focusPrevCol()
     }
     return ctx.expanded?.is ? ctx.expanded.set(false) : ctx.focusParent()
-  }
+  })
 
-  const home = (ctx: PatternContext): Command | void => {
+  const home = key(['core:set-col-index', 'core:focus'], (ctx) => {
     if (ctx.grid && ctx.grid.colIndex >= 0) return ctx.grid.focusFirstCol()
     return ctx.focusFirst()
-  }
+  })
 
-  const end = (ctx: PatternContext): Command | void => {
+  const end = key(['core:set-col-index', 'core:focus'], (ctx) => {
     if (ctx.grid && ctx.grid.colIndex >= 0) return ctx.grid.focusLastCol()
     return ctx.focusLast()
-  }
+  })
 
   return composePattern(
     { role: 'treegrid', childRole: 'row' },

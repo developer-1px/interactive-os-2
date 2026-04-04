@@ -1,8 +1,7 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 import type React from 'react'
 import type { Entity } from '../store/types'
-import type { Command } from '../engine/types'
-import type { PatternContext, FocusStrategy, SelectionMode, ClickMap, EntityDecl, CtxFactory } from '../axis/types'
+import type { FocusStrategy, SelectionMode, ClickMap, EntityDecl, CtxFactory, KeyHandler } from '../axis/types'
 import type { ValueRange } from '../axis/value'
 import type { Middleware, VisibilityFilter } from '../engine/types'
 
@@ -26,7 +25,7 @@ export interface NodeState {
 export interface AriaPattern<TState extends NodeState = NodeState> {
   role: string
   childRole?: string | ((entity: Entity, state: NodeState) => string)
-  keyMap: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap: Record<string, KeyHandler>
   focusStrategy: FocusStrategy
   /** When true, all nodes are expandable regardless of children. Used by accordion, disclosure. */
   expandable?: boolean
@@ -45,7 +44,7 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   /** Panel visibility condition — 'selected' for tabs, 'expanded' for accordion. */
   panelVisibility?: 'selected' | 'expanded'
   /** Trigger-specific keyMap — Aria.Trigger binds these instead of the main keyMap. */
-  triggerKeyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  triggerKeyMap?: Record<string, KeyHandler>
   /** Trigger-specific clickMap — modifier → handler for Aria.Trigger clicks. */
   triggerClickMap?: Partial<ClickMap>
   /** Middleware composed from axes (e.g. anchorResetMiddleware from select axis) */
@@ -53,7 +52,7 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   /** Visibility filters from axes — getVisibleNodes applies these generically */
   visibilityFilters?: VisibilityFilter[]
   /** Declarative click bindings from unified inputMap — 'Click', 'Shift+Click', 'Mod+Click' etc. */
-  clickMap?: Record<string, (ctx: PatternContext) => Command | void>
+  clickMap?: Record<string, KeyHandler>
   ariaAttributes?: (node: Entity, state: TState) => Record<string, string>
   /** Meta-entities that must exist in the store for this pattern to work. Axes declare these. */
   requiredEntities?: EntityDecl[]

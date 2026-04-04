@@ -1,5 +1,6 @@
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 import type { PatternContext, EntityDecl, CtxFactory } from './types'
+import { key } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
@@ -131,13 +132,13 @@ function _openAndFocusLast(ctx: PatternContext): Command | void {
 // ── Axis instance ──
 
 export function popup(type: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog', opts?: { modal?: boolean }) {
-  const open_ = (ctx: PatternContext): Command | void => _openPopup(ctx)
-  const close_ = (ctx: PatternContext): Command | void => _closePopup(ctx)
-  const openOrActivate_ = (ctx: PatternContext): Command | void => _openPopup(ctx) ?? activateHandler(ctx)
-  const openFirstOrFocusNext_ = (ctx: PatternContext): Command | void =>
-    _openAndFocusFirst(ctx) ?? ctx.focusNext({ wrap: true })
-  const openLastOrFocusPrev_ = (ctx: PatternContext): Command | void =>
-    _openAndFocusLast(ctx) ?? ctx.focusPrev({ wrap: true })
+  const open_ = key(['core:open', 'core:focus'], (ctx) => _openPopup(ctx))
+  const close_ = key(['core:close', 'core:focus'], (ctx) => _closePopup(ctx))
+  const openOrActivate_ = key(['core:open', 'core:focus', 'core:activate'], (ctx) => _openPopup(ctx) ?? activateHandler(ctx))
+  const openFirstOrFocusNext_ = key(['core:open', 'core:focus'], (ctx) =>
+    _openAndFocusFirst(ctx) ?? ctx.focusNext({ wrap: true }))
+  const openLastOrFocusPrev_ = key(['core:open', 'core:focus'], (ctx) =>
+    _openAndFocusLast(ctx) ?? ctx.focusPrev({ wrap: true }))
 
   return {
     keyMap: {} as Record<string, never>,
@@ -170,8 +171,8 @@ export function popup(type: 'menu' | 'listbox' | 'grid' | 'tree' | 'dialog', opt
     triggerKeys: {
       Enter: open_,
       Space: open_,
-      ArrowDown: (ctx: PatternContext): Command | void => _openAndFocusFirst(ctx),
-      ArrowUp: (ctx: PatternContext): Command | void => _openAndFocusLast(ctx),
-    } as Record<string, (ctx: PatternContext) => Command | void>,
+      ArrowDown: key(['core:open', 'core:focus'], (ctx) => _openAndFocusFirst(ctx)),
+      ArrowUp: key(['core:open', 'core:focus'], (ctx) => _openAndFocusLast(ctx)),
+    } as Record<string, import('./types').KeyHandler>,
   }
 }

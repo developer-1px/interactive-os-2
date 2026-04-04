@@ -1,29 +1,23 @@
-// ② 2026-04-04-inspector-zone-keymap-prd.md
-import { useEffect, useRef, useState, useMemo } from 'react'
+// ② 2026-04-04-inspector-redesign-prd.md
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import type { InspectResult } from '@os/engine/types'
 import type { AriaActions } from '@os/primitives/ariaRegistry'
-import type { NormalizedData } from '@os/store/types'
-import { ROOT_ID } from '@os/store/types'
+import type { PaneSize } from '@os/store/types'
 import type { Plugin } from '@os/plugins/types'
 import { getAllAriaActions } from '@os/primitives/ariaRegistry'
 import { TreeView } from '@os/ui/TreeView'
+import { SplitPane } from '@os/ui/SplitPane'
 import { AppInspector } from './AppInspector'
+import { copyAriaTree } from './inspectToAscii'
+import { registryToUnifiedTree, findInstanceId } from './inspectorStore'
+import type { InstanceMeta } from './inspectorStore'
 import { ax } from '@styles/ax'
 import styles from './InspectorWindow.module.css'
 
 const emptyPlugins: Plugin[] = []
 
-function registryToTree(ids: string[]): NormalizedData {
-  const entities: NormalizedData['entities'] = {}
-  for (const id of ids) {
-    entities[id] = { id, data: { label: id } }
-  }
-  return { entities, relationships: { [ROOT_ID]: ids } }
-}
-
 function KeyCommandTable({ inspectResult }: { inspectResult: InspectResult }) {
   const keyEntries = Object.entries(inspectResult.keyMap)
-  // Commands not bound to any key
   const boundCommands = new Set(keyEntries.map(([, e]) => e.command).filter(Boolean))
   const unboundCommands = inspectResult.commands.filter(c => !boundCommands.has(c))
 
@@ -40,9 +34,9 @@ function KeyCommandTable({ inspectResult }: { inspectResult: InspectResult }) {
         </tr>
       </thead>
       <tbody>
-        {keyEntries.map(([key, entry]) => (
-          <tr key={key}>
-            <td className={styles.tdKey}>{key}</td>
+        {keyEntries.map(([k, entry]) => (
+          <tr key={k}>
+            <td className={styles.tdKey}>{k}</td>
             <td className={styles.tdCommand}>{entry.command ?? '—'}</td>
             <td className={styles.tdOwner}>{entry.owner}</td>
           </tr>
@@ -59,9 +53,28 @@ function KeyCommandTable({ inspectResult }: { inspectResult: InspectResult }) {
   )
 }
 
+function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
+  const [copied, setCopied] = useState(false)
+  const handleCopy = useCallback(async () => {
+    await copyAriaTree(inspectResult)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }, [inspectResult])
+
+  return (
+    <button
+      className={`${ax({ textStyle: 'caption' })} ${styles.copyButton}`}
+      onClick={handleCopy}
+    >
+      {copied ? '✓ Copied' : 'Copy ASCII'}
+    </button>
+  )
+}
+
 export function InspectorWindow() {
   const [actionsMap, setActionsMap] = useState<Map<string, AriaActions>>(new Map())
   const [selectedId, setSelectedId] = useState('')
+  const [sizes, setSizes] = useState<PaneSize[]>([0.3, 'flex'])
   const prevSnapshotRef = useRef('')
 
   useEffect(() => {
@@ -73,8 +86,9 @@ export function InspectorWindow() {
 
       setActionsMap(new Map(all))
       setSelectedId(prev => {
-        if (prev && all.has(prev)) return prev
-        return all.size > 0 ? all.keys().next().value! : ''
+        if (prev && all.has(findInstanceId(prev).replace('__inst__', ''))) return prev
+        if (all.size > 0) return `__inst__${all.keys().next().value!}`
+        return ''
       })
     }
     update()
@@ -82,67 +96,84 @@ export function InspectorWindow() {
     return () => clearInterval(interval)
   }, [])
 
-  const ids = useMemo(() => [...actionsMap.keys()], [actionsMap])
-  const treeData = useMemo(() => registryToTree(ids), [ids])
+  const { tree, metas } = useMemo(
+    () => registryToUnifiedTree(actionsMap),
+    [actionsMap],
+  )
 
-  const selectedActions = actionsMap.get(selectedId)
-  const inspectResult: InspectResult | undefined = useMemo(() => selectedActions?.inspect(), [selectedActions])
+  const instanceId = findInstanceId(selectedId)
+  const meta: InstanceMeta | undefined = metas.get(instanceId)
+  const inspectResult = meta?.inspectResult
+
+  const handleActivate = useCallback((nodeId: string) => {
+    setSelectedId(nodeId)
+  }, [])
 
   return (
     <div className={`${ax({ layout: 'column' })} ${styles.root}`}>
       <div className={ax({ layout: 'spread', padding: 'sm', textStyle: 'caption', surface: 'overlay' })}>
         <span className={ax({ text: 'bright' })}>Aria Inspector</span>
-        <span className={ax({ text: 'muted' })}>{ids.length} instances</span>
+        <span className={ax({ text: 'muted' })}>{actionsMap.size} instances</span>
       </div>
 
-      <div className={styles.splitLayout}>
-        <div className={`${ax({ layout: 'column' })} ${styles.sidebar}`}>
-          {ids.length === 0 ? (
-            <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>등록된 인스턴스 없음</div>
-          ) : (
-            <TreeView
-              data={treeData}
-              plugins={emptyPlugins}
-              onActivate={setSelectedId}
-              selectionFollowsFocus
-              activateOnClick
-              aria-label="Inspector instances"
-            />
-          )}
-        </div>
+      <div className={styles.content}>
+        <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.15}>
+          <div className={ax({ layout: 'column' })}>
+            {actionsMap.size === 0 ? (
+              <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>등록된 인스턴스 없음</div>
+            ) : (
+              <TreeView
+                data={tree}
+                plugins={emptyPlugins}
+                onActivate={handleActivate}
+                selectionFollowsFocus
+                activateOnClick
+              />
+            )}
+          </div>
 
-        <div className={styles.detail}>
-          {inspectResult ? (
-            <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
-              <section>
-                <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
-                  Key → Command ({Object.keys(inspectResult.keyMap).length} bindings, {inspectResult.commands.length} commands)
-                </div>
-                <KeyCommandTable inspectResult={inspectResult} />
-              </section>
+          <div className={styles.detail}>
+            {inspectResult ? (
+              <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+                <section>
+                  <div className={ax({ layout: 'spread', textStyle: 'caption', text: 'bright', padding: 'xs' })}>
+                    <span>Command + Key ({Object.keys(inspectResult.keyMap).length})</span>
+                    <CopyButton inspectResult={inspectResult} />
+                  </div>
+                  <KeyCommandTable inspectResult={inspectResult} />
+                </section>
 
-              <section>
-                <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
-                  Plugins ({inspectResult.plugins.length})
-                </div>
-                <div className={ax({ layout: 'column', textStyle: 'caption' })}>
-                  {inspectResult.plugins.map(p => (
-                    <div key={p} className={styles.commandItem}>{p}</div>
-                  ))}
-                </div>
-              </section>
+                <section>
+                  <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
+                    State ({Object.keys(inspectResult.state.entities).length} entities)
+                  </div>
+                  <AppInspector inspectResult={inspectResult} />
+                </section>
 
-              <section>
-                <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>Engine State</div>
-                <AppInspector inspectResult={inspectResult} />
-              </section>
-            </div>
-          ) : (
-            <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
-              선택된 인스턴스 없음
-            </div>
-          )}
-        </div>
+                <section>
+                  <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
+                    Info
+                  </div>
+                  <div className={ax({ layout: 'column', textStyle: 'caption', padding: 'xs' })}>
+                    <div><span className={ax({ text: 'muted' })}>Role: </span>{inspectResult.role ?? '—'}</div>
+                    <div><span className={ax({ text: 'muted' })}>Child Role: </span>{inspectResult.childRole ?? '—'}</div>
+                    <div><span className={ax({ text: 'muted' })}>Plugins: </span>{inspectResult.plugins.join(', ') || '—'}</div>
+                    {Object.keys(inspectResult.extras).length > 0 && (
+                      <div>
+                        <span className={ax({ text: 'muted' })}>Extras: </span>
+                        <pre className={styles.extras}>{JSON.stringify(inspectResult.extras, null, 2)}</pre>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              </div>
+            ) : (
+              <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
+                선택된 인스턴스 없음
+              </div>
+            )}
+          </div>
+        </SplitPane>
       </div>
     </div>
   )

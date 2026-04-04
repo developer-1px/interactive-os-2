@@ -1,5 +1,5 @@
-import type { PatternContext, EntityDecl } from './types'
-import type { Command } from '../engine/types'
+import type { EntityDecl } from './types'
+import { key } from './types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
 
@@ -80,7 +80,7 @@ export function checkedCtx(
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 export function checked() {
-  const toggle = (ctx: PatternContext): Command | void => ctx.checked?.toggle()
+  const toggle = key(['core:toggle-check'], (ctx) => ctx.checked?.toggle())
   return {
     keyMap: {} as Record<string, never>,
     entities: [{ id: CHECKED_ID, default: { checkedIds: [] } }] as EntityDecl[],

@@ -1,4 +1,5 @@
-import type { PatternContext, CtxFactory } from './types'
+import type { CtxFactory } from './types'
+import { key } from './types'
 import type { Command } from '../engine/types'
 import { defineCommands } from '../engine/defineCommand'
 
@@ -87,12 +88,12 @@ export function valueCtx(
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 export function value(range: ValueRange) {
-  const increment = (ctx: PatternContext): Command | void => ctx.value?.increment()
-  const decrement = (ctx: PatternContext): Command | void => ctx.value?.decrement()
-  const incrementBig_ = (ctx: PatternContext): Command | void => ctx.value?.increment(ctx.value.step * 10)
-  const decrementBig_ = (ctx: PatternContext): Command | void => ctx.value?.decrement(ctx.value.step * 10)
-  const setToMin_ = (ctx: PatternContext): Command | void => ctx.value?.setToMin()
-  const setToMax_ = (ctx: PatternContext): Command | void => ctx.value?.setToMax()
+  const increment = key(['core:increment-value'], (ctx) => ctx.value?.increment())
+  const decrement = key(['core:increment-value'], (ctx) => ctx.value?.decrement())
+  const incrementBig_ = key(['core:increment-value'], (ctx) => ctx.value?.increment(ctx.value!.step * 10))
+  const decrementBig_ = key(['core:increment-value'], (ctx) => ctx.value?.decrement(ctx.value!.step * 10))
+  const setToMin_ = key(['core:set-value'], (ctx) => ctx.value?.setToMin())
+  const setToMax_ = key(['core:set-value'], (ctx) => ctx.value?.setToMax())
 
   return {
     keyMap: {} as Record<string, never>,

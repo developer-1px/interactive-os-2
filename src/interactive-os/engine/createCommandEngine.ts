@@ -115,6 +115,8 @@ export function createCommandEngine(
   )
 
   let inspectKeyMap: Record<string, import('./types').KeyMapEntry> = options?.keyMap ?? {}
+  let inspectRole: string | undefined
+  let inspectChildRole: string | undefined
 
   const inspect = (): import('./types').InspectResult => {
     const pluginList = options?.plugins ?? []
@@ -134,6 +136,8 @@ export function createCommandEngine(
       plugins: pluginList.map((p) => p.name ?? 'anonymous'),
       state: store,
       extras,
+      role: inspectRole,
+      childRole: inspectChildRole,
     }
   }
 
@@ -145,5 +149,6 @@ export function createCommandEngine(
     },
     inspect,
     setInspectKeyMap: (desc: Record<string, import('./types').KeyMapEntry>) => { inspectKeyMap = desc },
+    setInspectRole: (role: string, childRole?: string) => { inspectRole = role; inspectChildRole = childRole },
   }
 }
