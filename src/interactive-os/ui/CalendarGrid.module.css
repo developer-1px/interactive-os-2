@@ -4,25 +4,16 @@
   border-collapse: collapse;
 }
 
-/* ── last-mile: header cell ── */
+/* ── last-mile: header cell — text-align only ── */
 
 .dayHeader {
-  padding: var(--space-xs);
-  font-weight: var(--type-label-weight);
   text-align: center;
-  width: 36px;
 }
 
-/* ── last-mile: day cell ── */
+/* ── last-mile: day cell — text-align only ── */
 
 .day {
-  width: 36px;
-  height: 36px;
   text-align: center;
-  outline: none;
-  cursor: default;
-  border-radius: var(--shape-xs-radius);
-  border: 2px solid transparent;
 }
 
 /* ── variant: state ── */

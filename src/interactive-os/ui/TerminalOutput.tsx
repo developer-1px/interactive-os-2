@@ -9,12 +9,12 @@ export interface TerminalOutputProps {
 
 export function TerminalOutput({ command, output }: TerminalOutputProps) {
   return (
-    <div className={`${ax({ layout: 'column', textStyle: 'code', flex: '1' })} ${styles.root}`}>
-      <div className={styles.prompt}>
-        <span className={styles.promptSymbol}>$</span>
-        <span className={styles.command}>{command}</span>
+    <div className={ax({ layout: 'column', textStyle: 'code', flex: '1', surface: 'sunken', text: 'primary' })}>
+      <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'sunken' })} ${styles.prompt}`}>
+        <span className={ax({ text: 'success', flex: 'none' })}>$</span>
+        <span className={`${ax({ weight: 'semi' })} ${styles.command}`}>{command}</span>
       </div>
-      <div className={styles.output}>{output || '(no output)'}</div>
+      <div className={`${ax({ padding: 'sm' })} ${styles.output}`}>{output || '(no output)'}</div>
     </div>
   )
 }

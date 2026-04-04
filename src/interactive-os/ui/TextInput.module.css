@@ -1,16 +1,7 @@
 /* ── TextInput — 3-block recipe ──
    // ② 2026-03-26-component-styling-rules-prd.md */
 
-/* ═══ Block 1: base ═══ */
-.input {
-  background: var(--_bg, var(--surface-base));
-  height: var(--input-height);
-  border-radius: var(--shape-md-radius);
-  padding: var(--shape-md-py) var(--shape-md-px);
-  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
-}
-/* :focus → data-surface="input" provides via interactive.css */
-
+/* ═══ Block 1: base — ax() handles controlSize/padding/shape/surface ═══ */
 .input::placeholder {
   color: var(--text-muted);
 }

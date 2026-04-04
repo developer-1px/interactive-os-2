@@ -43,15 +43,15 @@ function ToastItem({
   const variant = toast.variant ?? 'default'
   const axes = variantTone[variant] ?? variantTone.default
   return (
-    <div className={`${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm' })} ${styles.toast}`} data-variant={variant}>
-      <div className={ax({ flex: '1' })}>
+    <div className={`${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' })} ${styles.toast}`} data-variant={variant}>
+      <div className={ax({ flex: '1', layout: 'self-start' })}>
         <div className={ax({ textStyle: 'body', weight: 'medium' })}>{toast.title}</div>
         {toast.description && (
-          <div className={`${ax({ textStyle: 'body', text: 'secondary' })} ${styles.description}`}>{toast.description}</div>
+          <div className={ax({ textStyle: 'body', text: 'secondary' })}>{toast.description}</div>
         )}
       </div>
       <button
-        className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm' })} ${styles.dismiss}`}
+        className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', flex: 'none' })}`}
         onClick={() => onDismiss(toast.id)}
         aria-label="Dismiss"
       >

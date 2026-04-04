@@ -1,17 +1,5 @@
-.container {
-  border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-md-radius);
-  padding: var(--space-sm);
-  background: var(--surface-sunken);
-  max-width: 360px;
-}
-
-.item {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  border-radius: var(--shape-xs-radius);
-  gap: var(--space-sm);
-  cursor: default;
-}
+.container { /* anchor for PatternDemo wrapper */ }
+.item { /* anchor for PatternDemo items */ }
 
 .itemFocused {
   background: var(--bg-hover);

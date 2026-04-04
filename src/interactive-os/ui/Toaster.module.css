@@ -14,9 +14,6 @@
 
 .toast {
   pointer-events: auto;
-  align-items: flex-start;
-  border-radius: var(--shape-xl-radius);
-  animation: slideIn 150ms ease-out;
 }
 
 .toast[data-variant='success'] {
@@ -25,23 +22,4 @@
 
 .toast[data-variant='error'] {
   border-color: var(--tone-destructive-base);
-}
-
-.description {
-  /* textStyle + text handled by ax() */
-}
-
-.dismiss {
-  flex-shrink: 0;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

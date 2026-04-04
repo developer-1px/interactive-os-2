@@ -105,7 +105,7 @@ function getStateLabel(state: NodeState): string | null {
 }
 
 function getItemClass(state: NodeState): string {
-  const base = `flex-row items-center ${ax({ textStyle: 'body', text: 'primary' })} ${styles.item}`
+  const base = `flex-row items-center ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', shape: 'sm', gap: 'sm' })} ${styles.item}`
   if (state.focused && state.selected) return `${base} ${styles.itemFocusedSelected}`
   if (state.focused) return `${base} ${styles.itemFocused}`
   if (state.selected) return `${base} ${styles.itemSelected}`
@@ -146,7 +146,7 @@ function PatternDemoInner({ entry }: { entry: PatternEntry }) {
   const pattern = useMemo(() => entry.pattern, [entry.pattern])
 
   return (
-    <div className={styles.container}>
+    <div className={`${ax({ surface: 'sunken', shape: 'md', padding: 'sm', width: 'sm' })} ${styles.container}`}>
       <Aria
         pattern={pattern}
         data={data}

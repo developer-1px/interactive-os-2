@@ -1,34 +1,15 @@
-.root {
-  background: #1a1a1a;
-  color: #e0e0e0;
-  font-family: var(--font-mono);
-}
+/* ── TerminalOutput — last-mile only ── */
 
 .prompt {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5em;
-  padding: 8px 12px 4px;
   position: sticky;
   top: 0;
-  background: #1a1a1a;
   z-index: 1;
 }
 
-.promptSymbol {
-  color: #4ec970;
-  flex: none;
-}
-
 .command {
-  font-weight: 600;
-  white-space: pre-wrap;
   word-break: break-all;
 }
 
 .output {
-  padding: 4px 12px 12px;
-  white-space: pre-wrap;
   word-break: break-all;
-  line-height: 1.4;
 }
