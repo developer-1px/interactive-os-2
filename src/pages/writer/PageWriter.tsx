@@ -1,28 +1,66 @@
 // ② 2026-04-04-writer-chat-prd.md
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useWriterData, useWriterDirty, writerState } from './writerStore'
-import { mdToStore } from './writerTransform'
+import { mdToStore, storeToMd } from './writerTransform'
 import { expandCommands } from '@os/axis/expand'
 import { useWriterChatSync, sendWriterMessage, getSessionForFile } from './writerChatBridge'
-import WriterPreview from './WriterPreview'
+import { requestAnalysis } from './writerAnalyze'
+import type { SentenceRole } from './writerSchema'
+import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import WriterFileBrowser from './WriterFileBrowser'
 import { ChatPane } from '../chat/ChatPane'
 import { TreeGrid } from '@os/ui/TreeGrid'
+import { Aria } from '@os/primitives/aria'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
 import { dnd } from '@os/plugins/dnd'
-import { rename } from '@os/plugins/rename'
+import { rename, renameCommands } from '@os/plugins/rename'
+import { clipboard } from '@os/plugins/clipboard'
+import { crudCommands } from '@os/plugins/crud'
+import { getParent, getChildren } from '@os/store/createStore'
+import { definePlugin } from '@os/plugins/definePlugin'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import type { RouteKeyMap } from '@os/primitives/AriaRoute'
 import { ExpandIndicator } from '@os/ui/indicators'
+import type { NormalizedData } from '@os/store/types'
 import { ax } from '@styles/ax'
-import type { Plugin } from '@os/engine/types'
+import { createBatchCommand, type Plugin } from '@os/engine/types'
 import type { NodeState } from '@os/pattern/types'
+import styles from './PageWriter.module.css'
 
 const headingStyle = ['display', 'page', 'section', 'label', 'label', 'label'] as const
+
+
+const roleLabel: Record<SentenceRole, string> = {
+  fact: '사실',
+  interpretation: '해석',
+  evidence: '근거',
+  opinion: '의견',
+}
+
+const roleText: Record<SentenceRole, 'accent' | 'warning' | 'success' | 'danger'> = {
+  fact: 'accent',
+  interpretation: 'warning',
+  evidence: 'success',
+  opinion: 'danger',
+}
+
+function RoleBadge({ role }: { role: SentenceRole }) {
+  return (
+    <span className={`${ax({ textStyle: 'caption', text: roleText[role] })} ${styles.roleBadge}`}>
+      {roleLabel[role]}
+    </span>
+  )
+}
+
+/** Prose preview — reuses the shared MarkdownViewer with storeToMd() */
+function ProseView({ data: storeData }: { data: NormalizedData }) {
+  const md = useMemo(() => storeToMd(storeData), [storeData])
+  return <MarkdownViewer content={md} />
+}
 
 const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const data = node.data as Record<string, unknown> | undefined
@@ -30,10 +68,13 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
   const type = data?.type as string
   const level = data?.level as number | undefined
   const hasChildren = state.expanded !== undefined
+  const depth = (state.level ?? 1) - 1
+  const depthStyle = { paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }
+  const surface = state.selected ? 'action' as const : 'ghost' as const
 
   if (type === 'document') {
     return (
-      <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })}>
+      <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>{data?.path as string || 'Untitled'}</span>
       </div>
@@ -41,33 +82,116 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
   }
 
   if (type === 'heading' && level) {
+    const marginCls = level === 1 ? styles.headingL1 : styles.heading
     return (
-      <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })}>
+      <div {...props} className={`${ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax({ textStyle: headingStyle[level - 1], text: state.focused ? 'primary' : 'secondary' })}>{content}</span>
+        <Aria.Editable field="content" selection="end"><span className={ax({ textStyle: headingStyle[level - 1], text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       </div>
     )
   }
 
-  // paragraph
+  if (type === 'paragraph') {
+    return (
+      <div {...props} className={`${ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} ${styles.paragraph}`} style={depthStyle}>
+        <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
+        <span className={ax({ textStyle: 'caption', text: 'muted' })}>¶{state.index + 1}</span>
+      </div>
+    )
+  }
+
+  if (type === 'list') {
+    return (
+      <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
+        <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
+        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{(data?.ordered as boolean) ? 'ol' : 'ul'}</span>
+      </div>
+    )
+  }
+
+  if (type === 'listItem') {
+    return (
+      <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
+        <ExpandIndicator hasChildren={false} />
+        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
+        <Aria.Editable field="content" selection="end"><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+      </div>
+    )
+  }
+
+  if (type === 'hr') {
+    return <div {...props} className={`${ax({ surface, padding: 'xs' })} ${styles.hr}`} style={depthStyle} />
+  }
+
+  // sentence
+  const role = data?.role as SentenceRole | undefined
   return (
-    <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })}>
-      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'muted' })}>{content}</span>
+    <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
+      <ExpandIndicator hasChildren={false} />
+      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
+      <Aria.Editable field="content" selection="end"><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+      {role && <RoleBadge role={role} />}
     </div>
   )
 }
 
+let _insertCounter = 0
+
+function writerKeys(): Plugin {
+  type Ctx = {
+    focused: string
+    getEntity: (id: string) => { data?: Record<string, unknown> } | undefined
+    getStore: () => { entities: Record<string, { data?: Record<string, unknown> } | undefined>; relationships: Record<string, string[]> }
+  }
+  return definePlugin({
+    name: 'writerKeys',
+    keyMap: {
+      'Enter': (ctx: Ctx) => renameCommands.startRename(ctx.focused),
+      'Mod+Enter': (ctx: Ctx) => {
+        const store = ctx.getStore() as import('@os/store/types').NormalizedData
+        const entity = ctx.getEntity(ctx.focused)
+        const d = entity?.data as Record<string, unknown> | undefined
+        if (!d) return undefined
+        const type = d.type as string
+        const parentId = getParent(store, ctx.focused)
+        if (!parentId) return undefined
+        const siblings = getChildren(store, parentId)
+        const idx = siblings.indexOf(ctx.focused)
+        const newId = `wi${++_insertCounter}`
+
+        let newData: Record<string, unknown>
+        if (type === 'heading') {
+          newData = { type: 'heading', level: d.level, content: '' }
+        } else if (type === 'sentence') {
+          newData = { type: 'sentence', content: '' }
+        } else if (type === 'listItem') {
+          newData = { type: 'listItem', content: '' }
+        } else {
+          return undefined
+        }
+
+        return createBatchCommand([
+          crudCommands.create({ id: newId, data: newData }, parentId, idx + 1),
+          renameCommands.startRename(newId),
+        ])
+      },
+    },
+  })
+}
+
 const writerPlugins: Plugin[] = [
   crud(),
+  clipboard(),
   dnd(),
   history(),
   rename(),
+  writerKeys(),
 ]
 
 export default function PageWriter() {
   const [data, setData] = useWriterData()
   const dirty = useWriterDirty()
-  const [view, setView] = useState<'tree' | 'preview'>('tree')
+  const [prose, setProse] = useState(false)
   const [sizes, setSizes] = useState<PaneSize[]>([0.15, 'flex', 0.30])
 
   const location = useLocation()
@@ -142,10 +266,39 @@ export default function PageWriter() {
     }
   }, [])
 
+  // Auto-save on edit (debounced)
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  useEffect(() => {
+    if (!dirty) return
+    const filePath = writerState.getFilePath()
+    if (!filePath) return
+    clearTimeout(saveTimerRef.current)
+    saveTimerRef.current = setTimeout(async () => {
+      const md = writerState.getMd()
+      try {
+        const res = await fetch('/api/writer/write', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file: filePath, content: md }),
+        })
+        if (res.ok) writerState.markClean()
+      } catch { /* silent */ }
+    }, 500)
+    return () => clearTimeout(saveTimerRef.current)
+  }, [dirty, data])
+
+  const handleAnalyze = useCallback(() => {
+    requestAnalysis(chatSessionId)
+  }, [chatSessionId])
+
   const writerKeyMap: RouteKeyMap = useMemo(() => ({
     'Mod+S': () => {
       handleSave()
       return { type: 'writer:save' }
+    },
+    'Mod+\\': () => {
+      setProse(p => !p)
+      return { type: 'writer:toggle-prose' }
     },
   }), [handleSave])
 
@@ -167,28 +320,21 @@ export default function PageWriter() {
             <button onClick={handleSave} disabled={!dirty} className={ax({ controlSize: 'sm', padding: 'sm', content: 'text', surface: 'ghost' })}>
               Save{dirty ? ' *' : ''}
             </button>
+            <button onClick={handleAnalyze} className={ax({ controlSize: 'sm', padding: 'sm', content: 'text', surface: 'ghost' })}>Analyze</button>
             {urlFilePath && <span className={ax({ text: 'muted' })}>{urlFilePath}</span>}
-            <div className={ax({ layout: 'fill' })} />
-            <button
-              onClick={() => setView(v => v === 'tree' ? 'preview' : 'tree')}
-              className={ax({ controlSize: 'sm', padding: 'sm', content: 'text', surface: 'ghost' })}
-            >
-              {view === 'tree' ? 'Preview' : 'Edit'}
-            </button>
           </div>
 
-          <div className={ax({ layout: 'scroll' })}>
-            {view === 'tree' ? (
+          <div className={ax({ layout: 'scroll', width: 'prose', padding: 'md' })}>
+            {prose ? (
+              <ProseView data={data} />
+            ) : (
               <TreeGrid
                 data={data}
                 plugins={writerPlugins}
                 onChange={setData}
-                enableEditing
                 renderItem={writerRenderItem}
                 aria-label="Document structure"
               />
-            ) : (
-              <WriterPreview data={data} />
             )}
           </div>
         </div>
