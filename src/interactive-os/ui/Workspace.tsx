@@ -9,7 +9,7 @@ import { workspaceCommands, findTabgroup } from '../plugins/workspaceStore'
 import { SplitPane } from './SplitPane'
 import type { PaneSize } from './SplitPane'
 import { TabGroup } from './TabGroup'
-import { useLayoutKeys } from '../../hooks/useLayoutKeys'
+import { useKeyMap } from '../primitives/useKeyMap'
 import styles from './Workspace.module.css'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
@@ -104,7 +104,7 @@ export function Workspace({
     nextTab: () => switchTab(1),
   }), [data, onChange, switchTab])
 
-  const { onKeyDown: handleKeyDown } = useLayoutKeys(layoutHandlers)
+  const { onKeyDown: handleKeyDown } = useKeyMap(layoutHandlers)
 
   if (rootChildren.length === 0) {
     return (
