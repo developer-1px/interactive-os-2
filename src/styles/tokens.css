@@ -77,11 +77,11 @@
   /* ── Indicator ── */
   --indicator-width: 2px;
 
-  /* ② 2026-04-04-chroma-ladder-prd.md */
-  /* ── Selection — chroma ladder (hue 250 고정, chroma로 위계 표현) ── */
-  --selection-context: oklch(24%  0.020  250);
-  --selection:         oklch(28%  0.037  250);
-  --selection-cursor:  oklch(31%  0.047  250);
+  /* ② 2026-04-05-selection-neutral-prd.md */
+  /* ── Selection — stone ladder (neutral elevation) ── */
+  --selection-context: var(--stone-850);
+  --selection:         var(--stone-750);
+  --selection-cursor:  var(--stone-700);
 
   /* ── Interactive ── */
   --bg-hover:  var(--stone-800);
@@ -251,11 +251,11 @@
   --focus:      var(--blue-500);
   --focus-idle: var(--bg-hover);
 
-  /* ② 2026-04-04-chroma-ladder-prd.md */
-  /* ── Selection — chroma ladder (hue 250 고정, chroma로 위계 표현) ── */
-  --selection-context: var(--blue-50);
-  --selection:         var(--blue-100);
-  --selection-cursor:  var(--blue-200);
+  /* ② 2026-04-05-selection-neutral-prd.md */
+  /* ── Selection — stone ladder (neutral elevation) ── */
+  --selection-context: var(--stone-100);
+  --selection:         var(--stone-200);
+  --selection-cursor:  var(--stone-300);
 
   /* ── Interactive ── */
   --bg-hover:  var(--stone-100);

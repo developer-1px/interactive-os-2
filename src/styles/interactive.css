@@ -211,10 +211,10 @@
   background: var(--selection-cursor);
 }
 
-/* Tab selected uses accent border, not background */
+/* Tab selected uses neutral text, not accent */
 [data-aria-container] [role="tab"][aria-selected="true"] {
-  color: var(--tone-primary-base);
-  border-bottom-color: var(--tone-primary-base);
+  color: var(--text-bright);
+  border-bottom-color: var(--text-bright);
   font-weight: var(--weight-semi);
   background: transparent;
 }
