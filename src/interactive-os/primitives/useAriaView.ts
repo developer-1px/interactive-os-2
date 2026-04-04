@@ -79,8 +79,6 @@ export interface UseAriaViewReturn {
   containerProps: Record<string, unknown>
   patternCtxOptions: { visibilityFilters?: import('../engine/types').VisibilityFilter[]; ctxFactories?: import('../axis/types').CtxFactory[] }
   observedEngine: CommandEngine
-  /** Merged keyMap keys for inspector — key → owner string */
-  getKeyMap: () => Record<string, string>
 }
 
 export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
@@ -413,8 +411,8 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     el.focus({ preventScroll: false })
   }, [disabled, isKeyMapOnly, focusedId, pattern.focusStrategy.type, nodeIdAttr, autoFocus])
 
-  // ② 2026-04-04-inspector-zone-keymap-prd.md
-  const keyMapDesc = useMemo((): Record<string, string> => {
+  // ② 2026-04-04-inspector-zone-keymap-prd.md — feed keyMap description into engine.inspect()
+  useMemo(() => {
     const desc: Record<string, string> = {}
     for (const key of Object.keys(pattern.keyMap)) {
       desc[key] = 'pattern'
@@ -429,9 +427,8 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         desc[key] = 'override'
       }
     }
-    return desc
-  }, [pattern.keyMap, pluginKeyMaps, keyMapOverrides])
-  const getKeyMap = useCallback(() => keyMapDesc, [keyMapDesc])
+    engine.setInspectKeyMap(desc)
+  }, [pattern.keyMap, pluginKeyMaps, keyMapOverrides, engine])
 
-  return { getNodeProps, getNodeState, containerProps, patternCtxOptions, observedEngine, getKeyMap }
+  return { getNodeProps, getNodeState, containerProps, patternCtxOptions, observedEngine }
 }

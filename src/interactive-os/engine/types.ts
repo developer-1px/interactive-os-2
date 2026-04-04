@@ -20,6 +20,8 @@ export interface CommandEngine {
   syncStore(newStore: NormalizedData): void
   /** Introspect engine capability — commands, keyMap, plugins, state, plugin extras */
   inspect(): InspectResult
+  /** Set keyMap description for inspect() — called by view layer after merging pattern+plugin+user keyMaps */
+  setInspectKeyMap(desc: Record<string, string>): void
 }
 
 export interface Command {

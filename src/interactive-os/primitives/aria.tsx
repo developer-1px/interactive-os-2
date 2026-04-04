@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, cloneElement } from 'react'
+import React, { useEffect, useRef, cloneElement } from 'react'
 import type { ReactNode, ReactElement } from 'react'
 import type { Command } from '../engine/types'
 import type { NormalizedData } from '../store/types'
@@ -12,7 +12,6 @@ import { FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
 import { EXPANDED_ID } from '../axis/expand'
 import { POPUP_ID } from '../axis/popup'
 import { renameCommands, RENAME_ID } from '../plugins/rename'
-import { registerAria, unregisterAria } from './ariaRegistry'
 import { SEARCH_ID, searchCommands, matchesSearchFilter } from '../plugins/search'
 
 interface AriaProps {
@@ -47,20 +46,12 @@ const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist',
 const AriaItemContext = React.createContext<{ nodeId: string; focused: boolean; renaming: boolean } | null>(null)
 
 function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, logger, autoFocus, disabled, children }: AriaProps) {
-  const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, logger, autoFocus, disabled })
-
-  const registryKey = id ?? ariaLabel
-  useEffect(() => {
-    if (!registryKey) return
-    // ② 2026-04-04-inspector-zone-keymap-prd.md
-    registerAria(registryKey, { dispatch: aria.dispatch, getStore: aria.getStore, inspect: aria.inspect, getKeyMap: aria.getKeyMap })
-    return () => unregisterAria(registryKey)
-  }, [registryKey, aria.dispatch, aria.getStore, aria.inspect, aria.getKeyMap])
+  const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, logger, autoFocus, disabled, 'aria-label': ariaLabel, id })
 
   const role = pattern?.role || undefined
   const orientation = pattern?.focusStrategy?.orientation
   return (
-    <AriaInternalContext.Provider value={{ ...aria, pattern, registryKey }}>
+    <AriaInternalContext.Provider value={{ ...aria, pattern }}>
       <Component
         role={role}
         aria-label={ariaLabel}
