@@ -13,7 +13,6 @@ import styles from './InspectorWindow.module.css'
 
 const emptyPlugins: Plugin[] = []
 
-/** Convert registry to flat NormalizedData for TreeView (no hierarchy — all roots) */
 function registryToTree(ids: string[]): NormalizedData {
   const entities: NormalizedData['entities'] = {}
   for (const id of ids) {
@@ -22,9 +21,9 @@ function registryToTree(ids: string[]): NormalizedData {
   return { entities, relationships: { [ROOT_ID]: ids } }
 }
 
-function KeyMapTable({ keyMap }: { keyMap: Record<string, string> }) {
-  const entries = Object.entries(keyMap)
-  if (entries.length === 0) {
+function KeyMapTable({ inspectResult }: { inspectResult: InspectResult }) {
+  const keyEntries = Object.entries(inspectResult.keyMap)
+  if (keyEntries.length === 0) {
     return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No keyMap</div>
   }
   return (
@@ -36,7 +35,7 @@ function KeyMapTable({ keyMap }: { keyMap: Record<string, string> }) {
         </tr>
       </thead>
       <tbody>
-        {entries.map(([key, owner]) => (
+        {keyEntries.map(([key, owner]) => (
           <tr key={key}>
             <td className={styles.tdKey}>{key}</td>
             <td className={styles.tdOwner}>{owner}</td>
@@ -44,6 +43,19 @@ function KeyMapTable({ keyMap }: { keyMap: Record<string, string> }) {
         ))}
       </tbody>
     </table>
+  )
+}
+
+function CommandList({ commands }: { commands: string[] }) {
+  if (commands.length === 0) {
+    return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No commands</div>
+  }
+  return (
+    <div className={ax({ layout: 'column', textStyle: 'caption' })}>
+      {commands.map(cmd => (
+        <div key={cmd} className={styles.commandItem}>{cmd}</div>
+      ))}
+    </div>
   )
 }
 
@@ -92,6 +104,7 @@ export function InspectorWindow() {
               data={treeData}
               plugins={emptyPlugins}
               onActivate={setSelectedId}
+              selectionFollowsFocus
               activateOnClick
               aria-label="Inspector instances"
             />
@@ -100,12 +113,36 @@ export function InspectorWindow() {
 
         <div className={styles.detail}>
           {inspectResult ? (
-            <div className={ax({ layout: 'column', gap: 'sm', padding: 'sm' })}>
-              <div className={ax({ textStyle: 'caption', text: 'bright' })}>KeyMap ({Object.keys(inspectResult.keyMap).length})</div>
-              <KeyMapTable keyMap={inspectResult.keyMap} />
+            <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+              <section>
+                <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
+                  KeyMap ({Object.keys(inspectResult.keyMap).length})
+                </div>
+                <KeyMapTable inspectResult={inspectResult} />
+              </section>
 
-              <div className={ax({ textStyle: 'caption', text: 'bright' })}>Engine Inspect</div>
-              <AppInspector inspectResult={inspectResult} />
+              <section>
+                <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
+                  Commands ({inspectResult.commands.length})
+                </div>
+                <CommandList commands={inspectResult.commands} />
+              </section>
+
+              <section>
+                <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
+                  Plugins ({inspectResult.plugins.length})
+                </div>
+                <div className={ax({ layout: 'column', textStyle: 'caption' })}>
+                  {inspectResult.plugins.map(p => (
+                    <div key={p} className={styles.commandItem}>{p}</div>
+                  ))}
+                </div>
+              </section>
+
+              <section>
+                <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>Engine State</div>
+                <AppInspector inspectResult={inspectResult} />
+              </section>
             </div>
           ) : (
             <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>

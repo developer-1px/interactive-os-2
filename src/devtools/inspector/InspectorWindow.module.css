@@ -45,3 +45,9 @@
   composes: td;
   opacity: 0.7;
 }
+
+.commandItem {
+  padding: 2px var(--space-sm);
+  font-family: var(--mono);
+  color: #3b82f6;
+}
