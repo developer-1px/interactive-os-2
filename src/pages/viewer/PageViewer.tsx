@@ -17,7 +17,7 @@ import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelec
 import { Workspace } from '@os/ui/Workspace'
 import { createWorkspace } from '@os/plugins/workspaceStore'
 import type { TabData } from '@os/plugins/workspaceStore'
-import { useLayoutKeys } from '../../hooks/useLayoutKeys'
+import { useKeyMap } from '@os/primitives/useKeyMap'
 import { ax } from '@styles/ax'
 import { SpinnerIndicator, ExpandIndicator } from '@os/ui/indicators'
 import { FilePanel } from './widgets/FilePanel'
@@ -161,7 +161,7 @@ export default function PageViewer() {
     splitV: () => { duplicatePaneRef.current() },
   }), [])
 
-  const { onKeyDown: handleLayoutKeyDown } = useLayoutKeys(viewerLayoutHandlers)
+  const { onKeyDown: handleLayoutKeyDown } = useKeyMap(viewerLayoutHandlers)
 
 
   if (loading || !initialStore) {

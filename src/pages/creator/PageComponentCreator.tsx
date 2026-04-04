@@ -14,7 +14,7 @@ import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData, Entity } from '@os/store/types'
 import type { TabData } from '@os/plugins/workspaceStore'
-import { useLayoutKeys } from '../../hooks/useLayoutKeys'
+import { useKeyMap } from '@os/primitives/useKeyMap'
 import { ax } from '@styles/ax'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import styles from './PageComponentCreator.module.css'
@@ -95,7 +95,7 @@ export default function PageComponentCreator() {
 
   const [wsData, setWsData] = useState(() => createCreatorWorkspace())
 
-  const { onKeyDown: handleLayoutKeyDown } = useLayoutKeys({})
+  const { onKeyDown: handleLayoutKeyDown } = useKeyMap({})
 
   const renderPanel = useCallback((tab: Entity) => {
     const tabData = tab.data as unknown as TabData

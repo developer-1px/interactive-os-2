@@ -27,7 +27,7 @@ import {
   getEntityData,
   updateEntityData,
 } from '@os/store/createStore'
-import { useLayoutKeys } from '../../hooks/useLayoutKeys'
+import { useKeyMap } from '@os/primitives/useKeyMap'
 import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
 import { PanelHeader } from '@os/ui/PanelHeader'
@@ -174,7 +174,7 @@ export default function PageAgentChat() {
       createSession()
     },
   }), [])
-  const { onKeyDown: handleLayoutKeyDown } = useLayoutKeys(layoutHandlers)
+  const { onKeyDown: handleLayoutKeyDown } = useKeyMap(layoutHandlers)
 
   const handleAddTab = useCallback(() => {
     createSession()
