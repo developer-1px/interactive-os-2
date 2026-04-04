@@ -18,6 +18,7 @@
 .tab[aria-selected="true"] {
   --_bg: var(--surface-raised);
   --_fg: var(--text-primary);
+  box-shadow: inset 0 -2px 0 var(--border-accent);
 }
 
 .tabPreview {
