@@ -176,6 +176,10 @@ export default function PageAgentChat() {
   }), [])
   const { onKeyDown: handleLayoutKeyDown } = useLayoutKeys(layoutHandlers)
 
+  const handleAddTab = useCallback(() => {
+    createSession()
+  }, [])
+
   const handleSidebarClick = useCallback((sessionId: string) => {
     setActiveSession(sessionId)
   }, [])
@@ -188,7 +192,7 @@ export default function PageAgentChat() {
 
   return (
     <div className={`${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
-      <div className={ax({ layout: 'stack', flex: 'none' }) + ' ' + styles.chatSidebar}>
+      <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none' }) + ' ' + styles.chatSidebar}>
         <PanelHeader axes={{ layout: 'spread' }}>
           <span>Sessions</span>
           <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm' }) + ' ' + styles.chatNewBtn} onClick={createSession} aria-label="New session">
@@ -199,12 +203,12 @@ export default function PageAgentChat() {
           {sessions.map(s => (
             <div
               key={s.id}
-              className={`${ax({ layout: 'stack', gap: 'xs', padding: 'xs', text: 'secondary' })} ${styles.chatSessionItem} ${s.id === activeSessionId ? styles.chatSessionActive : ''}`}
+              className={`${ax({ surface: 'ghost', layout: 'stack', gap: 'xs', padding: 'xs', text: 'secondary' })} ${styles.chatSessionItem} ${s.id === activeSessionId ? styles.chatSessionActive : ''}`}
               onClick={() => handleSidebarClick(s.id)}
             >
               <div className={ax({ layout: 'bar', gap: 'sm' })}>
                 <Circle size={8} fill="currentColor" className={s.state === 'running' ? ax({ text: 'success' }) : ax({ text: 'muted' })} />
-                <span className={ax({ clamp: '1' })}>{s.id.slice(0, 8)}</span>
+                <span className={ax({ flex: '1', clamp: '1' })}>{s.id.slice(0, 8)}</span>
                 <button
                   className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + styles.chatCloseBtn}
                   onClick={(e) => { e.stopPropagation(); closeSession(s.id) }}
@@ -226,6 +230,7 @@ export default function PageAgentChat() {
         <Workspace
           data={wsData}
           onChange={handleWorkspaceChange}
+          onAddTab={handleAddTab}
           renderPanel={renderPanel}
           aria-label="Chat workspace"
         />

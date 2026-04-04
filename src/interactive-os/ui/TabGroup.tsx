@@ -1,6 +1,6 @@
 // ② 2026-03-26-workspace-containers-prd.md
 import React, { useCallback, useMemo } from 'react'
-import { X } from 'lucide-react'
+import { X, Plus } from 'lucide-react'
 
 import type { NormalizedData, Entity } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -20,6 +20,7 @@ interface TabGroupProps {
   tabgroupId: string
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
+  onAddTab?: (tabgroupId: string) => void
   renderPanel: (tab: Entity) => React.ReactNode
   keyMap?: Record<string, (ctx: PatternContext) => Command | void>
   'aria-label'?: string
@@ -30,6 +31,7 @@ export function TabGroup({
   tabgroupId,
   plugins,
   onChange,
+  onAddTab,
   renderPanel,
   keyMap,
   'aria-label': ariaLabel,
@@ -83,11 +85,13 @@ export function TabGroup({
 
   const activeEntity = data.entities[activeTabId]
 
-  const showTabBar = childIds.length > 1
+  const handleAdd = useCallback(() => {
+    onAddTab?.(tabgroupId)
+  }, [onAddTab, tabgroupId])
 
   return (
     <div className={ax({ layout: 'column', flex: '1' })} data-full-height>
-      {showTabBar && <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${ax({ layout: 'bar', gap: 'xs', padding: 'xs' })} ${styles.tabBar}`}>
+      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${ax({ layout: 'bar', gap: 'xs', padding: 'xs' })} ${styles.tabBar}`}>
         {childIds.map((id) => {
           const entity = store.entities[id]
           if (!entity) return null
@@ -113,7 +117,17 @@ export function TabGroup({
             </div>
           )
         })}
-      </div>}
+        {onAddTab && (
+          <button
+            className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', text: 'muted' })} ${styles.tabAdd}`}
+            aria-label="Add tab"
+            tabIndex={-1}
+            onClick={handleAdd}
+          >
+            <Plus size={12} />
+          </button>
+        )}
+      </div>
       <div role="tabpanel" className={ax({ layout: 'fill' })}>
         {activeEntity ? renderPanel(activeEntity) : null}
       </div>
