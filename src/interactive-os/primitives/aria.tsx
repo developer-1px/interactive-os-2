@@ -184,7 +184,7 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
         const focusedCol = (store.entities[GRID_COL_ID]?.colIndex as number) ?? 0
         const isFocusedCell = nodeCtx.focused && index === focusedCol
         return (
-          <div role="gridcell" aria-colindex={index + 1} tabIndex={isFocusedCell ? 0 : -1}>
+          <div role="gridcell" aria-colindex={index + 1} tabIndex={isFocusedCell ? 0 : -1} data-cell-focused={isFocusedCell || undefined}>
             {children}
           </div>
         )
