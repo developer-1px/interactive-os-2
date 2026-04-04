@@ -63,6 +63,7 @@
 |--------|----------|------|
 | Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight | Integrated | Panel/Trigger 제거 완료. state.slotProps로 slot ARIA 전달. Part 5종만. aria-multiselectable 자동 출력 |
 | useAria · useAriaZone · useControlledAria | Integrated | onFocusChange 콜백 추가. disabled 옵션. keyMap-only 경로 검증 완료 (CmsLayout Mod+\\) |
+| useKeyMap | Integrated | 레이아웃 레벨 키 캡처 (React onKeyDown + findMatchingKey). src/hooks에서 OS로 이동 |
 | useKeyboard · useSpatialNav | Integrated | — |
 | useResizer · useVirtualScroll | Integrated | plugins/로 이동. virtualScroll() definePlugin 래퍼 + useVirtualScrollState 훅 이중 구조 |
 | VirtualCodeBlock | Integrated | 500줄+ 코드 파일 가상 스크롤. Shiki codeToTokens 줄별 토큰 캐시 |
