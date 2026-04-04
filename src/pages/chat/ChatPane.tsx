@@ -91,7 +91,7 @@ function useCommandHighlight(commands: string[], text: string) {
   }, [sorted, text])
 }
 
-export function ChatPane({ sessionId }: { sessionId: string }) {
+export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (sessionId: string, text: string) => void }) {
   const session = useChatSession(sessionId)
   const composerRef = useRef<ComposerHandle>(null)
   const [inputText, setInputText] = useState('')
@@ -104,14 +104,15 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
   const suggestions = useSlashSuggestions(commands, inputText, dismissed)
   const commandHighlight = useCommandHighlight(commands, inputText)
 
+  const send = onSend ?? sendMessage
   const handleSubmit = useCallback((text: string) => {
     if (text === '/clear') {
       clearSession(sessionId)
       return
     }
-    sendMessage(sessionId, text)
+    send(sessionId, text)
     setInputText('')
-  }, [sessionId])
+  }, [sessionId, send])
 
   const handleInterrupt = useCallback(() => {
     interruptSession(sessionId)
@@ -165,12 +166,12 @@ export function ChatPane({ sessionId }: { sessionId: string }) {
         messages={messages}
         blockRenderers={chatRenderers}
         isStreaming={false}
-        className={ax({ flex: '1' }) + ' ' + styles.chatFeed}
+        className={ax({ flex: '1', padding: 'lg' })}
       />
-      <div className={ax({ flex: 'none' }) + ' ' + styles.chatComposer}>
+      <div className={ax({ flex: 'none', padding: 'md' })}>
         {isRunning && (
           <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' ' + styles.chatActivityBar}>
-            <span className={styles.chatDot} />
+            <span className={`${ax({ surface: 'base', tone: 'accent', shape: 'pill' })} ${styles.chatDot}`} />
             <span>{label}</span>
             <span>{elapsed}s</span>
             {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}

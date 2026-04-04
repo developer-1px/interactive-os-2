@@ -184,7 +184,7 @@ export function Combobox({
 
   const defaultRender = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
     <div {...props} className={[
-      ax({ surface: 'ghost', controlSize: 'md', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined }),
+      ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined }),
     ].filter(Boolean).join(' ')}>
       {getNodeLabel(item)}
     </div>
@@ -294,7 +294,7 @@ export function Combobox({
             ))}
           </div>
           <input
-            className={`${ax({ surface: 'input', controlSize: 'lg', width: 'full', shape: 'xl' })} ${styles.comboInput}`}
+            className={`${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })} ${styles.comboInput}`}
             role="combobox"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -308,7 +308,7 @@ export function Combobox({
       )}
       {mode !== 'multiple' && (
       <input
-        className={`${ax({ surface: 'input', controlSize: 'lg', width: 'full', shape: 'xl' })} ${styles.comboInput}`}
+        className={`${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })} ${styles.comboInput}`}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -344,7 +344,7 @@ export function Combobox({
             <div
               data-combobox-create
               className={[
-                ax({ surface: 'ghost', controlSize: 'md', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined }),
+                ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined }),
               ].filter(Boolean).join(' ')}
               onClick={() => handleCreate(filterText)}
               role="option"

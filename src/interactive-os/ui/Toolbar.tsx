@@ -21,6 +21,7 @@ const iconMap: Record<string, LucideIcon> = {
 
 interface ToolbarProps extends AriaComponentProps {
   orientation?: 'horizontal' | 'vertical'
+  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
@@ -30,7 +31,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <span
       {...props}
-      className={ax({ surface: 'ghost', controlSize: 'sm', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined })}
+      className={ax({ surface: 'ghost', controlSize: 'sm', layout: Icon ? 'center' : undefined, padding: Icon ? undefined : 'sm', content: Icon ? undefined : 'text', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined })}
       aria-label={Icon ? label : undefined}
     >
       {Icon ? <Icon size={18} /> : label}
@@ -53,9 +54,20 @@ export function Toolbar({
   plugins = [],
   onChange,
   onActivate,
+  onFocusChange,
   renderItem = defaultRenderItem,
   orientation = 'horizontal',
+  keyMap,
+  'aria-label': ariaLabel,
 }: ToolbarProps) {
+  const mergedKeyMap = React.useMemo(() => {
+    const base = orientation === 'vertical' ? verticalKeyMap as Record<string, (ctx: PatternContext) => Command | void> : undefined
+    if (!base && !keyMap) return undefined
+    if (!base) return keyMap
+    if (!keyMap) return base
+    return { ...base, ...keyMap }
+  }, [orientation, keyMap])
+
   return (
     <Aria
       pattern={toolbarPattern}
@@ -63,7 +75,9 @@ export function Toolbar({
       plugins={plugins}
       onChange={onChange}
       onActivate={onActivate}
-      keyMap={orientation === 'vertical' ? verticalKeyMap as Record<string, (ctx: PatternContext) => Command | void> : undefined}
+      onFocusChange={onFocusChange}
+      keyMap={mergedKeyMap}
+      aria-label={ariaLabel}
     >
       <Aria.Item render={renderItem} />
     </Aria>

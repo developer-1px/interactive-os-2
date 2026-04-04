@@ -105,7 +105,7 @@ export default function A2UISurfaceDemo() {
             onClick={() => setActiveIndex(i)}
             className={ax({
               surface: i === activeIndex ? 'action' : 'ghost',
-              controlSize: 'sm',
+              controlSize: 'sm', padding: 'sm', content: 'text',
               tone: i === activeIndex ? 'accent' : undefined,
             })}
           >

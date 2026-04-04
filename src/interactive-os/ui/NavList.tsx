@@ -27,6 +27,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const itemClass = ax({
     surface: 'ghost',
     controlSize: 'md',
+    padding: 'sm',
+    content: 'text',
     text: (state.focused || state.active) ? 'primary' : 'secondary',
   })
   return <div {...props} className={`${props.className ?? ''} ${itemClass}`}>{label}</div>

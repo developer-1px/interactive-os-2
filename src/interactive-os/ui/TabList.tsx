@@ -67,6 +67,8 @@ export function TabList({
             className={ax({
               surface: 'ghost',
               controlSize: 'sm',
+              padding: 'sm',
+              content: 'text',
               textStyle: 'caption',
             })}
           >

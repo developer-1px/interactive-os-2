@@ -21,7 +21,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <div
       {...props}
-      className={ax({ surface: 'ghost', controlSize: 'md', text: state.focused ? 'primary' : 'secondary' })}
+      className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', text: state.focused ? 'primary' : 'secondary' })}
       data-focused={state.focused || undefined}
     >
       {label}

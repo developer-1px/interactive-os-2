@@ -24,7 +24,7 @@ const tabData = createStore({
 const renderTab = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
   const label = (item.data as Record<string, unknown>)?.label as string
   return (
-    <span className={ax({ surface: 'ghost', controlSize: 'md', text: state.selected ? 'primary' : 'muted', weight: state.selected ? 'semi' : undefined })}>
+    <span className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', text: state.selected ? 'primary' : 'muted', weight: state.selected ? 'semi' : undefined })}>
       {label}
     </span>
   )
@@ -40,7 +40,7 @@ function ThemePanel() {
       <div className={ax({ layout: 'spread' })}>
         <span className={ax({ textStyle: 'body', text: 'secondary' })}>Appearance</span>
         <button
-          className={ax({ surface: 'action', controlSize: 'sm', tone: 'neutral', shape: 'xl' })}
+          className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone: 'neutral', shape: 'xl' })}
           onClick={toggle}
         >
           {theme === 'dark' ? '☾ Dark' : '☀ Light'}

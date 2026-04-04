@@ -1,6 +1,7 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import { useState, useCallback, useMemo, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BookOpen, List, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { Breadcrumb } from '@os/ui/Breadcrumb'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { NavList } from '@os/ui/NavList'
 import { SpreadReader } from '@os/ui/SpreadReader'
@@ -63,40 +64,26 @@ export default function PageBookViewer() {
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   // ── Chrome: show on mouse near edges, hide after idle ──
-  useEffect(() => {
-    const area = areaRef.current
-    if (!area) return
-    const EDGE = 80
-    const HIDE_DELAY = 2500
+  const EDGE = 80
+  const HIDE_DELAY = 2500
 
-    const show = () => {
+  const handleAreaMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const nearEdge =
+      e.clientY - rect.top < EDGE ||
+      rect.bottom - e.clientY < EDGE ||
+      e.clientX - rect.left < EDGE ||
+      rect.right - e.clientX < EDGE
+    if (nearEdge) {
       clearTimeout(hideTimer.current)
       setChromeVisible(true)
       hideTimer.current = setTimeout(() => setChromeVisible(false), HIDE_DELAY)
     }
+  }, [])
 
-    const handleMove = (e: MouseEvent) => {
-      const rect = area.getBoundingClientRect()
-      const nearEdge =
-        e.clientY - rect.top < EDGE ||
-        rect.bottom - e.clientY < EDGE ||
-        e.clientX - rect.left < EDGE ||
-        rect.right - e.clientX < EDGE
-      if (nearEdge) show()
-    }
-
-    const handleLeave = () => {
-      clearTimeout(hideTimer.current)
-      setChromeVisible(false)
-    }
-
-    area.addEventListener('mousemove', handleMove)
-    area.addEventListener('mouseleave', handleLeave)
-    return () => {
-      clearTimeout(hideTimer.current)
-      area.removeEventListener('mousemove', handleMove)
-      area.removeEventListener('mouseleave', handleLeave)
-    }
+  const handleAreaMouseLeave = useCallback(() => {
+    clearTimeout(hideTimer.current)
+    setChromeVisible(false)
   }, [])
 
   // ── Page index lookup ──
@@ -169,9 +156,9 @@ export default function PageBookViewer() {
 
   if (pages.length === 0) {
     return (
-      <div className={`${ax({ text: 'primary' })} ${styles.book}`}>
-        <div className={`${ax({ text: 'muted' })} ${styles.empty}`}>
-          <BookOpen size={48} className={styles.emptyIcon} />
+      <div className={`${ax({ surface: 'base', text: 'primary' })} ${styles.book}`}>
+        <div className={`${ax({ layout: 'center', gap: 'lg', text: 'muted' })} ${styles.empty}`}>
+          <BookOpen size={48} className={ax({ opacity: 'dim' })} />
           <span>No content found</span>
         </div>
       </div>
@@ -193,13 +180,13 @@ export default function PageBookViewer() {
         'End': { command: 'spread:last', owner: 'SpreadReader' },
       }}
     >
-      <div className={`${ax({ text: 'primary' })} ${styles.book}`}>
+      <div className={`${ax({ surface: 'base', text: 'primary' })} ${styles.book}`}>
         {/* ── Page content ── */}
-        <div className={styles.pageArea} ref={areaRef}>
+        <div className={styles.pageArea} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
           {/* ── Floating pill — top-left ── */}
           <div className={`${styles.pill} ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
             <button
-              className={`${ax({ text: 'secondary' })} ${styles.pillBtn}`}
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} ${styles.pillBtn}`}
               onClick={() => setTocOpen(true)}
               aria-label="Open table of contents"
             >
@@ -209,12 +196,10 @@ export default function PageBookViewer() {
             <span className={ax({ textStyle: 'caption', text: 'secondary', clamp: '1' })}>{page?.title}</span>
           </div>
 
-          {/* ── Page number — always visible, bottom-center ── */}
-          <div className={styles.pageNumber}>
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-              {currentPage + 1}/{pages.length}
-              {totalSpreads > 1 && ` · ${spread + 1}/${totalSpreads}`}
-            </span>
+          {/* ── Page footer — breadcrumb + page number, bottom-center ── */}
+          <div className={`${styles.pageNumber} ${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })}`}>
+            {page && <Breadcrumb path={page.id} root="" />}
+            <span>{currentPage + 1}/{pages.length}</span>
           </div>
 
           {/* ── Progress — bottom edge ── */}
@@ -236,7 +221,7 @@ export default function PageBookViewer() {
             <div>
               {!isFirstSpread && (
                 <button
-                  className={ax({ surface: 'overlay', controlSize: 'sm', layout: 'bar', gap: 'sm' })}
+                  className={ax({ surface: 'overlay', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'sm' })}
                   onClick={() => handlePrevBoundary()}
                 >
                   <ChevronLeft size={14} />
@@ -252,7 +237,7 @@ export default function PageBookViewer() {
             <div>
               {!isLastSpread && (
                 <button
-                  className={ax({ surface: 'overlay', controlSize: 'sm', layout: 'bar', gap: 'sm' })}
+                  className={ax({ surface: 'overlay', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'sm' })}
                   onClick={() => handleNextBoundary()}
                 >
                   {spread >= totalSpreads - 1 && nextPage && (
@@ -273,7 +258,7 @@ export default function PageBookViewer() {
               <div className={`${ax({ layout: 'spread', padding: 'md' })} ${styles.tocOverlayHeader}`}>
                 <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
                 <button
-                  className={`${ax({ text: 'secondary' })} ${styles.pillBtn}`}
+                  className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} ${styles.pillBtn}`}
                   onClick={() => setTocOpen(false)}
                   aria-label="Close"
                 >
