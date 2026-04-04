@@ -8,14 +8,14 @@ import type { PatternContext, NodeState } from '@os/pattern/types'
 import type { LogEntry } from '@os/engine/logger'
 import { Aria } from '@os/primitives/aria'
 import { TreeView } from '@os/ui/TreeView'
-import type { TreeItemRenderProps } from '@os/ui/TreeView'
+import { renderInspectorItem } from './renderInspectorItem'
 import { tree } from '@os/pattern/roles/tree'
 import { history } from '@os/plugins/history'
 import { crud, crudCommands } from '@os/plugins/crud'
 import { dnd, dndCommands } from '@os/plugins/dnd'
 import { focusRecovery } from '@os/plugins/focusRecovery'
 import { storeToInspectorTree } from '@os/store/storeToInspectorTree'
-import { treeData } from '../../pages/shared/shared-tree-data'
+import { treeData } from '../../pages/shared/sharedTreeData'
 import styles from './PageStoreInspector.module.css'
 
 // --- Stateless module-level constants ---
@@ -43,74 +43,6 @@ function makeEditorPlugins(): { plugins: Plugin[]; keyMap: Record<string, (ctx: 
     plugins: [crud(), dnd(), history(), focusRecovery()],
     keyMap: { ...editorKeyMap, ...createKeyMap },
   }
-}
-
-// --- Inspector render helpers ---
-
-const TYPE_COLORS: Record<string, string> = {
-  meta: '#f59e0b',
-  entity: '#3b82f6',
-  rel: '#8b5cf6',
-}
-
-function truncate(str: string, max = 60): string {
-  if (!str || str.length <= max) return str
-  return str.slice(0, max) + '…'
-}
-
-function renderInspectorItem(_props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState) {
-  const d = node.data as Record<string, unknown>
-  const type = d?.type as string
-  const label = d?.label as string
-  const value = d?.value as string | undefined
-  const count = d?.count as number | undefined
-  const indent = ((state.level ?? 1) - 1) * 16
-
-  const isGroup = type === 'group'
-
-  return (
-    <div
-      style={{
-        paddingLeft: `calc(var(--space-sm) + ${indent}px)`,
-        paddingTop: 2,
-        paddingBottom: 2,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 6,
-        fontFamily: 'var(--mono)',
-        fontSize: 'var(--type-body-size)',
-        opacity: state.focused ? 1 : 0.85,
-        background: state.focused ? 'var(--bg-hover)' : undefined,
-        outline: state.focused ? '1.5px solid var(--focus)' : undefined,
-        cursor: 'default',
-      }}
-    >
-      {isGroup ? (
-        <>
-          <span style={{ opacity: 0.6, fontSize: 'var(--type-caption-size)' }}>
-            {state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-          </span>
-          <span style={{ fontWeight: 600 }}>{label}</span>
-          {count !== undefined && (
-            <span style={{ opacity: 0.5, fontSize: 'var(--type-caption-size)' }}>({count})</span>
-          )}
-        </>
-      ) : (
-        <>
-          <span style={{ opacity: 0.3, fontSize: 'var(--type-caption-size)' }}>·</span>
-          <span style={{ color: TYPE_COLORS[type] ?? 'inherit', fontSize: 'var(--type-caption-size)', opacity: 0.8 }}>
-            {type}
-          </span>
-          <span>{label}</span>
-          {value && (
-            <span style={{ opacity: 0.5, fontSize: 'var(--type-caption-size)' }}>
-              {truncate(value)}
-            </span>
-          )}
-        </>
-      )}
-    </div>
-  )
 }
 
 // --- Editor render ---

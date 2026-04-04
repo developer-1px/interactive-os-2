@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
-import type { TreeItemRenderProps } from '../../ui/TreeView'
+import type React from 'react'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
@@ -60,7 +60,7 @@ const data: NormalizedData = createStore({
 })
 
 const renderTreeitem = (
-  props: TreeItemRenderProps,
+  props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
   state: NodeState,
 ): React.ReactElement => {
@@ -69,11 +69,11 @@ const renderTreeitem = (
 
   return (
     <div
+      {...props}
       className={`${styles.treeitem} flex-row items-center whitespace-nowrap outline-none`}
       data-focused={state.focused || undefined}
-      style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >
-      <span {...props.toggleProps} className={styles.indicator} aria-hidden="true">
+      <span className={styles.indicator} aria-hidden="true">
         {isFolder ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
       </span>
       <span>{label}</span>

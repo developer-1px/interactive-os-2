@@ -1,6 +1,6 @@
+import type React from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import type { NodeState } from '@os/pattern/types'
-import type { TreeItemRenderProps } from '@os/ui/TreeView'
 
 const TYPE_COLORS: Record<string, string> = {
   command: '#3b82f6',
@@ -17,7 +17,7 @@ function truncate(str: string, max = 80): string {
   return str.slice(0, max) + '…'
 }
 
-export function renderInspectorItem(_props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState) {
+export function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) {
   const d = node.data as Record<string, unknown>
   const type = d?.type as string
   const label = d?.label as string
@@ -29,6 +29,7 @@ export function renderInspectorItem(_props: TreeItemRenderProps, node: Record<st
 
   return (
     <div
+      {...props}
       style={{
         paddingLeft: `calc(var(--space-sm) + ${indent}px)`,
         paddingTop: 2,

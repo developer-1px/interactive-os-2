@@ -3,33 +3,33 @@ import { ExpandIndicator } from './indicators'
 
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
-import { useTreeView } from './useTreeView'
-import { expandCommands } from '../axis/expand'
-import { ROOT_ID } from '../store/types'
-import { getChildren } from '../store/createStore'
+import type { Plugin } from '../plugins/types'
+import { getNodeLabel } from './types'
+import { Aria } from '../primitives/aria'
+import { tree } from '../pattern/roles/tree'
+import { activateHandler } from '../axis/activate'
+import { selectionFollowsFocusMiddleware } from '../axis/select'
+import { typeahead } from '../plugins/typeahead'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 
-export interface TreeItemRenderProps {
-  toggleProps?: React.HTMLAttributes<HTMLElement>
-}
+const defaultTypeahead = typeahead({ getLabel: (e) => getNodeLabel(e as Record<string, unknown>) })
+const emptyPlugins: Plugin[] = []
+const sfFollowsFocus = selectionFollowsFocusMiddleware()
 
-interface TreeViewProps extends Omit<AriaComponentProps, 'renderItem'> {
-  renderItem?: (props: TreeItemRenderProps, item: Record<string, unknown>, state: NodeState) => React.ReactElement
+interface TreeViewProps extends AriaComponentProps {
   selectionFollowsFocus?: boolean
   selectable?: boolean
   activateOnClick?: boolean
-  initialFocus?: string
 }
 
-const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = (node.data as Record<string, unknown>)?.label as string
-    ?? (node.data as Record<string, unknown>)?.name as string
-    ?? node.id as string
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
+  const label = getNodeLabel(node)
   const hasChildren = state.expanded !== undefined
+  const depth = (state.level ?? 1) - 1
   return (
-    <div className={ax({ surface: 'ghost', controlSize: 'sm', layout: 'row', gap: 'xs' })}>
-      <span {...props.toggleProps}><ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" /></span>
+    <div {...props} className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}>
+      <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
       <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
@@ -37,59 +37,47 @@ const defaultRenderItem = (props: TreeItemRenderProps, node: Record<string, unkn
 
 export function TreeView({
   data,
-  plugins = [],
+  plugins = emptyPlugins,
   onChange,
   onActivate,
+  onFocusChange,
   renderItem = defaultRenderItem,
   selectionFollowsFocus,
-  selectable,
-  activateOnClick,
-  initialFocus,
+  selectable = false,
+  activateOnClick = false,
   'aria-label': ariaLabel,
 }: TreeViewProps) {
-  const tv = useTreeView({
-    data,
-    plugins,
-    onChange,
-    onActivate,
-    selectionFollowsFocus,
-    selectable,
-    activateOnClick,
-    initialFocus,
-    'aria-label': ariaLabel,
-  })
+  const pattern = React.useMemo(() => {
+    let p = tree
+    if (!selectable) {
+      const { Space: _space, ...restKeys } = p.keyMap
+      const clickMap = activateOnClick
+        ? { Click: activateHandler }
+        : undefined
+      p = { ...p, keyMap: restKeys, selectionMode: undefined, clickMap }
+    }
+    if (selectionFollowsFocus) {
+      p = { ...p, selectionFollowsFocus: true, activationFollowsSelection: true, middleware: sfFollowsFocus }
+    }
+    return p
+  }, [selectable, activateOnClick, selectionFollowsFocus])
 
-  const store = tv.getStore()
-
-  function renderNodes(parentId: string): React.ReactNode {
-    const childIds = getChildren(store, parentId)
-    return childIds.map((id) => {
-      const entity = store.entities[id]
-      if (!entity) return null
-      const state = tv.getItemState(id)
-      const props = tv.getItemProps(id)
-      const children = getChildren(store, id)
-      const renderProps: TreeItemRenderProps = {
-        toggleProps: children.length > 0
-          ? { onClick: (e: React.MouseEvent) => { e.preventDefault(); tv.dispatch(expandCommands.toggleExpand(id)) } }
-          : undefined,
-      }
-      return (
-        <div key={id} {...(props as React.HTMLAttributes<HTMLDivElement>)}>
-          {renderItem(renderProps, entity, state)}
-          {state.expanded && children.length > 0 && (
-            <div role="group">
-              {renderNodes(id)}
-            </div>
-          )}
-        </div>
-      )
-    })
-  }
+  const mergedPlugins = React.useMemo(
+    () => [defaultTypeahead, ...plugins],
+    [plugins],
+  )
 
   return (
-    <div {...(tv.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${ax({ layout: 'column' })} flex-1 min-h-0`}>
-      {renderNodes(ROOT_ID)}
-    </div>
+    <Aria
+      pattern={pattern}
+      data={data}
+      plugins={mergedPlugins}
+      onChange={onChange}
+      onActivate={onActivate}
+      onFocusChange={onFocusChange}
+      aria-label={ariaLabel}
+    >
+      <Aria.Item render={renderItem} />
+    </Aria>
   )
 }
