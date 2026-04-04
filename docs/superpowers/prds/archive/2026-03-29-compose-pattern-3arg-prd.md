@@ -140,4 +140,17 @@
 
 ---
 
-**전체 완성도:** 🟢 8/8
+**전체 완성도:** 🟢 구현 완료
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| 3인자 시그니처 | `composePattern.ts:141` — `composePattern(config: Identity, required: Axis[], inputMap: KeyMap)` |
+| Identity 축소 | `composePattern.ts:7-13` — `{ role, childRole, panel?, ariaAttributes? }` |
+| AxisInstance 타입 | `src/interactive-os/axis/types.ts` — `Axis` 타입에 handlers + config 소유 |
+| navigate() 축 함수 | `src/interactive-os/axis/navigate.ts:132` — `navigate(type, opts?)` |
+| selected()/expanded()/checked() | `axis/select.ts`, `axis/expand.ts`, `axis/checked.ts` — 인스턴스 반환 |
+| popup() 축 | `axis/popup.ts` — popup 인스턴스 |
+| grid() 축 | `navigate.ts:175` — `grid(columns, opts?)` |
+| 31개 role 변환 | `pattern/roles/*.ts` 전부 `composePattern(identity, [axes], keyMap)` 형태 |

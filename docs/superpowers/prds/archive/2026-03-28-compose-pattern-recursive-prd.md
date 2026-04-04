@@ -107,4 +107,12 @@
 
 ---
 
-**전체 완성도:** 🟢 8/8 (구현 완료, 커밋 70cb8eb)
+**전체 완성도:** 🟢 구현 완료 (커밋 70cb8eb, 이후 3arg로 진화)
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| 커밋 | `70cb8eb feat: composePattern recursive override — pattern-on-pattern composition` |
+| 현재 상태 | `composePattern.ts` — 3arg 시그니처 `(identity, required[], inputMap)`로 진화 |
+| base 패턴 지원 | 3arg 형태에서 base 패턴 확장은 required[] merge로 자연스럽게 동작 |

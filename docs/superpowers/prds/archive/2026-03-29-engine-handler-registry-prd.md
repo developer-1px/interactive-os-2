@@ -133,3 +133,13 @@
 3. **경계 ↔ 검증**: 6개 경계 중 핵심 4개(V5~V8) 커버 ✅
 4. **금지 ↔ 출처**: 5개 금지 모두 ⑤/④/discussion에서 파생 ✅
 5. **원칙 대조 ↔ 전체**: 위반 없음 ✅
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| handler registry | `createCommandEngine.ts:1` — PRD 참조 주석, `:82` — `registry.get(command.type)` |
+| Command.execute 제거 | `engine/types.ts` — `.execute` grep 0건 |
+| creator.reduce() | `engine/defineCommand.ts` — `.reduce()` static method |
+| history spy 제거 | `plugins/history.ts` — getStore() before/after 패턴 |
+| batch registry lookup | `createCommandEngine.ts` — sub-command 순차 registry lookup |

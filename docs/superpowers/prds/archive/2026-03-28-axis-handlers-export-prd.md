@@ -144,4 +144,14 @@
 
 ---
 
-**전체 완성도:** 🟡 8/8 (AI 초안 완료, 사용자 확인 필요)
+**전체 완성도:** 🟢 구현 완료 (compose-pattern-3arg에 의해 대체)
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| 구현 방식 | 정적 export 대신 축 인스턴스 handler로 대체 (`nav.next`, `sel.toggle`, `exp.expandOrFocusChild`) |
+| 증거 파일 | `src/interactive-os/pattern/roles/*.ts` — 모든 role이 인스턴스 handler 사용 |
+| 증거 파일 | `src/interactive-os/axis/tab.ts` — `focusNextWrap`, `focusPrevWrap` static export 잔존 |
+| 대체 PRD | `2026-03-29-compose-pattern-3arg-prd.md` — AxisInstance가 config+handler 소유 |
+| 하위 호환 | 기존 테스트 전체 통과 (3arg 전환 시 원자적 변환) |

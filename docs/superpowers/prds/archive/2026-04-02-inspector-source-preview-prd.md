@@ -111,4 +111,12 @@
 
 ---
 
-**전체 완성도:** 🟢 8/8
+**전체 완성도:** 🟢 구현 완료
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| computePlacement | `src/misc/computePlacement.ts` — 순수 배치 함수 |
+| SourcePreview | `src/devtools/inspector/SourcePreview.tsx` — ~5줄 코드 preview |
+| InspectorOverlay 통합 | `src/devtools/inspector/InspectorOverlay.tsx` — SourcePreview 참조 |
