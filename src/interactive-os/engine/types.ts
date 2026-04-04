@@ -10,6 +10,13 @@ export interface KeyMapEntry {
   command?: string
 }
 
+// ② 2026-04-04-command-binding-registry-prd.md
+export interface BindingEntry {
+  command: string
+  nodeId: string | null
+  input: string
+}
+
 export interface InspectResult {
   commands: string[]
   keyMap: Record<string, KeyMapEntry>
@@ -20,6 +27,8 @@ export interface InspectResult {
   role?: string
   /** Pattern child role — for ASCII tree rendering */
   childRole?: string
+  /** Registered command-input bindings from bindingRegistry */
+  bindings?: BindingEntry[]
 }
 
 export interface CommandEngine {
