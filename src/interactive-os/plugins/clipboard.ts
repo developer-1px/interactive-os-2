@@ -415,6 +415,28 @@ export const clipboardCommands = defineCommands({
       return result
     },
   },
+
+  duplicateAfter: {
+    type: 'clipboard:duplicateAfter' as const,
+    create: (targetId: string) => ({ targetId }),
+    handler: (store, { targetId }) => {
+      const buffer = [...clipboardBuffer]
+      if (buffer.length === 0) return store
+
+      const parentId = getParent(store, targetId as string) ?? ROOT_ID
+      const siblings = getChildren(store, parentId)
+      const pos = siblings.indexOf(targetId as string)
+      const insertIndex = pos >= 0 ? pos + 1 : undefined
+
+      let result = store
+      for (let i = 0; i < buffer.length; i++) {
+        const entry = buffer[i]!
+        const idx = insertIndex !== undefined ? insertIndex + i : undefined
+        result = insertClipboardEntry(result, entry, parentId, true, idx)
+      }
+      return result
+    },
+  },
 })
 
 export interface ClipboardOptions {
@@ -450,12 +472,13 @@ export function clipboard(options?: ClipboardOptions) {
       [PASTE_CELL]: clipboardCommands.pasteCellValue,
       [CLEAR_CELL]: clipboardCommands.clearCellValue,
       [CUT_CELL]: clipboardCommands.cutCellValue,
+      'clipboard:duplicateAfter': clipboardCommands.duplicateAfter,
     },
     keyMap: {
       'Mod+D': (ctx: { focused: string; selected?: { ids: string[] }; dispatch(cmd: Command): void }) => {
         const ids = resolveTargetIds(ctx)
         ctx.dispatch(clipboardCommands.copy(ids))
-        return clipboardCommands.paste(ids.at(-1)!, boundCanAccept)
+        return clipboardCommands.duplicateAfter(ids.at(-1)!)
       },
     },
     onCopy: (ctx: { focused: string; selected?: { ids: string[] } }) =>
