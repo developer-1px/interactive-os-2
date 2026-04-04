@@ -1,8 +1,6 @@
 # interactive-os — Architecture Map
 
-> Concept Map + Maturity Tracker. Task list가 아님.
-> **갱신 시점:** 모듈 추가/삭제 시 행 갱신. Maturity·Gaps는 /retro 시 반영.
-> **Maturity:** Concept → Prototype → Validated → Integrated → Production
+> Concept Map + Maturity Tracker. Task list가 아님. > **갱신 시점:** 모듈 추가/삭제 시 행 갱신. Maturity·Gaps는 /retro 시 반영. > **Maturity:** Concept → Prototype → Validated → Integrated → Production
 > **이력:** PROGRESS-ARCHIVE.md (체크리스트 시절 전체 이력)
 
 ## Store (L1)
@@ -31,7 +29,7 @@
 | crud | Integrated | — |
 | cellEdit | Integrated | Google Sheets 2모드: Delete→셀 클리어, Enter→행 이동, Mod+X/C/V 셀 클립보드 |
 | search | Integrated | Mod+F 검색, Aria.Search input + Aria.SearchHighlight mark. getVisibleNodes 필터. Grid searchable prop |
-| clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료, cutCellValue/clearCellValue 추가 |
+| clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료, cutCellValue/clearCellValue 추가, multi-select copy/cut/paste + Mod+D |
 | zodSchema | Integrated | Zod childRules → canAccept/canDelete 자동 파생, middleware 기반. ZodSchema 타입 export |
 | form | Prototype | Zod entityRules 기반 값 검증, __errors__/__touched__ 메타 엔티티, submit/reset/touch 커맨드 |
 | rename | Integrated | — |
