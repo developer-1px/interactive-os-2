@@ -12,6 +12,7 @@ import { createPatternContext } from '../pattern/createPatternContext'
 import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
 import { useSpatialBridge } from './useSpatialBridge'
+import { getSerializedText, setExternalClipboard, hasDeserialize } from '../plugins/clipboard'
 
 type KeyMapHandler = (ctx: ReturnType<typeof createPatternContext>) => Command | void
 type PluginKeyMapHandler = (ctx: ReturnType<typeof createPatternContext>, original?: () => Command | void) => Command | void
@@ -225,6 +226,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
   // ── Event handlers ──
 
+  // ② 2026-04-04-clipboard-serialize-prd.md
   const handleClipboardEvent = useCallback(
     (event: ClipboardEvent) => {
       if (event.defaultPrevented) return
@@ -232,6 +234,17 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       if (isEditableElement(event.target as Element)) return
 
       const ctx = createPatternContext(observedEngine, patternCtxOptions)
+      const isPaste = event.type === 'paste'
+
+      // Paste: inject external clipboard text before dispatching
+      if (isPaste && hasDeserialize()) {
+        const externalText = event.clipboardData?.getData('text/plain') ?? ''
+        const lastSerialized = getSerializedText()
+        if (externalText && externalText !== lastSerialized) {
+          setExternalClipboard(externalText)
+        }
+      }
+
       let handler: ClipboardHandler | undefined
       switch (event.type) {
         case 'copy': handler = pluginClipboardHandlers.onCopy; break
@@ -242,6 +255,15 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       const command = handler(ctx)
       if (command) {
         observedEngine.dispatch(command)
+
+        // Copy/Cut: write serialized text to system clipboard
+        if (!isPaste) {
+          const text = getSerializedText()
+          if (text && event.clipboardData) {
+            event.clipboardData.setData('text/plain', text)
+          }
+        }
+
         event.preventDefault()
       }
     },

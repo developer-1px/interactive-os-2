@@ -29,7 +29,7 @@
 | crud | Integrated | — |
 | cellEdit | Integrated | Google Sheets 2모드: Delete→셀 클리어, Enter→행 이동, Mod+X/C/V 셀 클립보드 |
 | search | Integrated | Mod+F 검색, Aria.Search input + Aria.SearchHighlight mark. getVisibleNodes 필터. Grid searchable prop |
-| clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료, cutCellValue/clearCellValue 추가, multi-select copy/cut/paste + Mod+D |
+| clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료, cutCellValue/clearCellValue 추가, multi-select copy/cut/paste + Mod+D, serialize/deserialize 시스템 클립보드 브릿지 |
 | zodSchema | Integrated | Zod childRules → canAccept/canDelete 자동 파생, middleware 기반. ZodSchema 타입 export |
 | form | Prototype | Zod entityRules 기반 값 검증, __errors__/__touched__ 메타 엔티티, submit/reset/touch 커맨드 |
 | rename | Integrated | — |

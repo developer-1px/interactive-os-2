@@ -51,16 +51,90 @@ function resolveTargetIds(ctx: { focused: string; selected?: { ids: string[] } }
   return (ctx.selected?.ids.length ?? 0) > 0 ? ctx.selected!.ids : [ctx.focused]
 }
 
+// -- Serialize/Deserialize types --
+
+// ② 2026-04-04-clipboard-serialize-prd.md
+export type ClipboardSerializeFn = (subtree: NormalizedData, fullStore: NormalizedData) => string
+export type ClipboardDeserializeFn = (text: string) => NormalizedData | null
+
 // -- Module-level clipboard data (shared -- OS clipboard model) --
 
 let clipboardBuffer: ClipboardEntry[] = []
 let clipboardMode: 'copy' | 'cut' = 'copy'
 let cutSourceIds: string[] = []
 let cellValueBuffer: string = ''
+let serializedText: string | null = null
+let boundSerializeFn: ClipboardSerializeFn | undefined
+let boundDeserializeFn: ClipboardDeserializeFn | undefined
 
 /** Read-only access to cut source IDs -- for UI cut-state styling */
 export function getCutSourceIds(): readonly string[] {
   return cutSourceIds
+}
+
+// ② 2026-04-04-clipboard-serialize-prd.md
+/** Read serialized text after copy/cut — for useAriaView to write to clipboardData */
+export function getSerializedText(): string | null {
+  return serializedText
+}
+
+// ② 2026-04-04-clipboard-serialize-prd.md
+/** Inject external clipboard text into buffer via deserialize. Returns true if successful. */
+export function setExternalClipboard(text: string): boolean {
+  if (!text || !boundDeserializeFn) return false
+  const data = boundDeserializeFn(text)
+  if (!data) return false
+  const rootChildren = data.relationships[ROOT_ID] ?? []
+  if (rootChildren.length === 0) return false
+  clipboardBuffer = rootChildren.map(id => collectSubtreeFromStore(data, id))
+  clipboardMode = 'copy'
+  cutSourceIds = []
+  return true
+}
+
+// ② 2026-04-04-clipboard-serialize-prd.md
+/** Convert ClipboardEntry[] to NormalizedData for serialization */
+export function entriesToStore(entries: ClipboardEntry[]): NormalizedData {
+  let store: NormalizedData = { entities: {}, relationships: { [ROOT_ID]: [] }, slots: {} }
+  for (const entry of entries) {
+    store = insertEntryIntoStore(store, entry, ROOT_ID)
+  }
+  return store
+}
+
+function insertEntryIntoStore(store: NormalizedData, entry: ClipboardEntry, parentId: string): NormalizedData {
+  let result = addEntity(store, entry.entity, parentId)
+  for (const child of entry.children) {
+    result = insertEntryIntoStore(result, child, entry.entity.id)
+  }
+  return result
+}
+
+function collectSubtreeFromStore(store: NormalizedData, nodeId: string): ClipboardEntry {
+  const entity = getEntity(store, nodeId)!
+  const childIds = getChildren(store, nodeId)
+  return {
+    entity: { ...entity },
+    children: childIds.map(id => collectSubtreeFromStore(store, id)),
+  }
+}
+
+/** Check if a deserialize function is bound */
+export function hasDeserialize(): boolean {
+  return !!boundDeserializeFn
+}
+
+/** Serialize clipboard buffer using bound serialize function */
+function serializeBuffer(store: NormalizedData): void {
+  if (!boundSerializeFn || clipboardBuffer.length === 0) {
+    serializedText = null
+    return
+  }
+  try {
+    serializedText = boundSerializeFn(entriesToStore(clipboardBuffer), store)
+  } catch {
+    serializedText = null
+  }
 }
 
 /** Reset clipboard state -- use in tests to isolate state between cases */
@@ -69,6 +143,7 @@ export function resetClipboard(): void {
   clipboardMode = 'copy'
   cutSourceIds = []
   cellValueBuffer = ''
+  serializedText = null
   idCounter = 0
 }
 
@@ -261,6 +336,7 @@ export const clipboardCommands = defineCommands({
       clipboardBuffer = (nodeIds as string[]).map((id: string) => collectSubtree(store, id))
       clipboardMode = 'copy'
       cutSourceIds = []
+      serializeBuffer(store)
       return store
     },
   },
@@ -274,6 +350,7 @@ export const clipboardCommands = defineCommands({
       clipboardBuffer = deletable.map((id: string) => collectSubtree(store, id))
       clipboardMode = 'cut'
       cutSourceIds = [...deletable]
+      serializeBuffer(store)
       return store
     },
   },
@@ -345,11 +422,17 @@ export interface ClipboardOptions {
   canAccept?: CanAcceptFn
   /** @deprecated Use zodSchema() plugin instead. */
   canDelete?: CanDeleteFn
+  /** Convert copied subtree to text for system clipboard */
+  serialize?: ClipboardSerializeFn
+  /** Convert pasted text from system clipboard to tree data */
+  deserialize?: ClipboardDeserializeFn
 }
 
 export function clipboard(options?: ClipboardOptions) {
   const boundCanAccept = options?.canAccept
   const boundCanDelete = options?.canDelete
+  boundSerializeFn = options?.serialize
+  boundDeserializeFn = options?.deserialize
 
   if (boundCanAccept || boundCanDelete) {
     if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {

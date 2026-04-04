@@ -179,9 +179,13 @@ function writerKeys(): Plugin {
   })
 }
 
+// ② 2026-04-04-clipboard-serialize-prd.md
 const writerPlugins: Plugin[] = [
   crud(),
-  clipboard(),
+  clipboard({
+    serialize: (subtree) => storeToMd(subtree),
+    deserialize: (text) => mdToStore(text),
+  }),
   dnd(),
   history(),
   rename(),
