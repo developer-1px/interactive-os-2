@@ -61,6 +61,6 @@ export function useTabList(options: UseTabListOptions): UseTabListReturn {
   const { data, plugins = [...(options.enableEditing ? [history()] : [])], keyMap, onChange, onActivate, initialFocus, enableEditing = false, manual = false, 'aria-label': ariaLabel } = options
   const mergedKeyMap = enableEditing ? { ...editingKeyMap, ...keyMap } : keyMap
   const pattern = manual ? tabsManual : tabs
-  const aria = useAria({ pattern, data, plugins, keyMap: mergedKeyMap, onChange, onActivate, initialFocus })
+  const aria = useAria({ pattern, data, plugins, keyMap: mergedKeyMap, onChange, onActivate, initialFocus, 'aria-label': ariaLabel })
   return toTabListReturn(aria, ariaLabel)
 }

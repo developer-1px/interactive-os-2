@@ -21,6 +21,7 @@ import { createPatternContext } from '../pattern/createPatternContext'
 import type { PatternContextOptions } from '../pattern/createPatternContext'
 import { useAriaView } from './useAriaView'
 import { dispatchKeyAction } from './keymapHelpers'
+import { registerAria, unregisterAria } from './ariaRegistry'
 
 type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; onFocusChange: UseAriaOptions['onFocusChange']; pattern: AriaPattern; prevFocus: string; prevSelectedIds: string[] }
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
@@ -51,6 +52,10 @@ export interface UseAriaOptions {
   autoFocus?: boolean
   /** When true, the zone is fully inert — no focus, no events, no ARIA */
   disabled?: boolean
+  /** Registry key for inspector — auto-registers when provided */
+  'aria-label'?: string
+  /** Explicit registry id (takes precedence over aria-label) */
+  id?: string
 }
 
 export interface UseAriaReturn {
@@ -62,12 +67,10 @@ export interface UseAriaReturn {
   getStore(): NormalizedData
   inspect(): import('../engine/types').InspectResult
   containerProps: Record<string, unknown>
-  /** View-level merged keyMap for inspector — key → owner string */
-  getKeyMap?: () => Record<string, string>
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, onFocusChange, initialFocus, logger, autoFocus = true, disabled = false } = options
+  const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, onFocusChange, initialFocus, logger, autoFocus = true, disabled = false, 'aria-label': ariaLabel, id: ariaId } = options
   const [, forceRender] = useState(0)
   const pointerDownCtxRef = useRef<ReturnType<typeof createPatternContext> | null>(null)
   const suppressFocusDispatchRef = useRef(false)
@@ -315,6 +318,14 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     [view.containerProps],
   )
 
+  // Auto-register in inspector registry
+  const registryKey = ariaId ?? ariaLabel
+  useEffect(() => {
+    if (!registryKey) return
+    registerAria(registryKey, { dispatch, getStore: () => engine.getStore(), inspect: () => engine.inspect() })
+    return () => unregisterAria(registryKey)
+  }, [registryKey, dispatch, engine])
+
   return {
     dispatch,
     getNodeProps,
@@ -324,6 +335,5 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     getStore: () => engine.getStore(),
     inspect: () => engine.inspect(),
     containerProps,
-    getKeyMap: view.getKeyMap,
   }
 }

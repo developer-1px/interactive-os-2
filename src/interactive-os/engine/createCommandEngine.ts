@@ -114,6 +114,8 @@ export function createCommandEngine(
     executor
   )
 
+  let inspectKeyMap: Record<string, string> = options?.keyMap ?? {}
+
   const inspect = (): import('./types').InspectResult => {
     const pluginList = options?.plugins ?? []
     const extras: Record<string, Record<string, unknown>> = {}
@@ -128,7 +130,7 @@ export function createCommandEngine(
     }
     return {
       commands: [...registry.keys()],
-      keyMap: options?.keyMap ?? {},
+      keyMap: inspectKeyMap,
       plugins: pluginList.map((p) => p.name ?? 'anonymous'),
       state: store,
       extras,
@@ -142,5 +144,6 @@ export function createCommandEngine(
       store = newStore
     },
     inspect,
+    setInspectKeyMap: (desc: Record<string, string>) => { inspectKeyMap = desc },
   }
 }

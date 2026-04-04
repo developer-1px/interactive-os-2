@@ -59,6 +59,6 @@ export function useTreeView(options: UseTreeViewOptions): UseTreeViewReturn {
       : (Object.keys(clickRest).length > 0 ? clickRest : undefined)
     pattern = { ...pattern, keyMap: rest, selectionMode: undefined, clickMap: resolvedClickMap }
   }
-  const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, initialFocus })
+  const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, initialFocus, 'aria-label': ariaLabel })
   return toTreeViewReturn(aria, ariaLabel)
 }
