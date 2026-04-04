@@ -7,8 +7,13 @@ import { navigate } from '../../axis/navigate'
 const nav = navigate('vertical')
 const pop = popup('menu')
 
+// ② 2026-03-28-aria-panel-trigger-prd.md
 export const menuButton = composePattern(
-  { role: 'menu', childRole: 'menuitem' },
+  {
+    role: 'menu', childRole: 'menuitem',
+    triggerKeyMap: { Enter: pop.triggerKeys.Enter, Space: pop.triggerKeys.Space, ArrowDown: pop.triggerKeys.ArrowDown },
+    triggerClickMap: { Click: pop.open },
+  },
   [nav, pop],
   {
     ArrowDown: pop.openFirstOrFocusNext,

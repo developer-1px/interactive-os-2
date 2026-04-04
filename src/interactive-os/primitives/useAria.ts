@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
-import type { Command, EffectContext, EngineOptions } from '../engine/types'
+import type { Command, EffectContext, EngineOptions, InspectResult } from '../engine/types'
 import { buildRegistry } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import type { Plugin } from '../plugins/types'
-import type { AriaPattern, NodeState } from '../pattern/types'
+import type { AriaPattern, NodeState, PatternContext } from '../pattern/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren } from '../store/createStore'
@@ -66,8 +66,10 @@ export interface UseAriaReturn {
   focused: string
   selected: string[]
   getStore(): NormalizedData
-  inspect(): import('../engine/types').InspectResult
+  inspect(): InspectResult
   containerProps: Record<string, unknown>
+  // ② 2026-03-28-aria-panel-trigger-prd.md
+  getPatternContext?(): PatternContext
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
@@ -358,5 +360,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     getStore: () => engine.getStore(),
     inspect: () => engine.inspect(),
     containerProps,
+    // ② 2026-03-28-aria-panel-trigger-prd.md
+    getPatternContext: () => createPatternContext(engine, patternCtxOptions as PatternContextOptions),
   }
 }
