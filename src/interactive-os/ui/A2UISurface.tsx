@@ -14,15 +14,17 @@ import { Slider } from './Slider'
 import { Button } from './Button'
 import { TextInput } from './TextInput'
 import { ax } from '@styles/ax'
+import { CheckIndicator, RadioIndicator } from './indicators'
 
 // ── Shared helpers ──
 
 function listItemCls(state: NodeState) {
-  return [
-    'list-item',
-    state.focused && 'list-item--focused',
-    state.selected && !state.focused && 'list-item--selected',
-  ].filter(Boolean).join(' ')
+  return ax({
+    surface: 'ghost',
+    padding: 'sm',
+    shape: 'sm',
+    text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary',
+  })
 }
 
 // ── Default component map: A2UI type → our UI component ──
@@ -104,7 +106,7 @@ function checkboxRenderer({ entity }: A2UIRenderContext) {
         const nd = node.data as Record<string, unknown>
         return (
           <div {...props} className={ax({ layout: 'row', gap: 'sm' })}>
-            <span>{state.selected || nd?.checked ? '☑' : '☐'}</span>
+            <CheckIndicator checked={state.selected || (nd?.checked as boolean)} />
             <span>{nd?.label as string}</span>
           </div>
         )
@@ -166,7 +168,7 @@ function listRenderer({ entity, store }: A2UIRenderContext) {
   )
 }
 
-function TabsRenderer({ entity, store, renderChildren, depth }: A2UIRenderContext) {
+function TabsRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) {
   const d = entity.data as Record<string, unknown>
   const tabItems = (d.tabItems as Array<{ title: string; child: string }>) ?? []
   const [activeIndex, setActiveIndex] = useState(0)
@@ -200,7 +202,7 @@ function TabsRenderer({ entity, store, renderChildren, depth }: A2UIRenderContex
       />
       <div className={ax({ padding: 'md' })}>
         {tabItems[activeIndex]?.child && store.entities[tabItems[activeIndex].child]
-          ? renderChildren(tabItems[activeIndex].child, depth)
+          ? renderNode(tabItems[activeIndex].child, depth + 1)
           : null}
       </div>
     </div>
@@ -227,7 +229,7 @@ function choicePickerRenderer({ entity }: A2UIRenderContext) {
         const nd = node.data as Record<string, unknown>
         return (
           <div {...props} className={listItemCls(state)}>
-            <span>{state.selected ? '◉' : '○'}</span>
+            <RadioIndicator />
             <span>{nd?.label as string}</span>
           </div>
         )
@@ -247,14 +249,14 @@ function imageRenderer({ entity }: A2UIRenderContext) {
   return <img src={url} alt={alt} className={ax({ width: 'full', shape: 'md' })} />
 }
 
-function modalRenderer({ entity, store, renderChildren, depth }: A2UIRenderContext) {
+function modalRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) {
   const d = entity.data as Record<string, unknown>
   const contentChildId = d.contentChild as string | undefined
   // Read-only: just render the content inline (no actual modal trigger)
   if (contentChildId && store.entities[contentChildId]) {
     return (
       <div className={ax({ surface: 'overlay', padding: 'md', shape: 'md' })}>
-        {renderChildren(contentChildId, depth)}
+        {renderNode(contentChildId, depth + 1)}
       </div>
     )
   }
@@ -331,6 +333,7 @@ export function A2UISurface({ payload, componentMap }: A2UISurfaceProps) {
     const ctx: A2UIRenderContext = {
       entity,
       store,
+      renderNode,
       renderChildren: (parentId, d) => {
         const childIds = getChildren(store, parentId)
         return childIds.map((cid) => (

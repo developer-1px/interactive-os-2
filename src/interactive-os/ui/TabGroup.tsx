@@ -1,7 +1,5 @@
 // ② 2026-03-26-workspace-containers-prd.md
 import React, { useCallback, useMemo } from 'react'
-import { X, Plus } from 'lucide-react'
-
 import type { NormalizedData, Entity } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { PatternContext } from '../pattern/types'
@@ -13,6 +11,7 @@ import { workspaceCommands } from '../plugins/workspaceStore'
 import type { TabGroupData } from '../plugins/workspaceStore'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
+import { CloseIndicator, AddIndicator } from './indicators'
 import styles from './TabGroup.module.css'
 
 interface TabGroupProps {
@@ -112,7 +111,7 @@ export function TabGroup({
                 onClick={(e) => handleClose(e, id)}
                 onMouseDown={(e) => e.preventDefault()}
               >
-                <X size={12} />
+                <CloseIndicator />
               </button>
             </div>
           )
@@ -124,7 +123,7 @@ export function TabGroup({
             tabIndex={-1}
             onClick={handleAdd}
           >
-            <Plus size={12} />
+            <AddIndicator />
           </button>
         )}
       </div>
