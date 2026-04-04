@@ -194,13 +194,14 @@
 }
 
 /* ── Selected ── */
+/* No :where() — must win over .sf-action/.sf-ghost background: transparent */
 
-:where([data-aria-container] [aria-selected="true"]) {
+[data-aria-container] [aria-selected="true"] {
   background: var(--selection);
 }
 
 /* Tab selected uses accent border, not background */
-:where([data-aria-container] [role="tab"][aria-selected="true"]) {
+[data-aria-container] [role="tab"][aria-selected="true"] {
   color: var(--tone-primary-base);
   border-bottom-color: var(--tone-primary-base);
   font-weight: var(--weight-semi);
@@ -209,37 +210,37 @@
 
 /* ── Checked (radio, switch) ── */
 
-:where([data-aria-container] [aria-checked="true"]) {
+[data-aria-container] [aria-checked="true"] {
   background: var(--selection);
 }
 
 /* ── Focused + Selected compound ── */
 /* Selected background preserved; outline only when container active */
 
-:where([data-aria-container] [aria-selected="true"]:focus),
-:where([data-aria-container] [aria-checked="true"]:focus),
-:where([data-aria-container] [aria-selected="true"][data-focused]),
-:where([data-aria-container] [aria-checked="true"][data-focused]) {
+[data-aria-container] [aria-selected="true"]:focus,
+[data-aria-container] [aria-checked="true"]:focus,
+[data-aria-container] [aria-selected="true"][data-focused],
+[data-aria-container] [aria-checked="true"][data-focused] {
   background: var(--selection);
   color: var(--text-bright);
 }
 
-:where([data-aria-container]:focus-within [aria-selected="true"][data-focused]),
-:where([data-aria-container]:focus-within [aria-checked="true"][data-focused]) {
+[data-aria-container]:focus-within [aria-selected="true"][data-focused],
+[data-aria-container]:focus-within [aria-checked="true"][data-focused] {
   outline-color: var(--focus);
 }
 
 /* ── Disabled ── */
 
-:where([data-aria-container] [aria-disabled="true"]) {
+[data-aria-container] [aria-disabled="true"] {
   opacity: 0.4;
   pointer-events: none;
   cursor: default;
 }
 
 /* Disabled + Selected: preserve selection tint, apply dimming */
-:where([data-aria-container] [aria-disabled="true"][aria-selected="true"]),
-:where([data-aria-container] [aria-disabled="true"][aria-checked="true"]) {
+[data-aria-container] [aria-disabled="true"][aria-selected="true"],
+[data-aria-container] [aria-disabled="true"][aria-checked="true"] {
   background: var(--selection);
   opacity: 0.4;
 }
