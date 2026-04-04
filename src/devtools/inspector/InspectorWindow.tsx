@@ -21,41 +21,41 @@ function registryToTree(ids: string[]): NormalizedData {
   return { entities, relationships: { [ROOT_ID]: ids } }
 }
 
-function KeyMapTable({ inspectResult }: { inspectResult: InspectResult }) {
+function KeyCommandTable({ inspectResult }: { inspectResult: InspectResult }) {
   const keyEntries = Object.entries(inspectResult.keyMap)
-  if (keyEntries.length === 0) {
-    return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No keyMap</div>
+  // Commands not bound to any key
+  const boundCommands = new Set(keyEntries.map(([, e]) => e.command).filter(Boolean))
+  const unboundCommands = inspectResult.commands.filter(c => !boundCommands.has(c))
+
+  if (keyEntries.length === 0 && unboundCommands.length === 0) {
+    return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No bindings</div>
   }
   return (
     <table className={`${ax({ textStyle: 'caption' })} ${styles.table}`}>
       <thead>
         <tr>
           <th className={styles.th}>Key</th>
+          <th className={styles.th}>Command</th>
           <th className={styles.th}>Owner</th>
         </tr>
       </thead>
       <tbody>
-        {keyEntries.map(([key, owner]) => (
+        {keyEntries.map(([key, entry]) => (
           <tr key={key}>
             <td className={styles.tdKey}>{key}</td>
-            <td className={styles.tdOwner}>{owner}</td>
+            <td className={styles.tdCommand}>{entry.command ?? '—'}</td>
+            <td className={styles.tdOwner}>{entry.owner}</td>
+          </tr>
+        ))}
+        {unboundCommands.map(cmd => (
+          <tr key={cmd}>
+            <td className={styles.td}>—</td>
+            <td className={styles.tdCommand}>{cmd}</td>
+            <td className={styles.tdOwner}>registry</td>
           </tr>
         ))}
       </tbody>
     </table>
-  )
-}
-
-function CommandList({ commands }: { commands: string[] }) {
-  if (commands.length === 0) {
-    return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No commands</div>
-  }
-  return (
-    <div className={ax({ layout: 'column', textStyle: 'caption' })}>
-      {commands.map(cmd => (
-        <div key={cmd} className={styles.commandItem}>{cmd}</div>
-      ))}
-    </div>
   )
 }
 
@@ -116,16 +116,9 @@ export function InspectorWindow() {
             <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
               <section>
                 <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
-                  KeyMap ({Object.keys(inspectResult.keyMap).length})
+                  Key → Command ({Object.keys(inspectResult.keyMap).length} bindings, {inspectResult.commands.length} commands)
                 </div>
-                <KeyMapTable inspectResult={inspectResult} />
-              </section>
-
-              <section>
-                <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
-                  Commands ({inspectResult.commands.length})
-                </div>
-                <CommandList commands={inspectResult.commands} />
+                <KeyCommandTable inspectResult={inspectResult} />
               </section>
 
               <section>

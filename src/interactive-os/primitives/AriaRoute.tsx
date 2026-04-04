@@ -40,17 +40,17 @@ export function AriaRoute({ keyMap, label, inspectMap, children }: AriaRouteProp
     const registryKey = label ? `route:${label}` : undefined
     if (!registryKey) return
     const commands: string[] = []
-    const keyMapDesc: Record<string, string> = {}
+    const keyMapDesc: Record<string, import('../engine/types').KeyMapEntry> = {}
 
     if (inspectMap) {
       for (const [key, meta] of Object.entries(inspectMap)) {
         commands.push(meta.command)
-        keyMapDesc[key] = `${meta.owner} → ${meta.command}`
+        keyMapDesc[key] = { owner: meta.owner, command: meta.command }
       }
     } else {
       for (const key of Object.keys(keyMap)) {
         commands.push(key)
-        keyMapDesc[key] = label ?? 'route'
+        keyMapDesc[key] = { owner: label ?? 'route' }
       }
     }
 

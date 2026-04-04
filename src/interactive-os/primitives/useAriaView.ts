@@ -413,18 +413,18 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
 
   // ② 2026-04-04-inspector-zone-keymap-prd.md — feed keyMap description into engine.inspect()
   useMemo(() => {
-    const desc: Record<string, string> = {}
+    const desc: Record<string, import('../engine/types').KeyMapEntry> = {}
     for (const key of Object.keys(pattern.keyMap)) {
-      desc[key] = 'pattern'
+      desc[key] = { owner: 'pattern' }
     }
     if (pluginKeyMaps) {
       for (const key of Object.keys(pluginKeyMaps)) {
-        desc[key] = key in desc ? `${desc[key]} + plugin` : 'plugin'
+        desc[key] = { owner: key in desc ? `${desc[key]!.owner} + plugin` : 'plugin' }
       }
     }
     if (keyMapOverrides) {
       for (const key of Object.keys(keyMapOverrides)) {
-        desc[key] = 'override'
+        desc[key] = { owner: 'override' }
       }
     }
     engine.setInspectKeyMap(desc)
