@@ -1,5 +1,6 @@
-import type { PatternContext, EntityDecl } from './types'
+import type { EntityDecl } from './types'
 import type { SelectionMode } from './types'
+import { key } from './types'
 import { type Command, type Middleware, createBatchCommand } from '../engine/types'
 import { focusCommands } from './navigate'
 import { activateCommands } from './activate'
@@ -92,8 +93,8 @@ export const selectionCommands = {
   select: (nodeId: string): Command => _selectionCommands.selectRange([nodeId]),
 }
 
-export const selectAndAnchor = (ctx: PatternContext): Command =>
-  createBatchCommand([focusCommands.setFocus(ctx.focused), selectionCommands.select(ctx.focused), selectionCommands.setAnchor(ctx.focused)])
+export const selectAndAnchor = key(['core:focus', 'core:select-range', 'core:set-anchor'], (ctx) =>
+  createBatchCommand([focusCommands.setFocus(ctx.focused), selectionCommands.select(ctx.focused), selectionCommands.setAnchor(ctx.focused)]))
 
 /**
  * Middleware that clears the selection anchor when a standalone focus command fires.
@@ -197,13 +198,13 @@ export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; ac
     ? middlewares[0]!
     : (next, getStore) => middlewares.reduceRight<(command: Command) => void>((acc, mw) => mw(acc, getStore), next)
 
-  const toggle = (ctx: PatternContext): Command | void => ctx.selected?.toggle()
-  const extendNext = (ctx: PatternContext): Command | void => ctx.selected?.extend('next')
-  const extendPrev = (ctx: PatternContext): Command | void => ctx.selected?.extend('prev')
-  const extendFirst = (ctx: PatternContext): Command | void => ctx.selected?.extend('first')
-  const extendLast = (ctx: PatternContext): Command | void => ctx.selected?.extend('last')
+  const toggle = key(['core:toggle-select'], (ctx) => ctx.selected?.toggle())
+  const extendNext = key(['core:focus', 'core:select-range'], (ctx) => ctx.selected?.extend('next'))
+  const extendPrev = key(['core:focus', 'core:select-range'], (ctx) => ctx.selected?.extend('prev'))
+  const extendFirst = key(['core:focus', 'core:select-range'], (ctx) => ctx.selected?.extend('first'))
+  const extendLast = key(['core:focus', 'core:select-range'], (ctx) => ctx.selected?.extend('last'))
   const _selectAndAnchor = selectAndAnchor
-  const extendToFocused = (ctx: PatternContext): Command | void => ctx.selected?.extendTo(ctx.focused)
+  const extendToFocused = key(['core:focus', 'core:select-range'], (ctx) => ctx.selected?.extendTo(ctx.focused))
 
   return {
     keyMap: {} as Record<string, never>,
@@ -237,12 +238,12 @@ export function selected(mode: SelectionMode, opts?: { followFocus?: boolean; ac
       'Shift+ArrowUp': extendPrev,
       'Shift+Home': extendFirst,
       'Shift+End': extendLast,
-    } as Record<string, (ctx: PatternContext) => Command | void>,
+    } as Record<string, import('./types').KeyHandler>,
     clickKeys: {
       Click: _selectAndAnchor,
       'Shift+Click': extendToFocused,
       'Mod+Click': toggle,
-    } as Record<string, (ctx: PatternContext) => Command | void>,
+    } as Record<string, import('./types').KeyHandler>,
   }
 }
 

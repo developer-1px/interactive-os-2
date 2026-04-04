@@ -2,6 +2,7 @@ import type { Entity, NormalizedData } from '../store/types'
 import type { Command, Middleware, VisibilityFilter } from '../engine/types'
 import type { AriaPattern, NodeState } from './types'
 import type { PatternContext, FocusStrategy, KeyMap, Axis, EntityDecl, CtxFactory, AriaGen, StateGen } from '../axis/types'
+import { key as keyFn } from '../axis/types'
 
 export interface Identity {
   role: string
@@ -34,18 +35,19 @@ function splitInputMap(inputMap: KeyMap): { keyMap: KeyMap; clickMap: KeyMap } {
 function mergeKeyMaps(keyMaps: KeyMap[]): KeyMap {
   const allKeys = new Set(keyMaps.flatMap(Object.keys))
   const result: KeyMap = {}
-  for (const key of allKeys) {
-    const handlers = keyMaps.map((km) => km[key]).filter(Boolean)
+  for (const k of allKeys) {
+    const handlers = keyMaps.map((km) => km[k]).filter(Boolean)
     if (handlers.length === 1) {
-      result[key] = handlers[0]
+      result[k] = handlers[0]!
     } else if (handlers.length > 1) {
-      result[key] = (ctx: PatternContext): Command | void => {
+      const allCommands = [...new Set(handlers.flatMap(h => h.commands))]
+      result[k] = keyFn(allCommands, (ctx: PatternContext): Command | void => {
         for (const handler of handlers) {
           const r = handler(ctx)
           if (r !== undefined) return r
         }
         return undefined
-      }
+      })
     }
   }
   return result

@@ -217,6 +217,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
       syncStore() { /* no-op — zone doesn't own engine store */ },
       inspect: () => engine.inspect(),
       setInspectKeyMap: (desc) => { engine.setInspectKeyMap(desc) },
+      setInspectRole: (role, childRole) => { engine.setInspectRole(role, childRole) },
     }
 
     function runFocusRecovery(storeBefore: NormalizedData, storeAfter: NormalizedData) {

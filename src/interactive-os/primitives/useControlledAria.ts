@@ -29,6 +29,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
       syncStore: () => { /* no-op for controlled mode */ },
       inspect: () => ({ commands: [], keyMap: {}, plugins: [], state: store, extras: {} }),
       setInspectKeyMap: () => { /* no-op for controlled mode */ },
+      setInspectRole: () => { /* no-op for controlled mode */ },
     }),
     // Re-create whenever store or onDispatch changes so the engine always
     // reflects the latest props.

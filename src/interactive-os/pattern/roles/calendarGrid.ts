@@ -1,4 +1,5 @@
 import type { PatternContext } from '../../axis/types'
+import { key } from '../../axis/types'
 import type { Command } from '../../engine/types'
 import { composePattern } from '../composePattern'
 import { navigate, focusCommands } from '../../axis/navigate'
@@ -19,23 +20,23 @@ function moveBy(ctx: PatternContext, offset: number): Command {
   return focusCommands.setFocus(nodes[next]!)
 }
 
-const nextDay = (ctx: PatternContext): Command => moveBy(ctx, 1)
-const prevDay = (ctx: PatternContext): Command => moveBy(ctx, -1)
-const nextWeek = (ctx: PatternContext): Command => moveBy(ctx, 7)
-const prevWeek = (ctx: PatternContext): Command => moveBy(ctx, -7)
+const nextDay = key(['core:focus'], (ctx) => moveBy(ctx, 1))
+const prevDay = key(['core:focus'], (ctx) => moveBy(ctx, -1))
+const nextWeek = key(['core:focus'], (ctx) => moveBy(ctx, 7))
+const prevWeek = key(['core:focus'], (ctx) => moveBy(ctx, -7))
 
-const firstDayOfWeek = (ctx: PatternContext): Command => {
+const firstDayOfWeek = key(['core:focus'], (ctx) => {
   const nodes = getVisibleList(ctx)
   const idx = nodes.indexOf(ctx.focused)
   return focusCommands.setFocus(nodes[idx - (idx % 7)]!)
-}
-const lastDayOfWeek = (ctx: PatternContext): Command => {
+})
+const lastDayOfWeek = key(['core:focus'], (ctx) => {
   const nodes = getVisibleList(ctx)
   const idx = nodes.indexOf(ctx.focused)
   return focusCommands.setFocus(nodes[Math.min(idx - (idx % 7) + 6, nodes.length - 1)]!)
-}
+})
 
-const selectDay = (ctx: PatternContext): Command => selectionCommands.select(ctx.focused)
+const selectDay = key(['core:select-range'], (ctx) => selectionCommands.select(ctx.focused))
 
 const nav = navigate('both')
 const sel = selected('single')

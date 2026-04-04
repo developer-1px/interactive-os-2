@@ -105,10 +105,18 @@ export interface PatternContext {
   spatialMove?: (dir: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') => import('../engine/types').Command | void
 }
 
-export type KeyMap = Record<string, (ctx: PatternContext) => Command | void>
+/** Annotated keyMap handler — carries command metadata for introspection */
+export type KeyHandler = ((ctx: PatternContext) => Command | void) & { commands: readonly string[] }
+
+/** Create an annotated keyMap handler with command metadata */
+export function key(commands: readonly string[], handler: (ctx: PatternContext) => Command | void): KeyHandler {
+  return Object.assign(handler, { commands })
+}
+
+export type KeyMap = Record<string, KeyHandler>
 
 /** Modifier-keyed click handler map for declarative click binding. Keys: 'default' | 'shift' | 'ctrl' | 'meta' | 'alt'. */
-export type ClickMap = Record<string, (ctx: PatternContext) => Command | void>
+export type ClickMap = Record<string, KeyHandler>
 
 // ② 2026-03-29-axis-config-removal-prd.md
 /** Declarative entity requirement — axis declares what meta-entities it needs in the store. */

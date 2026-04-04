@@ -1,5 +1,6 @@
-import type { PatternContext, EntityDecl } from './types'
-import type { Command, VisibilityFilter } from '../engine/types'
+import type { EntityDecl } from './types'
+import { key } from './types'
+import type { VisibilityFilter } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
 
@@ -82,12 +83,13 @@ export function expandedCtx(
 
 // ② 2026-03-29-compose-pattern-3arg-prd.md
 export function expanded(opts?: { allExpandable?: boolean }) {
-  const toggle = (ctx: PatternContext): Command | void => ctx.expanded?.toggle()
-  const set = (value: boolean) => (ctx: PatternContext): Command | void => ctx.expanded?.set(value)
-  const expandOrFocusChild_ = (ctx: PatternContext): Command | void =>
-    ctx.expanded ? (ctx.expanded.is ? ctx.focusChild() : ctx.expanded.set(true)) : undefined
-  const collapseOrFocusParent_ = (ctx: PatternContext): Command | void =>
-    ctx.expanded ? (ctx.expanded.is ? ctx.expanded.set(false) : ctx.focusParent()) : undefined
+  const toggle = key(['core:toggle-expand'], (ctx) => ctx.expanded?.toggle())
+  const _expand = key(['core:expand'], (ctx) => ctx.expanded?.set(true))
+  const _collapse = key(['core:collapse'], (ctx) => ctx.expanded?.set(false))
+  const expandOrFocusChild_ = key(['core:expand', 'core:focus'], (ctx) =>
+    ctx.expanded ? (ctx.expanded.is ? ctx.focusChild() : ctx.expanded.set(true)) : undefined)
+  const collapseOrFocusParent_ = key(['core:collapse', 'core:focus'], (ctx) =>
+    ctx.expanded ? (ctx.expanded.is ? ctx.expanded.set(false) : ctx.focusParent()) : undefined)
 
   return {
     keyMap: {} as Record<string, never>,
@@ -109,9 +111,8 @@ export function expanded(opts?: { allExpandable?: boolean }) {
       return result
     }) as import('./types').AriaGen,
     toggle,
-    set,
-    expand: set(true),
-    collapse: set(false),
+    expand: _expand,
+    collapse: _collapse,
     expandOrFocusChild: expandOrFocusChild_,
     collapseOrFocusParent: collapseOrFocusParent_,
   }

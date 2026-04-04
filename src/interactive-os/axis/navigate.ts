@@ -1,4 +1,5 @@
-import type { PatternContext, CtxFactory } from './types'
+import type { CtxFactory } from './types'
+import { key } from './types'
 import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -129,20 +130,20 @@ function navigateCtxFactory(): CtxFactory {
 
 // ② 2026-03-30-spatial-navigate-prd.md
 export function navigate(type: NavigateType = 'vertical', opts?: SpatialOptions) {
-  const next = (ctx: PatternContext): Command => ctx.focusNext()
-  const prev = (ctx: PatternContext): Command => ctx.focusPrev()
-  const first = (ctx: PatternContext): Command => ctx.focusFirst()
-  const last = (ctx: PatternContext): Command => ctx.focusLast()
-  const parent = (ctx: PatternContext): Command => ctx.focusParent()
-  const child = (ctx: PatternContext): Command => ctx.focusChild()
-  const nextWrap = (ctx: PatternContext): Command => ctx.focusNext({ wrap: true })
-  const prevWrap = (ctx: PatternContext): Command => ctx.focusPrev({ wrap: true })
+  const next = key(['core:focus'], (ctx) => ctx.focusNext())
+  const prev = key(['core:focus'], (ctx) => ctx.focusPrev())
+  const first = key(['core:focus'], (ctx) => ctx.focusFirst())
+  const last = key(['core:focus'], (ctx) => ctx.focusLast())
+  const parent = key(['core:focus'], (ctx) => ctx.focusParent())
+  const child = key(['core:focus'], (ctx) => ctx.focusChild())
+  const nextWrap = key(['core:focus'], (ctx) => ctx.focusNext({ wrap: true }))
+  const prevWrap = key(['core:focus'], (ctx) => ctx.focusPrev({ wrap: true }))
 
   // Spatial directional handlers — delegate to ctx.spatialMove (provided by useSpatialBridge)
-  const up = (ctx: PatternContext): Command | void => ctx.spatialMove?.('ArrowUp')
-  const down = (ctx: PatternContext): Command | void => ctx.spatialMove?.('ArrowDown')
-  const left = (ctx: PatternContext): Command | void => ctx.spatialMove?.('ArrowLeft')
-  const right = (ctx: PatternContext): Command | void => ctx.spatialMove?.('ArrowRight')
+  const up = key(['core:focus'], (ctx) => ctx.spatialMove?.('ArrowUp'))
+  const down = key(['core:focus'], (ctx) => ctx.spatialMove?.('ArrowDown'))
+  const left = key(['core:focus'], (ctx) => ctx.spatialMove?.('ArrowLeft'))
+  const right = key(['core:focus'], (ctx) => ctx.spatialMove?.('ArrowRight'))
 
   const isSpatial = type === 'spatial'
   const meta: Record<string, unknown> = isSpatial
@@ -174,11 +175,11 @@ export function navigate(type: NavigateType = 'vertical', opts?: SpatialOptions)
 export function grid(columns: number, opts?: { initialColIndex?: number }) {
   const initialCol = opts?.initialColIndex ?? 0
 
-  const focusNextCol_ = (ctx: PatternContext): Command | void => ctx.grid?.focusNextCol()
-  const focusPrevCol_ = (ctx: PatternContext): Command | void => ctx.grid?.focusPrevCol()
-  const focusFirstCol_ = (ctx: PatternContext): Command | void => ctx.grid?.focusFirstCol()
-  const focusLastCol_ = (ctx: PatternContext): Command | void => ctx.grid?.focusLastCol()
-  const tabCycleNext_ = (ctx: PatternContext): Command | void => {
+  const focusNextCol_ = key(['core:set-col-index'], (ctx) => ctx.grid?.focusNextCol())
+  const focusPrevCol_ = key(['core:set-col-index'], (ctx) => ctx.grid?.focusPrevCol())
+  const focusFirstCol_ = key(['core:set-col-index'], (ctx) => ctx.grid?.focusFirstCol())
+  const focusLastCol_ = key(['core:set-col-index'], (ctx) => ctx.grid?.focusLastCol())
+  const tabCycleNext_ = key(['core:set-col-index', 'core:focus'], (ctx) => {
     const g = ctx.grid
     if (!g) return
     const atLastCol = g.colIndex >= g.colCount - 1
@@ -186,8 +187,8 @@ export function grid(columns: number, opts?: { initialColIndex?: number }) {
     const nextRowCmd = ctx.focusNext()
     if ((nextRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
     return createBatchCommand([nextRowCmd, g.focusFirstCol()])
-  }
-  const tabCyclePrev_ = (ctx: PatternContext): Command | void => {
+  })
+  const tabCyclePrev_ = key(['core:set-col-index', 'core:focus'], (ctx) => {
     const g = ctx.grid
     if (!g) return
     const atFirstCol = g.colIndex <= 0
@@ -195,8 +196,8 @@ export function grid(columns: number, opts?: { initialColIndex?: number }) {
     const prevRowCmd = ctx.focusPrev()
     if ((prevRowCmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return
     return createBatchCommand([prevRowCmd, g.focusLastCol()])
-  }
-  const focusRow_ = (ctx: PatternContext): Command | void => ctx.grid?.focusRow()
+  })
+  const focusRow_ = key(['core:set-col-index'], (ctx) => ctx.grid?.focusRow())
 
   return {
     keyMap: {} as Record<string, never>,

@@ -411,20 +411,30 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     el.focus({ preventScroll: false })
   }, [disabled, isKeyMapOnly, focusedId, pattern.focusStrategy.type, nodeIdAttr, autoFocus])
 
+  // Feed pattern role into engine.inspect()
+  useMemo(() => {
+    const resolvedChildRole = typeof pattern.childRole === 'string' ? pattern.childRole : undefined
+    engine.setInspectRole(pattern.role, resolvedChildRole)
+  }, [pattern.role, pattern.childRole, engine])
+
   // ② 2026-04-04-inspector-zone-keymap-prd.md — feed keyMap description into engine.inspect()
   useMemo(() => {
     const desc: Record<string, import('../engine/types').KeyMapEntry> = {}
-    for (const key of Object.keys(pattern.keyMap)) {
-      desc[key] = { owner: 'pattern' }
+    for (const [k, handler] of Object.entries(pattern.keyMap)) {
+      desc[k] = { owner: 'pattern', command: handler.commands.join(' | ') }
     }
     if (pluginKeyMaps) {
-      for (const key of Object.keys(pluginKeyMaps)) {
-        desc[key] = { owner: key in desc ? `${desc[key]!.owner} + plugin` : 'plugin' }
+      for (const k of Object.keys(pluginKeyMaps)) {
+        if (desc[k]) {
+          desc[k] = { ...desc[k]!, owner: `${desc[k]!.owner} + plugin` }
+        } else {
+          desc[k] = { owner: 'plugin' }
+        }
       }
     }
     if (keyMapOverrides) {
-      for (const key of Object.keys(keyMapOverrides)) {
-        desc[key] = { owner: 'override' }
+      for (const k of Object.keys(keyMapOverrides)) {
+        desc[k] = { owner: 'override' }
       }
     }
     engine.setInspectKeyMap(desc)

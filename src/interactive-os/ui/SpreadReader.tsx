@@ -6,8 +6,7 @@ import { useAria } from '../primitives/useAria'
 import { createSequentialStore } from '../store/createSingleNodeStore'
 import { FOCUS_ID } from '../axis/navigate'
 import type { NormalizedData } from '../store/types'
-import type { PatternContext } from '../pattern/types'
-import type { Command } from '../engine/types'
+import { key } from '../axis/types'
 import { ax } from '@styles/ax'
 import styles from './SpreadReader.module.css'
 
@@ -52,22 +51,22 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
     { role: 'none', childRole: 'none' },
     [nav],
     {
-      ArrowRight: (ctx: PatternContext): Command | void => {
+      ArrowRight: key(['core:focus'], (ctx) => {
         const cmd = nav.next(ctx)
-        if ((cmd.payload as { nodeId?: string })?.nodeId === ctx.focused) {
+        if (cmd && (cmd.payload as { nodeId?: string })?.nodeId === ctx.focused) {
           callbacksRef.current.onNextBoundary?.()
           return
         }
         return cmd
-      },
-      ArrowLeft: (ctx: PatternContext): Command | void => {
+      }),
+      ArrowLeft: key(['core:focus'], (ctx) => {
         const cmd = nav.prev(ctx)
-        if ((cmd.payload as { nodeId?: string })?.nodeId === ctx.focused) {
+        if (cmd && (cmd.payload as { nodeId?: string })?.nodeId === ctx.focused) {
           callbacksRef.current.onPrevBoundary?.()
           return
         }
         return cmd
-      },
+      }),
       Home: nav.first,
       End: nav.last,
     },

@@ -16,6 +16,10 @@ export interface InspectResult {
   plugins: string[]
   state: NormalizedData
   extras: Record<string, Record<string, unknown>>
+  /** Pattern role — for ASCII tree rendering */
+  role?: string
+  /** Pattern child role — for ASCII tree rendering */
+  childRole?: string
 }
 
 export interface CommandEngine {
@@ -27,6 +31,8 @@ export interface CommandEngine {
   inspect(): InspectResult
   /** Set keyMap description for inspect() — called by view layer after merging pattern+plugin+user keyMaps */
   setInspectKeyMap(desc: Record<string, KeyMapEntry>): void
+  /** Set pattern role info for inspect() — called by view layer */
+  setInspectRole(role: string, childRole?: string): void
 }
 
 export interface Command {

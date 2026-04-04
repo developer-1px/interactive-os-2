@@ -2,11 +2,12 @@ import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages, Map,
-  MessageSquare, Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText, Bird, BookText, Play, Search,
+  MessageSquare, Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText, Bird, BookText, Play, Search, Cable,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import { Aria } from '@os/primitives/aria'
+import { key } from '@os/axis/types'
 import { toolbar } from '@os/pattern/roles/toolbar'
 import { FOCUS_ID } from '@os/axis/navigate'
 import { createStore } from '@os/store/createStore'
@@ -73,12 +74,12 @@ const LAYER_LABELS: Record<string, string> = {
 const verticalToolbar: AriaPattern = {
   ...toolbar(),
   keyMap: {
-    ArrowDown: (ctx) => ctx.focusNext(),
-    ArrowUp: (ctx) => ctx.focusPrev(),
-    Home: (ctx) => ctx.focusFirst(),
-    End: (ctx) => ctx.focusLast(),
-    Enter: (ctx) => ctx.activate(),
-    Space: (ctx) => ctx.activate(),
+    ArrowDown: key(['core:focus'], (ctx) => ctx.focusNext()),
+    ArrowUp: key(['core:focus'], (ctx) => ctx.focusPrev()),
+    Home: key(['core:focus'], (ctx) => ctx.focusFirst()),
+    End: key(['core:focus'], (ctx) => ctx.focusLast()),
+    Enter: key(['core:activate'], (ctx) => ctx.activate()),
+    Space: key(['core:activate'], (ctx) => ctx.activate()),
   },
   focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
   selectionFollowsFocus: true,
@@ -122,6 +123,7 @@ const appNavItems: NavItem[] = [
   { id: 'birdseye', label: 'Birdseye', icon: Bird, path: '/birdseye' },
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
   { id: 'inspector', label: 'Inspector', icon: Search, path: '/inspector' },
+  { id: 'a2ui', label: 'A2UI', icon: Cable, path: '/a2ui' },
 ]
 
 const internalsNavItems: NavItem[] = contentsOrder.map((layer) => ({

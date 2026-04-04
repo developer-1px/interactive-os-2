@@ -12,7 +12,7 @@ import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState, AriaPattern } from '../pattern/types'
-import type { PatternContext } from '../axis/types'
+import { key } from '../axis/types'
 import { navigate } from '../axis/navigate'
 import { selected } from '../axis/select'
 import { composePattern } from '../pattern/composePattern'
@@ -295,7 +295,7 @@ describe('OS Spatial Navigate — DOM rect-based movement', () => {
       {
         ArrowDown: nav.down,
         ArrowRight: nav.right,
-        Enter: (ctx: PatternContext) => ctx.activate(),
+        Enter: key(['core:activate'], (ctx) => ctx.activate()),
       },
     )
 

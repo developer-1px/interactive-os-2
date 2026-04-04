@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Aria } from '../primitives/aria'
+import { key } from '../axis/types'
 import { toolbar } from '../pattern/roles/toolbar'
 import { ROOT_ID } from '../store/types'
 import { createStore } from '../store/createStore'
@@ -27,12 +28,12 @@ const renderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<strin
 const verticalToolbar: AriaPattern = {
   ...toolbar(),
   keyMap: {
-    ArrowDown: (ctx) => ctx.focusNext(),
-    ArrowUp: (ctx) => ctx.focusPrev(),
-    Home: (ctx) => ctx.focusFirst(),
-    End: (ctx) => ctx.focusLast(),
-    Enter: (ctx) => ctx.activate(),
-    Space: (ctx) => ctx.activate(),
+    ArrowDown: key(['core:focus'], (ctx) => ctx.focusNext()),
+    ArrowUp: key(['core:focus'], (ctx) => ctx.focusPrev()),
+    Home: key(['core:focus'], (ctx) => ctx.focusFirst()),
+    End: key(['core:focus'], (ctx) => ctx.focusLast()),
+    Enter: key(['core:activate'], (ctx) => ctx.activate()),
+    Space: key(['core:activate'], (ctx) => ctx.activate()),
   },
   focusStrategy: { type: 'roving-tabindex', orientation: 'vertical' },
 }

@@ -1,6 +1,6 @@
 // ② 2026-03-30-spatial-navigate-prd.md
 import type { AriaPattern } from '../pattern/types'
-import type { PatternContext } from '../axis/types'
+import { key } from '../axis/types'
 import { ROOT_ID } from '../store/types'
 import { SPATIAL_PARENT_ID } from '../plugins/spatial'
 import { navigate, focusCommands } from '../axis/navigate'
@@ -30,27 +30,27 @@ export function createSpatialPattern(selector: string | (() => string)): AriaPat
       ArrowLeft: nav.left,
       ArrowRight: nav.right,
 
-      Enter: (ctx: PatternContext) => ctx.activate(),
-      Escape: (ctx: PatternContext) => (ctx.expanded?.is ? ctx.expanded.set(false) : ctx.focusParent()),
+      Enter: key(['core:activate'], (ctx) => ctx.activate()),
+      Escape: key(['core:collapse', 'core:focus'], (ctx) => (ctx.expanded?.is ? ctx.expanded.set(false) : ctx.focusParent())),
 
       Space: sel.toggle,
       ...sel.keys,
       ...sel.clickKeys,
 
-      Home: (ctx: PatternContext) => {
+      Home: key(['core:focus'], (ctx) => {
         const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
         const depthParentId = (spatialParent?.parentId as string) ?? ROOT_ID
         const siblings = ctx.getChildren(depthParentId)
         if (siblings.length > 0) return focusCommands.setFocus(siblings[0]!)
         return ctx.focusFirst()
-      },
-      End: (ctx: PatternContext) => {
+      }),
+      End: key(['core:focus'], (ctx) => {
         const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
         const depthParentId = (spatialParent?.parentId as string) ?? ROOT_ID
         const siblings = ctx.getChildren(depthParentId)
         if (siblings.length > 0) return focusCommands.setFocus(siblings[siblings.length - 1]!)
         return ctx.focusLast()
-      },
+      }),
     },
   )
 }
