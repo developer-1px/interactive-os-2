@@ -25,12 +25,12 @@ describe('Aria.Panel', () => {
     render(
       <Aria pattern={tabs} data={data} plugins={[]} aria-label="Test tabs">
         <div role="tablist">
-          <Aria.Item render={(props, node, state) => (
-            <div {...props} data-testid={`tab-${node.id}`}>{String(node.data?.label)}</div>
+          <Aria.Item render={(props, node) => (
+            <div {...props} data-testid={`tab-${node.id}`}>{String((node.data as Record<string, unknown>)?.label)}</div>
           )} />
         </div>
-        <Aria.Panel render={(props, node, state) => (
-          <div {...props} data-testid={`panel-${node.id}`}>Panel for {String(node.data?.label)}</div>
+        <Aria.Panel render={(props, node) => (
+          <div {...props} data-testid={`panel-${node.id}`}>Panel for {String((node.data as Record<string, unknown>)?.label)}</div>
         )} />
       </Aria>,
     )
@@ -60,10 +60,10 @@ describe('Aria.Panel accordion', () => {
     render(
       <Aria pattern={accordion} data={data} plugins={[]} aria-label="Test accordion">
         <Aria.Item render={(props, node) => (
-          <div {...props} data-testid={`header-${node.id}`}>{String(node.data?.label)}</div>
+          <div {...props} data-testid={`header-${node.id}`}>{String((node.data as Record<string, unknown>)?.label)}</div>
         )} />
         <Aria.Panel render={(props, node) => (
-          <div {...props} data-testid={`region-${node.id}`}>Content for {String(node.data?.label)}</div>
+          <div {...props} data-testid={`region-${node.id}`}>Content for {String((node.data as Record<string, unknown>)?.label)}</div>
         )} />
       </Aria>,
     )
@@ -85,8 +85,7 @@ describe('Aria.Panel accordion', () => {
 
 // V3: MenuButton Trigger — Enter opens popup
 describe('Aria.Trigger', () => {
-  it('V3: Enter on trigger opens popup with aria-haspopup/aria-expanded', async () => {
-    const user = userEvent.setup()
+  it('V3: Enter on trigger opens popup with aria-haspopup/aria-expanded', () => {
     // MenuButton needs a trigger parent with menu items as children
     const data: NormalizedData = {
       entities: {
@@ -106,7 +105,7 @@ describe('Aria.Trigger', () => {
           <button {...props} data-testid="trigger">Menu {state.open ? '▲' : '▼'}</button>
         )} />
         <Aria.Item render={(props, node) => (
-          <div {...props} data-testid={`item-${node.id}`}>{String(node.data?.label)}</div>
+          <div {...props} data-testid={`item-${node.id}`}>{String((node.data as Record<string, unknown>)?.label)}</div>
         )} />
       </Aria>,
     )
@@ -124,7 +123,7 @@ describe('backward compatibility', () => {
     render(
       <Aria pattern={listboxFn()} data={data} plugins={[]} aria-label="Test listbox">
         <Aria.Item render={(props, node) => (
-          <div {...props}>{String(node.data?.label)}</div>
+          <div {...props}>{String((node.data as Record<string, unknown>)?.label)}</div>
         )} />
       </Aria>,
     )

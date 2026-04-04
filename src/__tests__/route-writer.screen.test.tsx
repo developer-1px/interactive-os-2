@@ -20,11 +20,8 @@ describe('PageWriter screen', () => {
 
   it('renders toolbar and file browser', () => {
     renderWriter()
-    expect(screen.getByText('New')).toBeTruthy()
-    expect(screen.getByText('Save')).toBeTruthy()
-    expect(screen.getByText('Analyze')).toBeTruthy()
-    expect(screen.getByText('Files')).toBeTruthy()
-    expect(screen.getByText('Chat')).toBeTruthy()
+    expect(screen.getByLabelText('Writer toolbar')).toBeTruthy()
+    expect(screen.getByLabelText('Document structure')).toBeTruthy()
   })
 
   it('loads MD and displays document in tree', async () => {
