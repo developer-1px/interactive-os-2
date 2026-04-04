@@ -3,7 +3,7 @@
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { vi, describe, it, expect, afterEach } from 'vitest'
 import type { TreeNode } from '../pages/viewer/fsClient'
 
 // ── Mock: fetchTree + mermaid ──
