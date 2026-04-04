@@ -90,7 +90,7 @@ export function TabGroup({
   }, [onAddTab, tabgroupId])
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })} data-full-height>
+    <div className={ax({ layout: 'fill' })} data-full-height>
       <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${ax({ layout: 'bar', gap: 'xs', padding: 'xs' })} ${styles.tabBar}`}>
         {childIds.map((id) => {
           const entity = store.entities[id]
