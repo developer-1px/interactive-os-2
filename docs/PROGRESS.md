@@ -51,7 +51,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| composePattern | Integrated | keyMap + config + middleware 합성 |
+| composePattern | Integrated | keyMap + config + middleware 합성. Identity에 triggerKeyMap/triggerClickMap 지원 |
 | edit | Integrated | — |
 | pointer interaction | Integrated | — |
 | examples/ (36 APG presets) | Integrated | 34/36 ui/ 소비 구조 전환 완료. 2종 미전환(CarouselTabs·CarouselPrevNext = carousel/비-ARIA, 실전 빈도 낮아 제외) |
@@ -61,7 +61,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight | Integrated | Panel/Trigger 제거 완료. state.slotProps로 slot ARIA 전달. Part 5종만. aria-multiselectable 자동 출력 |
+| Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight · Aria.Panel · Aria.Trigger | Integrated | Part 7종. Panel(slotProps 렌더링, panelVisibility), Trigger(triggerKeyMap/clickMap, aria-haspopup/expanded). aria-multiselectable 자동 출력 |
 | useAria · useAriaZone · useControlledAria | Integrated | onFocusChange 콜백 추가. disabled 옵션. keyMap-only 경로 검증 완료 (CmsLayout Mod+\\) |
 | useKeyMap | Integrated | 레이아웃 레벨 키 캡처 (React onKeyDown + findMatchingKey). src/hooks에서 OS로 이동 |
 | useCommand · bindingRegistry | Integrated | 이름 있는 커맨드 핸들러 + 전역 바인딩 레지스트리. DEV 전용. inspector 양방향 조회(byNode/byCommand) |

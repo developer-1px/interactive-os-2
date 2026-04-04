@@ -471,35 +471,37 @@ function AriaTrigger({ render }: AriaTriggerProps) {
   const store = aria.getStore()
   const popupEntity = store.entities[POPUP_ID] as Record<string, unknown> | undefined
   const isOpen = (popupEntity?.isOpen as boolean) ?? false
-  const pattern = aria.pattern
+  const { dispatch, getPatternContext, pattern } = aria
+
+  const triggerKeyMap = pattern?.triggerKeyMap
+  const triggerClickMap = pattern?.triggerClickMap
 
   const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
     if (e.defaultPrevented) return
-    if (!pattern?.triggerKeyMap) return
-    const key = e.key
-    const handler = pattern.triggerKeyMap[key]
+    if (!triggerKeyMap) return
+    const handler = triggerKeyMap[e.key]
     if (!handler) return
     e.preventDefault()
     e.stopPropagation()
-    const ctx = aria.getPatternContext?.()
+    const ctx = getPatternContext?.()
     if (!ctx) return
     const cmd = handler(ctx)
-    if (cmd) aria.dispatch(cmd)
-  }, [aria, pattern?.triggerKeyMap])
+    if (cmd) dispatch(cmd)
+  }, [dispatch, getPatternContext, triggerKeyMap])
 
   const handleClick = React.useCallback((e: React.MouseEvent) => {
     if (e.defaultPrevented) return
-    if (!pattern?.triggerClickMap) return
+    if (!triggerClickMap) return
     const modifier = e.shiftKey ? 'Shift+Click' : e.metaKey || e.ctrlKey ? 'Mod+Click' : 'Click'
-    const handler = pattern.triggerClickMap[modifier]
+    const handler = triggerClickMap[modifier]
     if (!handler) return
     e.preventDefault()
     e.stopPropagation()
-    const ctx = aria.getPatternContext?.()
+    const ctx = getPatternContext?.()
     if (!ctx) return
     const cmd = handler(ctx)
-    if (cmd) aria.dispatch(cmd)
-  }, [aria, pattern?.triggerClickMap])
+    if (cmd) dispatch(cmd)
+  }, [dispatch, getPatternContext, triggerClickMap])
 
   const props: React.HTMLAttributes<HTMLElement> = {
     ...(pattern?.popupType && { 'aria-haspopup': pattern.popupType }),
