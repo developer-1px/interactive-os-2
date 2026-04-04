@@ -432,6 +432,85 @@ function AriaSearchHighlight({ children }: { children: React.ReactNode }) {
   })}</>
 }
 
+// ② 2026-03-28-aria-panel-trigger-prd.md
+interface AriaPanelProps {
+  render: (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => ReactElement
+}
+
+function AriaPanel({ render }: AriaPanelProps) {
+  return (
+    <AriaInternalContext.Consumer>
+      {(aria) => {
+        if (!aria) throw new Error('<Aria.Panel> must be inside <Aria>')
+        if (!aria.pattern?.panelRole) return null
+        const store = aria.getStore()
+        const childIds = getChildren(store, ROOT_ID)
+        return <>{childIds.map(childId => {
+          const entity = store.entities[childId]
+          if (!entity) return null
+          const state = aria.getNodeState(childId)
+          if (!state.slotProps) return null
+          return cloneElement(
+            render(state.slotProps as React.HTMLAttributes<HTMLElement>, entity, state),
+            { key: `panel-${childId}` },
+          )
+        })}</>
+      }}
+    </AriaInternalContext.Consumer>
+  )
+}
+
+// ② 2026-03-28-aria-panel-trigger-prd.md
+interface AriaTriggerProps {
+  render: (props: React.HTMLAttributes<HTMLElement>, state: { open: boolean }) => ReactElement
+}
+
+function AriaTrigger({ render }: AriaTriggerProps) {
+  const aria = React.useContext(AriaInternalContext)
+  if (!aria) throw new Error('<Aria.Trigger> must be inside <Aria>')
+  const store = aria.getStore()
+  const popupEntity = store.entities[POPUP_ID] as Record<string, unknown> | undefined
+  const isOpen = (popupEntity?.isOpen as boolean) ?? false
+  const pattern = aria.pattern
+
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
+    if (e.defaultPrevented) return
+    if (!pattern?.triggerKeyMap) return
+    const key = e.key
+    const handler = pattern.triggerKeyMap[key]
+    if (!handler) return
+    e.preventDefault()
+    e.stopPropagation()
+    const ctx = aria.getPatternContext?.()
+    if (!ctx) return
+    const cmd = handler(ctx)
+    if (cmd) aria.dispatch(cmd)
+  }, [aria, pattern?.triggerKeyMap])
+
+  const handleClick = React.useCallback((e: React.MouseEvent) => {
+    if (e.defaultPrevented) return
+    if (!pattern?.triggerClickMap) return
+    const modifier = e.shiftKey ? 'Shift+Click' : e.metaKey || e.ctrlKey ? 'Mod+Click' : 'Click'
+    const handler = pattern.triggerClickMap[modifier]
+    if (!handler) return
+    e.preventDefault()
+    e.stopPropagation()
+    const ctx = aria.getPatternContext?.()
+    if (!ctx) return
+    const cmd = handler(ctx)
+    if (cmd) aria.dispatch(cmd)
+  }, [aria, pattern?.triggerClickMap])
+
+  const props: React.HTMLAttributes<HTMLElement> = {
+    ...(pattern?.popupType && { 'aria-haspopup': pattern.popupType }),
+    'aria-expanded': isOpen,
+    onKeyDown: handleKeyDown,
+    onClick: handleClick,
+  }
+
+  return render(props, { open: isOpen })
+}
+
 export { AriaItemContext }
 // eslint-disable-next-line react-refresh/only-export-components
-export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Editable: AriaEditable, Search: AriaSearch, SearchHighlight: AriaSearchHighlight })
+export const Aria = Object.assign(AriaRoot, { Item: AriaItem, Cell: AriaCell, Editable: AriaEditable, Search: AriaSearch, SearchHighlight: AriaSearchHighlight, Panel: AriaPanel, Trigger: AriaTrigger })

@@ -1,13 +1,16 @@
 import type { Entity, NormalizedData } from '../store/types'
 import type { Command, Middleware, VisibilityFilter } from '../engine/types'
 import type { AriaPattern, NodeState } from './types'
-import type { PatternContext, FocusStrategy, KeyMap, Axis, EntityDecl, CtxFactory, AriaGen, StateGen } from '../axis/types'
+import type { PatternContext, FocusStrategy, KeyMap, Axis, EntityDecl, CtxFactory, AriaGen, StateGen, KeyHandler, ClickMap } from '../axis/types'
 import { key as keyFn } from '../axis/types'
 
 export interface Identity {
   role: string
   childRole?: string | ((entity: Entity, state: NodeState) => string)
   panel?: string
+  // ② 2026-03-28-aria-panel-trigger-prd.md
+  triggerKeyMap?: Record<string, KeyHandler>
+  triggerClickMap?: Partial<ClickMap>
   // Transitional — auto-ARIA will replace
   ariaAttributes?: (node: Entity, state: NodeState) => Record<string, string>
 }
@@ -184,5 +187,7 @@ export function composePattern(
     ...(ctxFactories.length > 0 && { ctxFactories }),
     ...(ariaGens.length > 0 && { ariaGens }),
     ...(stateGens.length > 0 && { stateGens }),
+    ...(config.triggerKeyMap && { triggerKeyMap: config.triggerKeyMap }),
+    ...(config.triggerClickMap && { triggerClickMap: config.triggerClickMap }),
   } as AriaPattern
 }
