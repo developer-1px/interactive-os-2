@@ -2,7 +2,11 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import type { InspectResult } from '@os/engine/types'
 import type { AriaActions } from '@os/primitives/ariaRegistry'
+import type { NormalizedData } from '@os/store/types'
+import { ROOT_ID } from '@os/store/types'
+import type { Plugin } from '@os/plugins/types'
 import { getAllAriaActions } from '@os/primitives/ariaRegistry'
+import { TreeView } from '@os/ui/TreeView'
 import { AppInspector } from './AppInspector'
 import { ax } from '@styles/ax'
 import styles from './InspectorWindow.module.css'
@@ -13,22 +17,34 @@ interface RegistryEntry {
   parentId?: string
 }
 
-function buildTree(entries: RegistryEntry[]): { roots: RegistryEntry[]; childrenMap: Map<string, RegistryEntry[]> } {
+const emptyPlugins: Plugin[] = []
+
+/** Convert registry entries to NormalizedData for TreeView */
+function registryToTree(entries: RegistryEntry[]): NormalizedData {
   const idSet = new Set(entries.map(e => e.id))
-  const childrenMap = new Map<string, RegistryEntry[]>()
-  const roots: RegistryEntry[] = []
+  const entities: NormalizedData['entities'] = {}
+  const relationships: NormalizedData['relationships'] = {}
+
+  const rootIds: string[] = []
+  const childrenMap = new Map<string, string[]>()
 
   for (const entry of entries) {
+    entities[entry.id] = { id: entry.id, data: { label: entry.id } }
     if (entry.parentId && idSet.has(entry.parentId)) {
       const siblings = childrenMap.get(entry.parentId) ?? []
-      siblings.push(entry)
+      siblings.push(entry.id)
       childrenMap.set(entry.parentId, siblings)
     } else {
-      roots.push(entry)
+      rootIds.push(entry.id)
     }
   }
 
-  return { roots, childrenMap }
+  relationships[ROOT_ID] = rootIds
+  for (const [parentId, childIds] of childrenMap) {
+    relationships[parentId] = childIds
+  }
+
+  return { entities, relationships }
 }
 
 function KeyMapTable({ keyMap }: { keyMap: Record<string, string> }) {
@@ -56,38 +72,6 @@ function KeyMapTable({ keyMap }: { keyMap: Record<string, string> }) {
   )
 }
 
-function TreeNode({ entry, childrenMap, selectedId, onSelect, depth = 0 }: {
-  entry: RegistryEntry
-  childrenMap: Map<string, RegistryEntry[]>
-  selectedId: string
-  onSelect: (id: string) => void
-  depth?: number
-}) {
-  const children = childrenMap.get(entry.id) ?? []
-  const isSelected = entry.id === selectedId
-
-  return (
-    <>
-      <button
-        onClick={() => onSelect(entry.id)}
-        className={`${ax({ controlSize: 'sm', surface: isSelected ? 'action' : 'ghost', textStyle: 'caption' })} ${styles.treeBtn} ${styles[`depth${Math.min(depth, 4)}` as keyof typeof styles] ?? ''}`}
-      >
-        {entry.id}
-      </button>
-      {children.map(child => (
-        <TreeNode
-          key={child.id}
-          entry={child}
-          childrenMap={childrenMap}
-          selectedId={selectedId}
-          onSelect={onSelect}
-          depth={depth + 1}
-        />
-      ))}
-    </>
-  )
-}
-
 export function InspectorWindow() {
   const [entries, setEntries] = useState<RegistryEntry[]>([])
   const [selectedId, setSelectedId] = useState('')
@@ -96,7 +80,6 @@ export function InspectorWindow() {
   useEffect(() => {
     const update = () => {
       const all = getAllAriaActions()
-      // Change detection: registry keys + parentIds
       const parts: string[] = []
       for (const [id, actions] of all) {
         parts.push(`${id}:${actions.parentId ?? ''}`)
@@ -120,13 +103,16 @@ export function InspectorWindow() {
     return () => clearInterval(interval)
   }, [])
 
-  const { roots, childrenMap } = useMemo(() => buildTree(entries), [entries])
+  const treeData = useMemo(() => registryToTree(entries), [entries])
+  const actionsMap = useMemo(() => {
+    const map = new Map<string, AriaActions>()
+    for (const e of entries) map.set(e.id, e.actions)
+    return map
+  }, [entries])
 
-  const selected = useMemo(() => entries.find(e => e.id === selectedId), [entries, selectedId])
-  const inspectResult: InspectResult | undefined = useMemo(() => selected?.actions.inspect(), [selected])
-  const viewKeyMap = useMemo(() => selected?.actions.getKeyMap?.(), [selected])
-
-  // E4 fallback: prefer getKeyMap (view-level) over inspect().keyMap (engine-level)
+  const selectedActions = actionsMap.get(selectedId)
+  const inspectResult: InspectResult | undefined = useMemo(() => selectedActions?.inspect(), [selectedActions])
+  const viewKeyMap = useMemo(() => selectedActions?.getKeyMap?.(), [selectedActions])
   const effectiveKeyMap = viewKeyMap ?? inspectResult?.keyMap ?? {}
 
   return (
@@ -138,24 +124,21 @@ export function InspectorWindow() {
 
       <div className={styles.splitLayout}>
         <div className={`${ax({ layout: 'column' })} ${styles.sidebar}`}>
-          <div className={ax({ padding: 'xs', textStyle: 'caption', text: 'muted' })}>Hierarchy</div>
           {entries.length === 0 ? (
             <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>등록된 인스턴스 없음</div>
           ) : (
-            roots.map(entry => (
-              <TreeNode
-                key={entry.id}
-                entry={entry}
-                childrenMap={childrenMap}
-                selectedId={selectedId}
-                onSelect={setSelectedId}
-              />
-            ))
+            <TreeView
+              data={treeData}
+              plugins={emptyPlugins}
+              onActivate={setSelectedId}
+              activateOnClick
+              aria-label="Inspector hierarchy"
+            />
           )}
         </div>
 
         <div className={styles.detail}>
-          {selected ? (
+          {selectedActions ? (
             <div className={ax({ layout: 'column', gap: 'sm', padding: 'sm' })}>
               <div className={ax({ textStyle: 'caption', text: 'bright' })}>KeyMap ({Object.keys(effectiveKeyMap).length})</div>
               <KeyMapTable keyMap={effectiveKeyMap} />
