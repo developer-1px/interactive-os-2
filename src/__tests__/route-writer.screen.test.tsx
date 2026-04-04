@@ -14,11 +14,11 @@ describe('PageWriter screen', () => {
     writerState.reset()
   })
 
-  it('renders empty state with toolbar', () => {
+  it('renders toolbar and file browser', () => {
     render(<PageWriter />)
     expect(screen.getByText('New')).toBeTruthy()
-    expect(screen.getByText('Open')).toBeTruthy()
     expect(screen.getByText('Save')).toBeTruthy()
+    expect(screen.getByText('Files')).toBeTruthy()
     expect(screen.getByText('Preview')).toBeTruthy()
   })
 
@@ -29,12 +29,12 @@ describe('PageWriter screen', () => {
     render(<PageWriter />)
     const user = userEvent.setup()
 
-    // Document root is visible and collapsed
-    const treegrid = screen.getByRole('treegrid')
+    // Document structure treegrid should exist
+    const treegrid = screen.getByLabelText('Document structure')
     expect(treegrid).toBeTruthy()
 
     // Expand document root to see heading
-    const docRow = screen.getByRole('row')
+    const docRow = treegrid.querySelector('[role="row"]')!
     await user.click(docRow)
     await user.keyboard('{ArrowRight}')
 
@@ -48,17 +48,13 @@ describe('PageWriter screen', () => {
     render(<PageWriter />)
     const user = userEvent.setup()
 
-    // Initially in tree view
     expect(screen.getByText('Preview')).toBeTruthy()
 
-    // Switch to preview
     await user.click(screen.getByText('Preview'))
     expect(screen.getByText('Edit')).toBeTruthy()
-    // Preview renders heading as h1
     const heading = screen.getByRole('heading', { level: 1 })
     expect(heading.textContent).toBe('Hello')
 
-    // Switch back to tree
     await user.click(screen.getByText('Edit'))
     expect(screen.getByText('Preview')).toBeTruthy()
   })
