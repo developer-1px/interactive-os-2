@@ -15,11 +15,11 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| S1 | Listbox에 5개 항목 | 3번 항목을 선택 | neutral raised bg (stone elevation), accent 없음 | |
-| S2 | TreeGrid에 행 3개 | 2번 행 선택 + 셀 포커스 | 행=neutral context, 셀=neutral cursor, accent 없음 | |
-| S3 | Tab 3개 | 2번 탭 선택됨 | neutral 처리 (accent border/color 제거) | |
-| S4 | Listbox 포커스 활성 | 항목에 포커스 이동 | focus=accent outline(1채널), selected bg와 독립 | |
-| S5 | 선택된 항목에 포커스 | focus + selected 동시 | neutral cursor bg + accent outline | |
+| S1 | Listbox에 5개 항목 | 3번 항목을 선택 | neutral raised bg (stone elevation), accent 없음 | ✅ 일치 |
+| S2 | TreeGrid에 행 3개 | 2번 행 선택 + 셀 포커스 | 행=neutral context, 셀=neutral cursor, accent 없음 | ✅ 일치 |
+| S3 | Tab 3개 | 2번 탭 선택됨 | neutral 처리 (accent border/color 제거) | ✅ 일치 |
+| S4 | Listbox 포커스 활성 | 항목에 포커스 이동 | focus=accent outline(1채널), selected bg와 독립 | ✅ 일치 |
+| S5 | 선택된 항목에 포커스 | focus + selected 동시 | neutral cursor bg + accent outline | ✅ 일치 |
 
 완성도: 🟢
 
@@ -27,14 +27,14 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `tokens.css` — `--selection-context` (dark) | `oklch(24% 0.020 250)` → `var(--stone-850)` | |
-| `tokens.css` — `--selection` (dark) | `oklch(28% 0.037 250)` → `var(--stone-750)` | |
-| `tokens.css` — `--selection-cursor` (dark) | `oklch(31% 0.047 250)` → `var(--stone-700)` | |
-| `tokens.css` — `--selection-context` (light) | `var(--blue-50)` → `var(--stone-100)` | |
-| `tokens.css` — `--selection` (light) | `var(--blue-100)` → `var(--stone-200)` | |
-| `tokens.css` — `--selection-cursor` (light) | `var(--blue-200)` → `var(--stone-300)` | |
-| `interactive.css` — Tab selected | accent border/color → `--text-bright` neutral | |
-| `tokens.css` — 주석 | "chroma ladder" → "stone ladder (neutral elevation)" + 이 PRD 참조 | |
+| `tokens.css` — `--selection-context` (dark) | `oklch(24% 0.020 250)` → `var(--stone-850)` | ✅ `tokens.css::--selection-context` |
+| `tokens.css` — `--selection` (dark) | `oklch(28% 0.037 250)` → `var(--stone-750)` | ✅ `tokens.css::--selection` |
+| `tokens.css` — `--selection-cursor` (dark) | `oklch(31% 0.047 250)` → `var(--stone-700)` | ✅ `tokens.css::--selection-cursor` |
+| `tokens.css` — `--selection-context` (light) | `var(--blue-50)` → `var(--stone-100)` | ✅ `tokens.css::--selection-context` |
+| `tokens.css` — `--selection` (light) | `var(--blue-100)` → `var(--stone-200)` | ✅ `tokens.css::--selection` |
+| `tokens.css` — `--selection-cursor` (light) | `var(--blue-200)` → `var(--stone-300)` | ✅ `tokens.css::--selection-cursor` |
+| `interactive.css` — Tab selected | accent border/color → `--text-bright` neutral | ✅ `interactive.css::[role="tab"][aria-selected="true"]` |
+| `tokens.css` — 주석 | "chroma ladder" → "stone ladder (neutral elevation)" + 이 PRD 참조 | ✅ 주석 갱신 완료 |
 
 완성도: 🟢
 
@@ -107,14 +107,14 @@
 
 | # | 출처 | 시나리오 | 예상 결과 | 역PRD |
 |---|------|---------|----------|-------|
-| V1 | ①S1 | Listbox 항목 선택 | bg=stone-750(dark), accent 없음 | |
-| V2 | ①S2 | TreeGrid 행 선택 + 셀 포커스 | 행=stone-850, 셀=stone-700 | |
-| V3 | ①S3 | Tab 선택 | color=text-bright, border=text-bright, bg=transparent | |
-| V4 | ①S4 | Listbox 포커스 이동 | focus outline=accent, bg=tone-primary-dim | |
-| V5 | ①S5 | 선택+포커스 동시 | bg=stone-700 + accent outline | |
-| V6 | ④ hover+selected | hover 중 selected 항목 | selected bg 우선 | |
-| V7 | ④ checked | radio/switch ON | bg=stone-750, :active만 accent | |
-| V8 | ④ light | light theme 선택 | stone-200 bg, hover(stone-100)와 구분 | |
+| V1 | ①S1 | Listbox 항목 선택 | bg=stone-750(dark), accent 없음 | ✅ 토큰 변경으로 보장 |
+| V2 | ①S2 | TreeGrid 행 선택 + 셀 포커스 | 행=stone-850, 셀=stone-700 | ✅ 토큰 변경으로 보장 |
+| V3 | ①S3 | Tab 선택 | color=text-bright, border=text-bright, bg=transparent | ✅ `interactive.css` 셀렉터 변경 |
+| V4 | ①S4 | Listbox 포커스 이동 | focus outline=accent, bg=tone-primary-dim | ✅ 변경 없음 (의도) |
+| V5 | ①S5 | 선택+포커스 동시 | bg=stone-700 + accent outline | ✅ 토큰 변경으로 보장 |
+| V6 | ④ hover+selected | hover 중 selected 항목 | selected bg 우선 | ✅ CSS specificity로 보장 |
+| V7 | ④ checked | radio/switch ON | bg=stone-750, :active만 accent | ✅ 토큰 변경으로 보장 |
+| V8 | ④ light | light theme 선택 | stone-200 bg, hover(stone-100)와 구분 | ✅ 토큰 변경으로 보장 |
 
 완성도: 🟢
 
