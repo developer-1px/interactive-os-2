@@ -267,6 +267,24 @@ export function ComponentInspector() {
     return () => window.removeEventListener("inspector:marquee-preview", handler);
   }, []);
 
+  // Listen for highlight requests from InspectorWindow
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { element: HTMLElement | null };
+      if (detail?.element) {
+        setIsActive(true);
+        setLockedElement(detail.element);
+        setLockPoint(null);
+        setTraversalHistory([]);
+      } else {
+        setLockedElement(null);
+        setLockPoint(null);
+      }
+    };
+    window.addEventListener("inspector:highlight-element", handler);
+    return () => window.removeEventListener("inspector:highlight-element", handler);
+  }, []);
+
   // Determine active element for overlay: marquee preview > locked > hovered
   const activeElement = marqueePreview || lockedElement || hoveredElement;
 

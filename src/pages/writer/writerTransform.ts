@@ -225,14 +225,16 @@ export function storeToMd(store: NormalizedData): string {
     lines.push('')
   }
 
-  function walk(nodeId: string) {
+  function walk(nodeId: string, headingDepth: number) {
     const entity = store.entities[nodeId]
     if (!entity?.data) return
 
     const data = entity.data as Record<string, unknown>
 
     if (data.type === 'heading') {
-      const prefix = '#'.repeat(data.level as number)
+      // Level derived from tree depth, capped at 6
+      const level = Math.min(headingDepth, 6)
+      const prefix = '#'.repeat(level)
       lines.push(`${prefix} ${data.content}`)
       lines.push('')
     } else if (data.type === 'paragraph') {
@@ -263,14 +265,15 @@ export function storeToMd(store: NormalizedData): string {
     }
 
     const children = store.relationships[nodeId] ?? []
+    const nextDepth = data.type === 'heading' ? headingDepth + 1 : headingDepth
     for (const childId of children) {
-      walk(childId)
+      walk(childId, nextDepth)
     }
   }
 
   const docChildren = store.relationships[docId] ?? []
   for (const childId of docChildren) {
-    walk(childId)
+    walk(childId, 1)
   }
 
   return lines.join('\n')

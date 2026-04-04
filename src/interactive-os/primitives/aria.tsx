@@ -202,7 +202,15 @@ function placeCaret(el: HTMLElement, atEnd: boolean) {
   sel?.addRange(range)
 }
 
-function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = false, tabContinue = false, enterContinue = false, children, ...restProps }: { field: string; placeholder?: string; selection?: 'all' | 'end'; allowEmpty?: boolean; tabContinue?: boolean; enterContinue?: boolean; children: React.ReactNode } & React.HTMLAttributes<HTMLSpanElement>) {
+// ② 2026-04-05-writer-tree-crud-prd.md
+export interface EditKeyContext {
+  nodeId: string
+  field: string
+  content: string
+  cursorOffset: number
+}
+
+function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = false, tabContinue = false, enterContinue = false, editKeyDown, children, ...restProps }: { field: string; placeholder?: string; selection?: 'all' | 'end'; allowEmpty?: boolean; tabContinue?: boolean; enterContinue?: boolean; editKeyDown?: (e: React.KeyboardEvent, ctx: EditKeyContext) => Command | void; children: React.ReactNode } & React.HTMLAttributes<HTMLSpanElement>) {
   const nodeCtx = React.useContext(AriaItemContext)
   const ariaCtx = React.useContext(AriaInternalContext)
   const editRef = useRef<HTMLSpanElement>(null)
@@ -286,6 +294,23 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
       onCompositionStart={() => { composingRef.current = true }}
       onCompositionEnd={() => { composingRef.current = false }}
       onKeyDown={(e) => {
+        if (editKeyDown && !composingRef.current && nodeCtx && ariaCtx) {
+          const sel = window.getSelection()
+          const ctx: EditKeyContext = {
+            nodeId: nodeCtx.nodeId,
+            field,
+            content: editRef.current?.textContent ?? '',
+            cursorOffset: sel?.focusOffset ?? 0,
+          }
+          const cmd = editKeyDown(e, ctx)
+          if (cmd) {
+            e.preventDefault()
+            e.stopPropagation()
+            committedRef.current = true
+            ariaCtx.dispatch(cmd)
+            return
+          }
+        }
         if (e.key === 'Enter' && !composingRef.current) {
           e.preventDefault()
           const shiftKey = e.shiftKey

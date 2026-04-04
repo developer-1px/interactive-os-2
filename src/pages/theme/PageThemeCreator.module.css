@@ -153,10 +153,10 @@
 
 /* ── Alerts tone border (동적 tone 참조) ── */
 
-.alert[data-tone="success"] { border-left: 3px solid var(--tone-success-base); }
-.alert[data-tone="accent"]  { border-left: 3px solid var(--tone-primary-base); }
-.alert[data-tone="warning"] { border-left: 3px solid var(--tone-warning-base); }
-.alert[data-tone="danger"]  { border-left: 3px solid var(--tone-destructive-base); }
+.alert[data-tone="success"] { border-left: 3px solid var(--tone-success-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.alert[data-tone="accent"]  { border-left: 3px solid var(--tone-primary-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.alert[data-tone="warning"] { border-left: 3px solid var(--tone-warning-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.alert[data-tone="danger"]  { border-left: 3px solid var(--tone-destructive-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
 
 /* ── Card image placeholder ── */
 

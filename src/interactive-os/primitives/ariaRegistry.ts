@@ -5,6 +5,7 @@ export interface AriaActions {
   dispatch: (command: Command) => void
   getStore: () => NormalizedData
   inspect: () => InspectResult
+  getElement: () => HTMLElement | null
 }
 
 const registry = new Map<string, AriaActions>()

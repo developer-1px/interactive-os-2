@@ -16,19 +16,20 @@ import styles from './InspectorWindow.module.css'
 
 const emptyPlugins: Plugin[] = []
 
-function KeyCommandTable({ inspectResult }: { inspectResult: InspectResult }) {
-  const keyEntries = Object.entries(inspectResult.keyMap)
-  const boundCommands = new Set(keyEntries.map(([, e]) => e.command).filter(Boolean))
-  const unboundCommands = inspectResult.commands.filter(c => !boundCommands.has(c))
+type DetailTab = 'interaction' | 'state'
 
-  if (keyEntries.length === 0 && unboundCommands.length === 0) {
+function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
+  const keyEntries = Object.entries(inspectResult.keyMap)
+  const clickEntries = Object.entries(inspectResult.clickMap ?? {})
+
+  if (keyEntries.length === 0 && clickEntries.length === 0) {
     return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No bindings</div>
   }
   return (
     <table className={`${ax({ textStyle: 'caption' })} ${styles.table}`}>
       <thead>
         <tr>
-          <th className={styles.th}>Key</th>
+          <th className={styles.th}>Input</th>
           <th className={styles.th}>Command</th>
           <th className={styles.th}>Owner</th>
         </tr>
@@ -41,11 +42,11 @@ function KeyCommandTable({ inspectResult }: { inspectResult: InspectResult }) {
             <td className={styles.tdOwner}>{entry.owner}</td>
           </tr>
         ))}
-        {unboundCommands.map(cmd => (
-          <tr key={cmd}>
-            <td className={styles.td}>—</td>
-            <td className={styles.tdCommand}>{cmd}</td>
-            <td className={styles.tdOwner}>registry</td>
+        {clickEntries.map(([input, commands]) => (
+          <tr key={`click:${input}`}>
+            <td className={styles.tdKey}>{input}</td>
+            <td className={styles.tdCommand}>{commands.join(', ')}</td>
+            <td className={styles.tdOwner}>pattern</td>
           </tr>
         ))}
       </tbody>
@@ -71,10 +72,30 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
   )
 }
 
+function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: DetailTab) => void }) {
+  return (
+    <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} ${styles.tabBar}`}>
+      <button
+        className={`${ax({ textStyle: 'caption', padding: 'xs', text: active === 'interaction' ? 'bright' : 'muted' })} ${styles.tab} ${active === 'interaction' ? styles.tabActive : ''}`}
+        onClick={() => onChange('interaction')}
+      >
+        Interaction
+      </button>
+      <button
+        className={`${ax({ textStyle: 'caption', padding: 'xs', text: active === 'state' ? 'bright' : 'muted' })} ${styles.tab} ${active === 'state' ? styles.tabActive : ''}`}
+        onClick={() => onChange('state')}
+      >
+        State
+      </button>
+    </div>
+  )
+}
+
 export function InspectorWindow() {
   const [actionsMap, setActionsMap] = useState<Map<string, AriaActions>>(new Map())
   const [selectedId, setSelectedId] = useState('')
   const [sizes, setSizes] = useState<PaneSize[]>([0.3, 'flex'])
+  const [activeTab, setActiveTab] = useState<DetailTab>('interaction')
   const prevSnapshotRef = useRef('')
 
   useEffect(() => {
@@ -107,7 +128,29 @@ export function InspectorWindow() {
 
   const handleActivate = useCallback((nodeId: string) => {
     setSelectedId(nodeId)
-  }, [])
+    // Highlight selected node's element in the main window
+    const instId = findInstanceId(nodeId)
+    const instMeta = metas.get(instId)
+    if (instMeta) {
+      const actions = actionsMap.get(instMeta.registryKey)
+      const container = actions?.getElement() ?? null
+      let element: HTMLElement | null = null
+
+      // If selecting a child node (not the instance root), find its DOM element
+      const sep = nodeId.indexOf('::')
+      if (sep !== -1 && container) {
+        const childNodeId = nodeId.slice(sep + 2)
+        element = container.querySelector<HTMLElement>(`[data-node-id="${childNodeId}"]`)
+      }
+      // Fallback to instance container
+      if (!element) element = container
+
+      const mainWindow = window.opener ?? window
+      mainWindow.dispatchEvent(
+        new CustomEvent('inspector:highlight-element', { detail: { element } }),
+      )
+    }
+  }, [metas, actionsMap])
 
   return (
     <div className={`${ax({ layout: 'column' })} ${styles.root}`}>
@@ -134,38 +177,27 @@ export function InspectorWindow() {
 
           <div className={styles.detail}>
             {inspectResult ? (
-              <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
-                <section>
-                  <div className={ax({ layout: 'spread', textStyle: 'caption', text: 'bright', padding: 'xs' })}>
-                    <span>Command + Key ({Object.keys(inspectResult.keyMap).length})</span>
-                    <CopyButton inspectResult={inspectResult} />
-                  </div>
-                  <KeyCommandTable inspectResult={inspectResult} />
-                </section>
+              <div className={ax({ layout: 'column' })}>
+                <TabBar active={activeTab} onChange={setActiveTab} />
 
-                <section>
-                  <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
-                    State ({Object.keys(inspectResult.state.entities).length} entities)
+                {activeTab === 'interaction' && (
+                  <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+                    <div className={ax({ layout: 'spread', textStyle: 'caption', text: 'bright' })}>
+                      <span>Bindings ({Object.keys(inspectResult.keyMap).length + Object.keys(inspectResult.clickMap ?? {}).length})</span>
+                      <CopyButton inspectResult={inspectResult} />
+                    </div>
+                    <BoundKeyTable inspectResult={inspectResult} />
                   </div>
-                  <AppInspector inspectResult={inspectResult} />
-                </section>
+                )}
 
-                <section>
-                  <div className={ax({ textStyle: 'caption', text: 'bright', padding: 'xs' })}>
-                    Info
+                {activeTab === 'state' && (
+                  <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+                    <div className={ax({ textStyle: 'caption', text: 'bright' })}>
+                      State ({Object.keys(inspectResult.state.entities).length} entities)
+                    </div>
+                    <AppInspector inspectResult={inspectResult} />
                   </div>
-                  <div className={ax({ layout: 'column', textStyle: 'caption', padding: 'xs' })}>
-                    <div><span className={ax({ text: 'muted' })}>Role: </span>{inspectResult.role ?? '—'}</div>
-                    <div><span className={ax({ text: 'muted' })}>Child Role: </span>{inspectResult.childRole ?? '—'}</div>
-                    <div><span className={ax({ text: 'muted' })}>Plugins: </span>{inspectResult.plugins.join(', ') || '—'}</div>
-                    {Object.keys(inspectResult.extras).length > 0 && (
-                      <div>
-                        <span className={ax({ text: 'muted' })}>Extras: </span>
-                        <pre className={styles.extras}>{JSON.stringify(inspectResult.extras, null, 2)}</pre>
-                      </div>
-                    )}
-                  </div>
-                </section>
+                )}
               </div>
             ) : (
               <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>

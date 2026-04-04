@@ -326,13 +326,16 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   const registryKey = ariaId ?? ariaLabel
   useEffect(() => {
     if (!registryKey) return
+    const clickMapCommands = pattern.clickMap
+      ? Object.fromEntries(Object.entries(pattern.clickMap).map(([k, h]) => [k, h.commands]))
+      : undefined
     registerAria(registryKey, { dispatch, getStore: () => engine.getStore(), inspect: () => {
       const base = engine.inspect()
       if (import.meta.env.DEV) {
-        return { ...base, bindings: getAllBindings().filter(b => b.nodeId === null || b.nodeId === registryKey) }
+        return { ...base, bindings: getAllBindings().filter(b => b.nodeId === null || b.nodeId === registryKey), clickMap: clickMapCommands }
       }
-      return base
-    } })
+      return { ...base, clickMap: clickMapCommands }
+    }, getElement: () => containerRef.current })
 
     if (import.meta.env.DEV) {
       for (const map of [pattern.keyMap, pattern.clickMap]) {

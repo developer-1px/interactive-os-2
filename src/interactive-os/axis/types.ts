@@ -46,6 +46,7 @@ export interface SelectedNav {
 /** aria-expanded 변화 범주 */
 export interface ExpandedNav {
   is: boolean
+  isExpandable: boolean
   set(value: boolean): Command
   toggle(): Command
 }

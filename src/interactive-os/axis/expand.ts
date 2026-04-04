@@ -104,9 +104,11 @@ export function expandedCtx(
 ): import('./types').ExpandedNav {
   const store = engine.getStore()
   const expandedIds = getExpandedIds(store)
+  const children = store.relationships[focusedId] ?? []
   const is = expandedIds.includes(focusedId)
   return {
     is,
+    isExpandable: children.length > 0,
     set: (value: boolean) => value ? expandCommands.expand(focusedId) : expandCommands.collapse(focusedId),
     toggle: () => expandCommands.toggleExpand(focusedId),
   }
@@ -117,8 +119,12 @@ export function expanded(opts?: { allExpandable?: boolean }) {
   const toggle = key(['core:toggle-expand'], (ctx) => ctx.expanded?.toggle())
   const _expand = key(['core:expand'], (ctx) => ctx.expanded?.set(true))
   const _collapse = key(['core:collapse'], (ctx) => ctx.expanded?.set(false))
-  const expandOrFocusChild_ = key(['core:expand', 'core:focus'], (ctx) =>
-    ctx.expanded ? (ctx.expanded.is ? ctx.focusChild() : ctx.expanded.set(true)) : undefined)
+  const expandOrFocusChild_ = key(['core:expand', 'core:focus'], (ctx) => {
+    if (!ctx.expanded) return undefined
+    if (ctx.expanded.is) return ctx.focusChild()
+    if (!ctx.expanded.isExpandable) return ctx.focusNext()
+    return ctx.expanded.set(true)
+  })
   const collapseOrFocusParent_ = key(['core:collapse', 'core:focus'], (ctx) =>
     ctx.expanded ? (ctx.expanded.is ? ctx.expanded.set(false) : ctx.focusParent()) : undefined)
 

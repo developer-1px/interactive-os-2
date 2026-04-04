@@ -1,4 +1,4 @@
-// ② 2026-04-04-writer-chat-prd.md
+// ② 2026-04-05-writer-tree-crud-prd.md
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useWriterData, useWriterDirty, writerState } from './writerStore'
@@ -12,16 +12,18 @@ import WriterFileBrowser from './WriterFileBrowser'
 import { ChatPane } from '../chat/ChatPane'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { Aria } from '@os/primitives/aria'
+import type { EditKeyContext } from '@os/primitives/aria'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
-import { dnd } from '@os/plugins/dnd'
+import { dnd, dndCommands } from '@os/plugins/dnd'
 import { rename, renameCommands } from '@os/plugins/rename'
 import { clipboard } from '@os/plugins/clipboard'
 import { crudCommands } from '@os/plugins/crud'
-import { getParent, getChildren } from '@os/store/createStore'
+import { getParent, getChildren, updateEntityData, addEntity, removeEntity, moveNode } from '@os/store/createStore'
 import { definePlugin } from '@os/plugins/definePlugin'
+import { defineCommands } from '@os/engine/defineCommand'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import type { RouteKeyMap } from '@os/primitives/AriaRoute'
 import { ExpandIndicator } from '@os/ui/indicators'
@@ -29,10 +31,245 @@ import { Toolbar } from '@os/ui/Toolbar'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
+import type { VisibilityFilter } from '@os/engine/types'
 import { ax } from '@styles/ax'
-import { createBatchCommand, type Plugin } from '@os/engine/types'
+import { createBatchCommand, type Command, type Plugin } from '@os/engine/types'
 import type { NodeState } from '@os/pattern/types'
+import { getVisibleNodes } from '@os/engine/getVisibleNodes'
 import styles from './PageWriter.module.css'
+
+// ── Writer Commands ──────────────────────────────────────
+// ② 2026-04-05-writer-tree-crud-prd.md
+
+const writerCommands = defineCommands({
+  updateContent: {
+    type: 'writer:update-content' as const,
+    create: (nodeId: string, content: string) => ({ nodeId, content }),
+    handler: (store, { nodeId, content }) => updateEntityData(store, nodeId, { content }),
+  },
+
+  insertAfter: {
+    type: 'writer:insert-after' as const,
+    create: (afterNodeId: string, newId: string, data: Record<string, unknown>) => ({ afterNodeId, newId, data }),
+    handler: (store, { afterNodeId, newId, data }) => {
+      const parentId = getParent(store, afterNodeId) ?? ROOT_ID
+      const siblings = getChildren(store, parentId)
+      const idx = siblings.indexOf(afterNodeId)
+      return addEntity(store, { id: newId, data }, parentId, idx + 1)
+    },
+  },
+
+  merge: {
+    type: 'writer:merge' as const,
+    create: (targetId: string, mergedContent: string, removeId: string) => ({ targetId, mergedContent, removeId }),
+    handler: (store, { targetId, mergedContent, removeId }) => {
+      let s = updateEntityData(store, targetId, { content: mergedContent })
+      s = removeEntity(s, removeId)
+      return s
+    },
+  },
+
+  wrapInList: {
+    type: 'writer:wrap-list' as const,
+    create: (nodeIds: string[], listId: string, ordered: boolean) => ({ nodeIds, listId, ordered }),
+    handler: (store, { nodeIds, listId, ordered }) => {
+      if (nodeIds.length === 0) return store
+      const firstId = nodeIds[0]!
+      const parentId = getParent(store, firstId) ?? ROOT_ID
+      const siblings = getChildren(store, parentId)
+      const firstIdx = siblings.indexOf(firstId)
+
+      // Create list entity
+      let s = addEntity(store, { id: listId, data: { type: 'list', ordered } }, parentId, firstIdx)
+
+      // Move each node into list, converting to listItem
+      for (const id of nodeIds) {
+        const entity = s.entities[id]
+        if (!entity) continue
+        const d = entity.data as Record<string, unknown> | undefined
+        // Only wrap leaf types (sentence, listItem, paragraph children)
+        if (d?.type === 'heading') continue
+        s = moveNode(s, id, listId)
+        s = updateEntityData(s, id, { type: 'listItem' })
+      }
+      return s
+    },
+  },
+
+  unwrapFromList: {
+    type: 'writer:unwrap-list' as const,
+    create: (nodeId: string) => ({ nodeId }),
+    handler: (store, { nodeId }) => {
+      const listId = getParent(store, nodeId)
+      if (!listId) return store
+      const listEntity = store.entities[listId]
+      if ((listEntity?.data as Record<string, unknown>)?.type !== 'list') return store
+
+      const grandparentId = getParent(store, listId) ?? ROOT_ID
+      const gpChildren = getChildren(store, grandparentId)
+      const listIdx = gpChildren.indexOf(listId)
+      const listChildren = [...getChildren(store, listId)]
+
+      let s = store
+      // Move all list children out to grandparent
+      for (let i = 0; i < listChildren.length; i++) {
+        const childId = listChildren[i]!
+        s = moveNode(s, childId, grandparentId, listIdx + 1 + i)
+        // Convert listItem → sentence
+        const childData = s.entities[childId]?.data as Record<string, unknown> | undefined
+        if (childData?.type === 'listItem') {
+          s = updateEntityData(s, childId, { type: 'sentence' })
+        }
+      }
+
+      // Remove empty list
+      if (getChildren(s, listId).length === 0) {
+        s = removeEntity(s, listId)
+      }
+      return s
+    },
+  },
+
+  visibleSwap: {
+    type: 'writer:visible-swap' as const,
+    create: (nodeId: string, adjacentId: string, direction: -1 | 1) => ({ nodeId, adjacentId, direction }),
+    handler: (store, { nodeId, adjacentId, direction }) => {
+      const nodeParent = getParent(store, nodeId) ?? ROOT_ID
+      const adjParent = getParent(store, adjacentId) ?? ROOT_ID
+
+      if (nodeParent === adjParent) {
+        // Same parent — simple reorder
+        const siblings = getChildren(store, nodeParent)
+        const adjIdx = siblings.indexOf(adjacentId)
+        return moveNode(store, nodeId, nodeParent, direction === -1 ? adjIdx : adjIdx + 1)
+      }
+
+      // Cross-parent — move to adjacent node's parent, next to the adjacent node
+      const adjSiblings = getChildren(store, adjParent)
+      const adjIdx = adjSiblings.indexOf(adjacentId)
+      return moveNode(store, nodeId, adjParent, direction === -1 ? adjIdx : adjIdx + 1)
+    },
+  },
+
+  convertType: {
+    type: 'writer:convert-type' as const,
+    create: (nodeId: string, toType: 'heading' | 'paragraph') => ({ nodeId, toType }),
+    handler: (store, { nodeId, toType }) => {
+      const entity = store.entities[nodeId]
+      if (!entity) return store
+      const d = entity.data as Record<string, unknown> | undefined
+      const fromType = d?.type as string
+
+      if (fromType === 'heading' && toType === 'paragraph') {
+        // heading → paragraph: children move to heading's parent
+        const parentId = getParent(store, nodeId) ?? ROOT_ID
+        const siblings = getChildren(store, parentId)
+        const idx = siblings.indexOf(nodeId)
+        const children = [...getChildren(store, nodeId)]
+        let s = store
+        for (let i = 0; i < children.length; i++) {
+          s = moveNode(s, children[i]!, parentId, idx + 1 + i)
+        }
+        s = updateEntityData(s, nodeId, { type: 'paragraph', level: undefined })
+        return s
+      }
+
+      if (fromType === 'paragraph' && toType === 'heading') {
+        // paragraph → heading: level derived from tree depth (parent heading level + 1, or 1 if under document)
+        const parentId = getParent(store, nodeId) ?? ROOT_ID
+        const parentData = store.entities[parentId]?.data as Record<string, unknown> | undefined
+        const parentLevel = (parentData?.type === 'heading' ? parentData.level as number : 0) ?? 0
+        const level = Math.min(parentLevel + 1, 6)
+        return updateEntityData(store, nodeId, { type: 'heading', level, content: d?.content ?? '' })
+      }
+
+      return store
+    },
+  },
+})
+
+// ── Navigate Filter ──────────────────────────────────────
+// Skip container nodes (paragraph, list, document) — only focusable: heading, sentence, listItem, hr
+
+const CONTAINER_TYPES = new Set(['paragraph', 'list', 'document'])
+
+const writerNavigateFilter: VisibilityFilter = {
+  isFocusable: (nodeId: string, store: NormalizedData) => {
+    const entity = store.entities[nodeId]
+    const type = (entity?.data as Record<string, unknown> | undefined)?.type as string | undefined
+    return !type || !CONTAINER_TYPES.has(type)
+  },
+}
+
+// ── Edit Key Handler (runs during editing) ───────────────
+
+let _splitCounter = 0
+
+function getAdjacentVisible(store: NormalizedData, nodeId: string, filters: VisibilityFilter[], direction: -1 | 1): string | undefined {
+  const visible = getVisibleNodes(store, filters)
+  const idx = visible.indexOf(nodeId)
+  const target = idx + direction
+  return target >= 0 && target < visible.length ? visible[target] : undefined
+}
+
+function getPrevVisibleNode(store: NormalizedData, nodeId: string, filters: VisibilityFilter[]): string | undefined {
+  return getAdjacentVisible(store, nodeId, filters, -1)
+}
+
+function writerEditKeyDown(store: NormalizedData, e: React.KeyboardEvent, ctx: EditKeyContext): Command | void {
+  const { nodeId, field, content, cursorOffset } = ctx
+  const entity = store.entities[nodeId]
+  const d = entity?.data as Record<string, unknown> | undefined
+  const type = d?.type as string
+
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    const firstHalf = content.slice(0, cursorOffset)
+    const secondHalf = content.slice(cursorOffset)
+    const newId = `ws${++_splitCounter}`
+    return createBatchCommand([
+      renameCommands.confirmRename(nodeId, field, firstHalf),
+      writerCommands.insertAfter(nodeId, newId, { type, content: secondHalf }),
+      renameCommands.startRename(newId),
+    ])
+  }
+
+  if (e.key === 'Backspace' && cursorOffset === 0 && !e.metaKey && !e.ctrlKey) {
+    const sel = window.getSelection()
+    if (sel && !sel.isCollapsed) return undefined
+
+    const prevId = getPrevVisibleNode(store, nodeId, [writerNavigateFilter])
+    if (!prevId) return undefined
+    const prevData = store.entities[prevId]?.data as Record<string, unknown> | undefined
+    const prevContent = (prevData?.content as string) ?? ''
+    // hr has no content field — can't merge into it
+    if (prevData?.type === 'hr') return undefined
+
+    const mergedContent = prevContent + content
+    return createBatchCommand([
+      renameCommands.cancelRename(),
+      writerCommands.merge(prevId, mergedContent, nodeId),
+      renameCommands.startRename(prevId),
+    ])
+  }
+
+  if (e.key === 'Tab' && !e.shiftKey) {
+    return createBatchCommand([
+      renameCommands.confirmRename(nodeId, field, content),
+      dndCommands.moveIn(nodeId),
+    ])
+  }
+
+  if (e.key === 'Tab' && e.shiftKey) {
+    return createBatchCommand([
+      renameCommands.confirmRename(nodeId, field, content),
+      dndCommands.moveOut(nodeId),
+    ])
+  }
+
+  return undefined
+}
+
+// ── Visual ───────────────────────────────────────────────
 
 const headingStyle = ['display', 'page', 'section', 'label', 'label', 'label'] as const
 
@@ -65,6 +302,8 @@ function ProseView({ data: storeData }: { data: NormalizedData }) {
   return <MarkdownViewer content={md} />
 }
 
+const handleEditKeyDown = (e: React.KeyboardEvent, ctx: EditKeyContext) => writerEditKeyDown(writerState.getData(), e, ctx)
+
 const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const data = node.data as Record<string, unknown> | undefined
   const content = (data?.content as string) ?? ''
@@ -89,7 +328,7 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
     return (
       <div {...props} className={`${ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <Aria.Editable field="content" selection="end"><span className={ax({ textStyle: headingStyle[level - 1], text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+        <Aria.Editable field="content" selection="end" editKeyDown={handleEditKeyDown}><span className={ax({ textStyle: headingStyle[level - 1], text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       </div>
     )
   }
@@ -117,7 +356,7 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
       <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
         <ExpandIndicator hasChildren={false} />
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
-        <Aria.Editable field="content" selection="end"><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+        <Aria.Editable field="content" selection="end" editKeyDown={handleEditKeyDown}><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       </div>
     )
   }
@@ -132,7 +371,7 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
     <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
       <ExpandIndicator hasChildren={false} />
       <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
-      <Aria.Editable field="content" selection="end"><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+      <Aria.Editable field="content" selection="end" editKeyDown={handleEditKeyDown}><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       {role && <RoleBadge role={role} />}
     </div>
   )
@@ -140,26 +379,43 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
 
 let _insertCounter = 0
 
+type WriterCtx = {
+  focused: string
+  getEntity: (id: string) => { data?: Record<string, unknown> } | undefined
+  getParent: (id: string) => string | undefined
+  getChildren: (id: string) => string[]
+  selected?: { ids: string[] }
+}
+
 function writerKeys(): Plugin {
-  type Ctx = {
-    focused: string
-    getEntity: (id: string) => { data?: Record<string, unknown> } | undefined
-    getStore: () => { entities: Record<string, { data?: Record<string, unknown> } | undefined>; relationships: Record<string, string[]> }
-  }
   return definePlugin({
     name: 'writerKeys',
+    visibilityFilter: writerNavigateFilter,
+    commands: {
+      insertAfter: writerCommands.insertAfter,
+      merge: writerCommands.merge,
+      updateContent: writerCommands.updateContent,
+      wrapInList: writerCommands.wrapInList,
+      unwrapFromList: writerCommands.unwrapFromList,
+      convertType: writerCommands.convertType,
+      visibleSwap: writerCommands.visibleSwap,
+    },
     keyMap: {
-      'Enter': (ctx: Ctx) => renameCommands.startRename(ctx.focused),
-      'Mod+Enter': (ctx: Ctx) => {
-        const store = ctx.getStore() as import('@os/store/types').NormalizedData
-        const entity = ctx.getEntity(ctx.focused)
-        const d = entity?.data as Record<string, unknown> | undefined
+      // Enter → edit (rename)
+      'Enter': (ctx: WriterCtx) => {
+        const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
+        // hr has no content — skip
+        if (d?.type === 'hr') return undefined
+        return renameCommands.startRename(ctx.focused)
+      },
+
+      // Cmd+Enter (non-editing) → new sibling + edit
+      'Mod+Enter': (ctx: WriterCtx) => {
+        const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
         if (!d) return undefined
         const type = d.type as string
-        const parentId = getParent(store, ctx.focused)
+        const parentId = ctx.getParent(ctx.focused)
         if (!parentId) return undefined
-        const siblings = getChildren(store, parentId)
-        const idx = siblings.indexOf(ctx.focused)
         const newId = `wi${++_insertCounter}`
 
         let newData: Record<string, unknown>
@@ -174,9 +430,75 @@ function writerKeys(): Plugin {
         }
 
         return createBatchCommand([
-          crudCommands.create({ id: newId, data: newData }, parentId, idx + 1),
+          writerCommands.insertAfter(ctx.focused, newId, newData),
           renameCommands.startRename(newId),
         ])
+      },
+
+      // Cmd+Shift+Enter → insert first child sentence + edit
+      'Mod+Shift+Enter': (ctx: WriterCtx) => {
+        const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
+        if (d?.type !== 'heading') return undefined
+        const newId = `wi${++_insertCounter}`
+        return createBatchCommand([
+          crudCommands.create({ id: newId, data: { type: 'sentence', content: '' } }, ctx.focused, 0),
+          renameCommands.startRename(newId),
+        ])
+      },
+
+      // Tab → indent (reparent under previous sibling)
+      'Tab': (ctx: WriterCtx) => dndCommands.moveIn(ctx.focused),
+
+      // Shift+Tab → outdent (reparent to grandparent)
+      'Shift+Tab': (ctx: WriterCtx) => dndCommands.moveOut(ctx.focused),
+
+      // Alt+↑↓ → reorder in visible order (crosses paragraph boundaries)
+      'Alt+ArrowUp': (ctx: WriterCtx) => {
+        const prev = getAdjacentVisible(writerState.getData(), ctx.focused, [writerNavigateFilter], -1)
+        if (!prev) return undefined
+        return writerCommands.visibleSwap(ctx.focused, prev, -1)
+      },
+      'Alt+ArrowDown': (ctx: WriterCtx) => {
+        const next = getAdjacentVisible(writerState.getData(), ctx.focused, [writerNavigateFilter], 1)
+        if (!next) return undefined
+        return writerCommands.visibleSwap(ctx.focused, next, 1)
+      },
+
+      // Backspace (non-editing) → delete node
+      'Backspace': (ctx: WriterCtx) => {
+        const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
+        const content = (d?.content as string) ?? ''
+        // If empty content node, just delete
+        if (!content || content.trim() === '') {
+          return crudCommands.remove(ctx.focused)
+        }
+        // If has content, enter edit mode instead of deleting
+        return renameCommands.startRename(ctx.focused)
+      },
+
+      // Mod+L → wrap selection in list
+      'Mod+l': (ctx: WriterCtx) => {
+        const selectedIds = ctx.selected?.ids ?? []
+        const nodeIds = selectedIds.length > 0 ? selectedIds : [ctx.focused]
+        const listId = `wl${++_insertCounter}`
+        return writerCommands.wrapInList(nodeIds, listId, false)
+      },
+
+      // Mod+Shift+L → unwrap from list
+      'Mod+Shift+l': (ctx: WriterCtx) => writerCommands.unwrapFromList(ctx.focused),
+
+      // Mod+0 → heading → paragraph
+      'Mod+Digit0': (ctx: WriterCtx) => {
+        const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
+        if (d?.type !== 'heading') return undefined
+        return writerCommands.convertType(ctx.focused, 'paragraph')
+      },
+
+      // Mod+Shift+H → paragraph → heading
+      'Mod+Shift+h': (ctx: WriterCtx) => {
+        const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
+        if (d?.type !== 'paragraph') return undefined
+        return writerCommands.convertType(ctx.focused, 'heading')
       },
     },
   })

@@ -3,6 +3,7 @@
 ## 배경
 
 axis decomposition v1에서 11개 축 + metadata grab bag으로 구현. 검토 결과:
+
 - `activateFollowFocus` ≡ `activate` (코드 100% 동일, 유령 축)
 - metadata의 행동 플래그(followFocus, activateOnClick, selectionMode, expandable, colCount)가 축 밖에 존재
 - 축 조합만으로 pattern을 완전 정의할 수 없는 구조
