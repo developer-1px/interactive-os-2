@@ -36,3 +36,15 @@
 .tab[aria-selected="true"] .tabClose {
   opacity: 0.6;
 }
+
+/* ── Add button — last-mile: consistent with close button styling ── */
+.tabAdd {
+  border-radius: var(--shape-xs-radius);
+  padding: var(--space-2xs);
+  opacity: 0.4;
+  transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+.tabAdd:hover {
+  opacity: 1;
+}

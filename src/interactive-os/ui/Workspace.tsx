@@ -17,6 +17,7 @@ import '@styles/ax.css'
 interface WorkspaceProps {
   data: NormalizedData
   onChange: (data: NormalizedData) => void
+  onAddTab?: (tabgroupId: string) => void
   renderPanel: (tab: Entity) => React.ReactNode
   'aria-label'?: string
 }
@@ -25,10 +26,11 @@ interface WorkspaceNodeProps {
   nodeId: string
   data: NormalizedData
   onChange: (data: NormalizedData) => void
+  onAddTab?: (tabgroupId: string) => void
   renderPanel: (tab: Entity) => React.ReactNode
 }
 
-function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodeProps) {
+function WorkspaceNode({ nodeId, data, onChange, onAddTab, renderPanel }: WorkspaceNodeProps) {
   const entityData = getEntityData<{ type: string }>(data, nodeId)
   if (!entityData) return null
 
@@ -43,7 +45,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
     return (
       <SplitPane direction={splitData.direction} sizes={splitData.sizes} onResize={handleResize}>
         {childIds.map((id) => (
-          <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} renderPanel={renderPanel} />
+          <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} onAddTab={onAddTab} renderPanel={renderPanel} />
         ))}
       </SplitPane>
     )
@@ -52,7 +54,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
   if (entityData.type === 'tabgroup') {
     const tabIds = getChildren(data, nodeId)
     if (tabIds.length === 0) {
-      return <div className={`${ax({ layout: 'center', text: 'muted' })} ${styles.empty}`}>No open tabs</div>
+      return null
     }
 
     return (
@@ -60,6 +62,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
         data={data}
         tabgroupId={nodeId}
         onChange={onChange}
+        onAddTab={onAddTab}
         renderPanel={renderPanel}
         aria-label="Tab group"
       />
@@ -72,6 +75,7 @@ function WorkspaceNode({ nodeId, data, onChange, renderPanel }: WorkspaceNodePro
 export function Workspace({
   data,
   onChange,
+  onAddTab,
   renderPanel,
   'aria-label': ariaLabel,
 }: WorkspaceProps) {
@@ -114,7 +118,7 @@ export function Workspace({
     <div className={`${ax({ layout: 'fill' })} ${styles.root}`} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
       <div className={ax({ layout: 'fill' })}>
         {rootChildren.map((id) => (
-          <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} renderPanel={renderPanel} />
+          <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} onAddTab={onAddTab} renderPanel={renderPanel} />
         ))}
       </div>
     </div>

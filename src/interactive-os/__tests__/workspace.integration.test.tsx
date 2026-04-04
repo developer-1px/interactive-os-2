@@ -85,7 +85,7 @@ describe('Workspace', () => {
     expect(screen.getByRole('separator')).toBeTruthy()
   })
 
-  it('V9: empty workspace with no tabs shows empty state', () => {
+  it('V9: empty workspace with no tabs renders nothing in tabgroup', () => {
     const data = createWorkspace()
 
     render(
@@ -97,6 +97,7 @@ describe('Workspace', () => {
       />,
     )
 
-    expect(screen.getByText('No open tabs')).toBeTruthy()
+    expect(screen.queryByRole('tablist')).toBeNull()
+    expect(screen.queryByRole('tabpanel')).toBeNull()
   })
 })
