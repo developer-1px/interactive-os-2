@@ -330,7 +330,7 @@ export default function PageWriter() {
 
           <div className={ax({ layout: 'scroll', padding: 'md' })}>
             {prose ? (
-              <div className={ax({ width: 'prose' })}><ProseView data={data} /></div>
+              <ProseView data={data} />
             ) : (
               <TreeGrid
                 data={data}
