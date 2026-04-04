@@ -12,7 +12,7 @@ export function openInspectorWindow(): void {
     return
   }
 
-  const win = window.open('', 'aria-inspector', 'width=480,height=720')
+  const win = window.open('', 'aria-inspector', 'width=960,height=800')
   if (!win) return
 
   inspectorWin = win
