@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { codeToTokens, type BundledLanguage } from 'shiki'
 import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme, escapeHtml } from './shikiUtils'
-import { useVirtualScroll } from './useVirtualScroll'
+import { useVirtualScrollState } from '../plugins/virtualScroll'
 import codeStyles from './CodeBlock.module.css'
 import vs from './VirtualCodeBlock.module.css'
 
@@ -57,7 +57,7 @@ export function VirtualCodeBlock({
     return () => { cancelled = true }
   }, [code, lang, theme])
 
-  const { totalHeight, visibleRange, offsetTop } = useVirtualScroll({
+  const { totalHeight, visibleRange, offsetTop } = useVirtualScrollState({
     itemCount: lines.length,
     estimatedItemHeight: lineHeight,
     overscan: 10,
