@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * PreToolUse:Write hook — kebab-case 파일명 차단
+ * PreToolUse:Write hook — 파일명 관례 검증
  *
- * 규칙: 파일명 = 주 export 식별자 (camelCase 또는 PascalCase)
- * kebab-case (예: my-component.tsx) 금지
+ * 규칙 1: kebab-case 금지 (camelCase 또는 PascalCase)
+ * 규칙 2: pages/ 네이밍 관례
+ *   - 진입점(라우트 컴포넌트): Page{Domain}.tsx (*Layout 금지)
+ *   - Store: {domain}Store.ts
+ *   - 변환: {domain}Transform.ts (Adapter 금지)
  *
  * 제외: 설정 파일, dotfile, node_modules, docs/, .css 파일(BEM 허용)
  */
@@ -41,15 +44,31 @@ if (['.css', '.json', '.yaml', '.yml', '.md', '.mdx', '.html', '.svg'].includes(
 }
 
 const name = basename(filePath, ext)
+const violations = []
 
-// kebab-case 감지: 소문자-소문자 패턴 (예: my-component)
-// 단, .test., .config. 등 관례적 접미사는 제외
+// 규칙 1: kebab-case 감지
 const baseName = name.replace(/\.(test|spec|config|integration|regression|module|stories)$/, '')
 
 if (/^[a-z][a-z0-9]*-[a-z]/.test(baseName)) {
+  violations.push(`kebab-case 파일명 금지: "${basename(filePath)}". camelCase 또는 PascalCase 사용.`)
+}
+
+// 규칙 2: pages/ 네이밍 관례
+if (filePath.includes('/pages/') && ['.ts', '.tsx'].includes(ext)) {
+  // *Layout.tsx → Page*.tsx 여야 한다
+  if (/Layout$/.test(name) && ext === '.tsx') {
+    violations.push(`"${name}${ext}": 진입점은 Page{Domain}.tsx 형식. *Layout 금지.`)
+  }
+  // *Adapter.ts → *Transform.ts 여야 한다
+  if (/Adapter$/.test(name) || /adapter$/i.test(name)) {
+    violations.push(`"${name}${ext}": 변환 파일은 {domain}Transform.ts 형식. *Adapter 금지.`)
+  }
+}
+
+if (violations.length > 0) {
   const output = JSON.stringify({
     decision: 'block',
-    reason: `kebab-case 파일명 금지: "${basename(filePath)}". 파일명은 주 export 식별자와 일치해야 한다 (camelCase 또는 PascalCase). 예: myComponent.ts, TreeGrid.tsx`,
+    reason: `파일명 관례 위반 ${violations.length}건:\n${violations.map((v, i) => `  ${i + 1}. ${v}`).join('\n')}`,
   })
   process.stdout.write(output)
   process.exit(0)

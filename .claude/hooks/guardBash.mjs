@@ -13,7 +13,7 @@
  * CLAUDE.md 규칙: "어떤 경우든 git stash로 전체 원복 금지"
  */
 
-import { readFileSync, execFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import { execSync } from 'child_process'
 
 const input = JSON.parse(readFileSync('/dev/stdin', 'utf8'))
@@ -32,6 +32,9 @@ const BLOCKED = [
   { pattern: /\bgit\s+restore\s+\./, reason: 'git restore . 금지 — 전체 원복 대신 개별 파일만 원복' },
   { pattern: /\bgit\s+clean\s+-[a-zA-Z]*f/, reason: 'git clean -f 금지 — untracked 파일 삭제는 개별적으로' },
   { pattern: /\bgit\s+reset\s+--hard\b/, reason: 'git reset --hard 금지 — 비가역 히스토리 파괴' },
+  { pattern: /\bgit\s+push\s+[^|]*--force\b/, reason: 'git push --force 금지 — 원격 히스토리 파괴' },
+  { pattern: /\bgit\s+push\s+[^|]*-f\b/, reason: 'git push -f 금지 — 원격 히스토리 파괴' },
+  { pattern: /\bgit\s+branch\s+-D\b/, reason: 'git branch -D 금지 — git branch -d (소문자)를 사용하세요' },
 ]
 
 for (const { pattern, reason, onlyMain } of BLOCKED) {

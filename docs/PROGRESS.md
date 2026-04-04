@@ -101,6 +101,7 @@
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | Vitest (859 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+| Claude Harness (11 hooks · 29 skills · /improve-skill) | Validated | 실전 오탐 튜닝 필요 |
 | Design Lint (8 rules · browser-injectable · Playwright CI) | Validated | 신규 관계 규칙(internal≤external, depth-inversion) false positive 튜닝 필요 |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
