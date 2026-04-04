@@ -1,0 +1,24 @@
+flowchart TB
+  subgraph core ["core"]
+    createCommandEngine["createCommandEngine"]
+    defineCommand["defineCommand"]
+    types["types"]
+  end
+
+  subgraph query ["query"]
+    getVisibleNodes["getVisibleNodes"]
+    inspectToTree["inspectToTree"]
+  end
+
+  subgraph hooks ["hooks"]
+    useEngine["useEngine"]
+  end
+
+  subgraph logging ["logging"]
+    logger["logger"]
+  end
+
+  core --> query
+  core --> hooks
+  core --> logging
+  query --> hooks

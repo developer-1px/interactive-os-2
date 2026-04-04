@@ -1,5 +1,5 @@
 // ② 2026-03-28-ui-indicators-prd.md
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 
 interface ExpandIndicatorProps {
   expanded?: boolean
@@ -15,11 +15,11 @@ export function ExpandIndicator({
   className,
 }: ExpandIndicatorProps) {
   const variantClass = variant === 'tree' ? 'item-chevron--tree' : 'item-chevron--expand'
-  const classes = ['inline-flex items-center justify-center shrink-0', 'item-chevron', variantClass, variant === 'expand' ? 'text-center' : '', className].filter(Boolean).join(' ')
+  const classes = ['inline-flex items-center justify-center shrink-0', 'item-chevron', variantClass, className].filter(Boolean).join(' ')
 
   return (
-    <span className={classes}>
-      {hasChildren && (expanded ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />)}
+    <span className={classes} data-expanded={expanded ? '' : undefined}>
+      {hasChildren && <ChevronRight size="1em" />}
     </span>
   )
 }

@@ -1,8 +1,4 @@
-/* ═══════════════════════════════════════════
-   Agent Chat — last-mile only (ax 축 외 CSS)
-   ═══════════════════════════════════════════ */
-
-/* --- Layout --- */
+/* ── Last-mile only ── */
 
 .chat {
   grid-column: 2 / -1;
@@ -11,39 +7,17 @@
   overflow: hidden;
 }
 
-/* --- Sidebar --- */
-
 .chatSidebar {
   width: 200px;
-  background: var(--surface-sunken);
   border-right: 1px solid var(--border-subtle);
 }
-
-/* chatSidebarHeader → PanelHeader */
 
 .chatNewBtn {
   width: 24px;
   height: 24px;
 }
 
-/* --- Session list --- */
-
-.chatSessionItem {
-  padding-inline: var(--space-md);
-  cursor: pointer;
-}
-
-.chatSessionItem:hover {
-  background: var(--bg-hover);
-}
-
-.chatSessionActive {
-  background: var(--bg-active);
-  color: var(--text-bright);
-}
-
 .chatCloseBtn {
-  margin-left: auto;
   width: 20px;
   height: 20px;
   opacity: 0;
@@ -53,28 +27,13 @@
   opacity: 1;
 }
 
-/* --- File list per session --- */
-
 .chatFileList {
   padding-left: calc(8px + var(--space-xs));
 }
 
-/* --- Main chat area --- */
-
 .chatMain {
-  width: 100%;
   max-width: 860px;
   margin-inline: auto;
-}
-
-.chatFeed {
-  padding: var(--space-xl) var(--space-lg);
-}
-
-/* --- Composer --- */
-
-.chatComposer {
-  padding: 0 var(--space-lg) var(--space-md);
 }
 
 @keyframes pulse {
@@ -85,8 +44,6 @@
 .chatDot {
   width: 6px;
   height: 6px;
-  border-radius: var(--shape-pill-radius);
-  background: var(--tone-primary-base);
   animation: pulse var(--motion-pulse-period) ease-in-out infinite;
 }
 
@@ -99,24 +56,14 @@
   min-width: 0;
 }
 
-/* --- Status bar --- */
-
 .chatStatusBar {
   font-variant-numeric: tabular-nums;
 }
 
-.chatHint {
-  margin-left: auto;
-}
-
-/* --- Welcome --- */
-
 .chatStartBtn {
   border: 1px solid var(--border-subtle);
-  background: var(--surface-raised);
 }
 
 .chatStartBtn:hover {
-  background: var(--bg-hover);
   border-color: var(--border-default);
 }

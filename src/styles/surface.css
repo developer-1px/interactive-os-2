@@ -19,7 +19,7 @@
 
 /* input: border defines identity, no shadow */
 [data-surface="input"] {
-  border: 1px solid var(--_border, var(--border-default));
+  border: 1px solid var(--_border, var(--border-strong));
   outline: none;
 }
 
@@ -28,6 +28,6 @@
 
 /* overlay: floating layer — border + shadow for depth */
 [data-surface="overlay"] {
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-lg);
 }

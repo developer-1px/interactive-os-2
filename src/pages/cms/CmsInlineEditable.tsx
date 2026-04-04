@@ -2,10 +2,10 @@ import { useCallback, useEffect, useRef } from 'react'
 import type { NormalizedData } from '@os/store/types'
 import type { Command } from '@os/engine/types'
 import { RENAME_ID, renameCommands } from '@os/plugins/rename'
-import type { Locale } from './cms-types'
-import { localized } from './cms-types'
-import type { LocaleMap } from './cms-types'
-import { NodeContent, getEditableFields } from './cms-renderers'
+import type { Locale } from './cmsTypes'
+import { localized } from './cmsTypes'
+import type { LocaleMap } from './cmsTypes'
+import { NodeContent, getEditableFields } from './cmsRenderers'
 
 interface CmsInlineEditableProps {
   nodeId: string

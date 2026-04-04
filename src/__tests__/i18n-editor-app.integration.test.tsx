@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { resetClipboard } from '@os/plugins/clipboard'
 import PageI18nEditor from '../pages/i18n/PageI18nEditor'
 import { translatableEntriesToGrid } from '../pages/cms/cmsI18nAdapter'
-import { cmsStore } from '../pages/cms/cms-store'
+import { cmsStore } from '../pages/cms/cmsStore'
 
 // ── Helpers ──
 

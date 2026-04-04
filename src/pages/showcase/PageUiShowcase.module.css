@@ -1,28 +1,15 @@
-/* ═══════════════════════════════════════════
-   UI Showcase — component docs page
-   ═══════════════════════════════════════════ */
+/* ── Last-mile only ── */
 
 .uiPage { grid-column: 2 / -1; }
-
-/* --- Sidebar --- */
 
 .uiSidebar {
   width: 240px;
   min-width: 200px;
-  background: var(--surface-sunken);
   border-right: 1px solid var(--border-subtle);
 }
 
-/* uiSidebarHeader → PanelHeader */
-
 .uiSidebarBody {
   padding: var(--space-sm) 0;
-}
-
-/* --- Content area --- */
-
-.uiContent {
-  background: var(--surface-default);
 }
 
 .uiContentBody {

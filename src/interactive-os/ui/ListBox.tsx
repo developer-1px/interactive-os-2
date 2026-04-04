@@ -17,6 +17,8 @@ const listboxPattern = listbox()
 interface ListBoxProps extends AriaComponentProps {
   enableEditing?: boolean
   searchable?: boolean
+  keyMap?: Record<string, (ctx: import('../pattern/types').PatternContext) => import('../engine/types').Command | void>
+  autoFocus?: boolean
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
@@ -35,6 +37,12 @@ export function ListBox({
   renderItem = defaultRenderItem,
   enableEditing = false,
   searchable = false,
+  onActivate,
+  onFocusChange,
+  keyMap,
+  autoFocus,
+  className: _className,
+  'aria-label': ariaLabel,
 }: ListBoxProps) {
   const mergedPlugins = React.useMemo(
     () => {
@@ -52,6 +60,11 @@ export function ListBox({
       data={data}
       plugins={mergedPlugins}
       onChange={onChange}
+      onActivate={onActivate}
+      onFocusChange={onFocusChange}
+      keyMap={keyMap}
+      autoFocus={autoFocus}
+      aria-label={ariaLabel}
     >
       {searchable && <Aria.Search placeholder="Search..." />}
       <Aria.Item render={renderItem} />

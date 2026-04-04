@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CmsLayout from '../pages/cms/CmsLayout'
-import { resetCmsData } from '../pages/cms/cms-state'
+import PageCms from '../pages/cms/PageCms'
+import { resetCmsData } from '../pages/cms/cmsState'
 
 function getFocused(): string {
   return document.activeElement?.getAttribute('data-cms-id') ?? ''
@@ -34,7 +34,7 @@ describe('CMS collection: crud + clipboard + history', () => {
 
   it('Delete removes a collection item from the section', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     await focusNode(container, user, 'article-start')
     expect(getFocused()).toBe('article-start')
@@ -45,7 +45,7 @@ describe('CMS collection: crud + clipboard + history', () => {
 
   it('Mod+Z undoes a delete', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     await focusNode(container, user, 'article-start')
     await user.keyboard('{Delete}')
@@ -57,7 +57,7 @@ describe('CMS collection: crud + clipboard + history', () => {
 
   it('Mod+Shift+Z redoes after undo', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     await focusNode(container, user, 'article-start')
     await user.keyboard('{Delete}')
@@ -72,7 +72,7 @@ describe('CMS collection: crud + clipboard + history', () => {
 
   it('copy then paste duplicates a collection item', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const before = articleCount(container)
     await focusNode(container, user, 'article-start')
@@ -94,7 +94,7 @@ describe('CMS collection: crud + clipboard + history', () => {
 
   it('cut then paste moves the item', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     await focusNode(container, user, 'article-start')
 

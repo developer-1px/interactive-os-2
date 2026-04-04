@@ -3,13 +3,9 @@ import cmsStyles from './CmsLanding.module.css'
 import { getChildren } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import type { Command } from '@os/engine/types'
-import type { PatternContext } from '@os/pattern/types'
-import type { Locale } from './cms-types'
-import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
-import { useAria } from '@os/primitives/useAria'
-
-const EMPTY_DATA: NormalizedData = { entities: {}, relationships: {} }
+import type { Locale } from './cmsTypes'
+import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cmsRenderers'
+import { AriaRoute } from '@os/primitives/AriaRoute'
 
 interface CmsPresentModeProps {
   data: NormalizedData
@@ -20,14 +16,9 @@ interface CmsPresentModeProps {
 export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
+  const keyMap = useMemo(() => ({
     Escape: () => { onExit() },
   }), [onExit])
-
-  const { containerProps } = useAria({
-    data: EMPTY_DATA,
-    keyMap,
-  })
 
   // Present mode has no focusable content — autoFocus the container so keyMap catches Escape
   useEffect(() => {
@@ -78,16 +69,17 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
   }
 
   return (
-    <div
-      className="cms-present fixed inset-0 overflow-y-auto cursor-pointer"
-      ref={containerRef}
-      tabIndex={-1}
-      onClick={onExit}
-      {...(containerProps as React.HTMLAttributes<HTMLDivElement>)}
-    >
-      <div className={`cms-landing ${cmsStyles.cmsLanding} w-full overflow-x-hidden`}>
-        {getChildren(data, ROOT_ID).map(id => renderNode(id))}
+    <AriaRoute keyMap={keyMap} label="Present Mode">
+      <div
+        className="cms-present fixed inset-0 overflow-y-auto cursor-pointer"
+        ref={containerRef}
+        tabIndex={-1}
+        onClick={onExit}
+      >
+        <div className={`cms-landing ${cmsStyles.cmsLanding} w-full overflow-x-hidden`}>
+          {getChildren(data, ROOT_ID).map(id => renderNode(id))}
+        </div>
       </div>
-    </div>
+    </AriaRoute>
   )
 }

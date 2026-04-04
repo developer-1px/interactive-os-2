@@ -14,14 +14,34 @@ export const nodeSchemas = {
   }),
   paragraph: z.object({
     type: z.literal('paragraph'),
-    content: z.string().describe('Content'),
+  }),
+  sentence: z.object({
+    type: z.literal('sentence'),
+    content: z.string().describe('Sentence'),
+    role: z.enum(['fact', 'interpretation', 'evidence', 'opinion']).optional(),
+  }),
+  list: z.object({
+    type: z.literal('list'),
+    ordered: z.boolean(),
+  }),
+  listItem: z.object({
+    type: z.literal('listItem'),
+    content: z.string().describe('List item'),
+  }),
+  hr: z.object({
+    type: z.literal('hr'),
   }),
 }
 
 export type DocumentData = z.infer<typeof nodeSchemas.document>
 export type HeadingData = z.infer<typeof nodeSchemas.heading>
 export type ParagraphData = z.infer<typeof nodeSchemas.paragraph>
-export type WriterNodeData = DocumentData | HeadingData | ParagraphData
+export type SentenceData = z.infer<typeof nodeSchemas.sentence>
+export type SentenceRole = NonNullable<SentenceData['role']>
+export type ListData = z.infer<typeof nodeSchemas.list>
+export type ListItemData = z.infer<typeof nodeSchemas.listItem>
+export type HrData = z.infer<typeof nodeSchemas.hr>
+export type WriterNodeData = DocumentData | HeadingData | ParagraphData | SentenceData | ListData | ListItemData | HrData
 
 export const childRules = {
   document: z.array(z.discriminatedUnion('type', [nodeSchemas.heading, nodeSchemas.paragraph])),

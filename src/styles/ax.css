@@ -361,9 +361,11 @@
 .w-full { width: 100%; }
 .w-auto { width: auto; }
 .w-fit  { width: fit-content; }
-.w-sm   { max-width: 200px; }
-.w-md   { max-width: 400px; }
-.w-lg   { max-width: 640px; }
+.w-sm    { max-width: 200px; }
+.w-md    { max-width: 400px; }
+.w-lg    { max-width: 640px; }
+.w-xl    { max-width: 960px; }
+.w-prose { max-width: 72ch; }
 
 /* ════════════════════════════════════════════
  * Flex — flex item 크기

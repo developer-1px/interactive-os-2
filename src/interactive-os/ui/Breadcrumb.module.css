@@ -1,5 +1,5 @@
 .breadcrumb {
-  gap: var(--border-width);
+  gap: var(--space-xs);
 }
 
 .sep {

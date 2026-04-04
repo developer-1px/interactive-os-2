@@ -4,6 +4,12 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
+import noRawAriaRole from './eslint-rules/noRawAriaRole.js'
+
+const localPlugin = {
+  meta: { name: 'local' },
+  rules: { 'no-raw-aria-role': noRawAriaRole },
+}
 
 export default defineConfig([
   globalIgnores(['dist', 'dist-lib']),
@@ -25,6 +31,13 @@ export default defineConfig([
         varsIgnorePattern: '^_',
         destructuredArrayIgnorePattern: '^_',
       }],
+    },
+  },
+  {
+    files: ['src/pages/**/*.{ts,tsx}'],
+    plugins: { local: localPlugin },
+    rules: {
+      'local/no-raw-aria-role': 'error',
     },
   },
 ])

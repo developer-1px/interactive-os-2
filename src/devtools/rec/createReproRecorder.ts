@@ -21,6 +21,8 @@
  */
 
 import type { LogEntry, Logger } from '@os/engine/logger'
+import { findRoleContainer, serializeAriaTree, diffAriaTree } from './reproAriaTree'
+import { formatTimelineAsText } from './reproFormatter'
 
 // ---- Types ----
 
@@ -72,14 +74,6 @@ interface ReproRecording {
   }
   timeline: ReproEvent[]
 }
-
-// ---- ARIA role containers (used to find the nearest meaningful subtree) ----
-
-const CONTAINER_ROLES = new Set([
-  'listbox', 'tree', 'treegrid', 'grid', 'table', 'tablist', 'menu',
-  'menubar', 'toolbar', 'radiogroup', 'group', 'dialog', 'alertdialog',
-  'navigation', 'main', 'region', 'application',
-])
 
 // ---- Helpers ----
 
@@ -148,187 +142,9 @@ function formatDiff(diff: { path: string; kind: string; before?: unknown; after?
   return `${diff.path}: ${JSON.stringify(diff.before)} → ${JSON.stringify(diff.after)}`
 }
 
-// ---- ARIA Tree Serialization (Playwright YAML-like format) ----
-
 function describeFocus(el: Element | null): string {
   if (!el || el === document.body) return 'body'
   return describeTarget(el)
-}
-
-function findRoleContainer(el: Element | null): Element | null {
-  let current = el
-  while (current && current !== document.body) {
-    const role = current.getAttribute('role')
-    if (role && CONTAINER_ROLES.has(role)) return current
-    current = current.parentElement
-  }
-  return null
-}
-
-const ARIA_STATE_ATTRS = [
-  'aria-selected', 'aria-expanded', 'aria-checked', 'aria-disabled',
-  'aria-pressed', 'aria-level', 'aria-activedescendant', 'aria-current',
-  'aria-invalid', 'aria-required', 'aria-valuemin', 'aria-valuemax',
-  'aria-valuenow', 'aria-valuetext',
-] as const
-
-function serializeAriaNode(el: Element, depth: number, activeEl: Element | null): string {
-  const indent = '  '.repeat(depth)
-  const role = el.getAttribute('role') || implicitRole(el)
-  if (!role) return ''
-
-  const name = el.getAttribute('aria-label')
-    || el.getAttribute('aria-labelledby')
-    || (el.children.length === 0 ? el.textContent?.trim().slice(0, 50) : null)
-    || ''
-
-  const attrs: string[] = []
-  for (const attr of ARIA_STATE_ATTRS) {
-    const val = el.getAttribute(attr)
-    if (val !== null) {
-      const shortName = attr.replace('aria-', '')
-      attrs.push(val === 'true' ? shortName : `${shortName}=${val}`)
-    }
-  }
-
-  const isActive = el === activeEl
-  if (isActive) attrs.push('◀ focus')
-
-  const attrStr = attrs.length > 0 ? ` [${attrs.join(', ')}]` : ''
-  const nameStr = name ? ` "${name}"` : ''
-  const line = `${indent}- ${role}${nameStr}${attrStr}`
-
-  const childLines: string[] = []
-  for (const child of el.children) {
-    const childRole = child.getAttribute('role') || implicitRole(child)
-    if (childRole) {
-      const serialized = serializeAriaNode(child, depth + 1, activeEl)
-      if (serialized) childLines.push(serialized)
-    } else {
-      // Walk deeper — non-role wrappers (div, span) are skipped
-      for (const grandchild of child.children) {
-        const serialized = serializeAriaNode(grandchild, depth + 1, activeEl)
-        if (serialized) childLines.push(serialized)
-      }
-    }
-  }
-
-  return childLines.length > 0
-    ? `${line}\n${childLines.join('\n')}`
-    : line
-}
-
-const IMPLICIT_ROLES: Record<string, string> = {
-  button: 'button', a: 'link', input: 'textbox', select: 'combobox',
-  textarea: 'textbox', nav: 'navigation', main: 'main', header: 'banner',
-  footer: 'contentinfo', aside: 'complementary', ul: 'list', ol: 'list',
-  li: 'listitem', table: 'table', tr: 'row', td: 'cell', th: 'columnheader',
-  h1: 'heading', h2: 'heading', h3: 'heading', h4: 'heading',
-  h5: 'heading', h6: 'heading', dialog: 'dialog',
-}
-
-function implicitRole(el: Element): string | null {
-  return IMPLICIT_ROLES[el.tagName.toLowerCase()] ?? null
-}
-
-// ---- ARIA Tree Diff ----
-
-function diffAriaTree(prev: string, current: string): string {
-  if (prev === current) return '(no changes)'
-
-  const prevLines = prev.split('\n')
-  const currentLines = current.split('\n')
-  const prevSet = new Set(prevLines)
-  const currentSet = new Set(currentLines)
-
-  const removed = prevLines.filter(l => !currentSet.has(l))
-  const added = currentLines.filter(l => !prevSet.has(l))
-
-  if (removed.length === 0 && added.length === 0) return '(no changes)'
-
-  const parts: string[] = []
-  for (const line of removed) parts.push(`- ${line.trimStart()}`)
-  for (const line of added) parts.push(`+ ${line.trimStart()}`)
-  parts.push(`(${added.length} added, ${removed.length} removed, ${currentLines.length - added.length} unchanged)`)
-  return parts.join('\n')
-}
-
-// ---- Text Formatter (LLM-readable output) ----
-
-const INPUT_ICONS: Record<string, string> = {
-  keydown: '⌨', click: '🖱', focus: '⏎',
-}
-
-function formatTimelineAsText(meta: ReproRecording['meta'], timeline: ReproEvent[]): string {
-  const lines: string[] = []
-  lines.push(`# Reproduction — ${meta.url}`)
-  lines.push(`# ${meta.startedAt} · ${(meta.duration / 1000).toFixed(1)}s · ${meta.eventCount} events`)
-  lines.push('')
-
-  let lastSource = ''
-
-  // Merge consecutive events: input followed by state/console entries = one "step"
-  let i = 0
-  while (i < timeline.length) {
-    const ev = timeline[i]
-
-    if (ev.ch === 'input') {
-      const icon = INPUT_ICONS[ev.type] ?? '?'
-      const keyStr = ev.key ? ` ${ev.key}` : ''
-      // Only show source when it changes from previous
-      const srcChanged = ev.source !== null && ev.source !== lastSource
-      const srcStr = srcChanged ? `  ← ${ev.source}` : ''
-      if (ev.source) lastSource = ev.source
-
-      // Collect trailing state/console entries that belong to this input
-      let j = i + 1
-      const trailingLines: string[] = []
-      while (j < timeline.length && timeline[j].ch !== 'input') {
-        const trailing = timeline[j]
-        if (trailing.ch === 'state') {
-          const diffStr = trailing.diff.length > 0 ? trailing.diff.join(', ') : 'no diff'
-          trailingLines.push(`  → ${trailing.command}: ${diffStr}`)
-          if (trailing.error) trailingLines.push(`  ⚠ ${trailing.error}`)
-        } else if (trailing.ch === 'console') {
-          const prefix = trailing.level === 'error' ? '✗' : '⚠'
-          trailingLines.push(`  ${prefix} ${trailing.message}`)
-        }
-        j++
-      }
-
-      const noChanges = ev.ariaTree === '(no changes)' && trailingLines.length === 0
-      if (noChanges) {
-        lines.push(`[${ev.seq}] ${ev.time} ${icon}${keyStr} → ${ev.target} (no changes)`)
-      } else {
-        lines.push(`[${ev.seq}] ${ev.time} ${icon}${keyStr} → ${ev.target}${srcStr}`)
-        // Only show focus when different from target (e.g. activedescendant)
-        const focusDiffers = ev.focus !== ev.target
-        const focusStr = focusDiffers ? `focus: ${ev.focus}` : ''
-        const preventedStr = ev.prevented ? 'prevented' : ''
-        const metaLine = [focusStr, preventedStr].filter(Boolean).join(' | ')
-        if (metaLine) lines.push(metaLine)
-        for (const treeLine of ev.ariaTree.split('\n')) {
-          lines.push(`  ${treeLine}`)
-        }
-        for (const tl of trailingLines) lines.push(tl)
-      }
-
-      lines.push('')
-      i = j
-    } else {
-      // Orphan state/console entries (before any input)
-      if (ev.ch === 'state') {
-        lines.push(`[${ev.seq}] ${ev.time} → ${ev.command}: ${ev.diff.join(', ')}`)
-      } else if (ev.ch === 'console') {
-        const prefix = ev.level === 'error' ? '✗' : '⚠'
-        lines.push(`[${ev.seq}] ${ev.time} ${prefix} ${ev.message}`)
-      }
-      lines.push('')
-      i++
-    }
-  }
-
-  return lines.join('\n')
 }
 
 // ---- Main ----
@@ -359,7 +175,7 @@ export function createReproRecorder() {
     lastContainer = container
 
     const current = container
-      ? serializeAriaNode(container, 0, document.activeElement)
+      ? serializeAriaTree(container, document.activeElement)
       : '(no role container found)'
 
     // Full tree on first input or when container changes (re-baseline)

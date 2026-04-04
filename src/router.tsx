@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
         element: <InternalsLayout />,
       },
 
-      { path: '/writer', lazy: () => import('./pages/writer/PageWriter').then(m => ({ Component: m.default })) },
+      { path: '/writer/*', lazy: () => import('./pages/writer/PageWriter').then(m => ({ Component: m.default })) },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

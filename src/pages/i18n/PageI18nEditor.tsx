@@ -11,7 +11,7 @@ import { clipboard } from '@os/plugins/clipboard'
 import { dnd } from '@os/plugins/dnd'
 import { focusRecovery } from '@os/plugins/focusRecovery'
 import { translatableEntriesToGrid, I18N_COLUMNS } from '../cms/cmsI18nAdapter'
-import { cmsStore } from '../cms/cms-store'
+import { cmsStore } from '../cms/cmsStore'
 
 const plugins = [crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 

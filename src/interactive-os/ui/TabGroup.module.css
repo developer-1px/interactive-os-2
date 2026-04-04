@@ -1,11 +1,11 @@
 /* ── TabGroup — JetBrains Islands style ──
    // ② 2026-03-26-component-styling-rules-prd.md */
 
-/* last-mile: tabBar background (sunken surface not in ax) */
+/* last-mile: tabBar separator (line, not surface) */
 .tabBar {
   overflow-x: auto;
   flex-shrink: 0;
-  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* ── Tab — last-mile: selected state colors, preview italic ── */

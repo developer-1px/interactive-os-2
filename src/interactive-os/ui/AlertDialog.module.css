@@ -1,6 +1,0 @@
-/* ── AlertDialog — last-mile only ──
- * ax()로 불가: backdrop blur, z-index, transition transform, overlay width */
-
-.box {
-  width: var(--overlay-width);
-}

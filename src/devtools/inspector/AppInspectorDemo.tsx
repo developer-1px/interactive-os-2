@@ -5,7 +5,7 @@ import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
 import { dnd } from '@os/plugins/dnd'
 import { focusRecovery } from '@os/plugins/focusRecovery'
-import { treeData } from '../../pages/shared/shared-tree-data'
+import { treeData } from '../../pages/shared/sharedTreeData'
 import { AppInspector } from './AppInspector'
 
 export default function AppInspectorDemo() {

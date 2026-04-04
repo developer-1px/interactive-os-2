@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CmsLayout from '../pages/cms/CmsLayout'
+import PageCms from '../pages/cms/PageCms'
 
 describe('CMS Detail Panel', () => {
   it('shows editable fields when a leaf node is focused', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Click on hero-badge to focus it
     const badge = container.querySelector('[data-cms-id="hero-badge"]')
@@ -19,7 +19,7 @@ describe('CMS Detail Panel', () => {
   })
 
   it('shows grouped fields on initial render (section auto-focused by spatial)', () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
     const panel = container.querySelector('.cms-detail-panel')
     expect(panel).not.toBeNull()
     // Spatial pattern auto-focuses first section (hero) which has child fields
@@ -29,7 +29,7 @@ describe('CMS Detail Panel', () => {
 
   it('form edit then blur updates canvas text', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const badge = container.querySelector('[data-cms-id="hero-badge"]')
     act(() => { (badge as HTMLElement).click() })
@@ -45,7 +45,7 @@ describe('CMS Detail Panel', () => {
   })
 
   it('updates panel content when canvas focus changes', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const badge = container.querySelector('[data-cms-id="hero-badge"]')
     act(() => { (badge as HTMLElement).click() })
@@ -64,7 +64,7 @@ describe('CMS Detail Panel', () => {
   // ── Container editing tests ──
 
   it('shows grouped fields when a card container is focused', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Focus features section first, then enter to card depth
     const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
@@ -86,7 +86,7 @@ describe('CMS Detail Panel', () => {
   })
 
   it('shows all grouped fields when a section is focused', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Focus on showcase section (6 showcase-items, each with icon + label + desc = 3 fields)
     const showcase = container.querySelector('[data-cms-id="showcase"]') as HTMLElement
@@ -98,7 +98,7 @@ describe('CMS Detail Panel', () => {
   })
 
   it('section focus shows section header fields + sub-container groups', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
     act(() => { features.click() })
@@ -110,7 +110,7 @@ describe('CMS Detail Panel', () => {
 
   it('container panel edit updates canvas text via rename', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Focus card-store container
     const cardStore = container.querySelector('[data-cms-id="card-store"]') as HTMLElement
@@ -131,7 +131,7 @@ describe('CMS Detail Panel', () => {
   })
 
   it('narrows panel scope when entering card depth from section', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Focus section → see all 10 input fields (desc is textarea)
     const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
@@ -150,7 +150,7 @@ describe('CMS Detail Panel', () => {
   // V4: Escape widens panel scope back to section
   it('widens panel scope when escaping from card to section', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Enter features section
     const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
@@ -174,7 +174,7 @@ describe('CMS Detail Panel', () => {
 
   // V8: patterns section → 17 fields scrollable
   it('shows all 17 fields for patterns section', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const patterns = container.querySelector('[data-cms-id="patterns"]') as HTMLElement
     act(() => { patterns.click() })
@@ -187,7 +187,7 @@ describe('CMS Detail Panel', () => {
   // V9: edit in progress + focus change → commit
   it('commits edit on focus change via blur', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const badge = container.querySelector('[data-cms-id="hero-badge"]') as HTMLElement
     await user.click(badge)
@@ -207,7 +207,7 @@ describe('CMS Detail Panel', () => {
 
   // V10: container group label = derived from content
   it('uses section variant as group label', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
     act(() => { features.click() })
@@ -221,7 +221,7 @@ describe('CMS Detail Panel', () => {
 
   // V12: footer-links container → link fields
   it('shows link fields for footer-links container', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const footerLinks = container.querySelector('[data-cms-id="footer-links"]') as HTMLElement
     act(() => { footerLinks.click() })

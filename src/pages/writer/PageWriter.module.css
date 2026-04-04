@@ -1,0 +1,25 @@
+.heading {
+  margin-top: var(--space-md);
+}
+
+.headingL1 {
+  margin-top: var(--space-lg);
+}
+
+.paragraph {
+  margin-top: var(--space-xs);
+}
+
+.list {
+  margin-top: var(--space-xs);
+}
+
+.hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-md) 0;
+}
+
+.roleBadge {
+  margin-left: auto;
+}

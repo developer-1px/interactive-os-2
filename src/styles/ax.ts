@@ -44,7 +44,7 @@ type Layout =
 
 type Gap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 type Padding = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-type Width = 'full' | 'auto' | 'fit' | 'sm' | 'md' | 'lg'
+type Width = 'full' | 'auto' | 'fit' | 'sm' | 'md' | 'lg' | 'xl' | 'prose'
 type Flex = 'none' | 'auto' | '1'
 // clamp: 텍스트 줄 수 제한 ('1'=nowrap+ellipsis, '2'~'4'=line-clamp)
 type Clamp = '1' | '2' | '3' | '4'

@@ -1,8 +1,8 @@
 import { createElement } from 'react'
 import { getChildren } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
-import type { Locale } from './cms-types'
-import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cms-renderers'
+import type { Locale } from './cmsTypes'
+import { getSectionClassName, NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cmsRenderers'
 
 export default function SectionThumbnail({ data, sectionId, locale }: {
   data: NormalizedData

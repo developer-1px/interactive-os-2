@@ -5,7 +5,7 @@ import type { RegistryEntry } from '../componentRegistry'
 import { SourceViewer } from './SourceViewer'
 import { ax } from '@styles/ax'
 import { PanelHeader } from '@os/ui/PanelHeader'
-import styles from '../PageComponentCreator.module.css'
+
 
 type SourceTab = 'tsx' | 'css'
 
@@ -16,14 +16,13 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
       <PanelHeader axes={{ textStyle: 'caption' }}>
         <button
           data-surface="action"
-          className={`${ax({ text: 'muted' })} ${styles.sourceTab}${sourceTab === 'tsx' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
+          className={ax({ surface: 'ghost', padding: 'xs', shape: 'sm', text: sourceTab === 'tsx' ? 'primary' : 'muted', weight: sourceTab === 'tsx' ? 'medium' : undefined })}
           onClick={() => setSourceTab('tsx')}
         >
           TSX
         </button>
         <button
-          data-surface="action"
-          className={`${ax({ text: 'muted' })} ${styles.sourceTab}${sourceTab === 'css' ? ` ${ax({ weight: 'medium' })} ${styles.sourceTabActive}` : ''}`}
+          className={ax({ surface: 'ghost', padding: 'xs', shape: 'sm', text: sourceTab === 'css' ? 'primary' : 'muted', weight: sourceTab === 'css' ? 'medium' : undefined })}
           onClick={() => setSourceTab('css')}
         >
           CSS
@@ -33,7 +32,7 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
         {entry ? (
           <SourceViewer entry={entry} activeTab={sourceTab} />
         ) : (
-          <div className={`flex-row items-center justify-center flex-1 ${ax({ textStyle: 'body' })} ${styles.emptyState}`}>
+          <div className={ax({ layout: 'center', flex: '1', textStyle: 'body', text: 'muted' })}>
             컴포넌트를 선택하세요
           </div>
         )}

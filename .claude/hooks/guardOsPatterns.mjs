@@ -123,10 +123,10 @@ if (/\bstyle\s*=\s*\{\{/.test(content)) {
     for (const block of styleBlocks) {
       const inner = block.replace(/^style\s*=\s*\{\{/, '').replace(/\}\}$/, '').trim()
       if (!inner) continue
-      // 각 속성이 backgroundImage 또는 var() 값만 사용하는지 확인
+      // 각 속성이 backgroundImage, var()/calc() 값, 또는 CSS custom property(--*)만 사용하는지 확인
       const props = inner.split(',').map(p => p.trim()).filter(Boolean)
       const allAllowed = props.every(prop =>
-        /^backgroundImage\s*:/.test(prop) || /:\s*['"`]?var\(/.test(prop)
+        /^backgroundImage\s*:/.test(prop) || /:\s*['"`]?(?:var|calc)\(/.test(prop) || /^['"]?--[\w-]+['"]?\s*:/.test(prop)
       )
       if (!allAllowed) {
         violations.push(

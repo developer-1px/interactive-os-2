@@ -185,6 +185,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     for (const [key, value] of Object.entries(currentStore.entities)) {
       if (META_ENTITY_IDS.has(key)) {
         if (key === FOCUS_ID && FOCUS_ID in data.entities) continue
+        if (key === EXPANDED_ID && EXPANDED_ID in data.entities) continue
         mergedEntities[key] = value
       }
     }

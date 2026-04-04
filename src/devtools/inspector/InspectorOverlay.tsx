@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { getComponentStack, getDebugSource, getOSComponentType } from "./inspectorUtils";
 import { SourcePreview } from "./SourcePreview";
+import { type BoxModel, measureBoxModel, formatSpacing } from "./inspectorBoxModel";
 
 const COLORS = {
   margin: "rgba(245, 158, 11, 0.3)",
@@ -10,30 +11,6 @@ const COLORS = {
   border: "rgba(250, 204, 21, 0.3)",
   gap: "rgba(139, 92, 246, 0.3)",
 };
-
-interface BoxModel {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-  marginTop: number;
-  marginRight: number;
-  marginBottom: number;
-  marginLeft: number;
-  paddingTop: number;
-  paddingRight: number;
-  paddingBottom: number;
-  paddingLeft: number;
-  borderTop: number;
-  borderRight: number;
-  borderBottom: number;
-  borderLeft: number;
-  rowGap: number;
-  colGap: number;
-  gaps?: Array<{ top: number; left: number; width: number; height: number }>;
-  borderRadius?: string;
-  display: string;
-}
 
 const Box = ({
   top,
@@ -96,142 +73,8 @@ export const InspectorOverlay: React.FC<{
       (activeElement.closest("[data-primitive]") as HTMLElement) ||
       (activeElement.closest("svg") as unknown as HTMLElement) ||
       activeElement;
-    const styles = window.getComputedStyle(element);
-    const display = styles.display;
-    const getVal = (val: string) => parseFloat(val) || 0;
 
-    let rect = element.getBoundingClientRect();
-
-    if (display === "contents") {
-      const children = Array.from(element.children);
-      if (children.length > 0) {
-        let minTop = Infinity,
-          minLeft = Infinity,
-          maxBottom = -Infinity,
-          maxRight = -Infinity;
-        children.forEach((child) => {
-          const r = child.getBoundingClientRect();
-          if (r.width === 0 && r.height === 0) return;
-          minTop = Math.min(minTop, r.top);
-          minLeft = Math.min(minLeft, r.left);
-          maxBottom = Math.max(maxBottom, r.bottom);
-          maxRight = Math.max(maxRight, r.right);
-        });
-
-        if (minTop !== Infinity) {
-          rect = {
-            top: minTop,
-            left: minLeft,
-            bottom: maxBottom,
-            right: maxRight,
-            width: maxRight - minLeft,
-            height: maxBottom - minTop,
-            x: minLeft,
-            y: minTop,
-            toJSON: () => {},
-          } as DOMRect;
-        }
-      }
-    }
-
-    const gaps: Array<{
-      top: number;
-      left: number;
-      width: number;
-      height: number;
-    }> = [];
-    const isFlex = display === "flex" || display === "inline-flex";
-    const isGrid = display === "grid" || display === "inline-grid";
-    const rowGap = getVal(styles.rowGap) || getVal(styles.gap);
-    const colGap = getVal(styles.columnGap) || getVal(styles.gap);
-
-    if ((isFlex || isGrid) && (rowGap > 0 || colGap > 0)) {
-      const children = Array.from(element.children) as HTMLElement[];
-      if (children.length > 1) {
-        for (let i = 0; i < children.length; i++) {
-          const current = children[i].getBoundingClientRect();
-          for (let j = 0; j < children.length; j++) {
-            if (i === j) continue;
-            const next = children[j].getBoundingClientRect();
-            const verticalOverlap = Math.max(
-              0,
-              Math.min(current.bottom, next.bottom) -
-                Math.max(current.top, next.top),
-            );
-            if (
-              verticalOverlap > 0 &&
-              colGap > 0 &&
-              next.left > current.right &&
-              Math.abs(next.left - current.right - colGap) < 2
-            ) {
-              gaps.push({
-                top: Math.min(current.top, next.top) + window.scrollY,
-                left: current.right + window.scrollX,
-                width: next.left - current.right,
-                height: Math.max(current.height, next.height),
-              });
-            }
-            const horizontalOverlap = Math.max(
-              0,
-              Math.min(current.right, next.right) -
-                Math.max(current.left, next.left),
-            );
-            if (
-              horizontalOverlap > 0 &&
-              rowGap > 0 &&
-              next.top > current.bottom &&
-              Math.abs(next.top - current.bottom - rowGap) < 2
-            ) {
-              gaps.push({
-                top: current.bottom + window.scrollY,
-                left: Math.min(current.left, next.left) + window.scrollX,
-                width: Math.max(current.width, next.width),
-                height: next.top - current.bottom,
-              });
-            }
-          }
-        }
-      }
-    }
-
-    const distinctGaps: typeof gaps = [];
-    gaps.forEach((g) => {
-      if (
-        !distinctGaps.some(
-          (dg) =>
-            Math.abs(dg.top - g.top) < 1 &&
-            Math.abs(dg.left - g.left) < 1 &&
-            Math.abs(dg.width - g.width) < 1 &&
-            Math.abs(dg.height - g.height) < 1,
-        )
-      ) {
-        distinctGaps.push(g);
-      }
-    });
-
-    setTargetBox({
-      top: rect.top + window.scrollY,
-      left: rect.left + window.scrollX,
-      width: rect.width,
-      height: rect.height,
-      marginTop: getVal(styles.marginTop),
-      marginRight: getVal(styles.marginRight),
-      marginBottom: getVal(styles.marginBottom),
-      marginLeft: getVal(styles.marginLeft),
-      paddingTop: getVal(styles.paddingTop),
-      paddingRight: getVal(styles.paddingRight),
-      paddingBottom: getVal(styles.paddingBottom),
-      paddingLeft: getVal(styles.paddingLeft),
-      borderTop: getVal(styles.borderTopWidth),
-      borderRight: getVal(styles.borderRightWidth),
-      borderBottom: getVal(styles.borderBottomWidth),
-      borderLeft: getVal(styles.borderLeftWidth),
-      rowGap,
-      colGap,
-      gaps: distinctGaps,
-      borderRadius: styles.borderRadius,
-      display,
-    });
+    setTargetBox(measureBoxModel(element));
 
     const name = element.getAttribute("data-primitive") || "";
     setTargetName(name);
@@ -262,7 +105,7 @@ export const InspectorOverlay: React.FC<{
 
   if (!targetBox) return null;
 
-  const { top, left, width, height, gaps: gapsList, rowGap, colGap } = targetBox;
+  const { top, left, width, height, gaps: gapsList } = targetBox;
   const marginTopH = targetBox.marginTop;
   const marginBottomH = targetBox.marginBottom;
   const marginLeftW = targetBox.marginLeft;
@@ -290,37 +133,10 @@ export const InspectorOverlay: React.FC<{
 
   const dims = `${Math.round(width)} × ${Math.round(height)}`;
 
-  let mInfo = "";
-  if (marginTopH + marginRightW + marginBottomH + marginLeftW > 0) {
-    if (
-      marginTopH === marginRightW &&
-      marginTopH === marginBottomH &&
-      marginTopH === marginLeftW
-    ) {
-      mInfo = `m: ${marginTopH}`;
-    } else {
-      mInfo = `m: ${marginTopH} ${marginRightW} ${marginBottomH} ${marginLeftW}`;
-    }
-  }
-
-  let padInfo = "";
-  if (paddingTopV + paddingRightV + paddingBottomV + paddingLeftV > 0) {
-    if (
-      paddingTopV === paddingRightV &&
-      paddingTopV === paddingBottomV &&
-      paddingTopV === paddingLeftV
-    ) {
-      padInfo = `p: ${paddingTopV}`;
-    } else {
-      padInfo = `p: ${paddingTopV} ${paddingRightV} ${paddingBottomV} ${paddingLeftV}`;
-    }
-  }
-
-  let gapInfo = "";
-  if (rowGap > 0 || colGap > 0) {
-    if (rowGap === colGap) gapInfo = `g: ${rowGap}`;
-    else gapInfo = `g: ${rowGap}/${colGap}`;
-  }
+  const spacing = formatSpacing(targetBox);
+  const mInfo = spacing.margin;
+  const padInfo = spacing.padding;
+  const gapInfo = spacing.gap;
 
   return (
     <div

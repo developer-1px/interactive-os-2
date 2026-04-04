@@ -1,8 +1,8 @@
 import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
-import { localeFieldsOf } from './cms-schema'
-import { LOCALES } from './cms-types'
-import type { LocaleMap } from './cms-types'
+import { localeFieldsOf } from './cmsSchema'
+import { LOCALES } from './cmsTypes'
+import type { LocaleMap } from './cmsTypes'
 
 export const I18N_COLUMNS: { key: string; header: string; width?: string }[] = [
   { key: 'key', header: 'KEY', width: '200px' },

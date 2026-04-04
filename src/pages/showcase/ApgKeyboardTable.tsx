@@ -1,6 +1,6 @@
 // ② 2026-03-25-registry-md-ssot-prd.md
-import type { ApgPatternData } from './apg-data'
-import { apgBySlug } from './apg-data'
+import type { ApgPatternData } from './apgData'
+import { apgBySlug } from './apgData'
 
 type ApgKeyboardTableProps = ApgPatternData | { slug: string }
 

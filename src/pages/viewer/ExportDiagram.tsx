@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { MermaidBlock } from '../showcase/MermaidBlock'
-import styles from '../PageViewer.module.css'
+import { ax } from '@styles/ax'
 
 // --- Export structure types ---
 
@@ -119,7 +119,7 @@ export function ExportDiagram({ filePath }: { filePath: string }) {
   if (!mermaidCode) return null
 
   return (
-    <div className={styles.vwDepGraph}>
+    <div className={ax({ padding: 'md' })}>
       <MermaidBlock code={mermaidCode} />
     </div>
   )

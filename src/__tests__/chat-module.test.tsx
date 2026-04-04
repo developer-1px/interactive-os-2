@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
 import { Composer } from '@os/ui/Composer'
-import { timelineToMessages } from '../pages/viewer/timelineAdapter'
+import { timelineToMessages } from '../pages/viewer/timelineTransform'
 import type { ChatMessage, ChatBlock, BlockRendererMap, DataBlock } from '@os/ui/chat/types'
 import type { TimelineEvent } from '../pages/viewer/groupEvents'
 

@@ -8,6 +8,9 @@ const DOCS_DIR = path.resolve(process.cwd(), 'docs')
 export default function writerPlugin(): Plugin {
   return {
     name: 'writer-file-io',
+    handleHotUpdate({ file }) {
+      if (file.startsWith(DOCS_DIR) && file.endsWith('.md')) return []
+    },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         if (!req.url?.startsWith('/api/writer/')) return next()

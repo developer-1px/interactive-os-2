@@ -1,7 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { Up, Down } from '../shared/kbdIcons'
-import { Aria } from '@os/primitives/aria'
-import { listbox } from '@os/pattern/roles/listbox'
+import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
@@ -21,7 +20,6 @@ const demoData = createStore({
 
 export default function AriaListboxDemo() {
   const [data, setData] = useState<NormalizedData>(demoData)
-  const pattern = useMemo(() => listbox(), [])
 
   return (
     <>
@@ -30,14 +28,12 @@ export default function AriaListboxDemo() {
         <kbd>Space</kbd> <span className="key-hint">select</span>
       </div>
       <div className="card overflow-hidden">
-        <Aria
-          pattern={pattern}
+        <ListBox
           data={data}
           plugins={[]}
           onChange={setData}
           aria-label="Fruit picker"
-        >
-          <Aria.Item render={(props, node, state: NodeState) => {
+          renderItem={(props, node, state: NodeState) => {
             const d = node.data as Record<string, unknown>
             const cls = [
               'list-item flex-row items-center justify-between',
@@ -49,8 +45,8 @@ export default function AriaListboxDemo() {
                 <span className="list-item__label">{d?.emoji as string} {d?.label as string}</span>
               </div>
             )
-          }} />
-        </Aria>
+          }}
+        />
       </div>
     </>
   )

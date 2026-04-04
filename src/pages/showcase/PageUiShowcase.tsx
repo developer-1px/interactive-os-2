@@ -1,5 +1,6 @@
 import { useMemo, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { ax } from '@styles/ax'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import styles from './PageUiShowcase.module.css'
 import MdPage from './MdPage'
@@ -62,7 +63,7 @@ export default function PageUiShowcase() {
 
   return (
     <div className={`${styles.uiPage} flex-row flex-1 min-h-0`}>
-      <nav className={`${styles.uiSidebar} flex-col`}>
+      <nav className={`${ax({ surface: 'sunken', layout: 'column' })} ${styles.uiSidebar}`}>
         <PanelHeader axes={{ layout: 'spread' }}>UI Components</PanelHeader>
         <div className={`${styles.uiSidebarBody} flex-1 overflow-y-auto`}>
           <NavList
@@ -72,12 +73,12 @@ export default function PageUiShowcase() {
           />
         </div>
       </nav>
-      <div className={`${styles.uiContent} flex-col flex-1 min-w-0 overflow-hidden`}>
+      <div className={`${ax({ surface: 'base', layout: 'fill' })}`}>
         <div className={`${styles.uiContentBody} flex-1 overflow-y-auto`}>
           {mdFile ? (
             <MdPage key={activeSlug} md={`ui/${mdFile}`} />
           ) : (
-            <div style={{ padding: 'var(--space-xl)', color: 'var(--text-muted)' }}>Unknown component: {activeSlug}</div>
+            <div className={ax({ padding: 'xl', text: 'muted' })}>Unknown component: {activeSlug}</div>
           )}
         </div>
       </div>

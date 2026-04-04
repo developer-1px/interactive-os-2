@@ -48,7 +48,7 @@ export default function AppShell() {
       <div className="page flex-row overflow-hidden">
         <ReproRecorderOverlay />
         <ActivityBar theme={theme} onThemeToggle={toggleTheme} />
-        <div className="page-content flex-col flex-1 overflow-hidden">
+        <div className="page-content flex-col flex-1 overflow-y-auto">
           <Outlet />
         </div>
         <FileViewerModal

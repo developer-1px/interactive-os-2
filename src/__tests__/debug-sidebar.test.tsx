@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CmsLayout from '../pages/cms/CmsLayout'
-import { resetCmsData } from '../pages/cms/cms-state'
+import PageCms from '../pages/cms/PageCms'
+import { resetCmsData } from '../pages/cms/cmsState'
 
 describe('debug sidebar', () => {
   beforeEach(() => { resetCmsData() })
 
   it('confirms order of sidebar options', async () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
     const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
     const allOptions = sidebar.querySelectorAll('[role="option"]')
     const ids = Array.from(allOptions).map(el => el.getAttribute('data-sidebar-id'))
@@ -20,7 +20,7 @@ describe('debug sidebar', () => {
 
   it('what has tabindex=0 after 3 ArrowDowns', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
     const sidebar = container.querySelector('[role="listbox"]') as HTMLElement
 
     const firstOption = sidebar.querySelector('[role="option"][tabindex="0"]') as HTMLElement
