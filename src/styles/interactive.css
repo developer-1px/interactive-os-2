@@ -211,12 +211,12 @@
   background: var(--selection-cursor);
 }
 
-/* Tab selected uses neutral text, not accent */
+/* Tab selected uses neutral elevation, not accent */
 [data-aria-container] [role="tab"][aria-selected="true"] {
   color: var(--text-bright);
   border-bottom-color: var(--text-bright);
   font-weight: var(--weight-semi);
-  background: transparent;
+  background: var(--selection);
 }
 
 /* ── Checked (radio, switch) ── */

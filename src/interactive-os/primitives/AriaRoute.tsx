@@ -64,6 +64,7 @@ export function AriaRoute({ keyMap, label, inspectMap, children }: AriaRouteProp
         state: { entities: {}, relationships: {} },
         extras: {},
       }),
+      getElement: () => null,
     })
     return () => unregisterAria(registryKey)
   }, [keyMap, label, inspectMap])

@@ -29,6 +29,8 @@ export interface InspectResult {
   childRole?: string
   /** Registered command-input bindings from bindingRegistry */
   bindings?: BindingEntry[]
+  /** Declarative click bindings from pattern clickMap */
+  clickMap?: Record<string, readonly string[]>
 }
 
 export interface CommandEngine {
@@ -76,6 +78,8 @@ export interface VisibilityFilter {
   shouldShow?(nodeId: string, store: NormalizedData): boolean
   /** false면 이 노드의 자식을 walk하지 않음 */
   shouldDescend?(nodeId: string, store: NormalizedData): boolean
+  /** false면 이 노드를 visible에 push하지 않지만 자식은 walk (container skip) */
+  isFocusable?(nodeId: string, store: NormalizedData): boolean
 }
 
 export interface EngineOptions {

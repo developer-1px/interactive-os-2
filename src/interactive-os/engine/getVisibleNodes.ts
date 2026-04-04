@@ -18,17 +18,25 @@ export function getVisibleNodes(store: NormalizedData, filters?: VisibilityFilte
   const visible: string[] = []
   let _visitCount = 0
   const hasDescendFilter = filters?.some(f => f.shouldDescend) ?? false
+  const hasFocusableFilter = filters?.some(f => f.isFocusable) ?? false
 
   const visitChild = (childId: string) => {
     _visitCount++
     if (_visitCount > 5000) { console.error('[getVisibleNodes] visit loop, count:', _visitCount); return }
     if (filters?.some(f => f.shouldShow && !f.shouldShow(childId, store))) return
 
+    // isFocusable: false → skip from visible list but still walk children
+    const focusable = !hasFocusableFilter || !filters?.some(f => f.isFocusable && !f.isFocusable(childId, store))
+
     const grandChildren = getChildren(store, childId)
     const grandSlots = getSlotChildren(store, childId)
     const isContainer = grandChildren.length > 0 || grandSlots.length > 0
 
-    if (isContainer && !hasDescendFilter) {
+    if (!focusable) {
+      // Not focusable but walk children
+      const shouldDescend = !filters?.some(f => f.shouldDescend && !f.shouldDescend(childId, store))
+      if (shouldDescend) walk(childId)
+    } else if (isContainer && !hasDescendFilter && !hasFocusableFilter) {
       walk(childId)
     } else {
       visible.push(childId)
