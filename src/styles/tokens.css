@@ -77,8 +77,11 @@
   /* ── Indicator ── */
   --indicator-width: 2px;
 
-  /* ── Selection (blue dim — surface-default와 구분 가능) ── */
-  --selection: oklch(28%  0.037  250);
+  /* ② 2026-04-04-chroma-ladder-prd.md */
+  /* ── Selection — chroma ladder (hue 250 고정, chroma로 위계 표현) ── */
+  --selection-context: oklch(24%  0.020  250);
+  --selection:         oklch(28%  0.037  250);
+  --selection-cursor:  oklch(31%  0.047  250);
 
   /* ── Interactive ── */
   --bg-hover:  var(--stone-800);
@@ -248,8 +251,11 @@
   --focus:      var(--blue-500);
   --focus-idle: var(--bg-hover);
 
-  /* ── Selection (blue-100 — sunken 위에서도 구분 가능) ── */
-  --selection: var(--blue-100);
+  /* ② 2026-04-04-chroma-ladder-prd.md */
+  /* ── Selection — chroma ladder (hue 250 고정, chroma로 위계 표현) ── */
+  --selection-context: var(--blue-50);
+  --selection:         var(--blue-100);
+  --selection-cursor:  var(--blue-200);
 
   /* ── Interactive ── */
   --bg-hover:  var(--stone-100);

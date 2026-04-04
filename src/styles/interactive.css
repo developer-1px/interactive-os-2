@@ -51,7 +51,7 @@
   display: flex;
 }
 
-:where([data-aria-container] [role="treeitem"]) {
+:where([data-aria-container] [role="treeitem"]:has(> [role="treeitem"])) {
   flex-wrap: wrap;
 }
 
@@ -64,7 +64,7 @@
 /* Expanded treeitem: transparent layout container.
    First child (label row) takes over visual responsibility.
    Uses :first-child to be renderItem-agnostic (any inline-flex row or custom). */
-:where([data-aria-container] [role="treeitem"][aria-expanded="true"]) {
+:where([data-aria-container] [role="treeitem"][aria-expanded="true"]:has(> [role="treeitem"])) {
   padding: 0;
   /* !important: expanded treeitem은 투명 컨테이너 — :first-child가 시각 책임.
      같은 파일의 :active/selected 규칙이 여기 적용되면 안 됨.
@@ -73,7 +73,7 @@
   outline: none !important;
 }
 
-:where([data-aria-container] [role="treeitem"][aria-expanded="true"] > :first-child) {
+:where([data-aria-container] [role="treeitem"][aria-expanded="true"]:has(> [role="treeitem"]) > :first-child) {
   display: flex;
   align-items: center;
   width: 100%;
@@ -200,6 +200,17 @@
   background: var(--selection);
 }
 
+/* Grid/treegrid row: context-level selection (chroma ladder — spatial context for cursor) */
+[data-aria-container] [role="row"][aria-selected="true"],
+[data-aria-container] [role="row"][aria-selected="true"][data-focused] {
+  background: var(--selection-context);
+}
+
+/* Grid cursor cell: strongest chroma in selection ladder */
+[data-aria-container]:focus-within [role="gridcell"][data-cell-focused] {
+  background: var(--selection-cursor);
+}
+
 /* Tab selected uses accent border, not background */
 [data-aria-container] [role="tab"][aria-selected="true"] {
   color: var(--tone-primary-base);
@@ -215,13 +226,13 @@
 }
 
 /* ── Focused + Selected compound ── */
-/* Selected background preserved; outline only when container active */
+/* Cursor-level background for focused+selected items; row override above takes precedence for grids */
 
 [data-aria-container] [aria-selected="true"]:focus,
 [data-aria-container] [aria-checked="true"]:focus,
 [data-aria-container] [aria-selected="true"][data-focused],
 [data-aria-container] [aria-checked="true"][data-focused] {
-  background: var(--selection);
+  background: var(--selection-cursor);
   color: var(--text-bright);
 }
 
