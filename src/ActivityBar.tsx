@@ -2,7 +2,7 @@ import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages, Map,
-  MessageSquare, Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText, Bird, BookText, Play, Search, Cable, PenLine,
+  MessageSquare, Bird, BookText, Play, Search, Cable, PenLine,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -16,58 +16,7 @@ import type { AriaPattern, NodeState } from '@os/pattern/types'
 import type { NormalizedData } from '@os/store/types'
 import { selectionFollowsFocusMiddleware } from '@os/axis/select'
 import { Tooltip } from '@os/ui/Tooltip'
-import { SeparatorIndicator } from '@os/ui/indicators'
 import { ax } from '@styles/ax'
-
-// --- contents/_meta.yaml auto-import ---
-
-const metaModules = import.meta.glob<{ default: string }>('/contents/_meta.yaml', {
-  query: '?raw',
-  eager: true,
-})
-
-function parseRootMetaOrder(): string[] {
-  const mod = metaModules['/contents/_meta.yaml']
-  if (!mod) return []
-  const order: string[] = []
-  let inOrder = false
-  for (const line of mod.default.split('\n')) {
-    if (line.match(/^order:\s*$/)) { inOrder = true; continue }
-    if (inOrder) {
-      const m = line.match(/^\s+-\s+(.+)/)
-      if (m) order.push(m[1].trim())
-      else if (!line.match(/^\s*$/)) break
-    }
-  }
-  return order
-}
-
-const contentsOrder = parseRootMetaOrder()
-
-// --- Layer icon mapping ---
-
-const LAYER_ICONS: Record<string, LucideIcon> = {
-  overview: BookOpen,
-  vision: Lightbulb,
-  store: Database,
-  engine: Cog,
-  axis: Axe,
-  pattern: Layers,
-  plugins: Puzzle,
-  primitives: Box,
-  ui: Component,
-  devtools: Wrench,
-}
-
-const LAYER_LABELS: Record<string, string> = {
-  store: 'L1 Store',
-  engine: 'L2 Engine',
-  axis: 'L3 Axis',
-  pattern: 'L4 Pattern',
-  plugins: 'L5 Plugins',
-  primitives: 'L6 Primitives',
-  ui: 'L7 UI',
-}
 
 // --- Vertical toolbar pattern ---
 
@@ -127,19 +76,11 @@ const appNavItems: NavItem[] = [
   { id: 'writer', label: 'Writer', icon: PenLine, path: '/writer' },
 ]
 
-const internalsNavItems: NavItem[] = contentsOrder.map((layer) => ({
-  id: `internals/${layer}`,
-  label: LAYER_LABELS[layer] ?? layer.charAt(0).toUpperCase() + layer.slice(1),
-  icon: LAYER_ICONS[layer] ?? FileText,
-  path: `/internals/${layer}`,
-}))
-
-const navItems: NavItem[] = [...appNavItems, ...internalsNavItems]
+const navItems: NavItem[] = appNavItems
 
 // --- Pre-computed stores ---
 
 const APP_IDS = appNavItems.map((n) => n.id)
-const INTERNALS_IDS = internalsNavItems.map((n) => n.id)
 const UTIL_IDS = ['theme']
 
 const activityBarStore = toStore([
@@ -167,14 +108,6 @@ const renderNavItem = (props: HTMLAttributes<HTMLElement>, node: Record<string, 
 // --- URL → store focus ID ---
 
 function resolveActivityBarFocusId(pathname: string): string | undefined {
-  if (pathname.startsWith('/internals/')) {
-    const rest = pathname.slice('/internals/'.length)
-    const layer = rest.split('/')[0]
-    if (layer && layer !== 'theme') {
-      return `internals/${layer}`
-    }
-  }
-
   const sorted = [...appNavItems].sort((a, b) => b.path.length - a.path.length)
   for (const nav of sorted) {
     if (nav.path === '/') {
@@ -232,10 +165,6 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
       >
         <div role="group" aria-label="Apps">
           <Aria.Item asChild ids={APP_IDS} render={renderNavItem} />
-        </div>
-        <SeparatorIndicator />
-        <div role="group" aria-label="Internals">
-          <Aria.Item asChild ids={INTERNALS_IDS} render={renderNavItem} />
         </div>
         <div className={ax({ flex: '1' })} />
         <div role="group" aria-label="Util">
