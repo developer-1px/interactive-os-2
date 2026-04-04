@@ -46,6 +46,11 @@ export const PASTE_CELL = 'clipboard:pasteCellValue' as const
 export const CLEAR_CELL = 'clipboard:clearCellValue' as const
 export const CUT_CELL = 'clipboard:cutCellValue' as const
 
+/** Resolve target node IDs: selected ids if any, otherwise focused as single-element array. */
+function resolveTargetIds(ctx: { focused: string; selected?: { ids: string[] } }): string[] {
+  return (ctx.selected?.ids.length ?? 0) > 0 ? ctx.selected!.ids : [ctx.focused]
+}
+
 // -- Module-level clipboard data (shared -- OS clipboard model) --
 
 let clipboardBuffer: ClipboardEntry[] = []
@@ -364,15 +369,16 @@ export function clipboard(options?: ClipboardOptions) {
       [CUT_CELL]: clipboardCommands.cutCellValue,
     },
     keyMap: {
-      'Mod+D': (ctx: { focused: string; dispatch(cmd: Command): void }) => {
-        ctx.dispatch(clipboardCommands.copy([ctx.focused]))
-        return clipboardCommands.paste(ctx.focused, boundCanAccept)
+      'Mod+D': (ctx: { focused: string; selected?: { ids: string[] }; dispatch(cmd: Command): void }) => {
+        const ids = resolveTargetIds(ctx)
+        ctx.dispatch(clipboardCommands.copy(ids))
+        return clipboardCommands.paste(ids.at(-1)!, boundCanAccept)
       },
     },
     onCopy: (ctx: { focused: string; selected?: { ids: string[] } }) =>
-      clipboardCommands.copy((ctx.selected?.ids.length ?? 0) > 0 ? ctx.selected!.ids : [ctx.focused]),
+      clipboardCommands.copy(resolveTargetIds(ctx)),
     onCut: (ctx: { focused: string; selected?: { ids: string[] } }) =>
-      clipboardCommands.cut((ctx.selected?.ids.length ?? 0) > 0 ? ctx.selected!.ids : [ctx.focused], boundCanDelete),
+      clipboardCommands.cut(resolveTargetIds(ctx), boundCanDelete),
     onPaste: (ctx: { focused: string }) =>
       clipboardCommands.paste(ctx.focused, boundCanAccept),
   })
