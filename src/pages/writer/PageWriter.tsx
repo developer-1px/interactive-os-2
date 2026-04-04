@@ -328,9 +328,9 @@ export default function PageWriter() {
             {urlFilePath && <span className={ax({ text: 'muted' })}>{urlFilePath}</span>}
           </div>
 
-          <div className={ax({ layout: 'scroll', width: 'prose', padding: 'md' })}>
+          <div className={ax({ layout: 'scroll', padding: 'md' })}>
             {prose ? (
-              <ProseView data={data} />
+              <div className={ax({ width: 'prose' })}><ProseView data={data} /></div>
             ) : (
               <TreeGrid
                 data={data}
