@@ -161,7 +161,7 @@ describe('engine.inspect()', () => {
 
 // V7: 2026-04-03-app-inspector-prd.md
 describe('inspectToTree', () => {
-  it('V7: converts InspectResult to NormalizedData with 5 groups', () => {
+  it('V7: converts InspectResult to NormalizedData with 6 groups', () => {
     const input: InspectResult = {
       commands: ['core:focus', 'core:expand'],
       keyMap: { ArrowDown: { owner: 'navigate' } },
@@ -175,11 +175,12 @@ describe('inspectToTree', () => {
 
     const tree = inspectToTree(input)
 
-    // 5 groups under root
+    // 6 groups under root
     const rootChildren = tree.relationships[ROOT_ID]!
-    expect(rootChildren).toHaveLength(5)
+    expect(rootChildren).toHaveLength(6)
     expect(rootChildren).toContain('_group:commands')
     expect(rootChildren).toContain('_group:keyMap')
+    expect(rootChildren).toContain('_group:bindings')
     expect(rootChildren).toContain('_group:plugins')
     expect(rootChildren).toContain('_group:state')
     expect(rootChildren).toContain('_group:extras')

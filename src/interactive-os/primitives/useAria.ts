@@ -22,6 +22,7 @@ import type { PatternContextOptions } from '../pattern/createPatternContext'
 import { useAriaView } from './useAriaView'
 import { dispatchKeyAction } from './keymapHelpers'
 import { registerAria, unregisterAria } from './ariaRegistry'
+import { registerBinding, unregisterBindings, getAllBindings } from './bindingRegistry'
 
 type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; onFocusChange: UseAriaOptions['onFocusChange']; pattern: AriaPattern; prevFocus: string; prevSelectedIds: string[] }
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
@@ -319,13 +320,34 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     [view.containerProps],
   )
 
-  // Auto-register in inspector registry
+  // Auto-register in inspector registry + binding registry
   const registryKey = ariaId ?? ariaLabel
   useEffect(() => {
     if (!registryKey) return
-    registerAria(registryKey, { dispatch, getStore: () => engine.getStore(), inspect: () => engine.inspect() })
-    return () => unregisterAria(registryKey)
-  }, [registryKey, dispatch, engine])
+    registerAria(registryKey, { dispatch, getStore: () => engine.getStore(), inspect: () => {
+      const base = engine.inspect()
+      if (import.meta.env.DEV) {
+        return { ...base, bindings: getAllBindings().filter(b => b.nodeId === null || b.nodeId === registryKey) }
+      }
+      return base
+    } })
+
+    if (import.meta.env.DEV) {
+      for (const map of [pattern.keyMap, pattern.clickMap]) {
+        if (!map) continue
+        for (const [input, handler] of Object.entries(map)) {
+          for (const cmd of handler.commands) {
+            registerBinding({ command: cmd, nodeId: registryKey, input })
+          }
+        }
+      }
+    }
+
+    return () => {
+      unregisterAria(registryKey)
+      if (import.meta.env.DEV) unregisterBindings(registryKey)
+    }
+  }, [registryKey, dispatch, engine, pattern.keyMap, pattern.clickMap])
 
   return {
     dispatch,

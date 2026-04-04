@@ -64,6 +64,7 @@
 | Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight | Integrated | Panel/Trigger 제거 완료. state.slotProps로 slot ARIA 전달. Part 5종만. aria-multiselectable 자동 출력 |
 | useAria · useAriaZone · useControlledAria | Integrated | onFocusChange 콜백 추가. disabled 옵션. keyMap-only 경로 검증 완료 (CmsLayout Mod+\\) |
 | useKeyMap | Integrated | 레이아웃 레벨 키 캡처 (React onKeyDown + findMatchingKey). src/hooks에서 OS로 이동 |
+| useCommand · bindingRegistry | Integrated | 이름 있는 커맨드 핸들러 + 전역 바인딩 레지스트리. DEV 전용. inspector 양방향 조회(byNode/byCommand) |
 | useKeyboard · useSpatialNav | Integrated | — |
 | useResizer · useVirtualScroll | Integrated | plugins/로 이동. virtualScroll() definePlugin 래퍼 + useVirtualScrollState 훅 이중 구조 |
 | VirtualCodeBlock | Integrated | 500줄+ 코드 파일 가상 스크롤. Shiki codeToTokens 줄별 토큰 캐시 |
@@ -120,7 +121,7 @@
 | Agent Chat (Agent SDK · WebSocket · session lifecycle) | Prototype | Phase A: 텍스트 채팅. Phase B/C: tool UI, permission |
 | Devtools (REC · Inspector · Test Runner) | Integrated | 크로스커팅 도메인 독립, /devtools/* 라우트, ARIA tree 스냅샷 REC |
 | Inspector · Command · Diff | Validated | Source preview on click (computePlacement 범용 유틸) |
-| App Inspector (engine.inspect) | Validated | 새 창 전용, Zone 계층 트리, view-level keyMap 노출 (pattern/plugin/override 출처별) |
+| App Inspector (engine.inspect) | Validated | 새 창 전용, Zone 계층 트리, view-level keyMap 노출 (pattern/plugin/override 출처별), bindingRegistry 통합 |
 | Showcase (Plugin · Axis · Area) | Validated | Pattern/Collection → /ui 흡수 완료 |
 | Writer (MD 구조 편집 · 산문 프리뷰 · 파일 I/O) | Prototype | chat 브릿지 미구현, Tab indent/outdent 미구현 |
 

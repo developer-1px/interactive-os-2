@@ -9,6 +9,7 @@ export function inspectToTree(result: InspectResult): NormalizedData {
 
   const COMMANDS_GROUP = '_group:commands'
   const KEYMAP_GROUP = '_group:keyMap'
+  const BINDINGS_GROUP = '_group:bindings'
   const PLUGINS_GROUP = '_group:plugins'
   const STATE_GROUP = '_group:state'
   const EXTRAS_GROUP = '_group:extras'
@@ -20,6 +21,11 @@ export function inspectToTree(result: InspectResult): NormalizedData {
   entities[KEYMAP_GROUP] = {
     id: KEYMAP_GROUP,
     data: { label: 'keyMap', type: 'group', count: Object.keys(result.keyMap).length },
+  }
+  const bindings = result.bindings ?? []
+  entities[BINDINGS_GROUP] = {
+    id: BINDINGS_GROUP,
+    data: { label: 'bindings', type: 'group', count: bindings.length },
   }
   entities[PLUGINS_GROUP] = {
     id: PLUGINS_GROUP,
@@ -36,7 +42,7 @@ export function inspectToTree(result: InspectResult): NormalizedData {
     data: { label: 'extras', type: 'group', count: Object.keys(result.extras).length },
   }
 
-  relationships[ROOT_ID] = [COMMANDS_GROUP, KEYMAP_GROUP, PLUGINS_GROUP, STATE_GROUP, EXTRAS_GROUP]
+  relationships[ROOT_ID] = [COMMANDS_GROUP, KEYMAP_GROUP, BINDINGS_GROUP, PLUGINS_GROUP, STATE_GROUP, EXTRAS_GROUP]
 
   // Commands
   const commandChildren: string[] = []
@@ -56,6 +62,35 @@ export function inspectToTree(result: InspectResult): NormalizedData {
     keyMapChildren.push(nodeId)
   }
   relationships[KEYMAP_GROUP] = keyMapChildren
+
+  // Bindings — grouped by command
+  const bindingsByCmd = new Map<string, typeof bindings>()
+  for (const b of bindings) {
+    const list = bindingsByCmd.get(b.command) ?? []
+    list.push(b)
+    bindingsByCmd.set(b.command, list)
+  }
+  const bindingCmdChildren: string[] = []
+  for (const [cmd, list] of bindingsByCmd) {
+    const cmdNodeId = `_bind:${cmd}`
+    entities[cmdNodeId] = {
+      id: cmdNodeId,
+      data: { label: cmd, type: 'command', count: list.length },
+    }
+    bindingCmdChildren.push(cmdNodeId)
+    const bindChildren: string[] = []
+    for (const b of list) {
+      const bId = `_bind:${cmd}:${b.nodeId ?? 'global'}:${b.input}`
+      const nodeLabel = b.nodeId ?? '(global)'
+      entities[bId] = {
+        id: bId,
+        data: { label: `${b.input} → ${nodeLabel}`, type: 'binding' },
+      }
+      bindChildren.push(bId)
+    }
+    relationships[cmdNodeId] = bindChildren
+  }
+  relationships[BINDINGS_GROUP] = bindingCmdChildren
 
   // Plugins
   const pluginChildren: string[] = []
