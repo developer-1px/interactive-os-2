@@ -150,4 +150,12 @@
 
 ---
 
-**전체 완성도:** 🟢 8/8
+**전체 완성도:** 🟢 구현 완료
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| CalendarGrid ui/ 완성품 | `src/interactive-os/ui/CalendarGrid.tsx` |
+| DatePicker ui/ 조합 완성품 | `src/interactive-os/ui/DatePicker.tsx` |
+| DatePicker 스타일 | `src/interactive-os/ui/DatePicker.module.css` |

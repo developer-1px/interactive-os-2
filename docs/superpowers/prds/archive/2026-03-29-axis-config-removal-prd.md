@@ -128,4 +128,15 @@
 
 ---
 
-**전체 완성도:** 🟢 8/8
+**전체 완성도:** 🟢 구현 완료
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| AxisConfig 삭제 | `AxisConfig` grep 결과 0건 — 완전 제거 |
+| entities 선언 | `src/interactive-os/axis/types.ts` — `EntityDecl`, `CtxFactory` 타입 존재 |
+| composePattern 변경 | `composePattern.ts:148` — `collectEntities(required)` |
+| requiredEntities | `composePattern.ts:163+` — AriaPattern에 entities 합성 |
+| clickMap 이관 | `composePattern.ts` — `splitInputMap`으로 keyMap/clickMap 분리 |
+| 축 middleware | `src/interactive-os/axis/select.ts` — `ctx.selected.*` namespace |

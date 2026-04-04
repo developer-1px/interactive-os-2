@@ -180,6 +180,18 @@ composePattern이 ctxFactory를 수집 → createPatternContext가 호출하여 
 
 ---
 
-**전체 완성도:** 🟢 8/8
+**전체 완성도:** 🟢 구현 완료
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| ctx.expanded | `axis/expand.ts` — `ExpandedNav` factory, `ctx.expanded.toggle()` 사용처 6파일 |
+| ctx.selected | `axis/select.ts` — `SelectedNav` factory, `ctx.selected.toggle()` 사용처 |
+| ctx.checked | `axis/checked.ts` — `CheckedNav` factory, `ctx.checked.toggle()` 사용처 |
+| ctx.popup | `axis/popup.ts` — popup namespace 존재 |
+| ctxFactory 프로토콜 | `axis/types.ts` — `CtxFactory` 타입 |
+| createPatternContext 단순화 | `composePattern.ts:149` — `collectCtxFactories(required)` |
+| flat 메서드 제거 | `toggleSelect`, `expand()`, `collapse()` 등 flat 메서드 grep 0건 (namespace로 전환) |
 
 **실행 방식:** 에이전트 위임 아님. 사람과 함께 단계별 확인하며 점진적 수정.

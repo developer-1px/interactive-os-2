@@ -104,4 +104,12 @@
 
 ---
 
-**전체 완성도:** 🟢 8/8
+**전체 완성도:** 🟢 구현 완료
+
+## 역PRD
+
+| 항목 | 증거 |
+|------|------|
+| ListBoxGrouped ui/ 완성품 | `src/interactive-os/ui/ListBoxGrouped.tsx` |
+| ListboxGrouped example 전환 | `src/interactive-os/pattern/examples/ListboxGrouped.tsx` — ui/ 소비 |
+| examples → ui 의존 | examples가 ui/ 컴포넌트를 import |
