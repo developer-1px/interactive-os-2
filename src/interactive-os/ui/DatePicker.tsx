@@ -1,8 +1,8 @@
 // ② 2026-04-03-command-unification-prd.md
 import React, { useMemo, useCallback, useRef, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
+import { DirectionIndicator, ExpandIndicator } from './indicators'
 import styles from './DatePicker.module.css'
 import { FOCUS_ID } from '../axis/navigate'
 import { useEngine } from '../engine/useEngine'
@@ -248,7 +248,7 @@ export function DatePicker({
           tabIndex={-1}
           onClick={() => isOpen ? closeDialog() : openDialog()}
         >
-          <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+          <ExpandIndicator expanded={isOpen} />
         </button>
       </div>
 
@@ -263,17 +263,17 @@ export function DatePicker({
         >
           <div className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.navBar}`}>
             <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
-              <ChevronsLeft size="1em" />
+              <DirectionIndicator direction="prev" double />
             </button>
             <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
-              <ChevronLeft size="1em" />
+              <DirectionIndicator direction="prev" />
             </button>
             <span className={`${ax({ flex: '1', textStyle: 'label', text: 'primary' })} ${styles.monthYear}`} aria-live="polite">{MONTHS[month]} {year}</span>
             <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
-              <ChevronRight size="1em" />
+              <DirectionIndicator direction="next" />
             </button>
             <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Year" onClick={() => changeYear(1)}>
-              <ChevronsRight size="1em" />
+              <DirectionIndicator direction="next" double />
             </button>
           </div>
 

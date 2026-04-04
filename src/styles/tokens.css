@@ -137,13 +137,13 @@
   --space-inline-code: 2px;
   --space-xs:  4px;
   --space-sm:  8px;
-  --space-md:  12px;
-  --space-lg:  16px;
-  --space-xl:  24px;
-  --space-2xl: 32px;
-  --space-3xl: 40px;
-  --space-4xl: 48px;
-  --space-5xl: 64px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 80px;
+  --space-5xl: 96px;
 
   /* ── Border ── */
   --border-width: 1px;
@@ -197,7 +197,7 @@
 [data-theme="light"] {
   /* ── Surface ── */
   --surface-base:     var(--stone-50);     /* page bg */
-  --surface-sunken:   var(--stone-100);    /* sidebar, blockquote */
+  --surface-sunken:   oklch(96% 0.007 90); /* sidebar, blockquote — 2% gap from base */
   --surface-default:  var(--stone-0);      /* content — pure white */
   --surface-raised:   var(--stone-0);      /* + shadow */
   --surface-overlay:  var(--stone-0);      /* + shadow */
@@ -215,10 +215,10 @@
   --text-secondary: var(--stone-600);
   --text-muted:     var(--stone-500);
 
-  /* ── Border ── */
-  --border-subtle:  var(--stone-300);
-  --border-default: var(--stone-400);
-  --border-strong:  var(--stone-500);
+  /* ── Border — subtle for layout, stronger for interactive ── */
+  --border-subtle:  oklch(96% 0.007 90);  /* ~2% — layout dividers */
+  --border-default: oklch(94% 0.009 90);  /* ~4% — general */
+  --border-strong:  oklch(88% 0.012 90);  /* ~12% — input, overlay */
 
   /* ── Tone (light) ── */
   --tone-primary-base:   var(--blue-600);

@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react'
-import { X } from 'lucide-react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import styles from './Combobox.module.css'
+import { CloseIndicator } from './indicators'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
@@ -288,7 +288,7 @@ export function Combobox({
                   onClick={() => removeToken(id)}
                   aria-label={`Remove ${getLabel(id)}`}
                 >
-                  <X size={14} />
+                  <CloseIndicator />
                 </button>
               </span>
             ))}

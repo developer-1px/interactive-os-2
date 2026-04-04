@@ -1,14 +1,15 @@
 // ── MECE Axis Design System — 순수 TypeScript ──
 //
 // ax()만 사용. style={} 금지.
-// 시각 6축 + 구조 6축 = 12축. 이게 전부.
+// 시각 축 + 구조 축. 이게 전부.
 
 // ── 시각 축 ──
 
-type Surface = 'action' | 'input' | 'display' | 'overlay' | 'ghost' | 'placeholder'
+type Surface = 'action' | 'input' | 'display' | 'overlay' | 'ghost' | 'placeholder' | 'sunken' | 'base'
 type ControlSize = 'sm' | 'md' | 'lg'
 type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code' | 'overline'
 type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
+  | 'accent-dim' | 'danger-dim' | 'success-dim' | 'warning-dim' | 'neutral-dim'
 type Text = 'bright' | 'primary' | 'secondary' | 'muted' | 'accent' | 'danger' | 'success' | 'warning'
 // shape: 비-컨트롤 요소의 border-radius (컨트롤은 controlSize가 소유)
 type Shape = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
@@ -19,6 +20,8 @@ type Weight = 'medium' | 'semi' | 'bold'
 type State = 'focused' | 'selected'
 // opacity: 비-disabled 시각적 약화 (disabled는 surface 소관)
 type Opacity = 'dim' | 'faint' | 'hidden'
+// motion: 반복 애니메이션 (transition은 surface 소유, motion은 반복/진입)
+type Motion = 'pulse' | 'spin' | 'fade-in' | 'slide-up'
 
 // ── 구조 축 ──
 
@@ -32,8 +35,12 @@ type Layout =
   | 'stack'   // flex column (gap은 gap 축에서)
   | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
   | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
+  // self-alignment (자식이 부모 안에서의 위치 지정)
+  | 'self-start'  // align-self: flex-start
+  | 'self-end'    // align-self: flex-end
+  | 'self-center' // align-self: center
 
-type Gap = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+type Gap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 type Padding = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 type Width = 'full' | 'auto' | 'fit' | 'sm' | 'md' | 'lg'
 type Flex = 'none' | 'auto' | '1'
@@ -53,6 +60,7 @@ export interface Axes {
   state?: State
   opacity?: Opacity
   shape?: Shape
+  motion?: Motion
 
   // 구조 축
   layout?: Layout
@@ -76,6 +84,7 @@ const prefixes: Record<keyof Axes, string> = {
   state: 'st',
   opacity: 'op',
   shape: 'sh',
+  motion: 'mo',
   layout: 'ly',
   gap: 'g',
   padding: 'pd',

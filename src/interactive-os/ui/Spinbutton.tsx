@@ -1,6 +1,5 @@
 // ② 2026-04-03-command-unification-prd.md
 import React, { useCallback, useRef } from 'react'
-import { Minus, Plus } from 'lucide-react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import styles from './Spinbutton.module.css'
@@ -13,6 +12,7 @@ import { valueCommands } from '../axis/value'
 import { editCommands } from '../axis/edit'
 import { history } from '../plugins/history'
 import { getAriaActions } from '../primitives/ariaRegistry'
+import { IncrementIndicator } from './indicators'
 
 interface SpinbuttonProps extends AriaComponentProps {
   id?: string
@@ -130,7 +130,7 @@ export function Spinbutton({
             aria-disabled={atMin || undefined}
             onClick={handleDecrement}
           >
-            <Minus size={16} />
+            <IncrementIndicator direction="decrement" />
           </button>
           {editing ? (
             <input
@@ -161,7 +161,7 @@ export function Spinbutton({
             aria-disabled={atMax || undefined}
             onClick={handleIncrement}
           >
-            <Plus size={16} />
+            <IncrementIndicator direction="increment" />
           </button>
         </div>
       </div>

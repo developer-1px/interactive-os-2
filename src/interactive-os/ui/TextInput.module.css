@@ -14,3 +14,7 @@
 .input::placeholder {
   color: var(--text-muted);
 }
+
+.input[data-align="right"] {
+  text-align: right;
+}

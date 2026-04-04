@@ -1,7 +1,5 @@
 import React from 'react'
 import type { ReactNode } from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
-
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
 import type { NodeState } from '../pattern/types'
@@ -10,6 +8,7 @@ import { menubar } from '../pattern/roles/menubar'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import styles from './Menubar.module.css'
+import { ExpandIndicator, DirectionIndicator } from './indicators'
 
 type MenubarRenderItem = (
   props: React.HTMLAttributes<HTMLElement>,
@@ -39,7 +38,7 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
         >
           <span>{label}</span>
           <span className={ax({ layout: 'row', text: 'muted' })} aria-hidden="true">
-            {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
+            {isRoot ? <ExpandIndicator expanded={state.expanded} /> : <DirectionIndicator direction="next" />}
           </span>
         </a>
         <ul
@@ -66,7 +65,7 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
         <span>{label}</span>
         {hasChildren && (
           <span className={ax({ layout: 'row', text: 'muted' })} aria-hidden="true">
-            {isRoot ? <ChevronDown size="1em" /> : <ChevronRight size="1em" />}
+            {isRoot ? <ExpandIndicator expanded={state.expanded} /> : <DirectionIndicator direction="next" />}
           </span>
         )}
       </a>

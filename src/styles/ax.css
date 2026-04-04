@@ -24,8 +24,8 @@
 .sf-action:disabled { opacity: 0.4; pointer-events: none; cursor: default; }
 
 .sf-input {
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-default);
+  border: 1px solid var(--border-strong);
+  background: var(--_bg, var(--surface-default));
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 .sf-input:focus-within { border-color: var(--focus); }
@@ -36,20 +36,30 @@
 
 .sf-display {
   border: 1px solid var(--border-subtle);
-  background: var(--surface-default);
+  background: var(--_bg, var(--surface-default));
 }
 
 .sf-overlay {
-  background: var(--surface-overlay);
+  background: var(--_bg, var(--surface-overlay));
   box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-strong);
+}
+
+.sf-sunken {
+  background: var(--_bg, var(--surface-sunken));
+  border: none;
+}
+
+.sf-base {
+  background: var(--_bg, var(--surface-base));
+  border: none;
 }
 
 .sf-placeholder {
   cursor: pointer;
   user-select: none;
   border: 1px dashed var(--border-subtle);
-  background: transparent;
+  background: var(--_bg, transparent);
   color: var(--text-muted);
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing),
               color var(--motion-instant-duration) var(--motion-instant-easing);
@@ -212,6 +222,39 @@
   --_bg-active: var(--bg-active);
 }
 
+/* ── Tone dim — 연한 배경, 진한 전경 (배지, 버블, 하이라이트) ── */
+
+.tn-accent-dim {
+  --_bg: var(--tone-primary-dim);
+  --_fg: var(--tone-primary-hover);
+  --_bg-hover: var(--tone-primary-mid);
+  --_bg-active: var(--tone-primary-dim);
+}
+.tn-danger-dim {
+  --_bg: var(--tone-destructive-dim);
+  --_fg: var(--tone-destructive-hover);
+  --_bg-hover: var(--tone-destructive-mid);
+  --_bg-active: var(--tone-destructive-dim);
+}
+.tn-success-dim {
+  --_bg: var(--tone-success-dim);
+  --_fg: var(--tone-success-hover);
+  --_bg-hover: var(--tone-success-mid);
+  --_bg-active: var(--tone-success-dim);
+}
+.tn-warning-dim {
+  --_bg: var(--tone-warning-dim);
+  --_fg: var(--tone-warning-hover);
+  --_bg-hover: var(--tone-warning-mid);
+  --_bg-active: var(--tone-warning-dim);
+}
+.tn-neutral-dim {
+  --_bg: var(--bg-hover);
+  --_fg: var(--text-secondary);
+  --_bg-hover: var(--bg-active);
+  --_bg-active: var(--bg-hover);
+}
+
 /* ════════════════════════════════════════════
  * Text Color — 텍스트 색상 위계 (tone과 독립)
  * ════════════════════════════════════════════ */
@@ -284,15 +327,21 @@
 /* 부모를 꽉 채우는 패인/분할창. 자식이 넘치면 클립. 콘텐츠는 내부에서 ly-scroll로 처리. */
 .ly-fill   { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
 
+/* ── Self-alignment — 자식이 부모 안에서의 위치 ── */
+.ly-self-start  { align-self: flex-start; }
+.ly-self-end    { align-self: flex-end; }
+.ly-self-center { align-self: center; }
+
 /* ════════════════════════════════════════════
- * Gap — 간격 스케일 (claude.ai 실측: 4/8/12/16/24)
+ * Gap — 간격 스케일 (dense: xs~sm, breathing: md~xl)
  * ════════════════════════════════════════════ */
 
-.g-xs { gap: var(--space-xs); }  /*  4px */
-.g-sm { gap: var(--space-sm); }  /*  8px */
-.g-md { gap: var(--space-md); }  /* 12px */
-.g-lg { gap: var(--space-lg); }  /* 16px */
-.g-xl { gap: var(--space-xl); }  /* 24px */
+.g-xs  { gap: var(--space-xs); }   /*  4px */
+.g-sm  { gap: var(--space-sm); }   /*  8px */
+.g-md  { gap: var(--space-md); }   /* 16px */
+.g-lg  { gap: var(--space-lg); }   /* 24px */
+.g-xl  { gap: var(--space-xl); }   /* 32px */
+.g-2xl { gap: var(--space-2xl); }  /* 48px */
 
 /* ════════════════════════════════════════════
  * Padding — 같은 간격 스케일
@@ -301,9 +350,9 @@
 .pd-none { padding: 0; }
 .pd-xs   { padding: var(--space-xs); }   /*  4px */
 .pd-sm   { padding: var(--space-sm); }   /*  8px */
-.pd-md   { padding: var(--space-md); }   /* 12px */
-.pd-lg   { padding: var(--space-lg); }   /* 16px */
-.pd-xl   { padding: var(--space-xl); }   /* 24px */
+.pd-md   { padding: var(--space-md); }   /* 16px */
+.pd-lg   { padding: var(--space-lg); }   /* 24px */
+.pd-xl   { padding: var(--space-xl); }   /* 32px */
 
 /* ════════════════════════════════════════════
  * Width — 너비 제약
@@ -323,6 +372,42 @@
 .fx-none { flex: none; }
 .fx-auto { flex: auto; }
 .fx-1    { flex: 1; }
+
+/* ════════════════════════════════════════════
+ * Clamp — 텍스트 줄 수 제한
+ * '1': nowrap + ellipsis (단일행)
+ * '2'~'4': CSS line-clamp (다중행)
+ * ════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════
+ * Motion — 반복/진입 애니메이션
+ * transition은 surface가 소유. motion은 @keyframes 기반.
+ * ════════════════════════════════════════════ */
+
+@keyframes ax-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes ax-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ax-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ax-slide-up {
+  from { opacity: 0; transform: translateY(var(--space-sm)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mo-pulse    { animation: ax-pulse 1.5s ease-in-out infinite; }
+.mo-spin     { animation: ax-spin 1s linear infinite; }
+.mo-fade-in  { animation: ax-fade-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
+.mo-slide-up { animation: ax-slide-up var(--motion-enter-duration) var(--motion-enter-easing) both; }
 
 /* ════════════════════════════════════════════
  * Clamp — 텍스트 줄 수 제한

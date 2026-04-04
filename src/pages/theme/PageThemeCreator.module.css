@@ -2,52 +2,88 @@
 
 .root {
   grid-column: 2 / -1;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1600px;
+  padding: var(--space-xl);
   padding-bottom: 80px;
-  overflow-y: auto;
+}
+
+/* ── Tab content area ── */
+
+.tabContent {
+  min-height: 0;
+}
+
+/* ── Theme panel ── */
+
+.themePanel {
+  flex-shrink: 0;
 }
 
 /* ── Page layout: 3-column grid ── */
 
 .pageGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1.1fr 1.2fr;
+  gap: var(--space-xl);
+}
+
+/* ── Composed: 2-column grid ── */
+
+.composedGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
   gap: var(--space-xl);
 }
 
 /* ── Grid helpers (column counts) ── */
 
-.grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-xs); }
-.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-xs); align-items: center; }
+.grid7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--space-sm); }
+.grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-sm); }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-sm); align-items: center; }
 
-/* ── Section label ── */
+/* ── Palette strip ── */
 
-.sectionLabel {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.paletteStrip {
+  display: flex;
+  gap: var(--space-xs);
 }
 
-/* ── Mono font for token names ── */
+.paletteSwatch {
+  aspect-ratio: 1;
+}
+.paletteSwatch[data-stone="0"]   { background: var(--stone-0); border: 1px solid var(--border-subtle); }
+.paletteSwatch[data-stone="50"]  { background: var(--stone-50); }
+.paletteSwatch[data-stone="100"] { background: var(--stone-100); }
+.paletteSwatch[data-stone="200"] { background: var(--stone-200); }
+.paletteSwatch[data-stone="300"] { background: var(--stone-300); }
+.paletteSwatch[data-stone="400"] { background: var(--stone-400); }
+.paletteSwatch[data-stone="500"] { background: var(--stone-500); }
+.paletteSwatch[data-stone="600"] { background: var(--stone-600); }
+.paletteSwatch[data-stone="700"] { background: var(--stone-700); }
+.paletteSwatch[data-stone="750"] { background: var(--stone-750); }
+.paletteSwatch[data-stone="800"] { background: var(--stone-800); }
+.paletteSwatch[data-stone="850"] { background: var(--stone-850); }
+.paletteSwatch[data-stone="875"] { background: var(--stone-875); }
+.paletteSwatch[data-stone="900"] { background: var(--stone-900); }
+.paletteSwatch[data-stone="950"] { background: var(--stone-950); }
 
-.mono { font-family: var(--mono); }
-
-/* ── Swatches (dynamic token color — ax()로 불가) ── */
+/* ── Surface swatches (dynamic token color — ax()로 불가) ── */
 
 .swatch {
   aspect-ratio: 1.4;
-  border-radius: 8px;
-  border: 1px solid var(--border-subtle);
 }
 .swatch[data-surface="action"]  { background: var(--bg-hover); cursor: pointer; }
-.swatch[data-surface="input"]   { background: var(--surface-default); border-color: var(--border-default); }
-.swatch[data-surface="display"] { background: var(--surface-default); }
+.swatch[data-surface="input"]   { background: var(--surface-default); border: 1px solid var(--border-strong); }
+.swatch[data-surface="display"] { background: var(--surface-default); border: 1px solid var(--border-subtle); }
 .swatch[data-surface="overlay"] { background: var(--surface-overlay); box-shadow: var(--shadow-lg); }
-.swatch[data-surface="ghost"]   { background: transparent; }
+.swatch[data-surface="ghost"]   { background: transparent; border: 1px dashed var(--border-subtle); }
+.swatch[data-surface="sunken"]  { background: var(--surface-sunken); }
+.swatch[data-surface="base"]    { background: var(--surface-base); }
+
+/* ── Tone swatches ── */
 
 .toneSwatch {
   aspect-ratio: 1.4;
-  border-radius: 8px;
 }
 .toneSwatch[data-tone="accent"]  { background: var(--tone-primary-base); }
 .toneSwatch[data-tone="danger"]  { background: var(--tone-destructive-base); }
@@ -55,13 +91,50 @@
 .toneSwatch[data-tone="warning"] { background: var(--tone-warning-base); }
 .toneSwatch[data-tone="neutral"] { background: var(--bg-hover); }
 
+.toneDimSwatch {
+  aspect-ratio: 1.4;
+}
+.toneDimSwatch[data-tone="accent"]  { background: var(--tone-primary-dim); }
+.toneDimSwatch[data-tone="danger"]  { background: var(--tone-destructive-dim); }
+.toneDimSwatch[data-tone="success"] { background: var(--tone-success-dim); }
+.toneDimSwatch[data-tone="warning"] { background: var(--tone-warning-dim); }
+.toneDimSwatch[data-tone="neutral"] { background: var(--tone-neutral-dim); }
+
+/* ── Shadow swatches ── */
+
+.shadowSwatch {
+  aspect-ratio: 1;
+  background: var(--surface-default);
+}
+.shadowSwatch[data-shadow="xs"] { box-shadow: var(--shadow-xs); }
+.shadowSwatch[data-shadow="sm"] { box-shadow: var(--shadow-sm); }
+.shadowSwatch[data-shadow="md"] { box-shadow: var(--shadow-md); }
+.shadowSwatch[data-shadow="lg"] { box-shadow: var(--shadow-lg); }
+
+/* ── Shape swatches ── */
+
+.shapeSwatch {
+  width: 48px;
+  height: 48px;
+  background: var(--tone-primary-base);
+}
+
+/* ── Border swatches ── */
+
+.borderSwatch {
+  aspect-ratio: 2;
+  background: var(--surface-default);
+}
+.borderSwatch[data-border="subtle"]  { border: 1px solid var(--border-subtle); }
+.borderSwatch[data-border="default"] { border: 1px solid var(--border-default); }
+.borderSwatch[data-border="strong"]  { border: 1px solid var(--border-strong); }
+
 /* ── Spacing bars ── */
 
 .spacingLabel { min-width: 36px; text-align: right; }
 .spacingBar {
   height: 12px;
   background: var(--tone-primary-base);
-  border-radius: 4px;
 }
 .spacingBar[data-size="xs"] { width: var(--space-xs); }
 .spacingBar[data-size="sm"] { width: var(--space-sm); }
@@ -69,18 +142,17 @@
 .spacingBar[data-size="lg"] { width: var(--space-lg); }
 .spacingBar[data-size="xl"] { width: var(--space-xl); }
 
+/* ── Button label ── */
+
+.btnLabel { min-width: 56px; text-align: right; }
+
 /* ── Typography rows ── */
 
-.typeRow { padding: var(--space-md) 0; border-bottom: 1px solid var(--border-subtle); }
+.typeRow { border-bottom: 1px solid var(--border-subtle); }
 .typeRow:first-child { padding-top: 0; }
-
-/* ── Buttons hover state (pseudo-class, ax() 불가) ── */
-
-.hovered { background: var(--_bg-hover, var(--bg-hover)) !important; }
 
 /* ── Alerts tone border (동적 tone 참조) ── */
 
-.alert { border-radius: 8px; }
 .alert[data-tone="success"] { border-left: 3px solid var(--tone-success-base); }
 .alert[data-tone="accent"]  { border-left: 3px solid var(--tone-primary-base); }
 .alert[data-tone="warning"] { border-left: 3px solid var(--tone-warning-base); }
@@ -90,8 +162,7 @@
 
 .cardImage {
   aspect-ratio: 16/9;
-  background: linear-gradient(135deg, var(--surface-raised), var(--surface-overlay));
-  border-radius: 8px;
+  background: linear-gradient(135deg, var(--tone-primary-dim), var(--tone-primary-mid));
 }
 
 /* ── Layout showcase ── */
@@ -99,12 +170,67 @@
 .layoutBox {
   min-height: 80px;
   border: 1px dashed var(--border-default);
-  border-radius: 8px;
 }
 .layoutChild {
   width: 24px;
   height: 24px;
   background: var(--tone-primary-base);
-  border-radius: 4px;
   flex-shrink: 0;
+}
+
+/* ── Composed: stat bar ── */
+
+.statBar {
+  height: 4px;
+  width: 100%;
+}
+.statBar[data-tone="accent"]  { background: var(--tone-primary-base); }
+.statBar[data-tone="success"] { background: var(--tone-success-base); }
+.statBar[data-tone="warning"] { background: var(--tone-warning-base); }
+.statBar[data-tone="neutral"] { background: var(--bg-hover); }
+
+/* ── Composed: notification row ── */
+
+.notifRow { border-bottom: 1px solid var(--border-subtle); }
+.notifRow:last-child { border-bottom: none; }
+
+.notifDot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+}
+.notifDot[data-tone="accent"]  { background: var(--tone-primary-base); }
+.notifDot[data-tone="success"] { background: var(--tone-success-base); }
+.notifDot[data-tone="warning"] { background: var(--tone-warning-base); }
+.notifDot[data-tone="danger"]  { background: var(--tone-destructive-base); }
+
+/* ── Composed: avatar ── */
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  background: var(--tone-primary-base);
+  flex-shrink: 0;
+}
+
+/* ── Composed: textarea ── */
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+  padding: var(--space-sm);
+}
+
+/* ── Scenario divider ── */
+
+.scenarioDivider {
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* ── Preview placeholder ── */
+
+.previewPlaceholder {
+  min-height: 200px;
+  border: 2px dashed var(--border-subtle);
 }
