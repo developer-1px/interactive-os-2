@@ -9,6 +9,7 @@ import type { NormalizedData, Entity } from '@os/store/types'
 export interface A2UIRenderContext {
   entity: Entity
   store: NormalizedData
+  renderNode: (nodeId: string, depth: number) => ReactNode
   renderChildren: (parentId: string, depth: number) => ReactNode
   depth: number
 }

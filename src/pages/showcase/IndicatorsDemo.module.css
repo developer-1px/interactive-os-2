@@ -1,15 +1,4 @@
-/* ── Block 1: base ── */
-.root {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
-}
-
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
+/* ── Last-mile only ── */
 
 .sectionTitle {
   padding-bottom: var(--space-xs);
@@ -25,31 +14,6 @@
   gap: var(--space-md);
 }
 
-.label {
-  white-space: nowrap;
-}
-
-.value {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
-
-.interactiveTarget {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--shape-sm-radius);
-  cursor: pointer;
-  transition: background var(--motion-instant-duration);
-  user-select: none;
-}
-
-.interactiveTarget:hover {
-  background: var(--selection);
-}
-
 /* interactive.css [aria-checked="true"] 배경 차단 — 데모에서는 indicator 자체만 상태 표현 */
 .interactiveTarget[aria-checked] {
   background: transparent;
@@ -59,18 +23,6 @@
   background: var(--selection);
 }
 
-.stateLabel {
-  font-size: var(--type-code-size);
-  font-family: var(--type-code-family);
-}
-
-.separatorFill { flex: 1; }
-
-.ariaCheckedWrapper { display: inline-flex; }
-
 .verticalSeparatorDemo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
   height: var(--space-3xl);
 }

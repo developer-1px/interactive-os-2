@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
-import { useAriaZone } from '@os/primitives/useAriaZone'
+import { AriaZone } from '@os/ui/AriaZone'
+import type { AriaZoneContext } from '@os/ui/AriaZone'
 import { spatial } from '@os/misc/spatial'
 import { useSpatialNav } from '@os/plugins/useSpatialNav'
 import { focusCommands } from '@os/axis/navigate'
@@ -17,10 +18,10 @@ import type { CommandEngine } from '@os/engine/createCommandEngine'
 import type { PatternContext } from '@os/pattern/types'
 import { spatialReachable } from '@os/plugins/focusRecovery'
 import { renameCommands } from '@os/plugins/rename'
-import type { Locale } from './cms-types'
-import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getInlineEditableFields } from './cms-renderers'
+import type { Locale } from './cmsTypes'
+import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getInlineEditableFields } from './cmsRenderers'
 import { CmsInlineEditable } from './CmsInlineEditable'
-import { cmsCanDelete } from './cms-schema'
+import { cmsCanDelete } from './cmsSchema'
 import { SelectionOverlay } from '@os/ui/SelectionOverlay'
 import landingStyles from './CmsLanding.module.css'
 
@@ -72,7 +73,7 @@ const cmsKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
 }
 
 export default function CmsCanvas({ engine, store, locale, onFocusChange, plugins, activeTabMap: activeTabMapProp, onActivateTabItem }: CmsCanvasProps) {
-  'use no memo' // useAriaZone reads internal refs during render (getNodeProps), which is intentional but incompatible with React Compiler
+  'use no memo' // AriaZone reads internal refs during render (getNodeProps) — incompatible with React Compiler
   const spatialNav = useSpatialNav('[data-cms-root]', store, 'cms')
 
   // Merge spatial nav + CMS CRUD keyMap (CRUD takes precedence for Mod+ combos)
@@ -169,21 +170,43 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     focusStrategy: { type: 'natural-tab-order' as const, orientation: 'both' as const },
   }), [])
 
-  // Spatial model: all nodes always rendered — reachable = exists in store
-  const aria = useAriaZone({
-    engine,
-    store,
-    pattern: cmsBehavior,
-    scope: 'cms',
-    plugins,
-    keyMap: mergedKeyMap,
-    isReachable: spatialReachable,
-  })
+  return (
+    <AriaZone
+      engine={engine}
+      store={store}
+      pattern={cmsBehavior}
+      scope="cms"
+      plugins={plugins}
+      keyMap={mergedKeyMap}
+      isReachable={spatialReachable}
+      onFocusChange={onFocusChange}
+    >
+      {(aria) => (
+        <CmsCanvasContent
+          aria={aria}
+          locale={locale}
+          spatialNav={spatialNav}
+          activeTabMapProp={activeTabMapProp}
+          onActivateTabItem={onActivateTabItem}
+        />
+      )}
+    </AriaZone>
+  )
+}
 
-  // Recursive renderer — ALL nodes always rendered
+// ── Inner content — receives AriaZone context ──
+
+interface CmsCanvasContentProps {
+  aria: AriaZoneContext
+  locale: Locale
+  spatialNav: ReturnType<typeof useSpatialNav>
+  activeTabMapProp?: Map<string, string>
+  onActivateTabItem?: (tabItemId: string) => void
+}
+
+function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActivateTabItem }: CmsCanvasContentProps) {
   const currentStore = aria.getStore()
 
-  // Track active tab: if focused node is a tab-item, update its parent tab-group
   const focusedEntity = currentStore.entities[aria.focused]
   const focusedData = (focusedEntity?.data ?? {}) as Record<string, unknown>
   const focusedIsTabItem = focusedData.type === 'tab-item'
@@ -201,7 +224,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
 
   const activeTabMap = activeTabMapProp ?? localActiveTabMap
 
-  // Notify parent about tab-item activation, or update local map
   useEffect(() => {
     if (!focusedTabParent) return
     if (onActivateTabItem) {
@@ -219,12 +241,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     return children[0]
   }
 
-  // Report focus changes to parent (for activeSectionId computation)
-  useEffect(() => {
-    onFocusChange?.(aria.focused)
-  }, [aria.focused, onFocusChange])
-
-  // Click handler: jump to node's depth + focus
   const handleNodeClick = useCallback((nodeId: string, e: React.MouseEvent) => {
     e.stopPropagation()
     const s = aria.getStore()
@@ -259,7 +275,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     const children = getChildren(currentStore, nodeId)
     const d = (entity.data ?? {}) as Record<string, unknown>
 
-    // Destructure props from aria to override onClick
     const {
       onClick: _,
       onKeyDown,
@@ -274,7 +289,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     const className = getNodeClassName(ds)
     const Tag = getNodeTag(ds) as React.ElementType
 
-    // For section nodes, render section header + children container
     if (d.type === 'section') {
       const childrenContainerClass = getChildrenContainerClassName(ds)
 
@@ -317,7 +331,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       )
     }
 
-    // For tab-group nodes, render tablist + active panel
     if (d.type === 'tab-group') {
       const tabItems = children
       const activeTabId = getActiveTabId(nodeId)
@@ -333,6 +346,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           onClick={(e) => handleNodeClick(nodeId, e)}
           className={className}
         >
+          {/* eslint-disable-next-line local/no-raw-aria-role -- CMS renderer: AriaZone이 role 미포함, pattern이 tablist 관리 */}
           <div className={`${landingStyles.cmsTablist} flex-row`} role="tablist">
             {tabItems.map(tabId => {
               const tabEntity = currentStore.entities[tabId]
@@ -347,7 +361,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
                 <button
                   key={tabId}
                   {...(tabRest as React.HTMLAttributes<HTMLButtonElement>)}
-                  role="tab"
+                  role="tab" // eslint-disable-line local/no-raw-aria-role -- CMS renderer
                   tabIndex={ti as number}
                   aria-selected={isActive}
                   onKeyDown={tkd as React.KeyboardEventHandler}
@@ -382,7 +396,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
               <div
                 key={panelId}
                 {...(panelRest as React.HTMLAttributes<HTMLDivElement>)}
-                role="tabpanel"
+                role="tabpanel" // eslint-disable-line local/no-raw-aria-role -- CMS renderer
                 tabIndex={pti as number}
                 onKeyDown={pkd as React.KeyboardEventHandler}
                 onFocus={pf as React.FocusEventHandler}
@@ -397,7 +411,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       )
     }
 
-    // For card nodes, render all children via renderNode
     if (d.type === 'card') {
       return (
         <div
@@ -415,7 +428,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       )
     }
 
-    // Leaf / generic nodes
     const slotKids = getSlotChildren(currentStore, nodeId)
     return (
       <Tag
@@ -459,8 +471,8 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
   const containerRef = useRef<HTMLDivElement>(null)
 
   const labelFn = useCallback((id: string) => {
-    const store = aria.getStore()
-    const entity = store.entities[id]
+    const s = aria.getStore()
+    const entity = s.entities[id]
     if (!entity) return ''
     const d = (entity.data ?? {}) as Record<string, string>
     return d.type ?? ''

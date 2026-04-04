@@ -19,6 +19,9 @@
 
 .entry {
   min-width: 0;
+  max-width: 720px;
+  margin-inline: auto;
+  width: 100%;
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
 }
 
@@ -38,6 +41,9 @@
 .streaming {
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
+  max-width: 720px;
+  margin-inline: auto;
+  width: 100%;
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
 }
 

@@ -50,7 +50,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
     <div className={`flex-col h-full ${styles.chat}`}>
       {/* Context bar */}
       {entry && (
-        <div className={`${ax({ textStyle: 'caption' })} ${styles.chatContext}`}>
+        <div className={`${ax({ surface: 'sunken', layout: 'spread', padding: 'xs', textStyle: 'caption' })} ${styles.chatContext}`}>
           <span className={`${ax({ weight: 'semi', text: 'primary' })} ${styles.chatContextLabel}`}>{entry.name}</span>
           {entry.variants.length > 0 && (
             <span className={`${ax({ text: 'muted' })} ${styles.chatContextMeta}`}>
@@ -61,9 +61,9 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       )}
 
       {/* Messages */}
-      <div className={`flex-col gap-sm overflow-y-auto flex-1 ${styles.chatMessages}`}>
+      <div className={ax({ layout: 'scroll', flex: '1', gap: 'sm', padding: 'md' })}>
         {messages.length === 0 && (
-          <div className={`${ax({ textStyle: 'body', text: 'muted' })} ${styles.chatEmpty} text-center`}>
+          <div className={ax({ padding: 'xl', textStyle: 'body', text: 'muted' })}>
             {entry
               ? `"${entry.name}의 tone을 바꿔줘" 같은 요청을 입력하세요`
               : '컴포넌트를 선택하세요'}
@@ -72,7 +72,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
         {messages.map((msg) => (
           <div
             key={msg.ts}
-            className={`${ax({ textStyle: 'body' })} ${styles.chatBubble} ${msg.role === 'user' ? `${ax({ text: 'bright' })} ${styles.chatBubbleUser}` : `${ax({ text: 'primary' })} ${styles.chatBubbleAssistant}`}`}
+            className={`${ax({ textStyle: 'body', padding: 'xs', shape: 'sm' })} ${styles.chatBubble} ${msg.role === 'user' ? ax({ surface: 'base', tone: 'accent-dim', layout: 'self-end', text: 'bright' }) : ax({ surface: 'sunken', layout: 'self-start', text: 'primary' })}`}
           >
             {msg.content}
           </div>
@@ -80,9 +80,9 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       </div>
 
       {/* Input */}
-      <div className={styles.chatInputWrap}>
+      <div className={`${ax({ padding: 'sm' })} ${styles.chatInputWrap}`}>
         <textarea
-          className={`${ax({ textStyle: 'body', text: 'primary' })} ${styles.chatInput} w-full`}
+          className={`${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'sm' })} ${styles.chatInput} w-full`}
           data-surface="input"
           placeholder={entry ? `${entry.name} 수정 요청...` : 'dev-channel 미연결'}
           value={input}

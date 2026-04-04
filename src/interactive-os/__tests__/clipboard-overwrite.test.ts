@@ -7,7 +7,7 @@ import { clipboardCommands, resetClipboard, clipboard } from '../plugins/clipboa
 import { crudCommands } from '../plugins/crud'
 import { history, historyCommands } from '../plugins/history'
 import { zodSchema } from '../plugins/zodSchema'
-import { childRules, nodeSchemas, cmsCanDelete } from '../../pages/cms/cms-schema'
+import { childRules, nodeSchemas, cmsCanDelete } from '../../pages/cms/cmsSchema'
 import type { CommandHandler } from '../engine/types'
 
 /**

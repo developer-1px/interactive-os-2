@@ -11,7 +11,7 @@ echo "" >> "$OUT"
 total_files=0
 total_lines=0
 
-for f in $(find src -name '*.module.css' -not -path '*/pattern/examples/*' | sort); do
+for f in $(find src -name '*.module.css' -not -path '*/pattern/examples/*' -not -path '*/pages/cms/*' | sort); do
   lines=$(wc -l < "$f")
   total_files=$((total_files + 1))
   total_lines=$((total_lines + lines))

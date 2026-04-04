@@ -6,7 +6,7 @@ import type { RegistryEntry } from '../componentRegistry'
 import { getSampleData } from '../sampleData'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from '../PageComponentCreator.module.css'
+
 
 interface ComponentCanvasProps {
   entry: RegistryEntry
@@ -23,7 +23,7 @@ export function ComponentCanvas({ entry }: ComponentCanvasProps) {
 
   return (
     <Suspense fallback={<div className={`flex-row items-center justify-center flex-1`}>Loading...</div>}>
-      <div className={`${styles.canvas} flex-row items-center justify-center flex-1 min-h-0 overflow-auto`}>
+      <div className={`${ax({ layout: 'center', padding: 'lg', flex: '1' })} min-h-0 overflow-auto`}>
         <ComponentInstance Component={LazyComponent} name={entry.name} />
       </div>
     </Suspense>
@@ -59,7 +59,7 @@ class CanvasErrorBoundary extends Component<{ name: string; children: ReactNode 
   static getDerivedStateFromError(err: Error) { return { error: err.message } }
   componentDidCatch(err: Error, info: ErrorInfo) { console.warn(`[Creator] ${this.props.name}:`, err, info) }
   render() {
-    if (this.state.error) return <div className={`${ax({ text: 'muted' })} ${styles.canvasError}`}>Cannot preview: {this.state.error}</div>
+    if (this.state.error) return <div className={ax({ padding: 'md', text: 'muted' })}>Cannot preview: {this.state.error}</div>
     return this.props.children
   }
 }

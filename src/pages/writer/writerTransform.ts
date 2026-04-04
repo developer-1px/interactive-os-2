@@ -1,4 +1,4 @@
-// ② 2026-04-04-md-writer-prd.md
+// ② 2026-04-04-writer-chat-prd.md
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { createStore } from '@os/store/createStore'
@@ -10,12 +10,25 @@ function nextId() { return `w${++counter}` }
 export function resetIdCounter() { counter = 0 }
 
 interface ParsedBlock {
-  type: 'heading' | 'paragraph'
+  type: 'heading' | 'paragraph' | 'list' | 'hr'
   level?: number
   content: string
+  line: number
+  ordered?: boolean
+  items?: { content: string; line: number }[]
 }
 
 const HEADING_RE = /^(#{1,6})\s+(.+)$/
+const UL_RE = /^[-*+]\s+(.+)$/
+const OL_RE = /^\d+\.\s+(.+)$/
+const HR_RE = /^(---+|\*\*\*+|___+)\s*$/
+
+/** Split text into sentences. Handles Korean (마침표) and English (period + space). */
+function splitSentences(text: string): string[] {
+  // Split on sentence-ending punctuation followed by space or end
+  const parts = text.split(/(?<=[.!?。])\s+/)
+  return parts.filter(s => s.length > 0)
+}
 
 /** Simple MD parser: extracts headings (# lines) and paragraphs (non-empty text blocks). */
 function parseMd(md: string): { frontmatter?: string; blocks: ParsedBlock[] } {
@@ -34,32 +47,68 @@ function parseMd(md: string): { frontmatter?: string; blocks: ParsedBlock[] } {
 
   const blocks: ParsedBlock[] = []
   let paragraphLines: string[] = []
+  let paragraphStart = -1
+  let listItems: { content: string; line: number }[] = []
+  let listOrdered = false
+  let listStart = -1
 
   function flushParagraph() {
     if (paragraphLines.length > 0) {
-      blocks.push({ type: 'paragraph', content: paragraphLines.join('\n') })
+      blocks.push({ type: 'paragraph', content: paragraphLines.join('\n'), line: paragraphStart + 1 })
       paragraphLines = []
+    }
+  }
+
+  function flushList() {
+    if (listItems.length > 0) {
+      blocks.push({ type: 'list', content: '', ordered: listOrdered, items: [...listItems], line: listStart + 1 })
+      listItems = []
     }
   }
 
   for (let i = startIdx; i < lines.length; i++) {
     const line = lines[i]
     const headingMatch = line.match(HEADING_RE)
+    const ulMatch = line.match(UL_RE)
+    const olMatch = line.match(OL_RE)
+    const hrMatch = line.match(HR_RE)
 
-    if (headingMatch) {
+    if (hrMatch) {
       flushParagraph()
+      flushList()
+      blocks.push({ type: 'hr', content: '', line: i + 1 })
+    } else if (headingMatch) {
+      flushParagraph()
+      flushList()
       blocks.push({
         type: 'heading',
         level: headingMatch[1].length,
         content: headingMatch[2],
+        line: i + 1,
       })
+    } else if (ulMatch || olMatch) {
+      flushParagraph()
+      const isOrdered = !!olMatch
+      const content = ulMatch ? ulMatch[1] : olMatch![1]
+      if (listItems.length > 0 && listOrdered !== isOrdered) {
+        flushList()
+      }
+      if (listItems.length === 0) {
+        listStart = i
+        listOrdered = isOrdered
+      }
+      listItems.push({ content, line: i + 1 })
     } else if (line.trim() === '') {
       flushParagraph()
+      flushList()
     } else {
+      flushList()
+      if (paragraphLines.length === 0) paragraphStart = i
       paragraphLines.push(line)
     }
   }
   flushParagraph()
+  flushList()
 
   return { frontmatter, blocks }
 }
@@ -101,7 +150,7 @@ export function mdToStore(md: string, filePath?: string): NormalizedData {
       const id = nextId()
       entities[id] = {
         id,
-        data: { type: 'heading' as const, level, content: block.content },
+        data: { type: 'heading' as const, level, content: block.content, line: block.line },
       }
       relationships[id] = []
 
@@ -117,9 +166,40 @@ export function mdToStore(md: string, filePath?: string): NormalizedData {
       const id = nextId()
       entities[id] = {
         id,
-        data: { type: 'paragraph' as const, content: block.content },
+        data: { type: 'paragraph' as const, line: block.line },
       }
+      relationships[id] = []
+      addChild(currentParent().id, id)
 
+      const sentences = splitSentences(block.content)
+      for (const s of sentences) {
+        const sid = nextId()
+        entities[sid] = { id: sid, data: { type: 'sentence' as const, content: s } }
+        addChild(id, sid)
+      }
+    } else if (block.type === 'list') {
+      const id = nextId()
+      entities[id] = {
+        id,
+        data: { type: 'list' as const, ordered: !!block.ordered, line: block.line },
+      }
+      relationships[id] = []
+      addChild(currentParent().id, id)
+
+      for (const item of block.items ?? []) {
+        const itemId = nextId()
+        entities[itemId] = {
+          id: itemId,
+          data: { type: 'listItem' as const, content: item.content, line: item.line },
+        }
+        addChild(id, itemId)
+      }
+    } else if (block.type === 'hr') {
+      const id = nextId()
+      entities[id] = {
+        id,
+        data: { type: 'hr' as const, line: block.line },
+      }
       addChild(currentParent().id, id)
     }
   }
@@ -156,8 +236,30 @@ export function storeToMd(store: NormalizedData): string {
       lines.push(`${prefix} ${data.content}`)
       lines.push('')
     } else if (data.type === 'paragraph') {
-      lines.push(data.content as string)
+      const children = store.relationships[nodeId] ?? []
+      const parts = children.map(cid => {
+        const child = store.entities[cid]?.data as Record<string, unknown> | undefined
+        return (child?.type === 'sentence' ? child.content as string : '')
+      }).filter(Boolean)
+      lines.push(parts.join(' '))
       lines.push('')
+      return
+    } else if (data.type === 'list') {
+      const children = store.relationships[nodeId] ?? []
+      const ordered = data.ordered as boolean
+      children.forEach((cid, idx) => {
+        const child = store.entities[cid]?.data as Record<string, unknown> | undefined
+        if (child?.type === 'listItem') {
+          const prefix = ordered ? `${idx + 1}. ` : '- '
+          lines.push(`${prefix}${child.content}`)
+        }
+      })
+      lines.push('')
+      return
+    } else if (data.type === 'hr') {
+      lines.push('---')
+      lines.push('')
+      return
     }
 
     const children = store.relationships[nodeId] ?? []

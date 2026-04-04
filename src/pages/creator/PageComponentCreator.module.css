@@ -6,37 +6,9 @@
 
 /* paneHeader → PanelHeader 컴포넌트로 교체 */
 
-/* ── Primary: Canvas ── */
-
-.canvas {
-  padding: var(--space-lg);
-}
-
-.canvasError {
-  padding: var(--space-md);
-}
-
 /* ── Right pane container ── */
 .rightPane {
   border-left: 1px solid var(--border-subtle);
-}
-
-/* ── Secondary: Code [TSX | CSS] ── */
-
-.sourceTab {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  border-radius: var(--shape-xs-radius);
-  font-weight: var(--type-caption-weight);
-  --_bg: transparent;
-  --_bg-hover: var(--surface-default);
-  background: var(--_bg);
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing),
-              color var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-.sourceTabActive {
-  --_bg: var(--surface-raised);
-  color: var(--text-primary);
 }
 
 /* ── Tertiary: Chat ── */
@@ -45,59 +17,20 @@
 }
 
 .chatContext {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  background: var(--surface-sunken);
   border-bottom: 1px solid var(--border-subtle);
 }
 
-.chatContextMeta {
-  margin-left: var(--space-sm);
-}
-
-.chatMessages {
-  padding: var(--space-md);
-}
-
-.chatEmpty {
-  padding: var(--space-xl);
-}
-
 .chatBubble {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  border-radius: var(--shape-sm-radius);
-  line-height: var(--leading-snug);
   white-space: pre-wrap;
   max-width: 85%;
 }
 
-.chatBubbleUser {
-  align-self: flex-end;
-  background: var(--tone-primary-dim);
-}
-
-.chatBubbleAssistant {
-  align-self: flex-start;
-  background: var(--surface-sunken);
-}
-
 .chatInputWrap {
-  padding: var(--space-sm);
   border-top: 1px solid var(--border-subtle);
 }
 
 .chatInput {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  border-radius: var(--shape-sm-radius);
-  background: var(--surface-default);
   resize: none;
-  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
-}
-
-/* ── Nav bar (bottom) ── */
-.navBar {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  background: var(--surface-sunken);
-  overflow-x: auto;
 }
 
 .navBar [role="tablist"] {

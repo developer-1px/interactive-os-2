@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
-import CmsLayout from '../../pages/cms/CmsLayout'
-import { resetCmsData } from '../../pages/cms/cms-state'
+import PageCms from '../../pages/cms/PageCms'
+import { resetCmsData } from '../../pages/cms/cmsState'
 import { listbox } from '../pattern/roles/listbox'
 import { tree } from '../pattern/roles/tree'
 import { spatial } from '../misc/spatial'
@@ -17,7 +17,7 @@ describe('CMS tab flow (natural-tab-order)', () => {
   beforeEach(() => { resetCmsData() })
 
   it('all CMS nodes have tabIndex=0', () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     const nodes = container.querySelectorAll<HTMLElement>('[data-cms-id]')
     expect(nodes.length).toBeGreaterThan(0)

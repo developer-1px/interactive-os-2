@@ -6,12 +6,13 @@ import type { Command } from '@os/engine/types'
 import type { Plugin } from '@os/plugins/types'
 import type { CommandEngine } from '@os/engine/createCommandEngine'
 import type { PatternContext } from '@os/pattern/types'
-import type { Locale } from './cms-types'
-import type { TemplateType } from './cms-templates'
-import { templateToCommand } from './cms-templates'
+import type { Locale } from './cmsTypes'
+import type { TemplateType } from './cmsTemplates'
+import { templateToCommand } from './cmsTemplates'
 import { collectSections, getRootAncestor, getTabItemAncestor } from './collectSections'
-import type { LocaleMap } from './cms-types'
-import { useAriaZone } from '@os/primitives/useAriaZone'
+import type { LocaleMap } from './cmsTypes'
+import { AriaZone } from '@os/ui/AriaZone'
+import type { AriaZoneContext } from '@os/ui/AriaZone'
 import { listbox } from '@os/pattern/roles/listbox'
 import { focusCommands } from '@os/axis/navigate'
 import CmsTemplatePicker from './CmsTemplatePicker'
@@ -85,23 +86,12 @@ function computeSectionGrouping(sectionIds: string[], store: NormalizedData, loc
 // ── CmsSidebar ──
 
 export default function CmsSidebar({ engine, store, locale, activeSectionId, plugins, onActivateTabItem, style }: CmsSidebarProps) {
-  const [pickerOpen, setPickerOpen] = useState(false)
-  const listRef = useRef<HTMLDivElement>(null)
-  const addBtnRef = useRef<HTMLButtonElement>(null)
-
   const sectionIds = useMemo(() => collectSections(store, ROOT_ID), [store])
-
-  const activeTabItemId = useMemo(() => {
-    if (!activeSectionId) return undefined
-    return getTabItemAncestor(store, activeSectionId)
-  }, [activeSectionId, store])
 
   const scrollToSection = useCallback((sectionId: string) => {
     const tabItemId = getTabItemAncestor(store, sectionId)
     if (tabItemId) {
-      // Activate the tab via shared callback so canvas renders the correct panel
       onActivateTabItem?.(tabItemId)
-      // Double rAF: 1st for React re-render, 2nd for DOM paint
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           const el = document.querySelector(`[data-cms-root] [data-cms-id="${sectionId}"]`) as HTMLElement
@@ -114,7 +104,6 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [store, onActivateTabItem])
 
-  // Zone-specific keyMap — navigation is sidebar-unique (section-only), plugins handle crud/dnd/clipboard
   const sidebarKeyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => {
     const navigateInSections = (ctx: PatternContext, delta: number) => {
       const idx = sectionIds.indexOf(ctx.focused)
@@ -135,14 +124,53 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
 
   const sidebarBehavior = useMemo(() => listbox(), [])
 
-  const aria = useAriaZone({
-    engine,
-    store,
-    pattern: sidebarBehavior,
-    scope: 'sidebar',
-    plugins,
-    keyMap: sidebarKeyMap,
-  })
+  return (
+    <AriaZone
+      engine={engine}
+      store={store}
+      pattern={sidebarBehavior}
+      scope="sidebar"
+      plugins={plugins}
+      keyMap={sidebarKeyMap}
+    >
+      {(aria) => (
+        <CmsSidebarContent
+          aria={aria}
+          engine={engine}
+          store={store}
+          locale={locale}
+          activeSectionId={activeSectionId}
+          sectionIds={sectionIds}
+          scrollToSection={scrollToSection}
+          style={style}
+        />
+      )}
+    </AriaZone>
+  )
+}
+
+// ── Inner content — receives AriaZone context ──
+
+interface CmsSidebarContentProps {
+  aria: AriaZoneContext
+  engine: CommandEngine
+  store: NormalizedData
+  locale: Locale
+  activeSectionId: string | null
+  sectionIds: string[]
+  scrollToSection: (sectionId: string) => void
+  style?: React.CSSProperties
+}
+
+function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, sectionIds, scrollToSection, style }: CmsSidebarContentProps) {
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const listRef = useRef<HTMLDivElement>(null)
+  const addBtnRef = useRef<HTMLButtonElement>(null)
+
+  const activeTabItemId = useMemo(() => {
+    if (!activeSectionId) return undefined
+    return getTabItemAncestor(store, activeSectionId)
+  }, [activeSectionId, store])
 
   // Sync with canvas active section (when sidebar not focused)
   const ariaRef = useRef(aria)
@@ -165,14 +193,11 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     const focusedIdx = sectionIds.indexOf(aria.focused)
     const insertAt = (focusedIdx >= 0 ? focusedIdx : sectionIds.length - 1) + 1
     const { command, rootId } = templateToCommand(variant, ROOT_ID, insertAt)
-    // Data command → engine (triggers external focus recovery in useAriaZone).
-    // Focus command → zone (zone-local viewState, not engine meta-entity).
     engine.dispatch(command)
     aria.dispatch(focusCommands.setFocus(rootId))
     requestAnimationFrame(() => scrollToSection(rootId))
   }
 
-  // When container itself receives focus, move DOM focus to the focused option
   const sectionGrouping = useMemo(() => computeSectionGrouping(sectionIds, store, locale), [sectionIds, store, locale])
 
   const handleContainerFocus = useCallback((e: React.FocusEvent<HTMLDivElement>) => {
@@ -183,6 +208,7 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
 
   return (
     <aside className="cms-sidebar shrink-0 flex-col overflow-hidden" aria-label="Sections" style={style}>
+      {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
       <div className="cms-sidebar__list flex-1 flex-col overflow-y-auto" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
             const elements: React.ReactNode[] = []

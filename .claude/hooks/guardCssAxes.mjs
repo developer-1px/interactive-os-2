@@ -93,6 +93,7 @@ if (unique.length > 0) {
     ...unique.map(p => `  - ${p} → ax()로 이동`),
     '',
     'module.css에는 position, z-index, transform, grid-template 등 ax()에 없는 속성만.',
+    '원하는 값이 ax() 축에 없으면 ax.ts의 타입 + ax.css의 클래스를 확장한 뒤 ax()로 사용.',
   ].join('\n')
 
   process.stdout.write(JSON.stringify({ decision: 'block', reason }))

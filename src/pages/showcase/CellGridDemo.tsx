@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
-import { Aria } from '@os/primitives/aria'
-import { grid } from '@os/pattern/roles/grid'
+import { Grid } from '@os/ui/Grid'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
 
 const gridData = createStore({
   entities: {
@@ -20,6 +18,12 @@ const gridData = createStore({
   },
 })
 
+const columns = [
+  { key: 'name', header: 'Element' },
+  { key: 'role', header: 'Role' },
+  { key: 'focusable', header: 'Focusable' },
+]
+
 export default function CellGridDemo() {
   const [data, setData] = useState<NormalizedData>(gridData)
 
@@ -32,27 +36,20 @@ export default function CellGridDemo() {
         <kbd>End</kbd> <span className="key-hint">last cell</span>
       </div>
       <div className="card overflow-hidden">
-        <div className="grid-header" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0, borderBottom: '1px solid var(--border-default)', padding: 'var(--space-xs) var(--space-md)', fontSize: 'var(--type-caption-size)', opacity: 0.6 }}>
-          <span>Element</span>
-          <span>Role</span>
-          <span>Focusable</span>
-        </div>
-        <Aria pattern={grid({ columns: 3 })} data={data} plugins={[]} onChange={setData} aria-label="ARIA elements">
-          <Aria.Item render={(props, node: Record<string, unknown>, state: NodeState) => {
-            const d = node.data as Record<string, unknown>
-            const cls = [
-              'grid-row',
-              state.focused && 'grid-row--focused',
-            ].filter(Boolean).join(' ')
-            return (
-              <div {...props} className={cls} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-                <Aria.Cell index={0}><span>{d?.name as string}</span></Aria.Cell>
-                <Aria.Cell index={1}><span><code>{d?.role as string}</code></span></Aria.Cell>
-                <Aria.Cell index={2}><span>{d?.focusable as string}</span></Aria.Cell>
-              </div>
-            )
-          }} />
-        </Aria>
+        <Grid
+          data={data}
+          columns={columns}
+          plugins={[]}
+          onChange={setData}
+          header
+          aria-label="ARIA elements"
+          renderCell={(props, value, column) => {
+            if (column.key === 'role') {
+              return <span {...props}><code>{String(value)}</code></span>
+            }
+            return <span {...props}>{String(value ?? '')}</span>
+          }}
+        />
       </div>
     </>
   )

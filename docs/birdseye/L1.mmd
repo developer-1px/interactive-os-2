@@ -1,0 +1,71 @@
+flowchart LR
+  subgraph store ["store"]
+    direction TB
+    NormalizedData["NormalizedData"]
+    Command["Command"]
+    createStore["createStore"]
+  end
+
+  subgraph engine ["engine"]
+    direction TB
+    createCommandEngine["createCommandEngine"]
+    useEngine["useEngine"]
+    defineCommand["defineCommand"]
+    getVisibleNodes["getVisibleNodes"]
+  end
+
+  subgraph axis ["axis"]
+    direction TB
+    navigate["navigate"]
+    select["select"]
+    expand["expand"]
+    activate["activate"]
+    tab["tab"]
+    value["value"]
+    edit["edit"]
+  end
+
+  subgraph pattern ["pattern"]
+    direction TB
+    composePattern["composePattern"]
+    roles["roles (32 APG)"]
+  end
+
+  subgraph plugins ["plugins"]
+    direction TB
+    definePlugin["definePlugin"]
+    history["history"]
+    clipboard["clipboard"]
+    crud["crud"]
+    dnd["dnd"]
+    focusRecovery["focusRecovery"]
+    search["search"]
+  end
+
+  subgraph primitives ["primitives"]
+    direction TB
+    useAria["useAria"]
+    useAriaZone["useAriaZone"]
+    Aria["Aria.tsx"]
+    AriaRoute["AriaRoute"]
+  end
+
+  subgraph ui ["ui"]
+    direction TB
+    TreeView["TreeView"]
+    ListBox["ListBox"]
+    Combobox["Combobox"]
+    TabGroup["TabGroup"]
+    TreeGrid["TreeGrid"]
+    Dialog["Dialog"]
+    Workspace["Workspace"]
+    etc["...60+"]
+  end
+
+  store --> engine
+  engine --> axis
+  axis --> pattern
+  engine --> plugins
+  pattern --> primitives
+  plugins --> primitives
+  primitives --> ui

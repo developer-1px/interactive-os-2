@@ -1,293 +1,200 @@
-import type { NormalizedData } from '@os/store/types'
-import { ROOT_ID } from '@os/store/types'
-import { createStore, getChildren, getEntityData } from '@os/store/createStore'
+// ② 2026-04-04-birdseye-mermaid-prd.md
+import type { TreeNode } from '../viewer/fsClient'
 
-type FsEntityData = {
-  name: string
-  type: 'file' | 'directory'
-  path: string
-  loc?: number
-}
+const LAYER_ORDER = ['store', 'engine', 'axis', 'pattern', 'plugins', 'primitives', 'ui']
+const LAYER_EDGES = [
+  ['store', 'engine'],
+  ['engine', 'axis'],
+  ['axis', 'pattern'],
+  ['engine', 'plugins'],
+  ['pattern', 'primitives'],
+  ['plugins', 'primitives'],
+  ['primitives', 'ui'],
+]
 
-/**
- * buildNavStore — fs store → NavList용 NormalizedData
- *
- * ROOT → group:{dirId} (루트 디렉토리) → {dirId} (2depth 디렉토리)
- * 파일은 제외. 하위 디렉토리가 없는 루트 디렉토리는 빈 그룹으로 포함.
- */
-export function buildNavStore(fsStore: NormalizedData): NormalizedData {
-  const entities: Record<string, { id: string; data?: Record<string, unknown> }> = {}
-  const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
-
-  function addDir(dirId: string, parentId: string) {
-    const data = getEntityData<FsEntityData>(fsStore, dirId)
-    if (!data) return
-
-    entities[dirId] = { id: dirId, data: { label: data.name, name: data.name, sourceId: dirId } }
-    relationships[parentId].push(dirId)
-
-    const childDirs = getChildren(fsStore, dirId).filter((id) => {
-      const d = getEntityData<FsEntityData>(fsStore, id)
-      return d?.type === 'directory'
-    })
-
-    if (childDirs.length > 0) {
-      relationships[dirId] = []
-      for (const childId of childDirs) addDir(childId, dirId)
+function findDir(nodes: TreeNode[], name: string): TreeNode | undefined {
+  for (const n of nodes) {
+    if (n.type === 'directory' && n.name === name) return n
+    if (n.children) {
+      const found = findDir(n.children, name)
+      if (found) return found
     }
   }
-
-  const rootDirs = getChildren(fsStore, ROOT_ID).filter((id) => {
-    const data = getEntityData<FsEntityData>(fsStore, id)
-    return data?.type === 'directory' && !data.name.startsWith('.')
-  })
-
-  for (const dirId of rootDirs) addDir(dirId, ROOT_ID)
-
-  return createStore({ entities, relationships })
-}
-
-/**
- * buildKanbanStore — fs store → Kanban용 NormalizedData
- *
- * 선택된 folderId 기준:
- * - 하위 디렉토리 → 컬럼 (col:{dirId})
- * - 각 컬럼의 직접 자식들 → 카드 (card:{originalId})
- * - 선택 폴더 직하 파일 → "(files)" 컬럼 (col:__files__)
- * - 하위 디렉토리가 없으면 단일 (files) 컬럼
- */
-/** 폴더 먼저, types.ts 맨 위, index.ts 맨 아래, 나머지 알파벳순 */
-function sortCards(fsStore: NormalizedData, ids: string[]): string[] {
-  return [...ids].sort((a, b) => {
-    const aData = getEntityData<FsEntityData>(fsStore, a)
-    const bData = getEntityData<FsEntityData>(fsStore, b)
-    const aName = aData?.name ?? ''
-    const bName = bData?.name ?? ''
-    // 폴더 먼저
-    const aDir = aData?.type === 'directory'
-    const bDir = bData?.type === 'directory'
-    if (aDir !== bDir) return aDir ? -1 : 1
-    // 파일끼리: types.ts 맨 위, index.ts 맨 아래
-    if (!aDir && !bDir) {
-      const aTypes = /^types\.[^.]+$/.test(aName)
-      const bTypes = /^types\.[^.]+$/.test(bName)
-      if (aTypes !== bTypes) return aTypes ? -1 : 1
-      const aIndex = /^index\.[^.]+$/.test(aName)
-      const bIndex = /^index\.[^.]+$/.test(bName)
-      if (aIndex !== bIndex) return aIndex ? 1 : -1
-    }
-    return aName.localeCompare(bName)
-  })
-}
-
-export interface KanbanBuildOptions {
-  /** 컬럼 정렬 순서. 이름 배열. 목록에 없는 폴더는 뒤에 알파벳순으로 붙는다. */
-  columnOrder?: string[]
-  /** 파일별 import/importedBy 카운트 */
-  depCounts?: Record<string, { imports: number; importedBy: number }>
-  /** 확장자 필터. 설정 시 해당 확장자 파일만 표시 */
-  extFilter?: string
-  /** 폴더 간 의존 edge 목록 — columnOrder가 없을 때 위상 정렬에 사용 */
-  folderEdges?: { from: string; to: string }[]
-}
-
-/** 디렉토리를 정렬하는 공통 로직 */
-function sortDirs(fsStore: NormalizedData, dirIds: string[], order?: string[]): string[] {
-  return [...dirIds].sort((a, b) => {
-    const aName = getEntityData<FsEntityData>(fsStore, a)?.name ?? ''
-    const bName = getEntityData<FsEntityData>(fsStore, b)?.name ?? ''
-    if (order) {
-      const aIdx = order.indexOf(aName)
-      const bIdx = order.indexOf(bName)
-      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx
-      if (aIdx !== -1) return -1
-      if (bIdx !== -1) return 1
-    }
-    const aUnder = aName.startsWith('__')
-    const bUnder = bName.startsWith('__')
-    if (aUnder !== bUnder) return aUnder ? 1 : -1
-    return aName.localeCompare(bName)
-  })
-}
-
-/** 파일 메타 subtitle 구성: LOC only (deps는 별도 depUp/depDown 필드) */
-function buildSubtitle(loc: number | undefined): string | undefined {
-  return loc != null ? `${loc}L` : undefined
-}
-
-/** 카드 tooltip: 파일명 + LOC/deps 설명 */
-function buildTooltip(name: string, loc: number | undefined, deps: { imports: number; importedBy: number } | undefined): string {
-  const lines = [name]
-  if (loc != null) lines.push(`${loc} lines`)
-  if (deps) {
-    if (deps.importedBy > 0) lines.push(`↑ ${deps.importedBy} files import this`)
-    if (deps.imports > 0) lines.push(`↓ imports ${deps.imports} files`)
-  }
-  return lines.join('\n')
-}
-
-/** 파일 크기 구간: compact 카드 시각 힌트용 */
-function locWeight(loc: number): 'sm' | 'md' | 'lg' | undefined {
-  if (loc >= 300) return 'lg'
-  if (loc >= 100) return 'md'
   return undefined
 }
 
-// ② 2026-03-30-birdseye-improve-prd.md
-/** 폴더 간 의존 그래프에서 위상 정렬. 의존되는 폴더(기반)가 앞에 온다. */
-export function topoSortDirs(dirs: string[], edges: { from: string; to: string }[]): string[] {
-  const inDegree = new Map<string, number>()
-  const graph = new Map<string, string[]>()
-  for (const d of dirs) {
-    inDegree.set(d, 0)
-    graph.set(d, [])
-  }
-  for (const { from, to } of edges) {
-    if (!graph.has(to) || !inDegree.has(from)) continue
-    graph.get(to)!.push(from) // to → from (to가 기반, from이 소비)
-    inDegree.set(from, (inDegree.get(from) ?? 0) + 1)
-  }
-  // Kahn's algorithm
-  const queue = dirs.filter(d => inDegree.get(d) === 0).sort()
-  const result: string[] = []
-  while (queue.length > 0) {
-    const node = queue.shift()!
-    result.push(node)
-    for (const neighbor of graph.get(node) ?? []) {
-      const deg = (inDegree.get(neighbor) ?? 1) - 1
-      inDegree.set(neighbor, deg)
-      if (deg === 0) {
-        // 삽입 정렬로 알파벳 순서 유지
-        const idx = queue.findIndex(q => q.localeCompare(neighbor) > 0)
-        queue.splice(idx === -1 ? queue.length : idx, 0, neighbor)
-      }
-    }
-  }
-  // 사이클에 갇힌 노드는 알파벳순으로 추가
-  const remaining = dirs.filter(d => !result.includes(d)).sort()
-  return [...result, ...remaining]
+function findOsRoot(nodes: TreeNode[]): TreeNode | undefined {
+  return findDir(nodes, 'interactive-os')
 }
 
-export function buildKanbanStore(fsStore: NormalizedData, folderId: string, options?: KanbanBuildOptions): NormalizedData {
-  const entities: Record<string, { id: string; data?: Record<string, unknown> }> = {}
-  const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
-  let topIndex = 0
+function fileLabel(name: string): string {
+  return name.replace(/\.(ts|tsx)$/, '')
+}
 
-  /**
-   * 재귀적으로 폴더를 컬럼으로 풀어낸다.
-   * 하위 폴더를 만나면 카드 대신 부모 컬럼 바로 뒤에 새 컬럼 추가.
-   * prefix: 넘버링 접두사 (예: "4", "4-1")
-   */
-  function addFolder(dirId: string, prefix: string, pathPrefix: string) {
-    const dirData = getEntityData<FsEntityData>(fsStore, dirId)
-    if (!dirData) return
+function safeId(s: string): string {
+  // Mermaid ID에 쓸 수 없는 문자 제거
+  return s.replace(/[^a-zA-Z0-9_]/g, '_')
+}
 
-    const path = pathPrefix ? `${pathPrefix}/${dirData.name}` : dirData.name
-    const children = getChildren(fsStore, dirId)
-
-    // 파일만 추출 (extFilter 적용)
-    const files = sortCards(fsStore, children.filter((id) => {
-      const d = getEntityData<FsEntityData>(fsStore, id)
-      if (d?.type !== 'file') return false
-      if (options?.extFilter && d.name.includes('.')) {
-        return d.name.split('.').pop() === options.extFilter
-      }
-      return true
-    }))
-
-    // 파일이 있을 때만 컬럼 생성
-    if (files.length > 0) {
-      const colId = `col:${dirId}`
-      const title = `${prefix}. /${path}`
-      const totalLoc = files.reduce((sum, id) => sum + (getEntityData<FsEntityData>(fsStore, id)?.loc ?? 0), 0)
-      entities[colId] = { id: colId, data: { title, sourceId: dirId, totalLoc } }
-      relationships[ROOT_ID].push(colId)
-      relationships[colId] = []
-
-      for (const fileId of files) {
-        const fileData = getEntityData<FsEntityData>(fsStore, fileId)
-        if (!fileData) continue
-        const cardId = `card:${fileId}`
-        entities[cardId] = {
-          id: cardId,
-          data: {
-            title: fileData.name, sourceId: fileId, sourceType: 'file',
-            ext: fileData.name.includes('.') ? fileData.name.split('.').pop() : undefined,
-            ...(fileData.loc != null && { loc: fileData.loc, weight: locWeight(fileData.loc) }),
-            subtitle: buildSubtitle(fileData.loc),
-            depUp: options?.depCounts?.[fileId]?.importedBy,
-            depDown: options?.depCounts?.[fileId]?.imports,
-            tooltip: buildTooltip(fileData.name, fileData.loc, options?.depCounts?.[fileId]),
-          },
-        }
-        relationships[colId].push(cardId)
-      }
+/** 알파벳 범주 그룹화 — 균등 분할 (그룹당 ~8개 목표) */
+function alphabetGroup(sorted: TreeNode[]): { label: string; files: TreeNode[] }[] {
+  const targetSize = 8
+  const groups: { label: string; files: TreeNode[] }[] = []
+  let i = 0
+  while (i < sorted.length) {
+    const startChar = fileLabel(sorted[i].name)[0].toUpperCase()
+    const batch: TreeNode[] = []
+    let endChar = startChar
+    // targetSize까지 채우되, 같은 첫 글자는 끊지 않음
+    while (i < sorted.length && (batch.length < targetSize || fileLabel(sorted[i].name)[0].toUpperCase() === endChar)) {
+      endChar = fileLabel(sorted[i].name)[0].toUpperCase()
+      batch.push(sorted[i])
+      i++
     }
-
-    // 하위 폴더 → 재귀적으로 컬럼 추가 (파일 유무와 무관하게 항상 재귀)
-    const subDirs = children.filter((id) => {
-      const d = getEntityData<FsEntityData>(fsStore, id)
-      return d?.type === 'directory'
-    })
-    const sorted = sortDirs(fsStore, subDirs)
-    sorted.forEach((subId, i) => {
-      addFolder(subId, `${prefix}-${i + 1}`, path)
-    })
+    const label = startChar === endChar ? startChar : `${startChar}–${endChar}`
+    groups.push({ label, files: batch })
   }
+  return groups
+}
 
-  // 1단 하위 폴더를 정렬하고 재귀 전개
-  const topChildren = getChildren(fsStore, folderId)
-  const topDirs = topChildren.filter((id) => {
-    const d = getEntityData<FsEntityData>(fsStore, id)
-    return d?.type === 'directory'
-  })
-  const topFiles = topChildren.filter((id) => {
-    const d = getEntityData<FsEntityData>(fsStore, id)
-    if (d?.type !== 'file') return false
-    if (options?.extFilter && d.name.includes('.')) {
-      return d.name.split('.').pop() === options.extFilter
+/** L1: 레이어 전체 조감 flowchart */
+export function buildMermaidL1(tree: TreeNode[], direction: 'TB' | 'LR' = 'TB'): string {
+  const os = findOsRoot(tree)
+  if (!os?.children) return `flowchart ${direction}\n  empty["No interactive-os found"]`
+
+  const lines: string[] = [`flowchart ${direction}`]
+
+  for (const layerName of LAYER_ORDER) {
+    // plugins는 engine/plugins 또는 plugins/ 둘 다 확인
+    const dir = layerName === 'plugins'
+      ? findDir(os.children, 'plugins') ?? findDir(os.children.find(c => c.name === 'engine')?.children ?? [], 'plugins')
+      : os.children.find((c) => c.type === 'directory' && c.name === layerName)
+    if (!dir?.children) continue
+
+    lines.push(`  subgraph ${layerName} ["${layerName}"]`)
+    lines.push(`    direction LR`)
+
+    const files = dir.children.filter(
+      (c) => c.type === 'file' && /\.(ts|tsx)$/.test(c.name) && !c.name.startsWith('_'),
+    )
+    // L1은 대표 5개만, 나머지는 ...N+ 표시
+    const files5 = files.slice(0, 5)
+    const ids: string[] = []
+    for (const f of files5) {
+      const label = fileLabel(f.name)
+      const id = safeId(layerName + '_' + label)
+      lines.push(`    ${id}["${label}"]`)
+      ids.push(id)
     }
-    return true
-  })
-
-  let columnOrder = options?.columnOrder
-  if (!columnOrder && options?.folderEdges) {
-    const dirNames = topDirs.map(id => getEntityData<FsEntityData>(fsStore, id)?.name).filter(Boolean) as string[]
-    columnOrder = topoSortDirs(dirNames, options.folderEdges)
-  }
-  const sortedTopDirs = sortDirs(fsStore, topDirs, columnOrder)
-
-  for (const dirId of sortedTopDirs) {
-    topIndex++
-    addFolder(dirId, String(topIndex), '')
+    if (files.length > 5) {
+      const etcId = safeId(layerName + '_etc')
+      lines.push(`    ${etcId}["...${files.length - 5}+"]`)
+      ids.push(etcId)
+    }
+    // 가로 배치를 위한 invisible link chain
+    if (ids.length > 1) {
+      lines.push(`    ${ids.join(' ~~~ ')}`)
+    }
+    lines.push(`  end`)
   }
 
-  // 루트 파일 → (files) 컬럼
+  for (const [from, to] of LAYER_EDGES) {
+    lines.push(`  ${from} --> ${to}`)
+  }
+
+  return lines.join('\n')
+}
+
+/** L2: 레이어 내부 구조 flowchart — 모든 파일을 가로 배치 */
+export function buildMermaidL2(tree: TreeNode[], layerName: string, direction: 'TB' | 'LR' = 'TB'): string | null {
+  const os = findOsRoot(tree)
+  if (!os?.children) return null
+
+  const dir = layerName === 'plugins'
+    ? findDir(os.children, 'plugins') ?? findDir(os.children.find(c => c.name === 'engine')?.children ?? [], 'plugins')
+    : os.children.find((c) => c.type === 'directory' && c.name === layerName)
+  if (!dir?.children) return null
+
+  const subdirs = dir.children.filter((c) => c.type === 'directory' && !c.name.startsWith('_') && !c.name.startsWith('.'))
+  const topFiles = dir.children.filter((c) => c.type === 'file' && /\.(ts|tsx)$/.test(c.name) && !c.name.startsWith('_'))
+
+  if (subdirs.length === 0 && topFiles.length === 0) return null
+
+  // 하위 폴더가 있으면 그룹별 subgraph, 없으면 플랫 그리드
+  const lines: string[] = [`flowchart ${direction}`]
+
+  // 서브디렉토리를 subgraph로
+  for (const sub of subdirs) {
+    const subId = safeId(sub.name)
+    lines.push(`  subgraph ${subId} ["${sub.name}"]`)
+    lines.push(`    direction LR`)
+    const files = (sub.children ?? []).filter(
+      (c) => c.type === 'file' && /\.(ts|tsx)$/.test(c.name) && !c.name.startsWith('_'),
+    )
+    const ids: string[] = []
+    for (const f of files.slice(0, 8)) {
+      const label = fileLabel(f.name)
+      const id = safeId(sub.name + '_' + label)
+      lines.push(`    ${id}["${label}"]`)
+      ids.push(id)
+    }
+    if (files.length > 8) {
+      const etcId = safeId(sub.name + '_etc')
+      lines.push(`    ${etcId}["...${files.length - 8}+"]`)
+      ids.push(etcId)
+    }
+    if (ids.length > 1) {
+      lines.push(`    ${ids.join(' ~~~ ')}`)
+    }
+    lines.push(`  end`)
+  }
+
+  // 최상위 파일 — 10개 이하면 플랫, 초과면 알파벳 범주 그룹화
   if (topFiles.length > 0) {
-    const filesColId = 'col:__files__'
-    const filesTotalLoc = topFiles.reduce((sum, id) => sum + (getEntityData<FsEntityData>(fsStore, id)?.loc ?? 0), 0)
-    entities[filesColId] = { id: filesColId, data: { title: '(files)', sourceId: folderId, totalLoc: filesTotalLoc } }
-    relationships[ROOT_ID].push(filesColId)
-    relationships[filesColId] = []
+    const sorted = [...topFiles].sort((a, b) => fileLabel(a.name).localeCompare(fileLabel(b.name)))
 
-    for (const fileId of sortCards(fsStore, topFiles)) {
-      const fileData = getEntityData<FsEntityData>(fsStore, fileId)
-      if (!fileData) continue
-      const cardId = `card:${fileId}`
-      entities[cardId] = {
-        id: cardId,
-        data: {
-            title: fileData.name, sourceId: fileId, sourceType: 'file',
-            ext: fileData.name.includes('.') ? fileData.name.split('.').pop() : undefined,
-            ...(fileData.loc != null && { loc: fileData.loc, weight: locWeight(fileData.loc) }),
-            subtitle: buildSubtitle(fileData.loc),
-            depUp: options?.depCounts?.[fileId]?.importedBy,
-            depDown: options?.depCounts?.[fileId]?.imports,
-          },
+    if (sorted.length <= 10) {
+      if (subdirs.length > 0) {
+        lines.push(`  subgraph root_files ["(root)"]`)
+        lines.push(`    direction LR`)
       }
-      relationships[filesColId].push(cardId)
+      const ids: string[] = []
+      for (const f of sorted) {
+        const label = fileLabel(f.name)
+        const id = safeId('root_' + label)
+        lines.push(subdirs.length > 0 ? `    ${id}["${label}"]` : `  ${id}["${label}"]`)
+        ids.push(id)
+      }
+      if (ids.length > 1) {
+        for (let i = 0; i < ids.length; i += 4) {
+          const row = ids.slice(i, i + 4)
+          if (row.length > 1) lines.push(subdirs.length > 0 ? `    ${row.join(' ~~~ ')}` : `  ${row.join(' ~~~ ')}`)
+        }
+      }
+      if (subdirs.length > 0) lines.push(`  end`)
+    } else {
+      const groups = alphabetGroup(sorted)
+      for (const g of groups) {
+        const gid = safeId('alpha_' + g.label)
+        lines.push(`  subgraph ${gid} ["${g.label}"]`)
+        lines.push(`    direction LR`)
+        const ids: string[] = []
+        for (const f of g.files) {
+          const label = fileLabel(f.name)
+          const id = safeId('root_' + label)
+          lines.push(`    ${id}["${label}"]`)
+          ids.push(id)
+        }
+        if (ids.length > 1) {
+          for (let i = 0; i < ids.length; i += 5) {
+            const row = ids.slice(i, i + 5)
+            if (row.length > 1) lines.push(`    ${row.join(' ~~~ ')}`)
+          }
+        }
+        lines.push(`  end`)
+      }
     }
   }
 
-  return createStore({ entities, relationships })
+  return lines.join('\n')
 }

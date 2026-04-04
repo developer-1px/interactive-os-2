@@ -35,7 +35,7 @@ store → engine → axis → pattern → primitives → ui → pages
 
 | 경로 | 파일 | 역할 |
 |------|------|------|
-| `/` | `src/pages/cms/CmsLayout.tsx` | Visual CMS (기본 landing) |
+| `/` | `src/pages/cms/PageCms.tsx` | Visual CMS (기본 landing) |
 | `/viewer/*` | `src/pages/PageViewer.tsx` | 메타 쇼케이스 + 문서 viewer |
 | `/ui/*` | `src/pages/PageUiShowcase.tsx` | UI 완성품 쇼케이스 |
 | `/agent/*` | `src/pages/PageAgentViewer.tsx` | Agent viewer |
@@ -43,9 +43,9 @@ store → engine → axis → pattern → primitives → ui → pages
 
 ### CMS 핵심 파일
 
-- `src/pages/cms/cms-schema.ts` — Zod 15 노드 타입 SSOT
-- `src/pages/cms/cms-store.ts` — 단일 store (하나의 앱 = 하나의 store)
-- `src/pages/cms/cms-state.ts` — 파생 상태/셀렉터
+- `src/pages/cms/cmsSchema.ts` — Zod 15 노드 타입 SSOT
+- `src/pages/cms/cmsStore.ts` — 단일 store (하나의 앱 = 하나의 store)
+- `src/pages/cms/cmsState.ts` — 파생 상태/셀렉터
 - `src/pages/viewer/viewerStore.ts` — Viewer store
 
 ### 디자인 시스템
@@ -59,6 +59,11 @@ store → engine → axis → pattern → primitives → ui → pages
 
 - **타입 import**: `import type { Foo }` 또는 `import { type Foo, bar }` 사용. 함수 시그니처에 `import('...')` 인라인 타입 금지.
 - **파일명** = 주 export 식별자 (`useAria.ts` → `export function useAria`). multi-export는 camelCase. kebab-case 금지. rename 시 `git mv`.
+- **pages 네이밍 관례**:
+  - 진입점: `Page{Domain}.tsx` (예: `PageCms.tsx`, `PageReplay.tsx`). `*Layout` 금지.
+  - Store: `{domain}Store.ts`
+  - 변환: `{domain}Transform.ts` (Adapter 금지)
+  - Fixture: `{domain}Fixtures.ts`
 - **테스트**: 계산은 unit, 인터랙션은 통합(`user.keyboard()` → DOM/ARIA 상태 검증). mock 호출 검증(`toHaveBeenCalled`) 금지.
 - **CSS**: `/design-implement` 필수. `frontend-design` 스킬 금지.
 - **커밋 전**: `/simplify` 필수.

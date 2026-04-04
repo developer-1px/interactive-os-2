@@ -56,7 +56,7 @@ export function a2uiToNormalized(payload: A2UIPayload): NormalizedData {
   }
 
   for (const comp of payload.components) {
-    const { id, component, children: _c, child: _ch, tabItems: _t, ...rest } = comp
+    const { id, component, children: _c, child: _ch, ...rest } = comp
     const resolvedProps = resolveBindings(rest) as Record<string, unknown>
 
     entities[id] = { id, data: { component, ...resolvedProps } }

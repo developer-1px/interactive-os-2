@@ -2,6 +2,7 @@ import type { EntityDecl } from './types'
 import { key } from './types'
 import type { VisibilityFilter } from '../engine/types'
 import type { NormalizedData } from '../store/types'
+import { ROOT_ID } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
 
 // ② 2026-03-29-define-command-prd.md
@@ -62,6 +63,36 @@ export const expandCommands = defineCommands({
         },
       }
     },
+  },
+
+  expandAll: {
+    type: 'core:expand-all' as const,
+    meta: true,
+    handler: (store) => {
+      const expandedIds: string[] = []
+      for (const [id, children] of Object.entries(store.relationships) as [string, string[]][]) {
+        if (id !== ROOT_ID && children.length > 0) expandedIds.push(id)
+      }
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds },
+        },
+      }
+    },
+  },
+
+  collapseAll: {
+    type: 'core:collapse-all' as const,
+    meta: true,
+    handler: (store) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [] },
+      },
+    }),
   },
 })
 

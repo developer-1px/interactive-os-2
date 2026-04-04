@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { cmsCanAccept, getEditableFields } from '../pages/cms/cms-schema'
+import { cmsCanAccept, getEditableFields } from '../pages/cms/cmsSchema'
 
 describe('CMS Tab Container Schema', () => {
   it('root accepts tab-group', () => {

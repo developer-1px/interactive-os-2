@@ -14,7 +14,7 @@ import { crud, crudCommands } from '@os/plugins/crud'
 import { dnd, dndCommands } from '@os/plugins/dnd'
 import { focusRecovery } from '@os/plugins/focusRecovery'
 import { storeToInspectorTree } from '@os/store/storeToInspectorTree'
-import { treeData } from '../../pages/shared/shared-tree-data'
+import { treeData } from '../../pages/shared/sharedTreeData'
 import { renderInspectorItem } from './renderInspectorItem'
 import styles from './PageStoreInspector.module.css'
 

@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useRef } from 'react'
-import { TEMPLATE_VARIANTS } from './cms-templates'
-import type { TemplateType } from './cms-templates'
+import { useMemo } from 'react'
+import { TEMPLATE_VARIANTS } from './cmsTemplates'
+import type { TemplateType } from './cmsTemplates'
 import type { NormalizedData } from '@os/store/types'
-import type { Command } from '@os/engine/types'
 import type { PatternContext } from '@os/pattern/types'
-import { listbox } from '@os/pattern/roles/listbox'
-import { useAria } from '@os/primitives/useAria'
-import { focusCommands } from '@os/axis/navigate'
+import type { Command } from '@os/engine/types'
+import type { NodeState } from '@os/pattern/types'
+import { ListBox } from '@os/ui/ListBox'
 import { ax } from '@styles/ax'
 
 const pickerData: NormalizedData = {
@@ -22,60 +21,41 @@ interface CmsTemplatePickerProps {
   onSelect: (variant: TemplateType) => void
 }
 
+const renderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
+  <div
+    {...props}
+    className={`cms-template-picker__item flex-row items-center cursor-pointer${state.focused ? ' cms-template-picker__item--focused' : ''}`}
+  >
+    {(item.data as Record<string, unknown>)?.label as string}
+  </div>
+)
+
 export default function CmsTemplatePicker({ open, onClose, onSelect }: CmsTemplatePickerProps) {
   if (!open) return null
   return <TemplatePickerInner onClose={onClose} onSelect={onSelect} />
 }
 
 function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps, 'open'>) {
-  const listRef = useRef<HTMLDivElement>(null)
-
   const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
     Escape: () => { onClose() },
   }), [onClose])
 
-  const pattern = useMemo(() => listbox(), [])
-
-  const aria = useAria({
-    pattern,
-    data: pickerData,
-    plugins: [],
-    keyMap,
-    onActivate: (nodeId) => {
-      onSelect(nodeId as TemplateType)
-    },
-  })
-
-  // Auto-focus the first item when mounted
-  useEffect(() => {
-    const first = listRef.current?.querySelector<HTMLElement>('[role="option"]')
-    first?.focus()
-  }, [])
-
   return (
     <div
       className={`cms-template-picker ${ax({ surface: 'overlay' })} absolute`}
-      ref={listRef}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) onClose()
       }}
     >
-      <div role="listbox" aria-label="Section templates" {...aria.containerProps}>
-        {TEMPLATE_VARIANTS.map(v => {
-          const props = aria.getNodeProps(v.id)
-          const state = aria.getNodeState(v.id)
-          return (
-            <div
-              key={v.id}
-              {...(props as React.HTMLAttributes<HTMLDivElement>)}
-              className={`cms-template-picker__item flex-row items-center cursor-pointer${state.focused ? ' cms-template-picker__item--focused' : ''}`}
-              onPointerEnter={() => aria.dispatch(focusCommands.setFocus(v.id))}
-            >
-              {v.label}
-            </div>
-          )
-        })}
-      </div>
+      <ListBox
+        data={pickerData}
+        plugins={[]}
+        renderItem={renderItem}
+        keyMap={keyMap}
+        autoFocus
+        aria-label="Section templates"
+        onActivate={(nodeId) => onSelect(nodeId as TemplateType)}
+      />
     </div>
   )
 }

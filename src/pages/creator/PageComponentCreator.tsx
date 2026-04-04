@@ -142,7 +142,7 @@ export default function PageComponentCreator() {
       </div>
 
       {/* Nav bar: Component tabs */}
-      <div className={`shrink-0 overflow-x-auto ${styles.navBar}`}>
+      <div className={`${ax({ surface: 'sunken', padding: 'xs' })} shrink-0 overflow-x-auto ${styles.navBar}`}>
         <TabList
           data={componentNavData}
           plugins={[]}

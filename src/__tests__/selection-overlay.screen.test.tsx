@@ -9,13 +9,13 @@
  */
 import { describe, it, expect } from 'vitest'
 import { render, act } from '@testing-library/react'
-import CmsLayout from '../pages/cms/CmsLayout'
-import { getNodeClassName } from '../pages/cms/cms-renderers'
+import PageCms from '../pages/cms/PageCms'
+import { getNodeClassName } from '../pages/cms/cmsRenderers'
 
 // V9: 2026-03-31-selection-overlay-prd.md
 describe('SelectionOverlay on CMS', () => {
   it('has no *Focused CSS classes in DOM after migration', () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Click to focus a node
     const badge = container.querySelector('[data-cms-id="hero-badge"]')
@@ -32,7 +32,7 @@ describe('SelectionOverlay on CMS', () => {
 
   // V1: 2026-03-31-selection-overlay-prd.md
   it('renders overlay container when canvas is mounted', () => {
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // SelectionOverlay renders inside the cms-landing div
     const cmsRoot = container.querySelector('[data-cms-root]')

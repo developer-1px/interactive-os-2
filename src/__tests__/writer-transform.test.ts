@@ -21,11 +21,16 @@ describe('mdToStore', () => {
     const h1 = getEntity(store, h1Id)
     expect(h1?.data).toMatchObject({ type: 'heading', level: 1, content: 'Title' })
 
-    // paragraph is child of h1 (heading owns following content)
+    // paragraph is child of h1, sentence is child of paragraph
     const h1Children = getChildren(store, h1Id)
     expect(h1Children).toHaveLength(1)
     const p = getEntity(store, h1Children[0])
-    expect(p?.data).toMatchObject({ type: 'paragraph', content: 'Some paragraph text.' })
+    expect(p?.data).toMatchObject({ type: 'paragraph' })
+
+    const sentences = getChildren(store, h1Children[0])
+    expect(sentences).toHaveLength(1)
+    const s = getEntity(store, sentences[0])
+    expect(s?.data).toMatchObject({ type: 'sentence', content: 'Some paragraph text.' })
   })
 
   it('nests headings by level', () => {
@@ -65,6 +70,41 @@ describe('mdToStore', () => {
   })
 })
 
+describe('mdToStore — lists', () => {
+  it('parses unordered list', () => {
+    const store = mdToStore('# Title\n\n- Alpha\n- Beta\n')
+    const docId = getChildren(store, ROOT_ID)[0]
+    const h1Id = getChildren(store, docId)[0]
+    const h1Children = getChildren(store, h1Id)
+    expect(h1Children).toHaveLength(1)
+    const list = getEntity(store, h1Children[0])
+    expect(list?.data).toMatchObject({ type: 'list', ordered: false })
+    const items = getChildren(store, h1Children[0])
+    expect(items).toHaveLength(2)
+    expect(getEntity(store, items[0])?.data).toMatchObject({ type: 'listItem', content: 'Alpha' })
+    expect(getEntity(store, items[1])?.data).toMatchObject({ type: 'listItem', content: 'Beta' })
+  })
+
+  it('parses ordered list', () => {
+    const store = mdToStore('1. First\n2. Second\n')
+    const docId = getChildren(store, ROOT_ID)[0]
+    const children = getChildren(store, docId)
+    expect(children).toHaveLength(1)
+    const list = getEntity(store, children[0])
+    expect(list?.data).toMatchObject({ type: 'list', ordered: true })
+  })
+
+  it('parses horizontal rule', () => {
+    const store = mdToStore('# Title\n\n---\n\nText.\n')
+    const docId = getChildren(store, ROOT_ID)[0]
+    const h1Id = getChildren(store, docId)[0]
+    const h1Children = getChildren(store, h1Id)
+    expect(h1Children).toHaveLength(2)
+    expect(getEntity(store, h1Children[0])?.data).toMatchObject({ type: 'hr' })
+    expect(getEntity(store, h1Children[1])?.data).toMatchObject({ type: 'paragraph' })
+  })
+})
+
 describe('storeToMd', () => {
   it('serializes tree back to markdown', () => {
     const md = '# Title\n\nSome text.\n\n## Subtitle\n\nMore text.\n'
@@ -74,6 +114,29 @@ describe('storeToMd', () => {
     expect(result).toContain('Some text.')
     expect(result).toContain('## Subtitle')
     expect(result).toContain('More text.')
+  })
+
+  it('round-trips unordered list', () => {
+    const md = '- Alpha\n- Beta\n'
+    const store = mdToStore(md)
+    const result = storeToMd(store)
+    expect(result).toContain('- Alpha')
+    expect(result).toContain('- Beta')
+  })
+
+  it('round-trips ordered list', () => {
+    const md = '1. First\n2. Second\n'
+    const store = mdToStore(md)
+    const result = storeToMd(store)
+    expect(result).toContain('1. First')
+    expect(result).toContain('2. Second')
+  })
+
+  it('round-trips horizontal rule', () => {
+    const md = '# Title\n\n---\n\nText.\n'
+    const store = mdToStore(md)
+    const result = storeToMd(store)
+    expect(result).toContain('---')
   })
 
   it('round-trips heading levels', () => {

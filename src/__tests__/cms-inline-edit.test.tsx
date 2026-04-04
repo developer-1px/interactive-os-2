@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CmsLayout from '../pages/cms/CmsLayout'
+import PageCms from '../pages/cms/PageCms'
 
 function getFocused(): string {
   return document.activeElement?.getAttribute('data-cms-id') ?? ''
@@ -10,7 +10,7 @@ function getFocused(): string {
 describe('CMS inline edit', () => {
   it('Enter on leaf node starts inline editing', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // hero-badge is a leaf node with type 'badge' (has editable fields)
     // First drill into hero section
@@ -28,7 +28,7 @@ describe('CMS inline edit', () => {
 
   it('Enter on container node does NOT start inline editing', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // hero is a container node (has children) — Enter should drill in, not edit
     const hero = container.querySelector('[data-cms-id="hero"]') as HTMLElement
@@ -42,7 +42,7 @@ describe('CMS inline edit', () => {
 
   it('inline edit → type → Enter confirms and updates text', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Navigate to hero-badge
     const hero = container.querySelector('[data-cms-id="hero"]') as HTMLElement
@@ -66,7 +66,7 @@ describe('CMS inline edit', () => {
 
   it('inline edit → Escape cancels and restores original text', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Navigate to hero-badge
     const hero = container.querySelector('[data-cms-id="hero"]') as HTMLElement
@@ -88,7 +88,7 @@ describe('CMS inline edit', () => {
 
   it('Enter on icon node (leaf, no editable text fields) does nothing', async () => {
     const user = userEvent.setup()
-    const { container } = render(<CmsLayout />)
+    const { container } = render(<PageCms />)
 
     // Navigate: features → Enter → click card-store → Enter → card-store-icon
     const features = container.querySelector('[data-cms-id="features"]') as HTMLElement

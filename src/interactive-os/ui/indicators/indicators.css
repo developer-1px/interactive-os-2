@@ -17,14 +17,18 @@
 
 :where([data-aria-container] .item-chevron--expand),
 :where(details .item-chevron--expand) {
+  min-width: var(--icon-xs);
   width: var(--icon-xs);
 }
 
 :where([data-aria-container] .item-chevron--tree) {
+  min-width: var(--icon-sm);
   width: var(--icon-sm);
 }
 
-/* Expanded state: details[open] drives rotation (standalone context) */
+/* Expanded state: ARIA parent, data-expanded self, or details[open] drives rotation */
+:where([aria-expanded="true"] > .item-chevron),
+:where(.item-chevron[data-expanded]),
 :where(details[open] > summary .item-chevron) {
   transform: rotate(90deg);
 }
