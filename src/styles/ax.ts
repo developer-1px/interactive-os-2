@@ -22,6 +22,8 @@ type State = 'focused' | 'selected'
 type Opacity = 'dim' | 'faint' | 'hidden'
 // motion: 반복 애니메이션 (transition은 surface 소유, motion은 반복/진입)
 type Motion = 'pulse' | 'spin' | 'fade-in' | 'slide-up'
+// content: 콘텐츠 유형 — padding의 inline:block 비율을 결정 (text=2:1)
+type Content = 'text'
 
 // ── 구조 축 ──
 
@@ -61,6 +63,7 @@ export interface Axes {
   opacity?: Opacity
   shape?: Shape
   motion?: Motion
+  content?: Content
 
   // 구조 축
   layout?: Layout
@@ -85,6 +88,7 @@ const prefixes: Record<keyof Axes, string> = {
   opacity: 'op',
   shape: 'sh',
   motion: 'mo',
+  content: 'ct',
   layout: 'ly',
   gap: 'g',
   padding: 'pd',
@@ -99,8 +103,11 @@ const prefixes: Record<keyof Axes, string> = {
  * style={} 대신 이것만 사용한다.
  *
  * @example
- * // 버튼: controlSize가 display+align+justify 소유
- * ax({ surface: 'action', controlSize: 'md', tone: 'accent' })
+ * // 텍스트 버튼: padding + content:'text'로 2:1 inline 비율
+ * ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: 'accent' })
+ *
+ * // 아이콘 버튼: cs의 min-width=min-height로 정사각
+ * ax({ surface: 'ghost', controlSize: 'md', layout: 'center' })
  *
  * // 툴바: bar = flex row + align:center
  * ax({ layout: 'bar', gap: 'sm' })

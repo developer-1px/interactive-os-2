@@ -1,25 +1,26 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+// ② 2026-04-03-viewer-command-prd.md
+import { useState, useEffect, useMemo, useCallback, useRef, type RefObject } from 'react'
 import { connectSession, disconnectSession, useTimeline, useSessionMeta } from '../viewer/viewerStore'
-import { timelineToMessages } from '../viewer/timelineAdapter'
+import { timelineToMessages } from '../viewer/timelineTransform'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
-import type { HighlightTone } from '@os/ui/CodeBlock'
+import { TabList } from '@os/ui/TabList'
+import { createStore } from '@os/store/createStore'
+import type { NormalizedData } from '@os/store/types'
+import type { NodeState } from '@os/pattern/types'
 import { ax } from '@styles/ax'
 import { useActiveSessions } from './useActiveSessions'
-import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
-import { fetchFile } from '../viewer/fsClient'
+import { createFileState } from './fileState'
+import { processToolEvents } from './toolToCommands'
 import { chatRenderers } from './replayRenderers'
-import type { ViewerOverlay } from './PageReplay'
+import type { UseViewerTabsReturn } from './useViewerTabs'
+import type { FileViewerHandle } from './viewerTypes'
 
 interface LiveSessionPanelProps {
-  onViewerUpdate: (
-    files: Map<string, string>,
-    activeFile: string | null,
-    highlights?: Map<number, HighlightTone>,
-    overlay?: ViewerOverlay,
-  ) => void
+  viewerTabs: UseViewerTabsReturn
+  fileViewerRef: RefObject<FileViewerHandle | null>
 }
 
-export function LiveSessionPanel({ onViewerUpdate }: LiveSessionPanelProps) {
+export function LiveSessionPanel({ viewerTabs, fileViewerRef }: LiveSessionPanelProps) {
   const activeSessions = useActiveSessions()
   const [userSelectedId, setUserSelectedId] = useState<string | null>(null)
 
@@ -29,42 +30,59 @@ export function LiveSessionPanel({ onViewerUpdate }: LiveSessionPanelProps) {
       ? userSelectedId
       : activeSessions[0].id
 
+  const tabData: NormalizedData = useMemo(() => {
+    if (activeSessions.length === 0) return createStore({ entities: {}, relationships: {} })
+    const entities = Object.fromEntries(activeSessions.map(s => [s.id, { id: s.id, data: { label: s.label } }]))
+    return createStore({ entities, relationships: { __root__: activeSessions.map(s => s.id) } })
+  }, [activeSessions])
+
+  const renderSessionTab = useCallback((_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
+    const label = (item.data as Record<string, unknown>)?.label as string ?? item.id as string
+    return (
+      <span className={ax({
+        surface: state.selected ? 'display' : 'ghost',
+        controlSize: 'sm', padding: 'sm', content: 'text',
+        textStyle: 'caption',
+        tone: state.selected ? 'accent' : undefined,
+      })}>
+        {label}
+      </span>
+    )
+  }, [])
+
   return (
     <div className={ax({ layout: 'fill' })}>
-      <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })} role="tablist">
-        {activeSessions.map(s => (
-          <button
-            key={s.id}
-            role="tab"
-            aria-selected={s.id === selectedId}
-            onClick={() => setUserSelectedId(s.id)}
-            className={ax({
-              surface: s.id === selectedId ? 'display' : 'ghost',
-              controlSize: 'sm',
-              textStyle: 'caption',
-              tone: s.id === selectedId ? 'accent' : undefined,
-            })}
-          >
-            {s.label}
-          </button>
-        ))}
-        {activeSessions.length === 0 && (
+      {activeSessions.length > 0 ? (
+        <TabList
+          data={tabData}
+          initialFocus={selectedId ?? undefined}
+          onActivate={(nodeId) => setUserSelectedId(nodeId)}
+          renderItem={renderSessionTab}
+          aria-label="Live sessions"
+        />
+      ) : (
+        <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })}>
           <span className={ax({ textStyle: 'caption', text: 'muted' })}>활성 세션 없음</span>
-        )}
-      </div>
+        </div>
+      )}
 
       {selectedId && (
         <LiveFeed
           key={selectedId}
           sessionId={selectedId}
-          onViewerUpdate={onViewerUpdate}
+          viewerTabs={viewerTabs}
+          fileViewerRef={fileViewerRef}
         />
       )}
     </div>
   )
 }
 
-function LiveFeed({ sessionId, onViewerUpdate }: { sessionId: string; onViewerUpdate: LiveSessionPanelProps['onViewerUpdate'] }) {
+function LiveFeed({ sessionId, viewerTabs, fileViewerRef }: {
+  sessionId: string
+  viewerTabs: UseViewerTabsReturn
+  fileViewerRef: RefObject<FileViewerHandle | null>
+}) {
   useEffect(() => {
     connectSession(sessionId, true)
     return () => disconnectSession(sessionId)
@@ -74,88 +92,20 @@ function LiveFeed({ sessionId, onViewerUpdate }: { sessionId: string; onViewerUp
   const { agentStatus, fetchError, initialLoading } = useSessionMeta(sessionId)
   const messages = useMemo(() => timelineToMessages(timeline), [timeline])
 
-  // Incremental file state tracking
   const processedRef = useRef(0)
   const fsRef = useRef(createFileState())
   const fetchedRef = useRef(new Set<string>())
 
   useEffect(() => {
     if (timeline.length === 0 || timeline.length <= processedRef.current) return
-    let aborted = false
 
     const newEvents = timeline.slice(processedRef.current)
     processedRef.current = timeline.length
 
-    let lastFilePath: string | null = null
-    let lastHighlights: Map<number, HighlightTone> | undefined
-    let lastOverlay: ViewerOverlay = null
-    const toFetch = new Set<string>()
+    const getRef = () => fileViewerRef.current
 
-    for (let i = 0; i < newEvents.length; i++) {
-      const evt = newEvents[i]
-      if (evt.type !== 'tool_use') continue
-
-      // File tools → clear overlay, update file state
-      if (evt.filePath && (evt.tool === 'Read' || evt.tool === 'Edit' || evt.tool === 'Write')) {
-        lastFilePath = evt.filePath
-        lastHighlights = undefined
-        lastOverlay = null
-
-        if (evt.tool === 'Read') {
-          if (!fetchedRef.current.has(evt.filePath) && !fsRef.current.files.has(evt.filePath)) {
-            toFetch.add(evt.filePath)
-          }
-        } else if (evt.tool === 'Write' && evt.editNew) {
-          applyWrite(fsRef.current, evt.filePath, evt.editNew)
-        } else if (evt.tool === 'Edit' && evt.editOld && evt.editNew) {
-          const range = applyEdit(fsRef.current, evt.filePath, evt.editOld, evt.editNew)
-          if (range) {
-            const hl = new Map<number, HighlightTone>()
-            for (let line = range.newStart; line <= range.newEnd; line++) {
-              hl.set(line, 'edited')
-            }
-            lastHighlights = hl
-          }
-        }
-        continue
-      }
-
-      // Grep/Glob → search overlay
-      if (evt.tool === 'Grep' || evt.tool === 'Glob') {
-        const result = findNextResult(newEvents, i)
-        lastOverlay = { type: 'search', query: evt.text ?? '', output: result }
-        continue
-      }
-
-      // Bash → terminal overlay
-      if (evt.tool === 'Bash') {
-        const result = findNextResult(newEvents, i)
-        lastOverlay = { type: 'terminal', command: evt.text ?? '', output: result }
-        continue
-      }
-    }
-
-    function flush() {
-      if (aborted) return
-      onViewerUpdate(new Map(fsRef.current.files), lastFilePath, lastHighlights, lastOverlay)
-    }
-
-    if (toFetch.size > 0) {
-      Promise.all([...toFetch].map(async (p) => {
-        try {
-          const content = await fetchFile(p)
-          if (content) {
-            applyRead(fsRef.current, p, content, true)
-            fetchedRef.current.add(p)
-          }
-        } catch { /* unavailable */ }
-      })).then(flush)
-    } else if (lastFilePath || lastOverlay) {
-      flush()
-    }
-
-    return () => { aborted = true }
-  }, [timeline, onViewerUpdate])
+    processToolEvents(newEvents, fsRef.current, fetchedRef.current, viewerTabs, getRef)
+  }, [timeline, viewerTabs, fileViewerRef])
 
   return (
     <>
@@ -182,13 +132,4 @@ function LiveFeed({ sessionId, onViewerUpdate }: { sessionId: string; onViewerUp
       )}
     </>
   )
-}
-
-/** Find the next tool_result text after a tool_use at index i. */
-function findNextResult(events: { type: string; text?: string }[], i: number): string {
-  for (let j = i + 1; j < events.length; j++) {
-    if (events[j].type === 'tool_result') return events[j].text ?? ''
-    if (events[j].type === 'tool_use') break // next tool started, no result found
-  }
-  return ''
 }

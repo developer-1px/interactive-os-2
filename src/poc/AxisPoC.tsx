@@ -11,7 +11,7 @@ import './ax.css'
 
 function AxisButton() {
   return (
-    <button className={ax({ surface: 'action', controlSize: 'md', tone: 'accent' })}>
+    <button className={ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: 'accent' })}>
       Axis Button
     </button>
   )
@@ -19,7 +19,7 @@ function AxisButton() {
 
 function AxisDangerButton() {
   return (
-    <button className={ax({ surface: 'action', controlSize: 'md', tone: 'danger' })}>
+    <button className={ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: 'danger' })}>
       Delete
     </button>
   )
@@ -27,7 +27,7 @@ function AxisDangerButton() {
 
 function AxisGhostButton() {
   return (
-    <button className={ax({ surface: 'action', controlSize: 'sm', tone: 'neutral' })}>
+    <button className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone: 'neutral' })}>
       Ghost
     </button>
   )
@@ -36,7 +36,7 @@ function AxisGhostButton() {
 function AxisInput() {
   return (
     <input
-      className={ax({ surface: 'input', controlSize: 'lg' })}
+      className={ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text' })}
       placeholder="Type here..."
     />
   )
@@ -52,7 +52,7 @@ function AxisCard({ children }: { children: React.ReactNode }) {
 
 function AxisMenuItem({ children }: { children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'ghost', controlSize: 'md' })}>
+    <div className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text' })}>
       {children}
     </div>
   )
@@ -69,7 +69,7 @@ function AxisOverlay({ children }: { children: React.ReactNode }) {
 function AxisTab({ selected, children }: { selected?: boolean; children: React.ReactNode }) {
   return (
     <div
-      className={ax({ surface: 'ghost', controlSize: 'sm' })}
+      className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })}
       role="tab"
       aria-selected={selected}
     >

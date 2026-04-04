@@ -99,8 +99,8 @@ export function TabGroup({
           const label = entityData?.label as string ?? id
           const isPreview = entityData?.preview === true
           const tabClass = isPreview
-            ? `${ax({ surface: 'ghost', controlSize: 'sm' })} ${styles.tab} ${styles.tabPreview}`
-            : `${ax({ surface: 'ghost', controlSize: 'sm' })} ${styles.tab}`
+            ? `${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })} ${styles.tab} ${styles.tabPreview}`
+            : `${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })} ${styles.tab}`
           return (
             <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
               <span>{label}</span>

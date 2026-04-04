@@ -98,7 +98,7 @@ const themeRadioData = makeStore({ system: 'System', light: 'Light', dark: 'Dark
 const renderSettingsTab = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
   const label = (item.data as Record<string, unknown>)?.label as string
   return (
-    <span className={ax({ surface: 'ghost', controlSize: 'sm', text: state.selected ? 'primary' : 'muted' })}>
+    <span className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: state.selected ? 'primary' : 'muted' })}>
       {label}
     </span>
   )

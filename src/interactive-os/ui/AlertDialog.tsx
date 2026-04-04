@@ -19,6 +19,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
       className={ax({
         surface: isDanger ? 'action' : 'ghost',
         controlSize: 'md',
+        padding: 'sm',
+        content: 'text',
         tone: isDanger ? 'danger' : 'neutral',
         text: state.focused ? 'primary' : 'secondary',
       })}

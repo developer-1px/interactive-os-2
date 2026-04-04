@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  ChevronRight, ChevronDown, Circle, Search,
-} from 'lucide-react'
+import { Search } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { TreeView } from '@os/ui/TreeView'
 import { SplitPane } from '@os/ui/SplitPane'
@@ -21,11 +19,9 @@ import { createWorkspace } from '@os/plugins/workspaceStore'
 import type { TabData } from '@os/plugins/workspaceStore'
 import { useLayoutKeys } from '../../hooks/useLayoutKeys'
 import { ax } from '@styles/ax'
-import styles from './PageViewer.module.css'
+import { SpinnerIndicator, ExpandIndicator } from '@os/ui/indicators'
 import { FilePanel } from './widgets/FilePanel'
 import { previewFileReducer, pinFileReducer, openInNewPaneReducer, duplicatePaneReducer } from './viewerWorkspace'
-import { LiveSessionPanel } from '../replay/LiveSessionPanel'
-import { useActiveSessions } from '../replay/useActiveSessions'
 
 const TREE_RATIO_KEY = 'viewer-tree-ratio'
 const DEFAULT_TREE_RATIO = 0.18
@@ -58,6 +54,7 @@ export default function PageViewer() {
       let store = treeToStore(tree)
       if (initialFilePath && store.entities[initialFilePath]) {
         store = withInitialFileSelected(store, initialFilePath)
+        setWorkspaceStore(prev => previewFileReducer(prev, initialFilePath))
       }
       setInitialStore(store)
       setLoading(false)
@@ -166,21 +163,11 @@ export default function PageViewer() {
 
   const { onKeyDown: handleLayoutKeyDown } = useLayoutKeys(viewerLayoutHandlers)
 
-  // Live session auto-display
-  const activeSessions = useActiveSessions()
-  const hasLiveSession = activeSessions.length > 0
-  const [liveSizes, setLiveSizes] = useState<PaneSize[]>([0.6, 0.4])
-
-  const handleViewerUpdate = useCallback((_files: Map<string, string>, activeFilePath: string | null) => {
-    if (activeFilePath) {
-      setWorkspaceStore(prev => pinFileReducer(prev, activeFilePath))
-    }
-  }, [])
 
   if (loading || !initialStore) {
     return (
-      <div className={`${styles.vwLoading} ${ax({ layout: 'center', gap: 'sm', textStyle: 'body', text: 'muted' })}`}>
-        <Circle size={12} className={styles.vwLoadingSpinner} />
+      <div className={ax({ layout: 'center', gap: 'sm', textStyle: 'body', text: 'muted', flex: '1' })}>
+        <SpinnerIndicator size="sm" />
         <span>Loading project...</span>
       </div>
     )
@@ -191,12 +178,12 @@ export default function PageViewer() {
     <div className={`${ax({ layout: 'row' })} h-full min-h-0`} onKeyDown={handleLayoutKeyDown}>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
         {/* Tree panel (sidebar) */}
-        <div className={styles.vwTree}>
-          <div className={`${styles.vwTreeHeader} ${ax({ layout: 'spread' })}`}>
+        <div className={ax({ layout: 'fill', surface: 'display' })}>
+          <div className={ax({ layout: 'spread', padding: 'xs', flex: 'none' })}>
             <span className={ax({ textStyle: 'caption', text: 'muted' })}>Explorer</span>
           </div>
           {/* @FIXME(srp): 트리 renderItem — 페이지 주입 커스터마이징 vs 별도 파일. 판단 조건: 다른 곳에서 같은 렌더러를 쓰게 되면 분리 */}
-          <div className={`${styles.vwTreeBody} ${ax({ layout: 'scroll', flex: '1' })}`}>
+          <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs' })}>
             <TreeView
               data={initialStore}
               plugins={[]}
@@ -206,21 +193,19 @@ export default function PageViewer() {
               renderItem={(props, node, state) => {
                 const data = node.data as FileNodeData
                 return (
-                  <div className={ax({ layout: 'bar', gap: 'xs' })}>
+                  <>
                     {data.type === 'directory' ? (
-                      <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center', text: 'muted' })}`} {...props.toggleProps}>
-                        {state.expanded
-                          ? <ChevronDown size={12} />
-                          : <ChevronRight size={12} />}
+                      <span className={ax({ layout: 'center', text: 'muted', flex: 'none' })} {...props.toggleProps}>
+                        <ExpandIndicator expanded={state.expanded} />
                       </span>
                     ) : (
-                      <span className={`${styles.vwTreeChevron} ${ax({ layout: 'center', text: 'muted' })}`} />
+                      <span className={ax({ layout: 'center', text: 'muted', flex: 'none' })} />
                     )}
                     <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
-                    <span className={`${ax({ text: 'secondary', clamp: '1' })}${data.type === 'directory' ? ` ${ax({ weight: 'medium' })}` : ''}`}>
+                    <span className={`${ax({ clamp: '1' })}${data.type === 'directory' ? ` ${ax({ weight: 'medium' })}` : ''}`}>
                       {data.name}
                     </span>
-                  </div>
+                  </>
                 )
               }}
             />
@@ -228,14 +213,14 @@ export default function PageViewer() {
         </div>
 
         {/* Content panel */}
-        <div className={styles.vwContent}>
-          <div className={`${styles.vwContentHeader} ${ax({ layout: 'spread' })}`}>
+        <div className={ax({ layout: 'fill' })}>
+          <div className={ax({ layout: 'spread', padding: 'xs', flex: 'none' })}>
             <div className={ax({ layout: 'bar', gap: 'sm' })}>
               {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
             </div>
             <div className={ax({ layout: 'bar', gap: 'sm' })}>
               <button
-                className={ax({ surface: 'ghost', controlSize: 'sm' })}
+                className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })}
                 onClick={() => setQuickOpenVisible(true)}
                 title="Quick Open (Cmd+P)"
               >
@@ -243,24 +228,12 @@ export default function PageViewer() {
               </button>
             </div>
           </div>
-          {hasLiveSession ? (
-            <SplitPane direction="vertical" sizes={liveSizes} onResize={setLiveSizes} minRatio={0.15}>
-              <Workspace
-                data={workspaceStore}
-                onChange={handleWorkspaceChange}
-                renderPanel={renderPanel}
-                aria-label="File workspace"
-              />
-              <LiveSessionPanel onViewerUpdate={handleViewerUpdate} />
-            </SplitPane>
-          ) : (
-            <Workspace
-              data={workspaceStore}
-              onChange={handleWorkspaceChange}
-              renderPanel={renderPanel}
-              aria-label="File workspace"
-            />
-          )}
+          <Workspace
+            data={workspaceStore}
+            onChange={handleWorkspaceChange}
+            renderPanel={renderPanel}
+            aria-label="File workspace"
+          />
         </div>
       </SplitPane>
 

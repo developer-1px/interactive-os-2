@@ -1,10 +1,15 @@
-// ② 2026-04-03-replay-edit-animation-prd.md
-import { useState, useEffect, useCallback, useRef } from 'react'
+// ② 2026-04-03-viewer-command-prd.md
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
+import { TabList } from '@os/ui/TabList'
+import { createStore } from '@os/store/createStore'
+import type { NormalizedData } from '@os/store/types'
+import type { NodeState } from '@os/pattern/types'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
-import type { HighlightTone } from '@os/ui/CodeBlock'
-import { FilePreview } from '@os/ui/FilePreview'
+import { FileViewer } from '@os/ui/FileViewer'
+import { SearchResults } from '@os/ui/SearchResults'
+import { TerminalOutput } from '@os/ui/TerminalOutput'
 import type { ChatMessage } from '@os/ui/chat/types'
 import { useAnimationQueue } from '@os/ui/useAnimationQueue'
 import { ax } from '@styles/ax'
@@ -13,16 +18,11 @@ import { parseJsonl, extractToolSteps } from './parseJsonl'
 import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
 import { fetchFile } from '../viewer/fsClient'
 import { editAnimationFrames, readFrames, writeFrames, type TimedFrame } from './editAnimation'
-import { ReplayCursor } from './ReplayCursor'
 import { LiveSessionPanel } from './LiveSessionPanel'
 import { chatRenderers } from './replayRenderers'
-import { SearchResults } from '@os/ui/SearchResults'
-import { TerminalOutput } from '@os/ui/TerminalOutput'
-
-export type ViewerOverlay =
-  | { type: 'search'; query: string; output: string }
-  | { type: 'terminal'; command: string; output: string }
-  | null
+import { useViewerTabs } from './useViewerTabs'
+import type { FileViewerHandle, ViewerTab } from './viewerTypes'
+import { Search, Terminal, FileText } from 'lucide-react'
 
 // --- Session loading ---
 
@@ -54,7 +54,21 @@ function filenameFrom(path: string | null): string {
   return parts[parts.length - 1] || 'output'
 }
 
-// --- Unified delta ---
+function tabLabel(tab: ViewerTab): string {
+  switch (tab.type) {
+    case 'file': return filenameFrom(tab.path)
+    case 'search': return 'Search'
+    case 'terminal': return 'Terminal'
+  }
+}
+
+const tabIcons: Record<string, typeof FileText> = {
+  file: FileText,
+  search: Search,
+  terminal: Terminal,
+}
+
+// --- Unified delta for replay ---
 
 type ViewerDelta =
   | { kind: 'chat'; td: TimedDelta }
@@ -66,22 +80,17 @@ export default function PageReplay() {
   const [selectedId, setSelectedId] = useState(sessionEntries[0]?.id ?? '')
   const [allMessages, setAllMessages] = useState<ChatMessage[]>([])
   const [messages, setMessages] = useState<ChatMessage[]>([])
-
-  // Viewer state
-  const [openFiles, setOpenFiles] = useState<Map<string, string>>(new Map()) // path → content
-  const [activeFile, setActiveFile] = useState<string | null>(null)
-  const [highlights, setHighlights] = useState<Map<number, HighlightTone> | undefined>(undefined)
-  const [cursorLine, setCursorLine] = useState<number | null>(null)
   const [sizes, setSizes] = useState<PaneSize[]>([0.7, 0.3])
-  const [overlay, setOverlay] = useState<ViewerOverlay>(null)
-
-  // Right panel tab
   const [rightTab, setRightTab] = useState<'replay' | 'live'>('live')
 
-  // Active file ref for content updates (avoids stale closure in onRelease)
+  // Viewer tabs (shared between replay and live)
+  const viewerTabs = useViewerTabs()
+  const fileViewerRef = useRef<FileViewerHandle>(null)
+
+  // Track active file path for replay frame dispatch
   const activeFileRef = useRef<string | null>(null)
 
-  // Release handler
+  // Replay: release handler
   const onRelease = useCallback((vd: ViewerDelta) => {
     if (vd.kind === 'chat') {
       setMessages(prev => chatReducer(prev, vd.td.delta))
@@ -89,54 +98,40 @@ export default function PageReplay() {
     }
     const f = vd.frame.frame
     if (f.filePath != null) {
-      setOpenFiles(prev => {
-        const next = new Map(prev)
-        next.set(f.filePath!, f.content ?? prev.get(f.filePath!) ?? '')
-        return next
-      })
-      setActiveFile(f.filePath)
+      viewerTabs.openFile(f.filePath, f.content ?? '')
       activeFileRef.current = f.filePath
+      if (fileViewerRef.current && f.content != null) {
+        fileViewerRef.current.dispatch({ type: 'open', content: f.content })
+      }
     } else if (f.content != null) {
+      // Content update for current active file
       const path = activeFileRef.current
       if (path) {
-        setOpenFiles(prev => {
-          const next = new Map(prev)
-          next.set(path, f.content!)
-          return next
-        })
+        viewerTabs.openFile(path, f.content)
+        if (fileViewerRef.current) {
+          fileViewerRef.current.dispatch({ type: 'open', content: f.content })
+        }
       }
     }
     if (f.highlights !== undefined) {
-      setHighlights(f.highlights ?? undefined)
+      if (fileViewerRef.current) {
+        if (f.highlights) {
+          fileViewerRef.current.dispatch({ type: 'highlight', lines: f.highlights })
+        } else {
+          fileViewerRef.current.dispatch({ type: 'clear' })
+        }
+      }
     }
-    if (f.cursorLine !== undefined) {
-      setCursorLine(f.cursorLine)
-    }
-  }, [])
+  }, [viewerTabs])
 
   const getDelay = useCallback((vd: ViewerDelta) => {
     return vd.kind === 'chat' ? vd.td.delay : vd.frame.delay
   }, [])
 
-  const { enqueueAll, clear, isRunning } = useAnimationQueue<ViewerDelta>({
+  const { enqueueAll, clear: clearReplay, isRunning } = useAnimationQueue<ViewerDelta>({
     onRelease,
     getDelay,
   })
-
-  // Live session viewer update
-  const onViewerUpdate = useCallback((
-    files: Map<string, string>,
-    activeFilePath: string | null,
-    hl?: Map<number, HighlightTone>,
-    newOverlay?: ViewerOverlay,
-  ) => {
-    setOpenFiles(files)
-    setActiveFile(activeFilePath)
-    activeFileRef.current = activeFilePath
-    setHighlights(hl ?? undefined)
-    setCursorLine(null)
-    setOverlay(newOverlay ?? null)
-  }, [])
 
   // Load session
   useEffect(() => {
@@ -163,42 +158,34 @@ export default function PageReplay() {
   }, [selectedId])
 
   const startReplay = useCallback(async () => {
-    clear()
+    clearReplay()
     setMessages([])
-    setOpenFiles(new Map())
-    setActiveFile(null)
-    setHighlights(undefined)
-    setCursorLine(null)
+    viewerTabs.clear()
 
     if (allMessages.length === 0) return
 
     const chatDeltas = toReplayDeltas(allMessages)
     const toolSteps = extractToolSteps(allMessages)
 
-    // Pre-simulate: try fetching real files, fallback to JSONL content
     const simFs = createFileState()
     const toolAnimations = new Map<number, TimedFrame[]>()
 
-    // Batch-fetch unique file paths from Read steps
     const readPaths = new Set(toolSteps.filter(s => s.tool === 'Read' && s.filePath).map(s => s.filePath!))
     const realFiles = new Map<string, string>()
     await Promise.all([...readPaths].map(async (path) => {
       try {
         const content = await fetchFile(path)
         if (content) realFiles.set(path, content)
-      } catch { /* file doesn't exist or server unavailable — fallback to JSONL */ }
+      } catch { /* fallback to JSONL */ }
     }))
 
     for (const step of toolSteps) {
       if (step.tool === 'Read' && step.filePath) {
-        // Prefer JSONL tool_result (session-time snapshot), fallback to real file (current disk)
         if (step.result) {
           applyRead(simFs, step.filePath, step.result)
         } else {
           const realContent = realFiles.get(step.filePath)
-          if (realContent != null) {
-            applyRead(simFs, step.filePath, realContent, true)
-          }
+          if (realContent != null) applyRead(simFs, step.filePath, realContent, true)
         }
         const content = simFs.files.get(step.filePath) ?? ''
         toolAnimations.set(step.index, readFrames(step.filePath, content))
@@ -225,7 +212,6 @@ export default function PageReplay() {
     let toolIdx = 0
 
     for (const td of chatDeltas) {
-      // Non-tool messages: instant (delay 0). Tool messages keep original delay.
       const isToolMsg = td.delta.type === 'add-message' && td.delta.message.role === 'system'
       const chatTd = isToolMsg ? td : { ...td, delay: 0 }
       unified.push({ kind: 'chat', td: chatTd })
@@ -235,12 +221,9 @@ export default function PageReplay() {
         for (let i = 0; i < msg.blocks.length; i++) {
           const block = msg.blocks[i]
           if (block.type !== 'tool_use' || !('data' in block)) continue
-
           const anim = toolAnimations.get(toolIdx)
           if (anim) {
-            for (const f of anim) {
-              unified.push({ kind: 'frame', frame: f })
-            }
+            for (const f of anim) unified.push({ kind: 'frame', frame: f })
           }
           toolIdx++
         }
@@ -248,73 +231,88 @@ export default function PageReplay() {
     }
 
     enqueueAll(unified)
-  }, [allMessages, enqueueAll, clear])
+  }, [allMessages, enqueueAll, clearReplay, viewerTabs])
 
-  // Auto-start only when replay tab is active
+  // Auto-start replay
   const startRef = useRef(startReplay)
   useEffect(() => { startRef.current = startReplay })
   useEffect(() => {
     if (allMessages.length > 0 && rightTab === 'replay') startRef.current()
   }, [allMessages, rightTab])
 
-  // Current file content
-  const currentCode = activeFile ? openFiles.get(activeFile) ?? null : null
-  const tabs = [...openFiles.keys()]
-  const codeContainerRef = useRef<HTMLDivElement>(null)
+  const { tabs, activeTab, activeTabId, setActiveTab } = viewerTabs
 
-  // Auto-scroll to highlighted/cursor line
-  const scrollTargetLine = cursorLine ?? (highlights ? Math.min(...highlights.keys()) : null)
-  useEffect(() => {
-    if (scrollTargetLine == null || !codeContainerRef.current) return
-    const lineEl = codeContainerRef.current.querySelector(`[data-line="${scrollTargetLine}"]`)
-    if (lineEl) {
-      lineEl.scrollIntoView({ block: 'center', behavior: 'smooth' })
+  const viewerTabData: NormalizedData = useMemo(() => {
+    if (tabs.length === 0) return createStore({ entities: {}, relationships: {} })
+    const entities = Object.fromEntries(tabs.map(t => [t.id, { id: t.id, data: { label: tabLabel(t), type: t.type } }]))
+    return createStore({ entities, relationships: { __root__: tabs.map(t => t.id) } })
+  }, [tabs])
+
+  const renderViewerTab = useCallback((_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState) => {
+    const d = item.data as Record<string, unknown>
+    const label = d?.label as string ?? item.id as string
+    const type = d?.type as string
+    const Icon = tabIcons[type] ?? FileText
+    return (
+      <span className={ax({ layout: 'row', gap: 'xs' })}>
+        <Icon size={12} /> {label}
+      </span>
+    )
+  }, [])
+
+  const rightTabData: NormalizedData = useMemo(() => createStore({
+    entities: {
+      live: { id: 'live', data: { label: 'Live' } },
+      replay: { id: 'replay', data: { label: 'Replay' } },
+    },
+    relationships: { __root__: ['live', 'replay'] },
+  }), [])
+
+  const renderRightTab = useCallback((_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState) => {
+    const label = (item.data as Record<string, unknown>)?.label as string ?? item.id as string
+    return (
+      <span className={ax({ layout: 'row', gap: 'xs' })}>{label}</span>
+    )
+  }, [])
+
+  const handleRightTabActivate = useCallback((nodeId: string) => {
+    const tab = nodeId as 'live' | 'replay'
+    setRightTab(tab)
+    if (tab === 'live') {
+      clearReplay()
+      setMessages([])
+      viewerTabs.clear()
     }
-  }, [scrollTargetLine])
+  }, [clearReplay, setMessages, viewerTabs])
 
   return (
     <div className={ax({ layout: 'fill' })}>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes}>
-        {/* Left: Code Viewer with tabs */}
+        {/* Left: Viewer with tabs */}
         <div className={`${ax({ layout: 'fill' })} min-h-0`}>
           {/* Tab bar */}
-          <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })} role="tablist">
-            {tabs.map(path => (
-              <button
-                key={path}
-                role="tab"
-                aria-selected={path === activeFile}
-                onClick={() => setActiveFile(path)}
-                className={ax({
-                  surface: path === activeFile ? 'display' : 'ghost',
-                  controlSize: 'sm',
-                  textStyle: 'caption',
-                  tone: path === activeFile ? 'accent' : undefined,
-                })}
-              >
-                {filenameFrom(path)}
-              </button>
-            ))}
-            {tabs.length === 0 && (
-              <span className={ax({ textStyle: 'caption', text: 'muted' })}>Code Viewer</span>
-            )}
-          </div>
+          {tabs.length > 0 ? (
+            <TabList
+              data={viewerTabData}
+              initialFocus={activeTabId ?? undefined}
+              onActivate={(nodeId) => setActiveTab(nodeId)}
+              renderItem={renderViewerTab}
+              aria-label="Viewer tabs"
+            />
+          ) : (
+            <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })}>
+              <span className={ax({ textStyle: 'caption', text: 'muted' })}>Viewer</span>
+            </div>
+          )}
 
-          {/* Content: overlay (search/terminal) or code */}
-          <div ref={codeContainerRef} className={`${ax({ flex: '1', layout: 'scroll' })} min-h-0`} style={{ position: 'relative' }}>
-            {overlay?.type === 'search' ? (
-              <SearchResults query={overlay.query} output={overlay.output} />
-            ) : overlay?.type === 'terminal' ? (
-              <TerminalOutput command={overlay.command} output={overlay.output} />
-            ) : currentCode != null ? (
-              <>
-                <FilePreview
-                  content={currentCode}
-                  filename={filenameFrom(activeFile)}
-                  highlightLines={highlights}
-                />
-                {cursorLine != null && <ReplayCursor line={cursorLine} />}
-              </>
+          {/* Content */}
+          <div className={`${ax({ flex: '1', layout: 'scroll' })} min-h-0`}>
+            {activeTab?.type === 'file' ? (
+              <FileViewer ref={fileViewerRef} filename={filenameFrom(activeTab.path)} />
+            ) : activeTab?.type === 'search' ? (
+              <SearchResults query={activeTab.query} output={activeTab.output} />
+            ) : activeTab?.type === 'terminal' ? (
+              <TerminalOutput command={activeTab.command} output={activeTab.output} />
             ) : (
               <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
                 tool_use 스텝이 재생되면 여기에 표시됩니다
@@ -325,38 +323,14 @@ export default function PageReplay() {
 
         {/* Right: Chat tabs (Replay / Live) */}
         <div className={ax({ layout: 'fill' })}>
-          {/* Tab bar */}
-          <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })} role="tablist">
-            <button
-              role="tab"
-              aria-selected={rightTab === 'live'}
-              onClick={() => {
-                setRightTab('live')
-                // Stop replay + clear viewer
-                clear()
-                setMessages([])
-                setOpenFiles(new Map())
-                setActiveFile(null)
-                activeFileRef.current = null
-                setHighlights(undefined)
-                setCursorLine(null)
-                setOverlay(null)
-              }}
-              className={ax({ surface: rightTab === 'live' ? 'display' : 'ghost', controlSize: 'sm', textStyle: 'caption', tone: rightTab === 'live' ? 'accent' : undefined })}
-            >
-              Live
-            </button>
-            <button
-              role="tab"
-              aria-selected={rightTab === 'replay'}
-              onClick={() => setRightTab('replay')}
-              className={ax({ surface: rightTab === 'replay' ? 'display' : 'ghost', controlSize: 'sm', textStyle: 'caption', tone: rightTab === 'replay' ? 'accent' : undefined })}
-            >
-              Replay
-            </button>
-          </div>
+          <TabList
+            data={rightTabData}
+            initialFocus={rightTab}
+            onActivate={handleRightTabActivate}
+            renderItem={renderRightTab}
+            aria-label="Chat mode"
+          />
 
-          {/* Replay tab */}
           {rightTab === 'replay' && (
             <div className={ax({ layout: 'fill' })}>
               <div className={ax({ layout: 'bar', gap: 'sm', padding: 'xs', flex: 'none' })}>
@@ -372,7 +346,7 @@ export default function PageReplay() {
                   ))}
                 </select>
                 {!isRunning && messages.length > 0 && (
-                  <button onClick={startReplay} className={ax({ surface: 'ghost', controlSize: 'sm', textStyle: 'caption' })}>
+                  <button onClick={startReplay} className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', textStyle: 'caption' })}>
                     Replay
                   </button>
                 )}
@@ -386,9 +360,8 @@ export default function PageReplay() {
             </div>
           )}
 
-          {/* Live tab */}
           {rightTab === 'live' && (
-            <LiveSessionPanel onViewerUpdate={onViewerUpdate} />
+            <LiveSessionPanel viewerTabs={viewerTabs} fileViewerRef={fileViewerRef} />
           )}
         </div>
       </SplitPane>

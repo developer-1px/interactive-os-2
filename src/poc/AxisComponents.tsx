@@ -15,7 +15,7 @@ function Button({ tone = 'neutral' as const, size = 'md' as const, children, ...
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button className={ax({
-      surface: 'action', controlSize: size, tone,
+      surface: 'action', controlSize: size, padding: 'sm', content: 'text', tone,
     })} {...props}>
       {children}
     </button>
@@ -27,7 +27,7 @@ function IconButton({ children, ...props }: {
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button className={ax({
-      surface: 'action', controlSize: 'sm', tone: 'neutral',
+      surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone: 'neutral',
     })} {...props}>
       {children}
     </button>
@@ -39,7 +39,7 @@ function TextInput({ label, placeholder }: { label: string; placeholder?: string
     <label className={ax({ layout: 'column', gap: 'xs' })}>
       <span className={ax({ textStyle: 'caption', text: 'muted' })}>{label}</span>
       <input
-        className={ax({ surface: 'input', controlSize: 'lg' })}
+        className={ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text' })}
         placeholder={placeholder}
       />
     </label>
@@ -52,7 +52,7 @@ function Badge({ children, tone = 'neutral' as const }: {
 }) {
   return (
     <span className={ax({
-      surface: 'action', controlSize: 'sm', tone, textStyle: 'caption',
+      surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone, textStyle: 'caption',
     })}>
       {children}
     </span>
@@ -67,7 +67,7 @@ function NavItem({ active, children }: { active?: boolean; children: React.React
   return (
     <div
       className={ax({
-        surface: 'ghost', controlSize: 'md',
+        surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text',
         text: active ? 'primary' : 'secondary',
       })}
       aria-current={active ? 'page' : undefined}
@@ -97,7 +97,7 @@ function Tab({ selected, children }: { selected?: boolean; children: React.React
   return (
     <div
       className={ax({
-        surface: 'ghost', controlSize: 'sm',
+        surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text',
         text: selected ? 'primary' : 'muted',
       })}
       role="tab"
@@ -125,7 +125,7 @@ function ListItem({ selected, children }: { selected?: boolean; children: React.
   return (
     <div
       className={ax({
-        surface: 'ghost', controlSize: 'md', text: 'primary',
+        surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', text: 'primary',
       })}
       role="option"
       aria-selected={selected}
@@ -181,7 +181,7 @@ function MenuList({ children }: { children: React.ReactNode }) {
 function MenuItem({ children }: { children: React.ReactNode }) {
   return (
     <div className={ax({
-      surface: 'ghost', controlSize: 'md', text: 'primary',
+      surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', text: 'primary',
     })} role="menuitem">
       {children}
     </div>
