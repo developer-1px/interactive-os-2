@@ -118,7 +118,7 @@
 | Agent Chat (Agent SDK · WebSocket · session lifecycle) | Prototype | Phase A: 텍스트 채팅. Phase B/C: tool UI, permission |
 | Devtools (REC · Inspector · Test Runner) | Integrated | 크로스커팅 도메인 독립, /devtools/* 라우트, ARIA tree 스냅샷 REC |
 | Inspector · Command · Diff | Validated | Source preview on click (computePlacement 범용 유틸) |
-| App Inspector (engine.inspect) | Prototype | engine capability 직렬화 — commands, keyMap, plugins, state, plugin extras |
+| App Inspector (engine.inspect) | Validated | 새 창 전용, Zone 계층 트리, view-level keyMap 노출 (pattern/plugin/override 출처별) |
 | Showcase (Plugin · Axis · Area) | Validated | Pattern/Collection → /ui 흡수 완료 |
 
 ## APG Coverage (16/19)
