@@ -32,7 +32,7 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
         <a
           {...props}
           href="#"
-          className={`${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', text: state.focused ? 'bright' : 'primary' })} ${styles.link}`}
+          className={`${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1', text: state.focused ? 'bright' : 'primary' })} ${styles.link}`}
           data-focused={state.focused || undefined}
           onClick={e => e.preventDefault()}
         >
@@ -44,7 +44,7 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
         <ul
           role="menu"
           aria-label={label}
-          className={`absolute list-none ${isRoot ? styles.submenuRoot : styles.submenuNested}`}
+          className={`absolute list-none ${ax({ surface: 'overlay', padding: 'xs', shape: 'sm' })} ${isRoot ? styles.submenuRoot : styles.submenuNested}`}
           data-hidden={!state.expanded || undefined}
         >
           {children}
@@ -58,7 +58,7 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
       <a
         {...props}
         href="#"
-        className={`${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', text: state.focused ? 'bright' : 'primary' })} ${styles.link}`}
+        className={`${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1', text: state.focused ? 'bright' : 'primary' })} ${styles.link}`}
         data-focused={state.focused || undefined}
         onClick={e => e.preventDefault()}
       >

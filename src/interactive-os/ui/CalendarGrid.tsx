@@ -28,7 +28,7 @@ const defaultRenderCell = (
 ): React.ReactElement => (
   <td
     {...props}
-    className={`${ax({ controlSize: 'sm', padding: 'sm', content: 'text', textStyle: 'body', text: 'primary' })} ${styles.day}`}
+    className={`${ax({ controlSize: 'sm', padding: 'sm', content: 'text', textStyle: 'body', text: 'primary', shape: 'sm' })} ${styles.day}`}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
     data-outside={!meta.isCurrentMonth || undefined}
@@ -74,7 +74,7 @@ export function CalendarGrid({
     >
       <thead>
         <tr>
-          {DAYS.map(d => <th key={d} className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.dayHeader}`} scope="col">{d}</th>)}
+          {DAYS.map(d => <th key={d} className={`${ax({ textStyle: 'caption', text: 'muted', padding: 'xs', weight: 'medium' })} ${styles.dayHeader}`} scope="col">{d}</th>)}
         </tr>
       </thead>
       <tbody>

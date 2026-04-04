@@ -36,6 +36,7 @@ type Layout =
   | 'spread'  // flex row + align:center + justify:space-between
   | 'stack'   // flex column (gap은 gap 축에서)
   | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
+  | 'scroll-x' // flex row + overflow-x:auto + min-width:0 (가로 스크롤)
   | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
   // self-alignment (자식이 부모 안에서의 위치 지정)
   | 'self-start'  // align-self: flex-start
@@ -46,8 +47,8 @@ type Gap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 type Padding = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 type Width = 'full' | 'auto' | 'fit' | 'sm' | 'md' | 'lg' | 'xl' | 'prose'
 type Flex = 'none' | 'auto' | '1'
-// clamp: 텍스트 줄 수 제한 ('1'=nowrap+ellipsis, '2'~'4'=line-clamp)
-type Clamp = '1' | '2' | '3' | '4'
+// clamp: 텍스트 줄 수 제한 ('1'=nowrap+ellipsis, '2'~'4'=line-clamp, 'pre'=코드 공백 보존+1줄 말줄임)
+type Clamp = '1' | '2' | '3' | '4' | 'pre'
 // icon: SVG 크기 (width + height)
 type Icon = 'xs' | 'sm' | 'md' | 'lg'
 

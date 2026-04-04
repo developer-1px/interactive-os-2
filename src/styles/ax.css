@@ -319,7 +319,8 @@
 .ly-bar    { display: flex; flex-direction: row; align-items: center; }
 .ly-spread { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
 .ly-stack  { display: flex; flex-direction: column; }
-.ly-scroll { display: flex; flex-direction: column; overflow-y: auto; min-width: 0; min-height: 0; scrollbar-gutter: stable; }
+.ly-scroll   { display: flex; flex-direction: column; overflow-y: auto; min-width: 0; min-height: 0; scrollbar-gutter: stable; }
+.ly-scroll-x { display: flex; flex-direction: row; overflow-x: auto; min-width: 0; min-height: 0; }
 .ly-scroll::-webkit-scrollbar { width: 6px; }
 .ly-scroll::-webkit-scrollbar-thumb { background: transparent; border-radius: 3px; }
 .ly-scroll:hover::-webkit-scrollbar-thumb { background: var(--border-default); }
@@ -417,7 +418,8 @@
  * '2'~'4': CSS line-clamp (다중행)
  * ════════════════════════════════════════════ */
 
-.cl-1 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-1   { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-pre { white-space: pre; overflow: hidden; text-overflow: ellipsis; }
 .cl-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .cl-3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 .cl-4 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }

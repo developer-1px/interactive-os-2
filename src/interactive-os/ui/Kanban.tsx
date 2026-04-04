@@ -59,7 +59,7 @@ export function Kanban({
         role={kanbanBehavior.role}
         aria-label={ariaLabel}
         data-aria-container=""
-        className={`${ax({ layout: 'row', gap: 'md' })} ${styles.board}`}
+        className={`${ax({ layout: 'scroll-x', gap: 'md', padding: 'xs' })} ${styles.board}`}
         data-compact={compact || undefined}
         data-has-highlight={(highlightUp?.size || highlightDown?.size) ? '' : undefined}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
@@ -77,11 +77,11 @@ export function Kanban({
           const locRatio = totalLoc && maxColLoc ? totalLoc / maxColLoc : 0
 
           return (
-            <div key={colId} className={`${ax({ layout: 'column', gap: 'xs' })} ${styles.column}`}>
+            <div key={colId} className={`${ax({ layout: 'column', gap: 'xs', flex: '1', surface: 'sunken', shape: 'xl', padding: 'xl' })} ${styles.column}`}>
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'overline', text: 'secondary' })} ${styles.columnHeader}`}
+                className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'overline', text: 'secondary', padding: 'xs', shape: 'sm' })} ${styles.columnHeader}`}
                 title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
                 style={locRatio > 0 ? { '--_loc-ratio': locRatio } as React.CSSProperties : undefined}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
@@ -113,7 +113,7 @@ export function Kanban({
                   <FocusDiv
                     key={cardId}
                     focused={cardState.focused}
-                    className={`${ax({ surface: 'display' })} ${styles.card}`}
+                    className={`${ax({ surface: 'display', shape: 'xl', padding: 'xl' })} ${styles.card}`}
                     data-hub={isHub || undefined}
                     title={cardTooltip ?? cardTitle}
                     data-weight={cardWeight || undefined}

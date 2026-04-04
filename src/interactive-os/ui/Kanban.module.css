@@ -1,39 +1,15 @@
 /* --- Kanban Board --- */
 
-.board {
-  padding: var(--space-xs);
-  overflow-x: auto;
-}
+/* ── Anchors for compact variant selectors ── */
+.board { /* compact variant anchor */ }
+.column { /* compact variant anchor */ }
+.columnHeader { /* compact variant anchor */ }
+.card { /* compact variant anchor */ }
 
-/* ── Column panel ── */
-.column {
-  flex: 1 1 0;
-  min-width: calc(var(--space-3xl) * 5);
-  max-width: calc(var(--space-3xl) * 8);
-  background: var(--surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xl-radius);
-  padding: var(--shape-xl-py) var(--shape-xl-px);
-}
-
-/* ── Column header ── */
-.columnHeader {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  border-radius: var(--shape-xs-radius);
-}
-
+/* ── Column count — text-transform reset is last-mile ── */
 .columnCount {
   text-transform: none;
   letter-spacing: 0;
-}
-
-/* ── Card ── */
-.card {
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-xl-radius);
-  padding: var(--shape-xl-py) var(--shape-xl-px);
-  line-height: var(--leading-snug);
-  cursor: default;
 }
 
 /* ── Editable card title ── */

@@ -1,8 +1,4 @@
-.icon {
-  margin-right: var(--space-xs);
-  opacity: 0.55;
-}
-
+/* ── file-type color overrides (custom tokens, no ax axis) ── */
 .iconFolder { color: var(--file-folder); }
 .iconTs { color: var(--file-ts); }
 .iconJs { color: var(--file-js); }
