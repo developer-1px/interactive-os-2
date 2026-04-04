@@ -122,6 +122,7 @@
 | Inspector · Command · Diff | Validated | Source preview on click (computePlacement 범용 유틸) |
 | App Inspector (engine.inspect) | Validated | 새 창 전용, Zone 계층 트리, view-level keyMap 노출 (pattern/plugin/override 출처별) |
 | Showcase (Plugin · Axis · Area) | Validated | Pattern/Collection → /ui 흡수 완료 |
+| Writer (MD 구조 편집 · 산문 프리뷰 · 파일 I/O) | Prototype | chat 브릿지 미구현, Tab indent/outdent 미구현 |
 
 ## APG Coverage (16/19)
 

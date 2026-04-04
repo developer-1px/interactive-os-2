@@ -5,6 +5,7 @@ import { fsPlugin } from './vite-plugin-fs'
 import { agentOpsPlugin } from './vite-plugin-agent-ops'
 import { inspectorPlugin } from './vite-plugin-inspector'
 import { browserTestPlugin } from './src/devtools/testRunner/browserTestPlugin'
+import writerPlugin from './writerFilePlugin'
 
 export default defineConfig({
   plugins: [
@@ -13,6 +14,7 @@ export default defineConfig({
     fsPlugin(),
     agentOpsPlugin(),
     browserTestPlugin(),
+    writerPlugin(),
   ],
   resolve: {
     alias: {

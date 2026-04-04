@@ -2,7 +2,7 @@ import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages, Map,
-  MessageSquare, Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText, Bird, BookText, Play, Search, Cable,
+  MessageSquare, Database, Cog, Axe, Puzzle, Box, Layers, Wrench, BookOpen, Lightbulb, FileText, Bird, BookText, Play, Search, Cable, PenLine,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -124,6 +124,7 @@ const appNavItems: NavItem[] = [
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
   { id: 'inspector', label: 'Inspector', icon: Search, path: '/inspector' },
   { id: 'a2ui', label: 'A2UI', icon: Cable, path: '/a2ui' },
+  { id: 'writer', label: 'Writer', icon: PenLine, path: '/writer' },
 ]
 
 const internalsNavItems: NavItem[] = contentsOrder.map((layer) => ({

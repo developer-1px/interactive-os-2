@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
   {
     element: <AppShell />,
     children: [
-      { path: '/', lazy: () => import('./pages/cms/CmsLayout').then(m => ({ Component: m.default })) },
+      { path: '/', lazy: () => import('./pages/cms/PageCms').then(m => ({ Component: m.default })) },
       { path: '/ui/*', lazy: () => import('./pages/showcase/PageUiShowcase').then(m => ({ Component: m.default })) },
       { path: '/viewer/*', lazy: () => import('./pages/viewer/PageViewer').then(m => ({ Component: m.default })) },
       {
@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
           return { Component: m.default, loader: m.loader }
         },
       },
-      { path: '/birdseye/*', lazy: () => import('./pages/birdseye/BirdseyeLayout').then(m => ({ Component: m.default })) },
+      { path: '/birdseye/*', lazy: () => import('./pages/birdseye/PageBirdseye').then(m => ({ Component: m.default })) },
 { path: '/chat', lazy: () => import('./pages/chat/PageAgentChat').then(m => ({ Component: m.default })) },
       { path: '/replay', lazy: () => import('./pages/replay/PageReplay').then(m => ({ Component: m.default })) },
       { path: '/storymap', lazy: () => import('./pages/storymap/PageStoryMap').then(m => ({ Component: m.default })) },
@@ -41,6 +41,7 @@ export const router = createBrowserRouter([
         element: <InternalsLayout />,
       },
 
+      { path: '/writer', lazy: () => import('./pages/writer/PageWriter').then(m => ({ Component: m.default })) },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

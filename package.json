@@ -281,6 +281,10 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.28.0",
     "fuse.js": "^7.1.0",
+    "remark-frontmatter": "^5.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
+    "unified": "^11.0.5",
     "yaml": "^2.8.3",
     "zod": "^4.3.6"
   },
