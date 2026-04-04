@@ -66,7 +66,9 @@
 | Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight | Integrated | Panel/Trigger 제거 완료. state.slotProps로 slot ARIA 전달. Part 5종만 |
 | useAria · useAriaZone · useControlledAria | Integrated | onFocusChange 콜백 추가. disabled 옵션. keyMap-only 경로 검증 완료 (CmsLayout Mod+\\) |
 | useKeyboard · useSpatialNav | Integrated | — |
-| useResizer · useVirtualScroll | Validated | — |
+| useResizer · useVirtualScroll | Integrated | ui/로 이동, containerRef 옵션 추가. VirtualCodeBlock에서 사용 |
+| VirtualCodeBlock | Integrated | 500줄+ 코드 파일 가상 스크롤. Shiki codeToTokens 줄별 토큰 캐시 |
+| shikiUtils | Integrated | CodeBlock/VirtualCodeBlock 공유 유틸 (theme, lang map, escape) |
 | *가상화 (10k+ 노드)* | Concept | — |
 
 ## UI (L7 · 15종 + indicators)

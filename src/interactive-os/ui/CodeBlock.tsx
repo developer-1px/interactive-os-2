@@ -1,45 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { codeToHtml } from 'shiki'
+import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme } from './shikiUtils'
 import styles from './CodeBlock.module.css'
-
-// --- Theme detection (single observer shared across all CodeBlock instances) ---
-
-function getShikiTheme(): string {
-  return document.documentElement.getAttribute('data-theme') === 'light'
-    ? 'github-light'
-    : 'github-dark'
-}
-
-const themeListeners = new Set<() => void>()
-let shikiThemeCache = getShikiTheme()
-
-if (typeof MutationObserver !== 'undefined') {
-  const themeObserver = new MutationObserver(() => {
-    shikiThemeCache = getShikiTheme()
-    themeListeners.forEach(fn => fn())
-  })
-  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
-}
-
-function useShikiTheme(): string {
-  const [theme, setTheme] = useState(shikiThemeCache)
-  useEffect(() => {
-    const cb = () => setTheme(getShikiTheme())
-    themeListeners.add(cb)
-    return () => { themeListeners.delete(cb) }
-  }, [])
-  return theme
-}
-
-// --- Shiki code highlighting ---
-
-const IDENTIFIER_RE = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
-
-const EXT_TO_LANG: Record<string, string> = {
-  ts: 'typescript', tsx: 'tsx', js: 'javascript', jsx: 'jsx',
-  json: 'json', css: 'css', html: 'html', yaml: 'yaml', yml: 'yaml',
-  sh: 'bash', bash: 'bash', py: 'python', md: 'markdown',
-}
 
 // HighlightTone: used by replay edit animation for tone-coded line highlights
 export type HighlightTone = 'edited' | 'selected' | 'deleted' | 'inserted'
