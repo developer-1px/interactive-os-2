@@ -1,6 +1,6 @@
 // ② 2026-04-04-md-writer-prd.md
 import { useCallback, useEffect, useState } from 'react'
-import { TreeGrid } from '@os/ui/TreeGrid'
+import { TreeView } from '@os/ui/TreeView'
 import { ExpandIndicator } from '@os/ui/indicators'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -37,11 +37,12 @@ const fileRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<s
   const type = data?.type as string
   const isDir = type === 'dir'
   const hasChildren = state.expanded !== undefined
+  const depth = (state.level ?? 1) - 1
 
   return (
-    <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })}>
+    <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }}>
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-      <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>
+      <span className={ax({ text: state.focused ? 'primary' : 'secondary', clamp: '1' })}>
         {isDir ? `${name}/` : name}
       </span>
     </div>
@@ -129,12 +130,12 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
 
   return (
     <div className={ax({ layout: 'scroll' })}>
-      <TreeGrid
+      <TreeView
         data={fileData}
-        plugins={[]}
         onChange={handleChange}
         onActivate={handleActivate}
         renderItem={fileRenderItem}
+        selectionFollowsFocus
         aria-label="File browser"
       />
     </div>
