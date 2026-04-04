@@ -41,6 +41,7 @@ export function TreeGrid({
   renderItem = defaultRenderItem,
   enableEditing = false,
   columns,
+  onActivate,
   'aria-label': ariaLabel,
 }: TreeGridProps) {
   const pattern = React.useMemo(
@@ -60,6 +61,7 @@ export function TreeGrid({
       data={data}
       plugins={mergedPlugins}
       onChange={onChange}
+      onActivate={onActivate}
       aria-label={ariaLabel}
     >
       <Aria.Item render={renderItem} />

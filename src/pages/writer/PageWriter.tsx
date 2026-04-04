@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useWriterData, useWriterDirty, writerState } from './writerStore'
 import { mdToStore, storeToMd } from './writerTransform'
 import WriterPreview from './WriterPreview'
+import WriterFileBrowser from './WriterFileBrowser'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
@@ -14,6 +15,7 @@ import { ExpandIndicator } from '@os/ui/indicators'
 import { ax } from '@styles/ax'
 import type { Plugin } from '@os/engine/types'
 import type { NodeState } from '@os/pattern/types'
+import css from './PageWriter.module.css'
 
 const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const data = node.data as Record<string, unknown> | undefined
@@ -50,14 +52,12 @@ export default function PageWriter() {
     writerState.markClean()
   }, [setData])
 
-  const handleOpen = useCallback(async () => {
-    const file = prompt('File path (relative to docs/):')
-    if (!file) return
+  const handleFileSelect = useCallback(async (filePath: string) => {
     try {
-      const res = await fetch(`/api/writer/read?file=${encodeURIComponent(file)}`)
+      const res = await fetch(`/api/writer/read?file=${encodeURIComponent(filePath)}`)
       if (!res.ok) throw new Error(await res.text())
       const md = await res.text()
-      loadDocument(mdToStore(md, file), file)
+      loadDocument(mdToStore(md, filePath), filePath)
     } catch (err) {
       console.error('Failed to open file:', err)
     }
@@ -67,7 +67,6 @@ export default function PageWriter() {
     loadDocument(mdToStore(''))
   }, [loadDocument])
 
-  // Read from writerState.getData() directly to avoid stale closure
   const handleSave = useCallback(async () => {
     let filePath = writerState.getFilePath()
     if (!filePath) {
@@ -97,37 +96,48 @@ export default function PageWriter() {
     },
   }), [handleSave])
 
+  const currentFile = writerState.getFilePath()
+
   return (
     <AriaRoute keyMap={writerKeyMap} label="Writer">
-      <div className={ax({ layout: 'fill' })}>
-        <div className={ax({ layout: 'bar', gap: 'sm', padding: 'sm' })}>
-          <button onClick={handleNew} className={ax({ controlSize: 'sm', surface: 'ghost' })}>New</button>
-          <button onClick={handleOpen} className={ax({ controlSize: 'sm', surface: 'ghost' })}>Open</button>
-          <button onClick={handleSave} disabled={!dirty} className={ax({ controlSize: 'sm', surface: 'ghost' })}>
-            Save{dirty ? ' *' : ''}
-          </button>
-          <div className={ax({ layout: 'fill' })} />
-          <button
-            onClick={() => setView(v => v === 'tree' ? 'preview' : 'tree')}
-            className={ax({ controlSize: 'sm', surface: 'ghost' })}
-          >
-            {view === 'tree' ? 'Preview' : 'Edit'}
-          </button>
+      <div className={`${ax({ flex: '1' })} ${css.writerLayout}`}>
+        <div className={ax({ layout: 'fill', surface: 'sunken' })}>
+          <div className={ax({ layout: 'bar', padding: 'sm' })}>
+            <span className={ax({ text: 'muted' })}>Files</span>
+          </div>
+          <WriterFileBrowser onFileSelect={handleFileSelect} />
         </div>
 
-        <div className={ax({ layout: 'scroll' })}>
-          {view === 'tree' ? (
-            <TreeGrid
-              data={data}
-              plugins={writerPlugins}
-              onChange={setData}
-              enableEditing
-              renderItem={writerRenderItem}
-              aria-label="Document structure"
-            />
-          ) : (
-            <WriterPreview data={data} />
-          )}
+        <div className={ax({ layout: 'fill' })}>
+          <div className={ax({ layout: 'bar', gap: 'sm', padding: 'sm' })}>
+            <button onClick={handleNew} className={ax({ controlSize: 'sm', surface: 'ghost' })}>New</button>
+            <button onClick={handleSave} disabled={!dirty} className={ax({ controlSize: 'sm', surface: 'ghost' })}>
+              Save{dirty ? ' *' : ''}
+            </button>
+            {currentFile && <span className={ax({ text: 'muted' })}>{currentFile}</span>}
+            <div className={ax({ layout: 'fill' })} />
+            <button
+              onClick={() => setView(v => v === 'tree' ? 'preview' : 'tree')}
+              className={ax({ controlSize: 'sm', surface: 'ghost' })}
+            >
+              {view === 'tree' ? 'Preview' : 'Edit'}
+            </button>
+          </div>
+
+          <div className={ax({ layout: 'scroll' })}>
+            {view === 'tree' ? (
+              <TreeGrid
+                data={data}
+                plugins={writerPlugins}
+                onChange={setData}
+                enableEditing
+                renderItem={writerRenderItem}
+                aria-label="Document structure"
+              />
+            ) : (
+              <WriterPreview data={data} />
+            )}
+          </div>
         </div>
       </div>
     </AriaRoute>
