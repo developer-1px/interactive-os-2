@@ -5,6 +5,8 @@ import { mdToStore, storeToMd } from './writerTransform'
 import WriterPreview from './WriterPreview'
 import WriterFileBrowser from './WriterFileBrowser'
 import { TreeGrid } from '@os/ui/TreeGrid'
+import { SplitPane } from '@os/ui/SplitPane'
+import type { PaneSize } from '@os/ui/SplitPane'
 import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
 import { dnd } from '@os/plugins/dnd'
@@ -15,7 +17,6 @@ import { ExpandIndicator } from '@os/ui/indicators'
 import { ax } from '@styles/ax'
 import type { Plugin } from '@os/engine/types'
 import type { NodeState } from '@os/pattern/types'
-import css from './PageWriter.module.css'
 
 const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const data = node.data as Record<string, unknown> | undefined
@@ -26,7 +27,7 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
   const prefix = type === 'heading' && level ? `H${level}` : type === 'document' ? 'DOC' : ''
 
   return (
-    <div {...props} className={ax({ surface: 'ghost', controlSize: 'md', layout: 'bar', gap: 'xs' })}>
+    <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })}>
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
       {prefix && <span className={ax({ text: 'muted' })}>{prefix}</span>}
       <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{content}</span>
@@ -45,6 +46,7 @@ export default function PageWriter() {
   const [data, setData] = useWriterData()
   const dirty = useWriterDirty()
   const [view, setView] = useState<'tree' | 'preview'>('tree')
+  const [sizes, setSizes] = useState<PaneSize[]>([0.15, 'flex'])
 
   const loadDocument = useCallback((store: ReturnType<typeof mdToStore>, filePath?: string) => {
     writerState.setFilePath(filePath)
@@ -100,12 +102,14 @@ export default function PageWriter() {
 
   return (
     <AriaRoute keyMap={writerKeyMap} label="Writer">
-      <div className={`${ax({ flex: '1' })} ${css.writerLayout}`}>
+      <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1} noScroll={[0, 1]}>
         <div className={ax({ layout: 'fill', surface: 'sunken' })}>
-          <div className={ax({ layout: 'bar', padding: 'sm' })}>
+          <div className={ax({ layout: 'spread', padding: 'sm' })}>
             <span className={ax({ text: 'muted' })}>Files</span>
           </div>
-          <WriterFileBrowser onFileSelect={handleFileSelect} />
+          <div className={ax({ layout: 'scroll' })}>
+            <WriterFileBrowser onFileSelect={handleFileSelect} />
+          </div>
         </div>
 
         <div className={ax({ layout: 'fill' })}>
@@ -139,7 +143,7 @@ export default function PageWriter() {
             )}
           </div>
         </div>
-      </div>
+      </SplitPane>
     </AriaRoute>
   )
 }

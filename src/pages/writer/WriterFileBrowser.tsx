@@ -39,7 +39,7 @@ const fileRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<s
   const hasChildren = state.expanded !== undefined
 
   return (
-    <div {...props} className={ax({ surface: 'ghost', controlSize: 'sm', layout: 'bar', gap: 'xs' })}>
+    <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })}>
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
       <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>
         {isDir ? `${name}/` : name}

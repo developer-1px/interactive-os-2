@@ -82,32 +82,24 @@
 
 /* ════════════════════════════════════════════
  * Control Size — "이 요소의 물리적 크기"
- * 번들: display + align + justify + min-height + border-radius + font-size + padding-inline
+ * 번들: min-height + border-radius + font-size + padding-inline
+ * display/align/justify는 layout 축 소유
  * claude.ai 실측: sm=32/6, md=36/8, lg=44/10
  * ════════════════════════════════════════════ */
 
 .cs-sm {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   min-height: 32px;
   border-radius: 6px;
   font-size: var(--type-caption-size);   /* 12px */
   padding-inline: var(--space-lg);       /* 16px */
 }
 .cs-md {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   min-height: 36px;
   border-radius: 8px;
   font-size: var(--type-body-size);      /* 14px */
   padding-inline: var(--space-lg);       /* 16px */
 }
 .cs-lg {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   min-height: 44px;
   border-radius: 10px;
   font-size: var(--type-body-size);      /* 14px */
