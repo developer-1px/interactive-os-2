@@ -25,6 +25,9 @@ import { definePlugin } from '@os/plugins/definePlugin'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import type { RouteKeyMap } from '@os/primitives/AriaRoute'
 import { ExpandIndicator } from '@os/ui/indicators'
+import { Toolbar } from '@os/ui/Toolbar'
+import { createStore } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
 import { ax } from '@styles/ax'
 import { createBatchCommand, type Plugin } from '@os/engine/types'
@@ -295,6 +298,21 @@ export default function PageWriter() {
     requestAnalysis(chatSessionId)
   }, [chatSessionId])
 
+  const toolbarData = useMemo(() => createStore({
+    entities: {
+      new: { id: 'new', data: { label: 'New', icon: 'add' } },
+      save: { id: 'save', data: { label: dirty ? 'Save *' : 'Save' } },
+      analyze: { id: 'analyze', data: { label: 'Analyze', icon: 'search' } },
+    },
+    relationships: { [ROOT_ID]: ['new', 'save', 'analyze'] },
+  }), [dirty])
+
+  const handleToolbarActivate = useCallback((nodeId: string) => {
+    if (nodeId === 'new') handleNew()
+    else if (nodeId === 'save') handleSave()
+    else if (nodeId === 'analyze') handleAnalyze()
+  }, [handleNew, handleSave, handleAnalyze])
+
   const writerKeyMap: RouteKeyMap = useMemo(() => ({
     'Mod+S': () => {
       handleSave()
@@ -320,11 +338,7 @@ export default function PageWriter() {
 
         <div className={ax({ layout: 'fill' })}>
           <div className={ax({ layout: 'bar', gap: 'sm', padding: 'sm' })}>
-            <button onClick={handleNew} className={ax({ controlSize: 'sm', padding: 'sm', content: 'text', surface: 'ghost' })}>New</button>
-            <button onClick={handleSave} disabled={!dirty} className={ax({ controlSize: 'sm', padding: 'sm', content: 'text', surface: 'ghost' })}>
-              Save{dirty ? ' *' : ''}
-            </button>
-            <button onClick={handleAnalyze} className={ax({ controlSize: 'sm', padding: 'sm', content: 'text', surface: 'ghost' })}>Analyze</button>
+            <Toolbar data={toolbarData} onActivate={handleToolbarActivate} aria-label="Writer toolbar" />
             {urlFilePath && <span className={ax({ text: 'muted' })}>{urlFilePath}</span>}
           </div>
 
