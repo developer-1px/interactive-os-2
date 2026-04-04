@@ -57,6 +57,7 @@ function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, o
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-orientation={role && ROLES_WITH_ORIENTATION.has(role) && orientation !== 'both' ? orientation : undefined}
+        aria-multiselectable={pattern?.selectionMode === 'multiple' ? 'true' : undefined}
         aria-modal={pattern?.popupModal ? 'true' : undefined}
         style={orientation === 'horizontal' ? horizontalStyle : undefined}
         data-aria-container=""

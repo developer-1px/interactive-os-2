@@ -1,9 +1,8 @@
 // ② 2026-03-26-unified-navigation-prd.md
-import { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { TreeView } from '@os/ui/TreeView'
-import type { TreeItemRenderProps } from '@os/ui/TreeView'
 import { FOCUS_ID } from '@os/axis/navigate'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -125,15 +124,16 @@ export function AreaSidebar({ layer }: { layer: string }) {
     navigate(`/internals/${nodeId}`)
   }, [navigate])
 
-  const renderItem = useCallback((_props: TreeItemRenderProps, node: Record<string, unknown>, state: NodeState) => {
+  const renderItem = useCallback((props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState) => {
     const hasChildren = state.expanded !== undefined
+    const depth = (state.level ?? 1) - 1
     return (
-      <span className="inline-flex items-center gap-sm">
+      <div {...props} className="inline-flex items-center gap-sm" style={{ paddingLeft: `calc(${depth} * var(--space-md))` }}>
         <span className="inline-flex items-center justify-center shrink-0 item-chevron item-chevron--tree">
           {hasChildren ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
         </span>
         <span>{(node.data as Record<string, unknown>)?.name as string}</span>
-      </span>
+      </div>
     )
   }, [])
 

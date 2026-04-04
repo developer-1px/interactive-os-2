@@ -61,7 +61,7 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight | Integrated | Panel/Trigger 제거 완료. state.slotProps로 slot ARIA 전달. Part 5종만 |
+| Aria · Aria.Item · Aria.Cell · Aria.Editable · Aria.Search · Aria.SearchHighlight | Integrated | Panel/Trigger 제거 완료. state.slotProps로 slot ARIA 전달. Part 5종만. aria-multiselectable 자동 출력 |
 | useAria · useAriaZone · useControlledAria | Integrated | onFocusChange 콜백 추가. disabled 옵션. keyMap-only 경로 검증 완료 (CmsLayout Mod+\\) |
 | useKeyboard · useSpatialNav | Integrated | — |
 | useResizer · useVirtualScroll | Integrated | plugins/로 이동. virtualScroll() definePlugin 래퍼 + useVirtualScrollState 훅 이중 구조 |
@@ -76,7 +76,7 @@
 | indicators/ (Expand·Check·Radio·Switch·Separator) | Validated | 5/18 완료, Phase 2~3 미착수 |
 | **AriaComponentProps** (공통 인터페이스) | Integrated | data/plugins/renderItem/onChange/onActivate/onFocusChange/className. mergeRenderers, getNodeLabel. 전 ui/ 컴포넌트 통일 완료 |
 | **ListBoxGrouped** | Integrated | listboxGrouped pattern 기반 별도 완성품. 동적 childRole(group/option) |
-| TreeGrid · ListBox · TabList · Grid | Integrated | AriaComponentProps 통일, TabList manual prop 추가, TreeGrid Cell re-export |
+| TreeGrid · TreeView · ListBox · TabList · Grid | Integrated | AriaComponentProps 통일, TabList manual prop 추가, TreeGrid Cell re-export. TreeView: Aria 프리미티브 기반 재작성, typeahead 기본 포함 |
 | Accordion · MenuList · DisclosureGroup | Integrated | AriaComponentProps 통일 |
 | Combobox · RadioGroup · SwitchGroup | Integrated | AriaComponentProps 통일 |
 | Kanban · Slider · Spinbutton | Integrated | AriaComponentProps 통일, Slider/Spinbutton useId() 전환 |

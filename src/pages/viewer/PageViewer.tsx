@@ -192,10 +192,11 @@ export default function PageViewer() {
               aria-label="File tree"
               renderItem={(props, node, state) => {
                 const data = node.data as FileNodeData
+                const depth = (state.level ?? 1) - 1
                 return (
-                  <>
+                  <div {...props} className={ax({ layout: 'bar', gap: 'xs', padding: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }}>
                     {data.type === 'directory' ? (
-                      <span className={ax({ layout: 'center', text: 'muted', flex: 'none' })} {...props.toggleProps}>
+                      <span className={ax({ layout: 'center', text: 'muted', flex: 'none' })}>
                         <ExpandIndicator expanded={state.expanded} />
                       </span>
                     ) : (
@@ -205,7 +206,7 @@ export default function PageViewer() {
                     <span className={`${ax({ clamp: '1' })}${data.type === 'directory' ? ` ${ax({ weight: 'medium' })}` : ''}`}>
                       {data.name}
                     </span>
-                  </>
+                  </div>
                 )
               }}
             />
