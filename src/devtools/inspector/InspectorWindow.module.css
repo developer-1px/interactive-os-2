@@ -9,18 +9,6 @@
   overflow: auto;
 }
 
-.treeBtn {
-  width: 100%;
-  text-align: left;
-  display: block;
-}
-
-.depth0 { padding-left: var(--space-sm); }
-.depth1 { padding-left: calc(var(--space-sm) + 16px); }
-.depth2 { padding-left: calc(var(--space-sm) + 32px); }
-.depth3 { padding-left: calc(var(--space-sm) + 48px); }
-.depth4 { padding-left: calc(var(--space-sm) + 64px); }
-
 .detail {
   flex: 1;
   overflow: auto;
