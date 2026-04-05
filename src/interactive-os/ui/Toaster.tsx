@@ -5,7 +5,7 @@ import { CloseIndicator } from './indicators'
 import { ax } from '@styles/ax'
 import type { Axes } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './Toaster.module.css'
+import './Toaster.css'
 
 const variantTone: Record<string, Axes> = {
   default: { surface: 'overlay' },
@@ -25,7 +25,7 @@ export function Toaster({ toaster }: ToasterProps): ReactNode {
   )
 
   return (
-    <div aria-live="polite" aria-atomic="false" className={`pointer-none ${ax({ layout: 'column', gap: 'sm' })} ${styles.container}`}>
+    <div aria-live="polite" aria-atomic="false" className={`pointer-none ${ax({ layout: 'column', gap: 'sm' })}`}>
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onDismiss={toaster.dismiss} />
       ))}
@@ -43,7 +43,7 @@ function ToastItem({
   const variant = toast.variant ?? 'default'
   const axes = variantTone[variant] ?? variantTone.default
   return (
-    <div className={`${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' })} ${styles.toast}`} data-variant={variant}>
+    <div className={`toast-item pointer-auto ${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' })}`} data-variant={variant}>
       <div className={ax({ flex: '1', layout: 'self-start' })}>
         <div className={ax({ textStyle: 'body', weight: 'medium' })}>{toast.title}</div>
         {toast.description && (

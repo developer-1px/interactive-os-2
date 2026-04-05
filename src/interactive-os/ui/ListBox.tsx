@@ -10,7 +10,6 @@ import { edit, replaceEditPlugin } from '../plugins/edit'
 import { search } from '../plugins/search'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './ListBox.module.css'
 
 const listboxPattern = listbox()
 
@@ -24,7 +23,7 @@ interface ListBoxProps extends AriaComponentProps {
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={`${ax({ layout: 'bar', gap: 'sm' })} ${styles.item}`} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
+    <div {...props} className={ax({ layout: 'bar', gap: 'sm' })} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
       <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )

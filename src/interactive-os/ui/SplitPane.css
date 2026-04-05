@@ -1,19 +1,19 @@
-.separatorH {
+/* SplitPane — separator hit areas */
+.split-sep-h {
   width: var(--border-width);
   border-left: var(--border-width) solid var(--border-default);
 }
-.separatorH::before {
+.split-sep-h::before {
   content: '';
   position: absolute;
-  inset: 0 -var(--space-xs);
+  inset: 0 calc(-1 * var(--space-xs));
 }
-
-.separatorV {
+.split-sep-v {
   height: var(--border-width);
   border-top: var(--border-width) solid var(--border-default);
 }
-.separatorV::before {
+.split-sep-v::before {
   content: '';
   position: absolute;
-  inset: -var(--space-xs) 0;
+  inset: calc(-1 * var(--space-xs)) 0;
 }

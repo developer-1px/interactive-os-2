@@ -1,39 +1,25 @@
-/* ── Tab — last-mile: selected state colors, preview italic ── */
-.tab {
+/* TabGroup — tab states, close/add button reveal */
+.tab-item {
   white-space: nowrap;
   --_fg: var(--text-muted);
   color: var(--_fg);
 }
-
-.tab[aria-selected="true"] {
+.tab-item[aria-selected="true"] {
   --_bg: var(--surface-raised);
   --_fg: var(--text-primary);
   box-shadow: inset 0 -var(--indicator-width) 0 var(--border-accent);
 }
-
-.tabPreview {
-  font-style: italic;
-}
-
-/* ── Close button — last-mile: opacity reveal on hover ── */
-.tabClose {
+.tab-item-preview { font-style: italic; }
+.tab-close {
   padding: var(--space-2xs);
   opacity: 0;
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
 }
-
-.tab:hover .tabClose,
-.tab[aria-selected="true"] .tabClose {
-  opacity: 0.6;
-}
-
-/* ── Add button — last-mile: consistent with close button styling ── */
-.tabAdd {
+.tab-item:hover .tab-close,
+.tab-item[aria-selected="true"] .tab-close { opacity: 0.6; }
+.tab-add {
   padding: var(--space-2xs);
   opacity: 0.4;
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
 }
-
-.tabAdd:hover {
-  opacity: 1;
-}
+.tab-add:hover { opacity: 1; }

@@ -12,7 +12,7 @@ import type { TabGroupData } from '../plugins/workspaceStore'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { CloseIndicator, AddIndicator } from './indicators'
-import styles from './TabGroup.module.css'
+import './TabGroup.css'
 
 interface TabGroupProps {
   data: NormalizedData
@@ -90,7 +90,7 @@ export function TabGroup({
 
   return (
     <div className={ax({ layout: 'fill' })} data-full-height>
-      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`overflow-x-auto ${ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })} ${styles.tabBar}`}>
+      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`overflow-x-auto ${ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })}`}>
         {childIds.map((id) => {
           const entity = store.entities[id]
           if (!entity) return null
@@ -98,14 +98,12 @@ export function TabGroup({
           const entityData = entity.data as Record<string, unknown>
           const label = entityData?.label as string ?? id
           const isPreview = entityData?.preview === true
-          const tabClass = isPreview
-            ? `${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })} ${styles.tab} ${styles.tabPreview}`
-            : `${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })} ${styles.tab}`
+          const tabClass = `tab-item ${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })}${isPreview ? ' tab-item-preview' : ''}`
           return (
             <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
               <span>{label}</span>
               <button
-                className={`${ax({ surface: 'ghost', layout: 'center', text: 'muted', shape: 'sm' })} ${styles.tabClose}`}
+                className={`tab-close ${ax({ surface: 'ghost', layout: 'center', text: 'muted', shape: 'sm' })}`}
                 aria-label={`Close ${label}`}
                 tabIndex={-1}
                 onClick={(e) => handleClose(e, id)}
@@ -118,7 +116,7 @@ export function TabGroup({
         })}
         {onAddTab && (
           <button
-            className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', text: 'muted', shape: 'sm' })} ${styles.tabAdd}`}
+            className={`tab-add ${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', text: 'muted', shape: 'sm' })}`}
             aria-label="Add tab"
             tabIndex={-1}
             onClick={handleAdd}

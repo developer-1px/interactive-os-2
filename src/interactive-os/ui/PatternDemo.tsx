@@ -19,7 +19,7 @@ import { windowSplitter } from '../pattern/roles/windowSplitter'
 
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './PatternDemo.module.css'
+import './PatternDemo.css'
 
 interface PatternEntry {
   pattern: AriaPattern
@@ -104,12 +104,8 @@ function getStateLabel(state: NodeState): string | null {
   return parts.length > 0 ? parts.join(', ') : null
 }
 
-function getItemClass(state: NodeState): string {
-  const base = `flex-row items-center ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', shape: 'sm', gap: 'sm' })} ${styles.item}`
-  if (state.focused && state.selected) return `${base} ${styles.itemFocusedSelected}`
-  if (state.focused) return `${base} ${styles.itemFocused}`
-  if (state.selected) return `${base} ${styles.itemSelected}`
-  return base
+function getItemClass(_state: NodeState): string {
+  return `pattern-demo-item flex-row items-center ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', shape: 'sm', gap: 'sm' })}`
 }
 
 const defaultRender = (
@@ -123,9 +119,9 @@ const defaultRender = (
   const indent = (state.level ?? 1) > 1 ? { paddingLeft: `calc(var(--space-lg) * ${(state.level ?? 1) - 1})` } : undefined
 
   return (
-    <div {...props} className={getItemClass(state)} style={indent}>
+    <div {...props} className={getItemClass(state)} style={indent} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
       <span>{label}</span>
-      {stateLabel && <span className={`shrink-0 ${ax({ textStyle: 'caption', text: 'muted' })} ${styles.badge}`}>{stateLabel}</span>}
+      {stateLabel && <span className={`shrink-0 ml-auto ${ax({ textStyle: 'caption', text: 'muted' })}`}>{stateLabel}</span>}
     </div>
   )
 }
@@ -146,7 +142,7 @@ function PatternDemoInner({ entry }: { entry: PatternEntry }) {
   const pattern = useMemo(() => entry.pattern, [entry.pattern])
 
   return (
-    <div className={`${ax({ surface: 'sunken', shape: 'md', padding: 'sm', width: 'sm' })} ${styles.container}`}>
+    <div className={ax({ surface: 'sunken', shape: 'md', padding: 'sm', width: 'sm' })}>
       <Aria
         pattern={pattern}
         data={data}

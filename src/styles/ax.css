@@ -572,4 +572,10 @@
 .bg-transparent  { background: transparent; }
 .select-none     { user-select: none; }
 .pointer-none    { pointer-events: none; }
+.pointer-auto    { pointer-events: auto; }
 .font-inherit    { font-family: inherit; }
+.ml-auto         { margin-left: auto; }
+.border-collapse { border-collapse: collapse; }
+.cursor-col-resize { cursor: col-resize; }
+.cursor-row-resize { cursor: row-resize; }
+.font-italic     { font-style: italic; }

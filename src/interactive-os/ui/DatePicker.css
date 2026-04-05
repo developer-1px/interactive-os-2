@@ -1,0 +1,28 @@
+/* DatePicker — border-radius splits, positioning */
+.dp-input {
+  padding: var(--shape-xs-py) var(--shape-sm-px);
+  border-radius: var(--shape-xs-radius) 0 0 var(--shape-xs-radius);
+  font-family: inherit;
+}
+.dp-trigger {
+  padding: var(--shape-xs-py) var(--shape-xs-px);
+  border-left: none;
+  border-radius: 0 var(--shape-xs-radius) var(--shape-xs-radius) 0;
+}
+.dp-dialog {
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  margin-top: var(--space-xs);
+}
+.dp-nav-bar { margin-bottom: var(--space-sm); }
+.dp-nav-btn {
+  width: var(--icon-lg);
+  height: var(--icon-lg);
+  padding: 0;
+}
+.dp-actions {
+  margin-top: var(--space-sm);
+  justify-content: flex-end;
+}
+.dp-action-btn { font-family: inherit; }

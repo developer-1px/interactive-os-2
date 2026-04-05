@@ -1,0 +1,2 @@
+/* NavList — sibling spacing */
+.navlist-group + .navlist-group { padding-top: var(--space-lg); }

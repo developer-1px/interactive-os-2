@@ -9,7 +9,7 @@ import { getChildren } from '../store/createStore'
 import { getNodeLabel } from './types'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './NavList.module.css'
+import './NavList.css'
 
 interface NavListProps {
   data: NormalizedData
@@ -35,7 +35,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 }
 
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (
-  <div className={`${ax({ textStyle: 'overline', text: 'muted' })} ${styles.groupLabel}`}>{label}</div>
+  <div className={ax({ textStyle: 'overline', text: 'muted', padding: 'sm', content: 'text' })}>{label}</div>
 )
 
 function isGroup(entity: Record<string, unknown>): boolean {
@@ -100,7 +100,7 @@ export function NavList({
         if (isGroup(entity)) {
           const groupChildren = getChildren(store, id)
           return (
-            <div key={id} role="group" aria-label={getLabel(entity)} className={`${ax({ layout: 'column', gap: 'xs' })} ${styles.group}`}>
+            <div key={id} role="group" aria-label={getLabel(entity)} className={`navlist-group ${ax({ layout: 'column', gap: 'xs' })}`}>
               {renderGroupLabel(getLabel(entity))}
               {renderItems(groupChildren)}
             </div>

@@ -1,27 +1,23 @@
-/* --- Slider --- */
-
-.sliderLabel {
-  min-width: calc(var(--space-2xl) * 2);
-}
-
-.sliderTrack {
+/* Slider — track, fill, thumb */
+.slider-label { min-width: calc(var(--space-2xl) * 2); }
+.slider-track {
   --slider-track-height: var(--shape-xs-radius);
-
   height: var(--slider-track-height);
   background: var(--border-default);
   border-radius: calc(var(--slider-track-height) / 2);
+  position: relative;
 }
-
-.sliderFill {
+.slider-fill {
+  position: absolute;
   left: 0;
   top: 0;
+  height: 100%;
   background: var(--tone-primary-base);
   border-radius: calc(var(--slider-track-height) / 2);
 }
-
-.sliderThumb {
+.slider-thumb {
   --slider-thumb-size: var(--icon-md);
-
+  position: absolute;
   top: 50%;
   width: var(--slider-thumb-size);
   height: var(--slider-thumb-size);
@@ -29,11 +25,7 @@
   transform: translate(-50%, -50%);
   transition: box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
 }
-
-[data-focused] .sliderThumb {
+[data-focused] .slider-thumb {
   box-shadow: 0 0 0 calc(var(--slider-track-height) / 2) var(--tone-primary-base);
 }
-
-.sliderValue {
-  min-width: var(--space-2xl);
-}
+.slider-value { min-width: var(--space-2xl); }

@@ -8,7 +8,7 @@ import { Aria } from '../primitives/aria'
 import { accordion } from '../pattern/roles/accordion'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './Accordion.module.css'
+import './Accordion.css'
 
 type AccordionProps = AriaComponentProps
 
@@ -19,9 +19,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   if (isGroup) {
     return (
       <div>
-        <div {...props} className={`${ax({ surface: 'ghost', layout: 'spread', weight: 'semi' })} ${styles.header}`}>
+        <div {...props} className={ax({ surface: 'ghost', layout: 'spread', weight: 'semi' })}>
           <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
-          <span className={`${ax({ flex: 'none', text: 'muted' })} ${styles.chevron} ${state.expanded ? styles.chevronExpanded : ''}`}>
+          <span className={`accordion-chevron ${ax({ flex: 'none', text: 'muted' })}`} data-expanded={state.expanded || undefined}>
             <ExpandIndicator />
           </span>
         </div>
@@ -35,7 +35,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   }
 
   return (
-    <div {...props} className={`${ax({ textStyle: 'body', text: 'secondary' })} ${styles.item}`}>
+    <div {...props} className={ax({ textStyle: 'body', text: 'secondary', padding: 'md' })}>
       <span>{label}</span>
     </div>
   )

@@ -2,7 +2,7 @@ import React, { useRef, useState, useCallback, useMemo, useEffect, Children } fr
 import type { PaneSize } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import styles from './SplitPane.module.css'
+import './SplitPane.css'
 import { ax } from '@styles/ax'
 import { useAria } from '../primitives/useAria'
 import { composePattern } from '../pattern/composePattern'
@@ -143,7 +143,7 @@ function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onKeyDel
       aria-valuemax={100 - Math.round(minRatio * 100)}
       aria-label={`Resize pane ${index + 1}`}
       tabIndex={0}
-      className={`relative ${ax({ surface: 'action' })} shrink-0 bg-transparent ${isHorizontal ? 'cursor-col-resize' : 'cursor-row-resize'} ${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
+      className={`relative ${ax({ surface: 'action' })} shrink-0 bg-transparent ${isHorizontal ? 'cursor-col-resize split-sep-h' : 'cursor-row-resize split-sep-v'}`}
       data-focused={nodeState.focused || undefined}
       onPointerDown={(e) => aria.dispatch(startDragResize(e.pointerId, e.currentTarget as HTMLElement, e.clientX, e.clientY))}
     />
