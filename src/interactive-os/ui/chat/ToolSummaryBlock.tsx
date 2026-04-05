@@ -182,13 +182,13 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   let content: React.ReactNode = null
   if (isRead && text) {
     content = (
-      <div className={`${ax({ border: 'top' })} ${styles.toolGroupCode}`}>
+      <div className={`overflow-auto ${ax({ border: 'top' })} ${styles.toolGroupCode}`}>
         <CodeBlock code={codeText} filename={filename} variant="compact" />
       </div>
     )
   } else if (isWrite && typeof input.content === 'string') {
     content = (
-      <div className={`${ax({ border: 'top' })} ${styles.toolGroupCode}`}>
+      <div className={`overflow-auto ${ax({ border: 'top' })} ${styles.toolGroupCode}`}>
         <CodeBlock code={input.content as string} filename={filename} variant="compact" />
       </div>
     )
@@ -264,7 +264,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolChain}`}>
+    <div className={`overflow-hidden ${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolChain}`}>
       <div
         {...toggleProps}
         className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}
