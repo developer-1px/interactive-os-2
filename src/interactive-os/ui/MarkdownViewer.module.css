@@ -5,7 +5,6 @@
    ═══════════════════════════════════════════ */
 
 .markdown {
-  max-width: 48rem;
   margin: 0 auto;
   padding: var(--space-2xl) var(--space-3xl);
   font-size: var(--type-prose-size);
@@ -13,7 +12,6 @@
   font-family: var(--type-prose-family);
   line-height: var(--type-prose-line-height);
   letter-spacing: var(--type-prose-letter-spacing);
-  word-wrap: break-word;
   overflow-wrap: break-word;
 }
 

@@ -12,7 +12,6 @@
 
 :where(.feed) {
   min-height: 0;
-  gap: var(--space-xl);
 }
 
 /* --- Entry animation --- */
@@ -21,7 +20,6 @@
   min-width: 0;
   max-width: var(--content-md);
   margin-inline: auto;
-  width: 100%;
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
 }
 
@@ -39,11 +37,9 @@
 /* --- Streaming indicator --- */
 
 .streaming {
-  gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
   max-width: var(--content-md);
   margin-inline: auto;
-  width: 100%;
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
 }
 

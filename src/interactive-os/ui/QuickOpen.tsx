@@ -126,7 +126,7 @@ export function QuickOpen({
           <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
           <input
             ref={inputRef}
-            className={`${ax({ surface: 'input', controlSize: 'md', padding: 'sm', content: 'text', flex: '1' })} ${styles.input}`}
+            className={`${ax({ controlSize: 'md', padding: 'sm', content: 'text', flex: '1' })} ${styles.input}`}
             type="text"
             placeholder="파일 검색..."
             value={query}
@@ -134,10 +134,10 @@ export function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className={`${ax({ textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm' })} ${styles.shortcut}`}>ESC</kbd>
+          <kbd className={`${ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm' })} ${styles.shortcut}`}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
-          <div className={`${ax({ layout: 'scroll', flex: '1' })} ${styles.results}`} onMouseDown={e => e.preventDefault()}>
+          <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>
             {children.map(childId => {
               const entity = store.entities[childId]
               if (!entity) return null

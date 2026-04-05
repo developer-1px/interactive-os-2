@@ -93,7 +93,7 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, styles = d
   }), [codeVariant, styles])
 
   return (
-    <div className={`${ax({ text: 'primary' })} ${styles.markdown}`}>
+    <div className={`${ax({ text: 'primary', width: 'prose' })} ${styles.markdown}`}>
       <Markdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}

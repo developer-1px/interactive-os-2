@@ -1,16 +1,3 @@
-.codeBlock {
-  font-size: var(--type-code-size);
-  line-height: var(--leading-code);
-}
-
-.codeBlockLoading {
-  padding: var(--shape-xl-py) var(--shape-xl-px);
-  background: var(--surface-base);
-  border-radius: var(--shape-xl-radius);
-  font-family: var(--mono);
-  font-size: var(--type-code-size);
-}
-
 .codeBlock :global(.shiki) {
   margin: 0;
   padding: var(--space-lg) 0;

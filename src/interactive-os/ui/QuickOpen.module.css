@@ -51,18 +51,12 @@
 }
 
 .shortcut {
-  background: var(--surface-base);
   border: var(--border-width) solid var(--border-subtle);
   padding: var(--shape-xs-py) var(--shape-xs-px);
 }
 
-.results {
-  padding: var(--space-xs) var(--space-sm);
-}
-
 .item {
   cursor: default;
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
 .itemText {
