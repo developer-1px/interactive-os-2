@@ -1,8 +1,6 @@
 /* ── base ── */
 
 .button {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
-  background: var(--surface-sunken);
   border: var(--border-width) solid var(--border-default);
   cursor: default;
   outline: var(--border-width) solid transparent;
@@ -10,7 +8,6 @@
 }
 
 .panel {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
   border: var(--border-width) solid var(--border-default);
   border-top: none;
 }

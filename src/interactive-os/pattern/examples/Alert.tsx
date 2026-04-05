@@ -39,7 +39,7 @@ const renderAlert = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <div {...props} className={`${styles.alert} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary', surface: 'sunken', shape: 'sm' })} items-center`}>
+    <div {...props} className={`${styles.alert} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary', surface: 'sunken', shape: 'sm', padding: 'sm', content: 'text' })} items-center`}>
       <span className={`${styles.icon} ${ax({ text: 'secondary' })} shrink-0`} aria-hidden="true">
         &#9432;
       </span>

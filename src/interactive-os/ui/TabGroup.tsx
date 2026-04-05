@@ -105,7 +105,7 @@ export function TabGroup({
             <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
               <span>{label}</span>
               <button
-                className={`${ax({ surface: 'ghost', layout: 'center', text: 'muted' })} ${styles.tabClose}`}
+                className={`${ax({ surface: 'ghost', layout: 'center', text: 'muted', shape: 'sm' })} ${styles.tabClose}`}
                 aria-label={`Close ${label}`}
                 tabIndex={-1}
                 onClick={(e) => handleClose(e, id)}
@@ -118,7 +118,7 @@ export function TabGroup({
         })}
         {onAddTab && (
           <button
-            className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', text: 'muted' })} ${styles.tabAdd}`}
+            className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', text: 'muted', shape: 'sm' })} ${styles.tabAdd}`}
             aria-label="Add tab"
             tabIndex={-1}
             onClick={handleAdd}

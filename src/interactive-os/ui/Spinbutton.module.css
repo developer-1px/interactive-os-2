@@ -18,7 +18,6 @@
 
 /* Unified group: − [value] + with single focus ring */
 .spinbuttonGroup {
-  border-radius: var(--shape-md-radius);
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing), box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
 }
 

@@ -107,13 +107,13 @@ export default function PageBirdseye() {
           </span>
         </PanelHeader>
 
-        <div className={styles.diagram} ref={containerRef} onClick={handleClick}>
+        <div className={`${ax({ flex: '1' })} ${styles.diagram}`} ref={containerRef} onClick={handleClick}>
           {error ? (
-            <span className={`${ax({ text: 'muted' })} ${styles.empty}`}>{error}</span>
+            <span className={`${ax({ text: 'muted', textStyle: 'body' })}`}>{error}</span>
           ) : svg ? (
             <div dangerouslySetInnerHTML={{ __html: svg }} />
           ) : (
-            <span className={`${ax({ text: 'muted' })} ${styles.empty}`}>Loading...</span>
+            <span className={`${ax({ text: 'muted', textStyle: 'body' })}`}>Loading...</span>
           )}
         </div>
       </div>

@@ -3,9 +3,7 @@
 .heading { margin: 0; }
 
 .trigger {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
   font: inherit;
-  font-size: var(--type-body-size);
   border: var(--border-width) solid var(--border-default);
   cursor: default;
   outline: var(--border-width) solid transparent;
@@ -17,7 +15,6 @@
 }
 
 .panel {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
   border: var(--border-width) solid var(--border-default);
   border-top: none;
 }
@@ -31,16 +28,9 @@
   gap: var(--space-xxs);
 }
 
-.label {
-}
-
 .input {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   font: inherit;
-  font-size: var(--type-body-size);
-  background: var(--surface-default);
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--radius-sm);
   outline: var(--border-width) solid transparent;
   outline-offset: -var(--border-width);
 }

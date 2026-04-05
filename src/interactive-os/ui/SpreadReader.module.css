@@ -15,7 +15,6 @@
 }
 
 .inset {
-  flex: 1;
   overflow: hidden;
   padding: var(--_padding-y) var(--_padding-x);
 }

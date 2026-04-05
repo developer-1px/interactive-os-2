@@ -10,7 +10,6 @@
   grid-template-columns: 16ch 1fr;
   align-items: center;
   min-height: var(--space-2xl);
-  gap: var(--space-md);
 }
 
 /* interactive.css [aria-checked="true"] 배경 차단 — 데모에서는 indicator 자체만 상태 표현 */

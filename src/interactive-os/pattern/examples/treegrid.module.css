@@ -1,7 +1,6 @@
 /* ── base ── */
 
 .row {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   cursor: default;
   border-bottom: var(--border-width) solid var(--border-default);
 }

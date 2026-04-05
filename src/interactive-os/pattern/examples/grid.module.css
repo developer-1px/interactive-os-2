@@ -1,14 +1,11 @@
 /* ── base ── */
 
 .cell {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   cursor: default;
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
 .tile {
-  padding: var(--shape-md-py) var(--shape-md-px);
-  background: var(--surface-sunken);
   cursor: default;
 }
 

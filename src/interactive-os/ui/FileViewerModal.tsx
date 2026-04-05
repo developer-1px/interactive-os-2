@@ -85,7 +85,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
 
   return (
     <dialog ref={dialogRef} className={styles.fvmDialog} onClick={handleBackdropClick}>
-      <div className={`${ax({ surface: 'overlay', layout: 'column' })} ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
+      <div className={`${ax({ surface: 'overlay', layout: 'column', shape: 'xl' })} ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
         <PanelHeader axes={{ layout: 'spread' }}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
@@ -107,7 +107,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 )}
               </div>
             )}
-            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', layout: 'center', textStyle: 'section', text: 'secondary' })} ${styles.fvmClose}`} onClick={onClose}>&times;</button>
+            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', layout: 'center', textStyle: 'section', text: 'secondary', shape: 'xl' })}`} onClick={onClose}>&times;</button>
           </div>
         </PanelHeader>
         <div className={ax({ flex: '1', layout: 'scroll' })}>

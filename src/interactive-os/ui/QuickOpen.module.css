@@ -47,9 +47,7 @@
   font-weight: var(--type-body-weight);
 }
 
-.shortcut {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-}
+.shortcut {}
 
 .item {
   cursor: default;

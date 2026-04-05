@@ -1,5 +1,4 @@
 .switchItem {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   cursor: default;
 }
 
@@ -22,7 +21,6 @@
 .thumb {
   width: var(--space-sm);
   height: var(--space-sm);
-  border-radius: 50%;
   background: var(--text-on-fill);
   transition: translate var(--motion-duration-fast) var(--motion-easing-default);
 }

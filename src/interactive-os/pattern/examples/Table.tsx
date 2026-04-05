@@ -85,7 +85,7 @@ const renderItem = (
   return (
     <div
       {...props}
-      className={isHeader ? `${styles.headerCell} ${ax({ textStyle: 'body', text: 'primary', weight: 'semi' })}` : `${styles.cell} ${ax({ textStyle: 'body', text: 'primary' })}`}
+      className={isHeader ? `${styles.headerCell} ${ax({ textStyle: 'body', text: 'primary', weight: 'semi', padding: 'xs', content: 'text', surface: 'sunken' })}` : `${styles.cell} ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })}`}
     >
       {label}
     </div>

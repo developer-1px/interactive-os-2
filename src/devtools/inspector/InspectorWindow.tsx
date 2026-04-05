@@ -64,7 +64,7 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
 
   return (
     <button
-      className={`${ax({ textStyle: 'caption', border: 'default' })} ${styles.copyButton}`}
+      className={`${ax({ textStyle: 'caption', border: 'default', text: 'muted' })} ${styles.copyButton}`}
       onClick={handleCopy}
     >
       {copied ? '✓ Copied' : 'Copy ASCII'}
@@ -159,7 +159,7 @@ export function InspectorWindow() {
         <span className={ax({ text: 'muted' })}>{actionsMap.size} instances</span>
       </div>
 
-      <div className={styles.content}>
+      <div className={`${ax({ flex: '1' })} ${styles.content}`}>
         <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.15}>
           <div className={ax({ layout: 'column' })}>
             {actionsMap.size === 0 ? (

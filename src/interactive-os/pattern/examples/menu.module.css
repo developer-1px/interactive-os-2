@@ -1,7 +1,6 @@
 /* ── base ── */
 
 .menuitem {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   cursor: default;
 }
 
@@ -13,8 +12,6 @@
 
 .trigger {
   padding: var(--shape-xs-py) var(--shape-sm-px);
-  background: var(--surface-default);
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-sm-r);
   cursor: default;
 }

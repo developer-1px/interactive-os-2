@@ -1,14 +1,9 @@
 /* ── carousel container ── */
 
-.carousel {
-  border: var(--border-width) solid var(--border-default);
-}
-
 /* ── rotation control ── */
 
 .controls {
   padding: var(--space-xs) var(--space-sm);
-  background: var(--surface-raised);
 }
 
 .rotationButton {
@@ -17,7 +12,6 @@
   padding: 0;
   background: transparent;
   border: var(--border-width) solid transparent;
-  border-radius: var(--shape-xs-radius);
   cursor: default;
 }
 
@@ -55,7 +49,6 @@
 .slide {
   padding: var(--space-lg) var(--space-xl);
   min-height: var(--space-5xl);
-  background: var(--surface-default);
 }
 
 .slideTitle {
@@ -65,7 +58,6 @@
 }
 
 .slideDesc {
-  font-size: var(--type-body-size);
   margin: 0;
 }
 
@@ -73,5 +65,4 @@
 
 .indicator {
   padding: var(--space-xs) var(--space-sm);
-  background: var(--surface-raised);
 }

@@ -1,5 +1,4 @@
 .radio {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   cursor: default;
 }
 
@@ -10,7 +9,6 @@
 .indicator {
   width: var(--space-md);
   height: var(--space-md);
-  border-radius: 50%;
   border: var(--border-width) solid var(--border-default);
 }
 

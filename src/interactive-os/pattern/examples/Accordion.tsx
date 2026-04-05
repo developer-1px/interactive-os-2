@@ -33,8 +33,8 @@ const data: NormalizedData = createStore({
 function Field({ label, id, type = 'text' }: { label: string; id: string; type?: string }) {
   return (
     <div className={`${styles.field} flex-col`}>
-      <label htmlFor={id} className={`${styles.label} ${ax({ textStyle: 'caption', weight: 'semi', text: 'primary' })}`}>{label}</label>
-      <input id={id} type={type} className={`${styles.input} ${ax({ text: 'primary' })}`} />
+      <label htmlFor={id} className={`${ax({ textStyle: 'caption', weight: 'semi', text: 'primary' })}`}>{label}</label>
+      <input id={id} type={type} className={`${styles.input} ${ax({ text: 'primary', textStyle: 'body', surface: 'display', shape: 'sm', padding: 'xs', content: 'text' })}`} />
     </div>
   )
 }
@@ -87,7 +87,7 @@ const renderItem = (
         <button
           {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
           id={node.id as string}
-          className={`${styles.trigger} ${ax({ weight: 'semi', text: 'primary', surface: 'sunken' })} flex-row items-center justify-between w-full`}
+          className={`${styles.trigger} ${ax({ weight: 'semi', text: 'primary', surface: 'sunken', textStyle: 'body', padding: 'sm', content: 'text' })} flex-row items-center justify-between w-full`}
           type="button"
           data-focused={state.focused || undefined}
         >
@@ -95,7 +95,7 @@ const renderItem = (
           <ExpandIndicator expanded={state.expanded === true} />
         </button>
       </h3>
-      <div {...state.slotProps} className={`${styles.panel} ${ax({ textStyle: 'body', text: 'secondary' })}`}>
+      <div {...state.slotProps} className={`${styles.panel} ${ax({ textStyle: 'body', text: 'secondary', padding: 'sm', content: 'text' })}`}>
         {panels[node.id as string]}
       </div>
     </div>

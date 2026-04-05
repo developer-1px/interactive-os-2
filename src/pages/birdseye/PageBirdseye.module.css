@@ -23,7 +23,6 @@
 }
 
 .diagram {
-  flex: 1;
   min-height: 0;
   overflow: auto;
   padding: var(--space-lg);
@@ -47,16 +46,11 @@
   margin-left: auto;
   cursor: pointer;
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--shape-xs-radius);
 }
 
 .dirToggle:hover {
   color: var(--text-bright);
   background: var(--surface-sunken);
-}
-
-.empty {
-  font-size: var(--type-body-size);
 }
 
 /* Make nodes and subgraphs clickable */

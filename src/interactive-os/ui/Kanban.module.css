@@ -72,7 +72,6 @@
 
 /* ── Card subtitle (LOC etc.) ── */
 .cardSubtitle {
-  flex-shrink: 0;
   margin-left: auto;
   font-variant-numeric: tabular-nums;
 }

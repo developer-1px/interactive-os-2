@@ -44,7 +44,7 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${styles.dialog} ${ax({ shape: 'md' })} outline-none`}
+        className={`${styles.dialog} ${ax({ shape: 'md', padding: 'md', content: 'text', surface: 'display' })} outline-none`}
         data-focused={state.focused || undefined}
       >
         <h2 className={`${styles.title} ${ax({ weight: 'semi', text: 'primary' })}`}>{label}</h2>

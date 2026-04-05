@@ -10,7 +10,6 @@
 
 .track {
   height: var(--space-xs);
-  background: var(--surface-sunken);
 }
 
 .fill {

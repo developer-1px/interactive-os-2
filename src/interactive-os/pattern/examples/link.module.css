@@ -1,7 +1,6 @@
 /* ── base ── */
 
 .link {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   color: var(--focus);
 }
 

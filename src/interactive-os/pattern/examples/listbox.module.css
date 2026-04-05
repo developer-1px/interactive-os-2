@@ -11,7 +11,6 @@
 }
 
 .option {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   cursor: default;
 }
 
@@ -62,9 +61,7 @@
 .toolbarButton {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   font-family: inherit;
-  background: var(--surface-default);
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-xs-radius);
   cursor: default;
 }
 

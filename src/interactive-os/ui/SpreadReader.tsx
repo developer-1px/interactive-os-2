@@ -119,7 +119,7 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
 
   return (
     <div className={styles.root}>
-      <div className={styles.inset}>
+      <div className={`${ax({ flex: '1' })} ${styles.inset}`}>
         <div className={styles.viewport} {...aria.containerProps}>
           <div className={styles.columns} ref={columnsRef}>
             {children}

@@ -57,9 +57,9 @@ const renderTab = (
         {label}
       </button>
       {state.slotProps && (
-        <div {...state.slotProps} className={styles.slide} aria-roledescription="slide">
+        <div {...state.slotProps} className={`${ax({ surface: 'display' })} ${styles.slide}`} aria-roledescription="slide">
           <h3 className={`${styles.slideTitle} ${ax({ text: 'bright' })}`}>{label}</h3>
-          <p className={`${styles.slideDesc} ${ax({ text: 'secondary' })}`}>{desc}</p>
+          <p className={`${ax({ text: 'secondary', textStyle: 'body' })} ${styles.slideDesc}`}>{desc}</p>
         </div>
       )}
     </div>
@@ -120,15 +120,15 @@ export function CarouselTabs() {
       ref={containerRef}
       aria-roledescription="carousel"
       aria-label="Highlighted features"
-      className={`${styles.carousel} ${ax({ shape: 'sm' })} overflow-hidden`}
+      className={`${ax({ shape: 'sm', border: 'default' })} overflow-hidden`}
       onFocus={onFocusIn}
       onBlur={onFocusOut}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className={`${styles.controls} flex-row justify-end`}>
+      <div className={`${ax({ surface: 'display' })} ${styles.controls} flex-row justify-end`}>
         <button
-          className={`${styles.rotationButton} ${ax({ text: 'secondary' })} flex-row items-center justify-center`}
+          className={`${ax({ text: 'secondary', shape: 'sm' })} ${styles.rotationButton} flex-row items-center justify-center`}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
@@ -151,7 +151,7 @@ export function CarouselTabs() {
         </Aria>
       </div>
 
-      <div className={`${styles.indicator} ${ax({ textStyle: 'caption', text: 'muted' })} text-center`} aria-hidden="true">
+      <div className={`${ax({ textStyle: 'caption', text: 'muted', surface: 'display' })} ${styles.indicator} text-center`} aria-hidden="true">
         {slideIndex} / {slides.length}
       </div>
     </section>

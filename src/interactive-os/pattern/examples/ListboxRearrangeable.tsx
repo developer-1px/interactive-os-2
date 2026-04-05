@@ -49,7 +49,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={`${styles.option} ${ax({ textStyle: 'body', text: 'primary', gap: 'sm' })} flex-row items-center`}
+      className={`${styles.option} ${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text' })} flex-row items-center`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
@@ -125,7 +125,7 @@ export function ListboxRearrangeable() {
 
       <div role="toolbar" aria-label="Actions" className={`${styles.toolbar} ${ax({ gap: 'xs' })} flex-col`}>
         <button
-          className={`${styles.toolbarButton} ${ax({ textStyle: 'caption', text: 'primary' })} whitespace-nowrap`}
+          className={`${styles.toolbarButton} ${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm' })} whitespace-nowrap`}
           aria-keyshortcuts="Enter"
           disabled={availableSelected.length === 0}
           onClick={addToChosen}
@@ -133,7 +133,7 @@ export function ListboxRearrangeable() {
           Add →
         </button>
         <button
-          className={`${styles.toolbarButton} ${ax({ textStyle: 'caption', text: 'primary' })} whitespace-nowrap`}
+          className={`${styles.toolbarButton} ${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm' })} whitespace-nowrap`}
           aria-keyshortcuts="Delete"
           disabled={chosenSelected.length === 0}
           onClick={removeFromChosen}

@@ -20,7 +20,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className={styles.row}>
+    <div className={`${ax({ gap: 'md' })} ${styles.row}`}>
       <span className={ax({ textStyle: 'code', text: 'muted', clamp: '1' })}>{label}</span>
       <div className={ax({ layout: 'bar', gap: 'md' })}>{children}</div>
     </div>

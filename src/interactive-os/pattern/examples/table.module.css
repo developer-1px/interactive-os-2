@@ -5,12 +5,9 @@
 }
 
 .headerCell {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  background: var(--surface-sunken);
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
 .cell {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   border-bottom: var(--border-width) solid var(--border-default);
 }

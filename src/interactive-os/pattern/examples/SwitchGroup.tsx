@@ -31,7 +31,7 @@ const renderSwitch = (
   return (
     <div
       {...props}
-      className={`${styles.switchItem} ${ax({ gap: 'md', text: 'primary' })} flex-row items-center justify-between`}
+      className={`${styles.switchItem} ${ax({ gap: 'md', text: 'primary', padding: 'xs', content: 'text' })} flex-row items-center justify-between`}
       data-focused={state.focused || undefined}
     >
       <span className={`${styles.label} flex-1`}>{label}</span>
@@ -40,7 +40,7 @@ const renderSwitch = (
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >
-        <span className={`${styles.thumb} block`} />
+        <span className={`${styles.thumb} ${ax({ shape: 'pill' })} block`} />
       </span>
     </div>
   )

@@ -1,8 +1,6 @@
 /* ── base ── */
 
 .dialog {
-  padding: var(--shape-md-py) var(--shape-md-px);
-  background: var(--surface-raised);
   border: var(--border-width) solid var(--border-default);
 }
 

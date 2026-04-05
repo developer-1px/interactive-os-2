@@ -49,10 +49,10 @@ export function MenubarNavigation() {
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <div className={`${styles.demo} ${ax({ shape: 'sm' })}`}>
+    <div className={ax({ shape: 'sm', border: 'default' })}>
       <header className={`${styles.header} text-center`}>
         <div className={`${styles.title} ${ax({ text: 'bright' })}`}>Mythical University</div>
-        <div className={`${styles.tagline} ${ax({ text: 'secondary' })}`}>Using a Menubar for navigation links</div>
+        <div className={`${ax({ text: 'secondary', textStyle: 'body' })} ${styles.tagline}`}>Using a Menubar for navigation links</div>
       </header>
       <nav className={styles.wrapper}>
         <Menubar

@@ -1,7 +1,6 @@
 /* ── base ── */
 
 .alert {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
   border: var(--border-width) solid var(--border-default);
 }
 

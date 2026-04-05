@@ -4,7 +4,6 @@
 }
 
 .content {
-  flex: 1;
   overflow: hidden;
 }
 
@@ -50,7 +49,6 @@
   border-radius: var(--space-xs);
   padding: var(--border-width) var(--space-sm);
   cursor: pointer;
-  color: var(--text-muted);
 }
 
 .copyButton:hover {

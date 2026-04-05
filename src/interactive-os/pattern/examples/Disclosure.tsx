@@ -68,7 +68,7 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${styles.button} ${ax({ gap: 'sm', weight: 'semi', text: 'primary' })} flex-row items-center`}
+        className={`${styles.button} ${ax({ gap: 'sm', weight: 'semi', text: 'primary', padding: 'sm', content: 'text', surface: 'sunken' })} flex-row items-center`}
         data-focused={state.focused || undefined}
       >
         <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">
@@ -80,7 +80,7 @@ const renderItem = (
   }
 
   return (
-    <div {...props} className={`${styles.panel} ${ax({ textStyle: 'body', text: 'secondary' })}`}>
+    <div {...props} className={`${styles.panel} ${ax({ textStyle: 'body', text: 'secondary', padding: 'sm', content: 'text' })}`}>
       {label}
     </div>
   )

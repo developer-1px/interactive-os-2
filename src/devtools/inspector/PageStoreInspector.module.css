@@ -1,7 +1,6 @@
 .splitContainer {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
-  gap: var(--space-md);
   min-height: var(--overlay-width);
 }
 
@@ -9,11 +8,8 @@
   grid-column: 1 / -1;
   max-height: var(--storymap-col-width);
   font-family: var(--mono);
-  font-size: var(--type-caption-size);
   line-height: var(--leading-normal);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  background: var(--surface-sunken);
-  border-radius: var(--shape-xs-radius);
 }
 
 .logEntry {
@@ -25,12 +21,8 @@
   opacity: 0.7;
 }
 
-.logDiff {
-  color: var(--tone-primary-base);
-}
 
 .panelLabel {
-  font-size: var(--type-caption-size);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   opacity: 0.5;

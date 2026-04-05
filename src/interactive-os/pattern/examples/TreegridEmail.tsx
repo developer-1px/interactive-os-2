@@ -78,7 +78,7 @@ const renderRow = (
   return (
     <div
       {...props}
-      className={`${styles.row} ${ax({ textStyle: 'body', text: 'primary', gap: 'sm' })} flex-row items-center whitespace-nowrap outline-none`}
+      className={`${styles.row} ${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text' })} flex-row items-center whitespace-nowrap outline-none`}
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >

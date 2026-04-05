@@ -32,11 +32,11 @@ const renderRadio = (
   return (
     <div
       {...props}
-      className={`${styles.radio} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center`}
+      className={`${styles.radio} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })} items-center`}
       data-focused={state.focused || undefined}
     >
       <span
-        className={`${styles.indicator} inline-flex items-center justify-center`}
+        className={`${styles.indicator} ${ax({ shape: 'pill' })} inline-flex items-center justify-center`}
         data-checked={state.selected || undefined}
         aria-hidden="true"
       />

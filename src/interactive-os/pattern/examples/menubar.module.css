@@ -1,8 +1,5 @@
 /* ── demo wrapper ── */
 
-.demo {
-  border: var(--border-width) solid var(--border-default);
-}
 
 .header {
   padding: var(--space-xl) var(--space-lg);
@@ -15,7 +12,6 @@
 }
 
 .tagline {
-  font-size: var(--type-body-size);
   font-style: italic;
 }
 
