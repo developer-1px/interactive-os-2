@@ -44,10 +44,10 @@ export function ThemeTokens() {
     <div className={ax({ layout: 'column', gap: 'xl' })}>
       {/* Palette full strip */}
       <Section title="STONE PALETTE">
-        <div className={styles.paletteStrip}>
+        <div className={ax({ layout: 'row', gap: 'xs' })}>
           {stoneSteps.map(step => (
             <div key={step} className={ax({ layout: 'column', gap: 'xs', flex: '1' })}>
-              <div className={`${ax({ shape: 'sm' })} ${styles.paletteSwatch}`} data-stone={step} />
+              <div className={`${ax({ shape: 'sm', aspect: '1' })} ${styles.paletteSwatch}`} data-stone={step} />
               <span className={ax({ textStyle: 'code', text: 'muted' })}>{step}</span>
             </div>
           ))}
@@ -58,10 +58,10 @@ export function ThemeTokens() {
       <div className={styles.composedGrid}>
         <div className={ax({ layout: 'column', gap: 'md' })}>
           <Section title="SURFACE">
-            <div className={styles.grid7}>
+            <div className={ax({ layout: 'grid-7', gap: 'sm' })}>
               {surfaces.map(s => (
                 <div key={s} className={ax({ layout: 'column', gap: 'xs' })}>
-                  <div className={`${ax({ shape: 'md' })} ${styles.swatch}`} data-surface={s} />
+                  <div className={`${ax({ shape: 'md', aspect: 'card' })} ${styles.swatch}`} data-surface={s} />
                   <span className={ax({ textStyle: 'code' })}>{s}</span>
                 </div>
               ))}
