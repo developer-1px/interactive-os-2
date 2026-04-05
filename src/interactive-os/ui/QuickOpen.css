@@ -1,0 +1,27 @@
+/* QuickOpen — last-mile: positioning, animation, caret, placeholder */
+
+.quick-open-backdrop {
+  z-index: 100;
+  justify-content: center;
+  padding-top: 12vh;
+}
+
+.quick-open-dialog {
+  width: var(--overlay-width);
+  max-height: var(--overlay-width);
+  box-shadow: var(--shadow-lg);
+}
+
+.quick-open-input {
+  background: none;
+  caret-color: var(--tone-primary-base);
+}
+
+.quick-open-input::placeholder {
+  color: var(--text-muted);
+  font-weight: var(--type-body-weight);
+}
+
+.quick-open-item-text {
+  min-width: 0;
+}

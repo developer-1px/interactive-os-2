@@ -1,4 +1,6 @@
-.codeBlock :global(.shiki) {
+/* CodeBlock — last-mile: shiki integration, line numbers, token highlights */
+
+.code-block :is(.shiki) {
   margin: 0;
   padding: var(--space-lg) 0;
   counter-reset: line;
@@ -7,34 +9,34 @@
   border-radius: var(--shape-xl-radius);
 }
 
-.codeBlockCompact :global(.shiki) {
+.code-block--compact :is(.shiki) {
   border-radius: var(--shape-md-radius);
   padding: var(--space-md) 0;
 }
 
-.codeBlockCompact :global(.shiki .line)::before {
+.code-block--compact :is(.shiki .line)::before {
   width: 2.5em;
   padding-right: 0.75em;
 }
 
-.codeBlockFlush :global(.shiki) {
+.code-block--flush :is(.shiki) {
   border: none;
   border-radius: 0;
 }
 
-.codeBlock :global(.shiki) code {
+.code-block :is(.shiki) code {
   display: flex;
   flex-direction: column;
 }
 
-.codeBlock :global(.shiki .line) {
+.code-block :is(.shiki .line) {
   display: block;
   padding: 0 var(--space-lg) 0 0;
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
 
-.codeBlock :global(.shiki .line)::before {
+.code-block :is(.shiki .line)::before {
   counter-increment: line;
   content: counter(line);
   display: inline-block;
@@ -47,41 +49,41 @@
   opacity: 0.65;
 }
 
-:global(.code-token) {
+.code-token {
   cursor: pointer;
   border-radius: var(--space-inline-code);
   transition: background 0.1s;
 }
 
-:global(.code-token):hover {
+.code-token:hover {
   background: var(--tone-primary-dim);
 }
 
-:global(.code-token--highlighted) {
+.code-token--highlighted {
   background: var(--tone-primary-mid) !important;
   outline: var(--border-width) solid var(--tone-primary-bright);
   border-radius: var(--space-inline-code);
 }
 
-:global(.code-line--edited) {
+.code-line--edited {
   background: color-mix(in srgb, var(--tone-warning-base) 12%, transparent) !important;
   border-left: var(--indicator-width) solid var(--tone-warning-base);
   padding-left: var(--space-sm) !important;
 }
 
-:global(.code-line--selected) {
+.code-line--selected {
   background: color-mix(in srgb, var(--tone-primary-base) 15%, transparent) !important;
   border-left: var(--indicator-width) solid var(--tone-primary-base);
   padding-left: var(--space-sm) !important;
 }
 
-:global(.code-line--deleted) {
+.code-line--deleted {
   background: color-mix(in srgb, var(--tone-danger-base) 15%, transparent) !important;
   border-left: var(--indicator-width) solid var(--tone-danger-base);
   padding-left: var(--space-sm) !important;
 }
 
-:global(.code-line--inserted) {
+.code-line--inserted {
   background: color-mix(in srgb, var(--tone-success-base) 15%, transparent) !important;
   border-left: var(--indicator-width) solid var(--tone-success-base);
   padding-left: var(--space-sm) !important;
