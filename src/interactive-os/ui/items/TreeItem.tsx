@@ -1,0 +1,35 @@
+// ② 2026-04-05-ui-items-prd.md
+import type React from 'react'
+import type { NodeState } from '../../pattern/types'
+import { ExpandIndicator } from '../indicators'
+import { getNodeLabel } from '../types'
+import { ax } from '@styles/ax'
+
+interface TreeItemOptions {
+  icon?: React.ReactNode
+  rightContent?: React.ReactNode
+  className?: string
+}
+
+export function TreeItem(
+  props: React.HTMLAttributes<HTMLElement>,
+  node: Record<string, unknown>,
+  state: NodeState,
+  options?: TreeItemOptions,
+): React.ReactElement {
+  const label = getNodeLabel(node)
+  const hasChildren = state.expanded !== undefined
+  const depth = (state.level ?? 1) - 1
+  return (
+    <div
+      {...props}
+      className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })}
+      style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}
+    >
+      <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
+      {options?.icon && <span className="shrink-0">{options.icon}</span>}
+      <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary', clamp: '1' })}>{label}</span>
+      {options?.rightContent && <span className="shrink-0 ml-auto">{options.rightContent}</span>}
+    </div>
+  )
+}

@@ -1,5 +1,4 @@
 import React from 'react'
-import { ExpandIndicator } from './indicators'
 
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
@@ -7,8 +6,7 @@ import { Aria } from '../primitives/aria'
 import { treegrid } from '../pattern/roles/treegrid'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
-import { ax } from '@styles/ax'
-import '@styles/ax.css'
+import { TreeItem } from './items'
 
 interface TreeGridProps extends AriaComponentProps {
   id?: string
@@ -16,19 +14,8 @@ interface TreeGridProps extends AriaComponentProps {
   columns?: number
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = (node.data as Record<string, unknown>)?.label as string
-    ?? (node.data as Record<string, unknown>)?.name as string
-    ?? node.id as string
-  const hasChildren = state.expanded !== undefined
-  const depth = (state.level ?? 1) - 1
-  return (
-    <div {...props} className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}>
-      <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-      <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
-    </div>
-  )
-}
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement =>
+  TreeItem(props, node, state)
 
 // Re-export Cell for grid consumers (e.g. TreegridEmail)
 // eslint-disable-next-line react-refresh/only-export-components

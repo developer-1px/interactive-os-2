@@ -5,6 +5,7 @@ import type { AriaComponentProps } from './types'
 import { useTabList } from './useTabList'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
+import { TabItem } from './items'
 import { ax } from '@styles/ax'
 
 interface TabListProps extends AriaComponentProps {
@@ -15,19 +16,8 @@ interface TabListProps extends AriaComponentProps {
   manual?: boolean
 }
 
-const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = (tab.data as Record<string, unknown>)?.label as string
-    ?? (tab.data as Record<string, unknown>)?.name as string
-    ?? tab.id as string
-  return (
-    <span className={ax({
-      surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text',
-      textStyle: 'caption', text: state.selected ? 'primary' : 'muted',
-    })}>
-      {label}
-    </span>
-  )
-}
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, state: NodeState): React.ReactElement =>
+  TabItem(props, tab, state)
 
 export function TabList({
   data,
