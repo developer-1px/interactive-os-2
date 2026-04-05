@@ -77,6 +77,8 @@ store → engine → axis → pattern → primitives → ui → pages
   - 아이템 렌더링 → `src/interactive-os/ui/items/` 사용. pages에서 renderItem prop 직접 전달 금지. 필요하면 items/에 새 Item 추가.
   - 패널 컨테이너 → `src/interactive-os/ui/panels/` 사용. pages에서 surface+header+scroll 패턴 직접 조립 금지.
   - 셀 렌더링 → `src/interactive-os/ui/cells/` 사용. Grid/Table 셀 pages에서 직접 만들기 금지.
+  - **renderItem에 ARIA props 전달 필수**: UI 컴포넌트가 renderItem을 호출할 때 `getItemProps(id)`의 결과를 첫 번째 인자로 전달해야 함. 빈 `{}`를 넘기면 ARIA 속성(role, aria-selected, tabindex)과 interactive 클래스가 다른 DOM 요소에 분리되어 CSS 매칭 실패.
+  - **interactive 축 필수**: 인터랙티브 아이템은 `interactive: 'item'|'tab'|'check'|'cell'|'input'|'button'` 중 하나를 ax()에 선언. `surface: 'ghost'`는 독립 버튼/컨트롤에서만 사용.
 
 ## 테스트 실패 시 원복 정책
 
