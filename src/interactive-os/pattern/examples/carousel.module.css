@@ -1,26 +1,16 @@
 /* ── carousel container ── */
 
-.carousel {
-  border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-sm-radius);
-}
-
 /* ── rotation control ── */
 
 .controls {
   padding: var(--space-xs) var(--space-sm);
-  background: var(--surface-raised);
 }
 
 .rotationButton {
-  width: 28px;
-  height: 28px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   padding: 0;
-  color: var(--text-secondary);
-  background: transparent;
   border: var(--border-width) solid transparent;
-  border-radius: var(--shape-xs-radius);
-  cursor: default;
 }
 
 .rotationButton:hover {
@@ -29,20 +19,14 @@
 
 .rotationButton:focus {
   border-color: var(--focus);
-  outline: none;
 }
 
 /* ── tabs (inside Aria) ── */
 
 .tab {
   padding: var(--shape-xs-py) var(--shape-sm-px);
-  font-size: var(--type-caption-size);
   font-family: inherit;
-  color: var(--text-secondary);
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  cursor: default;
+  border-bottom: var(--indicator-width) solid transparent;
 }
 
 .tab:is([data-selected='true']) {
@@ -58,20 +42,16 @@
 
 .slide {
   padding: var(--space-lg) var(--space-xl);
-  min-height: 120px;
-  background: var(--surface-default);
+  min-height: var(--space-5xl);
 }
 
 .slideTitle {
   font-size: var(--type-heading-size);
   font-weight: var(--type-heading-weight);
-  color: var(--text-bright);
   margin: 0 0 var(--space-sm);
 }
 
 .slideDesc {
-  font-size: var(--type-body-size);
-  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -79,7 +59,4 @@
 
 .indicator {
   padding: var(--space-xs) var(--space-sm);
-  font-size: var(--type-caption-size);
-  color: var(--text-muted);
-  background: var(--surface-raised);
 }

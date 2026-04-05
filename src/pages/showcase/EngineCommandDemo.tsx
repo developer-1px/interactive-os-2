@@ -1,5 +1,6 @@
 import type React from 'react'
 import { useState } from 'react'
+import { ax } from '@styles/ax'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
@@ -117,18 +118,18 @@ export default function EngineCommandDemo() {
 
       <div className="page-section">
         <h3 className="page-section-title">Dispatch Log ({entries.length})</h3>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 'var(--type-caption-size)', lineHeight: 1.8, maxHeight: '240px', overflow: 'auto' }}>
+        <div className={ax({ textStyle: 'code', layout: 'scroll' })}>
           {entries.length === 0 ? (
-            <span style={{ opacity: 0.5 }}>Interact with the list to see dispatched commands…</span>
+            <span className="op-dim">Interact with the list to see dispatched commands…</span>
           ) : (
             entries.map((e) => (
-              <div key={e.seq} style={{ borderBottom: '1px solid var(--color-border, rgba(128,128,128,0.15))' }}>
-                <span style={{ opacity: 0.4, marginRight: '6px' }}>#{e.seq}</span>
-                <span style={{ color: 'var(--color-primary, #6366f1)', fontWeight: 600 }}>{e.type}</span>
-                <span style={{ opacity: 0.5, marginLeft: '8px' }}>{e.payload}</span>
+              <div key={e.seq} className="debug-log-entry">
+                <span className="op-faint">#{e.seq}</span>{' '}
+                <span className={ax({ text: 'accent', weight: 'semi' })}>{e.type}</span>{' '}
+                <span className="op-dim">{e.payload}</span>
                 {e.middlewares.length > 0 && (
-                  <span style={{ opacity: 0.35, marginLeft: '8px' }}>
-                    via {e.middlewares.join(' → ')}
+                  <span className="op-faint">
+                    {' '}via {e.middlewares.join(' → ')}
                   </span>
                 )}
               </div>

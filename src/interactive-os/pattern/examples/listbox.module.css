@@ -2,31 +2,16 @@
 
 .listbox {
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-md-radius);
-  background: var(--surface-sunken);
   padding: var(--space-xs) 0;
-  max-height: 240px;
+  max-height: var(--storymap-col-width);
 }
 
 .listbox:focus-within {
   outline: var(--focus-ring) solid var(--focus);
 }
 
-.option {
-  gap: var(--space-sm);
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
-  cursor: default;
-}
-
 .groupLabel {
   padding: var(--space-xs) var(--shape-xs-px);
-  font-size: var(--type-label-size);
-  font-weight: var(--weight-bold);
-  color: var(--text-primary);
   letter-spacing: var(--tracking-normal);
 }
 
@@ -53,37 +38,23 @@
 }
 
 .check {
-  font-size: var(--type-caption-size);
   color: var(--tone-primary-base);
 }
 
 /* ── rearrangeable (dual listbox + toolbar) ── */
 
-.rearrangeable {
-  gap: var(--space-md);
-}
-
 .zoneLabel {
-  font-size: var(--type-label-size);
-  font-weight: var(--type-label-weight);
-  color: var(--text-primary);
   margin-bottom: var(--space-xs);
 }
 
 .toolbar {
-  gap: var(--space-xs);
   padding-top: var(--space-xl);
 }
 
 .toolbarButton {
   padding: var(--shape-xs-py) var(--shape-sm-px);
-  font-size: var(--type-caption-size);
   font-family: inherit;
-  color: var(--text-primary);
-  background: var(--surface-default);
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-xs-radius);
-  cursor: default;
 }
 
 .toolbarButton:hover:not(:disabled) {
@@ -92,7 +63,6 @@
 
 .toolbarButton:focus {
   border-color: var(--focus);
-  outline: none;
 }
 
 .toolbarButton:disabled {

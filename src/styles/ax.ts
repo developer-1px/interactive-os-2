@@ -24,6 +24,9 @@ type Opacity = 'dim' | 'faint' | 'hidden'
 type Motion = 'pulse' | 'spin' | 'fade-in' | 'slide-up'
 // content: 콘텐츠 유형 — padding의 inline:block 비율을 결정 (text=2:1)
 type Content = 'text'
+// border: 테두리 — 전체 또는 단면 구분선
+type Border = 'subtle' | 'default' | 'strong'
+  | 'bottom' | 'top' | 'start' | 'end'
 
 // ── 구조 축 ──
 
@@ -38,6 +41,9 @@ type Layout =
   | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
   | 'scroll-x' // flex row + overflow-x:auto + min-width:0 (가로 스크롤)
   | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
+  | 'sticky'  // position:sticky + top:0 + z-index:1 (고정 헤더)
+  // grid (display:grid + equal columns)
+  | 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7'
   // self-alignment (자식이 부모 안에서의 위치 지정)
   | 'self-start'  // align-self: flex-start
   | 'self-end'    // align-self: flex-end
@@ -51,6 +57,10 @@ type Flex = 'none' | 'auto' | '1'
 type Clamp = '1' | '2' | '3' | '4' | 'pre'
 // icon: SVG 크기 (width + height)
 type Icon = 'xs' | 'sm' | 'md' | 'lg'
+// size: 정사각 크기 (width + height) — 비-SVG 요소용 (avatar, dot, swatch 등)
+type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+// aspect: 종횡비
+type Aspect = '1' | 'video' | 'card'
 
 export interface Axes {
   // 시각 축
@@ -65,6 +75,7 @@ export interface Axes {
   shape?: Shape
   motion?: Motion
   content?: Content
+  border?: Border
 
   // 구조 축
   layout?: Layout
@@ -74,6 +85,8 @@ export interface Axes {
   flex?: Flex
   clamp?: Clamp
   icon?: Icon
+  size?: Size
+  aspect?: Aspect
 }
 
 // ── className 매핑 ──
@@ -90,6 +103,7 @@ const prefixes: Record<keyof Axes, string> = {
   shape: 'sh',
   motion: 'mo',
   content: 'ct',
+  border: 'bd',
   layout: 'ly',
   gap: 'g',
   padding: 'pd',
@@ -97,6 +111,8 @@ const prefixes: Record<keyof Axes, string> = {
   flex: 'fx',
   clamp: 'cl',
   icon: 'ic',
+  size: 'sz',
+  aspect: 'ar',
 }
 
 /**

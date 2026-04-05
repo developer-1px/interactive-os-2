@@ -35,7 +35,7 @@ const renderTab = (_props: React.HTMLAttributes<HTMLElement>, item: Record<strin
 function ThemePanel() {
   const { theme, toggle } = useTheme()
   return (
-    <div className={`${ax({ surface: 'display', layout: 'column', gap: 'sm', padding: 'md', shape: 'lg' })} ${styles.themePanel}`}>
+    <div className={ax({ surface: 'display', layout: 'column', gap: 'sm', padding: 'md', shape: 'lg', flex: 'none' })}>
       <span className={ax({ textStyle: 'overline', text: 'muted' })}>THEME</span>
       <div className={ax({ layout: 'spread' })}>
         <span className={ax({ textStyle: 'body', text: 'secondary' })}>Appearance</span>
@@ -62,7 +62,7 @@ export default function PageThemeCreator() {
   }, [tabs])
 
   return (
-    <div className={`${ax({ layout: 'column', gap: 'lg' })} ${styles.root}`}>
+    <div className={`${ax({ layout: 'column', gap: 'lg', padding: 'xl' })} ${styles.root}`}>
       {/* Header */}
       <div className={ax({ layout: 'spread' })}>
         <div className={ax({ layout: 'column', gap: 'xs' })}>

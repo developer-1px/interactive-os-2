@@ -296,6 +296,20 @@
 .ct-text { --pd-ratio: 2; }
 
 /* ════════════════════════════════════════════
+ * Border — 테두리
+ * 전체: subtle/default/strong (4면 모두)
+ * 단면: bottom/top/start/end (구분선, subtle 색상)
+ * ════════════════════════════════════════════ */
+
+.bd-subtle  { border: var(--border-width) solid var(--border-subtle); }
+.bd-default { border: var(--border-width) solid var(--border-default); }
+.bd-strong  { border: var(--border-width) solid var(--border-strong); }
+.bd-bottom  { border-bottom: var(--border-width) solid var(--border-subtle); }
+.bd-top     { border-top: var(--border-width) solid var(--border-subtle); }
+.bd-start   { border-inline-start: var(--border-width) solid var(--border-subtle); }
+.bd-end     { border-inline-end: var(--border-width) solid var(--border-subtle); }
+
+/* ════════════════════════════════════════════
  * Shape — 비-컨트롤 요소의 border-radius
  * 컨트롤(button/input 등)은 controlSize가 소유
  * ════════════════════════════════════════════ */
@@ -326,6 +340,15 @@
 .ly-scroll:hover::-webkit-scrollbar-thumb { background: var(--border-default); }
 /* 부모를 꽉 채우는 패인/분할창. 자식이 넘치면 클립. 콘텐츠는 내부에서 ly-scroll로 처리. */
 .ly-fill   { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+/* 고정 헤더 (sticky top) */
+.ly-sticky { position: sticky; top: 0; z-index: 1; }
+
+/* ── Grid — equal-column 그리드 ── */
+.ly-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
+.ly-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+.ly-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); }
+.ly-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); }
+.ly-grid-7 { display: grid; grid-template-columns: repeat(7, 1fr); }
 
 /* ── Self-alignment — 자식이 부모 안에서의 위치 ── */
 .ly-self-start  { align-self: flex-start; }
@@ -429,3 +452,59 @@
 .ic-sm { width: var(--icon-sm); height: var(--icon-sm); }
 .ic-md { width: var(--icon-md); height: var(--icon-md); }
 .ic-lg { width: var(--icon-lg); height: var(--icon-lg); }
+
+/* ════════════════════════════════════════════
+ * Size — 정사각 크기 (비-SVG 요소: avatar, dot, swatch 등)
+ * ════════════════════════════════════════════ */
+
+.sz-xs  { width: var(--space-xs);  height: var(--space-xs); }   /*  4px */
+.sz-sm  { width: var(--space-sm);  height: var(--space-sm); }   /*  8px */
+.sz-md  { width: var(--space-md);  height: var(--space-md); }   /* 16px */
+.sz-lg  { width: var(--space-lg);  height: var(--space-lg); }   /* 24px */
+.sz-xl  { width: var(--space-xl);  height: var(--space-xl); }   /* 32px */
+.sz-2xl { width: var(--space-2xl); height: var(--space-2xl); }  /* 48px */
+
+/* ════════════════════════════════════════════
+ * Aspect — 종횡비
+ * ════════════════════════════════════════════ */
+
+.ar-1     { aspect-ratio: 1; }
+.ar-video { aspect-ratio: 16 / 9; }
+.ar-card  { aspect-ratio: 1.4; }
+
+/* ════════════════════════════════════════════
+ * Atomic Utilities — 키워드 전용 (수치 없음)
+ * module.css last-mile 제거용
+ * ════════════════════════════════════════════ */
+
+/* cursor */
+.cursor-default { cursor: default; }
+.cursor-pointer { cursor: pointer; }
+
+/* overflow */
+.overflow-hidden  { overflow: hidden; }
+.overflow-auto    { overflow: auto; }
+.overflow-y-auto  { overflow-y: auto; }
+.overflow-x-auto  { overflow-x: auto; }
+.overflow-x-hidden { overflow-x: hidden; }
+
+/* text / white-space */
+.text-right   { text-align: right; }
+.text-center  { text-align: center; }
+.text-left    { text-align: left; }
+.pre-wrap     { white-space: pre-wrap; }
+.break-word   { overflow-wrap: break-word; }
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* layout helpers */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.inset-0  { inset: 0; }
+
+/* reset / misc */
+.border-none     { border: none; }
+.outline-none    { outline: none; }
+.bg-transparent  { background: transparent; }
+.select-none     { user-select: none; }
+.pointer-none    { pointer-events: none; }
+.font-inherit    { font-family: inherit; }

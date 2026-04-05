@@ -4,6 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Combobox } from '../../ui/Combobox'
+import { ax } from '../../../../styles/ax'
 import styles from './combobox.module.css'
 
 // APG #11: Select-Only Combobox
@@ -37,7 +38,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={`${styles.option} flex-row items-center`}
+      className={`${styles.option} ${ax({ textStyle: 'body', text: 'primary' })} flex-row items-center cursor-default`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

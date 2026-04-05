@@ -60,7 +60,7 @@
   line-height: var(--leading-relaxed);
   color: var(--landing-text-muted);
   margin: 0 0 var(--landing-space-section-sm);
-  max-width: 560px;
+  max-width: var(--content-sm);
   white-space: pre-line;
 }
 
@@ -87,7 +87,7 @@
   color: var(--landing-text-muted);
   /* surface-outlined */
   background: transparent;
-  border: 1px solid var(--landing-surface-outlined-border);
+  border: var(--border-width) solid var(--landing-surface-outlined-border);
   /* shape-pill (badge 전용) */
   border-radius: var(--landing-radius-pill);
   padding: var(--landing-shape-xs-py) var(--landing-shape-xs-px);
@@ -96,8 +96,8 @@
 }
 
 .cmsHeroBadgeDot {
-  width: 6px;
-  height: 6px;
+  width: var(--shape-xs-radius);
+  height: var(--shape-xs-radius);
   border-radius: 50%;
   background: var(--landing-tone-success);
 }
@@ -122,7 +122,7 @@
   font-weight: var(--landing-type-body-weight);
   line-height: var(--leading-relaxed);
   color: var(--landing-text-muted);
-  margin: 0 0 var(--landing-space-block, 48px);
+  margin: 0 0 var(--landing-space-block, var(--space-2xl));
   max-width: 52ch;
 }
 
@@ -152,7 +152,7 @@
   font-weight: var(--landing-type-body-weight);
   color: var(--landing-text-secondary);
   background: transparent;
-  border: 1px solid var(--landing-surface-outlined-border);
+  border: var(--border-width) solid var(--landing-surface-outlined-border);
   border-radius: var(--landing-shape-sm-r);
   padding: var(--landing-shape-sm-py) var(--landing-shape-sm-px);
   gap: var(--landing-space-gap-row);
@@ -269,7 +269,7 @@
 .cmsFeatureCard {
   /* surface-raised 번들 */
   background: var(--landing-surface-raised-bg);
-  border: 1px solid var(--landing-surface-raised-border);
+  border: var(--border-width) solid var(--landing-surface-raised-border);
   box-shadow: var(--landing-surface-raised-shadow);
   /* shape-lg 번들 */
   border-radius: var(--landing-shape-lg-r);
@@ -278,8 +278,8 @@
 
 
 .cmsFeatureCardIcon {
-  width: 36px;
-  height: 36px;
+  width: var(--toolbar-height);
+  height: var(--toolbar-height);
   background: var(--landing-tone-neutral-dim);
   border-radius: var(--landing-shape-xs-r);
   color: var(--landing-text-secondary);
@@ -314,7 +314,7 @@
 .cmsStatCard {
   /* surface-outlined 번들 */
   background: transparent;
-  border: 1px solid var(--landing-surface-outlined-border);
+  border: var(--border-width) solid var(--landing-surface-outlined-border);
   /* shape-lg 번들 */
   border-radius: var(--landing-shape-lg-r);
   padding: var(--landing-shape-lg-py) var(--landing-shape-lg-px);
@@ -408,7 +408,7 @@
 .cmsPattern {
   /* surface-outlined 번들 */
   background: transparent;
-  border: 1px solid var(--landing-surface-outlined-border);
+  border: var(--border-width) solid var(--landing-surface-outlined-border);
   /* shape-sm 번들 */
   border-radius: var(--landing-shape-sm-r);
   padding: var(--landing-shape-sm-py) var(--landing-shape-sm-px);
@@ -424,8 +424,8 @@
 
 
 .cmsPatternIcon {
-  width: 28px;
-  height: 28px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   background: var(--landing-tone-neutral-dim);
   border-radius: var(--landing-shape-xs-r);
   color: var(--landing-text-secondary);
@@ -461,7 +461,7 @@
   background: transparent;
   border: none;
   box-shadow: none;
-  border-left: 2px solid var(--landing-surface-outlined-border);
+  border-left: var(--indicator-width) solid var(--landing-surface-outlined-border);
   border-radius: 0;
   padding: 0 0 0 var(--landing-shape-sm-px);
   /* motion-instant */
@@ -479,8 +479,8 @@
 
 .cmsShowcaseItemIcon {
   /* 인라인 — 라벨과 같은 행에 배치 (cmsShowcaseItemLabel 앞) */
-  width: var(--landing-icon-sm, 16px);
-  height: var(--landing-icon-sm, 16px);
+  width: var(--landing-icon-sm, var(--icon-sm));
+  height: var(--landing-icon-sm, var(--icon-sm));
   background: transparent;
   border-radius: 0;
   color: var(--landing-text-muted);
@@ -533,7 +533,7 @@
 /* Featured article (first in list) — surface-raised card treatment */
 .cmsJournalList > :first-child {
   background: var(--landing-surface-raised-bg);
-  border: 1px solid var(--landing-surface-raised-border);
+  border: var(--border-width) solid var(--landing-surface-raised-border);
   box-shadow: var(--landing-surface-raised-shadow);
   border-radius: var(--landing-shape-lg-r);
   padding: var(--landing-shape-lg-py) var(--landing-shape-lg-px);
@@ -541,8 +541,8 @@
 }
 
 .cmsJournalList > :first-child .cmsArticleIcon {
-  width: 48px;
-  height: 48px;
+  width: var(--space-2xl);
+  height: var(--space-2xl);
 }
 
 .cmsJournalList > :first-child .cmsArticleTitle {
@@ -569,17 +569,17 @@
 }
 
 .cmsArticleIcon {
-  width: 40px;
-  height: 40px;
+  width: var(--toolbar-height);
+  height: var(--toolbar-height);
   background: var(--landing-tone-neutral-dim);
-  border: 1px solid var(--landing-surface-outlined-border);
+  border: var(--border-width) solid var(--landing-surface-outlined-border);
   border-radius: var(--landing-shape-xs-r);
   color: var(--landing-text-secondary);
 }
 
 .cmsArticleImage {
-  width: 40px;
-  height: 40px;
+  width: var(--toolbar-height);
+  height: var(--toolbar-height);
   border-radius: var(--landing-shape-xs-r);
 }
 
@@ -637,7 +637,7 @@
 .cmsQuoteText {
   /* type-page 번들 (인용은 제목급) */
   font-family: var(--landing-type-page-family);
-  font-size: clamp(24px, 3.5vw, 36px);
+  font-size: clamp(var(--icon-lg), 3.5vw, var(--toolbar-height));
   font-weight: var(--landing-type-page-weight);
   line-height: var(--leading-snug);
   letter-spacing: var(--type-display-letter-spacing);
@@ -668,7 +668,7 @@
 
 .cmsCta > .cmsSectionTitle {
   /* hero급으로 확대 */
-  font-size: clamp(40px, 5vw, 56px);
+  font-size: clamp(var(--toolbar-height), 5vw, var(--space-2xl));
   font-weight: var(--landing-type-hero-weight);
   letter-spacing: var(--landing-tracking-tight);
   max-width: 18ch;
@@ -748,7 +748,7 @@
   margin-bottom: var(--landing-space-section-sm);
   /* surface-outlined */
   background: transparent;
-  border: 1px solid var(--landing-surface-outlined-border);
+  border: var(--border-width) solid var(--landing-surface-outlined-border);
   border-radius: var(--landing-shape-xs-r);
   width: fit-content;
   margin-inline: var(--landing-space-inline);
@@ -806,14 +806,14 @@
 
 .cmsHeroImage {
   border-radius: var(--landing-shape-lg-r);
-  max-height: 400px;
+  max-height: var(--overlay-width);
 }
 
 .cmsHeroImagePlaceholder {
-  height: 120px;
+  height: var(--space-5xl);
   border-radius: var(--landing-shape-lg-r);
   background: color-mix(in srgb, var(--landing-text-muted) 8%, transparent);
-  border: 1px dashed color-mix(in srgb, var(--landing-text-muted) 25%, transparent);
+  border: var(--border-width) dashed color-mix(in srgb, var(--landing-text-muted) 25%, transparent);
 }
 
 /* ══════════════════════════════
@@ -822,7 +822,7 @@
 
 .cmsImageCard {
   background: var(--landing-surface-card);
-  border: 1px solid var(--landing-surface-outlined-border);
+  border: var(--border-width) solid var(--landing-surface-outlined-border);
   border-radius: var(--landing-shape-lg-r);
 }
 
@@ -837,7 +837,7 @@
 }
 
 .cmsGalleryGrid {
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--storymap-col-width), 1fr));
   gap: var(--landing-space-block);
   max-width: var(--landing-space-content);
   margin: 0 auto;
@@ -846,7 +846,7 @@
 .cmsGalleryItem {
   border-radius: var(--landing-shape-lg-r);
   background: var(--landing-surface-card);
-  border: 1px solid var(--landing-surface-outlined-border);
+  border: var(--border-width) solid var(--landing-surface-outlined-border);
 }
 
 

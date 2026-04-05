@@ -1,24 +1,7 @@
 /* ── base ── */
 
 .cell {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
-  cursor: default;
   border-bottom: var(--border-width) solid var(--border-default);
-}
-
-.tile {
-  padding: var(--shape-md-py) var(--shape-md-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
-  background: var(--surface-sunken);
-  border-radius: var(--shape-md-radius);
-  cursor: default;
 }
 
 /* ── variant: state ── */

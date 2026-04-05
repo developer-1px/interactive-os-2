@@ -2,8 +2,6 @@
 
 .fvmDialog {
   padding: 0;
-  border: none;
-  background: transparent;
   max-width: none;
   max-height: none;
   width: 100vw;
@@ -24,10 +22,8 @@
 
 .fvmModal {
   width: 85vw;
-  max-width: 960px;
+  max-width: var(--content-xl);
   height: 85vh;
-  overflow: hidden;
-  border-radius: var(--shape-xl-radius);
   box-shadow: var(--shadow-lg);
 }
 
@@ -36,17 +32,12 @@
 /* fvmHeader → PanelHeader */
 
 .fvmMetaSep {
-  width: 1px;
-  height: 10px;
+  width: var(--border-width);
+  height: var(--shape-md-radius);
   background: var(--border-default);
   margin: 0 var(--space-inline-code);
 }
 
-/* ── last-mile: close button overrides ── */
-
-.fvmClose {
-  border-radius: var(--shape-xl-radius);
-}
 
 /* ── last-mile: image ── */
 

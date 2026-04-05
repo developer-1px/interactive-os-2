@@ -151,7 +151,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
   return (
     <div className={ax({ layout: 'row', flex: 'none' })}>
-      <div className={`${ax({ surface: 'input', flex: '1', shape: 'md' })} ${styles.inputWrap}`} data-disabled={disabled || undefined}>
+      <div className={`relative ${disabled ? 'pointer-none' : ''} ${ax({ surface: 'input', flex: '1', shape: 'md' })} ${styles.inputWrap}`} data-disabled={disabled || undefined}>
         {hasSuggestions && (
           <ul className={`${ax({ surface: 'overlay', padding: 'xs', shape: 'md' })} ${styles.suggestionList}`} role="listbox" aria-label="Command suggestions">
             {suggestions!.map(cmd => {
@@ -176,7 +176,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
         <div className={styles.editorWrap}>
           <div
             ref={ref}
-            className={`${ax({ textStyle: 'body', text: 'primary' })} ${styles.editor}`}
+            className={`pre-wrap overflow-y-auto outline-none ${ax({ textStyle: 'body', text: 'primary' })} ${styles.editor}`}
             contentEditable={!disabled}
             role="textbox"
             aria-multiline="true"
@@ -190,7 +190,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             suppressContentEditableWarning
           />
           {hasOverlay && (
-            <div className={`${ax({ textStyle: 'body' })} ${styles.overlay}`} aria-hidden="true">
+            <div className={`absolute inset-0 pointer-none font-inherit pre-wrap ${ax({ textStyle: 'body' })} ${styles.overlay}`} aria-hidden="true">
               {commandHighlight > 0 && (
                 <span className={ax({ text: 'accent' })}>{overlayText.slice(0, commandHighlight)}</span>
               )}

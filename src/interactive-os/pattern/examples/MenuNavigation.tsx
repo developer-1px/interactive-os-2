@@ -31,7 +31,7 @@ const renderMenuItem = (
   return (
     <div
       {...props}
-      className={`${styles.menuitem} flex-row items-center`}
+      className={`${styles.menuitem} flex-row items-center cursor-default`}
       data-focused={state.focused || undefined}
     >
       {label}

@@ -1,5 +1,6 @@
 // ② 2026-03-25-i18n-editor-app-prd.md
 import React, { useState, useRef, useEffect } from 'react'
+import { ax } from '@styles/ax'
 import type { NormalizedData } from '@os/store/types'
 import { Grid } from '@os/ui/Grid'
 import { Aria } from '@os/primitives/aria'
@@ -57,7 +58,7 @@ export default function PageI18nEditor() {
   }
 
   return (
-    <div style={{ padding: 'var(--space-lg)', overflow: 'auto' }}>
+    <div className={ax({ padding: 'lg', layout: 'scroll' })}>
       <div className="page-header">
         <h2 className="page-title">i18n Editor</h2>
         <p className="page-desc">
@@ -75,7 +76,7 @@ export default function PageI18nEditor() {
         <kbd>⌘F</kbd> <span className="key-hint">검색</span>
       </div>
       <div>
-        <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 'var(--shape-md-radius)', overflow: 'hidden' }}>
+        <div className={ax({ surface: 'display', shape: 'md' })}>
           <Grid
             data={data}
             columns={I18N_COLUMNS}

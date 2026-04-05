@@ -63,7 +63,7 @@ export default function PageUiShowcase() {
 
   return (
     <div className={`${styles.uiPage} flex-row flex-1 min-h-0`}>
-      <nav className={`${ax({ surface: 'sunken', layout: 'column' })} ${styles.uiSidebar}`}>
+      <nav className={`${ax({ surface: 'sunken', layout: 'column', border: 'end' })} ${styles.uiSidebar}`}>
         <PanelHeader axes={{ layout: 'spread' }}>UI Components</PanelHeader>
         <div className={`${styles.uiSidebarBody} flex-1 overflow-y-auto`}>
           <NavList

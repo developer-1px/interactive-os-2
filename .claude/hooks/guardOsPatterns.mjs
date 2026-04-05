@@ -71,15 +71,15 @@ if (isPages && /\buseAria(?:Zone)?\b/.test(content)) {
   )
 }
 
-// 규칙 3: addEventListener('key*'/'mouse*')
-if (!isExempt && /addEventListener\s*\(\s*['"](?:key|mouse)\w*['"]/.test(content)) {
+// 규칙 3: addEventListener('key*'/'mouse*') — 멀티라인 대응
+if (!isExempt && /addEventListener\s*\(\s*\n?\s*['"](?:key|mouse)\w*['"]/m.test(content)) {
   violations.push(
     'addEventListener(key*/mouse*) 금지 — KeyMap 선언을 사용하세요'
   )
 }
 
-// 규칙 5: onKeyDown/onKeyUp JSX 핸들러
-if (!isExempt && isTsx && /\bonKey(?:Down|Up)\s*=\s*\{/.test(content)) {
+// 규칙 5: onKeyDown/onKeyUp JSX 핸들러 — 멀티라인 대응
+if (!isExempt && isTsx && /\bonKey(?:Down|Up)\s*=\s*\n?\s*\{/m.test(content)) {
   violations.push(
     'onKeyDown/onKeyUp 핸들러 금지 — KeyMap 선언을 사용하세요'
   )

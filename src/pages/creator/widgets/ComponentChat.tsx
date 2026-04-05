@@ -47,10 +47,10 @@ export function ComponentChat({ entry }: ComponentChatProps) {
   }
 
   return (
-    <div className={`flex-col h-full ${styles.chat}`}>
+    <div className={`flex-col h-full ${ax({ border: 'start' })}`}>
       {/* Context bar */}
       {entry && (
-        <div className={`${ax({ surface: 'sunken', layout: 'spread', padding: 'xs', textStyle: 'caption' })} ${styles.chatContext}`}>
+        <div className={ax({ surface: 'sunken', layout: 'spread', padding: 'xs', textStyle: 'caption', border: 'bottom' })}>
           <span className={`${ax({ weight: 'semi', text: 'primary' })} ${styles.chatContextLabel}`}>{entry.name}</span>
           {entry.variants.length > 0 && (
             <span className={`${ax({ text: 'muted' })} ${styles.chatContextMeta}`}>
@@ -80,7 +80,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       </div>
 
       {/* Input */}
-      <div className={`${ax({ padding: 'sm' })} ${styles.chatInputWrap}`}>
+      <div className={ax({ padding: 'sm', border: 'top' })}>
         <textarea
           className={`${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'sm' })} ${styles.chatInput} w-full`}
           data-surface="input"

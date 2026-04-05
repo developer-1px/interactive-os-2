@@ -21,27 +21,21 @@
 }
 
 .dialog {
-  width: 560px;
-  max-height: 520px;
-  overflow: hidden;
-  border: 1px solid var(--border-default);
+  width: var(--overlay-width);
+  max-height: var(--overlay-width);
   box-shadow: var(--shadow-lg);
   animation: slide-in var(--motion-enter-duration) var(--motion-enter-easing);
 }
 
 @keyframes slide-in {
-  from { transform: translateY(-8px); opacity: 0; }
+  from { transform: translateY(-var(--space-sm)); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-.inputRow {
-  border-bottom: 1px solid var(--border-subtle);
-}
+.inputRow {}
 
 .input {
   background: none;
-  border: none;
-  outline: none;
   caret-color: var(--tone-primary-base);
 }
 
@@ -50,20 +44,9 @@
   font-weight: var(--type-body-weight);
 }
 
-.shortcut {
-  background: var(--surface-base);
-  border: 1px solid var(--border-subtle);
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-}
+.shortcut {}
 
-.results {
-  padding: var(--space-xs) var(--space-sm);
-}
-
-.item {
-  cursor: default;
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
-}
+.item {}
 
 .itemText {
   min-width: 0;

@@ -4,14 +4,12 @@
 .input {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border-radius: var(--shape-xs-radius) 0 0 var(--shape-xs-radius);
-  cursor: default;
   font-family: inherit;
 }
 
 /* ── trigger — border-radius split + sizing (last-mile) ── */
 .triggerButton {
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  border: var(--border-width) solid var(--border-default);
   border-left: none;
   border-radius: 0 var(--shape-xs-radius) var(--shape-xs-radius) 0;
 }
@@ -22,8 +20,6 @@
   left: 0;
   z-index: 10;
   margin-top: var(--space-xs);
-  border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-sm-radius);
 }
 
 /* ── nav bar — spacing (last-mile) ── */
@@ -33,16 +29,13 @@
 
 /* ── nav button — fixed sizing (last-mile) ── */
 .navButton {
-  width: 28px;
-  height: 28px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   padding: 0;
-  border-radius: var(--shape-xs-radius);
 }
 
-/* ── month/year label — text-align (last-mile) ── */
-.monthYear {
-  text-align: center;
-}
+/* ── month/year label (last-mile) ── */
+.monthYear {}
 
 /* ── actions — spacing (last-mile) ── */
 .actions {

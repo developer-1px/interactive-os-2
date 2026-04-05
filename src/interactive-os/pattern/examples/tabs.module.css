@@ -2,12 +2,7 @@
 
 .tab {
   padding: var(--shape-xs-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-secondary);
   border-bottom: var(--border-width-thick) solid transparent;
-  cursor: default;
 }
 
 /* ── variant: state ── */
@@ -20,12 +15,4 @@
 
 .tab:is([data-focused='true']) {
   background: var(--bg-hover);
-}
-
-.panel {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-secondary);
 }

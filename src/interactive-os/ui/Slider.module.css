@@ -1,9 +1,5 @@
 /* --- Slider --- */
 
-.sliderItem {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-}
-
 .sliderLabel {
   min-width: calc(var(--space-2xl) * 2);
 }
@@ -29,7 +25,6 @@
   top: 50%;
   width: var(--slider-thumb-size);
   height: var(--slider-thumb-size);
-  border-radius: 50%;
   background: var(--tone-primary-base);
   transform: translate(-50%, -50%);
   transition: box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
@@ -37,10 +32,8 @@
 
 [data-focused] .sliderThumb {
   box-shadow: 0 0 0 calc(var(--slider-track-height) / 2) var(--tone-primary-base);
-  outline: none;
 }
 
 .sliderValue {
   min-width: var(--space-2xl);
-  font-variant-numeric: tabular-nums;
 }

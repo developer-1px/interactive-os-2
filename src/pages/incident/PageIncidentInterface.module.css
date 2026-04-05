@@ -12,22 +12,22 @@
 
 /* ── Layout: fixed widths + order ── */
 
-.chatZone { width: 340px; order: 3; }
-.timelinePanel { width: 320px; }
+.chatZone { width: var(--overlay-width); order: 3; }
+.timelinePanel { width: var(--overlay-width); }
 
 /* ── Timeline items ── */
 
 .timelineItem {
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
-.timelineItemSelected { box-shadow: inset 3px 0 0 var(--tone-primary-base); }
+.timelineItemSelected { box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base); }
 
-.timelineTime { width: 36px; padding-top: 2px; }
-.dot { width: 6px; height: 6px; }
-.dotLine { width: 1px; min-height: var(--space-md); background: var(--border-subtle); }
-.timelineIcon { padding-top: 1px; }
-.causeArrow { padding-left: 20px; }
-.causeIcon { width: 20px; height: 20px; }
+.timelineTime { width: var(--toolbar-height); padding-top: var(--indicator-width); }
+.dot { width: var(--shape-xs-radius); height: var(--shape-xs-radius); }
+.dotLine { width: var(--border-width); min-height: var(--space-md); background: var(--border-subtle); }
+.timelineIcon { padding-top: var(--border-width); }
+.causeArrow { padding-left: var(--switch-height); }
+.causeIcon { width: var(--switch-height); height: var(--switch-height); }
 
 /* severity → icon/title color */
 .evCritical .timelineIcon { color: var(--tone-destructive-base); }
@@ -37,12 +37,12 @@
 /* ── Capture ── */
 
 .captureComparison { grid-template-columns: 1fr 1fr; }
-.captureChanged { box-shadow: inset 0 0 0 1px var(--tone-destructive-mid); }
+.captureChanged { box-shadow: inset 0 0 0 var(--border-width) var(--tone-destructive-mid); }
 
 /* ── Rich blocks ── */
 
 .metricGrid { grid-template-columns: 1fr 1fr 1fr; }
-.barTrack { height: 3px; }
+.barTrack { height: var(--indicator-width); }
 .barFillBad { background: var(--tone-destructive-base); }
 .barFillWarn { background: var(--tone-warning-base); }
 .barW100 { width: 100%; }
@@ -51,8 +51,8 @@
 
 /* ── Chat ── */
 
-.avatar { width: 20px; height: 20px; }
-.userAvatar { width: 20px; height: 20px; }
+.avatar { width: var(--switch-height); height: var(--switch-height); }
+.userAvatar { width: var(--switch-height); height: var(--switch-height); }
 
 /* ── Monitor ── */
 

@@ -4,6 +4,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { Menubar } from '../../ui/Menubar'
+import { ax } from '../../../styles/ax'
 import styles from './menubar.module.css'
 
 // APG #40: Navigation Menubar
@@ -48,10 +49,10 @@ export function MenubarNavigation() {
   const onChange = useCallback((next: NormalizedData) => setStore(next), [])
 
   return (
-    <div className={styles.demo}>
+    <div className={ax({ shape: 'sm', border: 'default' })}>
       <header className={`${styles.header} text-center`}>
-        <div className={styles.title}>Mythical University</div>
-        <div className={styles.tagline}>Using a Menubar for navigation links</div>
+        <div className={`${styles.title} ${ax({ text: 'bright' })}`}>Mythical University</div>
+        <div className={`${ax({ text: 'secondary', textStyle: 'body' })} ${styles.tagline}`}>Using a Menubar for navigation links</div>
       </header>
       <nav className={styles.wrapper}>
         <Menubar

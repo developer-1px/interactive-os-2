@@ -14,7 +14,7 @@
 
 /* ── Editable card title ── */
 .card :global([data-renaming]) {
-  outline: 1px solid var(--focus);
+  outline: var(--border-width) solid var(--focus);
   outline-offset: calc(var(--space-xs) / 2);
   border-radius: var(--shape-xs-radius);
   padding: 0 calc(var(--space-xs) / 2);
@@ -24,8 +24,6 @@
 /* ══ Compact variant ══ */
 
 .board[data-compact] {
-  gap: var(--space-sm);
-  padding: var(--space-sm);
   height: 100%;
   align-items: flex-start;
   overflow: auto hidden;
@@ -34,22 +32,16 @@
 .board[data-compact] .column {
   min-width: var(--space-3xl);
   max-width: none;
-  flex: 0 0 auto;
-  width: 240px;
-  border-radius: var(--shape-sm-radius);
+  width: var(--storymap-col-width);
   padding: var(--space-xs) var(--space-sm);
   overflow-y: auto;
   max-height: 100%;
 }
 
 .board[data-compact] .columnHeader {
-  font-size: var(--type-caption-size);
   text-transform: none;
   letter-spacing: 0;
   padding: var(--space-xs) 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   position: relative;
 }
 
@@ -58,7 +50,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 2px;
+  height: var(--indicator-width);
   width: calc(var(--_loc-ratio, 0) * 100%);
   background: var(--tone-primary-dim);
   border-radius: var(--border-width);
@@ -66,14 +58,9 @@
 }
 
 .board[data-compact] .card {
-  display: flex;
   align-items: baseline;
-  gap: var(--space-xs);
   padding: var(--space-xs) var(--space-sm);
-  border: none;
   border-radius: var(--shape-xs-radius);
-  font-size: var(--type-caption-size);
-  line-height: var(--leading-normal);
   flex-shrink: 0;
 }
 
@@ -84,21 +71,19 @@
 
 /* ── Card subtitle (LOC etc.) ── */
 .cardSubtitle {
-  flex-shrink: 0;
   margin-left: auto;
-  font-variant-numeric: tabular-nums;
 }
 
 /* ── Extension color indicator (inset shadow, border:none 호환) ── */
 
-.board[data-compact] .card[data-ext="ts"] { box-shadow: inset 3px 0 0 var(--tone-primary-base); }
-.board[data-compact] .card[data-ext="tsx"] { box-shadow: inset 3px 0 0 var(--focus); }
-.board[data-compact] .card[data-ext="css"] { box-shadow: inset 3px 0 0 var(--tone-destructive-base); }
+.board[data-compact] .card[data-ext="ts"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base); }
+.board[data-compact] .card[data-ext="tsx"] { box-shadow: inset var(--indicator-width) 0 0 var(--focus); }
+.board[data-compact] .card[data-ext="css"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-destructive-base); }
 .board[data-compact] .card[data-ext="md"],
-.board[data-compact] .card[data-ext="mdx"] { box-shadow: inset 3px 0 0 var(--tone-positive-base); }
+.board[data-compact] .card[data-ext="mdx"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-success-base); }
 .board[data-compact] .card[data-ext="json"],
 .board[data-compact] .card[data-ext="yaml"],
-.board[data-compact] .card[data-ext="yml"] { box-shadow: inset 3px 0 0 var(--tone-warning-base); }
+.board[data-compact] .card[data-ext="yml"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-warning-base); }
 
 /* ── Weight hints (LOC-based file size indicator) ── */
 
@@ -116,14 +101,14 @@
 
 .board[data-compact] .card[data-hub] {
   border-inline-start-width: var(--space-xs);
-  border-inline-start-color: var(--tone-info-base);
-  background: color-mix(in srgb, var(--tone-info-base) 6%, var(--surface-default));
+  border-inline-start-color: var(--tone-primary-base);
+  background: color-mix(in srgb, var(--tone-primary-base) 6%, var(--surface-default));
 }
 
 /* ── Dependency count colors in subtitle ── */
 
 .depUp {
-  color: var(--tone-positive-base);
+  color: var(--tone-success-base);
 }
 
 /* ── Dependency highlight — dim unrelated, brighten related ── */
@@ -133,11 +118,11 @@
 }
 
 .board[data-compact] .card[data-highlight="up"] {
-  box-shadow: inset 3px 0 0 var(--tone-positive-base);
+  box-shadow: inset var(--indicator-width) 0 0 var(--tone-success-base);
 }
 
 .board[data-compact] .card[data-highlight="down"] {
-  box-shadow: inset 3px 0 0 var(--tone-primary-base);
+  box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base);
 }
 
 /* ── Focus/Selection — override .card background ── */

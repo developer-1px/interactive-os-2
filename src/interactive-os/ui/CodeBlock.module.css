@@ -1,22 +1,9 @@
-.codeBlock {
-  font-size: var(--type-code-size);
-  line-height: var(--leading-code);
-}
-
-.codeBlockLoading {
-  padding: var(--shape-xl-py) var(--shape-xl-px);
-  background: var(--surface-base);
-  border-radius: var(--shape-xl-radius);
-  font-family: var(--mono);
-  font-size: var(--type-code-size);
-}
-
 .codeBlock :global(.shiki) {
   margin: 0;
   padding: var(--space-lg) 0;
   counter-reset: line;
   background: var(--surface-base) !important;
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
   border-radius: var(--shape-xl-radius);
 }
 
@@ -72,30 +59,30 @@
 
 :global(.code-token--highlighted) {
   background: var(--tone-primary-mid) !important;
-  outline: 1px solid var(--tone-primary-bright);
+  outline: var(--border-width) solid var(--tone-primary-bright);
   border-radius: var(--space-inline-code);
 }
 
 :global(.code-line--edited) {
   background: color-mix(in srgb, var(--tone-warning-base) 12%, transparent) !important;
-  border-left: 2px solid var(--tone-warning-base);
+  border-left: var(--indicator-width) solid var(--tone-warning-base);
   padding-left: var(--space-sm) !important;
 }
 
 :global(.code-line--selected) {
   background: color-mix(in srgb, var(--tone-primary-base) 15%, transparent) !important;
-  border-left: 2px solid var(--tone-primary-base);
+  border-left: var(--indicator-width) solid var(--tone-primary-base);
   padding-left: var(--space-sm) !important;
 }
 
 :global(.code-line--deleted) {
   background: color-mix(in srgb, var(--tone-danger-base) 15%, transparent) !important;
-  border-left: 2px solid var(--tone-danger-base);
+  border-left: var(--indicator-width) solid var(--tone-danger-base);
   padding-left: var(--space-sm) !important;
 }
 
 :global(.code-line--inserted) {
   background: color-mix(in srgb, var(--tone-success-base) 15%, transparent) !important;
-  border-left: 2px solid var(--tone-success-base);
+  border-left: var(--indicator-width) solid var(--tone-success-base);
   padding-left: var(--space-sm) !important;
 }

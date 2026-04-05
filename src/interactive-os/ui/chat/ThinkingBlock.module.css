@@ -7,8 +7,6 @@
 
 .thinkingSummary {
   padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--chat-indent);
-  cursor: pointer;
-  user-select: none;
 }
 
 .thinkingSummary > .thinkingChevron {
@@ -27,12 +25,10 @@
 
 .thinkingContent {
   padding: 0 var(--space-sm) var(--space-sm);
-  overflow-wrap: break-word;
 }
 
 /* Settled: minimal presence after completion */
 .settled {
-  background: transparent;
   border-radius: 0;
   opacity: 0.6;
 }

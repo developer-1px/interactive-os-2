@@ -39,7 +39,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
         return (
           <div
             key={`${tr.kind}-${tr.id}`}
-            className={`absolute ${s.rect} ${kindClass[tr.kind]}`}
+            className={`absolute ${ax({ shape: 'sm' })} ${s.rect} ${kindClass[tr.kind]}`}
             style={{
               left: tr.x,
               top: tr.y,
@@ -49,7 +49,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
           >
             {label && (
               <div
-                className={`absolute whitespace-nowrap pointer-events-none ${ax({ textStyle: 'caption' })} ${s.label}`}
+                className={`absolute whitespace-nowrap pointer-events-none ${ax({ textStyle: 'caption', shape: 'sm' })} ${s.label}`}
                 style={{ bottom: '100%', left: 0 }}
               >
                 {label}

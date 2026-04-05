@@ -1,7 +1,6 @@
 // ② 2026-04-03-viewer-command-prd.md
 import { useMemo } from 'react'
 import { ax } from '@styles/ax'
-import styles from './SearchResults.module.css'
 
 export interface SearchResultsProps {
   query: string
@@ -52,10 +51,10 @@ export function SearchResults({ query, output }: SearchResultsProps) {
       </div>
       {[...groups.entries()].map(([file, matches]) => (
         <div key={file}>
-          <div className={`${ax({ padding: 'xs', weight: 'semi', opacity: 'dim', surface: 'base' })} ${styles.fileHeader}`}>{file.replace(/.*\/aria\//, '')}</div>
+          <div className={ax({ padding: 'xs', weight: 'semi', opacity: 'dim', surface: 'base', layout: 'sticky' })}>{file.replace(/.*\/aria\//, '')}</div>
           {matches.map((m, i) => (
-            <div key={i} className={`${ax({ layout: 'row', gap: 'sm', padding: 'xs' })} ${styles.matchLine}`}>
-              {m.line != null && <span className={`${ax({ flex: 'none', opacity: 'dim' })} ${styles.lineNo}`}>{m.line}</span>}
+            <div key={i} className={ax({ layout: 'row', gap: 'sm', padding: 'xs', surface: 'ghost' })}>
+              {m.line != null && <span className={ax({ flex: 'none', opacity: 'dim' })} style={{ textAlign: 'right' }}>{m.line}</span>}
               <span className={ax({ flex: '1', clamp: 'pre' })}>{m.text}</span>
             </div>
           ))}

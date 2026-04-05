@@ -16,6 +16,7 @@ import { focusRecovery } from '@os/plugins/focusRecovery'
 import { storeToInspectorTree } from '@os/store/storeToInspectorTree'
 import { treeData } from '../../pages/shared/sharedTreeData'
 import { renderInspectorItem } from './renderInspectorItem'
+import { ax } from '@styles/ax'
 import styles from './PageStoreInspector.module.css'
 
 // --- Stateless module-level constants ---
@@ -137,11 +138,11 @@ export default function PageStoreInspector() {
       </div>
 
       <div className="card overflow-hidden">
-        <div className={`${styles.splitContainer} grid`}>
+        <div className={`${ax({ gap: 'md' })} ${styles.splitContainer} grid`}>
 
           {/* Editor panel */}
           <div className="min-h-0 overflow-auto">
-            <div className={styles.panelLabel}>Editor</div>
+            <div className={`${ax({ textStyle: 'caption' })} ${styles.panelLabel}`}>Editor</div>
             <Aria
               pattern={tree}
               data={data}
@@ -157,7 +158,7 @@ export default function PageStoreInspector() {
 
           {/* Inspector panel */}
           <div className="min-h-0 overflow-auto">
-            <div className={styles.panelLabel}>Inspector — NormalizedData</div>
+            <div className={`${ax({ textStyle: 'caption' })} ${styles.panelLabel}`}>Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}
               plugins={inspectorPlugins}
@@ -168,11 +169,11 @@ export default function PageStoreInspector() {
 
           {/* Log panel */}
           <div
-            className={`${styles.logPanel} overflow-y-auto`}
+            className={`${ax({ textStyle: 'caption', surface: 'sunken', shape: 'sm' })} ${styles.logPanel} overflow-y-auto`}
             ref={logRef}
             aria-label="Operation Log"
           >
-            <div className={styles.panelLabel}>Operation Log</div>
+            <div className={`${ax({ textStyle: 'caption' })} ${styles.panelLabel}`}>Operation Log</div>
             {log.length === 0 ? (
               <div style={{ opacity: 0.4 }}>Interact with the editor to see operations here.</div>
             ) : (
@@ -184,7 +185,7 @@ export default function PageStoreInspector() {
                 >
                   <span style={{ opacity: 0.5 }}>#{entry.seq}</span>{' '}
                   <span>{entry.type}</span>{' '}
-                  <span className={styles.logDiff}>| {formatDiffSummary(entry)}</span>
+                  <span className={ax({ text: 'accent' })}>| {formatDiffSummary(entry)}</span>
                 </div>
               ))
             )}

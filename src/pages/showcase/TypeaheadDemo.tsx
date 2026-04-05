@@ -76,8 +76,8 @@ export default function TypeaheadDemo() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div {...props} className={cls} style={{ justifyContent: 'flex-start' }}>
-                <span style={{ marginRight: 8 }}>{d?.emoji as string}</span>
+              <div {...props} className={cls}>
+                <span className="list-item__icon">{d?.emoji as string}</span>
                 <span className="list-item__label">{d?.label as string}</span>
               </div>
             )

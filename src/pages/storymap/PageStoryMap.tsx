@@ -42,11 +42,11 @@ function toSpatialStore(map: StoryMap): NormalizedData {
 
 function StoryCard({ story, focused }: { story: Story; focused: boolean }) {
   return (
-    <div className={`${css.smStory} flex-col border-none`} data-status={story.status} data-focused={focused || undefined}>
+    <div className={`${css.smStory} ${ax({ aspect: '1' })} flex-col border-none`} data-status={story.status} data-focused={focused || undefined}>
       <div className="flex-row items-center justify-between">
         <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smStoryId}`}>{story.id}</span>
         {story.status === 'blocked' && (
-          <span className={`${css.smStoryBlocked} shrink-0`} />
+          <span className={`${css.smStoryBlocked} ${ax({ size: 'sm' })} shrink-0`} />
         )}
       </div>
       <div className={`${ax({ textStyle: 'body', text: 'primary' })} ${css.smStoryText}`}>{story.story}</div>
@@ -112,7 +112,7 @@ export default function PageStoryMap() {
 
   return (
     <div className={`${css.sm} flex-col h-full overflow-hidden`}>
-      <div className={`${css.smHeader} flex-row items-center shrink-0`}>
+      <div className={`${ax({ border: 'bottom' })} ${css.smHeader} flex-row items-center shrink-0`}>
         <div className={`${css.smHeaderLeft} flex-row items-center min-w-0`}>
           <TabList
             data={tabStore}
@@ -123,7 +123,7 @@ export default function PageStoryMap() {
           <div className={`${css.smLegend} flex-row items-center shrink-0`} role="list" aria-label="Status legend">
             {(['pending', 'active', 'done', 'blocked'] as const).map(status => (
               <div key={status} className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smLegendItem} flex-row items-center`} role="listitem">
-                <span className={`${css.smLegendSwatch} shrink-0`} data-status={status} />
+                <span className={`${ax({ border: 'subtle' })} ${css.smLegendSwatch} shrink-0`} data-status={status} />
                 {status}
               </div>
             ))}

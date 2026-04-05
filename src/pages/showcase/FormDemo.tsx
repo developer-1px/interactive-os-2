@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ax } from '@styles/ax'
 import { z } from 'zod'
 import { createStore, updateEntityData } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -95,7 +96,7 @@ export default function FormDemo() {
   const errorCount = Object.keys(errors).length
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+    <div className={ax({ layout: 'column', gap: 'md' })}>
       {fieldIds.map((id) => {
         const entity = store.entities[id]
         const data = entity?.data as Record<string, unknown> | undefined
@@ -106,10 +107,10 @@ export default function FormDemo() {
         const showError = touched && fieldErrors?.value
 
         return (
-          <div key={id} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)' }}>
+          <div key={id} className={ax({ layout: 'column', gap: 'xs' })}>
             <label
               htmlFor={`field-${id}`}
-              style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-muted)' }}
+              className={ax({ textStyle: 'caption', text: 'muted' })}
             >
               {label}
             </label>
@@ -119,20 +120,12 @@ export default function FormDemo() {
               value={value}
               onChange={(e) => handleChange(id, e.target.value)}
               placeholder={`Enter ${label.toLowerCase()}...`}
-              style={{
-                padding: 'var(--space-sm) var(--space-md)',
-                fontSize: 'var(--font-size-md)',
-                borderRadius: 'var(--radius-sm)',
-                border: `1px solid ${showError ? 'var(--tone-destructive-base)' : 'var(--border-default)'}`,
-                background: 'var(--surface-bg)',
-                color: 'var(--text-default)',
-                outline: 'none',
-              }}
+              className={ax({ surface: 'input', controlSize: 'md', shape: 'sm', tone: showError ? 'danger' : undefined })}
             />
             {showError && (
               <span
                 role="alert"
-                style={{ fontSize: 'var(--font-size-xs)', color: 'var(--tone-destructive-base)' }}
+                className={ax({ textStyle: 'caption', text: 'danger' })}
               >
                 {fieldErrors.value}
               </span>
@@ -141,42 +134,26 @@ export default function FormDemo() {
         )
       })}
 
-      <div style={{ display: 'flex', gap: 'var(--space-sm)', alignItems: 'center' }}>
+      <div className={ax({ layout: 'bar', gap: 'sm' })}>
         <button
           onClick={handleSubmit}
-          style={{
-            padding: 'var(--space-sm) var(--space-lg)',
-            fontSize: 'var(--font-size-sm)',
-            borderRadius: 'var(--radius-sm)',
-            border: 'none',
-            background: 'var(--tone-primary-base)',
-            color: 'var(--tone-primary-contrast)',
-            cursor: 'pointer',
-          }}
+          className={ax({ surface: 'action', controlSize: 'md', shape: 'sm', tone: 'accent', content: 'text' })}
         >
           Submit
         </button>
         <button
           onClick={handleReset}
-          style={{
-            padding: 'var(--space-sm) var(--space-lg)',
-            fontSize: 'var(--font-size-sm)',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border-default)',
-            background: 'transparent',
-            color: 'var(--text-default)',
-            cursor: 'pointer',
-          }}
+          className={ax({ surface: 'ghost', controlSize: 'md', shape: 'sm', content: 'text' })}
         >
           Reset
         </button>
         {submitted && (
-          <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--tone-success-base, green)' }}>
+          <span className={ax({ textStyle: 'caption', text: 'success' })}>
             Submitted successfully
           </span>
         )}
         {errorCount > 0 && !submitted && (
-          <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--tone-destructive-base)' }}>
+          <span className={ax({ textStyle: 'caption', text: 'danger' })}>
             {errorCount} field(s) invalid
           </span>
         )}

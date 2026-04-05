@@ -119,15 +119,15 @@ const MessageBubble = memo(function MessageBubble({
   renderers: BlockRendererMap
 }) {
   const roleClass = message.role === 'user'
-    ? `${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} ${styles.chatUser}`
+    ? `${ax({ textStyle: 'body', weight: 'medium', text: 'primary', padding: 'xs', content: 'text' })} ${styles.chatUser}`
     : message.role === 'system'
-      ? `${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.chatSystem}`
-      : `${ax({ textStyle: 'body', text: 'primary' })} ${styles.chatAssistant}`
+      ? `${ax({ textStyle: 'caption', text: 'secondary', gap: 'sm' })} ${styles.chatSystem}`
+      : `${ax({ textStyle: 'body', text: 'primary', gap: 'sm' })} ${styles.chatAssistant}`
 
   if (message.role === 'system') {
     const groups = groupSystemBlocks(message.blocks)
     return (
-      <div className={`${ax({ layout: 'column' })} ${styles.chatMessage} ${roleClass}`}>
+      <div className={`${ax({ layout: 'column', gap: 'xs' })} ${roleClass}`}>
         {groups.map((g, i) => {
           if (g.kind === 'tool_chain') return <ToolChainGroup key={i} pairs={g.pairs} />
           if (g.kind === 'output') return <ToolGroup key={i} toolUse={g.pair.toolUse} toolResult={g.pair.toolResult} />
@@ -138,7 +138,7 @@ const MessageBubble = memo(function MessageBubble({
   }
 
   return (
-    <div className={`${styles.chatMessage} ${roleClass}`}>
+    <div className={`${ax({ gap: 'xs' })} ${roleClass}`}>
       {message.blocks.map((block, i) => (
         <BlockDispatch key={i} block={block} renderers={renderers} />
       ))}

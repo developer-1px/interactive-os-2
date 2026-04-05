@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import type { NormalizedData } from '../../store/types'
 import type { NodeState } from '../../pattern/types'
 import { TabList } from '../../ui/TabList'
+import { ax } from '@styles/ax'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import styles from './tabs.module.css'
@@ -31,7 +32,7 @@ const renderTab = (
   return (
     <div
       {...props}
-      className={`${styles.tab} inline-flex items-center`}
+      className={`${styles.tab} ${ax({ textStyle: 'body', text: 'secondary' })} inline-flex items-center cursor-default`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

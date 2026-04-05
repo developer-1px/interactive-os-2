@@ -4,6 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Feed as FeedComponent } from '../../ui/Feed'
+import { ax } from '../../../../styles/ax'
 import styles from './feed.module.css'
 
 // APG #24: Feed
@@ -34,11 +35,11 @@ const renderArticle = (
   return (
     <div
       {...props}
-      className={`${styles.article} outline-none`}
+      className={`${styles.article} ${ax({ shape: 'sm' })} outline-none`}
       data-focused={state.focused || undefined}
     >
-      <h3 className={styles.title}>{label}</h3>
-      <p className={styles.body}>{body}</p>
+      <h3 className={`${styles.title} ${ax({ textStyle: 'body', text: 'primary', weight: 'semi' })}`}>{label}</h3>
+      <p className={`${styles.body} ${ax({ textStyle: 'body', text: 'secondary' })}`}>{body}</p>
     </div>
   )
 }

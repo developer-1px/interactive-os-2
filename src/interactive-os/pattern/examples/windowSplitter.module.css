@@ -3,12 +3,6 @@
 .container {
   height: var(--space-5xl);
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-sm-radius);
-}
-
-.panelLabel {
-  font-size: var(--type-body-size);
-  color: var(--text-secondary);
 }
 
 .splitter {

@@ -4,18 +4,6 @@
   border-collapse: collapse;
 }
 
-/* ── last-mile: header cell — text-align only ── */
-
-.dayHeader {
-  text-align: center;
-}
-
-/* ── last-mile: day cell — text-align only ── */
-
-.day {
-  text-align: center;
-}
-
 /* ── variant: state ── */
 
 .day:is([data-outside]) {

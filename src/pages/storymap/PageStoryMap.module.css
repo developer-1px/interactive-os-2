@@ -14,7 +14,6 @@
 .smHeader {
   height: var(--toolbar-height);
   padding: 0 var(--space-lg);
-  border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
 .smHeaderLeft {
@@ -85,7 +84,6 @@
 .smStory {
   gap: var(--space-xs);
   padding: var(--space-md);
-  aspect-ratio: 1;
   background: var(--tone-warning-dim);
   box-shadow: var(--shadow-xs);
   cursor: default;
@@ -98,8 +96,6 @@
 
 /* blocked dot — destructive, S 카드 ID 옆 */
 .smStoryBlocked {
-  width: var(--space-sm);
-  height: var(--space-sm);
   border-radius: 50%;
   background: var(--tone-destructive-base);
 }
@@ -197,7 +193,6 @@
   width: var(--icon-sm);
   height: var(--icon-sm);
   border-radius: var(--shape-xs-radius);
-  border: var(--border-width) solid var(--border-subtle);
 }
 
 .smLegendSwatch[data-status="pending"]  { background: var(--tone-warning-dim); }
