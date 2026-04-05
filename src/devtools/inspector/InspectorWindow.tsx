@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import type { InspectResult } from '@os/engine/types'
 import type { AriaActions } from '@os/primitives/ariaRegistry'
-import type { PaneSize } from '@os/store/types'
+import type { NormalizedData, PaneSize } from '@os/store/types'
 import type { Plugin } from '@os/plugins/types'
 import { getAllAriaActions } from '@os/primitives/ariaRegistry'
 import { TreeView } from '@os/ui/TreeView'
@@ -73,9 +73,21 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
   )
 }
 
-function AriaPropsTable({ nodeProps }: { nodeProps: Record<string, string> }) {
-  const entries = Object.entries(nodeProps).filter(([k]) => k !== 'role')
-  if (entries.length === 0) {
+function readDomAriaProps(element: HTMLElement): Record<string, string> {
+  const props: Record<string, string> = {}
+  const role = element.getAttribute('role')
+  if (role) props.role = role
+  for (const attr of element.attributes) {
+    if (attr.name.startsWith('aria-')) {
+      props[attr.name] = attr.value
+    }
+  }
+  return props
+}
+
+function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>; domProps: Record<string, string> | null }) {
+  const allKeys = [...new Set([...Object.keys(osProps), ...Object.keys(domProps ?? {})])].filter(k => k !== 'role').sort()
+  if (allKeys.length === 0) {
     return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No ARIA props</div>
   }
   return (
@@ -83,33 +95,59 @@ function AriaPropsTable({ nodeProps }: { nodeProps: Record<string, string> }) {
       <thead>
         <tr>
           <th className={`text-left ${styles.th}`}>Attribute</th>
-          <th className={`text-left ${styles.th}`}>Value</th>
+          <th className={`text-left ${styles.th}`}>OS Intent</th>
+          {domProps && <th className={`text-left ${styles.th}`}>DOM Actual</th>}
         </tr>
       </thead>
       <tbody>
-        {entries.map(([k, v]) => (
-          <tr key={k}>
-            <td className={styles.tdKey}>{k}</td>
-            <td className={styles.tdCommand}>{v}</td>
-          </tr>
-        ))}
+        {allKeys.map(k => {
+          const os = osProps[k]
+          const dom = domProps?.[k]
+          const mismatch = domProps && os !== dom
+          return (
+            <tr key={k}>
+              <td className={styles.tdKey}>{k}</td>
+              <td className={styles.tdCommand}>{os ?? '—'}</td>
+              {domProps && (
+                <td className={mismatch ? `${styles.tdMismatch} ${ax({ text: 'danger', tone: 'danger-dim' })}` : styles.tdCommand}>{dom ?? '—'}</td>
+              )}
+            </tr>
+          )
+        })}
       </tbody>
     </table>
   )
 }
 
-function AriaTabContent({ selectedId, inspectResult }: { selectedId: string; inspectResult: InspectResult }) {
+interface AriaTabContentProps {
+  selectedId: string
+  inspectResult: InspectResult
+  actionsMap: Map<string, AriaActions>
+  metas: Map<string, InstanceMeta>
+}
+
+function AriaTabContent({ selectedId, inspectResult, actionsMap, metas }: AriaTabContentProps) {
   const sep = selectedId.indexOf('::')
   const nodeId = sep !== -1 ? selectedId.slice(sep + 2) : undefined
   const np = nodeId && inspectResult.computeNodeProps ? inspectResult.computeNodeProps(nodeId) : undefined
   const role = np?.role ?? inspectResult.role ?? ''
+
+  // Find DOM element for diff
+  const instId = findInstanceId(selectedId)
+  const instMeta = metas.get(instId)
+  const container = instMeta ? actionsMap.get(instMeta.registryKey)?.getElement() ?? null : null
+  const domElement = nodeId && container
+    ? container.querySelector<HTMLElement>(`[data-node-id="${nodeId}"]`)
+    : container
+  const domProps = domElement ? readDomAriaProps(domElement) : null
+
   return (
     <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
       <div className={ax({ textStyle: 'caption', text: 'bright' })}>
         {nodeId ? `Node: ${nodeId}` : 'Instance root'} — role: {role}
       </div>
       {np ? (
-        <AriaPropsTable nodeProps={np} />
+        <AriaDiffTable osProps={np} domProps={domProps} />
       ) : (
         <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>
           {nodeId ? 'No ARIA props' : 'Select a node for ARIA details'}
@@ -146,7 +184,9 @@ export function InspectorWindow() {
   const [selectedId, setSelectedId] = useState('')
   const [sizes, setSizes] = useState<PaneSize[]>([0.3, 'flex'])
   const [activeTab, setActiveTab] = useState<DetailTab>('interaction')
+  const [picking, setPicking] = useState(false)
   const prevSnapshotRef = useRef('')
+  const prevStateRef = useRef<Map<string, NormalizedData>>(new Map())
 
   useEffect(() => {
     const update = () => {
@@ -167,6 +207,42 @@ export function InspectorWindow() {
     return () => clearInterval(interval)
   }, [])
 
+  // Pick mode: click on main window → select in inspector
+  useEffect(() => {
+    if (!picking) return
+    const mainWindow = window.opener ?? window
+    const handler = (event: Event) => {
+      const e = event as MouseEvent
+      e.preventDefault()
+      e.stopPropagation()
+
+      const target = e.target as HTMLElement
+      const nodeEl = target.closest<HTMLElement>('[data-node-id]')
+      const containerEl = target.closest<HTMLElement>('[data-aria-container]')
+      if (!containerEl) return
+
+      // Find registryKey by matching container element
+      const all = getAllAriaActions()
+      let matchedKey: string | undefined
+      for (const [key, actions] of all) {
+        if (actions.getElement() === containerEl) {
+          matchedKey = key
+          break
+        }
+      }
+      if (!matchedKey) return
+
+      const nodeId = nodeEl?.getAttribute('data-node-id')
+      const inspectorId = nodeId
+        ? `__inst__${matchedKey}::${nodeId}`
+        : `__inst__${matchedKey}`
+      setSelectedId(inspectorId)
+      setPicking(false)
+    }
+    mainWindow.addEventListener('click', handler, true)
+    return () => mainWindow.removeEventListener('click', handler, true)
+  }, [picking])
+
   const { tree, metas } = useMemo(
     () => registryToUnifiedTree(actionsMap),
     [actionsMap],
@@ -175,6 +251,14 @@ export function InspectorWindow() {
   const instanceId = findInstanceId(selectedId)
   const meta: InstanceMeta | undefined = metas.get(instanceId)
   const inspectResult = meta?.inspectResult
+
+  // Track previous state for diff flash
+  const prevState = prevStateRef.current.get(instanceId)
+  useMemo(() => {
+    if (inspectResult) {
+      prevStateRef.current.set(instanceId, inspectResult.state)
+    }
+  }, [instanceId, inspectResult])
 
   const handleActivate = useCallback((nodeId: string) => {
     setSelectedId(nodeId)
@@ -205,7 +289,15 @@ export function InspectorWindow() {
   return (
     <div className={`overflow-hidden ${ax({ layout: 'column' })} ${styles.root}`}>
       <div className={ax({ layout: 'spread', padding: 'sm', textStyle: 'caption', surface: 'overlay' })}>
-        <span className={ax({ text: 'bright' })}>Aria Inspector</span>
+        <div className={ax({ layout: 'row', gap: 'sm' })}>
+          <span className={ax({ text: 'bright' })}>Aria Inspector</span>
+          <button
+            className={`border-none cursor-pointer ${ax({ textStyle: 'caption', padding: 'xs', text: picking ? 'bright' : 'muted' })} ${styles.tab} ${picking ? styles.tabActive : ''}`}
+            onClick={() => setPicking(p => !p)}
+          >
+            {picking ? '⊙ Picking…' : '⊙ Pick'}
+          </button>
+        </div>
         <span className={ax({ text: 'muted' })}>{actionsMap.size} instances</span>
       </div>
 
@@ -241,7 +333,7 @@ export function InspectorWindow() {
                 )}
 
                 {activeTab === 'aria' && (
-                  <AriaTabContent selectedId={selectedId} inspectResult={inspectResult} />
+                  <AriaTabContent selectedId={selectedId} inspectResult={inspectResult} actionsMap={actionsMap} metas={metas} />
                 )}
 
                 {activeTab === 'state' && (
@@ -249,7 +341,7 @@ export function InspectorWindow() {
                     <div className={ax({ textStyle: 'caption', text: 'bright' })}>
                       State ({Object.keys(inspectResult.state.entities).length} entities)
                     </div>
-                    <AppInspector inspectResult={inspectResult} />
+                    <AppInspector inspectResult={inspectResult} prevState={prevState} />
                   </div>
                 )}
               </div>

@@ -3,7 +3,7 @@ import type { NormalizedData, Entity } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import type { InspectResult } from './types'
 
-export function inspectToTree(result: InspectResult): NormalizedData {
+export function inspectToTree(result: InspectResult, prevState?: NormalizedData): NormalizedData {
   const entities: Record<string, Entity> = {}
   const relationships: Record<string, string[]> = {}
 
@@ -114,18 +114,34 @@ export function inspectToTree(result: InspectResult): NormalizedData {
   }
   relationships[STATE_GROUP] = [stateEntities, stateRels]
 
-  // State entities detail
-  const stateEntityChildren: string[] = []
+  // State entities detail — split meta (__*) and data entities
+  const metaGroup = '_se:__meta__'
+  const dataChildren: string[] = []
+  const metaChildren: string[] = []
   for (const [id, entity] of Object.entries(result.state.entities)) {
     const nodeId = `_se:${id}`
     const { id: _id, ...rest } = entity
+    const isMeta = id.startsWith('__')
+    const prevEntity = prevState?.entities[id]
+    const prevRest = prevEntity ? (({ id: _pid, ...r }) => r)(prevEntity) : undefined
+    const changed = prevRest !== undefined && JSON.stringify(rest) !== JSON.stringify(prevRest)
     entities[nodeId] = {
       id: nodeId,
-      data: { label: id, type: id.startsWith('__') ? 'meta' : 'entity', value: JSON.stringify(rest) },
+      data: { label: id, type: isMeta ? 'meta' : 'entity', value: JSON.stringify(rest), ...(changed && { changed: true }) },
     }
-    stateEntityChildren.push(nodeId)
+    if (isMeta) metaChildren.push(nodeId)
+    else dataChildren.push(nodeId)
   }
-  relationships[stateEntities] = stateEntityChildren
+  if (metaChildren.length > 0) {
+    entities[metaGroup] = {
+      id: metaGroup,
+      data: { label: `meta (${metaChildren.length})`, type: 'group', count: metaChildren.length },
+    }
+    relationships[metaGroup] = metaChildren
+    relationships[stateEntities] = [...dataChildren, metaGroup]
+  } else {
+    relationships[stateEntities] = dataChildren
+  }
 
   // State relationships detail
   const stateRelChildren: string[] = []
