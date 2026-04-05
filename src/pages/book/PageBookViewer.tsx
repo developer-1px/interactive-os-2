@@ -6,10 +6,11 @@ import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { NavList } from '@os/ui/NavList'
 import { SpreadReader } from '@os/ui/SpreadReader'
 import { AriaRoute } from '@os/primitives/AriaRoute'
+import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { ax } from '@styles/ax'
 import type { NodeState } from '@os/pattern/types'
 import { buildBook, buildTocStore, type BookPage, type Chapter } from './bookContent'
-import styles from './PageBookViewer.module.css'
+import './PageBookViewer.css'
 
 // ── Preload: cache book data so first render is instant ──
 
@@ -139,14 +140,12 @@ export default function PageBookViewer() {
 
   // ── Page-level keyMap (ArrowUp/Down for page jumps) ──
   const keyMap = useMemo(() => ({
-    ArrowDown: () => {
+    ArrowDown: defineRouteKey('book:next-page', () => {
       if (currentPage < pages.length - 1) goTo(currentPage + 1)
-      return { type: 'book:next-page', payload: { page: currentPage + 1 } } as const
-    },
-    ArrowUp: () => {
+    }, 'Book'),
+    ArrowUp: defineRouteKey('book:prev-page', () => {
       if (currentPage > 0) goTo(currentPage - 1)
-      return { type: 'book:prev-page', payload: { page: currentPage - 1 } } as const
-    },
+    }, 'Book'),
   }), [currentPage, pages.length, goTo])
 
   const prevPage = pages[currentPage - 1]
@@ -156,8 +155,8 @@ export default function PageBookViewer() {
 
   if (pages.length === 0) {
     return (
-      <div className={`${ax({ surface: 'base', text: 'primary' })} ${styles.book}`}>
-        <div className={`${ax({ layout: 'center', gap: 'lg', text: 'muted' })} ${styles.empty}`}>
+      <div className={`${ax({ surface: 'base', text: 'primary' })} book`}>
+        <div className={`${ax({ layout: 'center', gap: 'lg', text: 'muted' })} book-empty`}>
           <BookOpen size={48} className={ax({ opacity: 'dim' })} />
           <span>No content found</span>
         </div>
@@ -168,25 +167,14 @@ export default function PageBookViewer() {
   const progressPercent = ((currentPage + 1) / pages.length) * 100
 
   return (
-    <AriaRoute
-      keyMap={keyMap}
-      label="Book"
-      inspectMap={{
-        'ArrowUp': { command: 'book:prev-page', owner: 'AriaRoute' },
-        'ArrowDown': { command: 'book:next-page', owner: 'AriaRoute' },
-        'ArrowLeft': { command: 'spread:prev', owner: 'SpreadReader' },
-        'ArrowRight': { command: 'spread:next', owner: 'SpreadReader' },
-        'Home': { command: 'spread:first', owner: 'SpreadReader' },
-        'End': { command: 'spread:last', owner: 'SpreadReader' },
-      }}
-    >
-      <div className={`${ax({ surface: 'base', text: 'primary' })} ${styles.book}`}>
+    <AriaRoute keyMap={keyMap} label="Book">
+      <div className={`${ax({ surface: 'base', text: 'primary' })} book`}>
         {/* ── Page content ── */}
-        <div className={`relative ${styles.pageArea}`} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
+        <div className={`relative book-page-area`} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
           {/* ── Floating pill — top-left ── */}
-          <div className={`${styles.pill} ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
+          <div className={`book-pill ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
             <button
-              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} ${styles.pillBtn}`}
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} book-pill-btn`}
               onClick={() => setTocOpen(true)}
               aria-label="Open table of contents"
             >
@@ -197,14 +185,14 @@ export default function PageBookViewer() {
           </div>
 
           {/* ── Page footer — breadcrumb + page number, bottom-center ── */}
-          <div className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted', placement: 'bottom-center' })} ${styles.pageNumber}`}>
+          <div className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted', placement: 'bottom-center' })} book-page-number`}>
             {page && <Breadcrumb path={page.id} root="" />}
             <span>{currentPage + 1}/{pages.length}</span>
           </div>
 
           {/* ── Progress — bottom edge ── */}
-          <div className={`${ax({ placement: 'bottom' })} ${styles.progressBar}`} data-visible={chromeVisible}>
-            <div className={styles.progressFill} style={{ width: `${progressPercent}%` }} />
+          <div className={`${ax({ placement: 'bottom' })} book-progress-bar`} data-visible={chromeVisible}>
+            <div className="book-progress-fill" style={{ width: `${progressPercent}%` }} />
           </div>
           <SpreadReader
             resetKey={page?.id}
@@ -217,7 +205,7 @@ export default function PageBookViewer() {
           </SpreadReader>
 
           {/* Spread / page navigation */}
-          <nav className={`${ax({ placement: 'bottom' })} ${styles.pageNav}`} data-visible={chromeVisible}>
+          <nav className={`${ax({ placement: 'bottom' })} book-page-nav`} data-visible={chromeVisible}>
             <div>
               {!isFirstSpread && (
                 <button
@@ -253,12 +241,12 @@ export default function PageBookViewer() {
           </nav>
 
           {/* ── Overlay TOC ── */}
-          <div className={`${ax({ placement: 'center' })} ${styles.tocOverlay}`} data-open={tocOpen}>
-            <div className={styles.tocOverlayPanel}>
+          <div className={`${ax({ placement: 'center' })} book-toc-overlay`} data-open={tocOpen}>
+            <div className="book-toc-panel">
               <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
                 <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
                 <button
-                  className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} ${styles.pillBtn}`}
+                  className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} book-pill-btn`}
                   onClick={() => setTocOpen(false)}
                   aria-label="Close"
                 >

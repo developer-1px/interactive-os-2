@@ -10,7 +10,7 @@ import { sendMessage, clearSession, interruptSession, useChatSession } from './c
 import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './PageAgentChat.module.css'
+import './PageAgentChat.css'
 
 const chatRenderers: BlockRendererMap = {
   thinking: ThinkingBlock,
@@ -162,7 +162,7 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
     : 0
 
   return (
-    <div className={ax({ layout: 'fill' }) + ' ' + styles.chatMain}>
+    <div className={ax({ layout: 'fill' }) + ' chat-main'}>
       <ChatFeed
         messages={messages}
         blockRenderers={chatRenderers}
@@ -171,14 +171,14 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
       />
       <div className={ax({ flex: 'none', padding: 'md' })}>
         {isRunning && (
-          <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' tabular-nums ' + styles.chatActivityBar}>
-            <span className={`${ax({ surface: 'base', tone: 'accent', shape: 'pill' })} ${styles.chatDot}`} />
+          <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' tabular-nums chat-activity-bar'}>
+            <span className={`${ax({ surface: 'base', tone: 'accent', shape: 'pill' })} chat-dot`} />
             <span>{label}</span>
             <span>{elapsed}s</span>
             {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}
           </div>
         )}
-        <div className={ax({ layout: 'bar', gap: 'sm' }) + ' ' + styles.chatInputRow}>
+        <div className={ax({ layout: 'bar', gap: 'sm' }) + ' chat-input-row'}>
           <Composer
             ref={composerRef}
             onSubmit={handleSubmit}
@@ -199,7 +199,7 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
             </button>
           )}
         </div>
-        <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' tabular-nums ' + styles.chatStatusBar}>
+        <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' tabular-nums chat-status-bar'}>
           <span className={ax({ text: 'secondary' })}>{session.model || 'connecting...'}</span>
           {usage && (
             <>
@@ -208,7 +208,7 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
               <span>{(usage.durationMs / 1000).toFixed(1)}s</span>
             </>
           )}
-          <span className={ax({ textStyle: 'code' }) + ' ' + styles.chatHint}>/clear to reset</span>
+          <span className={ax({ textStyle: 'code' }) + ' chat-hint'}>/clear to reset</span>
         </div>
       </div>
     </div>

@@ -2,7 +2,8 @@
 
 import { CodeBlock } from '@os/ui/CodeBlock'
 import type { RegistryEntry } from '../componentRegistry'
-import styles from '../PageComponentCreator.module.css'
+import { ax } from '@styles/ax'
+import '../PageComponentCreator.css'
 
 // Glob raw source for TSX and CSS — keyed by filename for cross-directory matching
 const tsxSources = Object.fromEntries(
@@ -33,15 +34,15 @@ export function SourceViewer({ entry, activeTab }: SourceViewerProps) {
     const source = tsxSources[`${entry.name}.tsx`] ?? ''
     return source
       ? <CodeBlock code={source} filename={`${entry.name}.tsx`} variant="flush" />
-      : <div className={styles.canvasEmpty}>TSX source not found</div>
+      : <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>TSX source not found</div>
   }
 
   if (!entry.cssPath) {
-    return <div className={`flex-row items-center justify-center ${styles.canvasEmpty}`}>No CSS module</div>
+    return <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>No CSS module</div>
   }
 
   const source = cssSources[`${entry.name}.module.css`] ?? ''
   return source
     ? <CodeBlock code={source} filename={`${entry.name}.module.css`} variant="flush" />
-    : <div className={styles.canvasEmpty}>CSS source not found</div>
+    : <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>CSS source not found</div>
 }

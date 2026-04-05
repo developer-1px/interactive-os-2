@@ -1,7 +1,7 @@
 import React from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './PageThemeCreator.module.css'
+import './PageThemeCreator.css'
 import { Divider } from '@os/ui/Divider'
 import { Button } from '@os/ui/Button'
 import { TextInput } from '@os/ui/TextInput'
@@ -76,7 +76,7 @@ function DashboardScenario() {
       <Section title="RECENT TRANSACTIONS">
         <div className={ax({ layout: 'column' })}>
           {transactions.map((t, i) => (
-            <div key={i} className={`${ax({ layout: 'spread', padding: 'sm', border: 'bottom' })} ${styles.notifRow}`}>
+            <div key={i} className={`${ax({ layout: 'spread', padding: 'sm', border: 'bottom' })} theme-notif-row`}>
               <div className={ax({ layout: 'column', gap: 'xs' })}>
                 <span className={ax({ textStyle: 'body', text: 'primary' })}>{t.name}</span>
                 <span className={ax({ textStyle: 'caption', text: 'muted' })}>{t.email}</span>
@@ -99,7 +99,7 @@ const themeRadioData = makeStore({ system: 'System', light: 'Light', dark: 'Dark
 const renderSettingsTab = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
   const label = (item.data as Record<string, unknown>)?.label as string
   return (
-    <span className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: state.selected ? 'primary' : 'muted' })}>
+    <span className={ax({ text: state.selected ? 'primary' : 'muted' })}>
       {label}
     </span>
   )
@@ -118,7 +118,7 @@ function SettingsScenario() {
 
       <TabList data={settingsTabData} renderItem={renderSettingsTab} aria-label="Settings tabs" />
 
-      <div className={styles.composedGrid}>
+      <div className="theme-composed-grid">
         <Section title="PROFILE">
           <div className={ax({ layout: 'column', gap: 'sm' })}>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
@@ -131,7 +131,7 @@ function SettingsScenario() {
             </div>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Bio</span>
-              <textarea className={`${ax({ surface: 'input' })} ${styles.textarea}`} placeholder="Tell us about yourself..." />
+              <textarea className={`${ax({ surface: 'input' })} theme-textarea`} placeholder="Tell us about yourself..." />
             </div>
             <div className={ax({ layout: 'bar', gap: 'sm' })}>
               <Button variant="accent">Save Changes</Button>
@@ -165,7 +165,7 @@ function CreateFormScenario() {
         <span className={ax({ textStyle: 'body', text: 'muted' })}>Add a new interactive component to the registry.</span>
       </div>
 
-      <div className={styles.composedGrid}>
+      <div className="theme-composed-grid">
         <Section title="DETAILS">
           <div className={ax({ layout: 'column', gap: 'sm' })}>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
@@ -178,7 +178,7 @@ function CreateFormScenario() {
             </div>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Description</span>
-              <textarea className={`${ax({ surface: 'input' })} ${styles.textarea}`} placeholder="What does this component do?" />
+              <textarea className={`${ax({ surface: 'input' })} theme-textarea`} placeholder="What does this component do?" />
             </div>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Axes</span>
@@ -189,7 +189,7 @@ function CreateFormScenario() {
 
         <div className={ax({ layout: 'column', gap: 'lg' })}>
           <Section title="PREVIEW">
-            <div className={`${ax({ layout: 'center', shape: 'md', padding: 'xl' })} ${styles.previewPlaceholder}`}>
+            <div className={`${ax({ layout: 'center', shape: 'md', padding: 'xl' })} theme-preview-placeholder`}>
               <span className={ax({ textStyle: 'body', text: 'muted' })}>Component preview will appear here</span>
             </div>
           </Section>

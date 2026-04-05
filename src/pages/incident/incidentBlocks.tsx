@@ -1,5 +1,5 @@
 import { ax } from '@styles/ax'
-import styles from './PageIncidentInterface.module.css'
+import './PageIncidentInterface.css'
 import {
   GitCommit, Server, Database,
   RotateCcw, Play, Terminal,
@@ -21,10 +21,10 @@ export function BlockLog() {
 export function BlockMetric() {
   return (
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-      <div className={`${styles.metricGrid} grid`}>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>50/50</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>connections</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillBad} ${styles.barW100} h-full`} /></div></div>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>23</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pending</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillWarn} ${styles.barW46} h-full`} /></div></div>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>2.4s</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>p99 latency</div><div className={`${styles.barTrack} overflow-hidden`}><div className={`${styles.barFillBad} ${styles.barW80} h-full`} /></div></div>
+      <div className={`incident-metric-grid grid`}>
+        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>50/50</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>connections</div><div className={`incident-bar-track overflow-hidden`}><div className={`incident-bar-fill-bad incident-bar-w100 h-full`} /></div></div>
+        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>23</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pending</div><div className={`incident-bar-track overflow-hidden`}><div className={`incident-bar-fill-warn incident-bar-w46 h-full`} /></div></div>
+        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>2.4s</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>p99 latency</div><div className={`incident-bar-track overflow-hidden`}><div className={`incident-bar-fill-bad incident-bar-w80 h-full`} /></div></div>
       </div>
     </div>
   )
@@ -35,18 +35,18 @@ export function BlockCause() {
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
       <div className={ax({ layout: 'column', gap: 'xs' })}>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <div className={`${ax({ layout: 'center', text: 'danger' })} ${styles.causeIcon}`}><GitCommit size={12} /></div>
+          <div className={`${ax({ layout: 'center', text: 'danger' })} incident-cause-icon`}><GitCommit size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>PR #3421 — config cleanup</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pool_size: 100 → 50</div></div>
           <span className={ax({ textStyle: 'caption', weight: 'semi', text: 'danger' })}>87%</span>
         </div>
-        <div className={`${ax({ text: 'muted' })} ${styles.causeArrow}`}><ChevronDown size={12} /></div>
+        <div className={`${ax({ text: 'muted' })} incident-cause-arrow`}><ChevronDown size={12} /></div>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <div className={`${ax({ layout: 'center', text: 'warning' })} ${styles.causeIcon}`}><Database size={12} /></div>
+          <div className={`${ax({ layout: 'center', text: 'warning' })} incident-cause-icon`}><Database size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>DB pool 고갈</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>max=50, 동시 요청 처리 불가</div></div>
         </div>
-        <div className={`${ax({ text: 'muted' })} ${styles.causeArrow}`}><ChevronDown size={12} /></div>
+        <div className={`${ax({ text: 'muted' })} incident-cause-arrow`}><ChevronDown size={12} /></div>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <div className={`${ax({ layout: 'center', text: 'danger' })} ${styles.causeIcon}`}><AlertTriangle size={12} /></div>
+          <div className={`${ax({ layout: 'center', text: 'danger' })} incident-cause-icon`}><AlertTriangle size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>p99 2.4s → 3개 서비스 전파</div></div>
         </div>
       </div>

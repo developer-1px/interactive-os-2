@@ -1,7 +1,7 @@
 import React from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './PageThemeCreator.module.css'
+import './PageThemeCreator.css'
 import { Button } from '@os/ui/Button'
 import { TextInput } from '@os/ui/TextInput'
 import { TabList } from '@os/ui/TabList'
@@ -76,7 +76,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 const renderDemoTab = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
   const label = (item.data as Record<string, unknown>)?.label as string
   return (
-    <span className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: state.selected ? 'primary' : 'muted' })}>
+    <span className={ax({ text: state.selected ? 'primary' : 'muted' })}>
       {label}
     </span>
   )
@@ -102,7 +102,7 @@ export function ThemeComponents() {
         <div className={ax({ layout: 'column', gap: 'sm' })}>
           {(['accent', 'danger', 'success', 'warning', 'neutral'] as const).map(tone => (
             <div key={tone} className={ax({ layout: 'bar', gap: 'sm' })}>
-              <span className={`${ax({ textStyle: 'code', text: 'muted' })} ${styles.btnLabel}`}>{tone}</span>
+              <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{tone}</span>
               <Button variant="accent" tone={tone} size="sm">{tone}</Button>
               <Button variant="accent" tone={tone} size="md">{tone}</Button>
               <Button variant="accent" tone={tone} size="lg">{tone}</Button>
@@ -110,13 +110,13 @@ export function ThemeComponents() {
             </div>
           ))}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
-            <span className={`${ax({ textStyle: 'code', text: 'muted' })} ${styles.btnLabel}`}>ghost</span>
+            <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>ghost</span>
             <Button variant="ghost" size="sm">ghost sm</Button>
             <Button variant="ghost" size="md">ghost md</Button>
             <Button variant="ghost" size="lg">ghost lg</Button>
           </div>
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
-            <span className={`${ax({ textStyle: 'code', text: 'muted' })} ${styles.btnLabel}`}>dialog</span>
+            <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>dialog</span>
             <Button variant="dialog" size="sm">cancel</Button>
             <Button variant="dialog" size="md">cancel</Button>
             <Button variant="dialog" size="lg">cancel</Button>
@@ -125,7 +125,7 @@ export function ThemeComponents() {
       </Section>
 
       {/* 3-column grid: inputs, selections, controls */}
-      <div className={styles.pageGrid}>
+      <div className="theme-page-grid">
         {/* Column 1: Text inputs */}
         <div className={ax({ layout: 'column', gap: 'md' })}>
           <Section title="TEXT INPUT">
@@ -197,7 +197,7 @@ export function ThemeComponents() {
               { tone: 'warning', text: 'Your session will expire in 5 minutes.' },
               { tone: 'danger', text: 'Failed to save. Check your connection.' },
             ] as const).map(a => (
-              <div key={a.tone} className={`${ax({ surface: 'display', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'md' })} ${styles.alert}`} data-tone={a.tone}>
+              <div key={a.tone} className={`${ax({ surface: 'display', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'md' })} theme-alert`} data-tone={a.tone}>
                 <span className={ax({ textStyle: 'body', text: 'primary' })}>{a.text}</span>
               </div>
             ))}
