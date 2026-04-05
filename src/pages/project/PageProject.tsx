@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ListBox } from '@os/ui/ListBox'
+import { Grid } from '@os/ui/Grid'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { StatusIndicator, ProgressIndicator } from '@os/ui/indicators'
-import type { RenderItem } from '@os/ui/types'
+import type { NodeState } from '@os/pattern/types'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import { buildProjectStore } from './projectStore'
+import { buildProjectStore, PROJECT_COLUMNS } from './projectStore'
 import type { Maturity } from './projectData'
 
 const { store: initialStore, projects, pathMap } = buildProjectStore()
@@ -15,8 +15,8 @@ const totalFiles = projects.reduce((sum, p) => sum + p.fileCount, 0)
 const totalOpen = projects.reduce((sum, p) => sum + p.openBacklogs, 0)
 const totalDone = projects.reduce((sum, p) => sum + p.doneBacklogs, 0)
 
-const MATURITY_TONE: Record<Maturity, 'neutral' | 'warning' | 'accent' | 'success'> = {
-  Concept: 'neutral',
+const MATURITY_TEXT: Record<Maturity, 'muted' | 'warning' | 'accent' | 'success'> = {
+  Concept: 'muted',
   Prototype: 'warning',
   Validated: 'accent',
   Integrated: 'success',
@@ -29,84 +29,79 @@ const KIND_LABEL: Record<string, string> = {
   infra: 'Infra',
 }
 
-const renderItem: RenderItem = (props, node, state) => {
-  const data = node.data as Record<string, unknown> | undefined
-  const label = data?.label as string
-  const kind = data?.kind as string
-  const fileCount = data?.fileCount as number
-  const openBacklogs = data?.openBacklogs as number
-  const doneBacklogs = data?.doneBacklogs as number
-  const totalBacklogs = data?.totalBacklogs as number
-  const maturity = data?.maturity as Maturity | null
-  const hasP0 = data?.hasP0 as boolean
+const renderCell = (
+  _props: React.HTMLAttributes<HTMLElement>,
+  value: unknown,
+  column: { key: string },
+  state: NodeState,
+) => {
+  switch (column.key) {
+    case 'name': {
+      const v = value as { text: string; hasP0: boolean; openBacklogs: number }
+      return (
+        <span className={ax({ layout: 'bar', gap: 'sm' })}>
+          {v.hasP0
+            ? <StatusIndicator tone="error" />
+            : <StatusIndicator tone={v.openBacklogs > 0 ? 'warning' : 'success'} />
+          }
+          <span className={ax({
+            textStyle: 'body',
+            text: v.hasP0 ? 'danger' : state.focused ? 'bright' : 'primary',
+            weight: 'semi',
+          })}>
+            {v.text}
+          </span>
+        </span>
+      )
+    }
 
-  return (
-    <div
-      {...props}
-      className={ax({
-        surface: state.focused ? 'display' : 'ghost',
-        controlSize: 'lg',
-        padding: 'md',
-        content: 'text',
-        layout: 'bar',
-        gap: 'md',
-      })}
-    >
-      {/* Status dot */}
-      {hasP0
-        ? <StatusIndicator tone="error" />
-        : <StatusIndicator tone={openBacklogs > 0 ? 'warning' : 'success'} />
-      }
-
-      {/* Name */}
-      <span className={ax({
-        textStyle: 'body',
-        text: hasP0 ? 'danger' : state.focused ? 'bright' : 'primary',
-        weight: 'semi',
-      })}>
-        {label}
-      </span>
-
-      {/* Maturity badge */}
-      {maturity && (
+    case 'maturity': {
+      if (!value) return <span />
+      const maturity = value as Maturity
+      return (
         <span className={ax({
-          surface: 'sunken',
           textStyle: 'caption',
-          text: MATURITY_TONE[maturity] === 'neutral' ? 'muted' : MATURITY_TONE[maturity] as 'accent' | 'success' | 'warning',
-          padding: 'xs',
-          shape: 'sm',
-          content: 'text',
+          text: MATURITY_TEXT[maturity] ?? 'muted',
         })}>
           {maturity}
         </span>
-      )}
+      )
+    }
 
-      {/* Kind tag */}
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-        {KIND_LABEL[kind] ?? kind}
-      </span>
+    case 'kind':
+      return (
+        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+          {KIND_LABEL[String(value)] ?? String(value ?? '')}
+        </span>
+      )
 
-      {/* Spacer */}
-      <span className={ax({ flex: '1' })} />
-
-      {/* Backlog progress */}
-      {totalBacklogs > 0 && (
-        <span className={ax({ layout: 'bar', gap: 'sm', width: 'sm' })}>
-          <ProgressIndicator value={doneBacklogs} max={totalBacklogs} />
-          <span className={ax({ textStyle: 'caption', text: openBacklogs > 0 ? 'accent' : 'success', clamp: '1' })}>
-            {doneBacklogs}/{totalBacklogs}
+    case 'progress': {
+      if (!value) return <span />
+      const p = value as { done: number; total: number; open: number }
+      return (
+        <span className={ax({ layout: 'bar', gap: 'sm' })}>
+          <ProgressIndicator value={p.done} max={p.total} />
+          <span className={ax({
+            textStyle: 'caption',
+            text: p.open > 0 ? 'accent' : 'success',
+          })}>
+            {p.done}/{p.total}
           </span>
         </span>
-      )}
+      )
+    }
 
-      {/* File count */}
-      {fileCount > 0 && (
+    case 'files':
+      if (!value) return <span />
+      return (
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-          {fileCount}f
+          {String(value)}
         </span>
-      )}
-    </div>
-  )
+      )
+
+    default:
+      return <span>{String(value ?? '')}</span>
+  }
 }
 
 export default function PageProject() {
@@ -129,12 +124,14 @@ export default function PageProject() {
       </PanelHeader>
 
       <div className={ax({ layout: 'scroll', flex: '1' })}>
-        <ListBox
+        <Grid
           data={data}
+          columns={PROJECT_COLUMNS}
           onChange={setData}
           onActivate={handleActivate}
-          renderItem={renderItem}
+          renderCell={renderCell}
           searchable
+          header
           aria-label="Project list"
         />
       </div>

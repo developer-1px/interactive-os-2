@@ -40,6 +40,7 @@ export function Grid({
   columns,
   plugins = defaultPlugins,
   onChange,
+  onActivate,
   renderCell = defaultRenderCell,
   enableEditing = false,
   searchable = false,
@@ -106,6 +107,7 @@ export function Grid({
         data={data}
         plugins={mergedPlugins}
         onChange={onChange}
+        onActivate={onActivate}
         keyMap={keyMap}
         aria-label={ariaLabel}
       >
