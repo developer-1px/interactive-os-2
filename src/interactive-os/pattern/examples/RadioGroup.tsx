@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { RadioGroup as RadioGroupUI } from '../../ui/RadioGroup'
-import { ax } from '../../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './radiogroup.module.css'
 
 // APG #45: Radio Group Using Roving tabindex

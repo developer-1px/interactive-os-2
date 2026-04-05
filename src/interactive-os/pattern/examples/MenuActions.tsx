@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { MenuButton } from '../../ui/MenuButton'
-import { ax } from '../../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './menu.module.css'
 
 // APG #41: Actions Menu Button Using element.focus()

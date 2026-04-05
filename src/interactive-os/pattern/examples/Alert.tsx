@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Alert as AlertComponent } from '../../ui/Alert'
-import { ax } from '../../../../styles/ax'
+import { ax } from '@styles/ax'
 
 // APG #2: Alert
 // https://www.w3.org/WAI/ARIA/apg/patterns/alert/examples/alert/

@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { AlertDialog as AlertDialogUI } from '../../ui/AlertDialog'
-import { ax } from '../../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './alertDialog.module.css'
 
 // APG #3: Alert Dialog

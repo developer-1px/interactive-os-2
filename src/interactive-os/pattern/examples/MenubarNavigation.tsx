@@ -4,7 +4,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { Menubar } from '../../ui/Menubar'
-import { ax } from '../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './menubar.module.css'
 
 // APG #40: Navigation Menubar

@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Link as LinkComponent } from '../../ui/Link'
-import { ax } from '../../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './link.module.css'
 
 // APG #35: Link

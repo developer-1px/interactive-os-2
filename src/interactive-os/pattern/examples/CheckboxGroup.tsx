@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Checkbox } from '../../ui/Checkbox'
-import { ax } from '../../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './checkbox.module.css'
 
 // APG #9: Checkbox (Two State)

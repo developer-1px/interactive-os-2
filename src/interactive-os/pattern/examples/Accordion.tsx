@@ -6,7 +6,7 @@ import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { Accordion as AccordionUI } from '../../ui/Accordion'
 import { ExpandIndicator } from '../../ui/indicators'
-import { ax } from '../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './accordion.module.css'
 
 // APG #1: Accordion Example

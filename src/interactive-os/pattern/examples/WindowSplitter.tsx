@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { WindowSplitter as WindowSplitterComponent } from '../../ui/WindowSplitter'
-import { ax } from '../../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './windowSplitter.module.css'
 
 // APG #67: Window Splitter

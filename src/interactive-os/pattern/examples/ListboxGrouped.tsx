@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { ListBoxGrouped } from '../../ui/ListBoxGrouped'
-import { ax } from '../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './listbox.module.css'
 
 // APG #38: Listbox with Grouped Options — "Choose your animal sidekick"
