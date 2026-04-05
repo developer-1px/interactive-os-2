@@ -8,7 +8,7 @@ import { SELECTION_ID } from '../../axis/select'
 import { FOCUS_ID } from '../../axis/navigate'
 import { tabs } from '../../pattern/roles/tabs'
 import { Pause, Play } from 'lucide-react'
-import { ax } from '../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './carousel.module.css'
 
 // APG #8: Auto-Rotating Image Carousel with Tabs for Slide Control

@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { SELECTION_ID } from '../../axis/select'
 import { ListBox } from '../../ui/ListBox'
-import { ax } from '../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './listbox.module.css'
 
 // APG #37: Listbox with Rearrangeable Options (Example 2 — Multi-Select)

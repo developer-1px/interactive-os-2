@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { Table as TableComponent } from '../../ui/Table'
-import { ax } from '../../../../styles/ax'
+import { ax } from '@styles/ax'
 
 // APG #57: Table
 // https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/table/

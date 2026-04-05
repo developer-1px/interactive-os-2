@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
-import { ax } from '../../../styles/ax'
+import { ax } from '@styles/ax'
 import styles from './carousel.module.css'
 
 // APG #7: Auto-Rotating Image Carousel with Buttons for Slide Control
