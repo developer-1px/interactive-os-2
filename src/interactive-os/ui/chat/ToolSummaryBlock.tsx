@@ -203,7 +203,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   // No content → non-collapsible row
   if (!content) {
     return (
-      <div className={`${ax({ shape: 'md', border: 'subtle' })} ${styles.toolGroup}`}>
+      <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolGroup}`}>
         <div className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}>
           <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
           <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
@@ -213,7 +213,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   }
 
   return (
-    <div className={`${ax({ shape: 'md', border: 'subtle' })} ${styles.toolGroup}`}>
+    <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolGroup}`}>
       <div
         {...toggleProps}
         className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}
@@ -264,7 +264,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <div className={`${ax({ shape: 'md', border: 'subtle' })} ${styles.toolChain}`}>
+    <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolChain}`}>
       <div
         {...toggleProps}
         className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}

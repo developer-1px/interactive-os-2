@@ -70,7 +70,6 @@
 
 .toolGroup {
   overflow: hidden;
-  background: var(--surface-sunken);
 }
 
 /* Consecutive tool groups: merge borders, remove inter-gap */
@@ -120,7 +119,6 @@
 
 .toolChain {
   overflow: hidden;
-  background: var(--surface-sunken);
 }
 
 .toolChainSummary {
@@ -136,7 +134,6 @@
 
 /* toolChainLabel: ax({ textStyle: 'code' }) in TSX */
 
-.toolChainContent {}
 
 .toolChainRow {
   composes: iconRow;
