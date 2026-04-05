@@ -42,6 +42,7 @@ export function SpatialView({
     <div
       data-spatial-view=""
       data-aria-container=""
+      className="ax-interactive"
       {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
       aria-label={ariaLabel}
     >

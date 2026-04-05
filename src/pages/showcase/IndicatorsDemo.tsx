@@ -31,7 +31,7 @@ function ExpandSection() {
   const [expanded, setExpanded] = useState(false)
   return (
     <Section title="Expand">
-      <div data-aria-container="">
+      <div data-aria-container="" className="ax-interactive">
         <Row label="expanded=false">
           <ExpandIndicator expanded={false} />
         </Row>
@@ -60,7 +60,7 @@ function CheckSection() {
   const [checked, setChecked] = useState(false)
   return (
     <Section title="Check">
-      <div data-aria-container="">
+      <div data-aria-container="" className="ax-interactive">
         <Row label="checked=false">
           <CheckIndicator checked={false} />
         </Row>
@@ -86,7 +86,7 @@ function RadioSection() {
   const [selected, setSelected] = useState(0)
   return (
     <Section title="Radio">
-      <div data-aria-container="">
+      <div data-aria-container="" className="ax-interactive">
         <Row label="unchecked">
           <RadioIndicator />
         </Row>
@@ -114,7 +114,7 @@ function SwitchSection() {
   const [on, setOn] = useState(false)
   return (
     <Section title="Switch">
-      <div data-aria-container="">
+      <div data-aria-container="" className="ax-interactive">
         <Row label="off">
           <SwitchIndicator />
         </Row>
@@ -160,7 +160,7 @@ function SeparatorSection() {
 function IndeterminateSection() {
   return (
     <Section title="Indeterminate">
-      <div data-aria-container="">
+      <div data-aria-container="" className="ax-interactive">
         <Row label="default">
           <span aria-selected="true"><IndeterminateIndicator /></span>
         </Row>
@@ -178,7 +178,7 @@ function SortSection() {
   const [dir, setDir] = useState<'ascending' | 'descending' | undefined>(undefined)
   return (
     <Section title="Sort">
-      <div data-aria-container="">
+      <div data-aria-container="" className="ax-interactive">
         <Row label="none">
           <SortIndicator />
         </Row>

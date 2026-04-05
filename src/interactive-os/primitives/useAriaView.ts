@@ -389,7 +389,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
           const target = event.target as HTMLElement
           const container = event.currentTarget as HTMLElement
           // Nested guard: if click landed inside a deeper aria-container, let that one handle it
-          if (target.closest('[data-aria-container]') !== container) return
+          if (target.closest('.ax-interactive') !== container) return
           // If click was on an Item, onFocus will handle it
           if (target.closest(`[${nodeIdAttr}]`)) return
           // If click was inside a Panel (region/tabpanel), let native focus work
@@ -423,7 +423,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     if (pattern.focusStrategy.type === 'aria-activedescendant') return
     const el = document.querySelector<HTMLElement>(`[${nodeIdAttr}="${focusedId}"]`)
     if (!el || el === document.activeElement) return
-    const container = el.closest('[data-aria-container]')
+    const container = el.closest('.ax-interactive')
     const ownsActiveFocus = container?.contains(document.activeElement)
     const focusIsOrphaned = document.activeElement === document.body || document.activeElement === null
     if (!ownsActiveFocus && !focusIsOrphaned) return

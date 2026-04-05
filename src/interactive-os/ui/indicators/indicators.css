@@ -7,7 +7,7 @@
 
 /* ── Chevron ── */
 
-:where([data-aria-container] .item-chevron),
+:where(.ax-interactive .item-chevron),
 :where(details .item-chevron) {
   color: var(--text-muted);
   font-size: var(--type-body-size);
@@ -15,13 +15,13 @@
   transition: transform var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-:where([data-aria-container] .item-chevron--expand),
+:where(.ax-interactive .item-chevron--expand),
 :where(details .item-chevron--expand) {
   min-width: var(--icon-xs);
   width: var(--icon-xs);
 }
 
-:where([data-aria-container] .item-chevron--tree) {
+:where(.ax-interactive .item-chevron--tree) {
   min-width: var(--icon-sm);
   width: var(--icon-sm);
 }
@@ -35,7 +35,7 @@
 
 /* ── Checkbox indicator (square) ── */
 
-:where([data-aria-container] .item-indicator--checkbox) {
+:where(.ax-interactive .item-indicator--checkbox) {
   width: var(--icon-md);
   height: var(--icon-md);
   border: 1px solid var(--border-default);
@@ -44,12 +44,12 @@
   transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
 }
 
-:where([data-aria-container] [aria-selected="true"] .item-indicator--checkbox) {
+:where(.ax-interactive [aria-selected="true"] .item-indicator--checkbox) {
   border-color: var(--tone-primary-base);
   background: var(--tone-primary-base);
 }
 
-:where([data-aria-container] .item-indicator--checkbox-icon) {
+:where(.ax-interactive .item-indicator--checkbox-icon) {
   width: var(--icon-sm);
   height: var(--icon-sm);
   color: var(--tone-primary-foreground);
@@ -57,7 +57,7 @@
 
 /* ── Radio indicator (circle + dot) ── */
 
-:where([data-aria-container] .item-indicator--radio) {
+:where(.ax-interactive .item-indicator--radio) {
   width: var(--icon-md);
   height: var(--icon-md);
   border: 1px solid var(--border-default);
@@ -65,11 +65,11 @@
   transition: border-color var(--motion-instant-duration);
 }
 
-:where([data-aria-container] [aria-checked="true"] .item-indicator--radio) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--radio) {
   border-color: var(--tone-primary-base);
 }
 
-:where([data-aria-container] .item-indicator--radio-dot) {
+:where(.ax-interactive .item-indicator--radio-dot) {
   width: var(--space-sm);
   height: var(--space-sm);
   border-radius: 50%;
@@ -78,13 +78,13 @@
   transition: transform var(--motion-instant-duration);
 }
 
-:where([data-aria-container] [aria-checked="true"] .item-indicator--radio-dot) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--radio-dot) {
   transform: scale(1);
 }
 
 /* ── Switch indicator (track + thumb) ── */
 
-:where([data-aria-container] .item-indicator--switch) {
+:where(.ax-interactive .item-indicator--switch) {
   width: var(--switch-width);
   height: var(--switch-height);
   border-radius: var(--shape-pill-radius);
@@ -94,12 +94,12 @@
               border-color var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-:where([data-aria-container] [aria-checked="true"] .item-indicator--switch) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--switch) {
   background: var(--tone-primary-base);
   border-color: var(--tone-primary-base);
 }
 
-:where([data-aria-container] .item-indicator--switch-thumb) {
+:where(.ax-interactive .item-indicator--switch-thumb) {
   top: 1px;
   left: 1px;
   width: var(--icon-sm);
@@ -111,41 +111,41 @@
               background var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-:where([data-aria-container] [aria-checked="true"] .item-indicator--switch-thumb) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--switch-thumb) {
   background: var(--tone-primary-foreground);
   transform: translateX(calc(var(--switch-width) - var(--icon-sm) - 4px));
 }
 
 /* ── Toggle text indicator (On/Off) ── */
 
-:where([data-aria-container] .item-indicator--toggle) {
+:where(.ax-interactive .item-indicator--toggle) {
   color: var(--text-muted);
   font-size: var(--type-body-size);
 }
 
-:where([data-aria-container] [aria-checked="true"] .item-indicator--toggle) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--toggle) {
   color: var(--tone-success-base);
 }
 
 /* ── ToggleGroup text indicator ── */
 
-:where([data-aria-container] .item-indicator--toggle-group) {
+:where(.ax-interactive .item-indicator--toggle-group) {
   color: var(--text-muted);
 }
 
-:where([data-aria-container] [aria-selected="true"] .item-indicator--toggle-group) {
+:where(.ax-interactive [aria-selected="true"] .item-indicator--toggle-group) {
   color: var(--tone-primary-base);
 }
 
 /* ── Sort indicator ── */
 
-:where([data-aria-container] .item-indicator--sort) {
+:where(.ax-interactive .item-indicator--sort) {
   font-size: var(--type-body-size);
   color: var(--text-muted);
 }
 
-:where([data-aria-container] [aria-sort="ascending"] .item-indicator--sort),
-:where([data-aria-container] [aria-sort="descending"] .item-indicator--sort) {
+:where(.ax-interactive [aria-sort="ascending"] .item-indicator--sort),
+:where(.ax-interactive [aria-sort="descending"] .item-indicator--sort) {
   color: var(--tone-primary-base);
 }
 

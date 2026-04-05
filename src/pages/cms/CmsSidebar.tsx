@@ -209,7 +209,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
   return (
     <aside className="cms-sidebar shrink-0 flex-col overflow-hidden" aria-label="Sections" style={style}>
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
-      <div className="cms-sidebar__list flex-1 flex-col overflow-y-auto" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
+      <div className="ax-interactive cms-sidebar__list flex-1 flex-col overflow-y-auto" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
             const elements: React.ReactNode[] = []
 

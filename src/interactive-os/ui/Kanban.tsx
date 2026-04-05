@@ -60,7 +60,7 @@ export function Kanban({
         role={kanbanBehavior.role}
         aria-label={ariaLabel}
         data-aria-container=""
-        className={`${ax({ layout: 'scroll-x', gap: compact ? 'sm' : 'md', padding: compact ? 'sm' : 'xs' })} kanban-board`}
+        className={`ax-interactive ${ax({ layout: 'scroll-x', gap: compact ? 'sm' : 'md', padding: compact ? 'sm' : 'xs' })} kanban-board`}
         data-compact={compact || undefined}
         data-has-highlight={(highlightUp?.size || highlightDown?.size) ? '' : undefined}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
