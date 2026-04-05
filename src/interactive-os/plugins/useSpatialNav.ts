@@ -4,6 +4,8 @@ import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import type { PatternContext } from '../axis/types'
+import { key } from '../axis/types'
+import type { KeyHandler } from '../axis/types'
 import { focusCommands } from '../axis/navigate'
 import { getSpatialParentId, spatialCommands } from './spatial'
 import { getChildren, getParent } from '../store/createStore'
@@ -122,7 +124,7 @@ export function findAdjacentGroup(
 }
 
 export interface SpatialNavResult {
-  keyMap: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap: Record<string, KeyHandler>
   clearCursorsAtDepth: (parentId: string) => void
 }
 
@@ -288,14 +290,14 @@ export function useSpatialNav(
     }
 
     return {
-      ArrowUp: makeHandler('ArrowUp'),
-      ArrowDown: makeHandler('ArrowDown'),
-      ArrowLeft: makeHandler('ArrowLeft'),
-      ArrowRight: makeHandler('ArrowRight'),
-      'Shift+ArrowUp': makeShiftHandler('ArrowUp'),
-      'Shift+ArrowDown': makeShiftHandler('ArrowDown'),
-      'Shift+ArrowLeft': makeShiftHandler('ArrowLeft'),
-      'Shift+ArrowRight': makeShiftHandler('ArrowRight'),
+      ArrowUp: key(['navigate:focus'], makeHandler('ArrowUp')),
+      ArrowDown: key(['navigate:focus'], makeHandler('ArrowDown')),
+      ArrowLeft: key(['navigate:focus'], makeHandler('ArrowLeft')),
+      ArrowRight: key(['navigate:focus'], makeHandler('ArrowRight')),
+      'Shift+ArrowUp': key(['select:extend'], makeShiftHandler('ArrowUp')),
+      'Shift+ArrowDown': key(['select:extend'], makeShiftHandler('ArrowDown')),
+      'Shift+ArrowLeft': key(['select:extend'], makeShiftHandler('ArrowLeft')),
+      'Shift+ArrowRight': key(['select:extend'], makeShiftHandler('ArrowRight')),
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps -- allowed triggers handler refresh; refs read at call time
   }, [allowed, spatialParentId, containerSelector, scope])

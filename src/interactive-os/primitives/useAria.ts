@@ -41,7 +41,7 @@ export interface UseAriaOptions {
   pattern?: AriaPattern
   data: NormalizedData
   plugins?: Plugin[]
-  keyMap?: Record<string, (ctx: ReturnType<typeof createPatternContext>) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   onFocusChange?: (nodeId: string | null) => void

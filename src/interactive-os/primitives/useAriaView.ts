@@ -446,17 +446,17 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
       desc[k] = { owner: 'pattern', command: handler.commands.join(' | ') }
     }
     if (pluginKeyMaps) {
-      for (const k of Object.keys(pluginKeyMaps)) {
+      for (const [k, handler] of Object.entries(pluginKeyMaps)) {
         if (desc[k]) {
-          desc[k] = { ...desc[k]!, owner: `${desc[k]!.owner} + plugin` }
+          desc[k] = { ...desc[k]!, owner: `${desc[k]!.owner} + plugin`, command: handler.commands.join(' | ') }
         } else {
-          desc[k] = { owner: 'plugin' }
+          desc[k] = { owner: 'plugin', command: handler.commands.join(' | ') }
         }
       }
     }
     if (keyMapOverrides) {
-      for (const k of Object.keys(keyMapOverrides)) {
-        desc[k] = { owner: 'override' }
+      for (const [k, handler] of Object.entries(keyMapOverrides)) {
+        desc[k] = { owner: 'override', command: handler.commands.join(' | ') }
       }
     }
     engine.setInspectKeyMap(desc)

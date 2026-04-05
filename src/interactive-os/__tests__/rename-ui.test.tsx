@@ -9,6 +9,7 @@ import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
+import { key } from '../axis/types'
 
 const initialStore = createStore({
   entities: {
@@ -22,7 +23,7 @@ const initialStore = createStore({
 const plugins = [rename(), history()]
 
 // @test-harness — rename plugin + Aria.Editable integration requires primitive access
-function TestListBox({ initialData, keyMap, allowEmpty }: { initialData?: NormalizedData; keyMap?: Record<string, (ctx: import('../axis/types').PatternContext) => import('../engine/types').Command | void>; allowEmpty?: boolean }) {
+function TestListBox({ initialData, keyMap, allowEmpty }: { initialData?: NormalizedData; keyMap?: Record<string, import('../axis/types').KeyHandler>; allowEmpty?: boolean }) {
   const [data, setData] = useState(initialData ?? initialStore)
   return (
     <Aria pattern={listbox()} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
@@ -39,7 +40,7 @@ function TestListBox({ initialData, keyMap, allowEmpty }: { initialData?: Normal
 
 function setupWithKeyMap() {
   const keyMap = {
-    'F2': (ctx: import('../axis/types').PatternContext) => renameCommands.startRename(ctx.focused),
+    'F2': key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
   }
   return render(<TestListBox keyMap={keyMap} />)
 }
@@ -226,8 +227,8 @@ describe('Rename UI', () => {
   describe('Enter to start rename', () => {
     it('Enter starts rename when mapped in editingKeyMap', () => {
       const keyMap = {
-        'F2': (ctx: import('../axis/types').PatternContext) => renameCommands.startRename(ctx.focused),
-        'Enter': (ctx: import('../axis/types').PatternContext) => renameCommands.startRename(ctx.focused),
+        'F2': key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
+        'Enter': key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
       }
       const { container } = render(<TestListBox keyMap={keyMap} />)
       const firstNode = container.querySelector('[data-node-id="a"]')!
@@ -286,8 +287,9 @@ describe('Rename UI', () => {
         useEffect(() => { capturedStoreRef.current = data })
 
         const keyMap = {
-          'F2': (_ctx: import('../axis/types').PatternContext) =>
+          'F2': key(['rename:start'], (_ctx) =>
             renameCommands.startRename('a', { replace: true, initialChar: 'a' }),
+          ),
         }
         return (
           <Aria pattern={listbox()} data={data} plugins={plugins} onChange={setData} keyMap={keyMap}>
@@ -324,9 +326,10 @@ describe('Rename UI', () => {
   describe('replace mode UI', () => {
     function setupReplaceMode() {
       const keyMap = {
-        'F2': (ctx: import('../axis/types').PatternContext) => renameCommands.startRename(ctx.focused),
-        'a': (ctx: import('../axis/types').PatternContext) =>
+        'F2': key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
+        'a': key(['rename:start'], (ctx) =>
           renameCommands.startRename(ctx.focused, { replace: true, initialChar: 'a' }),
+        ),
       }
       return render(<TestListBox keyMap={keyMap} />)
     }
@@ -369,7 +372,7 @@ describe('Rename UI', () => {
 
     it('allowEmpty=true: empty string confirms with empty value', () => {
       const keyMap = {
-        'F2': (ctx: import('../axis/types').PatternContext) => renameCommands.startRename(ctx.focused),
+        'F2': key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
       }
       const { container } = render(<TestListBox keyMap={keyMap} allowEmpty />)
       const firstNode = container.querySelector('[data-node-id="a"]')!

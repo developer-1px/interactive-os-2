@@ -21,7 +21,7 @@ const iconMap: Record<string, LucideIcon> = {
 
 interface ToolbarProps extends AriaComponentProps {
   orientation?: 'horizontal' | 'vertical'
-  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {

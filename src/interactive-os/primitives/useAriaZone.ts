@@ -7,7 +7,6 @@ import type { Plugin } from '../plugins/types'
 import type { AriaPattern } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren } from '../store/createStore'
-import { createPatternContext } from '../pattern/createPatternContext'
 import { POPUP_ID } from '../axis/popup'
 import { isVisible, findFallbackFocus, detectNewVisibleEntities } from '../plugins/focusRecovery'
 import type { IsReachable } from '../plugins/focusRecovery'
@@ -22,7 +21,7 @@ export interface UseAriaZoneOptions {
   pattern: AriaPattern
   scope: string
   plugins?: Plugin[]
-  keyMap?: Record<string, (ctx: ReturnType<typeof createPatternContext>) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   onActivate?: (nodeId: string) => void
   initialFocus?: string
   isReachable?: IsReachable

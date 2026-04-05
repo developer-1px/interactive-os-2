@@ -5,7 +5,6 @@ import type { Command } from '../engine/types'
 import type { Plugin } from '../plugins/types'
 import type { AriaPattern, NodeState } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
-import type { PatternContext } from '../pattern/types'
 import type { IsReachable } from '../plugins/focusRecovery'
 import { useAriaZone } from '../primitives/useAriaZone'
 
@@ -25,7 +24,7 @@ interface AriaZoneProps {
   pattern: AriaPattern
   scope: string
   plugins?: Plugin[]
-  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   onActivate?: (nodeId: string) => void
   initialFocus?: string
   isReachable?: IsReachable

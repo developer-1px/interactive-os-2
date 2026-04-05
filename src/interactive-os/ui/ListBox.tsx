@@ -16,7 +16,7 @@ const listboxPattern = listbox()
 interface ListBoxProps extends AriaComponentProps {
   enableEditing?: boolean
   searchable?: boolean
-  keyMap?: Record<string, (ctx: import('../pattern/types').PatternContext) => import('../engine/types').Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   autoFocus?: boolean
 }
 

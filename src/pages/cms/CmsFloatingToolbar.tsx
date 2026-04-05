@@ -9,7 +9,8 @@ import { crudCommands } from '@os/plugins/crud'
 import { dndCommands } from '@os/plugins/dnd'
 import { clipboardCommands } from '@os/plugins/clipboard'
 import { cmsCanDelete } from './cmsSchema'
-import type { PatternContext, NodeState } from '@os/pattern/types'
+import type { NodeState } from '@os/pattern/types'
+import { key } from '@os/axis/types'
 import { Toolbar } from '@os/ui/Toolbar'
 import { ax } from '@styles/ax'
 
@@ -73,8 +74,8 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
     canvasEl?.focus()
   }
 
-  const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
-    Escape: () => { focusCanvas() },
+  const keyMap = useMemo(() => ({
+    Escape: key(['dismiss'], () => { focusCanvas() }),
   }), [])
 
   const handleActivate = useMemo(() => (actionId: string) => {

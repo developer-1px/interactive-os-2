@@ -20,7 +20,7 @@ interface AriaProps {
   pattern?: AriaPattern
   data: NormalizedData
   plugins: Plugin[]
-  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   onFocusChange?: (nodeId: string | null) => void

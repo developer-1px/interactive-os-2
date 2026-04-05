@@ -6,7 +6,8 @@ import { createStore, getChildren } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
 import type { Plugin } from '@os/plugins/types'
-import type { PatternContext, NodeState } from '@os/pattern/types'
+import type { NodeState } from '@os/pattern/types'
+import { key } from '@os/axis/types'
 import { FOCUS_ID } from '@os/axis/navigate'
 import { history } from '@os/plugins/history'
 import { crud, crudCommands } from '@os/plugins/crud'
@@ -65,7 +66,7 @@ function makeCreateCommand(focusedId: string, getChildrenFn: (id: string) => str
 // Inline plugin: N key → create after focused (engine pipeline: focusRecovery + history)
 const createPlugin: Plugin = {
   keyMap: {
-    'N': (ctx: PatternContext) => makeCreateCommand(ctx.focused, ctx.getChildren),
+    'N': key(['crud:create'], (ctx) => makeCreateCommand(ctx.focused, ctx.getChildren)),
   },
 }
 

@@ -2,10 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type React from 'react'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import type { Command } from '@os/engine/types'
 import type { Plugin } from '@os/plugins/types'
 import type { CommandEngine } from '@os/engine/createCommandEngine'
 import type { PatternContext } from '@os/pattern/types'
+import { key } from '@os/axis/types'
 import type { Locale } from './cmsTypes'
 import type { TemplateType } from './cmsTemplates'
 import { templateToCommand } from './cmsTemplates'
@@ -104,21 +104,21 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [store, onActivateTabItem])
 
-  const sidebarKeyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => {
+  const sidebarKeyMap = useMemo(() => {
     const navigateInSections = (ctx: PatternContext, delta: number) => {
       const idx = sectionIds.indexOf(ctx.focused)
       const next = sectionIds[idx + delta]
       if (next !== undefined) return focusCommands.setFocus(next)
     }
     return {
-      ArrowDown: (ctx) => navigateInSections(ctx, +1),
-      ArrowUp: (ctx) => navigateInSections(ctx, -1),
-      Home: () => sectionIds[0] !== undefined ? focusCommands.setFocus(sectionIds[0]) : undefined,
-      End: () => sectionIds[sectionIds.length - 1] !== undefined ? focusCommands.setFocus(sectionIds[sectionIds.length - 1]!) : undefined,
-      Enter: (ctx) => { scrollToSection(ctx.focused) },
-      Escape: () => {
+      ArrowDown: key(['navigate:focus'], (ctx) => navigateInSections(ctx, +1)),
+      ArrowUp: key(['navigate:focus'], (ctx) => navigateInSections(ctx, -1)),
+      Home: key(['navigate:focusFirst'], () => sectionIds[0] !== undefined ? focusCommands.setFocus(sectionIds[0]) : undefined),
+      End: key(['navigate:focusLast'], () => sectionIds[sectionIds.length - 1] !== undefined ? focusCommands.setFocus(sectionIds[sectionIds.length - 1]!) : undefined),
+      Enter: key(['activate'], (ctx) => { scrollToSection(ctx.focused) }),
+      Escape: key(['dismiss'], () => {
         ;(document.querySelector('[data-cms-root]') as HTMLElement)?.focus()
-      },
+      }),
     }
   }, [scrollToSection, sectionIds])
 

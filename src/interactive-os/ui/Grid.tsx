@@ -1,7 +1,7 @@
 import React from 'react'
 
-import type { Command, Plugin } from '../engine/types'
-import type { PatternContext, NodeState } from '../pattern/types'
+import type { Plugin } from '../engine/types'
+import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { grid as gridBehavior } from '../pattern/roles/grid'
@@ -26,7 +26,7 @@ interface GridProps extends Omit<AriaComponentProps, 'renderItem'> {
   tabCycle?: boolean
   /** Render column headers inside the grid-table container (subgrid-aligned) */
   header?: boolean
-  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
 }
 
 const defaultRenderCell = (props: React.HTMLAttributes<HTMLElement>, value: unknown, _column: ColumnDef, _state: NodeState): React.ReactElement => (

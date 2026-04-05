@@ -2,9 +2,8 @@ import { useMemo } from 'react'
 import { TEMPLATE_VARIANTS } from './cmsTemplates'
 import type { TemplateType } from './cmsTemplates'
 import type { NormalizedData } from '@os/store/types'
-import type { PatternContext } from '@os/pattern/types'
-import type { Command } from '@os/engine/types'
 import type { NodeState } from '@os/pattern/types'
+import { key } from '@os/axis/types'
 import { ListBox } from '@os/ui/ListBox'
 import { ax } from '@styles/ax'
 
@@ -36,8 +35,8 @@ export default function CmsTemplatePicker({ open, onClose, onSelect }: CmsTempla
 }
 
 function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps, 'open'>) {
-  const keyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
-    Escape: () => { onClose() },
+  const keyMap = useMemo(() => ({
+    Escape: key(['dismiss'], () => { onClose() }),
   }), [onClose])
 
   return (

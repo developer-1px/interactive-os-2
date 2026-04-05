@@ -1,7 +1,7 @@
 import type { NormalizedData } from '../store/types'
 import type { Plugin } from '../plugins/types'
 import type { Command } from '../engine/types'
-import type { NodeState, PatternContext } from '../pattern/types'
+import type { NodeState } from '../pattern/types'
 import { navlist } from '../misc/navlist'
 import { useAria } from '../primitives/useAria'
 import type { UseAriaReturn } from '../primitives/useAria'
@@ -9,7 +9,7 @@ import type { UseAriaReturn } from '../primitives/useAria'
 export interface UseNavListOptions {
   data: NormalizedData
   plugins?: Plugin[]
-  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   onChange?: (data: NormalizedData) => void
   onActivate?: (nodeId: string) => void
   initialFocus?: string
