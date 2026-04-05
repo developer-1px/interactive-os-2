@@ -2,14 +2,12 @@ import React from 'react'
 
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
-import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { listbox } from '../pattern/roles/listbox'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
 import { search } from '../plugins/search'
-import { ax } from '@styles/ax'
-import '@styles/ax.css'
+import { ListItem } from './items'
 
 const listboxPattern = listbox()
 
@@ -20,14 +18,8 @@ interface ListBoxProps extends AriaComponentProps {
   autoFocus?: boolean
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = getNodeLabel(item)
-  return (
-    <div {...props} className={ax({ layout: 'bar', gap: 'sm' })} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
-      <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
-    </div>
-  )
-}
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement =>
+  ListItem(props, item, state)
 
 export function ListBox({
   data,

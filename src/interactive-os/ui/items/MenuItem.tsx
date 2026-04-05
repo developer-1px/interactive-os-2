@@ -1,0 +1,37 @@
+// ② 2026-04-05-ui-items-prd.md
+import type React from 'react'
+import type { NodeState } from '../../pattern/types'
+import { ExpandIndicator } from '../indicators'
+import { getNodeLabel } from '../types'
+import { ax } from '@styles/ax'
+
+interface MenuItemOptions {
+  icon?: React.ReactNode
+  rightContent?: React.ReactNode
+  className?: string
+}
+
+export function MenuItem(
+  props: React.HTMLAttributes<HTMLElement>,
+  node: Record<string, unknown>,
+  state: NodeState,
+  options?: MenuItemOptions,
+): React.ReactElement {
+  const label = getNodeLabel(node)
+  const textColor = state.focused ? 'bright' as const : 'primary' as const
+  return (
+    <div
+      {...props}
+      className={ax({ layout: 'spread' })}
+      data-focused={state.focused || undefined}
+    >
+      <span className={ax({ textStyle: 'body', text: textColor })}>{label}</span>
+      {state.expanded !== undefined && (
+        <span className={ax({ layout: 'bar', text: 'muted' })}>
+          <ExpandIndicator expanded={state.expanded} />
+        </span>
+      )}
+      {options?.rightContent && <span className="shrink-0">{options.rightContent}</span>}
+    </div>
+  )
+}

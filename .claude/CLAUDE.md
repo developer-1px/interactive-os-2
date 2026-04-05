@@ -73,6 +73,10 @@ store → engine → axis → pattern → primitives → ui → pages
   - UI → `src/interactive-os/ui/` 기존 완성품 사용. 없으면 ui/에 먼저 만들고 pages에서 import. pages/에서 useAria/useAriaZone 직접 사용 금지.
   - 키바인딩 → KeyMap 선언. addEventListener('keydown'/'keyup') 금지.
   - 상태/CRUD → store command + plugin. 직접 state 조작 금지.
+  - 아이콘/인디케이터 → `src/interactive-os/ui/indicators/` 사용. 이모지(⚠✓✗🟢🔴)·특수기호(▾▸●○★)로 대용 금지.
+  - 아이템 렌더링 → `src/interactive-os/ui/items/` 사용. pages에서 renderItem prop 직접 전달 금지. 필요하면 items/에 새 Item 추가.
+  - 패널 컨테이너 → `src/interactive-os/ui/panels/` 사용. pages에서 surface+header+scroll 패턴 직접 조립 금지.
+  - 셀 렌더링 → `src/interactive-os/ui/cells/` 사용. Grid/Table 셀 pages에서 직접 만들기 금지.
 
 ## 테스트 실패 시 원복 정책
 

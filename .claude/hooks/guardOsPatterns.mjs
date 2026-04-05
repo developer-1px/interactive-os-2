@@ -113,6 +113,27 @@ if (!isExempt && isTsx && /useState\s*[<(].*\b(?:selected|expanded|focused|activ
   )
 }
 
+// 규칙 10: 이모지/특수기호를 아이콘/인디케이터 대용으로 사용 금지
+if (isTsx && /['"`](?:▾|▸|▶|▼|►|◀|◁|△|▲|▽|▿|⚠|✓|✗|✕|✖|✔|✘|●|○|◉|◎|★|☆|⬜|🟢|🔴|🟡|⚡|🔥|❌|✅|⏳|📌|🚀|💡|🎯|📝|🔧|⭐|💬|📦|🗑|🔗|📋)['"`]/.test(content)) {
+  violations.push(
+    '이모지/특수기호 아이콘 대용 금지 — src/interactive-os/ui/indicators/ 컴포넌트를 사용하세요 (ExpandIndicator, StatusIndicator 등)'
+  )
+}
+
+// 규칙 11: src/pages/에서 renderItem prop 직접 전달 금지
+if (isPages && isTsx && /\brenderItem\s*=\s*[\{(]/.test(content)) {
+  violations.push(
+    'renderItem 직접 전달 금지 — UI 컴포넌트의 기본 렌더링(ui/items/)을 사용하세요. 필요하면 ui/items/에 새 Item을 추가하세요'
+  )
+}
+
+// 규칙 12: src/pages/에서 패널 날코딩 금지 (surface+layout:'fill' 조합 = Panel 사용)
+if (isPages && isTsx && /ax\(\{[^}]*layout:\s*['"]fill['"][^}]*surface:|ax\(\{[^}]*surface:[^}]*layout:\s*['"]fill['"]/.test(content)) {
+  violations.push(
+    'surface+layout:fill 패널 날코딩 금지 — src/interactive-os/ui/panels/Panel을 사용하세요'
+  )
+}
+
 // 규칙 4: style={{ }} 인라인 리터럴 — CSS module.css, ax() 사용
 // style={variable} (prop 전달)은 허용, style={{ ... }} (인라인 리터럴)만 차단
 // 예외: backgroundImage, var() 만 사용하는 경우 허용

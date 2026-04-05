@@ -6,9 +6,7 @@ import { key, type KeyHandler } from '../axis/types'
 import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
-import { getNodeLabel } from './types'
-import { ax } from '@styles/ax'
-import '@styles/ax.css'
+import { ToolbarItem } from './items'
 
 const toolbarPattern = toolbar()
 
@@ -25,18 +23,9 @@ interface ToolbarProps extends AriaComponentProps {
 }
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = getNodeLabel(item)
   const iconKey = (item.data as Record<string, unknown>)?.icon as string | undefined
   const Icon = iconKey ? iconMap[iconKey] : undefined
-  return (
-    <span
-      {...props}
-      className={ax({ surface: 'ghost', controlSize: 'sm', layout: Icon ? 'center' : undefined, padding: Icon ? undefined : 'sm', content: Icon ? undefined : 'text', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined })}
-      aria-label={Icon ? label : undefined}
-    >
-      {Icon ? <Icon size={18} /> : label}
-    </span>
-  )
+  return ToolbarItem(props, item, state, Icon ? { icon: <Icon size={18} /> } : undefined)
 }
 
 // Override toolbar's horizontal keyMap to use vertical arrows instead

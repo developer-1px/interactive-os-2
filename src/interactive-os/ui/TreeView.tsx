@@ -1,5 +1,4 @@
 import React from 'react'
-import { ExpandIndicator } from './indicators'
 
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
@@ -10,8 +9,7 @@ import { tree } from '../pattern/roles/tree'
 import { activateHandler } from '../axis/activate'
 import { selectionFollowsFocusMiddleware } from '../axis/select'
 import { typeahead } from '../plugins/typeahead'
-import { ax } from '@styles/ax'
-import '@styles/ax.css'
+import { TreeItem } from './items'
 
 const defaultTypeahead = typeahead({ getLabel: (e) => getNodeLabel(e as Record<string, unknown>) })
 const emptyPlugins: Plugin[] = []
@@ -23,17 +21,8 @@ interface TreeViewProps extends AriaComponentProps {
   activateOnClick?: boolean
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = getNodeLabel(node)
-  const hasChildren = state.expanded !== undefined
-  const depth = (state.level ?? 1) - 1
-  return (
-    <div {...props} className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}>
-      <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
-      <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
-    </div>
-  )
-}
+const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement =>
+  TreeItem(props, node, state)
 
 export function TreeView({
   data,
