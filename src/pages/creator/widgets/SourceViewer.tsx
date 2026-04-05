@@ -18,7 +18,7 @@ const tsxSources = Object.fromEntries(
 const cssSources = Object.fromEntries(
   Object.entries(
     import.meta.glob<string>(
-      '../../../interactive-os/ui/*.module.css',
+      '../../../interactive-os/ui/*.css',
       { query: '?raw', import: 'default', eager: true },
     ),
   ).map(([path, src]) => [path.split('/').pop()!, src]),
@@ -41,8 +41,8 @@ export function SourceViewer({ entry, activeTab }: SourceViewerProps) {
     return <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>No CSS module</div>
   }
 
-  const source = cssSources[`${entry.name}.module.css`] ?? ''
+  const source = cssSources[`${entry.name}.css`] ?? ''
   return source
-    ? <CodeBlock code={source} filename={`${entry.name}.module.css`} variant="flush" />
+    ? <CodeBlock code={source} filename={`${entry.name}.css`} variant="flush" />
     : <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>CSS source not found</div>
 }

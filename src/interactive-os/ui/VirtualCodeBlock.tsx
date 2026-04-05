@@ -3,7 +3,7 @@ import { codeToTokens, type BundledLanguage } from 'shiki'
 import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme, escapeHtml } from './shikiUtils'
 import { useVirtualScrollState } from '../plugins/virtualScroll'
 import { ax } from '@styles/ax'
-import codeStyles from './CodeBlock.module.css'
+import './CodeBlock.css'
 export type { HighlightTone } from './CodeBlock'
 
 interface VirtualCodeBlockProps {
@@ -107,10 +107,10 @@ export function VirtualCodeBlock({
   }, [visibleRange.start, visibleRange.end, cachedLines, lines])
 
   const cls = variant === 'flush'
-    ? `overflow-hidden ${codeStyles.codeBlock} ${codeStyles.codeBlockFlush}`
+    ? `overflow-hidden code-block code-block--flush`
     : variant === 'compact'
-      ? `overflow-hidden ${codeStyles.codeBlock} ${codeStyles.codeBlockCompact}`
-      : `overflow-hidden ${codeStyles.codeBlock}`
+      ? `overflow-hidden code-block code-block--compact`
+      : `overflow-hidden code-block`
 
   const gutterCls = `text-right select-none ${ax({ text: 'muted', textStyle: 'code' })} `
 

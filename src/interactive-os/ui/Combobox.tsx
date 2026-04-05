@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './Combobox.module.css'
+import './Combobox.css'
 import { CloseIndicator } from './indicators'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
@@ -294,7 +294,7 @@ export function Combobox({
             ))}
           </div>
           <input
-            className={`${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })} ${styles.comboInput}`}
+            className={`${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })}`}
             role="combobox"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -308,7 +308,7 @@ export function Combobox({
       )}
       {mode !== 'multiple' && (
       <input
-        className={`${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })} ${styles.comboInput}`}
+        className={`${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })}`}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -321,7 +321,7 @@ export function Combobox({
       />
       )}
       {isOpen && (
-        <div className={`overflow-hidden ${ax({ surface: 'overlay', shape: 'xl' })} ${styles.comboDropdown}`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div className={`overflow-hidden ${ax({ surface: 'overlay', shape: 'xl' })} comboDropdown`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? (
             rootChildren.map(groupId => {
               const group = originalStore.entities[groupId]

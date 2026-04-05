@@ -17,7 +17,7 @@ import { dnd, dndCommands } from '@os/plugins/dnd'
 import { focusRecovery } from '@os/plugins/focusRecovery'
 import { storeToInspectorTree } from '@os/store/storeToInspectorTree'
 import { treeData } from '../../pages/shared/sharedTreeData'
-import styles from './PageStoreInspector.module.css'
+import './PageStoreInspector.css'
 
 // --- Stateless module-level constants ---
 
@@ -131,11 +131,11 @@ export default function StoreInspectorDemo() {
       </div>
 
       <div className="card overflow-hidden">
-        <div className={`${styles.splitContainer} grid`}>
+        <div className={`store-inspector-split grid`}>
 
           {/* Editor panel */}
           <div className="min-h-0 overflow-auto">
-            <div className={styles.panelLabel}>Editor</div>
+            <div className="store-inspector-panel-label">Editor</div>
             <Aria
               pattern={tree}
               data={data}
@@ -151,7 +151,7 @@ export default function StoreInspectorDemo() {
 
           {/* Inspector panel */}
           <div className="min-h-0 overflow-auto">
-            <div className={styles.panelLabel}>Inspector — NormalizedData</div>
+            <div className="store-inspector-panel-label">Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}
               plugins={inspectorPlugins}
@@ -162,23 +162,23 @@ export default function StoreInspectorDemo() {
 
           {/* Log panel */}
           <div
-            className={`${styles.logPanel} overflow-y-auto`}
+            className={`store-inspector-log overflow-y-auto`}
             ref={logRef}
             aria-label="Operation Log"
           >
-            <div className={styles.panelLabel}>Operation Log</div>
+            <div className="store-inspector-panel-label">Operation Log</div>
             {log.length === 0 ? (
               <div style={{ opacity: 0.4 }}>Interact with the editor to see operations here.</div>
             ) : (
               log.map((entry) => (
                 <div
                   key={entry.seq}
-                  className={`${styles.logEntry} whitespace-nowrap`}
+                  className={`store-inspector-log-entry whitespace-nowrap`}
                   {...(entry.parent != null ? { 'data-batch-child': '' } : {})}
                 >
                   <span style={{ opacity: 0.5 }}>#{entry.seq}</span>{' '}
                   <span>{entry.type}</span>{' '}
-                  <span className={styles.logDiff}>| {formatDiffSummary(entry)}</span>
+                  <span className="store-inspector-log-diff">| {formatDiffSummary(entry)}</span>
                 </div>
               ))
             )}

@@ -17,7 +17,7 @@ import type { TabData } from '@os/plugins/workspaceStore'
 import { useKeyMap } from '@os/primitives/useKeyMap'
 import { ax } from '@styles/ax'
 import { PanelHeader } from '@os/ui/PanelHeader'
-import styles from './PageComponentCreator.module.css'
+import './PageComponentCreator.css'
 
 // --- Fixed workspace layout ---
 
@@ -110,7 +110,7 @@ export default function PageComponentCreator() {
           {selectedEntry ? (
             <ComponentCanvas entry={selectedEntry} />
           ) : (
-            <div className={`flex-row items-center justify-center flex-1 ${ax({ textStyle: 'body', text: 'muted' })} ${styles.emptyState}`}>
+            <div className={`flex-row items-center justify-center flex-1 ${ax({ textStyle: 'body', text: 'muted' })} creator-empty-state`}>
               컴포넌트를 선택하세요
             </div>
           )}
@@ -142,7 +142,7 @@ export default function PageComponentCreator() {
       </div>
 
       {/* Nav bar: Component tabs */}
-      <div className={`${ax({ surface: 'sunken', padding: 'xs' })} shrink-0 overflow-x-auto ${styles.navBar}`}>
+      <div className={`${ax({ surface: 'sunken', padding: 'xs' })} shrink-0 overflow-x-auto creator-nav-bar`}>
         <TabList
           data={componentNavData}
           plugins={[]}
