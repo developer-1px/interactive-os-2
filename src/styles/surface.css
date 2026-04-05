@@ -1,15 +1,71 @@
 /* ═══════════════════════════════════════════
-   L3 Surface — Interaction mode policy
+   L3 Surface — Interaction mode + Depth zone
    ═══════════════════════════════════════════
    Changes when: interaction mode policy changes.
-   Single responsibility: data-surface attribute → border + shadow bundle + interaction mode declaration.
 
-   4 modes: action (Button, Toggle), input (TextInput, Select), display (Card, Badge), overlay (Dialog).
-   bg is NOT provided here — variant --_bg handles depth.
-   State transitions are in interactive.css [data-surface] section.
+   Two orthogonal concerns:
+   1. data-surface (role) — border + shadow + cursor policy
+   2. data-depth   (position) — interactive ladder (hover/selection tokens)
+
+   Role: what IS this element? (action/input/display/overlay)
+   Depth: where IS this element? (sunken/base/raised/overlay)
+
+   Children inherit depth via CSS cascade — a listbox inside
+   data-depth="overlay" automatically gets overlay hover/selection.
+   interactive.css needs zero changes.
+
+   Token values live in tokens.css (--depth-{zone}-{state}).
+   Theme switch = override tokens, these rules stay unchanged.
 
    // ② 2026-03-26-component-styling-rules-prd.md
 */
+
+
+/* ═══ Depth zones — interactive ladder cascade ═══
+   :root defaults = base (set in tokens.css).
+   Each zone overrides --bg-hover, --bg-active, --selection-*
+   so all children auto-adapt. */
+
+[data-depth="sunken"] {
+  background: var(--surface-sunken);
+  --bg-hover:          var(--depth-sunken-hover);
+  --bg-active:         var(--depth-sunken-active);
+  --selection-context: var(--depth-sunken-sel-context);
+  --selection:         var(--depth-sunken-sel);
+  --selection-cursor:  var(--depth-sunken-sel-cursor);
+}
+
+/* base: explicit opt-in (inherits :root by default, but useful for
+   resetting depth inside a sunken/raised parent) */
+[data-depth="base"] {
+  background: var(--surface-base);
+  --bg-hover:          var(--depth-base-hover);
+  --bg-active:         var(--depth-base-active);
+  --selection-context: var(--depth-base-sel-context);
+  --selection:         var(--depth-base-sel);
+  --selection-cursor:  var(--depth-base-sel-cursor);
+}
+
+[data-depth="raised"] {
+  background: var(--surface-raised);
+  --bg-hover:          var(--depth-raised-hover);
+  --bg-active:         var(--depth-raised-active);
+  --selection-context: var(--depth-raised-sel-context);
+  --selection:         var(--depth-raised-sel);
+  --selection-cursor:  var(--depth-raised-sel-cursor);
+}
+
+[data-depth="overlay"] {
+  background: var(--surface-overlay);
+  --bg-hover:          var(--depth-overlay-hover);
+  --bg-active:         var(--depth-overlay-active);
+  --selection-context: var(--depth-overlay-sel-context);
+  --selection:         var(--depth-overlay-sel);
+  --selection-cursor:  var(--depth-overlay-sel-cursor);
+}
+
+
+/* ��══ Surface roles — border + shadow + cursor policy ═══ */
 
 /* action: no border, no shadow — face itself is the action target */
 [data-surface="action"] {

@@ -77,15 +77,44 @@
   /* ── Indicator ── */
   --indicator-width: 2px;
 
-  /* ② 2026-04-05-selection-neutral-prd.md */
-  /* ── Selection — stone ladder (neutral elevation) ── */
-  --selection-context: var(--stone-850);
-  --selection:         var(--stone-750);
-  --selection-cursor:  var(--stone-700);
+  /* ── Depth ladder — interactive token values per zone ──
+     [data-depth] zones in surface.css consume these.
+     Theme switch = override these tokens, zone rules stay unchanged.
+     Pattern: --depth-{zone}-{state}
+     Each zone shifts the ladder up by 1 palette step. */
 
-  /* ── Interactive ── */
-  --bg-hover:  var(--stone-800);
-  --bg-active: var(--stone-700);
+  --depth-sunken-hover:       var(--stone-850);
+  --depth-sunken-active:      var(--stone-800);
+  --depth-sunken-sel-context: var(--stone-850);
+  --depth-sunken-sel:         var(--stone-800);
+  --depth-sunken-sel-cursor:  var(--stone-750);
+
+  --depth-base-hover:         var(--stone-800);
+  --depth-base-active:        var(--stone-700);
+  --depth-base-sel-context:   var(--stone-850);
+  --depth-base-sel:           var(--stone-750);
+  --depth-base-sel-cursor:    var(--stone-700);
+
+  --depth-raised-hover:       var(--stone-750);
+  --depth-raised-active:      var(--stone-700);
+  --depth-raised-sel-context: var(--stone-800);
+  --depth-raised-sel:         var(--stone-700);
+  --depth-raised-sel-cursor:  var(--stone-650);
+
+  --depth-overlay-hover:       var(--stone-700);
+  --depth-overlay-active:      var(--stone-650);
+  --depth-overlay-sel-context: var(--stone-750);
+  --depth-overlay-sel:         var(--stone-650);
+  --depth-overlay-sel-cursor:  var(--stone-600);
+
+  /* ── Interactive (base depth = :root default) ── */
+  --bg-hover:          var(--depth-base-hover);
+  --bg-active:         var(--depth-base-active);
+
+  /* ── Selection — stone ladder (neutral elevation) ── */
+  --selection-context: var(--depth-base-sel-context);
+  --selection:         var(--depth-base-sel);
+  --selection-cursor:  var(--depth-base-sel-cursor);
 
   /* ══ Typography ══ */
 
@@ -256,15 +285,42 @@
   --focus:      var(--blue-500);
   --focus-idle: var(--bg-hover);
 
-  /* ② 2026-04-05-selection-neutral-prd.md */
-  /* ── Selection — stone ladder (neutral elevation) ── */
-  --selection-context: var(--stone-100);
-  --selection:         var(--stone-200);
-  --selection-cursor:  var(--stone-300);
+  /* ── Depth ladder — light ──
+     light에서 raised/overlay는 모두 white → 동일 래더.
+     sunken만 배경이 다르므로 별도 래더. */
 
-  /* ── Interactive ── */
-  --bg-hover:  var(--stone-100);
-  --bg-active: var(--stone-200);
+  --depth-sunken-hover:       var(--stone-200);
+  --depth-sunken-active:      var(--stone-300);
+  --depth-sunken-sel-context: var(--stone-200);
+  --depth-sunken-sel:         var(--stone-300);
+  --depth-sunken-sel-cursor:  var(--stone-400);
+
+  --depth-base-hover:         var(--stone-100);
+  --depth-base-active:        var(--stone-200);
+  --depth-base-sel-context:   var(--stone-100);
+  --depth-base-sel:           var(--stone-200);
+  --depth-base-sel-cursor:    var(--stone-300);
+
+  --depth-raised-hover:       var(--stone-100);
+  --depth-raised-active:      var(--stone-200);
+  --depth-raised-sel-context: var(--stone-50);
+  --depth-raised-sel:         var(--stone-200);
+  --depth-raised-sel-cursor:  var(--stone-300);
+
+  --depth-overlay-hover:       var(--stone-100);
+  --depth-overlay-active:      var(--stone-200);
+  --depth-overlay-sel-context: var(--stone-50);
+  --depth-overlay-sel:         var(--stone-200);
+  --depth-overlay-sel-cursor:  var(--stone-300);
+
+  /* ── Interactive (base depth default) ── */
+  --bg-hover:          var(--depth-base-hover);
+  --bg-active:         var(--depth-base-active);
+
+  /* ── Selection ── */
+  --selection-context: var(--depth-base-sel-context);
+  --selection:         var(--depth-base-sel);
+  --selection-cursor:  var(--depth-base-sel-cursor);
 
   /* ── File type colors (same hues, adjusted L for light bg contrast) ── */
   --file-folder: oklch(55%  0.040  250);
