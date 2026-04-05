@@ -38,7 +38,7 @@ import { ax } from '@styles/ax'
 import { createBatchCommand, type Command, type Plugin } from '@os/engine/types'
 import type { NodeState } from '@os/pattern/types'
 import { getVisibleNodes } from '@os/engine/getVisibleNodes'
-import styles from './PageWriter.module.css'
+import './PageWriter.css'
 
 // ── Writer Commands ──────────────────────────────────────
 // ② 2026-04-05-writer-tree-crud-prd.md
@@ -292,7 +292,7 @@ const roleText: Record<SentenceRole, 'accent' | 'warning' | 'success' | 'danger'
 
 function RoleBadge({ role }: { role: SentenceRole }) {
   return (
-    <span className={`${ax({ textStyle: 'caption', text: roleText[role] })} ${styles.roleBadge}`}>
+    <span className={`${ax({ textStyle: 'caption', text: roleText[role] })} ml-auto`}>
       {roleLabel[role]}
     </span>
   )
@@ -326,7 +326,7 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
   }
 
   if (type === 'heading' && level) {
-    const marginCls = level === 1 ? styles.headingL1 : styles.heading
+    const marginCls = level === 1 ? 'writer-heading-l1' : 'writer-heading'
     return (
       <div {...props} className={`${ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
@@ -337,7 +337,7 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
 
   if (type === 'paragraph') {
     return (
-      <div {...props} className={`${ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} ${styles.paragraph}`} style={depthStyle}>
+      <div {...props} className={`${ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} ${'writer-paragraph'}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>¶{state.index + 1}</span>
       </div>
@@ -364,7 +364,7 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
   }
 
   if (type === 'hr') {
-    return <div {...props} className={`${ax({ surface, padding: 'xs' })} ${styles.hr}`} style={depthStyle} />
+    return <div {...props} className={`${ax({ surface, padding: 'xs' })} ${'writer-hr'}`} style={depthStyle} />
   }
 
   // sentence

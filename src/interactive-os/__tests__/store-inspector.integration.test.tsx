@@ -226,7 +226,7 @@ describe('Store Inspector — PRD V1–V10', () => {
     }
 
     // Log is capped at 50 entries
-    const logEntries = log.querySelectorAll('[class*="logEntry"]')
+    const logEntries = log.querySelectorAll('.store-inspector-log-entry')
     expect(logEntries.length).toBeLessThanOrEqual(50)
     // We definitely generated operations, so log should have entries
     expect(logEntries.length).toBeGreaterThan(0)

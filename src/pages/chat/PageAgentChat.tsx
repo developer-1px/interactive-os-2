@@ -32,7 +32,7 @@ import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { PanelHeader } from '@os/ui/PanelHeader'
-import styles from './PageAgentChat.module.css'
+import './PageAgentChat.css'
 
 // --- File extraction ---
 
@@ -57,7 +57,7 @@ function SessionFileList({ session }: { session: ChatSession }) {
   const files = useMemo(() => extractModifiedFiles(session.messages), [session.messages])
   if (files.length === 0) return null
   return (
-    <div className={styles.chatFileList}>
+    <div className="chat-file-list">
       {files.map(f => (
         <div key={f} className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
           <FileText size={10} />
@@ -192,8 +192,8 @@ export default function PageAgentChat() {
   }, [])
 
   return (
-    <div className={`overflow-hidden ${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
-      <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none', border: 'end' }) + ' ' + styles.chatSidebar}>
+    <div className={`overflow-hidden chat-page ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
+      <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none', border: 'end' }) + ' ' + 'chat-sidebar'}>
         <PanelHeader axes={{ layout: 'spread' }}>
           <span>Sessions</span>
           <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', icon: 'lg' })} onClick={createSession} aria-label="New session">
@@ -204,14 +204,14 @@ export default function PageAgentChat() {
           {sessions.map(s => (
             <div
               key={s.id}
-              className={`${ax({ surface: 'ghost', layout: 'stack', gap: 'xs', padding: 'xs', text: 'secondary' })} ${styles.chatSessionItem} ${s.id === activeSessionId ? styles.chatSessionActive : ''}`}
+              className={`${ax({ surface: 'ghost', layout: 'stack', gap: 'xs', padding: 'xs', text: 'secondary' })} chat-session-item ${s.id === activeSessionId ? 'chat-session-active' : ''}`}
               onClick={() => handleSidebarClick(s.id)}
             >
               <div className={ax({ layout: 'bar', gap: 'sm' })}>
                 <Circle size={8} fill="currentColor" className={s.state === 'running' ? ax({ text: 'success' }) : ax({ text: 'muted' })} />
                 <span className={ax({ flex: '1', clamp: '1' })}>{s.id.slice(0, 8)}</span>
                 <button
-                  className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + styles.chatCloseBtn}
+                  className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + 'chat-close-btn'}
                   onClick={(e) => { e.stopPropagation(); closeSession(s.id) }}
                   aria-label={`Close session ${s.id.slice(0, 8)}`}
                 >
@@ -236,10 +236,10 @@ export default function PageAgentChat() {
           aria-label="Chat workspace"
         />
       ) : (
-        <div className={ax({ layout: 'fill', width: 'full' }) + ' ' + styles.chatMain}>
+        <div className={ax({ layout: 'fill', width: 'full' }) + ' ' + 'chat-main'}>
           <div className={ax({ layout: 'center', flex: '1', gap: 'md', text: 'muted' })}>
             <p>Start a new Claude Code session</p>
-            <button className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'primary', border: 'subtle' }) + ' ' + styles.chatStartBtn} onClick={createSession}>
+            <button className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'primary', border: 'subtle' }) + ' ' + 'chat-start-btn'} onClick={createSession}>
               <Plus size={16} /> New Session
             </button>
           </div>
