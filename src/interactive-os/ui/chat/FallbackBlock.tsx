@@ -16,10 +16,10 @@ export function FallbackBlock({ block }: { block: ChatBlock }) {
   const { expanded, toggle, toggleProps } = useDisclosure({ initialOpen: expandByDefault })
 
   return (
-    <div className={`${ax({ text: 'muted' })} ${styles.fallback}`}>
+    <div className={`${ax({ text: 'muted', textStyle: 'caption', shape: 'md' })} ${styles.fallback}`}>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar' })} ${styles.fallbackSummary}`}
+        className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.fallbackSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
@@ -28,7 +28,7 @@ export function FallbackBlock({ block }: { block: ChatBlock }) {
         <ExpandIndicator variant="expand" expanded={expanded} />
         <span>{block.type}</span>
       </div>
-      {expanded && raw && <pre className={styles.fallbackPre}>{raw}</pre>}
+      {expanded && raw && <pre className={`${ax({ textStyle: 'caption' })} ${styles.fallbackPre}`}>{raw}</pre>}
     </div>
   )
 }

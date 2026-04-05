@@ -2,13 +2,10 @@
 
 .fallback {
   overflow: hidden;
-  font-size: var(--type-caption-size);
   border: var(--border-width) dashed var(--border-subtle);
-  border-radius: var(--shape-md-radius);
 }
 
 .fallbackSummary {
-  gap: var(--space-xs);
   padding: var(--space-xs) var(--space-sm);
   cursor: pointer;
   user-select: none;
@@ -25,7 +22,6 @@
   padding: var(--space-xs) var(--space-sm);
   border-top: var(--border-width) dashed var(--border-subtle);
   font-family: var(--mono);
-  font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
   white-space: pre-wrap;
   overflow-wrap: break-word;
