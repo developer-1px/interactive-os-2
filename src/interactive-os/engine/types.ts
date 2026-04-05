@@ -1,6 +1,7 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 import type React from 'react'
 import type { NormalizedData } from '../store/types'
+import type { InspectPatternInfo } from './computeNodeAriaProps'
 
 // ② 2026-03-29-engine-handler-registry-prd.md
 
@@ -31,6 +32,10 @@ export interface InspectResult {
   bindings?: BindingEntry[]
   /** Declarative click bindings from pattern clickMap */
   clickMap?: Record<string, readonly string[]>
+  /** Per-node lightweight ARIA labels (role + key states) for tree display */
+  nodeProps?: Record<string, Record<string, string>>
+  /** Compute full ARIA props for a single node on-demand (inspector x-ray) */
+  computeNodeProps?: (nodeId: string) => Record<string, string>
 }
 
 export interface CommandEngine {
@@ -44,6 +49,8 @@ export interface CommandEngine {
   setInspectKeyMap(desc: Record<string, KeyMapEntry>): void
   /** Set pattern role info for inspect() — called by view layer */
   setInspectRole(role: string, childRole?: string): void
+  /** Set pattern info for inspect() node-level ARIA x-ray — called by view layer */
+  setInspectPattern(info: InspectPatternInfo): void
 }
 
 export interface Command {

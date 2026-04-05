@@ -121,7 +121,7 @@
 | Agent Chat (Agent SDK · WebSocket · session lifecycle) | Prototype | Phase A: 텍스트 채팅. Phase B/C: tool UI, permission |
 | Devtools (REC · Inspector · Test Runner) | Integrated | 크로스커팅 도메인 독립, /devtools/* 라우트, ARIA tree 스냅샷 REC |
 | Inspector · Command · Diff | Validated | Source preview on click (computePlacement 범용 유틸) |
-| App Inspector (engine.inspect) | Validated | 새 창 전용, Zone 계층 트리, view-level keyMap 노출 (pattern/plugin/override 출처별), bindingRegistry 통합 |
+| App Inspector (engine.inspect) | Validated | 새 창 전용, Zone 계층 트리, view-level keyMap 노출 (pattern/plugin/override 출처별), bindingRegistry 통합, ARIA x-ray (노드별 role+aria-* 인라인 표시, 3탭 UI) |
 | Showcase (Plugin · Axis · Area) | Validated | Pattern/Collection → /ui 흡수 완료 |
 | Writer (MD 구조 편집 · 산문 프리뷰 · 파일 I/O) | Validated | 9개 트리 CRUD 조작(indent/outdent/split/merge/insert/wrap/unwrap/타입전환/navigate skip). chat 브릿지 미실전검증 |
 

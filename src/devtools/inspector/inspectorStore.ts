@@ -4,6 +4,21 @@ import type { AriaActions } from '@os/primitives/ariaRegistry'
 import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 
+/** Key ARIA states to show inline in tree labels */
+const INLINE_ATTRS = ['aria-selected', 'aria-expanded', 'aria-checked', 'aria-pressed', 'aria-disabled', 'aria-current'] as const
+
+function formatAriaStateInline(np: Record<string, string> | undefined): string {
+  if (!np) return ''
+  const parts: string[] = []
+  for (const attr of INLINE_ATTRS) {
+    const val = np[attr]
+    if (val !== undefined && val !== 'false') {
+      parts.push(val === 'true' ? attr : `${attr}=${val}`)
+    }
+  }
+  return parts.length > 0 ? ` ${parts.join(' ')}` : ''
+}
+
 /** Metadata stored per instance root for right panel rendering */
 export interface InstanceMeta {
   inspectResult: InspectResult
@@ -34,7 +49,7 @@ export function registryToUnifiedTree(
     const pluginLabel = plugins.length > 0 ? ` ${plugins.join('·')}` : ''
     entities[instanceId] = {
       id: instanceId,
-      data: { label: `${registryKey} [${role}]${pluginLabel}` },
+      data: { label: `${role} "${registryKey}"${pluginLabel}`, type: 'instance' },
     }
     metas.set(instanceId, { inspectResult, registryKey })
   }
@@ -83,6 +98,7 @@ export function registryToUnifiedTree(
 
     if (internalRootIds.length > 0) {
       const instanceChildren: string[] = []
+      const nodePropsMap = inst.inspectResult.nodeProps ?? {}
 
       function walkNodes(nodeIds: string[], parentKey: string) {
         const mapped: string[] = []
@@ -96,9 +112,13 @@ export function registryToUnifiedTree(
             ?? (entity?.data as Record<string, unknown>)?.name as string | undefined
             ?? nodeId
 
+          const np = nodePropsMap[nodeId]
+          const nodeRole = np?.role || childRole
+          const stateAttrs = formatAriaStateInline(np)
+
           entities[prefixedId] = {
             id: prefixedId,
-            data: { label: `${label} [${childRole}]` },
+            data: { label: `${nodeRole} "${label}"${stateAttrs}`, type: 'node', nodeProps: np },
           }
           mapped.push(prefixedId)
 

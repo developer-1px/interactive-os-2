@@ -462,5 +462,21 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     engine.setInspectKeyMap(desc)
   }, [pattern.keyMap, pluginKeyMaps, keyMapOverrides, engine])
 
+  // ② 2026-04-05-inspector-aria-xray-prd.md — feed pattern info for node-level ARIA x-ray
+  useMemo(() => {
+    engine.setInspectPattern({
+      childRole: pattern.childRole,
+      ariaGens: pattern.ariaGens,
+      stateGens: pattern.stateGens,
+      ariaAttributes: pattern.ariaAttributes,
+      expandable: pattern.expandable,
+      panelVisibility: pattern.panelVisibility,
+      popupType: pattern.popupType,
+      selectionMode: pattern.selectionMode,
+      colCount: pattern.colCount,
+      panelRole: pattern.panelRole,
+    })
+  }, [engine, pattern.childRole, pattern.ariaGens, pattern.stateGens, pattern.ariaAttributes, pattern.expandable, pattern.panelVisibility, pattern.popupType, pattern.selectionMode, pattern.colCount, pattern.panelRole])
+
   return { getNodeProps, getNodeState, containerProps, patternCtxOptions, observedEngine }
 }

@@ -218,6 +218,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
       inspect: () => engine.inspect(),
       setInspectKeyMap: (desc) => { engine.setInspectKeyMap(desc) },
       setInspectRole: (role, childRole) => { engine.setInspectRole(role, childRole) },
+      setInspectPattern: (info) => { engine.setInspectPattern(info) },
     }
 
     function runFocusRecovery(storeBefore: NormalizedData, storeAfter: NormalizedData) {

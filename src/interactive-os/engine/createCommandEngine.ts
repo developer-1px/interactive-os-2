@@ -3,6 +3,8 @@ import type { Command, Middleware, BatchCommand, CommandHandler, CommandEngine, 
 import { isBatchCommand } from './types'
 export type { CommandEngine } from './types'
 import type { NormalizedData } from '../store/types'
+import type { InspectPatternInfo } from './computeNodeAriaProps'
+import { computeAllNodeLabels, computeNodeAriaProps } from './computeNodeAriaProps'
 import { computeStoreDiff } from '../store/computeStoreDiff'
 import type { LogEntry, Logger } from './logger'
 import { defaultLogger } from './logger'
@@ -117,6 +119,7 @@ export function createCommandEngine(
   let inspectKeyMap: Record<string, import('./types').KeyMapEntry> = options?.keyMap ?? {}
   let inspectRole: string | undefined
   let inspectChildRole: string | undefined
+  let inspectPatternInfo: InspectPatternInfo | undefined
 
   const inspect = (): import('./types').InspectResult => {
     const pluginList = options?.plugins ?? []
@@ -138,6 +141,10 @@ export function createCommandEngine(
       extras,
       role: inspectRole,
       childRole: inspectChildRole,
+      ...(inspectPatternInfo && {
+        nodeProps: computeAllNodeLabels(store, inspectPatternInfo),
+        computeNodeProps: (nodeId: string) => computeNodeAriaProps(nodeId, store, inspectPatternInfo!),
+      }),
     }
   }
 
@@ -150,5 +157,6 @@ export function createCommandEngine(
     inspect,
     setInspectKeyMap: (desc: Record<string, import('./types').KeyMapEntry>) => { inspectKeyMap = desc },
     setInspectRole: (role: string, childRole?: string) => { inspectRole = role; inspectChildRole = childRole },
+    setInspectPattern: (info: InspectPatternInfo) => { inspectPatternInfo = info },
   }
 }
