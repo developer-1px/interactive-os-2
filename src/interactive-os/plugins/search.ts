@@ -3,6 +3,7 @@ import type { VisibilityFilter } from '../engine/types'
 import type { Plugin } from './types'
 import { definePlugin } from './definePlugin'
 import { defineCommands } from '../engine/defineCommand'
+import { key } from '../axis/types'
 import type { Entity } from '../store/types'
 
 export const SEARCH_ID = '__search__'
@@ -81,7 +82,7 @@ export function search(): Plugin {
       'search:clearFilter': searchCommands.clearFilter,
     },
     keyMap: {
-      'Mod+F': () => searchCommands.activateSearch(),
+      'Mod+F': key(['search:activate'], () => searchCommands.activateSearch()),
     },
     visibilityFilter: searchVisibilityFilter,
   })

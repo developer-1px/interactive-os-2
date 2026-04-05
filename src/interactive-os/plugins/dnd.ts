@@ -1,6 +1,7 @@
 import { ROOT_ID } from '../store/types'
 import { getChildren, getParent, moveNode } from '../store/createStore'
 import { definePlugin } from './definePlugin'
+import { key } from '../axis/types'
 import { defineCommands } from '../engine/defineCommand'
 
 export const dndCommands = defineCommands({
@@ -72,8 +73,8 @@ export function dnd() {
       moveTo: dndCommands.moveTo,
     },
     keyMap: {
-      'Mod+ArrowUp': (ctx: { focused: string }) => dndCommands.moveUp(ctx.focused),
-      'Mod+ArrowDown': (ctx: { focused: string }) => dndCommands.moveDown(ctx.focused),
+      'Mod+ArrowUp': key(['dnd:move-up'], (ctx) => dndCommands.moveUp(ctx.focused)),
+      'Mod+ArrowDown': key(['dnd:move-down'], (ctx) => dndCommands.moveDown(ctx.focused)),
     },
   })
 }

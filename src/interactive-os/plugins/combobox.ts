@@ -1,6 +1,7 @@
 import { createBatchCommand } from '../engine/types'
 import { ROOT_ID } from '../store/types'
 import { definePlugin } from './definePlugin'
+import { key } from '../axis/types'
 import { defineCommands } from '../engine/defineCommand'
 import { selectionCommands } from '../axis/select'
 
@@ -74,8 +75,7 @@ export function combobox(options?: { selectionMode?: 'single' | 'multiple' }) {
       create: comboboxCommands.create,
     },
     keyMap: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ArrowDown: (ctx: any) => {
+      ArrowDown: key(['combobox:open', 'core:focus'], (ctx) => {
         const entity = ctx.getEntity('__combobox__')
         const isOpen = (entity as Record<string, unknown> | undefined)?.isOpen === true
         if (!isOpen) {
@@ -83,9 +83,8 @@ export function combobox(options?: { selectionMode?: 'single' | 'multiple' }) {
           return ctx.focusFirst()
         }
         return ctx.focusNext()
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      Enter: (ctx: any) => {
+      }),
+      Enter: key(['core:toggle-select', 'core:select-range', 'combobox:close', 'combobox:open'], (ctx) => {
         const entity = ctx.getEntity('__combobox__')
         const isOpen = (entity as Record<string, unknown> | undefined)?.isOpen === true
         if (isOpen) {
@@ -98,10 +97,9 @@ export function combobox(options?: { selectionMode?: 'single' | 'multiple' }) {
           ])
         }
         return comboboxCommands.open()
-      },
-      Escape: () => comboboxCommands.close(),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      Backspace: (ctx: any) => {
+      }),
+      Escape: key(['combobox:close'], () => comboboxCommands.close()),
+      Backspace: key(['core:toggle-select'], (ctx) => {
         if (selectionMode !== 'multiple') return undefined
         const entity = ctx.getEntity('__combobox__')
         const filterText = (entity as Record<string, unknown> | undefined)?.filterText ?? ''
@@ -111,7 +109,7 @@ export function combobox(options?: { selectionMode?: 'single' | 'multiple' }) {
           return selectionCommands.toggleSelect(selected[selected.length - 1])
         }
         return undefined
-      },
+      }),
     },
   })
 }

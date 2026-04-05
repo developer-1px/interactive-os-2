@@ -1,4 +1,3 @@
-import type { Command } from '../engine/types'
 import type { Entity, NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import {
@@ -10,6 +9,7 @@ import {
   updateEntityData,
 } from '../store/createStore'
 import { definePlugin } from './definePlugin'
+import { key } from '../axis/types'
 import { defineCommands } from '../engine/defineCommand'
 
 interface ClipboardEntry {
@@ -475,11 +475,11 @@ export function clipboard(options?: ClipboardOptions) {
       'clipboard:duplicateAfter': clipboardCommands.duplicateAfter,
     },
     keyMap: {
-      'Mod+D': (ctx: { focused: string; selected?: { ids: string[] }; dispatch(cmd: Command): void }) => {
+      'Mod+D': key(['clipboard:copy', 'clipboard:duplicateAfter'], (ctx) => {
         const ids = resolveTargetIds(ctx)
         ctx.dispatch(clipboardCommands.copy(ids))
         return clipboardCommands.duplicateAfter(ids.at(-1)!)
-      },
+      }),
     },
     onCopy: (ctx: { focused: string; selected?: { ids: string[] } }) =>
       clipboardCommands.copy(resolveTargetIds(ctx)),

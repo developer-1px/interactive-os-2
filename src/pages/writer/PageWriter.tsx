@@ -23,9 +23,11 @@ import { clipboard } from '@os/plugins/clipboard'
 import { crudCommands } from '@os/plugins/crud'
 import { getParent, getChildren, updateEntityData, addEntity, removeEntity, moveNode } from '@os/store/createStore'
 import { definePlugin } from '@os/plugins/definePlugin'
+import { key } from '@os/axis/types'
 import { defineCommands } from '@os/engine/defineCommand'
 import { AriaRoute } from '@os/primitives/AriaRoute'
-import type { RouteKeyMap } from '@os/primitives/AriaRoute'
+import { defineRouteKey } from '@os/primitives/defineRouteKey'
+import type { RouteKeyMap } from '@os/primitives/defineRouteKey'
 import { ExpandIndicator } from '@os/ui/indicators'
 import { Toolbar } from '@os/ui/Toolbar'
 import { createStore } from '@os/store/createStore'
@@ -379,14 +381,6 @@ const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record
 
 let _insertCounter = 0
 
-type WriterCtx = {
-  focused: string
-  getEntity: (id: string) => { data?: Record<string, unknown> } | undefined
-  getParent: (id: string) => string | undefined
-  getChildren: (id: string) => string[]
-  selected?: { ids: string[] }
-}
-
 function writerKeys(): Plugin {
   return definePlugin({
     name: 'writerKeys',
@@ -402,15 +396,15 @@ function writerKeys(): Plugin {
     },
     keyMap: {
       // Enter → edit (rename)
-      'Enter': (ctx: WriterCtx) => {
+      'Enter': key(['rename:start'], (ctx) => {
         const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
         // hr has no content — skip
         if (d?.type === 'hr') return undefined
         return renameCommands.startRename(ctx.focused)
-      },
+      }),
 
       // Cmd+Enter (non-editing) → new sibling + edit
-      'Mod+Enter': (ctx: WriterCtx) => {
+      'Mod+Enter': key(['writer:insert-after', 'rename:start'], (ctx) => {
         const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
         if (!d) return undefined
         const type = d.type as string
@@ -433,10 +427,10 @@ function writerKeys(): Plugin {
           writerCommands.insertAfter(ctx.focused, newId, newData),
           renameCommands.startRename(newId),
         ])
-      },
+      }),
 
       // Cmd+Shift+Enter → insert first child sentence + edit
-      'Mod+Shift+Enter': (ctx: WriterCtx) => {
+      'Mod+Shift+Enter': key(['crud:create', 'rename:start'], (ctx) => {
         const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
         if (d?.type !== 'heading') return undefined
         const newId = `wi${++_insertCounter}`
@@ -444,28 +438,28 @@ function writerKeys(): Plugin {
           crudCommands.create({ id: newId, data: { type: 'sentence', content: '' } }, ctx.focused, 0),
           renameCommands.startRename(newId),
         ])
-      },
+      }),
 
       // Tab → indent (reparent under previous sibling)
-      'Tab': (ctx: WriterCtx) => dndCommands.moveIn(ctx.focused),
+      'Tab': key(['dnd:move-in'], (ctx) => dndCommands.moveIn(ctx.focused)),
 
       // Shift+Tab → outdent (reparent to grandparent)
-      'Shift+Tab': (ctx: WriterCtx) => dndCommands.moveOut(ctx.focused),
+      'Shift+Tab': key(['dnd:move-out'], (ctx) => dndCommands.moveOut(ctx.focused)),
 
       // Alt+↑↓ → reorder in visible order (crosses paragraph boundaries)
-      'Alt+ArrowUp': (ctx: WriterCtx) => {
+      'Alt+ArrowUp': key(['writer:visible-swap'], (ctx) => {
         const prev = getAdjacentVisible(writerState.getData(), ctx.focused, [writerNavigateFilter], -1)
         if (!prev) return undefined
         return writerCommands.visibleSwap(ctx.focused, prev, -1)
-      },
-      'Alt+ArrowDown': (ctx: WriterCtx) => {
+      }),
+      'Alt+ArrowDown': key(['writer:visible-swap'], (ctx) => {
         const next = getAdjacentVisible(writerState.getData(), ctx.focused, [writerNavigateFilter], 1)
         if (!next) return undefined
         return writerCommands.visibleSwap(ctx.focused, next, 1)
-      },
+      }),
 
       // Backspace (non-editing) → delete node
-      'Backspace': (ctx: WriterCtx) => {
+      'Backspace': key(['crud:delete', 'rename:start'], (ctx) => {
         const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
         const content = (d?.content as string) ?? ''
         // If empty content node, just delete
@@ -474,32 +468,32 @@ function writerKeys(): Plugin {
         }
         // If has content, enter edit mode instead of deleting
         return renameCommands.startRename(ctx.focused)
-      },
+      }),
 
       // Mod+L → wrap selection in list
-      'Mod+l': (ctx: WriterCtx) => {
+      'Mod+l': key(['writer:wrap-list'], (ctx) => {
         const selectedIds = ctx.selected?.ids ?? []
         const nodeIds = selectedIds.length > 0 ? selectedIds : [ctx.focused]
         const listId = `wl${++_insertCounter}`
         return writerCommands.wrapInList(nodeIds, listId, false)
-      },
+      }),
 
       // Mod+Shift+L → unwrap from list
-      'Mod+Shift+l': (ctx: WriterCtx) => writerCommands.unwrapFromList(ctx.focused),
+      'Mod+Shift+l': key(['writer:unwrap-list'], (ctx) => writerCommands.unwrapFromList(ctx.focused)),
 
       // Mod+0 → heading → paragraph
-      'Mod+Digit0': (ctx: WriterCtx) => {
+      'Mod+Digit0': key(['writer:convert-type'], (ctx) => {
         const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
         if (d?.type !== 'heading') return undefined
         return writerCommands.convertType(ctx.focused, 'paragraph')
-      },
+      }),
 
       // Mod+Shift+H → paragraph → heading
-      'Mod+Shift+h': (ctx: WriterCtx) => {
+      'Mod+Shift+h': key(['writer:convert-type'], (ctx) => {
         const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
         if (d?.type !== 'paragraph') return undefined
         return writerCommands.convertType(ctx.focused, 'heading')
-      },
+      }),
     },
   })
 }
@@ -636,14 +630,8 @@ export default function PageWriter() {
   }, [handleNew, handleSave, handleAnalyze])
 
   const writerKeyMap: RouteKeyMap = useMemo(() => ({
-    'Mod+S': () => {
-      handleSave()
-      return { type: 'writer:save' }
-    },
-    'Mod+\\': () => {
-      setProse(p => !p)
-      return { type: 'writer:toggle-prose' }
-    },
+    'Mod+S': defineRouteKey('writer:save', () => handleSave(), 'Writer'),
+    'Mod+\\': defineRouteKey('writer:toggle-prose', () => setProse(p => !p), 'Writer'),
   }), [handleSave])
 
   return (

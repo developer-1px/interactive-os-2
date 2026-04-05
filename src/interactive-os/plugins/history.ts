@@ -5,6 +5,7 @@ import { computeStoreDiff, applyDelta } from '../store/computeStoreDiff'
 import type { StoreDiff } from '../store/computeStoreDiff'
 import { definePlugin } from './definePlugin'
 import { defineCommand } from '../engine/defineCommand'
+import { key } from '../axis/types'
 
 const SKIP_META = new Set([
   '__focus__',
@@ -79,8 +80,8 @@ export function history() {
       }
     },
     keyMap: {
-      'Mod+Z': () => historyCommands.undo(),
-      'Mod+Shift+Z': () => historyCommands.redo(),
+      'Mod+Z': key(['history:undo'], () => historyCommands.undo()),
+      'Mod+Shift+Z': key(['history:redo'], () => historyCommands.redo()),
     },
   })
 }

@@ -4,6 +4,7 @@ import type { Entity } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import { addEntity, removeEntity } from '../store/createStore'
 import { definePlugin } from './definePlugin'
+import { key } from '../axis/types'
 import { focusRecovery } from './focusRecovery'
 import type { IsReachable } from './focusRecovery'
 import { defineCommands } from '../engine/defineCommand'
@@ -41,8 +42,8 @@ export function crud(options?: CrudOptions) {
       deleteMultiple: crudCommands.removeMultiple,
     },
     keyMap: {
-      'Delete': (ctx: { focused: string }) => crudCommands.remove(ctx.focused),
-      'Backspace': (ctx: { focused: string }) => crudCommands.remove(ctx.focused),
+      'Delete': key(['crud:delete'], (ctx) => crudCommands.remove(ctx.focused)),
+      'Backspace': key(['crud:delete'], (ctx) => crudCommands.remove(ctx.focused)),
     },
   })
 }
