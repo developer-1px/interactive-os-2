@@ -1,8 +1,10 @@
-.switchItem:is([data-focused='true']) {
+/* ── switch last-mile ── */
+
+.switch-item:is([data-focused='true']) {
   background: var(--bg-hover);
 }
 
-.track {
+.switch-track {
   width: var(--space-2xl);
   height: var(--space-md);
   background: var(--bg-muted);
@@ -10,15 +12,15 @@
   transition: background var(--motion-duration-fast) var(--motion-easing-default);
 }
 
-.track[data-checked='true'] {
+.switch-track[data-checked='true'] {
   background: var(--focus);
 }
 
-.thumb {
+.switch-thumb {
   background: var(--text-on-fill);
   transition: translate var(--motion-duration-fast) var(--motion-easing-default);
 }
 
-.track[data-checked='true'] .thumb {
+.switch-track[data-checked='true'] .switch-thumb {
   translate: var(--space-sm) 0;
 }

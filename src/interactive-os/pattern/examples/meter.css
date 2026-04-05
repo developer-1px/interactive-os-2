@@ -1,21 +1,17 @@
-/* ── base ── */
+/* ── meter last-mile ── */
 
-.meter {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
-}
-
-.label {
+.meter-label {
   min-width: var(--space-3xl);
 }
 
-.track {
+.meter-track {
   height: var(--space-xs);
 }
 
-.fill {
+.meter-fill {
   background: var(--focus);
 }
 
-.valueLabel {
+.meter-value {
   min-width: var(--space-xl);
 }

@@ -6,7 +6,7 @@ import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { AlertDialog as AlertDialogUI } from '../../ui/AlertDialog'
 import { ax } from '@styles/ax'
-import styles from './alertDialog.module.css'
+import './alertDialog.css'
 
 // APG #3: Alert Dialog
 // https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/examples/alertdialog/
@@ -44,16 +44,16 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${styles.dialog} ${ax({ shape: 'md', padding: 'md', content: 'text', surface: 'display' })} outline-none`}
+        className={`alert-dialog ${ax({ shape: 'md', padding: 'md', content: 'text', surface: 'display' })} outline-none`}
         data-focused={state.focused || undefined}
       >
-        <h2 className={`${styles.title} ${ax({ weight: 'semi', text: 'primary' })}`}>{label}</h2>
+        <h2 className={`alert-dialog-title ${ax({ weight: 'semi', text: 'primary' })}`}>{label}</h2>
       </div>
     )
   }
 
   return (
-    <div {...props} className={`${styles.message} ${ax({ textStyle: 'body', text: 'secondary' })}`}>
+    <div {...props} className={`alert-dialog-message ${ax({ textStyle: 'body', text: 'secondary' })}`}>
       {label}
     </div>
   )

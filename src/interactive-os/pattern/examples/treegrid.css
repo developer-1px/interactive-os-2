@@ -1,29 +1,27 @@
-/* ── base ── */
+/* ── treegrid last-mile ── */
 
-.row {
+.treegrid-row {
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
-.subject {
+.treegrid-subject {
   text-overflow: ellipsis;
 }
 
-.summary {
+.treegrid-summary {
   flex: 2;
   text-overflow: ellipsis;
 }
 
-/* ── variant: state ── */
-
-.row[aria-selected='true'] {
+.treegrid-row[aria-selected='true'] {
   background: var(--selection);
 }
 
-.row:is([data-focused='true']) {
+.treegrid-row:is([data-focused='true']) {
   background: var(--bg-hover);
 }
 
-.row:is([data-focused='true'][aria-selected='true']) {
+.treegrid-row:is([data-focused='true'][aria-selected='true']) {
   background: var(--selection);
   outline: var(--focus-ring) solid var(--focus);
 }

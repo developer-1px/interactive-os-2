@@ -4,7 +4,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { ListBox } from '../../ui/ListBox'
 import { ax } from '@styles/ax'
-import styles from './listbox.module.css'
+import './listbox.css'
 
 // APG #36: Scrollable Listbox — "Choose your favorite transuranic element"
 // https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-scrollable/
@@ -35,7 +35,7 @@ export function ListboxScrollable() {
       plugins={[]}
       onChange={onChange}
       aria-label="Choose your favorite transuranic element"
-      className={`${styles.listbox} ${ax({ shape: 'md', surface: 'sunken' })} overflow-y-auto outline-none`}
+      className={`listbox-container ${ax({ shape: 'md', surface: 'sunken' })} overflow-y-auto outline-none`}
     />
   )
 }

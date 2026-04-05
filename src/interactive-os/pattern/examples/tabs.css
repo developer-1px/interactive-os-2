@@ -1,18 +1,15 @@
-/* ── base ── */
+/* ── tabs last-mile ── */
 
-.tab {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
+.tab-item {
   border-bottom: var(--border-width-thick) solid transparent;
 }
 
-/* ── variant: state ── */
-
-.tab[aria-selected='true'] {
+.tab-item[aria-selected='true'] {
   color: var(--text-primary);
   border-bottom-color: var(--focus);
   font-weight: var(--weight-semi);
 }
 
-.tab:is([data-focused='true']) {
+.tab-item:is([data-focused='true']) {
   background: var(--bg-hover);
 }

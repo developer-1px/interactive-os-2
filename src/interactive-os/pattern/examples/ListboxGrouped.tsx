@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { ListBoxGrouped } from '../../ui/ListBoxGrouped'
 import { ax } from '@styles/ax'
-import styles from './listbox.module.css'
+import './listbox.css'
 
 // APG #38: Listbox with Grouped Options — "Choose your animal sidekick"
 // https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-grouped/
@@ -52,8 +52,8 @@ const renderItem = (
   if (children) {
     const labelId = `group-label-${node.id}`
     return (
-      <ul {...props} aria-labelledby={labelId} className={`${styles.groupOptions} list-none`}>
-        <li role="presentation" id={labelId} className={`${styles.groupLabel} ${ax({ textStyle: 'label', weight: 'bold', text: 'primary' })}`}>
+      <ul {...props} aria-labelledby={labelId} className={`listbox-group-options list-none`}>
+        <li role="presentation" id={labelId} className={`listbox-group-label ${ax({ textStyle: 'label', weight: 'bold', text: 'primary' })}`}>
           {label}
         </li>
         {children}
@@ -64,7 +64,7 @@ const renderItem = (
   return (
     <li
       {...props}
-      className={`${styles.option} ${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text' })} flex-row items-center`}
+      className={`listbox-option ${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text' })} flex-row items-center`}
       data-focused={state.focused || undefined}
     >
       {label}

@@ -7,7 +7,7 @@ import { EXPANDED_ID } from '../../axis/expand'
 import { GRID_COL_ID } from '../../axis/navigate'
 import { TreeGrid, Cell } from '../../ui/TreeGrid'
 import { ax } from '@styles/ax'
-import styles from './treegrid.module.css'
+import './treegrid.css'
 
 // APG #66: Treegrid Email Inbox
 // https://www.w3.org/WAI/ARIA/apg/patterns/treegrid/examples/treegrid-1/
@@ -78,7 +78,7 @@ const renderRow = (
   return (
     <div
       {...props}
-      className={`${styles.row} ${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text' })} flex-row items-center whitespace-nowrap outline-none cursor-default`}
+      className={`treegrid-row ${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text' })} flex-row items-center whitespace-nowrap outline-none cursor-default`}
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >
@@ -86,10 +86,10 @@ const renderRow = (
         <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} shrink-0`} aria-hidden="true">
           {isThread ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
         </span>
-        <span className={`${styles.subject} ${ax({ weight: 'semi' })} flex-1 overflow-hidden`}>{subject}</span>
+        <span className={`treegrid-subject ${ax({ weight: 'semi' })} flex-1 overflow-hidden`}>{subject}</span>
       </Cell>
       <Cell index={1}>
-        <span className={`${styles.summary} ${ax({ text: 'secondary' })} overflow-hidden`}>{summary}</span>
+        <span className={`treegrid-summary ${ax({ text: 'secondary' })} overflow-hidden`}>{summary}</span>
       </Cell>
       <Cell index={2}>
         <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} shrink-0`}>{sender}</span>
