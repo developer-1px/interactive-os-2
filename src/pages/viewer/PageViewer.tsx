@@ -3,11 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
-import { TreeView } from '@os/ui/TreeView'
+import { FileTreeView } from '@os/ui/FileTreeView'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import type { NormalizedData, Entity } from '@os/store/types'
-import { FileIcon } from '@os/ui/FileIcon'
 import { Breadcrumb } from '@os/ui/Breadcrumb'
 import { QuickOpen } from '@os/ui/QuickOpen'
 import { FOCUS_ID } from '@os/axis/navigate'
@@ -20,7 +19,8 @@ import { createWorkspace } from '@os/plugins/workspaceStore'
 import type { TabData } from '@os/plugins/workspaceStore'
 import { useKeyMap } from '@os/primitives/useKeyMap'
 import { ax } from '@styles/ax'
-import { SpinnerIndicator, ExpandIndicator } from '@os/ui/indicators'
+import { SpinnerIndicator } from '@os/ui/indicators'
+import { Panel } from '@os/ui/panels'
 import { FilePanel } from './widgets/FilePanel'
 import { previewFileReducer, pinFileReducer, openInNewPaneReducer, duplicatePaneReducer } from './viewerWorkspace'
 
@@ -178,40 +178,17 @@ export default function PageViewer() {
     <div className={`${ax({ layout: 'row' })} h-full min-h-0`} onKeyDown={handleLayoutKeyDown}>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
         {/* Tree panel (sidebar) */}
-        <div className={ax({ layout: 'fill', surface: 'display' })}>
-          <div className={ax({ layout: 'spread', padding: 'xs', flex: 'none' })}>
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>Explorer</span>
-          </div>
-          {/* @FIXME(srp): 트리 renderItem — 페이지 주입 커스터마이징 vs 별도 파일. 판단 조건: 다른 곳에서 같은 렌더러를 쓰게 되면 분리 */}
-          <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs' })}>
-            <TreeView
+        <Panel header="Explorer" surface="display">
+          <div className={ax({ padding: 'xs' })}>
+            <FileTreeView
               data={initialStore}
               plugins={[]}
               onChange={handleChange}
               onActivate={handleActivate}
               aria-label="File tree"
-              renderItem={(props, node, state) => {
-                const data = node.data as FileNodeData
-                const depth = (state.level ?? 1) - 1
-                return (
-                  <div {...props} className={ax({ layout: 'bar', gap: 'xs', padding: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }}>
-                    {data.type === 'directory' ? (
-                      <span className={ax({ layout: 'center', text: 'muted', flex: 'none' })}>
-                        <ExpandIndicator expanded={state.expanded} />
-                      </span>
-                    ) : (
-                      <span className={ax({ layout: 'center', text: 'muted', flex: 'none' })} />
-                    )}
-                    <FileIcon name={data.name} type={data.type} expanded={state.expanded} />
-                    <span className={`${ax({ clamp: '1' })}${data.type === 'directory' ? ` ${ax({ weight: 'medium' })}` : ''}`}>
-                      {data.name}
-                    </span>
-                  </div>
-                )
-              }}
             />
           </div>
-        </div>
+        </Panel>
 
         {/* Content panel */}
         <div className={ax({ layout: 'fill' })}>

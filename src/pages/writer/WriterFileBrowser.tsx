@@ -1,11 +1,9 @@
 // ② 2026-04-04-md-writer-prd.md
 import { useCallback, useEffect, useState } from 'react'
 import { TreeView } from '@os/ui/TreeView'
-import { ExpandIndicator } from '@os/ui/indicators'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData, Entity } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
 import { ax } from '@styles/ax'
 
 interface FileEntry { name: string; path: string }
@@ -17,7 +15,7 @@ function buildFileTree(listing: DirListing): NormalizedData {
 
   for (const dir of listing.dirs) {
     const id = `dir:${dir.path}`
-    entities[id] = { id, data: { type: 'dir', name: dir.name, path: dir.path } }
+    entities[id] = { id, data: { type: 'dir', name: `${dir.name}/`, path: dir.path } }
     relationships[ROOT_ID].push(id)
     relationships[id] = [] // placeholder for lazy load
   }
@@ -29,24 +27,6 @@ function buildFileTree(listing: DirListing): NormalizedData {
   }
 
   return createStore({ entities, relationships })
-}
-
-const fileRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const data = node.data as Record<string, unknown> | undefined
-  const name = (data?.name as string) ?? ''
-  const type = data?.type as string
-  const isDir = type === 'dir'
-  const hasChildren = state.expanded !== undefined
-  const depth = (state.level ?? 1) - 1
-
-  return (
-    <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }}>
-      <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-      <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary', clamp: '1' })}>
-        {isDir ? `${name}/` : name}
-      </span>
-    </div>
-  )
 }
 
 interface WriterFileBrowserProps {
@@ -75,7 +55,7 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
 
           for (const dir of listing.dirs) {
             const id = `dir:${dir.path}`
-            next.entities[id] = { id, data: { type: 'dir', name: dir.name, path: dir.path } }
+            next.entities[id] = { id, data: { type: 'dir', name: `${dir.name}/`, path: dir.path } }
             children.push(id)
             if (!next.relationships[id]) next.relationships[id] = []
           }
@@ -134,7 +114,6 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
         data={fileData}
         onChange={handleChange}
         onActivate={handleActivate}
-        renderItem={fileRenderItem}
         selectionFollowsFocus
         aria-label="File browser"
       />

@@ -9,7 +9,6 @@ import { SwitchGroup } from '@os/ui/SwitchGroup'
 import { RadioGroup } from '@os/ui/RadioGroup'
 import { TabList } from '@os/ui/TabList'
 import { createStore } from '@os/store/createStore'
-import type { NodeState } from '@os/pattern/types'
 
 /* ══ helpers ══ */
 
@@ -96,15 +95,6 @@ const settingsTabData = makeStore({ profile: 'Profile', notifications: 'Notifica
 const notifSwitchData = makeStore({ email: 'Email notifications', push: 'Push notifications', sms: 'SMS alerts', digest: 'Weekly digest' })
 const themeRadioData = makeStore({ system: 'System', light: 'Light', dark: 'Dark' })
 
-const renderSettingsTab = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-  return (
-    <span className={ax({ text: state.selected ? 'primary' : 'muted' })}>
-      {label}
-    </span>
-  )
-}
-
 function SettingsScenario() {
   const [notifState, setNotifState] = React.useState(notifSwitchData)
   const [themeState, setThemeState] = React.useState(themeRadioData)
@@ -116,7 +106,7 @@ function SettingsScenario() {
         <span className={ax({ textStyle: 'body', text: 'muted' })}>Manage your account preferences.</span>
       </div>
 
-      <TabList data={settingsTabData} renderItem={renderSettingsTab} aria-label="Settings tabs" />
+      <TabList data={settingsTabData} aria-label="Settings tabs" />
 
       <div className="theme-composed-grid">
         <Section title="PROFILE">

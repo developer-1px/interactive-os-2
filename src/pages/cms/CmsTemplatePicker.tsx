@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { TEMPLATE_VARIANTS } from './cmsTemplates'
 import type { TemplateType } from './cmsTemplates'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
 import { key } from '@os/axis/types'
 import { ListBox } from '@os/ui/ListBox'
 import { ax } from '@styles/ax'
@@ -19,15 +18,6 @@ interface CmsTemplatePickerProps {
   onClose: () => void
   onSelect: (variant: TemplateType) => void
 }
-
-const renderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
-  <div
-    {...props}
-    className={`cms-template-picker__item flex-row items-center cursor-pointer${state.focused ? ' cms-template-picker__item--focused' : ''}`}
-  >
-    {(item.data as Record<string, unknown>)?.label as string}
-  </div>
-)
 
 export default function CmsTemplatePicker({ open, onClose, onSelect }: CmsTemplatePickerProps) {
   if (!open) return null
@@ -49,7 +39,6 @@ function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps,
       <ListBox
         data={pickerData}
         plugins={[]}
-        renderItem={renderItem}
         keyMap={keyMap}
         autoFocus
         aria-label="Section templates"

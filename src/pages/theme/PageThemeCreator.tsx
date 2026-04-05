@@ -5,7 +5,6 @@ import './PageThemeCreator.css'
 import { TabList } from '@os/ui/TabList'
 import { createStore } from '@os/store/createStore'
 import { useTheme } from '../../hooks/useTheme'
-import type { NodeState } from '@os/pattern/types'
 import { ThemeTokens } from './ThemeTokens'
 import { ThemeAxes } from './ThemeAxes'
 import { ThemeComponents } from './ThemeComponents'
@@ -22,15 +21,6 @@ const tabData = createStore({
   },
   relationships: { __root__: ['tokens', 'axes', 'components', 'scenarios'] },
 })
-
-const renderTab = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-  return (
-    <span className={ax({ text: state.selected ? 'primary' : 'muted', weight: state.selected ? 'semi' : undefined })}>
-      {label}
-    </span>
-  )
-}
 
 /* ══ Theme Panel ══ */
 
@@ -75,7 +65,7 @@ export default function PageThemeCreator() {
       </div>
 
       {/* Tab bar */}
-      <TabList data={tabs} onChange={setTabs} renderItem={renderTab} aria-label="Styleguide sections" />
+      <TabList data={tabs} onChange={setTabs} aria-label="Styleguide sections" />
 
       {/* Tab content */}
       <div className="theme-tab-content">

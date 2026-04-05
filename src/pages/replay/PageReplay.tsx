@@ -268,13 +268,6 @@ export default function PageReplay() {
     relationships: { __root__: ['live', 'replay'] },
   }), [])
 
-  const renderRightTab = useCallback((_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState) => {
-    const label = (item.data as Record<string, unknown>)?.label as string ?? item.id as string
-    return (
-      <span className={ax({ layout: 'row', gap: 'xs' })}>{label}</span>
-    )
-  }, [])
-
   const handleRightTabActivate = useCallback((nodeId: string) => {
     const tab = nodeId as 'live' | 'replay'
     setRightTab(tab)
@@ -327,7 +320,6 @@ export default function PageReplay() {
             data={rightTabData}
             initialFocus={rightTab}
             onActivate={handleRightTabActivate}
-            renderItem={renderRightTab}
             aria-label="Chat mode"
           />
 

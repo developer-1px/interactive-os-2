@@ -6,12 +6,10 @@ import { mdToStore, storeToMd } from './writerTransform'
 import { expandCommands } from '@os/axis/expand'
 import { useWriterChatSync, sendWriterMessage, getSessionForFile } from './writerChatBridge'
 import { requestAnalysis } from './writerAnalyze'
-import type { SentenceRole } from './writerSchema'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import WriterFileBrowser from './WriterFileBrowser'
 import { ChatPane } from '../chat/ChatPane'
-import { TreeGrid } from '@os/ui/TreeGrid'
-import { Aria } from '@os/primitives/aria'
+import { WriterTreeGrid } from '@os/ui/WriterTreeGrid'
 import type { EditKeyContext } from '@os/primitives/aria'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
@@ -28,7 +26,7 @@ import { defineCommands } from '@os/engine/defineCommand'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import type { RouteKeyMap } from '@os/primitives/defineRouteKey'
-import { ExpandIndicator } from '@os/ui/indicators'
+import { Panel } from '@os/ui/panels'
 import { Toolbar } from '@os/ui/Toolbar'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -36,7 +34,6 @@ import type { NormalizedData } from '@os/store/types'
 import type { VisibilityFilter } from '@os/engine/types'
 import { ax } from '@styles/ax'
 import { createBatchCommand, type Command, type Plugin } from '@os/engine/types'
-import type { NodeState } from '@os/pattern/types'
 import { getVisibleNodes } from '@os/engine/getVisibleNodes'
 import './PageWriter.css'
 
@@ -271,112 +268,14 @@ function writerEditKeyDown(store: NormalizedData, e: React.KeyboardEvent, ctx: E
   return undefined
 }
 
-// ── Visual ───────────────────────────────────────────────
-
-const headingStyle = ['display', 'page', 'section', 'label', 'label', 'label'] as const
-
-
-const roleLabel: Record<SentenceRole, string> = {
-  fact: '사실',
-  interpretation: '해석',
-  evidence: '근거',
-  opinion: '의견',
-}
-
-const roleText: Record<SentenceRole, 'accent' | 'warning' | 'success' | 'danger'> = {
-  fact: 'accent',
-  interpretation: 'warning',
-  evidence: 'success',
-  opinion: 'danger',
-}
-
-function RoleBadge({ role }: { role: SentenceRole }) {
-  return (
-    <span className={`${ax({ textStyle: 'caption', text: roleText[role] })} ml-auto`}>
-      {roleLabel[role]}
-    </span>
-  )
-}
-
 /** Prose preview — reuses the shared MarkdownViewer with storeToMd() */
 function ProseView({ data: storeData }: { data: NormalizedData }) {
   const md = useMemo(() => storeToMd(storeData), [storeData])
   return <MarkdownViewer content={md} />
 }
 
-const handleEditKeyDown = (e: React.KeyboardEvent, ctx: EditKeyContext) => writerEditKeyDown(writerState.getData(), e, ctx)
-
-const writerRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const data = node.data as Record<string, unknown> | undefined
-  const content = (data?.content as string) ?? ''
-  const type = data?.type as string
-  const level = data?.level as number | undefined
-  const hasChildren = state.expanded !== undefined
-  const depth = (state.level ?? 1) - 1
-  const depthStyle = { paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }
-  const surface = state.selected ? 'action' as const : 'ghost' as const
-
-  if (type === 'document') {
-    return (
-      <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
-        <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{data?.path as string || 'Untitled'}</span>
-      </div>
-    )
-  }
-
-  if (type === 'heading' && level) {
-    const marginCls = level === 1 ? 'writer-heading-l1' : 'writer-heading'
-    return (
-      <div {...props} className={`${ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} ${marginCls}`} style={depthStyle}>
-        <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <Aria.Editable field="content" selection="end" editKeyDown={handleEditKeyDown}><span className={ax({ textStyle: headingStyle[level - 1], text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
-      </div>
-    )
-  }
-
-  if (type === 'paragraph') {
-    return (
-      <div {...props} className={`${ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} ${'writer-paragraph'}`} style={depthStyle}>
-        <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>¶{state.index + 1}</span>
-      </div>
-    )
-  }
-
-  if (type === 'list') {
-    return (
-      <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
-        <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{(data?.ordered as boolean) ? 'ol' : 'ul'}</span>
-      </div>
-    )
-  }
-
-  if (type === 'listItem') {
-    return (
-      <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
-        <ExpandIndicator hasChildren={false} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
-        <Aria.Editable field="content" selection="end" editKeyDown={handleEditKeyDown}><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
-      </div>
-    )
-  }
-
-  if (type === 'hr') {
-    return <div {...props} className={`${ax({ surface, padding: 'xs' })} ${'writer-hr'}`} style={depthStyle} />
-  }
-
-  // sentence
-  const role = data?.role as SentenceRole | undefined
-  return (
-    <div {...props} className={ax({ surface, padding: 'xs', layout: 'row', gap: 'xs' })} style={depthStyle}>
-      <ExpandIndicator hasChildren={false} />
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
-      <Aria.Editable field="content" selection="end" editKeyDown={handleEditKeyDown}><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
-      {role && <RoleBadge role={role} />}
-    </div>
-  )
+const writerItemOptions = {
+  editKeyDown: (e: React.KeyboardEvent, ctx: EditKeyContext) => writerEditKeyDown(writerState.getData(), e, ctx),
 }
 
 let _insertCounter = 0
@@ -637,16 +536,11 @@ export default function PageWriter() {
   return (
     <AriaRoute keyMap={writerKeyMap} label="Writer">
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1} noScroll={[0, 1, 2]}>
-        <div className={ax({ layout: 'fill', surface: 'sunken' })}>
-          <div className={ax({ layout: 'spread', padding: 'sm' })}>
-            <span className={ax({ textStyle: 'overline', text: 'muted' })}>Files</span>
-          </div>
-          <div className={ax({ layout: 'scroll' })}>
-            <WriterFileBrowser onFileSelect={handleFileSelect} />
-          </div>
-        </div>
+        <Panel header="Files" surface="sunken">
+          <WriterFileBrowser onFileSelect={handleFileSelect} />
+        </Panel>
 
-        <div className={ax({ layout: 'fill' })}>
+        <Panel scroll={false}>
           <div className={ax({ layout: 'bar', gap: 'sm', padding: 'sm' })}>
             <Toolbar data={toolbarData} onActivate={handleToolbarActivate} aria-label="Writer toolbar" />
             {urlFilePath && <span className={ax({ textStyle: 'caption', text: 'muted' })}>{urlFilePath}</span>}
@@ -656,23 +550,20 @@ export default function PageWriter() {
             {prose ? (
               <ProseView data={data} />
             ) : (
-              <TreeGrid
+              <WriterTreeGrid
                 data={data}
                 plugins={writerPlugins}
                 onChange={setData}
-                renderItem={writerRenderItem}
+                editKeyDown={writerItemOptions.editKeyDown}
                 aria-label="Document structure"
               />
             )}
           </div>
-        </div>
+        </Panel>
 
-        <div className={ax({ layout: 'fill', surface: 'sunken' })}>
-          <div className={ax({ layout: 'spread', padding: 'sm' })}>
-            <span className={ax({ textStyle: 'overline', text: 'muted' })}>Chat</span>
-          </div>
+        <Panel header="Chat" surface="sunken" scroll={false}>
           <ChatPane sessionId={chatSessionId} onSend={sendWriterMessage} />
-        </div>
+        </Panel>
       </SplitPane>
     </AriaRoute>
   )
