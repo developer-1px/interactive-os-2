@@ -2,7 +2,6 @@
 
 .container {
   height: 100%;
-  overflow: hidden;
 }
 
 .breadcrumb {
@@ -15,7 +14,6 @@
 
 .breadcrumbBtn {
   all: unset;
-  cursor: pointer;
 }
 
 .breadcrumbBtn:hover {
@@ -24,7 +22,6 @@
 
 .diagram {
   min-height: 0;
-  overflow: auto;
   padding: var(--space-lg);
 }
 
@@ -44,7 +41,6 @@
 .dirToggle {
   all: unset;
   margin-left: auto;
-  cursor: pointer;
   padding: var(--space-xs) var(--space-sm);
 }
 

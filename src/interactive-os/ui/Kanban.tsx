@@ -113,7 +113,7 @@ export function Kanban({
                   <FocusDiv
                     key={cardId}
                     focused={cardState.focused}
-                    className={`${ax({ surface: 'display', shape: compact ? undefined : 'xl', padding: compact ? undefined : 'xl', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : undefined, gap: compact ? 'xs' : undefined })} ${styles.card}`}
+                    className={`${compact ? 'border-none' : ''} ${ax({ surface: 'display', shape: compact ? undefined : 'xl', padding: compact ? undefined : 'xl', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : undefined, gap: compact ? 'xs' : undefined })} ${styles.card}`}
                     data-hub={isHub || undefined}
                     title={cardTooltip ?? cardTitle}
                     data-weight={cardWeight || undefined}
@@ -125,7 +125,7 @@ export function Kanban({
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
                       <span className={`${ax({ clamp: '1' })} ${styles.cardTitle}`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
                       {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
-                        <span className={`${ax({ text: 'muted', flex: 'none' })} ${styles.cardSubtitle}`}>
+                        <span className={`tabular-nums ${ax({ text: 'muted', flex: 'none' })} ${styles.cardSubtitle}`}>
                           {cardSubtitle}
                           {cardDepUp != null && cardDepUp > 0 && <span className={`${ax({ weight: 'medium' })} ${styles.depUp}`}> ↑{cardDepUp}</span>}
                           {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${ax({ text: 'accent' })}`}> ↓{cardDepDown}</span>}

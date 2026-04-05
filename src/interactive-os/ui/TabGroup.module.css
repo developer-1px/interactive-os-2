@@ -3,7 +3,6 @@
 
 /* last-mile: tabBar separator (line, not surface) */
 .tabBar {
-  overflow-x: auto;
   flex-shrink: 0;
 }
 

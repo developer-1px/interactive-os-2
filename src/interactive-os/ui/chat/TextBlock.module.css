@@ -7,7 +7,6 @@
   font-size: var(--type-body-size);
   line-height: var(--leading-relaxed);
   color: inherit;
-  word-wrap: break-word;
   padding: 0 var(--space-sm);
 }
 

@@ -12,6 +12,7 @@ import { copyAriaTree } from './inspectToAscii'
 import { registryToUnifiedTree, findInstanceId } from './inspectorStore'
 import type { InstanceMeta } from './inspectorStore'
 import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './InspectorWindow.module.css'
 
 const emptyPlugins: Plugin[] = []
@@ -29,9 +30,9 @@ function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
     <table className={`${ax({ textStyle: 'caption' })} ${styles.table}`}>
       <thead>
         <tr>
-          <th className={styles.th}>Input</th>
-          <th className={styles.th}>Command</th>
-          <th className={styles.th}>Owner</th>
+          <th className={`text-left ${styles.th}`}>Input</th>
+          <th className={`text-left ${styles.th}`}>Command</th>
+          <th className={`text-left ${styles.th}`}>Owner</th>
         </tr>
       </thead>
       <tbody>
@@ -64,7 +65,7 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
 
   return (
     <button
-      className={`${ax({ textStyle: 'caption', border: 'default', text: 'muted' })} ${styles.copyButton}`}
+      className={`cursor-pointer ${ax({ textStyle: 'caption', border: 'default', text: 'muted' })} ${styles.copyButton}`}
       onClick={handleCopy}
     >
       {copied ? '✓ Copied' : 'Copy ASCII'}
@@ -76,13 +77,13 @@ function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: Detai
   return (
     <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} ${styles.tabBar}`}>
       <button
-        className={`${ax({ textStyle: 'caption', padding: 'xs', text: active === 'interaction' ? 'bright' : 'muted' })} ${styles.tab} ${active === 'interaction' ? styles.tabActive : ''}`}
+        className={`border-none ${ax({ textStyle: 'caption', padding: 'xs', text: active === 'interaction' ? 'bright' : 'muted' })} ${styles.tab} ${active === 'interaction' ? styles.tabActive : ''}`}
         onClick={() => onChange('interaction')}
       >
         Interaction
       </button>
       <button
-        className={`${ax({ textStyle: 'caption', padding: 'xs', text: active === 'state' ? 'bright' : 'muted' })} ${styles.tab} ${active === 'state' ? styles.tabActive : ''}`}
+        className={`border-none ${ax({ textStyle: 'caption', padding: 'xs', text: active === 'state' ? 'bright' : 'muted' })} ${styles.tab} ${active === 'state' ? styles.tabActive : ''}`}
         onClick={() => onChange('state')}
       >
         State
@@ -153,13 +154,13 @@ export function InspectorWindow() {
   }, [metas, actionsMap])
 
   return (
-    <div className={`${ax({ layout: 'column' })} ${styles.root}`}>
+    <div className={`overflow-hidden ${ax({ layout: 'column' })} ${styles.root}`}>
       <div className={ax({ layout: 'spread', padding: 'sm', textStyle: 'caption', surface: 'overlay' })}>
         <span className={ax({ text: 'bright' })}>Aria Inspector</span>
         <span className={ax({ text: 'muted' })}>{actionsMap.size} instances</span>
       </div>
 
-      <div className={`${ax({ flex: '1' })} ${styles.content}`}>
+      <div className={`overflow-hidden ${ax({ flex: '1' })} ${styles.content}`}>
         <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.15}>
           <div className={ax({ layout: 'column' })}>
             {actionsMap.size === 0 ? (
@@ -175,7 +176,7 @@ export function InspectorWindow() {
             )}
           </div>
 
-          <div className={styles.detail}>
+          <div className={`overflow-auto ${styles.detail}`}>
             {inspectResult ? (
               <div className={ax({ layout: 'column' })}>
                 <TabBar active={activeTab} onChange={setActiveTab} />

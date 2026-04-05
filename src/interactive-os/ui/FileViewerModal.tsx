@@ -84,8 +84,8 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
-    <dialog ref={dialogRef} className={styles.fvmDialog} onClick={handleBackdropClick}>
-      <div className={`${ax({ surface: 'overlay', layout: 'column', shape: 'xl' })} ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
+    <dialog ref={dialogRef} className={`border-none bg-transparent ${styles.fvmDialog}`} onClick={handleBackdropClick}>
+      <div className={`overflow-hidden ${ax({ surface: 'overlay', layout: 'column', shape: 'xl' })} ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
         <PanelHeader axes={{ layout: 'spread' }}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>

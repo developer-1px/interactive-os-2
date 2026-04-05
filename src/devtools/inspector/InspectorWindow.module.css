@@ -1,14 +1,11 @@
 .root {
   height: 100vh;
-  overflow: hidden;
 }
 
 .content {
-  overflow: hidden;
 }
 
 .detail {
-  overflow: auto;
   height: 100%;
 }
 
@@ -18,7 +15,6 @@
 }
 
 .th {
-  text-align: left;
   padding: var(--indicator-width) var(--space-sm);
   border-bottom: var(--border-width) solid var(--border-default);
 }
@@ -48,7 +44,6 @@
   background: none;
   border-radius: var(--space-xs);
   padding: var(--border-width) var(--space-sm);
-  cursor: pointer;
 }
 
 .copyButton:hover {
@@ -67,7 +62,6 @@
 
 .tab {
   background: none;
-  border: none;
   border-bottom: var(--indicator-width) solid transparent;
 }
 

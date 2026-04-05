@@ -90,7 +90,7 @@ export function TabGroup({
 
   return (
     <div className={ax({ layout: 'fill' })} data-full-height>
-      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })} ${styles.tabBar}`}>
+      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`overflow-x-auto ${ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })} ${styles.tabBar}`}>
         {childIds.map((id) => {
           const entity = store.entities[id]
           if (!entity) return null

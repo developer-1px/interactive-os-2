@@ -12,7 +12,6 @@
   font-family: var(--type-prose-family);
   line-height: var(--type-prose-line-height);
   letter-spacing: var(--type-prose-letter-spacing);
-  overflow-wrap: break-word;
 }
 
 .markdown > *:first-child {
@@ -196,7 +195,6 @@
 /* ── Clickable file path in inline code ── */
 
 .fileLink {
-  cursor: pointer;
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 0.15em; /* prose 비례 리듬 예외 */

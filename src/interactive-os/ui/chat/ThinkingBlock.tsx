@@ -22,7 +22,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
   })
 
   return (
-    <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.thinking}${settled ? ` ${styles.settled}` : ''}`}>
+    <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.thinking}${settled ? ` bg-transparent ${styles.settled}` : ''}`}>
       <div
         {...toggleProps}
         className={`cursor-pointer select-none ${ax({ layout: 'bar' })} ${styles.thinkingSummary}`}
@@ -36,7 +36,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
         {(!expanded || isLatest) && <span className={`${ax({ flex: '1', text: 'muted' })} ${styles.thinkingPreview}`}> {preview}…</span>}
       </div>
       {expanded && !isLatest && (
-        <div className={`${ax({ layout: 'scroll' })} ${styles.thinkingContent}`}>
+        <div className={`break-word ${ax({ layout: 'scroll' })} ${styles.thinkingContent}`}>
           <MarkdownViewer content={text} styles={chatStyles} codeVariant="compact" />
         </div>
       )}

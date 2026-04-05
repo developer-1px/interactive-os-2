@@ -30,6 +30,7 @@ import {
 import { useKeyMap } from '@os/primitives/useKeyMap'
 import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import styles from './PageAgentChat.module.css'
 
@@ -191,7 +192,7 @@ export default function PageAgentChat() {
   }, [])
 
   return (
-    <div className={`${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
+    <div className={`overflow-hidden ${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
       <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none', border: 'end' }) + ' ' + styles.chatSidebar}>
         <PanelHeader axes={{ layout: 'spread' }}>
           <span>Sessions</span>

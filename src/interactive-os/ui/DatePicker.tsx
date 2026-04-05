@@ -234,7 +234,7 @@ export function DatePicker({
           aria-expanded={isOpen}
           aria-label={ariaLabel}
           aria-autocomplete="none"
-          className={`${ax({ surface: 'input', textStyle: 'body', text: 'primary' })} ${styles.input}`}
+          className={`cursor-default ${ax({ surface: 'input', textStyle: 'body', text: 'primary' })} ${styles.input}`}
           type="text"
           readOnly
           value={value ? formatDate(value) : ''}
@@ -268,7 +268,7 @@ export function DatePicker({
             <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
               <DirectionIndicator direction="prev" />
             </button>
-            <span className={`${ax({ flex: '1', textStyle: 'label', text: 'primary' })} ${styles.monthYear}`} aria-live="polite">{MONTHS[month]} {year}</span>
+            <span className={`text-center ${ax({ flex: '1', textStyle: 'label', text: 'primary' })} ${styles.monthYear}`} aria-live="polite">{MONTHS[month]} {year}</span>
             <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
               <DirectionIndicator direction="next" />
             </button>

@@ -9,6 +9,7 @@ import { StreamingTextBlock } from '@os/ui/chat/StreamingTextBlock'
 import { sendMessage, clearSession, interruptSession, useChatSession } from './chatStore'
 import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
 import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import styles from './PageAgentChat.module.css'
 
 const chatRenderers: BlockRendererMap = {
@@ -170,7 +171,7 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
       />
       <div className={ax({ flex: 'none', padding: 'md' })}>
         {isRunning && (
-          <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' ' + styles.chatActivityBar}>
+          <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' tabular-nums ' + styles.chatActivityBar}>
             <span className={`${ax({ surface: 'base', tone: 'accent', shape: 'pill' })} ${styles.chatDot}`} />
             <span>{label}</span>
             <span>{elapsed}s</span>
@@ -198,7 +199,7 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
             </button>
           )}
         </div>
-        <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' ' + styles.chatStatusBar}>
+        <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' tabular-nums ' + styles.chatStatusBar}>
           <span className={ax({ text: 'secondary' })}>{session.model || 'connecting...'}</span>
           {usage && (
             <>

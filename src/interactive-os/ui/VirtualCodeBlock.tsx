@@ -114,7 +114,7 @@ export function VirtualCodeBlock({
       ? `overflow-hidden ${codeStyles.codeBlock} ${codeStyles.codeBlockCompact}`
       : `overflow-hidden ${codeStyles.codeBlock}`
 
-  const gutterCls = `${ax({ text: 'muted', textStyle: 'code' })} ${vs.gutter}`
+  const gutterCls = `text-right select-none ${ax({ text: 'muted', textStyle: 'code' })} ${vs.gutter}`
 
   return (
     <div ref={containerRef} className={`${cls} ${vs.container}`} onClick={handleClick}>

@@ -4,10 +4,6 @@
   border-collapse: collapse;
 }
 
-/* ── last-mile: header cell — text-align only ── */
-
-/* ── last-mile: day cell ── */
-
 /* ── variant: state ── */
 
 .day:is([data-outside]) {

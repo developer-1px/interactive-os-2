@@ -16,7 +16,5 @@
 .gutter {
   display: inline-block;
   padding-right: 1em;
-  text-align: right;
-  user-select: none;
   opacity: 0.65;
 }

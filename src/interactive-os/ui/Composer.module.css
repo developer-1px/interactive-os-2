@@ -8,7 +8,6 @@
 
 .inputWrap[data-disabled] {
   opacity: 0.4;
-  pointer-events: none;
 }
 
 /* --- Editor wrap (position context for overlay) --- */
@@ -23,10 +22,7 @@
   min-height: calc(var(--leading-snug) * 1em + var(--shape-sm-py) * 2);
   padding: var(--space-sm) var(--space-md);
   line-height: var(--leading-snug);
-  white-space: pre-wrap;
   word-break: break-word;
-  overflow-y: auto;
-  outline: none;
 }
 
 .editor[data-overlay] {
@@ -45,13 +41,8 @@
 /* --- Ghost text overlay — last-mile: positioning, text sync --- */
 
 .overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
   padding: var(--space-sm) var(--space-md);
   line-height: var(--leading-snug);
-  font-family: inherit;
-  white-space: pre-wrap;
   word-break: break-word;
 }
 

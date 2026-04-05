@@ -121,12 +121,12 @@ export function QuickOpen({
 
   return (
     <div className={`${ax({ surface: 'overlay', layout: 'row' })} ${styles.backdrop}`} onClick={handleBackdropClick}>
-      <div className={`${ax({ layout: 'column', shape: 'xl', border: 'default' })} ${styles.dialog}`} aria-label="Quick Open">
+      <div className={`overflow-hidden ${ax({ layout: 'column', shape: 'xl', border: 'default' })} ${styles.dialog}`} aria-label="Quick Open">
         <div className={`${ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })} ${styles.inputRow}`}>
           <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
           <input
             ref={inputRef}
-            className={`${ax({ controlSize: 'md', padding: 'sm', content: 'text', flex: '1' })} ${styles.input}`}
+            className={`border-none outline-none ${ax({ controlSize: 'md', padding: 'sm', content: 'text', flex: '1' })} ${styles.input}`}
             type="text"
             placeholder="파일 검색..."
             value={query}
@@ -148,7 +148,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm', state: state.focused ? 'focused' : undefined })} ${styles.item}`}
+                  className={`cursor-default ${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm', state: state.focused ? 'focused' : undefined })} ${styles.item}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),

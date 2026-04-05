@@ -2,8 +2,6 @@
 
 .fvmDialog {
   padding: 0;
-  border: none;
-  background: transparent;
   max-width: none;
   max-height: none;
   width: 100vw;
@@ -26,7 +24,6 @@
   width: 85vw;
   max-width: var(--content-xl);
   height: 85vh;
-  overflow: hidden;
   box-shadow: var(--shadow-lg);
 }
 

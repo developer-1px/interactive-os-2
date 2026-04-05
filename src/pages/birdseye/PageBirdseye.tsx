@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import mermaid from 'mermaid'
 import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import type { TreeNode } from '../viewer/fsClient'
 import { fetchTree } from '../viewer/fsClient'
@@ -92,12 +93,12 @@ export default function PageBirdseye() {
 
   return (
     <AriaRoute keyMap={keyMap} label="Birdseye">
-      <div className={`${styles.container} flex-col`}>
+      <div className={`overflow-hidden ${styles.container} flex-col`}>
         <PanelHeader>
           <span className={`${styles.breadcrumb} flex-row items-center`}>
             {layer ? (
               <>
-                <button className={`${ax({ text: 'muted' })} ${styles.breadcrumbBtn}`} onClick={goToL1}>Overview</button>
+                <button className={`cursor-pointer ${ax({ text: 'muted' })} ${styles.breadcrumbBtn}`} onClick={goToL1}>Overview</button>
                 <span className={`${ax({ opacity: 'faint', text: 'muted' })} ${styles.breadcrumbSep}`}>/</span>
                 <span>{layer}</span>
               </>
@@ -107,7 +108,7 @@ export default function PageBirdseye() {
           </span>
         </PanelHeader>
 
-        <div className={`${ax({ flex: '1' })} ${styles.diagram}`} ref={containerRef} onClick={handleClick}>
+        <div className={`overflow-auto ${ax({ flex: '1' })} ${styles.diagram}`} ref={containerRef} onClick={handleClick}>
           {error ? (
             <span className={`${ax({ text: 'muted', textStyle: 'body' })}`}>{error}</span>
           ) : svg ? (

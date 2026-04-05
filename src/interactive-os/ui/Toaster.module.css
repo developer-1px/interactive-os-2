@@ -9,7 +9,6 @@
   z-index: 9999;
   flex-direction: column-reverse;
   max-width: var(--overlay-width);
-  pointer-events: none;
 }
 
 .toast {

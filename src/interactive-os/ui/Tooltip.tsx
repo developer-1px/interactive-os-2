@@ -63,7 +63,7 @@ export function Tooltip({ content, placement = 'bottom', children }: TooltipProp
         id={id}
         popover="hint"
         role="tooltip"
-        className={`${ax({ surface: 'overlay', padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'primary' })} ${s.tooltip} ${s[placement]}`}
+        className={`pointer-none ${ax({ surface: 'overlay', padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'primary' })} ${s.tooltip} ${s[placement]}`}
         style={{ positionAnchor: anchorName } as CSSProperties}
       >
         {content}
