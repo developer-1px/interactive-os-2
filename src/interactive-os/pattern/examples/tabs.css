@@ -1,15 +1,15 @@
 /* ── tabs last-mile ── */
 
-.tab-item {
+.tabs-demo-item {
   border-bottom: var(--border-width-thick) solid transparent;
 }
 
-.tab-item[aria-selected='true'] {
+.tabs-demo-item[aria-selected='true'] {
   color: var(--text-primary);
   border-bottom-color: var(--focus);
   font-weight: var(--weight-semi);
 }
 
-.tab-item:is([data-focused='true']) {
+.tabs-demo-item:is([data-focused='true']) {
   background: var(--bg-hover);
 }
