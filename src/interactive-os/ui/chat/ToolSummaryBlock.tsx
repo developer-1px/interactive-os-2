@@ -24,7 +24,7 @@ function FilePathLink({ path, children }: { path: string; children: React.ReactN
   const open = () => window.dispatchEvent(new CustomEvent('inspector:open-source', { detail: { fileName: path } }))
   return (
     <span
-      className={`${ax({ text: 'muted' })} ${styles.toolDetail} ${styles.filePathLink}`}
+      className={`${ax({ text: 'muted', clamp: '1', shape: 'sm' })} ${styles.toolDetail} ${styles.filePathLink}`}
       role="button"
       tabIndex={0}
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); open() }}
@@ -89,7 +89,7 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
   return (
     <div className={`${ax({ layout: 'bar', textStyle: 'caption', text: 'secondary' })} ${styles.toolRow}`}>
       <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
-      <span><span className={ax({ weight: 'semi' })}>{name}</span>{detail ? ' ' : ''}<span className={`${ax({ text: 'muted' })} ${styles.toolDetail}`}>{detail}</span></span>
+      <span><span className={ax({ weight: 'semi' })}>{name}</span>{detail ? ' ' : ''}<span className={`${ax({ text: 'muted', clamp: '1' })} ${styles.toolDetail}`}>{detail}</span></span>
     </div>
   )
 }
@@ -112,23 +112,23 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
   const isLong = lines.length > 3 || text.length > 200
 
   if (!isLong) {
-    return <pre className={`${ax({ text: 'muted' })} ${styles.toolResult}`}>{text}</pre>
+    return <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} ${styles.toolResult}`}>{text}</pre>
   }
 
   return (
     <div>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar', textStyle: 'caption', text: 'muted' })} ${styles.toolResultSummary}`}
+        className={`${ax({ layout: 'bar', textStyle: 'code', text: 'muted' })} ${styles.toolResultSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
         <ExpandIndicator variant="expand" expanded={expanded} />
-        <span className={styles.toolResultPreview}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
+        <span className={`${ax({ clamp: '1' })} ${styles.toolResultPreview}`}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
       </div>
-      {expanded && <pre className={`${ax({ text: 'muted' })} ${styles.toolResult}`}>{text}</pre>}
+      {expanded && <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} ${styles.toolResult}`}>{text}</pre>}
     </div>
   )
 }
@@ -197,14 +197,14 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
     )
   } else if (text) {
-    content = <pre className={`${ax({ text: 'muted' })} ${styles.toolGroupResult}`}>{text}</pre>
+    content = <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} ${styles.toolGroupResult}`}>{text}</pre>
   }
 
   // No content → non-collapsible row
   if (!content) {
     return (
-      <div className={styles.toolGroup}>
-        <div className={`${ax({ layout: 'bar', text: 'secondary' })} ${styles.toolGroupSummary}`}>
+      <div className={`${ax({ shape: 'md' })} ${styles.toolGroup}`}>
+        <div className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}>
           <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
           <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
         </div>
@@ -213,10 +213,10 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   }
 
   return (
-    <div className={styles.toolGroup}>
+    <div className={`${ax({ shape: 'md' })} ${styles.toolGroup}`}>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar', text: 'secondary' })} ${styles.toolGroupSummary}`}
+        className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
