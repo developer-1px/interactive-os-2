@@ -1,12 +1,3 @@
-/* ── Combobox — last-mile only ──
-   ax() handles: surface, controlSize, layout, gap, text, width, shape, state
-   module.css handles: dropdown positioning, placeholder */
-
-/* ═══ Input — last-mile ═══ */
-.comboInput::placeholder {
-  color: var(--text-muted);
-}
-
 /* ═══ Dropdown — positioning ═══ */
 .comboDropdown {
   margin-top: var(--space-xs);

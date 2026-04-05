@@ -1,13 +1,6 @@
-/* SplitPane — ratio-based resizable split container
-   // ② 2026-03-26-component-styling-rules-prd.md */
-
-.separator {}
-
 .separatorH {
   width: var(--border-width);
   border-left: var(--border-width) solid var(--border-default);
-  cursor: col-resize;
-  position: relative;
 }
 .separatorH::before {
   content: '';
@@ -18,8 +11,6 @@
 .separatorV {
   height: var(--border-width);
   border-top: var(--border-width) solid var(--border-default);
-  cursor: row-resize;
-  position: relative;
 }
 .separatorV::before {
   content: '';

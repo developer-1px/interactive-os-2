@@ -17,35 +17,3 @@
 .badge {
   margin-left: auto;
 }
-
-.header {
-  padding: var(--space-xs) var(--shape-xs-px);
-}
-
-.nested {
-  padding-left: var(--space-lg);
-}
-
-.valueTrack {
-  height: var(--space-sm);
-  background: var(--surface-raised);
-  border-radius: var(--shape-pill-radius);
-}
-
-.valueThumb {
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: var(--space-lg);
-  height: var(--space-lg);
-  background: var(--tone-primary-base);
-  border-radius: var(--shape-pill-radius);
-}
-
-.valueThumbFocused {
-  outline: var(--focus-ring) solid var(--focus);
-  outline-offset: var(--indicator-width);
-}
-
-.valueLabel {
-  padding-top: var(--space-xs);
-}

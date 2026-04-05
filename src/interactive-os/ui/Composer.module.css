@@ -2,18 +2,8 @@
 
 /* --- Input wrapper — last-mile: border-radius, focus ring, disabled --- */
 
-.inputWrap {
-  position: relative;
-}
-
 .inputWrap[data-disabled] {
   opacity: 0.4;
-}
-
-/* --- Editor wrap (position context for overlay) --- */
-
-.editorWrap {
-  position: relative;
 }
 
 /* --- Editable content — last-mile: padding, whitespace, min-height --- */
@@ -49,10 +39,6 @@
 /* --- Suggestion popup (above input, Slack-style) — last-mile --- */
 
 .suggestionList {
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  right: 0;
   margin: 0;
   list-style: none;
   overflow-y: auto;

@@ -7,8 +7,6 @@
 /* --- last-mile: positioning & animation --- */
 
 .backdrop {
-  position: fixed;
-  inset: 0;
   z-index: 100;
   justify-content: center;
   padding-top: 12vh;

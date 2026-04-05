@@ -4,7 +4,6 @@
 /* --- Shared: icon row pattern --- */
 
 .iconRow {
-  position: relative;
   padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--chat-indent);
   min-height: var(--icon-sm);
 }
@@ -116,7 +115,6 @@
 }
 
 /* toolChainLabel: ax({ textStyle: 'code' }) in TSX */
-
 
 .toolChainRow {
   composes: iconRow;

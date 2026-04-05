@@ -182,7 +182,7 @@ export default function PageBookViewer() {
     >
       <div className={`${ax({ surface: 'base', text: 'primary' })} ${styles.book}`}>
         {/* ── Page content ── */}
-        <div className={styles.pageArea} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
+        <div className={`relative ${styles.pageArea}`} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
           {/* ── Floating pill — top-left ── */}
           <div className={`${styles.pill} ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
             <button
@@ -197,13 +197,13 @@ export default function PageBookViewer() {
           </div>
 
           {/* ── Page footer — breadcrumb + page number, bottom-center ── */}
-          <div className={`${styles.pageNumber} ${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })}`}>
+          <div className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted', placement: 'bottom-center' })} ${styles.pageNumber}`}>
             {page && <Breadcrumb path={page.id} root="" />}
             <span>{currentPage + 1}/{pages.length}</span>
           </div>
 
           {/* ── Progress — bottom edge ── */}
-          <div className={styles.progressBar} data-visible={chromeVisible}>
+          <div className={`${ax({ placement: 'bottom' })} ${styles.progressBar}`} data-visible={chromeVisible}>
             <div className={styles.progressFill} style={{ width: `${progressPercent}%` }} />
           </div>
           <SpreadReader
@@ -217,7 +217,7 @@ export default function PageBookViewer() {
           </SpreadReader>
 
           {/* Spread / page navigation */}
-          <nav className={styles.pageNav} data-visible={chromeVisible}>
+          <nav className={`${ax({ placement: 'bottom' })} ${styles.pageNav}`} data-visible={chromeVisible}>
             <div>
               {!isFirstSpread && (
                 <button
@@ -253,7 +253,7 @@ export default function PageBookViewer() {
           </nav>
 
           {/* ── Overlay TOC ── */}
-          <div className={styles.tocOverlay} data-open={tocOpen}>
+          <div className={`${ax({ placement: 'center' })} ${styles.tocOverlay}`} data-open={tocOpen}>
             <div className={styles.tocOverlayPanel}>
               <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
                 <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>

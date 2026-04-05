@@ -81,7 +81,7 @@ export function Kanban({
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className={`${ax({ layout: 'bar', gap: 'sm', textStyle: compact ? 'caption' : 'overline', text: 'secondary', padding: 'xs', shape: 'sm', clamp: compact ? '1' : undefined })} ${styles.columnHeader}`}
+                className={`relative ${ax({ layout: 'bar', gap: 'sm', textStyle: compact ? 'caption' : 'overline', text: 'secondary', padding: 'xs', shape: 'sm', clamp: compact ? '1' : undefined })} ${styles.columnHeader}`}
                 title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
                 style={locRatio > 0 ? { '--_loc-ratio': locRatio } as React.CSSProperties : undefined}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}

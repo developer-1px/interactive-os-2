@@ -38,17 +38,6 @@
   width: auto;
 }
 
-.dirToggle {
-  all: unset;
-  margin-left: auto;
-  padding: var(--space-xs) var(--space-sm);
-}
-
-.dirToggle:hover {
-  color: var(--text-bright);
-  background: var(--surface-sunken);
-}
-
 /* Make nodes and subgraphs clickable */
 .diagram :global(.cluster),
 .diagram :global(.node) {

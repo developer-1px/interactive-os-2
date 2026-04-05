@@ -23,8 +23,6 @@ import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYP
 import { CmsInlineEditable } from './CmsInlineEditable'
 import { cmsCanDelete } from './cmsSchema'
 import { SelectionOverlay } from '@os/ui/SelectionOverlay'
-import landingStyles from './CmsLanding.module.css'
-
 interface CmsCanvasProps {
   engine: CommandEngine
   store: NormalizedData
@@ -347,7 +345,7 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
           className={className}
         >
           {/* eslint-disable-next-line local/no-raw-aria-role -- CMS renderer: AriaZone이 role 미포함, pattern이 tablist 관리 */}
-          <div className={`${landingStyles.cmsTablist} flex-row`} role="tablist">
+          <div className={`flex-row`} role="tablist">
             {tabItems.map(tabId => {
               const tabEntity = currentStore.entities[tabId]
               if (!tabEntity) return null
@@ -367,7 +365,7 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
                   onKeyDown={tkd as React.KeyboardEventHandler}
                   onFocus={tf as React.FocusEventHandler}
                   onClick={(e) => handleNodeClick(tabId, e)}
-                  className={`${getNodeClassName(tabData as Record<string, string>)}${isActive ? ` ${landingStyles.cmsTabItemActive}` : ''}`}
+                  className={`${getNodeClassName(tabData as Record<string, string>)}${isActive ? ` ` : ''}`}
                 >
                   <CmsInlineEditable
                     nodeId={tabId}
@@ -479,7 +477,7 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
   }, [aria])
 
   return (
-    <div ref={containerRef} {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} className={`cms-landing ${landingStyles.cmsLanding} w-full overflow-x-hidden relative`} data-cms-root data-aria-container="">
+    <div ref={containerRef} {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} className={`cms-landing w-full overflow-x-hidden relative`} data-cms-root data-aria-container="">
       {getChildren(currentStore, ROOT_ID).map(id => renderNode(id))}
       <SelectionOverlay
         containerRef={containerRef}

@@ -356,9 +356,6 @@
 .ly-scroll:hover::-webkit-scrollbar-thumb { background: var(--border-default); }
 /* 부모를 꽉 채우는 패인/분할창. 자식이 넘치면 클립. 콘텐츠는 내부에서 ly-scroll로 처리. */
 .ly-fill   { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
-/* 고정 헤더 (sticky top) */
-.ly-sticky { position: sticky; top: 0; z-index: 1; }
-
 /* ── Grid — equal-column 그리드 ── */
 .ly-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
 .ly-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
@@ -511,6 +508,17 @@
 .pre-wrap     { white-space: pre-wrap; }
 .break-word   { overflow-wrap: break-word; }
 .tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* ── Placement — 의도 기반 배치 (position + inset + transform 번들) ── */
+/* ② 2026-04-05-placement-axis-prd.md */
+.pl-above         { position: absolute; bottom: 100%; left: 0; right: 0; }
+.pl-below         { position: absolute; top: 100%; left: 0; right: 0; }
+.pl-bottom        { position: absolute; bottom: 0; left: 0; right: 0; }
+.pl-bottom-center { position: absolute; bottom: var(--space-md); left: 50%; transform: translateX(-50%); }
+.pl-center        { position: absolute; inset: 0; margin: auto; width: fit-content; height: fit-content; }
+.pl-top-start     { position: absolute; top: 0; inset-inline-start: 0; }
+.pl-viewport      { position: fixed; inset: 0; }
+.pl-sticky        { position: sticky; top: 0; z-index: 1; }
 
 /* layout helpers */
 .relative { position: relative; }

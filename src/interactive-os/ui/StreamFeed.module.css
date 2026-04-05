@@ -1,13 +1,3 @@
-/* StreamFeed — streaming feed container
-   ② 2026-03-25-stream-feed-prd.md */
-
-/* --- Wrapper: relative anchor for FAB --- */
-
-.wrapper {
-  min-height: 0;
-  position: relative;
-}
-
 /* --- Container: :where() for specificity 0 defaults --- */
 
 :where(.feed) {
@@ -58,9 +48,6 @@
 /* --- Scroll to bottom FAB --- */
 
 .scrollFab {
-  bottom: var(--space-md);
-  left: 50%;
-  transform: translateX(-50%);
   width: var(--sidebar-item-height);
   height: var(--sidebar-item-height);
   --_bg: var(--surface-overlay);

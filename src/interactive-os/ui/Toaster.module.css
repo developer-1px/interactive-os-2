@@ -1,16 +1,3 @@
-/* ── Toaster — last-mile overrides ──
-   ax() handles: layout, gap, padding, surface, tone, textStyle, text, controlSize
-   module.css handles: positioning, animation, variant border colors */
-
-.container {
-  position: fixed;
-  bottom: var(--space-lg);
-  right: var(--space-lg);
-  z-index: 9999;
-  flex-direction: column-reverse;
-  max-width: var(--overlay-width);
-}
-
 .toast {
   pointer-events: auto;
 }

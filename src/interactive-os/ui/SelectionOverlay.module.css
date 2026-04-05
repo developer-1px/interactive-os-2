@@ -1,23 +1,8 @@
 /* ── base ── */
 
-.rect {
-  transition: opacity var(--motion-instant-duration);
-}
-
-.label {
-  padding: var(--space-xs) var(--space-sm);
-}
-
 /* ── variant: kind ── */
 
 .focus {
-  --_border: var(--focus);
-  --_bg: transparent;
-  --_label-bg: var(--focus);
-  --_label-color: var(--tone-primary-foreground);
-}
-
-.selection {
   --_border: var(--focus);
   --_bg: transparent;
   --_label-bg: var(--focus);
@@ -32,13 +17,3 @@
 }
 
 /* ── apply variants ── */
-
-.rect {
-  border: var(--focus-ring) solid var(--_border);
-  background: var(--_bg);
-}
-
-.label {
-  background: var(--_label-bg);
-  color: var(--_label-color);
-}

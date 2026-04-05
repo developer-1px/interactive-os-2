@@ -6,7 +6,6 @@ import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { MarkdownViewer } from '../MarkdownViewer'
 import { useChatFeatures } from './chatFeatures'
 import { useDisclosure } from './useDisclosure'
-import chatStyles from './TextBlock.module.css'
 import styles from './ThinkingBlock.module.css'
 import type { DataBlock } from './types'
 
@@ -37,7 +36,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
       </div>
       {expanded && !isLatest && (
         <div className={`break-word ${ax({ layout: 'scroll' })} ${styles.thinkingContent}`}>
-          <MarkdownViewer content={text} styles={chatStyles} codeVariant="compact" />
+          <MarkdownViewer content={text} styles={{}} codeVariant="compact" />
         </div>
       )}
     </div>

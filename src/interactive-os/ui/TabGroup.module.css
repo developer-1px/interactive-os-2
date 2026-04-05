@@ -1,11 +1,3 @@
-/* ── TabGroup — JetBrains Islands style ──
-   // ② 2026-03-26-component-styling-rules-prd.md */
-
-/* last-mile: tabBar separator (line, not surface) */
-.tabBar {
-  flex-shrink: 0;
-}
-
 /* ── Tab — last-mile: selected state colors, preview italic ── */
 .tab {
   white-space: nowrap;

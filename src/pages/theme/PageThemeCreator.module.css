@@ -117,10 +117,6 @@
 
 /* ── Card image placeholder ── */
 
-.cardImage {
-  background: linear-gradient(135deg, var(--tone-primary-dim), var(--tone-primary-mid));
-}
-
 /* ── Layout showcase ── */
 
 .layoutBox {
@@ -133,29 +129,11 @@
 
 /* ── Composed: stat bar ── */
 
-.statBar {
-  height: var(--space-xs);
-  width: 100%;
-}
-.statBar[data-tone="accent"]  { background: var(--tone-primary-base); }
-.statBar[data-tone="success"] { background: var(--tone-success-base); }
-.statBar[data-tone="warning"] { background: var(--tone-warning-base); }
-.statBar[data-tone="neutral"] { background: var(--bg-hover); }
-
 /* ── Composed: notification row ── */
 
 .notifRow:last-child { border-bottom: none; }
 
-.notifDot[data-tone="accent"]  { background: var(--tone-primary-base); }
-.notifDot[data-tone="success"] { background: var(--tone-success-base); }
-.notifDot[data-tone="warning"] { background: var(--tone-warning-base); }
-.notifDot[data-tone="danger"]  { background: var(--tone-destructive-base); }
-
 /* ── Composed: avatar ── */
-
-.avatar {
-  background: var(--tone-primary-base);
-}
 
 /* ── Composed: textarea ── */
 

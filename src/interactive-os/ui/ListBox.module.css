@@ -1,6 +1,1 @@
-/* ── ListBox — module.css (ax()로 불가능한 것만) ── */
-
-/* ═══ state — data-attr 기반 ═══ */
-.item[data-selected='true'] span {
-  font-weight: var(--weight-semi);
-}
+/* ── ListBox — module.css last-mile ── */

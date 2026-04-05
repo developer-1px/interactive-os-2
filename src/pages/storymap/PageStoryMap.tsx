@@ -2,8 +2,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { parseStoryMap } from './storyMapSchema'
 import type { Need, Story, Feature, StoryMap } from './storyMapSchema'
 import { ax } from '@styles/ax'
-import css from './PageStoryMap.module.css'
-
 import { TabList } from '@os/ui/TabList'
 import { SpatialView } from '@os/ui/SpatialView'
 import type { NormalizedData } from '@os/store/types'
@@ -42,21 +40,21 @@ function toSpatialStore(map: StoryMap): NormalizedData {
 
 function StoryCard({ story, focused }: { story: Story; focused: boolean }) {
   return (
-    <div className={`${css.smStory} ${ax({ aspect: '1' })} flex-col border-none`} data-status={story.status} data-focused={focused || undefined}>
+    <div className={`${ax({ aspect: '1' })} flex-col border-none`} data-status={story.status} data-focused={focused || undefined}>
       <div className="flex-row items-center justify-between">
-        <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smStoryId}`}>{story.id}</span>
+        <span className={`${ax({ textStyle: 'caption', text: 'muted' })} `}>{story.id}</span>
         {story.status === 'blocked' && (
-          <span className={`${css.smStoryBlocked} ${ax({ size: 'sm' })} shrink-0`} />
+          <span className={`${ax({ size: 'sm' })} shrink-0`} />
         )}
       </div>
-      <div className={`${ax({ textStyle: 'body', text: 'primary' })} ${css.smStoryText}`}>{story.story}</div>
+      <div className={`${ax({ textStyle: 'body', text: 'primary' })} `}>{story.story}</div>
       {story.links.length > 0 && (
-        <div className={`${css.smLinks} flex-row flex-wrap`}>
+        <div className={`flex-row flex-wrap`}>
           {story.links.map(link => (
             <a
               key={link.url}
               href={link.url}
-              className={`${ax({ textStyle: 'caption', text: 'accent' })} ${css.smLinksItem} no-underline`}
+              className={`${ax({ textStyle: 'caption', text: 'accent' })} no-underline`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -71,13 +69,13 @@ function StoryCard({ story, focused }: { story: Story; focused: boolean }) {
 
 function FeatureCard({ feature, focused }: { feature: Feature; focused: boolean }) {
   return (
-    <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${css.smFeature} flex-col border-none`} data-focused={focused || undefined}>
-      <span className={`${ax({ text: 'muted' })} ${css.smFeatureId}`}>{feature.id}</span>
-      <div className={`${ax({ text: 'secondary' })} ${css.smFeatureText}`}>{feature.feature}</div>
+    <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} flex-col border-none`} data-focused={focused || undefined}>
+      <span className={`${ax({ text: 'muted' })} `}>{feature.id}</span>
+      <div className={`${ax({ text: 'secondary' })} `}>{feature.feature}</div>
       {feature.screens.length > 0 && (
-        <div className={`${css.smFeatureScreens} flex-row`}>
+        <div className={`flex-row`}>
           {feature.screens.map(s => (
-            <span key={s} className={`${ax({ textStyle: 'caption', weight: 'medium', text: 'muted' })} ${css.smFeatureScreenTag}`}>{s}</span>
+            <span key={s} className={`${ax({ textStyle: 'caption', weight: 'medium', text: 'muted' })} `}>{s}</span>
           ))}
         </div>
       )}
@@ -111,30 +109,30 @@ export default function PageStoryMap() {
   }, [])
 
   return (
-    <div className={`${css.sm} flex-col h-full overflow-hidden`}>
-      <div className={`${ax({ border: 'bottom' })} ${css.smHeader} flex-row items-center shrink-0`}>
-        <div className={`${css.smHeaderLeft} flex-row items-center min-w-0`}>
+    <div className={`flex-col h-full overflow-hidden`}>
+      <div className={`${ax({ border: 'bottom' })} flex-row items-center shrink-0`}>
+        <div className={`flex-row items-center min-w-0`}>
           <TabList
             data={tabStore}
             onActivate={handleActivate}
             initialFocus={sourceId}
             aria-label="Story map source"
           />
-          <div className={`${css.smLegend} flex-row items-center shrink-0`} role="list" aria-label="Status legend">
+          <div className={`flex-row items-center shrink-0`} role="list" aria-label="Status legend">
             {(['pending', 'active', 'done', 'blocked'] as const).map(status => (
-              <div key={status} className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smLegendItem} flex-row items-center`} role="listitem">
-                <span className={`${ax({ border: 'subtle' })} ${css.smLegendSwatch} shrink-0`} data-status={status} />
+              <div key={status} className={`${ax({ textStyle: 'caption', text: 'muted' })} flex-row items-center`} role="listitem">
+                <span className={`${ax({ border: 'subtle' })} shrink-0`} data-status={status} />
                 {status}
               </div>
             ))}
           </div>
         </div>
       </div>
-      <div className={`${css.smBody} flex-1 overflow-auto`}>
+      <div className={`flex-1 overflow-auto`}>
         <SpatialView data={spatialStore} aria-label="Story map">
           {({ getNodeProps, getNodeState }) => (
             <div
-              className={`${css.smMap} grid`}
+              className={`grid`}
               style={{ gridTemplateColumns: `repeat(${totalColumns}, var(--_col-width))` }}
             >
               {/* Row 1: Need headers spanning their story columns */}
@@ -144,11 +142,11 @@ export default function PageStoryMap() {
                 return (
                   <div
                     key={need.id}
-                    className={`${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} ${css.smNeedHeader} flex-col`}
+                    className={`${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} flex-col`}
                     style={{ gridColumn: `${colStart} / span ${span}` }}
                   >
-                    <div className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smNeedHeaderTop} flex-row items-center`}>
-                      <span className={`${ax({ textStyle: 'caption', weight: 'semi', text: 'accent' })} ${css.smPersonaBadge} inline-flex items-center justify-center`}>{persona}</span>
+                    <div className={`${ax({ textStyle: 'caption', text: 'muted' })} flex-row items-center`}>
+                      <span className={`${ax({ textStyle: 'caption', weight: 'semi', text: 'accent' })} inline-flex items-center justify-center`}>{persona}</span>
                       {need.id} · {need.persona}
                     </div>
                     {need.need}
@@ -161,7 +159,7 @@ export default function PageStoryMap() {
                 need.stories.map((story, i) => (
                   <div
                     key={story.id}
-                    className={`${css.smStoryCol} grid`}
+                    className={`grid`}
                     data-status={story.status}
                     style={{ gridColumn: colStart + i }}
                   >
