@@ -22,8 +22,11 @@ type State = 'focused' | 'selected'
 type Opacity = 'dim' | 'faint' | 'hidden'
 // motion: 반복 애니메이션 (transition은 surface 소유, motion은 반복/진입)
 type Motion = 'pulse' | 'spin' | 'fade-in' | 'slide-up'
+  | 'fade-slide-in' | 'slide-in' | 'scale-in' | 'blink' | 'shimmer'
 // content: 콘텐츠 유형 — padding의 inline:block 비율을 결정 (text=2:1)
 type Content = 'text'
+// scroll: overflow 제어 — 컨테이너 경계 클리핑 또는 스크롤 방향
+type Scroll = 'hidden' | 'y' | 'x' | 'auto'
 // border: 테두리 — 전체 또는 단면 구분선
 type Border = 'subtle' | 'default' | 'strong'
   | 'bottom' | 'top' | 'start' | 'end'
@@ -86,6 +89,7 @@ export interface Axes {
   motion?: Motion
   content?: Content
   border?: Border
+  scroll?: Scroll
 
   // 구조 축
   placement?: Placement
@@ -115,6 +119,7 @@ const prefixes: Record<keyof Axes, string> = {
   motion: 'mo',
   content: 'ct',
   border: 'bd',
+  scroll: 'sc',
   placement: 'pl',
   layout: 'ly',
   gap: 'g',
