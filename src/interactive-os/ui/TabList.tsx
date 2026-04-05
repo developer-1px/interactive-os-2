@@ -55,15 +55,8 @@ export function TabList({
         const entity = store.entities[id]
         if (!entity) return null
         const state = tl.getItemState(id)
-        const props = tl.getItemProps(id)
-        return (
-          <div
-            key={id}
-            {...(props as React.HTMLAttributes<HTMLDivElement>)}
-          >
-            {renderItem({} as React.HTMLAttributes<HTMLElement>, entity, state)}
-          </div>
-        )
+        const props = { ...tl.getItemProps(id), key: id } as React.HTMLAttributes<HTMLElement>
+        return renderItem(props, entity, state)
       })}
     </div>
   )
