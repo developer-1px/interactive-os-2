@@ -7,6 +7,7 @@ import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { ComponentInspector } from './devtools/inspector/ComponentInspector'
 import { openInspectorWindow } from './devtools/inspector/openInspectorWindow'
 import { AriaRoute } from '@os/primitives/AriaRoute'
+import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { useTheme } from './hooks/useTheme'
 import { ActivityBar } from './ActivityBar'
 
@@ -36,10 +37,7 @@ export default function AppShell() {
   }, [])
 
   const shellKeyMap = useMemo(() => ({
-    'Mod+Shift+I': () => {
-      openInspectorWindow()
-      return { type: 'shell:open-inspector' } as const
-    },
+    'Mod+Shift+I': defineRouteKey('shell:open-inspector', () => openInspectorWindow(), 'Shell'),
   }), [])
 
   return (

@@ -3,6 +3,7 @@ import { SpreadReader } from '@os/ui/SpreadReader'
 import { FilePreview } from '@os/ui/FilePreview'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { AriaRoute } from '@os/primitives/AriaRoute'
+import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { fetchFile } from '../fsClient'
 import { ax } from '@styles/ax'
 
@@ -20,7 +21,7 @@ export function FilePanel({ path }: { path: string }) {
   const isMarkdown = filename.endsWith('.md')
 
   const keyMap = useMemo(() => ({
-    'Meta+b': () => { if (isMarkdown) setSpreadMode(s => !s); return { type: 'file-panel:toggle-spread' } as const },
+    'Meta+b': defineRouteKey('file-panel:toggle-spread', () => { if (isMarkdown) setSpreadMode(s => !s) }, 'FilePanel'),
   }), [isMarkdown])
 
   if (isMarkdown && spreadMode) {
