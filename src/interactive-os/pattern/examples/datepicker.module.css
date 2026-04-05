@@ -48,12 +48,6 @@
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--shape-sm-radius);
   box-shadow: var(--shadow-lg);
-  /* depth ladder */
-  --bg-hover:          var(--depth-overlay-hover);
-  --bg-active:         var(--depth-overlay-active);
-  --selection-context: var(--depth-overlay-sel-context);
-  --selection:         var(--depth-overlay-sel);
-  --selection-cursor:  var(--depth-overlay-sel-cursor);
 }
 
 /* ── nav bar (month/year buttons) ── */

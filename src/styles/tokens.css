@@ -78,10 +78,9 @@
   --indicator-width: 2px;
 
   /* ── Depth ladder — interactive token values per zone ──
-     [data-depth] zones in surface.css consume these.
-     Theme switch = override these tokens, zone rules stay unchanged.
-     Pattern: --depth-{zone}-{state}
-     Each zone shifts the ladder up by 1 palette step. */
+     sf-sunken/sf-base/sf-overlay in ax.css consume these.
+     Theme switch = override these tokens only.
+     Pattern: --depth-{zone}-{state} */
 
   --depth-sunken-hover:       var(--stone-850);
   --depth-sunken-active:      var(--stone-800);
@@ -286,8 +285,7 @@
   --focus-idle: var(--bg-hover);
 
   /* ── Depth ladder — light ──
-     light에서 raised/overlay는 모두 white → 동일 래더.
-     sunken만 배경이 다르므로 별도 래더. */
+     light: sunken은 별도 래더, base/raised/overlay는 공유. */
 
   --depth-sunken-hover:       var(--stone-200);
   --depth-sunken-active:      var(--stone-300);
@@ -301,17 +299,17 @@
   --depth-base-sel:           var(--stone-200);
   --depth-base-sel-cursor:    var(--stone-300);
 
-  --depth-raised-hover:       var(--stone-100);
-  --depth-raised-active:      var(--stone-200);
+  --depth-raised-hover:       var(--depth-base-hover);
+  --depth-raised-active:      var(--depth-base-active);
   --depth-raised-sel-context: var(--stone-50);
-  --depth-raised-sel:         var(--stone-200);
-  --depth-raised-sel-cursor:  var(--stone-300);
+  --depth-raised-sel:         var(--depth-base-sel);
+  --depth-raised-sel-cursor:  var(--depth-base-sel-cursor);
 
-  --depth-overlay-hover:       var(--stone-100);
-  --depth-overlay-active:      var(--stone-200);
-  --depth-overlay-sel-context: var(--stone-50);
-  --depth-overlay-sel:         var(--stone-200);
-  --depth-overlay-sel-cursor:  var(--stone-300);
+  --depth-overlay-hover:       var(--depth-raised-hover);
+  --depth-overlay-active:      var(--depth-raised-active);
+  --depth-overlay-sel-context: var(--depth-raised-sel-context);
+  --depth-overlay-sel:         var(--depth-raised-sel);
+  --depth-overlay-sel-cursor:  var(--depth-raised-sel-cursor);
 
   /* ── Interactive (base depth default) ── */
   --bg-hover:          var(--depth-base-hover);

@@ -26,9 +26,6 @@
   margin: 0;
   background: var(--surface-raised);
   border-bottom: var(--border-width) solid var(--border-default);
-  /* depth ladder — menubar items hover adapts to raised bg */
-  --bg-hover:          var(--depth-raised-hover);
-  --bg-active:         var(--depth-raised-active);
 }
 
 .wrapper [role='menubar']:focus-within {
@@ -63,12 +60,6 @@
   border-radius: var(--shape-xs-radius);
   box-shadow: var(--shadow-md);
   z-index: 1;
-  /* depth ladder — menuitem hover adapts to overlay bg */
-  --bg-hover:          var(--depth-overlay-hover);
-  --bg-active:         var(--depth-overlay-active);
-  --selection-context: var(--depth-overlay-sel-context);
-  --selection:         var(--depth-overlay-sel);
-  --selection-cursor:  var(--depth-overlay-sel-cursor);
 }
 
 .submenuRoot {
