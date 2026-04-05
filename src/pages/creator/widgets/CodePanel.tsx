@@ -15,7 +15,6 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
     <div className="flex-col overflow-hidden">
       <PanelHeader axes={{ textStyle: 'caption' }}>
         <button
-          data-surface="action"
           className={ax({ surface: 'ghost', padding: 'xs', shape: 'sm', text: sourceTab === 'tsx' ? 'primary' : 'muted', weight: sourceTab === 'tsx' ? 'medium' : undefined })}
           onClick={() => setSourceTab('tsx')}
         >

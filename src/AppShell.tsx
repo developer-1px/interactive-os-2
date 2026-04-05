@@ -14,7 +14,6 @@ import './styles/palette.css'       // L0: OKLCH color palette
 import './styles/reset.css'        // L1: Browser initialization
 import './styles/tokens.css'       // L2: Design token values
 import './styles/structure.css'    // L2.5: Atomic layout classes
-import './styles/surface.css'      // L3: Surface elevation bundles
 import './styles/interactive.css'  // L4: Interaction policy (hover, focus, disabled...)
 import './interactive-os/ui/indicators/indicators.css'  // L4: Indicator part classes
 import './styles/layout.css'       // App layout (sidebar, page grid)

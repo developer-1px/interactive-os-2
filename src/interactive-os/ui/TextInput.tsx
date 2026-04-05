@@ -12,9 +12,8 @@ export function TextInput({ align = 'left', size, className, ...props }: TextInp
   return (
     <input
       type="text"
-      data-surface="input"
       data-align={align}
-      className={`${ax({ textStyle: 'caption', text: 'primary', controlSize: size, padding: 'sm', content: 'text' })} ${styles.input}${className ? ` ${className}` : ''}`}
+      className={`${ax({ surface: 'input', textStyle: 'caption', text: 'primary', controlSize: size, padding: 'sm', content: 'text' })} ${styles.input}${className ? ` ${className}` : ''}`}
       {...props}
     />
   )
