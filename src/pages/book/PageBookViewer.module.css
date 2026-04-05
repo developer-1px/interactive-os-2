@@ -6,11 +6,11 @@
 /* ── base ── */
 
 .book {
-  --_page-col-width: 400px;
+  --_page-col-width: var(--overlay-width);
   --_page-padding-x: var(--space-5xl);
   --_page-padding-y: var(--space-5xl);
   --_page-col-gap: var(--space-3xl);
-  --_progress-height: 2px;
+  --_progress-height: var(--indicator-width);
   --_chrome-duration: 600ms;
   --_chrome-easing: cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -40,8 +40,8 @@
 }
 
 .pillBtn {
-  width: 24px;
-  height: 24px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   flex-shrink: 0;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .tocOverlayPanel {
-  width: min(480px, 90%);
+  width: min(var(--overlay-width), 90%);
   max-height: 80%;
   background: var(--surface-default);
   border-radius: var(--shape-xl-radius);
@@ -116,10 +116,6 @@
 
 .tocOverlay[data-open="true"] .tocOverlayPanel {
   transform: scale(1);
-}
-
-.tocOverlayHeader {
-  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* ── TOC item indent ── */

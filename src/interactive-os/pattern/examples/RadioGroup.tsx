@@ -4,6 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { RadioGroup as RadioGroupUI } from '../../ui/RadioGroup'
+import { ax } from '../../../../styles/ax'
 import styles from './radiogroup.module.css'
 
 // APG #45: Radio Group Using Roving tabindex
@@ -31,11 +32,11 @@ const renderRadio = (
   return (
     <div
       {...props}
-      className={`${styles.radio} flex-row items-center`}
+      className={`${styles.radio} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })} items-center cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span
-        className={`${styles.indicator} inline-flex items-center justify-center`}
+        className={`${styles.indicator} ${ax({ shape: 'pill', size: 'md' })} inline-flex items-center justify-center`}
         data-checked={state.selected || undefined}
         aria-hidden="true"
       />

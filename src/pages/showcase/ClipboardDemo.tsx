@@ -64,7 +64,7 @@ export default function ClipboardDemo() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div {...props} className={cls} style={{ paddingLeft: 14 + indent, opacity: isCut ? 0.4 : 1 }}>
+              <div {...props} className={cls} style={{ '--_indent': `${14 + indent}px`, paddingLeft: 'var(--_indent)', opacity: isCut ? 0.4 : undefined } as React.CSSProperties}>
                 <span className="tree-node__chevron shrink-0 inline-flex items-center justify-center">
                   {isGroup ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
                 </span>
@@ -74,12 +74,12 @@ export default function ClipboardDemo() {
                     style={{ background: d.hex as string }}
                   />
                 )}
-                <span className="tree-node__name" style={{ fontWeight: isGroup ? 600 : 400 }}>
+                <span className={`tree-node__name${isGroup ? ' wt-semi' : ''}`}>
                   {d?.label as string}
                 </span>
-                <span className="list-item__desc" style={{ marginLeft: 8, opacity: 0.5, fontSize: '0.85em' }}>
+                <span className="list-item__desc op-dim">
                   {d?.hex ? d.hex as string : ''}{' '}
-                  <span style={{ opacity: 0.4 }}>{node.id as string}</span>
+                  <span className="op-faint">{node.id as string}</span>
                 </span>
               </div>
             )

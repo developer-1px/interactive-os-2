@@ -167,6 +167,11 @@
   --sidebar-item-height: 32px;
   --storymap-col-width: 220px;
   --overlay-width:  360px;
+  --content-sm:     560px;
+  --content-md:     720px;
+  --content-lg:     860px;
+  --content-xl:     960px;
+  --content-max:    1600px;
   --switch-width:   36px;
   --switch-height:  20px;
 

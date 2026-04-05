@@ -2,12 +2,6 @@
 
 .button {
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
-  border-radius: var(--shape-sm-radius);
-  cursor: default;
 }
 
 /* ── variant: state ── */

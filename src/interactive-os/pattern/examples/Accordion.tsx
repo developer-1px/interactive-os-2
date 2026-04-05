@@ -6,6 +6,7 @@ import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { Accordion as AccordionUI } from '../../ui/Accordion'
 import { ExpandIndicator } from '../../ui/indicators'
+import { ax } from '../../../styles/ax'
 import styles from './accordion.module.css'
 
 // APG #1: Accordion Example
@@ -32,15 +33,15 @@ const data: NormalizedData = createStore({
 function Field({ label, id, type = 'text' }: { label: string; id: string; type?: string }) {
   return (
     <div className={`${styles.field} flex-col`}>
-      <label htmlFor={id} className={styles.label}>{label}</label>
-      <input id={id} type={type} className={styles.input} />
+      <label htmlFor={id} className={`${ax({ textStyle: 'caption', weight: 'semi', text: 'primary' })}`}>{label}</label>
+      <input id={id} type={type} className={`${styles.input} ${ax({ text: 'primary', textStyle: 'body', surface: 'display', shape: 'sm', padding: 'xs', content: 'text' })}`} />
     </div>
   )
 }
 
 const panels: Record<string, React.ReactNode> = {
   'personal-information': (
-    <fieldset className={`${styles.fieldset} flex-col border-none`}>
+    <fieldset className={`${styles.fieldset} ${ax({ gap: 'sm' })} flex-col border-none`}>
       <Field label="Name" id="cufc1" />
       <Field label="Email" id="cufc2" type="email" />
       <Field label="Phone" id="cufc3" type="tel" />
@@ -50,7 +51,7 @@ const panels: Record<string, React.ReactNode> = {
     </fieldset>
   ),
   'billing-address': (
-    <fieldset className={`${styles.fieldset} flex-col border-none`}>
+    <fieldset className={`${styles.fieldset} ${ax({ gap: 'sm' })} flex-col border-none`}>
       <Field label="Address 1" id="b-add1" />
       <Field label="Address 2" id="b-add2" />
       <Field label="City" id="b-city" />
@@ -59,7 +60,7 @@ const panels: Record<string, React.ReactNode> = {
     </fieldset>
   ),
   'shipping-address': (
-    <fieldset className={`${styles.fieldset} flex-col border-none`}>
+    <fieldset className={`${styles.fieldset} ${ax({ gap: 'sm' })} flex-col border-none`}>
       <Field label="Address 1" id="s-add1" />
       <Field label="Address 2" id="s-add2" />
       <Field label="City" id="s-city" />
@@ -86,7 +87,7 @@ const renderItem = (
         <button
           {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
           id={node.id as string}
-          className={`${styles.trigger} flex-row items-center justify-between w-full`}
+          className={`${styles.trigger} ${ax({ weight: 'semi', text: 'primary', surface: 'sunken', textStyle: 'body', padding: 'sm', content: 'text' })} flex-row items-center justify-between w-full`}
           type="button"
           data-focused={state.focused || undefined}
         >
@@ -94,7 +95,7 @@ const renderItem = (
           <ExpandIndicator expanded={state.expanded === true} />
         </button>
       </h3>
-      <div {...state.slotProps} className={styles.panel}>
+      <div {...state.slotProps} className={`${styles.panel} ${ax({ textStyle: 'body', text: 'secondary', padding: 'sm', content: 'text' })}`}>
         {panels[node.id as string]}
       </div>
     </div>

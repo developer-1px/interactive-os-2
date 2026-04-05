@@ -3,9 +3,7 @@
 
 /* last-mile: tabBar separator (line, not surface) */
 .tabBar {
-  overflow-x: auto;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* ── Tab — last-mile: selected state colors, preview italic ── */
@@ -18,7 +16,7 @@
 .tab[aria-selected="true"] {
   --_bg: var(--surface-raised);
   --_fg: var(--text-primary);
-  box-shadow: inset 0 -2px 0 var(--border-accent);
+  box-shadow: inset 0 -var(--indicator-width) 0 var(--border-accent);
 }
 
 .tabPreview {
@@ -27,7 +25,6 @@
 
 /* ── Close button — last-mile: opacity reveal on hover ── */
 .tabClose {
-  border-radius: var(--shape-xs-radius);
   padding: var(--space-2xs);
   opacity: 0;
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
@@ -40,7 +37,6 @@
 
 /* ── Add button — last-mile: consistent with close button styling ── */
 .tabAdd {
-  border-radius: var(--shape-xs-radius);
   padding: var(--space-2xs);
   opacity: 0.4;
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);

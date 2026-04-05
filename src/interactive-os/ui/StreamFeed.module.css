@@ -12,16 +12,14 @@
 
 :where(.feed) {
   min-height: 0;
-  gap: var(--space-xl);
 }
 
 /* --- Entry animation --- */
 
 .entry {
   min-width: 0;
-  max-width: 720px;
+  max-width: var(--content-md);
   margin-inline: auto;
-  width: 100%;
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
 }
 
@@ -39,19 +37,16 @@
 /* --- Streaming indicator --- */
 
 .streaming {
-  gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  max-width: 720px;
+  max-width: var(--content-md);
   margin-inline: auto;
-  width: 100%;
   animation: fadeSlideIn var(--motion-enter-duration) var(--motion-enter-easing) both;
 }
 
 .streamingDot {
-  width: 6px;
-  height: 6px;
+  width: var(--shape-xs-radius);
+  height: var(--shape-xs-radius);
   background: var(--tone-primary-base);
-  border-radius: var(--shape-pill-radius);
   animation: pulse var(--motion-pulse-period) ease-in-out infinite;
 }
 
@@ -66,13 +61,11 @@
   bottom: var(--space-md);
   left: 50%;
   transform: translateX(-50%);
-  width: 32px;
-  height: 32px;
+  width: var(--sidebar-item-height);
+  height: var(--sidebar-item-height);
   --_bg: var(--surface-overlay);
   --_bg-hover: var(--bg-hover);
   background: var(--_bg);
-  border: 1px solid var(--border-default);
-  border-radius: var(--shape-pill-radius);
   box-shadow: var(--shadow-md);
   transition:
     background var(--motion-instant-duration) var(--motion-instant-easing),
@@ -84,10 +77,10 @@
 /* --- Stream cursor (blinking caret) --- */
 
 .cursor {
-  width: 2px;
+  width: var(--indicator-width);
   height: 1em;
   background: var(--tone-primary-base);
-  margin-left: 1px;
+  margin-left: var(--border-width);
   vertical-align: text-bottom;
   animation: blink 0.8s step-end infinite;
 }

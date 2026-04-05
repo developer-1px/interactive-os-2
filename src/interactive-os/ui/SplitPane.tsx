@@ -143,7 +143,7 @@ function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onKeyDel
       aria-valuemax={100 - Math.round(minRatio * 100)}
       aria-label={`Resize pane ${index + 1}`}
       tabIndex={0}
-      className={`shrink-0 ${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
+      className={`shrink-0 bg-transparent ${styles.separator} ${isHorizontal ? styles.separatorH : styles.separatorV}`}
       data-surface="action"
       data-focused={nodeState.focused || undefined}
       onPointerDown={(e) => aria.dispatch(startDragResize(e.pointerId, e.currentTarget as HTMLElement, e.clientX, e.clientY))}

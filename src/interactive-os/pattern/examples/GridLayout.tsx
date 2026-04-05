@@ -3,6 +3,7 @@ import type { NormalizedData } from '../../store/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Grid } from '../../ui/Grid'
+import { ax } from '@styles/ax'
 import styles from './grid.module.css'
 
 // APG #26: Layout Grid
@@ -41,7 +42,7 @@ const renderTile = (
   value: unknown,
 ): React.ReactElement => {
   return (
-    <div {...props} className={`${styles.tile} flex-row items-center justify-center outline-none`}>
+    <div {...props} className={`${styles.tile} ${ax({ textStyle: 'body', weight: 'semi', text: 'primary', shape: 'md', padding: 'md', content: 'text', surface: 'sunken' })} flex-row items-center justify-center outline-none`}>
       {String(value ?? '')}
     </div>
   )

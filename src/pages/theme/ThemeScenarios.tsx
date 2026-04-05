@@ -2,6 +2,7 @@ import React from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import styles from './PageThemeCreator.module.css'
+import { Divider } from '@os/ui/Divider'
 import { Button } from '@os/ui/Button'
 import { TextInput } from '@os/ui/TextInput'
 import { SwitchGroup } from '@os/ui/SwitchGroup'
@@ -75,7 +76,7 @@ function DashboardScenario() {
       <Section title="RECENT TRANSACTIONS">
         <div className={ax({ layout: 'column' })}>
           {transactions.map((t, i) => (
-            <div key={i} className={`${ax({ layout: 'spread', padding: 'sm' })} ${styles.notifRow}`}>
+            <div key={i} className={`${ax({ layout: 'spread', padding: 'sm', border: 'bottom' })} ${styles.notifRow}`}>
               <div className={ax({ layout: 'column', gap: 'xs' })}>
                 <span className={ax({ textStyle: 'body', text: 'primary' })}>{t.name}</span>
                 <span className={ax({ textStyle: 'caption', text: 'muted' })}>{t.email}</span>
@@ -209,9 +210,9 @@ export function ThemeScenarios() {
   return (
     <div className={ax({ layout: 'column', gap: 'xl' })}>
       <DashboardScenario />
-      <div className={styles.scenarioDivider} />
+      <Divider />
       <SettingsScenario />
-      <div className={styles.scenarioDivider} />
+      <Divider />
       <CreateFormScenario />
     </div>
   )

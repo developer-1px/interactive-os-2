@@ -59,7 +59,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`${ax({ layout: 'center', surface: 'action', text: 'secondary' })} ${styles.scrollFab}`} onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`${ax({ layout: 'center', surface: 'action', text: 'secondary', border: 'default', shape: 'pill' })} ${styles.scrollFab}`} onClick={scrollToBottom} aria-label="Scroll to bottom">
       <DirectionIndicator direction="next" orientation="vertical" />
     </button>
   )
@@ -72,17 +72,17 @@ export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streami
     <div className={`${ax({ layout: 'column', flex: '1' })} ${styles.wrapper}`}>
       <div
         ref={feedRef}
-        className={`${ax({ layout: 'scroll', flex: '1' })} ${styles.feed}${className ? ` ${className}` : ''}`}
+        className={`${ax({ layout: 'scroll', flex: '1', gap: 'xl' })} ${styles.feed}${className ? ` ${className}` : ''}`}
         role="feed"
       >
         {items.map((item, i) => (
-          <div key={i} data-feed-entry="" className={styles.entry}>
+          <div key={i} data-feed-entry="" className={`${ax({ width: 'full' })} ${styles.entry}`}>
             {renderItem(item, i, { isLatest: i === items.length - 1 })}
           </div>
         ))}
         {isStreaming && (
-          <div className={`${ax({ layout: 'bar' })} ${styles.streaming}`}>
-            <span className={styles.streamingDot} />
+          <div className={`${ax({ layout: 'bar', gap: 'sm', width: 'full' })} ${styles.streaming}`}>
+            <span className={`${ax({ shape: 'pill' })} ${styles.streamingDot}`} />
             <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.streamingLabel}`}>{streamingLabel ?? 'Thinking'}</span>
             <StreamingTimer />
           </div>

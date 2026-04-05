@@ -8,14 +8,13 @@ import { Aria } from '../primitives/aria'
 import { disclosure } from '../pattern/roles/disclosure'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './DisclosureGroup.module.css'
 
 type DisclosureGroupProps = AriaComponentProps
 
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={`${ax({ layout: 'bar', surface: 'ghost', gap: 'xs' })} ${styles.item}`} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ layout: 'bar', surface: 'ghost', gap: 'xs' })} style={{ justifyContent: 'flex-start' }} data-focused={state.focused || undefined}>
       <ExpandIndicator expanded={state.expanded} />
       <span className={ax({ text: state.focused ? 'bright' : 'primary' })}>{label}</span>
     </div>

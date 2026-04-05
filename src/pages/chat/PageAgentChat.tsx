@@ -30,6 +30,7 @@ import {
 import { useKeyMap } from '@os/primitives/useKeyMap'
 import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
+import '@styles/ax.css'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import styles from './PageAgentChat.module.css'
 
@@ -191,11 +192,11 @@ export default function PageAgentChat() {
   }, [])
 
   return (
-    <div className={`${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
-      <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none' }) + ' ' + styles.chatSidebar}>
+    <div className={`overflow-hidden ${styles.chat} ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
+      <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none', border: 'end' }) + ' ' + styles.chatSidebar}>
         <PanelHeader axes={{ layout: 'spread' }}>
           <span>Sessions</span>
-          <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm' }) + ' ' + styles.chatNewBtn} onClick={createSession} aria-label="New session">
+          <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', icon: 'lg' })} onClick={createSession} aria-label="New session">
             <Plus size={14} />
           </button>
         </PanelHeader>
@@ -238,7 +239,7 @@ export default function PageAgentChat() {
         <div className={ax({ layout: 'fill', width: 'full' }) + ' ' + styles.chatMain}>
           <div className={ax({ layout: 'center', flex: '1', gap: 'md', text: 'muted' })}>
             <p>Start a new Claude Code session</p>
-            <button className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'primary' }) + ' ' + styles.chatStartBtn} onClick={createSession}>
+            <button className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'primary', border: 'subtle' }) + ' ' + styles.chatStartBtn} onClick={createSession}>
               <Plus size={16} /> New Session
             </button>
           </div>

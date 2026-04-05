@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Alert as AlertComponent } from '../../ui/Alert'
-import styles from './alert.module.css'
+import { ax } from '../../../../styles/ax'
 
 // APG #2: Alert
 // https://www.w3.org/WAI/ARIA/apg/patterns/alert/examples/alert/
@@ -38,8 +38,8 @@ const renderAlert = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <div {...props} className={`${styles.alert} flex-row items-center`}>
-      <span className={`${styles.icon} shrink-0`} aria-hidden="true">
+    <div {...props} className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'body', text: 'primary', surface: 'sunken', shape: 'sm', padding: 'sm', content: 'text', border: 'default' })}`}>
+      <span className={ax({ text: 'secondary', flex: 'none', textStyle: 'section' })} aria-hidden="true">
         &#9432;
       </span>
       <span>{label}</span>

@@ -1,0 +1,8 @@
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
+
+export function Divider({ direction = 'horizontal' }: { direction?: 'horizontal' | 'vertical' }) {
+  return direction === 'horizontal'
+    ? <div className={ax({ border: 'bottom', width: 'full' })} role="separator" />
+    : <div className={ax({ border: 'end' })} role="separator" style={{ alignSelf: 'stretch' }} />
+}

@@ -1,18 +1,7 @@
 /* ── base ── */
 
 .treeitem {
-  gap: var(--space-xs);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
-  cursor: default;
-}
-
-.indicator {
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
 }
 
 /* ── variant: state ── */

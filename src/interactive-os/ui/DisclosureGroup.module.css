@@ -1,6 +1,0 @@
-/* ── DisclosureGroup — last-mile only ── */
-
-/* controlSize centers children; disclosure header needs left-align */
-.item {
-  justify-content: flex-start;
-}

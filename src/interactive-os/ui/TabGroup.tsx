@@ -90,7 +90,7 @@ export function TabGroup({
 
   return (
     <div className={ax({ layout: 'fill' })} data-full-height>
-      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${ax({ layout: 'bar', gap: 'xs', padding: 'xs' })} ${styles.tabBar}`}>
+      <div {...(tl.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`overflow-x-auto ${ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })} ${styles.tabBar}`}>
         {childIds.map((id) => {
           const entity = store.entities[id]
           if (!entity) return null
@@ -105,7 +105,7 @@ export function TabGroup({
             <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
               <span>{label}</span>
               <button
-                className={`${ax({ surface: 'ghost', layout: 'center', text: 'muted' })} ${styles.tabClose}`}
+                className={`${ax({ surface: 'ghost', layout: 'center', text: 'muted', shape: 'sm' })} ${styles.tabClose}`}
                 aria-label={`Close ${label}`}
                 tabIndex={-1}
                 onClick={(e) => handleClose(e, id)}
@@ -118,7 +118,7 @@ export function TabGroup({
         })}
         {onAddTab && (
           <button
-            className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', text: 'muted' })} ${styles.tabAdd}`}
+            className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', text: 'muted', shape: 'sm' })} ${styles.tabAdd}`}
             aria-label="Add tab"
             tabIndex={-1}
             onClick={handleAdd}

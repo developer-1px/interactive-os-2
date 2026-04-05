@@ -10,7 +10,6 @@ import { SplitPane } from './SplitPane'
 import type { PaneSize } from './SplitPane'
 import { TabGroup } from './TabGroup'
 import { useKeyMap } from '../primitives/useKeyMap'
-import styles from './Workspace.module.css'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 
@@ -108,14 +107,14 @@ export function Workspace({
 
   if (rootChildren.length === 0) {
     return (
-      <div className={`${ax({ layout: 'fill' })} ${styles.root}`} aria-label={ariaLabel}>
-        <div className={`${ax({ layout: 'center', text: 'muted' })} ${styles.empty}`}>No open tabs</div>
+      <div className={ax({ layout: 'fill' })} style={{ height: '100%' }} aria-label={ariaLabel}>
+        <div className={ax({ layout: 'center', text: 'muted' })} style={{ height: '100%' }}>No open tabs</div>
       </div>
     )
   }
 
   return (
-    <div className={`${ax({ layout: 'fill' })} ${styles.root}`} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
+    <div className={ax({ layout: 'fill' })} style={{ height: '100%' }} aria-label={ariaLabel} onKeyDown={handleKeyDown}>
       <div className={ax({ layout: 'fill' })}>
         {rootChildren.map((id) => (
           <WorkspaceNode key={id} nodeId={id} data={data} onChange={onChange} onAddTab={onAddTab} renderPanel={renderPanel} />

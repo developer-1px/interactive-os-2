@@ -4,22 +4,15 @@
   grid-column: 2 / -1;
   height: 100%;
   min-height: 0;
-  overflow: hidden;
 }
 
 .chatSidebar {
-  width: 200px;
-  border-right: 1px solid var(--border-subtle);
-}
-
-.chatNewBtn {
-  width: 24px;
-  height: 24px;
+  width: var(--storymap-col-width);
 }
 
 .chatCloseBtn {
-  width: 20px;
-  height: 20px;
+  width: var(--switch-height);
+  height: var(--switch-height);
   opacity: 0;
 }
 
@@ -28,11 +21,11 @@
 }
 
 .chatFileList {
-  padding-left: calc(8px + var(--space-xs));
+  padding-left: calc(var(--space-sm) + var(--space-xs));
 }
 
 .chatMain {
-  max-width: 860px;
+  max-width: var(--content-lg);
   margin-inline: auto;
 }
 
@@ -42,13 +35,12 @@
 }
 
 .chatDot {
-  width: 6px;
-  height: 6px;
+  width: var(--shape-xs-radius);
+  height: var(--shape-xs-radius);
   animation: pulse var(--motion-pulse-period) ease-in-out infinite;
 }
 
 .chatActivityBar {
-  font-variant-numeric: tabular-nums;
 }
 
 .chatInputRow > :first-child {
@@ -57,11 +49,6 @@
 }
 
 .chatStatusBar {
-  font-variant-numeric: tabular-nums;
-}
-
-.chatStartBtn {
-  border: 1px solid var(--border-subtle);
 }
 
 .chatStartBtn:hover {

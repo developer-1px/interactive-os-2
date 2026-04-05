@@ -17,16 +17,11 @@
 }
 
 .toolDetail {
-  overflow: hidden;
   min-width: 0;
   font-family: var(--mono);
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .filePathLink {
-  cursor: pointer;
-  border-radius: var(--shape-xs-radius);
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
@@ -49,20 +44,11 @@
 /* --- Standalone tool result --- */
 
 .toolResult {
-  overflow-y: auto;
-  padding: var(--space-sm);
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
 }
 
 .toolResultSummary {
   composes: iconRow;
-  cursor: pointer;
-  font-family: var(--mono);
-  user-select: none;
 }
 
 .toolResultSummary::marker,
@@ -71,19 +57,12 @@
 }
 
 .toolResultPreview {
-  overflow: hidden;
   min-width: 0;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 /* ═══ ToolGroup: bordered card ═══ */
 
 .toolGroup {
-  overflow: hidden;
-  background: var(--surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-md-radius);
 }
 
 /* Consecutive tool groups: merge borders, remove inter-gap */
@@ -102,9 +81,6 @@
 
 .toolGroupSummary {
   composes: iconRow;
-  gap: var(--space-xs);
-  cursor: pointer;
-  user-select: none;
 }
 
 .toolGroupSummary::marker,
@@ -115,40 +91,23 @@
 /* --- Content areas --- */
 
 .toolGroupResult {
-  overflow-y: auto;
-  padding: var(--space-sm);
-  border-top: 1px solid var(--border-subtle);
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
 }
 
 .toolGroupCode {
-  overflow: auto;
-  border-top: 1px solid var(--border-subtle);
 }
 
 .toolGroupCode > div :global(.shiki) {
-  border: none;
   border-radius: 0;
 }
 
 /* ═══ ToolChainGroup: collapsible group of process tools ═══ */
 
 .toolChain {
-  overflow: hidden;
-  background: var(--surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--shape-md-radius);
 }
 
 .toolChainSummary {
   composes: iconRow;
-  gap: var(--space-xs);
-  cursor: pointer;
-  user-select: none;
 }
 
 .toolChainSummary::marker,
@@ -156,25 +115,13 @@
   display: none;
 }
 
-.toolChainLabel {
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
-}
+/* toolChainLabel: ax({ textStyle: 'code' }) in TSX */
 
-.toolChainContent {
-  border-top: 1px solid var(--border-subtle);
-}
 
 .toolChainRow {
   composes: iconRow;
-  gap: var(--space-xs);
 }
 
 .toolChainDetails {
-  overflow: hidden;
   min-width: 0;
-  font-family: var(--mono);
-  font-size: var(--type-caption-size);
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }

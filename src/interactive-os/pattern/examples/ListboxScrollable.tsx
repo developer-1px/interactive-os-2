@@ -3,6 +3,7 @@ import type { NormalizedData } from '../../store/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { ListBox } from '../../ui/ListBox'
+import { ax } from '../../../styles/ax'
 import styles from './listbox.module.css'
 
 // APG #36: Scrollable Listbox — "Choose your favorite transuranic element"
@@ -34,7 +35,7 @@ export function ListboxScrollable() {
       plugins={[]}
       onChange={onChange}
       aria-label="Choose your favorite transuranic element"
-      className={`${styles.listbox} overflow-y-auto outline-none`}
+      className={`${styles.listbox} ${ax({ shape: 'md', surface: 'sunken' })} overflow-y-auto outline-none`}
     />
   )
 }

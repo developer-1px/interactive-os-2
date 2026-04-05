@@ -1,30 +1,21 @@
 /* ── base ── */
 
 .meter {
-  gap: var(--space-sm);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
-  color: var(--text-primary);
 }
 
 .label {
   min-width: var(--space-3xl);
-  font-weight: var(--weight-semi);
 }
 
 .track {
   height: var(--space-xs);
-  background: var(--surface-sunken);
-  border-radius: var(--shape-xs-radius);
 }
 
 .fill {
   background: var(--focus);
-  border-radius: var(--shape-xs-radius);
 }
 
 .valueLabel {
   min-width: var(--space-xl);
-  font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
 }

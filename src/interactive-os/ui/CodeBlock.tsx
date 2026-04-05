@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { codeToHtml } from 'shiki'
+import { ax } from '@styles/ax'
 import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme } from './shikiUtils'
 import styles from './CodeBlock.module.css'
 
@@ -67,12 +68,13 @@ export function CodeBlock({ code, filename, highlightLines, variant = 'bordered'
     }
   }, [highlightToken, html])
 
+  const baseAx = ax({ textStyle: 'code' })
   const cls = variant === 'flush'
-    ? `overflow-hidden ${styles.codeBlock} ${styles.codeBlockFlush}`
+    ? `overflow-hidden ${baseAx} ${styles.codeBlock} ${styles.codeBlockFlush}`
     : variant === 'compact'
-      ? `overflow-hidden ${styles.codeBlock} ${styles.codeBlockCompact}`
-      : `overflow-hidden ${styles.codeBlock}`
-  if (!html) return <pre className={`${cls} ${styles.codeBlockLoading}`}><code>{code}</code></pre>
+      ? `overflow-hidden ${baseAx} ${styles.codeBlock} ${styles.codeBlockCompact}`
+      : `overflow-hidden ${baseAx} ${styles.codeBlock}`
+  if (!html) return <pre className={`${cls} ${ax({ padding: 'xl', surface: 'base', shape: 'xl', textStyle: 'code' })}`}><code>{code}</code></pre>
   return (
     <div
       ref={containerRef}

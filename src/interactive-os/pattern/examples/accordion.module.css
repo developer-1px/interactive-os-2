@@ -3,16 +3,10 @@
 .heading { margin: 0; }
 
 .trigger {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
   font: inherit;
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-primary);
-  background: var(--surface-sunken);
   border: var(--border-width) solid var(--border-default);
-  cursor: default;
-  outline: 1px solid transparent;
-  outline-offset: -1px;
+  outline: var(--border-width) solid transparent;
+  outline-offset: -var(--border-width);
 }
 
 .title {
@@ -20,17 +14,11 @@
 }
 
 .panel {
-  padding: var(--shape-sm-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-secondary);
   border: var(--border-width) solid var(--border-default);
   border-top: none;
 }
 
 .fieldset {
-  gap: var(--space-sm);
   margin: 0;
   padding: 0;
 }
@@ -39,22 +27,11 @@
   gap: var(--space-xxs);
 }
 
-.label {
-  font-size: var(--type-caption-size);
-  font-weight: var(--weight-semi);
-  color: var(--text-primary);
-}
-
 .input {
-  padding: var(--shape-xs-py) var(--shape-xs-px);
   font: inherit;
-  font-size: var(--type-body-size);
-  color: var(--text-primary);
-  background: var(--surface-default);
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--radius-sm);
-  outline: 1px solid transparent;
-  outline-offset: -1px;
+  outline: var(--border-width) solid transparent;
+  outline-offset: -var(--border-width);
 }
 
 .input:focus {
