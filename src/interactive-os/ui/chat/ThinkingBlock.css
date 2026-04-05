@@ -1,34 +1,34 @@
-/* ThinkingBlock — collapsible thinking content */
+/* ThinkingBlock — last-mile CSS */
 
-.thinking {
+.thinking-block {
   background: var(--surface-sunken);
   border-radius: var(--shape-md-radius);
 }
 
-.thinkingSummary {
+.thinking-summary {
   padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--chat-indent);
 }
 
-.thinkingSummary > .thinkingChevron {
+.thinking-summary > .thinking-chevron {
   left: var(--space-sm);
   width: var(--icon-sm);
 }
 
-.thinkingSummary::marker,
-.thinkingSummary::-webkit-details-marker {
+.thinking-summary::marker,
+.thinking-summary::-webkit-details-marker {
   display: none;
 }
 
-.thinkingPreview {
+.thinking-preview {
   text-overflow: ellipsis;
 }
 
-.thinkingContent {
+.thinking-content {
   padding: 0 var(--space-sm) var(--space-sm);
 }
 
 /* Settled: minimal presence after completion */
-.settled {
+.thinking-settled {
   border-radius: 0;
   opacity: 0.6;
 }

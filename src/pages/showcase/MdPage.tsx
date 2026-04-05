@@ -7,7 +7,7 @@ import { parseJsx } from './parseJsx'
 import { mdComponents } from './mdComponents'
 import { MermaidBlock } from './MermaidBlock'
 import { CodeBlock } from '@os/ui/CodeBlock'
-import markdownStyles from '@os/ui/MarkdownViewer.module.css'
+import '@os/ui/MarkdownViewer.css'
 
 interface MdPageProps {
   md: string
@@ -60,7 +60,7 @@ export default function MdPage({ md }: MdPageProps) {
   const content = mod.default
 
   return (
-    <div className={markdownStyles.markdown}>
+    <div className="markdown">
       <Markdown
         remarkPlugins={[remarkGfm, remarkRender]}
         rehypePlugins={[rehypeRaw]}

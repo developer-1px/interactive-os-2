@@ -10,9 +10,8 @@ import { parseJsx } from '../../pages/showcase/parseJsx'
 import { mdComponents } from '../../pages/showcase/mdComponents'
 import { MermaidBlock } from '../../pages/showcase/MermaidBlock'
 import { CodeBlock } from './CodeBlock'
-import defaultStyles from './MarkdownViewer.module.css'
+import './MarkdownViewer.css'
 
-export type MarkdownStyles = typeof defaultStyles
 export type CodeVariant = 'bordered' | 'flush' | 'compact'
 
 const remarkPlugins = [remarkGfm, remarkBreaks, remarkRender]
@@ -23,7 +22,7 @@ class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: st
   static getDerivedStateFromError(err: Error) { return { error: err.message } }
   render() {
     if (this.state.error) {
-      return <div style={{ color: 'var(--color-destructive)', padding: '4px 8px', fontSize: '0.85em' }}>Render error: {this.state.error}</div>
+      return <div className={ax({ text: 'danger', textStyle: 'caption', padding: 'xs' })}>Render error: {this.state.error}</div>
     }
     return this.props.children
   }
@@ -39,7 +38,7 @@ function RenderBlock({ children }: { children: string }) {
     const parsed = parseJsx(line)
     if (!parsed) {
       elements.push(
-        <div key={i} style={{ color: 'var(--color-destructive)', padding: '4px 8px' }}>
+        <div key={i} className={ax({ text: 'danger', textStyle: 'caption', padding: 'xs' })}>
           Parse error: {line}
         </div>
       )
@@ -48,7 +47,7 @@ function RenderBlock({ children }: { children: string }) {
     const Component = mdComponents[parsed.name]
     if (!Component) {
       elements.push(
-        <div key={i} style={{ color: 'var(--color-destructive)', padding: '4px 8px' }}>
+        <div key={i} className={ax({ text: 'danger', textStyle: 'caption', padding: 'xs' })}>
           Unknown component: {parsed.name}
         </div>
       )
@@ -64,7 +63,7 @@ function RenderBlock({ children }: { children: string }) {
   return <>{elements}</>
 }
 
-export const MarkdownViewer = memo(function MarkdownViewer({ content, styles = defaultStyles, codeVariant }: { content: string; styles?: MarkdownStyles; codeVariant?: CodeVariant }) {
+export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codeVariant, prose = true }: { content: string; className?: string; codeVariant?: CodeVariant; prose?: boolean }) {
   const components = useMemo(() => ({
     div(props: React.HTMLAttributes<HTMLDivElement> & { node?: unknown }) {
       const { node: _, children, ...rest } = props
@@ -90,10 +89,10 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, styles = d
 
       return <code className={className} {...props}>{children}</code>
     },
-  }), [codeVariant, styles])
+  }), [codeVariant])
 
   return (
-    <div className={`break-word ${ax({ text: 'primary', width: 'prose' })} ${styles.markdown}`}>
+    <div className={`break-word ${ax({ text: 'primary', width: 'prose' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
       <Markdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}

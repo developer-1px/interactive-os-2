@@ -69,5 +69,5 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
 
   if (!displayed) return null
 
-  return <MarkdownViewer content={displayed} styles={{}} codeVariant="compact" />
+  return <MarkdownViewer content={displayed} prose={false} codeVariant="compact" />
 }
