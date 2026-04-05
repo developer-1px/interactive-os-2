@@ -12,11 +12,6 @@
   border-right: var(--border-width) solid var(--border-subtle);
 }
 
-.chatNewBtn {
-  width: var(--icon-lg);
-  height: var(--icon-lg);
-}
-
 .chatCloseBtn {
   width: var(--switch-height);
   height: var(--switch-height);

@@ -175,7 +175,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   } else if (isEdit && input.file_path) {
     summaryLabel = <FilePathLink path={String(input.file_path)}>{detail}</FilePathLink>
   } else {
-    summaryLabel = detail ? <span className={`${ax({ text: 'muted' })} ${styles.toolDetail}`}>{detail}</span> : null
+    summaryLabel = detail ? <span className={`${ax({ text: 'muted', clamp: '1' })} ${styles.toolDetail}`}>{detail}</span> : null
   }
 
   // --- Content (no duplicate info — summary is the sole source) ---
@@ -264,27 +264,27 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <div className={styles.toolChain}>
+    <div className={`${ax({ shape: 'md' })} ${styles.toolChain}`}>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar', text: 'secondary' })} ${styles.toolChainSummary}`}
+        className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
         <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
-        <Layers size={12} /> <span className={`${ax({ text: 'muted' })} ${styles.toolChainLabel}`}>{summary}</span>
+        <Layers size={12} /> <span className={ax({ text: 'muted', textStyle: 'code' })}>{summary}</span>
       </div>
       {expanded && (
         <div className={`${ax({ layout: 'column' })} ${styles.toolChainContent}`}>
           {typeGroups.map(g => {
             const Icon = toolIcons[g.name] ?? Wrench
             return (
-              <div key={g.name} className={`${ax({ layout: 'bar', text: 'secondary' })} ${styles.toolChainRow}`}>
+              <div key={g.name} className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainRow}`}>
                 <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
                 <span className={ax({ weight: 'semi' })}>{g.name}</span>
-                <span className={`${ax({ text: 'muted' })} ${styles.toolChainDetails}`}>
+                <span className={`${ax({ text: 'muted', textStyle: 'code', clamp: '1' })} ${styles.toolChainDetails}`}>
                   {g.details.join(' · ')}
                 </span>
               </div>

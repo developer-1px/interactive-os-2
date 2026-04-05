@@ -195,7 +195,7 @@ export default function PageAgentChat() {
       <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none' }) + ' ' + styles.chatSidebar}>
         <PanelHeader axes={{ layout: 'spread' }}>
           <span>Sessions</span>
-          <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm' }) + ' ' + styles.chatNewBtn} onClick={createSession} aria-label="New session">
+          <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', icon: 'lg' })} onClick={createSession} aria-label="New session">
             <Plus size={14} />
           </button>
         </PanelHeader>
