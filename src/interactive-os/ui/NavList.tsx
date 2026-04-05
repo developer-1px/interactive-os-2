@@ -25,7 +25,7 @@ interface NavListProps {
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   const itemClass = ax({
-    surface: 'ghost',
+    interactive: 'item',
     controlSize: 'md',
     padding: 'sm',
     content: 'text',

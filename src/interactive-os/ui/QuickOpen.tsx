@@ -148,7 +148,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`cursor-default ${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm', state: state.focused ? 'focused' : undefined })}`}
+                  className={`cursor-default ${ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm', state: state.focused ? 'focused' : undefined })}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),

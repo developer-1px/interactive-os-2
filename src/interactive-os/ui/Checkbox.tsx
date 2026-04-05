@@ -15,7 +15,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const checked = state.checked === true
   return (
-    <div {...props} className={ax({ layout: 'bar', surface: 'ghost', gap: 'sm' })} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ layout: 'bar', interactive: 'check', gap: 'sm' })} data-focused={state.focused || undefined}>
       <CheckIndicator checked={checked} />
       <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>

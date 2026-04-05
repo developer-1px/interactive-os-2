@@ -32,7 +32,7 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
         <a
           {...props}
           href="#"
-          className={`${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1', text: state.focused ? 'bright' : 'primary' })} menubar-link`}
+          className={`${ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1', text: state.focused ? 'bright' : 'primary' })} menubar-link`}
           data-focused={state.focused || undefined}
           onClick={e => e.preventDefault()}
         >
@@ -58,7 +58,7 @@ const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
       <a
         {...props}
         href="#"
-        className={`${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1', text: state.focused ? 'bright' : 'primary' })} menubar-link`}
+        className={`${ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1', text: state.focused ? 'bright' : 'primary' })} menubar-link`}
         data-focused={state.focused || undefined}
         onClick={e => e.preventDefault()}
       >

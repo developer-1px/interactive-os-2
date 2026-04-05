@@ -19,7 +19,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   if (isGroup) {
     return (
       <div>
-        <div {...props} className={ax({ surface: 'ghost', layout: 'spread', weight: 'semi' })}>
+        <div {...props} className={ax({ interactive: 'item', layout: 'spread', weight: 'semi' })}>
           <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
           <span className={`accordion-chevron ${ax({ flex: 'none', text: 'muted' })}`} data-expanded={state.expanded || undefined}>
             <ExpandIndicator />
