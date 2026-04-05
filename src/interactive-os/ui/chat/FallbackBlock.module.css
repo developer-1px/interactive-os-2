@@ -1,14 +1,11 @@
 /* FallbackBlock — unknown block type with JSON dump */
 
 .fallback {
-  overflow: hidden;
   border: var(--border-width) dashed var(--border-subtle);
 }
 
 .fallbackSummary {
   padding: var(--space-xs) var(--space-sm);
-  cursor: pointer;
-  user-select: none;
   font-family: var(--mono);
 }
 
@@ -18,11 +15,8 @@
 }
 
 .fallbackPre {
-  overflow-y: auto;
   padding: var(--space-xs) var(--space-sm);
   border-top: var(--border-width) dashed var(--border-subtle);
   font-family: var(--mono);
   line-height: var(--leading-snug);
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
 }

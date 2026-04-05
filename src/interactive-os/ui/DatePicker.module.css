@@ -4,8 +4,6 @@
 .input {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border-radius: var(--shape-xs-radius) 0 0 var(--shape-xs-radius);
-  cursor: default;
-  font-family: inherit;
 }
 
 /* ── trigger — border-radius split + sizing (last-mile) ── */

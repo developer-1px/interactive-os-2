@@ -16,14 +16,14 @@ export const DiffBlock = memo(function DiffBlock({ block }: { block: DiffBlockTy
       )}
       <div className={`grid ${styles.diffBody}`}>
         <div className={`overflow-hidden min-w-0 ${ax({ surface: 'display' })}`}>
-          <pre className={`${ax({ textStyle: 'caption' })} ${styles.diffCode}`}>
+          <pre className={`pre-wrap break-word ${ax({ textStyle: 'caption' })} ${styles.diffCode}`}>
             {oldLines.map((line, i) => (
               <div key={i} className={styles.diffLineOld}>{line || ' '}</div>
             ))}
           </pre>
         </div>
         <div className={`overflow-hidden min-w-0 ${ax({ surface: 'display' })}`}>
-          <pre className={`${ax({ textStyle: 'caption' })} ${styles.diffCode}`}>
+          <pre className={`pre-wrap break-word ${ax({ textStyle: 'caption' })} ${styles.diffCode}`}>
             {newLines.map((line, i) => (
               <div key={i} className={styles.diffLineNew}>{line || ' '}</div>
             ))}
