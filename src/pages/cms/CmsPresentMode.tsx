@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
+import cmsStyles from './CmsLanding.module.css'
 import { getChildren } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
@@ -75,7 +76,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
         tabIndex={-1}
         onClick={onExit}
       >
-        <div className={`cms-landing w-full overflow-x-hidden`}>
+        <div className={`cms-landing ${cmsStyles.cmsLanding} w-full overflow-x-hidden`}>
           {getChildren(data, ROOT_ID).map(id => renderNode(id))}
         </div>
       </div>
