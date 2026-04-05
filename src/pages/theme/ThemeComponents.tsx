@@ -15,7 +15,6 @@ import { Accordion } from '@os/ui/Accordion'
 import { ToggleGroup } from '@os/ui/ToggleGroup'
 import { Spinbutton } from '@os/ui/Spinbutton'
 import { createStore } from '@os/store/createStore'
-import type { NodeState } from '@os/pattern/types'
 
 /* ══ Demo data factories ══ */
 
@@ -68,17 +67,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       <h3 className={ax({ textStyle: 'overline', text: 'muted' })}>{title}</h3>
       {children}
     </div>
-  )
-}
-
-/* ══ Tab render ══ */
-
-const renderDemoTab = (_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
-  const label = (item.data as Record<string, unknown>)?.label as string
-  return (
-    <span className={ax({ text: state.selected ? 'primary' : 'muted' })}>
-      {label}
-    </span>
   )
 }
 
@@ -145,7 +133,7 @@ export function ThemeComponents() {
           </Section>
 
           <Section title="TABS">
-            <TabList data={tabsData} renderItem={renderDemoTab} aria-label="Demo tabs" />
+            <TabList data={tabsData} aria-label="Demo tabs" />
           </Section>
 
           <Section title="SLIDER">

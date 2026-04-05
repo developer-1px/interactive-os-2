@@ -1,12 +1,11 @@
 // ② 2026-04-03-viewer-command-prd.md
-import { useState, useEffect, useMemo, useCallback, useRef, type RefObject } from 'react'
+import { useState, useEffect, useMemo, useRef, type RefObject } from 'react'
 import { connectSession, disconnectSession, useTimeline, useSessionMeta } from '../viewer/viewerStore'
 import { timelineToMessages } from '../viewer/timelineTransform'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
 import { TabList } from '@os/ui/TabList'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
 import { ax } from '@styles/ax'
 import { useActiveSessions } from './useActiveSessions'
 import { createFileState } from './fileState'
@@ -36,20 +35,6 @@ export function LiveSessionPanel({ viewerTabs, fileViewerRef }: LiveSessionPanel
     return createStore({ entities, relationships: { __root__: activeSessions.map(s => s.id) } })
   }, [activeSessions])
 
-  const renderSessionTab = useCallback((_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
-    const label = (item.data as Record<string, unknown>)?.label as string ?? item.id as string
-    return (
-      <span className={ax({
-        surface: state.selected ? 'display' : 'ghost',
-        controlSize: 'sm', padding: 'sm', content: 'text',
-        textStyle: 'caption',
-        tone: state.selected ? 'accent' : undefined,
-      })}>
-        {label}
-      </span>
-    )
-  }, [])
-
   return (
     <div className={ax({ layout: 'fill' })}>
       {activeSessions.length > 0 ? (
@@ -57,7 +42,6 @@ export function LiveSessionPanel({ viewerTabs, fileViewerRef }: LiveSessionPanel
           data={tabData}
           initialFocus={selectedId ?? undefined}
           onActivate={(nodeId) => setUserSelectedId(nodeId)}
-          renderItem={renderSessionTab}
           aria-label="Live sessions"
         />
       ) : (

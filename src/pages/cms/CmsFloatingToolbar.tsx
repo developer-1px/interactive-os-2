@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import type { Command } from '@os/engine/types'
@@ -9,9 +9,8 @@ import { crudCommands } from '@os/plugins/crud'
 import { dndCommands } from '@os/plugins/dnd'
 import { clipboardCommands } from '@os/plugins/clipboard'
 import { cmsCanDelete } from './cmsSchema'
-import type { NodeState } from '@os/pattern/types'
 import { key } from '@os/axis/types'
-import { Toolbar } from '@os/ui/Toolbar'
+import { ButtonToolbar } from '@os/ui/ButtonToolbar'
 import { ax } from '@styles/ax'
 
 interface CmsFloatingToolbarProps {
@@ -59,15 +58,24 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
   const isOnlySection = context === 'root' && rootChildren.length <= 1
   const disabled = context === 'none' || context === 'fields'
 
+  const separatorAfter = useMemo(() => new Set(['add', 'delete']), [])
+
   const toolbarData = useMemo(() => {
     const visible = toolbarActions.filter(a => !a.condition || a.condition(context))
     return {
         entities: Object.fromEntries(
-          visible.map(a => [a.id, { id: a.id, data: { label: a.label } }])
+          visible.map(a => [a.id, {
+            id: a.id,
+            data: {
+              label: a.label,
+              disabled: disabled || (a.id === 'delete' && isOnlySection),
+              separator: separatorAfter.has(a.id),
+            },
+          }])
         ),
         relationships: { __root__: visible.map(a => a.id) },
       } as NormalizedData
-  }, [context])
+  }, [context, disabled, isOnlySection, separatorAfter])
 
   const focusCanvas = () => {
     const canvasEl = document.querySelector('[data-cms-root]') as HTMLElement
@@ -109,39 +117,15 @@ export default function CmsFloatingToolbar({ store, focusedId, dispatch, hidden 
     focusCanvas()
   }, [focusedId, disabled, store, isOnlySection, dispatch])
 
-  const renderItem = useMemo(() => {
-    const separatorAfter = new Set(['add', 'delete'])
-    return (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState) => {
-      const actionId = item.id as string
-      const isDisabled = disabled || (actionId === 'delete' && isOnlySection)
-      const label = (item.data as Record<string, unknown>)?.label as string
-      return (
-        <React.Fragment>
-          <button
-            {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-            className="cms-floating-toolbar__btn flex-row items-center justify-center border-none cursor-pointer whitespace-nowrap"
-            disabled={isDisabled}
-          >
-            {label}
-          </button>
-          {separatorAfter.has(actionId) && (
-            <div className="cms-floating-toolbar__sep" />
-          )}
-        </React.Fragment>
-      )
-    }
-  }, [disabled, isOnlySection])
-
   if (hidden) return null
 
   return (
     <div className={`cms-floating-toolbar ${ax({ surface: 'overlay' })} fixed flex-row items-center`}>
-      <Toolbar
+      <ButtonToolbar
         data={toolbarData}
         plugins={[]}
         keyMap={keyMap}
         onActivate={handleActivate}
-        renderItem={renderItem}
         aria-label="Section actions"
       />
     </div>

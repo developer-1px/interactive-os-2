@@ -3,12 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { BookOpen, List, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { Breadcrumb } from '@os/ui/Breadcrumb'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
-import { NavList } from '@os/ui/NavList'
+import { TocNavList } from '@os/ui/TocNavList'
 import { SpreadReader } from '@os/ui/SpreadReader'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { ax } from '@styles/ax'
-import type { NodeState } from '@os/pattern/types'
 import { buildBook, buildTocStore, type BookPage, type Chapter } from './bookContent'
 import './PageBookViewer.css'
 
@@ -24,29 +23,6 @@ function getBook() {
 /** Call from router loader or on link hover to warm up */
 export function loader() {
   return getBook()
-}
-
-// ── TOC item renderer ──
-
-const renderTocItem = (
-  props: React.HTMLAttributes<HTMLElement>,
-  item: Record<string, unknown>,
-  state: NodeState,
-): React.ReactElement => {
-  const data = item.data as Record<string, unknown>
-  const label = data.label as string
-  const depth = data.depth as number
-  return (
-    <div
-      {...props}
-      className={ax({ layout: 'bar', gap: 'sm', padding: 'sm', textStyle: 'caption', text: state.selected ? 'bright' : 'muted' })}
-      data-indent={depth > 0 ? '' : undefined}
-      aria-current={state.selected ? 'page' : undefined}
-    >
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{(data.pageIndex as number) + 1}</span>
-      {label}
-    </div>
-  )
 }
 
 // ── Main component ──
@@ -254,10 +230,9 @@ export default function PageBookViewer() {
                 </button>
               </div>
               <div className={ax({ layout: 'scroll', padding: 'sm' })}>
-                <NavList
+                <TocNavList
                   data={tocStore}
                   onActivate={handleTocActivate}
-                  renderItem={renderTocItem}
                   aria-label="Table of contents"
                 />
               </div>
