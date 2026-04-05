@@ -13,25 +13,25 @@ import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
 import { useSpatialBridge } from './useSpatialBridge'
 import { getSerializedText, setExternalClipboard, hasDeserialize } from '../plugins/clipboard'
+import { key, type KeyHandler } from '../axis/types'
 
-type KeyMapHandler = (ctx: ReturnType<typeof createPatternContext>) => Command | void
-type PluginKeyMapHandler = (ctx: ReturnType<typeof createPatternContext>, original?: () => Command | void) => Command | void
-type ClipboardHandler = KeyMapHandler
+type ClipboardHandler = (ctx: ReturnType<typeof createPatternContext>) => Command | void
 
-function wrapWithOriginal(inner: KeyMapHandler, outer: PluginKeyMapHandler): KeyMapHandler {
-  return (ctx) => outer(ctx, () => inner(ctx))
+function wrapWithOriginal(inner: KeyHandler, outer: KeyHandler): KeyHandler {
+  const merged = [...new Set([...inner.commands, ...outer.commands])]
+  return key(merged, (ctx) => outer(ctx, () => inner(ctx)))
 }
 
 // ── Plugin handler extraction (pure) ──
 
-export function collectPluginKeyMaps(plugins: Plugin[]): Record<string, PluginKeyMapHandler> | undefined {
+export function collectPluginKeyMaps(plugins: Plugin[]): Record<string, KeyHandler> | undefined {
   if (!plugins.length) return undefined
-  const merged: Record<string, PluginKeyMapHandler> = {}
+  const merged: Record<string, KeyHandler> = {}
   for (const p of plugins) {
     if (p.keyMap) {
-      for (const [key, handler] of Object.entries(p.keyMap)) {
-        const prev = merged[key]
-        merged[key] = prev ? wrapWithOriginal(prev as KeyMapHandler, handler) : handler
+      for (const [k, handler] of Object.entries(p.keyMap)) {
+        const prev = merged[k]
+        merged[k] = prev ? wrapWithOriginal(prev, handler) : handler
       }
     }
   }
@@ -64,7 +64,7 @@ export interface UseAriaViewOptions {
   store: NormalizedData
   pattern: AriaPattern
   plugins?: Plugin[]
-  keyMap?: Record<string, KeyMapHandler>
+  keyMap?: Record<string, KeyHandler>
   onActivate?: (nodeId: string) => void
   focusedId: string
   selectedIdSet: Set<string>
@@ -121,11 +121,11 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   }), [plugins])
 
   const mergedKeyMap = useMemo(() => {
-    const base: Record<string, KeyMapHandler> = { ...pattern.keyMap }
+    const base: Record<string, KeyHandler> = { ...pattern.keyMap }
     if (pluginKeyMaps) {
-      for (const [key, handler] of Object.entries(pluginKeyMaps)) {
-        const patternHandler = base[key]
-        base[key] = patternHandler ? wrapWithOriginal(patternHandler, handler) : handler as KeyMapHandler
+      for (const [k, handler] of Object.entries(pluginKeyMaps)) {
+        const patternHandler = base[k]
+        base[k] = patternHandler ? wrapWithOriginal(patternHandler, handler) : handler
       }
     }
     if (keyMapOverrides) Object.assign(base, keyMapOverrides)

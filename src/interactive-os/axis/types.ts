@@ -107,10 +107,10 @@ export interface PatternContext {
 }
 
 /** Annotated keyMap handler — carries command metadata for introspection */
-export type KeyHandler = ((ctx: PatternContext) => Command | void) & { commands: readonly string[] }
+export type KeyHandler = ((ctx: PatternContext, original?: () => Command | void) => Command | void) & { commands: readonly string[] }
 
 /** Create an annotated keyMap handler with command metadata */
-export function key(commands: readonly string[], handler: (ctx: PatternContext) => Command | void): KeyHandler {
+export function key(commands: readonly string[], handler: (ctx: PatternContext, original?: () => Command | void) => Command | void): KeyHandler {
   return Object.assign(handler, { commands })
 }
 
