@@ -81,8 +81,6 @@
 
 .toolGroupSummary {
   composes: iconRow;
-  cursor: pointer;
-  user-select: none;
 }
 
 .toolGroupSummary::marker,
@@ -93,31 +91,23 @@
 /* --- Content areas --- */
 
 .toolGroupResult {
-  overflow-y: auto;
   line-height: var(--leading-snug);
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
 }
 
 .toolGroupCode {
-  overflow: auto;
 }
 
 .toolGroupCode > div :global(.shiki) {
-  border: none;
   border-radius: 0;
 }
 
 /* ═══ ToolChainGroup: collapsible group of process tools ═══ */
 
 .toolChain {
-  overflow: hidden;
 }
 
 .toolChainSummary {
   composes: iconRow;
-  cursor: pointer;
-  user-select: none;
 }
 
 .toolChainSummary::marker,

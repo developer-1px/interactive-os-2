@@ -197,14 +197,14 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
     )
   } else if (text) {
-    content = <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm', border: 'top' })} ${styles.toolGroupResult}`}>{text}</pre>
+    content = <pre className={`overflow-y-auto pre-wrap break-word ${ax({ text: 'muted', textStyle: 'code', padding: 'sm', border: 'top' })} ${styles.toolGroupResult}`}>{text}</pre>
   }
 
   // No content → non-collapsible row
   if (!content) {
     return (
       <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolGroup}`}>
-        <div className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}>
+        <div className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}>
           <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
           <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
         </div>
@@ -216,7 +216,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
     <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolGroup}`}>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
