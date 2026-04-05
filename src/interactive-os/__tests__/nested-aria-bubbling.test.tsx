@@ -5,8 +5,7 @@ import { useState } from 'react'
 import { Aria } from '../primitives/aria'
 import { listbox } from '../pattern/roles/listbox'
 import { ROOT_ID } from '../store/types'
-import type { Command } from '../engine/types'
-import type { PatternContext } from '../pattern/types'
+import { key } from '../axis/types'
 import { matchKeyEvent } from '../primitives/useKeyboard'
 
 function fixtureData() {
@@ -26,7 +25,7 @@ function NestedAriaHarness({ parentKey }: { parentKey: string }) {
   return (
     <div data-testid="root" data-opened={opened || undefined}>
       <Aria
-        keyMap={{ [parentKey]: (() => { setOpened(true); return undefined }) as (ctx: PatternContext) => Command | void }}
+        keyMap={{ [parentKey]: key(['open'], () => { setOpened(true); return undefined }) }}
         data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
         plugins={[]}
       >
@@ -70,7 +69,7 @@ describe('Nested Aria bubbling', () => {
   it('keyMap-only Aria (no pattern) renders without role/tabIndex', () => {
     const { container } = render(
       <Aria
-        keyMap={{ 'Meta+k': (() => undefined) as (ctx: PatternContext) => Command | void }}
+        keyMap={{ 'Meta+k': key(['noop'], () => undefined) }}
         data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
         plugins={[]}
       >

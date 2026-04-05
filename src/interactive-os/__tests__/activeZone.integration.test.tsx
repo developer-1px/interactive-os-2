@@ -13,7 +13,8 @@ import { listbox } from '../pattern/roles/listbox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
-import type { PatternContext, NodeState } from '../pattern/types'
+import type { NodeState } from '../pattern/types'
+import { key } from '../axis/types'
 
 function toolbarData(): NormalizedData {
   return createStore({
@@ -179,7 +180,7 @@ describe('Active Zone', () => {
     const user = userEvent.setup()
     const { container } = render(
       <Aria
-        keyMap={{ 'Meta+k': (_ctx: PatternContext) => undefined }}
+        keyMap={{ 'Meta+k': key(['noop'], (_ctx) => undefined) }}
         data={{ entities: {}, relationships: { [ROOT_ID]: [] } }}
         plugins={[]}
       >

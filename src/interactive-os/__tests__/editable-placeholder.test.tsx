@@ -8,13 +8,14 @@ import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
+import { key } from '../axis/types'
 
 const plugins = [rename()]
 
 // @test-harness
 function TestListBox({ initialData, keyMap }: {
   initialData: NormalizedData
-  keyMap?: Record<string, (ctx: import('../axis/types').PatternContext) => import('../engine/types').Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
 }) {
   const [data, setData] = useState(initialData)
   return (
@@ -70,7 +71,7 @@ describe('Aria.Editable placeholder', () => {
       relationships: { [ROOT_ID]: ['a'] },
     })
     const keyMap = {
-      F2: (ctx: import('../axis/types').PatternContext) => renameCommands.startRename(ctx.focused),
+      F2: key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
     }
     const { container } = render(<TestListBox initialData={store} keyMap={keyMap} />)
     const node = container.querySelector('[data-node-id="a"]')!

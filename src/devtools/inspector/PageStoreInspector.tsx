@@ -2,9 +2,10 @@ import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { Up, Down, Left, Right } from '../../pages/shared/kbdIcons'
 import type { NormalizedData } from '@os/store/types'
-import type { Command } from '@os/engine/types'
 import type { Plugin } from '@os/plugins/types'
-import type { PatternContext, NodeState } from '@os/pattern/types'
+import type { NodeState } from '@os/pattern/types'
+import { key } from '@os/axis/types'
+import type { KeyHandler } from '@os/axis/types'
 import type { LogEntry } from '@os/engine/logger'
 import { Aria } from '@os/primitives/aria'
 import { TreeView } from '@os/ui/TreeView'
@@ -23,22 +24,22 @@ import styles from './PageStoreInspector.module.css'
 
 const inspectorPlugins: Plugin[] = []
 
-const editorKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
-  'Delete': (ctx) => crudCommands.remove(ctx.focused),
-  'Alt+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-  'Alt+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
+const editorKeyMap: Record<string, KeyHandler> = {
+  'Delete': key(['crud:remove'], (ctx) => crudCommands.remove(ctx.focused)),
+  'Alt+ArrowUp': key(['dnd:moveUp'], (ctx) => dndCommands.moveUp(ctx.focused)),
+  'Alt+ArrowDown': key(['dnd:moveDown'], (ctx) => dndCommands.moveDown(ctx.focused)),
 }
 
-function makeEditorPlugins(): { plugins: Plugin[]; keyMap: Record<string, (ctx: PatternContext) => Command | void> } {
+function makeEditorPlugins(): { plugins: Plugin[]; keyMap: Record<string, KeyHandler> } {
   let nodeCounter = 0
-  const createKeyMap: Record<string, (ctx: PatternContext) => Command> = {
-    'Enter': (ctx) => {
+  const createKeyMap: Record<string, KeyHandler> = {
+    'Enter': key(['crud:create'], (ctx) => {
       const id = `node-${++nodeCounter}`
       return crudCommands.create(
         { id, data: { name: `New Item ${nodeCounter}`, type: 'file' } },
         ctx.focused || undefined,
       )
-    },
+    }),
   }
   return {
     plugins: [crud(), dnd(), history(), focusRecovery()],

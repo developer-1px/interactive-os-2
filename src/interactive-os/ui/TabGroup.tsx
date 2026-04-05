@@ -2,8 +2,7 @@
 import React, { useCallback, useMemo } from 'react'
 import type { NormalizedData, Entity } from '../store/types'
 import type { Plugin } from '../plugins/types'
-import type { PatternContext } from '../pattern/types'
-import type { Command } from '../engine/types'
+import { key } from '../axis/types'
 import { ROOT_ID } from '../store/types'
 import { createStore, getChildren, getEntityData } from '../store/createStore'
 import { useTabList } from './useTabList'
@@ -21,7 +20,7 @@ interface TabGroupProps {
   onChange?: (data: NormalizedData) => void
   onAddTab?: (tabgroupId: string) => void
   renderPanel: (tab: Entity) => React.ReactNode
-  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   'aria-label'?: string
 }
 
@@ -60,13 +59,13 @@ export function TabGroup({
     onChange(workspaceCommands.removeTab.reduce(data, tabId))
   }, [onChange, data])
 
-  const closeKeyMap = useMemo((): Record<string, (ctx: PatternContext) => Command | void> => ({
-    'Delete': (ctx) => {
+  const closeKeyMap = useMemo(() => ({
+    'Delete': key(['workspace:removeTab'], (ctx) => {
       onChange?.(workspaceCommands.removeTab.reduce(data, ctx.focused))
-    },
-    'Meta+w': (ctx) => {
+    }),
+    'Meta+w': key(['workspace:removeTab'], (ctx) => {
       onChange?.(workspaceCommands.removeTab.reduce(data, ctx.focused))
-    },
+    }),
     ...keyMap,
   }), [keyMap, onChange, data])
 

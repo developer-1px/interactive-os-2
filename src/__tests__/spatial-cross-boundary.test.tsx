@@ -22,8 +22,8 @@ import { spatialReachable } from '@os/plugins/focusRecovery'
 import { createStore, getParent } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import { createBatchCommand } from '@os/engine/types'
+import { key } from '@os/axis/types'
 import type { NormalizedData } from '@os/store/types'
-import type { PatternContext } from '@os/pattern/types'
 
 // ── rect helper ──
 
@@ -126,7 +126,7 @@ function TestCanvas({ data, activeRectMap }: { data: NormalizedData; activeRectM
 
   const testKeyMap = useMemo(() => ({
     ...spatialNav.keyMap,
-    Enter: (ctx: PatternContext) => {
+    Enter: key(['spatial:enterChild'], (ctx) => {
       const children = ctx.getChildren(ctx.focused)
       if (children.length === 0) return
       spatialNav.clearCursorsAtDepth(ctx.focused)
@@ -134,8 +134,8 @@ function TestCanvas({ data, activeRectMap }: { data: NormalizedData; activeRectM
         spatialCommands.enterChild(ctx.focused),
         focusCommands.setFocus(children[0]),
       ])
-    },
-    Escape: (ctx: PatternContext) => {
+    }),
+    Escape: key(['spatial:exitToParent'], (ctx) => {
       const spatialParent = ctx.getEntity('__spatial_parent__')
       const parentId = spatialParent?.parentId as string | undefined
       if (!parentId || parentId === ROOT_ID) return undefined
@@ -144,7 +144,7 @@ function TestCanvas({ data, activeRectMap }: { data: NormalizedData; activeRectM
         spatialCommands.exitToParent(),
         focusCommands.setFocus(parentId),
       ])
-    },
+    }),
   }), [spatialNav])
 
   const aria = useAriaZone({

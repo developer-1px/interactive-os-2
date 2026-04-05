@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { key } from '@os/axis/types'
+import type { KeyHandler } from '@os/axis/types'
 import { AriaZone } from '@os/ui/AriaZone'
 import type { AriaZoneContext } from '@os/ui/AriaZone'
 import { spatial } from '@os/misc/spatial'
@@ -52,23 +54,23 @@ function navigateTabSibling(ctx: PatternContext, dir: 1 | -1): Command | void {
 }
 
 /** CRUD keyMap for CMS Canvas — os commands with undo/redo */
-const cmsKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
-  'Mod+ArrowUp': (ctx) => dndCommands.moveUp(ctx.focused),
-  'Mod+ArrowDown': (ctx) => dndCommands.moveDown(ctx.focused),
-  'Mod+D': (ctx) => {
+const cmsKeyMap: Record<string, KeyHandler> = {
+  'Mod+ArrowUp': key(['dnd:moveUp'], (ctx) => dndCommands.moveUp(ctx.focused)),
+  'Mod+ArrowDown': key(['dnd:moveDown'], (ctx) => dndCommands.moveDown(ctx.focused)),
+  'Mod+D': key(['clipboard:copy', 'clipboard:paste'], (ctx) => {
     // Copy then paste = duplicate with new IDs (handles subtrees)
     return createBatchCommand([
       clipboardCommands.copy([ctx.focused]),
       clipboardCommands.paste(ctx.focused),
     ])
-  },
-  F2: (ctx) => {
+  }),
+  F2: key(['rename:start'], (ctx) => {
     const entity = ctx.getEntity(ctx.focused)
     const data = (entity?.data ?? {}) as Record<string, unknown>
     const inlineFields = getInlineEditableFields(data)
     if (inlineFields.length === 0) return
     return renameCommands.startRename(ctx.focused)
-  },
+  }),
   // Mod+C/X/V → clipboard plugin keyMap, Mod+Z → history plugin keyMap
 }
 
@@ -82,7 +84,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
     () => ({
       ...spatialNav.keyMap,
       ...cmsKeyMap,
-      Delete: (ctx: PatternContext) => {
+      Delete: key(['crud:remove'], (ctx) => {
         // Slot guard: non-array parent → structural child → cannot delete
         const parentId = getParent(engine.getStore(), ctx.focused)
         if (parentId) {
@@ -107,14 +109,14 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         }
 
         return crudCommands.remove(ctx.focused)
-      },
-      ArrowRight: (ctx: PatternContext) => {
+      }),
+      ArrowRight: key(['navigate:focus'], (ctx) => {
         return navigateTabSibling(ctx, 1) ?? spatialNav.keyMap.ArrowRight(ctx)
-      },
-      ArrowLeft: (ctx: PatternContext) => {
+      }),
+      ArrowLeft: key(['navigate:focus'], (ctx) => {
         return navigateTabSibling(ctx, -1) ?? spatialNav.keyMap.ArrowLeft(ctx)
-      },
-      Enter: (ctx: PatternContext) => {
+      }),
+      Enter: key(['spatial:enterChild', 'rename:start'], (ctx) => {
         const children = ctx.getChildren(ctx.focused)
         const slotKids = ctx.getSlotChildren(ctx.focused)
         if (children.length === 0 && slotKids.length === 0) {
@@ -149,8 +151,8 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           spatialCommands.enterChild(ctx.focused),
           focusCommands.setFocus(drillTarget[0]),
         ])
-      },
-      Escape: (ctx: PatternContext) => {
+      }),
+      Escape: key(['spatial:exitToParent'], (ctx) => {
         // Exit to parent depth (if not at root)
         const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
         const parentId = spatialParent?.parentId as string | undefined
@@ -160,7 +162,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           spatialCommands.exitToParent(),
           focusCommands.setFocus(parentId),
         ])
-      },
+      }),
     }),
     [spatialNav, engine],
   )

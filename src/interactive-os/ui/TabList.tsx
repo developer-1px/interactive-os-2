@@ -1,7 +1,6 @@
 import React from 'react'
 
-import type { NodeState, PatternContext } from '../pattern/types'
-import type { Command } from '../engine/types'
+import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
 import { useTabList } from './useTabList'
 import { ROOT_ID } from '../store/types'
@@ -10,17 +9,24 @@ import { ax } from '@styles/ax'
 
 interface TabListProps extends AriaComponentProps {
   enableEditing?: boolean
-  keyMap?: Record<string, (ctx: PatternContext) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   initialFocus?: string
   /** When true, uses tabsManual pattern (selection does NOT follow focus). */
   manual?: boolean
 }
 
-const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, _state: NodeState): React.ReactElement => {
+const defaultRenderItem = (_props: React.HTMLAttributes<HTMLElement>, tab: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = (tab.data as Record<string, unknown>)?.label as string
     ?? (tab.data as Record<string, unknown>)?.name as string
     ?? tab.id as string
-  return <span>{label}</span>
+  return (
+    <span className={ax({
+      surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text',
+      textStyle: 'caption', text: state.selected ? 'primary' : 'muted',
+    })}>
+      {label}
+    </span>
+  )
 }
 
 export function TabList({
@@ -64,13 +70,6 @@ export function TabList({
           <div
             key={id}
             {...(props as React.HTMLAttributes<HTMLDivElement>)}
-            className={ax({
-              surface: 'ghost',
-              controlSize: 'sm',
-              padding: 'sm',
-              content: 'text',
-              textStyle: 'caption',
-            })}
           >
             {renderItem({} as React.HTMLAttributes<HTMLElement>, entity, state)}
           </div>

@@ -13,10 +13,10 @@ import { listbox } from '../pattern/roles/listbox'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData, Entity } from '../store/types'
-import type { Command } from '../engine/types'
 import { rename, renameCommands } from '../plugins/rename'
 import { typeahead, resetTypeahead } from '../plugins/typeahead'
-import type { PatternContext, NodeState } from '../pattern/types'
+import { key } from '../axis/types'
+import type { NodeState } from '../pattern/types'
 
 function fixtureData(): NormalizedData {
   return createStore({
@@ -159,8 +159,8 @@ describe('Typeahead keyboard integration', () => {
   // V4: M4 — rename mode blocks typeahead (contenteditable captures event)
   it('typeahead does not fire during rename mode', async () => {
     const user = userEvent.setup()
-    const editKeyMap: Record<string, (ctx: PatternContext) => Command | void> = {
-      'F2': (ctx) => renameCommands.startRename(ctx.focused),
+    const editKeyMap = {
+      'F2': key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
     }
     const data = createStore({
       entities: {
