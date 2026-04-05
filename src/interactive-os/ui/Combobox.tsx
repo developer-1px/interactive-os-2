@@ -321,7 +321,7 @@ export function Combobox({
       />
       )}
       {isOpen && (
-        <div className={`overflow-hidden ${ax({ surface: 'overlay', shape: 'xl' })} comboDropdown`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div className={`overflow-hidden ${ax({ surface: 'overlay', shape: 'xl' })} combo-dropdown`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? (
             rootChildren.map(groupId => {
               const group = originalStore.entities[groupId]
