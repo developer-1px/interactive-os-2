@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { ax } from '@styles/ax'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
@@ -106,24 +107,19 @@ export default function EngineDiffDemo() {
 
       <div className="page-section">
         <h3 className="page-section-title">Diff Log ({entries.length})</h3>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 'var(--type-caption-size)', lineHeight: 1.8, maxHeight: '200px', overflow: 'auto' }}>
+        <div className={ax({ textStyle: 'code', layout: 'scroll' })}>
           {entries.length === 0 ? (
-            <span style={{ opacity: 0.5 }}>Interact with the list to generate diffs…</span>
+            <span className="op-dim">Interact with the list to generate diffs…</span>
           ) : (
             entries.map((e) => (
               <div
                 key={e.seq}
                 onClick={() => setSelection({ seq: e.seq, reversed: false })}
-                style={{
-                  borderBottom: '1px solid var(--color-border, rgba(128,128,128,0.15))',
-                  cursor: 'pointer',
-                  background: selection?.seq === e.seq ? 'var(--color-surface-hover, rgba(128,128,128,0.08))' : undefined,
-                  padding: '2px 4px',
-                }}
+                className={`debug-log-entry ${selection?.seq === e.seq ? 'st-selected' : ''}`}
               >
-                <span style={{ opacity: 0.4, marginRight: '6px' }}>#{e.seq}</span>
-                <span style={{ fontWeight: 600 }}>{e.type}</span>
-                <span style={{ opacity: 0.4, marginLeft: '8px' }}>{e.diffs.length} diff{e.diffs.length !== 1 ? 's' : ''}</span>
+                <span className="op-faint">#{e.seq}</span>{' '}
+                <span className={ax({ weight: 'semi' })}>{e.type}</span>{' '}
+                <span className="op-faint">{e.diffs.length} diff{e.diffs.length !== 1 ? 's' : ''}</span>
               </div>
             ))
           )}
@@ -136,35 +132,26 @@ export default function EngineDiffDemo() {
             #{selectedEntry.seq} — {selectedEntry.type}
             <button
               onClick={handleReverse}
-              style={{
-                marginLeft: 'var(--space-md)',
-                fontSize: 'var(--type-caption-size)',
-                padding: '2px 8px',
-                borderRadius: '4px',
-                border: '1px solid var(--color-border, rgba(128,128,128,0.3))',
-                background: 'var(--color-surface, transparent)',
-                cursor: 'pointer',
-                color: 'inherit',
-              }}
+              className={ax({ surface: 'ghost', controlSize: 'sm', shape: 'sm', textStyle: 'caption' })}
             >
               {selection?.reversed ? 'applyDelta(forward)' : 'applyDelta(reverse)'}
             </button>
           </h3>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 'var(--type-caption-size)', lineHeight: 1.8 }}>
+          <div className={ax({ textStyle: 'code' })}>
             {selectedEntry.diffs.map((d, i) => (
-              <div key={i} style={{ padding: '2px 0' }}>
-                <span style={{ opacity: 0.5 }}>{d.path}</span>{' '}
+              <div key={i} className={ax({ padding: 'xs' })}>
+                <span className="op-dim">{d.path}</span>{' '}
                 {d.kind === 'added' && (
-                  <span style={{ color: 'var(--color-success, #22c55e)' }}>+{summarizeValue(d.after)}</span>
+                  <span className={ax({ text: 'success' })}>+{summarizeValue(d.after)}</span>
                 )}
                 {d.kind === 'removed' && (
-                  <span style={{ color: 'var(--color-destructive, #ef4444)' }}>-{summarizeValue(d.before)}</span>
+                  <span className={ax({ text: 'danger' })}>-{summarizeValue(d.before)}</span>
                 )}
                 {d.kind === 'changed' && (
                   <>
-                    <span style={{ color: 'var(--color-destructive, #ef4444)' }}>{summarizeValue(d.before)}</span>
-                    <span style={{ opacity: 0.4 }}> → </span>
-                    <span style={{ color: 'var(--color-success, #22c55e)' }}>{summarizeValue(d.after)}</span>
+                    <span className={ax({ text: 'danger' })}>{summarizeValue(d.before)}</span>
+                    <span className="op-faint"> → </span>
+                    <span className={ax({ text: 'success' })}>{summarizeValue(d.after)}</span>
                   </>
                 )}
               </div>

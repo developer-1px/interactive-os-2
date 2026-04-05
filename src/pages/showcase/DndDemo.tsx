@@ -63,11 +63,11 @@ export default function DndDemo() {
             ].filter(Boolean).join(' ')
 
             return (
-              <div {...props} className={cls} style={{ paddingLeft: 14 + indent }}>
+              <div {...props} className={cls} style={{ '--_indent': `${14 + indent}px`, paddingLeft: 'var(--_indent)' } as React.CSSProperties}>
                 <span className="tree-node__chevron shrink-0 inline-flex items-center justify-center">
                   {isGroup ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
                 </span>
-                <span className="tree-node__name" style={{ fontWeight: isGroup ? 600 : 400 }}>
+                <span className={`tree-node__name${isGroup ? ' wt-semi' : ''}`}>
                   {d?.label as string}
                 </span>
               </div>

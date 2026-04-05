@@ -130,3 +130,62 @@ hook은 Write/Edit 시점에만 동작 → 기존 위반은 영원히 잔존.
 - 해치 목록은 CLAUDE.md에 SSOT로 관리
 - 해치 사용은 `pnpm score:design`에서 카운트 → 0이 아닌 것은 허용하되 추적
 - 해치가 3건 이상 같은 패턴이면 → 축(axis) 또는 토큰 확장을 검토
+
+---
+
+## 6. 소급 적용 결과 (Phase 1 실행)
+
+### 완료된 수정
+
+**하네스 강화:**
+- `check:deps` — pages/ 포함 스캔 + `pages-no-primitives` 규칙 추가
+- `stopTestGate` — 마지막 테스트 exit_code 확인 (실패 시 block)
+- `logAgentOps` — Bash exit_code 기록 추가 (stopTestGate 연동)
+- `guardOsPatterns` — addEventListener/onKeyDown 정규식 멀티라인 대응
+
+**레거시 부채 청산:**
+- FormDemo — style={{}} 18건 → ax() 전환 (surface/controlSize/textStyle/tone/layout/gap)
+- TypeaheadDemo — style={{}} 2건 → className 전환
+- ClipboardDemo — style={{}} 4건 → ax()/op-*/wt-* 클래스 + `--_indent` 해치
+- DndDemo — style={{}} 2건 → ax()/wt-* + `--_indent` 해치
+- EngineCommandDemo — style={{}} 8건 → ax()/op-*/debug-log-entry 클래스
+- EngineDiffDemo — style={{}} 15건 → ax()/op-*/debug-log-entry + surface:ghost 버튼
+- PageI18nEditor — style={{}} 2건 → ax({ padding, layout, surface, shape })
+- PanelHeader.module.css — `36px` → `var(--toolbar-height)`
+- Kanban.module.css — `height: 2px` → `var(--indicator-width)`
+- Kanban.module.css — `--tone-positive-base` (미정의) → `--tone-success-base`
+
+### 설계가 필요하여 미수정 (backlog)
+
+#### 1. pages → primitives `Aria` 직접 import (5곳)
+- PageWriter, PageI18nEditor, HistoryDemo, RenameDemo, CrudDemo
+- **문제**: `Aria.Editable`, `Aria.SearchHighlight` 등 서브 컴포넌트를 renderItem 콜백 안에서 사용
+- **설계 필요**: Grid/ListBox 등 ui/ 컴포넌트가 이 서브 컴포넌트를 prop/context로 제공하거나, ui/에서 re-export 계층을 만들어야 함
+- **결정 포인트**: 서브 컴포넌트를 ui/ re-export로 노출할 것인가, 아니면 renderItem API를 확장하여 primitives 의존을 제거할 것인가
+
+#### 2. module.css 레이아웃 속성 분리
+- MarkdownViewer.module.css (223줄), Kanban.module.css (153줄), CodeBlock.module.css (101줄)
+- **문제**: display:flex, flex-direction, gap 등 레이아웃 속성이 module.css에 있음
+- **설계 필요**: 허용 속성 화이트리스트 정의, "레이아웃은 ax()/structure" 경계를 명확히 해야 함
+- **결정 포인트**: module.css에서 layout 속성을 완전 금지할 것인가, compact variant 같은 조건부 레이아웃은 허용할 것인가
+
+#### 3. showcase/ IndicatorsDemo의 useState 인터랙션 상태
+- expanded, checked, selected, on — 4건
+- **문제**: 데모 목적의 로컬 상태. engine/store를 사용하면 데모가 과도하게 복잡해짐
+- **설계 필요**: showcase는 os 규칙 예외 구역으로 명시할 것인가, 아니면 Indicators 자체를 AriaZone 기반으로 만들 것인가
+- **결정 포인트**: showcase를 guard hook exempt 경로로 추가할 것인가
+
+#### 4. hardcoded px 토큰 확장
+- Kanban `width: 240px` — `--storymap-col-width`(220px)과 불일치
+- DatePicker `28px` — 기존 아이콘 토큰(14/16/18/24px)과 불일치
+- QuickOpen `560px` — `--overlay-width`(360px)과 불일치
+- **설계 필요**: 컴포넌트별 전용 토큰(`--kanban-col-width`, `--datepicker-cell-size`)을 tokens.css에 추가할지, 컴포넌트 로컬 `--_*` 변수로 처리할지
+
+#### 5. EngineCommandDemo/EngineDiffDemo 디버그 패널
+- `debug-log-entry` 클래스가 아직 어디에도 정의되지 않음
+- **설계 필요**: app.css에 디버그 패널 공통 스타일을 추가하거나, showcase 전용 module.css를 만들거나, devtools/ 레이어로 이동
+
+#### 6. 커밋 전 /simplify, CSS 편집 시 /design-implement 강제
+- 현재 강제 수단 없음 (CLAUDE.md 문서 규칙만 존재)
+- **설계 필요**: stop gate에서 스킬 호출 여부를 체크하려면 agent-ops 로그에 스킬 호출을 기록해야 함
+- **결정 포인트**: 스킬 호출을 hook으로 강제할 것인가, Claude의 자율에 맡기되 회고에서 추적할 것인가

@@ -58,7 +58,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 2px;
+  height: var(--indicator-width);
   width: calc(var(--_loc-ratio, 0) * 100%);
   background: var(--tone-primary-dim);
   border-radius: var(--border-width);
@@ -95,7 +95,7 @@
 .board[data-compact] .card[data-ext="tsx"] { box-shadow: inset 3px 0 0 var(--focus); }
 .board[data-compact] .card[data-ext="css"] { box-shadow: inset 3px 0 0 var(--tone-destructive-base); }
 .board[data-compact] .card[data-ext="md"],
-.board[data-compact] .card[data-ext="mdx"] { box-shadow: inset 3px 0 0 var(--tone-positive-base); }
+.board[data-compact] .card[data-ext="mdx"] { box-shadow: inset 3px 0 0 var(--tone-success-base); }
 .board[data-compact] .card[data-ext="json"],
 .board[data-compact] .card[data-ext="yaml"],
 .board[data-compact] .card[data-ext="yml"] { box-shadow: inset 3px 0 0 var(--tone-warning-base); }
@@ -123,7 +123,7 @@
 /* ── Dependency count colors in subtitle ── */
 
 .depUp {
-  color: var(--tone-positive-base);
+  color: var(--tone-success-base);
 }
 
 /* ── Dependency highlight — dim unrelated, brighten related ── */
@@ -133,7 +133,7 @@
 }
 
 .board[data-compact] .card[data-highlight="up"] {
-  box-shadow: inset 3px 0 0 var(--tone-positive-base);
+  box-shadow: inset 3px 0 0 var(--tone-success-base);
 }
 
 .board[data-compact] .card[data-highlight="down"] {

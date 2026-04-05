@@ -51,6 +51,15 @@ module.exports = {
       from: { path: '^src/interactive-os/primitives/' },
       to: { path: '^src/interactive-os/ui/' },
     },
+
+    // pages는 ui/ 만 import 가능 (primitives 이하 직접 import 금지)
+    {
+      name: 'pages-no-primitives',
+      severity: 'error',
+      comment: 'pages/에서 primitives 직접 import 금지 — ui/ 완성품을 사용하세요',
+      from: { path: '^src/pages/' },
+      to: { path: '^src/interactive-os/(store|engine|axis|pattern|plugins|misc|primitives)/' },
+    },
   ],
   options: {
     doNotFollow: { path: 'node_modules' },

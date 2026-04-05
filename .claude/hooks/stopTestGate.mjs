@@ -49,11 +49,27 @@ if (srcEdits.length === 0) process.exit(0)
 
 // agent-ops 로그에서 테스트/타입체크 Bash 실행 여부 확인
 const bashOps = ops.filter(op => op.tool === 'Bash' && op.command)
-const hasTestRun = bashOps.some(op =>
+const testOps = bashOps.filter(op =>
   /pnpm test|vitest|pnpm typecheck|tsc/.test(op.command)
 )
 
-if (hasTestRun) process.exit(0)
+const hasTestRun = testOps.length > 0
+
+// 테스트 실행이 있었더라도 마지막 테스트의 exit_code가 실패면 block
+if (hasTestRun) {
+  const lastTest = testOps[testOps.length - 1]
+  if (lastTest.exit_code != null && lastTest.exit_code !== 0) {
+    const failReason = [
+      `마지막 테스트가 실패했습니다 (exit code: ${lastTest.exit_code}):`,
+      `  $ ${lastTest.command}`,
+      '',
+      '테스트를 통과시킨 뒤 완료하세요.',
+    ].join('\n')
+    process.stdout.write(JSON.stringify({ decision: 'block', reason: failReason }))
+    process.exit(0)
+  }
+  process.exit(0)
+}
 
 // 코드 수정은 있는데 테스트 실행 흔적이 없음
 const editedFiles = [...new Set(srcEdits.map(op => op.file.split('/src/')[1]))]

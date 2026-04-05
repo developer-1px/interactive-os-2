@@ -2,6 +2,6 @@
 /* ax() handles: layout:bar, flex:none, textStyle:overline, text:muted, padding:md */
 
 .panelHeader {
-  height: 36px;
+  height: var(--toolbar-height);
   border-bottom: 1px solid var(--border-subtle);
 }
