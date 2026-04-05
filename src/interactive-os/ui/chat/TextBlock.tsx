@@ -4,5 +4,5 @@ import { MarkdownViewer } from '../MarkdownViewer'
 import type { TextBlock as TextBlockType } from './types'
 
 export const TextBlock = memo(function TextBlock({ block }: { block: TextBlockType }) {
-  return <MarkdownViewer content={block.content} styles={{}} codeVariant="compact" />
+  return <MarkdownViewer content={block.content} prose={false} codeVariant="compact" />
 })

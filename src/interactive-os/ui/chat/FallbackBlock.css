@@ -1,20 +1,20 @@
-/* FallbackBlock — unknown block type with JSON dump */
+/* FallbackBlock — last-mile CSS */
 
-.fallback {
+.fallback-block {
   border: var(--border-width) dashed var(--border-subtle);
 }
 
-.fallbackSummary {
+.fallback-summary {
   padding: var(--space-xs) var(--space-sm);
   font-family: var(--mono);
 }
 
-.fallbackSummary::marker,
-.fallbackSummary::-webkit-details-marker {
+.fallback-summary::marker,
+.fallback-summary::-webkit-details-marker {
   display: none;
 }
 
-.fallbackPre {
+.fallback-pre {
   padding: var(--space-xs) var(--space-sm);
   border-top: var(--border-width) dashed var(--border-subtle);
   font-family: var(--mono);

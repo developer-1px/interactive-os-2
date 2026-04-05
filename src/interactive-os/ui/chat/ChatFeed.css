@@ -1,8 +1,6 @@
-/* --- Message wrapper --- */
+/* ChatFeed — last-mile bubble styles */
 
-/* --- User bubble --- */
-
-.chatUser {
+.chat-user {
   width: fit-content;
   max-width: 80%;
   margin-left: auto;
@@ -11,16 +9,12 @@
   border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
 }
 
-/* --- System (tool use, results, errors) --- */
-
-.chatSystem {
+.chat-system {
   overflow: hidden;
   line-height: var(--leading-relaxed);
 }
 
-/* --- Assistant bubble --- */
-
-.chatAssistant {
+.chat-assistant {
   padding: var(--space-xs) 0;
   line-height: var(--leading-relaxed);
 }

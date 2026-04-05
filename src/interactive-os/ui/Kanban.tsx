@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useMemo } from 'react'
-import styles from './Kanban.module.css'
+import './Kanban.css'
 import { ROOT_ID } from '../store/types'
 import { useAria } from '../primitives/useAria'
 import { AriaInternalContext } from '../primitives/AriaInternalContext'
@@ -59,7 +59,7 @@ export function Kanban({
         role={kanbanBehavior.role}
         aria-label={ariaLabel}
         data-aria-container=""
-        className={`${ax({ layout: 'scroll-x', gap: compact ? 'sm' : 'md', padding: compact ? 'sm' : 'xs' })} ${styles.board}`}
+        className={`${ax({ layout: 'scroll-x', gap: compact ? 'sm' : 'md', padding: compact ? 'sm' : 'xs' })} kanban-board`}
         data-compact={compact || undefined}
         data-has-highlight={(highlightUp?.size || highlightDown?.size) ? '' : undefined}
         {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)}
@@ -77,18 +77,18 @@ export function Kanban({
           const locRatio = totalLoc && maxColLoc ? totalLoc / maxColLoc : 0
 
           return (
-            <div key={colId} className={`${ax({ layout: 'column', gap: 'xs', flex: compact ? 'none' : '1', surface: 'sunken', shape: compact ? 'sm' : 'xl', padding: compact ? undefined : 'xl' })} ${styles.column}`}>
+            <div key={colId} className={`${ax({ layout: 'column', gap: 'xs', flex: compact ? 'none' : '1', surface: 'sunken', shape: compact ? 'sm' : 'xl', padding: compact ? undefined : 'xl' })} kanban-column`}>
               {/* Column header */}
               <FocusDiv
                 focused={colState.focused}
-                className={`relative ${ax({ layout: 'bar', gap: 'sm', textStyle: compact ? 'caption' : 'overline', text: 'secondary', padding: 'xs', shape: 'sm', clamp: compact ? '1' : undefined })} ${styles.columnHeader}`}
+                className={`relative ${ax({ layout: 'bar', gap: 'sm', textStyle: compact ? 'caption' : 'overline', text: 'secondary', padding: 'xs', shape: 'sm', clamp: compact ? '1' : undefined })} kanban-column-header`}
                 title={`${colTitle}\n${cards.length} files${totalLoc ? ` · ${totalLoc} lines` : ''}`}
                 style={locRatio > 0 ? { '--_loc-ratio': locRatio } as React.CSSProperties : undefined}
                 {...(colProps as React.HTMLAttributes<HTMLDivElement>)}
               >
                 <AriaItemContext.Provider value={{ nodeId: colId, focused: colState.focused, renaming: !!colState.renaming }}>
                   <span>{colTitle}</span>
-                  <span className={`${ax({ text: 'muted' })} ${styles.columnCount}`}>{cards.length}{totalLoc != null && totalLoc > 0 ? ` · ${totalLoc}L` : ''}</span>
+                  <span className={`${ax({ text: 'muted' })} kanban-column-count`}>{cards.length}{totalLoc != null && totalLoc > 0 ? ` · ${totalLoc}L` : ''}</span>
                 </AriaItemContext.Provider>
               </FocusDiv>
 
@@ -113,7 +113,7 @@ export function Kanban({
                   <FocusDiv
                     key={cardId}
                     focused={cardState.focused}
-                    className={`${compact ? 'border-none' : ''} ${ax({ surface: 'display', shape: compact ? undefined : 'xl', padding: compact ? undefined : 'xl', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : undefined, gap: compact ? 'xs' : undefined })} ${styles.card}`}
+                    className={`${compact ? 'border-none' : ''} ${ax({ surface: 'display', shape: compact ? undefined : 'xl', padding: compact ? undefined : 'xl', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : undefined, gap: compact ? 'xs' : undefined })} kanban-card`}
                     data-hub={isHub || undefined}
                     title={cardTooltip ?? cardTitle}
                     data-weight={cardWeight || undefined}
@@ -123,11 +123,11 @@ export function Kanban({
                     {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
                   >
                     <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
-                      <span className={`${ax({ clamp: '1' })} ${styles.cardTitle}`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
+                      <span className={`${ax({ clamp: '1' })} kanban-card-title`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
                       {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
-                        <span className={`tabular-nums ${ax({ text: 'muted', flex: 'none' })} ${styles.cardSubtitle}`}>
+                        <span className={`tabular-nums ${ax({ text: 'muted', flex: 'none' })} kanban-card-subtitle`}>
                           {cardSubtitle}
-                          {cardDepUp != null && cardDepUp > 0 && <span className={`${ax({ weight: 'medium' })} ${styles.depUp}`}> ↑{cardDepUp}</span>}
+                          {cardDepUp != null && cardDepUp > 0 && <span className={`${ax({ weight: 'medium' })} kanban-dep-up`}> ↑{cardDepUp}</span>}
                           {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${ax({ text: 'accent' })}`}> ↓{cardDepDown}</span>}
                         </span>
                       )}

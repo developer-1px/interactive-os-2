@@ -1,8 +1,4 @@
-/* ═══════════════════════════════════════════
-   Markdown prose — bundle-aligned
-   Type/Shape/Surface 번들 완전 준수.
-   em margin은 prose 비례 리듬 예외.
-   ═══════════════════════════════════════════ */
+/* Markdown prose — all rules are last-mile (prose typography rhythm) */
 
 .markdown {
   margin: 0 auto;
@@ -84,8 +80,8 @@
   margin: 1.5em 0;
 }
 
-/* CodeBlock이 들어있으면 wrapper pre 스타일 리셋 */
-.markdown pre:has(:global(.shiki)) {
+/* CodeBlock wrapper reset */
+.markdown pre:has(.shiki) {
   background: none;
   border: none;
   padding: 0;
@@ -175,7 +171,6 @@
   border-radius: var(--shape-lg-radius);
 }
 
-/* Mermaid diagrams: full width */
 .markdown svg {
   max-width: 100%;
   height: auto;
@@ -191,8 +186,6 @@
   font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
-
-/* ── Clickable file path in inline code ── */
 
 .markdown input[type="checkbox"] {
   margin-right: 0.4em;

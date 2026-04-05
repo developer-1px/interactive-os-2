@@ -11,7 +11,7 @@ import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { useChatFeatures } from './chatFeatures'
 import { useDisclosure } from './useDisclosure'
-import styles from './ToolSummaryBlock.module.css'
+import './ToolSummaryBlock.css'
 import type { DataBlock } from './types'
 
 const toolIcons: Record<string, typeof Wrench> = {
@@ -24,7 +24,7 @@ function FilePathLink({ path, children }: { path: string; children: React.ReactN
   const open = () => window.dispatchEvent(new CustomEvent('inspector:open-source', { detail: { fileName: path } }))
   return (
     <span
-      className={`${ax({ text: 'muted', clamp: '1', shape: 'sm' })} ${styles.toolDetail} ${styles.filePathLink}`}
+      className={`${ax({ text: 'muted', clamp: '1', shape: 'sm' })} tool-detail tool-file-path-link`}
       role="button"
       tabIndex={0}
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); open() }}
@@ -87,9 +87,9 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
   const Icon = toolIcons[name] ?? Wrench
 
   return (
-    <div className={`relative ${ax({ layout: 'bar', textStyle: 'caption', text: 'secondary' })} ${styles.toolRow}`}>
-      <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
-      <span><span className={ax({ weight: 'semi' })}>{name}</span>{detail ? ' ' : ''}<span className={`${ax({ text: 'muted', clamp: '1' })} ${styles.toolDetail}`}>{detail}</span></span>
+    <div className={`relative ${ax({ layout: 'bar', textStyle: 'caption', text: 'secondary' })} tool-icon-row`}>
+      <span className={`${ax({ layout: 'center' })} tool-row-icon`}><Icon size={12} /></span>
+      <span><span className={ax({ weight: 'semi' })}>{name}</span>{detail ? ' ' : ''}<span className={`${ax({ text: 'muted', clamp: '1' })} tool-detail`}>{detail}</span></span>
     </div>
   )
 }
@@ -112,23 +112,23 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
   const isLong = lines.length > 3 || text.length > 200
 
   if (!isLong) {
-    return <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} ${styles.toolResult}`}>{text}</pre>
+    return <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} tool-result`}>{text}</pre>
   }
 
   return (
     <div>
       <div
         {...toggleProps}
-        className={`relative ${ax({ layout: 'bar', textStyle: 'code', text: 'muted' })} ${styles.toolResultSummary}`}
+        className={`relative ${ax({ layout: 'bar', textStyle: 'code', text: 'muted' })} tool-result-summary`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
         <ExpandIndicator variant="expand" expanded={expanded} />
-        <span className={`${ax({ clamp: '1' })} ${styles.toolResultPreview}`}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
+        <span className={`${ax({ clamp: '1' })} tool-result-preview`}>{preview}{lines.length > 1 ? ` (+${lines.length - 1} lines)` : ''}</span>
       </div>
-      {expanded && <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} ${styles.toolResult}`}>{text}</pre>}
+      {expanded && <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} tool-result`}>{text}</pre>}
     </div>
   )
 }
@@ -175,20 +175,20 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   } else if (isEdit && input.file_path) {
     summaryLabel = <FilePathLink path={String(input.file_path)}>{detail}</FilePathLink>
   } else {
-    summaryLabel = detail ? <span className={`${ax({ text: 'muted', clamp: '1' })} ${styles.toolDetail}`}>{detail}</span> : null
+    summaryLabel = detail ? <span className={`${ax({ text: 'muted', clamp: '1' })} tool-detail`}>{detail}</span> : null
   }
 
   // --- Content (no duplicate info — summary is the sole source) ---
   let content: React.ReactNode = null
   if (isRead && text) {
     content = (
-      <div className={`overflow-auto ${ax({ border: 'top' })} ${styles.toolGroupCode}`}>
+      <div className={`overflow-auto ${ax({ border: 'top' })} tool-group-code`}>
         <CodeBlock code={codeText} filename={filename} variant="compact" />
       </div>
     )
   } else if (isWrite && typeof input.content === 'string') {
     content = (
-      <div className={`overflow-auto ${ax({ border: 'top' })} ${styles.toolGroupCode}`}>
+      <div className={`overflow-auto ${ax({ border: 'top' })} tool-group-code`}>
         <CodeBlock code={input.content as string} filename={filename} variant="compact" />
       </div>
     )
@@ -197,15 +197,15 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
     )
   } else if (text) {
-    content = <pre className={`overflow-y-auto pre-wrap break-word ${ax({ text: 'muted', textStyle: 'code', padding: 'sm', border: 'top' })} ${styles.toolGroupResult}`}>{text}</pre>
+    content = <pre className={`overflow-y-auto pre-wrap break-word ${ax({ text: 'muted', textStyle: 'code', padding: 'sm', border: 'top' })} tool-group-result`}>{text}</pre>
   }
 
   // No content → non-collapsible row
   if (!content) {
     return (
-      <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolGroup}`}>
-        <div className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}>
-          <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
+      <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} tool-group`}>
+        <div className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} tool-group-summary`}>
+          <span className={`${ax({ layout: 'center' })} tool-row-icon`}><Icon size={12} /></span>
           <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
         </div>
       </div>
@@ -213,16 +213,16 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   }
 
   return (
-    <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolGroup}`}>
+    <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} tool-group`}>
       <div
         {...toggleProps}
-        className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}
+        className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} tool-group-summary`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
-        <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
+        <span className={`${ax({ layout: 'center' })} tool-row-icon`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
         <Icon size={12} /> <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
       </div>
       {expanded && content}
@@ -264,16 +264,16 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <div className={`overflow-hidden ${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolChain}`}>
+    <div className={`overflow-hidden ${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })}`}>
       <div
         {...toggleProps}
-        className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}
+        className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} tool-chain-summary`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
-        <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
+        <span className={`${ax({ layout: 'center' })} tool-row-icon`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
         <Layers size={12} /> <span className={ax({ text: 'muted', textStyle: 'code' })}>{summary}</span>
       </div>
       {expanded && (
@@ -281,10 +281,10 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
           {typeGroups.map(g => {
             const Icon = toolIcons[g.name] ?? Wrench
             return (
-              <div key={g.name} className={`relative ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainRow}`}>
-                <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
+              <div key={g.name} className={`relative ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} tool-chain-row`}>
+                <span className={`${ax({ layout: 'center' })} tool-row-icon`}><Icon size={12} /></span>
                 <span className={ax({ weight: 'semi' })}>{g.name}</span>
-                <span className={`${ax({ text: 'muted', textStyle: 'code', clamp: '1' })} ${styles.toolChainDetails}`}>
+                <span className={`${ax({ text: 'muted', textStyle: 'code', clamp: '1' })} tool-chain-details`}>
                   {g.details.join(' · ')}
                 </span>
               </div>

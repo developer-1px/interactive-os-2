@@ -6,7 +6,7 @@ import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { MarkdownViewer } from '../MarkdownViewer'
 import { useChatFeatures } from './chatFeatures'
 import { useDisclosure } from './useDisclosure'
-import styles from './ThinkingBlock.module.css'
+import './ThinkingBlock.css'
 import type { DataBlock } from './types'
 
 export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: DataBlock }) {
@@ -21,22 +21,22 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
   })
 
   return (
-    <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.thinking}${settled ? ` bg-transparent ${styles.settled}` : ''}`}>
+    <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} thinking-block${settled ? ` bg-transparent thinking-settled` : ''}`}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar' })} ${styles.thinkingSummary}`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar' })} thinking-summary`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
-        <span className={`${ax({ layout: 'center' })} ${styles.thinkingChevron}`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
+        <span className={`${ax({ layout: 'center' })} thinking-chevron`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
         <span className={`${ax({ weight: 'semi', text: 'muted' })}`}>Thinking</span>
-        {(!expanded || isLatest) && <span className={`${ax({ flex: '1', text: 'muted' })} ${styles.thinkingPreview}`}> {preview}…</span>}
+        {(!expanded || isLatest) && <span className={`${ax({ flex: '1', text: 'muted' })} thinking-preview`}> {preview}…</span>}
       </div>
       {expanded && !isLatest && (
-        <div className={`break-word ${ax({ layout: 'scroll' })} ${styles.thinkingContent}`}>
-          <MarkdownViewer content={text} styles={{}} codeVariant="compact" />
+        <div className={`break-word ${ax({ layout: 'scroll' })} thinking-content`}>
+          <MarkdownViewer content={text} prose={false} codeVariant="compact" />
         </div>
       )}
     </div>

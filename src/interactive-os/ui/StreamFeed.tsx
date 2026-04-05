@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, type ReactNode } from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './StreamFeed.module.css'
+import './StreamFeed.css'
 import { DirectionIndicator } from './indicators'
 
 // --- Types ---
@@ -27,13 +27,13 @@ function StreamingTimer() {
     return () => clearInterval(id)
   }, [])
 
-  return <span className={`${ax({ textStyle: 'caption', text: 'muted', opacity: 'dim' })} ${styles.streamingTime}`}>{elapsed}s</span>
+  return <span className={ax({ textStyle: 'caption', text: 'muted', opacity: 'dim' })}>{elapsed}s</span>
 }
 
 // --- StreamCursor (export for renderItem use) ---
 
 export function StreamCursor() {
-  return <span className={styles.cursor} />
+  return <span className={`${ax({ motion: 'blink' })} stream-cursor`} />
 }
 
 // --- ScrollToBottom FAB ---
@@ -59,7 +59,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`${ax({ layout: 'center', surface: 'action', text: 'secondary', border: 'default', shape: 'pill', placement: 'bottom-center' })} ${styles.scrollFab}`} onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`${ax({ layout: 'center', surface: 'action', text: 'secondary', border: 'default', shape: 'pill', placement: 'bottom-center', motion: 'fade-slide-in' })} stream-fab`} onClick={scrollToBottom} aria-label="Scroll to bottom">
       <DirectionIndicator direction="next" orientation="vertical" />
     </button>
   )
@@ -69,21 +69,21 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
 
 export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streamingLabel, className }: StreamFeedProps<T>) {
   return (
-    <div className={`relative ${ax({ layout: 'column', flex: '1' })} ${styles.wrapper}`}>
+    <div className={`relative ${ax({ layout: 'column', flex: '1' })}`}>
       <div
         ref={feedRef}
-        className={`${ax({ layout: 'scroll', flex: '1', gap: 'xl' })} ${styles.feed}${className ? ` ${className}` : ''}`}
+        className={`${ax({ layout: 'scroll', flex: '1', gap: 'xl' })} stream-feed${className ? ` ${className}` : ''}`}
         role="feed"
       >
         {items.map((item, i) => (
-          <div key={i} data-feed-entry="" className={`${ax({ width: 'full' })} ${styles.entry}`}>
+          <div key={i} data-feed-entry="" className={`${ax({ width: 'full', motion: 'fade-slide-in' })} stream-entry`}>
             {renderItem(item, i, { isLatest: i === items.length - 1 })}
           </div>
         ))}
         {isStreaming && (
-          <div className={`${ax({ layout: 'bar', gap: 'sm', width: 'full' })} ${styles.streaming}`}>
-            <span className={`${ax({ shape: 'pill' })} ${styles.streamingDot}`} />
-            <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.streamingLabel}`}>{streamingLabel ?? 'Thinking'}</span>
+          <div className={`${ax({ layout: 'bar', gap: 'sm', width: 'full', motion: 'fade-slide-in' })} stream-indicator`}>
+            <span className={`${ax({ shape: 'pill', motion: 'pulse' })} stream-dot`} />
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>{streamingLabel ?? 'Thinking'}</span>
             <StreamingTimer />
           </div>
         )}

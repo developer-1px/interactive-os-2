@@ -1,0 +1,131 @@
+/* Kanban — last-mile CSS (not expressible via ax()) */
+
+/* ── Column count — text-transform reset ── */
+.kanban-column-count {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── Editable card title ── */
+.kanban-card :global([data-renaming]) {
+  outline: var(--border-width) solid var(--focus);
+  outline-offset: calc(var(--space-xs) / 2);
+  border-radius: var(--shape-xs-radius);
+  padding: 0 calc(var(--space-xs) / 2);
+  min-width: var(--space-3xl);
+}
+
+/* ══ Compact variant ══ */
+
+.kanban-board[data-compact] {
+  height: 100%;
+  align-items: flex-start;
+  overflow: auto hidden;
+}
+
+.kanban-board[data-compact] .kanban-column {
+  min-width: var(--space-3xl);
+  max-width: none;
+  width: var(--storymap-col-width);
+  padding: var(--space-xs) var(--space-sm);
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.kanban-board[data-compact] .kanban-column-header {
+  text-transform: none;
+  letter-spacing: 0;
+  padding: var(--space-xs) 0;
+}
+
+.kanban-board[data-compact] .kanban-column-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: var(--indicator-width);
+  width: calc(var(--_loc-ratio, 0) * 100%);
+  background: var(--tone-primary-dim);
+  border-radius: var(--border-width);
+  opacity: 0.6;
+}
+
+.kanban-board[data-compact] .kanban-card {
+  align-items: baseline;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--shape-xs-radius);
+  flex-shrink: 0;
+}
+
+/* ── Card title (truncate) ── */
+.kanban-card-title {
+  min-width: 0;
+}
+
+/* ── Card subtitle (LOC etc.) ── */
+.kanban-card-subtitle {
+  margin-left: auto;
+}
+
+/* ── Extension color indicator (inset shadow) ── */
+
+.kanban-board[data-compact] .kanban-card[data-ext="ts"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base); }
+.kanban-board[data-compact] .kanban-card[data-ext="tsx"] { box-shadow: inset var(--indicator-width) 0 0 var(--focus); }
+.kanban-board[data-compact] .kanban-card[data-ext="css"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-destructive-base); }
+.kanban-board[data-compact] .kanban-card[data-ext="md"],
+.kanban-board[data-compact] .kanban-card[data-ext="mdx"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-success-base); }
+.kanban-board[data-compact] .kanban-card[data-ext="json"],
+.kanban-board[data-compact] .kanban-card[data-ext="yaml"],
+.kanban-board[data-compact] .kanban-card[data-ext="yml"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-warning-base); }
+
+/* ── Weight hints ── */
+
+.kanban-board[data-compact] .kanban-card[data-weight="md"] {
+  font-weight: var(--weight-medium);
+}
+
+.kanban-board[data-compact] .kanban-card[data-weight="lg"] {
+  font-weight: var(--weight-semi);
+  color: var(--text-bright);
+  background: color-mix(in srgb, var(--tone-warning-base) 12%, var(--surface-default));
+}
+
+/* ── Hub indicator ── */
+
+.kanban-board[data-compact] .kanban-card[data-hub] {
+  border-inline-start-width: var(--space-xs);
+  border-inline-start-color: var(--tone-primary-base);
+  background: color-mix(in srgb, var(--tone-primary-base) 6%, var(--surface-default));
+}
+
+/* ── Dependency count colors ── */
+
+.kanban-dep-up {
+  color: var(--tone-success-base);
+}
+
+/* ── Dependency highlight ── */
+
+.kanban-board[data-compact][data-has-highlight] .kanban-card:not([data-highlight]):not([data-focused]) {
+  opacity: 0.25;
+}
+
+.kanban-board[data-compact] .kanban-card[data-highlight="up"] {
+  box-shadow: inset var(--indicator-width) 0 0 var(--tone-success-base);
+}
+
+.kanban-board[data-compact] .kanban-card[data-highlight="down"] {
+  box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base);
+}
+
+/* ── Focus/Selection ── */
+
+.kanban-card[data-focused] {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+}
+
+.kanban-card[aria-selected="true"] {
+  background: var(--selection);
+  color: var(--text-bright);
+}
