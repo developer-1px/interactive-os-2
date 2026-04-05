@@ -1,23 +1,16 @@
 // ② 2026-04-03-command-unification-prd.md
 import { useEffect, type ReactNode } from 'react'
 import { findMatchingKey } from './useKeyboard'
-import type { Command } from '../engine/types'
 import { registerAria, unregisterAria } from './ariaRegistry'
-
-export type RouteKeyMap = Record<string, () => Command | void>
-
-/** key → { command: command type, owner: 소유 컴포넌트 } */
-export type RouteInspectMap = Record<string, { command: string; owner: string }>
+import type { RouteKeyMap } from './defineRouteKey'
 
 interface AriaRouteProps {
   keyMap: RouteKeyMap
   label?: string
-  /** 선언적 inspect 메타 — key별 command type과 소유자 */
-  inspectMap?: RouteInspectMap
   children: ReactNode
 }
 
-export function AriaRoute({ keyMap, label, inspectMap, children }: AriaRouteProps) {
+export function AriaRoute({ keyMap, label, children }: AriaRouteProps) {
   useEffect(() => {
     if (Object.keys(keyMap).length === 0) return
     const handler = (e: KeyboardEvent) => {
@@ -25,7 +18,7 @@ export function AriaRoute({ keyMap, label, inspectMap, children }: AriaRouteProp
       const match = findMatchingKey(e, keyMap)
       if (match) {
         const command = keyMap[match]()
-        if (command && typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
+        if (command && import.meta.env?.DEV) {
           console.log(`[AriaRoute] ${command.type} | ${JSON.stringify(command.payload)}`)
         }
         e.preventDefault()
@@ -42,16 +35,10 @@ export function AriaRoute({ keyMap, label, inspectMap, children }: AriaRouteProp
     const commands: string[] = []
     const keyMapDesc: Record<string, import('../engine/types').KeyMapEntry> = {}
 
-    if (inspectMap) {
-      for (const [key, meta] of Object.entries(inspectMap)) {
-        commands.push(meta.command)
-        keyMapDesc[key] = { owner: meta.owner, command: meta.command }
-      }
-    } else {
-      for (const key of Object.keys(keyMap)) {
-        commands.push(key)
-        keyMapDesc[key] = { owner: label ?? 'route' }
-      }
+    for (const [key, handler] of Object.entries(keyMap)) {
+      const owner = handler.owner ?? label ?? 'route'
+      commands.push(handler.type)
+      keyMapDesc[key] = { owner, command: handler.type }
     }
 
     registerAria(registryKey, {
@@ -67,7 +54,7 @@ export function AriaRoute({ keyMap, label, inspectMap, children }: AriaRouteProp
       getElement: () => null,
     })
     return () => unregisterAria(registryKey)
-  }, [keyMap, label, inspectMap])
+  }, [keyMap, label])
 
   return <>{children}</>
 }
