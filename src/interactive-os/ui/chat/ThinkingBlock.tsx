@@ -25,7 +25,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
     <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} ${styles.thinking}${settled ? ` ${styles.settled}` : ''}`}>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar' })} ${styles.thinkingSummary}`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar' })} ${styles.thinkingSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}

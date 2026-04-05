@@ -23,7 +23,6 @@
 .dialog {
   width: var(--overlay-width);
   max-height: var(--overlay-width);
-  overflow: hidden;
   box-shadow: var(--shadow-lg);
   animation: slide-in var(--motion-enter-duration) var(--motion-enter-easing);
 }
@@ -37,8 +36,6 @@
 
 .input {
   background: none;
-  border: none;
-  outline: none;
   caret-color: var(--tone-primary-base);
 }
 
@@ -49,9 +46,7 @@
 
 .shortcut {}
 
-.item {
-  cursor: default;
-}
+.item {}
 
 .itemText {
   min-width: 0;
