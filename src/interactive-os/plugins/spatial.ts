@@ -1,12 +1,11 @@
-import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import { getParent } from '../store/createStore'
 import { focusCommands } from '../axis/navigate'
 import { definePlugin } from './definePlugin'
+import { key } from '../axis/types'
 import { defineCommands } from '../engine/defineCommand'
-import type { PatternContext } from '../axis/types'
 
 export const SPATIAL_PARENT_ID = '__spatial_parent__'
 
@@ -55,7 +54,7 @@ export function spatial() {
     name: 'spatial',
     commands: spatialCommands,
     keyMap: {
-      Enter: (ctx: PatternContext, original?: () => Command | void) => {
+      Enter: key(['spatial:enter-child', 'core:focus'], (ctx, original) => {
         const kids = ctx.getChildren(ctx.focused)
         if (kids.length > 0) {
           return createBatchCommand([
@@ -71,8 +70,8 @@ export function spatial() {
           ])
         }
         return original?.()
-      },
-      Escape: (ctx: PatternContext, original?: () => Command | void) => {
+      }),
+      Escape: key(['spatial:exit-to-parent', 'core:focus'], (ctx, original) => {
         const spatialParent = ctx.getEntity(SPATIAL_PARENT_ID)
         const parentId = spatialParent?.parentId as string | undefined
         if (!parentId || parentId === ROOT_ID) return original?.()
@@ -80,7 +79,7 @@ export function spatial() {
           spatialCommands.exitToParent(),
           focusCommands.setFocus(parentId),
         ])
-      },
+      }),
     },
   })
 }

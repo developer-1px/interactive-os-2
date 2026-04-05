@@ -1,4 +1,4 @@
-import type { PatternContext } from '../axis/types'
+import { key, type KeyHandler } from '../axis/types'
 import type { Plugin } from './types'
 import { definePlugin } from './definePlugin'
 import { crudCommands } from './crud'
@@ -14,18 +14,17 @@ interface EditOptions {
 }
 
 export function edit(options?: EditOptions): Plugin {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const keyMap: Record<string, (ctx: any) => any> = {
-    'F2': (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
-    'Enter': (ctx: PatternContext) => renameCommands.startRename(ctx.focused),
-    'Delete': (ctx: PatternContext) => crudCommands.remove(ctx.focused),
-    'Alt+ArrowUp': (ctx: PatternContext) => dndCommands.moveUp(ctx.focused),
-    'Alt+ArrowDown': (ctx: PatternContext) => dndCommands.moveDown(ctx.focused),
+  const keyMap: Record<string, KeyHandler> = {
+    'F2': key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
+    'Enter': key(['rename:start'], (ctx) => renameCommands.startRename(ctx.focused)),
+    'Delete': key(['crud:delete'], (ctx) => crudCommands.remove(ctx.focused)),
+    'Alt+ArrowUp': key(['dnd:move-up'], (ctx) => dndCommands.moveUp(ctx.focused)),
+    'Alt+ArrowDown': key(['dnd:move-down'], (ctx) => dndCommands.moveDown(ctx.focused)),
   }
 
   if (options?.tree) {
-    keyMap['Alt+ArrowLeft'] = (ctx: PatternContext) => dndCommands.moveOut(ctx.focused)
-    keyMap['Alt+ArrowRight'] = (ctx: PatternContext) => dndCommands.moveIn(ctx.focused)
+    keyMap['Alt+ArrowLeft'] = key(['dnd:move-out'], (ctx) => dndCommands.moveOut(ctx.focused))
+    keyMap['Alt+ArrowRight'] = key(['dnd:move-in'], (ctx) => dndCommands.moveIn(ctx.focused))
   }
 
   return definePlugin({ name: 'edit', keyMap })
