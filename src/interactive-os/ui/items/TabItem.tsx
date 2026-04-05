@@ -19,7 +19,7 @@ export function TabItem(
     <span
       {...props}
       className={ax({
-        surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text',
+        interactive: 'tab', controlSize: 'sm', padding: 'sm', content: 'text',
         textStyle: 'caption', text: state.selected ? 'primary' : 'muted',
       })}
     >

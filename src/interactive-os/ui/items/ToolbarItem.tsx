@@ -21,7 +21,7 @@ export function ToolbarItem(
     <span
       {...props}
       className={ax({
-        surface: 'ghost',
+        interactive: 'button',
         controlSize: 'sm',
         layout: hasIcon ? 'center' : undefined,
         padding: hasIcon ? undefined : 'sm',

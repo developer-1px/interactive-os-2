@@ -33,6 +33,7 @@ function toNavListReturn(aria: UseAriaReturn, ariaLabel?: string): UseNavListRet
       'aria-label': ariaLabel,
       'aria-orientation': 'vertical',
       'data-aria-container': '',
+      className: `ax-interactive${(aria.containerProps as Record<string, string>)?.className ? ` ${(aria.containerProps as Record<string, string>).className}` : ''}`,
     },
     getItemProps: aria.getNodeProps,
     getItemState: aria.getNodeState,

@@ -23,7 +23,7 @@ export function TreeItem(
   return (
     <div
       {...props}
-      className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })}
+      className={ax({ interactive: 'item', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })}
       style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}
     >
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />

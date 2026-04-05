@@ -30,6 +30,9 @@ type Scroll = 'hidden' | 'y' | 'x' | 'auto'
 // border: 테두리 — 전체 또는 단면 구분선
 type Border = 'subtle' | 'default' | 'strong'
   | 'bottom' | 'top' | 'start' | 'end'
+// interactive: 동적 상태 시각 (hover/focus/selected/checked/disabled)
+// surface=정적 시각(cursor/border/shadow), interactive=동적 상태 응답
+type Interactive = 'item' | 'tab' | 'check' | 'cell' | 'input' | 'button'
 
 // ── 구조 축 ──
 
@@ -90,6 +93,7 @@ export interface Axes {
   content?: Content
   border?: Border
   scroll?: Scroll
+  interactive?: Interactive
 
   // 구조 축
   placement?: Placement
@@ -120,6 +124,7 @@ const prefixes: Record<keyof Axes, string> = {
   content: 'ct',
   border: 'bd',
   scroll: 'sc',
+  interactive: 'ia',
   placement: 'pl',
   layout: 'ly',
   gap: 'g',

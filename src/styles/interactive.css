@@ -1,265 +1,14 @@
 /* ═══════════════════════════════════════════
-   L4 Interactive — Interaction policy (all state styling)
+   L4 Interactive — Structure-only rules
    ═══════════════════════════════════════════
-   Changes when: user input response policy changes.
-   Single responsibility: hover, focus, active, disabled, selected, invalid
-   + ARIA component structure (container, item parts, grid, tree depth).
-
-   "Pico for ARIA" — selectors use ARIA roles and attributes
-   rendered by <Aria>. No className needed.
-   Scoped under [data-aria-container] to prevent role collisions.
-
-   All selectors wrapped in :where() → specificity (0,0,0).
-   Any module.css selector can override these defaults.
-
-   Focus rule (Apple HIG convention):
-     [data-aria-container] 안의 자식 → background highlight (컬렉션 커서)
-     독립 요소 (*:focus-visible)      → outline ring (standalone)
-
-   Focus states:
-     idle   = container 비활성 → var(--focus-idle) background, no outline
-     active = container :focus-within → var(--tone-primary-dim) background + var(--focus) outline
-
-   // ② 2026-03-25-css-writing-rules-prd.md
+   상태 스타일(hover/focus/selected/disabled)은 ax.css .ia-* 축으로 이관됨.
+   여기는 ARIA role 기반 구조 규칙(grid layout, tree depth)만 남김.
+   // ② 2026-04-06-interactive-axis-prd.md
 */
-
-/* ── Common interactive item base ── */
-
-:where([data-aria-container] :is([role="option"],[role="treeitem"],[role="tab"],[role="menuitem"],[role="radio"],[role="switch"],[role="row"])) {
-  padding: var(--space-sm) var(--space-md);
-  cursor: pointer;
-  user-select: none;
-  font-size: var(--type-body-size);
-  font-weight: var(--weight-medium);
-  color: var(--text-primary);
-  border-radius: var(--shape-md-radius);
-  transition: background 0.08s;
-  outline: 1px solid transparent;
-  outline-offset: -1px;
-}
-
-/* Tree/treegrid: slightly denser + row layout */
-:where([data-aria-container] :is([role="treeitem"],[role="row"])) {
-  padding: var(--space-xs) var(--space-md);
-  display: flex;
-}
-
-:where([data-aria-container] [role="treeitem"]:has(> [role="treeitem"])) {
-  flex-wrap: wrap;
-}
-
-/* Expandable treeitems: disable bg transition to prevent flash
-   during the handoff between treeitem ↔ :first-child */
-:where([data-aria-container] [role="treeitem"][aria-expanded]) {
-  transition: none;
-}
-
-/* Expanded treeitem: transparent layout container.
-   First child (label row) takes over visual responsibility.
-   Uses :first-child to be renderItem-agnostic (any inline-flex row or custom). */
-:where([data-aria-container] [role="treeitem"][aria-expanded="true"]:has(> [role="treeitem"])) {
-  padding: 0;
-  /* !important: expanded treeitem은 투명 컨테이너 — :first-child가 시각 책임.
-     같은 파일의 :active/selected 규칙이 여기 적용되면 안 됨.
-     :where() 체계에서 specificity 구분이 불가하므로 !important로 강제. */
-  background: transparent !important;
-  outline: none !important;
-}
-
-:where([data-aria-container] [role="treeitem"][aria-expanded="true"]:has(> [role="treeitem"]) > :first-child) {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--shape-md-radius);
-  outline: 1px solid transparent;
-  outline-offset: -1px;
-}
-
-/* Expanded treeitem: redirect hover to label row */
-:where([data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"]:hover > :first-child) {
-  background: var(--bg-hover);
-}
-
-/* Expanded treeitem: redirect focus (active) to label row */
-:where([data-aria-container]:focus-within [role="treeitem"][aria-expanded="true"]:focus > :first-child),
-:where([data-aria-container]:focus-within [role="treeitem"][aria-expanded="true"][data-focused] > :first-child) {
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
-  outline-color: var(--focus);
-}
-
-/* Expanded treeitem: redirect focus (idle) to label row */
-:where([data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"]:focus > :first-child),
-:where([data-aria-container]:not(:focus-within) [role="treeitem"][aria-expanded="true"][data-focused] > :first-child) {
-  background: var(--focus-idle);
-}
-
-/* Expanded treeitem: redirect active press to label row */
-:where([data-aria-container] [role="treeitem"][aria-expanded="true"]:active:not(:has([role="treeitem"]:active)) > :first-child) {
-  background: var(--tone-primary-bright);
-}
-
-/* Nested group wraps below the item label */
-:where([data-aria-container] [role="treeitem"] > [role="group"]) {
-  flex-basis: 100%;
-  padding-top: 0;
-  padding-right: 0;
-  padding-bottom: 0;
-  /* padding-left preserved — tree indentation uses it */
-}
-
-
-/* ── Hover (suppressed when focus is active via :focus-within) ── */
-
-:where([data-aria-container]:not(:focus-within) :is([role="option"],[role="treeitem"],[role="menuitem"],[role="radio"],[role="switch"],[role="row"]):hover) {
-  background: var(--bg-hover);
-}
-
-/* Tabs: no background hover, use subtle text change */
-:where([data-aria-container]:not(:focus-within) [role="tab"]:hover) {
-  color: var(--text-secondary);
-}
-
-/* ── Focused: idle (roving-tabindex — container NOT active) ── */
-/* Background only, gray tone — "cursor was here" */
-
-:where([data-aria-container]:not(:focus-within) :is([role="option"],[role="treeitem"],[role="menuitem"],[role="radio"],[role="switch"],[role="row"]):focus) {
-  background: var(--focus-idle);
-}
-
-/* ── Focused: active (roving-tabindex — container HAS focus) ── */
-/* Background highlight + outline ring */
-
-:where([data-aria-container]:focus-within :is([role="option"],[role="treeitem"],[role="menuitem"],[role="radio"],[role="switch"],[role="row"]):focus) {
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
-  outline-color: var(--focus);
-}
-
-/* Tabs: focused uses accent bottom border (exception — no background) */
-:where([data-aria-container] [role="tab"]:focus),
-:where([data-aria-container] [role="tab"][data-focused]) {
-  color: var(--tone-primary-base);
-  border-bottom-color: var(--tone-primary-base);
-  font-weight: var(--weight-semi);
-  outline-color: transparent;
-}
-
-/* ── Focused (aria-activedescendant — data-focused) ── */
-/* Idle: gray background only (restore cursor position) */
-
-:where([data-aria-container] [data-focused]) {
-  background: var(--focus-idle);
-}
-
-/* Active: background highlight + outline ring */
-:where([data-aria-container]:focus-within [data-focused]) {
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
-  outline-color: var(--focus);
-}
-
-/* ── Active (press feedback) ── */
-
-:where([data-aria-container] :is([role="option"],[role="radio"],[role="switch"],[role="row"]):active),
-:where([data-aria-container] [role="treeitem"]:active:not(:has([role="treeitem"]:active))),
-:where([data-aria-container] [role="menuitem"]:active:not(:has([role="menuitem"]:active))) {
-  background: var(--tone-primary-bright);
-}
-
-/* ── Selected ── */
-/* No :where() — must win over .sf-action/.sf-ghost background: transparent */
-
-[data-aria-container] [aria-selected="true"] {
-  background: var(--selection);
-}
-
-/* Grid/treegrid row: context-level selection (chroma ladder — spatial context for cursor) */
-[data-aria-container] [role="row"][aria-selected="true"],
-[data-aria-container] [role="row"][aria-selected="true"][data-focused] {
-  background: var(--selection-context);
-}
-
-/* Grid cursor cell: strongest chroma in selection ladder */
-[data-aria-container]:focus-within [role="gridcell"][data-cell-focused] {
-  background: var(--selection-cursor);
-}
-
-/* Tab selected uses neutral elevation, not accent */
-[data-aria-container] [role="tab"][aria-selected="true"] {
-  color: var(--text-bright);
-  border-bottom-color: var(--text-bright);
-  font-weight: var(--weight-semi);
-  background: var(--selection);
-}
-
-/* ── Checked (radio, switch) ── */
-
-[data-aria-container] [aria-checked="true"] {
-  background: var(--selection);
-}
-
-/* ── Focused + Selected compound ── */
-/* Cursor-level background for focused+selected items; row override above takes precedence for grids */
-
-[data-aria-container] [aria-selected="true"]:focus,
-[data-aria-container] [aria-checked="true"]:focus,
-[data-aria-container] [aria-selected="true"][data-focused],
-[data-aria-container] [aria-checked="true"][data-focused] {
-  background: var(--selection-cursor);
-  color: var(--text-bright);
-}
-
-[data-aria-container]:focus-within [aria-selected="true"][data-focused],
-[data-aria-container]:focus-within [aria-checked="true"][data-focused] {
-  outline-color: var(--focus);
-}
-
-/* ── Disabled ── */
-
-[data-aria-container] [aria-disabled="true"] {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: default;
-}
-
-/* Disabled + Selected: preserve selection tint, apply dimming */
-[data-aria-container] [aria-disabled="true"][aria-selected="true"],
-[data-aria-container] [aria-disabled="true"][aria-checked="true"] {
-  background: var(--selection);
-  opacity: 0.4;
-}
-
-/* Standalone disabled (buttons, inputs outside collections) */
-:where(:disabled),
-:where([aria-disabled="true"]:not(:is([role="option"],[role="treeitem"],[role="menuitem"],[role="tab"],[role="row"],[role="radio"],[role="switch"]))) {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: default;
-}
-
-/* ── Invalid (input error state) ── */
-
-:where([aria-invalid="true"]) {
-  border-color: var(--tone-destructive-base);
-}
-
-:where([aria-invalid="true"]:focus) {
-  border-color: var(--tone-destructive-base);
-  outline-color: var(--tone-destructive-base);
-}
-
-/* ── Expanded chevron rotation ── */
-
-:where([data-aria-container] [aria-expanded="true"] > .chevron),
-:where([data-aria-container] [aria-expanded="true"] > * > .chevron) {
-  transform: rotate(90deg);
-}
 
 /* ── Tree depth indentation ── */
 
-/* Tree: nested DOM — group-based indentation (each nesting level adds one increment) */
+/* Tree: nested DOM — group-based indentation */
 :where([role="tree"] [role="group"]) { padding-left: var(--space-lg); }
 
 /* Treegrid: flat DOM — absolute aria-level-based indentation */
@@ -281,8 +30,6 @@
   grid-template-columns: var(--grid-columns, repeat(var(--grid-col-count, 4), 1fr));
   width: 100%;
 }
-
-/* ── Grid header ── */
 
 :where(.grid-header) {
   display: grid;
@@ -307,15 +54,11 @@
   border-right: none;
 }
 
-/* ── Grid body (Aria container) ── */
-
-:where(.grid-table > [data-aria-container]) {
+:where(.grid-table > .ax-interactive) {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
 }
-
-/* ── Grid row ── */
 
 :where(.grid-table [role="row"]) {
   display: grid;
@@ -329,44 +72,22 @@
   grid-column: 1 / -1;
 }
 
-/* ── Grid cell ── */
+/* ── Standalone disabled (컨테이너 밖) ── */
 
-:where([data-aria-container] [role="gridcell"]) {
-  display: flex;
-  align-items: center;
-  padding: var(--space-sm) var(--space-md);
-  min-width: 80px;
-  font-size: var(--type-body-size);
-  border-right: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
+:where(:disabled),
+:where([aria-disabled="true"]:not(.ia-item):not(.ia-tab):not(.ia-check):not(.ia-button)) {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
 }
 
-:where([data-aria-container] [role="gridcell"]:last-child) {
-  border-right: none;
+/* ── Invalid (input error state) ── */
+
+:where([aria-invalid="true"]) {
+  border-color: var(--tone-destructive-base);
 }
 
-:where([data-aria-container] [role="gridcell"][tabindex="0"]) {
-  outline: 1px solid var(--focus);
-  outline-offset: -1px;
-  background: var(--tone-primary-dim);
+:where([aria-invalid="true"]:focus) {
+  border-color: var(--tone-destructive-base);
+  outline-color: var(--tone-destructive-base);
 }
-
-/* ── Tab-specific: horizontal + bottom border ── */
-
-:where([data-aria-container][role="tablist"]) {
-  padding: 0;
-}
-
-:where([data-aria-container][role="tablist"] [role="tab"]) {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-sm) var(--space-lg);
-  margin: 0;
-  font-weight: var(--weight-medium);
-  color: var(--text-muted);
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
-  transition: color 0.1s, border-color 0.1s;
-}
-
-/* ── Item part classes: moved to ui/indicators/indicators.css ── */

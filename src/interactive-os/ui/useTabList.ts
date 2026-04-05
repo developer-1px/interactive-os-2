@@ -50,6 +50,7 @@ function toTabListReturn(aria: UseAriaReturn, ariaLabel?: string): UseTabListRet
       'aria-label': ariaLabel,
       'aria-orientation': 'horizontal',
       'data-aria-container': '',
+      className: `ax-interactive${(aria.containerProps as Record<string, string>)?.className ? ` ${(aria.containerProps as Record<string, string>).className}` : ''}`,
     },
     getItemProps: aria.getNodeProps,
     getItemState: aria.getNodeState,

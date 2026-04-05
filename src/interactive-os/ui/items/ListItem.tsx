@@ -20,7 +20,7 @@ export function ListItem(
   return (
     <div
       {...props}
-      className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption' })}
+      className={ax({ interactive: 'item', layout: 'bar', gap: 'sm', textStyle: 'caption' })}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

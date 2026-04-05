@@ -22,7 +22,7 @@ export function MenuItem(
   return (
     <div
       {...props}
-      className={ax({ layout: 'spread' })}
+      className={ax({ interactive: 'item', layout: 'spread' })}
       data-focused={state.focused || undefined}
     >
       <span className={ax({ textStyle: 'body', text: textColor })}>{label}</span>

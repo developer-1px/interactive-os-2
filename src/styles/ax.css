@@ -579,3 +579,301 @@
 .cursor-col-resize { cursor: col-resize; }
 .cursor-row-resize { cursor: row-resize; }
 .font-italic     { font-style: italic; }
+
+/* ════════════════════════════════════════════
+ * Interactive — 동적 상태 시각 (hover/focus/selected/checked/disabled)
+ * surface=정적(cursor/border/shadow), interactive=동적 상태 응답
+ * .ax-interactive = 컨테이너 스코프 (:focus-within idle/active 판정)
+ *
+ * 모든 규칙 :where() → specificity (0,0,0). module.css override 가능.
+ * 색상은 depth 토큰(--bg-hover, --selection 등)만 참조 → surface별 자동 적응.
+ * ════════════════════════════════════════════ */
+
+/* ── ia-item: option, treeitem, menuitem, row ── */
+
+:where(.ia-item) {
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--shape-md-radius);
+  transition: background 0.08s;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+/* hover (컨테이너 포커스 없을 때만) */
+:where(.ax-interactive:not(:focus-within) .ia-item:hover) {
+  background: var(--bg-hover);
+}
+
+/* focus: idle (컨테이너 비활성) */
+:where(.ax-interactive:not(:focus-within) .ia-item:focus),
+:where(.ax-interactive:not(:focus-within) .ia-item[data-focused]) {
+  background: var(--focus-idle);
+}
+
+/* focus: active (컨테이너 활성) */
+:where(.ax-interactive:focus-within .ia-item:focus),
+:where(.ax-interactive:focus-within .ia-item[data-focused]) {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+  outline-color: var(--focus);
+}
+
+/* active (press) */
+:where(.ia-item:active) {
+  background: var(--tone-primary-bright);
+}
+
+/* selected — no :where() to win over surface bg */
+.ia-item[aria-selected="true"] {
+  background: var(--selection);
+}
+
+/* checked (radio, switch) */
+.ia-item[aria-checked="true"] {
+  background: var(--selection);
+}
+
+/* focused + selected compound */
+.ia-item[aria-selected="true"]:focus,
+.ia-item[aria-checked="true"]:focus,
+.ia-item[aria-selected="true"][data-focused],
+.ia-item[aria-checked="true"][data-focused] {
+  background: var(--selection-cursor);
+  color: var(--text-bright);
+}
+
+.ax-interactive:focus-within .ia-item[aria-selected="true"][data-focused],
+.ax-interactive:focus-within .ia-item[aria-checked="true"][data-focused] {
+  outline-color: var(--focus);
+}
+
+/* disabled */
+.ia-item[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+.ia-item[aria-disabled="true"][aria-selected="true"],
+.ia-item[aria-disabled="true"][aria-checked="true"] {
+  background: var(--selection);
+  opacity: 0.4;
+}
+
+/* ── ia-item: treeitem expanded redirect ── */
+
+:where(.ia-item[aria-expanded]) {
+  transition: none;
+}
+
+:where(.ia-item[aria-expanded="true"]:has(> .ia-item)) {
+  padding: 0;
+  background: transparent !important;
+  outline: none !important;
+}
+
+:where(.ia-item[aria-expanded="true"]:has(> .ia-item) > :first-child) {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--shape-md-radius);
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-item[aria-expanded="true"]:hover > :first-child) {
+  background: var(--bg-hover);
+}
+
+:where(.ax-interactive:focus-within .ia-item[aria-expanded="true"]:focus > :first-child),
+:where(.ax-interactive:focus-within .ia-item[aria-expanded="true"][data-focused] > :first-child) {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+  outline-color: var(--focus);
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-item[aria-expanded="true"]:focus > :first-child),
+:where(.ax-interactive:not(:focus-within) .ia-item[aria-expanded="true"][data-focused] > :first-child) {
+  background: var(--focus-idle);
+}
+
+:where(.ia-item[aria-expanded="true"]:active:not(:has(.ia-item:active)) > :first-child) {
+  background: var(--tone-primary-bright);
+}
+
+/* ── ia-item: treeitem group indentation ── */
+
+:where(.ia-item > [role="group"]) {
+  flex-basis: 100%;
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+/* ── ia-tab: tab ── */
+
+:where(.ia-tab) {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  font-weight: var(--weight-medium);
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: color 0.1s, border-color 0.1s;
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-tab:hover) {
+  color: var(--text-secondary);
+}
+
+:where(.ia-tab:focus),
+:where(.ia-tab[data-focused]) {
+  color: var(--tone-primary-base);
+  border-bottom-color: var(--tone-primary-base);
+  font-weight: var(--weight-semi);
+  outline-color: transparent;
+}
+
+.ia-tab[aria-selected="true"] {
+  color: var(--text-bright);
+  border-bottom-color: var(--text-bright);
+  font-weight: var(--weight-semi);
+  background: var(--selection);
+}
+
+/* ── ia-check: radio, switch, checkbox ── */
+
+:where(.ia-check) {
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--shape-md-radius);
+  transition: background 0.08s;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-check:hover) {
+  background: var(--bg-hover);
+}
+
+:where(.ax-interactive:not(:focus-within) .ia-check:focus) {
+  background: var(--focus-idle);
+}
+
+:where(.ax-interactive:focus-within .ia-check:focus) {
+  background: var(--tone-primary-dim);
+  color: var(--text-bright);
+  outline-color: var(--focus);
+}
+
+.ia-check[aria-checked="true"] {
+  background: var(--selection);
+}
+
+.ia-check[aria-checked="true"]:focus,
+.ia-check[aria-checked="true"][data-focused] {
+  background: var(--selection-cursor);
+  color: var(--text-bright);
+}
+
+.ia-check[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── ia-cell: gridcell ── */
+
+:where(.ia-cell) {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  min-width: 80px;
+  font-size: var(--type-body-size);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+:where(.ia-cell:last-child) {
+  border-right: none;
+}
+
+:where(.ia-cell[tabindex="0"]) {
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
+  background: var(--tone-primary-dim);
+}
+
+/* ia-cell: grid row selection */
+.ia-item[role="row"][aria-selected="true"],
+.ia-item[role="row"][aria-selected="true"][data-focused] {
+  background: var(--selection-context);
+}
+
+.ax-interactive:focus-within .ia-cell[data-cell-focused] {
+  background: var(--selection-cursor);
+}
+
+/* ── ia-button: button ── */
+
+:where(.ia-button) {
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--shape-md-radius);
+  transition: background 0.08s;
+}
+
+:where(.ia-button:hover) {
+  background: var(--bg-hover);
+}
+
+:where(.ia-button:active) {
+  background: var(--tone-primary-bright);
+}
+
+.ia-button[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── ia-input: textbox, combobox input ── */
+
+:where(.ia-input) {
+  transition: border-color 0.1s, outline-color 0.1s;
+}
+
+:where(.ia-input[aria-invalid="true"]) {
+  border-color: var(--tone-destructive-base);
+}
+
+:where(.ia-input[aria-invalid="true"]:focus) {
+  border-color: var(--tone-destructive-base);
+  outline-color: var(--tone-destructive-base);
+}
+
+/* ── .ax-interactive 컨테이너 ── */
+
+:where(.ax-interactive[role="tablist"]) {
+  padding: 0;
+}
+
+/* ── Expanded chevron rotation (컨테이너 스코프) ── */
+
+:where(.ax-interactive [aria-expanded="true"] > .chevron),
+:where(.ax-interactive [aria-expanded="true"] > * > .chevron) {
+  transform: rotate(90deg);
+}
+
+/* ── Standalone disabled (컨테이너 밖) ── */
+
+:where(:disabled),
+:where([aria-disabled="true"]:not(.ia-item):not(.ia-tab):not(.ia-check):not(.ia-button)) {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
