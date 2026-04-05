@@ -6,7 +6,6 @@ import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { Table as TableComponent } from '../../ui/Table'
 import { ax } from '../../../../styles/ax'
-import styles from './table.module.css'
 
 // APG #57: Table
 // https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/table/
@@ -78,14 +77,14 @@ const renderItem = (
 
   if (level === 2) {
     // row: grid row container
-    return <div {...props} className={`${ax({ layout: 'grid-4' })} ${styles.row}`} />
+    return <div {...props} className={ax({ layout: 'grid-4' })} />
   }
 
   // cell
   return (
     <div
       {...props}
-      className={isHeader ? `${styles.headerCell} ${ax({ textStyle: 'body', text: 'primary', weight: 'semi', padding: 'xs', content: 'text', surface: 'sunken' })}` : `${styles.cell} ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })}`}
+      className={isHeader ? ax({ textStyle: 'body', text: 'primary', weight: 'semi', padding: 'xs', content: 'text', surface: 'sunken', border: 'bottom' }) : ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', border: 'bottom' })}
     >
       {label}
     </div>

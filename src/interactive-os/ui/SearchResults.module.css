@@ -1,9 +1,0 @@
-.matchLine:hover {
-  background: var(--bg-hover);
-}
-
-.lineNo {
-  text-align: right;
-}
-
-.fileHeader { /* absorbed → layout:'sticky' */ }

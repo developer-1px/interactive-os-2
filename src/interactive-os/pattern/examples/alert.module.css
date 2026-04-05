@@ -1,9 +1,0 @@
-/* ── base ── */
-
-.alert {
-  border: var(--border-width) solid var(--border-default);
-}
-
-.icon {
-  font-size: var(--type-heading-size);
-}

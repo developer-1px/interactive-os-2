@@ -5,7 +5,6 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Alert as AlertComponent } from '../../ui/Alert'
 import { ax } from '../../../../styles/ax'
-import styles from './alert.module.css'
 
 // APG #2: Alert
 // https://www.w3.org/WAI/ARIA/apg/patterns/alert/examples/alert/
@@ -39,8 +38,8 @@ const renderAlert = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <div {...props} className={`${styles.alert} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary', surface: 'sunken', shape: 'sm', padding: 'sm', content: 'text' })} items-center`}>
-      <span className={`${styles.icon} ${ax({ text: 'secondary' })} shrink-0`} aria-hidden="true">
+    <div {...props} className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'body', text: 'primary', surface: 'sunken', shape: 'sm', padding: 'sm', content: 'text', border: 'default' })}`}>
+      <span className={ax({ text: 'secondary', flex: 'none', textStyle: 'section' })} aria-hidden="true">
         &#9432;
       </span>
       <span>{label}</span>

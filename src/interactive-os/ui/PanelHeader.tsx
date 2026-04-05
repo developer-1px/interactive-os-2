@@ -1,6 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { ax, type Axes } from '@styles/ax'
-import styles from './PanelHeader.module.css'
 
 interface PanelHeaderProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
@@ -13,7 +12,8 @@ export function PanelHeader({ children, className, axes, ...rest }: PanelHeaderP
   const base: Axes = { layout: 'bar', flex: 'none', textStyle: 'overline', text: 'muted', padding: 'md', border: 'bottom' }
   return (
     <div
-      className={`${ax({ ...base, ...axes })} ${styles.panelHeader}${className ? ` ${className}` : ''}`}
+      className={`${ax({ ...base, ...axes })}${className ? ` ${className}` : ''}`}
+      style={{ height: 'var(--toolbar-height)' }}
       {...rest}
     >
       {children}
