@@ -1,8 +1,0 @@
-.breadcrumb {
-  gap: var(--space-xs);
-}
-
-.sep {
-  flex-shrink: 0;
-  margin: 0 var(--space-xs);
-}

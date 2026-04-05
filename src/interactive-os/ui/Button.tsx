@@ -1,7 +1,6 @@
 import React from 'react'
 import { type Axes, ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './Button.module.css'
 
 type ButtonVariant = 'accent' | 'ghost' | 'dialog' | 'destructive'
 type ButtonTone = Axes['tone']
@@ -25,7 +24,7 @@ export function Button({ variant = 'ghost', tone, size = 'md', className, ...pro
   if (tone) axes.tone = tone
   return (
     <button
-      className={`${ax({ ...axes, controlSize: size, padding: 'sm', content: 'text', shape: 'xl' })} ${styles[variant]}${className ? ` ${className}` : ''}`}
+      className={`${ax({ ...axes, controlSize: size, padding: 'sm', content: 'text', shape: 'xl' })}${className ? ` ${className}` : ''}`}
       {...props}
     />
   )
