@@ -17,7 +17,7 @@ import styles from './InspectorWindow.module.css'
 
 const emptyPlugins: Plugin[] = []
 
-type DetailTab = 'interaction' | 'state'
+type DetailTab = 'interaction' | 'aria' | 'state'
 
 function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
   const keyEntries = Object.entries(inspectResult.keyMap)
@@ -73,21 +73,70 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
   )
 }
 
+function AriaPropsTable({ nodeProps }: { nodeProps: Record<string, string> }) {
+  const entries = Object.entries(nodeProps).filter(([k]) => k !== 'role')
+  if (entries.length === 0) {
+    return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No ARIA props</div>
+  }
+  return (
+    <table className={`${ax({ textStyle: 'caption' })} ${styles.table}`}>
+      <thead>
+        <tr>
+          <th className={`text-left ${styles.th}`}>Attribute</th>
+          <th className={`text-left ${styles.th}`}>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {entries.map(([k, v]) => (
+          <tr key={k}>
+            <td className={styles.tdKey}>{k}</td>
+            <td className={styles.tdCommand}>{v}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+function AriaTabContent({ selectedId, inspectResult }: { selectedId: string; inspectResult: InspectResult }) {
+  const sep = selectedId.indexOf('::')
+  const nodeId = sep !== -1 ? selectedId.slice(sep + 2) : undefined
+  const np = nodeId && inspectResult.computeNodeProps ? inspectResult.computeNodeProps(nodeId) : undefined
+  const role = np?.role ?? inspectResult.role ?? ''
+  return (
+    <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+      <div className={ax({ textStyle: 'caption', text: 'bright' })}>
+        {nodeId ? `Node: ${nodeId}` : 'Instance root'} — role: {role}
+      </div>
+      {np ? (
+        <AriaPropsTable nodeProps={np} />
+      ) : (
+        <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>
+          {nodeId ? 'No ARIA props' : 'Select a node for ARIA details'}
+        </div>
+      )}
+    </div>
+  )
+}
+
+const TAB_LIST: { id: DetailTab; label: string }[] = [
+  { id: 'interaction', label: 'Interaction' },
+  { id: 'aria', label: 'ARIA' },
+  { id: 'state', label: 'State' },
+]
+
 function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: DetailTab) => void }) {
   return (
     <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} ${styles.tabBar}`}>
-      <button
-        className={`border-none ${ax({ textStyle: 'caption', padding: 'xs', text: active === 'interaction' ? 'bright' : 'muted' })} ${styles.tab} ${active === 'interaction' ? styles.tabActive : ''}`}
-        onClick={() => onChange('interaction')}
-      >
-        Interaction
-      </button>
-      <button
-        className={`border-none ${ax({ textStyle: 'caption', padding: 'xs', text: active === 'state' ? 'bright' : 'muted' })} ${styles.tab} ${active === 'state' ? styles.tabActive : ''}`}
-        onClick={() => onChange('state')}
-      >
-        State
-      </button>
+      {TAB_LIST.map(t => (
+        <button
+          key={t.id}
+          className={`border-none ${ax({ textStyle: 'caption', padding: 'xs', text: active === t.id ? 'bright' : 'muted' })} ${styles.tab} ${active === t.id ? styles.tabActive : ''}`}
+          onClick={() => onChange(t.id)}
+        >
+          {t.label}
+        </button>
+      ))}
     </div>
   )
 }
@@ -189,6 +238,10 @@ export function InspectorWindow() {
                     </div>
                     <BoundKeyTable inspectResult={inspectResult} />
                   </div>
+                )}
+
+                {activeTab === 'aria' && (
+                  <AriaTabContent selectedId={selectedId} inspectResult={inspectResult} />
                 )}
 
                 {activeTab === 'state' && (
