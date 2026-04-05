@@ -63,3 +63,8 @@
 .tabActive {
   border-bottom-color: var(--text-bright);
 }
+
+.tdMismatch {
+  composes: td;
+  font-family: var(--mono);
+}

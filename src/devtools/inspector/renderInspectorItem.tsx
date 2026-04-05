@@ -23,6 +23,7 @@ export function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, no
   const label = d?.label as string
   const value = d?.value as string | undefined
   const count = d?.count as number | undefined
+  const changed = d?.changed as boolean | undefined
   const indent = ((state.level ?? 1) - 1) * 16
 
   const isGroup = type === 'group'
@@ -40,7 +41,7 @@ export function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, no
         fontFamily: 'var(--mono)',
         fontSize: 'var(--type-body-size)',
         opacity: state.focused ? 1 : 0.85,
-        background: state.focused ? 'var(--bg-hover)' : undefined,
+        background: changed ? 'rgba(59, 130, 246, 0.15)' : state.focused ? 'var(--bg-hover)' : undefined,
         outline: state.focused ? '1.5px solid var(--focus)' : undefined,
         cursor: 'default',
       }}
