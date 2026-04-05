@@ -43,6 +43,7 @@
   background: var(--_bg, var(--surface-overlay));
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-strong);
+  transition: opacity var(--motion-enter-duration) var(--motion-enter-easing);
   /* depth ladder — children auto-inherit overlay interactive tokens */
   --bg-hover:          var(--depth-overlay-hover);
   --bg-active:         var(--depth-overlay-active);
