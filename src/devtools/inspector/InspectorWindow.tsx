@@ -13,7 +13,7 @@ import { registryToUnifiedTree, findInstanceId } from './inspectorStore'
 import type { InstanceMeta } from './inspectorStore'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './InspectorWindow.module.css'
+import './InspectorWindow.css'
 
 const emptyPlugins: Plugin[] = []
 
@@ -27,27 +27,27 @@ function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
     return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No bindings</div>
   }
   return (
-    <table className={`${ax({ textStyle: 'caption' })} ${styles.table}`}>
+    <table className={`${ax({ textStyle: 'caption' })} inspector-table`}>
       <thead>
         <tr>
-          <th className={`text-left ${styles.th}`}>Input</th>
-          <th className={`text-left ${styles.th}`}>Command</th>
-          <th className={`text-left ${styles.th}`}>Owner</th>
+          <th className="text-left inspector-th">Input</th>
+          <th className="text-left inspector-th">Command</th>
+          <th className="text-left inspector-th">Owner</th>
         </tr>
       </thead>
       <tbody>
         {keyEntries.map(([k, entry]) => (
           <tr key={k}>
-            <td className={styles.tdKey}>{k}</td>
-            <td className={styles.tdCommand}>{entry.command ?? '—'}</td>
-            <td className={styles.tdOwner}>{entry.owner}</td>
+            <td className="inspector-td-key">{k}</td>
+            <td className="inspector-td-command">{entry.command ?? '—'}</td>
+            <td className="inspector-td-owner">{entry.owner}</td>
           </tr>
         ))}
         {clickEntries.map(([input, commands]) => (
           <tr key={`click:${input}`}>
-            <td className={styles.tdKey}>{input}</td>
-            <td className={styles.tdCommand}>{commands.join(', ')}</td>
-            <td className={styles.tdOwner}>pattern</td>
+            <td className="inspector-td-key">{input}</td>
+            <td className="inspector-td-command">{commands.join(', ')}</td>
+            <td className="inspector-td-owner">pattern</td>
           </tr>
         ))}
       </tbody>
@@ -65,7 +65,7 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
 
   return (
     <button
-      className={`cursor-pointer ${ax({ textStyle: 'caption', border: 'default', text: 'muted' })} ${styles.copyButton}`}
+      className={`cursor-pointer ${ax({ textStyle: 'caption', border: 'default', text: 'muted' })} inspector-copy-button`}
       onClick={handleCopy}
     >
       {copied ? '✓ Copied' : 'Copy ASCII'}
@@ -91,12 +91,12 @@ function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>;
     return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No ARIA props</div>
   }
   return (
-    <table className={`${ax({ textStyle: 'caption' })} ${styles.table}`}>
+    <table className={`${ax({ textStyle: 'caption' })} inspector-table`}>
       <thead>
         <tr>
-          <th className={`text-left ${styles.th}`}>Attribute</th>
-          <th className={`text-left ${styles.th}`}>OS Intent</th>
-          {domProps && <th className={`text-left ${styles.th}`}>DOM Actual</th>}
+          <th className="text-left inspector-th">Attribute</th>
+          <th className="text-left inspector-th">OS Intent</th>
+          {domProps && <th className="text-left inspector-th">DOM Actual</th>}
         </tr>
       </thead>
       <tbody>
@@ -106,10 +106,10 @@ function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>;
           const mismatch = domProps && os !== dom
           return (
             <tr key={k}>
-              <td className={styles.tdKey}>{k}</td>
-              <td className={styles.tdCommand}>{os ?? '—'}</td>
+              <td className="inspector-td-key">{k}</td>
+              <td className="inspector-td-command">{os ?? '—'}</td>
               {domProps && (
-                <td className={mismatch ? `${styles.tdMismatch} ${ax({ text: 'danger', tone: 'danger-dim' })}` : styles.tdCommand}>{dom ?? '—'}</td>
+                <td className={mismatch ? `inspector-td-mismatch ${ax({ text: 'danger', tone: 'danger-dim' })}` : 'inspector-td-command'}>{dom ?? '—'}</td>
               )}
             </tr>
           )
@@ -165,11 +165,11 @@ const TAB_LIST: { id: DetailTab; label: string }[] = [
 
 function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: DetailTab) => void }) {
   return (
-    <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} ${styles.tabBar}`}>
+    <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} inspector-tab-bar`}>
       {TAB_LIST.map(t => (
         <button
           key={t.id}
-          className={`border-none ${ax({ textStyle: 'caption', padding: 'xs', text: active === t.id ? 'bright' : 'muted' })} ${styles.tab} ${active === t.id ? styles.tabActive : ''}`}
+          className={`border-none ${ax({ textStyle: 'caption', padding: 'xs', text: active === t.id ? 'bright' : 'muted' })} inspector-tab ${active === t.id ? 'inspector-tab-active' : ''}`}
           onClick={() => onChange(t.id)}
         >
           {t.label}
@@ -287,12 +287,12 @@ export function InspectorWindow() {
   }, [metas, actionsMap])
 
   return (
-    <div className={`overflow-hidden ${ax({ layout: 'column' })} ${styles.root}`}>
+    <div className={`overflow-hidden ${ax({ layout: 'column' })} inspector-root`}>
       <div className={ax({ layout: 'spread', padding: 'sm', textStyle: 'caption', surface: 'overlay' })}>
         <div className={ax({ layout: 'row', gap: 'sm' })}>
           <span className={ax({ text: 'bright' })}>Aria Inspector</span>
           <button
-            className={`border-none cursor-pointer ${ax({ textStyle: 'caption', padding: 'xs', text: picking ? 'bright' : 'muted' })} ${styles.tab} ${picking ? styles.tabActive : ''}`}
+            className={`border-none cursor-pointer ${ax({ textStyle: 'caption', padding: 'xs', text: picking ? 'bright' : 'muted' })} inspector-tab ${picking ? 'inspector-tab-active' : ''}`}
             onClick={() => setPicking(p => !p)}
           >
             {picking ? '⊙ Picking…' : '⊙ Pick'}
@@ -301,7 +301,7 @@ export function InspectorWindow() {
         <span className={ax({ text: 'muted' })}>{actionsMap.size} instances</span>
       </div>
 
-      <div className={`overflow-hidden ${ax({ flex: '1' })} ${styles.content}`}>
+      <div className={`overflow-hidden ${ax({ flex: '1' })}`}>
         <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.15}>
           <div className={ax({ layout: 'column' })}>
             {actionsMap.size === 0 ? (
@@ -317,7 +317,7 @@ export function InspectorWindow() {
             )}
           </div>
 
-          <div className={`overflow-auto ${styles.detail}`}>
+          <div className="overflow-auto inspector-detail">
             {inspectResult ? (
               <div className={ax({ layout: 'column' })}>
                 <TabBar active={activeTab} onChange={setActiveTab} />

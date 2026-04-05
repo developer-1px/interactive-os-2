@@ -1,10 +1,10 @@
-.splitContainer {
+.store-inspector-split {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
   min-height: var(--overlay-width);
 }
 
-.logPanel {
+.store-inspector-log {
   grid-column: 1 / -1;
   max-height: var(--storymap-col-width);
   font-family: var(--mono);
@@ -12,17 +12,16 @@
   padding: var(--shape-xs-py) var(--shape-xs-px);
 }
 
-.logEntry {
+.store-inspector-log-entry {
   opacity: 0.9;
 }
 
-.logEntry[data-batch-child] {
+.store-inspector-log-entry[data-batch-child] {
   padding-left: var(--space-lg);
   opacity: 0.7;
 }
 
-
-.panelLabel {
+.store-inspector-panel-label {
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   opacity: 0.5;

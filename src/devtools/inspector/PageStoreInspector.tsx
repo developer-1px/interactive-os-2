@@ -18,7 +18,7 @@ import { storeToInspectorTree } from '@os/store/storeToInspectorTree'
 import { treeData } from '../../pages/shared/sharedTreeData'
 import { renderInspectorItem } from './renderInspectorItem'
 import { ax } from '@styles/ax'
-import styles from './PageStoreInspector.module.css'
+import './PageStoreInspector.css'
 
 // --- Stateless module-level constants ---
 
@@ -139,11 +139,11 @@ export default function PageStoreInspector() {
       </div>
 
       <div className="card overflow-hidden">
-        <div className={`${ax({ gap: 'md' })} ${styles.splitContainer} grid`}>
+        <div className={`${ax({ gap: 'md' })} store-inspector-split grid`}>
 
           {/* Editor panel */}
           <div className="min-h-0 overflow-auto">
-            <div className={`${ax({ textStyle: 'caption' })} ${styles.panelLabel}`}>Editor</div>
+            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Editor</div>
             <Aria
               pattern={tree}
               data={data}
@@ -159,7 +159,7 @@ export default function PageStoreInspector() {
 
           {/* Inspector panel */}
           <div className="min-h-0 overflow-auto">
-            <div className={`${ax({ textStyle: 'caption' })} ${styles.panelLabel}`}>Inspector — NormalizedData</div>
+            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}
               plugins={inspectorPlugins}
@@ -170,18 +170,18 @@ export default function PageStoreInspector() {
 
           {/* Log panel */}
           <div
-            className={`${ax({ textStyle: 'caption', surface: 'sunken', shape: 'sm' })} ${styles.logPanel} overflow-y-auto`}
+            className={`${ax({ textStyle: 'caption', surface: 'sunken', shape: 'sm' })} store-inspector-log overflow-y-auto`}
             ref={logRef}
             aria-label="Operation Log"
           >
-            <div className={`${ax({ textStyle: 'caption' })} ${styles.panelLabel}`}>Operation Log</div>
+            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Operation Log</div>
             {log.length === 0 ? (
               <div style={{ opacity: 0.4 }}>Interact with the editor to see operations here.</div>
             ) : (
               log.map((entry) => (
                 <div
                   key={entry.seq}
-                  className={`${styles.logEntry} whitespace-nowrap`}
+                  className="store-inspector-log-entry whitespace-nowrap"
                   {...(entry.parent != null ? { 'data-batch-child': '' } : {})}
                 >
                   <span style={{ opacity: 0.5 }}>#{entry.seq}</span>{' '}
