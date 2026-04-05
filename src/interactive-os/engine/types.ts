@@ -141,8 +141,7 @@ export interface Plugin {
   visibilityFilter?: VisibilityFilter
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   commands?: Record<string, (...args: any[]) => Command>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  keyMap?: Record<string, (ctx: any, original?: () => Command | void) => Command | void>
+  keyMap?: Record<string, import('../axis/types').KeyHandler>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUnhandledKey?: (event: KeyboardEvent, engine: any) => boolean
   intercepts?: readonly string[]
