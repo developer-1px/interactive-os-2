@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
+import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { TreeView } from '@os/ui/TreeView'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
@@ -148,12 +149,11 @@ export default function PageViewer() {
   useEffect(() => { duplicatePaneRef.current = duplicatePane }, [duplicatePane])
 
   const quickOpenKeyMap = useMemo(() => ({
-    'Meta+p': () => { setQuickOpenVisibleRef.current(true); return { type: 'viewer:quick-open' } as const },
-    'Meta+Enter': () => {
+    'Meta+p': defineRouteKey('viewer:quick-open', () => setQuickOpenVisibleRef.current(true), 'Viewer'),
+    'Meta+Enter': defineRouteKey('viewer:open-in-new-pane', () => {
       const path = focusedFileRef.current
       if (path) openInNewPaneRef.current(path)
-      return { type: 'viewer:open-in-new-pane', payload: { path: focusedFileRef.current } } as const
-    },
+    }, 'Viewer'),
   }), [])
 
   const viewerLayoutHandlers = useMemo(() => ({

@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AriaRoute } from '@os/primitives/AriaRoute'
+import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import mermaid from 'mermaid'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
@@ -10,7 +11,7 @@ import type { TreeNode } from '../viewer/fsClient'
 import { fetchTree } from '../viewer/fsClient'
 import { DEFAULT_ROOT } from '../viewer/types'
 import { buildMermaidL1, buildMermaidL2 } from './birdseyeTransform'
-import styles from './PageBirdseye.module.css'
+import './PageBirdseye.css'
 
 mermaid.initialize({ startOnLoad: false, theme: 'neutral' })
 
@@ -80,26 +81,22 @@ export default function PageBirdseye() {
   }, [layer, setSearchParams])
 
   const keyMap = useMemo(() => ({
-    Escape: () => {
-      if (layer) {
-        setSearchParams({})
-        return { type: 'birdseye:back' } as const
-      }
-      return undefined
-    },
+    Escape: defineRouteKey('birdseye:back', () => {
+      if (layer) setSearchParams({})
+    }, 'Birdseye'),
   }), [layer, setSearchParams])
 
   const goToL1 = useCallback(() => setSearchParams({}), [setSearchParams])
 
   return (
     <AriaRoute keyMap={keyMap} label="Birdseye">
-      <div className={`overflow-hidden ${styles.container} flex-col`}>
+      <div className={`overflow-hidden h-full flex-col`}>
         <PanelHeader>
-          <span className={`${styles.breadcrumb} flex-row items-center`}>
+          <span className={`birdseye-breadcrumb flex-row items-center`}>
             {layer ? (
               <>
-                <button className={`cursor-pointer ${ax({ text: 'muted' })} ${styles.breadcrumbBtn}`} onClick={goToL1}>Overview</button>
-                <span className={`${ax({ opacity: 'faint', text: 'muted' })} ${styles.breadcrumbSep}`}>/</span>
+                <button className={`cursor-pointer ${ax({ text: 'muted' })} birdseye-breadcrumb-btn`} onClick={goToL1}>Overview</button>
+                <span className={`${ax({ opacity: 'faint', text: 'muted' })} birdseye-breadcrumb-sep`}>/</span>
                 <span>{layer}</span>
               </>
             ) : (
@@ -108,7 +105,7 @@ export default function PageBirdseye() {
           </span>
         </PanelHeader>
 
-        <div className={`overflow-auto ${ax({ flex: '1' })} ${styles.diagram}`} ref={containerRef} onClick={handleClick}>
+        <div className={`overflow-auto ${ax({ flex: '1' })} birdseye-diagram`} ref={containerRef} onClick={handleClick}>
           {error ? (
             <span className={`${ax({ text: 'muted', textStyle: 'body' })}`}>{error}</span>
           ) : svg ? (

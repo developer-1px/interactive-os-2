@@ -6,6 +6,7 @@ import type { NormalizedData } from '@os/store/types'
 import type { Locale } from './cmsTypes'
 import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cmsRenderers'
 import { AriaRoute } from '@os/primitives/AriaRoute'
+import { defineRouteKey } from '@os/primitives/defineRouteKey'
 
 interface CmsPresentModeProps {
   data: NormalizedData
@@ -17,7 +18,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
   const containerRef = useRef<HTMLDivElement>(null)
 
   const keyMap = useMemo(() => ({
-    Escape: () => { onExit() },
+    Escape: defineRouteKey('present:exit', () => onExit(), 'PresentMode'),
   }), [onExit])
 
   // Present mode has no focusable content — autoFocus the container so keyMap catches Escape

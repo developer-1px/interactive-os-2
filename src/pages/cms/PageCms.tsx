@@ -28,6 +28,7 @@ import type { Plugin } from '@os/plugins/types'
 import { childRules, nodeSchemas } from './cmsSchema'
 import { zodSchema } from '@os/plugins/zodSchema'
 import { AriaRoute } from '@os/primitives/AriaRoute'
+import { defineRouteKey } from '@os/primitives/defineRouteKey'
 
 const sharedPlugins: Plugin[] = [
   spatial(),
@@ -50,7 +51,7 @@ export default function PageCms() {
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
 
   const cmsGlobalKeyMap = useMemo(() => ({
-    'Mod+\\': () => { setPresenting(prev => !prev); return { type: 'cms:toggle-present' } as const },
+    'Mod+\\': defineRouteKey('cms:toggle-present', () => setPresenting(prev => !prev), 'CMS'),
   }), [])
 
   const sidebarResizer = useResizer({
