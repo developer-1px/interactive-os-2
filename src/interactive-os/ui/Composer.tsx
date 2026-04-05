@@ -163,7 +163,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
                   ref={state.focused ? el => el?.scrollIntoView({ block: 'nearest' }) : undefined}
                   role="option"
                   aria-selected={state.focused}
-                  className={`composer-suggestion-item ${ax({ surface: 'ghost', textStyle: 'body', text: 'secondary' })}`}
+                  className={`composer-suggestion-item ${ax({ interactive: 'item', textStyle: 'body', text: 'secondary' })}`}
                   data-selected={state.focused || undefined}
                   data-node-id={nodeProps['data-node-id'] as string}
                 >
