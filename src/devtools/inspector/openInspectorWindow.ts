@@ -19,7 +19,7 @@ export function openInspectorWindow(): void {
   win.document.title = 'Aria Inspector'
 
   // E5: 새 창에 필요한 CSS 주입
-  const cssFiles = ['palette.css', 'reset.css', 'tokens.css', 'ax.css', 'surface.css', 'interactive.css']
+  const cssFiles = ['palette.css', 'reset.css', 'tokens.css', 'ax.css', 'interactive.css']
   for (const file of cssFiles) {
     const link = win.document.createElement('link')
     link.rel = 'stylesheet'
