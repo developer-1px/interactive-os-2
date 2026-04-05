@@ -296,6 +296,20 @@
 .ct-text { --pd-ratio: 2; }
 
 /* ════════════════════════════════════════════
+ * Border — 테두리
+ * 전체: subtle/default/strong (4면 모두)
+ * 단면: bottom/top/start/end (구분선, subtle 색상)
+ * ════════════════════════════════════════════ */
+
+.bd-subtle  { border: var(--border-width) solid var(--border-subtle); }
+.bd-default { border: var(--border-width) solid var(--border-default); }
+.bd-strong  { border: var(--border-width) solid var(--border-strong); }
+.bd-bottom  { border-bottom: var(--border-width) solid var(--border-subtle); }
+.bd-top     { border-top: var(--border-width) solid var(--border-subtle); }
+.bd-start   { border-inline-start: var(--border-width) solid var(--border-subtle); }
+.bd-end     { border-inline-end: var(--border-width) solid var(--border-subtle); }
+
+/* ════════════════════════════════════════════
  * Shape — 비-컨트롤 요소의 border-radius
  * 컨트롤(button/input 등)은 controlSize가 소유
  * ════════════════════════════════════════════ */

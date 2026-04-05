@@ -24,6 +24,9 @@ type Opacity = 'dim' | 'faint' | 'hidden'
 type Motion = 'pulse' | 'spin' | 'fade-in' | 'slide-up'
 // content: 콘텐츠 유형 — padding의 inline:block 비율을 결정 (text=2:1)
 type Content = 'text'
+// border: 테두리 — 전체 또는 단면 구분선
+type Border = 'subtle' | 'default' | 'strong'
+  | 'bottom' | 'top' | 'start' | 'end'
 
 // ── 구조 축 ──
 
@@ -65,6 +68,7 @@ export interface Axes {
   shape?: Shape
   motion?: Motion
   content?: Content
+  border?: Border
 
   // 구조 축
   layout?: Layout
@@ -90,6 +94,7 @@ const prefixes: Record<keyof Axes, string> = {
   shape: 'sh',
   motion: 'mo',
   content: 'ct',
+  border: 'bd',
   layout: 'ly',
   gap: 'g',
   padding: 'pd',
