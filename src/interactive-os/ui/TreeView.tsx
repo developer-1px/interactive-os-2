@@ -28,7 +28,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Recor
   const hasChildren = state.expanded !== undefined
   const depth = (state.level ?? 1) - 1
   return (
-    <div {...props} className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}>
+    <div {...props} className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}>
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
       <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>

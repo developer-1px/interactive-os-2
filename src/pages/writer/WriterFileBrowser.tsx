@@ -42,7 +42,7 @@ const fileRenderItem = (props: React.HTMLAttributes<HTMLElement>, node: Record<s
   return (
     <div {...props} className={ax({ surface: 'ghost', padding: 'xs', layout: 'row', gap: 'xs' })} style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }}>
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-      <span className={ax({ text: state.focused ? 'primary' : 'secondary', clamp: '1' })}>
+      <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary', clamp: '1' })}>
         {isDir ? `${name}/` : name}
       </span>
     </div>
