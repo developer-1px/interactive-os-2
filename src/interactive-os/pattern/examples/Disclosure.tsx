@@ -5,6 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { DisclosureGroup } from '../../ui/DisclosureGroup'
+import { ax } from '@styles/ax'
 import styles from './disclosure.module.css'
 
 // APG #19: Disclosure (Show/Hide)
@@ -67,10 +68,10 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${styles.button} flex-row items-center`}
+        className={`${styles.button} ${ax({ gap: 'sm', weight: 'semi', text: 'primary' })} flex-row items-center`}
         data-focused={state.focused || undefined}
       >
-        <span className={styles.indicator} aria-hidden="true">
+        <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">
           {state.expanded ? '\u25BC' : '\u25B6'}
         </span>
         <span>{label}</span>
@@ -79,7 +80,7 @@ const renderItem = (
   }
 
   return (
-    <div {...props} className={styles.panel}>
+    <div {...props} className={`${styles.panel} ${ax({ textStyle: 'body', text: 'secondary' })}`}>
       {label}
     </div>
   )

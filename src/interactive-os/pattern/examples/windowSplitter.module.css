@@ -6,11 +6,6 @@
   border-radius: var(--shape-sm-radius);
 }
 
-.panelLabel {
-  font-size: var(--type-body-size);
-  color: var(--text-secondary);
-}
-
 .splitter {
   width: var(--space-xs);
   background: var(--border-default);

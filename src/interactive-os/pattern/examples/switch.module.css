@@ -1,8 +1,5 @@
 .switchItem {
-  gap: var(--space-md);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
-  color: var(--text-primary);
   cursor: default;
 }
 
@@ -13,7 +10,6 @@
 .track {
   width: var(--space-2xl);
   height: var(--space-md);
-  border-radius: var(--shape-pill);
   background: var(--bg-muted);
   padding: var(--space-3xs);
   transition: background var(--motion-duration-fast) var(--motion-easing-default);

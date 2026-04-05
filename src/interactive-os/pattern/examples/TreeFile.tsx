@@ -6,6 +6,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { TreeView } from '../../ui/TreeView'
+import { ax } from '@styles/ax'
 import styles from './tree.module.css'
 
 // APG #63: File Directory Treeview
@@ -70,10 +71,10 @@ const renderTreeitem = (
   return (
     <div
       {...props}
-      className={`${styles.treeitem} flex-row items-center whitespace-nowrap outline-none`}
+      className={`${styles.treeitem} ${ax({ textStyle: 'body', text: 'primary', gap: 'xs' })} flex-row items-center whitespace-nowrap outline-none`}
       data-focused={state.focused || undefined}
     >
-      <span className={styles.indicator} aria-hidden="true">
+      <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">
         {isFolder ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
       </span>
       <span>{label}</span>

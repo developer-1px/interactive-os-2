@@ -5,6 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { AlertDialog as AlertDialogUI } from '../../ui/AlertDialog'
+import { ax } from '../../../../styles/ax'
 import styles from './alertDialog.module.css'
 
 // APG #3: Alert Dialog
@@ -43,16 +44,16 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${styles.dialog} outline-none`}
+        className={`${styles.dialog} ${ax({ shape: 'md' })} outline-none`}
         data-focused={state.focused || undefined}
       >
-        <h2 className={styles.title}>{label}</h2>
+        <h2 className={`${styles.title} ${ax({ weight: 'semi', text: 'primary' })}`}>{label}</h2>
       </div>
     )
   }
 
   return (
-    <div {...props} className={styles.message}>
+    <div {...props} className={`${styles.message} ${ax({ textStyle: 'body', text: 'secondary' })}`}>
       {label}
     </div>
   )

@@ -1,15 +1,8 @@
 /* ── base ── */
 
 .spinbutton {
-  gap: var(--space-sm);
   padding: var(--shape-sm-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
-  color: var(--text-primary);
   cursor: default;
-}
-
-.label {
-  font-weight: var(--weight-semi);
 }
 
 .value {
@@ -17,7 +10,6 @@
   font-variant-numeric: tabular-nums;
   padding: var(--shape-xs-py) var(--shape-xs-px);
   background: var(--surface-sunken);
-  border-radius: var(--shape-xs-radius);
   border: var(--border-width) solid var(--border-default);
 }
 

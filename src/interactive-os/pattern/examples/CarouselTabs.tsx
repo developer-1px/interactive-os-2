@@ -8,6 +8,7 @@ import { SELECTION_ID } from '../../axis/select'
 import { FOCUS_ID } from '../../axis/navigate'
 import { tabs } from '../../pattern/roles/tabs'
 import { Pause, Play } from 'lucide-react'
+import { ax } from '../../../styles/ax'
 import styles from './carousel.module.css'
 
 // APG #8: Auto-Rotating Image Carousel with Tabs for Slide Control
@@ -49,7 +50,7 @@ const renderTab = (
     <div>
       <button
         {...props}
-        className={`${styles.tab} outline-none`}
+        className={`${styles.tab} ${ax({ textStyle: 'caption', text: 'secondary' })} outline-none`}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
       >
@@ -57,8 +58,8 @@ const renderTab = (
       </button>
       {state.slotProps && (
         <div {...state.slotProps} className={styles.slide} aria-roledescription="slide">
-          <h3 className={styles.slideTitle}>{label}</h3>
-          <p className={styles.slideDesc}>{desc}</p>
+          <h3 className={`${styles.slideTitle} ${ax({ text: 'bright' })}`}>{label}</h3>
+          <p className={`${styles.slideDesc} ${ax({ text: 'secondary' })}`}>{desc}</p>
         </div>
       )}
     </div>
@@ -119,7 +120,7 @@ export function CarouselTabs() {
       ref={containerRef}
       aria-roledescription="carousel"
       aria-label="Highlighted features"
-      className={`${styles.carousel} overflow-hidden`}
+      className={`${styles.carousel} ${ax({ shape: 'sm' })} overflow-hidden`}
       onFocus={onFocusIn}
       onBlur={onFocusOut}
       onMouseEnter={onMouseEnter}
@@ -127,7 +128,7 @@ export function CarouselTabs() {
     >
       <div className={`${styles.controls} flex-row justify-end`}>
         <button
-          className={`${styles.rotationButton} flex-row items-center justify-center`}
+          className={`${styles.rotationButton} ${ax({ text: 'secondary' })} flex-row items-center justify-center`}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
@@ -150,7 +151,7 @@ export function CarouselTabs() {
         </Aria>
       </div>
 
-      <div className={`${styles.indicator} text-center`} aria-hidden="true">
+      <div className={`${styles.indicator} ${ax({ textStyle: 'caption', text: 'muted' })} text-center`} aria-hidden="true">
         {slideIndex} / {slides.length}
       </div>
     </section>

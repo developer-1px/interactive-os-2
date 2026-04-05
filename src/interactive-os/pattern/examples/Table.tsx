@@ -5,6 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { Table as TableComponent } from '../../ui/Table'
+import { ax } from '../../../../styles/ax'
 import styles from './table.module.css'
 
 // APG #57: Table
@@ -84,7 +85,7 @@ const renderItem = (
   return (
     <div
       {...props}
-      className={isHeader ? styles.headerCell : styles.cell}
+      className={isHeader ? `${styles.headerCell} ${ax({ textStyle: 'body', text: 'primary', weight: 'semi' })}` : `${styles.cell} ${ax({ textStyle: 'body', text: 'primary' })}`}
     >
       {label}
     </div>

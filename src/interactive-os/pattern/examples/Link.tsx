@@ -4,6 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Link as LinkComponent } from '../../ui/Link'
+import { ax } from '../../../../styles/ax'
 import styles from './link.module.css'
 
 // APG #35: Link
@@ -34,11 +35,11 @@ const renderLink = (
   return (
     <div
       {...props}
-      className={`${styles.link} flex-row items-center cursor-pointer outline-none`}
+      className={`${styles.link} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body' })} items-center cursor-pointer outline-none`}
       data-focused={state.focused || undefined}
     >
       <span className={styles.label}>{label}</span>
-      <span className={`${styles.url} no-underline`}>{href}</span>
+      <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} no-underline`}>{href}</span>
     </div>
   )
 }

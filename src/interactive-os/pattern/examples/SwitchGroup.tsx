@@ -4,6 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { SwitchGroup as SwitchGroupUI } from '../../ui/SwitchGroup'
+import { ax } from '@styles/ax'
 import styles from './switch.module.css'
 
 // APG #54: Switch
@@ -30,12 +31,12 @@ const renderSwitch = (
   return (
     <div
       {...props}
-      className={`${styles.switchItem} flex-row items-center justify-between`}
+      className={`${styles.switchItem} ${ax({ gap: 'md', text: 'primary' })} flex-row items-center justify-between`}
       data-focused={state.focused || undefined}
     >
       <span className={`${styles.label} flex-1`}>{label}</span>
       <span
-        className={`${styles.track} inline-flex items-center`}
+        className={`${styles.track} ${ax({ shape: 'pill' })} inline-flex items-center`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >

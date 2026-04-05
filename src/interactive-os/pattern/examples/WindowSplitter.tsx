@@ -4,6 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { WindowSplitter as WindowSplitterComponent } from '../../ui/WindowSplitter'
+import { ax } from '../../../../styles/ax'
 import styles from './windowSplitter.module.css'
 
 // APG #67: Window Splitter
@@ -27,7 +28,7 @@ const renderSplitter = (
   return (
     <div className={`${styles.container} flex-row`}>
       <div className={`${styles.panel} flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${current}%` }}>
-        <p className={styles.panelLabel}>Panel 1</p>
+        <p className={ax({ textStyle: 'body', text: 'secondary' })}>Panel 1</p>
       </div>
       <div
         {...props}
@@ -35,7 +36,7 @@ const renderSplitter = (
         data-focused={state.focused || undefined}
       />
       <div className={`${styles.panel} flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${100 - current}%` }}>
-        <p className={styles.panelLabel}>Panel 2</p>
+        <p className={ax({ textStyle: 'body', text: 'secondary' })}>Panel 2</p>
       </div>
     </div>
   )

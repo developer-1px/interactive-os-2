@@ -4,6 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Alert as AlertComponent } from '../../ui/Alert'
+import { ax } from '../../../../styles/ax'
 import styles from './alert.module.css'
 
 // APG #2: Alert
@@ -38,8 +39,8 @@ const renderAlert = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <div {...props} className={`${styles.alert} flex-row items-center`}>
-      <span className={`${styles.icon} shrink-0`} aria-hidden="true">
+    <div {...props} className={`${styles.alert} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary', surface: 'sunken', shape: 'sm' })} items-center`}>
+      <span className={`${styles.icon} ${ax({ text: 'secondary' })} shrink-0`} aria-hidden="true">
         &#9432;
       </span>
       <span>{label}</span>

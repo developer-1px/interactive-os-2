@@ -4,6 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Checkbox } from '../../ui/Checkbox'
+import { ax } from '../../../../styles/ax'
 import styles from './checkbox.module.css'
 
 // APG #9: Checkbox (Two State)
@@ -32,11 +33,11 @@ const renderCheckbox = (
   return (
     <div
       {...props}
-      className={`${styles.checkbox} flex-row items-center`}
+      className={`${styles.checkbox} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center`}
       data-focused={state.focused || undefined}
     >
       <span
-        className={`${styles.checkIndicator} inline-flex items-center justify-center`}
+        className={`${styles.checkIndicator} ${ax({ textStyle: 'caption', shape: 'sm' })} inline-flex items-center justify-center`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >

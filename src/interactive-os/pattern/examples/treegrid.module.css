@@ -1,35 +1,18 @@
 /* ── base ── */
 
 .row {
-  gap: var(--space-sm);
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
   cursor: default;
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
-.indicator {
-  font-size: var(--type-caption-size);
-  color: var(--text-secondary);
-}
-
 .subject {
-  font-weight: var(--weight-semi);
   text-overflow: ellipsis;
 }
 
 .summary {
   flex: 2;
-  color: var(--text-secondary);
   text-overflow: ellipsis;
-}
-
-.sender {
-  color: var(--text-secondary);
-  font-size: var(--type-caption-size);
 }
 
 /* ── variant: state ── */

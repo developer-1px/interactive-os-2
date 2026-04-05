@@ -2,7 +2,6 @@
 
 .demo {
   border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-sm-radius);
 }
 
 .header {
@@ -13,13 +12,11 @@
 .title {
   font-size: var(--type-heading-size);
   font-weight: var(--type-heading-weight);
-  color: var(--text-bright);
 }
 
 .tagline {
   font-size: var(--type-body-size);
   font-style: italic;
-  color: var(--text-secondary);
 }
 
 /* ── menubar container ── */
