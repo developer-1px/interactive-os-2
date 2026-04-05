@@ -1,20 +1,18 @@
-/* ── base ── */
+/* ── alertDialog last-mile ── */
 
-.dialog {
+.alert-dialog {
   border: var(--border-width) solid var(--border-default);
 }
 
-.title {
+.alert-dialog-title {
   margin: 0;
   font-size: var(--type-heading-size);
 }
 
-.message {
+.alert-dialog-message {
   padding: var(--shape-sm-py) var(--shape-md-px);
 }
 
-/* ── variant: state ── */
-
-.dialog:is([data-focused='true']) {
+.alert-dialog:is([data-focused='true']) {
   outline: var(--focus-ring) solid var(--focus);
 }

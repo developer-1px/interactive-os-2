@@ -9,7 +9,7 @@ import { FOCUS_ID } from '../../axis/navigate'
 import { tabs } from '../../pattern/roles/tabs'
 import { Pause, Play } from 'lucide-react'
 import { ax } from '@styles/ax'
-import styles from './carousel.module.css'
+import './carousel.css'
 
 // APG #8: Auto-Rotating Image Carousel with Tabs for Slide Control
 // https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-2-tablist/
@@ -50,16 +50,16 @@ const renderTab = (
     <div>
       <button
         {...props}
-        className={`${styles.tab} ${ax({ textStyle: 'caption', text: 'secondary' })} outline-none`}
+        className={`carousel-tab ${ax({ textStyle: 'caption', text: 'secondary' })} outline-none`}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
       >
         {label}
       </button>
       {state.slotProps && (
-        <div {...state.slotProps} className={`${ax({ surface: 'display' })} ${styles.slide}`} aria-roledescription="slide">
-          <h3 className={`${styles.slideTitle} ${ax({ text: 'bright' })}`}>{label}</h3>
-          <p className={`${ax({ text: 'secondary', textStyle: 'body' })} ${styles.slideDesc}`}>{desc}</p>
+        <div {...state.slotProps} className={`${ax({ surface: 'display' })} carousel-slide`} aria-roledescription="slide">
+          <h3 className={`carousel-slide-title ${ax({ text: 'bright' })}`}>{label}</h3>
+          <p className={`${ax({ text: 'secondary', textStyle: 'body' })} carousel-slide-desc`}>{desc}</p>
         </div>
       )}
     </div>
@@ -126,9 +126,9 @@ export function CarouselTabs() {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className={`${ax({ surface: 'display' })} ${styles.controls} flex-row justify-end`}>
+      <div className={`${ax({ surface: 'display' })} carousel-controls flex-row justify-end`}>
         <button
-          className={`${ax({ text: 'secondary', shape: 'sm' })} ${styles.rotationButton} flex-row items-center justify-center`}
+          className={`${ax({ text: 'secondary', shape: 'sm' })} carousel-rotation-button flex-row items-center justify-center`}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
@@ -137,7 +137,7 @@ export function CarouselTabs() {
       </div>
 
       <div
-        className={styles.liveRegion}
+        className="carousel-live-region"
         aria-live={isRotating && !isPaused ? 'off' : 'polite'}
       >
         <Aria
@@ -151,7 +151,7 @@ export function CarouselTabs() {
         </Aria>
       </div>
 
-      <div className={`${ax({ textStyle: 'caption', text: 'muted', surface: 'display' })} ${styles.indicator} text-center`} aria-hidden="true">
+      <div className={`${ax({ textStyle: 'caption', text: 'muted', surface: 'display' })} carousel-indicator text-center`} aria-hidden="true">
         {slideIndex} / {slides.length}
       </div>
     </section>

@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Meter as MeterComponent } from '../../ui/Meter'
 import { ax } from '@styles/ax'
-import styles from './meter.module.css'
+import './meter.css'
 
 // APG #44: Meter
 // https://www.w3.org/WAI/ARIA/apg/patterns/meter/
@@ -31,12 +31,12 @@ const renderMeter = (
   void state
 
   return (
-    <div {...props} className={`${styles.meter} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center`}>
-      <span className={`${styles.label} ${ax({ weight: 'semi' })}`}>{label}</span>
-      <span className={`${styles.track} ${ax({ shape: 'sm', surface: 'sunken' })} flex-1 relative`}>
-        <span className={`${styles.fill} ${ax({ shape: 'sm' })} h-full`} style={{ width: `${pct}%` }} />
+    <div {...props} className={`meter-item ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center`}>
+      <span className={`meter-label ${ax({ weight: 'semi' })}`}>{label}</span>
+      <span className={`meter-track ${ax({ shape: 'sm', surface: 'sunken' })} flex-1 relative`}>
+        <span className={`meter-fill ${ax({ shape: 'sm' })} h-full`} style={{ width: `${pct}%` }} />
       </span>
-      <span className={`${styles.valueLabel} ${ax({ text: 'secondary' })} text-right tabular-nums`}>{value}%</span>
+      <span className={`meter-value ${ax({ text: 'secondary' })} text-right tabular-nums`}>{value}%</span>
     </div>
   )
 }

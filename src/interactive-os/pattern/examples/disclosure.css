@@ -1,23 +1,21 @@
-/* ── base ── */
+/* ── disclosure last-mile ── */
 
-.button {
+.disclosure-button {
   border: var(--border-width) solid var(--border-default);
   outline: var(--border-width) solid transparent;
   outline-offset: -var(--border-width);
 }
 
-.panel {
-  border: var(--border-width) solid var(--border-default);
-  border-top: none;
-}
-
-/* ── variant: state ── */
-
-.button[aria-expanded='true'] {
+.disclosure-button[aria-expanded='true'] {
   border-bottom-color: transparent;
 }
 
-.button:is([data-focused='true']) {
+.disclosure-button:is([data-focused='true']) {
   background: var(--bg-hover);
   outline-color: var(--focus);
+}
+
+.disclosure-panel {
+  border: var(--border-width) solid var(--border-default);
+  border-top: none;
 }

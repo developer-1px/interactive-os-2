@@ -1,33 +1,31 @@
-/* ── base ── */
+/* ── grid last-mile ── */
 
-.cell {
+.grid-cell {
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
-/* ── variant: state ── */
-
-.cell[aria-selected='true'] {
+.grid-cell[aria-selected='true'] {
   background: var(--selection);
 }
 
-.cell:is([data-focused='true']) {
+.grid-cell:is([data-focused='true']) {
   background: var(--bg-hover);
 }
 
-.cell:is([data-focused='true'][aria-selected='true']) {
+.grid-cell:is([data-focused='true'][aria-selected='true']) {
   background: var(--selection);
   outline: var(--focus-ring) solid var(--focus);
 }
 
-.tile[aria-selected='true'] {
+.grid-tile[aria-selected='true'] {
   background: var(--selection);
 }
 
-.tile:is([data-focused='true']) {
+.grid-tile:is([data-focused='true']) {
   background: var(--bg-hover);
 }
 
-.tile:is([data-focused='true'][aria-selected='true']) {
+.grid-tile:is([data-focused='true'][aria-selected='true']) {
   background: var(--selection);
   outline: var(--focus-ring) solid var(--focus);
 }

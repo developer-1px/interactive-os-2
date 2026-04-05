@@ -1,18 +1,16 @@
-/* ── base ── */
+/* ── windowSplitter last-mile ── */
 
-.container {
+.splitter-container {
   height: var(--space-5xl);
   border: var(--border-width) solid var(--border-default);
 }
 
-.splitter {
+.splitter-handle {
   width: var(--space-xs);
   background: var(--border-default);
   cursor: col-resize;
 }
 
-/* ── variant: state ── */
-
-.splitter:is([data-focused='true']) {
+.splitter-handle:is([data-focused='true']) {
   background: var(--focus);
 }

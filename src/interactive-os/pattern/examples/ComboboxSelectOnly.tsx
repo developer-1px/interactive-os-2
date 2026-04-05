@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Combobox } from '../../ui/Combobox'
 import { ax } from '@styles/ax'
-import styles from './combobox.module.css'
+import './combobox.css'
 
 // APG #11: Select-Only Combobox
 // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
@@ -38,7 +38,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={`${styles.option} ${ax({ textStyle: 'body', text: 'primary' })} flex-row items-center cursor-default`}
+      className={`combobox-option ${ax({ textStyle: 'body', text: 'primary' })} flex-row items-center cursor-default`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

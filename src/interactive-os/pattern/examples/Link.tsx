@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Link as LinkComponent } from '../../ui/Link'
 import { ax } from '@styles/ax'
-import styles from './link.module.css'
+import './link.css'
 
 // APG #35: Link
 // https://www.w3.org/WAI/ARIA/apg/patterns/link/
@@ -35,10 +35,10 @@ const renderLink = (
   return (
     <div
       {...props}
-      className={`${styles.link} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', padding: 'xs', content: 'text' })} items-center cursor-pointer outline-none`}
+      className={`link-item ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', padding: 'xs', content: 'text' })} items-center cursor-pointer outline-none`}
       data-focused={state.focused || undefined}
     >
-      <span className={styles.label}>{label}</span>
+      <span className="link-label">{label}</span>
       <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} no-underline`}>{href}</span>
     </div>
   )

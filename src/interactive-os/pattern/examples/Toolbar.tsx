@@ -10,7 +10,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Toolbar as ToolbarUI } from '../../ui/Toolbar'
 import { ax } from '@styles/ax'
-import styles from './toolbar.module.css'
+import './toolbar.css'
 
 // APG #61: Toolbar
 // https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/
@@ -56,7 +56,7 @@ const renderButton = (
   return (
     <div
       {...props}
-      className={`${styles.button} ${ax({ textStyle: 'body', text: 'primary', shape: 'sm' })} inline-flex items-center justify-center cursor-default`}
+      className={`toolbar-button ${ax({ textStyle: 'body', text: 'primary', shape: 'sm' })} inline-flex items-center justify-center cursor-default`}
       data-focused={state.focused || undefined}
       aria-label={label}
     >

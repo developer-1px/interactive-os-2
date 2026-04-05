@@ -1,22 +1,19 @@
-/* ── demo wrapper ── */
+/* ── menubar last-mile ── */
 
-.header {
-  padding: var(--space-xl) var(--space-lg);
+.menubar-header {
   background: var(--tone-primary-dim);
 }
 
-.title {
+.menubar-title {
   font-size: var(--type-heading-size);
   font-weight: var(--type-heading-weight);
 }
 
-.tagline {
+.menubar-tagline {
   font-style: italic;
 }
 
-/* ── menubar container ── */
-
-.wrapper [role='menubar'] {
+.menubar-wrapper [role='menubar'] {
   display: flex;
   align-items: center;
   gap: 0;
@@ -27,16 +24,7 @@
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
-.wrapper [role='menubar']:focus-within {
+.menubar-wrapper [role='menubar']:focus-within {
   outline: var(--indicator-width) solid var(--focus);
   outline-offset: -var(--indicator-width);
 }
-
-/* ── menubar item ── */
-
-/* ── submenu panel ── */
-
-/* ── variant: state ── */
-
-/* Focus ring only when element actually has DOM focus */
-/* Background highlight when focused (keyboard navigation) */

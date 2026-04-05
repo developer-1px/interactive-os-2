@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Checkbox } from '../../ui/Checkbox'
 import { ax } from '@styles/ax'
-import styles from './checkbox.module.css'
+import './checkbox.css'
 
 // APG #9: Checkbox (Two State)
 // https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/examples/checkbox/
@@ -33,11 +33,11 @@ const renderCheckbox = (
   return (
     <div
       {...props}
-      className={`${styles.checkbox} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center cursor-default`}
+      className={`checkbox-item ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span
-        className={`${styles.checkIndicator} ${ax({ textStyle: 'caption', shape: 'sm', size: 'md' })} inline-flex items-center justify-center`}
+        className={`check-indicator ${ax({ textStyle: 'caption', shape: 'sm', size: 'md' })} inline-flex items-center justify-center`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >

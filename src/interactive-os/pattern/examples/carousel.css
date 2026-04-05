@@ -1,62 +1,52 @@
-/* ── carousel container ── */
+/* ── carousel last-mile ── */
 
-/* ── rotation control ── */
-
-.controls {
+.carousel-controls {
   padding: var(--space-xs) var(--space-sm);
 }
 
-.rotationButton {
+.carousel-indicator {
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.carousel-rotation-button {
   width: var(--icon-lg);
   height: var(--icon-lg);
   padding: 0;
   border: var(--border-width) solid transparent;
 }
 
-.rotationButton:hover {
+.carousel-rotation-button:hover {
   background: var(--bg-hover);
 }
 
-.rotationButton:focus {
+.carousel-rotation-button:focus {
   border-color: var(--focus);
 }
 
-/* ── tabs (inside Aria) ── */
-
-.tab {
-  padding: var(--shape-xs-py) var(--shape-sm-px);
+.carousel-tab {
   font-family: inherit;
   border-bottom: var(--indicator-width) solid transparent;
 }
 
-.tab:is([data-selected='true']) {
+.carousel-tab:is([data-selected='true']) {
   color: var(--text-primary);
   border-bottom-color: var(--tone-primary-base);
 }
 
-.tab:focus {
+.carousel-tab:focus {
   background: var(--bg-hover);
 }
 
-/* ── slide panel ── */
-
-.slide {
-  padding: var(--space-lg) var(--space-xl);
+.carousel-slide {
   min-height: var(--space-5xl);
 }
 
-.slideTitle {
+.carousel-slide-title {
   font-size: var(--type-heading-size);
   font-weight: var(--type-heading-weight);
   margin: 0 0 var(--space-sm);
 }
 
-.slideDesc {
+.carousel-slide-desc {
   margin: 0;
-}
-
-/* ── indicator ── */
-
-.indicator {
-  padding: var(--space-xs) var(--space-sm);
 }

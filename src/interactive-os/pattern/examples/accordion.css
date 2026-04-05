@@ -1,0 +1,48 @@
+/* ── accordion last-mile ── */
+
+.accordion-heading { margin: 0; }
+
+.accordion-trigger {
+  font: inherit;
+  border: var(--border-width) solid var(--border-default);
+  outline: var(--border-width) solid transparent;
+  outline-offset: -var(--border-width);
+}
+
+.accordion-trigger[aria-expanded='true'] {
+  border-bottom-color: transparent;
+}
+
+.accordion-trigger:is([data-focused]) {
+  background: var(--bg-hover);
+  outline-color: var(--focus);
+}
+
+.accordion-panel {
+  border: var(--border-width) solid var(--border-default);
+  border-top: none;
+}
+
+.accordion-input {
+  font: inherit;
+  border: var(--border-width) solid var(--border-default);
+  outline: var(--border-width) solid transparent;
+  outline-offset: -var(--border-width);
+}
+
+.accordion-input:focus {
+  border-color: var(--focus-ring);
+}
+
+.accordion-field {
+  gap: var(--space-xxs);
+}
+
+.accordion-fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+.accordion-title {
+  text-align: start;
+}

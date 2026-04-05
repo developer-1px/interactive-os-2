@@ -4,7 +4,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Grid } from '../../ui/Grid'
 import { ax } from '@styles/ax'
-import styles from './grid.module.css'
+import './grid.css'
 
 // APG #26: Layout Grid
 // https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/layout-grids/
@@ -42,7 +42,7 @@ const renderTile = (
   value: unknown,
 ): React.ReactElement => {
   return (
-    <div {...props} className={`${styles.tile} ${ax({ textStyle: 'body', weight: 'semi', text: 'primary', shape: 'md', padding: 'md', content: 'text', surface: 'sunken' })} flex-row items-center justify-center outline-none`}>
+    <div {...props} className={`grid-tile ${ax({ textStyle: 'body', weight: 'semi', text: 'primary', shape: 'md', padding: 'md', content: 'text', surface: 'sunken' })} flex-row items-center justify-center outline-none`}>
       {String(value ?? '')}
     </div>
   )

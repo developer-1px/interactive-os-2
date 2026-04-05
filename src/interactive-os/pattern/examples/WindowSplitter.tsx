@@ -5,7 +5,7 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { WindowSplitter as WindowSplitterComponent } from '../../ui/WindowSplitter'
 import { ax } from '@styles/ax'
-import styles from './windowSplitter.module.css'
+import './windowSplitter.css'
 
 // APG #67: Window Splitter
 // https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/
@@ -26,16 +26,16 @@ const renderSplitter = (
   void node
 
   return (
-    <div className={`${styles.container} ${ax({ shape: 'sm' })} flex-row`}>
-      <div className={`${styles.panel} flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${current}%` }}>
+    <div className={`splitter-container ${ax({ shape: 'sm' })} flex-row`}>
+      <div className={`splitter-panel flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${current}%` }}>
         <p className={ax({ textStyle: 'body', text: 'secondary' })}>Panel 1</p>
       </div>
       <div
         {...props}
-        className={`${styles.splitter} shrink-0 outline-none`}
+        className={`splitter-handle shrink-0 outline-none`}
         data-focused={state.focused || undefined}
       />
-      <div className={`${styles.panel} flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${100 - current}%` }}>
+      <div className={`splitter-panel flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${100 - current}%` }}>
         <p className={ax({ textStyle: 'body', text: 'secondary' })}>Panel 2</p>
       </div>
     </div>
