@@ -1,8 +1,8 @@
 import React from 'react'
 import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Undo, Redo, Copy, Scissors, Clipboard, Trash2, Plus, Minus, Search, Settings, type LucideIcon } from 'lucide-react'
 
-import type { Command } from '../engine/types'
-import type { PatternContext, NodeState } from '../pattern/types'
+import type { NodeState } from '../pattern/types'
+import { key, type KeyHandler } from '../axis/types'
 import type { AriaComponentProps } from './types'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
@@ -40,13 +40,13 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 }
 
 // Override toolbar's horizontal keyMap to use vertical arrows instead
-const verticalKeyMap: Record<string, ((ctx: PatternContext) => Command | void) | undefined> = {
-  ArrowDown: (ctx: PatternContext) => ctx.focusNext(),
-  ArrowUp: (ctx: PatternContext) => ctx.focusPrev(),
-  ArrowRight: undefined,
-  ArrowLeft: undefined,
-  Home: (ctx: PatternContext) => ctx.focusFirst(),
-  End: (ctx: PatternContext) => ctx.focusLast(),
+const verticalKeyMap: Record<string, KeyHandler> = {
+  ArrowDown: key(['core:focus:next'], (ctx) => ctx.focusNext()),
+  ArrowUp: key(['core:focus:prev'], (ctx) => ctx.focusPrev()),
+  ArrowRight: key([], () => undefined), // suppress horizontal nav
+  ArrowLeft: key([], () => undefined), // suppress horizontal nav
+  Home: key(['core:focus:first'], (ctx) => ctx.focusFirst()),
+  End: key(['core:focus:last'], (ctx) => ctx.focusLast()),
 }
 
 export function Toolbar({
@@ -61,7 +61,7 @@ export function Toolbar({
   'aria-label': ariaLabel,
 }: ToolbarProps) {
   const mergedKeyMap = React.useMemo(() => {
-    const base = orientation === 'vertical' ? verticalKeyMap as Record<string, (ctx: PatternContext) => Command | void> : undefined
+    const base = orientation === 'vertical' ? verticalKeyMap : undefined
     if (!base && !keyMap) return undefined
     if (!base) return keyMap
     if (!keyMap) return base
