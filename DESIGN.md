@@ -527,3 +527,16 @@ shape + type 번들 override. 번들 세트로 교체.
 | `--_border-invalid` | input | 에러 테두리 | `--tone-destructive-base` |
 
 풀 확장 시 이 표에 등록 필수.
+
+## scroll 축 vs layout:scroll
+
+| 축 | CSS | 용도 |
+|---|---|---|
+| `layout: 'scroll'` | `display:flex; flex-direction:column; overflow-y:auto; min-height:0` | **레이아웃 역할** — flex column 스크롤 패널 (사이드바, 리스트) |
+| `layout: 'scroll-x'` | `display:flex; flex-direction:row; overflow-x:auto; min-width:0` | **레이아웃 역할** — flex row 가로 스크롤 |
+| `scroll: 'hidden'` | `overflow: hidden` | **순수 overflow** — 컨테이너 클리핑 (layout 불변) |
+| `scroll: 'y'` | `overflow-y:auto; overflow-x:hidden` | **순수 overflow** — 비-flex 세로 스크롤 |
+| `scroll: 'x'` | `overflow-x:auto; overflow-y:hidden` | **순수 overflow** — 테이블/코드 가로 스크롤 |
+| `scroll: 'auto'` | `overflow: auto` | **순수 overflow** — 양방향 |
+
+**판단 기준:** flex 레이아웃이 필요하면 `layout:scroll`, overflow만 필요하면 `scroll` 축.
