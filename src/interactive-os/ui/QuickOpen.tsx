@@ -12,7 +12,7 @@ import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobo
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { FileIcon } from './FileIcon'
-import styles from './QuickOpen.module.css'
+import './QuickOpen.css'
 
 // --- Flatten file entities for search ---
 
@@ -120,13 +120,13 @@ export function QuickOpen({
   }, [onClose])
 
   return (
-    <div className={`${ax({ surface: 'overlay', layout: 'row', placement: 'viewport' })} ${styles.backdrop}`} onClick={handleBackdropClick}>
-      <div className={`overflow-hidden ${ax({ layout: 'column', shape: 'xl', border: 'default' })} ${styles.dialog}`} aria-label="Quick Open">
-        <div className={`${ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })} ${styles.inputRow}`}>
+    <div className={`quick-open-backdrop ${ax({ surface: 'overlay', layout: 'row', placement: 'viewport', motion: 'fade-in' })}`} onClick={handleBackdropClick}>
+      <div className={`quick-open-dialog overflow-hidden ${ax({ layout: 'column', shape: 'xl', border: 'default', motion: 'slide-in' })}`} aria-label="Quick Open">
+        <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
           <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
           <input
             ref={inputRef}
-            className={`border-none outline-none ${ax({ controlSize: 'md', padding: 'sm', content: 'text', flex: '1' })} ${styles.input}`}
+            className={`quick-open-input border-none outline-none ${ax({ controlSize: 'md', padding: 'sm', content: 'text', flex: '1' })}`}
             type="text"
             placeholder="파일 검색..."
             value={query}
@@ -134,7 +134,7 @@ export function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className={`${ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })} ${styles.shortcut}`}>ESC</kbd>
+          <kbd className={ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
           <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>
@@ -148,7 +148,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`cursor-default ${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm', state: state.focused ? 'focused' : undefined })} ${styles.item}`}
+                  className={`cursor-default ${ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm', state: state.focused ? 'focused' : undefined })}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),
@@ -159,7 +159,7 @@ export function QuickOpen({
                   <span className={ax({ flex: 'none' })}>
                     <FileIcon name={fileData.name} type="file" />
                   </span>
-                  <span className={`${ax({ layout: 'column', flex: '1' })} ${styles.itemText}`}>
+                  <span className={`quick-open-item-text ${ax({ layout: 'column', flex: '1' })}`}>
                     <span className={ax({ textStyle: 'body', clamp: '1', weight: 'medium' })}>{fileData.name}</span>
                     <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
                   </span>

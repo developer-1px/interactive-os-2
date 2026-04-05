@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { codeToHtml } from 'shiki'
 import { ax } from '@styles/ax'
 import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme } from './shikiUtils'
-import styles from './CodeBlock.module.css'
+import './CodeBlock.css'
 
 // HighlightTone: used by replay edit animation for tone-coded line highlights
 export type HighlightTone = 'edited' | 'selected' | 'deleted' | 'inserted'
@@ -70,10 +70,10 @@ export function CodeBlock({ code, filename, highlightLines, variant = 'bordered'
 
   const baseAx = ax({ textStyle: 'code' })
   const cls = variant === 'flush'
-    ? `overflow-hidden ${baseAx} ${styles.codeBlock} ${styles.codeBlockFlush}`
+    ? `overflow-hidden ${baseAx} code-block code-block--flush`
     : variant === 'compact'
-      ? `overflow-hidden ${baseAx} ${styles.codeBlock} ${styles.codeBlockCompact}`
-      : `overflow-hidden ${baseAx} ${styles.codeBlock}`
+      ? `overflow-hidden ${baseAx} code-block code-block--compact`
+      : `overflow-hidden ${baseAx} code-block`
   if (!html) return <pre className={`${cls} ${ax({ padding: 'xl', surface: 'base', shape: 'xl', textStyle: 'code' })}`}><code>{code}</code></pre>
   return (
     <div

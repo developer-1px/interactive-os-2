@@ -1,44 +1,34 @@
-/* Composer — multiline input with Enter-to-submit */
+/* Composer — last-mile: pseudo-elements, state selectors */
 
-/* --- Input wrapper — last-mile: border-radius, focus ring, disabled --- */
-
-.inputWrap[data-disabled] {
+.composer-input-wrap[data-disabled] {
   opacity: 0.4;
 }
 
-/* --- Editable content — last-mile: padding, whitespace, min-height --- */
-
-.editor {
+.composer-editor {
   min-height: calc(var(--leading-snug) * 1em + var(--shape-sm-py) * 2);
   padding: var(--space-sm) var(--space-md);
   line-height: var(--leading-snug);
   word-break: break-word;
 }
 
-.editor[data-overlay] {
+.composer-editor[data-overlay] {
   color: transparent;
   caret-color: var(--text-primary);
 }
 
-/* --- Placeholder via :empty --- */
-
-.editor:empty::before {
+.composer-editor:empty::before {
   content: attr(data-placeholder);
   color: var(--text-muted);
   pointer-events: none;
 }
 
-/* --- Ghost text overlay — last-mile: positioning, text sync --- */
-
-.overlay {
+.composer-overlay {
   padding: var(--space-sm) var(--space-md);
   line-height: var(--leading-snug);
   word-break: break-word;
 }
 
-/* --- Suggestion popup (above input, Slack-style) — last-mile --- */
-
-.suggestionList {
+.composer-suggestion-list {
   margin: 0;
   list-style: none;
   overflow-y: auto;
@@ -46,17 +36,17 @@
   z-index: 1;
 }
 
-.suggestionItem {
+.composer-suggestion-item {
   padding: var(--space-xs) var(--space-md);
   line-height: var(--leading-snug);
 }
 
-.suggestionItem:hover {
+.composer-suggestion-item:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
 }
 
-.suggestionItem[data-selected] {
+.composer-suggestion-item[data-selected] {
   background: var(--bg-active);
   color: var(--text-bright);
 }

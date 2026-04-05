@@ -8,7 +8,7 @@ import { FOCUS_ID } from '../axis/navigate'
 import type { NormalizedData } from '../store/types'
 import { key } from '../axis/types'
 import { ax } from '@styles/ax'
-import styles from './SpreadReader.module.css'
+import './SpreadReader.css'
 
 const nav = navigate('activedescendant')
 
@@ -118,16 +118,16 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
   }, [spreadIndex])
 
   return (
-    <div className={`relative ${styles.root}`}>
-      <div className={`${ax({ flex: '1' })} ${styles.inset}`}>
-        <div className={`outline-none ${styles.viewport}`} {...aria.containerProps}>
-          <div className={styles.columns} ref={columnsRef}>
+    <div className="relative spread-root">
+      <div className={`spread-inset ${ax({ flex: '1' })}`}>
+        <div className="spread-viewport outline-none" {...aria.containerProps}>
+          <div className="spread-columns" ref={columnsRef}>
             {children}
           </div>
         </div>
       </div>
       {total > 1 && (
-        <div className={`${ax({ placement: 'bottom-center' })} ${styles.indicator}`}>
+        <div className={`spread-indicator ${ax({ placement: 'bottom-center' })}`}>
           <span className={ax({ textStyle: 'caption', text: 'muted' })}>
             {spreadIndex + 1}/{total}
           </span>
