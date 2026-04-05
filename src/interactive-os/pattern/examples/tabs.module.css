@@ -3,7 +3,6 @@
 .tab {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border-bottom: var(--border-width-thick) solid transparent;
-  cursor: default;
 }
 
 /* ── variant: state ── */

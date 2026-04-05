@@ -22,7 +22,6 @@
 }
 
 .filePathLink {
-  cursor: pointer;
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 
@@ -45,16 +44,11 @@
 /* --- Standalone tool result --- */
 
 .toolResult {
-  overflow-y: auto;
   line-height: var(--leading-snug);
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
 }
 
 .toolResultSummary {
   composes: iconRow;
-  cursor: pointer;
-  user-select: none;
 }
 
 .toolResultSummary::marker,
@@ -69,7 +63,6 @@
 /* ═══ ToolGroup: bordered card ═══ */
 
 .toolGroup {
-  overflow: hidden;
 }
 
 /* Consecutive tool groups: merge borders, remove inter-gap */

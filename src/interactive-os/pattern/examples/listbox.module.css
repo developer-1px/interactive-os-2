@@ -10,10 +10,6 @@
   outline: var(--focus-ring) solid var(--focus);
 }
 
-.option {
-  cursor: default;
-}
-
 .groupLabel {
   padding: var(--space-xs) var(--shape-xs-px);
   letter-spacing: var(--tracking-normal);
@@ -47,9 +43,6 @@
 
 /* ── rearrangeable (dual listbox + toolbar) ── */
 
-.rearrangeable {
-}
-
 .zoneLabel {
   margin-bottom: var(--space-xs);
 }
@@ -62,7 +55,6 @@
   padding: var(--shape-xs-py) var(--shape-sm-px);
   font-family: inherit;
   border: var(--border-width) solid var(--border-default);
-  cursor: default;
 }
 
 .toolbarButton:hover:not(:disabled) {
@@ -71,7 +63,6 @@
 
 .toolbarButton:focus {
   border-color: var(--focus);
-  outline: none;
 }
 
 .toolbarButton:disabled {

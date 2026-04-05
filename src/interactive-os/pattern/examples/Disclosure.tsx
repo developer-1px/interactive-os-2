@@ -68,7 +68,7 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`${styles.button} ${ax({ gap: 'sm', weight: 'semi', text: 'primary', padding: 'sm', content: 'text', surface: 'sunken' })} flex-row items-center`}
+        className={`${styles.button} ${ax({ gap: 'sm', weight: 'semi', text: 'primary', padding: 'sm', content: 'text', surface: 'sunken' })} flex-row items-center cursor-default`}
         data-focused={state.focused || undefined}
       >
         <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">

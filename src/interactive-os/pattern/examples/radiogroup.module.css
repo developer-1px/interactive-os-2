@@ -1,7 +1,3 @@
-.radio {
-  cursor: default;
-}
-
 .radio:is([data-focused='true']) {
   background: var(--bg-hover);
 }

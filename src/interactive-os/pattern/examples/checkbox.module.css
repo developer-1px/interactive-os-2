@@ -1,6 +1,5 @@
 .checkbox {
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  cursor: default;
 }
 
 .checkbox:is([data-focused='true']) {

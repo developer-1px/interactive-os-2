@@ -116,7 +116,7 @@ export function ListboxRearrangeable() {
   }, [chosenSelected])
 
   return (
-    <div className={`${styles.rearrangeable} ${ax({ gap: 'md' })} flex-row items-start`}>
+    <div className={`${ax({ gap: 'md' })} flex-row items-start`}>
       <ListboxZone
         label="Available upgrades"
         ids={availableIds}

@@ -1,7 +1,6 @@
 /* ── base ── */
 
 .row {
-  cursor: default;
   border-bottom: var(--border-width) solid var(--border-default);
 }
 

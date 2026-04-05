@@ -8,7 +8,6 @@
   font-weight: var(--type-body-weight);
   line-height: var(--type-body-line-height);
   color: var(--text-primary);
-  cursor: default;
 }
 
 /* 큰 패딩 아이템 (accordion header, disclosure button, feed article 등) */
@@ -89,7 +88,6 @@
 
 .valueLabel {
   min-width: var(--space-xl);
-  font-variant-numeric: tabular-nums;
   color: var(--text-secondary);
 }
 

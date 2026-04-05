@@ -71,7 +71,7 @@ const renderTreeitem = (
   return (
     <div
       {...props}
-      className={`${styles.treeitem} ${ax({ textStyle: 'body', text: 'primary', gap: 'xs' })} flex-row items-center whitespace-nowrap outline-none`}
+      className={`${styles.treeitem} ${ax({ textStyle: 'body', text: 'primary', gap: 'xs' })} flex-row items-center whitespace-nowrap outline-none cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">

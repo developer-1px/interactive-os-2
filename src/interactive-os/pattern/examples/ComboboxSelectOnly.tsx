@@ -38,7 +38,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={`${styles.option} ${ax({ textStyle: 'body', text: 'primary' })} flex-row items-center`}
+      className={`${styles.option} ${ax({ textStyle: 'body', text: 'primary' })} flex-row items-center cursor-default`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

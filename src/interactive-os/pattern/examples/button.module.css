@@ -2,7 +2,6 @@
   padding: var(--shape-sm-py) var(--shape-sm-px);
   background: var(--bg-muted);
   border: var(--border-width) solid var(--border-default);
-  cursor: default;
 }
 
 .toggleButton:is([data-focused='true']) {

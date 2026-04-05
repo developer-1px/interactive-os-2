@@ -33,7 +33,7 @@ const renderCheckbox = (
   return (
     <div
       {...props}
-      className={`${styles.checkbox} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center`}
+      className={`${styles.checkbox} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span

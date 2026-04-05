@@ -1,12 +1,7 @@
 /* ── base ── */
 
 .cell {
-  cursor: default;
   border-bottom: var(--border-width) solid var(--border-default);
-}
-
-.tile {
-  cursor: default;
 }
 
 /* ── variant: state ── */

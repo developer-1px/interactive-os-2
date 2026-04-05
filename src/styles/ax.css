@@ -471,3 +471,40 @@
 .ar-1     { aspect-ratio: 1; }
 .ar-video { aspect-ratio: 16 / 9; }
 .ar-card  { aspect-ratio: 1.4; }
+
+/* ════════════════════════════════════════════
+ * Atomic Utilities — 키워드 전용 (수치 없음)
+ * module.css last-mile 제거용
+ * ════════════════════════════════════════════ */
+
+/* cursor */
+.cursor-default { cursor: default; }
+.cursor-pointer { cursor: pointer; }
+
+/* overflow */
+.overflow-hidden  { overflow: hidden; }
+.overflow-auto    { overflow: auto; }
+.overflow-y-auto  { overflow-y: auto; }
+.overflow-x-auto  { overflow-x: auto; }
+.overflow-x-hidden { overflow-x: hidden; }
+
+/* text / white-space */
+.text-right   { text-align: right; }
+.text-center  { text-align: center; }
+.text-left    { text-align: left; }
+.pre-wrap     { white-space: pre-wrap; }
+.break-word   { overflow-wrap: break-word; }
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* layout helpers */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.inset-0  { inset: 0; }
+
+/* reset / misc */
+.border-none     { border: none; }
+.outline-none    { outline: none; }
+.bg-transparent  { background: transparent; }
+.select-none     { user-select: none; }
+.pointer-none    { pointer-events: none; }
+.font-inherit    { font-family: inherit; }

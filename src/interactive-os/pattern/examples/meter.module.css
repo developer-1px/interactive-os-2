@@ -18,5 +18,4 @@
 
 .valueLabel {
   min-width: var(--space-xl);
-  font-variant-numeric: tabular-nums;
 }

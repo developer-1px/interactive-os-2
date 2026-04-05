@@ -37,7 +37,7 @@ const renderTrigger = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <button {...props} className={`${styles.trigger} ${ax({ gap: 'xs', textStyle: 'body', text: 'primary', surface: 'display', shape: 'sm' })} inline-flex items-center`} type="button">
+    <button {...props} className={`${styles.trigger} ${ax({ gap: 'xs', textStyle: 'body', text: 'primary', surface: 'display', shape: 'sm' })} inline-flex items-center cursor-default`} type="button">
       {label} ▾
     </button>
   )
@@ -52,7 +52,7 @@ const renderMenuItem = (
   return (
     <div
       {...props}
-      className={`${styles.menuitem} ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })} flex-row items-center`}
+      className={`${styles.menuitem} ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })} flex-row items-center cursor-default`}
       data-focused={state.focused || undefined}
     >
       {label}

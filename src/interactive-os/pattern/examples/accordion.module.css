@@ -5,7 +5,6 @@
 .trigger {
   font: inherit;
   border: var(--border-width) solid var(--border-default);
-  cursor: default;
   outline: var(--border-width) solid transparent;
   outline-offset: -var(--border-width);
 }

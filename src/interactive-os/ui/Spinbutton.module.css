@@ -24,7 +24,6 @@
 [data-focused] .spinbuttonGroup {
   border-color: var(--tone-primary-base);
   box-shadow: 0 0 0 var(--_ring-spread) var(--tone-primary-base);
-  outline: none;
 }
 
 .spinbuttonBtn {
@@ -34,8 +33,6 @@
   background: var(--_bg);
   font-weight: var(--weight-regular);
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 
@@ -50,15 +47,12 @@
 .spinbuttonValue {
   min-width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-md);
-  font-variant-numeric: tabular-nums;
   cursor: text;
 }
 
 .spinbuttonInput {
   width: var(--_value-min-w);
   padding: var(--space-sm) var(--space-sm);
-  background: transparent;
-  font-variant-numeric: tabular-nums;
 }
 
 .spinbuttonInput::placeholder {

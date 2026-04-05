@@ -2,7 +2,6 @@
 
 .slider {
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  cursor: default;
 }
 
 .label {
@@ -22,7 +21,6 @@
 
 .valueLabel {
   min-width: var(--space-xl);
-  font-variant-numeric: tabular-nums;
 }
 
 /* ── variant: state ── */

@@ -1,9 +1,5 @@
 /* ── base ── */
 
-.menuitem {
-  cursor: default;
-}
-
 /* ── variant: state ── */
 
 .menuitem:is([data-focused='true']) {
@@ -13,5 +9,4 @@
 .trigger {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   border: var(--border-width) solid var(--border-default);
-  cursor: default;
 }

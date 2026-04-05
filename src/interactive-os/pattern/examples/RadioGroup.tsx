@@ -32,7 +32,7 @@ const renderRadio = (
   return (
     <div
       {...props}
-      className={`${styles.radio} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })} items-center`}
+      className={`${styles.radio} ${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })} items-center cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span

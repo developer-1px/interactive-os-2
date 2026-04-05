@@ -2,7 +2,6 @@
 
 .button {
   padding: var(--shape-xs-py) var(--shape-xs-px);
-  cursor: default;
 }
 
 /* ── variant: state ── */

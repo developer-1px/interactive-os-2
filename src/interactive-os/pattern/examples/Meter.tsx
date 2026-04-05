@@ -36,7 +36,7 @@ const renderMeter = (
       <span className={`${styles.track} ${ax({ shape: 'sm', surface: 'sunken' })} flex-1 relative`}>
         <span className={`${styles.fill} ${ax({ shape: 'sm' })} h-full`} style={{ width: `${pct}%` }} />
       </span>
-      <span className={`${styles.valueLabel} ${ax({ text: 'secondary' })} text-right`}>{value}%</span>
+      <span className={`${styles.valueLabel} ${ax({ text: 'secondary' })} text-right tabular-nums`}>{value}%</span>
     </div>
   )
 }

@@ -2,12 +2,10 @@
 
 .spinbutton {
   padding: var(--shape-sm-py) var(--shape-sm-px);
-  cursor: default;
 }
 
 .value {
   min-width: var(--space-xl);
-  font-variant-numeric: tabular-nums;
   padding: var(--shape-xs-py) var(--shape-xs-px);
   background: var(--surface-sunken);
   border: var(--border-width) solid var(--border-default);

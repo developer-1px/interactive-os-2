@@ -10,9 +10,7 @@
   width: var(--icon-lg);
   height: var(--icon-lg);
   padding: 0;
-  background: transparent;
   border: var(--border-width) solid transparent;
-  cursor: default;
 }
 
 .rotationButton:hover {
@@ -21,7 +19,6 @@
 
 .rotationButton:focus {
   border-color: var(--focus);
-  outline: none;
 }
 
 /* ── tabs (inside Aria) ── */
@@ -29,10 +26,7 @@
 .tab {
   padding: var(--shape-xs-py) var(--shape-sm-px);
   font-family: inherit;
-  background: transparent;
-  border: none;
   border-bottom: var(--indicator-width) solid transparent;
-  cursor: default;
 }
 
 .tab:is([data-selected='true']) {
