@@ -48,7 +48,7 @@ if (filePath.includes('/src/') && /\.[tj]sx?$/.test(filePath)) {
 if (/\.(test|spec)\.[tj]sx?$/.test(filePath)) {
   if (/toHaveBeenCalled\b/.test(content)) {
     violations.push(
-      'toHaveBeenCalled* mock 검증 금지 — DOM/ARIA 상태를 직접 검증하세요'
+      'toHaveBeenCalled* mock 검증 금지 — DOM/ARIA 상태를 직접 검증하세요. 예: expect(el).toHaveAttribute(\'aria-selected\', \'true\'), expect(el).toHaveFocus(), screen.getByRole(...)'
     )
   }
 }
