@@ -5,14 +5,9 @@
 
 .pre {
   margin: 0;
-  background: var(--surface-base);
   position: relative;
 }
 
-.code {
-  display: flex;
-  flex-direction: column;
-}
 
 .spacer {
   flex-shrink: 0;
@@ -22,8 +17,6 @@
   display: inline-block;
   padding-right: 1em;
   text-align: right;
-  color: var(--text-muted);
-  font-size: var(--type-code-size);
   user-select: none;
   opacity: 0.65;
 }

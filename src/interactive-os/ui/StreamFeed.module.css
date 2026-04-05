@@ -47,7 +47,6 @@
   width: var(--shape-xs-radius);
   height: var(--shape-xs-radius);
   background: var(--tone-primary-base);
-  border-radius: var(--shape-pill-radius);
   animation: pulse var(--motion-pulse-period) ease-in-out infinite;
 }
 
@@ -67,7 +66,6 @@
   --_bg: var(--surface-overlay);
   --_bg-hover: var(--bg-hover);
   background: var(--_bg);
-  border-radius: var(--shape-pill-radius);
   box-shadow: var(--shadow-md);
   transition:
     background var(--motion-instant-duration) var(--motion-instant-easing),

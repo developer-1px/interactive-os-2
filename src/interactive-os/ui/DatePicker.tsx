@@ -258,21 +258,21 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`absolute ${ax({ surface: 'overlay', padding: 'sm', border: 'default' })} ${styles.dialog}`}
+          className={`absolute ${ax({ surface: 'overlay', padding: 'sm', border: 'default', shape: 'sm' })} ${styles.dialog}`}
           onKeyDown={handleDialogKeyDown}
         >
           <div className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.navBar}`}>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
               <DirectionIndicator direction="prev" double />
             </button>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
               <DirectionIndicator direction="prev" />
             </button>
             <span className={`${ax({ flex: '1', textStyle: 'label', text: 'primary' })} ${styles.monthYear}`} aria-live="polite">{MONTHS[month]} {year}</span>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
               <DirectionIndicator direction="next" />
             </button>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.navButton}`} aria-label="Next Year" onClick={() => changeYear(1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Next Year" onClick={() => changeYear(1)}>
               <DirectionIndicator direction="next" double />
             </button>
           </div>

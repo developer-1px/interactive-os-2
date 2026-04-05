@@ -21,7 +21,6 @@
   left: 0;
   z-index: 10;
   margin-top: var(--space-xs);
-  border-radius: var(--shape-sm-radius);
 }
 
 /* ── nav bar — spacing (last-mile) ── */
@@ -34,7 +33,6 @@
   width: var(--icon-lg);
   height: var(--icon-lg);
   padding: 0;
-  border-radius: var(--shape-xs-radius);
 }
 
 /* ── month/year label — text-align (last-mile) ── */

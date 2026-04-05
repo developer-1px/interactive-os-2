@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { codeToTokens, type BundledLanguage } from 'shiki'
 import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme, escapeHtml } from './shikiUtils'
 import { useVirtualScrollState } from '../plugins/virtualScroll'
+import { ax } from '@styles/ax'
 import codeStyles from './CodeBlock.module.css'
 import vs from './VirtualCodeBlock.module.css'
 
@@ -113,10 +114,12 @@ export function VirtualCodeBlock({
       ? `overflow-hidden ${codeStyles.codeBlock} ${codeStyles.codeBlockCompact}`
       : `overflow-hidden ${codeStyles.codeBlock}`
 
+  const gutterCls = `${ax({ text: 'muted', textStyle: 'code' })} ${vs.gutter}`
+
   return (
     <div ref={containerRef} className={`${cls} ${vs.container}`} onClick={handleClick}>
-      <pre className={`shiki ${vs.pre}`}>
-        <code ref={codeRef} className={vs.code}>
+      <pre className={`shiki ${ax({ surface: 'base' })} ${vs.pre}`}>
+        <code ref={codeRef} className={ax({ layout: 'column' })}>
           <div ref={spacerRef} className={vs.spacer} />
           {visibleLineHtmls.map(({ index, html, raw }) => {
             const lineNum = index + 1
@@ -124,8 +127,8 @@ export function VirtualCodeBlock({
             const lineCls = `line${tone ? ` code-line--${tone}` : ''}`
 
             return html
-              ? <span key={index} className={lineCls} data-line={lineNum} dangerouslySetInnerHTML={{ __html: `<span class="${vs.gutter}">${lineNum}</span>${html}` }} />
-              : <span key={index} className={lineCls} data-line={lineNum}><span className={vs.gutter}>{lineNum}</span>{raw}</span>
+              ? <span key={index} className={lineCls} data-line={lineNum} dangerouslySetInnerHTML={{ __html: `<span class="${gutterCls}">${lineNum}</span>${html}` }} />
+              : <span key={index} className={lineCls} data-line={lineNum}><span className={gutterCls}>{lineNum}</span>{raw}</span>
           })}
         </code>
       </pre>

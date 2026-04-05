@@ -59,7 +59,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`${ax({ layout: 'center', surface: 'action', text: 'secondary', border: 'default' })} ${styles.scrollFab}`} onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`${ax({ layout: 'center', surface: 'action', text: 'secondary', border: 'default', shape: 'pill' })} ${styles.scrollFab}`} onClick={scrollToBottom} aria-label="Scroll to bottom">
       <DirectionIndicator direction="next" orientation="vertical" />
     </button>
   )
@@ -82,7 +82,7 @@ export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streami
         ))}
         {isStreaming && (
           <div className={`${ax({ layout: 'bar', gap: 'sm', width: 'full' })} ${styles.streaming}`}>
-            <span className={styles.streamingDot} />
+            <span className={`${ax({ shape: 'pill' })} ${styles.streamingDot}`} />
             <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${styles.streamingLabel}`}>{streamingLabel ?? 'Thinking'}</span>
             <StreamingTimer />
           </div>
