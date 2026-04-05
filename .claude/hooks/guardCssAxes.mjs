@@ -56,6 +56,9 @@ const AX_OWNED_PROPS = [
   'text-overflow', 'white-space', '-webkit-line-clamp',
   // overflow (layout 축 소유)
   'overflow', 'overflow-x', 'overflow-y',
+  // placement 축 소유
+  'position', 'top', 'bottom', 'left', 'right', 'inset',
+  'inset-inline-start', 'inset-inline-end', 'inset-block-start', 'inset-block-end',
 ]
 
 // 속성명 → 정규식 (줄 단위로 매칭)

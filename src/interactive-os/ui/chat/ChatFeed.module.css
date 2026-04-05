@@ -1,12 +1,3 @@
-/* ChatFeed — chat message bubbles
-   ② 2026-03-27-chat-module-prd.md */
-
-/* --- Shared indent for icon alignment --- */
-
-:root {
-  --chat-indent: calc(var(--icon-sm) + var(--space-sm));
-}
-
 /* --- Message wrapper --- */
 
 /* --- User bubble --- */

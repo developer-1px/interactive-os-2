@@ -30,6 +30,17 @@ type Border = 'subtle' | 'default' | 'strong'
 
 // ── 구조 축 ──
 
+// placement: 의도 기반 배치 (position + inset + transform 번들)
+type Placement =
+  | 'above'         // absolute + bottom:100% + left:0 + right:0 (dropdown upward)
+  | 'below'         // absolute + top:100% + left:0 + right:0 (dropdown downward)
+  | 'bottom'        // absolute + bottom:0 + left:0 + right:0 (flush bottom edge)
+  | 'bottom-center' // absolute + bottom:md + left:50% + translateX(-50%) (floating FAB)
+  | 'center'        // absolute + inset:0 + margin:auto (center overlay)
+  | 'top-start'     // absolute + top:0 + inset-inline-start:0 (badge)
+  | 'viewport'      // fixed + inset:0 (modal backdrop)
+  | 'sticky'        // sticky + top:0 + z-index:1 (pinned header)
+
 // layout: 역할 기반 구조 번들 (display + direction + align + justify + overflow)
 type Layout =
   | 'row'     // flex row
@@ -41,7 +52,6 @@ type Layout =
   | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
   | 'scroll-x' // flex row + overflow-x:auto + min-width:0 (가로 스크롤)
   | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
-  | 'sticky'  // position:sticky + top:0 + z-index:1 (고정 헤더)
   // grid (display:grid + equal columns)
   | 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7'
   // self-alignment (자식이 부모 안에서의 위치 지정)
@@ -78,6 +88,7 @@ export interface Axes {
   border?: Border
 
   // 구조 축
+  placement?: Placement
   layout?: Layout
   gap?: Gap
   padding?: Padding
@@ -104,6 +115,7 @@ const prefixes: Record<keyof Axes, string> = {
   motion: 'mo',
   content: 'ct',
   border: 'bd',
+  placement: 'pl',
   layout: 'ly',
   gap: 'g',
   padding: 'pd',

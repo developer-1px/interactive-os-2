@@ -1,6 +1,5 @@
 /* ── demo wrapper ── */
 
-
 .header {
   padding: var(--space-xl) var(--space-lg);
   background: var(--tone-primary-dim);
@@ -35,57 +34,9 @@
 
 /* ── menubar item ── */
 
-.link {
-  gap: var(--space-xs);
-  padding: var(--shape-xs-py) var(--shape-sm-px);
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: var(--type-body-line-height);
-  color: var(--text-primary);
-  border: var(--indicator-width) solid transparent;
-}
-
-.indicator {
-  color: var(--text-muted);
-}
-
 /* ── submenu panel ── */
-
-.submenu {
-  padding: var(--space-xs) 0;
-  margin: 0;
-  min-width: var(--storymap-col-width);
-  background: var(--surface-overlay);
-  border: var(--border-width) solid var(--border-default);
-  border-radius: var(--shape-xs-radius);
-  box-shadow: var(--shadow-md);
-  z-index: 1;
-}
-
-.submenuRoot {
-  composes: submenu;
-  top: 100%;
-  left: 0;
-}
-
-.submenuNested {
-  composes: submenu;
-  top: calc(var(--space-xs) * -1);
-  left: 100%;
-}
 
 /* ── variant: state ── */
 
 /* Focus ring only when element actually has DOM focus */
-.link:focus {
-  border-color: var(--focus);
-}
-
 /* Background highlight when focused (keyboard navigation) */
-.link:is([data-focused='true']):focus {
-  background: var(--bg-hover);
-}
-
-.link:is([aria-expanded='true']) {
-  background: var(--bg-hover);
-}

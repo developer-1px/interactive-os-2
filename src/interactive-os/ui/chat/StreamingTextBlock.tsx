@@ -1,7 +1,6 @@
 // ② 2026-03-31-chat-perf-prd.md
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { MarkdownViewer } from '../MarkdownViewer'
-import chatStyles from './TextBlock.module.css'
 import type { StreamingTextBlock as StreamingTextBlockType } from './types'
 
 const FLUSH_TIMEOUT_MS = 200
@@ -70,5 +69,5 @@ export function StreamingTextBlock({ block }: { block: StreamingTextBlockType })
 
   if (!displayed) return null
 
-  return <MarkdownViewer content={displayed} styles={chatStyles} codeVariant="compact" />
+  return <MarkdownViewer content={displayed} styles={{}} codeVariant="compact" />
 }

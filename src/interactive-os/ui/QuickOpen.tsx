@@ -120,7 +120,7 @@ export function QuickOpen({
   }, [onClose])
 
   return (
-    <div className={`${ax({ surface: 'overlay', layout: 'row' })} ${styles.backdrop}`} onClick={handleBackdropClick}>
+    <div className={`${ax({ surface: 'overlay', layout: 'row', placement: 'viewport' })} ${styles.backdrop}`} onClick={handleBackdropClick}>
       <div className={`overflow-hidden ${ax({ layout: 'column', shape: 'xl', border: 'default' })} ${styles.dialog}`} aria-label="Quick Open">
         <div className={`${ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })} ${styles.inputRow}`}>
           <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />

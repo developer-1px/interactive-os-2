@@ -51,11 +51,6 @@
   border-color: var(--text-muted);
 }
 
-.extras {
-  margin: 0;
-  font-family: var(--mono);
-}
-
 .tabBar {
   border-bottom: var(--border-width) solid var(--border-default);
 }

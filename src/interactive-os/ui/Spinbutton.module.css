@@ -1,21 +1,3 @@
-/* --- Spinbutton --- */
-/* ax() handles: layout, gap, text, surface, controlSize, center */
-/* module.css: component tokens, focus ring, borders, sizing, input */
-
-/* ── Component tokens ── */
-.spinbuttonItem {
-  --_label-min-w: calc(var(--space-lg) * 4);      /* var(--space-3xl) */
-  --_btn-w: var(--switch-width);                     /* var(--toolbar-height) */
-  --_value-min-w: calc(var(--space-lg) * 3);       /* var(--space-2xl) */
-  --_ring-spread: var(--indicator-width);
-
-  padding: var(--space-sm) var(--space-md);
-}
-
-.spinbuttonLabel {
-  min-width: var(--_label-min-w);
-}
-
 /* Unified group: − [value] + with single focus ring */
 .spinbuttonGroup {
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing), box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
@@ -34,7 +16,6 @@
   font-weight: var(--weight-regular);
   transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
-
 
 .spinbuttonBtnDec {
   border-right: var(--border-width) solid var(--border-default);

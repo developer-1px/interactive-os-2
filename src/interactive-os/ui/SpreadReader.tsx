@@ -118,7 +118,7 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
   }, [spreadIndex])
 
   return (
-    <div className={styles.root}>
+    <div className={`relative ${styles.root}`}>
       <div className={`${ax({ flex: '1' })} ${styles.inset}`}>
         <div className={`outline-none ${styles.viewport}`} {...aria.containerProps}>
           <div className={styles.columns} ref={columnsRef}>
@@ -127,7 +127,7 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
         </div>
       </div>
       {total > 1 && (
-        <div className={styles.indicator}>
+        <div className={`${ax({ placement: 'bottom-center' })} ${styles.indicator}`}>
           <span className={ax({ textStyle: 'caption', text: 'muted' })}>
             {spreadIndex + 1}/{total}
           </span>

@@ -32,9 +32,7 @@
 /* severity → icon/title color */
 .evCritical .timelineIcon { color: var(--tone-destructive-base); }
 .evWarning .timelineIcon { color: var(--tone-warning-base); }
-.evCritical .timelineTitle { color: var(--tone-destructive-hover); }
-
-/* ── Capture ── */
+.evCritical /* ── Capture ── */
 
 .captureComparison { grid-template-columns: 1fr 1fr; }
 .captureChanged { box-shadow: inset 0 0 0 var(--border-width) var(--tone-destructive-mid); }

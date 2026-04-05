@@ -153,7 +153,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
     <div className={ax({ layout: 'row', flex: 'none' })}>
       <div className={`relative ${disabled ? 'pointer-none' : ''} ${ax({ surface: 'input', flex: '1', shape: 'md' })} ${styles.inputWrap}`} data-disabled={disabled || undefined}>
         {hasSuggestions && (
-          <ul className={`${ax({ surface: 'overlay', padding: 'xs', shape: 'md' })} ${styles.suggestionList}`} role="listbox" aria-label="Command suggestions">
+          <ul className={`${ax({ surface: 'overlay', padding: 'xs', shape: 'md', placement: 'above' })} ${styles.suggestionList}`} role="listbox" aria-label="Command suggestions">
             {suggestions!.map(cmd => {
               const nodeProps = aria.getNodeProps(cmd) as Record<string, unknown>
               const state = aria.getNodeState(cmd)
@@ -173,7 +173,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
             })}
           </ul>
         )}
-        <div className={styles.editorWrap}>
+        <div className={`relative ${styles.editorWrap}`}>
           <div
             ref={ref}
             className={`pre-wrap overflow-y-auto outline-none ${ax({ textStyle: 'body', text: 'primary' })} ${styles.editor}`}

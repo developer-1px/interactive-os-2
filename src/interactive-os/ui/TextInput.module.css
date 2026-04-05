@@ -1,11 +1,3 @@
-/* ── TextInput — 3-block recipe ──
-   // ② 2026-03-26-component-styling-rules-prd.md */
-
-/* ═══ Block 1: base — ax() handles controlSize/padding/shape/surface ═══ */
-.input::placeholder {
-  color: var(--text-muted);
-}
-
 .input[data-align="right"] {
   text-align: right;
 }

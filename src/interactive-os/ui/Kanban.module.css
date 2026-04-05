@@ -42,7 +42,6 @@
   text-transform: none;
   letter-spacing: 0;
   padding: var(--space-xs) 0;
-  position: relative;
 }
 
 .board[data-compact] .columnHeader::after {

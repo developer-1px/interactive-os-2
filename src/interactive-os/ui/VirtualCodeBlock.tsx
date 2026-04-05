@@ -4,8 +4,6 @@ import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme, escapeHtml } from './shikiUt
 import { useVirtualScrollState } from '../plugins/virtualScroll'
 import { ax } from '@styles/ax'
 import codeStyles from './CodeBlock.module.css'
-import vs from './VirtualCodeBlock.module.css'
-
 export type { HighlightTone } from './CodeBlock'
 
 interface VirtualCodeBlockProps {
@@ -114,13 +112,13 @@ export function VirtualCodeBlock({
       ? `overflow-hidden ${codeStyles.codeBlock} ${codeStyles.codeBlockCompact}`
       : `overflow-hidden ${codeStyles.codeBlock}`
 
-  const gutterCls = `text-right select-none ${ax({ text: 'muted', textStyle: 'code' })} ${vs.gutter}`
+  const gutterCls = `text-right select-none ${ax({ text: 'muted', textStyle: 'code' })} `
 
   return (
-    <div ref={containerRef} className={`${cls} ${vs.container}`} onClick={handleClick}>
-      <pre className={`shiki ${ax({ surface: 'base' })} ${vs.pre}`}>
+    <div ref={containerRef} className={`${cls} `} onClick={handleClick}>
+      <pre className={`shiki ${ax({ surface: 'base' })} `}>
         <code ref={codeRef} className={ax({ layout: 'column' })}>
-          <div ref={spacerRef} className={vs.spacer} />
+          <div ref={spacerRef} className={""} />
           {visibleLineHtmls.map(({ index, html, raw }) => {
             const lineNum = index + 1
             const tone = highlightLines?.get(lineNum)

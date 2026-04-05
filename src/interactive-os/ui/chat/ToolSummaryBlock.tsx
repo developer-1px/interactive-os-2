@@ -87,7 +87,7 @@ export function ToolSummaryBlock({ block }: { block: DataBlock }) {
   const Icon = toolIcons[name] ?? Wrench
 
   return (
-    <div className={`${ax({ layout: 'bar', textStyle: 'caption', text: 'secondary' })} ${styles.toolRow}`}>
+    <div className={`relative ${ax({ layout: 'bar', textStyle: 'caption', text: 'secondary' })} ${styles.toolRow}`}>
       <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
       <span><span className={ax({ weight: 'semi' })}>{name}</span>{detail ? ' ' : ''}<span className={`${ax({ text: 'muted', clamp: '1' })} ${styles.toolDetail}`}>{detail}</span></span>
     </div>
@@ -119,7 +119,7 @@ export function ToolResultBlock({ block }: { block: DataBlock }) {
     <div>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar', textStyle: 'code', text: 'muted' })} ${styles.toolResultSummary}`}
+        className={`relative ${ax({ layout: 'bar', textStyle: 'code', text: 'muted' })} ${styles.toolResultSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
@@ -204,7 +204,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   if (!content) {
     return (
       <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolGroup}`}>
-        <div className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}>
+        <div className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}>
           <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
           <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
         </div>
@@ -216,7 +216,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
     <div className={`${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolGroup}`}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}
+        className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
@@ -267,7 +267,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
     <div className={`overflow-hidden ${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolChain}`}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}
+        className={`relative cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
@@ -281,7 +281,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
           {typeGroups.map(g => {
             const Icon = toolIcons[g.name] ?? Wrench
             return (
-              <div key={g.name} className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainRow}`}>
+              <div key={g.name} className={`relative ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainRow}`}>
                 <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
                 <span className={ax({ weight: 'semi' })}>{g.name}</span>
                 <span className={`${ax({ text: 'muted', textStyle: 'code', clamp: '1' })} ${styles.toolChainDetails}`}>
