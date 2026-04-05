@@ -37,7 +37,7 @@ const renderCheckbox = (
       data-focused={state.focused || undefined}
     >
       <span
-        className={`${styles.checkIndicator} ${ax({ textStyle: 'caption', shape: 'sm' })} inline-flex items-center justify-center`}
+        className={`${styles.checkIndicator} ${ax({ textStyle: 'caption', shape: 'sm', size: 'md' })} inline-flex items-center justify-center`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >

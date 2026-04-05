@@ -19,8 +19,6 @@
 }
 
 .thumb {
-  width: var(--space-sm);
-  height: var(--space-sm);
   background: var(--text-on-fill);
   transition: translate var(--motion-duration-fast) var(--motion-easing-default);
 }

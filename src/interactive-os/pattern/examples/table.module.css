@@ -1,8 +1,6 @@
 /* ── base ── */
 
-.row {
-  grid-template-columns: repeat(4, 1fr);
-}
+.row { /* absorbed → layout:'grid-4' */ }
 
 .headerCell {
   border-bottom: var(--border-width) solid var(--border-default);

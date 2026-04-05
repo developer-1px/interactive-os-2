@@ -78,7 +78,7 @@ const renderItem = (
 
   if (level === 2) {
     // row: grid row container
-    return <div {...props} className={`${styles.row} grid`} />
+    return <div {...props} className={`${ax({ layout: 'grid-4' })} ${styles.row}`} />
   }
 
   // cell

@@ -84,7 +84,6 @@
 .smStory {
   gap: var(--space-xs);
   padding: var(--space-md);
-  aspect-ratio: 1;
   background: var(--tone-warning-dim);
   box-shadow: var(--shadow-xs);
   cursor: default;
@@ -97,8 +96,6 @@
 
 /* blocked dot — destructive, S 카드 ID 옆 */
 .smStoryBlocked {
-  width: var(--space-sm);
-  height: var(--space-sm);
   border-radius: 50%;
   background: var(--tone-destructive-base);
 }

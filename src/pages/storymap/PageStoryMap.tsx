@@ -42,11 +42,11 @@ function toSpatialStore(map: StoryMap): NormalizedData {
 
 function StoryCard({ story, focused }: { story: Story; focused: boolean }) {
   return (
-    <div className={`${css.smStory} flex-col border-none`} data-status={story.status} data-focused={focused || undefined}>
+    <div className={`${css.smStory} ${ax({ aspect: '1' })} flex-col border-none`} data-status={story.status} data-focused={focused || undefined}>
       <div className="flex-row items-center justify-between">
         <span className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smStoryId}`}>{story.id}</span>
         {story.status === 'blocked' && (
-          <span className={`${css.smStoryBlocked} shrink-0`} />
+          <span className={`${css.smStoryBlocked} ${ax({ size: 'sm' })} shrink-0`} />
         )}
       </div>
       <div className={`${ax({ textStyle: 'body', text: 'primary' })} ${css.smStoryText}`}>{story.story}</div>

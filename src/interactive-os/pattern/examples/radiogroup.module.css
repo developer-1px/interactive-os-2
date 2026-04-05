@@ -7,8 +7,6 @@
 }
 
 .indicator {
-  width: var(--space-md);
-  height: var(--space-md);
   border: var(--border-width) solid var(--border-default);
 }
 
