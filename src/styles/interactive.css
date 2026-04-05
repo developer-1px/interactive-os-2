@@ -25,13 +25,7 @@
 
 /* ── Common interactive item base ── */
 
-:where([data-aria-container] [role="option"]),
-:where([data-aria-container] [role="treeitem"]),
-:where([data-aria-container] [role="tab"]),
-:where([data-aria-container] [role="menuitem"]),
-:where([data-aria-container] [role="radio"]),
-:where([data-aria-container] [role="switch"]),
-:where([data-aria-container] [role="row"]) {
+:where([data-aria-container] :is([role="option"],[role="treeitem"],[role="tab"],[role="menuitem"],[role="radio"],[role="switch"],[role="row"])) {
   padding: var(--space-sm) var(--space-md);
   cursor: pointer;
   user-select: none;
@@ -45,8 +39,7 @@
 }
 
 /* Tree/treegrid: slightly denser + row layout */
-:where([data-aria-container] [role="treeitem"]),
-:where([data-aria-container] [role="row"]) {
+:where([data-aria-container] :is([role="treeitem"],[role="row"])) {
   padding: var(--space-xs) var(--space-md);
   display: flex;
 }
@@ -119,12 +112,7 @@
 
 /* ── Hover (suppressed when focus is active via :focus-within) ── */
 
-:where([data-aria-container]:not(:focus-within) [role="option"]:hover),
-:where([data-aria-container]:not(:focus-within) [role="treeitem"]:hover),
-:where([data-aria-container]:not(:focus-within) [role="menuitem"]:hover),
-:where([data-aria-container]:not(:focus-within) [role="radio"]:hover),
-:where([data-aria-container]:not(:focus-within) [role="switch"]:hover),
-:where([data-aria-container]:not(:focus-within) [role="row"]:hover) {
+:where([data-aria-container]:not(:focus-within) :is([role="option"],[role="treeitem"],[role="menuitem"],[role="radio"],[role="switch"],[role="row"]):hover) {
   background: var(--bg-hover);
 }
 
@@ -136,24 +124,14 @@
 /* ── Focused: idle (roving-tabindex — container NOT active) ── */
 /* Background only, gray tone — "cursor was here" */
 
-:where([data-aria-container]:not(:focus-within) [role="option"]:focus),
-:where([data-aria-container]:not(:focus-within) [role="treeitem"]:focus),
-:where([data-aria-container]:not(:focus-within) [role="menuitem"]:focus),
-:where([data-aria-container]:not(:focus-within) [role="radio"]:focus),
-:where([data-aria-container]:not(:focus-within) [role="switch"]:focus),
-:where([data-aria-container]:not(:focus-within) [role="row"]:focus) {
+:where([data-aria-container]:not(:focus-within) :is([role="option"],[role="treeitem"],[role="menuitem"],[role="radio"],[role="switch"],[role="row"]):focus) {
   background: var(--focus-idle);
 }
 
 /* ── Focused: active (roving-tabindex — container HAS focus) ── */
 /* Background highlight + outline ring */
 
-:where([data-aria-container]:focus-within [role="option"]:focus),
-:where([data-aria-container]:focus-within [role="treeitem"]:focus),
-:where([data-aria-container]:focus-within [role="menuitem"]:focus),
-:where([data-aria-container]:focus-within [role="radio"]:focus),
-:where([data-aria-container]:focus-within [role="switch"]:focus),
-:where([data-aria-container]:focus-within [role="row"]:focus) {
+:where([data-aria-container]:focus-within :is([role="option"],[role="treeitem"],[role="menuitem"],[role="radio"],[role="switch"],[role="row"]):focus) {
   background: var(--tone-primary-dim);
   color: var(--text-bright);
   outline-color: var(--focus);
@@ -184,12 +162,9 @@
 
 /* ── Active (press feedback) ── */
 
-:where([data-aria-container] [role="option"]:active),
+:where([data-aria-container] :is([role="option"],[role="radio"],[role="switch"],[role="row"]):active),
 :where([data-aria-container] [role="treeitem"]:active:not(:has([role="treeitem"]:active))),
-:where([data-aria-container] [role="menuitem"]:active:not(:has([role="menuitem"]:active))),
-:where([data-aria-container] [role="radio"]:active),
-:where([data-aria-container] [role="switch"]:active),
-:where([data-aria-container] [role="row"]:active) {
+:where([data-aria-container] [role="menuitem"]:active:not(:has([role="menuitem"]:active))) {
   background: var(--tone-primary-bright);
 }
 
@@ -258,7 +233,7 @@
 
 /* Standalone disabled (buttons, inputs outside collections) */
 :where(:disabled),
-:where([aria-disabled="true"]:not([role="option"]):not([role="treeitem"]):not([role="menuitem"]):not([role="tab"]):not([role="row"]):not([role="radio"]):not([role="switch"])) {
+:where([aria-disabled="true"]:not(:is([role="option"],[role="treeitem"],[role="menuitem"],[role="tab"],[role="row"],[role="radio"],[role="switch"]))) {
   opacity: 0.4;
   pointer-events: none;
   cursor: default;
@@ -395,58 +370,3 @@
 }
 
 /* ── Item part classes: moved to ui/indicators/indicators.css ── */
-
-/* ═══════════════════════════════════════════
-   Standalone component state transitions ([data-surface])
-   ═══════════════════════════════════════════
-   Complement to [data-aria-container] collection states above.
-   Collection items use [data-aria-container], standalone components use [data-surface].
-   Never apply both to the same element.
-
-   // ② 2026-03-26-component-styling-rules-prd.md
-*/
-
-/* ── Action surface: hover → bg, active → bg, focus → ring, disabled ── */
-
-:where([data-surface="action"]:hover) {
-  background: var(--_bg-hover);
-}
-
-:where([data-surface="action"]:active) {
-  background: var(--_bg-active, var(--_bg-hover));
-}
-
-:where([data-surface="action"]:focus-visible) {
-  outline: 2px solid var(--focus);
-  outline-offset: -2px;
-}
-
-:where([data-surface="action"]:disabled),
-:where([data-surface="action"][aria-disabled="true"]) {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: default;
-}
-
-/* ── Input surface: focus → border, invalid → border, disabled ── */
-
-:where([data-surface="input"]:focus) {
-  border-color: var(--_border-focus, var(--focus));
-}
-
-:where([data-surface="input"][aria-invalid="true"]) {
-  border-color: var(--_border-invalid, var(--tone-destructive-base));
-}
-
-:where([data-surface="input"]:disabled),
-:where([data-surface="input"][aria-disabled="true"]) {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: default;
-}
-
-/* ── Overlay surface: enter motion ── */
-
-:where([data-surface="overlay"]) {
-  transition: opacity var(--motion-enter-duration) var(--motion-enter-easing);
-}

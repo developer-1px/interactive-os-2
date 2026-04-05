@@ -83,7 +83,6 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       <div className={ax({ padding: 'sm', border: 'top' })}>
         <textarea
           className={`${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'sm' })} ${styles.chatInput} w-full`}
-          data-surface="input"
           placeholder={entry ? `${entry.name} 수정 요청...` : 'dev-channel 미연결'}
           value={input}
           onChange={(e) => setInput(e.target.value)}

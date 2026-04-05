@@ -43,16 +43,32 @@
   background: var(--_bg, var(--surface-overlay));
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-strong);
+  transition: opacity var(--motion-enter-duration) var(--motion-enter-easing);
+  --bg-hover:          var(--depth-overlay-hover);
+  --bg-active:         var(--depth-overlay-active);
+  --selection-context: var(--depth-overlay-sel-context);
+  --selection:         var(--depth-overlay-sel);
+  --selection-cursor:  var(--depth-overlay-sel-cursor);
 }
 
 .sf-sunken {
   background: var(--_bg, var(--surface-sunken));
   border: none;
+  --bg-hover:          var(--depth-sunken-hover);
+  --bg-active:         var(--depth-sunken-active);
+  --selection-context: var(--depth-sunken-sel-context);
+  --selection:         var(--depth-sunken-sel);
+  --selection-cursor:  var(--depth-sunken-sel-cursor);
 }
 
 .sf-base {
   background: var(--_bg, var(--surface-base));
   border: none;
+  --bg-hover:          var(--depth-base-hover);
+  --bg-active:         var(--depth-base-active);
+  --selection-context: var(--depth-base-sel-context);
+  --selection:         var(--depth-base-sel);
+  --selection-cursor:  var(--depth-base-sel-cursor);
 }
 
 .sf-placeholder {

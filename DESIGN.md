@@ -173,10 +173,10 @@ tokens.css 4→8→12→16→24→32→40은 충분. claude.ai도 비슷한 scal
 ```
 Global ──────────────────────────────
   L1  reset.css        브라우저 초기화 + HTML type 기본값
-  L2  tokens.css       디자인 값 선언 (:root 변수 + 테마 override)
+  L2  tokens.css       디자인 값 선언 (:root 변수 + 테마 override + depth ladder 토큰)
       structure.css    수치 없는 atomic layout class (닫힌 체계)
-  L3  surface.css      인터랙션 모드 정책 ([data-surface] action/input/display/overlay)
-  L4  interactive.css  인터랙션 정책 (hover, focus, disabled, selected...) + [data-surface] 독립 컴포넌트 상태 전환
+  L3  ax.css           surface 역할 (sf-*) + depth ladder cascade
+  L4  interactive.css  인터랙션 정책 (hover, focus, disabled, selected...)
 
 Local ───────────────────────────────
   L5  *.module.css     컴포넌트 고유 형태 (Structure)
@@ -188,36 +188,60 @@ Local ────────────────────────�
 | L1 | `reset.css` | 브라우저 기본값 정책이 바뀔 때 | 기본 |
 | L2 | `tokens.css` | 디자인 시스템 값이 바뀔 때 | — (값만) |
 | — | `structure.css` | atomic layout class가 필요할 때 | (0,1,0) |
-| L3 | `surface.css` | 인터랙션 모드 정책이 바뀔 때 | (0,1,0) |
+| L3 | `ax.css` | surface 역할/depth 정책이 바뀔 때 | (0,1,0) |
 | L4 | `interactive.css` | 사용자 입력 반응 정책이 바뀔 때 | (0,0,0) `:where()` |
 | L5+L6 | `*.module.css` | 이 컴포넌트의 형태/변형이 바뀔 때 | (0,1,0)+ |
 
-### 판단 플로우
+### 같은 역할 = 같은 디자인 — Depth × Surface 매트릭스
+
+모든 컴포넌트의 시각 처리는 두 질문으로 결정된다:
+
+1. **Surface (역할)** — 이 요소는 무엇인가?
+2. **Depth (위치)** — 이 요소는 어디에 있는가?
+
+#### Surface: 5종 (역할)
+
+| Surface | 조건 | 상태 피드백 | 선언 |
+|---------|------|-----------|------|
+| `aria-container` | 아이템 탐색 (listbox, tree, menu, grid...) | bg hover → bg focus → bg selected | `data-aria-container` |
+| `action` | 클릭 → 실행 (button, link) | bg hover → ring focus | `ax({ surface: 'action' })` |
+| `input` | 값 입력 (textinput, spinbutton) | border focus → border invalid | `ax({ surface: 'input' })` |
+| `display` | 읽기 전용 (alert, meter) | 없음 (정적) | `ax({ surface: 'display' })` |
+| `overlay` | 부유 레이어 (dialog, popup) | shadow + border + motion | `ax({ surface: 'overlay' })` |
+
+복합 패턴(Combobox, MenuButton): trigger=action/input, popup=overlay+aria-container.
+
+#### Depth: 4종 (위치)
+
+| Depth | 용도 | 효과 |
+|-------|------|------|
+| `sunken` | 사이드바, 패널 헤더, 후퇴 영역 | 어두운 bg + 한 단계 낮은 hover/selection 래더 |
+| `base` | 페이지 본문 (:root 기본값, 선언 불필요) | 기본 래더 |
+| `raised` | 카드, 부유 툴바 | 밝은 bg + 한 단계 높은 래더 |
+| `overlay` | 다이얼로그, 메뉴 팝업 | 가장 밝은 bg + 최상위 래더 |
+
+#### 동작 원리: CSS cascade
+
+sf-sunken/sf-overlay 등 ax.css 클래스가 `--bg-hover`, `--selection` 등 인터랙션 토큰을 override.
+interactive.css는 항상 `var(--bg-hover)`만 참조 → **코드 변경 없이 자동 적응**.
 
 ```
-속성을 쓰려 한다
-  ├─ display, flex-direction, align-items, justify-content,
-  │  flex-wrap, flex-shrink, overflow, position?
-  │  → structure.css atomic class (className에서 사용)
-  │
-  ├─ color, background, font, spacing, border, shadow, radius?
-  │  → CSS 파일 (module.css 또는 글로벌) + 토큰 필수
-  │
-  └─ ARIA 상태 (hover, focus, selected, disabled)?
-     → interactive.css 기본값 확인
-       ├─ 기본값 충분 → 그대로 사용
-       └─ 커스텀 필요 → module.css에서 override (:where() 덕에 바로 이김)
+tokens.css      →  --depth-{zone}-{state} 값 선언 (테마별)
+ax.css (sf-*)   →  sf-sunken/sf-overlay가 인터랙션 토큰을 zone 값으로 override
+interactive.css →  var(--bg-hover) 참조 (불변). 테마 전환 = tokens.css만 교체
 ```
 
-### 컴포넌트 분류와 필수 상태
+#### 전체 페이지 위계 예시
 
-| 분류 | 예시 | 필수 상태 | 상태 제공 |
-|------|------|-----------|-----------|
-| **Action** | Button, Toggle, Switch | hover, active, focus, disabled, tone variant | `data-surface="action"` + variant --_ |
-| **Collection** | ListBox, TreeGrid, Menu, Tabs | hover, focus(bg), selected, disabled item | `data-aria-container` (L4 전담) |
-| **Input** | TextInput, Checkbox, Radio, Slider | hover, focus(ring), disabled, invalid, readonly | `data-surface="input"` + variant --_ |
-| **Overlay** | Dialog, AlertDialog, Tooltip | enter/exit motion, backdrop | `data-surface="overlay"` (L3 + L4) |
-| **Static** | Separator, Progress | 없음 또는 최소 | `data-surface="display"` 또는 L5만 |
+```
+:root                           ← base depth (기본값)
+├─ sf-sunken sidebar            ← sunken 래더 (hover=850)
+│   └─ [aria-container] NavList
+├─ main                         ← base 래더 (hover=800)
+│   └─ .card (raised)           ← raised 래더 (hover=750)
+└─ sf-overlay Dialog            ← overlay 래더 (hover=700)
+    └─ [aria-container] Listbox
+```
 
 ### `--_` Scoped Property 패턴
 
@@ -323,15 +347,14 @@ class를 만들려 한다
 |------|------|------|
 | raw 수치 (6px, #fff) | 토큰 (var(--space-sm)) | 디자인 시스템 일관성 |
 | margin | gap | 부모가 간격 제어 |
-| module.css에 display:flex/grid | structure.css atomic class | 구조는 DOM과 co-locate |
-| module.css에 :hover/:focus/:disabled | interactive.css에 위임 | L4 SRP — 상태는 글로벌 정책 |
+| module.css에 display:flex/grid | ax() layout 축 | 구조는 DOM과 co-locate |
+| module.css에 :hover/:focus/:disabled | interactive.css / ax({ surface }) 위임 | L4 SRP |
 | interactive.css에 :where() 없는 셀렉터 | :where() 래핑 | specificity 군비경쟁 방지 |
 | palette 직접 참조 (--blue-600) | semantic 토큰 (--tone-primary-base) | 테마 독립성 |
-| 구조/위치 이름의 class (inner, wrapper) | atomic class 조합 | 역할을 말하지 않음 |
-| module.css에 :hover/:focus/:active/:disabled | data-surface가 상태 제공. 예외: HTML 기본 요소(a:hover), syntax highlight | L4 SRP |
 | variant에 background/color 직접 작성 | --_ 변수 선언만 | 값과 전환 분리 |
-| data-surface + data-aria-container 동시 부여 | 컬렉션은 [data-aria-container], 독립은 [data-surface] | 셀렉터 충돌 방지 |
+| ax({ surface }) + data-aria-container 동시 부여 | 컬렉션=[aria-container], 독립=ax({ surface }) | 셀렉터 충돌 방지 |
 | --_ 풀에 없는 scoped property 무단 추가 | DESIGN.md 풀 테이블에 등록 후 사용 | 닫힌 체계 |
+| --bg-hover/--selection 직접 override | sf-sunken/sf-overlay 등 depth class 사용 | depth cascade 보호 |
 
 ---
 

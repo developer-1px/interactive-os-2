@@ -181,6 +181,11 @@ kbd {
   background: var(--surface-raised);
   box-shadow: var(--surface-3-shadow);
   max-width: 720px;
+  --bg-hover:          var(--depth-raised-hover);
+  --bg-active:         var(--depth-raised-active);
+  --selection-context: var(--depth-raised-sel-context);
+  --selection:         var(--depth-raised-sel);
+  --selection-cursor:  var(--depth-raised-sel-cursor);
 }
 
 /* ═══════════════════════════════════════════

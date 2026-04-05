@@ -18,7 +18,7 @@ interactive-os는 반-헤드리스 UI 라이브러리. 내부 로직은 탄탄�
 Global ──────────────────────────────
   L1  Reset          브라우저 초기화 + HTML type 기본값  → reset.css
   L2  Tokens         디자인 값 (계약 인터페이스)          → tokens.css
-  L3  Surface        면/깊이/구분 정책                   → surface.css
+  L3  Surface        면/깊이 정책 (sf-* in ax.css)        → ax.css
   L4  Interactive    인터랙션 정책                       → interactive.css
 
 Local ───────────────────────────────

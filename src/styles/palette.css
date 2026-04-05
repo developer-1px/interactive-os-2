@@ -23,6 +23,7 @@
   --stone-400: oklch(73%    0.012   90);    /* text-muted(dark), border-strong(light) */
   --stone-500: oklch(51%    0.009   90);    /* text-muted(light) — 4.5:1+ on stone-200 */
   --stone-600: oklch(47%    0.008   90);    /* text-secondary(light) */
+  --stone-650: oklch(41.5%  0.007   90);    /* depth-overlay ladder step */
   --stone-700: oklch(35.9%  0.006   90);
   --stone-750: oklch(32%    0.006   90);
   --stone-800: oklch(29%    0.006   90);
