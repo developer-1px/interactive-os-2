@@ -1,7 +1,7 @@
 import { Children, cloneElement, useId, useRef, useCallback, useEffect } from 'react'
 import { ax } from '@styles/ax'
 import type { ReactElement, ReactNode, CSSProperties } from 'react'
-import s from './Tooltip.module.css'
+import './Tooltip.css'
 
 type Placement = 'top' | 'bottom' | 'left' | 'right'
 
@@ -63,7 +63,7 @@ export function Tooltip({ content, placement = 'bottom', children }: TooltipProp
         id={id}
         popover="hint"
         role="tooltip"
-        className={`pointer-none ${ax({ surface: 'overlay', padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'primary' })} ${s.tooltip} ${s[placement]}`}
+        className={`tooltip-popover pointer-none tooltip-${placement} ${ax({ surface: 'overlay', padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'primary' })}`}
         style={{ positionAnchor: anchorName } as CSSProperties}
       >
         {content}

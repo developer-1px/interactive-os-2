@@ -1,7 +1,7 @@
 import React from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './Slider.module.css'
+import './Slider.css'
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
 import type { NodeState } from '../pattern/types'
@@ -49,12 +49,12 @@ export function Slider({
 
     return (
       <div className={`${ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined, padding: 'xs', content: 'text' })}`} data-focused={state.focused || undefined}>
-        {label && <span className={`${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} ${styles.sliderLabel}`}>{label}</span>}
-        <div className={`${ax({ flex: '1' })} ${styles.sliderTrack}`} ref={trackRef} onClick={handleTrackClick}>
-          <div className={styles.sliderFill} style={{ width: `${pct}%` }} />
-          <div className={`outline-none ${ax({ shape: 'pill' })} ${styles.sliderThumb}`} style={{ left: `${pct}%` }} />
+        {label && <span className={`slider-label ${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })}`}>{label}</span>}
+        <div className={`slider-track ${ax({ flex: '1' })}`} ref={trackRef} onClick={handleTrackClick}>
+          <div className="slider-fill" style={{ width: `${pct}%`, height: '100%' }} />
+          <div className={`slider-thumb outline-none ${ax({ shape: 'pill' })}`} style={{ left: `${pct}%` }} />
         </div>
-        <span className={`tabular-nums ${ax({ textStyle: 'body', weight: 'medium', text: 'secondary' })} ${styles.sliderValue}`}>{current}</span>
+        <span className={`slider-value tabular-nums ${ax({ textStyle: 'body', weight: 'medium', text: 'secondary' })}`}>{current}</span>
       </div>
     )
   }

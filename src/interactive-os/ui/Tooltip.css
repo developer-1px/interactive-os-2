@@ -1,6 +1,5 @@
-/* Tooltip — last-mile only */
-
-.tooltip {
+/* Tooltip — popover reset, placement via CSS anchor positioning */
+.tooltip-popover {
   margin: 0;
   max-width: calc(var(--space-3xl) * 6);
   line-height: var(--leading-snug);
@@ -9,33 +8,25 @@
   transition:
     opacity var(--motion-enter-duration) var(--motion-enter-easing),
     transform var(--motion-enter-duration) var(--motion-enter-easing);
-
-  /* popover reset */
   inset: unset;
   position: fixed;
 }
-
-/* ── Placement (CSS anchor positioning) ── */
-
-.bottom {
+.tooltip-bottom {
   position-area: bottom span-all;
   position-try-fallbacks: flip-block;
   margin-top: var(--space-xs);
 }
-
-.top {
+.tooltip-top {
   position-area: top span-all;
   position-try-fallbacks: flip-block;
   margin-bottom: var(--space-xs);
 }
-
-.right {
+.tooltip-right {
   position-area: right span-all;
   position-try-fallbacks: flip-inline;
   margin-left: var(--space-xs);
 }
-
-.left {
+.tooltip-left {
   position-area: left span-all;
   position-try-fallbacks: flip-inline;
   margin-right: var(--space-xs);

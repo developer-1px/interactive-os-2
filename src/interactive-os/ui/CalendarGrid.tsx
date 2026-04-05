@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './CalendarGrid.module.css'
+import './CalendarGrid.css'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
@@ -28,7 +28,7 @@ const defaultRenderCell = (
 ): React.ReactElement => (
   <td
     {...props}
-    className={`text-center ${ax({ controlSize: 'sm', padding: 'sm', content: 'text', textStyle: 'body', text: 'primary', shape: 'sm' })} ${styles.day}`}
+    className={`calendar-day text-center ${ax({ controlSize: 'sm', padding: 'sm', content: 'text', textStyle: 'body', text: 'primary', shape: 'sm' })}`}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
     data-outside={!meta.isCurrentMonth || undefined}
@@ -68,7 +68,7 @@ export function CalendarGrid({
   return (
     <table
       role="grid"
-      className={styles.grid}
+      className="border-collapse"
       aria-label={ariaLabel}
       {...(grid.containerProps as React.HTMLAttributes<HTMLTableElement>)}
     >

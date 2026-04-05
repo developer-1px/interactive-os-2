@@ -2,7 +2,7 @@
 import React, { useCallback, useRef } from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './Spinbutton.module.css'
+import './Spinbutton.css'
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
@@ -119,12 +119,12 @@ export function Spinbutton({
     }
 
     return (
-      <div className={`${ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined })} ${styles.spinbuttonItem}`} data-focused={state.focused || undefined}>
-        {itemLabel && <span className={`${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} ${styles.spinbuttonLabel}`}>{itemLabel}</span>}
-        <div className={`outline-none ${ax({ layout: 'bar', border: 'default', shape: 'md' })} ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
+      <div className={ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined })} data-focused={state.focused || undefined}>
+        {itemLabel && <span className={ax({ textStyle: 'body', weight: 'medium', text: 'primary' })}>{itemLabel}</span>}
+        <div className={`spinbutton-group outline-none ${ax({ layout: 'bar', border: 'default', shape: 'md' })}`} data-invalid={invalid || undefined}>
           <button
             type="button"
-            className={`select-none ${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page', text: 'primary' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}
+            className={`spinbutton-btn spinbutton-btn-dec select-none ${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page', text: 'primary' })}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
             aria-disabled={atMin || undefined}
@@ -135,7 +135,7 @@ export function Spinbutton({
           {editing ? (
             <input
               ref={inputRef}
-              className={`bg-transparent tabular-nums ${ax({ textStyle: 'body', weight: 'semi', text: 'primary' })} ${styles.spinbuttonInput}`}
+              className={`spinbutton-input bg-transparent tabular-nums ${ax({ textStyle: 'body', weight: 'semi', text: 'primary' })}`}
               type="text"
               inputMode="numeric"
               value={editValue}
@@ -146,7 +146,7 @@ export function Spinbutton({
             />
           ) : (
             <div
-              className={`tabular-nums ${ax({ layout: 'center', textStyle: 'body', weight: 'semi', text: 'primary' })} ${styles.spinbuttonValue}`}
+              className={`spinbutton-value tabular-nums ${ax({ layout: 'center', textStyle: 'body', weight: 'semi', text: 'primary' })}`}
               onClick={startEditing}
               onDoubleClick={startEditing}
             >
@@ -155,7 +155,7 @@ export function Spinbutton({
           )}
           <button
             type="button"
-            className={`select-none ${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page', text: 'primary' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnInc}`}
+            className={`spinbutton-btn spinbutton-btn-inc select-none ${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page', text: 'primary' })}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}
             aria-disabled={atMax || undefined}

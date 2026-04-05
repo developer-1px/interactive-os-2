@@ -1,0 +1,10 @@
+/* Menubar — link decoration, submenu positioning, state */
+.menubar-link { text-decoration: none; }
+.menubar-link[data-focused='true'] { background: var(--bg-hover); }
+.menubar-link[aria-expanded='true'] { background: var(--bg-hover); }
+
+.menubar-submenu { z-index: 1; }
+.menubar-submenu-root { top: 100%; left: 0; }
+.menubar-submenu-nested { top: calc(var(--space-xs) * -1); left: 100%; }
+
+[data-hidden] { display: none; }

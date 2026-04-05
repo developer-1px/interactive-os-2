@@ -6,7 +6,7 @@ import { Breadcrumb } from './Breadcrumb'
 import { PanelHeader } from './PanelHeader'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './FileViewerModal.module.css'
+import './FileViewerModal.css'
 
 interface FileViewerModalProps {
   filePath: string | null
@@ -84,24 +84,24 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
-    <dialog ref={dialogRef} className={`border-none bg-transparent ${styles.fvmDialog}`} onClick={handleBackdropClick}>
-      <div className={`overflow-hidden ${ax({ surface: 'overlay', layout: 'column', shape: 'xl' })} ${styles.fvmModal}`} onClick={e => e.stopPropagation()}>
+    <dialog ref={dialogRef} className="border-none bg-transparent fvm-dialog" onClick={handleBackdropClick}>
+      <div className={`overflow-hidden fvm-modal ${ax({ surface: 'overlay', layout: 'column', shape: 'xl' })}`} onClick={e => e.stopPropagation()}>
         <PanelHeader axes={{ layout: 'spread' }}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
             {filePath && (
-              <div className={`${ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })} ${styles.fvmMeta}`}>
+              <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
                 <FileIcon name={filename} type="file" />
                 <span>{ext.toUpperCase()}</span>
                 {!isImage && lineCount > 0 && (
                   <>
-                    <span className={styles.fvmMetaSep} />
+                    <span className="fvm-meta-sep" />
                     <span>{lineCount} lines</span>
                   </>
                 )}
                 {mergedHighlightLines.size > 0 && (
                   <>
-                    <span className={styles.fvmMetaSep} />
+                    <span className="fvm-meta-sep" />
                     <span className={ax({ text: 'warning', weight: 'semi' })}>{mergedHighlightLines.size} lines highlighted</span>
                   </>
                 )}
@@ -112,9 +112,9 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
         </PanelHeader>
         <div className={ax({ flex: '1', layout: 'scroll' })}>
           {error ? (
-            <div className={styles.fvmError}>File not found</div>
+            <div className={ax({ text: 'danger', padding: 'md' })}>File not found</div>
           ) : isImage ? (
-            <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className={styles.fvmImage} />
+            <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className="fvm-image" />
           ) : isMarkdown ? (
             <MarkdownViewer content={fileContent} />
           ) : (

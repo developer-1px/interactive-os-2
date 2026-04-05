@@ -1,7 +1,6 @@
 import React from 'react'
 import { type Axes, ax } from '@styles/ax'
 import '@styles/ax.css'
-import styles from './TextInput.module.css'
 
 interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   align?: 'left' | 'right'
@@ -12,8 +11,7 @@ export function TextInput({ align = 'left', size, className, ...props }: TextInp
   return (
     <input
       type="text"
-      data-align={align}
-      className={`${ax({ surface: 'input', textStyle: 'caption', text: 'primary', controlSize: size, padding: 'sm', content: 'text' })} ${styles.input}${className ? ` ${className}` : ''}`}
+      className={`${ax({ surface: 'input', textStyle: 'caption', text: 'primary', controlSize: size, padding: 'sm', content: 'text' })}${align === 'right' ? ' text-right' : ''}${className ? ` ${className}` : ''}`}
       {...props}
     />
   )

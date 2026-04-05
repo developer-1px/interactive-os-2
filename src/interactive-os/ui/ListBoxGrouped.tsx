@@ -6,7 +6,8 @@ import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { listboxGrouped } from '../pattern/roles/listboxGrouped'
-import styles from './ListBox.module.css'
+import { ax } from '@styles/ax'
+import '@styles/ax.css'
 
 type ListBoxGroupedProps = AriaComponentProps
 
@@ -21,8 +22,8 @@ const defaultRenderItem = (
   if (children) {
     const labelId = `group-label-${item.id}`
     return (
-      <ul {...props} aria-labelledby={labelId} className={styles.group}>
-        <li role="presentation" id={labelId} className={styles.groupLabel}>
+      <ul {...props} aria-labelledby={labelId}>
+        <li role="presentation" id={labelId} className={ax({ textStyle: 'overline', text: 'muted', padding: 'sm' })}>
           {label}
         </li>
         {children}
@@ -33,11 +34,10 @@ const defaultRenderItem = (
   return (
     <li
       {...props}
-      className={styles.item}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
-      <span className={styles.label}>{label}</span>
+      <span>{label}</span>
     </li>
   )
 }

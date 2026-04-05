@@ -3,7 +3,7 @@ import React, { useMemo, useCallback, useRef, useEffect } from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { DirectionIndicator, ExpandIndicator } from './indicators'
-import styles from './DatePicker.module.css'
+import './DatePicker.css'
 import { FOCUS_ID } from '../axis/navigate'
 import { useEngine } from '../engine/useEngine'
 import { CalendarGrid } from './CalendarGrid'
@@ -234,7 +234,7 @@ export function DatePicker({
           aria-expanded={isOpen}
           aria-label={ariaLabel}
           aria-autocomplete="none"
-          className={`cursor-default ${ax({ surface: 'input', textStyle: 'body', text: 'primary' })} ${styles.input}`}
+          className={`cursor-default ${ax({ surface: 'input', textStyle: 'body', text: 'primary' })} dp-input`}
           type="text"
           readOnly
           value={value ? formatDate(value) : ''}
@@ -243,7 +243,7 @@ export function DatePicker({
           onKeyDown={(e) => { if (e.key === 'ArrowDown') { e.preventDefault(); openDialog() } }}
         />
         <button
-          className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', border: 'default' })} ${styles.triggerButton}`}
+          className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', border: 'default' })} dp-trigger`}
           aria-label="Choose Date"
           tabIndex={-1}
           onClick={() => isOpen ? closeDialog() : openDialog()}
@@ -258,21 +258,21 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`absolute ${ax({ surface: 'overlay', padding: 'sm', border: 'default', shape: 'sm' })} ${styles.dialog}`}
+          className={`absolute ${ax({ surface: 'overlay', padding: 'sm', border: 'default', shape: 'sm' })} dp-dialog`}
           onKeyDown={handleDialogKeyDown}
         >
-          <div className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.navBar}`}>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
+          <div className={`${ax({ layout: 'bar', gap: 'xs' })} dp-nav-bar`}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} dp-nav-btn`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
               <DirectionIndicator direction="prev" double />
             </button>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} dp-nav-btn`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
               <DirectionIndicator direction="prev" />
             </button>
-            <span className={`text-center ${ax({ flex: '1', textStyle: 'label', text: 'primary' })} ${styles.monthYear}`} aria-live="polite">{MONTHS[month]} {year}</span>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Next Month" onClick={() => changeMonth(1)}>
+            <span className={`text-center ${ax({ flex: '1', textStyle: 'label', text: 'primary' })} `} aria-live="polite">{MONTHS[month]} {year}</span>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} dp-nav-btn`} aria-label="Next Month" onClick={() => changeMonth(1)}>
               <DirectionIndicator direction="next" />
             </button>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} ${styles.navButton}`} aria-label="Next Year" onClick={() => changeYear(1)}>
+            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} dp-nav-btn`} aria-label="Next Year" onClick={() => changeYear(1)}>
               <DirectionIndicator direction="next" double />
             </button>
           </div>
@@ -287,9 +287,9 @@ export function DatePicker({
             />
           </div>
 
-          <div className={`${ax({ layout: 'row', gap: 'sm' })} ${styles.actions}`}>
-            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: 'primary' })} ${styles.actionButton}`} onClick={() => closeDialog()}>Cancel</button>
-            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: 'primary' })} ${styles.actionButton}`} onClick={confirmFocused}>OK</button>
+          <div className={`${ax({ layout: 'row', gap: 'sm' })} dp-actions`}>
+            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: 'primary' })} dp-action-btn font-inherit`} onClick={() => closeDialog()}>Cancel</button>
+            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: 'primary' })} dp-action-btn font-inherit`} onClick={confirmFocused}>OK</button>
           </div>
         </div>
       )}

@@ -4,7 +4,7 @@ import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { useRectTracker } from './useRectTracker'
 import type { TrackedRect } from './useRectTracker'
-import s from './SelectionOverlay.module.css'
+import './SelectionOverlay.css'
 
 export interface SelectionOverlayProps {
   /** Container element to track nodes within */
@@ -22,9 +22,9 @@ export interface SelectionOverlayProps {
 }
 
 const kindClass: Record<TrackedRect['kind'], string> = {
-  focus: s.focus,
-  selection: s.selection,
-  hover: s.hover,
+  focus: 'sel-overlay-focus',
+  selection: '',
+  hover: 'sel-overlay-hover',
 }
 
 export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdAttr, hover, labelFn }: SelectionOverlayProps) {
@@ -39,7 +39,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
         return (
           <div
             key={`${tr.kind}-${tr.id}`}
-            className={`absolute ${ax({ shape: 'sm' })} ${s.rect} ${kindClass[tr.kind]}`}
+            className={`absolute sel-overlay-rect ${ax({ shape: 'sm' })} ${kindClass[tr.kind]}`}
             style={{
               left: tr.x,
               top: tr.y,
@@ -49,7 +49,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
           >
             {label && (
               <div
-                className={`absolute whitespace-nowrap pointer-events-none ${ax({ textStyle: 'caption', shape: 'sm' })} ${s.label}`}
+                className={`absolute whitespace-nowrap pointer-none sel-overlay-label ${ax({ textStyle: 'caption', shape: 'sm' })}`}
                 style={{ bottom: '100%', left: 0 }}
               >
                 {label}
