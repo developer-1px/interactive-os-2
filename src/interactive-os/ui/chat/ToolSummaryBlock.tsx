@@ -267,7 +267,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
     <div className={`overflow-hidden ${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })} ${styles.toolChain}`}>
       <div
         {...toggleProps}
-        className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}

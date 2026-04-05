@@ -18,6 +18,7 @@
 }
 
 .codeBlockFlush :global(.shiki) {
+  border: none;
   border-radius: 0;
 }
 
@@ -29,6 +30,8 @@
 .codeBlock :global(.shiki .line) {
   display: block;
   padding: 0 var(--space-lg) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .codeBlock :global(.shiki .line)::before {
@@ -37,8 +40,10 @@
   display: inline-block;
   width: 3.5em;
   padding-right: 1em;
+  text-align: right;
   color: var(--text-muted);
   font-size: var(--type-code-size);
+  user-select: none;
   opacity: 0.65;
 }
 

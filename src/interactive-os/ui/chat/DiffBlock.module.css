@@ -2,7 +2,6 @@
    ② 2026-03-27-chat-module-prd.md */
 
 .diff {
-  overflow: hidden;
 }
 
 .diffHeader {
@@ -22,8 +21,6 @@
   padding: var(--space-xs) 0;
   font-family: var(--mono);
   line-height: var(--leading-snug);
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
 }
 
 .diffLineOld {
