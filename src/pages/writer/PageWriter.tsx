@@ -639,7 +639,7 @@ export default function PageWriter() {
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1} noScroll={[0, 1, 2]}>
         <div className={ax({ layout: 'fill', surface: 'sunken' })}>
           <div className={ax({ layout: 'spread', padding: 'sm' })}>
-            <span className={ax({ text: 'muted' })}>Files</span>
+            <span className={ax({ textStyle: 'overline', text: 'muted' })}>Files</span>
           </div>
           <div className={ax({ layout: 'scroll' })}>
             <WriterFileBrowser onFileSelect={handleFileSelect} />
@@ -649,7 +649,7 @@ export default function PageWriter() {
         <div className={ax({ layout: 'fill' })}>
           <div className={ax({ layout: 'bar', gap: 'sm', padding: 'sm' })}>
             <Toolbar data={toolbarData} onActivate={handleToolbarActivate} aria-label="Writer toolbar" />
-            {urlFilePath && <span className={ax({ text: 'muted' })}>{urlFilePath}</span>}
+            {urlFilePath && <span className={ax({ textStyle: 'caption', text: 'muted' })}>{urlFilePath}</span>}
           </div>
 
           <div className={ax({ layout: 'scroll', padding: 'md' })}>
@@ -669,7 +669,7 @@ export default function PageWriter() {
 
         <div className={ax({ layout: 'fill', surface: 'sunken' })}>
           <div className={ax({ layout: 'spread', padding: 'sm' })}>
-            <span className={ax({ text: 'muted' })}>Chat</span>
+            <span className={ax({ textStyle: 'overline', text: 'muted' })}>Chat</span>
           </div>
           <ChatPane sessionId={chatSessionId} onSend={sendWriterMessage} />
         </div>

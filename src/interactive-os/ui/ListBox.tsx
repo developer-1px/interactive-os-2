@@ -24,7 +24,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   return (
     <div {...props} className={ax({ layout: 'bar', gap: 'sm' })} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
-      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
+      <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
 }
