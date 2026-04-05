@@ -3,7 +3,6 @@
 .root {
   grid-column: 2 / -1;
   max-width: var(--content-max);
-  padding: var(--space-xl);
   padding-bottom: var(--space-4xl);
 }
 
@@ -13,13 +12,7 @@
   min-height: 0;
 }
 
-/* ── Theme panel ── */
-
-.themePanel {
-  flex-shrink: 0;
-}
-
-/* ── Page layout: 3-column grid ── */
+/* ── Page layout: non-equal-column grids ── */
 
 .pageGrid {
   display: grid;
@@ -27,30 +20,14 @@
   gap: var(--space-xl);
 }
 
-/* ── Composed: 2-column grid ── */
-
 .composedGrid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: var(--space-xl);
 }
 
-/* ── Grid helpers (column counts) ── */
+/* ── Palette swatches (data-attribute colors) ── */
 
-.grid7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--space-sm); }
-.grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-sm); }
-.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-sm); align-items: center; }
-
-/* ── Palette strip ── */
-
-.paletteStrip {
-  display: flex;
-  gap: var(--space-xs);
-}
-
-.paletteSwatch {
-  aspect-ratio: 1;
-}
 .paletteSwatch[data-stone="0"]   { background: var(--stone-0); border: var(--border-width) solid var(--border-subtle); }
 .paletteSwatch[data-stone="50"]  { background: var(--stone-50); }
 .paletteSwatch[data-stone="100"] { background: var(--stone-100); }
@@ -67,11 +44,8 @@
 .paletteSwatch[data-stone="900"] { background: var(--stone-900); }
 .paletteSwatch[data-stone="950"] { background: var(--stone-950); }
 
-/* ── Surface swatches (dynamic token color — ax()로 불가) ── */
+/* ── Surface swatches (dynamic token color) ── */
 
-.swatch {
-  aspect-ratio: 1.4;
-}
 .swatch[data-surface="action"]  { background: var(--bg-hover); cursor: pointer; }
 .swatch[data-surface="input"]   { background: var(--surface-default); border: var(--border-width) solid var(--border-strong); }
 .swatch[data-surface="display"] { background: var(--surface-default); border: var(--border-width) solid var(--border-subtle); }
@@ -82,18 +56,12 @@
 
 /* ── Tone swatches ── */
 
-.toneSwatch {
-  aspect-ratio: 1.4;
-}
 .toneSwatch[data-tone="accent"]  { background: var(--tone-primary-base); }
 .toneSwatch[data-tone="danger"]  { background: var(--tone-destructive-base); }
 .toneSwatch[data-tone="success"] { background: var(--tone-success-base); }
 .toneSwatch[data-tone="warning"] { background: var(--tone-warning-base); }
 .toneSwatch[data-tone="neutral"] { background: var(--bg-hover); }
 
-.toneDimSwatch {
-  aspect-ratio: 1.4;
-}
 .toneDimSwatch[data-tone="accent"]  { background: var(--tone-primary-dim); }
 .toneDimSwatch[data-tone="danger"]  { background: var(--tone-destructive-dim); }
 .toneDimSwatch[data-tone="success"] { background: var(--tone-success-dim); }
@@ -102,29 +70,19 @@
 
 /* ── Shadow swatches ── */
 
-.shadowSwatch {
-  aspect-ratio: 1;
-  background: var(--surface-default);
-}
 .shadowSwatch[data-shadow="xs"] { box-shadow: var(--shadow-xs); }
 .shadowSwatch[data-shadow="sm"] { box-shadow: var(--shadow-sm); }
 .shadowSwatch[data-shadow="md"] { box-shadow: var(--shadow-md); }
 .shadowSwatch[data-shadow="lg"] { box-shadow: var(--shadow-lg); }
 
-/* ── Shape swatches ── */
+/* ── Shape swatches (tone background — ax() tone doesn't set bg on non-surface) ── */
 
 .shapeSwatch {
-  width: var(--space-2xl);
-  height: var(--space-2xl);
   background: var(--tone-primary-base);
 }
 
 /* ── Border swatches ── */
 
-.borderSwatch {
-  aspect-ratio: 2;
-  background: var(--surface-default);
-}
 .borderSwatch[data-border="subtle"]  { border: var(--border-width) solid var(--border-subtle); }
 .borderSwatch[data-border="default"] { border: var(--border-width) solid var(--border-default); }
 .borderSwatch[data-border="strong"]  { border: var(--border-width) solid var(--border-strong); }
@@ -148,10 +106,9 @@
 
 /* ── Typography rows ── */
 
-.typeRow { border-bottom: var(--border-width) solid var(--border-subtle); }
 .typeRow:first-child { padding-top: 0; }
 
-/* ── Alerts tone border (동적 tone 참조) ── */
+/* ── Alerts tone border ── */
 
 .alert[data-tone="success"] { border-left: var(--indicator-width) solid var(--tone-success-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
 .alert[data-tone="accent"]  { border-left: var(--indicator-width) solid var(--tone-primary-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
@@ -161,7 +118,6 @@
 /* ── Card image placeholder ── */
 
 .cardImage {
-  aspect-ratio: 16/9;
   background: linear-gradient(135deg, var(--tone-primary-dim), var(--tone-primary-mid));
 }
 
@@ -172,10 +128,7 @@
   border: var(--border-width) dashed var(--border-default);
 }
 .layoutChild {
-  width: var(--icon-lg);
-  height: var(--icon-lg);
   background: var(--tone-primary-base);
-  flex-shrink: 0;
 }
 
 /* ── Composed: stat bar ── */
@@ -191,14 +144,8 @@
 
 /* ── Composed: notification row ── */
 
-.notifRow { border-bottom: var(--border-width) solid var(--border-subtle); }
 .notifRow:last-child { border-bottom: none; }
 
-.notifDot {
-  width: var(--space-sm);
-  height: var(--space-sm);
-  flex-shrink: 0;
-}
 .notifDot[data-tone="accent"]  { background: var(--tone-primary-base); }
 .notifDot[data-tone="success"] { background: var(--tone-success-base); }
 .notifDot[data-tone="warning"] { background: var(--tone-warning-base); }
@@ -207,10 +154,7 @@
 /* ── Composed: avatar ── */
 
 .avatar {
-  width: var(--space-2xl);
-  height: var(--space-2xl);
   background: var(--tone-primary-base);
-  flex-shrink: 0;
 }
 
 /* ── Composed: textarea ── */
@@ -219,13 +163,6 @@
   min-height: var(--space-4xl);
   resize: vertical;
   padding: var(--space-sm);
-}
-
-/* ── Scenario divider ── */
-
-.scenarioDivider {
-  height: var(--border-width);
-  background: var(--border-subtle);
 }
 
 /* ── Preview placeholder ── */
