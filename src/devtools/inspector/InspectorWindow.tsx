@@ -64,7 +64,7 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
 
   return (
     <button
-      className={`${ax({ textStyle: 'caption' })} ${styles.copyButton}`}
+      className={`${ax({ textStyle: 'caption', border: 'default' })} ${styles.copyButton}`}
       onClick={handleCopy}
     >
       {copied ? '✓ Copied' : 'Copy ASCII'}

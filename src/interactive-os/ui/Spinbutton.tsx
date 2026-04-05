@@ -121,7 +121,7 @@ export function Spinbutton({
     return (
       <div className={`${ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined })} ${styles.spinbuttonItem}`} data-focused={state.focused || undefined}>
         {itemLabel && <span className={`${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })} ${styles.spinbuttonLabel}`}>{itemLabel}</span>}
-        <div className={`${ax({ layout: 'bar' })} ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
+        <div className={`${ax({ layout: 'bar', border: 'default' })} ${styles.spinbuttonGroup}`} data-invalid={invalid || undefined}>
           <button
             type="button"
             className={`${ax({ layout: 'center', surface: 'ghost', controlSize: 'sm', textStyle: 'page', text: 'primary' })} ${styles.spinbuttonBtn} ${styles.spinbuttonBtnDec}`}

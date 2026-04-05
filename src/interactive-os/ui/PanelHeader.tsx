@@ -10,7 +10,7 @@ interface PanelHeaderProps extends HTMLAttributes<HTMLDivElement> {
 
 /** 패널/사이드바 상단 바. height:36px + border-bottom + bar layout. */
 export function PanelHeader({ children, className, axes, ...rest }: PanelHeaderProps) {
-  const base: Axes = { layout: 'bar', flex: 'none', textStyle: 'overline', text: 'muted', padding: 'md' }
+  const base: Axes = { layout: 'bar', flex: 'none', textStyle: 'overline', text: 'muted', padding: 'md', border: 'bottom' }
   return (
     <div
       className={`${ax({ ...base, ...axes })} ${styles.panelHeader}${className ? ` ${className}` : ''}`}

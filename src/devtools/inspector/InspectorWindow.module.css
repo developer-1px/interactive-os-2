@@ -47,7 +47,6 @@
 
 .copyButton {
   background: none;
-  border: var(--border-width) solid var(--border-default);
   border-radius: var(--space-xs);
   padding: var(--border-width) var(--space-sm);
   cursor: pointer;

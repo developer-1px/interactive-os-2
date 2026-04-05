@@ -243,7 +243,7 @@ export function DatePicker({
           onKeyDown={(e) => { if (e.key === 'ArrowDown') { e.preventDefault(); openDialog() } }}
         />
         <button
-          className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} ${styles.triggerButton}`}
+          className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', border: 'default' })} ${styles.triggerButton}`}
           aria-label="Choose Date"
           tabIndex={-1}
           onClick={() => isOpen ? closeDialog() : openDialog()}
@@ -258,7 +258,7 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`absolute ${ax({ surface: 'overlay', padding: 'sm' })} ${styles.dialog}`}
+          className={`absolute ${ax({ surface: 'overlay', padding: 'sm', border: 'default' })} ${styles.dialog}`}
           onKeyDown={handleDialogKeyDown}
         >
           <div className={`${ax({ layout: 'bar', gap: 'xs' })} ${styles.navBar}`}>

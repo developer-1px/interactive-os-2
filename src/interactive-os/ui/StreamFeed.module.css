@@ -67,7 +67,6 @@
   --_bg: var(--surface-overlay);
   --_bg-hover: var(--bg-hover);
   background: var(--_bg);
-  border: var(--border-width) solid var(--border-default);
   border-radius: var(--shape-pill-radius);
   box-shadow: var(--shadow-md);
   transition:

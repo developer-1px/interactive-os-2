@@ -5,12 +5,8 @@
 /* ═══ variant — last-mile only ═══ */
 .accent {}
 
-.dialog {
-  border: var(--border-width) solid var(--border-default);
-}
+.dialog {}
 
-.ghost {
-  border: var(--border-width) solid var(--border-subtle);
-}
+.ghost {}
 
 .destructive {}

@@ -24,7 +24,6 @@
   width: var(--overlay-width);
   max-height: var(--overlay-width);
   overflow: hidden;
-  border: var(--border-width) solid var(--border-default);
   box-shadow: var(--shadow-lg);
   animation: slide-in var(--motion-enter-duration) var(--motion-enter-easing);
 }
@@ -34,9 +33,7 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-.inputRow {
-  border-bottom: var(--border-width) solid var(--border-subtle);
-}
+.inputRow {}
 
 .input {
   background: none;
@@ -51,7 +48,6 @@
 }
 
 .shortcut {
-  border: var(--border-width) solid var(--border-subtle);
   padding: var(--shape-xs-py) var(--shape-xs-px);
 }
 

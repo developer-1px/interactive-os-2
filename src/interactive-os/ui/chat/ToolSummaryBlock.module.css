@@ -71,7 +71,6 @@
 .toolGroup {
   overflow: hidden;
   background: var(--surface-sunken);
-  border: var(--border-width) solid var(--border-subtle);
 }
 
 /* Consecutive tool groups: merge borders, remove inter-gap */
@@ -103,7 +102,6 @@
 
 .toolGroupResult {
   overflow-y: auto;
-  border-top: var(--border-width) solid var(--border-subtle);
   line-height: var(--leading-snug);
   white-space: pre-wrap;
   overflow-wrap: break-word;
@@ -111,7 +109,6 @@
 
 .toolGroupCode {
   overflow: auto;
-  border-top: var(--border-width) solid var(--border-subtle);
 }
 
 .toolGroupCode > div :global(.shiki) {
@@ -124,7 +121,6 @@
 .toolChain {
   overflow: hidden;
   background: var(--surface-sunken);
-  border: var(--border-width) solid var(--border-subtle);
 }
 
 .toolChainSummary {
@@ -140,9 +136,7 @@
 
 /* toolChainLabel: ax({ textStyle: 'code' }) in TSX */
 
-.toolChainContent {
-  border-top: var(--border-width) solid var(--border-subtle);
-}
+.toolChainContent {}
 
 .toolChainRow {
   composes: iconRow;

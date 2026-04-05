@@ -12,7 +12,7 @@ import styles from './IndicatorsDemo.module.css'
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className={ax({ layout: 'column', gap: 'xs' })}>
-      <h3 className={`${ax({ textStyle: 'overline', text: 'primary' })} ${styles.sectionTitle}`}>{title}</h3>
+      <h3 className={`${ax({ textStyle: 'overline', text: 'primary', border: 'bottom' })} ${styles.sectionTitle}`}>{title}</h3>
       {children}
     </div>
   )

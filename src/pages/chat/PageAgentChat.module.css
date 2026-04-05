@@ -9,7 +9,6 @@
 
 .chatSidebar {
   width: var(--storymap-col-width);
-  border-right: var(--border-width) solid var(--border-subtle);
 }
 
 .chatCloseBtn {
@@ -53,10 +52,6 @@
 
 .chatStatusBar {
   font-variant-numeric: tabular-nums;
-}
-
-.chatStartBtn {
-  border: var(--border-width) solid var(--border-subtle);
 }
 
 .chatStartBtn:hover {

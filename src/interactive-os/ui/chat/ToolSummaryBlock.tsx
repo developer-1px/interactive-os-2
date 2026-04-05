@@ -182,13 +182,13 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   let content: React.ReactNode = null
   if (isRead && text) {
     content = (
-      <div className={styles.toolGroupCode}>
+      <div className={`${ax({ border: 'top' })} ${styles.toolGroupCode}`}>
         <CodeBlock code={codeText} filename={filename} variant="compact" />
       </div>
     )
   } else if (isWrite && typeof input.content === 'string') {
     content = (
-      <div className={styles.toolGroupCode}>
+      <div className={`${ax({ border: 'top' })} ${styles.toolGroupCode}`}>
         <CodeBlock code={input.content as string} filename={filename} variant="compact" />
       </div>
     )
@@ -197,13 +197,13 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
     )
   } else if (text) {
-    content = <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm' })} ${styles.toolGroupResult}`}>{text}</pre>
+    content = <pre className={`${ax({ text: 'muted', textStyle: 'code', padding: 'sm', border: 'top' })} ${styles.toolGroupResult}`}>{text}</pre>
   }
 
   // No content → non-collapsible row
   if (!content) {
     return (
-      <div className={`${ax({ shape: 'md' })} ${styles.toolGroup}`}>
+      <div className={`${ax({ shape: 'md', border: 'subtle' })} ${styles.toolGroup}`}>
         <div className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}>
           <span className={`${ax({ layout: 'center' })} ${styles.rowIcon}`}><Icon size={12} /></span>
           <span className={ax({ weight: 'semi' })}>{name}</span> {summaryLabel}
@@ -213,7 +213,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
   }
 
   return (
-    <div className={`${ax({ shape: 'md' })} ${styles.toolGroup}`}>
+    <div className={`${ax({ shape: 'md', border: 'subtle' })} ${styles.toolGroup}`}>
       <div
         {...toggleProps}
         className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolGroupSummary}`}
@@ -264,7 +264,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <div className={`${ax({ shape: 'md' })} ${styles.toolChain}`}>
+    <div className={`${ax({ shape: 'md', border: 'subtle' })} ${styles.toolChain}`}>
       <div
         {...toggleProps}
         className={`${ax({ layout: 'bar', text: 'secondary', gap: 'xs' })} ${styles.toolChainSummary}`}
@@ -277,7 +277,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
         <Layers size={12} /> <span className={ax({ text: 'muted', textStyle: 'code' })}>{summary}</span>
       </div>
       {expanded && (
-        <div className={`${ax({ layout: 'column' })} ${styles.toolChainContent}`}>
+        <div className={`${ax({ layout: 'column', border: 'top' })} ${styles.toolChainContent}`}>
           {typeGroups.map(g => {
             const Icon = toolIcons[g.name] ?? Wrench
             return (

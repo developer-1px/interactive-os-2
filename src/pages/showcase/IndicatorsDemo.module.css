@@ -2,7 +2,6 @@
 
 .sectionTitle {
   padding-bottom: var(--space-xs);
-  border-bottom: var(--border-width) solid var(--border-subtle);
   margin: 0;
 }
 

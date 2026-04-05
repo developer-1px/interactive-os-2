@@ -5,7 +5,6 @@
 .uiSidebar {
   width: var(--storymap-col-width);
   min-width: var(--storymap-col-width);
-  border-right: var(--border-width) solid var(--border-subtle);
 }
 
 .uiSidebarBody {

@@ -255,7 +255,7 @@ export default function PageBookViewer() {
           {/* ── Overlay TOC ── */}
           <div className={styles.tocOverlay} data-open={tocOpen}>
             <div className={styles.tocOverlayPanel}>
-              <div className={`${ax({ layout: 'spread', padding: 'md' })} ${styles.tocOverlayHeader}`}>
+              <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
                 <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
                 <button
                   className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} ${styles.pillBtn}`}

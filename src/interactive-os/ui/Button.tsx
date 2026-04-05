@@ -9,8 +9,8 @@ type ButtonSize = Axes['controlSize']
 
 const variantAxes: Record<ButtonVariant, Parameters<typeof ax>[0]> = {
   accent: { surface: 'action', tone: 'accent', weight: 'semi' },
-  ghost: { surface: 'ghost', tone: 'neutral' },
-  dialog: { surface: 'action', tone: 'neutral', weight: 'medium' },
+  ghost: { surface: 'ghost', tone: 'neutral', border: 'subtle' },
+  dialog: { surface: 'action', tone: 'neutral', weight: 'medium', border: 'default' },
   destructive: { surface: 'action', tone: 'danger', weight: 'semi' },
 }
 

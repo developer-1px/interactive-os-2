@@ -118,10 +118,6 @@
   transform: scale(1);
 }
 
-.tocOverlayHeader {
-  border-bottom: var(--border-width) solid var(--border-subtle);
-}
-
 /* ── TOC item indent ── */
 
 .tocOverlayPanel [data-indent] {

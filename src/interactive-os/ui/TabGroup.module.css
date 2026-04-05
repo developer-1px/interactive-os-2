@@ -5,7 +5,6 @@
 .tabBar {
   overflow-x: auto;
   flex-shrink: 0;
-  border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
 /* ── Tab — last-mile: selected state colors, preview italic ── */

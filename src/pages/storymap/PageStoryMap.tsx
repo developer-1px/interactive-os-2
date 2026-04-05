@@ -112,7 +112,7 @@ export default function PageStoryMap() {
 
   return (
     <div className={`${css.sm} flex-col h-full overflow-hidden`}>
-      <div className={`${css.smHeader} flex-row items-center shrink-0`}>
+      <div className={`${ax({ border: 'bottom' })} ${css.smHeader} flex-row items-center shrink-0`}>
         <div className={`${css.smHeaderLeft} flex-row items-center min-w-0`}>
           <TabList
             data={tabStore}
@@ -123,7 +123,7 @@ export default function PageStoryMap() {
           <div className={`${css.smLegend} flex-row items-center shrink-0`} role="list" aria-label="Status legend">
             {(['pending', 'active', 'done', 'blocked'] as const).map(status => (
               <div key={status} className={`${ax({ textStyle: 'caption', text: 'muted' })} ${css.smLegendItem} flex-row items-center`} role="listitem">
-                <span className={`${css.smLegendSwatch} shrink-0`} data-status={status} />
+                <span className={`${ax({ border: 'subtle' })} ${css.smLegendSwatch} shrink-0`} data-status={status} />
                 {status}
               </div>
             ))}

@@ -121,8 +121,8 @@ export function QuickOpen({
 
   return (
     <div className={`${ax({ surface: 'overlay', layout: 'row' })} ${styles.backdrop}`} onClick={handleBackdropClick}>
-      <div className={`${ax({ layout: 'column', shape: 'xl' })} ${styles.dialog}`} aria-label="Quick Open">
-        <div className={`${ax({ layout: 'bar', gap: 'md', padding: 'lg' })} ${styles.inputRow}`}>
+      <div className={`${ax({ layout: 'column', shape: 'xl', border: 'default' })} ${styles.dialog}`} aria-label="Quick Open">
+        <div className={`${ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })} ${styles.inputRow}`}>
           <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
           <input
             ref={inputRef}
@@ -134,7 +134,7 @@ export function QuickOpen({
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           />
-          <kbd className={`${ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm' })} ${styles.shortcut}`}>ESC</kbd>
+          <kbd className={`${ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle' })} ${styles.shortcut}`}>ESC</kbd>
         </div>
         {isOpen && children.length > 0 ? (
           <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>

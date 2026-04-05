@@ -14,7 +14,6 @@
 .smHeader {
   height: var(--toolbar-height);
   padding: 0 var(--space-lg);
-  border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
 .smHeaderLeft {
@@ -197,7 +196,6 @@
   width: var(--icon-sm);
   height: var(--icon-sm);
   border-radius: var(--shape-xs-radius);
-  border: var(--border-width) solid var(--border-subtle);
 }
 
 .smLegendSwatch[data-status="pending"]  { background: var(--tone-warning-dim); }

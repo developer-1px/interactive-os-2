@@ -6,27 +6,9 @@
 
 /* paneHeader → PanelHeader 컴포넌트로 교체 */
 
-/* ── Right pane container ── */
-.rightPane {
-  border-left: var(--border-width) solid var(--border-subtle);
-}
-
-/* ── Tertiary: Chat ── */
-.chat {
-  border-left: var(--border-width) solid var(--border-subtle);
-}
-
-.chatContext {
-  border-bottom: var(--border-width) solid var(--border-subtle);
-}
-
 .chatBubble {
   white-space: pre-wrap;
   max-width: 85%;
-}
-
-.chatInputWrap {
-  border-top: var(--border-width) solid var(--border-subtle);
 }
 
 .chatInput {
