@@ -11,8 +11,8 @@
   background: var(--surface-sunken);
   border: var(--border-width) solid var(--border-default);
   cursor: default;
-  outline: 1px solid transparent;
-  outline-offset: -1px;
+  outline: var(--border-width) solid transparent;
+  outline-offset: -var(--border-width);
 }
 
 .title {
@@ -53,8 +53,8 @@
   background: var(--surface-default);
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--radius-sm);
-  outline: 1px solid transparent;
-  outline-offset: -1px;
+  outline: var(--border-width) solid transparent;
+  outline-offset: -var(--border-width);
 }
 
 .input:focus {

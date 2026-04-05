@@ -13,8 +13,8 @@
 }
 
 .rotationButton {
-  width: 28px;
-  height: 28px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   padding: 0;
   color: var(--text-secondary);
   background: transparent;
@@ -41,7 +41,7 @@
   color: var(--text-secondary);
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: var(--indicator-width) solid transparent;
   cursor: default;
 }
 
@@ -58,7 +58,7 @@
 
 .slide {
   padding: var(--space-lg) var(--space-xl);
-  min-height: 120px;
+  min-height: var(--space-5xl);
   background: var(--surface-default);
 }
 

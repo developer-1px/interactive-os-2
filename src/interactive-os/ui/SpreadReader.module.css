@@ -1,7 +1,7 @@
 /* SpreadReader — column-based spread layout for reading long content */
 
 .root {
-  --_col-width: 400px;
+  --_col-width: var(--overlay-width);
   --_col-gap: var(--space-3xl);
   --_padding-x: var(--space-5xl);
   --_padding-y: var(--space-5xl);

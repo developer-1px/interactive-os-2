@@ -9,8 +9,8 @@
   background: var(--surface-sunken);
   border: var(--border-width) solid var(--border-default);
   cursor: default;
-  outline: 1px solid transparent;
-  outline-offset: -1px;
+  outline: var(--border-width) solid transparent;
+  outline-offset: -var(--border-width);
 }
 
 .indicator {

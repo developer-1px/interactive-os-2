@@ -8,16 +8,16 @@
 
 /* ── Right pane container ── */
 .rightPane {
-  border-left: 1px solid var(--border-subtle);
+  border-left: var(--border-width) solid var(--border-subtle);
 }
 
 /* ── Tertiary: Chat ── */
 .chat {
-  border-left: 1px solid var(--border-subtle);
+  border-left: var(--border-width) solid var(--border-subtle);
 }
 
 .chatContext {
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
 .chatBubble {
@@ -26,7 +26,7 @@
 }
 
 .chatInputWrap {
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--border-width) solid var(--border-subtle);
 }
 
 .chatInput {

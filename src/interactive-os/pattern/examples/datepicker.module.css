@@ -59,8 +59,8 @@
 }
 
 .navButton {
-  width: 28px;
-  height: 28px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   padding: 0;
   color: var(--text-secondary);
   background: transparent;
@@ -96,17 +96,17 @@
   font-size: var(--type-caption-size);
   font-weight: var(--type-label-weight);
   color: var(--text-muted);
-  width: 36px;
+  width: var(--toolbar-height);
 }
 
 .day {
-  width: 36px;
-  height: 36px;
+  width: var(--toolbar-height);
+  height: var(--toolbar-height);
   font-size: var(--type-body-size);
   color: var(--text-primary);
   cursor: default;
   border-radius: var(--shape-xs-radius);
-  border: 2px solid transparent;
+  border: var(--indicator-width) solid transparent;
 }
 
 /* ── variant: state ── */

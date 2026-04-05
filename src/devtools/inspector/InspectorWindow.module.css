@@ -20,12 +20,12 @@
 
 .th {
   text-align: left;
-  padding: 2px var(--space-sm);
-  border-bottom: 1px solid var(--border-default);
+  padding: var(--indicator-width) var(--space-sm);
+  border-bottom: var(--border-width) solid var(--border-default);
 }
 
 .td {
-  padding: 2px var(--space-sm);
+  padding: var(--indicator-width) var(--space-sm);
 }
 
 .tdKey {
@@ -47,9 +47,9 @@
 
 .copyButton {
   background: none;
-  border: 1px solid var(--border-default);
-  border-radius: 4px;
-  padding: 1px 8px;
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--space-xs);
+  padding: var(--border-width) var(--space-sm);
   cursor: pointer;
   color: var(--text-muted);
 }
@@ -65,13 +65,13 @@
 }
 
 .tabBar {
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: var(--border-width) solid var(--border-default);
 }
 
 .tab {
   background: none;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: var(--indicator-width) solid transparent;
 }
 
 .tabActive {

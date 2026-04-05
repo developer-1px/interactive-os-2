@@ -2,9 +2,9 @@
 
 .root {
   grid-column: 2 / -1;
-  max-width: 1600px;
+  max-width: var(--content-max);
   padding: var(--space-xl);
-  padding-bottom: 80px;
+  padding-bottom: var(--space-4xl);
 }
 
 /* ── Tab content area ── */
@@ -51,7 +51,7 @@
 .paletteSwatch {
   aspect-ratio: 1;
 }
-.paletteSwatch[data-stone="0"]   { background: var(--stone-0); border: 1px solid var(--border-subtle); }
+.paletteSwatch[data-stone="0"]   { background: var(--stone-0); border: var(--border-width) solid var(--border-subtle); }
 .paletteSwatch[data-stone="50"]  { background: var(--stone-50); }
 .paletteSwatch[data-stone="100"] { background: var(--stone-100); }
 .paletteSwatch[data-stone="200"] { background: var(--stone-200); }
@@ -73,10 +73,10 @@
   aspect-ratio: 1.4;
 }
 .swatch[data-surface="action"]  { background: var(--bg-hover); cursor: pointer; }
-.swatch[data-surface="input"]   { background: var(--surface-default); border: 1px solid var(--border-strong); }
-.swatch[data-surface="display"] { background: var(--surface-default); border: 1px solid var(--border-subtle); }
+.swatch[data-surface="input"]   { background: var(--surface-default); border: var(--border-width) solid var(--border-strong); }
+.swatch[data-surface="display"] { background: var(--surface-default); border: var(--border-width) solid var(--border-subtle); }
 .swatch[data-surface="overlay"] { background: var(--surface-overlay); box-shadow: var(--shadow-lg); }
-.swatch[data-surface="ghost"]   { background: transparent; border: 1px dashed var(--border-subtle); }
+.swatch[data-surface="ghost"]   { background: transparent; border: var(--border-width) dashed var(--border-subtle); }
 .swatch[data-surface="sunken"]  { background: var(--surface-sunken); }
 .swatch[data-surface="base"]    { background: var(--surface-base); }
 
@@ -114,8 +114,8 @@
 /* ── Shape swatches ── */
 
 .shapeSwatch {
-  width: 48px;
-  height: 48px;
+  width: var(--space-2xl);
+  height: var(--space-2xl);
   background: var(--tone-primary-base);
 }
 
@@ -125,15 +125,15 @@
   aspect-ratio: 2;
   background: var(--surface-default);
 }
-.borderSwatch[data-border="subtle"]  { border: 1px solid var(--border-subtle); }
-.borderSwatch[data-border="default"] { border: 1px solid var(--border-default); }
-.borderSwatch[data-border="strong"]  { border: 1px solid var(--border-strong); }
+.borderSwatch[data-border="subtle"]  { border: var(--border-width) solid var(--border-subtle); }
+.borderSwatch[data-border="default"] { border: var(--border-width) solid var(--border-default); }
+.borderSwatch[data-border="strong"]  { border: var(--border-width) solid var(--border-strong); }
 
 /* ── Spacing bars ── */
 
-.spacingLabel { min-width: 36px; text-align: right; }
+.spacingLabel { min-width: var(--toolbar-height); text-align: right; }
 .spacingBar {
-  height: 12px;
+  height: var(--input-padding-x);
   background: var(--tone-primary-base);
 }
 .spacingBar[data-size="xs"] { width: var(--space-xs); }
@@ -144,19 +144,19 @@
 
 /* ── Button label ── */
 
-.btnLabel { min-width: 56px; text-align: right; }
+.btnLabel { min-width: var(--space-2xl); text-align: right; }
 
 /* ── Typography rows ── */
 
-.typeRow { border-bottom: 1px solid var(--border-subtle); }
+.typeRow { border-bottom: var(--border-width) solid var(--border-subtle); }
 .typeRow:first-child { padding-top: 0; }
 
 /* ── Alerts tone border (동적 tone 참조) ── */
 
-.alert[data-tone="success"] { border-left: 3px solid var(--tone-success-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
-.alert[data-tone="accent"]  { border-left: 3px solid var(--tone-primary-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
-.alert[data-tone="warning"] { border-left: 3px solid var(--tone-warning-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
-.alert[data-tone="danger"]  { border-left: 3px solid var(--tone-destructive-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.alert[data-tone="success"] { border-left: var(--indicator-width) solid var(--tone-success-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.alert[data-tone="accent"]  { border-left: var(--indicator-width) solid var(--tone-primary-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.alert[data-tone="warning"] { border-left: var(--indicator-width) solid var(--tone-warning-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.alert[data-tone="danger"]  { border-left: var(--indicator-width) solid var(--tone-destructive-base); border-top-left-radius: 0; border-bottom-left-radius: 0; }
 
 /* ── Card image placeholder ── */
 
@@ -168,12 +168,12 @@
 /* ── Layout showcase ── */
 
 .layoutBox {
-  min-height: 80px;
-  border: 1px dashed var(--border-default);
+  min-height: var(--space-4xl);
+  border: var(--border-width) dashed var(--border-default);
 }
 .layoutChild {
-  width: 24px;
-  height: 24px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   background: var(--tone-primary-base);
   flex-shrink: 0;
 }
@@ -181,7 +181,7 @@
 /* ── Composed: stat bar ── */
 
 .statBar {
-  height: 4px;
+  height: var(--space-xs);
   width: 100%;
 }
 .statBar[data-tone="accent"]  { background: var(--tone-primary-base); }
@@ -191,12 +191,12 @@
 
 /* ── Composed: notification row ── */
 
-.notifRow { border-bottom: 1px solid var(--border-subtle); }
+.notifRow { border-bottom: var(--border-width) solid var(--border-subtle); }
 .notifRow:last-child { border-bottom: none; }
 
 .notifDot {
-  width: 8px;
-  height: 8px;
+  width: var(--space-sm);
+  height: var(--space-sm);
   flex-shrink: 0;
 }
 .notifDot[data-tone="accent"]  { background: var(--tone-primary-base); }
@@ -207,8 +207,8 @@
 /* ── Composed: avatar ── */
 
 .avatar {
-  width: 48px;
-  height: 48px;
+  width: var(--space-2xl);
+  height: var(--space-2xl);
   background: var(--tone-primary-base);
   flex-shrink: 0;
 }
@@ -216,7 +216,7 @@
 /* ── Composed: textarea ── */
 
 .textarea {
-  min-height: 80px;
+  min-height: var(--space-4xl);
   resize: vertical;
   padding: var(--space-sm);
 }
@@ -224,13 +224,13 @@
 /* ── Scenario divider ── */
 
 .scenarioDivider {
-  height: 1px;
+  height: var(--border-width);
   background: var(--border-subtle);
 }
 
 /* ── Preview placeholder ── */
 
 .previewPlaceholder {
-  min-height: 200px;
-  border: 2px dashed var(--border-subtle);
+  min-height: var(--storymap-col-width);
+  border: var(--indicator-width) dashed var(--border-subtle);
 }

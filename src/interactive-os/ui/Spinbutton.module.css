@@ -4,10 +4,10 @@
 
 /* ── Component tokens ── */
 .spinbuttonItem {
-  --_label-min-w: calc(var(--space-lg) * 4);      /* 64px */
-  --_btn-w: var(--switch-width);                     /* 36px */
-  --_value-min-w: calc(var(--space-lg) * 3);       /* 48px */
-  --_ring-spread: 2px;
+  --_label-min-w: calc(var(--space-lg) * 4);      /* var(--space-3xl) */
+  --_btn-w: var(--switch-width);                     /* var(--toolbar-height) */
+  --_value-min-w: calc(var(--space-lg) * 3);       /* var(--space-2xl) */
+  --_ring-spread: var(--indicator-width);
 
   padding: var(--space-sm) var(--space-md);
 }
@@ -18,7 +18,7 @@
 
 /* Unified group: − [value] + with single focus ring */
 .spinbuttonGroup {
-  border: 1px solid var(--border-default);
+  border: var(--border-width) solid var(--border-default);
   border-radius: var(--shape-md-radius);
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing), box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
 }
@@ -42,11 +42,11 @@
 
 
 .spinbuttonBtnDec {
-  border-right: 1px solid var(--border-default);
+  border-right: var(--border-width) solid var(--border-default);
 }
 
 .spinbuttonBtnInc {
-  border-left: 1px solid var(--border-default);
+  border-left: var(--border-width) solid var(--border-default);
 }
 
 .spinbuttonValue {

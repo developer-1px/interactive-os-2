@@ -3,7 +3,7 @@
 .fallback {
   overflow: hidden;
   font-size: var(--type-caption-size);
-  border: 1px dashed var(--border-subtle);
+  border: var(--border-width) dashed var(--border-subtle);
   border-radius: var(--shape-md-radius);
 }
 
@@ -23,7 +23,7 @@
 .fallbackPre {
   overflow-y: auto;
   padding: var(--space-xs) var(--space-sm);
-  border-top: 1px dashed var(--border-subtle);
+  border-top: var(--border-width) dashed var(--border-subtle);
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   line-height: var(--leading-snug);

@@ -82,7 +82,7 @@
 .toolGroup {
   overflow: hidden;
   background: var(--surface-sunken);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
   border-radius: var(--shape-md-radius);
 }
 
@@ -117,7 +117,7 @@
 .toolGroupResult {
   overflow-y: auto;
   padding: var(--space-sm);
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--border-width) solid var(--border-subtle);
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   line-height: var(--leading-snug);
@@ -127,7 +127,7 @@
 
 .toolGroupCode {
   overflow: auto;
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--border-width) solid var(--border-subtle);
 }
 
 .toolGroupCode > div :global(.shiki) {
@@ -140,7 +140,7 @@
 .toolChain {
   overflow: hidden;
   background: var(--surface-sunken);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
   border-radius: var(--shape-md-radius);
 }
 
@@ -162,7 +162,7 @@
 }
 
 .toolChainContent {
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--border-width) solid var(--border-subtle);
 }
 
 .toolChainRow {

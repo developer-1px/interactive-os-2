@@ -3,5 +3,5 @@
 
 .panelHeader {
   height: var(--toolbar-height);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-subtle);
 }

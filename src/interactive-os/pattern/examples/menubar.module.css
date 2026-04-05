@@ -36,8 +36,8 @@
 }
 
 .wrapper [role='menubar']:focus-within {
-  outline: 2px solid var(--focus);
-  outline-offset: -2px;
+  outline: var(--indicator-width) solid var(--focus);
+  outline-offset: -var(--indicator-width);
 }
 
 /* ── menubar item ── */
@@ -50,7 +50,7 @@
   line-height: var(--type-body-line-height);
   color: var(--text-primary);
   cursor: default;
-  border: 2px solid transparent;
+  border: var(--indicator-width) solid transparent;
 }
 
 .indicator {
@@ -62,7 +62,7 @@
 .submenu {
   padding: var(--space-xs) 0;
   margin: 0;
-  min-width: 180px;
+  min-width: var(--storymap-col-width);
   background: var(--surface-overlay);
   border: var(--border-width) solid var(--border-default);
   border-radius: var(--shape-xs-radius);

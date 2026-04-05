@@ -14,7 +14,7 @@
 
 /* ── Editable card title ── */
 .card :global([data-renaming]) {
-  outline: 1px solid var(--focus);
+  outline: var(--border-width) solid var(--focus);
   outline-offset: calc(var(--space-xs) / 2);
   border-radius: var(--shape-xs-radius);
   padding: 0 calc(var(--space-xs) / 2);
@@ -35,7 +35,7 @@
   min-width: var(--space-3xl);
   max-width: none;
   flex: 0 0 auto;
-  width: 240px;
+  width: var(--storymap-col-width);
   border-radius: var(--shape-sm-radius);
   padding: var(--space-xs) var(--space-sm);
   overflow-y: auto;
@@ -91,14 +91,14 @@
 
 /* ── Extension color indicator (inset shadow, border:none 호환) ── */
 
-.board[data-compact] .card[data-ext="ts"] { box-shadow: inset 3px 0 0 var(--tone-primary-base); }
-.board[data-compact] .card[data-ext="tsx"] { box-shadow: inset 3px 0 0 var(--focus); }
-.board[data-compact] .card[data-ext="css"] { box-shadow: inset 3px 0 0 var(--tone-destructive-base); }
+.board[data-compact] .card[data-ext="ts"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base); }
+.board[data-compact] .card[data-ext="tsx"] { box-shadow: inset var(--indicator-width) 0 0 var(--focus); }
+.board[data-compact] .card[data-ext="css"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-destructive-base); }
 .board[data-compact] .card[data-ext="md"],
-.board[data-compact] .card[data-ext="mdx"] { box-shadow: inset 3px 0 0 var(--tone-success-base); }
+.board[data-compact] .card[data-ext="mdx"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-success-base); }
 .board[data-compact] .card[data-ext="json"],
 .board[data-compact] .card[data-ext="yaml"],
-.board[data-compact] .card[data-ext="yml"] { box-shadow: inset 3px 0 0 var(--tone-warning-base); }
+.board[data-compact] .card[data-ext="yml"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-warning-base); }
 
 /* ── Weight hints (LOC-based file size indicator) ── */
 
@@ -133,11 +133,11 @@
 }
 
 .board[data-compact] .card[data-highlight="up"] {
-  box-shadow: inset 3px 0 0 var(--tone-success-base);
+  box-shadow: inset var(--indicator-width) 0 0 var(--tone-success-base);
 }
 
 .board[data-compact] .card[data-highlight="down"] {
-  box-shadow: inset 3px 0 0 var(--tone-primary-base);
+  box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base);
 }
 
 /* ── Focus/Selection — override .card background ── */

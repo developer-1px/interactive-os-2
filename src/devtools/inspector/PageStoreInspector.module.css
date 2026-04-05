@@ -2,12 +2,12 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
   gap: var(--space-md);
-  min-height: 400px;
+  min-height: var(--overlay-width);
 }
 
 .logPanel {
   grid-column: 1 / -1;
-  max-height: 200px;
+  max-height: var(--storymap-col-width);
   font-family: var(--mono);
   font-size: var(--type-caption-size);
   line-height: var(--leading-normal);

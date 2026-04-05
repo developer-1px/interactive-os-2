@@ -3,9 +3,9 @@
 .uiPage { grid-column: 2 / -1; }
 
 .uiSidebar {
-  width: 240px;
-  min-width: 200px;
-  border-right: 1px solid var(--border-subtle);
+  width: var(--storymap-col-width);
+  min-width: var(--storymap-col-width);
+  border-right: var(--border-width) solid var(--border-subtle);
 }
 
 .uiSidebarBody {
@@ -13,5 +13,5 @@
 }
 
 .uiContentBody {
-  padding: var(--space-2xl) 48px;
+  padding: var(--space-2xl) var(--space-2xl);
 }

@@ -15,7 +15,7 @@
 
 .diffBody {
   grid-template-columns: 1fr 1fr;
-  gap: 0 1px;
+  gap: 0 var(--border-width);
   background: var(--border-subtle);
 }
 

@@ -24,7 +24,7 @@
 
 .fvmModal {
   width: 85vw;
-  max-width: 960px;
+  max-width: var(--content-xl);
   height: 85vh;
   overflow: hidden;
   border-radius: var(--shape-xl-radius);
@@ -36,8 +36,8 @@
 /* fvmHeader → PanelHeader */
 
 .fvmMetaSep {
-  width: 1px;
-  height: 10px;
+  width: var(--border-width);
+  height: var(--shape-md-radius);
   background: var(--border-default);
   margin: 0 var(--space-inline-code);
 }

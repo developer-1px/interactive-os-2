@@ -96,7 +96,7 @@
   background: var(--surface-base);
   padding: 0.15em 0.35em;
   border-radius: var(--shape-xs-radius);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
 }
 
 .markdown pre code {
@@ -120,7 +120,7 @@
 
 .markdown th {
   padding: 0.3em 0.5em;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-subtle);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
   text-align: left;
@@ -128,7 +128,7 @@
 
 .markdown td {
   padding: 0.25em 0.5em;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-subtle);
   text-align: left;
 }
 
@@ -144,7 +144,7 @@
 
 .markdown hr {
   border: none;
-  height: 1px;
+  height: var(--border-width);
   background: var(--border-subtle);
   margin: 1.2em 0;
 }

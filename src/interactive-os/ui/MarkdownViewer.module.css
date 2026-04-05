@@ -30,7 +30,7 @@
   color: var(--text-bright);
   margin: 2.5em 0 0.6em;
   padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
 .markdown h2 {
@@ -42,7 +42,7 @@
   color: var(--text-bright);
   margin: 2em 0 0.5em;
   padding-bottom: 0.25em;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
 .markdown h3 {
@@ -74,12 +74,12 @@
   background: var(--surface-base);
   padding: 0.15em 0.35em;
   border-radius: var(--shape-xs-radius);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
 }
 
 .markdown pre {
   background: var(--surface-base);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
   border-radius: var(--shape-lg-radius);
   padding: var(--shape-lg-py) var(--shape-lg-px);
   white-space: pre-wrap;
@@ -149,7 +149,7 @@
 
 .markdown th,
 .markdown td {
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
   padding: var(--space-sm) var(--space-md);
   text-align: left;
 }
@@ -186,7 +186,7 @@
 
 .markdown hr {
   border: none;
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--border-width) solid var(--border-subtle);
   margin: 2em 0;
 }
 

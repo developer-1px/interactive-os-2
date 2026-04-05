@@ -6,11 +6,11 @@
 .accent {}
 
 .dialog {
-  border: 1px solid var(--border-default);
+  border: var(--border-width) solid var(--border-default);
 }
 
 .ghost {
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
 }
 
 .destructive {}

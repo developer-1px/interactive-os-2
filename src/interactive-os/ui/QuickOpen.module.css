@@ -21,21 +21,21 @@
 }
 
 .dialog {
-  width: 560px;
-  max-height: 520px;
+  width: var(--overlay-width);
+  max-height: var(--overlay-width);
   overflow: hidden;
-  border: 1px solid var(--border-default);
+  border: var(--border-width) solid var(--border-default);
   box-shadow: var(--shadow-lg);
   animation: slide-in var(--motion-enter-duration) var(--motion-enter-easing);
 }
 
 @keyframes slide-in {
-  from { transform: translateY(-8px); opacity: 0; }
+  from { transform: translateY(-var(--space-sm)); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
 .inputRow {
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
 .input {
@@ -52,7 +52,7 @@
 
 .shortcut {
   background: var(--surface-base);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width) solid var(--border-subtle);
   padding: var(--shape-xs-py) var(--shape-xs-px);
 }
 
