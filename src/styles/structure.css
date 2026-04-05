@@ -7,6 +7,10 @@
    Includes: value-free layout props + token-bound gap scale.
    Gap is included because the token scale is fixed (7 values).
 
+   Prefer ax() for new code (ly-row, ly-column, ly-bar, ly-spread,
+   ly-center, ly-scroll, ly-fill, g-*, fx-*, w-*).
+   These classes remain for cases ax() doesn't cover.
+
    // ② 2026-03-25-css-writing-rules-prd.md
 */
 
@@ -19,32 +23,19 @@
 /* ── Flex ── */
 .flex-row      { display: flex; }
 .flex-col      { display: flex; flex-direction: column; }
-.flex-col-reverse { display: flex; flex-direction: column-reverse; }
 .flex-wrap     { flex-wrap: wrap; }
 .inline-flex   { display: inline-flex; }
 
 /* ── Grid ── */
 .grid          { display: grid; }
-.inline-grid   { display: inline-grid; }
 
 /* ── Alignment ── */
 .items-center    { align-items: center; }
-.items-start     { align-items: flex-start; }
-.items-end       { align-items: flex-end; }
-.items-stretch   { align-items: stretch; }
-.items-baseline  { align-items: baseline; }
 .justify-center  { justify-content: center; }
 .justify-between { justify-content: space-between; }
-.justify-end     { justify-content: flex-end; }
 
-/* ── Gap (token-bound, 7 values) ── */
-.gap-xs  { gap: var(--space-xs); }
+/* ── Gap (token-bound) ── */
 .gap-sm  { gap: var(--space-sm); }
-.gap-md  { gap: var(--space-md); }
-.gap-lg  { gap: var(--space-lg); }
-.gap-xl  { gap: var(--space-xl); }
-.gap-2xl { gap: var(--space-2xl); }
-.gap-3xl { gap: var(--space-3xl); }
 
 /* ── Sizing ── */
 .flex-1   { flex: 1; }
@@ -57,19 +48,12 @@
 /* ── Overflow ── */
 .overflow-hidden   { overflow: hidden; }
 .overflow-auto     { overflow: auto; }
-.overflow-x-hidden { overflow-x: hidden; }
-.overflow-x-auto   { overflow-x: auto; }
 .overflow-y-auto   { overflow-y: auto; }
 
 /* ── Text ── */
-.truncate      { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.text-left     { text-align: left; }
 .text-center   { text-align: center; }
-.text-right    { text-align: right; }
 .whitespace-nowrap { white-space: nowrap; }
-.no-underline  { text-decoration: none; }
 .align-middle  { vertical-align: middle; }
-.align-baseline { vertical-align: baseline; }
 
 /* ── Position ── */
 .relative { position: relative; }
@@ -82,16 +66,8 @@
 .cursor-pointer      { cursor: pointer; }
 .pointer-events-none { pointer-events: none; }
 
-/* ── Aspect Ratio ── */
-.aspect-square { aspect-ratio: 1; }
-.aspect-4-3    { aspect-ratio: 4 / 3; }
-.aspect-16-9   { aspect-ratio: 16 / 9; }
-.aspect-3-4    { aspect-ratio: 3 / 4; }
-
 /* ── Reset ── */
 .border-none  { border: none; }
-.outline-none { outline: none; }
-.list-none    { list-style: none; }
 .object-cover { object-fit: cover; }
 
 /* ── Visibility ── */

@@ -1,14 +1,11 @@
 /* ═══════════════════════════════════════════
-   L3 Surface — Interaction mode + Depth zone
+   L3 Surface — Depth zone
    ═══════════════════════════════════════════
-   Changes when: interaction mode policy changes.
+   Changes when: depth zone policy changes.
+   Single responsibility: [data-depth] → interactive ladder cascade.
 
-   Two orthogonal concerns:
-   1. data-surface (role) — border + shadow + cursor policy
-   2. data-depth   (position) — interactive ladder (hover/selection tokens)
-
-   Role: what IS this element? (action/input/display/overlay)
-   Depth: where IS this element? (sunken/base/raised/overlay)
+   Surface roles (action/input/display/overlay) moved to ax.css (sf-* classes).
+   This file handles only positional depth.
 
    Children inherit depth via CSS cascade — a listbox inside
    data-depth="overlay" automatically gets overlay hover/selection.
@@ -16,8 +13,6 @@
 
    Token values live in tokens.css (--depth-{zone}-{state}).
    Theme switch = override tokens, these rules stay unchanged.
-
-   // ② 2026-03-26-component-styling-rules-prd.md
 */
 
 
@@ -62,28 +57,4 @@
   --selection-context: var(--depth-overlay-sel-context);
   --selection:         var(--depth-overlay-sel);
   --selection-cursor:  var(--depth-overlay-sel-cursor);
-}
-
-
-/* ��══ Surface roles — border + shadow + cursor policy ═══ */
-
-/* action: no border, no shadow — face itself is the action target */
-[data-surface="action"] {
-  border: none;
-  cursor: pointer;
-}
-
-/* input: border defines identity, no shadow */
-[data-surface="input"] {
-  border: 1px solid var(--_border, var(--border-strong));
-  outline: none;
-}
-
-/* display: no interaction states — border/shadow optional via variant */
-/* (intentionally empty — variant handles everything) */
-
-/* overlay: floating layer — border + shadow for depth */
-[data-surface="overlay"] {
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-lg);
 }
