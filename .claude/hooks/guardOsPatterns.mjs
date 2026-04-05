@@ -105,7 +105,7 @@ if (!isExempt && isTsx && /\bonKey(?:Down|Up)\s*=\s*\n?\s*\{/m.test(content)) {
 if (!isExempt && isTsx && /\brole\s*=\s*["'](?:listbox|tree|treegrid|grid|menu|menubar|tablist|combobox|radiogroup)["']/.test(content)) {
   // role → component 1:1 매핑
   const ROLE_MAP = {
-    listbox: 'ListBox', tree: 'TreeGrid', treegrid: 'TreeGrid', grid: 'Grid',
+    listbox: 'ListBox', tree: 'TreeView', treegrid: 'TreeGrid', grid: 'Grid',
     menu: 'MenuList', menubar: 'Menubar', tablist: 'TabList', combobox: 'Combobox',
     radiogroup: 'RadioGroup',
   }
