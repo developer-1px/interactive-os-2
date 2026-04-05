@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { ax } from '@styles/ax'
-import styles from './PageIncidentInterface.module.css'
+import './PageIncidentInterface.css'
 import {
   AlertTriangle, GitCommit, Zap, Activity,
   CheckCircle, Loader, Bot,
@@ -94,7 +94,7 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   const { displayed, done } = useTypewriter(msg.text, active)
   return (
     <div className={ax({ layout: 'bar', gap: 'sm' })}>
-      <div className={`${ax({ layout: 'center', text: 'accent' })} ${styles.avatar}`}><Bot size={14} /></div>
+      <div className={`${ax({ layout: 'center', text: 'accent' })} incident-avatar`}><Bot size={14} /></div>
       <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
         <div className={ax({ textStyle: 'caption', text: 'primary' })}>
           {displayed}
@@ -122,9 +122,9 @@ function Elapsed({ startTime }: { startTime: number | null }) {
 // ═══════════════════════════════════════════
 
 const STATUS_CLS: Record<ServiceInfo['status'], string> = {
-  critical: styles.indicatorCritical,
-  warning: styles.indicatorWarning,
-  healthy: styles.indicatorHealthy,
+  critical: 'incident-indicator-critical',
+  warning: 'incident-indicator-warning',
+  healthy: 'incident-indicator-healthy',
 }
 
 function buildToolbarData(services: ServiceInfo[]): NormalizedData {
@@ -155,7 +155,7 @@ function MonitoringBar({ services, onActivate }: {
         {...props}
         className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', textStyle: 'caption', state: state.focused ? 'focused' : undefined })}
       >
-        <span className={`${styles.indicator} ${STATUS_CLS[svc.status]}`} />
+        <span className={`incident-indicator ${STATUS_CLS[svc.status]}`} />
         <span className={ax({ weight: 'medium' })}>{svc.name}</span>
         <span className={ax({ textStyle: 'code', text: 'muted' })}>{svc.latency}</span>
       </span>
@@ -173,7 +173,7 @@ function MonitoringBar({ services, onActivate }: {
       />
       <div className={ax({ layout: 'bar', gap: 'sm' })}>
         <span className={ax({ textStyle: 'code', text: 'muted' })}>INC-1284</span>
-        <span className={`${ax({ textStyle: 'code', text: 'danger', weight: 'semi' })} ${styles.monitorMetaLive}`}>REC</span>
+        <span className={`${ax({ textStyle: 'code', text: 'danger', weight: 'semi' })} incident-monitor-meta-live`}>REC</span>
       </div>
     </div>
   )
@@ -192,9 +192,9 @@ const EVENT_ICON: Record<TimelineEvent['type'], React.ReactNode> = {
 }
 
 const SEVERITY_CLS: Record<TimelineEvent['severity'], string> = {
-  critical: styles.evCritical,
-  warning: styles.evWarning,
-  info: styles.evInfo,
+  critical: 'incident-ev-critical',
+  warning: 'incident-ev-warning',
+  info: 'incident-ev-info',
 }
 
 function buildTimelineData(events: TimelineEvent[], visibleCount: number): NormalizedData {
@@ -227,19 +227,19 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
     return (
       <div
         {...props}
-        className={`${styles.timelineItem} ${SEVERITY_CLS[ev.severity]} ${isSelected ? styles.timelineItemSelected : ''} ${state.focused ? styles.timelineItemFocused : ''}`}
+        className={`incident-timeline-item ${SEVERITY_CLS[ev.severity]} ${isSelected ? 'incident-timeline-item-selected' : ''} ${state.focused ? 'incident-timeline-item-focused' : ''}`}
         onClick={(e) => {
           props.onClick?.(e)
           onSelect(node.id as string)
         }}
       >
-        <div className={`${ax({ textStyle: 'code' })} ${styles.timelineTime}`}>{ev.time}</div>
-        <div className={`${styles.timelineDot} ${ax({ layout: 'column' })}`}>
-          <span className={`${styles.dot} ${SEVERITY_CLS[ev.severity]}`} />
-          <span className={`${styles.dotLine} ${ax({ flex: '1' })}`} />
+        <div className={`${ax({ textStyle: 'code' })} incident-timeline-time`}>{ev.time}</div>
+        <div className={`incident-timeline-dot ${ax({ layout: 'column' })}`}>
+          <span className={`incident-dot ${SEVERITY_CLS[ev.severity]}`} />
+          <span className={`incident-dot-line ${ax({ flex: '1' })}`} />
         </div>
         <div className={ax({ layout: 'bar', gap: 'xs', flex: '1' })}>
-          <div className={styles.timelineIcon}>{EVENT_ICON[ev.type]}</div>
+          <div className="incident-timeline-icon">{EVENT_ICON[ev.type]}</div>
           <div className={ax({ flex: '1' })}>
             <div className={ax({ textStyle: 'body', weight: 'medium' })}>{ev.title}</div>
             <div className={ax({ textStyle: 'caption', text: 'muted' })}>{ev.detail}</div>
@@ -250,7 +250,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
   }, [selectedId, onSelect])
 
   return (
-    <div className={`${ax({ surface: 'base', layout: 'column', flex: 'none' })} ${styles.timelinePanel}`}>
+    <div className={`${ax({ surface: 'base', layout: 'column', flex: 'none' })} incident-timeline-panel`}>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ layout: 'bar', gap: 'xs' })}><Clock size={12} />Timeline</span>
         <span className={ax({ textStyle: 'code' })}>{visibleCount}/{events.length}</span>
@@ -290,14 +290,14 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
   const event = selectedEventId ? TIMELINE_EVENTS.find(e => e.id === selectedEventId) : null
 
   return (
-    <div className={`${ax({ surface: 'sunken', layout: 'fill' })} ${styles.capturePanel}`}>
+    <div className={`${ax({ surface: 'sunken', layout: 'fill' })} incident-capture-panel`}>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ layout: 'bar', gap: 'xs' })}><Image size={12} />Capture</span>
         {event && <span className={ax({ textStyle: 'code' })}>{event.time}</span>}
       </PanelHeader>
       {capture ? (
         <div className={ax({ layout: 'column', flex: '1', gap: 'md', padding: 'sm' })}>
-          <div className={`${styles.captureComparison} grid ${ax({ flex: '1', gap: 'sm' })}`}>
+          <div className={`incident-capture-comparison grid ${ax({ flex: '1', gap: 'sm' })}`}>
             <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })}>
               <div className={ax({ textStyle: 'overline', text: 'muted' })}>Before</div>
               <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
@@ -305,7 +305,7 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
                 <span className={ax({ textStyle: 'code', weight: 'semi' })}>{capture.before}</span>
               </div>
             </div>
-            <div className={`${ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })} ${styles.captureChanged}`}>
+            <div className={`${ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })} incident-capture-changed`}>
               <div className={ax({ textStyle: 'overline', text: 'muted' })}>After</div>
               <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
                 <Eye size={16} />
@@ -399,7 +399,7 @@ export default function PageIncidentInterface() {
   }, [])
 
   return (
-    <div className={`${styles.page} grid h-full overflow-hidden`}>
+    <div className={`incident-page grid h-full overflow-hidden`}>
       {/* Zone 1: Monitoring Bar */}
       <MonitoringBar
         services={SERVICES}
@@ -416,7 +416,7 @@ export default function PageIncidentInterface() {
         />
         <CapturePanel selectedEventId={selectedEvent} />
 
-        <div className={`${ax({ surface: 'sunken', layout: 'column', flex: 'none' })} ${styles.chatZone}`}>
+        <div className={`${ax({ surface: 'sunken', layout: 'column', flex: 'none' })} incident-chat-zone`}>
           <PanelHeader axes={{ layout: 'spread' }}>
             <span className={ax({ layout: 'bar', gap: 'xs' })}><Bot size={12} />AI Analysis</span>
             <span className={ax({ layout: 'bar', gap: 'xs', textStyle: 'code' })}>
@@ -440,7 +440,7 @@ export default function PageIncidentInterface() {
                     <div className={ax({ flex: '1' })}>
                       <div className={ax({ textStyle: 'caption', weight: 'medium' })}>{msg.text}</div>
                     </div>
-                    <div className={`${ax({ layout: 'center' })} ${styles.userAvatar}`}><User size={14} /></div>
+                    <div className={`${ax({ layout: 'center' })} incident-user-avatar`}><User size={14} /></div>
                   </div>
                 )
               }

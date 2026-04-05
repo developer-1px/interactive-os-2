@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import type { RegistryEntry } from '../componentRegistry'
 import { ax } from '@styles/ax'
-import styles from '../PageComponentCreator.module.css'
+import '../PageComponentCreator.css'
 
 interface ComponentChatProps {
   entry: RegistryEntry | null
@@ -51,9 +51,9 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       {/* Context bar */}
       {entry && (
         <div className={ax({ surface: 'sunken', layout: 'spread', padding: 'xs', textStyle: 'caption', border: 'bottom' })}>
-          <span className={`${ax({ weight: 'semi', text: 'primary' })} ${styles.chatContextLabel}`}>{entry.name}</span>
+          <span className={`${ax({ weight: 'semi', text: 'primary' })} creator-chat-context-label`}>{entry.name}</span>
           {entry.variants.length > 0 && (
-            <span className={`${ax({ text: 'muted' })} ${styles.chatContextMeta}`}>
+            <span className={`${ax({ text: 'muted' })} creator-chat-context-meta`}>
               {entry.variants.length} variants, {entry.sizes.length} sizes
             </span>
           )}
@@ -72,7 +72,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
         {messages.map((msg) => (
           <div
             key={msg.ts}
-            className={`${ax({ textStyle: 'body', padding: 'xs', shape: 'sm' })} ${styles.chatBubble} ${msg.role === 'user' ? ax({ surface: 'base', tone: 'accent-dim', layout: 'self-end', text: 'bright' }) : ax({ surface: 'sunken', layout: 'self-start', text: 'primary' })}`}
+            className={`${ax({ textStyle: 'body', padding: 'xs', shape: 'sm' })} creator-chat-bubble ${msg.role === 'user' ? ax({ surface: 'base', tone: 'accent-dim', layout: 'self-end', text: 'bright' }) : ax({ surface: 'sunken', layout: 'self-start', text: 'primary' })}`}
           >
             {msg.content}
           </div>
@@ -82,7 +82,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       {/* Input */}
       <div className={ax({ padding: 'sm', border: 'top' })}>
         <textarea
-          className={`${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'sm' })} ${styles.chatInput} w-full`}
+          className={`${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'sm' })} creator-chat-input w-full`}
           placeholder={entry ? `${entry.name} 수정 요청...` : 'dev-channel 미연결'}
           value={input}
           onChange={(e) => setInput(e.target.value)}
