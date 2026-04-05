@@ -43,6 +43,7 @@
   background: var(--_bg, var(--surface-overlay));
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-strong);
+  z-index: 10;
   transition: opacity var(--motion-enter-duration) var(--motion-enter-easing);
   --bg-hover:          var(--depth-overlay-hover);
   --bg-active:         var(--depth-overlay-active);
@@ -302,7 +303,7 @@
 
 .op-dim    { opacity: 0.6; }
 .op-faint  { opacity: 0.4; }
-.op-hidden { opacity: 0; }
+.op-hidden { opacity: 0; pointer-events: none; }
 
 /* ════════════════════════════════════════════
  * Content — 콘텐츠 유형에 ��른 padding inline 비율
@@ -448,6 +449,46 @@
 .mo-fade-in  { animation: ax-fade-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
 .mo-slide-up { animation: ax-slide-up var(--motion-enter-duration) var(--motion-enter-easing) both; }
 
+@keyframes ax-fade-slide-in {
+  from { opacity: 0; transform: translateY(var(--space-sm)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ax-slide-in {
+  from { opacity: 0; transform: translateY(calc(-1 * var(--space-sm))); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ax-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ax-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes ax-shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.mo-fade-slide-in { animation: ax-fade-slide-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
+.mo-slide-in      { animation: ax-slide-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
+.mo-scale-in      { animation: ax-scale-in var(--motion-enter-duration) var(--motion-enter-easing) both; }
+.mo-blink         { animation: ax-blink 0.8s step-end infinite; }
+.mo-shimmer       { animation: ax-shimmer 1.5s ease-in-out infinite; }
+
+/* ════════════════════════════════════════════
+ * Scroll — overflow 제어
+ * layout:scroll은 flex+overflow 번들, scroll은 순수 overflow만
+ * ════════════════════════════════════════════ */
+
+.sc-hidden { overflow: hidden; }
+.sc-y      { overflow-y: auto; overflow-x: hidden; }
+.sc-x      { overflow-x: auto; overflow-y: hidden; }
+.sc-auto   { overflow: auto; }
+
 /* ════════════════════════════════════════════
  * Clamp — 텍스트 줄 수 제한
  * '1': nowrap + ellipsis (단일행)
@@ -517,7 +558,7 @@
 .pl-bottom-center { position: absolute; bottom: var(--space-md); left: 50%; transform: translateX(-50%); }
 .pl-center        { position: absolute; inset: 0; margin: auto; width: fit-content; height: fit-content; }
 .pl-top-start     { position: absolute; top: 0; inset-inline-start: 0; }
-.pl-viewport      { position: fixed; inset: 0; }
+.pl-viewport      { position: fixed; inset: 0; z-index: 100; }
 .pl-sticky        { position: sticky; top: 0; z-index: 1; }
 
 /* layout helpers */
