@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
+import { ImageOff } from 'lucide-react'
 import cmsStyles from './CmsLanding.module.css'
 import { getChildren } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -31,9 +32,21 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
     if (!entity) return null
     const d = (entity.data ?? {}) as Record<string, string>
 
-    // Present mode: skip empty image nodes
-    if (d.type === 'hero-image' && !d.src) return null
-    if (d.type === 'gallery-item' && !d.src) return null
+    // Present mode: shy placeholder for empty image nodes
+    if (d.type === 'hero-image' && !d.src) {
+      return <div key={nodeId} className={`${cmsStyles.cmsPresentShyPlaceholder} flex-row items-center justify-center opacity-dim`}><ImageOff size={16} /></div>
+    }
+    if (d.type === 'gallery-item' && !d.image) {
+      const galleryChildren = getChildren(data, nodeId)
+      return (
+        <div key={nodeId} className={getNodeClassName(d)}>
+          <div className="flex-col">
+            <div className={`${cmsStyles.cmsPresentShyPlaceholderSmall} flex-row items-center justify-center opacity-faint`}><ImageOff size={14} /></div>
+            {galleryChildren.map(id => renderNode(id))}
+          </div>
+        </div>
+      )
+    }
     const children = getChildren(data, nodeId)
     const className = getNodeClassName(d)
     const Tag = getNodeTag(d)
