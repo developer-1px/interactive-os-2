@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ax } from '@styles/ax'
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { createStore, getChildren } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
 import type { Plugin } from '@os/plugins/types'
-import type { NodeState } from '@os/pattern/types'
 import { key } from '@os/axis/types'
 import { FOCUS_ID } from '@os/axis/navigate'
 import { history } from '@os/plugins/history'
@@ -93,7 +92,7 @@ export default function CrudDemo() {
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
-        <button type="button" onClick={handleCreate} style={{ marginLeft: 'var(--space-sm)', fontSize: '0.85em' }}>+ Add item</button>
+        <button type="button" onClick={handleCreate} className={ax({ surface: 'ghost', controlSize: 'sm', textStyle: 'caption' })}>+ Add item</button>
       </div>
       <div className="card overflow-hidden">
         <TreeGrid
@@ -102,28 +101,6 @@ export default function CrudDemo() {
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(props, node, state: NodeState) => {
-            const d = node.data as Record<string, unknown>
-            const isGroup = d?.type === 'group'
-            const indent = ((state.level ?? 1) - 1) * 18
-
-            const cls = [
-              'tree-node flex-row items-center',
-              state.focused && 'tree-node--focused',
-              state.selected && !state.focused && 'tree-node--selected',
-            ].filter(Boolean).join(' ')
-
-            return (
-              <div {...props} className={cls} style={{ paddingLeft: 14 + indent }}>
-                <span className="tree-node__chevron shrink-0 inline-flex items-center justify-center">
-                  {isGroup ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
-                </span>
-                <span className="tree-node__name" style={{ fontWeight: isGroup ? 600 : 400 }}>
-                  {d?.label as string}
-                </span>
-              </div>
-            )
-          }}
         />
       </div>
     </>

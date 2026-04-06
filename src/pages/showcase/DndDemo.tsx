@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
 import { history } from '@os/plugins/history'
 import { dnd } from '@os/plugins/dnd'
@@ -51,28 +49,6 @@ export default function DndDemo() {
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(props, node, state: NodeState) => {
-            const d = node.data as Record<string, unknown>
-            const isGroup = d?.type === 'group'
-            const indent = ((state.level ?? 1) - 1) * 18
-
-            const cls = [
-              'tree-node flex-row items-center',
-              state.focused && 'tree-node--focused',
-              state.selected && !state.focused && 'tree-node--selected',
-            ].filter(Boolean).join(' ')
-
-            return (
-              <div {...props} className={cls} style={{ '--_indent': `${14 + indent}px`, paddingLeft: 'var(--_indent)' } as React.CSSProperties}>
-                <span className="tree-node__chevron shrink-0 inline-flex items-center justify-center">
-                  {isGroup ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
-                </span>
-                <span className={`tree-node__name${isGroup ? ' wt-semi' : ''}`}>
-                  {d?.label as string}
-                </span>
-              </div>
-            )
-          }}
         />
       </div>
     </>

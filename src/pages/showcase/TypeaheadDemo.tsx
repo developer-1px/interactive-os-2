@@ -4,7 +4,7 @@ import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData, Entity } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
+import type { ItemSlots } from '@os/ui/types'
 import { typeahead } from '@os/plugins/typeahead'
 
 const fruitData = createStore({
@@ -52,6 +52,13 @@ const getLabel = (entity: Entity) =>
 
 const plugins = [typeahead({ getLabel })]
 
+const itemSlots: ItemSlots = {
+  icon: (node) => {
+    const d = node.data as Record<string, unknown>
+    return d?.emoji as string
+  },
+}
+
 export default function TypeaheadDemo() {
   const [data] = useState<NormalizedData>(fruitData)
 
@@ -67,21 +74,7 @@ export default function TypeaheadDemo() {
         <ListBox
           data={data}
           plugins={plugins}
-          renderItem={(props, item, state: NodeState) => {
-            const d = item.data as Record<string, unknown>
-            const cls = [
-              'list-item flex-row items-center justify-between',
-              state.focused && 'list-item--focused',
-              state.selected && !state.focused && 'list-item--selected',
-            ].filter(Boolean).join(' ')
-
-            return (
-              <div {...props} className={cls}>
-                <span className="list-item__icon">{d?.emoji as string}</span>
-                <span className="list-item__label">{d?.label as string}</span>
-              </div>
-            )
-          }}
+          itemSlots={itemSlots}
         />
       </div>
     </>

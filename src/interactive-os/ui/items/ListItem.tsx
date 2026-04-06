@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { getNodeLabel } from '../types'
 import { ax } from '@styles/ax'
 
-interface ListItemOptions {
+export interface ListItemOptions {
   icon?: React.ReactNode
   rightContent?: React.ReactNode
   className?: string

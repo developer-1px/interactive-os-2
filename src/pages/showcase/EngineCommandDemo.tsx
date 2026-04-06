@@ -7,7 +7,6 @@ import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
 import type { Command, Middleware } from '@os/engine/types'
-import type { NodeState } from '@os/pattern/types'
 import { crud } from '@os/plugins/crud'
 import { history } from '@os/plugins/history'
 import { focusRecovery } from '@os/plugins/focusRecovery'
@@ -100,19 +99,6 @@ export default function EngineCommandDemo() {
           data={data}
           onChange={setData}
           plugins={plugins}
-          renderItem={(props, item, state: NodeState) => {
-            const d = item.data as Record<string, unknown>
-            const cls = [
-              'list-item flex-row items-center justify-between',
-              state.focused && 'list-item--focused',
-              state.selected && !state.focused && 'list-item--selected',
-            ].filter(Boolean).join(' ')
-            return (
-              <div {...props} className={cls}>
-                <span className="list-item__label">{d?.label as string}</span>
-              </div>
-            )
-          }}
         />
       </div>
 
