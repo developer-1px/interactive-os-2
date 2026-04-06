@@ -45,11 +45,24 @@ if (filePath.includes('/src/') && /\.[tj]sx?$/.test(filePath)) {
 }
 
 // 규칙 2: toHaveBeenCalled* mock 호출 검증 금지
+// 예외: userEvent/user.keyboard/user.click이 있는 테스트 — 콜백 prop 계약 검증은 허용
 if (/\.(test|spec)\.[tj]sx?$/.test(filePath)) {
   if (/toHaveBeenCalled\b/.test(content)) {
-    violations.push(
-      'toHaveBeenCalled* mock 검증 금지 — DOM/ARIA 상태를 직접 검증하세요. 예: expect(el).toHaveAttribute(\'aria-selected\', \'true\'), expect(el).toHaveFocus(), screen.getByRole(...)'
-    )
+    // 작성 중인 내용에 user interaction이 있으면 콜백 검증으로 간주 → 허용
+    const hasUserInteraction = /\buser\s*\.\s*(?:keyboard|click|type|tab|pointer|hover|setup)\b|\buserEvent\b/.test(content)
+    // 파일 전체도 확인 (Edit의 경우 new_string만 오므로 파일 전체에 interaction이 있을 수 있음)
+    let fileHasInteraction = hasUserInteraction
+    if (!fileHasInteraction && filePath) {
+      try {
+        const fileContent = readFileSync(filePath, 'utf8')
+        fileHasInteraction = /\buser\s*\.\s*(?:keyboard|click|type|tab|pointer|hover|setup)\b|\buserEvent\b/.test(fileContent)
+      } catch { /* file may not exist yet */ }
+    }
+    if (!fileHasInteraction) {
+      violations.push(
+        'toHaveBeenCalled* mock 검증 금지 — DOM/ARIA 상태를 직접 검증하세요. 예: expect(el).toHaveAttribute(\'aria-selected\', \'true\'), expect(el).toHaveFocus(), screen.getByRole(...). 콜백 prop 검증은 user interaction(userEvent)이 있는 테스트에서만 허용됩니다.'
+      )
+    }
   }
 }
 
