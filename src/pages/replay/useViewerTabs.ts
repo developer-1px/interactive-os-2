@@ -2,11 +2,6 @@
 import { useState, useCallback } from 'react'
 import type { ViewerTab, FileTab, SearchTab, TerminalTab } from './viewerTypes'
 
-let tabCounter = 0
-function nextId(prefix: string): string {
-  return `${prefix}-${++tabCounter}`
-}
-
 export interface UseViewerTabsReturn {
   tabs: ViewerTab[]
   activeTabId: string | null
@@ -37,7 +32,7 @@ export function useViewerTabs(): UseViewerTabsReturn {
   }, [])
 
   const openSearch = useCallback((query: string, output: string): SearchTab => {
-    const id = nextId('search')
+    const id = 'search'
     const tab: SearchTab = { type: 'search', id, query, output }
     setTabMap(prev => {
       const next = new Map(prev)
@@ -49,7 +44,7 @@ export function useViewerTabs(): UseViewerTabsReturn {
   }, [])
 
   const openTerminal = useCallback((command: string, output: string): TerminalTab => {
-    const id = nextId('terminal')
+    const id = 'terminal'
     const tab: TerminalTab = { type: 'terminal', id, command, output }
     setTabMap(prev => {
       const next = new Map(prev)
