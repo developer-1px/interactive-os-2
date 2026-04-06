@@ -15,7 +15,7 @@ import { GRID_COL_ID } from '@os/axis/navigate'
 import { rename } from '@os/plugins/rename'
 import { history } from '@os/plugins/history'
 import { focusRecovery } from '@os/plugins/focusRecovery'
-import { translatableEntriesToGrid, I18N_COLUMNS } from '../pages/cms/cmsI18nAdapter'
+import { translatableEntriesToGrid, I18N_COLUMNS } from '../pages/cms/cmsI18nTransform'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID, type NormalizedData } from '@os/store/types'
 

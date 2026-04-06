@@ -67,6 +67,7 @@
 }
 
 .book-progress-fill {
+  width: var(--progress, 0%);
   height: 100%;
   background: var(--tone-primary-base);
   transition: width var(--motion-normal-duration) var(--motion-normal-easing);

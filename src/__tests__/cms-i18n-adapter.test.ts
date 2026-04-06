@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { translatableEntriesToGrid, I18N_COLUMNS, getRowMetadata, diffGridChanges } from '../pages/cms/cmsI18nAdapter'
+import { translatableEntriesToGrid, I18N_COLUMNS, getRowMetadata, diffGridChanges } from '../pages/cms/cmsI18nTransform'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID, type NormalizedData } from '@os/store/types'
 

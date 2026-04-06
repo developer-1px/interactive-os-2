@@ -6,7 +6,7 @@ import { rename } from '@os/plugins/rename'
 import { renameCommands } from '@os/plugins/rename'
 import { history } from '@os/plugins/history'
 import { focusRecovery } from '@os/plugins/focusRecovery'
-import { translatableEntriesToGrid, I18N_COLUMNS, diffGridChanges } from './cmsI18nAdapter'
+import { translatableEntriesToGrid, I18N_COLUMNS, diffGridChanges } from './cmsI18nTransform'
 
 const plugins = [rename(), history(), focusRecovery()]
 

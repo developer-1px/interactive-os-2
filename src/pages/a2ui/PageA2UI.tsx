@@ -1,3 +1,4 @@
+// @useState-hatch
 import { ax } from '@styles/ax'
 import { A2UISurface } from '@os/ui/A2UISurface'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
@@ -139,9 +140,9 @@ const componentShowcase: A2UIPayload = {
     { id: 'list-col', component: 'Column', children: ['list-label', 'color-list'] },
     { id: 'list-label', component: 'Text', text: 'Selection', variant: 'h5' },
     { id: 'color-list', component: 'List', children: ['red', 'green', 'blue'], 'aria-label': 'Colors' },
-    { id: 'red', component: 'Text', text: '🔴 Red', label: 'Red' },
-    { id: 'green', component: 'Text', text: '🟢 Green', label: 'Green' },
-    { id: 'blue', component: 'Text', text: '🔵 Blue', label: 'Blue' },
+    { id: 'red', component: 'Text', text: 'Red', label: 'Red' },
+    { id: 'green', component: 'Text', text: 'Green', label: 'Green' },
+    { id: 'blue', component: 'Text', text: 'Blue', label: 'Blue' },
   ],
 }
 
