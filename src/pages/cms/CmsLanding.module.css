@@ -781,34 +781,48 @@
    ══════════════════════════════ */
 
 @container cms-viewport (max-width: 768px) {
-  .cmsHeroTitle { max-width: 100%; }
+  .cmsHero { min-height: auto; }
+  .cmsHeroTitle { max-width: 100%; font-size: 40px; }
+  .cmsHeroSubtitle { font-size: 16px; }
+  .cmsSectionTitle { font-size: 24px; }
   .cmsFeaturesGrid { grid-template-columns: 1fr; }
   .cmsStatCard + .cmsFeatureCard { grid-column: auto; }
   .cmsManifestoValues { grid-template-columns: 1fr; }
   .cmsPatternsGrid { grid-template-columns: repeat(2, 1fr); }
   .cmsShowcaseGrid { grid-template-columns: 1fr; }
+  .cmsFooterLinks { margin-left: 0; }
 }
 
 @container cms-viewport (max-width: 480px) {
-  .cmsHero { min-height: auto; padding-top: 12vh; }
+  .cmsHero { padding-top: 10cqi; }
+  .cmsHeroTitle { font-size: 32px; }
+  .cmsHeroSubtitle { font-size: 14px; }
+  .cmsSectionTitle { font-size: 20px; }
   .cmsPatternsGrid { grid-template-columns: 1fr 1fr; }
-  .cmsGalleryGrid { grid-template-columns: 1fr 1fr; }
+  .cmsGalleryGrid { grid-template-columns: 1fr; }
 }
 
 /* Fallback for browsers without container query support */
 @supports not (container-type: inline-size) {
   @media (max-width: 768px) {
-    .cmsHeroTitle { max-width: 100%; }
+    .cmsHero { min-height: auto; }
+    .cmsHeroTitle { max-width: 100%; font-size: 40px; }
+    .cmsHeroSubtitle { font-size: 16px; }
+    .cmsSectionTitle { font-size: 24px; }
     .cmsFeaturesGrid { grid-template-columns: 1fr; }
     .cmsStatCard + .cmsFeatureCard { grid-column: auto; }
     .cmsManifestoValues { grid-template-columns: 1fr; }
     .cmsPatternsGrid { grid-template-columns: repeat(2, 1fr); }
     .cmsShowcaseGrid { grid-template-columns: 1fr; }
+    .cmsFooterLinks { margin-left: 0; }
   }
   @media (max-width: 480px) {
-    .cmsHero { min-height: auto; padding-top: 12vh; }
+    .cmsHero { padding-top: 10vw; }
+    .cmsHeroTitle { font-size: 32px; }
+    .cmsHeroSubtitle { font-size: 14px; }
+    .cmsSectionTitle { font-size: 20px; }
     .cmsPatternsGrid { grid-template-columns: 1fr 1fr; }
-    .cmsGalleryGrid { grid-template-columns: 1fr 1fr; }
+    .cmsGalleryGrid { grid-template-columns: 1fr; }
   }
 }
 
@@ -882,4 +896,22 @@
   font-family: var(--landing-type-label-family);
   font-size: var(--landing-type-label-size);
   color: var(--landing-text-secondary);
+}
+
+/* ══════════════════════════════
+   Shy Placeholder — 프레젠테이션 모드 빈 이미지
+   ══════════════════════════════ */
+
+.cmsPresentShyPlaceholder {
+  height: var(--space-3xl);
+  max-width: var(--landing-space-content);
+  margin: 0 auto;
+  color: var(--landing-text-muted);
+  border: var(--border-width) dashed color-mix(in srgb, var(--landing-text-muted) 15%, transparent);
+  border-radius: var(--landing-shape-lg-r);
+}
+
+.cmsPresentShyPlaceholderSmall {
+  aspect-ratio: 4 / 3;
+  color: var(--landing-text-muted);
 }
