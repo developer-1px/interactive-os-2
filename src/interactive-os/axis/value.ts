@@ -1,4 +1,5 @@
-import type { CtxFactory } from './types'
+import type { CtxFactory, ValueNav } from './types'
+import type { CommandEngine } from '../engine/createCommandEngine'
 import { key } from './types'
 import type { Command } from '../engine/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -67,10 +68,10 @@ export const valueCommands = {
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function valueCtx(
-  engine: import('../engine/createCommandEngine').CommandEngine,
+  engine: CommandEngine,
   _focusedId: string,
   range: ValueRange,
-): import('./types').ValueNav {
+): ValueNav {
   const store = engine.getStore()
   const currentValue = ((store.entities[VALUE_ID] as Record<string, unknown>)?.value as number) ?? range.min
   return {

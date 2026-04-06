@@ -1,7 +1,7 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 import type React from 'react'
 import type { Entity } from '../store/types'
-import type { FocusStrategy, SelectionMode, ClickMap, EntityDecl, CtxFactory, KeyHandler } from '../axis/types'
+import type { FocusStrategy, SelectionMode, ClickMap, EntityDecl, CtxFactory, KeyHandler, AriaGen, StateGen } from '../axis/types'
 import type { ValueRange } from '../axis/value'
 import type { Middleware, VisibilityFilter } from '../engine/types'
 
@@ -59,9 +59,9 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   /** Ctx factories from axes — createPatternContext calls these to populate namespace properties. */
   ctxFactories?: CtxFactory[]
   /** Per-node ARIA generators from axes — useAriaView calls these to produce aria-* attributes. OCP. */
-  ariaGens?: import('../axis/types').AriaGen[]
+  ariaGens?: AriaGen[]
   /** Per-node state generators from axes — useAriaView calls these to populate NodeState. OCP. */
-  stateGens?: import('../axis/types').StateGen[]
+  stateGens?: StateGen[]
   /** Spatial navigation selector — when set, useAriaView activates DOM-based spatial bridge. */
   spatialSelector?: string | (() => string)
   // Metadata — not used for behavior dispatch, only for external queries (e.g. tests)

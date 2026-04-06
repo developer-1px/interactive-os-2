@@ -1,5 +1,6 @@
 // ② 2026-04-03-command-unification-prd.md
-import type { PatternContext, EntityDecl, CtxFactory } from './types'
+import type { PatternContext, EntityDecl, CtxFactory, EditNav } from './types'
+import type { CommandEngine } from '../engine/createCommandEngine'
 import type { Command } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -89,9 +90,9 @@ export const editCommands = defineCommands({
 })
 
 export function editCtx(
-  engine: import('../engine/createCommandEngine').CommandEngine,
+  engine: CommandEngine,
   focusedId: string,
-): import('./types').EditNav {
+): EditNav {
   const state = getEditState(engine.getStore())
   return {
     active: state.active && state.nodeId === focusedId,

@@ -1,4 +1,5 @@
-import type { EntityDecl } from './types'
+import type { EntityDecl, CheckedNav } from './types'
+import type { CommandEngine } from '../engine/createCommandEngine'
 import { key } from './types'
 import type { NormalizedData } from '../store/types'
 import { defineCommands } from '../engine/defineCommand'
@@ -67,9 +68,9 @@ export const checkedCommands = defineCommands({
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function checkedCtx(
-  engine: import('../engine/createCommandEngine').CommandEngine,
+  engine: CommandEngine,
   focusedId: string,
-): import('./types').CheckedNav {
+): CheckedNav {
   const store = engine.getStore()
   const checkedIds = getCheckedIds(store)
   return {

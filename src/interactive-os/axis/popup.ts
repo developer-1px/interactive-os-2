@@ -1,5 +1,6 @@
 // ② 2026-03-29-compose-pattern-3arg-prd.md
-import type { PatternContext, EntityDecl, CtxFactory } from './types'
+import type { PatternContext, EntityDecl, CtxFactory, PopupNav } from './types'
+import type { CommandEngine } from '../engine/createCommandEngine'
 import { key } from './types'
 import type { Command, VisibilityFilter } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
@@ -69,9 +70,9 @@ export const popupVisibilityFilter: VisibilityFilter = {
 }
 
 function popupCtx(
-  engine: import('../engine/createCommandEngine').CommandEngine,
+  engine: CommandEngine,
   focusedId: string,
-): import('./types').PopupNav {
+): PopupNav {
   const store = engine.getStore()
   const { isOpen, triggerId } = getPopupEntity(store)
   const children = store.relationships[focusedId] ?? []

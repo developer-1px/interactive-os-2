@@ -2,6 +2,7 @@
 import type React from 'react'
 import type { NormalizedData } from '../store/types'
 import type { InspectPatternInfo } from './computeNodeAriaProps'
+import type { LogEntry } from './logger'
 
 // ② 2026-03-29-engine-handler-registry-prd.md
 
@@ -90,7 +91,7 @@ export interface VisibilityFilter {
 }
 
 export interface EngineOptions {
-  logger?: boolean | ((entry: import('./logger').LogEntry) => void)
+  logger?: boolean | ((entry: LogEntry) => void)
   /** Merged keyMap from all plugins — for inspect() introspection */
   keyMap?: Record<string, KeyMapEntry>
   /** Plugin instances — for inspect() introspection */

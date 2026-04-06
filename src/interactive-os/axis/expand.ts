@@ -1,4 +1,5 @@
-import type { EntityDecl } from './types'
+import type { EntityDecl, ExpandedNav } from './types'
+import type { CommandEngine } from '../engine/createCommandEngine'
 import { key } from './types'
 import type { VisibilityFilter } from '../engine/types'
 import type { NormalizedData } from '../store/types'
@@ -99,9 +100,9 @@ export const expandCommands = defineCommands({
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function expandedCtx(
-  engine: import('../engine/createCommandEngine').CommandEngine,
+  engine: CommandEngine,
   focusedId: string,
-): import('./types').ExpandedNav {
+): ExpandedNav {
   const store = engine.getStore()
   const expandedIds = getExpandedIds(store)
   const children = store.relationships[focusedId] ?? []

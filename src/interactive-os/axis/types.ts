@@ -1,8 +1,9 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 // axis가 계약을 정의, pattern이 구현
-import type { Entity } from '../store/types'
+import type { Entity, NormalizedData } from '../store/types'
 import type { Command } from '../engine/types'
 import type { Middleware, VisibilityFilter } from '../engine/types'
+import type { CommandEngine } from '../engine/createCommandEngine'
 
 export type SelectionMode = 'single' | 'multiple'
 
@@ -86,6 +87,8 @@ export interface PatternContext {
   focusLast(): Command
   focusParent(): Command
   focusChild(): Command
+  focusNextGroup(): Command
+  focusPrevGroup(): Command
   activate(): Command
   dispatch(command: Command): void
   getEntity(id: string): Entity | undefined
@@ -103,7 +106,7 @@ export interface PatternContext {
   edit?: EditNav
 
   // ── spatial navigation (provided by useSpatialBridge when strategy='spatial') ──
-  spatialMove?: (dir: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') => import('../engine/types').Command | void
+  spatialMove?: (dir: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') => Command | void
 }
 
 /** Annotated keyMap handler — carries command metadata for introspection */
@@ -127,7 +130,7 @@ export interface EntityDecl {
 }
 
 /** Factory that creates an axis namespace on PatternContext. Called by createPatternContext. */
-export type CtxFactory = (engine: import('../engine/createCommandEngine').CommandEngine, focusedId: string, visibleNodes: () => string[]) => Record<string, unknown>
+export type CtxFactory = (engine: CommandEngine, focusedId: string, visibleNodes: () => string[]) => Record<string, unknown>
 
 /** Per-node ARIA attribute generator. Called during render for each visible node. */
 export type AriaGen = (
@@ -139,7 +142,7 @@ export type AriaGen = (
 /** Per-node state contributor. Axis declares how its store data maps to NodeState fields. */
 export type StateGen = (
   id: string,
-  store: import('../store/types').NormalizedData,
+  store: NormalizedData,
   children: string[],
   meta: Record<string, unknown>,
 ) => Record<string, unknown>

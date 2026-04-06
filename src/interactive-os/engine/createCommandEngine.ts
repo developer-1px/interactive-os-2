@@ -1,5 +1,5 @@
 // ② 2026-03-29-engine-handler-registry-prd.md
-import type { Command, Middleware, BatchCommand, CommandHandler, CommandEngine, EngineOptions } from './types'
+import type { Command, Middleware, BatchCommand, CommandHandler, CommandEngine, EngineOptions, InspectResult, KeyMapEntry } from './types'
 import { isBatchCommand } from './types'
 export type { CommandEngine } from './types'
 import type { NormalizedData } from '../store/types'
@@ -116,12 +116,12 @@ export function createCommandEngine(
     executor
   )
 
-  let inspectKeyMap: Record<string, import('./types').KeyMapEntry> = options?.keyMap ?? {}
+  let inspectKeyMap: Record<string, KeyMapEntry> = options?.keyMap ?? {}
   let inspectRole: string | undefined
   let inspectChildRole: string | undefined
   let inspectPatternInfo: InspectPatternInfo | undefined
 
-  const inspect = (): import('./types').InspectResult => {
+  const inspect = (): InspectResult => {
     const pluginList = options?.plugins ?? []
     const extras: Record<string, Record<string, unknown>> = {}
     for (const p of pluginList) {

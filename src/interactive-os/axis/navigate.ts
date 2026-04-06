@@ -1,10 +1,39 @@
-import type { CtxFactory } from './types'
+import type { CtxFactory, GridNav, FocusStrategy } from './types'
+import type { CommandEngine } from '../engine/createCommandEngine'
 import { key } from './types'
 import type { Command } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import { defineCommands } from '../engine/defineCommand'
-import { ROOT_ID } from '../store/types'
+import { type NormalizedData, ROOT_ID } from '../store/types'
 import { getChildren, getParent } from '../store/createStore'
+
+/**
+ * Jump to the first/last child of the next/prev sibling group.
+ * "Group" = parent of the focused node. Finds adjacent sibling of parent
+ * that has children, then focuses first (direction=1) or last (direction=-1) child.
+ */
+function groupJump(store: NormalizedData, focusedId: string, direction: 1 | -1): Command {
+  const parentId = getParent(store, focusedId)
+  if (!parentId || parentId === ROOT_ID) return focusCommands.setFocus(focusedId)
+
+  const grandparentId = getParent(store, parentId)
+  if (!grandparentId) return focusCommands.setFocus(focusedId)
+
+  const siblings = getChildren(store, grandparentId)
+  const idx = siblings.indexOf(parentId)
+
+  for (let i = idx + direction; i >= 0 && i < siblings.length; i += direction) {
+    const sibId = siblings[i]!
+    const children = getChildren(store, sibId)
+    if (children.length > 0) {
+      const target = direction === 1 ? children[0]! : children[children.length - 1]!
+      return focusCommands.setFocus(target)
+    }
+    return focusCommands.setFocus(sibId)
+  }
+
+  return focusCommands.setFocus(focusedId)
+}
 
 // ② 2026-03-29-define-command-prd.md
 export const FOCUS_ID = '__focus__'
@@ -45,11 +74,11 @@ export const gridColCommands = defineCommands({
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function gridCtx(
-  engine: import('../engine/createCommandEngine').CommandEngine,
+  engine: CommandEngine,
   _focusedId: string,
   colCount: number,
   initialColIndex = 0,
-): import('./types').GridNav {
+): GridNav {
   const store = engine.getStore()
   const currentCol = (store.entities[GRID_COL_ID]?.colIndex as number) ?? initialColIndex
   return {
@@ -71,7 +100,7 @@ export interface SpatialOptions {
   selector: string | (() => string)
 }
 
-function toFocusStrategy(type: NavigateType): import('./types').FocusStrategy {
+function toFocusStrategy(type: NavigateType): FocusStrategy {
   if (type === 'activedescendant') return { type: 'aria-activedescendant', orientation: 'vertical' }
   if (type === 'natural') return { type: 'natural-tab-order', orientation: 'vertical' }
   if (type === 'spatial') return { type: 'roving-tabindex', orientation: 'both' }
@@ -124,6 +153,12 @@ function navigateCtxFactory(): CtxFactory {
         if (children.length === 0) return focusCommands.setFocus(focusedId)
         return focusCommands.setFocus(children[0]!)
       },
+      focusNextGroup(): Command {
+        return groupJump(store, focusedId, 1)
+      },
+      focusPrevGroup(): Command {
+        return groupJump(store, focusedId, -1)
+      },
     }
   }
 }
@@ -138,6 +173,8 @@ export function navigate(type: NavigateType = 'vertical', opts?: SpatialOptions)
   const child = key(['core:focus'], (ctx) => ctx.focusChild())
   const nextWrap = key(['core:focus'], (ctx) => ctx.focusNext({ wrap: true }))
   const prevWrap = key(['core:focus'], (ctx) => ctx.focusPrev({ wrap: true }))
+  const nextGroup = key(['core:focus'], (ctx) => ctx.focusNextGroup())
+  const prevGroup = key(['core:focus'], (ctx) => ctx.focusPrevGroup())
 
   // Spatial directional handlers — delegate to ctx.spatialMove (provided by useSpatialBridge)
   const up = key(['core:focus'], (ctx) => ctx.spatialMove?.('ArrowUp'))
@@ -163,6 +200,8 @@ export function navigate(type: NavigateType = 'vertical', opts?: SpatialOptions)
     child,
     nextWrap,
     prevWrap,
+    nextGroup,
+    prevGroup,
     // spatial 2D handlers
     up,
     down,
