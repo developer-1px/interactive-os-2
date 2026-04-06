@@ -11,6 +11,49 @@ function isMetaEntity(id: string): boolean {
   return id.startsWith('__')
 }
 
+function diffMetaFields(id: string, prevEntity: Entity | undefined, nextEntity: Entity | undefined, diffs: StoreDiff[]): void {
+  const allKeys = new Set([
+    ...Object.keys(prevEntity ?? {}),
+    ...Object.keys(nextEntity ?? {}),
+  ])
+  for (const key of allKeys) {
+    if (key === 'id') continue
+    const pv = prevEntity?.[key]
+    const nv = nextEntity?.[key]
+    if (pv === nv) continue
+    if (pv === undefined) diffs.push({ path: `${id}.${key}`, kind: 'added', after: nv })
+    else if (nv === undefined) diffs.push({ path: `${id}.${key}`, kind: 'removed', before: pv })
+    else diffs.push({ path: `${id}.${key}`, kind: 'changed', before: pv, after: nv })
+  }
+}
+
+function diffEntity(id: string, prevEntity: Entity | undefined, nextEntity: Entity | undefined, diffs: StoreDiff[]): void {
+  if (!prevEntity && nextEntity) {
+    if (isMetaEntity(id)) diffMetaFields(id, undefined, nextEntity, diffs)
+    else diffs.push({ path: 'entities', kind: 'added', after: nextEntity })
+  } else if (prevEntity && !nextEntity) {
+    if (isMetaEntity(id)) diffMetaFields(id, prevEntity, undefined, diffs)
+    else diffs.push({ path: 'entities', kind: 'removed', before: prevEntity })
+  } else if (prevEntity && nextEntity && prevEntity !== nextEntity) {
+    if (isMetaEntity(id)) diffMetaFields(id, prevEntity, nextEntity, diffs)
+    else diffs.push({ path: 'entities', kind: 'changed', before: prevEntity, after: nextEntity })
+  }
+}
+
+function diffRelationships(prev: NormalizedData, next: NormalizedData, diffs: StoreDiff[]): void {
+  const allKeys = new Set([...Object.keys(prev.relationships), ...Object.keys(next.relationships)])
+  for (const key of allKeys) {
+    const pArr = prev.relationships[key]
+    const nArr = next.relationships[key]
+    if (pArr === nArr) continue
+    if (!pArr && nArr) diffs.push({ path: key, kind: 'added', after: [...nArr] })
+    else if (pArr && !nArr) diffs.push({ path: key, kind: 'removed', before: [...pArr] })
+    else if (pArr && nArr && (pArr.length !== nArr.length || pArr.some((id, i) => id !== nArr[i]))) {
+      diffs.push({ path: key, kind: 'changed', before: [...pArr], after: [...nArr] })
+    }
+  }
+}
+
 export function computeStoreDiff(
   prev: NormalizedData,
   next: NormalizedData
@@ -18,81 +61,11 @@ export function computeStoreDiff(
   if (prev === next) return []
 
   const diffs: StoreDiff[] = []
-
-  // --- entities ---
-  const prevIds = Object.keys(prev.entities)
-  const nextIds = Object.keys(next.entities)
-  const allIds = new Set([...prevIds, ...nextIds])
-
+  const allIds = new Set([...Object.keys(prev.entities), ...Object.keys(next.entities)])
   for (const id of allIds) {
-    const prevEntity = prev.entities[id]
-    const nextEntity = next.entities[id]
-
-    if (!prevEntity && nextEntity) {
-      if (isMetaEntity(id)) {
-        for (const [key, val] of Object.entries(nextEntity)) {
-          if (key === 'id') continue
-          diffs.push({ path: `${id}.${key}`, kind: 'added', after: val })
-        }
-      } else {
-        diffs.push({ path: 'entities', kind: 'added', after: nextEntity })
-      }
-    } else if (prevEntity && !nextEntity) {
-      if (isMetaEntity(id)) {
-        for (const [key, val] of Object.entries(prevEntity)) {
-          if (key === 'id') continue
-          diffs.push({ path: `${id}.${key}`, kind: 'removed', before: val })
-        }
-      } else {
-        diffs.push({ path: 'entities', kind: 'removed', before: prevEntity })
-      }
-    } else if (prevEntity && nextEntity && prevEntity !== nextEntity) {
-      if (isMetaEntity(id)) {
-        const allKeys = new Set([
-          ...Object.keys(prevEntity),
-          ...Object.keys(nextEntity),
-        ])
-        for (const key of allKeys) {
-          if (key === 'id') continue
-          const pv = prevEntity[key]
-          const nv = nextEntity[key]
-          if (pv !== nv) {
-            if (pv === undefined) {
-              diffs.push({ path: `${id}.${key}`, kind: 'added', after: nv })
-            } else if (nv === undefined) {
-              diffs.push({ path: `${id}.${key}`, kind: 'removed', before: pv })
-            } else {
-              diffs.push({ path: `${id}.${key}`, kind: 'changed', before: pv, after: nv })
-            }
-          }
-        }
-      } else {
-        diffs.push({ path: 'entities', kind: 'changed', before: prevEntity, after: nextEntity })
-      }
-    }
+    diffEntity(id, prev.entities[id], next.entities[id], diffs)
   }
-
-  // --- relationships (id-level diff) ---
-  const allRelKeys = new Set([
-    ...Object.keys(prev.relationships),
-    ...Object.keys(next.relationships),
-  ])
-  for (const key of allRelKeys) {
-    const pArr = prev.relationships[key]
-    const nArr = next.relationships[key]
-    if (pArr === nArr) continue
-
-    if (!pArr && nArr) {
-      diffs.push({ path: key, kind: 'added', after: [...nArr] })
-    } else if (pArr && !nArr) {
-      diffs.push({ path: key, kind: 'removed', before: [...pArr] })
-    } else if (pArr && nArr) {
-      if (pArr.length !== nArr.length || pArr.some((id, i) => id !== nArr[i])) {
-        diffs.push({ path: key, kind: 'changed', before: [...pArr], after: [...nArr] })
-      }
-    }
-  }
-
+  diffRelationships(prev, next, diffs)
   return diffs
 }
 
