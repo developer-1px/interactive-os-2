@@ -30,6 +30,10 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
     const entity = data.entities[nodeId]
     if (!entity) return null
     const d = (entity.data ?? {}) as Record<string, string>
+
+    // Present mode: skip empty image nodes
+    if (d.type === 'hero-image' && !d.src) return null
+    if (d.type === 'gallery-item' && !d.src) return null
     const children = getChildren(data, nodeId)
     const className = getNodeClassName(d)
     const Tag = getNodeTag(d)
