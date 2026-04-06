@@ -4,7 +4,7 @@ import { Grid } from '@os/ui/Grid'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { StatusIndicator, ProgressIndicator } from '@os/ui/indicators'
 import type { NodeState } from '@os/pattern/types'
-import { ax } from '@styles/ax'
+import { ax, type Axes } from '@styles/ax'
 import '@styles/ax.css'
 import { buildProjectStore, PROJECT_COLUMNS } from './projectStore'
 import type { Maturity } from './projectData'
@@ -15,12 +15,20 @@ const totalFiles = projects.reduce((sum, p) => sum + p.fileCount, 0)
 const totalOpen = projects.reduce((sum, p) => sum + p.openBacklogs, 0)
 const totalDone = projects.reduce((sum, p) => sum + p.doneBacklogs, 0)
 
-const MATURITY_TEXT: Record<Maturity, 'muted' | 'warning' | 'accent' | 'success'> = {
-  Concept: 'muted',
+const MATURITY_TONE: Record<Maturity, Axes['tone']> = {
+  Concept: undefined,
   Prototype: 'warning',
   Validated: 'accent',
   Integrated: 'success',
   Production: 'accent',
+}
+
+const MATURITY_TEXT: Record<Maturity, Axes['text']> = {
+  Concept: 'muted',
+  Prototype: undefined,
+  Validated: undefined,
+  Integrated: undefined,
+  Production: undefined,
 }
 
 const KIND_LABEL: Record<string, string> = {
@@ -46,7 +54,8 @@ const renderCell = (
           }
           <span className={ax({
             textStyle: 'body',
-            text: v.hasP0 ? 'danger' : state.focused ? 'bright' : 'primary',
+            tone: v.hasP0 ? 'danger' : undefined,
+            text: v.hasP0 ? undefined : state.focused ? 'bright' : 'primary',
             weight: 'semi',
           })}>
             {v.text}
@@ -61,6 +70,7 @@ const renderCell = (
       return (
         <span className={ax({
           textStyle: 'caption',
+          tone: MATURITY_TONE[maturity],
           text: MATURITY_TEXT[maturity] ?? 'muted',
         })}>
           {maturity}
@@ -83,7 +93,7 @@ const renderCell = (
           <ProgressIndicator value={p.done} max={p.total} />
           <span className={ax({
             textStyle: 'caption',
-            text: p.open > 0 ? 'accent' : 'success',
+            tone: p.open > 0 ? 'accent' : 'success',
           })}>
             {p.done}/{p.total}
           </span>

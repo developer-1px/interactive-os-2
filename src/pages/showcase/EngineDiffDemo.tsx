@@ -142,16 +142,16 @@ export default function EngineDiffDemo() {
               <div key={i} className={ax({ padding: 'xs' })}>
                 <span className="op-dim">{d.path}</span>{' '}
                 {d.kind === 'added' && (
-                  <span className={ax({ text: 'success' })}>+{summarizeValue(d.after)}</span>
+                  <span className={ax({ tone: 'success' })}>+{summarizeValue(d.after)}</span>
                 )}
                 {d.kind === 'removed' && (
-                  <span className={ax({ text: 'danger' })}>-{summarizeValue(d.before)}</span>
+                  <span className={ax({ tone: 'danger' })}>-{summarizeValue(d.before)}</span>
                 )}
                 {d.kind === 'changed' && (
                   <>
-                    <span className={ax({ text: 'danger' })}>{summarizeValue(d.before)}</span>
+                    <span className={ax({ tone: 'danger' })}>{summarizeValue(d.before)}</span>
                     <span className="op-faint"> → </span>
-                    <span className={ax({ text: 'success' })}>{summarizeValue(d.after)}</span>
+                    <span className={ax({ tone: 'success' })}>{summarizeValue(d.after)}</span>
                   </>
                 )}
               </div>

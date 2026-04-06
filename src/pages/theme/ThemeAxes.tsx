@@ -106,13 +106,19 @@ function ToneAxis() {
 }
 
 function TextAxis() {
-  const values = ['bright', 'primary', 'secondary', 'muted', 'accent', 'danger', 'success', 'warning'] as const
+  const values = ['bright', 'primary', 'secondary', 'muted'] as const
+  const toneValues = ['accent', 'danger', 'success', 'warning'] as const
   return (
     <Section title="TEXT">
       <div className={ax({ layout: 'row', gap: 'lg' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
             <span className={ax({ textStyle: 'section', text: v })}>Ag</span>
+          </AxisRow>
+        ))}
+        {toneValues.map(v => (
+          <AxisRow key={v} label={`tone:${v}`}>
+            <span className={ax({ textStyle: 'section', tone: v })}>Ag</span>
           </AxisRow>
         ))}
       </div>

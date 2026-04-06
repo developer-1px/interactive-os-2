@@ -109,7 +109,7 @@ function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>;
               <td className="inspector-td-key">{k}</td>
               <td className="inspector-td-command">{os ?? '—'}</td>
               {domProps && (
-                <td className={mismatch ? `inspector-td-mismatch ${ax({ text: 'danger', tone: 'danger-dim' })}` : 'inspector-td-command'}>{dom ?? '—'}</td>
+                <td className={mismatch ? `inspector-td-mismatch ${ax({ tone: 'danger-dim' })}` : 'inspector-td-command'}>{dom ?? '—'}</td>
               )}
             </tr>
           )

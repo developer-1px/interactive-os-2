@@ -22,7 +22,7 @@ class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: st
   static getDerivedStateFromError(err: Error) { return { error: err.message } }
   render() {
     if (this.state.error) {
-      return <div className={ax({ text: 'danger', textStyle: 'caption', padding: 'xs' })}>Render error: {this.state.error}</div>
+      return <div className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>Render error: {this.state.error}</div>
     }
     return this.props.children
   }
@@ -38,7 +38,7 @@ function RenderBlock({ children }: { children: string }) {
     const parsed = parseJsx(line)
     if (!parsed) {
       elements.push(
-        <div key={i} className={ax({ text: 'danger', textStyle: 'caption', padding: 'xs' })}>
+        <div key={i} className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>
           Parse error: {line}
         </div>
       )
@@ -47,7 +47,7 @@ function RenderBlock({ children }: { children: string }) {
     const Component = mdComponents[parsed.name]
     if (!Component) {
       elements.push(
-        <div key={i} className={ax({ text: 'danger', textStyle: 'caption', padding: 'xs' })}>
+        <div key={i} className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>
           Unknown component: {parsed.name}
         </div>
       )

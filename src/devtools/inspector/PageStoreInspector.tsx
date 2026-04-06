@@ -186,7 +186,7 @@ export default function PageStoreInspector() {
                 >
                   <span style={{ opacity: 0.5 }}>#{entry.seq}</span>{' '}
                   <span>{entry.type}</span>{' '}
-                  <span className={ax({ text: 'accent' })}>| {formatDiffSummary(entry)}</span>
+                  <span className={ax({ tone: 'accent' })}>| {formatDiffSummary(entry)}</span>
                 </div>
               ))
             )}

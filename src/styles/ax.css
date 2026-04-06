@@ -231,6 +231,14 @@
   --_bg-active: var(--bg-active);
 }
 
+/* ── Tone standalone text — :where() zero specificity, surface가 있으면 surface의 color가 이긴다 ── */
+
+:where(.tn-accent)      { color: var(--tone-primary-base); }
+:where(.tn-danger)      { color: var(--tone-destructive-base); }
+:where(.tn-success)     { color: var(--tone-success-base); }
+:where(.tn-warning)     { color: var(--tone-warning-base); }
+:where(.tn-neutral)     { color: var(--text-secondary); }
+
 /* ── Tone dim — 연한 배경, 진한 전경 (배지, 버블, 하이라이트) ── */
 
 .tn-accent-dim {
@@ -264,18 +272,20 @@
   --_bg-active: var(--bg-hover);
 }
 
+:where(.tn-accent-dim)  { color: var(--tone-primary-hover); }
+:where(.tn-danger-dim)  { color: var(--tone-destructive-hover); }
+:where(.tn-success-dim) { color: var(--tone-success-hover); }
+:where(.tn-warning-dim) { color: var(--tone-warning-hover); }
+:where(.tn-neutral-dim) { color: var(--text-secondary); }
+
 /* ════════════════════════════════════════════
- * Text Color — 텍스트 색상 위계 (tone과 독립)
+ * Text Color — 텍스트 밝기 위계 (semantic 색상은 tone이 소유)
  * ════════════════════════════════════════════ */
 
 .tx-bright    { color: var(--text-bright); }
 .tx-primary   { color: var(--text-primary); }
 .tx-secondary { color: var(--text-secondary); }
 .tx-muted     { color: var(--text-muted); }
-.tx-accent    { color: var(--tone-primary-base); }
-.tx-danger    { color: var(--tone-destructive-base); }
-.tx-success   { color: var(--tone-success-base); }
-.tx-warning   { color: var(--tone-warning-base); }
 
 /* ════════════════════════════════════════════
  * Weight — textStyle weight와 독립적인 오버라이드
@@ -560,8 +570,8 @@
 .pl-top-start     { position: absolute; top: 0; inset-inline-start: 0; }
 .pl-viewport      { position: fixed; inset: 0; z-index: 100; }
 .pl-sticky        { position: sticky; top: 0; z-index: 1; }
-.pl-anchor-below  { position: fixed; inset: unset; position-area: block-end span-inline-start; position-try-fallbacks: flip-block; }
-.pl-anchor-end    { position: fixed; inset: unset; position-area: inline-end span-block-start; position-try-fallbacks: flip-inline; }
+.pl-anchor-below  { position: fixed; inset: unset; position-area: block-end span-inline-end; position-try-fallbacks: flip-block; }
+.pl-anchor-end    { position: fixed; inset: unset; position-area: inline-end span-block-end; position-try-fallbacks: flip-inline; }
 
 /* layout helpers */
 .relative { position: relative; }

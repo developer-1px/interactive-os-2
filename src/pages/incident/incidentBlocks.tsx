@@ -10,9 +10,9 @@ export function BlockLog() {
   return (
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
       <div className={ax({ layout: 'column', textStyle: 'code', gap: 'xs' })}>
-        <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:12</span><span className={`${ax({ weight: 'semi', text: 'danger' })}`}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
-        <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:13</span><span className={ax({ weight: 'semi', text: 'danger' })}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
-        <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:14</span><span className={ax({ weight: 'semi', text: 'warning' })}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
+        <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:12</span><span className={`${ax({ weight: 'semi', tone: 'danger' })}`}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
+        <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:13</span><span className={ax({ weight: 'semi', tone: 'danger' })}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
+        <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:14</span><span className={ax({ weight: 'semi', tone: 'warning' })}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
       </div>
     </div>
   )
@@ -35,18 +35,18 @@ export function BlockCause() {
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
       <div className={ax({ layout: 'column', gap: 'xs' })}>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <div className={`${ax({ layout: 'center', text: 'danger' })} incident-cause-icon`}><GitCommit size={12} /></div>
+          <div className={`${ax({ layout: 'center', tone: 'danger' })} incident-cause-icon`}><GitCommit size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>PR #3421 — config cleanup</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pool_size: 100 → 50</div></div>
-          <span className={ax({ textStyle: 'caption', weight: 'semi', text: 'danger' })}>87%</span>
+          <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'danger' })}>87%</span>
         </div>
         <div className={`${ax({ text: 'muted' })} incident-cause-arrow`}><ChevronDown size={12} /></div>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <div className={`${ax({ layout: 'center', text: 'warning' })} incident-cause-icon`}><Database size={12} /></div>
+          <div className={`${ax({ layout: 'center', tone: 'warning' })} incident-cause-icon`}><Database size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>DB pool 고갈</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>max=50, 동시 요청 처리 불가</div></div>
         </div>
         <div className={`${ax({ text: 'muted' })} incident-cause-arrow`}><ChevronDown size={12} /></div>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <div className={`${ax({ layout: 'center', text: 'danger' })} incident-cause-icon`}><AlertTriangle size={12} /></div>
+          <div className={`${ax({ layout: 'center', tone: 'danger' })} incident-cause-icon`}><AlertTriangle size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>p99 2.4s → 3개 서비스 전파</div></div>
         </div>
       </div>
@@ -58,12 +58,12 @@ export function BlockSimilar() {
   return (
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm', layout: 'column', gap: 'sm' })}>
       <div className={ax({ layout: 'bar', gap: 'sm' })}>
-        <span className={ax({ textStyle: 'caption', weight: 'semi', text: 'accent' })}>INC-847</span>
+        <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'accent' })}>INC-847</span>
         <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'success', surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })}>92%</span>
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>2주 전</span>
       </div>
       <div className={ax({ textStyle: 'caption', text: 'secondary' })}>동일: DB pool exhaustion after config change</div>
-      <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'success' })}>
+      <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', tone: 'success' })}>
         <CheckCircle size={12} />
         <span>해결: pool_size 50→200 (PR #2891) — 3분 정상화</span>
       </div>
@@ -72,11 +72,11 @@ export function BlockSimilar() {
 }
 
 const BLAST_SERVICES = [
-  { name: 'payment-api', status: 'p99: 2.4s', text: 'danger' as const },
-  { name: 'order-service', status: 'error +12%', text: 'warning' as const },
-  { name: 'checkout-web', status: 'timeout', text: 'warning' as const },
-  { name: 'notification-svc', status: 'healthy', text: 'success' as const },
-  { name: 'user-service', status: 'healthy', text: 'success' as const },
+  { name: 'payment-api', status: 'p99: 2.4s', tone: 'danger' as const },
+  { name: 'order-service', status: 'error +12%', tone: 'warning' as const },
+  { name: 'checkout-web', status: 'timeout', tone: 'warning' as const },
+  { name: 'notification-svc', status: 'healthy', tone: 'success' as const },
+  { name: 'user-service', status: 'healthy', tone: 'success' as const },
 ]
 
 export function BlockBlast() {
@@ -86,7 +86,7 @@ export function BlockBlast() {
         <div key={i} className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption' })}>
           <Server size={12} />
           <span className={ax({ weight: 'medium', flex: '1' })}>{s.name}</span>
-          <span className={ax({ text: s.text })}>{s.status}</span>
+          <span className={ax({ tone: s.tone })}>{s.status}</span>
         </div>
       ))}
     </div>

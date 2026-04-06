@@ -52,7 +52,7 @@ const renderOption = (
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
-      {state.selected && <span aria-hidden="true" className={`${ax({ textStyle: 'caption', text: 'accent' })}`}>✓</span>}
+      {state.selected && <span aria-hidden="true" className={`${ax({ textStyle: 'caption', tone: 'accent' })}`}>✓</span>}
       {label}
     </div>
   )

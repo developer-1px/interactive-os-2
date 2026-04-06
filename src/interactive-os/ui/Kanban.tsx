@@ -129,7 +129,7 @@ export function Kanban({
                         <span className={`tabular-nums ${ax({ text: 'muted', flex: 'none' })} kanban-card-subtitle`}>
                           {cardSubtitle}
                           {cardDepUp != null && cardDepUp > 0 && <span className={`${ax({ weight: 'medium' })} kanban-dep-up`}> ↑{cardDepUp}</span>}
-                          {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${ax({ text: 'accent' })}`}> ↓{cardDepDown}</span>}
+                          {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${ax({ tone: 'accent' })}`}> ↓{cardDepDown}</span>}
                         </span>
                       )}
                     </AriaItemContext.Provider>

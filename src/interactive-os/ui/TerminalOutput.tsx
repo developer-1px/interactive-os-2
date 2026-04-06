@@ -10,7 +10,7 @@ export function TerminalOutput({ command, output }: TerminalOutputProps) {
   return (
     <div className={ax({ layout: 'column', textStyle: 'code', flex: '1', surface: 'sunken', text: 'primary' })}>
       <div className={ax({ placement: 'sticky', gap: 'sm', padding: 'sm', surface: 'sunken' })}>
-        <span className={ax({ text: 'success', flex: 'none' })}>$</span>
+        <span className={ax({ tone: 'success', flex: 'none' })}>$</span>
         <span className={ax({ weight: 'semi' })} style={{ wordBreak: 'break-all' }}>{command}</span>
       </div>
       <div className={ax({ padding: 'sm' })} style={{ wordBreak: 'break-all' }}>{output || '(no output)'}</div>

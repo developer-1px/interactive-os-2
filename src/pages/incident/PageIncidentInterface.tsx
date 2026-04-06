@@ -94,7 +94,7 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   const { displayed, done } = useTypewriter(msg.text, active)
   return (
     <div className={ax({ layout: 'bar', gap: 'sm' })}>
-      <div className={`${ax({ layout: 'center', text: 'accent' })} incident-avatar`}><Bot size={14} /></div>
+      <div className={`${ax({ layout: 'center', tone: 'accent' })} incident-avatar`}><Bot size={14} /></div>
       <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
         <div className={ax({ textStyle: 'caption', text: 'primary' })}>
           {displayed}
@@ -173,7 +173,7 @@ function MonitoringBar({ services, onActivate }: {
       />
       <div className={ax({ layout: 'bar', gap: 'sm' })}>
         <span className={ax({ textStyle: 'code', text: 'muted' })}>INC-1284</span>
-        <span className={`${ax({ textStyle: 'code', text: 'danger', weight: 'semi' })} incident-monitor-meta-live`}>REC</span>
+        <span className={`${ax({ textStyle: 'code', tone: 'danger', weight: 'semi' })} incident-monitor-meta-live`}>REC</span>
       </div>
     </div>
   )
@@ -313,7 +313,7 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
               </div>
             </div>
           </div>
-          <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'accent' })}>
+          <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', tone: 'accent' })}>
             <Bot size={12} />
             <span>{capture.aiNote}</span>
           </div>
@@ -447,7 +447,7 @@ export default function PageIncidentInterface() {
               if (msg.type === 'system') {
                 return (
                   <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-                    <div className={ax({ textStyle: 'caption', weight: 'semi', text: 'danger' })}>{msg.text}</div>
+                    <div className={ax({ textStyle: 'caption', weight: 'semi', tone: 'danger' })}>{msg.text}</div>
                   </div>
                 )
               }
