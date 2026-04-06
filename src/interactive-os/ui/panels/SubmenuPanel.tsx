@@ -1,7 +1,6 @@
 // ② 2026-04-06-menubar-refactor-prd.md
 import type { ReactNode } from 'react'
 import { ax } from '@styles/ax'
-import './SubmenuPanel.css'
 
 interface SubmenuPanelProps {
   label: string
@@ -11,14 +10,18 @@ interface SubmenuPanelProps {
   children: ReactNode
 }
 
-export function SubmenuPanel({ label, expanded, placement, anchorName, children }: SubmenuPanelProps) {
-  if (!expanded) return null
+const placementMap = {
+  root: 'anchor-below',
+  nested: 'anchor-end',
+} as const
 
+export function SubmenuPanel({ label, expanded, placement, anchorName, children }: SubmenuPanelProps) {
   return (
     <div
       role="menu"
       aria-label={label}
-      className={`submenu-panel submenu-panel-${placement} ${ax({ surface: 'overlay', padding: 'xs', shape: 'sm', gap: 'xs' })}`}
+      hidden={!expanded || undefined}
+      className={ax({ placement: placementMap[placement], surface: 'overlay', padding: 'xs', shape: 'sm', gap: 'xs' })}
       style={{ positionAnchor: anchorName } as React.CSSProperties}
     >
       {children}

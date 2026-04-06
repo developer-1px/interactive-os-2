@@ -560,6 +560,8 @@
 .pl-top-start     { position: absolute; top: 0; inset-inline-start: 0; }
 .pl-viewport      { position: fixed; inset: 0; z-index: 100; }
 .pl-sticky        { position: sticky; top: 0; z-index: 1; }
+.pl-anchor-below  { position: fixed; inset: unset; position-area: block-end span-inline-start; position-try-fallbacks: flip-block; }
+.pl-anchor-end    { position: fixed; inset: unset; position-area: inline-end span-block-start; position-try-fallbacks: flip-inline; }
 
 /* layout helpers */
 .relative { position: relative; }

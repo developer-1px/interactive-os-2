@@ -46,6 +46,8 @@ type Placement =
   | 'top-start'     // absolute + top:0 + inset-inline-start:0 (badge)
   | 'viewport'      // fixed + inset:0 (modal backdrop)
   | 'sticky'        // sticky + top:0 + z-index:1 (pinned header)
+  | 'anchor-below'  // fixed + position-area:block-end + flip-block (anchor 아래)
+  | 'anchor-end'    // fixed + position-area:inline-end + flip-inline (anchor 오른쪽)
 
 // layout: 역할 기반 구조 번들 (display + direction + align + justify + overflow)
 type Layout =
