@@ -5,7 +5,7 @@ import { useWriterData, useWriterDirty, writerState } from './writerStore'
 import { mdToStore, storeToMd } from './writerTransform'
 import { expandCommands } from '@os/axis/expand'
 import { useWriterChatSync, sendWriterMessage, getSessionForFile } from './writerChatBridge'
-import { requestAnalysis } from './writerAnalyze'
+import { requestAnalysis, type AnalysisResult } from './writerAnalyze'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import WriterFileBrowser from './WriterFileBrowser'
 import { ChatPane } from '../chat/ChatPane'
@@ -126,6 +126,25 @@ const writerCommands = defineCommands({
         s = removeEntity(s, listId)
       }
       return s
+    },
+  },
+
+  setAnalysis: {
+    type: 'writer:set-analysis' as const,
+    create: (analysis: AnalysisResult) => ({ analysis }),
+    handler: (store, { analysis }) => {
+      const updatedEntities = { ...store.entities }
+      let changed = false
+      for (const [id, role] of Object.entries(analysis.roles)) {
+        const entity = updatedEntities[id]
+        if (!entity) continue
+        const d = entity.data as Record<string, unknown> | undefined
+        if (d?.type !== 'sentence') continue
+        const relations = analysis.relations[id]
+        updatedEntities[id] = { ...entity, data: { ...d, role, ...(relations ? { relations } : {}) } }
+        changed = true
+      }
+      return changed ? { ...store, entities: updatedEntities } : store
     },
   },
 
@@ -303,6 +322,7 @@ function writerKeys(): Plugin {
       unwrapFromList: writerCommands.unwrapFromList,
       convertType: writerCommands.convertType,
       visibleSwap: writerCommands.visibleSwap,
+      setAnalysis: writerCommands.setAnalysis,
     },
     keyMap: {
       // Enter → edit (rename)
@@ -457,8 +477,13 @@ export default function PageWriter() {
     setChatSessionId(getSessionForFile(currentFile))
   }, [currentFile])
 
-  // Sync AI responses → writerState
-  useWriterChatSync(chatSessionId)
+  // Sync AI responses → writerState (analysis results applied via command reducer)
+  const handleAnalysisResult = useCallback((result: AnalysisResult) => {
+    const current = writerState.getData()
+    const next = writerCommands.setAnalysis.handler(current, { analysis: result })
+    if (next !== current) setData(next)
+  }, [setData])
+  useWriterChatSync(chatSessionId, handleAnalysisResult)
 
   const loadDocument = useCallback((store: ReturnType<typeof mdToStore>, filePath?: string) => {
     writerState.setFilePath(filePath)

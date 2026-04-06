@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react'
 import { writerState } from './writerStore'
 import { useChatSession, createSession, sendMessage as chatSendMessage, hasSession } from '../chat/chatStore'
-import { extractRoleMap, applyRoles } from './writerAnalyze'
+import { extractAnalysis, type AnalysisResult } from './writerAnalyze'
 
 const WRITER_SESSIONS_KEY = 'writer-chat-sessions'
 
@@ -59,7 +59,7 @@ export function sendWriterMessage(sessionId: string, text: string) {
  * Hook: watches a chat session for new assistant messages containing
  * ```markdown blocks and applies them to writerState.
  */
-export function useWriterChatSync(sessionId: string | null) {
+export function useWriterChatSync(sessionId: string | null, onAnalysis?: (result: AnalysisResult) => void) {
   const session = useChatSession(sessionId ?? '')
   const lastCountRef = useRef(0)
 
@@ -81,13 +81,13 @@ export function useWriterChatSync(sessionId: string | null) {
           if (md !== null) {
             writerState.setMd(md)
           }
-          const roles = extractRoleMap(block.content)
-          if (roles) {
-            applyRoles(roles)
+          const analysis = extractAnalysis(block.content)
+          if (analysis && onAnalysis) {
+            onAnalysis(analysis)
           }
         }
       }
     }
     lastCountRef.current = msgs.length
-  }, [session, session?.messages.length])
+  }, [session, session?.messages.length, onAnalysis])
 }

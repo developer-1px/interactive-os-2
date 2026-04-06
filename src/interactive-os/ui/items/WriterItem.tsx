@@ -6,22 +6,26 @@ import { ExpandIndicator } from '../indicators'
 import { Aria } from '../../primitives/aria'
 import { ax, type Axes } from '@styles/ax'
 
-type SentenceRole = 'fact' | 'interpretation' | 'evidence' | 'opinion'
+type SentenceRole = 'claim' | 'evidence' | 'reasoning' | 'context' | 'counter' | 'transition'
 
 const headingStyle = ['display', 'page', 'section', 'label', 'label', 'label'] as const
 
 const roleLabel: Record<SentenceRole, string> = {
-  fact: '사실',
-  interpretation: '해석',
+  claim: '주장',
   evidence: '근거',
-  opinion: '의견',
+  reasoning: '논증',
+  context: '맥락',
+  counter: '반론',
+  transition: '전환',
 }
 
 const roleTone: Record<SentenceRole, Axes['tone']> = {
-  fact: 'accent',
-  interpretation: 'warning',
+  claim: 'accent',
   evidence: 'success',
-  opinion: 'danger',
+  reasoning: 'warning',
+  context: 'neutral',
+  counter: 'danger',
+  transition: 'neutral',
 }
 
 export interface WriterItemOptions {
