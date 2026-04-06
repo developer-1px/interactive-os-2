@@ -5,7 +5,7 @@ import { ExpandIndicator } from '../indicators'
 import { getNodeLabel } from '../types'
 import { ax } from '@styles/ax'
 
-interface TreeItemOptions {
+export interface TreeItemOptions {
   icon?: React.ReactNode
   rightContent?: React.ReactNode
   className?: string

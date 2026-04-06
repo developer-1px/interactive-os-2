@@ -1,21 +1,29 @@
 import { useState } from 'react'
+import { ax } from '@styles/ax'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
+import type { ItemSlots } from '@os/ui/types'
 
 const hookData = createStore({
   entities: {
-    useAria: { id: 'useAria', data: { label: 'useAria()', desc: 'Core hook — creates engine, wires keyMap, returns dispatch/getNodeProps/getNodeState' } },
-    useControlled: { id: 'useControlled', data: { label: 'useControlledAria()', desc: 'External store variant — you own the state, hook provides the same API' } },
-    useKeyboard: { id: 'useKeyboard', data: { label: 'useKeyboard()', desc: 'Utilities: parseKeyCombo, matchKeyEvent, findMatchingKey with Mod support' } },
+    hook1: { id: 'hook1', data: { label: 'Core Hook', desc: 'Creates engine, wires keyMap, returns dispatch/getNodeProps/getNodeState' } },
+    hook2: { id: 'hook2', data: { label: 'Controlled Hook', desc: 'External store variant — you own the state, hook provides the same API' } },
+    hook3: { id: 'hook3', data: { label: 'Keyboard Utilities', desc: 'parseKeyCombo, matchKeyEvent, findMatchingKey with Mod support' } },
   },
   relationships: {
-    [ROOT_ID]: ['useAria', 'useControlled', 'useKeyboard'],
+    [ROOT_ID]: ['hook1', 'hook2', 'hook3'],
   },
 })
+
+const itemSlots: ItemSlots = {
+  rightContent: (node) => {
+    const d = node.data as Record<string, unknown>
+    return <span className={ax({ text: 'muted', textStyle: 'caption' })}>{d?.desc as string}</span>
+  },
+}
 
 export default function HooksListDemo() {
   const [data, setData] = useState<NormalizedData>(hookData)
@@ -31,20 +39,7 @@ export default function HooksListDemo() {
           data={data}
           onChange={setData}
           plugins={[]}
-          renderItem={(props, item, state: NodeState) => {
-            const d = item.data as Record<string, unknown>
-            const cls = [
-              'list-item flex-row items-center justify-between',
-              state.focused && 'list-item--focused',
-              state.selected && !state.focused && 'list-item--selected',
-            ].filter(Boolean).join(' ')
-            return (
-              <div {...props} className={cls}>
-                <span className="list-item__label"><code>{d?.label as string}</code></span>
-                <span className="list-item__desc">{d?.desc as string}</span>
-              </div>
-            )
-          }}
+          itemSlots={itemSlots}
         />
       </div>
     </>

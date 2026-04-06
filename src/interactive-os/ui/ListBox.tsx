@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'
-import type { AriaComponentProps } from './types'
+import type { AriaComponentProps, ItemSlots } from './types'
 import { Aria } from '../primitives/aria'
 import { listbox } from '../pattern/roles/listbox'
 import { history } from '../plugins/history'
@@ -18,14 +18,22 @@ interface ListBoxProps extends AriaComponentProps {
   autoFocus?: boolean
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement =>
-  ListItem(props, item, state)
+function makeRenderItem(slots?: ItemSlots) {
+  if (!slots) return (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement =>
+    ListItem(props, item, state)
+  return (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement =>
+    ListItem(props, item, state, {
+      icon: slots.icon?.(item, state),
+      rightContent: slots.rightContent?.(item, state),
+    })
+}
 
 export function ListBox({
   data,
   plugins = [history()],
   onChange,
-  renderItem = defaultRenderItem,
+  renderItem,
+  itemSlots,
   enableEditing = false,
   searchable = false,
   onActivate,
@@ -35,6 +43,8 @@ export function ListBox({
   className: _className,
   'aria-label': ariaLabel,
 }: ListBoxProps) {
+  const defaultRenderer = React.useMemo(() => makeRenderItem(itemSlots), [itemSlots])
+  const resolvedRenderItem = renderItem ?? defaultRenderer
   const mergedPlugins = React.useMemo(
     () => {
       const result = [...plugins]
@@ -58,7 +68,7 @@ export function ListBox({
       aria-label={ariaLabel}
     >
       {searchable && <Aria.Search placeholder="Search..." />}
-      <Aria.Item render={renderItem} />
+      <Aria.Item render={resolvedRenderItem} />
     </Aria>
   )
 }

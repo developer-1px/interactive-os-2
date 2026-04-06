@@ -43,12 +43,6 @@ export default function CellGridDemo() {
           onChange={setData}
           header
           aria-label="ARIA elements"
-          renderCell={(props, value, column) => {
-            if (column.key === 'role') {
-              return <span {...props}><code>{String(value)}</code></span>
-            }
-            return <span {...props}>{String(value ?? '')}</span>
-          }}
         />
       </div>
     </>

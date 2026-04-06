@@ -7,7 +7,6 @@ import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
 import type { StoreDiff } from '@os/store/computeStoreDiff'
 import { computeStoreDiff, applyDelta } from '@os/store/computeStoreDiff'
-import type { NodeState } from '@os/pattern/types'
 import { crud } from '@os/plugins/crud'
 import { focusRecovery } from '@os/plugins/focusRecovery'
 import { summarizeValue } from '@os/engine/logger'
@@ -89,19 +88,6 @@ export default function EngineDiffDemo() {
           data={data}
           onChange={handleChange}
           plugins={plugins}
-          renderItem={(props, item, state: NodeState) => {
-            const d = item.data as Record<string, unknown>
-            const cls = [
-              'list-item flex-row items-center justify-between',
-              state.focused && 'list-item--focused',
-              state.selected && !state.focused && 'list-item--selected',
-            ].filter(Boolean).join(' ')
-            return (
-              <div {...props} className={cls}>
-                <span className="list-item__label">{d?.label as string}</span>
-              </div>
-            )
-          }}
         />
       </div>
 

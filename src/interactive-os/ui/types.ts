@@ -18,12 +18,19 @@ export type PluginRenderItem = (
   state: NodeState,
 ) => React.ReactElement | null
 
+/** 노드별 슬롯을 선언적으로 채우는 옵션 — renderItem 없이 아이콘/보조 콘텐츠 전달 */
+export interface ItemSlots {
+  icon?: (node: Record<string, unknown>, state: NodeState) => React.ReactNode
+  rightContent?: (node: Record<string, unknown>, state: NodeState) => React.ReactNode
+}
+
 /** UI 완성품의 공통 props — Pattern은 정체성(고정), Plugin + Renderer는 교체 가능 */
 export interface AriaComponentProps {
   data: NormalizedData
   onChange?: (data: NormalizedData) => void
   plugins?: Plugin[]
   renderItem?: RenderItem
+  itemSlots?: ItemSlots
   onActivate?: (nodeId: string) => void
   onFocusChange?: (nodeId: string | null) => void
   className?: string

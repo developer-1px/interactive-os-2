@@ -4,14 +4,13 @@ import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
 
 const demoData = createStore({
   entities: {
-    apple: { id: 'apple', data: { label: 'Apple', emoji: '\uD83C\uDF4E' } },
-    banana: { id: 'banana', data: { label: 'Banana', emoji: '\uD83C\uDF4C' } },
-    cherry: { id: 'cherry', data: { label: 'Cherry', emoji: '\uD83C\uDF52' } },
-    grape: { id: 'grape', data: { label: 'Grape', emoji: '\uD83C\uDF47' } },
+    apple: { id: 'apple', data: { label: 'Apple' } },
+    banana: { id: 'banana', data: { label: 'Banana' } },
+    cherry: { id: 'cherry', data: { label: 'Cherry' } },
+    grape: { id: 'grape', data: { label: 'Grape' } },
   },
   relationships: {
     [ROOT_ID]: ['apple', 'banana', 'cherry', 'grape'],
@@ -33,19 +32,6 @@ export default function AriaListboxDemo() {
           plugins={[]}
           onChange={setData}
           aria-label="Fruit picker"
-          renderItem={(props, node, state: NodeState) => {
-            const d = node.data as Record<string, unknown>
-            const cls = [
-              'list-item flex-row items-center justify-between',
-              state.focused && 'list-item--focused',
-              state.selected && !state.focused && 'list-item--selected',
-            ].filter(Boolean).join(' ')
-            return (
-              <div {...props} className={cls}>
-                <span className="list-item__label">{d?.emoji as string} {d?.label as string}</span>
-              </div>
-            )
-          }}
         />
       </div>
     </>
