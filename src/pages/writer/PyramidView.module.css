@@ -1,4 +1,4 @@
-/* Last-mile: transform-origin, touch-action are not ax() axes */
+/* Last-mile: transform-origin, touch-action */
 
 .viewport {
   touch-action: none;
