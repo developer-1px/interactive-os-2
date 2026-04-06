@@ -1,7 +1,7 @@
 // ② 2026-04-06-menubar-refactor-prd.md
 import type React from 'react'
 import type { NodeState } from '../../pattern/types'
-import { ExpandIndicator } from '../indicators'
+import { DirectionIndicator } from '../indicators'
 import { getNodeLabel } from '../types'
 import { ax } from '@styles/ax'
 
@@ -14,12 +14,12 @@ export function MenubarItem(
   return (
     <div
       {...props}
-      className={ax({ interactive: 'item', layout: 'bar', controlSize: 'md', padding: 'md', content: 'text', gap: 'xs' })}
+      className={ax({ interactive: 'item', layout: 'bar', padding: 'sm', gap: 'xs' })}
     >
       <span>{label}</span>
       {state.expanded !== undefined && (
         <span className={ax({ text: 'muted' })} aria-hidden="true">
-          <ExpandIndicator expanded={state.expanded} />
+          <DirectionIndicator direction={state.expanded ? 'prev' : 'next'} orientation="vertical" />
         </span>
       )}
     </div>

@@ -21,7 +21,7 @@ export function SubmenuPanel({ label, expanded, placement, anchorName, children 
       role="menu"
       aria-label={label}
       hidden={!expanded || undefined}
-      className={ax({ placement: placementMap[placement], surface: 'overlay', padding: 'xs', shape: 'sm', gap: 'xs' })}
+      className={ax({ placement: placementMap[placement], surface: 'overlay', layout: 'stack', padding: 'xs', shape: 'sm', gap: 'xs' })}
       style={{ positionAnchor: anchorName } as React.CSSProperties}
     >
       {children}
