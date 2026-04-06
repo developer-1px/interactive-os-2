@@ -188,9 +188,20 @@ const writerCommands = defineCommands({
 })
 
 // ── Navigate Filter ──────────────────────────────────────
-// Skip container nodes (paragraph, list, document) — only focusable: heading, sentence, listItem, hr
+// Skip list and document from navigation — paragraph is now focusable/selectable
 
-const CONTAINER_TYPES = new Set(['paragraph', 'list', 'document'])
+const CONTAINER_TYPES = new Set(['list', 'document'])
+
+// Leaf-only filter for Alt+Arrow reorder — skips paragraph so sentences swap with sentences
+const LEAF_SKIP = new Set(['paragraph', 'list', 'document'])
+
+const writerLeafFilter: VisibilityFilter = {
+  isFocusable: (nodeId: string, store: NormalizedData) => {
+    const entity = store.entities[nodeId]
+    const type = (entity?.data as Record<string, unknown> | undefined)?.type as string | undefined
+    return !type || !LEAF_SKIP.has(type)
+  },
+}
 
 const writerNavigateFilter: VisibilityFilter = {
   isFocusable: (nodeId: string, store: NormalizedData) => {
@@ -345,16 +356,31 @@ function writerKeys(): Plugin {
       // Shift+Tab → outdent (reparent to grandparent)
       'Shift+Tab': key(['dnd:move-out'], (ctx) => dndCommands.moveOut(ctx.focused)),
 
-      // Alt+↑↓ → reorder in visible order (crosses paragraph boundaries)
+      // Alt+↑↓ → reorder in visible order (leaf-only, crosses paragraph boundaries)
       'Alt+ArrowUp': key(['writer:visible-swap'], (ctx) => {
-        const prev = getAdjacentVisible(writerState.getData(), ctx.focused, [writerNavigateFilter], -1)
+        const prev = getAdjacentVisible(writerState.getData(), ctx.focused, [writerLeafFilter], -1)
         if (!prev) return undefined
         return writerCommands.visibleSwap(ctx.focused, prev, -1)
       }),
       'Alt+ArrowDown': key(['writer:visible-swap'], (ctx) => {
-        const next = getAdjacentVisible(writerState.getData(), ctx.focused, [writerNavigateFilter], 1)
+        const next = getAdjacentVisible(writerState.getData(), ctx.focused, [writerLeafFilter], 1)
         if (!next) return undefined
         return writerCommands.visibleSwap(ctx.focused, next, 1)
+      }),
+
+      // Cmd+↓ → jump to first child of next sibling group (falls through to dnd:moveDown)
+      'Mod+ArrowDown': key(['core:focus', 'dnd:move-down'], (ctx, original) => {
+        const cmd = ctx.focusNextGroup()
+        // If focusNextGroup returned same node (no next group), fall through to dnd
+        if ((cmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return original?.()
+        return cmd
+      }),
+
+      // Cmd+↑ → jump to last child of prev sibling group (falls through to dnd:moveUp)
+      'Mod+ArrowUp': key(['core:focus', 'dnd:move-up'], (ctx, original) => {
+        const cmd = ctx.focusPrevGroup()
+        if ((cmd.payload as Record<string, unknown>)?.nodeId === ctx.focused) return original?.()
+        return cmd
       }),
 
       // Backspace (non-editing) → delete node
@@ -535,7 +561,7 @@ export default function PageWriter() {
 
   return (
     <AriaRoute keyMap={writerKeyMap} label="Writer">
-      <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1} noScroll={[0, 1, 2]}>
+      <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
         <Panel header="Files" surface="sunken">
           <WriterFileBrowser onFileSelect={handleFileSelect} />
         </Panel>

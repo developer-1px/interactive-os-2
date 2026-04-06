@@ -2,7 +2,7 @@
 import { memo, useMemo } from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import './DiffBlock.css'
+
 import type { DiffBlock as DiffBlockType } from './types'
 
 export const DiffBlock = memo(function DiffBlock({ block }: { block: DiffBlockType }) {
@@ -10,22 +10,22 @@ export const DiffBlock = memo(function DiffBlock({ block }: { block: DiffBlockTy
   const newLines = useMemo(() => block.new.split('\n'), [block.new])
 
   return (
-    <div className={`overflow-hidden ${ax({ surface: 'display', shape: 'md' })}`}>
+    <div className={ax({ surface: 'display', shape: 'md', scroll: 'hidden' })}>
       {block.filePath && (
-        <div className={`${ax({ text: 'secondary', textStyle: 'caption' })} diff-header`}>{block.filePath}</div>
+        <div className={ax({ text: 'secondary', textStyle: 'code', padding: 'xs', content: 'text' })}>{block.filePath}</div>
       )}
-      <div className={`grid diff-body`}>
-        <div className={`overflow-hidden min-w-0 ${ax({ surface: 'display' })}`}>
-          <pre className={`pre-wrap break-word ${ax({ textStyle: 'caption' })} diff-code`}>
+      <div className={ax({ content: 'diff' })}>
+        <div className={ax({ scroll: 'hidden' })}>
+          <pre className={`pre-wrap break-word ${ax({ textStyle: 'code' })}`}>
             {oldLines.map((line, i) => (
-              <div key={i} className="diff-line-old">{line || ' '}</div>
+              <div key={i} className={ax({ tone: 'danger-dim', padding: 'xs', content: 'code' })}>{line || ' '}</div>
             ))}
           </pre>
         </div>
-        <div className={`overflow-hidden min-w-0 ${ax({ surface: 'display' })}`}>
-          <pre className={`pre-wrap break-word ${ax({ textStyle: 'caption' })} diff-code`}>
+        <div className={ax({ scroll: 'hidden' })}>
+          <pre className={`pre-wrap break-word ${ax({ textStyle: 'code' })}`}>
             {newLines.map((line, i) => (
-              <div key={i} className="diff-line-new">{line || ' '}</div>
+              <div key={i} className={ax({ tone: 'success-dim', padding: 'xs', content: 'code' })}>{line || ' '}</div>
             ))}
           </pre>
         </div>

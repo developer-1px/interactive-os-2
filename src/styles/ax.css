@@ -320,7 +320,20 @@
  * padding 축의 calc(... * var(--pd-ratio, 1))을 구동
  * ════════════════════════════════════════════ */
 
-.ct-text { --pd-ratio: 2; }
+.ct-text   { --pd-ratio: 2; }
+.ct-code   { --pd-ratio: 0; padding-block: 0; }
+.ct-bubble {
+  --pd-ratio: 2;
+  max-width: 80%;
+  margin-left: auto;
+  border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
+}
+.ct-diff {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 var(--border-width);
+  background: var(--border-subtle);
+}
 
 /* ════════════════════════════════════════════
  * Border — 테두리
@@ -329,6 +342,7 @@
  * ════════════════════════════════════════════ */
 
 .bd-subtle  { border: var(--border-width) solid var(--border-subtle); }
+.bd-dashed  { border: var(--border-width) dashed var(--border-subtle); }
 .bd-default { border: var(--border-width) solid var(--border-default); }
 .bd-strong  { border: var(--border-width) solid var(--border-strong); }
 .bd-bottom  { border-bottom: var(--border-width) solid var(--border-subtle); }
@@ -409,11 +423,11 @@
 .w-full { width: 100%; }
 .w-auto { width: auto; }
 .w-fit  { width: fit-content; }
-.w-sm    { max-width: 200px; }
-.w-md    { max-width: 400px; }
-.w-lg    { max-width: 640px; }
-.w-xl    { max-width: 960px; }
-.w-prose { max-width: 72ch; }
+.w-sm    { width: 100%; max-width: 200px; margin-inline: auto; }
+.w-md    { width: 100%; max-width: 400px; margin-inline: auto; }
+.w-lg    { width: 100%; max-width: 640px; margin-inline: auto; }
+.w-xl    { width: 100%; max-width: 960px; margin-inline: auto; }
+.w-prose { width: 100%; max-width: 72ch; margin-inline: auto; }
 
 /* ════════════════════════════════════════════
  * Flex — flex item 크기
@@ -505,6 +519,7 @@
  * '2'~'4': CSS line-clamp (다중행)
  * ════════════════════════════════════════════ */
 
+.cl-scroll { max-height: 300px; overflow-y: auto; }
 .cl-1   { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cl-pre { white-space: pre; overflow: hidden; text-overflow: ellipsis; }
 .cl-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }

@@ -200,11 +200,13 @@ export default function PageAgentChat() {
             <Plus size={14} />
           </button>
         </PanelHeader>
-        <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs' })}>
-          {sessions.map(s => (
+        <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs', gap: 'xs' })}>
+          {sessions.map(s => {
+            const isActive = s.id === activeSessionId
+            return (
             <div
               key={s.id}
-              className={`${ax({ surface: 'ghost', layout: 'stack', gap: 'xs', padding: 'xs', text: 'secondary' })} chat-session-item ${s.id === activeSessionId ? 'chat-session-active' : ''}`}
+              className={`${ax({ surface: isActive ? 'display' : 'ghost', layout: 'stack', gap: 'xs', padding: 'xs', text: isActive ? 'primary' : 'secondary', shape: 'sm' })} chat-session-item`}
               onClick={() => handleSidebarClick(s.id)}
             >
               <div className={ax({ layout: 'bar', gap: 'sm' })}>
@@ -220,7 +222,8 @@ export default function PageAgentChat() {
               </div>
               <SessionFileList session={s} />
             </div>
-          ))}
+            )
+          })}
           {sessions.length === 0 && (
             <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No sessions</div>
           )}

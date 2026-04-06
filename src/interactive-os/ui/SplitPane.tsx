@@ -18,7 +18,6 @@ interface SplitPaneProps {
   children: React.ReactNode
   minRatio?: number
   /** Pane indices that should NOT scroll (overflow:hidden). Default: all panes scroll. */
-  noScroll?: number[]
 }
 
 /** Ratio delta per keyboard step */
@@ -156,7 +155,6 @@ export function SplitPane({
   onResize,
   children,
   minRatio = 0.1,
-  noScroll,
 }: SplitPaneProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const childArray = Children.toArray(children)
@@ -196,9 +194,8 @@ export function SplitPane({
       ? { flex: 1 }
       : { flex: `0 0 ${(sizes[i] as number) * 100}%` }
 
-    const paneLayout = noScroll?.includes(i) ? 'fill' : 'scroll'
     elements.push(
-      <div key={`pane-${i}`} className={ax({ layout: paneLayout })} style={sizeStyle}>
+      <div key={`pane-${i}`} className={ax({ layout: 'fill' })} style={sizeStyle}>
         {child}
       </div>,
     )

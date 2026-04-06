@@ -97,7 +97,7 @@ export function TabGroup({
           const entityData = entity.data as Record<string, unknown>
           const label = entityData?.label as string ?? id
           const isPreview = entityData?.preview === true
-          const tabClass = `tab-item ${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })}${isPreview ? ' tab-item-preview' : ''}`
+          const tabClass = `tab-item ${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', interactive: 'tab' })}${isPreview ? ' tab-item-preview' : ''}`
           return (
             <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
               <span>{label}</span>

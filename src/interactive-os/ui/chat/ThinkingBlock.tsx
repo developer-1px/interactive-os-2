@@ -6,7 +6,6 @@ import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { MarkdownViewer } from '../MarkdownViewer'
 import { useChatFeatures } from './chatFeatures'
 import { useDisclosure } from './useDisclosure'
-import './ThinkingBlock.css'
 import type { DataBlock } from './types'
 
 export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: DataBlock }) {
@@ -21,21 +20,23 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
   })
 
   return (
-    <div className={`${ax({ textStyle: 'caption', text: 'secondary' })} thinking-block${settled ? ` bg-transparent thinking-settled` : ''}`}>
+    <div className={`${ax({ textStyle: 'caption', text: 'secondary', surface: settled ? undefined : 'sunken', shape: 'md' })} thinking-block${settled ? ' thinking-settled' : ''}`}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar' })} thinking-summary`}
+        className={`cursor-pointer select-none ${ax({ padding: 'sm' })}`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
         onClick={toggle}
       >
-        <span className={`${ax({ layout: 'center' })} thinking-chevron`}><ExpandIndicator variant="expand" expanded={expanded} /></span>
-        <span className={`${ax({ weight: 'semi', text: 'muted' })}`}>Thinking</span>
-        {(!expanded || isLatest) && <span className={`${ax({ flex: '1', text: 'muted' })} thinking-preview`}> {preview}…</span>}
+        <div className={ax({ layout: 'bar', gap: 'xs' })}>
+          <span className={ax({ weight: 'semi', text: 'muted' })}>Thinking</span>
+          <ExpandIndicator variant="expand" expanded={expanded} />
+        </div>
+        {isLatest && !expanded && <div className={ax({ text: 'muted', clamp: '2' })}>{preview}…</div>}
       </div>
       {expanded && !isLatest && (
-        <div className={`break-word ${ax({ layout: 'scroll' })} thinking-content`}>
+        <div className={`break-word ${ax({ clamp: 'scroll', padding: 'sm' })} thinking-content`}>
           <MarkdownViewer content={text} prose={false} codeVariant="compact" />
         </div>
       )}
