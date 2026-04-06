@@ -1,6 +1,2 @@
-/* Menubar — last-mile: submenu positioning (ax()에 없는 방향별 배치) */
-.menubar-link { text-decoration: none; }
-.menubar-submenu { z-index: 1; }
-.menubar-submenu-root { top: 100%; left: 0; }
-.menubar-submenu-nested { top: calc(var(--space-xs) * -1); left: 100%; }
-[data-hidden] { display: none; }
+/* Menubar — last-mile: <a> elements used as menuitems need text-decoration reset */
+.ia-item[role="menuitem"] { text-decoration: none; }

@@ -8,6 +8,7 @@ import { ax } from '@styles/ax'
 interface MenuItemOptions {
   icon?: React.ReactNode
   rightContent?: React.ReactNode
+  indicator?: React.ReactNode
   className?: string
 }
 
@@ -28,7 +29,7 @@ export function MenuItem(
       <span className={ax({ textStyle: 'body', text: textColor })}>{label}</span>
       {state.expanded !== undefined && (
         <span className={ax({ layout: 'bar', text: 'muted' })}>
-          <ExpandIndicator expanded={state.expanded} />
+          {options?.indicator ?? <ExpandIndicator expanded={state.expanded} />}
         </span>
       )}
       {options?.rightContent && <span className="shrink-0">{options.rightContent}</span>}

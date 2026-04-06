@@ -1,0 +1,24 @@
+/* SubmenuPanel — CSS Anchor Positioning for submenu placement */
+.submenu-panel {
+  position: fixed;
+  margin: 0;
+  inset: unset;
+  z-index: 1;
+  list-style: none;
+}
+
+.submenu-panel[data-hidden] {
+  display: none;
+}
+
+.submenu-panel-root {
+  position-area: block-end span-inline-start;
+  position-try-fallbacks: flip-block;
+  margin-top: var(--space-xs);
+}
+
+.submenu-panel-nested {
+  position-area: inline-end span-block-start;
+  position-try-fallbacks: flip-inline;
+  margin-left: var(--space-xs);
+}

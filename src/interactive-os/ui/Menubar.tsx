@@ -1,3 +1,4 @@
+// ② 2026-04-06-menubar-refactor-prd.md
 import React from 'react'
 import type { ReactNode } from 'react'
 import type { AriaComponentProps } from './types'
@@ -5,10 +6,12 @@ import { getNodeLabel } from './types'
 import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { menubar } from '../pattern/roles/menubar'
-import { ax } from '@styles/ax'
+import { MenubarItem } from './items/MenubarItem'
+import { MenuItem } from './items/MenuItem'
+import { DirectionIndicator } from './indicators'
+import { SubmenuPanel } from './panels/SubmenuPanel'
 import '@styles/ax.css'
 import './Menubar.css'
-import { ExpandIndicator, DirectionIndicator } from './indicators'
 
 type MenubarRenderItem = (
   props: React.HTMLAttributes<HTMLElement>,
@@ -21,54 +24,46 @@ interface MenubarProps extends Omit<AriaComponentProps, 'renderItem'> {
   renderItem?: MenubarRenderItem
 }
 
+const directionIndicator = <DirectionIndicator direction="next" />
+
 const defaultRenderItem: MenubarRenderItem = (props, item, state, children) => {
   const label = getNodeLabel(item)
   const isRoot = state.level === 1
-  const hasChildren = state.expanded !== undefined
+  const anchorName = `--menubar-${(item as { id?: string }).id ?? String(state.index)}`
 
+  if (isRoot) {
+    if (children) {
+      return (
+        <li role="none" className="relative" style={{ anchorName } as React.CSSProperties}>
+          {MenubarItem(props, item, state)}
+          <SubmenuPanel label={label} expanded={state.expanded} placement="root" anchorName={anchorName}>
+            {children}
+          </SubmenuPanel>
+        </li>
+      )
+    }
+    return (
+      <li role="none">
+        {MenubarItem(props, item, state)}
+      </li>
+    )
+  }
+
+  // Submenu level (2+): reuse MenuItem with DirectionIndicator
   if (children) {
     return (
-      <li role="none" className={"relative"}>
-        <a
-          {...props}
-          href="#"
-          className={`${ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1', text: state.focused ? 'bright' : 'primary' })} menubar-link`}
-          data-focused={state.focused || undefined}
-          onClick={e => e.preventDefault()}
-        >
-          <span>{label}</span>
-          <span className={ax({ layout: 'row', text: 'muted' })} aria-hidden="true">
-            {isRoot ? <ExpandIndicator expanded={state.expanded} /> : <DirectionIndicator direction="next" />}
-          </span>
-        </a>
-        <ul
-          role="menu"
-          aria-label={label}
-          className={`absolute list-none ${ax({ surface: 'overlay', padding: 'xs', shape: 'sm' })} menubar-submenu ${isRoot ? 'menubar-submenu-root' : 'menubar-submenu-nested'}`}
-          data-hidden={!state.expanded || undefined}
-        >
+      <li role="none" className="relative" style={{ anchorName } as React.CSSProperties}>
+        {MenuItem(props, item, state, { indicator: directionIndicator })}
+        <SubmenuPanel label={label} expanded={state.expanded} placement="nested" anchorName={anchorName}>
           {children}
-        </ul>
+        </SubmenuPanel>
       </li>
     )
   }
 
   return (
-    <li role="none" className={"relative"}>
-      <a
-        {...props}
-        href="#"
-        className={`${ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1', text: state.focused ? 'bright' : 'primary' })} menubar-link`}
-        data-focused={state.focused || undefined}
-        onClick={e => e.preventDefault()}
-      >
-        <span>{label}</span>
-        {hasChildren && (
-          <span className={ax({ layout: 'row', text: 'muted' })} aria-hidden="true">
-            {isRoot ? <ExpandIndicator expanded={state.expanded} /> : <DirectionIndicator direction="next" />}
-          </span>
-        )}
-      </a>
+    <li role="none">
+      {MenuItem(props, item, state)}
     </li>
   )
 }
