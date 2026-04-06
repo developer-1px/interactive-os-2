@@ -18,6 +18,8 @@ import { crud } from '@os/plugins/crud'
 import { dnd, dndCommands } from '@os/plugins/dnd'
 import { rename, renameCommands } from '@os/plugins/rename'
 import { clipboard } from '@os/plugins/clipboard'
+import { focusHistory } from '@os/plugins/focusHistory'
+import { scope } from '@os/plugins/scope'
 import { crudCommands } from '@os/plugins/crud'
 import { getParent, getChildren, updateEntityData, addEntity, removeEntity, moveNode } from '@os/store/createStore'
 import { definePlugin } from '@os/plugins/definePlugin'
@@ -55,6 +57,17 @@ const writerCommands = defineCommands({
       const siblings = getChildren(store, parentId)
       const idx = siblings.indexOf(afterNodeId)
       return addEntity(store, { id: newId, data }, parentId, idx + 1)
+    },
+  },
+
+  insertBefore: {
+    type: 'writer:insert-before' as const,
+    create: (beforeNodeId: string, newId: string, data: Record<string, unknown>) => ({ beforeNodeId, newId, data }),
+    handler: (store, { beforeNodeId, newId, data }) => {
+      const parentId = getParent(store, beforeNodeId) ?? ROOT_ID
+      const siblings = getChildren(store, parentId)
+      const idx = siblings.indexOf(beforeNodeId)
+      return addEntity(store, { id: newId, data }, parentId, idx)
     },
   },
 
@@ -316,6 +329,7 @@ function writerKeys(): Plugin {
     visibilityFilter: writerNavigateFilter,
     commands: {
       insertAfter: writerCommands.insertAfter,
+      insertBefore: writerCommands.insertBefore,
       merge: writerCommands.merge,
       updateContent: writerCommands.updateContent,
       wrapInList: writerCommands.wrapInList,
@@ -355,6 +369,32 @@ function writerKeys(): Plugin {
 
         return createBatchCommand([
           writerCommands.insertAfter(ctx.focused, newId, newData),
+          renameCommands.startRename(newId),
+        ])
+      }),
+
+      // Shift+Enter → new sibling BEFORE current + edit
+      'Shift+Enter': key(['writer:insert-before', 'rename:start'], (ctx) => {
+        const d = ctx.getEntity(ctx.focused)?.data as Record<string, unknown> | undefined
+        if (!d) return undefined
+        const type = d.type as string
+        const parentId = ctx.getParent(ctx.focused)
+        if (!parentId) return undefined
+        const newId = `wi${++_insertCounter}`
+
+        let newData: Record<string, unknown>
+        if (type === 'heading') {
+          newData = { type: 'heading', level: d.level, content: '' }
+        } else if (type === 'sentence') {
+          newData = { type: 'sentence', content: '' }
+        } else if (type === 'listItem') {
+          newData = { type: 'listItem', content: '' }
+        } else {
+          return undefined
+        }
+
+        return createBatchCommand([
+          writerCommands.insertBefore(ctx.focused, newId, newData),
           renameCommands.startRename(newId),
         ])
       }),
@@ -451,8 +491,10 @@ const writerPlugins: Plugin[] = [
     deserialize: (text) => mdToStore(text),
   }),
   dnd(),
+  focusHistory(),
   history(),
   rename(),
+  scope(),
   writerKeys(),
 ]
 
