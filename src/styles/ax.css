@@ -568,6 +568,9 @@
 .absolute { position: absolute; }
 .inset-0  { inset: 0; }
 
+/* HTML hidden attribute must always win over layout classes */
+[hidden] { display: none !important; }
+
 /* reset / misc */
 .border-none     { border: none; }
 .outline-none    { outline: none; }
