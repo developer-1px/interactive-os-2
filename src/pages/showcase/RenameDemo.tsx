@@ -1,10 +1,10 @@
 import { useState } from 'react'
+import { ax } from '@styles/ax'
 import { ListBox } from '@os/ui/ListBox'
-import { Aria } from '@os/primitives/aria'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
+import type { ItemSlots } from '@os/ui/types'
 import { Up, Down } from '../shared/kbdIcons'
 import { history } from '@os/plugins/history'
 import { rename } from '@os/plugins/rename'
@@ -25,6 +25,13 @@ const bookmarkData = createStore({
 
 const plugins = [rename(), history(), focusRecovery()]
 
+const itemSlots: ItemSlots = {
+  rightContent: (node) => {
+    const d = node.data as Record<string, unknown>
+    return <span className={ax({ text: 'muted', textStyle: 'caption' })}>{d?.url as string}</span>
+  },
+}
+
 export default function RenameDemo() {
   const [data, setData] = useState<NormalizedData>(bookmarkData)
 
@@ -43,23 +50,7 @@ export default function RenameDemo() {
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(props, item, state: NodeState) => {
-            const d = item.data as Record<string, unknown>
-            const cls = [
-              'list-item flex-row items-center justify-between',
-              state.focused && 'list-item--focused',
-              state.selected && !state.focused && 'list-item--selected',
-            ].filter(Boolean).join(' ')
-
-            return (
-              <div {...props} className={cls}>
-                <Aria.Editable field="label">
-                  <span className="list-item__label">{d?.label as string}</span>
-                </Aria.Editable>
-                <span className="list-item__desc">{d?.url as string}</span>
-              </div>
-            )
-          }}
+          itemSlots={itemSlots}
         />
       </div>
     </>

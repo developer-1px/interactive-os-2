@@ -7,7 +7,7 @@ import { listbox } from '../pattern/roles/listbox'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
 import { search } from '../plugins/search'
-import { ListItem } from './items'
+import { ListItem, EditableListItem } from './items'
 
 const listboxPattern = listbox()
 
@@ -18,11 +18,12 @@ interface ListBoxProps extends AriaComponentProps {
   autoFocus?: boolean
 }
 
-function makeRenderItem(slots?: ItemSlots) {
+function makeRenderItem(editable: boolean, slots?: ItemSlots) {
+  const Item = editable ? EditableListItem : ListItem
   if (!slots) return (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement =>
-    ListItem(props, item, state)
+    Item(props, item, state)
   return (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement =>
-    ListItem(props, item, state, {
+    Item(props, item, state, {
       icon: slots.icon?.(item, state),
       rightContent: slots.rightContent?.(item, state),
     })
@@ -43,7 +44,7 @@ export function ListBox({
   className: _className,
   'aria-label': ariaLabel,
 }: ListBoxProps) {
-  const defaultRenderer = React.useMemo(() => makeRenderItem(itemSlots), [itemSlots])
+  const defaultRenderer = React.useMemo(() => makeRenderItem(enableEditing, itemSlots), [enableEditing, itemSlots])
   const resolvedRenderItem = renderItem ?? defaultRenderer
   const mergedPlugins = React.useMemo(
     () => {
