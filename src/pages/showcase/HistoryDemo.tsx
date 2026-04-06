@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
-import { Aria } from '@os/primitives/aria'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
 import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
 import { clipboard } from '@os/plugins/clipboard'
@@ -48,22 +46,6 @@ export default function HistoryDemo() {
           onChange={setData}
           enableEditing
           plugins={plugins}
-          renderItem={(props, item, state: NodeState) => {
-            const d = item.data as Record<string, unknown>
-            const cls = [
-              'list-item flex-row items-center justify-between',
-              state.focused && 'list-item--focused',
-              state.selected && !state.focused && 'list-item--selected',
-            ].filter(Boolean).join(' ')
-
-            return (
-              <div {...props} className={cls}>
-                <Aria.Editable field="label">
-                  <span className="list-item__label">{d?.label as string}</span>
-                </Aria.Editable>
-              </div>
-            )
-          }}
         />
       </div>
     </>

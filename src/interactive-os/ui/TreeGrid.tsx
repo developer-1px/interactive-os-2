@@ -6,7 +6,7 @@ import { Aria } from '../primitives/aria'
 import { treegrid } from '../pattern/roles/treegrid'
 import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
-import { TreeItem } from './items'
+import { TreeItem, EditableTreeItem } from './items'
 
 interface TreeGridProps extends AriaComponentProps {
   id?: string
@@ -14,11 +14,12 @@ interface TreeGridProps extends AriaComponentProps {
   columns?: number
 }
 
-function makeRenderItem(slots?: ItemSlots) {
+function makeRenderItem(editable: boolean, slots?: ItemSlots) {
+  const Item = editable ? EditableTreeItem : TreeItem
   if (!slots) return (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement =>
-    TreeItem(props, node, state)
+    Item(props, node, state)
   return (props: React.HTMLAttributes<HTMLElement>, node: Record<string, unknown>, state: NodeState): React.ReactElement =>
-    TreeItem(props, node, state, {
+    Item(props, node, state, {
       icon: slots.icon?.(node, state),
       rightContent: slots.rightContent?.(node, state),
     })
@@ -40,7 +41,7 @@ export function TreeGrid({
   onActivate,
   'aria-label': ariaLabel,
 }: TreeGridProps) {
-  const defaultRenderer = React.useMemo(() => makeRenderItem(itemSlots), [itemSlots])
+  const defaultRenderer = React.useMemo(() => makeRenderItem(enableEditing, itemSlots), [enableEditing, itemSlots])
   const resolvedRenderItem = renderItem ?? defaultRenderer
   const pattern = React.useMemo(
     () => columns ? treegrid(columns) : treegrid(1),
