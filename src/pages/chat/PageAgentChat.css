@@ -1,0 +1,44 @@
+/* ── PageAgentChat last-mile ── */
+
+.chat-page {
+  grid-column: 2 / -1;
+  height: 100%;
+  min-height: 0;
+}
+
+.chat-sidebar {
+  width: var(--storymap-col-width);
+}
+
+.chat-close-btn {
+  width: var(--switch-height);
+  height: var(--switch-height);
+  opacity: 0;
+}
+
+.chat-session-item:hover .chat-close-btn {
+  opacity: 1;
+}
+
+.chat-file-list {
+  padding-left: calc(var(--space-sm) + var(--space-xs));
+}
+
+.chat-main {
+  max-width: var(--content-lg);
+  margin-inline: auto;
+}
+
+.chat-dot {
+  width: var(--shape-xs-radius);
+  height: var(--shape-xs-radius);
+}
+
+.chat-input-row > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-start-btn:hover {
+  border-color: var(--border-default);
+}

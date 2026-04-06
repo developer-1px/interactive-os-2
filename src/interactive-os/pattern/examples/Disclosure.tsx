@@ -6,7 +6,6 @@ import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { DisclosureGroup } from '../../ui/DisclosureGroup'
 import { ax } from '@styles/ax'
-import './disclosure.css'
 
 // APG #19: Disclosure (Show/Hide)
 // https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
@@ -68,7 +67,7 @@ const renderItem = (
     return (
       <div
         {...props}
-        className={`disclosure-button ${ax({ gap: 'sm', weight: 'semi', text: 'primary', padding: 'sm', content: 'text', surface: 'sunken' })} flex-row items-center cursor-default`}
+        className={`${ax({ gap: 'sm', weight: 'semi', text: 'primary', padding: 'sm', content: 'text', surface: 'sunken', interactive: 'item', border: 'default' })} flex-row items-center cursor-default`}
         data-focused={state.focused || undefined}
       >
         <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">
@@ -80,7 +79,7 @@ const renderItem = (
   }
 
   return (
-    <div {...props} className={`disclosure-panel ${ax({ textStyle: 'body', text: 'secondary', padding: 'sm', content: 'text' })}`}>
+    <div {...props} className={ax({ textStyle: 'body', text: 'secondary', padding: 'sm', content: 'text', border: 'default' })}>
       {label}
     </div>
   )

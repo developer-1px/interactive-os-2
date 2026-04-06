@@ -6,7 +6,6 @@ import { ROOT_ID } from '../../store/types'
 import { SELECTION_ID } from '../../axis/select'
 import { ListBox } from '../../ui/ListBox'
 import { ax } from '@styles/ax'
-import './listbox.css'
 
 // APG #37: Listbox with Rearrangeable Options (Example 2 — Multi-Select)
 // https://www.w3.org/WAI/ARIA/apg/patterns/listbox/examples/listbox-rearrangeable/
@@ -49,11 +48,11 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={`listbox-option ${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text' })} flex-row items-center`}
+      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item' })} flex-row items-center`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
-      {state.selected && <span aria-hidden="true" className={`listbox-check ${ax({ textStyle: 'caption' })}`}>✓</span>}
+      {state.selected && <span aria-hidden="true" className={`${ax({ textStyle: 'caption', text: 'accent' })}`}>✓</span>}
       {label}
     </div>
   )
@@ -77,7 +76,7 @@ function ListboxZone({
 
   return (
     <div className="flex-1 min-w-0">
-      <span className={`listbox-zone-label ${ax({ textStyle: 'label', text: 'primary' })} block`} id={`label-${label.toLowerCase().replace(/\s/g, '-')}`}>
+      <span className={`${ax({ textStyle: 'label', text: 'primary' })} block`} id={`label-${label.toLowerCase().replace(/\s/g, '-')}`}>
         {label}
       </span>
       <ListBox
@@ -123,9 +122,9 @@ export function ListboxRearrangeable() {
         onSelectionChange={setAvailableSelected}
       />
 
-      <div role="toolbar" aria-label="Actions" className={`listbox-toolbar ${ax({ gap: 'xs' })} flex-col`}>
+      <div role="toolbar" aria-label="Actions" className={`${ax({ gap: 'xs', padding: 'md' })} flex-col`}>
         <button
-          className={`listbox-toolbar-button ${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm' })} whitespace-nowrap`}
+          className={`${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button' })} whitespace-nowrap`}
           aria-keyshortcuts="Enter"
           disabled={availableSelected.length === 0}
           onClick={addToChosen}
@@ -133,7 +132,7 @@ export function ListboxRearrangeable() {
           Add →
         </button>
         <button
-          className={`listbox-toolbar-button ${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm' })} whitespace-nowrap`}
+          className={`${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button' })} whitespace-nowrap`}
           aria-keyshortcuts="Delete"
           disabled={chosenSelected.length === 0}
           onClick={removeFromChosen}

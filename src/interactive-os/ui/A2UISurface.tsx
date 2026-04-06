@@ -5,7 +5,6 @@ import { a2uiToNormalized, isSafeDepth } from './a2uiAdapter'
 import type { A2UIComponentMap, A2UIRenderContext } from './a2uiComponentMap'
 import { ROOT_ID } from '@os/store/types'
 import { createStore, getChildren } from '@os/store/createStore'
-import type { NodeState } from '@os/pattern/types'
 import { ListBox } from './ListBox'
 import { TabList } from './TabList'
 import { RadioGroup } from './RadioGroup'
@@ -14,18 +13,8 @@ import { Slider } from './Slider'
 import { Button } from './Button'
 import { TextInput } from './TextInput'
 import { ax } from '@styles/ax'
-import { CheckIndicator, RadioIndicator } from './indicators'
 
 // ── Shared helpers ──
-
-function listItemCls(state: NodeState) {
-  return ax({
-    surface: 'ghost',
-    padding: 'sm',
-    shape: 'sm',
-    text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary',
-  })
-}
 
 // ── Default component map: A2UI type → our UI component ──
 
@@ -102,15 +91,6 @@ function checkboxRenderer({ entity }: A2UIRenderContext) {
       data={store}
       plugins={[]}
       aria-label={label}
-      renderItem={(props, node, state: NodeState) => {
-        const nd = node.data as Record<string, unknown>
-        return (
-          <div {...props} className={ax({ layout: 'row', gap: 'sm' })}>
-            <CheckIndicator checked={state.selected || (nd?.checked as boolean)} />
-            <span>{nd?.label as string}</span>
-          </div>
-        )
-      }}
     />
   )
 }
@@ -160,10 +140,6 @@ function listRenderer({ entity, store }: A2UIRenderContext) {
       data={listStore}
       plugins={[]}
       aria-label={(entity.data as Record<string, unknown>)?.['aria-label'] as string ?? 'List'}
-      renderItem={(props, node, state: NodeState) => {
-        const nd = node.data as Record<string, unknown>
-        return <div {...props} className={listItemCls(state)}>{nd?.label as string}</div>
-      }}
     />
   )
 }
@@ -195,10 +171,6 @@ function TabsRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) {
           const idx = parseInt(nodeId.replace('tab-', ''), 10)
           if (!isNaN(idx)) setActiveIndex(idx)
         }}
-        renderItem={(props, node, state: NodeState) => {
-          const nd = node.data as Record<string, unknown>
-          return <div {...props} className={listItemCls(state)}>{nd?.label as string}</div>
-        }}
       />
       <div className={ax({ padding: 'md' })}>
         {tabItems[activeIndex]?.child && store.entities[tabItems[activeIndex].child]
@@ -225,15 +197,6 @@ function choicePickerRenderer({ entity }: A2UIRenderContext) {
       data={store}
       plugins={[]}
       aria-label={(d.label as string) ?? 'Choice'}
-      renderItem={(props, node, state: NodeState) => {
-        const nd = node.data as Record<string, unknown>
-        return (
-          <div {...props} className={listItemCls(state)}>
-            <RadioIndicator />
-            <span>{nd?.label as string}</span>
-          </div>
-        )
-      }}
     />
   )
 }

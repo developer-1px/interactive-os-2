@@ -70,18 +70,18 @@ describe('PageI18nEditor', () => {
       expect(getRowCount(container)).toBe(expectedRows)
     })
 
-    it('key column shows identifier text with cell-key class', () => {
+    it('key column shows identifier text with secondary style', () => {
       const { container } = render(<PageI18nEditor />)
-      const keyCell = container.querySelector('.cell-key')
+      const keyCell = container.querySelector('.tx-secondary')
       expect(keyCell).not.toBeNull()
       // Key format: "entityId.fieldName"
       expect(keyCell?.textContent).toMatch(/\w+\.\w+/)
     })
 
-    it('empty locale cells show "—" with cell-empty class', () => {
+    it('empty locale cells show "—" with muted style', () => {
       const { container } = render(<PageI18nEditor />)
       // localeMap() creates { ko: 'text', en: '', ja: '' } — en/ja are empty for most entries
-      const emptyCells = container.querySelectorAll('.cell-empty')
+      const emptyCells = container.querySelectorAll('.tx-muted')
       expect(emptyCells.length).toBeGreaterThan(0)
       // All empty cells show "—"
       for (const cell of emptyCells) {

@@ -5,7 +5,6 @@ import { TabList } from '../../ui/TabList'
 import { ax } from '@styles/ax'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
-import './tabs.css'
 
 // APG #60: Tabs with Manual Activation
 // https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-manual/
@@ -32,7 +31,7 @@ const renderTab = (
   return (
     <div
       {...props}
-      className={`tabs-demo-item ${ax({ textStyle: 'body', text: 'secondary' })} inline-flex items-center cursor-default`}
+      className={`${ax({ textStyle: 'body', text: 'secondary', interactive: 'tab' })} inline-flex items-center cursor-default`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

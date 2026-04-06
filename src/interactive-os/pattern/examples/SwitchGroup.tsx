@@ -5,7 +5,6 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { SwitchGroup as SwitchGroupUI } from '../../ui/SwitchGroup'
 import { ax } from '@styles/ax'
-import './switch.css'
 
 // APG #54: Switch
 // https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch/
@@ -31,16 +30,16 @@ const renderSwitch = (
   return (
     <div
       {...props}
-      className={`switch-item ${ax({ gap: 'md', text: 'primary', padding: 'xs', content: 'text' })} flex-row items-center justify-between cursor-default`}
+      className={`${ax({ gap: 'md', text: 'primary', padding: 'xs', content: 'text', interactive: 'check' })} flex-row items-center justify-between cursor-default`}
       data-focused={state.focused || undefined}
     >
-      <span className={`switch-label flex-1`}>{label}</span>
+      <span className={`flex-1`}>{label}</span>
       <span
-        className={`switch-track ${ax({ shape: 'pill' })} inline-flex items-center`}
+        className={`${ax({ shape: 'pill', surface: 'sunken' })} inline-flex items-center`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >
-        <span className={`switch-thumb ${ax({ shape: 'pill', size: 'sm' })} block`} />
+        <span className={`${ax({ shape: 'pill', size: 'sm', surface: 'action' })} block`} />
       </span>
     </div>
   )

@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
 import { ax } from '@styles/ax'
-import './carousel.css'
 
 // APG #7: Auto-Rotating Image Carousel with Buttons for Slide Control
 // https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/
@@ -65,18 +64,18 @@ export function CarouselPrevNext() {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className={`${ax({ surface: 'display' })} carousel-controls flex-row justify-end`}>
+      <div className={`${ax({ surface: 'display', padding: 'xs' })} flex-row justify-end`}>
         <button
-          className={`${ax({ text: 'secondary', shape: 'sm' })} carousel-rotation-button flex-row items-center justify-center`}
+          className={ax({ text: 'secondary', shape: 'sm', interactive: 'button', icon: 'lg', layout: 'center' })}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}
           onClick={() => setIsRotating(r => !r)}
         >
           {isRotating ? <Pause size="1em" /> : <Play size="1em" />}
         </button>
-        <button className={`${ax({ text: 'secondary', shape: 'sm' })} carousel-rotation-button flex-row items-center justify-center`} aria-label="Previous Slide" onClick={prev}>
+        <button className={ax({ text: 'secondary', shape: 'sm', interactive: 'button', icon: 'lg', layout: 'center' })} aria-label="Previous Slide" onClick={prev}>
           <ChevronLeft size="1em" />
         </button>
-        <button className={`${ax({ text: 'secondary', shape: 'sm' })} carousel-rotation-button flex-row items-center justify-center`} aria-label="Next Slide" onClick={next}>
+        <button className={ax({ text: 'secondary', shape: 'sm', interactive: 'button', icon: 'lg', layout: 'center' })} aria-label="Next Slide" onClick={next}>
           <ChevronRight size="1em" />
         </button>
       </div>
@@ -86,14 +85,14 @@ export function CarouselPrevNext() {
           role="group"
           aria-roledescription="slide"
           aria-label={`${currentIndex + 1} of ${slides.length}`}
-          className={`${ax({ surface: 'display' })} carousel-slide`}
+          className={ax({ surface: 'display', padding: 'md' })}
         >
-          <h3 className={`carousel-slide-title ${ax({ text: 'bright' })}`}>{slide.label}</h3>
-          <p className={`${ax({ text: 'secondary', textStyle: 'body' })} carousel-slide-desc`}>{slide.desc}</p>
+          <h3 className={ax({ text: 'bright', textStyle: 'section', weight: 'semi' })}>{slide.label}</h3>
+          <p className={ax({ text: 'secondary', textStyle: 'body' })}>{slide.desc}</p>
         </div>
       </div>
 
-      <div className={`${ax({ textStyle: 'caption', text: 'muted', surface: 'display' })} carousel-indicator text-center`} aria-hidden="true">
+      <div className={`${ax({ textStyle: 'caption', text: 'muted', surface: 'display', padding: 'xs' })} text-center`} aria-hidden="true">
         {currentIndex + 1} / {slides.length}
       </div>
     </section>

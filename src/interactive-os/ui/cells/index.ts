@@ -2,3 +2,5 @@
 export { TextCell } from './TextCell'
 export { BadgeCell } from './BadgeCell'
 export { CodeCell } from './CodeCell'
+export { EditableCell } from './EditableCell'
+export { SearchableCell } from './SearchableCell'
