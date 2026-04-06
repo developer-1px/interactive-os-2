@@ -4,7 +4,6 @@ import { ax } from '@styles/ax'
 import { type NormalizedData, ROOT_ID } from '@os/store/types'
 import { getChildren, getEntity } from '@os/store/createStore'
 import { MermaidBlock } from '../../pages/showcase/MermaidBlock'
-import type { SentenceData } from './writerSchema'
 import styles from './PyramidView.module.css'
 
 // ── helpers ──
@@ -19,102 +18,73 @@ function countLeaves(data: NormalizedData, id: string): number {
   return count
 }
 
-function countByRole(data: NormalizedData, id: string): Record<string, number> {
-  const counts: Record<string, number> = {}
-  const walk = (nodeId: string) => {
-    const entity = getEntity(data, nodeId)
-    if (entity?.data?.type === 'sentence') {
-      const role = (entity.data as SentenceData).role ?? 'none'
-      counts[role] = (counts[role] ?? 0) + 1
-    }
-    for (const childId of getChildren(data, nodeId)) walk(childId)
-  }
-  walk(id)
-  return counts
-}
-
-const ROLE_EMOJI: Record<string, string> = {
-  claim: 'C', evidence: 'E', reasoning: 'R',
-  context: 'X', counter: '!', transition: 'T', none: '-',
-}
 
 // ── storeToMermaid — full pyramid ──
 
-const SKIP_TYPES = new Set(['document'])
-const LEAF_TYPES = new Set(['sentence', 'listItem', 'hr'])
-const SHAPE: Record<string, [string, string]> = {
-  heading: ['["', '"]'],
-  paragraph: ['("', '")'],
-  sentence: ['("', '")'],
-  listItem: ['("', '")'],
-  list: ['[["', '"]]'],
-  hr: ['{"', '"}'],
-}
+const SKIP_TYPES = new Set(['document', 'hr'])
 
 function truncate(s: string, max: number): string {
   return s.length > max ? s.slice(0, max) + '…' : s
 }
 
-export function storeToMermaid(data: NormalizedData): string {
-  const lines: string[] = ['graph TD']
-  const edges: string[] = []
-  const styleLines: string[] = []
+function sanitize(s: string): string {
+  // Mermaid mindmap text: remove special chars that break parsing
+  return s.replace(/[()[\]{}"<>]/g, ' ').replace(/\s+/g, ' ').trim()
+}
 
-  const walk = (parentId: string, isRoot: boolean) => {
+export function storeToMermaid(data: NormalizedData): string {
+  const lines: string[] = ['mindmap']
+
+  const indent = (depth: number) => '  '.repeat(depth)
+
+  const walk = (parentId: string, depth: number) => {
     for (const childId of getChildren(data, parentId)) {
       const entity = getEntity(data, childId)
       const type = entity?.data?.type as string | undefined
       if (!type || SKIP_TYPES.has(type)) {
-        walk(childId, false)
+        walk(childId, depth)
         continue
       }
-      // Skip individual sentences/listItems — too many nodes for mermaid
-      if (LEAF_TYPES.has(type)) continue
 
       const d = entity!.data as Record<string, unknown>
       const content = (d.content as string) ?? ''
-      const [open, close] = SHAPE[type] ?? ['["', '"]']
-      let label: string
 
       if (type === 'heading') {
         const leafCount = countLeaves(data, childId)
-        const roles = countByRole(data, childId)
-        const roleStr = Object.entries(roles)
-          .filter(([r]) => r !== 'none')
-          .map(([r, c]) => `${ROLE_EMOJI[r] ?? r}${c}`)
-          .join(' ')
-        const safe = truncate(content, 30).replace(/"/g, '#quot;').replace(/\n/g, ' ')
-        label = roleStr ? `${safe}<br/>${leafCount}s | ${roleStr}` : `${safe}<br/>${leafCount}s`
-        if (leafCount === 0) {
-          styleLines.push(`  style ${childId} stroke:#e55,stroke-width:2px`)
+        const safe = sanitize(truncate(content, 40))
+        lines.push(`${indent(depth)}${safe} ${leafCount}s`)
+        walk(childId, depth + 1)
+      } else if (type === 'paragraph' || type === 'list') {
+        // Minto: first sentence = key point, rest = supporting
+        const sentences = getChildren(data, childId)
+        if (sentences.length === 0) continue
+        const firstEntity = getEntity(data, sentences[0]!)
+        if (!firstEntity) continue
+        const firstContent = (firstEntity.data as Record<string, unknown>)?.content as string ?? ''
+        lines.push(`${indent(depth)}${sanitize(truncate(firstContent, 35))}`)
+        for (let i = 1; i < sentences.length; i++) {
+          const subEntity = getEntity(data, sentences[i]!)
+          if (!subEntity) continue
+          const subContent = (subEntity.data as Record<string, unknown>)?.content as string ?? ''
+          lines.push(`${indent(depth + 1)}${sanitize(truncate(subContent, 30))}`)
         }
-      } else if (type === 'paragraph') {
-        const childCount = getChildren(data, childId).length
-        label = `¶ ${childCount}s`
-      } else if (type === 'list') {
-        const ordered = d.ordered as boolean
-        label = ordered ? 'ol' : 'ul'
-      } else {
-        const safe = truncate(content, 25).replace(/"/g, '#quot;').replace(/\n/g, ' ')
-        const role = d.role as string | undefined
-        label = role ? `${safe}<br/>${ROLE_EMOJI[role] ?? role}` : safe
+      } else if (type === 'sentence' || type === 'listItem') {
+        const safe = sanitize(truncate(content, 30))
+        lines.push(`${indent(depth)}${safe}`)
       }
-
-      lines.push(`  ${childId}${open}${label}${close}`)
-      if (!isRoot) {
-        edges.push(`  ${parentId} --> ${childId}`)
-      }
-
-      walk(childId, false)
     }
   }
 
   const rootChildren = getChildren(data, ROOT_ID)
   for (const docId of rootChildren) {
-    walk(docId, true)
+    // Use document's first heading or path as root
+    const docEntity = getEntity(data, docId)
+    const path = (docEntity?.data as Record<string, unknown>)?.path as string | undefined
+    lines.push(`  root(${sanitize(path ?? 'Document')})`)
+    walk(docId, 2)
   }
 
-  return [...lines, ...edges, ...styleLines].join('\n')
+  return lines.join('\n')
 }
 
 // ── Pan/Zoom hook ──
