@@ -19,14 +19,12 @@ export function MenuItem(
   options?: MenuItemOptions,
 ): React.ReactElement {
   const label = getNodeLabel(node)
-  const textColor = state.focused ? 'bright' as const : 'primary' as const
   return (
     <div
       {...props}
-      className={ax({ interactive: 'item', layout: 'spread' })}
-      data-focused={state.focused || undefined}
+      className={ax({ interactive: 'item', layout: 'spread', controlSize: 'md', padding: 'sm', content: 'text' })}
     >
-      <span className={ax({ textStyle: 'body', text: textColor })}>{label}</span>
+      <span>{label}</span>
       {state.expanded !== undefined && (
         <span className={ax({ layout: 'bar', text: 'muted' })}>
           {options?.indicator ?? <ExpandIndicator expanded={state.expanded} />}

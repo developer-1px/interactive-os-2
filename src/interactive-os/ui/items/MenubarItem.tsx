@@ -14,11 +14,11 @@ export function MenubarItem(
   return (
     <div
       {...props}
-      className={ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1' })}
+      className={ax({ interactive: 'item', layout: 'bar', controlSize: 'md', padding: 'md', content: 'text', gap: 'xs' })}
     >
       <span>{label}</span>
       {state.expanded !== undefined && (
-        <span className={ax({ layout: 'row', text: 'muted' })} aria-hidden="true">
+        <span className={ax({ text: 'muted' })} aria-hidden="true">
           <ExpandIndicator expanded={state.expanded} />
         </span>
       )}
