@@ -1,6 +1,27 @@
 {
   "enabledPlugins": {
-    "context7@claude-plugins-official": true
+    "context7@claude-plugins-official": true,
+    "plugin-repo@plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "plugins": {
+      "source": {
+        "source": "settings",
+        "name": "plugins",
+        "plugins": [
+          {
+            "name": "plugin-repo",
+            "source": {
+              "source": "github",
+              "repo": "developer-1px/plugin-repo"
+            }
+          }
+        ],
+        "owner": {
+          "name": "REDACTED"
+        }
+      }
+    }
   },
   "hooks": {
     "PreToolUse": [
@@ -85,6 +106,16 @@
             "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkTestComponents.mjs",
             "timeout": 5000,
             "statusMessage": "Checking test components..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkDesignScore.mjs",
+            "timeout": 3000
           }
         ]
       },
