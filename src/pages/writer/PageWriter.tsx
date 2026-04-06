@@ -1,4 +1,5 @@
 // ② 2026-04-05-writer-tree-crud-prd.md
+// @useState-hatch — viewMode/sizes: view-only state, no axis equivalent
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useWriterData, useWriterDirty, writerState } from './writerStore'
@@ -8,6 +9,7 @@ import { useWriterChatSync, sendWriterMessage, getSessionForFile } from './write
 import { requestAnalysis, type AnalysisResult } from './writerAnalyze'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import WriterFileBrowser from './WriterFileBrowser'
+import { PyramidView } from './PyramidView'
 import { ChatPane } from '../chat/ChatPane'
 import { WriterTreeGrid } from '@os/ui/WriterTreeGrid'
 import type { EditKeyContext } from '@os/primitives/aria'
@@ -501,7 +503,9 @@ const writerPlugins: Plugin[] = [
 export default function PageWriter() {
   const [data, setData] = useWriterData()
   const dirty = useWriterDirty()
-  const [prose, setProse] = useState(false)
+  // @useState-hatch view mode: tree/prose/pyramid (view-only state, no axis equivalent)
+  type ViewMode = 'tree' | 'prose' | 'pyramid'
+  const [viewMode, setViewMode] = useState<ViewMode>('tree')
   const [sizes, setSizes] = useState<PaneSize[]>([0.15, 'flex', 0.30])
 
   const location = useLocation()
@@ -510,14 +514,9 @@ export default function PageWriter() {
   // Extract file path from URL: /writer/path/to/file.md → path/to/file.md
   const urlFilePath = location.pathname.replace(/^\/writer\/?/, '') || undefined
 
-  // File-specific persistent chat session
+  // File-specific persistent chat session (derived — no state needed)
   const currentFile = writerState.getFilePath()
-  const [chatSessionId, setChatSessionId] = useState(() => getSessionForFile(currentFile))
-
-  // Update chat session when file changes
-  useEffect(() => {
-    setChatSessionId(getSessionForFile(currentFile))
-  }, [currentFile])
+  const chatSessionId = useMemo(() => getSessionForFile(currentFile), [currentFile])
 
   // Sync AI responses → writerState (analysis results applied via command reducer)
   const handleAnalysisResult = useCallback((result: AnalysisResult) => {
@@ -623,7 +622,7 @@ export default function PageWriter() {
 
   const writerKeyMap: RouteKeyMap = useMemo(() => ({
     'Mod+S': defineRouteKey('writer:save', () => handleSave(), 'Writer'),
-    'Mod+\\': defineRouteKey('writer:toggle-prose', () => setProse(p => !p), 'Writer'),
+    'Mod+\\': defineRouteKey('writer:toggle-view', () => setViewMode(m => m === 'tree' ? 'prose' : m === 'prose' ? 'pyramid' : 'tree'), 'Writer'),
   }), [handleSave])
 
   return (
@@ -637,11 +636,16 @@ export default function PageWriter() {
           <div className={ax({ layout: 'bar', gap: 'sm', padding: 'sm' })}>
             <Toolbar data={toolbarData} onActivate={handleToolbarActivate} aria-label="Writer toolbar" />
             {urlFilePath && <span className={ax({ textStyle: 'caption', text: 'muted' })}>{urlFilePath}</span>}
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+              {viewMode === 'tree' ? 'Tree' : viewMode === 'prose' ? 'Prose' : 'Pyramid'}
+            </span>
           </div>
 
           <div className={ax({ layout: 'scroll', padding: 'md' })}>
-            {prose ? (
+            {viewMode === 'prose' ? (
               <ProseView data={data} />
+            ) : viewMode === 'pyramid' ? (
+              <PyramidView data={data} />
             ) : (
               <WriterTreeGrid
                 data={data}
