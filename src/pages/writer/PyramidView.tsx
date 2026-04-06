@@ -1,59 +1,24 @@
-// @useState-hatch — scopePath is view-only navigation state, not OS data
-import { useState, useMemo } from 'react'
+// @useState-hatch — transform is view-only pan/zoom state
+import { useRef, useState, useCallback, useMemo } from 'react'
 import { ax } from '@styles/ax'
 import { type NormalizedData, ROOT_ID } from '@os/store/types'
 import { getChildren, getEntity } from '@os/store/createStore'
 import { MermaidBlock } from '../../pages/showcase/MermaidBlock'
 import type { HeadingData, SentenceData } from './writerSchema'
+import styles from './PyramidView.module.css'
 
 // ── helpers ──
 
-function isHeading(data: NormalizedData, id: string): boolean {
-  return getEntity(data, id)?.data?.type === 'heading'
-}
-
-function isSentenceOrListItem(data: NormalizedData, id: string): boolean {
-  const type = getEntity(data, id)?.data?.type
-  return type === 'sentence' || type === 'listItem'
-}
-
-/** Count all sentence/listItem descendants recursively */
 function countLeaves(data: NormalizedData, id: string): number {
   let count = 0
   for (const childId of getChildren(data, id)) {
-    if (isSentenceOrListItem(data, childId)) count++
+    const type = getEntity(data, childId)?.data?.type
+    if (type === 'sentence' || type === 'listItem') count++
     count += countLeaves(data, childId)
   }
   return count
 }
 
-/** Get direct heading children of a node */
-function getHeadingChildren(data: NormalizedData, parentId: string): string[] {
-  const result: string[] = []
-  for (const childId of getChildren(data, parentId)) {
-    if (isHeading(data, childId)) {
-      result.push(childId)
-    }
-  }
-  return result
-}
-
-/** Get all non-heading leaf content under a node */
-function getLeafContent(data: NormalizedData, parentId: string): string[] {
-  const result: string[] = []
-  for (const childId of getChildren(data, parentId)) {
-    const entity = getEntity(data, childId)
-    const type = entity?.data?.type
-    if (type === 'sentence' || type === 'listItem') {
-      result.push(childId)
-    } else if (type !== 'heading') {
-      result.push(...getLeafContent(data, childId))
-    }
-  }
-  return result
-}
-
-/** Count sentences by role under a subtree */
 function countByRole(data: NormalizedData, id: string): Record<string, number> {
   const counts: Record<string, number> = {}
   const walk = (nodeId: string) => {
@@ -62,155 +27,132 @@ function countByRole(data: NormalizedData, id: string): Record<string, number> {
       const role = (entity.data as SentenceData).role ?? 'none'
       counts[role] = (counts[role] ?? 0) + 1
     }
-    for (const childId of getChildren(data, nodeId)) {
-      walk(childId)
-    }
+    for (const childId of getChildren(data, nodeId)) walk(childId)
   }
   walk(id)
   return counts
 }
 
-// ── storeToMermaid ──
+const ROLE_EMOJI: Record<string, string> = {
+  claim: 'C', evidence: 'E', reasoning: 'R',
+  context: 'X', counter: '!', transition: 'T', none: '-',
+}
+
+// ── storeToMermaid — full pyramid ──
 
 export function storeToMermaid(data: NormalizedData): string {
   const lines: string[] = ['graph TD']
   const edges: string[] = []
+  const styleLines: string[] = []
 
-  const walk = (parentId: string) => {
+  const walk = (parentId: string, parentIsHeading: boolean) => {
     for (const childId of getChildren(data, parentId)) {
       const entity = getEntity(data, childId)
-      if (entity?.data?.type === 'heading') {
-        const hd = entity.data as HeadingData
-        const leafCount = countLeaves(data, childId)
-        const safe = hd.content.replace(/"/g, '#quot;')
-        lines.push(`  ${childId}["${safe} (${leafCount})"]`)
-        if (isHeading(data, parentId)) {
-          edges.push(`  ${parentId} --> ${childId}`)
-        }
-        walk(childId)
-      } else {
-        walk(childId)
+      if (entity?.data?.type !== 'heading') continue
+      const hd = entity.data as HeadingData
+      const leafCount = countLeaves(data, childId)
+      const roles = countByRole(data, childId)
+      const roleStr = Object.entries(roles)
+        .filter(([r]) => r !== 'none')
+        .map(([r, c]) => `${ROLE_EMOJI[r] ?? r}${c}`)
+        .join(' ')
+      const safe = hd.content.replace(/"/g, '#quot;').replace(/\n/g, ' ')
+      const label = roleStr ? `${safe}<br/>${leafCount}s | ${roleStr}` : `${safe}<br/>${leafCount}s`
+      lines.push(`  ${childId}["${label}"]`)
+
+      if (parentIsHeading) {
+        edges.push(`  ${parentId} --> ${childId}`)
       }
+
+      // Color by content health
+      if (leafCount === 0) {
+        styleLines.push(`  style ${childId} stroke:#e55,stroke-width:2px`)
+      }
+
+      walk(childId, true)
     }
   }
 
   const rootChildren = getChildren(data, ROOT_ID)
   for (const docId of rootChildren) {
-    walk(docId)
+    walk(docId, false)
   }
 
-  return [...lines, ...edges].join('\n')
+  return [...lines, ...edges, ...styleLines].join('\n')
+}
+
+// ── Pan/Zoom hook ──
+
+interface Transform { x: number; y: number; scale: number }
+
+function usePanZoom() {
+  const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, scale: 1 })
+  const isDragging = useRef(false)
+  const lastPos = useRef({ x: 0, y: 0 })
+
+  const onWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault()
+    if (e.ctrlKey || e.metaKey) {
+      // Pinch zoom
+      const delta = -e.deltaY * 0.005
+      setTransform(t => {
+        const newScale = Math.min(Math.max(t.scale + delta, 0.2), 5)
+        return { ...t, scale: newScale }
+      })
+    } else {
+      // Pan
+      setTransform(t => ({ ...t, x: t.x - e.deltaX, y: t.y - e.deltaY }))
+    }
+  }, [])
+
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    isDragging.current = true
+    lastPos.current = { x: e.clientX, y: e.clientY }
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  }, [])
+
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isDragging.current) return
+    const dx = e.clientX - lastPos.current.x
+    const dy = e.clientY - lastPos.current.y
+    lastPos.current = { x: e.clientX, y: e.clientY }
+    setTransform(t => ({ ...t, x: t.x + dx, y: t.y + dy }))
+  }, [])
+
+  const onPointerUp = useCallback(() => { isDragging.current = false }, [])
+
+  const reset = useCallback(() => setTransform({ x: 0, y: 0, scale: 1 }), [])
+
+  return { transform, onWheel, onPointerDown, onPointerMove, onPointerUp, reset }
 }
 
 // ── PyramidView ──
 
 export function PyramidView({ data }: { data: NormalizedData }) {
-  const [scopePath, setScopePath] = useState<string[]>([])
-
   const mermaidCode = useMemo(() => storeToMermaid(data), [data])
-
-  const docId = useMemo(() => {
-    const rootChildren = getChildren(data, ROOT_ID)
-    return rootChildren.find((id) => getEntity(data, id)?.data?.type === 'document') ?? rootChildren[0] ?? ROOT_ID
-  }, [data])
-
-  const currentParentId = scopePath.length > 0 ? scopePath[scopePath.length - 1] : docId
-
-  const headingChildren = useMemo(
-    () => getHeadingChildren(data, currentParentId),
-    [data, currentParentId],
-  )
-
-  const isLeaf = headingChildren.length === 0
-  const leafContentIds = useMemo(
-    () => isLeaf ? getLeafContent(data, currentParentId) : [],
-    [data, currentParentId, isLeaf],
-  )
-
-  const breadcrumbs = useMemo(() => {
-    const items: { id: string; label: string }[] = [{ id: '', label: 'Document' }]
-    for (const id of scopePath) {
-      const entity = getEntity(data, id)
-      const hd = entity?.data as HeadingData | undefined
-      items.push({ id, label: hd?.content ?? id })
-    }
-    return items
-  }, [data, scopePath])
+  const { transform, onWheel, onPointerDown, onPointerMove, onPointerUp, reset } = usePanZoom()
 
   return (
-    <div className={ax({ layout: 'stack', gap: 'md', padding: 'md' })}>
-      {/* Mermaid overview */}
-      <div className={ax({ surface: 'display', padding: 'md', shape: 'md' })}>
+    <div
+      className={`${styles.viewport} ${ax({ scroll: 'hidden' })}`}
+      onWheel={onWheel}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+    >
+      <div
+        className={`${styles.canvas} ${ax({ layout: 'center' })}`}
+        style={{ transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})` }}
+      >
         <MermaidBlock code={mermaidCode} />
       </div>
-
-      {/* Breadcrumb — click any segment to navigate back */}
-      <nav className={ax({ layout: 'row', gap: 'xs', padding: 'sm' })}>
-        {breadcrumbs.map((crumb, i) => (
-          <span key={crumb.id + i}>
-            {i > 0 && <span className={ax({ text: 'muted' })}> {'>'} </span>}
-            <button
-              type="button"
-              className={ax({ surface: 'ghost', textStyle: 'caption', text: i === breadcrumbs.length - 1 ? 'primary' : 'secondary' })}
-              onClick={() => {
-                if (i === 0) setScopePath([])
-                else setScopePath(scopePath.slice(0, i))
-              }}
-            >
-              {crumb.label}
-            </button>
-          </span>
-        ))}
-      </nav>
-
-      {/* Cards or leaf content */}
-      {isLeaf ? (
-        <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
-          {leafContentIds.map((id) => {
-            const entity = getEntity(data, id)
-            const content = (entity?.data as { content?: string })?.content ?? ''
-            return (
-              <div key={id} className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-                <p className={ax({ textStyle: 'body', text: 'primary' })}>{content}</p>
-              </div>
-            )
-          })}
-          {leafContentIds.length === 0 && (
-            <p className={ax({ tone: 'danger', textStyle: 'caption' })}>No content under this heading</p>
-          )}
-        </div>
-      ) : (
-        <div className={ax({ layout: 'row', gap: 'md', padding: 'md' })}>
-          {headingChildren.map((id) => {
-            const entity = getEntity(data, id)
-            const hd = entity?.data as HeadingData
-            const leafCount = countLeaves(data, id)
-            const roles = countByRole(data, id)
-            const hasContent = leafCount > 0
-
-            return (
-              <button
-                key={id}
-                type="button"
-                className={ax({ surface: 'overlay', padding: 'md', gap: 'sm', layout: 'stack', shape: 'md', interactive: 'item' })}
-                onClick={() => setScopePath([...scopePath, id])}
-              >
-                <span className={ax({ textStyle: hd.level <= 2 ? 'section' : 'label', text: 'primary' })}>
-                  {hd.content}
-                </span>
-                <span className={ax({ textStyle: 'caption', tone: hasContent ? 'success' : 'danger' })}>
-                  {leafCount} sentence{leafCount !== 1 ? 's' : ''}
-                </span>
-                {Object.keys(roles).length > 0 && (
-                  <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-                    {Object.entries(roles).map(([role, count]) => `${role}: ${count}`).join(', ')}
-                  </span>
-                )}
-              </button>
-            )
-          })}
-        </div>
-      )}
+      <button
+        type="button"
+        className={ax({ surface: 'overlay', textStyle: 'caption', padding: 'sm', shape: 'sm', placement: 'bottom' })}
+        onClick={reset}
+      >
+        Reset
+      </button>
     </div>
   )
 }
