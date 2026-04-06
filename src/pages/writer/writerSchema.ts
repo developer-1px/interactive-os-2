@@ -18,7 +18,11 @@ export const nodeSchemas = {
   sentence: z.object({
     type: z.literal('sentence'),
     content: z.string().describe('Sentence'),
-    role: z.enum(['fact', 'interpretation', 'evidence', 'opinion']).optional(),
+    role: z.enum(['claim', 'evidence', 'reasoning', 'context', 'counter', 'transition']).optional(),
+    relations: z.array(z.object({
+      target: z.string(),
+      type: z.enum(['supports', 'contradicts', 'elaborates', 'conditions']),
+    })).optional(),
   }),
   list: z.object({
     type: z.literal('list'),
@@ -38,6 +42,7 @@ export type HeadingData = z.infer<typeof nodeSchemas.heading>
 export type ParagraphData = z.infer<typeof nodeSchemas.paragraph>
 export type SentenceData = z.infer<typeof nodeSchemas.sentence>
 export type SentenceRole = NonNullable<SentenceData['role']>
+export type SentenceRelation = NonNullable<SentenceData['relations']>[number]
 export type ListData = z.infer<typeof nodeSchemas.list>
 export type ListItemData = z.infer<typeof nodeSchemas.listItem>
 export type HrData = z.infer<typeof nodeSchemas.hr>
