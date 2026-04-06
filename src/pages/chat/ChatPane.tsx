@@ -162,14 +162,14 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
     : 0
 
   return (
-    <div className={ax({ layout: 'fill' }) + ' chat-main'}>
+    <div className={ax({ layout: 'fill', width: 'lg' })}>
       <ChatFeed
         messages={messages}
         blockRenderers={chatRenderers}
         isStreaming={false}
-        className={ax({ flex: '1', padding: 'lg' })}
+        className={ax({ flex: '1', padding: 'lg', scroll: 'y' })}
       />
-      <div className={ax({ flex: 'none', padding: 'md' })}>
+      <div className={ax({ flex: 'none', padding: 'md', layout: 'stack', gap: 'sm' })}>
         {isRunning && (
           <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' tabular-nums chat-activity-bar'}>
             <span className={`${ax({ surface: 'base', tone: 'accent', shape: 'pill' })} chat-dot`} />

@@ -11,7 +11,7 @@ import type { ChatMessage, ChatBlock, DataBlock, BlockRendererMap } from './type
 import { useAutoscroll } from '../../plugins/autoscroll'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
-import './ChatFeed.css'
+
 
 // --- Default renderers (implementation set A: text/code/diff) ---
 
@@ -119,9 +119,9 @@ const MessageBubble = memo(function MessageBubble({
   renderers: BlockRendererMap
 }) {
   const roleClass = message.role === 'user'
-    ? `${ax({ textStyle: 'body', weight: 'medium', text: 'primary', padding: 'xs', content: 'text' })} chat-user`
+    ? `${ax({ textStyle: 'body', weight: 'medium', text: 'primary', padding: 'sm', content: 'bubble', surface: 'display', tone: 'accent-dim' })} chat-user`
     : message.role === 'system'
-      ? `${ax({ textStyle: 'caption', text: 'secondary', gap: 'sm' })} chat-system`
+      ? `${ax({ textStyle: 'caption', text: 'secondary', gap: 'sm', scroll: 'hidden' })} chat-system`
       : `${ax({ textStyle: 'body', text: 'primary', gap: 'sm' })} chat-assistant`
 
   if (message.role === 'system') {

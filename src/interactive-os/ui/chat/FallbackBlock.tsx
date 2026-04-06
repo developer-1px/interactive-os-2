@@ -5,7 +5,7 @@ import '@styles/ax.css'
 import { useChatFeatures } from './chatFeatures'
 import { useDisclosure } from './useDisclosure'
 import type { ChatBlock } from './types'
-import './FallbackBlock.css'
+
 
 export function FallbackBlock({ block }: { block: ChatBlock }) {
   const { expandByDefault } = useChatFeatures()
@@ -16,10 +16,10 @@ export function FallbackBlock({ block }: { block: ChatBlock }) {
   const { expanded, toggle, toggleProps } = useDisclosure({ initialOpen: expandByDefault })
 
   return (
-    <div className={`overflow-hidden ${ax({ text: 'muted', textStyle: 'caption', shape: 'md' })} fallback-block`}>
+    <div className={`overflow-hidden ${ax({ text: 'muted', textStyle: 'caption', shape: 'md', border: 'dashed' })}`}>
       <div
         {...toggleProps}
-        className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs' })} fallback-summary`}
+        className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs', padding: 'sm' })} fallback-summary`}
         role="button"
         aria-expanded={expanded}
         tabIndex={0}
@@ -28,7 +28,7 @@ export function FallbackBlock({ block }: { block: ChatBlock }) {
         <ExpandIndicator variant="expand" expanded={expanded} />
         <span>{block.type}</span>
       </div>
-      {expanded && raw && <pre className={`overflow-y-auto pre-wrap break-word ${ax({ textStyle: 'caption' })} fallback-pre`}>{raw}</pre>}
+      {expanded && raw && <pre className={`overflow-y-auto pre-wrap break-word ${ax({ textStyle: 'code', padding: 'sm', border: 'top' })}`}>{raw}</pre>}
     </div>
   )
 }
