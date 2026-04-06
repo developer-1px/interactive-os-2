@@ -2,9 +2,9 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
 import { TabList } from '@os/ui/TabList'
+import { ViewerTabList } from '@os/ui/ViewerTabList'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
-import type { NodeState } from '@os/pattern/types'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import { FileViewer } from '@os/ui/FileViewer'
@@ -22,7 +22,6 @@ import { LiveSessionPanel } from './LiveSessionPanel'
 import { chatRenderers } from './replayRenderers'
 import { useViewerTabs } from './useViewerTabs'
 import type { FileViewerHandle, ViewerTab } from './viewerTypes'
-import { Search, Terminal, FileText } from 'lucide-react'
 
 // --- Session loading ---
 
@@ -62,12 +61,6 @@ function tabLabel(tab: ViewerTab): string {
   }
 }
 
-const tabIcons: Record<string, typeof FileText> = {
-  file: FileText,
-  search: Search,
-  terminal: Terminal,
-}
-
 // --- Unified delta for replay ---
 
 type ViewerDelta =
@@ -80,7 +73,7 @@ export default function PageReplay() {
   const [selectedId, setSelectedId] = useState(sessionEntries[0]?.id ?? '')
   const [allMessages, setAllMessages] = useState<ChatMessage[]>([])
   const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [sizes, setSizes] = useState<PaneSize[]>([0.7, 0.3])
+  const [sizes, setSizes] = useState<PaneSize[]>([0.35, 0.65])
   const [rightTab, setRightTab] = useState<'replay' | 'live'>('live')
 
   // Viewer tabs (shared between replay and live)
@@ -248,18 +241,6 @@ export default function PageReplay() {
     return createStore({ entities, relationships: { __root__: tabs.map(t => t.id) } })
   }, [tabs])
 
-  const renderViewerTab = useCallback((_props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, _state: NodeState) => {
-    const d = item.data as Record<string, unknown>
-    const label = d?.label as string ?? item.id as string
-    const type = d?.type as string
-    const Icon = tabIcons[type] ?? FileText
-    return (
-      <span className={ax({ layout: 'row', gap: 'xs' })}>
-        <Icon size={12} /> {label}
-      </span>
-    )
-  }, [])
-
   const rightTabData: NormalizedData = useMemo(() => createStore({
     entities: {
       live: { id: 'live', data: { label: 'Live' } },
@@ -285,13 +266,14 @@ export default function PageReplay() {
         <div className={`${ax({ layout: 'fill' })} min-h-0`}>
           {/* Tab bar */}
           {tabs.length > 0 ? (
-            <TabList
-              data={viewerTabData}
-              initialFocus={activeTabId ?? undefined}
-              onActivate={(nodeId) => setActiveTab(nodeId)}
-              renderItem={renderViewerTab}
-              aria-label="Viewer tabs"
-            />
+            <div className={ax({ scroll: 'x', flex: 'none' })}>
+              <ViewerTabList
+                data={viewerTabData}
+                initialFocus={activeTabId ?? undefined}
+                onActivate={(nodeId) => setActiveTab(nodeId)}
+                aria-label="Viewer tabs"
+              />
+            </div>
           ) : (
             <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })}>
               <span className={ax({ textStyle: 'caption', text: 'muted' })}>Viewer</span>
@@ -299,7 +281,7 @@ export default function PageReplay() {
           )}
 
           {/* Content */}
-          <div className={`${ax({ flex: '1', layout: 'scroll' })} min-h-0`}>
+          <div className={`${ax({ flex: '1', layout: 'scroll', padding: 'sm' })} min-h-0`}>
             {activeTab?.type === 'file' ? (
               <FileViewer ref={fileViewerRef} filename={filenameFrom(activeTab.path)} />
             ) : activeTab?.type === 'search' ? (
@@ -329,7 +311,7 @@ export default function PageReplay() {
                 <select
                   value={selectedId}
                   onChange={e => setSelectedId(e.target.value)}
-                  className={ax({ textStyle: 'caption' })}
+                  className={ax({ textStyle: 'caption', interactive: 'input', controlSize: 'sm' })}
                 >
                   {sessionEntries.map(entry => (
                     <option key={entry.id} value={entry.id}>
@@ -347,7 +329,7 @@ export default function PageReplay() {
                 messages={messages}
                 blockRenderers={chatRenderers}
                 isStreaming={isRunning}
-                className={ax({ flex: '1' })}
+                className={ax({ flex: '1', padding: 'sm' })}
               />
             </div>
           )}

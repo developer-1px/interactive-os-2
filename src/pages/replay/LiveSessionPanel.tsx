@@ -38,12 +38,14 @@ export function LiveSessionPanel({ viewerTabs, fileViewerRef }: LiveSessionPanel
   return (
     <div className={ax({ layout: 'fill' })}>
       {activeSessions.length > 0 ? (
-        <TabList
-          data={tabData}
-          initialFocus={selectedId ?? undefined}
-          onActivate={(nodeId) => setUserSelectedId(nodeId)}
-          aria-label="Live sessions"
-        />
+        <div className={ax({ scroll: 'x', flex: 'none' })}>
+          <TabList
+            data={tabData}
+            initialFocus={selectedId ?? undefined}
+            onActivate={(nodeId) => setUserSelectedId(nodeId)}
+            aria-label="Live sessions"
+          />
+        </div>
       ) : (
         <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })}>
           <span className={ax({ textStyle: 'caption', text: 'muted' })}>활성 세션 없음</span>
@@ -111,7 +113,7 @@ function LiveFeed({ sessionId, viewerTabs, fileViewerRef }: {
           blockRenderers={chatRenderers}
           isStreaming={agentStatus === 'running'}
           streamingLabel="Thinking"
-          className={ax({ flex: '1' })}
+          className={ax({ flex: '1', padding: 'sm' })}
         />
       )}
     </>
