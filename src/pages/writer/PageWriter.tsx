@@ -10,6 +10,7 @@ import { requestAnalysis, type AnalysisResult } from './writerAnalyze'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import WriterFileBrowser from './WriterFileBrowser'
 import { PyramidView } from './PyramidView'
+import { SlideView, buildSlides } from './SlideView'
 import { ChatPane } from '../chat/ChatPane'
 import { WriterTreeGrid } from '@os/ui/WriterTreeGrid'
 import type { EditKeyContext } from '@os/primitives/aria'
@@ -504,8 +505,10 @@ export default function PageWriter() {
   const [data, setData] = useWriterData()
   const dirty = useWriterDirty()
   // @useState-hatch view mode: tree/prose/pyramid (view-only state, no axis equivalent)
-  type ViewMode = 'tree' | 'prose' | 'pyramid'
+  type ViewMode = 'tree' | 'prose' | 'pyramid' | 'slides'
   const [viewMode, setViewMode] = useState<ViewMode>('tree')
+  // @useState-hatch — slideIndex: view-only navigation state for slides mode
+  const [slideIndex, setSlideIndex] = useState(0)
   const [sizes, setSizes] = useState<PaneSize[]>([0.15, 'flex', 0.30])
 
   const location = useLocation()
@@ -620,13 +623,25 @@ export default function PageWriter() {
     else if (nodeId === 'analyze') handleAnalyze()
   }, [handleNew, handleSave, handleAnalyze])
 
+  const slideCount = useMemo(() => buildSlides(data).length, [data])
+
   const writerKeyMap: RouteKeyMap = useMemo(() => ({
     'Mod+S': defineRouteKey('writer:save', () => handleSave(), 'Writer'),
-    'Mod+\\': defineRouteKey('writer:toggle-view', () => setViewMode(m => m === 'tree' ? 'prose' : m === 'prose' ? 'pyramid' : 'tree'), 'Writer'),
-  }), [handleSave])
+    'Mod+\\': defineRouteKey('writer:toggle-view', () => { setViewMode(m => m === 'tree' ? 'prose' : m === 'prose' ? 'pyramid' : m === 'pyramid' ? 'slides' : 'tree'); setSlideIndex(0) }, 'Writer'),
+    ...(viewMode === 'slides' ? {
+      'ArrowRight': defineRouteKey('writer:slide-next', () => setSlideIndex(i => Math.min(i + 1, slideCount - 1)), 'Writer'),
+      'ArrowDown': defineRouteKey('writer:slide-next-alt', () => setSlideIndex(i => Math.min(i + 1, slideCount - 1)), 'Writer'),
+      'ArrowLeft': defineRouteKey('writer:slide-prev', () => setSlideIndex(i => Math.max(i - 1, 0)), 'Writer'),
+      'ArrowUp': defineRouteKey('writer:slide-prev-alt', () => setSlideIndex(i => Math.max(i - 1, 0)), 'Writer'),
+      'Escape': defineRouteKey('writer:slide-exit', () => setViewMode('tree'), 'Writer'),
+    } : {}),
+  }), [handleSave, viewMode, slideCount])
 
   return (
     <AriaRoute keyMap={writerKeyMap} label="Writer">
+      {viewMode === 'slides' && (
+        <SlideView data={data} slideIndex={slideIndex} slideCount={slideCount} />
+      )}
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
         <Panel header="Files" surface="sunken">
           <WriterFileBrowser onFileSelect={handleFileSelect} />
@@ -637,7 +652,7 @@ export default function PageWriter() {
             <Toolbar data={toolbarData} onActivate={handleToolbarActivate} aria-label="Writer toolbar" />
             {urlFilePath && <span className={ax({ textStyle: 'caption', text: 'muted' })}>{urlFilePath}</span>}
             <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-              {viewMode === 'tree' ? 'Tree' : viewMode === 'prose' ? 'Prose' : 'Pyramid'}
+              {{ tree: 'Tree', prose: 'Prose', pyramid: 'Pyramid', slides: 'Slides' }[viewMode]}
             </span>
           </div>
 
