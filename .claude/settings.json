@@ -1,6 +1,27 @@
 {
   "enabledPlugins": {
-    "context7@claude-plugins-official": true
+    "context7@claude-plugins-official": true,
+    "teo-claude-code@teo-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "teo-plugins": {
+      "source": {
+        "source": "settings",
+        "name": "teo-plugins",
+        "plugins": [
+          {
+            "name": "teo-claude-code",
+            "source": {
+              "source": "github",
+              "repo": "developer-1px/teo-claude-code"
+            }
+          }
+        ],
+        "owner": {
+          "name": "유용태"
+        }
+      }
+    }
   },
   "hooks": {
     "PreToolUse": [
@@ -85,6 +106,16 @@
             "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkTestComponents.mjs",
             "timeout": 5000,
             "statusMessage": "Checking test components..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkDesignScore.mjs",
+            "timeout": 3000
           }
         ]
       },
