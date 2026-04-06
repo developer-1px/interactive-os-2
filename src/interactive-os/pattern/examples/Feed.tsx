@@ -5,7 +5,6 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Feed as FeedComponent } from '../../ui/Feed'
 import { ax } from '@styles/ax'
-import './feed.css'
 
 // APG #24: Feed
 // https://www.w3.org/WAI/ARIA/apg/patterns/feed/
@@ -35,11 +34,11 @@ const renderArticle = (
   return (
     <div
       {...props}
-      className={`feed-article ${ax({ shape: 'sm' })} outline-none`}
+      className={`${ax({ shape: 'sm', border: 'default', interactive: 'item' })} outline-none`}
       data-focused={state.focused || undefined}
     >
-      <h3 className={`feed-title ${ax({ textStyle: 'body', text: 'primary', weight: 'semi' })}`}>{label}</h3>
-      <p className={`feed-body ${ax({ textStyle: 'body', text: 'secondary' })}`}>{body}</p>
+      <h3 className={`${ax({ textStyle: 'body', text: 'primary', weight: 'semi' })}`}>{label}</h3>
+      <p className={`${ax({ textStyle: 'body', text: 'secondary' })}`}>{body}</p>
     </div>
   )
 }

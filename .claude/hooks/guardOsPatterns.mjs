@@ -155,6 +155,14 @@ if (isPages && isTsx && /\brenderItem\s*=\s*[\{(]/.test(content)) {
   )
 }
 
+// 규칙 13: src/pages/에서 renderCell prop 직접 전달 금지
+if (isPages && isTsx && /\brenderCell\s*=\s*[\{(]/.test(content)) {
+  const cells = listComponents('cells').join(', ')
+  violations.push(
+    `renderCell 직접 전달 금지 — 범용 셀은 ui/cells/ 사용: ${cells}. 도메인 셀은 entities/{엔티티}/ui/에 추가하세요`
+  )
+}
+
 // 규칙 12: src/pages/에서 패널 날코딩 금지 (surface+layout:'fill' 조합 = Panel 사용)
 if (isPages && isTsx && /ax\(\{[^}]*layout:\s*['"]fill['"][^}]*surface:|ax\(\{[^}]*surface:[^}]*layout:\s*['"]fill['"]/.test(content)) {
   const panels = listComponents('panels').join(', ')

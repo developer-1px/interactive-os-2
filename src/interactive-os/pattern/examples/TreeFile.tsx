@@ -7,7 +7,6 @@ import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { TreeView } from '../../ui/TreeView'
 import { ax } from '@styles/ax'
-import './tree.css'
 
 // APG #63: File Directory Treeview
 // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/examples/treeview-1a/
@@ -71,7 +70,7 @@ const renderTreeitem = (
   return (
     <div
       {...props}
-      className={`tree-item ${ax({ textStyle: 'body', text: 'primary', gap: 'xs' })} flex-row items-center whitespace-nowrap outline-none cursor-default`}
+      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'xs', interactive: 'item' })} flex-row items-center whitespace-nowrap outline-none cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span className={ax({ textStyle: 'caption', text: 'secondary' })} aria-hidden="true">

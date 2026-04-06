@@ -5,7 +5,6 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { MenuButton } from '../../ui/MenuButton'
 import { ax } from '@styles/ax'
-import './menu.css'
 
 // APG #41: Actions Menu Button Using element.focus()
 // https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions/
@@ -37,7 +36,7 @@ const renderTrigger = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <button {...props} className={`menu-trigger ${ax({ gap: 'xs', textStyle: 'body', text: 'primary', surface: 'display', shape: 'sm' })} inline-flex items-center cursor-default`} type="button">
+    <button {...props} className={`${ax({ gap: 'xs', textStyle: 'body', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button', border: 'default' })} inline-flex items-center cursor-default`} type="button">
       {label} ▾
     </button>
   )
@@ -52,7 +51,7 @@ const renderMenuItem = (
   return (
     <div
       {...props}
-      className={`menu-item ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })} flex-row items-center cursor-default`}
+      className={`${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', interactive: 'item' })} flex-row items-center cursor-default`}
       data-focused={state.focused || undefined}
     >
       {label}

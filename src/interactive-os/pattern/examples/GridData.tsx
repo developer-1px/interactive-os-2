@@ -4,7 +4,6 @@ import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { Grid } from '../../ui/Grid'
 import { ax } from '@styles/ax'
-import './grid.css'
 
 // APG #25: Data Grid
 // https://www.w3.org/WAI/ARIA/apg/patterns/grid/examples/data-grids/
@@ -38,7 +37,7 @@ const renderCell = (
   value: unknown,
 ): React.ReactElement => {
   return (
-    <div {...props} className={`grid-cell ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text' })} flex-row items-center outline-none cursor-default`}>
+    <div {...props} className={`${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', interactive: 'cell' })} flex-row items-center outline-none cursor-default`}>
       {String(value ?? '')}
     </div>
   )

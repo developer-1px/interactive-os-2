@@ -5,7 +5,6 @@ import { ROOT_ID } from '../../store/types'
 import { EXPANDED_ID } from '../../axis/expand'
 import { Menubar } from '../../ui/Menubar'
 import { ax } from '@styles/ax'
-import './menubar.css'
 
 // APG #40: Navigation Menubar
 // https://www.w3.org/WAI/ARIA/apg/patterns/menubar/examples/menubar-navigation/
@@ -50,11 +49,11 @@ export function MenubarNavigation() {
 
   return (
     <div className={ax({ shape: 'sm', border: 'default' })}>
-      <header className={`menubar-header text-center`}>
-        <div className={`menubar-title ${ax({ text: 'bright' })}`}>Mythical University</div>
-        <div className={`${ax({ text: 'secondary', textStyle: 'body' })} menubar-tagline`}>Using a Menubar for navigation links</div>
+      <header className={`${ax({ surface: 'display', padding: 'md' })} text-center`}>
+        <div className={ax({ text: 'bright', textStyle: 'section', weight: 'semi' })}>Mythical University</div>
+        <div className={ax({ text: 'secondary', textStyle: 'body' })}>Using a Menubar for navigation links</div>
       </header>
-      <nav className="menubar-wrapper">
+      <nav>
         <Menubar
           data={store}
           onChange={onChange}

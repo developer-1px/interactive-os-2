@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from 'react'
 import { ax } from '@styles/ax'
 import type { NormalizedData } from '@os/store/types'
 import { Grid } from '@os/ui/Grid'
-import { Aria } from '@os/primitives/aria'
 import { GRID_COL_ID } from '@os/axis/navigate'
 import { rename } from '@os/plugins/rename'
 import { history } from '@os/plugins/history'
@@ -11,6 +10,7 @@ import { crud } from '@os/plugins/crud'
 import { clipboard } from '@os/plugins/clipboard'
 import { dnd } from '@os/plugins/dnd'
 import { focusRecovery } from '@os/plugins/focusRecovery'
+import { EditableCell, SearchableCell } from '@os/ui/cells'
 import { translatableEntriesToGrid, I18N_COLUMNS } from '../cms/cmsI18nAdapter'
 import { cmsStore } from '../cms/cmsStore'
 
@@ -32,28 +32,16 @@ export default function PageI18nEditor() {
 
     if (isActiveCell) {
       return (
-        <Aria.Editable field={`cells.${colIdx}`} allowEmpty enterContinue tabContinue>
-          <span className={isEmpty ? 'cell-empty' : undefined}>
-            {isEmpty ? '—' : text}
-          </span>
-        </Aria.Editable>
-      )
-    }
-
-    if (isKey) {
-      return (
-        <Aria.SearchHighlight>
-          <span className="cell-key">{text}</span>
-        </Aria.SearchHighlight>
+        <EditableCell field={`cells.${colIdx}`} allowEmpty enterContinue tabContinue empty={isEmpty}>
+          {text}
+        </EditableCell>
       )
     }
 
     return (
-      <Aria.SearchHighlight>
-        <span className={isEmpty ? 'cell-empty' : undefined}>
-          {isEmpty ? '—' : text}
-        </span>
-      </Aria.SearchHighlight>
+      <SearchableCell empty={isEmpty} muted={isKey}>
+        {text}
+      </SearchableCell>
     )
   }
 

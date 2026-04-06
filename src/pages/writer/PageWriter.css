@@ -1,0 +1,23 @@
+/* ── PageWriter last-mile ── */
+
+.writer-heading {
+  margin-top: var(--space-md);
+}
+
+.writer-heading-l1 {
+  margin-top: var(--space-lg);
+}
+
+.writer-paragraph {
+  margin-top: var(--space-xs);
+}
+
+.writer-list {
+  margin-top: var(--space-xs);
+}
+
+.writer-hr {
+  border: none;
+  border-top: var(--border-width) solid var(--border-default);
+  margin: var(--space-md) 0;
+}

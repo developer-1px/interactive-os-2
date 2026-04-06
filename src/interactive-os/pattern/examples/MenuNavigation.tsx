@@ -4,7 +4,7 @@ import type { NodeState } from '../../pattern/types'
 import { createStore } from '../../store/createStore'
 import { ROOT_ID } from '../../store/types'
 import { MenuList } from '../../ui/MenuList'
-import './menu.css'
+import { ax } from '@styles/ax'
 
 // APG #43: Navigation Menu Button
 // https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/
@@ -31,7 +31,7 @@ const renderMenuItem = (
   return (
     <div
       {...props}
-      className={`menu-item flex-row items-center cursor-default`}
+      className={`${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', interactive: 'item' })} flex-row items-center cursor-default`}
       data-focused={state.focused || undefined}
     >
       {label}

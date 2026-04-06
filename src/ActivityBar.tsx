@@ -1,8 +1,8 @@
 import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages, Map,
-  MessageSquare, Bird, BookText, Play, Search, Cable, PenLine,
+  Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
+  MessageSquare, Bird, BookText, Play, Search, Cable, PenLine, Kanban,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -66,13 +66,13 @@ const appNavItems: NavItem[] = [
   { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
   { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
-  { id: 'storymap', label: 'Story Map', icon: Map, path: '/storymap' },
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'birdseye', label: 'Birdseye', icon: Bird, path: '/birdseye' },
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
   { id: 'inspector', label: 'Inspector', icon: Search, path: '/inspector' },
   { id: 'a2ui', label: 'A2UI', icon: Cable, path: '/a2ui' },
+  { id: 'project', label: 'Project', icon: Kanban, path: '/project' },
   { id: 'writer', label: 'Writer', icon: PenLine, path: '/writer' },
 ]
 

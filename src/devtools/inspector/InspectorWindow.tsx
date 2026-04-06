@@ -218,7 +218,7 @@ export function InspectorWindow() {
 
       const target = e.target as HTMLElement
       const nodeEl = target.closest<HTMLElement>('[data-node-id]')
-      const containerEl = target.closest<HTMLElement>('[data-aria-container]')
+      const containerEl = target.closest<HTMLElement>('.ax-interactive')
       if (!containerEl) return
 
       // Find registryKey by matching container element
