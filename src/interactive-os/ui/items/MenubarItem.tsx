@@ -16,11 +16,9 @@ export function MenubarItem(
       {...props}
       className={ax({ interactive: 'item', layout: 'bar', padding: 'sm', gap: 'xs' })}
     >
-      <span>{label}</span>
+      {label}
       {state.expanded !== undefined && (
-        <span className={ax({ text: 'muted' })} aria-hidden="true">
-          <DirectionIndicator direction={state.expanded ? 'prev' : 'next'} orientation="vertical" />
-        </span>
+        <DirectionIndicator direction={state.expanded ? 'prev' : 'next'} orientation="vertical" />
       )}
     </div>
   )
