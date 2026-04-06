@@ -48,6 +48,26 @@ export const spatialCommands = defineCommands({
   },
 })
 
+// ② 2026-04-06-spatial-click-handler-prd.md
+export function spatialClickNavigate(store: NormalizedData, nodeId: string) {
+  const targetParent = getParent(store, nodeId) ?? ROOT_ID
+  const currentSpatialParent = getSpatialParentId(store)
+
+  if (targetParent === currentSpatialParent) {
+    return focusCommands.setFocus(nodeId)
+  }
+  if (targetParent === ROOT_ID) {
+    return createBatchCommand([
+      spatialCommands.exitToParent(),
+      focusCommands.setFocus(nodeId),
+    ])
+  }
+  return createBatchCommand([
+    spatialCommands.enterChild(targetParent),
+    focusCommands.setFocus(nodeId),
+  ])
+}
+
 // ② 2026-03-26-plugin-keymap-original-prd.md
 export function spatial() {
   return definePlugin({

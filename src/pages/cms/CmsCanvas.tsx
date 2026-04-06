@@ -9,7 +9,7 @@ import { focusCommands } from '@os/axis/navigate'
 import { crudCommands } from '@os/plugins/crud'
 import { dndCommands } from '@os/plugins/dnd'
 import { clipboardCommands } from '@os/plugins/clipboard'
-import { spatialCommands, getSpatialParentId, SPATIAL_PARENT_ID } from '@os/plugins/spatial'
+import { spatialCommands, SPATIAL_PARENT_ID, spatialClickNavigate } from '@os/plugins/spatial'
 import { getChildren, getSlotChildren, getParent } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
@@ -243,30 +243,14 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
     return children[0]
   }
 
+  // ② 2026-04-06-spatial-click-handler-prd.md — delegates to OS spatial plugin
   const handleNodeClick = useCallback((nodeId: string, e: React.MouseEvent) => {
     e.stopPropagation()
     const s = aria.getStore()
     const parentId = getParent(s, nodeId) ?? ROOT_ID
-    const currentSpatialParent = getSpatialParentId(s)
-
     spatialNav.clearCursorsAtDepth(parentId)
-
-    if (parentId !== currentSpatialParent) {
-      if (parentId === ROOT_ID) {
-        const exitCmd = spatialCommands.exitToParent()
-        aria.dispatch(createBatchCommand([
-          exitCmd,
-          focusCommands.setFocus(nodeId),
-        ]))
-        return
-      }
-      aria.dispatch(createBatchCommand([
-        spatialCommands.enterChild(parentId),
-        focusCommands.setFocus(nodeId),
-      ]))
-      return
-    }
-    aria.dispatch(focusCommands.setFocus(nodeId))
+    const cmd = spatialClickNavigate(s, nodeId)
+    if (cmd) aria.dispatch(cmd)
   }, [aria, spatialNav])
 
   function renderNode(nodeId: string): React.ReactNode {

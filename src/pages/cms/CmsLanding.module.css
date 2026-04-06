@@ -780,7 +780,7 @@
    Responsive
    ══════════════════════════════ */
 
-@media (max-width: 768px) {
+@container cms-viewport (max-width: 768px) {
   .cmsHeroTitle { max-width: 100%; }
   .cmsFeaturesGrid { grid-template-columns: 1fr; }
   .cmsStatCard + .cmsFeatureCard { grid-column: auto; }
@@ -789,10 +789,27 @@
   .cmsShowcaseGrid { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 480px) {
+@container cms-viewport (max-width: 480px) {
   .cmsHero { min-height: auto; padding-top: 12vh; }
   .cmsPatternsGrid { grid-template-columns: 1fr 1fr; }
   .cmsGalleryGrid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Fallback for browsers without container query support */
+@supports not (container-type: inline-size) {
+  @media (max-width: 768px) {
+    .cmsHeroTitle { max-width: 100%; }
+    .cmsFeaturesGrid { grid-template-columns: 1fr; }
+    .cmsStatCard + .cmsFeatureCard { grid-column: auto; }
+    .cmsManifestoValues { grid-template-columns: 1fr; }
+    .cmsPatternsGrid { grid-template-columns: repeat(2, 1fr); }
+    .cmsShowcaseGrid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .cmsHero { min-height: auto; padding-top: 12vh; }
+    .cmsPatternsGrid { grid-template-columns: 1fr 1fr; }
+    .cmsGalleryGrid { grid-template-columns: 1fr 1fr; }
+  }
 }
 
 /* ══════════════════════════════

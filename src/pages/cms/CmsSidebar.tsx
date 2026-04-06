@@ -89,19 +89,18 @@ export default function CmsSidebar({ engine, store, locale, activeSectionId, plu
   const sectionIds = useMemo(() => collectSections(store, ROOT_ID), [store])
 
   const scrollToSection = useCallback((sectionId: string) => {
+    const doScroll = () => {
+      const el = document.querySelector(`[data-cms-root] [data-cms-id="${sectionId}"]`) as HTMLElement
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
     const tabItemId = getTabItemAncestor(store, sectionId)
     if (tabItemId) {
       onActivateTabItem?.(tabItemId)
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const el = document.querySelector(`[data-cms-root] [data-cms-id="${sectionId}"]`) as HTMLElement
-          el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        })
-      })
-      return
     }
-    const el = document.querySelector(`[data-cms-root] [data-cms-id="${sectionId}"]`) as HTMLElement
-    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    // Double RAF ensures layout is settled after viewport transition or tab activation
+    requestAnimationFrame(() => {
+      requestAnimationFrame(doScroll)
+    })
   }, [store, onActivateTabItem])
 
   const sidebarKeyMap = useMemo(() => {
