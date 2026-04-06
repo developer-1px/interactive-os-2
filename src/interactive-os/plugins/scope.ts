@@ -59,7 +59,7 @@ export function scope(): Plugin {
       'scope:clear': scopeCommands.clear,
     },
     keyMap: {
-      'Mod+Shift+f': key(['scope:set'], (ctx) => scopeCommands.set(ctx.focused)),
+      'Mod+.': key(['scope:set'], (ctx) => scopeCommands.set(ctx.focused)),
       'Escape': key(['scope:clear'], (ctx) => {
         const scopeEntity = ctx.getEntity(SCOPE_ID) as Record<string, unknown> | undefined
         const scopeRootId = scopeEntity?.scopeRootId as string | null | undefined
