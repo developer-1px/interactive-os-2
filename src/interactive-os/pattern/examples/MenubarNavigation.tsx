@@ -53,7 +53,7 @@ export function MenubarNavigation() {
         <div className={ax({ text: 'bright', textStyle: 'section', weight: 'semi' })}>Mythical University</div>
         <div className={ax({ text: 'secondary', textStyle: 'body' })}>Using a Menubar for navigation links</div>
       </header>
-      <nav>
+      <nav className={ax({ surface: 'display', padding: 'xs', border: 'bottom' })}>
         <Menubar
           data={store}
           onChange={onChange}
