@@ -44,7 +44,7 @@
   transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
 }
 
-:where(.ax-interactive [aria-selected="true"] .item-indicator--checkbox) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--checkbox) {
   border-color: var(--tone-primary-base);
   background: var(--tone-primary-base);
 }
@@ -65,7 +65,8 @@
   transition: border-color var(--motion-instant-duration);
 }
 
-:where(.ax-interactive [aria-checked="true"] .item-indicator--radio) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--radio),
+:where(.item-indicator--radio[data-checked]) {
   border-color: var(--tone-primary-base);
 }
 
@@ -78,7 +79,8 @@
   transition: transform var(--motion-instant-duration);
 }
 
-:where(.ax-interactive [aria-checked="true"] .item-indicator--radio-dot) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--radio-dot),
+:where([data-checked] > .item-indicator--radio-dot) {
   transform: scale(1);
 }
 
@@ -94,26 +96,28 @@
               border-color var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-:where(.ax-interactive [aria-checked="true"] .item-indicator--switch) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--switch),
+:where(.item-indicator--switch[data-checked]) {
   background: var(--tone-primary-base);
   border-color: var(--tone-primary-base);
 }
 
 :where(.ax-interactive .item-indicator--switch-thumb) {
-  top: 1px;
-  left: 1px;
-  width: var(--icon-sm);
-  height: var(--icon-sm);
+  top: 2px;
+  left: 2px;
+  width: calc(var(--switch-height) - 8px);
+  height: calc(var(--switch-height) - 8px);
   border-radius: 50%;
-  background: var(--text-secondary);
+  background: var(--text-muted);
   box-shadow: var(--shadow-sm);
   transition: transform var(--motion-normal-duration) var(--motion-normal-easing),
               background var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-:where(.ax-interactive [aria-checked="true"] .item-indicator--switch-thumb) {
+:where(.ax-interactive [aria-checked="true"] .item-indicator--switch-thumb),
+:where([data-checked] > .item-indicator--switch-thumb) {
   background: var(--tone-primary-foreground);
-  transform: translateX(calc(var(--switch-width) - var(--icon-sm) - 4px));
+  transform: translateX(calc(var(--switch-width) - var(--switch-height) + 2px));
 }
 
 /* ── Toggle text indicator (On/Off) ── */
