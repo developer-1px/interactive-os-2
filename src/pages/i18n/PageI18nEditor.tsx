@@ -1,7 +1,7 @@
 // ② 2026-03-25-i18n-editor-app-prd.md
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { ax } from '@styles/ax'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import { Grid } from '@os/ui/Grid'
 import { GRID_COL_ID } from '@os/axis/navigate'
 import { rename } from '@os/plugins/rename'
@@ -11,14 +11,14 @@ import { clipboard } from '@os/plugins/clipboard'
 import { dnd } from '@os/plugins/dnd'
 import { focusRecovery } from '@os/plugins/focusRecovery'
 import { EditableCell, SearchableCell } from '@os/ui/cells'
-import { translatableEntriesToGrid, I18N_COLUMNS } from '../cms/cmsI18nAdapter'
+import { translatableEntriesToGrid, I18N_COLUMNS } from '../cms/cmsI18nTransform'
 import { cmsStore } from '../cms/cmsStore'
 
 const plugins = [crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
 export default function PageI18nEditor() {
   const gridData = React.useMemo(() => translatableEntriesToGrid(cmsStore), [])
-  const [data, setData] = useState<NormalizedData>(gridData)
+  const [data, setData] = useStore(gridData)
   const dataRef = useRef(data)
   useEffect(() => { dataRef.current = data })
 

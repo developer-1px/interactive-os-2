@@ -1,3 +1,4 @@
+// @useState-hatch
 import { useState, useCallback, useMemo, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BookOpen, List, ChevronLeft, ChevronRight, X } from 'lucide-react'
@@ -168,7 +169,7 @@ export default function PageBookViewer() {
 
           {/* ── Progress — bottom edge ── */}
           <div className={`${ax({ placement: 'bottom' })} book-progress-bar`} data-visible={chromeVisible}>
-            <div className="book-progress-fill" style={{ width: `${progressPercent}%` }} />
+            <div className="book-progress-fill" style={{ '--progress': `${progressPercent}%` } as React.CSSProperties} />
           </div>
           <SpreadReader
             resetKey={page?.id}
@@ -185,15 +186,12 @@ export default function PageBookViewer() {
             <div>
               {!isFirstSpread && (
                 <button
-                  className={ax({ surface: 'overlay', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'sm' })}
+                  className={ax({ surface: 'overlay', padding: 'sm', content: 'text', layout: 'bar', gap: 'sm', shape: 'md', textStyle: 'caption' })}
                   onClick={() => handlePrevBoundary()}
                 >
                   <ChevronLeft size={14} />
                   {spread === 0 && prevPage && (
-                    <span className={ax({ layout: 'column', gap: 'xs' })}>
-                      <span className={ax({ textStyle: 'caption', text: 'muted' })}>Previous</span>
-                      <span className={ax({ textStyle: 'caption', text: 'bright' })}>{prevPage.title}</span>
-                    </span>
+                    <span className={ax({ text: 'muted' })}>Previous <span className={ax({ text: 'bright' })}>{prevPage.title}</span></span>
                   )}
                 </button>
               )}
@@ -201,14 +199,11 @@ export default function PageBookViewer() {
             <div>
               {!isLastSpread && (
                 <button
-                  className={ax({ surface: 'overlay', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'sm' })}
+                  className={ax({ surface: 'overlay', padding: 'sm', content: 'text', layout: 'bar', gap: 'sm', shape: 'md', textStyle: 'caption' })}
                   onClick={() => handleNextBoundary()}
                 >
                   {spread >= totalSpreads - 1 && nextPage && (
-                    <span className={ax({ layout: 'column', gap: 'xs' })}>
-                      <span className={ax({ textStyle: 'caption', text: 'muted' })}>Next</span>
-                      <span className={ax({ textStyle: 'caption', text: 'bright' })}>{nextPage.title}</span>
-                    </span>
+                    <span className={ax({ text: 'muted' })}>Next <span className={ax({ text: 'bright' })}>{nextPage.title}</span></span>
                   )}
                   <ChevronRight size={14} />
                 </button>
