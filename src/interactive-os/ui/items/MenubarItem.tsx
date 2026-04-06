@@ -12,11 +12,9 @@ export function MenubarItem(
 ): React.ReactElement {
   const label = getNodeLabel(node)
   return (
-    <a
+    <div
       {...props}
-      href="#"
       className={ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', gap: 'xs', clamp: '1' })}
-      onClick={e => e.preventDefault()}
     >
       <span>{label}</span>
       {state.expanded !== undefined && (
@@ -24,6 +22,6 @@ export function MenubarItem(
           <ExpandIndicator expanded={state.expanded} />
         </span>
       )}
-    </a>
+    </div>
   )
 }

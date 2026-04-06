@@ -124,12 +124,6 @@
   min-width: 0;
 }
 
-.book-page-area .ax-interactive {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
 
 .book-page {
   height: 100%;
