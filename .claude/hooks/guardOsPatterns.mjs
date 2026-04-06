@@ -94,15 +94,30 @@ if (!isExempt && /addEventListener\s*\(\s*\n?\s*['"](?:key|mouse)\w*['"]/m.test(
   )
 }
 
+// AriaZone render-props 소비자 여부 — 규칙 5, 6, 7에서 공유
+// getNodeProps/AriaZone을 사용하는 파일은 OS가 생성한 props를 DOM에 전달하는 것이므로 면제
+let _isAriaZoneFile = false
+if (!isExempt && isTsx) {
+  _isAriaZoneFile = /\bgetNodeProps\b|\bAriaZone\b/.test(content)
+  if (!_isAriaZoneFile && filePath) {
+    try {
+      const full = readFileSync(filePath, 'utf8')
+      _isAriaZoneFile = /\bgetNodeProps\b|\bAriaZone\b/.test(full)
+    } catch { /* */ }
+  }
+}
+
 // 규칙 5: onKeyDown/onKeyUp JSX 핸들러 — 멀티라인 대응
-if (!isExempt && isTsx && /\bonKey(?:Down|Up)\s*=\s*\n?\s*\{/m.test(content)) {
+// 예외: AriaZone render-props 패턴 (getNodeProps에서 나온 핸들러를 DOM에 전달)
+if (!isExempt && !_isAriaZoneFile && isTsx && /\bonKey(?:Down|Up)\s*=\s*\n?\s*\{/m.test(content)) {
   violations.push(
     'onKeyDown/onKeyUp 핸들러 금지 — axis의 keyMap 또는 plugin의 keyMap 선언을 사용하세요'
   )
 }
 
 // 규칙 6: role="..." 수동 ARIA 역할 (JSX에서)
-if (!isExempt && isTsx && /\brole\s*=\s*["'](?:listbox|tree|treegrid|grid|menu|menubar|tablist|combobox|radiogroup)["']/.test(content)) {
+// 예외: AriaZone render-props 패턴 (getNodeProps role을 DOM에 전달)
+if (!isExempt && !_isAriaZoneFile && isTsx && /\brole\s*=\s*["'](?:listbox|tree|treegrid|grid|menu|menubar|tablist|combobox|radiogroup)["']/.test(content)) {
   // role → component 1:1 매핑
   const ROLE_MAP = {
     listbox: 'ListBox', tree: 'TreeView', treegrid: 'TreeGrid', grid: 'Grid',
@@ -119,7 +134,8 @@ if (!isExempt && isTsx && /\brole\s*=\s*["'](?:listbox|tree|treegrid|grid|menu|m
 }
 
 // 규칙 7: aria-selected/aria-expanded 등 수동 ARIA 속성
-if (!isExempt && isTsx && /\baria-(?:selected|expanded|activedescendant|checked|pressed|current)\s*=\s*\{/.test(content)) {
+// 예외: AriaZone render-props 패턴
+if (!isExempt && !_isAriaZoneFile && isTsx && /\baria-(?:selected|expanded|activedescendant|checked|pressed|current)\s*=\s*\{/.test(content)) {
   violations.push(
     'aria-* 수동 바인딩 금지 — axis(navigate/select/expand/activate/dismiss/tab/value)가 자동 생성합니다. ui/ 완성품을 사용하세요'
   )
@@ -132,10 +148,10 @@ if (!isExempt && isTsx && /\.current\??\.\bfocus\s*\(/.test(content)) {
   )
 }
 
-// 규칙 9: useState로 인터랙션 상태 관리
-if (!isExempt && isTsx && /useState\s*[<(].*\b(?:selected|expanded|focused|active|checked|isOpen)\b/.test(content)) {
+// 규칙 9: useState 전면 금지 — .tsx(컴포넌트)만. .ts(커스텀훅)는 허용
+if (!isExempt && /\.tsx$/.test(filePath) && /\buseState\b/.test(content) && !/\/\/\s*@useState-hatch/.test(content)) {
   violations.push(
-    'useState(selected/expanded/focused/active/checked) 금지 — NormalizedData + Command를 사용하세요. store에 노드 상태를 선언하고, select/expand/activate 축이 관리합니다'
+    'useState 금지 — OS가 모든 상태를 소유합니다. 인터랙션→축(select/expand/activate/dismiss/tab/value), 데이터→store Command, 뷰→engine. 축에 없는 상태가 필요하면 // @useState-hatch 주석으로 해치 선언하세요'
   )
 }
 
