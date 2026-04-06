@@ -4,7 +4,7 @@ import { ax } from '@styles/ax'
 import { type NormalizedData, ROOT_ID } from '@os/store/types'
 import { getChildren, getEntity } from '@os/store/createStore'
 import { MermaidBlock } from '../../pages/showcase/MermaidBlock'
-import type { HeadingData, SentenceData } from './writerSchema'
+import type { SentenceData } from './writerSchema'
 import styles from './PyramidView.module.css'
 
 // ── helpers ──
@@ -40,42 +40,78 @@ const ROLE_EMOJI: Record<string, string> = {
 
 // ── storeToMermaid — full pyramid ──
 
+const SKIP_TYPES = new Set(['document'])
+const LEAF_TYPES = new Set(['sentence', 'listItem', 'hr'])
+const SHAPE: Record<string, [string, string]> = {
+  heading: ['["', '"]'],
+  paragraph: ['("', '")'],
+  sentence: ['("', '")'],
+  listItem: ['("', '")'],
+  list: ['[["', '"]]'],
+  hr: ['{"', '"}'],
+}
+
+function truncate(s: string, max: number): string {
+  return s.length > max ? s.slice(0, max) + '…' : s
+}
+
 export function storeToMermaid(data: NormalizedData): string {
   const lines: string[] = ['graph TD']
   const edges: string[] = []
   const styleLines: string[] = []
 
-  const walk = (parentId: string, parentIsHeading: boolean) => {
+  const walk = (parentId: string, isRoot: boolean) => {
     for (const childId of getChildren(data, parentId)) {
       const entity = getEntity(data, childId)
-      if (entity?.data?.type !== 'heading') continue
-      const hd = entity.data as HeadingData
-      const leafCount = countLeaves(data, childId)
-      const roles = countByRole(data, childId)
-      const roleStr = Object.entries(roles)
-        .filter(([r]) => r !== 'none')
-        .map(([r, c]) => `${ROLE_EMOJI[r] ?? r}${c}`)
-        .join(' ')
-      const safe = hd.content.replace(/"/g, '#quot;').replace(/\n/g, ' ')
-      const label = roleStr ? `${safe}<br/>${leafCount}s | ${roleStr}` : `${safe}<br/>${leafCount}s`
-      lines.push(`  ${childId}["${label}"]`)
+      const type = entity?.data?.type as string | undefined
+      if (!type || SKIP_TYPES.has(type)) {
+        walk(childId, false)
+        continue
+      }
+      // Skip individual sentences/listItems — too many nodes for mermaid
+      if (LEAF_TYPES.has(type)) continue
 
-      if (parentIsHeading) {
+      const d = entity!.data as Record<string, unknown>
+      const content = (d.content as string) ?? ''
+      const [open, close] = SHAPE[type] ?? ['["', '"]']
+      let label: string
+
+      if (type === 'heading') {
+        const leafCount = countLeaves(data, childId)
+        const roles = countByRole(data, childId)
+        const roleStr = Object.entries(roles)
+          .filter(([r]) => r !== 'none')
+          .map(([r, c]) => `${ROLE_EMOJI[r] ?? r}${c}`)
+          .join(' ')
+        const safe = truncate(content, 30).replace(/"/g, '#quot;').replace(/\n/g, ' ')
+        label = roleStr ? `${safe}<br/>${leafCount}s | ${roleStr}` : `${safe}<br/>${leafCount}s`
+        if (leafCount === 0) {
+          styleLines.push(`  style ${childId} stroke:#e55,stroke-width:2px`)
+        }
+      } else if (type === 'paragraph') {
+        const childCount = getChildren(data, childId).length
+        label = `¶ ${childCount}s`
+      } else if (type === 'list') {
+        const ordered = d.ordered as boolean
+        label = ordered ? 'ol' : 'ul'
+      } else {
+        const safe = truncate(content, 25).replace(/"/g, '#quot;').replace(/\n/g, ' ')
+        const role = d.role as string | undefined
+        label = role ? `${safe}<br/>${ROLE_EMOJI[role] ?? role}` : safe
+      }
+
+      lines.push(`  ${childId}${open}${label}${close}`)
+      if (!isRoot) {
         edges.push(`  ${parentId} --> ${childId}`)
       }
 
-      // Color by content health
-      if (leafCount === 0) {
-        styleLines.push(`  style ${childId} stroke:#e55,stroke-width:2px`)
-      }
-
-      walk(childId, true)
+      walk(childId, false)
     }
   }
 
   const rootChildren = getChildren(data, ROOT_ID)
   for (const docId of rootChildren) {
-    walk(docId, false)
+    walk(docId, true)
   }
 
   return [...lines, ...edges, ...styleLines].join('\n')
