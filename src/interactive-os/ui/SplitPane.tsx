@@ -6,7 +6,7 @@ import './SplitPane.css'
 import { ax } from '@styles/ax'
 import { useAria } from '../primitives/useAria'
 import { composePattern } from '../pattern/composePattern'
-import { key } from '../axis/types'
+import { key, type KeyMap } from '../axis/types'
 import { dragResize, startDragResize, keyboardResize, resizeDelta } from '../plugins/dragResize'
 
 export type { PaneSize }
@@ -86,7 +86,7 @@ function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onKeyDel
     const incBig = key(['resize:delta'], () => resizeDelta(STEP * 10))
     const decBig = key(['resize:delta'], () => resizeDelta(-STEP * 10))
 
-    const keyMap: import('../axis/types').KeyMap = isHorizontal
+    const keyMap: KeyMap = isHorizontal
       ? { ArrowRight: inc, ArrowLeft: dec, PageUp: decBig, PageDown: incBig }
       : { ArrowDown: inc, ArrowUp: dec, PageUp: decBig, PageDown: incBig }
 

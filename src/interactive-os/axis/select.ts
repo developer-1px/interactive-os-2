@@ -1,5 +1,6 @@
-import type { EntityDecl } from './types'
+import type { EntityDecl, SelectedNav } from './types'
 import type { SelectionMode } from './types'
+import type { CommandEngine } from '../engine/createCommandEngine'
 import { key } from './types'
 import { type Command, type Middleware, createBatchCommand } from '../engine/types'
 import { focusCommands } from './navigate'
@@ -132,11 +133,11 @@ export function selectionFollowsFocusMiddleware(activateOnSelect?: boolean): Mid
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function selectedCtx(
-  engine: import('../engine/createCommandEngine').CommandEngine,
+  engine: CommandEngine,
   focusedId: string,
   visibleNodes: () => string[],
   mode?: SelectionMode,
-): import('./types').SelectedNav {
+): SelectedNav {
   const store = engine.getStore()
   const ids = getSelectedIds(store)
   return {

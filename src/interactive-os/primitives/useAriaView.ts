@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import type { Command } from '../engine/types'
+import type { Command, VisibilityFilter } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -13,7 +13,7 @@ import { findMatchingKey } from './useKeyboard'
 import { isEditableElement, dispatchKeyAction } from './keymapHelpers'
 import { useSpatialBridge } from './useSpatialBridge'
 import { getSerializedText, setExternalClipboard, hasDeserialize } from '../plugins/clipboard'
-import { key, type KeyHandler } from '../axis/types'
+import { key, type KeyHandler, type CtxFactory } from '../axis/types'
 
 type ClipboardHandler = (ctx: ReturnType<typeof createPatternContext>) => Command | void
 
@@ -78,7 +78,7 @@ export interface UseAriaViewReturn {
   getNodeProps: (id: string) => Record<string, unknown>
   getNodeState: (id: string) => NodeState
   containerProps: Record<string, unknown>
-  patternCtxOptions: { visibilityFilters?: import('../engine/types').VisibilityFilter[]; ctxFactories?: import('../axis/types').CtxFactory[] }
+  patternCtxOptions: { visibilityFilters?: VisibilityFilter[]; ctxFactories?: CtxFactory[] }
   observedEngine: CommandEngine
 }
 
