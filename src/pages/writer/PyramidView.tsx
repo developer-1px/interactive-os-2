@@ -1,5 +1,5 @@
-// @useState-hatch — transform is view-only pan/zoom state
-import { useRef, useState, useCallback, useMemo } from 'react'
+// @useState-hatch — transform is view-only pan/zoom state, useEffect for SVG resize
+import { useRef, useState, useCallback, useMemo, useEffect } from 'react'
 import { ax } from '@styles/ax'
 import { type NormalizedData, ROOT_ID } from '@os/store/types'
 import { getChildren, getEntity } from '@os/store/createStore'
@@ -85,6 +85,7 @@ export function storeToMermaid(data: NormalizedData): string {
 
 interface Transform { x: number; y: number; scale: number }
 
+// @useState-hatch — pan/zoom transform is view-only gesture state, no axis equivalent
 function usePanZoom() {
   const [transform, setTransform] = useState<Transform>({ x: 0, y: 0, scale: 1 })
   const isDragging = useRef(false)
@@ -128,31 +129,64 @@ function usePanZoom() {
 
 // ── PyramidView ──
 
-export function PyramidView({ data }: { data: NormalizedData }) {
+export function PyramidView({ data, onExit }: { data: NormalizedData; onExit: () => void }) {
   const mermaidCode = useMemo(() => storeToMermaid(data), [data])
   const { transform, onWheel, onPointerDown, onPointerMove, onPointerUp, reset } = usePanZoom()
+  const canvasRef = useRef<HTMLDivElement>(null)
+
+  // Make mermaid SVG responsive — remove fixed width/height, keep viewBox
+  useEffect(() => {
+    const el = canvasRef.current
+    if (!el) return
+    const observer = new MutationObserver(() => {
+      const svg = el.querySelector('svg')
+      if (!svg) return
+      if (!svg.getAttribute('viewBox')) {
+        const w = svg.getAttribute('width')?.replace('px', '')
+        const h = svg.getAttribute('height')?.replace('px', '')
+        if (w && h) svg.setAttribute('viewBox', `0 0 ${w} ${h}`)
+      }
+      svg.removeAttribute('width')
+      svg.removeAttribute('height')
+      svg.setAttribute('width', '90vw')
+      svg.setAttribute('height', '80vh')
+      svg.style.maxWidth = 'none'
+    })
+    observer.observe(el, { childList: true, subtree: true })
+    return () => observer.disconnect()
+  }, [mermaidCode])
 
   return (
     <div
-      className={`${styles.viewport} ${ax({ scroll: 'hidden' })}`}
+      className={`${styles.viewport} ${ax({ placement: 'viewport', surface: 'base', scroll: 'hidden' })}`}
       onWheel={onWheel}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
     >
       <div
+        ref={canvasRef}
         className={`${styles.canvas} ${ax({ layout: 'center' })}`}
         style={{ transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})` }}
       >
         <MermaidBlock code={mermaidCode} />
       </div>
-      <button
-        type="button"
-        className={ax({ surface: 'overlay', textStyle: 'caption', padding: 'sm', shape: 'sm', placement: 'bottom' })}
-        onClick={reset}
-      >
-        Reset
-      </button>
+      <div className={ax({ placement: 'bottom', layout: 'row', gap: 'sm' })}>
+        <button
+          type="button"
+          className={ax({ surface: 'overlay', textStyle: 'caption', padding: 'sm', shape: 'sm' })}
+          onClick={reset}
+        >
+          Reset
+        </button>
+        <button
+          type="button"
+          className={ax({ surface: 'overlay', textStyle: 'caption', padding: 'sm', shape: 'sm' })}
+          onClick={onExit}
+        >
+          Close
+        </button>
+      </div>
     </div>
   )
 }

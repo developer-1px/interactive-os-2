@@ -628,12 +628,14 @@ export default function PageWriter() {
   const writerKeyMap: RouteKeyMap = useMemo(() => ({
     'Mod+S': defineRouteKey('writer:save', () => handleSave(), 'Writer'),
     'Mod+\\': defineRouteKey('writer:toggle-view', () => { setViewMode(m => m === 'tree' ? 'prose' : m === 'prose' ? 'pyramid' : m === 'pyramid' ? 'slides' : 'tree'); setSlideIndex(0) }, 'Writer'),
+    ...(viewMode === 'slides' || viewMode === 'pyramid' ? {
+      'Escape': defineRouteKey('writer:fullscreen-exit', () => setViewMode('tree'), 'Writer'),
+    } : {}),
     ...(viewMode === 'slides' ? {
       'ArrowRight': defineRouteKey('writer:slide-next', () => setSlideIndex(i => Math.min(i + 1, slideCount - 1)), 'Writer'),
       'ArrowDown': defineRouteKey('writer:slide-next-alt', () => setSlideIndex(i => Math.min(i + 1, slideCount - 1)), 'Writer'),
       'ArrowLeft': defineRouteKey('writer:slide-prev', () => setSlideIndex(i => Math.max(i - 1, 0)), 'Writer'),
       'ArrowUp': defineRouteKey('writer:slide-prev-alt', () => setSlideIndex(i => Math.max(i - 1, 0)), 'Writer'),
-      'Escape': defineRouteKey('writer:slide-exit', () => setViewMode('tree'), 'Writer'),
     } : {}),
   }), [handleSave, viewMode, slideCount])
 
@@ -641,6 +643,9 @@ export default function PageWriter() {
     <AriaRoute keyMap={writerKeyMap} label="Writer">
       {viewMode === 'slides' && (
         <SlideView data={data} slideIndex={slideIndex} slideCount={slideCount} />
+      )}
+      {viewMode === 'pyramid' && (
+        <PyramidView data={data} onExit={() => setViewMode('tree')} />
       )}
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
         <Panel header="Files" surface="sunken">
@@ -659,8 +664,6 @@ export default function PageWriter() {
           <div className={ax({ layout: 'scroll', padding: 'md' })}>
             {viewMode === 'prose' ? (
               <ProseView data={data} />
-            ) : viewMode === 'pyramid' ? (
-              <PyramidView data={data} />
             ) : (
               <WriterTreeGrid
                 data={data}
