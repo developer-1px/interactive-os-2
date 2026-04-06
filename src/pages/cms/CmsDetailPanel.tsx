@@ -3,6 +3,7 @@ import type React from 'react'
 import type { NormalizedData } from '@os/store/types'
 import type { CommandEngine } from '@os/engine/createCommandEngine'
 import { renameCommands } from '@os/plugins/rename'
+import { historyCommands } from '@os/plugins/history'
 import { collectEditableGroups } from './cmsSchema'
 import type { EditableGroup, EditableGroupEntry } from './cmsSchema'
 import { localized } from './cmsTypes'
@@ -164,14 +165,22 @@ function useFieldCommit<T extends HTMLInputElement | HTMLTextAreaElement>(
     snapshotRef.current = newText
   }, [entry.nodeId, entry.field, entry.isLocaleMap, rawValue, locale, engine])
 
-  const commitOnEnter = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+  const handleFieldKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const mod = e.metaKey || e.ctrlKey
+    if (mod && e.key === 'z' && !e.shiftKey) {
+      e.preventDefault()
+      handleCommit()
+      engine.dispatch(historyCommands.undo())
+    } else if (mod && e.key === 'z' && e.shiftKey) {
+      e.preventDefault()
+      engine.dispatch(historyCommands.redo())
+    } else if (e.key === 'Enter') {
       e.preventDefault()
       handleCommit()
     }
-  }, [handleCommit])
+  }, [handleCommit, engine])
 
-  return { elRef, displayValue, handleFocus, handleCommit, commitOnEnter }
+  return { elRef, displayValue, handleFocus, handleCommit, handleFieldKeyDown }
 }
 
 // ── Field renderers ──
@@ -195,7 +204,7 @@ function DetailField(props: DetailFieldProps) {
 }
 
 function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
-  const { elRef, displayValue, handleFocus, handleCommit, commitOnEnter } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
+  const { elRef, displayValue, handleFocus, handleCommit, handleFieldKeyDown } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
 
   return (
     <div className="cms-detail-field flex-col">
@@ -207,7 +216,7 @@ function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
         defaultValue={displayValue}
         onFocus={handleFocus}
         onBlur={handleCommit}
-        onKeyDown={commitOnEnter}
+        onKeyDown={handleFieldKeyDown}
       />
     </div>
   )
