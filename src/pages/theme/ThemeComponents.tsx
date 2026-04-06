@@ -15,6 +15,11 @@ import { Accordion } from '@os/ui/Accordion'
 import { ToggleGroup } from '@os/ui/ToggleGroup'
 import { Spinbutton } from '@os/ui/Spinbutton'
 import { createStore } from '@os/store/createStore'
+import { Avatar } from '@os/ui/Avatar'
+import { Badge } from '@os/ui/Badge'
+import { Progress } from '@os/ui/Progress'
+import { Skeleton } from '@os/ui/Skeleton'
+import { Kbd } from '@os/ui/Kbd'
 
 /* ══ Demo data factories ══ */
 
@@ -204,6 +209,77 @@ export function ThemeComponents() {
             </div>
           </Section>
         </div>
+      </div>
+
+      {/* Row 3: Avatar, Badge, Progress */}
+      <div className="theme-page-grid">
+        <Section title="AVATAR">
+          <div className={ax({ layout: 'bar', gap: 'md' })}>
+            <Avatar name="Alice Brown" size="sm" />
+            <Avatar name="Bob Carter" size="md" />
+            <Avatar name="Dana Kim" size="lg" />
+            <Avatar name="Single" size="md" />
+          </div>
+          <div className={ax({ layout: 'bar', gap: 'xs' })}>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>sm / md / lg / single-word</span>
+          </div>
+        </Section>
+
+        <Section title="BADGE">
+          <div className={ax({ layout: 'row', gap: 'xs' })}>
+            {(['accent', 'danger', 'success', 'warning', 'neutral'] as const).map(tone => (
+              <Badge key={tone} tone={tone} variant="solid">{tone}</Badge>
+            ))}
+          </div>
+          <div className={ax({ layout: 'row', gap: 'xs' })}>
+            {(['accent', 'danger', 'success', 'warning', 'neutral'] as const).map(tone => (
+              <Badge key={tone} tone={tone} variant="outline">{tone}</Badge>
+            ))}
+          </div>
+        </Section>
+
+        <Section title="PROGRESS">
+          <div className={ax({ layout: 'column', gap: 'sm' })}>
+            <Progress value={25} tone="accent" aria-label="25%" />
+            <Progress value={50} tone="success" aria-label="50%" />
+            <Progress value={75} tone="warning" aria-label="75%" />
+            <Progress value={100} tone="danger" aria-label="100%" />
+          </div>
+        </Section>
+      </div>
+
+      {/* Row 4: Skeleton, Kbd */}
+      <div className="theme-page-grid">
+        <Section title="SKELETON">
+          <div className={ax({ layout: 'column', gap: 'sm' })}>
+            <Skeleton shape="text" height="xs" width="md" />
+            <Skeleton shape="rect" height="sm" width="full" />
+            <Skeleton shape="rect" height="md" width="full" />
+            <div className={ax({ layout: 'bar', gap: 'sm' })}>
+              <Skeleton shape="circle" height="md" />
+              <Skeleton shape="circle" height="lg" />
+              <Skeleton shape="circle" height="xl" />
+            </div>
+          </div>
+        </Section>
+
+        <Section title="KBD">
+          <div className={ax({ layout: 'row', gap: 'sm' })}>
+            <Kbd>⌘K</Kbd>
+            <Kbd>⌘S</Kbd>
+            <Kbd>Ctrl+Z</Kbd>
+            <Kbd>Esc</Kbd>
+            <Kbd>Tab</Kbd>
+            <Kbd>↵</Kbd>
+          </div>
+          <div className={ax({ layout: 'bar', gap: 'xs' })}>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>Press</span>
+            <Kbd>⌘</Kbd>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>+</span>
+            <Kbd>K</Kbd>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>to open command palette</span>
+          </div>
+        </Section>
       </div>
     </div>
   )
