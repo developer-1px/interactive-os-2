@@ -1,3 +1,4 @@
+// @useState-hatch
 import { useState } from 'react'
 import { ax } from '@styles/ax'
 import {
@@ -65,12 +66,11 @@ function CheckSection() {
           <CheckIndicator checked={false} />
         </Row>
         <Row label="checked=true">
-          <span aria-selected="true"><CheckIndicator checked={true} /></span>
+          <CheckIndicator checked={true} />
         </Row>
         <Row label="interactive">
           <div
             className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`}
-            aria-selected={checked ? 'true' : undefined}
             onClick={() => setChecked(!checked)}
           >
             <CheckIndicator checked={checked} />
@@ -91,17 +91,16 @@ function RadioSection() {
           <RadioIndicator />
         </Row>
         <Row label="checked">
-          <span aria-checked="true"><RadioIndicator /></span>
+          <RadioIndicator checked />
         </Row>
         <Row label="interactive">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
               className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`}
-              aria-checked={selected === i ? 'true' : 'false'}
               onClick={() => setSelected(i)}
             >
-              <RadioIndicator />
+              <RadioIndicator checked={selected === i} />
             </div>
           ))}
         </Row>
@@ -119,15 +118,14 @@ function SwitchSection() {
           <SwitchIndicator />
         </Row>
         <Row label="on">
-          <div className="inline-flex" aria-checked="true"><SwitchIndicator /></div>
+          <SwitchIndicator checked />
         </Row>
         <Row label="interactive">
           <div
             className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`}
-            aria-checked={on ? 'true' : 'false'}
             onClick={() => setOn(!on)}
           >
-            <SwitchIndicator />
+            <SwitchIndicator checked={on} />
             <span className={ax({ textStyle: 'code', text: 'secondary' })}>{on ? 'on' : 'off'}</span>
           </div>
         </Row>
@@ -162,11 +160,11 @@ function IndeterminateSection() {
     <Section title="Indeterminate">
       <div data-aria-container="" className="ax-interactive">
         <Row label="default">
-          <span aria-selected="true"><IndeterminateIndicator /></span>
+          <IndeterminateIndicator />
         </Row>
         <Row label="vs check">
-          <span aria-selected="true"><CheckIndicator checked={true} /></span>
-          <span aria-selected="true"><IndeterminateIndicator /></span>
+          <CheckIndicator checked={true} />
+          <IndeterminateIndicator />
           <CheckIndicator checked={false} />
         </Row>
       </div>
@@ -183,10 +181,10 @@ function SortSection() {
           <SortIndicator />
         </Row>
         <Row label="ascending">
-          <span aria-sort="ascending"><SortIndicator direction="ascending" /></span>
+          <SortIndicator direction="ascending" />
         </Row>
         <Row label="descending">
-          <span aria-sort="descending"><SortIndicator direction="descending" /></span>
+          <SortIndicator direction="descending" />
         </Row>
         <Row label="interactive">
           <div
