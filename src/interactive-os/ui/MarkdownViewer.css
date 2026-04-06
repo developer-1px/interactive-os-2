@@ -1,8 +1,6 @@
 /* Markdown prose — all rules are last-mile (prose typography rhythm) */
 
 .markdown {
-  margin: 0 auto;
-  padding: var(--space-2xl) var(--space-3xl);
   font-size: var(--type-prose-size);
   font-weight: var(--type-prose-weight);
   font-family: var(--type-prose-family);
