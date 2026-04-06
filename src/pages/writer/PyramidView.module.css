@@ -1,0 +1,9 @@
+/* Last-mile: transform-origin, touch-action are not ax() axes */
+
+.viewport {
+  touch-action: none;
+}
+
+.canvas {
+  transform-origin: center center;
+}
