@@ -17,7 +17,7 @@ const roleLabel: Record<SentenceRole, string> = {
   opinion: '의견',
 }
 
-const roleText: Record<SentenceRole, Axes['text']> = {
+const roleTone: Record<SentenceRole, Axes['tone']> = {
   fact: 'accent',
   interpretation: 'warning',
   evidence: 'success',
@@ -103,7 +103,7 @@ export function WriterItem(
       <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
       <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       {role && (
-        <span className={`${ax({ textStyle: 'caption', text: roleText[role] })} ml-auto`}>
+        <span className={`${ax({ textStyle: 'caption', tone: roleTone[role] })} ml-auto`}>
           {roleLabel[role]}
         </span>
       )}

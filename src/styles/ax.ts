@@ -10,7 +10,7 @@ type ControlSize = 'sm' | 'md' | 'lg'
 type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code' | 'overline'
 type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
   | 'accent-dim' | 'danger-dim' | 'success-dim' | 'warning-dim' | 'neutral-dim'
-type Text = 'bright' | 'primary' | 'secondary' | 'muted' | 'accent' | 'danger' | 'success' | 'warning'
+type Text = 'bright' | 'primary' | 'secondary' | 'muted'
 // shape: 비-컨트롤 요소의 border-radius (컨트롤은 controlSize가 소유)
 type Shape = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
 

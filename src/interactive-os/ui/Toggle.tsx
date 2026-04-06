@@ -16,7 +16,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   return (
     <div {...props} className={ax({ layout: 'spread', interactive: 'check' })} data-focused={state.focused || undefined}>
       <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
-      <span className={`${ax({ textStyle: 'caption', text: checked ? 'success' : 'muted', weight: 'semi' })}`} data-checked={checked || undefined}>{checked ? 'On' : 'Off'}</span>
+      <span className={`${ax({ textStyle: 'caption', tone: checked ? 'success' : undefined, text: checked ? undefined : 'muted', weight: 'semi' })}`} data-checked={checked || undefined}>{checked ? 'On' : 'Off'}</span>
     </div>
   )
 }

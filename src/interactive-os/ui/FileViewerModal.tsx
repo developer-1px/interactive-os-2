@@ -102,7 +102,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 {mergedHighlightLines.size > 0 && (
                   <>
                     <span className="fvm-meta-sep" />
-                    <span className={ax({ text: 'warning', weight: 'semi' })}>{mergedHighlightLines.size} lines highlighted</span>
+                    <span className={ax({ tone: 'warning', weight: 'semi' })}>{mergedHighlightLines.size} lines highlighted</span>
                   </>
                 )}
               </div>
@@ -112,7 +112,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
         </PanelHeader>
         <div className={ax({ flex: '1', layout: 'scroll' })}>
           {error ? (
-            <div className={ax({ text: 'danger', padding: 'md' })}>File not found</div>
+            <div className={ax({ tone: 'danger', padding: 'md' })}>File not found</div>
           ) : isImage ? (
             <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className="fvm-image" />
           ) : isMarkdown ? (

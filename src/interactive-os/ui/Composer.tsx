@@ -192,7 +192,7 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
           {hasOverlay && (
             <div className={`composer-overlay absolute inset-0 pointer-none font-inherit pre-wrap ${ax({ textStyle: 'body' })}`} aria-hidden="true">
               {commandHighlight > 0 && (
-                <span className={ax({ text: 'accent' })}>{overlayText.slice(0, commandHighlight)}</span>
+                <span className={ax({ tone: 'accent' })}>{overlayText.slice(0, commandHighlight)}</span>
               )}
               {commandHighlight > 0 && overlayText.length > commandHighlight && (
                 <span className={ax({ text: 'primary' })}>{overlayText.slice(commandHighlight)}</span>

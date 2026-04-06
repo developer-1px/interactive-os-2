@@ -208,7 +208,7 @@ export default function PageAgentChat() {
               onClick={() => handleSidebarClick(s.id)}
             >
               <div className={ax({ layout: 'bar', gap: 'sm' })}>
-                <Circle size={8} fill="currentColor" className={s.state === 'running' ? ax({ text: 'success' }) : ax({ text: 'muted' })} />
+                <Circle size={8} fill="currentColor" className={s.state === 'running' ? ax({ tone: 'success' }) : ax({ text: 'muted' })} />
                 <span className={ax({ flex: '1', clamp: '1' })}>{s.id.slice(0, 8)}</span>
                 <button
                   className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + 'chat-close-btn'}
