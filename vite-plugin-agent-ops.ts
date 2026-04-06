@@ -17,110 +17,107 @@ interface TimelineEvent {
 
 // --- Parse a single JSONL line into timeline events ---
 
+function extractText(content: unknown): string {
+  if (typeof content === 'string') return content
+  if (!Array.isArray(content)) return ''
+  let text = ''
+  for (const b of content) {
+    if (typeof b === 'object' && b !== null && (b as Record<string, unknown>).type === 'text') {
+      text += (b as Record<string, unknown>).text as string
+    }
+  }
+  return text
+}
+
+const DROP_PATTERNS = [
+  /^Caveat:/,
+  /^\/clear$/,
+  /^clear$/,
+  /^Read the output file to retrieve/,
+  /toolu_/,
+  /failed with exit code/,
+  /^Background command/,
+  /^Hook \w+ success/,
+  /^OK$/,
+  /^UserPromptSubmit hook/,
+  /^SessionStart/,
+]
+
+const INJECTED_PREFIXES = [
+  'Base directory for this skill:',
+  'Launching skill:',
+  'ARGUMENTS:',
+  'This skill',
+]
+
+function isNoise(text: string): boolean {
+  return DROP_PATTERNS.some(p => p.test(text))
+}
+
+function isInjected(text: string): boolean {
+  return INJECTED_PREFIXES.some(p => text.startsWith(p))
+    || (text.length > 300 && /^#{1,4} /m.test(text))
+    || text.length > 500
+}
+
+function parseUserMessage(obj: Record<string, unknown>, ts: string): TimelineEvent[] {
+  const msg = obj.message as Record<string, unknown> | undefined
+  if (!msg) return []
+  const text = extractText(msg.content).replace(/<[^>]+>/g, '').trim()
+  if (!text || isNoise(text) || isInjected(text)) return []
+  return [{ type: 'user', ts, text }]
+}
+
+function parseToolUse(b: Record<string, unknown>, ts: string): TimelineEvent {
+  const name = b.name as string
+  const input = (b.input ?? {}) as Record<string, unknown>
+  const evt: TimelineEvent = { type: 'tool_use', ts, tool: name }
+
+  if (name === 'Read' || name === 'Edit' || name === 'Write') {
+    evt.filePath = input.file_path as string
+  }
+  if (name === 'Edit') {
+    evt.editOld = input.old_string as string
+    evt.editNew = input.new_string as string
+  }
+  if (name === 'Bash') evt.text = input.command as string
+  if (name === 'Glob' || name === 'Grep') evt.text = input.pattern as string
+  if (name === 'Skill') evt.text = input.skill as string
+
+  return evt
+}
+
+function parseAssistantMessage(obj: Record<string, unknown>, ts: string): TimelineEvent[] {
+  const msg = obj.message as Record<string, unknown> | undefined
+  if (!msg) return []
+  const content = msg.content as unknown[]
+  if (!Array.isArray(content)) return []
+
+  const events: TimelineEvent[] = []
+  for (const block of content) {
+    if (typeof block !== 'object' || block === null) continue
+    const b = block as Record<string, unknown>
+    if (b.type === 'text') {
+      const text = (b.text as string).replace(/<[^>]+>/g, '').trim()
+      if (text) events.push({ type: 'assistant', ts, text })
+    }
+    if (b.type === 'tool_use') events.push(parseToolUse(b, ts))
+  }
+  return events
+}
+
+const messageParsers: Record<string, (obj: Record<string, unknown>, ts: string) => TimelineEvent[]> = {
+  user: parseUserMessage,
+  assistant: parseAssistantMessage,
+}
+
 function parseTranscriptLine(raw: string): TimelineEvent[] {
   let obj: Record<string, unknown>
   try { obj = JSON.parse(raw) } catch { return [] }
 
-  const type = obj.type as string
-  const events: TimelineEvent[] = []
   const ts = (obj.timestamp as string) ?? new Date().toISOString()
-
-  if (type === 'user') {
-    const msg = obj.message as Record<string, unknown> | undefined
-    if (!msg) return []
-    const content = msg.content
-    let text = ''
-    if (typeof content === 'string') {
-      text = content
-    } else if (Array.isArray(content)) {
-      for (const b of content) {
-        if (typeof b === 'object' && b !== null && (b as Record<string, unknown>).type === 'text') {
-          text += (b as Record<string, unknown>).text as string
-        }
-      }
-    }
-    // Strip XML tags for cleaner display
-    text = text.replace(/<[^>]+>/g, '').trim()
-    if (!text) return []
-
-    // Drop pure noise — no value even as "..."
-    const dropPatterns = [
-      /^Caveat:/,
-      /^\/clear$/,
-      /^clear$/,
-      /^Read the output file to retrieve/,
-      /toolu_/,
-      /failed with exit code/,
-      /^Background command/,
-      /^Hook \w+ success/,
-      /^OK$/,
-      /^UserPromptSubmit hook/,
-      /^SessionStart/,
-    ]
-    if (dropPatterns.some(p => p.test(text))) return []
-
-    // Detect system-injected content → drop entirely (shown as tool_use instead)
-    const isInjected =
-      // Skill bodies / system prompts
-      text.startsWith('Base directory for this skill:') ||
-      text.startsWith('Launching skill:') ||
-      text.startsWith('ARGUMENTS:') ||
-      text.startsWith('This skill') ||
-      // Long structured content (skills, agent results, hook output)
-      (text.length > 300 && /^#{1,4} /m.test(text)) ||
-      // Agent subagent results
-      (text.length > 500)
-
-    if (isInjected) return []
-
-    events.push({ type: 'user', ts, text })
-  }
-
-  if (type === 'assistant') {
-    const msg = obj.message as Record<string, unknown> | undefined
-    if (!msg) return []
-    const content = msg.content as unknown[]
-    if (!Array.isArray(content)) return []
-
-    for (const block of content) {
-      if (typeof block !== 'object' || block === null) continue
-      const b = block as Record<string, unknown>
-
-      if (b.type === 'text') {
-        const text = (b.text as string).replace(/<[^>]+>/g, '').trim()
-        if (text) {
-          events.push({ type: 'assistant', ts, text })
-        }
-      }
-
-      if (b.type === 'tool_use') {
-        const name = b.name as string
-        const input = (b.input ?? {}) as Record<string, unknown>
-        const evt: TimelineEvent = { type: 'tool_use', ts, tool: name }
-
-        if (name === 'Read' || name === 'Edit' || name === 'Write') {
-          evt.filePath = input.file_path as string
-        }
-        if (name === 'Edit') {
-          evt.editOld = input.old_string as string
-          evt.editNew = input.new_string as string
-        }
-        if (name === 'Bash') {
-          evt.text = input.command as string
-        }
-        if (name === 'Glob' || name === 'Grep') {
-          evt.text = input.pattern as string
-        }
-        if (name === 'Skill') {
-          evt.text = input.skill as string
-        }
-
-        events.push(evt)
-      }
-    }
-  }
-
-  return events
+  const parser = messageParsers[obj.type as string]
+  return parser ? parser(obj, ts) : []
 }
 
 // --- Find the most recent transcript JSONL ---
@@ -312,128 +309,115 @@ export function agentOpsPlugin(): Plugin {
         }
       })
 
+      type Req = import('node:http').IncomingMessage
+      type Res = import('node:http').ServerResponse
+
+      function handleLatest(_url: URL, _req: Req, res: Res) {
+        const data = getLatestOps(opsDir)
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify(data))
+      }
+
+      function handleSessions(_url: URL, _req: Req, res: Res) {
+        const sessions = listSessions(projectRoot)
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify(sessions.map(s => ({ id: s.id, mtime: s.mtime, label: s.label, active: s.active }))))
+      }
+
+      function handleTimeline(url: URL, _req: Req, res: Res) {
+        const sessionId = url.searchParams.get('session')
+        const tail = parseInt(url.searchParams.get('tail') ?? '100', 10)
+        const before = url.searchParams.get('before')
+        let filePath: string | null = null
+
+        if (sessionId) {
+          const dir = getTranscriptDir(projectRoot)
+          if (dir) {
+            const candidate = path.join(dir, `${sessionId}.jsonl`)
+            if (fs.existsSync(candidate)) filePath = candidate
+          }
+        } else {
+          filePath = findLatestTranscript(projectRoot)
+        }
+
+        if (!filePath) {
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ events: [], total: 0 }))
+          return
+        }
+        const allEvents = loadTranscriptEvents(filePath)
+        const total = allEvents.length
+
+        let events: TimelineEvent[]
+        if (before) {
+          const end = parseInt(before, 10)
+          const start = Math.max(0, end - tail)
+          events = allEvents.slice(start, end)
+        } else {
+          events = allEvents.slice(-tail)
+        }
+
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify({ events, total }))
+      }
+
+      function setupSSE(req: Req, res: Res, onClose: () => void) {
+        res.setHeader('Content-Type', 'text/event-stream')
+        res.setHeader('Cache-Control', 'no-cache')
+        res.setHeader('Connection', 'keep-alive')
+        const heartbeat = setInterval(() => res.write(':heartbeat\n\n'), 30000)
+        req.on('close', () => { onClose(); clearInterval(heartbeat) })
+      }
+
+      function handleStreamMux(url: URL, req: Req, res: Res) {
+        const sessionsCsv = url.searchParams.get('sessions') ?? ''
+        const sessionIds = sessionsCsv.split(',').filter(Boolean)
+
+        muxClients.add(res)
+        const subs = new Set(sessionIds)
+        clientSubscriptions.set(res, subs)
+        for (const sid of sessionIds) watchSession(sid)
+
+        setupSSE(req, res, () => {
+          muxClients.delete(res)
+          clientSubscriptions.delete(res)
+          for (const sid of subs) unwatchSessionIfOrphaned(sid)
+        })
+      }
+
+      function handleStream(url: URL, req: Req, res: Res) {
+        const sessionId = url.searchParams.get('session')
+        if (!sessionId) { res.statusCode = 400; res.end(); return }
+
+        watchSession(sessionId)
+        muxClients.add(res)
+        clientSubscriptions.set(res, new Set([sessionId]))
+
+        setupSSE(req, res, () => {
+          muxClients.delete(res)
+          clientSubscriptions.delete(res)
+          unwatchSessionIfOrphaned(sessionId)
+        })
+      }
+
+      function handleLegacyStream(_url: URL, req: Req, res: Res) {
+        setupSSE(req, res, () => {})
+      }
+
+      const opsRoutes: Record<string, (url: URL, req: Req, res: Res) => void> = {
+        '/api/agent-ops/latest': handleLatest,
+        '/api/agent-ops/sessions': handleSessions,
+        '/api/agent-ops/timeline': handleTimeline,
+        '/api/agent-ops/timeline-stream-mux': handleStreamMux,
+        '/api/agent-ops/timeline-stream': handleStream,
+        '/api/agent-ops/stream': handleLegacyStream,
+      }
+
       server.middlewares.use((req, res, next) => {
         const url = new URL(req.url!, `http://${req.headers.host}`)
-
-        // Existing: NDJSON ops
-        if (url.pathname === '/api/agent-ops/latest') {
-          const data = getLatestOps(opsDir)
-          res.setHeader('Content-Type', 'application/json')
-          res.end(JSON.stringify(data))
-          return
-        }
-
-        // Session list
-        if (url.pathname === '/api/agent-ops/sessions') {
-          const sessions = listSessions(projectRoot)
-          res.setHeader('Content-Type', 'application/json')
-          res.end(JSON.stringify(sessions.map(s => ({ id: s.id, mtime: s.mtime, label: s.label, active: s.active }))))
-          return
-        }
-
-        // Timeline for a specific session — supports tail pagination
-        // ?session=X          → last 100 events + total count
-        // ?session=X&tail=200 → last 200 events + total count
-        // ?session=X&before=500 → 100 events before index 500 (for scroll-up loading)
-        if (url.pathname === '/api/agent-ops/timeline') {
-          const sessionId = url.searchParams.get('session')
-          const tail = parseInt(url.searchParams.get('tail') ?? '100', 10)
-          const before = url.searchParams.get('before')
-          let filePath: string | null = null
-
-          if (sessionId) {
-            const dir = getTranscriptDir(projectRoot)
-            if (dir) {
-              const candidate = path.join(dir, `${sessionId}.jsonl`)
-              if (fs.existsSync(candidate)) filePath = candidate
-            }
-          } else {
-            filePath = findLatestTranscript(projectRoot)
-          }
-
-          if (!filePath) {
-            res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify({ events: [], total: 0 }))
-            return
-          }
-          const allEvents = loadTranscriptEvents(filePath)
-          const total = allEvents.length
-
-          let events: TimelineEvent[]
-          if (before) {
-            const end = parseInt(before, 10)
-            const start = Math.max(0, end - tail)
-            events = allEvents.slice(start, end)
-          } else {
-            events = allEvents.slice(-tail)
-          }
-
-          res.setHeader('Content-Type', 'application/json')
-          res.end(JSON.stringify({ events, total }))
-          return
-        }
-
-        // Multiplexed SSE — single connection for all sessions
-        // ?sessions=id1,id2,id3
-        if (url.pathname === '/api/agent-ops/timeline-stream-mux') {
-          const sessionsCsv = url.searchParams.get('sessions') ?? ''
-          const sessionIds = sessionsCsv.split(',').filter(Boolean)
-
-          muxClients.add(res)
-          const subs = new Set(sessionIds)
-          clientSubscriptions.set(res, subs)
-
-          for (const sid of sessionIds) watchSession(sid)
-
-          res.setHeader('Content-Type', 'text/event-stream')
-          res.setHeader('Cache-Control', 'no-cache')
-          res.setHeader('Connection', 'keep-alive')
-          const heartbeat = setInterval(() => res.write(':heartbeat\n\n'), 30000)
-
-          req.on('close', () => {
-            muxClients.delete(res)
-            clientSubscriptions.delete(res)
-            for (const sid of subs) unwatchSessionIfOrphaned(sid)
-            clearInterval(heartbeat)
-          })
-          return
-        }
-
-        // Legacy per-session SSE (kept for backward compat)
-        if (url.pathname === '/api/agent-ops/timeline-stream') {
-          const sessionId = url.searchParams.get('session')
-          if (!sessionId) { res.statusCode = 400; res.end(); return }
-
-          watchSession(sessionId)
-          muxClients.add(res)
-          clientSubscriptions.set(res, new Set([sessionId]))
-
-          res.setHeader('Content-Type', 'text/event-stream')
-          res.setHeader('Cache-Control', 'no-cache')
-          res.setHeader('Connection', 'keep-alive')
-          const heartbeat = setInterval(() => res.write(':heartbeat\n\n'), 30000)
-
-          req.on('close', () => {
-            muxClients.delete(res)
-            clientSubscriptions.delete(res)
-            unwatchSessionIfOrphaned(sessionId)
-            clearInterval(heartbeat)
-          })
-          return
-        }
-
-        // Existing: NDJSON SSE (kept)
-        if (url.pathname === '/api/agent-ops/stream') {
-          res.setHeader('Content-Type', 'text/event-stream')
-          res.setHeader('Cache-Control', 'no-cache')
-          res.setHeader('Connection', 'keep-alive')
-
-          const heartbeat = setInterval(() => res.write(':heartbeat\n\n'), 30000)
-          req.on('close', () => clearInterval(heartbeat))
-          return
-        }
-
-        next()
+        const handler = opsRoutes[url.pathname]
+        if (handler) handler(url, req, res)
+        else next()
       })
 
       // --- Chat mode: v1 query() API with skills/plugins support ---
@@ -441,6 +425,68 @@ export function agentOpsPlugin(): Plugin {
       // v1 query() is stateless per-turn: each turn creates a new query() with resume option.
 
       // Shared SDK options for all sessions
+      const a2uiSystemPrompt = `
+# A2UI Protocol
+
+When the user asks you to create a UI, generate an A2UI JSON payload inside a \`\`\`a2ui code block. The client will render it as an interactive UI with full keyboard/ARIA support.
+
+## Format
+
+\`\`\`a2ui
+{
+  "components": [
+    { "id": "unique-id", "component": "ComponentType", ...props },
+    ...
+  ],
+  "dataModel": { ... }  // optional, for data binding
+}
+\`\`\`
+
+## Available Components
+
+| Component | Props | Description |
+|-----------|-------|-------------|
+| Text | text, variant (h1-h5/caption/body) | Text display |
+| Row | children: string[] | Horizontal layout |
+| Column | children: string[] | Vertical layout |
+| Card | child: string | Container with border |
+| Button | label, variant ("primary"/default) | Clickable button |
+| TextField | label, value | Text input |
+| CheckBox | label, value (boolean) | Toggle checkbox |
+| Slider | label, minValue, maxValue, step, value | Range slider |
+| List | children: string[], aria-label | Selectable list (keyboard ↑↓) |
+| Tabs | tabItems: [{title, child}], aria-label | Tab panels (keyboard ←→) |
+| ChoicePicker | label, options: [{id, label}] | Radio group |
+| Divider | (none) | Horizontal rule |
+| Image | url, alt | Image display |
+| DateTimeInput | label | Date input |
+
+## Rules
+
+- Each component has a unique "id" string
+- Parent→child references use ID strings: "child" (single) or "children" (array)
+- Tabs use "tabItems": [{"title": "Tab Name", "child": "panel-id"}]
+- Data binding: use {"path": "/key/subkey"} as prop value + "dataModel" at root
+- Keep IDs short and descriptive (e.g., "header", "stat-1", "form-email")
+- Always include aria-label on List/Tabs components
+
+## Example
+
+\`\`\`a2ui
+{
+  "components": [
+    {"id": "root", "component": "Column", "children": ["title", "items"]},
+    {"id": "title", "component": "Text", "text": "My Tasks", "variant": "h3"},
+    {"id": "items", "component": "List", "children": ["t1", "t2"], "aria-label": "Tasks"},
+    {"id": "t1", "component": "Text", "text": "Buy groceries", "label": "Buy groceries"},
+    {"id": "t2", "component": "Text", "text": "Write report", "label": "Write report"}
+  ]
+}
+\`\`\`
+
+When the user asks to build/create/make a UI, dashboard, form, list, or any visual element — respond with a \`\`\`a2ui block. You can include explanation text before or after the block.
+`
+
       const chatSdkBaseOptions = {
         permissionMode: 'acceptEdits' as const,
         cwd: process.cwd(),
@@ -448,6 +494,7 @@ export function agentOpsPlugin(): Plugin {
         allowedTools: ['Skill', 'Read', 'Grep', 'Glob', 'Bash', 'Write', 'Edit', 'Agent', 'WebSearch', 'WebFetch'],
         includePartialMessages: true,
         thinking: { type: 'adaptive' as const },
+        appendSystemPrompt: a2uiSystemPrompt,
       }
 
       // Active queries (for abort) and session state
@@ -518,99 +565,96 @@ export function agentOpsPlugin(): Plugin {
         }
       }
 
+      type Reply = (event: string, payload: unknown) => void
+      type ChatCtx = { raw: Record<string, unknown>; sid: string; reply: Reply }
+
+      async function chatCreateSession({ raw, reply }: ChatCtx) {
+        try {
+          const { randomUUID } = await import('node:crypto')
+          const sessionId = randomUUID()
+          reply('chat:server', { type: 'session-created', sessionId, localId: raw.localId as string })
+        } catch (e) {
+          reply('chat:server', { type: 'create-failed', error: String(e) })
+        }
+      }
+
+      function chatSendMessage({ raw, sid }: ChatCtx) {
+        const text = raw.text as string
+        const slashMatch = text.match(/^\/(\S+)/)
+        if (slashMatch) {
+          const known = chatSessionCommands.get(sid)
+          if (known && !known.has(slashMatch[1])) {
+            wsBroadcast('chat:server', {
+              type: 'system-message', sessionId: sid,
+              text: `Unknown command: /${slashMatch[1]}. Available: ${[...known].map(c => '/' + c).join(', ')}`,
+            })
+            return
+          }
+        }
+        const resumeId = chatSdkSessionIds.get(sid)
+        runQueryTurn(sid, text, resumeId)
+      }
+
+      async function chatResumeSession({ raw, reply }: ChatCtx) {
+        const localId = raw.localId as string
+        const sdkSessionId = raw.sdkSessionId as string
+        let existingRouteId: string | undefined
+        for (const [routeId, sdkSid] of chatSdkSessionIds) {
+          if (sdkSid === sdkSessionId) { existingRouteId = routeId; break }
+        }
+        if (existingRouteId) {
+          const cmds = chatSessionCommands.get(existingRouteId)
+          reply('chat:server', { type: 'session-created', sessionId: existingRouteId, localId })
+          reply('chat:server', { type: 'session-ready', sessionId: existingRouteId, sdkSessionId, ...(cmds ? { commands: [...cmds] } : {}) })
+          return
+        }
+        try {
+          const { randomUUID } = await import('node:crypto')
+          const sessionId = randomUUID()
+          chatSdkSessionIds.set(sessionId, sdkSessionId)
+          reply('chat:server', { type: 'session-created', sessionId, localId })
+          reply('chat:server', { type: 'session-ready', sessionId, sdkSessionId })
+        } catch (e) {
+          reply('chat:server', { type: 'resume-failed', localId, error: String(e) })
+        }
+      }
+
+      function chatSetModel({ raw, sid }: ChatCtx) {
+        const model = raw.model as string | undefined
+        if (model) chatSessionModels.set(sid, model)
+        else chatSessionModels.delete(sid)
+      }
+
+      function chatInterrupt({ sid }: ChatCtx) {
+        const ac = chatAbortControllers.get(sid)
+        if (ac) ac.abort()
+      }
+
+      function chatCloseSession({ sid, reply }: ChatCtx) {
+        const ac = chatAbortControllers.get(sid)
+        if (ac) { ac.abort(); chatAbortControllers.delete(sid) }
+        chatSessionCommands.delete(sid)
+        chatSdkSessionIds.delete(sid)
+        chatSessionModels.delete(sid)
+        reply('chat:server', { type: 'session-closed', sessionId: sid })
+      }
+
+      const chatHandlers: Record<string, (ctx: ChatCtx) => void | Promise<void>> = {
+        'create-session': chatCreateSession,
+        'send-message': chatSendMessage,
+        'resume-session': chatResumeSession,
+        'set-model': chatSetModel,
+        'interrupt-session': chatInterrupt,
+        'close-session': chatCloseSession,
+      }
+
       server.hot.on('chat:client', async (data: unknown, client: { send: (event: string, payload?: unknown) => void }) => {
         let raw: Record<string, unknown>
         try {
           raw = (typeof data === 'string' ? JSON.parse(data) : data) as Record<string, unknown>
         } catch { return }
-        const t = raw.type as string
-        const sid = raw.sessionId as string
-
-        const reply = (event: string, payload: unknown) => client.send(event, payload)
-
-        if (t === 'create-session') {
-          try {
-            const { randomUUID } = await import('node:crypto')
-            const sessionId = randomUUID()
-            reply('chat:server', { type: 'session-created', sessionId, localId: raw.localId as string })
-          } catch (e) {
-            reply('chat:server', { type: 'create-failed', error: String(e) })
-          }
-          return
-        }
-
-        if (t === 'send-message') {
-          const text = raw.text as string
-          const slashMatch = text.match(/^\/(\S+)/)
-          if (slashMatch) {
-            const known = chatSessionCommands.get(sid)
-            if (known && !known.has(slashMatch[1])) {
-              wsBroadcast('chat:server', {
-                type: 'system-message', sessionId: sid,
-                text: `Unknown command: /${slashMatch[1]}. Available: ${[...known].map(c => '/' + c).join(', ')}`,
-              })
-              return
-            }
-          }
-          const resumeId = chatSdkSessionIds.get(sid)
-          runQueryTurn(sid, text, resumeId)
-          return
-        }
-
-        if (t === 'resume-session') {
-          const localId = raw.localId as string
-          const sdkSessionId = raw.sdkSessionId as string
-          // Check if we already track this SDK session
-          let existingRouteId: string | undefined
-          for (const [routeId, sdkSid] of chatSdkSessionIds) {
-            if (sdkSid === sdkSessionId) {
-              existingRouteId = routeId
-              break
-            }
-          }
-          if (existingRouteId) {
-            const cmds = chatSessionCommands.get(existingRouteId)
-            reply('chat:server', { type: 'session-created', sessionId: existingRouteId, localId })
-            reply('chat:server', { type: 'session-ready', sessionId: existingRouteId, sdkSessionId, ...(cmds ? { commands: [...cmds] } : {}) })
-            return
-          }
-          // New routing ID, store the SDK session ID for future resume
-          try {
-            const { randomUUID } = await import('node:crypto')
-            const sessionId = randomUUID()
-            chatSdkSessionIds.set(sessionId, sdkSessionId)
-            reply('chat:server', { type: 'session-created', sessionId, localId })
-            reply('chat:server', { type: 'session-ready', sessionId, sdkSessionId })
-          } catch (e) {
-            reply('chat:server', { type: 'resume-failed', localId, error: String(e) })
-          }
-          return
-        }
-
-        if (t === 'set-model') {
-          const model = raw.model as string | undefined
-          if (model) chatSessionModels.set(sid, model)
-          else chatSessionModels.delete(sid)
-          return
-        }
-
-        if (t === 'interrupt-session') {
-          const ac = chatAbortControllers.get(sid)
-          if (ac) ac.abort()
-          return
-        }
-
-        if (t === 'close-session') {
-          const ac = chatAbortControllers.get(sid)
-          if (ac) {
-            ac.abort()
-            chatAbortControllers.delete(sid)
-          }
-          chatSessionCommands.delete(sid)
-          chatSdkSessionIds.delete(sid)
-          chatSessionModels.delete(sid)
-          reply('chat:server', { type: 'session-closed', sessionId: sid })
-        }
+        const handler = chatHandlers[raw.type as string]
+        if (handler) await handler({ raw, sid: raw.sessionId as string, reply: (e, p) => client.send(e, p) })
       })
 
       // Cleanup
