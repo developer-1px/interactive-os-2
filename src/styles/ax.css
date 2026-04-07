@@ -1,3 +1,7 @@
+@layer ax;
+
+@layer ax {
+
 /* ── MECE Axis Design System — CSS Classes ──
  * 시각 6축 + 구조 6축 = 12축. 이게 전부.
  * style={} 사용 금지. 모든 것을 ax()로.
@@ -28,6 +32,7 @@
   background: var(--_bg, var(--surface-default));
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
+textarea.sf-input { field-sizing: content; }
 .sf-input:focus-within { border-color: var(--focus); }
 .sf-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .sf-input[aria-invalid="true"] { border-color: var(--tone-destructive-base); }
@@ -44,12 +49,61 @@
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-strong);
   z-index: 10;
-  transition: opacity var(--motion-enter-duration) var(--motion-enter-easing);
+  position: relative;
   --bg-hover:          var(--depth-overlay-hover);
   --bg-active:         var(--depth-overlay-active);
   --selection-context: var(--depth-overlay-sel-context);
   --selection:         var(--depth-overlay-sel);
   --selection-cursor:  var(--depth-overlay-sel-cursor);
+}
+
+/* Entry animation — popover/dialog 전용, surface와 분리 */
+.sf-overlay[popover],
+dialog.sf-overlay {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity var(--motion-enter-duration) var(--motion-enter-easing),
+              transform var(--motion-enter-duration) var(--motion-enter-easing),
+              display var(--motion-enter-duration) var(--motion-enter-easing) allow-discrete,
+              overlay var(--motion-enter-duration) var(--motion-enter-easing) allow-discrete;
+}
+
+.sf-overlay:popover-open,
+dialog.sf-overlay[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@starting-style {
+  .sf-overlay:popover-open,
+  dialog.sf-overlay[open] {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Light-reflection gradient border — top-lit glass edge */
+.sf-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    var(--overlay-edge-top)    0%,
+    var(--overlay-edge-bottom) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .sf-sunken {
@@ -907,3 +961,5 @@
   pointer-events: none;
   cursor: default;
 }
+
+} /* @layer ax */
