@@ -1,3 +1,4 @@
+/** @catalog 범용 버튼 */
 import React from 'react'
 import { type Axes, ax } from '@styles/ax'
 import '@styles/ax.css'

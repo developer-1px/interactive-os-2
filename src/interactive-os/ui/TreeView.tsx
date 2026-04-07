@@ -1,3 +1,4 @@
+/** @catalog 계층 트리 뷰 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

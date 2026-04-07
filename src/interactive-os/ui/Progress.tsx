@@ -1,3 +1,4 @@
+/** @catalog 진행률 표시 바 */
 import { ax } from '@styles/ax'
 import type { Axes } from '@styles/ax'
 import styles from './Progress.module.css'

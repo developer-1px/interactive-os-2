@@ -1,3 +1,4 @@
+/** @catalog 파일 내용 미리보기 (코드/마크다운) */
 import { useMemo } from 'react'
 import { CodeBlock, type HighlightTone } from './CodeBlock'
 import { VirtualCodeBlock } from './VirtualCodeBlock'

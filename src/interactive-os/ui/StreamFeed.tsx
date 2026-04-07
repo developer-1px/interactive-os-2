@@ -1,3 +1,4 @@
+/** @catalog 스트리밍 데이터 실시간 피드 */
 // ② 2026-03-25-stream-feed-prd.md
 import { useState, useEffect, useCallback, type ReactNode } from 'react'
 import { ax } from '@styles/ax'
@@ -49,7 +50,11 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
       setVisible(!nearBottom)
     }
     el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
+    el.addEventListener('scrollend', onScroll, { passive: true })
+    return () => {
+      el.removeEventListener('scroll', onScroll)
+      el.removeEventListener('scrollend', onScroll)
+    }
   }, [feedRef])
 
   const scrollToBottom = useCallback(() => {

@@ -1,3 +1,4 @@
+/** @catalog 글쓰기용 편집 가능 트리그리드 */
 // ② pages/writer 소급 마이그레이션 — WriterItem을 bake-in한 TreeGrid
 import React from 'react'
 import type { NodeState } from '../pattern/types'

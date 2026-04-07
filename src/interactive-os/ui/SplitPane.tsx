@@ -1,3 +1,4 @@
+/** @catalog 리사이즈 가능한 분할 패널 */
 import React, { useRef, useState, useCallback, useMemo, useEffect, Children } from 'react'
 import type { PaneSize } from '../store/types'
 import { ROOT_ID } from '../store/types'

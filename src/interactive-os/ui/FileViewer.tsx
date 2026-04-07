@@ -1,3 +1,4 @@
+/** @catalog 파일 내용 뷰어 (탭+미리보기) */
 // ② 2026-04-03-viewer-command-prd.md
 import { useState, useCallback, useImperativeHandle, forwardRef, useRef, useEffect } from 'react'
 import { FilePreview } from './FilePreview'

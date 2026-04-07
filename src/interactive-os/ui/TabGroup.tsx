@@ -1,3 +1,4 @@
+/** @catalog 탭+패널 그룹 컨테이너 */
 // ② 2026-03-26-workspace-containers-prd.md
 import React, { useCallback, useMemo } from 'react'
 import type { NormalizedData, Entity } from '../store/types'

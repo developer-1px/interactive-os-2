@@ -1,3 +1,4 @@
+/** @catalog 접기/펼치기 섹션 그룹 */
 import React from 'react'
 import { ExpandIndicator } from './indicators'
 

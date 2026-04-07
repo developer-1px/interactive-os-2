@@ -1,3 +1,4 @@
+/** @catalog 메뉴바 (다중 메뉴 그룹) */
 // ② 2026-04-06-menubar-refactor-prd.md
 import React from 'react'
 import type { ReactNode } from 'react'

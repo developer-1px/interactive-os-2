@@ -1,3 +1,4 @@
+/** @catalog 목차(TOC) 네비게이션 리스트 */
 // ② pages/book 소급 마이그레이션 — TocItem을 bake-in한 NavList
 import type { NormalizedData } from '../store/types'
 import { NavList } from './NavList'

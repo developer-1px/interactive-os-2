@@ -1,3 +1,4 @@
+/** @catalog 상태·카운트 라벨 뱃지 */
 import { ax } from '@styles/ax'
 import type { Axes } from '@styles/ax'
 

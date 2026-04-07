@@ -1,3 +1,4 @@
+/** @catalog 호버 시 툴팁 표시 */
 import { Children, cloneElement, useId, useRef, useCallback, useEffect } from 'react'
 import { ax } from '@styles/ax'
 import type { ReactElement, ReactNode, CSSProperties } from 'react'

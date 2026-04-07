@@ -1,3 +1,4 @@
+/** @catalog 체크박스 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

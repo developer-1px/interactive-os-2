@@ -1,3 +1,4 @@
+/** @catalog 검색 결과 하이라이트 표시 */
 // ② 2026-04-03-viewer-command-prd.md
 import { useMemo } from 'react'
 import { ax } from '@styles/ax'

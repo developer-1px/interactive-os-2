@@ -1,3 +1,4 @@
+/** @catalog 가상 스크롤 코드 블록 */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { codeToTokens, type BundledLanguage } from 'shiki'
 import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme, escapeHtml } from './shikiUtils'

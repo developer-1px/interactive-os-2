@@ -1,3 +1,4 @@
+/** @catalog 2D 공간 배치 뷰 */
 import React from 'react'
 
 import type { NormalizedData } from '../store/types'

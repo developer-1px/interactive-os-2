@@ -1,3 +1,4 @@
+/** @catalog 텍스트 입력 필드 */
 import React from 'react'
 import { type Axes, ax } from '@styles/ax'
 import '@styles/ax.css'

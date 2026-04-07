@@ -1,3 +1,4 @@
+/** @catalog 터미널 명령어+출력 표시 */
 // ② 2026-04-03-viewer-command-prd.md
 import { ax } from '@styles/ax'
 

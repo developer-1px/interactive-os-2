@@ -1,3 +1,4 @@
+/** @catalog 탭+패널 워크스페이스 레이아웃 */
 // ② 2026-03-26-workspace-containers-prd.md
 import React, { useCallback, useMemo } from 'react'
 

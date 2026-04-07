@@ -1,3 +1,4 @@
+/** @catalog 네비게이션 리스트 */
 import React from 'react'
 
 import type { NormalizedData } from '../store/types'

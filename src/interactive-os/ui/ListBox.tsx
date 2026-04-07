@@ -1,3 +1,4 @@
+/** @catalog 단일/다중 선택 리스트 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

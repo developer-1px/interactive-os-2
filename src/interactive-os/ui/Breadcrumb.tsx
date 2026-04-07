@@ -1,9 +1,10 @@
+/** @catalog 경로 탐색 브레드크럼 */
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 
 export function Breadcrumb({ path, root }: { path: string; root: string }) {
   if (!path) return null
-  const relative = path.startsWith(root) ? path.slice(root.length + 1) : path
+  const relative = path.startsWith(root) ? path.slice(root.length ? root.length + 1 : 0) : path
   const segments = relative.split('/')
   return (
     <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'body', text: 'muted', clamp: '1' })}>

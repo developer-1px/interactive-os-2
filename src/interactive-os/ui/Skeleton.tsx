@@ -1,3 +1,4 @@
+/** @catalog 로딩 상태 스켈레톤 플레이스홀더 */
 import { ax } from '@styles/ax'
 import type { Axes } from '@styles/ax'
 

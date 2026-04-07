@@ -1,3 +1,4 @@
+/** @catalog 키보드 단축키 표시 */
 import { ax } from '@styles/ax'
 
 interface KbdProps {

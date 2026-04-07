@@ -1,3 +1,4 @@
+/** @catalog 혼합(indeterminate) 상태를 지원하는 체크박스 */
 import React from 'react'
 
 import type { AriaComponentProps } from './types'

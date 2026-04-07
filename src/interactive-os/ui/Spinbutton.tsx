@@ -1,3 +1,4 @@
+/** @catalog 숫자 증감 스핀버튼 */
 // ② 2026-04-03-command-unification-prd.md
 import React, { useCallback, useRef } from 'react'
 import { ax } from '@styles/ax'

@@ -1,3 +1,4 @@
+/** @catalog 뷰어 전용 탭 목록 */
 // ② 2026-04-03-viewer-command-prd.md
 import React from 'react'
 

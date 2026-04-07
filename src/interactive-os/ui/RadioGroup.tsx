@@ -1,3 +1,4 @@
+/** @catalog 라디오 버튼 그룹 */
 import React from 'react'
 
 import type { AriaComponentProps } from './types'

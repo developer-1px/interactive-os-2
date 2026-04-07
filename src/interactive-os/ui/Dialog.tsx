@@ -1,3 +1,4 @@
+/** @catalog 모달 다이얼로그 */
 import React from 'react'
 
 import type { NormalizedData } from '../store/types'

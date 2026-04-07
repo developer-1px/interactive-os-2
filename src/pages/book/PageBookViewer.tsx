@@ -1,15 +1,28 @@
 // @useState-hatch
-import { useState, useCallback, useMemo, useRef } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { BookOpen, List, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { BookOpen, List, ChevronLeft, ChevronRight, X, Star, Search, Layers } from 'lucide-react'
 import { Breadcrumb } from '@os/ui/Breadcrumb'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { TocNavList } from '@os/ui/TocNavList'
 import { SpreadReader } from '@os/ui/SpreadReader'
+import { NavList } from '@os/ui/NavList'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import { buildBook, buildTocStore, type BookPage, type Chapter } from './bookContent'
+import {
+  addRecent,
+  toggleFavorite,
+  isFavorite,
+  buildQuickOpenStore,
+  buildAddToLayerStore,
+  addToLayer,
+  removeFromLayer,
+  createLayer,
+  getLayers,
+} from './bookNavStore'
 import './PageBookViewer.css'
 
 // ── Preload: cache book data so first render is instant ──
@@ -38,6 +51,11 @@ export default function PageBookViewer() {
   const [tocOpen, setTocOpen] = useState(false)
   const [chromeVisible, setChromeVisible] = useState(false)
   const [arrivedFromNext, setArrivedFromNext] = useState(false)
+  const [quickOpenVisible, setQuickOpenVisible] = useState(false)
+  const [quickOpenFilter, setQuickOpenFilter] = useState('')
+  const [favToggle, setFavToggle] = useState(0) // @useState-hatch
+  const [layerOverlayVisible, setLayerOverlayVisible] = useState(false) // @useState-hatch
+  const [layerToggle, setLayerToggle] = useState(0) // @useState-hatch
   const areaRef = useRef<HTMLDivElement>(null)
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
@@ -76,10 +94,25 @@ export default function PageBookViewer() {
   const currentPage = slug ? (pageIndexById.get(slug) ?? 0) : 0
   const page = pages[currentPage]
 
+  // ── Track recent on page change ──
+  useEffect(() => {
+    if (page) addRecent(page.id)
+  }, [page?.id]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // ── TOC store ──
   const tocStore = useMemo(
     () => buildTocStore(chapters, page?.id ?? ''),
     [chapters, page?.id],
+  )
+
+  // ── Quick Open store ──
+  const pageInfos = useMemo(
+    () => pages.map(p => ({ id: p.id, title: p.title, chapter: p.chapter })),
+    [pages],
+  )
+  const quickOpenStore = useMemo(
+    () => buildQuickOpenStore(pageInfos, quickOpenFilter),
+    [pageInfos, quickOpenFilter, favToggle], // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   // ── Navigation ──
@@ -87,13 +120,43 @@ export default function PageBookViewer() {
     if (index >= 0 && index < pages.length) {
       navigate(`/book/${pages[index].id}`, { replace: true })
       setTocOpen(false)
+      setQuickOpenVisible(false)
+      setQuickOpenFilter('')
     }
   }, [pages, navigate])
 
-  const handleTocActivate = useCallback((nodeId: string) => {
-    const index = pageIndexById.get(nodeId)
+  const goToId = useCallback((pageId: string) => {
+    const index = pageIndexById.get(pageId)
     if (index != null) goTo(index)
   }, [pageIndexById, goTo])
+
+  // ── Link transform for MarkdownViewer — keep links within /book ──
+  const linkTransform = useCallback((href: string) => {
+    // Internal .mdx / relative links → SPA navigate to /book/{pageId}
+    const match = href.match(/^\/?([\w/.-]+?)(?:\.mdx?)?$/)
+    if (match && !href.startsWith('http')) {
+      const pageId = match[1]
+      return {
+        href: `/book/${pageId}`,
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault()
+          goToId(pageId)
+        },
+      }
+    }
+    // External links — open in new tab
+    return { href }
+  }, [goToId])
+
+  const handleTocActivate = useCallback((nodeId: string) => {
+    goToId(nodeId)
+  }, [goToId])
+
+  const handleQuickOpenActivate = useCallback((nodeId: string) => {
+    const entity = quickOpenStore.entities[nodeId]
+    const pageId = (entity?.data as Record<string, unknown>)?.pageId as string | undefined
+    if (pageId) goToId(pageId)
+  }, [quickOpenStore, goToId])
 
   // ── SpreadReader callbacks ──
   const handleNextBoundary = useCallback(() => {
@@ -115,15 +178,111 @@ export default function PageBookViewer() {
     setTotalSpreads(total)
   }, [])
 
-  // ── Page-level keyMap (ArrowUp/Down for page jumps) ──
+  // ── Favorite toggle ──
+  const handleToggleFavorite = useCallback(() => {
+    if (page) {
+      toggleFavorite(page.id)
+      setFavToggle(v => v + 1)
+    }
+  }, [page])
+
+  const currentIsFavorite = page ? isFavorite(page.id) : false
+
+  // ── Quick Open open/close ──
+  const openQuickOpen = useCallback(() => {
+    setQuickOpenVisible(true)
+    setQuickOpenFilter('')
+  }, [])
+
+  const closeQuickOpen = useCallback(() => {
+    setQuickOpenVisible(false)
+    setQuickOpenFilter('')
+  }, [])
+
+  // ── Layer overlay ──
+  const currentPageId = page?.id ?? ''
+  const addToLayerStore = useMemo(
+    () => buildAddToLayerStore(currentPageId),
+    [currentPageId, layerToggle], // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
+  const openLayerOverlay = useCallback(() => {
+    if (!page) return
+    setLayerOverlayVisible(true)
+  }, [page])
+
+  const closeLayerOverlay = useCallback(() => {
+    setLayerOverlayVisible(false)
+  }, [])
+
+  const handleLayerActivate = useCallback((nodeId: string) => {
+    if (!page) return
+    const entity = addToLayerStore.entities[nodeId]
+    const data = entity?.data as Record<string, unknown> | undefined
+    const action = data?.action as string | undefined
+
+    if (action === 'create') {
+      const name = prompt('Layer name:')
+      if (name) {
+        const layerId = createLayer(name)
+        addToLayer(layerId, page.id)
+      }
+    } else if (action === 'add') {
+      const layerId = data?.layerId as string
+      addToLayer(layerId, page.id)
+    } else if (action === 'remove') {
+      const layerId = data?.layerId as string
+      removeFromLayer(layerId, page.id)
+    }
+
+    setLayerToggle(v => v + 1)
+    closeLayerOverlay()
+  }, [page, addToLayerStore, closeLayerOverlay])
+
+  // ── Page-level keyMap ──
+  // Modal open → suppress page-level navigation keys
+  const modalOpen = quickOpenVisible || tocOpen || layerOverlayVisible
   const keyMap = useMemo(() => ({
-    ArrowDown: defineRouteKey('book:next-page', () => {
-      if (currentPage < pages.length - 1) goTo(currentPage + 1)
+    ...(modalOpen ? {} : {
+      ArrowDown: defineRouteKey('book:next-page', () => {
+        if (currentPage < pages.length - 1) goTo(currentPage + 1)
+      }, 'Book'),
+      ArrowUp: defineRouteKey('book:prev-page', () => {
+        if (currentPage > 0) goTo(currentPage - 1)
+      }, 'Book'),
+      Home: defineRouteKey('book:first-page', () => {
+        goTo(0)
+      }, 'Book'),
+      End: defineRouteKey('book:last-page', () => {
+        goTo(pages.length - 1)
+      }, 'Book'),
+    }),
+    'Mod+P': defineRouteKey('book:quick-open', () => {
+      if (quickOpenVisible) closeQuickOpen()
+      else openQuickOpen()
     }, 'Book'),
-    ArrowUp: defineRouteKey('book:prev-page', () => {
-      if (currentPage > 0) goTo(currentPage - 1)
+    'Mod+D': defineRouteKey('book:toggle-favorite', () => {
+      handleToggleFavorite()
     }, 'Book'),
-  }), [currentPage, pages.length, goTo])
+    'Mod+L': defineRouteKey('book:add-to-layer', () => {
+      if (layerOverlayVisible) closeLayerOverlay()
+      else openLayerOverlay()
+    }, 'Book'),
+    ...(quickOpenVisible ? {
+      Enter: defineRouteKey('book:quick-open-activate', () => {
+        const panel = document.querySelector('.book-quick-open-panel')
+        const selected = panel?.querySelector('[aria-selected="true"]') as HTMLElement
+          ?? panel?.querySelector('[data-node-id]') as HTMLElement
+        const nodeId = selected?.getAttribute('data-node-id')
+        if (nodeId) handleQuickOpenActivate(nodeId)
+      }, 'Book'),
+    } : {}),
+    Escape: defineRouteKey('book:close-overlay', () => {
+      if (layerOverlayVisible) closeLayerOverlay()
+      else if (quickOpenVisible) closeQuickOpen()
+      else if (tocOpen) setTocOpen(false)
+    }, 'Book'),
+  }), [currentPage, pages.length, goTo, openQuickOpen, handleToggleFavorite, quickOpenVisible, closeQuickOpen, tocOpen, modalOpen, layerOverlayVisible, closeLayerOverlay, openLayerOverlay, handleQuickOpenActivate])
 
   const prevPage = pages[currentPage - 1]
   const nextPage = pages[currentPage + 1]
@@ -159,6 +318,27 @@ export default function PageBookViewer() {
             </button>
             <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{page?.chapter}</span>
             <span className={ax({ textStyle: 'caption', text: 'secondary', clamp: '1' })}>{page?.title}</span>
+            <button
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: currentIsFavorite ? 'bright' : 'muted' })} book-pill-btn`}
+              onClick={handleToggleFavorite}
+              aria-label={currentIsFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <Star size={12} fill={currentIsFavorite ? 'currentColor' : 'none'} />
+            </button>
+            <button
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: getLayers().length > 0 ? 'bright' : 'muted' })} book-pill-btn`}
+              onClick={openLayerOverlay}
+              aria-label="Add to layer"
+            >
+              <Layers size={12} />
+            </button>
+            <button
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} book-pill-btn`}
+              onClick={openQuickOpen}
+              aria-label="Quick open"
+            >
+              <Search size={12} />
+            </button>
           </div>
 
           {/* ── Page footer — breadcrumb + page number, bottom-center ── */}
@@ -178,7 +358,7 @@ export default function PageBookViewer() {
             onPrevBoundary={handlePrevBoundary}
             onSpreadChange={handleSpreadChange}
           >
-            {page && <MarkdownViewer content={page.content} />}
+            {page && <MarkdownViewer content={page.content} linkTransform={linkTransform} />}
           </SpreadReader>
 
           {/* Spread / page navigation */}
@@ -224,13 +404,67 @@ export default function PageBookViewer() {
                   <X size={16} />
                 </button>
               </div>
-              <div className={ax({ layout: 'scroll', padding: 'sm' })}>
+              <ScrollArea className={ax({ padding: 'sm' })}>
                 <TocNavList
                   data={tocStore}
                   onActivate={handleTocActivate}
                   aria-label="Table of contents"
                 />
+              </ScrollArea>
+            </div>
+          </div>
+
+          {/* ── Quick Open overlay ── */}
+          <div
+            className={`${ax({ placement: 'center' })} book-quick-open-overlay`}
+            data-open={quickOpenVisible}
+            onClick={(e) => { if (e.target === e.currentTarget) closeQuickOpen() }}
+          >
+            <div className={`${ax({ surface: 'overlay', shape: 'xl', width: 'xl' })} book-quick-open-panel`}>
+              <div className={ax({ layout: 'bar', gap: 'sm', padding: 'md', border: 'bottom' })}>
+                <Search size={16} className={ax({ text: 'muted' })} />
+                {quickOpenVisible && (
+                  <input
+                    className={`${ax({ text: 'primary', textStyle: 'body' })} book-quick-open-input`}
+                    type="text"
+                    placeholder="Search pages..."
+                    value={quickOpenFilter}
+                    onChange={(e) => setQuickOpenFilter(e.target.value)}
+                    autoFocus
+                  />
+                )}
+                <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+                  {quickOpenFilter ? '' : 'Esc'}
+                </span>
               </div>
+              <ScrollArea className={ax({ padding: 'sm' })}>
+                <NavList
+                  data={quickOpenStore}
+                  onActivate={handleQuickOpenActivate}
+                  aria-label="Quick open"
+                />
+              </ScrollArea>
+            </div>
+          </div>
+
+          {/* ── Layer overlay ── */}
+          <div
+            className={`${ax({ placement: 'center' })} book-quick-open-overlay`}
+            data-open={layerOverlayVisible}
+            onClick={(e) => { if (e.target === e.currentTarget) closeLayerOverlay() }}
+          >
+            <div className={`${ax({ surface: 'overlay', shape: 'xl', width: 'lg' })} book-quick-open-panel`}>
+              <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
+                <span className={ax({ textStyle: 'section', text: 'bright' })}>Add to Layer</span>
+                <span className={ax({ textStyle: 'caption', text: 'muted' })}>Cmd+L</span>
+              </div>
+              <ScrollArea className={ax({ padding: 'sm' })}>
+                <NavList
+                  data={addToLayerStore}
+                  onActivate={handleLayerActivate}
+                  aria-label="Add to layer"
+                />
+              </ScrollArea>
             </div>
           </div>
         </div>

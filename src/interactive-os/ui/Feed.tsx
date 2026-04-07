@@ -1,3 +1,4 @@
+/** @catalog 무한 스크롤 피드 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

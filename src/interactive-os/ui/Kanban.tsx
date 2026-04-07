@@ -1,3 +1,4 @@
+/** @catalog 칸반 보드 (드래그 앤 드롭 컬럼) */
 import React, { useRef, useEffect, useMemo } from 'react'
 import { key } from '../axis/types'
 import './Kanban.css'
@@ -54,6 +55,49 @@ export function Kanban({
     return max
   }, [store, columns])
 
+  function renderCard(cardId: string) {
+    const cardEntity = getEntity(store, cardId)
+    if (!cardEntity) return null
+    const cardState = aria.getNodeState(cardId)
+    const cardProps = aria.getNodeProps(cardId)
+    const cardData = cardEntity.data as Record<string, unknown> | undefined
+    const cardTitle = cardData?.title as string ?? ''
+    const cardSubtitle = cardData?.subtitle as string | undefined
+    const cardTooltip = cardData?.tooltip as string | undefined
+    const cardWeight = cardData?.weight as string | undefined
+    const cardExt = cardData?.ext as string | undefined
+    const cardDepUp = cardData?.depUp as number | undefined
+    const cardDepDown = cardData?.depDown as number | undefined
+    const hlDir = highlightUp?.has(cardId) ? 'up' : highlightDown?.has(cardId) ? 'down' : undefined
+    const isHub = cardDepUp != null && cardDepUp >= 20
+
+    return (
+      <FocusDiv
+        key={cardId}
+        focused={cardState.focused}
+        className={`${compact ? 'border-none' : ''} ${ax({ surface: 'display', shape: compact ? undefined : 'xl', padding: compact ? undefined : 'xl', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : undefined, gap: compact ? 'xs' : undefined })} kanban-card`}
+        data-hub={isHub || undefined}
+        title={cardTooltip ?? cardTitle}
+        data-weight={cardWeight || undefined}
+        data-ext={cardExt || undefined}
+        data-highlight={hlDir}
+        data-source={(cardData?.sourceId as string) || undefined}
+        {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
+      >
+        <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
+          <span className={`${ax({ clamp: '1' })} kanban-card-title`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
+          {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
+            <span className={`tabular-nums ${ax({ text: 'muted', flex: 'none' })} kanban-card-subtitle`}>
+              {cardSubtitle}
+              {cardDepUp != null && cardDepUp > 0 && <span className={`${ax({ weight: 'medium' })} kanban-dep-up`}> ↑{cardDepUp}</span>}
+              {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${ax({ tone: 'accent' })}`}> ↓{cardDepDown}</span>}
+            </span>
+          )}
+        </AriaItemContext.Provider>
+      </FocusDiv>
+    )
+  }
+
   return (
     <AriaInternalContext.Provider value={{ ...aria, pattern: kanbanBehavior }}>
       <div
@@ -93,49 +137,7 @@ export function Kanban({
                 </AriaItemContext.Provider>
               </FocusDiv>
 
-              {/* Cards */}
-              {cards.map((cardId) => {
-                const cardEntity = getEntity(store, cardId)
-                if (!cardEntity) return null
-                const cardState = aria.getNodeState(cardId)
-                const cardProps = aria.getNodeProps(cardId)
-                const cardData = cardEntity.data as Record<string, unknown> | undefined
-                const cardTitle = cardData?.title as string ?? ''
-                const cardSubtitle = cardData?.subtitle as string | undefined
-                const cardTooltip = cardData?.tooltip as string | undefined
-                const cardWeight = cardData?.weight as string | undefined
-                const cardExt = cardData?.ext as string | undefined
-                const cardDepUp = cardData?.depUp as number | undefined
-                const cardDepDown = cardData?.depDown as number | undefined
-                const hlDir = highlightUp?.has(cardId) ? 'up' : highlightDown?.has(cardId) ? 'down' : undefined
-                const isHub = cardDepUp != null && cardDepUp >= 20
-
-                return (
-                  <FocusDiv
-                    key={cardId}
-                    focused={cardState.focused}
-                    className={`${compact ? 'border-none' : ''} ${ax({ surface: 'display', shape: compact ? undefined : 'xl', padding: compact ? undefined : 'xl', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : undefined, gap: compact ? 'xs' : undefined })} kanban-card`}
-                    data-hub={isHub || undefined}
-                    title={cardTooltip ?? cardTitle}
-                    data-weight={cardWeight || undefined}
-                    data-ext={cardExt || undefined}
-                    data-highlight={hlDir}
-                    data-source={(cardData?.sourceId as string) || undefined}
-                    {...(cardProps as React.HTMLAttributes<HTMLDivElement>)}
-                  >
-                    <AriaItemContext.Provider value={{ nodeId: cardId, focused: cardState.focused, renaming: !!cardState.renaming }}>
-                      <span className={`${ax({ clamp: '1' })} kanban-card-title`}><Aria.Editable field="title">{cardTitle}</Aria.Editable></span>
-                      {(cardSubtitle || cardDepUp != null || cardDepDown != null) && (
-                        <span className={`tabular-nums ${ax({ text: 'muted', flex: 'none' })} kanban-card-subtitle`}>
-                          {cardSubtitle}
-                          {cardDepUp != null && cardDepUp > 0 && <span className={`${ax({ weight: 'medium' })} kanban-dep-up`}> ↑{cardDepUp}</span>}
-                          {cardDepDown != null && cardDepDown > 0 && <span className={`${ax({ weight: 'medium' })} ${ax({ tone: 'accent' })}`}> ↓{cardDepDown}</span>}
-                        </span>
-                      )}
-                    </AriaItemContext.Provider>
-                  </FocusDiv>
-                )
-              })}
+              {cards.map((cardId) => renderCard(cardId))}
             </div>
           )
         })}

@@ -1,3 +1,4 @@
+/** @catalog 데이터 테이블 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

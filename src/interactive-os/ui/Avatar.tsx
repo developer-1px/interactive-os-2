@@ -1,3 +1,4 @@
+/** @catalog 사용자 프로필 이미지/이니셜 표시 */
 import { ax } from '@styles/ax'
 import type { Axes } from '@styles/ax'
 

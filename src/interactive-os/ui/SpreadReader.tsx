@@ -1,3 +1,4 @@
+/** @catalog 페이지 넘김 방식 콘텐츠 리더 */
 // ② 2026-04-03-command-unification-prd.md
 import { useState, useCallback, useRef, useLayoutEffect, useMemo, type ReactNode } from 'react'
 import { composePattern } from '../pattern/composePattern'

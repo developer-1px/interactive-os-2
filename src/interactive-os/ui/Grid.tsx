@@ -1,3 +1,4 @@
+/** @catalog 2차원 그리드 탐색 */
 import React from 'react'
 
 import type { Plugin } from '../engine/types'

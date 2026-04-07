@@ -1,3 +1,4 @@
+/** @catalog Shiki 구문 강조 코드 블록 */
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { codeToHtml } from 'shiki'
 import { ax } from '@styles/ax'
@@ -70,10 +71,10 @@ export function CodeBlock({ code, filename, highlightLines, variant = 'bordered'
 
   const baseAx = ax({ textStyle: 'code' })
   const cls = variant === 'flush'
-    ? `overflow-hidden ${baseAx} code-block code-block--flush`
+    ? `${baseAx} code-block code-block--flush`
     : variant === 'compact'
-      ? `overflow-hidden ${baseAx} code-block code-block--compact`
-      : `overflow-hidden ${baseAx} code-block`
+      ? `${baseAx} code-block code-block--compact`
+      : `${baseAx} code-block`
   if (!html) return <pre className={`${cls} ${ax({ padding: 'xl', surface: 'base', shape: 'xl', textStyle: 'code' })}`}><code>{code}</code></pre>
   return (
     <div

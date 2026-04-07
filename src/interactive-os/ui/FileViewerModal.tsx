@@ -1,3 +1,4 @@
+/** @catalog 파일 뷰어 모달 */
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { CodeBlock } from './CodeBlock'
 import { MarkdownViewer } from './MarkdownViewer'

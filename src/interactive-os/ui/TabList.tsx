@@ -1,3 +1,4 @@
+/** @catalog 탭 목록 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

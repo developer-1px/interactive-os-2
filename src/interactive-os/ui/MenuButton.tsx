@@ -1,3 +1,4 @@
+/** @catalog 버튼+드롭다운 메뉴 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

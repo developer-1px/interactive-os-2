@@ -1,3 +1,4 @@
+/** @catalog 읽기 전용 알림 메시지 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

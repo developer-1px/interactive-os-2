@@ -1,3 +1,4 @@
+/** @catalog 날짜 선택용 캘린더 그리드 */
 // ② 2026-03-31-datepicker-composite-prd.md
 import React, { useMemo } from 'react'
 import { ax } from '@styles/ax'

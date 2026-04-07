@@ -1,3 +1,4 @@
+/** @catalog AI 생성 UI 페이로드를 engine 기반 Surface로 렌더링 */
 // ② 2026-04-04-a2ui-surface-showcase-prd.md
 import React, { useMemo, useState } from 'react'
 import type { A2UIPayload } from './a2uiAdapter'

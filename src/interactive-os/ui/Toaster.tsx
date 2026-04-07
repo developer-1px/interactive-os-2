@@ -1,3 +1,4 @@
+/** @catalog 토스트 알림 컨테이너 */
 import { useSyncExternalStore } from 'react'
 import type { ReactNode } from 'react'
 import type { Toaster as ToasterInstance, ToastData } from './createToaster'

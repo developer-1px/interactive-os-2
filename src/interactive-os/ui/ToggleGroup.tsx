@@ -1,3 +1,4 @@
+/** @catalog 토글 버튼 그룹 */
 import React from 'react'
 
 import { ax } from '@styles/ax'

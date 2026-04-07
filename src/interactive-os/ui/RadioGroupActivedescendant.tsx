@@ -1,3 +1,4 @@
+/** @catalog aria-activedescendant 방식 라디오 그룹 */
 import React from 'react'
 
 import type { AriaComponentProps } from './types'

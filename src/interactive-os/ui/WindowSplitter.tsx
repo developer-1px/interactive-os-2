@@ -1,3 +1,4 @@
+/** @catalog 윈도우 분할 스플리터 */
 import React, { useMemo } from 'react'
 
 import type { NodeState } from '../pattern/types'

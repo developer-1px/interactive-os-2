@@ -1,3 +1,4 @@
+/** @catalog 패널 상단 헤더 바 */
 import type { HTMLAttributes, ReactNode } from 'react'
 import { ax, type Axes } from '@styles/ax'
 

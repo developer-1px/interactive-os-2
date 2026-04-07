@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+/** @catalog 검색+액션 실행 팔레트 */
+import { useState, useEffect, useCallback, useRef, useMemo, type Ref } from 'react'
 import Fuse from 'fuse.js'
 import { Search } from 'lucide-react'
 import { useAria } from '../primitives/useAria'
@@ -115,17 +116,27 @@ export function QuickOpen({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) onClose()
+  const dialogRef = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    dialogRef.current?.showModal?.()
+
+  }, [])
+
+  useEffect(() => {
+    const dialog = dialogRef.current
+    if (!dialog) return
+    const handleClose = () => onClose()
+    dialog.addEventListener('close', handleClose)
+    return () => dialog.removeEventListener('close', handleClose)
   }, [onClose])
 
   return (
-    <div className={`quick-open-backdrop ${ax({ surface: 'overlay', layout: 'row', placement: 'viewport', motion: 'fade-in' })}`} onClick={handleBackdropClick}>
+    <dialog ref={dialogRef} className="quick-open-dialog-el" onClick={(e) => { if (e.target === dialogRef.current) onClose() }}>
       <div className={`quick-open-dialog overflow-hidden ${ax({ layout: 'column', shape: 'xl', border: 'default', motion: 'slide-in' })}`} aria-label="Quick Open">
         <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
           <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
           <input
-            ref={inputRef}
             className={`quick-open-input border-none outline-none ${ax({ controlSize: 'md', padding: 'sm', content: 'text', flex: '1' })}`}
             type="text"
             placeholder="파일 검색..."
@@ -133,6 +144,12 @@ export function QuickOpen({
             onChange={(e) => { setQuery(e.target.value) }}
             aria-label="파일 검색"
             {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
+            ref={(el: HTMLInputElement | null) => {
+              inputRef.current = el
+              const ariaRef = (aria.containerProps as { ref?: Ref<HTMLElement> }).ref
+              if (typeof ariaRef === 'function') ariaRef(el)
+              else if (ariaRef && typeof ariaRef === 'object') (ariaRef as React.MutableRefObject<HTMLElement | null>).current = el
+            }}
           />
           <kbd className={ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>ESC</kbd>
         </div>
@@ -171,6 +188,6 @@ export function QuickOpen({
           <div className={ax({ layout: 'center', text: 'muted', textStyle: 'body', padding: 'xl' })}>일치하는 파일이 없습니다</div>
         )}
       </div>
-    </div>
+    </dialog>
   )
 }

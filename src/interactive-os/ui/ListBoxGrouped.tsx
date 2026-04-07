@@ -1,3 +1,4 @@
+/** @catalog 그룹핑된 리스트박스 */
 // ② 2026-03-30-listbox-example-unification-prd.md
 import React from 'react'
 

@@ -1,3 +1,4 @@
+/** @catalog 폼 필드 그룹 */
 import React from 'react'
 
 import type { NormalizedData } from '../store/types'

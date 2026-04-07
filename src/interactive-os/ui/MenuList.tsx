@@ -1,3 +1,4 @@
+/** @catalog 메뉴 항목 리스트 */
 import React from 'react'
 
 import type { AriaComponentProps } from './types'

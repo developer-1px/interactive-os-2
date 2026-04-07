@@ -1,3 +1,4 @@
+/** @catalog 서식/액션 툴바 */
 import React from 'react'
 import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Undo, Redo, Copy, Scissors, Clipboard, Trash2, Plus, Minus, Search, Settings, type LucideIcon } from 'lucide-react'
 

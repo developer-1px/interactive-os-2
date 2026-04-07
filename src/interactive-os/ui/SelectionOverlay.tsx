@@ -1,3 +1,4 @@
+/** @catalog 선택/포커스 시각 오버레이 */
 // ② 2026-03-31-selection-overlay-prd.md
 import type { RefObject } from 'react'
 import { ax } from '@styles/ax'

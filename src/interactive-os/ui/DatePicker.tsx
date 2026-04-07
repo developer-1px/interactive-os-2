@@ -1,3 +1,4 @@
+/** @catalog 날짜 선택 피커 */
 // ② 2026-04-03-command-unification-prd.md
 import React, { useMemo, useCallback, useRef, useEffect } from 'react'
 import { ax } from '@styles/ax'
@@ -82,6 +83,7 @@ export function DatePicker({
   }, [engine, value, today])
 
   const closeDialog = useCallback((returnFocus = true) => {
+    dialogRef.current?.hidePopover?.()
     setIsOpen(false)
     engine.dispatch(calendarCommands.close())
     if (returnFocus) requestAnimationFrame(() => inputRef.current?.focus())
@@ -196,10 +198,12 @@ export function DatePicker({
     return () => document.removeEventListener('mousedown', handler)
   }, [isOpen, closeDialog])
 
-  // ── Focus grid on open ──
+  // ── Show popover + focus grid on open ──
 
   useEffect(() => {
     if (!isOpen || !dialogRef.current) return
+    dialogRef.current.showPopover?.()
+
     requestAnimationFrame(() => {
       const cell = dialogRef.current?.querySelector<HTMLElement>(`[data-calendar-id="day-${focusDayIndex}"]`)
       cell?.focus()
@@ -226,7 +230,7 @@ export function DatePicker({
 
   return (
     <div className={"relative inline-block"}>
-      <div className={ax({ layout: 'bar' })}>
+      <div className={`${ax({ layout: 'bar' })} dp-anchor`}>
         <input
           ref={inputRef}
           role="combobox"
@@ -255,10 +259,11 @@ export function DatePicker({
       {isOpen && (
         <div
           ref={dialogRef}
+          popover="manual"
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`absolute ${ax({ surface: 'overlay', padding: 'sm', border: 'default', shape: 'sm' })} dp-dialog`}
+          className={`${ax({ surface: 'overlay', padding: 'sm', border: 'default', shape: 'sm' })} dp-dialog`}
           onKeyDown={handleDialogKeyDown}
         >
           <div className={`${ax({ layout: 'bar', gap: 'xs' })} dp-nav-bar`}>

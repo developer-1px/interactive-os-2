@@ -1,3 +1,4 @@
+/** @catalog 확인/취소 액션이 있는 경고 다이얼로그 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

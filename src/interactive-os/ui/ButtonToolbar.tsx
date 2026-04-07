@@ -1,3 +1,4 @@
+/** @catalog 버튼 그룹 툴바 */
 import React from 'react'
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'

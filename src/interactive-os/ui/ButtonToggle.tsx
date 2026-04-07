@@ -1,3 +1,4 @@
+/** @catalog 눌림 상태를 토글하는 버튼 */
 import React from 'react'
 
 import type { AriaComponentProps } from './types'

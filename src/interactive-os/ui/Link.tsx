@@ -1,3 +1,4 @@
+/** @catalog 탐색 링크 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

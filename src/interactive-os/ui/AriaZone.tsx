@@ -1,3 +1,4 @@
+/** @catalog 독립 engine 인스턴스를 가진 ARIA 영역 컨테이너 */
 import React, { useEffect } from 'react'
 
 import type { NormalizedData } from '../store/types'

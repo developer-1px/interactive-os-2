@@ -1,3 +1,4 @@
+/** @catalog 텍스트 입력+제출 컴포저 */
 // ② 2026-03-30-composer-ghost-text-prd.md
 import { ax } from '@styles/ax'
 import '@styles/ax.css'

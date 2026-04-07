@@ -1,3 +1,4 @@
+/** @catalog 토글 버튼 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

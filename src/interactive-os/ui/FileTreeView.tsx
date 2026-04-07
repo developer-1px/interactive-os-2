@@ -1,3 +1,4 @@
+/** @catalog 파일 시스템 트리 뷰 */
 import type { AriaComponentProps } from './types'
 import type { Plugin } from '../plugins/types'
 import { TreeView } from './TreeView'

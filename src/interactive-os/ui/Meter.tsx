@@ -1,3 +1,4 @@
+/** @catalog 측정값 표시 미터 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

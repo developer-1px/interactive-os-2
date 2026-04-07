@@ -1,3 +1,4 @@
+/** @catalog 트리+그리드 복합 테이블 */
 import React from 'react'
 
 import type { NodeState } from '../pattern/types'

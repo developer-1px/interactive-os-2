@@ -1,3 +1,4 @@
+/** @catalog 마크다운 렌더링 뷰어 */
 // ② 2026-03-31-chat-perf-prd.md
 import { Component, createElement, memo, useMemo, type ReactNode } from 'react'
 import { ax } from '@styles/ax'
@@ -63,8 +64,17 @@ function RenderBlock({ children }: { children: string }) {
   return <>{elements}</>
 }
 
-export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codeVariant, prose = true }: { content: string; className?: string; codeVariant?: CodeVariant; prose?: boolean }) {
+export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codeVariant, prose = true, linkTransform }: { content: string; className?: string; codeVariant?: CodeVariant; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler } }) {
   const components = useMemo(() => ({
+    ...(linkTransform ? {
+      a({ href, children, node: _, ...rest }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { node?: unknown }) {
+        if (href) {
+          const transformed = linkTransform(href)
+          return <a {...rest} href={transformed.href} onClick={transformed.onClick}>{children}</a>
+        }
+        return <a {...rest} href={href}>{children}</a>
+      },
+    } : {}),
     div(props: React.HTMLAttributes<HTMLDivElement> & { node?: unknown }) {
       const { node: _, children, ...rest } = props
       const dataRender = (rest as Record<string, unknown>)['data-render']
@@ -89,7 +99,7 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, className,
 
       return <code className={className} {...props}>{children}</code>
     },
-  }), [codeVariant])
+  }), [codeVariant, linkTransform])
 
   return (
     <div className={`break-word ${ax({ text: 'primary', width: 'prose' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>

@@ -1,3 +1,4 @@
+/** @catalog APG 패턴 인터랙티브 데모 */
 import React, { useState, useMemo, useCallback } from 'react'
 import type { NormalizedData } from '../store/types'
 import type { AriaPattern, NodeState } from '../pattern/types'
