@@ -1,6 +1,7 @@
 // ② 2026-03-27-chat-module-prd.md
 import { memo, useMemo, useRef, type ReactNode } from 'react'
 import { StreamFeed } from '../StreamFeed'
+import './ChatFeed.css'
 import { FallbackBlock } from './FallbackBlock'
 import { TextBlock } from './TextBlock'
 import { ChatCodeBlock } from './ChatCodeBlock'

@@ -19,7 +19,6 @@
   border: none;
   background: var(--_bg, transparent);
   color: var(--_fg, inherit);
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 .sf-action:hover { background: var(--_bg-hover, var(--bg-hover)); }
 .sf-action:active { background: var(--_bg-active, var(--bg-active)); }
@@ -30,7 +29,6 @@
 .sf-input {
   border: 1px solid var(--border-strong);
   background: var(--_bg, var(--surface-default));
-  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 textarea.sf-input { field-sizing: content; }
 .sf-input:focus-within { border-color: var(--focus); }
@@ -132,8 +130,6 @@ dialog.sf-overlay[open] {
   border: 1px dashed var(--border-subtle);
   background: var(--_bg, transparent);
   color: var(--text-muted);
-  transition: border-color var(--motion-instant-duration) var(--motion-instant-easing),
-              color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 .sf-placeholder:hover { border-color: var(--tone-primary-base); color: var(--tone-primary-base); }
 .sf-placeholder:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
@@ -144,7 +140,6 @@ dialog.sf-overlay[open] {
   user-select: none;
   border: none;
   background: transparent;
-  transition: background var(--motion-instant-duration) var(--motion-instant-easing);
 }
 .sf-ghost:hover { background: var(--bg-hover); }
 .sf-ghost:active { background: var(--bg-active); }
@@ -375,19 +370,9 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 .ct-text   { --pd-ratio: 2; }
-.ct-code   { --pd-ratio: 0; padding-block: 0; }
-.ct-bubble {
-  --pd-ratio: 2;
-  max-width: 80%;
-  margin-left: auto;
-  border-radius: var(--shape-lg-radius) var(--shape-lg-radius) var(--shape-xs-radius) var(--shape-lg-radius);
-}
-.ct-diff {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 var(--border-width);
-  background: var(--border-subtle);
-}
+.ct-code   { --pd-ratio: 0; }
+.ct-bubble { --pd-ratio: 2; }
+.ct-diff   { --pd-ratio: 0; }
 
 /* ════════════════════════════════════════════
  * Border — 테두리
@@ -499,7 +484,8 @@ dialog.sf-overlay[open] {
 
 /* ════════════════════════════════════════════
  * Motion — 반복/진입 애니메이션
- * transition은 surface가 소유. motion은 @keyframes 기반.
+ * transition은 어느 축도 소유하지 않음 — last-mile.
+ * motion은 @keyframes 기반 반복/진입 애니메이션.
  * ════════════════════════════════════════════ */
 
 @keyframes ax-pulse {
@@ -908,10 +894,6 @@ dialog.sf-overlay[open] {
 
 /* ── ia-input: textbox, combobox input ── */
 
-:where(.ia-input) {
-  transition: border-color 0.1s, outline-color 0.1s;
-}
-
 :where(.ia-input[aria-invalid="true"]) {
   border-color: var(--tone-destructive-base);
 }
@@ -923,9 +905,7 @@ dialog.sf-overlay[open] {
 
 /* ── .ax-interactive 컨테이너 ── */
 
-:where(.ax-interactive[role="tablist"]) {
-  padding: 0;
-}
+/* tablist padding은 소비자가 padding 축으로 설정 */
 
 /* ── Expanded chevron rotation (컨테이너 스코프) ── */
 

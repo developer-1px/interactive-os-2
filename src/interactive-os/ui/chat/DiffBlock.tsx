@@ -14,7 +14,7 @@ export const DiffBlock = memo(function DiffBlock({ block }: { block: DiffBlockTy
       {block.filePath && (
         <div className={ax({ text: 'secondary', textStyle: 'code', padding: 'xs', content: 'text' })}>{block.filePath}</div>
       )}
-      <div className={ax({ content: 'diff' })}>
+      <div className={ax({ layout: 'grid-2' })}>
         <div className={ax({ scroll: 'hidden' })}>
           <pre className={`pre-wrap break-word ${ax({ textStyle: 'code' })}`}>
             {oldLines.map((line, i) => (
