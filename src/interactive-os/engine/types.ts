@@ -1,6 +1,7 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 import type React from 'react'
 import type { NormalizedData } from '../store/types'
+import type { StoreDiff } from '../store/computeStoreDiff'
 import type { InspectPatternInfo } from './computeNodeAriaProps'
 import type { LogEntry } from './logger'
 
@@ -39,6 +40,20 @@ export interface InspectResult {
   computeNodeProps?: (nodeId: string) => Record<string, string>
 }
 
+export interface DispatchEvent {
+  readonly kind: 'dispatch'
+  readonly seq: number
+  readonly command: Command
+  readonly prev: NormalizedData
+  readonly next: NormalizedData
+  /** lazy — 접근 시에만 computeStoreDiff 실행 */
+  readonly diff: StoreDiff[]
+  readonly error?: string
+}
+
+export type EngineEvent = DispatchEvent
+export type Unsubscribe = () => void
+
 export interface CommandEngine {
   dispatch(command: Command): void
   getStore(): NormalizedData
@@ -52,6 +67,8 @@ export interface CommandEngine {
   setInspectRole(role: string, childRole?: string): void
   /** Set pattern info for inspect() node-level ARIA x-ray — called by view layer */
   setInspectPattern(info: InspectPatternInfo): void
+  /** Subscribe to engine events (dispatch, error, etc.) */
+  subscribe(listener: (event: EngineEvent) => void): Unsubscribe
 }
 
 export interface Command {
