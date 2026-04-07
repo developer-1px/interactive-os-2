@@ -1,13 +1,33 @@
 import type { StoreDiff } from '../store/computeStoreDiff'
+import type { NormalizedData } from '../store/types'
 
-export interface LogEntry {
+export interface DispatchLogEntry {
   seq: number
+  kind?: 'dispatch'
   type: string
   payload: unknown
   diff: StoreDiff[]
   parent?: number
   error?: string
+  /** Store snapshot before command execution (null for ring-buffer-evicted entries) */
+  prev?: NormalizedData | null
+  /** Store snapshot after command execution (null for ring-buffer-evicted entries) */
+  next?: NormalizedData | null
+  /** Original command type before middleware transformation */
+  originalType?: string
+  /** Original command payload before middleware transformation */
+  originalPayload?: unknown
 }
+
+export interface UnhandledKeyEntry {
+  seq: number
+  kind: 'unhandled-key'
+  key: string
+  code: string
+  modifiers: string
+}
+
+export type LogEntry = DispatchLogEntry | UnhandledKeyEntry
 
 export type Logger = (entry: LogEntry) => void
 
@@ -38,6 +58,11 @@ function formatDiff(diff: StoreDiff[]): string {
 }
 
 export const defaultLogger: Logger = (entry) => {
+  if (entry.kind === 'unhandled-key') {
+    console.log(`[unhandled-key #${entry.seq}] ${entry.modifiers}${entry.key} (${entry.code})`)
+    return
+  }
+
   const indent = entry.parent != null ? '  ' : ''
   const prefix = `${indent}[dispatch #${entry.seq}]`
 
@@ -46,6 +71,7 @@ export const defaultLogger: Logger = (entry) => {
     return
   }
 
-  console.log(`${prefix} ${entry.type} | ${truncatePayload(entry.payload)} | ${formatDiff(entry.diff)}`)
+  const from = entry.originalType ? ` (from: ${entry.originalType})` : ''
+  console.log(`${prefix} ${entry.type}${from} | ${truncatePayload(entry.payload)} | ${formatDiff(entry.diff)}`)
 }
 

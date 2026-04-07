@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { Up, Down, Left, Right } from '../../pages/shared/kbdIcons'
-import type { NormalizedData } from '@os/store/types'
+import type { NormalizedData, Entity } from '@os/store/types'
 import type { Plugin } from '@os/plugins/types'
 import type { NodeState } from '@os/pattern/types'
 import { key } from '@os/axis/types'
@@ -84,6 +84,7 @@ function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record
 // --- Log diff formatter ---
 
 function formatDiffSummary(entry: LogEntry): string {
+  if (entry.kind === 'unhandled-key') return `${entry.modifiers}${entry.key} (${entry.code})`
   if (entry.error) return `ERROR: ${entry.error}`
   if (entry.diff.length === 0) return '(no change)'
   return entry.diff
@@ -96,18 +97,65 @@ function formatDiffSummary(entry: LogEntry): string {
     .join(' | ') + (entry.diff.length > 3 ? ` … +${entry.diff.length - 3} more` : '')
 }
 
+// --- Store snapshot renderer ---
+
+function renderEntityList(store: NormalizedData): React.ReactNode {
+  const ids = Object.keys(store.entities)
+  if (ids.length === 0) return <div className="store-inspector-log-empty">No entities</div>
+  return (
+    <div className="store-inspector-log-entity-list">
+      {ids.map((id) => {
+        const entity: Entity = store.entities[id]
+        const dataStr = entity.data ? JSON.stringify(entity.data) : ''
+        const children = store.relationships[id]
+        return (
+          <div key={id} className="store-inspector-log-entity">
+            <span className={ax({ tone: 'accent' })}>{id}</span>
+            {dataStr && <span className="store-inspector-log-entity-data"> {dataStr}</span>}
+            {children && children.length > 0 && (
+              <span className="store-inspector-log-entity-children"> [{children.join(', ')}]</span>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 // --- Page component ---
 
 export default function PageStoreInspector() {
   const [data, setData] = useState<NormalizedData>(treeData)
   const [log, setLog] = useState<LogEntry[]>([])
+  const [expandedSeqs, setExpandedSeqs] = useState<Set<number>>(new Set())
+  const [storeVisibleSeqs, setStoreVisibleSeqs] = useState<Set<number>>(new Set())
   const logRef = useRef<HTMLDivElement>(null)
   const editor = useMemo(() => makeEditorPlugins(), [])
+
+  const LOG_BUFFER_SIZE = 200
 
   const captureLogger = useCallback((entry: LogEntry) => {
     setLog((prev) => {
       const next = [...prev, entry]
-      return next.length > 50 ? next.slice(next.length - 50) : next
+      return next.length > LOG_BUFFER_SIZE ? next.slice(next.length - LOG_BUFFER_SIZE) : next
+    })
+  }, [])
+
+  const toggleExpanded = useCallback((seq: number) => {
+    setExpandedSeqs((prev) => {
+      const next = new Set(prev)
+      if (next.has(seq)) next.delete(seq)
+      else next.add(seq)
+      return next
+    })
+  }, [])
+
+  const toggleStoreVisible = useCallback((seq: number) => {
+    setStoreVisibleSeqs((prev) => {
+      const next = new Set(prev)
+      if (next.has(seq)) next.delete(seq)
+      else next.add(seq)
+      return next
     })
   }, [])
 
@@ -176,19 +224,96 @@ export default function PageStoreInspector() {
           >
             <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Operation Log</div>
             {log.length === 0 ? (
-              <div style={{ opacity: 0.4 }}>Interact with the editor to see operations here.</div>
+              <div className="store-inspector-log-placeholder">Interact with the editor to see operations here.</div>
             ) : (
-              log.map((entry) => (
-                <div
-                  key={entry.seq}
-                  className="store-inspector-log-entry whitespace-nowrap"
-                  {...(entry.parent != null ? { 'data-batch-child': '' } : {})}
-                >
-                  <span style={{ opacity: 0.5 }}>#{entry.seq}</span>{' '}
-                  <span>{entry.type}</span>{' '}
-                  <span className={ax({ tone: 'accent' })}>| {formatDiffSummary(entry)}</span>
-                </div>
-              ))
+              log.map((entry) => {
+                // Unhandled key entries render inline
+                if (entry.kind === 'unhandled-key') {
+                  return (
+                    <div key={entry.seq} className="store-inspector-log-entry whitespace-nowrap">
+                      <span className={ax({ text: 'muted' })}>#{entry.seq}</span>{' '}
+                      <span className={ax({ tone: 'warning-dim' })}>unhandled</span>{' '}
+                      <span className={ax({ tone: 'warning-dim' })}>| {formatDiffSummary(entry)}</span>
+                    </div>
+                  )
+                }
+
+                const isBatch = entry.type === 'batch'
+                const batchChildren = isBatch
+                  ? log.filter((e) => e.kind !== 'unhandled-key' && e.parent === entry.seq)
+                  : []
+                const isExpanded = expandedSeqs.has(entry.seq)
+                const isStoreVisible = storeVisibleSeqs.has(entry.seq)
+                const isTopLevel = entry.parent == null
+
+                // Skip batch children at top level — they render inside their parent
+                if (!isTopLevel) return null
+
+                const fromLabel = entry.originalType ? ` (from: ${entry.originalType})` : ''
+
+                return (
+                  <div key={entry.seq}>
+                    <div
+                      className="store-inspector-log-entry whitespace-nowrap store-inspector-log-clickable"
+                      onClick={() => toggleExpanded(entry.seq)}
+                    >
+                      <span className="store-inspector-log-chevron">
+                        {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                      </span>
+                      <span className="store-inspector-log-seq">#{entry.seq}</span>{' '}
+                      <span>{entry.type}{fromLabel}</span>
+                      {isBatch && <span className="store-inspector-log-batch-count"> ({batchChildren.length} commands)</span>}
+                      {' '}
+                      <span className={ax({ tone: 'accent' })}>| {formatDiffSummary(entry)}</span>
+                    </div>
+
+                    {isExpanded && (
+                      <div className="store-inspector-log-expanded">
+                        {/* Batch child commands */}
+                        {isBatch && batchChildren.length > 0 && (
+                          <div className="store-inspector-log-batch-children">
+                            {batchChildren.map((child) => (
+                              <div key={child.seq} className="store-inspector-log-batch-child">
+                                <span className="store-inspector-log-seq">#{child.seq}</span>{' '}
+                                {child.kind !== 'unhandled-key' ? child.type : 'unhandled'}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Diff details */}
+                        {entry.diff.length > 0 && (
+                          <div className="store-inspector-log-diff">
+                            {entry.diff.map((d, i) => (
+                              <div key={i} className="store-inspector-log-diff-line">
+                                {d.kind === 'added' ? '+' : d.kind === 'removed' ? '-' : '~'}{' '}
+                                {d.path}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Store snapshot toggle */}
+                        {entry.next && (
+                          <button
+                            className={`${ax({ surface: 'ghost', textStyle: 'caption' })} store-inspector-log-store-btn`}
+                            onClick={(e) => { e.stopPropagation(); toggleStoreVisible(entry.seq) }}
+                          >
+                            {isStoreVisible ? 'Hide Store' : 'Show Store'}
+                          </button>
+                        )}
+
+                        {/* Store snapshot — entity list */}
+                        {isStoreVisible && entry.next && (
+                          <div className="store-inspector-log-snapshot">
+                            {renderEntityList(entry.next)}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })
             )}
           </div>
 

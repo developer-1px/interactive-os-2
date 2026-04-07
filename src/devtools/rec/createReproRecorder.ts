@@ -239,6 +239,17 @@ export function createReproRecorder() {
   // Channel 4: Store diffs (passed as logger to <Aria>)
   const reproLogger: Logger = (entry: LogEntry) => {
     if (!active) return
+    if (entry.kind === 'unhandled-key') {
+      timeline.push({
+        seq: nextSeq(),
+        time: elapsed(),
+        ch: 'state',
+        command: `unhandled-key:${entry.modifiers}${entry.key}`,
+        payload: { key: entry.key, code: entry.code, modifiers: entry.modifiers },
+        diff: [],
+      })
+      return
+    }
     timeline.push({
       seq: nextSeq(),
       time: elapsed(),

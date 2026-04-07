@@ -49,9 +49,21 @@ export interface DispatchEvent {
   /** lazy — 접근 시에만 computeStoreDiff 실행 */
   readonly diff: StoreDiff[]
   readonly error?: string
+  /** Original command type before middleware transformation */
+  readonly originalType?: string
+  /** Original command payload before middleware transformation */
+  readonly originalPayload?: unknown
 }
 
-export type EngineEvent = DispatchEvent
+export interface UnhandledKeyEvent {
+  readonly kind: 'unhandled-key'
+  readonly seq: number
+  readonly key: string
+  readonly code: string
+  readonly modifiers: string
+}
+
+export type EngineEvent = DispatchEvent | UnhandledKeyEvent
 export type Unsubscribe = () => void
 
 export interface CommandEngine {
@@ -69,6 +81,8 @@ export interface CommandEngine {
   setInspectPattern(info: InspectPatternInfo): void
   /** Subscribe to engine events (dispatch, error, etc.) */
   subscribe(listener: (event: EngineEvent) => void): Unsubscribe
+  /** Emit an unhandled key event — called by view layer when keyMap has no match */
+  emitUnhandledKey(event: KeyboardEvent): void
 }
 
 export interface Command {

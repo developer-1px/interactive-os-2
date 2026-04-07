@@ -23,6 +23,9 @@ export function createCommandEngine(
   const subscribers = new Set<(event: EngineEvent) => void>()
   let seq = 0
 
+  /** Tracks the original command dispatched before middleware chain */
+  let _pendingOriginal: Command | null = null
+
   const emit = (event: EngineEvent) => {
     const snapshot = Array.from(subscribers)
     for (const listener of snapshot) {
@@ -42,6 +45,8 @@ export function createCommandEngine(
     error?: string
   ): EngineEvent => {
     let cachedDiff: StoreDiff[] | undefined
+    const original = _pendingOriginal
+    const wasTransformed = original != null && original.type !== command.type
     return {
       kind: 'dispatch' as const,
       seq: eventSeq,
@@ -55,6 +60,7 @@ export function createCommandEngine(
         return cachedDiff
       },
       ...(error ? { error } : {}),
+      ...(wasTransformed ? { originalType: original.type, originalPayload: original.payload } : {}),
     }
   }
 
@@ -70,12 +76,19 @@ export function createCommandEngine(
   const logger = resolveLogger()
   if (logger) {
     subscribers.add((event) => {
+      if (event.kind === 'unhandled-key') {
+        logger(event)
+        return
+      }
       const entry: LogEntry = {
         seq: event.seq,
         type: event.command.type,
         payload: event.command.payload,
         diff: event.diff,
+        prev: event.prev,
+        next: event.next,
         ...(event.error ? { error: event.error } : {}),
+        ...(event.originalType ? { originalType: event.originalType, originalPayload: event.originalPayload } : {}),
       }
       logger(entry)
 
@@ -184,7 +197,11 @@ export function createCommandEngine(
   }
 
   return {
-    dispatch: (command) => chain(command),
+    dispatch: (command) => {
+      _pendingOriginal = command
+      chain(command)
+      _pendingOriginal = null
+    },
     getStore,
     syncStore: (newStore: NormalizedData) => {
       store = newStore
@@ -196,6 +213,22 @@ export function createCommandEngine(
     subscribe: (listener: (event: EngineEvent) => void) => {
       subscribers.add(listener)
       return () => { subscribers.delete(listener) }
+    },
+    emitUnhandledKey: (event: KeyboardEvent) => {
+      if (subscribers.size === 0) return
+      seq++
+      const mods: string[] = []
+      if (event.ctrlKey) mods.push('Ctrl+')
+      if (event.altKey) mods.push('Alt+')
+      if (event.shiftKey) mods.push('Shift+')
+      if (event.metaKey) mods.push('Meta+')
+      emit({
+        kind: 'unhandled-key',
+        seq,
+        key: event.key,
+        code: event.code,
+        modifiers: mods.join(''),
+      })
     },
   }
 }

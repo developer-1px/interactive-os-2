@@ -7,6 +7,7 @@ import type { NodeState } from '@os/pattern/types'
 import { key } from '@os/axis/types'
 import type { KeyHandler } from '@os/axis/types'
 import type { LogEntry } from '@os/engine/logger'
+import { ax } from '@styles/ax'
 import { Aria } from '@os/primitives/aria'
 import { TreeView } from '@os/ui/TreeView'
 import { renderInspectorItem } from './renderInspectorItem'
@@ -83,6 +84,7 @@ function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record
 // --- Log diff formatter ---
 
 function formatDiffSummary(entry: LogEntry): string {
+  if (entry.kind === 'unhandled-key') return `${entry.modifiers}${entry.key} (${entry.code})`
   if (entry.error) return `ERROR: ${entry.error}`
   if (entry.diff.length === 0) return '(no change)'
   return entry.diff
@@ -174,11 +176,20 @@ export default function StoreInspectorDemo() {
                 <div
                   key={entry.seq}
                   className={`store-inspector-log-entry whitespace-nowrap`}
-                  {...(entry.parent != null ? { 'data-batch-child': '' } : {})}
+                  {...(entry.kind !== 'unhandled-key' && entry.parent != null ? { 'data-batch-child': '' } : {})}
                 >
-                  <span style={{ opacity: 0.5 }}>#{entry.seq}</span>{' '}
-                  <span>{entry.type}</span>{' '}
-                  <span className="store-inspector-log-diff">| {formatDiffSummary(entry)}</span>
+                  <span className={ax({ text: 'muted' })}>#{entry.seq}</span>{' '}
+                  {entry.kind === 'unhandled-key' ? (
+                    <>
+                      <span className={ax({ tone: 'warning-dim' })}>unhandled</span>{' '}
+                      <span className={ax({ tone: 'warning-dim' })}>| {formatDiffSummary(entry)}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>{entry.type}</span>{' '}
+                      <span className="store-inspector-log-diff">| {formatDiffSummary(entry)}</span>
+                    </>
+                  )}
                 </div>
               ))
             )}

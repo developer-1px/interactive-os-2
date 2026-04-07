@@ -4,12 +4,12 @@ import { computeStoreDiff, applyDelta } from '../store/computeStoreDiff'
 import type { StoreDiff } from '../store/computeStoreDiff'
 import { defaultLogger } from '../engine/logger'
 import type { NormalizedData } from '../store/types'
-import type { LogEntry } from '../engine/logger'
+import type { DispatchLogEntry, LogEntry } from '../engine/logger'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import { createStore } from '../store/createStore'
 import { focusCommands } from '../axis/navigate'
 import { createBatchCommand } from '../engine/types'
-import type { Command, CommandHandler } from '../engine/types'
+import type { Command, CommandHandler, Middleware } from '../engine/types'
 
 describe('computeStoreDiff', () => {
   const base: NormalizedData = {
@@ -350,8 +350,8 @@ describe('engine logger integration', () => {
   }
 
   it('logs single command with seq, type, payload, diff', () => {
-    const entries: LogEntry[] = []
-    const engine = setup((e) => entries.push(e))
+    const entries: DispatchLogEntry[] = []
+    const engine = setup((e) => entries.push(e as DispatchLogEntry))
 
     engine.dispatch(focusCommands.setFocus('item1'))
 
@@ -365,8 +365,8 @@ describe('engine logger integration', () => {
   })
 
   it('increments seq across dispatches', () => {
-    const entries: LogEntry[] = []
-    const engine = setup((e) => entries.push(e))
+    const entries: DispatchLogEntry[] = []
+    const engine = setup((e) => entries.push(e as DispatchLogEntry))
 
     engine.dispatch(focusCommands.setFocus('item1'))
     engine.dispatch(focusCommands.setFocus('item2'))
@@ -376,8 +376,8 @@ describe('engine logger integration', () => {
   })
 
   it('logs batch with parent (full diff) + children (type/payload only)', () => {
-    const entries: LogEntry[] = []
-    const engine = setup((e) => entries.push(e))
+    const entries: DispatchLogEntry[] = []
+    const engine = setup((e) => entries.push(e as DispatchLogEntry))
 
     const batch = createBatchCommand([
       focusCommands.setFocus('item1'),
@@ -397,8 +397,8 @@ describe('engine logger integration', () => {
   })
 
   it('handles nested batch recursively', () => {
-    const entries: LogEntry[] = []
-    const engine = setup((e) => entries.push(e))
+    const entries: DispatchLogEntry[] = []
+    const engine = setup((e) => entries.push(e as DispatchLogEntry))
 
     const inner = createBatchCommand([
       focusCommands.setFocus('item1'),
@@ -419,8 +419,8 @@ describe('engine logger integration', () => {
   })
 
   it('logs no-change command with empty diff', () => {
-    const entries: LogEntry[] = []
-    const engine = setup((e) => entries.push(e))
+    const entries: DispatchLogEntry[] = []
+    const engine = setup((e) => entries.push(e as DispatchLogEntry))
 
     engine.dispatch(focusCommands.setFocus('item1'))
     engine.dispatch(focusCommands.setFocus('item1'))
@@ -429,10 +429,10 @@ describe('engine logger integration', () => {
   })
 
   it('logs error command with error field', () => {
-    const entries: LogEntry[] = []
+    const entries: DispatchLogEntry[] = []
     const badRegistry = new Map<string, CommandHandler>()
     badRegistry.set('bad:command', () => { throw new Error('Boom') })
-    const engine = setup((e) => entries.push(e), badRegistry)
+    const engine = setup((e) => entries.push(e as DispatchLogEntry), badRegistry)
 
     const badCommand: Command = {
       type: 'bad:command',
@@ -446,17 +446,73 @@ describe('engine logger integration', () => {
   })
 
   it('does not log when logger is false', () => {
-    const entries: LogEntry[] = []
+    const entries: DispatchLogEntry[] = []
     const store = createStore({ entities: {}, relationships: { __root__: [] } })
     const focusRegistry = new Map<string, CommandHandler>()
     focusRegistry.set(focusCommands.setFocus.type, focusCommands.setFocus.handler as CommandHandler)
     const engine = createCommandEngine(store, [], focusRegistry, () => {}, { logger: false })
-    const engineWithLogger = createCommandEngine(store, [], new Map(focusRegistry), () => {}, { logger: (e) => entries.push(e) })
+    const engineWithLogger = createCommandEngine(store, [], new Map(focusRegistry), () => {}, { logger: (e) => entries.push(e as DispatchLogEntry) })
 
     engine.dispatch(focusCommands.setFocus('x'))
     expect(entries).toHaveLength(0)
 
     engineWithLogger.dispatch(focusCommands.setFocus('x'))
     expect(entries).toHaveLength(1)
+  })
+
+  it('records originalType/originalPayload when middleware transforms command', () => {
+    const entries: LogEntry[] = []
+    const store = createStore({
+      entities: {
+        item1: { id: 'item1', data: { name: 'A' } },
+      },
+      relationships: { __root__: ['item1'] },
+    })
+    const registry = new Map<string, CommandHandler>()
+    registry.set(focusCommands.setFocus.type, focusCommands.setFocus.handler as CommandHandler)
+
+    // Middleware that transforms 'alias:focus' into 'core:focus'
+    const transformMiddleware: Middleware = (next) => (command) => {
+      if (command.type === 'alias:focus') {
+        next(focusCommands.setFocus(command.payload as string))
+      } else {
+        next(command)
+      }
+    }
+
+    const engine = createCommandEngine(store, [transformMiddleware], registry, () => {}, { logger: (e) => entries.push(e) })
+
+    engine.dispatch({ type: 'alias:focus', payload: 'item1' })
+
+    expect(entries).toHaveLength(1)
+    const e0 = entries[0] as DispatchLogEntry
+    expect(e0.type).toBe('core:focus')
+    expect(e0.originalType).toBe('alias:focus')
+    expect(e0.originalPayload).toBe('item1')
+  })
+
+  it('does not set originalType when middleware passes command through unchanged', () => {
+    const entries: LogEntry[] = []
+    const store = createStore({
+      entities: {
+        item1: { id: 'item1', data: { name: 'A' } },
+      },
+      relationships: { __root__: ['item1'] },
+    })
+    const registry = new Map<string, CommandHandler>()
+    registry.set(focusCommands.setFocus.type, focusCommands.setFocus.handler as CommandHandler)
+
+    // Pass-through middleware
+    const noopMiddleware: Middleware = (next) => (command) => next(command)
+
+    const engine = createCommandEngine(store, [noopMiddleware], registry, () => {}, { logger: (e) => entries.push(e) })
+
+    engine.dispatch(focusCommands.setFocus('item1'))
+
+    expect(entries).toHaveLength(1)
+    const e1 = entries[0] as DispatchLogEntry
+    expect(e1.type).toBe('core:focus')
+    expect(e1.originalType).toBeUndefined()
+    expect(e1.originalPayload).toBeUndefined()
   })
 })

@@ -27,3 +27,84 @@
   opacity: 0.5;
   margin-bottom: var(--space-sm);
 }
+
+/* Log entry interaction */
+.store-inspector-log-clickable {
+  cursor: pointer;
+}
+
+.store-inspector-log-chevron {
+  opacity: 0.4;
+  display: inline-block;
+  width: 14px;
+  margin-right: var(--space-xs);
+  vertical-align: middle;
+}
+
+.store-inspector-log-seq {
+  opacity: 0.5;
+}
+
+.store-inspector-log-batch-count {
+  opacity: 0.6;
+}
+
+.store-inspector-log-placeholder {
+  opacity: 0.4;
+}
+
+/* Expanded log details */
+.store-inspector-log-expanded {
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-xs);
+}
+
+.store-inspector-log-batch-children {
+  margin-bottom: var(--space-xs);
+}
+
+.store-inspector-log-batch-child {
+  padding-left: var(--space-md);
+  opacity: 0.7;
+}
+
+.store-inspector-log-diff {
+  margin-bottom: var(--space-xs);
+}
+
+.store-inspector-log-diff-line {
+  opacity: 0.7;
+}
+
+.store-inspector-log-store-btn {
+  margin-bottom: var(--space-xs);
+}
+
+/* Store snapshot */
+.store-inspector-log-snapshot {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: var(--space-xs);
+  border-left: 2px solid var(--border);
+  margin-bottom: var(--space-xs);
+}
+
+.store-inspector-log-entity-list {
+  font-size: var(--type-caption-size);
+}
+
+.store-inspector-log-entity {
+  white-space: nowrap;
+}
+
+.store-inspector-log-entity-data {
+  opacity: 0.6;
+}
+
+.store-inspector-log-entity-children {
+  opacity: 0.5;
+}
+
+.store-inspector-log-empty {
+  opacity: 0.4;
+}

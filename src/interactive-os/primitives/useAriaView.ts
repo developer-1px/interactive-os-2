@@ -279,12 +279,19 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         if (!handler) return
         const handled = dispatchKeyAction(ctx, handler, observedEngine)
         if (handled) event.preventDefault()
-      } else if (pluginUnhandledKeyHandlers) {
-        for (const h of pluginUnhandledKeyHandlers) {
-          if (h(event, observedEngine)) {
-            event.preventDefault()
-            break
+      } else {
+        let handled = false
+        if (pluginUnhandledKeyHandlers) {
+          for (const h of pluginUnhandledKeyHandlers) {
+            if (h(event, observedEngine)) {
+              event.preventDefault()
+              handled = true
+              break
+            }
           }
+        }
+        if (!handled) {
+          observedEngine.emitUnhandledKey(event)
         }
       }
     },
