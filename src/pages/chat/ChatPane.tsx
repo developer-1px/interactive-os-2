@@ -165,7 +165,7 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
     : 0
 
   return (
-    <div className={ax({ layout: 'fill', width: 'lg' })}>
+    <div className={ax({ layout: 'fill' })}>
       <ChatFeed
         messages={messages}
         blockRenderers={chatRenderers}
@@ -173,45 +173,47 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
         className={ax({ flex: '1', padding: 'lg', scroll: 'y' })}
       />
       <div className={ax({ flex: 'none', padding: 'md', layout: 'stack', gap: 'sm' })}>
-        {isRunning && (
-          <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' tabular-nums chat-activity-bar'}>
-            <span className={`${ax({ surface: 'base', tone: 'accent', shape: 'pill' })} chat-dot`} />
-            <span>{label}</span>
-            <span>{elapsed}s</span>
-            {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}
-          </div>
-        )}
-        <div className={ax({ layout: 'bar', gap: 'sm' }) + ' chat-input-row'}>
-          <Composer
-            ref={composerRef}
-            onSubmit={handleSubmit}
-            disabled={isRunning}
-            placeholder="Send a message..."
-            commandHighlight={commandHighlight}
-            overlayText={inputText}
-            suggestions={suggestions}
-            onCommandSelect={handleCommandSelect}
-            onDismiss={handleDismiss}
-            onTextChange={handleTextChange}
-          />
+        <div className={ax({ width: 'prose', layout: 'stack', gap: 'sm' }) + ' chat-bottom-content'}>
           {isRunning && (
-            <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'md', tone: 'danger' })} onClick={handleInterrupt} aria-label="Stop">
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-                <rect width="10" height="10" rx="2" />
-              </svg>
-            </button>
+            <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'secondary' }) + ' tabular-nums chat-activity-bar'}>
+              <span className={`${ax({ surface: 'base', tone: 'accent', shape: 'pill' })} chat-dot`} />
+              <span>{label}</span>
+              <span>{elapsed}s</span>
+              {liveTokens > 0 && <span>~{formatTokens(liveTokens)} tokens</span>}
+            </div>
           )}
-        </div>
-        <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' tabular-nums chat-status-bar'}>
-          <span className={ax({ text: 'secondary' })}>{session.model || 'connecting...'}</span>
-          {usage && (
-            <>
-              <span>{formatTokens(usage.input)} in · {formatTokens(usage.output)} out</span>
-              <span>${usage.costUsd.toFixed(4)}</span>
-              <span>{(usage.durationMs / 1000).toFixed(1)}s</span>
-            </>
-          )}
-          <span className={ax({ textStyle: 'code' }) + ' chat-hint'}>/clear to reset</span>
+          <div className={ax({ layout: 'bar', gap: 'sm' }) + ' chat-input-row'}>
+            <Composer
+              ref={composerRef}
+              onSubmit={handleSubmit}
+              disabled={isRunning}
+              placeholder="Send a message..."
+              commandHighlight={commandHighlight}
+              overlayText={inputText}
+              suggestions={suggestions}
+              onCommandSelect={handleCommandSelect}
+              onDismiss={handleDismiss}
+              onTextChange={handleTextChange}
+            />
+            {isRunning && (
+              <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'md', tone: 'danger' })} onClick={handleInterrupt} aria-label="Stop">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+                  <rect width="10" height="10" rx="2" />
+                </svg>
+              </button>
+            )}
+          </div>
+          <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' tabular-nums chat-status-bar'}>
+            <span className={ax({ text: 'secondary' })}>{session.model || 'connecting...'}</span>
+            {usage && (
+              <>
+                <span>{formatTokens(usage.input)} in · {formatTokens(usage.output)} out</span>
+                <span>${usage.costUsd.toFixed(4)}</span>
+                <span>{(usage.durationMs / 1000).toFixed(1)}s</span>
+              </>
+            )}
+            <span className={ax({ textStyle: 'code' }) + ' chat-hint'}>/clear to reset</span>
+          </div>
         </div>
       </div>
     </div>

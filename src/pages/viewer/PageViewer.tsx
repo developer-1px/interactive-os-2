@@ -20,6 +20,7 @@ import type { TabData } from '@os/plugins/workspaceStore'
 import { useKeyMap } from '@os/primitives/useKeyMap'
 import { ax } from '@styles/ax'
 import { SpinnerIndicator } from '@os/ui/indicators'
+import { EmptyState } from '@os/ui/EmptyState'
 import { Panel } from '@os/ui/panels'
 import { FilePanel } from './widgets/FilePanel'
 import { previewFileReducer, pinFileReducer, openInNewPaneReducer, duplicatePaneReducer } from './viewerWorkspace'
@@ -190,12 +191,19 @@ export default function PageViewer() {
 
         {/* Content panel */}
         <div className={ax({ layout: 'fill' })}>
-          <Workspace
-            data={workspaceStore}
-            onChange={handleWorkspaceChange}
-            renderPanel={renderPanel}
-            aria-label="File workspace"
-          />
+          {!Object.values(workspaceStore.entities).some(e => (e.data as Record<string, unknown>)?.type === 'tab') ? (
+            <EmptyState
+              title="Select a file"
+              description="Choose a file from the sidebar to view its contents"
+            />
+          ) : (
+            <Workspace
+              data={workspaceStore}
+              onChange={handleWorkspaceChange}
+              renderPanel={renderPanel}
+              aria-label="File workspace"
+            />
+          )}
         </div>
       </SplitPane>
 
