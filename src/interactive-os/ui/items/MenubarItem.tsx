@@ -14,7 +14,7 @@ export function MenubarItem(
   return (
     <div
       {...props}
-      className={ax({ interactive: 'item', layout: 'bar', padding: 'sm', gap: 'xs' })}
+      className={ax({ interactive: 'item', shape: 'md', layout: 'bar', padding: 'sm', gap: 'xs' })}
     >
       {label}
       {state.expanded !== undefined && (

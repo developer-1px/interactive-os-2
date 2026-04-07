@@ -26,6 +26,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const itemClass = ax({
     interactive: 'item',
+    shape: 'md',
     controlSize: 'md',
     padding: 'sm',
     content: 'text',

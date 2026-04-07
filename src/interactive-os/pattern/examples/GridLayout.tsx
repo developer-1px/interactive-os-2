@@ -41,7 +41,7 @@ const renderTile = (
   value: unknown,
 ): React.ReactElement => {
   return (
-    <div {...props} className={`${ax({ textStyle: 'body', weight: 'semi', text: 'primary', shape: 'md', padding: 'md', content: 'text', surface: 'sunken', interactive: 'cell' })} flex-row items-center justify-center outline-none`}>
+    <div {...props} className={`${ax({ layout: 'row', textStyle: 'body', weight: 'semi', text: 'primary', shape: 'md', padding: 'md', content: 'text', surface: 'sunken', interactive: 'cell' })} justify-center outline-none`}>
       {String(value ?? '')}
     </div>
   )

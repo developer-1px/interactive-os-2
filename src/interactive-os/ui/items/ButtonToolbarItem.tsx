@@ -23,7 +23,7 @@ export function ButtonToolbarItem(
       <button
         {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
         className={ax({
-          interactive: 'button', controlSize: 'sm', padding: 'sm', content: 'text',
+          interactive: 'button', shape: 'md', controlSize: 'sm', padding: 'sm', content: 'text',
         })}
         disabled={isDisabled}
       >

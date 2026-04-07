@@ -678,8 +678,6 @@ dialog.sf-overlay[open] {
 :where(.ia-item) {
   cursor: pointer;
   user-select: none;
-  border-radius: var(--shape-md-radius);
-  transition: background 0.08s;
   outline: 1px solid transparent;
   outline-offset: -1px;
 }
@@ -761,8 +759,6 @@ dialog.sf-overlay[open] {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--shape-md-radius);
   outline: 1px solid transparent;
   outline-offset: -1px;
 }
@@ -799,15 +795,9 @@ dialog.sf-overlay[open] {
 /* ── ia-tab: tab ── */
 
 :where(.ia-tab) {
-  display: inline-flex;
-  align-items: center;
   cursor: pointer;
   user-select: none;
-  font-weight: var(--weight-medium);
-  color: var(--text-muted);
   border-bottom: 2px solid transparent;
-  border-radius: 0;
-  transition: color 0.1s, border-color 0.1s;
 }
 
 :where(.ax-interactive:not(:focus-within) .ia-tab:hover) {
@@ -834,8 +824,6 @@ dialog.sf-overlay[open] {
 :where(.ia-check) {
   cursor: pointer;
   user-select: none;
-  border-radius: var(--shape-md-radius);
-  transition: background 0.08s;
   outline: 1px solid transparent;
   outline-offset: -1px;
 }
@@ -873,11 +861,6 @@ dialog.sf-overlay[open] {
 /* ── ia-cell: gridcell ── */
 
 :where(.ia-cell) {
-  display: flex;
-  align-items: center;
-  padding: var(--space-sm) var(--space-md);
-  min-width: 80px;
-  font-size: var(--type-body-size);
   border-right: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -907,8 +890,6 @@ dialog.sf-overlay[open] {
 :where(.ia-button) {
   cursor: pointer;
   user-select: none;
-  border-radius: var(--shape-md-radius);
-  transition: background 0.08s;
 }
 
 :where(.ia-button:hover) {

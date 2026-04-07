@@ -22,6 +22,7 @@ export function ToolbarItem(
       {...props}
       className={ax({
         interactive: 'button',
+        shape: 'md',
         controlSize: 'sm',
         layout: hasIcon ? 'center' : undefined,
         padding: hasIcon ? undefined : 'sm',

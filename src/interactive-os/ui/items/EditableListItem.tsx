@@ -22,7 +22,7 @@ export function EditableListItem(
   return (
     <div
       {...props}
-      className={ax({ interactive: 'item', layout: 'bar', gap: 'sm', textStyle: 'caption' })}
+      className={ax({ interactive: 'item', shape: 'md', layout: 'bar', gap: 'sm', textStyle: 'caption' })}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

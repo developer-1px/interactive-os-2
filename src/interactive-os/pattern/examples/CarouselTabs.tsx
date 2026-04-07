@@ -49,7 +49,7 @@ const renderTab = (
     <div>
       <button
         {...props}
-        className={`${ax({ textStyle: 'caption', text: 'secondary', interactive: 'tab' })} outline-none`}
+        className={`${ax({ textStyle: 'caption', text: 'secondary', layout: 'row', interactive: 'tab' })} outline-none`}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
       >

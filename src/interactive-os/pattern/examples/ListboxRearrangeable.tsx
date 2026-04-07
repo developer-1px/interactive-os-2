@@ -48,7 +48,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item' })} flex-row items-center`}
+      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })} flex-row items-center`}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

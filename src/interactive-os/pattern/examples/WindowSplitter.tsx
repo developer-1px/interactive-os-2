@@ -31,7 +31,7 @@ const renderSplitter = (
       </div>
       <div
         {...props}
-        className={`${ax({ surface: 'sunken', interactive: 'button' })} shrink-0 outline-none`}
+        className={`${ax({ surface: 'sunken', interactive: 'button', shape: 'md' })} shrink-0 outline-none`}
         data-focused={state.focused || undefined}
       />
       <div className={`flex-row items-center justify-center overflow-hidden`} style={{ flexBasis: `${100 - current}%` }}>

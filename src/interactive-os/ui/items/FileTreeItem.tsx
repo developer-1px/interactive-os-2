@@ -18,7 +18,7 @@ export function FileTreeItem(
   return (
     <div
       {...props}
-      className={ax({ interactive: 'item', layout: 'bar', gap: 'xs', padding: 'xs' })}
+      className={ax({ interactive: 'item', shape: 'md', layout: 'bar', gap: 'xs', padding: 'xs' })}
       style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }}
     >
       {data.type === 'directory' ? (

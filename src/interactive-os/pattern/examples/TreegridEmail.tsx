@@ -77,7 +77,7 @@ const renderRow = (
   return (
     <div
       {...props}
-      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', border: 'bottom' })} flex-row items-center whitespace-nowrap outline-none cursor-default`}
+      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', shape: 'md', border: 'bottom' })} flex-row items-center whitespace-nowrap outline-none cursor-default`}
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >

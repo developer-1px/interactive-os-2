@@ -30,7 +30,7 @@ const renderSwitch = (
   return (
     <div
       {...props}
-      className={`${ax({ gap: 'md', text: 'primary', padding: 'xs', content: 'text', interactive: 'check' })} flex-row items-center justify-between cursor-default`}
+      className={`${ax({ gap: 'md', text: 'primary', padding: 'xs', content: 'text', interactive: 'check', shape: 'md' })} flex-row items-center justify-between cursor-default`}
       data-focused={state.focused || undefined}
     >
       <span className={`flex-1`}>{label}</span>

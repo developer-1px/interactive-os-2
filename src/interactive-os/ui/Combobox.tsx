@@ -142,25 +142,16 @@ export function Combobox({
   const effectiveCreateFocused = showCreateOption && createOptionFocused
 
   const handleCreate = (label: string) => {
-    // Reduce locally to discover the new ID deterministically
     const newStore = comboboxCommands.create.reduce(store, label)
     const newChildren = getChildren(newStore, ROOT_ID)
     const newId = newChildren[newChildren.length - 1]!
 
-    if (mode === 'multiple') {
-      aria.dispatch(createBatchCommand([
-        comboboxCommands.create(label),
-        selectionCommands.toggleSelect(newId),
-        comboboxCommands.setFilter(''),
-      ]))
-    } else {
-      aria.dispatch(createBatchCommand([
-        comboboxCommands.create(label),
-        selectionCommands.select(newId),
-        comboboxCommands.close(),
-        comboboxCommands.setFilter(''),
-      ]))
-    }
+    const selectCmd = mode === 'multiple'
+      ? selectionCommands.toggleSelect(newId)
+      : selectionCommands.select(newId)
+    const cmds = [comboboxCommands.create(label), selectCmd, comboboxCommands.setFilter('')]
+    if (mode !== 'multiple') cmds.push(comboboxCommands.close())
+    aria.dispatch(createBatchCommand(cmds))
     setCreateOptionFocused(false)
   }
 
@@ -185,7 +176,7 @@ export function Combobox({
 
   const defaultRender = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
     <div {...props} className={[
-      ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined }),
+      ax({ interactive: 'item', shape: 'md', controlSize: 'md', padding: 'sm', content: 'text', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined }),
     ].filter(Boolean).join(' ')}>
       {getNodeLabel(item)}
     </div>
@@ -199,22 +190,20 @@ export function Combobox({
     }
   }
 
+  const selectOption = (childId: string) => {
+    if (mode === 'multiple') {
+      aria.dispatch(selectionCommands.toggleSelect(childId))
+    } else {
+      aria.dispatch(createBatchCommand([selectionCommands.select(childId), comboboxCommands.close()]))
+    }
+  }
+
   const renderOption = (childId: string) => {
     const entity = store.entities[childId]
     if (!entity) return null
     const state = aria.getNodeState(childId)
     const props = aria.getNodeProps(childId)
-    const handleOptionClick = () => {
-      if (mode === 'multiple') {
-        aria.dispatch(selectionCommands.toggleSelect(childId))
-      } else {
-        aria.dispatch(createBatchCommand([
-          selectionCommands.select(childId),
-          comboboxCommands.close(),
-        ]))
-      }
-    }
-    const optionProps = mergeProps(props as unknown as Record<string, unknown>, { key: childId, onClick: handleOptionClick }) as React.HTMLAttributes<HTMLElement>
+    const optionProps = mergeProps(props as unknown as Record<string, unknown>, { key: childId, onClick: () => selectOption(childId) }) as React.HTMLAttributes<HTMLElement>
     return render(optionProps, entity, state)
   }
 
@@ -346,7 +335,7 @@ export function Combobox({
           {showCreateOption && (
             <div
               data-combobox-create
-              className={ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined })}
+              className={ax({ interactive: 'item', shape: 'md', controlSize: 'md', padding: 'sm', content: 'text', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined })}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"

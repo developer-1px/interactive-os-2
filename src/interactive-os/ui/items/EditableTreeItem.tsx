@@ -25,7 +25,7 @@ export function EditableTreeItem(
   return (
     <div
       {...props}
-      className={ax({ interactive: 'item', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })}
+      className={ax({ interactive: 'item', shape: 'md', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs' })}
       style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}
     >
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />

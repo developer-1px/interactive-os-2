@@ -86,7 +86,7 @@ const renderItem = (
         <button
           {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
           id={node.id as string}
-          className={`${ax({ weight: 'semi', text: 'primary', surface: 'sunken', textStyle: 'body', padding: 'sm', content: 'text', interactive: 'item', border: 'default' })} flex-row items-center justify-between w-full`}
+          className={`${ax({ weight: 'semi', text: 'primary', surface: 'sunken', textStyle: 'body', padding: 'sm', content: 'text', interactive: 'item', shape: 'md', border: 'default' })} flex-row items-center justify-between w-full`}
           type="button"
           data-focused={state.focused || undefined}
         >
