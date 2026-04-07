@@ -165,10 +165,11 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
         baseProps.tabIndex = pattern.focusStrategy.type === 'natural-tab-order' ? 0 : (id === focusedId ? 0 : -1)
         baseProps.onKeyDown = (event: KeyboardEvent) => {
           const matchedKey = findMatchingKey(event, mergedKeyMap)
-          if (!matchedKey) return
-          const ctx = createPatternContext(virtualEngine, patternCtxOptions)
-          const handler = mergedKeyMap[matchedKey]
+          const handler = matchedKey
+            ? mergedKeyMap[matchedKey]
+            : (!event.ctrlKey && !event.altKey && !event.metaKey ? pattern.fallbackKey : undefined)
           if (!handler) return
+          const ctx = createPatternContext(virtualEngine, patternCtxOptions)
           const command = handler(ctx)
           if (command) onDispatch(command)
           event.preventDefault()
@@ -187,16 +188,17 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
       'aria-activedescendant': focusedId || undefined,
       onKeyDown: (event: KeyboardEvent) => {
         const matchedKey = findMatchingKey(event, mergedKeyMap)
-        if (!matchedKey) return
-        const ctx = createPatternContext(virtualEngine, patternCtxOptions)
-        const handler = mergedKeyMap[matchedKey]
+        const handler = matchedKey
+          ? mergedKeyMap[matchedKey]
+          : (!event.ctrlKey && !event.altKey && !event.metaKey ? pattern.fallbackKey : undefined)
         if (!handler) return
+        const ctx = createPatternContext(virtualEngine, patternCtxOptions)
         const command = handler(ctx)
         if (command) onDispatch(command)
         event.preventDefault()
       },
     }
-  }, [pattern.focusStrategy.type, focusedId, mergedKeyMap, virtualEngine, patternCtxOptions, onDispatch])
+  }, [pattern.focusStrategy.type, pattern.fallbackKey, focusedId, mergedKeyMap, virtualEngine, patternCtxOptions, onDispatch])
 
   // Sync DOM focus with data focus (skip for aria-activedescendant — container holds focus)
   // Only move DOM focus if this widget already owns it (prevents stealing focus from other widgets)

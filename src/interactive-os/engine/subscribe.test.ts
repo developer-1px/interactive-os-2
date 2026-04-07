@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, vi } from 'vitest'
 import { createCommandEngine } from './createCommandEngine'
-import type { EngineEvent } from './types'
+import type { EngineEvent, DispatchEvent } from './types'
 import { buildRegistry } from './types'
 import type { NormalizedData } from '../store/types'
 import * as storeDiffModule from '../store/computeStoreDiff'
@@ -53,9 +53,10 @@ describe('engine.subscribe', () => {
     expect(events).toHaveLength(1)
     expect(events[0].kind).toBe('dispatch')
     expect(events[0].seq).toBe(1)
-    expect(events[0].command.type).toBe('test:setFocus')
-    expect(events[0].prev.entities.__focus__.focusedId).toBe('a')
-    expect(events[0].next.entities.__focus__.focusedId).toBe('b')
+    const e0 = events[0] as DispatchEvent
+    expect(e0.command.type).toBe('test:setFocus')
+    expect(e0.prev.entities.__focus__.focusedId).toBe('a')
+    expect(e0.next.entities.__focus__.focusedId).toBe('b')
   })
 
   it('does not receive events after unsubscribe', () => {
@@ -78,8 +79,9 @@ describe('engine.subscribe', () => {
     engine.dispatch({ type: 'test:throw' })
 
     expect(events).toHaveLength(1)
-    expect(events[0].error).toBe('boom')
-    expect(events[0].prev).toBe(events[0].next)
+    const e0 = events[0] as DispatchEvent
+    expect(e0.error).toBe('boom')
+    expect(e0.prev).toBe(e0.next)
   })
 
   it('lazy diff: computeStoreDiff is not called until .diff is accessed', () => {
@@ -94,12 +96,12 @@ describe('engine.subscribe', () => {
     expect(spy.mock.calls.length).toBe(0)
 
     // access diff triggers computation
-    const diff = events[0].diff
+    const diff = (events[0] as DispatchEvent).diff
     expect(spy.mock.calls.length).toBe(1)
     expect(diff.length).toBeGreaterThan(0)
 
     // second access uses cache — still 1 call
-    const diff2 = events[0].diff
+    const diff2 = (events[0] as DispatchEvent).diff
     expect(spy.mock.calls.length).toBe(1)
     expect(diff2).toBe(diff)
 
@@ -126,7 +128,7 @@ describe('engine.subscribe', () => {
 
     // second subscriber still receives the event
     expect(events).toHaveLength(1)
-    expect(events[0].command.type).toBe('test:setFocus')
+    expect((events[0] as DispatchEvent).command.type).toBe('test:setFocus')
   })
 
   it('handles unsubscribe during emit', () => {

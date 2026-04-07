@@ -145,6 +145,7 @@ export function composePattern(
   config: Identity,
   required: Axis[],
   inputMap: KeyMap,
+  options?: { fallbackKey?: KeyHandler },
 ): AriaPattern {
   const meta = collectMeta(required)
   const { keyMap, clickMap } = splitInputMap(inputMap)
@@ -189,5 +190,6 @@ export function composePattern(
     ...(stateGens.length > 0 && { stateGens }),
     ...(config.triggerKeyMap && { triggerKeyMap: config.triggerKeyMap }),
     ...(config.triggerClickMap && { triggerClickMap: config.triggerClickMap }),
+    ...(options?.fallbackKey && { fallbackKey: options.fallbackKey }),
   } as AriaPattern
 }

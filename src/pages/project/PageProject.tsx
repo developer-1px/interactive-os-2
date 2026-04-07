@@ -1,10 +1,12 @@
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
+import { useStore } from '@os/store/useStore'
 import { useNavigate } from 'react-router-dom'
 import { Grid } from '@os/ui/Grid'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { StatusIndicator, ProgressIndicator } from '@os/ui/indicators'
 import type { NodeState } from '@os/pattern/types'
 import { ax, type Axes } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import '@styles/ax.css'
 import { buildProjectStore, PROJECT_COLUMNS } from './projectStore'
 import type { Maturity } from './projectData'
@@ -115,7 +117,7 @@ const renderCell = (
 }
 
 export default function PageProject() {
-  const [data, setData] = useState(initialStore)
+  const [data, setData] = useStore(initialStore)
   const navigate = useNavigate()
 
   const handleActivate = useCallback((nodeId: string) => {
@@ -133,7 +135,7 @@ export default function PageProject() {
         </span>
       </PanelHeader>
 
-      <div className={ax({ layout: 'scroll', flex: '1' })}>
+      <ScrollArea className={ax({ flex: '1' })}>
         <Grid
           data={data}
           columns={PROJECT_COLUMNS}
@@ -144,7 +146,7 @@ export default function PageProject() {
           header
           aria-label="Project list"
         />
-      </div>
+      </ScrollArea>
     </div>
   )
 }

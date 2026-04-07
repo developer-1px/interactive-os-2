@@ -1,3 +1,4 @@
+// @useState-hatch — locale/viewport/i18nSheetOpen/presenting/canvasFocusedId/activeTabMap: view+interaction state not yet migrated to OS store
 import { useCallback, useMemo, useState } from 'react'
 import '../../styles/cms.css'
 import '../../styles/landingTokens.css'
@@ -12,6 +13,7 @@ import CmsFloatingToolbar from './CmsFloatingToolbar'
 import CmsI18nSheet from './CmsI18nSheet'
 import CmsPresentMode from './CmsPresentMode'
 import CmsDetailPanel from './CmsDetailPanel'
+import { RouteModal } from '@os/ui/RouteModal'
 import { useCmsData } from './cmsState'
 import type { Locale } from './cmsTypes'
 import { useEngine } from '@os/engine/useEngine'
@@ -126,13 +128,13 @@ export default function PageCms() {
       </div>
       <CmsViewportBar viewport={viewport} onViewportChange={setViewport} onPresent={() => setPresenting(true)} hidden={presenting} />
       <CmsFloatingToolbar store={store} focusedId={canvasFocusedId} dispatch={(cmd) => engine.dispatch(cmd)} hidden={presenting} />
-      {presenting && (
+      <RouteModal active={presenting} label="Presentation">
         <CmsPresentMode
           data={store}
           locale={locale}
           onExit={() => setPresenting(false)}
         />
-      )}
+      </RouteModal>
     </div>
     </AriaRoute>
   )

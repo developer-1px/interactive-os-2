@@ -36,7 +36,11 @@ export function matchKeyEvent(event: KeyboardEvent, combo: string): boolean {
 
   if (eventKey !== comboKey) return false
   if (event.ctrlKey !== parsed.ctrl) return false
-  if (event.shiftKey !== parsed.shift) return false
+  // Printable non-alpha single char (e.g. '*', '!', '/'):
+  // shift produced the character, so skip shift check unless combo explicitly requires Shift
+  const isPrintableSymbol = comboKey.length === 1 && !/[a-z]/i.test(comboKey)
+  if (!isPrintableSymbol && event.shiftKey !== parsed.shift) return false
+  if (isPrintableSymbol && parsed.shift && !event.shiftKey) return false
   if (event.altKey !== parsed.alt) return false
   if (event.metaKey !== parsed.meta) return false
 

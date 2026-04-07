@@ -1,10 +1,9 @@
-import { useState } from 'react'
 import { ax } from '@styles/ax'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import type { ItemSlots } from '@os/ui/types'
 
 const hookData = createStore({
@@ -26,7 +25,7 @@ const itemSlots: ItemSlots = {
 }
 
 export default function HooksListDemo() {
-  const [data, setData] = useState<NormalizedData>(hookData)
+  const [data, setData] = useStore(hookData)
 
   return (
     <>

@@ -1,11 +1,13 @@
+// @useState-hatch
 import type React from 'react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import type { Command, Middleware } from '@os/engine/types'
 import { crud } from '@os/plugins/crud'
 import { history } from '@os/plugins/history'
@@ -76,14 +78,16 @@ function createPlugins(
 }
 
 export default function EngineCommandDemo() {
-  const [data, setData] = useState<NormalizedData>(initialData)
+  const [data, setData] = useStore(initialData)
+  // @useState-hatch — entries is a growing demo log
   const [entries, setEntries] = useState<DispatchEntry[]>([])
-  const [state] = useState(() => {
+  const stateRef = useRef<{ seqBox: MutableBox<number>; traceBox: MutableBox<string[]>; plugins: ReturnType<typeof createPlugins> } | null>(null)
+  if (!stateRef.current) {
     const seqBox: MutableBox<number> = { current: 0 }
     const traceBox: MutableBox<string[]> = { current: [] }
-    return { seqBox, traceBox, plugins: createPlugins(seqBox, traceBox, setEntries) }
-  })
-  const plugins = state.plugins
+    stateRef.current = { seqBox, traceBox, plugins: createPlugins(seqBox, traceBox, setEntries) }
+  }
+  const plugins = stateRef.current.plugins
 
   return (
     <>
@@ -104,7 +108,7 @@ export default function EngineCommandDemo() {
 
       <div className="page-section">
         <h3 className="page-section-title">Dispatch Log ({entries.length})</h3>
-        <div className={ax({ textStyle: 'code', layout: 'scroll' })}>
+        <ScrollArea className={ax({ textStyle: 'code' })}>
           {entries.length === 0 ? (
             <span className="op-dim">Interact with the list to see dispatched commands…</span>
           ) : (
@@ -121,7 +125,7 @@ export default function EngineCommandDemo() {
               </div>
             ))
           )}
-        </div>
+        </ScrollArea>
       </div>
     </>
   )

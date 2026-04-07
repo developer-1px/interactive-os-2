@@ -1,13 +1,13 @@
+// @useState-hatch — initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; workspaceStore: NormalizedData init; sizes: SplitPane local
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Search } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { FileTreeView } from '@os/ui/FileTreeView'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import type { NormalizedData, Entity } from '@os/store/types'
-import { Breadcrumb } from '@os/ui/Breadcrumb'
+import { useStore } from '@os/store/useStore'
 import { QuickOpen } from '@os/ui/QuickOpen'
 import { FOCUS_ID } from '@os/axis/navigate'
 import { EXPANDED_ID } from '@os/axis/expand'
@@ -28,14 +28,13 @@ const TREE_RATIO_KEY = 'viewer-tree-ratio'
 const DEFAULT_TREE_RATIO = 0.18
 
 export default function PageViewer() {
-  const { pathname } = useLocation()
+  useLocation()
   const navigate = useNavigate()
-  const urlFilePath = useMemo(() => urlPathToFilePath(pathname, 'viewer', DEFAULT_ROOT), [pathname])
 
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
   const [loading, setLoading] = useState(true)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
-  const [workspaceStore, setWorkspaceStore] = useState(() => createWorkspace())
+  const [workspaceStore, setWorkspaceStore] = useStore(() => createWorkspace())
 
   const [sizes, setSizes] = useState<PaneSize[]>(() => {
     const saved = localStorage.getItem(TREE_RATIO_KEY)
@@ -47,7 +46,6 @@ export default function PageViewer() {
     if (typeof ratio === 'number') localStorage.setItem(TREE_RATIO_KEY, String(ratio))
   }, [sizes])
 
-  const selectedFile = urlFilePath && initialStore?.entities[urlFilePath] ? urlFilePath : null
 
   useEffect(() => {
     const initialFilePath = urlPathToFilePath(window.location.pathname, 'viewer', DEFAULT_ROOT)
@@ -192,20 +190,6 @@ export default function PageViewer() {
 
         {/* Content panel */}
         <div className={ax({ layout: 'fill' })}>
-          <div className={ax({ layout: 'spread', padding: 'xs', flex: 'none' })}>
-            <div className={ax({ layout: 'bar', gap: 'sm' })}>
-              {selectedFile && <Breadcrumb path={selectedFile} root={DEFAULT_ROOT} />}
-            </div>
-            <div className={ax({ layout: 'bar', gap: 'sm' })}>
-              <button
-                className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })}
-                onClick={() => setQuickOpenVisible(true)}
-                title="Quick Open (Cmd+P)"
-              >
-                <Search size={12} />
-              </button>
-            </div>
-          </div>
           <Workspace
             data={workspaceStore}
             onChange={handleWorkspaceChange}

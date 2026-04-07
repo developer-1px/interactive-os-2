@@ -44,3 +44,6 @@
 - [ ] [P1] form plugin: submit-on-Enter — Aria onActivate에서 dispatch 접근 불가, keyMap plugin으로 해결 필요 — 출처: form plugin retro (2026-03-29)
 - [ ] [P2] form plugin: 미들웨어 체인 통합 테스트 — engine 수준에서 rename:confirm 후 __errors__ 자동 갱신 검증 — 출처: form plugin retro (2026-03-29)
 - [ ] [P2] Form.tsx 정리 — FormDemo로 대체됨, Aria.Editable 의존은 부적절. 삭제 또는 input 기반 재구현 — 출처: form plugin retro (2026-03-29)
+- [ ] [P1] CMS 섹션 추가 실패 — + → 템플릿 선택 후 새 섹션이 사이드바/캔버스에 미표시. Zod 검증 또는 store 동기화 이슈 — 출처: /use power user 탐색 (2026-04-06)
+- [ ] [P2] CMS Cmd+↑/↓ 순서 변경 키보드 단축키 확인 — 하단 "위로"/"아래로" 버튼은 있으나 키보드로 작동하는지 미확인 — 출처: /use power user 탐색 (2026-04-06)
+- [ ] [P2] CMS 슬라이드 썸네일 클릭 시 패널 간헐적 미갱신 — 재현 조건 불명확, 포커스 경로에 따라 달라질 수 있음 — 출처: /use power user 탐색 (2026-04-06)

@@ -121,4 +121,55 @@ describe('APG Dialog — Keyboard Interaction', () => {
       })
     })
   })
+
+  // V1: 2026-04-06-modal-key-trap-prd.md
+  describe('Key trap (modal)', () => {
+    it('ArrowDown is trapped and does not propagate (defaultPrevented)', async () => {
+      const user = userEvent.setup()
+      const { container } = renderDialog(fixtureData())
+      const node = getNode(container, 'confirm')!
+      node.focus()
+
+      let defaultPrevented = false
+      const listener = (e: Event) => { defaultPrevented = (e as KeyboardEvent).defaultPrevented }
+      document.addEventListener('keydown', listener)
+
+      await user.keyboard('{ArrowDown}')
+
+      document.removeEventListener('keydown', listener)
+      expect(defaultPrevented).toBe(true)
+    })
+
+    it('ArrowUp is trapped and does not propagate', async () => {
+      const user = userEvent.setup()
+      const { container } = renderDialog(fixtureData())
+      const node = getNode(container, 'confirm')!
+      node.focus()
+
+      let defaultPrevented = false
+      const listener = (e: Event) => { defaultPrevented = (e as KeyboardEvent).defaultPrevented }
+      document.addEventListener('keydown', listener)
+
+      await user.keyboard('{ArrowUp}')
+
+      document.removeEventListener('keydown', listener)
+      expect(defaultPrevented).toBe(true)
+    })
+
+    it('Cmd+C (modifier key combo) is NOT trapped', async () => {
+      const user = userEvent.setup()
+      const { container } = renderDialog(fixtureData())
+      const node = getNode(container, 'confirm')!
+      node.focus()
+
+      let defaultPrevented = false
+      const listener = (e: Event) => { defaultPrevented = (e as KeyboardEvent).defaultPrevented }
+      document.addEventListener('keydown', listener)
+
+      await user.keyboard('{Meta>}c{/Meta}')
+
+      document.removeEventListener('keydown', listener)
+      expect(defaultPrevented).toBe(false)
+    })
+  })
 })

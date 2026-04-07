@@ -64,6 +64,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   stateGens?: StateGen[]
   /** Spatial navigation selector — when set, useAriaView activates DOM-based spatial bridge. */
   spatialSelector?: string | (() => string)
+  /** Fallback handler for unmatched keys — modal key trap. Separate from keyMap to avoid collision with literal '*' key. */
+  fallbackKey?: KeyHandler
   // Metadata — not used for behavior dispatch, only for external queries (e.g. tests)
   selectionFollowsFocus?: boolean
   activationFollowsSelection?: boolean

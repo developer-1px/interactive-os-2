@@ -56,6 +56,8 @@ export function treegrid(columns: number): AriaPattern {
       'Shift+Tab': g.tabCyclePrev,
       Enter: activateHandler,
       Space: sel.toggle,
+      '*': exp.expandSiblings,
+      'Mod+ArrowRight': exp.expandDescendants,
       ...sel.keys,
       ...sel.clickKeys,
     },

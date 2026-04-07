@@ -1,9 +1,20 @@
 /* QuickOpen — last-mile: positioning, animation, caret, placeholder */
 
-.quick-open-backdrop {
-  z-index: 100;
+dialog.quick-open-dialog-el {
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: none;
+  max-height: none;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
   justify-content: center;
   padding-top: 12vh;
+}
+
+dialog.quick-open-dialog-el::backdrop {
+  background: var(--surface-scrim, rgba(0, 0, 0, 0.5));
 }
 
 .quick-open-dialog {

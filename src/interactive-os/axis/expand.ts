@@ -95,6 +95,54 @@ export const expandCommands = defineCommands({
       },
     }),
   },
+
+  expandDescendants: {
+    type: 'core:expand-descendants' as const,
+    meta: true,
+    create: (nodeId: string) => ({ nodeId }),
+    handler: (store, { nodeId }) => {
+      const current = getExpandedIds(store)
+      const merged = new Set(current)
+      const walk = (id: string) => {
+        const children = (store.relationships[id] ?? []) as string[]
+        if (children.length > 0) {
+          merged.add(id)
+          for (const child of children) walk(child)
+        }
+      }
+      walk(nodeId)
+      if (merged.size === current.length) return store
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [...merged] },
+        },
+      }
+    },
+  },
+
+  expandSiblings: {
+    type: 'core:expand-siblings' as const,
+    meta: true,
+    create: (parentId: string) => ({ parentId }),
+    handler: (store, { parentId }) => {
+      const siblings = (store.relationships[parentId] ?? []) as string[]
+      const expandable = siblings.filter((id) => ((store.relationships[id] ?? []) as string[]).length > 0)
+      if (expandable.length === 0) return store
+      const current = getExpandedIds(store)
+      const merged = new Set(current)
+      for (const id of expandable) merged.add(id)
+      if (merged.size === current.length) return store
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [EXPANDED_ID]: { id: EXPANDED_ID, expandedIds: [...merged] },
+        },
+      }
+    },
+  },
 })
 
 
@@ -128,6 +176,13 @@ export function expanded(opts?: { allExpandable?: boolean }) {
   })
   const collapseOrFocusParent_ = key(['core:collapse', 'core:focus'], (ctx) =>
     ctx.expanded ? (ctx.expanded.is ? ctx.expanded.set(false) : ctx.focusParent()) : undefined)
+  const expandSiblings_ = key(['core:expand-siblings'], (ctx) => {
+    const parentId = ctx.getParent(ctx.focused)
+    if (!parentId) return undefined
+    return expandCommands.expandSiblings(parentId)
+  })
+  const expandDescendants_ = key(['core:expand-descendants'], (ctx) =>
+    expandCommands.expandDescendants(ctx.focused))
 
   return {
     keyMap: {} as Record<string, never>,
@@ -153,6 +208,8 @@ export function expanded(opts?: { allExpandable?: boolean }) {
     collapse: _collapse,
     expandOrFocusChild: expandOrFocusChild_,
     collapseOrFocusParent: collapseOrFocusParent_,
+    expandSiblings: expandSiblings_,
+    expandDescendants: expandDescendants_,
   }
 }
 

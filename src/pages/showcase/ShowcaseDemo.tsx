@@ -1,7 +1,8 @@
 // ② 2026-03-24-ui-docs-ssot-prd.md
 // src/pages/ShowcaseDemo.tsx
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import { components } from './showcaseRegistry'
 import { TestRunnerPanel } from '../../devtools/testRunner/TestRunnerPanel'
 
@@ -23,7 +24,7 @@ export function ShowcaseDemo({ slug }: { slug?: string }) {
 }
 
 function LiveDemo({ entry }: { entry: typeof components[number] }) {
-  const [data, setData] = useState(() => entry.makeData())
+  const [data, setData] = useStore(() => entry.makeData())
   const onChange = useCallback((next: NormalizedData) => setData(next), [])
   return <>{entry.render(data, onChange)}</>
 }

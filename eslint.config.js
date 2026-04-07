@@ -31,6 +31,7 @@ export default defineConfig([
         varsIgnorePattern: '^_',
         destructuredArrayIgnorePattern: '^_',
       }],
+      'complexity': ['warn', { max: 10 }],
     },
   },
   {

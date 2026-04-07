@@ -1,3 +1,4 @@
+// @useState-hatch
 // ② 2026-04-04-birdseye-mermaid-prd.md
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'

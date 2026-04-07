@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import { ax } from '@styles/ax'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import type { ItemSlots } from '@os/ui/types'
 import { Up, Down } from '../shared/kbdIcons'
 import { history } from '@os/plugins/history'
@@ -33,7 +32,7 @@ const itemSlots: ItemSlots = {
 }
 
 export default function RenameDemo() {
-  const [data, setData] = useState<NormalizedData>(bookmarkData)
+  const [data, setData] = useStore(bookmarkData)
 
   return (
     <>

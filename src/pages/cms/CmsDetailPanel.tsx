@@ -1,3 +1,4 @@
+// @useState-hatch — expanded (IconField disclosure): conditional render toggle, needs re-render
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react'
 import type React from 'react'
 import type { NormalizedData } from '@os/store/types'
@@ -246,13 +247,17 @@ function isValidUrl(value: string): boolean {
 
 function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
   const { elRef, displayValue, handleFocus, handleCommit } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
-  const [invalid, setInvalid] = useState(false)
+
+  const syncInvalid = useCallback(() => {
+    const val = elRef.current?.value.trim() ?? ''
+    const isInvalid = val !== '' && !isValidUrl(val)
+    elRef.current?.setAttribute('aria-invalid', String(isInvalid))
+  }, [elRef])
 
   const handleBlur = useCallback(() => {
     handleCommit()
-    const val = elRef.current?.value.trim() ?? ''
-    setInvalid(val !== '' && !isValidUrl(val))
-  }, [handleCommit, elRef])
+    syncInvalid()
+  }, [handleCommit, syncInvalid])
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -268,7 +273,6 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
         ref={elRef}
         className={`cms-detail-field__input ${ax({ surface: 'input' })} w-full outline-none`}
         type="url"
-        aria-invalid={invalid || undefined}
         defaultValue={displayValue}
         onFocus={handleFocus}
         onBlur={handleBlur}

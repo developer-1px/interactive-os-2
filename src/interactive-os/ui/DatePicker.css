@@ -9,10 +9,10 @@
   border-left: none;
   border-radius: 0 var(--shape-xs-radius) var(--shape-xs-radius) 0;
 }
+.dp-anchor { anchor-name: --dp-anchor; }
 .dp-dialog {
-  top: 100%;
-  left: 0;
-  z-index: 10;
+  position-anchor: --dp-anchor;
+  position-area: block-end span-inline-start;
   margin-top: var(--space-xs);
 }
 .dp-nav-bar { margin-bottom: var(--space-sm); }

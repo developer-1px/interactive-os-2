@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
 import { history } from '@os/plugins/history'
 import { dnd } from '@os/plugins/dnd'
@@ -30,7 +29,7 @@ const kanbanData = createStore({
 const plugins = [dnd(), history(), focusRecovery()]
 
 export default function DndDemo() {
-  const [data, setData] = useState<NormalizedData>(kanbanData)
+  const [data, setData] = useStore(kanbanData)
 
   return (
     <>

@@ -1,3 +1,4 @@
+// @useState-hatch — userSelectedId: derived from activeSessions, needs OS select axis migration
 // ② 2026-04-03-viewer-command-prd.md
 import { useState, useEffect, useMemo, useRef, type RefObject } from 'react'
 import { connectSession, disconnectSession, useTimeline, useSessionMeta } from '../viewer/viewerStore'

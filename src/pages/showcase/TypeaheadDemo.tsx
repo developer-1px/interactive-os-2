@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData, Entity } from '@os/store/types'
+import type { Entity } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import type { ItemSlots } from '@os/ui/types'
 import { typeahead } from '@os/plugins/typeahead'
 
@@ -60,7 +60,7 @@ const itemSlots: ItemSlots = {
 }
 
 export default function TypeaheadDemo() {
-  const [data] = useState<NormalizedData>(fruitData)
+  const [data] = useStore(fruitData)
 
   return (
     <>

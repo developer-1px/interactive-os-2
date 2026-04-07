@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
 import { clipboard } from '@os/plugins/clipboard'
@@ -30,7 +29,7 @@ const colorData = createStore({
 const plugins = [crud(), clipboard(), history(), focusRecovery()]
 
 export default function ClipboardDemo() {
-  const [data, setData] = useState<NormalizedData>(colorData)
+  const [data, setData] = useStore(colorData)
 
   return (
     <>

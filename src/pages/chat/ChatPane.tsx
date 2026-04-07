@@ -1,4 +1,5 @@
 // ② 2026-03-27-claude-chat-phase-a-prd.md
+// @useState-hatch
 import { useCallback, useMemo, useState, useEffect, useRef } from 'react'
 import { ChatFeed } from '@os/ui/chat/ChatFeed'
 import { Composer } from '@os/ui/Composer'
@@ -6,6 +7,7 @@ import type { ComposerHandle } from '@os/ui/Composer'
 import { ThinkingBlock } from '@os/ui/chat/ThinkingBlock'
 import { ToolSummaryBlock, ToolResultBlock } from '@os/ui/chat/ToolSummaryBlock'
 import { StreamingTextBlock } from '@os/ui/chat/StreamingTextBlock'
+import { A2UIBlock } from '@os/ui/chat/A2UIBlock'
 import { sendMessage, clearSession, interruptSession, useChatSession } from './chatStore'
 import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
 import { ax } from '@styles/ax'
@@ -18,6 +20,7 @@ const chatRenderers: BlockRendererMap = {
   tool_use: ToolSummaryBlock,
   tool_result: ToolResultBlock,
   streaming_text: StreamingTextBlock,
+  a2ui: A2UIBlock,
 }
 
 const activityLabels = {

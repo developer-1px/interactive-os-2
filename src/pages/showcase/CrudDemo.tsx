@@ -1,10 +1,9 @@
-import { useState } from 'react'
 import { ax } from '@styles/ax'
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { createStore, getChildren } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import type { Plugin } from '@os/plugins/types'
 import { key } from '@os/axis/types'
 import { FOCUS_ID } from '@os/axis/navigate'
@@ -72,7 +71,7 @@ const createPlugin: Plugin = {
 const plugins = [crud(), createPlugin, history(), focusRecovery()]
 
 export default function CrudDemo() {
-  const [data, setData] = useState<NormalizedData>(treeData)
+  const [data, setData] = useStore(treeData)
 
   const handleCreate = () => {
     const aria = getAriaActions('crud')

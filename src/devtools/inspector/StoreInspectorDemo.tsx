@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, Folder, File } from 'lucide-react'
 import { Up, Down, Left, Right } from '../../pages/shared/kbdIcons'
 import type { NormalizedData } from '@os/store/types'
 import type { Plugin } from '@os/plugins/types'
@@ -75,7 +75,7 @@ function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record
       <span style={{ opacity: 0.5, width: 10, textAlign: 'center' }}>
         {hasChildren ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
       </span>
-      <span style={{ opacity: 0.4, fontSize: 'var(--type-caption-size)' }}>{type === 'folder' ? '📁' : '📄'}</span>
+      <span className={ax({ opacity: 'faint', textStyle: 'caption' })}>{type === 'folder' ? <Folder size={12} /> : <File size={12} />}</span>
       <span>{name}</span>
     </div>
   )

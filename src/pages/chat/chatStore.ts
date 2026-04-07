@@ -1,7 +1,7 @@
 // ② 2026-03-27-claude-chat-phase-a-prd.md
 import { useSyncExternalStore } from 'react'
 import type { ChatWsClientMessage } from './chatWsProtocol'
-import type { ChatMessage } from '@os/ui/chat/types'
+import type { ChatMessage, ChatBlock } from '@os/ui/chat/types'
 
 // --- Per-session state ---
 
@@ -52,7 +52,44 @@ function pushMessage(id: string, msg: ChatMessage, extra?: Partial<ChatSession>)
 }
 
 function makeMsg(role: ChatMessage['role'], content: string): ChatMessage {
-  return { id: `${role}-${Date.now()}`, role, ts: Date.now(), blocks: [{ type: 'text', content }] }
+  return { id: `${role}-${Date.now()}`, role, ts: Date.now(), blocks: parseA2UIBlocks(content) }
+}
+
+/** Parse ```a2ui code blocks into mixed TextBlock + DataBlock(a2ui) sequences */
+function parseA2UIBlocks(text: string): ChatBlock[] {
+  const blocks: ChatBlock[] = []
+  const regex = /```a2ui\s*\n([\s\S]*?)```/g
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = regex.exec(text)) !== null) {
+    // Text before the code block
+    const before = text.slice(lastIndex, match.index).trim()
+    if (before) blocks.push({ type: 'text', content: before })
+
+    // Parse JSON → A2UI DataBlock
+    try {
+      const payload = JSON.parse(match[1])
+      if (payload?.components) {
+        blocks.push({ type: 'a2ui', data: payload })
+      } else {
+        blocks.push({ type: 'code', content: match[1], language: 'json' })
+      }
+    } catch {
+      blocks.push({ type: 'code', content: match[1], language: 'json' })
+    }
+
+    lastIndex = match.index + match[0].length
+  }
+
+  // Remaining text after last code block
+  const after = text.slice(lastIndex).trim()
+  if (after) blocks.push({ type: 'text', content: after })
+
+  // No a2ui blocks found — return plain text
+  if (blocks.length === 0) blocks.push({ type: 'text', content: text })
+
+  return blocks
 }
 
 function commitAccumulated(s: ChatSession): ChatMessage[] {

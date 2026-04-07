@@ -311,10 +311,10 @@ describe('spatial cross-boundary + sticky cursor', () => {
     await user.keyboard('{ArrowDown}') // b→d in sec2 (sticky: sec1→b)
     expect(getFocused(container)).toBe('d')
     await user.keyboard('{Escape}') // back to depth 0, clears sticky cursors
-    // Now at depth 0, focused on sec2 (spatial parent was sec2)
-    // Re-enter: focus sec1 and Enter
+    // Now at depth 0, engine focus on sec2 (spatial parent was sec2)
+    // Click sec1 to set engine focus, then Enter
     const sec1Again = container.querySelector('[data-test-id="sec1"]') as HTMLElement
-    act(() => { sec1Again.focus() })
+    await user.click(sec1Again)
     await user.keyboard('{Enter}')
     // Sticky was cleared, so first child (a), not b
     expect(getFocused(container)).toBe('a')

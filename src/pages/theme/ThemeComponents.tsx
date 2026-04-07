@@ -1,5 +1,6 @@
-import React from 'react'
+import type React from 'react'
 import { ax } from '@styles/ax'
+import { useStore } from '@os/store/useStore'
 import '@styles/ax.css'
 import './PageThemeCreator.css'
 import { Button } from '@os/ui/Button'
@@ -66,9 +67,9 @@ const spinbuttonData = createStore({
 
 /* ══ Section Card ══ */
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className={ax({ surface: 'display', layout: 'column', gap: 'sm', padding: 'md', shape: 'lg' })}>
+    <div className={`${ax({ surface: 'display', layout: 'column', gap: 'sm', padding: 'md', shape: 'lg' })}${className ? ` ${className}` : ''}`}>
       <h3 className={ax({ textStyle: 'overline', text: 'muted' })}>{title}</h3>
       {children}
     </div>
@@ -78,20 +79,20 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 /* ══ Components Tab ══ */
 
 export function ThemeComponents() {
-  const [checkboxState, setCheckboxState] = React.useState(checkboxData)
-  const [radioState, setRadioState] = React.useState(radioData)
-  const [switchState, setSwitchState] = React.useState(switchData)
-  const [toggleState, setToggleState] = React.useState(toggleData)
-  const [disclosureState, setDisclosureState] = React.useState(disclosureData)
-  const [accordionState, setAccordionState] = React.useState(accordionData)
-  const [toggleGroupState, setToggleGroupState] = React.useState(toggleGroupData)
-  const [sliderState, setSliderState] = React.useState(sliderData)
-  const [spinbuttonState, setSpinbuttonState] = React.useState(spinbuttonData)
+  const [checkboxState, setCheckboxState] = useStore(checkboxData)
+  const [radioState, setRadioState] = useStore(radioData)
+  const [switchState, setSwitchState] = useStore(switchData)
+  const [toggleState, setToggleState] = useStore(toggleData)
+  const [disclosureState, setDisclosureState] = useStore(disclosureData)
+  const [accordionState, setAccordionState] = useStore(accordionData)
+  const [toggleGroupState, setToggleGroupState] = useStore(toggleGroupData)
+  const [sliderState, setSliderState] = useStore(sliderData)
+  const [spinbuttonState, setSpinbuttonState] = useStore(spinbuttonData)
 
   return (
     <div className={ax({ layout: 'column', gap: 'xl' })}>
-      {/* Row 1: Buttons */}
-      <Section title="BUTTONS">
+      {/* Row 1: Buttons — fit to content width */}
+      <Section title="BUTTONS" className="theme-section-fit">
         <div className={ax({ layout: 'column', gap: 'sm' })}>
           {(['accent', 'danger', 'success', 'warning', 'neutral'] as const).map(tone => (
             <div key={tone} className={ax({ layout: 'bar', gap: 'sm' })}>

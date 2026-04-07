@@ -9,12 +9,13 @@ import { useWriterChatSync, sendWriterMessage, getSessionForFile } from './write
 import { requestAnalysis, type AnalysisResult } from './writerAnalyze'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import WriterFileBrowser from './WriterFileBrowser'
-import { PyramidView } from './PyramidView'
+import { PyramidView, buildPyramids } from './PyramidView'
 import { SlideView, buildSlides } from './SlideView'
 import { ChatPane } from '../chat/ChatPane'
 import { WriterTreeGrid } from '@os/ui/WriterTreeGrid'
 import type { EditKeyContext } from '@os/primitives/aria'
 import { SplitPane } from '@os/ui/SplitPane'
+import { RouteModal } from '@os/ui/RouteModal'
 import type { PaneSize } from '@os/ui/SplitPane'
 import { history } from '@os/plugins/history'
 import { crud } from '@os/plugins/crud'
@@ -38,6 +39,7 @@ import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
 import type { VisibilityFilter } from '@os/engine/types'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import { createBatchCommand, type Command, type Plugin } from '@os/engine/types'
 import { getVisibleNodes } from '@os/engine/getVisibleNodes'
 import './PageWriter.css'
@@ -624,6 +626,7 @@ export default function PageWriter() {
   }, [handleNew, handleSave, handleAnalyze])
 
   const slideCount = useMemo(() => buildSlides(data).length, [data])
+  const pyramidCount = useMemo(() => buildPyramids(data).length, [data])
 
   const writerKeyMap: RouteKeyMap = useMemo(() => ({
     'Mod+S': defineRouteKey('writer:save', () => handleSave(), 'Writer'),
@@ -637,16 +640,22 @@ export default function PageWriter() {
       'ArrowLeft': defineRouteKey('writer:slide-prev', () => setSlideIndex(i => Math.max(i - 1, 0)), 'Writer'),
       'ArrowUp': defineRouteKey('writer:slide-prev-alt', () => setSlideIndex(i => Math.max(i - 1, 0)), 'Writer'),
     } : {}),
-  }), [handleSave, viewMode, slideCount])
+    ...(viewMode === 'pyramid' ? {
+      'ArrowRight': defineRouteKey('writer:pyramid-next', () => setSlideIndex(i => Math.min(i + 1, pyramidCount - 1)), 'Writer'),
+      'ArrowDown': defineRouteKey('writer:pyramid-next-alt', () => setSlideIndex(i => Math.min(i + 1, pyramidCount - 1)), 'Writer'),
+      'ArrowLeft': defineRouteKey('writer:pyramid-prev', () => setSlideIndex(i => Math.max(i - 1, 0)), 'Writer'),
+      'ArrowUp': defineRouteKey('writer:pyramid-prev-alt', () => setSlideIndex(i => Math.max(i - 1, 0)), 'Writer'),
+    } : {}),
+  }), [handleSave, viewMode, slideCount, pyramidCount])
 
   return (
     <AriaRoute keyMap={writerKeyMap} label="Writer">
-      {viewMode === 'slides' && (
+      <RouteModal active={viewMode === 'slides'} label="Slide view">
         <SlideView data={data} slideIndex={slideIndex} slideCount={slideCount} />
-      )}
-      {viewMode === 'pyramid' && (
-        <PyramidView data={data} onExit={() => setViewMode('tree')} />
-      )}
+      </RouteModal>
+      <RouteModal active={viewMode === 'pyramid'} label="Pyramid view">
+        <PyramidView data={data} slideIndex={slideIndex} />
+      </RouteModal>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
         <Panel header="Files" surface="sunken">
           <WriterFileBrowser onFileSelect={handleFileSelect} />
@@ -661,7 +670,7 @@ export default function PageWriter() {
             </span>
           </div>
 
-          <div className={ax({ layout: 'scroll', padding: 'md' })}>
+          <ScrollArea className={ax({ padding: 'md' })}>
             {viewMode === 'prose' ? (
               <ProseView data={data} />
             ) : (
@@ -673,7 +682,7 @@ export default function PageWriter() {
                 aria-label="Document structure"
               />
             )}
-          </div>
+          </ScrollArea>
         </Panel>
 
         <Panel header="Chat" surface="sunken" scroll={false}>

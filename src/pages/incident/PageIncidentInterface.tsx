@@ -1,3 +1,4 @@
+// @useState-hatch
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { ax } from '@styles/ax'
 import './PageIncidentInterface.css'
@@ -432,7 +433,7 @@ export default function PageIncidentInterface() {
             items={items}
             feedRef={feedRef}
             isStreaming={isStreaming}
-            className={ax({ layout: 'scroll', flex: '1', gap: 'sm', padding: 'sm' })}
+            className={ax({ flex: '1', gap: 'sm', padding: 'sm' })}
             renderItem={(msg) => {
               if (msg.type === 'user') {
                 return (

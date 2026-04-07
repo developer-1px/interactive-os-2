@@ -1,8 +1,10 @@
 // ② 2026-03-27-component-creator-prd.md
+// @useState-hatch
 
 import React, { useState } from 'react'
 import type { RegistryEntry } from '../componentRegistry'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import '../PageComponentCreator.css'
 
 interface ComponentChatProps {
@@ -61,7 +63,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
       )}
 
       {/* Messages */}
-      <div className={ax({ layout: 'scroll', flex: '1', gap: 'sm', padding: 'md' })}>
+      <ScrollArea className={ax({ flex: '1', gap: 'sm', padding: 'md' })}>
         {messages.length === 0 && (
           <div className={ax({ padding: 'xl', textStyle: 'body', text: 'muted' })}>
             {entry
@@ -77,7 +79,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
             {msg.content}
           </div>
         ))}
-      </div>
+      </ScrollArea>
 
       {/* Input */}
       <div className={ax({ padding: 'sm', border: 'top' })}>

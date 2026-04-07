@@ -21,6 +21,8 @@ export const tree = composePattern(
     End: nav.last,
     Space: sel.toggle,
     Enter: activateHandler,
+    '*': exp.expandSiblings,
+    'Mod+ArrowRight': exp.expandDescendants,
     ...sel.keys,
     ...sel.clickKeys,
   },

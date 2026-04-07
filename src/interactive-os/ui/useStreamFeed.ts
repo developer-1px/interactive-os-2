@@ -84,7 +84,11 @@ export function useStreamFeed<T>(options: UseStreamFeedOptions<T> = {}): UseStre
       wasNearBottomRef.current = isNearBottom(el, bottomThreshold)
     }
     el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
+    el.addEventListener('scrollend', onScroll, { passive: true })
+    return () => {
+      el.removeEventListener('scroll', onScroll)
+      el.removeEventListener('scrollend', onScroll)
+    }
   }, [bottomThreshold])
 
   // Flush pending scroll (batched via rAF)

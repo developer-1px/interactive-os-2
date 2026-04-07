@@ -56,9 +56,7 @@ export function pinFileReducer(prev: NormalizedData, filePath: string): Normaliz
     data: { type: 'tab', label: filename, contentType: 'file', contentRef: filePath },
   }, tgId, insertIndex)
 
-  if (previewIndex >= 0) {
-    store = updateEntityData(store, tgId, { activeTabId: PREVIEW_TAB_ID })
-  }
+  store = updateEntityData(store, tgId, { activeTabId: permanentId })
 
   return store
 }

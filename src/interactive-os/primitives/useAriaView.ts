@@ -279,6 +279,10 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         if (!handler) return
         const handled = dispatchKeyAction(ctx, handler, observedEngine)
         if (handled) event.preventDefault()
+      } else if (pattern.fallbackKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
+        const ctx = createPatternContext(observedEngine, patternCtxOptions)
+        const handled = dispatchKeyAction(ctx, pattern.fallbackKey, observedEngine)
+        if (handled) event.preventDefault()
       } else {
         let handled = false
         if (pluginUnhandledKeyHandlers) {
@@ -295,7 +299,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         }
       }
     },
-    [mergedKeyMap, observedEngine, patternCtxOptions, pluginUnhandledKeyHandlers],
+    [mergedKeyMap, observedEngine, patternCtxOptions, pluginUnhandledKeyHandlers, pattern.fallbackKey],
   )
 
   // ── getNodeProps ──

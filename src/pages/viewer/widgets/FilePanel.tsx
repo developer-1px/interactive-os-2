@@ -1,3 +1,4 @@
+// @useState-hatch — content: async file fetch; spreadMode: view toggle
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { SpreadReader } from '@os/ui/SpreadReader'
 import { FilePreview } from '@os/ui/FilePreview'
@@ -6,6 +7,7 @@ import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { fetchFile } from '../fsClient'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 
 export function FilePanel({ path }: { path: string }) {
   const [content, setContent] = useState('')
@@ -36,8 +38,10 @@ export function FilePanel({ path }: { path: string }) {
 
   return (
     <AriaRoute keyMap={keyMap}>
-      <div ref={bodyRef} className={ax({ layout: 'scroll', flex: '1' })}>
-        <FilePreview content={content} filename={filename} />
+      <div className={ax({ layout: 'fill' })}>
+        <ScrollArea ref={bodyRef} className={ax({ flex: '1' })}>
+          <FilePreview content={content} filename={filename} />
+        </ScrollArea>
       </div>
     </AriaRoute>
   )

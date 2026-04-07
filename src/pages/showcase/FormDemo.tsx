@@ -1,9 +1,10 @@
+// @useState-hatch
 import { useState } from 'react'
 import { ax } from '@styles/ax'
 import { z } from 'zod'
 import { createStore, updateEntityData } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import {
   formCommands,
   getFormErrors,
@@ -42,7 +43,7 @@ const initialData = createStore({
 const fieldIds = ['name', 'email', 'team']
 
 export default function FormDemo() {
-  const [store, setStore] = useState<NormalizedData>(initialData)
+  const [store, setStore] = useStore(initialData)
   const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (nodeId: string, value: string) => {

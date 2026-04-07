@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 
 const demoData = createStore({
   entities: {
@@ -18,7 +17,7 @@ const demoData = createStore({
 })
 
 export default function AriaListboxDemo() {
-  const [data, setData] = useState<NormalizedData>(demoData)
+  const [data, setData] = useStore(demoData)
 
   return (
     <>

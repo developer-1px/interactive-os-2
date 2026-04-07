@@ -1,5 +1,6 @@
-import React from 'react'
+import type React from 'react'
 import { ax } from '@styles/ax'
+import { useStore } from '@os/store/useStore'
 import '@styles/ax.css'
 import './PageThemeCreator.css'
 import { Divider } from '@os/ui/Divider'
@@ -96,8 +97,8 @@ const notifSwitchData = makeStore({ email: 'Email notifications', push: 'Push no
 const themeRadioData = makeStore({ system: 'System', light: 'Light', dark: 'Dark' })
 
 function SettingsScenario() {
-  const [notifState, setNotifState] = React.useState(notifSwitchData)
-  const [themeState, setThemeState] = React.useState(themeRadioData)
+  const [notifState, setNotifState] = useStore(notifSwitchData)
+  const [themeState, setThemeState] = useStore(themeRadioData)
 
   return (
     <div className={ax({ layout: 'column', gap: 'lg' })}>

@@ -1,3 +1,4 @@
+// @useState-hatch — pickerOpen (template picker disclosure): local UI state not yet migrated to OS
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type React from 'react'
 import { ROOT_ID } from '@os/store/types'

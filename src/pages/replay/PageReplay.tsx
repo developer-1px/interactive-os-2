@@ -13,6 +13,7 @@ import { TerminalOutput } from '@os/ui/TerminalOutput'
 import type { ChatMessage } from '@os/ui/chat/types'
 import { useAnimationQueue } from '@os/ui/useAnimationQueue'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import { chatReducer, toReplayDeltas, type TimedDelta } from './replayDelta'
 import { parseJsonl, extractToolSteps } from './parseJsonl'
 import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
@@ -23,6 +24,7 @@ import { chatRenderers } from './replayRenderers'
 import { useViewerTabs } from './useViewerTabs'
 import type { FileViewerHandle, ViewerTab } from './viewerTypes'
 
+// @useState-hatch — selectedId/allMessages/messages: async replay data; sizes: SplitPane local; rightTab: two-tab toggle
 // --- Session loading ---
 
 interface SessionFile {
@@ -281,7 +283,7 @@ export default function PageReplay() {
           )}
 
           {/* Content */}
-          <div className={`${ax({ flex: '1', layout: 'scroll', padding: 'sm' })} min-h-0`}>
+          <ScrollArea className={`${ax({ flex: '1', padding: 'sm' })} min-h-0`}>
             {activeTab?.type === 'file' ? (
               <FileViewer ref={fileViewerRef} filename={filenameFrom(activeTab.path)} />
             ) : activeTab?.type === 'search' ? (
@@ -293,7 +295,7 @@ export default function PageReplay() {
                 tool_use 스텝이 재생되면 여기에 표시됩니다
               </div>
             )}
-          </div>
+          </ScrollArea>
         </div>
 
         {/* Right: Chat tabs (Replay / Live) */}

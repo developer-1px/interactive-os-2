@@ -1,9 +1,8 @@
-import { useState } from 'react'
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
 import { Grid } from '@os/ui/Grid'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 
 const gridData = createStore({
   entities: {
@@ -25,7 +24,7 @@ const columns = [
 ]
 
 export default function CellGridDemo() {
-  const [data, setData] = useState<NormalizedData>(gridData)
+  const [data, setData] = useStore(gridData)
 
   return (
     <>

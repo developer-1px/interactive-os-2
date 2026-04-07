@@ -1,6 +1,7 @@
 // ② 2026-03-25-i18n-editor-app-prd.md
 import React, { useRef, useEffect } from 'react'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import { useStore } from '@os/store/useStore'
 import { Grid } from '@os/ui/Grid'
 import { GRID_COL_ID } from '@os/axis/navigate'
@@ -46,7 +47,7 @@ export default function PageI18nEditor() {
   }
 
   return (
-    <div className={ax({ padding: 'lg', layout: 'scroll' })}>
+    <ScrollArea className={ax({ padding: 'lg' })}>
       <div className="page-header">
         <h2 className="page-title">i18n Editor</h2>
         <p className="page-desc">
@@ -79,6 +80,6 @@ export default function PageI18nEditor() {
           />
         </div>
       </div>
-    </div>
+    </ScrollArea>
   )
 }

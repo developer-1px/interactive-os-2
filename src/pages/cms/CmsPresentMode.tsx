@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { ImageOff } from 'lucide-react'
 import cmsStyles from './CmsLanding.module.css'
 import { getChildren } from '@os/store/createStore'
@@ -16,16 +16,9 @@ interface CmsPresentModeProps {
 }
 
 export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-
   const keyMap = useMemo(() => ({
     Escape: defineRouteKey('present:exit', () => onExit(), 'PresentMode'),
   }), [onExit])
-
-  // Present mode has no focusable content — autoFocus the container so keyMap catches Escape
-  useEffect(() => {
-    containerRef.current?.focus()
-  }, [])
 
   function renderNode(nodeId: string): React.ReactNode {
     const entity = data.entities[nodeId]
@@ -90,8 +83,6 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
     <AriaRoute keyMap={keyMap} label="Present Mode">
       <div
         className="cms-present fixed inset-0 overflow-y-auto cursor-pointer"
-        ref={containerRef}
-        tabIndex={-1}
         onClick={onExit}
       >
         <div className={`cms-landing ${cmsStyles.cmsLanding} w-full overflow-x-hidden`}>

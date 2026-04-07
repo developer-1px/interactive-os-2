@@ -1,10 +1,13 @@
+// @useState-hatch — entries/selection are demo log state
 import { useState, useRef } from 'react'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import { Up, Down } from '../shared/kbdIcons'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import type { StoreDiff } from '@os/store/computeStoreDiff'
 import { computeStoreDiff, applyDelta } from '@os/store/computeStoreDiff'
 import { crud } from '@os/plugins/crud'
@@ -46,11 +49,12 @@ function inferType(diffs: StoreDiff[]): string {
 }
 
 export default function EngineDiffDemo() {
-  const [data, setData] = useState<NormalizedData>(initialData)
+  const [data, setData] = useStore(initialData)
   const [entries, setEntries] = useState<DiffEntry[]>([])
   const [selection, setSelection] = useState<{ seq: number; reversed: boolean } | null>(null)
   const seqRef = useRef(0)
-  const [plugins] = useState(() => [crud(), focusRecovery()])
+  const pluginsRef = useRef([crud(), focusRecovery()])
+  const plugins = pluginsRef.current
   const prevRef = useRef<NormalizedData>(initialData)
 
   const selectedEntry = selection ? entries.find((e) => e.seq === selection.seq) ?? null : null
@@ -93,7 +97,7 @@ export default function EngineDiffDemo() {
 
       <div className="page-section">
         <h3 className="page-section-title">Diff Log ({entries.length})</h3>
-        <div className={ax({ textStyle: 'code', layout: 'scroll' })}>
+        <ScrollArea className={ax({ textStyle: 'code' })}>
           {entries.length === 0 ? (
             <span className="op-dim">Interact with the list to generate diffs…</span>
           ) : (
@@ -109,7 +113,7 @@ export default function EngineDiffDemo() {
               </div>
             ))
           )}
-        </div>
+        </ScrollArea>
       </div>
 
       {selectedEntry && (

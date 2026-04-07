@@ -31,7 +31,7 @@ export function useVirtualScroll({
   const internalRef = useRef<HTMLDivElement>(null!)
   const containerRef = externalRef ?? internalRef
   const heightCache = useRef(new Map<number, number>())
-  const rafId = useRef(0)
+
 
   const [visibleRange, setVisibleRange] = useState<VisibleRange>({ start: 0, end: 0 })
   const [totalHeight, setTotalHeight] = useState(0)
@@ -105,26 +105,29 @@ export function useVirtualScroll({
     setTotalHeight(prev => prev === newTotal ? prev : newTotal)
   }, [itemCount, getItemHeight, getOffsetForIndex, computeTotalHeight, overscan])
 
-  // Scroll handler with rAF
+  // Scroll handler with rAF + scrollend for final accuracy
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
 
+    // scrollend fires once after scroll completes — ensures final state accuracy
+    el.addEventListener('scrollend', recalc, { passive: true })
+
+    // scroll + rAF for real-time updates during scrolling
+    let rafId = 0
     function onScroll() {
-      if (rafId.current) return
-      rafId.current = requestAnimationFrame(() => {
-        rafId.current = 0
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = 0
         recalc()
       })
     }
-
     el.addEventListener('scroll', onScroll, { passive: true })
+
     return () => {
+      el.removeEventListener('scrollend', recalc)
       el.removeEventListener('scroll', onScroll)
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current)
-        rafId.current = 0
-      }
+      if (rafId) cancelAnimationFrame(rafId)
     }
   }, [recalc])
 

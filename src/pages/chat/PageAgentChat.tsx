@@ -1,5 +1,5 @@
 // ② 2026-03-28-workspace-sync-prd.md
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useEffect, useRef, useCallback, useMemo } from 'react'
 import { Plus, X, Circle, FileText } from 'lucide-react'
 import { ChatPane } from './ChatPane'
 import {
@@ -22,6 +22,7 @@ import {
 import type { TabData, SplitData } from '@os/plugins/workspaceStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData, Entity } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import {
   getChildren,
   getEntityData,
@@ -30,6 +31,7 @@ import {
 import { useKeyMap } from '@os/primitives/useKeyMap'
 import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import '@styles/ax.css'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import './PageAgentChat.css'
@@ -147,7 +149,7 @@ export default function PageAgentChat() {
   const activeSession = useActiveSession()
   const activeSessionId = activeSession?.id ?? null
 
-  const [wsData, setWsData] = useState(() => syncAsSplitPanes(createWorkspace(), sessions))
+  const [wsData, setWsData] = useStore(() => syncAsSplitPanes(createWorkspace(), sessions))
   const wsDataRef = useRef(wsData)
 
   useEffect(() => {
@@ -200,7 +202,7 @@ export default function PageAgentChat() {
             <Plus size={14} />
           </button>
         </PanelHeader>
-        <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs', gap: 'xs' })}>
+        <ScrollArea className={ax({ flex: '1', padding: 'xs', gap: 'xs' })}>
           {sessions.map(s => {
             const isActive = s.id === activeSessionId
             return (
@@ -227,7 +229,7 @@ export default function PageAgentChat() {
           {sessions.length === 0 && (
             <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No sessions</div>
           )}
-        </div>
+        </ScrollArea>
       </div>
 
       {sessions.length > 0 ? (

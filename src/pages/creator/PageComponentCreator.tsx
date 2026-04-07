@@ -1,6 +1,6 @@
 // ② 2026-03-28-workspace-sync-prd.md
 
-import { useMemo, useCallback, useState } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
 import { componentRegistry, type RegistryEntry } from './componentRegistry'
@@ -13,6 +13,7 @@ import { addEntity } from '@os/store/createStore'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData, Entity } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
 import type { TabData } from '@os/plugins/workspaceStore'
 import { useKeyMap } from '@os/primitives/useKeyMap'
 import { ax } from '@styles/ax'
@@ -78,7 +79,7 @@ export default function PageComponentCreator() {
   const params = useParams()
   const navigate = useNavigate()
 
-  const [selectedName, setSelectedName] = useState(() => nameFromParams(params))
+  const selectedName = nameFromParams(params)
 
   const selectedEntry: RegistryEntry | undefined = useMemo(
     () => componentRegistry.find((e) => e.name === selectedName),
@@ -87,13 +88,12 @@ export default function PageComponentCreator() {
 
   const handleSelectComponent = useCallback(
     (name: string) => {
-      setSelectedName(name)
       navigate(`/creator/${name}`)
     },
     [navigate],
   )
 
-  const [wsData, setWsData] = useState(() => createCreatorWorkspace())
+  const [wsData, setWsData] = useStore(() => createCreatorWorkspace())
 
   const { onKeyDown: handleLayoutKeyDown } = useKeyMap({})
 

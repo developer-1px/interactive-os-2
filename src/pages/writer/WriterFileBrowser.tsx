@@ -1,10 +1,11 @@
 // ② 2026-04-04-md-writer-prd.md
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { TreeView } from '@os/ui/TreeView'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData, Entity } from '@os/store/types'
-import { ax } from '@styles/ax'
+import { useStore } from '@os/store/useStore'
+import { ScrollArea } from '@os/ui/ScrollArea'
 
 interface FileEntry { name: string; path: string }
 interface DirListing { files: FileEntry[]; dirs: FileEntry[] }
@@ -34,11 +35,11 @@ interface WriterFileBrowserProps {
 }
 
 export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserProps) {
-  const [fileData, setFileData] = useState<NormalizedData>(createStore())
-  const [loadedDirs, setLoadedDirs] = useState<Set<string>>(new Set())
+  const [fileData, setFileData] = useStore(createStore())
+  const loadedDirsRef = useRef(new Set<string>())
 
   const loadDir = useCallback(async (dirPath: string) => {
-    if (loadedDirs.has(dirPath)) return
+    if (loadedDirsRef.current.has(dirPath)) return
     try {
       const res = await fetch(`/api/writer/list?dir=${encodeURIComponent(dirPath)}`)
       if (!res.ok) return
@@ -71,11 +72,11 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
         })
       }
 
-      setLoadedDirs(prev => new Set(prev).add(dirPath))
+      loadedDirsRef.current.add(dirPath)
     } catch {
       // ignore
     }
-  }, [loadedDirs])
+  }, [])
 
   useEffect(() => { loadDir('') }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -89,12 +90,12 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
         const dirPath = data.path as string
         const children = next.relationships[id] ?? []
         // If dir is visible (expanded) and has no children yet, load it
-        if (children.length === 0 && !loadedDirs.has(dirPath)) {
+        if (children.length === 0 && !loadedDirsRef.current.has(dirPath)) {
           loadDir(dirPath)
         }
       }
     }
-  }, [loadDir, loadedDirs])
+  }, [loadDir])
 
   const handleActivate = useCallback((nodeId: string) => {
     if (nodeId.startsWith('file:')) {
@@ -109,7 +110,7 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
   }, [fileData, onFileSelect, loadDir])
 
   return (
-    <div className={ax({ layout: 'scroll' })}>
+    <ScrollArea>
       <TreeView
         data={fileData}
         onChange={handleChange}
@@ -117,6 +118,6 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
         selectionFollowsFocus
         aria-label="File browser"
       />
-    </div>
+    </ScrollArea>
   )
 }

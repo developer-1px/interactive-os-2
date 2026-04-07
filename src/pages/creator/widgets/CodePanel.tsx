@@ -1,4 +1,5 @@
 // ② 2026-03-28-workspace-sync-prd.md
+// @useState-hatch
 
 import { useState } from 'react'
 import type { RegistryEntry } from '../componentRegistry'
