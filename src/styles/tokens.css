@@ -22,10 +22,11 @@
   --surface-outlined: transparent;
 
   /* ── Shadow (xs/sm/md/lg scale) ── */
-  --shadow-xs: 0 4px 20px rgba(0,0,0,0.035);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.15);
-  --shadow-md: 0 2px 6px rgba(0,0,0,0.2), 0 0 1px rgba(0,0,0,0.15);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.15);
+  /* Linear: shadow는 overlay만. xs/sm은 미세, lg만 overlay급 */
+  --shadow-xs: none;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-md: 0 3px 6px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 9px 48px rgba(0,0,0,0.12), 0 6px 24px rgba(0,0,0,0.15);
 
   /* ── Text color: 4-level hierarchy ──
      All 4 levels pass WCAG AA (4.5:1+) on every surface including overlay.
@@ -39,6 +40,10 @@
   --border-subtle:  var(--stone-850);
   --border-default: var(--stone-800);
   --border-strong:  var(--stone-600);
+
+  /* ── Overlay edge — top-lit gradient border ── */
+  --overlay-edge-top:    rgba(255,255,255, 0.12);
+  --overlay-edge-bottom: rgba(255,255,255, 0.04);
 
   /* ── Tone: semantic color bundles (base + hover + dim + mid + bright + foreground)
      All tones share the same axis structure. dim/mid/bright = background tint 3 levels. ── */
@@ -128,16 +133,16 @@
   --type-display-size: 32px;    --type-display-weight: 400;  --type-display-family: var(--serif); --type-display-line-height: 1.3;  --type-display-letter-spacing: -0.02em;
   --type-page-size: 24px;       --type-page-weight: 500;    --type-page-family: var(--serif); --type-page-line-height: 1.3;  --type-page-letter-spacing: -0.01em;
   --type-section-size: 16px;    --type-section-weight: 600;  --type-section-family: var(--sans); --type-section-line-height: 1.4;  --type-section-letter-spacing: 0em;
-  --type-body-size: 14px;       --type-body-weight: 430;    --type-body-family: var(--sans); --type-body-line-height: 1.4;  --type-body-letter-spacing: 0em;
+  --type-body-size: 13px;       --type-body-weight: 450;    --type-body-family: var(--sans); --type-body-line-height: 1.4;  --type-body-letter-spacing: 0em;
   --type-prose-size: 16px;      --type-prose-weight: 400;    --type-prose-family: var(--sans); --type-prose-line-height: 1.6;  --type-prose-letter-spacing: 0em;
-  --type-caption-size: 12px;    --type-caption-weight: 430;  --type-caption-family: var(--sans); --type-caption-line-height: 1.33;  --type-caption-letter-spacing: 0em;
+  --type-caption-size: 12px;    --type-caption-weight: 450;  --type-caption-family: var(--sans); --type-caption-line-height: 1.33;  --type-caption-letter-spacing: 0em;
   --type-code-size: 12px;       --type-code-weight: 400;     --type-code-family: var(--mono); --type-code-line-height: 1.5;   --type-code-letter-spacing: 0em;
 
   /* ── Independent axes: weight
      type 번들과 독립적으로 사용. 버튼·배지 등 텍스트 계층과 무관한 요소용. ── */
   --weight-light:   330;
   --weight-regular: 400;
-  --weight-book:    430;
+  --weight-book:    450;
   --weight-medium:  500;
   --weight-semi:    600;
 
@@ -177,7 +182,7 @@
   --space-5xl: 96px;
 
   /* ── Border ── */
-  --border-width: 1px;
+  --border-width: 0.5px;
 
   /* ── Icon ── */
   --icon-xs:  14px;
@@ -186,13 +191,14 @@
   --icon-lg:  24px;
   --icon-stroke: 1.75;
 
-  /* ── Component specs (claude.ai 실측) ── */
+  /* ── Component specs (claude.ai + Linear 실측) ── */
   --toolbar-height: 36px;
   --input-height:   44px;
   --input-padding-x: 12px;
   --input-radius:   var(--shape-md-radius);
   --sidebar-width:  288px;
-  --sidebar-item-height: 32px;
+  --sidebar-item-height: 28px;
+  --item-height: 28px;
   --storymap-col-width: 220px;
   --overlay-width:  360px;
   --content-sm:     560px;
@@ -239,11 +245,11 @@
   --surface-overlay:  var(--stone-0);      /* + shadow */
   --surface-outlined: transparent;
 
-  /* ── Shadow: macOS 스타일 — 은은하고 넓게 퍼지는 그림자 ── */
-  --shadow-xs: 0 1px 4px rgba(0,0,0,0.02);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.02);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.04), 0 0 1px rgba(0,0,0,0.03);
-  --shadow-lg: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.02);
+  /* ── Shadow: Linear 실측 — overlay만 shadow, 나머지는 면 분리 ── */
+  --shadow-xs: none;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-md: 0 3px 6px rgba(0,0,0,0.02), 0 0 1px rgba(0,0,0,0.02);
+  --shadow-lg: 0 9px 48px rgba(0,0,0,0.08), 0 6px 24px rgba(0,0,0,0.1);
 
   /* ── Text ── */
   --text-bright:    var(--stone-950);
@@ -255,6 +261,10 @@
   --border-subtle:  oklch(96% 0.007 90);  /* ~2% — layout dividers */
   --border-default: oklch(94% 0.009 90);  /* ~4% — general */
   --border-strong:  oklch(88% 0.012 90);  /* ~12% — input, overlay */
+
+  /* ── Overlay edge — top-lit gradient border ── */
+  --overlay-edge-top:    rgba(255,255,255, 0.55);
+  --overlay-edge-bottom: rgba(255,255,255, 0.12);
 
   /* ── Tone (light) ── */
   --tone-primary-base:   var(--blue-600);
