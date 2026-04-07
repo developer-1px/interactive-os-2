@@ -24,9 +24,9 @@
   /* ── Shadow (xs/sm/md/lg scale) ── */
   /* Linear: shadow는 overlay만. xs/sm은 미세, lg만 overlay급 */
   --shadow-xs: none;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
-  --shadow-md: 0 3px 6px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.06);
-  --shadow-lg: 0 9px 48px rgba(0,0,0,0.12), 0 6px 24px rgba(0,0,0,0.15);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06);
 
   /* ── Text color: 4-level hierarchy ──
      All 4 levels pass WCAG AA (4.5:1+) on every surface including overlay.
@@ -248,8 +248,8 @@
   /* ── Shadow: Linear 실측 — overlay만 shadow, 나머지는 면 분리 ── */
   --shadow-xs: none;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.02);
-  --shadow-md: 0 3px 6px rgba(0,0,0,0.02), 0 0 1px rgba(0,0,0,0.02);
-  --shadow-lg: 0 9px 48px rgba(0,0,0,0.08), 0 6px 24px rgba(0,0,0,0.1);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.03), 0 0 1px rgba(0,0,0,0.02);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.03);
 
   /* ── Text ── */
   --text-bright:    var(--stone-950);
