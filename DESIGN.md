@@ -1,8 +1,9 @@
 # Design System — interactive-os
 
-> Reference: claude.ai (2026-03-24 실측)
+> References: claude.ai (2026-03-24 실측), **Linear (2026-04-08 실측)**
 > 이 문서는 토큰 값이 아니라 **조합 규칙**을 정의한다.
 > 토큰은 tokens.css가 SSOT. 여기는 "왜 그 값인지"와 "어떻게 조합하는지".
+> Linear 실측은 ui/ 완성품 기본값의 기준점 (Pit of Success).
 
 ## 0. 번들 체계
 
@@ -540,3 +541,67 @@ shape + type 번들 override. 번들 세트로 교체.
 | `scroll: 'auto'` | `overflow: auto` | **순수 overflow** — 양방향 |
 
 **판단 기준:** flex 레이아웃이 필요하면 `layout:scroll`, overflow만 필요하면 `scroll` 축.
+
+---
+
+## Linear 실측 (2026-04-08) — ui/ 완성품 기본값 기준점
+
+> 목적: 조작형 UI 엔진의 Pit of Success. 각 ui/ 완성품이 기본으로 이 수준이어야 한다.
+
+### L-1. Surface
+
+| 레벨 | bg (lch) | border | shadow | 용도 |
+|------|----------|--------|--------|------|
+| base | `lch(95.94 0.5 282)` | — | — | 앱 배경 |
+| elevated | `lch(98.94 0.5 282)` | — | — | 헤더, 사이드바 |
+| surface | `lch(100 0.5 282)` | — | `0 3px 6px -2px lch(0/0.02)` | 버튼 |
+| overlay | `lch(100 0 282)` | `0.5px solid lch(91.9)` | `0 9px 48px lch(0/0.08), 0 6px 24px lch(0/0.1)` | Command Palette, Dialog |
+| input | `lch(100 0 282)` | `0.5px solid lch(86.5)` | — | Select, Input |
+
+**핵심 차이 (vs claude.ai):** border 0.5px (우리는 1px), shadow는 overlay만.
+
+### L-2. Type
+
+| 레벨 | Size | Weight | 용도 |
+|------|------|--------|------|
+| hero | 22px | 600 | 페이지 제목 |
+| section | 16px | 600 | 섹션 헤더 |
+| body | 13px | 450 | 본문 (지배적) |
+| label | 13px | 500 | 네비게이션, 설정 레이블 |
+| caption | 12px | 500 | 그룹 헤더, 탭 |
+| kbd | 11px | 500 | 단축키 |
+
+**핵심 차이:** 13px/450이 기본 (우리는 14px/430). weight 450은 Inter Variable 전용.
+
+### L-3. 컴포넌트 레시피 (ui/ 완성품 기본값)
+
+| 컴포넌트 | 아이템 높이 | padding | radius | font | 비고 |
+|---------|-----------|---------|--------|------|------|
+| **Combobox** (Command Palette) | 28px | 4px 8px | 컨테이너 12px | 13px/450 | 720px 너비, 그룹 헤더 12px/500 |
+| **ListBox** | 28px | 4px 8px | 아이템 없음 | 13px/450 | 선택 bg lch(96) |
+| **Select** | 30px | 1px 28px 1px 10px | 8px | 13px/400 | border 0.5px |
+| **Tabs** | 28px | ~8px | 8px | 12px/500 | 선택=bg lch(96) |
+| **Switch** | 20px (트랙) | — | pill | — | 36x20 |
+| **사이드바 아이템** | 28px | 4px 8px | 8px | 13px/500 | 아이콘 16px, gap 8px |
+| **설정 행** | 65px | 16px | — | 레이블 13px/500, 설명 13px/400 lch(40) |
+
+**28px 법칙:** 사이드바, 탭, 리스트 아이템, 커맨드 아이템이 모두 28px.
+
+### L-4. 조합 규칙 (Linear 특유)
+
+1. **면으로 구분** — border 대신 bg lch(95→98→100) 차이
+2. **0.5px border** — 사용 시 극히 얇게
+3. **shadow는 overlay만** — 카드/패널에 shadow 없음
+4. **28px 통일** — 인터랙티브 아이템 높이 통일
+5. **padding은 자식이 소유** — 컨테이너 radius만, padding은 자식
+6. **weight로 위계** — 450→500→600, fontSize 점프 최소
+7. **lch hue 282 고정** — 무채색, lightness만 조절
+
+### L-5. 적용 우선순위 (tokens.css 갱신)
+
+1. **font weight 450 추가** — body 기본값
+2. **border 0.5px** — input, select, overlay
+3. **아이템 높이 28px** — controlSize 기본
+4. **surface shadow 정리** — overlay만 shadow
+5. **font size 13px** — body 기본 검토 (14→13)
+6. **설정 행 패턴** — h=65px, padding 16px, gap 12px
