@@ -98,21 +98,21 @@ export function ThemeComponents() {
             <div key={tone} className={ax({ layout: 'bar', gap: 'sm' })}>
               <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{tone}</span>
               <Button variant="accent" tone={tone} size="sm">{tone}</Button>
-              <Button variant="accent" tone={tone} size="md">{tone}</Button>
+              <Button variant="accent" tone={tone} size="default">{tone}</Button>
               <Button variant="accent" tone={tone} size="lg">{tone}</Button>
-              <Button variant="accent" tone={tone} size="md" disabled>disabled</Button>
+              <Button variant="accent" tone={tone} size="default" disabled>disabled</Button>
             </div>
           ))}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>ghost</span>
             <Button variant="ghost" size="sm">ghost sm</Button>
-            <Button variant="ghost" size="md">ghost md</Button>
+            <Button variant="ghost" size="default">ghost md</Button>
             <Button variant="ghost" size="lg">ghost lg</Button>
           </div>
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>dialog</span>
             <Button variant="dialog" size="sm">cancel</Button>
-            <Button variant="dialog" size="md">cancel</Button>
+            <Button variant="dialog" size="default">cancel</Button>
             <Button variant="dialog" size="lg">cancel</Button>
           </div>
         </div>
@@ -124,16 +124,16 @@ export function ThemeComponents() {
         <div className={ax({ layout: 'column', gap: 'md' })}>
           <Section title="TEXT INPUT">
             <div className={ax({ layout: 'column', gap: 'sm' })}>
-              <TextInput size="sm" placeholder="Small input" />
-              <TextInput size="md" placeholder="Medium input" />
-              <TextInput size="lg" placeholder="Large input" />
+              <TextInput placeholder="Small input" />
+              <TextInput placeholder="Medium input" />
+              <TextInput placeholder="Large input" />
               <div className={ax({ layout: 'column', gap: 'xs' })}>
                 <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Email Address</span>
-                <TextInput size="lg" placeholder="name@company.com" />
+                <TextInput placeholder="name@company.com" />
               </div>
               <div className={ax({ layout: 'bar', gap: 'sm' })}>
-                <TextInput size="md" placeholder="Search..." className={ax({ flex: '1' })} />
-                <Button variant="accent" size="md">Search</Button>
+                <TextInput placeholder="Search..." className={ax({ flex: '1' })} />
+                <Button variant="accent" size="default">Search</Button>
               </div>
             </div>
           </Section>

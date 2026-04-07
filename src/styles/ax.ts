@@ -14,6 +14,18 @@ type Text = 'bright' | 'primary' | 'secondary' | 'muted'
 // shape: 비-컨트롤 요소의 border-radius (컨트롤은 controlSize가 소유)
 type Shape = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
 
+// recipe: 구조 축 프리셋 (height + padding + font + weight + gap + radius 세트)
+// shadcn 원리: 구조는 잠그고 색만 열어서 어떤 조합이든 완성품 보장
+// control: 버튼, 인풋, 셀렉트 등 조작 요소
+// item: 리스트/메뉴/탭/사이드바 아이템
+// container: 카드, 다이얼로그, 패널
+// badge: 배지, 태그
+type Recipe =
+  | 'control' | 'control-sm' | 'control-lg'
+  | 'item' | 'item-sm'
+  | 'container' | 'container-sm'
+  | 'badge'
+
 // weight: textStyle weight와 독립적인 오버라이드
 type Weight = 'medium' | 'semi' | 'bold'
 // state: surface 조립식 확장 — focused/selected 상태 시각
@@ -87,6 +99,9 @@ type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 type Aspect = '1' | 'video' | 'card'
 
 export interface Axes {
+  // 레시피 축 (구조 프리셋 — 색칠 축과 조합)
+  recipe?: Recipe
+
   // 시각 축
   surface?: Surface
   controlSize?: ControlSize
@@ -119,6 +134,7 @@ export interface Axes {
 // ── className 매핑 ──
 
 const prefixes: Record<keyof Axes, string> = {
+  recipe: 'rc',
   surface: 'sf',
   controlSize: 'cs',
   textStyle: 'ts',

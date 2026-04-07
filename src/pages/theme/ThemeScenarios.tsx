@@ -114,11 +114,11 @@ function SettingsScenario() {
           <div className={ax({ layout: 'column', gap: 'sm' })}>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Display Name</span>
-              <TextInput size="md" placeholder="Your name" />
+              <TextInput placeholder="Your name" />
             </div>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Email</span>
-              <TextInput size="md" placeholder="name@company.com" />
+              <TextInput placeholder="name@company.com" />
             </div>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Bio</span>
@@ -161,11 +161,11 @@ function CreateFormScenario() {
           <div className={ax({ layout: 'column', gap: 'sm' })}>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Component Name</span>
-              <TextInput size="lg" placeholder="e.g. DatePicker" />
+              <TextInput placeholder="e.g. DatePicker" />
             </div>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Pattern</span>
-              <TextInput size="md" placeholder="e.g. listbox, treegrid, combobox" />
+              <TextInput placeholder="e.g. listbox, treegrid, combobox" />
             </div>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Description</span>
@@ -173,7 +173,7 @@ function CreateFormScenario() {
             </div>
             <div className={ax({ layout: 'column', gap: 'xs' })}>
               <span className={ax({ textStyle: 'caption', text: 'secondary' })}>Axes</span>
-              <TextInput size="md" placeholder="navigate, select, expand..." />
+              <TextInput placeholder="navigate, select, expand..." />
             </div>
           </div>
         </Section>

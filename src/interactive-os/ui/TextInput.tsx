@@ -1,18 +1,18 @@
 /** @catalog 텍스트 입력 필드 */
 import React from 'react'
-import { type Axes, ax } from '@styles/ax'
+import { ax } from '@styles/ax'
 import '@styles/ax.css'
 
 interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   align?: 'left' | 'right'
-  size?: Axes['controlSize']
 }
 
-export function TextInput({ align = 'left', size, className, ...props }: TextInputProps) {
+export function TextInput({ align = 'left', className, ...props }: TextInputProps) {
   return (
     <input
       type="text"
-      className={`${ax({ surface: 'input', textStyle: 'caption', text: 'primary', controlSize: size, padding: 'sm', content: 'text' })}${align === 'right' ? ' text-right' : ''}${className ? ` ${className}` : ''}`}
+      className={`${ax({ recipe: 'control', surface: 'input', text: 'primary' })}${align === 'right' ? ' text-right' : ''}${className ? ` ${className}` : ''}`}
+      style={{ width: '100%' }}
       {...props}
     />
   )

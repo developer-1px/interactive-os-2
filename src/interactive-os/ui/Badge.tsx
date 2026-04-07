@@ -12,15 +12,11 @@ export function Badge({ tone = 'neutral', variant = 'solid', children }: BadgePr
   return (
     <span
       className={ax({
+        recipe: 'badge',
         surface: variant === 'solid' ? 'action' : 'ghost',
         tone,
-        shape: 'pill',
-        textStyle: 'caption',
         text: variant === 'solid' ? 'bright' : 'primary',
-        padding: 'xs',
-        content: 'text',
         border: variant === 'outline' ? 'default' : undefined,
-        weight: 'medium',
       })}
     >
       {children}
