@@ -52,6 +52,7 @@ export function AriaRoute({ keyMap, label, children }: AriaRouteProps) {
         extras: {},
       }),
       getElement: () => null,
+      subscribe: () => () => {},
     })
     return () => unregisterAria(registryKey)
   }, [keyMap, label])

@@ -11,13 +11,14 @@ import { AppInspector } from './AppInspector'
 import { copyAriaTree } from './inspectToAscii'
 import { registryToUnifiedTree, findInstanceId } from './inspectorStore'
 import type { InstanceMeta } from './inspectorStore'
+import { InspectorLogTab } from './InspectorLogTab'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import './InspectorWindow.css'
 
 const emptyPlugins: Plugin[] = []
 
-type DetailTab = 'interaction' | 'aria' | 'state'
+type DetailTab = 'interaction' | 'aria' | 'state' | 'log'
 
 function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
   const keyEntries = Object.entries(inspectResult.keyMap)
@@ -161,6 +162,7 @@ const TAB_LIST: { id: DetailTab; label: string }[] = [
   { id: 'interaction', label: 'Interaction' },
   { id: 'aria', label: 'ARIA' },
   { id: 'state', label: 'State' },
+  { id: 'log', label: 'Log' },
 ]
 
 function TabBar({ active, onChange }: { active: DetailTab; onChange: (tab: DetailTab) => void }) {
@@ -318,38 +320,42 @@ export function InspectorWindow() {
           </div>
 
           <div className="overflow-auto inspector-detail">
-            {inspectResult ? (
-              <div className={ax({ layout: 'column' })}>
-                <TabBar active={activeTab} onChange={setActiveTab} />
+            <div className={ax({ layout: 'column' })}>
+              <TabBar active={activeTab} onChange={setActiveTab} />
 
-                {activeTab === 'interaction' && (
-                  <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
-                    <div className={ax({ layout: 'spread', textStyle: 'caption', text: 'bright' })}>
-                      <span>Bindings ({Object.keys(inspectResult.keyMap).length + Object.keys(inspectResult.clickMap ?? {}).length})</span>
-                      <CopyButton inspectResult={inspectResult} />
+              {activeTab === 'log' ? (
+                <InspectorLogTab actionsMap={actionsMap} />
+              ) : inspectResult ? (
+                <>
+                  {activeTab === 'interaction' && (
+                    <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+                      <div className={ax({ layout: 'spread', textStyle: 'caption', text: 'bright' })}>
+                        <span>Bindings ({Object.keys(inspectResult.keyMap).length + Object.keys(inspectResult.clickMap ?? {}).length})</span>
+                        <CopyButton inspectResult={inspectResult} />
+                      </div>
+                      <BoundKeyTable inspectResult={inspectResult} />
                     </div>
-                    <BoundKeyTable inspectResult={inspectResult} />
-                  </div>
-                )}
+                  )}
 
-                {activeTab === 'aria' && (
-                  <AriaTabContent selectedId={selectedId} inspectResult={inspectResult} actionsMap={actionsMap} metas={metas} />
-                )}
+                  {activeTab === 'aria' && (
+                    <AriaTabContent selectedId={selectedId} inspectResult={inspectResult} actionsMap={actionsMap} metas={metas} />
+                  )}
 
-                {activeTab === 'state' && (
-                  <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
-                    <div className={ax({ textStyle: 'caption', text: 'bright' })}>
-                      State ({Object.keys(inspectResult.state.entities).length} entities)
+                  {activeTab === 'state' && (
+                    <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+                      <div className={ax({ textStyle: 'caption', text: 'bright' })}>
+                        State ({Object.keys(inspectResult.state.entities).length} entities)
+                      </div>
+                      <AppInspector inspectResult={inspectResult} prevState={prevState} />
                     </div>
-                    <AppInspector inspectResult={inspectResult} prevState={prevState} />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
-                선택된 인스턴스 없음
-              </div>
-            )}
+                  )}
+                </>
+              ) : (
+                <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
+                  선택된 인스턴스 없음
+                </div>
+              )}
+            </div>
           </div>
         </SplitPane>
       </div>

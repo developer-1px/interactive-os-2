@@ -335,7 +335,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         return { ...base, bindings: getAllBindings().filter(b => b.nodeId === null || b.nodeId === registryKey), clickMap: clickMapCommands }
       }
       return { ...base, clickMap: clickMapCommands }
-    }, getElement: () => containerRef.current })
+    }, getElement: () => containerRef.current, subscribe: (listener) => engine.subscribe(listener) })
 
     if (import.meta.env.DEV) {
       for (const map of [pattern.keyMap, pattern.clickMap]) {

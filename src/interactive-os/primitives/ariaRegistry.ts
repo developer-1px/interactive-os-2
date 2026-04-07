@@ -1,4 +1,4 @@
-import type { Command, InspectResult } from '../engine/types'
+import type { Command, InspectResult, EngineEvent, Unsubscribe } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 
 export interface AriaActions {
@@ -6,6 +6,7 @@ export interface AriaActions {
   getStore: () => NormalizedData
   inspect: () => InspectResult
   getElement: () => HTMLElement | null
+  subscribe: (listener: (event: EngineEvent) => void) => Unsubscribe
 }
 
 const registry = new Map<string, AriaActions>()

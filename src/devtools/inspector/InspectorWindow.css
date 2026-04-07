@@ -65,3 +65,60 @@
 .inspector-tab-active {
   border-bottom-color: var(--text-bright);
 }
+
+/* Log tab */
+.inspector-log-filter {
+  border-bottom: var(--border-width) solid var(--border-default);
+}
+
+.inspector-log-input {
+  background: none;
+  color: inherit;
+  font-family: var(--mono);
+  min-width: 0;
+  flex: 1;
+}
+
+.inspector-log-scroll {
+  font-family: var(--mono);
+  line-height: var(--leading-normal);
+}
+
+.inspector-log-entry {
+  padding: var(--border-width) var(--space-sm);
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.inspector-log-entry:hover {
+  background: var(--bg-hover);
+}
+
+.inspector-log-error {
+  color: var(--tone-danger);
+}
+
+.inspector-log-seq {
+  opacity: 0.5;
+}
+
+.inspector-log-instance {
+  color: #10b981;
+}
+
+.inspector-log-detail {
+  padding: var(--space-xs) var(--space-md);
+  font-family: var(--mono);
+  white-space: pre-wrap;
+  word-break: break-all;
+  border-left: var(--indicator-width) solid var(--border-default);
+  margin-left: var(--space-sm);
+}
+
+.inspector-log-diff-line {
+  padding-left: var(--space-sm);
+}
+
+.inspector-log-error-text {
+  color: var(--tone-danger);
+}
