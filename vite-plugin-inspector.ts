@@ -76,43 +76,45 @@ export function inspectorPlugin(): Plugin {
           return // Unparseable file, skip
         }
 
-        // Collect JSX opening element positions (sorted by descending offset for safe insertion)
         const insertions: { offset: number; line: number; col: number }[] = []
+
+        const FRAGMENT_TYPES = new Set(['JSXFragment', 'JSXNamespacedName'])
+
+        function isFragment(nameNode: BabelNode | undefined): boolean {
+          if (!nameNode) return true
+          if (FRAGMENT_TYPES.has(nameNode.type!)) return true
+          if (nameNode.type === 'JSXMemberExpression' && nameNode.property?.name === 'Fragment') return true
+          if (nameNode.type === 'JSXIdentifier' && nameNode.name === 'Fragment') return true
+          return false
+        }
+
+        function hasInspectorAttr(node: BabelNode): boolean {
+          return node.attributes?.some(
+            (a) => a.type === 'JSXAttribute' && typeof a.name === 'object' && (a.name as BabelNode)?.name === 'data-inspector-line',
+          ) ?? false
+        }
+
+        function collectJSX(node: BabelNode): void {
+          const nameNode = node.name as BabelNode | undefined
+          if (isFragment(nameNode) || hasInspectorAttr(node)) return
+          const nameEnd = nameNode?.end
+          if (nameEnd != null && node.loc) {
+            insertions.push({ offset: nameEnd, line: node.loc.start.line, col: node.loc.start.column + 1 })
+          }
+        }
+
+        const SKIP_KEYS = new Set(['leadingComments', 'trailingComments', 'innerComments'])
 
         function walk(node: BabelNode) {
           if (!node || typeof node !== 'object') return
           if (Array.isArray(node)) { node.forEach(walk); return }
 
           if (node.type === 'JSXOpeningElement' && node.loc && node.end != null) {
-            const nameNode = node.name as BabelNode | undefined
-            // Skip fragments — React.Fragment only accepts key and children
-            const isFragment = !nameNode
-              || nameNode.type === 'JSXFragment'
-              || nameNode.type === 'JSXNamespacedName'
-              || (nameNode.type === 'JSXMemberExpression' && nameNode.property?.name === 'Fragment')
-              || (nameNode.type === 'JSXIdentifier' && nameNode.name === 'Fragment')
-
-            if (!isFragment) {
-              // Skip if already has data-inspector-line
-              const hasAttr = node.attributes?.some(
-                (a) => a.type === 'JSXAttribute' && typeof a.name === 'object' && (a.name as BabelNode)?.name === 'data-inspector-line',
-              )
-              if (!hasAttr) {
-                const nameEnd = nameNode?.end
-                if (nameEnd != null) {
-                  insertions.push({
-                    offset: nameEnd,
-                    line: node.loc.start.line,
-                    col: node.loc.start.column + 1,
-                  })
-                }
-              }
-            }
+            collectJSX(node)
           }
 
-          // Walk children
           for (const key of Object.keys(node)) {
-            if (key === 'leadingComments' || key === 'trailingComments' || key === 'innerComments') continue
+            if (SKIP_KEYS.has(key)) continue
             const child = node[key]
             if (child && typeof child === 'object' && ((child as BabelNode).type || Array.isArray(child))) {
               walk(child as BabelNode)

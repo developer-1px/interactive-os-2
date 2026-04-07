@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import './Combobox.css'
@@ -80,6 +80,7 @@ export function Combobox({
   creatable = false,
 }: ComboboxProps) {
   const effectivePlugins = plugins ?? [comboboxPlugin({ selectionMode })]
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const [createOptionFocused, setCreateOptionFocused] = useState(false)
   const originalStore = data
   const rootChildren = getChildren(originalStore, ROOT_ID)
@@ -221,41 +222,41 @@ export function Combobox({
     ? (isOpen ? filterText : selectedLabel)
     : selectedLabel
 
-  // Wrap the pattern's onKeyDown to intercept create option navigation
   const behaviorOnKeyDown = (aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>).onKeyDown
+
+  function handleCreateFocusedKey(e: React.KeyboardEvent<HTMLInputElement>): boolean {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleCreate(filterText)
+      return true
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setCreateOptionFocused(false)
+      const lastVisibleId = visibleChildren[visibleChildren.length - 1]
+      if (lastVisibleId) aria.dispatch(focusCommands.setFocus(lastVisibleId))
+      return true
+    }
+    if (e.key === 'Escape') return false
+    return true
+  }
+
+  function handleCreateNavKey(e: React.KeyboardEvent<HTMLInputElement>): boolean {
+    if (e.key === 'ArrowDown') {
+      const lastVisibleId = visibleChildren[visibleChildren.length - 1]
+      if (aria.focused === lastVisibleId || visibleChildren.length === 0) {
+        e.preventDefault()
+        setCreateOptionFocused(true)
+        return true
+      }
+    }
+    return false
+  }
+
   const wrappedOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (showCreateOption) {
-      if (effectiveCreateFocused) {
-        if (e.key === 'Enter') {
-          e.preventDefault()
-          handleCreate(filterText)
-          return
-        }
-        if (e.key === 'ArrowUp') {
-          e.preventDefault()
-          setCreateOptionFocused(false)
-          // Focus last visible item in list
-          const lastVisibleId = visibleChildren[visibleChildren.length - 1]
-          if (lastVisibleId) aria.dispatch(focusCommands.setFocus(lastVisibleId))
-          return
-        }
-        if (e.key === 'Escape') {
-          // Fall through to pattern's Escape handler
-        } else {
-          // For all other keys when create option is focused, let the browser handle
-          return
-        }
-      } else {
-        // Not on create option yet — check if ArrowDown from last visible item
-        if (e.key === 'ArrowDown') {
-          const lastVisibleId = visibleChildren[visibleChildren.length - 1]
-          if (aria.focused === lastVisibleId || visibleChildren.length === 0) {
-            e.preventDefault()
-            setCreateOptionFocused(true)
-            return
-          }
-        }
-      }
+      if (effectiveCreateFocused && handleCreateFocusedKey(e)) return
+      if (!effectiveCreateFocused && handleCreateNavKey(e)) return
     }
     if (effectiveCreateFocused && e.key !== 'Escape') return
     behaviorOnKeyDown?.(e)
@@ -268,33 +269,53 @@ export function Combobox({
     }
   }
 
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      dropdownRef.current.showPopover?.()
+
+    }
+  }, [isOpen])
+
   const containerPropsWithWrappedKeyDown = {
     ...aria.containerProps,
     onKeyDown: wrappedOnKeyDown,
     onBlur: handleBlur,
   }
 
+  const inputClass = `combo-anchor ${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })}`
+  const inputProps = containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>
+
+  const renderGroupedOptions = () =>
+    rootChildren.map(groupId => {
+      const group = originalStore.entities[groupId]
+      const groupData = (group?.data ?? {}) as Record<string, string>
+      if (groupData.type !== 'group') return renderOption(groupId)
+      const groupItems = getChildren(originalStore, groupId)
+      return (
+        <div key={groupId} role="group" aria-label={groupData.label}>
+          <div role="presentation">{groupData.label}</div>
+          {groupItems.map(itemId => renderOption(itemId))}
+        </div>
+      )
+    })
+
   return (
     <div>
-      {mode === 'multiple' && (
-        <div className={ax({ layout: 'bar', gap: 'xs' })}>
+      {mode === 'multiple' ? (
+        <div className={`combo-anchor ${ax({ layout: 'bar', gap: 'xs' })}`}>
           <div role="list">
             {aria.selected.map((id) => (
               <span key={id} data-combobox-token role="listitem">
                 {getLabel(id)}
                 {' '}
-                <button
-                  type="button"
-                  onClick={() => removeToken(id)}
-                  aria-label={`Remove ${getLabel(id)}`}
-                >
+                <button type="button" onClick={() => removeToken(id)} aria-label={`Remove ${getLabel(id)}`}>
                   <CloseIndicator />
                 </button>
               </span>
             ))}
           </div>
           <input
-            className={`${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })}`}
+            className={inputClass}
             role="combobox"
             aria-expanded={isOpen}
             aria-haspopup="listbox"
@@ -302,50 +323,30 @@ export function Combobox({
             placeholder={aria.selected.length === 0 ? placeholder : ''}
             onChange={handleInput}
             onClick={handleInputClick}
-            {...(containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>)}
+            {...inputProps}
           />
         </div>
-      )}
-      {mode !== 'multiple' && (
-      <input
-        className={`${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })}`}
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-        value={inputValue}
-        placeholder={placeholder}
-        readOnly={!editable}
-        onChange={editable ? handleInput : undefined}
-        onClick={handleInputClick}
-        {...(containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>)}
-      />
+      ) : (
+        <input
+          className={inputClass}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          value={inputValue}
+          placeholder={placeholder}
+          readOnly={!editable}
+          onChange={editable ? handleInput : undefined}
+          onClick={handleInputClick}
+          {...inputProps}
+        />
       )}
       {isOpen && (
-        <div className={`overflow-hidden ${ax({ surface: 'overlay', shape: 'xl' })} combo-dropdown`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
-          {isGrouped ? (
-            rootChildren.map(groupId => {
-              const group = originalStore.entities[groupId]
-              const groupData = (group?.data ?? {}) as Record<string, string>
-              if (groupData.type !== 'group') {
-                return renderOption(groupId)
-              }
-              const groupItems = getChildren(originalStore, groupId)
-              return (
-                <div key={groupId} role="group" aria-label={groupData.label}>
-                  <div role="presentation">{groupData.label}</div>
-                  {groupItems.map(itemId => renderOption(itemId))}
-                </div>
-              )
-            })
-          ) : (
-            visibleChildren.map(childId => renderOption(childId))
-          )}
+        <div ref={dropdownRef} popover="manual" className={`overflow-hidden ${ax({ surface: 'overlay', shape: 'xl' })} combo-dropdown`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+          {isGrouped ? renderGroupedOptions() : visibleChildren.map(childId => renderOption(childId))}
           {showCreateOption && (
             <div
               data-combobox-create
-              className={[
-                ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined }),
-              ].filter(Boolean).join(' ')}
+              className={ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined })}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"
