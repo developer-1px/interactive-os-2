@@ -8,9 +8,9 @@ interface PanelHeaderProps extends HTMLAttributes<HTMLDivElement> {
   axes?: Axes
 }
 
-/** 패널/사이드바 상단 바. controlSize:md(36px) + border-bottom + bar layout. */
+/** 패널/사이드바 상단 바. recipe:item(36px) + border-bottom. */
 export function PanelHeader({ children, className, axes, ...rest }: PanelHeaderProps) {
-  const base: Axes = { layout: 'bar', flex: 'none', textStyle: 'overline', text: 'muted', padding: 'sm', controlSize: 'md', border: 'bottom' }
+  const base: Axes = { recipe: 'item', layout: 'bar', flex: 'none', textStyle: 'overline', text: 'muted', border: 'bottom' }
   return (
     <div
       className={`${ax({ ...base, ...axes })}${className ? ` ${className}` : ''}`}

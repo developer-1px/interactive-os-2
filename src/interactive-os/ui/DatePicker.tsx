@@ -293,8 +293,8 @@ export function DatePicker({
           </div>
 
           <div className={`${ax({ layout: 'row', gap: 'sm' })} dp-actions`}>
-            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: 'primary' })} dp-action-btn font-inherit`} onClick={() => closeDialog()}>Cancel</button>
-            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', text: 'primary' })} dp-action-btn font-inherit`} onClick={confirmFocused}>OK</button>
+            <button className={`${ax({ surface: 'ghost', recipe: 'control-sm', text: 'primary' })} dp-action-btn font-inherit`} onClick={() => closeDialog()}>Cancel</button>
+            <button className={`${ax({ surface: 'ghost', recipe: 'control-sm', text: 'primary' })} dp-action-btn font-inherit`} onClick={confirmFocused}>OK</button>
           </div>
         </div>
       )}

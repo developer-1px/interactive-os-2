@@ -21,12 +21,9 @@ export function ToolbarItem(
     <span
       {...props}
       className={ax({
+        recipe: 'control-sm',
         interactive: 'button',
-        shape: 'md',
-        controlSize: 'sm',
         layout: hasIcon ? 'center' : undefined,
-        padding: hasIcon ? undefined : 'sm',
-        content: hasIcon ? undefined : 'text',
         state: state.focused ? 'focused' : state.selected ? 'selected' : undefined,
       })}
       aria-label={hasIcon ? label : undefined}

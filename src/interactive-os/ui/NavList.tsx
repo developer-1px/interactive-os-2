@@ -27,10 +27,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const itemClass = ax({
     interactive: 'item',
-    shape: 'md',
-    controlSize: 'md',
-    padding: 'sm',
-    content: 'text',
+    recipe: 'item',
     text: (state.focused || state.active) ? 'primary' : 'secondary',
   })
   return <div {...props} className={`${props.className ?? ''} ${itemClass}`}>{label}</div>

@@ -177,7 +177,7 @@ export function Combobox({
 
   const defaultRender = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
     <div {...props} className={[
-      ax({ interactive: 'item', shape: 'md', controlSize: 'md', padding: 'sm', content: 'text', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined }),
+      ax({ interactive: 'item', recipe: 'item', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined }),
     ].filter(Boolean).join(' ')}>
       {getNodeLabel(item)}
     </div>
@@ -272,7 +272,7 @@ export function Combobox({
     onBlur: handleBlur,
   }
 
-  const inputClass = `combo-anchor ${ax({ surface: 'input', controlSize: 'lg', padding: 'sm', content: 'text', width: 'full', shape: 'xl' })}`
+  const inputClass = `combo-anchor ${ax({ surface: 'input', recipe: 'control-lg', width: 'full' })}`
   const inputProps = containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>
 
   const renderGroupedOptions = () =>
@@ -336,7 +336,7 @@ export function Combobox({
           {showCreateOption && (
             <div
               data-combobox-create
-              className={ax({ interactive: 'item', shape: 'md', controlSize: 'md', padding: 'sm', content: 'text', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined })}
+              className={ax({ interactive: 'item', recipe: 'item', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined })}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"

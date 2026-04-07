@@ -108,7 +108,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
                 )}
               </div>
             )}
-            <button className={`${ax({ surface: 'ghost', controlSize: 'sm', layout: 'center', textStyle: 'section', text: 'secondary', shape: 'xl' })}`} onClick={onClose}>&times;</button>
+            <button className={`${ax({ surface: 'ghost', recipe: 'control-sm', layout: 'center', text: 'secondary' })}`} onClick={onClose}>&times;</button>
           </div>
         </PanelHeader>
         <div className={ax({ flex: '1', layout: 'scroll' })}>

@@ -137,7 +137,7 @@ export function QuickOpen({
         <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
           <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
           <input
-            className={`quick-open-input border-none outline-none ${ax({ controlSize: 'md', padding: 'sm', content: 'text', flex: '1' })}`}
+            className={`quick-open-input border-none outline-none ${ax({ recipe: 'control', flex: '1' })}`}
             type="text"
             placeholder="파일 검색..."
             value={query}
@@ -165,7 +165,7 @@ export function QuickOpen({
                 <div
                   key={childId}
                   {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`cursor-default ${ax({ interactive: 'item', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'md', text: state.focused ? 'bright' : 'primary', shape: 'sm', state: state.focused ? 'focused' : undefined })}`}
+                  className={`cursor-default ${ax({ interactive: 'item', recipe: 'item', layout: 'bar', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined })}`}
                   onClick={() => {
                     aria.dispatch(createBatchCommand([
                       selectionCommands.select(childId),

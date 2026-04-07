@@ -98,7 +98,7 @@ export function TabGroup({
           const entityData = entity.data as Record<string, unknown>
           const label = entityData?.label as string ?? id
           const isPreview = entityData?.preview === true
-          const tabClass = `tab-item ${ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'muted', interactive: 'tab' })}${isPreview ? ' tab-item-preview' : ''}`
+          const tabClass = `tab-item ${ax({ surface: 'ghost', recipe: 'control-sm', layout: 'bar', text: 'muted', interactive: 'tab' })}${isPreview ? ' tab-item-preview' : ''}`
           return (
             <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
               <span>{label}</span>
@@ -116,7 +116,7 @@ export function TabGroup({
         })}
         {onAddTab && (
           <button
-            className={`tab-add ${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', text: 'muted', shape: 'sm' })}`}
+            className={`tab-add ${ax({ surface: 'ghost', layout: 'center', recipe: 'control-sm', text: 'muted' })}`}
             aria-label="Add tab"
             tabIndex={-1}
             onClick={handleAdd}

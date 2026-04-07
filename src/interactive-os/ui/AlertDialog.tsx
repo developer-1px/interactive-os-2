@@ -18,10 +18,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     <div
       {...props}
       className={ax({
+        recipe: 'control',
         surface: isDanger ? 'action' : 'ghost',
-        controlSize: 'md',
-        padding: 'sm',
-        content: 'text',
         tone: isDanger ? 'danger' : 'neutral',
         text: state.focused ? 'primary' : 'secondary',
       })}

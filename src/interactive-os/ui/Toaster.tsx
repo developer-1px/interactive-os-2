@@ -52,7 +52,7 @@ function ToastItem({
         )}
       </div>
       <button
-        className={`${ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', flex: 'none' })}`}
+        className={`${ax({ surface: 'ghost', layout: 'center', recipe: 'control-sm', flex: 'none' })}`}
         onClick={() => onDismiss(toast.id)}
         aria-label="Dismiss"
       >

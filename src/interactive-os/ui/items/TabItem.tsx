@@ -19,8 +19,8 @@ export function TabItem(
     <span
       {...props}
       className={ax({
-        interactive: 'tab', controlSize: 'sm', padding: 'sm', content: 'text',
-        layout: 'row', textStyle: 'caption', text: state.selected ? 'primary' : 'muted',
+        recipe: 'item-sm', interactive: 'tab',
+        layout: 'row', text: state.selected ? 'primary' : 'muted',
       })}
     >
       {label}
