@@ -100,6 +100,10 @@
 .theme-spacing-bar[data-size="lg"] { width: var(--space-lg); }
 .theme-spacing-bar[data-size="xl"] { width: var(--space-xl); }
 
+/* ── Section fit — shrink to content width ── */
+
+.theme-section-fit { align-self: start; }
+
 /* ── Button label ── */
 
 .theme-btn-label { min-width: var(--space-2xl); text-align: right; }

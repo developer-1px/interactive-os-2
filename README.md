@@ -1,12 +1,14 @@
 # interactive-os
 
-Keyboard-first ARIA framework with plugin architecture for React.
+**The engine for manipulation UI.** Like Unity for games, interactive-os is the engine for building keyboard-first, ARIA-compliant productivity tools.
 
-What ProseMirror did for text editors, interactive-os does for ARIA components — compose keyboard navigation, focus management, and CRUD operations through plugins.
+Declare a pattern and data — the engine guarantees interaction, accessibility, and design.
 
 ## Why
 
-Existing libraries (React Aria, react-complex-tree) handle navigation and display. But **editing** — copy/paste, undo/redo, inline rename, drag-and-drop — requires gluing together separate tools. interactive-os provides a unified Command-driven engine where all operations are undoable and composable.
+Building productivity tools (file explorers, kanban boards, spreadsheets, CMS dashboards) on the web means solving the same hard problems repeatedly: keyboard navigation, focus management, ARIA compliance, undo/redo, drag-and-drop, clipboard, selection. Existing libraries handle navigation and display, but **editing** — the core of manipulation UI — requires gluing together separate tools.
+
+interactive-os is a unified engine where all of this is built in. One data model, one command pipeline, one plugin system. The engine owns interaction and design so that humans and LLMs can produce product-grade UI by declaration alone.
 
 ## Quick Start
 
@@ -177,14 +179,28 @@ import { DisclosureGroup } from 'interactive-os/ui/disclosure-group'
 <DisclosureGroup data={disclosureData} />
 ```
 
+## Vision: Two Layers
+
+```
+┌─────────────────────────────────────────┐
+│  SaaS — Vibe-coding tool               │  Chat → UI appears → Manipulate → Ship
+│  "Build manipulation tools by talking"  │
+├─────────────────────────────────────────┤
+│  Engine — interactive-os SDK            │  Pattern + Data → Product-grade UI
+│  "Declare, don't implement"            │
+└─────────────────────────────────────────┘
+```
+
+The engine is the foundation. The SaaS is the proof — a vibe-coding tool where LLMs output A2UI declarations, the engine renders manipulable UI, and users build productivity tools through conversation. The tool itself runs on the same engine it builds with.
+
 ## Design Principles
 
+- **Engine, not framework** — The engine owns interaction + design. Pit of Success: any declaration produces product-grade output
 - **Keyboard > Mouse** — Desktop-level keyboard interaction on the web
 - **Plugin composition** — Build what you need from primitives
 - **Command pattern** — Every operation is undoable
-- **Headless** — Zero styling, full control over rendering
-- **LLM-friendly** — Pit of success API where correct usage converges to one pattern
-- **OCP** — Add behaviors without modifying framework code
+- **A2UI protocol** — LLMs declare UI as JSON, engine renders with full ARIA/keyboard/design guarantees
+- **OCP** — Add behaviors without modifying engine code
 
 ## License
 

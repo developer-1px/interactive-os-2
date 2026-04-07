@@ -1,11 +1,37 @@
-# GOAL — interactive-os 홈페이지
+# GOAL — interactive-os
 
 > 작성일: 2026-03-23
-> 맥락: walkthrough → visual test runner → UI SDK 완성품 → 홈페이지 구조 논의에서 도출
+> 갱신일: 2026-04-08
+> 맥락: "FE의 엔진" 비전 재설정. 엔진 + SaaS 2층 구조 합의.
 
 ## 한 줄 목표
 
-**interactive-os를 공부하고 쓸 개발자를 위한 공식 홈페이지** (shadcn/ui 수준)
+**조작형 UI의 엔진.** 패턴과 데이터를 선언하면 제품급 UI가 나온다.
+
+## 비전: 2층 구조
+
+| 층 | 무엇 | 비유 |
+|----|------|------|
+| **Engine (SDK)** | Store + Command + Axis + Pattern + UI + ax() | Unity 런타임 |
+| **SaaS (바이브코드)** | 챗봇 → A2UI 선언 → 조작 가능한 UI → 제품 | Unity Editor + Made with Unity |
+
+SaaS는 조작형 도구를 만드는 조작형 도구. 도구 자체도 엔진 위에서 돌아간다 (재귀 구조).
+
+## 핵심 과제: Pit of Success
+
+LLM이 "검색 리스트 만들어"라고만 해도 제품급 UI가 나와야 한다. 엔진이 소유하는 범위가 넓을수록 LLM/개발자의 부담이 줄어든다.
+
+| 엔진이 소유 | 상태 |
+|------------|------|
+| 인터랙션 (ARIA, 키보드, focus) | ✅ 해결 |
+| 상태 관리 (Command, undo/redo) | ✅ 해결 |
+| 디자인 (ax() 기본 프리셋) | 🔧 축적 중 |
+| 제품급 기본값 (컴포넌트별 완성된 모습) | 🔧 축적 중 |
+
+## 차별점: Bolt/v0와의 차이
+
+Bolt/v0는 LLM이 **React 코드를 생성**한다 → 품질이 LLM 코딩 실력에 의존.
+interactive-os는 LLM이 **A2UI 선언(JSON)만 출력** → 엔진이 ARIA/키보드/디자인을 보장. 생성 표면적이 작아서 정확도가 높다.
 
 ## 핵심 원칙
 

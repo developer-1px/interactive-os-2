@@ -34,16 +34,37 @@ function textRenderer({ entity }: A2UIRenderContext) {
 }
 
 function rowRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
+  const d = entity.data as Record<string, unknown>
+  const justify = d.justify as string | undefined
+  const align = d.align as string | undefined
+  const weight = d.weight as number | undefined
+
+  const layoutMap: Record<string, 'row' | 'bar' | 'spread'> = {
+    'space-between': 'spread',
+    center: 'bar',
+  }
+  const layout = (justify ? layoutMap[justify] : undefined) ?? 'row'
+
   return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
+    <div
+      className={ax({ layout, gap: 'md' })}
+      {...(weight != null ? { 'data-weight': weight } : {})}
+      {...(align === 'center' ? { 'data-align': 'center' } : {})}
+    >
       {renderChildren(entity.id, depth)}
     </div>
   )
 }
 
 function columnRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
+  const d = entity.data as Record<string, unknown>
+  const weight = d.weight as number | undefined
+
   return (
-    <div className={ax({ layout: 'stack', gap: 'md' })}>
+    <div
+      className={ax({ layout: 'stack', gap: 'md' })}
+      {...(weight != null ? { 'data-weight': weight } : {})}
+    >
       {renderChildren(entity.id, depth)}
     </div>
   )
@@ -57,21 +78,51 @@ function cardRenderer({ entity, renderChildren, depth }: A2UIRenderContext) {
   )
 }
 
-function buttonRenderer({ entity }: A2UIRenderContext) {
+function buttonRenderer({ entity, renderNode, depth, onAction }: A2UIRenderContext) {
   const d = entity.data as Record<string, unknown>
   const label = (d.label as string) ?? (d.text as string) ?? 'Button'
   const variant = d.variant === 'primary' ? 'accent' : 'ghost'
-  return <Button variant={variant}>{label}</Button>
+  const child = d.child as string | undefined
+  const action = d.action as { event?: { name: string; context?: Record<string, unknown> }; functionCall?: { call: string; args: Record<string, unknown> } } | undefined
+
+  const handleClick = () => {
+    if (!action) return
+    if (action.event && onAction) {
+      onAction(entity.id, action.event.name, action.event.context)
+    }
+    if (action.functionCall?.call === 'openUrl') {
+      const url = action.functionCall.args?.url as string | undefined
+      if (url) window.open(url, '_blank', 'noopener')
+    }
+  }
+
+  return (
+    <Button variant={variant} onClick={handleClick}>
+      {child ? renderNode(child, depth + 1) : label}
+    </Button>
+  )
 }
 
 function textFieldRenderer({ entity }: A2UIRenderContext) {
   const d = entity.data as Record<string, unknown>
   const label = (d.label as string) ?? ''
   const value = (d.value as string) ?? ''
+  const variant = d.variant as string | undefined
+
   return (
     <div className={ax({ layout: 'stack', gap: 'xs' })}>
       {label && <label className={ax({ textStyle: 'label', text: 'secondary' })}>{label}</label>}
-      <TextInput defaultValue={value} placeholder={label} aria-label={label} />
+      {variant === 'longText' ? (
+        <textarea
+          className={ax({ surface: 'input', padding: 'sm', shape: 'sm', textStyle: 'body' })}
+          defaultValue={value}
+          placeholder={label}
+          aria-label={label}
+          rows={4}
+        />
+      ) : (
+        <TextInput defaultValue={value} placeholder={label} aria-label={label} />
+      )}
     </div>
   )
 }
@@ -184,24 +235,52 @@ function TabsRenderer({ entity, store, renderNode, depth }: A2UIRenderContext) {
 function choicePickerRenderer({ entity }: A2UIRenderContext) {
   const d = entity.data as Record<string, unknown>
   const options = (d.options as Array<{ id: string; label: string }>) ?? []
+  const variant = d.variant as string | undefined
 
-  const store = createStore({
+  const optionStore = createStore({
     entities: Object.fromEntries(
-      options.map((opt) => [opt.id, { id: opt.id, data: { label: opt.label } }]),
+      options.map((opt) => [opt.id, { id: opt.id, data: { label: opt.label, checked: false } }]),
     ),
     relationships: { [ROOT_ID]: options.map((opt) => opt.id) },
   })
 
+  if (variant === 'multiSelect') {
+    return (
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
+        {options.map((opt) => {
+          const checkStore = createStore({
+            entities: { [opt.id]: { id: opt.id, data: { label: opt.label, checked: false } } },
+            relationships: { [ROOT_ID]: [opt.id] },
+          })
+          return (
+            <Checkbox
+              key={opt.id}
+              data={checkStore}
+              plugins={[]}
+              aria-label={opt.label}
+            />
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
     <RadioGroup
-      data={store}
+      data={optionStore}
       plugins={[]}
       aria-label={(d.label as string) ?? 'Choice'}
     />
   )
 }
 
-function dividerRenderer() {
+function dividerRenderer({ entity }: A2UIRenderContext) {
+  const d = entity.data as Record<string, unknown>
+  const axis = d.axis as string | undefined
+
+  if (axis === 'vertical') {
+    return <div className={ax({ layout: 'column', border: 'end' })} role="separator" aria-orientation="vertical" />
+  }
   return <hr className={ax({ width: 'full' })} />
 }
 
@@ -242,12 +321,30 @@ function fallbackRenderer({ entity }: A2UIRenderContext) {
   const component = (d.component as string) ?? 'Unknown'
   return (
     <div className={ax({ surface: 'sunken', padding: 'sm', shape: 'sm', textStyle: 'code' })}>
-      <div className={ax({ text: 'muted', textStyle: 'caption' })}>⚠ {component}</div>
+      <div className={ax({ text: 'muted', textStyle: 'caption' })}>Unknown: {component}</div>
       <pre className={ax({ textStyle: 'code', text: 'secondary' })}>
         {JSON.stringify(d, null, 2)}
       </pre>
     </div>
   )
+}
+
+function iconRenderer({ entity }: A2UIRenderContext) {
+  const d = entity.data as Record<string, unknown>
+  const name = (d.name as string) ?? 'icon'
+  return <span className={ax({ textStyle: 'label', text: 'secondary' })}>{name}</span>
+}
+
+function videoRenderer({ entity }: A2UIRenderContext) {
+  const d = entity.data as Record<string, unknown>
+  const url = (d.url as string) ?? ''
+  return <video src={url} controls className={ax({ width: 'full', shape: 'md' })} />
+}
+
+function audioPlayerRenderer({ entity }: A2UIRenderContext) {
+  const d = entity.data as Record<string, unknown>
+  const url = (d.url as string) ?? ''
+  return <audio src={url} controls className={ax({ width: 'full' })} />
 }
 
 const defaultComponentMap: A2UIComponentMap = {
@@ -266,7 +363,9 @@ const defaultComponentMap: A2UIComponentMap = {
   Image: imageRenderer,
   Modal: modalRenderer,
   DateTimeInput: dateTimeInputRenderer,
-  // Icon, Video, AudioPlayer — not mapped, will use fallback
+  Icon: iconRenderer,
+  Video: videoRenderer,
+  AudioPlayer: audioPlayerRenderer,
 }
 
 // ── A2UISurface ──
@@ -274,9 +373,12 @@ const defaultComponentMap: A2UIComponentMap = {
 interface A2UISurfaceProps {
   payload: A2UIPayload
   componentMap?: A2UIComponentMap
+  surfaceId?: string
+  onAction?: (componentId: string, actionName: string, context?: Record<string, unknown>) => void
+  dataModel?: Record<string, unknown>
 }
 
-export function A2UISurface({ payload, componentMap }: A2UISurfaceProps) {
+export function A2UISurface({ payload, componentMap, surfaceId, onAction, dataModel }: A2UISurfaceProps) {
   const mergedMap = useMemo(
     () => ({ ...defaultComponentMap, ...componentMap }),
     [componentMap],
@@ -304,6 +406,9 @@ export function A2UISurface({ payload, componentMap }: A2UISurfaceProps) {
         ))
       },
       depth,
+      surfaceId,
+      onAction,
+      dataModel: dataModel ?? payload.dataModel,
     }
 
     return renderer(ctx)

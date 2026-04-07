@@ -1,13 +1,10 @@
 // ② 2026-04-04-a2ui-surface-showcase-prd.md
 import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
+import { resolveDynamic, resolveDataPath } from './a2uiFunctions'
+import type { A2UIComponent } from './a2uiProtocol'
 
-/** A2UI v0.9 component entry in a flat list */
-export interface A2UIComponent {
-  id: string
-  component: string
-  [key: string]: unknown
-}
+export type { A2UIComponent }
 
 /** A2UI v0.9 data model (JSON Pointer path → value) */
 export type A2UIDataModel = Record<string, unknown>
@@ -31,14 +28,16 @@ const MAX_DEPTH = 20
 export function a2uiToNormalized(payload: A2UIPayload): NormalizedData {
   const entities: NormalizedData['entities'] = {}
   const relationships: NormalizedData['relationships'] = { [ROOT_ID]: [] }
+  const dataModel = payload.dataModel ?? {}
 
-  // Resolve data bindings: replace { path: "/foo/bar" } with actual values
+  // Resolve data bindings: {path}, {call}, or literal → resolved values
   const resolveBindings = (value: unknown): unknown => {
     if (value == null || typeof value !== 'object') return value
     if (Array.isArray(value)) return value.map(resolveBindings)
     const obj = value as Record<string, unknown>
-    if ('path' in obj && typeof obj.path === 'string' && Object.keys(obj).length === 1) {
-      return resolveDataPath(payload.dataModel ?? {}, obj.path as string)
+    // Try resolveDynamic for {path: "..."} and {call: "...", args: {...}}
+    if ('path' in obj || 'call' in obj) {
+      return resolveDynamic(obj, dataModel)
     }
     const resolved: Record<string, unknown> = {}
     for (const [k, v] of Object.entries(obj)) {
@@ -47,15 +46,18 @@ export function a2uiToNormalized(payload: A2UIPayload): NormalizedData {
     return resolved
   }
 
+  // Expand ChildList templates: {path, componentId} → generated component instances
+  const expandedComponents = expandChildListTemplates(payload.components, dataModel)
+
   // Track which IDs are referenced as children (not roots)
   const childIds = new Set<string>()
 
-  for (const comp of payload.components) {
+  for (const comp of expandedComponents) {
     const children = extractChildIds(comp)
     for (const cid of children) childIds.add(cid)
   }
 
-  for (const comp of payload.components) {
+  for (const comp of expandedComponents) {
     const { id, component, children: _c, child: _ch, ...rest } = comp
     const resolvedProps = resolveBindings(rest) as Record<string, unknown>
 
@@ -73,6 +75,89 @@ export function a2uiToNormalized(payload: A2UIPayload): NormalizedData {
   }
 
   return { entities, relationships }
+}
+
+/**
+ * Expand ChildList templates ({path, componentId}) into concrete component instances.
+ * For each item in the data array at `path`, clone the template component with a scoped ID.
+ */
+function expandChildListTemplates(
+  components: A2UIComponent[],
+  dataModel: Record<string, unknown>,
+): A2UIComponent[] {
+  const compMap = new Map(components.map(c => [c.id, c]))
+  const expanded: A2UIComponent[] = []
+
+  for (const comp of components) {
+    const children = comp.children
+    // Check if children is a ChildList template: {path, componentId}
+    if (
+      children != null &&
+      typeof children === 'object' &&
+      !Array.isArray(children) &&
+      'path' in (children as Record<string, unknown>) &&
+      'componentId' in (children as Record<string, unknown>)
+    ) {
+      const template = children as { path: string; componentId: string }
+      const arrayData = resolveDataPath(dataModel, template.path)
+      if (!Array.isArray(arrayData)) {
+        expanded.push({ ...comp, children: [] })
+        continue
+      }
+
+      const templateComp = compMap.get(template.componentId)
+      const generatedIds: string[] = []
+
+      for (let i = 0; i < arrayData.length; i++) {
+        const itemId = `${comp.id}__${template.componentId}__${i}`
+        generatedIds.push(itemId)
+
+        if (templateComp) {
+          // Clone template, resolving relative paths against the item scope
+          const { id: _tid, ...templateProps } = templateComp
+          const scopedProps = resolveRelativePaths(templateProps, template.path, i, dataModel)
+          expanded.push({ ...scopedProps, id: itemId } as A2UIComponent)
+        } else {
+          // No template found, create a text placeholder
+          expanded.push({ id: itemId, component: 'Text', text: String(arrayData[i]) })
+        }
+      }
+
+      // Replace template children with generated IDs
+      expanded.push({ ...comp, children: generatedIds })
+    } else {
+      expanded.push(comp)
+    }
+  }
+
+  return expanded
+}
+
+/** Resolve relative paths in props against collection scope */
+function resolveRelativePaths(
+  props: Record<string, unknown>,
+  collectionPath: string,
+  index: number,
+  dataModel: Record<string, unknown>,
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {}
+  for (const [k, v] of Object.entries(props)) {
+    if (v != null && typeof v === 'object' && !Array.isArray(v)) {
+      const obj = v as Record<string, unknown>
+      if ('path' in obj && typeof obj.path === 'string' && Object.keys(obj).length === 1) {
+        const path = obj.path as string
+        // Relative path (no leading /) → resolve against collection scope
+        if (!path.startsWith('/')) {
+          const absolutePath = `${collectionPath}/${index}/${path}`
+          const resolved = resolveDataPath(dataModel, absolutePath)
+          result[k] = resolved ?? v
+          continue
+        }
+      }
+    }
+    result[k] = v
+  }
+  return result
 }
 
 function extractChildIds(comp: A2UIComponent): string[] {
@@ -102,18 +187,6 @@ function extractChildIds(comp: A2UIComponent): string[] {
   if (typeof comp.contentChild === 'string') ids.push(comp.contentChild)
 
   return ids
-}
-
-/** Resolve a JSON Pointer path like "/booking/date" against a data model */
-function resolveDataPath(model: A2UIDataModel, path: string): unknown {
-  if (!path.startsWith('/')) return undefined
-  const segments = path.slice(1).split('/')
-  let current: unknown = model
-  for (const seg of segments) {
-    if (current == null || typeof current !== 'object') return undefined
-    current = (current as Record<string, unknown>)[seg]
-  }
-  return current
 }
 
 /** Check for circular references during render traversal */

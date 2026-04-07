@@ -1,26 +1,35 @@
-import React from 'react'
+import { useMemo } from 'react'
+import { Sun, Moon } from 'lucide-react'
 import { ax } from '@styles/ax'
+import { useStore } from '@os/store/useStore'
 import '@styles/ax.css'
 import './PageThemeCreator.css'
 import { TabList } from '@os/ui/TabList'
 import { createStore } from '@os/store/createStore'
+import { urlSync, getInitialTabFromUrl } from '@os/plugins/urlSync'
 import { useTheme } from '../../hooks/useTheme'
 import { ThemeTokens } from './ThemeTokens'
 import { ThemeAxes } from './ThemeAxes'
 import { ThemeComponents } from './ThemeComponents'
 import { ThemeScenarios } from './ThemeScenarios'
+import { ThemeComposites } from './ThemeComposites'
 
 /* ══ Tab data ══ */
 
-const tabData = createStore({
-  entities: {
-    tokens: { id: 'tokens', data: { label: 'Tokens' } },
-    axes: { id: 'axes', data: { label: 'Axes' } },
-    components: { id: 'components', data: { label: 'Components' } },
-    scenarios: { id: 'scenarios', data: { label: 'Scenarios' } },
-  },
-  relationships: { __root__: ['tokens', 'axes', 'components', 'scenarios'] },
-})
+function createTabData() {
+  const initialTab = getInitialTabFromUrl() ?? 'tokens'
+  return createStore({
+    entities: {
+      tokens: { id: 'tokens', data: { label: 'Tokens' } },
+      axes: { id: 'axes', data: { label: 'Axes' } },
+      components: { id: 'components', data: { label: 'Components' } },
+      scenarios: { id: 'scenarios', data: { label: 'Scenarios' } },
+      composites: { id: 'composites', data: { label: 'Composites' } },
+      __selection__: { id: '__selection__', data: { selectedIds: [initialTab] } },
+    },
+    relationships: { __root__: ['tokens', 'axes', 'components', 'scenarios', 'composites'] },
+  })
+}
 
 /* ══ Theme Panel ══ */
 
@@ -35,7 +44,7 @@ function ThemePanel() {
           className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone: 'neutral', shape: 'xl' })}
           onClick={toggle}
         >
-          {theme === 'dark' ? '☾ Dark' : '☀ Light'}
+          {theme === 'dark' ? <><Moon size={12} /> Dark</> : <><Sun size={12} /> Light</>}
         </button>
       </div>
     </div>
@@ -45,9 +54,11 @@ function ThemePanel() {
 /* ══ Main ══ */
 
 export default function PageThemeCreator() {
-  const [tabs, setTabs] = React.useState(tabData)
+  const initialTab = useMemo(() => getInitialTabFromUrl() ?? 'tokens', [])
+  const initialData = useMemo(createTabData, [])
+  const [tabs, setTabs] = useStore(initialData)
 
-  const activeTab = React.useMemo(() => {
+  const activeTab = useMemo(() => {
     const sel = tabs.entities.__selection__ as Record<string, unknown> | undefined
     const ids = (sel?.selectedIds as string[]) ?? []
     return ids[0] ?? 'tokens'
@@ -65,7 +76,7 @@ export default function PageThemeCreator() {
       </div>
 
       {/* Tab bar */}
-      <TabList data={tabs} onChange={setTabs} aria-label="Styleguide sections" />
+      <TabList data={tabs} onChange={setTabs} plugins={[urlSync()]} initialFocus={initialTab} aria-label="Styleguide sections" />
 
       {/* Tab content */}
       <div className="theme-tab-content">
@@ -73,6 +84,7 @@ export default function PageThemeCreator() {
         {activeTab === 'axes' && <ThemeAxes />}
         {activeTab === 'components' && <ThemeComponents />}
         {activeTab === 'scenarios' && <ThemeScenarios />}
+        {activeTab === 'composites' && <ThemeComposites />}
       </div>
     </div>
   )

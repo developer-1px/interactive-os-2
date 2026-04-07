@@ -12,6 +12,12 @@ export interface A2UIRenderContext {
   renderNode: (nodeId: string, depth: number) => ReactNode
   renderChildren: (parentId: string, depth: number) => ReactNode
   depth: number
+  /** Surface ID for action dispatching */
+  surfaceId?: string
+  /** Callback for A2UI action events (button clicks etc.) */
+  onAction?: (componentId: string, actionName: string, context?: Record<string, unknown>) => void
+  /** Data model for resolving dynamic bindings */
+  dataModel?: Record<string, unknown>
 }
 
 /**
