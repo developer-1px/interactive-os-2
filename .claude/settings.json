@@ -27,6 +27,7 @@
     "PreToolUse": [
       {
         "matcher": "Bash",
+        "if": "Bash(git *)",
         "hooks": [
           {
             "type": "command",
@@ -47,6 +48,7 @@
       },
       {
         "matcher": "Write|Edit",
+        "if": "Write(*.tsx)|Write(*.ts)|Write(*.jsx)|Edit(*.tsx)|Edit(*.ts)|Edit(*.jsx)",
         "hooks": [
           {
             "type": "command",
@@ -57,6 +59,7 @@
       },
       {
         "matcher": "Write|Edit",
+        "if": "Write(*.css)|Edit(*.css)",
         "hooks": [
           {
             "type": "command",

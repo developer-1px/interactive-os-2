@@ -123,7 +123,7 @@ if (warnings.length > 0) {
     ...warnings.slice(0, 10),
     ...(warnings.length > 10 ? [`  ... 외 ${warnings.length - 10}건`] : []),
     '',
-    '원칙: 디자인 속성에 raw 숫자 금지. tokens.css에 토큰 추가 후 참조.',
+    '원칙: 디자인 속성에 raw 숫자 금지. src/styles/tokens.css에서 토큰 값을 확인하고 var() 참조.',
   ].join('\n')
   process.stderr.write(msg)
 }
