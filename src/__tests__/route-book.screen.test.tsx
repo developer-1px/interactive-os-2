@@ -114,7 +114,7 @@ describe('Book screen: Quick Open', () => {
     await user.click(btn)
 
     await waitFor(() => {
-      expect(container.querySelector('.book-quick-open-input')).toBeTruthy()
+      expect(container.querySelector('.quick-open-input')).toBeTruthy()
     })
 
     // input에 포커스가 있는 상태에서 바로 Enter → 첫 번째 결과로 이동
@@ -122,6 +122,29 @@ describe('Book screen: Quick Open', () => {
 
     await waitFor(() => {
       // Quick Open이 닫혀야 함 = 페이지 이동 성공
+      expect(container.querySelector('[data-open="true"].book-quick-open-overlay')).toBeNull()
+    })
+  })
+})
+
+describe('Book screen: Quick Open 키보드 이동', () => {
+  it('ArrowDown → 항목 포커스 이동', async () => {
+    const user = userEvent.setup()
+    const { container } = renderBook('/book/overview')
+
+    const btn = container.querySelector('[aria-label="Quick open"]') as HTMLElement
+    await user.click(btn)
+
+    await waitFor(() => {
+      expect(container.querySelector('.quick-open-input')).toBeTruthy()
+    })
+
+    // ArrowDown으로 항목 이동 → Enter로 선택 → 닫힘 + 이동
+    await user.keyboard('{ArrowDown}')
+    await user.keyboard('{Enter}')
+
+    await waitFor(() => {
+      // Quick Open이 닫혀야 함 = 키보드 이동 후 선택 성공
       expect(container.querySelector('[data-open="true"].book-quick-open-overlay')).toBeNull()
     })
   })

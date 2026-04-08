@@ -6,6 +6,7 @@ import { Breadcrumb } from '@os/ui/Breadcrumb'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { TocNavList } from '@os/ui/TocNavList'
 import { SpreadReader } from '@os/ui/SpreadReader'
+import { QuickOpen } from '@os/ui/QuickOpen'
 import { NavList } from '@os/ui/NavList'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
@@ -268,15 +269,6 @@ export default function PageBookViewer() {
       if (layerOverlayVisible) closeLayerOverlay()
       else openLayerOverlay()
     }, 'Book'),
-    ...(quickOpenVisible ? {
-      Enter: defineRouteKey('book:quick-open-activate', () => {
-        const panel = document.querySelector('.book-quick-open-panel')
-        const selected = panel?.querySelector('[aria-selected="true"]') as HTMLElement
-          ?? panel?.querySelector('[data-node-id]') as HTMLElement
-        const nodeId = selected?.getAttribute('data-node-id')
-        if (nodeId) handleQuickOpenActivate(nodeId)
-      }, 'Book'),
-    } : {}),
     Escape: defineRouteKey('book:close-overlay', () => {
       if (layerOverlayVisible) closeLayerOverlay()
       else if (quickOpenVisible) closeQuickOpen()
@@ -420,31 +412,18 @@ export default function PageBookViewer() {
             data-open={quickOpenVisible}
             onClick={(e) => { if (e.target === e.currentTarget) closeQuickOpen() }}
           >
-            <div className={`${ax({ surface: 'overlay', shape: 'xl', width: 'xl' })} book-quick-open-panel`}>
-              <div className={ax({ layout: 'bar', gap: 'sm', padding: 'md', border: 'bottom' })}>
-                <Search size={16} className={ax({ text: 'muted' })} />
-                {quickOpenVisible && (
-                  <input
-                    className={`${ax({ text: 'primary', textStyle: 'body' })} book-quick-open-input`}
-                    type="text"
-                    placeholder="Search pages..."
-                    value={quickOpenFilter}
-                    onChange={(e) => setQuickOpenFilter(e.target.value)}
-                    autoFocus
-                  />
-                )}
-                <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-                  {quickOpenFilter ? '' : 'Esc'}
-                </span>
-              </div>
-              <ScrollArea className={ax({ padding: 'sm' })}>
-                <NavList
-                  data={quickOpenStore}
-                  onActivate={handleQuickOpenActivate}
-                  aria-label="Quick open"
-                />
-              </ScrollArea>
-            </div>
+            {quickOpenVisible && (
+              <QuickOpen
+                data={quickOpenStore}
+                query={quickOpenFilter}
+                onQueryChange={setQuickOpenFilter}
+                onActivate={handleQuickOpenActivate}
+                onClose={closeQuickOpen}
+                placeholder="Search pages..."
+                aria-label="Quick open"
+                dialog={false}
+              />
+            )}
           </div>
 
           {/* ── Layer overlay ── */}

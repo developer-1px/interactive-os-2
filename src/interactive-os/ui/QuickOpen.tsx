@@ -10,6 +10,7 @@ import { createBatchCommand } from '../engine/types'
 import { selectionCommands } from '../axis/select'
 import { combobox } from '../pattern/roles/combobox'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
+import { getNodeLabel } from './types'
 import { ax } from '@styles/ax'
 import '@styles/ax.css'
 import { FileIcon } from './FileIcon'
@@ -41,22 +42,200 @@ function flattenFiles(store: NormalizedData, root: string): FileEntry[] {
   return files
 }
 
+function isGroup(entity: Record<string, unknown>): boolean {
+  return (entity.data as Record<string, unknown>)?.type === 'group'
+}
+
+function getLabel(entity: Record<string, unknown>): string {
+  return (entity.data as Record<string, unknown>)?.label as string
+    ?? (entity.data as Record<string, unknown>)?.name as string
+    ?? entity.id as string
+}
+
 // --- Component ---
 
 const MAX_RESULTS = 12
 
-export function QuickOpen({
-  fileStore,
-  root,
-  onSelect,
-  onClose,
-}: {
+/** File-based mode: searches fileStore with Fuse.js */
+interface FileMode {
   fileStore: NormalizedData
   root: string
   onSelect: (filePath: string) => void
   onClose: () => void
-}) {
+}
+
+/** Managed mode: parent provides data + handles search */
+interface ManagedMode {
+  data: NormalizedData
+  query: string
+  onQueryChange: (query: string) => void
+  onActivate: (nodeId: string) => void
+  onClose: () => void
+  placeholder?: string
+  'aria-label'?: string
+  renderItem?: (label: string, data: Record<string, unknown>) => React.ReactNode
+  dialog?: boolean
+}
+
+type QuickOpenProps = FileMode | ManagedMode
+
+function isManagedMode(props: QuickOpenProps): props is ManagedMode {
+  return 'data' in props && 'onActivate' in props
+}
+
+export function QuickOpen(props: QuickOpenProps) {
+  if (isManagedMode(props)) return <QuickOpenManaged {...props} />
+  return <QuickOpenFile {...props} />
+}
+
+// --- Managed mode: parent provides NormalizedData ---
+
+function QuickOpenManaged({
+  data,
+  query,
+  onQueryChange,
+  onActivate,
+  onClose,
+  placeholder = 'Search...',
+  'aria-label': ariaLabel = 'Quick Open',
+  renderItem,
+  dialog = true,
+}: ManagedMode) {
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+  const onActivateRef = useRef(onActivate)
+  onActivateRef.current = onActivate
+
+  const handleChange = useCallback((newStore: NormalizedData) => {
+    const isOpen = (newStore.entities['__combobox__']?.isOpen as boolean) ?? false
+    if (!isOpen) {
+      const selectedIds = (newStore.entities['__selection__']?.selectedIds as string[]) ?? []
+      if (selectedIds.length > 0) {
+        onActivateRef.current(selectedIds[0])
+      }
+      onCloseRef.current()
+    }
+  }, [])
+
+  const aria = useAria({
+    pattern: combobox(),
+    data,
+    plugins: [comboboxPlugin()],
+    onChange: handleChange,
+  })
+
+  const store = aria.getStore()
+  const isOpen = (store.entities['__combobox__']?.isOpen as boolean) ?? false
+  const rootChildren = getChildren(store, ROOT_ID)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+    aria.dispatch(comboboxCommands.open())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const dialogRef = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    if (dialog) dialogRef.current?.showModal?.()
+  }, [dialog])
+
+  useEffect(() => {
+    if (!dialog) return
+    const el = dialogRef.current
+    if (!el) return
+    const handleClose = () => onClose()
+    el.addEventListener('close', handleClose)
+    return () => el.removeEventListener('close', handleClose)
+  }, [onClose, dialog])
+
+  const hasGroups = rootChildren.some(id => {
+    const entity = store.entities[id]
+    return entity && isGroup(entity)
+  })
+
+  const renderItems = (ids: string[]) =>
+    ids.map(childId => {
+      const entity = store.entities[childId]
+      if (!entity) return null
+      const state = aria.getNodeState(childId)
+      const nodeProps = aria.getNodeProps(childId)
+      const label = getNodeLabel(entity)
+      return (
+        <div
+          key={childId}
+          {...(nodeProps as React.HTMLAttributes<HTMLDivElement>)}
+          className={`cursor-default ${ax({ interactive: 'item', recipe: 'item', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined })}`}
+          onClick={() => {
+            aria.dispatch(createBatchCommand([
+              selectionCommands.select(childId),
+              comboboxCommands.close(),
+            ]))
+          }}
+        >
+          {renderItem ? renderItem(label, entity.data as Record<string, unknown>) : label}
+        </div>
+      )
+    })
+
+  const content = (
+    <div className={`quick-open-dialog overflow-hidden ${ax({ layout: 'column', shape: 'xl', border: 'default', motion: 'slide-in' })}`} aria-label={ariaLabel}>
+      <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
+        <Search size={16} className={ax({ text: 'muted', flex: 'none' })} />
+        <input
+          className={`quick-open-input border-none outline-none ${ax({ recipe: 'control', flex: '1' })}`}
+          type="text"
+          placeholder={placeholder}
+          value={query}
+          onChange={(e) => onQueryChange(e.target.value)}
+          aria-label={ariaLabel}
+          {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
+          ref={(el: HTMLInputElement | null) => {
+            inputRef.current = el
+            const ariaRef = (aria.containerProps as { ref?: Ref<HTMLElement> }).ref
+            if (typeof ariaRef === 'function') ariaRef(el)
+            else if (ariaRef && typeof ariaRef === 'object') (ariaRef as React.MutableRefObject<HTMLElement | null>).current = el
+          }}
+        />
+        <kbd className={ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>ESC</kbd>
+      </div>
+      {isOpen && rootChildren.length > 0 ? (
+        <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>
+          {hasGroups ? rootChildren.map(id => {
+            const entity = store.entities[id]
+            if (!entity) return null
+            if (isGroup(entity)) {
+              const groupChildren = getChildren(store, id)
+              return (
+                <div key={id} role="group" aria-label={getLabel(entity)}>
+                  <div className={ax({ textStyle: 'overline', text: 'muted', padding: 'sm', content: 'text' })}>{getLabel(entity)}</div>
+                  {renderItems(groupChildren)}
+                </div>
+              )
+            }
+            return renderItems([id])
+          }) : renderItems(rootChildren)}
+        </div>
+      ) : (
+        <div className={ax({ layout: 'center', text: 'muted', textStyle: 'body', padding: 'xl' })}>No results</div>
+      )}
+    </div>
+  )
+
+  if (!dialog) return content
+
+  return (
+    <dialog ref={dialogRef} className="quick-open-dialog-el" onClick={(e) => { if (e.target === dialogRef.current) onClose() }}>
+      {content}
+    </dialog>
+  )
+}
+
+// --- File mode: original Fuse.js-based search ---
+
+function QuickOpenFile({ fileStore, root, onSelect, onClose }: FileMode) {
   const [query, setQuery] = useState('')
 
   const files = useMemo(() => flattenFiles(fileStore, root), [fileStore, root])
@@ -70,124 +249,39 @@ export function QuickOpen({
     return fuse.search(query).slice(0, MAX_RESULTS).map(r => r.item)
   }, [query, fuse, files])
 
-  // Convert Fuse.js results to NormalizedData for the combobox pattern
   const comboboxData = useMemo(() => createStore({
     entities: Object.fromEntries(results.map(f => [f.id, { id: f.id, data: f as unknown as Record<string, unknown> }])),
     relationships: { [ROOT_ID]: results.map(f => f.id) },
   }), [results])
 
-  const onCloseRef = useRef(onClose)
-  onCloseRef.current = onClose
-  const onSelectRef = useRef(onSelect)
-  onSelectRef.current = onSelect
-
-  const handleChange = useCallback((newStore: NormalizedData) => {
-    // Detect close: __combobox__ isOpen went to false
-    const isOpen = (newStore.entities['__combobox__']?.isOpen as boolean) ?? false
-    if (!isOpen) {
-      // Check if a selection was made
-      const selectedIds = (newStore.entities['__selection__']?.selectedIds as string[]) ?? []
-      if (selectedIds.length > 0) {
-        const selectedEntity = newStore.entities[selectedIds[0]]
-        if (selectedEntity?.data) {
-          const fileData = selectedEntity.data as unknown as FileEntry
-          onSelectRef.current(fileData.path)
-        }
-      }
-      onCloseRef.current()
-    }
-  }, [])
-
-  const aria = useAria({
-    pattern: combobox(),
-    data: comboboxData,
-    plugins: [comboboxPlugin()],
-    onChange: handleChange,
-  })
-
-  const store = aria.getStore()
-  const isOpen = (store.entities['__combobox__']?.isOpen as boolean) ?? false
-  const children = getChildren(store, ROOT_ID)
-
-  // Auto-focus input and open combobox on mount
-  useEffect(() => {
-    inputRef.current?.focus()
-    aria.dispatch(comboboxCommands.open())
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const dialogRef = useRef<HTMLDialogElement>(null)
-
-  useEffect(() => {
-    dialogRef.current?.showModal?.()
-
-  }, [])
-
-  useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
-    const handleClose = () => onClose()
-    dialog.addEventListener('close', handleClose)
-    return () => dialog.removeEventListener('close', handleClose)
-  }, [onClose])
+  const handleActivate = useCallback((nodeId: string) => {
+    const file = results.find(f => f.id === nodeId)
+    if (file) onSelect(file.path)
+  }, [results, onSelect])
 
   return (
-    <dialog ref={dialogRef} className="quick-open-dialog-el" onClick={(e) => { if (e.target === dialogRef.current) onClose() }}>
-      <div className={`quick-open-dialog overflow-hidden ${ax({ layout: 'column', shape: 'xl', border: 'default', motion: 'slide-in' })}`} aria-label="Quick Open">
-        <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
-          <Search size={16} className={`${ax({ text: 'muted', flex: 'none' })}`} />
-          <input
-            className={`quick-open-input border-none outline-none ${ax({ recipe: 'control', flex: '1' })}`}
-            type="text"
-            placeholder="파일 검색..."
-            value={query}
-            onChange={(e) => { setQuery(e.target.value) }}
-            aria-label="파일 검색"
-            {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
-            ref={(el: HTMLInputElement | null) => {
-              inputRef.current = el
-              const ariaRef = (aria.containerProps as { ref?: Ref<HTMLElement> }).ref
-              if (typeof ariaRef === 'function') ariaRef(el)
-              else if (ariaRef && typeof ariaRef === 'object') (ariaRef as React.MutableRefObject<HTMLElement | null>).current = el
-            }}
-          />
-          <kbd className={ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>ESC</kbd>
-        </div>
-        {isOpen && children.length > 0 ? (
-          <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>
-            {children.map(childId => {
-              const entity = store.entities[childId]
-              if (!entity) return null
-              const state = aria.getNodeState(childId)
-              const props = aria.getNodeProps(childId)
-              const fileData = entity.data as unknown as FileEntry
-              return (
-                <div
-                  key={childId}
-                  {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                  className={`cursor-default ${ax({ interactive: 'item', recipe: 'item', layout: 'bar', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined })}`}
-                  onClick={() => {
-                    aria.dispatch(createBatchCommand([
-                      selectionCommands.select(childId),
-                      comboboxCommands.close(),
-                    ]))
-                  }}
-                >
-                  <span className={ax({ flex: 'none' })}>
-                    <FileIcon name={fileData.name} type="file" />
-                  </span>
-                  <span className={`quick-open-item-text ${ax({ layout: 'column', flex: '1' })}`}>
-                    <span className={ax({ textStyle: 'body', clamp: '1', weight: 'medium' })}>{fileData.name}</span>
-                    <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-        ) : (
-          <div className={ax({ layout: 'center', text: 'muted', textStyle: 'body', padding: 'xl' })}>일치하는 파일이 없습니다</div>
-        )}
-      </div>
-    </dialog>
+    <QuickOpenManaged
+      data={comboboxData}
+      query={query}
+      onQueryChange={setQuery}
+      onActivate={handleActivate}
+      onClose={onClose}
+      placeholder="파일 검색..."
+      aria-label="Quick Open"
+      renderItem={(_, data) => {
+        const fileData = data as unknown as FileEntry
+        return (
+          <>
+            <span className={ax({ flex: 'none' })}>
+              <FileIcon name={fileData.name} type="file" />
+            </span>
+            <span className={`quick-open-item-text ${ax({ layout: 'column', flex: '1' })}`}>
+              <span className={ax({ textStyle: 'body', clamp: '1', weight: 'medium' })}>{fileData.name}</span>
+              <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
+            </span>
+          </>
+        )
+      }}
+    />
   )
 }
