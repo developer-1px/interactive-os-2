@@ -7,7 +7,6 @@ import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/roles/switch'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 type ToggleProps = AriaComponentProps
 

@@ -1,3 +1,4 @@
+@layer component {
 /* SpreadReader — last-mile: column layout, transform, break-inside */
 
 .spread-root {
@@ -56,4 +57,5 @@
 .spread-indicator {
   z-index: 20;
   opacity: 0.5;
+}
 }

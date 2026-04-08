@@ -1,3 +1,4 @@
+@layer base {
 /* ═══════════════════════════════════════════
    Structure — atomic layout classes (closed system)
    ═══════════════════════════════════════════
@@ -82,3 +83,4 @@
   white-space: nowrap;
   border-width: 0;
 }
+} /* @layer base */

@@ -1,0 +1,7 @@
+/* ═══════════════════════════════════════════
+   L0 Layer Order — Global cascade priority
+   ═══════════════════════════════════════════
+   뒤가 이긴다. recipe/state가 component를 이김.
+   이 파일은 모든 CSS보다 먼저 import되어야 한다. */
+
+@layer reset, tokens, base, component, recipe, state;

@@ -1,7 +1,6 @@
 /** @catalog 빈 상태 표시 */
 import type React from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import { Button } from './Button'
 
 interface EmptyStateProps {

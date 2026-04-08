@@ -12,7 +12,6 @@ import { getFieldErrors } from '../plugins/form'
 import { rename } from '../plugins/rename'
 import { edit } from '../plugins/edit'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 interface FormProps {
   data: NormalizedData

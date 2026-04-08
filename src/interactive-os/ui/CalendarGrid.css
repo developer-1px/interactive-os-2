@@ -1,4 +1,5 @@
-/* CalendarGrid — state styling */
-.calendar-day[data-outside] { color: var(--text-muted); }
-.calendar-day[data-focused='true'] { background: var(--bg-hover); }
-.calendar-day[data-selected='true'] { background: var(--tone-primary-base); color: var(--tone-primary-foreground); }
+@layer component {
+  /* CalendarGrid — state styling */
+  .calendar-day[data-outside] { color: var(--text-muted); }
+  /* data-focused/data-selected removed: recipe 'control-sm' handles state via state layer */
+}

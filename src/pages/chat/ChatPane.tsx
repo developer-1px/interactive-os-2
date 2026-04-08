@@ -11,7 +11,6 @@ import { A2UIBlock } from '@os/ui/chat/A2UIBlock'
 import { sendMessage, clearSession, interruptSession, useChatSession } from './chatStore'
 import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './PageAgentChat.css'
 
 const chatRenderers: BlockRendererMap = {

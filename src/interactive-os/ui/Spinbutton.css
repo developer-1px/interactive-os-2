@@ -1,3 +1,4 @@
+@layer component {
 /* Spinbutton — group focus ring, button borders, value sizing */
 .spinbutton-group {
   transition: border-color var(--motion-instant-duration) var(--motion-instant-easing),
@@ -31,3 +32,4 @@
   padding: var(--space-sm) var(--space-sm);
 }
 .spinbutton-input::placeholder { color: var(--text-muted); }
+}

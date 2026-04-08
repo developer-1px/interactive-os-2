@@ -1,3 +1,4 @@
+@layer state {
 /* ═══════════════════════════════════════════
    L4 Interactive — Structure-only rules
    ═══════════════════════════════════════════
@@ -91,3 +92,4 @@
   border-color: var(--tone-destructive-base);
   outline-color: var(--tone-destructive-base);
 }
+} /* @layer state */

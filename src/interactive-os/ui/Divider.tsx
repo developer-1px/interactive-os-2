@@ -1,6 +1,5 @@
 /** @catalog 수평/수직 구분선 */
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 export function Divider({ direction = 'horizontal' }: { direction?: 'horizontal' | 'vertical' }) {
   return direction === 'horizontal'

@@ -1,3 +1,4 @@
+@layer component {
 /* QuickOpen — last-mile: positioning, animation, caret, placeholder */
 
 dialog.quick-open-dialog-el {
@@ -35,4 +36,5 @@ dialog.quick-open-dialog-el::backdrop {
 
 .quick-open-item-text {
   min-width: 0;
+}
 }

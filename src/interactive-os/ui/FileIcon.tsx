@@ -1,6 +1,5 @@
 /** @catalog 파일 확장자별 아이콘 */
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import {
   Folder, FolderOpen, FileCode, FileType,
   File, Braces, Palette, Terminal, Image, Settings,

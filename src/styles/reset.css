@@ -1,3 +1,4 @@
+@layer reset {
 /* ═══════════════════════════════════════════
    L1 Reset — Browser initialization + HTML type baselines
    ═══════════════════════════════════════════
@@ -63,3 +64,4 @@ p {
     animation-duration: 0.01ms !important;
   }
 }
+} /* @layer reset */

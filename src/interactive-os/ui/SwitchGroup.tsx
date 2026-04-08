@@ -8,7 +8,6 @@ import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/roles/switch'
 import { SwitchIndicator } from './indicators'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 type SwitchGroupProps = AriaComponentProps
 

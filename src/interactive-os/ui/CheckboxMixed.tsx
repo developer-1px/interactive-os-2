@@ -8,7 +8,6 @@ import { Aria } from '../primitives/aria'
 import { checkboxMixed } from '../pattern/roles/checkboxMixed'
 import { CheckIndicator, IndeterminateIndicator } from './indicators'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 type CheckboxMixedProps = AriaComponentProps
 

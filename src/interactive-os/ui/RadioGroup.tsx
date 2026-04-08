@@ -8,7 +8,6 @@ import { Aria } from '../primitives/aria'
 import { radiogroup } from '../pattern/roles/radiogroup'
 import { RadioIndicator } from './indicators'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 type RadioGroupProps = AriaComponentProps
 

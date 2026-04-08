@@ -6,7 +6,6 @@ import { FileIcon } from './FileIcon'
 import { Breadcrumb } from './Breadcrumb'
 import { PanelHeader } from './PanelHeader'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './FileViewerModal.css'
 
 interface FileViewerModalProps {

@@ -1,3 +1,4 @@
+@layer component {
 /* DatePicker — border-radius splits, positioning */
 .dp-input {
   padding: var(--shape-xs-py) var(--shape-sm-px);
@@ -26,3 +27,4 @@
   justify-content: flex-end;
 }
 .dp-action-btn { font-family: inherit; }
+}

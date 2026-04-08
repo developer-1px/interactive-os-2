@@ -19,7 +19,6 @@ import { tabsManual } from '../pattern/roles/tabsManual'
 import { windowSplitter } from '../pattern/roles/windowSplitter'
 
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './PatternDemo.css'
 
 interface PatternEntry {

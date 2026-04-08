@@ -1,6 +1,5 @@
 /** @catalog 경로 탐색 브레드크럼 */
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 export function Breadcrumb({ path, root }: { path: string; root: string }) {
   if (!path) return null

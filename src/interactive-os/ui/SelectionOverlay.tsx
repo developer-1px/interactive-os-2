@@ -2,7 +2,6 @@
 // ② 2026-03-31-selection-overlay-prd.md
 import type { RefObject } from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import { useRectTracker } from './useRectTracker'
 import type { TrackedRect } from './useRectTracker'
 import './SelectionOverlay.css'

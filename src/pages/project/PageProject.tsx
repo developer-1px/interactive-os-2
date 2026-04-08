@@ -7,7 +7,6 @@ import { StatusIndicator, ProgressIndicator } from '@os/ui/indicators'
 import type { NodeState } from '@os/pattern/types'
 import { ax, type Axes } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
-import '@styles/ax.css'
 import { buildProjectStore, PROJECT_COLUMNS } from './projectStore'
 import type { Maturity } from './projectData'
 

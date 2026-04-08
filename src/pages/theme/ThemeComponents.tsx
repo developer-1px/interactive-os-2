@@ -1,7 +1,6 @@
 import type React from 'react'
 import { ax } from '@styles/ax'
 import { useStore } from '@os/store/useStore'
-import '@styles/ax.css'
 import './PageThemeCreator.css'
 import { Button } from '@os/ui/Button'
 import { TextInput } from '@os/ui/TextInput'

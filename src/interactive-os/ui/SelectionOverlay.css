@@ -1,3 +1,4 @@
+@layer component {
 /* SelectionOverlay — variant theming via CSS custom properties */
 .sel-overlay-rect {
   border: var(--border-width) solid var(--_border, transparent);
@@ -19,4 +20,5 @@
   --_bg: transparent;
   --_label-bg: var(--tone-neutral-dim);
   --_label-color: var(--text-secondary);
+}
 }

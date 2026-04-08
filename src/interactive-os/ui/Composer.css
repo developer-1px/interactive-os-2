@@ -1,3 +1,4 @@
+@layer component {
 /* Composer — last-mile: pseudo-elements, state selectors */
 
 .composer-input-wrap[data-disabled] {
@@ -41,12 +42,5 @@
   line-height: var(--leading-snug);
 }
 
-.composer-suggestion-item:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-.composer-suggestion-item[data-selected] {
-  background: var(--bg-active);
-  color: var(--text-bright);
+/* suggestion-item hover/selected removed: interactive:'item' handles state via state layer */
 }

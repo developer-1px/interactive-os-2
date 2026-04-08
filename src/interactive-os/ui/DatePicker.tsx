@@ -2,7 +2,6 @@
 // ② 2026-04-03-command-unification-prd.md
 import React, { useMemo, useCallback, useRef, useEffect } from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import { DirectionIndicator, ExpandIndicator } from './indicators'
 import './DatePicker.css'
 import { FOCUS_ID } from '../axis/navigate'

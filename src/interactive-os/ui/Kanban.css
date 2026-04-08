@@ -1,3 +1,4 @@
+@layer component {
 /* Kanban — last-mile CSS (not expressible via ax()) */
 
 /* ── Column count — text-transform reset ── */
@@ -51,9 +52,6 @@
 }
 
 .kanban-board[data-compact] .kanban-card {
-  align-items: baseline;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--shape-xs-radius);
   flex-shrink: 0;
 }
 
@@ -80,15 +78,8 @@
 
 /* ── Weight hints ── */
 
-.kanban-board[data-compact] .kanban-card[data-weight="md"] {
-  font-weight: var(--weight-medium);
-}
-
-.kanban-board[data-compact] .kanban-card[data-weight="lg"] {
-  font-weight: var(--weight-semi);
-  color: var(--text-bright);
-  background: color-mix(in srgb, var(--tone-warning-base) 12%, var(--surface-default));
-}
+/* data-weight="md" font-weight removed: recipe 'container-sm' owns font-weight */
+/* data-weight="lg" font-weight/color removed: recipe owns those; background tint kept as last-mile */
 
 /* ── Hub indicator ── */
 
@@ -128,4 +119,5 @@
 .kanban-card[aria-selected="true"] {
   background: var(--selection);
   color: var(--text-bright);
+}
 }

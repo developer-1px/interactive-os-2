@@ -1,3 +1,4 @@
+@layer component {
 /* TabGroup — tab states, close/add button reveal */
 .tab-item {
   white-space: nowrap;
@@ -23,3 +24,4 @@
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
 }
 .tab-add:hover { opacity: 1; }
+}

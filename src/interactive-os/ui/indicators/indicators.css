@@ -1,3 +1,4 @@
+@layer component {
 /* ═══════════════════════════════════════════
    Indicator part classes (item-indicator--* convention)
    ARIA attributes drive state — no JS class toggle needed.
@@ -344,3 +345,4 @@
   background: var(--tone-primary-base);
   border-radius: 0 2px 2px 0;
 }
+} /* @layer component */

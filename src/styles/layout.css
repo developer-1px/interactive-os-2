@@ -1,4 +1,4 @@
-
+@layer component {
 /* ═══════════════════════════════════════════
    Layout — page, sidebar, content
    ═══════════════════════════════════════════
@@ -78,3 +78,4 @@
 }
 
 /* Outlet wrapper — ActivityBar 옆의 콘텐츠 영역 */
+} /* @layer component */

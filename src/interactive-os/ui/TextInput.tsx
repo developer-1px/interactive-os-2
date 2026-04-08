@@ -1,7 +1,6 @@
 /** @catalog 텍스트 입력 필드 */
 import React from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   align?: 'left' | 'right'

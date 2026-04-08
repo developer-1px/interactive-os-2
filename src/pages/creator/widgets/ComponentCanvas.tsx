@@ -5,7 +5,6 @@ import type { ErrorInfo, ReactNode } from 'react'
 import type { RegistryEntry } from '../componentRegistry'
 import { getSampleData } from '../sampleData'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 
 interface ComponentCanvasProps {

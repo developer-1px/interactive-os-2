@@ -1,7 +1,6 @@
 /** @catalog 측정값 표시 미터 */
 import React from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'

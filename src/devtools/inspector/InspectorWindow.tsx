@@ -13,7 +13,6 @@ import { registryToUnifiedTree, findInstanceId } from './inspectorStore'
 import type { InstanceMeta } from './inspectorStore'
 import { InspectorLogTab } from './InspectorLogTab'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './InspectorWindow.css'
 
 const emptyPlugins: Plugin[] = []

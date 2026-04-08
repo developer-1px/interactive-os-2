@@ -2,7 +2,6 @@
 import React from 'react'
 
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'

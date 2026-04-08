@@ -1,7 +1,6 @@
 /** @catalog 범위 값 슬라이더 */
 import React from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './Slider.css'
 import type { AriaComponentProps } from './types'
 import { getNodeLabel } from './types'

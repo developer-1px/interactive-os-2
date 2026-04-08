@@ -1,3 +1,4 @@
+@layer component {
 /* CodeBlock — last-mile: shiki integration, line numbers, token highlights */
 
 .code-block :is(.shiki) {
@@ -87,4 +88,5 @@
   background: color-mix(in srgb, var(--tone-success-base) 15%, transparent) !important;
   border-left: var(--indicator-width) solid var(--tone-success-base);
   padding-left: var(--space-sm) !important;
+}
 }

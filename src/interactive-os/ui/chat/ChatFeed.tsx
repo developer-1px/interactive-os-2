@@ -11,7 +11,6 @@ import { ChatFeaturesOverride } from './chatFeatures'
 import type { ChatMessage, ChatBlock, DataBlock, BlockRendererMap } from './types'
 import { useAutoscroll } from '../../plugins/autoscroll'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 
 // --- Default renderers (implementation set A: text/code/diff) ---

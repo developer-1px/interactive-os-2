@@ -1,7 +1,3 @@
-/* PatternDemo — state styling */
-.pattern-demo-item[data-focused='true'] { background: var(--bg-hover); }
-.pattern-demo-item[data-selected='true'] { background: var(--selection); }
-.pattern-demo-item[data-focused='true'][data-selected='true'] {
-  background: var(--selection);
-  outline: var(--focus-ring) solid var(--focus);
+@layer component {
+  /* PatternDemo — state styling removed: ia-item handles focus/selection */
 }

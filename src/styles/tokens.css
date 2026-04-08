@@ -8,6 +8,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap');
 
+@layer tokens {
 :root {
   /* ══ Semantic tokens (dark default) ══
      All color values reference palette.css variables.
@@ -343,3 +344,4 @@
 
   --dialog-backdrop: rgba(0, 0, 0, 0.2);
 }
+} /* @layer tokens */

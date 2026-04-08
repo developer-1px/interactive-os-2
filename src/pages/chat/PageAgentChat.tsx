@@ -32,7 +32,6 @@ import { useKeyMap } from '@os/primitives/useKeyMap'
 import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
-import '@styles/ax.css'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import './PageAgentChat.css'
 

@@ -12,7 +12,6 @@ import type { PaneSize } from './SplitPane'
 import { TabGroup } from './TabGroup'
 import { useKeyMap } from '../primitives/useKeyMap'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 interface WorkspaceProps {
   data: NormalizedData

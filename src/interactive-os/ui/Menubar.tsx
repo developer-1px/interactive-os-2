@@ -11,7 +11,6 @@ import { MenubarItem } from './items/MenubarItem'
 import { MenuItem } from './items/MenuItem'
 import { DirectionIndicator } from './indicators'
 import { SubmenuPanel } from './panels/SubmenuPanel'
-import '@styles/ax.css'
 
 type MenubarRenderItem = (
   props: React.HTMLAttributes<HTMLElement>,

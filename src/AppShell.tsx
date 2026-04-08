@@ -12,10 +12,12 @@ import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { useTheme } from './hooks/useTheme'
 import { ActivityBar } from './ActivityBar'
 
+import './styles/layers.css'        // L0: Layer order declaration (must be first)
 import './styles/palette.css'       // L0: OKLCH color palette
 import './styles/reset.css'        // L1: Browser initialization
 import './styles/tokens.css'       // L2: Design token values
 import './styles/structure.css'    // L2.5: Atomic layout classes
+import './styles/ax.css'           // L3-L5: Axis design system (recipe + state)
 import './styles/interactive.css'  // L4: Interaction policy (hover, focus, disabled...)
 import './interactive-os/ui/indicators/indicators.css'  // L4: Indicator part classes
 import './styles/layout.css'       // App layout (sidebar, page grid)

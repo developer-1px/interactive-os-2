@@ -5,7 +5,6 @@ import type { Toaster as ToasterInstance, ToastData } from './createToaster'
 import { CloseIndicator } from './indicators'
 import { ax } from '@styles/ax'
 import type { Axes } from '@styles/ax'
-import '@styles/ax.css'
 import './Toaster.css'
 
 const variantTone: Record<string, Axes> = {

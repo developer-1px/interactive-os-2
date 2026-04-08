@@ -1,3 +1,4 @@
+@layer component {
 /* Tooltip — popover reset, placement via CSS anchor positioning */
 .tooltip-popover {
   margin: 0;
@@ -30,4 +31,5 @@
   position-area: left span-all;
   position-try-fallbacks: flip-inline;
   margin-right: var(--space-xs);
+}
 }

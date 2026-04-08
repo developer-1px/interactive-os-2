@@ -1,7 +1,6 @@
 // ② 2026-03-31-chat-perf-prd.md
 import { memo, useMemo } from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 import type { DiffBlock as DiffBlockType } from './types'
 

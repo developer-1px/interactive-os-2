@@ -12,7 +12,6 @@ import { combobox } from '../pattern/roles/combobox'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
 import { getNodeLabel } from './types'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import { FileIcon } from './FileIcon'
 import './QuickOpen.css'
 

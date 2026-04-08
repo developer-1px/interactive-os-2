@@ -1,5 +1,4 @@
 import { type Axes, ax } from '@styles/ax'
-import '@styles/ax.css'
 import './PageThemeCreator.css'
 
 /* ══ Data ══ */

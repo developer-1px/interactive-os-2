@@ -2,7 +2,6 @@
 // ② 2026-03-25-stream-feed-prd.md
 import { useState, useEffect, useCallback, type ReactNode } from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './StreamFeed.css'
 import { DirectionIndicator } from './indicators'
 

@@ -1,3 +1,4 @@
+@layer component {
 /* StreamFeed — last-mile CSS (not expressible via ax()) */
 
 :where(.stream-feed) {
@@ -41,4 +42,5 @@
   background: var(--tone-primary-base);
   margin-left: var(--border-width);
   vertical-align: text-bottom;
+}
 }

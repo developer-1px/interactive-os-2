@@ -1,2 +1,4 @@
-/* NavList — sibling spacing */
-.navlist-group + .navlist-group { padding-top: var(--space-lg); }
+@layer component {
+  /* NavList — sibling spacing */
+  .navlist-group + .navlist-group { padding-top: var(--space-lg); }
+}

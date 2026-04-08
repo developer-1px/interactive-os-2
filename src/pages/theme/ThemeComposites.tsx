@@ -1,6 +1,5 @@
 import type React from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './PageThemeCreator.css'
 import { statGridRenderer } from '@os/ui/composites/StatGrid'
 import { formSectionRenderer } from '@os/ui/composites/FormSection'

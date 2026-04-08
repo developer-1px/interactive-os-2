@@ -1,7 +1,6 @@
 /** @catalog 필터+값 선택 드롭다운 */
 import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './Combobox.css'
 import { CloseIndicator } from './indicators'
 import type { NormalizedData } from '../store/types'

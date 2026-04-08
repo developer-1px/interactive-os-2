@@ -1,3 +1,4 @@
+@layer component {
 /* Markdown prose — all rules are last-mile (prose typography rhythm) */
 
 .markdown {
@@ -188,4 +189,5 @@
 .markdown input[type="checkbox"] {
   margin-right: 0.4em;
   vertical-align: middle;
+}
 }

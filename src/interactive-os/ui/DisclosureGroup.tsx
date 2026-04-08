@@ -8,7 +8,6 @@ import type { NodeState } from '../pattern/types'
 import { Aria } from '../primitives/aria'
 import { disclosure } from '../pattern/roles/disclosure'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 type DisclosureGroupProps = AriaComponentProps
 

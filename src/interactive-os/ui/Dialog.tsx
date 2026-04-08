@@ -8,7 +8,6 @@ import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { dialog } from '../pattern/roles/dialog'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 interface DialogProps {
   data: NormalizedData

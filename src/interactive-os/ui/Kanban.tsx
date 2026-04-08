@@ -10,7 +10,6 @@ import { kanban as kanbanBehavior } from './kanbanPreset'
 import { getChildren, getEntity } from '../store/createStore'
 import type { AriaComponentProps } from './types'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 interface KanbanProps extends AriaComponentProps {
   highlightUp?: Set<string>

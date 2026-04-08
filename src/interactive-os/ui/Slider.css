@@ -1,3 +1,4 @@
+@layer component {
 /* Slider — track, fill, thumb */
 .slider-label { min-width: calc(var(--space-2xl) * 2); }
 .slider-track {
@@ -29,3 +30,4 @@
   box-shadow: 0 0 0 calc(var(--slider-track-height) / 2) var(--tone-primary-base);
 }
 .slider-value { min-width: var(--space-2xl); }
+}

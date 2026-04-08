@@ -10,7 +10,6 @@ import { useTabList } from './useTabList'
 import { workspaceCommands } from '../plugins/workspaceStore'
 import type { TabGroupData } from '../plugins/workspaceStore'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import { CloseIndicator, AddIndicator } from './indicators'
 import './TabGroup.css'
 

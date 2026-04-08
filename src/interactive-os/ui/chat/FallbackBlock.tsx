@@ -1,7 +1,6 @@
 // ② 2026-04-03-command-unification-prd.md
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import { useChatFeatures } from './chatFeatures'
 import { useDisclosure } from './useDisclosure'
 import type { ChatBlock } from './types'

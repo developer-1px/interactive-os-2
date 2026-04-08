@@ -8,7 +8,6 @@ import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { listboxGrouped } from '../pattern/roles/listboxGrouped'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 
 type ListBoxGroupedProps = AriaComponentProps
 

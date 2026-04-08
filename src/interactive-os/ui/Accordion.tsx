@@ -8,7 +8,6 @@ import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { accordion } from '../pattern/roles/accordion'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import './Accordion.css'
 
 type AccordionProps = AriaComponentProps

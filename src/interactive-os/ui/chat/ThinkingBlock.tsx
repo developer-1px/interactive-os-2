@@ -1,7 +1,6 @@
 // ② 2026-04-03-command-unification-prd.md
 import { memo } from 'react'
 import { ax } from '@styles/ax'
-import '@styles/ax.css'
 import { ExpandIndicator } from '../indicators/ExpandIndicator'
 import { MarkdownViewer } from '../MarkdownViewer'
 import { useChatFeatures } from './chatFeatures'
