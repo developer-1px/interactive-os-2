@@ -11,6 +11,7 @@ import { parseJsx } from '../../pages/showcase/parseJsx'
 import { mdComponents } from '../../pages/showcase/mdComponents'
 import { MermaidBlock } from '../../pages/showcase/MermaidBlock'
 import { CodeBlock } from './CodeBlock'
+import { LightboxProvider, useLightbox } from './Lightbox'
 import './MarkdownViewer.css'
 
 export type CodeVariant = 'bordered' | 'flush' | 'compact'
@@ -64,7 +65,10 @@ function RenderBlock({ children }: { children: string }) {
   return <>{elements}</>
 }
 
-export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codeVariant, prose = true, linkTransform }: { content: string; className?: string; codeVariant?: CodeVariant; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler } }) {
+// ② lightbox-prd.md — img/mermaid click → Lightbox
+function MarkdownContent({ content, className, codeVariant, prose, linkTransform }: { content: string; className?: string; codeVariant?: CodeVariant; prose: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler } }) {
+  const lightbox = useLightbox()
+
   const components = useMemo(() => ({
     ...(linkTransform ? {
       a({ href, children, node: _, ...rest }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { node?: unknown }) {
@@ -75,6 +79,26 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, className,
         return <a {...rest} href={href}>{children}</a>
       },
     } : {}),
+    // V1: lightbox-prd.md — image click opens lightbox (unless inside <a>)
+    img(props: React.ImgHTMLAttributes<HTMLImageElement> & { node?: unknown }) {
+      const { src, alt, node: rawNode, ...rest } = props
+      // V5: lightbox-prd.md — skip if parent is <a> (link navigation takes priority)
+      const node = rawNode as Record<string, unknown> | undefined
+      const parentTag = node?.parent as { tagName?: string } | undefined
+      const isInsideLink = parentTag?.tagName === 'a'
+      if (isInsideLink || !src) {
+        return <img src={src} alt={alt ?? ''} {...rest} />
+      }
+      return (
+        <img
+          src={src}
+          alt={alt ?? ''}
+          {...rest}
+          className="lightbox-trigger"
+          onClick={() => lightbox.open({ type: 'image', src, alt })}
+        />
+      )
+    },
     div(props: React.HTMLAttributes<HTMLDivElement> & { node?: unknown }) {
       const { node: _, children, ...rest } = props
       const dataRender = (rest as Record<string, unknown>)['data-render']
@@ -90,7 +114,8 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, className,
       const text = String(children).replace(/\n$/, '')
 
       if (lang === 'mermaid') {
-        return <MermaidBlock code={text} />
+        // V2: lightbox-prd.md — mermaid click opens lightbox with SVG
+        return <MermaidBlock code={text} onClick={(svgHtml) => lightbox.open({ type: 'svg', html: svgHtml })} />
       }
 
       if (lang) {
@@ -99,7 +124,7 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, className,
 
       return <code className={className} {...props}>{children}</code>
     },
-  }), [codeVariant, linkTransform])
+  }), [codeVariant, linkTransform, lightbox])
 
   return (
     <div className={`break-word ${ax({ text: 'primary', width: 'prose' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
@@ -110,5 +135,13 @@ export const MarkdownViewer = memo(function MarkdownViewer({ content, className,
         components={components}
       />
     </div>
+  )
+}
+
+export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codeVariant, prose = true, linkTransform }: { content: string; className?: string; codeVariant?: CodeVariant; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler } }) {
+  return (
+    <LightboxProvider>
+      <MarkdownContent content={content} className={className} codeVariant={codeVariant} prose={prose} linkTransform={linkTransform} />
+    </LightboxProvider>
   )
 })

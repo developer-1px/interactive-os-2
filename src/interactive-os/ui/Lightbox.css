@@ -1,0 +1,33 @@
+/* ② lightbox-prd.md — dialog UA stylesheet override (last-mile) */
+@layer component {
+  .lightbox-dialog {
+    position: fixed;
+    inset: 0;
+    max-width: none;
+    max-height: none;
+    border: none;
+    cursor: zoom-out;
+  }
+
+  img.lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    cursor: default;
+  }
+
+  .lightbox-svg {
+    max-width: 90vw;
+    max-height: 90vh;
+    cursor: default;
+  }
+
+  .lightbox-svg svg {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  .lightbox-trigger {
+    cursor: zoom-in;
+  }
+}

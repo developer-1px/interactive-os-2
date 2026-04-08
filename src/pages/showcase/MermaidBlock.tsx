@@ -6,7 +6,7 @@ mermaid.initialize({ startOnLoad: false, theme: 'default' })
 
 let mermaidCounter = 0
 
-export function MermaidBlock({ code }: { code: string }) {
+export function MermaidBlock({ code, onClick }: { code: string; onClick?: (svgHtml: string) => void }) {
   const ref = useRef<HTMLDivElement>(null)
   const [svg, setSvg] = useState('')
 
@@ -15,6 +15,12 @@ export function MermaidBlock({ code }: { code: string }) {
     mermaid.render(id, code).then(({ svg }) => setSvg(svg)).catch(() => setSvg(''))
   }, [code])
 
+  const handleClick = () => {
+    if (onClick && ref.current) {
+      onClick(ref.current.innerHTML)
+    }
+  }
+
   if (!svg) return <pre><code>{code}</code></pre>
-  return <div ref={ref} dangerouslySetInnerHTML={{ __html: svg }} />
+  return <div ref={ref} className={onClick ? 'lightbox-trigger' : undefined} dangerouslySetInnerHTML={{ __html: svg }} onClick={handleClick} />
 }

@@ -274,11 +274,13 @@ if (!isExempt && isTsx) {
   }
 }
 
-// 규칙 14: CSS 파일에서 ax() 축 소유 속성 사용 금지
+// 규칙 14: CSS 파일에서 ax() 축 소유 속성 사용 금지 — os 내부도 예외 없음
 // module.css든 일반 .css든 last-mile(축에 없는 속성)만 허용
+// 예외: ax.css — 축 시스템 자체이므로 축 소유 속성 당연히 사용
 const isCss = /\.css$/.test(filePath)
-if (isCss && !isExempt) {
-  // ax() 축 → 소유 CSS 속성 매핑
+const isAxCss = filePath.endsWith('/styles/ax.css')
+if (isCss && !isAxCss) {
+  // ax() 축 → 소유 CSS 속성 매핑 (패턴은 속성명만, ':'는 RegExp에서 추가)
   const AX_OWNED_PROPS = [
     // surface 축
     ['background(?!-image)', 'surface'],
@@ -298,23 +300,32 @@ if (isCss && !isExempt) {
     ['flex-direction', 'layout'],
     ['align-items', 'layout'],
     ['justify-content', 'layout'],
+    ['overflow', 'layout'],
+    ['overflow-y', 'layout'],
+    ['overflow-x', 'layout'],
     // gap 축
     ['(?<!column-)(?<!row-)gap', 'gap'],
     // padding 축
-    ['padding(?!-)\\s*:', 'padding'],
+    ['padding(?!-)', 'padding'],
     // width 축
-    ['(?<!max-|min-)width\\s*:', 'width'],
+    ['(?<!max-|min-)width', 'width'],
+    // height — layout:fill 등으로 표현
+    ['(?<!max-|min-)height', 'layout'],
   ]
 
   const lines = content.split('\n')
   const found = new Set()
+  let inPseudoElement = false
   for (const line of lines) {
     const trimmed = line.trim()
     // skip comments, custom properties, var() only lines
     if (trimmed.startsWith('/*') || trimmed.startsWith('*') || trimmed.startsWith('//')) continue
     if (trimmed.startsWith('--')) continue
+    // skip ::backdrop, ::before, ::after pseudo-element blocks (CSS-only, ax() inapplicable)
+    if (/::(?:backdrop|before|after|placeholder)\s*\{/.test(trimmed)) { inPseudoElement = true; continue }
+    if (inPseudoElement) { if (trimmed === '}') inPseudoElement = false; continue }
     for (const [pattern, axis] of AX_OWNED_PROPS) {
-      const re = new RegExp(`^\\s*${pattern}\\s*:`, 'm')
+      const re = new RegExp(`^${pattern}\\s*:`, 'm')
       if (re.test(trimmed)) {
         found.add(`${trimmed.split(':')[0].trim()} → ax(${axis}) 사용`)
       }
@@ -326,6 +337,26 @@ if (isCss && !isExempt) {
       `CSS에서 ax() 축 소유 속성 사용 금지 — ax() 또는 해당 축을 사용하세요:\n${[...found].map(f => `      • ${f}`).join('\n')}`
     )
   }
+}
+
+// 규칙 20: ui/ 컴포넌트에서 onKeyDown/onKeyUp 바닐라 핸들링 금지 — keyMap/pattern/plugin 사용
+// isExempt는 os 전체를 면제하지만, ui/ 레이어는 useAria 기반 완성품이므로 키 핸들링도 os 방식이어야 함
+const isUiComponent = filePath.includes('/src/interactive-os/ui/') && /\.tsx$/.test(filePath)
+if (isUiComponent && !_isAriaZoneFile && /\bonKey(?:Down|Up)\s*=\s*\n?\s*\{/m.test(content)) {
+  // useAria 또는 pattern/plugin keyMap을 사용하는 파일은 허용
+  const usesOsKeyMap = /\buseAria\b|\bkeyMap\b|\bcomposePattern\b|\bdefinePlugin\b/.test(content)
+  if (!usesOsKeyMap) {
+    violations.push(
+      'ui/ 컴포넌트에서 onKeyDown/onKeyUp 바닐라 핸들링 금지 — pattern keyMap 또는 plugin.keyMap으로 선언적 키 매핑을 사용하세요. CLAUDE.md "키바인딩 → KeyMap 선언" 참조'
+    )
+  }
+}
+
+// 규칙 19: CSS ::after/::before content로 아이콘/인디케이터 대체 금지 — indicators/ 사용
+if (isCss && /::(?:after|before)\s*\{[^}]*content\s*:\s*['"][^'"]+['"]/s.test(content)) {
+  violations.push(
+    'CSS pseudo-element(::after/::before content)로 아이콘/인디케이터 대체 금지 — src/interactive-os/ui/indicators/ 컴포넌트를 사용하세요'
+  )
 }
 
 if (violations.length > 0) {
