@@ -15,7 +15,7 @@ const styles = {
     borderRadius: 6,
     fontSize: 11,
     fontWeight: 600,
-    fontFamily: 'monospace',
+    fontFamily: 'var(--font-sans, system-ui, sans-serif)',
     cursor: 'pointer',
     transition: 'all 0.15s',
     background: 'rgba(30,30,30,0.85)',
@@ -39,6 +39,9 @@ const styles = {
     fontVariantNumeric: 'tabular-nums' as const,
   },
 } as const
+
+const activeStyle = { ...styles.button, ...styles.active }
+const pulsingDot = { ...styles.dot, animation: 'repro-pulse 1s infinite' }
 
 export function ReproRecorderOverlay() {
   const recorder = useMemo(() => createReproRecorder(), [])
@@ -95,19 +98,18 @@ export function ReproRecorderOverlay() {
     return `${m}:${sec.toString().padStart(2, '0')}`
   }
 
+  if (!recording) return null
+
   return (
     <button
       onClick={toggle}
-      style={{ ...styles.button, ...(recording ? styles.active : {}) }}
-      title="Cmd+Shift+\ to toggle recording"
+      style={activeStyle}
+      title="Cmd+Shift+\ to stop recording"
     >
-      <span style={{
-        ...styles.dot,
-        animation: recording ? 'repro-pulse 1s infinite' : 'none',
-      }} />
-      {recording ? 'STOP' : 'REC'}
-      {recording && <span style={styles.timer}>{formatTime(elapsed)}</span>}
-      {recording && <style>{`@keyframes repro-pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }`}</style>}
+      <span style={pulsingDot} />
+      STOP
+      <span style={styles.timer}>{formatTime(elapsed)}</span>
+      <style>{`@keyframes repro-pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }`}</style>
     </button>
   )
 }
