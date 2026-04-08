@@ -49,7 +49,7 @@ export function Slider({
     const label = getNodeLabel(item)
 
     return (
-      <div className={`${ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined, padding: 'xs', content: 'text' })}`} data-focused={state.focused || undefined}>
+      <div className={`${ax({ recipe: 'item', layout: 'spread', text: state.focused ? 'bright' : undefined })}`} data-focused={state.focused || undefined}>
         {label && <span className={`slider-label ${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })}`}>{label}</span>}
         <div className={`slider-track ${ax({ flex: '1' })}`} ref={trackRef} onClick={handleTrackClick}>
           <div className="slider-fill" style={{ width: `${pct}%`, height: '100%' }} />
