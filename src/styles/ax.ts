@@ -44,8 +44,10 @@ type Content = 'text' | 'code' | 'bubble' | 'diff'
 // scroll: overflow 제어 — 컨테이너 경계 클리핑 또는 스크롤 방향
 type Scroll = 'hidden' | 'y' | 'x' | 'auto'
 // border: 테두리 — 전체, 단면, 스타일
-type Border = 'subtle' | 'default' | 'strong' | 'dashed'
-  | 'bottom' | 'top' | 'start' | 'end'
+// 단면(bottom/top/start/end) + shape(border-radius) 조합 금지 — Axes union으로 강제
+type BorderFull = 'subtle' | 'default' | 'strong' | 'dashed'
+type BorderSide = 'bottom' | 'top' | 'start' | 'end'
+type Border = BorderFull | BorderSide
 // interactive: 동적 상태 시각 (hover/focus/selected/checked/disabled)
 // surface=정적 시각(cursor/border/shadow), interactive=동적 상태 응답
 type Interactive = 'item' | 'tab' | 'check' | 'cell' | 'input' | 'button'
@@ -76,6 +78,7 @@ type Layout =
   | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
   | 'scroll-x' // flex row + overflow-x:auto + min-width:0 (가로 스크롤)
   | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
+  | 'row-fill' // flex:1 + flex row + overflow:hidden + min-*:0 (가로 분할 전체 채움)
   // grid (display:grid + equal columns)
   | 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7'
   // self-alignment (자식이 부모 안에서의 위치 지정)
@@ -98,7 +101,8 @@ type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 // aspect: 종횡비
 type Aspect = '1' | 'video' | 'card'
 
-export interface Axes {
+// 공통 축 (border/shape 제외)
+interface AxesBase {
   // 레시피 축 (구조 프리셋 — 색칠 축과 조합)
   recipe?: Recipe
 
@@ -111,10 +115,8 @@ export interface Axes {
   weight?: Weight
   state?: State
   opacity?: Opacity
-  shape?: Shape
   motion?: Motion
   content?: Content
-  border?: Border
   scroll?: Scroll
   interactive?: Interactive
 
@@ -131,9 +133,18 @@ export interface Axes {
   aspect?: Aspect
 }
 
+// 단면 border + shape 조합 금지: 단면 border에는 radius가 의미 없다
+export type Axes =
+  | (AxesBase & { border?: BorderFull; shape?: Shape })
+  | (AxesBase & { border?: BorderSide; shape?: never })
+  | (AxesBase & { border?: never; shape?: Shape })
+
 // ── className 매핑 ──
 
-const prefixes: Record<keyof Axes, string> = {
+// Axes가 union이므로 keyof Axes는 공통 키만 반환. 전체 키를 위해 AxesAll 사용.
+type AxesAll = AxesBase & { border?: Border; shape?: Shape }
+
+const prefixes: Record<keyof AxesAll, string> = {
   recipe: 'rc',
   surface: 'sf',
   controlSize: 'cs',
@@ -181,7 +192,7 @@ const prefixes: Record<keyof Axes, string> = {
 export function ax(axes: Axes): string {
   let result = ''
   for (const key in axes) {
-    const value = axes[key as keyof Axes]
+    const value = axes[key as keyof AxesAll]
     if (value != null) {
       if (result) result += ' '
       result += `${prefixes[key as keyof Axes]}-${value}`

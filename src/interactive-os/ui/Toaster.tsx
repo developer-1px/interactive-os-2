@@ -43,7 +43,7 @@ function ToastItem({
   const variant = toast.variant ?? 'default'
   const axes = variantTone[variant] ?? variantTone.default
   return (
-    <div className={`toast-item pointer-auto ${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' })}`} data-variant={variant}>
+    <div className={`toast-item pointer-auto ${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' } as Axes)}`} data-variant={variant}>
       <div className={ax({ flex: '1', layout: 'self-start' })}>
         <div className={ax({ textStyle: 'body', weight: 'medium' })}>{toast.title}</div>
         {toast.description && (

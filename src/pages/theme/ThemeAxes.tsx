@@ -238,7 +238,7 @@ function BorderAxis() {
       <div className={ax({ layout: 'row', gap: 'sm' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={ax({ padding: 'sm', shape: 'md', border: v })}>
+            <div className={ax((['bottom', 'top', 'start', 'end'].includes(v) ? { padding: 'sm', border: v as 'bottom' } : { padding: 'sm', shape: 'md', border: v as 'subtle' }))}>
               <span className={ax({ textStyle: 'code', text: 'secondary' })}>{v}</span>
             </div>
           </AxisRow>

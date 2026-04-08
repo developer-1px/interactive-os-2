@@ -10,10 +10,10 @@ interface PanelHeaderProps extends HTMLAttributes<HTMLDivElement> {
 
 /** 패널/사이드바 상단 바. recipe:item(36px) + border-bottom. */
 export function PanelHeader({ children, className, axes, ...rest }: PanelHeaderProps) {
-  const base: Axes = { recipe: 'item', layout: 'bar', flex: 'none', textStyle: 'overline', text: 'muted', border: 'bottom' }
+  const base = { recipe: 'item' as const, layout: 'bar' as const, flex: 'none' as const, textStyle: 'overline' as const, text: 'muted' as const, border: 'bottom' as const }
   return (
     <div
-      className={`${ax({ ...base, ...axes })}${className ? ` ${className}` : ''}`}
+      className={`${ax({ ...base, ...axes } as Axes)}${className ? ` ${className}` : ''}`}
       {...rest}
     >
       {children}
