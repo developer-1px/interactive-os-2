@@ -180,7 +180,7 @@ function QuickOpenManaged({
     })
 
   const content = (
-    <div className={`quick-open-dialog overflow-hidden ${ax({ layout: 'column', shape: 'xl', border: 'default', motion: 'slide-in' })}`} aria-label={ariaLabel}>
+    <div className={`quick-open-dialog ${ax({ layout: 'column', shape: 'xl', border: 'default', motion: 'slide-in', scroll: 'hidden' })}`} aria-label={ariaLabel}>
       <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
         <Search size={16} className={ax({ text: 'muted', flex: 'none' })} />
         <input

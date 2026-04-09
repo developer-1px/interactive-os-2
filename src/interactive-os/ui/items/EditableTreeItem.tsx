@@ -29,11 +29,11 @@ export function EditableTreeItem(
       style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}
     >
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
-      {options?.icon && <span className="shrink-0">{options.icon}</span>}
+      {options?.icon && <span className={ax({ flex: 'none' })}>{options.icon}</span>}
       <AriaEditable field={field}>
-        <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary', clamp: '1' })}>{label}</span>
+        <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary', clamp: '1', flex: '1' })}>{label}</span>
       </AriaEditable>
-      {options?.rightContent && <span className="shrink-0 ml-auto">{options.rightContent}</span>}
+      {options?.rightContent && <span className={ax({ flex: 'none' })}>{options.rightContent}</span>}
     </div>
   )
 }

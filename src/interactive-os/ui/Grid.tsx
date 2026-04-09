@@ -1,6 +1,7 @@
 /** @catalog 2차원 그리드 탐색 */
 import React from 'react'
 
+import { ax } from '@styles/ax'
 import type { Plugin } from '../engine/types'
 import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
@@ -28,6 +29,7 @@ interface GridProps extends Omit<AriaComponentProps, 'renderItem'> {
   /** Render column headers inside the grid-table container (subgrid-aligned) */
   header?: boolean
   keyMap?: Record<string, import('../axis/types').KeyHandler>
+  onFocusChange?: (nodeId: string | null) => void
 }
 
 const defaultRenderCell = (props: React.HTMLAttributes<HTMLElement>, value: unknown, _column: ColumnDef, _state: NodeState): React.ReactElement => (
@@ -42,6 +44,7 @@ export function Grid({
   plugins = defaultPlugins,
   onChange,
   onActivate,
+  onFocusChange,
   renderCell = defaultRenderCell,
   enableEditing = false,
   searchable = false,
@@ -97,9 +100,9 @@ export function Grid({
   return (
     <div className="grid-table" style={gridStyle}>
       {header && (
-        <div className="grid-header">
-          {columns.map((col) => (
-            <div key={col.key} className="grid-header-cell">{col.header}</div>
+        <div className={`grid-header ${ax({ surface: 'sunken', border: 'bottom' })}`}>
+          {columns.map((col, i) => (
+            <div key={col.key} className={`grid-header-cell ${ax({ padding: 'md', textStyle: 'overline', text: 'secondary' })}${i < columns.length - 1 ? ` ${ax({ border: 'end' })}` : ''}`}>{col.header}</div>
           ))}
         </div>
       )}
@@ -109,6 +112,7 @@ export function Grid({
         plugins={mergedPlugins}
         onChange={onChange}
         onActivate={onActivate}
+        onFocusChange={onFocusChange}
         keyMap={keyMap}
         aria-label={ariaLabel}
       >

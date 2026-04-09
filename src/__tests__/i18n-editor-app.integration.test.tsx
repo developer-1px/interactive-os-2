@@ -72,7 +72,7 @@ describe('PageI18nEditor', () => {
 
     it('key column shows identifier text with secondary style', () => {
       const { container } = render(<PageI18nEditor />)
-      const keyCell = container.querySelector('.tx-secondary')
+      const keyCell = container.querySelector('[role="row"] .tx-secondary')
       expect(keyCell).not.toBeNull()
       // Key format: "entityId.fieldName"
       expect(keyCell?.textContent).toMatch(/\w+\.\w+/)

@@ -30,7 +30,7 @@ export function MenuItem(
           {options?.indicator ?? <ExpandIndicator expanded={state.expanded} />}
         </span>
       )}
-      {options?.rightContent && <span className="shrink-0">{options.rightContent}</span>}
+      {options?.rightContent && <span className={ax({ flex: 'none' })}>{options.rightContent}</span>}
     </div>
   )
 }

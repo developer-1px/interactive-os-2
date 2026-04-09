@@ -28,15 +28,15 @@ export function IssueRow(
       data-selected={state.selected || undefined}
     >
       <span className={ax({ layout: 'bar', gap: 'sm' })}>
-        {options?.statusIcon && <span className="shrink-0">{options.statusIcon}</span>}
+        {options?.statusIcon && <span className={ax({ flex: 'none' })}>{options.statusIcon}</span>}
         {options?.identifier && (
-          <span className={ax({ textStyle: 'caption', text: 'muted' }) + ' shrink-0'}>
+          <span className={ax({ textStyle: 'caption', text: 'muted', flex: 'none' })}>
             {options.identifier}
           </span>
         )}
-        <span className={ax({ text: 'primary', clamp: '1' }) + ' flex-1'}>{label}</span>
+        <span className={ax({ text: 'primary', clamp: '1', flex: '1' })}>{label}</span>
       </span>
-      <span className="shrink-0">
+      <span className={ax({ flex: 'none' })}>
         <span className={ax({ layout: 'bar', gap: 'xs' })}>
           {options?.labels?.map((l) => (
             <Badge key={l.text} tone={l.tone as Axes['tone']}>

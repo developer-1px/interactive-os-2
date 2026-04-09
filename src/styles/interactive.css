@@ -36,23 +36,10 @@
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
-  border-bottom: 2px solid var(--border-default);
-  background: var(--surface-sunken);
 }
 
 :where(.grid-header-cell) {
-  padding: var(--space-md);
   min-width: 80px;
-  font-weight: var(--weight-semi);
-  font-size: var(--type-caption-size);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-  color: var(--text-secondary);
-  border-right: 1px solid var(--border-subtle);
-}
-
-:where(.grid-header-cell:last-child) {
-  border-right: none;
 }
 
 :where(.grid-table > .ax-interactive) {
