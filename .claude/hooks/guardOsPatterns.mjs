@@ -313,6 +313,9 @@ if (isCss && !isAxCss) {
     ['(?<!max-|min-)height', 'layout'],
   ]
 
+  // 허용 값: var()/calc()/min()/max()/clamp(), CSS 키워드, 숫자(단위/퍼센트 포함), 소수
+  const ALLOWED_VALUE = /^\s*(?:(?:var|calc|min|max|clamp)\(.*\)|inherit|initial|unset|none|transparent|grid|inline|pre-wrap|nowrap|pre-line|break-spaces|pointer|auto|\d*\.?\d+(?:%|vh|vw|dvh|dvw|svh|svw)?)\s*;?\s*$/
+
   const lines = content.split('\n')
   const found = new Set()
   let inPseudoElement = false
@@ -327,6 +330,11 @@ if (isCss && !isAxCss) {
     for (const [pattern, axis] of AX_OWNED_PROPS) {
       const re = new RegExp(`^${pattern}\\s*:`, 'm')
       if (re.test(trimmed)) {
+        // 값 부분 추출 후 허용 값이면 skip
+        const valMatch = trimmed.match(/:\s*(.+)/)
+        if (valMatch && ALLOWED_VALUE.test(valMatch[1])) continue
+        // align-items: center가 grid 컨텍스트에 있으면 허용
+        if (pattern === 'align-items' && valMatch && /^center\s*;?\s*$/.test(valMatch[1]) && /grid-template/.test(content)) continue
         found.add(`${trimmed.split(':')[0].trim()} → ax(${axis}) 사용`)
       }
     }

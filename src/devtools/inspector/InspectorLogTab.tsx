@@ -129,13 +129,13 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
       {/* Filter bar */}
       <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} inspector-log-filter`}>
         <input
-          className={`${ax({ textStyle: 'caption', padding: 'xs', border: 'default', shape: 'sm' })} inspector-log-input`}
+          className={`${ax({ textStyle: 'caption', padding: 'xs', border: 'default', shape: 'sm', flex: '1' })} inspector-log-input`}
           placeholder="command type..."
           value={filter}
           onChange={e => setFilter(e.target.value)}
         />
         <input
-          className={`${ax({ textStyle: 'caption', padding: 'xs', border: 'default', shape: 'sm' })} inspector-log-input`}
+          className={`${ax({ textStyle: 'caption', padding: 'xs', border: 'default', shape: 'sm', flex: '1' })} inspector-log-input`}
           placeholder="instance..."
           value={instanceFilter}
           onChange={e => setInstanceFilter(e.target.value)}
@@ -175,21 +175,21 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
             return (
               <div key={`${log.instanceName}-${log.seq}`}>
                 <div
-                  className={`cursor-pointer inspector-log-entry ${log.error ? 'inspector-log-error' : ''}`}
+                  className={`cursor-pointer ${ax({ padding: 'xs', clamp: '1', opacity: 'dim' })} inspector-log-entry ${log.error ? ax({ tone: 'danger' }) : ''}`}
                   onClick={() => toggleExpand(log.seq)}
                 >
                   <span className={ax({ text: 'muted' })}>{new Date(log.timestamp).toLocaleTimeString('en', { hour12: false, fractionalSecondDigits: 3 })}</span>
                   {' '}
-                  <span className="inspector-log-seq">#{log.seq}</span>
+                  <span className={`${ax({ opacity: 'faint' })} inspector-log-seq`}>#{log.seq}</span>
                   {' '}
-                  <span className="inspector-log-instance">[{log.instanceName}]</span>
+                  <span className={`${ax({ tone: 'success' })} inspector-log-instance`}>[{log.instanceName}]</span>
                   {' '}
                   <span className={ax({ text: 'bright' })}>{log.commandType}</span>
                   {' '}
                   <span className={ax({ text: 'muted' })}>| {formatDiffSummary(log.diff)}</span>
                 </div>
                 {isExpanded && (
-                  <div className={`${ax({ textStyle: 'caption', text: 'muted' })} inspector-log-detail`}>
+                  <div className={`${ax({ textStyle: 'caption', text: 'muted', padding: 'sm', clamp: 'pre' })} inspector-log-detail`}>
                     <div>payload: {JSON.stringify(log.payload, null, 2)}</div>
                     {log.diff.length > 0 && (
                       <div>
@@ -203,7 +203,7 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
                         ))}
                       </div>
                     )}
-                    {log.error && <div className="inspector-log-error-text">Error: {log.error}</div>}
+                    {log.error && <div className={`${ax({ tone: 'danger' })} inspector-log-error-text`}>Error: {log.error}</div>}
                   </div>
                 )}
               </div>

@@ -2,7 +2,6 @@
 
 .chat-page {
   grid-column: 2 / -1;
-  height: 100%;
   min-height: 0;
 }
 

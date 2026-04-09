@@ -15,9 +15,6 @@
 
   display: grid;
   grid-template-columns: 1fr;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
 }
 
 /* ── Floating pill — top-left ── */
@@ -41,7 +38,6 @@
 .book-pill-btn {
   width: var(--icon-lg);
   height: var(--icon-lg);
-  flex-shrink: 0;
 }
 
 /* ── Page footer ── */
@@ -77,9 +73,6 @@
 
 .book-toc-overlay {
   z-index: 30;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: var(--dialog-backdrop);
   opacity: 0;
   pointer-events: none;
@@ -97,9 +90,6 @@
   background: var(--surface-default);
   border-radius: var(--shape-xl-radius);
   box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
   transform: scale(0.95);
   transition: transform var(--motion-enter-duration) var(--motion-enter-easing);
 }
@@ -117,11 +107,6 @@
 /* ── Page area ── */
 
 .book-page-area {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   min-width: 0;
 }
 
@@ -154,8 +139,6 @@
 /* ── Page floating nav ── */
 
 .book-page-nav {
-  display: flex;
-  justify-content: space-between;
   padding: var(--space-lg);
   opacity: 0;
   pointer-events: none;
@@ -199,7 +182,6 @@
 }
 
 .book-quick-open-input {
-  flex: 1;
   background: transparent;
   border: none;
   outline: none;
@@ -209,5 +191,4 @@
 /* ── Empty state ── */
 
 .book-empty {
-  height: 100%;
 }

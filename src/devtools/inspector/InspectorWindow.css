@@ -1,56 +1,21 @@
-.inspector-root {
-  height: 100vh;
-}
-
-.inspector-detail {
-  height: 100%;
-}
-
 .inspector-table {
   border-collapse: collapse;
-  width: 100%;
 }
 
 .inspector-th {
-  padding: var(--indicator-width) var(--space-sm);
   border-bottom: var(--border-width) solid var(--border-default);
 }
 
-.inspector-td {
-  padding: var(--indicator-width) var(--space-sm);
-}
-
 .inspector-td-key {
-  padding: var(--indicator-width) var(--space-sm);
   font-family: var(--mono);
-  color: #10b981;
 }
 
 .inspector-td-command {
-  padding: var(--indicator-width) var(--space-sm);
   font-family: var(--mono);
-  color: #3b82f6;
-}
-
-.inspector-td-owner {
-  padding: var(--indicator-width) var(--space-sm);
-  opacity: 0.7;
 }
 
 .inspector-td-mismatch {
-  padding: var(--indicator-width) var(--space-sm);
   font-family: var(--mono);
-}
-
-.inspector-copy-button {
-  background: none;
-  border-radius: var(--space-xs);
-  padding: var(--border-width) var(--space-sm);
-}
-
-.inspector-copy-button:hover {
-  color: var(--text-default);
-  border-color: var(--text-muted);
 }
 
 .inspector-tab-bar {
@@ -58,7 +23,6 @@
 }
 
 .inspector-tab {
-  background: none;
   border-bottom: var(--indicator-width) solid transparent;
 }
 
@@ -72,53 +36,17 @@
 }
 
 .inspector-log-input {
-  background: none;
-  color: inherit;
   font-family: var(--mono);
   min-width: 0;
-  flex: 1;
 }
 
 .inspector-log-scroll {
   font-family: var(--mono);
-  line-height: var(--leading-normal);
-}
-
-.inspector-log-entry {
-  padding: var(--border-width) var(--space-sm);
-  white-space: nowrap;
-  opacity: 0.9;
-}
-
-.inspector-log-entry:hover {
-  background: var(--bg-hover);
-}
-
-.inspector-log-error {
-  color: var(--tone-danger);
-}
-
-.inspector-log-seq {
-  opacity: 0.5;
-}
-
-.inspector-log-instance {
-  color: #10b981;
 }
 
 .inspector-log-detail {
-  padding: var(--space-xs) var(--space-md);
   font-family: var(--mono);
-  white-space: pre-wrap;
   word-break: break-all;
   border-left: var(--indicator-width) solid var(--border-default);
   margin-left: var(--space-sm);
-}
-
-.inspector-log-diff-line {
-  padding-left: var(--space-sm);
-}
-
-.inspector-log-error-text {
-  color: var(--tone-danger);
 }

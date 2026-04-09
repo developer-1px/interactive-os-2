@@ -31,7 +31,7 @@ function TemplatePickerInner({ onClose, onSelect }: Omit<CmsTemplatePickerProps,
 
   return (
     <div
-      className={`cms-template-picker ${ax({ surface: 'overlay' })} absolute`}
+      className={`cms-template-picker ${ax({ surface: 'overlay', width: 'full', padding: 'xs', shape: 'xl' })} absolute`}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) onClose()
       }}

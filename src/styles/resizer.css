@@ -1,26 +1,5 @@
 .resizer-handle {
-  width: 4px;
   flex-shrink: 0;
-  cursor: col-resize;
-  background: transparent;
   transition: background var(--motion-instant-duration);
-  position: relative;
   z-index: 1;
-}
-
-/* Wider hit area via pseudo-element */
-.resizer-handle::after {
-  content: '';
-  position: absolute;
-  inset: 0 -4px;
-}
-
-.resizer-handle:hover,
-.resizer-handle:active {
-  background: var(--tone-primary-base);
-}
-
-.resizer-handle:focus-visible {
-  background: var(--tone-primary-base);
-  outline: none;
 }

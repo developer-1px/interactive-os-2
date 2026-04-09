@@ -27,27 +27,27 @@ function BoundKeyTable({ inspectResult }: { inspectResult: InspectResult }) {
     return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No bindings</div>
   }
   return (
-    <table className={`${ax({ textStyle: 'caption' })} inspector-table`}>
+    <table className={`${ax({ textStyle: 'caption', width: 'full' })} inspector-table`}>
       <thead>
         <tr>
-          <th className="text-left inspector-th">Input</th>
-          <th className="text-left inspector-th">Command</th>
-          <th className="text-left inspector-th">Owner</th>
+          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>Input</th>
+          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>Command</th>
+          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>Owner</th>
         </tr>
       </thead>
       <tbody>
         {keyEntries.map(([k, entry]) => (
           <tr key={k}>
-            <td className="inspector-td-key">{k}</td>
-            <td className="inspector-td-command">{entry.command ?? '—'}</td>
-            <td className="inspector-td-owner">{entry.owner}</td>
+            <td className={`${ax({ padding: 'xs', tone: 'success' })} inspector-td-key`}>{k}</td>
+            <td className={`${ax({ padding: 'xs', tone: 'accent' })} inspector-td-command`}>{entry.command ?? '—'}</td>
+            <td className={`${ax({ padding: 'xs', opacity: 'dim' })} inspector-td-owner`}>{entry.owner}</td>
           </tr>
         ))}
         {clickEntries.map(([input, commands]) => (
           <tr key={`click:${input}`}>
-            <td className="inspector-td-key">{input}</td>
-            <td className="inspector-td-command">{commands.join(', ')}</td>
-            <td className="inspector-td-owner">pattern</td>
+            <td className={`${ax({ padding: 'xs', tone: 'success' })} inspector-td-key`}>{input}</td>
+            <td className={`${ax({ padding: 'xs', tone: 'accent' })} inspector-td-command`}>{commands.join(', ')}</td>
+            <td className={`${ax({ padding: 'xs', opacity: 'dim' })} inspector-td-owner`}>pattern</td>
           </tr>
         ))}
       </tbody>
@@ -65,7 +65,7 @@ function CopyButton({ inspectResult }: { inspectResult: InspectResult }) {
 
   return (
     <button
-      className={`cursor-pointer ${ax({ textStyle: 'caption', border: 'default', text: 'muted' })} inspector-copy-button`}
+      className={`cursor-pointer ${ax({ textStyle: 'caption', border: 'default', text: 'muted', padding: 'xs', shape: 'sm' })} inspector-copy-button`}
       onClick={handleCopy}
     >
       {copied ? '✓ Copied' : 'Copy ASCII'}
@@ -91,12 +91,12 @@ function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>;
     return <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>No ARIA props</div>
   }
   return (
-    <table className={`${ax({ textStyle: 'caption' })} inspector-table`}>
+    <table className={`${ax({ textStyle: 'caption', width: 'full' })} inspector-table`}>
       <thead>
         <tr>
-          <th className="text-left inspector-th">Attribute</th>
-          <th className="text-left inspector-th">OS Intent</th>
-          {domProps && <th className="text-left inspector-th">DOM Actual</th>}
+          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>Attribute</th>
+          <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>OS Intent</th>
+          {domProps && <th className={`text-left ${ax({ padding: 'xs' })} inspector-th`}>DOM Actual</th>}
         </tr>
       </thead>
       <tbody>
@@ -106,10 +106,10 @@ function AriaDiffTable({ osProps, domProps }: { osProps: Record<string, string>;
           const mismatch = domProps && os !== dom
           return (
             <tr key={k}>
-              <td className="inspector-td-key">{k}</td>
-              <td className="inspector-td-command">{os ?? '—'}</td>
+              <td className={`${ax({ padding: 'xs', tone: 'success' })} inspector-td-key`}>{k}</td>
+              <td className={`${ax({ padding: 'xs', tone: 'accent' })} inspector-td-command`}>{os ?? '—'}</td>
               {domProps && (
-                <td className={mismatch ? `inspector-td-mismatch ${ax({ tone: 'danger-dim' })}` : 'inspector-td-command'}>{dom ?? '—'}</td>
+                <td className={mismatch ? `${ax({ padding: 'xs', tone: 'danger-dim' })} inspector-td-mismatch` : `${ax({ padding: 'xs', tone: 'accent' })} inspector-td-command`}>{dom ?? '—'}</td>
               )}
             </tr>
           )
@@ -318,7 +318,7 @@ export function InspectorWindow() {
             )}
           </div>
 
-          <div className="overflow-auto inspector-detail">
+          <div className={`${ax({ scroll: 'auto' })} inspector-detail`}>
             <div className={ax({ layout: 'column' })}>
               <TabBar active={activeTab} onChange={setActiveTab} />
 

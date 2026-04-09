@@ -65,7 +65,7 @@ store → engine → axis → pattern → primitives → ui → pages
   - 변환: `{domain}Transform.ts` (Adapter 금지)
   - Fixture: `{domain}Fixtures.ts`
 - **테스트**: 계산은 unit, 인터랙션은 통합(`user.keyboard()` → DOM/ARIA 상태 검증). mock 호출 검증(`toHaveBeenCalled`) 금지.
-- **CSS**: `/design-implement` 필수. `frontend-design` 스킬 금지.
+- **CSS**: `ax()`만 사용. `frontend-design` 스킬 금지.
 - **커밋 전**: `/simplify` 필수.
 - **`docs/3-resources/` 파일명**: `{순번}-[{태그}]{제목}.md`. 순번 = 폴더 마지막 번호 + 1.
 - **`docs/PROGRESS.md`**: concept map. 모듈 추가/삭제 시 갱신, Maturity/Gaps는 /retrospect 시.

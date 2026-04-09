@@ -83,7 +83,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
   return (
     <AriaRoute keyMap={keyMap} label="Present Mode">
       <div
-        className={`cms-present fixed inset-0 ${ax({ scroll: 'y' })} cursor-pointer`}
+        className={`cms-present fixed inset-0 ${ax({ scroll: 'y', surface: 'base' })} cursor-pointer`}
         onClick={onExit}
       >
         <div className={`cms-landing ${cmsStyles.cmsLanding} w-full overflow-x-hidden`}>

@@ -283,8 +283,8 @@ export default function PageBookViewer() {
 
   if (pages.length === 0) {
     return (
-      <div className={`${ax({ surface: 'base', text: 'primary' })} book`}>
-        <div className={`${ax({ layout: 'center', gap: 'lg', text: 'muted' })} book-empty`}>
+      <div className={`${ax({ surface: 'base', text: 'primary', width: 'full', scroll: 'hidden' })} h-full book`}>
+        <div className={`${ax({ layout: 'center', gap: 'lg', text: 'muted' })} h-full book-empty`}>
           <BookOpen size={48} className={ax({ opacity: 'dim' })} />
           <span>No content found</span>
         </div>
@@ -296,13 +296,13 @@ export default function PageBookViewer() {
 
   return (
     <AriaRoute keyMap={keyMap} label="Book">
-      <div className={`${ax({ surface: 'base', text: 'primary' })} book`}>
+      <div className={`${ax({ surface: 'base', text: 'primary', width: 'full', scroll: 'hidden' })} h-full book`}>
         {/* ── Page content ── */}
-        <div className={`${ax({ placement: 'relative' })} book-page-area`} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
+        <div className={`${ax({ placement: 'relative', layout: 'column', width: 'full', scroll: 'hidden' })} h-full book-page-area`} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
           {/* ── Floating pill — top-left ── */}
           <div className={`book-pill ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
             <button
-              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} book-pill-btn`}
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary', flex: 'none' })} book-pill-btn`}
               onClick={() => setTocOpen(true)}
               aria-label="Open table of contents"
             >
@@ -311,21 +311,21 @@ export default function PageBookViewer() {
             <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{page?.chapter}</span>
             <span className={ax({ textStyle: 'caption', text: 'secondary', clamp: '1' })}>{page?.title}</span>
             <button
-              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: currentIsFavorite ? 'bright' : 'muted' })} book-pill-btn`}
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: currentIsFavorite ? 'bright' : 'muted', flex: 'none' })} book-pill-btn`}
               onClick={handleToggleFavorite}
               aria-label={currentIsFavorite ? 'Remove from favorites' : 'Add to favorites'}
             >
               <Star size={12} fill={currentIsFavorite ? 'currentColor' : 'none'} />
             </button>
             <button
-              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: getLayers().length > 0 ? 'bright' : 'muted' })} book-pill-btn`}
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: getLayers().length > 0 ? 'bright' : 'muted', flex: 'none' })} book-pill-btn`}
               onClick={openLayerOverlay}
               aria-label="Add to layer"
             >
               <Layers size={12} />
             </button>
             <button
-              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} book-pill-btn`}
+              className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary', flex: 'none' })} book-pill-btn`}
               onClick={openQuickOpen}
               aria-label="Quick open"
             >
@@ -354,7 +354,7 @@ export default function PageBookViewer() {
           </SpreadReader>
 
           {/* Spread / page navigation */}
-          <nav className={`${ax({ placement: 'bottom' })} book-page-nav`} data-visible={chromeVisible}>
+          <nav className={`${ax({ placement: 'bottom', layout: 'spread' })} book-page-nav`} data-visible={chromeVisible}>
             <div>
               {!isFirstSpread && (
                 <button
@@ -384,12 +384,12 @@ export default function PageBookViewer() {
           </nav>
 
           {/* ── Overlay TOC ── */}
-          <div className={`${ax({ placement: 'center' })} book-toc-overlay`} data-open={tocOpen}>
-            <div className="book-toc-panel">
+          <div className={`${ax({ placement: 'center', layout: 'center' })} book-toc-overlay`} data-open={tocOpen}>
+            <div className={`${ax({ scroll: 'hidden', layout: 'column' })} book-toc-panel`}>
               <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
                 <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
                 <button
-                  className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary' })} book-pill-btn`}
+                  className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary', flex: 'none' })} book-pill-btn`}
                   onClick={() => setTocOpen(false)}
                   aria-label="Close"
                 >

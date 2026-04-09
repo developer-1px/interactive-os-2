@@ -119,16 +119,16 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
   }, [spreadIndex])
 
   return (
-    <div className={`${ax({ placement: 'relative' })} spread-root`}>
-      <div className={`spread-inset ${ax({ flex: '1' })}`}>
-        <div className="spread-viewport outline-none" {...aria.containerProps}>
+    <div className={`${ax({ placement: 'relative', layout: 'fill', width: 'full' })} spread-root`}>
+      <div className={`spread-inset ${ax({ flex: '1', scroll: 'hidden' })}`}>
+        <div className={`spread-viewport outline-none ${ax({ width: 'full', scroll: 'hidden', flex: '1' })}`} {...aria.containerProps}>
           <div className="spread-columns" ref={columnsRef}>
             {children}
           </div>
         </div>
       </div>
       {total > 1 && (
-        <div className={`spread-indicator ${ax({ placement: 'bottom-center' })}`}>
+        <div className={`spread-indicator ${ax({ placement: 'bottom-center', opacity: 'dim' })}`}>
           <span className={ax({ textStyle: 'caption', text: 'muted' })}>
             {spreadIndex + 1}/{total}
           </span>

@@ -5,15 +5,18 @@
   grid-column: 2 / -1;
 }
 
-/* ── Status indicators ── */
-
-.incident-indicator { width: var(--space-sm); height: var(--space-sm); }
-.incident-indicator-critical { box-shadow: 0 0 var(--space-sm) var(--tone-destructive-base); }
-
 /* ── Layout: fixed widths + order ── */
 
 .incident-chat-zone { width: var(--overlay-width); order: 3; }
 .incident-timeline-panel { width: var(--overlay-width); }
+.incident-timeline-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: var(--space-xl);
+  background: linear-gradient(transparent, var(--surface-base));
+  pointer-events: none;
+}
 
 /* ── Timeline items ── */
 
@@ -24,7 +27,7 @@
 
 .incident-timeline-time { width: var(--toolbar-height); padding-top: var(--indicator-width); }
 .incident-dot { width: var(--shape-xs-radius); height: var(--shape-xs-radius); }
-.incident-dot-line { width: var(--border-width); min-height: var(--space-md); background: var(--border-subtle); }
+.incident-dot-line { width: var(--border-width); min-height: var(--space-md); }
 .incident-timeline-icon { padding-top: var(--border-width); }
 .incident-cause-arrow { padding-left: var(--switch-height); }
 .incident-cause-icon { width: var(--switch-height); height: var(--switch-height); }
@@ -37,6 +40,7 @@
 
 .incident-capture-comparison { grid-template-columns: 1fr 1fr; }
 .incident-capture-changed { box-shadow: inset 0 0 0 var(--border-width) var(--tone-destructive-mid); }
+.incident-capture-text { word-break: break-all; }
 
 /* ── Rich blocks ── */
 

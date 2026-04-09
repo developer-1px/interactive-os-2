@@ -50,7 +50,7 @@ export function Slider({
     return (
       <div className={`${ax({ recipe: 'item', layout: 'spread', text: state.focused ? 'bright' : undefined })}`} data-focused={state.focused || undefined}>
         {label && <span className={`slider-label ${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })}`}>{label}</span>}
-        <div className={`slider-track ${ax({ flex: '1' })}`} ref={trackRef} onClick={handleTrackClick}>
+        <div className={`slider-track ${ax({ flex: '1', placement: 'relative' })}`} ref={trackRef} onClick={handleTrackClick}>
           <div className="slider-fill" style={{ width: `${pct}%`, height: '100%' }} />
           <div className={`slider-thumb outline-none ${ax({ shape: 'pill' })}`} style={{ left: `${pct}%` }} />
         </div>

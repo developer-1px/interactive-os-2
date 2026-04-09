@@ -6,23 +6,10 @@
   --_col-gap: var(--space-3xl);
   --_padding-x: var(--space-5xl);
   --_padding-y: var(--space-5xl);
-
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
 .spread-inset {
-  overflow: hidden;
   padding: var(--_padding-y) var(--_padding-x);
-}
-
-.spread-viewport {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
 }
 
 .spread-columns {
@@ -34,15 +21,8 @@
   transform: translateX(calc(-1 * var(--_spread, 0) * (100% + var(--_col-gap))));
 }
 
-.spread-columns :is(pre),
-.spread-columns :is(table),
-.spread-columns :is(blockquote),
-.spread-columns :is(figure),
-.spread-columns :is(ul),
-.spread-columns :is(ol) {
+.spread-columns :is(pre, table, blockquote, figure, ul, ol) {
   break-inside: avoid;
-  max-width: 100%;
-  overflow-x: auto;
 }
 
 .spread-columns :is(th) {
@@ -56,6 +36,5 @@
 
 .spread-indicator {
   z-index: 20;
-  opacity: 0.5;
 }
 }

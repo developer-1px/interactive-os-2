@@ -12,11 +12,12 @@ import { readFileSync } from 'fs'
 const input = JSON.parse(readFileSync('/dev/stdin', 'utf8'))
 const filePath = input.tool_input?.file_path ?? ''
 
-// module.css만 대상
-if (!/\.module\.css$/.test(filePath)) process.exit(0)
+// CSS 파일만 대상
+if (!/\.css$/.test(filePath)) process.exit(0)
 
-// tokens.css, 테스트 제외
-if (filePath.includes('tokens.css') || filePath.includes('__tests__')) process.exit(0)
+// 디자인 시스템 정의 파일 + 테스트 제외
+const EXEMPT = ['tokens.css', 'axes.css', 'palette.css', 'reset.css', 'layers.css', 'structure.css', 'interactive.css', 'ax.css', 'app.css', 'layout.css', 'landingTokens.css']
+if (EXEMPT.some(f => filePath.endsWith(f)) || filePath.includes('__tests__')) process.exit(0)
 
 const content =
   input.tool_name === 'Write'
@@ -124,10 +125,20 @@ for (const { prop, regex } of propPatterns) {
     for (const line of lines) {
       const trimmed = line.trim()
       if (new RegExp(`^${prop.replaceAll('-', '\\-')}\\s*:`).test(trimmed)) {
-        const value = trimmed.split(':').slice(1).join(':').trim()
-        // var()만 사용 또는 inherit/initial/unset/none/0 은 허용
-        if (/^var\(/.test(value)) continue
-        if (/^(inherit|initial|unset|none|0);?\s*$/.test(value)) continue
+        const value = trimmed.split(':').slice(1).join(':').trim().replace(/;$/, '').trim()
+        // var()/calc()/min()/max()/clamp() 사용, inherit/initial/unset/none/0, 퍼센트값 허용
+        if (/^(?:var|calc|min|max|clamp)\(/.test(value)) continue
+        if (/^(inherit|initial|unset|none|transparent|grid|inline|pointer|auto);?\s*$/.test(value)) continue
+        // 숫자값(소수 포함, 단위/퍼센트 포함) — ax() 프리셋에 없는 구체 값은 last-mile
+        if (/^\d*\.?\d+(%|vh|vw|dvh|dvw|svh|svw)?;?\s*$/.test(value)) continue
+        // display: grid는 grid-template과 함께 사용하는 last-mile 패턴 허용
+        if (prop === 'display' && /^grid\s*;?\s*$/.test(value)) continue
+        // white-space: pre-wrap/nowrap/pre-line/break-spaces는 ax() clamp에 없는 last-mile
+        if (prop === 'white-space' && /^(pre-wrap|nowrap|pre-line|break-spaces)\s*;?\s*$/.test(value)) continue
+        // align-items: center가 grid 컨텍스트(grid-template 있는 블록)에 있으면 허용
+        if (prop === 'align-items' && /^center\s*;?\s*$/.test(value) && /grid-template/.test(content)) continue
+        // 퍼센트, vh/vw/dvh 단위 값은 ax() 프리셋으로 표현 불가 → last-mile 허용
+        if (/^\d+(\.\d+)?(%|vh|vw|dvh|dvw|svh|svw)\s*;?\s*$/.test(value)) continue
         violations.push(prop)
         break
       }

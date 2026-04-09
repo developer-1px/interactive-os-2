@@ -137,7 +137,7 @@ export default function StoreInspectorDemo() {
 
           {/* Editor panel */}
           <div className={ax({ scroll: 'auto' })}>
-            <div className="store-inspector-panel-label">Editor</div>
+            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Editor</div>
             <Aria
               pattern={tree}
               data={data}
@@ -153,7 +153,7 @@ export default function StoreInspectorDemo() {
 
           {/* Inspector panel */}
           <div className={ax({ scroll: 'auto' })}>
-            <div className="store-inspector-panel-label">Inspector — NormalizedData</div>
+            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}
               plugins={inspectorPlugins}
@@ -168,14 +168,14 @@ export default function StoreInspectorDemo() {
             ref={logRef}
             aria-label="Operation Log"
           >
-            <div className="store-inspector-panel-label">Operation Log</div>
+            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Operation Log</div>
             {log.length === 0 ? (
-              <div style={{ opacity: 0.4 }}>Interact with the editor to see operations here.</div>
+              <div className={ax({ opacity: 'faint' })}>Interact with the editor to see operations here.</div>
             ) : (
               log.map((entry) => (
                 <div
                   key={entry.seq}
-                  className={`store-inspector-log-entry whitespace-nowrap`}
+                  className={`${ax({ opacity: 'dim', clamp: '1' })} store-inspector-log-entry${entry.kind !== 'unhandled-key' && entry.parent != null ? ` ${ax({ padding: 'md' })}` : ''}`}
                   {...(entry.kind !== 'unhandled-key' && entry.parent != null ? { 'data-batch-child': '' } : {})}
                 >
                   <span className={ax({ text: 'muted' })}>#{entry.seq}</span>{' '}

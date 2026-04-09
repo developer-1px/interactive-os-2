@@ -14,20 +14,20 @@ export default function CmsViewportBar({ viewport, onViewportChange, onPresent, 
   if (hidden) return null
 
   return (
-    <div className={`cms-viewport-bar ${ax({ surface: 'overlay', layout: 'bar', width: 'fit' })} fixed`} aria-label="Viewport controls">
+    <div className={`cms-viewport-bar ${ax({ surface: 'overlay', layout: 'bar', width: 'fit', padding: 'xs', gap: 'xs', shape: 'xl' })} fixed`} aria-label="Viewport controls">
       {([['mobile', Smartphone], ['tablet', Tablet], ['desktop', Monitor]] as const).map(([v, Icon]) => (
         <button
           key={v}
           type="button"
-          className={`cms-floating-toolbar__btn ${ax({ layout: 'center' })} border-none cursor-pointer whitespace-nowrap${viewport === v ? ' cms-floating-toolbar__btn--active' : ''}`}
+          className={`cms-floating-toolbar__btn ${ax({ layout: 'center', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'secondary', shape: 'md', size: 'lg' })} border-none cursor-pointer${viewport === v ? ' cms-floating-toolbar__btn--active' : ''}`}
           onClick={() => onViewportChange(v as ViewportSize)}
           title={v}
         >
           <Icon size={16} />
         </button>
       ))}
-      <div className="cms-floating-toolbar__sep" />
-      <button className={`cms-floating-toolbar__btn ${ax({ layout: 'center' })} border-none cursor-pointer whitespace-nowrap`} onClick={onPresent} title="Present" type="button">
+      <div className={`cms-floating-toolbar__sep ${ax({ border: 'start' })}`} />
+      <button className={`cms-floating-toolbar__btn ${ax({ layout: 'center', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'secondary', shape: 'md', size: 'lg' })} border-none cursor-pointer`} onClick={onPresent} title="Present" type="button">
         <Play size={16} />
       </button>
     </div>

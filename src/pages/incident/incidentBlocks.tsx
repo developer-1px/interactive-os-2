@@ -37,7 +37,7 @@ export function BlockCause() {
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
           <div className={`${ax({ layout: 'center', tone: 'danger' })} incident-cause-icon`}><GitCommit size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>PR #3421 — config cleanup</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pool_size: 100 → 50</div></div>
-          <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'danger' })}>87%</span>
+          <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'danger' })}>연관 87%</span>
         </div>
         <div className={`${ax({ text: 'muted' })} incident-cause-arrow`}><ChevronDown size={12} /></div>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>

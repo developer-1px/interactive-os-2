@@ -151,9 +151,9 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
 
   return (
     <div className={ax({ layout: 'row', flex: 'none' })}>
-      <div className={`composer-input-wrap ${disabled ? 'pointer-none' : ''} ${ax({ surface: 'input', flex: '1', shape: 'md', placement: 'relative' })}`} data-disabled={disabled || undefined}>
+      <div className={`composer-input-wrap ${disabled ? 'pointer-none' : ''} ${ax({ surface: 'input', flex: '1', shape: 'md', placement: 'relative', opacity: disabled ? 'faint' : undefined })}`} data-disabled={disabled || undefined}>
         {hasSuggestions && (
-          <ul className={`composer-suggestion-list ${ax({ surface: 'overlay', padding: 'xs', shape: 'md', placement: 'above' })}`} role="listbox" aria-label="Command suggestions">
+          <ul className={`composer-suggestion-list ${ax({ surface: 'overlay', padding: 'xs', shape: 'md', placement: 'above', scroll: 'y' })}`} role="listbox" aria-label="Command suggestions">
             {suggestions!.map(cmd => {
               const nodeProps = aria.getNodeProps(cmd) as Record<string, unknown>
               const state = aria.getNodeState(cmd)

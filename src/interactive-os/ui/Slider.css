@@ -6,7 +6,6 @@
   height: var(--slider-track-height);
   background: var(--border-default);
   border-radius: calc(var(--slider-track-height) / 2);
-  position: relative;
 }
 .slider-fill {
   position: absolute;

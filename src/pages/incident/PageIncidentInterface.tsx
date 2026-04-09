@@ -31,9 +31,9 @@ interface ServiceInfo {
 }
 
 const SERVICES: ServiceInfo[] = [
-  { name: 'payment-api', status: 'critical', latency: '2.4s', errorRate: '12%' },
+  { name: 'payment-api', status: 'critical', latency: '2400ms', errorRate: '12%' },
   { name: 'order-service', status: 'warning', latency: '890ms', errorRate: '3.2%' },
-  { name: 'checkout-web', status: 'warning', latency: '1.1s', errorRate: '5.1%' },
+  { name: 'checkout-web', status: 'warning', latency: '1100ms', errorRate: '5.1%' },
   { name: 'notification-svc', status: 'healthy', latency: '45ms', errorRate: '0.1%' },
   { name: 'user-service', status: 'healthy', latency: '32ms', errorRate: '0%' },
 ]
@@ -251,7 +251,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
   }, [selectedId, onSelect])
 
   return (
-    <div className={`${ax({ surface: 'base', layout: 'column', flex: 'none' })} incident-timeline-panel`}>
+    <div className={`${ax({ surface: 'base', layout: 'column', flex: 'none', placement: 'relative' })} incident-timeline-panel`}>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ layout: 'bar', gap: 'xs' })}><Clock size={12} />Timeline</span>
         <span className={ax({ textStyle: 'code' })}>{visibleCount}/{events.length}</span>
@@ -298,20 +298,14 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
       </PanelHeader>
       {capture ? (
         <div className={ax({ layout: 'column', flex: '1', gap: 'md', padding: 'sm' })}>
-          <div className={`incident-capture-comparison grid ${ax({ flex: '1', gap: 'sm' })}`}>
+          <div className={`incident-capture-comparison grid ${ax({ gap: 'sm' })}`}>
             <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })}>
-              <div className={ax({ textStyle: 'overline', text: 'muted' })}>Before</div>
-              <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
-                <Eye size={16} />
-                <span className={ax({ textStyle: 'code', weight: 'semi' })}>{capture.before}</span>
-              </div>
+              <div className={ax({ textStyle: 'overline', weight: 'semi' })}>Before</div>
+              <span className={ax({ textStyle: 'code', weight: 'semi' })}>{capture.before}</span>
             </div>
             <div className={`${ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })} incident-capture-changed`}>
-              <div className={ax({ textStyle: 'overline', text: 'muted' })}>After</div>
-              <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
-                <Eye size={16} />
-                <span className={ax({ textStyle: 'code', weight: 'semi' })}>{capture.after}</span>
-              </div>
+              <div className={ax({ textStyle: 'overline', weight: 'semi' })}>After</div>
+              <span className={`${ax({ textStyle: 'code', weight: 'semi' })} incident-capture-text`}>{capture.after}</span>
             </div>
           </div>
           <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', tone: 'accent' })}>
@@ -457,7 +451,7 @@ export default function PageIncidentInterface() {
                   <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'code' })}>
                     <Zap size={10} />
                     <span className={ax({ weight: 'semi' })}>{msg.toolName}</span>
-                    <span className={ax({ text: 'muted', clamp: '1' })}>{msg.text}</span>
+                    <span className={ax({ text: 'muted', clamp: '2' })}>{msg.text}</span>
                   </div>
                 )
               }

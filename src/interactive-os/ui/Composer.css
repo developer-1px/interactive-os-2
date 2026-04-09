@@ -1,10 +1,6 @@
 @layer component {
 /* Composer — last-mile: pseudo-elements, state selectors */
 
-.composer-input-wrap[data-disabled] {
-  opacity: 0.4;
-}
-
 .composer-editor {
   min-height: calc(var(--leading-snug) * 1em + var(--shape-sm-py) * 2);
   padding: var(--space-sm) var(--space-md);
@@ -32,7 +28,6 @@
 .composer-suggestion-list {
   margin: 0;
   list-style: none;
-  overflow-y: auto;
   max-height: calc(var(--type-body-size) * var(--leading-snug) * 8 + var(--space-xs) * 2);
   z-index: 1;
 }

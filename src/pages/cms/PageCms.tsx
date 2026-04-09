@@ -109,14 +109,14 @@ export default function PageCms() {
           onActivateTabItem={handleActivateTabItem}
           style={{ width: sidebarResizer.size, '--sidebar-w': sidebarResizer.size } as React.CSSProperties}
         />
-        <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
+        <div className={`resizer-handle ${ax({ size: 'xs', placement: 'relative', interactive: 'button' })}`} aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
         <ScrollArea className={`${ax({ flex: '1', placement: 'relative' })}`}>
           <CmsViewportWrapper viewport={viewport}>
             <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} activeTabMap={activeTabMap} onActivateTabItem={handleActivateTabItem} />
           </CmsViewportWrapper>
           <CmsI18nSheet engine={engine} store={store} open={i18nSheetOpen} />
         </ScrollArea>
-        <div className="resizer-handle" aria-label="Resize detail panel" {...detailResizer.separatorProps} />
+        <div className={`resizer-handle ${ax({ size: 'xs', placement: 'relative', interactive: 'button' })}`} aria-label="Resize detail panel" {...detailResizer.separatorProps} />
         <CmsDetailPanel
           engine={engine}
           store={store}

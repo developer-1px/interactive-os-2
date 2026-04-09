@@ -101,19 +101,19 @@ function formatDiffSummary(entry: LogEntry): string {
 
 function renderEntityList(store: NormalizedData): React.ReactNode {
   const ids = Object.keys(store.entities)
-  if (ids.length === 0) return <div className="store-inspector-log-empty">No entities</div>
+  if (ids.length === 0) return <div className={`${ax({ opacity: 'faint' })} store-inspector-log-empty`}>No entities</div>
   return (
-    <div className="store-inspector-log-entity-list">
+    <div className={`${ax({ textStyle: 'caption' })} store-inspector-log-entity-list`}>
       {ids.map((id) => {
         const entity: Entity = store.entities[id]
         const dataStr = entity.data ? JSON.stringify(entity.data) : ''
         const children = store.relationships[id]
         return (
-          <div key={id} className="store-inspector-log-entity">
+          <div key={id} className={`${ax({ clamp: '1' })} store-inspector-log-entity`}>
             <span className={ax({ tone: 'accent' })}>{id}</span>
-            {dataStr && <span className="store-inspector-log-entity-data"> {dataStr}</span>}
+            {dataStr && <span className={`${ax({ opacity: 'dim' })} store-inspector-log-entity-data`}> {dataStr}</span>}
             {children && children.length > 0 && (
-              <span className="store-inspector-log-entity-children"> [{children.join(', ')}]</span>
+              <span className={`${ax({ opacity: 'faint' })} store-inspector-log-entity-children`}> [{children.join(', ')}]</span>
             )}
           </div>
         )
@@ -191,7 +191,7 @@ export default function PageStoreInspector() {
 
           {/* Editor panel */}
           <div className={ax({ scroll: 'auto' })}>
-            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Editor</div>
+            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Editor</div>
             <Aria
               pattern={tree}
               data={data}
@@ -207,7 +207,7 @@ export default function PageStoreInspector() {
 
           {/* Inspector panel */}
           <div className={ax({ scroll: 'auto' })}>
-            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Inspector — NormalizedData</div>
+            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}
               plugins={inspectorPlugins}
@@ -222,15 +222,15 @@ export default function PageStoreInspector() {
             ref={logRef}
             aria-label="Operation Log"
           >
-            <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Operation Log</div>
+            <div className={`${ax({ textStyle: 'caption', opacity: 'faint' })} store-inspector-panel-label`}>Operation Log</div>
             {log.length === 0 ? (
-              <div className="store-inspector-log-placeholder">Interact with the editor to see operations here.</div>
+              <div className={`${ax({ opacity: 'faint' })} store-inspector-log-placeholder`}>Interact with the editor to see operations here.</div>
             ) : (
               log.map((entry) => {
                 // Unhandled key entries render inline
                 if (entry.kind === 'unhandled-key') {
                   return (
-                    <div key={entry.seq} className="store-inspector-log-entry whitespace-nowrap">
+                    <div key={entry.seq} className={`${ax({ opacity: 'dim', clamp: '1' })} store-inspector-log-entry`}>
                       <span className={ax({ text: 'muted' })}>#{entry.seq}</span>{' '}
                       <span className={ax({ tone: 'warning-dim' })}>unhandled</span>{' '}
                       <span className={ax({ tone: 'warning-dim' })}>| {formatDiffSummary(entry)}</span>
@@ -254,15 +254,15 @@ export default function PageStoreInspector() {
                 return (
                   <div key={entry.seq}>
                     <div
-                      className="store-inspector-log-entry whitespace-nowrap store-inspector-log-clickable"
+                      className={`${ax({ opacity: 'dim', clamp: '1' })} store-inspector-log-entry store-inspector-log-clickable cursor-pointer`}
                       onClick={() => toggleExpanded(entry.seq)}
                     >
-                      <span className="store-inspector-log-chevron">
+                      <span className={`${ax({ opacity: 'faint' })} store-inspector-log-chevron`}>
                         {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                       </span>
-                      <span className="store-inspector-log-seq">#{entry.seq}</span>{' '}
+                      <span className={`${ax({ opacity: 'faint' })} store-inspector-log-seq`}>#{entry.seq}</span>{' '}
                       <span>{entry.type}{fromLabel}</span>
-                      {isBatch && <span className="store-inspector-log-batch-count"> ({batchChildren.length} commands)</span>}
+                      {isBatch && <span className={`${ax({ opacity: 'dim' })} store-inspector-log-batch-count`}> ({batchChildren.length} commands)</span>}
                       {' '}
                       <span className={ax({ tone: 'accent' })}>| {formatDiffSummary(entry)}</span>
                     </div>
@@ -273,8 +273,8 @@ export default function PageStoreInspector() {
                         {isBatch && batchChildren.length > 0 && (
                           <div className="store-inspector-log-batch-children">
                             {batchChildren.map((child) => (
-                              <div key={child.seq} className="store-inspector-log-batch-child">
-                                <span className="store-inspector-log-seq">#{child.seq}</span>{' '}
+                              <div key={child.seq} className={`${ax({ padding: 'md', opacity: 'dim' })} store-inspector-log-batch-child`}>
+                                <span className={`${ax({ opacity: 'faint' })} store-inspector-log-seq`}>#{child.seq}</span>{' '}
                                 {child.kind !== 'unhandled-key' ? child.type : 'unhandled'}
                               </div>
                             ))}
@@ -285,7 +285,7 @@ export default function PageStoreInspector() {
                         {entry.diff.length > 0 && (
                           <div className="store-inspector-log-diff">
                             {entry.diff.map((d, i) => (
-                              <div key={i} className="store-inspector-log-diff-line">
+                              <div key={i} className={`${ax({ opacity: 'dim' })} store-inspector-log-diff-line`}>
                                 {d.kind === 'added' ? '+' : d.kind === 'removed' ? '-' : '~'}{' '}
                                 {d.path}
                               </div>
@@ -305,7 +305,7 @@ export default function PageStoreInspector() {
 
                         {/* Store snapshot — entity list */}
                         {isStoreVisible && entry.next && (
-                          <div className="store-inspector-log-snapshot">
+                          <div className={`${ax({ scroll: 'y', padding: 'xs' })} store-inspector-log-snapshot`}>
                             {renderEntityList(entry.next)}
                           </div>
                         )}
