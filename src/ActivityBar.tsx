@@ -2,7 +2,7 @@ import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
-  MessageSquare, Bird, BookText, Play, Search, Cable, PenLine, Kanban,
+  MessageSquare, Bird, BookText, Play, Search, Cable, PenLine, Kanban, Columns3, GitBranch,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -62,12 +62,16 @@ const appNavItems: NavItem[] = [
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'i18n', label: 'i18n', icon: Languages, path: '/i18n' },
   { id: 'ui-showcase', label: 'UI Showcase', icon: Eye, path: '/ui' },
-  { id: 'viewer', label: 'Viewer', icon: FolderCode, path: '/viewer' },
   { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
   { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
   { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
+  // --- Browse / Docs ---
+  { id: 'viewer', label: 'Viewer', icon: FolderCode, path: '/viewer' },
+  { id: 'docs', label: 'Docs', icon: Columns3, path: '/docs' },
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },
+  { id: 'pipeline', label: 'Pipeline', icon: GitBranch, path: '/pipeline' },
+  // ---
   { id: 'birdseye', label: 'Birdseye', icon: Bird, path: '/birdseye' },
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
   { id: 'inspector', label: 'Inspector', icon: Search, path: '/inspector' },

@@ -38,8 +38,11 @@ export const router = createBrowserRouter([
         element: <InternalsLayout />,
       },
 
+      { path: '/docs/*', lazy: () => import('./pages/docs/PageDocs').then(m => ({ Component: m.default })) },
+      { path: '/pipeline', lazy: () => import('./pages/pipeline/PagePipeline').then(m => ({ Component: m.default })) },
       { path: '/project', lazy: () => import('./pages/project/PageProject').then(m => ({ Component: m.default })) },
       { path: '/writer/*', lazy: () => import('./pages/writer/PageWriter').then(m => ({ Component: m.default })) },
+      { path: '/stories', lazy: () => import('./pages/stories/PageStories').then(m => ({ Component: m.default })) },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
