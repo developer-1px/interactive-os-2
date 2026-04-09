@@ -207,9 +207,10 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
   }, [aria.focused])
 
   return (
-    <aside className="cms-sidebar shrink-0 flex-col overflow-hidden" aria-label="Sections" style={style}>
+    <aside className={`cms-sidebar ${ax({ flex: 'none', layout: 'column', scroll: 'hidden' })}`} aria-label="Sections" style={style}>
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
-      <div className="ax-interactive cms-sidebar__list flex-1 flex-col overflow-y-auto" role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
+      {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
+      <div className={`ax-interactive cms-sidebar__list ${ax({ flex: '1', layout: 'column', scroll: 'y' })}`} role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
             const elements: React.ReactNode[] = []
 
@@ -234,7 +235,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
               <div
                 key={sectionId}
                 {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                className={`cms-sidebar__thumb w-full cursor-pointer relative shrink-0${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
+                className={`cms-sidebar__thumb w-full cursor-pointer relative ${ax({ flex: 'none' })}${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
                 onClick={() => {
                   aria.dispatch(focusCommands.setFocus(sectionId))
                   scrollToSection(sectionId)
@@ -250,11 +251,11 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
             return elements
           })}
       </div>
-      <div className="relative shrink-0">
+      <div className={`relative ${ax({ flex: 'none' })}`}>
         <button
           ref={addBtnRef}
           type="button"
-          className={`cms-sidebar__add-btn ${ax({ surface: 'placeholder' })} flex-row items-center justify-center`}
+          className={`cms-sidebar__add-btn ${ax({ surface: 'placeholder', layout: 'center' })}`}
           aria-label="Add section"
           onClick={() => setPickerOpen(o => !o)}
         >

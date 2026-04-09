@@ -78,6 +78,7 @@ type Layout =
   | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
   | 'scroll-x' // flex row + overflow-x:auto + min-width:0 (가로 스크롤)
   | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
+  | 'row-fill' // flex:1 + flex row + min-*:0 (가로 분할창)
   | 'row-fill' // flex:1 + flex row + overflow:hidden + min-*:0 (가로 분할 전체 채움)
   // grid (display:grid + equal columns)
   | 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7'

@@ -8,6 +8,7 @@ import type { Locale } from './cmsTypes'
 import { NodeContent, getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES } from './cmsRenderers'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
+import { ax } from '@styles/ax'
 
 interface CmsPresentModeProps {
   data: NormalizedData
@@ -27,14 +28,14 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
 
     // Present mode: shy placeholder for empty image nodes
     if (d.type === 'hero-image' && !d.src) {
-      return <div key={nodeId} className={`${cmsStyles.cmsPresentShyPlaceholder} flex-row items-center justify-center opacity-dim`}><ImageOff size={16} /></div>
+      return <div key={nodeId} className={`${cmsStyles.cmsPresentShyPlaceholder} ${ax({ layout: 'center' })} opacity-dim`}><ImageOff size={16} /></div>
     }
     if (d.type === 'gallery-item' && !d.image) {
       const galleryChildren = getChildren(data, nodeId)
       return (
         <div key={nodeId} className={getNodeClassName(d)}>
-          <div className="flex-col">
-            <div className={`${cmsStyles.cmsPresentShyPlaceholderSmall} flex-row items-center justify-center opacity-faint`}><ImageOff size={14} /></div>
+          <div className={ax({ layout: 'column' })}>
+            <div className={`${cmsStyles.cmsPresentShyPlaceholderSmall} ${ax({ layout: 'center' })} opacity-faint`}><ImageOff size={14} /></div>
             {galleryChildren.map(id => renderNode(id))}
           </div>
         </div>
@@ -82,7 +83,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
   return (
     <AriaRoute keyMap={keyMap} label="Present Mode">
       <div
-        className="cms-present fixed inset-0 overflow-y-auto cursor-pointer"
+        className={`cms-present fixed inset-0 ${ax({ scroll: 'y' })} cursor-pointer`}
         onClick={onExit}
       >
         <div className={`cms-landing ${cmsStyles.cmsLanding} w-full overflow-x-hidden`}>

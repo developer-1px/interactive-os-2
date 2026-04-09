@@ -1,4 +1,5 @@
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
+import { ax } from '@styles/ax'
 import { Grid } from '@os/ui/Grid'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -34,7 +35,7 @@ export default function CellGridDemo() {
         <kbd>Home</kbd> <span className="key-hint">first cell</span>{' '}
         <kbd>End</kbd> <span className="key-hint">last cell</span>
       </div>
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <Grid
           data={data}
           columns={columns}

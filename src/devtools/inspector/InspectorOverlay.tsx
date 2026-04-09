@@ -1,5 +1,5 @@
 // ② 2026-03-26-component-inspector-drag-select-prd.md
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react"; // @useState-hatch — devtools inspector overlay
 import { getComponentStack, getDebugSource, getOSComponentType } from "./inspectorUtils";
 import { SourcePreview } from "./SourcePreview";
 import { type BoxModel, measureBoxModel, formatSpacing } from "./inspectorBoxModel";

@@ -14,6 +14,7 @@ import { CmsIcon } from './cmsRenderers'
 import { LOCALES } from './cmsTypes'
 import { Sheet, ImagePlus, X } from 'lucide-react'
 import { ax } from '@styles/ax'
+import { ScrollArea } from '@os/ui/ScrollArea'
 
 interface CmsDetailPanelProps {
   engine: CommandEngine
@@ -33,16 +34,16 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
   )
 
   const localeBar = (
-    <div className="cms-detail-panel__locale-bar flex-row items-center shrink-0">
+    <div className={`cms-detail-panel__locale-bar ${ax({ layout: 'bar', flex: 'none' })}`}>
       <select
-        className={`cms-detail-panel__locale ${ax({ surface: 'input' })} flex-1 cursor-pointer min-w-0`}
+        className={`cms-detail-panel__locale ${ax({ surface: 'input', flex: '1' })} cursor-pointer min-w-0`}
         value={locale}
         onChange={e => onLocaleChange(e.target.value as Locale)}
       >
         {LOCALES.map(l => <option key={l} value={l}>{l}</option>)}
       </select>
       <button
-        className={`cms-detail-panel__i18n-btn flex-row items-center justify-center border-none cursor-pointer${i18nSheetOpen ? ' cms-detail-panel__i18n-btn--active' : ''}`}
+        className={`cms-detail-panel__i18n-btn ${ax({ layout: 'center' })} border-none cursor-pointer${i18nSheetOpen ? ' cms-detail-panel__i18n-btn--active' : ''}`}
         onClick={onI18nSheetToggle}
         title="Translation sheet"
         type="button"
@@ -54,12 +55,12 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
 
   if (groups.length === 0) {
     return (
-      <div className="cms-detail-panel shrink-0 flex-col overflow-y-auto" style={style}>
+      <ScrollArea className={`cms-detail-panel ${ax({ flex: 'none' })}`} style={style}>
         {localeBar}
         <div className="cms-detail-panel__empty text-center">
           {focusedNodeId ? 'No editable fields' : 'Select a node'}
         </div>
-      </div>
+      </ScrollArea>
     )
   }
 
@@ -67,12 +68,12 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
     const entity = store.entities[focusedNodeId]
     const data = (entity?.data ?? {}) as Record<string, unknown>
     return (
-      <div className="cms-detail-panel shrink-0 flex-col overflow-y-auto" style={style}>
+      <ScrollArea className={`cms-detail-panel ${ax({ flex: 'none' })}`} style={style}>
         {localeBar}
         <div className="cms-detail-panel__header">
           <span className="cms-detail-panel__type">{data.type as string}</span>
         </div>
-        <div className="cms-detail-panel__fields flex-col">
+        <div className={`cms-detail-panel__fields ${ax({ layout: 'column' })}`}>
           {groups[0].entries.map((entry) => (
             <DetailField
               key={`${entry.nodeId}-${entry.field}`}
@@ -84,12 +85,12 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
             />
           ))}
         </div>
-      </div>
+      </ScrollArea>
     )
   }
 
   return (
-    <div className="cms-detail-panel shrink-0 flex-col overflow-y-auto" style={style}>
+    <ScrollArea className={`cms-detail-panel ${ax({ flex: 'none' })}`} style={style}>
       {localeBar}
       <div className="cms-detail-panel__groups">
         {groups.map((group) => (
@@ -102,7 +103,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
           />
         ))}
       </div>
-    </div>
+    </ScrollArea>
   )
 }
 
@@ -208,7 +209,7 @@ function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
   const { elRef, displayValue, handleFocus, handleCommit, handleFieldKeyDown } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
 
   return (
-    <div className="cms-detail-field flex-col">
+    <div className={`cms-detail-field ${ax({ layout: 'column' })}`}>
       <label className="cms-detail-field__label">{entry.label}</label>
       <input
         ref={elRef}
@@ -227,7 +228,7 @@ function LongTextField({ entry, store, locale, engine }: DetailFieldProps) {
   const { elRef, displayValue, handleFocus, handleCommit } = useFieldCommit<HTMLTextAreaElement>(entry, store, locale, engine)
 
   return (
-    <div className="cms-detail-field flex-col">
+    <div className={`cms-detail-field ${ax({ layout: 'column' })}`}>
       <label className="cms-detail-field__label">{entry.label}</label>
       <textarea
         ref={elRef}
@@ -267,7 +268,7 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
   }, [handleBlur])
 
   return (
-    <div className="cms-detail-field flex-col">
+    <div className={`cms-detail-field ${ax({ layout: 'column' })}`}>
       <label className="cms-detail-field__label">{entry.label}</label>
       <input
         ref={elRef}
@@ -313,15 +314,15 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
   }, [])
 
   return (
-    <div className="cms-detail-field flex-col">
+    <div className={`cms-detail-field ${ax({ layout: 'column' })}`}>
       <label className="cms-detail-field__label">{entry.label}</label>
       {currentSrc ? (
         <div className="relative">
           <img src={currentSrc} alt="" className="cms-image-field__preview w-full object-cover" />
-          <div className="cms-image-field__actions absolute flex-row">
+          <div className={`cms-image-field__actions absolute ${ax({ layout: 'row' })}`}>
             <button
               type="button"
-              className="cms-image-field__action flex-row items-center justify-center border-none cursor-pointer"
+              className={`cms-image-field__action ${ax({ layout: 'center' })} border-none cursor-pointer`}
               onClick={() => fileRef.current?.click()}
               title="Replace"
             >
@@ -329,7 +330,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
             </button>
             <button
               type="button"
-              className="cms-image-field__action flex-row items-center justify-center border-none cursor-pointer"
+              className={`cms-image-field__action ${ax({ layout: 'center' })} border-none cursor-pointer`}
               onClick={handleRemove}
               title="Remove"
             >
@@ -340,7 +341,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
       ) : (
         <button
           type="button"
-          className={`cms-image-field__placeholder ${ax({ surface: 'placeholder' })} flex-col items-center justify-center w-full`}
+          className={`cms-image-field__placeholder ${ax({ surface: 'placeholder', layout: 'center' })} w-full`}
           onClick={() => fileRef.current?.click()}
           onKeyDown={handleKeyDown}
         >
@@ -374,11 +375,11 @@ function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) 
   const hasIcon = CMS_ICON_MAP.has(currentValue)
 
   return (
-    <div className="cms-detail-field flex-col">
+    <div className={`cms-detail-field ${ax({ layout: 'column' })}`}>
       <label className="cms-detail-field__label">{entry.label}</label>
       <button
         type="button"
-        className={`cms-icon-field__current ${ax({ surface: 'input' })} flex-row items-center cursor-pointer${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
+        className={`cms-icon-field__current ${ax({ surface: 'input', layout: 'bar' })} cursor-pointer${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
         onClick={() => setExpanded(v => !v)}
       >
         <CmsIcon name={currentValue} size={16} />
@@ -390,7 +391,7 @@ function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) 
             <button
               key={key}
               type="button"
-              className={`cms-icon-field__option ${ax({ surface: 'ghost' })} flex-row items-center justify-center${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
+              className={`cms-icon-field__option ${ax({ surface: 'ghost', layout: 'center' })}${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
               title={key}
               onClick={() => handleSelect(key)}
             >

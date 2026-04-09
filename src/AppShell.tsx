@@ -8,6 +8,7 @@ import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
 import { ComponentInspector } from './devtools/inspector/ComponentInspector'
 import { openInspectorWindow } from './devtools/inspector/openInspectorWindow'
 import { AriaRoute } from '@os/primitives/AriaRoute'
+import { ax } from '@styles/ax'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { useTheme } from './hooks/useTheme'
 import { ActivityBar } from './ActivityBar'
@@ -45,10 +46,10 @@ export default function AppShell() {
 
   return (
     <AriaRoute keyMap={shellKeyMap} label="Shell">
-      <div className="page flex-row overflow-hidden">
+      <div className={`page ${ax({ layout: 'row', scroll: 'hidden' })}`}>
         <ReproRecorderOverlay />
         <ActivityBar theme={theme} onThemeToggle={toggleTheme} />
-        <div className="page-content flex-col flex-1 overflow-y-auto">
+        <div className={`page-content ${ax({ layout: 'scroll', flex: '1' })}`}>
           <Outlet />
         </div>
         <FileViewerModal

@@ -55,7 +55,7 @@ export function SearchResults({ query, output }: SearchResultsProps) {
           <div className={ax({ padding: 'xs', weight: 'semi', opacity: 'dim', surface: 'base', placement: 'sticky' })}>{file.replace(/.*\/aria\//, '')}</div>
           {matches.map((m, i) => (
             <div key={i} className={ax({ layout: 'row', gap: 'sm', padding: 'xs', surface: 'ghost' })}>
-              {m.line != null && <span className={ax({ flex: 'none', opacity: 'dim' })} style={{ textAlign: 'right' }}>{m.line}</span>}
+              {m.line != null && <span className={`${ax({ flex: 'none', opacity: 'dim' })} text-right`}>{m.line}</span>}
               <span className={ax({ flex: '1', clamp: 'pre' })}>{m.text}</span>
             </div>
           ))}

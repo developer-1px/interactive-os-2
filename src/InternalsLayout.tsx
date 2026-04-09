@@ -1,6 +1,7 @@
 // ② 2026-03-26-unified-navigation-prd.md
 import { useLocation } from 'react-router-dom'
 import { AreaSidebar } from './pages/area/AreaSidebar'
+import { ax } from '@styles/ax'
 import PageAreaViewer from './pages/area/PageAreaViewer'
 
 export default function InternalsLayout() {
@@ -11,9 +12,9 @@ export default function InternalsLayout() {
   const layer = rest.split('/')[0]
 
   return (
-    <div className="sidebar-layout flex-row flex-1 overflow-hidden">
+    <div className={`sidebar-layout ${ax({ layout: 'row', flex: '1', scroll: 'hidden' })}`}>
       <AreaSidebar layer={layer} />
-      <main className="content flex-1 overflow-y-auto">
+      <main className={`content ${ax({ flex: '1', layout: 'scroll' })}`}>
         <PageAreaViewer />
       </main>
     </div>

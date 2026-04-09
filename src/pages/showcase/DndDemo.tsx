@@ -1,3 +1,4 @@
+import { ax } from '@styles/ax'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -42,7 +43,7 @@ export default function DndDemo() {
         <kbd>Alt+<Right /></kbd> <span className="key-hint">move in</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <TreeGrid
           data={data}
           onChange={setData}

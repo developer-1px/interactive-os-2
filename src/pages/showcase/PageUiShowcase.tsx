@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { ax } from '@styles/ax'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import './PageUiShowcase.css'
@@ -62,10 +62,15 @@ export default function PageUiShowcase() {
   const mdFile = slugToMdFile[activeSlug]
 
   return (
-    <div className={`ui-page flex-row flex-1 min-h-0`}>
+    <div className={`ui-page ${ax({ layout: 'row', flex: '1' })}`}>
       <nav className={`${ax({ surface: 'sunken', layout: 'column', border: 'end' })} ui-sidebar`}>
         <PanelHeader axes={{ layout: 'spread' }}>UI Components</PanelHeader>
-        <div className={`ui-sidebar-body flex-1 overflow-y-auto`}>
+        <div className={ax({ padding: 'sm', border: 'bottom' })}>
+          <Link to="/ui/progress" className={ax({ textStyle: 'caption', tone: 'accent' })}>
+            Progress Dashboard
+          </Link>
+        </div>
+        <div className={`ui-sidebar-body ${ax({ flex: '1' })} overflow-y-auto`}>
           <NavList
             data={sidebarData}
             onActivate={handleActivate}
@@ -74,7 +79,7 @@ export default function PageUiShowcase() {
         </div>
       </nav>
       <div className={`${ax({ surface: 'base', layout: 'fill' })}`}>
-        <div className={`ui-content-body flex-1 overflow-y-auto`}>
+        <div className={`ui-content-body ${ax({ flex: '1' })} overflow-y-auto`}>
           {mdFile ? (
             <MdPage key={activeSlug} md={`ui/${mdFile}`} />
           ) : (

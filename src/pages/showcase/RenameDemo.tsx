@@ -43,7 +43,7 @@ export default function RenameDemo() {
         <kbd>Esc</kbd> <span className="key-hint">cancel</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <ListBox
           data={data}
           onChange={setData}

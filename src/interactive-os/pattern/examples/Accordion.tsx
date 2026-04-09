@@ -31,7 +31,7 @@ const data: NormalizedData = createStore({
 
 function Field({ label, id, type = 'text' }: { label: string; id: string; type?: string }) {
   return (
-    <div className="flex-col">
+    <div className={ax({ layout: 'column' })}>
       <label htmlFor={id} className={`${ax({ textStyle: 'caption', weight: 'semi', text: 'primary' })}`}>{label}</label>
       <input id={id} type={type} className={ax({ text: 'primary', textStyle: 'body', surface: 'input', shape: 'sm', padding: 'xs', content: 'text', interactive: 'input', border: 'default' })} />
     </div>
@@ -86,7 +86,7 @@ const renderItem = (
         <button
           {...(buttonProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}
           id={node.id as string}
-          className={`${ax({ weight: 'semi', text: 'primary', surface: 'sunken', textStyle: 'body', padding: 'sm', content: 'text', interactive: 'item', shape: 'md', border: 'default' })} flex-row items-center justify-between w-full`}
+          className={`${ax({ layout: 'spread', weight: 'semi', text: 'primary', surface: 'sunken', textStyle: 'body', padding: 'sm', content: 'text', interactive: 'item', shape: 'md', border: 'default' })} w-full`}
           type="button"
           data-focused={state.focused || undefined}
         >

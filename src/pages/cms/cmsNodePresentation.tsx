@@ -7,6 +7,7 @@ import { localized } from './cmsTypes'
 import type { Locale, LocaleMap } from './cmsTypes'
 import s from './CmsLanding.module.css'
 import { CMS_ICON_MAP } from './cmsIcons'
+import { ax } from '@styles/ax'
 
 // ── Shared helpers ──
 
@@ -43,15 +44,15 @@ export function defineNodePresentation(type: string, desc: NodePresentationDesc)
 // ── Section presentation (variant → className/children 조회) ──
 
 const sectionVariantClass: Record<string, string> = {
-  hero: `${s.cmsHero} flex-col items-center text-center`,
+  hero: `${s.cmsHero} ${ax({ layout: 'column' })} items-center text-center`,
   manifesto: s.cmsManifesto,
   features: s.cmsFeatures,
   patterns: s.cmsPatterns,
   showcase: s.cmsShowcase,
   journal: s.cmsJournal,
-  testimonial: `${s.cmsTestimonial} flex-row justify-center`,
-  cta: `${s.cmsCta} flex-col items-center text-center`,
-  footer: `${s.cmsFooter} flex-row flex-wrap items-baseline`,
+  testimonial: `${s.cmsTestimonial} ${ax({ layout: 'row' })} justify-center`,
+  cta: `${s.cmsCta} ${ax({ layout: 'column' })} items-center text-center`,
+  footer: `${s.cmsFooter} ${ax({ layout: 'row' })} flex-wrap items-baseline`,
   gallery: s.cmsGallery,
 }
 
@@ -60,7 +61,7 @@ const sectionChildrenClass: Record<string, string> = {
   patterns: `${s.cmsPatternsGrid} grid`,
   manifesto: `${s.cmsManifestoValues} grid`,
   showcase: `${s.cmsShowcaseGrid} grid`,
-  journal: `${s.cmsJournalList} flex-col`,
+  journal: `${s.cmsJournalList} ${ax({ layout: 'column' })}`,
   gallery: `${s.cmsGalleryGrid} grid`,
 }
 
@@ -94,7 +95,7 @@ defineNodePresentation('text', {
 defineNodePresentation('cta', {
   className: '',
   render: (data, locale) => (
-    <div className={`${s.cmsHeroActions} flex-row items-center`}>
+    <div className={`${s.cmsHeroActions} ${ax({ layout: 'bar' })}`}>
       <button type="button" className={`${s.cmsHeroCta} inline-flex items-center border-none cursor-pointer`}>
         <LocalizedText value={data.primary as string | LocaleMap} locale={locale} /> <ArrowRight size={16} />
       </button>
@@ -118,7 +119,7 @@ defineNodePresentation('stat-value', {
 })
 
 defineNodePresentation('icon', {
-  className: `${s.cmsFeatureCardIcon} flex-row items-center justify-center`,
+  className: `${s.cmsFeatureCardIcon} ${ax({ layout: 'center' })}`,
   render: (data) => <CmsIcon name={data.value as string} size={16} />,
 })
 
@@ -135,17 +136,17 @@ defineNodePresentation('step-num', {
 })
 
 defineNodePresentation('pattern', {
-  className: `${s.cmsPattern} flex-row items-center`,
+  className: `${s.cmsPattern} ${ax({ layout: 'bar' })}`,
   render: (data, locale) => (
     <div className="contents">
-      <div className={`${s.cmsPatternIcon} flex-row items-center justify-center shrink-0`}><CmsIcon name={data.icon as string} size={12} /></div>
+      <div className={`${s.cmsPatternIcon} ${ax({ layout: 'center', flex: 'none' })}`}><CmsIcon name={data.icon as string} size={12} /></div>
       <span className={s.cmsPatternName}><LocalizedText value={data.name as string | LocaleMap} locale={locale} /></span>
     </div>
   ),
 })
 
 defineNodePresentation('brand', {
-  className: `${s.cmsFooterBrand} flex-row items-baseline`,
+  className: `${s.cmsFooterBrand} ${ax({ layout: 'row' })} items-baseline`,
   render: (data, locale) => (
     <div className="contents">
       <div className="hidden" />
@@ -180,7 +181,7 @@ defineNodePresentation('section-desc', {
 
 defineNodePresentation('links', {
   tag: 'nav',
-  className: `${s.cmsFooterLinks} flex-row`,
+  className: `${s.cmsFooterLinks} ${ax({ layout: 'row' })}`,
   render: () => null,
 })
 
@@ -213,7 +214,7 @@ defineNodePresentation('value-item', {
   tag: 'div',
   className: s.cmsValueItem,
   render: (data, locale) => (
-    <div className={`${s.cmsValueItemContent} flex-col`}>
+    <div className={`${s.cmsValueItemContent} ${ax({ layout: 'column' })}`}>
       <div className="hidden"><CmsIcon name={data.icon as string} size={24} /></div>
       <h3 className={s.cmsValueItemTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
       <p className={s.cmsValueItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></p>
@@ -239,12 +240,12 @@ defineNodePresentation('article', {
   render: (data, locale) => {
     const articleImage = data.image as string
     return (
-      <div className={`${s.cmsArticleContent} flex-row items-center`}>
+      <div className={`${s.cmsArticleContent} ${ax({ layout: 'bar' })}`}>
         {articleImage
-          ? <img src={articleImage} alt="" className={`${s.cmsArticleImage} object-cover shrink-0`} />
-          : <div className={`${s.cmsArticleIcon} flex-row items-center justify-center shrink-0`}><CmsIcon name={data.icon as string} size={20} /></div>
+          ? <img src={articleImage} alt="" className={`${s.cmsArticleImage} object-cover ${ax({ flex: 'none' })}`} />
+          : <div className={`${s.cmsArticleIcon} ${ax({ layout: 'center', flex: 'none' })}`}><CmsIcon name={data.icon as string} size={20} /></div>
         }
-        <div className={`${s.cmsArticleBody} flex-col`}>
+        <div className={`${s.cmsArticleBody} ${ax({ layout: 'column' })}`}>
           <h3 className={s.cmsArticleTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
           <span className={s.cmsArticleMeta}>
             <LocalizedText value={data.category as LocaleMap} locale={locale} /> · {data.readTime as string}
@@ -259,8 +260,8 @@ defineNodePresentation('showcase-item', {
   tag: 'div',
   className: s.cmsShowcaseItem,
   render: (data, locale) => (
-    <div className={`${s.cmsShowcaseItemContent} flex-col`}>
-      <div className={`${s.cmsShowcaseItemIcon} inline-flex items-center justify-center`}><CmsIcon name={data.icon as string} size={20} /></div>
+    <div className={`${s.cmsShowcaseItemContent} ${ax({ layout: 'column' })}`}>
+      <div className={`${s.cmsShowcaseItemIcon} ${ax({ layout: 'center' })}`}><CmsIcon name={data.icon as string} size={20} /></div>
       <span className={s.cmsShowcaseItemLabel}><LocalizedText value={data.label as LocaleMap} locale={locale} /></span>
       <span className={s.cmsShowcaseItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
     </div>
@@ -271,7 +272,7 @@ defineNodePresentation('stat-card', {
   tag: 'div',
   className: s.cmsStatCard,
   render: (data, locale) => (
-    <div className={`${s.cmsStatCardContent} flex-col`}>
+    <div className={`${s.cmsStatCardContent} ${ax({ layout: 'column' })}`}>
       <span className={s.cmsStatCardValue}>{data.value as string}</span>
       <span className={s.cmsStatCardLabel}><LocalizedText value={data.label as LocaleMap} locale={locale} /></span>
       <span className={s.cmsStatCardDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
@@ -281,7 +282,7 @@ defineNodePresentation('stat-card', {
 
 defineNodePresentation('section-cta', {
   tag: 'div',
-  className: `${s.cmsSectionCta} flex-row`,
+  className: `${s.cmsSectionCta} ${ax({ layout: 'row' })}`,
   render: (data, locale) => (
     <a className={`${s.cmsSectionCtaLink} inline-flex items-center no-underline cursor-pointer`} href={data.href as string}>
       <LocalizedText value={data.label as LocaleMap} locale={locale} /> <ArrowRight size={14} />
@@ -300,16 +301,16 @@ defineNodePresentation('hero-image', {
 })
 
 defineNodePresentation('image-card', {
-  className: `${s.cmsImageCard} overflow-hidden`,
+  className: `${s.cmsImageCard} ${ax({ scroll: 'hidden' })}`,
   render: () => null,
 })
 
 defineNodePresentation('gallery-item', {
-  className: `${s.cmsGalleryItem} overflow-hidden`,
+  className: `${s.cmsGalleryItem} ${ax({ scroll: 'hidden' })}`,
   render: (data, locale) => {
     const gSrc = data.image as string
     return (
-      <div className="flex-col">
+      <div className={ax({ layout: 'column' })}>
         {gSrc
           ? <img src={gSrc} alt="" className={`${s.cmsGalleryItemImage} w-full object-cover`} />
           : <div className={`${s.cmsGalleryItemPlaceholder} w-full`} />

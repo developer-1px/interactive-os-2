@@ -14,9 +14,11 @@ import CmsI18nSheet from './CmsI18nSheet'
 import CmsPresentMode from './CmsPresentMode'
 import CmsDetailPanel from './CmsDetailPanel'
 import { RouteModal } from '@os/ui/RouteModal'
+import { ScrollArea } from '@os/ui/ScrollArea'
 import { useCmsData } from './cmsState'
 import type { Locale } from './cmsTypes'
 import { useEngine } from '@os/engine/useEngine'
+import { ax } from '@styles/ax'
 import { history } from '@os/plugins/history'
 import { clipboard } from '@os/plugins/clipboard'
 import { crud } from '@os/plugins/crud'
@@ -96,8 +98,8 @@ export default function PageCms() {
 
   return (
     <AriaRoute keyMap={cmsGlobalKeyMap} label="CMS">
-    <div className="cms-layout flex-col flex-1 min-h-0">
-      <div className="flex-row flex-1 min-h-0">
+    <div className={`cms-layout ${ax({ layout: 'fill' })}`}>
+      <div className={ax({ layout: 'row-fill' })}>
         <CmsSidebar
           engine={engine}
           store={store}
@@ -108,12 +110,12 @@ export default function PageCms() {
           style={{ width: sidebarResizer.size, '--sidebar-w': sidebarResizer.size } as React.CSSProperties}
         />
         <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
-        <div className="flex-1 relative overflow-y-auto">
+        <ScrollArea className={`relative ${ax({ flex: '1' })}`}>
           <CmsViewportWrapper viewport={viewport}>
             <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} activeTabMap={activeTabMap} onActivateTabItem={handleActivateTabItem} />
           </CmsViewportWrapper>
           <CmsI18nSheet engine={engine} store={store} open={i18nSheetOpen} />
-        </div>
+        </ScrollArea>
         <div className="resizer-handle" aria-label="Resize detail panel" {...detailResizer.separatorProps} />
         <CmsDetailPanel
           engine={engine}

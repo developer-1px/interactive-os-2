@@ -186,11 +186,11 @@ export default function PageStoreInspector() {
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
 
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <div className={`${ax({ gap: 'md' })} store-inspector-split grid`}>
 
           {/* Editor panel */}
-          <div className="min-h-0 overflow-auto">
+          <div className={ax({ scroll: 'auto' })}>
             <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Editor</div>
             <Aria
               pattern={tree}
@@ -206,7 +206,7 @@ export default function PageStoreInspector() {
           </div>
 
           {/* Inspector panel */}
-          <div className="min-h-0 overflow-auto">
+          <div className={ax({ scroll: 'auto' })}>
             <div className={`${ax({ textStyle: 'caption' })} store-inspector-panel-label`}>Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}

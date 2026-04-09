@@ -103,7 +103,7 @@ export default function PageComponentCreator() {
 
     if (tabData.contentType === 'canvas') {
       return (
-        <div className="flex-col h-full overflow-hidden">
+        <div className={`${ax({ layout: 'column', scroll: 'hidden' })} h-full`}>
           <PanelHeader axes={{ textStyle: 'caption' }}>
             <span className={ax({ weight: 'semi', text: 'primary' })}>{selectedName || 'Select'}</span>
           </PanelHeader>
@@ -130,9 +130,9 @@ export default function PageComponentCreator() {
   }, [selectedName, selectedEntry])
 
   return (
-    <div className="flex-col h-full overflow-hidden" onKeyDown={handleLayoutKeyDown}>
+    <div className={`${ax({ layout: 'column', scroll: 'hidden' })} h-full`} onKeyDown={handleLayoutKeyDown}>
       {/* Body: Workspace */}
-      <div className="flex-row flex-1 min-h-0">
+      <div className={ax({ layout: 'row', flex: '1' })}>
         <Workspace
           data={wsData}
           onChange={setWsData}

@@ -1,4 +1,5 @@
 import { Up, Down } from '../shared/kbdIcons'
+import { ax } from '@styles/ax'
 import { ListBox } from '@os/ui/ListBox'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -70,7 +71,7 @@ export default function TypeaheadDemo() {
         <kbd>Home</kbd> <span className="key-hint">first</span>{' '}
         <kbd>End</kbd> <span className="key-hint">last</span>
       </div>
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <ListBox
           data={data}
           plugins={plugins}

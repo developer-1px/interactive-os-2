@@ -6,6 +6,7 @@ import { FOCUS_ID } from '@os/axis/navigate'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
+import { ax } from '@styles/ax'
 
 // --- Load _meta.yaml for a specific layer ---
 
@@ -125,9 +126,9 @@ export function AreaSidebar({ layer }: { layer: string }) {
   if (!sidebarData) {
     // No L3 items for this layer — no sidebar
     return (
-      <nav className="sidebar shrink-0 overflow-y-auto">
+      <nav className={`sidebar ${ax({ flex: 'none' })} overflow-y-auto`}>
         <div className="sidebar-header">
-          <div className="logo flex-row items-center">
+          <div className={`logo ${ax({ layout: 'bar' })}`}>
             <div className="logo-mark" />
             <h1>interactive-os</h1>
           </div>

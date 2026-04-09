@@ -7,6 +7,7 @@ import { renameCommands } from '@os/plugins/rename'
 import { history } from '@os/plugins/history'
 import { focusRecovery } from '@os/plugins/focusRecovery'
 import { translatableEntriesToGrid, I18N_COLUMNS, diffGridChanges } from './cmsI18nTransform'
+import { ax } from '@styles/ax'
 
 const plugins = [rename(), history(), focusRecovery()]
 
@@ -31,14 +32,14 @@ export default function CmsI18nSheet({ engine, store, open }: CmsI18nSheetProps)
   if (!open) return null
 
   return (
-    <div className="cms-i18n-sheet absolute flex-col">
-      <div className="cms-i18n-sheet__header flex-row items-center shrink-0">
+    <div className={`cms-i18n-sheet absolute ${ax({ layout: 'column' })}`}>
+      <div className={`cms-i18n-sheet__header ${ax({ layout: 'bar', flex: 'none' })}`}>
         i18n — Translation Sheet
       </div>
-      <div className="cms-i18n-sheet__grid flex-1 overflow-auto">
-        <div className="cms-i18n-sheet__col-headers flex-row sticky">
+      <div className={`cms-i18n-sheet__grid ${ax({ flex: '1', scroll: 'auto' })}`}>
+        <div className={`cms-i18n-sheet__col-headers sticky ${ax({ layout: 'row' })}`}>
           {I18N_COLUMNS.map(col => (
-            <div key={col.key} className="cms-i18n-sheet__col-header flex-1">{col.header}</div>
+            <div key={col.key} className={`cms-i18n-sheet__col-header ${ax({ flex: '1' })}`}>{col.header}</div>
           ))}
         </div>
         <Grid

@@ -1,0 +1,29 @@
+/* last-mile: ax() 축에 없는 속성만 */
+
+.resultItem {
+  padding-block: 0;
+}
+
+.errorPre {
+  margin: var(--space-xs) 0 var(--space-xs) var(--space-xl);
+}
+
+.groupBlock {
+  margin-bottom: 8px;
+}
+
+.renderArea {
+  margin-bottom: 16px;
+}
+
+.summaryBar {
+  margin-bottom: 12px;
+}
+
+.failCount {
+  margin-left: 12px;
+}
+
+.totalCount {
+  margin-left: 12px;
+}

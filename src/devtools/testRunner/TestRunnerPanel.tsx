@@ -1,28 +1,30 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react' // @useState-hatch — devtools 전용 로컬 UI 상태
 import { CircleCheck, CircleX, Circle, Play } from 'lucide-react'
+import { ax } from '@styles/ax'
 import { runTest, demoTest, type RunTestResult, type TestResult } from './runTest'
+import css from './TestRunnerPanel.module.css'
 
 function StatusIcon({ status }: { status: 'pass' | 'fail' | 'pending' }) {
-  if (status === 'pass') return <span style={{ color: 'var(--tone-success-base)' }}><CircleCheck size={14} /></span>
-  if (status === 'fail') return <span style={{ color: 'var(--red)' }}><CircleX size={14} /></span>
-  return <span style={{ color: 'var(--text-muted)' }}><Circle size={14} /></span>
+  if (status === 'pass') return <span className={ax({ tone: 'success' })}><CircleCheck size={14} /></span>
+  if (status === 'fail') return <span className={ax({ tone: 'danger' })}><CircleX size={14} /></span>
+  return <span className={ax({ text: 'muted' })}><Circle size={14} /></span>
 }
 
 function ResultItem({ result }: { result: TestResult }) {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(false) // @useState-hatch
 
   return (
-    <div style={{ paddingLeft: 16 }}>
+    <div className={`${ax({ padding: 'md' })} ${css.resultItem}`}>
       <div
-        style={{ display: 'flex', gap: 8, alignItems: 'center', cursor: result.error ? 'pointer' : 'default' }}
+        className={ax({ layout: 'bar', gap: 'sm' })}
         onClick={() => result.error && setExpanded(!expanded)}
       >
         <StatusIcon status={result.status} />
         <span>{result.name}</span>
-        <span className="text-muted" style={{ fontSize: '0.85em' }}>{result.duration.toFixed(0)}ms</span>
+        <span className={ax({ text: 'muted', textStyle: 'caption' })}>{result.duration.toFixed(0)}ms</span>
       </div>
       {expanded && result.error && (
-        <pre style={{ color: 'var(--red)', margin: 'var(--space-xs) 0 var(--space-xs) var(--space-xl)', whiteSpace: 'pre-wrap', fontSize: '0.85em' }}>
+        <pre className={`${ax({ tone: 'danger', textStyle: 'caption', clamp: 'pre' })} ${css.errorPre}`}>
           {result.error}
         </pre>
       )}
@@ -33,8 +35,8 @@ function ResultItem({ result }: { result: TestResult }) {
 function GroupResults({ groupName, results }: { groupName: string; results: TestResult[] }) {
   const allPass = results.every((r) => r.status === 'pass')
   return (
-    <div style={{ marginBottom: 8 }}>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', fontWeight: 600 }}>
+    <div className={css.groupBlock}>
+      <div className={ax({ layout: 'bar', gap: 'sm', weight: 'semi' })}>
         <StatusIcon status={allPass ? 'pass' : 'fail'} />
         <span>{groupName}</span>
       </div>
@@ -53,8 +55,8 @@ type Props = {
 }
 
 export function TestRunnerPanel({ testPath, label, autoRun = true, headless = false }: Props) {
-  const [state, setState] = useState<'idle' | 'running' | 'demo' | 'done'>('idle')
-  const [result, setResult] = useState<RunTestResult | null>(null)
+  const [state, setState] = useState<'idle' | 'running' | 'demo' | 'done'>('idle') // @useState-hatch
+  const [result, setResult] = useState<RunTestResult | null>(null) // @useState-hatch
   const renderAreaRef = useRef<HTMLDivElement>(null)
   const hiddenAreaRef = useRef<HTMLDivElement>(null)
 
@@ -122,25 +124,25 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
   return (
     <div>
       {headless
-        ? <div ref={hiddenAreaRef} style={{ display: 'none' }} />
-        : <div className="card overflow-hidden" ref={renderAreaRef} style={{ minHeight: 60, padding: 12, marginBottom: 16, display: ready ? undefined : 'none' }} />
+        ? <div ref={hiddenAreaRef} className={css.hidden} />
+        : <div className={`card ${ax({ scroll: 'hidden', padding: 'sm' })} ${css.renderArea} ${ready ? '' : css.hidden}`} ref={renderAreaRef} />
       }
-      <div className="card overflow-hidden" style={{ padding: 16, display: ready ? undefined : 'none' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: ready ? 12 : 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontFamily: 'var(--mono)', fontWeight: 700 }}>
+      <div className={`card ${ax({ scroll: 'hidden', padding: 'md' })} ${ready ? '' : css.hidden}`}>
+        <div className={`${ax({ layout: 'spread' })} ${ready ? css.summaryBar : ''}`}>
+          <div className={ax({ layout: 'bar', gap: 'md' })}>
+            <span className={ax({ textStyle: 'code', weight: 'bold' })}>
               {label ?? 'Test Runner'}
             </span>
             {state === 'demo' && result && (
-              <span className="text-muted" style={{ fontFamily: 'var(--mono)', fontSize: '0.85em' }}>
+              <span className={ax({ text: 'muted', textStyle: 'code' })}>
                 {total} tests
               </span>
             )}
             {state === 'done' && result && (
-              <span style={{ fontFamily: 'var(--mono)', fontSize: '0.85em' }}>
-                <span style={{ color: 'var(--tone-success-base)' }}>{passed} passed</span>
-                {failed > 0 && <span style={{ color: 'var(--red)', marginLeft: 12 }}>{failed} failed</span>}
-                <span className="text-muted" style={{ marginLeft: 12 }}>{total} total</span>
+              <span className={ax({ textStyle: 'code' })}>
+                <span className={css.passCount}>{passed} passed</span>
+                {failed > 0 && <span className={css.failCount}>{failed} failed</span>}
+                <span className={`${ax({ text: 'muted' })} ${css.totalCount}`}>{total} total</span>
               </span>
             )}
           </div>
@@ -154,7 +156,7 @@ export function TestRunnerPanel({ testPath, label, autoRun = true, headless = fa
         </div>
 
         {state === 'done' && result && (
-          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.9em' }}>
+          <div className={`${ax({ textStyle: 'code' })} ${css.resultDetails}`}>
             {Object.entries(grouped).map(([group, results]) => (
               <GroupResults key={group} groupName={group} results={results} />
             ))}

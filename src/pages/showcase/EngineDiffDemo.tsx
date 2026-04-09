@@ -87,7 +87,7 @@ export default function EngineDiffDemo() {
         <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}
         <kbd>Del</kbd> <span className="key-hint">delete</span>
       </div>
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <ListBox
           data={data}
           onChange={handleChange}

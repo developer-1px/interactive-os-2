@@ -132,11 +132,11 @@ export default function StoreInspectorDemo() {
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
 
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <div className={`store-inspector-split grid`}>
 
           {/* Editor panel */}
-          <div className="min-h-0 overflow-auto">
+          <div className={ax({ scroll: 'auto' })}>
             <div className="store-inspector-panel-label">Editor</div>
             <Aria
               pattern={tree}
@@ -152,7 +152,7 @@ export default function StoreInspectorDemo() {
           </div>
 
           {/* Inspector panel */}
-          <div className="min-h-0 overflow-auto">
+          <div className={ax({ scroll: 'auto' })}>
             <div className="store-inspector-panel-label">Inspector — NormalizedData</div>
             <TreeView
               data={inspectorData}

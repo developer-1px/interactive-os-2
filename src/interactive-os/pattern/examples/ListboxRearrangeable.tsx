@@ -48,7 +48,7 @@ const renderOption = (
   return (
     <div
       {...props}
-      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })} flex-row items-center`}
+      className={ax({ layout: 'bar', textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
@@ -75,7 +75,7 @@ function ListboxZone({
   }, [onSelectionChange])
 
   return (
-    <div className="flex-1 min-w-0">
+    <div className={ax({ flex: '1' })}>
       <span className={`${ax({ textStyle: 'label', text: 'primary' })} block`} id={`label-${label.toLowerCase().replace(/\s/g, '-')}`}>
         {label}
       </span>
@@ -115,14 +115,14 @@ export function ListboxRearrangeable() {
   }, [chosenSelected])
 
   return (
-    <div className={`${ax({ gap: 'md' })} flex-row items-start`}>
+    <div className={`${ax({ layout: 'row', gap: 'md' })} items-start`}>
       <ListboxZone
         label="Available upgrades"
         ids={availableIds}
         onSelectionChange={setAvailableSelected}
       />
 
-      <div role="toolbar" aria-label="Actions" className={`${ax({ gap: 'xs', padding: 'md' })} flex-col`}>
+      <div role="toolbar" aria-label="Actions" className={ax({ layout: 'column', gap: 'xs', padding: 'md' })}>
         <button
           className={`${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button' })} whitespace-nowrap`}
           aria-keyshortcuts="Enter"

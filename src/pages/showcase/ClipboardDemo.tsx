@@ -1,4 +1,5 @@
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
+import { ax } from '@styles/ax'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -42,7 +43,7 @@ export default function ClipboardDemo() {
         <kbd>⌘V</kbd> <span className="key-hint">paste</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>
       </div>
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <TreeGrid
           data={data}
           onChange={setData}

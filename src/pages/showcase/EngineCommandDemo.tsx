@@ -98,7 +98,7 @@ export default function EngineCommandDemo() {
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>
       </div>
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <ListBox
           data={data}
           onChange={setData}

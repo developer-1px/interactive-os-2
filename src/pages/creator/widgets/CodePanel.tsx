@@ -13,7 +13,7 @@ type SourceTab = 'tsx' | 'css'
 export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
   const [sourceTab, setSourceTab] = useState<SourceTab>('tsx')
   return (
-    <div className="flex-col overflow-hidden">
+    <div className={ax({ layout: 'column', scroll: 'hidden' })}>
       <PanelHeader axes={{ textStyle: 'caption' }}>
         <button
           className={ax({ surface: 'ghost', padding: 'xs', shape: 'sm', text: sourceTab === 'tsx' ? 'primary' : 'muted', weight: sourceTab === 'tsx' ? 'medium' : undefined })}
@@ -28,7 +28,7 @@ export function CodePanel({ entry }: { entry: RegistryEntry | undefined }) {
           CSS
         </button>
       </PanelHeader>
-      <div className="flex-1 overflow-auto min-h-0">
+      <div className={ax({ flex: '1', scroll: 'auto' })}>
         {entry ? (
           <SourceViewer entry={entry} activeTab={sourceTab} />
         ) : (

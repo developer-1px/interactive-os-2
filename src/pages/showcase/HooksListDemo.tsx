@@ -33,7 +33,7 @@ export default function HooksListDemo() {
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>
       </div>
-      <div className="card overflow-hidden">
+      <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <ListBox
           data={data}
           onChange={setData}

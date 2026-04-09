@@ -529,6 +529,7 @@ dialog.sf-overlay[open] {
 .ly-scroll:hover::-webkit-scrollbar-thumb { background: var(--border-default); }
 /* 부모를 꽉 채우는 패인/분할창. 자식이 넘치면 클립. 콘텐츠는 내부에서 ly-scroll로 처리. */
 .ly-fill     { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+.ly-row-fill { display: flex; flex-direction: row; flex: 1; min-width: 0; min-height: 0; }
 .ly-row-fill { display: flex; flex-direction: row;    flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
 /* ── Grid — equal-column 그리드 ── */
 .ly-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
@@ -969,6 +970,8 @@ dialog.sf-overlay[open] {
 :where(.ia-cell) {
   border-right: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
+  min-width: 0;
+  overflow: hidden;
 }
 
 :where(.ia-cell:last-child) {
@@ -989,6 +992,8 @@ dialog.sf-overlay[open] {
 
 .ax-interactive:focus-within .ia-cell[data-cell-focused] {
   background: var(--selection-cursor);
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
 }
 
 /* ── ia-button: button ── */
