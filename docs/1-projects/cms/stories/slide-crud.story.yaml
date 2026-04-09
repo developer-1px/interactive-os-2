@@ -1,0 +1,44 @@
+title: "슬라이드 CRUD"
+number: 1
+scope:
+  description: |
+    캔버스에 슬라이드를 추가·삭제·이동·복제한다.
+    모든 변경은 Command 패턴으로 undo/redo 가능.
+  design: /screenshots/cms.png
+
+behaviors:
+  - given: CMS 캔버스에 슬라이드 N개
+    when: Cmd+N 또는 "+" 버튼 클릭
+    then: 선택된 슬라이드 다음에 빈 슬라이드 추가, 자동 선택
+    status: done
+
+  - given: 슬라이드 0개 (빈 캔버스)
+    when: Cmd+N
+    then: 첫 슬라이드 생성, 자동 선택
+    status: done
+
+  - given: 슬라이드 선택됨
+    when: Delete 키
+    then: 선택된 슬라이드 삭제, 이전 슬라이드로 포커스 이동
+    status: done
+
+  - given: 마지막 슬라이드 1개
+    when: Delete 키
+    then: 삭제 차단 (최소 1개 유지)
+    status: wip
+
+  - given: 슬라이드 선택됨
+    when: Cmd+D
+    then: 선택된 슬라이드 복제, 복제본 자동 선택
+    status: todo
+
+  - given: 슬라이드 2개 이상
+    when: 드래그 앤 드롭
+    then: 슬라이드 순서 변경, undo 가능
+    status: done
+
+decisions:
+  - title: Command 패턴 사용
+    why: 모든 변경이 직렬화 가능해야 undo/redo + 협업 가능
+  - title: 최소 1개 슬라이드 유지
+    why: 빈 캔버스 상태의 UI 복잡도를 제거

@@ -1,0 +1,37 @@
+title: "노드 텍스트 편집"
+number: 2
+scope:
+  description: |
+    캔버스 위의 텍스트 노드를 인라인 편집한다.
+    더블클릭 또는 Enter로 편집 모드 진입.
+  design: /screenshots/cms.png
+
+behaviors:
+  - given: 텍스트 노드 선택됨
+    when: Enter 또는 더블클릭
+    then: 인라인 편집 모드 진입, 커서 텍스트 끝에 위치
+    status: done
+
+  - given: 편집 모드
+    when: Escape
+    then: 편집 취소, 원래 텍스트 복원
+    status: done
+
+  - given: 편집 모드
+    when: Enter (Shift 없이)
+    then: 편집 확정, 선택 모드로 복귀
+    status: done
+
+  - given: 편집 모드에서 텍스트 변경
+    when: 외부 클릭
+    then: 편집 확정
+    status: wip
+
+  - given: 빈 텍스트로 편집 확정
+    when: Enter
+    then: 빈 문자열 허용? placeholder 표시?
+    status: todo
+
+decisions:
+  - title: edit 축 사용
+    why: Grid 편집은 editingKeyMap이 아닌 edit 축으로 통합
