@@ -1,0 +1,255 @@
+specification {
+  element system {
+    style {
+      shape: rectangle
+      color: slate
+    }
+  }
+  element layer {
+    style {
+      shape: rectangle
+      color: blue
+    }
+  }
+  element module {
+    style {
+      shape: rectangle
+      color: sky
+    }
+  }
+  element component {
+    style {
+      shape: rectangle
+      color: muted
+    }
+  }
+}
+
+model {
+  interactiveOS = system 'Interactive OS' {
+    
+    store = layer 'store' {
+      description 'NormalizedData + Command 불변 업데이트'
+      store_computeStoreDiff = component 'computeStoreDiff'
+      store_createSingleNodeStore = component 'createSingleNodeStore'
+      store_createStore = component 'createStore'
+      store_storeToInspectorTree = component 'storeToInspectorTree'
+    }
+    
+    engine = layer 'engine' {
+      description 'Command 실행/undo/redo, Plugin 합성'
+      engine_computeNodeAriaProps = component 'computeNodeAriaProps'
+      engine_createCommandEngine = component 'createCommandEngine'
+      engine_defineCommand = component 'defineCommand'
+      engine_getVisibleNodes = component 'getVisibleNodes'
+      engine_inspectToTree = component 'inspectToTree'
+      engine_logger = component 'logger'
+      engine_useEngine = component 'useEngine'
+    }
+    
+    axis = layer 'axis' {
+      description 'ARIA 표준 축 (navigate/select/expand/…)'
+      axis_activate = component 'activate'
+      axis_checked = component 'checked'
+      axis_coreCommands = component 'coreCommands'
+      axis_edit = component 'edit'
+      axis_expand = component 'expand'
+      axis_navigate = component 'navigate'
+      axis_popup = component 'popup'
+      axis_select = component 'select'
+      axis_tab = component 'tab'
+      axis_value = component 'value'
+    }
+    
+    pattern = layer 'pattern' {
+      description 'APG 패턴 합성 (composePattern)'
+      pattern_composePattern = component 'composePattern'
+      pattern_createPatternContext = component 'createPatternContext'
+      pattern_examples = module 'examples/' {
+        description '36 files'
+        pattern_examples_Accordion = component 'Accordion'
+        pattern_examples_Alert = component 'Alert'
+        pattern_examples_AlertDialog = component 'AlertDialog'
+        pattern_examples_ButtonToggle = component 'ButtonToggle'
+        pattern_examples_CarouselPrevNext = component 'CarouselPrevNext'
+        pattern_examples_CarouselTabs = component 'CarouselTabs'
+        pattern_examples_CheckboxGroup = component 'CheckboxGroup'
+        pattern_examples_CheckboxMixed = component 'CheckboxMixed'
+        pattern_examples_ComboboxSelectOnly = component 'ComboboxSelectOnly'
+        pattern_examples_DatePickerCombobox = component 'DatePickerCombobox'
+        // ... +26 more
+      }
+      pattern_roles = module 'roles/' {
+        description '32 files'
+        pattern_roles_accordion = component 'accordion'
+        pattern_roles_alert = component 'alert'
+        pattern_roles_alertdialog = component 'alertdialog'
+        pattern_roles_buttonToggle = component 'buttonToggle'
+        pattern_roles_calendarGrid = component 'calendarGrid'
+        pattern_roles_checkbox = component 'checkbox'
+        pattern_roles_checkboxMixed = component 'checkboxMixed'
+        pattern_roles_combobox = component 'combobox'
+        pattern_roles_dialog = component 'dialog'
+        pattern_roles_disclosure = component 'disclosure'
+        // ... +22 more
+      }
+    }
+    
+    plugins = layer 'plugins' {
+      description 'definePlugin — history/crud/clipboard/…'
+      plugins_autoscroll = component 'autoscroll'
+      plugins_cellEdit = component 'cellEdit'
+      plugins_clipboard = component 'clipboard'
+      plugins_combobox = component 'combobox'
+      plugins_crud = component 'crud'
+      plugins_definePlugin = component 'definePlugin'
+      plugins_dnd = component 'dnd'
+      plugins_dragResize = component 'dragResize'
+      plugins_edit = component 'edit'
+      plugins_focusRecovery = component 'focusRecovery'
+      plugins_form = component 'form'
+      plugins_history = component 'history'
+      plugins_rename = component 'rename'
+      plugins_search = component 'search'
+      plugins_spatial = component 'spatial'
+      plugins_typeahead = component 'typeahead'
+      plugins_useSpatialNav = component 'useSpatialNav'
+      plugins_useVirtualScroll = component 'useVirtualScroll'
+      plugins_virtualScroll = component 'virtualScroll'
+      plugins_workspaceStore = component 'workspaceStore'
+      plugins_zodSchema = component 'zodSchema'
+    }
+    
+    primitives = layer 'primitives' {
+      description 'React 바인딩 (useAria, useAriaZone)'
+      primitives_AriaEditable = component 'AriaEditable'
+      primitives_AriaInternalContext = component 'AriaInternalContext'
+      primitives_AriaRoute = component 'AriaRoute'
+      primitives_AriaSearch = component 'AriaSearch'
+      primitives_aria = component 'aria'
+      primitives_ariaRegistry = component 'ariaRegistry'
+      primitives_bindingRegistry = component 'bindingRegistry'
+      primitives_defineRouteKey = component 'defineRouteKey'
+      primitives_keymapHelpers = component 'keymapHelpers'
+      primitives_mergeProps = component 'mergeProps'
+      primitives_spatialAlgorithm = component 'spatialAlgorithm'
+      primitives_useAria = component 'useAria'
+      primitives_useAriaView = component 'useAriaView'
+      primitives_useAriaZone = component 'useAriaZone'
+      primitives_useCommand = component 'useCommand'
+      primitives_useControlledAria = component 'useControlledAria'
+      primitives_useKeyMap = component 'useKeyMap'
+      primitives_useKeyboard = component 'useKeyboard'
+      primitives_useSpatialBridge = component 'useSpatialBridge'
+    }
+    
+    ui = layer 'ui' {
+      description '완성품 컴포넌트 (TreeGrid, ListBox, …)'
+      ui_A2UISurface = component 'A2UISurface'
+      ui_Accordion = component 'Accordion'
+      ui_Alert = component 'Alert'
+      ui_AlertDialog = component 'AlertDialog'
+      ui_AriaZone = component 'AriaZone'
+      ui_Breadcrumb = component 'Breadcrumb'
+      ui_Button = component 'Button'
+      ui_ButtonToggle = component 'ButtonToggle'
+      ui_ButtonToolbar = component 'ButtonToolbar'
+      ui_CalendarGrid = component 'CalendarGrid'
+      ui_Checkbox = component 'Checkbox'
+      ui_CheckboxMixed = component 'CheckboxMixed'
+      ui_CodeBlock = component 'CodeBlock'
+      ui_Combobox = component 'Combobox'
+      ui_Composer = component 'Composer'
+      ui_DatePicker = component 'DatePicker'
+      ui_Dialog = component 'Dialog'
+      ui_DisclosureGroup = component 'DisclosureGroup'
+      ui_Divider = component 'Divider'
+      ui_Feed = component 'Feed'
+      ui_FileIcon = component 'FileIcon'
+      ui_FilePreview = component 'FilePreview'
+      ui_FileTreeView = component 'FileTreeView'
+      ui_FileViewer = component 'FileViewer'
+      ui_FileViewerModal = component 'FileViewerModal'
+      ui_Form = component 'Form'
+      ui_Grid = component 'Grid'
+      ui_Kanban = component 'Kanban'
+      ui_Link = component 'Link'
+      ui_ListBox = component 'ListBox'
+      // ... +59 more components
+    }
+    
+    // ── 레이어 의존 관계 ──
+    ui -> primitives
+    primitives -> pattern
+    primitives -> engine
+    pattern -> axis
+    axis -> engine
+    engine -> store
+    plugins -> engine
+  }
+  
+  pages = system 'Pages' {
+    page_a2ui = layer 'a2ui'
+    page_area = layer 'area'
+    page_birdseye = layer 'birdseye'
+    page_book = layer 'book'
+    page_chat = layer 'chat'
+    page_cms = layer 'cms'
+    page_creator = layer 'creator'
+    page_i18n = layer 'i18n'
+    page_incident = layer 'incident'
+    page_project = layer 'project'
+    page_replay = layer 'replay'
+    page_shared = layer 'shared'
+    page_showcase = layer 'showcase'
+    page_theme = layer 'theme'
+    page_viewer = layer 'viewer'
+    page_writer = layer 'writer'
+  }
+  
+  pages -> interactiveOS
+}
+
+views {
+
+  view overview of interactiveOS {
+    title 'Interactive OS — Architecture'
+    include *
+  }
+
+  view storeDetail of store {
+    title 'store layer'
+    include *
+  }
+
+  view engineDetail of engine {
+    title 'engine layer'
+    include *
+  }
+
+  view axisDetail of axis {
+    title 'axis layer'
+    include *
+  }
+
+  view patternDetail of pattern {
+    title 'pattern layer'
+    include *
+  }
+
+  view pluginsDetail of plugins {
+    title 'plugins layer'
+    include *
+  }
+
+  view primitivesDetail of primitives {
+    title 'primitives layer'
+    include *
+  }
+
+  view uiDetail of ui {
+    title 'ui layer'
+    include *
+  }
+
+}

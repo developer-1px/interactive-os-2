@@ -30,6 +30,17 @@ interface StateEntry {
   command: string
   diff: string[]
   error?: string
+  engine?: string
+  originalType?: string
+}
+
+interface RouteEntry {
+  seq: number
+  time: string
+  ch: 'route'
+  from: string
+  to: string
+  method: 'pushState' | 'replaceState' | 'popstate'
 }
 
 interface ConsoleEntry {
@@ -40,7 +51,7 @@ interface ConsoleEntry {
   message: string
 }
 
-type ReproEvent = InputEntry | StateEntry | ConsoleEntry
+type ReproEvent = InputEntry | StateEntry | RouteEntry | ConsoleEntry
 
 const INPUT_ICONS: Record<string, string> = {
   keydown: '\u2328', click: '\uD83D\uDDB1', focus: '\u23CE',
@@ -70,9 +81,13 @@ export function formatTimelineAsText(meta: ReproMeta, timeline: ReproEvent[]): s
       while (j < timeline.length && timeline[j].ch !== 'input') {
         const trailing = timeline[j]
         if (trailing.ch === 'state') {
+          const engineTag = trailing.engine ? `[${trailing.engine}] ` : ''
+          const origTag = trailing.originalType ? ` (from: ${trailing.originalType})` : ''
           const diffStr = trailing.diff.length > 0 ? trailing.diff.join(', ') : 'no diff'
-          trailingLines.push(`  \u2192 ${trailing.command}: ${diffStr}`)
+          trailingLines.push(`  \u2192 ${engineTag}${trailing.command}${origTag}: ${diffStr}`)
           if (trailing.error) trailingLines.push(`  \u26A0 ${trailing.error}`)
+        } else if (trailing.ch === 'route') {
+          trailingLines.push(`  \uD83D\uDCC1 ${trailing.method}: ${trailing.from} \u2192 ${trailing.to}`)
         } else if (trailing.ch === 'console') {
           const prefix = trailing.level === 'error' ? '\u2717' : '\u26A0'
           trailingLines.push(`  ${prefix} ${trailing.message}`)
@@ -100,7 +115,11 @@ export function formatTimelineAsText(meta: ReproMeta, timeline: ReproEvent[]): s
       i = j
     } else {
       if (ev.ch === 'state') {
-        lines.push(`[${ev.seq}] ${ev.time} \u2192 ${ev.command}: ${ev.diff.join(', ')}`)
+        const engineTag = ev.engine ? `[${ev.engine}] ` : ''
+        const origTag = ev.originalType ? ` (from: ${ev.originalType})` : ''
+        lines.push(`[${ev.seq}] ${ev.time} \u2192 ${engineTag}${ev.command}${origTag}: ${ev.diff.join(', ')}`)
+      } else if (ev.ch === 'route') {
+        lines.push(`[${ev.seq}] ${ev.time} \uD83D\uDCC1 ${ev.method}: ${ev.from} \u2192 ${ev.to}`)
       } else if (ev.ch === 'console') {
         const prefix = ev.level === 'error' ? '\u2717' : '\u26A0'
         lines.push(`[${ev.seq}] ${ev.time} ${prefix} ${ev.message}`)

@@ -97,12 +97,13 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     const registry = buildRegistry(...pluginCommands)
     for (const [type, handler] of coreRegistry) registry.set(type, handler)
 
-    let _onChangeCount = 0
+    let _reentrantDepth = 0
     let initializing = true
     const created = createCommandEngine(data, middlewares, registry, (newStore) => {
       if (initializing) return
-      _onChangeCount++
-      if (_onChangeCount > 500) { console.error('[useAria] onStoreChange loop detected, count:', _onChangeCount); return }
+      _reentrantDepth++
+      if (_reentrantDepth > 50) { console.error('[useAria] onStoreChange reentrant loop detected, depth:', _reentrantDepth); _reentrantDepth--; return }
+      try {
       const cb = engineCallbacksMap.get(created)!
       const newFocusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
       // activationFollowsSelection: selection change → onActivate
@@ -119,6 +120,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
       cb.prevFocus = newFocusedId
       onChange?.(newStore)
       forceRender((n) => n + 1)
+      } finally { _reentrantDepth-- }
     }, logger != null ? { logger } : undefined)
 
     engineCallbacksMap.set(created, bag)
@@ -233,10 +235,12 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
 
   // ── ③④⑤⑥⑦ Shared view logic ──
 
+  const containerRef = useRef<HTMLElement | null>(null)
+
   const view = useAriaView({
     engine, store, pattern, plugins, keyMap: keyMapOverrides,
     onActivate, focusedId, selectedIdSet,
-    isKeyMapOnly, autoFocus, disabled,
+    isKeyMapOnly, autoFocus, disabled, containerRef,
   })
 
   // ── Pointer selection overlay (useAria-only) ──
@@ -308,7 +312,6 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
   )
 
   // ── Plugin effects ──
-  const containerRef = useRef<HTMLElement | null>(null)
   const effectCtx: EffectContext = useMemo(
     () => ({ containerRef, getStore: () => engine.getStore() }),
     [engine],

@@ -32,12 +32,12 @@ export type LogEntry = DispatchLogEntry | UnhandledKeyEntry
 export type Logger = (entry: LogEntry) => void
 
 function truncatePayload(payload: unknown): string {
-  const str = JSON.stringify(payload)
-  if (str && str.length > 200) {
+  const str = JSON.stringify(payload) ?? 'undefined'
+  if (str.length > 200) {
     const keys = typeof payload === 'object' && payload !== null ? Object.keys(payload) : []
     return `{ ...truncated (${keys.length} keys) }`
   }
-  return str ?? 'undefined'
+  return str
 }
 
 export function summarizeValue(val: unknown): string {

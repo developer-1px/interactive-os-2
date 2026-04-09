@@ -32,18 +32,15 @@ export function getVisibleNodes(store: NormalizedData, filters?: VisibilityFilte
     const grandSlots = getSlotChildren(store, childId)
     const isContainer = grandChildren.length > 0 || grandSlots.length > 0
 
+    const canDescend = !filters?.some(f => f.shouldDescend && !f.shouldDescend(childId, store))
+
     if (!focusable) {
-      // Not focusable but walk children
-      const shouldDescend = !filters?.some(f => f.shouldDescend && !f.shouldDescend(childId, store))
-      if (shouldDescend) walk(childId)
+      if (canDescend) walk(childId)
     } else if (isContainer && !hasDescendFilter && !hasFocusableFilter) {
       walk(childId)
     } else {
       visible.push(childId)
-      const shouldDescend = !filters?.some(f => f.shouldDescend && !f.shouldDescend(childId, store))
-      if (shouldDescend) {
-        walk(childId)
-      }
+      if (canDescend) walk(childId)
     }
   }
 

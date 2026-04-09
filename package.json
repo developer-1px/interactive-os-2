@@ -231,7 +231,8 @@
     "lint:design": "node scripts/designLintRunner.mjs",
     "check:contents": "node scripts/checkContentsIsomorphism.mjs",
     "check:deps": "depcruise src/interactive-os src/pages --config .dependency-cruiser.cjs",
-    "check:test-components": "node scripts/checkTestComponents.mjs"
+    "check:test-components": "node scripts/checkTestComponents.mjs",
+    "screenshot": "node scripts/screenshot.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

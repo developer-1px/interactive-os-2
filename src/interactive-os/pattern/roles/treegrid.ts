@@ -15,13 +15,26 @@ export function treegrid(columns: number): AriaPattern {
   const exp = expanded()
   const g = gridAxis(columns, { initialColIndex: -1 })
 
-  // APG: row mode (-1) → expand or focusChild; cell mode (0+) → next col
+  // APG Treegrid ArrowRight:
+  //   cell mode → next col
+  //   row mode, expandable & collapsed → expand
+  //   row mode, expandable & expanded → focus first child
+  //   row mode, leaf (not expandable) → enter cell mode (col 0)
   const arrowRight = key(['core:set-col-index', 'core:focus', 'core:expand'], (ctx) => {
     if (ctx.grid && ctx.grid.colIndex >= 0) return ctx.grid.focusNextCol()
-    if (ctx.expanded?.is) return ctx.focusChild()
-    return ctx.expanded?.set(true)
+    if (ctx.expanded?.isExpandable) {
+      if (!ctx.expanded.is) return ctx.expanded.set(true)
+      return ctx.focusChild()
+    }
+    // leaf node (or no expanded axis): enter cell mode
+    return ctx.grid?.focusFirstCol()
   })
 
+  // APG Treegrid ArrowLeft:
+  //   cell mode, col > 0 → prev col
+  //   cell mode, col 0 → return to row mode
+  //   row mode, expanded → collapse
+  //   row mode, collapsed/leaf → focus parent
   const arrowLeft = key(['core:set-col-index', 'core:collapse', 'core:focus'], (ctx) => {
     if (ctx.grid && ctx.grid.colIndex >= 0) {
       if (ctx.grid.colIndex === 0) return ctx.grid.focusRow()

@@ -21,6 +21,8 @@
  */
 
 import type { LogEntry, Logger } from '@os/engine/logger'
+import type { EngineEvent } from '@os/engine/types'
+import { getAllAriaActions } from '@os/primitives/ariaRegistry'
 import { findRoleContainer, serializeAriaTree, diffAriaTree } from './reproAriaTree'
 import { formatTimelineAsText } from './reproFormatter'
 
@@ -52,6 +54,19 @@ interface StateEntry {
   payload: unknown
   diff: string[]
   error?: string
+  /** Engine registry ID that dispatched this command */
+  engine?: string
+  /** Original command type before middleware transformation */
+  originalType?: string
+}
+
+interface RouteEntry {
+  seq: number
+  time: string
+  ch: 'route'
+  from: string
+  to: string
+  method: 'pushState' | 'replaceState' | 'popstate'
 }
 
 interface ConsoleEntry {
@@ -62,7 +77,7 @@ interface ConsoleEntry {
   message: string
 }
 
-type ReproEvent = InputEntry | StateEntry | ConsoleEntry
+type ReproEvent = InputEntry | StateEntry | RouteEntry | ConsoleEntry
 
 interface ReproRecording {
   text: string
@@ -236,20 +251,69 @@ export function createReproRecorder() {
     pushInputEntry('focus', target, false)
   }
 
-  // Channel 4: Store diffs (passed as logger to <Aria>)
-  const reproLogger: Logger = (entry: LogEntry) => {
-    if (!active) return
-    if (entry.kind === 'unhandled-key') {
-      timeline.push({
+  // Channel 4: Engine dispatch via ariaRegistry subscribe
+  // Subscribe to all registered engines and track new registrations
+  const engineUnsubs = new Map<string, () => void>()
+  let registryPollId: ReturnType<typeof setInterval> | undefined
+
+  function subscribeEngine(engineId: string) {
+    if (engineUnsubs.has(engineId)) return
+    const actions = getAllAriaActions().get(engineId)
+    if (!actions) return
+    const unsub = actions.subscribe((event: EngineEvent) => {
+      if (!active) return
+      if (event.kind === 'unhandled-key') return // skip noise
+      const entry: StateEntry = {
         seq: nextSeq(),
         time: elapsed(),
         ch: 'state',
-        command: `unhandled-key:${entry.modifiers}${entry.key}`,
-        payload: { key: entry.key, code: entry.code, modifiers: entry.modifiers },
-        diff: [],
-      })
-      return
+        command: event.command.type,
+        payload: event.command.payload,
+        diff: event.diff.map(formatDiff),
+        engine: engineId,
+        ...(event.error ? { error: event.error } : {}),
+        ...(event.originalType ? { originalType: event.originalType } : {}),
+      }
+      timeline.push(entry)
+    })
+    engineUnsubs.set(engineId, unsub)
+  }
+
+  function subscribeAllEngines() {
+    for (const id of getAllAriaActions().keys()) {
+      subscribeEngine(id)
     }
+  }
+
+  function unsubscribeAllEngines() {
+    for (const unsub of engineUnsubs.values()) unsub()
+    engineUnsubs.clear()
+    if (registryPollId !== undefined) {
+      clearInterval(registryPollId)
+      registryPollId = undefined
+    }
+  }
+
+  // Channel 4b: Route changes (pushState/replaceState/popstate)
+  let lastUrl = ''
+
+  function pushRouteEntry(method: RouteEntry['method'], to: string) {
+    if (!active || to === lastUrl) return
+    timeline.push({
+      seq: nextSeq(),
+      time: elapsed(),
+      ch: 'route',
+      from: lastUrl,
+      to,
+      method,
+    })
+    lastUrl = to
+  }
+
+  // Legacy logger callback (kept for backward compat but not primary path)
+  const reproLogger: Logger = (entry: LogEntry) => {
+    if (!active) return
+    if (entry.kind === 'unhandled-key') return
     timeline.push({
       seq: nextSeq(),
       time: elapsed(),
@@ -340,11 +404,35 @@ export function createReproRecorder() {
       window.addEventListener('focusin', onFocusIn, true)
       const restoreConsole = interceptConsole()
 
+      // Subscribe to all registered engines via ariaRegistry
+      subscribeAllEngines()
+      // Poll for newly registered engines (lazy-loaded pages)
+      registryPollId = setInterval(() => {
+        for (const id of getAllAriaActions().keys()) {
+          subscribeEngine(id)
+        }
+      }, 200)
+
+      // Intercept history.pushState / replaceState for route tracking
+      lastUrl = window.location.pathname + window.location.hash
+      const origPush = history.pushState.bind(history)
+      const origReplace = history.replaceState.bind(history)
+      history.pushState = function (...args) {
+        origPush(...args)
+        pushRouteEntry('pushState', window.location.pathname + window.location.hash)
+      }
+      history.replaceState = function (...args) {
+        origReplace(...args)
+        pushRouteEntry('replaceState', window.location.pathname + window.location.hash)
+      }
+
       cleanups.push(
         () => window.removeEventListener('keydown', onKeydown, true),
         () => window.removeEventListener('click', onClick, true),
         () => window.removeEventListener('focusin', onFocusIn, true),
         restoreConsole,
+        () => unsubscribeAllEngines(),
+        () => { history.pushState = origPush; history.replaceState = origReplace },
       )
     },
 

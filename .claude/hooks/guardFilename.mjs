@@ -57,7 +57,7 @@ if (/^[a-z][a-z0-9]*-[a-z]/.test(baseName)) {
 if (filePath.includes('/pages/') && ['.ts', '.tsx'].includes(ext)) {
   // *Layout.tsx → Page*.tsx 여야 한다
   if (/Layout$/.test(name) && ext === '.tsx') {
-    violations.push(`"${name}${ext}": 진입점은 Page{Domain}.tsx 형식. *Layout 금지.`)
+    violations.push(`"${name}${ext}": 진입점은 Page{Domain}.tsx 형식. *Layout 금
   }
   // *Adapter.ts → *Transform.ts 여야 한다
   if (/Adapter$/.test(name) || /adapter$/i.test(name)) {

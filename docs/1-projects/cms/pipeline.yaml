@@ -1,0 +1,240 @@
+project: Visual CMS
+base: docs/1-projects/cms
+
+stages:
+  - key: discuss
+    label: 논의
+    artifact: discuss.md
+    scope: [need, story, feature]
+  - key: story
+    label: 스토리
+    artifact: stories.md
+    scope: [project]
+  - key: ia
+    label: IA
+    artifact: ia.md
+    scope: [need]
+  - key: wireframe
+    label: 와이어프레임
+    artifact: wireframe.md
+    scope: [need, story]
+  - key: prd
+    label: PRD
+    artifact: prd.md
+    scope: [story, feature]
+  - key: impl
+    label: 구현
+    artifact: sources.yaml
+    scope: [feature]
+
+needs:
+  - id: content-editing
+    title: 콘텐츠를 편집하기 원한다
+    what: 관리자가 개발자 없이 텍스트/이미지를 교체
+    stories:
+      - id: page-selection
+        title: 편집할 페이지를 선택할 수 있다
+        what: 페이지 목록이 보이고, 선택하면 섹션 구성이 표시된다
+        how: prds/cms-landing-completeness-prd.md
+        features:
+          - id: page-list
+            title: 페이지 목록 표시 (썸네일 포함)
+            what: 페이지 데이터(id, title, thumbnail, updatedAt)를 최근 수정순으로 표시. ListBox 사용.
+            how: prds/cms-landing-completeness-prd.md
+            detail:
+              - src/pages/cms/CmsSidebar.tsx
+              - src/pages/cms/cmsStore.ts
+              - src/pages/cms/cmsSchema.ts
+              - src/pages/cms/SectionThumbnail.tsx
+          - id: section-load
+            title: 페이지 선택 시 섹션 구성 로드
+            what: 페이지 선택 시 우측 캔버스에 섹션 트리 로드. TreeGrid로 섹션 계층 표시.
+            how: prds/cms-landing-completeness-prd.md
+            detail:
+              - src/pages/cms/CmsCanvas.tsx
+              - src/pages/cms/cmsState.ts
+              - src/pages/cms/cmsRenderers.tsx
+              - src/pages/cms/collectSections.ts
+
+      - id: text-replace
+        title: 텍스트를 교체할 수 있다
+        what: 텍스트 필드를 선택하고 내용 변경. plain text만, 서식 불가
+        features:
+          - id: text-select
+            title: 텍스트 필드 선택 (클릭/키보드)
+            what: 클릭 또는 키보드 네비게이션으로 텍스트 필드 선택. 포커스 링 표시.
+            detail:
+              - src/pages/cms/CmsCanvas.tsx
+          - id: inline-edit
+            title: 캔버스 인라인 편집
+            what: Enter/F2로 편집 모드 진입. 캔버스에서 직접 텍스트 수정.
+            detail:
+              - src/pages/cms/CmsInlineEditable.tsx
+              - src/pages/cms/CmsCanvas.tsx
+          - id: panel-edit
+            title: 상세 패널 텍스트 편집
+            what: 폼 방식으로 우측 패널에서 편집. 긴 텍스트나 멀티라인에 적합.
+            detail:
+              - src/pages/cms/CmsDetailPanel.tsx
+
+      - id: image-replace
+        title: 이미지를 교체할 수 있다
+        what: 이미지 필드를 선택하고 다른 이미지로 교체
+        features:
+          - id: icon-select
+            title: 아이콘 필드 선택
+            what: 캔버스에서 아이콘 필드를 클릭/키보드로 선택
+            detail:
+              - src/pages/cms/cmsIcons.ts
+          - id: icon-replace
+            title: 아이콘 선택 그리드에서 교체
+            what: 아이콘 그리드에서 새 아이콘을 골라 교체
+            detail:
+              - src/pages/cms/CmsDetailPanel.tsx
+              - src/pages/cms/cmsIcons.ts
+
+  - id: page-structure
+    title: 페이지 구조를 변경하기 원한다
+    what: 관리자가 개발자 없이 섹션 추가/삭제/순서변경
+    stories:
+      - id: section-add
+        title: 새 섹션을 골라 추가할 수 있다
+        what: 템플릿 목록에서 선택, 원하는 위치에 삽입
+        features:
+          - id: add-button
+            title: 섹션 추가 버튼
+            what: "[+] 버튼으로 섹션 추가 시작"
+            detail:
+              - src/pages/cms/CmsSidebar.tsx
+          - id: template-pick
+            title: 템플릿 목록에서 유형 선택
+            what: 등록된 템플릿 중 하나를 골라 삽입
+            detail:
+              - src/pages/cms/CmsTemplatePicker.tsx
+              - src/pages/cms/cmsTemplates.ts
+          - id: section-insert
+            title: 선택한 위치에 새 섹션 삽입
+            what: 사이드바/캔버스의 현재 위치에 삽입
+            detail:
+              - src/pages/cms/cmsStore.ts
+
+      - id: section-delete
+        title: 섹션을 삭제할 수 있다
+        what: 선택한 섹션 제거, 최소 1개 유지
+        features:
+          - id: section-remove
+            title: 섹션 삭제
+            what: Delete 키 또는 플로팅 툴바로 섹션 삭제
+            detail:
+              - src/pages/cms/CmsFloatingToolbar.tsx
+              - src/pages/cms/cmsStore.ts
+          - id: min-section-guard
+            title: 최소 1개 섹션 유지
+            what: 마지막 섹션 삭제 시도 시 차단
+            detail:
+              - src/pages/cms/cmsStore.ts
+
+      - id: section-reorder
+        title: 섹션 순서를 변경할 수 있다
+        what: 드래그 또는 키보드로 섹션 위치 이동
+        features:
+          - id: keyboard-reorder
+            title: 키보드로 섹션 순서 변경
+            what: Cmd+Up/Down으로 섹션 이동
+            detail:
+              - src/pages/cms/cmsStore.ts
+          - id: toolbar-reorder
+            title: 플로팅 툴바에서 순서 변경
+            what: 툴바 Up/Down 버튼으로 이동
+            detail:
+              - src/pages/cms/CmsFloatingToolbar.tsx
+
+  - id: preview-deploy
+    title: 변경 결과를 확인하고 배포하기 원한다
+    what: 프리뷰 확인 + 원클릭 라이브 배포
+    stories:
+      - id: preview
+        title: 프리뷰로 확인할 수 있다
+        what: 데스크톱/모바일 뷰포트 전환 가능
+        how: prds/cms-landing-responsive-prd.md
+        features:
+          - id: viewport-switch
+            title: 뷰포트 전환
+            what: 모바일 375px / 태블릿 768px / 데스크톱 100%
+            how: prds/cms-landing-responsive-prd.md
+            detail:
+              - src/pages/cms/CmsViewportBar.tsx
+              - src/pages/cms/CmsViewportWrapper.tsx
+          - id: present-mode
+            title: 프레젠트 모드
+            what: 크롬 숨기고 풀스크린 프리뷰
+            detail:
+              - src/pages/cms/CmsPresentMode.tsx
+
+      - id: deploy
+        title: 라이브에 배포할 수 있다
+        what: 변경 전/후 diff 확인 후 원클릭 배포
+        features:
+          - id: diff-view
+            title: 변경 diff 확인
+            what: 변경 전/후 비교 화면
+          - id: one-click-deploy
+            title: 원클릭 배포
+            what: 확인 후 한 번 클릭으로 라이브 반영
+
+  - id: i18n
+    title: 다국어 콘텐츠를 관리하기 원한다
+    what: 개발자 없이 언어별 콘텐츠 전환
+    stories:
+      - id: language-switch
+        title: 언어를 전환하여 편집할 수 있다
+        what: 언어 드롭다운 선택 시 해당 언어 콘텐츠 표시 및 편집
+        features:
+          - id: language-dropdown
+            title: 언어 드롭다운 전환
+            what: 상단 툴바에서 언어 선택
+          - id: language-content
+            title: 전환된 언어로 콘텐츠 반영
+            what: 선택 언어의 콘텐츠가 캔버스와 패널에 표시
+            detail:
+              - src/pages/cms/cmsI18nTransform.ts
+          - id: translation-sheet
+            title: 번역 시트
+            what: 모든 필드의 다국어 값을 표로 관리
+            detail:
+              - src/pages/cms/CmsI18nSheet.tsx
+
+  - id: templates
+    title: 섹션 템플릿을 등록하기 원한다
+    what: 디자이너가 만든 디자인을 관리자가 쓸 수 있게 등록
+    stories:
+      - id: template-register
+        title: 섹션 디자인을 템플릿으로 등록할 수 있다
+        what: 등록된 템플릿이 관리자의 목록에 나타남
+        features:
+          - id: template-define
+            title: 섹션 템플릿 정의 및 등록
+            what: 디자이너가 섹션 구조를 정의하고 템플릿으로 등록
+            detail:
+              - src/pages/cms/cmsTemplates.ts
+
+  - id: design-guard
+    title: 디자인이 그대로 유지되기 원한다
+    what: 관리자가 디자인을 깨뜨리지 못하는 보장
+    stories:
+      - id: edit-constraint
+        title: 편집 시 디자인이 변경되지 않는다
+        what: 편집 가능 영역이 콘텐츠 필드로만 제한됨
+        features:
+          - id: editable-constraint
+            title: 편집 가능 영역을 콘텐츠 필드로 제한
+            what: 레이아웃/색상/폰트는 변경 불가. 텍스트/이미지만 편집 가능.
+            detail:
+              - src/pages/cms/cmsSchema.ts
+              - src/pages/cms/cmsTypes.ts
+          - id: slot-guard
+            title: 슬롯 구조 보호
+            what: 고정 자식의 삭제/추가/재배치 차단
+            detail:
+              - src/pages/cms/cmsStore.ts
+              - src/pages/cms/cmsTypes.ts

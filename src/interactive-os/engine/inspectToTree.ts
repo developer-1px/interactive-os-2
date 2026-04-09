@@ -123,7 +123,7 @@ export function inspectToTree(result: InspectResult, prevState?: NormalizedData)
     const { id: _id, ...rest } = entity
     const isMeta = id.startsWith('__')
     const prevEntity = prevState?.entities[id]
-    const prevRest = prevEntity ? (({ id: _pid, ...r }) => r)(prevEntity) : undefined
+    const prevRest = prevEntity ? (() => { const { id: _, ...r } = prevEntity; return r })() : undefined
     const changed = prevRest !== undefined && JSON.stringify(rest) !== JSON.stringify(prevRest)
     entities[nodeId] = {
       id: nodeId,

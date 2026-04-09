@@ -140,7 +140,7 @@ function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onKeyDel
       aria-valuemin={Math.round(minRatio * 100)}
       aria-valuemax={100 - Math.round(minRatio * 100)}
       aria-label={`Resize pane ${index + 1}`}
-      className={`${ax({ surface: 'action', placement: 'relative' })} shrink-0 bg-transparent ${isHorizontal ? 'cursor-col-resize split-sep-h' : 'cursor-row-resize split-sep-v'}`}
+      className={`${ax({ surface: 'action', placement: 'relative', flex: 'none' })} bg-transparent ${isHorizontal ? 'cursor-col-resize split-sep-h' : 'cursor-row-resize split-sep-v'}`}
       data-focused={nodeState.focused || undefined}
       onKeyDown={(e) => {
         if (e.currentTarget !== document.activeElement) return
@@ -232,7 +232,7 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={`${isHorizontal ? ax({ layout: 'row' }) : ax({ layout: 'column' })} flex-1 min-w-0 min-h-0 overflow-hidden`}
+      className={`${isHorizontal ? ax({ layout: 'row', flex: '1', scroll: 'hidden' }) : ax({ layout: 'column', flex: '1', scroll: 'hidden' })} min-w-0 min-h-0`}
     >
       {elements}
     </div>

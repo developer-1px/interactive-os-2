@@ -72,6 +72,8 @@ export interface UseAriaViewOptions {
   isKeyMapOnly?: boolean
   autoFocus?: boolean
   disabled?: boolean
+  /** Container ref for scoping DOM queries (e.g. focus sync) */
+  containerRef?: React.RefObject<HTMLElement | null>
 }
 
 export interface UseAriaViewReturn {
@@ -87,7 +89,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     engine, store, pattern, plugins = [], keyMap: keyMapOverrides,
     onActivate, focusedId, selectedIdSet,
     nodeIdAttr = 'data-node-id', isKeyMapOnly = false, autoFocus = true,
-    disabled = false,
+    disabled = false, containerRef,
   } = options
 
   const onActivateRef = useRef(onActivate)
@@ -432,7 +434,9 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     if (isKeyMapOnly) return
     if (!focusedId) return
     if (pattern.focusStrategy.type === 'aria-activedescendant') return
-    const el = document.querySelector<HTMLElement>(`[${nodeIdAttr}="${focusedId}"]`)
+    // Scope querySelector to own container to avoid cross-instance node-id collisions
+    const scope = containerRef?.current ?? document
+    const el = scope.querySelector<HTMLElement>(`[${nodeIdAttr}="${focusedId}"]`)
     if (!el || el === document.activeElement) return
     const container = el.closest('.ax-interactive')
     const ownsActiveFocus = container?.contains(document.activeElement)
@@ -442,7 +446,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
     // Don't steal focus from editable elements inside the container (e.g., search input)
     if (ownsActiveFocus && isEditableElement(document.activeElement as Element)) return
     el.focus({ preventScroll: false })
-  }, [disabled, isKeyMapOnly, focusedId, pattern.focusStrategy.type, nodeIdAttr, autoFocus])
+  }, [disabled, isKeyMapOnly, focusedId, pattern.focusStrategy.type, nodeIdAttr, autoFocus, containerRef])
 
   // Feed pattern role into engine.inspect()
   useMemo(() => {

@@ -1,0 +1,4 @@
+- src/pages/cms/CmsCanvas.tsx
+- src/pages/cms/cmsState.ts
+- src/pages/cms/cmsRenderers.tsx
+- src/pages/cms/collectSections.ts

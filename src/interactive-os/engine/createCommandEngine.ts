@@ -23,8 +23,8 @@ export function createCommandEngine(
   const subscribers = new Set<(event: EngineEvent) => void>()
   let seq = 0
 
-  /** Tracks the original command dispatched before middleware chain */
-  let _pendingOriginal: Command | null = null
+  /** Tracks the original command dispatched before middleware chain (stack for reentrant dispatch) */
+  const _pendingOriginalStack: Command[] = []
 
   const emit = (event: EngineEvent) => {
     const snapshot = Array.from(subscribers)
@@ -45,7 +45,7 @@ export function createCommandEngine(
     error?: string
   ): EngineEvent => {
     let cachedDiff: StoreDiff[] | undefined
-    const original = _pendingOriginal
+    const original = _pendingOriginalStack[_pendingOriginalStack.length - 1] ?? null
     const wasTransformed = original != null && original.type !== command.type
     return {
       kind: 'dispatch' as const,
@@ -136,7 +136,7 @@ export function createCommandEngine(
   let _execCount = 0
   const executor = (command: Command) => {
     _execCount++
-    if (_execCount > 1000) { console.error('[engine] executor loop detected, count:', _execCount, 'cmd:', command.type); return }
+    if (_execCount > 1000) { console.error('[engine] executor loop detected, count:', _execCount, 'cmd:', command.type); _execCount = 0; return }
     const prev = store
     try {
       store = resolve(prev, command)
@@ -198,9 +198,10 @@ export function createCommandEngine(
 
   return {
     dispatch: (command) => {
-      _pendingOriginal = command
+      _pendingOriginalStack.push(command)
+      _execCount = 0
       chain(command)
-      _pendingOriginal = null
+      _pendingOriginalStack.pop()
     },
     getStore,
     syncStore: (newStore: NormalizedData) => {
