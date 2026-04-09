@@ -1,4 +1,6 @@
 // ② 2026-03-28-ui-indicators-prd.md
+import { ax } from '@styles/ax'
+
 interface OverflowIndicatorProps {
   count: number
   className?: string
@@ -6,6 +8,6 @@ interface OverflowIndicatorProps {
 
 export function OverflowIndicator({ count, className }: OverflowIndicatorProps) {
   if (count <= 0) return null
-  const classes = ['whitespace-nowrap shrink-0', 'item-indicator--overflow', className].filter(Boolean).join(' ')
+  const classes = [`whitespace-nowrap ${ax({ flex: 'none' })}`, 'item-indicator--overflow', className].filter(Boolean).join(' ')
   return <span className={classes}>+{count}</span>
 }

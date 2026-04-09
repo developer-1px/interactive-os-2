@@ -1,4 +1,5 @@
 // ② 2026-03-28-ui-indicators-prd.md
+import { ax } from '@styles/ax'
 import { Check } from 'lucide-react'
 
 interface StepIndicatorProps {
@@ -9,7 +10,7 @@ interface StepIndicatorProps {
 
 export function StepIndicator({ step, completed, className }: StepIndicatorProps) {
   const classes = [
-    'inline-flex items-center justify-center shrink-0',
+    `inline-flex ${ax({ layout: 'center', flex: 'none' })}`,
     'item-indicator--step',
     completed ? 'item-indicator--step-completed' : '',
     className,

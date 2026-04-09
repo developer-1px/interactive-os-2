@@ -90,9 +90,9 @@ export default function PageBirdseye() {
 
   return (
     <AriaRoute keyMap={keyMap} label="Birdseye">
-      <div className={`overflow-hidden h-full flex-col`}>
+      <div className={`${ax({ scroll: 'hidden', layout: 'column' })} h-full`}>
         <PanelHeader>
-          <span className={`birdseye-breadcrumb flex-row items-center`}>
+          <span className={`birdseye-breadcrumb ${ax({ layout: 'bar' })}`}>
             {layer ? (
               <>
                 <button className={`cursor-pointer ${ax({ text: 'muted' })} birdseye-breadcrumb-btn`} onClick={goToL1}>Overview</button>

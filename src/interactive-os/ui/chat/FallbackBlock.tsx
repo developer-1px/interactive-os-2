@@ -15,7 +15,7 @@ export function FallbackBlock({ block }: { block: ChatBlock }) {
   const { expanded, toggle, toggleProps } = useDisclosure({ initialOpen: expandByDefault })
 
   return (
-    <div className={`overflow-hidden ${ax({ text: 'muted', textStyle: 'caption', shape: 'md', border: 'dashed' })}`}>
+    <div className={ax({ scroll: 'hidden', text: 'muted', textStyle: 'caption', shape: 'md', border: 'dashed' })}>
       <div
         {...toggleProps}
         className={`cursor-pointer select-none ${ax({ layout: 'bar', gap: 'xs', padding: 'sm' })} fallback-summary`}

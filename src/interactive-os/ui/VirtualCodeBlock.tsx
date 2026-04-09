@@ -108,10 +108,10 @@ export function VirtualCodeBlock({
   }, [visibleRange.start, visibleRange.end, cachedLines, lines])
 
   const cls = variant === 'flush'
-    ? `overflow-hidden code-block code-block--flush`
+    ? `${ax({ scroll: 'hidden' })} code-block code-block--flush`
     : variant === 'compact'
-      ? `overflow-hidden code-block code-block--compact`
-      : `overflow-hidden code-block`
+      ? `${ax({ scroll: 'hidden' })} code-block code-block--compact`
+      : `${ax({ scroll: 'hidden' })} code-block`
 
   const gutterCls = `text-right select-none ${ax({ text: 'muted', textStyle: 'code' })} `
 

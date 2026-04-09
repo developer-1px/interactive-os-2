@@ -55,7 +55,7 @@ const renderButton = (
   return (
     <div
       {...props}
-      className={`${ax({ textStyle: 'body', text: 'primary', shape: 'sm', interactive: 'button' })} inline-flex items-center justify-center cursor-default`}
+      className={`${ax({ layout: 'center', textStyle: 'body', text: 'primary', shape: 'sm', interactive: 'button' })} inline-flex cursor-default`}
       data-focused={state.focused || undefined}
       aria-label={label}
     >

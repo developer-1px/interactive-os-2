@@ -63,7 +63,7 @@ const renderItem = (
   return (
     <li
       {...props}
-      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })} flex-row items-center`}
+      className={ax({ layout: 'bar', textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })}
       data-focused={state.focused || undefined}
     >
       {label}

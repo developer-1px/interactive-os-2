@@ -1,4 +1,5 @@
 // ② 2026-03-28-ui-indicators-prd.md
+import { ax } from '@styles/ax'
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, ChevronsLeft, ChevronsRight } from 'lucide-react'
 
 interface DirectionIndicatorProps {
@@ -17,7 +18,7 @@ const iconMap = {
 } as const
 
 export function DirectionIndicator({ direction, double, orientation = 'horizontal', className }: DirectionIndicatorProps) {
-  const classes = ['inline-flex items-center justify-center', 'item-indicator--direction', className].filter(Boolean).join(' ')
+  const classes = [`inline-flex ${ax({ layout: 'center' })}`, 'item-indicator--direction', className].filter(Boolean).join(' ')
   const key = orientation === 'vertical' ? 'vertical' : (double ? 'horizontal-double' : 'horizontal')
   const Icon = iconMap[key][direction]
   return (

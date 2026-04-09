@@ -288,7 +288,7 @@ export function InspectorWindow() {
   }, [metas, actionsMap])
 
   return (
-    <div className={`overflow-hidden ${ax({ layout: 'column' })} inspector-root`}>
+    <div className={`${ax({ scroll: 'hidden', layout: 'column' })} inspector-root`}>
       <div className={ax({ layout: 'spread', padding: 'sm', textStyle: 'caption', surface: 'overlay' })}>
         <div className={ax({ layout: 'row', gap: 'sm' })}>
           <span className={ax({ text: 'bright' })}>Aria Inspector</span>
@@ -302,7 +302,7 @@ export function InspectorWindow() {
         <span className={ax({ text: 'muted' })}>{actionsMap.size} instances</span>
       </div>
 
-      <div className={`overflow-hidden ${ax({ flex: '1' })}`}>
+      <div className={ax({ scroll: 'hidden', flex: '1' })}>
         <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.15}>
           <div className={ax({ layout: 'column' })}>
             {actionsMap.size === 0 ? (

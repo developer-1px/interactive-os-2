@@ -105,7 +105,7 @@ function getStateLabel(state: NodeState): string | null {
 }
 
 function getItemClass(_state: NodeState): string {
-  return `pattern-demo-item flex-row items-center ${ax({ textStyle: 'body', text: 'primary', padding: 'xs', shape: 'sm', gap: 'sm' })}`
+  return `pattern-demo-item ${ax({ layout: 'bar', textStyle: 'body', text: 'primary', padding: 'xs', shape: 'sm', gap: 'sm' })}`
 }
 
 const defaultRender = (
@@ -121,7 +121,7 @@ const defaultRender = (
   return (
     <div {...props} className={getItemClass(state)} style={indent} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
       <span>{label}</span>
-      {stateLabel && <span className={`shrink-0 ml-auto ${ax({ textStyle: 'caption', text: 'muted' })}`}>{stateLabel}</span>}
+      {stateLabel && <span className={`ml-auto ${ax({ flex: 'none', textStyle: 'caption', text: 'muted' })}`}>{stateLabel}</span>}
     </div>
   )
 }

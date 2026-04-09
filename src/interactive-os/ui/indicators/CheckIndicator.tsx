@@ -1,4 +1,6 @@
 // ② 2026-03-28-ui-indicators-prd.md
+import { ax } from '@styles/ax'
+
 interface CheckIndicatorProps {
   checked?: boolean
   className?: string
@@ -11,7 +13,7 @@ const checkIcon = (
 )
 
 export function CheckIndicator({ checked, className }: CheckIndicatorProps) {
-  const classes = ['shrink-0 flex-row items-center justify-center', 'item-indicator--checkbox', className].filter(Boolean).join(' ')
+  const classes = [ax({ flex: 'none', layout: 'center' }), 'item-indicator--checkbox', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       {checked && checkIcon}

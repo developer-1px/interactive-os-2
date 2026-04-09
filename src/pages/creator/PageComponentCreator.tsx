@@ -110,7 +110,7 @@ export default function PageComponentCreator() {
           {selectedEntry ? (
             <ComponentCanvas entry={selectedEntry} />
           ) : (
-            <div className={`flex-row items-center justify-center flex-1 ${ax({ textStyle: 'body', text: 'muted' })} creator-empty-state`}>
+            <div className={`${ax({ layout: 'center', flex: '1', textStyle: 'body', text: 'muted' })} creator-empty-state`}>
               컴포넌트를 선택하세요
             </div>
           )}
@@ -142,7 +142,7 @@ export default function PageComponentCreator() {
       </div>
 
       {/* Nav bar: Component tabs */}
-      <div className={`${ax({ surface: 'sunken', padding: 'xs' })} shrink-0 overflow-x-auto creator-nav-bar`}>
+      <div className={`${ax({ surface: 'sunken', padding: 'xs', flex: 'none' })} overflow-x-auto creator-nav-bar`}>
         <TabList
           data={componentNavData}
           plugins={[]}

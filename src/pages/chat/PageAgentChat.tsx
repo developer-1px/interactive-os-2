@@ -193,7 +193,7 @@ export default function PageAgentChat() {
   }, [])
 
   return (
-    <div className={`overflow-hidden chat-page ${ax({ layout: 'row' })}`} onKeyDown={handleLayoutKeyDown}>
+    <div className={`${ax({ scroll: 'hidden', layout: 'row' })} chat-page`} onKeyDown={handleLayoutKeyDown}>
       <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none', border: 'end' }) + ' ' + 'chat-sidebar'}>
         <PanelHeader axes={{ layout: 'spread' }}>
           <span>Sessions</span>

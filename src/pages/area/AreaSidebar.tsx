@@ -141,7 +141,7 @@ export function AreaSidebar({ layer }: { layer: string }) {
   return (
     <nav className={`sidebar ${ax({ flex: 'none', scroll: 'y' })}`}>
       <div className="sidebar-header">
-        <div className="logo flex-row items-center">
+        <div className={`logo ${ax({ layout: 'bar' })}`}>
           <div className="logo-mark" />
           <h1>interactive-os</h1>
         </div>

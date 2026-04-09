@@ -22,9 +22,9 @@ export function BlockMetric() {
   return (
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
       <div className={`incident-metric-grid grid`}>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>50/50</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>connections</div><div className={`incident-bar-track overflow-hidden`}><div className={`incident-bar-fill-bad incident-bar-w100 h-full`} /></div></div>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>23</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pending</div><div className={`incident-bar-track overflow-hidden`}><div className={`incident-bar-fill-warn incident-bar-w46 h-full`} /></div></div>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>2.4s</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>p99 latency</div><div className={`incident-bar-track overflow-hidden`}><div className={`incident-bar-fill-bad incident-bar-w80 h-full`} /></div></div>
+        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>50/50</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>connections</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-bad incident-bar-w100 h-full`} /></div></div>
+        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>23</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pending</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-warn incident-bar-w46 h-full`} /></div></div>
+        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>2.4s</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>p99 latency</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-bad incident-bar-w80 h-full`} /></div></div>
       </div>
     </div>
   )

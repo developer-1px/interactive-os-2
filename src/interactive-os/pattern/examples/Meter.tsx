@@ -30,7 +30,7 @@ const renderMeter = (
   void state
 
   return (
-    <div {...props} className={`${ax({ layout: 'row', gap: 'sm', textStyle: 'body', text: 'primary' })} items-center`}>
+    <div {...props} className={ax({ layout: 'bar', gap: 'sm', textStyle: 'body', text: 'primary' })}>
       <span className={`${ax({ weight: 'semi' })}`}>{label}</span>
       <span className={`${ax({ shape: 'sm', surface: 'sunken', flex: '1', placement: 'relative' })}`}>
         <span className={`${ax({ shape: 'sm', tone: 'accent' })} h-full`} style={{ width: `${pct}%` }} />

@@ -21,7 +21,7 @@ export function ComponentCanvas({ entry }: ComponentCanvasProps) {
   )
 
   return (
-    <Suspense fallback={<div className={`flex-row items-center justify-center flex-1`}>Loading...</div>}>
+    <Suspense fallback={<div className={ax({ layout: 'center', flex: '1' })}>Loading...</div>}>
       <div className={`${ax({ layout: 'center', padding: 'lg', flex: '1' })} min-h-0 overflow-auto`}>
         <ComponentInstance Component={LazyComponent} name={entry.name} />
       </div>

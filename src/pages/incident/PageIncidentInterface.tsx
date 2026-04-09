@@ -400,7 +400,7 @@ export default function PageIncidentInterface() {
   }, [])
 
   return (
-    <div className={`incident-page grid h-full overflow-hidden`}>
+    <div className={`incident-page grid h-full ${ax({ scroll: 'hidden' })}`}>
       {/* Zone 1: Monitoring Bar */}
       <MonitoringBar
         services={SERVICES}

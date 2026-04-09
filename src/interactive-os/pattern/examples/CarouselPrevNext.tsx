@@ -58,13 +58,13 @@ export function CarouselPrevNext() {
       ref={containerRef}
       aria-roledescription="carousel"
       aria-label="Highlighted features"
-      className={`${ax({ shape: 'sm', border: 'default' })} overflow-hidden`}
+      className={ax({ shape: 'sm', border: 'default', scroll: 'hidden' })}
       onFocus={onFocusIn}
       onBlur={onFocusOut}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className={`${ax({ surface: 'display', padding: 'xs' })} flex-row justify-end`}>
+      <div className={`${ax({ layout: 'row', surface: 'display', padding: 'xs' })} justify-end`}>
         <button
           className={ax({ text: 'secondary', shape: 'sm', interactive: 'button', icon: 'lg', layout: 'center' })}
           aria-label={isRotating ? 'Stop automatic slide show' : 'Start automatic slide show'}

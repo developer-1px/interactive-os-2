@@ -36,7 +36,7 @@ const renderTrigger = (
 ): React.ReactElement => {
   const label = (node.data as Record<string, unknown>)?.label as string
   return (
-    <button {...props} className={`${ax({ gap: 'xs', textStyle: 'body', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button', border: 'default' })} inline-flex items-center cursor-default`} type="button">
+    <button {...props} className={`${ax({ layout: 'bar', gap: 'xs', textStyle: 'body', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button', border: 'default' })} inline-flex cursor-default`} type="button">
       {label} ▾
     </button>
   )
@@ -51,7 +51,7 @@ const renderMenuItem = (
   return (
     <div
       {...props}
-      className={`${ax({ textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })} flex-row items-center cursor-default`}
+      className={`${ax({ layout: 'bar', textStyle: 'body', text: 'primary', padding: 'xs', content: 'text', interactive: 'item', shape: 'md' })} cursor-default`}
       data-focused={state.focused || undefined}
     >
       {label}

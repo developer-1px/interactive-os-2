@@ -1,4 +1,6 @@
 // ② 2026-03-28-ui-indicators-prd.md
+import { ax } from '@styles/ax'
+
 interface SeparatorIndicatorProps {
   orientation?: 'horizontal' | 'vertical'
   className?: string
@@ -6,7 +8,7 @@ interface SeparatorIndicatorProps {
 
 export function SeparatorIndicator({ orientation = 'horizontal', className }: SeparatorIndicatorProps) {
   const isHorizontal = orientation === 'horizontal'
-  const classes = [`shrink-0${isHorizontal ? ' w-full' : ''}`, 'item-indicator--separator', className].filter(Boolean).join(' ')
+  const classes = [`${ax({ flex: 'none' })}${isHorizontal ? ' w-full' : ''}`, 'item-indicator--separator', className].filter(Boolean).join(' ')
   return (
     <div
       role="separator"

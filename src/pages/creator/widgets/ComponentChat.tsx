@@ -49,7 +49,7 @@ export function ComponentChat({ entry }: ComponentChatProps) {
   }
 
   return (
-    <div className={`flex-col h-full ${ax({ border: 'start' })}`}>
+    <div className={`${ax({ layout: 'column', border: 'start' })} h-full`}>
       {/* Context bar */}
       {entry && (
         <div className={ax({ surface: 'sunken', layout: 'spread', padding: 'xs', textStyle: 'caption', border: 'bottom' })}>

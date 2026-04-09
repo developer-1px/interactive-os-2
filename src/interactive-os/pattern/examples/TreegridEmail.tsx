@@ -77,21 +77,21 @@ const renderRow = (
   return (
     <div
       {...props}
-      className={`${ax({ textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', border: 'bottom' })} flex-row items-center whitespace-nowrap outline-none cursor-default`}
+      className={`${ax({ layout: 'bar', textStyle: 'body', text: 'primary', gap: 'sm', padding: 'xs', content: 'text', interactive: 'item', border: 'bottom' })} whitespace-nowrap outline-none cursor-default`}
       data-focused={state.focused || undefined}
       style={{ paddingLeft: `calc(var(--space-md) * ${(state.level ?? 1) - 1})` }}
     >
       <Cell index={0}>
-        <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} shrink-0`} aria-hidden="true">
+        <span className={ax({ textStyle: 'caption', text: 'secondary', flex: 'none' })} aria-hidden="true">
           {isThread ? (state.expanded ? '\u25BE' : '\u25B8') : '\u00A0'}
         </span>
-        <span className={`${ax({ weight: 'semi' })} flex-1 overflow-hidden`}>{subject}</span>
+        <span className={ax({ weight: 'semi', flex: '1', scroll: 'hidden' })}>{subject}</span>
       </Cell>
       <Cell index={1}>
-        <span className={`${ax({ text: 'secondary', flex: '1' })} overflow-hidden`}>{summary}</span>
+        <span className={ax({ text: 'secondary', flex: '1', scroll: 'hidden' })}>{summary}</span>
       </Cell>
       <Cell index={2}>
-        <span className={`${ax({ textStyle: 'caption', text: 'secondary' })} shrink-0`}>{sender}</span>
+        <span className={ax({ textStyle: 'caption', text: 'secondary', flex: 'none' })}>{sender}</span>
       </Cell>
     </div>
   )

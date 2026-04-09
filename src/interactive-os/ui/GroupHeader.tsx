@@ -23,7 +23,7 @@ export function GroupHeader({ icon, label, count, expanded, onToggle }: GroupHea
       {icon}
       <span className={ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}>{label}</span>
       {count !== undefined && (
-        <span className={`shrink-0 ml-auto ${ax({ textStyle: 'caption', text: 'muted' })}`}>{count}</span>
+        <span className={`ml-auto ${ax({ flex: 'none', textStyle: 'caption', text: 'muted' })}`}>{count}</span>
       )}
     </div>
   )

@@ -30,12 +30,12 @@ const renderSwitch = (
   return (
     <div
       {...props}
-      className={`${ax({ gap: 'md', text: 'primary', padding: 'xs', content: 'text', interactive: 'check', shape: 'md' })} flex-row items-center justify-between cursor-default`}
+      className={`${ax({ layout: 'bar', gap: 'md', text: 'primary', padding: 'xs', content: 'text', interactive: 'check', shape: 'md' })} justify-between cursor-default`}
       data-focused={state.focused || undefined}
     >
-      <span className={`flex-1`}>{label}</span>
+      <span className={ax({ flex: '1' })}>{label}</span>
       <span
-        className={`${ax({ shape: 'pill', surface: 'sunken' })} inline-flex items-center`}
+        className={`${ax({ shape: 'pill', surface: 'sunken', layout: 'bar' })} inline-flex`}
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >

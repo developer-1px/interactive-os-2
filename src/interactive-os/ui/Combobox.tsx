@@ -330,7 +330,7 @@ export function Combobox({
         />
       )}
       {isOpen && (
-        <div ref={dropdownRef} popover="manual" className={`overflow-hidden ${ax({ surface: 'overlay', shape: 'xl' })} combo-dropdown`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div ref={dropdownRef} popover="manual" className={`${ax({ scroll: 'hidden', surface: 'overlay', shape: 'xl' })} combo-dropdown`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? renderGroupedOptions() : visibleChildren.map(childId => renderOption(childId))}
           {showCreateOption && (
             <div

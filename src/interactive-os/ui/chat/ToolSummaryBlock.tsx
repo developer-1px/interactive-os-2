@@ -262,7 +262,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
   const summary = useMemo(() => buildChainSummary(typeGroups), [typeGroups])
 
   return (
-    <div className={`overflow-hidden ${ax({ shape: 'md', border: 'subtle', surface: 'sunken' })}`}>
+    <div className={ax({ scroll: 'hidden', shape: 'md', border: 'subtle', surface: 'sunken' })}>
       <div
         {...toggleProps}
         className={`cursor-pointer select-none ${ax({ layout: 'bar', text: 'secondary', gap: 'xs', padding: 'sm' })}`}

@@ -1,4 +1,6 @@
 // ② 2026-03-28-ui-indicators-prd.md
+import { ax } from '@styles/ax'
+
 interface IndeterminateIndicatorProps {
   className?: string
 }
@@ -10,7 +12,7 @@ const dashIcon = (
 )
 
 export function IndeterminateIndicator({ className }: IndeterminateIndicatorProps) {
-  const classes = ['shrink-0 flex-row items-center justify-center', 'item-indicator--checkbox', className].filter(Boolean).join(' ')
+  const classes = [ax({ flex: 'none', layout: 'center' }), 'item-indicator--checkbox', className].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       {dashIcon}

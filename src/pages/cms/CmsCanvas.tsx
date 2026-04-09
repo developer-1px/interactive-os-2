@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { ax } from '@styles/ax'
 import { key } from '@os/axis/types'
 import type { KeyHandler } from '@os/axis/types'
 import { AriaZone } from '@os/ui/AriaZone'
@@ -333,7 +334,7 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
           className={className}
         >
           {/* eslint-disable-next-line local/no-raw-aria-role -- CMS renderer: AriaZone이 role 미포함, pattern이 tablist 관리 */}
-          <div className={`${landingStyles.cmsTablist} flex-row`} role="tablist">
+          <div className={`${landingStyles.cmsTablist} ${ax({ layout: 'row' })}`} role="tablist">
             {tabItems.map(tabId => {
               const tabEntity = currentStore.entities[tabId]
               if (!tabEntity) return null

@@ -38,7 +38,7 @@ describe('SplitPane integration', () => {
     expect(sep.getAttribute('aria-valuemin')).toBe('20')
     expect(sep.getAttribute('aria-valuemax')).toBe('80')
     expect(sep.getAttribute('aria-label')).toBe('Resize pane 1')
-    expect(sep.tabIndex).toBe(0)
+    expect(sep.tabIndex).toBe(-1)
   })
 
   it('vertical split has horizontal separator orientation', () => {
