@@ -29,7 +29,7 @@ export default function CellGridDemo() {
 
   return (
     <>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd><Up /><Down /></kbd> <span className="key-hint">row</span>{' '}
         <kbd><Left /><Right /></kbd> <span className="key-hint">cell</span>{' '}
         <kbd>Home</kbd> <span className="key-hint">first cell</span>{' '}

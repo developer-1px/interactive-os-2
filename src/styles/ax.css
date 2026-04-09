@@ -530,7 +530,7 @@ dialog.sf-overlay[open] {
 /* 부모를 꽉 채우는 패인/분할창. 자식이 넘치면 클립. 콘텐츠는 내부에서 ly-scroll로 처리. */
 .ly-fill     { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
 .ly-row-fill { display: flex; flex-direction: row; flex: 1; min-width: 0; min-height: 0; }
-.ly-row-fill { display: flex; flex-direction: row;    flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+.ly-wrap     { display: inline-flex; flex-wrap: wrap; align-items: center; }
 /* ── Grid — equal-column 그리드 ── */
 .ly-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
 .ly-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
@@ -738,6 +738,7 @@ dialog.sf-overlay[open] {
 .pl-sticky        { position: sticky; top: 0; z-index: 1; }
 .pl-anchor-below  { position: fixed; inset: unset; position-area: block-end span-inline-end; position-try-fallbacks: flip-block; }
 .pl-anchor-end    { position: fixed; inset: unset; position-area: inline-end span-block-end; position-try-fallbacks: flip-inline; }
+.pl-relative      { position: relative; }
 
 /* layout helpers */
 .relative { position: relative; }

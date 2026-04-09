@@ -32,7 +32,7 @@ export default function HistoryDemo() {
 
   return (
     <>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">create</span>{' '}

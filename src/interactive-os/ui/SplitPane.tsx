@@ -18,7 +18,6 @@ interface SplitPaneProps {
   onResize: (sizes: PaneSize[]) => void
   children: React.ReactNode
   minRatio?: number
-  /** Pane indices that should NOT scroll (overflow:hidden). Default: all panes scroll. */
 }
 
 /** Ratio delta per keyboard step */
@@ -135,17 +134,28 @@ function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onKeyDel
 
   return (
     <div
-      {...nodeProps as React.HTMLAttributes<HTMLElement>}
       role="separator"
       aria-orientation={isHorizontal ? 'vertical' : 'horizontal'}
       aria-valuenow={valueNow}
       aria-valuemin={Math.round(minRatio * 100)}
       aria-valuemax={100 - Math.round(minRatio * 100)}
       aria-label={`Resize pane ${index + 1}`}
-      tabIndex={0}
-      className={`relative ${ax({ surface: 'action' })} shrink-0 bg-transparent ${isHorizontal ? 'cursor-col-resize split-sep-h' : 'cursor-row-resize split-sep-v'}`}
+      className={`${ax({ surface: 'action', placement: 'relative' })} shrink-0 bg-transparent ${isHorizontal ? 'cursor-col-resize split-sep-h' : 'cursor-row-resize split-sep-v'}`}
       data-focused={nodeState.focused || undefined}
-      onPointerDown={(e) => aria.dispatch(startDragResize(e.pointerId, e.currentTarget as HTMLElement, e.clientX, e.clientY))}
+      onKeyDown={(e) => {
+        if (e.currentTarget !== document.activeElement) return
+        const np = nodeProps as Record<string, unknown>
+        if (typeof np.onKeyDown === 'function') (np.onKeyDown as (e: unknown) => void)(e)
+      }}
+      onPointerDown={(e) => {
+        const el = e.currentTarget as HTMLElement
+        el.setAttribute('tabindex', '-1')
+        el.focus()
+        aria.dispatch(startDragResize(e.pointerId, el, e.clientX, e.clientY))
+      }}
+      onBlur={(e) => {
+        (e.currentTarget as HTMLElement).removeAttribute('tabindex')
+      }}
     />
   )
 }

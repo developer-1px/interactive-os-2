@@ -34,7 +34,7 @@ export default function DndDemo() {
 
   return (
     <>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd><Right /><Left /></kbd> <span className="key-hint">expand</span>{' '}
         <kbd>Alt+<Up /></kbd> <span className="key-hint">move up</span>{' '}

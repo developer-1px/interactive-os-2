@@ -317,7 +317,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
     <div className={`cms-detail-field ${ax({ layout: 'column' })}`}>
       <label className="cms-detail-field__label">{entry.label}</label>
       {currentSrc ? (
-        <div className="relative">
+        <div className={ax({ placement: 'relative' })}>
           <img src={currentSrc} alt="" className="cms-image-field__preview w-full object-cover" />
           <div className={`cms-image-field__actions absolute ${ax({ layout: 'row' })}`}>
             <button

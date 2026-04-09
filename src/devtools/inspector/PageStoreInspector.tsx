@@ -176,7 +176,7 @@ export default function PageStoreInspector() {
           Inspector (right) shows the raw store via storeToInspectorTree transform. Log (bottom) captures dispatched commands.
         </p>
       </div>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd><Left /><Right /></kbd> <span className="key-hint">expand/collapse</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">create child</span>{' '}
@@ -218,7 +218,7 @@ export default function PageStoreInspector() {
 
           {/* Log panel */}
           <div
-            className={`${ax({ textStyle: 'caption', surface: 'sunken', shape: 'sm' })} store-inspector-log overflow-y-auto`}
+            className={`${ax({ textStyle: 'caption', surface: 'sunken', shape: 'sm', scroll: 'y' })} store-inspector-log`}
             ref={logRef}
             aria-label="Operation Log"
           >

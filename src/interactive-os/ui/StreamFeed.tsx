@@ -73,7 +73,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
 
 export function StreamFeed<T>({ items, feedRef, renderItem, isStreaming, streamingLabel, className }: StreamFeedProps<T>) {
   return (
-    <div className={`relative ${ax({ layout: 'fill' })}`}>
+    <div className={`${ax({ layout: 'fill', placement: 'relative' })}`}>
       <div
         ref={feedRef}
         className={`${ax({ layout: 'scroll', flex: '1', gap: 'xl' })} stream-feed${className ? ` ${className}` : ''}`}

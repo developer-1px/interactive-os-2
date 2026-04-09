@@ -122,7 +122,7 @@ export default function StoreInspectorDemo() {
 
   return (
     <>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd><Left /><Right /></kbd> <span className="key-hint">expand/collapse</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">create child</span>{' '}
@@ -164,7 +164,7 @@ export default function StoreInspectorDemo() {
 
           {/* Log panel */}
           <div
-            className={`store-inspector-log overflow-y-auto`}
+            className={`${ax({ scroll: 'y' })} store-inspector-log`}
             ref={logRef}
             aria-label="Operation Log"
           >

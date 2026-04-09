@@ -22,7 +22,7 @@ export default function AriaListboxDemo() {
 
   return (
     <>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>Space</kbd> <span className="key-hint">select</span>
       </div>

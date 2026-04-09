@@ -298,7 +298,7 @@ export default function PageBookViewer() {
     <AriaRoute keyMap={keyMap} label="Book">
       <div className={`${ax({ surface: 'base', text: 'primary' })} book`}>
         {/* ── Page content ── */}
-        <div className={`relative book-page-area`} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
+        <div className={`${ax({ placement: 'relative' })} book-page-area`} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
           {/* ── Floating pill — top-left ── */}
           <div className={`book-pill ${ax({ surface: 'overlay', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
             <button

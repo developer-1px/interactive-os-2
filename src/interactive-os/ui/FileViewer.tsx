@@ -73,7 +73,7 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
     }
 
     return (
-      <div ref={containerRef} className={`${ax({ flex: '1', layout: 'scroll' })} relative`}>
+      <div ref={containerRef} className={`${ax({ flex: '1', layout: 'scroll', placement: 'relative' })}`}>
         <FilePreview content={content} filename={filename} highlightLines={highlights} />
         {cursorLine != null && <ReplayCursor line={cursorLine} />}
       </div>

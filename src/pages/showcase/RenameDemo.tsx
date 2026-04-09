@@ -36,7 +36,7 @@ export default function RenameDemo() {
 
   return (
     <>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>F2</kbd> <span className="key-hint">rename</span>{' '}
         <kbd>Enter</kbd> <span className="key-hint">confirm</span>{' '}

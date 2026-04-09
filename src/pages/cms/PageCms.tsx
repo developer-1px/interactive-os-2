@@ -110,7 +110,7 @@ export default function PageCms() {
           style={{ width: sidebarResizer.size, '--sidebar-w': sidebarResizer.size } as React.CSSProperties}
         />
         <div className="resizer-handle" aria-label="Resize sidebar" {...sidebarResizer.separatorProps} />
-        <ScrollArea className={`relative ${ax({ flex: '1' })}`}>
+        <ScrollArea className={`${ax({ flex: '1', placement: 'relative' })}`}>
           <CmsViewportWrapper viewport={viewport}>
             <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={sharedPlugins} activeTabMap={activeTabMap} onActivateTabItem={handleActivateTabItem} />
           </CmsViewportWrapper>

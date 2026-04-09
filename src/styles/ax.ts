@@ -66,6 +66,7 @@ type Placement =
   | 'sticky'        // sticky + top:0 + z-index:1 (pinned header)
   | 'anchor-below'  // fixed + position-area:block-end + flip-block (anchor 아래)
   | 'anchor-end'    // fixed + position-area:inline-end + flip-inline (anchor 오른쪽)
+  | 'relative'      // position:relative (자식 absolute 기준점)
 
 // layout: 역할 기반 구조 번들 (display + direction + align + justify + overflow)
 type Layout =
@@ -78,8 +79,8 @@ type Layout =
   | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
   | 'scroll-x' // flex row + overflow-x:auto + min-width:0 (가로 스크롤)
   | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
-  | 'row-fill' // flex:1 + flex row + min-*:0 (가로 분할창)
-  | 'row-fill' // flex:1 + flex row + overflow:hidden + min-*:0 (가로 분할 전체 채움)
+  | 'row-fill' // flex:1 + flex row + min-*:0 (가로 분할 전체 채움)
+  | 'wrap'     // inline-flex + flex-wrap + align:center (태그 바, 칩 리스트)
   // grid (display:grid + equal columns)
   | 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7'
   // self-alignment (자식이 부모 안에서의 위치 지정)

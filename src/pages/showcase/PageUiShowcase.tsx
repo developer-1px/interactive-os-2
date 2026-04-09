@@ -70,7 +70,7 @@ export default function PageUiShowcase() {
             Progress Dashboard
           </Link>
         </div>
-        <div className={`ui-sidebar-body ${ax({ flex: '1' })} overflow-y-auto`}>
+        <div className={`ui-sidebar-body ${ax({ flex: '1', scroll: 'y' })}`}>
           <NavList
             data={sidebarData}
             onActivate={handleActivate}
@@ -79,7 +79,7 @@ export default function PageUiShowcase() {
         </div>
       </nav>
       <div className={`${ax({ surface: 'base', layout: 'fill' })}`}>
-        <div className={`ui-content-body ${ax({ flex: '1' })} overflow-y-auto`}>
+        <div className={`ui-content-body ${ax({ flex: '1', scroll: 'y' })}`}>
           {mdFile ? (
             <MdPage key={activeSlug} md={`ui/${mdFile}`} />
           ) : (

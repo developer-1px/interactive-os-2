@@ -54,7 +54,7 @@ export default function PageI18nEditor() {
           Spreadsheet-style translation editor — Google Sheets 키보드 조작
         </p>
       </div>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd>Enter</kbd> <span className="key-hint">아래 이동</span>{' '}
         <kbd>Shift+Enter</kbd> <span className="key-hint">위 이동</span>{' '}
         <kbd>F2</kbd> <span className="key-hint">편집</span>{' '}

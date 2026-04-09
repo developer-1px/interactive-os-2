@@ -65,7 +65,7 @@ export default function TypeaheadDemo() {
 
   return (
     <>
-      <div className="page-keys inline-flex flex-wrap items-center">
+      <div className={`page-keys ${ax({ layout: 'wrap' })}`}>
         <kbd><Up /><Down /></kbd> <span className="key-hint">navigate</span>{' '}
         <kbd>a-z</kbd> <span className="key-hint">typeahead</span>{' '}
         <kbd>Home</kbd> <span className="key-hint">first</span>{' '}

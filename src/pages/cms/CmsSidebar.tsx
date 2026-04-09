@@ -235,7 +235,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
               <div
                 key={sectionId}
                 {...(props as React.HTMLAttributes<HTMLDivElement>)}
-                className={`cms-sidebar__thumb w-full cursor-pointer relative ${ax({ flex: 'none' })}${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
+                className={`cms-sidebar__thumb w-full cursor-pointer ${ax({ flex: 'none', placement: 'relative' })}${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
                 onClick={() => {
                   aria.dispatch(focusCommands.setFocus(sectionId))
                   scrollToSection(sectionId)
@@ -251,7 +251,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
             return elements
           })}
       </div>
-      <div className={`relative ${ax({ flex: 'none' })}`}>
+      <div className={`${ax({ flex: 'none', placement: 'relative' })}`}>
         <button
           ref={addBtnRef}
           type="button"

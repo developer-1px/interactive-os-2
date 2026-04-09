@@ -228,7 +228,7 @@ export function DatePicker({
   }, [cells, focusDayIndex, onChange, closeDialog])
 
   return (
-    <div className={"relative inline-block"}>
+    <div className={`${ax({ placement: 'relative' })} inline-block`}>
       <div className={`${ax({ layout: 'bar' })} dp-anchor`}>
         <input
           ref={inputRef}

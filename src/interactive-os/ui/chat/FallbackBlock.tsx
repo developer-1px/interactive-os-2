@@ -27,7 +27,7 @@ export function FallbackBlock({ block }: { block: ChatBlock }) {
         <ExpandIndicator variant="expand" expanded={expanded} />
         <span>{block.type}</span>
       </div>
-      {expanded && raw && <pre className={`overflow-y-auto pre-wrap break-word ${ax({ textStyle: 'code', padding: 'sm', border: 'top' })}`}>{raw}</pre>}
+      {expanded && raw && <pre className={`pre-wrap break-word ${ax({ textStyle: 'code', padding: 'sm', border: 'top', scroll: 'y' })}`}>{raw}</pre>}
     </div>
   )
 }

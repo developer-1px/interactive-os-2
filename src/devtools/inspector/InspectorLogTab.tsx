@@ -165,7 +165,7 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
       {/* Log entries */}
       <div
         ref={logRef}
-        className={`overflow-y-auto ${ax({ textStyle: 'caption', flex: '1' })} inspector-log-scroll`}
+        className={`${ax({ textStyle: 'caption', flex: '1', scroll: 'y' })} inspector-log-scroll`}
       >
         {filteredLogs.length === 0 ? (
           <div className={ax({ padding: 'sm', text: 'muted' })}>No events captured yet.</div>

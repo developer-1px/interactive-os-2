@@ -119,7 +119,7 @@ export function SpreadReader({ children, resetKey, onNextBoundary, onPrevBoundar
   }, [spreadIndex])
 
   return (
-    <div className="relative spread-root">
+    <div className={`${ax({ placement: 'relative' })} spread-root`}>
       <div className={`spread-inset ${ax({ flex: '1' })}`}>
         <div className="spread-viewport outline-none" {...aria.containerProps}>
           <div className="spread-columns" ref={columnsRef}>

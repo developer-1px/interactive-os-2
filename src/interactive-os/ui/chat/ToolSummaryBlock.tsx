@@ -195,7 +195,7 @@ export function ToolGroup({ toolUse, toolResult }: { toolUse: DataBlock; toolRes
       <DiffBlock block={{ type: 'diff', old: input.old_string as string, new: input.new_string as string }} />
     )
   } else if (text) {
-    content = <pre className={`overflow-y-auto pre-wrap break-word ${ax({ text: 'muted', textStyle: 'code', padding: 'sm', border: 'top' })} tool-group-result`}>{text}</pre>
+    content = <pre className={`pre-wrap break-word ${ax({ text: 'muted', textStyle: 'code', padding: 'sm', border: 'top', scroll: 'y' })} tool-group-result`}>{text}</pre>
   }
 
   // No content → non-collapsible row
