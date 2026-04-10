@@ -1,0 +1,25 @@
+/* eslint-disable react-refresh/only-export-components */
+// ② component-catalog-prd.md
+import { SubmenuPanel } from './SubmenuPanel'
+import { ax } from '@styles/ax'
+
+export const meta = {
+  slug: 'submenu-panel',
+  category: 'panel' as const,
+  label: 'SubmenuPanel',
+}
+
+export function Demo() {
+  return (
+    <div className={ax({ layout: 'stack', gap: 'md', placement: 'relative' })}>
+      <SubmenuPanel label="File" expanded placement="root" anchorName="--demo-anchor">
+        <div className={ax({ recipe: 'item-sm', interactive: 'item' })}>New File</div>
+        <div className={ax({ recipe: 'item-sm', interactive: 'item' })}>Open</div>
+        <div className={ax({ recipe: 'item-sm', interactive: 'item' })}>Save</div>
+      </SubmenuPanel>
+      <SubmenuPanel label="Hidden" expanded={false} placement="root" anchorName="--demo-anchor-2">
+        <div>Should not render</div>
+      </SubmenuPanel>
+    </div>
+  )
+}

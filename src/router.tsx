@@ -43,6 +43,8 @@ export const router = createBrowserRouter([
       { path: '/project', lazy: () => import('./pages/project/PageProject').then(m => ({ Component: m.default })) },
       { path: '/writer/*', lazy: () => import('./pages/writer/PageWriter').then(m => ({ Component: m.default })) },
       { path: '/stories', lazy: () => import('./pages/stories/PageStories').then(m => ({ Component: m.default })) },
+      { path: '/catalog', lazy: () => import('./pages/catalog/PageCatalog').then(m => ({ Component: m.default })) },
+      { path: '/kanban', lazy: () => import('./pages/replay/SkillKanban').then(m => ({ Component: m.default })) },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

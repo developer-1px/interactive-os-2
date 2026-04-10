@@ -159,7 +159,7 @@ export function buildProgressStore(): NormalizedData {
 
     const componentNames = Object.keys(layer.sources)
       .map(path => path.split('/').pop()?.replace('.tsx', '') ?? '')
-      .filter(name => name && !name.startsWith('_'))
+      .filter(name => name && !name.startsWith('_') && !name.includes('.demo'))
       .sort()
 
     for (const name of componentNames) {
