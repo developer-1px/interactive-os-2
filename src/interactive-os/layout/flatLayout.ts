@@ -56,7 +56,10 @@ export function definePage(config: { entities: Record<string, PageEntityConfig> 
 
   // Second pass: build entities and relationships
   for (const [id, cfg] of Object.entries(config.entities)) {
-    entities[id] = { id, data: cfg.data }
+    const label = cfg.data.type === 'widget'
+      ? (cfg.data as WidgetNode).widget
+      : `${cfg.data.type}: ${id}`
+    entities[id] = { id, data: { ...cfg.data, label } }
     if (cfg.children) {
       relationships[id] = cfg.children
     }

@@ -598,7 +598,7 @@ export default function PageBookViewer() {
     <AriaRoute keyMap={keyMap} label="Book">
       <div className={`${ax({ surface: 'base', text: 'primary', width: 'full', scroll: 'hidden' })} h-full book`}>
         <div className={`${ax({ placement: 'relative', layout: 'column', width: 'full', scroll: 'hidden' })} h-full book-page-area`} ref={areaRef} onMouseMove={handleAreaMouseMove} onMouseLeave={handleAreaMouseLeave}>
-          <FlatLayout data={layoutData} registry={bookWidgets} />
+          <FlatLayout data={layoutData} registry={bookWidgets} aria-label="Book" />
         </div>
       </div>
     </AriaRoute>

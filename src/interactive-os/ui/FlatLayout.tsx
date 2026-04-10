@@ -3,8 +3,8 @@ import React, { useMemo } from 'react'
 import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { getChildren, getEntityData } from '@os/store/createStore'
-import { useEngine } from '@os/engine/useEngine'
 import type { Plugin } from '@os/engine/types'
+import { useAria } from '@os/primitives/useAria'
 import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { resolveWidget } from '@os/layout/widgetRegistry'
 import { layout } from '@os/layout/layoutPlugin'
@@ -111,15 +111,24 @@ interface FlatLayoutProps {
   registry: WidgetRegistry
   plugins?: Plugin[]
   onChange?: (data: NormalizedData) => void
+  'aria-label'?: string
 }
 
-export function FlatLayout({ data, registry, plugins: extraPlugins, onChange }: FlatLayoutProps) {
+export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'aria-label': ariaLabel }: FlatLayoutProps) {
   const allPlugins = useMemo(
     () => [layout(), ...(extraPlugins ?? [])],
     [extraPlugins],
   )
 
-  const { store } = useEngine({ data, plugins: allPlugins, onChange })
+  const aria = useAria({
+    data,
+    plugins: allPlugins,
+    onChange,
+    autoFocus: false,
+    'aria-label': ariaLabel,
+  })
+
+  const store = aria.getStore()
 
   const renderNode = (nodeId: string): React.ReactNode => {
     const entity = store.entities[nodeId]
