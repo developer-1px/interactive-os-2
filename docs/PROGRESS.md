@@ -46,6 +46,7 @@
 |--------|----------|------|
 | 8축 (navigation · selection · expand · activate · tab · value · dismiss · edit) | Integrated | — |
 | commands (focus · selection · expand · gridCol · value · edit) | Integrated | core()에서 흡수, 각 axis가 commands+entities 소유 |
+| triggerPopup | Prototype | click/hover/focus/manual 트리거 → ARIA 연결 미완 (axis 레벨 keyMap만 구현) |
 
 ## Pattern (L4)
 
@@ -56,6 +57,16 @@
 | pointer interaction | Integrated | — |
 | examples/ (36 APG presets) | Integrated | 34/36 ui/ 소비 구조 전환 완료. 2종 미전환(CarouselTabs·CarouselPrevNext = carousel/비-ARIA, 실전 빈도 낮아 제외) |
 | menubar | Integrated | expand axis + custom handlers, multi-zone 아님 |
+
+## Overlay (L5.5)
+
+| Module | Maturity | Gaps |
+|--------|----------|------|
+| types (OverlayType · OverlayOptions · OverlayHandle) | Prototype | — |
+| layerStack | Prototype | — |
+| useOverlay | Prototype | modal(dialog) + popup(popover) + hint. 기존 UI 컴포넌트 마이그레이션 미시작 |
+| useAnchorPosition | Prototype | CSS Anchor Positioning + Safari JS fallback. Tooltip 통합 미완 |
+| overlay.css | Prototype | surface+shape+motion 번들 적용. /design-implement 미실행 |
 
 ## Primitives (L6)
 
@@ -100,8 +111,12 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
+<<<<<<< HEAD
 | Vitest (859 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
 | Claude Harness (11 hooks · 29 skills · /improve-skill) | Validated | 실전 오탐 튜닝 필요 |
+=======
+| Vitest (824 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+>>>>>>> origin/claude/propose-core-layer-features-ICEA8
 | Design Lint (8 rules · browser-injectable · Playwright CI) | Validated | 신규 관계 규칙(internal≤external, depth-inversion) false positive 튜닝 필요 |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
