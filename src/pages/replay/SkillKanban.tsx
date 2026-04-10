@@ -11,11 +11,10 @@ import { PanelHeader } from '@os/ui/PanelHeader'
 import { CloseIndicator } from '@os/ui/indicators'
 import './SkillKanban.css'
 
-// --- Pipeline column rules ---
-
 const PLANNING_SKILLS = new Set(['discuss', 'prd', 'plan', 'story', 'ia', 'wireframe', 'cast', 'conflict', 'ideal', 'design-spec'])
 const RUNNING_SKILLS = new Set(['go', 'do', 'fix', 'improve', 'use'])
 const DONE_SKILLS = new Set(['close', 'retrospect'])
+const MAX_MESSAGES = 200
 
 type PipelineStage = 'planning' | 'running' | 'done'
 
@@ -26,12 +25,7 @@ function classifySkill(skill: string): PipelineStage {
   return 'planning'
 }
 
-// --- Session card ---
-
-interface ChatMessage {
-  role: 'user' | 'assistant'
-  text: string
-}
+interface ChatMessage { role: 'user' | 'assistant'; text: string }
 
 interface SessionCard {
   id: string
@@ -42,8 +36,6 @@ interface SessionCard {
   toolCount: number
   startTs: number
   lastTs: number
-  lastMessages: string[]
-  lastUserMessage: string
   allMessages: ChatMessage[]
 }
 
@@ -53,15 +45,28 @@ function deriveStage(skills: string[]): { stage: PipelineStage; lastSkill: strin
   return { stage: classifySkill(lastSkill), lastSkill }
 }
 
-// --- Build from .jsonl events ---
+function lastUserMessage(card: SessionCard): string {
+  for (let i = card.allMessages.length - 1; i >= 0; i--) {
+    if (card.allMessages[i].role === 'user') return card.allMessages[i].text.slice(0, 60)
+  }
+  return card.label
+}
+
+function lastPreview(card: SessionCard): string {
+  return card.allMessages.slice(-3).map(m => m.text.slice(0, 80)).join('\n\n')
+}
+
+function pushMessage(messages: ChatMessage[], msg: ChatMessage): ChatMessage[] {
+  const next = [...messages, msg]
+  return next.length > MAX_MESSAGES ? next.slice(-MAX_MESSAGES) : next
+}
 
 function extractSessionCard(events: TimelineEvent[], session: ActiveSession): SessionCard {
   const skills: string[] = []
   let toolCount = 0
   let startTs = 0
   let lastTs = 0
-  const messages: string[] = []
-  const allMessages: ChatMessage[] = []
+  let allMessages: ChatMessage[] = []
 
   for (const evt of events) {
     const ts = Date.parse(evt.ts)
@@ -73,37 +78,20 @@ function extractSessionCard(events: TimelineEvent[], session: ActiveSession): Se
     } else if (evt.type === 'tool_use') {
       toolCount++
     }
-    if (evt.type === 'user' && evt.text) {
-      messages.push(evt.text)
-      allMessages.push({ role: 'user', text: evt.text })
-    }
-    if (evt.type === 'assistant' && evt.text) {
-      messages.push(evt.text)
-      allMessages.push({ role: 'assistant', text: evt.text })
+    if ((evt.type === 'user' || evt.type === 'assistant') && evt.text) {
+      allMessages = pushMessage(allMessages, { role: evt.type, text: evt.text })
     }
   }
 
   const { stage, lastSkill } = deriveStage(skills)
-  const lastMessages = messages.slice(-3).map(m => m.slice(0, 80))
-  const userMessages = allMessages.filter(m => m.role === 'user')
-  const lastUserMessage = userMessages.length > 0 ? userMessages[userMessages.length - 1].text.slice(0, 60) : session.label
 
   return {
-    id: session.id,
-    label: session.label,
-    stage,
-    lastSkill,
-    skillCount: skills.length,
-    toolCount,
-    startTs: startTs || session.mtime,
-    lastTs: lastTs || session.mtime,
-    lastMessages,
-    lastUserMessage,
+    id: session.id, label: session.label, stage, lastSkill,
+    skillCount: skills.length, toolCount,
+    startTs: startTs || session.mtime, lastTs: lastTs || session.mtime,
     allMessages,
   }
 }
-
-// --- Format helpers ---
 
 function formatElapsed(ms: number): string {
   const sec = Math.floor(ms / 1000)
@@ -113,8 +101,6 @@ function formatElapsed(ms: number): string {
   const hr = Math.floor(min / 60)
   return `${hr}h ${min % 60}m`
 }
-
-// --- Conversation dialog ---
 
 function ConversationDialog({ card, onClose }: { card: SessionCard | null; onClose: () => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -167,14 +153,12 @@ function ConversationDialog({ card, onClose }: { card: SessionCard | null; onClo
   )
 }
 
-// --- Card + Column components ---
-
 const STAGE_LABELS: Record<PipelineStage, string> = { planning: 'Planning', running: 'Running', done: 'Done' }
 
 function SessionCardView({ card, onClick }: { card: SessionCard; onClick: () => void }) {
-  const now = Date.now()
-  const elapsed = formatElapsed(now - card.startTs)
+  const elapsed = formatElapsed(Date.now() - card.startTs)
   const skillTag = card.lastSkill ? `/${card.lastSkill}` : ''
+  const preview = lastPreview(card)
 
   return (
     <div
@@ -183,13 +167,13 @@ function SessionCardView({ card, onClick }: { card: SessionCard; onClick: () => 
       role="button"
       tabIndex={0}
     >
-      <span className={ax({ clamp: '1', weight: 'medium', textStyle: 'caption' })}>{card.lastUserMessage}</span>
+      <span className={ax({ clamp: '1', weight: 'medium', textStyle: 'caption' })}>{lastUserMessage(card)}</span>
       <span className={ax({ text: 'muted', textStyle: 'caption' })}>
         {card.toolCount} tools · {elapsed}{skillTag ? ` · ${skillTag}` : ''}
       </span>
-      {card.lastMessages.length > 0 && (
+      {preview && (
         <div className="kanban-card-preview">
-          <MarkdownViewer content={card.lastMessages.join('\n\n')} prose={false} codeVariant="compact" />
+          <MarkdownViewer content={preview} prose={false} codeVariant="compact" />
         </div>
       )}
     </div>
@@ -207,40 +191,38 @@ function KanbanColumn({ stage, cards, onCardClick }: { stage: PipelineStage; car
   )
 }
 
-// --- Page component ---
-
 export default function SkillKanban() {
   const sessions = useActiveSessions()
   const [sessionCards, setSessionCards] = useState<SessionCard[]>([])
   const [, setTick] = useState(0)
   const [openCardId, setOpenCardId] = useState<string | null>(null)
 
-  // Load initial data from all sessions
   useEffect(() => {
     if (sessions.length === 0) return
     let cancelled = false
 
     async function loadInitial() {
-      const cards: SessionCard[] = []
-      for (const session of sessions) {
-        try {
+      const results = await Promise.allSettled(
+        sessions.map(async session => {
           const res = await fetch(`/api/agent-ops/timeline?session=${session.id}&tail=2000`)
-          if (!res.ok) continue
+          if (!res.ok) return null
           const { events } = await res.json() as { events: TimelineEvent[] }
-          cards.push(extractSessionCard(events, session))
-        } catch { /* ignore */ }
-      }
-      if (!cancelled) {
-        cards.sort((a, b) => b.lastTs - a.lastTs)
-        setSessionCards(cards)
-      }
+          return extractSessionCard(events, session)
+        })
+      )
+      if (cancelled) return
+      const cards = results
+        .filter((r): r is PromiseFulfilledResult<SessionCard | null> => r.status === 'fulfilled')
+        .map(r => r.value)
+        .filter((c): c is SessionCard => c !== null)
+      cards.sort((a, b) => b.lastTs - a.lastTs)
+      setSessionCards(cards)
     }
 
     loadInitial()
     return () => { cancelled = true }
   }, [sessions])
 
-  // SSE subscriptions for real-time updates
   useEffect(() => {
     if (sessions.length === 0) return
     const unsubs: (() => void)[] = []
@@ -252,9 +234,7 @@ export default function SkillKanban() {
         setSessionCards(prev => {
           const idx = prev.findIndex(c => c.id === session.id)
           if (idx === -1) return prev
-          const card = { ...prev[idx] }
-          const ts = Date.parse(data.ts)
-          card.lastTs = ts
+          const card = { ...prev[idx], lastTs: Date.parse(data.ts) }
 
           if (data.type === 'skill_start' && data.text) {
             card.lastSkill = data.text
@@ -263,14 +243,8 @@ export default function SkillKanban() {
           } else if (data.type === 'tool_use' && data.tool !== 'Skill') {
             card.toolCount++
           }
-          if (data.type === 'user' && data.text) {
-            card.lastMessages = [...card.lastMessages, data.text.slice(0, 80)].slice(-3)
-            card.lastUserMessage = data.text.slice(0, 60)
-            card.allMessages = [...card.allMessages, { role: 'user', text: data.text }]
-          }
-          if (data.type === 'assistant' && data.text) {
-            card.lastMessages = [...card.lastMessages, data.text.slice(0, 80)].slice(-3)
-            card.allMessages = [...card.allMessages, { role: 'assistant', text: data.text }]
+          if ((data.type === 'user' || data.type === 'assistant') && data.text) {
+            card.allMessages = pushMessage(card.allMessages, { role: data.type as 'user' | 'assistant', text: data.text })
           }
 
           const updated = [...prev]
@@ -284,7 +258,6 @@ export default function SkillKanban() {
     return () => unsubs.forEach(u => u())
   }, [sessions])
 
-  // Tick for elapsed time
   const hasActive = sessionCards.some(c => c.stage !== 'done')
   useEffect(() => {
     if (!hasActive) return
@@ -295,7 +268,6 @@ export default function SkillKanban() {
   const planning = sessionCards.filter(c => c.stage === 'planning')
   const running = sessionCards.filter(c => c.stage === 'running')
   const done = sessionCards.filter(c => c.stage === 'done')
-
   const openCard = openCardId ? sessionCards.find(c => c.id === openCardId) : null
 
   return (
