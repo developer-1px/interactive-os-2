@@ -404,6 +404,26 @@ export function agentOpsPlugin(): Plugin {
         setupSSE(req, res, () => {})
       }
 
+      function handleSkillEvent(_url: URL, req: Req, res: Res) {
+        const chunks: Buffer[] = []
+        req.on('data', (c: Buffer) => chunks.push(c))
+        req.on('end', () => {
+          let body: Record<string, unknown>
+          try { body = JSON.parse(Buffer.concat(chunks).toString()) } catch { res.statusCode = 400; res.end(); return }
+          const { skill, event, ts, session } = body as { skill: string; event: string; ts: string; session: string }
+          const sseType = event === 'start' ? 'skill_start' : 'skill_end'
+          const payload = JSON.stringify({ session, type: sseType, tool: 'Skill', text: skill, ts })
+          for (const client of muxClients) {
+            const subs = clientSubscriptions.get(client)
+            if (subs && subs.has(session)) {
+              client.write(`data: ${payload}\n\n`)
+            }
+          }
+          res.statusCode = 200
+          res.end('OK')
+        })
+      }
+
       const opsRoutes: Record<string, (url: URL, req: Req, res: Res) => void> = {
         '/api/agent-ops/latest': handleLatest,
         '/api/agent-ops/sessions': handleSessions,
@@ -411,6 +431,7 @@ export function agentOpsPlugin(): Plugin {
         '/api/agent-ops/timeline-stream-mux': handleStreamMux,
         '/api/agent-ops/timeline-stream': handleStream,
         '/api/agent-ops/stream': handleLegacyStream,
+        '/api/agent-ops/skill-event': handleSkillEvent,
       }
 
       server.middlewares.use((req, res, next) => {

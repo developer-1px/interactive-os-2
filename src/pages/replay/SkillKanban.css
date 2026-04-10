@@ -1,0 +1,8 @@
+.kanban-dialog-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.kanban-card-preview {
+  pointer-events: none;
+}

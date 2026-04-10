@@ -360,6 +360,13 @@ if (isUiComponent && !_isAriaZoneFile && /\bonKey(?:Down|Up)\s*=\s*\n?\s*\{/m.te
   }
 }
 
+// 규칙 21: 글자 닫기 버튼 금지 — CloseIndicator 사용
+if (!isExempt && isTsx && />\s*[×✕✖]\s*<\/\s*button/ms.test(content)) {
+  violations.push(
+    '글자(×/x) 닫기 버튼 금지 — <CloseIndicator /> (ui/indicators/) 를 사용하세요: import { CloseIndicator } from \'@os/ui/indicators\''
+  )
+}
+
 // 규칙 19: CSS ::after/::before content로 아이콘/인디케이터 대체 금지 — indicators/ 사용
 if (isCss && /::(?:after|before)\s*\{[^}]*content\s*:\s*['"][^'"]+['"]/s.test(content)) {
   violations.push(
