@@ -58,6 +58,16 @@
 | examples/ (36 APG presets) | Integrated | 34/36 ui/ 소비 구조 전환 완료. 2종 미전환(CarouselTabs·CarouselPrevNext = carousel/비-ARIA, 실전 빈도 낮아 제외) |
 | menubar | Integrated | expand axis + custom handlers, multi-zone 아님 |
 
+## Layout (L5.5)
+
+| Module | Maturity | Gaps |
+|--------|----------|------|
+| flatLayout (definePage) | Prototype | LayoutNode 4타입 (split/stack/overlay/widget). definePage 팩토리 |
+| widgetRegistry | Prototype | createWidgetRegistry + resolveWidget. 단순 Record wrapper |
+| layoutCommands | Prototype | setVisibility, setGap. workspaceCommands 확장 |
+| layoutPlugin | Prototype | layout() plugin. workspace() requires |
+| FlatLayout (ui/) | Prototype | UI 완성품. OCP renderer map. PageBookViewer Phase 1 검증 완료 |
+
 ## Overlay (L5.5)
 
 | Module | Maturity | Gaps |
