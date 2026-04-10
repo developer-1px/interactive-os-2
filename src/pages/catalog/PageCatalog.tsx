@@ -28,7 +28,7 @@ class DemoErrorBoundary extends React.Component<
   render() {
     if (this.state.error) {
       return (
-        <div className={ax({ surface: 'sunken', padding: 'md', text: 'secondary' })}>
+        <div className={ax({ surface: 'sunken', padding: 'md', text: 'secondary', textStyle: 'caption' })}>
           {this.props.name}: {this.state.error.message}
         </div>
       )
@@ -37,12 +37,27 @@ class DemoErrorBoundary extends React.Component<
   }
 }
 
+// ── Section Header Widget ──
+
+function SectionHeaderWidget({ label, count }: Record<string, unknown>) {
+  return (
+    <div className={ax({ layout: 'spread', width: 'full', padding: 'sm' })}>
+      <span className={ax({ textStyle: 'section', text: 'primary' })}>
+        {String(label ?? '').toUpperCase()}
+      </span>
+      <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+        {String(count ?? 0)}
+      </span>
+    </div>
+  )
+}
+
 // ── Empty State Widget ──
 
 function EmptyStateWidget({ componentName }: Record<string, unknown>) {
   return (
-    <div className={ax({ surface: 'sunken', padding: 'md', text: 'muted', textStyle: 'caption' })}>
-      No demo: {String(componentName ?? 'unknown')}
+    <div className={ax({ surface: 'sunken', padding: 'sm', text: 'muted', textStyle: 'caption', shape: 'sm' })}>
+      {String(componentName ?? 'unknown')}
     </div>
   )
 }
@@ -57,8 +72,8 @@ function createDemoWidget(entry: CatalogEntry) {
       default: function DemoWidget() {
         return (
           <DemoErrorBoundary name={entry.slug}>
-            <div className={ax({ padding: 'md' })}>
-              <div className={ax({ textStyle: 'caption', text: 'muted', padding: 'xs' })}>
+            <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })}>
+              <div className={ax({ textStyle: 'caption', text: 'muted' })}>
                 {entry.label}
               </div>
               <Demo />
@@ -73,7 +88,7 @@ function createDemoWidget(entry: CatalogEntry) {
     return (
       <React.Suspense
         fallback={
-          <div className={ax({ surface: 'sunken', padding: 'md', text: 'muted' })}>
+          <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', text: 'muted', textStyle: 'caption' })}>
             Loading {entry.slug}...
           </div>
         }
@@ -101,7 +116,10 @@ export default function PageCatalog() {
 
   const registry = useMemo<WidgetRegistry>(() => {
     if (!catalog) return {}
-    const reg: WidgetRegistry = { __empty__: EmptyStateWidget }
+    const reg: WidgetRegistry = {
+      __empty__: EmptyStateWidget,
+      __header__: SectionHeaderWidget,
+    }
 
     for (const entries of Object.values(catalog.categories)) {
       for (const entry of entries) {
@@ -121,10 +139,18 @@ export default function PageCatalog() {
   }
 
   return (
-    <FlatLayout
-      data={layoutData}
-      registry={registry}
-      aria-label="Component Catalog"
-    />
+    <div className={ax({ padding: 'lg', layout: 'column', gap: 'lg', width: 'full' })}>
+      <div className={ax({ layout: 'column', gap: 'xs' })}>
+        <span className={ax({ textStyle: 'page', text: 'primary' })}>Component Catalog</span>
+        <span className={ax({ textStyle: 'body', text: 'muted' })}>
+          {Object.values(catalog!.categories).reduce((sum, entries) => sum + entries.length, 0)} components
+        </span>
+      </div>
+      <FlatLayout
+        data={layoutData}
+        registry={registry}
+        aria-label="Component Catalog"
+      />
+    </div>
   )
 }

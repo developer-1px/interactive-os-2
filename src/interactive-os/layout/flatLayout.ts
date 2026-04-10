@@ -23,6 +23,11 @@ export interface OverlayNode extends Record<string, unknown> {
   visible?: boolean
 }
 
+export interface BarNode extends Record<string, unknown> {
+  type: 'bar'
+  justify?: 'start' | 'center' | 'between' | 'end'
+}
+
 export interface WidgetNode extends Record<string, unknown> {
   type: 'widget'
   widget: string
@@ -30,7 +35,13 @@ export interface WidgetNode extends Record<string, unknown> {
   source?: string
 }
 
-export type LayoutNode = SplitNode | StackNode | OverlayNode | WidgetNode
+export interface GridNode extends Record<string, unknown> {
+  type: 'grid'
+  columns: 2 | 3 | 4 | 5 | 7
+  gap?: 'sm' | 'md' | 'lg'
+}
+
+export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode
 
 // ── definePage factory ────────────────────────────────
 
