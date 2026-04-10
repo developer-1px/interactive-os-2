@@ -1,11 +1,13 @@
 // ② flat-layout-engine-prd.md
-import React from 'react'
+import React, { useMemo } from 'react'
 import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { getChildren, getEntityData } from '@os/store/createStore'
-import type { CommandEngine } from '@os/engine/types'
+import { useEngine } from '@os/engine/useEngine'
+import type { Plugin } from '@os/engine/types'
 import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { resolveWidget } from '@os/layout/widgetRegistry'
+import { layout } from '@os/layout/layoutPlugin'
 import type { SplitNode, StackNode, OverlayNode, WidgetNode } from '@os/layout/flatLayout'
 import { ax } from '@styles/ax'
 import styles from './FlatLayout.module.css'
@@ -14,19 +16,18 @@ import styles from './FlatLayout.module.css'
 
 interface LayoutRenderContext {
   nodeId: string
-  data: NormalizedData
+  store: NormalizedData
   registry: WidgetRegistry
-  engine?: CommandEngine
   renderNode: (nodeId: string) => React.ReactNode
 }
 
 // ── OCP renderer map ──────────────────────────────────
 
 const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactNode> = {
-  split: ({ nodeId, data, renderNode }) => {
-    const node = getEntityData<SplitNode>(data, nodeId)
+  split: ({ nodeId, store, renderNode }) => {
+    const node = getEntityData<SplitNode>(store, nodeId)
     if (!node) return null
-    const childIds = getChildren(data, nodeId)
+    const childIds = getChildren(store, nodeId)
     const isHorizontal = node.direction === 'horizontal'
 
     return (
@@ -48,10 +49,10 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  stack: ({ nodeId, data, renderNode }) => {
-    const node = getEntityData<StackNode>(data, nodeId)
+  stack: ({ nodeId, store, renderNode }) => {
+    const node = getEntityData<StackNode>(store, nodeId)
     if (!node) return null
-    const childIds = getChildren(data, nodeId)
+    const childIds = getChildren(store, nodeId)
 
     return (
       <div className={ax({ layout: 'column', gap: node.gap ?? 'md', width: 'full' })}>
@@ -62,10 +63,10 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  overlay: ({ nodeId, data, renderNode }) => {
-    const node = getEntityData<OverlayNode>(data, nodeId)
+  overlay: ({ nodeId, store, renderNode }) => {
+    const node = getEntityData<OverlayNode>(store, nodeId)
     if (!node || !node.visible) return null
-    const childIds = getChildren(data, nodeId)
+    const childIds = getChildren(store, nodeId)
 
     const placementMap: Record<string, 'center' | 'anchor-below'> = {
       modal: 'center',
@@ -82,8 +83,8 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  widget: ({ nodeId, data, registry }) => {
-    const node = getEntityData<WidgetNode>(data, nodeId)
+  widget: ({ nodeId, store, registry }) => {
+    const node = getEntityData<WidgetNode>(store, nodeId)
     if (!node) return null
     const Component = resolveWidget(registry, node.widget)
 
@@ -108,12 +109,20 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
 interface FlatLayoutProps {
   data: NormalizedData
   registry: WidgetRegistry
-  engine?: CommandEngine
+  plugins?: Plugin[]
+  onChange?: (data: NormalizedData) => void
 }
 
-export function FlatLayout({ data, registry, engine }: FlatLayoutProps) {
+export function FlatLayout({ data, registry, plugins: extraPlugins, onChange }: FlatLayoutProps) {
+  const allPlugins = useMemo(
+    () => [layout(), ...(extraPlugins ?? [])],
+    [extraPlugins],
+  )
+
+  const { store } = useEngine({ data, plugins: allPlugins, onChange })
+
   const renderNode = (nodeId: string): React.ReactNode => {
-    const entity = data.entities[nodeId]
+    const entity = store.entities[nodeId]
     if (!entity) return null
 
     const nodeData = entity.data as Record<string, unknown> | undefined
@@ -123,11 +132,11 @@ export function FlatLayout({ data, registry, engine }: FlatLayoutProps) {
     const renderer = layoutRenderers[type]
     if (!renderer) return null
 
-    const ctx: LayoutRenderContext = { nodeId, data, registry, engine, renderNode }
+    const ctx: LayoutRenderContext = { nodeId, store, registry, renderNode }
     return renderer(ctx)
   }
 
-  const rootIds = getChildren(data, ROOT_ID)
+  const rootIds = getChildren(store, ROOT_ID)
 
   return (
     <div className={ax({ layout: 'stack', gap: 'md', width: 'full' })}>
