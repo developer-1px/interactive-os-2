@@ -138,7 +138,7 @@
 |--------|----------|------|
 | ActivityBar (CMS·UI·Viewer·Agent·Theme / internals) | Integrated | / = CMS, /viewer, /agent 1급 앱 |
 | UI Docs (/ui/{name}) | Integrated | MD SSOT 완성, /publish 스킬로 7섹션 완전성 감사, 23/23 module 100% 완전 |
-| Theme (/internals/theme) | Validated | MiniDemo 그리드 흡수, token 편집기, `pnpm score:design` 누락 감지. 6레이어 CSS Layer Architecture 확정 (reset/tokens/surface/interactive + module.css) |
+| Theme (/internals/theme) | Validated | MiniDemo 그리드 흡수, token 편집기, `pnpm score:design` 누락 감지. 6레이어 CSS Layer Architecture 확정. **Pit of Success 불변량 3종**: surface-color 페어링, depth 5단계 레벨, radius-seed 비율 파생 |
 | Viewer (markdown · source · Quick Open · dep graph) | Integrated | — |
 | CMS (canvas · sidebar · i18n · detail panel · tabs · field types) | Validated | paste overwrite, viewer channel 미구현 |
 | CMS Landing Tokens (landingTokens.css · CmsLanding.module.css) | Integrated | editorial 9섹션(hero→manifesto→features→patterns→showcase→journal→testimonial→cta→footer), 4 신규 노드타입 |

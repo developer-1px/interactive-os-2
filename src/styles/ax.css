@@ -11,7 +11,7 @@
 
 /* ════════════════════════════════════════════
  * Surface — "이 요소는 사용자와 어떤 관계인가"
- * 번들: cursor + border + background + 상태 정책
+ * 번들: cursor + border + background + color + 상태 정책
  * ════════════════════════════════════════════ */
 
 .sf-action {
@@ -30,6 +30,7 @@
 .sf-input {
   border: 1px solid var(--border-strong);
   background: var(--_bg, var(--surface-default));
+  color: var(--_fg, inherit);
 }
 textarea.sf-input { field-sizing: content; }
 .sf-input:focus-within { border-color: var(--focus); }
@@ -41,10 +42,12 @@ textarea.sf-input { field-sizing: content; }
 .sf-display {
   border: 1px solid var(--border-subtle);
   background: var(--_bg, var(--surface-default));
+  color: var(--_fg, inherit);
 }
 
 .sf-overlay {
   background: var(--_bg, var(--surface-overlay));
+  color: var(--_fg, inherit);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-strong);
   z-index: 10;
@@ -107,6 +110,7 @@ dialog.sf-overlay[open] {
 
 .sf-sunken {
   background: var(--_bg, var(--surface-sunken));
+  color: var(--_fg, inherit);
   border: none;
   --bg-hover:          var(--depth-sunken-hover);
   --bg-active:         var(--depth-sunken-active);
@@ -117,6 +121,7 @@ dialog.sf-overlay[open] {
 
 .sf-base {
   background: var(--_bg, var(--surface-base));
+  color: var(--_fg, inherit);
   border: none;
   --bg-hover:          var(--depth-base-hover);
   --bg-active:         var(--depth-base-active);
@@ -141,6 +146,7 @@ dialog.sf-overlay[open] {
   user-select: none;
   border: none;
   background: transparent;
+  color: var(--_fg, inherit);
 }
 .sf-ghost:hover { background: var(--bg-hover); }
 .sf-ghost:active { background: var(--bg-active); }
@@ -165,7 +171,7 @@ dialog.sf-overlay[open] {
   font-size: 14px;
   font-weight: 500;
   gap: 8px;
-  border-radius: 6px;
+  border-radius: var(--shape-xs-radius);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -177,7 +183,7 @@ dialog.sf-overlay[open] {
   font-size: 13px;
   font-weight: 500;
   gap: 6px;
-  border-radius: 6px;
+  border-radius: var(--shape-xs-radius);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -189,7 +195,7 @@ dialog.sf-overlay[open] {
   font-size: 14px;
   font-weight: 500;
   gap: 8px;
-  border-radius: 6px;
+  border-radius: var(--shape-xs-radius);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -203,7 +209,7 @@ dialog.sf-overlay[open] {
   font-size: 14px;
   font-weight: 450;
   gap: 8px;
-  border-radius: 4px;
+  border-radius: var(--shape-2xs-radius);
   display: flex;
   align-items: center;
   width: 100%;
@@ -214,7 +220,7 @@ dialog.sf-overlay[open] {
   font-size: 13px;
   font-weight: 450;
   gap: 8px;
-  border-radius: 4px;
+  border-radius: var(--shape-2xs-radius);
   display: flex;
   align-items: center;
   width: 100%;
@@ -224,14 +230,14 @@ dialog.sf-overlay[open] {
 .rc-container {
   padding: 24px;
   gap: 24px;
-  border-radius: 12px;
+  border-radius: var(--shape-lg-radius);
   display: flex;
   flex-direction: column;
 }
 .rc-container-sm {
   padding: 16px;
   gap: 16px;
-  border-radius: 8px;
+  border-radius: var(--shape-md-radius);
   display: flex;
   flex-direction: column;
 }
@@ -242,7 +248,7 @@ dialog.sf-overlay[open] {
   font-size: 12px;
   font-weight: 500;
   gap: 4px;
-  border-radius: 9999px;
+  border-radius: var(--shape-pill-radius);
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
@@ -257,19 +263,19 @@ dialog.sf-overlay[open] {
 .cs-sm {
   min-height: 32px;
   min-width: 32px;
-  border-radius: 6px;
+  border-radius: var(--shape-xs-radius);
   font-size: var(--type-caption-size);   /* 12px */
 }
 .cs-md {
   min-height: 36px;
   min-width: 36px;
-  border-radius: 8px;
+  border-radius: var(--shape-md-radius);
   font-size: var(--type-body-size);      /* 14px */
 }
 .cs-lg {
   min-height: 44px;
   min-width: 44px;
-  border-radius: 10px;
+  border-radius: var(--shape-lg-radius);
   font-size: var(--type-body-size);      /* 14px */
 }
 

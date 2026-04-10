@@ -212,7 +212,7 @@ Local ────────────────────────�
 
 복합 패턴(Combobox, MenuButton): trigger=action/input, popup=overlay+aria-container.
 
-#### Depth: 4종 (위치)
+#### Depth: 5종 (위치)
 
 | Depth | 용도 | 효과 |
 |-------|------|------|
@@ -220,6 +220,13 @@ Local ────────────────────────�
 | `base` | 페이지 본문 (:root 기본값, 선언 불필요) | 기본 래더 |
 | `raised` | 카드, 부유 툴바 | 밝은 bg + 한 단계 높은 래더 |
 | `overlay` | 다이얼로그, 메뉴 팝업 | 가장 밝은 bg + 최상위 래더 |
+| `prominent` | overlay 위 강조 요소, 중첩 팝업 | overlay보다 한 단계 밝은 래더 |
+
+#### Pit of Success 불변량 3가지
+
+1. **Surface-Color 페어링**: 모든 surface 클래스가 `color: var(--_fg, inherit)`를 선언. tone을 조합하면 자동으로 전경색이 적용되고, tone 없이 surface만 쓰면 inherit으로 기존과 동일.
+2. **Depth Level Scale (hover=level+1)**: sunken→base→raised→overlay→prominent의 5단계 래더. 각 레벨의 hover 밝기는 한 단계 위 레벨의 기본 밝기와 일치.
+3. **Radius Seed 파생**: `--radius-seed: 10px`에서 모든 shape radius가 비율로 파생. seed 하나만 바꾸면 전체 radius 스케일이 비례 조정.
 
 #### 동작 원리: CSS cascade
 
