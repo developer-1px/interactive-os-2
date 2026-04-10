@@ -14,7 +14,7 @@ const PREVIEW_HEIGHT = 140
 const CONTEXT_LINES = 2
 
 // Module-scope cache survives re-mounts
-const fileCache = new Map<string, string>()
+export const fileCache = new Map<string, string>()
 
 export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewProps) {
   const [snippet, setSnippet] = useState<string>('')

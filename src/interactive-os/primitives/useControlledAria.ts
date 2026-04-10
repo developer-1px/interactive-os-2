@@ -167,7 +167,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
           const matchedKey = findMatchingKey(event, mergedKeyMap)
           const handler = matchedKey
             ? mergedKeyMap[matchedKey]
-            : (!event.ctrlKey && !event.altKey && !event.metaKey ? pattern.fallbackKey : undefined)
+            : (pattern.trapModifiers || (!event.ctrlKey && !event.altKey && !event.metaKey) ? pattern.fallbackKey : undefined)
           if (!handler) return
           const ctx = createPatternContext(virtualEngine, patternCtxOptions)
           const command = handler(ctx)
@@ -190,7 +190,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
         const matchedKey = findMatchingKey(event, mergedKeyMap)
         const handler = matchedKey
           ? mergedKeyMap[matchedKey]
-          : (!event.ctrlKey && !event.altKey && !event.metaKey ? pattern.fallbackKey : undefined)
+          : (pattern.trapModifiers || (!event.ctrlKey && !event.altKey && !event.metaKey) ? pattern.fallbackKey : undefined)
         if (!handler) return
         const ctx = createPatternContext(virtualEngine, patternCtxOptions)
         const command = handler(ctx)

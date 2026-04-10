@@ -66,6 +66,8 @@ export interface AriaPattern<TState extends NodeState = NodeState> {
   spatialSelector?: string | (() => string)
   /** Fallback handler for unmatched keys — modal key trap. Separate from keyMap to avoid collision with literal '*' key. */
   fallbackKey?: KeyHandler
+  /** When true, fallbackKey also traps modifier keys (Cmd+K, Ctrl+A, etc.). Auto-set for modal popups. */
+  trapModifiers?: boolean
   // Metadata — not used for behavior dispatch, only for external queries (e.g. tests)
   selectionFollowsFocus?: boolean
   activationFollowsSelection?: boolean

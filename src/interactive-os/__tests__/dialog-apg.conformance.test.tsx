@@ -156,7 +156,7 @@ describe('APG Dialog — Keyboard Interaction', () => {
       expect(defaultPrevented).toBe(true)
     })
 
-    it('Cmd+C (modifier key combo) is NOT trapped', async () => {
+    it('Cmd+C (modifier key combo) IS trapped in modal dialog (trapModifiers)', async () => {
       const user = userEvent.setup()
       const { container } = renderDialog(fixtureData())
       const node = getNode(container, 'confirm')!
@@ -169,7 +169,7 @@ describe('APG Dialog — Keyboard Interaction', () => {
       await user.keyboard('{Meta>}c{/Meta}')
 
       document.removeEventListener('keydown', listener)
-      expect(defaultPrevented).toBe(false)
+      expect(defaultPrevented).toBe(true)
     })
   })
 })

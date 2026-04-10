@@ -83,7 +83,7 @@ const isStyles = filePath.includes('/src/styles/')
 const isTsx = /\.[tj]sx?$/.test(filePath)
 
 // inspector overlay — 동적 DOM 하이라이팅만 면제 (style={{}}로 position/size 계산 필수)
-const INSPECTOR_OVERLAY_FILES = ['InspectorOverlay', 'ComponentInspector', 'inspectorUtils', 'MarqueeSelect']
+const INSPECTOR_OVERLAY_FILES = ['InspectorOverlay', 'inspectorUtils', 'MarqueeSelect']
 const isInspectorOverlay = isDevtools && INSPECTOR_OVERLAY_FILES.some(f => filePath.includes(f))
 
 // os 내부, styles, inspector overlay만 날코딩 규칙 제외

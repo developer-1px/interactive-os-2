@@ -191,5 +191,6 @@ export function composePattern(
     ...(config.triggerKeyMap && { triggerKeyMap: config.triggerKeyMap }),
     ...(config.triggerClickMap && { triggerClickMap: config.triggerClickMap }),
     ...(options?.fallbackKey && { fallbackKey: options.fallbackKey }),
+    ...(options?.fallbackKey && meta.popupModal ? { trapModifiers: true as const } : {}),
   } as AriaPattern
 }

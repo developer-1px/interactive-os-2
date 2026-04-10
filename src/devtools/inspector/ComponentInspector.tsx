@@ -1,6 +1,6 @@
 // ② 2026-03-26-component-inspector-drag-select-prd.md
 import type React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"; // @useState-hatch — devtools
 import {
   getAllOSComponents,
   getDebugSource,
@@ -8,6 +8,8 @@ import {
 } from "./inspectorUtils";
 import { InspectorOverlay } from "./InspectorOverlay";
 import { MarqueeSelect } from "./MarqueeSelect";
+import { FileViewerModal } from "@os/ui/FileViewerModal";
+import { useGlobalTrap, type GlobalTrapKeyMap } from "@os/primitives/useGlobalTrap";
 
 const OS_COLORS: Record<string, string> = {
   Zone: "rgba(59, 130, 246, 0.6)",
@@ -54,6 +56,7 @@ export function ComponentInspector() {
   const [osComponents, setOsComponents] = useState<OSComponentInfo[]>([]);
   const [marqueePreview, setMarqueePreview] = useState<HTMLElement | null>(null);
   const [lockPoint, setLockPoint] = useState<{ x: number; y: number } | null>(null);
+  const [sourceModalFile, setSourceModalFile] = useState<{ path: string; line: number } | null>(null);
   // Flag to suppress click after marquee drag — set by MarqueeSelect, consumed by click handler
   const suppressClickRef = useRef(false);
   // Flag to suppress hover tracking during marquee drag
@@ -112,31 +115,47 @@ export function ComponentInspector() {
     return () => window.removeEventListener("mousemove", handleMouseMove, true);
   }, [isActive]);
 
-  // Key handling (toggle + traversal)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Shift+Cmd+D: Toggle Inspector
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "d") {
-        e.preventDefault();
-        setIsActive((prev) => {
-          if (!prev) {
-            setToastMessage("Inspector Mode ON");
-          } else {
-            setLockedElement(null);
-            setLockPoint(null);
-            setTraversalHistory([]);
-            setMarqueePreview(null);
+  // Key handling — useGlobalTrap: toggle (always) + inspector trap (when active)
+  // Toggle keyMap: always active for Shift+Cmd+D
+  const toggleKeyMap = useMemo<GlobalTrapKeyMap>(() => ({
+    'Mod+Shift+d': () => {
+      setIsActive((prev) => {
+        if (!prev) {
+          setToastMessage("Inspector Mode ON");
+        } else {
+          setLockedElement(null);
+          setLockPoint(null);
+          setTraversalHistory([]);
+          setMarqueePreview(null);
+        }
+        return !prev;
+      });
+    },
+  }), []);
+
+  // Inspector keyMap: active only when inspector is on
+  const inspectorKeyMap = useMemo((): GlobalTrapKeyMap => {
+    // L2: source modal open — only ESC allowed
+    if (sourceModalFile) {
+      return {
+        'Escape': () => setSourceModalFile(null),
+      } satisfies GlobalTrapKeyMap;
+    }
+
+    // L1: inspector mode
+    return {
+      'Mod+o': () => {
+        let current = (lockedElement || hoveredElement) as HTMLElement | null;
+        while (current && current !== document.body) {
+          const source = getDebugSource(current);
+          if (source) {
+            setSourceModalFile({ path: source.fileName, line: source.lineNumber });
+            break;
           }
-          return !prev;
-        });
-        return;
-      }
-
-      if (!isActive) return;
-
-      // Cmd+Up: Traverse to parent
-      if ((e.metaKey || e.ctrlKey) && e.key === "ArrowUp") {
-        e.preventDefault();
+          current = current.parentElement;
+        }
+      },
+      'Mod+ArrowUp': () => {
         const current = lockedElement || hoveredElement;
         if (current?.parentElement && current.parentElement !== document.body) {
           const parent = current.parentElement;
@@ -144,11 +163,8 @@ export function ComponentInspector() {
           setLockedElement(parent);
           copyElementSource(parent);
         }
-      }
-
-      // Cmd+Down: Back to child
-      if ((e.metaKey || e.ctrlKey) && e.key === "ArrowDown") {
-        e.preventDefault();
+      },
+      'Mod+ArrowDown': () => {
         if (traversalHistory.length > 0) {
           const nextStack = [...traversalHistory];
           const lastChild = nextStack.pop();
@@ -157,10 +173,8 @@ export function ComponentInspector() {
           setTraversalHistory(nextStack);
           if (target) copyElementSource(target);
         }
-      }
-
-      if (e.key === "Escape") {
-        // Only deactivate if no locked element (otherwise just unlock)
+      },
+      'Escape': () => {
         if (lockedElement) {
           setLockedElement(null);
           setLockPoint(null);
@@ -169,12 +183,14 @@ export function ComponentInspector() {
         } else {
           setIsActive(false);
         }
-      }
+      },
     };
+  }, [sourceModalFile, lockedElement, hoveredElement, traversalHistory, copyElementSource]);
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isActive, lockedElement, hoveredElement, traversalHistory, copyElementSource]);
+  // Toggle: always on, passthrough (only intercepts Mod+Shift+D)
+  useGlobalTrap(true, toggleKeyMap, { trap: false });
+  // Inspector trap: on when active (traps ALL keys, only mapped ones execute)
+  useGlobalTrap(isActive, inspectorKeyMap);
 
   // Body class + click interception
   useEffect(() => {
@@ -359,6 +375,13 @@ export function ComponentInspector() {
           {toastMessage}
         </div>
       )}
+
+      {/* Full source viewer */}
+      <FileViewerModal
+        filePath={sourceModalFile?.path ?? null}
+        highlightLines={sourceModalFile ? new Set([sourceModalFile.line]) : undefined}
+        onClose={() => setSourceModalFile(null)}
+      />
     </>
   );
 }
