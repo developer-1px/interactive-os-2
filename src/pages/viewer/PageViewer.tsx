@@ -1,5 +1,5 @@
 // ② finder-viewer-prd.md
-// @useState-hatch — initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; quickLookPath: popup axis candidate; currentRoot: sidebar selection; sizes: SplitPane local
+// @useState-hatch — initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; quickLookPath: popup axis candidate; currentRoot: sidebar selection; sizes: SplitPane local; previewPath: follow-focus file preview
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AriaRoute } from '@os/primitives/AriaRoute'
@@ -22,7 +22,9 @@ import { fetchTree } from './fsClient'
 import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelected } from './treeTransform'
 import { ax } from '@styles/ax'
 import { SpinnerIndicator } from '@os/ui/indicators'
-import { Panel } from '@os/ui/panels'
+import { Panel, SidePanel } from '@os/ui/panels'
+import { ScrollArea } from '@os/ui/ScrollArea'
+import { FilePanel } from './widgets/FilePanel'
 
 const TREE_RATIO_KEY = 'viewer-tree-ratio'
 const DEFAULT_TREE_RATIO = 0.18
@@ -53,6 +55,7 @@ export default function PageViewer() {
     return saved === 'columns' ? 'columns' : 'list'
   })
   const [quickLookPath, setQuickLookPath] = useState<string | null>(null)
+  const [previewPath, setPreviewPath] = useState<string | null>(null) // @useState-hatch — follow-focus file preview
   const [currentRoot, setCurrentRoot] = useState('src')
 
   const [sizes, setSizes] = useState<PaneSize[]>(() => {
@@ -115,9 +118,11 @@ export default function PageViewer() {
     if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
       const path = (entity.data as unknown as FileNodeData).path
       focusedFileRef.current = path
+      setPreviewPath(path)
       navigate(filePathToUrlPath(path, 'viewer', DEFAULT_ROOT), { replace: true })
     } else {
       focusedFileRef.current = null
+      setPreviewPath(null)
     }
   }, [navigate])
 
@@ -132,6 +137,7 @@ export default function PageViewer() {
   const handleSidebarActivate = useCallback((nodeId: string) => {
     if (nodeId === 'src' || nodeId === 'docs') {
       setQuickLookPath(null)
+      setPreviewPath(null)
       setCurrentRoot(nodeId)
       setLoading(true)
       fetchTree(resolveRoot(nodeId)).then((tree) => {
@@ -186,22 +192,32 @@ export default function PageViewer() {
             onViewModeChange={setViewMode}
             onSearchClick={() => setQuickOpenVisible(true)}
           />
-          {viewMode === 'list' ? (
-            <FileTreeView
-              data={initialStore}
-              plugins={[]}
-              onChange={handleChange}
-              onActivate={handleActivate}
-              aria-label="File browser"
-            />
-          ) : (
-            <MillerColumns
-              data={initialStore}
-              onChange={handleChange}
-              onActivate={handleActivate}
-              aria-label="File browser"
-            />
-          )}
+          <div className={ax({ layout: 'row-fill', flex: '1' })}>
+            {viewMode === 'list' ? (
+              <ScrollArea className={ax({ flex: '1' })}>
+                <FileTreeView
+                  data={initialStore}
+                  plugins={[]}
+                  onChange={handleChange}
+                  onActivate={handleActivate}
+                  aria-label="File browser"
+                />
+              </ScrollArea>
+            ) : (
+              <MillerColumns
+                data={initialStore}
+                onChange={handleChange}
+                onActivate={handleActivate}
+                renderPreview={(nodeId) => <FilePanel path={nodeId} />}
+                aria-label="File browser"
+              />
+            )}
+            {viewMode === 'list' && previewPath && (
+              <SidePanel>
+                <FilePanel path={previewPath} />
+              </SidePanel>
+            )}
+          </div>
         </div>
       </SplitPane>
 
