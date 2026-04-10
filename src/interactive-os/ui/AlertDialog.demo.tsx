@@ -1,9 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② component-catalog-prd.md
+import { useState } from 'react'
 import { AlertDialog } from './AlertDialog'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
+import { Button } from './Button'
 
 export const meta = {
   slug: 'alert-dialog',
@@ -21,5 +23,11 @@ const data: NormalizedData = createStore({
 })
 
 export function Demo() {
-  return <AlertDialog data={data} onChange={() => {}} aria-label="Confirm deletion" />
+  const [open, setOpen] = useState(false)
+
+  if (!open) {
+    return <Button variant="ghost" onClick={() => setOpen(true)}>Open AlertDialog</Button>
+  }
+
+  return <AlertDialog data={data} onChange={() => setOpen(false)} aria-label="Confirm deletion" />
 }

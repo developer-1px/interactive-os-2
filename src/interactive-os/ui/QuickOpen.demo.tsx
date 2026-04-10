@@ -5,6 +5,8 @@ import { QuickOpen } from './QuickOpen'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
+import { ax } from '@styles/ax'
+import { Button } from './Button'
 
 export const meta = {
   slug: 'quick-open',
@@ -23,16 +25,28 @@ const items: NormalizedData = createStore({
 })
 
 export function Demo() {
+  const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
+
+  if (!open) {
+    return (
+      <Button variant="ghost" onClick={() => setOpen(true)}>
+        Open QuickOpen
+      </Button>
+    )
+  }
+
   return (
-    <QuickOpen
-      data={items}
-      query={query}
-      onQueryChange={setQuery}
-      onActivate={() => {}}
-      onClose={() => {}}
-      placeholder="Type a command..."
-      aria-label="Command Palette"
-    />
+    <div className={ax({ width: 'full' })}>
+      <QuickOpen
+        data={items}
+        query={query}
+        onQueryChange={setQuery}
+        onActivate={() => {}}
+        onClose={() => setOpen(false)}
+        placeholder="Type a command..."
+        aria-label="Command Palette"
+      />
+    </div>
   )
 }
