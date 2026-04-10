@@ -149,7 +149,7 @@ export default function PageViewer() {
 
   const quickOpenKeyMap = useMemo(() => ({
     'Meta+p': defineRouteKey('viewer:quick-open', () => setQuickOpenVisibleRef.current(true), 'Viewer'),
-    ' ': defineRouteKey('viewer:quick-look', () => {
+    'Space': defineRouteKey('viewer:quick-look', () => {
       const path = focusedFileRef.current
       if (path) {
         setQuickLookPathRef.current(prev => prev === path ? null : path)
