@@ -13,10 +13,10 @@ export const meta = {
 
 const data: NormalizedData = createStore({
   entities: {
-    intro: { id: 'intro', data: { label: 'Introduction', level: 1 } },
-    setup: { id: 'setup', data: { label: 'Getting Started', level: 2 } },
-    api: { id: 'api', data: { label: 'API Reference', level: 2 } },
-    faq: { id: 'faq', data: { label: 'FAQ', level: 1 } },
+    intro: { id: 'intro', data: { label: 'Introduction', depth: 0, pageIndex: 0 } },
+    setup: { id: 'setup', data: { label: 'Getting Started', depth: 1, pageIndex: 1 } },
+    api: { id: 'api', data: { label: 'API Reference', depth: 1, pageIndex: 2 } },
+    faq: { id: 'faq', data: { label: 'FAQ', depth: 0, pageIndex: 3 } },
   },
   relationships: { [ROOT_ID]: ['intro', 'setup', 'api', 'faq'] },
 })
