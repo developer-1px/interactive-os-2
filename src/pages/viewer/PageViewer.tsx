@@ -1,5 +1,5 @@
 // ② finder-viewer-prd.md
-// @useState-hatch — sortKey/sortDir/filters: view preference; initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; quickLookPath: popup axis candidate; currentRoot: sidebar selection; sizes: SplitPane local; previewPath: follow-focus file preview
+// @useState-hatch — sortKey/sortDir/filters: view preference; initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; currentRoot: sidebar selection; sizes: SplitPane local; previewPath: follow-focus file preview
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AriaRoute } from '@os/primitives/AriaRoute'
@@ -18,7 +18,6 @@ import { ROOT_ID } from '@os/store/types'
 import { QuickOpen } from '@os/ui/QuickOpen'
 import { NavList } from '@os/ui/NavList'
 import { FinderToolbar } from '@os/ui/FinderToolbar'
-import { FileViewerModal } from '@os/ui/FileViewerModal'
 import { FOCUS_ID } from '@os/axis/navigate'
 import { EXPANDED_ID } from '@os/axis/expand'
 import { DEFAULT_ROOT, type FileNodeData } from './types'
@@ -59,7 +58,6 @@ export default function PageViewer() {
     const saved = localStorage.getItem(VIEWMODE_KEY)
     return saved === 'columns' ? 'columns' : 'list'
   })
-  const [quickLookPath, setQuickLookPath] = useState<string | null>(null)
   const [previewPath, setPreviewPath] = useState<string | null>(null) // @useState-hatch — follow-focus file preview
   const [currentRoot, setCurrentRoot] = useState('src')
   const [sortKey, setSortKey] = useState<SortKey | null>(null) // @useState-hatch
@@ -118,33 +116,20 @@ export default function PageViewer() {
     return () => { import.meta.hot!.off('fs:tree-update', handler) }
   }, [currentRoot])
 
-  const focusedFileRef = useRef<string | null>(null)
-
   const handleChange = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
     const entity = newStore.entities[focusedId]
     if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
       const path = (entity.data as unknown as FileNodeData).path
-      focusedFileRef.current = path
       setPreviewPath(path)
       navigate(filePathToUrlPath(path, 'viewer', DEFAULT_ROOT), { replace: true })
     } else {
-      focusedFileRef.current = null
       setPreviewPath(null)
     }
   }, [navigate])
 
-  const handleActivate = useCallback((nodeId: string) => {
-    if (!initialStore) return
-    const entity = initialStore.entities[nodeId]
-    if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
-      setQuickLookPath((entity.data as unknown as FileNodeData).path)
-    }
-  }, [initialStore])
-
   const handleSidebarActivate = useCallback((nodeId: string) => {
     if (nodeId === 'src' || nodeId === 'docs') {
-      setQuickLookPath(null)
       setPreviewPath(null)
       setCurrentRoot(nodeId)
       setLoading(true)
@@ -158,17 +143,8 @@ export default function PageViewer() {
   const setQuickOpenVisibleRef = useRef(setQuickOpenVisible)
   useEffect(() => { setQuickOpenVisibleRef.current = setQuickOpenVisible }, [setQuickOpenVisible])
 
-  const setQuickLookPathRef = useRef(setQuickLookPath)
-  useEffect(() => { setQuickLookPathRef.current = setQuickLookPath }, [setQuickLookPath])
-
   const quickOpenKeyMap = useMemo(() => ({
     'Meta+p': defineRouteKey('viewer:quick-open', () => setQuickOpenVisibleRef.current(true), 'Viewer'),
-    'Space': defineRouteKey('viewer:quick-look', () => {
-      const path = focusedFileRef.current
-      if (path) {
-        setQuickLookPathRef.current(prev => prev === path ? null : path)
-      }
-    }, 'Viewer'),
   }), [])
 
   const listStore = useMemo(() => {
@@ -250,7 +226,7 @@ export default function PageViewer() {
                   <TreeGrid
                     data={listStore}
                     onChange={handleChange}
-                    onActivate={handleActivate}
+                    
                     itemSlots={{
                       icon: (node, state) => {
                         const d = node.data as Record<string, unknown>
@@ -280,7 +256,7 @@ export default function PageViewer() {
               <MillerColumns
                 data={initialStore}
                 onChange={handleChange}
-                onActivate={handleActivate}
+                
                 renderPreview={(nodeId) => <FilePanel path={nodeId} />}
                 aria-label="File browser"
               />
@@ -298,15 +274,11 @@ export default function PageViewer() {
         <QuickOpen
           fileStore={initialStore}
           root={DEFAULT_ROOT}
-          onSelect={setQuickLookPath}
+          onSelect={setPreviewPath}
           onClose={() => setQuickOpenVisible(false)}
         />
       )}
 
-      <FileViewerModal
-        filePath={quickLookPath}
-        onClose={() => setQuickLookPath(null)}
-      />
     </div>
     </AriaRoute>
   )
