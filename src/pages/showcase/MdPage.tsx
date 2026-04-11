@@ -7,6 +7,7 @@ import { parseJsx } from './parseJsx'
 import { mdComponents } from './mdComponents'
 import { MermaidBlock } from './MermaidBlock'
 import { CodeBlock } from '@os/ui/CodeBlock'
+import { ax } from '@styles/ax'
 import '@os/ui/MarkdownViewer.css'
 
 interface MdPageProps {
@@ -28,7 +29,7 @@ function RenderBlock({ children }: { children: string }) {
     const parsed = parseJsx(line)
     if (!parsed) {
       elements.push(
-        <div key={i} style={{ color: 'var(--color-destructive)', padding: '4px 8px' }}>
+        <div key={i} className={ax({ tone: 'danger', padding: 'xs' })}>
           Parse error: {line}
         </div>
       )
@@ -37,7 +38,7 @@ function RenderBlock({ children }: { children: string }) {
     const Component = mdComponents[parsed.name]
     if (!Component) {
       elements.push(
-        <div key={i} style={{ color: 'var(--color-destructive)', padding: '4px 8px' }}>
+        <div key={i} className={ax({ tone: 'danger', padding: 'xs' })}>
           Unknown component: {parsed.name}
         </div>
       )

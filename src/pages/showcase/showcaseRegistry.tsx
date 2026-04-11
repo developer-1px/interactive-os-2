@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② 2026-03-25-registry-md-ssot-prd.md
 import { z } from 'zod'
+import { ax } from '@styles/ax'
 import type { NormalizedData } from '@os/store/types'
 
 import { Accordion } from '@os/ui/Accordion'
@@ -46,7 +47,7 @@ const toastVariants: Array<'default' | 'success' | 'error'> = ['default', 'succe
 
 function ToasterDemo() {
   return (
-    <div style={{ display: 'flex', gap: 8 }}>
+    <div className={ax({ layout: 'row', gap: 'sm' })}>
       <button onClick={() => {
         const variant = toastVariants[toastCount % 3]
         toastCount++

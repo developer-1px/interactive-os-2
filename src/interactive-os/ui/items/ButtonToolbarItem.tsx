@@ -2,7 +2,7 @@ import React from 'react'
 import type { NodeState } from '../../pattern/types'
 import { getNodeLabel } from '../types'
 import { Divider } from '../Divider'
-import { ax } from '@styles/ax'
+import { Button } from '../Button'
 
 /**
  * Toolbar item rendered as a <button> with optional separator and disabled state.
@@ -20,15 +20,14 @@ export function ButtonToolbarItem(
 
   return (
     <React.Fragment>
-      <button
+      <Button
         {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-        className={ax({
-          recipe: 'control-sm', interactive: 'button',
-        })}
+        size="sm"
+        interactive="button"
         disabled={isDisabled}
       >
         {label}
-      </button>
+      </Button>
       {hasSeparator && <Divider direction="vertical" />}
     </React.Fragment>
   )

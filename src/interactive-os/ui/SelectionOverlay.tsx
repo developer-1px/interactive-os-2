@@ -33,7 +33,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
   if (rects.length === 0) return null
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className={`sel-overlay-container ${ax({ placement: 'center', scroll: 'hidden' })}`}>
       {rects.map((tr) => {
         const label = labelFn?.(tr.id, tr)
         return (
@@ -49,8 +49,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
           >
             {label && (
               <div
-                className={`absolute whitespace-nowrap pointer-none sel-overlay-label ${ax({ textStyle: 'caption', shape: 'sm' })}`}
-                style={{ bottom: '100%', left: 0 }}
+                className={`sel-overlay-label ${ax({ textStyle: 'caption', shape: 'sm', placement: 'above' })}`}
               >
                 {label}
               </div>

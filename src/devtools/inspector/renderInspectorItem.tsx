@@ -1,6 +1,8 @@
 import type React from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import type { NodeState } from '@os/pattern/types'
+import { ax } from '@styles/ax'
+import './renderInspectorItem.css'
 
 const TYPE_COLORS: Record<string, string> = {
   command: '#3b82f6',
@@ -31,40 +33,30 @@ export function renderInspectorItem(props: React.HTMLAttributes<HTMLElement>, no
   return (
     <div
       {...props}
-      style={{
-        paddingLeft: `calc(var(--space-sm) + ${indent}px)`,
-        paddingTop: 2,
-        paddingBottom: 2,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 6,
-        fontFamily: 'var(--mono)',
-        fontSize: 'var(--type-body-size)',
-        opacity: state.focused ? 1 : 0.85,
-        background: changed ? 'rgba(59, 130, 246, 0.15)' : state.focused ? 'var(--bg-hover)' : undefined,
-        outline: state.focused ? '1.5px solid var(--focus)' : undefined,
-        cursor: 'default',
-      }}
+      className={`${props.className ?? ''} inspector-item ${ax({ layout: 'bar', gap: 'xs', textStyle: 'code', surface: changed ? 'action' : state.focused ? 'ghost' : undefined, state: state.focused ? 'focused' : undefined })}`}
+      style={{ '--_indent': `${indent}px` } as React.CSSProperties}
+      data-focused={state.focused || undefined}
+      data-changed={changed || undefined}
     >
       {isGroup ? (
         <>
-          <span style={{ opacity: 0.6, fontSize: 'var(--type-caption-size)' }}>
+          <span className={ax({ opacity: 'dim', textStyle: 'caption' })}>
             {state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
           </span>
-          <span style={{ fontWeight: 600 }}>{label}</span>
+          <span className={ax({ weight: 'semi' })}>{label}</span>
           {count !== undefined && (
-            <span style={{ opacity: 0.5, fontSize: 'var(--type-caption-size)' }}>({count})</span>
+            <span className={ax({ opacity: 'dim', textStyle: 'caption' })}>({count})</span>
           )}
         </>
       ) : (
         <>
-          <span style={{ opacity: 0.3, fontSize: 'var(--type-caption-size)' }}>·</span>
-          <span style={{ color: TYPE_COLORS[type] ?? 'inherit', fontSize: 'var(--type-caption-size)', opacity: 0.8 }}>
+          <span className={ax({ opacity: 'faint', textStyle: 'caption' })}>·</span>
+          <span className={`inspector-item-type ${ax({ textStyle: 'caption' })}`} style={{ '--_type-color': TYPE_COLORS[type] } as React.CSSProperties}>
             {type}
           </span>
           <span>{label}</span>
           {value && (
-            <span style={{ opacity: 0.5, fontSize: 'var(--type-caption-size)' }}>
+            <span className={ax({ opacity: 'dim', textStyle: 'caption' })}>
               {truncate(value)}
             </span>
           )}

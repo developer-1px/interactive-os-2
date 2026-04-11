@@ -4,13 +4,14 @@ import { useCallback } from 'react'
 import type { NormalizedData } from '@os/store/types'
 import { useStore } from '@os/store/useStore'
 import { components } from './showcaseRegistry'
+import { ax } from '@styles/ax'
 import { TestRunnerPanel } from '../../devtools/testRunner/TestRunnerPanel'
 
 export function ShowcaseDemo({ slug }: { slug?: string }) {
   const entry = components.find((c) => c.slug === slug)
 
   if (!entry) {
-    return <div style={{ color: 'var(--tone-destructive-base)', padding: '8px' }}>Unknown component: {slug}</div>
+    return <div className={ax({ tone: 'danger', padding: 'sm' })}>Unknown component: {slug}</div>
   }
 
   return (

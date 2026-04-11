@@ -2,7 +2,7 @@ import { useCallback, useMemo, type HTMLAttributes } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
-  MessageSquare, Bird, BookText, Play, Search, Cable, PenLine, Kanban, SquareKanban, Columns3, GitBranch,
+  MessageSquare, BookText, Play, Cable, PenLine, Kanban, SquareKanban, GitBranch,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -68,13 +68,10 @@ const appNavItems: NavItem[] = [
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
   // --- Browse / Docs ---
   { id: 'viewer', label: 'Viewer', icon: FolderCode, path: '/viewer' },
-  { id: 'docs', label: 'Docs', icon: Columns3, path: '/docs' },
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'pipeline', label: 'Pipeline', icon: GitBranch, path: '/pipeline' },
   // ---
-  { id: 'birdseye', label: 'Birdseye', icon: Bird, path: '/birdseye' },
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
-  { id: 'inspector', label: 'Inspector', icon: Search, path: '/inspector' },
   { id: 'kanban', label: 'Kanban', icon: SquareKanban, path: '/kanban' },
   { id: 'a2ui', label: 'A2UI', icon: Cable, path: '/a2ui' },
   { id: 'project', label: 'Project', icon: Kanban, path: '/project' },

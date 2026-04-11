@@ -23,14 +23,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   tone?: ButtonTone
   size?: ButtonSize
+  /** Set when used inside a useAria container (e.g. toolbar) */
+  interactive?: Axes['interactive']
 }
 
-export function Button({ variant = 'ghost', tone, size = 'default', className, ...props }: ButtonProps) {
-  const axes = { ...variantAxes[variant] }
+export function Button({ variant = 'ghost', tone, size = 'default', interactive, className, ...props }: ButtonProps) {
+  const axes: Parameters<typeof ax>[0] = { ...variantAxes[variant], recipe: sizeRecipe[size] }
   if (tone) axes.tone = tone
+  if (interactive) axes.interactive = interactive
   return (
     <button
-      className={`${ax({ ...axes, recipe: sizeRecipe[size] })}${className ? ` ${className}` : ''}`}
+      className={`${ax(axes)}${className ? ` ${className}` : ''}`}
       {...props}
     />
   )

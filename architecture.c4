@@ -191,7 +191,6 @@ model {
   pages = system 'Pages' {
     page_a2ui = layer 'a2ui'
     page_area = layer 'area'
-    page_birdseye = layer 'birdseye'
     page_book = layer 'book'
     page_chat = layer 'chat'
     page_cms = layer 'cms'

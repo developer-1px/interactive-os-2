@@ -19,6 +19,7 @@ import { focusRecovery } from '@os/plugins/focusRecovery'
 import { storeToInspectorTree } from '@os/store/storeToInspectorTree'
 import { treeData } from '../../pages/shared/sharedTreeData'
 import './PageStoreInspector.css'
+import './renderInspectorItem.css'
 
 // --- Stateless module-level constants ---
 
@@ -59,20 +60,11 @@ function renderEditorItem(props: React.HTMLAttributes<HTMLElement>, node: Record
   return (
     <div
       {...props}
-      style={{
-        paddingLeft: `calc(var(--space-md) + ${indent}px)`,
-        paddingTop: 3,
-        paddingBottom: 3,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 6,
-        fontFamily: 'var(--mono)',
-        fontSize: 'var(--type-body-size)',
-        background: state.focused ? 'var(--bg-hover)' : undefined,
-        outline: state.focused ? '1.5px solid var(--focus)' : undefined,
-      }}
+      className={`${props.className ?? ''} inspector-item ${ax({ layout: 'bar', gap: 'xs', textStyle: 'code', state: state.focused ? 'focused' : undefined })}`}
+      style={{ '--_indent': `${indent}px` } as React.CSSProperties}
+      data-focused={state.focused || undefined}
     >
-      <span style={{ opacity: 0.5, width: 10, textAlign: 'center' }}>
+      <span className={ax({ opacity: 'dim', layout: 'center' })}>
         {hasChildren ? (state.expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : ''}
       </span>
       <span className={ax({ opacity: 'faint', textStyle: 'caption' })}>{type === 'folder' ? <Folder size={12} /> : <File size={12} />}</span>

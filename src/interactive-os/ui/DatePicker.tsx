@@ -262,7 +262,7 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`${ax({ surface: 'overlay', padding: 'sm', border: 'default', shape: 'sm' })} dp-dialog`}
+          className={`${ax({ surface: 'trap', padding: 'sm', border: 'default', shape: 'sm' })} dp-dialog`}
           onKeyDown={handleDialogKeyDown}
         >
           <div className={`${ax({ layout: 'bar', gap: 'xs' })} dp-nav-bar`}>

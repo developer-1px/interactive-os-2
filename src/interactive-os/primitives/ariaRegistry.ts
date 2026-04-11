@@ -6,6 +6,7 @@ export interface AriaActions {
   getStore: () => NormalizedData
   inspect: () => InspectResult
   getElement: () => HTMLElement | null
+  getNodeElement?: (nodeId: string) => HTMLElement | null
   subscribe: (listener: (event: EngineEvent) => void) => Unsubscribe
 }
 

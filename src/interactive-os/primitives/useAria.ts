@@ -57,6 +57,8 @@ export interface UseAriaOptions {
   'aria-label'?: string
   /** Explicit registry id (takes precedence over aria-label) */
   id?: string
+  /** Resolve a store node to its DOM element — used by inspector highlight for non-interactive nodes */
+  getNodeElement?: (nodeId: string) => HTMLElement | null
 }
 
 export interface UseAriaReturn {
@@ -73,7 +75,7 @@ export interface UseAriaReturn {
 }
 
 export function useAria(options: UseAriaOptions): UseAriaReturn {
-  const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, onFocusChange, initialFocus, logger, autoFocus = true, disabled = false, 'aria-label': ariaLabel, id: ariaId } = options
+  const { pattern = EMPTY_BEHAVIOR, data, plugins = [], keyMap: keyMapOverrides, onChange, onActivate, onFocusChange, initialFocus, logger, autoFocus = true, disabled = false, 'aria-label': ariaLabel, id: ariaId, getNodeElement } = options
   const [, forceRender] = useState(0)
   const pointerDownCtxRef = useRef<ReturnType<typeof createPatternContext> | null>(null)
   const suppressFocusDispatchRef = useRef(false)
@@ -338,7 +340,7 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
         return { ...base, bindings: getAllBindings().filter(b => b.nodeId === null || b.nodeId === registryKey), clickMap: clickMapCommands }
       }
       return { ...base, clickMap: clickMapCommands }
-    }, getElement: () => containerRef.current, subscribe: (listener) => engine.subscribe(listener) })
+    }, getElement: () => containerRef.current, getNodeElement, subscribe: (listener) => engine.subscribe(listener) })
 
     if (import.meta.env.DEV) {
       for (const map of [pattern.keyMap, pattern.clickMap]) {

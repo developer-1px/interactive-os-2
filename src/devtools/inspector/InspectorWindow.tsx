@@ -136,8 +136,9 @@ function AriaTabContent({ selectedId, inspectResult, actionsMap, metas }: AriaTa
   const instId = findInstanceId(selectedId)
   const instMeta = metas.get(instId)
   const container = instMeta ? actionsMap.get(instMeta.registryKey)?.getElement() ?? null : null
-  const domElement = nodeId && container
-    ? container.querySelector<HTMLElement>(`[data-node-id="${nodeId}"]`)
+  const actions = instMeta ? actionsMap.get(instMeta.registryKey) : undefined
+  const domElement = nodeId
+    ? (actions?.getNodeElement?.(nodeId) ?? container?.querySelector<HTMLElement>(`[data-node-id="${nodeId}"]`) ?? container)
     : container
   const domProps = domElement ? readDomAriaProps(domElement) : null
 
@@ -273,9 +274,9 @@ export function InspectorWindow() {
 
       // If selecting a child node (not the instance root), find its DOM element
       const sep = nodeId.indexOf('::')
-      if (sep !== -1 && container) {
+      if (sep !== -1) {
         const childNodeId = nodeId.slice(sep + 2)
-        element = container.querySelector<HTMLElement>(`[data-node-id="${childNodeId}"]`)
+        element = actions?.getNodeElement?.(childNodeId) ?? container?.querySelector<HTMLElement>(`[data-node-id="${childNodeId}"]`) ?? null
       }
       // Fallback to instance container
       if (!element) element = container

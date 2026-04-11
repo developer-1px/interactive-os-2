@@ -108,7 +108,6 @@ const PROJECT_KEYWORDS: Record<string, string[]> = {
   theme: ['theme', 'Theme', '테마'],
   book: ['book', 'Book'],
   i18n: ['i18n', 'I18n', 'DataTable', '다국어', 'Grid + history undo', 'rename 중 Tab', 'grid-i18n'],
-  birdseye: ['birdseye', 'Birdseye', '조감도'],
   area: ['area', 'Area'],
   // OS core layers
   os: [
@@ -193,7 +192,7 @@ export function getProjects(): ProjectInfo[] {
     cms: 'CMS', viewer: 'Viewer', writer: 'Writer', chat: 'Chat',
     showcase: 'Showcase', creator: 'Creator', a2ui: 'A2UI',
     storymap: 'Story Map', replay: 'Replay', incident: 'Incident',
-    theme: 'Theme', book: 'Book', i18n: 'i18n', birdseye: 'Birdseye',
+    theme: 'Theme', book: 'Book', i18n: 'i18n',
     area: 'Area', project: 'Project',
   }
 
@@ -201,7 +200,7 @@ export function getProjects(): ProjectInfo[] {
     cms: '/', viewer: '/viewer', writer: '/writer', chat: '/chat',
     showcase: '/ui', creator: '/creator', a2ui: '/a2ui',
     storymap: '/storymap', replay: '/replay', incident: '/incident',
-    theme: '/internals/theme', book: '/book', i18n: '/i18n', birdseye: '/birdseye',
+    theme: '/internals/theme', book: '/book', i18n: '/i18n',
     project: '/project',
   }
 

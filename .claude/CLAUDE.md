@@ -69,6 +69,7 @@ store → engine → axis → pattern → primitives → ui → pages
 - **커밋 전**: `/simplify` 필수.
 - **`docs/3-resources/` 파일명**: `{순번}-[{태그}]{제목}.md`. 순번 = 폴더 마지막 번호 + 1.
 - **`docs/PROGRESS.md`**: concept map. 모듈 추가/삭제 시 갱신, Maturity/Gaps는 /retrospect 시.
+- **제1원칙: 있는 걸로 만든다** — 새 컴포넌트·훅·유틸을 만들기 전에 `src/interactive-os/CATALOG.md`를 읽고 기존 부품에 없음을 확인한다. 확인 없이 새로 만들지 않는다.
 - **os 기반 개발 (필수)**:
   - UI → `src/interactive-os/ui/` 기존 완성품 사용. 없으면 ui/에 먼저 만들고 pages에서 import. pages/에서 useAria/useAriaZone 직접 사용 금지.
   - 키바인딩 → KeyMap 선언. addEventListener('keydown'/'keyup') 금지.
