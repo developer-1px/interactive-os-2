@@ -5,6 +5,7 @@
 // @useState-hatch — fileContent/activeFilePath: modal-local file fetch state, not OS store material
 // @useState-hatch — splitSizes: SplitPane local resize state
 // @useState-hatch — showEmptyDone: toggle for empty done sessions
+// @useState-hatch — showOlderDone: toggle for older (not today) done sessions
 // @useMemo-hatch — tabData: derived from card.touchedFiles, not OS store
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { subscribeTimeline } from '../viewer/timelineSSE'
@@ -392,6 +393,8 @@ export default function SkillKanban() {
   const [openCardId, setOpenCardId] = useState<string | null>(null)
   // @useState-hatch — showEmptyDone: toggle for empty done sessions display
   const [showEmptyDone, setShowEmptyDone] = useState(false)
+  // @useState-hatch — showOlderDone: toggle for older done sessions display
+  const [showOlderDone, setShowOlderDone] = useState(false)
 
   useEffect(() => {
     if (sessions.length === 0) return
@@ -497,18 +500,32 @@ export default function SkillKanban() {
 
   const waiting = sessionCards.filter(c => c.agentState === 'waiting')
   const active = sessionCards.filter(c => c.agentState === 'active')
-  const doneWithOutput = sessionCards.filter(c => c.agentState === 'done' && c.hasOutput)
-  const doneEmpty = sessionCards.filter(c => c.agentState === 'done' && !c.hasOutput)
-  const doneCards = showEmptyDone ? [...doneWithOutput, ...doneEmpty] : doneWithOutput
+  const todayStart = new Date().setHours(0, 0, 0, 0)
+  const doneAll = sessionCards.filter(c => c.agentState === 'done')
+  const doneToday = doneAll.filter(c => c.hasOutput && c.lastTs >= todayStart)
+  const doneOlder = doneAll.filter(c => c.hasOutput && c.lastTs < todayStart)
+  const doneEmpty = doneAll.filter(c => !c.hasOutput)
+  const doneCards = [
+    ...doneToday,
+    ...(showOlderDone ? doneOlder : []),
+    ...(showEmptyDone ? doneEmpty : []),
+  ]
   const openCard = openCardId ? sessionCards.find(c => c.id === openCardId) : null
 
-  const emptyDoneToggle = doneEmpty.length > 0 ? (
-    <button
-      className={ax({ surface: 'ghost', recipe: 'control-sm', textStyle: 'caption', text: 'muted', interactive: 'button' })}
-      onClick={() => setShowEmptyDone(v => !v)}
-    >
-      {showEmptyDone ? '빈 세션 숨기기' : `빈 세션 ${doneEmpty.length}개`}
-    </button>
+  const toggleBtnClass = ax({ surface: 'ghost', recipe: 'control-sm', textStyle: 'caption', text: 'muted', interactive: 'button' })
+  const doneToggles = (doneOlder.length > 0 || doneEmpty.length > 0) ? (
+    <div className={ax({ layout: 'column', gap: 'xs' })}>
+      {doneOlder.length > 0 && (
+        <button className={toggleBtnClass} onClick={() => setShowOlderDone(v => !v)}>
+          {showOlderDone ? '이전 세션 숨기기' : `이전 세션 ${doneOlder.length}개`}
+        </button>
+      )}
+      {doneEmpty.length > 0 && (
+        <button className={toggleBtnClass} onClick={() => setShowEmptyDone(v => !v)}>
+          {showEmptyDone ? '빈 세션 숨기기' : `빈 세션 ${doneEmpty.length}개`}
+        </button>
+      )}
+    </div>
   ) : undefined
 
   return (
@@ -517,7 +534,7 @@ export default function SkillKanban() {
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
           <h2 className={ax({ text: 'bright', textStyle: 'section' })}>Agent Dashboard</h2>
           <span className={ax({ text: 'muted', textStyle: 'caption' })}>
-            {waiting.length} waiting · {active.length} active · {doneWithOutput.length + doneEmpty.length} done
+            {waiting.length} waiting · {active.length} active · {doneAll.length} done
           </span>
         </div>
       </div>
@@ -535,7 +552,7 @@ export default function SkillKanban() {
               label={col.label}
               cards={cardsByState[col.state]}
               onCardClick={setOpenCardId}
-              emptyToggle={col.state === 'done' ? emptyDoneToggle : undefined}
+              emptyToggle={col.state === 'done' ? doneToggles : undefined}
             />
           )
         })}
