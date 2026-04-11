@@ -170,28 +170,12 @@ export default function PageViewer() {
     }, 'Viewer'),
   }), [])
 
-  const listColumns = useMemo(() => [
-    { key: 'name', header: 'Name', width: '1fr' },
-    { key: 'type', header: 'Type', width: '80px' },
-    { key: 'loc', header: 'LOC', width: '80px' },
-  ], [])
-
   const listStore = useMemo(() => {
     if (!initialStore) return null
     let store = initialStore
     if (filters.length > 0) store = filterStore(store, filters)
     if (sortKey) store = sortStore(store, sortKey, sortDir)
-    // Add cells array for TreeGrid column mode
-    const entities = { ...store.entities }
-    for (const [id, entity] of Object.entries(entities)) {
-      if (id.startsWith('__')) continue
-      const data = (entity.data ?? {}) as Record<string, unknown>
-      const name = (data.name as string) ?? ''
-      const ext = name.includes('.') ? name.split('.').pop() ?? '' : ''
-      const loc = data.loc as number | undefined
-      entities[id] = { ...entity, data: { ...data, cells: [name, ext, loc ?? '—'] } }
-    }
-    return { ...store, entities }
+    return store
   }, [initialStore, filters, sortKey, sortDir])
 
   const handleSort = useCallback((key: SortKey) => {
@@ -268,10 +252,23 @@ export default function PageViewer() {
                 <div className={ax({ layout: 'fill', flex: '1' })}>
                   <TreeGrid
                     data={listStore}
-                    columns={listColumns}
-                    header
                     onChange={handleChange}
                     onActivate={handleActivate}
+                    itemSlots={{
+                      rightContent: (node) => {
+                        const d = node.data as Record<string, unknown>
+                        if (d.type === 'directory') return null
+                        const name = (d.name as string) ?? ''
+                        const ext = name.includes('.') ? name.split('.').pop() ?? '' : ''
+                        const loc = d.loc as number | undefined
+                        return (
+                          <span className={ax({ layout: 'bar', gap: 'sm', text: 'muted', textStyle: 'caption' })}>
+                            <span>{ext}</span>
+                            {loc != null && <span>{loc}</span>}
+                          </span>
+                        )
+                      },
+                    }}
                     aria-label="File browser"
                   />
                 </div>
