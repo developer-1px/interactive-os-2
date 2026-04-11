@@ -94,7 +94,7 @@ graph TB
   subgraph L3["L3 · Plugin — plugins/"]
     direction TB
     subgraph L3_define["플러그인 정의"]
-      definePlugin["definePlugin — intercepts/requires · zodSchema"]
+      definePlugin["definePlugin — intercepts/requires/validator · zodSchema"]
     end
     subgraph L3_core["core — 포커스 · 셀렉션 · 확장"]
       direction LR
@@ -106,7 +106,7 @@ graph TB
     subgraph L3_data["데이터 조작"]
       direction LR
       cmd_crud["crud: moveNode · insertNode · add · remove"]
-      cmd_clip["clipboard: copy · cut · paste · CanAcceptFn"]
+      cmd_clip["clipboard: copy · cut · paste (NormalizedData 버퍼)"]
       cmd_rename["rename: startRename · confirmRename · cancelRename"]
       cmd_dnd["dnd: moveUp · moveDown · moveOut · moveIn"]
     end

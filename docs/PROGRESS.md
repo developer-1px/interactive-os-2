@@ -11,12 +11,14 @@
 | storeToInspectorTree | Integrated | — |
 | computeStoreDiff | Integrated | — |
 | createSingleNodeStore | Integrated | 단일/순차 노드 NormalizedData 헬퍼 |
+| extractSubtree / mergeSubtree | Integrated | 서브트리 추출·병합 범용 연산, clipboard·DnD 공용 |
 
 ## Engine (L2)
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
 | dispatch + middleware | Integrated | EffectContext: plugin DOM effect 지원 |
+| validator | Integrated | ValidatorFn 슬롯, CommandResult 반환, plugin 자동 수집, mutation command 자동 검증 |
 | defineCommand | Integrated | Phase 2: engine handler registry 전환 |
 | Dispatch Logger | Validated | — |
 
@@ -29,8 +31,8 @@
 | crud | Integrated | — |
 | cellEdit | Integrated | Google Sheets 2모드: Delete→셀 클리어, Enter→행 이동, Mod+X/C/V 셀 클립보드 |
 | search | Integrated | Mod+F 검색, Aria.Search input + Aria.SearchHighlight mark. getVisibleNodes 필터. Grid searchable prop |
-| clipboard | Integrated | definePlugin 전환, TYPE 상수, canAccept 인자화, keyMap→native event 전환 완료, cutCellValue/clearCellValue 추가, multi-select copy/cut/paste + Mod+D, serialize/deserialize 시스템 클립보드 브릿지 |
-| zodSchema | Integrated | Zod childRules → canAccept/canDelete 자동 파생, middleware 기반. ZodSchema 타입 export |
+| clipboard | Integrated | NormalizedData 버퍼 수렴 (ClipboardEntry 제거), extractSubtree/mergeSubtree store 연산 사용, serialize/deserialize 브릿지, multi-select, Mod+D |
+| zodSchema | Integrated | validator 패턴 전환 (middleware 제거), crud/dnd/clipboard 전 경로 구조 무결성 검증, CommandResult reject 시그널 |
 | form | Prototype | Zod entityRules 기반 값 검증, __errors__/__touched__ 메타 엔티티, submit/reset/touch 커맨드 |
 | rename | Integrated | — |
 | dnd | Integrated | — |
