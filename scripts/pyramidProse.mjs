@@ -136,13 +136,13 @@ export function generateLeveledProse(nodes, edges, subgraphs, subgraphMap) {
               lines.push('');
               lines.push(`#### **${edge.label}** ${targetNode.content}`);
               lines.push('');
-              dfs(edge.to, depth + 1, true);
-            // 그룹 자식 A: Lv.2에서 ##### 헤딩으로 출력
+              dfs(edge.to, 0, true);
+            // 그룹 자식 A: Lv.2에서 ##### 헤딩으로 출력, depth 리셋
             } else if (level >= 2 && insideGroup && HEADING_TYPES.has(targetNode.type)) {
               lines.push('');
               lines.push(`##### **${edge.label}** ${targetNode.content}`);
               lines.push('');
-              dfs(edge.to, depth + 1, false);
+              dfs(edge.to, 0, false);
             } else {
               lines.push(`${bullet(depth + 1)}**${edge.label}** ${targetNode.content}`);
               dfs(edge.to, depth + 1, insideGroup);
