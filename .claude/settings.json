@@ -132,6 +132,17 @@
         ]
       },
       {
+        "matcher": "Edit|Write|Bash",
+        "if": "Edit(docs/*.md)|Edit(docs/**/*.md)|Write(docs/*.md)|Write(docs/**/*.md)|Bash(git mv *docs*)|Bash(mv *docs*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkDocLinks.mjs",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write",
         "hooks": [
           {

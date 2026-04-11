@@ -1,5 +1,7 @@
 # Handoff: Finder Viewer
 
+consumed_by: 7a4c6d1d (FilePreview OCP 통합)
+
 > 2026-04-11 세션에서 viewer를 Finder 스타일로 전면 리팩토링 + List X-ray 기능 추가
 
 ## 완료

@@ -1,3 +1,7 @@
+---
+consumed_by: 38aac4f5 — Agent Dashboard 재설계로 v1 handoff 항목 해소
+---
+
 # Handoff: Skill Kanban v1 완성 → 상품성 개선 계속
 
 > 2026-04-11 세션에서 Skill Kanban 페이지를 discuss→PRD→구현→상품성 개선까지 진행
