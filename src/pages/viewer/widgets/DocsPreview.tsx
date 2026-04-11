@@ -1,27 +1,21 @@
 // @useState-hatch — content: async file fetch
 import { useState, useEffect } from 'react'
 import { fetchFile } from '../fsClient'
-import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { FilePreview } from '@os/ui/FilePreview'
+import { getFileSource } from '@os/ui/fileRenderers'
 import { SpinnerIndicator } from '@os/ui/indicators'
-import { ax } from '@styles/ax'
-
-const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.bmp'])
-
-function isImageFile(path: string): boolean {
-  const ext = path.slice(path.lastIndexOf('.')).toLowerCase()
-  return IMAGE_EXTS.has(ext)
-}
 
 export function DocsPreview({ nodeId }: { nodeId: string }) {
-  if (isImageFile(nodeId)) {
+  const source = getFileSource(nodeId)
+  const filename = nodeId.split('/').pop() ?? ''
+
+  if (source === 'url') {
     return (
-      <div className={ax({ layout: 'center', flex: '1' })}>
-        <img
-          src={`/api/fs/file?path=${encodeURIComponent(nodeId)}`}
-          alt={nodeId.split('/').pop() ?? ''}
-          className={ax({ width: 'full' })}
-        />
-      </div>
+      <FilePreview
+        content=""
+        filename={filename}
+        src={`/api/fs/file?path=${encodeURIComponent(nodeId)}`}
+      />
     )
   }
 
@@ -31,5 +25,5 @@ export function DocsPreview({ nodeId }: { nodeId: string }) {
     fetchFile(nodeId).then(setContent).catch(() => setContent('Failed to load file.'))
   }, [nodeId])
   if (content === null) return <SpinnerIndicator size="sm" />
-  return <MarkdownViewer content={content} />
+  return <FilePreview content={content} filename={filename} />
 }

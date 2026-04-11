@@ -7,6 +7,7 @@ import { PanelHeader } from '@os/ui/PanelHeader'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import { Panel } from '@os/ui/panels'
+import { FilePreview } from '@os/ui/FilePreview'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { TabList } from '@os/ui/TabList'
 import { ax } from '@styles/ax'
@@ -37,7 +38,7 @@ const initialTab = getInitialTabFromUrl() ?? ALL_PROJECTS[0] ?? 'cms'
 function ImagePreview({ src, caption }: { src: string; caption?: string }) {
   return (
     <div className={ax({ layout: 'column', gap: 'sm', padding: 'md' })}>
-      <img src={src} alt={caption ?? ''} className={ax({ shape: 'md' })} width="100%" />
+      <FilePreview content="" filename="image.png" src={src} />
       {caption && (
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>{caption}</span>
       )}
@@ -77,10 +78,12 @@ function MarkdownDocPreview({ path, fallback }: { path: string; fallback: string
     loadMarkdown(path).then(md => { if (md) setContent(md) })
   }, [path])
 
+  const filename = path.split('/').pop() ?? path
+
   return (
     <div className={ax({ layout: 'column', gap: 'sm', padding: 'md' })}>
       <span className={ax({ textStyle: 'caption', tone: 'accent' })}>{path}</span>
-      <MarkdownViewer content={content ?? fallback} codeVariant="compact" />
+      <FilePreview content={content ?? fallback} filename={filename} />
     </div>
   )
 }

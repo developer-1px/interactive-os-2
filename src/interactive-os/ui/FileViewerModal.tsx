@@ -1,10 +1,10 @@
 /** @catalog 파일 뷰어 모달 */
 import { useRef, useState, useEffect, useMemo } from 'react'
-import { CodeBlock } from './CodeBlock'
-import { MarkdownViewer } from './MarkdownViewer'
+import { FilePreview } from './FilePreview'
 import { FileIcon } from './FileIcon'
 import { Breadcrumb } from './Breadcrumb'
 import { PanelHeader } from './PanelHeader'
+import { getFileSource } from './fileRenderers'
 import { ax } from '@styles/ax'
 import './FileViewerModal.css'
 
@@ -15,8 +15,6 @@ interface FileViewerModalProps {
   root?: string
   onClose: () => void
 }
-
-const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp'])
 
 const DEFAULT_ROOT = '/Users/user/Desktop/aria'
 
@@ -79,13 +77,12 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
 
   const filename = filePath?.split('/').pop() ?? ''
   const ext = filename.includes('.') ? filename.split('.').pop()!.toLowerCase() : ''
-  const isMarkdown = ext === 'md'
-  const isImage = IMAGE_EXTS.has(ext)
+  const isUrl = filePath ? getFileSource(filePath) === 'url' : false
   const lineCount = fileContent ? fileContent.split('\n').length : 0
 
   return (
     <dialog ref={dialogRef} className="border-none bg-transparent fvm-dialog" onClick={handleBackdropClick}>
-      <div className={`fvm-modal ${ax({ surface: 'overlay', layout: 'column', shape: 'xl', scroll: 'hidden' })}`} onClick={e => e.stopPropagation()}>
+      <div className={`fvm-modal ${ax({ surface: 'trap', layout: 'column', shape: 'xl', scroll: 'hidden' })}`} onClick={e => e.stopPropagation()}>
         <PanelHeader axes={{ layout: 'spread' }}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
@@ -93,7 +90,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
               <div className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
                 <FileIcon name={filename} type="file" />
                 <span>{ext.toUpperCase()}</span>
-                {!isImage && lineCount > 0 && (
+                {!isUrl && lineCount > 0 && (
                   <>
                     <span className="fvm-meta-sep" />
                     <span>{lineCount} lines</span>
@@ -113,13 +110,13 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
         <div className={ax({ flex: '1', layout: 'scroll' })}>
           {error ? (
             <div className={ax({ tone: 'danger', padding: 'md' })}>File not found</div>
-          ) : isImage ? (
-            <img src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`} alt={filename} className="fvm-image" />
-          ) : isMarkdown ? (
-            <MarkdownViewer content={fileContent} />
           ) : (
-            <CodeBlock code={fileContent} filename={filename}
-              highlightLines={mergedHighlightLines.size > 0 ? mergedHighlightLines : undefined} />
+            <FilePreview
+              content={fileContent}
+              filename={filename}
+              src={`/api/fs/file?path=${encodeURIComponent(filePath!)}`}
+              highlightLines={mergedHighlightLines.size > 0 ? mergedHighlightLines : undefined}
+            />
           )}
         </div>
       </div>
