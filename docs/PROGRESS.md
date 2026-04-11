@@ -36,6 +36,7 @@
 | dnd | Integrated | — |
 | spatial | Integrated | — |
 | typeahead | Integrated | — |
+| urlSync | Integrated | v2: parser 전략 객체(hash/search/path), push/replace, commandFilter. useUrlSync 훅(popstate→onChange) |
 | autoscroll | Prototype | MutationObserver+IntersectionObserver 기반 자동스크롤. Plugin.useEffect 첫 적용 |
 | definePlugin | Integrated | Plugin 팩토리: name, intercepts, requires, useEffect. 전 플러그인 전환 완료 |
 | *permissions* | Concept | 예제만 존재 |

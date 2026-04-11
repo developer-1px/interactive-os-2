@@ -23,6 +23,8 @@ import { EXPANDED_ID } from '@os/axis/expand'
 import { DEFAULT_ROOT, type FileNodeData } from './types'
 import { fetchTree } from './fsClient'
 import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelected } from './treeTransform'
+import { pathParser } from '@os/plugins/urlParsers'
+import { useUrlSync } from '@os/plugins/useUrlSync'
 import { FileIcon } from '@os/ui/FileIcon'
 import { ax } from '@styles/ax'
 import { SpinnerIndicator } from '@os/ui/indicators'
@@ -58,7 +60,12 @@ export default function PageViewer() {
     return saved === 'columns' ? 'columns' : 'list'
   })
   const [previewPath, setPreviewPath] = useState<string | null>(null) // @useState-hatch — follow-focus file preview
-  const [currentRoot, setCurrentRoot] = useState('src')
+  // ② url-sync-v2-prd.md — L1 bug fix: derive currentRoot from URL
+  // @useState-hatch — sidebar selection derived from URL pathname
+  const [currentRoot, setCurrentRoot] = useState(() => {
+    const seg = window.location.pathname.split('/')[2]
+    return seg === 'docs' ? 'docs' : 'src'
+  })
   const [sortKey, setSortKey] = useState<SortKey | null>(null) // @useState-hatch
   const [sortDir, setSortDir] = useState<SortDir>('asc') // @useState-hatch
   const [filters, setFilters] = useState<string[]>([]) // @useState-hatch
@@ -115,13 +122,48 @@ export default function PageViewer() {
     return () => { import.meta.hot!.off('fs:tree-update', handler) }
   }, [currentRoot])
 
+  // ② url-sync-v2-prd.md — popstate → store re-initialization
+  const viewerParser = useMemo(() => pathParser({ prefix: 'viewer', root: DEFAULT_ROOT }), [])
+  const fetchIdRef = useRef(0)
+  const currentRootRef = useRef(currentRoot)
+  useEffect(() => { currentRootRef.current = currentRoot }, [currentRoot])
+  const handleUrlChange = useCallback((id: string | null) => {
+    if (!id) return
+    const newRoot = id.startsWith(DEFAULT_ROOT + '/docs') ? 'docs' : 'src'
+    if (newRoot === currentRootRef.current) {
+      // Same tree — reuse current store, just update selection
+      setInitialStore(prev => {
+        if (!prev) return prev
+        if (!prev.entities[id]) { setPreviewPath(null); return prev }
+        setPreviewPath(id)
+        return withInitialFileSelected(prev, id)
+      })
+      return
+    }
+    setCurrentRoot(newRoot)
+    const thisId = ++fetchIdRef.current
+    fetchTree(resolveRoot(newRoot)).then((tree) => {
+      if (fetchIdRef.current !== thisId) return
+      let store = treeToStore(tree)
+      if (store.entities[id]) {
+        store = withInitialFileSelected(store, id)
+        setPreviewPath(id)
+      } else {
+        setPreviewPath(null)
+      }
+      setInitialStore(store)
+    })
+  }, [])
+  useUrlSync({ parser: viewerParser, onUrlChange: handleUrlChange })
+
   const handleChange = useCallback((newStore: NormalizedData) => {
     const focusedId = (newStore.entities['__focus__']?.focusedId as string) ?? ''
     const entity = newStore.entities[focusedId]
     if (entity?.data && (entity.data as unknown as FileNodeData).type === 'file') {
       const path = (entity.data as unknown as FileNodeData).path
       setPreviewPath(path)
-      navigate(filePathToUrlPath(path, 'viewer', DEFAULT_ROOT), { replace: true })
+      // ② url-sync-v2-prd.md — push for back/forward navigation
+      navigate(filePathToUrlPath(path, 'viewer', DEFAULT_ROOT), { replace: false })
     } else {
       setPreviewPath(null)
     }
