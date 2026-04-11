@@ -6,7 +6,7 @@ import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { MillerColumns } from '@os/ui/MillerColumns'
-import { FilterBar } from '@os/ui/FilterBar'
+import { Button } from '@os/ui/Button'
 import { SortIndicator } from '@os/ui/indicators'
 import { sortStore, type SortKey, type SortDir } from './viewerSort'
 import { filterStore } from './viewerFilter'
@@ -219,32 +219,28 @@ export default function PageViewer() {
             onSearchClick={() => setQuickOpenVisible(true)}
           />
           {viewMode === 'list' && (
-            <FilterBar
-              filters={filters.map(ext => ({ id: ext, label: ext, onRemove: () => setFilters(f => f.filter(e => e !== ext)) }))}
-            >
-              <button className={ax({ surface: 'ghost', recipe: 'control-sm', interactive: 'button' })} onClick={() => handleSort('name')}>
+            <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })}>
+              <Button size="sm" onClick={() => handleSort('name')}>
                 Name <SortIndicator direction={sortKey === 'name' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
-              </button>
-              <button className={ax({ surface: 'ghost', recipe: 'control-sm', interactive: 'button' })} onClick={() => handleSort('type')}>
+              </Button>
+              <Button size="sm" onClick={() => handleSort('type')}>
                 Type <SortIndicator direction={sortKey === 'type' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
-              </button>
-              <button className={ax({ surface: 'ghost', recipe: 'control-sm', interactive: 'button' })} onClick={() => handleSort('loc')}>
+              </Button>
+              <Button size="sm" onClick={() => handleSort('loc')}>
                 LOC <SortIndicator direction={sortKey === 'loc' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
-              </button>
-              {['.tsx', '.ts', '.css', '.md', '.test.ts', '.test.tsx'].map(ext => (
-                <button
+              </Button>
+              <span className={ax({ border: 'end', flex: 'none' })} />
+              {['.tsx', '.ts', '.css', '.md'].map(ext => (
+                <Button
                   key={ext}
-                  className={ax({
-                    surface: filters.includes(ext) ? 'display' : 'ghost',
-                    recipe: 'control-sm',
-                    interactive: 'button',
-                  })}
+                  size="sm"
+                  variant={filters.includes(ext) ? 'dialog' : 'ghost'}
                   onClick={() => setFilters(f => f.includes(ext) ? f.filter(e => e !== ext) : [...f, ext])}
                 >
                   {ext}
-                </button>
+                </Button>
               ))}
-            </FilterBar>
+            </div>
           )}
           <div className={ax({ layout: 'row-fill', flex: '1' })}>
             {viewMode === 'list' ? (
