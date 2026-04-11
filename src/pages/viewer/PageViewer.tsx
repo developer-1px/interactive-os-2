@@ -24,6 +24,7 @@ import { EXPANDED_ID } from '@os/axis/expand'
 import { DEFAULT_ROOT, type FileNodeData } from './types'
 import { fetchTree } from './fsClient'
 import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelected } from './treeTransform'
+import { FileIcon } from '@os/ui/FileIcon'
 import { ax } from '@styles/ax'
 import { SpinnerIndicator } from '@os/ui/indicators'
 import { Panel, SidePanel } from '@os/ui/panels'
@@ -251,6 +252,10 @@ export default function PageViewer() {
                     onChange={handleChange}
                     onActivate={handleActivate}
                     itemSlots={{
+                      icon: (node, state) => {
+                        const d = node.data as Record<string, unknown>
+                        return <FileIcon name={d.name as string} type={d.type as string} expanded={state.expanded} />
+                      },
                       rightContent: (node) => {
                         const d = node.data as Record<string, unknown>
                         if (d.type === 'directory') return null
@@ -280,13 +285,9 @@ export default function PageViewer() {
                 aria-label="File browser"
               />
             )}
-            {viewMode === 'list' && (
+            {viewMode === 'list' && previewPath && (
               <SidePanel>
-                {previewPath ? (
-                  <FilePanel path={previewPath} />
-                ) : (
-                  <EmptyState title="No file selected" description="Click a file to preview" />
-                )}
+                <FilePanel path={previewPath} />
               </SidePanel>
             )}
           </div>
