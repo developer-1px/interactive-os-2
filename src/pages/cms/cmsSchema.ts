@@ -211,6 +211,7 @@ export interface EditableGroupEntry {
 export interface EditableGroup {
   groupLabel: string
   entries: EditableGroupEntry[]
+  nodeId?: string
 }
 
 /** Derive a human-readable label for a container group.
@@ -317,6 +318,7 @@ export function collectEditableGroups(
         groups.push({
           groupLabel: deriveGroupLabel(store, childId, locale, childChildren),
           entries: subEntries,
+          nodeId: childId,
         })
       }
     } else if (childFields.length > 0) {

@@ -1,104 +1,110 @@
-/** @catalog 폼 필드 그룹 */
-import React from 'react'
-
-import type { NormalizedData } from '../store/types'
-import type { Plugin } from '../plugins/types'
-import type { NodeState } from '../pattern/types'
-import { Aria } from '../primitives/aria'
-import { listbox } from '../pattern/roles/listbox'
-import { form as formPlugin } from '../plugins/form'
-import type { FormOptions } from '../plugins/form'
-import { getFieldErrors } from '../plugins/form'
-import { rename } from '../plugins/rename'
-import { edit } from '../plugins/edit'
+/** @catalog Form — Tab-navigated expandable field groups */
+import React, { useMemo } from 'react'
 import { ax } from '@styles/ax'
+import type { NormalizedData } from '../store/types'
+import type { NodeState } from '../pattern/types'
+import type { CommandEngine } from '../engine/createCommandEngine'
+import type { KeyHandler } from '../axis/types'
+import { key } from '../axis/types'
+import { form } from '../pattern/roles/form'
+import { useAriaZone } from '../primitives/useAriaZone'
+/** A group of form entries with a label and optional expand nodeId */
+export interface FormGroup<E = unknown> {
+  groupLabel: string
+  nodeId?: string
+  entries: E[]
+}
 
-interface FormProps {
-  data: NormalizedData
-  plugins?: Plugin[]
-  onChange?: (data: NormalizedData) => void
-  entityRules: FormOptions['entityRules']
-  renderField?: (
+/** Minimum entry shape: must have nodeId and a unique field key */
+export interface FormEntry {
+  nodeId: string
+  field: string
+}
+
+export interface FormProps<E extends FormEntry = FormEntry> {
+  engine: CommandEngine
+  store: NormalizedData
+  groups: FormGroup<E>[]
+  scope: string
+  onActivate?: (nodeId: string) => void
+  renderField: (
     props: React.HTMLAttributes<HTMLElement>,
-    item: Record<string, unknown>,
+    entry: E,
     state: NodeState,
-    errors: Record<string, string> | undefined,
   ) => React.ReactElement
+  onEscape?: () => void
+  initialFocus?: string
   'aria-label'?: string
 }
 
-const defaultRenderField = (
-  props: React.HTMLAttributes<HTMLElement>,
-  item: Record<string, unknown>,
-  _state: NodeState,
-  errors: Record<string, string> | undefined,
-): React.ReactElement => {
-  const data = item.data as Record<string, unknown> | undefined
-  const label = (data?.label as string) ?? item.id
-  const value = (data?.value as string) ?? ''
-  const fieldError = errors?.value
-
-  return (
-    <div {...props} className={ax({ layout: 'column', gap: 'xs', padding: 'sm' })}>
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{label}</span>
-      <span className={ax({ textStyle: 'body' })}>
-        <Aria.Editable field="value" placeholder="Enter value...">
-          {value}
-        </Aria.Editable>
-      </span>
-      {fieldError && <span className={ax({ textStyle: 'caption', tone: 'danger' })} role="alert">{fieldError}</span>}
-    </div>
-  )
-}
-
-const EMPTY_PLUGINS: Plugin[] = []
-
-export function Form({
-  data,
-  plugins = EMPTY_PLUGINS,
-  onChange,
-  entityRules,
-  renderField = defaultRenderField,
+export function Form<E extends FormEntry = FormEntry>({
+  engine,
+  store,
+  groups,
+  scope,
+  onActivate,
+  renderField,
+  onEscape,
+  initialFocus,
   'aria-label': ariaLabel,
-}: FormProps) {
-  const pattern = React.useMemo(() => listbox(), [])
+}: FormProps<E>) {
+  const escapeKeyMap = useMemo(() => {
+    if (!onEscape) return undefined
+    const map: Record<string, KeyHandler> = {
+      Escape: key(['core:toggle-expand'], (ctx) => {
+        if (ctx.expanded?.is) {
+          return ctx.expanded.toggle()
+        }
+        onEscape()
+        return undefined
+      }),
+    }
+    return map
+  }, [onEscape])
 
-  const mergedPlugins = React.useMemo(
-    () => [
-      ...plugins,
-      rename(),
-      edit(),
-      formPlugin({ entityRules }),
-    ],
-    [plugins, entityRules],
-  )
-
-  const storeRef = React.useRef(data)
-  React.useEffect(() => { storeRef.current = data })
-
-  const handleChange = React.useCallback((next: NormalizedData) => {
-    storeRef.current = next
-    onChange?.(next)
-  }, [onChange])
-
-  const renderWithErrors = React.useCallback(
-    (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => {
-      const store = storeRef.current
-      const errors = getFieldErrors(store, item.id as string)
-      return renderField(props, item, state, errors)
-    },
-    [renderField],
-  )
+  const zone = useAriaZone({
+    engine,
+    store,
+    pattern: form,
+    scope,
+    keyMap: escapeKeyMap,
+    onActivate,
+    initialFocus,
+  })
 
   return (
-    <Aria
-      pattern={pattern}
-      data={data}
-      plugins={mergedPlugins}
-      onChange={handleChange}
+    <div
+      role="form"
       aria-label={ariaLabel}
+      {...(zone.containerProps as React.HTMLAttributes<HTMLDivElement>)}
     >
-      <Aria.Item render={renderWithErrors} />
-    </Aria>
+      {groups.map((group) => {
+        const groupExpanded = group.nodeId
+          ? zone.getNodeState(group.nodeId).expanded !== false
+          : true
+
+        return (
+          <fieldset
+            key={group.groupLabel}
+            className={ax({ layout: 'column', gap: 'sm', padding: 'sm' })}
+          >
+            {group.groupLabel && (
+              <legend className={ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}>
+                {group.groupLabel}
+              </legend>
+            )}
+            {groupExpanded && group.entries.map((entry) => (
+              <React.Fragment key={`${entry.nodeId}-${entry.field}`}>
+                {renderField(
+                  zone.getNodeProps(entry.nodeId) as React.HTMLAttributes<HTMLElement>,
+                  entry,
+                  zone.getNodeState(entry.nodeId),
+                )}
+              </React.Fragment>
+            ))}
+          </fieldset>
+        )
+      })}
+    </div>
   )
 }

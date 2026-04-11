@@ -65,6 +65,7 @@ graph TB
       p_tabs["tabs · accordion · disclosure"]
       p_menu["menu · dialog · alertdialog · toolbar"]
       p_input["combobox · radiogroup · switch · slider · spinbutton"]
+      p_form["form"]
       p_extra["kanban · navlist · spatial"]
     end
     subgraph L5_GAP["🔴 Gap"]

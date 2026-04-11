@@ -64,7 +64,24 @@ export default function PageCms() {
   const [i18nSheetOpen, setI18nSheetOpen] = useState(false)
   const [presenting, setPresenting] = useState(false)
   const [canvasFocusedId, setCanvasFocusedId] = useState('')
-  const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map())
+  const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map()) // @useState-hatch
+  // @useState-hatch — detailZoneActive: zone transition (app-level routing, not OS state)
+  const [detailZoneActive, setDetailZoneActive] = useState(false)
+
+  const onSlotDrillDown = useCallback((_nodeId: string) => {
+    setDetailZoneActive(true)
+  }, [])
+
+  const onDetailEscape = useCallback(() => {
+    setDetailZoneActive(false)
+    // V2: restore DOM focus to the canvas node that triggered drill-down
+    requestAnimationFrame(() => {
+      if (canvasFocusedId) {
+        const el = document.querySelector<HTMLElement>(`[data-cms-id="${canvasFocusedId}"]`)
+        el?.focus()
+      }
+    })
+  }, [canvasFocusedId])
 
   const cmsGlobalKeyMap = useMemo(() => ({
     'Mod+\\': defineRouteKey('cms:toggle-present', () => setPresenting(prev => !prev), 'CMS'),
@@ -97,7 +114,10 @@ export default function PageCms() {
     setCanvasFocusedId,
     activeTabMap,
     onActivateTabItem: handleActivateTabItem,
-  }), [engine, store, locale, viewport, presenting, i18nSheetOpen, canvasFocusedId, activeTabMap, handleActivateTabItem])
+    detailZoneActive,
+    onSlotDrillDown,
+    onDetailEscape,
+  }), [engine, store, locale, viewport, presenting, i18nSheetOpen, canvasFocusedId, activeTabMap, handleActivateTabItem, detailZoneActive, onSlotDrillDown, onDetailEscape])
 
   return (
     <AriaRoute keyMap={cmsGlobalKeyMap} label="CMS">

@@ -99,7 +99,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   const observedEngine = useMemo((): CommandEngine => ({
     ...engine,
     dispatch: (command: Command) => {
-      engine.dispatch(command)
+      const result = engine.dispatch(command)
       // After dispatch, check for activate in the command (including batch)
       const check = (cmd: Command) => {
         if (cmd.type === 'core:activate') {
@@ -111,6 +111,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
         }
       }
       check(command)
+      return result
     },
   }), [engine])
 

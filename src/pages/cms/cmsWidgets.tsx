@@ -42,12 +42,12 @@ function SidebarWidget() {
 }
 
 function PreviewWidget() {
-  const { engine, store, locale, viewport, plugins, setCanvasFocusedId, activeTabMap, onActivateTabItem, i18nSheetOpen } = useCms()
+  const { engine, store, locale, viewport, plugins, setCanvasFocusedId, activeTabMap, onActivateTabItem, i18nSheetOpen, onSlotDrillDown } = useCms()
 
   return (
     <ScrollArea className={ax({ flex: '1', placement: 'relative' })}>
       <CmsViewportWrapper viewport={viewport}>
-        <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} plugins={plugins} activeTabMap={activeTabMap} onActivateTabItem={onActivateTabItem} />
+        <CmsCanvas engine={engine} store={store} locale={locale} onFocusChange={setCanvasFocusedId} onSlotDrillDown={onSlotDrillDown} plugins={plugins} activeTabMap={activeTabMap} onActivateTabItem={onActivateTabItem} />
       </CmsViewportWrapper>
       <CmsI18nSheet engine={engine} store={store} open={i18nSheetOpen} />
     </ScrollArea>
@@ -55,7 +55,7 @@ function PreviewWidget() {
 }
 
 function DetailWidget() {
-  const { engine, store, canvasFocusedId, locale, setLocale, i18nSheetOpen, setI18nSheetOpen } = useCms()
+  const { engine, store, canvasFocusedId, locale, setLocale, i18nSheetOpen, setI18nSheetOpen, onDetailEscape, detailZoneActive } = useCms()
 
   return (
     <CmsDetailPanel
@@ -66,6 +66,8 @@ function DetailWidget() {
       onLocaleChange={setLocale}
       i18nSheetOpen={i18nSheetOpen}
       onI18nSheetToggle={() => setI18nSheetOpen(v => !v)}
+      onEscape={onDetailEscape}
+      autoFocus={detailZoneActive}
     />
   )
 }

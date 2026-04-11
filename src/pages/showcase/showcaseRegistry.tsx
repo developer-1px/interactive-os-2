@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② 2026-03-25-registry-md-ssot-prd.md
-import { z } from 'zod'
+import React from 'react'
 import { ax } from '@styles/ax'
 import type { NormalizedData } from '@os/store/types'
 
@@ -26,6 +26,9 @@ import { Toolbar } from '@os/ui/Toolbar'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { TreeView } from '@os/ui/TreeView'
 import { Form } from '@os/ui/Form'
+import type { EditableGroup, EditableGroupEntry } from '../cms/cmsSchema'
+import type { NodeState } from '@os/pattern/types'
+import { useEngine } from '@os/engine/useEngine'
 import { MenuButton } from '@os/ui/MenuButton'
 import { Toaster } from '@os/ui/Toaster'
 import { createToaster } from '@os/ui/createToaster'
@@ -61,6 +64,46 @@ function ToasterDemo() {
       </button>
       <Toaster toaster={demoToaster} />
     </div>
+  )
+}
+
+// --- Form showcase wrapper ---
+
+const formGroups: EditableGroup[] = [
+  {
+    groupLabel: 'Fields',
+    entries: [
+      { nodeId: 'name', field: 'value', label: 'Name', isLocaleMap: false, fieldType: 'short-text' },
+      { nodeId: 'email', field: 'value', label: 'Email', isLocaleMap: false, fieldType: 'short-text' },
+      { nodeId: 'age', field: 'value', label: 'Age', isLocaleMap: false, fieldType: 'short-text' },
+    ],
+  },
+]
+
+function formRenderField(
+  _props: React.HTMLAttributes<HTMLElement>,
+  entry: EditableGroupEntry,
+  _state: NodeState,
+): React.ReactElement {
+  return (
+    <div className={ax({ layout: 'column', gap: 'xs' })}>
+      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{entry.label}</span>
+      <span className={ax({ textStyle: 'body', text: 'primary' })}>{entry.field}</span>
+    </div>
+  )
+}
+
+function FormShowcaseWrapper() {
+  const { engine, store } = useEngine({ data: makeFormData() })
+  return (
+    <Form
+      engine={engine}
+      store={store}
+      groups={formGroups}
+      scope="showcase-form"
+      renderField={formRenderField}
+      aria-label="Demo form"
+    />
   )
 }
 
@@ -112,20 +155,7 @@ export const components: ComponentEntry[] = [
   {
     slug: 'form',
     makeData: makeFormData,
-    render: (data, onChange) => (
-      <Form
-        data={data}
-        onChange={onChange}
-        entityRules={{
-          field: z.object({
-            type: z.literal('field'),
-            label: z.string(),
-            value: z.string().min(1, 'Required'),
-          }),
-        }}
-        aria-label="Demo form"
-      />
-    ),
+    render: () => <FormShowcaseWrapper />,
     testPath: 'src/interactive-os/__tests__/form-validation.integration.test',
   },
   {

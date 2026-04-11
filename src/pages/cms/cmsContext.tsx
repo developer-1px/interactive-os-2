@@ -21,6 +21,9 @@ export interface CmsContextValue {
   setCanvasFocusedId: (id: string) => void
   activeTabMap: Map<string, string>
   onActivateTabItem: (tabItemId: string) => void
+  detailZoneActive: boolean
+  onSlotDrillDown: (nodeId: string) => void
+  onDetailEscape: () => void
 }
 
 const CmsContext = createContext<CmsContextValue | null>(null)

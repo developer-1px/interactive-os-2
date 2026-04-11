@@ -11,7 +11,7 @@ import { crudCommands } from '@os/plugins/crud'
 import { dndCommands } from '@os/plugins/dnd'
 import { clipboardCommands } from '@os/plugins/clipboard'
 import { spatialCommands, SPATIAL_PARENT_ID, spatialClickNavigate } from '@os/plugins/spatial'
-import { getChildren, getSlotChildren, getParent } from '@os/store/createStore'
+import { getChildren, getParent } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
 import { createBatchCommand } from '@os/engine/types'
@@ -33,6 +33,7 @@ interface CmsCanvasProps {
   store: NormalizedData
   locale: Locale
   onFocusChange?: (focusedId: string) => void
+  onSlotDrillDown?: (nodeId: string) => void
   plugins?: Plugin[]
   activeTabMap?: Map<string, string>
   onActivateTabItem?: (tabItemId: string) => void
@@ -75,7 +76,7 @@ const cmsKeyMap: Record<string, KeyHandler> = {
   // Mod+C/X/V → clipboard plugin keyMap, Mod+Z → history plugin keyMap
 }
 
-export default function CmsCanvas({ engine, store, locale, onFocusChange, plugins, activeTabMap: activeTabMapProp, onActivateTabItem }: CmsCanvasProps) {
+export default function CmsCanvas({ engine, store, locale, onFocusChange, onSlotDrillDown, plugins, activeTabMap: activeTabMapProp, onActivateTabItem }: CmsCanvasProps) {
   'use no memo' // AriaZone reads internal refs during render (getNodeProps) — incompatible with React Compiler
   const spatialNav = useSpatialNav('[data-cms-root]', store, 'cms')
 
@@ -120,6 +121,11 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
       Enter: key(['spatial:enterChild', 'rename:start'], (ctx) => {
         const children = ctx.getChildren(ctx.focused)
         const slotKids = ctx.getSlotChildren(ctx.focused)
+        // ② form-pattern-detail-panel-prd.md — slot-only: zone transition to detail panel
+        if (children.length === 0 && slotKids.length > 0) {
+          onSlotDrillDown?.(ctx.focused)
+          return
+        }
         if (children.length === 0 && slotKids.length === 0) {
           // Leaf node: rename only if exactly 1 inline-editable text field
           const entity = ctx.getEntity(ctx.focused)
@@ -128,7 +134,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
           if (inlineFields.length !== 1) return
           return renameCommands.startRename(ctx.focused)
         }
-        // Prefer slot children for drill down when no array children
+        // Prefer real children for drill down; fall back to slot children
         const drillTarget = children.length > 0 ? children : slotKids
 
         // Tab-item: Enter goes through panel to its first section
@@ -165,7 +171,7 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, plugin
         ])
       }),
     }),
-    [spatialNav, engine],
+    [spatialNav, engine, onSlotDrillDown],
   )
 
   const cmsBehavior = useMemo(() => ({
@@ -415,7 +421,6 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
       )
     }
 
-    const slotKids = getSlotChildren(currentStore, nodeId)
     return (
       <Tag
         key={nodeId}
@@ -435,22 +440,6 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
           store={currentStore}
         />
         {children.length > 0 && children.map(childId => renderNode(childId))}
-        {slotKids.length > 0 && slotKids.map(childId => {
-          const slotProps = aria.getNodeProps(childId)
-          const { onClick: _sc, onKeyDown: skd, onFocus: sf, tabIndex: sti, role: _sr, ...slotRest } = slotProps as Record<string, unknown>
-          void _sc; void _sr
-          return (
-            <div
-              key={childId}
-              {...(slotRest as React.HTMLAttributes<HTMLDivElement>)}
-              tabIndex={sti as number}
-              onKeyDown={skd as React.KeyboardEventHandler}
-              onFocus={sf as React.FocusEventHandler}
-              onClick={(e: React.MouseEvent) => handleNodeClick(childId, e)}
-              className="sr-only"
-            />
-          )
-        })}
       </Tag>
     )
   }

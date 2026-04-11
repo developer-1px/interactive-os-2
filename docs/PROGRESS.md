@@ -33,7 +33,7 @@
 | search | Integrated | Mod+F 검색, Aria.Search input + Aria.SearchHighlight mark. getVisibleNodes 필터. Grid searchable prop |
 | clipboard | Integrated | NormalizedData 버퍼 수렴 (ClipboardEntry 제거), extractSubtree/mergeSubtree store 연산 사용, serialize/deserialize 브릿지, multi-select, Mod+D |
 | zodSchema | Integrated | validator 패턴 전환 (middleware 제거), crud/dnd/clipboard 전 경로 구조 무결성 검증, CommandResult reject 시그널 |
-| form | Prototype | Zod entityRules 기반 값 검증, __errors__/__touched__ 메타 엔티티, submit/reset/touch 커맨드 |
+| form | Prototype | Zod entityRules 기반 값 검증 (레거시). form 패턴 신규: navigate('natural') + expand, Tab 순회 표준 |
 | rename | Integrated | — |
 | dnd | Integrated | — |
 | spatial | Integrated | — |
@@ -110,7 +110,7 @@
 | MenuButton · Menubar · Toolbar | Integrated | AriaComponentProps 통일. MenuButton useAria 직접 사용 (popup 패턴) |
 | Alert · Link · Meter · Feed · Table · WindowSplitter | Validated | 신규 ui/ 완성품. 단순 패턴 래핑 |
 | ButtonToggle · CheckboxMixed · RadioGroupActivedescendant · MenuActivedescendant | Validated | pattern variant별 별도 완성품 (Pattern=identity 원칙) |
-| Form | Prototype | Zod 기반 폼 검증 UI, listbox 패턴 + form 플러그인 |
+| Form | Validated | useAriaZone 기반 Tab-navigated form. generic FormGroup/FormEntry. CMS DetailPanel에서 검증 |
 | SpatialView | Validated | 읽기 전용 공간 탐색 컨테이너. spatialViewPreset + useSpatialNav. storymap에서 검증 |
 | Toaster · Tooltip | Validated | Tooltip 데모 페이지 없음, Toaster testPath 없음 |
 | chat/ (ChatFeed · Composer · TextBlock · CodeBlock · DiffBlock) | Prototype | 블록 렌더러 OCP, agent viewer 포팅 완료. Composer ghost text autocomplete (slash command). 인터랙티브 블록(storeKey) 미실전 검증. **Perf:** MarkdownViewer memo화, 블록 컴포넌트 memo, StreamingTextBlock `\n` pacing + 코드펜스 보류 |

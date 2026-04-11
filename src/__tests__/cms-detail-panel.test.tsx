@@ -79,8 +79,8 @@ describe('CMS Detail Panel', () => {
     const inputs = panel.querySelectorAll('input')
     expect(inputs.length).toBe(2)
 
-    // Should show group with label (card title text)
-    const groupLabel = panel.querySelector('.cms-detail-group__label')
+    // Should show group with label (card title text) — Form renders <fieldset><legend>
+    const groupLabel = panel.querySelector('legend')
     expect(groupLabel).not.toBeNull()
     expect(groupLabel!.textContent).toContain('Normalized Store')
   })
@@ -104,8 +104,9 @@ describe('CMS Detail Panel', () => {
     act(() => { features.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
+    // Header entries only — sub-container groups start collapsed (Form V3)
     const inputs = panel.querySelectorAll('input')
-    expect(inputs.length).toBe(21)
+    expect(inputs.length).toBe(13)
   })
 
   it('container panel edit updates canvas text via rename', async () => {
@@ -133,12 +134,12 @@ describe('CMS Detail Panel', () => {
   it('narrows panel scope when entering card depth from section', async () => {
     const { container } = render(<PageCms />)
 
-    // Focus section → see all 10 input fields (desc is textarea)
+    // Focus section → header entries visible (sub-container groups collapsed)
     const features = container.querySelector('[data-cms-id="features"]') as HTMLElement
     act(() => { features.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    expect(panel.querySelectorAll('input').length).toBe(21)
+    expect(panel.querySelectorAll('input').length).toBe(13)
 
     // Click into a specific card → scope narrows
     const cardStore = container.querySelector('[data-cms-id="card-store"]') as HTMLElement
@@ -166,7 +167,7 @@ describe('CMS Detail Panel', () => {
     // Escape back to section
     await user.keyboard('{Escape}')
 
-    expect(panel.querySelectorAll('input').length).toBe(21)
+    expect(panel.querySelectorAll('input').length).toBe(13)
   })
 
   // V6: undo via Mod+Z — skipped in jsdom (Cmd+Z keyboard dispatch limitation)
@@ -213,7 +214,7 @@ describe('CMS Detail Panel', () => {
     act(() => { features.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    const legends = panel.querySelectorAll('.cms-detail-group__label')
+    const legends = panel.querySelectorAll('legend')
     const labels = Array.from(legends).map(l => l.textContent)
     // Section header group uses variant-derived label, card sub-groups use title text
     expect(labels[0]).toBe('Features')

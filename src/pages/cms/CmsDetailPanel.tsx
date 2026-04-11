@@ -1,12 +1,12 @@
-// @useState-hatch — expanded (IconField disclosure): conditional render toggle, needs re-render
-import { useRef, useState, useEffect, useCallback, useMemo } from 'react'
+// @useState-hatch — field renderers use uncontrolled refs for commit-on-blur pattern
+import { useRef, useEffect, useCallback, useMemo } from 'react'
 import type React from 'react'
 import type { NormalizedData } from '@os/store/types'
 import type { CommandEngine } from '@os/engine/createCommandEngine'
 import { renameCommands } from '@os/plugins/rename'
 import { historyCommands } from '@os/plugins/history'
 import { collectEditableGroups } from './cmsSchema'
-import type { EditableGroup, EditableGroupEntry } from './cmsSchema'
+import type { EditableGroupEntry } from './cmsSchema'
 import { localized } from './cmsTypes'
 import type { Locale, LocaleMap } from './cmsTypes'
 import { CMS_ICONS, CMS_ICON_MAP } from './cmsIcons'
@@ -15,6 +15,8 @@ import { LOCALES } from './cmsTypes'
 import { Sheet, ImagePlus, X } from 'lucide-react'
 import { ax } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
+import { Form } from '@os/ui/Form'
+import type { NodeState } from '@os/pattern/types'
 
 interface CmsDetailPanelProps {
   engine: CommandEngine
@@ -24,10 +26,25 @@ interface CmsDetailPanelProps {
   onLocaleChange: (locale: Locale) => void
   i18nSheetOpen: boolean
   onI18nSheetToggle: () => void
+  onEscape?: () => void
+  autoFocus?: boolean
   style?: React.CSSProperties
 }
 
-export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, onLocaleChange, i18nSheetOpen, onI18nSheetToggle, style }: CmsDetailPanelProps) {
+export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, onLocaleChange, i18nSheetOpen, onI18nSheetToggle, onEscape, autoFocus, style }: CmsDetailPanelProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Form's initialFocus sets ARIA state only; DOM focus needs explicit move
+  useEffect(() => {
+    if (!autoFocus) return
+    // Defer to allow Form to mount
+    const raf = requestAnimationFrame(() => {
+      const el = containerRef.current?.querySelector<HTMLElement>('input, textarea, select, [tabindex]')
+      el?.focus()
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [autoFocus, focusedNodeId])
+
   const groups = useMemo(
     () => focusedNodeId ? collectEditableGroups(store, focusedNodeId, locale) : [],
     [store, focusedNodeId, locale],
@@ -53,6 +70,21 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
     </div>
   )
 
+  const renderField = useCallback((
+    _props: React.HTMLAttributes<HTMLElement>,
+    entry: EditableGroupEntry,
+    state: NodeState,
+  ): React.ReactElement => {
+    const fieldProps = { entry, store, locale, engine, expanded: state.expanded }
+    switch (entry.fieldType) {
+      case 'long-text': return <LongTextField {...fieldProps} />
+      case 'url': return <UrlField {...fieldProps} />
+      case 'icon': return <IconField {...fieldProps} />
+      case 'image': return <ImageField {...fieldProps} />
+      default: return <ShortTextField {...fieldProps} />
+    }
+  }, [store, locale, engine])
+
   if (groups.length === 0) {
     return (
       <ScrollArea className={`cms-detail-panel ${ax({ flex: 'none', surface: 'sunken', border: 'start' })}`} style={style}>
@@ -64,68 +96,20 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
     )
   }
 
-  if (groups.length === 1 && groups[0].groupLabel === '') {
-    const entity = store.entities[focusedNodeId]
-    const data = (entity?.data ?? {}) as Record<string, unknown>
-    return (
-      <ScrollArea className={`cms-detail-panel ${ax({ flex: 'none', surface: 'sunken', border: 'start' })}`} style={style}>
-        {localeBar}
-        <div className={`cms-detail-panel__header ${ax({ padding: 'sm', border: 'bottom' })}`}>
-          <span className={`cms-detail-panel__type ${ax({ textStyle: 'caption', weight: 'semi', text: 'secondary' })}`}>{data.type as string}</span>
-        </div>
-        <div className={`cms-detail-panel__fields ${ax({ layout: 'column', padding: 'sm', gap: 'sm' })}`}>
-          {groups[0].entries.map((entry) => (
-            <DetailField
-              key={`${entry.nodeId}-${entry.field}`}
-              entry={entry}
-              store={store}
-              locale={locale}
-              engine={engine}
-              defaultExpanded
-            />
-          ))}
-        </div>
-      </ScrollArea>
-    )
-  }
-
   return (
-    <ScrollArea className={`cms-detail-panel ${ax({ flex: 'none', surface: 'sunken', border: 'start' })}`} style={style}>
+    <ScrollArea ref={containerRef} className={`cms-detail-panel ${ax({ flex: 'none', surface: 'sunken', border: 'start' })}`} style={style}>
       {localeBar}
-      <div className="cms-detail-panel__groups">
-        {groups.map((group) => (
-          <DetailGroup
-            key={group.groupLabel}
-            group={group}
-            store={store}
-            locale={locale}
-            engine={engine}
-          />
-        ))}
-      </div>
+      <Form
+        engine={engine}
+        store={store}
+        groups={groups}
+        scope="detail"
+        renderField={renderField}
+        onEscape={onEscape}
+        initialFocus={groups[0]?.entries[0]?.nodeId}
+        aria-label="Detail panel"
+      />
     </ScrollArea>
-  )
-}
-
-function DetailGroup({ group, store, locale, engine }: {
-  group: EditableGroup
-  store: NormalizedData
-  locale: Locale
-  engine: CommandEngine
-}) {
-  return (
-    <fieldset className="cms-detail-group">
-      <legend className="cms-detail-group__label">{group.groupLabel}</legend>
-      {group.entries.map((entry) => (
-        <DetailField
-          key={`${entry.nodeId}-${entry.field}`}
-          entry={entry}
-          store={store}
-          locale={locale}
-          engine={engine}
-        />
-      ))}
-    </fieldset>
   )
 }
 
@@ -192,17 +176,7 @@ interface DetailFieldProps {
   store: NormalizedData
   locale: Locale
   engine: CommandEngine
-  defaultExpanded?: boolean
-}
-
-function DetailField(props: DetailFieldProps) {
-  switch (props.entry.fieldType) {
-    case 'long-text': return <LongTextField {...props} />
-    case 'url': return <UrlField {...props} />
-    case 'icon': return <IconField {...props} />
-    case 'image': return <ImageField {...props} />
-    default: return <ShortTextField {...props} />
-  }
+  expanded?: boolean
 }
 
 function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
@@ -360,17 +334,16 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
   )
 }
 
-function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) {
+function IconField({ entry, store, engine, expanded }: DetailFieldProps) {
   const entity = store.entities[entry.nodeId]
   const data = (entity?.data ?? {}) as Record<string, unknown>
   const currentValue = (data[entry.field] as string) ?? ''
-  const [expanded, setExpanded] = useState(defaultExpanded ?? false)
+  const isExpanded = expanded ?? false
 
-  const handleSelect = useCallback((key: string) => {
-    if (key === currentValue) return
-    engine.dispatch(renameCommands.confirmRename(entry.nodeId, entry.field, key))
-    if (!defaultExpanded) setExpanded(false)
-  }, [entry.nodeId, entry.field, currentValue, engine, defaultExpanded])
+  const handleSelect = useCallback((iconKey: string) => {
+    if (iconKey === currentValue) return
+    engine.dispatch(renameCommands.confirmRename(entry.nodeId, entry.field, iconKey))
+  }, [entry.nodeId, entry.field, currentValue, engine])
 
   const hasIcon = CMS_ICON_MAP.has(currentValue)
 
@@ -380,20 +353,19 @@ function IconField({ entry, store, engine, defaultExpanded }: DetailFieldProps) 
       <button
         type="button"
         className={`cms-icon-field__current ${ax({ surface: 'input', layout: 'bar', gap: 'xs', textStyle: 'body', text: 'secondary', shape: 'md', padding: 'xs' })} cursor-pointer${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
-        onClick={() => setExpanded(v => !v)}
       >
         <CmsIcon name={currentValue} size={16} />
         <span>{currentValue || 'none'}</span>
       </button>
-      {expanded && (
+      {isExpanded && (
         <div className="cms-icon-field__grid grid">
-          {CMS_ICONS.map(({ key, Icon }) => (
+          {CMS_ICONS.map(({ key: iconKey, Icon }) => (
             <button
-              key={key}
+              key={iconKey}
               type="button"
-              className={`cms-icon-field__option ${ax({ surface: 'ghost', layout: 'center', size: 'lg', shape: 'md', text: 'secondary' })}${key === currentValue ? ' cms-icon-field__option--selected' : ''}`}
-              title={key}
-              onClick={() => handleSelect(key)}
+              className={`cms-icon-field__option ${ax({ surface: 'ghost', layout: 'center', size: 'lg', shape: 'md', text: 'secondary' })}${iconKey === currentValue ? ' cms-icon-field__option--selected' : ''}`}
+              title={iconKey}
+              onClick={() => handleSelect(iconKey)}
             >
               <Icon size={14} />
             </button>
