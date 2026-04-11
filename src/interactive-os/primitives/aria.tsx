@@ -105,7 +105,12 @@ function AriaItemNode({ childId, render, children }: { childId: string; render: 
 
   return (
     <AriaItemContext.Provider value={{ nodeId: childId, focused: state.focused, renaming: !!state.renaming }}>
-      {cloneElement(render(props, entity, state, children) as React.ReactElement<Record<string, unknown>>, { key: childId, ref: scrollRef })}
+      {(() => {
+        const rendered = render(props, entity, state, children)
+        const injected: Record<string, unknown> = { key: childId }
+        if (rendered.type !== React.Fragment) injected.ref = scrollRef
+        return cloneElement(rendered as React.ReactElement<Record<string, unknown>>, injected)
+      })()}
     </AriaItemContext.Provider>
   )
 }

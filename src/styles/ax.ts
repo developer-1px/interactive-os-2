@@ -67,6 +67,8 @@ type Placement =
   | 'anchor-below'  // fixed + position-area:block-end + flip-block (anchor 아래)
   | 'anchor-end'    // fixed + position-area:inline-end + flip-inline (anchor 오른쪽)
   | 'relative'      // position:relative (자식 absolute 기준점)
+  | 'float-top-center'    // fixed + top:md + left:50% + translateX(-50%) (floating bar)
+  | 'float-bottom-center' // fixed + bottom:lg + left:50% + translateX(-50%) (floating toolbar)
 
 // layout: 역할 기반 구조 번들 (display + direction + align + justify + overflow)
 type Layout =

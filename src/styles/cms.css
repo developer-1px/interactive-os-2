@@ -1,9 +1,8 @@
 /* CMS Layout */
 .cms-layout { background: var(--surface-base); grid-column: 2 / -1; }
 
-/* Floating viewport bar — top center */
+/* Floating viewport bar */
 .cms-viewport-bar {
-  transform: translateX(-50%);
   z-index: 200;
 }
 
@@ -52,7 +51,6 @@
 
 /* Floating CRUD toolbar */
 .cms-floating-toolbar {
-  transform: translateX(-50%);
   z-index: 100;
 }
 .cms-floating-toolbar__btn {

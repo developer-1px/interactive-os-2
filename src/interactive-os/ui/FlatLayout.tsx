@@ -8,7 +8,7 @@ import { useAria } from '@os/primitives/useAria'
 import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { resolveWidget } from '@os/layout/widgetRegistry'
 import { layout } from '@os/layout/layoutPlugin'
-import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, SectionNode } from '@os/layout/flatLayout'
+import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, SectionNode, FloatingNode } from '@os/layout/flatLayout'
 import { ax } from '@styles/ax'
 import styles from './FlatLayout.module.css'
 import { NavLayoutContext } from './NavLayoutContext'
@@ -109,7 +109,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const isHorizontal = node.direction === 'horizontal'
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full', surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full', scroll: 'hidden', surface })}>
         {childIds.map((childId, i) => {
           const size = node.sizes[i]
           const isFlex = size === 'flex' || size === undefined
@@ -118,7 +118,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
             : { '--split-flex': '0 0 auto', '--split-basis': `${size * 100}%` } as React.CSSProperties
 
           return (
-            <div key={childId} className={styles.splitPane} style={style}>
+            <div key={childId} className={`${ax({ scroll: 'hidden' })} ${styles.splitPane}`} style={style}>
               {renderNode(childId)}
             </div>
           )
@@ -237,6 +237,20 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
+  floating: ({ nodeId, store, renderNode, refCallback }) => {
+    const node = getEntityData<FloatingNode>(store, nodeId)
+    if (!node || node.hidden) return null
+    const childIds = getChildren(store, nodeId)
+
+    return (
+      <div ref={refCallback(nodeId)} className={ax({ placement: node.anchor })}>
+        {childIds.map((childId) => (
+          <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
+        ))}
+      </div>
+    )
+  },
+
   widget: ({ nodeId, store, surface, registry, refCallback, renderNode }) => {
     const node = getEntityData<WidgetNode>(store, nodeId)
     if (!node) return null
@@ -256,7 +270,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       : undefined
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ width: 'full', surface })}>
+      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', surface })} ${styles.splitChild}`}>
         <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )
@@ -316,7 +330,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
   const rootIds = getChildren(store, ROOT_ID)
 
   return (
-    <div {...aria.containerProps} className={ax({ layout: 'stack', gap: 'md', width: 'full' })}>
+    <div {...aria.containerProps} className={ax({ layout: 'stack', gap: 'md', width: 'full', flex: '1', scroll: 'hidden' })}>
       {rootIds.map((id) => (
         <React.Fragment key={id}>{renderNode(id)}</React.Fragment>
       ))}

@@ -1,5 +1,5 @@
 export { definePage } from './flatLayout'
-export type { LayoutNode, SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, TabNode, SectionNode } from './flatLayout'
+export type { LayoutNode, SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, TabNode, SectionNode, FloatingNode } from './flatLayout'
 export { createWidgetRegistry, resolveWidget } from './widgetRegistry'
 export type { WidgetRegistry } from './widgetRegistry'
 export { layoutCommands } from './layoutCommands'

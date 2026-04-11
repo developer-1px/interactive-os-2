@@ -134,6 +134,7 @@ dialog.sf-overlay[open] {
   background: var(--_bg, var(--surface-raised));
   color: var(--_fg, inherit);
   border: none;
+  box-shadow: var(--shadow-md);
   --bg-hover:          var(--depth-raised-hover);
   --bg-active:         var(--depth-raised-active);
   --selection-context: var(--depth-raised-sel-context);
@@ -756,6 +757,8 @@ dialog.sf-overlay[open] {
 .pl-anchor-below  { position: fixed; inset: unset; position-area: block-end span-inline-end; position-try-fallbacks: flip-block; }
 .pl-anchor-end    { position: fixed; inset: unset; position-area: inline-end span-block-end; position-try-fallbacks: flip-inline; }
 .pl-relative      { position: relative; }
+.pl-float-top-center    { position: fixed; top: var(--space-md); left: 50%; transform: translateX(-50%); z-index: 100; }
+.pl-float-bottom-center { position: fixed; bottom: var(--space-lg); left: 50%; transform: translateX(-50%); z-index: 100; }
 
 /* layout helpers */
 .relative { position: relative; }

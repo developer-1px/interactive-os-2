@@ -33,7 +33,7 @@ export function SelectionOverlay({ containerRef, focusedId, selectedIds, nodeIdA
   if (rects.length === 0) return null
 
   return (
-    <div className={`sel-overlay-container ${ax({ placement: 'center', scroll: 'hidden' })}`}>
+    <div className={`sel-overlay-container absolute inset-0 ${ax({ scroll: 'hidden' })}`}>
       {rects.map((tr) => {
         const label = labelFn?.(tr.id, tr)
         return (

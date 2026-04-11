@@ -61,7 +61,13 @@ export interface SectionNode extends LayoutBase {
   count?: number
 }
 
-export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabNode | SectionNode
+export interface FloatingNode extends LayoutBase {
+  type: 'floating'
+  anchor: 'float-top-center' | 'float-bottom-center'
+  hidden?: boolean
+}
+
+export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabNode | SectionNode | FloatingNode
 
 // ── definePage factory ────────────────────────────────
 
