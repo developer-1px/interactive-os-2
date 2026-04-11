@@ -12,6 +12,11 @@
   height: 100%;
 }
 
+/* Columns container: min-height 0 for flex scroll */
+.kanban-columns {
+  min-height: 0;
+}
+
 /* Active card: left accent border */
 .kanban-card-active {
   border-inline-start: 2px solid var(--accent);

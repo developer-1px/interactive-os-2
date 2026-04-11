@@ -529,7 +529,7 @@ export default function SkillKanban() {
   ) : undefined
 
   return (
-    <div className={ax({ layout: 'fill' })}>
+    <div className={ax({ layout: 'fill', scroll: 'hidden' })}>
       <div className={ax({ layout: 'spread', padding: 'md' })}>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
           <h2 className={ax({ text: 'bright', textStyle: 'section' })}>Agent Dashboard</h2>
@@ -543,7 +543,7 @@ export default function SkillKanban() {
           세션이 없습니다 — 스킬을 실행하면 여기에 표시됩니다
         </div>
       )}
-      <div className={ax({ layout: 'row', gap: 'md', padding: 'md', flex: '1' })}>
+      <div className={`kanban-columns ${ax({ layout: 'row', gap: 'md', padding: 'md', flex: '1', scroll: 'hidden' })}`}>
         {COLUMN_CONFIG.map(col => {
           const cardsByState: Record<AgentState, SessionCard[]> = { waiting, active, done: doneCards }
           return (
