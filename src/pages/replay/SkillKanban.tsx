@@ -1,8 +1,10 @@
+// ② agent-dashboard-prd.md
 // @useState-hatch — sessionCards: real-time SSE stream state, not OS axis/store material
 // @useState-hatch — tick: timer-driven re-render for elapsed time display
 // @useState-hatch — openCardId: dialog open state, not OS axis/store material
 // @useState-hatch — fileContent/activeFilePath: modal-local file fetch state, not OS store material
 // @useState-hatch — splitSizes: SplitPane local resize state
+// @useState-hatch — showEmptyDone: toggle for empty done sessions
 // @useMemo-hatch — tabData: derived from card.touchedFiles, not OS store
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { subscribeTimeline } from '../viewer/timelineSSE'
@@ -21,26 +23,29 @@ import { CloseIndicator } from '@os/ui/indicators'
 import './SkillKanban.css'
 
 const PLANNING_SKILLS = new Set(['discuss', 'prd', 'plan', 'story', 'ia', 'wireframe', 'cast', 'conflict', 'ideal', 'design-spec'])
-const RUNNING_SKILLS = new Set(['go', 'do', 'fix', 'improve', 'use'])
-const DONE_SKILLS = new Set(['close', 'retrospect'])
+const DEVELOPING_SKILLS = new Set(['go', 'do', 'fix'])
+const REVIEWING_SKILLS = new Set(['simplify', 'improve', 'use', 'improve-design', 'retrospect', 'close'])
 const MAX_MESSAGES = 200
 const MAX_CARD_FILES = 5
+const STALE_THRESHOLD_MS = 5 * 60 * 1000
+const STATE_DEBOUNCE_MS = 3_000
 
-type PipelineStage = 'planning' | 'running' | 'done'
-
-function classifySkill(skill: string): PipelineStage {
-  if (DONE_SKILLS.has(skill)) return 'done'
-  if (RUNNING_SKILLS.has(skill)) return 'running'
-  if (PLANNING_SKILLS.has(skill)) return 'planning'
-  return 'planning'
-}
+type AgentState = 'waiting' | 'active' | 'done'
+type Phase = 'planning' | 'developing' | 'reviewing'
 
 interface ChatMessage { role: 'user' | 'assistant'; text: string }
 
 interface SessionCard {
   id: string
   label: string
-  stage: PipelineStage
+  agentState: AgentState
+  phase: Phase
+  currentActivity: string
+  lastEventType: string
+  hasOutput: boolean
+  isStale: boolean
+  stateChangedAt: number
+  lastAssistantMsg: string
   lastSkill: string
   skills: string[]
   touchedFiles: string[]
@@ -51,21 +56,46 @@ interface SessionCard {
   allMessages: ChatMessage[]
 }
 
-function deriveStage(skills: string[]): { stage: PipelineStage; lastSkill: string } {
-  if (skills.length === 0) return { stage: 'planning', lastSkill: '' }
-  const lastSkill = skills[skills.length - 1]
-  return { stage: classifySkill(lastSkill), lastSkill }
+function derivePhase(skills: string[]): Phase {
+  if (skills.length === 0) return 'planning'
+  const last = skills[skills.length - 1]
+  if (REVIEWING_SKILLS.has(last)) return 'reviewing'
+  if (DEVELOPING_SKILLS.has(last)) return 'developing'
+  if (PLANNING_SKILLS.has(last)) return 'planning'
+  return 'planning'
 }
 
-function lastUserMessage(card: SessionCard): string {
-  for (let i = card.allMessages.length - 1; i >= 0; i--) {
-    if (card.allMessages[i].role === 'user') return card.allMessages[i].text.slice(0, 60)
+function deriveAgentState(active: boolean, lastEventType: string): AgentState {
+  if (active) {
+    if (lastEventType === 'assistant') return 'waiting'
+    return 'active' // tool_use, user, or other
   }
-  return card.label
+  return 'done'
 }
 
-function lastPreview(card: SessionCard): string {
-  return card.allMessages.slice(-3).map(m => m.text.slice(0, 80)).join('\n\n')
+function deriveCurrentActivity(lastEventType: string, lastTool: string, lastFilePath: string, lastText: string, lastAssistantMsg: string): string {
+  if (lastEventType === 'tool_use') {
+    if (lastTool === 'Edit' || lastTool === 'Write') {
+      return lastFilePath ? `${basename(lastFilePath)} 편집 중` : '파일 편집 중'
+    }
+    if (lastTool === 'Bash') return '명령 실행 중'
+    if (lastTool === 'Grep' || lastTool === 'Glob' || lastTool === 'Read') return '코드 탐색 중'
+    if (lastTool === 'Agent') return '서브에이전트 실행 중'
+    if (lastTool === 'Skill' && lastText) return `/${lastText} 실행 중`
+    return '도구 실행 중'
+  }
+  if (lastEventType === 'assistant') {
+    return lastAssistantMsg || '응답 대기 중'
+  }
+  if (lastEventType === 'user') return '입력 처리 중'
+  return ''
+}
+
+function findLastAssistantMsg(allMessages: ChatMessage[]): string {
+  for (let i = allMessages.length - 1; i >= 0; i--) {
+    if (allMessages[i].role === 'assistant') return allMessages[i].text.slice(0, 60)
+  }
+  return ''
 }
 
 function pushMessage(messages: ChatMessage[], msg: ChatMessage): ChatMessage[] {
@@ -77,13 +107,17 @@ function basename(filePath: string): string {
   return filePath.split('/').pop() ?? filePath
 }
 
-function extractSessionCard(events: TimelineEvent[], session: ActiveSession): SessionCard {
+function extractSessionCard(events: TimelineEvent[], session: ActiveSession, now: number): SessionCard {
   const skills: string[] = []
   const fileSet = new Set<string>()
   let toolCount = 0
   let startTs = 0
   let lastTs = 0
   let allMessages: ChatMessage[] = []
+  let lastEventType = ''
+  let lastTool = ''
+  let lastFilePath = ''
+  let lastText = ''
 
   for (const evt of events) {
     const ts = Date.parse(evt.ts)
@@ -99,14 +133,31 @@ function extractSessionCard(events: TimelineEvent[], session: ActiveSession): Se
     if ((evt.type === 'user' || evt.type === 'assistant') && evt.text) {
       allMessages = pushMessage(allMessages, { role: evt.type, text: evt.text })
     }
+
+    // Track last event info for deriving state
+    if (evt.type === 'tool_use' || evt.type === 'user' || evt.type === 'assistant') {
+      lastEventType = evt.type
+      if (evt.type === 'tool_use') {
+        lastTool = evt.tool ?? ''
+        lastFilePath = evt.filePath ?? ''
+        lastText = evt.text ?? ''
+      }
+    }
   }
 
-  const { stage: derivedStage, lastSkill } = deriveStage(skills)
-  const stage = session.active ? derivedStage : 'done'
+  const touchedFiles = [...fileSet]
+  const hasOutput = touchedFiles.length > 0
+  const phase = derivePhase(skills)
+  const agentState = deriveAgentState(session.active, lastEventType)
+  const isStale = session.active && lastTs > 0 && (now - lastTs > STALE_THRESHOLD_MS)
+  const lastAssistantMsg = findLastAssistantMsg(allMessages)
+  const currentActivity = deriveCurrentActivity(lastEventType, lastTool, lastFilePath, lastText, lastAssistantMsg)
+  const lastSkill = skills.length > 0 ? skills[skills.length - 1] : ''
 
   return {
-    id: session.id, label: session.label, stage, lastSkill,
-    skills, touchedFiles: [...fileSet],
+    id: session.id, label: session.label,
+    agentState, phase, currentActivity, lastEventType, hasOutput, isStale,
+    stateChangedAt: now, lastAssistantMsg, lastSkill, skills, touchedFiles,
     skillCount: skills.length, toolCount,
     startTs: startTs || session.mtime, lastTs: lastTs || session.mtime,
     allMessages,
@@ -132,6 +183,8 @@ function buildTabData(files: string[]): NormalizedData {
   return { entities, relationships: { [ROOT_ID]: ids } }
 }
 
+const PHASE_LABELS: Record<Phase, string> = { planning: 'Planning', developing: 'Developing', reviewing: 'Reviewing' }
+
 function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClose: () => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [splitSizes, setSplitSizes] = useState<PaneSize[]>([0.35, 'flex'])
@@ -141,7 +194,6 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
 
   const hasFiles = card !== null && card.touchedFiles.length > 0
 
-  // Auto-select first file when card changes
   useEffect(() => {
     if (card && card.touchedFiles.length > 0) {
       setActiveFilePath(card.touchedFiles[0])
@@ -152,7 +204,6 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
     }
   }, [card])
 
-  // Fetch file content when activeFilePath changes
   useEffect(() => {
     if (!activeFilePath) {
       setFileContent(null)
@@ -264,30 +315,45 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
   )
 }
 
-const STAGE_LABELS: Record<PipelineStage, string> = { planning: 'Planning', running: 'Running', done: 'Done' }
+const COLUMN_CONFIG: { state: AgentState; label: string }[] = [
+  { state: 'waiting', label: 'Waiting' },
+  { state: 'active', label: 'Active' },
+  { state: 'done', label: 'Done' },
+]
 
 function SessionCardView({ card, onClick }: { card: SessionCard; onClick: () => void }) {
   const elapsed = formatElapsed(Date.now() - card.startTs)
-  const skillTag = card.lastSkill ? `/${card.lastSkill}` : ''
-  const preview = lastPreview(card)
   const fileNames = card.touchedFiles.map(basename)
   const displayFiles = fileNames.slice(0, MAX_CARD_FILES)
   const moreCount = fileNames.length - MAX_CARD_FILES
 
+  const primaryText = card.agentState === 'waiting'
+    ? (card.lastAssistantMsg || card.label)
+    : card.currentActivity || card.label
+
+  const STATE_CSS: Record<AgentState, string> = { active: 'kanban-card-active', waiting: 'kanban-card-waiting', done: '' }
+  const axClass = ax({ recipe: 'container', surface: 'display', border: card.agentState === 'waiting' ? undefined : 'subtle', shape: 'md', layout: 'column', gap: 'xs', interactive: 'item' })
+  const cls = STATE_CSS[card.agentState] ? `${STATE_CSS[card.agentState]} ${axClass}` : axClass
+
   return (
     <div
-      className={ax({ recipe: 'container', surface: 'display', border: 'subtle', shape: 'md', layout: 'column', gap: 'xs', interactive: 'item' })}
+      className={cls}
       onClick={onClick}
       role="button"
       tabIndex={0}
     >
-      <span className={ax({ clamp: '1', weight: 'medium', textStyle: 'caption' })}>{lastUserMessage(card)}</span>
-      <span className={ax({ text: 'muted', textStyle: 'caption' })}>
-        {card.toolCount} tools · {elapsed}{skillTag ? ` · ${skillTag}` : ''}
-      </span>
+      <span className={ax({ clamp: '1', weight: 'medium', textStyle: 'caption' })}>{primaryText}</span>
+      <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })}>
+        <span className={ax({ recipe: 'badge', tone: 'neutral-dim' })}>{PHASE_LABELS[card.phase]}</span>
+        <span>{elapsed}</span>
+        <span>{card.toolCount} tools</span>
+      </div>
+      {card.isStale && (
+        <span className={ax({ textStyle: 'caption', text: 'primary', tone: 'warning-dim', recipe: 'badge' })}>5분+ 무응답</span>
+      )}
       {card.skills.length > 0 && (
-        <span className={ax({ text: 'secondary', textStyle: 'caption' })}>
-          {card.skills.join(' → ')}
+        <span className={ax({ text: 'secondary', textStyle: 'caption', clamp: '1' })}>
+          {card.skills.join(' \u2192 ')}
         </span>
       )}
       {displayFiles.length > 0 && (
@@ -295,22 +361,26 @@ function SessionCardView({ card, onClick }: { card: SessionCard; onClick: () => 
           {displayFiles.join(', ')}{moreCount > 0 ? ` +${moreCount} more` : ''}
         </span>
       )}
-      {preview && (
-        <div className="kanban-card-preview">
-          <MarkdownViewer content={preview} prose={false} codeVariant="compact" />
-        </div>
-      )}
     </div>
   )
 }
 
-function KanbanColumn({ stage, cards, onCardClick }: { stage: PipelineStage; cards: SessionCard[]; onCardClick: (id: string) => void }) {
+function KanbanColumn({ label, cards, onCardClick, emptyToggle }: {
+  label: string
+  cards: SessionCard[]
+  onCardClick: (id: string) => void
+  emptyToggle?: React.ReactNode
+}) {
   return (
-    <div className={ax({ layout: 'column', gap: 'xs', flex: '1', surface: 'sunken', shape: 'xl', padding: 'md' })}>
+    <div className={ax({ layout: 'column', gap: 'xs', flex: '1', surface: 'sunken', shape: 'xl', padding: 'md', scroll: 'y' })}>
       <div className={ax({ textStyle: 'overline', text: 'secondary', padding: 'xs' })}>
-        {STAGE_LABELS[stage]} {cards.length}
+        {label} {cards.length}
       </div>
+      {cards.length === 0 && !emptyToggle && (
+        <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>세션 없음</div>
+      )}
       {cards.map(card => <SessionCardView key={card.id} card={card} onClick={() => onCardClick(card.id)} />)}
+      {emptyToggle}
     </div>
   )
 }
@@ -320,18 +390,21 @@ export default function SkillKanban() {
   const [sessionCards, setSessionCards] = useState<SessionCard[]>([])
   const [, setTick] = useState(0)
   const [openCardId, setOpenCardId] = useState<string | null>(null)
+  // @useState-hatch — showEmptyDone: toggle for empty done sessions display
+  const [showEmptyDone, setShowEmptyDone] = useState(false)
 
   useEffect(() => {
     if (sessions.length === 0) return
     let cancelled = false
 
     async function loadInitial() {
+      const now = Date.now()
       const results = await Promise.allSettled(
         sessions.map(async session => {
           const res = await fetch(`/api/agent-ops/timeline?session=${session.id}&tail=2000`)
           if (!res.ok) return null
           const { events } = await res.json() as { events: TimelineEvent[] }
-          return extractSessionCard(events, session)
+          return extractSessionCard(events, session, now)
         })
       )
       if (cancelled) return
@@ -358,21 +431,50 @@ export default function SkillKanban() {
         setSessionCards(prev => {
           const idx = prev.findIndex(c => c.id === session.id)
           if (idx === -1) return prev
+          const now = Date.now()
           const card = { ...prev[idx], lastTs: Date.parse(data.ts) }
 
           if (data.type === 'skill_start' && data.text) {
             card.lastSkill = data.text
             card.skills = [...card.skills, data.text]
-            card.stage = classifySkill(data.text)
+            card.phase = derivePhase(card.skills)
             card.skillCount++
           } else if (data.type === 'tool_use' && data.tool !== 'Skill') {
             card.toolCount++
             if (data.filePath && !card.touchedFiles.includes(data.filePath)) {
               card.touchedFiles = [...card.touchedFiles, data.filePath]
+              card.hasOutput = true
             }
           }
           if ((data.type === 'user' || data.type === 'assistant') && data.text) {
             card.allMessages = pushMessage(card.allMessages, { role: data.type as 'user' | 'assistant', text: data.text })
+            if (data.type === 'assistant') card.lastAssistantMsg = data.text.slice(0, 60)
+          }
+
+          // Update derived fields
+          const prevState = card.agentState
+          const prevActivity = card.currentActivity
+          const prevToolCount = card.toolCount
+          if (data.type === 'tool_use' || data.type === 'user' || data.type === 'assistant') {
+            card.lastEventType = data.type
+            const newState = deriveAgentState(session.active, data.type)
+            if (newState !== card.agentState && now - card.stateChangedAt >= STATE_DEBOUNCE_MS) {
+              card.agentState = newState
+              card.stateChangedAt = now
+            }
+            card.currentActivity = deriveCurrentActivity(
+              data.type,
+              data.type === 'tool_use' ? (data.tool ?? '') : '',
+              data.type === 'tool_use' ? (data.filePath ?? '') : '',
+              data.type === 'tool_use' ? (data.text ?? '') : '',
+              card.lastAssistantMsg,
+            )
+          }
+          card.isStale = session.active && card.lastTs > 0 && (now - card.lastTs > STALE_THRESHOLD_MS)
+
+          // No-op guard: skip re-render if nothing visible changed
+          if (card.agentState === prevState && card.currentActivity === prevActivity && card.toolCount === prevToolCount) {
+            return prev
           }
 
           const updated = [...prev]
@@ -386,37 +488,57 @@ export default function SkillKanban() {
     return () => unsubs.forEach(u => u())
   }, [sessions])
 
-  const hasActive = sessionCards.some(c => c.stage !== 'done')
+  const hasActive = sessionCards.some(c => c.agentState !== 'done')
   useEffect(() => {
     if (!hasActive) return
     const id = setInterval(() => setTick(t => t + 1), 1000)
     return () => clearInterval(id)
   }, [hasActive])
 
-  const planning = sessionCards.filter(c => c.stage === 'planning')
-  const running = sessionCards.filter(c => c.stage === 'running')
-  const done = sessionCards.filter(c => c.stage === 'done')
+  const waiting = sessionCards.filter(c => c.agentState === 'waiting')
+  const active = sessionCards.filter(c => c.agentState === 'active')
+  const doneWithOutput = sessionCards.filter(c => c.agentState === 'done' && c.hasOutput)
+  const doneEmpty = sessionCards.filter(c => c.agentState === 'done' && !c.hasOutput)
+  const doneCards = showEmptyDone ? [...doneWithOutput, ...doneEmpty] : doneWithOutput
   const openCard = openCardId ? sessionCards.find(c => c.id === openCardId) : null
+
+  const emptyDoneToggle = doneEmpty.length > 0 ? (
+    <button
+      className={ax({ surface: 'ghost', recipe: 'control-sm', textStyle: 'caption', text: 'muted', interactive: 'button' })}
+      onClick={() => setShowEmptyDone(v => !v)}
+    >
+      {showEmptyDone ? '빈 세션 숨기기' : `빈 세션 ${doneEmpty.length}개`}
+    </button>
+  ) : undefined
 
   return (
     <div className={ax({ layout: 'fill' })}>
       <div className={ax({ layout: 'spread', padding: 'md' })}>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <h2 className={ax({ text: 'bright', textStyle: 'section' })}>Skill Kanban</h2>
+          <h2 className={ax({ text: 'bright', textStyle: 'section' })}>Agent Dashboard</h2>
           <span className={ax({ text: 'muted', textStyle: 'caption' })}>
-            {planning.length} planning · {running.length} running · {done.length} done
+            {waiting.length} waiting · {active.length} active · {doneWithOutput.length + doneEmpty.length} done
           </span>
         </div>
       </div>
       {sessionCards.length === 0 && (
         <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
-          Waiting — sessions will appear here when skills are executed
+          세션이 없습니다 — 스킬을 실행하면 여기에 표시됩니다
         </div>
       )}
       <div className={ax({ layout: 'row', gap: 'md', padding: 'md', flex: '1' })}>
-        <KanbanColumn stage="planning" cards={planning} onCardClick={setOpenCardId} />
-        <KanbanColumn stage="running" cards={running} onCardClick={setOpenCardId} />
-        <KanbanColumn stage="done" cards={done} onCardClick={setOpenCardId} />
+        {COLUMN_CONFIG.map(col => {
+          const cardsByState: Record<AgentState, SessionCard[]> = { waiting, active, done: doneCards }
+          return (
+            <KanbanColumn
+              key={col.state}
+              label={col.label}
+              cards={cardsByState[col.state]}
+              onCardClick={setOpenCardId}
+              emptyToggle={col.state === 'done' ? emptyDoneToggle : undefined}
+            />
+          )
+        })}
       </div>
       <SessionDetailModal card={openCard ?? null} onClose={() => setOpenCardId(null)} />
     </div>
