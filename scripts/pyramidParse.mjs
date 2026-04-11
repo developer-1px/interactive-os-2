@@ -12,7 +12,7 @@ import { generateSlidesHtml } from './pyramidSlides.mjs';
 
 // ── Mermaid 파서 ──
 
-/** @typedef {{ id: string, type: string, content: string, group: string | null }} Node */
+/** @typedef {{ id: string, type: string, content: string, group: string | null, isGroup: boolean }} Node */
 /** @typedef {{ from: string, to: string, label: string }} Edge */
 /** @typedef {{ id: string, title: string, members: string[] }} Subgraph */
 
@@ -53,8 +53,8 @@ function parseMermaid(mermaidBlock) {
       edges.push({ from: fromId, to: toId, label });
 
       if (toContent && !nodes.has(toId)) {
-        const { type, content } = parseNodeLabel(toContent);
-        nodes.set(toId, { id: toId, type, content, group: currentSubgraph?.id ?? null });
+        const { type, content, isGroup } = parseNodeLabel(toContent);
+        nodes.set(toId, { id: toId, type, content, group: currentSubgraph?.id ?? null, isGroup });
         if (currentSubgraph) currentSubgraph.members.push(toId);
       }
       continue;
@@ -65,8 +65,8 @@ function parseMermaid(mermaidBlock) {
     if (nodeMatch) {
       const [, id, rawContent] = nodeMatch;
       if (!nodes.has(id)) {
-        const { type, content } = parseNodeLabel(rawContent);
-        nodes.set(id, { id, type, content, group: currentSubgraph?.id ?? null });
+        const { type, content, isGroup } = parseNodeLabel(rawContent);
+        nodes.set(id, { id, type, content, group: currentSubgraph?.id ?? null, isGroup });
       }
       if (currentSubgraph) {
         if (!currentSubgraph.members.includes(id)) {
@@ -101,16 +101,20 @@ function parseNodeLabel(label) {
     D: 'Detail',
   };
 
+  // 그룹 접두사: GA:, GP:, GD: → 원래 타입 + isGroup: true
+  const groupMatch = label.match(/^G([APD]):\s*(.+)$/);
+  if (groupMatch) return { type: typeMap[groupMatch[1]] || groupMatch[1], content: groupMatch[2], isGroup: true };
+
   const r1Match = label.match(/^R1:\s*(.+)$/);
-  if (r1Match) return { type: 'Undesired', content: r1Match[1] };
+  if (r1Match) return { type: 'Undesired', content: r1Match[1], isGroup: false };
 
   const r2Match = label.match(/^R2:\s*(.+)$/);
-  if (r2Match) return { type: 'Desired', content: r2Match[1] };
+  if (r2Match) return { type: 'Desired', content: r2Match[1], isGroup: false };
 
   const prefixMatch = label.match(/^([SCQAPDK]):\s*(.+)$/);
-  if (prefixMatch) return { type: typeMap[prefixMatch[1]] || prefixMatch[1], content: prefixMatch[2] };
+  if (prefixMatch) return { type: typeMap[prefixMatch[1]] || prefixMatch[1], content: prefixMatch[2], isGroup: false };
 
-  return { type: '?', content: label };
+  return { type: '?', content: label, isGroup: false };
 }
 
 // ── 메인 ──

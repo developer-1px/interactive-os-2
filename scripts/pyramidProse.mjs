@@ -75,6 +75,7 @@ export function generateLeveledProse(nodes, edges, subgraphs, subgraphMap) {
 
     const introOrder = [];
     const introEdgeMap = new Map();
+    const groupChildren = new Set(); // 그룹 헤더의 SCQA 자식 ID
     const bfsQueue = roots.map((r) => r.id);
     const bfsVisited = new Set();
 
@@ -92,17 +93,25 @@ export function generateLeveledProse(nodes, edges, subgraphs, subgraphMap) {
           if (!introEdgeMap.has(edge.to)) {
             introEdgeMap.set(edge.to, edge);
           }
+          // 그룹 헤더의 자식 표시
+          if (node.isGroup) {
+            groupChildren.add(edge.to);
+          }
           bfsQueue.push(edge.to);
         }
       }
     }
 
-    function dfs(nodeId, depth) {
+    function dfs(nodeId, depth, insideGroup = false) {
       for (const edge of outEdgesMap.get(nodeId) || []) {
         const targetNode = nodes.get(edge.to);
         const targetSg = subgraphMap.get(edge.to);
 
-        if (targetNode && SCQA_TYPES.has(targetNode.type)) continue;
+        // 그룹 내부가 아니면 SCQA는 introOrder에서 처리
+        if (targetNode && SCQA_TYPES.has(targetNode.type) && !insideGroup) continue;
+
+        // Lv.1에서 그룹 헤더의 자식은 숨김
+        if (level === 1 && insideGroup) continue;
 
         if (targetSg) {
           lines.push(`${bullet(depth + 1)}**${edge.label}** [${targetSg.title}]`);
@@ -120,8 +129,23 @@ export function generateLeveledProse(nodes, edges, subgraphs, subgraphMap) {
           const tLevel = nodeLevel(edge.to);
           if (tLevel <= level && !visited.has(edge.to)) {
             visited.add(edge.to);
-            lines.push(`${bullet(depth + 1)}**${edge.label}** ${targetNode.content}`);
-            dfs(edge.to, depth + 1);
+
+            // 그룹 헤더: Lv.2에서 한 단계 높은 헤딩으로 출력
+            if (level >= 2 && targetNode.isGroup && HEADING_TYPES.has(targetNode.type)) {
+              lines.push('');
+              lines.push(`#### **${edge.label}** ${targetNode.content}`);
+              lines.push('');
+              dfs(edge.to, depth + 1, true);
+            // 그룹 자식 A: Lv.2에서 ##### 헤딩으로 출력
+            } else if (level >= 2 && insideGroup && HEADING_TYPES.has(targetNode.type)) {
+              lines.push('');
+              lines.push(`##### **${edge.label}** ${targetNode.content}`);
+              lines.push('');
+              dfs(edge.to, depth + 1, false);
+            } else {
+              lines.push(`${bullet(depth + 1)}**${edge.label}** ${targetNode.content}`);
+              dfs(edge.to, depth + 1, insideGroup);
+            }
           }
         }
       }
@@ -129,22 +153,37 @@ export function generateLeveledProse(nodes, edges, subgraphs, subgraphMap) {
 
     const HEADING_TYPES = new Set(['Question', 'Answer', 'Undesired', 'Desired']);
 
+    let prologueStarted = false;
+
     for (const nodeId of introOrder) {
       if (nodeLevel(nodeId) > level) continue;
+      // 그룹 헤더의 자식은 그룹 헤더 dfs에서 처리 — introOrder에서 제외
+      if (groupChildren.has(nodeId)) continue;
       visited.add(nodeId);
       const node = nodes.get(nodeId);
       const inEdge = introEdgeMap.get(nodeId);
       const prefix = inEdge ? `**${inEdge.label}** ` : '';
 
+      // 프롤로그: 첫 S/C 노드 앞에 헤딩 삽입
+      if (level >= 2 && !prologueStarted && (node.type === 'Situation' || node.type === 'Complication')) {
+        lines.push('');
+        lines.push('## 프롤로그');
+        lines.push('');
+        prologueStarted = true;
+      }
+
       if (level >= 2 && HEADING_TYPES.has(node.type)) {
-        const headingLevel = node.type === 'Question' ? '##' : '###';
+        // 그룹 헤더 A는 ### 대신 #### (자식 A가 ##### 로)
+        const headingLevel = node.type === 'Question' ? '##'
+          : node.isGroup ? '####'
+          : '###';
         lines.push('');
         lines.push(`${headingLevel} ${prefix}${node.content}`);
         lines.push('');
       } else {
         lines.push(`${bullet(0)}${prefix}${node.content}`);
       }
-      dfs(nodeId, 0);
+      dfs(nodeId, 0, node.isGroup);
     }
 
     return lines;
@@ -228,6 +267,7 @@ export function generateGaps(nodes, edges, subgraphs, subgraphMap) {
   const proofs = [...nodes.values()].filter((n) => n.type === 'Proof');
 
   for (const a of answers) {
+    if (a.isGroup) continue; // 그룹 헤더는 P 요구 면제
     const aProofs = resolveTargets(a.id).filter((n) => n.type === 'Proof');
     if (aProofs.length < 2) {
       lines.push(`- [ ] ${a.id}의 P 부족 (${aProofs.length}개) — MECE를 위해 2개 이상 필요`);
@@ -252,9 +292,21 @@ export function generateGaps(nodes, edges, subgraphs, subgraphMap) {
     }
   }
 
-  // 비대 감지
+  // 비대 감지 — 그룹 헤더의 자식은 부모에서 1개로 집계
   const childCount = new Map();
+  const groupChildIds = new Set(); // 그룹 헤더의 자식 ID
   for (const edge of edges) {
+    const toNode = nodes.get(edge.to);
+    if (toNode && toNode.isGroup) {
+      // 그룹 헤더로 가는 엣지: 부모에서 1개로 카운트 (이미 됨)
+      // 그룹 헤더의 자식들은 부모의 직속에서 제외
+      for (const ge of outEdgesMap.get(edge.to) || []) {
+        groupChildIds.add(ge.to);
+      }
+    }
+  }
+  for (const edge of edges) {
+    if (groupChildIds.has(edge.to)) continue; // 그룹 자식은 부모 팬아웃에서 제외
     childCount.set(edge.from, (childCount.get(edge.from) || 0) + 1);
   }
   for (const [parentId, count] of childCount) {
