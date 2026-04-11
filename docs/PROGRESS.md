@@ -62,11 +62,11 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-| flatLayout (definePage) | Prototype | LayoutNode 4타입 (split/stack/overlay/widget). definePage 팩토리 |
-| widgetRegistry | Prototype | createWidgetRegistry + resolveWidget. 단순 Record wrapper |
+| flatLayout (definePage) | Integrated | LayoutNode 9타입 + LayoutBase.surface(Z 배치). definePage 팩토리 |
+| widgetRegistry | Integrated | createWidgetRegistry + resolveWidget |
 | layoutCommands | Prototype | setVisibility, setGap. workspaceCommands 확장 |
-| layoutPlugin | Prototype | layout() plugin. workspace() requires |
-| FlatLayout (ui/) | Prototype | UI 완성품. OCP renderer map. PageBookViewer Phase 1 검증 완료 |
+| layoutPlugin | Integrated | layout() plugin. workspace() requires |
+| FlatLayout (ui/) | Integrated | 배치 엔진(XY+Z). OCP renderer map. 모든 렌더러 surface 적용 |
 
 ## Overlay (L5.5)
 
