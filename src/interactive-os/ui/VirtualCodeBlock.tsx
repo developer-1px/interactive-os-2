@@ -108,10 +108,10 @@ export function VirtualCodeBlock({
   }, [visibleRange.start, visibleRange.end, cachedLines, lines])
 
   const cls = variant === 'flush'
-    ? `${ax({ scroll: 'hidden' })} code-block code-block--flush`
+    ? `${ax({ scroll: 'hidden' })} code-block code-block--flush select-text`
     : variant === 'compact'
-      ? `${ax({ scroll: 'hidden' })} code-block code-block--compact`
-      : `${ax({ scroll: 'hidden' })} code-block`
+      ? `${ax({ scroll: 'hidden' })} code-block code-block--compact select-text`
+      : `${ax({ scroll: 'hidden' })} code-block select-text`
 
   const gutterCls = `code-gutter text-right select-none ${ax({ text: 'muted', textStyle: 'code', width: 'sm', padding: 'sm' })} `
 

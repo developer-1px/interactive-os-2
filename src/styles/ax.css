@@ -770,6 +770,7 @@ dialog.sf-overlay[open] {
 .outline-none    { outline: none; }
 .bg-transparent  { background: transparent; }
 .select-none     { user-select: none; }
+.select-text     { user-select: text; }
 .pointer-none    { pointer-events: none; }
 .pointer-auto    { pointer-events: auto; }
 .font-inherit    { font-family: inherit; }

@@ -71,10 +71,10 @@ export function CodeBlock({ code, filename, highlightLines, variant = 'bordered'
 
   const baseAx = ax({ textStyle: 'code' })
   const cls = variant === 'flush'
-    ? `${baseAx} code-block code-block--flush`
+    ? `${baseAx} code-block code-block--flush select-text`
     : variant === 'compact'
-      ? `${baseAx} code-block code-block--compact`
-      : `${baseAx} code-block`
+      ? `${baseAx} code-block code-block--compact select-text`
+      : `${baseAx} code-block select-text`
   if (!html) return <pre className={`${cls} ${ax({ padding: 'xl', surface: 'base', shape: 'xl', textStyle: 'code' })}`}><code>{code}</code></pre>
   return (
     <div
