@@ -13,11 +13,11 @@ export const meta = {
 
 const data: NormalizedData = createStore({
   entities: {
-    src: { id: 'src', data: { label: 'src', type: 'directory' } },
-    index: { id: 'index', data: { label: 'index.ts', type: 'file' } },
-    app: { id: 'app', data: { label: 'App.tsx', type: 'file' } },
-    docs: { id: 'docs', data: { label: 'docs', type: 'directory' } },
-    readme: { id: 'readme', data: { label: 'README.md', type: 'file' } },
+    src: { id: 'src', data: { name: 'src', type: 'directory' } },
+    index: { id: 'index', data: { name: 'index.ts', type: 'file' } },
+    app: { id: 'app', data: { name: 'App.tsx', type: 'file' } },
+    docs: { id: 'docs', data: { name: 'docs', type: 'directory' } },
+    readme: { id: 'readme', data: { name: 'README.md', type: 'file' } },
   },
   relationships: {
     [ROOT_ID]: ['src', 'docs'],

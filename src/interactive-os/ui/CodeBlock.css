@@ -50,6 +50,10 @@
   opacity: 0.65;
 }
 
+.code-block :is(.shiki .line:has(> .code-gutter))::before {
+  content: none;
+}
+
 .code-token {
   cursor: pointer;
   border-radius: var(--space-inline-code);

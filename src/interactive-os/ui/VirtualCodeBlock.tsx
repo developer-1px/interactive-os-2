@@ -113,7 +113,7 @@ export function VirtualCodeBlock({
       ? `${ax({ scroll: 'hidden' })} code-block code-block--compact`
       : `${ax({ scroll: 'hidden' })} code-block`
 
-  const gutterCls = `text-right select-none ${ax({ text: 'muted', textStyle: 'code' })} `
+  const gutterCls = `code-gutter text-right select-none ${ax({ text: 'muted', textStyle: 'code', width: 'sm', padding: 'sm' })} `
 
   return (
     <div ref={containerRef} className={`${cls} `} onClick={handleClick}>
