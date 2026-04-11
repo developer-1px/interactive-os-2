@@ -1,7 +1,7 @@
 // ② finder-viewer-prd.md
 // @useState-hatch — sortKey/sortDir/filters: view preference; initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; currentRoot: sidebar selection; sizes: SplitPane local; previewPath: follow-focus file preview
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { TreeGrid } from '@os/ui/TreeGrid'
@@ -48,7 +48,6 @@ function resolveRoot(key: string): string {
 }
 
 export default function PageViewer() {
-  useLocation()
   const navigate = useNavigate()
 
   const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
@@ -148,12 +147,15 @@ export default function PageViewer() {
   }), [])
 
   const listStore = useMemo(() => {
-    if (!initialStore) return null
+    if (!initialStore || viewMode !== 'list') return null
     let store = initialStore
     if (filters.length > 0) store = filterStore(store, filters)
     if (sortKey) store = sortStore(store, sortKey, sortDir)
     return store
-  }, [initialStore, filters, sortKey, sortDir])
+  }, [initialStore, viewMode, filters, sortKey, sortDir])
+
+  const sortDirection = (key: SortKey) =>
+    sortKey === key ? (sortDir === 'asc' ? 'ascending' as const : 'descending' as const) : undefined
 
   const handleSort = useCallback((key: SortKey) => {
     setSortKey(prev => {
@@ -198,13 +200,13 @@ export default function PageViewer() {
           {viewMode === 'list' && (
             <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })}>
               <Button size="sm" onClick={() => handleSort('name')}>
-                Name <SortIndicator direction={sortKey === 'name' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
+                Name <SortIndicator direction={sortDirection('name')} />
               </Button>
               <Button size="sm" onClick={() => handleSort('type')}>
-                Type <SortIndicator direction={sortKey === 'type' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
+                Type <SortIndicator direction={sortDirection('type')} />
               </Button>
               <Button size="sm" onClick={() => handleSort('loc')}>
-                LOC <SortIndicator direction={sortKey === 'loc' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
+                LOC <SortIndicator direction={sortDirection('loc')} />
               </Button>
               <span className={ax({ border: 'end', flex: 'none' })} />
               {['.tsx', '.ts', '.css', '.md'].map(ext => (
@@ -226,7 +228,6 @@ export default function PageViewer() {
                   <TreeGrid
                     data={listStore}
                     onChange={handleChange}
-                    
                     itemSlots={{
                       icon: (node, state) => {
                         const d = node.data as Record<string, unknown>
@@ -256,7 +257,6 @@ export default function PageViewer() {
               <MillerColumns
                 data={initialStore}
                 onChange={handleChange}
-                
                 renderPreview={(nodeId) => <FilePanel path={nodeId} />}
                 aria-label="File browser"
               />
