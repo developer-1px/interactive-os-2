@@ -1,12 +1,21 @@
 // @useState-hatch — sessionCards: real-time SSE stream state, not OS axis/store material
 // @useState-hatch — tick: timer-driven re-render for elapsed time display
 // @useState-hatch — openCardId: dialog open state, not OS axis/store material
-import { useState, useEffect, useRef } from 'react'
+// @useState-hatch — fileContent/activeFilePath: modal-local file fetch state, not OS store material
+// @useState-hatch — splitSizes: SplitPane local resize state
+// @useMemo-hatch — tabData: derived from card.touchedFiles, not OS store
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { subscribeTimeline } from '../viewer/timelineSSE'
 import { useActiveSessions, type ActiveSession } from './useActiveSessions'
 import type { TimelineEvent } from '../viewer/groupEvents'
+import type { NormalizedData, Entity } from '@os/store/types'
+import { ROOT_ID } from '@os/store/types'
+import type { PaneSize } from '@os/ui/SplitPane'
 import { ax } from '@styles/ax'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { SplitPane } from '@os/ui/SplitPane'
+import { FilePreview } from '@os/ui/FilePreview'
+import { TabList } from '@os/ui/TabList'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { CloseIndicator } from '@os/ui/indicators'
 import './SkillKanban.css'
@@ -15,6 +24,7 @@ const PLANNING_SKILLS = new Set(['discuss', 'prd', 'plan', 'story', 'ia', 'wiref
 const RUNNING_SKILLS = new Set(['go', 'do', 'fix', 'improve', 'use'])
 const DONE_SKILLS = new Set(['close', 'retrospect'])
 const MAX_MESSAGES = 200
+const MAX_CARD_FILES = 5
 
 type PipelineStage = 'planning' | 'running' | 'done'
 
@@ -32,6 +42,8 @@ interface SessionCard {
   label: string
   stage: PipelineStage
   lastSkill: string
+  skills: string[]
+  touchedFiles: string[]
   skillCount: number
   toolCount: number
   startTs: number
@@ -61,8 +73,13 @@ function pushMessage(messages: ChatMessage[], msg: ChatMessage): ChatMessage[] {
   return next.length > MAX_MESSAGES ? next.slice(-MAX_MESSAGES) : next
 }
 
+function basename(filePath: string): string {
+  return filePath.split('/').pop() ?? filePath
+}
+
 function extractSessionCard(events: TimelineEvent[], session: ActiveSession): SessionCard {
   const skills: string[] = []
+  const fileSet = new Set<string>()
   let toolCount = 0
   let startTs = 0
   let lastTs = 0
@@ -77,16 +94,19 @@ function extractSessionCard(events: TimelineEvent[], session: ActiveSession): Se
       skills.push(evt.text)
     } else if (evt.type === 'tool_use') {
       toolCount++
+      if (evt.filePath) fileSet.add(evt.filePath)
     }
     if ((evt.type === 'user' || evt.type === 'assistant') && evt.text) {
       allMessages = pushMessage(allMessages, { role: evt.type, text: evt.text })
     }
   }
 
-  const { stage, lastSkill } = deriveStage(skills)
+  const { stage: derivedStage, lastSkill } = deriveStage(skills)
+  const stage = session.active ? derivedStage : 'done'
 
   return {
     id: session.id, label: session.label, stage, lastSkill,
+    skills, touchedFiles: [...fileSet],
     skillCount: skills.length, toolCount,
     startTs: startTs || session.mtime, lastTs: lastTs || session.mtime,
     allMessages,
@@ -102,8 +122,57 @@ function formatElapsed(ms: number): string {
   return `${hr}h ${min % 60}m`
 }
 
-function ConversationDialog({ card, onClose }: { card: SessionCard | null; onClose: () => void }) {
+function buildTabData(files: string[]): NormalizedData {
+  const entities: Record<string, Entity> = {}
+  const ids: string[] = []
+  for (const f of files) {
+    entities[f] = { id: f, label: basename(f) }
+    ids.push(f)
+  }
+  return { entities, relationships: { [ROOT_ID]: ids } }
+}
+
+function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClose: () => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const [splitSizes, setSplitSizes] = useState<PaneSize[]>([0.35, 'flex'])
+  const [activeFilePath, setActiveFilePath] = useState<string | null>(null)
+  const [fileContent, setFileContent] = useState<string | null>(null)
+  const [fileError, setFileError] = useState<string | null>(null)
+
+  const hasFiles = card !== null && card.touchedFiles.length > 0
+
+  // Auto-select first file when card changes
+  useEffect(() => {
+    if (card && card.touchedFiles.length > 0) {
+      setActiveFilePath(card.touchedFiles[0])
+    } else {
+      setActiveFilePath(null)
+      setFileContent(null)
+      setFileError(null)
+    }
+  }, [card])
+
+  // Fetch file content when activeFilePath changes
+  useEffect(() => {
+    if (!activeFilePath) {
+      setFileContent(null)
+      setFileError(null)
+      return
+    }
+    let cancelled = false
+    setFileContent(null)
+    setFileError(null)
+
+    fetch(`/api/fs/file?path=${encodeURIComponent(activeFilePath)}`)
+      .then(res => {
+        if (!res.ok) throw new Error('File not found')
+        return res.text()
+      })
+      .then(text => { if (!cancelled) setFileContent(text) })
+      .catch(() => { if (!cancelled) setFileError('File not found') })
+
+    return () => { cancelled = true }
+  }, [activeFilePath])
 
   useEffect(() => {
     const el = dialogRef.current
@@ -125,13 +194,27 @@ function ConversationDialog({ card, onClose }: { card: SessionCard | null; onClo
     if (e.target === dialogRef.current) onClose()
   }
 
+  const handleTabChange = useCallback((data: NormalizedData) => {
+    const rootChildren = data.relationships[ROOT_ID]
+    if (!rootChildren) return
+    for (const id of rootChildren) {
+      const entity = data.entities[id]
+      if (entity && entity['selected']) {
+        setActiveFilePath(id)
+        return
+      }
+    }
+  }, [])
+
   const md = card
     ? card.allMessages.map(m => m.role === 'user' ? `> **User:** ${m.text}` : m.text).join('\n\n---\n\n')
     : ''
 
+  const tabData = useMemo(() => card ? buildTabData(card.touchedFiles) : null, [card?.touchedFiles])
+
   return (
-    <dialog ref={dialogRef} className="border-none bg-transparent fvm-dialog" onClick={handleBackdropClick}>
-      <div className={`fvm-modal ${ax({ surface: 'trap', layout: 'column', shape: 'xl', scroll: 'hidden' })}`} onClick={e => e.stopPropagation()}>
+    <dialog ref={dialogRef} className="border-none bg-transparent kanban-fullscreen-dialog" onClick={handleBackdropClick}>
+      <div className={`kanban-fullscreen-modal ${ax({ surface: 'trap', layout: 'column', shape: 'xl', scroll: 'hidden' })}`} onClick={e => e.stopPropagation()}>
         <PanelHeader axes={{ layout: 'spread' }}>
           {card && (
             <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })}>
@@ -145,8 +228,36 @@ function ConversationDialog({ card, onClose }: { card: SessionCard | null; onClo
             <CloseIndicator />
           </button>
         </PanelHeader>
-        <div className={`${ax({ flex: '1' })} kanban-dialog-body`}>
-          {card && <MarkdownViewer content={md} codeVariant="compact" />}
+        <div className={ax({ flex: '1', layout: 'fill' })}>
+          {card && (
+            <SplitPane direction="horizontal" sizes={splitSizes} onResize={setSplitSizes}>
+              <div className={ax({ layout: 'column', scroll: 'y', flex: '1' })}>
+                <MarkdownViewer content={md} codeVariant="compact" />
+              </div>
+              <div className={ax({ layout: 'column', flex: '1' })}>
+                {hasFiles && tabData ? (
+                  <>
+                    <TabList data={tabData} onChange={handleTabChange} aria-label="Modified files" />
+                    <div className={ax({ flex: '1', scroll: 'y' })}>
+                      {fileError && (
+                        <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption' })}>{fileError}</div>
+                      )}
+                      {fileContent !== null && activeFilePath && (
+                        <FilePreview content={fileContent} filename={basename(activeFilePath)} />
+                      )}
+                      {fileContent === null && !fileError && (
+                        <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption' })}>Loading...</div>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption', layout: 'center', flex: '1' })}>
+                    No files modified
+                  </div>
+                )}
+              </div>
+            </SplitPane>
+          )}
         </div>
       </div>
     </dialog>
@@ -159,6 +270,9 @@ function SessionCardView({ card, onClick }: { card: SessionCard; onClick: () => 
   const elapsed = formatElapsed(Date.now() - card.startTs)
   const skillTag = card.lastSkill ? `/${card.lastSkill}` : ''
   const preview = lastPreview(card)
+  const fileNames = card.touchedFiles.map(basename)
+  const displayFiles = fileNames.slice(0, MAX_CARD_FILES)
+  const moreCount = fileNames.length - MAX_CARD_FILES
 
   return (
     <div
@@ -171,6 +285,16 @@ function SessionCardView({ card, onClick }: { card: SessionCard; onClick: () => 
       <span className={ax({ text: 'muted', textStyle: 'caption' })}>
         {card.toolCount} tools · {elapsed}{skillTag ? ` · ${skillTag}` : ''}
       </span>
+      {card.skills.length > 0 && (
+        <span className={ax({ text: 'secondary', textStyle: 'caption' })}>
+          {card.skills.join(' → ')}
+        </span>
+      )}
+      {displayFiles.length > 0 && (
+        <span className={ax({ text: 'muted', textStyle: 'caption', clamp: '2' })}>
+          {displayFiles.join(', ')}{moreCount > 0 ? ` +${moreCount} more` : ''}
+        </span>
+      )}
       {preview && (
         <div className="kanban-card-preview">
           <MarkdownViewer content={preview} prose={false} codeVariant="compact" />
@@ -192,7 +316,7 @@ function KanbanColumn({ stage, cards, onCardClick }: { stage: PipelineStage; car
 }
 
 export default function SkillKanban() {
-  const sessions = useActiveSessions()
+  const sessions = useActiveSessions({ activeOnly: false })
   const [sessionCards, setSessionCards] = useState<SessionCard[]>([])
   const [, setTick] = useState(0)
   const [openCardId, setOpenCardId] = useState<string | null>(null)
@@ -229,7 +353,7 @@ export default function SkillKanban() {
 
     for (const session of sessions) {
       const unsub = subscribeTimeline(session.id, (evt) => {
-        const data = evt as unknown as { type: string; tool?: string; text?: string; ts: string }
+        const data = evt as unknown as { type: string; tool?: string; text?: string; ts: string; filePath?: string }
 
         setSessionCards(prev => {
           const idx = prev.findIndex(c => c.id === session.id)
@@ -238,10 +362,14 @@ export default function SkillKanban() {
 
           if (data.type === 'skill_start' && data.text) {
             card.lastSkill = data.text
+            card.skills = [...card.skills, data.text]
             card.stage = classifySkill(data.text)
             card.skillCount++
           } else if (data.type === 'tool_use' && data.tool !== 'Skill') {
             card.toolCount++
+            if (data.filePath && !card.touchedFiles.includes(data.filePath)) {
+              card.touchedFiles = [...card.touchedFiles, data.filePath]
+            }
           }
           if ((data.type === 'user' || data.type === 'assistant') && data.text) {
             card.allMessages = pushMessage(card.allMessages, { role: data.type as 'user' | 'assistant', text: data.text })
@@ -290,7 +418,7 @@ export default function SkillKanban() {
         <KanbanColumn stage="running" cards={running} onCardClick={setOpenCardId} />
         <KanbanColumn stage="done" cards={done} onCardClick={setOpenCardId} />
       </div>
-      <ConversationDialog card={openCard ?? null} onClose={() => setOpenCardId(null)} />
+      <SessionDetailModal card={openCard ?? null} onClose={() => setOpenCardId(null)} />
     </div>
   )
 }
