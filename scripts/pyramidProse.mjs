@@ -62,6 +62,7 @@ export function generateLeveledProse(nodes, edges, subgraphs, subgraphMap) {
     const node = nodes.get(id);
     if (!node) return 1;
     if (SCQA_TYPES.has(node.type)) return 1;
+    if (node.isGroup) return 1; // 그룹 헤더는 Lv.1에서도 표시
     return 2;
   }
 
