@@ -1,11 +1,15 @@
 // ② finder-viewer-prd.md
-// @useState-hatch — initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; quickLookPath: popup axis candidate; currentRoot: sidebar selection; sizes: SplitPane local; previewPath: follow-focus file preview
+// @useState-hatch — sortKey/sortDir/filters: view preference; initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; quickLookPath: popup axis candidate; currentRoot: sidebar selection; sizes: SplitPane local; previewPath: follow-focus file preview
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
-import { FileTreeView } from '@os/ui/FileTreeView'
+import { TreeGrid } from '@os/ui/TreeGrid'
 import { MillerColumns } from '@os/ui/MillerColumns'
+import { FilterBar } from '@os/ui/FilterBar'
+import { SortIndicator } from '@os/ui/indicators'
+import { sortStore, type SortKey, type SortDir } from './viewerSort'
+import { filterStore } from './viewerFilter'
 import { SplitPane } from '@os/ui/SplitPane'
 import type { PaneSize } from '@os/ui/SplitPane'
 import type { NormalizedData } from '@os/store/types'
@@ -23,7 +27,6 @@ import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelec
 import { ax } from '@styles/ax'
 import { SpinnerIndicator } from '@os/ui/indicators'
 import { Panel, SidePanel } from '@os/ui/panels'
-import { ScrollArea } from '@os/ui/ScrollArea'
 import { EmptyState } from '@os/ui/EmptyState'
 import { FilePanel } from './widgets/FilePanel'
 
@@ -58,6 +61,9 @@ export default function PageViewer() {
   const [quickLookPath, setQuickLookPath] = useState<string | null>(null)
   const [previewPath, setPreviewPath] = useState<string | null>(null) // @useState-hatch — follow-focus file preview
   const [currentRoot, setCurrentRoot] = useState('src')
+  const [sortKey, setSortKey] = useState<SortKey | null>(null) // @useState-hatch
+  const [sortDir, setSortDir] = useState<SortDir>('asc') // @useState-hatch
+  const [filters, setFilters] = useState<string[]>([]) // @useState-hatch
 
   const [sizes, setSizes] = useState<PaneSize[]>(() => {
     const saved = localStorage.getItem(TREE_RATIO_KEY)
@@ -164,6 +170,41 @@ export default function PageViewer() {
     }, 'Viewer'),
   }), [])
 
+  const listColumns = useMemo(() => [
+    { key: 'name', header: 'Name', width: '1fr' },
+    { key: 'type', header: 'Type', width: '80px' },
+    { key: 'loc', header: 'LOC', width: '80px' },
+  ], [])
+
+  const listStore = useMemo(() => {
+    if (!initialStore) return null
+    let store = initialStore
+    if (filters.length > 0) store = filterStore(store, filters)
+    if (sortKey) store = sortStore(store, sortKey, sortDir)
+    // Add cells array for TreeGrid column mode
+    const entities = { ...store.entities }
+    for (const [id, entity] of Object.entries(entities)) {
+      if (id.startsWith('__')) continue
+      const data = (entity.data ?? {}) as Record<string, unknown>
+      const name = (data.name as string) ?? ''
+      const ext = name.includes('.') ? name.split('.').pop() ?? '' : ''
+      const loc = data.loc as number | undefined
+      entities[id] = { ...entity, data: { ...data, cells: [name, ext, loc ?? '—'] } }
+    }
+    return { ...store, entities }
+  }, [initialStore, filters, sortKey, sortDir])
+
+  const handleSort = useCallback((key: SortKey) => {
+    setSortKey(prev => {
+      if (prev === key) {
+        setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+        return key
+      }
+      setSortDir(key === 'loc' ? 'desc' : 'asc')
+      return key
+    })
+  }, [])
+
   if (loading || !initialStore) {
     return (
       <div className={ax({ layout: 'center', gap: 'sm', textStyle: 'body', text: 'muted', flex: '1' })}>
@@ -193,17 +234,50 @@ export default function PageViewer() {
             onViewModeChange={setViewMode}
             onSearchClick={() => setQuickOpenVisible(true)}
           />
+          {viewMode === 'list' && (
+            <FilterBar
+              filters={filters.map(ext => ({ id: ext, label: ext, onRemove: () => setFilters(f => f.filter(e => e !== ext)) }))}
+            >
+              <button className={ax({ surface: 'ghost', recipe: 'control-sm', interactive: 'button' })} onClick={() => handleSort('name')}>
+                Name <SortIndicator direction={sortKey === 'name' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
+              </button>
+              <button className={ax({ surface: 'ghost', recipe: 'control-sm', interactive: 'button' })} onClick={() => handleSort('type')}>
+                Type <SortIndicator direction={sortKey === 'type' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
+              </button>
+              <button className={ax({ surface: 'ghost', recipe: 'control-sm', interactive: 'button' })} onClick={() => handleSort('loc')}>
+                LOC <SortIndicator direction={sortKey === 'loc' ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined} />
+              </button>
+              {['.tsx', '.ts', '.css', '.md', '.test.ts', '.test.tsx'].map(ext => (
+                <button
+                  key={ext}
+                  className={ax({
+                    surface: filters.includes(ext) ? 'display' : 'ghost',
+                    recipe: 'control-sm',
+                    interactive: 'button',
+                  })}
+                  onClick={() => setFilters(f => f.includes(ext) ? f.filter(e => e !== ext) : [...f, ext])}
+                >
+                  {ext}
+                </button>
+              ))}
+            </FilterBar>
+          )}
           <div className={ax({ layout: 'row-fill', flex: '1' })}>
             {viewMode === 'list' ? (
-              <ScrollArea className={ax({ flex: '1' })}>
-                <FileTreeView
-                  data={initialStore}
-                  plugins={[]}
-                  onChange={handleChange}
-                  onActivate={handleActivate}
-                  aria-label="File browser"
-                />
-              </ScrollArea>
+              listStore && Object.keys(listStore.entities).filter(k => !k.startsWith('__')).length > 0 ? (
+                <div className={ax({ layout: 'fill', flex: '1' })}>
+                  <TreeGrid
+                    data={listStore}
+                    columns={listColumns}
+                    header
+                    onChange={handleChange}
+                    onActivate={handleActivate}
+                    aria-label="File browser"
+                  />
+                </div>
+              ) : filters.length > 0 ? (
+                <EmptyState title="No files match filter" description="Try removing some filters" />
+              ) : null
             ) : (
               <MillerColumns
                 data={initialStore}
