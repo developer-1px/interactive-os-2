@@ -1,9 +1,11 @@
-// ── Catalog Layout ──
+// ② flatlayout-nav-catalog-prd.md
 // Builds FlatLayout NormalizedData from CatalogData
-// Grid layout with category section headers + surface cards
+// Nav layout with sidebar + category sections
 
 import { definePage } from '@os/layout/flatLayout'
 import type { LayoutNode } from '@os/layout/flatLayout'
+import { createStore } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
 import type { CatalogData } from './catalogLoader'
 
 const CATEGORY_ORDER = ['ui', 'composite', 'panel', 'item', 'cell', 'indicator']
@@ -19,7 +21,6 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export function buildCatalogLayout(catalog: CatalogData) {
   const entities: Record<string, { data: LayoutNode; children?: string[] }> = {}
-  const categoryIds: string[] = []
 
   // Sort categories by defined order
   const sortedCategories = Object.entries(catalog.categories).sort(([a], [b]) => {
@@ -28,17 +29,34 @@ export function buildCatalogLayout(catalog: CatalogData) {
     return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib)
   })
 
+  // Nav widget — pre-built NormalizedData for NavList
+  const navStoreData = createStore({
+    entities: Object.fromEntries(
+      sortedCategories.map(([cat, entries]) => [
+        cat,
+        { id: cat, data: { label: `${CATEGORY_LABELS[cat] ?? cat} (${entries.length})` } },
+      ]),
+    ),
+    relationships: { [ROOT_ID]: sortedCategories.map(([cat]) => cat) },
+  })
+
+  entities['nav'] = {
+    data: {
+      type: 'widget',
+      widget: '__nav__',
+      props: {
+        navData: navStoreData,
+        categoryIds: sortedCategories.map(([cat]) => cat),
+      },
+    },
+  }
+
+  // Each category section
+  const sectionIds: string[] = []
   for (const [category, entries] of sortedCategories) {
     const sectionId = `section:${category}`
-    categoryIds.push(sectionId)
+    sectionIds.push(sectionId)
 
-    // Header widget
-    const headerId = `header:${category}`
-    entities[headerId] = {
-      data: { type: 'widget', widget: '__header__', props: { label: CATEGORY_LABELS[category] ?? category, count: entries.length } },
-    }
-
-    // Grid of demo cards
     const gridId = `grid:${category}`
     const widgetIds = entries.map(entry => {
       const widgetId = `demo:${entry.slug}`
@@ -53,22 +71,16 @@ export function buildCatalogLayout(catalog: CatalogData) {
       children: widgetIds,
     }
 
-    // Section = header + grid
     entities[sectionId] = {
-      data: { type: 'stack', gap: 'md' },
-      children: [headerId, gridId],
+      data: { type: 'section', title: (CATEGORY_LABELS[category] ?? category).toUpperCase(), count: entries.length },
+      children: [gridId],
     }
   }
 
   // Missing components section
   if (catalog.missing.length > 0) {
     const sectionId = 'section:missing'
-    categoryIds.push(sectionId)
-
-    const headerId = 'header:missing'
-    entities[headerId] = {
-      data: { type: 'widget', widget: '__header__', props: { label: 'Missing Demos', count: catalog.missing.length } },
-    }
+    sectionIds.push(sectionId)
 
     const gridId = 'grid:missing'
     const missingWidgetIds = catalog.missing.map(name => {
@@ -85,15 +97,15 @@ export function buildCatalogLayout(catalog: CatalogData) {
     }
 
     entities[sectionId] = {
-      data: { type: 'stack', gap: 'md' },
-      children: [headerId, gridId],
+      data: { type: 'section', title: 'MISSING DEMOS', count: catalog.missing.length },
+      children: [gridId],
     }
   }
 
-  // Root
+  // Root: NavNode
   entities['root'] = {
-    data: { type: 'stack', gap: 'lg' },
-    children: categoryIds,
+    data: { type: 'nav', sidebarWidth: 0.18 },
+    children: ['nav', ...sectionIds],
   }
 
   return definePage({ entities })

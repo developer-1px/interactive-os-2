@@ -1,10 +1,12 @@
-// ── PageCatalog ──
+// ② flatlayout-nav-catalog-prd.md
 // /catalog route — auto-discovered component demos via FlatLayout
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import type { NormalizedData } from '@os/store/types'
 import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { FlatLayout } from '@os/ui/FlatLayout'
+import { NavLayoutContext } from '@os/ui/NavLayoutContext'
+import { NavList } from '@os/ui/NavList'
 import { ax } from '@styles/ax'
 import { type CatalogData, type CatalogEntry, loadCatalog } from './catalogLoader'
 import { buildCatalogLayout } from './catalogLayout'
@@ -37,18 +39,22 @@ class DemoErrorBoundary extends React.Component<
   }
 }
 
-// ── Section Header Widget ──
+// ── Nav Widget ──
 
-function SectionHeaderWidget({ label, count }: Record<string, unknown>) {
+function CatalogNavWidget({ navData, categoryIds }: Record<string, unknown>) {
+  const { setActiveIndex } = useContext(NavLayoutContext)
+  const data = navData as NormalizedData
+  const ids = categoryIds as string[]
+
   return (
-    <div className={ax({ layout: 'spread', width: 'full', padding: 'sm' })}>
-      <span className={ax({ textStyle: 'section', text: 'primary' })}>
-        {String(label ?? '').toUpperCase()}
-      </span>
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-        {String(count ?? 0)}
-      </span>
-    </div>
+    <NavList
+      data={data}
+      onActivate={(nodeId: string) => {
+        const idx = ids.indexOf(nodeId)
+        if (idx >= 0) setActiveIndex(idx)
+      }}
+      aria-label="Component Categories"
+    />
   )
 }
 
@@ -72,8 +78,8 @@ function createDemoWidget(entry: CatalogEntry) {
       default: function DemoWidget() {
         return (
           <DemoErrorBoundary name={entry.slug}>
-            <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })}>
-              <div className={ax({ textStyle: 'caption', text: 'muted' })}>
+            <div className={ax({ surface: 'display', padding: 'md', shape: 'md', layout: 'column', gap: 'sm', border: 'default' })}>
+              <div className={ax({ textStyle: 'caption', text: 'secondary', content: 'text' })}>
                 {entry.label}
               </div>
               <Demo />
@@ -88,7 +94,7 @@ function createDemoWidget(entry: CatalogEntry) {
     return (
       <React.Suspense
         fallback={
-          <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', text: 'muted', textStyle: 'caption' })}>
+          <div className={ax({ surface: 'display', padding: 'md', shape: 'md', text: 'muted', textStyle: 'caption', border: 'default' })}>
             Loading {entry.slug}...
           </div>
         }
@@ -118,7 +124,7 @@ export default function PageCatalog() {
     if (!catalog) return {}
     const reg: WidgetRegistry = {
       __empty__: EmptyStateWidget,
-      __header__: SectionHeaderWidget,
+      __nav__: CatalogNavWidget,
     }
 
     for (const entries of Object.values(catalog.categories)) {
@@ -139,18 +145,10 @@ export default function PageCatalog() {
   }
 
   return (
-    <div className={ax({ padding: 'lg', layout: 'column', gap: 'lg', width: 'full' })}>
-      <div className={ax({ layout: 'column', gap: 'xs' })}>
-        <span className={ax({ textStyle: 'page', text: 'primary' })}>Component Catalog</span>
-        <span className={ax({ textStyle: 'body', text: 'muted' })}>
-          {Object.values(catalog!.categories).reduce((sum, entries) => sum + entries.length, 0)} components
-        </span>
-      </div>
-      <FlatLayout
-        data={layoutData}
-        registry={registry}
-        aria-label="Component Catalog"
-      />
-    </div>
+    <FlatLayout
+      data={layoutData}
+      registry={registry}
+      aria-label="Component Catalog"
+    />
   )
 }

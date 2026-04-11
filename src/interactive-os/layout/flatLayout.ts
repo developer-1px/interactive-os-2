@@ -41,7 +41,22 @@ export interface GridNode extends Record<string, unknown> {
   gap?: 'sm' | 'md' | 'lg'
 }
 
-export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode
+export interface NavNode extends Record<string, unknown> {
+  type: 'nav'
+  sidebarWidth?: number  // 0~1 비율, 기본 0.2
+}
+
+export interface TabNode extends Record<string, unknown> {
+  type: 'tab'
+}
+
+export interface SectionNode extends Record<string, unknown> {
+  type: 'section'
+  title: string
+  count?: number
+}
+
+export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabNode | SectionNode
 
 // ── definePage factory ────────────────────────────────
 

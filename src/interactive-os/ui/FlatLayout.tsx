@@ -8,9 +8,10 @@ import { useAria } from '@os/primitives/useAria'
 import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { resolveWidget } from '@os/layout/widgetRegistry'
 import { layout } from '@os/layout/layoutPlugin'
-import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode } from '@os/layout/flatLayout'
+import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, SectionNode } from '@os/layout/flatLayout'
 import { ax } from '@styles/ax'
 import styles from './FlatLayout.module.css'
+import { NavLayoutContext } from './NavLayoutContext'
 
 // ── Types ─────────────────────────────────────────────
 
@@ -20,6 +21,79 @@ interface LayoutRenderContext {
   registry: WidgetRegistry
   renderNode: (nodeId: string) => React.ReactNode
   refCallback: (nodeId: string) => (el: HTMLElement | null) => void
+}
+
+// ── Nav wrapper ───────────────────────────────────────
+
+function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode, refCallback }: {
+  nodeId: string
+  navId: string
+  contentIds: string[]
+  sidebarWidth: number
+  renderNode: (id: string) => React.ReactNode
+  refCallback: (id: string) => (el: HTMLElement | null) => void
+}) {
+  const [activeIndex, setActiveIndex] = React.useState(0)
+  const ctx = useMemo(() => ({ activeIndex, setActiveIndex }), [activeIndex])
+
+  return (
+    <NavLayoutContext.Provider value={ctx}>
+      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'row', width: 'full' })} ${styles.navRoot}`}>
+        <div
+          className={`${styles.splitPane} ${styles.navSidebar}`}
+          style={{ '--split-flex': '0 0 auto', '--split-basis': `${sidebarWidth * 100}%` } as React.CSSProperties}
+        >
+          {renderNode(navId)}
+        </div>
+        <div
+          className={`${styles.splitPane} ${styles.navContent}`}
+          style={{ '--split-flex': '1', '--split-basis': 'auto' } as React.CSSProperties}
+        >
+          {contentIds[activeIndex] ? renderNode(contentIds[activeIndex]) : null}
+        </div>
+      </div>
+    </NavLayoutContext.Provider>
+  )
+}
+
+// ── Tab wrapper ───────────────────────────────────────
+
+function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
+  nodeId: string
+  store: NormalizedData
+  renderNode: (id: string) => React.ReactNode
+  refCallback: (id: string) => (el: HTMLElement | null) => void
+}) {
+  const childIds = getChildren(store, nodeId)
+  const [activeTab, setActiveTab] = React.useState(0)
+
+  return (
+    <div ref={refCallback(nodeId)} className={ax({ layout: 'column', width: 'full', gap: 'md' })}>
+      <div className={ax({ layout: 'bar', gap: 'xs', surface: 'base', padding: 'xs', shape: 'sm' })}>
+        {childIds.map((childId, i) => {
+          const data = getEntityData(store, childId)
+          const label = (data as Record<string, unknown> | undefined)?.label ?? childId
+          return (
+            <button
+              key={childId}
+              className={ax({
+                interactive: 'tab',
+                recipe: 'item',
+                surface: i === activeTab ? 'display' : 'ghost',
+                text: i === activeTab ? 'primary' : 'secondary',
+                padding: 'sm',
+                shape: 'sm',
+              })}
+              onClick={() => setActiveTab(i)}
+            >
+              {String(label)}
+            </button>
+          )
+        })}
+      </div>
+      {childIds[activeTab] ? renderNode(childIds[activeTab]) : null}
+    </div>
+  )
 }
 
 // ── OCP renderer map ──────────────────────────────────
@@ -108,6 +182,52 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div ref={refCallback(nodeId)} className={ax({ placement: placementMap[node.overlayType] ?? 'center' })}>
         {childIds.map((childId) => (
+          <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
+        ))}
+      </div>
+    )
+  },
+
+  nav: ({ nodeId, store, renderNode, refCallback }) => {
+    const node = getEntityData<NavNode>(store, nodeId)
+    if (!node) return null
+    const childIds = getChildren(store, nodeId)
+    if (childIds.length === 0) return null
+
+    const navId = childIds[0]
+    const contentIds = childIds.slice(1)
+    const sidebarWidth = node.sidebarWidth ?? 0.2
+
+    return (
+      <NavLayoutWrapper
+        nodeId={nodeId}
+        navId={navId}
+        contentIds={contentIds}
+        sidebarWidth={sidebarWidth}
+        renderNode={renderNode}
+        refCallback={refCallback}
+      />
+    )
+  },
+
+  tab: ({ nodeId, store, renderNode, refCallback }) => {
+    return <TabLayoutWrapper nodeId={nodeId} store={store} renderNode={renderNode} refCallback={refCallback} />
+  },
+
+  section: ({ nodeId, store, renderNode, refCallback }) => {
+    const node = getEntityData<SectionNode>(store, nodeId)
+    if (!node) return null
+    const childIds = getChildren(store, nodeId)
+
+    return (
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'column', gap: 'md', width: 'full' })}>
+        <div className={ax({ layout: 'spread', width: 'full', padding: 'sm' })}>
+          <span className={ax({ textStyle: 'section', text: 'primary' })}>{node.title}</span>
+          {node.count != null && (
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>{node.count}</span>
+          )}
+        </div>
+        {childIds.map(childId => (
           <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
         ))}
       </div>
