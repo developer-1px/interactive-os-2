@@ -9,6 +9,8 @@
 | `97c4fca8` | FlatLayout NavNode/TabNode/SectionNode + 카탈로그 Nav 기반 재구성 + 데모 카드 시각 개선 |
 | `37cd51d3` | TocNavList NaN 수정 + 데모 카드 overflow hidden |
 | `92915586` | 카탈로그 demo 안티패턴 3건 (FileTreeView/SpreadReader/VirtualCodeBlock) |
+| `6db58526` | demo 안티패턴 5건 (Meter/Progress/Skeleton/Table/ButtonToggle) |
+| `0f4967b7` | navContent padding lg→md — 3열 카드 폭 확보 |
 
 ### 구현된 것
 - **NavNode**: 사이드바(NavList) + 콘텐츠 split, NavLayoutContext로 위젯→레이아웃 통신
@@ -22,9 +24,9 @@
 ## 남은 것
 
 ### 즉시 (다음 세션 첫 작업)
-1. **improve-design 2라운드** — 남은 안티패턴 9건: Meter/Progress/Skeleton 시각 요소 미렌더링, Table 빈 카드, Badge Default variant, ButtonToggle 단일 상태 등. demo 데이터 보강 + 컴포넌트 시각 개선.
-2. **ax() 축 확장 검토** — max-height가 ax()에 없어서 카드 높이 제한 불가. size 축 확장 또는 aspect:'card' 활용 검토.
-3. **개별 ui/ 컴포넌트 시각 완성** — Button, ListBox 등 핵심 컴포넌트에 tone/surface 다양화
+1. **디자인 토큰 수준 이슈 3건** — Skeleton contrast (sunken vs display 대비 약), Badge neutral tone action surface 색상, Meter/Progress 바 크기 (좁은 컬럼에서)
+2. **개별 ui/ 컴포넌트 시각 완성** — Button, ListBox 등 핵심 컴포넌트에 tone/surface 다양화
+3. **theme/showcase 페이지 통합** — NavNode/TabNode으로 3페이지를 하나로
 
 ### 이후
 - **theme/showcase 페이지 통합** — NavNode/TabNode으로 3페이지를 하나로. 라우트 통합은 별도
