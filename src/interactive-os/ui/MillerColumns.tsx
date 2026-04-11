@@ -7,7 +7,8 @@ import { AriaInternalContext } from '../primitives/AriaInternalContext'
 import { miller as millerBehavior } from './millerPreset'
 import { getChildren, getEntity } from '../store/createStore'
 import type { AriaComponentProps } from './types'
-import { DirectionIndicator, FileTypeIndicator } from './indicators'
+import { DirectionIndicator } from './indicators'
+import { FileIcon } from './FileIcon'
 import { EmptyState } from './EmptyState'
 import { ax } from '@styles/ax'
 import './MillerColumns.css'
@@ -109,10 +110,10 @@ export function MillerColumns({
               key={itemId}
               focused={state.focused}
               {...propsObj}
-              className={`${(props as Record<string, string>).className ?? ''} ${ax({ padding: 'sm', textStyle: 'body', layout: 'bar', gap: 'xs', interactive: 'item' })}`}
+              className={`${(props as Record<string, string>).className ?? ''} ${ax({ recipe: 'item-sm', layout: 'bar', gap: 'xs', interactive: 'item' })}`}
             >
-              <span className={ax({ text: 'muted', flex: 'none' })} aria-hidden="true">
-                <FileTypeIndicator name={label} isFolder={hasChildren} />
+              <span className={ax({ flex: 'none' })} aria-hidden="true">
+                <FileIcon name={label} type={hasChildren ? 'directory' : 'file'} />
               </span>
               <span className={ax({ clamp: '1', flex: '1' })}>{label}</span>
               {hasChildren && <span className={ax({ text: 'muted', flex: 'none' })} aria-hidden="true"><DirectionIndicator direction="next" /></span>}
