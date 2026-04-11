@@ -406,10 +406,12 @@ export function generateGaps(nodes, edges, subgraphs, subgraphMap) {
   }
 
   // 역의존 + 도달 불가
+  // S → C → R1/R2 → Q → A → P → D → K
   const typeRank = {
-    Situation: 0, Complication: 1, Question: 2,
-    Undesired: 3, Desired: 3, Answer: 3,
-    Proof: 4, Detail: 5, Takeaway: 6,
+    Situation: 0, Complication: 1,
+    Undesired: 2, Desired: 2,
+    Question: 3, Answer: 4,
+    Proof: 5, Detail: 6, Takeaway: 7,
   };
 
   for (const edge of edges) {
@@ -420,7 +422,8 @@ export function generateGaps(nodes, edges, subgraphs, subgraphMap) {
     const toRank = typeRank[toNode.type];
     if (fromRank === undefined || toRank === undefined) continue;
     if (fromRank === toRank) continue;
-    if ((fromNode.type === 'Undesired' || fromNode.type === 'Desired') && toNode.type === 'Question') continue;
+    // R1/R2 → Q는 정상 (R1/R2가 Q 앞). Q → A도 정상.
+    // Q → R1/R2는 역의존 (Q가 R1/R2 뒤이므로 Q에서 R1으로 가면 역행)
     if (fromRank > toRank) {
       lines.push(`- [ ] 🔄 역의존 — ${edge.from}(${TYPE_LABELS[fromNode.type]}) → ${edge.to}(${TYPE_LABELS[toNode.type]}), ${TYPE_LABELS[fromNode.type]}→${TYPE_LABELS[toNode.type]}는 위계 역행`);
     }
