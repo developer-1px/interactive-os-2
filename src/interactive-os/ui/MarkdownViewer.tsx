@@ -115,7 +115,7 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
 
       if (lang === 'mermaid') {
         // V2: lightbox-prd.md — mermaid click opens lightbox with SVG
-        return <MermaidBlock code={text} onClick={(svgHtml) => lightbox.open({ type: 'svg', html: svgHtml })} />
+        return <MermaidBlock code={text} onClick={() => lightbox.open({ type: 'mermaid', code: text })} />
       }
 
       if (lang) {
@@ -127,7 +127,7 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
   }), [codeVariant, linkTransform, lightbox])
 
   return (
-    <div className={`break-word ${ax({ text: 'primary', width: 'prose' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
+    <div className={`break-word select-text ${ax({ text: 'primary', width: 'prose' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
       <Markdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}

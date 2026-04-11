@@ -19,7 +19,6 @@
   .lightbox-svg {
     max-width: 90vw;
     max-height: 90vh;
-    cursor: default;
   }
 
   .lightbox-svg svg {
@@ -27,7 +26,17 @@
     max-height: 90vh;
   }
 
-  .lightbox-trigger {
-    cursor: zoom-in;
+  .lightbox-canvas {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .lightbox-mermaid {
+    transform-origin: center center;
+  }
+
+  .lightbox-mermaid svg {
+    max-width: none;
+    max-height: none;
   }
 }
