@@ -5,7 +5,7 @@
 
 // ── 시각 축 ──
 
-type Surface = 'action' | 'input' | 'display' | 'overlay' | 'ghost' | 'placeholder' | 'sunken' | 'base'
+type Surface = 'action' | 'input' | 'display' | 'overlay' | 'trap' | 'ghost' | 'placeholder' | 'sunken' | 'base' | 'raised'
 type ControlSize = 'sm' | 'md' | 'lg'
 type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code' | 'overline'
 type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'

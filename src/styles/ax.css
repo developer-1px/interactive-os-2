@@ -130,6 +130,17 @@ dialog.sf-overlay[open] {
   --selection-cursor:  var(--depth-base-sel-cursor);
 }
 
+.sf-raised {
+  background: var(--_bg, var(--surface-raised));
+  color: var(--_fg, inherit);
+  border: none;
+  --bg-hover:          var(--depth-raised-hover);
+  --bg-active:         var(--depth-raised-active);
+  --selection-context: var(--depth-raised-sel-context);
+  --selection:         var(--depth-raised-sel);
+  --selection-cursor:  var(--depth-raised-sel-cursor);
+}
+
 .sf-placeholder {
   cursor: pointer;
   user-select: none;

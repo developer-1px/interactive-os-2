@@ -15,10 +15,13 @@ import { NavLayoutContext } from './NavLayoutContext'
 
 // ── Types ─────────────────────────────────────────────
 
+type LayoutSurface = 'sunken' | 'base' | 'raised' | 'overlay'
+
 interface LayoutRenderContext {
   nodeId: string
   store: NormalizedData
   registry: WidgetRegistry
+  surface?: LayoutSurface
   renderNode: (nodeId: string) => React.ReactNode
   refCallback: (nodeId: string) => (el: HTMLElement | null) => void
 }
@@ -99,14 +102,14 @@ function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
 // ── OCP renderer map ──────────────────────────────────
 
 const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactNode> = {
-  split: ({ nodeId, store, renderNode, refCallback }) => {
+  split: ({ nodeId, store, surface, renderNode, refCallback }) => {
     const node = getEntityData<SplitNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
     const isHorizontal = node.direction === 'horizontal'
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full' })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full', surface })}>
         {childIds.map((childId, i) => {
           const size = node.sizes[i]
           const isFlex = size === 'flex' || size === undefined
@@ -124,13 +127,13 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  stack: ({ nodeId, store, renderNode, refCallback }) => {
+  stack: ({ nodeId, store, surface, renderNode, refCallback }) => {
     const node = getEntityData<StackNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'column', gap: node.gap ?? 'md', width: 'full' })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'column', gap: node.gap ?? 'md', width: 'full', surface })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
         ))}
@@ -138,14 +141,14 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  grid: ({ nodeId, store, renderNode, refCallback }) => {
+  grid: ({ nodeId, store, surface, renderNode, refCallback }) => {
     const node = getEntityData<GridNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
     const layoutValue = `grid-${node.columns}` as 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7'
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: layoutValue, gap: node.gap ?? 'md', width: 'full' })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: layoutValue, gap: node.gap ?? 'md', width: 'full', surface })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
         ))}
@@ -153,14 +156,14 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  bar: ({ nodeId, store, renderNode, refCallback }) => {
+  bar: ({ nodeId, store, surface, renderNode, refCallback }) => {
     const node = getEntityData<BarNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
     const layout = node.justify === 'between' ? 'spread' as const : 'bar' as const
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full' })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', surface })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
         ))}
@@ -168,7 +171,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  overlay: ({ nodeId, store, renderNode, refCallback }) => {
+  overlay: ({ nodeId, store, surface, renderNode, refCallback }) => {
     const node = getEntityData<OverlayNode>(store, nodeId)
     if (!node || !node.visible) return null
     const childIds = getChildren(store, nodeId)
@@ -180,7 +183,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     }
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ placement: placementMap[node.overlayType] ?? 'center' })}>
+      <div ref={refCallback(nodeId)} className={ax({ placement: placementMap[node.overlayType] ?? 'center', surface })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
         ))}
@@ -214,13 +217,13 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return <TabLayoutWrapper nodeId={nodeId} store={store} renderNode={renderNode} refCallback={refCallback} />
   },
 
-  section: ({ nodeId, store, renderNode, refCallback }) => {
+  section: ({ nodeId, store, surface, renderNode, refCallback }) => {
     const node = getEntityData<SectionNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'column', gap: 'md', width: 'full' })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'column', gap: 'md', width: 'full', surface })}>
         <div className={ax({ layout: 'spread', width: 'full', padding: 'sm' })}>
           <span className={ax({ textStyle: 'section', text: 'primary' })}>{node.title}</span>
           {node.count != null && (
@@ -234,7 +237,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  widget: ({ nodeId, store, registry, refCallback, renderNode }) => {
+  widget: ({ nodeId, store, surface, registry, refCallback, renderNode }) => {
     const node = getEntityData<WidgetNode>(store, nodeId)
     if (!node) return null
     const Component = resolveWidget(registry, node.widget)
@@ -253,7 +256,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       : undefined
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ width: 'full' })}>
+      <div ref={refCallback(nodeId)} className={ax({ width: 'full', surface })}>
         <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )
@@ -305,7 +308,8 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
     const renderer = layoutRenderers[type]
     if (!renderer) return null
 
-    const ctx: LayoutRenderContext = { nodeId, store, registry, renderNode, refCallback }
+    const surface = nodeData?.surface as LayoutSurface | undefined
+    const ctx: LayoutRenderContext = { nodeId, store, registry, surface, renderNode, refCallback }
     return renderer(ctx)
   }
 

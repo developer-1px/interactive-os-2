@@ -63,15 +63,15 @@
 
 .markdown code {
   font-family: var(--mono);
-  background: var(--surface-base);
+  background: var(--surface-raised);
   padding: 0.15em 0.35em;
   border-radius: var(--shape-xs-radius);
-  border: var(--border-width) solid var(--border-subtle);
 }
 
 .markdown pre {
-  background: var(--surface-base);
-  border: var(--border-width) solid var(--border-subtle);
+  background: var(--surface-raised);
+  padding: 0.15em 0.35em;
+  border: none;
   border-radius: var(--shape-lg-radius);
   padding: var(--shape-lg-py) var(--shape-lg-px);
   white-space: pre-wrap;
@@ -132,28 +132,37 @@
 
 .markdown table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   margin: 1.2em 0;
   overflow-wrap: break-word;
   font-size: var(--type-body-size);
   line-height: var(--type-body-line-height);
+  background: var(--surface-raised);
+  padding: 0.15em 0.35em;
+  border-radius: var(--shape-lg-radius);
 }
 
 .markdown th,
 .markdown td {
-  border: var(--border-width) solid var(--border-subtle);
+  border: none;
+  border-bottom: var(--border-width) solid var(--border-subtle);
   padding: var(--space-sm) var(--space-md);
   text-align: left;
 }
 
+.markdown tr:last-child td {
+  border-bottom: none;
+}
+
 .markdown th {
-  background: var(--surface-base);
+  background: transparent;
   font-weight: var(--weight-semi);
   color: var(--text-bright);
 }
 
 .markdown tr:nth-child(even) {
-  background: var(--surface-sunken);
+  background: transparent;
 }
 
 .markdown a {

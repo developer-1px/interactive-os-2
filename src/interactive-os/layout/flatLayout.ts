@@ -5,52 +5,57 @@ import { createStore } from '../store/createStore'
 
 // ── Layout node types ─────────────────────────────────
 
-export interface SplitNode extends Record<string, unknown> {
+/** 모든 레이아웃 노드의 공통 속성 — XY 배치 + Z 깊이 */
+export interface LayoutBase extends Record<string, unknown> {
+  surface?: 'sunken' | 'base' | 'raised' | 'overlay'
+}
+
+export interface SplitNode extends LayoutBase {
   type: 'split'
   direction: 'horizontal' | 'vertical'
   sizes: PaneSize[]
 }
 
-export interface StackNode extends Record<string, unknown> {
+export interface StackNode extends LayoutBase {
   type: 'stack'
   gap?: 'sm' | 'md' | 'lg'
 }
 
-export interface OverlayNode extends Record<string, unknown> {
+export interface OverlayNode extends LayoutBase {
   type: 'overlay'
   overlayType: 'modal' | 'popup' | 'hint'
   trigger?: string
   visible?: boolean
 }
 
-export interface BarNode extends Record<string, unknown> {
+export interface BarNode extends LayoutBase {
   type: 'bar'
   justify?: 'start' | 'center' | 'between' | 'end'
 }
 
-export interface WidgetNode extends Record<string, unknown> {
+export interface WidgetNode extends LayoutBase {
   type: 'widget'
   widget: string
   props?: Record<string, unknown>
   source?: string
 }
 
-export interface GridNode extends Record<string, unknown> {
+export interface GridNode extends LayoutBase {
   type: 'grid'
   columns: 2 | 3 | 4 | 5 | 7
   gap?: 'sm' | 'md' | 'lg'
 }
 
-export interface NavNode extends Record<string, unknown> {
+export interface NavNode extends LayoutBase {
   type: 'nav'
   sidebarWidth?: number  // 0~1 비율, 기본 0.2
 }
 
-export interface TabNode extends Record<string, unknown> {
+export interface TabNode extends LayoutBase {
   type: 'tab'
 }
 
-export interface SectionNode extends Record<string, unknown> {
+export interface SectionNode extends LayoutBase {
   type: 'section'
   title: string
   count?: number

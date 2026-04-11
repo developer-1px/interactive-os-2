@@ -181,7 +181,7 @@ export default function PageViewer() {
     <AriaRoute keyMap={quickOpenKeyMap}>
     <div className={`${ax({ layout: 'row' })} h-full min-h-0`}>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
-        <Panel surface="display">
+        <Panel surface="sunken">
           <div className={ax({ padding: 'xs' })}>
             <NavList
               data={sidebarData}
@@ -262,7 +262,7 @@ export default function PageViewer() {
               />
             )}
             {viewMode === 'list' && previewPath && (
-              <SidePanel>
+              <SidePanel surface="raised">
                 <FilePanel path={previewPath} />
               </SidePanel>
             )}
