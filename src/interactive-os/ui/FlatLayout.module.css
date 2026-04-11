@@ -20,6 +20,6 @@
     overflow-y: auto;
     height: 100%;
     flex: 1;
-    padding: var(--space-lg);
+    padding: var(--space-md);
   }
 }
