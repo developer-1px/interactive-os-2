@@ -24,6 +24,7 @@ import { ax } from '@styles/ax'
 import { SpinnerIndicator } from '@os/ui/indicators'
 import { Panel, SidePanel } from '@os/ui/panels'
 import { ScrollArea } from '@os/ui/ScrollArea'
+import { EmptyState } from '@os/ui/EmptyState'
 import { FilePanel } from './widgets/FilePanel'
 
 const TREE_RATIO_KEY = 'viewer-tree-ratio'
@@ -176,7 +177,7 @@ export default function PageViewer() {
     <AriaRoute keyMap={quickOpenKeyMap}>
     <div className={`${ax({ layout: 'row' })} h-full min-h-0`}>
       <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.1}>
-        <Panel header="Favorites" surface="display">
+        <Panel surface="display">
           <div className={ax({ padding: 'xs' })}>
             <NavList
               data={sidebarData}
@@ -212,9 +213,13 @@ export default function PageViewer() {
                 aria-label="File browser"
               />
             )}
-            {viewMode === 'list' && previewPath && (
+            {viewMode === 'list' && (
               <SidePanel>
-                <FilePanel path={previewPath} />
+                {previewPath ? (
+                  <FilePanel path={previewPath} />
+                ) : (
+                  <EmptyState title="No file selected" description="Click a file to preview" />
+                )}
               </SidePanel>
             )}
           </div>
