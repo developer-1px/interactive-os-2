@@ -79,7 +79,7 @@ function createEngine() {
     middlewares,
     registry,
     vi.fn(),
-    { logger: false },
+    { logger: false, plugins },
   )
 }
 

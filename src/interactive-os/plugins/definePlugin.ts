@@ -1,4 +1,4 @@
-import type { Command, Middleware, VisibilityFilter, Plugin, EffectContext } from './types'
+import type { Command, Middleware, VisibilityFilter, Plugin, EffectContext, ValidatorFn } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 
 export interface PluginConfig {
@@ -23,6 +23,8 @@ export interface PluginConfig {
   onPaste?: (ctx: any) => Command | void
   /** Introspect plugin-specific data for devtools inspector */
   inspect?: () => Record<string, unknown>
+  // ② engine-validator-clipboard-prd.md
+  validator?: ValidatorFn
 }
 
 function composeMiddlewares(middlewares: Middleware[]): Middleware {
@@ -34,7 +36,7 @@ function composeMiddlewares(middlewares: Middleware[]): Middleware {
 }
 
 export function definePlugin(config: PluginConfig): Plugin {
-  const { name, commands, keyMap, middleware, onUnhandledKey, intercepts, requires, onCopy, onCut, onPaste, visibilityFilter, inspect, useEffect } = config
+  const { name, commands, keyMap, middleware, onUnhandledKey, intercepts, requires, onCopy, onCut, onPaste, visibilityFilter, inspect, useEffect, validator } = config
 
   const middlewares: Middleware[] = []
   for (const dep of requires ?? []) {
@@ -55,5 +57,6 @@ export function definePlugin(config: PluginConfig): Plugin {
     visibilityFilter,
     inspect,
     useEffect,
+    validator,
   }
 }

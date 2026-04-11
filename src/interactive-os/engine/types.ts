@@ -67,7 +67,7 @@ export type EngineEvent = DispatchEvent | UnhandledKeyEvent
 export type Unsubscribe = () => void
 
 export interface CommandEngine {
-  dispatch(command: Command): void
+  dispatch(command: Command): CommandResult
   getStore(): NormalizedData
   /** Replace internal store with external data (for controlled/sync scenarios) */
   syncStore(newStore: NormalizedData): void
@@ -84,6 +84,14 @@ export interface CommandEngine {
   /** Emit an unhandled key event — called by view layer when keyMap has no match */
   emitUnhandledKey(event: KeyboardEvent): void
 }
+
+// ② engine-validator-clipboard-prd.md
+export type CommandResult =
+  | { ok: true; store: NormalizedData }
+  | { ok: false; reason: string }
+
+// ② engine-validator-clipboard-prd.md
+export type ValidatorFn = (store: NormalizedData, command: Command) => CommandResult | undefined
 
 export interface Command {
   type: string
@@ -187,4 +195,6 @@ export interface Plugin {
   renderer?: RendererModule
   /** Introspect plugin-specific data for devtools inspector */
   inspect?: () => Record<string, unknown>
+  // ② engine-validator-clipboard-prd.md
+  validator?: ValidatorFn
 }

@@ -1,5 +1,5 @@
 // ② 2026-03-29-engine-handler-registry-prd.md
-import type { Command, Middleware, BatchCommand, CommandHandler, CommandEngine, EngineOptions, InspectResult, KeyMapEntry, EngineEvent } from './types'
+import type { Command, Middleware, BatchCommand, CommandHandler, CommandEngine, EngineOptions, InspectResult, KeyMapEntry, EngineEvent, CommandResult, ValidatorFn } from './types'
 import { isBatchCommand } from './types'
 export type { CommandEngine } from './types'
 import type { NormalizedData } from '../store/types'
@@ -133,10 +133,59 @@ export function createCommandEngine(
     return handler(s, command.payload)
   }
 
+  // ② engine-validator-clipboard-prd.md — collect validators from plugins
+  const validators: ValidatorFn[] = (options?.plugins ?? [])
+    .map(p => p.validator)
+    .filter((v): v is ValidatorFn => v != null)
+
+  const MUTATION_PREFIXES = ['crud:', 'dnd:', 'clipboard:paste', 'clipboard:cut', 'clipboard:duplicateAfter']
+  const isMutationCommand = (cmd: Command): boolean => {
+    if (cmd.meta) return false
+    if (isBatchCommand(cmd)) return (cmd as BatchCommand).commands.some(c => isMutationCommand(c))
+    return MUTATION_PREFIXES.some(p => cmd.type.startsWith(p))
+  }
+
+  const runValidators = (s: NormalizedData, command: Command): CommandResult | undefined => {
+    if (validators.length === 0) return undefined
+    if (isBatchCommand(command)) {
+      for (const sub of (command as BatchCommand).commands) {
+        if (isMutationCommand(sub)) {
+          const rejection = runValidatorsForSingle(s, sub)
+          if (rejection) return rejection
+        }
+      }
+      return undefined
+    }
+    if (!isMutationCommand(command)) return undefined
+    return runValidatorsForSingle(s, command)
+  }
+
+  const runValidatorsForSingle = (s: NormalizedData, command: Command): CommandResult | undefined => {
+    for (const validator of validators) {
+      const result = validator(s, command)
+      if (result && !result.ok) return result
+    }
+    return undefined
+  }
+
+  let _lastResult: CommandResult = { ok: true, store: initialStore }
+
   let _execCount = 0
   const executor = (command: Command) => {
     _execCount++
     if (_execCount > 1000) { console.error('[engine] executor loop detected, count:', _execCount, 'cmd:', command.type); _execCount = 0; return }
+
+    // ② engine-validator-clipboard-prd.md — validator check
+    const rejection = runValidators(store, command)
+    if (rejection && !rejection.ok) {
+      _lastResult = rejection
+      seq++
+      if (subscribers.size > 0) {
+        emit(createDispatchEvent(command, store, store, seq, rejection.reason))
+      }
+      return
+    }
+
     const prev = store
     try {
       store = resolve(prev, command)
@@ -146,6 +195,7 @@ export function createCommandEngine(
       if (subscribers.size > 0) {
         emit(createDispatchEvent(command, prev, prev, seq, error instanceof Error ? error.message : String(error)))
       }
+      _lastResult = { ok: false, reason: error instanceof Error ? error.message : String(error) }
       return
     }
     seq++
@@ -155,6 +205,7 @@ export function createCommandEngine(
     if (store !== prev) {
       onStoreChange(store)
     }
+    _lastResult = { ok: true, store }
   }
 
   const getStore = () => store
@@ -202,6 +253,7 @@ export function createCommandEngine(
       _execCount = 0
       chain(command)
       _pendingOriginalStack.pop()
+      return _lastResult
     },
     getStore,
     syncStore: (newStore: NormalizedData) => {

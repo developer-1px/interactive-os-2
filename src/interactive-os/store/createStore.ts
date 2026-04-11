@@ -128,6 +128,89 @@ export function moveNode(
   return { ...store, relationships }
 }
 
+// ② engine-validator-clipboard-prd.md
+/** Extract subtrees rooted at `nodeIds` into a standalone NormalizedData. */
+export function extractSubtree(store: NormalizedData, nodeIds: string[]): NormalizedData {
+  const entities: Record<string, Entity> = {}
+  const relationships: Record<string, string[]> = {}
+  const rootChildren: string[] = []
+
+  const collect = (id: string) => {
+    const entity = store.entities[id]
+    if (!entity) return
+    entities[id] = { ...entity }
+    const children = getChildren(store, id)
+    if (children.length > 0) {
+      relationships[id] = [...children]
+      for (const childId of children) {
+        collect(childId)
+      }
+    }
+  }
+
+  for (const id of nodeIds) {
+    collect(id)
+    rootChildren.push(id)
+  }
+
+  return { entities, relationships: { [ROOT_ID]: rootChildren, ...relationships }, slots: {} }
+}
+
+let _mergeIdCounter = 0
+
+/** Reset merge ID counter — for tests */
+export function resetMergeIdCounter(): void {
+  _mergeIdCounter = 0
+}
+
+function generateMergeId(originalId: string): string {
+  return `${originalId}-copy-${++_mergeIdCounter}`
+}
+
+// ② engine-validator-clipboard-prd.md
+/** Merge a NormalizedData subtree into store under `parentId` at optional `index`. */
+export function mergeSubtree(
+  store: NormalizedData,
+  subtree: NormalizedData,
+  parentId: string,
+  index?: number,
+  generateNewIds?: boolean,
+): NormalizedData {
+  const rootChildren = subtree.relationships[ROOT_ID] ?? []
+  if (rootChildren.length === 0) return store
+
+  let result = store
+  for (let i = 0; i < rootChildren.length; i++) {
+    const idx = index !== undefined ? index + i : undefined
+    result = insertSubtreeNode(result, subtree, rootChildren[i]!, parentId, generateNewIds ?? false, idx)
+  }
+  return result
+}
+
+function insertSubtreeNode(
+  store: NormalizedData,
+  subtree: NormalizedData,
+  nodeId: string,
+  parentId: string,
+  generateNewIds: boolean,
+  index?: number,
+): NormalizedData {
+  const entity = subtree.entities[nodeId]
+  if (!entity) return store
+
+  const newId = generateNewIds ? generateMergeId(entity.id) : entity.id
+  const newEntity = { ...entity, id: newId }
+
+  let result = addEntity(store, newEntity, parentId, index)
+
+  const children = subtree.relationships[nodeId] ?? []
+  for (const childId of children) {
+    result = insertSubtreeNode(result, subtree, childId, newId, generateNewIds)
+  }
+
+  return result
+}
+
 export function getEntityData<T extends Record<string, unknown>>(
   store: NormalizedData, id: string
 ): T | undefined {

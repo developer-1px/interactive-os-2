@@ -1,21 +1,20 @@
-import type { Entity, NormalizedData } from '../store/types'
+// ② engine-validator-clipboard-prd.md
+import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import {
-  addEntity,
-  removeEntity,
+  createStore,
   getEntity,
   getChildren,
   getParent,
   updateEntityData,
+  extractSubtree,
+  mergeSubtree,
+  removeEntity,
+  resetMergeIdCounter,
 } from '../store/createStore'
 import { definePlugin } from './definePlugin'
 import { key } from '../axis/types'
 import { defineCommands } from '../engine/defineCommand'
-
-interface ClipboardEntry {
-  entity: Entity
-  children: ClipboardEntry[]
-}
 
 /** Schema-based paste routing result:
  *  - 'insert': add as new child (collection)
@@ -59,7 +58,8 @@ export type ClipboardDeserializeFn = (text: string) => NormalizedData | null
 
 // -- Module-level clipboard data (shared -- OS clipboard model) --
 
-let clipboardBuffer: ClipboardEntry[] = []
+// ② engine-validator-clipboard-prd.md — buffer is now NormalizedData
+let clipboardBuffer: NormalizedData = createStore()
 let clipboardMode: 'copy' | 'cut' = 'copy'
 let cutSourceIds: string[] = []
 let cellValueBuffer: string = ''
@@ -86,37 +86,10 @@ export function setExternalClipboard(text: string): boolean {
   if (!data) return false
   const rootChildren = data.relationships[ROOT_ID] ?? []
   if (rootChildren.length === 0) return false
-  clipboardBuffer = rootChildren.map(id => collectSubtreeFromStore(data, id))
+  clipboardBuffer = data
   clipboardMode = 'copy'
   cutSourceIds = []
   return true
-}
-
-// ② 2026-04-04-clipboard-serialize-prd.md
-/** Convert ClipboardEntry[] to NormalizedData for serialization */
-export function entriesToStore(entries: ClipboardEntry[]): NormalizedData {
-  let store: NormalizedData = { entities: {}, relationships: { [ROOT_ID]: [] }, slots: {} }
-  for (const entry of entries) {
-    store = insertEntryIntoStore(store, entry, ROOT_ID)
-  }
-  return store
-}
-
-function insertEntryIntoStore(store: NormalizedData, entry: ClipboardEntry, parentId: string): NormalizedData {
-  let result = addEntity(store, entry.entity, parentId)
-  for (const child of entry.children) {
-    result = insertEntryIntoStore(result, child, entry.entity.id)
-  }
-  return result
-}
-
-function collectSubtreeFromStore(store: NormalizedData, nodeId: string): ClipboardEntry {
-  const entity = getEntity(store, nodeId)!
-  const childIds = getChildren(store, nodeId)
-  return {
-    entity: { ...entity },
-    children: childIds.map(id => collectSubtreeFromStore(store, id)),
-  }
 }
 
 /** Check if a deserialize function is bound */
@@ -126,12 +99,17 @@ export function hasDeserialize(): boolean {
 
 /** Serialize clipboard buffer using bound serialize function */
 function serializeBuffer(store: NormalizedData): void {
-  if (!boundSerializeFn || clipboardBuffer.length === 0) {
+  if (!boundSerializeFn) {
+    serializedText = null
+    return
+  }
+  const rootChildren = clipboardBuffer.relationships[ROOT_ID] ?? []
+  if (rootChildren.length === 0) {
     serializedText = null
     return
   }
   try {
-    serializedText = boundSerializeFn(entriesToStore(clipboardBuffer), store)
+    serializedText = boundSerializeFn(clipboardBuffer, store)
   } catch {
     serializedText = null
   }
@@ -139,45 +117,12 @@ function serializeBuffer(store: NormalizedData): void {
 
 /** Reset clipboard state -- use in tests to isolate state between cases */
 export function resetClipboard(): void {
-  clipboardBuffer = []
+  clipboardBuffer = createStore()
   clipboardMode = 'copy'
   cutSourceIds = []
   cellValueBuffer = ''
   serializedText = null
-  idCounter = 0
-}
-
-function collectSubtree(store: NormalizedData, nodeId: string): ClipboardEntry {
-  const entity = getEntity(store, nodeId)!
-  const childIds = getChildren(store, nodeId)
-  return {
-    entity: { ...entity },
-    children: childIds.map((id) => collectSubtree(store, id)),
-  }
-}
-
-let idCounter = 0
-function generateId(originalId: string): string {
-  return `${originalId}-copy-${++idCounter}`
-}
-
-function insertClipboardEntry(
-  store: NormalizedData,
-  entry: ClipboardEntry,
-  parentId: string,
-  generateNewIds: boolean,
-  index?: number,
-): NormalizedData {
-  const newId = generateNewIds ? generateId(entry.entity.id) : entry.entity.id
-  const newEntity = { ...entry.entity, id: newId }
-
-  let result = addEntity(store, newEntity, parentId, index)
-
-  for (const child of entry.children) {
-    result = insertClipboardEntry(result, child, newId, generateNewIds)
-  }
-
-  return result
+  resetMergeIdCounter()
 }
 
 /** Normalize CanAcceptResult: true -> 'insert', false -> false */
@@ -185,15 +130,6 @@ function normalizeAcceptResult(result: CanAcceptResult): 'insert' | 'overwrite' 
   if (result === true) return 'insert'
   if (result === false) return false
   return result
-}
-
-/** Check if a node can be deleted/cut based on its parent's canDelete. */
-function canDeleteNode(store: NormalizedData, nodeId: string, canDeleteFn?: CanDeleteFn): boolean {
-  if (!canDeleteFn) return true
-  const parentId = getParent(store, nodeId)
-  if (!parentId) return true // ROOT-level
-  const parentData = getEntity(store, parentId)?.data as Record<string, unknown> | undefined
-  return canDeleteFn(parentData)
 }
 
 /**
@@ -333,7 +269,8 @@ export const clipboardCommands = defineCommands({
     type: COPY,
     create: (nodeIds: string[]) => ({ nodeIds }),
     handler: (store, { nodeIds }) => {
-      clipboardBuffer = (nodeIds as string[]).map((id: string) => collectSubtree(store, id))
+      // ② engine-validator-clipboard-prd.md — use extractSubtree
+      clipboardBuffer = extractSubtree(store, nodeIds as string[])
       clipboardMode = 'copy'
       cutSourceIds = []
       serializeBuffer(store)
@@ -343,13 +280,14 @@ export const clipboardCommands = defineCommands({
 
   cut: {
     type: CUT,
-    create: (nodeIds: string[], canDeleteFn?: CanDeleteFn) => ({ nodeIds, canDeleteFn }),
-    handler: (store, { nodeIds, canDeleteFn }) => {
-      const deletable = (nodeIds as string[]).filter((id: string) => canDeleteNode(store, id, canDeleteFn as CanDeleteFn | undefined))
-      if (deletable.length === 0) return store
-      clipboardBuffer = deletable.map((id: string) => collectSubtree(store, id))
+    create: (nodeIds: string[]) => ({ nodeIds }),
+    handler: (store, { nodeIds }) => {
+      // ② engine-validator-clipboard-prd.md — canDeleteFn removed, validator handles rejection
+      const ids = nodeIds as string[]
+      if (ids.length === 0) return store
+      clipboardBuffer = extractSubtree(store, ids)
       clipboardMode = 'cut'
-      cutSourceIds = [...deletable]
+      cutSourceIds = [...ids]
       serializeBuffer(store)
       return store
     },
@@ -359,13 +297,15 @@ export const clipboardCommands = defineCommands({
     type: PASTE,
     create: (targetId: string, canAcceptFn?: CanAcceptFn) => ({ targetId, canAcceptFn }),
     handler: (store, { targetId, canAcceptFn }) => {
-      const buffer = [...clipboardBuffer]
+      const buffer = clipboardBuffer
       const mode = clipboardMode
       const sourceIds = [...cutSourceIds]
 
-      if (buffer.length === 0) return store
+      const rootChildren = buffer.relationships[ROOT_ID] ?? []
+      if (rootChildren.length === 0) return store
 
-      const childData = buffer[0]!.entity.data as Record<string, unknown> | undefined
+      const firstId = rootChildren[0]!
+      const childData = buffer.entities[firstId]?.data as Record<string, unknown> | undefined
       const { pasteInto, insertIndex: initialInsertIndex, mode: pasteMode } = findPasteTarget(store, targetId, childData, canAcceptFn)
 
       if (pasteMode === 'overwrite') {
@@ -397,19 +337,13 @@ export const clipboardCommands = defineCommands({
           const targetPos = siblings.indexOf(refNode)
           insertIndex = targetPos >= 0 ? targetPos + 1 : undefined
         }
-        for (let i = 0; i < buffer.length; i++) {
-          const entry = buffer[i]!
-          const idx = insertIndex !== undefined ? insertIndex + i : undefined
-          result = insertClipboardEntry(result, entry, pasteInto, false, idx)
-        }
-        clipboardBuffer = []
+        // ② engine-validator-clipboard-prd.md — use mergeSubtree, no new IDs for cut
+        result = mergeSubtree(result, buffer, pasteInto, insertIndex, false)
+        clipboardBuffer = createStore()
         cutSourceIds = []
       } else {
-        for (let i = 0; i < buffer.length; i++) {
-          const entry = buffer[i]!
-          const idx = insertIndex !== undefined ? insertIndex + i : undefined
-          result = insertClipboardEntry(result, entry, pasteInto, true, idx)
-        }
+        // ② engine-validator-clipboard-prd.md — use mergeSubtree with new IDs for copy
+        result = mergeSubtree(result, buffer, pasteInto, insertIndex, true)
       }
 
       return result
@@ -420,21 +354,15 @@ export const clipboardCommands = defineCommands({
     type: 'clipboard:duplicateAfter' as const,
     create: (targetId: string) => ({ targetId }),
     handler: (store, { targetId }) => {
-      const buffer = [...clipboardBuffer]
-      if (buffer.length === 0) return store
+      const rootChildren = clipboardBuffer.relationships[ROOT_ID] ?? []
+      if (rootChildren.length === 0) return store
 
       const parentId = getParent(store, targetId as string) ?? ROOT_ID
       const siblings = getChildren(store, parentId)
       const pos = siblings.indexOf(targetId as string)
       const insertIndex = pos >= 0 ? pos + 1 : undefined
 
-      let result = store
-      for (let i = 0; i < buffer.length; i++) {
-        const entry = buffer[i]!
-        const idx = insertIndex !== undefined ? insertIndex + i : undefined
-        result = insertClipboardEntry(result, entry, parentId, true, idx)
-      }
-      return result
+      return mergeSubtree(store, clipboardBuffer, parentId, insertIndex, true)
     },
   },
 })
@@ -484,7 +412,7 @@ export function clipboard(options?: ClipboardOptions) {
     onCopy: (ctx: { focused: string; selected?: { ids: string[] } }) =>
       clipboardCommands.copy(resolveTargetIds(ctx)),
     onCut: (ctx: { focused: string; selected?: { ids: string[] } }) =>
-      clipboardCommands.cut(resolveTargetIds(ctx), boundCanDelete),
+      clipboardCommands.cut(resolveTargetIds(ctx)),
     onPaste: (ctx: { focused: string }) =>
       clipboardCommands.paste(ctx.focused, boundCanAccept),
   })
