@@ -174,6 +174,17 @@
       },
       {
         "matcher": "Edit|Write",
+        "if": "Write(*/pages/*/Page*.tsx)|Edit(*/pages/*/Page*.tsx)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/warnFlatLayout.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
