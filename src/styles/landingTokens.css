@@ -211,3 +211,15 @@
   --landing-radius-pill:  9999px;
   --landing-rule:         1px solid #E8E6DC;
 }
+
+/* ── Theme-independent tokens (측정값/last-mile) ── */
+
+.cms-landing {
+  /* text measure (max-width로 본문 줄길이 제약) */
+  --landing-measure-hero:     16ch;
+  --landing-measure-body:     52ch;
+  --landing-measure-display:  18ch;
+  /* placeholder 배경 (반투명 합성) */
+  --landing-placeholder-bg:   color-mix(in srgb, var(--landing-text-muted) 8%, transparent);
+  --landing-placeholder-border: color-mix(in srgb, var(--landing-text-muted) 25%, transparent);
+}

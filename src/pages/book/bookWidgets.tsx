@@ -46,7 +46,7 @@ function BookPill(props: Record<string, unknown>) {
   const layerCount = props.layerCount as number
 
   return (
-    <div className={`book-pill ${ax({ surface: 'overlay', width: 'fit', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
+    <div className={`book-pill ${ax({ surface: 'overlay', placement: 'top-start', width: 'fit', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
       <button
         className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary', flex: 'none' })} book-pill-btn`}
         onClick={onOpenToc}

@@ -12,11 +12,6 @@
 .chat-close-btn {
   width: var(--switch-height);
   height: var(--switch-height);
-  opacity: 0;
-}
-
-.chat-session-item:hover .chat-close-btn {
-  opacity: 1;
 }
 
 .chat-file-list {
@@ -32,8 +27,4 @@
 .chat-input-row > :first-child {
   flex: 1;
   min-width: 0;
-}
-
-.chat-start-btn:hover {
-  border-color: var(--border-default);
 }

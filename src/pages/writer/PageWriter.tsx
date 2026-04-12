@@ -566,9 +566,10 @@ export default function PageWriter() {
   const handleSave = useCallback(async () => {
     let filePath = writerState.getFilePath()
     if (!filePath) {
-      const name = prompt('Save as (relative to docs/):')
-      if (!name) return
-      filePath = name.endsWith('.md') ? name : `${name}.md`
+      // No path set — default to timestamped draft under docs/0-inbox/
+      // (open a file from the browser to save at a chosen location)
+      const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+      filePath = `0-inbox/writer-draft-${ts}.md`
       writerState.setFilePath(filePath)
     }
     const md = writerState.getMd()

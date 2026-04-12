@@ -20,7 +20,6 @@
 /* ── Floating pill — top-left ── */
 
 .book-pill {
-  position: absolute;
   top: var(--space-md);
   left: var(--space-md);
   z-index: 20;

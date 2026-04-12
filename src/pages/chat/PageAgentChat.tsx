@@ -1,5 +1,8 @@
 // ② 2026-03-28-workspace-sync-prd.md
 import { useEffect, useRef, useCallback, useMemo } from 'react'
+// NOTE: layout-level key shortcuts (Meta+D 새 세션 등) intentionally removed —
+// pages 레이어는 onKeyDown 금지. 세션 생성은 사이드바 "+" 버튼과 empty-state 버튼으로 커버.
+// Workspace ui 컴포넌트가 탭/패널 범위의 키바인딩(close/prevTab/nextTab)을 소유한다.
 import { Plus, X, Circle, FileText } from 'lucide-react'
 import { ChatPane } from './ChatPane'
 import {
@@ -28,7 +31,6 @@ import {
   getEntityData,
   updateEntityData,
 } from '@os/store/createStore'
-import { useKeyMap } from '@os/primitives/useKeyMap'
 import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
@@ -171,13 +173,6 @@ export default function PageAgentChat() {
     setWsData(newData)
   }, [])
 
-  const layoutHandlers = useMemo(() => ({
-    splitH: () => {
-      createSession()
-    },
-  }), [])
-  const { onKeyDown: handleLayoutKeyDown } = useKeyMap(layoutHandlers)
-
   const handleAddTab = useCallback(() => {
     createSession()
   }, [])
@@ -193,7 +188,7 @@ export default function PageAgentChat() {
   }, [])
 
   return (
-    <div className={`${ax({ scroll: 'hidden', layout: 'row' })} h-full chat-page`} onKeyDown={handleLayoutKeyDown}>
+    <div className={`${ax({ scroll: 'hidden', layout: 'row' })} h-full chat-page`}>
       <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none', border: 'end' }) + ' ' + 'chat-sidebar'}>
         <PanelHeader axes={{ layout: 'spread' }}>
           <span>Sessions</span>
@@ -208,14 +203,14 @@ export default function PageAgentChat() {
             <div
               key={s.id}
               className={`${ax({ surface: isActive ? 'display' : 'ghost', layout: 'stack', gap: 'xs', padding: 'xs', text: isActive ? 'primary' : 'secondary', shape: 'sm' })} chat-session-item`}
-              onClick={() => handleSidebarClick(s.id)}
+              onClick={(e) => { if (e.defaultPrevented) return; handleSidebarClick(s.id) }}
             >
               <div className={ax({ layout: 'bar', gap: 'sm' })}>
                 <Circle size={8} fill="currentColor" className={s.state === 'running' ? ax({ tone: 'success' }) : ax({ text: 'muted' })} />
                 <span className={ax({ flex: '1', clamp: '1' })}>{s.id.slice(0, 8)}</span>
                 <button
                   className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + 'chat-close-btn'}
-                  onClick={(e) => { e.stopPropagation(); closeSession(s.id) }}
+                  onClick={(e) => { e.preventDefault(); closeSession(s.id) }}
                   aria-label={`Close session ${s.id.slice(0, 8)}`}
                 >
                   <X size={12} />
@@ -243,7 +238,7 @@ export default function PageAgentChat() {
         <div className={ax({ layout: 'fill', width: 'full' }) + ' ' + 'chat-main'}>
           <div className={ax({ layout: 'center', flex: '1', gap: 'md', text: 'muted' })}>
             <p>Start a new Claude Code session</p>
-            <button className={ax({ surface: 'ghost', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'primary', border: 'subtle' }) + ' ' + 'chat-start-btn'} onClick={createSession}>
+            <button className={ax({ interactive: 'button', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'primary', border: 'subtle' }) + ' ' + 'chat-start-btn'} onClick={createSession}>
               <Plus size={16} /> New Session
             </button>
           </div>

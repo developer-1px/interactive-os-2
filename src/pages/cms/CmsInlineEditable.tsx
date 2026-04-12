@@ -1,3 +1,4 @@
+import type React from 'react'
 import { useCallback, useEffect, useRef } from 'react'
 import type { NormalizedData } from '@os/store/types'
 import type { Command } from '@os/engine/types'
@@ -58,7 +59,7 @@ export function CmsInlineEditable({ nodeId, data, locale, dispatch, store }: Cms
   const rawValue = data[primaryField.field]
   const { text } = localized(rawValue as string | LocaleMap, locale)
 
-  const confirm = (shouldRestoreFocus: boolean) => {
+  const commit = (shouldRestoreFocus: boolean) => {
     if (committedRef.current) return
     committedRef.current = true
     const newText = editRef.current?.textContent?.trim() ?? ''
@@ -82,20 +83,27 @@ export function CmsInlineEditable({ nodeId, data, locale, dispatch, store }: Cms
     restoreFocus()
   }
 
+  // IME-aware inline rename: contentEditable + composition guard.
+  // Handler props are spread (not bound inline) so the keyMap axis can
+  // migrate later without changing this call site. See feedback_edit_axis_needed.
+  const editHandlers: React.HTMLAttributes<HTMLSpanElement> = {
+    onCompositionStart: () => { composingRef.current = true },
+    onCompositionEnd: () => { composingRef.current = false },
+    onKeyDown: (e) => {
+      if (e.key === 'Enter' && !composingRef.current) { e.preventDefault(); commit(true) }
+      else if (e.key === 'Escape') { e.preventDefault(); cancel() }
+      else if (e.key === 'Tab') { e.preventDefault(); commit(true) }
+    },
+    onBlur: () => commit(false),
+  }
+
   return (
     <span
       ref={editRef}
       contentEditable
       suppressContentEditableWarning
       data-renaming=""
-      onCompositionStart={() => { composingRef.current = true }}
-      onCompositionEnd={() => { composingRef.current = false }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' && !composingRef.current) { e.preventDefault(); confirm(true) }
-        else if (e.key === 'Escape') { e.preventDefault(); cancel() }
-        else if (e.key === 'Tab') { e.preventDefault(); confirm(true) }
-      }}
-      onBlur={() => confirm(false)}
+      {...editHandlers}
     >
       {text}
     </span>

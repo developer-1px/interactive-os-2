@@ -252,7 +252,8 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
 
   // ② 2026-04-06-spatial-click-handler-prd.md — delegates to OS spatial plugin
   const handleNodeClick = useCallback((nodeId: string, e: React.MouseEvent) => {
-    e.stopPropagation()
+    if (e.defaultPrevented) return
+    e.preventDefault()
     const s = aria.getStore()
     const parentId = getParent(s, nodeId) ?? ROOT_ID
     spatialNav.clearCursorsAtDepth(parentId)
@@ -340,7 +341,7 @@ function CmsCanvasContent({ aria, locale, spatialNav, activeTabMapProp, onActiva
           className={className}
         >
           {/* eslint-disable-next-line local/no-raw-aria-role -- CMS renderer: AriaZone이 role 미포함, pattern이 tablist 관리 */}
-          <div className={`${landingStyles.cmsTablist} ${ax({ layout: 'row' })}`} role="tablist">
+          <div className={`${landingStyles.cmsTablist} ${ax({ layout: 'row', width: 'fit' })}`} role="tablist">
             {tabItems.map(tabId => {
               const tabEntity = currentStore.entities[tabId]
               if (!tabEntity) return null
