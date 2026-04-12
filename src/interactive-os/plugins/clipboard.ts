@@ -1,5 +1,6 @@
 // ② engine-validator-clipboard-prd.md
 import type { NormalizedData } from '../store/types'
+import type { Command } from '../engine/types'
 import { ROOT_ID } from '../store/types'
 import {
   createStore,
@@ -44,10 +45,24 @@ export const COPY_CELL = 'clipboard:copyCellValue' as const
 export const PASTE_CELL = 'clipboard:pasteCellValue' as const
 export const CLEAR_CELL = 'clipboard:clearCellValue' as const
 export const CUT_CELL = 'clipboard:cutCellValue' as const
+export const COPY_CELL_RANGE = 'clipboard:copyCellRange' as const
+export const PASTE_CELL_RANGE = 'clipboard:pasteCellRange' as const
+export const CLEAR_CELL_RANGE = 'clipboard:clearCellRange' as const
 
 /** Resolve target node IDs: selected ids if any, otherwise focused as single-element array. */
 function resolveTargetIds(ctx: { focused: string; selected?: { ids: string[] } }): string[] {
   return (ctx.selected?.ids.length ?? 0) > 0 ? ctx.selected!.ids : [ctx.focused]
+}
+
+// ② grid-cell-range-prd.md — cellRange targets are 2D cells, distinct from row-level targets.
+// Returns null when no cellRange is active so callers can fall back to row-level resolveTargetIds.
+type CellTarget = { rowId: string; col: number }
+function resolveCellTargets(
+  ctx: { grid?: { cellRange?: { cells: CellTarget[] } | null } | null },
+): CellTarget[] | null {
+  const cells = ctx.grid?.cellRange?.cells
+  if (!cells || cells.length === 0) return null
+  return cells
 }
 
 // -- Serialize/Deserialize types --
@@ -63,6 +78,8 @@ let clipboardBuffer: NormalizedData = createStore()
 let clipboardMode: 'copy' | 'cut' = 'copy'
 let cutSourceIds: string[] = []
 let cellValueBuffer: string = ''
+// ② grid-cell-range-prd.md — 2D cell range buffer (rows × cols of strings)
+let cellRangeBuffer: string[][] = []
 let serializedText: string | null = null
 let boundSerializeFn: ClipboardSerializeFn | undefined
 let boundDeserializeFn: ClipboardDeserializeFn | undefined
@@ -121,6 +138,7 @@ export function resetClipboard(): void {
   clipboardMode = 'copy'
   cutSourceIds = []
   cellValueBuffer = ''
+  cellRangeBuffer = []
   serializedText = null
   resetMergeIdCounter()
 }
@@ -365,6 +383,94 @@ export const clipboardCommands = defineCommands({
       return mergeSubtree(store, clipboardBuffer, parentId, insertIndex, true)
     },
   },
+
+  // ② grid-cell-range-prd.md — 2D batch clear. col 0 (read-only key column) is excluded.
+  clearCellRange: {
+    type: CLEAR_CELL_RANGE,
+    create: (cells: CellTarget[]) => ({ cells }),
+    handler: (store, { cells }) => {
+      const byRow = new Map<string, number[]>()
+      for (const c of cells) {
+        if (c.col === 0) continue // col 0 is read-only
+        const arr = byRow.get(c.rowId) ?? []
+        arr.push(c.col)
+        byRow.set(c.rowId, arr)
+      }
+      let result = store
+      for (const [rowId, cols] of byRow) {
+        const cellsArr = getCells(result, rowId)
+        let dirty = false
+        for (const col of cols) {
+          if ((cellsArr[col] ?? '') !== '') {
+            cellsArr[col] = ''
+            dirty = true
+          }
+        }
+        if (dirty) result = updateEntityData(result, rowId, { cells: cellsArr })
+      }
+      return result
+    },
+  },
+
+  // ② grid-cell-range-prd.md — capture rect into 2D buffer. width derives row split.
+  copyCellRange: {
+    type: COPY_CELL_RANGE,
+    meta: true,
+    create: (cells: CellTarget[], width: number) => ({ cells, width }),
+    handler: (store, { cells, width }) => {
+      if (width <= 0 || cells.length === 0) {
+        cellRangeBuffer = []
+        return store
+      }
+      const rows: string[][] = []
+      for (let i = 0; i < cells.length; i += width) {
+        const row: string[] = []
+        for (let j = 0; j < width; j++) {
+          const c = cells[i + j]
+          if (!c) break
+          row.push(getCells(store, c.rowId)[c.col] ?? '')
+        }
+        rows.push(row)
+      }
+      cellRangeBuffer = rows
+      return store
+    },
+  },
+
+  // ② grid-cell-range-prd.md — paste 2D buffer at (anchorNodeId, anchorCol).
+  // Row order is taken from the anchor's siblings (flat-grid assumption).
+  // col 0 (read-only key column) is skipped on write.
+  pasteCellRange: {
+    type: PASTE_CELL_RANGE,
+    create: (anchorNodeId: string, anchorCol: number) => ({ anchorNodeId, anchorCol }),
+    handler: (store, { anchorNodeId, anchorCol }) => {
+      const buffer = cellRangeBuffer
+      if (buffer.length === 0) return store
+      const parentId = getParent(store, anchorNodeId) ?? ROOT_ID
+      const siblings = getChildren(store, parentId)
+      const startIdx = siblings.indexOf(anchorNodeId)
+      if (startIdx < 0) return store
+      let result = store
+      for (let r = 0; r < buffer.length; r++) {
+        const rowId = siblings[startIdx + r]
+        if (!rowId) break
+        const row = buffer[r]!
+        const cellsArr = getCells(result, rowId)
+        let dirty = false
+        for (let c = 0; c < row.length; c++) {
+          const colIdx = anchorCol + c
+          if (colIdx === 0) continue // col 0 is read-only
+          if (colIdx >= cellsArr.length) break
+          if (cellsArr[colIdx] !== row[c]) {
+            cellsArr[colIdx] = row[c]!
+            dirty = true
+          }
+        }
+        if (dirty) result = updateEntityData(result, rowId, { cells: cellsArr })
+      }
+      return result
+    },
+  },
 })
 
 export interface ClipboardOptions {
@@ -400,6 +506,9 @@ export function clipboard(options?: ClipboardOptions) {
       [PASTE_CELL]: clipboardCommands.pasteCellValue,
       [CLEAR_CELL]: clipboardCommands.clearCellValue,
       [CUT_CELL]: clipboardCommands.cutCellValue,
+      [COPY_CELL_RANGE]: clipboardCommands.copyCellRange,
+      [PASTE_CELL_RANGE]: clipboardCommands.pasteCellRange,
+      [CLEAR_CELL_RANGE]: clipboardCommands.clearCellRange,
       'clipboard:duplicateAfter': clipboardCommands.duplicateAfter,
     },
     keyMap: {
@@ -409,11 +518,52 @@ export function clipboard(options?: ClipboardOptions) {
         return clipboardCommands.duplicateAfter(ids.at(-1)!)
       }),
     },
-    onCopy: (ctx: { focused: string; selected?: { ids: string[] } }) =>
-      clipboardCommands.copy(resolveTargetIds(ctx)),
-    onCut: (ctx: { focused: string; selected?: { ids: string[] } }) =>
-      clipboardCommands.cut(resolveTargetIds(ctx)),
-    onPaste: (ctx: { focused: string }) =>
-      clipboardCommands.paste(ctx.focused, boundCanAccept),
+    onCopy: (ctx: {
+      focused: string
+      selected?: { ids: string[] }
+      grid?: { cellRange?: { cells: CellTarget[]; rect: { c0: number; c1: number } | null } | null } | null
+    }) => {
+      const cells = resolveCellTargets(ctx)
+      if (cells) {
+        const rect = ctx.grid?.cellRange?.rect
+        const width = rect ? rect.c1 - rect.c0 + 1 : 1
+        // Reset row-level buffer so subsequent paste routes to cellRange.
+        clipboardBuffer = createStore()
+        cutSourceIds = []
+        return clipboardCommands.copyCellRange(cells, width)
+      }
+      cellRangeBuffer = []
+      return clipboardCommands.copy(resolveTargetIds(ctx))
+    },
+    onCut: (ctx: {
+      focused: string
+      selected?: { ids: string[] }
+      grid?: { cellRange?: { cells: CellTarget[]; rect: { c0: number; c1: number } | null } | null } | null
+    }) => {
+      const cells = resolveCellTargets(ctx)
+      if (cells) {
+        // Cell-level cut = copy + clear (col 0 excluded inside clearCellRange).
+        const rect = ctx.grid?.cellRange?.rect
+        const width = rect ? rect.c1 - rect.c0 + 1 : 1
+        clipboardBuffer = createStore()
+        cutSourceIds = []
+        return { type: 'batch', commands: [
+          clipboardCommands.copyCellRange(cells, width),
+          clipboardCommands.clearCellRange(cells),
+        ] } as Command
+      }
+      cellRangeBuffer = []
+      return clipboardCommands.cut(resolveTargetIds(ctx))
+    },
+    onPaste: (ctx: {
+      focused: string
+      grid?: { colIndex?: number; cellRange?: unknown } | null
+    }) => {
+      if (cellRangeBuffer.length > 0) {
+        const colIndex = ctx.grid?.colIndex ?? 0
+        return clipboardCommands.pasteCellRange(ctx.focused, colIndex)
+      }
+      return clipboardCommands.paste(ctx.focused, boundCanAccept)
+    },
   })
 }

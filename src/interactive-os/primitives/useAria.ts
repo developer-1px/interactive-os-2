@@ -9,7 +9,7 @@ import { createCommandEngine } from '../engine/createCommandEngine'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren } from '../store/createStore'
 import { coreRegistry } from '../axis/coreCommands'
-import { focusCommands, FOCUS_ID, GRID_COL_ID } from '../axis/navigate'
+import { focusCommands, FOCUS_ID, GRID_COL_ID, CELL_RANGE_ID } from '../axis/navigate'
 import { SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
 import { EXPANDED_ID } from '../axis/expand'
 import { CHECKED_ID } from '../axis/checked'
@@ -28,7 +28,7 @@ type EngineCallbacks = { onActivate: UseAriaOptions['onActivate']; onFocusChange
 const engineCallbacksMap = new WeakMap<CommandEngine, EngineCallbacks>()
 
 /** Known internal meta-entity IDs — only these are preserved during external sync */
-const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, CHECKED_ID, GRID_COL_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID, '__search__', POPUP_ID, ERRORS_ID, TOUCHED_ID])
+const META_ENTITY_IDS = new Set([FOCUS_ID, SELECTION_ID, SELECTION_ANCHOR_ID, EXPANDED_ID, CHECKED_ID, GRID_COL_ID, CELL_RANGE_ID, RENAME_ID, '__combobox__', '__spatial_parent__', VALUE_ID, '__search__', POPUP_ID, ERRORS_ID, TOUCHED_ID])
 
 const EMPTY_BEHAVIOR: AriaPattern = {
   role: '',
@@ -326,6 +326,31 @@ export function useAria(options: UseAriaOptions): UseAriaReturn {
     () => ({ ...view.containerProps, ref: containerRef }),
     [view.containerProps],
   )
+
+  // Dev-only self-check: pattern promises keyboard nav, but containerProps
+  // never reached a DOM element → user-facing interactions silently no-op.
+  // Runs once post-mount (rAF to allow refs to settle).
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+    if (isKeyMapOnly) return
+    const hasKeyMap = pattern.keyMap && Object.keys(pattern.keyMap).length > 0
+    if (!hasKeyMap) return
+    const raf = requestAnimationFrame(() => {
+      const el = containerRef.current
+      const tag = `[useAria:${pattern.role || 'none'}${ariaLabel ? ` "${ariaLabel}"` : ''}]`
+      if (!el) {
+        console.warn(`${tag} containerProps가 DOM에 스프레드되지 않았습니다 — 키보드 내비게이션/ARIA 속성이 동작하지 않습니다. <Component {...aria.containerProps} /> 또는 ref 포워딩을 확인하세요.`)
+        return
+      }
+      const expectedRole = pattern.role
+      const actualRole = el.getAttribute('role')
+      if (expectedRole && actualRole !== expectedRole) {
+        console.warn(`${tag} 컨테이너 role이 일치하지 않습니다 (expected="${expectedRole}", actual="${actualRole ?? 'null'}") — containerProps가 부분적으로만 스프레드된 것으로 보입니다.`)
+      }
+    })
+    return () => cancelAnimationFrame(raf)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Auto-register in inspector registry + binding registry
   const registryKey = ariaId ?? ariaLabel

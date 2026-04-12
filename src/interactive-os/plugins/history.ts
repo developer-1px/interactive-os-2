@@ -13,6 +13,7 @@ const SKIP_META = new Set([
   '__selection_anchor__',
   '__expanded__',
   '__grid_col__',
+  '__cell_range__',
   '__spatial_parent__',
   '__rename__',
 ])

@@ -9,7 +9,7 @@ import type { EngineOptions } from '../engine/types'
 import { useAria } from './useAria'
 import { AriaInternalContext } from './AriaInternalContext'
 import { getChildren } from '../store/createStore'
-import { GRID_COL_ID } from '../axis/navigate'
+import { GRID_COL_ID, CELL_RANGE_ID, gridColCommands } from '../axis/navigate'
 import { EXPANDED_ID } from '../axis/expand'
 import { POPUP_ID } from '../axis/popup'
 import { SEARCH_ID, matchesSearchFilter } from '../plugins/search'
@@ -189,8 +189,35 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
         const store = aria.getStore()
         const focusedCol = (store.entities[GRID_COL_ID]?.colIndex as number) ?? 0
         const isFocusedCell = nodeCtx.focused && index === focusedCol
+
+        // ② 2026-04-13-grid-cell-range-prd.md — visual range tint
+        let isInRange = false
+        const rangeEnt = store.entities[CELL_RANGE_ID] as { value?: { anchorRowId: string; anchorCol: number; focusRowId: string; focusCol: number } | null } | undefined
+        const range = rangeEnt?.value ?? null
+        if (range) {
+          const c0 = Math.min(range.anchorCol, range.focusCol)
+          const c1 = Math.max(range.anchorCol, range.focusCol)
+          if (index >= c0 && index <= c1) {
+            const rowIds = getChildren(store, ROOT_ID)
+            const r0idx = rowIds.indexOf(range.anchorRowId)
+            const r1idx = rowIds.indexOf(range.focusRowId)
+            const rowIdx = rowIds.indexOf(nodeCtx.nodeId)
+            if (r0idx !== -1 && r1idx !== -1 && rowIdx !== -1) {
+              const r0 = Math.min(r0idx, r1idx)
+              const r1 = Math.max(r0idx, r1idx)
+              if (rowIdx >= r0 && rowIdx <= r1) isInRange = true
+            }
+          }
+        }
+
+        const onMouseDown = (e: React.MouseEvent) => {
+          // Shift+Click is handled by the row-level Shift+Click binding which uses
+          // the captured pointerdown ctx — updating colIndex here would race. Skip.
+          if (e.shiftKey) return
+          if (focusedCol !== index) aria.dispatch(gridColCommands.setColIndex(index))
+        }
         return (
-          <div role="gridcell" className="ia-cell" aria-colindex={index + 1} tabIndex={isFocusedCell ? 0 : -1} data-cell-focused={isFocusedCell || undefined}>
+          <div role="gridcell" className="ia-cell" aria-colindex={index + 1} tabIndex={isFocusedCell ? 0 : -1} data-cell-focused={isFocusedCell || undefined} data-in-range={isInRange ? 'true' : undefined} onMouseDown={onMouseDown}>
             {children}
           </div>
         )

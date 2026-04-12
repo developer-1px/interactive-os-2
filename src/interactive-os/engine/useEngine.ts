@@ -3,7 +3,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin, CommandHandler } from './types'
 import { createCommandEngine } from './createCommandEngine'
 import type { CommandEngine } from './createCommandEngine'
-import { focusCommands, gridColCommands } from '../axis/navigate'
+import { focusCommands, gridColCommands, gridCellRangeCommands } from '../axis/navigate'
 import { selectionCommands } from '../axis/select'
 import { expandCommands } from '../axis/expand'
 import { checkedCommands } from '../axis/checked'
@@ -47,7 +47,7 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
 
     // Build handler registry from core axes + plugin commands
     const registry = new Map<string, CommandHandler>()
-    const axisCommandSets = [focusCommands, gridColCommands, selectionCommands, expandCommands, checkedCommands, popupCommands, valueCommands]
+    const axisCommandSets = [focusCommands, gridColCommands, gridCellRangeCommands, selectionCommands, expandCommands, checkedCommands, popupCommands, valueCommands]
     for (const cmdSet of axisCommandSets) {
       for (const creator of Object.values(cmdSet)) {
         if (creator != null && 'type' in creator && 'handler' in creator) {

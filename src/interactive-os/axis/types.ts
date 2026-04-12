@@ -7,6 +7,22 @@ import type { CommandEngine } from '../engine/createCommandEngine'
 
 export type SelectionMode = 'single' | 'multiple'
 
+export interface CellRangeRect {
+  r0: number
+  c0: number
+  r1: number
+  c1: number
+}
+
+export interface CellRangeCtx {
+  rect: CellRangeRect | null
+  cells: Array<{ rowId: string; col: number }>
+  extendCol(dir: 'next' | 'prev' | 'first' | 'last'): Command
+  extendRow(dir: 'next' | 'prev' | 'first' | 'last'): Command
+  extendTo(rowId: string, col: number): Command
+  clear(): Command
+}
+
 export interface GridNav {
   colIndex: number
   colCount: number
@@ -15,6 +31,7 @@ export interface GridNav {
   focusFirstCol(): Command
   focusLastCol(): Command
   focusRow(): Command
+  cellRange: CellRangeCtx | null
 }
 
 export interface ValueNav {

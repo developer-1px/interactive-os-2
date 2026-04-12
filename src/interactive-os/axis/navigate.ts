@@ -1,7 +1,7 @@
-import type { CtxFactory, GridNav, FocusStrategy } from './types'
+import type { CtxFactory, GridNav, FocusStrategy, CellRangeCtx, CellRangeRect } from './types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { key } from './types'
-import type { Command } from '../engine/types'
+import type { Command, Middleware } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import { defineCommands } from '../engine/defineCommand'
 import { type NormalizedData, ROOT_ID } from '../store/types'
@@ -38,6 +38,14 @@ function groupJump(store: NormalizedData, focusedId: string, direction: 1 | -1):
 // ② 2026-03-29-define-command-prd.md
 export const FOCUS_ID = '__focus__'
 export const GRID_COL_ID = '__grid_col__'
+export const CELL_RANGE_ID = '__cell_range__'
+
+interface CellRangeEntityValue {
+  anchorRowId: string
+  anchorCol: number
+  focusRowId: string
+  focusCol: number
+}
 
 export const focusCommands = defineCommands({
   setFocus: {
@@ -57,6 +65,74 @@ export const focusCommands = defineCommands({
   },
 })
 
+function getCellRange(store: NormalizedData): CellRangeEntityValue | null {
+  const ent = store.entities[CELL_RANGE_ID] as { value?: CellRangeEntityValue | null } | undefined
+  return ent?.value ?? null
+}
+
+export const gridCellRangeCommands = defineCommands({
+  setRange: {
+    type: 'core:cell-range-set' as const,
+    meta: true,
+    create: (range: CellRangeEntityValue) => range,
+    handler: (store, range) => ({
+      ...store,
+      entities: {
+        ...store.entities,
+        [CELL_RANGE_ID]: { id: CELL_RANGE_ID, value: range },
+      },
+    }),
+  },
+
+  extendRange: {
+    type: 'core:cell-range-extend' as const,
+    meta: true,
+    create: (focus: { focusRowId: string; focusCol: number }) => focus,
+    handler: (store, { focusRowId, focusCol }) => {
+      const current = getCellRange(store)
+      const next: CellRangeEntityValue = current
+        ? { ...current, focusRowId, focusCol }
+        : { anchorRowId: focusRowId, anchorCol: focusCol, focusRowId, focusCol }
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [CELL_RANGE_ID]: { id: CELL_RANGE_ID, value: next },
+        },
+      }
+    },
+  },
+
+  clearRange: {
+    type: 'core:cell-range-clear' as const,
+    meta: true,
+    handler: (store) => {
+      if (getCellRange(store) === null) return store
+      return {
+        ...store,
+        entities: {
+          ...store.entities,
+          [CELL_RANGE_ID]: { id: CELL_RANGE_ID, value: null },
+        },
+      }
+    },
+  },
+})
+
+/**
+ * Middleware: clear cellRange when a standalone focus command fires.
+ * Batch commands (Shift+Arrow extend) are exempt — anchor persists within a batch.
+ * Same pattern as select.ts:anchorResetMiddleware.
+ */
+function anchorCellMiddleware(): Middleware {
+  return (next, _getStore) => (command) => {
+    next(command)
+    if (command.type === 'core:focus' || command.type === 'core:set-col-index') {
+      next(gridCellRangeCommands.clearRange())
+    }
+  }
+}
+
 export const gridColCommands = defineCommands({
   setColIndex: {
     type: 'core:set-col-index' as const,
@@ -75,7 +151,8 @@ export const gridColCommands = defineCommands({
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function gridCtx(
   engine: CommandEngine,
-  _focusedId: string,
+  focusedId: string,
+  rowIds: string[],
   colCount: number,
   initialColIndex = 0,
 ): GridNav {
@@ -89,6 +166,99 @@ export function gridCtx(
     focusFirstCol: () => gridColCommands.setColIndex(0),
     focusLastCol: () => gridColCommands.setColIndex(colCount - 1),
     focusRow: () => gridColCommands.setColIndex(-1),
+    cellRange: currentCol < 0 ? null : cellRangeCtx(engine, focusedId, currentCol, rowIds, colCount),
+  }
+}
+
+function cellRangeCtx(
+  engine: CommandEngine,
+  focusedId: string,
+  colIndex: number,
+  rowIds: string[],
+  colCount: number,
+): CellRangeCtx {
+  const store = engine.getStore()
+  const range = getCellRange(store)
+
+  let rect: CellRangeRect | null = null
+  let cells: Array<{ rowId: string; col: number }> = []
+  if (range) {
+    const r0idx = rowIds.indexOf(range.anchorRowId)
+    const r1idx = rowIds.indexOf(range.focusRowId)
+    if (r0idx !== -1 && r1idx !== -1) {
+      const r0 = Math.min(r0idx, r1idx)
+      const r1 = Math.max(r0idx, r1idx)
+      const c0 = Math.min(range.anchorCol, range.focusCol)
+      const c1 = Math.max(range.anchorCol, range.focusCol)
+      rect = { r0, c0, r1, c1 }
+      const out: Array<{ rowId: string; col: number }> = []
+      for (let r = r0; r <= r1; r++) {
+        const rowId = rowIds[r]
+        if (!rowId) continue
+        for (let c = c0; c <= c1; c++) out.push({ rowId, col: c })
+      }
+      cells = out
+    }
+  }
+
+  return {
+    rect,
+    cells,
+    extendCol(dir) {
+      let newCol = colIndex
+      if (dir === 'next') newCol = Math.min(colIndex + 1, colCount - 1)
+      else if (dir === 'prev') newCol = Math.max(colIndex - 1, 0)
+      else if (dir === 'first') newCol = 0
+      else if (dir === 'last') newCol = colCount - 1
+      const seed: Command[] = range ? [] : [
+        gridCellRangeCommands.setRange({
+          anchorRowId: focusedId, anchorCol: colIndex,
+          focusRowId: focusedId, focusCol: colIndex,
+        }),
+      ]
+      return createBatchCommand([
+        ...seed,
+        gridColCommands.setColIndex(newCol),
+        gridCellRangeCommands.extendRange({ focusRowId: focusedId, focusCol: newCol }),
+      ])
+    },
+    extendRow(dir) {
+      const idx = rowIds.indexOf(focusedId)
+      let newIdx = idx
+      if (dir === 'next') newIdx = Math.min(idx + 1, rowIds.length - 1)
+      else if (dir === 'prev') newIdx = Math.max(idx - 1, 0)
+      else if (dir === 'first') newIdx = 0
+      else if (dir === 'last') newIdx = rowIds.length - 1
+      const newRowId = rowIds[newIdx] ?? focusedId
+      const seed: Command[] = range ? [] : [
+        gridCellRangeCommands.setRange({
+          anchorRowId: focusedId, anchorCol: colIndex,
+          focusRowId: focusedId, focusCol: colIndex,
+        }),
+      ]
+      return createBatchCommand([
+        ...seed,
+        focusCommands.setFocus(newRowId),
+        gridCellRangeCommands.extendRange({ focusRowId: newRowId, focusCol: colIndex }),
+      ])
+    },
+    extendTo(rowId, col) {
+      const seed: Command[] = range ? [] : [
+        gridCellRangeCommands.setRange({
+          anchorRowId: focusedId, anchorCol: colIndex,
+          focusRowId: focusedId, focusCol: colIndex,
+        }),
+      ]
+      return createBatchCommand([
+        ...seed,
+        focusCommands.setFocus(rowId),
+        gridColCommands.setColIndex(col),
+        gridCellRangeCommands.extendRange({ focusRowId: rowId, focusCol: col }),
+      ])
+    },
+    clear() {
+      return gridCellRangeCommands.clearRange()
+    },
   }
 }
 
@@ -240,11 +410,15 @@ export function grid(columns: number, opts?: { initialColIndex?: number }) {
 
   return {
     keyMap: {} as Record<string, never>,
-    entities: [{ id: GRID_COL_ID, default: { colIndex: initialCol } }] as import('./types').EntityDecl[],
+    entities: [
+      { id: GRID_COL_ID, default: { colIndex: initialCol } },
+      { id: CELL_RANGE_ID, default: { value: null } },
+    ] as import('./types').EntityDecl[],
+    middleware: anchorCellMiddleware(),
     meta: { colCount: columns },
     ariaGen: ((s) => ({ 'aria-rowindex': String((s.index as number ?? 0) + 1) })) as import('./types').AriaGen,
-    ctxFactory: ((engine, focusedId) => ({
-      grid: gridCtx(engine, focusedId, columns, initialCol),
+    ctxFactory: ((engine, focusedId, visibleNodes) => ({
+      grid: gridCtx(engine, focusedId, visibleNodes(), columns, initialCol),
     })) as CtxFactory,
     // handlers
     focusNextCol: focusNextCol_,

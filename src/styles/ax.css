@@ -1013,6 +1013,17 @@ dialog.sf-overlay[open] {
   outline-offset: -2px;
 }
 
+/* ② 2026-04-13-grid-cell-range-prd.md
+   cellRange visual: neutral tint only (accent budget — focus cell keeps the outline). */
+.ia-cell[data-in-range="true"] {
+  background: color-mix(in oklch, var(--focus) 8%, transparent);
+}
+
+/* range + focused cell: keep accent outline on top of the tint */
+.ax-interactive:focus-within .ia-cell[data-in-range="true"][data-cell-focused] {
+  background: var(--selection-cursor);
+}
+
 /* ── ia-button: button ── */
 
 :where(.ia-button) {

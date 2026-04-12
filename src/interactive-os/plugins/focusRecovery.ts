@@ -3,7 +3,7 @@ import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import { getChildren, getParent, getEntity } from '../store/createStore'
 import { definePlugin } from './definePlugin'
-import { focusCommands } from '../axis/navigate'
+import { focusCommands, gridCellRangeCommands } from '../axis/navigate'
 
 const FOCUS_ID = '__focus__'
 const EXPANDED_ID = '__expanded__'
@@ -160,12 +160,13 @@ export function focusRecovery(options?: FocusRecoveryOptions) {
         return
       }
 
-      // Current focus not visible → fallback
+      // Current focus not visible → fallback. cellRange may reference deleted rows, clear it.
       const currentFocus = getFocusedId(after) || getFocusedId(before)
       if (currentFocus && !isVisible(after, currentFocus, reachable)) {
         const fallback = findFallbackFocus(before, after, currentFocus, reachable)
         if (fallback) {
           next(focusCommands.setFocus(fallback))
+          next(gridCellRangeCommands.clearRange())
         }
       }
     },
