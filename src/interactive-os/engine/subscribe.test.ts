@@ -134,9 +134,7 @@ describe('engine.subscribe', () => {
   it('handles unsubscribe during emit', () => {
     const { engine } = makeEngine()
     const events: EngineEvent[] = []
-    let unsub: () => void
-
-    unsub = engine.subscribe(() => { unsub() })
+    const unsub: () => void = engine.subscribe(() => { unsub() })
     engine.subscribe((e) => events.push(e))
 
     engine.dispatch({ type: 'test:setFocus', payload: { id: 'b' } })

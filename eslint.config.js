@@ -12,7 +12,7 @@ const localPlugin = {
 }
 
 export default defineConfig([
-  globalIgnores(['dist', 'dist-lib']),
+  globalIgnores(['dist', 'dist-lib', '.worktrees']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -39,6 +39,17 @@ export default defineConfig([
     plugins: { local: localPlugin },
     rules: {
       'local/no-raw-aria-role': 'error',
+    },
+  },
+  {
+    // Widget registry files intentionally colocate multiple widgets + a registry export.
+    // Test utility files colocate helper components with non-component exports.
+    files: [
+      '**/*Widgets.tsx',
+      'src/interactive-os/__tests__/clipboardTestUtils.tsx',
+    ],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
 ])

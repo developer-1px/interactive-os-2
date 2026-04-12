@@ -33,6 +33,7 @@ function getBook() {
 }
 
 /** Call from router loader or on link hover to warm up */
+// eslint-disable-next-line react-refresh/only-export-components
 export function loader() {
   return getBook()
 }

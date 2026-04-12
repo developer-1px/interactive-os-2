@@ -49,6 +49,7 @@ function buildSlides(data: NormalizedData): Slide[] {
   return slides
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { buildSlides }
 
 interface SlideViewProps {

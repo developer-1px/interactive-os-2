@@ -34,16 +34,21 @@ interface CmsDetailPanelProps {
 export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, onLocaleChange, i18nSheetOpen, onI18nSheetToggle, onEscape, autoFocus, style }: CmsDetailPanelProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Form's initialFocus sets ARIA state only; DOM focus needs explicit move
+  // Form's initialFocus sets ARIA state only; DOM focus needs explicit move.
+  // Only fire when autoFocus transitions to true — otherwise canvas clicks would
+  // steal DOM focus into the detail panel via focusedNodeId changes.
   useEffect(() => {
     if (!autoFocus) return
-    // Defer to allow Form to mount
     const raf = requestAnimationFrame(() => {
-      const el = containerRef.current?.querySelector<HTMLElement>('input, textarea, select, [tabindex]')
+      const root = containerRef.current
+      if (!root) return
+      const el =
+        root.querySelector<HTMLElement>('.cms-detail-field input, .cms-detail-field textarea') ??
+        root.querySelector<HTMLElement>('[tabindex]:not([tabindex="-1"])')
       el?.focus()
     })
     return () => cancelAnimationFrame(raf)
-  }, [autoFocus, focusedNodeId])
+  }, [autoFocus])
 
   const groups = useMemo(
     () => focusedNodeId ? collectEditableGroups(store, focusedNodeId, locale) : [],

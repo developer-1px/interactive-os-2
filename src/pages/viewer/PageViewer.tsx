@@ -27,7 +27,6 @@ import { pathParser } from '@os/plugins/urlParsers'
 import { useUrlSync } from '@os/plugins/useUrlSync'
 import { FileIcon } from '@os/ui/FileIcon'
 import { ax } from '@styles/ax'
-import { SpinnerIndicator } from '@os/ui/indicators'
 import { Panel, SidePanel } from '@os/ui/panels'
 import { EmptyState } from '@os/ui/EmptyState'
 import { FilePanel } from './widgets/FilePanel'
@@ -52,9 +51,8 @@ function resolveRoot(key: string): string {
 export default function PageViewer() {
   const navigate = useNavigate()
 
-  const [initialStore, setInitialStore] = useState<NormalizedData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [quickOpenVisible, setQuickOpenVisible] = useState(false)
+  const [initialStore, setInitialStore] = useState<NormalizedData | null>(null) // @useState-hatch — async tree fetch
+  const [quickOpenVisible, setQuickOpenVisible] = useState(false) // @useState-hatch — dismiss axis candidate
   const [viewMode, setViewMode] = useState<'list' | 'columns'>(() => {
     const saved = localStorage.getItem(VIEWMODE_KEY)
     return saved === 'columns' ? 'columns' : 'list'
@@ -92,7 +90,6 @@ export default function PageViewer() {
         store = withInitialFileSelected(store, initialFilePath)
       }
       setInitialStore(store)
-      setLoading(false)
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps -- initial load only, sidebar switch uses handleSidebarActivate
   }, [])
@@ -173,10 +170,8 @@ export default function PageViewer() {
     if (nodeId === 'src' || nodeId === 'docs') {
       setPreviewPath(null)
       setCurrentRoot(nodeId)
-      setLoading(true)
       fetchTree(resolveRoot(nodeId)).then((tree) => {
         setInitialStore(treeToStore(tree))
-        setLoading(false)
       })
     }
   }, [])
@@ -210,14 +205,7 @@ export default function PageViewer() {
     })
   }, [])
 
-  if (loading || !initialStore) {
-    return (
-      <div className={ax({ layout: 'center', gap: 'sm', textStyle: 'body', text: 'muted', flex: '1' })}>
-        <SpinnerIndicator size="sm" />
-        <span>Loading project...</span>
-      </div>
-    )
-  }
+  if (!initialStore) return null
 
   return (
     <AriaRoute keyMap={quickOpenKeyMap}>

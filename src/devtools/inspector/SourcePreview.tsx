@@ -14,6 +14,7 @@ const PREVIEW_HEIGHT = 140
 const CONTEXT_LINES = 2
 
 // Module-scope cache survives re-mounts
+// eslint-disable-next-line react-refresh/only-export-components
 export const fileCache = new Map<string, string>()
 
 export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewProps) {

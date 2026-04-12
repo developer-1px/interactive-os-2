@@ -114,6 +114,7 @@ function buildPyramids(data: NormalizedData): Pyramid[] {
   return pyramids
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { buildPyramids }
 
 // ── PyramidView (slideshow) ──
