@@ -31,6 +31,20 @@ store → engine → axis → pattern → primitives → ui → pages
 - **primitives** (`src/interactive-os/primitives/`): `useAria`, `useAriaZone`, `aria.tsx` — React 바인딩. `useAria`가 engine + pattern을 연결.
 - **ui** (`src/interactive-os/ui/`): 완성품 컴포넌트 (TreeGrid, ListBox, Combobox, Workspace 등). useAria 기반.
 
+### 외부 표면 vs 내부 구조
+
+ARIA OS는 두 청자를 위해 두 개의 면을 가진다.
+
+**외부 표면 (npm 사용자, LLM 시스템 프롬프트):**
+- `aria-os/ui` — 88+ 완성품 컴포넌트 + AriaComponentProps 타입 + indicators/items/panels/cells/composites namespaces
+- `aria-os/layout` — definePage, LayoutNode 9 variants, FlatLayout, widgetRegistry
+- `aria-os/schema` — NormalizedData/Entity 타입, ROOT_ID, createStore (defineData 빌더는 후속 plan)
+- `aria-os/advanced` — useAria, useAriaZone, useControlledAria, composePattern, createCommandEngine, useEngine, definePlugin (사람-개발자 escape hatch, LLM 비노출)
+
+**내부 구조 (개발용, 위 의존 순서 그대로):** store → engine → axis → pattern → primitives → ui → pages.
+
+내부 cross-layer import는 자유. 외부 npm 사용자와 LLM은 4개 entry만 본다.
+
 ### 앱 라우트 구조
 
 | 경로 | 파일 | 역할 |

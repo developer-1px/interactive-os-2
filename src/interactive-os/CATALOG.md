@@ -2,6 +2,22 @@
 
 > 구현 전 이 파일을 읽고, 기존 부품으로 해결 가능한지 먼저 확인한다.
 
+## Import 경로
+
+**LLM/외부 사용자 (권장 — 단일 entry 4개):**
+```ts
+import { TreeGrid, ListBox, indicators } from 'aria-os/ui'
+import { definePage, FlatLayout } from 'aria-os/layout'
+import type { NormalizedData } from 'aria-os/schema'
+```
+
+**고급 사용자 (escape hatch, LLM 비노출):**
+```ts
+import { useAria, composePattern, definePlugin } from 'aria-os/advanced'
+```
+
+**프로젝트 내부(monorepo):** path alias `@os/*` 그대로 사용. pages → 단일 entry 마이그레이션은 별도 plan.
+
 ## axis
 
 navigate, select, expand, activate, tab, value, checked, popup, edit
