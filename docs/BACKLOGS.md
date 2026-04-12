@@ -47,3 +47,7 @@
 - [ ] [P1] CMS 섹션 추가 실패 — + → 템플릿 선택 후 새 섹션이 사이드바/캔버스에 미표시. Zod 검증 또는 store 동기화 이슈 — 출처: /use power user 탐색 (2026-04-06)
 - [ ] [P2] CMS Cmd+↑/↓ 순서 변경 키보드 단축키 확인 — 하단 "위로"/"아래로" 버튼은 있으나 키보드로 작동하는지 미확인 — 출처: /use power user 탐색 (2026-04-06)
 - [ ] [P2] CMS 슬라이드 썸네일 클릭 시 패널 간헐적 미갱신 — 재현 조건 불명확, 포커스 경로에 따라 달라질 수 있음 — 출처: /use power user 탐색 (2026-04-06)
+- [ ] [P1] LLM-facing Plan 3 — defineData() schema 빌더 (schema/builders/{list,tree,grid,form,...}.ts) — NormalizedData 직접 노출 회피, A2UI Adapter 패턴 재활용 — 출처: PRD docs/2-areas/distribution/prds/llm-facing-3layer-prd.md ② (2026-04-12)
+- [ ] [P1] LLM-facing Plan 4 — eject CLI + doctor (scripts/eject.ts, registry.json, dependency-cruiser closure 화이트리스트=ui/items/cells/indicators/panels) — shadcn 모델, 엔진은 npm 잠금 — 출처: 동 PRD ② (2026-04-12)
+- [ ] [P1] LLM-facing Plan 6 — evals harness (pyramid-eval/llm-generation/, 30 프롬프트×6범주, axe+키보드 채점, baseline.json, nightly+PR smoke 5개) — Plan 5 aria.md 회귀 보호 — 출처: 동 PRD ② (2026-04-12)
+- [ ] [P2] LLM-facing Plan 1.5 — src/pages/ 73 파일 codemod로 단일 entry 마이그레이션 + guardOsPatterns rule 24 차단 승격 — 출처: 동 PRD ⑥#1, Plan 1 후속 (2026-04-12)
