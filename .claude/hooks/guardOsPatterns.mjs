@@ -279,7 +279,8 @@ if (!isExempt && isTsx) {
 // 예외: ax.css — 축 시스템 자체이므로 축 소유 속성 당연히 사용
 const isCss = /\.css$/.test(filePath)
 const isAxCss = filePath.endsWith('/styles/ax.css')
-if (isCss && !isAxCss) {
+const isResetCss = filePath.endsWith('/styles/reset.css')
+if (isCss && !isAxCss && !isResetCss) {
   // ax() 축 → 소유 CSS 속성 매핑 (패턴은 속성명만, ':'는 RegExp에서 추가)
   const AX_OWNED_PROPS = [
     // surface 축
@@ -387,6 +388,19 @@ if (isPages && isTsx && /\.showModal\s*\(/.test(content)) {
   violations.push(
     'dialog.showModal() 수동 제어 금지 — useOverlay({ type: \'modal\' })를 사용하세요. overlay/useOverlay.ts가 dialog sync, backdrop, focus restoration, layer stack을 소유합니다'
   )
+}
+
+// 규칙 24: FlatLayout widget 노드에 props 필드 Push 금지 — widget은 Context/hook pull
+// (a) updateEntityData(data, 'xxx', { props: ... }) 패턴
+// (b) definePage 내부 { type: 'widget', ..., props: ... } 패턴
+if (isPages && isTsx) {
+  const pushA = /updateEntityData\s*\([^,]+,\s*['"][^'"]+['"]\s*,\s*\{[\s\S]{0,40}?\bprops\s*:/.test(content)
+  const pushB = /type\s*:\s*['"]widget['"][\s\S]{0,200}?\bprops\s*:/.test(content)
+  if (pushA || pushB) {
+    violations.push(
+      'FlatLayout widget 노드에 props 필드 전달 금지 (Push 모델) — definePage는 구조/id만 담고, widget이 도메인 Context/hook으로 값을 pull 하세요. 전범: src/pages/cms/cmsContext.tsx + cmsWidgets.tsx. 원칙: feedback_flatlayout_pull_not_push'
+    )
+  }
 }
 
 if (violations.length > 0) {
