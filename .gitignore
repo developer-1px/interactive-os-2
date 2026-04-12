@@ -31,3 +31,5 @@ test-results
 coverage/
 screenshots/
 docs/superpowers/specs/module-css-dump.md
+
+.worktrees/
