@@ -14,6 +14,7 @@ export interface SplitNode extends LayoutBase {
   type: 'split'
   direction: 'horizontal' | 'vertical'
   sizes: PaneSize[]
+  resizable?: boolean  // ② flatlayout-resizable-split-prd.md — 기본 true, false면 고정 비율
 }
 
 export interface StackNode extends LayoutBase {
@@ -67,7 +68,13 @@ export interface FloatingNode extends LayoutBase {
   hidden?: boolean
 }
 
-export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabNode | SectionNode | FloatingNode
+/** 데이터 전용 노드 — 렌더링되지 않고, 위젯 간 shared state를 store에 보관하는 용도. command로 업데이트, useFlatLayout()로 읽기. */
+export interface StateNode extends LayoutBase {
+  type: 'state'
+  [key: string]: unknown
+}
+
+export type LayoutNode = SplitNode | StackNode | BarNode | OverlayNode | WidgetNode | GridNode | NavNode | TabNode | SectionNode | FloatingNode | StateNode
 
 // ── definePage factory ────────────────────────────────
 

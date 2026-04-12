@@ -1,9 +1,9 @@
-// ② flat-layout-engine-prd.md
+// ② flat-layout-engine-prd.md  ② flatlayout-resizable-split-prd.md
 import React, { useMemo, useRef, useCallback } from 'react'
-import type { NormalizedData } from '@os/store/types'
+import type { NormalizedData, PaneSize } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { getChildren, getEntityData } from '@os/store/createStore'
-import type { Plugin } from '@os/engine/types'
+import type { Plugin, Command } from '@os/engine/types'
 import { useAria } from '@os/primitives/useAria'
 import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { resolveWidget } from '@os/layout/widgetRegistry'
@@ -12,6 +12,9 @@ import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, 
 import { ax } from '@styles/ax'
 import styles from './FlatLayout.module.css'
 import { NavLayoutContext } from './NavLayoutContext'
+import { SplitPane } from './SplitPane'
+import { workspaceCommands } from '@os/plugins/workspaceStore'
+import { FlatLayoutContext } from './useFlatLayout'
 
 // ── Types ─────────────────────────────────────────────
 
@@ -24,6 +27,7 @@ interface LayoutRenderContext {
   surface?: LayoutSurface
   renderNode: (nodeId: string) => React.ReactNode
   refCallback: (nodeId: string) => (el: HTMLElement | null) => void
+  dispatch: (command: Command) => void
 }
 
 // ── Nav wrapper ───────────────────────────────────────
@@ -102,27 +106,43 @@ function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
 // ── OCP renderer map ──────────────────────────────────
 
 const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactNode> = {
-  split: ({ nodeId, store, surface, renderNode, refCallback }) => {
+  split: ({ nodeId, store, surface, renderNode, refCallback, dispatch }) => {
     const node = getEntityData<SplitNode>(store, nodeId)
     if (!node) return null
     const childIds = getChildren(store, nodeId)
     const isHorizontal = node.direction === 'horizontal'
 
-    return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full', scroll: 'hidden', surface })}>
-        {childIds.map((childId, i) => {
-          const size = node.sizes[i]
-          const isFlex = size === 'flex' || size === undefined
-          const style = isFlex
-            ? { '--split-flex': '1', '--split-basis': 'auto' } as React.CSSProperties
-            : { '--split-flex': '0 0 auto', '--split-basis': `${size * 100}%` } as React.CSSProperties
+    // ② flatlayout-resizable-split-prd.md — resizable: false → 고정 비율
+    if (node.resizable === false) {
+      return (
+        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full', scroll: 'hidden', surface })}>
+          {childIds.map((childId, i) => {
+            const size = node.sizes[i]
+            const isFlex = size === 'flex' || size === undefined
+            const style = isFlex
+              ? { '--split-flex': '1', '--split-basis': 'auto' } as React.CSSProperties
+              : { '--split-flex': '0 0 auto', '--split-basis': `${size * 100}%` } as React.CSSProperties
 
-          return (
-            <div key={childId} className={`${ax({ scroll: 'hidden' })} ${styles.splitPane}`} style={style}>
-              {renderNode(childId)}
-            </div>
-          )
-        })}
+            return (
+              <div key={childId} className={`${ax({ scroll: 'hidden' })} ${styles.splitPane}`} style={style}>
+                {renderNode(childId)}
+              </div>
+            )
+          })}
+        </div>
+      )
+    }
+
+    // resizable: true (기본) → SplitPane 위임
+    const handleResize = (newSizes: PaneSize[]) => {
+      dispatch(workspaceCommands.resize(nodeId, newSizes))
+    }
+
+    return (
+      <div ref={refCallback(nodeId)} className={ax({ flex: '1', layout: 'fill', scroll: 'hidden', surface })}>
+        <SplitPane direction={node.direction} sizes={node.sizes} onResize={handleResize}>
+          {childIds.map((childId) => renderNode(childId))}
+        </SplitPane>
       </div>
     )
   },
@@ -133,7 +153,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const childIds = getChildren(store, nodeId)
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'column', gap: node.gap ?? 'md', width: 'full', surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'fill', gap: node.gap ?? 'md', width: 'full', surface })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
         ))}
@@ -270,7 +290,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       : undefined
 
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', surface })} ${styles.splitChild}`}>
+      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', surface, ...(surface === 'raised' ? { shape: 'lg' } : {}) })} ${styles.splitChild} min-h-0`}>
         <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )
@@ -310,6 +330,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
   })
 
   const store = aria.getStore()
+  const layoutCtx = useMemo(() => ({ store, dispatch: aria.dispatch }), [store, aria.dispatch])
 
   const renderNode = (nodeId: string): React.ReactNode => {
     const entity = store.entities[nodeId]
@@ -323,17 +344,19 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
     if (!renderer) return null
 
     const surface = nodeData?.surface as LayoutSurface | undefined
-    const ctx: LayoutRenderContext = { nodeId, store, registry, surface, renderNode, refCallback }
+    const ctx: LayoutRenderContext = { nodeId, store, registry, surface, renderNode, refCallback, dispatch: aria.dispatch }
     return renderer(ctx)
   }
 
   const rootIds = getChildren(store, ROOT_ID)
 
   return (
-    <div {...aria.containerProps} className={ax({ layout: 'stack', gap: 'md', width: 'full', flex: '1', scroll: 'hidden' })}>
-      {rootIds.map((id) => (
-        <React.Fragment key={id}>{renderNode(id)}</React.Fragment>
-      ))}
-    </div>
+    <FlatLayoutContext.Provider value={layoutCtx}>
+      <div {...aria.containerProps} className={ax({ layout: 'stack', gap: 'md', width: 'full', flex: '1', scroll: 'hidden' })}>
+        {rootIds.map((id) => (
+          <React.Fragment key={id}>{renderNode(id)}</React.Fragment>
+        ))}
+      </div>
+    </FlatLayoutContext.Provider>
   )
 }
