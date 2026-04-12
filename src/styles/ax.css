@@ -52,11 +52,9 @@ textarea.sf-input { field-sizing: content; }
   border: 1px solid var(--border-strong);
   z-index: 10;
   position: relative;
-  --bg-hover:          var(--depth-overlay-hover);
-  --bg-active:         var(--depth-overlay-active);
-  --selection-context: var(--depth-overlay-sel-context);
-  --selection:         var(--depth-overlay-sel);
-  --selection-cursor:  var(--depth-overlay-sel-cursor);
+  --bg-hover:  var(--depth-overlay-hover);
+  --bg-active: var(--depth-overlay-active);
+  /* selection은 surface 불변 — :root 값 사용 */
 }
 
 /* Entry animation — popover/dialog 전용, surface와 분리 */
@@ -112,22 +110,16 @@ dialog.sf-overlay[open] {
   background: var(--_bg, var(--surface-sunken));
   color: var(--_fg, inherit);
   border: none;
-  --bg-hover:          var(--depth-sunken-hover);
-  --bg-active:         var(--depth-sunken-active);
-  --selection-context: var(--depth-sunken-sel-context);
-  --selection:         var(--depth-sunken-sel);
-  --selection-cursor:  var(--depth-sunken-sel-cursor);
+  --bg-hover:  var(--depth-sunken-hover);
+  --bg-active: var(--depth-sunken-active);
 }
 
 .sf-base {
   background: var(--_bg, var(--surface-base));
   color: var(--_fg, inherit);
   border: none;
-  --bg-hover:          var(--depth-base-hover);
-  --bg-active:         var(--depth-base-active);
-  --selection-context: var(--depth-base-sel-context);
-  --selection:         var(--depth-base-sel);
-  --selection-cursor:  var(--depth-base-sel-cursor);
+  --bg-hover:  var(--depth-base-hover);
+  --bg-active: var(--depth-base-active);
 }
 
 .sf-raised {
@@ -135,11 +127,8 @@ dialog.sf-overlay[open] {
   color: var(--_fg, inherit);
   border: none;
   box-shadow: var(--shadow-md);
-  --bg-hover:          var(--depth-raised-hover);
-  --bg-active:         var(--depth-raised-active);
-  --selection-context: var(--depth-raised-sel-context);
-  --selection:         var(--depth-raised-sel);
-  --selection-cursor:  var(--depth-raised-sel-cursor);
+  --bg-hover:  var(--depth-raised-hover);
+  --bg-active: var(--depth-raised-active);
 }
 
 .sf-placeholder {
@@ -752,6 +741,7 @@ dialog.sf-overlay[open] {
 .pl-bottom-center { position: absolute; bottom: var(--space-md); left: 50%; transform: translateX(-50%); }
 .pl-center        { position: absolute; inset: 0; margin: auto; width: fit-content; height: fit-content; }
 .pl-top-start     { position: absolute; top: 0; inset-inline-start: 0; }
+.pl-top-end       { position: absolute; top: 0; inset-inline-end: 0; }
 .pl-viewport      { position: fixed; inset: 0; z-index: 100; }
 .pl-sticky        { position: sticky; top: 0; z-index: 1; }
 .pl-anchor-below  { position: fixed; inset: unset; position-area: block-end span-inline-end; position-try-fallbacks: flip-block; }
@@ -851,7 +841,12 @@ dialog.sf-overlay[open] {
 .ia-item[aria-selected="true"][data-focused],
 .ia-item[aria-checked="true"][data-focused] {
   background: var(--selection-cursor);
-  color: var(--text-bright);
+}
+
+/* active pane override — container :focus-within 일 때 selection을 더 밝게 (Mac Finder 모델) */
+.ax-interactive:focus-within {
+  --selection:        var(--selection-active);
+  --selection-cursor: var(--selection-cursor-active);
 }
 
 .ax-interactive:focus-within .ia-item[aria-selected="true"][data-focused],

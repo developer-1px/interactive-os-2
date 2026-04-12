@@ -15,6 +15,12 @@
     "undo-redo"
   ],
   "sideEffects": false,
+  "browserslist": [
+    "Chrome >= 130",
+    "Safari >= 16.4",
+    "Firefox >= 128",
+    "Edge >= 130"
+  ],
   "exports": {
     "./core/types": {
       "import": "./dist-lib/core/types.js",
@@ -232,6 +238,7 @@
     "check:contents": "node scripts/checkContentsIsomorphism.mjs",
     "check:deps": "depcruise src/interactive-os src/pages --config .dependency-cruiser.cjs",
     "check:test-components": "node scripts/checkTestComponents.mjs",
+    "check:tokens": "node scripts/checkTokens.mjs",
     "scan:violations": "node scripts/scanOsViolations.mjs",
     "screenshot": "node scripts/screenshot.mjs"
   },

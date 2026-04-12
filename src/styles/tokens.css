@@ -83,50 +83,68 @@
   /* ── Indicator ── */
   --indicator-width: 2px;
 
-  /* ── Depth ladder — interactive token values per zone ──
-     sf-sunken/sf-base/sf-overlay in ax.css consume these.
-     Theme switch = override these tokens only.
-     Pattern: --depth-{zone}-{state} */
+  /* ── L1 Semantic: Elevation tier ──
+     surface별 elev base + step ladder. role 토큰은 여기서 자동 파생.
+     dark: +Δ L = raised (lighter on dark = elevated)
+     palette 직접 매핑은 elev base만. 나머지는 oklch from 계산.
+     ② design-token-3tier-auto-derivation-prd.md */
 
-  --depth-sunken-hover:       var(--stone-850);
-  --depth-sunken-active:      var(--stone-800);
-  --depth-sunken-sel-context: var(--stone-850);
-  --depth-sunken-sel:         var(--stone-800);
-  --depth-sunken-sel-cursor:  var(--stone-750);
+  --elev-base-sunken:  var(--stone-900);
+  --elev-base:         var(--stone-850);
+  --elev-base-raised:  var(--stone-800);
+  --elev-base-overlay: var(--stone-750);
 
-  --depth-base-hover:         var(--stone-800);
-  --depth-base-active:        var(--stone-700);
-  --depth-base-sel-context:   var(--stone-850);
-  --depth-base-sel:           var(--stone-750);
-  --depth-base-sel-cursor:    var(--stone-700);
+  --elev-step-direction: 1;       /* dark = +1, light overrides to -1 */
+  --elev-delta-1: 0.03;            /* hover, selection-context */
+  --elev-delta-2: 0.07;            /* selection */
+  --elev-delta-3: 0.11;            /* active, selection-cursor */
 
-  --depth-raised-hover:       var(--stone-750);
-  --depth-raised-active:      var(--stone-700);
-  --depth-raised-sel-context: var(--stone-800);
-  --depth-raised-sel:         var(--stone-700);
-  --depth-raised-sel-cursor:  var(--stone-650);
+  /* ── L2 Role aliases (depth-*): elev base + step → oklch from 자동 파생 ──
+     ax.css의 sf-{surface} recipe가 이 토큰들을 var()로 소비. */
 
-  --depth-overlay-hover:       var(--stone-700);
-  --depth-overlay-active:      var(--stone-650);
-  --depth-overlay-sel-context: var(--stone-750);
-  --depth-overlay-sel:         var(--stone-650);
-  --depth-overlay-sel-cursor:  var(--stone-600);
+  --depth-sunken-hover:       oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-sunken-active:      oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+  --depth-sunken-sel-context: oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-sunken-sel:         oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
+  --depth-sunken-sel-cursor:  oklch(from var(--elev-base-sunken) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
 
-  /* ── Depth Level Scale — hover=level+1 불변량 ── */
-  --depth-prominent-hover:       var(--stone-650);
-  --depth-prominent-active:      var(--stone-600);
-  --depth-prominent-sel-context: var(--stone-700);
-  --depth-prominent-sel:         var(--stone-600);
-  --depth-prominent-sel-cursor:  var(--stone-500);
+  --depth-base-hover:         oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-base-active:        oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+  --depth-base-sel-context:   oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-base-sel:           oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
+  --depth-base-sel-cursor:    oklch(from var(--elev-base) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+
+  --depth-raised-hover:       oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-raised-active:      oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+  --depth-raised-sel-context: oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-raised-sel:         oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
+  --depth-raised-sel-cursor:  oklch(from var(--elev-base-raised) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+
+  --depth-overlay-hover:       oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-overlay-active:      oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+  --depth-overlay-sel-context: oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
+  --depth-overlay-sel:         oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
+  --depth-overlay-sel-cursor:  oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
+
+  /* prominent = overlay alias (선택 가능한 가장 밝은 elev) */
+  --depth-prominent-hover:       var(--depth-overlay-hover);
+  --depth-prominent-active:      var(--depth-overlay-active);
+  --depth-prominent-sel-context: var(--depth-overlay-sel-context);
+  --depth-prominent-sel:         var(--depth-overlay-sel);
+  --depth-prominent-sel-cursor:  var(--depth-overlay-sel-cursor);
 
   /* ── Interactive (base depth = :root default) ── */
   --bg-hover:          var(--depth-base-hover);
   --bg-active:         var(--depth-base-active);
 
-  /* ── Selection — stone ladder (neutral elevation) ── */
-  --selection-context: var(--depth-base-sel-context);
-  --selection:         var(--depth-base-sel);
-  --selection-cursor:  var(--depth-base-sel-cursor);
+  /* ── Selection — active pane vs inactive pane 분리 (Mac Finder 모델)
+     기본 토큰 = inactive pane (다른 pane에 focus 있을 때). ax.css :focus-within에서 active로 override.
+     "raised = 더 밝은" 메타포. dark는 +Δ, light는 +Δ(pure white). accent 0%, stone only. ── */
+  --selection-context: var(--depth-base-sel-context); /* grid row context, subtle */
+  --selection:         var(--stone-800);               /* inactive pane selection (subtle) */
+  --selection-cursor:  var(--stone-750);               /* inactive pane cursor (slight raised) */
+  --selection-active:         var(--stone-700);       /* active pane selection (clearly raised) */
+  --selection-cursor-active:  var(--stone-600);        /* active pane cursor (brightest, pressable) */
 
   /* ══ Typography ══ */
 
@@ -331,47 +349,27 @@
   --focus:      var(--blue-500);
   --focus-idle: var(--bg-hover);
 
-  /* ── Depth ladder — light ──
-     light: sunken은 별도 래더, base/raised/overlay는 공유. */
+  /* ── L1 Semantic: Elevation tier (light) ──
+     light: -Δ L = raised (darker on light = elevated, 카드/그림자 메타포)
+     elev base만 override. role aliases는 :root에서 자동 재계산됨. */
 
-  --depth-sunken-hover:       var(--stone-200);
-  --depth-sunken-active:      var(--stone-300);
-  --depth-sunken-sel-context: var(--stone-200);
-  --depth-sunken-sel:         var(--stone-300);
-  --depth-sunken-sel-cursor:  var(--stone-400);
+  --elev-base-sunken:  var(--stone-100);
+  --elev-base:         var(--stone-50);
+  --elev-base-raised:  var(--stone-0);
+  --elev-base-overlay: var(--stone-0);
 
-  --depth-base-hover:         var(--stone-100);
-  --depth-base-active:        var(--stone-200);
-  --depth-base-sel-context:   var(--stone-100);
-  --depth-base-sel:           var(--stone-200);
-  --depth-base-sel-cursor:    var(--stone-300);
-
-  --depth-raised-hover:       var(--depth-base-hover);
-  --depth-raised-active:      var(--depth-base-active);
-  --depth-raised-sel-context: var(--stone-50);
-  --depth-raised-sel:         var(--depth-base-sel);
-  --depth-raised-sel-cursor:  var(--depth-base-sel-cursor);
-
-  --depth-overlay-hover:       var(--depth-raised-hover);
-  --depth-overlay-active:      var(--depth-raised-active);
-  --depth-overlay-sel-context: var(--depth-raised-sel-context);
-  --depth-overlay-sel:         var(--depth-raised-sel);
-  --depth-overlay-sel-cursor:  var(--depth-raised-sel-cursor);
-
-  --depth-prominent-hover:       var(--depth-overlay-hover);
-  --depth-prominent-active:      var(--depth-overlay-active);
-  --depth-prominent-sel-context: var(--depth-overlay-sel-context);
-  --depth-prominent-sel:         var(--depth-overlay-sel);
-  --depth-prominent-sel-cursor:  var(--depth-overlay-sel-cursor);
+  --elev-step-direction: -1;
 
   /* ── Interactive (base depth default) ── */
   --bg-hover:          var(--depth-base-hover);
   --bg-active:         var(--depth-base-active);
 
-  /* ── Selection ── */
+  /* ── Selection — light: inactive=subtle darker, active=pure white raised ── */
   --selection-context: var(--depth-base-sel-context);
-  --selection:         var(--depth-base-sel);
-  --selection-cursor:  var(--depth-base-sel-cursor);
+  --selection:         var(--stone-100);              /* inactive pane (subtle darker) */
+  --selection-cursor:  var(--stone-200);              /* inactive pane cursor */
+  --selection-active:         var(--stone-0);         /* active pane = pure white raised */
+  --selection-cursor-active:  var(--stone-0);         /* active cursor = pure white + focus ring */
 
   /* ── File type colors (same hues, adjusted L for light bg contrast) ── */
   --file-folder: oklch(55%  0.040  250);

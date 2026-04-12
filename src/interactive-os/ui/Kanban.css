@@ -114,12 +114,10 @@
 /* ── Focus/Selection ── */
 
 .kanban-card[data-focused] {
-  background: var(--tone-primary-dim);
-  color: var(--text-bright);
+  background: var(--selection-cursor);
 }
 
 .kanban-card[aria-selected="true"] {
   background: var(--selection);
-  color: var(--text-bright);
 }
 }

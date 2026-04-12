@@ -126,9 +126,7 @@
   color: var(--text-muted);
 }
 
-:where(.ax-interactive [aria-selected="true"] .item-indicator--toggle-group) {
-  color: var(--tone-primary-base);
-}
+/* selected override 제거: accent 미사용, 기본 muted 유지 */
 
 /* ── Sort indicator ── */
 
@@ -139,7 +137,7 @@
 
 :where(.ax-interactive [aria-sort="ascending"] .item-indicator--sort),
 :where(.ax-interactive [aria-sort="descending"] .item-indicator--sort) {
-  color: var(--tone-primary-base);
+  color: var(--text-primary);
 }
 
 /* ── Spinner indicator ──
