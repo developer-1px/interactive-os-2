@@ -1,3 +1,4 @@
+// ② flatlayout-pull-transition-prd.md
 import { ChevronLeft, ChevronRight, X, Star, Search, Layers, List } from 'lucide-react'
 import { Breadcrumb } from '@os/ui/Breadcrumb'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
@@ -10,17 +11,12 @@ import { ScrollArea } from '@os/ui/ScrollArea'
 import { TextInput } from '@os/ui/TextInput'
 import { Button } from '@os/ui/Button'
 import { createWidgetRegistry } from '@os/layout'
-import type { BookPage } from './bookContent'
+import { useBook } from './bookContext'
 
 // ── Widgets ──
 
-function BookReader(props: Record<string, unknown>) {
-  const page = props.page as BookPage | undefined
-  const linkTransform = props.linkTransform as ((href: string) => { href: string; onClick?: (e: React.MouseEvent) => void })
-  const arrivedFromNext = props.arrivedFromNext as boolean
-  const onNextBoundary = props.onNextBoundary as () => void
-  const onPrevBoundary = props.onPrevBoundary as () => void
-  const onSpreadChange = props.onSpreadChange as (s: number, total: number) => void
+function BookReader() {
+  const { page, linkTransform, arrivedFromNext, onNextBoundary, onPrevBoundary, onSpreadChange } = useBook()
 
   return (
     <SpreadReader
@@ -35,15 +31,8 @@ function BookReader(props: Record<string, unknown>) {
   )
 }
 
-function BookPill(props: Record<string, unknown>) {
-  const page = props.page as BookPage | undefined
-  const chromeVisible = props.chromeVisible as boolean
-  const currentIsFavorite = props.currentIsFavorite as boolean
-  const onToggleFavorite = props.onToggleFavorite as () => void
-  const onOpenToc = props.onOpenToc as () => void
-  const onOpenLayerOverlay = props.onOpenLayerOverlay as () => void
-  const onOpenQuickOpen = props.onOpenQuickOpen as () => void
-  const layerCount = props.layerCount as number
+function BookPill() {
+  const { page, chromeVisible, currentIsFavorite, onToggleFavorite, onOpenToc, onOpenLayerOverlay, onOpenQuickOpen, layerCount } = useBook()
 
   return (
     <div className={`book-pill ${ax({ surface: 'overlay', placement: 'top-start', width: 'fit', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
@@ -81,11 +70,8 @@ function BookPill(props: Record<string, unknown>) {
   )
 }
 
-function BookPrevButton(props: Record<string, unknown>) {
-  const isFirstSpread = props.isFirstSpread as boolean
-  const prevPage = props.prevPage as BookPage | undefined
-  const spread = props.spread as number
-  const onPrevBoundary = props.onPrevBoundary as () => void
+function BookPrevButton() {
+  const { isFirstSpread, prevPage, spread, onPrevBoundary } = useBook()
 
   if (isFirstSpread) return <div />
 
@@ -99,12 +85,8 @@ function BookPrevButton(props: Record<string, unknown>) {
   )
 }
 
-function BookNextButton(props: Record<string, unknown>) {
-  const isLastSpread = props.isLastSpread as boolean
-  const nextPage = props.nextPage as BookPage | undefined
-  const spread = props.spread as number
-  const totalSpreads = props.totalSpreads as number
-  const onNextBoundary = props.onNextBoundary as () => void
+function BookNextButton() {
+  const { isLastSpread, nextPage, spread, totalSpreads, onNextBoundary } = useBook()
 
   if (isLastSpread) return <div />
 
@@ -118,10 +100,8 @@ function BookNextButton(props: Record<string, unknown>) {
   )
 }
 
-function BookFooter(props: Record<string, unknown>) {
-  const page = props.page as BookPage | undefined
-  const currentPage = props.currentPage as number
-  const totalPages = props.totalPages as number
+function BookFooter() {
+  const { page, currentPage, totalPages } = useBook()
 
   return (
     <div className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted', placement: 'bottom-center' })} book-page-number`}>
@@ -131,9 +111,8 @@ function BookFooter(props: Record<string, unknown>) {
   )
 }
 
-function BookProgress(props: Record<string, unknown>) {
-  const chromeVisible = props.chromeVisible as boolean
-  const progressPercent = props.progressPercent as number
+function BookProgress() {
+  const { chromeVisible, progressPercent } = useBook()
 
   return (
     <div className={`${ax({ placement: 'bottom' })} book-progress-bar`} data-visible={chromeVisible}>
@@ -142,11 +121,8 @@ function BookProgress(props: Record<string, unknown>) {
   )
 }
 
-function BookTocOverlay(props: Record<string, unknown>) {
-  const tocOpen = props.tocOpen as boolean
-  const tocStore = props.tocStore as import('@os/store/types').NormalizedData
-  const onActivate = props.onActivate as (nodeId: string) => void
-  const onClose = props.onClose as () => void
+function BookTocOverlay() {
+  const { tocOpen, tocStore, onTocActivate, onTocClose } = useBook()
 
   return (
     <div className={`${ax({ placement: 'center', layout: 'center' })} book-toc-overlay`} data-open={tocOpen}>
@@ -155,7 +131,7 @@ function BookTocOverlay(props: Record<string, unknown>) {
           <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
           <button
             className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary', flex: 'none' })} book-pill-btn`}
-            onClick={onClose}
+            onClick={onTocClose}
             aria-label="Close"
           >
             <X size={16} />
@@ -164,7 +140,7 @@ function BookTocOverlay(props: Record<string, unknown>) {
         <ScrollArea className={ax({ padding: 'sm' })}>
           <TocNavList
             data={tocStore}
-            onActivate={onActivate}
+            onActivate={onTocActivate}
             aria-label="Table of contents"
           />
         </ScrollArea>
@@ -173,27 +149,22 @@ function BookTocOverlay(props: Record<string, unknown>) {
   )
 }
 
-function BookQuickOpen(props: Record<string, unknown>) {
-  const quickOpenVisible = props.quickOpenVisible as boolean
-  const quickOpenStore = props.quickOpenStore as import('@os/store/types').NormalizedData
-  const quickOpenFilter = props.quickOpenFilter as string
-  const onQueryChange = props.onQueryChange as (q: string) => void
-  const onActivate = props.onActivate as (nodeId: string) => void
-  const onClose = props.onClose as () => void
+function BookQuickOpen() {
+  const { quickOpenVisible, quickOpenStore, quickOpenFilter, onQueryChange, onQuickOpenActivate, onQuickOpenClose } = useBook()
 
   return (
     <div
       className={`${ax({ placement: 'center' })} book-quick-open-overlay`}
       data-open={quickOpenVisible}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => { if (e.target === e.currentTarget) onQuickOpenClose() }}
     >
       {quickOpenVisible && (
         <QuickOpen
           data={quickOpenStore}
           query={quickOpenFilter}
           onQueryChange={onQueryChange}
-          onActivate={onActivate}
-          onClose={onClose}
+          onActivate={onQuickOpenActivate}
+          onClose={onQuickOpenClose}
           placeholder="Search pages..."
           aria-label="Quick open"
           dialog={false}
@@ -203,21 +174,14 @@ function BookQuickOpen(props: Record<string, unknown>) {
   )
 }
 
-function BookLayerOverlay(props: Record<string, unknown>) {
-  const layerOverlayVisible = props.layerOverlayVisible as boolean
-  const addToLayerStore = props.addToLayerStore as import('@os/store/types').NormalizedData
-  const onActivate = props.onActivate as (nodeId: string) => void
-  const onClose = props.onClose as () => void
-  const layerNameMode = props.layerNameMode as boolean
-  const layerNameInput = props.layerNameInput as string
-  const onLayerNameChange = props.onLayerNameChange as (v: string) => void
-  const onLayerNameSubmit = props.onLayerNameSubmit as () => void
+function BookLayerOverlay() {
+  const { layerOverlayVisible, addToLayerStore, onLayerActivate, onLayerClose, layerNameMode, layerNameInput, onLayerNameChange, onLayerNameSubmit } = useBook()
 
   return (
     <div
       className={`${ax({ placement: 'center' })} book-quick-open-overlay`}
       data-open={layerOverlayVisible}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => { if (e.target === e.currentTarget) onLayerClose() }}
     >
       <div className={`${ax({ surface: 'overlay', width: 'lg', shape: 'xl' })} book-quick-open-panel`}>
         <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
@@ -237,7 +201,7 @@ function BookLayerOverlay(props: Record<string, unknown>) {
           <ScrollArea className={ax({ padding: 'sm' })}>
             <NavList
               data={addToLayerStore}
-              onActivate={onActivate}
+              onActivate={onLayerActivate}
               aria-label="Add to layer"
             />
           </ScrollArea>

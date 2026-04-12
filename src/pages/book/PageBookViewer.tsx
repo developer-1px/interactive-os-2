@@ -9,6 +9,7 @@ import { FlatLayout } from '@os/ui/FlatLayout'
 import { definePage } from '@os/layout'
 import { updateEntityData } from '@os/store/createStore'
 import { buildBook, buildTocStore, type BookPage, type Chapter } from './bookContent'
+import { BookProvider, type BookContextValue } from './bookContext'
 import {
   addRecent,
   toggleFavorite,
@@ -282,25 +283,62 @@ export default function PageBookViewer() {
   const isLastSpread = spread >= totalSpreads - 1 && currentPage === pages.length - 1
   const progressPercent = ((currentPage + 1) / pages.length) * 100
 
-  // ── FlatLayout data with dynamic widget props + overlay visibility ──
+  // ── FlatLayout data: static baseLayout + overlay visibility flips only ──
+  // ② flatlayout-pull-transition-prd.md — widget props는 BookContext pull로 이동
   const layoutData = useMemo(() => {
     let data = baseLayout
-    // Widget props
-    data = updateEntityData(data, 'reader', { props: { page, linkTransform, arrivedFromNext, onNextBoundary: handleNextBoundary, onPrevBoundary: handlePrevBoundary, onSpreadChange: handleSpreadChange } })
-    data = updateEntityData(data, 'pill', { props: { page, chromeVisible, currentIsFavorite, onToggleFavorite: handleToggleFavorite, onOpenToc: () => setTocOpen(true), onOpenLayerOverlay: openLayerOverlay, onOpenQuickOpen: openQuickOpen, layerCount: getLayers().length } })
-    data = updateEntityData(data, 'footer', { props: { page, currentPage, totalPages: pages.length } })
-    data = updateEntityData(data, 'progress', { props: { chromeVisible, progressPercent } })
-    data = updateEntityData(data, 'prev-btn', { props: { isFirstSpread, prevPage, spread, onPrevBoundary: handlePrevBoundary } })
-    data = updateEntityData(data, 'next-btn', { props: { isLastSpread, nextPage, spread, totalSpreads, onNextBoundary: handleNextBoundary } })
-    data = updateEntityData(data, 'toc-content', { props: { tocOpen, tocStore, onActivate: handleTocActivate, onClose: () => setTocOpen(false) } })
-    data = updateEntityData(data, 'qo-content', { props: { quickOpenVisible, quickOpenStore, quickOpenFilter, onQueryChange: setQuickOpenFilter, onActivate: handleQuickOpenActivate, onClose: closeQuickOpen } })
-    data = updateEntityData(data, 'layer-content', { props: { layerOverlayVisible, addToLayerStore: addToLayerStoreData, onActivate: handleLayerActivate, onClose: closeLayerOverlay, layerNameMode, layerNameInput, onLayerNameChange: setLayerNameInput, onLayerNameSubmit: handleLayerNameSubmit } })
-    // Overlay visibility
     if (tocOpen) data = updateEntityData(data, 'toc-overlay', { visible: true })
     if (quickOpenVisible) data = updateEntityData(data, 'quick-open', { visible: true })
     if (layerOverlayVisible) data = updateEntityData(data, 'layer-overlay', { visible: true })
     return data
-  }, [page, linkTransform, arrivedFromNext, handleNextBoundary, handlePrevBoundary, handleSpreadChange, chromeVisible, currentIsFavorite, handleToggleFavorite, openLayerOverlay, openQuickOpen, currentPage, pages.length, progressPercent, isFirstSpread, isLastSpread, prevPage, nextPage, spread, totalSpreads, tocOpen, tocStore, handleTocActivate, quickOpenVisible, quickOpenStore, quickOpenFilter, handleQuickOpenActivate, closeQuickOpen, layerOverlayVisible, addToLayerStoreData, handleLayerActivate, closeLayerOverlay, layerNameMode, layerNameInput, handleLayerNameSubmit])
+  }, [tocOpen, quickOpenVisible, layerOverlayVisible])
+
+  // ── BookContext value (pull 대상) ──
+  const openToc = useCallback(() => setTocOpen(true), [])
+  const closeToc = useCallback(() => setTocOpen(false), [])
+
+  const bookCtx = useMemo<BookContextValue>(() => ({
+    page,
+    currentPage,
+    totalPages: pages.length,
+    linkTransform,
+    arrivedFromNext,
+    onNextBoundary: handleNextBoundary,
+    onPrevBoundary: handlePrevBoundary,
+    onSpreadChange: handleSpreadChange,
+    chromeVisible,
+    currentIsFavorite,
+    onToggleFavorite: handleToggleFavorite,
+    onOpenToc: openToc,
+    onOpenLayerOverlay: openLayerOverlay,
+    onOpenQuickOpen: openQuickOpen,
+    layerCount: getLayers().length,
+    progressPercent,
+    isFirstSpread,
+    isLastSpread,
+    prevPage,
+    nextPage,
+    spread,
+    totalSpreads,
+    tocOpen,
+    tocStore,
+    onTocActivate: handleTocActivate,
+    onTocClose: closeToc,
+    quickOpenVisible,
+    quickOpenStore,
+    quickOpenFilter,
+    onQueryChange: setQuickOpenFilter,
+    onQuickOpenActivate: handleQuickOpenActivate,
+    onQuickOpenClose: closeQuickOpen,
+    layerOverlayVisible,
+    addToLayerStore: addToLayerStoreData,
+    onLayerActivate: handleLayerActivate,
+    onLayerClose: closeLayerOverlay,
+    layerNameMode,
+    layerNameInput,
+    onLayerNameChange: setLayerNameInput,
+    onLayerNameSubmit: handleLayerNameSubmit,
+  }), [page, currentPage, pages.length, linkTransform, arrivedFromNext, handleNextBoundary, handlePrevBoundary, handleSpreadChange, chromeVisible, currentIsFavorite, handleToggleFavorite, openToc, openLayerOverlay, openQuickOpen, layerToggle, progressPercent, isFirstSpread, isLastSpread, prevPage, nextPage, spread, totalSpreads, tocOpen, tocStore, handleTocActivate, closeToc, quickOpenVisible, quickOpenStore, quickOpenFilter, handleQuickOpenActivate, closeQuickOpen, layerOverlayVisible, addToLayerStoreData, handleLayerActivate, closeLayerOverlay, layerNameMode, layerNameInput, handleLayerNameSubmit]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (pages.length === 0) {
     return (
@@ -315,11 +353,14 @@ export default function PageBookViewer() {
 
   return (
     <AriaRoute keyMap={keyMap} label="Book">
-      <div className={`${ax({ surface: 'base', text: 'primary', width: 'full', scroll: 'hidden' })} h-full book`}>
-        <div className={`${ax({ placement: 'relative', layout: 'column', width: 'full', scroll: 'hidden' })} h-full book-page-area`} ref={areaRef}>
-          <FlatLayout data={layoutData} registry={bookWidgets} aria-label="Book" />
+      {/* ② flatlayout-pull-transition-prd.md — widget은 useBook()으로 pull */}
+      <BookProvider value={bookCtx}>
+        <div className={`${ax({ surface: 'base', text: 'primary', width: 'full', scroll: 'hidden' })} h-full book`}>
+          <div className={`${ax({ placement: 'relative', layout: 'column', width: 'full', scroll: 'hidden' })} h-full book-page-area`} ref={areaRef}>
+            <FlatLayout data={layoutData} registry={bookWidgets} aria-label="Book" />
+          </div>
         </div>
-      </div>
+      </BookProvider>
     </AriaRoute>
   )
 }
