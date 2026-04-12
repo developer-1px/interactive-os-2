@@ -1,6 +1,7 @@
 /** @catalog 마크다운 렌더링 뷰어 */
 // ② 2026-03-31-chat-perf-prd.md
 import { Component, createElement, memo, useMemo, type ReactNode } from 'react'
+import { parse as parseYaml } from 'yaml'
 import { ax } from '@styles/ax'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -11,6 +12,7 @@ import { parseJsx } from '../../pages/showcase/parseJsx'
 import { mdComponents } from '../../pages/showcase/mdComponents'
 import { MermaidBlock } from '../../pages/showcase/MermaidBlock'
 import { CodeBlock } from './CodeBlock'
+import { FrontmatterCard } from './FrontmatterCard'
 import { LightboxProvider, useLightbox } from './Lightbox'
 import './MarkdownViewer.css'
 
@@ -68,6 +70,16 @@ function RenderBlock({ children }: { children: string }) {
 // ② lightbox-prd.md — img/mermaid click → Lightbox
 function MarkdownContent({ content, className, codeVariant, prose, linkTransform }: { content: string; className?: string; codeVariant?: CodeVariant; prose: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler } }) {
   const lightbox = useLightbox()
+  const { data: frontmatter, body } = useMemo(() => {
+    const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(content)
+    if (!match) return { data: {}, body: content }
+    try {
+      const parsed = parseYaml(match[1]) as Record<string, unknown> | null
+      return { data: parsed ?? {}, body: content.slice(match[0].length) }
+    } catch {
+      return { data: {}, body: content }
+    }
+  }, [content])
 
   const components = useMemo(() => ({
     ...(linkTransform ? {
@@ -127,11 +139,12 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
   }), [codeVariant, linkTransform, lightbox])
 
   return (
-    <div className={`break-word select-text ${ax({ text: 'primary', width: 'prose' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
+    <div className={`break-word select-text ${ax({ text: 'primary', width: 'prose', layout: 'stack', gap: 'md' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
+      {Object.keys(frontmatter).length > 0 && <FrontmatterCard data={frontmatter} />}
       <Markdown
         remarkPlugins={remarkPlugins}
         rehypePlugins={rehypePlugins}
-        children={content}
+        children={body}
         components={components}
       />
     </div>
