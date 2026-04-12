@@ -1,7 +1,7 @@
-/** @catalog 마크다운 frontmatter 메타 카드 */
+/** @catalog 마크다운 frontmatter 메타 카드 — Notion 스타일 페이지 프로퍼티 */
 import { ax } from '@styles/ax'
-import { PropertyRow } from './PropertyRow'
 import { Badge } from './Badge'
+import styles from './FrontmatterCard.module.css'
 
 const DATE_KEYS = new Set(['date', 'created', 'updated', 'modified', 'published'])
 const TAG_KEYS = new Set(['tags', 'tag', 'keywords', 'categories'])
@@ -27,7 +27,7 @@ function renderValue(key: string, value: unknown) {
   }
   if (DATE_KEYS.has(key)) {
     const s = value instanceof Date ? value.toISOString().slice(0, 10) : String(value)
-    return <Badge tone="accent" variant="outline">{s}</Badge>
+    return <span className={ax({ textStyle: 'body', text: 'primary' })}>{s}</span>
   }
   if (value === null || value === undefined) return null
   if (typeof value === 'object') {
@@ -48,20 +48,14 @@ export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
   const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined && v !== '')
   if (entries.length === 0) return null
   return (
-    <section
-      className={ax({
-        surface: 'raised',
-        border: 'default',
-        shape: 'md',
-        padding: 'md',
-        layout: 'stack',
-        gap: 'xs',
-      })}
-    >
+    <section className={ax({ surface: 'sunken', shape: 'md', layout: 'stack', gap: 'xs', padding: 'md' })}>
       {entries.map(([key, value]) => (
-        <PropertyRow key={key} label={key}>
-          {renderValue(key, value)}
-        </PropertyRow>
+        <div key={key} className={ax({ layout: 'row', gap: 'md' })}>
+          <span className={`${styles.label} ${ax({ textStyle: 'caption', text: 'muted' })}`}>
+            {key}
+          </span>
+          <div className={ax({ flex: '1' })}>{renderValue(key, value)}</div>
+        </div>
       ))}
     </section>
   )

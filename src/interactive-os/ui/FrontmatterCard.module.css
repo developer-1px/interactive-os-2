@@ -1,0 +1,4 @@
+.label {
+  flex-shrink: 0;
+  min-width: 7rem;
+}
