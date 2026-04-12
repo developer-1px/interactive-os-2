@@ -14,11 +14,6 @@ A paragraph with **bold** and *italic* text.
 
 - Item one
 - Item two
-- Item three
-
-\`\`\`ts
-const x = 42
-\`\`\`
 `
 
 export function Demo() {

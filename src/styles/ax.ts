@@ -62,6 +62,7 @@ type Placement =
   | 'bottom-center' // absolute + bottom:md + left:50% + translateX(-50%) (floating FAB)
   | 'center'        // absolute + inset:0 + margin:auto (center overlay)
   | 'top-start'     // absolute + top:0 + inset-inline-start:0 (badge)
+  | 'top-end'       // absolute + top:0 + inset-inline-end:0 (copy button)
   | 'viewport'      // fixed + inset:0 (modal backdrop)
   | 'sticky'        // sticky + top:0 + z-index:1 (pinned header)
   | 'anchor-below'  // fixed + position-area:block-end + flip-block (anchor 아래)

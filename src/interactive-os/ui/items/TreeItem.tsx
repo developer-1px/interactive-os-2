@@ -27,7 +27,7 @@ export function TreeItem(
       style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}
     >
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
-      {options?.icon && <span className={ax({ flex: 'none' })}>{options.icon}</span>}
+      {options?.icon && <span className={ax({ layout: 'center', flex: 'none' })}>{options.icon}</span>}
       <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary', clamp: '1', flex: '1' })}>{label}</span>
       {options?.rightContent && <span className={ax({ flex: 'none' })}>{options.rightContent}</span>}
     </div>

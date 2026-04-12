@@ -1,7 +1,7 @@
 // ② 2026-03-24-isomorphic-layer-tree-prd.md
 // axis가 계약을 정의, pattern이 구현
 import type { Entity, NormalizedData } from '../store/types'
-import type { Command } from '../engine/types'
+import type { Command, CommandResult } from '../engine/types'
 import type { Middleware, VisibilityFilter } from '../engine/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
 
@@ -90,7 +90,7 @@ export interface PatternContext {
   focusNextGroup(): Command
   focusPrevGroup(): Command
   activate(): Command
-  dispatch(command: Command): void
+  dispatch(command: Command): CommandResult | void
   getEntity(id: string): Entity | undefined
   getChildren(id: string): string[]
   getSlotChildren(id: string): string[]

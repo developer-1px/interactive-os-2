@@ -1,23 +1,41 @@
+// ② flatlayout-resizable-split-prd.md
+import { useMemo, useCallback } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { definePage } from '@os/layout'
+import type { NormalizedData } from '@os/store/types'
 import { creatorWidgets } from './creatorWidgets'
 
 const creatorLayout = definePage({
   entities: {
-    root:     { data: { type: 'split', direction: 'horizontal', sizes: [0.15, 'flex'] }, children: ['sidebar', 'main'] },
-    sidebar:  { data: { type: 'widget', widget: 'CreatorSidebar' } },
-    main:     { data: { type: 'split', direction: 'vertical', sizes: [0.55, 0.45] }, children: ['preview', 'source'] },
+    root:     { data: { type: 'split', direction: 'horizontal', sizes: [0.15, 'flex', 0.35] }, children: ['sidebar', 'preview', 'source'] },
+    sidebar:  { data: { type: 'widget', widget: 'CreatorSidebar', surface: 'raised' } },
     preview:  { data: { type: 'widget', widget: 'CreatorPreview' } },
-    source:   { data: { type: 'widget', widget: 'CreatorSource' } },
+    source:   { data: { type: 'widget', widget: 'CreatorSource', surface: 'raised' } },
   },
 })
 
+const STORAGE_KEY = 'creator:layout'
+
+function loadLayout(): NormalizedData {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) return JSON.parse(saved) as NormalizedData
+  } catch { /* fallback */ }
+  return creatorLayout
+}
+
 export default function PageComponentCreator() {
+  const initialData = useMemo(() => loadLayout(), [])
+
+  const handleChange = useCallback((data: NormalizedData) => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) } catch { /* quota */ }
+  }, [])
+
   return (
     <FlatLayout
-      data={creatorLayout}
+      data={initialData}
       registry={creatorWidgets}
-      onChange={() => {}}
+      onChange={handleChange}
       aria-label="Component creator"
     />
   )

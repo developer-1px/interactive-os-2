@@ -1,33 +1,34 @@
 // ② agent-dashboard-prd.md
 // @useState-hatch — sessionCards: real-time SSE stream state, not OS axis/store material
 // @useState-hatch — tick: timer-driven re-render for elapsed time display
-// @useState-hatch — openCardId: dialog open state, not OS axis/store material
+// @useState-hatch — openCardId: overlay open state, useOverlay가 관리
 // @useState-hatch — fileContent/activeFilePath: modal-local file fetch state, not OS store material
-// @useState-hatch — splitSizes: SplitPane local resize state
 // @useState-hatch — showEmptyDone: toggle for empty done sessions
 // @useState-hatch — showOlderDone: toggle for older (not today) done sessions
 // @useMemo-hatch — tabData: derived from card.touchedFiles, not OS store
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { subscribeTimeline } from '../viewer/timelineSSE'
 import { useActiveSessions, type ActiveSession } from './useActiveSessions'
 import type { TimelineEvent } from '../viewer/groupEvents'
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
-import type { PaneSize } from '@os/ui/SplitPane'
 import { ax } from '@styles/ax'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
-import { SplitPane } from '@os/ui/SplitPane'
 import { FilePreview } from '@os/ui/FilePreview'
 import { TabList } from '@os/ui/TabList'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { CloseIndicator } from '@os/ui/indicators'
+import { useOverlay } from '@os/overlay/useOverlay'
+import { FlatLayout } from '@os/ui/FlatLayout'
+import { definePage } from '@os/layout/flatLayout'
+import { createWidgetRegistry } from '@os/layout/widgetRegistry'
+import { Kanban } from '@os/ui/Kanban'
 import './SkillKanban.css'
 
 const PLANNING_SKILLS = new Set(['discuss', 'prd', 'plan', 'story', 'ia', 'wireframe', 'cast', 'conflict', 'ideal', 'design-spec'])
 const DEVELOPING_SKILLS = new Set(['go', 'do', 'fix'])
 const REVIEWING_SKILLS = new Set(['simplify', 'improve', 'use', 'improve-design', 'retrospect', 'close'])
 const MAX_MESSAGES = 200
-const MAX_CARD_FILES = 5
 const STALE_THRESHOLD_MS = 5 * 60 * 1000
 const STATE_DEBOUNCE_MS = 3_000
 
@@ -69,7 +70,7 @@ function derivePhase(skills: string[]): Phase {
 function deriveAgentState(active: boolean, lastEventType: string): AgentState {
   if (active) {
     if (lastEventType === 'assistant') return 'waiting'
-    return 'active' // tool_use, user, or other
+    return 'active'
   }
   return 'done'
 }
@@ -135,7 +136,6 @@ function extractSessionCard(events: TimelineEvent[], session: ActiveSession, now
       allMessages = pushMessage(allMessages, { role: evt.type, text: evt.text })
     }
 
-    // Track last event info for deriving state
     if (evt.type === 'tool_use' || evt.type === 'user' || evt.type === 'assistant') {
       lastEventType = evt.type
       if (evt.type === 'tool_use') {
@@ -174,6 +174,57 @@ function formatElapsed(ms: number): string {
   return `${hr}h ${min % 60}m`
 }
 
+const PHASE_LABELS: Record<Phase, string> = { planning: 'Planning', developing: 'Developing', reviewing: 'Reviewing' }
+
+// ── SessionCard[] → NormalizedData for <Kanban> ──
+
+const COL_WAITING = 'col-waiting'
+const COL_ACTIVE = 'col-active'
+const COL_DONE = 'col-done'
+
+function cardsToKanbanData(cards: SessionCard[], now: number): NormalizedData {
+  const entities: Record<string, Entity> = {
+    [COL_WAITING]: { id: COL_WAITING, label: 'Waiting', data: { title: 'Waiting' } },
+    [COL_ACTIVE]: { id: COL_ACTIVE, label: 'Active', data: { title: 'Active' } },
+    [COL_DONE]: { id: COL_DONE, label: 'Done', data: { title: 'Done' } },
+  }
+  const waiting: string[] = []
+  const active: string[] = []
+  const done: string[] = []
+
+  for (const card of cards) {
+    const elapsed = formatElapsed(now - card.startTs)
+    const primaryText = card.agentState === 'waiting'
+      ? (card.lastAssistantMsg || card.label)
+      : card.currentActivity || card.label
+    const subtitle = [PHASE_LABELS[card.phase], elapsed, `${card.toolCount} tools`].join(' · ')
+      + (card.isStale ? ' · 5분+ 무응답' : '')
+      + (card.lastSkill ? ` · /${card.lastSkill}` : '')
+
+    entities[card.id] = {
+      id: card.id,
+      label: primaryText,
+      data: { title: primaryText, subtitle },
+    }
+
+    if (card.agentState === 'waiting') waiting.push(card.id)
+    else if (card.agentState === 'active') active.push(card.id)
+    else done.push(card.id)
+  }
+
+  return {
+    entities,
+    relationships: {
+      [ROOT_ID]: [COL_WAITING, COL_ACTIVE, COL_DONE],
+      [COL_WAITING]: waiting,
+      [COL_ACTIVE]: active,
+      [COL_DONE]: done,
+    },
+  }
+}
+
+// ── Session detail widgets ───────────────────────────
+
 function buildTabData(files: string[]): NormalizedData {
   const entities: Record<string, Entity> = {}
   const ids: string[] = []
@@ -184,217 +235,129 @@ function buildTabData(files: string[]): NormalizedData {
   return { entities, relationships: { [ROOT_ID]: ids } }
 }
 
-const PHASE_LABELS: Record<Phase, string> = { planning: 'Planning', developing: 'Developing', reviewing: 'Reviewing' }
+function ChatViewerWidget({ content }: Record<string, unknown>) {
+  return (
+    <div className={ax({ flex: '1', scroll: 'y' })}>
+      <MarkdownViewer content={String(content ?? '')} codeVariant="compact" />
+    </div>
+  )
+}
 
-function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClose: () => void }) {
-  const dialogRef = useRef<HTMLDialogElement>(null)
-  const [splitSizes, setSplitSizes] = useState<PaneSize[]>([0.35, 'flex'])
-  const [activeFilePath, setActiveFilePath] = useState<string | null>(null)
+function FilePanelWidget({ files }: Record<string, unknown>) {
+  const fileList = files as string[] | undefined
+  // @useState-hatch — activeFilePath: modal-local file selection, not OS axis material
+  const [activeFilePath, setActiveFilePath] = useState<string | null>(fileList?.[0] ?? null)
+  // @useState-hatch — fileContent: modal-local file fetch state, not OS store material
   const [fileContent, setFileContent] = useState<string | null>(null)
+  // @useState-hatch — fileError: modal-local file fetch error, not OS store material
   const [fileError, setFileError] = useState<string | null>(null)
 
-  const hasFiles = card !== null && card.touchedFiles.length > 0
+  const tabData = useMemo(() => fileList ? buildTabData(fileList) : null, [fileList])
+  const handleTabActivate = useCallback((nodeId: string) => { setActiveFilePath(nodeId) }, [])
 
   useEffect(() => {
-    if (card && card.touchedFiles.length > 0) {
-      setActiveFilePath(card.touchedFiles[0])
-    } else {
-      setActiveFilePath(null)
-      setFileContent(null)
-      setFileError(null)
-    }
-  }, [card])
-
-  useEffect(() => {
-    if (!activeFilePath) {
-      setFileContent(null)
-      setFileError(null)
-      return
-    }
+    if (!activeFilePath) { setFileContent(null); setFileError(null); return }
     let cancelled = false
     setFileContent(null)
     setFileError(null)
-
     fetch(`/api/fs/file?path=${encodeURIComponent(activeFilePath)}`)
-      .then(res => {
-        if (!res.ok) throw new Error('File not found')
-        return res.text()
-      })
+      .then(res => { if (!res.ok) throw new Error('File not found'); return res.text() })
       .then(text => { if (!cancelled) setFileContent(text) })
       .catch(() => { if (!cancelled) setFileError('File not found') })
-
     return () => { cancelled = true }
   }, [activeFilePath])
 
-  useEffect(() => {
-    const el = dialogRef.current
-    if (!el) return
-    if (card && !el.open) el.showModal()
-    if (!card && el.open) el.close()
-  }, [card])
-
-  useEffect(() => {
-    const el = dialogRef.current
-    if (!el) return
-    const handler = () => onClose()
-    el.addEventListener('close', handler)
-    return () => el.removeEventListener('close', handler)
-  }, [onClose])
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.defaultPrevented) return
-    if (e.target === dialogRef.current) onClose()
+  if (!fileList || fileList.length === 0 || !tabData) {
+    return <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption', layout: 'center', flex: '1' })}>No files modified</div>
   }
 
-  const handleTabChange = useCallback((data: NormalizedData) => {
-    const rootChildren = data.relationships[ROOT_ID]
-    if (!rootChildren) return
-    for (const id of rootChildren) {
-      const entity = data.entities[id]
-      if (entity && entity['selected']) {
-        setActiveFilePath(id)
-        return
-      }
-    }
-  }, [])
+  return (
+    <>
+      <TabList data={tabData} onActivate={handleTabActivate} aria-label="Modified files" />
+      <div className={ax({ flex: '1', scroll: 'y' })}>
+        {fileError && <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption' })}>{fileError}</div>}
+        {fileContent !== null && activeFilePath && <FilePreview content={fileContent} filename={basename(activeFilePath)} />}
+        {fileContent === null && !fileError && <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption' })}>Loading...</div>}
+      </div>
+    </>
+  )
+}
+
+const sessionDetailRegistry = createWidgetRegistry({
+  ChatViewer: ChatViewerWidget,
+  FilePanel: FilePanelWidget,
+})
+
+const sessionDetailLayout = definePage({
+  entities: {
+    root: { data: { type: 'split', direction: 'horizontal', sizes: [0.35, 'flex'] }, children: ['chat', 'files'] },
+    chat: { data: { type: 'widget', widget: 'ChatViewer' } },
+    files: { data: { type: 'widget', widget: 'FilePanel' } },
+  },
+})
+
+function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClose: () => void }) {
+  const { isOpen, open, close, contentRef } = useOverlay({ type: 'modal' })
+
+  // card → overlay sync
+  useEffect(() => {
+    if (card && !isOpen) open()
+    if (!card && isOpen) close()
+  }, [!!card]) // eslint-disable-line react-hooks/exhaustive-deps -- open/close stable, track card presence only
+
+  // overlay close (ESC/backdrop) → parent sync
+  useEffect(() => {
+    if (!isOpen && card) onClose()
+  }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps -- onClose identity irrelevant
 
   const md = card
     ? card.allMessages.map(m => m.role === 'user' ? `> **User:** ${m.text}` : m.text).join('\n\n---\n\n')
     : ''
 
-  const tabData = useMemo(() => card ? buildTabData(card.touchedFiles) : null, [card?.touchedFiles])
+  const layoutData = useMemo(() => {
+    if (!card) return sessionDetailLayout
+    const entities = { ...sessionDetailLayout.entities }
+    entities['chat'] = { ...entities['chat'], data: { ...entities['chat'].data, props: { content: md }, label: 'ChatViewer' } }
+    entities['files'] = { ...entities['files'], data: { ...entities['files'].data, props: { files: card.touchedFiles }, label: 'FilePanel' } }
+    return { ...sessionDetailLayout, entities }
+  }, [card, md])
 
   return (
-    <dialog ref={dialogRef} className="border-none bg-transparent kanban-fullscreen-dialog" onClick={handleBackdropClick}>
-      <div className={`kanban-fullscreen-modal ${ax({ surface: 'trap', layout: 'column', shape: 'xl', scroll: 'hidden' })}`} onClick={e => e.stopPropagation()}>
-        <PanelHeader axes={{ layout: 'spread' }}>
-          {card && (
-            <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })}>
-              <span className={ax({ text: 'bright', weight: 'medium' })}>{card.label}</span>
-              <span>{card.allMessages.length} messages</span>
-              <span>{card.toolCount} tools</span>
-              {card.lastSkill && <span>/{card.lastSkill}</span>}
-            </div>
-          )}
-          <button className={ax({ surface: 'ghost', recipe: 'control-sm', layout: 'center', text: 'secondary', interactive: 'button' })} onClick={onClose}>
-            <CloseIndicator />
-          </button>
-        </PanelHeader>
-        <div className={ax({ flex: '1', layout: 'fill' })}>
-          {card && (
-            <SplitPane direction="horizontal" sizes={splitSizes} onResize={setSplitSizes}>
-              <div className={ax({ layout: 'column', scroll: 'y', flex: '1' })}>
-                <MarkdownViewer content={md} codeVariant="compact" />
-              </div>
-              <div className={ax({ layout: 'column', flex: '1' })}>
-                {hasFiles && tabData ? (
-                  <>
-                    <TabList data={tabData} onChange={handleTabChange} aria-label="Modified files" />
-                    <div className={ax({ flex: '1', scroll: 'y' })}>
-                      {fileError && (
-                        <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption' })}>{fileError}</div>
-                      )}
-                      {fileContent !== null && activeFilePath && (
-                        <FilePreview content={fileContent} filename={basename(activeFilePath)} />
-                      )}
-                      {fileContent === null && !fileError && (
-                        <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption' })}>Loading...</div>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <div className={ax({ padding: 'lg', text: 'muted', textStyle: 'caption', layout: 'center', flex: '1' })}>
-                    No files modified
-                  </div>
-                )}
-              </div>
-            </SplitPane>
-          )}
-        </div>
+    <dialog
+      ref={contentRef as React.RefObject<HTMLDialogElement>}
+      className={`kanban-detail-dialog ${ax({ surface: 'overlay', width: 'full', shape: 'xl', layout: 'column', scroll: 'hidden' })}`}
+      aria-label="Session detail"
+    >
+      <PanelHeader axes={{ layout: 'spread' }}>
+        {card && (
+          <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })}>
+            <span className={ax({ text: 'bright', weight: 'medium' })}>{card.label}</span>
+            <span>{card.allMessages.length} messages</span>
+            <span>{card.toolCount} tools</span>
+            {card.lastSkill && <span>/{card.lastSkill}</span>}
+          </div>
+        )}
+        <button className={ax({ surface: 'ghost', recipe: 'control-sm', layout: 'center', text: 'secondary', interactive: 'button' })} onClick={close}>
+          <CloseIndicator />
+        </button>
+      </PanelHeader>
+      <div className={ax({ flex: '1', layout: 'fill' })}>
+        {card && <FlatLayout data={layoutData} registry={sessionDetailRegistry} aria-label="Session detail" />}
       </div>
     </dialog>
   )
 }
 
-const COLUMN_CONFIG: { state: AgentState; label: string }[] = [
-  { state: 'waiting', label: 'Waiting' },
-  { state: 'active', label: 'Active' },
-  { state: 'done', label: 'Done' },
-]
-
-function SessionCardView({ card, onClick }: { card: SessionCard; onClick: () => void }) {
-  const elapsed = formatElapsed(Date.now() - card.startTs)
-  const fileNames = card.touchedFiles.map(basename)
-  const displayFiles = fileNames.slice(0, MAX_CARD_FILES)
-  const moreCount = fileNames.length - MAX_CARD_FILES
-
-  const primaryText = card.agentState === 'waiting'
-    ? (card.lastAssistantMsg || card.label)
-    : card.currentActivity || card.label
-
-  const STATE_CSS: Record<AgentState, string> = { active: 'kanban-card-active', waiting: 'kanban-card-waiting', done: '' }
-  const axClass = ax({ recipe: 'container', surface: 'display', border: card.agentState === 'waiting' ? undefined : 'subtle', shape: 'md', layout: 'column', gap: 'xs', interactive: 'item' })
-  const cls = STATE_CSS[card.agentState] ? `${STATE_CSS[card.agentState]} ${axClass}` : axClass
-
-  return (
-    <div
-      className={cls}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-    >
-      <span className={ax({ clamp: '1', weight: 'medium', textStyle: 'caption' })}>{primaryText}</span>
-      <div className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })}>
-        <span className={ax({ recipe: 'badge', tone: 'neutral-dim' })}>{PHASE_LABELS[card.phase]}</span>
-        <span>{elapsed}</span>
-        <span>{card.toolCount} tools</span>
-      </div>
-      {card.isStale && (
-        <span className={ax({ textStyle: 'caption', text: 'primary', tone: 'warning-dim', recipe: 'badge' })}>5분+ 무응답</span>
-      )}
-      {card.skills.length > 0 && (
-        <span className={ax({ text: 'secondary', textStyle: 'caption', clamp: '1' })}>
-          {card.skills.join(' \u2192 ')}
-        </span>
-      )}
-      {displayFiles.length > 0 && (
-        <span className={ax({ text: 'muted', textStyle: 'caption', clamp: '2' })}>
-          {displayFiles.join(', ')}{moreCount > 0 ? ` +${moreCount} more` : ''}
-        </span>
-      )}
-    </div>
-  )
-}
-
-function KanbanColumn({ label, cards, onCardClick, emptyToggle }: {
-  label: string
-  cards: SessionCard[]
-  onCardClick: (id: string) => void
-  emptyToggle?: React.ReactNode
-}) {
-  return (
-    <div className={ax({ layout: 'column', gap: 'xs', flex: '1', surface: 'sunken', shape: 'xl', padding: 'md', scroll: 'y' })}>
-      <div className={ax({ textStyle: 'overline', text: 'secondary', padding: 'xs' })}>
-        {label} {cards.length}
-      </div>
-      {cards.length === 0 && !emptyToggle && (
-        <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>세션 없음</div>
-      )}
-      {cards.map(card => <SessionCardView key={card.id} card={card} onClick={() => onCardClick(card.id)} />)}
-      {emptyToggle}
-    </div>
-  )
-}
+// ── Main page ───────────────────────────
 
 export default function SkillKanban() {
   const sessions = useActiveSessions({ activeOnly: false })
+  // @useState-hatch — sessionCards: real-time SSE stream state, not OS axis/store material
   const [sessionCards, setSessionCards] = useState<SessionCard[]>([])
+  // @useState-hatch — tick: timer-driven re-render for elapsed time display
   const [, setTick] = useState(0)
+  // @useState-hatch — openCardId: overlay open state, useOverlay가 관리
   const [openCardId, setOpenCardId] = useState<string | null>(null)
-  // @useState-hatch — showEmptyDone: toggle for empty done sessions display
-  const [showEmptyDone, setShowEmptyDone] = useState(false)
-  // @useState-hatch — showOlderDone: toggle for older done sessions display
-  const [showOlderDone, setShowOlderDone] = useState(false)
 
   useEffect(() => {
     if (sessions.length === 0) return
@@ -454,7 +417,6 @@ export default function SkillKanban() {
             if (data.type === 'assistant') card.lastAssistantMsg = data.text.slice(0, 60)
           }
 
-          // Update derived fields
           const prevState = card.agentState
           const prevActivity = card.currentActivity
           const prevToolCount = card.toolCount
@@ -475,7 +437,6 @@ export default function SkillKanban() {
           }
           card.isStale = session.active && card.lastTs > 0 && (now - card.lastTs > STALE_THRESHOLD_MS)
 
-          // No-op guard: skip re-render if nothing visible changed
           if (card.agentState === prevState && card.currentActivity === prevActivity && card.toolCount === prevToolCount) {
             return prev
           }
@@ -498,65 +459,43 @@ export default function SkillKanban() {
     return () => clearInterval(id)
   }, [hasActive])
 
-  const waiting = sessionCards.filter(c => c.agentState === 'waiting')
-  const active = sessionCards.filter(c => c.agentState === 'active')
-  const todayStart = new Date().setHours(0, 0, 0, 0)
-  const doneAll = sessionCards.filter(c => c.agentState === 'done')
-  const doneToday = doneAll.filter(c => c.hasOutput && c.lastTs >= todayStart)
-  const doneOlder = doneAll.filter(c => c.hasOutput && c.lastTs < todayStart)
-  const doneEmpty = doneAll.filter(c => !c.hasOutput)
-  const doneCards = [
-    ...doneToday,
-    ...(showOlderDone ? doneOlder : []),
-    ...(showEmptyDone ? doneEmpty : []),
-  ]
+  const kanbanData = useMemo(
+    () => cardsToKanbanData(sessionCards, Date.now()),
+    [sessionCards],
+  )
+
+  const handleActivate = useCallback((nodeId: string) => {
+    // column 노드는 무시, card만 열기
+    if (nodeId === COL_WAITING || nodeId === COL_ACTIVE || nodeId === COL_DONE) return
+    setOpenCardId(nodeId)
+  }, [])
+
   const openCard = openCardId ? sessionCards.find(c => c.id === openCardId) : null
 
-  const toggleBtnClass = ax({ surface: 'ghost', recipe: 'control-sm', textStyle: 'caption', text: 'muted', interactive: 'button' })
-  const doneToggles = (doneOlder.length > 0 || doneEmpty.length > 0) ? (
-    <div className={ax({ layout: 'column', gap: 'xs' })}>
-      {doneOlder.length > 0 && (
-        <button className={toggleBtnClass} onClick={() => setShowOlderDone(v => !v)}>
-          {showOlderDone ? '이전 세션 숨기기' : `이전 세션 ${doneOlder.length}개`}
-        </button>
-      )}
-      {doneEmpty.length > 0 && (
-        <button className={toggleBtnClass} onClick={() => setShowEmptyDone(v => !v)}>
-          {showEmptyDone ? '빈 세션 숨기기' : `빈 세션 ${doneEmpty.length}개`}
-        </button>
-      )}
-    </div>
-  ) : undefined
+  const waiting = sessionCards.filter(c => c.agentState === 'waiting').length
+  const active = sessionCards.filter(c => c.agentState === 'active').length
+  const doneCount = sessionCards.filter(c => c.agentState === 'done').length
 
   return (
     <div className={ax({ layout: 'fill', scroll: 'hidden' })}>
-      <div className={ax({ layout: 'spread', padding: 'md' })}>
+      <PanelHeader axes={{ layout: 'spread' }}>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
-          <h2 className={ax({ text: 'bright', textStyle: 'section' })}>Agent Dashboard</h2>
+          <span className={ax({ text: 'bright', weight: 'medium' })}>Agent Dashboard</span>
           <span className={ax({ text: 'muted', textStyle: 'caption' })}>
-            {waiting.length} waiting · {active.length} active · {doneAll.length} done
+            {waiting} waiting · {active} active · {doneCount} done
           </span>
         </div>
-      </div>
+      </PanelHeader>
       {sessionCards.length === 0 && (
         <div className={ax({ padding: 'md', text: 'muted', textStyle: 'caption' })}>
           세션이 없습니다 — 스킬을 실행하면 여기에 표시됩니다
         </div>
       )}
-      <div className={`kanban-columns ${ax({ layout: 'row', gap: 'md', padding: 'md', flex: '1', scroll: 'hidden' })}`}>
-        {COLUMN_CONFIG.map(col => {
-          const cardsByState: Record<AgentState, SessionCard[]> = { waiting, active, done: doneCards }
-          return (
-            <KanbanColumn
-              key={col.state}
-              label={col.label}
-              cards={cardsByState[col.state]}
-              onCardClick={setOpenCardId}
-              emptyToggle={col.state === 'done' ? doneToggles : undefined}
-            />
-          )
-        })}
-      </div>
+      {sessionCards.length > 0 && (
+        <div className={ax({ flex: '1', scroll: 'hidden', padding: 'md' })}>
+          <Kanban data={kanbanData} onActivate={handleActivate} aria-label="Agent Dashboard" />
+        </div>
+      )}
       <SessionDetailModal card={openCard ?? null} onClose={() => setOpenCardId(null)} />
     </div>
   )

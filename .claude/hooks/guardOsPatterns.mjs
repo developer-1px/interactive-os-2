@@ -374,6 +374,21 @@ if (isCss && /::(?:after|before)\s*\{[^}]*content\s*:\s*['"][^'"]+['"]/s.test(co
   )
 }
 
+// 규칙 22: stopPropagation() 금지 — defaultPrevented 가드 패턴 사용
+if (!isExempt && isTsx && /\.stopPropagation\s*\(/.test(content)) {
+  violations.push(
+    'stopPropagation() 금지 — 이벤트 전파 차단 대신 `if (e.defaultPrevented) return` 가드 패턴을 사용하세요. CLAUDE.md feedback_nested_bubbling_guard 참조'
+  )
+}
+
+// 규칙 23: pages에서 수동 dialog showModal 금지 — useOverlay 사용
+// .close()는 EventSource/WebSocket 등에도 사용되므로 showModal만 검사
+if (isPages && isTsx && /\.showModal\s*\(/.test(content)) {
+  violations.push(
+    'dialog.showModal() 수동 제어 금지 — useOverlay({ type: \'modal\' })를 사용하세요. overlay/useOverlay.ts가 dialog sync, backdrop, focus restoration, layer stack을 소유합니다'
+  )
+}
+
 if (violations.length > 0) {
   const reason = [
     `os 위반 ${violations.length}건 감지:`,

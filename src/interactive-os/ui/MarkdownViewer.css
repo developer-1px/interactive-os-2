@@ -20,8 +20,8 @@
   line-height: var(--type-hero-line-height);
   letter-spacing: var(--type-hero-letter-spacing);
   color: var(--text-bright);
-  margin: 2.5em 0 0.6em;
-  padding-bottom: 0.3em;
+  margin: 1.2em 0 0.4em;
+  padding-bottom: 0.2em;
   border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
@@ -32,8 +32,8 @@
   line-height: var(--type-display-line-height);
   letter-spacing: var(--type-display-letter-spacing);
   color: var(--text-bright);
-  margin: 2em 0 0.5em;
-  padding-bottom: 0.25em;
+  margin: 1.4em 0 0.35em;
+  padding-bottom: 0.15em;
   border-bottom: var(--border-width) solid var(--border-subtle);
 }
 
@@ -44,7 +44,7 @@
   line-height: var(--type-page-line-height);
   letter-spacing: var(--type-page-letter-spacing);
   color: var(--text-bright);
-  margin: 1.6em 0 0.4em;
+  margin: 1.1em 0 0.3em;
 }
 
 .markdown h4 {
@@ -99,6 +99,11 @@
   padding-left: 1.6em;
 }
 
+.markdown > ul > li,
+.markdown > ol > li {
+  margin: 0.4em 0;
+}
+
 .markdown li {
   margin: 0.25em 0;
 }
@@ -138,15 +143,15 @@
   overflow-wrap: break-word;
   font-size: var(--type-body-size);
   line-height: var(--type-body-line-height);
-  background: var(--surface-raised);
-  padding: 0.15em 0.35em;
+  background: transparent;
+  border: var(--border-width) solid var(--border-strong);
   border-radius: var(--shape-lg-radius);
 }
 
 .markdown th,
 .markdown td {
   border: none;
-  border-bottom: var(--border-width) solid var(--border-subtle);
+  border-bottom: var(--border-width) solid var(--border-default);
   padding: var(--space-sm) var(--space-md);
   text-align: left;
 }
@@ -156,7 +161,8 @@
 }
 
 .markdown th {
-  background: transparent;
+  background: var(--surface-raised);
+  border-bottom: var(--border-width) solid var(--border-subtle);
   font-weight: var(--weight-semi);
   color: var(--text-bright);
 }

@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { codeToHtml } from 'shiki'
 import { ax } from '@styles/ax'
 import { IDENTIFIER_RE, EXT_TO_LANG, useShikiTheme } from './shikiUtils'
+import { CopyButton } from './CopyButton'
 import './CodeBlock.css'
 
 // HighlightTone: used by replay edit animation for tone-coded line highlights
@@ -75,13 +76,21 @@ export function CodeBlock({ code, filename, highlightLines, variant = 'bordered'
     : variant === 'compact'
       ? `${baseAx} code-block code-block--compact select-text`
       : `${baseAx} code-block select-text`
-  if (!html) return <pre className={`${cls} ${ax({ padding: 'xl', surface: 'base', shape: 'xl', textStyle: 'code' })}`}><code>{code}</code></pre>
+  if (!html) return (
+    <div className={ax({ placement: 'relative' })}>
+      <pre className={`${cls} ${ax({ padding: 'xl', surface: 'base', shape: 'xl', textStyle: 'code' })}`}><code>{code}</code></pre>
+      <CopyButton text={code} />
+    </div>
+  )
   return (
-    <div
-      ref={containerRef}
-      className={cls}
-      dangerouslySetInnerHTML={{ __html: html }}
-      onClick={handleClick}
-    />
+    <div className={ax({ placement: 'relative' })}>
+      <div
+        ref={containerRef}
+        className={cls}
+        dangerouslySetInnerHTML={{ __html: html }}
+        onClick={handleClick}
+      />
+      <CopyButton text={code} />
+    </div>
   )
 }

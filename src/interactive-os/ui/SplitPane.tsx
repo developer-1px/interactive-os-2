@@ -206,7 +206,7 @@ export function SplitPane({
       : { flex: `0 0 ${(sizes[i] as number) * 100}%` }
 
     elements.push(
-      <div key={`pane-${i}`} className={ax({ layout: 'fill' })} style={sizeStyle}>
+      <div key={`pane-${i}`} className={`${ax({ layout: 'fill', scroll: 'hidden' })} min-w-0 min-h-0`} style={sizeStyle}>
         {child}
       </div>,
     )

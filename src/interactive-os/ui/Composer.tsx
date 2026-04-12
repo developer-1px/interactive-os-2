@@ -47,7 +47,14 @@ export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Compo
   const ref = useRef<HTMLDivElement>(null)
   const isComposingRef = useRef(false)
 
-  useEffect(() => { ref.current?.focus() }, [])
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const container = el.closest('.ax-interactive')
+    const ownsActiveFocus = container?.contains(document.activeElement)
+    const containerOwnsFocus = container === document.activeElement
+    if (ownsActiveFocus || containerOwnsFocus) el.focus()
+  }, [])
 
   const getText = useCallback(() => ref.current?.textContent ?? '', [])
 

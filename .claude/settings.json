@@ -24,17 +24,6 @@
     }
   },
   "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/detectHandoff.mjs",
-            "timeout": 3000
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Skill",
@@ -139,6 +128,17 @@
             "type": "command",
             "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkDocLinks.mjs",
             "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "if": "Edit(docs/0-inbox/minto-*.md)|Write(docs/0-inbox/minto-*.md)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardMintoNormalForm.mjs",
+            "timeout": 3000
           }
         ]
       },

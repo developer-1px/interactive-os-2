@@ -149,7 +149,7 @@ export function MillerColumns({
         </div>
 
         {focusedIsFile && renderPreview && (
-          <div className={ax({ layout: 'scroll', flex: '1', padding: 'md' })} data-scroll-target>
+          <div className={ax({ layout: 'scroll', flex: '1' })} data-scroll-target>
             {renderPreview(focusedId)}
           </div>
         )}

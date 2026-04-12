@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
-import type { Command } from '../engine/types'
+import type { Command, CommandResult } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
@@ -159,7 +159,7 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
 
     return {
       getStore: getVirtualStore,
-      dispatch(command: Command) {
+      dispatch(command: Command): CommandResult {
         if (command.type === 'batch' && 'commands' in command) {
           const metaCmds: Command[] = []
           const dataCmds: Command[] = []
@@ -174,19 +174,20 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
               return s
             })
           }
+          let result: CommandResult = { ok: true, store: getVirtualStore() }
           if (dataCmds.length > 0) {
             const storeBefore = engine.getStore()
             if (dataCmds.length === 1) {
-              engine.dispatch(dataCmds[0]!)
+              result = engine.dispatch(dataCmds[0]!)
             } else {
-              engine.dispatch(createBatchCommand(dataCmds))
+              result = engine.dispatch(createBatchCommand(dataCmds))
             }
             const storeAfter = engine.getStore()
             if (storeAfter !== storeBefore) {
               runFocusRecovery(storeBefore, storeAfter)
             }
           }
-          return
+          return result
         }
 
         if (command.meta === true) {
@@ -203,15 +204,16 @@ export function useAriaZone(options: UseAriaZoneOptions): UseAriaReturn {
             }
             return next
           })
-          return
+          return { ok: true, store: getVirtualStore() }
         }
 
         const storeBefore = engine.getStore()
-        engine.dispatch(command)
+        const result = engine.dispatch(command)
         const storeAfter = engine.getStore()
         if (storeAfter !== storeBefore) {
           runFocusRecovery(storeBefore, storeAfter)
         }
+        return result
       },
       syncStore() { /* no-op — zone doesn't own engine store */ },
       inspect: () => engine.inspect(),

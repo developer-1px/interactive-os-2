@@ -20,8 +20,8 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
         <span className={ax({ textStyle: 'caption', text: 'secondary' })}>{label}</span>
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>{Math.round(pct)}%</span>
       </div>
-      <div className={ax({ surface: 'sunken', shape: 'pill', width: 'full', size: 'xs', scroll: 'hidden' })}>
-        <div className={ax({ surface: 'action', tone: 'accent', shape: 'pill', size: 'xs' })} style={{ width: `${pct}%` }} />
+      <div className={`w-full ${ax({ scroll: 'hidden' })} item-indicator--progress`}>
+        <div className="h-full item-indicator--progress-fill" style={{ width: `${pct}%` }} />
       </div>
     </div>
   )

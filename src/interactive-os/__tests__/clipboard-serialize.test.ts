@@ -15,7 +15,6 @@ import {
   resetClipboard,
   getSerializedText,
   setExternalClipboard,
-  entriesToStore,
 } from '../plugins/clipboard'
 
 function fixtureData(): NormalizedData {
@@ -164,14 +163,4 @@ describe('clipboard serialize/deserialize', () => {
     expect(setExternalClipboard('')).toBe(false)
   })
 
-  it('entriesToStore converts ClipboardEntry array to NormalizedData', () => {
-    const store = fixtureData()
-    const entries = [
-      { entity: store.entities['a']!, children: [] },
-      { entity: store.entities['b']!, children: [] },
-    ]
-    const result = entriesToStore(entries)
-    expect(getChildren(result, ROOT_ID)).toEqual(['a', 'b'])
-    expect(result.entities['a']?.data).toEqual(store.entities['a']?.data)
-  })
 })

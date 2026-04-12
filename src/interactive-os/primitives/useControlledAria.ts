@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import type { Command } from '../engine/types'
+import type { Command, CommandResult } from '../engine/types'
 import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import type { Plugin } from '../plugins/types'
@@ -24,7 +24,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
   // Minimal virtual engine adapter — no internal state
   const virtualEngine = useMemo<CommandEngine>(
     () => ({
-      dispatch: onDispatch,
+      dispatch: (command: Command): CommandResult => { onDispatch(command); return { ok: true, store } },
       getStore: () => store,
       syncStore: () => { /* no-op for controlled mode */ },
       inspect: () => ({ commands: [], keyMap: {}, plugins: [], state: store, extras: {} }),
