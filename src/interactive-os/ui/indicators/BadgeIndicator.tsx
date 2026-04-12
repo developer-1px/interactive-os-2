@@ -8,6 +8,10 @@ interface BadgeIndicatorProps {
 
 export function BadgeIndicator({ count, className }: BadgeIndicatorProps) {
   if (count <= 0) return null
-  const classes = [`inline-flex ${ax({ layout: 'center', flex: 'none' })}`, 'item-indicator--badge', className].filter(Boolean).join(' ')
+  const classes = [
+    ax({ recipe: 'badge', flex: 'none', surface: 'display', tone: 'danger' }),
+    'item-indicator--badge',
+    className,
+  ].filter(Boolean).join(' ')
   return <span className={classes}>{count >= 100 ? '99+' : count}</span>
 }

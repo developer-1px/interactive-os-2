@@ -8,7 +8,6 @@
   border-radius: calc(var(--slider-track-height) / 2);
 }
 .slider-fill {
-  position: absolute;
   left: 0;
   top: 0;
   height: 100%;
@@ -17,16 +16,15 @@
 }
 .slider-thumb {
   --slider-thumb-size: var(--icon-md);
-  position: absolute;
   top: 50%;
   width: var(--slider-thumb-size);
   height: var(--slider-thumb-size);
   background: var(--tone-primary-base);
   transform: translate(-50%, -50%);
-  transition: box-shadow var(--motion-instant-duration) var(--motion-instant-easing);
+  transition: outline-color var(--motion-instant-duration) var(--motion-instant-easing);
 }
 [data-focused] .slider-thumb {
-  box-shadow: 0 0 0 calc(var(--slider-track-height) / 2) var(--tone-primary-base);
+  outline: calc(var(--slider-track-height) / 2) solid var(--tone-primary-base);
 }
 .slider-value { min-width: var(--space-2xl); }
 }

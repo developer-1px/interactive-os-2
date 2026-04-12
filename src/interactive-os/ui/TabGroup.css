@@ -1,27 +1,15 @@
 @layer component {
-/* TabGroup — tab states, close/add button reveal */
+/* TabGroup — close/add button reveal (last-mile: whitespace, italic, opacity transitions) */
 .tab-item {
   white-space: nowrap;
-  --_fg: var(--text-muted);
-  color: var(--_fg);
-}
-.tab-item[aria-selected="true"] {
-  --_bg: var(--surface-raised);
-  --_fg: var(--text-primary);
-  box-shadow: inset 0 -var(--indicator-width) 0 var(--border-accent);
 }
 .tab-item-preview { font-style: italic; }
 .tab-close {
   padding: var(--space-2xs);
-  opacity: 0;
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
 }
-.tab-item:hover .tab-close,
-.tab-item[aria-selected="true"] .tab-close { opacity: 0.6; }
 .tab-add {
   padding: var(--space-2xs);
-  opacity: 0.4;
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
 }
-.tab-add:hover { opacity: 1; }
 }

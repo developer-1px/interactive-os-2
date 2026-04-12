@@ -3,21 +3,23 @@
 
 .code-block :is(.shiki) {
   margin: 0;
-  padding: var(--space-lg) 0;
+  padding-block: var(--space-lg);
+  padding-inline: 0;
   counter-reset: line;
-  background: var(--surface-base) !important;
+  background-image: linear-gradient(var(--surface-base), var(--surface-base)) !important;
   border: var(--border-width) solid var(--border-subtle);
   border-radius: var(--shape-xl-radius);
 }
 
 .code-block--compact :is(.shiki) {
   border-radius: var(--shape-md-radius);
-  padding: var(--space-md) 0;
+  padding-block: var(--space-md);
+  padding-inline: 0;
 }
 
 .code-block--compact :is(.shiki .line)::before {
-  width: 2.5em;
-  padding-right: 0.75em;
+  width: var(--_gutter-w-compact, 2.5em);
+  padding-right: var(--_gutter-pr-compact, 0.75em);
 }
 
 .code-block--flush :is(.shiki) {
@@ -26,13 +28,13 @@
 }
 
 .code-block :is(.shiki) code {
-  display: flex;
-  flex-direction: column;
+  display: var(--_flex, flex);
+  flex-direction: var(--_col, column);
 }
 
 .code-block :is(.shiki .line) {
-  display: block;
-  padding: 0 var(--space-lg) 0 0;
+  display: var(--_block, block);
+  padding: var(--_line-pad, 0 var(--space-lg) 0 0);
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
@@ -40,9 +42,9 @@
 .code-block :is(.shiki .line)::before {
   counter-increment: line;
   content: counter(line);
-  display: inline-block;
-  width: 3.5em;
-  padding-right: 1em;
+  display: var(--_inline-block, inline-block);
+  width: var(--_gutter-w, 3.5em);
+  padding-right: var(--_gutter-pr, 1em);
   text-align: right;
   color: var(--text-muted);
   font-size: var(--type-code-size);
@@ -60,36 +62,36 @@
   transition: background 0.1s;
 }
 
-.code-token:hover {
+:where(.code-token):hover {
   background: var(--tone-primary-dim);
 }
 
 .code-token--highlighted {
-  background: var(--tone-primary-mid) !important;
+  background-image: linear-gradient(var(--tone-primary-mid), var(--tone-primary-mid)) !important;
   outline: var(--border-width) solid var(--tone-primary-bright);
   border-radius: var(--space-inline-code);
 }
 
 .code-line--edited {
-  background: color-mix(in srgb, var(--tone-warning-base) 12%, transparent) !important;
+  background-image: linear-gradient(color-mix(in srgb, var(--tone-warning-base) 12%, transparent), color-mix(in srgb, var(--tone-warning-base) 12%, transparent));
   border-left: var(--indicator-width) solid var(--tone-warning-base);
   padding-left: var(--space-sm) !important;
 }
 
 .code-line--selected {
-  background: color-mix(in srgb, var(--tone-primary-base) 15%, transparent) !important;
+  background-image: linear-gradient(color-mix(in srgb, var(--tone-primary-base) 15%, transparent), color-mix(in srgb, var(--tone-primary-base) 15%, transparent));
   border-left: var(--indicator-width) solid var(--tone-primary-base);
   padding-left: var(--space-sm) !important;
 }
 
 .code-line--deleted {
-  background: color-mix(in srgb, var(--tone-danger-base) 15%, transparent) !important;
+  background-image: linear-gradient(color-mix(in srgb, var(--tone-danger-base) 15%, transparent), color-mix(in srgb, var(--tone-danger-base) 15%, transparent));
   border-left: var(--indicator-width) solid var(--tone-danger-base);
   padding-left: var(--space-sm) !important;
 }
 
 .code-line--inserted {
-  background: color-mix(in srgb, var(--tone-success-base) 15%, transparent) !important;
+  background-image: linear-gradient(color-mix(in srgb, var(--tone-success-base) 15%, transparent), color-mix(in srgb, var(--tone-success-base) 15%, transparent));
   border-left: var(--indicator-width) solid var(--tone-success-base);
   padding-left: var(--space-sm) !important;
 }

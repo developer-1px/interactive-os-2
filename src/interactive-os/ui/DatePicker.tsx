@@ -291,7 +291,7 @@ export function DatePicker({
             />
           </div>
 
-          <div className={`${ax({ layout: 'row', gap: 'sm' })} dp-actions`}>
+          <div className={`${ax({ layout: 'row', gap: 'sm' })} justify-end dp-actions`}>
             <button className={`${ax({ surface: 'ghost', recipe: 'control-sm', text: 'primary' })} dp-action-btn font-inherit`} onClick={() => closeDialog()}>Cancel</button>
             <button className={`${ax({ surface: 'ghost', recipe: 'control-sm', text: 'primary' })} dp-action-btn font-inherit`} onClick={confirmFocused}>OK</button>
           </div>

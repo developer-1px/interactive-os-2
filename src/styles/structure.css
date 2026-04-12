@@ -34,6 +34,7 @@
 .items-center    { align-items: center; }
 .justify-center  { justify-content: center; }
 .justify-between { justify-content: space-between; }
+.justify-end     { justify-content: flex-end; }
 
 /* ── Gap (token-bound) ── */
 .gap-sm  { gap: var(--space-sm); }

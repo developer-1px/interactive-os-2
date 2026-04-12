@@ -13,7 +13,12 @@ const checkIcon = (
 )
 
 export function CheckIndicator({ checked, className }: CheckIndicatorProps) {
-  const classes = [ax({ flex: 'none', layout: 'center' }), 'item-indicator--checkbox', className].filter(Boolean).join(' ')
+  const classes = [
+    ax({ flex: 'none', layout: 'center', icon: 'md', border: 'subtle', shape: 'sm' }),
+    'bg-transparent',
+    'item-indicator--checkbox',
+    className,
+  ].filter(Boolean).join(' ')
   return (
     <span className={classes}>
       {checked && checkIcon}

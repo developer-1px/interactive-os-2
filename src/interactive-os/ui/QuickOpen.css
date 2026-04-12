@@ -9,8 +9,6 @@ dialog.quick-open-dialog-el {
   max-height: none;
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
   padding-top: 12vh;
 }
 
@@ -21,7 +19,7 @@ dialog.quick-open-dialog-el::backdrop {
 .quick-open-dialog {
   width: var(--overlay-width);
   max-height: var(--overlay-width);
-  box-shadow: var(--shadow-lg);
+  margin-inline: auto;
 }
 
 .quick-open-input {

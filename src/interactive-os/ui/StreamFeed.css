@@ -38,7 +38,7 @@
 
 .stream-cursor {
   width: var(--indicator-width);
-  height: 1em;
+  height: var(--icon-sm);
   background: var(--tone-primary-base);
   margin-left: var(--border-width);
   vertical-align: text-bottom;

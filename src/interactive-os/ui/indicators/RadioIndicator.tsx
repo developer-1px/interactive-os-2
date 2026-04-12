@@ -7,7 +7,11 @@ interface RadioIndicatorProps {
 }
 
 export function RadioIndicator({ checked, className }: RadioIndicatorProps) {
-  const classes = [ax({ flex: 'none', layout: 'center' }), 'item-indicator--radio', className].filter(Boolean).join(' ')
+  const classes = [
+    ax({ flex: 'none', layout: 'center', icon: 'md', border: 'subtle', shape: 'pill' }),
+    'item-indicator--radio',
+    className,
+  ].filter(Boolean).join(' ')
   return (
     <span className={classes} data-checked={checked || undefined}>
       <span className="item-indicator--radio-dot" />

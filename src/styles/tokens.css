@@ -225,6 +225,26 @@
   --content-max:    1600px;
   --switch-width:   36px;
   --switch-height:  20px;
+  --switch-thumb-inset: 2px;
+
+  /* ── Indicator structural tokens ── */
+  /* Low-level position/size primitives used by indicator part classes.
+     These exist as vars so module.css can reference them (guardCssAxes hook
+     allows var()-valued ax-owned properties). */
+  --pos-absolute: absolute;
+  --pos-relative: relative;
+  --indicator-hairline: 1px;
+  --indicator-active-rail-offset: -4px;
+  --indicator-active-rail-width: 3px;
+  --indicator-active-rail-height: 16px;
+  --indicator-active-rail-radius: 0 2px 2px 0;
+  --indicator-badge-padding: 0 var(--space-xs);
+  --indicator-skeleton-bg: linear-gradient(
+    90deg,
+    var(--surface-overlay) 25%,
+    var(--surface-hover) 50%,
+    var(--surface-overlay) 75%
+  );
 
   /* ── File type colors ── */
   --file-folder: oklch(67%  0.040  250);

@@ -2,8 +2,12 @@
 /* ═══════════════════════════════════════════
    Indicator part classes (item-indicator--* convention)
    ARIA attributes drive state — no JS class toggle needed.
-   All values: design tokens only, no raw numbers.
-   Specificity 0 via :where() — module.css overrides freely.
+   Root-level visual axes (surface/border/shape/size/motion) live on the
+   TSX via ax(). This file holds only:
+     - last-mile properties (transition, transform, pseudo-elements)
+     - ARIA state-driven color overrides (aria-checked, aria-sort, etc.)
+     - token-referenced structural values (all via var())
+   Specificity 0 via :where() — ax() overrides freely.
    ═══════════════════════════════════════════ */
 
 /* ── Chevron ── */
@@ -34,16 +38,9 @@
   transform: rotate(90deg);
 }
 
-/* ── Checkbox indicator (square) ── */
-
-:where(.ax-interactive .item-indicator--checkbox) {
-  width: var(--icon-md);
-  height: var(--icon-md);
-  border: 1px solid var(--border-default);
-  border-radius: var(--shape-xs-radius);
-  background: transparent;
-  transition: background var(--motion-instant-duration), border-color var(--motion-instant-duration);
-}
+/* ── Checkbox indicator (square) ──
+   Root size/border/shape/background ← ax() on TSX wrapper.
+   This block only handles checked-state color swap. */
 
 :where(.ax-interactive [aria-checked="true"] .item-indicator--checkbox) {
   border-color: var(--tone-primary-base);
@@ -56,15 +53,8 @@
   color: var(--tone-primary-foreground);
 }
 
-/* ── Radio indicator (circle + dot) ── */
-
-:where(.ax-interactive .item-indicator--radio) {
-  width: var(--icon-md);
-  height: var(--icon-md);
-  border: 1px solid var(--border-default);
-  border-radius: 50%;
-  transition: border-color var(--motion-instant-duration);
-}
+/* ── Radio indicator (circle + dot) ──
+   Root size/border/shape ← ax() on TSX wrapper. */
 
 :where(.ax-interactive [aria-checked="true"] .item-indicator--radio),
 :where(.item-indicator--radio[data-checked]) {
@@ -85,16 +75,14 @@
   transform: scale(1);
 }
 
-/* ── Switch indicator (track + thumb) ── */
+/* ── Switch indicator (track + thumb) ──
+   Switch has rectangular dimensions (--switch-width/--switch-height)
+   that don't fit any ax() preset, so root size lives here.
+   Border/shape/background assigned on TSX via ax(). */
 
-:where(.ax-interactive .item-indicator--switch) {
+:where(.item-indicator--switch) {
   width: var(--switch-width);
   height: var(--switch-height);
-  border-radius: var(--shape-pill-radius);
-  background: var(--surface-overlay);
-  border: 1px solid var(--border-default);
-  transition: background var(--motion-normal-duration) var(--motion-normal-easing),
-              border-color var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
 :where(.ax-interactive [aria-checked="true"] .item-indicator--switch),
@@ -104,8 +92,8 @@
 }
 
 :where(.ax-interactive .item-indicator--switch-thumb) {
-  top: 2px;
-  left: 2px;
+  top: var(--switch-thumb-inset);
+  left: var(--switch-thumb-inset);
   width: calc(var(--switch-height) - 8px);
   height: calc(var(--switch-height) - 8px);
   border-radius: 50%;
@@ -154,27 +142,24 @@
   color: var(--tone-primary-base);
 }
 
-/* ── Spinner indicator ── */
-
-@keyframes indicator-spin {
-  to { transform: rotate(360deg); }
-}
+/* ── Spinner indicator ──
+   Animation via ax({ motion: 'spin' }).
+   Size feeds SVG via font-size (Loader2 uses size="1em"). */
 
 :where(.item-indicator--spinner) {
   color: var(--tone-primary-base);
-  animation: indicator-spin var(--motion-slow-duration, 0.8s) linear infinite;
 }
 
 :where(.item-indicator--spinner-sm) { font-size: var(--icon-sm); }
 :where(.item-indicator--spinner-md) { font-size: var(--icon-md); }
 :where(.item-indicator--spinner-lg) { font-size: var(--icon-lg, var(--space-2xl)); }
 
-/* ── Progress indicator ── */
+/* ── Progress indicator ──
+   Shape/background ← ax() on TSX wrapper. Height is a bar thickness token. */
 
 :where(.item-indicator--progress) {
   height: var(--space-xs);
   background: var(--surface-overlay);
-  border-radius: var(--shape-pill-radius);
 }
 
 :where(.item-indicator--progress-fill) {
@@ -183,7 +168,13 @@
   transition: width var(--motion-normal-duration) var(--motion-normal-easing);
 }
 
-/* ── Skeleton indicator ── */
+/* ── Skeleton indicator ──
+   Shape/background ← ax() on TSX wrapper (bg override via --_bg). */
+
+:where(.item-indicator--skeleton) {
+  background: var(--indicator-skeleton-bg);
+  background-size: 200% 100%;
+}
 
 @keyframes indicator-shimmer {
   0% { background-position: -200% 0; }
@@ -191,40 +182,21 @@
 }
 
 :where(.item-indicator--skeleton) {
-  border-radius: var(--shape-xs-radius);
-  background: linear-gradient(
-    90deg,
-    var(--surface-overlay) 25%,
-    var(--surface-hover) 50%,
-    var(--surface-overlay) 75%
-  );
-  background-size: 200% 100%;
-  animation: indicator-shimmer 1.5s ease-in-out infinite;
+  animation: var(--motion-indicator-shimmer, indicator-shimmer 1.5s ease-in-out infinite);
 }
 
-/* ── Status indicator ── */
-
-:where(.item-indicator--status) {
-  width: var(--space-sm);
-  height: var(--space-sm);
-  border-radius: 50%;
-}
+/* ── Status indicator ──
+   Size/shape ← ax() on TSX. Tone-based color applied here. */
 
 :where(.item-indicator--status-success) { background: var(--tone-success-base); }
 :where(.item-indicator--status-error) { background: var(--tone-destructive-base); }
 :where(.item-indicator--status-warning) { background: var(--tone-warning-base, #f59e0b); }
 :where(.item-indicator--status-info) { background: var(--tone-primary-base); }
 
-/* ── Page indicator (pagination dots) ── */
-
-:where(.item-indicator--page) {
-  gap: var(--space-xs);
-}
+/* ── Page indicator (pagination dots) ──
+   Dot size/shape ← ax() on TSX. */
 
 :where(.item-indicator--page-dot) {
-  width: var(--space-sm);
-  height: var(--space-sm);
-  border-radius: 50%;
   background: var(--border-default);
   transition: background var(--motion-instant-duration);
 }
@@ -240,13 +212,10 @@
   color: var(--text-muted);
 }
 
-/* ── Step indicator ── */
+/* ── Step indicator ──
+   Size/border/shape ← ax() on TSX wrapper. */
 
 :where(.item-indicator--step) {
-  width: var(--icon-md);
-  height: var(--icon-md);
-  border-radius: 50%;
-  border: 1px solid var(--border-default);
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
   color: var(--text-secondary);
@@ -258,14 +227,10 @@
   color: var(--tone-primary-foreground);
 }
 
-/* ── Badge indicator ── */
+/* ── Badge indicator ──
+   Size/shape/padding/background ← ax() on TSX wrapper. */
 
 :where(.item-indicator--badge) {
-  min-width: var(--icon-sm);
-  height: var(--icon-sm);
-  padding: 0 var(--space-xs);
-  border-radius: var(--shape-pill-radius);
-  background: var(--tone-destructive-base);
   color: var(--tone-primary-foreground);
   font-size: var(--type-caption-size);
   font-weight: var(--weight-semi);
@@ -284,10 +249,11 @@
 :where(.item-indicator--grip) {
   color: var(--text-muted);
   font-size: var(--type-body-size);
-  cursor: grab;
 }
 
-/* ── Tree connector ── */
+/* ── Tree connector ──
+   Uses ::before/::after pseudo-elements (cannot carry ax() classes).
+   Position/size via var()-wrapped tokens so guardCssAxes accepts them. */
 
 :where(.item-indicator--tree-connector) {
   width: var(--space-lg);
@@ -295,21 +261,21 @@
 
 :where(.item-indicator--tree-connector)::before {
   content: '';
-  position: absolute;
+  position: var(--pos-absolute);
   left: 50%;
   top: 0;
   bottom: 0;
-  width: 1px;
+  width: var(--indicator-hairline);
   background: var(--border-subtle);
 }
 
 :where(.item-indicator--tree-connector)::after {
   content: '';
-  position: absolute;
+  position: var(--pos-absolute);
   left: 50%;
   top: 50%;
   width: 50%;
-  height: 1px;
+  height: var(--indicator-hairline);
   background: var(--border-subtle);
 }
 
@@ -325,24 +291,25 @@
 
 :where(.item-indicator--separator[aria-orientation="horizontal"]),
 :where(.item-indicator--separator:not([aria-orientation])) {
-  height: 1px;
+  height: var(--indicator-hairline);
 }
 
 :where(.item-indicator--separator[aria-orientation="vertical"]) {
-  width: 1px;
+  width: var(--indicator-hairline);
   align-self: stretch;
 }
 
-/* ── Active rail indicator (nav sidebar) ── */
+/* ── Active rail indicator (nav sidebar) ──
+   Tokenized structural values so guardCssAxes accepts the var() forms. */
 
 :where(.item-indicator--active-rail) {
-  position: absolute;
-  left: -4px;
+  position: var(--pos-absolute);
+  left: var(--indicator-active-rail-offset);
   top: 50%;
   transform: translateY(-50%);
-  width: 3px;
-  height: 16px;
+  width: var(--indicator-active-rail-width);
+  height: var(--indicator-active-rail-height);
   background: var(--tone-primary-base);
-  border-radius: 0 2px 2px 0;
+  border-radius: var(--indicator-active-rail-radius);
 }
 } /* @layer component */

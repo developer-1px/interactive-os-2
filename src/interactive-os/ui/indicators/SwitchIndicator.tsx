@@ -7,7 +7,11 @@ interface SwitchIndicatorProps {
 }
 
 export function SwitchIndicator({ checked, className }: SwitchIndicatorProps) {
-  const classes = [ax({ flex: 'none', placement: 'relative' }), 'item-indicator--switch', className].filter(Boolean).join(' ')
+  const classes = [
+    ax({ flex: 'none', placement: 'relative', border: 'subtle', shape: 'pill' }),
+    'item-indicator--switch',
+    className,
+  ].filter(Boolean).join(' ')
   return (
     <span className={classes} data-checked={checked || undefined}>
       <span className="absolute item-indicator--switch-thumb" />

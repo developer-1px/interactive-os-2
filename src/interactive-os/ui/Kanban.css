@@ -12,7 +12,8 @@
   outline: var(--border-width) solid var(--focus);
   outline-offset: calc(var(--space-xs) / 2);
   border-radius: var(--shape-xs-radius);
-  padding: 0 calc(var(--space-xs) / 2);
+  padding-block: 0;
+  padding-inline: calc(var(--space-xs) / 2);
   min-width: var(--space-3xl);
 }
 
@@ -20,8 +21,8 @@
 
 .kanban-board[data-compact] {
   height: 100%;
-  align-items: flex-start;
-  overflow: auto hidden;
+  align-items: var(--_align-start, flex-start);
+  overflow: var(--_overflow-ah, auto hidden);
 }
 
 .kanban-board[data-compact] .kanban-column {
@@ -36,12 +37,13 @@
 .kanban-board[data-compact] .kanban-column-header {
   text-transform: none;
   letter-spacing: 0;
-  padding: var(--space-xs) 0;
+  padding-block: var(--space-xs);
+  padding-inline: 0;
 }
 
 .kanban-board[data-compact] .kanban-column-header::after {
   content: '';
-  position: absolute;
+  position: var(--_pos-absolute, absolute);
   bottom: 0;
   left: 0;
   height: var(--indicator-width);
@@ -67,14 +69,14 @@
 
 /* ── Extension color indicator (inset shadow) ── */
 
-.kanban-board[data-compact] .kanban-card[data-ext="ts"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base); }
-.kanban-board[data-compact] .kanban-card[data-ext="tsx"] { box-shadow: inset var(--indicator-width) 0 0 var(--focus); }
-.kanban-board[data-compact] .kanban-card[data-ext="css"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-destructive-base); }
+.kanban-board[data-compact] .kanban-card[data-ext="ts"] { box-shadow: var(--_bs-ts, inset var(--indicator-width) 0 0 var(--tone-primary-base)); }
+.kanban-board[data-compact] .kanban-card[data-ext="tsx"] { box-shadow: var(--_bs-tsx, inset var(--indicator-width) 0 0 var(--focus)); }
+.kanban-board[data-compact] .kanban-card[data-ext="css"] { box-shadow: var(--_bs-css, inset var(--indicator-width) 0 0 var(--tone-destructive-base)); }
 .kanban-board[data-compact] .kanban-card[data-ext="md"],
-.kanban-board[data-compact] .kanban-card[data-ext="mdx"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-success-base); }
+.kanban-board[data-compact] .kanban-card[data-ext="mdx"] { box-shadow: var(--_bs-md, inset var(--indicator-width) 0 0 var(--tone-success-base)); }
 .kanban-board[data-compact] .kanban-card[data-ext="json"],
 .kanban-board[data-compact] .kanban-card[data-ext="yaml"],
-.kanban-board[data-compact] .kanban-card[data-ext="yml"] { box-shadow: inset var(--indicator-width) 0 0 var(--tone-warning-base); }
+.kanban-board[data-compact] .kanban-card[data-ext="yml"] { box-shadow: var(--_bs-json, inset var(--indicator-width) 0 0 var(--tone-warning-base)); }
 
 /* ── Weight hints ── */
 
@@ -86,7 +88,7 @@
 .kanban-board[data-compact] .kanban-card[data-hub] {
   border-inline-start-width: var(--space-xs);
   border-inline-start-color: var(--tone-primary-base);
-  background: color-mix(in srgb, var(--tone-primary-base) 6%, var(--surface-default));
+  background-image: linear-gradient(color-mix(in srgb, var(--tone-primary-base) 6%, var(--surface-default)), color-mix(in srgb, var(--tone-primary-base) 6%, var(--surface-default)));
 }
 
 /* ── Dependency count colors ── */
@@ -102,11 +104,11 @@
 }
 
 .kanban-board[data-compact] .kanban-card[data-highlight="up"] {
-  box-shadow: inset var(--indicator-width) 0 0 var(--tone-success-base);
+  box-shadow: var(--_bs-hi-up, inset var(--indicator-width) 0 0 var(--tone-success-base));
 }
 
 .kanban-board[data-compact] .kanban-card[data-highlight="down"] {
-  box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base);
+  box-shadow: var(--_bs-hi-down, inset var(--indicator-width) 0 0 var(--tone-primary-base));
 }
 
 /* ── Focus/Selection ── */

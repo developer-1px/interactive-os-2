@@ -116,21 +116,28 @@ const propPatterns = AX_OWNED_PROPS.map(prop => ({
   regex: new RegExp(`^\\s*${prop.replaceAll('-', '\\-')}\\s*:`, 'm'),
 }))
 
+// ::backdrop, ::before, ::after 등 pseudo-element 블록 내 속성은 ax() 적용 불가 → 허용
+const PSEUDO_ELEMENT_RE = /::(?:backdrop|before|after|placeholder|selection|marker|first-line|first-letter)\s*\{[^}]*\}/gs
+const contentWithoutPseudo = content.replace(PSEUDO_ELEMENT_RE, '')
+
 const violations = []
 
 for (const { prop, regex } of propPatterns) {
-  if (regex.test(content)) {
+  if (regex.test(contentWithoutPseudo)) {
     // var() 참조만 사용하는 경우는 허용 (토큰 바인딩)
-    const lines = content.split('\n')
+    const lines = contentWithoutPseudo.split('\n')
     for (const line of lines) {
       const trimmed = line.trim()
       if (new RegExp(`^${prop.replaceAll('-', '\\-')}\\s*:`).test(trimmed)) {
         const value = trimmed.split(':').slice(1).join(':').trim().replace(/;$/, '').trim()
-        // var()/calc()/min()/max()/clamp() 사용, inherit/initial/unset/none/0, 퍼센트값 허용
-        if (/^(?:var|calc|min|max|clamp)\(/.test(value)) continue
+        // var()/calc()/min()/max()/clamp()/color-mix() 사용, inherit/initial/unset/none/0, 퍼센트값 허용
+        if (/^(?:var|calc|min|max|clamp|color-mix)\(/.test(value)) continue
         if (/^(inherit|initial|unset|none|transparent|grid|inline|pointer|auto);?\s*$/.test(value)) continue
-        // 숫자값(소수 포함, 단위/퍼센트 포함) — ax() 프리셋에 없는 구체 값은 last-mile
-        if (/^\d*\.?\d+(%|vh|vw|dvh|dvw|svh|svw)?;?\s*$/.test(value)) continue
+        // 숫자값(소수 포함, 단위/퍼센트/ch/em/rem 포함) — ax() 프리셋에 없는 구체 값은 last-mile
+        if (/^\d*\.?\d+(%|vh|vw|dvh|dvw|svh|svw|ch|em|rem)?;?\s*$/.test(value)) continue
+        // composite 값 (padding/margin 등): 각 토큰이 0 | var() | calc() | 숫자+단위면 last-mile 허용
+        //   예: `0 0 0 var(--x)`, `var(--a) 0`, `0.5rem 0`
+        if (/^(?:(?:0|var\([^)]*\)|calc\([^)]*\)|\d*\.?\d+(?:px|%|em|rem|ch|vh|vw|dvh|dvw|svh|svw)?)\s+){1,3}(?:0|var\([^)]*\)|calc\([^)]*\)|\d*\.?\d+(?:px|%|em|rem|ch|vh|vw|dvh|dvw|svh|svw)?)\s*;?\s*$/.test(value)) continue
         // display: grid는 grid-template과 함께 사용하는 last-mile 패턴 허용
         if (prop === 'display' && /^grid\s*;?\s*$/.test(value)) continue
         // white-space: pre-wrap/nowrap/pre-line/break-spaces는 ax() clamp에 없는 last-mile

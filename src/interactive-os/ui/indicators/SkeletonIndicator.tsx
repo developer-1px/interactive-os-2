@@ -1,4 +1,6 @@
 // ② 2026-03-28-ui-indicators-prd.md
+import { ax } from '@styles/ax'
+
 interface SkeletonIndicatorProps {
   width?: string
   height?: string
@@ -6,6 +8,6 @@ interface SkeletonIndicatorProps {
 }
 
 export function SkeletonIndicator({ width, height, className }: SkeletonIndicatorProps) {
-  const classes = ['item-indicator--skeleton', className].filter(Boolean).join(' ')
+  const classes = [ax({ shape: 'sm' }), 'item-indicator--skeleton', className].filter(Boolean).join(' ')
   return <div className={classes} style={{ width, height }} />
 }
