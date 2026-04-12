@@ -69,7 +69,7 @@
 | widgetRegistry | Integrated | createWidgetRegistry + resolveWidget |
 | layoutCommands | Prototype | setVisibility, setGap. workspaceCommands 확장 |
 | layoutPlugin | Integrated | layout() plugin. workspace() requires |
-| FlatLayout (ui/) | Integrated | 배치 엔진(XY+Z). OCP renderer map. 모든 렌더러 surface 적용 |
+| FlatLayout (ui/) | Integrated | 배치 엔진(XY+Z). OCP renderer map. Pull 모델(widget은 도메인 Context에서 pull, props 운반선 아님) |
 
 ## Overlay (L5.5)
 
