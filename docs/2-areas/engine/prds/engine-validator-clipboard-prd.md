@@ -16,11 +16,11 @@
 
 | # | Given | When | Then | 역PRD |
 |---|-------|------|------|-------|
-| S1 | zod childRules에서 file은 children 불가 | file 노드에 paste 시도 | paste 거부, store 변경 없음, CommandResult.ok = false | |
-| S2 | zod childRules 없이 engine 사용 (뷰어 모드) | 아무 mutation command 실행 | validator 없으므로 전부 통과 (기존 동작 보존) | |
-| S3 | section에 card를 copy → 다른 section에 paste | paste 실행 | NormalizedData 버퍼에서 subtree 추출 → 대상 section에 merge | |
-| S4 | DnD로 card를 file 노드 안으로 이동 | dnd:moveTo command 실행 | validator가 거부, 이동 안 됨 | |
-| S5 | crud:create로 file 안에 새 노드 생성 시도 | childRules에서 file은 leaf | validator가 거부, 생성 안 됨 | |
+| S1 | zod childRules에서 file은 children 불가 | file 노드에 paste 시도 | paste 거부, store 변경 없음, CommandResult.ok = false | ✓ `zodSchema.ts:73-150` validator + `createCommandEngine.ts:136-169` runValidators. 전용 유닛 테스트 없음(회귀만) |
+| S2 | zod childRules 없이 engine 사용 (뷰어 모드) | 아무 mutation command 실행 | validator 없으므로 전부 통과 (기존 동작 보존) | ✓ `createCommandEngine.ts:136` validators optional, `definePlugin.ts:39` |
+| S3 | section에 card를 copy → 다른 section에 paste | paste 실행 | NormalizedData 버퍼에서 subtree 추출 → 대상 section에 merge | ✓ `clipboard.ts:272` copy→extractSubtree, `:340` paste→mergeSubtree |
+| S4 | DnD로 card를 file 노드 안으로 이동 | dnd:moveTo command 실행 | validator가 거부, 이동 안 됨 | ✓ 구조적 보장(`MUTATION_PREFIXES`에 `dnd:` 포함, `createCommandEngine.ts:137`). 전용 테스트 없음 |
+| S5 | crud:create로 file 안에 새 노드 생성 시도 | childRules에서 file은 leaf | validator가 거부, 생성 안 됨 | ✓ 구조적 보장(`crud:` prefix). 전용 테스트 없음 |
 
 완성도: 🟢
 
@@ -28,14 +28,14 @@
 
 | 산출물 | 설명 | 역PRD |
 |--------|------|-------|
-| `ValidatorFn` 타입 | `(store: NormalizedData, command: Command) => CommandResult` — engine이 호출하는 함수 시그니처 | |
-| `CommandResult` 타입 | `{ ok: true; store: NormalizedData } \| { ok: false; reason: string }` — dispatch 반환값 | |
-| `PluginConfig.validator` 필드 | `definePlugin`에 validator 슬롯 추가. 플러그인이 등록하면 engine이 mutation command 실행 전 호출 | |
-| `engine.dispatch` 반환 타입 변경 | `void` → `CommandResult` | |
-| `extractSubtree(store, nodeIds)` | store에서 서브트리를 NormalizedData로 추출. clipboard.ts의 `collectSubtree` 승격 | |
-| `mergeSubtree(store, subtree, parentId, index?)` | NormalizedData 서브트리를 store에 병합. clipboard.ts의 `insertClipboardEntry` 승격 | |
-| clipboard 버퍼 → `NormalizedData` | `ClipboardEntry[]` 제거, 버퍼를 `NormalizedData`로 교체 | |
-| `zodSchema` 플러그인 리팩토링 | middleware 패턴 → `validator` 필드 등록 패턴. `deriveCanAccept`/`deriveCanDelete` → `ValidatorFn` 팩토리로 변환 | |
+| `ValidatorFn` 타입 | `(store: NormalizedData, command: Command) => CommandResult` — engine이 호출하는 함수 시그니처 | ✓ `engine/types.ts:94` |
+| `CommandResult` 타입 | `{ ok: true; store: NormalizedData } \| { ok: false; reason: string }` — dispatch 반환값 | ✓ `engine/types.ts:89-91` discriminated union |
+| `PluginConfig.validator` 필드 | `definePlugin`에 validator 슬롯 추가. 플러그인이 등록하면 engine이 mutation command 실행 전 호출 | ✓ `definePlugin.ts:26,60`, `engine/types.ts:198` |
+| `engine.dispatch` 반환 타입 변경 | `void` → `CommandResult` | ✓ `engine/types.ts:70`, `createCommandEngine.ts:256` `return _lastResult` |
+| `extractSubtree(store, nodeIds)` | store에서 서브트리를 NormalizedData로 추출. clipboard.ts의 `collectSubtree` 승격 | ✓ `store/createStore.ts:133-157` |
+| `mergeSubtree(store, subtree, parentId, index?)` | NormalizedData 서브트리를 store에 병합. clipboard.ts의 `insertClipboardEntry` 승격 | ✓ `store/createStore.ts:170-187` (+ `insertSubtreeNode` helper) |
+| clipboard 버퍼 → `NormalizedData` | `ClipboardEntry[]` 제거, 버퍼를 `NormalizedData`로 교체 | ✓ `plugins/clipboard.ts:22-23` 모듈 변수. `ClipboardEntry`/`collectSubtree`/`insertClipboardEntry` 완전 제거 |
+| `zodSchema` 플러그인 리팩토링 | middleware 패턴 → `validator` 필드 등록 패턴. `deriveCanAccept`/`deriveCanDelete` → `ValidatorFn` 팩토리로 변환 | ✓ `plugins/zodSchema.ts:73-150` validator 함수. middleware/intercepts 삭제. ⚠ payload mutation(canAcceptFn 주입) 발견 — handoff의 "남은 것" 항목으로 이월 |
 
 완성도: 🟢
 
@@ -45,29 +45,29 @@
 
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
-| `zodSchema({ childRules, rootTypes })` 플러그인 등록 | engine에 validator 없음 | definePlugin의 validator 필드를 engine이 수집 | 플러그인 등록 시 engine이 commands/keyMap과 동일하게 validator도 수집하는 통일된 패턴 | engine이 mutation command 실행 전 validator 호출 | |
-| validator 없이 engine 생성 | validator 미등록 | 모든 command가 검증 없이 실행 | validator가 optional이므로 기존 동작 그대로 보존 | 기존과 동일 | |
+| `zodSchema({ childRules, rootTypes })` 플러그인 등록 | engine에 validator 없음 | definePlugin의 validator 필드를 engine이 수집 | 플러그인 등록 시 engine이 commands/keyMap과 동일하게 validator도 수집하는 통일된 패턴 | engine이 mutation command 실행 전 validator 호출 | ✓ `createCommandEngine.ts:136-169` runValidators, validator 배열 수집 |
+| validator 없이 engine 생성 | validator 미등록 | 모든 command가 검증 없이 실행 | validator가 optional이므로 기존 동작 그대로 보존 | 기존과 동일 | ✓ `createCommandEngine.ts:136` optional 체크 |
 
 ### clipboard copy (NormalizedData 수렴)
 
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
-| `clipboard:copy` + 선택된 노드 ID들 | store에 노드 존재 | `extractSubtree(store, nodeIds)` → NormalizedData 버퍼에 저장 | 버퍼가 NormalizedData이므로 store 연산 한 번으로 완료. ClipboardEntry 변환 불필요 | clipboardBuffer = NormalizedData, clipboardMode = 'copy' | |
+| `clipboard:copy` + 선택된 노드 ID들 | store에 노드 존재 | `extractSubtree(store, nodeIds)` → NormalizedData 버퍼에 저장 | 버퍼가 NormalizedData이므로 store 연산 한 번으로 완료. ClipboardEntry 변환 불필요 | clipboardBuffer = NormalizedData, clipboardMode = 'copy' | ✓ `plugins/clipboard.ts:272` copy handler |
 
 ### clipboard paste (validator 경유)
 
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
-| `clipboard:paste` + 대상 노드 ID | 버퍼에 NormalizedData 있음 | `findPasteTarget` → `mergeSubtree(store, buffer, targetId)` | validator가 engine 레벨에서 command를 검증. paste command handler는 store 연산만 수행 | 노드가 대상 위치에 삽입됨 | |
-| `clipboard:paste` + validator 거부 대상 | 파일 노드에 paste 시도 | engine이 validator 호출 → reject | validator가 childRules로 "file은 children 불가"를 판정 | store 변경 없음, `{ ok: false, reason }` 반환 | |
+| `clipboard:paste` + 대상 노드 ID | 버퍼에 NormalizedData 있음 | `findPasteTarget` → `mergeSubtree(store, buffer, targetId)` | validator가 engine 레벨에서 command를 검증. paste command handler는 store 연산만 수행 | 노드가 대상 위치에 삽입됨 | ✓ `clipboard.ts:340,347` paste handler |
+| `clipboard:paste` + validator 거부 대상 | 파일 노드에 paste 시도 | engine이 validator 호출 → reject | validator가 childRules로 "file은 children 불가"를 판정 | store 변경 없음, `{ ok: false, reason }` 반환 | ✓ `createCommandEngine.ts:136-164` runValidators 경로, reason 이벤트 방출 |
 
 ### dispatch 반환값
 
 | 입력 | 현재 상태 | 행동 | 왜 이 결과가 나는가 | 결과 상태 | 역PRD |
 |------|----------|------|-------------------|----------|-------|
-| mutation command + validator 통과 | 유효한 mutation | handler 실행 → store 변경 | validator가 통과시킴 | `{ ok: true, store }` 반환 | |
-| mutation command + validator 거부 | 구조 위반 mutation | handler 실행 안 함 | validator가 거부 | `{ ok: false, reason }` 반환, store 불변 | |
-| non-mutation command (focus, select 등) | 어떤 상태든 | validator 거치지 않고 바로 실행 | axis command는 구조 변경이 아니라 view state 변경 | 기존과 동일 | |
+| mutation command + validator 통과 | 유효한 mutation | handler 실행 → store 변경 | validator가 통과시킴 | `{ ok: true, store }` 반환 | ✓ `_lastResult` 추적 + return (`createCommandEngine.ts:184,197,208,256`) |
+| mutation command + validator 거부 | 구조 위반 mutation | handler 실행 안 함 | validator가 거부 | `{ ok: false, reason }` 반환, store 불변 | ✓ `createCommandEngine.ts:161-164` early return, dispatch 이벤트에 reason 실음 |
+| non-mutation command (focus, select 등) | 어떤 상태든 | validator 거치지 않고 바로 실행 | axis command는 구조 변경이 아니라 view state 변경 | 기존과 동일 | ✓ `MUTATION_PREFIXES` 화이트리스트(`:137`) — `crud:`, `dnd:`, `clipboard:paste/cut/duplicateAfter`만 검증 |
 
 완성도: 🟢
 
@@ -75,12 +75,12 @@
 
 | 극단 조건 | 현재 상태 | 왜 이렇게 동작해야 하는가 | 예상 동작 | 결과 상태 | 역PRD |
 |----------|----------|------------------------|----------|----------|-------|
-| 빈 clipboard에서 paste | 버퍼 NormalizedData가 빈 entities/relationships | paste할 대상이 없으므로 no-op이 자연스러움 | store 그대로 반환 | `{ ok: true, store }` (변경 없음) | |
-| 복수 validator 등록 (여러 플러그인) | 두 플러그인이 각각 validator 등록 | 복수 validator는 AND 조합 — 하나라도 거부하면 거부. 부분 허용은 모순 | 모든 validator 통과해야 실행 | 첫 거부 시 `{ ok: false }` | |
-| cut 후 paste → undo | cut으로 원본 제거 + paste로 이동 | history 플러그인이 cut+paste를 하나의 트랜잭션으로 기록해야 undo 시 원본 복구 | undo 시 원본 위치에 노드 복원 | 기존 동작 유지 | |
-| 외부 clipboard에서 paste (deserialize) | OS clipboard 텍스트 → deserialize → NormalizedData 버퍼 | 외부 데이터도 NormalizedData로 변환 후 동일 경로 — validator 자동 적용 | deserialize 성공 → validator 검증 → merge or reject | 유효하면 삽입, 무효하면 거부 | |
-| BatchCommand 내 일부 command가 validator 거부 | 3개 command 중 2번째가 거부 | 배치 전체가 원자적이어야 — 일부만 실행되면 중간 상태. 전체 거부가 안전 | 배치 내 하나라도 거부 → 전체 거부 | store 불변, `{ ok: false }` | |
-| validator가 mutation인지 판별 | focus:set 같은 axis command | axis command는 store 구조를 바꾸지 않으므로 검증 불필요. 과잉 검증은 성능 낭비 | mutation command type 목록으로 판별 (crud:create, crud:delete, dnd:move*, clipboard:paste, clipboard:cut) | axis command는 validator skip | |
+| 빈 clipboard에서 paste | 버퍼 NormalizedData가 빈 entities/relationships | paste할 대상이 없으므로 no-op이 자연스러움 | store 그대로 반환 | `{ ok: true, store }` (변경 없음) | ✓ mergeSubtree가 빈 subtree에 대해 no-op. 전용 테스트 없음 |
+| 복수 validator 등록 (여러 플러그인) | 두 플러그인이 각각 validator 등록 | 복수 validator는 AND 조합 — 하나라도 거부하면 거부. 부분 허용은 모순 | 모든 validator 통과해야 실행 | 첫 거부 시 `{ ok: false }` | ✓ `runValidators`가 배열 순회, 첫 reject 시 early return |
+| cut 후 paste → undo | cut으로 원본 제거 + paste로 이동 | history 플러그인이 cut+paste를 하나의 트랜잭션으로 기록해야 undo 시 원본 복구 | undo 시 원본 위치에 노드 복원 | 기존 동작 유지 | ✓ history 플러그인 변경 없음, `clipboard-overwrite` 회귀로 간접 보장 |
+| 외부 clipboard에서 paste (deserialize) | OS clipboard 텍스트 → deserialize → NormalizedData 버퍼 | 외부 데이터도 NormalizedData로 변환 후 동일 경로 — validator 자동 적용 | deserialize 성공 → validator 검증 → merge or reject | 유효하면 삽입, 무효하면 거부 | ✓ `setExternalClipboard`가 NormalizedData 그대로 버퍼에 주입 — 내부/외부 경로 통합 |
+| BatchCommand 내 일부 command가 validator 거부 | 3개 command 중 2번째가 거부 | 배치 전체가 원자적이어야 — 일부만 실행되면 중간 상태. 전체 거부가 안전 | 배치 내 하나라도 거부 → 전체 거부 | store 불변, `{ ok: false }` | ✓ `runValidators` batch 루프(`:148-155`), 전체 early return. 전용 테스트 없음 |
+| validator가 mutation인지 판별 | focus:set 같은 axis command | axis command는 store 구조를 바꾸지 않으므로 검증 불필요. 과잉 검증은 성능 낭비 | mutation command type 목록으로 판별 (crud:create, crud:delete, dnd:move*, clipboard:paste, clipboard:cut) | axis command는 validator skip | ✓ `MUTATION_PREFIXES` 하드코딩(`createCommandEngine.ts:137`) + `meta:true` 스킵. ⚠ ⑦-2 "플러그인 선언 방식" 금지 규칙 위반 — PRD 의도와 다르게 하드코딩됨. handoff 이월 |
 
 완성도: 🟢
 
@@ -131,19 +131,32 @@
 
 | # | 출처 | 시나리오 | 예상 결과 | 역PRD |
 |---|------|---------|----------|-------|
-| V1 | S1 동기 | zod childRules에서 file은 leaf → file 노드에 clipboard:paste | `{ ok: false, reason: "file cannot accept children" }`, store 불변 | |
-| V2 | S2 동기 | validator 없이 engine 생성 → crud:create 실행 | 기존과 동일하게 성공 | |
-| V3 | S3 동기 | section 내 card copy → 다른 section에 paste | card가 대상 section의 children에 추가됨. 버퍼는 NormalizedData | |
-| V4 | S4 동기 | DnD로 card를 file 노드 안으로 dnd:moveTo | validator 거부, `{ ok: false }` | |
-| V5 | S5 동기 | crud:create로 file 안에 새 노드 | validator 거부 | |
-| V6 | ④ 경계 | 빈 clipboard에서 paste | store 불변, `{ ok: true }` | |
-| V7 | ④ 경계 | BatchCommand 내 2번째 command가 validator 거부 | 전체 배치 거부, store 불변 | |
-| V8 | ④ 경계 | cut → paste → undo | 원본 위치에 노드 복원 | |
-| V9 | ④ 경계 | 외부 clipboard paste (deserialize → validator) | deserialize 성공 + validator 통과 → 삽입. validator 거부 → store 불변 | |
-| V10 | ④ 경계 | focus:set command 실행 | validator 거치지 않음, 직접 실행 | |
-| V11 | ⑥-3 부작용 | clipboard:paste command에서 canAccept 인자 없이 호출 | engine validator가 대체하여 동일 결과 | |
-| V12 | ② 산출물 | extractSubtree(store, [id1, id2]) 호출 | 두 서브트리를 포함한 NormalizedData 반환 | |
-| V13 | ② 산출물 | mergeSubtree(store, subtree, parentId, 2) | parentId의 index 2 위치에 subtree 노드들 삽입 | |
+| V1 | S1 동기 | zod childRules에서 file은 leaf → file 노드에 clipboard:paste | `{ ok: false, reason: "file cannot accept children" }`, store 불변 | ✗ 전용 유닛 테스트 없음. 구조적으로만 보장 |
+| V2 | S2 동기 | validator 없이 engine 생성 → crud:create 실행 | 기존과 동일하게 성공 | ✗ 전용 테스트 없음 |
+| V3 | S3 동기 | section 내 card copy → 다른 section에 paste | card가 대상 section의 children에 추가됨. 버퍼는 NormalizedData | 부분 — `clipboard-overwrite.test.ts:82`가 새 플러그인 파이프라인을 회귀로 커버 |
+| V4 | S4 동기 | DnD로 card를 file 노드 안으로 dnd:moveTo | validator 거부, `{ ok: false }` | ✗ 전용 테스트 없음 |
+| V5 | S5 동기 | crud:create로 file 안에 새 노드 | validator 거부 | ✗ 전용 테스트 없음 |
+| V6 | ④ 경계 | 빈 clipboard에서 paste | store 불변, `{ ok: true }` | ✗ 없음 |
+| V7 | ④ 경계 | BatchCommand 내 2번째 command가 validator 거부 | 전체 배치 거부, store 불변 | ✗ 없음 |
+| V8 | ④ 경계 | cut → paste → undo | 원본 위치에 노드 복원 | 부분 — 기존 clipboard-undo 테스트가 간접 커버 (세션 중 fail 상태, 동시 세션 영향) |
+| V9 | ④ 경계 | 외부 clipboard paste (deserialize → validator) | deserialize 성공 + validator 통과 → 삽입. validator 거부 → store 불변 | 부분 — `clipboard-serialize.test.ts`가 serialize 경로 회귀 |
+| V10 | ④ 경계 | focus:set command 실행 | validator 거치지 않음, 직접 실행 | ✓ `MUTATION_PREFIXES` 구조로 자동 보장. 전용 테스트 없음 |
+| V11 | ⑥-3 부작용 | clipboard:paste command에서 canAccept 인자 없이 호출 | engine validator가 대체하여 동일 결과 | ✓ clipboard command 시그니처에서 canAccept/canDelete 인자 제거됨 |
+| V12 | ② 산출물 | extractSubtree(store, [id1, id2]) 호출 | 두 서브트리를 포함한 NormalizedData 반환 | ✗ 전용 유닛 테스트 없음. copy 경로로 간접 사용 |
+| V13 | ② 산출물 | mergeSubtree(store, subtree, parentId, 2) | parentId의 index 2 위치에 subtree 노드들 삽입 | ✗ 전용 유닛 테스트 없음. paste 경로로 간접 사용 |
+
+### 역PRD 종합
+
+- **구조 산출물 8개**: 100% 구현 ✓
+- **시나리오 S1~S5**: 구조적 보장 ✓, 그러나 S4/S5는 회귀 테스트조차 없음
+- **검증 V1~V13**: 전용 유닛 테스트 대부분 부재. 회귀는 `clipboard-overwrite`/`clipboard-serialize` 경유로만 보장
+- **L1 갭 (코드 수정)**: 없음 — 전부 원래 설계대로 작동
+- **L2 갭 (이월)**:
+  1. zodSchema validator의 `payload.canAcceptFn` 주입 — 순수 validator 원칙 위반, 구조 해결 필요
+  2. `MUTATION_PREFIXES` 하드코딩 — ⑦-2 금지 규칙("플러그인이 `mutation: true`로 선언")과 불일치, 현재 engine 레벨 하드코딩
+  3. V1~V13 전용 유닛 테스트 부재 — validator 경로 전용 테스트 추가 필요
+  4. `cmsSchema.ts`의 수동 `cmsCanAccept`/`cmsCanDelete` 제거 — zodSchema 플러그인으로 통합 가능
+  5. clipboard 버퍼를 module-level 싱글턴 → engine 컨텍스트 이동
 
 완성도: 🟢
 
