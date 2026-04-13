@@ -10,7 +10,8 @@ import { useTabList } from './useTabList'
 import { workspaceCommands } from '../plugins/workspaceStore'
 import type { TabGroupData } from '../plugins/workspaceStore'
 import { ax } from '@styles/ax'
-import { CloseIndicator, AddIndicator } from './indicators'
+import { AddIndicator } from './indicators'
+import { TabItem } from './items'
 import './TabGroup.css'
 
 interface TabGroupProps {
@@ -93,25 +94,14 @@ export function TabGroup({
         {childIds.map((id) => {
           const entity = store.entities[id]
           if (!entity) return null
-          const itemProps = tl.getItemProps(id)
-          const entityData = entity.data as Record<string, unknown>
-          const label = entityData?.label as string ?? id
-          const isPreview = entityData?.preview === true
-          const tabClass = `tab-item ${ax({ surface: 'ghost', recipe: 'control-sm', layout: 'bar', text: 'muted', interactive: 'tab', padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', clamp: '1' })}${isPreview ? ' tab-item-preview' : ''}`
-          return (
-            <div key={id} {...(itemProps as React.HTMLAttributes<HTMLDivElement>)} className={tabClass}>
-              <span>{label}</span>
-              <button
-                className={`tab-close ${ax({ surface: 'ghost', layout: 'center', text: 'muted', shape: 'sm', opacity: 'dim' })}`}
-                aria-label={`Close ${label}`}
-                tabIndex={-1}
-                onClick={(e) => handleClose(e, id)}
-                onMouseDown={(e) => e.preventDefault()}
-              >
-                <CloseIndicator />
-              </button>
-            </div>
-          )
+          const itemProps = { ...tl.getItemProps(id), key: id } as React.HTMLAttributes<HTMLElement>
+          const isPreview = (entity.data as Record<string, unknown>)?.preview === true
+          const state = tl.getItemState(id)
+          return TabItem(itemProps, entity, state, {
+            closable: true,
+            onClose: (e) => handleClose(e, id),
+            preview: isPreview,
+          })
         })}
         {onAddTab && (
           <button

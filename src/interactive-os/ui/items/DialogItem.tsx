@@ -1,0 +1,22 @@
+// ② 2026-04-05-ui-items-prd.md
+import type React from 'react'
+import type { NodeState } from '../../pattern/types'
+import { getNodeLabel } from '../types'
+import { ax } from '@styles/ax'
+
+export function DialogItem(
+  props: React.HTMLAttributes<HTMLElement>,
+  node: Record<string, unknown>,
+  state: NodeState,
+): React.ReactElement {
+  const label = getNodeLabel(node)
+  return (
+    <div
+      {...props}
+      className={ax({ interactive: 'item', recipe: 'item', text: state.focused ? 'primary' : 'secondary', padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+      data-focused={state.focused || undefined}
+    >
+      {label}
+    </div>
+  )
+}

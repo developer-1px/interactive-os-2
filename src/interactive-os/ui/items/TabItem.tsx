@@ -3,28 +3,51 @@ import type React from 'react'
 import type { NodeState } from '../../pattern/types'
 import { getNodeLabel } from '../types'
 import { ax } from '@styles/ax'
+import { CloseIndicator } from '../indicators'
 
-interface TabItemOptions {
-  className?: string
+export interface TabItemOptions {
+  icon?: React.ReactNode
+  closable?: boolean
+  onClose?: (e: React.MouseEvent) => void
+  preview?: boolean
 }
 
 export function TabItem(
   props: React.HTMLAttributes<HTMLElement>,
   node: Record<string, unknown>,
   state: NodeState,
-  _options?: TabItemOptions,
+  options?: TabItemOptions,
 ): React.ReactElement {
   const label = getNodeLabel(node)
+  const { icon, closable, onClose, preview } = options ?? {}
+
   return (
-    <span
+    <div
       {...props}
-      className={ax({
-        recipe: 'item-sm', interactive: 'tab',
-        padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full',
+      className={`tab-item ${ax({
+        surface: 'ghost', recipe: 'control-sm', layout: 'bar',
         text: state.selected ? 'primary' : 'muted',
-      })}
+        interactive: 'tab', padding: 'xs', content: 'text',
+        gap: 'xs', shape: 'xs', clamp: '1',
+      })}${preview ? ' tab-item-preview' : ''}`}
     >
-      {label}
-    </span>
+      {icon && <span className={ax({ layout: 'center', flex: 'none' })}>{icon}</span>}
+      <span>{label}</span>
+      {closable && (
+        <button
+          className={`tab-close ${ax({ surface: 'ghost', layout: 'center', text: 'muted', shape: 'sm', opacity: 'dim' })}`}
+          aria-label={`Close ${label}`}
+          tabIndex={-1}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onClose?.(e)
+          }}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <CloseIndicator />
+        </button>
+      )}
+    </div>
   )
 }

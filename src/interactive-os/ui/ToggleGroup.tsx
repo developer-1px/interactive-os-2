@@ -1,13 +1,8 @@
 /** @catalog 토글 버튼 그룹 */
-import React from 'react'
-
-import { ax } from '@styles/ax'
-import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
-import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
-import { CheckIndicator } from './indicators'
+import { ToggleItem } from './items'
 
 const toggleGroupPattern = toolbar({ toggle: true })
 
@@ -15,21 +10,11 @@ interface ToggleGroupProps extends AriaComponentProps {
   orientation?: 'horizontal' | 'vertical'
 }
 
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = getNodeLabel(item)
-  return (
-    <div {...props} className={ax({ recipe: 'item', interactive: 'check', padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
-      <CheckIndicator checked={state.selected} />
-      <span className={ax({ textStyle: 'body', text: 'primary' })}>{label}</span>
-    </div>
-  )
-}
-
 export function ToggleGroup({
   data,
   plugins = [],
   onChange,
-  renderItem = defaultRenderItem,
+  renderItem = ToggleItem,
   orientation: _orientation = 'horizontal',
 }: ToggleGroupProps) {
   return (

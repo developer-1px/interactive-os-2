@@ -1,31 +1,16 @@
 /** @catalog 온/오프 스위치 그룹 */
-import React from 'react'
-
-import type { NodeState } from '../pattern/types'
 import type { AriaComponentProps } from './types'
-import { getNodeLabel } from './types'
 import { Aria } from '../primitives/aria'
 import { switchPattern } from '../pattern/roles/switch'
-import { SwitchIndicator } from './indicators'
-import { ax } from '@styles/ax'
+import { SwitchItem } from './items'
 
 type SwitchGroupProps = AriaComponentProps
-
-const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = getNodeLabel(item)
-  return (
-    <div {...props} className={ax({ recipe: 'item', interactive: 'check', layout: 'spread', text: state.checked ? 'primary' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', width: 'full' })} data-focused={state.focused || undefined}>
-      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
-      <SwitchIndicator />
-    </div>
-  )
-}
 
 export function SwitchGroup({
   data,
   plugins = [],
   onChange,
-  renderItem = defaultRenderItem,
+  renderItem = SwitchItem,
   'aria-label': ariaLabel,
 }: SwitchGroupProps) {
   return (
