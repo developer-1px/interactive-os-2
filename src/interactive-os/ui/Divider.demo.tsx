@@ -15,7 +15,7 @@ export function Demo() {
       <span>Above</span>
       <Divider />
       <span>Below</span>
-      <div className={ax({ layout: 'row', gap: 'md', size: 'lg' })}>
+      <div className={ax({ layout: 'row', gap: 'md', square: 'lg' })}>
         <span>Left</span>
         <Divider direction="vertical" />
         <span>Right</span>

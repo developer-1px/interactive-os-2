@@ -276,6 +276,37 @@ dialog.sf-overlay[open] {
   text-transform: uppercase;
 }
 
+/* ════════════════════════════════════════════
+ * Role: Control — 버튼, 인풋, 셀렉트의 크기 정체성
+ * role이 크기+구조+interactive를 소유한다.
+ * surface는 색칠만, tone은 의미 색상만.
+ * ════════════════════════════════════════════ */
+
+.rl-control {
+  min-height: 36px;
+  min-width: 36px;
+  font-size: 14px;
+  font-weight: 500;
+  padding-inline: 16px;
+  padding-block: 8px;
+  gap: 8px;
+  border-radius: var(--shape-sm-radius);
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 아이콘 전용 — content:'icon'과 조합 시 */
+.rl-control.ct-icon {
+  padding: 0;
+  justify-content: center;
+}
+
 } /* @layer recipe — Recipe, Control Size, Text Style */
 
 @layer state {
@@ -401,6 +432,13 @@ dialog.sf-overlay[open] {
 .op-faint  { opacity: 0.4; }
 .op-hidden { opacity: 0; pointer-events: none; }
 
+/* ── Role: Control — interactive 상태 ── */
+.rl-control:hover { background: var(--_bg-hover, var(--bg-hover)); }
+.rl-control:active { background: var(--_bg-active, var(--bg-active)); }
+.rl-control:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.rl-control[aria-disabled="true"],
+.rl-control:disabled { opacity: 0.4; pointer-events: none; cursor: default; }
+
 } /* @layer state — Tone, Text Color, Weight, State, Opacity */
 
 @layer recipe {
@@ -414,6 +452,11 @@ dialog.sf-overlay[open] {
 .ct-code   { --pd-ratio: 0; }
 .ct-bubble { --pd-ratio: 2; }
 .ct-diff   { --pd-ratio: 0; }
+.ct-icon {
+  padding: 0;
+  justify-content: center;
+  align-content: center;
+}
 
 /* ════════════════════════════════════════════
  * Border — 테두리
@@ -618,15 +661,15 @@ dialog.sf-overlay[open] {
 .ic-lg { width: var(--icon-lg); height: var(--icon-lg); }
 
 /* ════════════════════════════════════════════
- * Size — 정사각 크기 (비-SVG 요소: avatar, dot, swatch 등)
+ * Square — 정사각 크기 (비-SVG 요소: avatar, dot, swatch 등)
  * ════════════════════════════════════════════ */
 
-.sz-xs  { width: var(--space-xs);  height: var(--space-xs); }   /*  4px */
-.sz-sm  { width: var(--space-sm);  height: var(--space-sm); }   /*  8px */
-.sz-md  { width: var(--space-md);  height: var(--space-md); }   /* 16px */
-.sz-lg  { width: var(--space-lg);  height: var(--space-lg); }   /* 24px */
-.sz-xl  { width: var(--space-xl);  height: var(--space-xl); }   /* 32px */
-.sz-2xl { width: var(--space-2xl); height: var(--space-2xl); }  /* 48px */
+.sq-xs  { width: var(--space-xs);  height: var(--space-xs); }   /*  4px */
+.sq-sm  { width: var(--space-sm);  height: var(--space-sm); }   /*  8px */
+.sq-md  { width: var(--space-md);  height: var(--space-md); }   /* 16px */
+.sq-lg  { width: var(--space-lg);  height: var(--space-lg); }   /* 24px */
+.sq-xl  { width: var(--space-xl);  height: var(--space-xl); }   /* 32px */
+.sq-2xl { width: var(--space-2xl); height: var(--space-2xl); }  /* 48px */
 
 /* ════════════════════════════════════════════
  * Aspect — 종횡비

@@ -105,7 +105,7 @@ export function TabGroup({
         })}
         {onAddTab && (
           <button
-            className={`tab-add ${ax({ surface: 'ghost', layout: 'center', recipe: 'control-sm', text: 'muted', opacity: 'dim', padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', clamp: '1' })}`}
+            className={`tab-add ${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'muted', opacity: 'dim' })}`}
             aria-label="Add tab"
             tabIndex={-1}
             onClick={handleAdd}

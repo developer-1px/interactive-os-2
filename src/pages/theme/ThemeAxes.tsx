@@ -191,7 +191,7 @@ function ShapeAxis() {
       <div className={ax({ layout: 'row', gap: 'sm' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={`${ax({ shape: v, size: '2xl' })} theme-shape-swatch`} />
+            <div className={`${ax({ shape: v, square: '2xl' })} theme-shape-swatch`} />
           </AxisRow>
         ))}
       </div>
@@ -206,7 +206,7 @@ function MotionAxis() {
       <div className={ax({ layout: 'row', gap: 'sm' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={ax({ surface: 'display', padding: 'sm', shape: 'md', size: 'xl', layout: 'center', motion: v })}>
+            <div className={ax({ surface: 'display', padding: 'sm', shape: 'md', square: 'xl', layout: 'center', motion: v })}>
               <span className={ax({ textStyle: 'body', text: 'primary' })}>A</span>
             </div>
           </AxisRow>
@@ -258,9 +258,9 @@ function LayoutAxis() {
         {values.map(l => (
           <AxisRow key={l} label={l}>
             <div className={`${ax({ layout: l as Axes['layout'], gap: 'xs', padding: 'sm', shape: 'md' })} theme-layout-box`}>
-              <div className={`${ax({ shape: 'sm', size: 'lg', flex: 'none' })} theme-layout-child`} />
-              <div className={`${ax({ shape: 'sm', size: 'lg', flex: 'none' })} theme-layout-child`} />
-              <div className={`${ax({ shape: 'sm', size: 'lg', flex: 'none' })} theme-layout-child`} />
+              <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
+              <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
+              <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
             </div>
           </AxisRow>
         ))}
@@ -278,9 +278,9 @@ function GapAxis() {
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
             <div className={ax({ layout: 'row', gap: v })}>
-              <div className={`${ax({ shape: 'sm', size: 'lg' })} theme-layout-child`} />
-              <div className={`${ax({ shape: 'sm', size: 'lg' })} theme-layout-child`} />
-              <div className={`${ax({ shape: 'sm', size: 'lg' })} theme-layout-child`} />
+              <div className={`${ax({ shape: 'sm', square: 'lg' })} theme-layout-child`} />
+              <div className={`${ax({ shape: 'sm', square: 'lg' })} theme-layout-child`} />
+              <div className={`${ax({ shape: 'sm', square: 'lg' })} theme-layout-child`} />
             </div>
           </div>
         ))}
@@ -355,7 +355,7 @@ function SizeAxis() {
       <div className={ax({ layout: 'row', gap: 'sm' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={`${ax({ shape: 'sm', size: v })} theme-layout-child`} />
+            <div className={`${ax({ shape: 'sm', square: v })} theme-layout-child`} />
           </AxisRow>
         ))}
       </div>
@@ -421,7 +421,7 @@ function AspectAxis() {
       <div className={ax({ layout: 'row', gap: 'sm' })}>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={ax({ surface: 'display', shape: 'md', aspect: v, size: 'xl', border: 'default' })} />
+            <div className={ax({ surface: 'display', shape: 'md', aspect: v, square: 'xl', border: 'default' })} />
           </AxisRow>
         ))}
       </div>

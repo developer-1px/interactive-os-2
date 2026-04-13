@@ -9,7 +9,7 @@ interface StatusIndicatorProps {
 
 export function StatusIndicator({ tone = 'info', variant = 'filled', className }: StatusIndicatorProps) {
   const classes = [
-    `inline-block ${ax({ flex: 'none', size: 'sm', shape: 'pill' })}`,
+    `inline-block ${ax({ flex: 'none', square: 'sm', shape: 'pill' })}`,
     'item-indicator--status',
     `item-indicator--status-${tone}`,
     variant === 'ring' ? 'item-indicator--status-ring' : undefined,

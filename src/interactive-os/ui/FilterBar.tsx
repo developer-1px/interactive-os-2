@@ -33,7 +33,7 @@ export function FilterBar({ filters, onAddFilter, children }: FilterBarProps) {
             <button
               type="button"
               onClick={chip.onRemove}
-              className={ax({ surface: 'ghost', interactive: 'button' })}
+              className={ax({ role: 'control', surface: 'ghost', content: 'icon' })}
               aria-label={`Remove ${chip.label} filter`}
             >
               ×

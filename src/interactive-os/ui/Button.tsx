@@ -2,13 +2,14 @@
 import React from 'react'
 import { type Axes, ax } from '@styles/ax'
 
-type ButtonVariant = 'accent' | 'ghost' | 'dialog' | 'destructive'
+type ButtonVariant = 'accent' | 'ghost' | 'overlay' | 'dialog' | 'destructive'
 type ButtonTone = Axes['tone']
 type ButtonSize = 'sm' | 'default' | 'lg'
 
 const variantAxes: Record<ButtonVariant, Parameters<typeof ax>[0]> = {
   accent: { surface: 'action', tone: 'accent' },
   ghost: { surface: 'ghost' },
+  overlay: { surface: 'overlay', width: 'fit' },
   dialog: { surface: 'action', tone: 'neutral', border: 'default' },
   destructive: { surface: 'action', tone: 'danger' },
 }
@@ -31,7 +32,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({ variant = 'ghost', tone, size = 'default', interactive, className, ...props }: ButtonProps) {
-  const axes = { ...variantAxes[variant], recipe: sizeRecipe[size], padding: sizePadding[size], gap: sizeGap[size], shape: 'xs', layout: 'row', content: 'text', clamp: '1' } as Axes
+  const axes = size === 'default'
+    ? { ...variantAxes[variant], role: 'control' as const } as Axes
+    : { ...variantAxes[variant], recipe: sizeRecipe[size], padding: sizePadding[size], gap: sizeGap[size], shape: 'xs' as const, layout: 'bar' as const, content: 'text' as const, clamp: '1' as const } as Axes
   if (tone) axes.tone = tone
   if (interactive) axes.interactive = interactive
   return (

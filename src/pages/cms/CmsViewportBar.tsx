@@ -19,7 +19,7 @@ export default function CmsViewportBar({ viewport, onViewportChange, onPresent, 
         <button
           key={v}
           type="button"
-          className={`cms-floating-toolbar__btn ${ax({ layout: 'center', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'secondary', shape: 'md', size: 'lg' })} border-none cursor-pointer${viewport === v ? ' cms-floating-toolbar__btn--active' : ''}`}
+          className={`cms-floating-toolbar__btn ${ax({ layout: 'center', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'secondary', shape: 'md', square: 'lg' })} border-none cursor-pointer${viewport === v ? ' cms-floating-toolbar__btn--active' : ''}`}
           onClick={() => onViewportChange(v as ViewportSize)}
           title={v}
         >
@@ -27,7 +27,7 @@ export default function CmsViewportBar({ viewport, onViewportChange, onPresent, 
         </button>
       ))}
       <div className={`cms-floating-toolbar__sep ${ax({ border: 'start' })}`} />
-      <button className={`cms-floating-toolbar__btn ${ax({ layout: 'center', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'secondary', shape: 'md', size: 'lg' })} border-none cursor-pointer`} onClick={onPresent} title="Present" type="button">
+      <button className={`cms-floating-toolbar__btn ${ax({ layout: 'center', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'secondary', shape: 'md', square: 'lg' })} border-none cursor-pointer`} onClick={onPresent} title="Present" type="button">
         <Play size={16} />
       </button>
     </div>

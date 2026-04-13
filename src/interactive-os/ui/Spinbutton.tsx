@@ -124,7 +124,7 @@ export function Spinbutton({
         <div className={`spinbutton-group outline-none ${ax({ layout: 'bar', border: 'default', shape: 'md' })}`} data-invalid={invalid || undefined}>
           <button
             type="button"
-            className={`spinbutton-btn spinbutton-btn-dec select-none ${ax({ layout: 'center', surface: 'ghost', text: 'primary' })}`}
+            className={`spinbutton-btn spinbutton-btn-dec select-none ${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'primary' })}`}
             tabIndex={-1}
             aria-label={`Decrease ${itemLabel}`}
             aria-disabled={atMin || undefined}
@@ -155,7 +155,7 @@ export function Spinbutton({
           )}
           <button
             type="button"
-            className={`spinbutton-btn spinbutton-btn-inc select-none ${ax({ layout: 'center', surface: 'ghost', text: 'primary' })}`}
+            className={`spinbutton-btn spinbutton-btn-inc select-none ${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'primary' })}`}
             tabIndex={-1}
             aria-label={`Increase ${itemLabel}`}
             aria-disabled={atMax || undefined}

@@ -297,7 +297,7 @@ export function Combobox({
               <span key={id} data-combobox-token role="listitem">
                 {getLabel(id)}
                 {' '}
-                <button type="button" onClick={() => removeToken(id)} aria-label={`Remove ${getLabel(id)}`}>
+                <button type="button" className={ax({ role: 'control', surface: 'ghost', content: 'icon' })} onClick={() => removeToken(id)} aria-label={`Remove ${getLabel(id)}`}>
                   <CloseIndicator />
                 </button>
               </span>

@@ -65,7 +65,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
         {LOCALES.map(l => <option key={l} value={l}>{l}</option>)}
       </select>
       <button
-        className={`cms-detail-panel__i18n-btn ${ax({ layout: 'center', size: 'lg', shape: 'md', text: 'muted' })} border-none cursor-pointer${i18nSheetOpen ? ' cms-detail-panel__i18n-btn--active' : ''}`}
+        className={`cms-detail-panel__i18n-btn ${ax({ layout: 'center', square: 'lg', shape: 'md', text: 'muted' })} border-none cursor-pointer${i18nSheetOpen ? ' cms-detail-panel__i18n-btn--active' : ''}`}
         onClick={onI18nSheetToggle}
         title="Translation sheet"
         type="button"
@@ -301,7 +301,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
           <div className={`cms-image-field__actions absolute ${ax({ layout: 'row', gap: 'xs' })}`}>
             <button
               type="button"
-              className={`cms-image-field__action ${ax({ layout: 'center', size: 'md', shape: 'sm', surface: 'ghost', text: 'primary', opacity: 'hidden' })} border-none cursor-pointer`}
+              className={`cms-image-field__action ${ax({ layout: 'center', square: 'md', shape: 'sm', surface: 'ghost', text: 'primary', opacity: 'hidden' })} border-none cursor-pointer`}
               onClick={() => fileRef.current?.click()}
               title="Replace"
             >
@@ -309,7 +309,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
             </button>
             <button
               type="button"
-              className={`cms-image-field__action ${ax({ layout: 'center', size: 'md', shape: 'sm', surface: 'ghost', text: 'primary', opacity: 'hidden' })} border-none cursor-pointer`}
+              className={`cms-image-field__action ${ax({ layout: 'center', square: 'md', shape: 'sm', surface: 'ghost', text: 'primary', opacity: 'hidden' })} border-none cursor-pointer`}
               onClick={handleRemove}
               title="Remove"
             >
@@ -368,7 +368,7 @@ function IconField({ entry, store, engine, expanded }: DetailFieldProps) {
             <button
               key={iconKey}
               type="button"
-              className={`cms-icon-field__option ${ax({ surface: 'ghost', layout: 'center', size: 'lg', shape: 'md', text: 'secondary' })}${iconKey === currentValue ? ' cms-icon-field__option--selected' : ''}`}
+              className={`cms-icon-field__option ${ax({ surface: 'ghost', layout: 'center', square: 'lg', shape: 'md', text: 'secondary' })}${iconKey === currentValue ? ' cms-icon-field__option--selected' : ''}`}
               title={iconKey}
               onClick={() => handleSelect(iconKey)}
             >

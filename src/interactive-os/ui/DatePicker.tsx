@@ -266,17 +266,17 @@ export function DatePicker({
           onKeyDown={handleDialogKeyDown}
         >
           <div className={`${ax({ layout: 'bar', gap: 'xs' })} dp-nav-bar`}>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} dp-nav-btn`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
+            <button className={`${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'secondary' })} dp-nav-btn`} aria-label="Previous Year" onClick={() => changeYear(-1)}>
               <DirectionIndicator direction="prev" double />
             </button>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} dp-nav-btn`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
+            <button className={`${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'secondary' })} dp-nav-btn`} aria-label="Previous Month" onClick={() => changeMonth(-1)}>
               <DirectionIndicator direction="prev" />
             </button>
             <span className={`text-center ${ax({ flex: '1', textStyle: 'label', text: 'primary' })} `} aria-live="polite">{MONTHS[month]} {year}</span>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} dp-nav-btn`} aria-label="Next Month" onClick={() => changeMonth(1)}>
+            <button className={`${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'secondary' })} dp-nav-btn`} aria-label="Next Month" onClick={() => changeMonth(1)}>
               <DirectionIndicator direction="next" />
             </button>
-            <button className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', shape: 'sm' })} dp-nav-btn`} aria-label="Next Year" onClick={() => changeYear(1)}>
+            <button className={`${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'secondary' })} dp-nav-btn`} aria-label="Next Year" onClick={() => changeYear(1)}>
               <DirectionIndicator direction="next" double />
             </button>
           </div>
@@ -292,8 +292,8 @@ export function DatePicker({
           </div>
 
           <div className={`${ax({ layout: 'row', gap: 'sm' })} justify-end dp-actions`}>
-            <button className={`${ax({ surface: 'ghost', recipe: 'control-sm', text: 'primary', padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', layout: 'row', clamp: '1' })} dp-action-btn font-inherit`} onClick={() => closeDialog()}>Cancel</button>
-            <button className={`${ax({ surface: 'ghost', recipe: 'control-sm', text: 'primary', padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', layout: 'row', clamp: '1' })} dp-action-btn font-inherit`} onClick={confirmFocused}>OK</button>
+            <button className={`${ax({ role: 'control', surface: 'ghost', text: 'primary' })} dp-action-btn font-inherit`} onClick={() => closeDialog()}>Cancel</button>
+            <button className={`${ax({ role: 'control', surface: 'ghost', text: 'primary' })} dp-action-btn font-inherit`} onClick={confirmFocused}>OK</button>
           </div>
         </div>
       )}

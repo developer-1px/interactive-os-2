@@ -137,7 +137,7 @@ export function ThemeTokens() {
             <div className={ax({ layout: 'row', gap: 'sm' })}>
               {shapes.map(s => (
                 <div key={s} className={ax({ layout: 'column', gap: 'xs' })}>
-                  <div className={`${ax({ shape: s as Axes['shape'], size: '2xl', tone: 'accent' })} theme-shape-swatch`} />
+                  <div className={`${ax({ shape: s as Axes['shape'], square: '2xl', tone: 'accent' })} theme-shape-swatch`} />
                   <span className={ax({ textStyle: 'code', text: 'muted' })}>{s}</span>
                 </div>
               ))}
@@ -160,9 +160,9 @@ export function ThemeTokens() {
               {layouts.map(l => (
                 <div key={l} className={ax({ layout: 'column', gap: 'xs' })}>
                   <div className={`${ax({ layout: l as Axes['layout'], gap: 'xs', padding: 'sm', shape: 'md' })} theme-layout-box`}>
-                    <div className={`${ax({ shape: 'sm', size: 'lg', flex: 'none' })} theme-layout-child`} />
-                    <div className={`${ax({ shape: 'sm', size: 'lg', flex: 'none' })} theme-layout-child`} />
-                    <div className={`${ax({ shape: 'sm', size: 'lg', flex: 'none' })} theme-layout-child`} />
+                    <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
+                    <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
+                    <div className={`${ax({ shape: 'sm', square: 'lg', flex: 'none' })} theme-layout-child`} />
                   </div>
                   <span className={ax({ textStyle: 'code' })}>{l}</span>
                 </div>

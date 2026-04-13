@@ -16,7 +16,7 @@ export function CopyButton({ text }: { text: string }) {
   return (
     <button
       type="button"
-      className={ax({ placement: 'top-end', surface: 'ghost', interactive: 'button', text: 'muted', shape: 'md', padding: 'xs' })}
+      className={ax({ placement: 'top-end', role: 'control', surface: 'ghost', content: 'icon', text: 'muted' })}
       onClick={handleCopy}
       aria-label="Copy to clipboard"
     >

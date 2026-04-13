@@ -39,7 +39,7 @@ const renderSwitch = (
         data-checked={state.checked || undefined}
         aria-hidden="true"
       >
-        <span className={`${ax({ shape: 'pill', size: 'sm', surface: 'action' })} block`} />
+        <span className={`${ax({ shape: 'pill', square: 'sm', surface: 'action' })} block`} />
       </span>
     </div>
   )

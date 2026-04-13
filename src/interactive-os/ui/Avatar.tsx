@@ -18,7 +18,7 @@ function getInitials(name: string): string {
     .join('')
 }
 
-const sizeMap: Record<AvatarSize, Axes['size']> = {
+const sizeMap: Record<AvatarSize, Axes['square']> = {
   sm: 'sm',
   md: 'md',
   lg: 'lg',
@@ -32,7 +32,7 @@ export function Avatar({ src, name, size = 'md' }: AvatarProps) {
       <img
         src={src}
         alt={name}
-        className={ax({ size: sizeMap[size], shape: 'pill', surface: 'display' })}
+        className={ax({ square: sizeMap[size], shape: 'pill', surface: 'display' })}
       />
     )
   }
@@ -40,7 +40,7 @@ export function Avatar({ src, name, size = 'md' }: AvatarProps) {
   return (
     <div
       className={ax({
-        size: sizeMap[size],
+        square: sizeMap[size],
         shape: 'pill',
         surface: 'action',
         tone: 'accent-dim',

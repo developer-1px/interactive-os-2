@@ -4,7 +4,7 @@ import type { Axes } from '@styles/ax'
 
 interface SkeletonProps {
   width?: Axes['width']
-  height?: Axes['size']
+  height?: Axes['square']
   shape?: 'text' | 'circle' | 'rect'
 }
 
@@ -21,7 +21,7 @@ export function Skeleton({ width = 'full', height = 'sm', shape = 'rect' }: Skel
         motion: 'shimmer',
         shape: resolvedShape,
         width: shape === 'circle' ? undefined : width,
-        size: height,
+        square: height,
       })}
       aria-hidden="true"
     />

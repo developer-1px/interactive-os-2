@@ -40,7 +40,8 @@ type Motion = 'pulse' | 'spin' | 'fade-in' | 'slide-up'
 // code: block 0, inline만 (코드 행, diff 행, 테이블 셀)
 // bubble: 우측 정렬 말풍선 (채팅, 코멘트) — max-width:80% + margin-left:auto + 비대칭 radius
 // diff: 2열 삭제/추가 비교 (grid 2열 + gap:0 + border 구분선)
-type Content = 'text' | 'code' | 'bubble' | 'diff'
+// icon: 정사각 아이콘 컨테이너 — padding 1:1
+type Content = 'text' | 'code' | 'bubble' | 'diff' | 'icon'
 // scroll: overflow 제어 — 컨테이너 경계 클리핑 또는 스크롤 방향
 type Scroll = 'hidden' | 'y' | 'x' | 'auto'
 // border: 테두리 — 전체, 단면, 스타일
@@ -103,8 +104,12 @@ type Flex = 'none' | 'auto' | '1'
 type Clamp = '1' | '2' | '3' | '4' | 'pre' | 'scroll'
 // icon: SVG 크기 (width + height)
 type Icon = 'xs' | 'sm' | 'md' | 'lg'
-// size: 정사각 크기 (width + height) — 비-SVG 요소용 (avatar, dot, swatch 등)
-type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+// square: 정사각 크기 (width + height) — 비-SVG 요소용 (avatar, dot, swatch 등)
+type Square = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+// role: 요소의 의미적 역할
+type Role = 'control'  // 후속: 'item' | 'badge' | 'card' | 'container'
+// size: role의 크기급
+type RoleSize = 'md'  // 후속: 'xs' | 'sm' | 'lg'
 // aspect: 종횡비
 type Aspect = '1' | 'video' | 'card'
 
@@ -136,7 +141,9 @@ interface AxesBase {
   flex?: Flex
   clamp?: Clamp
   icon?: Icon
-  size?: Size
+  square?: Square
+  role?: Role
+  size?: RoleSize
   aspect?: Aspect
 }
 
@@ -175,6 +182,8 @@ const prefixes: Record<keyof AxesAll, string> = {
   flex: 'fx',
   clamp: 'cl',
   icon: 'ic',
+  square: 'sq',
+  role: 'rl',
   size: 'sz',
   aspect: 'ar',
 }

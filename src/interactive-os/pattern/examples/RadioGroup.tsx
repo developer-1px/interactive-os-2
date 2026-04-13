@@ -35,7 +35,7 @@ const renderRadio = (
       data-focused={state.focused || undefined}
     >
       <span
-        className={`${ax({ layout: 'center', shape: 'pill', size: 'md', interactive: 'check' })} inline-flex`}
+        className={`${ax({ layout: 'center', shape: 'pill', square: 'md', interactive: 'check' })} inline-flex`}
         data-checked={state.selected || undefined}
         aria-hidden="true"
       />
