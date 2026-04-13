@@ -304,7 +304,11 @@ export default function PageViewer() {
         <QuickOpen
           fileStore={initialStore}
           root={DEFAULT_ROOT}
-          onSelect={setPreviewPath}
+          persistKey="viewer-quickopen-query"
+          onSelect={(filePath) => {
+            setPreviewPath(filePath)
+            navigate(filePathToUrlPath(filePath, 'viewer', DEFAULT_ROOT))
+          }}
           onClose={() => setQuickOpenVisible(false)}
         />
       )}

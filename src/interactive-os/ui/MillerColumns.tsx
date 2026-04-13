@@ -112,11 +112,9 @@ export function MillerColumns({
               {...propsObj}
               className={`${(props as Record<string, string>).className ?? ''} ${ax({ recipe: 'item-sm', layout: 'bar', gap: 'xs', interactive: 'item' })}`}
             >
-              <span className={ax({ flex: 'none' })} aria-hidden="true">
-                <FileIcon name={label} type={hasChildren ? 'directory' : 'file'} />
-              </span>
+              <FileIcon name={label} type={hasChildren ? 'directory' : 'file'} />
               <span className={ax({ clamp: '1', flex: '1' })}>{label}</span>
-              {hasChildren && <span className={ax({ text: 'muted', flex: 'none' })} aria-hidden="true"><DirectionIndicator direction="next" /></span>}
+              {hasChildren && <DirectionIndicator direction="next" className={ax({ text: 'muted', flex: 'none' })} />}
             </FocusDiv>
           )
         })}

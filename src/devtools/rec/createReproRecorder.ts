@@ -209,7 +209,7 @@ export function createReproRecorder() {
     const source = info.source
       ? `${info.stack.at(-1) ?? ''} (${info.source})`.trim()
       : info.stack.at(-1) ?? null
-    timeline.push({
+    const entry: InputEntry = {
       seq: nextSeq(),
       time: elapsed(),
       ch: 'input',
@@ -219,7 +219,15 @@ export function createReproRecorder() {
       source,
       focus: describeFocus(document.activeElement),
       prevented,
-      ariaTree: captureAriaTree(target),
+      ariaTree: '(pending)',
+    }
+    timeline.push(entry)
+    // Defer aria-tree capture to the next frame so React has a chance to
+    // commit any state changes triggered by this event. Capturing
+    // synchronously here races the dispatch and produces false "(no changes)".
+    requestAnimationFrame(() => {
+      entry.ariaTree = captureAriaTree(target)
+      entry.focus = describeFocus(document.activeElement)
     })
   }
 

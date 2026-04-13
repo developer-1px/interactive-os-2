@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react'
+import { Search, X } from 'lucide-react'
+import { ax } from '@styles/ax'
 import { AriaInternalContext } from './AriaInternalContext'
 import { SEARCH_ID, searchCommands } from '../plugins/search'
 
-function AriaSearch({ placeholder, className }: { placeholder?: string; className?: string }) {
+function AriaSearch({ placeholder = 'Search...', className }: { placeholder?: string; className?: string }) {
   const ariaCtx = React.useContext(AriaInternalContext)
   if (!ariaCtx) throw new Error('<Aria.Search> must be inside <Aria>')
 
@@ -20,38 +22,59 @@ function AriaSearch({ placeholder, className }: { placeholder?: string; classNam
     }
   }, [active])
 
+  const focusFirstItem = () => {
+    const container = inputRef.current?.closest('.ax-interactive') as HTMLElement | null
+    if (!container) return
+    const firstItem = container.querySelector<HTMLElement>('[role="row"],[role="option"],[role="treeitem"],[role="menuitem"]')
+    firstItem?.focus()
+  }
+
+  const handleClear = () => {
+    ariaCtx.dispatch(searchCommands.clearFilter())
+    inputRef.current?.focus()
+  }
+
+  const wrapperClass = `${ax({ layout: 'bar', gap: 'sm', padding: 'sm', surface: 'sunken', border: 'default', shape: 'md' })}${className ? ` ${className}` : ''}`
+
   return (
-    <input
-      ref={inputRef}
-      type="text"
-      placeholder={placeholder}
-      className={className}
-      value={filterText}
-      onChange={(e) => {
-        ariaCtx.dispatch(searchCommands.setFilter(e.target.value))
-      }}
-      onKeyDown={(e) => {
-        e.stopPropagation()
-        if (e.key === 'Escape') {
-          e.preventDefault()
-          ariaCtx.dispatch(searchCommands.clearFilter())
-          // Find the Aria container and focus a collection item
-          const container = inputRef.current?.closest('.ax-interactive') as HTMLElement | null
-          if (container) {
-            const firstItem = container.querySelector<HTMLElement>('[role="row"],[role="option"],[role="treeitem"],[role="menuitem"],[tabindex="0"]')
-            firstItem?.focus()
+    <div className={wrapperClass}>
+      <Search size={14} className={ax({ text: 'muted', flex: 'none' })} aria-hidden />
+      <input
+        ref={inputRef}
+        type="text"
+        placeholder={placeholder}
+        aria-label={placeholder}
+        className={`${ax({ flex: '1', text: 'primary' })} bg-transparent border-none outline-none`}
+        value={filterText}
+        onChange={(e) => {
+          ariaCtx.dispatch(searchCommands.setFilter(e.target.value))
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation()
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            ariaCtx.dispatch(searchCommands.clearFilter())
+            focusFirstItem()
+          } else if (e.key === 'Enter') {
+            e.preventDefault()
+            focusFirstItem()
           }
-        } else if (e.key === 'Enter') {
-          e.preventDefault()
-          // Focus first visible item without clearing filter
-          const container = inputRef.current?.closest('.ax-interactive') as HTMLElement | null
-          if (container) {
-            const firstItem = container.querySelector<HTMLElement>('[role="row"],[role="option"],[role="treeitem"],[role="menuitem"]')
-            firstItem?.focus()
-          }
-        }
-      }}
-    />
+        }}
+      />
+      {filterText && (
+        <button
+          type="button"
+          onClick={handleClear}
+          aria-label="Clear search"
+          className={ax({ surface: 'ghost', shape: 'sm', padding: 'xs', layout: 'center', flex: 'none', text: 'muted' })}
+        >
+          <X size={14} aria-hidden />
+        </button>
+      )}
+      <kbd className={ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>
+        {filterText ? 'ESC' : '⌘F'}
+      </kbd>
+    </div>
   )
 }
 

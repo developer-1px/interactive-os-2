@@ -8,6 +8,7 @@ import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 import { createBatchCommand } from '../engine/types'
 import { selectionCommands } from '../axis/select'
+import { focusCommands } from '../axis/navigate'
 import { combobox } from '../pattern/roles/combobox'
 import { combobox as comboboxPlugin, comboboxCommands } from '../plugins/combobox'
 import { getNodeLabel } from './types'
@@ -61,6 +62,8 @@ interface FileMode {
   root: string
   onSelect: (filePath: string) => void
   onClose: () => void
+  /** localStorage key for persisting the last-typed query across mounts. */
+  persistKey?: string
 }
 
 /** Managed mode: parent provides data + handles search */
@@ -127,13 +130,48 @@ function QuickOpenManaged({
 
   const store = aria.getStore()
   const isOpen = (store.entities['__combobox__']?.isOpen as boolean) ?? false
+  const focusedId = (store.entities['__focus__']?.focusedId as string) ?? ''
   const rootChildren = getChildren(store, ROOT_ID)
+  const listboxId = useMemo(() => `quickopen-listbox-${Math.random().toString(36).slice(2, 8)}`, [])
 
   useEffect(() => {
     inputRef.current?.focus()
     aria.dispatch(comboboxCommands.open())
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Scroll focused option into view — activedescendant pattern needs manual scroll.
+  // Compute scroll directly against the listbox scroll container so wrapping
+  // group <div>s (offsetParent chains) don't defeat scrollIntoView.
+  useEffect(() => {
+    if (!focusedId) return
+    const listbox = document.getElementById(listboxId)
+    if (!listbox) return
+    const el = listbox.querySelector<HTMLElement>(`[data-node-id="${CSS.escape(focusedId)}"]`)
+    if (!el) return
+    const lr = listbox.getBoundingClientRect()
+    const er = el.getBoundingClientRect()
+    if (er.top < lr.top) {
+      listbox.scrollTop += er.top - lr.top
+    } else if (er.bottom > lr.bottom) {
+      listbox.scrollTop += er.bottom - lr.bottom
+    }
+  }, [focusedId, listboxId])
+
+  // Keep focus on the first option whenever results change and nothing is focused
+  // (or the current focus fell out of the result set). Without this, ArrowUp from
+  // an empty focus is a noop because focusPrev(empty) === empty.
+  useEffect(() => {
+    if (!isOpen) return
+    const firstId = rootChildren.find(id => {
+      const entity = store.entities[id]
+      return entity && !isGroup(entity)
+    }) ?? rootChildren[0]
+    if (!firstId) return
+    if (!focusedId || !store.entities[focusedId]) {
+      aria.dispatch(focusCommands.setFocus(firstId))
+    }
+  }, [isOpen, focusedId, rootChildren, store, aria])
 
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -165,6 +203,7 @@ function QuickOpenManaged({
       return (
         <div
           key={childId}
+          id={childId}
           {...(nodeProps as React.HTMLAttributes<HTMLDivElement>)}
           className={`cursor-default ${ax({ interactive: 'item', recipe: 'item', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined })}`}
           onClick={() => {
@@ -190,6 +229,10 @@ function QuickOpenManaged({
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           aria-label={ariaLabel}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-controls={listboxId}
+          aria-autocomplete="list"
           {...(aria.containerProps as React.InputHTMLAttributes<HTMLInputElement>)}
           ref={(el: HTMLInputElement | null) => {
             inputRef.current = el
@@ -201,7 +244,7 @@ function QuickOpenManaged({
         <kbd className={ax({ surface: 'base', textStyle: 'code', text: 'muted', flex: 'none', shape: 'sm', border: 'subtle', padding: 'xs', content: 'text' })}>ESC</kbd>
       </div>
       {isOpen && rootChildren.length > 0 ? (
-        <div className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>
+        <div id={listboxId} role="listbox" className={ax({ layout: 'scroll', flex: '1', padding: 'xs', content: 'text' })} onMouseDown={e => e.preventDefault()}>
           {hasGroups ? rootChildren.map(id => {
             const entity = store.entities[id]
             if (!entity) return null
@@ -234,8 +277,12 @@ function QuickOpenManaged({
 
 // --- File mode: original Fuse.js-based search ---
 
-function QuickOpenFile({ fileStore, root, onSelect, onClose }: FileMode) {
-  const [query, setQuery] = useState('')
+function QuickOpenFile({ fileStore, root, onSelect, onClose, persistKey }: FileMode) {
+  // @useState-hatch — view preference mirrored to localStorage (matches VIEWMODE_KEY pattern)
+  const [query, setQuery] = useState(() => (persistKey && localStorage.getItem(persistKey)) || '')
+  useEffect(() => {
+    if (persistKey) localStorage.setItem(persistKey, query)
+  }, [persistKey, query])
 
   const files = useMemo(() => flattenFiles(fileStore, root), [fileStore, root])
   const fuse = useMemo(() => new Fuse(files, {

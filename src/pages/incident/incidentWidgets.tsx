@@ -1,5 +1,5 @@
 // @useState-hatch — useFlatLayout + useStreamFeed 조합 실험
-// FlatLayout widget 컴포넌트들 — store command 기반 위젯 간 통신
+// FlatLayout widget 컴포넌트들 — Pull model (useIncident context + useFlatLayout shared state)
 import { useCallback, useMemo, useRef, useEffect } from 'react'
 import { Toolbar } from '@os/ui/Toolbar'
 import { ListBox } from '@os/ui/ListBox'
@@ -14,9 +14,10 @@ import { TimelineItem } from '@os/ui/items/TimelineItem'
 import { ax } from '@styles/ax'
 import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
-import { incidentCommands } from '../pages/incident/incidentCommands'
-import type { Msg } from '../pages/incident/incidentData'
-import { TIMELINE_EVENTS, SERVICES, CAPTURE_STATES } from '../pages/incident/incidentData'
+import { incidentCommands } from './incidentCommands'
+import type { Msg } from './incidentData'
+import { TIMELINE_EVENTS, SERVICES, CAPTURE_STATES } from './incidentData'
+import { useIncident } from './incidentContext'
 import {
   Activity, Clock, Eye, Bot, User, Zap,
   CheckCircle, Loader, AlertTriangle, GitCommit, Terminal,
@@ -204,10 +205,9 @@ function chatRenderItem(msg: Msg) {
   return <AgentMessage msg={msg} active={true} />
 }
 
-export function ChatZoneWidget({ items, isStreaming, feedRef, onReplay }: Record<string, unknown>) {
+export function ChatZoneWidget() {
   const { dispatch } = useFlatLayout()
-  const msgItems = (items as Msg[]) ?? []
-  const streaming = (isStreaming as boolean) ?? false
+  const { items: msgItems, isStreaming: streaming, feedRef, onReplay } = useIncident()
 
   // items.length 변경 → store에 chatItemCount sync
   const prevLenRef = useRef(0)
@@ -228,12 +228,12 @@ export function ChatZoneWidget({ items, isStreaming, feedRef, onReplay }: Record
       </PanelHeader>
       <StreamFeed
         items={msgItems}
-        feedRef={feedRef as React.RefObject<HTMLDivElement | null>}
+        feedRef={feedRef}
         isStreaming={streaming}
         className={ax({ flex: '1', gap: 'sm', padding: 'sm' })}
         renderItem={chatRenderItem}
       />
-      <Composer placeholder="AI에게 질문하세요..." disabled={streaming} onSubmit={(onReplay as () => void) ?? (() => {})} />
+      <Composer placeholder="AI에게 질문하세요..." disabled={streaming} onSubmit={onReplay} />
     </div>
   )
 }

@@ -6,7 +6,7 @@
 // @useState-hatch — showEmptyDone: toggle for empty done sessions
 // @useState-hatch — showOlderDone: toggle for older (not today) done sessions
 // @useMemo-hatch — tabData: derived from card.touchedFiles, not OS store
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react'
 import { subscribeTimeline } from '../viewer/timelineSSE'
 import { useActiveSessions, type ActiveSession } from './useActiveSessions'
 import type { TimelineEvent } from '../viewer/groupEvents'
@@ -235,16 +235,33 @@ function buildTabData(files: string[]): NormalizedData {
   return { entities, relationships: { [ROOT_ID]: ids } }
 }
 
-function ChatViewerWidget({ content }: Record<string, unknown>) {
+// ── Session Detail Context (Pull model) ──
+
+interface SessionDetailContextValue {
+  content: string
+  files: string[]
+}
+
+const SessionDetailContext = createContext<SessionDetailContextValue | null>(null)
+
+function useSessionDetail(): SessionDetailContextValue {
+  const ctx = useContext(SessionDetailContext)
+  if (!ctx) throw new Error('useSessionDetail must be used inside SessionDetailContext.Provider')
+  return ctx
+}
+
+function ChatViewerWidget() {
+  const { content } = useSessionDetail()
   return (
     <div className={ax({ flex: '1', scroll: 'y' })}>
-      <MarkdownViewer content={String(content ?? '')} codeVariant="compact" />
+      <MarkdownViewer content={content} codeVariant="compact" />
     </div>
   )
 }
 
-function FilePanelWidget({ files }: Record<string, unknown>) {
-  const fileList = files as string[] | undefined
+function FilePanelWidget() {
+  const { files } = useSessionDetail()
+  const fileList = files
   // @useState-hatch — activeFilePath: modal-local file selection, not OS axis material
   const [activeFilePath, setActiveFilePath] = useState<string | null>(fileList?.[0] ?? null)
   // @useState-hatch — fileContent: modal-local file fetch state, not OS store material
@@ -314,12 +331,9 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
     ? card.allMessages.map(m => m.role === 'user' ? `> **User:** ${m.text}` : m.text).join('\n\n---\n\n')
     : ''
 
-  const layoutData = useMemo(() => {
-    if (!card) return sessionDetailLayout
-    const entities = { ...sessionDetailLayout.entities }
-    entities['chat'] = { ...entities['chat'], data: { ...entities['chat'].data, props: { content: md }, label: 'ChatViewer' } }
-    entities['files'] = { ...entities['files'], data: { ...entities['files'].data, props: { files: card.touchedFiles }, label: 'FilePanel' } }
-    return { ...sessionDetailLayout, entities }
+  const detailCtx = useMemo<SessionDetailContextValue | null>(() => {
+    if (!card) return null
+    return { content: md, files: card.touchedFiles }
   }, [card, md])
 
   return (
@@ -342,7 +356,11 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
         </button>
       </PanelHeader>
       <div className={ax({ flex: '1', layout: 'fill' })}>
-        {card && <FlatLayout data={layoutData} registry={sessionDetailRegistry} aria-label="Session detail" />}
+        {card && detailCtx && (
+          <SessionDetailContext.Provider value={detailCtx}>
+            <FlatLayout data={sessionDetailLayout} registry={sessionDetailRegistry} aria-label="Session detail" />
+          </SessionDetailContext.Provider>
+        )}
       </div>
     </dialog>
   )

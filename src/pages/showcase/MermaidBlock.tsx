@@ -13,8 +13,10 @@ export function MermaidBlock({ code, onClick }: { code: string; onClick?: (svgHt
   const [svg, setSvg] = useState('')
 
   useEffect(() => {
+    let cancelled = false
     const id = `mermaid-${++mermaidCounter}`
-    mermaid.render(id, code).then(({ svg }) => setSvg(svg)).catch(() => setSvg(''))
+    mermaid.render(id, code).then(({ svg }) => { if (!cancelled) setSvg(svg) }).catch(() => { if (!cancelled) setSvg('') })
+    return () => { cancelled = true }
   }, [code])
 
   const handleClick = () => {
@@ -23,11 +25,15 @@ export function MermaidBlock({ code, onClick }: { code: string; onClick?: (svgHt
     }
   }
 
-  if (!svg) return <pre><code>{code}</code></pre>
   return (
     <div className={ax({ placement: 'relative' })}>
-      <div ref={ref} className={onClick ? 'lightbox-trigger' : undefined} dangerouslySetInnerHTML={{ __html: svg }} onClick={handleClick} />
-      <CopyButton text={code} />
+      <div
+        ref={ref}
+        className={onClick ? 'lightbox-trigger' : undefined}
+        dangerouslySetInnerHTML={{ __html: svg }}
+        onClick={handleClick}
+      />
+      {svg && <CopyButton text={code} />}
     </div>
   )
 }

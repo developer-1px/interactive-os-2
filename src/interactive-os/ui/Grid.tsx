@@ -28,6 +28,8 @@ interface GridProps extends Omit<AriaComponentProps, 'renderItem'> {
   tabCycle?: boolean
   /** Render column headers inside the grid-table container (subgrid-aligned) */
   header?: boolean
+  /** Initial focused column index (default 0). Use 1+ to skip a read-only key column. */
+  initialColIndex?: number
   keyMap?: Record<string, import('../axis/types').KeyHandler>
   onFocusChange?: (nodeId: string | null) => void
 }
@@ -50,12 +52,13 @@ export function Grid({
   searchable = false,
   tabCycle = false,
   header = false,
+  initialColIndex,
   keyMap,
   'aria-label': ariaLabel,
 }: GridProps) {
   const pattern = React.useMemo(
-    () => gridBehavior({ columns: columns.length, tabCycle }),
-    [columns.length, tabCycle],
+    () => gridBehavior({ columns: columns.length, tabCycle, initialColIndex }),
+    [columns.length, tabCycle, initialColIndex],
   )
 
   const mergedPlugins = React.useMemo(

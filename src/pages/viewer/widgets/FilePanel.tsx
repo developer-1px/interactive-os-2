@@ -1,5 +1,7 @@
 // @useState-hatch — content: async file fetch; spreadMode: view toggle
 import { useState, useEffect, useRef, useMemo } from 'react'
+
+const fileCache = new Map<string, string>()
 import { SpreadReader } from '@os/ui/SpreadReader'
 import { FilePreview } from '@os/ui/FilePreview'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
@@ -21,9 +23,19 @@ export function FilePanel({ path }: { path: string }) {
 
   useEffect(() => {
     bodyRef.current?.scrollTo(0, 0)
-    if (source === 'text') {
-      fetchFile(path).then(setContent)
+    if (source !== 'text') return
+    const cached = fileCache.get(path)
+    if (cached !== undefined) {
+      setContent(cached)
+      return
     }
+    setContent('')
+    let cancelled = false
+    fetchFile(path).then((text) => {
+      fileCache.set(path, text)
+      if (!cancelled) setContent(text)
+    })
+    return () => { cancelled = true }
   }, [path, source])
 
   const keyMap = useMemo(() => ({

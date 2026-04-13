@@ -25,7 +25,8 @@ interface LayoutRenderContext {
   store: NormalizedData
   registry: WidgetRegistry
   surface?: LayoutSurface
-  renderNode: (nodeId: string) => React.ReactNode
+  parentType?: string
+  renderNode: (nodeId: string, parentType?: string) => React.ReactNode
   refCallback: (nodeId: string) => (el: HTMLElement | null) => void
   dispatch: (command: Command) => void
 }
@@ -37,7 +38,7 @@ function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode,
   navId: string
   contentIds: string[]
   sidebarWidth: number
-  renderNode: (id: string) => React.ReactNode
+  renderNode: (id: string, parentType?: string) => React.ReactNode
   refCallback: (id: string) => (el: HTMLElement | null) => void
 }) {
   const [activeIndex, setActiveIndex] = React.useState(0)
@@ -50,13 +51,13 @@ function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode,
           className={`${styles.splitPane} ${styles.navSidebar}`}
           style={{ '--split-flex': '0 0 auto', '--split-basis': `${sidebarWidth * 100}%` } as React.CSSProperties}
         >
-          {renderNode(navId)}
+          {renderNode(navId, 'nav')}
         </div>
         <div
           className={`${styles.splitPane} ${styles.navContent}`}
           style={{ '--split-flex': '1', '--split-basis': 'auto' } as React.CSSProperties}
         >
-          {contentIds[activeIndex] ? renderNode(contentIds[activeIndex]) : null}
+          {contentIds[activeIndex] ? renderNode(contentIds[activeIndex], 'nav') : null}
         </div>
       </div>
     </NavLayoutContext.Provider>
@@ -68,7 +69,7 @@ function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode,
 function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
   nodeId: string
   store: NormalizedData
-  renderNode: (id: string) => React.ReactNode
+  renderNode: (id: string, parentType?: string) => React.ReactNode
   refCallback: (id: string) => (el: HTMLElement | null) => void
 }) {
   const childIds = getChildren(store, nodeId)
@@ -98,7 +99,7 @@ function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
           )
         })}
       </div>
-      {childIds[activeTab] ? renderNode(childIds[activeTab]) : null}
+      {childIds[activeTab] ? renderNode(childIds[activeTab], 'tab') : null}
     </div>
   )
 }
@@ -125,7 +126,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
 
             return (
               <div key={childId} className={`${ax({ scroll: 'hidden' })} ${styles.splitPane}`} style={style}>
-                {renderNode(childId)}
+                {renderNode(childId, 'split')}
               </div>
             )
           })}
@@ -141,7 +142,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div ref={refCallback(nodeId)} className={ax({ flex: '1', layout: 'fill', scroll: 'hidden', surface })}>
         <SplitPane direction={node.direction} sizes={node.sizes} onResize={handleResize}>
-          {childIds.map((childId) => renderNode(childId))}
+          {childIds.map((childId) => renderNode(childId, 'split'))}
         </SplitPane>
       </div>
     )
@@ -155,7 +156,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div ref={refCallback(nodeId)} className={ax({ layout: 'fill', gap: node.gap ?? 'md', width: 'full', surface })}>
         {childIds.map((childId) => (
-          <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
+          <React.Fragment key={childId}>{renderNode(childId, 'stack')}</React.Fragment>
         ))}
       </div>
     )
@@ -170,7 +171,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div ref={refCallback(nodeId)} className={ax({ layout: layoutValue, gap: node.gap ?? 'md', width: 'full', surface })}>
         {childIds.map((childId) => (
-          <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
+          <React.Fragment key={childId}>{renderNode(childId, 'grid')}</React.Fragment>
         ))}
       </div>
     )
@@ -185,7 +186,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', surface })}>
         {childIds.map((childId) => (
-          <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
+          <React.Fragment key={childId}>{renderNode(childId, 'bar')}</React.Fragment>
         ))}
       </div>
     )
@@ -205,7 +206,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div ref={refCallback(nodeId)} className={ax({ placement: placementMap[node.overlayType] ?? 'center', surface })}>
         {childIds.map((childId) => (
-          <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
+          <React.Fragment key={childId}>{renderNode(childId, 'overlay')}</React.Fragment>
         ))}
       </div>
     )
@@ -251,7 +252,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
           )}
         </div>
         {childIds.map(childId => (
-          <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
+          <React.Fragment key={childId}>{renderNode(childId, 'section')}</React.Fragment>
         ))}
       </div>
     )
@@ -265,13 +266,13 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     return (
       <div ref={refCallback(nodeId)} className={ax({ placement: node.anchor })}>
         {childIds.map((childId) => (
-          <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>
+          <React.Fragment key={childId}>{renderNode(childId, 'floating')}</React.Fragment>
         ))}
       </div>
     )
   },
 
-  widget: ({ nodeId, store, surface, registry, refCallback, renderNode }) => {
+  widget: ({ nodeId, store, surface, parentType, registry, refCallback, renderNode }) => {
     const node = getEntityData<WidgetNode>(store, nodeId)
     if (!node) return null
     const Component = resolveWidget(registry, node.widget)
@@ -286,11 +287,13 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
 
     const childIds = getChildren(store, nodeId)
     const children = childIds.length > 0
-      ? childIds.map((childId) => <React.Fragment key={childId}>{renderNode(childId)}</React.Fragment>)
+      ? childIds.map((childId) => <React.Fragment key={childId}>{renderNode(childId, 'widget')}</React.Fragment>)
       : undefined
 
+    const isSplitChild = parentType === 'split' || parentType === 'nav'
+
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', surface, ...(surface === 'raised' ? { shape: 'lg' } : {}) })} ${styles.splitChild} min-h-0`}>
+      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', surface, ...(surface === 'raised' ? { shape: 'lg' } : {}) })} ${isSplitChild ? styles.splitChild : ''} min-h-0`}>
         <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )
@@ -332,7 +335,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
   const store = aria.getStore()
   const layoutCtx = useMemo(() => ({ store, dispatch: aria.dispatch }), [store, aria.dispatch])
 
-  const renderNode = (nodeId: string): React.ReactNode => {
+  const renderNode = (nodeId: string, parentType?: string): React.ReactNode => {
     const entity = store.entities[nodeId]
     if (!entity) return null
 
@@ -344,7 +347,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
     if (!renderer) return null
 
     const surface = nodeData?.surface as LayoutSurface | undefined
-    const ctx: LayoutRenderContext = { nodeId, store, registry, surface, renderNode, refCallback, dispatch: aria.dispatch }
+    const ctx: LayoutRenderContext = { nodeId, store, registry, surface, parentType, renderNode, refCallback, dispatch: aria.dispatch }
     return renderer(ctx)
   }
 

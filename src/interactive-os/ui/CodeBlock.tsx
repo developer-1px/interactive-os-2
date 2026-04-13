@@ -76,20 +76,20 @@ export function CodeBlock({ code, filename, highlightLines, variant = 'bordered'
     : variant === 'compact'
       ? `${baseAx} code-block code-block--compact select-text`
       : `${baseAx} code-block select-text`
-  if (!html) return (
-    <div className={ax({ placement: 'relative' })}>
-      <pre className={`${cls} ${ax({ padding: 'xl', surface: 'base', shape: 'xl', textStyle: 'code' })}`}><code>{code}</code></pre>
-      <CopyButton text={code} />
-    </div>
-  )
   return (
     <div className={ax({ placement: 'relative' })}>
-      <div
-        ref={containerRef}
-        className={cls}
-        dangerouslySetInnerHTML={{ __html: html }}
-        onClick={handleClick}
-      />
+      {html ? (
+        <div
+          ref={containerRef}
+          className={cls}
+          dangerouslySetInnerHTML={{ __html: html }}
+          onClick={handleClick}
+        />
+      ) : (
+        <div ref={containerRef} className={cls}>
+          <pre className="shiki"><code>{code}</code></pre>
+        </div>
+      )}
       <CopyButton text={code} />
     </div>
   )

@@ -1,5 +1,5 @@
 // @useState-hatch — useStreamFeed 페이지 소유 필요
-// FlatLayout gap 발견 실험 — command + shared store 기반 위젯 통신
+// FlatLayout Pull model — IncidentProvider + useFlatLayout shared state
 import { useCallback, useMemo, useRef, useEffect } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { definePage } from '@os/layout/flatLayout'
@@ -14,7 +14,8 @@ import {
   TimelinePanelWidget,
   CapturePanelWidget,
   ChatZoneWidget,
-} from '../../experiments/incidentWidgets'
+} from './incidentWidgets'
+import { IncidentProvider } from './incidentContext'
 
 // ── Blocks (채팅 메시지에 첨부되는 리치 콘텐츠) ──
 
@@ -61,6 +62,25 @@ const registry = createWidgetRegistry({
 
 const incidentPlugins = [incidentPlugin()]
 
+const incidentLayout = definePage({
+  entities: {
+    root: {
+      data: { type: 'split', direction: 'vertical', sizes: [0.05, 'flex'], resizable: false },
+      children: ['monitor-bar', 'workspace'],
+    },
+    'monitor-bar': { data: { type: 'widget', widget: 'MonitoringBar' } },
+    workspace: {
+      data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex', 0.3], resizable: false },
+      children: ['timeline', 'capture', 'chat'],
+    },
+    timeline: { data: { type: 'widget', widget: 'TimelinePanel' } },
+    capture: { data: { type: 'widget', widget: 'CapturePanel' } },
+    chat: { data: { type: 'widget', widget: 'ChatZone' } },
+    // shared state node — widgets read/write via useFlatLayout + commands
+    shared: { data: { type: 'state', selectedEventId: null, chatItemCount: 0 } },
+  },
+})
+
 // ── Page ──
 
 export default function PageIncidentFlat() {
@@ -81,39 +101,19 @@ export default function PageIncidentFlat() {
     addItems(MESSAGES)
   }, [clear, addItems])
 
-  // 레이아웃 선언 — 정적 구조 + ChatZone만 동적 props
-  const layoutData = useMemo(() => definePage({
-    entities: {
-      root: {
-        data: { type: 'split', direction: 'vertical', sizes: [0.05, 'flex'], resizable: false },
-        children: ['monitor-bar', 'workspace'],
-      },
-      'monitor-bar': { data: { type: 'widget', widget: 'MonitoringBar' } },
-      workspace: {
-        data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex', 0.3], resizable: false },
-        children: ['timeline', 'capture', 'chat'],
-      },
-      timeline: { data: { type: 'widget', widget: 'TimelinePanel' } },
-      capture: { data: { type: 'widget', widget: 'CapturePanel' } },
-      chat: {
-        data: {
-          type: 'widget', widget: 'ChatZone',
-          props: { items, isStreaming, feedRef, onReplay: replay },
-        },
-      },
-      // shared state node — widgets read/write via useFlatLayout + commands
-      // type 'state'는 layoutRenderers에 없으므로 렌더링되지 않음 (데이터 전용 노드)
-      shared: { data: { type: 'state', selectedEventId: null, chatItemCount: 0 } },
-    },
-  }), [items, isStreaming, feedRef, replay])
+  const incidentCtx = useMemo(() => ({
+    items, isStreaming, feedRef, onReplay: replay,
+  }), [items, isStreaming, replay]) // feedRef는 useRef — stable identity
 
   return (
-    <FlatLayout
-      data={layoutData}
-      registry={registry}
-      plugins={incidentPlugins}
-      onChange={() => {}}
-      aria-label="Incident analysis (FlatLayout experiment)"
-    />
+    <IncidentProvider value={incidentCtx}>
+      <FlatLayout
+        data={incidentLayout}
+        registry={registry}
+        plugins={incidentPlugins}
+        onChange={() => {}}
+        aria-label="Incident analysis (FlatLayout experiment)"
+      />
+    </IncidentProvider>
   )
 }
