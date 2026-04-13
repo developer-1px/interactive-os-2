@@ -4,8 +4,8 @@ import { useState, useCallback, useImperativeHandle, forwardRef, useRef, useEffe
 import { FilePreview } from './FilePreview'
 import { useAnimationQueue } from './useAnimationQueue'
 import type { HighlightTone } from './CodeBlock'
-import { editAnimationFrames, type TimedFrame } from '../../pages/replay/editAnimation'
-import type { FileViewerCommand, FileViewerHandle } from '../../pages/replay/viewerTypes'
+import { editAnimationFrames, type TimedFrame } from './editAnimation'
+import type { FileViewerCommand, FileViewerHandle } from './viewerTypes'
 import { ax } from '@styles/ax'
 
 interface FileViewerProps {

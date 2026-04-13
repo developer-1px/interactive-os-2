@@ -2,7 +2,7 @@
 // ② component-catalog-prd.md
 import { useRef, useEffect } from 'react'
 import { FileViewer } from './FileViewer'
-import type { FileViewerHandle } from '../../pages/replay/viewerTypes'
+import type { FileViewerHandle } from './viewerTypes'
 import { ax } from '@styles/ax'
 
 export const meta = {

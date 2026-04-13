@@ -4,6 +4,7 @@ import type { NormalizedData } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { getChildren, getEntity } from '@os/store/createStore'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { showcaseMdConfig } from '../showcase/mdConfig'
 import styles from './SlideView.module.css'
 
 interface Slide {
@@ -76,7 +77,7 @@ export function SlideView({ data, slideIndex, slideCount }: SlideViewProps) {
     <div className={ax({ placement: 'viewport', surface: 'base' })}>
       <div className={ax({ layout: 'stack', gap: 'lg', padding: 'xl', width: 'prose' })}>
         <h1 className={ax({ textStyle: headingStyle, text: 'primary' })}>{slide.title}</h1>
-        <MarkdownViewer content={slide.content.join('\n\n')} />
+        <MarkdownViewer content={slide.content.join('\n\n')} config={showcaseMdConfig} />
       </div>
       <div className={`${styles.counter} ${ax({ textStyle: 'caption', text: 'muted', placement: 'bottom' })}`}>
         {slideIndex + 1} / {slideCount}

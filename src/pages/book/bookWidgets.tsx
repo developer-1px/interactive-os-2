@@ -2,6 +2,7 @@
 import { ChevronLeft, ChevronRight, X, Star, Search, Layers, List } from 'lucide-react'
 import { Breadcrumb } from '@os/ui/Breadcrumb'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { showcaseMdConfig } from '../showcase/mdConfig'
 import { TocNavList } from '@os/ui/TocNavList'
 import { SpreadReader } from '@os/ui/SpreadReader'
 import { QuickOpen } from '@os/ui/QuickOpen'
@@ -26,7 +27,7 @@ function BookReader() {
       onPrevBoundary={onPrevBoundary}
       onSpreadChange={onSpreadChange}
     >
-      {page && <MarkdownViewer content={page.content} linkTransform={linkTransform} />}
+      {page && <MarkdownViewer content={page.content} linkTransform={linkTransform} config={showcaseMdConfig} />}
     </SpreadReader>
   )
 }

@@ -1,6 +1,6 @@
 // ② 2026-04-03-viewer-command-prd.md
 import { useState, useCallback } from 'react'
-import type { ViewerTab, FileTab, SearchTab, TerminalTab } from './viewerTypes'
+import type { ViewerTab, FileTab, SearchTab, TerminalTab } from '@os/ui/viewerTypes'
 
 export interface UseViewerTabsReturn {
   tabs: ViewerTab[]

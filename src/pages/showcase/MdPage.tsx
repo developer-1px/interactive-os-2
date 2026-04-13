@@ -1,4 +1,5 @@
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { showcaseMdConfig } from './mdConfig'
 
 interface MdPageProps {
   md: string
@@ -17,5 +18,5 @@ export default function MdPage({ md }: MdPageProps) {
     return <div className="page-header"><p className="page-desc">Not found: {mdPath}</p></div>
   }
 
-  return <MarkdownViewer content={mod.default} />
+  return <MarkdownViewer content={mod.default} config={showcaseMdConfig} />
 }

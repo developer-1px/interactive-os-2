@@ -13,7 +13,7 @@ import { createFileState } from './fileState'
 import { processToolEvents } from './toolToCommands'
 import { chatRenderers } from './replayRenderers'
 import type { UseViewerTabsReturn } from './useViewerTabs'
-import type { FileViewerHandle } from './viewerTypes'
+import type { FileViewerHandle } from '@os/ui/viewerTypes'
 
 interface LiveSessionPanelProps {
   viewerTabs: UseViewerTabsReturn

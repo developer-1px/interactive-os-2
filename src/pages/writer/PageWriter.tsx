@@ -8,6 +8,7 @@ import { expandCommands } from '@os/axis/expand'
 import { useWriterChatSync, sendWriterMessage, getSessionForFile } from './writerChatBridge'
 import { requestAnalysis, type AnalysisResult } from './writerAnalyze'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { showcaseMdConfig } from '../showcase/mdConfig'
 import WriterFileBrowser from './WriterFileBrowser'
 import { PyramidView, buildPyramids } from './PyramidView'
 import { SlideView, buildSlides } from './SlideView'
@@ -319,7 +320,7 @@ function writerEditKeyDown(store: NormalizedData, e: React.KeyboardEvent, ctx: E
 /** Prose preview — reuses the shared MarkdownViewer with storeToMd() */
 function ProseView({ data: storeData }: { data: NormalizedData }) {
   const md = useMemo(() => storeToMd(storeData), [storeData])
-  return <MarkdownViewer content={md} />
+  return <MarkdownViewer content={md} config={showcaseMdConfig} />
 }
 
 const writerItemOptions = {

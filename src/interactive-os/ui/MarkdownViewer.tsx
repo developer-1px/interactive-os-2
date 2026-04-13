@@ -1,16 +1,13 @@
 /** @catalog 마크다운 렌더링 뷰어 */
 // ② 2026-03-31-chat-perf-prd.md
-import { Component, createElement, memo, useMemo, type ReactNode } from 'react'
+import { Component, createElement, memo, useMemo, type ComponentType, type ReactNode } from 'react'
+import type { Plugin } from 'unified'
 import { parse as parseYaml } from 'yaml'
 import { ax } from '@styles/ax'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
 import rehypeRaw from 'rehype-raw'
-import remarkRender from '../../pages/showcase/remarkRender'
-import { parseJsx } from '../../pages/showcase/parseJsx'
-import { mdComponents } from '../../pages/showcase/mdComponents'
-import { MermaidBlock } from '../../pages/showcase/MermaidBlock'
 import { CodeBlock } from './CodeBlock'
 import { FrontmatterCard } from './FrontmatterCard'
 import { LightboxProvider, useLightbox } from './Lightbox'
@@ -18,7 +15,14 @@ import './MarkdownViewer.css'
 
 export type CodeVariant = 'bordered' | 'flush' | 'compact'
 
-const remarkPlugins = [remarkGfm, remarkBreaks, remarkRender]
+export interface MarkdownRendererConfig {
+  remarkPlugins?: Plugin<any[], any>[]
+  componentRegistry?: Record<string, ComponentType<any>>
+  parseComponent?: (input: string) => { name: string; props: Record<string, string | boolean> } | null
+  mermaidComponent?: ComponentType<{ code: string; onClick?: (svgHtml: string) => void }>
+}
+
+const baseRemarkPlugins = [remarkGfm, remarkBreaks]
 const rehypePlugins = [rehypeRaw]
 
 class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
@@ -32,14 +36,22 @@ class RenderErrorBoundary extends Component<{ children: ReactNode }, { error: st
   }
 }
 
-function RenderBlock({ children }: { children: string }) {
+function RenderBlock({ children, config }: { children: string; config?: MarkdownRendererConfig }) {
+  if (!config?.parseComponent || !config?.componentRegistry) {
+    return (
+      <div className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>
+        No config provided for render block
+      </div>
+    )
+  }
+
   const lines = children.trim().split('\n')
   const elements: ReactNode[] = []
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim()
     if (!line) continue
-    const parsed = parseJsx(line)
+    const parsed = config.parseComponent(line)
     if (!parsed) {
       elements.push(
         <div key={i} className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>
@@ -48,8 +60,8 @@ function RenderBlock({ children }: { children: string }) {
       )
       continue
     }
-    const Component = mdComponents[parsed.name]
-    if (!Component) {
+    const Comp = config.componentRegistry[parsed.name]
+    if (!Comp) {
       elements.push(
         <div key={i} className={ax({ tone: 'danger', textStyle: 'caption', padding: 'xs' })}>
           Unknown component: {parsed.name}
@@ -59,7 +71,7 @@ function RenderBlock({ children }: { children: string }) {
     }
     elements.push(
       <RenderErrorBoundary key={i}>
-        {createElement(Component, parsed.props)}
+        {createElement(Comp, parsed.props)}
       </RenderErrorBoundary>
     )
   }
@@ -68,7 +80,7 @@ function RenderBlock({ children }: { children: string }) {
 }
 
 // ② lightbox-prd.md — img/mermaid click → Lightbox
-function MarkdownContent({ content, className, codeVariant, prose, linkTransform }: { content: string; className?: string; codeVariant?: CodeVariant; prose: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler } }) {
+function MarkdownContent({ content, className, codeVariant, prose, linkTransform, config }: { content: string; className?: string; codeVariant?: CodeVariant; prose: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig }) {
   const lightbox = useLightbox()
   const { data: frontmatter, body } = useMemo(() => {
     const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(content)
@@ -116,7 +128,7 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
       const dataRender = (rest as Record<string, unknown>)['data-render']
       if (typeof dataRender === 'string') {
         const decoded = atob(dataRender)
-        return <RenderBlock>{decoded}</RenderBlock>
+        return <RenderBlock config={config}>{decoded}</RenderBlock>
       }
       return <div {...rest}>{children}</div>
     },
@@ -127,7 +139,11 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
 
       if (lang === 'mermaid') {
         // V2: lightbox-prd.md — mermaid click opens lightbox with SVG
-        return <MermaidBlock code={text} onClick={() => lightbox.open({ type: 'mermaid', code: text })} />
+        if (config?.mermaidComponent) {
+          const Mermaid = config.mermaidComponent
+          return <Mermaid code={text} onClick={() => lightbox.open({ type: 'mermaid', code: text })} />
+        }
+        return <CodeBlock code={text} filename="code.mermaid" variant={codeVariant} />
       }
 
       if (lang) {
@@ -136,7 +152,12 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
 
       return <code className={className} {...props}>{children}</code>
     },
-  }), [codeVariant, linkTransform, lightbox])
+  }), [codeVariant, linkTransform, lightbox, config])
+
+  const remarkPlugins = useMemo(
+    () => [...baseRemarkPlugins, ...(config?.remarkPlugins ?? [])],
+    [config?.remarkPlugins],
+  )
 
   return (
     <div className={`break-word select-text ${ax({ text: 'primary', width: 'prose', layout: 'stack', gap: 'md' })}${prose ? ' markdown' : ''}${className ? ` ${className}` : ''}`}>
@@ -151,10 +172,10 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
   )
 }
 
-export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codeVariant, prose = true, linkTransform }: { content: string; className?: string; codeVariant?: CodeVariant; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler } }) {
+export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codeVariant, prose = true, linkTransform, config }: { content: string; className?: string; codeVariant?: CodeVariant; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig }) {
   return (
     <LightboxProvider>
-      <MarkdownContent content={content} className={className} codeVariant={codeVariant} prose={prose} linkTransform={linkTransform} />
+      <MarkdownContent content={content} className={className} codeVariant={codeVariant} prose={prose} linkTransform={linkTransform} config={config} />
     </LightboxProvider>
   )
 })

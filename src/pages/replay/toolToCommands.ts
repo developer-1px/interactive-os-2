@@ -1,6 +1,6 @@
 // ② 2026-04-03-viewer-command-prd.md
 import type { TimelineEvent } from '../viewer/groupEvents'
-import type { FileViewerHandle } from './viewerTypes'
+import type { FileViewerHandle } from '@os/ui/viewerTypes'
 import type { FileState } from './fileState'
 import { applyRead, applyEdit, applyWrite } from './fileState'
 import { fetchFile } from '../viewer/fsClient'

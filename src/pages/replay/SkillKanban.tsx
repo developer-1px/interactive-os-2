@@ -15,13 +15,8 @@ import type { TimelineEvent } from '../viewer/groupEvents'
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { ax } from '@styles/ax'
-import { MarkdownViewer, type MarkdownRendererConfig } from '@os/ui/MarkdownViewer'
-import remarkRender from '../showcase/remarkRender'
-import { parseJsx } from '../showcase/parseJsx'
-import { mdComponents } from '../showcase/mdComponents'
-import { MermaidBlock } from '../showcase/MermaidBlock'
-
-const mdConfig: MarkdownRendererConfig = { remarkPlugins: [remarkRender], componentRegistry: mdComponents, parseComponent: parseJsx, mermaidComponent: MermaidBlock }
+import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { showcaseMdConfig } from '../showcase/mdConfig'
 import { FilePreview } from '@os/ui/FilePreview'
 import { TabList } from '@os/ui/TabList'
 import { PanelHeader } from '@os/ui/PanelHeader'
@@ -256,7 +251,7 @@ function ChatViewerWidget() {
   const { content } = useSessionDetail()
   return (
     <div className={ax({ flex: '1', scroll: 'y' })}>
-      <MarkdownViewer content={content} codeVariant="compact" config={mdConfig} />
+      <MarkdownViewer content={content} codeVariant="compact" config={showcaseMdConfig} />
     </div>
   )
 }

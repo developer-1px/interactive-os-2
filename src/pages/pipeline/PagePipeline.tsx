@@ -9,6 +9,7 @@ import type { PaneSize } from '@os/ui/SplitPane'
 import { Panel } from '@os/ui/panels'
 import { FilePreview } from '@os/ui/FilePreview'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { showcaseMdConfig } from '../showcase/mdConfig'
 import { TabList } from '@os/ui/TabList'
 import { ax } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
@@ -50,7 +51,7 @@ function SummaryPreview({ title, body }: { title: string; body: string }) {
   return (
     <div className={ax({ layout: 'column', gap: 'sm', padding: 'md' })}>
       <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{title}</span>
-      <MarkdownViewer content={body} prose={false} codeVariant="compact" />
+      <MarkdownViewer content={body} prose={false} codeVariant="compact" config={showcaseMdConfig} />
     </div>
   )
 }

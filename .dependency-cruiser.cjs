@@ -52,6 +52,15 @@ module.exports = {
       to: { path: '^src/interactive-os/ui/' },
     },
 
+    // ui/ → pages/ 역방향 import 금지 (demo 파일 제외)
+    {
+      name: 'no-ui-to-pages',
+      severity: 'error',
+      comment: 'ui/ 컴포넌트는 도메인(pages/)에 의존할 수 없다 — demo 파일만 예외',
+      from: { path: '^src/interactive-os/ui/', pathNot: '\\.demo\\.(ts|tsx)$' },
+      to: { path: '^src/pages/' },
+    },
+
     // pages는 ui/ 만 import 가능 (primitives 이하 직접 import 금지)
     {
       name: 'pages-no-primitives',

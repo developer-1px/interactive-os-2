@@ -5,6 +5,7 @@ const fileCache = new Map<string, string>()
 import { SpreadReader } from '@os/ui/SpreadReader'
 import { FilePreview } from '@os/ui/FilePreview'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { showcaseMdConfig } from '../../showcase/mdConfig'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { getFileSource } from '@os/ui/fileRenderers'
@@ -46,7 +47,7 @@ export function FilePanel({ path }: { path: string }) {
     return (
       <AriaRoute keyMap={keyMap}>
         <SpreadReader resetKey={path}>
-          <MarkdownViewer content={content} />
+          <MarkdownViewer content={content} config={showcaseMdConfig} />
         </SpreadReader>
       </AriaRoute>
     )

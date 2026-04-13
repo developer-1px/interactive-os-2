@@ -411,6 +411,28 @@ if (isPages && /from\s+['"]@os\/(?:store|engine|axis|pattern|primitives|plugins)
   )
 }
 
+// 규칙 25: 위젯에서 ax({ placement: ... }) 금지 — 배치는 FlatLayout이 소유
+const isWidgetFile = isPages && isTsx && /[Ww]idget/.test(filePath)
+if (isWidgetFile && /\bax\(\{[^}]*\bplacement\s*:/.test(content)) {
+  violations.push(
+    'widget에서 ax({ placement: ... }) 금지 — 위치 배치는 FlatLayout(floating/overlay 노드)이 소유합니다. definePage에 floating/overlay 노드를 추가하세요'
+  )
+}
+
+// 규칙 26: 위젯에서 document.querySelector/getElementById 금지 — ref 또는 engine 사용
+if (isWidgetFile && /\bdocument\s*\.\s*(?:querySelector(?:All)?|getElementById|getElementsBy\w+)\s*\(/.test(content)) {
+  violations.push(
+    'widget에서 document.querySelector/getElementById 금지 — useRef 또는 engine의 navigate 축을 사용하세요'
+  )
+}
+
+// 규칙 27: 위젯에서 requestAnimationFrame 금지 — engine 렌더 구독 사용
+if (isWidgetFile && /\brequestAnimationFrame\s*\(/.test(content)) {
+  violations.push(
+    'widget에서 requestAnimationFrame 금지 — engine 렌더 구독 또는 useEffect를 사용하세요'
+  )
+}
+
 if (violations.length > 0) {
   const reason = [
     `os 위반 ${violations.length}건 감지:`,
