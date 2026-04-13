@@ -15,7 +15,13 @@ import type { TimelineEvent } from '../viewer/groupEvents'
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { ax } from '@styles/ax'
-import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { MarkdownViewer, type MarkdownRendererConfig } from '@os/ui/MarkdownViewer'
+import remarkRender from '../showcase/remarkRender'
+import { parseJsx } from '../showcase/parseJsx'
+import { mdComponents } from '../showcase/mdComponents'
+import { MermaidBlock } from '../showcase/MermaidBlock'
+
+const mdConfig: MarkdownRendererConfig = { remarkPlugins: [remarkRender], componentRegistry: mdComponents, parseComponent: parseJsx, mermaidComponent: MermaidBlock }
 import { FilePreview } from '@os/ui/FilePreview'
 import { TabList } from '@os/ui/TabList'
 import { PanelHeader } from '@os/ui/PanelHeader'
@@ -250,7 +256,7 @@ function ChatViewerWidget() {
   const { content } = useSessionDetail()
   return (
     <div className={ax({ flex: '1', scroll: 'y' })}>
-      <MarkdownViewer content={content} codeVariant="compact" />
+      <MarkdownViewer content={content} codeVariant="compact" config={mdConfig} />
     </div>
   )
 }
@@ -347,7 +353,7 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
             {card.lastSkill && <span>/{card.lastSkill}</span>}
           </div>
         )}
-        <button className={ax({ surface: 'ghost', recipe: 'control-sm', layout: 'center', text: 'secondary', interactive: 'button' })} onClick={close}>
+        <button className={ax({ surface: 'ghost', recipe: 'control-sm', layout: 'center', text: 'secondary', interactive: 'button', padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', clamp: '1' })} onClick={close}>
           <CloseIndicator />
         </button>
       </PanelHeader>

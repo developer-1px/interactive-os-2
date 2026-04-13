@@ -159,101 +159,26 @@ dialog.sf-overlay[open] {
 @layer recipe {
 
 /* ════════════════════════════════════════════
- * Recipe — 구조 프리셋 (shadcn 원리)
- * height + padding + font + weight + gap + radius 세트.
- * 색칠 축(surface/tone/text/border)과 조합하여 사용.
- * 구조를 잠그고 색만 열어서 어떤 조합이든 완성품 보장.
+ * Recipe — 크기 정체성 프리셋
+ * min-height + font-size + font-weight만 소유.
+ * 구조(padding/gap/shape/layout)는 각 컴포넌트가 명시적 축으로 선언.
  * ════════════════════════════════════════════ */
 
 /* ── control: 버튼, 인풋, 셀렉트 ── */
-.rc-control {
-  min-height: 36px;
-  padding: 6px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  gap: 8px;
-  border-radius: var(--shape-xs-radius);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-}
-.rc-control-sm {
-  min-height: 32px;
-  padding: 4px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  gap: 6px;
-  border-radius: var(--shape-xs-radius);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-}
-.rc-control-lg {
-  min-height: 40px;
-  padding: 8px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  gap: 8px;
-  border-radius: var(--shape-xs-radius);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-}
+.rc-control    { min-height: 36px; font-size: 14px; font-weight: 500; }
+.rc-control-sm { min-height: 32px; font-size: 13px; font-weight: 500; }
+.rc-control-lg { min-height: 40px; font-size: 14px; font-weight: 500; }
 
 /* ── item: 리스트/메뉴/탭/사이드바 아이템 ── */
-.rc-item {
-  min-height: 36px;
-  padding: 6px 8px;
-  font-size: 14px;
-  font-weight: 450;
-  gap: 8px;
-  border-radius: var(--shape-2xs-radius);
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-.rc-item-sm {
-  min-height: 28px;
-  padding: 4px 8px;
-  font-size: 13px;
-  font-weight: 450;
-  gap: 8px;
-  border-radius: var(--shape-2xs-radius);
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
+.rc-item    { min-height: 36px; font-size: 14px; font-weight: 450; }
+.rc-item-sm { min-height: 28px; font-size: 13px; font-weight: 450; }
 
-/* ── container: 카드, 다이얼로그, 패널 ── */
-.rc-container {
-  padding: 24px;
-  gap: 24px;
-  border-radius: var(--shape-lg-radius);
-  display: flex;
-  flex-direction: column;
-}
-.rc-container-sm {
-  padding: 16px;
-  gap: 16px;
-  border-radius: var(--shape-md-radius);
-  display: flex;
-  flex-direction: column;
-}
+/* ── container: 카드, 다이얼로그, 패널 (의미적 마커) ── */
+.rc-container    { /* size identity: none — semantic marker */ }
+.rc-container-sm { /* size identity: none — semantic marker */ }
 
 /* ── badge: 배지, 태그 ── */
-.rc-badge {
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 500;
-  gap: 4px;
-  border-radius: var(--shape-pill-radius);
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-}
+.rc-badge { font-size: 12px; font-weight: 500; }
 
 /* ════════════════════════════════════════════
  * Control Size — "이 요소의 크기급" (레거시 — recipe 사용 권장)
@@ -511,6 +436,8 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 .sh-none { border-radius: 0; }
+.sh-2xs  { border-radius: var(--shape-2xs-radius); } /*  4px */
+.sh-xs   { border-radius: var(--shape-xs-radius); }  /*  6px */
 .sh-sm   { border-radius: var(--shape-sm-radius); }  /*  6px */
 .sh-md   { border-radius: var(--shape-md-radius); }  /* 10px */
 .sh-lg   { border-radius: var(--shape-lg-radius); }  /* 12px */

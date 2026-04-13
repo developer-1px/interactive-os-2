@@ -20,7 +20,8 @@ export function TabItem(
       {...props}
       className={ax({
         recipe: 'item-sm', interactive: 'tab',
-        layout: 'row', text: state.selected ? 'primary' : 'muted',
+        padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full',
+        text: state.selected ? 'primary' : 'muted',
       })}
     >
       {label}

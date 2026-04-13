@@ -25,8 +25,9 @@ export function ViewerTabItem(
       {...props}
       className={ax({
         recipe: 'item-sm', interactive: 'tab',
+        padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full',
         text: state.selected ? 'primary' : 'muted',
-        layout: 'row', flex: 'none',
+        flex: 'none',
       })}
     >
       <Icon size={12} /> {label}

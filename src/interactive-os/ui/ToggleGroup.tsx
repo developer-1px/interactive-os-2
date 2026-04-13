@@ -18,7 +18,7 @@ interface ToggleGroupProps extends AriaComponentProps {
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={ax({ recipe: 'item', interactive: 'check' })} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
+    <div {...props} className={ax({ recipe: 'item', interactive: 'check', padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} data-focused={state.focused || undefined} data-selected={state.selected || undefined}>
       <CheckIndicator checked={state.selected} />
       <span className={ax({ textStyle: 'body', text: 'primary' })}>{label}</span>
     </div>

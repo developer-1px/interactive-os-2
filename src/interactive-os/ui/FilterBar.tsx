@@ -16,11 +16,11 @@ interface FilterBarProps {
 
 export function FilterBar({ filters, onAddFilter, children }: FilterBarProps) {
   return (
-    <div className={ax({ recipe: 'item-sm', layout: 'bar', gap: 'xs' })}>
+    <div className={ax({ recipe: 'item-sm', layout: 'bar', gap: 'xs', padding: 'xs', shape: '2xs', width: 'full' })}>
       {filters.map((chip) => (
         <span
           key={chip.id}
-          className={ax({ recipe: 'badge', surface: 'display', border: 'default', layout: 'bar', gap: 'xs' })}
+          className={ax({ recipe: 'badge', surface: 'display', border: 'default', layout: 'bar', gap: 'xs', padding: 'xs', shape: 'pill', content: 'text', clamp: '1' })}
         >
           <span className={ax({ text: 'muted' })}>{chip.label}</span>
           {chip.value && (
@@ -45,7 +45,7 @@ export function FilterBar({ filters, onAddFilter, children }: FilterBarProps) {
         <button
           type="button"
           onClick={onAddFilter}
-          className={ax({ recipe: 'badge', surface: 'ghost', text: 'muted', interactive: 'button' })}
+          className={ax({ recipe: 'badge', surface: 'ghost', text: 'muted', interactive: 'button', padding: 'xs', gap: 'xs', shape: 'pill', layout: 'row', content: 'text', clamp: '1' })}
         >
           +
         </button>

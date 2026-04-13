@@ -14,7 +14,7 @@ interface GroupHeaderProps {
 export function GroupHeader({ icon, label, count, expanded, onToggle }: GroupHeaderProps) {
   return (
     <div
-      className={ax({ recipe: 'item-sm', interactive: 'item', layout: 'bar' })}
+      className={ax({ recipe: 'item-sm', interactive: 'item', layout: 'bar', padding: 'xs', gap: 'sm', shape: '2xs', width: 'full' })}
       onClick={onToggle}
     >
       {expanded !== undefined && (

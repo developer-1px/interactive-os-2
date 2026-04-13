@@ -28,6 +28,11 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     interactive: 'item',
     recipe: 'item',
     text: (state.focused || state.active) ? 'primary' : 'secondary',
+    padding: 'sm',
+    gap: 'sm',
+    shape: '2xs',
+    layout: 'row',
+    width: 'full',
   })
   return <div {...props} className={`${props.className ?? ''} ${itemClass}`}>{label}</div>
 }

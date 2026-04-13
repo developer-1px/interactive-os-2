@@ -14,7 +14,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const checked = state.expanded ?? false
   return (
-    <div {...props} className={ax({ recipe: 'item', interactive: 'check', layout: 'spread' })} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ recipe: 'item', interactive: 'check', layout: 'spread', padding: 'sm', gap: 'sm', shape: '2xs', width: 'full' })} data-focused={state.focused || undefined}>
       <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
       <span className={`${ax({ textStyle: 'caption', tone: checked ? 'success' : undefined, text: checked ? undefined : 'muted', weight: 'semi' })}`} data-checked={checked || undefined}>{checked ? 'On' : 'Off'}</span>
     </div>

@@ -17,6 +17,12 @@ export function Badge({ tone = 'neutral', variant = 'solid', children }: BadgePr
         tone,
         text: variant === 'solid' ? 'bright' : 'primary',
         border: variant === 'outline' ? 'default' : undefined,
+        padding: 'xs',
+        gap: 'xs',
+        shape: 'pill',
+        layout: 'row',
+        content: 'text',
+        clamp: '1',
       })}
     >
       {children}

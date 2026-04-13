@@ -205,7 +205,7 @@ function QuickOpenManaged({
           key={childId}
           id={childId}
           {...(nodeProps as React.HTMLAttributes<HTMLDivElement>)}
-          className={`cursor-default ${ax({ interactive: 'item', recipe: 'item', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined })}`}
+          className={`cursor-default ${ax({ interactive: 'item', recipe: 'item', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}`}
           onClick={() => {
             aria.dispatch(createBatchCommand([
               selectionCommands.select(childId),
@@ -223,7 +223,7 @@ function QuickOpenManaged({
       <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
         <Search size={16} className={ax({ text: 'muted', flex: 'none' })} />
         <input
-          className={`quick-open-input border-none outline-none ${ax({ recipe: 'control', flex: '1' })}`}
+          className={`quick-open-input border-none outline-none ${ax({ recipe: 'control', flex: '1', padding: 'sm', content: 'text', gap: 'sm', shape: 'xs', layout: 'row', clamp: '1' })}`}
           type="text"
           placeholder={placeholder}
           value={query}

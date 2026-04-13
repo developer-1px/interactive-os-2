@@ -9,7 +9,7 @@ interface BadgeIndicatorProps {
 export function BadgeIndicator({ count, className }: BadgeIndicatorProps) {
   if (count <= 0) return null
   const classes = [
-    ax({ recipe: 'badge', flex: 'none', surface: 'display', tone: 'danger' }),
+    ax({ recipe: 'badge', flex: 'none', surface: 'display', tone: 'danger', padding: 'xs', gap: 'xs', shape: 'pill', layout: 'row', content: 'text', clamp: '1' }),
     'item-indicator--badge',
     className,
   ].filter(Boolean).join(' ')

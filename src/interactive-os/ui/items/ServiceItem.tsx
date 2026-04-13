@@ -35,6 +35,7 @@ export function ServiceItem(
         layout: 'bar',
         gap: 'xs',
         state: state.focused ? 'focused' : state.selected ? 'selected' : undefined,
+        padding: 'xs', content: 'text', shape: 'xs', clamp: '1',
       })}
     >
       {status && <StatusIndicator tone={STATUS_TONE[status]} />}

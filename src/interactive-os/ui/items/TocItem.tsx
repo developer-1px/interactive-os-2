@@ -14,7 +14,7 @@ export function TocItem(
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item-sm', interactive: 'item', text: state.selected ? 'bright' : 'muted' })}
+      className={ax({ recipe: 'item-sm', interactive: 'item', text: state.selected ? 'bright' : 'muted', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
       data-indent={depth > 0 ? '' : undefined}
       aria-current={state.selected ? 'page' : undefined}
     >

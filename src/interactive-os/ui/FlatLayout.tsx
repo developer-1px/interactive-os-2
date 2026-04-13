@@ -90,7 +90,10 @@ function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
                 surface: i === activeTab ? 'display' : 'ghost',
                 text: i === activeTab ? 'primary' : 'secondary',
                 padding: 'sm',
+                gap: 'sm',
                 shape: 'sm',
+                layout: 'row',
+                width: 'full',
               })}
               onClick={() => setActiveTab(i)}
             >

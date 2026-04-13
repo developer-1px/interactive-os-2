@@ -19,6 +19,9 @@ const sizeRecipe: Record<ButtonSize, Axes['recipe']> = {
   lg: 'control-lg',
 }
 
+const sizePadding = { sm: 'xs', default: 'sm', lg: 'sm' } as const
+const sizeGap = { sm: 'xs', default: 'sm', lg: 'sm' } as const
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   tone?: ButtonTone
@@ -28,7 +31,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({ variant = 'ghost', tone, size = 'default', interactive, className, ...props }: ButtonProps) {
-  const axes: Parameters<typeof ax>[0] = { ...variantAxes[variant], recipe: sizeRecipe[size] }
+  const axes = { ...variantAxes[variant], recipe: sizeRecipe[size], padding: sizePadding[size], gap: sizeGap[size], shape: 'xs', layout: 'row', content: 'text', clamp: '1' } as Axes
   if (tone) axes.tone = tone
   if (interactive) axes.interactive = interactive
   return (

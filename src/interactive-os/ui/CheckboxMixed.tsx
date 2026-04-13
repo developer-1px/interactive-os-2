@@ -16,7 +16,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const isMixed = state.checked === 'mixed'
   const isChecked = state.checked === true
   return (
-    <div {...props} className={ax({ layout: 'bar', interactive: 'check', recipe: 'item' })} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ layout: 'bar', interactive: 'check', recipe: 'item', padding: 'sm', gap: 'sm', shape: '2xs', width: 'full' })} data-focused={state.focused || undefined}>
       {isMixed ? <IndeterminateIndicator /> : <CheckIndicator checked={isChecked} />}
       <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>

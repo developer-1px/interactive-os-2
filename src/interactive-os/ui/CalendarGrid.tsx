@@ -28,7 +28,7 @@ const defaultRenderCell = (
 ): React.ReactElement => (
   <td
     {...props}
-    className={`calendar-day text-center ${ax({ recipe: 'control-sm', text: 'primary' })}`}
+    className={`calendar-day text-center ${ax({ recipe: 'control-sm', text: 'primary', padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', layout: 'row', clamp: '1' })}`}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
     data-outside={!meta.isCurrentMonth || undefined}

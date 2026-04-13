@@ -12,13 +12,13 @@ type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
   | 'accent-dim' | 'danger-dim' | 'success-dim' | 'warning-dim' | 'neutral-dim'
 type Text = 'bright' | 'primary' | 'secondary' | 'muted'
 // shape: 비-컨트롤 요소의 border-radius (컨트롤은 controlSize가 소유)
-type Shape = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
+type Shape = 'none' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
 
-// recipe: 구조 축 프리셋 (height + padding + font + weight + gap + radius 세트)
-// shadcn 원리: 구조는 잠그고 색만 열어서 어떤 조합이든 완성품 보장
+// recipe: 크기 정체성 프리셋 (min-height + font-size + font-weight)
+// 구조(padding/gap/shape/layout)는 각 컴포넌트가 명시적 축으로 선언
 // control: 버튼, 인풋, 셀렉트 등 조작 요소
 // item: 리스트/메뉴/탭/사이드바 아이템
-// container: 카드, 다이얼로그, 패널
+// container: 카드, 다이얼로그, 패널 (의미적 마커)
 // badge: 배지, 태그
 type Recipe =
   | 'control' | 'control-sm' | 'control-lg'

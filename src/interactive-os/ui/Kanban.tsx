@@ -74,7 +74,7 @@ export function Kanban({
       <FocusDiv
         key={cardId}
         focused={cardState.focused}
-        className={`${ax({ recipe: compact ? 'container-sm' : 'container', surface: 'display', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : undefined, border: compact ? undefined : 'subtle' })} kanban-card`}
+        className={`${ax({ recipe: compact ? 'container-sm' : 'container', surface: 'display', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : 'column', padding: compact ? 'md' : 'lg', gap: compact ? 'md' : 'lg', shape: compact ? 'md' : 'lg', border: compact ? undefined : 'subtle' })} kanban-card`}
         data-hub={isHub || undefined}
         title={cardTooltip ?? cardTitle}
         data-weight={cardWeight || undefined}

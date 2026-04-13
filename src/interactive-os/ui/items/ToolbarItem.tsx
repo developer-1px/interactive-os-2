@@ -25,6 +25,7 @@ export function ToolbarItem(
         interactive: 'button',
         layout: hasIcon ? 'center' : undefined,
         state: state.focused ? 'focused' : state.selected ? 'selected' : undefined,
+        padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', clamp: '1',
       })}
       aria-label={hasIcon ? label : undefined}
     >

@@ -22,7 +22,7 @@ export function MenuItem(
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item-sm', interactive: 'item', layout: 'spread' })}
+      className={ax({ recipe: 'item-sm', interactive: 'item', layout: 'spread', padding: 'xs', gap: 'sm', shape: '2xs', width: 'full' })}
     >
       <span>{label}</span>
       {state.expanded !== undefined && (

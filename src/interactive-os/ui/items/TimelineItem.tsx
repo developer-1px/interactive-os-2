@@ -24,7 +24,7 @@ export function TimelineItem(
     <div
       {...props}
       aria-selected={state.selected || undefined}
-      className={ax({ recipe: 'item-sm', interactive: 'item' })}
+      className={ax({ recipe: 'item-sm', interactive: 'item', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
       data-focused={state.focused || undefined}
     >
       {options?.icon && <span className={ax({ flex: 'none' })}>{options.icon}</span>}

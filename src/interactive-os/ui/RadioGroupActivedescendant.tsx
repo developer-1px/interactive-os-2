@@ -14,7 +14,7 @@ type RadioGroupActivedescendantProps = AriaComponentProps
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={ax({ layout: 'bar', interactive: 'check', recipe: 'item', text: state.checked ? 'primary' : undefined })} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ layout: 'bar', interactive: 'check', recipe: 'item', text: state.checked ? 'primary' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', width: 'full' })} data-focused={state.focused || undefined}>
       <RadioIndicator />
       <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>

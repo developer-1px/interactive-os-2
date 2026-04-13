@@ -11,7 +11,7 @@ interface PropertyRowProps {
 
 export function PropertyRow({ label, description, children }: PropertyRowProps) {
   return (
-    <div className={ax({ recipe: 'item', layout: 'spread' })}>
+    <div className={ax({ recipe: 'item', layout: 'spread', padding: 'sm', gap: 'sm', shape: '2xs', width: 'full' })}>
       <div className={ax({ layout: 'stack', gap: 'xs' })}>
         <span className={ax({ textStyle: 'body', text: 'primary', weight: 'medium' })}>{label}</span>
         {description && (
