@@ -1,17 +1,18 @@
 import { useMemo, useCallback } from 'react'
-import { useLocation, useNavigate, Link } from 'react-router-dom'
-import { ax } from '@styles/ax'
-import { PanelHeader } from '@os/ui/PanelHeader'
-import './PageUiShowcase.css'
-import MdPage from './MdPage'
-import { uiCategories, slugToMdFile } from './uiCategories'
-import { NavList } from '@os/ui/NavList'
-import { FOCUS_ID } from '@os/axis/navigate'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { FlatLayout } from '@os/ui/FlatLayout'
+import { definePage } from '@os/layout/flatLayout'
+import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
 import type { NormalizedData } from '@os/store/types'
+import { FOCUS_ID } from '@os/axis/navigate'
+import { uiCategories, slugToMdFile } from './uiCategories'
+import { ShowcaseProvider, type ShowcaseContextValue } from './showcaseContext'
+import { ShowcaseSidebarWidget, ShowcaseContentWidget } from './showcaseWidgets'
+import './PageUiShowcase.css'
 
-// --- Grouped store: ROOT → groups → items ---
+// ── Sidebar store ──
 
 const sidebarBaseStore = createStore({
   entities: {
@@ -36,7 +37,22 @@ const sidebarBaseStore = createStore({
   },
 })
 
-// --- PageUiShowcase ---
+// ── Layout ──
+
+const showcaseWidgets = createWidgetRegistry({
+  ShowcaseSidebar: ShowcaseSidebarWidget,
+  ShowcaseContent: ShowcaseContentWidget,
+})
+
+const showcaseLayout = definePage({
+  entities: {
+    root:    { data: { type: 'split', direction: 'horizontal', sizes: [0.2, 'flex'], resizable: false }, children: ['sidebar', 'content'] },
+    sidebar: { data: { type: 'widget', widget: 'ShowcaseSidebar', surface: 'sunken' } },
+    content: { data: { type: 'widget', widget: 'ShowcaseContent' } },
+  },
+})
+
+// ── Page ──
 
 export default function PageUiShowcase() {
   const { pathname } = useLocation()
@@ -61,32 +77,13 @@ export default function PageUiShowcase() {
 
   const mdFile = slugToMdFile[activeSlug]
 
+  const ctx = useMemo<ShowcaseContextValue>(() => ({
+    sidebarData, activeSlug, handleActivate, mdFile,
+  }), [sidebarData, activeSlug, handleActivate, mdFile])
+
   return (
-    <div className={`ui-page ${ax({ layout: 'row', flex: '1' })}`}>
-      <nav className={`${ax({ surface: 'sunken', layout: 'column', border: 'end' })} ui-sidebar`}>
-        <PanelHeader axes={{ layout: 'spread' }}>UI Components</PanelHeader>
-        <div className={ax({ padding: 'sm', border: 'bottom' })}>
-          <Link to="/ui/progress" className={ax({ textStyle: 'caption', tone: 'accent' })}>
-            Progress Dashboard
-          </Link>
-        </div>
-        <div className={`ui-sidebar-body ${ax({ flex: '1', scroll: 'y' })}`}>
-          <NavList
-            data={sidebarData}
-            onActivate={handleActivate}
-            aria-label="UI Components"
-          />
-        </div>
-      </nav>
-      <div className={`${ax({ surface: 'base', layout: 'fill' })}`}>
-        <div className={`ui-content-body ${ax({ flex: '1', scroll: 'y' })}`}>
-          {mdFile ? (
-            <MdPage key={activeSlug} md={`ui/${mdFile}`} />
-          ) : (
-            <div className={ax({ padding: 'xl', text: 'muted' })}>Unknown component: {activeSlug}</div>
-          )}
-        </div>
-      </div>
-    </div>
+    <ShowcaseProvider value={ctx}>
+      <FlatLayout data={showcaseLayout} registry={showcaseWidgets} aria-label="UI Showcase" />
+    </ShowcaseProvider>
   )
 }

@@ -1,31 +1,25 @@
 // ② 2026-04-03-viewer-command-prd.md
+// @useState-hatch — selectedId/allMessages/messages: async replay data; rightTab: two-tab toggle
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { ChatFeed } from '@os/ui/chat/ChatFeed'
-import { TabList } from '@os/ui/TabList'
-import { ViewerTabList } from '@os/ui/ViewerTabList'
+import { FlatLayout } from '@os/ui/FlatLayout'
+import { definePage } from '@os/layout/flatLayout'
+import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
-import { SplitPane } from '@os/ui/SplitPane'
-import type { PaneSize } from '@os/ui/SplitPane'
-import { FileViewer } from '@os/ui/FileViewer'
-import { SearchResults } from '@os/ui/SearchResults'
-import { TerminalOutput } from '@os/ui/TerminalOutput'
 import type { ChatMessage } from '@os/ui/chat/types'
 import { useAnimationQueue } from '@os/ui/useAnimationQueue'
 import { ax } from '@styles/ax'
-import { ScrollArea } from '@os/ui/ScrollArea'
 import { chatReducer, toReplayDeltas, type TimedDelta } from './replayDelta'
 import { parseJsonl, extractToolSteps } from './parseJsonl'
 import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
 import { fetchFile } from '../viewer/fsClient'
 import { editAnimationFrames, readFrames, writeFrames, type TimedFrame } from './editAnimation'
-import { LiveSessionPanel } from './LiveSessionPanel'
-import { chatRenderers } from './replayRenderers'
 import { useViewerTabs } from './useViewerTabs'
 import type { FileViewerHandle, ViewerTab } from './viewerTypes'
+import { ReplayProvider, type ReplayContextValue } from './replayContext'
+import { ReplayViewerWidget, ReplayChatWidget } from './replayWidgets'
 
-// @useState-hatch — selectedId/allMessages/messages: async replay data; sizes: SplitPane local; rightTab: two-tab toggle
-// --- Session loading ---
+// ── Session loading ──
 
 interface SessionFile {
   id: string
@@ -49,43 +43,51 @@ const sessionEntries: SessionEntry[] = [
   })),
 ]
 
-function filenameFrom(path: string | null): string {
-  if (!path) return 'output'
-  const parts = path.split('/')
-  return parts[parts.length - 1] || 'output'
-}
+// ── Layout ──
 
-function tabLabel(tab: ViewerTab): string {
-  switch (tab.type) {
-    case 'file': return filenameFrom(tab.path)
-    case 'search': return 'Search'
-    case 'terminal': return 'Terminal'
-  }
-}
+const replayWidgets = createWidgetRegistry({
+  ReplayViewer: ReplayViewerWidget,
+  ReplayChat: ReplayChatWidget,
+})
 
-// --- Unified delta for replay ---
+const replayLayout = definePage({
+  entities: {
+    root:   { data: { type: 'split', direction: 'horizontal', sizes: [0.35, 'flex'] }, children: ['viewer', 'chat'] },
+    viewer: { data: { type: 'widget', widget: 'ReplayViewer' } },
+    chat:   { data: { type: 'widget', widget: 'ReplayChat' } },
+  },
+})
+
+// ── Unified delta for replay ──
 
 type ViewerDelta =
   | { kind: 'chat'; td: TimedDelta }
   | { kind: 'frame'; frame: TimedFrame }
 
-// --- Component ---
+function tabLabel(tab: ViewerTab): string {
+  switch (tab.type) {
+    case 'file': {
+      const parts = (tab.path ?? 'output').split('/')
+      return parts[parts.length - 1] || 'output'
+    }
+    case 'search': return 'Search'
+    case 'terminal': return 'Terminal'
+  }
+}
+
+// ── Page ──
 
 export default function PageReplay() {
   const [selectedId, setSelectedId] = useState(sessionEntries[0]?.id ?? '')
   const [allMessages, setAllMessages] = useState<ChatMessage[]>([])
   const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [sizes, setSizes] = useState<PaneSize[]>([0.35, 0.65])
   const [rightTab, setRightTab] = useState<'replay' | 'live'>('live')
 
-  // Viewer tabs (shared between replay and live)
   const viewerTabs = useViewerTabs()
   const fileViewerRef = useRef<FileViewerHandle>(null)
-
-  // Track active file path for replay frame dispatch
   const activeFileRef = useRef<string | null>(null)
 
-  // Replay: release handler
+  // Replay release handler
   const onRelease = useCallback((vd: ViewerDelta) => {
     if (vd.kind === 'chat') {
       setMessages(prev => chatReducer(prev, vd.td.delta))
@@ -99,7 +101,6 @@ export default function PageReplay() {
         fileViewerRef.current.dispatch({ type: 'open', content: f.content })
       }
     } else if (f.content != null) {
-      // Content update for current active file
       const path = activeFileRef.current
       if (path) {
         viewerTabs.openFile(path, f.content)
@@ -171,7 +172,7 @@ export default function PageReplay() {
       try {
         const content = await fetchFile(path)
         if (content) realFiles.set(path, content)
-      } catch { /* fallback to JSONL */ }
+      } catch { /* fallback */ }
     }))
 
     for (const step of toolSteps) {
@@ -202,7 +203,6 @@ export default function PageReplay() {
       }
     }
 
-    // Interleave chat deltas + tool animation frames
     const unified: ViewerDelta[] = []
     let toolIdx = 0
 
@@ -259,88 +259,23 @@ export default function PageReplay() {
       setMessages([])
       viewerTabs.clear()
     }
-  }, [clearReplay, setMessages, viewerTabs])
+  }, [clearReplay, viewerTabs])
+
+  // ── Context ──
+
+  const replayCtx = useMemo<ReplayContextValue>(() => ({
+    selectedId, setSelectedId, sessionEntries,
+    messages, isRunning, startReplay,
+    rightTab, rightTabData, handleRightTabActivate,
+    tabs, activeTab, activeTabId, setActiveTab, viewerTabData, fileViewerRef,
+    viewerTabs,
+  }), [selectedId, sessionEntries, messages, isRunning, startReplay, rightTab, rightTabData, handleRightTabActivate, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs])
 
   return (
-    <div className={ax({ layout: 'fill' })}>
-      <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes}>
-        {/* Left: Viewer with tabs */}
-        <div className={`${ax({ layout: 'fill' })} min-h-0`}>
-          {/* Tab bar */}
-          {tabs.length > 0 ? (
-            <div className={ax({ scroll: 'x', flex: 'none' })}>
-              <ViewerTabList
-                data={viewerTabData}
-                initialFocus={activeTabId ?? undefined}
-                onActivate={(nodeId) => setActiveTab(nodeId)}
-                aria-label="Viewer tabs"
-              />
-            </div>
-          ) : (
-            <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', flex: 'none' })}>
-              <span className={ax({ textStyle: 'caption', text: 'muted' })}>Viewer</span>
-            </div>
-          )}
-
-          {/* Content */}
-          <ScrollArea className={`${ax({ flex: '1', padding: 'sm' })} min-h-0`}>
-            {activeTab?.type === 'file' ? (
-              <FileViewer ref={fileViewerRef} filename={filenameFrom(activeTab.path)} />
-            ) : activeTab?.type === 'search' ? (
-              <SearchResults query={activeTab.query} output={activeTab.output} />
-            ) : activeTab?.type === 'terminal' ? (
-              <TerminalOutput command={activeTab.command} output={activeTab.output} />
-            ) : (
-              <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption' })}>
-                tool_use 스텝이 재생되면 여기에 표시됩니다
-              </div>
-            )}
-          </ScrollArea>
-        </div>
-
-        {/* Right: Chat tabs (Replay / Live) */}
-        <div className={ax({ layout: 'fill' })}>
-          <TabList
-            data={rightTabData}
-            initialFocus={rightTab}
-            onActivate={handleRightTabActivate}
-            aria-label="Chat mode"
-          />
-
-          {rightTab === 'replay' && (
-            <div className={ax({ layout: 'fill' })}>
-              <div className={ax({ layout: 'bar', gap: 'sm', padding: 'xs', flex: 'none' })}>
-                <select
-                  value={selectedId}
-                  onChange={e => setSelectedId(e.target.value)}
-                  className={ax({ textStyle: 'caption', interactive: 'input', controlSize: 'sm' })}
-                >
-                  {sessionEntries.map(entry => (
-                    <option key={entry.id} value={entry.id}>
-                      {entry.id} ({entry.type})
-                    </option>
-                  ))}
-                </select>
-                {!isRunning && messages.length > 0 && (
-                  <button onClick={startReplay} className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', textStyle: 'caption' })}>
-                    Replay
-                  </button>
-                )}
-              </div>
-              <ChatFeed
-                messages={messages}
-                blockRenderers={chatRenderers}
-                isStreaming={isRunning}
-                className={ax({ flex: '1', padding: 'sm' })}
-              />
-            </div>
-          )}
-
-          {rightTab === 'live' && (
-            <LiveSessionPanel viewerTabs={viewerTabs} fileViewerRef={fileViewerRef} />
-          )}
-        </div>
-      </SplitPane>
+    <div className={ax({ layout: 'column', flex: '1' })}>
+      <ReplayProvider value={replayCtx}>
+        <FlatLayout data={replayLayout} registry={replayWidgets} aria-label="Replay" />
+      </ReplayProvider>
     </div>
   )
 }

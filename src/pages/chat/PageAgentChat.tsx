@@ -1,9 +1,9 @@
 // ② 2026-03-28-workspace-sync-prd.md
+// @useState-hatch — wsData: Workspace NormalizedData (os ui component owns its own store)
 import { useEffect, useRef, useCallback, useMemo } from 'react'
-// NOTE: layout-level key shortcuts (Meta+D 새 세션 등) intentionally removed —
-// pages 레이어는 onKeyDown 금지. 세션 생성은 사이드바 "+" 버튼과 empty-state 버튼으로 커버.
-// Workspace ui 컴포넌트가 탭/패널 범위의 키바인딩(close/prevTab/nextTab)을 소유한다.
-import { Plus, X, Circle, FileText } from 'lucide-react'
+import { FlatLayout } from '@os/ui/FlatLayout'
+import { definePage } from '@os/layout/flatLayout'
+import { createWidgetRegistry } from '@os/layout/widgetRegistry'
 import { ChatPane } from './ChatPane'
 import {
   createSession,
@@ -12,9 +12,16 @@ import {
   useActiveSession,
   useChatSessions,
 } from './chatStore'
-import type { ChatSession } from './chatStore'
-import type { ChatMessage } from '@os/ui/chat/types'
-import { Workspace } from '@os/ui/Workspace'
+import type { Entity } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
+import { useStore } from '@os/store/useStore'
+import {
+  getChildren,
+  getEntityData,
+  updateEntityData,
+} from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
+import type { PaneSize } from '@os/store/types'
 import {
   createWorkspace,
   workspaceCommands,
@@ -23,55 +30,27 @@ import {
   findTabgroup,
 } from '@os/plugins/workspaceStore'
 import type { TabData, SplitData } from '@os/plugins/workspaceStore'
-import { ROOT_ID } from '@os/store/types'
-import type { NormalizedData, Entity } from '@os/store/types'
-import { useStore } from '@os/store/useStore'
-import {
-  getChildren,
-  getEntityData,
-  updateEntityData,
-} from '@os/store/createStore'
-import type { PaneSize } from '@os/store/types'
 import { ax } from '@styles/ax'
-import { ScrollArea } from '@os/ui/ScrollArea'
-import { PanelHeader } from '@os/ui/PanelHeader'
+import { ChatProvider, type ChatContextValue } from './chatContext'
+import { ChatSidebarWidget, ChatWorkspaceWidget } from './chatWidgets'
 import './PageAgentChat.css'
 
-// --- File extraction ---
+// ── Layout ──
 
-const FILE_TOOLS = new Set(['Edit', 'Write', 'Read'])
+const chatWidgets = createWidgetRegistry({
+  ChatSidebar: ChatSidebarWidget,
+  ChatWorkspace: ChatWorkspaceWidget,
+})
 
-function extractModifiedFiles(messages: ChatMessage[]): string[] {
-  const files = new Set<string>()
-  for (const msg of messages) {
-    for (const block of msg.blocks) {
-      if (block.type !== 'tool_use') continue
-      const data = (block as { data: { name?: string; input?: { file_path?: string } } }).data
-      if (!data?.name || !FILE_TOOLS.has(data.name)) continue
-      if (data.name === 'Read') continue
-      const fp = data.input?.file_path
-      if (fp) files.add(fp.replace(/.*\/aria\//, ''))
-    }
-  }
-  return [...files]
-}
+const chatLayout = definePage({
+  entities: {
+    root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.2, 'flex'], resizable: false }, children: ['sidebar', 'workspace'] },
+    sidebar:   { data: { type: 'widget', widget: 'ChatSidebar', surface: 'sunken' } },
+    workspace: { data: { type: 'widget', widget: 'ChatWorkspace' } },
+  },
+})
 
-function SessionFileList({ session }: { session: ChatSession }) {
-  const files = useMemo(() => extractModifiedFiles(session.messages), [session.messages])
-  if (files.length === 0) return null
-  return (
-    <div className="chat-file-list">
-      {files.map(f => (
-        <div key={f} className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
-          <FileText size={10} />
-          <span className={ax({ clamp: '1' })}>{f.split('/').pop()}</span>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// --- Helpers ---
+// ── Helpers ──
 
 function sessionToTab(session: { id: string }): Entity {
   return {
@@ -80,11 +59,6 @@ function sessionToTab(session: { id: string }): Entity {
   }
 }
 
-/**
- * Sync sessions as split panes: each session gets its own tabgroup in a horizontal split.
- * - 1 session → single tabgroup (no split)
- * - 2+ sessions → split(horizontal) → tabgroup per session
- */
 function syncAsSplitPanes(
   store: NormalizedData,
   sessions: { id: string }[],
@@ -99,31 +73,25 @@ function syncAsSplitPanes(
 
   let s = store
 
-  // Remove closed sessions
   for (const [, tabId] of toRemove) {
     s = workspaceCommands.removeTab.reduce(s, tabId)
   }
 
-  // Add new sessions
   for (const session of toAdd) {
     const tab = sessionToTab(session)
     const existingTg = findTabgroup(s)
 
     if (existingTg) {
-      // Check if existing tabgroup already has a tab
       const existingTabs = getChildren(s, existingTg)
       if (existingTabs.length === 0) {
-        // Empty tabgroup — just add here
         s = workspaceCommands.createTab.reduce(s, existingTg, tab)
         s = workspaceCommands.setActiveTab.reduce(s, existingTg, tab.id)
       } else {
-        // Already has a tab → split and add to new pane
         s = splitAndAddTab(s, existingTg, 'horizontal', tab)
       }
     }
   }
 
-  // Equalize split sizes
   const rootChildren = getChildren(s, ROOT_ID)
   if (rootChildren.length === 1) {
     const rootChild = rootChildren[0]
@@ -143,7 +111,7 @@ function syncAsSplitPanes(
   return s
 }
 
-// --- Component ---
+// ── Page ──
 
 export default function PageAgentChat() {
   const sessions = useChatSessions()
@@ -159,23 +127,19 @@ export default function PageAgentChat() {
       wsDataRef.current = synced
       setWsData(synced)
     }
-  }, [sessions])
+  }, [sessions]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleWorkspaceChange = useCallback((newData: NormalizedData) => {
     const oldRefs = collectContentRefs(wsDataRef.current)
     const newRefs = collectContentRefs(newData)
     for (const [ref] of oldRefs) {
-      if (!newRefs.has(ref)) {
-        closeSession(ref)
-      }
+      if (!newRefs.has(ref)) closeSession(ref)
     }
     wsDataRef.current = newData
     setWsData(newData)
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleAddTab = useCallback(() => {
-    createSession()
-  }, [])
+  const handleAddTab = useCallback(() => { createSession() }, [])
 
   const handleSidebarClick = useCallback((sessionId: string) => {
     setActiveSession(sessionId)
@@ -187,63 +151,16 @@ export default function PageAgentChat() {
     return <ChatPane sessionId={tabData.contentRef} />
   }, [])
 
+  const chatCtx = useMemo<ChatContextValue>(() => ({
+    sessions, activeSessionId, wsData,
+    handleWorkspaceChange, handleAddTab, handleSidebarClick, renderPanel,
+  }), [sessions, activeSessionId, wsData, handleWorkspaceChange, handleAddTab, handleSidebarClick, renderPanel])
+
   return (
     <div className={`${ax({ scroll: 'hidden', layout: 'row' })} h-full chat-page`}>
-      <div className={ax({ surface: 'sunken', layout: 'stack', flex: 'none', border: 'end' }) + ' ' + 'chat-sidebar'}>
-        <PanelHeader axes={{ layout: 'spread' }}>
-          <span>Sessions</span>
-          <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', icon: 'lg' })} onClick={createSession} aria-label="New session">
-            <Plus size={14} />
-          </button>
-        </PanelHeader>
-        <ScrollArea className={ax({ flex: '1', padding: 'xs', gap: 'xs' })}>
-          {sessions.map(s => {
-            const isActive = s.id === activeSessionId
-            return (
-            <div
-              key={s.id}
-              className={`${ax({ surface: isActive ? 'display' : 'ghost', layout: 'stack', gap: 'xs', padding: 'xs', text: isActive ? 'primary' : 'secondary', shape: 'sm' })} chat-session-item`}
-              onClick={(e) => { if (e.defaultPrevented) return; handleSidebarClick(s.id) }}
-            >
-              <div className={ax({ layout: 'bar', gap: 'sm' })}>
-                <Circle size={8} fill="currentColor" className={s.state === 'running' ? ax({ tone: 'success' }) : ax({ text: 'muted' })} />
-                <span className={ax({ flex: '1', clamp: '1' })}>{s.id.slice(0, 8)}</span>
-                <button
-                  className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + 'chat-close-btn'}
-                  onClick={(e) => { e.preventDefault(); closeSession(s.id) }}
-                  aria-label={`Close session ${s.id.slice(0, 8)}`}
-                >
-                  <X size={12} />
-                </button>
-              </div>
-              <SessionFileList session={s} />
-            </div>
-            )
-          })}
-          {sessions.length === 0 && (
-            <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No sessions</div>
-          )}
-        </ScrollArea>
-      </div>
-
-      {sessions.length > 0 ? (
-        <Workspace
-          data={wsData}
-          onChange={handleWorkspaceChange}
-          onAddTab={handleAddTab}
-          renderPanel={renderPanel}
-          aria-label="Chat workspace"
-        />
-      ) : (
-        <div className={ax({ layout: 'fill', width: 'full' }) + ' ' + 'chat-main'}>
-          <div className={ax({ layout: 'center', flex: '1', gap: 'md', text: 'muted' })}>
-            <p>Start a new Claude Code session</p>
-            <button className={ax({ interactive: 'button', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'primary', border: 'subtle' }) + ' ' + 'chat-start-btn'} onClick={createSession}>
-              <Plus size={16} /> New Session
-            </button>
-          </div>
-        </div>
-      )}
+      <ChatProvider value={chatCtx}>
+        <FlatLayout data={chatLayout} registry={chatWidgets} aria-label="Chat" />
+      </ChatProvider>
     </div>
   )
 }
