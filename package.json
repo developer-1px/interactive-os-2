@@ -22,197 +22,21 @@
     "Edge >= 130"
   ],
   "exports": {
-    "./core/types": {
-      "import": "./dist-lib/core/types.js",
-      "types": "./dist-lib/core/types.d.ts"
+    "./ui": {
+      "import": "./dist-lib/ui.js",
+      "types": "./dist-lib/ui.d.ts"
     },
-    "./core/createStore": {
-      "import": "./dist-lib/core/createStore.js",
-      "types": "./dist-lib/core/createStore.d.ts"
+    "./layout": {
+      "import": "./dist-lib/layout.js",
+      "types": "./dist-lib/layout.d.ts"
     },
-    "./core/createCommandEngine": {
-      "import": "./dist-lib/core/createCommandEngine.js",
-      "types": "./dist-lib/core/createCommandEngine.d.ts"
+    "./schema": {
+      "import": "./dist-lib/schema.js",
+      "types": "./dist-lib/schema.d.ts"
     },
-    "./plugins/core": {
-      "import": "./dist-lib/plugins/core.js",
-      "types": "./dist-lib/plugins/core.d.ts"
-    },
-    "./plugins/history": {
-      "import": "./dist-lib/plugins/history.js",
-      "types": "./dist-lib/plugins/history.d.ts"
-    },
-    "./plugins/crud": {
-      "import": "./dist-lib/plugins/crud.js",
-      "types": "./dist-lib/plugins/crud.d.ts"
-    },
-    "./plugins/clipboard": {
-      "import": "./dist-lib/plugins/clipboard.js",
-      "types": "./dist-lib/plugins/clipboard.d.ts"
-    },
-    "./plugins/rename": {
-      "import": "./dist-lib/plugins/rename.js",
-      "types": "./dist-lib/plugins/rename.d.ts"
-    },
-    "./plugins/dnd": {
-      "import": "./dist-lib/plugins/dnd.js",
-      "types": "./dist-lib/plugins/dnd.d.ts"
-    },
-    "./behaviors/types": {
-      "import": "./dist-lib/behaviors/types.js",
-      "types": "./dist-lib/behaviors/types.d.ts"
-    },
-    "./behaviors/treegrid": {
-      "import": "./dist-lib/behaviors/treegrid.js",
-      "types": "./dist-lib/behaviors/treegrid.d.ts"
-    },
-    "./behaviors/listbox": {
-      "import": "./dist-lib/behaviors/listbox.js",
-      "types": "./dist-lib/behaviors/listbox.d.ts"
-    },
-    "./behaviors/disclosure": {
-      "import": "./dist-lib/behaviors/disclosure.js",
-      "types": "./dist-lib/behaviors/disclosure.d.ts"
-    },
-    "./behaviors/tabs": {
-      "import": "./dist-lib/behaviors/tabs.js",
-      "types": "./dist-lib/behaviors/tabs.d.ts"
-    },
-    "./behaviors/accordion": {
-      "import": "./dist-lib/behaviors/accordion.js",
-      "types": "./dist-lib/behaviors/accordion.d.ts"
-    },
-    "./behaviors/menu": {
-      "import": "./dist-lib/behaviors/menu.js",
-      "types": "./dist-lib/behaviors/menu.d.ts"
-    },
-    "./behaviors/dialog": {
-      "import": "./dist-lib/behaviors/dialog.js",
-      "types": "./dist-lib/behaviors/dialog.d.ts"
-    },
-    "./behaviors/toolbar": {
-      "import": "./dist-lib/behaviors/toolbar.js",
-      "types": "./dist-lib/behaviors/toolbar.d.ts"
-    },
-    "./behaviors/grid": {
-      "import": "./dist-lib/behaviors/grid.js",
-      "types": "./dist-lib/behaviors/grid.d.ts"
-    },
-    "./behaviors/combobox": {
-      "import": "./dist-lib/behaviors/combobox.js",
-      "types": "./dist-lib/behaviors/combobox.d.ts"
-    },
-    "./behaviors/radiogroup": {
-      "import": "./dist-lib/behaviors/radiogroup.js",
-      "types": "./dist-lib/behaviors/radiogroup.d.ts"
-    },
-    "./behaviors/slider": {
-      "import": "./dist-lib/behaviors/slider.js",
-      "types": "./dist-lib/behaviors/slider.d.ts"
-    },
-    "./behaviors/spinbutton": {
-      "import": "./dist-lib/behaviors/spinbutton.js",
-      "types": "./dist-lib/behaviors/spinbutton.d.ts"
-    },
-    "./behaviors/alertdialog": {
-      "import": "./dist-lib/behaviors/alertdialog.js",
-      "types": "./dist-lib/behaviors/alertdialog.d.ts"
-    },
-    "./behaviors/switch": {
-      "import": "./dist-lib/behaviors/switch.js",
-      "types": "./dist-lib/behaviors/switch.d.ts"
-    },
-    "./behaviors/tree": {
-      "import": "./dist-lib/behaviors/tree.js",
-      "types": "./dist-lib/behaviors/tree.d.ts"
-    },
-    "./behaviors/createBehaviorContext": {
-      "import": "./dist-lib/behaviors/createBehaviorContext.js",
-      "types": "./dist-lib/behaviors/createBehaviorContext.d.ts"
-    },
-    "./plugins/combobox": {
-      "import": "./dist-lib/plugins/combobox.js",
-      "types": "./dist-lib/plugins/combobox.d.ts"
-    },
-    "./plugins/focus-recovery": {
-      "import": "./dist-lib/plugins/focus-recovery.js",
-      "types": "./dist-lib/plugins/focus-recovery.d.ts"
-    },
-    "./hooks/useAria": {
-      "import": "./dist-lib/hooks/useAria.js",
-      "types": "./dist-lib/hooks/useAria.d.ts"
-    },
-    "./hooks/useKeyboard": {
-      "import": "./dist-lib/hooks/useKeyboard.js",
-      "types": "./dist-lib/hooks/useKeyboard.d.ts"
-    },
-    "./hooks/useControlledAria": {
-      "import": "./dist-lib/hooks/useControlledAria.js",
-      "types": "./dist-lib/hooks/useControlledAria.d.ts"
-    },
-    "./components/aria": {
-      "import": "./dist-lib/components/aria.js",
-      "types": "./dist-lib/components/aria.d.ts"
-    },
-    "./components/aria-context": {
-      "import": "./dist-lib/components/aria-context.js",
-      "types": "./dist-lib/components/aria-context.d.ts"
-    },
-    "./ui/TreeGrid": {
-      "import": "./dist-lib/ui/TreeGrid.js",
-      "types": "./dist-lib/ui/TreeGrid.d.ts"
-    },
-    "./ui/ListBox": {
-      "import": "./dist-lib/ui/ListBox.js",
-      "types": "./dist-lib/ui/ListBox.d.ts"
-    },
-    "./ui/TabList": {
-      "import": "./dist-lib/ui/TabList.js",
-      "types": "./dist-lib/ui/TabList.d.ts"
-    },
-    "./ui/Accordion": {
-      "import": "./dist-lib/ui/Accordion.js",
-      "types": "./dist-lib/ui/Accordion.d.ts"
-    },
-    "./ui/MenuList": {
-      "import": "./dist-lib/ui/MenuList.js",
-      "types": "./dist-lib/ui/MenuList.d.ts"
-    },
-    "./ui/DisclosureGroup": {
-      "import": "./dist-lib/ui/DisclosureGroup.js",
-      "types": "./dist-lib/ui/DisclosureGroup.d.ts"
-    },
-    "./ui/Grid": {
-      "import": "./dist-lib/ui/Grid.js",
-      "types": "./dist-lib/ui/Grid.d.ts"
-    },
-    "./ui/Combobox": {
-      "import": "./dist-lib/ui/Combobox.js",
-      "types": "./dist-lib/ui/Combobox.d.ts"
-    },
-    "./ui/RadioGroup": {
-      "import": "./dist-lib/ui/RadioGroup.js",
-      "types": "./dist-lib/ui/RadioGroup.d.ts"
-    },
-    "./ui/SwitchGroup": {
-      "import": "./dist-lib/ui/SwitchGroup.js",
-      "types": "./dist-lib/ui/SwitchGroup.d.ts"
-    },
-    "./ui/TreeView": {
-      "import": "./dist-lib/ui/TreeView.js",
-      "types": "./dist-lib/ui/TreeView.d.ts"
-    },
-    "./ui/Slider": {
-      "import": "./dist-lib/ui/Slider.js",
-      "types": "./dist-lib/ui/Slider.d.ts"
-    },
-    "./ui/Spinbutton": {
-      "import": "./dist-lib/ui/Spinbutton.js",
-      "types": "./dist-lib/ui/Spinbutton.d.ts"
-    },
-    "./axes/value": {
-      "import": "./dist-lib/axes/value.js",
-      "types": "./dist-lib/axes/value.d.ts"
+    "./advanced": {
+      "import": "./dist-lib/advanced.js",
+      "types": "./dist-lib/advanced.d.ts"
     }
   },
   "files": [

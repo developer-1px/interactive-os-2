@@ -390,7 +390,7 @@ if (isPages && isTsx && /\.showModal\s*\(/.test(content)) {
   )
 }
 
-// 규칙 24: FlatLayout widget 노드에 props 필드 Push 금지 — widget은 Context/hook pull
+// 규칙 24a: FlatLayout widget 노드에 props 필드 Push 금지 — widget은 Context/hook pull
 // (a) updateEntityData(data, 'xxx', { props: ... }) 패턴
 // (b) definePage 내부 { type: 'widget', ..., props: ... } 패턴
 if (isPages && isTsx) {
@@ -401,6 +401,14 @@ if (isPages && isTsx) {
       'FlatLayout widget 노드에 props 필드 전달 금지 (Push 모델) — definePage는 구조/id만 담고, widget이 도메인 Context/hook으로 값을 pull 하세요. 전범: src/pages/cms/cmsContext.tsx + cmsWidgets.tsx. 원칙: feedback_flatlayout_pull_not_push'
     )
   }
+}
+
+// 규칙 24b: src/pages/에서 @os/(store|engine|axis|pattern|primitives|plugins) 직접 import 권장 위반 (Phase 1: 경고)
+// 단일 entry: @os/ui, @os/layout, @os/schema, @os/advanced 만 권장
+if (isPages && /from\s+['"]@os\/(?:store|engine|axis|pattern|primitives|plugins)\b/.test(content)) {
+  violations.push(
+    'single-entry 권장: @os/(store|engine|axis|pattern|primitives|plugins) 대신 @os/ui · @os/layout · @os/schema · @os/advanced 4개 단일 entry를 사용하세요. (Phase 1: 경고 — 후속 plan에서 차단으로 승격)'
+  )
 }
 
 if (violations.length > 0) {

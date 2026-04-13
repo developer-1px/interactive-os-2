@@ -40,6 +40,7 @@ export interface WidgetNode extends LayoutBase {
   widget: string
   props?: Record<string, unknown>
   source?: string
+  scroll?: boolean
 }
 
 export interface GridNode extends LayoutBase {

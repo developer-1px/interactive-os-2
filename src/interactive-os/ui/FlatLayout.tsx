@@ -291,10 +291,17 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       : undefined
 
     const isSplitChild = parentType === 'split' || parentType === 'nav'
+    const isFloating = parentType === 'floating'
+    const scrollable = node.scroll !== false && !isFloating
 
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', surface, ...(surface === 'raised' ? { shape: 'lg' } : {}) })} ${isSplitChild ? styles.splitChild : ''} min-h-0`}>
-        <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
+      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', flex: '1', surface, ...(surface === 'raised' ? { shape: 'lg' } : {}) })} ${isSplitChild ? styles.splitChild : ''} min-h-0`}>
+        {scrollable
+          ? <div className={ax({ layout: 'scroll', flex: '1' })}>
+              <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
+            </div>
+          : <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
+        }
       </div>
     )
   },

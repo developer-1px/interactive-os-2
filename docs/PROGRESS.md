@@ -124,12 +124,9 @@
 
 | Module | Maturity | Gaps |
 |--------|----------|------|
-<<<<<<< HEAD
-| Vitest (859 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
-| Claude Harness (11 hooks · 29 skills · /improve-skill) | Validated | 실전 오탐 튜닝 필요 |
-=======
-| Vitest (824 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
->>>>>>> origin/claude/propose-core-layer-features-ICEA8
+| Vitest (1306 tests) · coverage-v8 · axe-core · ESLint | Integrated | — |
+| Claude Harness (12 hooks · 29 skills · /improve-skill) | Validated | 실전 오탐 튜닝 필요. rule 24 single-entry 권장 |
+| Single Entry (ui/layout/schema/advanced) | Validated | 4 barrel exports + tsup 4 entry + package.json 정리 + hook rule 24. pages 마이그레이션 별도 plan |
 | Design Lint (8 rules · browser-injectable · Playwright CI) | Validated | 신규 관계 규칙(internal≤external, depth-inversion) false positive 튜닝 필요 |
 | tsup (ESM+DTS) · npm exports | Integrated | — |
 | CI/CD · npm publish | Integrated | — |
