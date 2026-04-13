@@ -93,8 +93,9 @@ describe('CMS Detail Panel', () => {
     act(() => { showcase.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    const inputs = panel.querySelectorAll('input')
-    expect(inputs.length).toBe(16)
+    // ② meta-editable-ssot-prd.md — long-text renders as textarea
+    const fields = panel.querySelectorAll('input, textarea')
+    expect(fields.length).toBe(17)
   })
 
   it('section focus shows section header fields + sub-container groups', async () => {
@@ -104,9 +105,8 @@ describe('CMS Detail Panel', () => {
     act(() => { features.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    // Header entries only — sub-container groups start collapsed (Form V3)
-    const inputs = panel.querySelectorAll('input')
-    expect(inputs.length).toBe(13)
+    const fields = panel.querySelectorAll('input, textarea')
+    expect(fields.length).toBe(14)
   })
 
   it('container panel edit updates canvas text via rename', async () => {
@@ -139,13 +139,13 @@ describe('CMS Detail Panel', () => {
     act(() => { features.click() })
 
     const panel = container.querySelector('.cms-detail-panel')!
-    expect(panel.querySelectorAll('input').length).toBe(13)
+    expect(panel.querySelectorAll('input, textarea').length).toBe(14)
 
     // Click into a specific card → scope narrows
     const cardStore = container.querySelector('[data-cms-id="card-store"]') as HTMLElement
     act(() => { cardStore.click() })
 
-    expect(panel.querySelectorAll('input').length).toBe(2)
+    expect(panel.querySelectorAll('input, textarea').length).toBe(2)
   })
 
   // V4: Escape widens panel scope back to section
@@ -162,12 +162,12 @@ describe('CMS Detail Panel', () => {
     await user.click(cardStore)
 
     const panel = container.querySelector('.cms-detail-panel')!
-    expect(panel.querySelectorAll('input').length).toBe(2)
+    expect(panel.querySelectorAll('input, textarea').length).toBe(2)
 
     // Escape back to section
     await user.keyboard('{Escape}')
 
-    expect(panel.querySelectorAll('input').length).toBe(13)
+    expect(panel.querySelectorAll('input, textarea').length).toBe(14)
   })
 
   // V6: undo via Mod+Z — skipped in jsdom (Cmd+Z keyboard dispatch limitation)

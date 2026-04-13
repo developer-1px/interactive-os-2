@@ -18,8 +18,9 @@ import { dnd } from '@os/plugins/dnd'
 import { rename } from '@os/plugins/rename'
 import { spatial } from '@os/plugins/spatial'
 import { getParent } from '@os/store/createStore'
-import type { Plugin } from '@os/plugins/types'
-import { childRules, nodeSchemas } from './cmsSchema'
+import { definePlugin } from '@os/advanced'
+import type { Plugin, VisibilityFilter } from '@os/advanced'
+import { childRules, nodeSchemas, getEditableFields, expandEntitySlots } from './cmsSchema'
 import { zodSchema } from '@os/plugins/zodSchema'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
@@ -27,6 +28,20 @@ import { definePage } from '@os/layout/flatLayout'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { CmsProvider } from './cmsContext'
 import { cmsWidgets } from './cmsWidgets'
+
+// ② meta-editable-ssot-prd.md
+const cmsEditableFilter: VisibilityFilter = {
+  isFocusable: (nodeId: string, store) => {
+    const entity = store.entities[nodeId]
+    if (!entity) return true
+    const data = (entity.data ?? {}) as Record<string, unknown>
+    // Single rule: .meta({ fieldType }) fields → focusable, else skip
+    if (getEditableFields(data).length === 0) return false
+    // Slot expansion nodes → children handle focus
+    if (expandEntitySlots(nodeId, data) !== null) return false
+    return true
+  },
+}
 
 const sharedPlugins: Plugin[] = [
   spatial(),
@@ -36,6 +51,7 @@ const sharedPlugins: Plugin[] = [
   clipboard(),
   zodSchema({ childRules, rootTypes: [nodeSchemas.section, nodeSchemas['tab-group']] }),
   rename(),
+  definePlugin({ name: 'cmsEditable', visibilityFilter: cmsEditableFilter }),
 ]
 
 const cmsLayout = definePage({

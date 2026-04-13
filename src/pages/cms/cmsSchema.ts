@@ -29,37 +29,38 @@ const localeMapSchema = z.object({
 // .describe() on each field provides the UI label for Detail Panel.
 
 export const nodeSchemas = {
-  badge:            z.object({ type: z.literal('badge'),         value: localeMapSchema.describe('Badge') }),
+  // ② meta-editable-ssot-prd.md
+  badge:            z.object({ type: z.literal('badge'),         value: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Badge') }),
   icon:             z.object({ type: z.literal('icon'),          value: z.string().meta({ fieldType: 'icon' }).describe('Icon') }),
-  text:             z.object({ type: z.literal('text'),          role: z.string(), value: localeMapSchema.describe('Text') }),
-  cta:              z.object({ type: z.literal('cta'),           primary: localeMapSchema.describe('Primary CTA'), secondary: localeMapSchema.describe('Secondary CTA') }),
-  'stat-value':     z.object({ type: z.literal('stat-value'),    value: z.string().describe('Value') }),
+  text:             z.object({ type: z.literal('text'),          role: z.string(), value: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Text') }),
+  cta:              z.object({ type: z.literal('cta'),           primary: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Primary CTA'), secondary: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Secondary CTA') }),
+  'stat-value':     z.object({ type: z.literal('stat-value'),    value: z.string().meta({ fieldType: 'short-text' }).describe('Value') }),
   stat:             z.object({ type: z.literal('stat') }),
-  'step-num':       z.object({ type: z.literal('step-num'),      value: z.string().describe('Number') }),
+  'step-num':       z.object({ type: z.literal('step-num'),      value: z.string().meta({ fieldType: 'short-text' }).describe('Number') }),
   step:             z.object({ type: z.literal('step') }),
-  pattern:          z.object({ type: z.literal('pattern'),       name: localeMapSchema.describe('Name'), icon: z.string().meta({ fieldType: 'icon' }).describe('Icon') }),
-  link:             z.object({ type: z.literal('link'),          label: localeMapSchema.describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),
-  brand:            z.object({ type: z.literal('brand'),         name: localeMapSchema.describe('Name'), license: z.string().describe('License') }),
-  'section-label':  z.object({ type: z.literal('section-label'), value: localeMapSchema.describe('Text') }),
-  'section-title':  z.object({ type: z.literal('section-title'), value: localeMapSchema.describe('Text') }),
+  pattern:          z.object({ type: z.literal('pattern'),       name: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Name'), icon: z.string().meta({ fieldType: 'icon' }).describe('Icon') }),
+  link:             z.object({ type: z.literal('link'),          label: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),
+  brand:            z.object({ type: z.literal('brand'),         name: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Name'), license: z.string().meta({ fieldType: 'short-text' }).describe('License') }),
+  'section-label':  z.object({ type: z.literal('section-label'), value: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Text') }),
+  'section-title':  z.object({ type: z.literal('section-title'), value: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Text') }),
   'section-desc':   z.object({ type: z.literal('section-desc'),  value: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Text') }),
   links:            z.object({ type: z.literal('links') }),
   card:             z.object({ type: z.literal('card') }),
-  section:          z.object({ type: z.literal('section'), variant: z.string() }),
+  section:          z.object({ type: z.literal('section'), variant: z.string().meta({ fieldType: 'short-text' }).describe('Variant') }),
   'tab-group':      z.object({ type: z.literal('tab-group') }),
-  'tab-item':       z.object({ type: z.literal('tab-item'),  label: localeMapSchema.describe('Label') }),
+  'tab-item':       z.object({ type: z.literal('tab-item'),  label: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Label') }),
   'tab-panel':      z.object({ type: z.literal('tab-panel') }),
   // ② 2026-03-24-cms-editorial-content-prd.md
-  'value-item':     z.object({ type: z.literal('value-item'),    icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.describe('Title'), desc: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Description') }),
-  'quote':          z.object({ type: z.literal('quote'),          text: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Quote'), attribution: localeMapSchema.describe('Attribution') }),
-  'article':        z.object({ type: z.literal('article'),        image: z.string().meta({ fieldType: 'image' }).describe('Thumbnail'), icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.describe('Title'), category: localeMapSchema.describe('Category'), readTime: z.string().describe('Read Time') }),
-  'showcase-item':  z.object({ type: z.literal('showcase-item'),  icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
-  'stat-card':      z.object({ type: z.literal('stat-card'),      value: z.string().describe('Value'), label: localeMapSchema.describe('Label'), desc: localeMapSchema.describe('Description') }),
-  'section-cta':    z.object({ type: z.literal('section-cta'),    label: localeMapSchema.describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),
+  'value-item':     z.object({ type: z.literal('value-item'),    icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Title'), desc: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Description') }),
+  'quote':          z.object({ type: z.literal('quote'),          text: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Quote'), attribution: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Attribution') }),
+  'article':        z.object({ type: z.literal('article'),        image: z.string().meta({ fieldType: 'image' }).describe('Thumbnail'), icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), title: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Title'), category: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Category'), readTime: z.string().meta({ fieldType: 'short-text' }).describe('Read Time') }),
+  'showcase-item':  z.object({ type: z.literal('showcase-item'),  icon: z.string().meta({ fieldType: 'icon' }).describe('Icon'), label: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Label'), desc: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Description') }),
+  'stat-card':      z.object({ type: z.literal('stat-card'),      value: z.string().meta({ fieldType: 'short-text' }).describe('Value'), label: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Label'), desc: localeMapSchema.meta({ fieldType: 'long-text' }).describe('Description') }),
+  'section-cta':    z.object({ type: z.literal('section-cta'),    label: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Label'), href: z.string().meta({ fieldType: 'url' }).describe('URL') }),
   // ② 2026-03-27-cms-image-field-prd.md
-  'hero-image':     z.object({ type: z.literal('hero-image'),     src: z.string().meta({ fieldType: 'image' }).describe('Banner Image'), alt: localeMapSchema.describe('Alt Text') }),
+  'hero-image':     z.object({ type: z.literal('hero-image'),     src: z.string().meta({ fieldType: 'image' }).describe('Banner Image'), alt: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Alt Text') }),
   'image-card':     z.object({ type: z.literal('image-card') }),
-  'gallery-item':   z.object({ type: z.literal('gallery-item'),   image: z.string().meta({ fieldType: 'image' }).describe('Image'), caption: localeMapSchema.describe('Caption') }),
+  'gallery-item':   z.object({ type: z.literal('gallery-item'),   image: z.string().meta({ fieldType: 'image' }).describe('Image'), caption: localeMapSchema.meta({ fieldType: 'short-text' }).describe('Caption') }),
 } as const
 
 // ── Children rules ──
@@ -131,21 +132,32 @@ function isLocaleMapShape(schema: z.ZodType): boolean {
   return schema instanceof z.ZodObject && 'ko' in (schema as z.ZodObject<z.core.$ZodLooseShape>).shape
 }
 
+// ② meta-editable-ssot-prd.md — memoized: nodeSchemas is static, so results never change
+const fieldsOfCache = new Map<string, EditableField[]>()
+
 function fieldsOf(type: string): EditableField[] {
+  const cached = fieldsOfCache.get(type)
+  if (cached) return cached
+
   const schema = nodeSchemas[type as keyof typeof nodeSchemas]
   if (!schema) return []
   const shape = schema.shape as Record<string, z.ZodType & { description?: string }>
-  return Object.entries(shape)
-    .filter(([key, fieldSchema]) => key !== 'type' && fieldSchema.description !== undefined)
-    .map(([key, fieldSchema]) => {
-      const meta = z.globalRegistry.get(fieldSchema)
-      return {
-        field: key,
-        label: fieldSchema.description!,
-        isLocaleMap: isLocaleMapShape(fieldSchema),
-        fieldType: FIELD_TYPES.has((meta as Record<string, unknown>)?.fieldType as FieldType) ? (meta as Record<string, unknown>).fieldType as FieldType : 'short-text',
-      }
+  const result = Object.entries(shape).reduce<EditableField[]>((acc, [key, fieldSchema]) => {
+    if (key === 'type') return acc
+    const meta = z.globalRegistry.get(fieldSchema) as Record<string, unknown> | undefined
+    const fieldType = meta?.fieldType as FieldType | undefined
+    if (!fieldType || !FIELD_TYPES.has(fieldType)) return acc
+    acc.push({
+      field: key,
+      label: fieldSchema.description ?? key,
+      isLocaleMap: isLocaleMapShape(fieldSchema),
+      fieldType,
     })
+    return acc
+  }, [])
+
+  fieldsOfCache.set(type, result)
+  return result
 }
 
 export function getEditableFields(data: Record<string, unknown>): EditableField[] {
