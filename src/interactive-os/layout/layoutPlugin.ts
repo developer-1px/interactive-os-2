@@ -9,6 +9,7 @@ export function layout() {
     requires: [workspace()],
     commands: {
       setVisibility: layoutCommands.setVisibility,
+      setHidden: layoutCommands.setHidden,
       setGap: layoutCommands.setGap,
     },
   })

@@ -342,6 +342,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
     const nodeData = entity.data as Record<string, unknown> | undefined
     const type = nodeData?.type as string | undefined
     if (!type) return null
+    if (nodeData?.hidden) return null
 
     const renderer = layoutRenderers[type]
     if (!renderer) return null

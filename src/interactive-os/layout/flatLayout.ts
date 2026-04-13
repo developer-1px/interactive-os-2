@@ -8,6 +8,7 @@ import { createStore } from '../store/createStore'
 /** 모든 레이아웃 노드의 공통 속성 — XY 배치 + Z 깊이 */
 export interface LayoutBase extends Record<string, unknown> {
   surface?: 'sunken' | 'base' | 'raised' | 'overlay'
+  hidden?: boolean
 }
 
 export interface SplitNode extends LayoutBase {
