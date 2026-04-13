@@ -3,4 +3,5 @@ export type { LayoutNode, SplitNode, StackNode, BarNode, OverlayNode, WidgetNode
 export { createWidgetRegistry, resolveWidget } from './widgetRegistry'
 export type { WidgetRegistry } from './widgetRegistry'
 export { layoutCommands } from './layoutCommands'
+export { createDomainContext } from './createDomainContext'
 export { layout } from './layoutPlugin'

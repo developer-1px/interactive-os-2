@@ -231,6 +231,15 @@ function MySidebar() {
 { type: 'widget', widget: 'MySidebar', props: { items, onSelect } }  // ❌
 ```
 
+### Domain Context 생성
+
+```ts
+import { createDomainContext } from '@os/layout'
+
+export interface MyContextValue { /* ... */ }
+export const [MyProvider, useMy] = createDomainContext<MyContextValue>('My')
+```
+
 ### Widget 구현 위치
 
 - `src/pages/{domain}/{domain}Widgets.tsx` — 도메인 context에 결합

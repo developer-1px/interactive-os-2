@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createDomainContext } from '@os/layout'
 import type { NormalizedData } from '@os/store/types'
 
 export interface ShowcaseContextValue {
@@ -8,12 +8,4 @@ export interface ShowcaseContextValue {
   mdFile: string | undefined
 }
 
-const ShowcaseContext = createContext<ShowcaseContextValue | null>(null)
-
-export const ShowcaseProvider = ShowcaseContext.Provider
-
-export function useShowcase(): ShowcaseContextValue {
-  const ctx = useContext(ShowcaseContext)
-  if (!ctx) throw new Error('useShowcase must be used inside ShowcaseProvider')
-  return ctx
-}
+export const [ShowcaseProvider, useShowcase] = createDomainContext<ShowcaseContextValue>('Showcase')

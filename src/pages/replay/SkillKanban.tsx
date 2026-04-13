@@ -6,7 +6,9 @@
 // @useState-hatch — showEmptyDone: toggle for empty done sessions
 // @useState-hatch — showOlderDone: toggle for older (not today) done sessions
 // @useMemo-hatch — tabData: derived from card.touchedFiles, not OS store
-import { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react'
+// @useState-hatch — below imports use useState for view+interaction state
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import { createDomainContext } from '@os/layout'
 import { subscribeTimeline } from '../viewer/timelineSSE'
 import { useActiveSessions, type ActiveSession } from './useActiveSessions'
 import type { TimelineEvent } from '../viewer/groupEvents'
@@ -242,13 +244,7 @@ interface SessionDetailContextValue {
   files: string[]
 }
 
-const SessionDetailContext = createContext<SessionDetailContextValue | null>(null)
-
-function useSessionDetail(): SessionDetailContextValue {
-  const ctx = useContext(SessionDetailContext)
-  if (!ctx) throw new Error('useSessionDetail must be used inside SessionDetailContext.Provider')
-  return ctx
-}
+const [SessionDetailProvider, useSessionDetail] = createDomainContext<SessionDetailContextValue>('SessionDetail')
 
 function ChatViewerWidget() {
   const { content } = useSessionDetail()
@@ -357,9 +353,9 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
       </PanelHeader>
       <div className={ax({ flex: '1', layout: 'fill' })}>
         {card && detailCtx && (
-          <SessionDetailContext.Provider value={detailCtx}>
+          <SessionDetailProvider value={detailCtx}>
             <FlatLayout data={sessionDetailLayout} registry={sessionDetailRegistry} aria-label="Session detail" />
-          </SessionDetailContext.Provider>
+          </SessionDetailProvider>
         )}
       </div>
     </dialog>

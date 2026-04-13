@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createDomainContext } from '@os/layout'
 import type { CommandEngine } from '@os/engine/createCommandEngine'
 import type { NormalizedData } from '@os/store/types'
 import type { Plugin } from '@os/plugins/types'
@@ -26,12 +26,4 @@ export interface CmsContextValue {
   onDetailEscape: () => void
 }
 
-const CmsContext = createContext<CmsContextValue | null>(null)
-
-export const CmsProvider = CmsContext.Provider
-
-export function useCms(): CmsContextValue {
-  const ctx = useContext(CmsContext)
-  if (!ctx) throw new Error('useCms must be used within CmsProvider')
-  return ctx
-}
+export const [CmsProvider, useCms] = createDomainContext<CmsContextValue>('Cms')

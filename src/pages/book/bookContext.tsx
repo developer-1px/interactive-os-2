@@ -1,5 +1,5 @@
 // ② flatlayout-pull-transition-prd.md
-import { createContext, useContext } from 'react'
+import { createDomainContext } from '@os/layout'
 import type { NormalizedData } from '@os/store/types'
 import type { BookPage } from './bookContent'
 
@@ -66,12 +66,4 @@ export interface BookContextValue {
   onLayerNameSubmit: () => void
 }
 
-const BookContext = createContext<BookContextValue | null>(null)
-
-export const BookProvider = BookContext.Provider
-
-export function useBook(): BookContextValue {
-  const ctx = useContext(BookContext)
-  if (!ctx) throw new Error('useBook must be used within BookProvider')
-  return ctx
-}
+export const [BookProvider, useBook] = createDomainContext<BookContextValue>('Book')

@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createDomainContext } from '@os/layout'
 import type { Msg } from './incidentData'
 
 export interface IncidentContextValue {
@@ -8,12 +8,4 @@ export interface IncidentContextValue {
   onReplay: () => void
 }
 
-const IncidentContext = createContext<IncidentContextValue | null>(null)
-
-export const IncidentProvider = IncidentContext.Provider
-
-export function useIncident(): IncidentContextValue {
-  const ctx = useContext(IncidentContext)
-  if (!ctx) throw new Error('useIncident must be used inside IncidentProvider')
-  return ctx
-}
+export const [IncidentProvider, useIncident] = createDomainContext<IncidentContextValue>('Incident')
