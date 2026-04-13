@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import { ax } from '@styles/ax'
 import { Button } from '@os/ui/Button'
+import { RemoteSearch } from '@os/ui/RemoteSearch'
 import { CheckIndicator } from '@os/ui/indicators/CheckIndicator'
 import { HelpCircle } from 'lucide-react'
 import { I18nGrid } from '../../entities/i18n/ui/I18nGrid'
@@ -21,9 +22,10 @@ export function I18nTitleWidget() {
 
 // ── Search slot (portal target for Grid's AriaSearch) ──
 
+const I18N_ENGINE_ID = 'i18n Translation Editor'
+
 export function I18nSearchSlotWidget() {
-  const { searchPortalRef } = useI18n()
-  return <div ref={searchPortalRef} className={ax({ flex: '1' })} />
+  return <RemoteSearch engineId={I18N_ENGINE_ID} />
 }
 
 // ── Stats (numbers only) ──
@@ -99,7 +101,7 @@ export function I18nHelpWidget() {
 // ── Grid ──
 
 export function I18nGridWidget() {
-  const { data, plugins, keyMap, onChange, missingOnly, searchPortalRef } = useI18n()
+  const { data, plugins, keyMap, onChange, missingOnly } = useI18n()
 
   const visibleData = useMemo(() => {
     if (!missingOnly) return data
@@ -114,7 +116,6 @@ export function I18nGridWidget() {
       initialColIndex={1}
       keyMap={keyMap}
       onChange={onChange}
-      searchPortalTarget={searchPortalRef}
       aria-label="i18n Translation Editor"
     />
   )

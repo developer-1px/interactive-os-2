@@ -24,48 +24,6 @@
 :where([role="treegrid"] [aria-level="9"]) { padding-left: 136px; }
 :where([role="treegrid"] [aria-level="10"]) { padding-left: 152px; }
 
-/* ── Grid table (subgrid layout) ── */
-
-:where(.grid-table) {
-  display: grid;
-  grid-template-columns: var(--grid-columns, repeat(var(--grid-col-count, 4), 1fr));
-  width: 100%;
-}
-
-:where(.grid-header) {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: 1 / -1;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-:where(.grid-header-cell) {
-  min-width: 80px;
-}
-
-:where(.grid-table > .ax-interactive) {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: 1 / -1;
-}
-
-:where(.grid-table .ax-interactive > :not([role="row"]):not([role="option"])) {
-  grid-column: 1 / -1;
-}
-
-:where(.grid-table [role="row"]) {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: 1 / -1;
-}
-
-:where(.grid-table [role="row"] .grid-row) {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: 1 / -1;
-}
 
 /* ── Standalone disabled (컨테이너 밖) ── */
 

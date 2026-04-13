@@ -1,6 +1,5 @@
 /** @catalog 2차원 그리드 탐색 */
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import { ax } from '@styles/ax'
 import type { Plugin } from '../engine/types'
@@ -11,6 +10,7 @@ import { grid as gridBehavior } from '../pattern/roles/grid'
 import { cellEdit } from '../plugins/cellEdit'
 import { search } from '../plugins/search'
 import { edit, replaceEditPlugin } from '../plugins/edit'
+import styles from './Grid.module.css'
 
 interface ColumnDef {
   key: string
@@ -31,8 +31,6 @@ interface GridProps extends Omit<AriaComponentProps, 'renderItem'> {
   header?: boolean
   /** Initial focused column index (default 0). Use 1+ to skip a read-only key column. */
   initialColIndex?: number
-  /** Portal target for search input — renders AriaSearch into this DOM element instead of inline */
-  searchPortalTarget?: React.RefObject<HTMLElement | null>
   keyMap?: Record<string, import('../axis/types').KeyHandler>
   onFocusChange?: (nodeId: string | null) => void
 }
@@ -56,7 +54,6 @@ export function Grid({
   tabCycle = false,
   header = false,
   initialColIndex,
-  searchPortalTarget,
   keyMap,
   'aria-label': ariaLabel,
 }: GridProps) {
@@ -90,7 +87,7 @@ export function Grid({
     const cells = (node.data as Record<string, unknown>)?.cells as unknown[] | undefined
     return (
       <div
-        className="grid-row"
+        className={styles.row}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
         {...props}
@@ -105,11 +102,11 @@ export function Grid({
   }
 
   return (
-    <div className="grid-table" style={gridStyle}>
+    <div className={`${styles.table} ${ax({ width: 'full', flex: '1' })}`} style={gridStyle}>
       {header && (
-        <div className={`grid-header ${ax({ surface: 'sunken', border: 'bottom' })}`}>
+        <div className={`${styles.header} ${ax({ placement: 'sticky', surface: 'sunken', border: 'bottom' })}`}>
           {columns.map((col, i) => (
-            <div key={col.key} className={`grid-header-cell ${ax({ padding: 'md', textStyle: 'overline', text: 'secondary' })}${i < columns.length - 1 ? ` ${ax({ border: 'end' })}` : ''}`}>{col.header}</div>
+            <div key={col.key} className={ax({ padding: 'md', textStyle: 'overline', text: 'secondary', width: 'sm', ...(i < columns.length - 1 ? { border: 'end' } : {}) })}>{col.header}</div>
           ))}
         </div>
       )}
@@ -123,10 +120,6 @@ export function Grid({
         keyMap={keyMap}
         aria-label={ariaLabel}
       >
-        {searchable && (searchPortalTarget?.current
-          ? ReactDOM.createPortal(<Aria.Search placeholder="Search..." />, searchPortalTarget.current)
-          : <Aria.Search placeholder="Search..." />
-        )}
         <Aria.Item render={renderRow} />
       </Aria>
     </div>

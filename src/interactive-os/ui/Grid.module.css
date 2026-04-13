@@ -1,0 +1,39 @@
+/* Grid — subgrid layout (last-mile: ax() 축에 없는 CSS Grid 속성) */
+
+.table {
+  display: grid;
+  grid-template-columns: var(--grid-columns, repeat(var(--grid-col-count, 4), 1fr));
+  overflow-y: auto;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+/* Aria container — subgrid span */
+.table > :global(.ax-interactive) {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+/* Search/non-row children — full span */
+.table :global(.ax-interactive) > :not([role="row"]):not([role="option"]) {
+  grid-column: 1 / -1;
+}
+
+/* Row — subgrid span */
+.table :global([role="row"]) {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+/* Inner row wrapper — subgrid span */
+.table :global([role="row"]) .row {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}

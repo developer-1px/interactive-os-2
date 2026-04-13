@@ -55,7 +55,7 @@ describe('PageI18nEditor', () => {
 
     it('renders 4 column headers (key + 3 locales)', () => {
       const { container } = render(<PageI18nEditor />)
-      const headers = container.querySelectorAll('.grid-header-cell')
+      const headers = container.querySelectorAll('.ts-overline')
       expect(headers.length).toBe(4)
       expect(headers[0]?.textContent).toBe('KEY')
       expect(headers[1]?.textContent).toBe('KO')

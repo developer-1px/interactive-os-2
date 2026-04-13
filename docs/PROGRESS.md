@@ -30,7 +30,7 @@
 | history | Integrated | delta-based undo/redo, navigation skip 구현. command grouping 미구현 |
 | crud | Integrated | — |
 | cellEdit | Integrated | Google Sheets 2모드: Delete→셀 클리어, Enter→행 이동, Mod+X/C/V 셀 클립보드 |
-| search | Integrated | Mod+F 검색, Aria.Search input + Aria.SearchHighlight mark. getVisibleNodes 필터. Grid searchable prop |
+| search | Integrated | Mod+F 검색, Aria.Search(context) + AriaRemoteSearch(registry) + Aria.SearchHighlight mark. getVisibleNodes 필터. Grid searchable prop. RemoteSearch로 Aria 트리 외부에서 검색 UI 독립 배치 |
 | clipboard | Integrated | NormalizedData 버퍼 수렴 (ClipboardEntry 제거), extractSubtree/mergeSubtree store 연산 사용, serialize/deserialize 브릿지, multi-select, Mod+D |
 | zodSchema | Integrated | validator 패턴 전환 (middleware 제거), crud/dnd/clipboard 전 경로 구조 무결성 검증, CommandResult reject 시그널 |
 | form | Prototype | Zod entityRules 기반 값 검증 (레거시). form 패턴 신규: navigate('natural') + expand, Tab 순회 표준 |
@@ -69,7 +69,7 @@
 | widgetRegistry | Integrated | createWidgetRegistry + resolveWidget |
 | layoutCommands | Prototype | setVisibility, setGap. workspaceCommands 확장 |
 | layoutPlugin | Integrated | layout() plugin. workspace() requires |
-| FlatLayout (ui/) | Integrated | 배치 엔진(XY+Z). OCP renderer map. Pull 모델(widget은 도메인 Context에서 pull, props 운반선 아님) |
+| FlatLayout (ui/) | Integrated | 배치 엔진(XY+Z). OCP renderer map. Pull 모델. **Widget scroll 독립**: 구조 노드는 FlatLayout이 스크롤, widget은 자체 스크롤 소유. Widget에 .ly-scroll/surface/layout:column 강제 안 함 |
 
 ## Overlay (L5.5)
 

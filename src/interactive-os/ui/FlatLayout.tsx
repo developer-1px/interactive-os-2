@@ -275,7 +275,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  widget: ({ nodeId, store, surface, parentType, registry, refCallback, renderNode }) => {
+  widget: ({ nodeId, store, parentType, registry, refCallback, renderNode }) => {
     const node = getEntityData<WidgetNode>(store, nodeId)
     if (!node) return null
     const Component = resolveWidget(registry, node.widget)
@@ -295,16 +295,10 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
 
     const isSplitChild = parentType === 'split' || parentType === 'nav'
     const fillSlot = isSplitChild || parentType === 'tab'
-    const scrollable = fillSlot && node.scroll !== false
 
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', ...(fillSlot ? { flex: '1' } : {}), surface, ...(surface === 'raised' ? { shape: 'lg' } : {}) })} ${isSplitChild ? styles.splitChild : ''} min-h-0`}>
-        {scrollable
-          ? <div className={ax({ layout: 'scroll', flex: '1' })}>
-              <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
-            </div>
-          : <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
-        }
+      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', scroll: 'hidden', ...(fillSlot ? { flex: '1', layout: 'fill' } : {}) })} ${isSplitChild ? styles.splitChild : ''} min-h-0`}>
+        <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )
   },

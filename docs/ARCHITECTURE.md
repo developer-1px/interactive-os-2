@@ -43,7 +43,7 @@ graph TB
       kmHelpers["keymapHelpers"]
     end
     subgraph L6_reg["레지스트리"]
-      ariaReg["ariaRegistry — 글로벌 등록/해제"]
+      ariaReg["ariaRegistry — 글로벌 등록/해제/구독(subscribeRegistry)"]
     end
   end
 

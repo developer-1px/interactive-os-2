@@ -96,7 +96,6 @@ export default function PageI18nEditor() {
   const [data, setData] = useStore(initialGridData)
   const [missingOnly, setMissingOnly] = useState(false)
   const prevDataRef = useRef(data)
-  const searchPortalRef = useRef<HTMLDivElement>(null)
 
   const handleChange = useCallback((next: NormalizedData) => {
     const changes = diffGridChanges(prevDataRef.current, next, cmsStore)
@@ -109,7 +108,7 @@ export default function PageI18nEditor() {
 
   const i18nCtx = useMemo<I18nContextValue>(() => ({
     data, plugins, keyMap: keyMapOverride, onChange: handleChange,
-    missingOnly, setMissingOnly, stats, searchPortalRef,
+    missingOnly, setMissingOnly, stats,
   }), [data, handleChange, missingOnly, stats])
 
   return (
