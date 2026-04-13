@@ -30,7 +30,7 @@ import { CmsProvider } from './cmsContext'
 import { cmsWidgets } from './cmsWidgets'
 
 // ② meta-editable-ssot-prd.md
-const cmsEditableFilter: VisibilityFilter = {
+export const cmsEditableFilter: VisibilityFilter = {
   isFocusable: (nodeId: string, store) => {
     const entity = store.entities[nodeId]
     if (!entity) return true

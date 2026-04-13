@@ -14,3 +14,5 @@ export { useEngine } from '../engine/useEngine';
 export { definePlugin } from '../plugins/definePlugin';
 export type { Plugin, Command, Middleware, VisibilityFilter } from '../engine/types';
 export type { KeyHandler } from '../axis/types';
+
+export { getFirstVisibleChild } from '../engine/getVisibleNodes';

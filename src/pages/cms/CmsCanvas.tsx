@@ -24,9 +24,28 @@ import { renameCommands } from '@os/plugins/rename'
 import type { Locale } from './cmsTypes'
 import { getNodeClassName, getChildrenContainerClassName, getNodeTag, HEADER_TYPES, getInlineEditableFields } from './cmsRenderers'
 import { CmsInlineEditable } from './CmsInlineEditable'
-import { cmsCanDelete } from './cmsSchema'
+import { cmsCanDelete, getEditableFields, expandEntitySlots } from './cmsSchema'
 import { SelectionOverlay } from '@os/ui/SelectionOverlay'
 import landingStyles from './CmsLanding.module.css'
+
+// ② meta-editable-ssot-prd.md — find first focusable descendant (skip isFocusable=false)
+function isCmsFocusable(store: NormalizedData, nodeId: string): boolean {
+  const entity = store.entities[nodeId]
+  if (!entity) return true
+  const data = (entity.data ?? {}) as Record<string, unknown>
+  if (getEditableFields(data).length === 0) return false
+  if (expandEntitySlots(nodeId, data) !== null) return false
+  return true
+}
+
+function findFirstFocusableChild(store: NormalizedData, parentId: string): string | undefined {
+  for (const childId of getChildren(store, parentId)) {
+    if (isCmsFocusable(store, childId)) return childId
+    const deeper = findFirstFocusableChild(store, childId)
+    if (deeper) return deeper
+  }
+  return undefined
+}
 
 interface CmsCanvasProps {
   engine: CommandEngine
@@ -134,9 +153,6 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, onSlot
           if (inlineFields.length !== 1) return
           return renameCommands.startRename(ctx.focused)
         }
-        // Prefer real children for drill down; fall back to slot children
-        const drillTarget = children.length > 0 ? children : slotKids
-
         // Tab-item: Enter goes through panel to its first section
         const entity = ctx.getEntity(ctx.focused)
         const d = (entity?.data ?? {}) as Record<string, unknown>
@@ -154,9 +170,12 @@ export default function CmsCanvas({ engine, store, locale, onFocusChange, onSlot
 
         spatialNav.clearCursorsAtDepth(ctx.focused)
         // Container node → enterChild (spatial depth navigation)
+        // ② meta-editable-ssot-prd.md — skip isFocusable=false nodes
+        const firstFocusable = findFirstFocusableChild(engine.getStore(), ctx.focused)
+        if (!firstFocusable) return
         return createBatchCommand([
           spatialCommands.enterChild(ctx.focused),
-          focusCommands.setFocus(drillTarget[0]),
+          focusCommands.setFocus(firstFocusable),
         ])
       }),
       Escape: key(['spatial:exitToParent'], (ctx) => {

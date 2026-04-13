@@ -14,6 +14,36 @@ import type { VisibilityFilter } from './types'
  * Container nodes (nodes with children or slots) without expand filter are
  * not focusable — only their children are walked into.
  */
+/** Find the first visible (focusable) descendant of a parent node.
+ *  Walks children depth-first, skipping isFocusable=false nodes but descending into them. */
+export function getFirstVisibleChild(store: NormalizedData, parentId: string, filters?: VisibilityFilter[]): string | undefined {
+  const hasFocusable = filters?.some(f => f.isFocusable) ?? false
+  if (!hasFocusable) {
+    // No isFocusable filter → first child as before
+    const kids = getChildren(store, parentId)
+    return kids[0] ?? getSlotChildren(store, parentId)[0]
+  }
+
+  const isFocusable = (id: string) => !filters?.some(f => f.isFocusable && !f.isFocusable(id, store))
+
+  const walk = (pid: string): string | undefined => {
+    for (const childId of getChildren(store, pid)) {
+      if (filters?.some(f => f.shouldShow && !f.shouldShow(childId, store))) continue
+      if (isFocusable(childId)) return childId
+      const deeper = walk(childId)
+      if (deeper) return deeper
+    }
+    for (const childId of getSlotChildren(store, pid)) {
+      if (filters?.some(f => f.shouldShow && !f.shouldShow(childId, store))) continue
+      if (isFocusable(childId)) return childId
+      const deeper = walk(childId)
+      if (deeper) return deeper
+    }
+    return undefined
+  }
+  return walk(parentId)
+}
+
 export function getVisibleNodes(store: NormalizedData, filters?: VisibilityFilter[]): string[] {
   const visible: string[] = []
   let _visitCount = 0
