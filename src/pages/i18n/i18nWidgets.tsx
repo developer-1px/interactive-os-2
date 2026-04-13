@@ -74,12 +74,12 @@ export function I18nHelpWidget() {
   // @useState-hatch — help popover visibility
   const [open, setOpen] = useState(false)
   return (
-    <div className={ax({ placement: 'relative' })}>
+    <>
       <Button variant="ghost" size="sm" onClick={() => setOpen(v => !v)} aria-label="Keyboard shortcuts">
         <HelpCircle size={14} />
       </Button>
       {open && (
-        <div className={ax({ placement: 'below', surface: 'overlay', padding: 'md', shape: 'md', width: 'xl' })}>
+        <div className={ax({ surface: 'overlay', padding: 'md', shape: 'md', width: 'xl' })}>
           <ul className={ax({ layout: 'stack', gap: 'xs', textStyle: 'caption' })}>
             <li><kbd>Enter</kbd> edit cell</li>
             <li><kbd>F2</kbd> edit cell</li>
@@ -94,7 +94,7 @@ export function I18nHelpWidget() {
           </ul>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

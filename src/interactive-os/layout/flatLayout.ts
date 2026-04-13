@@ -68,7 +68,7 @@ export interface SectionNode extends LayoutBase {
 
 export interface FloatingNode extends LayoutBase {
   type: 'floating'
-  anchor: 'float-top-center' | 'float-bottom-center'
+  anchor: 'float-top-start' | 'float-top-center' | 'float-bottom-center' | 'float-bottom'
   hidden?: boolean
 }
 

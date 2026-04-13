@@ -43,19 +43,22 @@ export function loader() {
 
 const baseLayout = definePage({
   entities: {
-    root:             { data: { type: 'stack' as const, gap: 'md' as const }, children: ['reader', 'pill', 'footer', 'progress', 'nav'] },
+    root:             { data: { type: 'stack' as const, gap: 'md' as const }, children: ['reader', 'pill-float', 'footer-float', 'progress-float', 'nav'] },
     reader:           { data: { type: 'widget' as const, widget: 'BookReader' } },
+    'pill-float':     { data: { type: 'floating' as const, anchor: 'float-top-start' as const }, children: ['pill'] },
     pill:             { data: { type: 'widget' as const, widget: 'BookPill' } },
+    'footer-float':   { data: { type: 'floating' as const, anchor: 'float-bottom-center' as const }, children: ['footer'] },
     footer:           { data: { type: 'widget' as const, widget: 'BookFooter' } },
+    'progress-float': { data: { type: 'floating' as const, anchor: 'float-bottom' as const }, children: ['progress'] },
     progress:         { data: { type: 'widget' as const, widget: 'BookProgress' } },
     nav:              { data: { type: 'bar' as const, justify: 'between' as const }, children: ['prev-btn', 'next-btn'] },
     'prev-btn':       { data: { type: 'widget' as const, widget: 'BookPrevButton' } },
     'next-btn':       { data: { type: 'widget' as const, widget: 'BookNextButton' } },
     'toc-overlay':    { data: { type: 'overlay' as const, overlayType: 'modal' as const, visible: false }, children: ['toc-content'] },
     'toc-content':    { data: { type: 'widget' as const, widget: 'BookTocOverlay' } },
-    'quick-open':     { data: { type: 'overlay' as const, overlayType: 'popup' as const, visible: false }, children: ['qo-content'] },
+    'quick-open':     { data: { type: 'overlay' as const, overlayType: 'modal' as const, visible: false }, children: ['qo-content'] },
     'qo-content':     { data: { type: 'widget' as const, widget: 'BookQuickOpen' } },
-    'layer-overlay':  { data: { type: 'overlay' as const, overlayType: 'popup' as const, visible: false }, children: ['layer-content'] },
+    'layer-overlay':  { data: { type: 'overlay' as const, overlayType: 'modal' as const, visible: false }, children: ['layer-content'] },
     'layer-content':  { data: { type: 'widget' as const, widget: 'BookLayerOverlay' } },
   },
 })

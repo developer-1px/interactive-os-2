@@ -36,7 +36,7 @@ function BookPill() {
   const { page, chromeVisible, currentIsFavorite, onToggleFavorite, onOpenToc, onOpenLayerOverlay, onOpenQuickOpen, layerCount } = useBook()
 
   return (
-    <div className={`book-pill ${ax({ surface: 'overlay', placement: 'top-start', width: 'fit', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
+    <div className={`book-pill ${ax({ surface: 'overlay', width: 'fit', layout: 'bar', gap: 'sm', padding: 'sm', shape: 'pill' })}`} data-visible={chromeVisible}>
       <button
         className={`${ax({ surface: 'ghost', layout: 'center', shape: 'pill', text: 'secondary', flex: 'none' })} book-pill-btn`}
         onClick={onOpenToc}
@@ -105,7 +105,7 @@ function BookFooter() {
   const { page, currentPage, totalPages } = useBook()
 
   return (
-    <div className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted', placement: 'bottom-center' })} book-page-number`}>
+    <div className={`${ax({ layout: 'bar', gap: 'sm', textStyle: 'caption', text: 'muted' })} book-page-number`}>
       {page && <Breadcrumb path={page.id} root="" />}
       <span>{currentPage + 1}/{totalPages}</span>
     </div>
@@ -116,7 +116,7 @@ function BookProgress() {
   const { chromeVisible, progressPercent } = useBook()
 
   return (
-    <div className={`${ax({ placement: 'bottom' })} book-progress-bar`} data-visible={chromeVisible}>
+    <div className="book-progress-bar" data-visible={chromeVisible}>
       <div className="book-progress-fill" style={{ '--progress': `${progressPercent}%` } as React.CSSProperties} />
     </div>
   )
@@ -126,7 +126,7 @@ function BookTocOverlay() {
   const { tocOpen, tocStore, onTocActivate, onTocClose } = useBook()
 
   return (
-    <div className={`${ax({ placement: 'center', layout: 'center' })} book-toc-overlay`} data-open={tocOpen}>
+    <div className="book-toc-overlay" data-open={tocOpen}>
       <div className={`${ax({ scroll: 'hidden', layout: 'column' })} book-toc-panel`}>
         <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
           <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
@@ -155,7 +155,7 @@ function BookQuickOpen() {
 
   return (
     <div
-      className={`${ax({ placement: 'center' })} book-quick-open-overlay`}
+      className="book-quick-open-overlay"
       data-open={quickOpenVisible}
       onClick={(e) => { if (e.target === e.currentTarget) onQuickOpenClose() }}
     >
@@ -180,7 +180,7 @@ function BookLayerOverlay() {
 
   return (
     <div
-      className={`${ax({ placement: 'center' })} book-quick-open-overlay`}
+      className="book-quick-open-overlay"
       data-open={layerOverlayVisible}
       onClick={(e) => { if (e.target === e.currentTarget) onLayerClose() }}
     >
