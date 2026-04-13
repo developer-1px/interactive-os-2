@@ -206,7 +206,7 @@ export function SplitPane({
       : { flex: `0 0 ${(sizes[i] as number) * 100}%` }
 
     elements.push(
-      <div key={`pane-${i}`} className={`${ax({ layout: 'fill', scroll: 'hidden' })} min-w-0 min-h-0`} style={sizeStyle}>
+      <div key={`pane-${i}`} className={ax({ layout: 'fill', scroll: 'hidden' })} style={sizeStyle}>
         {child}
       </div>,
     )
@@ -232,7 +232,7 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={`${isHorizontal ? ax({ layout: 'row', flex: '1', scroll: 'hidden' }) : ax({ layout: 'column', flex: '1', scroll: 'hidden' })} min-w-0 min-h-0`}
+      className={isHorizontal ? ax({ layout: 'row-fill', scroll: 'hidden' }) : ax({ layout: 'fill', scroll: 'hidden' })}
     >
       {elements}
     </div>

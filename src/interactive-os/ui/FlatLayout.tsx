@@ -300,7 +300,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const fillSlot = isSplitChild || parentType === 'tab'
 
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', scroll: 'hidden', ...(fillSlot ? { flex: '1', layout: 'fill' } : {}) })} ${isSplitChild ? styles.splitChild : ''} min-h-0`}>
+      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', ...(fillSlot ? { layout: 'fill' } : { scroll: 'hidden' }) })} ${isSplitChild ? styles.splitChild : ''}`}>
         <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )

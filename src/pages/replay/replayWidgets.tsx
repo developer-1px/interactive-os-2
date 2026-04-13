@@ -4,6 +4,7 @@ import { ScrollArea } from '@os/ui/ScrollArea'
 import { ViewerTabList } from '@os/ui/ViewerTabList'
 import { TabList } from '@os/ui/TabList'
 import { Combobox } from '@os/ui/Combobox'
+import { Button } from '@os/ui/Button'
 import { FileViewer } from '@os/ui/FileViewer'
 import { SearchResults } from '@os/ui/SearchResults'
 import { TerminalOutput } from '@os/ui/TerminalOutput'
@@ -19,7 +20,7 @@ export function ReplayViewerWidget() {
   const { tabs, activeTab, activeTabId, setActiveTab, viewerTabData, fileViewerRef } = useReplay()
 
   return (
-    <div className={`${ax({ layout: 'column', flex: '1' })} min-h-0`}>
+    <div className={ax({ layout: 'fill' })}>
       {tabs.length > 0 ? (
         <div className={ax({ scroll: 'x', flex: 'none' })}>
           <ViewerTabList
@@ -35,7 +36,7 @@ export function ReplayViewerWidget() {
         </div>
       )}
 
-      <ScrollArea className={`${ax({ flex: '1', padding: 'sm' })} min-h-0`}>
+      <ScrollArea className={ax({ flex: '1', padding: 'sm' })}>
         {activeTab?.type === 'file' ? (
           <FileViewer ref={fileViewerRef} filename={filenameFrom(activeTab.path)} />
         ) : activeTab?.type === 'search' ? (
@@ -76,7 +77,7 @@ export function ReplayChatWidget() {
   }, [setSelectedId])
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'fill' })}>
       <TabList
         data={rightTabData}
         initialFocus={rightTab}
@@ -85,7 +86,7 @@ export function ReplayChatWidget() {
       />
 
       {rightTab === 'replay' && (
-        <div className={ax({ layout: 'column', flex: '1' })}>
+        <div className={ax({ layout: 'fill' })}>
           <div className={ax({ layout: 'bar', gap: 'sm', padding: 'xs', flex: 'none' })}>
             <Combobox
               data={sessionComboData}
@@ -94,9 +95,7 @@ export function ReplayChatWidget() {
               aria-label="Session selector"
             />
             {!isRunning && messages.length > 0 && (
-              <button onClick={startReplay} className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', textStyle: 'caption' })}>
-                Replay
-              </button>
+              <Button size="sm" onClick={startReplay}>Replay</Button>
             )}
           </div>
           <ChatFeed

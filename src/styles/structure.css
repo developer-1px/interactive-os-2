@@ -22,8 +22,6 @@
 .contents      { display: contents; }
 
 /* ── Flex ── */
-.flex-row      { display: flex; }
-.flex-col      { display: flex; flex-direction: column; }
 .flex-wrap     { flex-wrap: wrap; }
 .inline-flex   { display: inline-flex; }
 
@@ -33,24 +31,12 @@
 /* ── Alignment ── */
 .items-center    { align-items: center; }
 .justify-center  { justify-content: center; }
-.justify-between { justify-content: space-between; }
 .justify-end     { justify-content: flex-end; }
 
-/* ── Gap (token-bound) ── */
-.gap-sm  { gap: var(--space-sm); }
-
 /* ── Sizing ── */
-.flex-1   { flex: 1; }
-.shrink-0 { flex-shrink: 0; }
 .min-w-0  { min-width: 0; }
-.min-h-0  { min-height: 0; }
 .h-full   { height: 100%; }
 .w-full   { width: 100%; }
-
-/* ── Overflow ── */
-.overflow-hidden   { overflow: hidden; }
-.overflow-auto     { overflow: auto; }
-.overflow-y-auto   { overflow-y: auto; }
 
 /* ── Text ── */
 .text-center   { text-align: center; }
@@ -72,16 +58,4 @@
 .border-none  { border: none; }
 .object-cover { object-fit: cover; }
 
-/* ── Visibility ── */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px; /* stylelint-disable-line — WCAG screen-reader hide technique */
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
 } /* @layer base */
