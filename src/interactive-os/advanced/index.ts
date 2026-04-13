@@ -12,3 +12,5 @@ export { createCommandEngine } from '../engine/createCommandEngine';
 export { useEngine } from '../engine/useEngine';
 
 export { definePlugin } from '../plugins/definePlugin';
+export type { Plugin, Command, Middleware } from '../engine/types';
+export type { KeyHandler } from '../axis/types';

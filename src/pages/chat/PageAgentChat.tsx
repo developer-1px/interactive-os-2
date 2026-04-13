@@ -30,7 +30,6 @@ import {
   findTabgroup,
 } from '@os/plugins/workspaceStore'
 import type { TabData, SplitData } from '@os/plugins/workspaceStore'
-import { ax } from '@styles/ax'
 import { ChatProvider, type ChatContextValue } from './chatContext'
 import { ChatSidebarWidget, ChatWorkspaceWidget } from './chatWidgets'
 import './PageAgentChat.css'
@@ -157,10 +156,8 @@ export default function PageAgentChat() {
   }), [sessions, activeSessionId, wsData, handleWorkspaceChange, handleAddTab, handleSidebarClick, renderPanel])
 
   return (
-    <div className={`${ax({ scroll: 'hidden', layout: 'row' })} h-full chat-page`}>
-      <ChatProvider value={chatCtx}>
-        <FlatLayout data={chatLayout} registry={chatWidgets} aria-label="Chat" />
-      </ChatProvider>
-    </div>
+    <ChatProvider value={chatCtx}>
+      <FlatLayout data={chatLayout} registry={chatWidgets} aria-label="Chat" />
+    </ChatProvider>
   )
 }

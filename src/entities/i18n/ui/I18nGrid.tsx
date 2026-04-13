@@ -1,8 +1,7 @@
 import React from 'react'
 import { Grid } from '@os/ui/Grid'
-import type { NormalizedData } from '@os/store/types'
-import type { Plugin } from '@os/engine/types'
-import type { KeyHandler } from '@os/axis/types'
+import type { NormalizedData } from '@os/schema'
+import type { Plugin, KeyHandler } from '@os/advanced'
 import { EditableCell, SearchableCell } from '@os/ui/cells'
 
 interface I18nGridProps {
@@ -12,10 +11,11 @@ interface I18nGridProps {
   initialColIndex?: number
   keyMap?: Record<string, KeyHandler>
   onChange: (next: NormalizedData) => void
+  searchPortalTarget?: React.RefObject<HTMLElement | null>
   'aria-label'?: string
 }
 
-export function I18nGrid({ data, columns, plugins, initialColIndex = 1, keyMap, onChange, 'aria-label': ariaLabel }: I18nGridProps) {
+export function I18nGrid({ data, columns, plugins, initialColIndex = 1, keyMap, onChange, searchPortalTarget, 'aria-label': ariaLabel }: I18nGridProps) {
   const dataRef = React.useRef(data)
   React.useEffect(() => { dataRef.current = data })
 
@@ -51,6 +51,7 @@ export function I18nGrid({ data, columns, plugins, initialColIndex = 1, keyMap, 
       onChange={onChange}
       enableEditing
       searchable
+      searchPortalTarget={searchPortalTarget}
       tabCycle
       renderCell={renderCell}
       aria-label={ariaLabel}

@@ -34,7 +34,7 @@ function AriaSearch({ placeholder = 'Search...', className }: { placeholder?: st
     inputRef.current?.focus()
   }
 
-  const wrapperClass = `${ax({ layout: 'bar', gap: 'sm', padding: 'sm', surface: 'sunken', border: 'default', shape: 'md' })}${className ? ` ${className}` : ''}`
+  const wrapperClass = `${ax({ layout: 'bar', gap: 'sm', padding: 'sm', surface: 'raised', border: 'default', shape: 'md' })}${className ? ` ${className}` : ''}`
 
   return (
     <div className={wrapperClass}>

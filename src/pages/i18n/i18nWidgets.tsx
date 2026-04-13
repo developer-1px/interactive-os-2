@@ -1,75 +1,105 @@
-// @useState-hatch — missingOnly toggle lives in page, pulled via context
-import { useMemo } from 'react'
+// @useState-hatch — help popover open/close는 view-only ephemeral toggle (OS 축에 해당 없음)
+import { useMemo, useState } from 'react'
 import { ax } from '@styles/ax'
 import { Button } from '@os/ui/Button'
 import { CheckIndicator } from '@os/ui/indicators/CheckIndicator'
+import { HelpCircle } from 'lucide-react'
 import { I18nGrid } from '../../entities/i18n/ui/I18nGrid'
 import { I18N_COLUMNS } from '../cms/cmsI18nTransform'
 import { LOCALES } from '../cms/cmsTypes'
 import { useI18n } from './i18nContext'
+import type { NormalizedData } from '@os/schema'
+import { ROOT_ID } from '@os/schema'
 
-export function I18nHeaderWidget() {
+// ── Title (compact, single line) ──
+
+export function I18nTitleWidget() {
   return (
-    <div className="page-header">
-      <h2 className="page-title">i18n Editor</h2>
-      <p className="page-desc">
-        Spreadsheet-style translation editor — Google Sheets keyboard navigation
-      </p>
-    </div>
+    <span className={ax({ textStyle: 'label', text: 'primary' })}>i18n Editor</span>
   )
 }
 
-export function I18nStatsBarWidget() {
-  const { stats, missingOnly, setMissingOnly } = useI18n()
+// ── Search slot (portal target for Grid's AriaSearch) ──
+
+export function I18nSearchSlotWidget() {
+  const { searchPortalRef } = useI18n()
+  return <div ref={searchPortalRef} className={ax({ flex: '1' })} />
+}
+
+// ── Stats (numbers only) ──
+
+export function I18nStatsWidget() {
+  const { stats } = useI18n()
   const overallPct = stats.total === 0 ? 0 : Math.round((stats.filled / stats.total) * 100)
 
   return (
-    <div className={ax({ layout: 'bar', gap: 'md', padding: 'sm', surface: 'sunken', shape: 'md' })}>
-      <div className={ax({ layout: 'bar', gap: 'sm', flex: '1' })}>
-        <strong>{stats.filled} / {stats.total}</strong>
-        <span className={ax({ text: 'muted' })}>({overallPct}%)</span>
-        {stats.perLocale.map((s, i) => {
-          const pct = s.total === 0 ? 0 : Math.round((s.filled / s.total) * 100)
-          const locale = LOCALES[i]
-          return (
-            <span key={locale} className={ax({ text: pct === 100 ? 'muted' : 'primary' })}>
-              {locale?.toUpperCase()} {s.filled}/{s.total} ({pct}%)
-            </span>
-          )
-        })}
-      </div>
-      <Button
-        variant={missingOnly ? 'accent' : 'ghost'}
-        size="sm"
-        onClick={() => setMissingOnly(v => !v)}
-      >
-        <CheckIndicator checked={missingOnly} />
-        Missing only
-      </Button>
+    <div className={ax({ layout: 'bar', gap: 'sm' })}>
+      <span className={ax({ textStyle: 'caption', text: 'secondary' })}>
+        {stats.filled}/{stats.total} ({overallPct}%)
+      </span>
+      {stats.perLocale.map((s, i) => {
+        const pct = s.total === 0 ? 0 : Math.round((s.filled / s.total) * 100)
+        const locale = LOCALES[i]
+        return (
+          <span key={locale} className={ax({ textStyle: 'caption', text: pct === 100 ? 'muted' : 'primary' })}>
+            {locale?.toUpperCase()} {pct}%
+          </span>
+        )
+      })}
     </div>
   )
 }
 
-export function I18nKeyHintsWidget() {
+// ── Missing only toggle ──
+
+export function I18nMissingWidget() {
+  const { missingOnly, setMissingOnly } = useI18n()
   return (
-    <ul className={`page-keys ${ax({ layout: 'wrap', gap: 'sm' })}`}>
-      <li><kbd>Enter</kbd> <span className="key-hint">edit cell</span></li>
-      <li><kbd>F2</kbd> <span className="key-hint">edit cell</span></li>
-      <li><kbd>Tab</kbd> <span className="key-hint">next cell edit</span></li>
-      <li><kbd>Arrow keys</kbd> <span className="key-hint">move</span></li>
-      <li><kbd>Shift+Arrow</kbd> <span className="key-hint">range select</span></li>
-      <li><kbd>Shift+Click</kbd> <span className="key-hint">extend range</span></li>
-      <li><kbd>Drag</kbd> <span className="key-hint">range select</span></li>
-      <li><kbd>Del</kbd> <span className="key-hint">clear cell/range</span></li>
-      <li><kbd>Cmd+X/C/V</kbd> <span className="key-hint">clipboard</span></li>
-      <li><kbd>Cmd+Z</kbd> <span className="key-hint">undo</span></li>
-      <li><kbd>Cmd+F</kbd> <span className="key-hint">search</span></li>
-    </ul>
+    <Button
+      variant={missingOnly ? 'accent' : 'ghost'}
+      size="sm"
+      onClick={() => setMissingOnly(v => !v)}
+    >
+      <CheckIndicator checked={missingOnly} />
+      Missing only
+    </Button>
   )
 }
 
+// ── Help button (toggles keyboard hints) ──
+
+export function I18nHelpWidget() {
+  // @useState-hatch — help popover visibility
+  const [open, setOpen] = useState(false)
+  return (
+    <div className={ax({ placement: 'relative' })}>
+      <Button variant="ghost" size="sm" onClick={() => setOpen(v => !v)} aria-label="Keyboard shortcuts">
+        <HelpCircle size={14} />
+      </Button>
+      {open && (
+        <div className={ax({ placement: 'below', surface: 'overlay', padding: 'md', shape: 'md', width: 'xl' })}>
+          <ul className={ax({ layout: 'stack', gap: 'xs', textStyle: 'caption' })}>
+            <li><kbd>Enter</kbd> edit cell</li>
+            <li><kbd>F2</kbd> edit cell</li>
+            <li><kbd>Tab</kbd> next cell edit</li>
+            <li><kbd>Arrow keys</kbd> move</li>
+            <li><kbd>Shift+Arrow</kbd> range select</li>
+            <li><kbd>Shift+Click</kbd> extend range</li>
+            <li><kbd>Del</kbd> clear cell/range</li>
+            <li><kbd>Cmd+X/C/V</kbd> clipboard</li>
+            <li><kbd>Cmd+Z</kbd> undo</li>
+            <li><kbd>Cmd+F</kbd> search</li>
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Grid ──
+
 export function I18nGridWidget() {
-  const { data, plugins, keyMap, onChange, missingOnly } = useI18n()
+  const { data, plugins, keyMap, onChange, missingOnly, searchPortalRef } = useI18n()
 
   const visibleData = useMemo(() => {
     if (!missingOnly) return data
@@ -77,23 +107,20 @@ export function I18nGridWidget() {
   }, [data, missingOnly])
 
   return (
-    <div className={ax({ surface: 'display', shape: 'md' })}>
-      <I18nGrid
-        data={visibleData}
-        columns={I18N_COLUMNS}
-        plugins={plugins}
-        initialColIndex={1}
-        keyMap={keyMap}
-        onChange={onChange}
-        aria-label="i18n Translation Editor"
-      />
-    </div>
+    <I18nGrid
+      data={visibleData}
+      columns={I18N_COLUMNS}
+      plugins={plugins}
+      initialColIndex={1}
+      keyMap={keyMap}
+      onChange={onChange}
+      searchPortalTarget={searchPortalRef}
+      aria-label="i18n Translation Editor"
+    />
   )
 }
 
 // ── Helpers ──
-
-import { ROOT_ID, type NormalizedData } from '@os/store/types'
 
 function filterMissingOnly(data: NormalizedData): NormalizedData {
   const rows = (data.relationships[ROOT_ID] ?? []).filter(rowId => {

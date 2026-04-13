@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { execSync } from 'child_process'
 
-const HOOK = '/Users/user/Desktop/aria/.worktrees/single-entry-refactor/.claude/hooks/guardOsPatterns.mjs'
+const HOOK = '/Users/user/Desktop/aria/.claude/hooks/guardOsPatterns.mjs'
 
 function runHook(input) {
   try {

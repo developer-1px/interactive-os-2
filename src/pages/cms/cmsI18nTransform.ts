@@ -5,8 +5,8 @@ import { LOCALES } from './cmsTypes'
 import type { LocaleMap } from './cmsTypes'
 
 export const I18N_COLUMNS: { key: string; header: string; width?: string }[] = [
-  { key: 'key', header: 'KEY', width: '200px' },
-  ...LOCALES.map(l => ({ key: l, header: l.toUpperCase() })),
+  { key: 'key', header: 'KEY', width: '280px' },
+  ...LOCALES.map(l => ({ key: l, header: l.toUpperCase(), width: '1fr' })),
 ]
 
 export function translatableEntriesToGrid(store: NormalizedData): NormalizedData {

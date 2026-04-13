@@ -142,10 +142,11 @@ const scrollable = node.scroll !== false && !isFloating
 ### slotPolicy (개념 — 코드 분리는 선택)
 
 ```typescript
-// 모든 parentType에서 fill+scroll 기본. 예외만 분기.
+// 공간 분할 슬롯(split/nav/tab)만 fill+scroll. 문서 흐름(stack/floating)은 자연 높이.
+// split/nav/tab → 2층 (fill + scroll)
+// stack → 단층 (자연 높이, 문서 흐름)
 // floating → 단층 (자연 크기)
-// 나머지 → 2층 (fill + scroll)
-// scroll: false → 2층이지만 overflow: hidden
+// scroll: false → fill은 유지하되 overflow: hidden
 ```
 
 ### WidgetNode 타입 확장

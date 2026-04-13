@@ -8,7 +8,6 @@ import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
 import type { ChatMessage } from '@os/ui/chat/types'
 import { useAnimationQueue } from '@os/ui/useAnimationQueue'
-import { ax } from '@styles/ax'
 import { chatReducer, toReplayDeltas, type TimedDelta } from './replayDelta'
 import { parseJsonl, extractToolSteps } from './parseJsonl'
 import { createFileState, applyRead, applyEdit, applyWrite } from './fileState'
@@ -272,10 +271,8 @@ export default function PageReplay() {
   }), [selectedId, sessionEntries, messages, isRunning, startReplay, rightTab, rightTabData, handleRightTabActivate, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs])
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
-      <ReplayProvider value={replayCtx}>
-        <FlatLayout data={replayLayout} registry={replayWidgets} aria-label="Replay" />
-      </ReplayProvider>
-    </div>
+    <ReplayProvider value={replayCtx}>
+      <FlatLayout data={replayLayout} registry={replayWidgets} aria-label="Replay" />
+    </ReplayProvider>
   )
 }

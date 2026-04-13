@@ -4,8 +4,6 @@ import { useMemo, useState, useCallback, useRef } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { definePage } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
-import { ScrollArea } from '@os/ui/ScrollArea'
-import { ax } from '@styles/ax'
 import { useStore } from '@os/store/useStore'
 import type { NormalizedData } from '@os/store/types'
 import { rename, renameCommands } from '@os/plugins/rename'
@@ -19,7 +17,7 @@ import { translatableEntriesToGrid, diffGridChanges } from '../cms/cmsI18nTransf
 import { LOCALES, type LocaleMap } from '../cms/cmsTypes'
 import { cmsStore } from '../cms/cmsStore'
 import { I18nProvider, type I18nContextValue } from './i18nContext'
-import { I18nHeaderWidget, I18nStatsBarWidget, I18nKeyHintsWidget, I18nGridWidget } from './i18nWidgets'
+import { I18nTitleWidget, I18nSearchSlotWidget, I18nStatsWidget, I18nMissingWidget, I18nHelpWidget, I18nGridWidget } from './i18nWidgets'
 
 const plugins = [crud(), clipboard(), rename(), dnd(), history(), focusRecovery()]
 
@@ -37,19 +35,26 @@ const keyMapOverride = {
 }
 
 const i18nWidgets = createWidgetRegistry({
-  I18nHeader: I18nHeaderWidget,
-  I18nStatsBar: I18nStatsBarWidget,
-  I18nKeyHints: I18nKeyHintsWidget,
+  I18nTitle: I18nTitleWidget,
+  I18nSearchSlot: I18nSearchSlotWidget,
+  I18nStats: I18nStatsWidget,
+  I18nMissing: I18nMissingWidget,
+  I18nHelp: I18nHelpWidget,
   I18nGrid: I18nGridWidget,
 })
 
 const i18nLayout = definePage({
   entities: {
-    root:     { data: { type: 'stack', gap: 'md' }, children: ['header', 'stats', 'hints', 'grid'] },
-    header:   { data: { type: 'widget', widget: 'I18nHeader' } },
-    stats:    { data: { type: 'widget', widget: 'I18nStatsBar' } },
-    hints:    { data: { type: 'widget', widget: 'I18nKeyHints' } },
-    grid:     { data: { type: 'widget', widget: 'I18nGrid' } },
+    root:         { data: { type: 'split', direction: 'vertical', sizes: ['auto', 'flex'], resizable: false }, children: ['toolbar', 'grid'] },
+    toolbar:      { data: { type: 'bar', justify: 'between', padding: 'sm', surface: 'sunken' }, children: ['toolbarLeft', 'toolbarRight'] },
+    toolbarLeft:  { data: { type: 'bar', gap: 'sm' }, children: ['title', 'searchSlot'] },
+    toolbarRight: { data: { type: 'bar', gap: 'sm' }, children: ['stats', 'missing', 'help'] },
+    title:        { data: { type: 'widget', widget: 'I18nTitle' } },
+    searchSlot:   { data: { type: 'widget', widget: 'I18nSearchSlot' } },
+    stats:        { data: { type: 'widget', widget: 'I18nStats' } },
+    missing:      { data: { type: 'widget', widget: 'I18nMissing' } },
+    help:         { data: { type: 'widget', widget: 'I18nHelp' } },
+    grid:         { data: { type: 'widget', widget: 'I18nGrid' } },
   },
 })
 
@@ -91,6 +96,7 @@ export default function PageI18nEditor() {
   const [data, setData] = useStore(initialGridData)
   const [missingOnly, setMissingOnly] = useState(false)
   const prevDataRef = useRef(data)
+  const searchPortalRef = useRef<HTMLDivElement>(null)
 
   const handleChange = useCallback((next: NormalizedData) => {
     const changes = diffGridChanges(prevDataRef.current, next, cmsStore)
@@ -103,14 +109,12 @@ export default function PageI18nEditor() {
 
   const i18nCtx = useMemo<I18nContextValue>(() => ({
     data, plugins, keyMap: keyMapOverride, onChange: handleChange,
-    missingOnly, setMissingOnly, stats,
+    missingOnly, setMissingOnly, stats, searchPortalRef,
   }), [data, handleChange, missingOnly, stats])
 
   return (
-    <ScrollArea className={ax({ padding: 'lg' })}>
-      <I18nProvider value={i18nCtx}>
-        <FlatLayout data={i18nLayout} registry={i18nWidgets} aria-label="i18n Editor" />
-      </I18nProvider>
-    </ScrollArea>
+    <I18nProvider value={i18nCtx}>
+      <FlatLayout data={i18nLayout} registry={i18nWidgets} aria-label="i18n Editor" />
+    </I18nProvider>
   )
 }

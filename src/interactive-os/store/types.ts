@@ -15,8 +15,8 @@ export interface NormalizedData {
 
 export const ROOT_ID = '__root__' as const
 
-/** Size of a pane in a split layout: a ratio (0–1) or 'flex' for CSS flex:1 */
-export type PaneSize = number | 'flex'
+/** Size of a pane in a split layout: a ratio (0–1), 'flex' for CSS flex:1, or 'auto' for content size */
+export type PaneSize = number | 'flex' | 'auto'
 
 export interface TransformAdapter<TExternal> {
   normalize(external: TExternal): NormalizedData

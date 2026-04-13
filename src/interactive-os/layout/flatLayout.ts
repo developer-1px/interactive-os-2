@@ -9,6 +9,7 @@ import { createStore } from '../store/createStore'
 export interface LayoutBase extends Record<string, unknown> {
   surface?: 'sunken' | 'base' | 'raised' | 'overlay'
   hidden?: boolean
+  padding?: 'xs' | 'sm' | 'md' | 'lg'
 }
 
 export interface SplitNode extends LayoutBase {
@@ -33,6 +34,7 @@ export interface OverlayNode extends LayoutBase {
 export interface BarNode extends LayoutBase {
   type: 'bar'
   justify?: 'start' | 'center' | 'between' | 'end'
+  gap?: 'xs' | 'sm' | 'md' | 'lg'
 }
 
 export interface WidgetNode extends LayoutBase {

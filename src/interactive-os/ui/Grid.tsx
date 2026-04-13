@@ -1,5 +1,6 @@
 /** @catalog 2차원 그리드 탐색 */
 import React from 'react'
+import ReactDOM from 'react-dom'
 
 import { ax } from '@styles/ax'
 import type { Plugin } from '../engine/types'
@@ -30,6 +31,8 @@ interface GridProps extends Omit<AriaComponentProps, 'renderItem'> {
   header?: boolean
   /** Initial focused column index (default 0). Use 1+ to skip a read-only key column. */
   initialColIndex?: number
+  /** Portal target for search input — renders AriaSearch into this DOM element instead of inline */
+  searchPortalTarget?: React.RefObject<HTMLElement | null>
   keyMap?: Record<string, import('../axis/types').KeyHandler>
   onFocusChange?: (nodeId: string | null) => void
 }
@@ -53,6 +56,7 @@ export function Grid({
   tabCycle = false,
   header = false,
   initialColIndex,
+  searchPortalTarget,
   keyMap,
   'aria-label': ariaLabel,
 }: GridProps) {
@@ -119,7 +123,10 @@ export function Grid({
         keyMap={keyMap}
         aria-label={ariaLabel}
       >
-        {searchable && <Aria.Search placeholder="Search..." />}
+        {searchable && (searchPortalTarget?.current
+          ? ReactDOM.createPortal(<Aria.Search placeholder="Search..." />, searchPortalTarget.current)
+          : <Aria.Search placeholder="Search..." />
+        )}
         <Aria.Item render={renderRow} />
       </Aria>
     </div>

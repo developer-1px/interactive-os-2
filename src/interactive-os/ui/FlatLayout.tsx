@@ -120,12 +120,15 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
           {childIds.map((childId, i) => {
             const size = node.sizes[i]
             const isFlex = size === 'flex' || size === undefined
+            const isAuto = size === 'auto'
             const style = isFlex
               ? { '--split-flex': '1', '--split-basis': 'auto' } as React.CSSProperties
-              : { '--split-flex': '0 0 auto', '--split-basis': `${size * 100}%` } as React.CSSProperties
+              : isAuto
+                ? { '--split-flex': '0 0 auto', '--split-basis': 'auto' } as React.CSSProperties
+                : { '--split-flex': '0 0 auto', '--split-basis': `${size * 100}%` } as React.CSSProperties
 
             return (
-              <div key={childId} className={`${ax({ scroll: 'hidden' })} ${styles.splitPane}`} style={style}>
+              <div key={childId} className={`${ax({ scroll: 'hidden' })} ${isAuto ? '' : styles.splitPane}`} style={style}>
                 {renderNode(childId, 'split')}
               </div>
             )
@@ -154,7 +157,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const childIds = getChildren(store, nodeId)
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'fill', gap: node.gap ?? 'md', width: 'full', surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', gap: node.gap ?? 'md', width: 'full', surface, ...(node.padding ? { padding: node.padding } : {}) })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'stack')}</React.Fragment>
         ))}
@@ -184,7 +187,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const layout = node.justify === 'between' ? 'spread' as const : 'bar' as const
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout, width: 'full', surface, ...(node.gap ? { gap: node.gap } : {}), ...(node.padding ? { padding: node.padding } : {}) })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'bar')}</React.Fragment>
         ))}
@@ -291,11 +294,11 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       : undefined
 
     const isSplitChild = parentType === 'split' || parentType === 'nav'
-    const isFloating = parentType === 'floating'
-    const scrollable = node.scroll !== false && !isFloating
+    const fillSlot = isSplitChild || parentType === 'tab'
+    const scrollable = fillSlot && node.scroll !== false
 
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', flex: '1', surface, ...(surface === 'raised' ? { shape: 'lg' } : {}) })} ${isSplitChild ? styles.splitChild : ''} min-h-0`}>
+      <div ref={refCallback(nodeId)} className={`${ax({ layout: 'column', width: 'full', scroll: 'hidden', ...(fillSlot ? { flex: '1' } : {}), surface, ...(surface === 'raised' ? { shape: 'lg' } : {}) })} ${isSplitChild ? styles.splitChild : ''} min-h-0`}>
         {scrollable
           ? <div className={ax({ layout: 'scroll', flex: '1' })}>
               <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
@@ -361,9 +364,18 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
 
   const rootIds = getChildren(store, ROOT_ID)
 
+  // root 노드 타입으로 app/document 모드 자동 파생
+  const firstRootId = rootIds[0]
+  const firstRootData = firstRootId ? store.entities[firstRootId]?.data as Record<string, unknown> | undefined : undefined
+  const rootType = firstRootData?.type as string | undefined
+  const isAppMode = rootType === 'split' || rootType === 'nav' || rootType === 'tab'
+
   return (
     <FlatLayoutContext.Provider value={layoutCtx}>
-      <div {...aria.containerProps} className={ax({ layout: 'stack', gap: 'md', width: 'full', flex: '1', scroll: 'hidden' })}>
+      <div {...aria.containerProps} className={ax(isAppMode
+        ? { layout: 'fill', width: 'full', scroll: 'hidden' }
+        : { layout: 'scroll', width: 'full', flex: '1' }
+      )}>
         {rootIds.map((id) => (
           <React.Fragment key={id}>{renderNode(id)}</React.Fragment>
         ))}

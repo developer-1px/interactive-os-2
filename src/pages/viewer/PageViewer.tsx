@@ -249,7 +249,7 @@ export default function PageViewer() {
 
   return (
     <AriaRoute keyMap={quickOpenKeyMap}>
-      <div className={`${ax({ layout: 'row' })} h-full min-h-0`}>
+      <div className={ax({ layout: 'row', flex: '1' })}>
         <ViewerProvider value={viewerCtx}>
           <FlatLayout data={layoutData} registry={viewerWidgets} aria-label="File viewer" />
         </ViewerProvider>
