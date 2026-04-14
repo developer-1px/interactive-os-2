@@ -51,3 +51,6 @@
 - [ ] [P1] LLM-facing Plan 4 — eject CLI + doctor (scripts/eject.ts, registry.json, dependency-cruiser closure 화이트리스트=ui/items/cells/indicators/panels) — shadcn 모델, 엔진은 npm 잠금 — 출처: 동 PRD ② (2026-04-12)
 - [ ] [P1] LLM-facing Plan 6 — evals harness (pyramid-eval/llm-generation/, 30 프롬프트×6범주, axe+키보드 채점, baseline.json, nightly+PR smoke 5개) — Plan 5 aria.md 회귀 보호 — 출처: 동 PRD ② (2026-04-12)
 - [ ] [P2] LLM-facing Plan 1.5 — src/pages/ 73 파일 codemod로 단일 entry 마이그레이션 + guardOsPatterns rule 24 차단 승격 — 출처: 동 PRD ⑥#1, Plan 1 후속 (2026-04-12)
+- [ ] Progress 바 렌더링 깨짐 — Theme/Components PROGRESS 섹션에서 바 대신 점 4개만 표시됨, `@os/ui/Progress` 내부 이슈 의심 — 출처: /internals/theme#components 개선 세션 (2026-04-15)
+- [ ] Card Filled variant "선택된 듯" 외형 확인 — 설계 의도인지 버그인지 판단 필요 — 출처: /internals/theme#components 개선 세션 (2026-04-15)
+- [ ] worktree 격리 시 untracked 파일 전파 이슈 — Agent tool isolation:worktree 사용 시 main의 untracked 파일이 worktree에 복제되지 않아 import 에러 → 에이전트가 "코드 없음"으로 오인해 삭제하는 실패 발생. SessionStart 훅으로 경고 또는 worktree 생성 시 자동 복사 검토 — 출처: /internals/theme#components 개선 세션 중 실패 모드 (2026-04-15)
