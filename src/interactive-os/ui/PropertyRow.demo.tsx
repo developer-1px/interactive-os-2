@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'column', gap: 'sm' })}>
+    <div className={ax({ layout: 'stack', gap: 'sm' })}>
       <PropertyRow label="Name" description="Display name">
         <span className={ax({ text: 'secondary' })}>Aria OS</span>
       </PropertyRow>

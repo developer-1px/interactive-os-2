@@ -6,8 +6,6 @@
 // ── 시각 축 ──
 
 type Surface = 'action' | 'input' | 'display' | 'overlay' | 'trap' | 'ghost' | 'placeholder' | 'sunken' | 'base' | 'raised'
-// controlSize: 레거시 — role 축으로 대체 완료. 잔존 사용처 확인 후 삭제 예정.
-type ControlSize = 'sm' | 'md' | 'lg'
 type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code' | 'overline'
 type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
   | 'accent-dim' | 'danger-dim' | 'success-dim' | 'warning-dim' | 'neutral-dim'
@@ -29,11 +27,10 @@ type Motion = 'pulse' | 'spin' | 'fade-in' | 'slide-up'
   | 'fade-slide-in' | 'slide-in' | 'scale-in' | 'blink' | 'shimmer'
 // content: 콘텐츠 유형 — padding의 inline:block 비율 + 레이아웃 어포던스
 // text: inline 2:1 (텍스트 버튼, 라벨)
-// code: block 0, inline만 (코드 행, diff 행, 테이블 셀)
+// code: block 0, inline만 (코드 행, 테이블 셀)
 // bubble: 우측 정렬 말풍선 (채팅, 코멘트) — max-width:80% + margin-left:auto + 비대칭 radius
-// diff: 2열 삭제/추가 비교 (grid 2열 + gap:0 + border 구분선)
 // icon: 정사각 아이콘 컨테이너 — padding 1:1
-type Content = 'text' | 'code' | 'bubble' | 'diff' | 'icon'
+type Content = 'text' | 'code' | 'bubble' | 'icon'
 // scroll: overflow 제어 — 컨테이너 경계 클리핑 또는 스크롤 방향
 type Scroll = 'hidden' | 'y' | 'x' | 'auto'
 // border: 테두리 — 전체, 단면, 스타일
@@ -72,11 +69,10 @@ type Placement =
 // layout: 역할 기반 구조 번들 (display + direction + align + justify + overflow)
 type Layout =
   | 'row'     // flex row
-  | 'column'  // flex column
   | 'center'  // flex center+center (아이콘 래퍼 등)
   | 'bar'     // flex row + align:center (툴바, 헤더)
   | 'spread'  // flex row + align:center + justify:space-between
-  | 'stack'   // flex column (gap은 gap 축에서)
+  | 'stack'   // flex column (replaces 'column'; gap은 gap 축에서)
   | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
   | 'scroll-x' // flex row + overflow-x:auto + min-width:0 (가로 스크롤)
   | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
@@ -103,8 +99,6 @@ type Icon = 'xs' | 'sm' | 'md' | 'lg'
 type Square = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 // role: 요소의 의미적 역할
 type Role = 'control' | 'control-group' | 'item' | 'badge'
-// size: role의 크기급
-type RoleSize = 'md'  // 후속: 'xs' | 'sm' | 'lg'
 // aspect: 종횡비
 type Aspect = '1' | 'video' | 'card'
 
@@ -115,7 +109,6 @@ interface AxesBase {
 
   // 시각 축
   surface?: Surface
-  controlSize?: ControlSize
   textStyle?: TextStyle
   tone?: Tone
   text?: Text
@@ -138,7 +131,6 @@ interface AxesBase {
   icon?: Icon
   square?: Square
   role?: Role
-  size?: RoleSize
   aspect?: Aspect
 }
 
@@ -156,7 +148,6 @@ type AxesAll = AxesBase & { border?: Border; shape?: Shape }
 const prefixes: Record<keyof AxesAll, string> = {
   recipe: 'rc',
   surface: 'sf',
-  controlSize: 'cs',
   textStyle: 'ts',
   tone: 'tn',
   text: 'tx',
@@ -179,7 +170,6 @@ const prefixes: Record<keyof AxesAll, string> = {
   icon: 'ic',
   square: 'sq',
   role: 'rl',
-  size: 'sz',
   aspect: 'ar',
 }
 

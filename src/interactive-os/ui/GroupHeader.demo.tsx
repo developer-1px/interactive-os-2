@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'column', gap: 'xs', width: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'xs', width: 'md' })}>
       <GroupHeader label="Components" count={12} expanded onToggle={() => {}} />
       <GroupHeader label="Indicators" count={5} expanded={false} onToggle={() => {}} />
       <GroupHeader label="No Toggle" />

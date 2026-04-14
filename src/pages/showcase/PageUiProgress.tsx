@@ -42,17 +42,17 @@ function DetailPanel({ data, rowId, colKey }: { data: Parameters<typeof getProgr
   const tier = nodeData.tier as string
 
   return (
-    <div className={ax({ layout: 'column', gap: 'md', padding: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'md', padding: 'md' })}>
       <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{label}</span>
       {catalog && <span className={ax({ textStyle: 'body', text: 'secondary' })}>{catalog}</span>}
       {tier === 'component' && stages && (
-        <div className={ax({ layout: 'column', gap: 'sm' })}>
+        <div className={ax({ layout: 'stack', gap: 'sm' })}>
           {colKey && colKey !== 'feature' && (
             <span className={ax({ textStyle: 'caption', tone: stages[colKey]?.status === 'done' ? 'success' : 'neutral' })}>
               {colKey}: {stages[colKey]?.status ?? 'unknown'}
             </span>
           )}
-          <div className={ax({ layout: 'column', gap: 'xs' })}>
+          <div className={ax({ layout: 'stack', gap: 'xs' })}>
             {(['recipe', 'demo', 'test', 'doc'] as const).map(key => (
               <span key={key} className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: stages[key]?.status === 'done' ? 'primary' : 'muted' })}>
                 <StatusIndicator tone={STAGE_TONE[stages[key]?.status ?? 'missing']} />
@@ -106,7 +106,7 @@ export default function PageUiProgress() {
     : 'Detail'
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ textStyle: 'label', weight: 'semi' })}>UI Component Progress</span>
         <SummaryBar data={data} />

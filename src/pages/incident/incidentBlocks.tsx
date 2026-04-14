@@ -10,7 +10,7 @@ import {
 export function BlockLog() {
   return (
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-      <div className={ax({ layout: 'column', textStyle: 'code', gap: 'xs' })}>
+      <div className={ax({ layout: 'stack', textStyle: 'code', gap: 'xs' })}>
         <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:12</span><span className={`${ax({ weight: 'semi', tone: 'danger' })}`}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5002ms)</span></div>
         <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:13</span><span className={ax({ weight: 'semi', tone: 'danger' })}>ERROR</span><span>pool exhausted — cannot acquire connection (waited 5001ms)</span></div>
         <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:14</span><span className={ax({ weight: 'semi', tone: 'warning' })}>WARN</span><span>active_connections: 50/50, pending: 23</span></div>
@@ -23,9 +23,9 @@ export function BlockMetric() {
   return (
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
       <div className={`incident-metric-grid grid`}>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>50/50</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>connections</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-bad incident-bar-w100 h-full`} /></div></div>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>23</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pending</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-warn incident-bar-w46 h-full`} /></div></div>
-        <div className={ax({ layout: 'column', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>2.4s</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>p99 latency</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-bad incident-bar-w80 h-full`} /></div></div>
+        <div className={ax({ layout: 'stack', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>50/50</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>connections</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-bad incident-bar-w100 h-full`} /></div></div>
+        <div className={ax({ layout: 'stack', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>23</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pending</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-warn incident-bar-w46 h-full`} /></div></div>
+        <div className={ax({ layout: 'stack', gap: 'xs' })}><div className={ax({ textStyle: 'body', weight: 'semi' })}>2.4s</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>p99 latency</div><div className={`incident-bar-track ${ax({ scroll: 'hidden' })}`}><div className={`incident-bar-fill-bad incident-bar-w80 h-full`} /></div></div>
       </div>
     </div>
   )
@@ -34,7 +34,7 @@ export function BlockMetric() {
 export function BlockCause() {
   return (
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-      <div className={ax({ layout: 'column', gap: 'xs' })}>
+      <div className={ax({ layout: 'stack', gap: 'xs' })}>
         <div className={ax({ layout: 'bar', gap: 'sm' })}>
           <div className={`${ax({ layout: 'center', tone: 'danger' })} incident-cause-icon`}><GitCommit size={12} /></div>
           <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>PR #3421 — config cleanup</div><div className={ax({ textStyle: 'caption', text: 'muted' })}>pool_size: 100 → 50</div></div>
@@ -57,7 +57,7 @@ export function BlockCause() {
 
 export function BlockSimilar() {
   return (
-    <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm', layout: 'column', gap: 'sm' })}>
+    <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm', layout: 'stack', gap: 'sm' })}>
       <div className={ax({ layout: 'bar', gap: 'sm' })}>
         <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'accent' })}>INC-847</span>
         <span className={ax({ role: 'badge', tone: 'success', surface: 'ghost', content: 'text' })}>92%</span>
@@ -82,7 +82,7 @@ const BLAST_SERVICES = [
 
 export function BlockBlast() {
   return (
-    <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm', layout: 'column', gap: 'xs' })}>
+    <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm', layout: 'stack', gap: 'xs' })}>
       {BLAST_SERVICES.map((s, i) => (
         <div key={i} className={ax({ layout: 'bar', gap: 'sm', textStyle: 'caption' })}>
           <Server size={12} />

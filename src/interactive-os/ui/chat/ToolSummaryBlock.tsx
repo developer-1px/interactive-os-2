@@ -275,7 +275,7 @@ export function ToolChainGroup({ pairs }: { pairs: ToolPair[] }) {
         <Layers size={12} /> <span className={ax({ text: 'muted', textStyle: 'code' })}>{summary}</span>
       </div>
       {expanded && (
-        <div className={ax({ layout: 'column', border: 'top' })}>
+        <div className={ax({ layout: 'stack', border: 'top' })}>
           {typeGroups.map(g => {
             const Icon = toolIcons[g.name] ?? Wrench
             return (

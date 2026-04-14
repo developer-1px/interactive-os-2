@@ -15,7 +15,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const max = (data?.max as number) ?? 100
   const pct = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0
   return (
-    <div {...props} className={ax({ layout: 'column', gap: 'xs' })}>
+    <div {...props} className={ax({ layout: 'stack', gap: 'xs' })}>
       <div className={ax({ layout: 'spread' })}>
         <span className={ax({ textStyle: 'caption', text: 'secondary' })}>{label}</span>
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>{Math.round(pct)}%</span>

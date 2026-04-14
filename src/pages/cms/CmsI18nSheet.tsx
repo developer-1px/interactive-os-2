@@ -32,7 +32,7 @@ export default function CmsI18nSheet({ engine, store, open }: CmsI18nSheetProps)
   if (!open) return null
 
   return (
-    <div className={`cms-i18n-sheet absolute ${ax({ layout: 'column', surface: 'display', border: 'top' })}`}>
+    <div className={`cms-i18n-sheet absolute ${ax({ layout: 'stack', surface: 'display', border: 'top' })}`}>
       <div className={`cms-i18n-sheet__header ${ax({ layout: 'bar', flex: 'none', padding: 'xs', textStyle: 'caption', weight: 'semi', text: 'muted', border: 'bottom' })}`}>
         i18n — Translation Sheet
       </div>

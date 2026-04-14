@@ -207,10 +207,10 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
   }, [aria.focused])
 
   return (
-    <aside className={`cms-sidebar ${ax({ flex: 'none', layout: 'column', scroll: 'hidden', surface: 'sunken', border: 'end' })}`} aria-label="Sections" style={style}>
+    <aside className={`cms-sidebar ${ax({ flex: 'none', layout: 'stack', scroll: 'hidden', surface: 'sunken', border: 'end' })}`} aria-label="Sections" style={style}>
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
-      <div className={`ax-interactive cms-sidebar__list ${ax({ flex: '1', layout: 'column', scroll: 'y', padding: 'none', gap: 'xs' })}`} role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
+      <div className={`ax-interactive cms-sidebar__list ${ax({ flex: '1', layout: 'stack', scroll: 'y', padding: 'none', gap: 'xs' })}`} role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
         {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
             const elements: React.ReactNode[] = []
 

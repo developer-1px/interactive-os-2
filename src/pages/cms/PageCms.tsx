@@ -138,7 +138,7 @@ export default function PageCms() {
   return (
     <AriaRoute keyMap={cmsGlobalKeyMap} label="CMS">
       <CmsProvider value={cmsCtx}>
-        <div className={`cms-layout ${ax({ layout: 'column', flex: '1' })}`}>
+        <div className={`cms-layout ${ax({ layout: 'stack', flex: '1' })}`}>
           <FlatLayout data={cmsLayout} registry={cmsWidgets} aria-label="CMS Layout" />
           <div className={ax({ placement: 'float-top-center' })}>
             <CmsViewportBar viewport={viewport} onViewportChange={setViewport} onPresent={() => setPresenting(true)} hidden={presenting} />

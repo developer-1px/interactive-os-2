@@ -8,14 +8,14 @@ const stories = loadStories()
 
 export default function PageStories() {
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader>
         <span className={ax({ textStyle: 'label', weight: 'semi' })}>Stories</span>
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>{stories.length} stories</span>
       </PanelHeader>
 
       <ScrollArea className={ax({ flex: '1' })}>
-        <div className={ax({ layout: 'column', gap: 'lg', padding: 'lg' })}>
+        <div className={ax({ layout: 'stack', gap: 'lg', padding: 'lg' })}>
           {stories.map(entry => (
             <StoryCard key={entry.path} doc={entry.doc} />
           ))}

@@ -460,6 +460,25 @@ if (isPages && isTsx && !isButtonExempt && /<button[\s\S]*?className=\{.*?ax\(\{
   )
 }
 
+// 규칙 33: items/*.tsx에서 bespoke className 리터럴 금지 — ax() 또는 indicators/ 사용
+// items/ 레이어는 축 조합만으로 표현 가능해야 함. "timeline-dot", "stepper-item--vertical" 같은
+// 문자열 클래스는 대응 module.css도 없는 dead string인 경우가 많고, 있어도 last-mile 경계를 넘어
+// ax() 축 소유 속성을 재정의하는 drift의 통로가 됨
+const isItemsFile = /\/src\/interactive-os\/ui\/items\/[^/]+\.tsx$/.test(filePath)
+if (isItemsFile) {
+  // className="foo-bar" 또는 className={`foo-bar ...`} 패턴에서 kebab-case 문자열 리터럴 검출
+  const bespokeMatches = [
+    ...content.matchAll(/className=["']([a-z][a-z0-9]*-[a-z0-9-]+)["']/g),
+    ...content.matchAll(/className=\{`([a-z][a-z0-9]*-[a-z0-9-]+)\s/g),
+  ]
+  if (bespokeMatches.length > 0) {
+    const names = [...new Set(bespokeMatches.map(m => m[1]))].join(', ')
+    violations.push(
+      `items/에서 bespoke className 리터럴 금지 (${names}) — ax() 축으로 표현하거나 ui/indicators/ 컴포넌트를 사용하세요. items/ 레이어는 축 조합만으로 완결되어야 합니다`
+    )
+  }
+}
+
 // 규칙 32: data-checked 중복 상태 채널 금지 — aria-checked가 SSOT
 if (isTsx && /\bdata-checked\s*=\s*\{/.test(content)) {
   violations.push(

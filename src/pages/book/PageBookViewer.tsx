@@ -382,7 +382,7 @@ export default function PageBookViewer() {
       {/* ② flatlayout-pull-transition-prd.md — widget은 useBook()으로 pull */}
       <BookProvider value={bookCtx}>
         <div className={`${ax({ surface: 'base', text: 'primary', width: 'full', scroll: 'hidden' })} h-full book`}>
-          <div className={`${ax({ placement: 'relative', layout: 'column', width: 'full', scroll: 'hidden' })} h-full book-page-area`} ref={areaRef}>
+          <div className={`${ax({ placement: 'relative', layout: 'stack', width: 'full', scroll: 'hidden' })} h-full book-page-area`} ref={areaRef}>
             <FlatLayout data={layoutData} registry={bookWidgets} aria-label="Book" />
           </div>
         </div>

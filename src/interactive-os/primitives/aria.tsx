@@ -13,6 +13,7 @@ import { GRID_COL_ID, CELL_RANGE_ID, gridColCommands } from '../axis/navigate'
 import { EXPANDED_ID } from '../axis/expand'
 import { POPUP_ID } from '../axis/popup'
 import { SEARCH_ID, matchesSearchFilter } from '../plugins/search'
+import { ax } from '../../styles/ax'
 import { AriaItemContext, AriaEditable } from './AriaEditable'
 import { AriaSearch, AriaSearchHighlight } from './AriaSearch'
 
@@ -217,7 +218,7 @@ function AriaCell({ index, children }: { index: number; children: React.ReactNod
           if (focusedCol !== index) aria.dispatch(gridColCommands.setColIndex(index))
         }
         return (
-          <div role="gridcell" className="ia-cell" aria-colindex={index + 1} tabIndex={isFocusedCell ? 0 : -1} data-cell-focused={isFocusedCell || undefined} data-in-range={isInRange ? 'true' : undefined} onMouseDown={onMouseDown}>
+          <div role="gridcell" className={ax({ role: 'item', interactive: 'cell' })} aria-colindex={index + 1} tabIndex={isFocusedCell ? 0 : -1} data-cell-focused={isFocusedCell || undefined} data-in-range={isInRange ? 'true' : undefined} onMouseDown={onMouseDown}>
             {children}
           </div>
         )

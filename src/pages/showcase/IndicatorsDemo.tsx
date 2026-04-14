@@ -15,7 +15,7 @@ import './IndicatorsDemo.css'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={ax({ layout: 'column', gap: 'xs' })}>
+    <div className={ax({ layout: 'stack', gap: 'xs' })}>
       <h3 className={`${ax({ textStyle: 'overline', text: 'primary', border: 'bottom' })} indicators-section-title`}>{title}</h3>
       {children}
     </div>
@@ -279,7 +279,7 @@ function TreeConnectorSection() {
 
 export default function IndicatorsDemo() {
   return (
-    <div className={ax({ layout: 'column', gap: 'xl' })}>
+    <div className={ax({ layout: 'stack', gap: 'xl' })}>
       <ExpandSection />
       <CheckSection />
       <IndeterminateSection />

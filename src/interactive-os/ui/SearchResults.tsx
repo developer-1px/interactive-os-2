@@ -46,7 +46,7 @@ export function SearchResults({ query, output }: SearchResultsProps) {
   }
 
   return (
-    <div className={ax({ layout: 'column', textStyle: 'code' })}>
+    <div className={ax({ layout: 'stack', textStyle: 'code' })}>
       <div className={ax({ padding: 'xs', textStyle: 'caption', text: 'muted', flex: 'none' })}>
         {[...groups.values()].reduce((s, g) => s + Math.max(g.length, 1), 0)} matches in {groups.size} files — "{query}"
       </div>

@@ -108,7 +108,7 @@ export function Kanban({
       <FocusDiv
         key={cardId}
         focused={cardState.focused}
-        className={ax({ recipe: compact ? 'container-sm' : 'container', surface: 'display', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : 'column', padding: compact ? 'md' : 'lg', gap: compact ? 'md' : 'lg', shape: compact ? 'md' : 'lg', border: compact ? undefined : 'subtle' })}
+        className={ax({ recipe: compact ? 'container-sm' : 'container', surface: 'display', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : 'stack', padding: compact ? 'md' : 'lg', gap: compact ? 'md' : 'lg', shape: compact ? 'md' : 'lg', border: compact ? undefined : 'subtle' })}
         style={cardStyle}
         title={cardTooltip ?? cardTitle}
         data-weight={cardWeight || undefined}
@@ -157,7 +157,7 @@ export function Kanban({
           return (
             <div
               key={colId}
-              className={ax({ layout: 'column', gap: 'xs', flex: compact ? 'none' : '1', surface: 'sunken', shape: compact ? 'sm' : 'xl', padding: compact ? undefined : 'xl' })}
+              className={ax({ layout: 'stack', gap: 'xs', flex: compact ? 'none' : '1', surface: 'sunken', shape: compact ? 'sm' : 'xl', padding: compact ? undefined : 'xl' })}
               style={compact ? { minWidth: 'var(--space-3xl)', maxWidth: 'none', width: 'var(--storymap-col-width)', padding: 'var(--space-xs) var(--space-sm)', overflowY: 'auto', maxHeight: '100%' } as CSSProperties : undefined}
             >
               {/* Column header */}

@@ -59,18 +59,19 @@ interface NavItem {
 }
 
 const appNavItems: NavItem[] = [
+  // --- 완성도 높음 / 자주 사용 ---
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
-  { id: 'i18n', label: 'i18n', icon: Languages, path: '/i18n' },
-  { id: 'ui-showcase', label: 'UI Showcase', icon: Eye, path: '/ui' },
-  { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
-  { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
-  { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
-  { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
-  // --- Browse / Docs ---
   { id: 'viewer', label: 'Viewer', icon: FolderCode, path: '/viewer' },
+  { id: 'ui-showcase', label: 'UI Showcase', icon: Eye, path: '/ui' },
+  { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'pipeline', label: 'Pipeline', icon: GitBranch, path: '/pipeline' },
-  // ---
+  // --- 보조 / 진행중 ---
+  { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
+  { id: 'i18n', label: 'i18n', icon: Languages, path: '/i18n' },
+  { id: 'incident', label: 'Incident', icon: ShieldAlert, path: '/incident' },
+  { id: 'theme-creator', label: 'Theme', icon: Palette, path: '/internals/theme' },
+  // --- 미완성 / 데모 미생성 ---
   { id: 'replay', label: 'Replay', icon: Play, path: '/replay' },
   { id: 'kanban', label: 'Kanban', icon: SquareKanban, path: '/kanban' },
   { id: 'a2ui', label: 'A2UI', icon: Cable, path: '/a2ui' },

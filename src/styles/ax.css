@@ -173,26 +173,6 @@ dialog.sf-overlay[open] {
  * padding은 padding 축이 소유, content 축이 inline 비율 결정
  * ════════════════════════════════════════════ */
 
-/* DEPRECATED: controlSize → role 축으로 대체. 사용처 0. */
-.cs-sm {
-  min-height: 32px;
-  min-width: 32px;
-  border-radius: var(--shape-xs-radius);
-  font-size: var(--type-caption-size);   /* 12px */
-}
-.cs-md {
-  min-height: 36px;
-  min-width: 36px;
-  border-radius: var(--shape-md-radius);
-  font-size: var(--type-body-size);      /* 14px */
-}
-.cs-lg {
-  min-height: 44px;
-  min-width: 44px;
-  border-radius: var(--shape-lg-radius);
-  font-size: var(--type-body-size);      /* 14px */
-}
-
 /* ════════════════════════════════════════════
  * Text Style — 타이포그래피 번들
  * 번들: font-size + weight + family + line-height + letter-spacing
@@ -506,7 +486,6 @@ dialog.sf-overlay[open] {
 .ct-text   { --pd-ratio: 2; }
 .ct-code   { --pd-ratio: 0; }
 .ct-bubble { --pd-ratio: 2; }
-.ct-diff   { --pd-ratio: 0; }
 .ct-icon {
   padding: 0;
   justify-content: center;
@@ -549,7 +528,6 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 .ly-row    { display: flex; flex-direction: row; }
-.ly-column { display: flex; flex-direction: column; }
 .ly-center { display: flex; align-items: center; justify-content: center; }
 .ly-bar    { display: flex; flex-direction: row; align-items: center; }
 .ly-spread { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }

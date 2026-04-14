@@ -86,7 +86,7 @@ export function Form<E extends FormEntry = FormEntry>({
         return (
           <fieldset
             key={group.groupLabel}
-            className={ax({ layout: 'column', gap: 'sm', padding: 'sm' })}
+            className={ax({ layout: 'stack', gap: 'sm', padding: 'sm' })}
           >
             {group.groupLabel && (
               <legend className={ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}>

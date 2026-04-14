@@ -26,7 +26,7 @@ export function Demo() {
   }, [])
 
   return (
-    <div className={ax({ layout: 'column' })}>
+    <div className={ax({ layout: 'stack' })}>
       <FileViewer ref={ref} filename="fibonacci.ts" />
     </div>
   )

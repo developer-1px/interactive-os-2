@@ -78,7 +78,7 @@ function createDemoWidget(entry: CatalogEntry) {
       default: function DemoWidget() {
         return (
           <DemoErrorBoundary name={entry.slug}>
-            <div className={ax({ surface: 'display', padding: 'md', shape: 'md', layout: 'column', gap: 'sm', border: 'default', scroll: 'hidden' })}>
+            <div className={ax({ surface: 'display', padding: 'md', shape: 'md', layout: 'stack', gap: 'sm', border: 'default', scroll: 'hidden' })}>
               <div className={ax({ textStyle: 'caption', text: 'secondary', content: 'text' })}>
                 {entry.label}
               </div>

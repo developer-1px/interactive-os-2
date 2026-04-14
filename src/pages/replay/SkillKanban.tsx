@@ -371,7 +371,7 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
   return (
     <dialog
       ref={contentRef as React.RefObject<HTMLDialogElement>}
-      className={`kanban-detail-dialog ${ax({ surface: 'overlay', width: 'full', shape: 'xl', layout: 'column', scroll: 'hidden' })}`}
+      className={`kanban-detail-dialog ${ax({ surface: 'overlay', width: 'full', shape: 'xl', layout: 'stack', scroll: 'hidden' })}`}
       aria-label="Session detail"
     >
       <PanelHeader axes={{ layout: 'spread' }}>

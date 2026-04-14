@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ surface: 'raised', layout: 'column', width: 'md', shape: 'md', scroll: 'hidden' })}>
+    <div className={ax({ surface: 'raised', layout: 'stack', width: 'md', shape: 'md', scroll: 'hidden' })}>
       <PanelHeader>
         <span>Explorer</span>
         <span className={ax({ text: 'muted' })}>3 files</span>

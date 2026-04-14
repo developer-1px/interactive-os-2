@@ -22,7 +22,7 @@ import { IncidentProvider } from './incidentContext'
 function BlockLog() {
   return (
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm' })}>
-      <div className={ax({ layout: 'column', textStyle: 'code', gap: 'xs' })}>
+      <div className={ax({ layout: 'stack', textStyle: 'code', gap: 'xs' })}>
         <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:12</span><span className={ax({ weight: 'semi', tone: 'danger' })}>ERROR</span><span>pool exhausted</span></div>
         <div className={ax({ layout: 'bar', gap: 'sm' })}><span className={ax({ text: 'muted' })}>14:35:14</span><span className={ax({ weight: 'semi', tone: 'warning' })}>WARN</span><span>active: 50/50, pending: 23</span></div>
       </div>

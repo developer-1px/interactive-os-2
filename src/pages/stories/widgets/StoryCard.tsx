@@ -24,7 +24,7 @@ export function StoryCard({ doc }: StoryCardProps) {
   const storyLabel = doc.number != null ? `[ Story #${doc.number} ] ${doc.title}` : doc.title
 
   return (
-    <div className={ax({ layout: 'column', surface: 'display', shape: 'lg', scroll: 'hidden' })}>
+    <div className={ax({ layout: 'stack', surface: 'display', shape: 'lg', scroll: 'hidden' })}>
       {/* Title bar */}
       <div className={ax({ layout: 'spread', padding: 'md', tone: 'accent', surface: 'action' })}>
         <span className={ax({ textStyle: 'label', weight: 'bold' })}>{storyLabel}</span>
@@ -34,7 +34,7 @@ export function StoryCard({ doc }: StoryCardProps) {
       {/* Body */}
       <div className={ax({ layout: 'row-fill', gap: 'lg', padding: 'lg' })}>
         {/* Left: Scope + Design image */}
-        <div className={ax({ layout: 'column', gap: 'md', width: 'sm' })}>
+        <div className={ax({ layout: 'stack', gap: 'md', width: 'sm' })}>
           <span className={ax({ textStyle: 'label', weight: 'semi', text: 'secondary' })}>In Scope</span>
 
           {doc.scope.design && (
@@ -48,10 +48,10 @@ export function StoryCard({ doc }: StoryCardProps) {
           <p className={ax({ textStyle: 'caption', text: 'secondary' })}>{doc.scope.description}</p>
 
           {doc.decisions && doc.decisions.length > 0 && (
-            <div className={ax({ layout: 'column', gap: 'sm', border: 'top', padding: 'sm' })}>
+            <div className={ax({ layout: 'stack', gap: 'sm', border: 'top', padding: 'sm' })}>
               <span className={ax({ textStyle: 'label', weight: 'semi', text: 'secondary' })}>Decisions</span>
               {doc.decisions.map((d, i) => (
-                <div key={i} className={ax({ layout: 'column', gap: 'xs' })}>
+                <div key={i} className={ax({ layout: 'stack', gap: 'xs' })}>
                   <span className={ax({ textStyle: 'caption', weight: 'medium' })}>{d.title}</span>
                   <span className={ax({ textStyle: 'caption', text: 'muted' })}>{d.why}</span>
                 </div>

@@ -25,7 +25,7 @@ export function TierCell({ text, tier, subtitle, thumbnail }: TierCellProps) {
       {thumbnail && (
         <img src={thumbnail} alt="" width={36} height={24} className={ax({ shape: 'sm' })} />
       )}
-      <span className={ax({ layout: 'column' })}>
+      <span className={ax({ layout: 'stack' })}>
         <span className={ax({
           textStyle: style.textStyle,
           weight: style.weight,

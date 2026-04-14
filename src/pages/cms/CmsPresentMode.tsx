@@ -34,7 +34,7 @@ export default function CmsPresentMode({ data, locale, onExit }: CmsPresentModeP
       const galleryChildren = getChildren(data, nodeId)
       return (
         <div key={nodeId} className={getNodeClassName(d)}>
-          <div className={ax({ layout: 'column' })}>
+          <div className={ax({ layout: 'stack' })}>
             <div className={`${cmsStyles.cmsPresentShyPlaceholderSmall} ${ax({ layout: 'center' })} opacity-faint`}><ImageOff size={14} /></div>
             {galleryChildren.map(id => renderNode(id))}
           </div>

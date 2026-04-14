@@ -29,7 +29,7 @@ export function SessionItem(
       {...props}
       className={ax({
         role: 'item', interactive: 'item',
-        layout: 'column', gap: 'xs', width: 'full',
+        layout: 'stack', gap: 'xs', width: 'full',
         text: state.focused ? 'primary' : 'secondary',
       })}
     >

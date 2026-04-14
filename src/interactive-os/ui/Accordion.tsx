@@ -26,7 +26,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
           </span>
         </div>
         {state.slotProps && (
-          <div {...state.slotProps} className={ax({ layout: 'column' })}>
+          <div {...state.slotProps} className={ax({ layout: 'stack' })}>
             <span>{label} content</span>
           </div>
         )}
@@ -50,7 +50,7 @@ export function Accordion({
   'aria-label': ariaLabel,
 }: AccordionProps) {
   return (
-    <div className={className ?? ax({ layout: 'column' })}>
+    <div className={className ?? ax({ layout: 'stack' })}>
       <Aria pattern={accordion} data={data} plugins={plugins} onChange={onChange} aria-label={ariaLabel}>
         <Aria.Item render={renderItem} />
       </Aria>

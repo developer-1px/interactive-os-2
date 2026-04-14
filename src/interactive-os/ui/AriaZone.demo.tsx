@@ -29,7 +29,7 @@ export function Demo() {
   return (
     <AriaZone engine={engine} store={store} pattern={listbox()} scope="demo">
       {(ctx) => (
-        <div {...ctx.containerProps} className={ax({ layout: 'column' })}>
+        <div {...ctx.containerProps} className={ax({ layout: 'stack' })}>
           {['a', 'b', 'c'].map((id) => {
             const state = ctx.getNodeState(id)
             return (

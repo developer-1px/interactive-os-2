@@ -26,7 +26,7 @@ navigate, select, expand, activate, tab, value, checked, popup, edit
 
 ## pattern (composePattern 조합)
 
-listbox, listboxGrouped, tree, treegrid, grid, table, tabs, tabsManual, combobox, menu, menuActivedescendant, menuButton, menubar, toolbar, feed, dialog, alertdialog, alert, accordion, disclosure, radiogroup, radiogroupActivedescendant, checkbox, checkboxMixed, switch, buttonToggle, slider, spinbutton, calendarGrid, meter, link, windowSplitter
+listbox, listboxGrouped, tree, treegrid, grid, table, tabs, tabsManual, combobox, menu, menuActivedescendant, menuButton, menubar, toolbar, feed, dialog, alertdialog, alert, accordion, disclosure, radiogroup, radiogroupActivedescendant, checkbox, checkboxMixed, switch, buttonToggle, select, slider, spinbutton, calendarGrid, meter, link, windowSplitter
 
 `pattern/roles/{name}.ts`
 
@@ -50,7 +50,7 @@ useAria, useAriaZone, useAriaView, useControlledAria, useCommand, useCommandBind
 
 ## ui
 
-Accordion, Alert, AlertDialog, Avatar, Badge, Breadcrumb, Button, ButtonToggle, ButtonToolbar, CalendarGrid, Checkbox, CheckboxMixed, CodeBlock, Combobox, Composer, DatePicker, Dialog, DisclosureGroup, Divider, EmptyState, Feed, FileIcon, FilePreview, FileTreeView, FileViewer, FileViewerModal, FilterBar, FlatLayout, Form, FrontmatterCard, Grid, GroupHeader, Kanban, Kbd, Lightbox, Link, ListBox, ListBoxGrouped, MarkdownViewer, MenuActivedescendant, MenuButton, MenuList, Menubar, Meter, MillerColumns, NavList, PanelHeader, PatternDemo, PipelineGrid, Progress, PropertyRow, QuickOpen, RadioGroup, RadioGroupActivedescendant, RouteModal, ScrollArea, SearchResults, SelectionOverlay, Skeleton, Slider, Spinbutton, SpatialView, SplitPane, SpreadReader, StreamFeed, SwitchGroup, TabGroup, TabList, Table, TerminalOutput, TextInput, Toaster, TocNavList, Toggle, ToggleGroup, Toolbar, Tooltip, TreeGrid, TreeView, ViewerTabList, VirtualCodeBlock, WindowSplitter, Workspace, WriterTreeGrid, ZoomPanCanvas
+Accordion, Alert, AlertDialog, Avatar, Badge, Breadcrumb, Button, ButtonToggle, ButtonToolbar, CalendarGrid, Card, Carousel, Checkbox, CheckboxMixed, CodeBlock, Combobox, Composer, DatePicker, Dialog, DisclosureGroup, Divider, Drawer, EmptyState, Feed, FileIcon, FilePreview, FileTreeView, FileViewer, FileViewerModal, FilterBar, FlatLayout, Form, FrontmatterCard, Grid, GroupHeader, Kanban, Kbd, Lightbox, Link, ListBox, ListBoxGrouped, MarkdownViewer, MenuActivedescendant, MenuButton, MenuList, Menubar, Meter, MillerColumns, NavList, Pagination, PanelHeader, PatternDemo, PipelineGrid, Popover, Progress, PropertyRow, QuickOpen, RadioGroup, RadioGroupActivedescendant, Rating, RouteModal, ScrollArea, SearchResults, Select, SelectionOverlay, Skeleton, Slider, Spinbutton, SpatialView, SplitPane, SpreadReader, Stepper, StreamFeed, SwitchGroup, TabGroup, TabList, Table, TerminalOutput, Textarea, TextInput, Timeline, Toaster, TocNavList, Toggle, ToggleGroup, Toolbar, Tooltip, TreeGrid, TreeView, ViewerTabList, VirtualCodeBlock, WindowSplitter, Workspace, WriterTreeGrid, ZoomPanCanvas
 
 `ui/{Name}.tsx`
 
@@ -62,13 +62,13 @@ FormSection, MasterDetail, SearchableList, StatGrid, StepWizard
 
 ## ui/indicators
 
-AddIndicator, BadgeIndicator, CheckIndicator, CloseIndicator, DirectionIndicator, ExpandIndicator, FileTypeIndicator, GripIndicator, IncrementIndicator, IndeterminateIndicator, OverflowIndicator, PageIndicator, ProgressIndicator, RadioIndicator, SeparatorIndicator, SkeletonIndicator, SortIndicator, SpinnerIndicator, StatusIndicator, StepIndicator, SwitchIndicator, TreeConnector
+AddIndicator, BadgeIndicator, CheckIndicator, CloseIndicator, DirectionIndicator, ExpandIndicator, FileTypeIndicator, GripIndicator, IncrementIndicator, IndeterminateIndicator, OverflowIndicator, PageIndicator, ProgressIndicator, RadioIndicator, SeparatorIndicator, SkeletonIndicator, SortIndicator, SpinnerIndicator, StarIndicator, StatusIndicator, StepIndicator, SwitchIndicator, TreeConnector
 
 `ui/indicators/{Name}.tsx`
 
 ## ui/items
 
-ButtonToolbarItem, EditableListItem, EditableTreeItem, FileTreeItem, IssueRow, ListItem, MenubarItem, MenuItem, TabItem, TocItem, ToolbarItem, TreeItem, ViewerTabItem, WriterItem
+ButtonToolbarItem, CarouselItem, EditableListItem, EditableTreeItem, FileTreeItem, IssueRow, ListItem, MenubarItem, MenuItem, PaginationItem, RatingItem, SelectItem, StepperItem, TabItem, TimelineItem, TocItem, ToolbarItem, TreeItem, ViewerTabItem, WriterItem
 
 `ui/items/{Name}.tsx`
 

@@ -111,7 +111,7 @@ function BookTocOverlay() {
   const { tocStore, onTocActivate, onTocClose } = useBook()
 
   return (
-    <div className={ax({ scroll: 'hidden', layout: 'column', width: 'lg' })}>
+    <div className={ax({ scroll: 'hidden', layout: 'stack', width: 'lg' })}>
       <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
         <span className={ax({ textStyle: 'section', text: 'bright' })}>Contents</span>
         <Button icon variant="ghost" onClick={onTocClose} aria-label="Close">
@@ -152,7 +152,7 @@ function BookLayerOverlay() {
   const { addToLayerStore, onLayerActivate, layerNameMode, layerNameInput, onLayerNameChange, onLayerNameSubmit } = useBook()
 
   return (
-    <div className={ax({ layout: 'column', width: 'lg' })}>
+    <div className={ax({ layout: 'stack', width: 'lg' })}>
       <div className={ax({ layout: 'spread', padding: 'md', border: 'bottom' })}>
         <span className={ax({ textStyle: 'section', text: 'bright' })}>Add to Layer</span>
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>Cmd+L</span>

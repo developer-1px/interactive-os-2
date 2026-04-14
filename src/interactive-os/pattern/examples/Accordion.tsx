@@ -31,7 +31,7 @@ const data: NormalizedData = createStore({
 
 function Field({ label, id, type = 'text' }: { label: string; id: string; type?: string }) {
   return (
-    <div className={ax({ layout: 'column' })}>
+    <div className={ax({ layout: 'stack' })}>
       <label htmlFor={id} className={`${ax({ textStyle: 'caption', weight: 'semi', text: 'primary' })}`}>{label}</label>
       <input id={id} type={type} className={ax({ text: 'primary', textStyle: 'body', surface: 'input', shape: 'sm', padding: 'xs', content: 'text', interactive: 'input', border: 'default' })} />
     </div>

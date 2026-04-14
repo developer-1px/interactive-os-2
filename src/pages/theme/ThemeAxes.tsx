@@ -5,7 +5,7 @@ import './PageThemeCreator.css'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={ax({ surface: 'display', layout: 'column', gap: 'sm', padding: 'md', shape: 'lg' })}>
+    <div className={ax({ surface: 'display', layout: 'stack', gap: 'sm', padding: 'md', shape: 'lg' })}>
       <h3 className={ax({ textStyle: 'overline', text: 'muted' })}>{title}</h3>
       {children}
     </div>
@@ -16,7 +16,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function AxisRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className={ax({ layout: 'column', gap: 'xs' })}>
+    <div className={ax({ layout: 'stack', gap: 'xs' })}>
       <span className={ax({ textStyle: 'code', text: 'muted' })}>{label}</span>
       {children}
     </div>
@@ -29,7 +29,7 @@ function SurfaceAxis() {
   const values = ['action', 'input', 'display', 'overlay', 'ghost', 'sunken', 'base'] as const
   return (
     <Section title="SURFACE">
-      <div className={ax({ layout: 'column', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
@@ -47,7 +47,7 @@ function RoleAxis() {
   const values = ['control', 'item', 'badge'] as const
   return (
     <Section title="ROLE">
-      <div className={ax({ layout: 'column', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
@@ -65,7 +65,7 @@ function TextStyleAxis() {
   const values = ['hero', 'display', 'page', 'section', 'label', 'body', 'caption', 'code', 'overline'] as const
   return (
     <Section title="TEXT STYLE">
-      <div className={ax({ layout: 'column' })}>
+      <div className={ax({ layout: 'stack' })}>
         {values.map(v => (
           <div key={v} className={ax({ layout: 'spread', padding: 'xs', border: 'bottom' })}>
             <span className={ax({ textStyle: v, text: 'primary' })}>{v}</span>
@@ -81,7 +81,7 @@ function ToneAxis() {
   const values = ['accent', 'danger', 'success', 'warning', 'neutral'] as const
   return (
     <Section title="TONE">
-      <div className={ax({ layout: 'column', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
         <div className={ax({ layout: 'row', gap: 'sm' })}>
           {values.map(v => (
             <AxisRow key={v} label={v}>
@@ -273,7 +273,7 @@ function GapAxis() {
   const values = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const
   return (
     <Section title="GAP">
-      <div className={ax({ layout: 'column', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
@@ -293,7 +293,7 @@ function PaddingAxis() {
   const values = ['none', 'xs', 'sm', 'md', 'lg', 'xl'] as const
   return (
     <Section title="PADDING">
-      <div className={ax({ layout: 'column', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
@@ -311,7 +311,7 @@ function FlexAxis() {
   const values = ['none', 'auto', '1'] as const
   return (
     <Section title="FLEX">
-      <div className={ax({ layout: 'column', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
@@ -400,7 +400,7 @@ function WidthAxis() {
   const values = ['full', 'auto', 'fit', 'sm', 'md', 'lg', 'xl', 'prose'] as const
   return (
     <Section title="WIDTH">
-      <div className={ax({ layout: 'column', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
@@ -433,19 +433,19 @@ function AspectAxis() {
 
 export function ThemeAxes() {
   return (
-    <div className={ax({ layout: 'column', gap: 'xl' })}>
+    <div className={ax({ layout: 'stack', gap: 'xl' })}>
       {/* 시각 축 */}
       <div>
         <h2 className={ax({ textStyle: 'section', text: 'primary', padding: 'sm' })}>Visual Axes</h2>
         <div className="theme-composed-grid">
-          <div className={ax({ layout: 'column', gap: 'md' })}>
+          <div className={ax({ layout: 'stack', gap: 'md' })}>
             <SurfaceAxis />
             <RoleAxis />
             <ToneAxis />
             <TextAxis />
             <WeightAxis />
           </div>
-          <div className={ax({ layout: 'column', gap: 'md' })}>
+          <div className={ax({ layout: 'stack', gap: 'md' })}>
             <TextStyleAxis />
             <ShapeAxis />
             <StateAxis />
@@ -461,14 +461,14 @@ export function ThemeAxes() {
       <div>
         <h2 className={ax({ textStyle: 'section', text: 'primary', padding: 'sm' })}>Structural Axes</h2>
         <div className="theme-composed-grid">
-          <div className={ax({ layout: 'column', gap: 'md' })}>
+          <div className={ax({ layout: 'stack', gap: 'md' })}>
             <LayoutAxis />
             <GapAxis />
             <PaddingAxis />
             <FlexAxis />
             <WidthAxis />
           </div>
-          <div className={ax({ layout: 'column', gap: 'md' })}>
+          <div className={ax({ layout: 'stack', gap: 'md' })}>
             <SizeAxis />
             <IconAxis />
             <ClampAxis />

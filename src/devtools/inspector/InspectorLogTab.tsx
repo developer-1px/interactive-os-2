@@ -125,7 +125,7 @@ export function InspectorLogTab({ actionsMap }: InspectorLogTabProps) {
   }, [filteredLogs])
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       {/* Filter bar */}
       <div className={`${ax({ layout: 'row', gap: 'sm', padding: 'sm', surface: 'overlay' })} inspector-log-filter`}>
         <input

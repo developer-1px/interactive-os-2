@@ -57,7 +57,7 @@ function CreatorSidebar() {
   )
 
   return (
-    <div className={ax({ layout: 'column', scroll: 'hidden' })}>
+    <div className={ax({ layout: 'stack', scroll: 'hidden' })}>
       <PanelHeader axes={{ textStyle: 'caption' }}>
         <span className={ax({ weight: 'semi' })}>Components</span>
         <span className={ax({ text: 'muted' })}>{demoRegistry.length}</span>

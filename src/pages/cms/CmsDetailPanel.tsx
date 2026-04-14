@@ -188,7 +188,7 @@ function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
   const { elRef, displayValue, handleFocus, handleCommit, handleFieldKeyDown } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
 
   return (
-    <div className={`cms-detail-field ${ax({ layout: 'column', gap: 'xs' })}`}>
+    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       <input
         ref={elRef}
@@ -207,7 +207,7 @@ function LongTextField({ entry, store, locale, engine }: DetailFieldProps) {
   const { elRef, displayValue, handleFocus, handleCommit } = useFieldCommit<HTMLTextAreaElement>(entry, store, locale, engine)
 
   return (
-    <div className={`cms-detail-field ${ax({ layout: 'column', gap: 'xs' })}`}>
+    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       <textarea
         ref={elRef}
@@ -247,7 +247,7 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
   }, [handleBlur])
 
   return (
-    <div className={`cms-detail-field ${ax({ layout: 'column', gap: 'xs' })}`}>
+    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       <input
         ref={elRef}
@@ -293,7 +293,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
   }, [])
 
   return (
-    <div className={`cms-detail-field ${ax({ layout: 'column', gap: 'xs' })}`}>
+    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       {currentSrc ? (
         <div className={ax({ placement: 'relative' })}>
@@ -353,7 +353,7 @@ function IconField({ entry, store, engine, expanded }: DetailFieldProps) {
   const hasIcon = CMS_ICON_MAP.has(currentValue)
 
   return (
-    <div className={`cms-detail-field ${ax({ layout: 'column', gap: 'xs' })}`}>
+    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       <button
         type="button"

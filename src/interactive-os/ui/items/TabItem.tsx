@@ -34,7 +34,7 @@ export function TabItem(
       <span>{label}</span>
       {closable && (
         <button
-          className={`tab-close ${ax({ surface: 'ghost', layout: 'center', content: 'icon', text: 'muted', opacity: 'dim' })}`}
+          className={ax({ surface: 'ghost', layout: 'center', content: 'icon', text: 'muted', opacity: 'dim' })}
           aria-label={`Close ${label}`}
           tabIndex={-1}
           onClick={(e) => {

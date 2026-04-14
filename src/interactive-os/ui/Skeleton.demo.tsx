@@ -11,18 +11,18 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'column', gap: 'lg', width: 'full' })}>
+    <div className={ax({ layout: 'stack', gap: 'lg', width: 'full' })}>
       {/* Profile card skeleton */}
       <div className={ax({ layout: 'row', gap: 'md' })}>
         <Skeleton shape="circle" height="lg" />
-        <div className={ax({ layout: 'column', gap: 'xs', width: 'full' })}>
+        <div className={ax({ layout: 'stack', gap: 'xs', width: 'full' })}>
           <Skeleton shape="text" width="md" height="sm" />
           <Skeleton shape="text" width="sm" height="xs" />
         </div>
       </div>
 
       {/* Content block skeleton */}
-      <div className={ax({ layout: 'column', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', gap: 'sm' })}>
         <Skeleton shape="text" width="full" height="xs" />
         <Skeleton shape="text" width="full" height="xs" />
         <Skeleton shape="text" width="lg" height="xs" />

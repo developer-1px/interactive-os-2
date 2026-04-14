@@ -96,7 +96,7 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   return (
     <div className={ax({ layout: 'bar', gap: 'sm' })}>
       <div className={`${ax({ layout: 'center', tone: 'accent' })} incident-avatar`}><Bot size={14} /></div>
-      <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', flex: '1', gap: 'sm' })}>
         <div className={ax({ textStyle: 'caption', text: 'primary' })}>
           {displayed}
           {!done && <StreamCursor />}
@@ -235,7 +235,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
         }}
       >
         <div className={`${ax({ textStyle: 'code' })} incident-timeline-time`}>{ev.time}</div>
-        <div className={`incident-timeline-dot ${ax({ layout: 'column' })}`}>
+        <div className={`incident-timeline-dot ${ax({ layout: 'stack' })}`}>
           <span className={`incident-dot ${SEVERITY_CLS[ev.severity]}`} />
           <span className={`incident-dot-line ${ax({ flex: '1' })}`} />
         </div>
@@ -251,7 +251,7 @@ function TimelinePanel({ events, visibleCount, selectedId, onSelect }: {
   }, [selectedId, onSelect])
 
   return (
-    <div className={`${ax({ surface: 'base', layout: 'column', flex: 'none', placement: 'relative' })} incident-timeline-panel`}>
+    <div className={`${ax({ surface: 'base', layout: 'stack', flex: 'none', placement: 'relative' })} incident-timeline-panel`}>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ layout: 'bar', gap: 'xs' })}><Clock size={12} />Timeline</span>
         <span className={ax({ textStyle: 'code' })}>{visibleCount}/{events.length}</span>
@@ -297,13 +297,13 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
         {event && <span className={ax({ textStyle: 'code' })}>{event.time}</span>}
       </PanelHeader>
       {capture ? (
-        <div className={ax({ layout: 'column', flex: '1', gap: 'md', padding: 'sm' })}>
+        <div className={ax({ layout: 'stack', flex: '1', gap: 'md', padding: 'sm' })}>
           <div className={`incident-capture-comparison grid ${ax({ gap: 'sm' })}`}>
-            <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })}>
+            <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'stack', gap: 'sm' })}>
               <div className={ax({ textStyle: 'overline', weight: 'semi' })}>Before</div>
               <span className={ax({ textStyle: 'code', weight: 'semi' })}>{capture.before}</span>
             </div>
-            <div className={`${ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })} incident-capture-changed`}>
+            <div className={`${ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'stack', gap: 'sm' })} incident-capture-changed`}>
               <div className={ax({ textStyle: 'overline', weight: 'semi' })}>After</div>
               <span className={`${ax({ textStyle: 'code', weight: 'semi' })} incident-capture-text`}>{capture.after}</span>
             </div>
@@ -315,7 +315,7 @@ function CapturePanel({ selectedEventId }: { selectedEventId: string | null }) {
         </div>
       ) : (
         <div className={ax({ layout: 'center', flex: '1', textStyle: 'caption', text: 'muted' })}>
-          <div className={ax({ layout: 'column', gap: 'sm' })}>
+          <div className={ax({ layout: 'stack', gap: 'sm' })}>
             <Eye size={24} />
             <span>타임라인에서 이벤트를 선택하세요</span>
             <kbd>↑↓</kbd>
@@ -411,7 +411,7 @@ export default function PageIncidentInterface() {
         />
         <CapturePanel selectedEventId={selectedEvent} />
 
-        <div className={`${ax({ surface: 'sunken', layout: 'column', flex: 'none' })} incident-chat-zone`}>
+        <div className={`${ax({ surface: 'sunken', layout: 'stack', flex: 'none' })} incident-chat-zone`}>
           <PanelHeader axes={{ layout: 'spread' }}>
             <span className={ax({ layout: 'bar', gap: 'xs' })}><Bot size={12} />AI Analysis</span>
             <span className={ax({ layout: 'bar', gap: 'xs', textStyle: 'code' })}>

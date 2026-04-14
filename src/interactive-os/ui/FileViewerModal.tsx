@@ -82,7 +82,7 @@ export function FileViewerModal({ filePath, editRanges, highlightLines: highligh
 
   return (
     <dialog ref={dialogRef} className="border-none bg-transparent fvm-dialog" onClick={handleBackdropClick}>
-      <div className={`fvm-modal ${ax({ surface: 'trap', layout: 'column', shape: 'xl', scroll: 'hidden' })}`} onClick={e => e.stopPropagation()}>
+      <div className={`fvm-modal ${ax({ surface: 'trap', layout: 'stack', shape: 'xl', scroll: 'hidden' })}`} onClick={e => e.stopPropagation()}>
         <PanelHeader axes={{ layout: 'spread' }}>
           {filePath && <Breadcrumb path={filePath} root={root} />}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>

@@ -219,7 +219,7 @@ function QuickOpenManaged({
     })
 
   const content = (
-    <div className={`quick-open-dialog ${ax({ layout: 'column', surface: 'overlay', shape: 'xl', border: 'default', motion: 'slide-in', scroll: 'hidden' })}`} aria-label={ariaLabel}>
+    <div className={`quick-open-dialog ${ax({ layout: 'stack', surface: 'overlay', shape: 'xl', border: 'default', motion: 'slide-in', scroll: 'hidden' })}`} aria-label={ariaLabel}>
       <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
         <Search size={16} className={ax({ text: 'muted', flex: 'none' })} />
         <input
@@ -321,7 +321,7 @@ function QuickOpenFile({ fileStore, root, onSelect, onClose, persistKey }: FileM
             <span className={ax({ flex: 'none' })}>
               <FileIcon name={fileData.name} type="file" />
             </span>
-            <span className={`quick-open-item-text ${ax({ layout: 'column', flex: '1' })}`}>
+            <span className={`quick-open-item-text ${ax({ layout: 'stack', flex: '1' })}`}>
               <span className={ax({ clamp: '1', weight: 'medium' })}>{fileData.name}</span>
               <span className={ax({ text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
             </span>

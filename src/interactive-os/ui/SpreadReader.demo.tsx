@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'column', gap: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'md' })}>
       <SpreadReader>
         <p>Spread readers display long-form content across horizontal pages. Swipe or use arrow keys to navigate between pages.</p>
         <p>Each page is sized to fit the container, making it comfortable to read without vertical scrolling.</p>

@@ -44,14 +44,14 @@ export function defineNodePresentation(type: string, desc: NodePresentationDesc)
 // ── Section presentation (variant → className/children 조회) ──
 
 const sectionVariantClass: Record<string, string> = {
-  hero: `${s.cmsHero} ${ax({ layout: 'column' })} items-center text-center`,
+  hero: `${s.cmsHero} ${ax({ layout: 'stack' })} items-center text-center`,
   manifesto: s.cmsManifesto,
   features: s.cmsFeatures,
   patterns: s.cmsPatterns,
   showcase: s.cmsShowcase,
   journal: s.cmsJournal,
   testimonial: `${s.cmsTestimonial} ${ax({ layout: 'row' })} justify-center`,
-  cta: `${s.cmsCta} ${ax({ layout: 'column' })} items-center text-center`,
+  cta: `${s.cmsCta} ${ax({ layout: 'stack' })} items-center text-center`,
   footer: `${s.cmsFooter} ${ax({ layout: 'row' })} flex-wrap items-baseline`,
   gallery: s.cmsGallery,
 }
@@ -61,7 +61,7 @@ const sectionChildrenClass: Record<string, string> = {
   patterns: `${s.cmsPatternsGrid} grid`,
   manifesto: `${s.cmsManifestoValues} grid`,
   showcase: `${s.cmsShowcaseGrid} grid`,
-  journal: `${s.cmsJournalList} ${ax({ layout: 'column' })}`,
+  journal: `${s.cmsJournalList} ${ax({ layout: 'stack' })}`,
   gallery: `${s.cmsGalleryGrid} grid`,
 }
 
@@ -214,7 +214,7 @@ defineNodePresentation('value-item', {
   tag: 'div',
   className: s.cmsValueItem,
   render: (data, locale) => (
-    <div className={`${s.cmsValueItemContent} ${ax({ layout: 'column' })}`}>
+    <div className={`${s.cmsValueItemContent} ${ax({ layout: 'stack' })}`}>
       <div className="hidden"><CmsIcon name={data.icon as string} size={24} /></div>
       <h3 className={s.cmsValueItemTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
       <p className={s.cmsValueItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></p>
@@ -245,7 +245,7 @@ defineNodePresentation('article', {
           ? <img src={articleImage} alt="" className={`${s.cmsArticleImage} object-cover ${ax({ flex: 'none' })}`} />
           : <div className={`${s.cmsArticleIcon} ${ax({ layout: 'center', flex: 'none' })}`}><CmsIcon name={data.icon as string} size={20} /></div>
         }
-        <div className={`${s.cmsArticleBody} ${ax({ layout: 'column' })}`}>
+        <div className={`${s.cmsArticleBody} ${ax({ layout: 'stack' })}`}>
           <h3 className={s.cmsArticleTitle}><LocalizedText value={data.title as LocaleMap} locale={locale} /></h3>
           <span className={s.cmsArticleMeta}>
             <LocalizedText value={data.category as LocaleMap} locale={locale} /> · {data.readTime as string}
@@ -260,7 +260,7 @@ defineNodePresentation('showcase-item', {
   tag: 'div',
   className: `${s.cmsShowcaseItem} ${ax({ interactive: 'button' })}`,
   render: (data, locale) => (
-    <div className={`${s.cmsShowcaseItemContent} ${ax({ layout: 'column' })}`}>
+    <div className={`${s.cmsShowcaseItemContent} ${ax({ layout: 'stack' })}`}>
       <div className={`${s.cmsShowcaseItemIcon} ${ax({ layout: 'center' })}`}><CmsIcon name={data.icon as string} size={20} /></div>
       <span className={s.cmsShowcaseItemLabel}><LocalizedText value={data.label as LocaleMap} locale={locale} /></span>
       <span className={s.cmsShowcaseItemDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
@@ -272,7 +272,7 @@ defineNodePresentation('stat-card', {
   tag: 'div',
   className: `${s.cmsStatCard} ${ax({ interactive: 'button' })}`,
   render: (data, locale) => (
-    <div className={`${s.cmsStatCardContent} ${ax({ layout: 'column' })}`}>
+    <div className={`${s.cmsStatCardContent} ${ax({ layout: 'stack' })}`}>
       <span className={s.cmsStatCardValue}>{data.value as string}</span>
       <span className={s.cmsStatCardLabel}><LocalizedText value={data.label as LocaleMap} locale={locale} /></span>
       <span className={s.cmsStatCardDesc}><LocalizedText value={data.desc as LocaleMap} locale={locale} /></span>
@@ -310,7 +310,7 @@ defineNodePresentation('gallery-item', {
   render: (data, locale) => {
     const gSrc = data.image as string
     return (
-      <div className={ax({ layout: 'column' })}>
+      <div className={ax({ layout: 'stack' })}>
         {gSrc
           ? <img src={gSrc} alt="" className={`${s.cmsGalleryItemImage} w-full object-cover`} />
           : <div className={`${s.cmsGalleryItemPlaceholder} w-full`} />

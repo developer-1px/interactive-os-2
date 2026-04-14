@@ -76,7 +76,7 @@ function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
   const [activeTab, setActiveTab] = React.useState(0)
 
   return (
-    <div ref={refCallback(nodeId)} className={ax({ layout: 'column', width: 'full', gap: 'md' })}>
+    <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', width: 'full', gap: 'md' })}>
       <div className={ax({ layout: 'bar', gap: 'xs', surface: 'base', padding: 'xs', shape: 'sm' })}>
         {childIds.map((childId, i) => {
           const data = getEntityData(store, childId)
@@ -117,7 +117,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     // ② flatlayout-resizable-split-prd.md — resizable: false → 고정 비율
     if (node.resizable === false) {
       return (
-        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full', flex: '1', scroll: 'hidden', surface })}>
+        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'stack', width: 'full', flex: '1', scroll: 'hidden', surface })}>
           {childIds.map((childId, i) => {
             const size = node.sizes[i]
             const isFlex = size === 'flex' || size === undefined
@@ -249,7 +249,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const childIds = getChildren(store, nodeId)
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'column', gap: 'md', width: 'full', surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', gap: 'md', width: 'full', surface })}>
         <div className={ax({ layout: 'spread', width: 'full', padding: 'sm' })}>
           <span className={ax({ textStyle: 'section', text: 'primary' })}>{node.title}</span>
           {node.count != null && (

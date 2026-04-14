@@ -20,7 +20,7 @@ export function Demo() {
   const feedRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className={ax({ layout: 'column', gap: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'md' })}>
       <StreamFeed
         items={items}
         feedRef={feedRef}

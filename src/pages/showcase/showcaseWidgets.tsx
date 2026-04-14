@@ -9,7 +9,7 @@ import { useShowcase } from './showcaseContext'
 export function ShowcaseSidebarWidget() {
   const { sidebarData, handleActivate } = useShowcase()
   return (
-    <nav className={ax({ layout: 'column', flex: '1' })}>
+    <nav className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader axes={{ layout: 'spread' }}>UI Components</PanelHeader>
       <div className={ax({ padding: 'sm', border: 'bottom' })}>
         <Link to="/ui/progress" className={ax({ textStyle: 'caption', tone: 'accent' })}>

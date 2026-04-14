@@ -118,7 +118,7 @@ export function VirtualCodeBlock({
   return (
     <div ref={containerRef} className={`${cls} `} onClick={handleClick}>
       <pre className={`shiki ${ax({ surface: 'base' })} `}>
-        <code ref={codeRef} className={ax({ layout: 'column' })}>
+        <code ref={codeRef} className={ax({ layout: 'stack' })}>
           <div ref={spacerRef} className={""} />
           {visibleLineHtmls.map(({ index, html, raw }) => {
             const lineNum = index + 1

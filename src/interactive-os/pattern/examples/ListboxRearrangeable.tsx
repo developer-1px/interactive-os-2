@@ -122,7 +122,7 @@ export function ListboxRearrangeable() {
         onSelectionChange={setAvailableSelected}
       />
 
-      <div role="toolbar" aria-label="Actions" className={ax({ layout: 'column', gap: 'xs', padding: 'md' })}>
+      <div role="toolbar" aria-label="Actions" className={ax({ layout: 'stack', gap: 'xs', padding: 'md' })}>
         <button
           className={`${ax({ textStyle: 'caption', text: 'primary', surface: 'display', shape: 'sm', interactive: 'button' })} whitespace-nowrap`}
           aria-keyshortcuts="Enter"

@@ -43,7 +43,7 @@ function renderField(
   _state: NodeState,
 ): React.ReactElement {
   return (
-    <div className={ax({ layout: 'column', gap: 'xs' })}>
+    <div className={ax({ layout: 'stack', gap: 'xs' })}>
       <span className={ax({ textStyle: 'caption', text: 'muted' })}>{entry.label}</span>
       <span className={ax({ textStyle: 'body', text: 'primary' })}>{entry.field}</span>
     </div>

@@ -143,7 +143,7 @@ function AriaTabContent({ selectedId, inspectResult, actionsMap, metas }: AriaTa
   const domProps = domElement ? readDomAriaProps(domElement) : null
 
   return (
-    <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+    <div className={ax({ layout: 'stack', gap: 'md', padding: 'sm' })}>
       <div className={ax({ textStyle: 'caption', text: 'bright' })}>
         {nodeId ? `Node: ${nodeId}` : 'Instance root'} — role: {role}
       </div>
@@ -289,7 +289,7 @@ export function InspectorWindow() {
   }, [metas, actionsMap])
 
   return (
-    <div className={`${ax({ scroll: 'hidden', layout: 'column' })} inspector-root`}>
+    <div className={`${ax({ scroll: 'hidden', layout: 'stack' })} inspector-root`}>
       <div className={ax({ layout: 'spread', padding: 'sm', textStyle: 'caption', surface: 'overlay' })}>
         <div className={ax({ layout: 'row', gap: 'sm' })}>
           <span className={ax({ text: 'bright' })}>Aria Inspector</span>
@@ -305,7 +305,7 @@ export function InspectorWindow() {
 
       <div className={ax({ scroll: 'hidden', flex: '1' })}>
         <SplitPane direction="horizontal" sizes={sizes} onResize={setSizes} minRatio={0.15}>
-          <div className={ax({ layout: 'column' })}>
+          <div className={ax({ layout: 'stack' })}>
             {actionsMap.size === 0 ? (
               <div className={ax({ padding: 'sm', text: 'muted', textStyle: 'caption' })}>등록된 인스턴스 없음</div>
             ) : (
@@ -320,7 +320,7 @@ export function InspectorWindow() {
           </div>
 
           <div className={`${ax({ scroll: 'auto' })} inspector-detail`}>
-            <div className={ax({ layout: 'column' })}>
+            <div className={ax({ layout: 'stack' })}>
               <TabBar active={activeTab} onChange={setActiveTab} />
 
               {activeTab === 'log' ? (
@@ -328,7 +328,7 @@ export function InspectorWindow() {
               ) : inspectResult ? (
                 <>
                   {activeTab === 'interaction' && (
-                    <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+                    <div className={ax({ layout: 'stack', gap: 'md', padding: 'sm' })}>
                       <div className={ax({ layout: 'spread', textStyle: 'caption', text: 'bright' })}>
                         <span>Bindings ({Object.keys(inspectResult.keyMap).length + Object.keys(inspectResult.clickMap ?? {}).length})</span>
                         <CopyButton inspectResult={inspectResult} />
@@ -342,7 +342,7 @@ export function InspectorWindow() {
                   )}
 
                   {activeTab === 'state' && (
-                    <div className={ax({ layout: 'column', gap: 'md', padding: 'sm' })}>
+                    <div className={ax({ layout: 'stack', gap: 'md', padding: 'sm' })}>
                       <div className={ax({ textStyle: 'caption', text: 'bright' })}>
                         State ({Object.keys(inspectResult.state.entities).length} entities)
                       </div>

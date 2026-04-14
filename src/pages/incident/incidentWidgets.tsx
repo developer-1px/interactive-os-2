@@ -96,7 +96,7 @@ export function TimelinePanelWidget() {
   }, [visibleCount, dispatch])
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ layout: 'bar', gap: 'xs' })}><Clock size={12} />Timeline</span>
         <span className={ax({ textStyle: 'code' })}>{visibleCount}/{TIMELINE_EVENTS.length}</span>
@@ -136,19 +136,19 @@ export function CapturePanelWidget() {
   const event = id ? TIMELINE_EVENTS.find((e) => e.id === id) : null
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ layout: 'bar', gap: 'xs' })}><Eye size={12} />Capture</span>
         {event && <span className={ax({ textStyle: 'code' })}>{event.time}</span>}
       </PanelHeader>
       {capture ? (
-        <div className={ax({ layout: 'column', flex: '1', gap: 'md', padding: 'sm' })}>
+        <div className={ax({ layout: 'stack', flex: '1', gap: 'md', padding: 'sm' })}>
           <div className={ax({ layout: 'grid-2', gap: 'sm' })}>
-            <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })}>
+            <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'stack', gap: 'sm' })}>
               <div className={ax({ textStyle: 'overline', weight: 'semi' })}>Before</div>
               <span className={ax({ textStyle: 'code', weight: 'semi' })}>{capture.before}</span>
             </div>
-            <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'column', gap: 'sm' })}>
+            <div className={ax({ surface: 'display', padding: 'md', shape: 'sm', layout: 'stack', gap: 'sm' })}>
               <div className={ax({ textStyle: 'overline', weight: 'semi' })}>After</div>
               <span className={ax({ textStyle: 'code', weight: 'semi' })}>{capture.after}</span>
             </div>
@@ -159,7 +159,7 @@ export function CapturePanelWidget() {
         </div>
       ) : (
         <div className={ax({ layout: 'center', flex: '1', textStyle: 'caption', text: 'muted' })}>
-          <div className={ax({ layout: 'column', gap: 'sm' })}><Eye size={24} /><span>타임라인에서 이벤트를 선택하세요</span></div>
+          <div className={ax({ layout: 'stack', gap: 'sm' })}><Eye size={24} /><span>타임라인에서 이벤트를 선택하세요</span></div>
         </div>
       )}
     </div>
@@ -175,7 +175,7 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   return (
     <div className={ax({ layout: 'bar', gap: 'sm' })}>
       <div className={ax({ role: 'control', layout: 'center', tone: 'accent' })}><Bot size={14} /></div>
-      <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
+      <div className={ax({ layout: 'stack', flex: '1', gap: 'sm' })}>
         <div className={ax({ textStyle: 'caption', text: 'primary' })}>{displayed}{!done && <StreamCursor />}</div>
         {done && msg.block && <msg.block />}
       </div>
@@ -219,7 +219,7 @@ export function ChatZoneWidget() {
   }, [msgItems.length, dispatch])
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span className={ax({ layout: 'bar', gap: 'xs' })}><Bot size={12} />AI Analysis</span>
         <span className={ax({ layout: 'bar', gap: 'xs', textStyle: 'code' })}>

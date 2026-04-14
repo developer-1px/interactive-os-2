@@ -38,7 +38,7 @@ const initialTab = getInitialTabFromUrl() ?? ALL_PROJECTS[0] ?? 'cms'
 
 function ImagePreview({ src, caption }: { src: string; caption?: string }) {
   return (
-    <div className={ax({ layout: 'column', gap: 'sm', padding: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
       <FilePreview content="" filename="image.png" src={src} />
       {caption && (
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>{caption}</span>
@@ -49,7 +49,7 @@ function ImagePreview({ src, caption }: { src: string; caption?: string }) {
 
 function SummaryPreview({ title, body }: { title: string; body: string }) {
   return (
-    <div className={ax({ layout: 'column', gap: 'sm', padding: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
       <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{title}</span>
       <MarkdownViewer content={body} prose={false} codeVariant="compact" config={showcaseMdConfig} />
     </div>
@@ -68,7 +68,7 @@ function FileListPreview({ title, files }: { title: string; files: { label: stri
   }, [files])
 
   return (
-    <div className={ax({ layout: 'column', gap: 'sm', padding: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
       <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{title}</span>
       <NavList data={listData} aria-label={title} />
     </div>
@@ -87,7 +87,7 @@ function MarkdownDocPreview({ path, fallback }: { path: string; fallback: string
   const filename = path.split('/').pop() ?? path
 
   return (
-    <div className={ax({ layout: 'column', gap: 'sm', padding: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
       <span className={ax({ textStyle: 'caption', tone: 'accent' })}>{path}</span>
       <FilePreview content={content ?? fallback} filename={filename} />
     </div>
@@ -144,7 +144,7 @@ export default function PagePipeline() {
   const panelTitle = cellFocus ? `${rowLabel} / ${colLabel}` : 'Preview'
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader>
         <TabList
           data={projectTabStore}

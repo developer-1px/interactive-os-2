@@ -127,7 +127,7 @@ const MessageBubble = memo(function MessageBubble({
   if (message.role === 'system') {
     const groups = groupSystemBlocks(message.blocks)
     return (
-      <div className={`${ax({ layout: 'column', gap: 'xs' })} ${roleClass}`}>
+      <div className={`${ax({ layout: 'stack', gap: 'xs' })} ${roleClass}`}>
         {groups.map((g, i) => {
           if (g.kind === 'tool_chain') return <ToolChainGroup key={i} pairs={g.pairs} />
           if (g.kind === 'output') return <ToolGroup key={i} toolUse={g.pair.toolUse} toolResult={g.pair.toolResult} />

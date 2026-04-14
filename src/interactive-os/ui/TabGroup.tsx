@@ -107,7 +107,6 @@ export function TabGroup({
         {onAddTab && (
           <Button
             icon
-            className="tab-add"
             aria-label="Add tab"
             tabIndex={-1}
             onClick={handleAdd}

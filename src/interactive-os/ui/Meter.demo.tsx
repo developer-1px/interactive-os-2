@@ -28,7 +28,7 @@ export function Demo() {
   const [data, setData] = useState(() => makeData(65, 8, 120))
 
   return (
-    <div className={ax({ layout: 'column', gap: 'md', width: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'md', width: 'md' })}>
       <Meter data={data} onChange={setData} aria-label="System meters" />
     </div>
   )

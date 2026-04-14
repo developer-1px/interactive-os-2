@@ -11,7 +11,7 @@ export const meta = {
 
 export function Demo() {
   return (
-    <div className={ax({ layout: 'column', gap: 'md', width: 'md' })}>
+    <div className={ax({ layout: 'stack', gap: 'md', width: 'md' })}>
       <span>Above</span>
       <Divider />
       <span>Below</span>

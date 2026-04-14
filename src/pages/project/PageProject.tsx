@@ -125,7 +125,7 @@ export default function PageProject() {
   }, [navigate])
 
   return (
-    <div className={ax({ layout: 'column', flex: '1' })}>
+    <div className={ax({ layout: 'stack', flex: '1' })}>
       <PanelHeader>
         <span className={ax({ textStyle: 'label', weight: 'semi' })}>Projects</span>
         <span className={ax({ flex: '1' })} />

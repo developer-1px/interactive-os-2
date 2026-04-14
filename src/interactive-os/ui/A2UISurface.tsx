@@ -280,7 +280,7 @@ function dividerRenderer({ entity }: A2UIRenderContext) {
   const axis = d.axis as string | undefined
 
   if (axis === 'vertical') {
-    return <div className={ax({ layout: 'column', border: 'end' })} role="separator" aria-orientation="vertical" />
+    return <div className={ax({ layout: 'stack', border: 'end' })} role="separator" aria-orientation="vertical" />
   }
   return <hr className={ax({ width: 'full' })} />
 }
