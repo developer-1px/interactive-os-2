@@ -1,0 +1,10 @@
+/* Carousel — last-mile styles not expressible via ax() */
+
+.carousel-track {
+  transition: transform 0.3s ease;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}

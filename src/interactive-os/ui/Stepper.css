@@ -1,0 +1,29 @@
+@layer component {
+/* Stepper — connector lines between steps (last-mile: pseudo-element connectors) */
+.stepper-item {
+  z-index: 0;
+}
+
+/* Horizontal connector */
+.stepper-item--horizontal:not(:first-child)::before {
+  content: '';
+  z-index: -1;
+  inset-block-start: 50%;
+  inset-inline-end: 100%;
+  inline-size: var(--space-md);
+  block-size: 1px;
+  background: var(--color-border);
+  transform: translateY(-50%);
+}
+
+/* Vertical connector */
+.stepper-item--vertical:not(:first-child)::before {
+  content: '';
+  z-index: -1;
+  inset-inline-start: calc(var(--space-sm) + 0.5em);
+  inset-block-end: 100%;
+  inline-size: 1px;
+  block-size: var(--space-md);
+  background: var(--color-border);
+}
+}
