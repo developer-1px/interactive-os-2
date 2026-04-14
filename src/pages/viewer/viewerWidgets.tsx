@@ -46,20 +46,19 @@ export function ViewerSortBarWidget() {
 
   return (
     <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs', border: 'bottom' })}>
-      <Button size="sm" onClick={() => onSort('name')}>
+      <Button onClick={() => onSort('name')}>
         Name <SortIndicator direction={sortDirection('name')} />
       </Button>
-      <Button size="sm" onClick={() => onSort('type')}>
+      <Button onClick={() => onSort('type')}>
         Type <SortIndicator direction={sortDirection('type')} />
       </Button>
-      <Button size="sm" onClick={() => onSort('loc')}>
+      <Button onClick={() => onSort('loc')}>
         LOC <SortIndicator direction={sortDirection('loc')} />
       </Button>
       <span className={ax({ border: 'end', flex: 'none' })} />
       {['.tsx', '.ts', '.css', '.md'].map(ext => (
         <Button
           key={ext}
-          size="sm"
           variant={filters.includes(ext) ? 'dialog' : 'ghost'}
           onClick={() => setFilters(f => f.includes(ext) ? f.filter(e => e !== ext) : [...f, ext])}
         >

@@ -31,7 +31,7 @@ export function Demo() {
             <div
               key={id}
               {...(ctx.getNodeProps(id) as React.HTMLAttributes<HTMLDivElement>)}
-              className={ax({ recipe: 'item', interactive: 'item', padding: 'md', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+              className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}
               data-focused={ctx.getNodeState(id).focused || undefined}
             >
               {(data.entities[id]?.data as Record<string, string>)?.label}

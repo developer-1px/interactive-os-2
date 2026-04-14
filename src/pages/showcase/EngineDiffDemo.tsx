@@ -122,7 +122,7 @@ export default function EngineDiffDemo() {
             #{selectedEntry.seq} — {selectedEntry.type}
             <button
               onClick={handleReverse}
-              className={ax({ surface: 'ghost', controlSize: 'sm', shape: 'sm', textStyle: 'caption' })}
+              className={ax({ role: 'control', surface: 'ghost' })}
             >
               {selection?.reversed ? 'applyDelta(forward)' : 'applyDelta(reverse)'}
             </button>

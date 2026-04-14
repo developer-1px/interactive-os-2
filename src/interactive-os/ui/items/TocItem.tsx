@@ -14,11 +14,11 @@ export function TocItem(
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item-sm', interactive: 'item', text: state.selected ? 'bright' : 'muted', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'item', content: 'text', text: state.selected ? 'bright' : 'muted', layout: 'row', width: 'full' })}
       data-indent={depth > 0 ? '' : undefined}
       aria-current={state.selected ? 'page' : undefined}
     >
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{(data.pageIndex as number) + 1}</span>
+      <span className={ax({ text: 'muted' })}>{(data.pageIndex as number) + 1}</span>
       {label}
     </div>
   )

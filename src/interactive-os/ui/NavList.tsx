@@ -9,7 +9,6 @@ import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
 import { getNodeLabel } from './types'
 import { ax } from '@styles/ax'
-import './NavList.css'
 
 interface NavListProps {
   data: NormalizedData
@@ -26,11 +25,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const itemClass = ax({
     interactive: 'item',
-    recipe: 'item',
+    role: 'item',
+    content: 'text',
     text: (state.focused || state.active) ? 'primary' : 'secondary',
-    padding: 'sm',
-    gap: 'sm',
-    shape: '2xs',
     layout: 'row',
     width: 'full',
   })
@@ -38,7 +35,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
 }
 
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (
-  <div className={ax({ textStyle: 'overline', text: 'muted', padding: 'sm', content: 'text' })}>{label}</div>
+  <div className={ax({ role: 'item', textStyle: 'overline', text: 'muted', content: 'text' })}>{label}</div>
 )
 
 function isGroup(entity: Record<string, unknown>): boolean {
@@ -96,7 +93,7 @@ export function NavList({
   }
 
   return (
-    <div {...(nav.rootProps as React.HTMLAttributes<HTMLDivElement>)}>
+    <div {...(nav.rootProps as React.HTMLAttributes<HTMLDivElement>)} className={`${(nav.rootProps as React.HTMLAttributes<HTMLDivElement>).className ?? ''} ${ax({ layout: 'column', gap: 'lg' })}`}>
       {rootChildren.map((id) => {
         const entity = store.entities[id]
         if (!entity) return null

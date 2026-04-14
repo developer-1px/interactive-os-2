@@ -5,12 +5,17 @@ import type { Toaster as ToasterInstance, ToastData } from './createToaster'
 import { CloseIndicator } from './indicators'
 import { ax } from '@styles/ax'
 import type { Axes } from '@styles/ax'
-import './Toaster.css'
 
 const variantTone: Record<string, Axes> = {
   default: { surface: 'overlay' },
   success: { surface: 'overlay', tone: 'success' },
   error: { surface: 'overlay', tone: 'danger' },
+}
+
+const variantBorder: Record<string, React.CSSProperties | undefined> = {
+  default: undefined,
+  success: { borderColor: 'var(--tone-success-base)' },
+  error: { borderColor: 'var(--tone-destructive-base)' },
 }
 
 interface ToasterProps {
@@ -43,7 +48,7 @@ function ToastItem({
   const variant = toast.variant ?? 'default'
   const axes = variantTone[variant] ?? variantTone.default
   return (
-    <div className={`toast-item pointer-auto ${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' } as Axes)}`} data-variant={variant}>
+    <div className={`pointer-auto ${ax({ ...axes, layout: 'row', gap: 'sm', padding: 'sm', shape: 'xl', motion: 'slide-up' } as Axes)}`} style={variantBorder[variant]}>
       <div className={ax({ flex: '1', layout: 'self-start' })}>
         <div className={ax({ textStyle: 'body', weight: 'medium' })}>{toast.title}</div>
         {toast.description && (

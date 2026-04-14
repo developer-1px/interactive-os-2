@@ -27,6 +27,7 @@ export interface StackNode extends LayoutBase {
 export interface OverlayNode extends LayoutBase {
   type: 'overlay'
   overlayType: 'modal' | 'popup' | 'hint'
+  placement?: string
   trigger?: string
   visible?: boolean
 }

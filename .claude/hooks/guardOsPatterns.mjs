@@ -260,19 +260,8 @@ if (isPages && isTsx && /<(?:input|select|textarea)\b/.test(content)) {
   )
 }
 
-// 규칙 17: surface:'overlay'에 width 축 필수 — 오버레이 가로 고정
-if (!isExempt && isTsx) {
-  // ax({ ... surface: 'overlay' ... }) 블록에서 width가 없으면 위반
-  const axCalls = content.match(/ax\(\{[^}]*\}\)/g) ?? []
-  for (const call of axCalls) {
-    if (/surface:\s*['"]overlay['"]/.test(call) && !/width:\s*['"]/.test(call)) {
-      violations.push(
-        `surface:'overlay'에 width 축 필수 — 오버레이 패널은 가로 크기가 고정이어야 합니다. ax({ surface: 'overlay', width: 'xl' }) 처럼 width를 지정하세요`
-      )
-      break
-    }
-  }
-}
+// 규칙 17: 삭제됨 — surface:'overlay'는 depth ladder 층위일 뿐, width 필수가 아님
+// dialog/panel 컨테이너가 width를 가져야 하는 건 맞지만 overlay surface 전체에 강제할 규칙이 아님
 
 // 규칙 14: CSS 파일에서 ax() 축 소유 속성 사용 금지 — os 내부도 예외 없음
 // module.css든 일반 .css든 last-mile(축에 없는 속성)만 허용
@@ -430,6 +419,68 @@ if (isWidgetFile && /\bdocument\s*\.\s*(?:querySelector(?:All)?|getElementById|g
 if (isWidgetFile && /\brequestAnimationFrame\s*\(/.test(content)) {
   violations.push(
     'widget에서 requestAnimationFrame 금지 — engine 렌더 구독 또는 useEffect를 사용하세요'
+  )
+}
+
+// 규칙 28: recipe 레거시 사용 금지 — role 축 사용
+// container만 잔존 허용, control/item/badge는 role로 이전 완료
+if (isTsx && /\brecipe\s*:\s*['"](?:control|control-sm|control-lg|item|item-sm|badge)['"]/.test(content)) {
+  violations.push(
+    "recipe: 'control'/'item'/'badge' 레거시 금지 — role: 'control' | 'item' | 'badge' 축을 사용하세요. role이 크기(height/font/padding/gap/shape)를 소유합니다"
+  )
+}
+
+// 규칙 30: controlSize 레거시 사용 금지 — role 축으로 대체 완료
+if (isTsx && /\bcontrolSize\s*:/.test(content)) {
+  violations.push(
+    "controlSize 레거시 금지 — role: 'control' 축을 사용하세요. role이 min-height/font-size/padding/gap/shape를 소유합니다"
+  )
+}
+
+// 규칙 29: interactive 요소에 role 미사용 금지
+// ax() 호출 내에 interactive:가 있으면 role:도 있어야 함
+if (isTsx) {
+  const axCalls = content.match(/ax\(\{[^}]+\}\)/g) ?? []
+  for (const call of axCalls) {
+    if (/\binteractive\s*:/.test(call) && !/\brole\s*:/.test(call)) {
+      violations.push(
+        "interactive 축 사용 시 role 축 필수 — role: 'control' (버튼/인풋) 또는 role: 'item' (목록 행)을 함께 선언하세요. role이 크기 일관성을 보장합니다"
+      )
+      break
+    }
+  }
+}
+
+// 규칙 31: pages/에서 <button> + ax() 수동 조합 금지 — Button 컴포넌트 사용
+// 예외: ThemeAxes (축 데모), cmsNodePresentation (CMS 프레젠테이션 레이어)
+const isButtonExempt = filePath.includes('ThemeAxes') || filePath.includes('cmsNodePresentation')
+if (isPages && isTsx && !isButtonExempt && /<button[\s\S]*?className=\{.*?ax\(\{/.test(content)) {
+  violations.push(
+    "<button className={ax({...})}> 수동 조합 금지 — <Button> 컴포넌트를 사용하세요. variant='ghost'|'accent', icon={true}(아이콘 전용). import { Button } from '@os/ui/Button'"
+  )
+}
+
+// 규칙 32: data-checked 중복 상태 채널 금지 — aria-checked가 SSOT
+if (isTsx && /\bdata-checked\s*=\s*\{/.test(content)) {
+  violations.push(
+    'data-checked 금지 — checked 상태는 aria-checked (OS 자동 설정)가 유일한 SSOT입니다. indicator는 prop 없는 순수 시각 마커로, 부모의 aria-checked로 CSS가 제어됩니다'
+  )
+}
+
+// ── 경고 (차단 아님) ──
+const warnings = []
+
+// 경고 W1: pages/에서 .map() + raw <div — ui/ 컴포넌트 사용 검토 권유
+if (isPages && isTsx && /\.map\s*\([\s\S]*?=>\s*[\s\S]*?<div[\s>]/.test(content)) {
+  warnings.push(
+    '.map() + raw <div> 발견 — 반복 렌더링 항목이 인터랙티브하다면 ui/ 컴포넌트(NavList, Badge 등)를 사용하세요. (antipattern 체크리스트 #8 참조)'
+  )
+}
+
+// 경고 출력 (stderr, 차단하지 않음)
+if (warnings.length > 0) {
+  process.stderr.write(
+    `⚠ os 경고 ${warnings.length}건:\n${warnings.map((w, i) => `  ${i + 1}. ${w}`).join('\n')}\n`
   )
 }
 

@@ -58,7 +58,7 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
   const localeBar = (
     <div className={`cms-detail-panel__locale-bar ${ax({ layout: 'bar', flex: 'none', gap: 'xs', padding: 'xs', border: 'bottom' })}`}>
       <select
-        className={`cms-detail-panel__locale ${ax({ surface: 'input', flex: '1', padding: 'xs', textStyle: 'caption', text: 'primary', shape: 'md' })} cursor-pointer min-w-0`}
+        className={`cms-detail-panel__locale ${ax({ role: 'control', surface: 'input', flex: '1', text: 'primary', content: 'text' })} cursor-pointer min-w-0`}
         value={locale}
         onChange={e => onLocaleChange(e.target.value as Locale)}
       >
@@ -192,7 +192,7 @@ function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       <input
         ref={elRef}
-        className={`cms-detail-field__input ${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'md' })} w-full outline-none`}
+        className={`cms-detail-field__input ${ax({ role: 'control', surface: 'input', text: 'primary', content: 'text' })} w-full outline-none`}
         type="text"
         defaultValue={displayValue}
         onFocus={handleFocus}
@@ -251,7 +251,7 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       <input
         ref={elRef}
-        className={`cms-detail-field__input ${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'md' })} w-full outline-none`}
+        className={`cms-detail-field__input ${ax({ role: 'control', surface: 'input', text: 'primary', content: 'text' })} w-full outline-none`}
         type="url"
         defaultValue={displayValue}
         onFocus={handleFocus}
@@ -357,7 +357,7 @@ function IconField({ entry, store, engine, expanded }: DetailFieldProps) {
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       <button
         type="button"
-        className={`cms-icon-field__current ${ax({ surface: 'input', layout: 'bar', gap: 'xs', textStyle: 'body', text: 'secondary', shape: 'md', padding: 'xs' })} cursor-pointer${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
+        className={`cms-icon-field__current ${ax({ role: 'control', surface: 'input', text: 'secondary', content: 'text' })} cursor-pointer${!hasIcon && currentValue ? ' cms-icon-field__current--fallback' : ''}`}
       >
         <CmsIcon name={currentValue} size={16} />
         <span>{currentValue || 'none'}</span>

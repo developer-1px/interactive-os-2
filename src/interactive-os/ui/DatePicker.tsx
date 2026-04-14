@@ -1,6 +1,6 @@
 /** @catalog 날짜 선택 피커 */
 // ② 2026-04-03-command-unification-prd.md
-import React, { useMemo, useCallback, useRef, useEffect } from 'react'
+import React, { useMemo, useCallback, useRef, useEffect, useId } from 'react'
 import { ax } from '@styles/ax'
 import { DirectionIndicator, ExpandIndicator } from './indicators'
 import './DatePicker.css'
@@ -36,6 +36,8 @@ export function DatePicker({
 
   const inputRef = useRef<HTMLInputElement>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
+  const rawId = useId()
+  const anchorName = `--dp-${rawId.replace(/[^a-zA-Z0-9-]/g, '')}`
 
   // year/month are TransformAdapter inputs — they rebuild NormalizedData
   const [yearMonth, setYearMonth] = React.useState({ year: target.getFullYear(), month: target.getMonth() })
@@ -229,7 +231,7 @@ export function DatePicker({
 
   return (
     <div className={`${ax({ placement: 'relative' })} inline-block`}>
-      <div className={`${ax({ layout: 'bar' })} dp-anchor`}>
+      <div className={ax({ role: 'control-group', border: 'strong' })} style={{ anchorName } as React.CSSProperties}>
         <input
           ref={inputRef}
           role="combobox"
@@ -237,7 +239,7 @@ export function DatePicker({
           aria-expanded={isOpen}
           aria-label={ariaLabel}
           aria-autocomplete="none"
-          className={`cursor-default ${ax({ surface: 'input', textStyle: 'body', text: 'primary' })} dp-input`}
+          className={`cursor-default ${ax({ surface: 'input', text: 'primary', content: 'text', flex: '1' })} dp-input`}
           type="text"
           readOnly
           value={value ? formatDate(value) : ''}
@@ -246,7 +248,7 @@ export function DatePicker({
           onKeyDown={(e) => { if (e.key === 'ArrowDown') { e.preventDefault(); openDialog() } }}
         />
         <button
-          className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary', border: 'default' })} dp-trigger`}
+          className={`${ax({ surface: 'ghost', layout: 'center', text: 'secondary' })} dp-trigger`}
           aria-label="Choose Date"
           tabIndex={-1}
           onClick={() => isOpen ? closeDialog() : openDialog()}
@@ -262,7 +264,8 @@ export function DatePicker({
           role="dialog"
           aria-modal="true"
           aria-label="Choose Date"
-          className={`${ax({ surface: 'trap', padding: 'sm', border: 'default', shape: 'sm' })} dp-dialog`}
+          className={`${ax({ surface: 'trap', padding: 'sm', border: 'default', shape: 'sm', placement: 'anchor-below-start' })} dp-dialog`}
+          style={{ positionAnchor: anchorName } as React.CSSProperties}
           onKeyDown={handleDialogKeyDown}
         >
           <div className={`${ax({ layout: 'bar', gap: 'xs' })} dp-nav-bar`}>

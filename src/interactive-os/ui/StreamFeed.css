@@ -8,13 +8,13 @@
 .stream-entry {
   min-width: 0;
   max-width: var(--content-md);
-  margin-inline: auto;
+  place-self: center;
 }
 
 .stream-indicator {
   padding: var(--space-sm) var(--space-md);
   max-width: var(--content-md);
-  margin-inline: auto;
+  place-self: center;
 }
 
 .stream-dot {
@@ -26,8 +26,10 @@
 .stream-fab {
   width: var(--sidebar-item-height);
   height: var(--sidebar-item-height);
+
   --_bg: var(--surface-overlay);
   --_bg-hover: var(--bg-hover);
+
   background: var(--_bg);
   box-shadow: var(--shadow-md);
   transition:
@@ -40,7 +42,7 @@
   width: var(--indicator-width);
   height: var(--icon-sm);
   background: var(--tone-primary-base);
-  margin-left: var(--border-width);
+  padding-inline-start: var(--border-width);
   vertical-align: text-bottom;
 }
 }

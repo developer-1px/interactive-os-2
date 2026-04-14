@@ -33,7 +33,7 @@ export function SidePanel({
       >
         {header && (
           <button
-            className={ax({ role: 'control', surface: 'ghost', textStyle: 'overline', text: 'muted' })}
+            className={ax({ role: 'control', surface: 'ghost', text: 'muted' })}
             onClick={() => setCollapsed(false)}
             aria-expanded={false}
           >

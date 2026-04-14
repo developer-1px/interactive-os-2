@@ -18,7 +18,7 @@ export function Demo() {
   return (
     <div className={ax({ layout: 'row', gap: 'sm' })}>
       <button
-        className={ax({ recipe: 'control', surface: 'action', padding: 'sm', content: 'text', gap: 'sm', shape: 'xs', layout: 'row', clamp: '1' })}
+        className={ax({ role: 'control', surface: 'action', content: 'text', clamp: '1' })}
         onClick={() => {
           const variant = variants[toastCount % 3]
           toastCount++

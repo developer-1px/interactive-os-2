@@ -36,7 +36,7 @@ export function Demo() {
               <div
                 key={id}
                 {...ctx.getNodeProps(id)}
-                className={ax({ recipe: 'item', interactive: 'item', text: state.focused ? 'primary' : 'secondary', padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+                className={ax({ role: 'item', interactive: 'item', content: 'text', text: state.focused ? 'primary' : 'secondary', layout: 'row', width: 'full' })}
               >
                 {(store.entities[id]?.data as Record<string, unknown>)?.label as string}
               </div>

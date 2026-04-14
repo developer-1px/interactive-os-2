@@ -1,9 +1,13 @@
-import { useMemo } from 'react'
-import { Plus, X, Circle, FileText } from 'lucide-react'
+import { useMemo, useCallback } from 'react'
+import { Plus } from 'lucide-react'
 import { ax } from '@styles/ax'
-import { ScrollArea } from '@os/ui/ScrollArea'
+import { Badge } from '@os/ui/Badge'
+import { Button } from '@os/ui/Button'
 import { PanelHeader } from '@os/ui/PanelHeader'
+import { SessionList } from '@os/ui/SessionList'
 import { Workspace } from '@os/ui/Workspace'
+import type { SessionItemOptions } from '@os/ui/items'
+import { createStore, ROOT_ID } from '@os/schema'
 import { useChat } from './chatContext'
 import { createSession, closeSession } from './chatStore'
 import type { ChatSession } from './chatStore'
@@ -32,12 +36,9 @@ function SessionFileList({ session }: { session: ChatSession }) {
   const files = useMemo(() => extractModifiedFiles(session.messages), [session.messages])
   if (files.length === 0) return null
   return (
-    <div className="chat-file-list">
+    <div className={ax({ layout: 'wrap', gap: 'xs' })}>
       {files.map(f => (
-        <div key={f} className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
-          <FileText size={10} />
-          <span className={ax({ clamp: '1' })}>{f.split('/').pop()}</span>
-        </div>
+        <Badge key={f} tone="neutral" variant="outline">{f.split('/').pop()}</Badge>
       ))}
     </div>
   )
@@ -48,42 +49,55 @@ function SessionFileList({ session }: { session: ChatSession }) {
 export function ChatSidebarWidget() {
   const { sessions, activeSessionId, handleSidebarClick } = useChat()
 
+  const navData = useMemo(() => {
+    const entities: Record<string, { id: string; data: { label: string; state: string } }> = {}
+    const rootIds: string[] = []
+    for (const s of sessions) {
+      entities[s.id] = { id: s.id, data: { label: s.id.slice(0, 8), state: s.state } }
+      rootIds.push(s.id)
+    }
+    return createStore({ entities, relationships: { [ROOT_ID]: rootIds } })
+  }, [sessions])
+
+  const sessionMap = useMemo(() => {
+    const map = new Map<string, ChatSession>()
+    for (const s of sessions) map.set(s.id, s)
+    return map
+  }, [sessions])
+
+  const handleActivate = useCallback((nodeId: string) => {
+    handleSidebarClick(nodeId)
+  }, [handleSidebarClick])
+
+  const getItemOptions = useCallback((nodeId: string): SessionItemOptions => {
+    const session = sessionMap.get(nodeId)
+    const data = navData.entities[nodeId]?.data as { state: string } | undefined
+    return {
+      status: data?.state === 'running' ? 'running' : 'idle',
+      onClose: (id) => closeSession(id),
+      footer: session ? <SessionFileList session={session} /> : undefined,
+    }
+  }, [sessionMap, navData])
+
   return (
     <>
       <PanelHeader axes={{ layout: 'spread' }}>
         <span>Sessions</span>
-        <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'sm', icon: 'lg' })} onClick={createSession} aria-label="New session">
+        <Button icon onClick={createSession} aria-label="New session">
           <Plus size={14} />
-        </button>
+        </Button>
       </PanelHeader>
-      <ScrollArea className={ax({ flex: '1', padding: 'xs', gap: 'xs' })}>
-        {sessions.map(s => {
-          const isActive = s.id === activeSessionId
-          return (
-            <div
-              key={s.id}
-              className={`${ax({ surface: isActive ? 'display' : 'ghost', layout: 'stack', gap: 'xs', padding: 'xs', text: isActive ? 'primary' : 'secondary', shape: 'sm' })} chat-session-item`}
-              onClick={(e) => { if (e.defaultPrevented) return; handleSidebarClick(s.id) }}
-            >
-              <div className={ax({ layout: 'bar', gap: 'sm' })}>
-                <Circle size={8} fill="currentColor" className={s.state === 'running' ? ax({ tone: 'success' }) : ax({ text: 'muted' })} />
-                <span className={ax({ flex: '1', clamp: '1' })}>{s.id.slice(0, 8)}</span>
-                <button
-                  className={ax({ surface: 'ghost', layout: 'center' }) + ' ' + 'chat-close-btn'}
-                  onClick={(e) => { e.preventDefault(); closeSession(s.id) }}
-                  aria-label={`Close session ${s.id.slice(0, 8)}`}
-                >
-                  <X size={12} />
-                </button>
-              </div>
-              <SessionFileList session={s} />
-            </div>
-          )
-        })}
-        {sessions.length === 0 && (
-          <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No sessions</div>
-        )}
-      </ScrollArea>
+      {sessions.length === 0 ? (
+        <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No sessions</div>
+      ) : (
+        <SessionList
+          data={navData}
+          onActivate={handleActivate}
+          itemOptions={getItemOptions}
+          initialFocus={activeSessionId ?? undefined}
+          aria-label="Sessions"
+        />
+      )}
     </>
   )
 }
@@ -97,9 +111,9 @@ export function ChatWorkspaceWidget() {
     return (
       <div className={ax({ layout: 'center', flex: '1', gap: 'md', text: 'muted' })}>
         <p>Start a new Claude Code session</p>
-        <button className={ax({ interactive: 'button', controlSize: 'md', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', text: 'primary', border: 'subtle' }) + ' ' + 'chat-start-btn'} onClick={createSession}>
+        <Button variant="dialog" className="chat-start-btn" onClick={createSession}>
           <Plus size={16} /> New Session
-        </button>
+        </Button>
       </div>
     )
   }

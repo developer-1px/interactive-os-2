@@ -7,8 +7,12 @@
 
 /* ── Layout: fixed widths + order ── */
 
-.incident-chat-zone { width: var(--overlay-width); order: 3; }
+.incident-chat-zone {
+  width: var(--overlay-width);
+  order: 3;
+}
 .incident-timeline-panel { width: var(--overlay-width); }
+
 .incident-timeline-panel::after {
   content: '';
   position: absolute;
@@ -25,12 +29,24 @@
 }
 .incident-timeline-item-selected { box-shadow: inset var(--indicator-width) 0 0 var(--tone-primary-base); }
 
-.incident-timeline-time { width: var(--toolbar-height); padding-top: var(--indicator-width); }
-.incident-dot { width: var(--shape-xs-radius); height: var(--shape-xs-radius); }
-.incident-dot-line { width: var(--border-width); min-height: var(--space-md); }
+.incident-timeline-time {
+  width: var(--toolbar-height);
+  padding-top: var(--indicator-width);
+}
+.incident-dot {
+  width: var(--shape-xs-radius);
+  height: var(--shape-xs-radius);
+}
+.incident-dot-line {
+  width: var(--border-width);
+  min-height: var(--space-md);
+}
 .incident-timeline-icon { padding-top: var(--border-width); }
 .incident-cause-arrow { padding-left: var(--switch-height); }
-.incident-cause-icon { width: var(--switch-height); height: var(--switch-height); }
+.incident-cause-icon {
+  width: var(--switch-height);
+  height: var(--switch-height);
+}
 
 /* severity → icon/title color */
 .incident-ev-critical .incident-timeline-icon { color: var(--tone-destructive-base); }
@@ -54,8 +70,14 @@
 
 /* ── Chat ── */
 
-.incident-avatar { width: var(--switch-height); height: var(--switch-height); }
-.incident-user-avatar { width: var(--switch-height); height: var(--switch-height); }
+.incident-avatar {
+  width: var(--switch-height);
+  height: var(--switch-height);
+}
+.incident-user-avatar {
+  width: var(--switch-height);
+  height: var(--switch-height);
+}
 
 /* ── Monitor ── */
 

@@ -1,7 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 // ② component-catalog-prd.md
-import { ax } from '@styles/ax'
-import { CheckIndicator } from './CheckIndicator'
+import { Checkbox } from '../Checkbox'
+import { createStore } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
 
 export const meta = {
   slug: 'check-indicator',
@@ -9,11 +11,14 @@ export const meta = {
   label: 'CheckIndicator',
 }
 
+const data: NormalizedData = createStore({
+  entities: {
+    a: { id: 'a', data: { label: 'Unchecked' } },
+    b: { id: 'b', data: { label: 'Checked' }, checked: true },
+  },
+  relationships: { [ROOT_ID]: ['a', 'b'] },
+})
+
 export function Demo() {
-  return (
-    <div className={ax({ layout: 'row', gap: 'md' })}>
-      <CheckIndicator checked={false} />
-      <CheckIndicator checked />
-    </div>
-  )
+  return <Checkbox data={data} onChange={() => {}} aria-label="Check indicator demo" />
 }

@@ -95,6 +95,13 @@ ARIA OS는 두 청자를 위해 두 개의 면을 가진다.
   - **renderItem에 ARIA props 전달 필수**: UI 컴포넌트가 renderItem을 호출할 때 `getItemProps(id)`의 결과를 첫 번째 인자로 전달해야 함. 빈 `{}`를 넘기면 ARIA 속성(role, aria-selected, tabindex)과 interactive 클래스가 다른 DOM 요소에 분리되어 CSS 매칭 실패.
   - **interactive 축 필수**: 인터랙티브 아이템은 `interactive: 'item'|'tab'|'check'|'cell'|'input'|'button'` 중 하나를 ax()에 선언. `surface: 'ghost'`는 독립 버튼/컨트롤에서만 사용.
 
+## 메모리 거버넌스
+
+- **저장 전 병합 검토**: 새 memory 저장 시 MEMORY.md에서 같은 범주의 기존 항목을 확인하고, 중복이면 기존 파일에 병합한다.
+- **CLAUDE.md 중복 금지**: CLAUDE.md에 이미 있는 규칙은 memory에 별도 저장하지 않는다.
+- **폐기 즉시 삭제**: 설계가 대체되면(v2→v3, Panda→ax 등) 구 memory를 즉시 삭제한다.
+- **MEMORY.md MECE 트리 유지**: 5섹션(User/Reference/Architecture/Features/Principles) + 하위 범주. 새 항목은 적절한 범주에 배치.
+
 ## 테스트 실패 시 원복 정책
 
 1. `bash scripts/activeSessions.sh $SESSION_ID`로 동시 작업 여부 확인

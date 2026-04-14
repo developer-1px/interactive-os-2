@@ -25,17 +25,16 @@ export function TabItem(
     <div
       {...props}
       className={`tab-item ${ax({
-        surface: 'ghost', recipe: 'control-sm', layout: 'bar',
+        surface: 'ghost', role: 'control', layout: 'bar',
         text: state.selected ? 'primary' : 'muted',
-        interactive: 'tab', padding: 'xs', content: 'text',
-        gap: 'xs', shape: 'xs', clamp: '1',
+        interactive: 'tab', content: 'text', clamp: '1',
       })}${preview ? ' tab-item-preview' : ''}`}
     >
       {icon && <span className={ax({ layout: 'center', flex: 'none' })}>{icon}</span>}
       <span>{label}</span>
       {closable && (
         <button
-          className={`tab-close ${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'muted', opacity: 'dim' })}`}
+          className={`tab-close ${ax({ surface: 'ghost', layout: 'center', content: 'icon', text: 'muted', opacity: 'dim' })}`}
           aria-label={`Close ${label}`}
           tabIndex={-1}
           onClick={(e) => {

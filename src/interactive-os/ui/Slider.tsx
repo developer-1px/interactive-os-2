@@ -48,13 +48,13 @@ export function Slider({
     const label = getNodeLabel(item)
 
     return (
-      <div className={`${ax({ recipe: 'item', layout: 'spread', text: state.focused ? 'bright' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', width: 'full' })}`} data-focused={state.focused || undefined}>
-        {label && <span className={`slider-label ${ax({ textStyle: 'body', weight: 'medium', text: 'primary' })}`}>{label}</span>}
+      <div className={`${ax({ role: 'item', content: 'text', layout: 'spread', text: state.focused ? 'bright' : undefined, width: 'full' })}`} data-focused={state.focused || undefined}>
+        {label && <span className={`slider-label ${ax({ weight: 'medium', text: 'primary' })}`}>{label}</span>}
         <div className={`slider-track ${ax({ flex: '1', placement: 'relative' })}`} ref={trackRef} onClick={handleTrackClick}>
           <div className={`slider-fill ${ax({ placement: 'top-start' })}`} style={{ width: `${pct}%`, height: '100%' }} />
           <div className={`slider-thumb outline-none ${ax({ placement: 'top-start', shape: 'pill' })}`} style={{ left: `${pct}%` }} />
         </div>
-        <span className={`slider-value tabular-nums ${ax({ textStyle: 'body', weight: 'medium', text: 'secondary' })}`}>{current}</span>
+        <span className={`slider-value tabular-nums ${ax({ weight: 'medium', text: 'secondary' })}`}>{current}</span>
       </div>
     )
   }

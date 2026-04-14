@@ -2,7 +2,7 @@
 /* CodeBlock — last-mile: shiki integration, line numbers, token highlights */
 
 .code-block :is(.shiki) {
-  margin: 0;
+  padding: 0;
   padding-block: var(--space-lg);
   padding-inline: 0;
   counter-reset: line;

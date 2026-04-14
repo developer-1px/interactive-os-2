@@ -14,8 +14,7 @@
 
 .spread-columns {
   height: 100%;
-  column-count: 2;
-  column-width: var(--_col-width);
+  columns: var(--_col-width) 2;
   column-gap: var(--_col-gap);
   column-fill: balance;
   transform: translateX(calc(-1 * var(--_spread, 0) * (100% + var(--_col-gap))));

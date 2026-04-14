@@ -1,14 +1,7 @@
 @layer component {
-/* Combobox — last-mile */
-.combo-anchor {
-  anchor-name: --combo-anchor;
-}
-
+/* Combobox — last-mile: dropdown offset */
 .combo-dropdown {
-  position-anchor: --combo-anchor;
-  position-area: block-end span-inline-end;
-  position-try-fallbacks: flip-block;
-  margin: 0;
-  margin-top: var(--space-xs);
+  padding: 0;
+  padding-top: var(--space-xs);
 }
 }

@@ -11,6 +11,7 @@ import { workspaceCommands } from '../plugins/workspaceStore'
 import type { TabGroupData } from '../plugins/workspaceStore'
 import { ax } from '@styles/ax'
 import { AddIndicator } from './indicators'
+import { Button } from './Button'
 import { TabItem } from './items'
 import './TabGroup.css'
 
@@ -104,14 +105,15 @@ export function TabGroup({
           })
         })}
         {onAddTab && (
-          <button
-            className={`tab-add ${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'muted', opacity: 'dim' })}`}
+          <Button
+            icon
+            className="tab-add"
             aria-label="Add tab"
             tabIndex={-1}
             onClick={handleAdd}
           >
             <AddIndicator />
-          </button>
+          </Button>
         )}
       </div>
       <div role="tabpanel" className={ax({ layout: 'fill' })}>

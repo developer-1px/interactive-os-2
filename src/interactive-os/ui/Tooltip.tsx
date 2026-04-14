@@ -2,9 +2,22 @@
 import { Children, cloneElement, useId, useRef, useCallback, useEffect } from 'react'
 import { ax } from '@styles/ax'
 import type { ReactElement, ReactNode, CSSProperties } from 'react'
-import './Tooltip.css'
 
 type Placement = 'top' | 'bottom' | 'left' | 'right'
+
+const placementMap = {
+  bottom: 'anchor-below',
+  top: 'anchor-above',
+  right: 'anchor-end',
+  left: 'anchor-start',
+} as const
+
+const offsetStyle: Record<Placement, CSSProperties> = {
+  bottom: { paddingBlockStart: 'var(--space-xs)' },
+  top: { paddingBlockEnd: 'var(--space-xs)' },
+  right: { paddingInlineStart: 'var(--space-xs)' },
+  left: { paddingInlineEnd: 'var(--space-xs)' },
+}
 
 interface TooltipProps {
   content: string
@@ -64,8 +77,13 @@ export function Tooltip({ content, placement = 'bottom', children }: TooltipProp
         id={id}
         popover="hint"
         role="tooltip"
-        className={`tooltip-popover pointer-none tooltip-${placement} ${ax({ surface: 'overlay', placement: 'anchor-below', padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'primary' })}`}
-        style={{ positionAnchor: anchorName } as CSSProperties}
+        className={`pointer-none ${ax({ surface: 'overlay', placement: placementMap[placement], padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'primary', motion: 'fade-slide-in' })}`}
+        style={{
+          positionAnchor: anchorName,
+          maxWidth: 'calc(var(--space-3xl) * 6)',
+          overflowWrap: 'break-word',
+          ...offsetStyle[placement],
+        } as CSSProperties}
       >
         {content}
       </span>

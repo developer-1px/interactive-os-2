@@ -5,25 +5,31 @@
 }
 
 .errorPre {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
   margin: var(--space-xs) 0 var(--space-xs) var(--space-xl);
 }
 
 .groupBlock {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
   margin-bottom: 8px;
 }
 
 .renderArea {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
   margin-bottom: 16px;
 }
 
 .summaryBar {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
   margin-bottom: 12px;
 }
 
 .failCount {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
   margin-left: 12px;
 }
 
 .totalCount {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
   margin-left: 12px;
 }

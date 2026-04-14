@@ -11,6 +11,7 @@ import { A2UIBlock } from '@os/ui/chat/A2UIBlock'
 import { sendMessage, clearSession, interruptSession, useChatSession } from './chatStore'
 import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
 import { ax } from '@styles/ax'
+import { Button } from '@os/ui/Button'
 import './PageAgentChat.css'
 
 const chatRenderers: BlockRendererMap = {
@@ -195,11 +196,11 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
               onTextChange={handleTextChange}
             />
             {isRunning && (
-              <button className={ax({ surface: 'ghost', layout: 'center', controlSize: 'md', tone: 'danger' })} onClick={handleInterrupt} aria-label="Stop">
+              <Button icon tone="danger" onClick={handleInterrupt} aria-label="Stop">
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
                   <rect width="10" height="10" rx="2" />
                 </svg>
-              </button>
+              </Button>
             )}
           </div>
           <div className={ax({ layout: 'bar', gap: 'md', textStyle: 'caption', text: 'muted' }) + ' tabular-nums chat-status-bar'}>

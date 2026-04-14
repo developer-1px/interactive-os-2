@@ -5,7 +5,7 @@
   min-height: calc(var(--leading-snug) * 1em + var(--shape-sm-py) * 2);
   padding: var(--space-sm) var(--space-md);
   line-height: var(--leading-snug);
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .composer-editor[data-overlay] {
@@ -22,11 +22,11 @@
 .composer-overlay {
   padding: var(--space-sm) var(--space-md);
   line-height: var(--leading-snug);
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .composer-suggestion-list {
-  margin: 0;
+  padding: 0;
   list-style: none;
   max-height: calc(var(--type-body-size) * var(--leading-snug) * 8 + var(--space-xs) * 2);
   z-index: 1;

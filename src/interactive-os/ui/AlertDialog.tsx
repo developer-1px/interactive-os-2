@@ -17,11 +17,11 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     <div
       {...props}
       className={ax({
-        recipe: 'control',
+        role: 'control',
         surface: isDanger ? 'action' : 'ghost',
         tone: isDanger ? 'danger' : 'neutral',
         text: state.focused ? 'primary' : 'secondary',
-        padding: 'sm', content: 'text', gap: 'sm', shape: 'xs', layout: 'row', clamp: '1',
+        content: 'text', clamp: '1',
       })}
       data-focused={state.focused || undefined}
     >

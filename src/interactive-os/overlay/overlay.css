@@ -13,11 +13,9 @@
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-xl-radius);
-
   max-width: var(--overlay-width);
   max-height: 85dvh;
   overflow-y: auto;
-
   opacity: 0;
   transform: translateY(8px);
   transition:
@@ -34,17 +32,15 @@
 
 .overlay-popup {
   position: fixed;
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- popover reset requires margin:0 */
   margin: 0;
   padding: 0;
-
   background: var(--surface-overlay);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-subtle);
   border-radius: var(--shape-lg-radius);
-
   max-height: 70dvh;
   overflow-y: auto;
-
   opacity: 0;
   transform: translateY(4px);
   transition:
@@ -66,10 +62,3 @@
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
 }
 
-/* ── Safari anchor fallback ── */
-
-@supports not (anchor-name: --x) {
-  .overlay-anchored {
-    position: fixed;
-  }
-}

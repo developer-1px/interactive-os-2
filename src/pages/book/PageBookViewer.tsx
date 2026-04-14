@@ -12,6 +12,7 @@ import { buildBook, buildTocStore, type BookPage, type Chapter } from './bookCon
 import { BookProvider, type BookContextValue } from './bookContext'
 import {
   addRecent,
+  getRecent,
   toggleFavorite,
   isFavorite,
   buildQuickOpenStore,
@@ -43,17 +44,16 @@ export function loader() {
 
 const baseLayout = definePage({
   entities: {
-    root:             { data: { type: 'stack' as const, gap: 'md' as const }, children: ['reader', 'pill-float', 'footer-float', 'progress-float', 'nav'] },
+    root:             { data: { type: 'stack' as const, gap: 'md' as const }, children: ['reader', 'pill-float', 'nav-float', 'progress'] },
     reader:           { data: { type: 'widget' as const, widget: 'BookReader' } },
     'pill-float':     { data: { type: 'floating' as const, anchor: 'float-top-start' as const }, children: ['pill'] },
     pill:             { data: { type: 'widget' as const, widget: 'BookPill' } },
-    'footer-float':   { data: { type: 'floating' as const, anchor: 'float-bottom-center' as const }, children: ['footer'] },
-    footer:           { data: { type: 'widget' as const, widget: 'BookFooter' } },
-    'progress-float': { data: { type: 'floating' as const, anchor: 'float-bottom' as const }, children: ['progress'] },
-    progress:         { data: { type: 'widget' as const, widget: 'BookProgress' } },
-    nav:              { data: { type: 'bar' as const, justify: 'between' as const }, children: ['prev-btn', 'next-btn'] },
+    'nav-float':      { data: { type: 'floating' as const, anchor: 'float-bottom' as const }, children: ['nav'] },
+    nav:              { data: { type: 'bar' as const, justify: 'between' as const, padding: 'lg' as const }, children: ['prev-btn', 'footer', 'next-btn'] },
     'prev-btn':       { data: { type: 'widget' as const, widget: 'BookPrevButton' } },
+    footer:           { data: { type: 'widget' as const, widget: 'BookFooter' } },
     'next-btn':       { data: { type: 'widget' as const, widget: 'BookNextButton' } },
+    progress:         { data: { type: 'widget' as const, widget: 'BookProgress' } },
     'toc-overlay':    { data: { type: 'overlay' as const, overlayType: 'modal' as const, visible: false }, children: ['toc-content'] },
     'toc-content':    { data: { type: 'widget' as const, widget: 'BookTocOverlay' } },
     'quick-open':     { data: { type: 'overlay' as const, overlayType: 'modal' as const, visible: false }, children: ['qo-content'] },
@@ -90,10 +90,24 @@ export default function PageBookViewer() {
     return map
   }, [pages])
 
-  // ── URL → page index ──
+  // ── URL → page index (auto-resume: redirect to last read page) ──
   const slug = location.pathname.replace('/book', '').replace(/^\//, '')
-  const currentPage = slug ? (pageIndexById.get(slug) ?? 0) : 0
+  const resolvedSlug = slug || (() => {
+    const recent = getRecent()
+    for (const id of recent) {
+      if (pageIndexById.has(id)) return id
+    }
+    return ''
+  })()
+  const currentPage = resolvedSlug ? (pageIndexById.get(resolvedSlug) ?? 0) : 0
   const page = pages[currentPage]
+
+  // ── Auto-resume: update URL if resolved from recent ──
+  useEffect(() => {
+    if (!slug && resolvedSlug && page) {
+      navigate(`/book/${page.id}`, { replace: true })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Track recent on page change ──
   useEffect(() => {
@@ -108,7 +122,7 @@ export default function PageBookViewer() {
 
   // ── Quick Open store ──
   const pageInfos = useMemo(
-    () => pages.map(p => ({ id: p.id, title: p.title, chapter: p.chapter })),
+    () => pages.map(p => ({ id: p.id, title: p.title, chapter: p.chapter, content: p.content })),
     [pages],
   )
   const quickOpenStore = useMemo(
@@ -286,6 +300,12 @@ export default function PageBookViewer() {
   const isLastSpread = spread >= totalSpreads - 1 && currentPage === pages.length - 1
   const progressPercent = ((currentPage + 1) / pages.length) * 100
 
+  // ── Chapter position ──
+  const currentChapter = page ? chapters[page.chapterIndex] : undefined
+  const chapterName = currentChapter?.label ?? ''
+  const chapterPageIndex = currentChapter ? currentPage - (pageIndexById.get(currentChapter.pages[0].id) ?? 0) : 0
+  const chapterPageCount = currentChapter?.pages.length ?? 1
+
   // ── FlatLayout data: static baseLayout + overlay visibility flips only ──
   // ② flatlayout-pull-transition-prd.md — widget props는 BookContext pull로 이동
   const layoutData = useMemo(() => {
@@ -317,6 +337,9 @@ export default function PageBookViewer() {
     onOpenQuickOpen: openQuickOpen,
     layerCount: getLayers().length,
     progressPercent,
+    chapterName,
+    chapterPageIndex,
+    chapterPageCount,
     isFirstSpread,
     isLastSpread,
     prevPage,

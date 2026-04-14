@@ -11,10 +11,10 @@ import { FilePreview } from '@os/ui/FilePreview'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { showcaseMdConfig } from '../showcase/mdConfig'
 import { TabList } from '@os/ui/TabList'
+import { NavList } from '@os/ui/NavList'
 import { ax } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
-import { createStore } from '@os/store/createStore'
-import { ROOT_ID } from '@os/store/types'
+import { createStore, ROOT_ID } from '@os/schema'
 import { urlSync, getInitialTabFromUrl } from '@os/plugins/urlSync'
 import { ALL_PROJECTS, buildPipelineStore, getCellPreview, loadMarkdown } from './pipelineStore'
 import type { PreviewContent } from './pipelineStore'
@@ -57,15 +57,20 @@ function SummaryPreview({ title, body }: { title: string; body: string }) {
 }
 
 function FileListPreview({ title, files }: { title: string; files: { label: string; path: string }[] }) {
+  const listData = useMemo(() => {
+    const entities: Record<string, { id: string; data: { label: string; description: string } }> = {}
+    const rootIds: string[] = []
+    for (const f of files) {
+      entities[f.path] = { id: f.path, data: { label: f.label, description: f.path } }
+      rootIds.push(f.path)
+    }
+    return createStore({ entities, relationships: { [ROOT_ID]: rootIds } })
+  }, [files])
+
   return (
     <div className={ax({ layout: 'column', gap: 'sm', padding: 'md' })}>
       <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{title}</span>
-      {files.map((f) => (
-        <div key={f.path} className={ax({ layout: 'column', gap: 'xs' })}>
-          <span className={ax({ textStyle: 'body', tone: 'accent' })}>{f.label}</span>
-          <span className={ax({ textStyle: 'caption', text: 'muted' })}>{f.path}</span>
-        </div>
-      ))}
+      <NavList data={listData} aria-label={title} />
     </div>
   )
 }

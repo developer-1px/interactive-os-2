@@ -34,7 +34,7 @@ export function TierCell({ text, tier, subtitle, thumbnail }: TierCellProps) {
           {text}
         </span>
         {subtitle && (
-          <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>
+          <span className={ax({ text: 'muted', clamp: '1' })}>
             {subtitle}
           </span>
         )}

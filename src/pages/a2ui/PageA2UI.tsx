@@ -1,6 +1,7 @@
 // @useState-hatch
 import { useState, useMemo, useRef, useCallback } from 'react'
 import { ax } from '@styles/ax'
+import { Button } from '@os/ui/Button'
 import { A2UISurface } from '@os/ui/A2UISurface'
 import type { A2UIPayload } from '@os/ui/a2uiAdapter'
 import { categories } from './a2uiPresets'
@@ -131,57 +132,38 @@ export default function PageA2UI() {
       {/* Category tabs */}
       <div className={ax({ layout: 'row', gap: 'xs', flex: 'none' })}>
         {categories.map((c, i) => (
-          <button
+          <Button
             key={c.label}
             onClick={() => selectCategory(i)}
-            className={ax({
-              interactive: 'tab',
-              layout: 'row',
-              text: 'muted',
-              surface: i === catIndex ? 'action' : 'ghost',
-              controlSize: 'sm',
-              padding: 'sm',
-              content: 'text',
-              tone: i === catIndex ? 'accent' : undefined,
-            })}
+            variant={i === catIndex ? 'accent' : 'ghost'}
+            tone={i === catIndex ? 'accent' : undefined}
           >
             {c.label}
-          </button>
+          </Button>
         ))}
       </div>
 
       {/* Preset selector within category + stream button */}
       <div className={ax({ layout: 'row', gap: 'sm', flex: 'none' })}>
         {presetNames.map((name) => (
-          <button
+          <Button
             key={name}
             onClick={() => selectPreset(name)}
-            className={ax({
-              surface: name === presetKey ? 'action' : 'ghost',
-              controlSize: 'sm',
-              padding: 'sm',
-              content: 'text',
-              tone: name === presetKey ? 'accent-dim' : undefined,
-            })}
+            variant={name === presetKey ? 'accent' : 'ghost'}
+            tone={name === presetKey ? 'accent-dim' : undefined}
           >
             {name}
-          </button>
+          </Button>
         ))}
         <span className={ax({ flex: '1' })} />
         {streaming ? (
-          <button
-            onClick={stopStream}
-            className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone: 'danger' })}
-          >
+          <Button variant="destructive" onClick={stopStream}>
             Stop ({progress}%)
-          </button>
+          </Button>
         ) : (
-          <button
-            onClick={simulateStream}
-            className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone: 'accent' })}
-          >
+          <Button variant="accent" onClick={simulateStream}>
             Simulate Stream
-          </button>
+          </Button>
         )}
       </div>
 

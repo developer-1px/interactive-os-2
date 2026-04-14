@@ -7,20 +7,23 @@
   width: 100vw;
   height: 100vh;
 }
+
 .fvm-dialog::backdrop {
   background: var(--dialog-backdrop);
 }
+
 .fvm-modal {
-  margin: auto;
+  place-self: center;
   width: 85vw;
   max-width: var(--content-xl);
   height: 85vh;
   box-shadow: var(--shadow-lg);
 }
+
 .fvm-meta-sep {
   width: var(--border-width);
   height: var(--shape-md-radius);
   background: var(--border-default);
-  margin: 0 var(--space-inline-code);
+  padding-inline: var(--space-inline-code);
 }
 }

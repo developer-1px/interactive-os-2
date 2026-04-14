@@ -119,9 +119,9 @@ export function Spinbutton({
     }
 
     return (
-      <div className={ax({ layout: 'bar', gap: 'md', text: state.focused ? 'bright' : undefined })} data-focused={state.focused || undefined}>
-        {itemLabel && <span className={ax({ textStyle: 'body', weight: 'medium', text: 'primary' })}>{itemLabel}</span>}
-        <div className={`spinbutton-group outline-none ${ax({ layout: 'bar', border: 'default', shape: 'md' })}`} data-invalid={invalid || undefined}>
+      <div className={ax({ role: 'item', layout: 'bar', text: state.focused ? 'bright' : undefined })} data-focused={state.focused || undefined}>
+        {itemLabel && <span className={ax({ weight: 'medium', text: 'primary' })}>{itemLabel}</span>}
+        <div className={`spinbutton-group outline-none ${ax({ role: 'control-group', border: 'strong' })}`} data-invalid={invalid || undefined}>
           <button
             type="button"
             className={`spinbutton-btn spinbutton-btn-dec select-none ${ax({ role: 'control', surface: 'ghost', content: 'icon', text: 'primary' })}`}
@@ -135,7 +135,7 @@ export function Spinbutton({
           {editing ? (
             <input
               ref={inputRef}
-              className={`spinbutton-input bg-transparent tabular-nums ${ax({ textStyle: 'body', weight: 'semi', text: 'primary' })}`}
+              className={`spinbutton-input bg-transparent tabular-nums ${ax({ weight: 'semi', text: 'primary' })}`}
               type="text"
               inputMode="numeric"
               value={editValue}
@@ -146,7 +146,7 @@ export function Spinbutton({
             />
           ) : (
             <div
-              className={`spinbutton-value tabular-nums ${ax({ layout: 'center', textStyle: 'body', weight: 'semi', text: 'primary' })}`}
+              className={`spinbutton-value tabular-nums ${ax({ layout: 'center', weight: 'semi', text: 'primary' })}`}
               onClick={startEditing}
               onDoubleClick={startEditing}
             >

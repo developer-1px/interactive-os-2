@@ -1,19 +1,14 @@
 // ② 2026-03-28-ui-indicators-prd.md
 import { ax } from '@styles/ax'
 
-interface RadioIndicatorProps {
-  checked?: boolean
-  className?: string
-}
-
-export function RadioIndicator({ checked, className }: RadioIndicatorProps) {
+export function RadioIndicator({ className }: { className?: string }) {
   const classes = [
-    ax({ flex: 'none', layout: 'center', icon: 'md', border: 'subtle', shape: 'pill' }),
+    ax({ flex: 'none', layout: 'center', border: 'strong', shape: 'pill' }),
     'item-indicator--radio',
     className,
   ].filter(Boolean).join(' ')
   return (
-    <span className={classes} data-checked={checked || undefined}>
+    <span className={classes}>
       <span className="item-indicator--radio-dot" />
     </span>
   )

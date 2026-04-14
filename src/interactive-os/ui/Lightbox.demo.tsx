@@ -13,7 +13,7 @@ function Trigger() {
   const { open } = useLightbox()
   return (
     <button
-      className={ax({ interactive: 'button', surface: 'ghost', padding: 'sm', shape: 'sm' })}
+      className={ax({ role: 'control', interactive: 'button', surface: 'ghost' })}
       onClick={() => open({ type: 'svg', html: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="oklch(0.7 0.15 250)"/></svg>', alt: 'Blue circle' })}
     >
       Open Lightbox

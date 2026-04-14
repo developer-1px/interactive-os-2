@@ -1,6 +1,7 @@
 // @useState-hatch
 import { useState } from 'react'
 import { ax } from '@styles/ax'
+import { Button } from '@os/ui/Button'
 import { z } from 'zod'
 import { createStore, updateEntityData } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -121,7 +122,7 @@ export default function FormDemo() {
               value={value}
               onChange={(e) => handleChange(id, e.target.value)}
               placeholder={`Enter ${label.toLowerCase()}...`}
-              className={ax({ surface: 'input', controlSize: 'md', shape: 'sm', tone: showError ? 'danger' : undefined })}
+              className={ax({ role: 'control', surface: 'input', content: 'text', tone: showError ? 'danger' : undefined })}
             />
             {showError && (
               <span
@@ -136,18 +137,12 @@ export default function FormDemo() {
       })}
 
       <div className={ax({ layout: 'bar', gap: 'sm' })}>
-        <button
-          onClick={handleSubmit}
-          className={ax({ surface: 'action', controlSize: 'md', shape: 'sm', tone: 'accent', content: 'text' })}
-        >
+        <Button variant="accent" onClick={handleSubmit}>
           Submit
-        </button>
-        <button
-          onClick={handleReset}
-          className={ax({ surface: 'ghost', controlSize: 'md', shape: 'sm', content: 'text' })}
-        >
+        </Button>
+        <Button onClick={handleReset}>
           Reset
-        </button>
+        </Button>
         {submitted && (
           <span className={ax({ textStyle: 'caption', tone: 'success' })}>
             Submitted successfully

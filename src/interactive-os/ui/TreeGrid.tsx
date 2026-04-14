@@ -126,7 +126,7 @@ function TreeGridColumns({
 
     return (
       <div
-        className="grid-row"
+        className={`grid-row ${ax({ role: 'item' })}`}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
         {...props}
@@ -154,7 +154,7 @@ function TreeGridColumns({
       {header && (
         <div className={`grid-header ${ax({ surface: 'sunken', border: 'bottom' })}`}>
           {columns.map((col, i) => (
-            <div key={col.key} className={`grid-header-cell ${ax({ padding: 'md', textStyle: 'overline', text: 'secondary' })}${i < columns.length - 1 ? ` ${ax({ border: 'end' })}` : ''}`}>{col.header}</div>
+            <div key={col.key} className={`grid-header-cell ${ax({ role: 'item', textStyle: 'overline', text: 'secondary', content: 'text' })}${i < columns.length - 1 ? ` ${ax({ border: 'end' })}` : ''}`}>{col.header}</div>
           ))}
         </div>
       )}

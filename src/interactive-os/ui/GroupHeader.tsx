@@ -14,16 +14,16 @@ interface GroupHeaderProps {
 export function GroupHeader({ icon, label, count, expanded, onToggle }: GroupHeaderProps) {
   return (
     <div
-      className={ax({ recipe: 'item-sm', interactive: 'item', layout: 'bar', padding: 'xs', gap: 'sm', shape: '2xs', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'bar', width: 'full' })}
       onClick={onToggle}
     >
       {expanded !== undefined && (
         <ExpandIndicator expanded={expanded} />
       )}
       {icon}
-      <span className={ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}>{label}</span>
+      <span className={ax({ weight: 'semi', text: 'muted' })}>{label}</span>
       {count !== undefined && (
-        <span className={`ml-auto ${ax({ flex: 'none', textStyle: 'caption', text: 'muted' })}`}>{count}</span>
+        <span className={`ml-auto ${ax({ flex: 'none', text: 'muted' })}`}>{count}</span>
       )}
     </div>
   )

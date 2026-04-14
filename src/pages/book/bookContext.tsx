@@ -32,6 +32,9 @@ export interface BookContextValue {
 
   // ── Progress ──
   progressPercent: number
+  chapterName: string
+  chapterPageIndex: number
+  chapterPageCount: number
 
   // ── Prev / Next buttons ──
   isFirstSpread: boolean

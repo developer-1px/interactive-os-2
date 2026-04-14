@@ -40,7 +40,7 @@ function ThemePanel() {
       <div className={ax({ layout: 'spread' })}>
         <span className={ax({ textStyle: 'body', text: 'secondary' })}>Appearance</span>
         <button
-          className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone: 'neutral', shape: 'xl' })}
+          className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'neutral' })}
           onClick={toggle}
         >
           {theme === 'dark' ? <><Moon size={12} /> Dark</> : <><Sun size={12} /> Light</>}

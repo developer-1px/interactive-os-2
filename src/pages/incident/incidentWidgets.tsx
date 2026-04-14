@@ -174,7 +174,7 @@ function AgentMessage({ msg, active }: { msg: Msg; active: boolean }) {
   const { displayed, done } = useTypewriter(msg.text, active)
   return (
     <div className={ax({ layout: 'bar', gap: 'sm' })}>
-      <div className={ax({ layout: 'center', tone: 'accent', controlSize: 'sm' })}><Bot size={14} /></div>
+      <div className={ax({ role: 'control', layout: 'center', tone: 'accent' })}><Bot size={14} /></div>
       <div className={ax({ layout: 'column', flex: '1', gap: 'sm' })}>
         <div className={ax({ textStyle: 'caption', text: 'primary' })}>{displayed}{!done && <StreamCursor />}</div>
         {done && msg.block && <msg.block />}
@@ -188,7 +188,7 @@ function chatRenderItem(msg: Msg) {
     return (
       <div className={ax({ layout: 'bar', gap: 'sm' })}>
         <div className={ax({ flex: '1' })}><div className={ax({ textStyle: 'caption', weight: 'medium' })}>{msg.text}</div></div>
-        <div className={ax({ layout: 'center', controlSize: 'sm' })}><User size={14} /></div>
+        <div className={ax({ role: 'control', layout: 'center' })}><User size={14} /></div>
       </div>
     )
   }

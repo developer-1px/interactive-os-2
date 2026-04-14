@@ -49,9 +49,9 @@ export function WriterItem(
 
   if (type === 'document') {
     return (
-      <div {...props} className={ax({ recipe: 'item-sm', interactive: 'item', surface, padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} style={depthStyle}>
+      <div {...props} className={ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{data?.path as string || 'Untitled'}</span>
+        <span className={ax({ text: 'muted' })}>{data?.path as string || 'Untitled'}</span>
       </div>
     )
   }
@@ -59,7 +59,7 @@ export function WriterItem(
   if (type === 'heading' && level) {
     const marginCls = level === 1 ? 'writer-heading-l1' : 'writer-heading'
     return (
-      <div {...props} className={`${ax({ recipe: 'item-sm', interactive: 'item', surface, padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
+      <div {...props} className={`${ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
         <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ textStyle: headingStyle[level - 1], text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       </div>
@@ -69,45 +69,45 @@ export function WriterItem(
   if (type === 'paragraph') {
     const marginCls = 'writer-paragraph'
     return (
-      <div {...props} className={`${ax({ recipe: 'item-sm', interactive: 'item', surface, padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
+      <div {...props} className={`${ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>¶{state.index + 1}</span>
+        <span className={ax({ text: 'muted' })}>¶{state.index + 1}</span>
       </div>
     )
   }
 
   if (type === 'list') {
     return (
-      <div {...props} className={ax({ recipe: 'item-sm', interactive: 'item', surface, padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} style={depthStyle}>
+      <div {...props} className={ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{(data?.ordered as boolean) ? 'ol' : 'ul'}</span>
+        <span className={ax({ text: 'muted' })}>{(data?.ordered as boolean) ? 'ol' : 'ul'}</span>
       </div>
     )
   }
 
   if (type === 'listItem') {
     return (
-      <div {...props} className={ax({ recipe: 'item-sm', interactive: 'item', surface, padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} style={depthStyle}>
+      <div {...props} className={ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator hasChildren={false} />
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
-        <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+        <span className={ax({ text: 'muted' })}>{state.index + 1}</span>
+        <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       </div>
     )
   }
 
   if (type === 'hr') {
-    return <div {...props} className={`${ax({ recipe: 'item-sm', interactive: 'item', surface, padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} writer-hr`} style={depthStyle} />
+    return <div {...props} className={`${ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} writer-hr`} style={depthStyle} />
   }
 
   // sentence (default)
   const role = data?.role as SentenceRole | undefined
   return (
-    <div {...props} className={ax({ recipe: 'item-sm', interactive: 'item', surface, padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })} style={depthStyle}>
+    <div {...props} className={ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} style={depthStyle}>
       <ExpandIndicator hasChildren={false} />
-      <span className={ax({ textStyle: 'caption', text: 'muted' })}>{state.index + 1}</span>
-      <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
+      <span className={ax({ text: 'muted' })}>{state.index + 1}</span>
+      <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       {role && (
-        <span className={`${ax({ textStyle: 'caption', tone: roleTone[role] })} ml-auto`}>
+        <span className={`${ax({ tone: roleTone[role] })} ml-auto`}>
           {roleLabel[role]}
         </span>
       )}

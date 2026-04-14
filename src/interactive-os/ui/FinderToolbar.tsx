@@ -53,7 +53,7 @@ export function FinderToolbar({ viewMode, onViewModeChange, onSearchClick }: Fin
   }, [onViewModeChange, onSearchClick])
 
   return (
-    <div className={`finder-toolbar ${ax({ placement: 'sticky', surface: 'display', padding: 'xs' })}`}>
+    <div className={`finder-toolbar ${ax({ placement: 'sticky', surface: 'display', padding: 'xs', border: 'bottom' })}`}>
       <Toolbar
         data={data}
         onActivate={handleActivate}

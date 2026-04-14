@@ -4,10 +4,12 @@
   white-space: nowrap;
 }
 .tab-item-preview { font-style: italic; }
+
 .tab-close {
   padding: var(--space-2xs);
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);
 }
+
 .tab-add {
   padding: var(--space-2xs);
   transition: opacity var(--motion-instant-duration) var(--motion-instant-easing);

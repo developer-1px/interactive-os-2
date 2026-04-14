@@ -51,7 +51,7 @@ export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
     <section className={ax({ surface: 'sunken', shape: 'md', layout: 'stack', gap: 'xs', padding: 'md' })}>
       {entries.map(([key, value]) => (
         <div key={key} className={ax({ layout: 'row', gap: 'md' })}>
-          <span className={`${styles.label} ${ax({ textStyle: 'caption', text: 'muted' })}`}>
+          <span className={`${styles.label} ${ax({ textStyle: 'caption', text: 'muted', flex: 'none' })}`}>
             {key}
           </span>
           <div className={ax({ flex: '1' })}>{renderValue(key, value)}</div>

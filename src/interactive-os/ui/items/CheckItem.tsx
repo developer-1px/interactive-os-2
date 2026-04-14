@@ -12,15 +12,14 @@ export function CheckItem(
 ): React.ReactElement {
   const label = getNodeLabel(node)
   const isMixed = state.checked === 'mixed'
-  const isChecked = state.checked === true
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item', interactive: 'check', padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'check', layout: 'row', width: 'full' })}
       data-focused={state.focused || undefined}
     >
-      {isMixed ? <IndeterminateIndicator /> : <CheckIndicator checked={isChecked} />}
-      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
+      {isMixed ? <IndeterminateIndicator /> : <CheckIndicator />}
+      <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
 }

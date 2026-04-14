@@ -1,5 +1,6 @@
 /** @catalog 토글 버튼 그룹 */
 import type { AriaComponentProps } from './types'
+import { ax } from '@styles/ax'
 import { Aria } from '../primitives/aria'
 import { toolbar } from '../pattern/roles/toolbar'
 import { ToggleItem } from './items'
@@ -18,13 +19,15 @@ export function ToggleGroup({
   orientation: _orientation = 'horizontal',
 }: ToggleGroupProps) {
   return (
-    <Aria
-      pattern={toggleGroupPattern}
-      data={data}
-      plugins={plugins}
-      onChange={onChange}
-    >
-      <Aria.Item render={renderItem} />
-    </Aria>
+    <div className={ax({ layout: 'row', border: 'strong', shape: 'sm', scroll: 'hidden' })}>
+      <Aria
+        pattern={toggleGroupPattern}
+        data={data}
+        plugins={plugins}
+        onChange={onChange}
+      >
+        <Aria.Item render={renderItem} />
+      </Aria>
+    </div>
   )
 }

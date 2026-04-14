@@ -1,5 +1,0 @@
-@layer component {
-  /* Toaster — variant border */
-  .toast-item[data-variant='success'] { border-color: var(--tone-success-base); }
-  .toast-item[data-variant='error'] { border-color: var(--tone-destructive-base); }
-}

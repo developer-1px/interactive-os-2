@@ -9,7 +9,7 @@ import type { WidgetRegistry } from '@os/layout/widgetRegistry'
 import { resolveWidget } from '@os/layout/widgetRegistry'
 import { layout } from '@os/layout/layoutPlugin'
 import type { SplitNode, StackNode, BarNode, OverlayNode, WidgetNode, GridNode, NavNode, SectionNode, FloatingNode } from '@os/layout/flatLayout'
-import { ax } from '@styles/ax'
+import { ax, type Axes } from '@styles/ax'
 import styles from './FlatLayout.module.css'
 import { NavLayoutContext } from './NavLayoutContext'
 import { SplitPane } from './SplitPane'
@@ -54,7 +54,7 @@ function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode,
           {renderNode(navId, 'nav')}
         </div>
         <div
-          className={`${styles.splitPane} ${styles.navContent}`}
+          className={`${styles.splitPane} ${styles.navContent} ${ax({ padding: 'md' })}`}
           style={{ '--split-flex': '1', '--split-basis': 'auto' } as React.CSSProperties}
         >
           {contentIds[activeIndex] ? renderNode(contentIds[activeIndex], 'nav') : null}
@@ -86,12 +86,10 @@ function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
               key={childId}
               className={ax({
                 interactive: 'tab',
-                recipe: 'item',
+                role: 'item',
+                content: 'text',
                 surface: i === activeTab ? 'display' : 'ghost',
                 text: i === activeTab ? 'primary' : 'secondary',
-                padding: 'sm',
-                gap: 'sm',
-                shape: 'sm',
                 layout: 'row',
                 width: 'full',
               })}
@@ -119,7 +117,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     // ② flatlayout-resizable-split-prd.md — resizable: false → 고정 비율
     if (node.resizable === false) {
       return (
-        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full', scroll: 'hidden', surface })}>
+        <div ref={refCallback(nodeId)} className={ax({ layout: isHorizontal ? 'row' : 'column', width: 'full', flex: '1', scroll: 'hidden', surface })}>
           {childIds.map((childId, i) => {
             const size = node.sizes[i]
             const isFlex = size === 'flex' || size === undefined
@@ -160,7 +158,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     const childIds = getChildren(store, nodeId)
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', gap: node.gap ?? 'md', width: 'full', surface, ...(node.padding ? { padding: node.padding } : {}) })}>
+      <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', gap: node.gap ?? 'md', width: 'full', flex: '1', scroll: 'hidden', surface, ...(node.padding ? { padding: node.padding } : {}) })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'stack')}</React.Fragment>
         ))}
@@ -203,14 +201,15 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     if (!node || !node.visible) return null
     const childIds = getChildren(store, nodeId)
 
-    const placementMap: Record<string, 'center' | 'anchor-below'> = {
+    const defaultPlacement: Record<string, string> = {
       modal: 'center',
       popup: 'anchor-below',
       hint: 'anchor-below',
     }
+    const pl = (node.placement ?? defaultPlacement[node.overlayType] ?? 'center') as Axes['placement']
 
     return (
-      <div ref={refCallback(nodeId)} className={ax({ placement: placementMap[node.overlayType] ?? 'center', surface })}>
+      <div ref={refCallback(nodeId)} className={ax({ placement: pl, surface })}>
         {childIds.map((childId) => (
           <React.Fragment key={childId}>{renderNode(childId, 'overlay')}</React.Fragment>
         ))}
@@ -278,7 +277,7 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
-  widget: ({ nodeId, store, parentType, registry, refCallback, renderNode }) => {
+  widget: ({ nodeId, store, surface, parentType, registry, refCallback, renderNode }) => {
     const node = getEntityData<WidgetNode>(store, nodeId)
     if (!node) return null
     const Component = resolveWidget(registry, node.widget)
@@ -297,10 +296,10 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
       : undefined
 
     const isSplitChild = parentType === 'split' || parentType === 'nav'
-    const fillSlot = isSplitChild || parentType === 'tab'
+    const fillSlot = isSplitChild || parentType === 'tab' || (node as Record<string, unknown>).fill
 
     return (
-      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', ...(fillSlot ? { layout: 'fill' } : { scroll: 'hidden' }) })} ${isSplitChild ? styles.splitChild : ''}`}>
+      <div ref={refCallback(nodeId)} className={`${ax({ width: 'full', surface, ...(fillSlot ? { layout: 'fill' } : { scroll: 'hidden' }) })} ${isSplitChild ? styles.splitChild : ''}`}>
         <Component {...(node.props ?? {})} source={node.source}>{children}</Component>
       </div>
     )

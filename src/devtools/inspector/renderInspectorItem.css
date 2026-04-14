@@ -2,9 +2,11 @@
 .inspector-item {
   padding-left: calc(var(--space-sm) + var(--_indent, 0px));
 }
+
 .inspector-item[data-focused] {
   outline: 1.5px solid var(--focus);
 }
+
 .inspector-item-type {
   color: var(--_type-color, inherit);
 }

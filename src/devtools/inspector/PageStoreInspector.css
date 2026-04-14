@@ -13,33 +13,33 @@
 .store-inspector-panel-label {
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
-  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-sm);
 }
 
 .store-inspector-log-chevron {
-  margin-right: var(--space-xs);
+  padding-right: var(--space-xs);
   vertical-align: middle;
 }
 
 /* Expanded log details */
 .store-inspector-log-expanded {
-  margin-bottom: var(--space-xs);
+  padding-bottom: var(--space-xs);
 }
 
 .store-inspector-log-batch-children {
-  margin-bottom: var(--space-xs);
+  padding-bottom: var(--space-xs);
 }
 
 .store-inspector-log-diff {
-  margin-bottom: var(--space-xs);
+  padding-bottom: var(--space-xs);
 }
 
 .store-inspector-log-store-btn {
-  margin-bottom: var(--space-xs);
+  padding-bottom: var(--space-xs);
 }
 
 /* Store snapshot */
 .store-inspector-log-snapshot {
   border-left: 2px solid var(--border);
-  margin-bottom: var(--space-xs);
+  padding-bottom: var(--space-xs);
 }

@@ -14,11 +14,11 @@ export function RadioItem(
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item', interactive: 'check', text: state.checked ? 'primary' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'check', text: state.checked ? 'primary' : undefined, layout: 'row', width: 'full' })}
       data-focused={state.focused || undefined}
     >
       <RadioIndicator />
-      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
+      <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
     </div>
   )
 }

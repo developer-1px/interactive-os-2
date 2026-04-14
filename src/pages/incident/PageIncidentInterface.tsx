@@ -154,7 +154,7 @@ function MonitoringBar({ services, onActivate }: {
     return (
       <span
         {...props}
-        className={ax({ surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', textStyle: 'caption', state: state.focused ? 'focused' : undefined })}
+        className={ax({ role: 'control', surface: 'ghost', content: 'text', layout: 'bar', state: state.focused ? 'focused' : undefined })}
       >
         <span className={`incident-indicator ${STATUS_CLS[svc.status]}`} />
         <span className={ax({ weight: 'medium' })}>{svc.name}</span>

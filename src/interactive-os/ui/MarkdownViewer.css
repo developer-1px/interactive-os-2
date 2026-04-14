@@ -1,5 +1,7 @@
 @layer component {
-/* Markdown prose — all rules are last-mile (prose typography rhythm) */
+/* Markdown prose — all rules are last-mile (prose typography rhythm)
+   stylelint margin exceptions: .markdown is flow layout (not flex/grid),
+   so vertical rhythm between block elements requires margin-block. */
 
 .markdown {
   font-size: var(--type-prose-size);
@@ -10,6 +12,7 @@
 }
 
 .markdown > *:first-child {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin-top: 0;
 }
 
@@ -20,6 +23,7 @@
   line-height: var(--type-hero-line-height);
   letter-spacing: var(--type-hero-letter-spacing);
   color: var(--text-bright);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 1.2em 0 0.4em;
   padding-bottom: 0.2em;
   border-bottom: var(--border-width) solid var(--border-subtle);
@@ -32,6 +36,7 @@
   line-height: var(--type-display-line-height);
   letter-spacing: var(--type-display-letter-spacing);
   color: var(--text-bright);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 1.4em 0 0.35em;
   padding-bottom: 0.15em;
   border-bottom: var(--border-width) solid var(--border-subtle);
@@ -44,6 +49,7 @@
   line-height: var(--type-page-line-height);
   letter-spacing: var(--type-page-letter-spacing);
   color: var(--text-bright);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 1.1em 0 0.3em;
 }
 
@@ -54,10 +60,12 @@
   line-height: var(--type-section-line-height);
   letter-spacing: var(--type-section-letter-spacing);
   color: var(--text-secondary);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 1.2em 0 0.3em;
 }
 
 .markdown p {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 0.8em 0;
 }
 
@@ -70,12 +78,12 @@
 
 .markdown pre {
   background: var(--surface-raised);
-  padding: 0.15em 0.35em;
   border: none;
   border-radius: var(--shape-lg-radius);
   padding: var(--shape-lg-py) var(--shape-lg-px);
   white-space: pre-wrap;
   overflow-wrap: break-word;
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 1.5em 0;
 }
 
@@ -95,20 +103,24 @@
 
 .markdown ul,
 .markdown ol {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 0.6em 0;
   padding-left: 1.6em;
 }
 
 .markdown > ul > li,
 .markdown > ol > li {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 0.4em 0;
 }
 
 .markdown li {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 0.25em 0;
 }
 
 .markdown li > p {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 0.3em 0;
 }
 
@@ -116,10 +128,12 @@
 .markdown ol ol,
 .markdown ul ol,
 .markdown ol ul {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 0.15em 0;
 }
 
 .markdown blockquote {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 1.2em 0;
   padding: var(--shape-lg-py) var(--shape-lg-px);
   background: var(--surface-sunken);
@@ -128,10 +142,12 @@
 }
 
 .markdown blockquote > *:first-child {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin-top: 0;
 }
 
 .markdown blockquote > *:last-child {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin-bottom: 0;
 }
 
@@ -139,6 +155,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 1.2em 0;
   overflow-wrap: break-word;
   font-size: var(--type-body-size);
@@ -193,6 +210,7 @@
 .markdown hr {
   border: none;
   border-top: var(--border-width) solid var(--border-subtle);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout prose rhythm */
   margin: 2em 0;
 }
 
@@ -202,6 +220,7 @@
 }
 
 .markdown input[type="checkbox"] {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- checkbox inline spacing */
   margin-right: 0.4em;
   vertical-align: middle;
 }

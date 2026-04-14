@@ -22,7 +22,7 @@ function FilePathLink({ path, children }: { path: string; children: React.ReactN
   const open = () => window.dispatchEvent(new CustomEvent('inspector:open-source', { detail: { fileName: path } }))
   return (
     <span
-      className={ax({ text: 'muted', clamp: '1', shape: 'sm', interactive: 'button' })}
+      className={ax({ role: 'control', text: 'muted', clamp: '1', interactive: 'button' })}
       role="button"
       tabIndex={0}
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); open() }}

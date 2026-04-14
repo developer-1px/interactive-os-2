@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react'
 import { ax } from '@styles/ax'
 import { Button } from '@os/ui/Button'
 import { RemoteSearch } from '@os/ui/RemoteSearch'
-import { CheckIndicator } from '@os/ui/indicators/CheckIndicator'
 import { HelpCircle } from 'lucide-react'
 import { I18nGrid } from '../../entities/i18n/ui/I18nGrid'
 import { I18N_COLUMNS } from '../cms/cmsI18nTransform'
@@ -59,10 +58,8 @@ export function I18nMissingWidget() {
   return (
     <Button
       variant={missingOnly ? 'accent' : 'ghost'}
-      size="sm"
       onClick={() => setMissingOnly(v => !v)}
     >
-      <CheckIndicator checked={missingOnly} />
       Missing only
     </Button>
   )
@@ -75,7 +72,7 @@ export function I18nHelpWidget() {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <Button variant="ghost" size="sm" onClick={() => setOpen(v => !v)} aria-label="Keyboard shortcuts">
+      <Button variant="ghost" onClick={() => setOpen(v => !v)} aria-label="Keyboard shortcuts">
         <HelpCircle size={14} />
       </Button>
       {open && (

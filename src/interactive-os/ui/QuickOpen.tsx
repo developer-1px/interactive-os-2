@@ -205,7 +205,7 @@ function QuickOpenManaged({
           key={childId}
           id={childId}
           {...(nodeProps as React.HTMLAttributes<HTMLDivElement>)}
-          className={`cursor-default ${ax({ interactive: 'item', recipe: 'item', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}`}
+          className={`cursor-default ${ax({ interactive: 'item', role: 'item', content: 'text', text: state.focused ? 'bright' : 'primary', state: state.focused ? 'focused' : undefined, layout: 'row', width: 'full' })}`}
           onClick={() => {
             aria.dispatch(createBatchCommand([
               selectionCommands.select(childId),
@@ -223,7 +223,7 @@ function QuickOpenManaged({
       <div className={ax({ layout: 'bar', gap: 'md', padding: 'lg', border: 'bottom' })}>
         <Search size={16} className={ax({ text: 'muted', flex: 'none' })} />
         <input
-          className={`quick-open-input border-none outline-none ${ax({ recipe: 'control', flex: '1', padding: 'sm', content: 'text', gap: 'sm', shape: 'xs', layout: 'row', clamp: '1' })}`}
+          className={`quick-open-input border-none outline-none ${ax({ role: 'control', flex: '1', content: 'text', clamp: '1' })}`}
           type="text"
           placeholder={placeholder}
           value={query}
@@ -252,7 +252,7 @@ function QuickOpenManaged({
               const groupChildren = getChildren(store, id)
               return (
                 <div key={id} role="group" aria-label={getLabel(entity)}>
-                  <div className={ax({ textStyle: 'overline', text: 'muted', padding: 'sm', content: 'text' })}>{getLabel(entity)}</div>
+                  <div className={ax({ role: 'item', textStyle: 'overline', text: 'muted', content: 'text' })}>{getLabel(entity)}</div>
                   {renderItems(groupChildren)}
                 </div>
               )
@@ -322,8 +322,8 @@ function QuickOpenFile({ fileStore, root, onSelect, onClose, persistKey }: FileM
               <FileIcon name={fileData.name} type="file" />
             </span>
             <span className={`quick-open-item-text ${ax({ layout: 'column', flex: '1' })}`}>
-              <span className={ax({ textStyle: 'body', clamp: '1', weight: 'medium' })}>{fileData.name}</span>
-              <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
+              <span className={ax({ clamp: '1', weight: 'medium' })}>{fileData.name}</span>
+              <span className={ax({ text: 'muted', clamp: '1' })}>{fileData.relativePath}</span>
             </span>
           </>
         )

@@ -1,6 +1,6 @@
 ---
-last_commit: e8bef92b43e7764e5762588d7ca16b3e810ac3fa
-last_updated: 2026-03-29
+last_commit: e450367a9e3d171998935cf095948af3719f5bcb
+last_updated: 2026-04-14
 ---
 
 ## Verbs
@@ -65,6 +65,7 @@ last_updated: 2026-03-29
 | event | 1 | label | eventLabel |
 | rel | 1 | derive | relPath |
 | split | 1 | transform | splitInputMap |
+| build | 1 | derive | buildFileConflictMap |
 | checked | 1 | axis factory | checked |
 | selected | 1 | axis factory | selected |
 | expanded | 1 | axis factory | expanded |
@@ -208,6 +209,7 @@ last_updated: 2026-03-29
 | node | item (component layer) | node = store/data layer, item = component API (Aria.Item) |
 | compose | merge | composeMiddlewares (function composition), mergeProps/mergeKeyMaps (object merge) |
 | make | create | make = fixture/demo data factory, create = runtime instance factory |
+| build | create | build = derived lookup structure (1회, pages/replay), create = runtime instance |
 | load/save | get/set | load/save = localStorage I/O, get/set = in-memory state |
 | cursor | focus | cursor=보관된 이전 위치, focus=현재 활성 노드 |
 | collect | get | collect = 배열 순회/병합, get = 단건 조회 |

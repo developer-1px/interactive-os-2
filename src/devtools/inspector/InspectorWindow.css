@@ -48,5 +48,5 @@
   font-family: var(--mono);
   word-break: break-all;
   border-left: var(--indicator-width) solid var(--border-default);
-  margin-left: var(--space-sm);
+  padding-left: var(--space-sm);
 }

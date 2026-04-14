@@ -1,5 +1,0 @@
-@layer component {
-  /* CalendarGrid — state styling */
-  .calendar-day[data-outside] { color: var(--text-muted); }
-  /* data-focused/data-selected removed: recipe 'control-sm' handles state via state layer */
-}

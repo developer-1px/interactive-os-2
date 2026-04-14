@@ -13,9 +13,9 @@ export function Demo() {
   return (
     <div className={ax({ layout: 'stack', gap: 'md', placement: 'relative' })}>
       <SubmenuPanel label="File" expanded placement="root" anchorName="--demo-anchor">
-        <div className={ax({ recipe: 'item-sm', interactive: 'item', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}>New File</div>
-        <div className={ax({ recipe: 'item-sm', interactive: 'item', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}>Open</div>
-        <div className={ax({ recipe: 'item-sm', interactive: 'item', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}>Save</div>
+        <div className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}>New File</div>
+        <div className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}>Open</div>
+        <div className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}>Save</div>
       </SubmenuPanel>
       <SubmenuPanel label="Hidden" expanded={false} placement="root" anchorName="--demo-anchor-2">
         <div>Should not render</div>

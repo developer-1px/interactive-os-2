@@ -96,23 +96,17 @@ export function ThemeComponents() {
           {(['accent', 'danger', 'success', 'warning', 'neutral'] as const).map(tone => (
             <div key={tone} className={ax({ layout: 'bar', gap: 'sm' })}>
               <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{tone}</span>
-              <Button variant="accent" tone={tone} size="sm">{tone}</Button>
-              <Button variant="accent" tone={tone} size="default">{tone}</Button>
-              <Button variant="accent" tone={tone} size="lg">{tone}</Button>
-              <Button variant="accent" tone={tone} size="default" disabled>disabled</Button>
+              <Button variant="accent" tone={tone}>{tone}</Button>
+              <Button variant="accent" tone={tone} disabled>disabled</Button>
             </div>
           ))}
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>ghost</span>
-            <Button variant="ghost" size="sm">ghost sm</Button>
-            <Button variant="ghost" size="default">ghost md</Button>
-            <Button variant="ghost" size="lg">ghost lg</Button>
+            <Button variant="ghost">ghost</Button>
           </div>
           <div className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>dialog</span>
-            <Button variant="dialog" size="sm">cancel</Button>
-            <Button variant="dialog" size="default">cancel</Button>
-            <Button variant="dialog" size="lg">cancel</Button>
+            <Button variant="dialog">cancel</Button>
           </div>
         </div>
       </Section>
@@ -132,7 +126,7 @@ export function ThemeComponents() {
               </div>
               <div className={ax({ layout: 'bar', gap: 'sm' })}>
                 <TextInput placeholder="Search..." className={ax({ flex: '1' })} />
-                <Button variant="accent" size="default">Search</Button>
+                <Button variant="accent">Search</Button>
               </div>
             </div>
           </Section>
@@ -199,12 +193,12 @@ export function ThemeComponents() {
           <Section title="CHIPS">
             <div className={ax({ layout: 'row', gap: 'xs' })}>
               {(['accent', 'danger', 'success', 'warning', 'neutral'] as const).map(tone => (
-                <Button key={tone} variant="accent" tone={tone} size="sm">{tone}</Button>
+                <Button key={tone} variant="accent" tone={tone}>{tone}</Button>
               ))}
             </div>
             <div className={ax({ layout: 'row', gap: 'xs' })}>
               {(['accent-dim', 'danger-dim', 'success-dim', 'warning-dim', 'neutral-dim'] as const).map(tone => (
-                <Button key={tone} variant="accent" tone={tone} size="sm">{tone.replace('-dim', '')}</Button>
+                <Button key={tone} variant="accent" tone={tone}>{tone.replace('-dim', '')}</Button>
               ))}
             </div>
           </Section>
@@ -215,7 +209,7 @@ export function ThemeComponents() {
       <div className="theme-page-grid">
         <Section title="AVATAR">
           <div className={ax({ layout: 'bar', gap: 'md' })}>
-            <Avatar name="Alice Brown" size="sm" />
+            <Avatar name="Alice Brown" />
             <Avatar name="Bob Carter" size="md" />
             <Avatar name="Dana Kim" size="lg" />
             <Avatar name="Single" size="md" />

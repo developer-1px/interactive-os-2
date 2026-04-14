@@ -23,7 +23,7 @@ const defaultRenderItem = (
     const labelId = `group-label-${item.id}`
     return (
       <ul {...props} aria-labelledby={labelId}>
-        <li role="presentation" id={labelId} className={ax({ textStyle: 'overline', text: 'muted', padding: 'sm' })}>
+        <li role="presentation" id={labelId} className={ax({ role: 'item', textStyle: 'overline', text: 'muted', content: 'text' })}>
           {label}
         </li>
         {children}

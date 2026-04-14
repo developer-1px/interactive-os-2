@@ -1,4 +1,5 @@
 import { ax } from '@styles/ax'
+import { Button } from '@os/ui/Button'
 import './PageIncidentInterface.css'
 import {
   GitCommit, Server, Database,
@@ -59,7 +60,7 @@ export function BlockSimilar() {
     <div className={ax({ surface: 'display', padding: 'sm', shape: 'sm', layout: 'column', gap: 'sm' })}>
       <div className={ax({ layout: 'bar', gap: 'sm' })}>
         <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'accent' })}>INC-847</span>
-        <span className={ax({ textStyle: 'caption', weight: 'semi', tone: 'success', surface: 'ghost', controlSize: 'sm', padding: 'sm', content: 'text' })}>92%</span>
+        <span className={ax({ role: 'badge', tone: 'success', surface: 'ghost', content: 'text' })}>92%</span>
         <span className={ax({ textStyle: 'caption', text: 'muted' })}>2주 전</span>
       </div>
       <div className={ax({ textStyle: 'caption', text: 'secondary' })}>동일: DB pool exhaustion after config change</div>
@@ -96,10 +97,10 @@ export function BlockBlast() {
 export function BlockActions() {
   return (
     <div className={ax({ layout: 'row', gap: 'sm', padding: 'xs' })}>
-      <button className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', tone: 'accent', layout: 'bar', gap: 'xs', textStyle: 'caption', weight: 'medium' })}><RotateCcw size={14} />Revert PR #3421<kbd className={ax({ textStyle: 'code' })}>1</kbd></button>
-      <button className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', textStyle: 'caption', weight: 'medium' })}><Play size={14} />Rollback v2.14.2<kbd className={ax({ textStyle: 'code' })}>2</kbd></button>
-      <button className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', textStyle: 'caption', weight: 'medium' })}><Terminal size={14} />Scale pool → 200<kbd className={ax({ textStyle: 'code' })}>3</kbd></button>
-      <button className={ax({ surface: 'action', controlSize: 'sm', padding: 'sm', content: 'text', layout: 'bar', gap: 'xs', textStyle: 'caption', weight: 'medium' })}><ArrowRight size={14} />Runbook<kbd className={ax({ textStyle: 'code' })}>4</kbd></button>
+      <Button variant="accent"><RotateCcw size={14} />Revert PR #3421<kbd className={ax({ textStyle: 'code' })}>1</kbd></Button>
+      <Button variant="accent" tone="neutral"><Play size={14} />Rollback v2.14.2<kbd className={ax({ textStyle: 'code' })}>2</kbd></Button>
+      <Button variant="accent" tone="neutral"><Terminal size={14} />Scale pool → 200<kbd className={ax({ textStyle: 'code' })}>3</kbd></Button>
+      <Button variant="accent" tone="neutral"><ArrowRight size={14} />Runbook<kbd className={ax({ textStyle: 'code' })}>4</kbd></Button>
     </div>
   )
 }

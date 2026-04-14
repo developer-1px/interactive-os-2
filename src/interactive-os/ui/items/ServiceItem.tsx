@@ -30,12 +30,11 @@ export function ServiceItem(
     <span
       {...props}
       className={ax({
-        recipe: 'control-sm',
+        role: 'control',
         interactive: 'button',
         layout: 'bar',
-        gap: 'xs',
         state: state.focused ? 'focused' : state.selected ? 'selected' : undefined,
-        padding: 'xs', content: 'text', shape: 'xs', clamp: '1',
+        content: 'text', clamp: '1',
       })}
     >
       {status && <StatusIndicator tone={STATUS_TONE[status]} />}

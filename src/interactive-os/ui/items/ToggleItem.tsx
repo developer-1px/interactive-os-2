@@ -3,7 +3,6 @@ import type React from 'react'
 import type { NodeState } from '../../pattern/types'
 import { getNodeLabel } from '../types'
 import { ax } from '@styles/ax'
-import { CheckIndicator } from '../indicators'
 
 export function ToggleItem(
   props: React.HTMLAttributes<HTMLElement>,
@@ -11,15 +10,24 @@ export function ToggleItem(
   state: NodeState,
 ): React.ReactElement {
   const label = getNodeLabel(node)
+  const pressed = state.selected
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item', interactive: 'check', padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+      className={ax({
+        role: 'control',
+        interactive: 'check',
+        surface: pressed ? 'action' : 'ghost',
+        tone: pressed ? 'accent-dim' : undefined,
+        layout: 'center',
+        content: 'text',
+        text: pressed ? 'bright' : 'secondary',
+        weight: 'semi',
+      })}
       data-focused={state.focused || undefined}
-      data-selected={state.selected || undefined}
+      data-selected={pressed || undefined}
     >
-      <CheckIndicator checked={state.selected} />
-      <span className={ax({ textStyle: 'body', text: 'primary' })}>{label}</span>
+      {label}
     </div>
   )
 }

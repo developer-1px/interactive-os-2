@@ -176,6 +176,14 @@ function AriaEditable({ field, placeholder, selection = 'all', allowEmpty = fals
       onBlur={confirm}
       data-renaming=""
       data-placeholder={placeholder}
+      style={{
+        outline: 'var(--border-width) solid var(--focus)',
+        outlineOffset: 'calc(var(--space-xs) / 2)',
+        borderRadius: 'var(--shape-xs-radius)',
+        paddingBlock: 0,
+        paddingInline: 'calc(var(--space-xs) / 2)',
+        minWidth: 'var(--space-3xl)',
+      }}
     >
       {children}
     </span>

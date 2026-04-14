@@ -251,6 +251,9 @@
      allows var()-valued ax-owned properties). */
   --pos-absolute: absolute;
   --pos-relative: relative;
+  --indicator-icon: 1em;
+  --indicator-icon-lg: 1.2em;
+  --indicator-box: 1.25em;
   --indicator-hairline: 1px;
   --indicator-active-rail-offset: -4px;
   --indicator-active-rail-width: 3px;

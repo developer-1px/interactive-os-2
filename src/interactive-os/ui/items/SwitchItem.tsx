@@ -14,10 +14,10 @@ export function SwitchItem(
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item', interactive: 'check', layout: 'spread', text: state.checked ? 'primary' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'check', layout: 'spread', text: state.checked ? 'primary' : undefined, width: 'full' })}
       data-focused={state.focused || undefined}
     >
-      <span className={ax({ textStyle: 'body', text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
+      <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
       <SwitchIndicator />
     </div>
   )

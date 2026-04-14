@@ -110,7 +110,7 @@ export function MillerColumns({
               key={itemId}
               focused={state.focused}
               {...propsObj}
-              className={`${(props as Record<string, string>).className ?? ''} ${ax({ recipe: 'item-sm', layout: 'bar', gap: 'xs', interactive: 'item', padding: 'xs', shape: '2xs', width: 'full' })}`}
+              className={`${(props as Record<string, string>).className ?? ''} ${ax({ role: 'item', layout: 'bar', interactive: 'item', width: 'full' })}`}
             >
               <FileIcon name={label} type={hasChildren ? 'directory' : 'file'} />
               <span className={ax({ clamp: '1', flex: '1' })}>{label}</span>

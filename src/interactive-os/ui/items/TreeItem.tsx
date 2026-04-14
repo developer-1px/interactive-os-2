@@ -23,12 +23,12 @@ export function TreeItem(
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item-sm', interactive: 'item', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'item', layout: 'row', width: 'full' })}
       style={{ paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }}
     >
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
       {options?.icon && <span className={ax({ layout: 'center', flex: 'none' })}>{options.icon}</span>}
-      <span className={ax({ textStyle: 'caption', text: state.focused ? 'primary' : 'secondary', clamp: '1', flex: '1' })}>{label}</span>
+      <span className={ax({ text: state.focused ? 'primary' : 'secondary', clamp: '1', flex: '1' })}>{label}</span>
       {options?.rightContent && <span className={ax({ flex: 'none' })}>{options.rightContent}</span>}
     </div>
   )

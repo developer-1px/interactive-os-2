@@ -62,7 +62,7 @@ const baseLayout = definePage({
     main:      { data: { type: 'split', direction: 'horizontal', sizes: ['flex', 0.35], resizable: false }, children: ['tree-area', 'preview'] },
     'tree-area': { data: { type: 'widget', widget: 'ViewerTreeGrid', hidden: false } },
     preview:   { data: { type: 'widget', widget: 'ViewerPreview', hidden: false } },
-    miller:    { data: { type: 'widget', widget: 'ViewerMiller', hidden: true } },
+    miller:    { data: { type: 'widget', widget: 'ViewerMiller', hidden: true, fill: true } },
   },
 })
 

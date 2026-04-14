@@ -6,25 +6,17 @@
 // ── 시각 축 ──
 
 type Surface = 'action' | 'input' | 'display' | 'overlay' | 'trap' | 'ghost' | 'placeholder' | 'sunken' | 'base' | 'raised'
+// controlSize: 레거시 — role 축으로 대체 완료. 잔존 사용처 확인 후 삭제 예정.
 type ControlSize = 'sm' | 'md' | 'lg'
 type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code' | 'overline'
 type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
   | 'accent-dim' | 'danger-dim' | 'success-dim' | 'warning-dim' | 'neutral-dim'
 type Text = 'bright' | 'primary' | 'secondary' | 'muted'
-// shape: 비-컨트롤 요소의 border-radius (컨트롤은 controlSize가 소유)
+// shape: 비-role 요소의 border-radius (role 축이 소유하는 요소에서는 role이 shape 결정)
 type Shape = 'none' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
 
-// recipe: 크기 정체성 프리셋 (min-height + font-size + font-weight)
-// 구조(padding/gap/shape/layout)는 각 컴포넌트가 명시적 축으로 선언
-// control: 버튼, 인풋, 셀렉트 등 조작 요소
-// item: 리스트/메뉴/탭/사이드바 아이템
-// container: 카드, 다이얼로그, 패널 (의미적 마커)
-// badge: 배지, 태그
-type Recipe =
-  | 'control' | 'control-sm' | 'control-lg'
-  | 'item' | 'item-sm'
-  | 'container' | 'container-sm'
-  | 'badge'
+// recipe: 레거시 크기 프리셋 — role 축으로 이전 중. container만 잔존.
+type Recipe = 'container' | 'container-sm'
 
 // weight: textStyle weight와 독립적인 오버라이드
 type Weight = 'medium' | 'semi' | 'bold'
@@ -66,8 +58,11 @@ type Placement =
   | 'top-end'       // absolute + top:0 + inset-inline-end:0 (copy button)
   | 'viewport'      // fixed + inset:0 (modal backdrop)
   | 'sticky'        // sticky + top:0 + z-index:1 (pinned header)
-  | 'anchor-below'  // fixed + position-area:block-end + flip-block (anchor 아래)
-  | 'anchor-end'    // fixed + position-area:inline-end + flip-inline (anchor 오른쪽)
+  | 'anchor-below'       // fixed + position-area:block-end span-inline-end + flip-block (anchor 아래-끝)
+  | 'anchor-below-start' // fixed + position-area:block-end span-inline-start + flip-block (anchor 아래-시작)
+  | 'anchor-above'       // fixed + position-area:block-start span-all + flip-block (anchor 위)
+  | 'anchor-end'         // fixed + position-area:inline-end span-all + flip-inline (anchor 오른쪽)
+  | 'anchor-start'       // fixed + position-area:inline-start span-all + flip-inline (anchor 왼쪽)
   | 'relative'      // position:relative (자식 absolute 기준점)
   | 'float-top-start'     // fixed + top:md + inset-inline-start:md (floating pill)
   | 'float-top-center'    // fixed + top:md + left:50% + translateX(-50%) (floating bar)
@@ -107,7 +102,7 @@ type Icon = 'xs' | 'sm' | 'md' | 'lg'
 // square: 정사각 크기 (width + height) — 비-SVG 요소용 (avatar, dot, swatch 등)
 type Square = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 // role: 요소의 의미적 역할
-type Role = 'control'  // 후속: 'item' | 'badge' | 'card' | 'container'
+type Role = 'control' | 'control-group' | 'item' | 'badge'
 // size: role의 크기급
 type RoleSize = 'md'  // 후속: 'xs' | 'sm' | 'lg'
 // aspect: 종횡비
@@ -194,10 +189,10 @@ const prefixes: Record<keyof AxesAll, string> = {
  *
  * @example
  * // 텍스트 버튼: padding + content:'text'로 2:1 inline 비율
- * ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: 'accent' })
+ * ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })
  *
- * // 아이콘 버튼: cs의 min-width=min-height로 정사각
- * ax({ surface: 'ghost', controlSize: 'md', layout: 'center' })
+ * // 아이콘 버튼: role:'control'의 min-height로 정사각
+ * ax({ role: 'control', surface: 'ghost', layout: 'center' })
  *
  * // 툴바: bar = flex row + align:center
  * ax({ layout: 'bar', gap: 'sm' })

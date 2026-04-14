@@ -33,8 +33,8 @@ function SurfaceAxis() {
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
-            <div className={ax({ surface: v, controlSize: 'md', padding: 'sm', content: 'text', shape: v === 'action' ? undefined : 'md', flex: '1' })}>
-              <span className={ax({ textStyle: 'body', text: 'primary' })}>surface: '{v}'</span>
+            <div className={ax({ surface: v, role: 'control', content: 'text', flex: '1' })}>
+              <span className={ax({ text: 'primary' })}>surface: '{v}'</span>
             </div>
           </div>
         ))}
@@ -43,16 +43,16 @@ function SurfaceAxis() {
   )
 }
 
-function ControlSizeAxis() {
-  const values = ['sm', 'md', 'lg'] as const
+function RoleAxis() {
+  const values = ['control', 'item', 'badge'] as const
   return (
-    <Section title="CONTROL SIZE">
+    <Section title="ROLE">
       <div className={ax({ layout: 'column', gap: 'sm' })}>
         {values.map(v => (
           <div key={v} className={ax({ layout: 'bar', gap: 'sm' })}>
             <span className={`${ax({ textStyle: 'code', text: 'muted' })} theme-btn-label`}>{v}</span>
-            <button className={ax({ surface: 'action', controlSize: v, padding: 'sm', content: 'text', tone: 'neutral' })}>
-              controlSize: '{v}'
+            <button className={ax({ role: v, surface: 'action', content: 'text', tone: 'neutral' })}>
+              role: '{v}'
             </button>
           </div>
         ))}
@@ -85,7 +85,7 @@ function ToneAxis() {
         <div className={ax({ layout: 'row', gap: 'sm' })}>
           {values.map(v => (
             <AxisRow key={v} label={v}>
-              <button className={ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: v })}>{v}</button>
+              <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: v })}>{v}</button>
             </AxisRow>
           ))}
         </div>
@@ -94,7 +94,7 @@ function ToneAxis() {
             const dim = `${v}-dim` as Axes['tone']
             return (
               <AxisRow key={v} label={`${v}-dim`}>
-                <button className={ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: dim })}>{v}</button>
+                <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: dim })}>{v}</button>
               </AxisRow>
             )
           })}
@@ -168,14 +168,14 @@ function OpacityAxis() {
     <Section title="OPACITY">
       <div className={ax({ layout: 'row', gap: 'sm' })}>
         <AxisRow label="(none)">
-          <div className={ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: 'accent' })}>
-            <span className={ax({ textStyle: 'body' })}>default</span>
+          <div className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })}>
+            <span>default</span>
           </div>
         </AxisRow>
         {values.map(v => (
           <AxisRow key={v} label={v}>
-            <div className={ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: 'accent', opacity: v })}>
-              <span className={ax({ textStyle: 'body' })}>{v}</span>
+            <div className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent', opacity: v })}>
+              <span>{v}</span>
             </div>
           </AxisRow>
         ))}
@@ -221,10 +221,10 @@ function ContentAxis() {
     <Section title="CONTENT">
       <div className={ax({ layout: 'row', gap: 'sm' })}>
         <AxisRow label="(none)">
-          <button className={ax({ surface: 'action', controlSize: 'md', padding: 'sm', tone: 'neutral' })}>1:1 ratio</button>
+          <button className={ax({ role: 'control', surface: 'action', tone: 'neutral' })}>1:1 ratio</button>
         </AxisRow>
         <AxisRow label="text">
-          <button className={ax({ surface: 'action', controlSize: 'md', padding: 'sm', content: 'text', tone: 'neutral' })}>2:1 ratio</button>
+          <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'neutral' })}>2:1 ratio</button>
         </AxisRow>
       </div>
     </Section>
@@ -440,7 +440,7 @@ export function ThemeAxes() {
         <div className="theme-composed-grid">
           <div className={ax({ layout: 'column', gap: 'md' })}>
             <SurfaceAxis />
-            <ControlSizeAxis />
+            <RoleAxis />
             <ToneAxis />
             <TextAxis />
             <WeightAxis />

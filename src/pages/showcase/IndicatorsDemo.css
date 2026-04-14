@@ -2,6 +2,7 @@
 
 .indicators-section-title {
   padding-bottom: var(--space-xs);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- reset browser default */
   margin: 0;
 }
 

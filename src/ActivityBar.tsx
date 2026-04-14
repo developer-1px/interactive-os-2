@@ -99,7 +99,7 @@ const renderNavItem = (props: HTMLAttributes<HTMLElement>, node: Record<string, 
   const Icon = nav.icon
   return (
     <Tooltip content={nav.label} placement="right">
-      <div {...props} className={ax({ surface: state.focused ? 'display' : 'ghost', layout: 'center', controlSize: 'md', shape: 'xl', text: state.focused ? 'bright' : 'muted' })}>
+      <div {...props} className={ax({ role: 'control', surface: state.focused ? 'display' : 'ghost', layout: 'center', content: 'icon', text: state.focused ? 'bright' : 'muted' })}>
         {state.focused && <span className="item-indicator--active-rail" />}
         <Icon className={ax({ icon: 'sm' })} />
       </div>
@@ -154,7 +154,7 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
 
   return (
     <nav className={ax({ layout: 'scroll', padding: 'xs' })}>
-      <div className={ax({ layout: 'center', controlSize: 'md' })}>
+      <div className={ax({ role: 'control', layout: 'center' })}>
         <div className="logo-mark" />
       </div>
       <Aria
@@ -174,7 +174,7 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
             const ThemeIcon = theme === 'dark' ? Sun : Moon
             return (
               <Tooltip content={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} placement="right">
-                <div {...props} className={ax({ surface: state.focused ? 'display' : 'ghost', layout: 'center', controlSize: 'md', shape: 'xl', text: state.focused ? 'bright' : 'muted' })}>
+                <div {...props} className={ax({ role: 'control', surface: state.focused ? 'display' : 'ghost', layout: 'center', content: 'icon', text: state.focused ? 'bright' : 'muted' })}>
                   {state.focused && <span className="item-indicator--active-rail" />}
                   <ThemeIcon className={ax({ icon: 'sm' })} />
                 </div>

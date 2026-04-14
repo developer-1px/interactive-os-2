@@ -15,6 +15,7 @@ import type { TimelineEvent } from '../viewer/groupEvents'
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
 import { ax } from '@styles/ax'
+import { Button } from '@os/ui/Button'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { showcaseMdConfig } from '../showcase/mdConfig'
 import { FilePreview } from '@os/ui/FilePreview'
@@ -185,6 +186,30 @@ const COL_WAITING = 'col-waiting'
 const COL_ACTIVE = 'col-active'
 const COL_DONE = 'col-done'
 
+function buildFileConflictMap(cards: SessionCard[]): Map<string, string[]> {
+  const fileToSessions = new Map<string, string[]>()
+  for (const card of cards) {
+    if (card.agentState === 'done') continue
+    for (const f of card.touchedFiles) {
+      const list = fileToSessions.get(f)
+      if (list) list.push(card.id)
+      else fileToSessions.set(f, [card.id])
+    }
+  }
+  return fileToSessions
+}
+
+function getConflictFiles(cardId: string, fileConflictMap: Map<string, string[]>, touchedFiles: string[]): string[] {
+  const conflicts: string[] = []
+  for (const f of touchedFiles) {
+    const sessions = fileConflictMap.get(f)
+    if (sessions && sessions.length > 1 && sessions.includes(cardId)) {
+      conflicts.push(basename(f))
+    }
+  }
+  return conflicts
+}
+
 function cardsToKanbanData(cards: SessionCard[], now: number): NormalizedData {
   const entities: Record<string, Entity> = {
     [COL_WAITING]: { id: COL_WAITING, label: 'Waiting', data: { title: 'Waiting' } },
@@ -195,19 +220,29 @@ function cardsToKanbanData(cards: SessionCard[], now: number): NormalizedData {
   const active: string[] = []
   const done: string[] = []
 
+  const fileConflictMap = buildFileConflictMap(cards)
+
   for (const card of cards) {
     const elapsed = formatElapsed(now - card.startTs)
     const primaryText = card.agentState === 'waiting'
       ? (card.lastAssistantMsg || card.label)
       : card.currentActivity || card.label
+    const conflictFiles = getConflictFiles(card.id, fileConflictMap, card.touchedFiles)
     const subtitle = [PHASE_LABELS[card.phase], elapsed, `${card.toolCount} tools`].join(' · ')
       + (card.isStale ? ' · 5분+ 무응답' : '')
       + (card.lastSkill ? ` · /${card.lastSkill}` : '')
+      + (conflictFiles.length > 0 ? ` · conflict: ${conflictFiles.join(', ')}` : '')
 
     entities[card.id] = {
       id: card.id,
       label: primaryText,
-      data: { title: primaryText, subtitle },
+      data: {
+        title: primaryText,
+        subtitle,
+        agentState: card.agentState,
+        isStale: card.isStale,
+        conflict: conflictFiles.length > 0,
+      },
     }
 
     if (card.agentState === 'waiting') waiting.push(card.id)
@@ -348,9 +383,9 @@ function SessionDetailModal({ card, onClose }: { card: SessionCard | null; onClo
             {card.lastSkill && <span>/{card.lastSkill}</span>}
           </div>
         )}
-        <button className={ax({ surface: 'ghost', recipe: 'control-sm', layout: 'center', text: 'secondary', interactive: 'button', padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', clamp: '1' })} onClick={close}>
+        <Button icon onClick={close}>
           <CloseIndicator />
-        </button>
+        </Button>
       </PanelHeader>
       <div className={ax({ flex: '1', layout: 'fill' })}>
         {card && detailCtx && (
@@ -474,10 +509,7 @@ export default function SkillKanban() {
     return () => clearInterval(id)
   }, [hasActive])
 
-  const kanbanData = useMemo(
-    () => cardsToKanbanData(sessionCards, Date.now()),
-    [sessionCards],
-  )
+  const kanbanData = cardsToKanbanData(sessionCards, Date.now())
 
   const handleActivate = useCallback((nodeId: string) => {
     // column 노드는 무시, card만 열기

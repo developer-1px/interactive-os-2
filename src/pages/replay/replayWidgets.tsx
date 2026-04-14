@@ -95,7 +95,7 @@ export function ReplayChatWidget() {
               aria-label="Session selector"
             />
             {!isRunning && messages.length > 0 && (
-              <Button size="sm" onClick={startReplay}>Replay</Button>
+              <Button onClick={startReplay}>Replay</Button>
             )}
           </div>
           <ChatFeed

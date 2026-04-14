@@ -63,7 +63,7 @@ function ScrollToBottomButton({ feedRef }: { feedRef: React.RefObject<HTMLDivEle
   if (!visible) return null
 
   return (
-    <button className={`${ax({ layout: 'center', surface: 'action', text: 'secondary', border: 'default', shape: 'pill', placement: 'bottom-center', motion: 'fade-slide-in' })} stream-fab`} onClick={scrollToBottom} aria-label="Scroll to bottom">
+    <button className={`${ax({ role: 'control', surface: 'action', text: 'secondary', border: 'default', content: 'icon', placement: 'bottom-center', motion: 'fade-slide-in' })} stream-fab`} onClick={scrollToBottom} aria-label="Scroll to bottom">
       <DirectionIndicator direction="next" orientation="vertical" />
     </button>
   )

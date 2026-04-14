@@ -13,13 +13,13 @@ dialog.quick-open-dialog-el {
 }
 
 dialog.quick-open-dialog-el::backdrop {
-  background: var(--surface-scrim, rgba(0, 0, 0, 0.5));
+  background: var(--surface-scrim, rgb(0 0 0 / 50%));
 }
 
 .quick-open-dialog {
   width: var(--overlay-width);
   max-height: var(--overlay-width);
-  margin-inline: auto;
+  place-self: center;
 }
 
 .quick-open-input {

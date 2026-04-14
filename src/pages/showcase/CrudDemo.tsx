@@ -1,4 +1,5 @@
 import { ax } from '@styles/ax'
+import { Button } from '@os/ui/Button'
 import { Up, Down, Left, Right } from '../shared/kbdIcons'
 import { TreeGrid } from '@os/ui/TreeGrid'
 import { createStore, getChildren } from '@os/store/createStore'
@@ -91,7 +92,7 @@ export default function CrudDemo() {
         <kbd>Space</kbd> <span className="key-hint">select</span>{' '}
         <kbd>⌘Z</kbd> <span className="key-hint">undo</span>{' '}
         <kbd>⌘⇧Z</kbd> <span className="key-hint">redo</span>{' '}
-        <button type="button" onClick={handleCreate} className={ax({ surface: 'ghost', controlSize: 'sm', textStyle: 'caption' })}>+ Add item</button>
+        <Button onClick={handleCreate}>+ Add item</Button>
       </div>
       <div className={`card ${ax({ scroll: 'hidden' })}`}>
         <TreeGrid

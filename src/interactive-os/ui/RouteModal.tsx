@@ -1,7 +1,6 @@
 /** @catalog 라우트 연동 모달 오버레이 */
 // ② 2026-04-07-route-modal-prd.md
 import { useEffect, useRef, type ReactNode } from 'react'
-import './RouteModal.css'
 
 interface RouteModalProps {
   active: boolean
@@ -70,7 +69,7 @@ export function RouteModal({ active, children, restoreFocus = true, label }: Rou
       role="dialog"
       aria-modal="true"
       aria-label={label}
-      className="route-modal"
+      className="outline-none"
     >
       {children}
     </div>

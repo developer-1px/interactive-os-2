@@ -22,7 +22,6 @@ export function ButtonToolbarItem(
     <React.Fragment>
       <Button
         {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-        size="sm"
         interactive="button"
         disabled={isDisabled}
       >

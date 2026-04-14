@@ -44,7 +44,7 @@ const chatWidgets = createWidgetRegistry({
 const chatLayout = definePage({
   entities: {
     root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.2, 'flex'], resizable: false }, children: ['sidebar', 'workspace'] },
-    sidebar:   { data: { type: 'widget', widget: 'ChatSidebar', surface: 'sunken' } },
+    sidebar:   { data: { type: 'widget', widget: 'ChatSidebar', surface: 'raised' } },
     workspace: { data: { type: 'widget', widget: 'ChatWorkspace' } },
   },
 })

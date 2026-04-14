@@ -159,26 +159,13 @@ dialog.sf-overlay[open] {
 @layer recipe {
 
 /* ════════════════════════════════════════════
- * Recipe — 크기 정체성 프리셋
- * min-height + font-size + font-weight만 소유.
- * 구조(padding/gap/shape/layout)는 각 컴포넌트가 명시적 축으로 선언.
+ * Recipe — 레거시 크기 프리셋 (role 축으로 이전 중)
+ * container만 잔존. control/item/badge는 role 축 사용.
  * ════════════════════════════════════════════ */
-
-/* ── control: 버튼, 인풋, 셀렉트 ── */
-.rc-control    { min-height: 36px; font-size: 14px; font-weight: 500; }
-.rc-control-sm { min-height: 32px; font-size: 13px; font-weight: 500; }
-.rc-control-lg { min-height: 40px; font-size: 14px; font-weight: 500; }
-
-/* ── item: 리스트/메뉴/탭/사이드바 아이템 ── */
-.rc-item    { min-height: 36px; font-size: 14px; font-weight: 450; }
-.rc-item-sm { min-height: 28px; font-size: 13px; font-weight: 450; }
 
 /* ── container: 카드, 다이얼로그, 패널 (의미적 마커) ── */
 .rc-container    { /* size identity: none — semantic marker */ }
 .rc-container-sm { /* size identity: none — semantic marker */ }
-
-/* ── badge: 배지, 태그 ── */
-.rc-badge { font-size: 12px; font-weight: 500; }
 
 /* ════════════════════════════════════════════
  * Control Size — "이 요소의 크기급" (레거시 — recipe 사용 권장)
@@ -186,6 +173,7 @@ dialog.sf-overlay[open] {
  * padding은 padding 축이 소유, content 축이 inline 비율 결정
  * ════════════════════════════════════════════ */
 
+/* DEPRECATED: controlSize → role 축으로 대체. 사용처 0. */
 .cs-sm {
   min-height: 32px;
   min-width: 32px;
@@ -301,10 +289,77 @@ dialog.sf-overlay[open] {
   white-space: nowrap;
 }
 
-/* 아이콘 전용 — content:'icon'과 조합 시 */
+/* 아이콘 전용 — content:'icon'과 조합 시 정사각형 */
 .rl-control.ct-icon {
   padding: 0;
+  aspect-ratio: 1;
   justify-content: center;
+}
+
+/* ════════════════════════════════════════════
+ * Role: ControlGroup — 필드형 복합 컨트롤의 외곽 셸
+ * Spinbutton [- 1 +], Combobox [input ▾] 등.
+ * 크기 SSOT: 내부 part는 role 없이 stretch로 높이를 채움.
+ * ════════════════════════════════════════════ */
+
+.rl-control-group {
+  min-height: 36px;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 0;
+  border-radius: var(--shape-sm-radius);
+  display: inline-flex;
+  flex-direction: row;
+  align-items: stretch;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* control-group 내부의 control은 크기를 그룹에 위임 */
+.rl-control-group .rl-control {
+  min-height: unset;
+  min-width: unset;
+  border-radius: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* ════════════════════════════════════════════
+ * Role: Item — 리스트/메뉴/트리/사이드바 아이템의 크기 정체성
+ * role이 크기(height/font/padding/gap/shape)를 소유한다.
+ * width, layout, interactive는 미소유 — 컴포넌트가 명시.
+ * ════════════════════════════════════════════ */
+
+.rl-item {
+  min-height: 28px;
+  font-size: 13px;
+  font-weight: 450;
+  padding-block: var(--space-xs);
+  padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
+  gap: 8px;
+  border-radius: var(--shape-2xs-radius);
+}
+
+/* ════════════════════════════════════════════
+ * Role: Badge — 배지, 태그의 크기 정체성
+ * 작고 둥글고 한 줄. content:'text'와 조합하여 inline padding 2배.
+ * ════════════════════════════════════════════ */
+
+.rl-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding-block: var(--space-xs);
+  padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
+  gap: 4px;
+  border-radius: var(--shape-pill-radius);
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
 }
 
 } /* @layer recipe — Recipe, Control Size, Text Style */
@@ -714,8 +769,11 @@ dialog.sf-overlay[open] {
 .pl-top-end       { position: absolute; top: 0; inset-inline-end: 0; }
 .pl-viewport      { position: fixed; inset: 0; z-index: 100; }
 .pl-sticky        { position: sticky; top: 0; z-index: 1; }
-.pl-anchor-below  { position: fixed; inset: unset; position-area: block-end span-inline-end; position-try-fallbacks: flip-block; }
-.pl-anchor-end    { position: fixed; inset: unset; position-area: inline-end span-block-end; position-try-fallbacks: flip-inline; }
+.pl-anchor-below        { position: fixed; inset: unset; position-area: block-end span-inline-end; position-try-fallbacks: flip-block; }
+.pl-anchor-below-start  { position: fixed; inset: unset; position-area: block-end span-inline-start; position-try-fallbacks: flip-block; }
+.pl-anchor-above        { position: fixed; inset: unset; position-area: block-start span-all; position-try-fallbacks: flip-block; }
+.pl-anchor-end          { position: fixed; inset: unset; position-area: inline-end span-all; position-try-fallbacks: flip-inline; }
+.pl-anchor-start        { position: fixed; inset: unset; position-area: inline-start span-all; position-try-fallbacks: flip-inline; }
 .pl-relative      { position: relative; }
 .pl-float-top-start     { position: fixed; top: var(--space-md); inset-inline-start: var(--space-md); z-index: 100; }
 .pl-float-top-center    { position: fixed; top: var(--space-md); left: 50%; transform: translateX(-50%); z-index: 100; }

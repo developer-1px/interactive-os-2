@@ -14,7 +14,7 @@ type DisclosureGroupProps = AriaComponentProps
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
   const label = getNodeLabel(item)
   return (
-    <div {...props} className={ax({ layout: 'bar', interactive: 'item', shape: 'md', gap: 'xs' })} data-focused={state.focused || undefined}>
+    <div {...props} className={ax({ role: 'item', layout: 'bar', interactive: 'item', content: 'text', width: 'full' })} data-focused={state.focused || undefined}>
       <ExpandIndicator expanded={state.expanded} />
       <span className={ax({ text: state.focused ? 'bright' : 'primary' })}>{label}</span>
     </div>

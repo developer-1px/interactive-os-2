@@ -2,7 +2,6 @@
 // ② 2026-03-31-datepicker-composite-prd.md
 import React, { useMemo } from 'react'
 import { ax } from '@styles/ax'
-import './CalendarGrid.css'
 import type { NormalizedData } from '../store/types'
 import type { NodeState } from '../pattern/types'
 import type { CommandEngine } from '../engine/createCommandEngine'
@@ -28,10 +27,9 @@ const defaultRenderCell = (
 ): React.ReactElement => (
   <td
     {...props}
-    className={`calendar-day text-center ${ax({ recipe: 'control-sm', text: 'primary', padding: 'xs', content: 'text', gap: 'xs', shape: 'xs', layout: 'row', clamp: '1' })}`}
+    className={`calendar-day text-center ${ax({ role: 'control', text: meta.isCurrentMonth ? 'primary' : 'muted', content: 'text', clamp: '1' })}`}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
-    data-outside={!meta.isCurrentMonth || undefined}
     onClick={onClick}
   >
     {meta.dayOfMonth}

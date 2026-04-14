@@ -175,6 +175,7 @@ interface PageInfo {
   id: string
   title: string
   chapter: string
+  content?: string
 }
 
 type StoreAccumulator = {
@@ -205,12 +206,22 @@ function buildFilteredStore(acc: StoreAccumulator, allPages: PageInfo[], filterT
   const matched = allPages.filter(p =>
     p.title.toLowerCase().includes(lower) ||
     p.id.toLowerCase().includes(lower) ||
-    p.chapter.toLowerCase().includes(lower),
+    p.chapter.toLowerCase().includes(lower) ||
+    (p.content?.toLowerCase().includes(lower) ?? false),
   )
   for (const page of matched) {
+    let snippet: string | undefined
+    if (page.content) {
+      const idx = page.content.toLowerCase().indexOf(lower)
+      if (idx >= 0) {
+        const start = Math.max(0, idx - 30)
+        const end = Math.min(page.content.length, idx + lower.length + 30)
+        snippet = (start > 0 ? '...' : '') + page.content.slice(start, end).replace(/\n/g, ' ') + (end < page.content.length ? '...' : '')
+      }
+    }
     acc.entities[page.id] = {
       id: page.id,
-      data: { label: page.title, pageId: page.id, chapter: page.chapter },
+      data: { label: page.title, pageId: page.id, chapter: page.chapter, ...(snippet ? { description: snippet } : {}) },
     }
     acc.relationships[ROOT_ID].push(page.id)
   }

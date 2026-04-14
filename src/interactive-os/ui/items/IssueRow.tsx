@@ -23,14 +23,14 @@ export function IssueRow(
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item-sm', interactive: 'item', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'item', layout: 'row', width: 'full' })}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
       <span className={ax({ layout: 'bar', gap: 'sm' })}>
         {options?.statusIcon && <span className={ax({ flex: 'none' })}>{options.statusIcon}</span>}
         {options?.identifier && (
-          <span className={ax({ textStyle: 'caption', text: 'muted', flex: 'none' })}>
+          <span className={ax({ text: 'muted', flex: 'none' })}>
             {options.identifier}
           </span>
         )}

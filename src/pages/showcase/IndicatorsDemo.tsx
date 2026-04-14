@@ -2,12 +2,15 @@
 import { useState } from 'react'
 import { ax } from '@styles/ax'
 import {
-  ExpandIndicator, CheckIndicator, RadioIndicator, SwitchIndicator,
+  ExpandIndicator, CheckIndicator,
   SeparatorIndicator, IndeterminateIndicator, SortIndicator,
   SpinnerIndicator, ProgressIndicator, SkeletonIndicator, StatusIndicator,
   PageIndicator, DirectionIndicator, StepIndicator,
   BadgeIndicator, OverflowIndicator, GripIndicator, TreeConnector,
 } from '@os/ui/indicators'
+import { Demo as CheckIndicatorDemo } from '@os/ui/indicators/CheckIndicator.demo'
+import { Demo as RadioIndicatorDemo } from '@os/ui/indicators/RadioIndicator.demo'
+import { Demo as SwitchIndicatorDemo } from '@os/ui/indicators/SwitchIndicator.demo'
 import './IndicatorsDemo.css'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -58,78 +61,25 @@ function ExpandSection() {
 }
 
 function CheckSection() {
-  const [checked, setChecked] = useState(false)
   return (
     <Section title="Check">
-      <div data-aria-container="" className="ax-interactive">
-        <Row label="checked=false">
-          <CheckIndicator checked={false} />
-        </Row>
-        <Row label="checked=true">
-          <CheckIndicator checked={true} />
-        </Row>
-        <Row label="interactive">
-          <div
-            className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`}
-            onClick={() => setChecked(!checked)}
-          >
-            <CheckIndicator checked={checked} />
-            <span className={ax({ textStyle: 'code', text: 'secondary' })}>{checked ? 'checked' : 'unchecked'}</span>
-          </div>
-        </Row>
-      </div>
+      <CheckIndicatorDemo />
     </Section>
   )
 }
 
 function RadioSection() {
-  const [selected, setSelected] = useState(0)
   return (
     <Section title="Radio">
-      <div data-aria-container="" className="ax-interactive">
-        <Row label="unchecked">
-          <RadioIndicator />
-        </Row>
-        <Row label="checked">
-          <RadioIndicator checked />
-        </Row>
-        <Row label="interactive">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`}
-              onClick={() => setSelected(i)}
-            >
-              <RadioIndicator checked={selected === i} />
-            </div>
-          ))}
-        </Row>
-      </div>
+      <RadioIndicatorDemo />
     </Section>
   )
 }
 
 function SwitchSection() {
-  const [on, setOn] = useState(false)
   return (
     <Section title="Switch">
-      <div data-aria-container="" className="ax-interactive">
-        <Row label="off">
-          <SwitchIndicator />
-        </Row>
-        <Row label="on">
-          <SwitchIndicator checked />
-        </Row>
-        <Row label="interactive">
-          <div
-            className={`${ax({ surface: 'ghost', layout: 'bar', gap: 'sm', padding: 'xs', shape: 'sm' })}`}
-            onClick={() => setOn(!on)}
-          >
-            <SwitchIndicator checked={on} />
-            <span className={ax({ textStyle: 'code', text: 'secondary' })}>{on ? 'on' : 'off'}</span>
-          </div>
-        </Row>
-      </div>
+      <SwitchIndicatorDemo />
     </Section>
   )
 }
@@ -163,9 +113,8 @@ function IndeterminateSection() {
           <IndeterminateIndicator />
         </Row>
         <Row label="vs check">
-          <CheckIndicator checked={true} />
+          <CheckIndicator />
           <IndeterminateIndicator />
-          <CheckIndicator checked={false} />
         </Row>
       </div>
     </Section>

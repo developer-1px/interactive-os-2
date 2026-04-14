@@ -1,5 +1,5 @@
 /** @catalog 필터+값 선택 드롭다운 */
-import React, { useState, useMemo, useRef, useEffect } from 'react'
+import React, { useState, useMemo, useRef, useEffect, useId } from 'react'
 import { ax } from '@styles/ax'
 import './Combobox.css'
 import { CloseIndicator } from './indicators'
@@ -80,6 +80,8 @@ export function Combobox({
   creatable = false,
 }: ComboboxProps) {
   const effectivePlugins = plugins ?? [comboboxPlugin({ selectionMode })]
+  const rawId = useId()
+  const anchorName = `--combo-${rawId.replace(/[^a-zA-Z0-9-]/g, '')}`
   const dropdownRef = useRef<HTMLDivElement>(null)
   const [createOptionFocused, setCreateOptionFocused] = useState(false)
   const originalStore = data
@@ -176,7 +178,7 @@ export function Combobox({
 
   const defaultRender = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState) => (
     <div {...props} className={[
-      ax({ interactive: 'item', recipe: 'item', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' }),
+      ax({ interactive: 'item', role: 'item', content: 'text', text: state.focused ? 'bright' : state.selected ? 'primary' : 'secondary', state: state.focused ? 'focused' : state.selected ? 'selected' : undefined, layout: 'row', width: 'full' }),
     ].filter(Boolean).join(' ')}>
       {getNodeLabel(item)}
     </div>
@@ -271,7 +273,8 @@ export function Combobox({
     onBlur: handleBlur,
   }
 
-  const inputClass = `combo-anchor ${ax({ surface: 'input', recipe: 'control-lg', width: 'full', padding: 'sm', content: 'text', gap: 'sm', shape: 'xs', layout: 'row', clamp: '1' })}`
+  const inputClass = ax({ surface: 'input', role: 'control', width: 'full', content: 'text', clamp: '1' })
+  const anchorStyle = { anchorName } as React.CSSProperties
   const inputProps = containerPropsWithWrappedKeyDown as React.InputHTMLAttributes<HTMLInputElement>
 
   const renderGroupedOptions = () =>
@@ -291,13 +294,13 @@ export function Combobox({
   return (
     <div>
       {mode === 'multiple' ? (
-        <div className={`combo-anchor ${ax({ layout: 'bar', gap: 'xs' })}`}>
+        <div className={ax({ layout: 'bar', gap: 'xs' })} style={anchorStyle}>
           <div role="list">
             {aria.selected.map((id) => (
               <span key={id} data-combobox-token role="listitem">
                 {getLabel(id)}
                 {' '}
-                <button type="button" className={ax({ role: 'control', surface: 'ghost', content: 'icon' })} onClick={() => removeToken(id)} aria-label={`Remove ${getLabel(id)}`}>
+                <button type="button" className={ax({ surface: 'ghost', layout: 'center', content: 'icon' })} onClick={() => removeToken(id)} aria-label={`Remove ${getLabel(id)}`}>
                   <CloseIndicator />
                 </button>
               </span>
@@ -318,6 +321,7 @@ export function Combobox({
       ) : (
         <input
           className={inputClass}
+          style={anchorStyle}
           role="combobox"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
@@ -330,12 +334,12 @@ export function Combobox({
         />
       )}
       {isOpen && (
-        <div ref={dropdownRef} popover="manual" className={`${ax({ scroll: 'hidden', surface: 'overlay', shape: 'xl' })} combo-dropdown`} role="listbox" onMouseDown={(e) => e.preventDefault()}>
+        <div ref={dropdownRef} popover="manual" className={`${ax({ scroll: 'hidden', surface: 'overlay', shape: 'xl', placement: 'anchor-below' })} combo-dropdown`} style={{ positionAnchor: anchorName } as React.CSSProperties} role="listbox" onMouseDown={(e) => e.preventDefault()}>
           {isGrouped ? renderGroupedOptions() : visibleChildren.map(childId => renderOption(childId))}
           {showCreateOption && (
             <div
               data-combobox-create
-              className={ax({ interactive: 'item', recipe: 'item', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined, padding: 'sm', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+              className={ax({ interactive: 'item', role: 'item', content: 'text', text: effectiveCreateFocused ? 'bright' : 'secondary', state: effectiveCreateFocused ? 'focused' : undefined, layout: 'row', width: 'full' })}
               onClick={() => handleCreate(filterText)}
               role="option"
               aria-selected="false"

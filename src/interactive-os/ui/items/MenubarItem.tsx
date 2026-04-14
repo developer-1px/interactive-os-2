@@ -14,7 +14,7 @@ export function MenubarItem(
   return (
     <div
       {...props}
-      className={ax({ recipe: 'item-sm', interactive: 'item', padding: 'xs', gap: 'sm', shape: '2xs', layout: 'row', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}
     >
       {label}
       {state.expanded !== undefined && (
