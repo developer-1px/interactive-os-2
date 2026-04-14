@@ -59,8 +59,10 @@ const routes = [
 
 const rawArgs = process.argv.slice(2)
 const theme = rawArgs.find(a => a === '--light') ? 'light' : rawArgs.find(a => a === '--dark') ? 'dark' : null
-const wait = (() => { const i = rawArgs.indexOf('--wait'); return i >= 0 ? Number(rawArgs[i + 1]) : 500 })()
-const args = rawArgs.filter(a => !a.startsWith('--') && !(rawArgs[rawArgs.indexOf('--wait') + 1] === a))
+const waitIdx = rawArgs.indexOf('--wait')
+const wait = waitIdx >= 0 ? Number(rawArgs[waitIdx + 1]) : 500
+const waitValue = waitIdx >= 0 ? rawArgs[waitIdx + 1] : null
+const args = rawArgs.filter(a => !a.startsWith('--') && a !== waitValue)
 
 function filterRoutes(allRoutes, filters) {
   if (filters.length === 0) return allRoutes

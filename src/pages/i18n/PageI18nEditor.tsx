@@ -45,16 +45,16 @@ const i18nWidgets = createWidgetRegistry({
 
 const i18nLayout = definePage({
   entities: {
-    root:         { data: { type: 'split', direction: 'vertical', sizes: ['auto', 'flex'], resizable: false }, children: ['toolbar', 'grid'] },
-    toolbar:      { data: { type: 'bar', justify: 'between', padding: 'sm', surface: 'sunken' }, children: ['toolbarLeft', 'toolbarRight'] },
-    toolbarLeft:  { data: { type: 'bar', gap: 'sm' }, children: ['title', 'searchSlot'] },
-    toolbarRight: { data: { type: 'bar', gap: 'sm' }, children: ['stats', 'missing', 'help'] },
+    root:         { data: { type: 'split', direction: 'vertical', sizes: ['auto', 'auto', 'flex', 'auto'], resizable: false, padding: 'sm' }, children: ['header', 'toolbar', 'grid', 'footer'] },
+    header:       { data: { type: 'bar', justify: 'between', padding: 'sm', surface: 'raised', gap: 'md' }, children: ['title', 'stats'] },
+    toolbar:      { data: { type: 'bar', justify: 'between', padding: 'sm', surface: 'sunken', gap: 'md' }, children: ['searchSlot', 'missing'] },
+    footer:       { data: { type: 'bar', justify: 'start', padding: 'sm', surface: 'sunken' }, children: ['help'] },
     title:        { data: { type: 'widget', widget: 'I18nTitle' } },
     searchSlot:   { data: { type: 'widget', widget: 'I18nSearchSlot' } },
     stats:        { data: { type: 'widget', widget: 'I18nStats' } },
     missing:      { data: { type: 'widget', widget: 'I18nMissing' } },
     help:         { data: { type: 'widget', widget: 'I18nHelp' } },
-    grid:         { data: { type: 'widget', widget: 'I18nGrid' } },
+    grid:         { data: { type: 'widget', widget: 'I18nGrid', surface: 'base' } },
   },
 })
 

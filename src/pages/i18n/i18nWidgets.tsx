@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { ax } from '@styles/ax'
 import { Button } from '@os/ui/Button'
 import { RemoteSearch } from '@os/ui/RemoteSearch'
+import { ProgressIndicator } from '@os/ui/indicators/ProgressIndicator'
 import { HelpCircle } from 'lucide-react'
 import { I18nGrid } from '../../entities/i18n/ui/I18nGrid'
 import { I18N_COLUMNS } from '../cms/cmsI18nTransform'
@@ -34,19 +35,29 @@ export function I18nStatsWidget() {
   const overallPct = stats.total === 0 ? 0 : Math.round((stats.filled / stats.total) * 100)
 
   return (
-    <div className={ax({ layout: 'bar', gap: 'sm' })}>
-      <span className={ax({ textStyle: 'caption', text: 'secondary' })}>
-        {stats.filled}/{stats.total} ({overallPct}%)
-      </span>
-      {stats.perLocale.map((s, i) => {
-        const pct = s.total === 0 ? 0 : Math.round((s.filled / s.total) * 100)
-        const locale = LOCALES[i]
-        return (
-          <span key={locale} className={ax({ textStyle: 'caption', text: pct === 100 ? 'muted' : 'primary' })}>
-            {locale?.toUpperCase()} {pct}%
-          </span>
-        )
-      })}
+    <div className={ax({ layout: 'bar', gap: 'md' })}>
+      <div className={ax({ layout: 'bar', gap: 'sm' })}>
+        <span className={ax({ textStyle: 'label', text: 'primary', weight: 'semi' })}>
+          {overallPct}%
+        </span>
+        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+          {stats.filled}/{stats.total}
+        </span>
+        <div className={ax({ width: 'md' })}>
+          <ProgressIndicator value={overallPct} />
+        </div>
+      </div>
+      <div className={ax({ layout: 'bar', gap: 'sm' })}>
+        {stats.perLocale.map((s, i) => {
+          const pct = s.total === 0 ? 0 : Math.round((s.filled / s.total) * 100)
+          const locale = LOCALES[i]
+          return (
+            <span key={locale} className={ax({ textStyle: 'caption', text: pct === 100 ? 'muted' : 'primary' })}>
+              {locale?.toUpperCase()} {pct}%
+            </span>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -67,12 +78,27 @@ export function I18nMissingWidget() {
 
 // ── Help button (toggles keyboard hints) ──
 
+const PRIMARY_HINTS: Array<[string, string]> = [
+  ['Enter', 'edit'],
+  ['↑↓←→', 'move'],
+  ['⇧+Arrow', 'range'],
+  ['Del', 'clear'],
+  ['⌘Z', 'undo'],
+  ['⌘F', 'search'],
+]
+
 export function I18nHelpWidget() {
   // @useState-hatch — help popover visibility
   const [open, setOpen] = useState(false)
   return (
-    <>
-      <Button variant="ghost" onClick={() => setOpen(v => !v)} aria-label="Keyboard shortcuts">
+    <div className={ax({ layout: 'bar', gap: 'md' })}>
+      {PRIMARY_HINTS.map(([keys, label]) => (
+        <span key={keys} className={ax({ layout: 'bar', gap: 'xs', textStyle: 'caption', text: 'muted' })}>
+          <kbd className={ax({ textStyle: 'code', text: 'secondary' })}>{keys}</kbd>
+          <span>{label}</span>
+        </span>
+      ))}
+      <Button variant="ghost" onClick={() => setOpen(v => !v)} aria-label="All keyboard shortcuts">
         <HelpCircle size={14} />
       </Button>
       {open && (
@@ -91,7 +117,7 @@ export function I18nHelpWidget() {
           </ul>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

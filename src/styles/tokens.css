@@ -16,10 +16,10 @@
 
   /* ── Surface ── */
   --surface-base:     var(--stone-875);
-  --surface-sunken:   var(--stone-900);
+  --surface-sunken:   var(--stone-950);
   --surface-default:  var(--stone-850);
-  --surface-raised:   var(--stone-800);
-  --surface-overlay:  var(--stone-750);
+  --surface-raised:   var(--stone-750);
+  --surface-overlay:  var(--stone-700);
   --surface-outlined: transparent;
 
   /* ── Shadow (xs/sm/md/lg scale) ── */

@@ -37,10 +37,11 @@ const VIEWMODE_KEY = 'viewer-viewmode'
 const sidebarData = createStore({
   entities: {
     'favorites': { id: 'favorites', data: { type: 'group', label: 'Favorites' } },
+    'root': { id: 'root', data: { name: '/', type: 'directory', icon: 'folder' } },
     'src': { id: 'src', data: { name: 'src', type: 'directory', icon: 'folder' } },
     'docs': { id: 'docs', data: { name: 'docs', type: 'directory', icon: 'folder' } },
   },
-  relationships: { [ROOT_ID]: ['favorites'], 'favorites': ['src', 'docs'] },
+  relationships: { [ROOT_ID]: ['favorites'], 'favorites': ['root', 'src', 'docs'] },
 })
 
 const viewerWidgets = createWidgetRegistry({
@@ -57,16 +58,17 @@ const baseLayout = definePage({
     root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.18, 'flex'] }, children: ['sidebar', 'content'] },
     sidebar:   { data: { type: 'widget', widget: 'ViewerSidebar', surface: 'sunken' } },
     content:   { data: { type: 'stack' }, children: ['toolbar', 'sort-bar', 'main', 'miller'] },
-    toolbar:   { data: { type: 'widget', widget: 'ViewerToolbar' } },
-    'sort-bar':{ data: { type: 'widget', widget: 'ViewerSortBar', hidden: false } },
-    main:      { data: { type: 'split', direction: 'horizontal', sizes: ['flex', 0.35], resizable: false }, children: ['tree-area', 'preview'] },
-    'tree-area': { data: { type: 'widget', widget: 'ViewerTreeGrid', hidden: false } },
-    preview:   { data: { type: 'widget', widget: 'ViewerPreview', hidden: false } },
+    toolbar:   { data: { type: 'widget', widget: 'ViewerToolbar', surface: 'base' } },
+    'sort-bar':{ data: { type: 'widget', widget: 'ViewerSortBar', surface: 'raised', hidden: false } },
+    main:      { data: { type: 'split', direction: 'horizontal', sizes: ['flex', 0.35], resizable: true }, children: ['tree-area', 'preview'] },
+    'tree-area': { data: { type: 'widget', widget: 'ViewerTreeGrid', surface: 'base', hidden: false } },
+    preview:   { data: { type: 'widget', widget: 'ViewerPreview', surface: 'sunken', hidden: false } },
     miller:    { data: { type: 'widget', widget: 'ViewerMiller', hidden: true, fill: true } },
   },
 })
 
 function resolveRoot(key: string): string {
+  if (key === 'root') return DEFAULT_ROOT
   return DEFAULT_ROOT + '/' + key
 }
 
@@ -178,7 +180,7 @@ export default function PageViewer() {
   }, [navigate])
 
   const handleSidebarActivate = useCallback((nodeId: string) => {
-    if (nodeId === 'src' || nodeId === 'docs') {
+    if (nodeId === 'root' || nodeId === 'src' || nodeId === 'docs') {
       setPreviewPath(null)
       setCurrentRoot(nodeId)
       fetchTree(resolveRoot(nodeId)).then((tree) => {
