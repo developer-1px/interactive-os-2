@@ -11,7 +11,6 @@ import { ThemeTokens } from './ThemeTokens'
 import { ThemeAxes } from './ThemeAxes'
 import { ThemeComponents } from './ThemeComponents'
 import { ThemeScenarios } from './ThemeScenarios'
-import { ThemeComposites } from './ThemeComposites'
 
 /* ══ Tab data ══ */
 
@@ -23,10 +22,9 @@ function createTabData() {
       axes: { id: 'axes', data: { label: 'Axes' } },
       components: { id: 'components', data: { label: 'Components' } },
       scenarios: { id: 'scenarios', data: { label: 'Scenarios' } },
-      composites: { id: 'composites', data: { label: 'Composites' } },
       __selection__: { id: '__selection__', data: { selectedIds: [initialTab] } },
     },
-    relationships: { __root__: ['tokens', 'axes', 'components', 'scenarios', 'composites'] },
+    relationships: { __root__: ['tokens', 'axes', 'components', 'scenarios'] },
   })
 }
 
@@ -35,7 +33,7 @@ function createTabData() {
 function ThemePanel() {
   const { theme, toggle } = useTheme()
   return (
-    <div className={ax({ surface: 'display', layout: 'column', gap: 'sm', padding: 'md', shape: 'lg', flex: 'none' })}>
+    <div className={ax({ surface: 'display', layout: 'stack', gap: 'sm', padding: 'md', shape: 'lg', flex: 'none' })}>
       <span className={ax({ textStyle: 'overline', text: 'muted' })}>THEME</span>
       <div className={ax({ layout: 'spread' })}>
         <span className={ax({ textStyle: 'body', text: 'secondary' })}>Appearance</span>
@@ -64,10 +62,10 @@ export default function PageThemeCreator() {
   }, [tabs])
 
   return (
-    <div className={`${ax({ layout: 'column', gap: 'lg', padding: 'xl' })} theme-root`}>
+    <div className={`${ax({ layout: 'stack', gap: 'lg', padding: 'xl' })} theme-root`}>
       {/* Header */}
       <div className={ax({ layout: 'spread' })}>
-        <div className={ax({ layout: 'column', gap: 'xs' })}>
+        <div className={ax({ layout: 'stack', gap: 'xs' })}>
           <h1 className={ax({ textStyle: 'page', text: 'primary' })}>Axis Styleguide</h1>
           <span className={ax({ textStyle: 'caption', text: 'muted' })}>12-axis MECE design system</span>
         </div>
@@ -83,7 +81,6 @@ export default function PageThemeCreator() {
         {activeTab === 'axes' && <ThemeAxes />}
         {activeTab === 'components' && <ThemeComponents />}
         {activeTab === 'scenarios' && <ThemeScenarios />}
-        {activeTab === 'composites' && <ThemeComposites />}
       </div>
     </div>
   )
