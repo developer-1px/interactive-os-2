@@ -1,0 +1,34 @@
+/* Key Line Test — last-mile only (ax() 축에 없는 CSS) */
+
+/* ── Inspector overlay: role별 색상 outline ──
+   .rl-control/.rl-item/.rl-badge는 ax()가 생성하는 global class.
+   inspector 모드일 때만 활성화. */
+
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+.inspector :global(.rl-control) {
+  outline: 2px solid rgba(255, 100, 100, 0.6);
+  outline-offset: -2px;
+}
+
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+.inspector :global(.rl-control-group) {
+  outline: 2px dashed rgba(255, 100, 100, 0.6);
+  outline-offset: -2px;
+}
+
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+.inspector :global(.rl-item) {
+  outline: 2px solid rgba(100, 150, 255, 0.6);
+  outline-offset: -2px;
+}
+
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+.inspector :global(.rl-badge) {
+  outline: 2px solid rgba(100, 255, 150, 0.6);
+  outline-offset: -2px;
+}
+
+/* ── Raw row: 부품 나란히 ── */
+.rawRow {
+  flex-wrap: wrap;
+}

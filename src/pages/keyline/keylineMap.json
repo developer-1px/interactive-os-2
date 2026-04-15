@@ -1,0 +1,226 @@
+{
+  "Accordion": {
+    "role": "item",
+    "content": "text"
+  },
+  "AlertDialog": {
+    "role": "control",
+    "content": "text"
+  },
+  "Badge": {
+    "role": "badge",
+    "content": "text"
+  },
+  "CalendarGrid": {
+    "role": "control",
+    "content": "text"
+  },
+  "Carousel": {
+    "role": "control",
+    "content": null
+  },
+  "Combobox": {
+    "role": "item",
+    "content": "text"
+  },
+  "Composer": {
+    "role": "item",
+    "content": "text"
+  },
+  "CopyButton": {
+    "role": "control",
+    "content": "icon"
+  },
+  "DatePicker": {
+    "role": "control-group",
+    "content": null
+  },
+  "DisclosureGroup": {
+    "role": "item",
+    "content": "text"
+  },
+  "FileViewerModal": {
+    "role": "control",
+    "content": "icon"
+  },
+  "FilterBar": {
+    "role": "item",
+    "content": "text"
+  },
+  "FlatLayout": {
+    "role": "item",
+    "content": "text"
+  },
+  "Grid": {
+    "role": "item",
+    "content": null
+  },
+  "GroupHeader": {
+    "role": "item",
+    "content": "text"
+  },
+  "ListBoxGrouped": {
+    "role": "item",
+    "content": "text"
+  },
+  "MillerColumns": {
+    "role": "item",
+    "content": null
+  },
+  "NavList": {
+    "role": "item",
+    "content": "text"
+  },
+  "PropertyRow": {
+    "role": "item",
+    "content": "text"
+  },
+  "QuickOpen": {
+    "role": "item",
+    "content": "text"
+  },
+  "Select": {
+    "role": "control",
+    "content": "text"
+  },
+  "Slider": {
+    "role": "item",
+    "content": "text"
+  },
+  "Spinbutton": {
+    "role": "item",
+    "content": null
+  },
+  "StreamFeed": {
+    "role": "control",
+    "content": "icon"
+  },
+  "TextInput": {
+    "role": "control",
+    "content": "text"
+  },
+  "Textarea": {
+    "role": "control",
+    "content": "text"
+  },
+  "Toaster": {
+    "role": "control",
+    "content": "icon"
+  },
+  "Toggle": {
+    "role": "control",
+    "content": "text"
+  },
+  "TreeGrid": {
+    "role": "item",
+    "content": null
+  },
+  "ToolSummaryBlock": {
+    "role": "control",
+    "content": null
+  },
+  "BadgeIndicator": {
+    "role": "badge",
+    "content": "text"
+  },
+  "CheckItem": {
+    "role": "item",
+    "content": null
+  },
+  "DialogItem": {
+    "role": "item",
+    "content": "text"
+  },
+  "EditableListItem": {
+    "role": "item",
+    "content": "text"
+  },
+  "EditableTreeItem": {
+    "role": "item",
+    "content": null
+  },
+  "FileTreeItem": {
+    "role": "item",
+    "content": null
+  },
+  "IssueRow": {
+    "role": "item",
+    "content": null
+  },
+  "ListItem": {
+    "role": "item",
+    "content": "text"
+  },
+  "MenuItem": {
+    "role": "item",
+    "content": "text"
+  },
+  "MenubarItem": {
+    "role": "item",
+    "content": "text"
+  },
+  "PaginationItem": {
+    "role": "control",
+    "content": null
+  },
+  "RadioItem": {
+    "role": "item",
+    "content": null
+  },
+  "RatingItem": {
+    "role": "control",
+    "content": null
+  },
+  "SelectItem": {
+    "role": "item",
+    "content": "text"
+  },
+  "ServiceItem": {
+    "role": "control",
+    "content": "text"
+  },
+  "SessionItem": {
+    "role": "item",
+    "content": null
+  },
+  "StepperItem": {
+    "role": "item",
+    "content": null
+  },
+  "SwitchItem": {
+    "role": "item",
+    "content": null
+  },
+  "TabItem": {
+    "role": "control",
+    "content": "text"
+  },
+  "TimelineItem": {
+    "role": "item",
+    "content": null
+  },
+  "TocItem": {
+    "role": "item",
+    "content": "text"
+  },
+  "ToggleItem": {
+    "role": "control",
+    "content": "text"
+  },
+  "ToolbarItem": {
+    "role": "control",
+    "content": "text"
+  },
+  "TreeItem": {
+    "role": "item",
+    "content": null
+  },
+  "WriterItem": {
+    "role": "item",
+    "content": null
+  },
+  "SidePanel": {
+    "role": "control",
+    "content": null
+  }
+}
