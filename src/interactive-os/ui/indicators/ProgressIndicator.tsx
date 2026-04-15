@@ -9,7 +9,7 @@ interface ProgressIndicatorProps {
 
 export function ProgressIndicator({ value, max = 100, className }: ProgressIndicatorProps) {
   const classes = [
-    `w-full ${ax({ scroll: 'hidden', shape: 'pill' })}`,
+    ax({ width: 'full', scroll: 'hidden', shape: 'pill' }),
     'item-indicator--progress',
     className,
   ].filter(Boolean).join(' ')

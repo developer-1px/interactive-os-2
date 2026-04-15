@@ -10,8 +10,7 @@ export function TextInput({ align = 'left', className, ...props }: TextInputProp
   return (
     <input
       type="text"
-      className={`${ax({ role: 'control', surface: 'input', text: 'primary', content: 'text', clamp: '1' })}${align === 'right' ? ' text-right' : ''}${className ? ` ${className}` : ''}`}
-      style={{ width: '100%' }}
+      className={`${ax({ role: 'control', surface: 'input', text: 'primary', content: 'text', clamp: '1', width: 'full' })}${align === 'right' ? ' text-right' : ''}${className ? ` ${className}` : ''}`}
       {...props}
     />
   )

@@ -112,34 +112,49 @@ function findModuleCssFiles(dir) {
 /**
  * TSX 파일에서 모든 ax() 호출의 축 값을 추출한다.
  * 정규식 기반 — AST 불필요 (ax()는 단일 객체 리터럴만 받음).
+ * ax(변수) 패턴도 역추적하여 객체 리터럴을 찾는다.
  */
 function parseAxCalls(filePath) {
   const src = readFileSync(filePath, 'utf-8')
   const calls = []
 
-  // ax({ ... }) 패턴 매칭 — 중첩 {} 1단계까지 허용
-  const axPattern = /\bax\(\{([^}]*(?:\{[^}]*\}[^}]*)*)\}\)/g
-  let match
-  while ((match = axPattern.exec(src)) !== null) {
-    const body = match[1]
+  function extractAxes(body) {
     const axes = {}
-    const offset = match.index
-    const line = src.slice(0, offset).split('\n').length
-
-    // key: 'value' 또는 key: value 추출
     const propPattern = /(\w+)\s*:\s*(?:'([^']*)'|"([^"]*)"|(\w+))/g
     let prop
     while ((prop = propPattern.exec(body)) !== null) {
       const key = prop[1]
       const val = prop[2] ?? prop[3] ?? prop[4]
-      // 스프레드나 변수 참조는 건너뜀 — 리터럴 문자열만 수집
       if (val === 'true' || val === 'false' || val === 'undefined') continue
-      // 따옴표 없이 매칭된 값(group 4)은 변수 참조 — 첫 글자 소문자+camelCase면 건너뜀
       if (prop[2] == null && prop[3] == null && /^[a-z]/.test(val)) continue
       axes[key] = val
     }
+    return axes
+  }
 
+  // 1) ax({ ... }) 직접 객체 리터럴
+  const axPattern = /\bax\(\{([^}]*(?:\{[^}]*\}[^}]*)*)\}\)/g
+  let match
+  while ((match = axPattern.exec(src)) !== null) {
+    const axes = extractAxes(match[1])
+    const line = src.slice(0, match.index).split('\n').length
     calls.push({ axes, line, raw: match[0] })
+  }
+
+  // 2) ax(변수) — 변수 정의를 역추적하여 role 등을 추출
+  const axVarPattern = /\bax\((\w+)\)/g
+  while ((match = axVarPattern.exec(src)) !== null) {
+    const varName = match[1]
+    // 같은 파일에서 변수 정의 찾기: const varName = { ... } 또는 스프레드 포함
+    const defPattern = new RegExp(`(?:const|let)\\s+${varName}\\s*=\\s*\\{([^}]*(?:\\{[^}]*\\}[^}]*)*)\\}`, 'g')
+    let defMatch
+    while ((defMatch = defPattern.exec(src)) !== null) {
+      const axes = extractAxes(defMatch[1])
+      if (Object.keys(axes).length > 0) {
+        const line = src.slice(0, match.index).split('\n').length
+        calls.push({ axes, line, raw: match[0] })
+      }
+    }
   }
 
   return calls
@@ -344,6 +359,7 @@ function formatJsonReport(findings) {
 
 const args = process.argv.slice(2)
 const jsonMode = args.includes('--json')
+const syncMap = args.includes('--sync-map')
 const fileFilter = args.filter(a => !a.startsWith('--'))
 
 let files = findTsxFiles(ROOT)
@@ -352,6 +368,140 @@ if (fileFilter.length > 0) {
 }
 
 const findings = runChecks(files)
+
+// --sync-map: 전체 ui/ 컴포넌트 스캔 → role + level 자동 분류 → keylineMap.json
+if (syncMap) {
+  const { writeFileSync } = await import('node:fs')
+
+  // ── 1. 모든 demo 파일에서 컴포넌트 목록 수집 ──
+  function findDemoFiles(dir) {
+    const results = []
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) results.push(...findDemoFiles(join(dir, entry.name)))
+      else if (entry.name.endsWith('.demo.tsx')) results.push(join(dir, entry.name))
+    }
+    return results
+  }
+
+  const demos = findDemoFiles(ROOT)
+  const allTsx = findTsxFiles(ROOT)
+  const allNames = new Set(allTsx.map(f => basename(f, '.tsx')))
+
+  // ── 2. 폴더 기반 레벨 ──
+  const FOLDER_LEVEL = {
+    indicators: 'indicator',
+    cells: 'cell',
+    items: 'item',
+    panels: 'panel',
+    composites: 'composite',
+    chat: 'composite',
+  }
+
+  function getFolder(filePath) {
+    const rel = relative(ROOT, filePath)
+    return rel.includes('/') ? rel.split('/')[0] : 'root'
+  }
+
+  // ── 3. import 분석: 다른 ui/ 컴포넌트를 import하는가? ──
+  function getUiImports(filePath) {
+    const src = readFileSync(filePath, 'utf-8')
+    const imports = []
+    const re = /from\s+['"]([^'"]+)['"]/g
+    let m
+    while ((m = re.exec(src)) !== null) {
+      const imp = m[1]
+      if (imp.startsWith('./') || imp.startsWith('../')) {
+        const resolved = imp.split('/').pop().replace(/\.tsx?$/, '')
+        if (allNames.has(resolved)) imports.push(resolved)
+      }
+    }
+    return imports
+  }
+
+  // ── 4. Aria/useAria 사용 여부 ──
+  function usesAria(filePath) {
+    const src = readFileSync(filePath, 'utf-8')
+    return /\bAria\b|\buseAria\b/.test(src)
+  }
+
+  // ── 5. role 정보 (기존 keylineSummary에서) ──
+  // component → { role, content } (첫 번째 role)
+  // component → multiRole (2개 이상 다른 role 선언 = composite)
+  const roleMap = {}
+  const multiRoleSet = new Set()
+  const rolesByComponent = {}
+  for (const entry of findings.keylineSummary) {
+    if (!rolesByComponent[entry.component]) rolesByComponent[entry.component] = new Set()
+    rolesByComponent[entry.component].add(entry.role)
+    if (!roleMap[entry.component]) {
+      roleMap[entry.component] = { role: entry.role, content: entry.content }
+    }
+  }
+  for (const [comp, roles] of Object.entries(rolesByComponent)) {
+    if (roles.size > 1) multiRoleSet.add(comp)
+  }
+
+  // ── 6. 컴포넌트별 분류 테이블 조립 ──
+  // tsx 경로 매핑: name → filePath
+  const nameToPath = {}
+  for (const f of allTsx) nameToPath[basename(f, '.tsx')] = f
+
+  // indicator 목록 (의존 분석에서 제외)
+  const indicatorNames = new Set(
+    allTsx.filter(f => getFolder(f) === 'indicators').map(f => basename(f, '.tsx'))
+  )
+
+  const map = {}
+  for (const demoPath of demos) {
+    const name = basename(demoPath).replace('.demo.tsx', '')
+    const srcPath = nameToPath[name]
+    if (!srcPath) continue
+
+    const folder = getFolder(srcPath)
+    const roleInfo = roleMap[name] || null
+    let level
+
+    // 폴더가 명시적 레벨을 갖는 경우
+    if (FOLDER_LEVEL[folder]) {
+      level = FOLDER_LEVEL[folder]
+    } else {
+      // root: import 분석으로 자동 분류
+      const uiImports = getUiImports(srcPath)
+      const substantive = uiImports.filter(i => !indicatorNames.has(i))
+
+      if (substantive.length > 0) {
+        level = 'composite'
+      } else if (multiRoleSet.has(name)) {
+        level = 'composite'  // 여러 role 선언 = 내부에 다른 역할 요소 포함
+      } else if (usesAria(srcPath)) {
+        level = 'orchestrator'
+      } else if (roleInfo) {
+        level = 'atom'
+      } else {
+        level = 'standalone'
+      }
+    }
+
+    map[name] = {
+      level,
+      ...(roleInfo ? { role: roleInfo.role, content: roleInfo.content } : {}),
+    }
+  }
+
+  const sorted = Object.fromEntries(Object.entries(map).sort(([a], [b]) => a.localeCompare(b)))
+  const mapPath = join(import.meta.dirname, '..', 'src', 'pages', 'keyline', 'keylineMap.json')
+  writeFileSync(mapPath, JSON.stringify(sorted, null, 2) + '\n')
+
+  // 통계
+  const stats = {}
+  for (const v of Object.values(sorted)) {
+    stats[v.level] = (stats[v.level] || 0) + 1
+  }
+  const total = Object.keys(sorted).length
+  const statStr = Object.entries(stats).sort(([a],[b]) => a.localeCompare(b)).map(([k,v]) => `${k}:${v}`).join(' ')
+  console.log(`✅ keylineMap.json synced — ${total} components (${statStr})`)
+  process.exit(0)
+}
 
 if (jsonMode) {
   console.log(formatJsonReport(findings))

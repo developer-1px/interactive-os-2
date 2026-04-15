@@ -31,6 +31,8 @@
   border: 1px solid var(--border-strong);
   background: var(--_bg, var(--surface-default));
   color: var(--_fg, inherit);
+  /* border가 role의 min-height를 깨뜨리지 않도록 padding 보정 */
+  padding-block: calc(var(--space-sm) - 1px);
 }
 textarea.sf-input { field-sizing: content; }
 .sf-input:focus-within { border-color: var(--focus); }
@@ -251,13 +253,14 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 .rl-control {
-  min-height: 36px;
-  min-width: 36px;
-  font-size: 14px;
-  font-weight: 500;
-  padding-inline: 16px;
-  padding-block: 8px;
-  gap: 8px;
+  min-height: var(--control-height);
+  min-width: var(--control-height);
+  font-size: var(--type-control-size);
+  font-weight: var(--type-control-weight);
+  line-height: var(--type-control-line-height);
+  padding-inline: var(--space-md);
+  padding-block: var(--space-sm);
+  gap: var(--space-sm);
   border-radius: var(--shape-sm-radius);
   display: inline-flex;
   flex-direction: row;
@@ -283,9 +286,9 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 .rl-control-group {
-  min-height: 36px;
-  font-size: 14px;
-  font-weight: 500;
+  min-height: var(--control-height);
+  font-size: var(--type-control-size);
+  font-weight: var(--type-control-weight);
   gap: 0;
   border-radius: var(--shape-sm-radius);
   display: inline-flex;
@@ -312,12 +315,13 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 .rl-item {
-  min-height: 28px;
-  font-size: 13px;
-  font-weight: 450;
+  min-height: var(--item-height);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-item-line-height);
   padding-block: var(--space-xs);
   padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
-  gap: 8px;
+  gap: var(--space-sm);
   border-radius: var(--shape-2xs-radius);
 }
 
@@ -327,11 +331,11 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 .rl-badge {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--type-caption-size);
+  font-weight: var(--weight-medium);
   padding-block: var(--space-xs);
   padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
-  gap: 4px;
+  gap: var(--space-xs);
   border-radius: var(--shape-pill-radius);
   display: inline-flex;
   flex-direction: row;
@@ -447,7 +451,7 @@ dialog.sf-overlay[open] {
 
 .wt-medium { font-weight: var(--weight-medium); }
 .wt-semi   { font-weight: var(--weight-semi); }
-.wt-bold   { font-weight: 700; }
+.wt-bold   { font-weight: var(--weight-bold); }
 
 /* ════════════════════════════════════════════
  * State — surface 조립식 확장

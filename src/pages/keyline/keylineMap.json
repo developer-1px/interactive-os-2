@@ -1,226 +1,499 @@
 {
+  "A2UISurface": {
+    "level": "composite"
+  },
   "Accordion": {
+    "level": "orchestrator",
     "role": "item",
     "content": "text"
   },
+  "AddIndicator": {
+    "level": "indicator"
+  },
+  "Alert": {
+    "level": "orchestrator"
+  },
   "AlertDialog": {
+    "level": "orchestrator",
     "role": "control",
     "content": "text"
   },
+  "AriaZone": {
+    "level": "standalone"
+  },
+  "Avatar": {
+    "level": "standalone"
+  },
   "Badge": {
+    "level": "atom",
     "role": "badge",
     "content": "text"
   },
-  "CalendarGrid": {
-    "role": "control",
+  "BadgeCell": {
+    "level": "cell"
+  },
+  "BadgeIndicator": {
+    "level": "indicator",
+    "role": "badge",
     "content": "text"
   },
-  "Carousel": {
+  "Breadcrumb": {
+    "level": "standalone"
+  },
+  "Button": {
+    "level": "orchestrator",
     "role": "control",
     "content": null
   },
+  "ButtonToggle": {
+    "level": "orchestrator"
+  },
+  "ButtonToolbar": {
+    "level": "orchestrator"
+  },
+  "ButtonToolbarItem": {
+    "level": "item"
+  },
+  "CalendarGrid": {
+    "level": "atom",
+    "role": "control",
+    "content": "text"
+  },
+  "Checkbox": {
+    "level": "orchestrator"
+  },
+  "CheckboxMixed": {
+    "level": "orchestrator"
+  },
+  "CheckIndicator": {
+    "level": "indicator"
+  },
+  "CloseIndicator": {
+    "level": "indicator"
+  },
+  "CodeBlock": {
+    "level": "composite"
+  },
+  "CodeCell": {
+    "level": "cell"
+  },
   "Combobox": {
+    "level": "composite",
     "role": "item",
     "content": "text"
   },
   "Composer": {
+    "level": "orchestrator",
     "role": "item",
     "content": "text"
   },
-  "CopyButton": {
-    "role": "control",
-    "content": "icon"
-  },
   "DatePicker": {
+    "level": "composite",
     "role": "control-group",
     "content": null
   },
+  "Dialog": {
+    "level": "orchestrator"
+  },
+  "DirectionIndicator": {
+    "level": "indicator"
+  },
   "DisclosureGroup": {
+    "level": "orchestrator",
     "role": "item",
     "content": "text"
   },
-  "FileViewerModal": {
-    "role": "control",
-    "content": "icon"
+  "Divider": {
+    "level": "standalone"
   },
-  "FilterBar": {
-    "role": "item",
-    "content": "text"
+  "DocLinkCell": {
+    "level": "cell"
   },
-  "FlatLayout": {
-    "role": "item",
-    "content": "text"
-  },
-  "Grid": {
-    "role": "item",
-    "content": null
-  },
-  "GroupHeader": {
-    "role": "item",
-    "content": "text"
-  },
-  "ListBoxGrouped": {
-    "role": "item",
-    "content": "text"
-  },
-  "MillerColumns": {
-    "role": "item",
-    "content": null
-  },
-  "NavList": {
-    "role": "item",
-    "content": "text"
-  },
-  "PropertyRow": {
-    "role": "item",
-    "content": "text"
-  },
-  "QuickOpen": {
-    "role": "item",
-    "content": "text"
-  },
-  "Select": {
-    "role": "control",
-    "content": "text"
-  },
-  "Slider": {
-    "role": "item",
-    "content": "text"
-  },
-  "Spinbutton": {
-    "role": "item",
-    "content": null
-  },
-  "StreamFeed": {
-    "role": "control",
-    "content": "icon"
-  },
-  "TextInput": {
-    "role": "control",
-    "content": "text"
-  },
-  "Textarea": {
-    "role": "control",
-    "content": "text"
-  },
-  "Toaster": {
-    "role": "control",
-    "content": "icon"
-  },
-  "Toggle": {
-    "role": "control",
-    "content": "text"
-  },
-  "TreeGrid": {
-    "role": "item",
-    "content": null
-  },
-  "ToolSummaryBlock": {
-    "role": "control",
-    "content": null
-  },
-  "BadgeIndicator": {
-    "role": "badge",
-    "content": "text"
-  },
-  "CheckItem": {
-    "role": "item",
-    "content": null
-  },
-  "DialogItem": {
-    "role": "item",
-    "content": "text"
+  "EditableCell": {
+    "level": "cell"
   },
   "EditableListItem": {
+    "level": "item",
     "role": "item",
     "content": "text"
   },
   "EditableTreeItem": {
+    "level": "item",
     "role": "item",
     "content": null
+  },
+  "EmptyState": {
+    "level": "composite"
+  },
+  "ExpandIndicator": {
+    "level": "indicator"
+  },
+  "Feed": {
+    "level": "orchestrator"
+  },
+  "FileIcon": {
+    "level": "standalone"
+  },
+  "FilePreview": {
+    "level": "composite"
   },
   "FileTreeItem": {
+    "level": "item",
     "role": "item",
     "content": null
+  },
+  "FileTreeView": {
+    "level": "composite"
+  },
+  "FileTypeIndicator": {
+    "level": "indicator"
+  },
+  "FileViewer": {
+    "level": "composite"
+  },
+  "FileViewerModal": {
+    "level": "composite",
+    "role": "control",
+    "content": "icon"
+  },
+  "FilterBar": {
+    "level": "composite",
+    "role": "item",
+    "content": "text"
+  },
+  "FlatLayout": {
+    "level": "composite",
+    "role": "item",
+    "content": "text"
+  },
+  "Form": {
+    "level": "standalone"
+  },
+  "FormSection": {
+    "level": "composite"
+  },
+  "Grid": {
+    "level": "orchestrator",
+    "role": "item",
+    "content": null
+  },
+  "GripIndicator": {
+    "level": "indicator"
+  },
+  "GroupHeader": {
+    "level": "atom",
+    "role": "item",
+    "content": "text"
+  },
+  "IncrementIndicator": {
+    "level": "indicator"
+  },
+  "IndeterminateIndicator": {
+    "level": "indicator"
   },
   "IssueRow": {
+    "level": "item",
     "role": "item",
     "content": null
+  },
+  "Kanban": {
+    "level": "orchestrator"
+  },
+  "Kbd": {
+    "level": "standalone"
+  },
+  "Lightbox": {
+    "level": "composite"
+  },
+  "Link": {
+    "level": "orchestrator"
+  },
+  "ListBox": {
+    "level": "orchestrator"
+  },
+  "ListBoxGrouped": {
+    "level": "orchestrator",
+    "role": "item",
+    "content": "text"
   },
   "ListItem": {
+    "level": "item",
     "role": "item",
     "content": "text"
   },
-  "MenuItem": {
-    "role": "item",
-    "content": "text"
+  "MarkdownViewer": {
+    "level": "composite"
+  },
+  "MasterDetail": {
+    "level": "composite"
+  },
+  "MenuActivedescendant": {
+    "level": "orchestrator"
+  },
+  "Menubar": {
+    "level": "composite"
   },
   "MenubarItem": {
+    "level": "item",
     "role": "item",
     "content": "text"
   },
-  "PaginationItem": {
-    "role": "control",
-    "content": null
+  "MenuButton": {
+    "level": "orchestrator"
   },
-  "RadioItem": {
-    "role": "item",
-    "content": null
-  },
-  "RatingItem": {
-    "role": "control",
-    "content": null
-  },
-  "SelectItem": {
+  "MenuItem": {
+    "level": "item",
     "role": "item",
     "content": "text"
   },
-  "ServiceItem": {
-    "role": "control",
-    "content": "text"
+  "MenuList": {
+    "level": "orchestrator"
   },
-  "SessionItem": {
+  "Meter": {
+    "level": "orchestrator"
+  },
+  "MillerColumns": {
+    "level": "composite",
     "role": "item",
     "content": null
   },
-  "StepperItem": {
-    "role": "item",
-    "content": null
-  },
-  "SwitchItem": {
-    "role": "item",
-    "content": null
-  },
-  "TabItem": {
-    "role": "control",
-    "content": "text"
-  },
-  "TimelineItem": {
-    "role": "item",
-    "content": null
-  },
-  "TocItem": {
+  "NavList": {
+    "level": "atom",
     "role": "item",
     "content": "text"
   },
-  "ToggleItem": {
-    "role": "control",
+  "OverflowIndicator": {
+    "level": "indicator"
+  },
+  "PageIndicator": {
+    "level": "indicator"
+  },
+  "Panel": {
+    "level": "panel"
+  },
+  "PanelHeader": {
+    "level": "standalone"
+  },
+  "PatternDemo": {
+    "level": "orchestrator"
+  },
+  "PhaseCell": {
+    "level": "cell"
+  },
+  "PipelineGrid": {
+    "level": "composite"
+  },
+  "Progress": {
+    "level": "standalone"
+  },
+  "ProgressIndicator": {
+    "level": "indicator"
+  },
+  "PropertyRow": {
+    "level": "atom",
+    "role": "item",
     "content": "text"
   },
-  "ToolbarItem": {
-    "role": "control",
+  "QuickOpen": {
+    "level": "composite",
+    "role": "item",
     "content": "text"
   },
-  "TreeItem": {
-    "role": "item",
-    "content": null
+  "RadioGroup": {
+    "level": "orchestrator"
   },
-  "WriterItem": {
-    "role": "item",
-    "content": null
+  "RadioGroupActivedescendant": {
+    "level": "orchestrator"
+  },
+  "RadioIndicator": {
+    "level": "indicator"
+  },
+  "RouteModal": {
+    "level": "standalone"
+  },
+  "ScrollArea": {
+    "level": "standalone"
+  },
+  "SearchableCell": {
+    "level": "cell"
+  },
+  "SearchableList": {
+    "level": "composite"
+  },
+  "SearchResults": {
+    "level": "standalone"
+  },
+  "SelectionOverlay": {
+    "level": "standalone"
+  },
+  "SeparatorIndicator": {
+    "level": "indicator"
   },
   "SidePanel": {
+    "level": "panel",
     "role": "control",
     "content": null
+  },
+  "Skeleton": {
+    "level": "standalone"
+  },
+  "SkeletonIndicator": {
+    "level": "indicator"
+  },
+  "Slider": {
+    "level": "orchestrator",
+    "role": "item",
+    "content": "text"
+  },
+  "SortIndicator": {
+    "level": "indicator"
+  },
+  "SpatialView": {
+    "level": "orchestrator"
+  },
+  "Spinbutton": {
+    "level": "composite",
+    "role": "item",
+    "content": null
+  },
+  "SpinnerIndicator": {
+    "level": "indicator"
+  },
+  "SplitPane": {
+    "level": "orchestrator"
+  },
+  "SpreadReader": {
+    "level": "orchestrator"
+  },
+  "StatGrid": {
+    "level": "composite"
+  },
+  "StatusIndicator": {
+    "level": "indicator"
+  },
+  "StepIndicator": {
+    "level": "indicator"
+  },
+  "StepWizard": {
+    "level": "composite"
+  },
+  "StreamFeed": {
+    "level": "atom",
+    "role": "control",
+    "content": "icon"
+  },
+  "SubmenuPanel": {
+    "level": "panel"
+  },
+  "SummaryCell": {
+    "level": "cell"
+  },
+  "SwitchGroup": {
+    "level": "orchestrator"
+  },
+  "SwitchIndicator": {
+    "level": "indicator"
+  },
+  "TabGroup": {
+    "level": "composite"
+  },
+  "TabItem": {
+    "level": "item",
+    "role": "control",
+    "content": "text"
+  },
+  "Table": {
+    "level": "orchestrator"
+  },
+  "TabList": {
+    "level": "standalone"
+  },
+  "TerminalOutput": {
+    "level": "standalone"
+  },
+  "TextCell": {
+    "level": "cell"
+  },
+  "TextInput": {
+    "level": "atom",
+    "role": "control",
+    "content": "text"
+  },
+  "TierCell": {
+    "level": "cell"
+  },
+  "Toaster": {
+    "level": "atom",
+    "role": "control",
+    "content": "icon"
+  },
+  "TocItem": {
+    "level": "item",
+    "role": "item",
+    "content": "text"
+  },
+  "TocNavList": {
+    "level": "composite"
+  },
+  "Toggle": {
+    "level": "orchestrator",
+    "role": "control",
+    "content": "text"
+  },
+  "ToggleGroup": {
+    "level": "orchestrator"
+  },
+  "Toolbar": {
+    "level": "orchestrator"
+  },
+  "ToolbarItem": {
+    "level": "item",
+    "role": "control",
+    "content": "text"
+  },
+  "Tooltip": {
+    "level": "standalone"
+  },
+  "TreeConnector": {
+    "level": "indicator"
+  },
+  "TreeGrid": {
+    "level": "orchestrator",
+    "role": "item",
+    "content": null
+  },
+  "TreeItem": {
+    "level": "item",
+    "role": "item",
+    "content": null
+  },
+  "TreeView": {
+    "level": "orchestrator"
+  },
+  "ViewerTabItem": {
+    "level": "item"
+  },
+  "ViewerTabList": {
+    "level": "standalone"
+  },
+  "VirtualCodeBlock": {
+    "level": "composite"
+  },
+  "VisualCell": {
+    "level": "cell"
+  },
+  "WindowSplitter": {
+    "level": "orchestrator"
+  },
+  "Workspace": {
+    "level": "composite"
+  },
+  "WriterItem": {
+    "level": "item",
+    "role": "item",
+    "content": null
+  },
+  "WriterTreeGrid": {
+    "level": "orchestrator"
   }
 }

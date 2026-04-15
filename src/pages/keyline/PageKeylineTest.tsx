@@ -1,12 +1,15 @@
-/** Key Line 전방위 테스트 페이지 — 모든 demo를 role별 가로 비교 + inspector overlay */
-// @useState-hatch — inspector 토글은 뷰 상태, engine 축 해당 없음
-import { Suspense, lazy, useMemo, useState, type ComponentType } from 'react'
+/** Key Line 테스트 — role별 실측 높이 비교 + level 자동 분류 */
+// @useState-hatch — inspector/measurements는 뷰 상태, engine 축 해당 없음
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState, type ComponentType } from 'react'
 import { ax } from '@styles/ax'
 import { Button } from '../../interactive-os/ui/Button'
 import keylineMap from './keylineMap.json'
 import css from './PageKeylineTest.module.css'
 
-// ── demo 모듈 자동 수집 (Vite glob) ──
+// ── types ──
+
+type KeylineEntry = { level: string; role?: string; content?: string | null }
+type KMap = Record<string, KeylineEntry>
 
 type DemoModule = { Demo: ComponentType; meta: { slug: string; category: string; label: string } }
 
@@ -18,27 +21,27 @@ const demoModules = import.meta.glob<DemoModule>(
 interface DemoEntry {
   path: string
   label: string
+  level: string
   role: string | null
   Component: ComponentType
 }
 
-function extractComponentName(path: string): string {
-  const file = path.split('/').pop() ?? ''
-  return file.replace('.demo.tsx', '')
-}
+// ── demo 수집 ──
 
 function buildDemoEntries(): DemoEntry[] {
   const entries: DemoEntry[] = []
+  const kmap = keylineMap as KMap
   for (const [path, loader] of Object.entries(demoModules)) {
-    const compName = extractComponentName(path)
-    const mapping = (keylineMap as Record<string, { role: string; content: string | null }>)[compName]
+    const label = (path.split('/').pop() ?? '').replace('.demo.tsx', '')
+    const mapping = kmap[label]
     const LazyDemo = lazy(async () => {
       const mod = await loader()
       return { default: mod.Demo }
     })
     entries.push({
       path,
-      label: compName,
+      label,
+      level: mapping?.level ?? 'unknown',
       role: mapping?.role ?? null,
       Component: LazyDemo,
     })
@@ -46,68 +49,206 @@ function buildDemoEntries(): DemoEntry[] {
   return entries.sort((a, b) => a.label.localeCompare(b.label))
 }
 
-// ── 상수 ──
+// ── 키라인 대상 판정: level이 atom/item이고 role이 있는 것 ──
 
-const ROLE_ORDER = ['control', 'control-group', 'item', 'badge'] as const
-const ROLE_META: Record<string, { height: string; font: string; legend: string }> = {
-  control: { height: '36px', font: '14px/500', legend: 'red outline' },
-  'control-group': { height: '36px', font: '14px/500', legend: 'red dashed' },
-  item: { height: '28px', font: '13px/450', legend: 'blue outline' },
-  badge: { height: 'auto', font: '12px/500', legend: 'green outline' },
+const KEYLINE_LEVELS = new Set(['atom', 'item'])
+
+function isKeylineTarget(entry: DemoEntry): boolean {
+  return KEYLINE_LEVELS.has(entry.level) && entry.role != null
 }
 
-// ── 컴포넌트 ──
+// ── 기대 높이 ──
 
-function RoleSection({ role, entries }: { role: string; entries: DemoEntry[] }) {
-  const meta = ROLE_META[role]
+const ROLE_EXPECTED: Record<string, number> = {
+  control: 36,
+  'control-group': 36,
+  item: 28,
+}
+
+const ROLE_ORDER = ['control', 'control-group', 'item', 'badge'] as const
+const LEVEL_ORDER = ['indicator', 'cell', 'orchestrator', 'composite', 'panel', 'standalone', 'unknown'] as const
+const TOLERANCE = 1
+
+// ── 실측 슬롯 ──
+
+function DemoSlot({
+  entry,
+  onMeasure,
+  mismatch,
+}: {
+  entry: DemoEntry
+  onMeasure: (label: string, height: number) => void
+  mismatch: boolean
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!ref.current) return
+    const measure = () => {
+      if (!ref.current) return
+      const el = ref.current.querySelector('[class*="ia-"]') ?? ref.current.querySelector('[class*="rl-"]')
+      if (el) onMeasure(entry.label, Math.round(el.getBoundingClientRect().height))
+    }
+    const observer = new MutationObserver(measure)
+    observer.observe(ref.current, { childList: true, subtree: true })
+    measure()
+    return () => observer.disconnect()
+  }, [entry.label, onMeasure])
+
+  return (
+    <div
+      ref={ref}
+      data-component={entry.label}
+      className={`${ax({ layout: 'stack', gap: 'xs' })} ${mismatch ? css.mismatch : ''}`}
+    >
+      <span className={ax({ textStyle: 'caption', text: mismatch ? 'bright' : 'muted' })}>
+        {entry.label}
+      </span>
+      <Suspense fallback={<span className={ax({ textStyle: 'caption', text: 'muted' })}>...</span>}>
+        <entry.Component />
+      </Suspense>
+    </div>
+  )
+}
+
+// ── role 섹션 (키라인 대상) ──
+
+function RoleSection({
+  role,
+  entries,
+  measurements,
+  onMeasure,
+}: {
+  role: string
+  entries: DemoEntry[]
+  measurements: Record<string, number>
+  onMeasure: (label: string, height: number) => void
+}) {
+  const expected = ROLE_EXPECTED[role]
+  const heights = entries.map((e) => measurements[e.label]).filter((h): h is number => h != null)
+  const mode = heights.length > 0 ? mostCommon(heights) : null
+  const effectiveExpected = expected ?? mode
+
+  const mismatchCount = effectiveExpected != null
+    ? entries.filter((e) => measurements[e.label] != null && Math.abs(measurements[e.label] - effectiveExpected) > TOLERANCE).length
+    : 0
+
   return (
     <section data-role={role} className={ax({ layout: 'stack', gap: 'sm' })}>
       <div className={ax({ layout: 'row', gap: 'sm', padding: 'xs' })}>
         <span className={ax({ textStyle: 'label', text: 'primary' })}>
-          {role} — {meta?.height} height · {meta?.font} font · {entries.length} components
+          {role} — expected {effectiveExpected ?? '?'}px · {entries.length} components
+          {mismatchCount > 0 && <span className={ax({ text: 'bright', tone: 'danger' })}> · {mismatchCount} mismatch</span>}
+        </span>
+      </div>
+      <div className={`${ax({ layout: 'row', gap: 'md' })} ${css.rawRow}`}>
+        {entries.map((entry) => {
+          const h = measurements[entry.label]
+          const isMismatch = effectiveExpected != null && h != null && Math.abs(h - effectiveExpected) > TOLERANCE
+          return <DemoSlot key={entry.path} entry={entry} onMeasure={onMeasure} mismatch={isMismatch} />
+        })}
+      </div>
+    </section>
+  )
+}
+
+// ── level 섹션 (비키라인 — indicator/cell/composite 등) ──
+
+function LevelSection({
+  level,
+  entries,
+  onMeasure,
+}: {
+  level: string
+  entries: DemoEntry[]
+  onMeasure: (label: string, height: number) => void
+}) {
+  return (
+    <section className={ax({ layout: 'stack', gap: 'sm' })}>
+      <div className={ax({ layout: 'row', gap: 'sm', padding: 'xs' })}>
+        <span className={ax({ textStyle: 'label', text: 'muted' })}>
+          {level} · {entries.length} components
         </span>
       </div>
       <div className={`${ax({ layout: 'row', gap: 'md' })} ${css.rawRow}`}>
         {entries.map((entry) => (
-          <div key={entry.path} data-component={entry.label} className={ax({ layout: 'stack', gap: 'xs' })}>
-            <span className={ax({ textStyle: 'caption', text: 'muted' })}>{entry.label}</span>
-            <Suspense fallback={<span className={ax({ textStyle: 'caption', text: 'muted' })}>...</span>}>
-              <entry.Component />
-            </Suspense>
-          </div>
+          <DemoSlot key={entry.path} entry={entry} onMeasure={onMeasure} mismatch={false} />
         ))}
       </div>
     </section>
   )
 }
 
+function mostCommon(nums: number[]): number {
+  const freq = new Map<number, number>()
+  for (const n of nums) freq.set(n, (freq.get(n) ?? 0) + 1)
+  let best = nums[0]
+  let bestCount = 0
+  for (const [n, c] of freq) {
+    if (c > bestCount) { best = n; bestCount = c }
+  }
+  return best
+}
+
 // ── 메인 ──
 
 export default function PageKeylineTest() {
   const [inspector, setInspector] = useState(true)
+  const [measurements, setMeasurements] = useState<Record<string, number>>({})
   const allEntries = useMemo(() => buildDemoEntries(), [])
 
-  const grouped = useMemo(() => {
+  const handleMeasure = useCallback((label: string, height: number) => {
+    setMeasurements((prev) => {
+      if (prev[label] === height) return prev
+      return { ...prev, [label]: height }
+    })
+  }, [])
+
+  // 키라인 대상: role별 그룹
+  const keylineGrouped = useMemo(() => {
     const byRole: Record<string, DemoEntry[]> = {}
     for (const r of ROLE_ORDER) byRole[r] = []
-    byRole.unmapped = []
     for (const entry of allEntries) {
-      const key = entry.role ?? 'unmapped'
-      if (!byRole[key]) byRole[key] = []
-      byRole[key].push(entry)
+      if (isKeylineTarget(entry) && entry.role) {
+        if (!byRole[entry.role]) byRole[entry.role] = []
+        byRole[entry.role].push(entry)
+      }
     }
     return byRole
   }, [allEntries])
 
+  // 비키라인: level별 그룹
+  const otherGrouped = useMemo(() => {
+    const byLevel: Record<string, DemoEntry[]> = {}
+    for (const entry of allEntries) {
+      if (!isKeylineTarget(entry)) {
+        if (!byLevel[entry.level]) byLevel[entry.level] = []
+        byLevel[entry.level].push(entry)
+      }
+    }
+    return byLevel
+  }, [allEntries])
+
   const wrapperClass = inspector ? css.inspector : undefined
+
+  // 전체 mismatch 수
+  const keylineEntries = allEntries.filter(isKeylineTarget)
+  const totalMismatch = ROLE_ORDER.reduce((sum, role) => {
+    const entries = keylineGrouped[role] ?? []
+    const expected = ROLE_EXPECTED[role]
+    if (expected == null) return sum
+    return sum + entries.filter((e) => measurements[e.label] != null && Math.abs(measurements[e.label] - expected) > TOLERANCE).length
+  }, 0)
 
   return (
     <div className={`${ax({ layout: 'stack', gap: 'xl', padding: 'lg' })} ${wrapperClass ?? ''}`}>
-      {/* 헤더 + 컨트롤 */}
       <div className={ax({ layout: 'stack', gap: 'sm' })}>
         <h1 className={ax({ textStyle: 'page', text: 'bright' })}>Key Line Test</h1>
         <p className={ax({ textStyle: 'caption', text: 'muted' })}>
-          {allEntries.length} demos / inspector: {inspector ? 'ON' : 'OFF'}
+          {allEntries.length} demos · {keylineEntries.length} keyline targets · {Object.keys(measurements).length} measured
+          {totalMismatch > 0
+            ? <span className={ax({ tone: 'danger', text: 'bright' })}> · {totalMismatch} height mismatch</span>
+            : ' · all matched'}
         </p>
         <div className={ax({ layout: 'row', gap: 'sm' })}>
           <Button
@@ -117,28 +258,38 @@ export default function PageKeylineTest() {
             Inspector {inspector ? 'ON' : 'OFF'}
           </Button>
         </div>
-        {/* 범례 */}
         {inspector && (
           <div className={ax({ layout: 'row', gap: 'md', textStyle: 'caption', text: 'muted' })}>
-            <span>control = red solid (36px)</span>
-            <span>control-group = red dashed (36px)</span>
-            <span>item = blue solid (28px)</span>
-            <span>badge = green solid (auto)</span>
+            <span>red bg = height mismatch within role</span>
+            <span>green outline = role assigned</span>
           </div>
         )}
       </div>
 
-      {/* Role 섹션들 */}
+      {/* ── 키라인 대상: role별 ── */}
       {ROLE_ORDER.map((role) => (
-        grouped[role].length > 0 && (
-          <RoleSection key={role} role={role} entries={grouped[role]} />
+        (keylineGrouped[role]?.length ?? 0) > 0 && (
+          <RoleSection
+            key={role}
+            role={role}
+            entries={keylineGrouped[role]}
+            measurements={measurements}
+            onMeasure={handleMeasure}
+          />
         )
       ))}
 
-      {/* Unmapped */}
-      {grouped.unmapped.length > 0 && (
-        <RoleSection role="unmapped" entries={grouped.unmapped} />
-      )}
+      {/* ── 비키라인: level별 ── */}
+      {LEVEL_ORDER.map((level) => (
+        (otherGrouped[level]?.length ?? 0) > 0 && (
+          <LevelSection
+            key={level}
+            level={level}
+            entries={otherGrouped[level]}
+            onMeasure={handleMeasure}
+          />
+        )
+      ))}
     </div>
   )
 }
