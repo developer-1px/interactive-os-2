@@ -12,7 +12,7 @@
 //   3. key line 불일치 — 같은 role인데 content 축 조합이 다른 패턴 감지
 //   4. 미등록 ax() 축 — 존재하지 않는 축 값 사용
 
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { join, basename, relative } from 'node:path'
 
 // ── 토큰 테이블 (tokens.css + ax.css에서 정적 추출) ──
@@ -27,7 +27,8 @@ const ROLE_KEYLINES = {
   },
   'control-group': {
     minHeight: 36, fontSize: 14, fontWeight: 500,
-    gap: 0, borderRadius: 'var(--shape-sm-radius)',
+    paddingBlock: 0, paddingInline: 0, gap: 0,
+    borderRadius: 'var(--shape-sm-radius)',
   },
   item: {
     minHeight: 28, fontSize: 13, fontWeight: 450,
@@ -35,7 +36,7 @@ const ROLE_KEYLINES = {
     borderRadius: 'var(--shape-2xs-radius)', // 4px
   },
   badge: {
-    fontSize: 12, fontWeight: 500,
+    minHeight: 20, fontSize: 12, fontWeight: 500,
     paddingBlock: SPACE.xs, paddingInline: SPACE.xs, gap: 4,
     borderRadius: 'var(--shape-pill-radius)',
   },
@@ -355,11 +356,105 @@ function formatJsonReport(findings) {
   return JSON.stringify(findings, null, 2)
 }
 
+// ── keylineMap.json 로드 ──
+
+const MAP_PATH = join(import.meta.dirname, '..', 'src', 'pages', 'keyline', 'keylineMap.json')
+
+function loadKeylineMap() {
+  try {
+    return JSON.parse(readFileSync(MAP_PATH, 'utf-8'))
+  } catch {
+    return {}
+  }
+}
+
+// ── --audit 리포트 생성 ──
+
+function buildAuditReport(findings) {
+  const keylineMap = loadKeylineMap()
+
+  // designComplete 분류
+  const incomplete = []
+  const designCompleteNames = new Set()
+
+  for (const [name, entry] of Object.entries(keylineMap)) {
+    if (entry.designComplete === true) {
+      designCompleteNames.add(name)
+    } else {
+      incomplete.push({ name, level: entry.level || 'unknown' })
+    }
+  }
+
+  // keylineViolations — designComplete인 컴포넌트만
+  const violationSources = [
+    ...findings.missingRole.map(f => ({
+      name: basename(f.file, '.tsx'),
+      file: f.file, line: f.line, role: null,
+      issue: 'missing_role',
+      details: `interactive:'${f.interactive}' 선언인데 role 미선언`,
+    })),
+    ...findings.invalidAxis.map(f => ({
+      name: basename(f.file, '.tsx'),
+      file: f.file, line: f.line, role: null,
+      issue: 'invalid_axis',
+      details: `${f.axis}: '${f.value}' — 유효값: ${f.valid}`,
+    })),
+    ...findings.sizingOverride.map(f => ({
+      name: basename(f.file, '.module.css'),
+      file: f.file, line: f.line, role: null,
+      issue: 'sizing_override',
+      details: `module.css에서 ${f.property} 재정의: ${f.declaration}`,
+    })),
+  ]
+  const keylineViolations = violationSources.filter(v => designCompleteNames.has(v.name))
+
+  // cssOverrides — 전체 (designComplete 필터 무관)
+  const cssOverrides = findings.sizingOverride.map(f => ({
+    file: f.file,
+    line: f.line,
+    property: f.property,
+    declaration: f.declaration,
+  }))
+
+  // tokenGaps — ROLE_KEYLINES에서 기대값이 없는 필드 탐지
+  const tokenGaps = []
+  const EXPECTED_FIELDS = ['minHeight', 'fontSize', 'fontWeight', 'paddingBlock', 'paddingInline', 'gap', 'borderRadius']
+  for (const [role, keyline] of Object.entries(ROLE_KEYLINES)) {
+    for (const field of EXPECTED_FIELDS) {
+      if (keyline[field] == null) {
+        tokenGaps.push({
+          role,
+          field,
+          issue: `ROLE_KEYLINES.${role}에 ${field} 추가 필요 (scripts/keylineCheck.mjs)`,
+        })
+      }
+    }
+  }
+
+  const totalComponents = Object.keys(keylineMap).length
+
+  return {
+    incomplete,
+    keylineViolations,
+    tokenGaps,
+    cssOverrides,
+    summary: {
+      totalComponents,
+      designComplete: designCompleteNames.size,
+      designIncomplete: incomplete.length,
+      violations: keylineViolations.length,
+      cssOverrides: cssOverrides.length,
+      tokenGaps: tokenGaps.length,
+    },
+  }
+}
+
 // ── Main ──
 
 const args = process.argv.slice(2)
 const jsonMode = args.includes('--json')
 const syncMap = args.includes('--sync-map')
+const auditMode = args.includes('--audit')
 const fileFilter = args.filter(a => !a.startsWith('--'))
 
 let files = findTsxFiles(ROOT)
@@ -371,7 +466,9 @@ const findings = runChecks(files)
 
 // --sync-map: 전체 ui/ 컴포넌트 스캔 → role + level 자동 분류 → keylineMap.json
 if (syncMap) {
-  const { writeFileSync } = await import('node:fs')
+
+  // 기존 keylineMap.json 읽기 (designComplete 보존)
+  const existingMap = loadKeylineMap()
 
   // ── 1. 모든 demo 파일에서 컴포넌트 목록 수집 ──
   function findDemoFiles(dir) {
@@ -425,8 +522,6 @@ if (syncMap) {
   }
 
   // ── 5. role 정보 (기존 keylineSummary에서) ──
-  // component → { role, content } (첫 번째 role)
-  // component → multiRole (2개 이상 다른 role 선언 = composite)
   const roleMap = {}
   const multiRoleSet = new Set()
   const rolesByComponent = {}
@@ -442,11 +537,9 @@ if (syncMap) {
   }
 
   // ── 6. 컴포넌트별 분류 테이블 조립 ──
-  // tsx 경로 매핑: name → filePath
   const nameToPath = {}
   for (const f of allTsx) nameToPath[basename(f, '.tsx')] = f
 
-  // indicator 목록 (의존 분석에서 제외)
   const indicatorNames = new Set(
     allTsx.filter(f => getFolder(f) === 'indicators').map(f => basename(f, '.tsx'))
   )
@@ -461,18 +554,16 @@ if (syncMap) {
     const roleInfo = roleMap[name] || null
     let level
 
-    // 폴더가 명시적 레벨을 갖는 경우
     if (FOLDER_LEVEL[folder]) {
       level = FOLDER_LEVEL[folder]
     } else {
-      // root: import 분석으로 자동 분류
       const uiImports = getUiImports(srcPath)
       const substantive = uiImports.filter(i => !indicatorNames.has(i))
 
       if (substantive.length > 0) {
         level = 'composite'
       } else if (multiRoleSet.has(name)) {
-        level = 'composite'  // 여러 role 선언 = 내부에 다른 역할 요소 포함
+        level = 'composite'
       } else if (usesAria(srcPath)) {
         level = 'orchestrator'
       } else if (roleInfo) {
@@ -482,15 +573,20 @@ if (syncMap) {
       }
     }
 
-    map[name] = {
+    const entry = {
       level,
       ...(roleInfo ? { role: roleInfo.role, content: roleInfo.content } : {}),
     }
+
+    if (existingMap[name]?.designComplete != null) {
+      entry.designComplete = existingMap[name].designComplete
+    }
+
+    map[name] = entry
   }
 
   const sorted = Object.fromEntries(Object.entries(map).sort(([a], [b]) => a.localeCompare(b)))
-  const mapPath = join(import.meta.dirname, '..', 'src', 'pages', 'keyline', 'keylineMap.json')
-  writeFileSync(mapPath, JSON.stringify(sorted, null, 2) + '\n')
+  writeFileSync(MAP_PATH, JSON.stringify(sorted, null, 2) + '\n')
 
   // 통계
   const stats = {}
@@ -498,8 +594,16 @@ if (syncMap) {
     stats[v.level] = (stats[v.level] || 0) + 1
   }
   const total = Object.keys(sorted).length
+  const dcCount = Object.values(sorted).filter(v => v.designComplete === true).length
   const statStr = Object.entries(stats).sort(([a],[b]) => a.localeCompare(b)).map(([k,v]) => `${k}:${v}`).join(' ')
-  console.log(`✅ keylineMap.json synced — ${total} components (${statStr})`)
+  console.log(`✅ keylineMap.json synced — ${total} components (${statStr}) designComplete:${dcCount}`)
+  process.exit(0)
+}
+
+// --audit: JSON 리포트 출력
+if (auditMode) {
+  const report = buildAuditReport(findings)
+  console.log(JSON.stringify(report, null, 2))
   process.exit(0)
 }
 

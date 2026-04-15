@@ -27,7 +27,8 @@
   "Badge": {
     "level": "atom",
     "role": "badge",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "BadgeCell": {
     "level": "cell"
@@ -43,7 +44,8 @@
   "Button": {
     "level": "orchestrator",
     "role": "control",
-    "content": null
+    "content": null,
+    "designComplete": true
   },
   "ButtonToggle": {
     "level": "orchestrator"
@@ -57,7 +59,8 @@
   "CalendarGrid": {
     "level": "atom",
     "role": "control",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "Checkbox": {
     "level": "orchestrator"
@@ -115,12 +118,14 @@
   "EditableListItem": {
     "level": "item",
     "role": "item",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "EditableTreeItem": {
     "level": "item",
     "role": "item",
-    "content": null
+    "content": null,
+    "designComplete": true
   },
   "EmptyState": {
     "level": "composite"
@@ -140,7 +145,8 @@
   "FileTreeItem": {
     "level": "item",
     "role": "item",
-    "content": null
+    "content": null,
+    "designComplete": true
   },
   "FileTreeView": {
     "level": "composite"
@@ -183,7 +189,8 @@
   "GroupHeader": {
     "level": "atom",
     "role": "item",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "IncrementIndicator": {
     "level": "indicator"
@@ -194,7 +201,8 @@
   "IssueRow": {
     "level": "item",
     "role": "item",
-    "content": null
+    "content": null,
+    "designComplete": true
   },
   "Kanban": {
     "level": "orchestrator"
@@ -219,7 +227,8 @@
   "ListItem": {
     "level": "item",
     "role": "item",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "MarkdownViewer": {
     "level": "composite"
@@ -236,7 +245,8 @@
   "MenubarItem": {
     "level": "item",
     "role": "item",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "MenuButton": {
     "level": "orchestrator"
@@ -244,7 +254,8 @@
   "MenuItem": {
     "level": "item",
     "role": "item",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "MenuList": {
     "level": "orchestrator"
@@ -260,7 +271,8 @@
   "NavList": {
     "level": "atom",
     "role": "item",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "OverflowIndicator": {
     "level": "indicator"
@@ -292,7 +304,8 @@
   "PropertyRow": {
     "level": "atom",
     "role": "item",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "QuickOpen": {
     "level": "composite",
@@ -380,7 +393,8 @@
   "StreamFeed": {
     "level": "atom",
     "role": "control",
-    "content": "icon"
+    "content": "icon",
+    "designComplete": true
   },
   "SubmenuPanel": {
     "level": "panel"
@@ -400,7 +414,8 @@
   "TabItem": {
     "level": "item",
     "role": "control",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "Table": {
     "level": "orchestrator"
@@ -417,7 +432,8 @@
   "TextInput": {
     "level": "atom",
     "role": "control",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "TierCell": {
     "level": "cell"
@@ -425,12 +441,14 @@
   "Toaster": {
     "level": "atom",
     "role": "control",
-    "content": "icon"
+    "content": "icon",
+    "designComplete": true
   },
   "TocItem": {
     "level": "item",
     "role": "item",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "TocNavList": {
     "level": "composite"
@@ -449,7 +467,8 @@
   "ToolbarItem": {
     "level": "item",
     "role": "control",
-    "content": "text"
+    "content": "text",
+    "designComplete": true
   },
   "Tooltip": {
     "level": "standalone"
@@ -465,7 +484,8 @@
   "TreeItem": {
     "level": "item",
     "role": "item",
-    "content": null
+    "content": null,
+    "designComplete": true
   },
   "TreeView": {
     "level": "orchestrator"
@@ -491,7 +511,8 @@
   "WriterItem": {
     "level": "item",
     "role": "item",
-    "content": null
+    "content": null,
+    "designComplete": true
   },
   "WriterTreeGrid": {
     "level": "orchestrator"
