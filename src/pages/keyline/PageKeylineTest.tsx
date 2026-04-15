@@ -231,21 +231,14 @@ function mostCommon(nums: number[]): number {
   return best
 }
 
-// ── vertical keyline: x좌표 측정 ──
+// ── vertical keyline: leading x좌표 측정 ──
 
-interface XMeasurement { leading: number; trailing: number }
-
-function measureX(container: HTMLElement): XMeasurement | null {
+function measureLeadingX(container: HTMLElement): number | null {
   const el = container.querySelector('[class*="ia-"]') ?? container.querySelector('[class*="rl-"]')
   if (!el) return null
   const children = el.children
-  if (children.length === 0) {
-    const rect = el.getBoundingClientRect()
-    return { leading: Math.round(rect.left), trailing: Math.round(rect.right) }
-  }
-  const first = children[0].getBoundingClientRect()
-  const last = children[children.length - 1].getBoundingClientRect()
-  return { leading: Math.round(first.left), trailing: Math.round(last.right) }
+  if (children.length === 0) return Math.round(el.getBoundingClientRect().left)
+  return Math.round(children[0].getBoundingClientRect().left)
 }
 
 function VerticalDemoSlot({
@@ -254,7 +247,7 @@ function VerticalDemoSlot({
   mismatch,
 }: {
   entry: DemoEntry
-  onMeasure: (label: string, m: XMeasurement) => void
+  onMeasure: (label: string, x: number) => void
   mismatch: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -263,8 +256,8 @@ function VerticalDemoSlot({
     if (!ref.current) return
     const measure = () => {
       if (!ref.current) return
-      const m = measureX(ref.current)
-      if (m) onMeasure(entry.label, m)
+      const x = measureLeadingX(ref.current)
+      if (x != null) onMeasure(entry.label, x)
     }
     const observer = new MutationObserver(measure)
     observer.observe(ref.current, { childList: true, subtree: true })
@@ -292,16 +285,16 @@ function VerticalRoleSection({
 }: {
   role: string
   entries: DemoEntry[]
-  xMeasurements: Record<string, XMeasurement>
-  onMeasure: (label: string, m: XMeasurement) => void
+  xMeasurements: Record<string, number>
+  onMeasure: (label: string, x: number) => void
 }) {
   const sectionRef = useRef<HTMLDivElement>(null)
 
-  const leadingValues = entries.map((e) => xMeasurements[e.label]?.leading).filter((v): v is number => v != null)
+  const leadingValues = entries.map((e) => xMeasurements[e.label]).filter((v): v is number => v != null)
   const leadingMode = leadingValues.length > 0 ? mostCommon(leadingValues) : null
 
   const leadingMismatchCount = leadingMode != null
-    ? entries.filter((e) => xMeasurements[e.label] != null && Math.abs(xMeasurements[e.label].leading - leadingMode) > TOLERANCE).length
+    ? entries.filter((e) => xMeasurements[e.label] != null && Math.abs(xMeasurements[e.label] - leadingMode) > TOLERANCE).length
     : 0
 
   // @useState-hatch — section 기준 상대 좌표 계산용 뷰 상태, engine 축 해당 없음
@@ -337,8 +330,8 @@ function VerticalRoleSection({
         style={{ backgroundImage: guideImage }}
       >
         {entries.map((entry) => {
-          const m = xMeasurements[entry.label]
-          const isMismatch = leadingMode != null && m != null && Math.abs(m.leading - leadingMode) > TOLERANCE
+          const x = xMeasurements[entry.label]
+          const isMismatch = leadingMode != null && x != null && Math.abs(x - leadingMode) > TOLERANCE
           return (
             <VerticalDemoSlot
               key={entry.path}
@@ -358,8 +351,8 @@ function VerticalRoleSection({
 export default function PageKeylineTest() {
   const [inspector, setInspector] = useState(true)
   const [measurements, setMeasurements] = useState<Record<string, number>>({})
-  // @useState-hatch — vertical keyline x좌표 실측값, engine 축 해당 없음
-  const [xMeasurements, setXMeasurements] = useState<Record<string, XMeasurement>>({})
+  // @useState-hatch — vertical keyline leading x좌표 실측값, engine 축 해당 없음
+  const [xMeasurements, setXMeasurements] = useState<Record<string, number>>({})
   const allEntries = useMemo(() => buildDemoEntries(), [])
 
   const handleMeasure = useCallback((label: string, height: number) => {
@@ -369,10 +362,10 @@ export default function PageKeylineTest() {
     })
   }, [])
 
-  const handleXMeasure = useCallback((label: string, m: XMeasurement) => {
+  const handleXMeasure = useCallback((label: string, x: number) => {
     setXMeasurements((prev) => {
-      if (prev[label]?.leading === m.leading && prev[label]?.trailing === m.trailing) return prev
-      return { ...prev, [label]: m }
+      if (prev[label] === x) return prev
+      return { ...prev, [label]: x }
     })
   }, [])
 
