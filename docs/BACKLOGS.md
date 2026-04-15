@@ -54,3 +54,6 @@
 - [ ] Progress 바 렌더링 깨짐 — Theme/Components PROGRESS 섹션에서 바 대신 점 4개만 표시됨, `@os/ui/Progress` 내부 이슈 의심 — 출처: /internals/theme#components 개선 세션 (2026-04-15)
 - [ ] Card Filled variant "선택된 듯" 외형 확인 — 설계 의도인지 버그인지 판단 필요 — 출처: /internals/theme#components 개선 세션 (2026-04-15)
 - [ ] worktree 격리 시 untracked 파일 전파 이슈 — Agent tool isolation:worktree 사용 시 main의 untracked 파일이 worktree에 복제되지 않아 import 에러 → 에이전트가 "코드 없음"으로 오인해 삭제하는 실패 발생. SessionStart 훅으로 경고 또는 worktree 생성 시 자동 복사 검토 — 출처: /internals/theme#components 개선 세션 중 실패 모드 (2026-04-15)
+- [ ] PropertyRow 런타임 height mismatch (52px vs expected 28px) — description으로 multi-line content 시 minHeight 초과. demo content 조정 또는 런타임 실측 레이어 추가 검토 — 출처: /keyline-audit 수렴 루프 (2026-04-16)
+- [ ] /keyline-audit 스킬을 플러그인 레포(plugin-repo)에 커밋 — 현재 심볼릭 링크 통해 로컬에만 존재 — 출처: /keyline-audit 구현 세션 (2026-04-16)
+- [ ] keylineMap designComplete 118개 미판정 — 나머지 컴포넌트(orchestrator/composite/panel/standalone) 시각적 완성도 판정 필요 — 출처: /keyline-audit 첫 실행 (2026-04-16)

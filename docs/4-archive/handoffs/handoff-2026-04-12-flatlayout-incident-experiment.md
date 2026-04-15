@@ -1,6 +1,8 @@
 ---
 name: FlatLayout incident 재현 실험 — widget 합성 한계 발견
 date: 2026-04-12
+consumed_by: 2026-04-15-archived
+consumed_at: 2026-04-15
 ---
 
 # Handoff: FlatLayout incident 재현 실험

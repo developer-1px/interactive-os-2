@@ -1,6 +1,8 @@
 ---
 created_at: 2026-04-15
 session_id: theme-components-masonry
+consumed_by: 2026-04-15-archived
+consumed_at: 2026-04-15
 ---
 
 # Handoff: /internals/theme#components 개선

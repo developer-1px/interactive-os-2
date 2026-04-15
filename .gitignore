@@ -1,3 +1,6 @@
+# Design score history (local)
+.design-score-history.json
+
 # Logs
 logs
 *.log
@@ -33,3 +36,4 @@ screenshots/
 docs/superpowers/specs/module-css-dump.md
 
 .worktrees/
+.aider*

@@ -2,6 +2,8 @@
 created_at: 2026-04-15
 session_id: 124c5a5b-e314-4a59-8e2d-130b15acb61c
 tags: [retrospective, failure, design-loop]
+consumed_by: 2026-04-15-handoff-ack
+consumed_at: 2026-04-15
 ---
 
 # Handoff: Beauty 루프 실패 회고 — 왜 점수가 안 올랐나

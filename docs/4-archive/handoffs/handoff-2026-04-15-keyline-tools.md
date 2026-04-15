@@ -1,5 +1,7 @@
 ---
 created_at: 2026-04-15
+consumed_by: 2026-04-15-keyline-resume
+consumed_at: 2026-04-15
 ---
 
 # Handoff: Key Line 정적 분석 + Inspector 도구

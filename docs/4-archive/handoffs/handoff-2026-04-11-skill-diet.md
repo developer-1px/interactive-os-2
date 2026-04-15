@@ -1,3 +1,8 @@
+---
+consumed_by: 2026-04-15-archived
+consumed_at: 2026-04-15
+---
+
 # Handoff: 스킬 다이어트 — discuss 12요소 + 34→19 구조 설계
 
 > 2026-04-11 세션에서 discuss 프레임 확장(⑧보유자산) + 스킬 다이어트 논의

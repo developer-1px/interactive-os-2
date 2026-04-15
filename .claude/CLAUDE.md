@@ -13,6 +13,8 @@ pnpm lint:css         # stylelint
 pnpm build:lib        # tsup — dist-lib 라이브러리 빌드
 pnpm score:design     # 디자인 점수
 pnpm check:deps       # 레이어 의존성 위반 확인
+pnpm check:keyline    # ax() key line 정적 분석
+pnpm screenshot       # Puppeteer 라우트별 스크린샷 (screenshots/ 출력, dev server 필요)
 ```
 
 ## 아키텍처
@@ -36,7 +38,7 @@ store → engine → axis → pattern → primitives → ui → pages
 ARIA OS는 두 청자를 위해 두 개의 면을 가진다.
 
 **외부 표면 (npm 사용자, LLM 시스템 프롬프트):**
-- `aria-os/ui` — 88+ 완성품 컴포넌트 + AriaComponentProps 타입 + indicators/items/panels/cells/composites namespaces
+- `aria-os/ui` — 100+ 완성품 컴포넌트 + AriaComponentProps 타입 + indicators/items/panels/cells/composites namespaces
 - `aria-os/layout` — definePage, LayoutNode 9 variants, FlatLayout, widgetRegistry
 - `aria-os/schema` — NormalizedData/Entity 타입, ROOT_ID, createStore (defineData 빌더는 후속 plan)
 - `aria-os/advanced` — useAria, useAriaZone, useControlledAria, composePattern, createCommandEngine, useEngine, definePlugin (사람-개발자 escape hatch, LLM 비노출)
@@ -64,7 +66,7 @@ ARIA OS는 두 청자를 위해 두 개의 면을 가진다.
 
 ### 디자인 시스템
 
-- `src/styles/ax.ts` — ax() 12축 MECE 디자인 시스템 (시각6+구조6)
+- `src/styles/ax.ts` — ax() 24축 MECE 디자인 시스템 (시각+구조)
 - `src/styles/axes.css` — 축별 CSS 클래스
 - `DESIGN.md` — 조합 규칙
 - **ax()만 사용**. style={} 금지. module.css는 last-mile(축에 없는 CSS)만.
