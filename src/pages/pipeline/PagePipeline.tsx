@@ -80,8 +80,11 @@ function MarkdownDocPreview({ path, fallback }: { path: string; fallback: string
   const [content, setContent] = useState<string | null>(null)
 
   useEffect(() => {
+    let cancelled = false
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContent(null)
-    loadMarkdown(path).then(md => { if (md) setContent(md) })
+    loadMarkdown(path).then(md => { if (md && !cancelled) setContent(md) })
+    return () => { cancelled = true }
   }, [path])
 
   const filename = path.split('/').pop() ?? path

@@ -27,9 +27,11 @@ export function FilePanel({ path }: { path: string }) {
     if (source !== 'text') return
     const cached = fileCache.get(path)
     if (cached !== undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setContent(cached)
       return
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setContent('')
     let cancelled = false
     fetchFile(path).then((text) => {

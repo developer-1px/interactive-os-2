@@ -1,5 +1,5 @@
-/** Key Line 전방위 테스트 페이지 — 모든 demo를 role별 배치 + inspector overlay */
-// @useState-hatch — inspector/layout 토글은 뷰 상태, engine 축 해당 없음
+/** Key Line 전방위 테스트 페이지 — 모든 demo를 role별 가로 비교 + inspector overlay */
+// @useState-hatch — inspector 토글은 뷰 상태, engine 축 해당 없음
 import { Suspense, lazy, useMemo, useState, type ComponentType } from 'react'
 import { ax } from '@styles/ax'
 import { Button } from '../../interactive-os/ui/Button'
@@ -56,23 +56,20 @@ const ROLE_META: Record<string, { height: string; font: string; legend: string }
   badge: { height: 'auto', font: '12px/500', legend: 'green outline' },
 }
 
-type LayoutMode = 'inline' | 'block'
-
 // ── 컴포넌트 ──
 
-function RoleSection({ role, entries, mode }: { role: string; entries: DemoEntry[]; mode: LayoutMode }) {
+function RoleSection({ role, entries }: { role: string; entries: DemoEntry[] }) {
   const meta = ROLE_META[role]
   return (
-    <section className={ax({ layout: 'stack', gap: 'sm' })}>
+    <section data-role={role} className={ax({ layout: 'stack', gap: 'sm' })}>
       <div className={ax({ layout: 'row', gap: 'sm', padding: 'xs' })}>
-        <span className={ax({ textStyle: 'label', text: 'primary' })}>{role}</span>
-        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
-          {meta?.height} / {meta?.font} / {meta?.legend} / {entries.length}
+        <span className={ax({ textStyle: 'label', text: 'primary' })}>
+          {role} — {meta?.height} height · {meta?.font} font · {entries.length} components
         </span>
       </div>
-      <div className={`${ax({ layout: mode === 'inline' ? 'row' : 'stack', gap: 'md' })} ${css.rawRow}`}>
+      <div className={`${ax({ layout: 'row', gap: 'md' })} ${css.rawRow}`}>
         {entries.map((entry) => (
-          <div key={entry.path} className={ax({ layout: 'stack', gap: 'xs' })}>
+          <div key={entry.path} data-component={entry.label} className={ax({ layout: 'stack', gap: 'xs' })}>
             <span className={ax({ textStyle: 'caption', text: 'muted' })}>{entry.label}</span>
             <Suspense fallback={<span className={ax({ textStyle: 'caption', text: 'muted' })}>...</span>}>
               <entry.Component />
@@ -88,8 +85,7 @@ function RoleSection({ role, entries, mode }: { role: string; entries: DemoEntry
 
 export default function PageKeylineTest() {
   const [inspector, setInspector] = useState(true)
-  const [mode, setMode] = useState<LayoutMode>('inline')
-  const allEntries = useMemo(buildDemoEntries, [])
+  const allEntries = useMemo(() => buildDemoEntries(), [])
 
   const grouped = useMemo(() => {
     const byRole: Record<string, DemoEntry[]> = {}
@@ -111,7 +107,7 @@ export default function PageKeylineTest() {
       <div className={ax({ layout: 'stack', gap: 'sm' })}>
         <h1 className={ax({ textStyle: 'page', text: 'bright' })}>Key Line Test</h1>
         <p className={ax({ textStyle: 'caption', text: 'muted' })}>
-          {allEntries.length} demos / inspector: {inspector ? 'ON' : 'OFF'} / {mode}
+          {allEntries.length} demos / inspector: {inspector ? 'ON' : 'OFF'}
         </p>
         <div className={ax({ layout: 'row', gap: 'sm' })}>
           <Button
@@ -119,18 +115,6 @@ export default function PageKeylineTest() {
             onClick={() => setInspector((v) => !v)}
           >
             Inspector {inspector ? 'ON' : 'OFF'}
-          </Button>
-          <Button
-            variant={mode === 'inline' ? 'accent' : 'ghost'}
-            onClick={() => setMode('inline')}
-          >
-            Inline
-          </Button>
-          <Button
-            variant={mode === 'block' ? 'accent' : 'ghost'}
-            onClick={() => setMode('block')}
-          >
-            Block
           </Button>
         </div>
         {/* 범례 */}
@@ -147,13 +131,13 @@ export default function PageKeylineTest() {
       {/* Role 섹션들 */}
       {ROLE_ORDER.map((role) => (
         grouped[role].length > 0 && (
-          <RoleSection key={role} role={role} entries={grouped[role]} mode={mode} />
+          <RoleSection key={role} role={role} entries={grouped[role]} />
         )
       ))}
 
       {/* Unmapped */}
       {grouped.unmapped.length > 0 && (
-        <RoleSection role="unmapped" entries={grouped.unmapped} mode={mode} />
+        <RoleSection role="unmapped" entries={grouped.unmapped} />
       )}
     </div>
   )

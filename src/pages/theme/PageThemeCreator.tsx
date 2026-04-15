@@ -52,7 +52,7 @@ function ThemePanel() {
 
 export default function PageThemeCreator() {
   const initialTab = useMemo(() => getInitialTabFromUrl() ?? 'tokens', [])
-  const initialData = useMemo(createTabData, [])
+  const initialData = useMemo(() => createTabData(), [])
   const [tabs, setTabs] = useStore(initialData)
 
   const activeTab = useMemo(() => {

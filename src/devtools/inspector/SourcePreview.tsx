@@ -23,6 +23,7 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
 
   const contentWidth = Math.min(PREVIEW_WIDTH, window.innerWidth - 16)
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const placement = useMemo(() =>
     computePlacement({
       anchor,
@@ -33,6 +34,7 @@ export function SourcePreview({ filePath, lineNumber, anchor }: SourcePreviewPro
 
   useEffect(() => {
     if (!filePath) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSnippet('')
       setError(false)
       return

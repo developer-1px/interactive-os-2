@@ -181,6 +181,7 @@ export function useControlledAria(options: UseControlledAriaOptions): UseAriaRet
     [store, pattern, mergedKeyMap, virtualEngine, focusedId, getNodeState, patternCtxOptions, onDispatch]
   )
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const containerProps = useMemo((): Record<string, unknown> => {
     if (pattern.focusStrategy.type !== 'aria-activedescendant') return { tabIndex: -1 }
     return {

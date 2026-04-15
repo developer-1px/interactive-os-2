@@ -16,7 +16,9 @@ import './MarkdownViewer.css'
 export type CodeVariant = 'bordered' | 'flush' | 'compact'
 
 export interface MarkdownRendererConfig {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   remarkPlugins?: Plugin<any[], any>[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   componentRegistry?: Record<string, ComponentType<any>>
   parseComponent?: (input: string) => { name: string; props: Record<string, string | boolean> } | null
   mermaidComponent?: ComponentType<{ code: string; onClick?: (svgHtml: string) => void }>

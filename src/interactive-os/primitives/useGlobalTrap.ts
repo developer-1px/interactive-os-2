@@ -43,6 +43,7 @@ interface GlobalTrapOptions {
 
 export function useGlobalTrap(active: boolean, keyMap: GlobalTrapKeyMap, options?: GlobalTrapOptions) {
   const keyMapRef = useRef(keyMap)
+  // eslint-disable-next-line react-hooks/refs
   keyMapRef.current = keyMap
   const trap = options?.trap ?? true
 

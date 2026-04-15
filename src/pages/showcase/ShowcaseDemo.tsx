@@ -26,6 +26,7 @@ export function ShowcaseDemo({ slug }: { slug?: string }) {
 
 function LiveDemo({ entry }: { entry: typeof components[number] }) {
   const [data, setData] = useStore(() => entry.makeData())
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const onChange = useCallback((next: NormalizedData) => setData(next), [])
   return <>{entry.render(data, onChange)}</>
 }

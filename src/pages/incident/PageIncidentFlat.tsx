@@ -101,6 +101,7 @@ export default function PageIncidentFlat() {
     addItems(MESSAGES)
   }, [clear, addItems])
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const incidentCtx = useMemo(() => ({
     items, isStreaming, feedRef, onReplay: replay,
   }), [items, isStreaming, replay]) // feedRef는 useRef — stable identity

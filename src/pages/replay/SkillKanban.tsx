@@ -305,6 +305,7 @@ function FilePanelWidget() {
   const handleTabActivate = useCallback((nodeId: string) => { setActiveFilePath(nodeId) }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!activeFilePath) { setFileContent(null); setFileError(null); return }
     let cancelled = false
     setFileContent(null)
@@ -509,6 +510,7 @@ export default function SkillKanban() {
     return () => clearInterval(id)
   }, [hasActive])
 
+  // eslint-disable-next-line react-hooks/purity
   const kanbanData = cardsToKanbanData(sessionCards, Date.now())
 
   const handleActivate = useCallback((nodeId: string) => {

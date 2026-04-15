@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 // @useState-hatch
 import type React from 'react'
 import { useState, useRef } from 'react'

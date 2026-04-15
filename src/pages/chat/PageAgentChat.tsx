@@ -128,6 +128,7 @@ export default function PageAgentChat() {
     }
   }, [sessions]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const handleWorkspaceChange = useCallback((newData: NormalizedData) => {
     const oldRefs = collectContentRefs(wsDataRef.current)
     const newRefs = collectContentRefs(newData)

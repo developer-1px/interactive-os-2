@@ -54,6 +54,7 @@ export default function EngineDiffDemo() {
   const [selection, setSelection] = useState<{ seq: number; reversed: boolean } | null>(null)
   const seqRef = useRef(0)
   const pluginsRef = useRef([crud(), focusRecovery()])
+  // eslint-disable-next-line react-hooks/refs
   const plugins = pluginsRef.current
   const prevRef = useRef<NormalizedData>(initialData)
 

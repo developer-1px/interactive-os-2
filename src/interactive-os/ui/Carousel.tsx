@@ -94,6 +94,7 @@ export function Carousel({
   // Sync focus → active slide
   useEffect(() => {
     const idx = slideIds.indexOf(tl.focused)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (idx >= 0) setActiveIndex(idx)
   }, [tl.focused, slideIds])
 

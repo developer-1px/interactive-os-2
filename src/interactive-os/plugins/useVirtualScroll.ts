@@ -60,7 +60,7 @@ export function useVirtualScroll({
     [getItemHeight],
   )
 
-  // Core: compute visible range from scroll position
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const recalc = useCallback(() => {
     const el = containerRef.current
     if (!el) return
@@ -148,8 +148,8 @@ export function useVirtualScroll({
     [recalc],
   )
 
-  // scrollToIndex: scroll so that item at index is at the given block position
   const scrollToIndex = useCallback(
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
     (index: number, block: 'start' | 'end' = 'start') => {
       const el = containerRef.current
       if (!el) return

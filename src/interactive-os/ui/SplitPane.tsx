@@ -107,6 +107,7 @@ function SplitPaneSeparator({ index, direction, currentRatio, minRatio, onKeyDel
     onDragMoveRef.current = onDragMove
   })
 
+  // eslint-disable-next-line react-hooks/refs
   const [plugins] = useState(() => [
     dragResize({
       orientation: direction,

@@ -38,6 +38,7 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
   const [fileData, setFileData] = useStore(createStore())
   const loadedDirsRef = useRef(new Set<string>())
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const loadDir = useCallback(async (dirPath: string) => {
     if (loadedDirsRef.current.has(dirPath)) return
     try {
@@ -80,6 +81,7 @@ export default function WriterFileBrowser({ onFileSelect }: WriterFileBrowserPro
 
   useEffect(() => { loadDir('') }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const handleChange = useCallback((next: NormalizedData) => {
     setFileData(next)
 

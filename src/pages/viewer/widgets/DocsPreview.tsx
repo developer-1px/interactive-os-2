@@ -9,6 +9,14 @@ export function DocsPreview({ nodeId }: { nodeId: string }) {
   const source = getFileSource(nodeId)
   const filename = nodeId.split('/').pop() ?? ''
 
+  const [content, setContent] = useState<string | null>(null)
+  useEffect(() => {
+    if (source === 'url') return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setContent(null)
+    fetchFile(nodeId).then(setContent).catch(() => setContent('Failed to load file.'))
+  }, [nodeId, source])
+
   if (source === 'url') {
     return (
       <FilePreview
@@ -19,11 +27,6 @@ export function DocsPreview({ nodeId }: { nodeId: string }) {
     )
   }
 
-  const [content, setContent] = useState<string | null>(null)
-  useEffect(() => {
-    setContent(null)
-    fetchFile(nodeId).then(setContent).catch(() => setContent('Failed to load file.'))
-  }, [nodeId])
   if (content === null) return <SpinnerIndicator size="sm" />
   return <FilePreview content={content} filename={filename} />
 }

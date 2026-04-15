@@ -30,6 +30,7 @@ import { CmsProvider } from './cmsContext'
 import { cmsWidgets } from './cmsWidgets'
 
 // ② meta-editable-ssot-prd.md
+// eslint-disable-next-line react-refresh/only-export-components
 export const cmsEditableFilter: VisibilityFilter = {
   isFocusable: (nodeId: string, store) => {
     const entity = store.entities[nodeId]

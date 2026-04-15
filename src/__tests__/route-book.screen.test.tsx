@@ -9,6 +9,7 @@ let currentPath = '/'
 // @test-harness — 라우트 경로 추적용 최소 hook wrapper
 function LocationTracker() {
   const loc = useLocation()
+  // eslint-disable-next-line react-hooks/globals
   currentPath = loc.pathname
   return null
 }

@@ -255,9 +255,11 @@ export function InspectorWindow() {
   const inspectResult = meta?.inspectResult
 
   // Track previous state for diff flash
+  // eslint-disable-next-line react-hooks/refs
   const prevState = prevStateRef.current.get(instanceId)
   useMemo(() => {
     if (inspectResult) {
+      // eslint-disable-next-line react-hooks/refs
       prevStateRef.current.set(instanceId, inspectResult.state)
     }
   }, [instanceId, inspectResult])

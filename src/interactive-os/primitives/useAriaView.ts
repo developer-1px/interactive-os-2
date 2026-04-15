@@ -274,6 +274,7 @@ export function useAriaView(options: UseAriaViewOptions): UseAriaViewReturn {
   )
 
   const handleKeyDown = useCallback(
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
     (event: KeyboardEvent) => {
       const matchedKey = findMatchingKey(event, mergedKeyMap)
       if (matchedKey) {

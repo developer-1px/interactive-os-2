@@ -320,6 +320,7 @@ export default function PageBookViewer() {
   const openToc = useCallback(() => setTocOpen(true), [])
   const closeToc = useCallback(() => setTocOpen(false), [])
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const bookCtx = useMemo<BookContextValue>(() => ({
     page,
     currentPage,

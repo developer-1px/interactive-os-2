@@ -1,4 +1,4 @@
-import { Suspense, lazy, useMemo, useState, useCallback } from 'react' // @useState-hatch: filter는 로컬 검색 입력
+import React, { Suspense, lazy, useMemo, useState, useCallback } from 'react' // @useState-hatch: filter는 로컬 검색 입력
 import { useParams, useNavigate } from 'react-router-dom'
 
 import { demoRegistry, demoSources, findDemo } from './demoRegistry'
@@ -96,7 +96,7 @@ function CreatorPreview() {
       </PanelHeader>
       {LazyDemo ? (
         <Suspense fallback={<div className={ax({ padding: 'md', text: 'muted' })}>Loading...</div>}>
-          <LazyDemo />
+          <LazyDemoRenderer Demo={LazyDemo} />
         </Suspense>
       ) : (
         <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>
@@ -105,6 +105,10 @@ function CreatorPreview() {
       )}
     </div>
   )
+}
+
+function LazyDemoRenderer({ Demo }: { Demo: React.LazyExoticComponent<React.ComponentType> }) {
+  return <Demo />
 }
 
 // ── Source widget ──

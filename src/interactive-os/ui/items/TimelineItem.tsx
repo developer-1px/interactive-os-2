@@ -5,6 +5,7 @@ import { ax } from '@styles/ax'
 import { StatusIndicator } from '../indicators'
 
 export interface TimelineItemOptions {
+  icon?: React.ReactNode
   time?: string
   detail?: string
   tone?: 'success' | 'error' | 'warning' | 'info'
