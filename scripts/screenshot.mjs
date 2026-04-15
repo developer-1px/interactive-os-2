@@ -58,6 +58,7 @@ const routes = [
 /* ── Options parsing ── */
 
 const rawArgs = process.argv.slice(2)
+const keylineMode = rawArgs.includes('--keyline')
 const theme = rawArgs.find(a => a === '--light') ? 'light' : rawArgs.find(a => a === '--dark') ? 'dark' : null
 const waitIdx = rawArgs.indexOf('--wait')
 const wait = waitIdx >= 0 ? Number(rawArgs[waitIdx + 1]) : 500
@@ -110,6 +111,30 @@ async function main() {
     process.exit(1)
   }
 
+  // ── keyline 모드: role 그룹별 개별 스크린샷 ──
+  if (keylineMode) {
+    await page.goto(`${baseUrl}/test/keyline`, { waitUntil: 'networkidle0', timeout: 15000 })
+    await new Promise(r => setTimeout(r, 2000)) // lazy demo 로드 대기
+
+    const keylineDir = resolve(outDir, 'keyline')
+    mkdirSync(keylineDir, { recursive: true })
+
+    const sections = await page.$$('[data-role]')
+    let count = 0
+    for (const section of sections) {
+      const role = await section.evaluate(el => el.getAttribute('data-role'))
+      const filePath = resolve(keylineDir, `${role}.png`)
+      await section.screenshot({ path: filePath })
+      console.log(`✓ keyline/${role}.png`)
+      count++
+    }
+
+    await browser.close()
+    console.log(`\n${count} keyline screenshots saved to ${keylineDir}/`)
+    return
+  }
+
+  // ── 일반 모드: 라우트별 스크린샷 ──
   const targetRoutes = filterRoutes(routes, args)
   if (targetRoutes.length === 0) {
     console.error(`No routes matched: ${args.join(', ')}`)
@@ -132,7 +157,7 @@ async function main() {
 
     const suffix = theme ? `-${theme}` : ''
     const filePath = resolve(outDir, `${route.label}${suffix}.png`)
-    await page.screenshot({ path: filePath, fullPage: false })
+    await page.screenshot({ path: filePath, fullPage: true })
     captured.push({ label: route.label, path: filePath })
     console.log(`✓ ${route.label} → ${filePath}`)
   }

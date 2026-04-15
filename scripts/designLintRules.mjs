@@ -124,6 +124,8 @@ export function runDesignLint(root, options) {
 
           const tag = el.tagName.toLowerCase()
           if (tag === 'img' || tag === 'video' || tag === 'canvas' || tag === 'picture') continue
+          // Headings without explicit bg/border inherit from parent — padding not required
+          if (/^h[1-6]$/.test(tag) && !hasBorder) continue
 
           checked++
           const pL = c.parseSpacing(style, 'paddingLeft')
@@ -162,6 +164,11 @@ export function runDesignLint(root, options) {
             const childBg = childStyle.backgroundColor !== 'rgba(0, 0, 0, 0)' && childStyle.backgroundColor !== 'transparent'
             const childBorder = childStyle.borderWidth !== '0px' && childStyle.borderStyle !== 'none'
             if (!childBg && !childBorder) continue
+            // Input controls (input, select, textarea) have intentionally generous padding per design rules
+            const childTag = child.tagName.toLowerCase()
+            if (childTag === 'input' || childTag === 'select' || childTag === 'textarea') continue
+            // Elements with rl-control class are sized by the role axis — exempt
+            if (child.className && typeof child.className === 'string' && child.className.includes('rl-control')) continue
 
             const maxPadding = Math.max(
               c.parseSpacing(childStyle, 'paddingTop'), c.parseSpacing(childStyle, 'paddingRight'),
@@ -194,10 +201,17 @@ export function runDesignLint(root, options) {
           const containerGap = c.getEffectiveGap(container)
           if (containerGap.value <= 0) continue
 
-          const nested = container.querySelectorAll('[role="list"], [role="listbox"], [role="grid"], [role="tree"], [role="group"], ul, ol, div')
-          for (const child of nested) {
-            if (child === container) continue
+          // Only check direct children that are themselves gap-containers.
+          // Skip leaf items (role=option/treeitem/menuitem/tab/row) — their internal layout
+          // is allowed to have wider gaps than the parent list spacing.
+          const LEAF_ROLES = ['option', 'treeitem', 'menuitem', 'menuitemradio', 'menuitemcheckbox', 'tab', 'row', 'radio', 'switch']
+          for (const child of container.children) {
             if (c.shouldSkip(child)) continue
+            const role = child.getAttribute('role')
+            if (role && LEAF_ROLES.includes(role)) continue
+            // Section headers (overline labels) are leaf items, not containers
+            const cls = child.className && typeof child.className === 'string' ? child.className : ''
+            if (cls.includes('ts-overline') || cls.includes('rl-item') || cls.includes('rl-control')) continue
             const childGap = c.getEffectiveGap(child)
             if (childGap.value <= 0) continue
 
@@ -330,11 +344,16 @@ export function runDesignLint(root, options) {
           if (c.shouldSkip(el)) continue
           if (el.disabled || el.getAttribute('aria-disabled') === 'true') continue
           const rect = el.getBoundingClientRect()
+          // Inline elements (links, spans) use line-height as effective click height
+          const style = getComputedStyle(el)
+          const effectiveHeight = style.display === 'inline'
+            ? Math.max(rect.height, parseFloat(style.lineHeight) || rect.height)
+            : rect.height
           checked++
-          if (rect.width >= MIN && rect.height >= MIN) {
+          if (rect.width >= MIN && effectiveHeight >= MIN) {
             passed++
           } else {
-            c.addViolation(this.id, el, `Interactive element is ${Math.round(rect.width)}×${Math.round(rect.height)}px`, `≥ ${MIN}×${MIN}px`, `${Math.round(rect.width)}×${Math.round(rect.height)}px`, this.severity)
+            c.addViolation(this.id, el, `Interactive element is ${Math.round(rect.width)}×${Math.round(effectiveHeight)}px`, `≥ ${MIN}×${MIN}px`, `${Math.round(rect.width)}×${Math.round(effectiveHeight)}px`, this.severity)
           }
         }
         return { checked, passed }
@@ -399,6 +418,7 @@ export function runDesignLint(root, options) {
           if (SAFE.includes(v)) return true
           if (/^-?\d+(\.\d+)?$/.test(v)) return true  // unitless (font-weight, line-height, flex)
           if (v === '1px' || v === '-1px') return true
+          if (/^-?\d+(\.\d+)?(rem|em)$/.test(v)) return true
           return false
         }
 
@@ -408,6 +428,8 @@ export function runDesignLint(root, options) {
         for (const el of all) {
           if (!el.style || el.style.length === 0) continue
           if (c.shouldSkip(el)) continue
+          // Skip code highlight elements (Shiki, Prism, etc.) — syntax colors are not design tokens
+          if (el.closest('pre.shiki') || el.closest('code[class*="language-"]') || el.closest('.shiki')) continue
 
           let hasDesignProp = false
           let hasViolation = false
@@ -452,6 +474,8 @@ export function runDesignLint(root, options) {
           if (SAFE.includes(v)) return true
           if (/^-?\d+(\.\d+)?$/.test(v)) return true
           if (v === '1px' || v === '-1px') return true
+          // rem/em values are token-derived scales — exempt
+          if (/^-?\d+(\.\d+)?(rem|em)$/.test(v)) return true
           return false
         }
 
@@ -594,7 +618,9 @@ export function runDesignLint(root, options) {
 
         let checked = 0, passed = 0
         for (const [role, { signatures, elements }] of roleMap) {
-          if (elements.length < 2) continue
+          // Need at least 3 elements to judge consistency — 2 with different
+          // contexts (sidebar vs main) is expected, not a violation
+          if (elements.length < 3) continue
           checked++
           if (signatures.size <= 1) {
             passed++

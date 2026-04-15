@@ -26,7 +26,16 @@ const chromePaths = [
 ]
 
 const routes = [
-  { path: '/', label: 'CMS' },
+  // App pages
+  { path: '/viewer', label: 'Viewer' },
+  { path: '/book', label: 'Book' },
+  { path: '/chat', label: 'Chat' },
+  { path: '/writer', label: 'Writer' },
+  { path: '/incident', label: 'Incident' },
+  { path: '/replay', label: 'Replay' },
+  { path: '/i18n', label: 'I18n Editor' },
+  { path: '/creator', label: 'Creator' },
+  // UI showcase
   { path: '/ui/navlist', label: 'UI: NavList' },
   { path: '/ui/tab-list', label: 'UI: TabList' },
   { path: '/ui/menu-list', label: 'UI: MenuList' },
@@ -50,6 +59,7 @@ const routes = [
   { path: '/ui/alert-dialog', label: 'UI: AlertDialog' },
   { path: '/ui/toaster', label: 'UI: Toaster' },
   { path: '/ui/tooltip', label: 'UI: Tooltip' },
+  // Internals
   { path: '/internals/theme', label: 'Theme' },
 ]
 
