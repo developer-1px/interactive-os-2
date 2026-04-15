@@ -152,7 +152,48 @@ function RoleSection({
   )
 }
 
-// ── level 섹션 (비키라인 — indicator/cell/composite 등) ──
+// ── indicator 섹션 — control/item context 안에서 렌더링하여 부모 따라감 증명 ──
+
+function IndicatorSection({ entries }: { entries: DemoEntry[] }) {
+  return (
+    <section className={ax({ layout: 'stack', gap: 'sm' })}>
+      <div className={ax({ layout: 'row', gap: 'sm', padding: 'xs' })}>
+        <span className={ax({ textStyle: 'label', text: 'muted' })}>
+          indicator · {entries.length} components
+        </span>
+        <span className={ax({ textStyle: 'caption', text: 'muted' })}>
+          — 1em indicators inherit parent font-size
+        </span>
+      </div>
+      {/* control context: font-size 14px → 1em = 14px */}
+      <div className={ax({ layout: 'stack', gap: 'xs' })}>
+        <span className={ax({ textStyle: 'caption', text: 'muted' })}>in control context</span>
+        <div className={`${ax({ role: 'control', layout: 'row', gap: 'md', content: 'text' })} ${css.rawRow}`}>
+          {entries.map((e) => (
+            <span key={e.path} className={ax({ layout: 'row', gap: 'xs' })}>
+              <span className={ax({ text: 'muted', textStyle: 'caption' })}>{e.label}</span>
+              <Suspense fallback={null}><e.Component /></Suspense>
+            </span>
+          ))}
+        </div>
+      </div>
+      {/* item context: font-size 13px → 1em = 13px */}
+      <div className={ax({ layout: 'stack', gap: 'xs' })}>
+        <span className={ax({ textStyle: 'caption', text: 'muted' })}>in item context</span>
+        <div className={`${ax({ role: 'item', layout: 'row', gap: 'md', content: 'text' })} ${css.rawRow}`}>
+          {entries.map((e) => (
+            <span key={e.path} className={ax({ layout: 'row', gap: 'xs' })}>
+              <span className={ax({ text: 'muted', textStyle: 'caption' })}>{e.label}</span>
+              <Suspense fallback={null}><e.Component /></Suspense>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ── level 섹션 (비키라인 — cell/composite 등) ──
 
 function LevelSection({
   level,
@@ -279,8 +320,13 @@ export default function PageKeylineTest() {
         )
       ))}
 
+      {/* ── indicator: control/item context 안에서 렌더링 ── */}
+      {(otherGrouped.indicator?.length ?? 0) > 0 && (
+        <IndicatorSection entries={otherGrouped.indicator} />
+      )}
+
       {/* ── 비키라인: level별 ── */}
-      {LEVEL_ORDER.map((level) => (
+      {LEVEL_ORDER.filter((l) => l !== 'indicator').map((level) => (
         (otherGrouped[level]?.length ?? 0) > 0 && (
           <LevelSection
             key={level}
