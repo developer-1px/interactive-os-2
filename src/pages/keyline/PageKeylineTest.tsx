@@ -231,17 +231,148 @@ function mostCommon(nums: number[]): number {
   return best
 }
 
+// ── vertical keyline: x좌표 측정 ──
+
+interface XMeasurement { leading: number; trailing: number }
+
+function measureX(container: HTMLElement): XMeasurement | null {
+  const el = container.querySelector('[class*="ia-"]') ?? container.querySelector('[class*="rl-"]')
+  if (!el) return null
+  const children = el.children
+  if (children.length === 0) {
+    const rect = el.getBoundingClientRect()
+    return { leading: Math.round(rect.left), trailing: Math.round(rect.right) }
+  }
+  const first = children[0].getBoundingClientRect()
+  const last = children[children.length - 1].getBoundingClientRect()
+  return { leading: Math.round(first.left), trailing: Math.round(last.right) }
+}
+
+function VerticalDemoSlot({
+  entry,
+  onMeasure,
+  mismatch,
+}: {
+  entry: DemoEntry
+  onMeasure: (label: string, m: XMeasurement) => void
+  mismatch: boolean
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!ref.current) return
+    const measure = () => {
+      if (!ref.current) return
+      const m = measureX(ref.current)
+      if (m) onMeasure(entry.label, m)
+    }
+    const observer = new MutationObserver(measure)
+    observer.observe(ref.current, { childList: true, subtree: true })
+    measure()
+    window.addEventListener('resize', measure)
+    return () => { observer.disconnect(); window.removeEventListener('resize', measure) }
+  }, [entry.label, onMeasure])
+
+  return (
+    <div ref={ref} data-component={entry.label} className={mismatch ? css.vMismatch : ''}>
+      <Suspense fallback={<span className={ax({ textStyle: 'caption', text: 'muted' })}>...</span>}>
+        <entry.Component />
+      </Suspense>
+    </div>
+  )
+}
+
+// ── vertical role section ──
+
+function VerticalRoleSection({
+  role,
+  entries,
+  xMeasurements,
+  onMeasure,
+}: {
+  role: string
+  entries: DemoEntry[]
+  xMeasurements: Record<string, XMeasurement>
+  onMeasure: (label: string, m: XMeasurement) => void
+}) {
+  const sectionRef = useRef<HTMLDivElement>(null)
+
+  const leadingValues = entries.map((e) => xMeasurements[e.label]?.leading).filter((v): v is number => v != null)
+  const leadingMode = leadingValues.length > 0 ? mostCommon(leadingValues) : null
+
+  const leadingMismatchCount = leadingMode != null
+    ? entries.filter((e) => xMeasurements[e.label] != null && Math.abs(xMeasurements[e.label].leading - leadingMode) > TOLERANCE).length
+    : 0
+
+  // @useState-hatch — section 기준 상대 좌표 계산용 뷰 상태, engine 축 해당 없음
+  const [sectionLeft, setSectionLeft] = useState(0)
+  useEffect(() => {
+    if (!sectionRef.current) return
+    const update = () => {
+      if (sectionRef.current) setSectionLeft(sectionRef.current.getBoundingClientRect().left)
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
+  const guideLeadingX = leadingMode != null ? leadingMode - sectionLeft : null
+
+  const guideImage = guideLeadingX != null
+    ? `linear-gradient(to right, transparent ${guideLeadingX}px, rgba(100,200,100,0.6) ${guideLeadingX}px, rgba(100,200,100,0.6) ${guideLeadingX + 1}px, transparent ${guideLeadingX + 1}px)`
+    : undefined
+
+  return (
+    <section ref={sectionRef} data-role={role} className={ax({ layout: 'stack', gap: 'sm' })}>
+      <div className={ax({ layout: 'row', gap: 'sm', padding: 'xs' })}>
+        <span className={ax({ textStyle: 'label', text: 'primary' })}>
+          vertical {role} — leading {leadingMode ?? '?'}px · {entries.length} components
+          {leadingMismatchCount > 0 && <span className={ax({ text: 'bright', tone: 'danger' })}> · {leadingMismatchCount} off</span>}
+          {leadingMismatchCount === 0 && leadingValues.length > 0 &&
+            <span className={ax({ text: 'muted' })}> · aligned</span>}
+        </span>
+      </div>
+      <div
+        className={ax({ layout: 'stack' })}
+        style={{ backgroundImage: guideImage }}
+      >
+        {entries.map((entry) => {
+          const m = xMeasurements[entry.label]
+          const isMismatch = leadingMode != null && m != null && Math.abs(m.leading - leadingMode) > TOLERANCE
+          return (
+            <VerticalDemoSlot
+              key={entry.path}
+              entry={entry}
+              onMeasure={onMeasure}
+              mismatch={isMismatch}
+            />
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
 // ── 메인 ──
 
 export default function PageKeylineTest() {
   const [inspector, setInspector] = useState(true)
   const [measurements, setMeasurements] = useState<Record<string, number>>({})
+  // @useState-hatch — vertical keyline x좌표 실측값, engine 축 해당 없음
+  const [xMeasurements, setXMeasurements] = useState<Record<string, XMeasurement>>({})
   const allEntries = useMemo(() => buildDemoEntries(), [])
 
   const handleMeasure = useCallback((label: string, height: number) => {
     setMeasurements((prev) => {
       if (prev[label] === height) return prev
       return { ...prev, [label]: height }
+    })
+  }, [])
+
+  const handleXMeasure = useCallback((label: string, m: XMeasurement) => {
+    setXMeasurements((prev) => {
+      if (prev[label]?.leading === m.leading && prev[label]?.trailing === m.trailing) return prev
+      return { ...prev, [label]: m }
     })
   }, [])
 
@@ -316,6 +447,19 @@ export default function PageKeylineTest() {
             entries={keylineGrouped[role]}
             measurements={measurements}
             onMeasure={handleMeasure}
+          />
+        )
+      ))}
+
+      {/* ── vertical keyline: role별 stack 배치 ── */}
+      {ROLE_ORDER.map((role) => (
+        (keylineGrouped[role]?.length ?? 0) > 0 && (
+          <VerticalRoleSection
+            key={`v-${role}`}
+            role={role}
+            entries={keylineGrouped[role]}
+            xMeasurements={xMeasurements}
+            onMeasure={handleXMeasure}
           />
         )
       ))}

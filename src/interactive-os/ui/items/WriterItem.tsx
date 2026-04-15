@@ -44,12 +44,12 @@ export function WriterItem(
   const level = data?.level as number | undefined
   const hasChildren = state.expanded !== undefined
   const depth = (state.level ?? 1) - 1
-  const depthStyle = { paddingLeft: `calc(${depth} * var(--space-md) + var(--space-xs))` }
+  const depthStyle = { paddingLeft: `calc(${depth} * var(--space-md) + var(--space-sm))` }
   const surface = state.selected ? 'action' as const : undefined
 
   if (type === 'document') {
     return (
-      <div {...props} className={ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} style={depthStyle}>
+      <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
         <span className={ax({ text: 'muted' })}>{data?.path as string || 'Untitled'}</span>
       </div>
@@ -59,7 +59,7 @@ export function WriterItem(
   if (type === 'heading' && level) {
     const marginCls = level === 1 ? 'writer-heading-l1' : 'writer-heading'
     return (
-      <div {...props} className={`${ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
+      <div {...props} className={`${ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
         <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ textStyle: headingStyle[level - 1], text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
       </div>
@@ -69,7 +69,7 @@ export function WriterItem(
   if (type === 'paragraph') {
     const marginCls = 'writer-paragraph'
     return (
-      <div {...props} className={`${ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
+      <div {...props} className={`${ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} ${marginCls}`} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
         <span className={ax({ text: 'muted' })}>¶{state.index + 1}</span>
       </div>
@@ -78,7 +78,7 @@ export function WriterItem(
 
   if (type === 'list') {
     return (
-      <div {...props} className={ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} style={depthStyle}>
+      <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} />
         <span className={ax({ text: 'muted' })}>{(data?.ordered as boolean) ? 'ol' : 'ul'}</span>
       </div>
@@ -87,7 +87,7 @@ export function WriterItem(
 
   if (type === 'listItem') {
     return (
-      <div {...props} className={ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} style={depthStyle}>
+      <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} style={depthStyle}>
         <ExpandIndicator hasChildren={false} />
         <span className={ax({ text: 'muted' })}>{state.index + 1}</span>
         <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>
@@ -96,13 +96,13 @@ export function WriterItem(
   }
 
   if (type === 'hr') {
-    return <div {...props} className={`${ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} writer-hr`} style={depthStyle} />
+    return <div {...props} className={`${ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} writer-hr`} style={depthStyle} />
   }
 
   // sentence (default)
   const role = data?.role as SentenceRole | undefined
   return (
-    <div {...props} className={ax({ role: 'item', interactive: 'item', surface, layout: 'row', width: 'full' })} style={depthStyle}>
+    <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', surface, layout: 'row', width: 'full' })} style={depthStyle}>
       <ExpandIndicator hasChildren={false} />
       <span className={ax({ text: 'muted' })}>{state.index + 1}</span>
       <Aria.Editable field="content" selection="end" editKeyDown={options?.editKeyDown}><span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{content}</span></Aria.Editable>

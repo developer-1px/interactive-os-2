@@ -16,7 +16,7 @@ interface FilterBarProps {
 
 export function FilterBar({ filters, onAddFilter, children }: FilterBarProps) {
   return (
-    <div className={ax({ role: 'item', content: 'text', layout: 'bar', width: 'full' })}>
+    <div className={ax({ role: 'item', content: 'text', layout: 'bar', width: 'full', padding: 'none' })}>
       {filters.map((chip) => (
         <span
           key={chip.id}

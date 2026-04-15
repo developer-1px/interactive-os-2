@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
           return { Component: m.default, loader: m.loader }
         },
       },
-{ path: '/chat', lazy: () => import('./pages/chat/PageAgentChat').then(m => ({ Component: m.default })) },
+      { path: '/chat', lazy: () => import('./pages/chat/PageAgentChat').then(m => ({ Component: m.default })) },
       { path: '/replay', lazy: () => import('./pages/replay/PageReplay').then(m => ({ Component: m.default })) },
       { path: '/i18n', lazy: () => import('./pages/i18n/PageI18nEditor').then(m => ({ Component: m.default })) },
       { path: '/incident', lazy: () => import('./pages/incident/PageIncidentFlat').then(m => ({ Component: m.default })) },
@@ -44,6 +44,7 @@ export const router = createBrowserRouter([
       { path: '/stories', lazy: () => import('./pages/stories/PageStories').then(m => ({ Component: m.default })) },
       { path: '/catalog', lazy: () => import('./pages/catalog/PageCatalog').then(m => ({ Component: m.default })) },
       { path: '/kanban', lazy: () => import('./pages/replay/SkillKanban').then(m => ({ Component: m.default })) },
+      { path: '/showcase/gmail', lazy: () => import('./pages/showcase/gmail/PageGmail').then(m => ({ Component: m.default })) },
       { path: '/test/keyline', lazy: () => import('./pages/keyline/PageKeylineTest').then(m => ({ Component: m.default })) },
       { path: '*', element: <Navigate to="/" replace /> },
     ],

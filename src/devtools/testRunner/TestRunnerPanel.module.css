@@ -10,26 +10,21 @@
 }
 
 .groupBlock {
-  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
-  margin-bottom: 8px;
+  margin-bottom: var(--space-sm);
 }
 
 .renderArea {
-  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
-  margin-bottom: 16px;
+  margin-bottom: var(--space-lg);
 }
 
 .summaryBar {
-  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
-  margin-bottom: 12px;
+  margin-bottom: var(--space-md);
 }
 
 .failCount {
-  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
-  margin-left: 12px;
+  margin-left: var(--space-md);
 }
 
 .totalCount {
-  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
-  margin-left: 12px;
+  margin-left: var(--space-md);
 }

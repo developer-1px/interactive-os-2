@@ -35,3 +35,11 @@
   outline: 3px solid rgba(255, 40, 40, 0.9);
   outline-offset: 2px;
 }
+
+/* ── Vertical keyline ── */
+
+/* vertical mismatch — leading 또는 trailing이 어긋난 요소 */
+.vMismatch {
+  outline: 2px solid rgba(255, 40, 40, 0.7);
+  outline-offset: -1px;
+}

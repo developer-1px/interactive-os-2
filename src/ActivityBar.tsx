@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
   MessageSquare, BookText, Play, Cable, PenLine, Kanban, SquareKanban, GitBranch,
+  Mail,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -79,11 +80,16 @@ const appNavItems: NavItem[] = [
   { id: 'writer', label: 'Writer', icon: PenLine, path: '/writer' },
 ]
 
-const navItems: NavItem[] = appNavItems
+const showcaseNavItems: NavItem[] = [
+  { id: 'gmail', label: 'Gmail', icon: Mail, path: '/showcase/gmail' },
+]
+
+const navItems: NavItem[] = [...appNavItems, ...showcaseNavItems]
 
 // --- Pre-computed stores ---
 
 const APP_IDS = appNavItems.map((n) => n.id)
+const SHOWCASE_IDS = showcaseNavItems.map((n) => n.id)
 const UTIL_IDS = ['theme']
 
 const activityBarStore = toStore([
@@ -168,6 +174,10 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
       >
         <div role="group" aria-label="Apps">
           <Aria.Item asChild ids={APP_IDS} render={renderNavItem} />
+        </div>
+        <div role="separator" className={ax({ border: 'top' })} />
+        <div role="group" aria-label="Showcase">
+          <Aria.Item asChild ids={SHOWCASE_IDS} render={renderNavItem} />
         </div>
         <div className={ax({ flex: '1' })} />
         <div role="group" aria-label="Util">

@@ -96,10 +96,10 @@ defineNodePresentation('cta', {
   className: '',
   render: (data, locale) => (
     <div className={`${s.cmsHeroActions} ${ax({ layout: 'bar' })}`}>
-      <button type="button" className={`${s.cmsHeroCta} ${ax({ interactive: 'button' })} inline-flex items-center border-none`}>
+      <button type="button" className={`${s.cmsHeroCta} ${ax({ role: 'control', interactive: 'button', content: 'text' })} inline-flex items-center border-none`}>
         <LocalizedText value={data.primary as string | LocaleMap} locale={locale} /> <ArrowRight size={16} />
       </button>
-      <button type="button" className={`${s.cmsHeroCtaSecondary} ${ax({ interactive: 'button' })} inline-flex items-center`}>
+      <button type="button" className={`${s.cmsHeroCtaSecondary} ${ax({ role: 'control', interactive: 'button', content: 'text' })} inline-flex items-center`}>
         <LocalizedText value={data.secondary as string | LocaleMap} locale={locale} /> <ChevronRight size={16} />
       </button>
     </div>
@@ -136,7 +136,7 @@ defineNodePresentation('step-num', {
 })
 
 defineNodePresentation('pattern', {
-  className: `${s.cmsPattern} ${ax({ layout: 'bar', interactive: 'button' })}`,
+  className: `${s.cmsPattern} ${ax({ role: 'control', layout: 'bar', interactive: 'button', content: 'text' })}`,
   render: (data, locale) => (
     <div className="contents">
       <div className={`${s.cmsPatternIcon} ${ax({ layout: 'center', flex: 'none' })}`}><CmsIcon name={data.icon as string} size={12} /></div>
@@ -187,7 +187,7 @@ defineNodePresentation('links', {
 
 defineNodePresentation('link', {
   className: '',
-  render: (data, locale) => <a className={`${s.cmsFooterLink} ${ax({ interactive: 'button' })} no-underline`} href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>,
+  render: (data, locale) => <a className={`${s.cmsFooterLink} ${ax({ role: 'item', interactive: 'button', content: 'text' })} no-underline`} href={data.href as string}><LocalizedText value={data.label as string | LocaleMap} locale={locale} /></a>,
 })
 
 defineNodePresentation('tab-group', {
@@ -197,7 +197,7 @@ defineNodePresentation('tab-group', {
 
 defineNodePresentation('tab-item', {
   tag: 'button',
-  className: `${s.cmsTabItem} ${ax({ interactive: 'tab' })} border-none`,
+  className: `${s.cmsTabItem} ${ax({ role: 'control', interactive: 'tab', content: 'text' })} border-none`,
   render: (data, locale) => <LocalizedText value={data.label as LocaleMap} locale={locale} />,
 })
 
@@ -258,7 +258,7 @@ defineNodePresentation('article', {
 
 defineNodePresentation('showcase-item', {
   tag: 'div',
-  className: `${s.cmsShowcaseItem} ${ax({ interactive: 'button' })}`,
+  className: `${s.cmsShowcaseItem} ${ax({ role: 'control', interactive: 'button', content: 'text' })}`,
   render: (data, locale) => (
     <div className={`${s.cmsShowcaseItemContent} ${ax({ layout: 'stack' })}`}>
       <div className={`${s.cmsShowcaseItemIcon} ${ax({ layout: 'center' })}`}><CmsIcon name={data.icon as string} size={20} /></div>
@@ -270,7 +270,7 @@ defineNodePresentation('showcase-item', {
 
 defineNodePresentation('stat-card', {
   tag: 'div',
-  className: `${s.cmsStatCard} ${ax({ interactive: 'button' })}`,
+  className: `${s.cmsStatCard} ${ax({ role: 'control', interactive: 'button', content: 'text' })}`,
   render: (data, locale) => (
     <div className={`${s.cmsStatCardContent} ${ax({ layout: 'stack' })}`}>
       <span className={s.cmsStatCardValue}>{data.value as string}</span>
@@ -284,7 +284,7 @@ defineNodePresentation('section-cta', {
   tag: 'div',
   className: `${s.cmsSectionCta} ${ax({ layout: 'row', width: 'fit' })}`,
   render: (data, locale) => (
-    <a className={`${s.cmsSectionCtaLink} ${ax({ interactive: 'button' })} inline-flex items-center no-underline`} href={data.href as string}>
+    <a className={`${s.cmsSectionCtaLink} ${ax({ role: 'control', interactive: 'button', content: 'text' })} inline-flex items-center no-underline`} href={data.href as string}>
       <LocalizedText value={data.label as LocaleMap} locale={locale} /> <ArrowRight size={14} />
     </a>
   ),

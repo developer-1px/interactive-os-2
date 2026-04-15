@@ -23,7 +23,7 @@ export function IssueRow(
   return (
     <div
       {...props}
-      className={ax({ role: 'item', interactive: 'item', layout: 'row', width: 'full' })}
+      className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >

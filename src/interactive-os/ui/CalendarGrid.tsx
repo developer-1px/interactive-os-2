@@ -27,7 +27,7 @@ const defaultRenderCell = (
 ): React.ReactElement => (
   <td
     {...props}
-    className={`calendar-day text-center ${ax({ role: 'control', text: meta.isCurrentMonth ? 'primary' : 'muted', content: 'text', clamp: '1' })}`}
+    className={`text-center ${ax({ role: 'control', text: meta.isCurrentMonth ? 'primary' : 'muted', content: 'text', clamp: '1' })}`}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
     onClick={onClick}
