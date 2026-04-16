@@ -50,6 +50,13 @@ while ((match = axCallRegex.exec(content)) !== null) {
 }
 
 if (violations.length > 0) {
-  console.error(`ax() 조합 위반 ${violations.length}건:\n  ${violations.join('\n  ')}\n\nsurface:'action'은 tone 없이 사용하면 시각적 존재감이 없습니다.\nax({ surface: 'action', tone: 'accent' }) 처럼 tone을 명시하세요.`)
-  process.exit(1)
+  const reason = [
+    `ax() 조합 위반 ${violations.length}건:`,
+    ...violations.map(v => `  ${v}`),
+    '',
+    "surface:'action'은 tone 없이 사용하면 시각적 존재감이 없습니다.",
+    "ax({ surface: 'action', tone: 'accent' }) 처럼 tone을 명시하세요.",
+  ].join('\n')
+  process.stdout.write(JSON.stringify({ decision: 'block', reason }))
+  process.exit(0)
 }

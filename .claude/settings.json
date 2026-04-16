@@ -144,6 +144,7 @@
       },
       {
         "matcher": "Edit|Write",
+        "if": "Write(*.css)|Write(*.tsx)|Write(*.ts)|Edit(*.css)|Edit(*.tsx)|Edit(*.ts)",
         "hooks": [
           {
             "type": "command",
@@ -153,23 +154,13 @@
         ]
       },
       {
-        "matcher": "Write",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
             "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkTestComponents.mjs",
             "timeout": 5000,
             "statusMessage": "Checking test components..."
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkDesignScore.mjs",
-            "timeout": 3000
           }
         ]
       },

@@ -464,5 +464,12 @@ out.push('정규형: 표 = 6컬럼 | 접속사 | 원문 | 구체화 | 순서 | �
 out.push('게이트: 접속사(가장 왼쪽) → 원문 순으로 채움. 요소(번호)는 가장 오른쪽 = 결과.')
 out.push('규칙: L2 절 행 <7, 원문 중복 0, 헤딩=액션 타이틀, 사후 라벨 금지 (검사 13·14·17·18·19)')
 
-process.stderr.write(out.join('\n') + '\n')
-process.exit(fails.length > 0 ? 2 : 0)
+if (fails.length > 0) {
+  // fail → stdout JSON block 프로토콜
+  process.stdout.write(JSON.stringify({ decision: 'block', reason: out.join('\n') }))
+  process.exit(0)
+} else {
+  // warn only → stderr 경고, block하지 않음
+  process.stderr.write(out.join('\n') + '\n')
+  process.exit(0)
+}

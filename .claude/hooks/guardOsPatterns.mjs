@@ -263,79 +263,8 @@ if (isPages && isTsx && /<(?:input|select|textarea)\b/.test(content)) {
 // 규칙 17: 삭제됨 — surface:'overlay'는 depth ladder 층위일 뿐, width 필수가 아님
 // dialog/panel 컨테이너가 width를 가져야 하는 건 맞지만 overlay surface 전체에 강제할 규칙이 아님
 
-// 규칙 14: CSS 파일에서 ax() 축 소유 속성 사용 금지 — os 내부도 예외 없음
-// module.css든 일반 .css든 last-mile(축에 없는 속성)만 허용
-// 예외: ax.css — 축 시스템 자체이므로 축 소유 속성 당연히 사용
-const isCss = /\.css$/.test(filePath)
-const isAxCss = filePath.endsWith('/styles/ax.css')
-const isResetCss = filePath.endsWith('/styles/reset.css')
-if (isCss && !isAxCss && !isResetCss) {
-  // ax() 축 → 소유 CSS 속성 매핑 (패턴은 속성명만, ':'는 RegExp에서 추가)
-  const AX_OWNED_PROPS = [
-    // surface 축
-    ['background(?!-image)', 'surface'],
-    ['background-color', 'surface'],
-    ['box-shadow', 'surface'],
-    // shape 축
-    ['border-radius', 'shape'],
-    // textStyle 축
-    ['font-size', 'textStyle'],
-    ['font-weight', 'textStyle/weight'],
-    ['line-height', 'textStyle'],
-    ['letter-spacing', 'textStyle'],
-    // text 축
-    ['(?<!-)color', 'text'],
-    // layout 축
-    ['display', 'layout'],
-    ['flex-direction', 'layout'],
-    ['align-items', 'layout'],
-    ['justify-content', 'layout'],
-    ['overflow', 'layout'],
-    ['overflow-y', 'layout'],
-    ['overflow-x', 'layout'],
-    // gap 축
-    ['(?<!column-)(?<!row-)gap', 'gap'],
-    // padding 축
-    ['padding(?!-)', 'padding'],
-    // width 축
-    ['(?<!max-|min-)width', 'width'],
-    // height — layout:fill 등으로 표현
-    ['(?<!max-|min-)height', 'layout'],
-  ]
-
-  // 허용 값: var()/calc()/min()/max()/clamp(), CSS 키워드, 숫자(단위/퍼센트 포함), 소수
-  const ALLOWED_VALUE = /^\s*(?:(?:var|calc|min|max|clamp)\(.*\)|inherit|initial|unset|none|transparent|grid|inline|pre-wrap|nowrap|pre-line|break-spaces|pointer|auto|\d*\.?\d+(?:%|vh|vw|dvh|dvw|svh|svw)?)\s*;?\s*$/
-
-  const lines = content.split('\n')
-  const found = new Set()
-  let inPseudoElement = false
-  for (const line of lines) {
-    const trimmed = line.trim()
-    // skip comments, custom properties, var() only lines
-    if (trimmed.startsWith('/*') || trimmed.startsWith('*') || trimmed.startsWith('//')) continue
-    if (trimmed.startsWith('--')) continue
-    // skip ::backdrop, ::before, ::after pseudo-element blocks (CSS-only, ax() inapplicable)
-    if (/::(?:backdrop|before|after|placeholder)\s*\{/.test(trimmed)) { inPseudoElement = true; continue }
-    if (inPseudoElement) { if (trimmed === '}') inPseudoElement = false; continue }
-    for (const [pattern, axis] of AX_OWNED_PROPS) {
-      const re = new RegExp(`^${pattern}\\s*:`, 'm')
-      if (re.test(trimmed)) {
-        // 값 부분 추출 후 허용 값이면 skip
-        const valMatch = trimmed.match(/:\s*(.+)/)
-        if (valMatch && ALLOWED_VALUE.test(valMatch[1])) continue
-        // align-items: center가 grid 컨텍스트에 있으면 허용
-        if (pattern === 'align-items' && valMatch && /^center\s*;?\s*$/.test(valMatch[1]) && /grid-template/.test(content)) continue
-        found.add(`${trimmed.split(':')[0].trim()} → ax(${axis}) 사용`)
-      }
-    }
-  }
-
-  if (found.size > 0) {
-    violations.push(
-      `CSS에서 ax() 축 소유 속성 사용 금지 — ax() 또는 해당 축을 사용하세요:\n${[...found].map(f => `      • ${f}`).join('\n')}`
-    )
-  }
-}
+// 규칙 14: 삭제됨 — CSS 속성 검사는 guardCssAxes.mjs가 담당.
+// settings.json의 if 필터가 ts/tsx/jsx만이므로 이 훅은 CSS 파일에서 트리거되지 않아 dead code였음.
 
 // 규칙 20: ui/ 컴포넌트에서 onKeyDown/onKeyUp 바닐라 핸들링 금지 — keyMap/pattern/plugin 사용
 // isExempt는 os 전체를 면제하지만, ui/ 레이어는 useAria 기반 완성품이므로 키 핸들링도 os 방식이어야 함
