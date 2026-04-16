@@ -14,7 +14,7 @@ import { editAnimationFrames, readFrames, writeFrames, type TimedFrame } from '@
 import { useViewerTabs } from './useViewerTabs'
 import type { FileViewerHandle, ViewerTab } from '@os/ui/viewerTypes'
 import { ReplayProvider, type ReplayContextValue } from './replayContext'
-import { ReplayStageWidget } from './replayWidgets'
+import { ReplayStageWidget, ReplaySidebarWidget } from './replayWidgets'
 
 // ── Session loading ──
 
@@ -61,31 +61,19 @@ function tabLabel(tab: ViewerTab): string {
 
 // ── Per-session slot ──
 
-function ReplaySlot({ entry }: { entry: SessionEntry }) {
+type RegisterCtx = (index: number, ctx: ReplayContextValue | null) => void
+
+function ReplaySlot({ entry, index, register }: { entry: SessionEntry; index: number; register: RegisterCtx }) {
   const [allMessages, setAllMessages] = useState<ChatMessage[]>([])
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [mode] = useState<'replay' | 'live'>('replay')
   const [editingLine, setEditingLine] = useState<number | null>(null)
-  const [isVisible, setIsVisible] = useState(false)
-  const slotRef = useRef<HTMLDivElement>(null)
   const hasStartedRef = useRef(false)
 
   const viewerTabs = useViewerTabs()
   const fileViewerRef = useRef<FileViewerHandle>(null)
   const activeFileRef = useRef<string | null>(null)
   const zoomActiveRef = useRef(false)
-
-  // IntersectionObserver — detect when this slot is visible
-  useEffect(() => {
-    const el = slotRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([e]) => setIsVisible(e.isIntersecting),
-      { threshold: 0.5 },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
 
   // Replay release handler
   const onRelease = useCallback((vd: ViewerDelta) => {
@@ -261,13 +249,14 @@ function ReplaySlot({ entry }: { entry: SessionEntry }) {
     enqueueAll(unified)
   }, [allMessages, enqueueAll, clearReplay, viewerTabs])
 
-  // Auto-start replay when slot becomes visible (once)
+  // Auto-start replay on mount (slot is only mounted when near-visible)
   useEffect(() => {
-    if (isVisible && allMessages.length > 0 && !hasStartedRef.current) {
+    if (allMessages.length > 0 && !hasStartedRef.current) {
       hasStartedRef.current = true
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       startReplay()
     }
-  }, [isVisible, allMessages, startReplay])
+  }, [allMessages, startReplay])
 
   const { tabs, activeTab, activeTabId, setActiveTab } = viewerTabs
 
@@ -281,18 +270,21 @@ function ReplaySlot({ entry }: { entry: SessionEntry }) {
 
   const replayCtx = useMemo<ReplayContextValue>(() => ({
     selectedId: entry.id, setSelectedId: noop, sessionEntries,
-    messages, isRunning, startReplay, editingLine,
+    messages, allMessagesCount: allMessages.length, isRunning, startReplay, editingLine,
     mode, setMode: noop as never,
     tabs, activeTab, activeTabId, setActiveTab, viewerTabData, fileViewerRef,
     viewerTabs,
-  }), [entry.id, noop, messages, isRunning, startReplay, editingLine, mode, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs])
+  }), [entry.id, noop, messages, allMessages.length, isRunning, startReplay, editingLine, mode, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs])
+
+  useEffect(() => {
+    register(index, replayCtx)
+    return () => register(index, null)
+  }, [index, replayCtx, register])
 
   return (
-    <div ref={slotRef} className="replay-slot">
-      <ReplayProvider value={replayCtx}>
-        <ReplayStageWidget />
-      </ReplayProvider>
-    </div>
+    <ReplayProvider value={replayCtx}>
+      <ReplayStageWidget />
+    </ReplayProvider>
   )
 }
 
@@ -316,39 +308,62 @@ function useSnapFeed() {
   return feedRef
 }
 
-// ── Current session indicator ──
+// ── Page ──
 
-function useCurrentSessionId(feedRef: React.RefObject<HTMLDivElement | null>) {
+function useCurrentIndex(feedRef: React.RefObject<HTMLDivElement | null>) {
   const [index, setIndex] = useState(0)
-
   useEffect(() => {
     const el = feedRef.current
     if (!el) return
     const onScroll = () => {
-      const i = Math.round(el.scrollTop / el.clientHeight)
-      setIndex(i)
+      const next = Math.round(el.scrollTop / el.clientHeight)
+      setIndex(prev => prev === next ? prev : next)
     }
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => el.removeEventListener('scroll', onScroll)
   }, [feedRef])
-
-  return sessionEntries[index]?.id ?? ''
+  return index
 }
-
-// ── Page ──
 
 export default function PageReplay() {
   const feedRef = useSnapFeed()
-  const currentId = useCurrentSessionId(feedRef)
+  const currentIndex = useCurrentIndex(feedRef)
+  const [registry, setRegistry] = useState<Record<number, ReplayContextValue>>({})
+  const register = useCallback<RegisterCtx>((index, ctx) => {
+    setRegistry(prev => {
+      if (ctx === null) {
+        if (!(index in prev)) return prev
+        const { [index]: _, ...rest } = prev
+        return rest
+      }
+      if (prev[index] === ctx) return prev
+      return { ...prev, [index]: ctx }
+    })
+  }, [])
+  const activeCtx = registry[currentIndex] ?? null
+  const currentSessionId = sessionEntries[currentIndex]?.id ?? null
+
   return (
     <div className={ax({ layout: 'fill' })} style={{ overflow: 'hidden' }}>
-      {/* Session ID overlay — outside scroll */}
-      <div className={ax({ placement: 'top-start', padding: 'sm' })} style={{ zIndex: 30, pointerEvents: 'none' }}>
-        <span className={ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}>{currentId}</span>
+      {/* Sidebar — fixed, always rendered (ctx may be null between slot transitions) */}
+      <ReplaySidebarWidget
+        ctx={activeCtx}
+        sessionEntries={sessionEntries}
+        currentSessionId={currentSessionId}
+      />
+      {/* Dot indicator — right edge */}
+      <div className={`replay-dots ${ax({ layout: 'stack', gap: 'xs', placement: 'top-end' })}`}>
+        {sessionEntries.map((e, i) => (
+          <div key={e.id} className={`replay-dot ${i === currentIndex ? 'replay-dot--active' : ''}`} style={{ width: 6, height: 6 }} />
+        ))}
       </div>
       <div ref={feedRef} className={`replay-feed ${ax({ scroll: 'y' })}`}>
-        {sessionEntries.map(entry => (
-          <ReplaySlot key={entry.id} entry={entry} />
+        {sessionEntries.map((entry, i) => (
+          <div key={entry.id} className="replay-slot">
+            {Math.abs(i - currentIndex) <= 1
+              ? <ReplaySlot entry={entry} index={i} register={register} />
+              : null}
+          </div>
         ))}
       </div>
     </div>

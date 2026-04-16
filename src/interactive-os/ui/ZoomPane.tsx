@@ -50,15 +50,54 @@ export const ZoomPane = forwardRef<ZoomPaneHandle, ZoomPaneProps>(
       stateRef.current = { originX: ox, originY: oy, scale }
     }, [])
 
-    const scrollToLine = useCallback((lineEl: Element) => {
+    /** Scroll to center a line, resolve when scroll settles (scrollend + rAF-idle fallback + 500ms safety). */
+    const scrollToLineAwait = useCallback((lineEl: Element): Promise<void> => {
       const container = containerRef.current
-      if (!container) return
+      if (!container) return Promise.resolve()
       const containerRect = container.getBoundingClientRect()
       const lineRect = lineEl.getBoundingClientRect()
-      // Calculate target scroll position to center the line
       const lineCenter = lineRect.top - containerRect.top + container.scrollTop + lineRect.height / 2
-      const targetScroll = lineCenter - containerRect.height / 2
-      container.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' })
+      const targetScroll = Math.max(0, lineCenter - containerRect.height / 2)
+
+      // Already at target — no scroll needed
+      if (Math.abs(container.scrollTop - targetScroll) < 1) return Promise.resolve()
+
+      return new Promise<void>((resolve) => {
+        let settled = false
+        const finish = () => {
+          if (settled) return
+          settled = true
+          container.removeEventListener('scrollend', onScrollEnd)
+          clearTimeout(safety)
+          resolve()
+        }
+        const onScrollEnd = () => finish()
+
+        // Prefer native scrollend (Chrome 114+, Safari 17+)
+        container.addEventListener('scrollend', onScrollEnd, { once: true })
+
+        // Fallback: consecutive rAF ticks with no scrollTop change = settled
+        let lastTop = container.scrollTop
+        let still = 0
+        const poll = () => {
+          if (settled) return
+          const now = container.scrollTop
+          if (Math.abs(now - lastTop) < 0.5) {
+            still++
+            if (still >= 3 && Math.abs(now - targetScroll) < 1) { finish(); return }
+          } else {
+            still = 0
+            lastTop = now
+          }
+          requestAnimationFrame(poll)
+        }
+        requestAnimationFrame(poll)
+
+        // Ultimate safety — smooth scroll typically 300-500ms
+        const safety = setTimeout(finish, 600)
+
+        container.scrollTo({ top: targetScroll, behavior: 'smooth' })
+      })
     }, [])
 
     const zoomTo = useCallback((rect: ZoomRect, scale = 1.5) => {
@@ -77,18 +116,19 @@ export const ZoomPane = forwardRef<ZoomPaneHandle, ZoomPaneProps>(
         return
       }
 
-      const containerRect = container.getBoundingClientRect()
-      const lineRect = lineEl.getBoundingClientRect()
-      const top = lineRect.top - containerRect.top + container.scrollTop
-      const left = lineRect.left - containerRect.left + container.scrollLeft
-
-      // Scroll first, then apply zoom after scroll settles
-      scrollToLine(lineEl)
-      // Small delay to let scroll start, then apply zoom (they overlap smoothly)
-      requestAnimationFrame(() => {
-        applyTransform({ originX: `${left}px`, originY: `${top + lineRect.height / 2}px` }, scale, duration)
+      // 1) Scroll first, 2) await settlement, 3) then zoom from the final rect
+      scrollToLineAwait(lineEl).then(() => {
+        // Re-measure after scroll has settled — rect coordinates are now stable
+        const c = containerRef.current
+        const el = c?.querySelector(`[data-line="${line}"]`)
+        if (!c || !el) return
+        const cRect = c.getBoundingClientRect()
+        const lRect = el.getBoundingClientRect()
+        const top = lRect.top - cRect.top + c.scrollTop
+        const left = lRect.left - cRect.left + c.scrollLeft
+        applyTransform({ originX: `${left}px`, originY: `${top + lRect.height / 2}px` }, scale, duration)
       })
-    }, [applyTransform, scrollToLine, duration])
+    }, [applyTransform, scrollToLineAwait, duration])
 
     const reset = useCallback(() => {
       // Keep current origin, just scale back to 1 — no jarring origin jump

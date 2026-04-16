@@ -8,14 +8,15 @@ export interface SearchResultsProps {
   output: string
 }
 
-interface MatchLine {
+export interface MatchLine {
   file: string
   line: number | null
   text: string
 }
 
 /** Parse ripgrep-style output: "file:line:text" or "file:text" */
-function parseResults(output: string): Map<string, MatchLine[]> {
+// eslint-disable-next-line react-refresh/only-export-components
+export function parseResults(output: string): Map<string, MatchLine[]> {
   const groups = new Map<string, MatchLine[]>()
   for (const raw of output.split('\n')) {
     if (!raw.trim()) continue

@@ -1,9 +1,15 @@
 import { useMemo, useEffect, useRef, useState } from 'react'
 import type { RefObject } from 'react'
+import { Search } from 'lucide-react'
 import { ax } from '@styles/ax'
 import { ScrollArea } from '@os/ui/ScrollArea'
+import { NavList } from '@os/ui/NavList'
+import { Combobox } from '@os/ui/Combobox'
+import { Button } from '@os/ui/Button'
 import { FileViewer } from '@os/ui/FileViewer'
-import { SearchResults } from '@os/ui/SearchResults'
+import { parseResults } from '@os/ui/SearchResults'
+import { createStore } from '@os/store/createStore'
+import type { NormalizedData } from '@os/store/types'
 import type { FileViewerHandle } from '@os/ui/viewerTypes'
 import type { ChatMessage } from '@os/ui/chat/types'
 import { connectSession, disconnectSession, useTimeline } from '../viewer/viewerStore'
@@ -12,7 +18,108 @@ import { createFileState } from './fileState'
 import { processToolEvents } from './toolToCommands'
 import { useActiveSessions } from './useActiveSessions'
 import { useReplay } from './replayContext'
+import type { ReplayContextValue } from './replayContext'
 import './replayStages.css'
+
+// ── Session entry type (mirrors replayContext sessionEntries item) ──
+type SessionEntry = { id: string; type: 'json' | 'jsonl' }
+
+// ── Sidebar (fixed, outside scroll feed) ──
+
+export interface ReplaySidebarWidgetProps {
+  /** Active slot context — null when no slot is visible yet. Sidebar renders unconditionally and degrades gracefully. */
+  ctx: ReplayContextValue | null
+  /** Session list from the page — always available (doesn't depend on slot ctx). */
+  sessionEntries: SessionEntry[]
+  /** Currently highlighted session id from the page (snap index). */
+  currentSessionId: string | null
+}
+
+export function ReplaySidebarWidget({ ctx, sessionEntries, currentSessionId }: ReplaySidebarWidgetProps) {
+  const isRunning = ctx?.isRunning ?? false
+  const startReplay = ctx?.startReplay
+  const messages = ctx?.messages ?? []
+  const tabs = ctx?.tabs ?? []
+  const activeTabId = ctx?.activeTabId ?? null
+  const setActiveTab = ctx?.setActiveTab
+  const viewerTabs = ctx?.viewerTabs
+
+  // ── Session combobox data — always available ──
+  const sessionComboData = useMemo(() => {
+    const entities = Object.fromEntries(
+      sessionEntries.map(e => [e.id, { id: e.id, data: { label: `${e.id} (${e.type})` } }])
+    )
+    return createStore({ entities, relationships: { __root__: sessionEntries.map(e => e.id) } })
+  }, [sessionEntries])
+
+  // ── File list data (grouped: edited / read) ──
+  const fileListData: NormalizedData = useMemo(() => {
+    const fileTabs = tabs.filter(t => t.type === 'file')
+    if (fileTabs.length === 0 || !viewerTabs) return createStore({ entities: {}, relationships: {} })
+
+    const edited = fileTabs.filter(t => viewerTabs.editedPaths.has(t.id))
+    const readOnly = fileTabs.filter(t => !viewerTabs.editedPaths.has(t.id))
+
+    const entities: Record<string, { id: string; data: Record<string, unknown> }> = {}
+    const relationships: Record<string, string[]> = { __root__: [] }
+
+    if (edited.length > 0) {
+      entities['__edited__'] = { id: '__edited__', data: { label: '수정한 파일', type: 'group' } }
+      relationships['__root__'].push('__edited__')
+      relationships['__edited__'] = edited.map(t => t.id)
+      for (const t of edited) {
+        entities[t.id] = { id: t.id, data: { label: filenameFrom(t.id) } }
+      }
+    }
+    if (readOnly.length > 0) {
+      entities['__read__'] = { id: '__read__', data: { label: '열어본 파일', type: 'group' } }
+      relationships['__root__'].push('__read__')
+      relationships['__read__'] = readOnly.map(t => t.id)
+      for (const t of readOnly) {
+        entities[t.id] = { id: t.id, data: { label: filenameFrom(t.id) } }
+      }
+    }
+
+    return createStore({ entities, relationships })
+  }, [tabs, viewerTabs])
+
+  const fileCount = tabs.filter(t => t.type === 'file').length
+  const placeholder = currentSessionId ?? sessionEntries[0]?.id ?? 'Session'
+  const canReplay = !isRunning && messages.length > 0 && !!startReplay
+
+  return (
+    <div className={ax({ layout: 'fill' })} style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 200, zIndex: 20 }}>
+      {/* Session info — always rendered */}
+      <div className={ax({ flex: 'none', padding: 'xs', gap: 'xs', layout: 'fill' })}>
+        <Combobox
+          data={sessionComboData}
+          placeholder={placeholder}
+          aria-label="Session"
+        />
+        <div className={ax({ layout: 'bar', gap: 'xs', padding: 'xs' })}>
+          {canReplay && (
+            <Button onClick={startReplay}>Replay</Button>
+          )}
+          {isRunning && (
+            <span className={ax({ textStyle: 'caption', text: 'muted', motion: 'pulse' })}>Playing…</span>
+          )}
+        </div>
+      </div>
+
+      {/* File list — only when ctx has files */}
+      {fileCount > 0 && setActiveTab && (
+        <ScrollArea className={ax({ flex: '1' })}>
+          <NavList
+            data={fileListData}
+            initialFocus={activeTabId ?? undefined}
+            onActivate={(id) => setActiveTab(id)}
+            aria-label="Files"
+          />
+        </ScrollArea>
+      )}
+    </div>
+  )
+}
 
 // ── Stage: Shorts frame with IDE + subtitle ──
 
@@ -80,20 +187,11 @@ export function ReplayStageWidget() {
 
   // ── Current filename ──
   const currentPath = activeTab?.type === 'file' ? (activeTab.path ?? null) : null
-  const currentFilename = currentPath ? shortPath(currentPath) : null
 
-  // ── File switch flash ──
-  const [flashFile, setFlashFile] = useState<string | null>(null)
-  const prevPathRef = useRef<string | null>(null)
-  useEffect(() => {
-    if (currentPath && currentPath !== prevPathRef.current) {
-      setFlashFile(shortPath(currentPath))
-      const timer = setTimeout(() => setFlashFile(null), 1500)
-      prevPathRef.current = currentPath
-      return () => clearTimeout(timer)
-    }
-    prevPathRef.current = currentPath
-  }, [currentPath])
+  const flashFile = useFlash(currentPath ? shortPath(currentPath) : null, 1500)
+  const toolType = activeTab?.type ?? null
+  const toolLabel = toolType === 'file' ? 'Code' : toolType === 'terminal' ? 'Terminal' : toolType === 'search' ? 'Search' : null
+  const toolSplash = useFlash(toolLabel, 800, { skipFirst: true })
 
   // ── Replay finished? ──
   const replayFinished = mode === 'replay' && !isRunning && displayMessages.length > 0
@@ -106,13 +204,6 @@ export function ReplayStageWidget() {
         className={ax({ placement: 'relative', surface: 'base', shape: 'lg' })}
         style={{ aspectRatio: '9 / 16', height: 'calc(100% - 2rem)', display: 'flex', flexDirection: 'column', overflow: 'hidden', border: '1px solid var(--border-default)' }}
       >
-        {/* Filename bar */}
-        {currentFilename && (
-          <div className={ax({ layout: 'bar', padding: 'xs', flex: 'none', border: 'bottom' })}>
-            <span className={ax({ textStyle: 'caption', text: 'secondary' })}>{currentFilename}</span>
-          </div>
-        )}
-
         {/* File switch flash overlay */}
         {flashFile && (
           <div
@@ -141,7 +232,28 @@ export function ReplayStageWidget() {
             activeTab={activeTab}
             fileViewerRef={fileViewerRef}
             toolName={lastTool}
+            fileTabs={viewerTabs.tabs.filter(t => t.type === 'file')}
+            activeTabId={viewerTabs.activeTabId}
           />
+        )}
+
+        {/* Tool switch icon splash */}
+        {toolSplash && (
+          <div
+            className={ax({ layout: 'center', motion: 'fade-in' })}
+            style={{
+              position: 'absolute',
+              top: '45%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 19,
+              pointerEvents: 'none',
+            }}
+          >
+            <span className={ax({ textStyle: 'page', weight: 'semi', surface: 'overlay', padding: 'md', shape: 'lg' })}
+              style={{ fontSize: '1.5rem' }}
+            >{toolSplash}</span>
+          </div>
         )}
 
         {/* Subtitle overlay */}
@@ -206,17 +318,39 @@ function ToolBadge({ name }: { name: string }) {
   )
 }
 
-function CodeStage({ activeTab, fileViewerRef, toolName }: {
+function CodeStage({ activeTab, fileViewerRef, toolName, fileTabs, activeTabId }: {
   activeTab: { path?: string | null }
   fileViewerRef: RefObject<FileViewerHandle | null>
   toolName: string | null
+  fileTabs: Array<{ id: string; path?: string | null }>
+  activeTabId: string | null
 }) {
   return (
-    <div className={ax({ flex: '1', layout: 'fill' })} style={{ position: 'relative', background: '#1e1e2e', color: '#cdd6f4' }}>
+    <div className={ax({ flex: '1', layout: 'fill', scroll: 'hidden' })} style={{ position: 'relative', background: '#1e1e2e', color: '#cdd6f4' }}>
       {toolName && <ToolBadge name={toolName} />}
-      <ScrollArea className={ax({ flex: '1' })}>
+      {/* IDE tab bar */}
+      {fileTabs.length > 0 && (
+        <div className={ax({ layout: 'row', flex: 'none' })} style={{ background: '#181825', overflow: 'hidden' }}>
+          {fileTabs.slice(-5).map(t => {
+            const isActive = t.id === activeTabId
+            return (
+              <div
+                key={t.id}
+                className={ax({ padding: 'xs', textStyle: 'caption', clamp: '1' })}
+                style={{
+                  background: isActive ? '#1e1e2e' : 'transparent',
+                  color: isActive ? '#cdd6f4' : '#6c7086',
+                  borderBottom: isActive ? '2px solid #89b4fa' : '2px solid transparent',
+                  maxWidth: '33%',
+                }}
+              >{filenameFrom(t.path ?? null)}</div>
+            )
+          })}
+        </div>
+      )}
+      <div className={ax({ flex: '1' })}>
         <FileViewer ref={fileViewerRef} filename={filenameFrom(activeTab.path ?? null)} />
-      </ScrollArea>
+      </div>
     </div>
   )
 }
@@ -241,7 +375,7 @@ function TerminalStage({ command, output, toolName }: {
           <span className="terminal-dot" style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
         </div>
         {/* Terminal content */}
-        <ScrollArea className={ax({ flex: '1' })}>
+        <div className={ax({ flex: '1', scroll: 'hidden' })}>
           <div className={ax({ padding: 'sm', gap: 'sm', layout: 'stack' })}>
             <div className={ax({ layout: 'row', gap: 'sm' })}>
               <span className={`${ax({ flex: 'none' })} terminal-glow-prompt`} style={{ color: '#22d3ee' }}>$</span>
@@ -249,23 +383,117 @@ function TerminalStage({ command, output, toolName }: {
             </div>
             <div style={{ color: '#d4d4d8', wordBreak: 'break-all' }}>{output || '(no output)'}</div>
           </div>
-        </ScrollArea>
+        </div>
       </div>
     </div>
   )
 }
 
-function SearchStage({ query, output, toolName }: {
+const MATCHES_PER_FILE = 4
+
+/** Emits `key` briefly (ms) when it changes, then null. `skipFirst` suppresses initial emission. */
+function useFlash(key: string | null, ms: number, options?: { skipFirst?: boolean }): string | null {
+  const [value, setValue] = useState<string | null>(null)
+  const prevRef = useRef<string | null>(null)
+  const firstRef = useRef(true)
+  const skipFirst = options?.skipFirst ?? false
+  useEffect(() => {
+    if (key === prevRef.current) return
+    prevRef.current = key
+    const shouldEmit = key !== null && !(skipFirst && firstRef.current)
+    firstRef.current = false
+    // Transient UI flash — effect-driven state is intentional here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!shouldEmit) { setValue(null); return }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setValue(key)
+    const timer = setTimeout(() => setValue(null), ms)
+    return () => clearTimeout(timer)
+  }, [key, ms, skipFirst])
+  return value
+}
+
+function ReplaySearchStage({ query, output, toolName }: {
   query: string
   output: string
   toolName: string | null
 }) {
+  const groups = useMemo(() => parseResults(output), [output])
+  const totalMatches = useMemo(
+    () => [...groups.values()].reduce((s, g) => s + Math.max(g.length, 1), 0),
+    [groups],
+  )
+  const fileCount = groups.size
+
   return (
-    <div className={ax({ flex: '1', layout: 'fill', surface: 'base' })} style={{ position: 'relative' }}>
+    <div className={ax({ flex: '1', layout: 'stack', surface: 'base', scroll: 'hidden', padding: 'lg', gap: 'lg' })} style={{ position: 'relative' }}>
       {toolName && <ToolBadge name={toolName} />}
-      <ScrollArea className={ax({ flex: '1' })}>
-        <SearchResults query={query} output={output} />
-      </ScrollArea>
+
+      {/* ── Hero query ── */}
+      <div className={ax({ layout: 'stack', gap: 'md', padding: 'lg' })}>
+        <div className={ax({ layout: 'center', text: 'muted' })}>
+          <Search aria-hidden="true" className={ax({ icon: 'lg' })} />
+        </div>
+        <div className={ax({ layout: 'center' })}>
+          <span className={ax({ textStyle: 'page', weight: 'semi', text: 'primary', clamp: '2' })} style={{ textAlign: 'center', wordBreak: 'break-word' }}>
+            &ldquo;{query}&rdquo;
+          </span>
+        </div>
+      </div>
+
+      {/* ── Match count (hero numbers) ── */}
+      {fileCount > 0 ? (
+        <div className={ax({ layout: 'stack', gap: 'xs', padding: 'sm' })}>
+          <div className={ax({ layout: 'row', gap: 'md' })} style={{ justifyContent: 'center', alignItems: 'baseline' }}>
+            <span className={ax({ textStyle: 'hero', weight: 'bold', text: 'primary' })}>{totalMatches}</span>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>matches</span>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>in</span>
+            <span className={ax({ textStyle: 'hero', weight: 'bold', text: 'primary' })}>{fileCount}</span>
+            <span className={ax({ textStyle: 'caption', text: 'muted' })}>files</span>
+          </div>
+        </div>
+      ) : (
+        <div className={ax({ layout: 'center', text: 'muted', textStyle: 'body' })}>
+          No results
+        </div>
+      )}
+
+      {/* ── File group cards ── */}
+      <div className={ax({ flex: '1', layout: 'stack', gap: 'md', scroll: 'hidden' })}>
+        {[...groups.entries()].map(([file, matches]) => {
+          const visible = matches.slice(0, MATCHES_PER_FILE)
+          const overflow = matches.length - visible.length
+          return (
+            <div key={file} className={ax({ layout: 'stack', surface: 'raised', shape: 'md', border: 'subtle' })}>
+              <div className={ax({ padding: 'sm', border: 'bottom', flex: 'none' })}>
+                <span className={ax({ textStyle: 'caption', weight: 'semi', text: 'primary', clamp: '1' })}>
+                  {file.replace(/.*\/aria\//, '')}
+                </span>
+              </div>
+              <div className={ax({ layout: 'stack', textStyle: 'code' })}>
+                {visible.map((m, i) => (
+                  <div key={i} className={ax({ layout: 'row', gap: 'sm', padding: 'xs' })}>
+                    {m.line != null && (
+                      <span className={ax({ flex: 'none', text: 'muted', opacity: 'dim' })} style={{ minWidth: '2.5em', textAlign: 'right' }}>
+                        {m.line}
+                      </span>
+                    )}
+                    <span className={ax({ flex: '1', clamp: 'pre', text: 'secondary' })}>{m.text}</span>
+                  </div>
+                ))}
+                {matches.length === 0 && (
+                  <div className={ax({ padding: 'xs', text: 'muted', textStyle: 'caption' })}>(file match)</div>
+                )}
+                {overflow > 0 && (
+                  <div className={ax({ padding: 'xs', text: 'muted', textStyle: 'caption', border: 'top' })}>
+                    +{overflow} more
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -354,7 +582,7 @@ function StatsEndCard({ messages }: { messages: ChatMessage[] }) {
   }, [allEdits])
 
   return (
-    <ScrollArea className={ax({ flex: '1', surface: 'base' })}>
+    <div className={ax({ flex: '1', surface: 'base', scroll: 'hidden' })}>
       <div className={ax({ layout: 'stack', gap: 'md', padding: 'sm' })}>
         {/* Summary */}
         {summary && (
@@ -406,23 +634,25 @@ function StatsEndCard({ messages }: { messages: ChatMessage[] }) {
           </div>
         ))}
       </div>
-    </ScrollArea>
+    </div>
   )
 }
 
-function StageRouter({ activeTab, fileViewerRef, toolName }: {
+function StageRouter({ activeTab, fileViewerRef, toolName, fileTabs, activeTabId }: {
   activeTab: { type: string; path?: string | null; query?: string; output?: string; command?: string } | null
   fileViewerRef: RefObject<FileViewerHandle | null>
   toolName: string | null
+  fileTabs: Array<{ id: string; path?: string | null }>
+  activeTabId: string | null
 }) {
   if (activeTab?.type === 'file') {
-    return <CodeStage activeTab={activeTab} fileViewerRef={fileViewerRef} toolName={toolName} />
+    return <CodeStage activeTab={activeTab} fileViewerRef={fileViewerRef} toolName={toolName} fileTabs={fileTabs} activeTabId={activeTabId} />
   }
   if (activeTab?.type === 'terminal') {
     return <TerminalStage command={activeTab.command!} output={activeTab.output!} toolName={toolName} />
   }
   if (activeTab?.type === 'search') {
-    return <SearchStage query={activeTab.query!} output={activeTab.output!} toolName={toolName} />
+    return <ReplaySearchStage query={activeTab.query!} output={activeTab.output!} toolName={toolName} />
   }
   return <EmptyStage />
 }

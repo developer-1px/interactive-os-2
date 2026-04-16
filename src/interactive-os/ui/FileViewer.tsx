@@ -1,9 +1,9 @@
 /** @catalog 파일 내용 뷰어 (탭+미리보기) */
 // ② 2026-04-03-viewer-command-prd.md
-import { useState, useCallback, useImperativeHandle, forwardRef, useRef, useEffect } from 'react'
+import { useState, useCallback, useImperativeHandle, forwardRef, useRef } from 'react'
 import { FilePreview } from './FilePreview'
 import { useAnimationQueue } from './useAnimationQueue'
-import type { HighlightTone } from './CodeBlock'
+import type { HighlightTone } from './CodeViewer'
 import { editAnimationFrames, type TimedFrame } from './editAnimation'
 import type { FileViewerCommand, FileViewerHandle } from './viewerTypes'
 import { ZoomPane, type ZoomPaneHandle } from './ZoomPane'
@@ -66,17 +66,6 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
     }, [enqueueAll, clearQueue])
 
     useImperativeHandle(ref, () => ({ dispatch }), [dispatch])
-
-    // Auto-scroll to highlighted/cursor line
-    const scrollTarget = cursorLine ?? (highlights ? Math.min(...highlights.keys()) : null)
-    useEffect(() => {
-      if (scrollTarget == null) return
-      const container = zoomRef.current as unknown as { zoomToLine: (line: number) => void } | null
-      if (!container) return
-      // scroll via DOM — ZoomPane's container ref handles this
-      const el = document.querySelector(`[data-line="${scrollTarget}"]`)
-      if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' })
-    }, [scrollTarget])
 
     if (content == null) {
       return (
