@@ -11,7 +11,9 @@ import type { Locale } from './cmsTypes'
 import type { TemplateType } from './cmsTemplates'
 import { templateToCommand } from './cmsTemplates'
 import { collectSections, getRootAncestor, getTabItemAncestor } from './collectSections'
+import { localized } from './cmsTypes'
 import type { LocaleMap } from './cmsTypes'
+import { getChildren } from '@os/store/createStore'
 import { AriaZone } from '@os/ui/AriaZone'
 import type { AriaZoneContext } from '@os/ui/AriaZone'
 import { listbox } from '@os/pattern/roles/listbox'
@@ -42,6 +44,7 @@ interface SectionGroupEntry {
   prevRootAncestorForSepEnd: string
   showLabel: boolean
   labelText: string
+  ariaLabel: string
 }
 
 function computeSectionGrouping(sectionIds: string[], store: NormalizedData, locale: Locale): SectionGroupEntry[] {
@@ -77,10 +80,20 @@ function computeSectionGrouping(sectionIds: string[], store: NormalizedData, loc
       labelText = label?.[locale] ?? label?.ko ?? ''
     }
 
+    const sectionData = (store.entities[sectionId]?.data ?? {}) as Record<string, unknown>
+    const sectionVariant = (sectionData.variant as string) ?? (sectionData.type as string) ?? ''
+    const sectionTitleEntity = getChildren(store, sectionId)
+      .map(cid => store.entities[cid])
+      .find(e => (e?.data as Record<string, unknown>)?.type === 'section-title')
+    const sectionTitleText = sectionTitleEntity
+      ? localized((sectionTitleEntity.data as Record<string, unknown>).value as string | LocaleMap, locale).text
+      : ''
+    const ariaLabel = `Section ${index + 1}: ${sectionVariant}${sectionTitleText ? ' — ' + sectionTitleText : ''}`
+
     prevRoot = rootAncestor
     prevTab = tabItemId ?? ''
 
-    return { sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }
+    return { sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText, ariaLabel }
   })
 }
 
@@ -211,7 +224,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
       {/* eslint-disable-next-line local/no-raw-aria-role -- AriaZone 기반, containerProps에 role 미포함 */}
       <div className={`ax-interactive cms-sidebar__list ${ax({ flex: '1', layout: 'stack', scroll: 'y', padding: 'none', gap: 'xs' })}`} role="listbox" aria-label="Section thumbnails" ref={listRef} data-aria-container="" {...(aria.containerProps as React.HTMLAttributes<HTMLDivElement>)} onFocus={handleContainerFocus}>
-        {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText }) => {
+        {sectionGrouping.map(({ sectionId, index, rootAncestor, tabItemId, showSepStart, showSepEnd, prevRootAncestorForSepEnd, showLabel, labelText, ariaLabel }) => {
             const elements: React.ReactNode[] = []
 
             if (showSepStart) {
@@ -236,6 +249,7 @@ function CmsSidebarContent({ aria, engine, store, locale, activeSectionId, secti
                 key={sectionId}
                 {...(props as React.HTMLAttributes<HTMLDivElement>)}
                 className={`cms-sidebar__thumb w-full cursor-pointer ${ax({ flex: 'none', placement: 'relative', shape: 'md', surface: 'display', padding: 'none' })}${state.focused ? ' cms-sidebar__thumb--focused' : ''}`}
+                aria-label={ariaLabel}
                 onClick={() => {
                   aria.dispatch(focusCommands.setFocus(sectionId))
                   scrollToSection(sectionId)

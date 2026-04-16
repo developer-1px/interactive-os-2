@@ -14,9 +14,30 @@ import { CmsIcon } from './cmsRenderers'
 import { LOCALES } from './cmsTypes'
 import { Sheet, ImagePlus, X } from 'lucide-react'
 import { ax } from '@styles/ax'
+import { getParent } from '@os/store/createStore'
 import { ScrollArea } from '@os/ui/ScrollArea'
 import { Form } from '@os/ui/Form'
 import type { NodeState } from '@os/pattern/types'
+
+function buildBreadcrumb(store: NormalizedData, nodeId: string, locale: Locale): string {
+  const path: string[] = []
+  let current: string | null = nodeId
+  let depth = 0
+  while (current && current !== 'root' && depth++ < 20) {
+    const entity = store.entities[current]
+    if (entity) {
+      const data = entity.data as Record<string, unknown>
+      const type = data.type as string
+      const nameField = data.title ?? data.label ?? data.value ?? data.variant ?? data.name
+      const name = nameField
+        ? (typeof nameField === 'object' ? localized(nameField as LocaleMap, locale).text : String(nameField))
+        : ''
+      path.unshift(name ? `${type}: ${name}` : type)
+    }
+    current = getParent(store, current) ?? null
+  }
+  return path.join(' \u203A ')
+}
 
 interface CmsDetailPanelProps {
   engine: CommandEngine
@@ -49,6 +70,11 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
     })
     return () => cancelAnimationFrame(raf)
   }, [autoFocus])
+
+  const breadcrumb = useMemo(
+    () => focusedNodeId ? buildBreadcrumb(store, focusedNodeId, locale) : '',
+    [store, focusedNodeId, locale],
+  )
 
   const groups = useMemo(
     () => focusedNodeId ? collectEditableGroups(store, focusedNodeId, locale) : [],
@@ -104,6 +130,12 @@ export default function CmsDetailPanel({ engine, store, focusedNodeId, locale, o
   return (
     <ScrollArea ref={containerRef} className={`cms-detail-panel ${ax({ flex: 'none', surface: 'sunken', border: 'start' })}`} style={style}>
       {localeBar}
+      {breadcrumb && (
+        <div className={`cms-detail-panel__breadcrumb ${ax({ padding: 'xs', textStyle: 'caption', text: 'muted', border: 'bottom' })}`}
+             aria-label="Edit path">
+          {breadcrumb}
+        </div>
+      )}
       <Form
         engine={engine}
         store={store}
@@ -194,6 +226,7 @@ function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
         ref={elRef}
         className={`cms-detail-field__input ${ax({ role: 'control', surface: 'input', text: 'primary', content: 'text' })} w-full outline-none`}
         type="text"
+        name={`${entry.nodeId}.${entry.field}`}
         defaultValue={displayValue}
         onFocus={handleFocus}
         onBlur={handleCommit}
@@ -212,6 +245,7 @@ function LongTextField({ entry, store, locale, engine }: DetailFieldProps) {
       <textarea
         ref={elRef}
         className={`cms-detail-field__textarea ${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'md' })} w-full outline-none`}
+        name={`${entry.nodeId}.${entry.field}`}
         defaultValue={displayValue}
         rows={4}
         onFocus={handleFocus}
@@ -253,6 +287,7 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
         ref={elRef}
         className={`cms-detail-field__input ${ax({ role: 'control', surface: 'input', text: 'primary', content: 'text' })} w-full outline-none`}
         type="url"
+        name={`${entry.nodeId}.${entry.field}`}
         defaultValue={displayValue}
         onFocus={handleFocus}
         onBlur={handleBlur}

@@ -1,5 +1,5 @@
 // @useState-hatch — locale/viewport/i18nSheetOpen/presenting/canvasFocusedId/activeTabMap: view+interaction state not yet migrated to OS store
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react' // @useState-hatch
 import '../../styles/cms.css'
 import '../../styles/landingTokens.css'
 import type { ViewportSize } from './CmsViewportWrapper'
@@ -7,6 +7,7 @@ import CmsViewportBar from './CmsViewportBar'
 import CmsFloatingToolbar from './CmsFloatingToolbar'
 import CmsPresentMode from './CmsPresentMode'
 import { RouteModal } from '@os/ui/RouteModal'
+import { createCmsApi } from './cmsApi'
 import { useCmsData } from './cmsState'
 import type { Locale } from './cmsTypes'
 import { useEngine } from '@os/engine/useEngine'
@@ -84,6 +85,20 @@ export default function PageCms() {
   const [activeTabMap, setActiveTabMap] = useState<Map<string, string>>(new Map()) // @useState-hatch
   // @useState-hatch — detailZoneActive: zone transition (app-level routing, not OS state)
   const [detailZoneActive, setDetailZoneActive] = useState(false)
+
+  const storeRef = useRef(store)
+  const localeRef = useRef(locale)
+  useEffect(() => { storeRef.current = store }, [store])
+  useEffect(() => { localeRef.current = locale }, [locale])
+  useEffect(() => {
+    const api = createCmsApi(
+      () => engine,
+      () => storeRef.current,
+      () => localeRef.current,
+    )
+    ;(window as any).cms = api
+    return () => { delete (window as any).cms }
+  }, [engine])
 
   const onSlotDrillDown = useCallback((_nodeId: string) => {
     setDetailZoneActive(true)
