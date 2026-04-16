@@ -13,13 +13,14 @@ export function CheckItem(
   const label = getNodeLabel(node)
   const isMixed = state.checked === 'mixed'
   return (
-    <div
-      {...props}
+    <button
+      type="button"
+      {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
       className={ax({ role: 'item', interactive: 'check', layout: 'row', width: 'full' })}
       data-focused={state.focused || undefined}
     >
       {isMixed ? <IndeterminateIndicator /> : <CheckIndicator />}
       <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
-    </div>
+    </button>
   )
 }

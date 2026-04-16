@@ -14,8 +14,9 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const label = getNodeLabel(item)
   const pressed = state.expanded ?? false
   return (
-    <div
-      {...props}
+    <button
+      type="button"
+      {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
       className={ax({
         role: 'control',
         interactive: 'check',
@@ -23,12 +24,12 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
         tone: pressed ? 'accent-dim' : undefined,
         content: 'text',
         text: pressed ? 'bright' : state.focused ? 'primary' : 'secondary',
-        border: pressed ? undefined : 'strong',
+        border: pressed ? undefined : 'default',
       })}
       data-focused={state.focused || undefined}
     >
       {label}
-    </div>
+    </button>
   )
 }
 

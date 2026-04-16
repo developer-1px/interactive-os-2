@@ -22,9 +22,10 @@ export function TabItem(
   const { icon, closable, onClose, preview } = options ?? {}
 
   return (
-    <div
-      {...props}
-      className={`tab-item ${ax({
+    <button
+      type="button"
+      {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+      className={`${ax({
         surface: 'ghost', role: 'control', layout: 'bar',
         text: state.selected ? 'primary' : 'muted',
         interactive: 'tab', content: 'text', clamp: '1',
@@ -48,6 +49,6 @@ export function TabItem(
           <CloseIndicator />
         </button>
       )}
-    </div>
+    </button>
   )
 }

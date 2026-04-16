@@ -2,7 +2,7 @@
 import React from 'react'
 import { type Axes, ax } from '@styles/ax'
 
-type ButtonVariant = 'accent' | 'ghost' | 'overlay' | 'dialog' | 'destructive'
+type ButtonVariant = 'accent' | 'ghost' | 'overlay' | 'dialog' | 'destructive' | 'outline' | 'secondary' | 'link'
 type ButtonTone = Axes['tone']
 const variantAxes: Record<ButtonVariant, Parameters<typeof ax>[0]> = {
   accent: { surface: 'action', tone: 'accent', text: 'bright' },
@@ -10,6 +10,9 @@ const variantAxes: Record<ButtonVariant, Parameters<typeof ax>[0]> = {
   overlay: { surface: 'overlay', width: 'fit' },
   dialog: { surface: 'input', interactive: 'button' },
   destructive: { surface: 'action', tone: 'danger-dim' },
+  outline: { surface: 'display', interactive: 'button' },
+  secondary: { surface: 'sunken', interactive: 'button' },
+  link: { surface: 'ghost', text: 'primary' },
 }
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

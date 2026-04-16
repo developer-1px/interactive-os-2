@@ -1040,6 +1040,7 @@ textarea::placeholder { color: var(--text-muted); }
   user-select: none;
   outline: 1px solid transparent;
   outline-offset: -1px;
+  box-shadow: var(--shadow-xs);
 }
 
 :where(.ax-interactive:not(:focus-within) .ia-check:hover) {

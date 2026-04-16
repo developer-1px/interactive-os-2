@@ -12,13 +12,14 @@ export function SwitchItem(
 ): React.ReactElement {
   const label = getNodeLabel(node)
   return (
-    <div
-      {...props}
+    <button
+      type="button"
+      {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
       className={ax({ role: 'item', interactive: 'check', layout: 'spread', text: state.checked ? 'primary' : undefined, width: 'full' })}
       data-focused={state.focused || undefined}
     >
       <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
       <SwitchIndicator />
-    </div>
+    </button>
   )
 }

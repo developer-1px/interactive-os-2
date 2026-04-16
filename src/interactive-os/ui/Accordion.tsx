@@ -19,12 +19,12 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   if (isGroup) {
     return (
       <div>
-        <div {...props} className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'spread', weight: 'semi', width: 'full' })}>
+        <button type="button" {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)} className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'spread', weight: 'semi', width: 'full', border: 'bottom' })}>
           <span className={ax({ text: state.focused ? 'primary' : 'secondary' })}>{label}</span>
           <span className={`accordion-chevron ${ax({ flex: 'none', text: 'muted' })}`} data-expanded={state.expanded || undefined}>
             <ExpandIndicator />
           </span>
-        </div>
+        </button>
         {state.slotProps && (
           <div {...state.slotProps} className={ax({ layout: 'stack' })}>
             <span>{label} content</span>
