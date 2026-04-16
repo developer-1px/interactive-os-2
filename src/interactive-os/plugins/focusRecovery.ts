@@ -3,10 +3,7 @@ import type { NormalizedData } from '../store/types'
 import { ROOT_ID } from '../store/types'
 import { getChildren, getParent, getEntity } from '../store/createStore'
 import { definePlugin } from './definePlugin'
-import { focusCommands, gridCellRangeCommands } from '../core'
-
-const FOCUS_ID = '__focus__'
-const EXPANDED_ID = '__expanded__'
+import { focusCommands, gridCellRangeCommands, FOCUS_ID, EXPANDED_ID } from '../core'
 
 export type IsReachable = (store: NormalizedData, nodeId: string) => boolean
 

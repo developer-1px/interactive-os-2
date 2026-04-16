@@ -3,11 +3,7 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin, CommandHandler } from './types'
 import { createCommandEngine } from './createCommandEngine'
 import type { CommandEngine } from './createCommandEngine'
-import {
-  focusCommands, gridColCommands, gridCellRangeCommands,
-  selectionCommands, expandCommands, checkedCommands, popupCommands,
-} from '../core'
-import { valueCommands } from '../axis/value'
+import { coreRegistry } from '../core'
 
 export interface UseEngineOptions {
   data: NormalizedData
@@ -44,16 +40,8 @@ export function useEngine(options: UseEngineOptions): UseEngineReturn {
       .map((p) => p.middleware)
       .filter((m): m is NonNullable<typeof m> => m != null)
 
-    // Build handler registry from core axes + plugin commands
-    const registry = new Map<string, CommandHandler>()
-    const axisCommandSets = [focusCommands, gridColCommands, gridCellRangeCommands, selectionCommands, expandCommands, checkedCommands, popupCommands, valueCommands]
-    for (const cmdSet of axisCommandSets) {
-      for (const creator of Object.values(cmdSet)) {
-        if (creator != null && 'type' in creator && 'handler' in creator) {
-          registry.set(creator.type as string, creator.handler as CommandHandler)
-        }
-      }
-    }
+    // Build handler registry from core + plugin commands
+    const registry = new Map<string, CommandHandler>(coreRegistry)
     for (const plugin of plugins) {
       for (const creator of Object.values(plugin.commands ?? {})) {
         if ('type' in creator && 'handler' in creator) {
