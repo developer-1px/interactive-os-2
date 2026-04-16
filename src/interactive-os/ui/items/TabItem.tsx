@@ -28,6 +28,7 @@ export function TabItem(
         surface: 'ghost', role: 'control', layout: 'bar',
         text: state.selected ? 'primary' : 'muted',
         interactive: 'tab', content: 'text', clamp: '1',
+        shape: 'sm', textStyle: 'label', flex: '1',
       })}${preview ? ' tab-item-preview' : ''}`}
     >
       {icon && <span className={ax({ layout: 'center', flex: 'none' })}>{icon}</span>}

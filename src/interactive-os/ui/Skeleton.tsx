@@ -18,7 +18,7 @@ export function Skeleton({ width = 'full', height = 'sm', shape = 'rect' }: Skel
     <div
       className={ax({
         surface: 'sunken',
-        motion: 'shimmer',
+        motion: 'pulse',
         shape: resolvedShape,
         width: shape === 'circle' ? undefined : width,
         square: height,

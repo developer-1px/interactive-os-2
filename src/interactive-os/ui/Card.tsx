@@ -15,7 +15,7 @@ interface CardProps {
 
 const variantAxes: Record<CardVariant, Partial<Axes>> = {
   outlined: { surface: 'base', border: 'default', shape: 'md' },
-  elevated: { surface: 'raised', shape: 'md' },
+  elevated: { surface: 'raised', border: 'ring', shape: 'md' },
   filled: { surface: 'sunken', shape: 'md' },
 }
 

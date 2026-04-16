@@ -19,6 +19,7 @@ export function Badge({ tone = 'neutral', variant = 'solid', children }: BadgePr
         border: variant === 'outline' ? 'default' : undefined,
         content: 'text',
         clamp: '1',
+        shape: 'pill',
       })}
     >
       {children}

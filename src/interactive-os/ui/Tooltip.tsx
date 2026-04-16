@@ -77,7 +77,7 @@ export function Tooltip({ content, placement = 'bottom', children }: TooltipProp
         id={id}
         popover="hint"
         role="tooltip"
-        className={`pointer-none ${ax({ surface: 'overlay', placement: placementMap[placement], padding: 'xs', shape: 'sm', textStyle: 'caption', text: 'primary', motion: 'fade-slide-in' })}`}
+        className={`pointer-none ${ax({ surface: 'inverted', placement: placementMap[placement], padding: 'xs', shape: 'sm', textStyle: 'caption', motion: 'fade-slide-in' })}`}
         style={{
           positionAnchor: anchorName,
           maxWidth: 'calc(var(--space-3xl) * 6)',

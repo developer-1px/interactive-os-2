@@ -42,12 +42,10 @@ export function Avatar({ src, name, size = 'md' }: AvatarProps) {
       className={ax({
         square: sizeMap[size],
         shape: 'pill',
-        surface: 'action',
-        tone: 'accent-dim',
+        surface: 'sunken',
         layout: 'center',
         textStyle: size === 'lg' ? 'label' : 'caption',
-        text: 'bright',
-        weight: 'semi',
+        text: 'muted',
       })}
       aria-label={name}
       role="img"

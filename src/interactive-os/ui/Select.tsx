@@ -74,7 +74,7 @@ export function Select({
       {showDropdown && (
         <div
           role="listbox"
-          className={ax({ scroll: 'hidden', surface: 'overlay', shape: 'xl', placement: 'anchor-below' })}
+          className={ax({ scroll: 'hidden', surface: 'overlay', shape: 'md', border: 'ring', placement: 'anchor-below' })}
           style={{ positionAnchor: anchorName } as React.CSSProperties}
           onMouseDown={(e) => e.preventDefault()}
         >

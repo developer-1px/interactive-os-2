@@ -20,7 +20,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
   const resolvedTone = (tone ? toneMap[tone] : undefined) ?? 'neutral-dim' as const
   const indicatorTone = tone === 'danger' || tone === 'error' ? 'error' : tone === 'success' ? 'success' : tone === 'warning' ? 'warning' : 'info'
   return (
-    <div {...props} className={ax({ recipe: 'container-sm', surface: 'display', tone: resolvedTone, layout: 'row', gap: 'sm', padding: 'md', shape: 'md' })}>
+    <div {...props} className={ax({ surface: 'raised', border: 'ring', tone: resolvedTone, layout: 'row', gap: 'xs', padding: 'md', shape: 'md' })}>
       <StatusIndicator tone={indicatorTone} />
       <div className={ax({ layout: 'stack', gap: 'xs' })}>
         <span className={ax({ textStyle: 'label', text: 'primary', weight: 'semi' })}>{label}</span>

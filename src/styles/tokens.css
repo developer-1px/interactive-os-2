@@ -23,7 +23,7 @@
 
   /* ── Shadow (xs/sm/md/lg scale) ── */
   /* Linear: shadow는 overlay만. xs/sm은 미세, lg만 overlay급 */
-  --shadow-xs: none;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
   --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.04);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06);
@@ -78,6 +78,7 @@
   --focus:        var(--blue-400);
   --focus-idle:   var(--bg-hover);
   --focus-ring:   1px;
+  --focus-ring-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.35);
 
   /* ── Indicator ── */
   --indicator-width: 2px;
@@ -160,7 +161,7 @@
   --type-section-size: 16px;    --type-section-weight: 600;  --type-section-family: var(--sans); --type-section-line-height: 1.4;  --type-section-letter-spacing: 0em;
   --type-control-size: 14px;    --type-control-weight: 500;  --type-control-line-height: 20px;
   --type-item-line-height: 20px;
-  --type-body-size: 13px;       --type-body-weight: 450;    --type-body-family: var(--sans); --type-body-line-height: 1.4;  --type-body-letter-spacing: 0em;
+  --type-body-size: 14px;       --type-body-weight: 450;    --type-body-family: var(--sans); --type-body-line-height: 1.4;  --type-body-letter-spacing: 0em;
   --type-prose-size: 16px;      --type-prose-weight: 400;    --type-prose-family: var(--sans); --type-prose-line-height: 1.6;  --type-prose-letter-spacing: 0em;
   --type-caption-size: 12px;    --type-caption-weight: 450;  --type-caption-family: var(--sans); --type-caption-line-height: 1.33;  --type-caption-letter-spacing: 0em;
   --type-code-size: 12px;       --type-code-weight: 400;     --type-code-family: var(--mono); --type-code-line-height: 1.5;   --type-code-letter-spacing: 0em;
@@ -187,13 +188,13 @@
   --tracking-wider:   0.08em;
 
   /* ── Radius Seed — 비율 파생 불변량 ── */
-  --radius-seed: 10px;
-  --shape-2xs-radius: calc(var(--radius-seed) * 0.4);   /* 4px */
-  --shape-xs-radius:  calc(var(--radius-seed) * 0.6);   /* 6px */
-  --shape-sm-radius:  calc(var(--radius-seed) * 0.6);   /* 6px */
-  --shape-md-radius:  var(--radius-seed);                /* 10px */
-  --shape-lg-radius:  calc(var(--radius-seed) * 1.2);   /* 12px */
-  --shape-xl-radius:  calc(var(--radius-seed) * 2);     /* 20px */
+  --radius-seed: 8px;
+  --shape-2xs-radius: 2px;                               /* checkbox inner */
+  --shape-xs-radius:  4px;                               /* checkbox */
+  --shape-sm-radius:  6px;                               /* = shadcn rounded-md */
+  --shape-md-radius:  var(--radius-seed);                /* 8px = shadcn rounded-lg */
+  --shape-lg-radius:  12px;                              /* = shadcn rounded-xl */
+  --shape-xl-radius:  calc(var(--radius-seed) * 2);     /* 16px */
   --shape-pill-radius: 9999px;                           /* 시드 무관 */
 
   /* ── Shape bundle: padding-y + padding-x (claude.ai 실측)
@@ -297,7 +298,7 @@
   --surface-overlay:  var(--stone-0);      /* + shadow */
 
   /* ── Shadow: Linear 실측 — overlay만 shadow, 나머지는 면 분리 ── */
-  --shadow-xs: none;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.02);
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.02);
   --shadow-md: 0 2px 8px rgba(0,0,0,0.03), 0 0 1px rgba(0,0,0,0.02);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.03);

@@ -20,26 +20,29 @@
   border: none;
   background: var(--_bg, transparent);
   color: var(--_fg, inherit);
+  transition: color 150ms, background-color 150ms, box-shadow 150ms;
 }
 .sf-action:hover { background: var(--_bg-hover, var(--bg-hover)); }
 .sf-action:active { background: var(--_bg-active, var(--bg-active)); }
-.sf-action:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sf-action:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
 .sf-action[aria-disabled="true"],
-.sf-action:disabled { opacity: 0.4; pointer-events: none; cursor: default; }
+.sf-action:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
 .sf-input {
   border: 1px solid var(--border-strong);
   background: var(--_bg, var(--surface-default));
   color: var(--_fg, inherit);
+  box-shadow: var(--shadow-xs);
+  transition: color 150ms, box-shadow 150ms, border-color 150ms;
   /* border가 role의 min-height를 깨뜨리지 않도록 padding 보정 */
   padding-block: calc(var(--space-sm) - 1px);
 }
 textarea.sf-input { field-sizing: content; }
 .sf-input:focus-within { border-color: var(--focus); }
-.sf-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sf-input:focus-visible { outline: none; border-color: var(--focus); box-shadow: var(--focus-ring-shadow); }
 .sf-input[aria-invalid="true"] { border-color: var(--tone-destructive-base); }
 .sf-input[aria-disabled="true"],
-.sf-input:disabled { opacity: 0.4; pointer-events: none; }
+.sf-input:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
 .sf-display {
   border: 1px solid var(--border-subtle);
@@ -133,6 +136,12 @@ dialog.sf-overlay[open] {
   --bg-active: var(--depth-raised-active);
 }
 
+.sf-inverted {
+  background: var(--text-primary);
+  color: var(--surface-base);
+  border: none;
+}
+
 .sf-placeholder {
   cursor: pointer;
   user-select: none;
@@ -141,8 +150,8 @@ dialog.sf-overlay[open] {
   color: var(--text-muted);
 }
 .sf-placeholder:hover { border-color: var(--tone-primary-base); color: var(--tone-primary-base); }
-.sf-placeholder:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.sf-placeholder[aria-disabled="true"] { opacity: 0.4; pointer-events: none; cursor: default; }
+.sf-placeholder:focus-visible { outline: none; border-color: var(--focus); box-shadow: var(--focus-ring-shadow); }
+.sf-placeholder[aria-disabled="true"] { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
 .sf-ghost {
   cursor: pointer;
@@ -150,11 +159,12 @@ dialog.sf-overlay[open] {
   border: none;
   background: transparent;
   color: var(--_fg, inherit);
+  transition: color 150ms, background-color 150ms;
 }
 .sf-ghost:hover { background: var(--bg-hover); }
 .sf-ghost:active { background: var(--bg-active); }
-.sf-ghost:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
-.sf-ghost[aria-disabled="true"] { opacity: 0.4; pointer-events: none; cursor: default; }
+.sf-ghost:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
+.sf-ghost[aria-disabled="true"] { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
 } /* @layer state — Surface */
 
@@ -210,11 +220,11 @@ dialog.sf-overlay[open] {
   letter-spacing: var(--type-section-letter-spacing);
 }
 .ts-label {
-  font-size: var(--type-section-size);
-  font-weight: var(--weight-book);
+  font-size: var(--type-body-size);
+  font-weight: var(--weight-medium);
   font-family: var(--sans);
-  line-height: var(--type-section-line-height);
-  letter-spacing: var(--type-section-letter-spacing);
+  line-height: var(--type-body-line-height);
+  letter-spacing: var(--type-body-letter-spacing);
 }
 .ts-body {
   font-size: var(--type-body-size);
@@ -265,11 +275,22 @@ dialog.sf-overlay[open] {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   cursor: pointer;
   user-select: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color 150ms, background-color 150ms, box-shadow 150ms;
+}
+
+/* SVG auto-size inside controls */
+.rl-control svg:not([class*="ic-"]) {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  pointer-events: none;
 }
 
 /* 아이콘 전용 — content:'icon'과 조합 시 정사각형 */
@@ -323,6 +344,10 @@ dialog.sf-overlay[open] {
   padding-inline: calc(var(--space-xs) * var(--pd-ratio, 1));
   gap: var(--space-sm);
   border-radius: var(--shape-2xs-radius);
+  display: flex;
+  align-items: center;
+  cursor: default;
+  user-select: none;
 }
 
 /* ════════════════════════════════════════════
@@ -340,10 +365,21 @@ dialog.sf-overlay[open] {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  width: fit-content;
+  flex-shrink: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1;
+}
+
+/* SVG auto-size inside badges */
+.rl-badge svg:not([class*="ic-"]) {
+  width: 0.75em;
+  height: 0.75em;
+  flex-shrink: 0;
+  pointer-events: none;
 }
 
 } /* @layer recipe — Recipe, Control Size, Text Style */
@@ -474,9 +510,9 @@ dialog.sf-overlay[open] {
 /* ── Role: Control — interactive 상태 ── */
 .rl-control:hover { background: var(--_bg-hover, var(--bg-hover)); }
 .rl-control:active { background: var(--_bg-active, var(--bg-active)); }
-.rl-control:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.rl-control:focus-visible { outline: none; box-shadow: var(--focus-ring-shadow); }
 .rl-control[aria-disabled="true"],
-.rl-control:disabled { opacity: 0.4; pointer-events: none; cursor: default; }
+.rl-control:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
 
 } /* @layer state — Tone, Text Color, Weight, State, Opacity */
 
@@ -510,6 +546,8 @@ dialog.sf-overlay[open] {
 .bd-top     { border-top: var(--border-width) solid var(--border-subtle); }
 .bd-start   { border-inline-start: var(--border-width) solid var(--border-subtle); }
 .bd-end     { border-inline-end: var(--border-width) solid var(--border-subtle); }
+.bd-ring    { --bd-ring: 0 0 0 1px oklch(from var(--text-primary) l c h / 0.10); box-shadow: var(--bd-ring); }
+.bd-ring:focus-visible { box-shadow: var(--bd-ring), var(--focus-ring-shadow); }
 
 /* ════════════════════════════════════════════
  * Shape — 비-컨트롤 요소의 border-radius
@@ -517,12 +555,12 @@ dialog.sf-overlay[open] {
  * ════════════════════════════════════════════ */
 
 .sh-none { border-radius: 0; }
-.sh-2xs  { border-radius: var(--shape-2xs-radius); } /*  4px */
-.sh-xs   { border-radius: var(--shape-xs-radius); }  /*  6px */
+.sh-2xs  { border-radius: var(--shape-2xs-radius); } /*  2px */
+.sh-xs   { border-radius: var(--shape-xs-radius); }  /*  4px */
 .sh-sm   { border-radius: var(--shape-sm-radius); }  /*  6px */
-.sh-md   { border-radius: var(--shape-md-radius); }  /* 10px */
+.sh-md   { border-radius: var(--shape-md-radius); }  /*  8px */
 .sh-lg   { border-radius: var(--shape-lg-radius); }  /* 12px */
-.sh-xl   { border-radius: var(--shape-xl-radius); }  /* 20px */
+.sh-xl   { border-radius: var(--shape-xl-radius); }  /* 16px */
 .sh-pill { border-radius: var(--shape-pill-radius); }
 
 /* ════════════════════════════════════════════
@@ -551,6 +589,30 @@ dialog.sf-overlay[open] {
 .ly-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); }
 .ly-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); }
 .ly-grid-7 { display: grid; grid-template-columns: repeat(7, 1fr); }
+/* ── Table (CSS Grid subgrid) ── */
+.ly-table {
+  display: grid;
+  grid-template-columns: var(--grid-columns, repeat(var(--grid-col-count, 4), 1fr));
+}
+:where(.ly-table > .ax-interactive) {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+:where(.ly-table .ax-interactive > :not([role="row"], [role="option"])) {
+  grid-column: 1 / -1;
+}
+:where(.ly-table [role="row"]) {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+:where(.ly-table > [role="row"]:not(.ax-interactive [role="row"])),
+:where(.ly-table > [role="rowgroup"]) {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
 
 /* ── Self-alignment — 자식이 부모 안에서의 위치 ── */
 .ly-self-start  { align-self: flex-start; }
@@ -785,6 +847,21 @@ dialog.sf-overlay[open] {
 .cursor-row-resize { cursor: row-resize; }
 .font-italic     { font-style: italic; }
 
+/* ════════════════════════════════════════════
+ * Global form element styling
+ * placeholder, selection, aria-invalid
+ * ════════════════════════════════════════════ */
+
+input::placeholder,
+textarea::placeholder { color: var(--text-muted); }
+
+::selection { background: var(--tone-primary-dim); color: var(--text-bright); }
+
+/* aria-invalid ring — input/textarea */
+.sf-input[aria-invalid="true"] {
+  box-shadow: 0 0 0 3px oklch(from var(--tone-destructive-base) l c h / 0.2);
+}
+
 } /* @layer recipe — Content~Placement~Utilities */
 
 @layer state {
@@ -806,6 +883,7 @@ dialog.sf-overlay[open] {
   border-radius: var(--shape-xs-radius);
   outline: 1px solid transparent;
   outline-offset: -1px;
+  transition: color 150ms, background-color 150ms;
 }
 
 /* hover (컨테이너 포커스 없을 때) */
