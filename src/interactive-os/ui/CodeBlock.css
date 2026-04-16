@@ -34,7 +34,9 @@
 
 .code-block :is(.shiki .line) {
   display: var(--_block, block);
-  padding: var(--_line-pad, 0 var(--space-lg) 0 0);
+  padding-left: var(--_gutter-w, 3.5em);
+  padding-right: var(--space-lg);
+  text-indent: calc(-1 * var(--_gutter-w, 3.5em));
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
@@ -46,6 +48,7 @@
   width: var(--_gutter-w, 3.5em);
   padding-right: var(--_gutter-pr, 1em);
   text-align: right;
+  text-indent: 0;
   color: var(--text-muted);
   font-size: var(--type-code-size);
   user-select: none;
@@ -93,6 +96,12 @@
 .code-line--inserted {
   background-image: linear-gradient(color-mix(in srgb, var(--tone-success-base) 15%, transparent), color-mix(in srgb, var(--tone-success-base) 15%, transparent));
   border-left: var(--indicator-width) solid var(--tone-success-base);
+  padding-left: var(--space-sm) !important;
+}
+
+.code-line--context {
+  background-image: linear-gradient(color-mix(in srgb, var(--tone-success-base) 5%, transparent), color-mix(in srgb, var(--tone-success-base) 5%, transparent));
+  border-left: var(--indicator-width) solid color-mix(in srgb, var(--tone-success-base) 30%, transparent);
   padding-left: var(--space-sm) !important;
 }
 }
