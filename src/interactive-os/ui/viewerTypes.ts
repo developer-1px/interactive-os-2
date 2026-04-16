@@ -38,8 +38,11 @@ export interface TerminalTab {
 
 export type FileViewerCommand =
   | { type: 'open'; content: string }
+  | { type: 'update-content'; content: string }
   | { type: 'highlight'; lines: Map<number, HighlightTone> }
   | { type: 'editAnimate'; preContent: string; oldStr: string; newStr: string; range: LineRange | null }
+  | { type: 'zoom'; line: number; scale?: number }
+  | { type: 'zoom-reset' }
   | { type: 'clear' }
 
 export interface FileViewerHandle {

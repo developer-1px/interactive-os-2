@@ -52,42 +52,61 @@ export function editAnimationFrames(
     frames.push({ frame: { highlights: map }, delay: 80 })
   }
 
-  // Hold
+  // Hold selected
   const fullSelected = new Map<number, HighlightTone>()
   for (let i = start; i <= end; i++) fullSelected.set(i, 'selected')
-  frames.push({ frame: { highlights: fullSelected }, delay: 400 })
+  frames.push({ frame: { highlights: fullSelected }, delay: 300 })
 
-  // ② 삭제: 사라짐
+  // ② Deleted tone (빨강) — 삭제 직전 강조
+  const fullDeleted = new Map<number, HighlightTone>()
+  for (let i = start; i <= end; i++) fullDeleted.set(i, 'deleted')
+  frames.push({ frame: { highlights: fullDeleted }, delay: 400 })
+
+  // 삭제: 사라짐
   const deletedContent = before + after
   frames.push({ frame: { content: deletedContent, highlights: null, cursorLine: startLine }, delay: 150 })
 
-  // ③ 타이핑: 앞쪽 띄어쓰기 skip, 8-12글자 랜덤 타이핑
-  const leadingWs = newString.match(/^[\s\n]*/)?.[0] ?? ''
-  const typingStart = leadingWs.length
-  const TYPING_CHARS = Math.min(newString.length - typingStart, 8 + Math.floor(Math.random() * 5)) // 8-12
+  // ③ 타이핑: 토큰(단어) 단위, 최소 2초 ~ 최대 4초 동안 타이핑
   const cursorLineNum = before.split('\n').length
+  const tokens = tokenize(newString)
+  const TYPING_DURATION = 2000 + Math.floor(Math.random() * 2000) // 2-4초
 
-  // 앞쪽 공백은 한번에
-  if (typingStart > 0) {
-    const partial = before + newString.slice(0, typingStart) + after
-    frames.push({ frame: { content: partial, cursorLine: cursorLineNum }, delay: 50 })
+  let typed = ''
+  let elapsed = 0
+  let t = 0
+  for (; t < tokens.length && elapsed < TYPING_DURATION; t++) {
+    typed += tokens[t]
+    const partial = before + typed + after
+    const delay = /^\s+$/.test(tokens[t]) ? 40 : 120
+    // 타이핑 중인 줄에 inserted 하이라이트
+    const typingLines = typed.split('\n').length
+    const typingHighlights = new Map<number, HighlightTone>()
+    for (let l = 0; l < typingLines; l++) {
+      typingHighlights.set(cursorLineNum + l, 'inserted')
+    }
+    frames.push({ frame: { content: partial, highlights: typingHighlights, cursorLine: cursorLineNum }, delay })
+    elapsed += delay
   }
 
-  // 글자 하나씩
-  for (let c = 1; c <= TYPING_CHARS; c++) {
-    const partial = before + newString.slice(0, typingStart + c) + after
-    frames.push({ frame: { content: partial, cursorLine: cursorLineNum }, delay: 100 })
-  }
-
-  // 나머지 한번에 짠
-  const fullContent = before + newString + after
-  if (newString.length - typingStart > TYPING_CHARS) {
-    frames.push({ frame: { content: fullContent, cursorLine: null }, delay: 100 })
-  }
-
-  // Hold
+  // ④ Inserted highlights for all new lines
   const newLineCount = newString.split('\n').length
-  frames.push({ frame: { content: fullContent, cursorLine: null }, delay: Math.min(newLineCount * 150, 2000) })
+  const insertedStart = before.split('\n').length
+  const insertedHighlights = new Map<number, HighlightTone>()
+  for (let i = 0; i < newLineCount; i++) {
+    insertedHighlights.set(insertedStart + i, 'inserted')
+  }
+
+  // 나머지 한번에 짠 (with inserted highlights)
+  const fullContent = before + newString + after
+  if (t < tokens.length) {
+    frames.push({ frame: { content: fullContent, highlights: insertedHighlights, cursorLine: cursorLineNum }, delay: 150 })
+  }
+
+  // Hold inserted highlights
+  frames.push({ frame: { content: fullContent, highlights: insertedHighlights, cursorLine: cursorLineNum }, delay: Math.min(newLineCount * 200, 2000) })
+
+  // Zoom reset signal (cursorLine: null) — highlights persist
+  frames.push({ frame: { content: fullContent, highlights: insertedHighlights, cursorLine: null }, delay: 200 })
 
   return frames
 }
@@ -96,8 +115,13 @@ export function editAnimationFrames(
 export function readFrames(filePath: string, content: string): TimedFrame[] {
   return [{
     frame: { content, filePath, highlights: null, cursorLine: null },
-    delay: 400,
+    delay: 50,
   }]
+}
+
+/** Split text into tokens: words, operators, whitespace chunks */
+function tokenize(text: string): string[] {
+  return text.match(/\s+|[a-zA-Z_$][a-zA-Z0-9_$]*|[0-9]+|[^\s]/g) ?? [text]
 }
 
 /** Write step frames. */

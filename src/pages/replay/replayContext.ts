@@ -12,9 +12,9 @@ export interface ReplayContextValue {
   messages: ChatMessage[]
   isRunning: boolean
   startReplay: () => void
-  rightTab: 'replay' | 'live'
-  rightTabData: NormalizedData
-  handleRightTabActivate: (nodeId: string) => void
+  editingLine: number | null
+  mode: 'replay' | 'live'
+  setMode: (mode: 'replay' | 'live') => void
   tabs: ViewerTab[]
   activeTab: ViewerTab | null
   activeTabId: string | null

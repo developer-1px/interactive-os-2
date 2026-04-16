@@ -10,12 +10,24 @@ export interface UseViewerTabsReturn {
   openFile: (path: string, content: string) => FileTab
   openSearch: (query: string, output: string) => SearchTab
   openTerminal: (command: string, output: string) => TerminalTab
+  markEdited: (path: string) => void
+  editedPaths: Set<string>
   clear: () => void
 }
 
 export function useViewerTabs(): UseViewerTabsReturn {
   const [tabMap, setTabMap] = useState<Map<string, ViewerTab>>(new Map())
   const [activeTabId, setActiveTabId] = useState<string | null>(null)
+  const [editedPaths, setEditedPaths] = useState<Set<string>>(new Set())
+
+  const markEdited = useCallback((path: string) => {
+    setEditedPaths(prev => {
+      if (prev.has(path)) return prev
+      const next = new Set(prev)
+      next.add(path)
+      return next
+    })
+  }, [])
 
   const tabs = [...tabMap.values()]
   const activeTab = activeTabId ? tabMap.get(activeTabId) ?? null : null
@@ -58,6 +70,7 @@ export function useViewerTabs(): UseViewerTabsReturn {
   const clear = useCallback(() => {
     setTabMap(new Map())
     setActiveTabId(null)
+    setEditedPaths(new Set())
   }, [])
 
   return {
@@ -68,6 +81,8 @@ export function useViewerTabs(): UseViewerTabsReturn {
     openFile,
     openSearch,
     openTerminal,
+    markEdited,
+    editedPaths,
     clear,
   }
 }

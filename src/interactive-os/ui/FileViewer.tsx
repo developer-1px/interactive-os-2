@@ -6,6 +6,7 @@ import { useAnimationQueue } from './useAnimationQueue'
 import type { HighlightTone } from './CodeBlock'
 import { editAnimationFrames, type TimedFrame } from './editAnimation'
 import type { FileViewerCommand, FileViewerHandle } from './viewerTypes'
+import { ZoomPane, type ZoomPaneHandle } from './ZoomPane'
 import { ax } from '@styles/ax'
 
 interface FileViewerProps {
@@ -17,7 +18,7 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
     const [content, setContent] = useState<string | null>(null)
     const [highlights, setHighlights] = useState<Map<number, HighlightTone> | undefined>(undefined)
     const [cursorLine, setCursorLine] = useState<number | null>(null)
-    const containerRef = useRef<HTMLDivElement>(null)
+    const zoomRef = useRef<ZoomPaneHandle>(null)
 
     const onRelease = useCallback((tf: TimedFrame) => {
       const f = tf.frame
@@ -38,6 +39,9 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
           setHighlights(undefined)
           setCursorLine(null)
           break
+        case 'update-content':
+          setContent(cmd.content)
+          break
         case 'highlight':
           setHighlights(cmd.lines)
           break
@@ -46,10 +50,17 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
           enqueueAll(frames)
           break
         }
+        case 'zoom':
+          zoomRef.current?.zoomToLine(cmd.line, cmd.scale)
+          break
+        case 'zoom-reset':
+          zoomRef.current?.reset()
+          break
         case 'clear':
           clearQueue()
           setHighlights(undefined)
           setCursorLine(null)
+          zoomRef.current?.reset()
           break
       }
     }, [enqueueAll, clearQueue])
@@ -59,9 +70,12 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
     // Auto-scroll to highlighted/cursor line
     const scrollTarget = cursorLine ?? (highlights ? Math.min(...highlights.keys()) : null)
     useEffect(() => {
-      if (scrollTarget == null || !containerRef.current) return
-      const lineEl = containerRef.current.querySelector(`[data-line="${scrollTarget}"]`)
-      if (lineEl) lineEl.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      if (scrollTarget == null) return
+      const container = zoomRef.current as unknown as { zoomToLine: (line: number) => void } | null
+      if (!container) return
+      // scroll via DOM — ZoomPane's container ref handles this
+      const el = document.querySelector(`[data-line="${scrollTarget}"]`)
+      if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' })
     }, [scrollTarget])
 
     if (content == null) {
@@ -73,10 +87,10 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
     }
 
     return (
-      <div ref={containerRef} className={`${ax({ flex: '1', layout: 'scroll', placement: 'relative' })}`}>
+      <ZoomPane ref={zoomRef}>
         <FilePreview content={content} filename={filename} highlightLines={highlights} />
         {cursorLine != null && <ReplayCursor line={cursorLine} />}
-      </div>
+      </ZoomPane>
     )
   },
 )
