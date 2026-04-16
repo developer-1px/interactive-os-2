@@ -1,7 +1,7 @@
 /** @catalog Miller Columns (Finder 스타일 컬럼 탐색기) */
 import React, { useRef, useEffect, useMemo } from 'react'
 import { ROOT_ID } from '../store/types'
-import { FOCUS_ID } from '../axis/navigate'
+import { FOCUS_ID } from '../core'
 import { useAria } from '../primitives/useAria'
 import { AriaInternalContext } from '../primitives/AriaInternalContext'
 import { miller as millerBehavior } from './millerPreset'

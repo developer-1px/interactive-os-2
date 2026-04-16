@@ -10,7 +10,7 @@ import {
   focusCommands,
   gridCellRangeCommands,
   gridColCommands,
-} from '../axis/navigate'
+} from '../core'
 
 /**
  * Pointer-driven cell range drag selection plugin.

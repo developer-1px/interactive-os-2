@@ -5,8 +5,7 @@ import { getVisibleNodes } from '../engine/getVisibleNodes'
 import type { VisibilityFilter } from '../engine/types'
 import type { PatternContext, CtxFactory } from './types'
 import { getEntity, getChildren, getSlotChildren, getParent } from '../store/createStore'
-import { FOCUS_ID } from '../axis/navigate'
-import { activateCommands } from '../axis/activate'
+import { FOCUS_ID, activateCommands } from '../core'
 
 function getFocusedId(engine: CommandEngine): string {
   return (engine.getStore().entities[FOCUS_ID]?.focusedId as string) ?? ''

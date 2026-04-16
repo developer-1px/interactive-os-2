@@ -8,11 +8,12 @@ import type { AriaPattern, NodeState, PatternContext } from '../pattern/types'
 import { createCommandEngine } from '../engine/createCommandEngine'
 import type { CommandEngine } from '../engine/createCommandEngine'
 import { getChildren } from '../store/createStore'
-import { coreRegistry } from '../axis/coreCommands'
-import { focusCommands, FOCUS_ID, GRID_COL_ID, CELL_RANGE_ID } from '../axis/navigate'
-import { SELECTION_ID, SELECTION_ANCHOR_ID } from '../axis/select'
-import { EXPANDED_ID } from '../axis/expand'
-import { CHECKED_ID } from '../axis/checked'
+import {
+  coreRegistry, focusCommands,
+  FOCUS_ID, GRID_COL_ID, CELL_RANGE_ID,
+  SELECTION_ID, SELECTION_ANCHOR_ID,
+  EXPANDED_ID, CHECKED_ID,
+} from '../core'
 import { POPUP_ID } from '../axis/popup'
 import { VALUE_ID } from '../axis/value'
 import { RENAME_ID } from '../plugins/rename'

@@ -3,7 +3,7 @@ import { ROOT_ID } from '../store/types'
 import { definePlugin } from './definePlugin'
 import { key } from '../axis/types'
 import { defineCommands } from '../engine/defineCommand'
-import { selectionCommands } from '../axis/select'
+import { selectionCommands } from '../core'
 
 const COMBOBOX_ID = '__combobox__'
 

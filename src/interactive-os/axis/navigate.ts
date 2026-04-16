@@ -3,9 +3,16 @@ import type { CommandEngine } from '../engine/createCommandEngine'
 import { key } from './types'
 import type { Command, Middleware } from '../engine/types'
 import { createBatchCommand } from '../engine/types'
-import { defineCommands } from '../engine/defineCommand'
 import { type NormalizedData, ROOT_ID } from '../store/types'
 import { getChildren, getParent } from '../store/createStore'
+import {
+  FOCUS_ID, focusCommands,
+  GRID_COL_ID, gridColCommands,
+  CELL_RANGE_ID, gridCellRangeCommands,
+} from '../core'
+
+// Re-export for backwards compatibility during migration
+export { FOCUS_ID, focusCommands, GRID_COL_ID, gridColCommands, CELL_RANGE_ID, gridCellRangeCommands }
 
 /**
  * Jump to the first/last child of the next/prev sibling group.
@@ -35,11 +42,6 @@ function groupJump(store: NormalizedData, focusedId: string, direction: 1 | -1):
   return focusCommands.setFocus(focusedId)
 }
 
-// ② 2026-03-29-define-command-prd.md
-export const FOCUS_ID = '__focus__'
-export const GRID_COL_ID = '__grid_col__'
-export const CELL_RANGE_ID = '__cell_range__'
-
 interface CellRangeEntityValue {
   anchorRowId: string
   anchorCol: number
@@ -47,77 +49,10 @@ interface CellRangeEntityValue {
   focusCol: number
 }
 
-export const focusCommands = defineCommands({
-  setFocus: {
-    type: 'core:focus' as const,
-    meta: true,
-    create: (nodeId: string) => ({ nodeId }),
-    handler: (store, { nodeId }) => {
-      if ((store.entities[FOCUS_ID] as { focusedId?: string } | undefined)?.focusedId === nodeId) return store
-      return {
-        ...store,
-        entities: {
-          ...store.entities,
-          [FOCUS_ID]: { id: FOCUS_ID, focusedId: nodeId },
-        },
-      }
-    },
-  },
-})
-
 function getCellRange(store: NormalizedData): CellRangeEntityValue | null {
   const ent = store.entities[CELL_RANGE_ID] as { value?: CellRangeEntityValue | null } | undefined
   return ent?.value ?? null
 }
-
-export const gridCellRangeCommands = defineCommands({
-  setRange: {
-    type: 'core:cell-range-set' as const,
-    meta: true,
-    create: (range: CellRangeEntityValue) => range,
-    handler: (store, range) => ({
-      ...store,
-      entities: {
-        ...store.entities,
-        [CELL_RANGE_ID]: { id: CELL_RANGE_ID, value: range },
-      },
-    }),
-  },
-
-  extendRange: {
-    type: 'core:cell-range-extend' as const,
-    meta: true,
-    create: (focus: { focusRowId: string; focusCol: number }) => focus,
-    handler: (store, { focusRowId, focusCol }) => {
-      const current = getCellRange(store)
-      const next: CellRangeEntityValue = current
-        ? { ...current, focusRowId, focusCol }
-        : { anchorRowId: focusRowId, anchorCol: focusCol, focusRowId, focusCol }
-      return {
-        ...store,
-        entities: {
-          ...store.entities,
-          [CELL_RANGE_ID]: { id: CELL_RANGE_ID, value: next },
-        },
-      }
-    },
-  },
-
-  clearRange: {
-    type: 'core:cell-range-clear' as const,
-    meta: true,
-    handler: (store) => {
-      if (getCellRange(store) === null) return store
-      return {
-        ...store,
-        entities: {
-          ...store.entities,
-          [CELL_RANGE_ID]: { id: CELL_RANGE_ID, value: null },
-        },
-      }
-    },
-  },
-})
 
 /**
  * Middleware: clear cellRange when a standalone focus command fires.
@@ -132,21 +67,6 @@ function anchorCellMiddleware(): Middleware {
     }
   }
 }
-
-export const gridColCommands = defineCommands({
-  setColIndex: {
-    type: 'core:set-col-index' as const,
-    meta: true,
-    create: (colIndex: number) => ({ colIndex }),
-    handler: (store, { colIndex }) => ({
-      ...store,
-      entities: {
-        ...store.entities,
-        [GRID_COL_ID]: { id: GRID_COL_ID, colIndex },
-      },
-    }),
-  },
-})
 
 // ② 2026-03-29-ctx-axis-namespace-prd.md
 export function gridCtx(
@@ -430,4 +350,3 @@ export function grid(columns: number, opts?: { initialColIndex?: number }) {
     focusRow: focusRow_,
   }
 }
-

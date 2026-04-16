@@ -1,7 +1,7 @@
 import type { NormalizedData } from '../store/types'
 import { createStore } from '../store/createStore'
 import { ROOT_ID } from '../store/types'
-import { FOCUS_ID } from '../axis/navigate'
+import { FOCUS_ID } from '../core'
 import { SELECTION_ID } from '../axis/select'
 import { CALENDAR_ID } from './calendarCommands'
 

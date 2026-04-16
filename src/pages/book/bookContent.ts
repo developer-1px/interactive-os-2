@@ -1,6 +1,6 @@
 import { createStore } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
-import { FOCUS_ID } from '@os/axis/navigate'
+import { FOCUS_ID } from '@os/core'
 import { SELECTION_ID } from '@os/axis/select'
 import type { NormalizedData } from '@os/store/types'
 

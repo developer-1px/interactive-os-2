@@ -6,7 +6,7 @@ import { ROOT_ID } from '../store/types'
 import type { PatternContext } from '../axis/types'
 import { key } from '../axis/types'
 import type { KeyHandler } from '../axis/types'
-import { focusCommands } from '../axis/navigate'
+import { focusCommands } from '../core'
 import { getSpatialParentId, spatialCommands } from './spatial'
 import { getChildren, getParent } from '../store/createStore'
 

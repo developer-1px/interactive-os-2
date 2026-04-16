@@ -1,22 +1,3 @@
-import type { CommandHandler } from '../engine/types'
-import { buildRegistry } from '../engine/types'
-import { focusCommands, gridColCommands, gridCellRangeCommands } from './navigate'
-import { selectionCommands } from './select'
-import { expandCommands } from './expand'
-import { checkedCommands } from './checked'
-import { popupCommands } from './popup'
-import { valueCommands } from './value'
-import { editCommands } from './edit'
-
-/** All core axis command handlers as a pre-built registry */
-export const coreRegistry: Map<string, CommandHandler> = buildRegistry(
-  focusCommands,
-  gridColCommands,
-  gridCellRangeCommands,
-  selectionCommands,
-  expandCommands,
-  checkedCommands,
-  popupCommands,
-  valueCommands,
-  editCommands,
-)
+// This file is kept for backwards compatibility.
+// The canonical source is now ../core/index.ts
+export { coreRegistry } from '../core'

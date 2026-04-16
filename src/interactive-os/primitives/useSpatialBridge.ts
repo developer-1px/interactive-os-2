@@ -16,7 +16,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import type { CtxFactory } from '../axis/types'
 import type { Direction } from './spatialAlgorithm'
 import { findNearest } from './spatialAlgorithm'
-import { focusCommands } from '../axis/navigate'
+import { focusCommands } from '../core'
 
 export function useSpatialBridge(
   selector: string | (() => string) | undefined,

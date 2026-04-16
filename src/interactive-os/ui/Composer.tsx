@@ -5,7 +5,7 @@ import { useRef, useCallback, useEffect, useImperativeHandle, forwardRef, useMem
 import './Composer.css'
 import { useAria } from '../primitives/useAria'
 import { combobox as comboboxPattern } from '../pattern/roles/combobox'
-import { focusCommands } from '../axis/navigate'
+import { focusCommands } from '../core'
 import { ROOT_ID } from '../store/types'
 import type { NormalizedData } from '../store/types'
 

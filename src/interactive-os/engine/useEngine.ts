@@ -3,11 +3,10 @@ import type { NormalizedData } from '../store/types'
 import type { Plugin, CommandHandler } from './types'
 import { createCommandEngine } from './createCommandEngine'
 import type { CommandEngine } from './createCommandEngine'
-import { focusCommands, gridColCommands, gridCellRangeCommands } from '../axis/navigate'
-import { selectionCommands } from '../axis/select'
-import { expandCommands } from '../axis/expand'
-import { checkedCommands } from '../axis/checked'
-import { popupCommands } from '../axis/popup'
+import {
+  focusCommands, gridColCommands, gridCellRangeCommands,
+  selectionCommands, expandCommands, checkedCommands, popupCommands,
+} from '../core'
 import { valueCommands } from '../axis/value'
 
 export interface UseEngineOptions {
