@@ -13,7 +13,7 @@ function runHook(input) {
 }
 
 describe('guardOsPatterns: single-entry rule', () => {
-  it('blocks when src/pages imports from @os/store', () => {
+  it('warns (not blocks) when src/pages imports from @os/store (Phase 1)', () => {
     const result = runHook({
       tool_name: 'Write',
       tool_input: {
@@ -21,8 +21,11 @@ describe('guardOsPatterns: single-entry rule', () => {
         content: `import { createStore } from '@os/store/createStore'\nexport const x = 1`,
       },
     })
-    expect(result?.decision).toBe('block')
-    expect(result.reason).toMatch(/single-entry/)
+    // Phase 1: warnings only (stderr), no block decision
+    // If there's a block, it should NOT be from single-entry rule
+    if (result?.decision === 'block') {
+      expect(result.reason).not.toMatch(/single-entry/)
+    }
   })
 
   it('does NOT block when src/pages imports from @os/ui', () => {

@@ -13,15 +13,8 @@ import { BookProvider, type BookContextValue } from './bookContext'
 import {
   addRecent,
   getRecent,
-  toggleFavorite,
-  isFavorite,
-  buildQuickOpenStore,
-  buildAddToLayerStore,
-  addToLayer,
-  removeFromLayer,
-  createLayer,
-  getLayers,
 } from './bookNavStore'
+import { useBookNavigation } from './bookNavigation'
 import { bookWidgets } from './bookWidgets'
 import './PageBookViewer.css'
 
@@ -74,12 +67,7 @@ export default function PageBookViewer() {
   const [tocOpen, setTocOpen] = useState(false)
   const [arrivedFromNext, setArrivedFromNext] = useState(false)
   const [quickOpenVisible, setQuickOpenVisible] = useState(false)
-  const [quickOpenFilter, setQuickOpenFilter] = useState('')
-  const [favToggle, setFavToggle] = useState(0) // @useState-hatch
-  const [layerOverlayVisible, setLayerOverlayVisible] = useState(false) // @useState-hatch
-  const [layerToggle, setLayerToggle] = useState(0) // @useState-hatch
-  const [layerNameInput, setLayerNameInput] = useState('') // @useState-hatch — inline layer naming
-  const [layerNameMode, setLayerNameMode] = useState(false) // @useState-hatch
+  const [quickOpenFilter, setQuickOpenFilter] = useState('') // @useState-hatch
   const areaRef = useRef<HTMLDivElement>(null)
   const chromeVisible = true
 
@@ -120,144 +108,30 @@ export default function PageBookViewer() {
     [chapters, page?.id],
   )
 
-  // ── Quick Open store ──
+  // ── Quick Open page infos ──
   const pageInfos = useMemo(
     () => pages.map(p => ({ id: p.id, title: p.title, chapter: p.chapter, content: p.content })),
     [pages],
   )
-  const quickOpenStore = useMemo(
-    () => buildQuickOpenStore(pageInfos, quickOpenFilter),
-    [pageInfos, quickOpenFilter, favToggle], // eslint-disable-line react-hooks/exhaustive-deps
-  )
 
-  // ── Navigation ──
-  const goTo = useCallback((index: number) => {
-    if (index >= 0 && index < pages.length) {
-      navigate(`/book/${pages[index].id}`, { replace: true })
-      setTocOpen(false)
-      setQuickOpenVisible(false)
-      setQuickOpenFilter('')
-    }
-  }, [pages, navigate])
-
-  const goToId = useCallback((pageId: string) => {
-    const index = pageIndexById.get(pageId)
-    if (index != null) goTo(index)
-  }, [pageIndexById, goTo])
-
-  // ── Link transform for MarkdownViewer ──
-  const linkTransform = useCallback((href: string) => {
-    const match = href.match(/^\/?([\w/.-]+?)(?:\.mdx?)?$/)
-    if (match && !href.startsWith('http')) {
-      const pageId = match[1]
-      return {
-        href: `/book/${pageId}`,
-        onClick: (e: React.MouseEvent) => {
-          e.preventDefault()
-          goToId(pageId)
-        },
-      }
-    }
-    return { href }
-  }, [goToId])
-
-  const handleTocActivate = useCallback((nodeId: string) => {
-    goToId(nodeId)
-  }, [goToId])
-
-  const handleQuickOpenActivate = useCallback((nodeId: string) => {
-    const entity = quickOpenStore.entities[nodeId]
-    const pageId = (entity?.data as Record<string, unknown>)?.pageId as string | undefined
-    if (pageId) goToId(pageId)
-  }, [quickOpenStore, goToId])
-
-  // ── SpreadReader callbacks ──
-  const handleNextBoundary = useCallback(() => {
-    if (currentPage < pages.length - 1) {
-      setArrivedFromNext(false)
-      goTo(currentPage + 1)
-    }
-  }, [currentPage, pages.length, goTo])
-
-  const handlePrevBoundary = useCallback(() => {
-    if (currentPage > 0) {
-      setArrivedFromNext(true)
-      navigate(`/book/${pages[currentPage - 1].id}`, { replace: true })
-    }
-  }, [currentPage, pages, navigate])
-
-  const handleSpreadChange = useCallback((s: number, total: number) => {
-    setSpread(s)
-    setTotalSpreads(total)
-  }, [])
-
-  // ── Favorite toggle ──
-  const handleToggleFavorite = useCallback(() => {
-    if (page) {
-      toggleFavorite(page.id)
-      setFavToggle(v => v + 1)
-    }
-  }, [page])
-
-  const currentIsFavorite = page ? isFavorite(page.id) : false
-
-  // ── Quick Open open/close ──
-  const openQuickOpen = useCallback(() => {
-    setQuickOpenVisible(true)
-    setQuickOpenFilter('')
-  }, [])
-
-  const closeQuickOpen = useCallback(() => {
-    setQuickOpenVisible(false)
-    setQuickOpenFilter('')
-  }, [])
-
-  // ── Layer overlay ──
-  const currentPageId = page?.id ?? ''
-  const addToLayerStoreData = useMemo(
-    () => buildAddToLayerStore(currentPageId),
-    [currentPageId, layerToggle], // eslint-disable-line react-hooks/exhaustive-deps
-  )
-
-  const openLayerOverlay = useCallback(() => {
-    if (!page) return
-    setLayerOverlayVisible(true)
-  }, [page])
-
-  const closeLayerOverlay = useCallback(() => {
-    setLayerOverlayVisible(false)
-    setLayerNameMode(false)
-    setLayerNameInput('')
-  }, [])
-
-  const handleLayerActivate = useCallback((nodeId: string) => {
-    if (!page) return
-    const entity = addToLayerStoreData.entities[nodeId]
-    const data = entity?.data as Record<string, unknown> | undefined
-    const action = data?.action as string | undefined
-
-    if (action === 'create') {
-      setLayerNameMode(true)
-      return
-    } else if (action === 'add') {
-      const layerId = data?.layerId as string
-      addToLayer(layerId, page.id)
-    } else if (action === 'remove') {
-      const layerId = data?.layerId as string
-      removeFromLayer(layerId, page.id)
-    }
-
-    setLayerToggle(v => v + 1)
-    closeLayerOverlay()
-  }, [page, addToLayerStoreData, closeLayerOverlay])
-
-  const handleLayerNameSubmit = useCallback(() => {
-    if (!page || !layerNameInput.trim()) return
-    const layerId = createLayer(layerNameInput.trim())
-    addToLayer(layerId, page.id)
-    setLayerToggle(v => v + 1)
-    closeLayerOverlay()
-  }, [page, layerNameInput, closeLayerOverlay])
+  // ── Navigation / Favorite / Layer (extracted) ──
+  const {
+    goTo, linkTransform,
+    handleTocActivate, handleQuickOpenActivate,
+    handleNextBoundary, handlePrevBoundary, handleSpreadChange,
+    handleToggleFavorite, currentIsFavorite,
+    quickOpenStore, openQuickOpen, closeQuickOpen,
+    layerOverlayVisible, addToLayerStoreData,
+    layerNameMode, layerNameInput, setLayerNameInput,
+    openLayerOverlay, closeLayerOverlay,
+    handleLayerActivate, handleLayerNameSubmit,
+    layerCount,
+  } = useBookNavigation({
+    pages, pageIndexById, currentPage, page, navigate,
+    pageInfos, quickOpenFilter,
+    setTocOpen, setQuickOpenVisible, setQuickOpenFilter,
+    setArrivedFromNext, setSpread, setTotalSpreads,
+  })
 
   // ── Page-level keyMap ──
   const modalOpen = quickOpenVisible || tocOpen || layerOverlayVisible
@@ -336,7 +210,7 @@ export default function PageBookViewer() {
     onOpenToc: openToc,
     onOpenLayerOverlay: openLayerOverlay,
     onOpenQuickOpen: openQuickOpen,
-    layerCount: getLayers().length,
+    layerCount,
     progressPercent,
     chapterName,
     chapterPageIndex,
@@ -365,7 +239,7 @@ export default function PageBookViewer() {
     layerNameInput,
     onLayerNameChange: setLayerNameInput,
     onLayerNameSubmit: handleLayerNameSubmit,
-  }), [page, currentPage, pages.length, linkTransform, arrivedFromNext, handleNextBoundary, handlePrevBoundary, handleSpreadChange, chromeVisible, currentIsFavorite, handleToggleFavorite, openToc, openLayerOverlay, openQuickOpen, layerToggle, progressPercent, isFirstSpread, isLastSpread, prevPage, nextPage, spread, totalSpreads, tocOpen, tocStore, handleTocActivate, closeToc, quickOpenVisible, quickOpenStore, quickOpenFilter, handleQuickOpenActivate, closeQuickOpen, layerOverlayVisible, addToLayerStoreData, handleLayerActivate, closeLayerOverlay, layerNameMode, layerNameInput, handleLayerNameSubmit]) // eslint-disable-line react-hooks/exhaustive-deps
+  }), [page, currentPage, pages.length, linkTransform, arrivedFromNext, handleNextBoundary, handlePrevBoundary, handleSpreadChange, chromeVisible, currentIsFavorite, handleToggleFavorite, openToc, openLayerOverlay, openQuickOpen, layerCount, progressPercent, isFirstSpread, isLastSpread, prevPage, nextPage, spread, totalSpreads, tocOpen, tocStore, handleTocActivate, closeToc, quickOpenVisible, quickOpenStore, quickOpenFilter, handleQuickOpenActivate, closeQuickOpen, layerOverlayVisible, addToLayerStoreData, handleLayerActivate, closeLayerOverlay, layerNameMode, layerNameInput, handleLayerNameSubmit]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (pages.length === 0) {
     return (

@@ -395,7 +395,7 @@ if (isPages && isTsx) {
 // 규칙 24b: src/pages/에서 @os/(store|engine|axis|pattern|primitives|plugins) 직접 import 권장 위반 (Phase 1: 경고)
 // 단일 entry: @os/ui, @os/layout, @os/schema, @os/advanced 만 권장
 if (isPages && /from\s+['"]@os\/(?:store|engine|axis|pattern|primitives|plugins)\b/.test(content)) {
-  violations.push(
+  warnings.push(
     'single-entry 권장: @os/(store|engine|axis|pattern|primitives|plugins) 대신 @os/ui · @os/layout · @os/schema · @os/advanced 4개 단일 entry를 사용하세요. (Phase 1: 경고 — 후속 plan에서 차단으로 승격)'
   )
 }
