@@ -1,203 +1,134 @@
-// ── MECE Axis Design System — 순수 TypeScript ──
+// ── MECE Axis Design System — Public/Private 2계층 ──
 //
 // ax()만 사용. style={} 금지.
-// 시각 축 + 구조 축. 이게 전부.
+// Public 축 → rolePreset cascade → Private 주입 → className 합성.
+// Private 축 직접 지정이 필요한 경우에만 ax.raw() 사용.
 
-// ── 시각 축 ──
+import type { AxPublic } from './axPublic'
+import type { AxPrivate } from './axPrivate'
+import { AX_PRIVATE_KEYS } from './axPrivate'
+import { resolveRolePreset } from './rolePreset'
+import { axRaw } from './axRaw'
 
-type Surface = 'action' | 'input' | 'display' | 'overlay' | 'trap' | 'ghost' | 'placeholder' | 'sunken' | 'base' | 'raised'
-type TextStyle = 'hero' | 'display' | 'page' | 'section' | 'label' | 'body' | 'caption' | 'code' | 'overline'
-type Tone = 'accent' | 'danger' | 'success' | 'warning' | 'neutral'
-  | 'accent-dim' | 'danger-dim' | 'success-dim' | 'warning-dim' | 'neutral-dim'
-type Text = 'bright' | 'primary' | 'secondary' | 'muted'
-// shape: 비-role 요소의 border-radius (role 축이 소유하는 요소에서는 role이 shape 결정)
-type Shape = 'none' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'pill'
+// Public 타입 re-export — 외부 사용자는 'src/styles/ax' 한 경로만 본다.
+export type {
+  AxPublic, CsScale, AxRole, AxSurface, AxTone, AxTextStyle, AxContent,
+  AxLayout, AxPlacement, AxInteractive, AxWidth, AxFlex, AxClamp, AxAspect, AxScroll,
+} from './axPublic'
 
-// recipe: 레거시 크기 프리셋 — role 축으로 이전 중. container만 잔존.
+// 마이그레이션 back-compat: 기존 `Axes` import 경로 유지용 alias.
+// 139 데모 마이그레이션 완료 후 제거.
+export type Axes = AxPublic & Partial<AxPrivate> & { recipe?: 'container' | 'container-sm' }
+
+// recipe: 레거시 크기 프리셋 — role로 이전 중. container만 잔존 (마이그레이션 유예).
 type Recipe = 'container' | 'container-sm'
 
-// weight: textStyle weight와 독립적인 오버라이드
-type Weight = 'medium' | 'semi' | 'bold'
-// state: surface 조립식 확장 — focused/selected 상태 시각
-type State = 'focused' | 'selected'
-// opacity: 비-disabled 시각적 약화 (disabled는 surface 소관)
-type Opacity = 'dim' | 'faint' | 'hidden'
-// motion: 반복 애니메이션 (transition은 surface 소유, motion은 반복/진입)
-type Motion = 'pulse' | 'spin' | 'fade-in' | 'slide-up'
-  | 'fade-slide-in' | 'slide-in' | 'scale-in' | 'blink' | 'shimmer'
-// content: 콘텐츠 유형 — padding의 inline:block 비율 + 레이아웃 어포던스
-// text: inline 2:1 (텍스트 버튼, 라벨)
-// code: block 0, inline만 (코드 행, 테이블 셀)
-// bubble: 우측 정렬 말풍선 (채팅, 코멘트) — max-width:80% + margin-left:auto + 비대칭 radius
-// icon: 정사각 아이콘 컨테이너 — padding 1:1
-type Content = 'text' | 'code' | 'bubble' | 'icon'
-// scroll: overflow 제어 — 컨테이너 경계 클리핑 또는 스크롤 방향
-type Scroll = 'hidden' | 'y' | 'x' | 'auto'
-// border: 테두리 — 전체, 단면, 스타일
-// 단면(bottom/top/start/end) + shape(border-radius) 조합 금지 — Axes union으로 강제
-type BorderFull = 'subtle' | 'default' | 'strong' | 'dashed'
-type BorderSide = 'bottom' | 'top' | 'start' | 'end'
-type Border = BorderFull | BorderSide
-// interactive: 동적 상태 시각 (hover/focus/selected/checked/disabled)
-// surface=정적 시각(cursor/border/shadow), interactive=동적 상태 응답
-type Interactive = 'item' | 'tab' | 'check' | 'cell' | 'input' | 'button'
-
-// ── 구조 축 ──
-
-// placement: 의도 기반 배치 (position + inset + transform 번들)
-type Placement =
-  | 'above'         // absolute + bottom:100% + left:0 + right:0 (dropdown upward)
-  | 'below'         // absolute + top:100% + left:0 + right:0 (dropdown downward)
-  | 'bottom'        // absolute + bottom:0 + left:0 + right:0 (flush bottom edge)
-  | 'bottom-center' // absolute + bottom:md + left:50% + translateX(-50%) (floating FAB)
-  | 'center'        // absolute + inset:0 + margin:auto (center overlay)
-  | 'top-start'     // absolute + top:0 + inset-inline-start:0 (badge)
-  | 'top-end'       // absolute + top:0 + inset-inline-end:0 (copy button)
-  | 'viewport'      // fixed + inset:0 (modal backdrop)
-  | 'sticky'        // sticky + top:0 + z-index:1 (pinned header)
-  | 'anchor-below'       // fixed + position-area:block-end span-inline-end + flip-block (anchor 아래-끝)
-  | 'anchor-below-start' // fixed + position-area:block-end span-inline-start + flip-block (anchor 아래-시작)
-  | 'anchor-above'       // fixed + position-area:block-start span-all + flip-block (anchor 위)
-  | 'anchor-end'         // fixed + position-area:inline-end span-all + flip-inline (anchor 오른쪽)
-  | 'anchor-start'       // fixed + position-area:inline-start span-all + flip-inline (anchor 왼쪽)
-  | 'relative'      // position:relative (자식 absolute 기준점)
-  | 'float-top-start'     // fixed + top:md + inset-inline-start:md (floating pill)
-  | 'float-top-center'    // fixed + top:md + left:50% + translateX(-50%) (floating bar)
-  | 'float-bottom-center' // fixed + bottom:lg + left:50% + translateX(-50%) (floating toolbar)
-  | 'float-bottom'        // fixed + bottom:0 + left:0 + right:0 (floating progress)
-
-// layout: 역할 기반 구조 번들 (display + direction + align + justify + overflow)
-type Layout =
-  | 'row'     // flex row
-  | 'center'  // flex center+center (아이콘 래퍼 등)
-  | 'bar'     // flex row + align:center (툴바, 헤더)
-  | 'spread'  // flex row + align:center + justify:space-between
-  | 'stack'   // flex column (replaces 'column'; gap은 gap 축에서)
-  | 'scroll'  // flex column + overflow-y:auto + min-height:0 (스크롤 패널)
-  | 'scroll-x' // flex row + overflow-x:auto + min-width:0 (가로 스크롤)
-  | 'fill'    // flex:1 + flex column + overflow:hidden + min-*:0 (패인/분할창 전체 채움)
-  | 'row-fill' // flex:1 + flex row + min-*:0 (가로 분할 전체 채움)
-  | 'wrap'     // inline-flex + flex-wrap + align:center (태그 바, 칩 리스트)
-  // grid (display:grid + equal columns)
-  | 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5' | 'grid-7'
-  // self-alignment (자식이 부모 안에서의 위치 지정)
-  | 'self-start'  // align-self: flex-start
-  | 'self-end'    // align-self: flex-end
-  | 'self-center' // align-self: center
-
-type Gap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
-type Padding = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-type Width = 'full' | 'auto' | 'fit' | 'sm' | 'md' | 'lg' | 'xl' | 'prose'
-type Flex = 'none' | 'auto' | '1'
-// clamp: 콘텐츠 제한 — 줄 수 또는 높이
-// '1'~'4': 텍스트 줄 수 제한, 'pre': 코드 공백 보존+1줄 말줄임
-// 'scroll': 높이 제한(300px) + overflow-y:auto (disclosure, 코드 프리뷰)
-type Clamp = '1' | '2' | '3' | '4' | 'pre' | 'scroll'
-// icon: SVG 크기 (width + height)
-type Icon = 'xs' | 'sm' | 'md' | 'lg'
-// square: 정사각 크기 (width + height) — 비-SVG 요소용 (avatar, dot, swatch 등)
-type Square = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
-// role: 요소의 의미적 역할
-type Role = 'control' | 'control-group' | 'item' | 'badge'
-// aspect: 종횡비
-type Aspect = '1' | 'video' | 'card'
-
-// 공통 축 (border/shape 제외)
-interface AxesBase {
-  // 레시피 축 (구조 프리셋 — 색칠 축과 조합)
-  recipe?: Recipe
-
-  // 시각 축
-  surface?: Surface
-  textStyle?: TextStyle
-  tone?: Tone
-  text?: Text
-  weight?: Weight
-  state?: State
-  opacity?: Opacity
-  motion?: Motion
-  content?: Content
-  scroll?: Scroll
-  interactive?: Interactive
-
-  // 구조 축
-  placement?: Placement
-  layout?: Layout
-  gap?: Gap
-  padding?: Padding
-  width?: Width
-  flex?: Flex
-  clamp?: Clamp
-  icon?: Icon
-  square?: Square
-  role?: Role
-  aspect?: Aspect
-}
-
-// 단면 border + shape 조합 금지: 단면 border에는 radius가 의미 없다
-export type Axes =
-  | (AxesBase & { border?: BorderFull; shape?: Shape })
-  | (AxesBase & { border?: BorderSide; shape?: never })
-  | (AxesBase & { border?: never; shape?: Shape })
-
-// ── className 매핑 ──
-
-// Axes가 union이므로 keyof Axes는 공통 키만 반환. 전체 키를 위해 AxesAll 사용.
-type AxesAll = AxesBase & { border?: Border; shape?: Shape }
+// 전체 축 prefix 매핑 (Public + Private + recipe).
+// Private 축은 rolePreset 주입 또는 마이그레이션 기간 직접 입력 모두 수용.
+type AxesAll = AxPublic & AxPrivate & { recipe?: Recipe }
 
 const prefixes: Record<keyof AxesAll, string> = {
-  recipe: 'rc',
+  // Public
+  cs: 'cs',
+  role: 'rl',
   surface: 'sf',
-  textStyle: 'ts',
   tone: 'tn',
-  text: 'tx',
-  weight: 'wt',
-  state: 'st',
-  opacity: 'op',
-  shape: 'sh',
-  motion: 'mo',
+  textStyle: 'ts',
   content: 'ct',
-  border: 'bd',
-  scroll: 'sc',
-  interactive: 'ia',
-  placement: 'pl',
   layout: 'ly',
-  gap: 'g',
-  padding: 'pd',
+  placement: 'pl',
   width: 'w',
   flex: 'fx',
   clamp: 'cl',
+  aspect: 'ar',
+  scroll: 'sc',
+  interactive: 'ia',
+  // Private
+  padding: 'pd',
+  gap: 'g',
+  shape: 'sh',
+  border: 'bd',
   icon: 'ic',
   square: 'sq',
-  role: 'rl',
-  aspect: 'ar',
+  weight: 'wt',
+  text: 'tx',
+  opacity: 'op',
+  state: 'st',
+  motion: 'mo',
+  // Legacy
+  recipe: 'rc',
 }
+
+const PRIVATE_KEY_SET = new Set<string>(AX_PRIVATE_KEYS as readonly string[])
+const warnedKeys = new Set<string>()
 
 /**
  * 축 값을 className 문자열로 변환한다.
  * style={} 대신 이것만 사용한다.
  *
+ * @invariant 입력 타입은 AxPublic — Private 키는 타입 수준에서 거부
+ * @invariant 반환은 순수 문자열
+ * @invariant Public 축 변경은 axPublic.ts 1곳, 조합 변경은 rolePreset.ts 1곳
+ *
+ * 마이그레이션 유예: 현 시점 호출부 중 Private 키를 직접 쓰는 사례가 다수 존재한다.
+ * 타입 시그니처는 AxPublic으로 전환하되, 런타임은 dev 경고 후 기존 동작을 유지한다.
+ * 139 데모 마이그레이션 완료 후 dev throw + guardCssAxes block으로 승격.
+ *
  * @example
- * // 텍스트 버튼: padding + content:'text'로 2:1 inline 비율
+ * // 텍스트 버튼
  * ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })
  *
- * // 아이콘 버튼: role:'control'의 min-height로 정사각
+ * // 아이콘 버튼
  * ax({ role: 'control', surface: 'ghost', layout: 'center' })
  *
- * // 툴바: bar = flex row + align:center
- * ax({ layout: 'bar', gap: 'sm' })
- *
- * // 텍스트
- * ax({ textStyle: 'body', text: 'secondary' })
+ * // 툴바
+ * ax({ layout: 'bar', cs: 'sm' })
  */
 export function ax(axes: Axes): string {
-  let result = ''
-  for (const key in axes) {
-    const value = axes[key as keyof AxesAll]
-    if (value != null) {
-      if (result) result += ' '
-      result += `${prefixes[key as keyof Axes]}-${value}`
+  // 런타임 입력 — 마이그레이션 기간에는 Private 키도 사실상 들어올 수 있다.
+  const input = axes as Partial<AxesAll>
+
+  // 1) rolePreset cascade — role/surface/cs 기반 Private 주입
+  const preset = resolveRolePreset({
+    role: input.role,
+    surface: input.surface,
+    cs: input.cs,
+    content: input.content,
+    interactive: input.interactive,
+  })
+
+  // 2) merge — preset을 base로 깔고 input이 덮는다.
+  //    마이그레이션 기간: input에 Private 키가 있으면 경고 후 통과.
+  if (import.meta.env?.DEV) {
+    for (const key in input) {
+      if (PRIVATE_KEY_SET.has(key) && !warnedKeys.has(key)) {
+        warnedKeys.add(key)
+        console.warn(
+          `ax() received private key: "${key}". Migrate to role preset or ax.raw().`,
+        )
+      }
     }
   }
+  const merged: Partial<AxesAll> = { ...preset, ...input }
+
+  // 3) className 합성 — prefix-value 공백 구분
+  let result = ''
+  for (const key in merged) {
+    const value = (merged as Record<string, string | undefined>)[key]
+    if (value == null) continue
+    const prefix = prefixes[key as keyof AxesAll]
+    if (!prefix) continue
+    if (result) result += ' '
+    result += `${prefix}-${value}`
+  }
   return result
+}
+
+// Escape hatch 부착 — Private 축 직접 지정의 유일 경로.
+;(ax as typeof ax & { raw: typeof axRaw }).raw = axRaw
+
+// namespace 선언으로 ax.raw 의 d.ts 형태 제공
+export declare namespace ax {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const raw: typeof axRaw
 }

@@ -15,9 +15,10 @@ const filePath = input.tool_input?.file_path ?? ''
 // CSS 파일만 대상
 if (!/\.css$/.test(filePath)) process.exit(0)
 
-// 디자인 시스템 정의 파일 + 테스트 제외
-const EXEMPT = ['tokens.css', 'axes.css', 'palette.css', 'reset.css', 'layers.css', 'structure.css', 'interactive.css', 'ax.css', 'app.css', 'layout.css', 'landingTokens.css']
-if (EXEMPT.some(f => filePath.endsWith(f)) || filePath.includes('__tests__')) process.exit(0)
+// 디자인 시스템 정의 파일 + 테스트 + 도구용 CSS 제외
+const EXEMPT = ['tokens.css', 'axes.css', 'palette.css', 'reset.css', 'layers.css', 'structure.css', 'interactive.css', 'ax.css', 'app.css', 'layout.css', 'landingTokens.css', 'inspect.css']
+const EXEMPT_DIRS = ['/src/devtools/']
+if (EXEMPT.some(f => filePath.endsWith(f)) || EXEMPT_DIRS.some(d => filePath.includes(d)) || filePath.includes('__tests__')) process.exit(0)
 
 const content =
   input.tool_name === 'Write'
@@ -166,7 +167,31 @@ for (const selector of STATE_SELECTORS) {
 // 중복 제거
 const unique = [...new Set(violations)]
 
-if (unique.length > 0 || stateViolations.length > 0) {
+// ── ax() Private 키 검사 (TS/TSX 파일) ──
+// axPrivate.ts와 동기된 하드코딩 집합. 이 배치는 warning only — 139 데모 마이그레이션 후 block 승격.
+const AX_PRIVATE_KEYS = [
+  'padding', 'gap', 'shape', 'border', 'icon', 'square',
+  'weight', 'text', 'opacity', 'state', 'motion',
+]
+const axPrivateWarnings = []
+if (/\.(ts|tsx)$/.test(filePath) && !filePath.endsWith('ax.ts') && !filePath.endsWith('axRaw.ts') && !filePath.endsWith('rolePreset.ts') && !filePath.endsWith('axPrivate.ts')) {
+  // ax({ ... }) 호출 — ax.raw는 제외 (MemberExpression)
+  // 단순 정규식: `ax(` 뒤에 `{` 이 오고 이어서 키 목록을 스캔 (multiline).
+  const axCallRe = /(?<!\.)\bax\s*\(\s*\{([^}]*)\}/gs
+  let m
+  while ((m = axCallRe.exec(content)) != null) {
+    const body = m[1]
+    for (const k of AX_PRIVATE_KEYS) {
+      // 키 이름: 시작/콤마/공백 뒤에 <key>:
+      const keyRe = new RegExp(`(^|[,\\s{])${k}\\s*:`)
+      if (keyRe.test(body) && !axPrivateWarnings.includes(k)) {
+        axPrivateWarnings.push(k)
+      }
+    }
+  }
+}
+
+if (unique.length > 0 || stateViolations.length > 0 || axPrivateWarnings.length > 0) {
   const lines = []
 
   if (unique.length > 0) {
@@ -184,6 +209,19 @@ if (unique.length > 0 || stateViolations.length > 0) {
 
   lines.push("import { ax } from '@styles/ax'")
   lines.push('module.css에는 z-index, transform, grid-template, ::before/::after 등 축에 없는 속성만.')
+
+  // ax() Private 키 경고 (아직 block 아님 — 마이그레이션 유예)
+  if (axPrivateWarnings.length > 0) {
+    lines.push('')
+    lines.push(`[warn] ax() received private key: ${axPrivateWarnings.join(', ')}. Migrate to role preset or ax.raw().`)
+  }
+
+  // Private 키만 있고 CSS 위반/상태 선택자 없으면 block 하지 않는다 (warning only)
+  if (unique.length === 0 && stateViolations.length === 0) {
+    // warning만 stderr로 출력, 차단 없음
+    process.stderr.write(lines.join('\n') + '\n')
+    process.exit(0)
+  }
 
   process.stdout.write(JSON.stringify({ decision: 'block', reason: lines.join('\n') }))
 }
