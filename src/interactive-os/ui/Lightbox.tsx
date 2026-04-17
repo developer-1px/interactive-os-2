@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { ax } from '@styles/ax'
-import { ZoomPanCanvas } from './ZoomPanCanvas'
+import { Camera, type CameraHandle, type CameraRect } from './Camera'
 import './Lightbox.css'
 
 // ── Types ──
@@ -38,6 +38,7 @@ export function useLightbox(): LightboxContextValue {
 
 function MermaidLightboxContent({ code }: { code: string }) {
   const ref = useRef<HTMLDivElement>(null)
+  const cameraRef = useRef<CameraHandle>(null)
   const [svg, setSvg] = useState('')
   const [initialScale, setInitialScale] = useState<number | undefined>(undefined)
 
@@ -75,12 +76,25 @@ function MermaidLightboxContent({ code }: { code: string }) {
       .replace(/(<svg[^>]*?)(?:\s+height="[\d.]+(?:px)?")/g, '$1')
     : '', [svg])
 
+  // Apply initialScale when available via imperative focus.
+  useEffect(() => {
+    if (initialScale == null || !ref.current) return
+    const el = ref.current
+    const rect: CameraRect = {
+      top: el.offsetTop,
+      left: el.offsetLeft,
+      width: el.offsetWidth,
+      height: el.offsetHeight,
+    }
+    cameraRef.current?.focus(rect, { scale: initialScale, duration: 0 })
+  }, [initialScale])
+
   if (!cleanSvg) return null
 
   return (
-    <ZoomPanCanvas initialScale={initialScale} className="lightbox-canvas">
+    <Camera ref={cameraRef} mode="interact" className="lightbox-canvas">
       <div ref={ref} className="lightbox-mermaid" dangerouslySetInnerHTML={{ __html: cleanSvg }} />
-    </ZoomPanCanvas>
+    </Camera>
   )
 }
 

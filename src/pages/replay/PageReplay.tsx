@@ -15,6 +15,7 @@ import { useViewerTabs } from './useViewerTabs'
 import type { FileViewerHandle, ViewerTab } from '@os/ui/viewerTypes'
 import { ReplayProvider, type ReplayContextValue } from './replayContext'
 import { ReplayStageWidget, ReplaySidebarWidget } from './replayWidgets'
+import { useActiveSessions } from './useActiveSessions'
 
 // ── Session loading ──
 
@@ -73,7 +74,6 @@ function ReplaySlot({ entry, index, register }: { entry: SessionEntry; index: nu
   const viewerTabs = useViewerTabs()
   const fileViewerRef = useRef<FileViewerHandle>(null)
   const activeFileRef = useRef<string | null>(null)
-  const zoomActiveRef = useRef(false)
 
   // Replay release handler
   const onRelease = useCallback((vd: ViewerDelta) => {
@@ -105,27 +105,25 @@ function ReplaySlot({ entry, index, register }: { entry: SessionEntry; index: nu
         }
       }
     }
+    // Highlights & cursor drive Camera directly via FileViewer dispatch.
+    // No flag state-machine — current input conditions fully determine the intent.
     if (f.highlights !== undefined && fileViewerRef.current) {
       if (f.highlights) {
         fileViewerRef.current.dispatch({ type: 'highlight', lines: f.highlights })
-        if (!zoomActiveRef.current) {
-          const firstLine = Math.min(...f.highlights.keys())
-          fileViewerRef.current.dispatch({ type: 'zoom', line: firstLine })
-          setEditingLine(firstLine)
-          zoomActiveRef.current = true
-          if (activeFileRef.current) viewerTabs.markEdited(activeFileRef.current)
-        }
+        const firstLine = Math.min(...f.highlights.keys())
+        fileViewerRef.current.dispatch({ type: 'zoom', line: firstLine })
+        setEditingLine(firstLine)
+        if (activeFileRef.current) viewerTabs.markEdited(activeFileRef.current)
       } else {
         fileViewerRef.current.dispatch({ type: 'clear' })
       }
     }
-    if (f.cursorLine != null && zoomActiveRef.current && fileViewerRef.current) {
+    if (f.cursorLine != null && fileViewerRef.current) {
       fileViewerRef.current.dispatch({ type: 'zoom', line: f.cursorLine })
       setEditingLine(f.cursorLine)
     }
-    if (f.cursorLine === null && zoomActiveRef.current && f.content != null) {
+    if (f.cursorLine === null && f.content != null) {
       fileViewerRef.current?.dispatch({ type: 'zoom-reset' })
-      zoomActiveRef.current = false
       setEditingLine(null)
     }
   }, [viewerTabs])
@@ -271,7 +269,7 @@ function ReplaySlot({ entry, index, register }: { entry: SessionEntry; index: nu
   const replayCtx = useMemo<ReplayContextValue>(() => ({
     selectedId: entry.id, setSelectedId: noop, sessionEntries,
     messages, allMessagesCount: allMessages.length, isRunning, startReplay, editingLine,
-    mode, setMode: noop as never,
+    mode,
     tabs, activeTab, activeTabId, setActiveTab, viewerTabData, fileViewerRef,
     viewerTabs,
   }), [entry.id, noop, messages, allMessages.length, isRunning, startReplay, editingLine, mode, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs])
@@ -283,6 +281,45 @@ function ReplaySlot({ entry, index, register }: { entry: SessionEntry; index: nu
 
   return (
     <ReplayProvider value={replayCtx}>
+      <ReplayStageWidget />
+    </ReplayProvider>
+  )
+}
+
+// ── Live slot: renders the Shorts stage driven by the active agent session ──
+
+function LiveSlot({ slotIndex, sessionId, register }: {
+  slotIndex: number
+  sessionId: string | null
+  register: RegisterCtx
+}) {
+  const viewerTabs = useViewerTabs()
+  const fileViewerRef = useRef<FileViewerHandle>(null)
+  const { tabs, activeTab, activeTabId, setActiveTab } = viewerTabs
+
+  const viewerTabData: NormalizedData = useMemo(() => {
+    if (tabs.length === 0) return createStore({ entities: {}, relationships: {} })
+    const entities = Object.fromEntries(tabs.map(t => [t.id, { id: t.id, data: { label: tabLabel(t), type: t.type } }]))
+    return createStore({ entities, relationships: { __root__: tabs.map(t => t.id) } })
+  }, [tabs])
+
+  const noop = useCallback(() => {}, [])
+
+  const ctx = useMemo<ReplayContextValue>(() => ({
+    selectedId: sessionId ?? '__live__', setSelectedId: noop, sessionEntries,
+    messages: [], allMessagesCount: 0, isRunning: false, startReplay: noop, editingLine: null,
+    mode: 'live', liveSessionId: sessionId,
+    tabs, activeTab, activeTabId, setActiveTab, viewerTabData, fileViewerRef,
+    viewerTabs,
+  }), [noop, sessionId, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs])
+
+  useEffect(() => {
+    register(slotIndex, ctx)
+    return () => register(slotIndex, null)
+  }, [slotIndex, ctx, register])
+
+  return (
+    <ReplayProvider value={ctx}>
       <ReplayStageWidget />
     </ReplayProvider>
   )
@@ -340,8 +377,18 @@ export default function PageReplay() {
       return { ...prev, [index]: ctx }
     })
   }, [])
-  const activeCtx = registry[currentIndex] ?? null
-  const currentSessionId = sessionEntries[currentIndex]?.id ?? null
+  // Slots 0..L-1 = Live (one per active session, min 1 placeholder); L..L+N-1 = sessionEntries
+  const activeSessions = useActiveSessions()
+  const liveSessionIds: (string | null)[] = activeSessions.length > 0
+    ? activeSessions.map(s => s.id)
+    : [null]
+  const liveCount = liveSessionIds.length
+  const replayIndex = currentIndex - liveCount
+  const activeCtx = currentIndex < liveCount
+    ? (registry[-(currentIndex + 1)] ?? null)
+    : (replayIndex >= 0 ? (registry[replayIndex] ?? null) : null)
+  const currentSessionId = replayIndex >= 0 ? (sessionEntries[replayIndex]?.id ?? null) : null
+  const totalSlots = liveCount + sessionEntries.length
 
   return (
     <div className={ax({ layout: 'fill' })} style={{ overflow: 'hidden' }}>
@@ -353,14 +400,21 @@ export default function PageReplay() {
       />
       {/* Dot indicator — right edge */}
       <div className={`replay-dots ${ax({ layout: 'stack', gap: 'xs', placement: 'top-end' })}`}>
-        {sessionEntries.map((e, i) => (
-          <div key={e.id} className={`replay-dot ${i === currentIndex ? 'replay-dot--active' : ''}`} style={{ width: 6, height: 6 }} />
+        {Array.from({ length: totalSlots }).map((_, i) => (
+          <div key={i} className={`replay-dot ${i === currentIndex ? 'replay-dot--active' : ''}`} style={{ width: 6, height: 6 }} />
         ))}
       </div>
       <div ref={feedRef} className={`replay-feed ${ax({ scroll: 'y' })}`}>
+        {liveSessionIds.map((sid, i) => (
+          <div key={`live-${sid ?? 'empty'}`} className="replay-slot">
+            {Math.abs(i - currentIndex) <= 1
+              ? <LiveSlot slotIndex={-(i + 1)} sessionId={sid} register={register} />
+              : null}
+          </div>
+        ))}
         {sessionEntries.map((entry, i) => (
           <div key={entry.id} className="replay-slot">
-            {Math.abs(i - currentIndex) <= 1
+            {Math.abs(i - replayIndex) <= 1
               ? <ReplaySlot entry={entry} index={i} register={register} />
               : null}
           </div>

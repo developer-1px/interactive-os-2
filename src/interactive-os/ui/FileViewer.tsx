@@ -6,7 +6,7 @@ import { useAnimationQueue } from './useAnimationQueue'
 import type { HighlightTone } from './CodeViewer'
 import { editAnimationFrames, type TimedFrame } from './editAnimation'
 import type { FileViewerCommand, FileViewerHandle } from './viewerTypes'
-import { ZoomPane, type ZoomPaneHandle } from './ZoomPane'
+import { Camera, type CameraHandle } from './Camera'
 import { ax } from '@styles/ax'
 
 interface FileViewerProps {
@@ -18,7 +18,7 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
     const [content, setContent] = useState<string | null>(null)
     const [highlights, setHighlights] = useState<Map<number, HighlightTone> | undefined>(undefined)
     const [cursorLine, setCursorLine] = useState<number | null>(null)
-    const zoomRef = useRef<ZoomPaneHandle>(null)
+    const zoomRef = useRef<CameraHandle>(null)
 
     const onRelease = useCallback((tf: TimedFrame) => {
       const f = tf.frame
@@ -51,7 +51,7 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
           break
         }
         case 'zoom':
-          zoomRef.current?.zoomToLine(cmd.line, cmd.scale)
+          zoomRef.current?.focus(`[data-line="${cmd.line}"]`, { scale: cmd.scale ?? 1.5 })
           break
         case 'zoom-reset':
           zoomRef.current?.reset()
@@ -76,10 +76,10 @@ export const FileViewer = forwardRef<FileViewerHandle, FileViewerProps>(
     }
 
     return (
-      <ZoomPane ref={zoomRef}>
+      <Camera ref={zoomRef}>
         <FilePreview content={content} filename={filename} highlightLines={highlights} />
         {cursorLine != null && <ReplayCursor line={cursorLine} />}
-      </ZoomPane>
+      </Camera>
     )
   },
 )
