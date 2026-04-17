@@ -8,12 +8,12 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
 import rehypeRaw from 'rehype-raw'
-import { CodeBlock } from './CodeBlock'
+import { CodeViewer, type CodeViewerPreset } from './CodeViewer'
 import { FrontmatterCard } from './FrontmatterCard'
 import { LightboxProvider, useLightbox } from './Lightbox'
 import './MarkdownViewer.css'
 
-export type CodeVariant = 'bordered' | 'flush' | 'compact'
+export type CodePreset = CodeViewerPreset
 
 export interface MarkdownRendererConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,7 +82,7 @@ function RenderBlock({ children, config }: { children: string; config?: Markdown
 }
 
 // ② lightbox-prd.md — img/mermaid click → Lightbox
-function MarkdownContent({ content, className, codeVariant, prose, linkTransform, config }: { content: string; className?: string; codeVariant?: CodeVariant; prose: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig }) {
+function MarkdownContent({ content, className, codePreset, prose, linkTransform, config }: { content: string; className?: string; codePreset?: CodePreset; prose: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig }) {
   const lightbox = useLightbox()
   const { data: frontmatter, body } = useMemo(() => {
     const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(content)
@@ -145,16 +145,16 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
           const Mermaid = config.mermaidComponent
           return <Mermaid code={text} onClick={() => lightbox.open({ type: 'mermaid', code: text })} />
         }
-        return <CodeBlock code={text} filename="code.mermaid" variant={codeVariant} />
+        return <CodeViewer code={text} filename="code.mermaid" preset={codePreset} />
       }
 
       if (lang) {
-        return <CodeBlock code={text} filename={`code.${lang}`} variant={codeVariant} />
+        return <CodeViewer code={text} filename={`code.${lang}`} preset={codePreset} />
       }
 
       return <code className={className} {...props}>{children}</code>
     },
-  }), [codeVariant, linkTransform, lightbox, config])
+  }), [codePreset, linkTransform, lightbox, config])
 
   const remarkPlugins = useMemo(
     () => [...baseRemarkPlugins, ...(config?.remarkPlugins ?? [])],
@@ -174,10 +174,10 @@ function MarkdownContent({ content, className, codeVariant, prose, linkTransform
   )
 }
 
-export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codeVariant, prose = true, linkTransform, config }: { content: string; className?: string; codeVariant?: CodeVariant; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig }) {
+export const MarkdownViewer = memo(function MarkdownViewer({ content, className, codePreset, prose = true, linkTransform, config }: { content: string; className?: string; codePreset?: CodePreset; prose?: boolean; linkTransform?: (href: string) => { href: string; onClick?: React.MouseEventHandler }; config?: MarkdownRendererConfig }) {
   return (
     <LightboxProvider>
-      <MarkdownContent content={content} className={className} codeVariant={codeVariant} prose={prose} linkTransform={linkTransform} config={config} />
+      <MarkdownContent content={content} className={className} codePreset={codePreset} prose={prose} linkTransform={linkTransform} config={config} />
     </LightboxProvider>
   )
 })

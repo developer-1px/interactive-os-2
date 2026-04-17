@@ -36,7 +36,7 @@ export const ThinkingBlock = memo(function ThinkingBlock({ block }: { block: Dat
       </div>
       {expanded && !isLatest && (
         <div className={`break-word ${ax({ clamp: 'scroll', padding: 'sm' })} thinking-content`}>
-          <MarkdownViewer content={text} prose={false} codeVariant="compact" />
+          <MarkdownViewer content={text} prose={false} codePreset="chat" />
         </div>
       )}
     </div>

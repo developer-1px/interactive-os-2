@@ -1,12 +1,9 @@
 /** @catalog 파일 내용 미리보기 — registry 기반 (이미지/코드/마크다운) */
-import { useMemo } from 'react'
-import { CodeBlock, type HighlightTone } from './CodeBlock'
-import { VirtualCodeBlock } from './VirtualCodeBlock'
+// ② code-viewer-prd.md
+import { CodeViewer, type HighlightTone, type CodeViewerPreset } from './CodeViewer'
 import { MarkdownViewer } from './MarkdownViewer'
 import { getFileRenderer, defineFileRenderer, type FileRenderProps } from './fileRenderers'
 import { ax } from '@styles/ax'
-
-const VIRTUAL_THRESHOLD = 500
 
 // --- Built-in renderers ---
 
@@ -36,38 +33,26 @@ interface FilePreviewProps {
   content: string
   filename: string
   highlightLines?: Set<number> | Map<number, HighlightTone>
-  variant?: 'flush' | 'compact'
+  preset?: CodeViewerPreset
   /** 이미지 등 바이너리 파일의 URL (source: 'url' 렌더러용) */
   src?: string
 }
 
-export function FilePreview({ content, filename, highlightLines, variant = 'flush', src }: FilePreviewProps) {
+export function FilePreview({ content, filename, highlightLines, preset = 'doc', src }: FilePreviewProps) {
   const renderer = getFileRenderer(filename)
-  const lineCount = useMemo(() => content.split('\n').length, [content])
 
   if (renderer) {
     const resolvedSrc = src ?? `/api/fs/file?path=${encodeURIComponent(filename)}`
-    return <>{renderer.render({ content, src: resolvedSrc, filename, highlightLines, variant })}</>
-  }
-
-  // Fallback: code renderer
-  if (lineCount > VIRTUAL_THRESHOLD) {
-    return (
-      <VirtualCodeBlock
-        code={content}
-        filename={filename}
-        highlightLines={highlightLines instanceof Map ? highlightLines : undefined}
-        variant={variant}
-      />
-    )
+    return <>{renderer.render({ content, src: resolvedSrc, filename, highlightLines, preset })}</>
   }
 
   return (
-    <CodeBlock
+    <CodeViewer
       code={content}
       filename={filename}
       highlightLines={highlightLines}
-      variant={variant}
+      preset={preset}
+      virtualized
     />
   )
 }

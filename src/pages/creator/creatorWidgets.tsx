@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { demoRegistry, demoSources, findDemo } from './demoRegistry'
 import { NavList } from '@os/ui/NavList'
 import { TextInput } from '@os/ui/TextInput'
-import { CodeBlock } from '@os/ui/CodeBlock'
+import { CodeViewer } from '@os/ui/CodeViewer'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { createStore, addEntity } from '@os/store/createStore'
 import { ROOT_ID } from '@os/store/types'
@@ -124,7 +124,7 @@ function CreatorSource() {
         <span className={ax({ text: 'muted' })}>{selectedName}.demo.tsx</span>
       </PanelHeader>
       {demoSource ? (
-        <CodeBlock code={demoSource} filename={`${selectedName}.demo.tsx`} variant="flush" />
+        <CodeViewer code={demoSource} filename={`${selectedName}.demo.tsx`} preset="doc" />
       ) : (
         <div className={ax({ layout: 'center', padding: 'xl', text: 'muted' })}>No source</div>
       )}

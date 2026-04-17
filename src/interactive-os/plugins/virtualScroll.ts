@@ -13,7 +13,7 @@ interface VirtualScrollOptions {
 /**
  * Component hook — reads virtual scroll state.
  * Works with or without the virtualScroll plugin.
- * Use when itemCount is component-controlled (e.g. VirtualCodeBlock lines).
+ * Use when itemCount is component-controlled (e.g. CodeViewer virtualized lines).
  */
 export function useVirtualScrollState(
   options: VirtualScrollOptions & {

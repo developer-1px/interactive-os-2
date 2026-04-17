@@ -1,5 +1,5 @@
 // ② 2026-04-03-viewer-command-prd.md
-import type { HighlightTone } from '@os/ui/CodeBlock'
+import type { HighlightTone } from '@os/ui/CodeViewer'
 
 export interface LineRange {
   start: number

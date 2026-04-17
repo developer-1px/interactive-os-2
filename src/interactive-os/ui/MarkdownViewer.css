@@ -87,7 +87,7 @@
   margin: 1.5em 0;
 }
 
-/* CodeBlock wrapper reset */
+/* CodeViewer wrapper reset */
 .markdown pre:has(.shiki) {
   background: none;
   border: none;

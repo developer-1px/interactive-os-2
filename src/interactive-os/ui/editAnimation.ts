@@ -1,5 +1,5 @@
 // ② 2026-04-03-replay-edit-animation-prd.md
-import type { HighlightTone } from '@os/ui/CodeBlock'
+import type { HighlightTone } from '@os/ui/CodeViewer'
 
 // --- Types ---
 
@@ -67,6 +67,7 @@ export function editAnimationFrames(
   frames.push({ frame: { content: deletedContent, highlights: null, cursorLine: startLine }, delay: 150 })
 
   // ③ 타이핑: 토큰(단어) 단위, 최소 2초 ~ 최대 4초 동안 타이핑
+  const oldLines = oldString.split('\n')
   const cursorLineNum = before.split('\n').length
   const tokens = tokenize(newString)
   const TYPING_DURATION = 2000 + Math.floor(Math.random() * 2000) // 2-4초
@@ -78,22 +79,26 @@ export function editAnimationFrames(
     typed += tokens[t]
     const partial = before + typed + after
     const delay = /^\s+$/.test(tokens[t]) ? 40 : 120
-    // 타이핑 중인 줄에 inserted 하이라이트
-    const typingLines = typed.split('\n').length
+    // 타이핑 중인 줄에 하이라이트 — 변경된 줄만 inserted
+    const typedLines = typed.split('\n')
     const typingHighlights = new Map<number, HighlightTone>()
-    for (let l = 0; l < typingLines; l++) {
-      typingHighlights.set(cursorLineNum + l, 'inserted')
+    for (let l = 0; l < typedLines.length; l++) {
+      const isChanged = l >= oldLines.length || typedLines[l] !== oldLines[l]
+      typingHighlights.set(cursorLineNum + l, isChanged ? 'inserted' : 'context')
     }
     frames.push({ frame: { content: partial, highlights: typingHighlights, cursorLine: cursorLineNum }, delay })
     elapsed += delay
   }
 
-  // ④ Inserted highlights for all new lines
-  const newLineCount = newString.split('\n').length
+  // ④ Inserted highlights — 변경된 줄만 'inserted', 동일한 줄은 'edited'(연한 톤)
+  const newLines = newString.split('\n')
+  const newLineCount = newLines.length
   const insertedStart = before.split('\n').length
   const insertedHighlights = new Map<number, HighlightTone>()
   for (let i = 0; i < newLineCount; i++) {
-    insertedHighlights.set(insertedStart + i, 'inserted')
+    // old에 같은 줄이 있으면 edited(변경 없는 맥락), 없으면 inserted(실제 변경)
+    const isChanged = i >= oldLines.length || newLines[i] !== oldLines[i]
+    insertedHighlights.set(insertedStart + i, isChanged ? 'inserted' : 'context')
   }
 
   // 나머지 한번에 짠 (with inserted highlights)

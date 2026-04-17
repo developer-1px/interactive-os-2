@@ -151,7 +151,7 @@ const OS_LAYER_MATURITY_KEYWORDS: Record<string, string[]> = {
   axis: ['8축', 'commands (focus'],
   pattern: ['composePattern', 'edit', 'pointer interaction', 'examples/', 'menubar'],
   plugins: ['focusRecovery', 'history', 'crud', 'cellEdit', 'search', 'clipboard', 'zodSchema', 'rename', 'dnd', 'spatial', 'typeahead', 'autoscroll', 'definePlugin'],
-  primitives: ['Aria ', 'Aria.Item', 'Aria.Cell', 'Aria.Panel', 'Aria.Trigger', 'KeyMap', 'Keyboard', 'Resizer', 'VirtualCodeBlock', 'shikiUtils'],
+  primitives: ['Aria ', 'Aria.Item', 'Aria.Cell', 'Aria.Panel', 'Aria.Trigger', 'KeyMap', 'Keyboard', 'Resizer', 'shikiUtils'],
   ui: ['indicators/', 'AriaComponentProps', 'ListBox', 'TreeGrid', 'TreeView', 'TabList', 'Accordion', 'Combobox', 'Kanban', 'Slider', 'SpatialView', 'Toaster', 'Tooltip', 'A2UISurface', 'SelectionOverlay', 'DatePicker', 'CalendarGrid'],
 }
 

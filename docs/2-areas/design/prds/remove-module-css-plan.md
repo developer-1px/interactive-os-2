@@ -218,7 +218,7 @@ git commit -m "refactor: ui/ 소형 module.css 17개 제거 → ax() 마이그�
 **Files:**
 - `ui/Composer.module.css` (62줄) + `ui/Composer.tsx`
 - `ui/QuickOpen.module.css` (51줄) + `ui/QuickOpen.tsx`
-- `ui/CodeBlock.module.css` (88줄) + `ui/CodeBlock.tsx`
+- `ui/CodeBlock.module.css` (88줄) + `ui/CodeViewer.tsx`
 - `ui/SpreadReader.module.css` (62줄) + `ui/SpreadReader.tsx`
 
 특수 처리:

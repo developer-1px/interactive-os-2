@@ -51,7 +51,7 @@ function SummaryPreview({ title, body }: { title: string; body: string }) {
   return (
     <div className={ax({ layout: 'stack', gap: 'sm', padding: 'md' })}>
       <span className={ax({ textStyle: 'label', weight: 'semi', text: 'bright' })}>{title}</span>
-      <MarkdownViewer content={body} prose={false} codeVariant="compact" config={showcaseMdConfig} />
+      <MarkdownViewer content={body} prose={false} codePreset="chat" config={showcaseMdConfig} />
     </div>
   )
 }

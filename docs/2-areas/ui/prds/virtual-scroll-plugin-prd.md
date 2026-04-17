@@ -27,7 +27,7 @@
 | `src/interactive-os/plugins/virtualScroll.ts` | definePlugin 래퍼. useEffect에서 containerRef 기반 스크롤 이벤트 배선 | ✅ `virtualScroll.ts` |
 | `src/interactive-os/plugins/virtualScroll.ts::virtualScroll` | 팩토리 함수. `virtualScroll({ estimatedItemHeight, overscan? })` | ✅ `virtualScroll.ts::virtualScroll` |
 | `src/interactive-os/plugins/virtualScroll.ts::useVirtualScrollState` | 컴포넌트용 훅. visibleRange, totalHeight, offsetTop, measureItem, scrollToIndex 반환 | ✅ `virtualScroll.ts::useVirtualScrollState` |
-| `src/interactive-os/ui/VirtualCodeBlock.tsx` 수정 | useVirtualScroll 직접 호출 → useVirtualScrollState 훅으로 교체 | ✅ import 교체 완료 |
+| `src/interactive-os/ui/VirtualCodeViewer.tsx` 수정 | useVirtualScroll 직접 호출 → useVirtualScrollState 훅으로 교체 | ✅ import 교체 완료 |
 
 ⚠️ PRD에 없는 추가 산출물:
 - `plugins/useVirtualScroll.ts` — 훅 본체 이동 (ui/ → plugins/)
@@ -75,7 +75,7 @@
 
 | # | 이 기능이 건드리는 기존 것 | 예상 부작용 | 심각도 | 대응 | 역PRD |
 |---|------------------------|-----------|--------|------|-------|
-| 1 | VirtualCodeBlock.tsx | useVirtualScroll → useVirtualScrollState 교체 | 낮 | 동일 인터페이스 유지 | ✅ |
+| 1 | VirtualCodeViewer.tsx | useVirtualScroll → useVirtualScrollState 교체 | 낮 | 동일 인터페이스 유지 | ✅ |
 | 2 | useVirtualScroll.ts (ui/) | 본체 이동 + re-export shim | 낮 | 허용 | ✅ |
 
 완성도: 🟢
