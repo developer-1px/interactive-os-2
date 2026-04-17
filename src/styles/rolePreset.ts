@@ -1,5 +1,5 @@
 import type {
-  AxPublic, AxRole, AxSurface, AxContent, AxInteractive,
+  AxPublic, AxRole, AxSurface, AxContent, AxInteractive, AxTextStyle,
 } from './axPublic'
 import type { AxPrivate } from './axPrivate'
 
@@ -60,6 +60,48 @@ export const rolePresetTable: Partial<Record<RolePresetKey, Partial<AxPrivate>>>
   'badge.ghost': { padding: 'xs', text: 'muted' },
   // badge.overlay — 오버레이 뱃지 (빈도 1, 샘플: src/pages/replay/replayWidgets.tsx:330)
   'badge.overlay': { padding: 'xs', shape: 'md', weight: 'semi' },
+
+  // ── motion 주입 seed ──
+  // motion은 의미 축이 아니라 시각 피드백이라 Private 유지.
+  // 상태 role(loading/streaming/error 등)이 주입하는 경로를 rolePreset에 seed.
+  // item.placeholder — 스트리밍/스켈레톤 행 (shimmer)
+  'item.placeholder': { padding: 'sm', gap: 'sm', motion: 'shimmer', text: 'muted' },
+  // badge.placeholder — 로딩 상태 칩 (pulse)
+  'badge.placeholder': { padding: 'xs', shape: 'pill', motion: 'pulse', text: 'muted' },
+  // control.placeholder — 로딩 스피너 컨트롤 (spin)
+  'control.placeholder': { padding: 'xs', shape: 'md', motion: 'spin', text: 'muted' },
+}
+
+/**
+ * textStyle → Private(weight/text) 주입 테이블.
+ * textStyle은 Public 축이지만 weight/text는 Private이므로 주입 경로가 필요하다.
+ * §1 불변식 #4 — 텍스트 조합 변경은 이 테이블만 수정.
+ *
+ * @invariant 값은 Partial<AxPrivate> 만 — AxPublic 키 포함 금지
+ * @invariant rolePreset과 병합 시 role이 우선 (더 구체적 의도)
+ */
+export const textStylePresetTable: Partial<Record<AxTextStyle, Partial<AxPrivate>>> = {
+  hero:     { weight: 'bold',   text: 'bright' },
+  display:  { weight: 'bold',   text: 'bright' },
+  page:     { weight: 'semi',   text: 'bright' },
+  section:  { weight: 'semi',   text: 'primary' },
+  label:    { weight: 'medium', text: 'primary' },
+  body:     {                   text: 'primary' },
+  caption:  {                   text: 'secondary' },
+  code:     {                   text: 'primary' },
+  overline: { weight: 'semi',   text: 'muted' },
+}
+
+/**
+ * textStyle 입력에서 Private 값을 해석.
+ * @invariant 반환은 Partial<AxPrivate> 키만 — AxPublic 키 미포함
+ * @invariant 미정의/undefined 입력 시 {} 반환, throw 금지
+ */
+export function resolveTextStylePreset(
+  textStyle: AxTextStyle | undefined,
+): Partial<AxPrivate> {
+  if (!textStyle) return {}
+  return textStylePresetTable[textStyle] ?? {}
 }
 
 /**

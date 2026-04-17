@@ -16,7 +16,7 @@ export function MenubarItem(
       {...props}
       className={ax({ role: 'item', interactive: 'item', content: 'text', layout: 'row', width: 'full' })}
     >
-      {label}
+      <span>{label}</span>
       {state.expanded !== undefined && (
         <DirectionIndicator direction={state.expanded ? 'prev' : 'next'} orientation="vertical" />
       )}

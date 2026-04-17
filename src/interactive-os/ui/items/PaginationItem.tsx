@@ -22,7 +22,7 @@ export function PaginationItem(
   if (kind === 'ellipsis') {
     return (
       <span
-        className={ax({ role: 'control', text: 'secondary' })}
+        className={`${ax({ role: 'control' })} ${ax.raw({ text: 'secondary' })}`}
         aria-hidden="true"
       >
         ...

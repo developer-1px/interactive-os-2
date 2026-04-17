@@ -28,21 +28,19 @@ export function StepperItem(
   return (
     <div
       {...props}
-      className={ax({
+      className={`${ax({
         role: 'item',
         interactive: 'item',
         layout: isVertical ? 'stack' : 'bar',
-        gap: 'xs',
-        text: isActive ? 'primary' : completed ? 'secondary' : 'muted',
-      })}
+      })} ${ax.raw({ gap: 'xs', text: isActive ? 'primary' : completed ? 'secondary' : 'muted' })}`}
     >
-      <span className={ax({ layout: isVertical ? 'bar' : 'stack', gap: 'xs', content: 'text' })}>
-        <span className={ax({ layout: 'bar', gap: 'xs' })}>
+      <span className={`${ax({ layout: isVertical ? 'bar' : 'stack', content: 'text' })} ${ax.raw({ gap: 'xs' })}`}>
+        <span className={`${ax({ layout: 'bar' })} ${ax.raw({ gap: 'xs' })}`}>
           <StepIndicator step={step} completed={completed} />
           <span className={ax({ clamp: '1' })}>{label}</span>
         </span>
         {description && (
-          <span className={ax({ textStyle: 'caption', text: 'muted', clamp: '1' })}>{description}</span>
+          <span className={`${ax({ textStyle: 'caption', clamp: '1' })} ${ax.raw({ text: 'muted' })}`}>{description}</span>
         )}
       </span>
     </div>

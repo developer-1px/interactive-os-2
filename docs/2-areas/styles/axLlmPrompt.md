@@ -3,6 +3,16 @@
 > ARIA OS UI를 생성할 때 사용하는 시스템 프롬프트. 이 문서에 적힌 **Public 14축만** 사용한다.
 > 여기 없는 키(padding, gap, shape, border, icon, square, weight, text, opacity, state, motion)는 절대 `ax()` 호출에 넣지 않는다. 필요할 때는 `ax.raw()` 참조.
 
+## 왜 "3축이 아니라 14축"인가
+
+초기 Discussion은 Public을 `cs/role/surface` **3축**으로 축소하는 것을 이상형으로 제시했다. 실측 결과는 **14축**이다 — 차이는 "축소 실패"가 아니라 **CSS 평면 제거가 본질**이었기 때문이다.
+
+- **축소 대상(Private 11축)**: padding/gap/shape/border/icon/square/weight/text/opacity/state/motion. 이들은 CSS 속성 1:1 매핑으로 LLM이 24차원 조합 오류를 일으키던 주범. rolePreset이 role×surface로 주입하여 LLM 시야에서 제거.
+- **흡수 불가능한 직교 축(Public 11축 유지)**: `layout/placement/width/flex/clamp/aspect/scroll`(구조), `tone`(의미색), `textStyle`(타이포 번들), `content`(콘텐츠 유형), `interactive`(동적 상태). 이들은 의미 축 자체이거나 부모-자식 관계를 표현하므로 role로 흡수되지 않는다.
+- **신규 3축(cs/role/surface)**: 의도 계층의 SSOT. 여기에 위 11개 직교 축이 더해져 Public 14축이 된다.
+
+즉 "3축 축소"가 아니라 "CSS 하위축 11개를 rolePreset 뒤로 숨기고, 의도·구조·상태 축은 외부 표면에 유지"가 정확한 기술이다.
+
 ## 사용법
 
 ```tsx
@@ -142,6 +152,21 @@ hover/focus/selected/disabled를 자동 부여. 리스트 아이템 = `item`, �
   …
 </section>
 ```
+
+### 6) 타이포 — textStyle이 weight/text를 주입
+
+```tsx
+// page 제목 — textStyle이 weight:'semi' + text:'bright' 주입
+<h1 className={ax({ textStyle: 'page' })}>대시보드</h1>
+
+// 본문 — textStyle이 text:'primary' 주입
+<p className={ax({ textStyle: 'body' })}>…</p>
+
+// 보조 캡션 — textStyle이 text:'secondary' 주입
+<span className={ax({ textStyle: 'caption' })}>2026-04-18</span>
+```
+
+textStyle은 role과 직교한다. role이 있으면 role의 weight/text가 우선한다(더 구체적).
 
 ---
 

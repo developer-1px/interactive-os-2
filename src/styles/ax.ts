@@ -7,7 +7,7 @@
 import type { AxPublic } from './axPublic'
 import type { AxPrivate } from './axPrivate'
 import { AX_PRIVATE_KEYS } from './axPrivate'
-import { resolveRolePreset } from './rolePreset'
+import { resolveRolePreset, resolveTextStylePreset } from './rolePreset'
 import { axRaw } from './axRaw'
 
 // Public 타입 re-export — 외부 사용자는 'src/styles/ax' 한 경로만 본다.
@@ -18,14 +18,12 @@ export type {
 
 // 마이그레이션 back-compat: 기존 `Axes` import 경로 유지용 alias.
 // 139 데모 마이그레이션 완료 후 제거.
-export type Axes = AxPublic & Partial<AxPrivate> & { recipe?: 'container' | 'container-sm' }
+// recipe 축은 제거됨 — 레거시 CSS @layer recipe 이름과 혼동 주의 (별개 개념).
+export type Axes = AxPublic & Partial<AxPrivate>
 
-// recipe: 레거시 크기 프리셋 — role로 이전 중. container만 잔존 (마이그레이션 유예).
-type Recipe = 'container' | 'container-sm'
-
-// 전체 축 prefix 매핑 (Public + Private + recipe).
+// 전체 축 prefix 매핑 (Public + Private).
 // Private 축은 rolePreset 주입 또는 마이그레이션 기간 직접 입력 모두 수용.
-type AxesAll = AxPublic & AxPrivate & { recipe?: Recipe }
+type AxesAll = AxPublic & AxPrivate
 
 const prefixes: Record<keyof AxesAll, string> = {
   // Public
@@ -55,8 +53,6 @@ const prefixes: Record<keyof AxesAll, string> = {
   opacity: 'op',
   state: 'st',
   motion: 'mo',
-  // Legacy
-  recipe: 'rc',
 }
 
 const PRIVATE_KEY_SET = new Set<string>(AX_PRIVATE_KEYS as readonly string[])
@@ -90,12 +86,19 @@ export function ax(axes: Axes): string {
 
   // 1) rolePreset cascade — role × surface × (content|interactive) 기반 Private 주입
   //    cs는 Public 키로 그대로 전달되며 preset 조회 키에는 포함하지 않는다.
-  const preset = resolveRolePreset({
+  const rolePreset = resolveRolePreset({
     role: input.role,
     surface: input.surface,
     content: input.content,
     interactive: input.interactive,
   })
+
+  // 1b) textStylePreset — textStyle(Public)이 weight/text(Private)를 주입.
+  //     textStyle은 role과 직교하므로 별도 테이블로 해석한다.
+  //     role preset이 weight/text를 이미 지정한 경우 textStyle preset이 우선하지 않도록
+  //     role preset을 뒤에 얹는다(role이 더 구체적).
+  const textPreset = resolveTextStylePreset(input.textStyle)
+  const preset = { ...textPreset, ...rolePreset }
 
   // 2) merge — preset을 base로 깔고 input이 덮는다.
   //    마이그레이션 기간: input에 Private 키가 있으면 경고 후 통과.

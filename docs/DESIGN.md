@@ -161,7 +161,9 @@ ax()의 25축은 외부 API 관점에서 **Public 14축** + **Private 11축**으
 | Public | `ax({...})` | 14 | cs, role, surface, tone, textStyle, content, layout, placement, width, flex, clamp, aspect, scroll, interactive | `src/styles/axPublic.ts` |
 | Private | `ax.raw({...})` | 11 | padding, gap, shape, border, icon, square, weight, text, opacity, state, motion | `src/styles/axPrivate.ts` |
 
-**rolePreset = 단일 SSOT.** `role × surface (× content|interactive)` 조합이 Private 값을 cascade 주입한다 (cs는 키에 없음 — 외부 크기 입력으로 직교). 조합 변경은 `src/styles/rolePreset.ts` 1곳에서만 일어난다. 현재 seed: `control.action[.text|.icon|.button]`, `control.ghost[.icon|.text|.tab]`, `control.input[.text|.input]`, `item.base`, `badge.display`, `badge.ghost`, `badge.overlay`.
+**rolePreset = 단일 SSOT.** `role × surface (× content|interactive)` 조합이 Private 값을 cascade 주입한다 (cs는 키에 없음 — 외부 크기 입력으로 직교). 조합 변경은 `src/styles/rolePreset.ts` 1곳에서만 일어난다. 현재 seed: `control.action[.text|.icon|.button]`, `control.ghost[.icon|.text|.tab]`, `control.input[.text|.input]`, `item.base`, `item.placeholder`, `control.placeholder`, `badge.display`, `badge.ghost`, `badge.overlay`, `badge.placeholder`. `*.placeholder` 3종은 motion(pulse/spin/shimmer)을 주입하는 상태 role 경로다.
+
+**textStylePreset = 타이포 주입 경로.** `textStyle`은 Public이지만 `weight`/`text`는 Private이므로 `textStylePresetTable`(`src/styles/rolePreset.ts`)이 9종 textStyle을 weight/text로 해석한다. role preset과 병합될 때는 role이 우선한다(더 구체적 의도).
 
 **Escape hatch.** rolePreset에 없는 Private 값이 필요하면 `ax.raw({ padding: 'sm' })`를 써서 명시적으로 노출한다. `ax()`는 Private 키를 받지 않는다(타입 수준 거부).
 

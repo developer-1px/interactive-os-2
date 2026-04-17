@@ -17,7 +17,7 @@ export function SelectItem(
       data-focused={state.focused || undefined}
       data-selected={state.selected || undefined}
     >
-      <span className={ax({ text: state.focused ? 'primary' : 'secondary', clamp: '1', flex: '1' })}>{label}</span>
+      <span className={`${ax({ clamp: '1', flex: '1' })} ${ax.raw({ text: state.focused ? 'primary' : 'secondary' })}`}>{label}</span>
       {state.selected && <span className={ax({ flex: 'none' })}><CheckIndicator /></span>}
     </div>
   )

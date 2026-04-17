@@ -1,0 +1,117 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Design Guideline Inspector
+   ═══════════════════════════════════════════════════════════════════
+   3 modes, independently togglable via body class or query param:
+     ?inspect      → body.inspect       — role/interactive violation outline
+     ?inspect-grid → body.inspect-grid  — 8px baseline grid overlay
+     ?inspect-box  → body.inspect-box   — box-model color visualization
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Mode 1: Role Violation Outline (?inspect) ──
+   interactive(ia-*) without role(rl-*) = red outline (violation)
+   proper role = subtle green (correct) */
+
+@layer state {
+  body.inspect .ia-item:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-tab:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-check:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-cell:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-input:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge),
+  body.inspect .ia-button:not(.rl-control):not(.rl-control-group):not(.rl-item):not(.rl-badge) {
+    outline: 3px solid rgba(255, 40, 40, 0.9);
+    outline-offset: -2px;
+  }
+
+  body.inspect .rl-control,
+  body.inspect .rl-control-group,
+  body.inspect .rl-item,
+  body.inspect .rl-badge {
+    outline: 1px solid rgba(100, 200, 100, 0.3);
+    outline-offset: -1px;
+  }
+}
+
+/* ── Mode 2: Baseline Grid (?inspect-grid) ──
+   8px horizontal grid — every element's height should land on these lines.
+   LLM vision detects broken rhythm as pattern mismatch in the stripe overlay. */
+
+@layer state {
+  body.inspect-grid::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99998;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 7px,
+        rgba(255, 60, 60, 0.25) 7px,
+        rgba(255, 60, 60, 0.25) 8px
+      );
+    background-size: 100% 8px;
+    background-position: top left;
+  }
+
+  /* 4px sub-grid — finer rhythm */
+  body.inspect-grid::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99999;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(255, 60, 60, 0.08) 3px,
+        rgba(255, 60, 60, 0.08) 4px
+      );
+    background-size: 100% 4px;
+  }
+}
+
+/* ── Mode 3: Box-Model Color (?inspect-box) ──
+   role = green tint, interactive = blue outline, surface = purple dot,
+   layout container = orange tint.
+   LLM vision sees color blocks and judges spacing uniformity. */
+
+@layer state {
+  /* Role elements — green: structural keyline elements */
+  body.inspect-box .rl-control,
+  body.inspect-box .rl-control-group,
+  body.inspect-box .rl-item,
+  body.inspect-box .rl-badge {
+    background-image: linear-gradient(rgba(76, 175, 80, 0.10), rgba(76, 175, 80, 0.10));
+    outline: 1px solid rgba(76, 175, 80, 0.35);
+    outline-offset: -1px;
+  }
+
+  /* Interactive elements — blue dashed: clickable/focusable */
+  body.inspect-box [class*="ia-"] {
+    background-image: linear-gradient(rgba(33, 150, 243, 0.06), rgba(33, 150, 243, 0.06));
+    outline: 1px dashed rgba(33, 150, 243, 0.30);
+    outline-offset: -1px;
+  }
+
+  /* Surface elements — purple dotted: visual containers */
+  body.inspect-box [class*="sf-"] {
+    outline: 1px dotted rgba(156, 39, 176, 0.25);
+    outline-offset: -1px;
+  }
+
+  /* Layout containers — orange: structural spacing */
+  body.inspect-box [class*="ly-"] {
+    background-image: linear-gradient(rgba(255, 152, 0, 0.06), rgba(255, 152, 0, 0.06));
+    outline: 1px dotted rgba(255, 152, 0, 0.25);
+    outline-offset: 0px;
+  }
+}
+
+/* ── Mode 4: Keyline Projection (?inspect-keyline) ──
+   SVG overlay via KeylineOverlay.tsx (src/devtools/).
+   Each rl-* element's 4 edges projected as full-viewport lines.
+   Aligned → lines overlap → few. Misaligned → lines scatter → many.
+   Visual entropy = inverse of design quality. ── */

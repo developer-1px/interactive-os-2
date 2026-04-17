@@ -27,13 +27,12 @@ export function SessionItem(
   return (
     <div
       {...props}
-      className={ax({
+      className={`${ax({
         role: 'item', interactive: 'item',
-        layout: 'stack', gap: 'xs', width: 'full',
-        text: state.focused ? 'primary' : 'secondary',
-      })}
+        layout: 'stack', width: 'full',
+      })} ${ax.raw({ gap: 'xs', text: state.focused ? 'primary' : 'secondary' })}`}
     >
-      <div className={ax({ layout: 'bar', gap: 'sm' })}>
+      <div className={`${ax({ layout: 'bar' })} ${ax.raw({ gap: 'sm' })}`}>
         <StatusIndicator tone={status === 'running' ? 'success' : 'info'} />
         <span className={ax({ flex: '1', clamp: '1' })}>{label}</span>
         {onClose && (

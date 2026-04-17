@@ -20,13 +20,12 @@ export function ToolbarItem(
   return (
     <span
       {...props}
-      className={ax({
+      className={`${ax({
         role: 'control',
         interactive: 'button',
         layout: hasIcon ? 'center' : undefined,
-        state: state.focused ? 'focused' : state.selected ? 'selected' : undefined,
         content: 'text', clamp: '1',
-      })}
+      })} ${ax.raw({ state: state.focused ? 'focused' : state.selected ? 'selected' : undefined })}`}
       aria-label={hasIcon ? label : undefined}
     >
       {hasIcon ? options.icon : label}

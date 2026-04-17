@@ -31,7 +31,7 @@ export function EditableTreeItem(
       <ExpandIndicator expanded={state.expanded} hasChildren={hasChildren} variant="tree" />
       {options?.icon && <span className={ax({ flex: 'none' })}>{options.icon}</span>}
       <AriaEditable field={field}>
-        <span className={ax({ text: state.focused ? 'primary' : 'secondary', clamp: '1', flex: '1' })}>{label}</span>
+        <span className={`${ax({ clamp: '1', flex: '1' })} ${ax.raw({ text: state.focused ? 'primary' : 'secondary' })}`}>{label}</span>
       </AriaEditable>
       {options?.rightContent && <span className={ax({ flex: 'none' })}>{options.rightContent}</span>}
     </div>

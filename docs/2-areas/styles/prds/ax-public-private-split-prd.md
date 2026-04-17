@@ -24,7 +24,7 @@
 
 | 축 | 현 타입(요약) | 분류 | 근거 |
 |---|---|---|---|
-| `recipe` | `'container' \| 'container-sm'` | **제거(?)** | 주석: "레거시, role로 이전 중" — 프리셋으로 흡수 |
+| `recipe` | `'container' \| 'container-sm'` | **제거 완료** | 2026-04-18 ax.ts에서 `recipe?` 제거. ax.css `@layer recipe`는 CSS 레이어 이름으로 별개 개념(유지) |
 | `surface` | `'action' \| 'input' \| 'display' \| 'overlay' \| 'trap' \| 'ghost' \| 'placeholder' \| 'sunken' \| 'base' \| 'raised' \| 'inverted'` | **Public** | 표면(색/깊이) — 외부 의도 |
 | `textStyle` | `'hero' \| 'display' \| 'page' \| 'section' \| 'label' \| 'body' \| 'caption' \| 'code' \| 'overline'` | **Public** | 텍스트 의도(별도 Public 축, role과 직교) |
 | `tone` | `'accent' \| 'danger' \| 'success' \| 'warning' \| 'neutral'` + `-dim` 5종 | **Public** | 색 의미(shadcn variant에 대응) |
@@ -32,7 +32,7 @@
 | `weight` | `'medium' \| 'semi' \| 'bold'` | Private | textStyle 프리셋 주입. escape로 `ax.raw` |
 | `state` | `'focused' \| 'selected'` | Private | interactive 축이 동적으로 주입 |
 | `opacity` | `'dim' \| 'faint' \| 'hidden'` | Private | 비-disabled 시각 — tone 파생 |
-| `motion` | `'pulse' \| 'spin' \| ...` 9종 | Private | 상태 파생 (loading/streaming 등 semantic role에서 주입) (?) |
+| `motion` | `'pulse' \| 'spin' \| ...` 9종 | Private | 상태 파생 — `*.placeholder` role preset이 주입 (item:shimmer, badge:pulse, control:spin). 의미 축이 아닌 시각 피드백이라 Private 유지 확정 |
 | `content` | `'text' \| 'code' \| 'bubble' \| 'icon'` | **Public** | 콘텐츠 유형 — padding 비율 결정 의도 |
 | `scroll` | `'hidden' \| 'y' \| 'x' \| 'auto'` | **Public** | 오버플로 의도 — layout과 직교 |
 | `interactive` | `'item' \| 'tab' \| 'check' \| 'cell' \| 'input' \| 'button'` | **Public** | CLAUDE.md 규칙상 필수 축 — state/hover/focus 주입 |
@@ -47,10 +47,20 @@
 | `clamp` | `'1' \| '2' \| '3' \| '4' \| 'pre' \| 'scroll'` | **Public** | 콘텐츠 제한 의도 |
 | `icon` | `'xs' \| 'sm' \| 'md' \| 'lg'` | Private | cs 프리셋 주입 |
 | `square` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | Private | cs 프리셋 주입 |
-| `role` | `'control' \| 'control-group' \| 'item' \| 'badge'` | **Public** | 의미적 역할 — 크기 SSOT (확장 후보: `'field' \| 'chip' \| 'card' \| 'panel'` ?) |
+| `role` | `'control' \| 'control-group' \| 'item' \| 'badge'` | **Public** | 의미적 역할 — 크기 SSOT. 확장 후보 `'field' \| 'chip' \| 'card' \| 'panel'`은 2026-04-18 실측 스캔 결과 코드베이스 사용처 0건 → **향후 확장 후보**로만 주석 유지, 현 시점 enum 추가하지 않음 |
 | `aspect` | `'1' \| 'video' \| 'card'` | **Public** | 종횡비 의도 |
 
-**감사 결과**: Public 11축 / Private 10축 / 제거 후보 1축 (`recipe`) / 신규 1축 (`cs`).
+**감사 결과**: Public 14축 / Private 11축 / 제거 완료 1축 (`recipe` — 2026-04-18) / 신규 1축 (`cs`).
+
+> **경고 1 해결(2026-04-18)**: "Public 3축" vs 실측 "14축"의 간극은 축소 실패가 아니라 **CSS 평면 제거가 본질**이었음을 명시. 흡수 불가 직교 축 11개(layout/placement/width/flex/clamp/aspect/scroll/tone/textStyle/content/interactive)는 의미 축 자체. 상세: `axLlmPrompt.md` "왜 3축이 아니라 14축인가" 단락.
+
+> **경고 2 해결(2026-04-18)**: motion 주입 경로 부재 → `*.placeholder` 3개 role preset seed 추가(item/badge/control × placeholder). motion은 시각 피드백이라 Public 승격 않고 상태 role 주입 경로로 수용.
+
+> **경고 3 해결(2026-04-18)**: textStyle(Public) ↔ weight/text(Private) 상충 → `textStylePresetTable`(`src/styles/rolePreset.ts`) 신설. 9종 textStyle을 weight/text로 해석하며 `resolveTextStylePreset` 함수 제공. role preset과 병합 시 role 우선(더 구체적).
+
+> **경고 4 해결(2026-04-18)**: role enum 확장 후보 `field|chip|card|panel` → 실측 grep 결과 사용처 0건. 현 시점 enum 추가 않고 주석으로만 "향후 확장 후보" 유지.
+
+> **경고 5 처리(2026-04-18)**: `axLlmPrompt.md` 위치 판단 → 현 warning-only 상태에서는 `docs/2-areas/styles/` 유지. ax Private 키 block 승격(dev throw + guardCssAxes) 시점에 `docs/3-resources/`로 이동.
 
 > (?) Discussion 원문은 "Public 3축(cs/role/surface)"을 이상형으로 제시했으나, 실측 24축 중 `layout`/`placement`/`textStyle`/`tone`/`content`/`scroll`/`interactive`/`width`/`flex`/`clamp`/`aspect`는 CSS 하위축으로 흡수 불가능한 독립 의도 축이다. → Public은 "3축"이 아니라 "의도 층"이며 11축. Private 흡수 대상은 padding/gap/shape/radius/icon/square/weight/text/opacity/border/motion/state 계열.
 
@@ -157,8 +167,28 @@ const rolePreset: RolePresetTable = {
   'control.input':         { padding: 'sm', shape: 'sm', border: 'default', text: 'primary' },
   'item.base':             { padding: 'sm', gap: 'sm' },
   'badge.display':         { padding: 'xs', shape: 'pill', weight: 'semi', text: 'bright' },
-  'badge.ghost':           { padding: 'xs', text: 'muted' },
+  'badge.ghost':            { padding: 'xs', text: 'muted' },
+
+  // motion 주입 (경고 2 seed)
+  'item.placeholder':       { padding: 'sm', gap: 'sm', motion: 'shimmer', text: 'muted' },
+  'badge.placeholder':      { padding: 'xs', shape: 'pill', motion: 'pulse', text: 'muted' },
+  'control.placeholder':    { padding: 'xs', shape: 'md', motion: 'spin', text: 'muted' },
   // ... (역PRD 단계에서 실측 demo 기반 확장)
+}
+
+// textStylePresetTable — textStyle(Public) → weight/text(Private) (경고 3)
+type TextStylePresetTable = Partial<Record<AxTextStyle, Partial<AxPrivate>>>
+
+const textStylePresetTable: TextStylePresetTable = {
+  hero:     { weight: 'bold',   text: 'bright' },
+  display:  { weight: 'bold',   text: 'bright' },
+  page:     { weight: 'semi',   text: 'bright' },
+  section:  { weight: 'semi',   text: 'primary' },
+  label:    { weight: 'medium', text: 'primary' },
+  body:     {                   text: 'primary' },
+  caption:  {                   text: 'secondary' },
+  code:     {                   text: 'primary' },
+  overline: { weight: 'semi',   text: 'muted' },
 }
 ```
 
@@ -503,13 +533,18 @@ function ax(input: AxPublic): string {
 
   // 2) rolePreset cascade — role/surface/cs[.content|.interactive]
   //    §3 invariant "미존재 시 {} 반환, throw 금지"
-  const priv: Partial<AxPrivate> = resolveRolePreset({
+  const rolePriv: Partial<AxPrivate> = resolveRolePreset({
     role:         input.role,
     surface:      input.surface,
     cs:           input.cs,
     content:      input.content,
     interactive:  input.interactive,
   })
+
+  // 2b) textStylePreset — textStyle(Public) → weight/text(Private) 주입
+  //     경고 3 해결. role preset이 더 구체적이므로 role이 뒤에 얹혀 override.
+  const textPriv: Partial<AxPrivate> = resolveTextStylePreset(input.textStyle)
+  const priv = { ...textPriv, ...rolePriv }
 
   // 3) merge — Public 키는 그대로, Private 키는 preset 값만
   //    §1 invariant #4 "조합 변경은 rolePreset.ts 단일 수정"
