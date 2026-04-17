@@ -14,7 +14,7 @@ import { ax } from '@/styles/ax'
 ```
 
 - `ax()`는 Public 14축만 받는다.
-- `role × surface × cs`가 정해지면 내부 rolePreset 테이블이 크기·패딩·간격·shape 같은 Private 값을 자동 주입한다.
+- `role × surface`가 정해지면 내부 rolePreset 테이블이 패딩·간격·shape·weight·text 같은 Private 값을 자동 주입한다. `cs`는 외부 입력(크기)으로 preset과 직교.
 - 반환값은 className 문자열. `style={}` 금지.
 
 ---
@@ -82,13 +82,13 @@ hover/focus/selected/disabled를 자동 부여. 리스트 아이템 = `item`, �
 
 ## 조합 원칙
 
-1. **role이 크기·패딩·간격·shape를 자동 결정**한다. rolePreset 테이블(`src/styles/rolePreset.ts`)이 `role × surface × cs (× content|interactive)`를 Private 값으로 cascade 해석한다. 현재 seed로 등록된 조합:
-   - `control.action.{xs|sm|md|lg|xl}` — 기본 액션 버튼
-   - `control.ghost.md` — 투명 버튼
-   - `control.input.md` — 폼 입력
-   - `item.base.md` — 리스트 아이템
-   - `badge.display.sm` — 뱃지
-2. **`role × surface × cs` 조합으로 의도를 완결**한다. 추가로 `tone`으로 의미색을, `interactive`로 동적 상태를 얹는다.
+1. **role이 패딩·간격·shape·weight·text를 자동 결정**한다. rolePreset 테이블(`src/styles/rolePreset.ts`)이 `role × surface (× content|interactive)`를 Private 값으로 cascade 해석한다. `cs`는 preset 키에 포함되지 않으며 외부 크기 입력으로 그대로 흐른다. 현재 seed로 등록된 조합:
+   - `control.action` / `.text` / `.icon` / `.button` — 기본 액션 버튼
+   - `control.ghost` / `.icon` / `.text` / `.tab` — 투명 버튼
+   - `control.input` / `.text` / `.input` — 폼 입력
+   - `item.base` — 리스트 아이템
+   - `badge.display` / `badge.ghost` / `badge.overlay` — 뱃지
+2. **`role × surface` 조합으로 의도를 완결**한다. `cs`로 크기를, `tone`으로 의미색을, `interactive`로 동적 상태를 얹는다.
 3. **`textStyle`은 role과 직교**한다. 타이포 의도는 언제나 textStyle로 선언한다 (예: `{ role: 'control', textStyle: 'label' }`).
 4. **`layout` / `placement` / `width` / `flex` / `scroll`은 구조 축**이다. role이 흡수하지 못한다. 부모의 배치 의도를 표현할 때 함께 쓴다.
 5. **14축 밖은 절대 `ax()`에 넣지 않는다.** 필요하면 `ax.raw({ padding: 'sm' })`로 명시적 escape. 단, 이는 예외 경로이며 기본은 rolePreset 확장이다.

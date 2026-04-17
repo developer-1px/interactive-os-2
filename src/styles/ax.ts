@@ -88,11 +88,11 @@ export function ax(axes: Axes): string {
   // 런타임 입력 — 마이그레이션 기간에는 Private 키도 사실상 들어올 수 있다.
   const input = axes as Partial<AxesAll>
 
-  // 1) rolePreset cascade — role/surface/cs 기반 Private 주입
+  // 1) rolePreset cascade — role × surface × (content|interactive) 기반 Private 주입
+  //    cs는 Public 키로 그대로 전달되며 preset 조회 키에는 포함하지 않는다.
   const preset = resolveRolePreset({
     role: input.role,
     surface: input.surface,
-    cs: input.cs,
     content: input.content,
     interactive: input.interactive,
   })

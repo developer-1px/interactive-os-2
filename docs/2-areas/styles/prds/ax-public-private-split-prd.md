@@ -131,31 +131,34 @@ type AxPrivate = {
 
 ### Role 프리셋 테이블 스키마
 
-**키**: `role × surface × cs × (content?) × (interactive?)` — content/interactive는 있을 때만 분기.
+**키**: `role × surface × (content?|interactive?)` — content/interactive는 있을 때만 분기. **cs는 키에서 제외** — 외부 입력(크기)으로 유지하며 Private 주입과 직교.
 **값**: `AxPrivate` 부분집합.
 
 ```ts
 // 평탄 키 방식 (lookup 비용 O(1), 빈칸 감지 용이)
 type RolePresetKey =
-  | `${AxRole}.${AxSurface}.${CsScale}`
-  | `${AxRole}.${AxSurface}.${CsScale}.${AxContent}`
-  | `${AxRole}.${AxSurface}.${CsScale}.${AxInteractive}`
+  | `${AxRole}`                                       // fallback
+  | `${AxRole}.${AxSurface}`                          // base
+  | `${AxRole}.${AxSurface}.${AxContent}`             // content 분기
+  | `${AxRole}.${AxSurface}.${AxInteractive}`         // interactive 분기
 
-type RolePresetTable = Record<RolePresetKey, Partial<AxPrivate>>
+type RolePresetTable = Partial<Record<RolePresetKey, Partial<AxPrivate>>>
 
-// 해석 순서: 가장 구체 키 → 가장 일반 키로 fallback (cascade)
-// 예) 'control.action.md.button' → 'control.action.md' → 'control.*.md' → 'control.*.*'
+// 해석 순서: 일반 → 구체로 병합 (뒤가 override)
+// 예) 'control.action' → 'control.action.button' 또는 'control.action.icon'
 
-// 사용 예
+// 사용 예 (1761 ax() 호출 스캔 기반)
 const rolePreset: RolePresetTable = {
-  'control.action.md':          { padding: 'sm', shape: 'md', gap: 'xs', weight: 'medium', text: 'bright' },
-  'control.action.md.text':     { padding: 'sm' /* 2:1 inline */ },
-  'control.action.md.icon':     { padding: 'xs' /* 1:1 square */ },
-  'control.ghost.md':           { padding: 'sm', shape: 'md', text: 'secondary' },
-  'control.input.md':           { padding: 'sm', shape: 'sm', border: 'default', text: 'primary' },
-  'item.base.md':               { padding: 'sm', gap: 'sm' },
-  'badge.accent.sm':            { padding: 'xs', shape: 'pill', weight: 'semi', text: 'bright' },
-  // ... (역PRD 단계에서 실측 demo 139개 기반 확정)
+  'control.action':        { padding: 'sm', shape: 'md', gap: 'xs', weight: 'medium', text: 'bright' },
+  'control.action.text':   { padding: 'sm' /* 2:1 inline */ },
+  'control.action.icon':   { padding: 'xs' /* 1:1 square */ },
+  'control.ghost':         { padding: 'sm', shape: 'md', text: 'secondary' },
+  'control.ghost.icon':    { padding: 'xs' },
+  'control.input':         { padding: 'sm', shape: 'sm', border: 'default', text: 'primary' },
+  'item.base':             { padding: 'sm', gap: 'sm' },
+  'badge.display':         { padding: 'xs', shape: 'pill', weight: 'semi', text: 'bright' },
+  'badge.ghost':           { padding: 'xs', text: 'muted' },
+  // ... (역PRD 단계에서 실측 demo 기반 확장)
 }
 ```
 
@@ -175,7 +178,7 @@ flowchart LR
     P[padding·gap·shape·border·icon·square·weight·text·opacity·state·motion]
   end
 
-  R & S & T & C --> Resolver[rolePresetTable lookup]
+  R & S --> Resolver[rolePresetTable lookup]
   Resolver --> P
 
   Raw[ax.raw Private] -. escape hatch .-> P
@@ -192,8 +195,8 @@ flowchart LR
 | 1 | LLM 시스템 프롬프트·ui 공개 타입(`AriaComponentProps`)에 Private 10축 미노출 | 프롬프트/타입 선언 grep에 `padding\|gap\|shape\|border\|icon\|square\|weight\|text\|opacity\|state\|motion` 1건이라도 등장 |
 | 2 | Public 축 조합(`ax({ role, surface, cs, ... })`)만으로 시각 완결 — 데모 렌더에 Private 주입 없이 keyline 통과 | `pnpm check:keyline` 실행 시 Private 축 누락으로 인한 시각 차이 발생 |
 | 3 | `ax.raw()`는 Private 직접 지정의 유일 경로 | 일반 `ax()` 타입 시그니처가 Private 키를 허용하거나, `rolePreset` 외 경로로 Private CSS 클래스가 주입됨 |
-| 4 | role/surface/cs 조합 변경은 `rolePresetTable` 단일 파일(`src/styles/rolePreset.ts`) 수정만으로 완료 | 다른 `.ts`/`.tsx`/`.css` 파일 수정 없이 demo 스샷이 바뀌지 않음 |
-| 5 | `rolePresetTable`에 존재하는 모든 `AxRole × AxSurface × CsScale` 조합 엔트리 빈칸 0 | key coverage 테스트에서 미정의 조합 1건이라도 발견 |
+| 4 | role/surface 조합 변경은 `rolePresetTable` 단일 파일(`src/styles/rolePreset.ts`) 수정만으로 완료 | 다른 `.ts`/`.tsx`/`.css` 파일 수정 없이 demo 스샷이 바뀌지 않음 |
+| 5 | `rolePresetTable`에 미정의된 `role × surface` 조합은 `role` fallback 또는 `{}` 반환 (throw 금지). cs는 Public으로 그대로 전달되어 엔트리 빈칸과 무관 | resolveRolePreset 에서 throw 발생 또는 cs가 preset 키에 포함됨 |
 | 6 | `guardCssAxes.mjs`는 `ax({ padding: ... })` 같은 Private 키 사용을 에러로 리포트 | 샘플 위반 코드에 가드 훅 실행 시 exit 0(통과) |
 | 7 | `recipe` 축은 제거되고, 기존 `recipe: 'container'` 사용처는 모두 `role`+`cs` 쌍으로 치환 | `git grep "recipe:"` 결과 > 0 |
 
@@ -350,35 +353,38 @@ export type AxPrivate = {
 
 ```ts
 import type {
-  AxPublic, AxRole, AxSurface, CsScale, AxContent, AxInteractive,
+  AxPublic, AxRole, AxSurface, AxContent, AxInteractive,
 } from './axPublic'
 import type { AxPrivate } from './axPrivate'
 
 /**
- * rolePresetTable 키 형식. cascade 해석 순서 = 구체 → 일반.
- * 'role.surface.cs.content' > 'role.surface.cs.interactive' > 'role.surface.cs' > (fallback 없음: #5 엔트리 빈칸 0)
+ * rolePresetTable 키 형식. cascade 해석 순서 = 일반 → 구체 (뒤가 override).
+ * 'role' < 'role.surface' < 'role.surface.interactive' < 'role.surface.content'
+ *
+ * @invariant cs는 키에서 제외 — 외부 입력으로 유지, Private 주입과 직교
  */
 export type RolePresetKey =
-  | `${AxRole}.${AxSurface}.${CsScale}`
-  | `${AxRole}.${AxSurface}.${CsScale}.${AxContent}`
-  | `${AxRole}.${AxSurface}.${CsScale}.${AxInteractive}`
+  | `${AxRole}`
+  | `${AxRole}.${AxSurface}`
+  | `${AxRole}.${AxSurface}.${AxContent}`
+  | `${AxRole}.${AxSurface}.${AxInteractive}`
 
 /**
- * role × surface × cs × (content|interactive) → Private 값 cascade 테이블.
+ * role × surface × (content|interactive) → Private 값 cascade 테이블.
  * 단일 SSOT. §1 불변식 #4 — 조합 변경은 이 파일 수정만으로 완결.
- * @invariant 값은 Partial<AxPrivate> 만 — AxPublic 키 포함 금지 (test로 검증)
- * @invariant 모든 (AxRole × AxSurface × CsScale) 조합은 최소 하나의 엔트리 존재 (#5)
+ * @invariant 값은 Partial<AxPrivate> 만 — AxPublic 키 포함 금지
+ * @invariant 미정의 키 허용 — cascade가 일반 키로 fallback
  */
-export const rolePresetTable: Record<RolePresetKey, Partial<AxPrivate>>
+export const rolePresetTable: Partial<Record<RolePresetKey, Partial<AxPrivate>>>
 
 /**
  * Public 입력에서 Private 값을 cascade 로 해석.
  * @invariant 반환은 Partial<AxPrivate> 키만 — AxPublic 키 미포함
  * @invariant 같은 입력에 대해 idempotent (순수 함수, 외부 상태 의존 금지)
- * @invariant rolePresetTable 에 키 없으면 {} 반환, throw 금지 (ax()에서 Public 축만으로도 렌더)
+ * @invariant rolePresetTable 에 키 없으면 {} 반환, throw 금지
  */
 export function resolveRolePreset(
-  input: Pick<AxPublic, 'role' | 'surface' | 'cs' | 'content' | 'interactive'>,
+  input: Pick<AxPublic, 'role' | 'surface' | 'content' | 'interactive'>,
 ): Partial<AxPrivate>
 ```
 
@@ -522,29 +528,30 @@ function ax(input: AxPublic): string {
 
 ```ts
 function resolveRolePreset(
-  x: Pick<AxPublic, 'role' | 'surface' | 'cs' | 'content' | 'interactive'>,
+  x: Pick<AxPublic, 'role' | 'surface' | 'content' | 'interactive'>,
 ): Partial<AxPrivate> {
-  // A) 필수 3축 없으면 early return {}
+  // A) role 없으면 early return {}
   //    §3 invariant "throw 금지, {} 반환"
-  if (!x.role || !x.surface || !x.cs) return {}
+  if (!x.role) return {}
 
-  // B) 키 후보 생성 — 구체 → 일반
-  //    §1 "'role.surface.cs.content' > 'role.surface.cs.interactive' > 'role.surface.cs'"
-  const keys: RolePresetKey[] = []
-  if (x.content)     keys.push(`${x.role}.${x.surface}.${x.cs}.${x.content}`      as RolePresetKey)
-  if (x.interactive) keys.push(`${x.role}.${x.surface}.${x.cs}.${x.interactive}`  as RolePresetKey)
-  keys.push(`${x.role}.${x.surface}.${x.cs}` as RolePresetKey)
+  // B) 키 후보 생성 — 일반 → 구체 (뒤가 덮음)
+  //    §1 "'role' < 'role.surface' < ... .interactive < ... .content"
+  const keys: RolePresetKey[] = [`${x.role}` as RolePresetKey]
+  if (x.surface) {
+    keys.push(`${x.role}.${x.surface}` as RolePresetKey)
+    if (x.interactive) keys.push(`${x.role}.${x.surface}.${x.interactive}` as RolePresetKey)
+    if (x.content)     keys.push(`${x.role}.${x.surface}.${x.content}`     as RolePresetKey)
+  }
 
-  // C) 누적 병합 — 일반(base) 먼저 깔고, 구체가 덮도록 역순 리듀스
-  //    "일반이 base, 구체가 override" — shadcn cva variant 와 동일 규약
+  // C) 누적 병합 — 일반(base) 먼저, 구체가 override
+  //    shadcn cva variant 와 동일 규약
   let out: Partial<AxPrivate> = {}
-  for (const k of [...keys].reverse()) {
+  for (const k of keys) {
     const hit = rolePresetTable[k]
     if (hit) out = { ...out, ...hit }
   }
 
   // D) 미존재 시 {} — throw 금지
-  //    §3 invariant "rolePresetTable 에 키 없으면 {} 반환"
   return out
 }
 ```

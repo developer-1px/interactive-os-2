@@ -161,7 +161,7 @@ ax()의 25축은 외부 API 관점에서 **Public 14축** + **Private 11축**으
 | Public | `ax({...})` | 14 | cs, role, surface, tone, textStyle, content, layout, placement, width, flex, clamp, aspect, scroll, interactive | `src/styles/axPublic.ts` |
 | Private | `ax.raw({...})` | 11 | padding, gap, shape, border, icon, square, weight, text, opacity, state, motion | `src/styles/axPrivate.ts` |
 
-**rolePreset = 단일 SSOT.** `role × surface × cs (× content|interactive)` 조합이 Private 값을 cascade 주입한다. 조합 변경은 `src/styles/rolePreset.ts` 1곳에서만 일어난다. 현재 seed: `control.action.{xs|sm|md|lg|xl}`, `control.ghost.md`, `control.input.md`, `item.base.md`, `badge.display.sm`.
+**rolePreset = 단일 SSOT.** `role × surface (× content|interactive)` 조합이 Private 값을 cascade 주입한다 (cs는 키에 없음 — 외부 크기 입력으로 직교). 조합 변경은 `src/styles/rolePreset.ts` 1곳에서만 일어난다. 현재 seed: `control.action[.text|.icon|.button]`, `control.ghost[.icon|.text|.tab]`, `control.input[.text|.input]`, `item.base`, `badge.display`, `badge.ghost`, `badge.overlay`.
 
 **Escape hatch.** rolePreset에 없는 Private 값이 필요하면 `ax.raw({ padding: 'sm' })`를 써서 명시적으로 노출한다. `ax()`는 Private 키를 받지 않는다(타입 수준 거부).
 
