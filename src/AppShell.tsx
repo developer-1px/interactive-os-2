@@ -1,10 +1,11 @@
 // ② 2026-03-26-unified-navigation-prd.md
 // @useState-hatch
 import { useState, useEffect, useMemo } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
 import { FileViewerModal } from '@os/ui/FileViewerModal'
 import { ReproRecorderOverlay } from './devtools/rec/ReproRecorderOverlay'
+import { KeylineOverlay } from './devtools/KeylineOverlay'
 import { ComponentInspector } from './devtools/inspector/ComponentInspector'
 import { openInspectorWindow } from './devtools/inspector/openInspectorWindow'
 import { AriaRoute } from '@os/primitives/AriaRoute'
@@ -23,9 +24,19 @@ import './styles/interactive.css'  // L4: Interaction policy (hover, focus, disa
 import './interactive-os/ui/indicators/indicators.css'  // L4: Indicator part classes
 import './styles/layout.css'       // App layout (sidebar, page grid)
 import './styles/app.css'          // App-level utilities
+import './styles/inspect.css'      // Keyline inspector (?inspect)
 
 export default function AppShell() {
   const { theme, toggle: toggleTheme } = useTheme()
+  const { search } = useLocation()
+
+  useEffect(() => {
+    const params = new URLSearchParams(search)
+    document.body.classList.toggle('inspect', params.has('inspect'))
+    document.body.classList.toggle('inspect-grid', params.has('inspect-grid'))
+    document.body.classList.toggle('inspect-box', params.has('inspect-box'))
+    document.body.classList.toggle('inspect-keyline', params.has('inspect-keyline'))
+  }, [search])
 
   const [previewFile, setPreviewFile] = useState<{ path: string; line?: number } | null>(null)
 
@@ -48,6 +59,7 @@ export default function AppShell() {
     <AriaRoute keyMap={shellKeyMap} label="Shell">
       <div className={`page ${ax({ layout: 'row', scroll: 'hidden' })}`}>
         <ReproRecorderOverlay />
+        <KeylineOverlay />
         <ActivityBar theme={theme} onThemeToggle={toggleTheme} />
         <div className={`page-content ${ax({ layout: 'scroll', flex: '1' })}`}>
           <Outlet />

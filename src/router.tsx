@@ -43,6 +43,7 @@ export const router = createBrowserRouter([
       { path: '/writer/*', lazy: () => import('./pages/writer/PageWriter').then(m => ({ Component: m.default })) },
       { path: '/stories', lazy: () => import('./pages/stories/PageStories').then(m => ({ Component: m.default })) },
       { path: '/catalog', lazy: () => import('./pages/catalog/PageCatalog').then(m => ({ Component: m.default })) },
+      { path: '/features', lazy: () => import('./pages/features/PageFeatures').then(m => ({ Component: m.default })) },
       { path: '/kanban', lazy: () => import('./pages/replay/SkillKanban').then(m => ({ Component: m.default })) },
       { path: '/showcase/gmail', lazy: () => import('./pages/showcase/gmail/PageGmail').then(m => ({ Component: m.default })) },
       { path: '/test/keyline', lazy: () => import('./pages/keyline/PageKeylineTest').then(m => ({ Component: m.default })) },

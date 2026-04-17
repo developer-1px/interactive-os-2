@@ -66,7 +66,8 @@
     "check:test-components": "node scripts/checkTestComponents.mjs",
     "check:tokens": "node scripts/checkTokens.mjs",
     "scan:violations": "node scripts/scanOsViolations.mjs",
-    "screenshot": "node scripts/screenshot.mjs"
+    "screenshot": "node scripts/screenshot.mjs",
+    "features": "node scripts/features-dashboard.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -85,6 +86,8 @@
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.2",
     "axe-core": "^4.11.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dependency-cruiser": "^17.3.10",
     "eslint": "^10.1.0",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -97,6 +100,7 @@
     "madge": "^8.0.0",
     "mermaid": "^11.13.0",
     "puppeteer-core": "^24.40.0",
+    "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.1.0",

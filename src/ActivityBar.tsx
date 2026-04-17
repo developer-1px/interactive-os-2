@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
   MessageSquare, BookText, Play, Cable, PenLine, Kanban, SquareKanban, GitBranch,
-  Mail,
+  Mail, ListTree,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -67,6 +67,7 @@ const appNavItems: NavItem[] = [
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'pipeline', label: 'Pipeline', icon: GitBranch, path: '/pipeline' },
+  { id: 'features', label: 'Features', icon: ListTree, path: '/features' },
   // --- 보조 / 진행중 ---
   { id: 'creator', label: 'Creator', icon: Component, path: '/creator' },
   { id: 'i18n', label: 'i18n', icon: Languages, path: '/i18n' },
