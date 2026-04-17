@@ -61,6 +61,8 @@ ax({ layout: 'stack', gap: 'lg' })
 
 input surface는 별도: Select, Input (border만, shadow 없음).
 
+inverted surface는 전경/배경 반전 (Tooltip용): `bg=text-primary, color=surface-base`.
+
 ```tsx
 ax({ surface: 'sunken' })                          // 사이드바
 ax({ surface: 'raised', shape: 'lg', padding: 'lg' })  // 카드
@@ -78,8 +80,8 @@ ax({ surface: 'overlay', placement: 'center' })     // 모달
 |------|------|--------|
 | 페이지 제목 | 22px | 600 |
 | 섹션 헤더 | 16px | 600 |
-| 본문 | 13px | 450 |
-| 레이블 | 13px | 500 |
+| 본문 | 14px | 450 |
+| 레이블 | 14px | 500 |
 | 캡션 | 12px | 500 |
 
 ### 조합 특성 (Linear 실측)
@@ -115,7 +117,7 @@ ax({ textStyle: 'body', text: 'secondary' })
 
 | 축 | 접두사 | 값 | 역할 |
 |---|---|---|---|
-| **surface** | `sf` | action, input, display, overlay, trap, ghost, placeholder, sunken, base, raised | 요소의 시각 역할 — bg + border + shadow + 상태 피드백 번들 |
+| **surface** | `sf` | action, input, display, overlay, trap, ghost, placeholder, sunken, base, raised, inverted | 요소의 시각 역할 — bg + border + shadow + 상태 피드백 번들 |
 | **textStyle** | `ts` | hero, display, page, section, label, body, caption, code, overline | 타이포 번들 (size + weight + family + line-height) |
 | **tone** | `tn` | accent, danger, success, warning, neutral + 각 -dim | 의미 색상 |
 | **text** | `tx` | bright, primary, secondary, muted | 전경색 밝기 |
@@ -127,7 +129,7 @@ ax({ textStyle: 'body', text: 'secondary' })
 | **content** | `ct` | text, code, bubble, icon | 콘텐츠 유형 — padding 비율 + 레이아웃 어포던스 |
 | **interactive** | `ia` | item, tab, check, cell, input, button | 동적 상태 시각 (hover/focus/selected/disabled) |
 
-> **border** (`bd`) — subtle, default, strong, dashed, bottom, top, start, end. 시각 축이지만 shape와 타입 상호배제 관계로 별도 취급 (아래 타입 제약 참조).
+> **border** (`bd`) — subtle, default, strong, dashed, ring, bottom, top, start, end. ring은 box-shadow 기반 미세 경계 (레이아웃 무영향, border-radius 자동 추종). 시각 축이지만 shape와 타입 상호배제 관계로 별도 취급 (아래 타입 제약 참조).
 
 > **recipe** (`rc`) — container, container-sm. 구조 프리셋으로 색칠 축과 조합. 레거시 — role 축으로 이전 중.
 
@@ -149,6 +151,24 @@ ax({ textStyle: 'body', text: 'secondary' })
 | **scroll** | `sc` | hidden, y, x, auto | overflow 제어 (layout과 독립) |
 
 > **scroll**은 코드에서 시각 축 블록에 위치하지만 기능상 구조 축이다. 문서에서는 구조 축으로 분류.
+
+### Public / Private 2계층
+
+ax()의 25축은 외부 API 관점에서 **Public 14축** + **Private 11축**으로 분리된다. LLM 시스템 프롬프트·`AriaComponentProps` 등 외부 표면은 Public만 노출하고, Private는 rolePreset 또는 `ax.raw()`를 통해서만 접근한다.
+
+| 계층 | 진입점 | 축 개수 | 축 목록 | SSOT |
+|------|--------|---------|---------|------|
+| Public | `ax({...})` | 14 | cs, role, surface, tone, textStyle, content, layout, placement, width, flex, clamp, aspect, scroll, interactive | `src/styles/axPublic.ts` |
+| Private | `ax.raw({...})` | 11 | padding, gap, shape, border, icon, square, weight, text, opacity, state, motion | `src/styles/axPrivate.ts` |
+
+**rolePreset = 단일 SSOT.** `role × surface × cs (× content|interactive)` 조합이 Private 값을 cascade 주입한다. 조합 변경은 `src/styles/rolePreset.ts` 1곳에서만 일어난다. 현재 seed: `control.action.{xs|sm|md|lg|xl}`, `control.ghost.md`, `control.input.md`, `item.base.md`, `badge.display.sm`.
+
+**Escape hatch.** rolePreset에 없는 Private 값이 필요하면 `ax.raw({ padding: 'sm' })`를 써서 명시적으로 노출한다. `ax()`는 Private 키를 받지 않는다(타입 수준 거부).
+
+**마이그레이션 상태.** 현 시점 `ax()`는 Private 키가 들어와도 dev 경고 후 통과시키는 warning-only 모드다. 139 데모 마이그레이션이 끝나면 dev throw + `guardCssAxes` block으로 승격한다.
+
+> 상세 설계·불변식·마이그레이션 플랜: [`docs/2-areas/styles/prds/ax-public-private-split-prd.md`](./2-areas/styles/prds/ax-public-private-split-prd.md)
+> LLM 시스템 프롬프트(Public 14축만): [`docs/2-areas/styles/axLlmPrompt.md`](./2-areas/styles/axLlmPrompt.md)
 
 ### 타입 제약
 
