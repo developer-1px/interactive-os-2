@@ -134,6 +134,38 @@ interface SessionInfo {
   mtime: number
   label: string // first user message or timestamp
   active: boolean
+  subagentFiles: SubAgentFile[]
+}
+
+// TODO: import type from './src/pages/replay/subAgentTypes' once created
+// Structure matches Blueprint §1 SubAgentFile.
+interface SubAgentFile {
+  parentSessionId: string
+  agentHash: string   // "agent-{hex}"
+  jsonlPath: string
+  metaPath: string
+  mtime: number       // jsonl mtime
+}
+
+function scanSubAgentFiles(parentSessionId: string, dir: string): SubAgentFile[] {
+  const subDir = path.join(dir, parentSessionId, 'subagents')
+  if (!fs.existsSync(subDir)) return []
+  let entries: string[]
+  try { entries = fs.readdirSync(subDir) } catch { return [] }
+
+  // Collect jsonl files matching agent-{hash}.jsonl
+  const out: SubAgentFile[] = []
+  for (const name of entries) {
+    const m = name.match(/^(agent-[a-f0-9]+)\.jsonl$/)
+    if (!m) continue
+    const agentHash = m[1]
+    const jsonlPath = path.join(subDir, name)
+    const metaPath = path.join(subDir, `${agentHash}.meta.json`)
+    let mtime = 0
+    try { mtime = fs.statSync(jsonlPath).mtimeMs } catch { continue }
+    out.push({ parentSessionId, agentHash, jsonlPath, metaPath, mtime })
+  }
+  return out
 }
 
 const ACTIVE_THRESHOLD_MS = 10 * 60 * 1000 // 10분 — 브라우저 연결 제한(6) 때문에 active를 좁게
@@ -180,7 +212,8 @@ function listSessions(projectRoot: string, limit = 20): SessionInfo[] {
         }
       }
     } catch { /* ignore */ }
-    return { id, filePath, mtime: f.mtime, label, active: (Date.now() - f.mtime) < ACTIVE_THRESHOLD_MS }
+    const subagentFiles = scanSubAgentFiles(id, dir)
+    return { id, filePath, mtime: f.mtime, label, active: (Date.now() - f.mtime) < ACTIVE_THRESHOLD_MS, subagentFiles }
   })
 }
 
@@ -321,7 +354,13 @@ export function agentOpsPlugin(): Plugin {
       function handleSessions(_url: URL, _req: Req, res: Res) {
         const sessions = listSessions(projectRoot)
         res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(sessions.map(s => ({ id: s.id, mtime: s.mtime, label: s.label, active: s.active }))))
+        res.end(JSON.stringify(sessions.map(s => ({
+          id: s.id,
+          mtime: s.mtime,
+          label: s.label,
+          active: s.active,
+          subagentFiles: s.subagentFiles,
+        }))))
       }
 
       function handleTimeline(url: URL, _req: Req, res: Res) {
@@ -359,6 +398,55 @@ export function agentOpsPlugin(): Plugin {
 
         res.setHeader('Content-Type', 'application/json')
         res.end(JSON.stringify({ events, total }))
+      }
+
+      function handleSubAgent(url: URL, _req: Req, res: Res) {
+        res.setHeader('Content-Type', 'application/json')
+        const parent = url.searchParams.get('parent') ?? ''
+        const hash = url.searchParams.get('hash') ?? ''
+
+        // Path traversal guard: parent is a UUID-ish session id; hash is agent-{hex}.
+        if (!parent || !hash || parent.includes('..') || parent.includes('/') || parent.includes('\\')
+          || !/^agent-[a-f0-9]+$/.test(hash)) {
+          res.statusCode = 400
+          res.end(JSON.stringify({ error: 'invalid parent or hash' }))
+          return
+        }
+
+        const dir = getTranscriptDir(projectRoot)
+        if (!dir) {
+          res.statusCode = 404
+          res.end(JSON.stringify({ error: 'transcript dir not found' }))
+          return
+        }
+
+        const subDir = path.join(dir, parent, 'subagents')
+        const jsonlPath = path.join(subDir, `${hash}.jsonl`)
+        const metaPath = path.join(subDir, `${hash}.meta.json`)
+
+        if (!fs.existsSync(jsonlPath)) {
+          res.statusCode = 404
+          res.end(JSON.stringify({ error: 'jsonl not found' }))
+          return
+        }
+
+        let jsonl: string
+        let mtime: number
+        try {
+          jsonl = fs.readFileSync(jsonlPath, 'utf-8')
+          mtime = fs.statSync(jsonlPath).mtimeMs
+        } catch (e) {
+          res.statusCode = 500
+          res.end(JSON.stringify({ error: String(e) }))
+          return
+        }
+
+        let meta = ''
+        if (fs.existsSync(metaPath)) {
+          try { meta = fs.readFileSync(metaPath, 'utf-8') } catch { /* meta optional/pending */ }
+        }
+
+        res.end(JSON.stringify({ jsonl, meta, mtime }))
       }
 
       function setupSSE(req: Req, res: Res, onClose: () => void) {
@@ -427,6 +515,7 @@ export function agentOpsPlugin(): Plugin {
       const opsRoutes: Record<string, (url: URL, req: Req, res: Res) => void> = {
         '/api/agent-ops/latest': handleLatest,
         '/api/agent-ops/sessions': handleSessions,
+        '/api/agent-ops/subagent': handleSubAgent,
         '/api/agent-ops/timeline': handleTimeline,
         '/api/agent-ops/timeline-stream-mux': handleStreamMux,
         '/api/agent-ops/timeline-stream': handleStream,

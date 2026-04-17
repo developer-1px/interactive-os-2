@@ -16,6 +16,11 @@ import type { FileViewerHandle, ViewerTab } from '@os/ui/viewerTypes'
 import { ReplayProvider, type ReplayContextValue } from './replayContext'
 import { ReplayStageWidget, ReplaySidebarWidget } from './replayWidgets'
 import { useActiveSessions } from './useActiveSessions'
+import { useSubAgentSessions } from './useSubAgentSessions'
+import { matchSubAgents } from './matchSubAgents'
+import { SubAgentStageWidget } from './SubAgentStageWidget'
+import { useTimeline } from '../viewer/viewerStore'
+import type { SubAgentFile } from './subAgentTypes'
 
 // ── Session loading ──
 
@@ -288,14 +293,29 @@ function ReplaySlot({ entry, index, register }: { entry: SessionEntry; index: nu
 
 // ── Live slot: renders the Shorts stage driven by the active agent session ──
 
-function LiveSlot({ slotIndex, sessionId, register }: {
+function LiveSlot({ slotIndex, sessionId, parentActive, subagentFiles, register }: {
   slotIndex: number
   sessionId: string | null
+  parentActive: boolean
+  subagentFiles: SubAgentFile[]
   register: RegisterCtx
 }) {
   const viewerTabs = useViewerTabs()
   const fileViewerRef = useRef<FileViewerHandle>(null)
   const { tabs, activeTab, activeTabId, setActiveTab } = viewerTabs
+
+  // SubAgent 구독 (Live 모드에서만)
+  const parentEvents = useTimeline(sessionId ?? '')
+  const subagents = useSubAgentSessions({
+    parentSessionId: sessionId ?? '',
+    parentActive,
+    parentEvents,
+    subagentFiles,
+  })
+  const subAgentMatches = useMemo(
+    () => matchSubAgents({ parentEvents, subagents }),
+    [parentEvents, subagents],
+  )
 
   const viewerTabData: NormalizedData = useMemo(() => {
     if (tabs.length === 0) return createStore({ entities: {}, relationships: {} })
@@ -311,7 +331,8 @@ function LiveSlot({ slotIndex, sessionId, register }: {
     mode: 'live', liveSessionId: sessionId,
     tabs, activeTab, activeTabId, setActiveTab, viewerTabData, fileViewerRef,
     viewerTabs,
-  }), [noop, sessionId, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs])
+    subagents, subAgentMatches,
+  }), [noop, sessionId, tabs, activeTab, activeTabId, setActiveTab, viewerTabData, viewerTabs, subagents, subAgentMatches])
 
   useEffect(() => {
     register(slotIndex, ctx)
@@ -320,7 +341,20 @@ function LiveSlot({ slotIndex, sessionId, register }: {
 
   return (
     <ReplayProvider value={ctx}>
-      <ReplayStageWidget />
+      <div className={`replay-subagent-row ${ax({ layout: 'scroll-x' })}`}>
+        <ReplayStageWidget />
+        {subagents.map((sub, i) => {
+          const match = subAgentMatches[i]
+          return (
+            <SubAgentStageWidget
+              key={sub.agentHash}
+              session={sub}
+              matchKey={match?.orphan ? null : (match?.key ?? null)}
+              parentSessionId={sessionId ?? ''}
+            />
+          )
+        })}
+      </div>
     </ReplayProvider>
   )
 }
@@ -379,10 +413,11 @@ export default function PageReplay() {
   }, [])
   // Slots 0..L-1 = Live (one per active session, min 1 placeholder); L..L+N-1 = sessionEntries
   const activeSessions = useActiveSessions()
-  const liveSessionIds: (string | null)[] = activeSessions.length > 0
-    ? activeSessions.map(s => s.id)
-    : [null]
-  const liveCount = liveSessionIds.length
+  const liveSlots: Array<{ id: string | null; active: boolean; subagentFiles: SubAgentFile[] }> =
+    activeSessions.length > 0
+      ? activeSessions.map(s => ({ id: s.id, active: s.active, subagentFiles: s.subagentFiles }))
+      : [{ id: null, active: false, subagentFiles: [] }]
+  const liveCount = liveSlots.length
   const replayIndex = currentIndex - liveCount
   const activeCtx = currentIndex < liveCount
     ? (registry[-(currentIndex + 1)] ?? null)
@@ -405,10 +440,16 @@ export default function PageReplay() {
         ))}
       </div>
       <div ref={feedRef} className={`replay-feed ${ax({ scroll: 'y' })}`}>
-        {liveSessionIds.map((sid, i) => (
-          <div key={`live-${sid ?? 'empty'}`} className="replay-slot">
+        {liveSlots.map((slot, i) => (
+          <div key={`live-${slot.id ?? 'empty'}`} className="replay-slot">
             {Math.abs(i - currentIndex) <= 1
-              ? <LiveSlot slotIndex={-(i + 1)} sessionId={sid} register={register} />
+              ? <LiveSlot
+                  slotIndex={-(i + 1)}
+                  sessionId={slot.id}
+                  parentActive={slot.active}
+                  subagentFiles={slot.subagentFiles}
+                  register={register}
+                />
               : null}
           </div>
         ))}

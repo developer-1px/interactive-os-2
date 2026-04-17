@@ -14,6 +14,29 @@
   scroll-snap-stop: always;
 }
 
+/* ── Dot indicator ── */
+
+.replay-dots {
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  pointer-events: none;
+}
+
+.replay-dot {
+  border-radius: 50%;
+  background: var(--text-muted);
+  opacity: 0.4;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.replay-dot--active {
+  opacity: 1;
+  transform: scale(1.5);
+  background: var(--text-primary);
+}
+
 .terminal-glow-prompt {
   text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
 }
@@ -31,4 +54,16 @@
   z-index: 10;
   pointer-events: none;
   backdrop-filter: blur(8px);
+}
+
+/* ── SubAgent viewer row (Live 모드: 부모 + sub N + orphan M) ── */
+
+.replay-subagent-row {
+  overscroll-behavior-x: contain;
+}
+
+.replay-subagent-viewer {
+  inline-size: 520px;
+  block-size: 100%;
+  border-left: 1px solid var(--border-default);
 }

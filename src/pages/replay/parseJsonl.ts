@@ -11,6 +11,9 @@ interface JsonlEntry {
   }
   timestamp?: string
   uuid?: string
+  parentUuid?: string
+  isSidechain?: boolean
+  sessionId?: string
 }
 
 type JsonlContentBlock =
@@ -26,8 +29,16 @@ export interface ParsedSession {
   messages: ChatMessage[]
 }
 
-/** Parse JSONL text → ChatMessage[]. Skips malformed lines. */
-export function parseJsonl(text: string): ParsedSession {
+/**
+ * Parse JSONL text → ChatMessage[]. Skips malformed lines.
+ * @invariant I4 — `sidechainOnly: true` 시 반환 messages는 모두 isSidechain=true 엔트리 기반
+ * @invariant 기본(`sidechainOnly` 미지정 또는 false) = 메인 세션만(isSidechain=true 스킵). 기존 호출부 동작 불변
+ */
+export function parseJsonl(
+  text: string,
+  options?: { sidechainOnly?: boolean },
+): ParsedSession {
+  const sidechainOnly = options?.sidechainOnly === true
   const lines = text.split('\n').filter(Boolean)
   const messages: ChatMessage[] = []
   let model = ''
@@ -52,6 +63,10 @@ export function parseJsonl(text: string): ParsedSession {
     } catch {
       continue // skip malformed
     }
+
+    // I4: sidechain filter — sidechainOnly true면 isSidechain !== true 스킵, false면 isSidechain === true 스킵
+    const isSide = entry.isSidechain === true
+    if (sidechainOnly ? !isSide : isSide) continue
 
     const msg = entry.message
     if (!msg?.role) continue

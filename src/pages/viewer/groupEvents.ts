@@ -6,6 +6,11 @@ export interface TimelineEvent {
   text?: string
   editOld?: string
   editNew?: string
+  // Optional fields for SubAgent matching (I6 in subagent-viewer-prd.md §1).
+  // Populated defensively by parsers that have access to raw JSONL entries.
+  uuid?: string
+  parentUuid?: string
+  description?: string
 }
 
 export interface ToolGroup {
