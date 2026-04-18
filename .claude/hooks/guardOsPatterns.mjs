@@ -138,18 +138,32 @@ if (!isExempt && !_isAriaZoneFile && isTsx && /\bonKey(?:Down|Up)\s*=\s*\n?\s*\{
 
 // 규칙 6: role="..." 수동 ARIA 역할 (JSX에서)
 // 예외: AriaZone render-props 패턴 (getNodeProps role을 DOM에 전달)
-if (!isExempt && !_isAriaZoneFile && isTsx && /\brole\s*=\s*["'](?:listbox|tree|treegrid|grid|menu|menubar|tablist|combobox|radiogroup)["']/.test(content)) {
+// 커버: 컨테이너(listbox/tree/grid/...) + 아이템(listitem/option/row/...) + 표준 ARIA list 계열(list/listitem/tab/tabpanel/treeitem 등)
+if (!isExempt && !_isAriaZoneFile && isTsx && /\brole\s*=\s*["'](?:list|listitem|listbox|option|tree|treeitem|treegrid|grid|row|cell|gridcell|columnheader|rowheader|menu|menuitem|menubar|tablist|tab|tabpanel|combobox|radiogroup|radio)["']/.test(content)) {
   // role → component 1:1 매핑
   const ROLE_MAP = {
-    listbox: 'ListBox', tree: 'TreeView', treegrid: 'TreeGrid', grid: 'Grid',
-    menu: 'MenuList', menubar: 'Menubar', tablist: 'TabList', combobox: 'Combobox',
-    radiogroup: 'RadioGroup',
+    list: 'ListBox 또는 NavList (값 선택/네비)',
+    listitem: 'ListBox + ui/items/ListItem (NormalizedData data prop 주입)',
+    listbox: 'ListBox',
+    option: 'ListBox + ui/items/ListItem',
+    tree: 'TreeView', treeitem: 'TreeView + ui/items/TreeItem',
+    treegrid: 'TreeGrid', grid: 'Grid',
+    row: 'TreeGrid 또는 Grid 내부 — pages에서 수동 선언 금지',
+    cell: 'TreeGrid/Grid + ui/cells/',
+    gridcell: 'TreeGrid/Grid + ui/cells/',
+    columnheader: 'TreeGrid/Grid header slot',
+    rowheader: 'TreeGrid/Grid header slot',
+    menu: 'MenuList', menuitem: 'MenuList + ui/items/MenuItem',
+    menubar: 'Menubar',
+    tablist: 'TabList', tab: 'TabList + ui/items/TabItem', tabpanel: 'TabGroup',
+    combobox: 'Combobox',
+    radiogroup: 'RadioGroup', radio: 'RadioGroup + ui/items/RadioItem',
   }
-  const detectedRole = (content.match(/\brole\s*=\s*["'](\w+)["']/)?.[1]) ?? ''
+  const detectedRole = (content.match(/\brole\s*=\s*["']([a-z]+)["']/)?.[1]) ?? ''
   const suggested = ROLE_MAP[detectedRole]
   violations.push(
     suggested
-      ? `role="${detectedRole}" 수동 선언 금지 — ${suggested}를 사용하세요`
+      ? `role="${detectedRole}" 수동 선언 금지 — ${suggested}를 사용하세요. NormalizedData를 plain array로 변환 후 수동 JSX 렌더는 aria-os의 NormalizedData→UI 채널 우회입니다.`
       : `role="..." 수동 선언 금지 — pattern이 자동 생성합니다. ui/ 완성품을 사용하세요: ${listComponentsWithCatalog('').join(', ')}`
   )
 }
@@ -287,7 +301,7 @@ if (!isExempt && isTsx && />\s*[×✕✖]\s*<\/\s*button/ms.test(content)) {
 }
 
 // 규칙 19: CSS ::after/::before content로 아이콘/인디케이터 대체 금지 — indicators/ 사용
-if (isCss && /::(?:after|before)\s*\{[^}]*content\s*:\s*['"][^'"]+['"]/s.test(content)) {
+if (/\.css$/.test(filePath) && /::(?:after|before)\s*\{[^}]*content\s*:\s*['"][^'"]+['"]/s.test(content)) {
   violations.push(
     'CSS pseudo-element(::after/::before content)로 아이콘/인디케이터 대체 금지 — src/interactive-os/ui/indicators/ 컴포넌트를 사용하세요'
   )
