@@ -75,7 +75,7 @@
   --tone-neutral-foreground: var(--stone-0);
 
   /* ── Focus ── */
-  --focus:        var(--blue-200);
+  --focus:        var(--blue-100);
   --focus-idle:   var(--bg-hover);
   --focus-ring:   1px;
   --focus-ring-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.95);
