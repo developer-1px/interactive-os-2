@@ -14,12 +14,22 @@
      All color values reference palette.css variables.
      No hex/rgb/oklch literals here — palette is the single source. */
 
-  /* ── Surface ── */
-  --surface-base:     var(--stone-875);
-  --surface-sunken:   var(--stone-950);
-  --surface-default:  var(--stone-850);
-  --surface-raised:   var(--stone-750);
-  --surface-overlay:  var(--stone-700);
+  /* ── Elevation primitive (palette-like, dark) ──
+     디자인-중립 숫자 시리즈. 음수 단 인정 (--elevation--1 = sunken).
+     향후 -2, +3 확장 가능. Material/Carbon/Atlassian 수렴진화 패턴. */
+  --elevation--1: var(--stone-950);   /* sunken — sidebar/blockquote */
+  --elevation-0:  var(--stone-875);   /* base — page bg */
+  --elevation-1:  var(--stone-750);   /* raised — content card */
+  --elevation-2:  var(--stone-700);   /* overlay — modal/popover */
+
+  /* ── Surface semantic (4단) — elevation primitive 매핑 SSOT ── */
+  --surface-sunken:   var(--elevation--1);
+  --surface-base:     var(--elevation-0);
+  --surface-raised:   var(--elevation-1);
+  --surface-overlay:  var(--elevation-2);
+
+  /* legacy alias — 사용처 정리 후 제거 예정 */
+  --surface-default:  var(--surface-base);
 
   /* ── Shadow (xs/sm/md/lg scale) ── */
   /* Linear: shadow는 overlay만. xs/sm은 미세, lg만 overlay급 */
@@ -134,13 +144,6 @@
   --depth-overlay-sel-context: oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-1) * var(--elev-step-direction)), 0.95) c h);
   --depth-overlay-sel:         oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-2) * var(--elev-step-direction)), 0.95) c h);
   --depth-overlay-sel-cursor:  oklch(from var(--elev-base-overlay) clamp(0, calc(l + var(--elev-delta-3) * var(--elev-step-direction)), 0.95) c h);
-
-  /* prominent = overlay alias (선택 가능한 가장 밝은 elev) */
-  --depth-prominent-hover:       var(--depth-overlay-hover);
-  --depth-prominent-active:      var(--depth-overlay-active);
-  --depth-prominent-sel-context: var(--depth-overlay-sel-context);
-  --depth-prominent-sel:         var(--depth-overlay-sel);
-  --depth-prominent-sel-cursor:  var(--depth-overlay-sel-cursor);
 
   /* ── Interactive (base depth = :root default) ── */
   --bg-hover:          var(--depth-base-hover);
@@ -289,11 +292,20 @@
 
 [data-theme="light"] {
   /* ── Surface ── */
-  --surface-base:     var(--stone-50);     /* page bg */
-  --surface-sunken:   oklch(96% 0.007 90); /* sidebar, blockquote — 2% gap from base */
-  --surface-default:  var(--stone-0);      /* content — pure white */
-  --surface-raised:   var(--stone-0);      /* + shadow */
-  --surface-overlay:  var(--stone-0);      /* + shadow */
+  /* ── Elevation primitive (light) ──
+     Apple HIG 패턴: 흰색 베이스 유지 + raised/overlay는 shadow + rim으로 구분.
+     색만으로 4단 구분 부족 → shadow가 보조. */
+  --elevation--1: oklch(96% 0.007 90); /* sunken — sidebar/blockquote (96% lightness) */
+  --elevation-0:  var(--stone-50);     /* base — page bg */
+  --elevation-1:  var(--stone-0);      /* raised — white card + shadow-sm */
+  --elevation-2:  var(--stone-0);      /* overlay — white + shadow-lg + rim */
+
+  --surface-sunken:   var(--elevation--1);
+  --surface-base:     var(--elevation-0);
+  --surface-raised:   var(--elevation-1);
+  --surface-overlay:  var(--elevation-2);
+
+  --surface-default:  var(--surface-raised); /* legacy alias — content card */
 
   /* ── Shadow: Linear 실측 — overlay만 shadow, 나머지는 면 분리 ── */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.02);

@@ -65,6 +65,12 @@
 
 /* ── Surface swatches ── */
 
+.theme-swatch {
+  aspect-ratio: 1.5;
+  border-radius: var(--shape-md);
+  width: 100%;
+}
+
 .theme-swatch[data-surface="action"] {
   background: var(--bg-hover);
   cursor: pointer;
@@ -87,6 +93,10 @@
 }
 .theme-swatch[data-surface="sunken"]  { background: var(--surface-sunken); }
 .theme-swatch[data-surface="base"]    { background: var(--surface-base); }
+.theme-swatch[data-surface="raised"]  {
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
+}
 
 /* ── Tone swatches ── */
 

@@ -4,7 +4,13 @@ import './PageThemeCreator.css'
 /* ══ Data ══ */
 
 const stoneSteps = [0, 50, 100, 200, 300, 400, 500, 600, 700, 750, 800, 850, 875, 900, 950] as const
-const surfaces = ['action', 'input', 'display', 'overlay', 'ghost', 'sunken', 'base'] as const
+const depths = [
+  { name: 'sunken',  elev: '-1' },
+  { name: 'base',    elev: '0' },
+  { name: 'raised',  elev: '+1' },
+  { name: 'overlay', elev: '+2' },
+] as const
+const surfaceRoles = ['action', 'input', 'display', 'ghost'] as const
 const tones = ['accent', 'danger', 'success', 'warning', 'neutral'] as const
 const textColors = ['bright', 'primary', 'secondary', 'muted'] as const
 const shadows = ['xs', 'sm', 'md', 'lg'] as const
@@ -56,11 +62,22 @@ export function ThemeTokens() {
       {/* 2-column grid: color tokens + visual tokens */}
       <div className="theme-composed-grid">
         <div className={ax({ layout: 'stack', gap: 'md' })}>
-          <Section title="SURFACE">
-            <div className={ax({ layout: 'grid-7', gap: 'sm' })}>
-              {surfaces.map(s => (
-                <div key={s} className={ax({ layout: 'stack', gap: 'xs' })}>
-                  <div className={`${ax({ shape: 'md', aspect: 'card' })} theme-swatch`} data-surface={s} />
+          <Section title="DEPTH (elevation -1 → +2)">
+            <div className={ax({ layout: 'grid-4' })}>
+              {depths.map(d => (
+                <div key={d.name} className={ax({ layout: 'stack' })}>
+                  <div className="theme-swatch" data-surface={d.name} />
+                  <span className={ax({ textStyle: 'code' })}>{d.name} ({d.elev})</span>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section title="SURFACE ROLE">
+            <div className={ax({ layout: 'grid-4' })}>
+              {surfaceRoles.map(s => (
+                <div key={s} className={ax({ layout: 'stack' })}>
+                  <div className="theme-swatch" data-surface={s} />
                   <span className={ax({ textStyle: 'code' })}>{s}</span>
                 </div>
               ))}
