@@ -97,6 +97,17 @@
             "timeout": 3000
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "if": "Write(docs/*.md)|Write(docs/**/*.md)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/md-frontmatter.mjs",
+            "timeout": 5000
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -204,6 +215,18 @@
             "timeout": 15000,
             "async": true,
             "statusMessage": "Type checking..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "if": "Edit(docs/*.md)|Edit(docs/**/*.md)|Write(docs/*.md)|Write(docs/**/*.md)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/md-validate.mjs",
+            "timeout": 5000,
+            "async": true
           }
         ]
       }
