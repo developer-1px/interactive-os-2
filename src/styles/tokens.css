@@ -74,10 +74,13 @@
   --tone-neutral-dim:        var(--stone-800);
   --tone-neutral-foreground: var(--stone-0);
 
-  /* ── Focus ── */
-  --focus:        var(--blue-100);
-  --focus-idle:   var(--bg-hover);
-  --focus-ring:   1px;
+  /* ── Focus ──
+     focus inverted 토큰은 역전 surface(inverted) 전용. dark 기본은 blue 진하게,
+     light 오버라이드에서 반대로 재지정. */
+  --focus:          var(--blue-100);
+  --focus-inverted: var(--blue-700);
+  --focus-idle:     var(--bg-hover);
+  --focus-ring:     1px;
   --focus-ring-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.95);
 
   /* ── Indicator ── */
@@ -343,8 +346,9 @@
   --tone-neutral-dim:   var(--stone-100);
 
   /* ── Focus ── */
-  --focus:      var(--blue-700);
-  --focus-idle: var(--bg-hover);
+  --focus:          var(--blue-700);
+  --focus-inverted: var(--blue-100);
+  --focus-idle:     var(--bg-hover);
 
   /* ── L1 Semantic: Elevation tier (light) ──
      light: -Δ L = raised (darker on light = elevated, 카드/그림자 메타포)

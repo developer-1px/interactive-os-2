@@ -140,6 +140,8 @@ dialog.sf-overlay[open] {
   background: var(--text-primary);
   color: var(--surface-base);
   border: none;
+  /* 역전 맥락 — focus 색도 반전 (dark theme의 밝은 bg에는 진한 blue, 반대도 동일) */
+  --focus: var(--focus-inverted);
 }
 
 .sf-placeholder {

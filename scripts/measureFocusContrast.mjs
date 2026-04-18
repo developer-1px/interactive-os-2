@@ -295,7 +295,7 @@ const SURFACES = [
   { key: 'sunken', darkVar: '--stone-950', lightVar: '--stone-100', note: 'sidebar·blockquote' },
   { key: 'base', darkVar: '--stone-875', lightVar: '--stone-50', note: 'page bg' },
   { key: 'raised', darkVar: '--stone-750', lightVar: '--stone-0', note: 'card (+shadow)' },
-  { key: 'inverted', darkVar: '--stone-0', lightVar: '--stone-950', note: '역전 tooltip' },
+  { key: 'inverted', darkVar: '--stone-0', lightVar: '--stone-950', note: '역전 tooltip', focusVar: '--focus-inverted' },
 ]
 
 /**
@@ -380,9 +380,10 @@ function main() {
 
   for (const theme of ['dark', 'light']) {
     const vars = theme === 'dark' ? root : light
-    const focusVar = FOCUS_VAR
     for (const s of SURFACES) {
       const surfVar = theme === 'dark' ? s.darkVar : s.lightVar
+      // surface가 자체 focus override를 선언하면 그걸 사용 (예: inverted → --focus-inverted)
+      const focusVar = s.focusVar ?? FOCUS_VAR
       const row = computeRow(s.key, surfVar, focusVar, vars, focusAlpha)
       const lc = row.lc ?? 0
       const pass = !row.error && lc >= 60
