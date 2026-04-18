@@ -88,15 +88,40 @@ CSS grid N열 레이아웃.
 
 **자식 규칙:** children[0] = nav widget, children[1..] = 콘텐츠 페이지들
 
-### tab — 탭 전환
+### tabgroup — 탭 그룹
 
-자식 중 하나만 보여준다. 탭 바 자동 생성.
+자식 탭 중 하나(`activeTabId`)를 활성화하여 본문으로 보여준다. 탭 바는 `ViewerTabList` 기반 store-backed.
+
+| prop | 타입 | 기본값 |
+|------|------|--------|
+| activeTabId | `string` | 필수 — 초기 활성 tab id |
 
 ```ts
-{ type: 'tab' }
+{ type: 'tabgroup', activeTabId: 'tab-1' }
 ```
 
-**자식 규칙:** 각 자식의 label이 탭 이름으로 표시됨
+**자식 규칙:** children은 모두 `type: 'tab'` 노드여야 한다.
+
+**동적 조작:**
+- 탭 추가: `workspaceCommands.addTab(tabgroupId, tab)` (activeTabId도 동시 갱신)
+- 탭 제거: `workspaceCommands.removeTab(tabId)` — 마지막이면 부모 split 자동 collapse
+- 탭 활성화: `workspaceCommands.setActiveTab(tabgroupId, tabId)` 또는 `nextTab/prevTab/gotoTab`
+
+### tab — 탭 자식
+
+tabgroup의 자식. 탭바에 `label`로 표시되고, 활성 시 자신의 children[0]을 본문으로 렌더. 본문 widget은 `useFlatLayoutSurface()` hook으로 자신을 감싼 tab의 data(contentType, contentRef)를 pull할 수 있다.
+
+| prop | 타입 | 기본값 |
+|------|------|--------|
+| label | `string` | 필수 — 탭 바에 표시 |
+| contentType | `string` | — 도메인 키 (예: `'chat'`, `'entities'`, `'files'`) |
+| contentRef | `string` | — 도메인 엔티티 식별자 (예: session id) |
+
+```ts
+{ type: 'tab', label: 'Chat', contentType: 'chat', contentRef: 'session-1' }
+```
+
+**자식 규칙:** children 길이 1. widget / split / stack / tabgroup 중 하나.
 
 ### section — 제목 + 콘텐츠
 
@@ -196,12 +221,13 @@ registry에 등록된 React 컴포넌트를 배치한다.
 
 | 부모 | 자식 | 비고 |
 |------|------|------|
-| split | split, stack, grid, bar, widget, nav, tab | 가장 유연 |
+| split | split, stack, grid, bar, widget, nav, tabgroup | 가장 유연 |
 | stack | widget, bar, overlay, floating, section | 수직 쌓기 |
 | grid | widget | 그리드 셀 = widget |
 | bar | widget | 수평 나열 |
-| nav | widget (첫째=nav), section/tab/widget (나머지) | 사이드바+콘텐츠 |
-| tab | widget, stack, split | 탭 페이지 |
+| nav | widget (첫째=nav), section/tabgroup/widget (나머지) | 사이드바+콘텐츠 |
+| tabgroup | tab | 자식은 모두 tab 노드 |
+| tab | widget, split, stack, tabgroup | 본문 1개 (children 길이 1) |
 | section | grid, widget, stack | 섹션 콘텐츠 |
 | overlay | widget, stack, split | 오버레이 콘텐츠 |
 | floating | widget | 떠있는 콘텐츠 |
@@ -275,6 +301,11 @@ const registry = createWidgetRegistry({
 | `setVisibility` | `(nodeId, visible: boolean)` | overlay/floating 표시/숨김 |
 | `setHidden` | `(nodeId, hidden: boolean)` | 모든 노드 조건부 노출 |
 | `setGap` | `(nodeId, gap: string)` | stack/grid 간격 변경 |
+| `setFocus` | `(nodeId, tabId?)` | 현재 포커스된 tabgroup을 기록. splitHere/closeHere/focusDir의 기준점 |
+| `splitHere` | `(direction)` | focusedTabgroupId를 horizontal/vertical 분할 |
+| `closeHere` | `()` | focused tabgroup의 active tab 제거. 마지막이면 pane 자동 collapse |
+| `focusDir` | `(dir)` | `'left'`/`'right'`/`'up'`/`'down'` — DOM rect 기반 공간 이웃 tabgroup으로 포커스 이동 |
+| `flashPane` | `()` | focused pane에 300ms flash ring 1회 재생. 위치 확인용 |
 
 ### workspaceCommands
 
@@ -392,7 +423,7 @@ definePage({
 | 1 | **CMS floating 크롬** — ViewportBar 등 전역 크롬이 FlatLayout 밖 | `ax({ placement })` 직접 사용 | 허용 (전역 크롬은 레이아웃 트리 밖) |
 | 2 | **Route-level modal** — present mode 등 라우트 수준 전환 | `RouteModal` / `useOverlay` 별도 | 허용 (FlatLayout 스코프 밖) |
 | 3 | **Stack widget 크기 제어** — stack 안 widget이 자연 높이가 아닌 비율 지정 불가 | `vertical split`으로 대체 | GAP — stack sizing 정책 필요 |
-| 4 | **동적 노드 CRUD** — definePage는 정적, 런타임 탭 추가/패널 열기 없음 | workspaceCommands 존재하나 FlatLayout 연동 미검증 | GAP — 검증 필요 |
+| 4 | **동적 노드 CRUD** — definePage는 정적, 런타임 탭 추가/패널 열기 없음 | workspaceCommands + tabgroup renderer 연동 | **해결됨** — workspaceStore command + tabgroup renderer 연동 완료 (cmux-layout-prd.md) |
 | 5 | ~~조건부 영역~~ | `LayoutBase.hidden` 일반화로 해결 | **해결됨** |
 | 6 | **반응형 레이아웃** — viewport 기반 split 비율/노드 교체 불가 | CSS 미디어쿼리 widget 내부 | GAP — 방법 미정 |
 | 7 | **포탈 패턴** — 동일 widget이 트리 두 곳에 동시 등장 불가 | 해당 없음 (현재 필요 사례 없음) | 한계 인지 |

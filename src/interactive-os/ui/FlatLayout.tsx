@@ -79,46 +79,6 @@ function NavLayoutWrapper({ nodeId, navId, contentIds, sidebarWidth, renderNode,
   )
 }
 
-// ── Tab wrapper ───────────────────────────────────────
-
-function TabLayoutWrapper({ nodeId, store, renderNode, refCallback }: {
-  nodeId: string
-  store: NormalizedData
-  renderNode: (id: string, parentType?: string) => React.ReactNode
-  refCallback: (id: string) => (el: HTMLElement | null) => void
-}) {
-  const childIds = getChildren(store, nodeId)
-  const [activeTab, setActiveTab] = React.useState(0)
-
-  return (
-    <div ref={refCallback(nodeId)} className={ax({ layout: 'stack', width: 'full', gap: 'md' })}>
-      <div className={ax({ layout: 'bar', gap: 'xs', surface: 'base', padding: 'xs', shape: 'sm' })}>
-        {childIds.map((childId, i) => {
-          const data = getEntityData(store, childId)
-          const label = (data as Record<string, unknown> | undefined)?.label ?? childId
-          return (
-            <button
-              key={childId}
-              className={ax({
-                interactive: 'tab',
-                role: 'item',
-                content: 'text',
-                surface: i === activeTab ? 'display' : 'ghost',
-                layout: 'row',
-                width: 'full',
-              })}
-              onClick={() => setActiveTab(i)}
-            >
-              {String(label)}
-            </button>
-          )
-        })}
-      </div>
-      {childIds[activeTab] ? renderNode(childIds[activeTab], 'tab') : null}
-    </div>
-  )
-}
-
 // ── OCP renderer map ──────────────────────────────────
 
 const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactNode> = {
@@ -253,8 +213,53 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
     )
   },
 
+  tabgroup: ({ nodeId, store, surface, renderNode, refCallback, dispatch }) => {
+    const node = getEntityData<TabgroupNode>(store, nodeId)
+    if (!node) return null
+    const childIds = getChildren(store, nodeId)
+    if (childIds.length === 0) return null
+    const activeTabId = node.activeTabId && childIds.includes(node.activeTabId)
+      ? node.activeTabId
+      : childIds[0]!
+
+    const tabBarStore: NormalizedData = {
+      entities: Object.fromEntries(
+        childIds.map(id => [id, { id, data: getEntityData(store, id) }])
+      ),
+      relationships: { [ROOT_ID]: childIds },
+    }
+
+    return (
+      <div
+        ref={refCallback(nodeId)}
+        className={ax({ layout: 'stack', width: 'full', flex: '1', surface })}
+        onPointerDownCapture={() => dispatch(layoutCommands.setFocus(nodeId, activeTabId))}
+      >
+        <ViewerTabList
+          data={tabBarStore}
+          initialFocus={activeTabId}
+          onActivate={(tabId) => {
+            dispatch(workspaceCommands.setActiveTab(nodeId, tabId))
+            dispatch(layoutCommands.setFocus(nodeId, tabId))
+          }}
+          aria-label={`Tabgroup ${nodeId}`}
+        />
+        {renderNode(activeTabId, 'tabgroup')}
+      </div>
+    )
+  },
+
   tab: ({ nodeId, store, renderNode, refCallback }) => {
-    return <TabLayoutWrapper nodeId={nodeId} store={store} renderNode={renderNode} refCallback={refCallback} />
+    const tabData = getEntityData<TabNode>(store, nodeId)
+    const childIds = getChildren(store, nodeId)
+    if (!tabData || childIds.length === 0) return null
+    return (
+      <FlatLayoutSurfaceContext.Provider value={{ tabNodeId: nodeId, tabData }}>
+        <div ref={refCallback(nodeId)} className={ax({ layout: 'fill', flex: '1' })}>
+          {renderNode(childIds[0]!, 'tab')}
+        </div>
+      </FlatLayoutSurfaceContext.Provider>
+    )
   },
 
   section: ({ nodeId, store, surface, renderNode, refCallback }) => {
@@ -378,7 +383,7 @@ export function FlatLayout({ data, registry, plugins: extraPlugins, onChange, 'a
   const firstRootId = rootIds[0]
   const firstRootData = firstRootId ? store.entities[firstRootId]?.data as Record<string, unknown> | undefined : undefined
   const rootType = firstRootData?.type as string | undefined
-  const isAppMode = rootType === 'split' || rootType === 'nav' || rootType === 'tab'
+  const isAppMode = rootType === 'split' || rootType === 'nav' || rootType === 'tab' || rootType === 'tabgroup'
 
   return (
     <FlatLayoutContext.Provider value={layoutCtx}>
