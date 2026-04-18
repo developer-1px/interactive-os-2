@@ -1,9 +1,12 @@
-// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
- * extract orchestrator (lite) — content + git → ExtractResult.
+ * extract orchestrator — content + git → ExtractResult.
+ *
+ * 2026-04-19 재설계: tags 소스를 frontmatter.tags로만 단일화 (하단 hashtag 파서 폐기).
  *
  * @invariant 우선순위: explicit > content > git > filename > mtime
- * @invariant tags = explicit.tags(array) || content.tags(last hashtag line)
+ * @invariant tags는 explicit.tags 만 (frontmatter SSOT)
+ * @invariant type/slug 필수 — explicit 없으면 filename에서 추론
  * @invariant date-path-mismatch warn 시 frontmatter는 그대로 (relocate가 처리)
  * @invariant memory/ 경로는 throw (defense in depth)
  */
@@ -13,9 +16,12 @@ import {
   DocFrontmatterSchema,
   SOURCE_CONFIDENCE,
   LEGACY_FIELD_RENAMES,
+  DOC_TYPES,
+  SLUG_RE,
 } from './schema.ts'
 import type {
   DocFrontmatter,
+  DocType,
   ExtractResult,
   ExtractSource,
   ExtractWarning,
@@ -38,11 +44,36 @@ import { extractContent } from './extractContent.ts'
 import type { ContentExtract } from './extractContent.ts'
 
 const CORE_FIELD_KEYS = [
-  'id', 'title', 'created', 'updated', 'summary', 'tags', 'legacy',
+  'id', 'type', 'slug', 'title', 'tags', 'created', 'updated',
+  'summary', 'status', 'project', 'layer', 'consumed_by', 'legacy',
 ] as const satisfies readonly (keyof DocFrontmatter)[]
 
-function slugFromPath(relPath: string): string {
-  return relPath.replace(/\.md$/i, '')
+function slugFromFilename(relPath: string): string {
+  const stem = basename(relPath).replace(/\.md$/i, '')
+  // 순번 prefix / [tag] prefix / 날짜 prefix-suffix 제거
+  const cleaned = stem
+    .replace(/^\d{2,3}-/, '')
+    .replace(/\[[^\]]+\]/g, '')
+    .replace(/[-_]?\d{4}-\d{2}-\d{2}[-_]?/g, '')
+    .replace(/^-+|-+$/g, '')
+  // kebab → camel
+  const camel = cleaned.replace(/[-_](\w)/g, (_, c: string) => c.toUpperCase())
+  // 영문 시작 보장
+  return camel.replace(/^[^a-zA-Z]+/, '').replace(/^(.)/, (c) => c.toLowerCase())
+    || 'note'
+}
+
+function inferTypeFromFilename(filename: string): DocType {
+  if (/^handoff-\d{4}-\d{2}-\d{2}/i.test(filename)) return 'handoff'
+  if (/-prd\.md$/i.test(filename) || /Prd\.md$/.test(filename)) return 'prd'
+  if (/-plan\.md$/i.test(filename) || /Plan\.md$/.test(filename)) return 'plan'
+  if (/^pyramid-/i.test(filename)) return 'pyramid'
+  if (/^minto-/i.test(filename)) return 'minto'
+  if (/^explain-/i.test(filename)) return 'explain'
+  if (/^retro-/i.test(filename)) return 'retro'
+  if (/^audit-|-audit\.md$/i.test(filename)) return 'audit'
+  if (/^backlog-|-backlog\.md$/i.test(filename)) return 'backlog'
+  return 'note'
 }
 
 function setProv(
@@ -96,8 +127,29 @@ export function buildFrontmatterByPriority(input: {
     id = explicitCanonical.id
     setProv(prov, 'id', id, 'explicit')
   } else {
-    id = slugFromPath(relPath)
+    id = filenameStem
     setProv(prov, 'id', id, 'filename')
+  }
+
+  // ── type ──
+  let type: DocType
+  if (typeof explicitCanonical.type === 'string'
+    && (DOC_TYPES as readonly string[]).includes(explicitCanonical.type)) {
+    type = explicitCanonical.type as DocType
+    setProv(prov, 'type', type, 'explicit')
+  } else {
+    type = inferTypeFromFilename(basename(relPath))
+    setProv(prov, 'type', type, 'filename')
+  }
+
+  // ── slug ──
+  let slug: string
+  if (typeof explicitCanonical.slug === 'string' && SLUG_RE.test(explicitCanonical.slug)) {
+    slug = explicitCanonical.slug
+    setProv(prov, 'slug', slug, 'explicit')
+  } else {
+    slug = slugFromFilename(relPath)
+    setProv(prov, 'slug', slug, 'filename')
   }
 
   // ── title ──
@@ -149,18 +201,21 @@ export function buildFrontmatterByPriority(input: {
     setProv(prov, 'summary', summary, 'explicit')
   }
 
-  // ── tags ── explicit.tags > content.tags
+  // ── tags ── explicit.tags만 (하단 hashtag 파서 폐기)
   let tags: string[] = []
   if (Array.isArray(explicitCanonical.tags)) {
     tags = (explicitCanonical.tags as unknown[])
       .filter((t): t is string => typeof t === 'string')
     setProv(prov, 'tags', tags, 'explicit')
-  } else if (content.tags.length > 0) {
-    tags = content.tags
-    setProv(prov, 'tags', tags, 'content')
   } else {
     setProv(prov, 'tags', tags, 'filename')
   }
+
+  // ── status / project / layer / consumed_by ──
+  const status = typeof explicitCanonical.status === 'string' ? explicitCanonical.status : undefined
+  const project = typeof explicitCanonical.project === 'string' ? explicitCanonical.project : undefined
+  const layer = typeof explicitCanonical.layer === 'string' ? explicitCanonical.layer : undefined
+  const consumed_by = typeof explicitCanonical.consumed_by === 'string' ? explicitCanonical.consumed_by : undefined
 
   // ── legacy ──
   const legacy = Object.keys(legacyBucket).length > 0 ? legacyBucket : undefined
@@ -168,12 +223,18 @@ export function buildFrontmatterByPriority(input: {
 
   const frontmatter: DocFrontmatter = {
     id,
+    type,
+    slug,
     title,
+    tags,
     created,
     updated,
-    summary,
-    tags,
-    legacy,
+    ...(summary !== undefined && { summary }),
+    ...(status !== undefined && { status: status as DocFrontmatter['status'] }),
+    ...(project !== undefined && { project }),
+    ...(layer !== undefined && { layer }),
+    ...(consumed_by !== undefined && { consumed_by }),
+    ...(legacy !== undefined && { legacy }),
   }
 
   return [frontmatter, prov]
@@ -248,7 +309,6 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
       message: `not under YYYY/YYYY-MM/YYYY-MM-DD/ — relocate pending`,
     })
   } else if (datePath.day !== frontmatter.created) {
-    // path 의 일자와 created 가 다르면 정보성 warning (relocate 후 일관성)
     warnings.push({
       code: 'date-path-mismatch',
       severity: 'info',
@@ -275,22 +335,15 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
     frontmatter.updated = frontmatter.created
   }
 
-  // hashtag 라인 형식 검증 (마지막 줄에 # 있으나 매칭 실패 시)
-  const lastNonBlank = content.body.split('\n').reverse().find((l) => l.trim().length > 0)
-  if (lastNonBlank && lastNonBlank.trim().startsWith('#') && content.tags.length === 0) {
-    // tag로 인식 안 됐는데 # 시작이면 — 숫자-only이거나 heading일 수 있음
-    const trimmed = lastNonBlank.trim()
-    if (/^#\d+(\s|$)/.test(trimmed)) {
+  // slug-filename-mismatch
+  if (frontmatter.slug && basename(docsRel).replace(/\.md$/i, '') !== frontmatter.slug) {
+    const filenameSlug = slugFromFilename(docsRel)
+    if (filenameSlug !== frontmatter.slug) {
       warnings.push({
-        code: 'numeric-only-hashtag',
-        severity: 'info',
-        message: `last line has numeric-only hashtag (treated as non-tag): ${trimmed.slice(0, 40)}`,
-      })
-    } else if (!trimmed.startsWith('# ') && !trimmed.startsWith('## ')) {
-      warnings.push({
-        code: 'hashtag-line-malformed',
-        severity: 'info',
-        message: `last line starts with # but not a valid tag line: ${trimmed.slice(0, 40)}`,
+        code: 'slug-filename-mismatch',
+        field: 'slug',
+        severity: 'warn',
+        message: `slug=${frontmatter.slug} != filename-derived=${filenameSlug}`,
       })
     }
   }
@@ -298,11 +351,19 @@ export async function extractFile(relPath: string): Promise<ExtractResult> {
   const parsed = DocFrontmatterSchema.safeParse(frontmatter)
   const finalFm = parsed.success ? parsed.data : (frontmatter as DocFrontmatter)
   if (!parsed.success) {
-    warnings.push({
-      code: 'schema-invalid',
-      severity: 'error',
-      message: parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; '),
-    })
+    for (const issue of parsed.error.issues) {
+      const p = issue.path.join('.')
+      const code: ExtractWarning['code'] =
+        p === 'type' ? 'missing-type'
+        : p === 'slug' ? 'missing-slug'
+        : p === 'tags' ? 'missing-tags'
+        : 'schema-invalid'
+      warnings.push({
+        code,
+        severity: 'error',
+        message: `${p}: ${issue.message}`,
+      })
+    }
   }
 
   return {
@@ -369,12 +430,12 @@ function fallbackFrontmatter(relPath: string): DocFrontmatter {
   const today = new Date().toISOString().slice(0, 10)
   const filename = basename(relPath).replace(/\.md$/i, '')
   return {
-    id: relPath.replace(/\.md$/i, ''),
+    id: filename,
+    type: inferTypeFromFilename(basename(relPath)),
+    slug: slugFromFilename(relPath),
     title: filename,
+    tags: ['untagged'],
     created: today,
     updated: today,
-    summary: undefined,
-    tags: [],
-    legacy: undefined,
   }
 }

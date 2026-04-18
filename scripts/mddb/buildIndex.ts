@@ -1,4 +1,4 @@
-// @see docs/0-inbox/handoff-2026-04-18-mddb-phase1.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
  * buildIndex — extractAll → MddbIndex (frontmatter only).
  *

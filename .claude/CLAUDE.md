@@ -83,7 +83,7 @@ ARIA OS는 두 청자를 위해 두 개의 면을 가진다.
 - **테스트**: 계산은 unit, 인터랙션은 통합(`user.keyboard()` → DOM/ARIA 상태 검증). mock 호출 검증(`toHaveBeenCalled`) 금지.
 - **CSS**: `ax()`만 사용. `frontend-design` 스킬 금지.
 - **커밋 전**: `/simplify` 필수.
-- **`docs/3-resources/` 파일명**: `{순번}-[{태그}]{제목}.md`. 순번 = 폴더 마지막 번호 + 1.
+- **md 작성 규칙**: `docs/2026/2026-04/2026-04-19/mdConventions.md` — **frontmatter SSOT + 날짜 폴더 SSOT**. 경로 `docs/YYYY/YYYY-MM/YYYY-MM-DD/{slug}.md`. PARA 폴더(`0-inbox`/`1-projects`/`5-backlogs` 등) 폐기. 하단 해시태그 라인 폐기 (frontmatter `tags` 필드가 유일 소스).
 - **`docs/PROGRESS.md`**: concept map. 모듈 추가/삭제 시 갱신, Maturity/Gaps는 /retrospect 시.
 - **제1원칙: 있는 걸로 만든다** — 새 컴포넌트·훅·유틸을 만들기 전에 `src/interactive-os/CATALOG.md`를 읽고 기존 부품에 없음을 확인한다. 확인 없이 새로 만들지 않는다.
 - **os 기반 개발 (필수)**:

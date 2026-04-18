@@ -1,10 +1,12 @@
-// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
- * Validation (lite) — Zod safeParse + duplicate-id + date-path 정합.
+ * Validation — Zod safeParse + duplicate-id/slug + date-path 정합.
+ *
+ * 2026-04-19 재설계: type/slug/tags missing 구분 warning 추가.
  *
  * @invariant validateExtract/validateAll 는 pure (파일 IO 없음)
  * @invariant severity='error'는 CI block 대상
- * @invariant supersede-cycle / parent / superseded_by 검증은 폐기 (필드 자체 제거됨)
+ * @invariant hashtag 관련 warning은 더 이상 발생하지 않음 (폐기)
  */
 import { DocFrontmatterSchema } from './schema.ts'
 import type { ExtractResult, ExtractWarning } from './schema.ts'
@@ -23,13 +25,21 @@ export function validateExtract(result: ExtractResult): ExtractWarning[] {
 
   const parsed = DocFrontmatterSchema.safeParse(result.frontmatter)
   if (!parsed.success) {
-    const msg = parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ')
-    if (!result.warnings.some((w) => w.code === 'schema-invalid')) {
-      out.push({ code: 'schema-invalid', severity: 'error', message: msg })
+    for (const issue of parsed.error.issues) {
+      const path = issue.path.join('.')
+      const code = mapIssuePathToCode(path)
+      const warning: ExtractWarning = {
+        code,
+        severity: 'error',
+        message: `${path}: ${issue.message}`,
+      }
+      if (isFrontmatterKey(path)) warning.field = path
+      out.push(warning)
     }
   }
 
-  if (result.frontmatter.created > result.frontmatter.updated) {
+  if (result.frontmatter.created && result.frontmatter.updated
+    && result.frontmatter.created > result.frontmatter.updated) {
     out.push({
       code: 'created-after-updated',
       field: 'updated',
@@ -50,17 +60,41 @@ export function validateExtract(result: ExtractResult): ExtractWarning[] {
   return merged
 }
 
+function mapIssuePathToCode(path: string): ExtractWarning['code'] {
+  if (path === 'type') return 'missing-type'
+  if (path === 'slug') return 'missing-slug'
+  if (path === 'tags') return 'missing-tags'
+  return 'schema-invalid'
+}
+
+const FRONTMATTER_KEYS = new Set([
+  'id', 'type', 'slug', 'title', 'tags', 'created', 'updated',
+  'summary', 'status', 'project', 'layer', 'consumed_by', 'legacy',
+])
+
+function isFrontmatterKey(path: string): path is keyof import('./schema.ts').DocFrontmatter {
+  return FRONTMATTER_KEYS.has(path)
+}
+
 /**
- * 전체 DB 검증: duplicate-id 만.
+ * 전체 DB 검증: duplicate-id + duplicate-slug.
  */
 export function validateGlobal(all: ExtractResult[]): ExtractWarning[] {
   const out: ExtractWarning[] = []
   const idToPath = new Map<string, string[]>()
+  const slugToPath = new Map<string, string[]>()
   for (const r of all) {
     const id = r.frontmatter.id
-    const arr = idToPath.get(id) ?? []
-    arr.push(r.path)
-    idToPath.set(id, arr)
+    const idArr = idToPath.get(id) ?? []
+    idArr.push(r.path)
+    idToPath.set(id, idArr)
+
+    const slug = r.frontmatter.slug
+    if (slug) {
+      const slugArr = slugToPath.get(slug) ?? []
+      slugArr.push(r.path)
+      slugToPath.set(slug, slugArr)
+    }
   }
   for (const [id, paths] of idToPath.entries()) {
     if (paths.length > 1) {
@@ -69,6 +103,16 @@ export function validateGlobal(all: ExtractResult[]): ExtractWarning[] {
         field: 'id',
         severity: 'error',
         message: `duplicate id="${id}" in: ${paths.join(', ')}`,
+      })
+    }
+  }
+  for (const [slug, paths] of slugToPath.entries()) {
+    if (paths.length > 1) {
+      out.push({
+        code: 'duplicate-slug',
+        field: 'slug',
+        severity: 'error',
+        message: `duplicate slug="${slug}" in: ${paths.join(', ')}`,
       })
     }
   }

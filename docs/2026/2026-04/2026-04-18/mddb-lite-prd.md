@@ -1,18 +1,24 @@
 ---
-id: 2-areas/docs-infra/prds/mddb-lite-prd
-title: 'mddb lite — 연월일 물리 + 하단 hashtag 논리 (Phase 1 승계)'
+id: mddbLitePrd
+type: prd
+slug: mddbLitePrd
+title: 'mddb lite — 연월일 물리 + 하단 hashtag 논리 (SUPERSEDED)'
+tags: [docs-infra, mddb, prd, superseded]
+status: archived
 created: 2026-04-18
-updated: 2026-04-18
-summary: 'PARA 이동식 + frontmatter 자동주입 Phase 1을 철회하고 time-stamped immovable 경로 + 마지막 줄 hashtag 컨벤션으로 재구성한다. 재사용 9 / 신규 1 / 삭제 2 / 수정 7.'
+updated: 2026-04-19
+summary: 'SUPERSEDED by mdPathPolicyMigrationPrd (2026-04-19). 하단 hashtag SSOT 규약이 frontmatter SSOT로 교체됨. 이유: Jekyll/Hugo/Astro 등 업계 사실상 표준 재정렬.'
+consumed_by: 2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 legacy:
-  status: active
   kind: prd
   topics: [docs-infra, mddb, prd]
-  relates: [2-areas/docs-infra/prds/mddb-phase1-prd]
-  supersedes: [2-areas/docs-infra/prds/mddb-phase1-prd]
+  relates: [mddbPhase1Prd]
+  supersedes: [mddbPhase1Prd]
 ---
 
 # mddb lite — PRD
+
+> **⚠ SUPERSEDED (2026-04-19)** — 본 PRD의 "마지막 줄 hashtag = SSOT" 규약은 폐기됨. `docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md`로 교체. 근거: frontmatter SSOT가 SSG/CMS 생태계 사실상 표준 (Jekyll/Hugo/Astro/Docusaurus/Obsidian Properties/Hashnode). 본 문서는 역사 기록용으로 보존.
 
 > **Discussion**: 2026-04-18 discuss (13요소 🟢 + FRT 게이트 6/6 🟢)
 > **산출물 유형**: 스크립트·훅 (scripts + hooks)

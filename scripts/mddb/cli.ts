@@ -1,6 +1,6 @@
-// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
- * CLI entry — `pnpm mddb:{extract|validate|audit|relocate|index}` 단일 진입점.
+ * CLI entry — `pnpm mddb:{extract|validate|audit|relocate|backfill|index}` 단일 진입점.
  *
  * @invariant parseArgv는 pure (process.* 만지지 않음)
  * @invariant main은 exit code 반환 (0/1/2)
@@ -10,7 +10,7 @@ import { extractFile, extractAll } from './extract.ts'
 import { validateExtract, validateAll } from './validate.ts'
 import { runAudit, writeAuditFile, renderAuditMarkdown } from './audit.ts'
 import { relocate as runRelocate, planRelocate } from './relocate.ts'
-import { backfill as runBackfill, planBackfill } from './backfillTags.ts'
+import { backfill as runBackfill, planBackfill } from './backfillFrontmatter.ts'
 import { writeIndexFile, DEFAULT_INDEX_PATH } from './buildIndex.ts'
 import { toRelDocsPath, isDocsMd, isMemoryPath, DOCS_ROOT, PROJECT_ROOT, walkDocsMd } from './paths.ts'
 
@@ -213,18 +213,14 @@ async function backfillSubcommand(args: CliArgs): Promise<number> {
       console.log('  by skip reason:')
       for (const [r, c] of Object.entries(byReason).sort()) console.log(`    ${r}: ${c}`)
     }
-    // tag namespace 분포
-    const nsCount: Record<string, number> = {}
+    // type 분포
+    const typeCount: Record<string, number> = {}
     for (const e of plan.changed) {
-      for (const t of e.finalLine.split(/\s+/)) {
-        const m = /^#([^/]+)/.exec(t)
-        const ns = m ? m[1] : '(unknown)'
-        nsCount[ns] = (nsCount[ns] ?? 0) + 1
-      }
+      typeCount[e.inferred.type] = (typeCount[e.inferred.type] ?? 0) + 1
     }
-    console.log('  tag namespace 분포 (token count):')
-    for (const [ns, c] of Object.entries(nsCount).sort((a, b) => b[1] - a[1])) {
-      console.log(`    ${ns}: ${c}`)
+    console.log('  type 분포:')
+    for (const [t, c] of Object.entries(typeCount).sort((a, b) => b[1] - a[1])) {
+      console.log(`    ${t}: ${c}`)
     }
     // 샘플 출력
     const sampleN = args.flags.sample ?? (dryRun ? 30 : 0)
@@ -235,8 +231,7 @@ async function backfillSubcommand(args: CliArgs): Promise<number> {
       for (let i = 0; i < plan.changed.length && printed < sampleN; i += step) {
         const e = plan.changed[i]
         console.log(`    ${e.path}`)
-        console.log(`      → ${e.finalLine}`)
-        if (e.fmRemoved.length > 0) console.log(`      (fm→legacy: ${e.fmRemoved.join(', ')})`)
+        console.log(`      type=${e.inferred.type} slug=${e.inferred.slug} tags=[${e.inferred.tags.join(', ')}]`)
         printed++
       }
     }

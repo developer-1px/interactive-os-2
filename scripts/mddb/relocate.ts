@@ -1,4 +1,4 @@
-// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
  * relocate — git mv로 docs/ 파일을 YYYY/YYYY-MM/YYYY-MM-DD/ 경로로 이동.
  *

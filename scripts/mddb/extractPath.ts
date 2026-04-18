@@ -1,4 +1,4 @@
-// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
  * Path-based extraction (lite) — only handoff filename → createdFromFilename hint.
  *

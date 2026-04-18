@@ -1,4 +1,4 @@
-// @see docs/2-areas/docs-infra/prds/mddb-lite-prd.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
  * Audit (lite) — 전체 docs/ 통계 리포트.
  *
