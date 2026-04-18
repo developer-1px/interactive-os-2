@@ -48,6 +48,8 @@
     "dev": "vite",
     "typecheck": "tsc -b --noEmit",
     "build": "tsc -b && vite build",
+    "build:pages": "GITHUB_PAGES=true vite build",
+    "deploy:pages": "pnpm build:pages && gh-pages -d dist -b gh-pages -m 'deploy pages'",
     "build:lib": "tsup",
     "lint": "eslint .",
     "lint:css": "stylelint 'src/**/*.css'",

@@ -10,3 +10,9 @@
   height: 100dvh;
   border-inline: 1px solid var(--color-border-subtle, rgba(0, 0, 0, 0.08));
 }
+
+/* 파이프라인 뷰어 스샷 — 비율 유지 (max-width/height auto는 이미지 고유 속성) */
+.stageImg {
+  max-width: 100%;
+  height: auto;
+}
