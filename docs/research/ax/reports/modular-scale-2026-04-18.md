@@ -1,3 +1,15 @@
+---
+id: research/ax/reports/modular-scale-2026-04-18
+title: 'Modular Scale Verification — 2026-04-18'
+status: research
+kind: note
+created: 2026-04-18
+updated: 2026-04-18
+summary: '**기준:** 각 계단 인접 ratio `r ∈ [1.067, 2]` (P-02 Size Ladder) **권장:** 1.25 Major Third 기반 ladder (± 0.05)'
+topics: [research]
+relates: []
+supersedes: []
+---
 # Modular Scale Verification — 2026-04-18
 
 **기준:** 각 계단 인접 ratio `r ∈ [1.067, 2]` (P-02 Size Ladder)

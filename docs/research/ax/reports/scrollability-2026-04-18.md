@@ -1,3 +1,15 @@
+---
+id: research/ax/reports/scrollability-2026-04-18
+title: 'Scrollability — 2026-04-18'
+status: research
+kind: note
+created: 2026-04-18
+updated: 2026-04-18
+summary: '**기준:** content가 viewport보다 크면 window.scrollTo(0,500) 후 scrollY > 0 **Base URL:** http://localhost:4173/interactive-os-2   **Viewport:** 1280×800'
+topics: [research]
+relates: []
+supersedes: []
+---
 # Scrollability — 2026-04-18
 
 **기준:** content가 viewport보다 크면 window.scrollTo(0,500) 후 scrollY > 0

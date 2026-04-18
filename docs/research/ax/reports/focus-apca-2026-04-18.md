@@ -1,3 +1,15 @@
+---
+id: research/ax/reports/focus-apca-2026-04-18
+title: 'Focus APCA Measurement — 2026-04-18'
+status: research
+kind: note
+created: 2026-04-18
+updated: 2026-04-18
+summary: '**기준:** APCA Lc ≥ 60 (24px body, P-08 Focus Visibility)'
+topics: [research]
+relates: []
+supersedes: []
+---
 # Focus APCA Measurement — 2026-04-18
 
 **기준:** APCA Lc ≥ 60 (24px body, P-08 Focus Visibility)
