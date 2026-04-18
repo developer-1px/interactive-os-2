@@ -1,4 +1,4 @@
-// @see docs/0-inbox/handoff-2026-04-18-mddb-phase1.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
  * knowledgeFetch — /mddb-index.json 정적 fetch.
  *
@@ -8,17 +8,17 @@
 
 export type MddbFrontmatter = {
   id: string
+  type: string
+  slug: string
   title: string
-  status: 'inbox' | 'active' | 'reference' | 'archived' | 'backlog' | 'research' | 'sample' | 'meta'
-  kind: string
+  tags: string[]
   created: string
   updated: string
   summary?: string
-  topics: string[]
-  parent?: string
-  relates: string[]
-  supersedes: string[]
-  superseded_by?: string
+  status?: 'open' | 'in_progress' | 'consumed' | 'merged' | 'archived'
+  project?: string
+  layer?: string
+  consumed_by?: string
   legacy?: Record<string, unknown>
 }
 

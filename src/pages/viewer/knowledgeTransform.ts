@@ -1,12 +1,14 @@
-// @see docs/0-inbox/handoff-2026-04-18-mddb-phase1.md
+// @see docs/2026/2026-04/2026-04-19/mdPathPolicyMigrationPrd.md
 /**
  * knowledgeTransform — MddbIndex → NormalizedData (Knowledge 가상 폴더).
+ *
+ * 2026-04-19 재설계: 새 frontmatter 스키마(type/tags/status)에 맞춰 groupBy 재정렬.
  *
  * @invariant group 노드 id = '{groupBy}:{key}' (파일 경로와 충돌 방지)
  * @invariant file 노드 id = '{groupId}::{absPath}' — group-scoped (한 파일이 복수 group에 속할 때 중복 방지)
  * @invariant file data.path = '{DEFAULT_ROOT}/docs/...' 절대 경로 (FilePanel → /api/fs/file 호환)
  * @invariant ROOT_ID 아래에 group만, group 아래에 file만 (depth 2)
- * @invariant group은 topic/kind/status 값 오름차순, file은 path 오름차순
+ * @invariant group은 값 오름차순, file은 path 오름차순
  */
 import type { NormalizedData, Entity } from '@os/store/types'
 import { ROOT_ID } from '@os/store/types'
@@ -14,15 +16,15 @@ import { createStore } from '@os/store/createStore'
 import { DEFAULT_ROOT } from './types'
 import type { MddbIndex, MddbIndexEntry, MddbFrontmatter } from './knowledgeFetch'
 
-export type KnowledgeGroupBy = 'topic' | 'kind' | 'status'
+export type KnowledgeGroupBy = 'tag' | 'type' | 'status'
 
 const NO_GROUP = '(none)'
 
 function groupKeys(fm: MddbFrontmatter, groupBy: KnowledgeGroupBy): string[] {
-  if (groupBy === 'topic') {
-    return fm.topics.length > 0 ? fm.topics : [NO_GROUP]
+  if (groupBy === 'tag') {
+    return fm.tags.length > 0 ? fm.tags : [NO_GROUP]
   }
-  if (groupBy === 'kind') return [fm.kind || NO_GROUP]
+  if (groupBy === 'type') return [fm.type || NO_GROUP]
   return [fm.status || NO_GROUP]
 }
 
@@ -38,7 +40,6 @@ export function indexToTree(
   const entities: Record<string, Entity> = {}
   const relationships: Record<string, string[]> = { [ROOT_ID]: [] }
 
-  // group key → ordered file ids
   const groupFiles = new Map<string, MddbIndexEntry[]>()
 
   for (const entry of index.entries) {
@@ -51,7 +52,6 @@ export function indexToTree(
   }
 
   const groupKeysSorted = Array.from(groupFiles.keys()).sort((a, b) => {
-    // (none) 항상 마지막
     if (a === NO_GROUP) return 1
     if (b === NO_GROUP) return -1
     return a.localeCompare(b)
@@ -72,7 +72,6 @@ export function indexToTree(
     const childIds: string[] = []
     for (const entry of files) {
       const absPath = `${DEFAULT_ROOT}/${entry.path}`
-      // 엔티티 id는 group-scoped — 동일 파일이 여러 group에 속할 때 충돌 방지
       const fileId = `${groupId}::${absPath}`
       entities[fileId] = {
         id: fileId,

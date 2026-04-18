@@ -2,7 +2,7 @@
 // @useState-hatch — sortKey/sortDir/filters: view preference; initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; currentRoot: sidebar selection; previewPath: follow-focus file preview
 import { useState, useEffect, useCallback, useRef, useMemo, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Folder, Code2, BookText, Image, Boxes } from 'lucide-react'
+import { Folder, Code2, BookText, Image, Boxes, CalendarDays, CalendarClock, Hash, Tag, Activity } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { FlatLayout } from '@os/ui/FlatLayout'
@@ -21,7 +21,7 @@ import { DEFAULT_ROOT, type FileNodeData } from './types'
 import { fetchTree } from './fsClient'
 import { treeToStore, urlPathToFilePath, filePathToUrlPath, withInitialFileSelected } from './treeTransform'
 import { fetchMddbIndex } from './knowledgeFetch'
-import { indexToTree } from './knowledgeTransform'
+import { indexToTree, type KnowledgeGroupBy } from './knowledgeTransform'
 import { pathParser } from '@os/plugins/urlParsers'
 import { useUrlSync } from '@os/plugins/useUrlSync'
 import { ax } from '@styles/ax'
@@ -40,6 +40,27 @@ type FavoriteRoot = { id: string; name: string; path: string; icon: ReactNode }
 
 const ICON_SIZE = 14
 
+function toLocalDateParts(d: Date): { yyyy: string; mm: string; dd: string } {
+  return {
+    yyyy: String(d.getFullYear()),
+    mm: String(d.getMonth() + 1).padStart(2, '0'),
+    dd: String(d.getDate()).padStart(2, '0'),
+  }
+}
+
+function docsDayPath(d: Date): string {
+  const { yyyy, mm, dd } = toLocalDateParts(d)
+  return `${DEFAULT_ROOT}/docs/${yyyy}/${yyyy}-${mm}/${yyyy}-${mm}-${dd}`
+}
+
+const NOW = new Date()
+const YESTERDAY = new Date(NOW.getTime() - 24 * 60 * 60 * 1000)
+
+const RECENT: FavoriteRoot[] = [
+  { id: 'today',       name: 'today',       path: docsDayPath(NOW),                   icon: <CalendarDays size={ICON_SIZE} /> },
+  { id: 'yesterday',   name: 'yesterday',   path: docsDayPath(YESTERDAY),             icon: <CalendarClock size={ICON_SIZE} /> },
+]
+
 const FAVORITES: FavoriteRoot[] = [
   { id: 'root',        name: '/',           path: DEFAULT_ROOT,                       icon: <Folder size={ICON_SIZE} /> },
   { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src`,              icon: <Code2 size={ICON_SIZE} /> },
@@ -47,23 +68,39 @@ const FAVORITES: FavoriteRoot[] = [
   { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots`,      icon: <Image size={ICON_SIZE} /> },
 ]
 
+const SIDEBAR_ROOTS: FavoriteRoot[] = [...RECENT, ...FAVORITES]
+
 const DEFAULT_FAVORITE_ID = 'src'
 
-const KNOWLEDGE_ID = 'knowledge'
+// Knowledge 가상 폴더: mddb-index를 frontmatter 필드로 그룹핑
+const KNOWLEDGE_VIRTUAL: Array<{ id: string; name: string; groupBy: KnowledgeGroupBy; icon: ReactNode }> = [
+  { id: 'knowledge-all', name: 'All (mddb)', groupBy: 'tag', icon: <Boxes size={ICON_SIZE} /> },
+  { id: 'knowledge-by-type', name: 'By Type', groupBy: 'type', icon: <Tag size={ICON_SIZE} /> },
+  { id: 'knowledge-by-tag', name: 'By Tag', groupBy: 'tag', icon: <Hash size={ICON_SIZE} /> },
+  { id: 'knowledge-by-status', name: 'By Status', groupBy: 'status', icon: <Activity size={ICON_SIZE} /> },
+]
+
+const KNOWLEDGE_GROUP_BY_ID: Record<string, KnowledgeGroupBy> = Object.fromEntries(
+  KNOWLEDGE_VIRTUAL.map((v) => [v.id, v.groupBy]),
+)
 
 const sidebarData = createStore({
   entities: {
+    'recent': { id: 'recent', data: { type: 'group', label: 'Recent' } },
     'favorites': { id: 'favorites', data: { type: 'group', label: 'Favorites' } },
     'knowledge-group': { id: 'knowledge-group', data: { type: 'group', label: 'Knowledge' } },
     ...Object.fromEntries(
-      FAVORITES.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: f.icon } }]),
+      SIDEBAR_ROOTS.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: f.icon } }]),
     ),
-    [KNOWLEDGE_ID]: { id: KNOWLEDGE_ID, data: { name: 'mddb-index', type: 'directory', icon: <Boxes size={ICON_SIZE} /> } },
+    ...Object.fromEntries(
+      KNOWLEDGE_VIRTUAL.map((v) => [v.id, { id: v.id, data: { name: v.name, type: 'directory', icon: v.icon } }]),
+    ),
   },
   relationships: {
-    [ROOT_ID]: ['favorites', 'knowledge-group'],
+    [ROOT_ID]: ['recent', 'favorites', 'knowledge-group'],
+    'recent': RECENT.map((f) => f.id),
     'favorites': FAVORITES.map((f) => f.id),
-    'knowledge-group': [KNOWLEDGE_ID],
+    'knowledge-group': KNOWLEDGE_VIRTUAL.map((v) => v.id),
   },
 })
 
@@ -76,15 +113,15 @@ const viewerWidgets = createWidgetRegistry({
 })
 
 function resolveRoot(key: string): string {
-  return FAVORITES.find((f) => f.id === key)?.path ?? DEFAULT_ROOT
+  return SIDEBAR_ROOTS.find((f) => f.id === key)?.path ?? DEFAULT_ROOT
 }
 
 function detectRootFromSeg(seg: string | undefined): string {
-  return FAVORITES.find((f) => f.id === seg)?.id ?? DEFAULT_FAVORITE_ID
+  return SIDEBAR_ROOTS.find((f) => f.id === seg)?.id ?? DEFAULT_FAVORITE_ID
 }
 
 function detectRootFromPath(id: string): string {
-  return FAVORITES.find((f) => f.id !== 'root' && id.startsWith(f.path + '/'))?.id ?? DEFAULT_FAVORITE_ID
+  return SIDEBAR_ROOTS.find((f) => f.id !== 'root' && id.startsWith(f.path + '/'))?.id ?? DEFAULT_FAVORITE_ID
 }
 
 export default function PageViewer() {
@@ -192,17 +229,18 @@ export default function PageViewer() {
   }, [navigate])
 
   const handleSidebarActivate = useCallback((nodeId: string) => {
-    if (nodeId === KNOWLEDGE_ID) {
+    const groupBy = KNOWLEDGE_GROUP_BY_ID[nodeId]
+    if (groupBy) {
       setPreviewPath(null)
-      setCurrentRoot(KNOWLEDGE_ID)
+      setCurrentRoot(nodeId)
       fetchMddbIndex().then((idx) => {
-        setInitialStore(indexToTree(idx, 'topic'))
+        setInitialStore(indexToTree(idx, groupBy))
       }).catch((err) => {
         console.error('[viewer] failed to load mddb-index.json', err)
       })
       return
     }
-    if (FAVORITES.some((f) => f.id === nodeId)) {
+    if (SIDEBAR_ROOTS.some((f) => f.id === nodeId)) {
       setPreviewPath(null)
       setCurrentRoot(nodeId)
       fetchTree(resolveRoot(nodeId)).then((tree) => {
