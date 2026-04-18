@@ -215,3 +215,31 @@
   min-height: var(--storymap-col-width);
   border: var(--indicator-width) dashed var(--border-subtle);
 }
+
+/* ── Zone × Interactive Composition ── */
+
+.theme-zone-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+.theme-zone-card {
+  aspect-ratio: 1;
+  border-radius: var(--shape-lg);
+  padding: var(--space-md);
+  gap: var(--space-xs);
+}
+
+.theme-zone-label {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.theme-zone-caption {
+  grid-column: 1 / -1;
+  padding-top: var(--space-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}

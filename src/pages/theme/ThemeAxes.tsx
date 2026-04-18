@@ -32,44 +32,35 @@ function ZoneCompositionAxis() {
   const zones = ['sunken', 'base', 'raised', 'overlay'] as const
   return (
     <Section title="ZONE × INTERACTIVE — 배경 위의 법도">
-      <div className={ax({ layout: 'grid-2' })}>
+      <div className="theme-zone-grid">
         {zones.map(z => (
           <div key={z} className={ax({ layout: 'stack' })}>
-            <span className={ax({ textStyle: 'code' })}>surface: '{z}'</span>
+            <span className={`${ax({ textStyle: 'code' })} theme-zone-label`}>{z}</span>
             <div
-              className={`${ax({ role: 'control-group', surface: z, layout: 'stack' })} ax-interactive`}
+              className={`${ax({ role: 'control-group', surface: z, layout: 'stack' })} ax-interactive theme-zone-card`}
             >
-              {/* list — same ARIA state, different zone law */}
               <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`}>
                 <span>default</span>
               </div>
               <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} aria-selected="true">
-                <span>aria-selected</span>
+                <span>selected</span>
               </div>
               <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} aria-selected="true" data-focused>
                 <span>selected + focused</span>
               </div>
 
-              {/* button row — action on zone */}
               <div className={ax({ layout: 'row' })}>
-                <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })}>
-                  Action
-                </button>
-                <button className={ax({ role: 'control', surface: 'ghost', content: 'text' })}>
-                  Ghost
-                </button>
-                <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'danger' })}>
-                  Danger
-                </button>
+                <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })}>Action</button>
+                <button className={ax({ role: 'control', surface: 'ghost', content: 'text' })}>Ghost</button>
               </div>
             </div>
           </div>
         ))}
+        <span className={`${ax({ textStyle: 'caption' })} theme-zone-caption`}>
+          동일한 aria-selected가 sunken/base/raised/overlay 각 zone에서 다른 배경을 받는다 —
+          .sf-{'{'}z{'}'} 클래스가 --selection을 --depth-{'{'}z{'}'}-sel로 재바인딩 (Zone cascade).
+        </span>
       </div>
-      <span className={ax({ textStyle: 'caption' })}>
-        동일한 aria-selected가 sunken/base/raised/overlay 각 zone에서 다른 배경을 받는다 —
-        .sf-z 클래스가 --selection을 --depth-z-sel로 재바인딩 (Zone cascade).
-      </span>
     </Section>
   )
 }
