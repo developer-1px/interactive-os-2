@@ -70,7 +70,8 @@ function diffFocusApca(prev, cur) {
   // Lc delta 집계 — individual 상승/하락도 추적 (pass 수가 바닥인 상태에서 유일한 진행 지표)
   const LC_EPS = 0.5 // 부동소수 노이즈 무시
   const risen = [] // { id, prevLc, curLc, delta }
-  const dropped = []
+  const droppedPass = [] // pass 유지 상태에서 Lc 하락 — hard regression (margin 잠식)
+  const droppedFail = [] // fail 유지 상태에서 Lc 하락 — soft (pass 손실 아님)
 
   for (const [id, prevItem] of prevMap) {
     const curItem = curMap.get(id)
@@ -90,26 +91,38 @@ function diffFocusApca(prev, cur) {
       })
       continue
     }
-    // 상태 불변이면 Lc delta 추적
+    // 상태 불변이면 Lc delta 추적. pass 유지 vs fail 유지를 분리
     const delta = (curItem.lc ?? 0) - (prevItem.lc ?? 0)
     if (delta > LC_EPS) risen.push({ id, prevLc: prevItem.lc, curLc: curItem.lc, delta })
-    else if (delta < -LC_EPS) dropped.push({ id, prevLc: prevItem.lc, curLc: curItem.lc, delta })
+    else if (delta < -LC_EPS) {
+      if (curItem.pass) droppedPass.push({ id, prevLc: prevItem.lc, curLc: curItem.lc, delta })
+      else droppedFail.push({ id, prevLc: prevItem.lc, curLc: curItem.lc, delta })
+    }
   }
 
-  // 집계 요약으로 append — 모든 item을 나열하면 노이즈
+  // 집계 요약 — 상승
   if (risen.length > 0) {
-    const avgDelta = risen.reduce((a, r) => a + r.delta, 0) / risen.length
+    const avg = risen.reduce((a, r) => a + r.delta, 0) / risen.length
     improvements.push({
       type: 'lc_rise',
-      detail: `Lc 상승 ${risen.length}건 (평균 +${avgDelta.toFixed(2)}, 최대 +${Math.max(...risen.map((r) => r.delta)).toFixed(2)})`,
+      detail: `Lc 상승 ${risen.length}건 (평균 +${avg.toFixed(2)}, 최대 +${Math.max(...risen.map((r) => r.delta)).toFixed(2)})`,
     })
   }
-  if (dropped.length > 0) {
-    const avgDelta = dropped.reduce((a, r) => a + r.delta, 0) / dropped.length
-    // pass 유지하는데 하락하면 경계 근접 — 회귀로 분류 (개선이 아님)
+  // pass 유지 Lc 하락 — hard regression (margin 위험)
+  if (droppedPass.length > 0) {
+    const avg = droppedPass.reduce((a, r) => a + r.delta, 0) / droppedPass.length
     regressions.push({
-      type: 'lc_drop',
-      detail: `Lc 하락 ${dropped.length}건 (평균 ${avgDelta.toFixed(2)}, 최소 ${Math.min(...dropped.map((r) => r.delta)).toFixed(2)})`,
+      type: 'lc_drop_pass',
+      detail: `Lc 하락 ${droppedPass.length}건 (pass 유지, margin 잠식; 평균 ${avg.toFixed(2)})`,
+    })
+  }
+  // fail 유지 Lc 하락 — soft: 개선과 병렬 발생 가능. improvement 내 noting으로 표시
+  if (droppedFail.length > 0) {
+    const avg = droppedFail.reduce((a, r) => a + r.delta, 0) / droppedFail.length
+    const ids = droppedFail.map((r) => r.id).join(', ')
+    improvements.push({
+      type: 'lc_drop_fail_soft',
+      detail: `[soft] Lc 하락 ${droppedFail.length}건 (fail 유지; 평균 ${avg.toFixed(2)}; ${ids})`,
     })
   }
 

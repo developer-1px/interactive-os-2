@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T01:53:23.900Z",
+  "generatedAt": "2026-04-18T01:57:23.005Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -11,73 +11,73 @@
         "focus_alpha": 0.95
       },
       "total": 22,
-      "pass": 5,
-      "fail": 17,
+      "pass": 14,
+      "fail": 8,
       "items": [
         {
           "theme": "dark",
           "key": "action",
-          "lc": 38.13,
-          "pass": false
+          "lc": 61.7,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "input",
-          "lc": 41.88,
-          "pass": false
+          "lc": 65.31,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "display",
-          "lc": 41.68,
-          "pass": false
+          "lc": 64.73,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "overlay",
-          "lc": 38.13,
-          "pass": false
+          "lc": 61.7,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "trap",
-          "lc": 35.23,
+          "lc": 58.89,
           "pass": false
         },
         {
           "theme": "dark",
           "key": "ghost",
-          "lc": 41.68,
-          "pass": false
+          "lc": 64.73,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "placeholder",
-          "lc": 42.69,
-          "pass": false
+          "lc": 66.24,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "sunken",
-          "lc": 42.69,
-          "pass": false
+          "lc": 66.24,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "base",
-          "lc": 41.68,
-          "pass": false
+          "lc": 64.73,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "raised",
-          "lc": 38.13,
-          "pass": false
+          "lc": 61.7,
+          "pass": true
         },
         {
           "theme": "dark",
           "key": "inverted",
-          "lc": 52.87,
+          "lc": 29.35,
           "pass": false
         },
         {
