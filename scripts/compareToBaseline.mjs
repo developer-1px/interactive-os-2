@@ -32,6 +32,7 @@ const METRICS = [
   { name: 'spatial-grid', script: 'scripts/verifySpatialGrid.mjs' },
   { name: 'line-length', script: 'scripts/verifyLineLength.mjs' },
   { name: 'surface-pairs', script: 'scripts/measureSurfacePairs.mjs' },
+  { name: 'radius-usage', script: 'scripts/verifyRadiusUsage.mjs' },
 ]
 
 function runMetric(scriptPath) {
@@ -268,6 +269,7 @@ function main() {
     'surface-pairs': prev.metrics['surface-pairs']
       ? diffApcaLike(prev.metrics['surface-pairs'], curMetrics['surface-pairs'], (i) => `${i.theme}/${i.pair}`)
       : { regressions: [], improvements: [{ type: 'new_metric', detail: `신규 metric: pass ${curMetrics['surface-pairs'].pass}/${curMetrics['surface-pairs'].total}` }] },
+    'radius-usage': diffCountMetric(prev.metrics['radius-usage'], curMetrics['radius-usage'], 'total_violations'),
   }
 
   const totalRegressions = Object.values(diffs).reduce((acc, d) => acc + d.regressions.length, 0)

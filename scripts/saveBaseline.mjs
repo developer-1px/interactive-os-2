@@ -36,6 +36,7 @@ const METRICS = [
   { name: 'spatial-grid', script: 'scripts/verifySpatialGrid.mjs' },
   { name: 'line-length', script: 'scripts/verifyLineLength.mjs' },
   { name: 'surface-pairs', script: 'scripts/measureSurfacePairs.mjs' },
+  { name: 'radius-usage', script: 'scripts/verifyRadiusUsage.mjs' },
 ]
 
 /**
@@ -111,6 +112,11 @@ function main() {
       if (llPrev && llCur) {
         console.log(`  line-length: violations ${llPrev.violations} → ${llCur.violations}`)
       }
+      const ruPrev = prev.metrics?.['radius-usage']
+      const ruCur = metrics['radius-usage']
+      if (ruPrev && ruCur) {
+        console.log(`  radius-usage: violations ${ruPrev.total_violations} → ${ruCur.total_violations}`)
+      }
     } catch (e) {
       console.warn(`[baseline] 이전 baseline 파싱 실패 (덮어쓰기 진행): ${e instanceof Error ? e.message : e}`)
     }
@@ -125,6 +131,7 @@ function main() {
   console.log(`  modular-scale: warnings=${metrics['modular-scale'].warnings}`)
   console.log(`  spatial-grid: violations=${metrics['spatial-grid'].total_violations}`)
   console.log(`  line-length: violations=${metrics['line-length'].violations} (${metrics['line-length'].total_rules} rules)`)
+  console.log(`  radius-usage: violations=${metrics['radius-usage'].total_violations}`)
 }
 
 try {

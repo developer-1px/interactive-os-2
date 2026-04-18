@@ -74,7 +74,8 @@ function walkCss(dir, out = []) {
 function scanFile(absPath) {
   const content = readFileSync(absPath, 'utf-8')
   // /* ... */ 블록 주석 제거
-  const stripped = content.replace(/\/\*[\s\S]*?\*\//g, '')
+  // 블록 주석 제거 — 개행은 보존하여 라인 번호 일관성 유지
+  const stripped = content.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ''))
   /** @type {{line: number, prop: string, value: string, px: number, reason: string}[]} */
   const violations = []
 

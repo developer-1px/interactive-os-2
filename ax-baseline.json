@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T02:28:16.980Z",
+  "generatedAt": "2026-04-18T02:32:57.390Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -1206,6 +1206,25 @@
           "kind": "feature",
           "lc": 0,
           "pass": false
+        }
+      ]
+    },
+    "radius-usage": {
+      "metric": "radius-usage",
+      "total_violations": 1,
+      "files": [
+        {
+          "file": "src/styles/ax.css",
+          "count": 1,
+          "items": [
+            {
+              "line": 582,
+              "prop": "border-radius",
+              "raw": [
+                "3px"
+              ]
+            }
+          ]
         }
       ]
     }
