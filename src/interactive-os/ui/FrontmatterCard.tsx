@@ -160,19 +160,9 @@ export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
           {typeof subtitle === 'string' && (
             <div className={ax({ textStyle: 'caption' })}>{subtitle}</div>
           )}
-          {byline.length > 0 && (
-            <div className={ax({ layout: 'wrap', gap: 'md' })}>
-              {byline.map(({ key, value, cat }) => (
-                <div key={key} className={ax({ layout: 'row', gap: 'xs' })}>
-                  <span className={ax({ textStyle: 'caption' })}>{key}</span>
-                  {renderValue(key, value, cat)}
-                </div>
-              ))}
-            </div>
-          )}
-          {others.length > 0 && (
+          {(byline.length > 0 || others.length > 0) && (
             <div className={ax({ layout: 'stack', gap: 'xs' })}>
-              {others.map(({ key, value, cat }) => (
+              {[...byline, ...others].map(({ key, value, cat }) => (
                 <Row key={key} keyName={key} value={value} cat={cat} />
               ))}
             </div>
