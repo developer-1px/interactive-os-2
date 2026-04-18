@@ -29,7 +29,6 @@ import { ViewerProvider, type ViewerContextValue } from './viewerContext'
 import {
   ViewerSidebarWidget,
   ViewerToolbarWidget,
-  ViewerSortBarWidget,
   ViewerTreeGridWidget,
   ViewerPreviewWidget,
   ViewerMillerWidget,
@@ -37,41 +36,40 @@ import {
 
 const VIEWMODE_KEY = 'viewer-viewmode'
 
-type FavoriteRoot = { id: string; name: string; path: string; icon: ReactNode; hint: string }
+type FavoriteRoot = { id: string; name: string; path: string; icon: ReactNode }
 
 const ICON_SIZE = 14
 
 const FAVORITES: FavoriteRoot[] = [
-  { id: 'root',        name: '/',           path: DEFAULT_ROOT,                       icon: <Folder size={ICON_SIZE} />,   hint: 'all' },
-  { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src`,              icon: <Code2 size={ICON_SIZE} />,    hint: 'app' },
-  { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs`,             icon: <BookText size={ICON_SIZE} />, hint: 'PARA' },
-  { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots`,      icon: <Image size={ICON_SIZE} />,    hint: 'snap' },
+  { id: 'root',        name: '/',           path: DEFAULT_ROOT,                       icon: <Folder size={ICON_SIZE} /> },
+  { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src`,              icon: <Code2 size={ICON_SIZE} /> },
+  { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs`,             icon: <BookText size={ICON_SIZE} /> },
+  { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots`,      icon: <Image size={ICON_SIZE} /> },
 ]
 
 const DEFAULT_FAVORITE_ID = 'src'
 
 const KNOWLEDGE_ID = 'knowledge'
 
-const hintHtml = (text: string) => <span className={ax({ textStyle: 'caption' })}>{text}</span>
-
 const sidebarData = createStore({
   entities: {
     'favorites': { id: 'favorites', data: { type: 'group', label: 'Favorites' } },
+    'knowledge-group': { id: 'knowledge-group', data: { type: 'group', label: 'Knowledge' } },
     ...Object.fromEntries(
-      FAVORITES.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: f.icon, rightContent: hintHtml(f.hint) } }]),
+      FAVORITES.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: f.icon } }]),
     ),
-    [KNOWLEDGE_ID]: { id: KNOWLEDGE_ID, data: { name: 'Knowledge', type: 'directory', icon: <Boxes size={ICON_SIZE} />, rightContent: hintHtml('mddb') } },
+    [KNOWLEDGE_ID]: { id: KNOWLEDGE_ID, data: { name: 'mddb-index', type: 'directory', icon: <Boxes size={ICON_SIZE} /> } },
   },
   relationships: {
-    [ROOT_ID]: ['favorites'],
-    'favorites': [...FAVORITES.map((f) => f.id), KNOWLEDGE_ID],
+    [ROOT_ID]: ['favorites', 'knowledge-group'],
+    'favorites': FAVORITES.map((f) => f.id),
+    'knowledge-group': [KNOWLEDGE_ID],
   },
 })
 
 const viewerWidgets = createWidgetRegistry({
   ViewerSidebar: ViewerSidebarWidget,
   ViewerToolbar: ViewerToolbarWidget,
-  ViewerSortBar: ViewerSortBarWidget,
   ViewerTreeGrid: ViewerTreeGridWidget,
   ViewerPreview: ViewerPreviewWidget,
   ViewerMiller: ViewerMillerWidget,
@@ -239,7 +237,6 @@ export default function PageViewer() {
   const layoutData = useMemo(() => {
     const isList = viewMode === 'list'
     let data = baseLayout
-    data = updateEntityData(data, 'sort-bar', { hidden: !isList })
     data = updateEntityData(data, 'tree-area', { hidden: !isList })
     data = updateEntityData(data, 'preview', { hidden: !isList || !previewPath })
     data = updateEntityData(data, 'main', { hidden: !isList })

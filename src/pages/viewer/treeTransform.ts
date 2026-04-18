@@ -11,7 +11,10 @@ export function treeToStore(nodes: TreeNode[]): NormalizedData {
 
   function walk(items: TreeNode[], parentId: string) {
     for (const node of items) {
-      entities[node.id] = { id: node.id, data: { name: node.name, type: node.type, path: node.id, ...(node.loc != null && { loc: node.loc }) } }
+      const isFile = node.type !== 'directory'
+      const ext = isFile && node.name.includes('.') ? node.name.split('.').pop() ?? '' : ''
+      const cells: unknown[] = [{ name: node.name, type: node.type }, ext, isFile ? (node.loc ?? '') : '']
+      entities[node.id] = { id: node.id, data: { name: node.name, type: node.type, path: node.id, ...(node.loc != null && { loc: node.loc }), cells } }
       if (!relationships[parentId]) relationships[parentId] = []
       relationships[parentId].push(node.id)
       if (node.children && node.children.length > 0) {

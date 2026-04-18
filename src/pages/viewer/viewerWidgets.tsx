@@ -1,14 +1,11 @@
 import { useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
-import { TreeGrid } from '@os/ui/TreeGrid'
 import { MillerColumns } from '@os/ui/MillerColumns'
-import { Button } from '@os/ui/Button'
-import { SortIndicator } from '@os/ui/indicators'
 import { NavList } from '@os/ui/NavList'
 import { FinderToolbar } from '@os/ui/FinderToolbar'
-import { FileIcon } from '@os/ui/FileIcon'
 import { EmptyState } from '@os/ui/EmptyState'
 import { ax } from '@styles/ax'
+import { FileTreeGrid } from '@entities/file/ui/FileTreeGrid'
 import { useViewer } from './viewerContext'
 import { FilePanel } from './widgets/FilePanel'
 import type { SortKey } from './viewerSort'
@@ -44,48 +41,10 @@ export function ViewerToolbarWidget() {
   )
 }
 
-// ── Sort bar (list mode only) ──
-
-export function ViewerSortBarWidget() {
-  const { sortKey, sortDir, onSort, filters, setFilters } = useViewer()
-
-  const sortDirection = (key: SortKey) =>
-    sortKey === key ? (sortDir === 'asc' ? 'ascending' as const : 'descending' as const) : undefined
-
-  // Action clusters as floating glass pills (lifted theme: frost + tint + rim).
-  // Container row stays solid; the clusters are the "things you press" → glass.
-  return (
-    <div className={ax({ layout: 'bar' })}>
-      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', cs: 'sm' })}>
-        <Button onClick={() => onSort('name')}>
-          Name <SortIndicator direction={sortDirection('name')} />
-        </Button>
-        <Button onClick={() => onSort('type')}>
-          Type <SortIndicator direction={sortDirection('type')} />
-        </Button>
-        <Button onClick={() => onSort('loc')}>
-          LOC <SortIndicator direction={sortDirection('loc')} />
-        </Button>
-      </div>
-      <div className={ax({ role: 'control-group', surface: 'overlay', layout: 'bar', cs: 'sm' })}>
-        {['.tsx', '.ts', '.css', '.md'].map(ext => (
-          <Button
-            key={ext}
-            variant={filters.includes(ext) ? 'dialog' : 'ghost'}
-            onClick={() => setFilters(f => f.includes(ext) ? f.filter(e => e !== ext) : [...f, ext])}
-          >
-            {ext}
-          </Button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 // ── TreeGrid content (list mode) ──
 
 export function ViewerTreeGridWidget() {
-  const { listStore, onChange, filters } = useViewer()
+  const { listStore, onChange, filters, sortKey, sortDir, onSort } = useViewer()
 
   if (!listStore || Object.keys(listStore.entities).filter(k => !k.startsWith('__')).length === 0) {
     if (filters.length > 0) {
@@ -96,29 +55,12 @@ export function ViewerTreeGridWidget() {
 
   return (
     <div className={ax({ layout: 'fill', flex: '1' })}>
-      <TreeGrid
+      <FileTreeGrid
         data={listStore}
         onChange={onChange}
-        itemSlots={{
-          icon: (node, state) => {
-            const d = node.data as Record<string, unknown>
-            return <FileIcon name={d.name as string} type={d.type as string} expanded={state.expanded} />
-          },
-          rightContent: (node) => {
-            const d = node.data as Record<string, unknown>
-            if (d.type === 'directory') return null
-            const name = (d.name as string) ?? ''
-            const ext = name.includes('.') ? name.split('.').pop() ?? '' : ''
-            const loc = d.loc as number | undefined
-            return (
-              <span className={ax({ layout: 'bar', gap: 'sm', text: 'muted', textStyle: 'caption' })}>
-                <span>{ext}</span>
-                {loc != null && <span>{loc}</span>}
-              </span>
-            )
-          },
-        }}
-        aria-label="File browser"
+        sortKey={sortKey ?? undefined}
+        sortDir={sortDir}
+        onSort={(k) => onSort(k as SortKey)}
       />
     </div>
   )

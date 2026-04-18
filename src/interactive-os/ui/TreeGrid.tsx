@@ -9,7 +9,7 @@ import { history } from '../plugins/history'
 import { edit, replaceEditPlugin } from '../plugins/edit'
 import { search } from '../plugins/search'
 import { cellEdit } from '../plugins/cellEdit'
-import { ExpandIndicator } from './indicators'
+import { ExpandIndicator, SortIndicator } from './indicators'
 import { TreeItem, EditableTreeItem } from './items'
 import { ax } from '@styles/ax'
 
@@ -35,6 +35,9 @@ interface TreeGridColumnProps extends Omit<AriaComponentProps, 'renderItem'> {
   enableEditing?: boolean
   searchable?: boolean
   header?: boolean
+  sortKey?: string
+  sortDir?: 'asc' | 'desc'
+  onSortColumn?: (key: string) => void
   keyMap?: Record<string, import('../axis/types').KeyHandler>
 }
 
@@ -89,6 +92,9 @@ function TreeGridColumns({
   enableEditing = false,
   searchable = false,
   header = false,
+  sortKey,
+  sortDir,
+  onSortColumn,
   keyMap,
   'aria-label': ariaLabel,
 }: TreeGridColumnProps) {
@@ -152,9 +158,18 @@ function TreeGridColumns({
   return (
     <div className={ax({ layout: 'table' })} style={gridStyle}>
       {header && (
-        <div role="row" className={ax({ placement: 'sticky', surface: 'sunken', border: 'bottom' })}>
-          {columns.map((col, i) => (
-            <div key={col.key} className={ax({ role: 'item', textStyle: 'overline', content: 'text', ...(i < columns.length - 1 ? { border: 'end' as const } : {}) })}>{col.header}</div>
+        <div role="row" className={ax({ placement: 'sticky' })}>
+          {columns.map((col) => (
+            <div key={col.key} role="columnheader">
+              <button
+                type="button"
+                className={ax({ role: 'item', interactive: 'button', textStyle: 'caption', tone: 'neutral-dim', content: 'text', layout: 'bar' })}
+                onClick={onSortColumn ? () => onSortColumn(col.key) : undefined}
+              >
+                {col.header}
+                {sortKey === col.key && <SortIndicator direction={sortDir === 'asc' ? 'ascending' : 'descending'} />}
+              </button>
+            </div>
           ))}
         </div>
       )}

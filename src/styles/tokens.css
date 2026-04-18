@@ -272,17 +272,6 @@
     var(--surface-overlay) 75%
   );
 
-  /* ── File type colors ── */
-  --file-folder: oklch(67%  0.040  250);
-  --file-ts:     oklch(62%  0.070  250);
-  --file-js:     oklch(67%  0.080  130);
-  --file-json:   oklch(62%  0.025  250);
-  --file-md:     oklch(62%  0.055  240);
-  --file-css:    oklch(57%  0.080  300);
-  --file-sh:     oklch(62%  0.065  160);
-  --file-img:    oklch(57%  0.070  350);
-  --file-config: oklch(58%  0.020  250);
-
   /* ── Motion bundle: duration + easing (claude.ai 실측)
      property는 독립. duration과 easing이 세트. ── */
   --motion-instant-duration: 0.075s;  --motion-instant-easing: cubic-bezier(0.165, 0.85, 0.45, 1);
@@ -383,17 +372,6 @@
   --selection-cursor:  var(--stone-200);              /* inactive pane cursor */
   --selection-active:         var(--tone-primary-dim);  /* active = primary 50 tint */
   --selection-cursor-active:  var(--tone-primary-mid);  /* active cursor = primary 100 */
-
-  /* ── File type colors (same hues, adjusted L for light bg contrast) ── */
-  --file-folder: oklch(55%  0.040  250);
-  --file-ts:     oklch(50%  0.070  250);
-  --file-js:     oklch(55%  0.080  130);
-  --file-json:   oklch(50%  0.025  250);
-  --file-md:     oklch(50%  0.055  240);
-  --file-css:    oklch(45%  0.080  300);
-  --file-sh:     oklch(50%  0.065  160);
-  --file-img:    oklch(45%  0.070  350);
-  --file-config: oklch(46%  0.020  250);
 
   --dialog-backdrop: rgba(0, 0, 0, 0.2);
 }
