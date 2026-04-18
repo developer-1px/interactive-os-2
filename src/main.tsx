@@ -1,3 +1,6 @@
+// L0: @layer 순서 선언 — 모든 import 보다 먼저 평가되어야 component layer 가 reset 보다 후순위 등록됨
+import './styles/layers.css'
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'

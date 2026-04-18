@@ -25,6 +25,7 @@ import './interactive-os/ui/indicators/indicators.css'  // L4: Indicator part cl
 import './styles/layout.css'       // App layout (sidebar, page grid)
 import './styles/app.css'          // App-level utilities
 import './styles/inspect.css'      // Keyline inspector (?inspect)
+import './pages/showcase/registerMdRenderer'  // .md 파일 렌더러 등록 (CSS 후 import 해야 @layer 순서 유지)
 
 const MOBILE_ROUTES = ['/todo']
 

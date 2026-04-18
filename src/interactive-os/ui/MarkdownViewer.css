@@ -3,7 +3,13 @@
    stylelint margin exceptions: .markdown is flow layout (not flex/grid),
    so vertical rhythm between block elements requires margin-block. */
 
+/* file-renderer wrapper — .md 라우트의 prose gutter (FilePreview/FilePanel/FileViewer 공용) */
+.markdown-file {
+  padding: var(--shape-lg-py) var(--shape-lg-px);
+}
+
 .markdown {
+  color: var(--text-primary);
   font-size: var(--type-prose-size);
   font-weight: var(--type-prose-weight);
   font-family: var(--type-prose-family);

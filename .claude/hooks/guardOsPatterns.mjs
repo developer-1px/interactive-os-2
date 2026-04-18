@@ -466,6 +466,29 @@ if (isTsx && /\bdata-checked\s*=\s*\{/.test(content)) {
   )
 }
 
+// 규칙 34: src/main.tsx 의 첫 import 는 ./styles/layers.css 여야 함 — @layer 순서 보장
+if (filePath.endsWith('/src/main.tsx')) {
+  const lines = content.split('\n')
+  let firstImport = null
+  for (const raw of lines) {
+    const line = raw.trim()
+    if (!line || line.startsWith('//') || line.startsWith('/*') || line.startsWith('*')) continue
+    if (line.startsWith('import')) { firstImport = line; break }
+    // 첫 비주석 코드가 import 가 아니면 그대로 통과 (안전장치)
+    break
+  }
+  if (firstImport && !/['"]\.\/styles\/layers\.css['"]/.test(firstImport)) {
+    violations.push(
+      `src/main.tsx 의 첫 import 는 './styles/layers.css' 여야 합니다 (현재: ${firstImport}). ` +
+      'AppShell 의 React component import 들이 그 안의 .css 파일들(@layer component)을 ' +
+      'layers.css 의 @layer statement 보다 먼저 로드하면 component 레이어가 reset 보다 먼저 등록되어 ' +
+      'layer 순서가 역전됩니다 (reset 이 후순위 = 더 높은 우선순위 → ' +
+      '* { font: inherit } 같은 reset 규칙이 component 규칙을 이김 → MarkdownViewer 등 prose 스타일 미적용). ' +
+      '`import \'./styles/layers.css\'` 를 entry 의 가장 첫 줄에 두세요.'
+    )
+  }
+}
+
 // ── 경고 (차단 아님) ──
 const warnings = []
 

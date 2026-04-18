@@ -8,6 +8,7 @@ import { Combobox } from '@os/ui/Combobox'
 import { Button } from '@os/ui/Button'
 import { FileViewer } from '@os/ui/FileViewer'
 import { MarkdownViewer } from '@os/ui/MarkdownViewer'
+import { showcaseMdConfig } from '../showcase/mdConfig'
 import { parseResults } from '@os/ui/SearchResults'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
@@ -550,7 +551,7 @@ function MarkdownStage({ messages }: { messages: ChatMessage[] }) {
   return (
     <ScrollArea className={ax({ flex: '1', surface: 'base' })}>
       <div className={ax({ padding: 'sm' })}>
-        <MarkdownViewer content={content} />
+        <MarkdownViewer content={content} config={showcaseMdConfig} />
       </div>
     </ScrollArea>
   )

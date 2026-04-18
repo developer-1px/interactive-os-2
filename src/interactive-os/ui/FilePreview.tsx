@@ -1,26 +1,17 @@
 /** @catalog 파일 내용 미리보기 — registry 기반 (이미지/코드/마크다운) */
 // ② code-viewer-prd.md
 import { CodeViewer, type HighlightTone, type CodeViewerPreset } from './CodeViewer'
-import { MarkdownViewer } from './MarkdownViewer'
 import { getFileRenderer, defineFileRenderer, type FileRenderProps } from './fileRenderers'
 import { ax } from '@styles/ax'
 
 // --- Built-in renderers ---
+// .md 는 pages/showcase/registerMdRenderer 에서 등록 (showcaseMdConfig 주입 필요, ui→pages 차단)
 
 defineFileRenderer(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp'], {
   source: 'url',
   render: ({ src, filename }: FileRenderProps) => (
     <div className={ax({ layout: 'center', flex: '1', padding: 'md' })}>
       <img src={src} alt={filename.split('/').pop() ?? ''} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-    </div>
-  ),
-})
-
-defineFileRenderer(['md'], {
-  source: 'text',
-  render: ({ content }: FileRenderProps) => (
-    <div className={ax({ padding: 'lg' })}>
-      <MarkdownViewer content={content} />
     </div>
   ),
 })
