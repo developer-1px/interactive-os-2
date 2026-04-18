@@ -187,6 +187,7 @@ export function ActivityBar({ theme, onThemeToggle }: ActivityBarProps) {
         onActivate={handleActivate}
         aria-label="Navigation"
         autoFocus={false}
+        className={ax({ layout: 'stack', flex: '1' })}
       >
         <div role="group" aria-label="Apps">
           <Aria.Item asChild ids={APP_IDS} render={renderNavItem} />

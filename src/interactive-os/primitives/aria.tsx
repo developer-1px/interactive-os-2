@@ -20,6 +20,7 @@ import { AriaSearch, AriaSearchHighlight } from './AriaSearch'
 interface AriaProps {
   id?: string
   as?: React.ElementType
+  className?: string
   pattern?: AriaPattern
   data: NormalizedData
   plugins: Plugin[]
@@ -46,7 +47,7 @@ const horizontalStyle = { display: 'flex' } as const
 
 const ROLES_WITH_ORIENTATION = new Set(['listbox', 'menu', 'menubar', 'tablist', 'toolbar', 'treegrid'])
 
-function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, logger, autoFocus, disabled, children }: AriaProps) {
+function AriaRoot({ id, as: Component = 'div', className, pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, logger, autoFocus, disabled, children }: AriaProps) {
   const aria = useAria({ pattern, data, plugins, keyMap, onChange, onActivate, onFocusChange, logger, autoFocus, disabled, 'aria-label': ariaLabel, id })
 
   const role = pattern?.role || undefined
@@ -63,7 +64,11 @@ function AriaRoot({ id, as: Component = 'div', pattern, data, plugins, keyMap, o
         style={orientation === 'horizontal' ? horizontalStyle : undefined}
         data-aria-container=""
         {...(aria.containerProps as React.HTMLAttributes<HTMLElement>)}
-        className={`ax-interactive${(aria.containerProps as Record<string, string>)?.className ? ` ${(aria.containerProps as Record<string, string>).className}` : ''}`}
+        className={[
+          'ax-interactive',
+          className,
+          (aria.containerProps as Record<string, string>)?.className,
+        ].filter(Boolean).join(' ')}
       >
         {children}
       </Component>
