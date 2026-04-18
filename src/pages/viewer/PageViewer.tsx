@@ -1,7 +1,8 @@
 // ② finder-viewer-prd.md
 // @useState-hatch — sortKey/sortDir/filters: view preference; initialStore/loading: async tree fetch; quickOpenVisible: dismiss axis candidate; viewMode: view preference localStorage; currentRoot: sidebar selection; previewPath: follow-focus file preview
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Folder, Code2, BookText, Image, Boxes } from 'lucide-react'
 import { AriaRoute } from '@os/primitives/AriaRoute'
 import { defineRouteKey } from '@os/primitives/defineRouteKey'
 import { FlatLayout } from '@os/ui/FlatLayout'
@@ -36,13 +37,15 @@ import {
 
 const VIEWMODE_KEY = 'viewer-viewmode'
 
-type FavoriteRoot = { id: string; name: string; path: string }
+type FavoriteRoot = { id: string; name: string; path: string; icon: ReactNode }
+
+const ICON_SIZE = 14
 
 const FAVORITES: FavoriteRoot[] = [
-  { id: 'root',        name: '/',           path: DEFAULT_ROOT },
-  { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src` },
-  { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs` },
-  { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots` },
+  { id: 'root',        name: '/',           path: DEFAULT_ROOT,                       icon: <Folder size={ICON_SIZE} /> },
+  { id: 'src',         name: 'src',         path: `${DEFAULT_ROOT}/src`,              icon: <Code2 size={ICON_SIZE} /> },
+  { id: 'docs',        name: 'docs',        path: `${DEFAULT_ROOT}/docs`,             icon: <BookText size={ICON_SIZE} /> },
+  { id: 'screenshots', name: 'screenshots', path: `${DEFAULT_ROOT}/screenshots`,      icon: <Image size={ICON_SIZE} /> },
 ]
 
 const DEFAULT_FAVORITE_ID = 'src'
@@ -53,9 +56,9 @@ const sidebarData = createStore({
   entities: {
     'favorites': { id: 'favorites', data: { type: 'group', label: 'Favorites' } },
     ...Object.fromEntries(
-      FAVORITES.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: 'folder' } }]),
+      FAVORITES.map((f) => [f.id, { id: f.id, data: { name: f.name, type: 'directory', icon: f.icon } }]),
     ),
-    [KNOWLEDGE_ID]: { id: KNOWLEDGE_ID, data: { name: 'Knowledge', type: 'directory', icon: 'folder' } },
+    [KNOWLEDGE_ID]: { id: KNOWLEDGE_ID, data: { name: 'Knowledge', type: 'directory', icon: <Boxes size={ICON_SIZE} /> } },
   },
   relationships: {
     [ROOT_ID]: ['favorites'],

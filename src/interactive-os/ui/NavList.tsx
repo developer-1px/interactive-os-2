@@ -7,7 +7,7 @@ import type { NodeState } from '../pattern/types'
 import { useNavList } from './useNavList'
 import { ROOT_ID } from '../store/types'
 import { getChildren } from '../store/createStore'
-import { getNodeLabel } from './types'
+import { ListItem } from './items/ListItem'
 import { ax } from '@styles/ax'
 
 interface NavListProps {
@@ -21,20 +21,17 @@ interface NavListProps {
   'aria-label'?: string
 }
 
+// data.icon (ReactNode)와 data.rightContent를 ListItem slot으로 자동 전달
 const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Record<string, unknown>, state: NodeState): React.ReactElement => {
-  const label = getNodeLabel(item)
-  const itemClass = ax({
-    interactive: 'item',
-    role: 'item',
-    content: 'text',
-    layout: 'row',
-    width: 'full',
+  const data = item.data as Record<string, unknown> | undefined
+  return ListItem(props, item, state, {
+    icon: data?.icon as React.ReactNode | undefined,
+    rightContent: data?.rightContent as React.ReactNode | undefined,
   })
-  return <div {...props} className={`${props.className ?? ''} ${itemClass}`} data-focused={state.focused || undefined} data-selected={state.selected || undefined}><span>{label}</span></div>
 }
 
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (
-  <div className={ax({ role: 'item', textStyle: 'overline', content: 'text' })}>{label}</div>
+  <div className={ax({ textStyle: 'overline' })}>{label}</div>
 )
 
 function isGroup(entity: Record<string, unknown>): boolean {
