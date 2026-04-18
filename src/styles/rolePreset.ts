@@ -6,6 +6,10 @@ import type {
 } from './axPublic'
 import type { AxPrivate } from './axPrivate'
 
+// Phase 1-a G-5 임시: rolePreset miss throw 완화용 dedup set.
+// Bundle E 완료 후 아래 warnedMissKeys 및 관련 warn 로직 제거, throw 재승격.
+const warnedMissKeys = new Set<string>()
+
 /**
  * rolePresetTable 키 형식. cascade 해석 순서 = 일반 → 구체 (구체 override).
  * 'role' > 'role.surface' > 'role.surface.interactive' > 'role.surface.content'
@@ -184,11 +188,19 @@ export function resolveRolePreset(
       const suffix =
         (input.content ? `.${input.content}` : '') +
         (input.interactive ? `.${input.interactive}` : '')
-      throw new Error(
-        `rolePreset miss: "${input.role}.${input.surface}${suffix}" — register entry in rolePresetTable or use utility branch.`,
-      )
+      // Phase 1-a G-5 임시: throw → warn 완화.
+      // Bundle D/E 미완료 상태에서 미등록 preset이 React 초기 렌더를 깨뜨려 관측 불가.
+      // Bundle E 완료 후 throw 재승격 (§1 #7 promise 이행).
+      const missKey = `${input.role}.${input.surface}${suffix}`
+      if (!warnedMissKeys.has(missKey)) {
+        warnedMissKeys.add(missKey)
+        console.warn(
+          `rolePreset miss: "${missKey}" — TEMP warn (Phase 1-a G-5). ` +
+          `Will re-promote to throw after Bundle E migration completes.`,
+        )
+      }
     }
-    return {}  // silent branch
+    return {}  // silent branch (throw 완화 중 유일 경로)
   }
 
   return out

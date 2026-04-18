@@ -52,6 +52,9 @@ const prefixes: Record<string, string> = {
 }
 
 const PRIVATE_KEY_SET = new Set<string>(AX_PRIVATE_KEYS as readonly string[])
+// Phase 1-a G-5 임시: Bundle D/E 마이그레이션 중 throw → warn 완화용 dedup set.
+// Bundle E 완료 후 이 Set과 아래 warn 로직 제거, throw 재승격 (§1 #9).
+const warnedPrivateKeys = new Set<string>()
 
 /**
  * 축 값을 className 문자열로 변환한다.
@@ -82,13 +85,18 @@ export function ax(axes: Axes): string {
   // 런타임에서는 키 존재/부재만 확인하면 되므로 Record view로 읽는다.
   const input = axes as Record<string, string | undefined>
 
-  // 1) Private 키 오염 검사 — AS-IS의 console.warn 경로를 throw로 승격 (§1 #9, §4a step2).
-  //    타입 통과 경로에서는 unreachable. any-cast 우회 시 즉시 fail-fast.
-  //    정책: dev = throw / prod = 동일 throw (silent drop 비선호 — 증상 숨김 재발 차단).
+  // 1) Private 키 오염 검사 — Phase 1-a G-5 임시 완화.
+  //    원래 Bundle B에서 throw 승격했으나(§1 #9), Bundle D/E 호출부 마이그레이션 미완 상태에서
+  //    throw가 React 초기 렌더를 깨뜨려 앱 부팅 실패 → Puppeteer/Gemma 관측 불가능 상태 발생.
+  //    smoke test(scripts/smokeTestPuppeteer.mjs)로 원인 확정. G-5는 "Bundle 중간 상태 런타임
+  //    smoke test 부재"를 관리 시스템 갭으로 기록.
+  //    Bundle E 완료 후 이 블록 제거 + throw 재승격 (§1 #9 promise 이행).
   for (const key in input) {
-    if (PRIVATE_KEY_SET.has(key)) {
-      throw new TypeError(
-        `ax() received private key: "${key}". Use ax.raw() for escape hatch or rolePreset injection.`,
+    if (PRIVATE_KEY_SET.has(key) && !warnedPrivateKeys.has(key)) {
+      warnedPrivateKeys.add(key)
+      console.warn(
+        `ax() received private key: "${key}". TEMP warn (Phase 1-a G-5). ` +
+        `Will re-promote to throw after Bundle E migration completes.`,
       )
     }
   }

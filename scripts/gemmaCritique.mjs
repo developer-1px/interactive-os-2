@@ -34,23 +34,35 @@ const CHROME_PATHS = [
 
 const VIEWPORT = { width: 1440, height: 900 }
 
+// Prompt v2 (2026-04-18) — v1 이슈 수 강제("3-5개") 제거, Overall 기준을 이슈 수에서 구조적 심각도로 분리,
+// "none" 허용으로 hallucination 탈출구 제공, 일반 상식 나열 금지 명시.
+// 변경 기록: docs/research/ax/gemmaCritique/summary.md "프롬프트 버전" 섹션.
 const PROMPT = `너는 일반 웹사이트 시각 디자인 비평가다. 프로젝트 맥락 없이 순수 시각 평가만.
 
-첨부된 스크린샷 1장을 평가.
+첨부된 스크린샷 1장을 평가. **실제로 보이는 것만** 보고. 일반 디자인 상식 나열 금지.
 
 리포트 형식 (Markdown 600자 이내):
-## 주요 이슈 3-5개
-1. **[제목]** — 정량 관찰(수치/비율). 깨진 원리.
-## 좋은 점 1-2개
+
+## 주요 이슈
+(실제로 관찰된 것만 번호로. 없으면 "none" 1줄로 끝. 억지로 채우지 말 것.)
+1. **[제목]** — 스크린샷의 어디(위치·요소)에서 무엇이 보이는지. 구체 수치/비율 있으면 포함.
+
+## 좋은 점
+(실제로 관찰된 것만. 없으면 "none" 1줄.)
+
 ## Overall: good | ok | needs improvement
-(이유 1문장)
+
+(판정 기준은 **이슈의 수가 아니라 구조적 심각도**:
+- **good**: 시각적 결함이 관찰되지 않거나, 있더라도 미세 조정 수준
+- **ok**: 개선 여지는 있으나 제품 수준 유지. 기본 사용성/가독성에 지장 없음
+- **needs improvement**: 위계·대비·정렬·여백 중 하나 이상이 **기본 사용성·가독성을 저해**)
+이유 1문장.
 
 엄수:
 - 수정 제안 금지 — 관찰만
-- 정량 속성 우선 (spacing, 대비, 정렬, 위계, 라인 길이, icon weight, radius 등)
-- "good": 이슈 ≤2개 & critical 없음
-- "ok": 이슈 3-4개, 구조적 문제 없음
-- "needs improvement": 이슈 5+ or 구조적 결함`
+- 이슈 수 맞추려 억지로 채우지 말 것. 안 보이면 "none"이 정답
+- 일반 디자인 상식 나열 금지 — 이 화면에서 실제 보이는 것만
+- 이슈 위치는 "어디서 보이는지"로 지시 (예: "좌측 nav 3번째 아이템 여백", "Hero 섹션 headline과 subtitle 사이")`
 
 const toLabel = (route) => {
   if (route === '/') return 'root'
@@ -69,7 +81,16 @@ const screenshot = async (browser, route, outPath) => {
   await page.setViewport(VIEWPORT)
   const url = `${BASE_URL}${route}`
   await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 })
-  await new Promise((r) => setTimeout(r, 800))
+  // React mount 대기 — Vite+React는 networkidle 이후 mount가 지연될 수 있다.
+  // #root에 children이 생길 때까지 최대 10초 대기 (검은 화면 방지).
+  await page.waitForFunction(
+    () => document.querySelector('#root')?.children.length > 0,
+    { timeout: 10000 },
+  ).catch(() => {
+    console.warn(`  ⚠ ${route} — #root 미mount, 그대로 진행`)
+  })
+  // 레이아웃/폰트/이미지 안정화 추가 대기
+  await new Promise((r) => setTimeout(r, 1500))
   ensureDir(outPath)
   await page.screenshot({ path: outPath, fullPage: false })
   await page.close()
