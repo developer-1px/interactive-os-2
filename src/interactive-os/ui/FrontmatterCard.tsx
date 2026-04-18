@@ -1,7 +1,8 @@
-/** @catalog 마크다운 frontmatter 메타 카드 — 의도별 티어(hero/subtitle/byline) + 기타 접기 */
+/** @catalog 마크다운 frontmatter 메타 카드 — 의도별 티어(title header / body) + 카드 전체 접기 */
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { ax } from '@styles/ax'
+import { usePersistedState } from '../primitives/usePersistedState'
 import { Badge } from './Badge'
 import styles from './FrontmatterCard.module.css'
 
@@ -28,7 +29,7 @@ const HIDDEN_KEYS = new Set([
 ])
 
 const LONG_TEXT_THRESHOLD = 140
-const PERSIST_KEY = 'frontmatter-expanded'
+const PERSIST_KEY = 'frontmatter-card-open'
 
 type Category = 'title' | 'subtitle' | 'date' | 'people' | 'tags' | 'hidden' | 'other'
 
@@ -120,9 +121,7 @@ function Row({ keyName, value, cat }: { keyName: string; value: unknown; cat: Ca
 }
 
 export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
-  const [expanded, setExpanded] = useState<boolean>(() => {
-    try { return localStorage.getItem(PERSIST_KEY) === 'true' } catch { return false }
-  })
+  const [open, setOpen] = usePersistedState<boolean>(PERSIST_KEY, true)
 
   const entries = Object.entries(data)
     .filter(([, v]) => v !== null && v !== undefined && v !== '')
@@ -136,53 +135,49 @@ export function FrontmatterCard({ data }: { data: Record<string, unknown> }) {
   const others = entries.filter((e) => e.cat === 'other')
   // hidden은 전부 숨김
 
-  const hasHero = Boolean(title) || Boolean(subtitle) || byline.length > 0
-  if (!hasHero && others.length === 0) return null
+  const hasBody = Boolean(subtitle) || byline.length > 0 || others.length > 0
+  if (!title && !hasBody) return null
 
-  const handleToggle = () => {
-    setExpanded((prev) => {
-      const next = !prev
-      try { localStorage.setItem(PERSIST_KEY, String(next)) } catch { /* ignore */ }
-      return next
-    })
-  }
+  const handleToggle = () => setOpen((prev) => !prev)
+
+  const headerLabel = typeof title === 'string' ? title : 'Properties'
 
   return (
     <section className={ax({ surface: 'sunken', shape: 'md', layout: 'stack', gap: 'sm', padding: 'md' })}>
-      {typeof title === 'string' && (
-        <div className={ax({ textStyle: 'section' })}>{title}</div>
-      )}
-      {typeof subtitle === 'string' && (
-        <div className={ax({ textStyle: 'caption' })}>{subtitle}</div>
-      )}
-      {byline.length > 0 && (
-        <div className={ax({ layout: 'wrap', gap: 'md' })}>
-          {byline.map(({ key, value, cat }) => (
-            <div key={key} className={ax({ layout: 'row', gap: 'xs' })}>
-              <span className={ax({ textStyle: 'caption' })}>{key}</span>
-              {renderValue(key, value, cat)}
-            </div>
-          ))}
-        </div>
-      )}
+      <button
+        type="button"
+        onClick={handleToggle}
+        data-expanded={open ? '' : undefined}
+        aria-expanded={open}
+        className={`${styles.header} ${ax({ role: 'control', interactive: 'button', surface: 'ghost', layout: 'spread', textStyle: 'section' })}`}
+      >
+        <span>{headerLabel}</span>
+        {hasBody && <ChevronDown size={14} className={styles.chevron} />}
+      </button>
 
-      {others.length > 0 && expanded && (
-        <div className={ax({ layout: 'stack', gap: 'xs' })}>
-          {others.map(({ key, value, cat }) => (
-            <Row key={key} keyName={key} value={value} cat={cat} />
-          ))}
-        </div>
-      )}
-      {others.length > 0 && (
-        <button
-          type="button"
-          onClick={handleToggle}
-          data-expanded={expanded ? '' : undefined}
-          className={`${styles.toggle} ${ax({ role: 'control', interactive: 'button', surface: 'ghost', textStyle: 'caption', layout: 'row', gap: 'xs' })}`}
-        >
-          <ChevronDown size={12} className={styles.chevron} />
-          {expanded ? 'Hide properties' : `Show ${others.length} more ${others.length === 1 ? 'property' : 'properties'}`}
-        </button>
+      {open && hasBody && (
+        <>
+          {typeof subtitle === 'string' && (
+            <div className={ax({ textStyle: 'caption' })}>{subtitle}</div>
+          )}
+          {byline.length > 0 && (
+            <div className={ax({ layout: 'wrap', gap: 'md' })}>
+              {byline.map(({ key, value, cat }) => (
+                <div key={key} className={ax({ layout: 'row', gap: 'xs' })}>
+                  <span className={ax({ textStyle: 'caption' })}>{key}</span>
+                  {renderValue(key, value, cat)}
+                </div>
+              ))}
+            </div>
+          )}
+          {others.length > 0 && (
+            <div className={ax({ layout: 'stack', gap: 'xs' })}>
+              {others.map(({ key, value, cat }) => (
+                <Row key={key} keyName={key} value={value} cat={cat} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </section>
   )
