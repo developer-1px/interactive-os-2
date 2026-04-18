@@ -206,7 +206,9 @@ function main() {
     for (const t of TEXTS) {
       for (const s of SURFACES) {
         const surfVar = theme === 'dark' ? s.darkVar : s.lightVar
-        const row = computeRow(t.varName, surfVar, vars)
+        // inverted surface: text 토큰도 반전 (ax.css .sf-inverted cascade와 align)
+        const textVar = s.key === 'inverted' ? `${t.varName}-inverted` : t.varName
+        const row = computeRow(textVar, surfVar, vars)
         const threshold = t.key === 'muted' ? LC_MIN_MUTED : LC_MIN
         const lc = row.lc ?? 0
         const pass = !row.error && lc >= threshold

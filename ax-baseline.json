@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T02:39:11.316Z",
+  "generatedAt": "2026-04-18T02:42:31.917Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -155,8 +155,8 @@
         "lc_min_muted": 60
       },
       "total": 88,
-      "pass": 64,
-      "fail": 24,
+      "pass": 71,
+      "fail": 17,
       "items": [
         {
           "theme": "dark",
@@ -242,9 +242,9 @@
           "theme": "dark",
           "text": "bright",
           "surface": "inverted",
-          "lc": 0,
+          "lc": 105.62,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
@@ -330,9 +330,9 @@
           "theme": "dark",
           "text": "primary",
           "surface": "inverted",
-          "lc": 7.65,
+          "lc": 104.41,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
@@ -418,9 +418,9 @@
           "theme": "dark",
           "text": "secondary",
           "surface": "inverted",
-          "lc": 23.31,
+          "lc": 95.21,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "dark",
@@ -506,9 +506,9 @@
           "theme": "dark",
           "text": "muted",
           "surface": "inverted",
-          "lc": 47.36,
+          "lc": 78.75,
           "threshold": 60,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "light",
@@ -594,9 +594,9 @@
           "theme": "light",
           "text": "bright",
           "surface": "inverted",
-          "lc": 0,
+          "lc": 107.57,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "light",
@@ -682,9 +682,9 @@
           "theme": "light",
           "text": "primary",
           "surface": "inverted",
-          "lc": 0,
+          "lc": 96.36,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "light",
@@ -770,9 +770,9 @@
           "theme": "light",
           "text": "secondary",
           "surface": "inverted",
-          "lc": 18.12,
+          "lc": 79.58,
           "threshold": 75,
-          "pass": false
+          "pass": true
         },
         {
           "theme": "light",
@@ -858,7 +858,7 @@
           "theme": "light",
           "text": "muted",
           "surface": "inverted",
-          "lc": 22.74,
+          "lc": 54.34,
           "threshold": 60,
           "pass": false
         }
@@ -1203,7 +1203,7 @@
           "count": 1,
           "items": [
             {
-              "line": 582,
+              "line": 586,
               "prop": "border-radius",
               "raw": [
                 "3px"

@@ -36,6 +36,12 @@
   --text-secondary: var(--stone-300);
   --text-muted:     var(--stone-400);
 
+  /* inverted text — 역전 surface(.sf-inverted) 전용. dark 기본은 밝은 bg에 맞춘 어두운 text */
+  --text-bright-inverted:    var(--stone-950);
+  --text-primary-inverted:   var(--stone-900);
+  --text-secondary-inverted: var(--stone-700);
+  --text-muted-inverted:     var(--stone-500);
+
   /* ── Border ── */
   --border-subtle:  var(--stone-850);
   --border-default: var(--stone-800);
@@ -311,6 +317,12 @@
   --text-primary:   var(--stone-900);
   --text-secondary: var(--stone-600);
   --text-muted:     var(--stone-500);
+
+  /* inverted text (light theme) — 어두운 bg에 맞춘 밝은 text */
+  --text-bright-inverted:    var(--stone-0);
+  --text-primary-inverted:   var(--stone-100);
+  --text-secondary-inverted: var(--stone-300);
+  --text-muted-inverted:     var(--stone-400);
 
   /* ── Border — subtle for layout, stronger for interactive ── */
   --border-subtle:  oklch(96% 0.007 90);  /* ~2% — layout dividers */
