@@ -31,6 +31,7 @@ const METRICS = [
   { name: 'modular-scale', script: 'scripts/verifyModularScale.mjs' },
   { name: 'spatial-grid', script: 'scripts/verifySpatialGrid.mjs' },
   { name: 'line-length', script: 'scripts/verifyLineLength.mjs' },
+  { name: 'surface-pairs', script: 'scripts/measureSurfacePairs.mjs' },
 ]
 
 function runMetric(scriptPath) {
@@ -264,6 +265,9 @@ function main() {
     'modular-scale': diffModularScale(prev.metrics['modular-scale'], curMetrics['modular-scale']),
     'spatial-grid': diffSpatialGrid(prev.metrics['spatial-grid'], curMetrics['spatial-grid']),
     'line-length': diffCountMetric(prev.metrics['line-length'], curMetrics['line-length'], 'violations'),
+    'surface-pairs': prev.metrics['surface-pairs']
+      ? diffApcaLike(prev.metrics['surface-pairs'], curMetrics['surface-pairs'], (i) => `${i.theme}/${i.pair}`)
+      : { regressions: [], improvements: [{ type: 'new_metric', detail: `신규 metric: pass ${curMetrics['surface-pairs'].pass}/${curMetrics['surface-pairs'].total}` }] },
   }
 
   const totalRegressions = Object.values(diffs).reduce((acc, d) => acc + d.regressions.length, 0)

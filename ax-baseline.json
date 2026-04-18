@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T02:23:00.278Z",
+  "generatedAt": "2026-04-18T02:28:16.980Z",
   "date": "2026-04-18",
   "metrics": {
     "focus-apca": {
@@ -1083,6 +1083,129 @@
           "selector": ".w-prose",
           "max_width_ch": 72,
           "in_range": true
+        }
+      ]
+    },
+    "surface-pairs": {
+      "metric": "surface-pairs",
+      "threshold": {
+        "lc_min": 10
+      },
+      "total": 16,
+      "pass": 2,
+      "fail": 14,
+      "items": [
+        {
+          "theme": "dark",
+          "pair": "sunken↔base",
+          "kind": "depth",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "pair": "base↔raised",
+          "kind": "depth",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "pair": "raised↔overlay",
+          "kind": "depth",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "pair": "overlay↔trap",
+          "kind": "depth",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "pair": "base↔placeholder",
+          "kind": "feature",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "pair": "base↔input",
+          "kind": "feature",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "dark",
+          "pair": "base↔inverted",
+          "kind": "feature",
+          "lc": 103.66,
+          "pass": true
+        },
+        {
+          "theme": "dark",
+          "pair": "ghost↔base",
+          "kind": "feature",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "pair": "sunken↔base",
+          "kind": "depth",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "pair": "base↔raised",
+          "kind": "depth",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "pair": "raised↔overlay",
+          "kind": "depth",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "pair": "overlay↔trap",
+          "kind": "depth",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "pair": "base↔placeholder",
+          "kind": "feature",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "pair": "base↔input",
+          "kind": "feature",
+          "lc": 0,
+          "pass": false
+        },
+        {
+          "theme": "light",
+          "pair": "base↔inverted",
+          "kind": "feature",
+          "lc": 103.09,
+          "pass": true
+        },
+        {
+          "theme": "light",
+          "pair": "ghost↔base",
+          "kind": "feature",
+          "lc": 0,
+          "pass": false
         }
       ]
     }

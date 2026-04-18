@@ -35,6 +35,7 @@ const METRICS = [
   { name: 'modular-scale', script: 'scripts/verifyModularScale.mjs' },
   { name: 'spatial-grid', script: 'scripts/verifySpatialGrid.mjs' },
   { name: 'line-length', script: 'scripts/verifyLineLength.mjs' },
+  { name: 'surface-pairs', script: 'scripts/measureSurfacePairs.mjs' },
 ]
 
 /**
@@ -90,7 +91,7 @@ function main() {
     try {
       const prev = JSON.parse(readFileSync(BASELINE_PATH, 'utf-8'))
       console.log(`[baseline] 이전 baseline: ${prev.date ?? prev.generatedAt}`)
-      for (const key of ['focus-apca', 'text-apca']) {
+      for (const key of ['focus-apca', 'text-apca', 'surface-pairs']) {
         const p = prev.metrics?.[key]
         const c = metrics[key]
         if (p && c) console.log(`  ${key}: pass ${p.pass}/${p.total} → ${c.pass}/${c.total}`)
@@ -117,7 +118,7 @@ function main() {
 
   writeFileSync(BASELINE_PATH, json)
   console.log(`[baseline] 저장: ${BASELINE_PATH}`)
-  for (const key of ['focus-apca', 'text-apca']) {
+  for (const key of ['focus-apca', 'text-apca', 'surface-pairs']) {
     const m = metrics[key]
     if (m) console.log(`  ${key}: pass=${m.pass}/${m.total}`)
   }
