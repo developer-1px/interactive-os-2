@@ -23,6 +23,57 @@ function AxisRow({ label, children }: { label: string; children: React.ReactNode
   )
 }
 
+/* ══ Zone × Interactive Composition ══
+ * 용도에 맞는 조합 데모 — surface zone이 interactive 법도를 결정.
+ * 같은 `aria-selected="true"` 아이템이 4 zone에서 각자 다른 배경을 받음.
+ * (feedback_contextual_zone_cascade · P-26) */
+
+function ZoneCompositionAxis() {
+  const zones = ['sunken', 'base', 'raised', 'overlay'] as const
+  return (
+    <Section title="ZONE × INTERACTIVE — 배경 위의 법도">
+      <div className={ax({ layout: 'grid-2' })}>
+        {zones.map(z => (
+          <div key={z} className={ax({ layout: 'stack' })}>
+            <span className={ax({ textStyle: 'code' })}>surface: '{z}'</span>
+            <div
+              className={`${ax({ role: 'control-group', surface: z, layout: 'stack' })} ax-interactive`}
+            >
+              {/* list — same ARIA state, different zone law */}
+              <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`}>
+                <span>default</span>
+              </div>
+              <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} aria-selected="true">
+                <span>aria-selected</span>
+              </div>
+              <div className={`${ax({ role: 'item', interactive: 'item', layout: 'row' })} ia-item`} aria-selected="true" data-focused>
+                <span>selected + focused</span>
+              </div>
+
+              {/* button row — action on zone */}
+              <div className={ax({ layout: 'row' })}>
+                <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'accent' })}>
+                  Action
+                </button>
+                <button className={ax({ role: 'control', surface: 'ghost', content: 'text' })}>
+                  Ghost
+                </button>
+                <button className={ax({ role: 'control', surface: 'action', content: 'text', tone: 'danger' })}>
+                  Danger
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <span className={ax({ textStyle: 'caption' })}>
+        동일한 aria-selected가 sunken/base/raised/overlay 각 zone에서 다른 배경을 받는다 —
+        .sf-z 클래스가 --selection을 --depth-z-sel로 재바인딩 (Zone cascade).
+      </span>
+    </Section>
+  )
+}
+
 /* ══ Visual Axes ══ */
 
 function SurfaceAxis() {
@@ -434,6 +485,11 @@ function AspectAxis() {
 export function ThemeAxes() {
   return (
     <div className={ax({ layout: 'stack', gap: 'xl' })}>
+      {/* 조합 데모 (Zone cascade) */}
+      <div>
+        <ZoneCompositionAxis />
+      </div>
+
       {/* 시각 축 */}
       <div>
         <h2 className={ax({ textStyle: 'section', text: 'primary', padding: 'sm' })}>Visual Axes</h2>
