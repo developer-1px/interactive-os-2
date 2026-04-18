@@ -1,6 +1,9 @@
 ---
 id: '4-archive/engine/archive/41-[retro]cell-edit-plugin'
+type: retro
+slug: cellEditPlugin
 title: 'Retro: cellEdit Plugin — 2026-03-25'
+tags: [retro]
 created: 2026-03-24
 updated: 2026-04-11
 legacy:

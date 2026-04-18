@@ -1,6 +1,9 @@
 ---
 id: chat-module
+type: note
+slug: chatModule
 title: 'Agent Chat (Gen UI)'
+tags: [agent-sdk, chat, gen-ui, websocket]
 created: 2026-01
 updated: 2026-04-17
 summary: 'Anthropic Agent SDK + WebSocket 기반 채팅. Phase A는 텍스트, Phase B/C에서 tool UI·permission·인터랙티브 Gen UI 블록.'

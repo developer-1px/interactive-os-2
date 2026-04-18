@@ -1,6 +1,9 @@
 ---
 id: 1-projects/chat/prds/md-writer-plan
+type: plan
+slug: mdWriter
 title: MD Writer Implementation Plan
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-08
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'

@@ -1,6 +1,9 @@
 ---
 id: 4-archive/cms/summary
+type: note
+slug: cmsSummary
 title: 'CMS — 결정 요약'
+tags: [retro]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

@@ -1,6 +1,9 @@
 ---
 id: '2-areas/styles/77-[explain]design-system-invariant'
+type: explain
+slug: designSystemInvariant
 title: '디자인 시스템 불변량 — 값이 아니라 값 사이의 관계를 잠그는 것'
+tags: [explain, role]
 created: 2026-04-10
 updated: 2026-04-11
 summary: '작성일: 2026-04-11 맥락: ax() 시스템에 pit of success를 도입하기 위한 discuss 중'

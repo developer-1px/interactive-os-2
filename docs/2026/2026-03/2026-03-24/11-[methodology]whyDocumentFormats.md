@@ -1,6 +1,9 @@
 ---
 id: '3-resources/11-[methodology]whyDocumentFormats'
+type: note
+slug: whyDocumentFormats
 title: 'WHY를 구조적으로 기록하는 IT 문서 산출물 — 비교 분석'
+tags: [methodology]
 created: 2026-03-24
 updated: 2026-03-24
 summary: '작성일: 2026-03-24 맥락: PRD에 discuss의 WHY가 구조적으로 이식되도록 개선하려는 논의에서, 업계 대표 WHY 기록 형식을 조사'

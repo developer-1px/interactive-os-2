@@ -1,6 +1,9 @@
 ---
 id: '0-inbox/79-[backlog]grid-subgrid-ax-migration'
+type: backlog
+slug: gridSubgridAxMigration
 title: 'Grid Subgrid → ax() 축 승격 마이그레이션 — 2026-04-16'
+tags: [backlog]
 created: 2026-04-18
 updated: 2026-04-18
 legacy:

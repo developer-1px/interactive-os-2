@@ -1,6 +1,9 @@
 ---
 id: 4-archive/handoffs/handoff-2026-04-13-widget-boundary
+type: handoff
+slug: widgetBoundary
 title: 'Handoff: 위젯/컴포넌트 경계 구조적 강제'
+tags: [untagged]
 created: 2026-04-13
 updated: 2026-04-15
 summary: '2026-04-13 세션에서 ui→pages 역방향 의존 제거 + 위젯 경계 차단 규칙 추가'

@@ -1,6 +1,9 @@
 ---
 id: '4-archive/axis/archive/35-[retro]tab-axis'
+type: retro
+slug: tabAxis
 title: 'Retro: tab-axis — 2026-03-24'
+tags: [retro, x]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

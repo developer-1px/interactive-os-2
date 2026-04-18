@@ -1,6 +1,9 @@
 ---
 id: '4-archive/design/archive/55-[retro]cssWritingRules'
+type: retro
+slug: cssWritingRules
 title: 'Retro: CSS Writing Rules — 2026-03-25'
+tags: [data-aria-container, retro]
 created: 2026-03-25
 updated: 2026-04-11
 legacy:

@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/handoff-2026-04-16-cms-llm-friendly
+type: handoff
+slug: cmsLlmFriendly
 title: 'Handoff: CMS LLM 친화적 접근성 개선'
+tags: [untagged]
 created: 2026-04-16
 updated: 2026-04-18
 summary: 'LLM 브라우저 자동화 에이전트가 CMS를 효율적으로 조작할 수 있도록 aria-label, field name, breadcrumb, window.cms API 4가지를 추가했다.'

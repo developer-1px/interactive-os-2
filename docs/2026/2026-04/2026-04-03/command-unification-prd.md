@@ -1,6 +1,9 @@
 ---
 id: 2-areas/store/prds/command-unification-prd
+type: prd
+slug: commandUnification
 title: 'Command Unification — PRD'
+tags: [untagged]
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'Discussion: OS 위의 모든 컴포넌트가 NormalizedData + Command로 상태/행동을 표현하여, 기록·통신·외부 조작이 가능하도록 통일한다.'

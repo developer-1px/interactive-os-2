@@ -1,6 +1,9 @@
 ---
 id: '2-areas/engine/75-[explain]layerV2CoreAbsorption'
+type: explain
+slug: layerV2CoreAbsorption
 title: '레이어 v2: core 흡수 — 구체적 변경 계획'
+tags: [explain]
 created: 2026-03-26
 updated: 2026-04-11
 summary: '작성일: 2026-03-26 맥락: plugins/core.ts의 commands+entities를 axis/로 이동하여 L4→L5 역참조 제거'

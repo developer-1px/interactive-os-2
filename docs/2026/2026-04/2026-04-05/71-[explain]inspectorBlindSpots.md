@@ -1,6 +1,9 @@
 ---
 id: '2-areas/devtools/71-[explain]inspectorBlindSpots'
+type: explain
+slug: inspectorBlindSpots
 title: 'Inspector Blind Spots — command/keyMap이 inspector에 도달하지 못하는 5가지 구조적 결함'
+tags: [explain]
 created: 2026-04-05
 updated: 2026-04-11
 summary: '작성일: 2026-04-05 맥락: inspector가 route:Writer의 Mod+\ command를 빈칸으로 표시���는 버그를 수정하면서, 동일한 패턴의 구조적 결함이 더 있는지 전수 조사'

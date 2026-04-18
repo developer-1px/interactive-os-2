@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/splitPane
+type: note
+slug: splitPane
 title: SplitPane
+tags: [untagged]
 created: 2026-03-28
 updated: 2026-03-28
 summary: 'Ratio 기반 리사이즈 가능한 분할 컨테이너. 수평/수직 방향, 키보드/포인터 리사이즈 지원.'

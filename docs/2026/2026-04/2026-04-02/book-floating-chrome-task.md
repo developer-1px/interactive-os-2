@@ -1,6 +1,9 @@
 ---
 id: 1-projects/book/prds/book-floating-chrome-task
+type: plan
+slug: bookFloatingChrome
 title: Book UI Floating Chrome
+tags: [untagged]
 created: 2026-04-02
 updated: 2026-04-08
 legacy:

@@ -1,6 +1,9 @@
 ---
 id: samples/architecture
+type: note
+slug: architecture
 title: 'CMS 모듈 아키텍처'
+tags: [samples]
 created: 2026-04-09
 updated: 2026-04-09
 legacy:

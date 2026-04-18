@@ -1,6 +1,9 @@
 ---
 id: '3-resources/06-[tooling]namingReport'
+type: note
+slug: namingReport
 title: Naming Report
+tags: [tooling]
 created: 2026-03-22
 updated: 2026-04-18
 summary: 'Generated: 2026-03-22'

@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/prds/project-viewer-task
+type: plan
+slug: projectViewer
 title: Project Viewer Task
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 legacy:

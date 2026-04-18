@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/stories/doc-browsing/features/miller-columns/5-review/review
+type: note
+slug: review
 title: 'Miller Columns — Design Review'
+tags: [x]
 created: 2026-04-09
 updated: 2026-04-09
 legacy:

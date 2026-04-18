@@ -1,3 +1,12 @@
+---
+id: cmuxLayout
+type: prd
+slug: cmuxLayout
+title: 'cmux Layout for /chat — PRD'
+tags: [untagged]
+created: 2026-04-19
+updated: 2026-04-18
+---
 # cmux Layout for /chat — PRD
 
 > **Discussion**: 2026-04-18 세션. `/discuss http://localhost:5173/chat cmux처럼 UI 구현` → `/blueprint` 수렴.

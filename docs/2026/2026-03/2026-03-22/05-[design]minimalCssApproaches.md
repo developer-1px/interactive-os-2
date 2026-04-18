@@ -1,6 +1,9 @@
 ---
 id: '3-resources/05-[design]minimalCssApproaches'
+type: note
+slug: minimalCssApproaches
 title: 'Minimal CSS 접근법 — 최소한의 CSS로 기본 UI를 커버하는 방법론'
+tags: [data-focused, data-pressed, design]
 created: 2026-03-22
 updated: 2026-03-24
 summary: '작성일: 2026-03-22 맥락: interactive-os UI 컴포넌트의 base 디자인을 잡되, 22개 개별 CSS를 관리하지 않고 최소한의 공통 CSS로 전체를 커버하는 방법을 찾기 위해'

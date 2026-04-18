@@ -1,6 +1,9 @@
 ---
 id: '4-archive/engine/archive/31-[retro]define-plugin'
+type: retro
+slug: definePlugin
 title: 'Retro: definePlugin — 2026-03-23'
+tags: [retro]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

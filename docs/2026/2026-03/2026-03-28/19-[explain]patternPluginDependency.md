@@ -1,6 +1,9 @@
 ---
 id: '2-areas/pattern/19-[explain]patternPluginDependency'
+type: explain
+slug: patternPluginDependency
 title: 'Pattern→Plugin 의존 구조 — createPatternContext가 모든 위반의 허브다'
+tags: [explain]
 created: 2026-03-28
 updated: 2026-04-11
 summary: '작성일: 2026-03-26 맥락: L4 Pattern이 L5 Plugins를 runtime import하는 구조적 위반 분석'

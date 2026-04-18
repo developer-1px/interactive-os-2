@@ -1,6 +1,9 @@
 ---
 id: '3-resources/34-[methodology]aiCollaborationPlaybook'
+type: note
+slug: aiCollaborationPlaybook
 title: 'AI한테 일 잘 시키는 법 — 3개월간 Claude Code 전면 사용 후기'
+tags: [methodology]
 created: 2026-03-25
 updated: 2026-03-28
 summary: '작성일: 2026-03-25 작성자: FE개발'

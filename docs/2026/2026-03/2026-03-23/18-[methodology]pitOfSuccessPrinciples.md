@@ -1,6 +1,9 @@
 ---
 id: '3-resources/18-[methodology]pitOfSuccessPrinciples'
+type: note
+slug: pitOfSuccessPrinciples
 title: 'interactive-os Pit of Success — LLM이 올바른 코드로 수렴하는 설계 원리'
+tags: [methodology]
 created: 2026-03-23
 updated: 2026-03-25
 summary: '작성일: 2026-03-23 맥락: interactive-os를 "LLM이 위에서 개발하면 올바른 형태의 코드로 수렴할 수밖에 없는" 프레임워크로 만들기 위한 설계 원리 정립과 현재 상태 감사'

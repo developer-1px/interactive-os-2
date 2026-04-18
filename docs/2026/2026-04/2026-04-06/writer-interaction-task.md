@@ -1,6 +1,9 @@
 ---
 id: 1-projects/chat/prds/writer-interaction-task
+type: plan
+slug: writerInteraction
 title: 'Writer 인터랙션 확장 — scope + focusHistory + writer keyMap'
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 legacy:

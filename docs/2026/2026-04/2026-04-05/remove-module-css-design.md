@@ -1,6 +1,9 @@
 ---
 id: 2-areas/design/prds/remove-module-css-design
+type: note
+slug: removeModuleCssDesign
 title: 'module.css 전면 제거 — ax() 디자인 언어 고도화'
+tags: [untagged]
 created: 2026-04-05
 updated: 2026-04-08
 legacy:

@@ -1,6 +1,9 @@
 ---
 id: 2-areas/plugin-showcase
+type: note
+slug: pluginShowcase
 title: Plugin Showcase
+tags: [untagged]
 created: 2026-03-21
 updated: 2026-03-21
 summary: '최종 갱신: 2026-03-21 (retro: plugin-showcase-gap-phase2)'

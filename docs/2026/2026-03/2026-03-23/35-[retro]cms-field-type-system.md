@@ -1,6 +1,9 @@
 ---
 id: '4-archive/cms/archive/35-[retro]cms-field-type-system'
+type: retro
+slug: cmsFieldTypeSystem
 title: 'Retro: CMS Field Type System — 2026-03-24'
+tags: [retro]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

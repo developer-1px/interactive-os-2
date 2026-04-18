@@ -1,6 +1,9 @@
 ---
 id: '3-resources/23-[methodology]discussFirstWorkflowTheory'
+type: note
+slug: discussFirstWorkflowTheory
 title: 'Discuss-First 워크플로우의 이론적 기반'
+tags: [methodology]
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: discuss→prd→go→retrospect→improve 파이프라인을 범용화하기 전에 이론적 탄탄함을 검증'

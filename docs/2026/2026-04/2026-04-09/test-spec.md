@@ -1,6 +1,9 @@
 ---
 id: samples/test-spec
+type: note
+slug: testSpec
 title: 'Test Spec — CMS Slide CRUD'
+tags: [samples]
 created: 2026-04-09
 updated: 2026-04-09
 legacy:

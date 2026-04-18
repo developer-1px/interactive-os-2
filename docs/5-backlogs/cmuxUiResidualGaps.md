@@ -1,9 +1,14 @@
 ---
-created_at: 2026-04-19
-status: backlog
-source: handoff-2026-04-19-cmuxPreviewPoc
+id: cmuxUiResidualGaps
+type: backlog
+slug: cmuxUiResidualGaps
+title: 'cmux UI 잔여 gap (매트릭스 기반)'
+tags: [untagged]
+created: 2026-04-19
+updated: 2026-04-18
+legacy:
+  legacy_status: backlog
 ---
-
 # cmux UI 잔여 gap (매트릭스 기반)
 
 ## 배경

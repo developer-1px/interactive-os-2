@@ -1,6 +1,9 @@
 ---
 id: '2-areas/layout/76-[explain]flat-layout-engine-what-changed'
+type: explain
+slug: flatLayoutEngineWhatChanged
 title: 'FlatLayout 엔진 — 뭐가 달라졌나 — 2026-04-10'
+tags: [explain]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

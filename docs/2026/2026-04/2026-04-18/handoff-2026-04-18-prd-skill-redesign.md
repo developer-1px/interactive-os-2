@@ -1,8 +1,12 @@
 ---
-created_at: 2026-04-18
-session_id: prd-skill-redesign
+id: prdSkillRedesign
+type: handoff
+slug: prdSkillRedesign
+title: 'Handoff: PRD 스킬 책임 분해 중심 재설계'
+tags: [untagged]
+created: 2026-04-19
+updated: 2026-04-18
 ---
-
 # Handoff: PRD 스킬 책임 분해 중심 재설계
 
 > /prd 스킬의 본질을 재정의하고 재작성. 6 에이전트 6 섹션 → 사고 흐름(요구사항 → 책임 분해 → Contract → WHY → HOW → WHAT). 책임 분해 SSOT를 CLAUDE.md에 신설. liquid-glass 케이스 시뮬레이션으로 새 스킬의 우위를 정성 검증.

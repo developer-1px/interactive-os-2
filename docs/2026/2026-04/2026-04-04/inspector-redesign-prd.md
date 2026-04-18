@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/prds/inspector-redesign-prd
+type: prd
+slug: inspectorRedesign
 title: 'Inspector 리디자인 — PRD'
+tags: [childrole, role]
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: 통합 ARIA 트리 + SplitPane + 3섹션 우측 패널 + ASCII 복사'

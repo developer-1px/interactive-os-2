@@ -1,3 +1,12 @@
+---
+id: index
+type: note
+slug: index
+title: Finder Reference Index
+tags: [reference, finder]
+created: 2026-04-19
+updated: 2026-04-18
+---
 # Finder Reference Index
 
 > macOS Finder 스샷을 design-loop의 reference로 사용. 각 png가 viewer의 어떤 zone과 매핑되는지, 어떤 ax 영역을 후보로 갖는지 명시.

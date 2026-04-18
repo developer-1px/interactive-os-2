@@ -1,6 +1,9 @@
 ---
 id: '4-archive/primitives/archive/33-[explain]useAria-triad'
+type: explain
+slug: useAriaTriad
 title: 'useAria · useAriaZone · useAriaView — 라인별 해설'
+tags: [explain]
 created: 2026-03-23
 updated: 2026-04-11
 summary: '작성일: 2026-03-23 맥락: useAria 리팩터 후 3개 hook의 역할 분담을 라인 단위로 해설'

@@ -1,6 +1,9 @@
 ---
 id: '3-resources/04-[design]surfaceElevationNaming'
+type: note
+slug: surfaceElevationNaming
 title: 'Surface/Elevation 네이밍 체계 — 주요 디자인 시스템 비교'
+tags: [design]
 created: 2026-03-22
 updated: 2026-03-24
 summary: '작성일: 2026-03-22 맥락: interactive-os의 surface level 이름을 업계 표준에 맞추기 위해, 주요 디자인 시스템의 네이밍 체계를 비교 조사'

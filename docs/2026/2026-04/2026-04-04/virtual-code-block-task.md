@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/prds/virtual-code-block-task
+type: plan
+slug: virtualCodeBlock
 title: 'FilePanel 대규모 파일 가상화'
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-17
 legacy:

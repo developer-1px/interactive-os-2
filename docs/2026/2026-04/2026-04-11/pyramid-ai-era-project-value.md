@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/pyramid-ai-era-project-value
+type: pyramid
+slug: aiEraProjectValue
 title: 'AI 시대 이 프로젝트가 중요한 이유'
+tags: [untagged]
 created: 2026-04-11
 updated: 2026-04-18
 legacy:

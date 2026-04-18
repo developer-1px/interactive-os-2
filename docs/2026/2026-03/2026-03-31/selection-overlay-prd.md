@@ -1,6 +1,9 @@
 ---
 id: 2-areas/axis/prds/selection-overlay-prd
+type: prd
+slug: selectionOverlay
 title: 'SelectionOverlay — PRD'
+tags: [data-node-id, nodeidattr]
 created: 2026-03-31
 updated: 2026-04-08
 summary: 'Discussion: 포커스/선택 표현을 콘텐츠에서 분리하여 독립 overlay로 전환. 범용 selection 도구.'

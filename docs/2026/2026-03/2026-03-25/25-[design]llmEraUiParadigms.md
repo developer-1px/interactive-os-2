@@ -1,6 +1,9 @@
 ---
 id: '1-projects/feAiUiLayer/25-[design]llmEraUiParadigms'
+type: note
+slug: llmEraUiParadigms
 title: 'LLM 시대의 UI 패러다임 — 채팅을 넘어서'
+tags: [design]
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: 클라우드팀 FE로서 AI 기반 전사 도구를 제안하기 위해, "LLM 시대에 UI가 어떻게 변하고 있는가"를 조사'

@@ -1,6 +1,9 @@
 ---
 id: samples/wireframe
+type: note
+slug: wireframe
 title: 'Visual CMS 와이어프레임'
+tags: [samples]
 created: 2026-04-09
 updated: 2026-04-09
 legacy:

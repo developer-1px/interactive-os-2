@@ -92,9 +92,11 @@ export function inferSlug(relPath: string, type: DocType): string {
   if (type === 'backlog') s = s.replace(/^backlog[-_]?/i, '').replace(/[-_]?backlog$/i, '')
   // 5. 연속/양끝 하이픈 정리
   s = s.replace(/[-_]+/g, '-').replace(/^-+|-+$/g, '')
-  // 6. kebab → camelCase
+  // 6. all-caps (BACKLOGS, README) → 전부 소문자
+  if (/^[A-Z]+$/.test(s)) s = s.toLowerCase()
+  // 7. kebab → camelCase
   const camel = s.replace(/-(\w)/g, (_, c: string) => c.toUpperCase())
-  // 7. 영문 시작 + 첫 글자 소문자
+  // 8. 영문 시작 + 첫 글자 소문자
   const normalized = camel.replace(/^[^a-zA-Z]+/, '').replace(/^(.)/, (c) => c.toLowerCase())
   return SLUG_RE.test(normalized) ? normalized : 'note'
 }
@@ -255,9 +257,33 @@ function buildOutput(
     created: inferred.created,
     updated: inferred.updated,
   }
-  // optional fields preserve if present
-  for (const k of ['summary', 'status', 'project', 'layer', 'consumed_by', 'legacy'] as const) {
-    if (existing[k] !== undefined) merged[k] = existing[k]
+  // optional fields preserve if present — status는 enum 매핑
+  const VALID_STATUS = new Set(['open', 'in_progress', 'consumed', 'merged', 'archived'])
+  const LEGACY_STATUS_MAP: Record<string, string> = {
+    active: 'open',
+    pending: 'open',
+    wip: 'in_progress',
+    done: 'merged',
+    closed: 'archived',
+    superseded: 'archived',
+  }
+  if (existing.status !== undefined) {
+    const raw = typeof existing.status === 'string' ? existing.status.toLowerCase() : null
+    if (raw && VALID_STATUS.has(raw)) {
+      merged.status = raw
+    } else if (raw && LEGACY_STATUS_MAP[raw]) {
+      merged.status = LEGACY_STATUS_MAP[raw]
+      // 원본 값은 legacy로 보존
+      const legacy = (merged.legacy as Record<string, unknown> | undefined) ?? {}
+      merged.legacy = { ...legacy, legacy_status: existing.status }
+    } else {
+      // 알 수 없는 status → legacy로 격리, canonical 비움
+      const legacy = (merged.legacy as Record<string, unknown> | undefined) ?? {}
+      merged.legacy = { ...legacy, legacy_status: existing.status }
+    }
+  }
+  for (const k of ['summary', 'project', 'layer', 'consumed_by', 'legacy'] as const) {
+    if (existing[k] !== undefined && merged[k] === undefined) merged[k] = existing[k]
   }
 
   const lines = ['---']
@@ -293,9 +319,18 @@ function yamlScalar(s: string): string {
 
 export async function backfill(opts: { dryRun?: boolean } = {}): Promise<BackfillResult> {
   const dryRun = opts.dryRun ?? false
+  // docs/ scope만 체크: 이미 staged/modified 상태라도 backfill은 frontmatter만 추가하여 git diff로 검토 가능
   if (!dryRun) {
-    const dirty = execSync('git status --porcelain', { cwd: PROJECT_ROOT, encoding: 'utf8' })
-    if (dirty.trim()) throw new Error('backfill: working tree dirty — commit or stash first, or use --dry-run')
+    const dirty = execSync('git status --porcelain --untracked-files=no docs/', { cwd: PROJECT_ROOT, encoding: 'utf8' })
+    const dirtyDocs = dirty.split('\n')
+      .filter((l) => l.trim() && !l.endsWith('.md.bak'))
+      .filter((l) => l.length > 0)
+    if (dirtyDocs.length > 0) {
+      throw new Error(
+        `backfill: docs/ has uncommitted changes — commit or stash first.\n`
+        + dirtyDocs.slice(0, 5).join('\n'),
+      )
+    }
   }
   const plan = await planBackfill()
   if (dryRun) return plan

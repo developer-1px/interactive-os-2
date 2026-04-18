@@ -1,6 +1,9 @@
 ---
 id: 1-projects/chat/prds/chat-perf-prd
+type: prd
+slug: chatPerf
 title: 'Chat Performance Optimization — PRD'
+tags: [untagged]
 created: 2026-03-31
 updated: 2026-04-08
 summary: 'Discussion: 채팅 UI 퍼포먼스 병목 제거 + 스트리밍 줄바꿈 pacing'

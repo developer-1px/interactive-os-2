@@ -1,6 +1,9 @@
 ---
 id: '3-resources/15-[tooling]agentViewerVirtualScroll'
+type: note
+slug: agentViewerVirtualScroll
 title: 'Agent Viewer 가상스크롤 — height cache + linear scan 기반 윈도잉'
+tags: [tooling]
 created: 2026-03-23
 updated: 2026-03-25
 summary: '작성일: 2026-03-23 맥락: Agent Viewer의 타임라인 렌더링 성능 메커니즘 해설'

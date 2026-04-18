@@ -1,6 +1,9 @@
 ---
 id: '3-resources/43-[design]shadcnAxMapping'
+type: note
+slug: shadcnAxMapping
 title: 'shadcn/ui → ax() 전수 매핑 테이블'
+tags: [auto-1fr, design, svg]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**목적**: shadcn/ui의 tailwind 유틸리티를 ax() 축으로 1:1 번역하기 위한 참조 테이블. **원칙**: "대충 비슷한 거" 선택 금지. 매핑이 없으면 ❌ GAP으로 명시. **출처**: `/tmp/shadcn-reference/src/components/ui/` (shadcn@latest, 2026-04)'

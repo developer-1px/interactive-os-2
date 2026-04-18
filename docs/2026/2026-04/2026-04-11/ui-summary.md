@@ -1,6 +1,9 @@
 ---
 id: 4-archive/ui/summary
+type: note
+slug: uiSummary
 title: 'UI — 결정 요약'
+tags: [retro]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

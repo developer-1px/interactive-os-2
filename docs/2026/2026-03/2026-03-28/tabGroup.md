@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/tabGroup
+type: note
+slug: tabGroup
 title: TabGroup
+tags: [untagged]
 created: 2026-03-28
 updated: 2026-03-28
 summary: '탭 내비게이션 + 패널 렌더링. os의 tabs pattern 기반, 활성화/삭제/순서 변경 지원.'

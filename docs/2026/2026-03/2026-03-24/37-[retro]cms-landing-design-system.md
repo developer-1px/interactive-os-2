@@ -1,6 +1,9 @@
 ---
 id: '4-archive/cms/archive/37-[retro]cms-landing-design-system'
+type: retro
+slug: cmsLandingDesignSystem
 title: 'Retro: CMS Landing 독립 디자인 시스템 — 2026-03-24'
+tags: [retro]
 created: 2026-03-24
 updated: 2026-04-11
 legacy:

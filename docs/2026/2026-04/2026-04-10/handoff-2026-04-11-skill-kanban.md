@@ -1,6 +1,9 @@
 ---
 id: 4-archive/meta/archive/handoff-2026-04-11-skill-kanban
+type: handoff
+slug: skillKanban
 title: 'Handoff: Skill Kanban v1 완성 → 상품성 개선 계속'
+tags: [untagged]
 created: 2026-04-10
 updated: 2026-04-11
 summary: '2026-04-11 세션에서 Skill Kanban 페이지를 discuss→PRD→구현→상품성 개선까지 진행'

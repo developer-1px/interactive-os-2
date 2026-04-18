@@ -1,6 +1,9 @@
 ---
 id: '2-areas/61-[decision]serviceUserStoryPipeline'
+type: decision
+slug: serviceUserStoryPipeline
 title: 'Service User Story Pipeline — 2026-03-27'
+tags: [decision]
 created: 2026-03-27
 updated: 2026-03-28
 legacy:

@@ -1,6 +1,9 @@
 ---
 id: 2-areas/axis/prds/spatial-click-handler-prd
+type: prd
+slug: spatialClickHandler
 title: 'Spatial Click Handler — PRD'
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 summary: 'Discussion: CMS가 spatial depth를 click으로 전환할 때 12줄 우회 코드가 필요. spatial plugin에 click handler가 없어서 발생.'

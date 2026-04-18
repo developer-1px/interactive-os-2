@@ -1,6 +1,9 @@
 ---
 id: '4-archive/meta/archive/49-[report]aiUtilizationReport'
+type: note
+slug: aiUtilizationReport
 title: 'AI 개발 협업 현황 보고서'
+tags: [audit, ideal, methodology, report]
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 작성자: FE개발 대상: 사내 기술 공유 분류: AI 활용 사례 보고'

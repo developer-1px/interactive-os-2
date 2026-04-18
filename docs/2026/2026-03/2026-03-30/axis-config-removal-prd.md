@@ -1,6 +1,9 @@
 ---
 id: 2-areas/axis/prds/axis-config-removal-prd
+type: prd
+slug: axisConfigRemoval
 title: 'AxisConfig 제거 — PRD'
+tags: [expanded-id]
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: AxisConfig 19필드가 v2 운반체 잔재. 축이 플래그를 설정하고 useAria가 해석하는 중간 해석 계층 = OCP 위반.'

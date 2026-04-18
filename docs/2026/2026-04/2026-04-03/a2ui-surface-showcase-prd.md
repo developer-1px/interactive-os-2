@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/prds/a2ui-surface-showcase-prd
+type: prd
+slug: a2uiSurfaceShowcase
 title: 'A2UI Surface Showcase — PRD'
+tags: [untagged]
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'Discussion: A2UI 프로토콜의 세부 스펙을 조사하여 우리 interactive-os UI 컴포넌트와 매핑 가능성을 분석. 읽기 전용 showcase로 첫 통로를 만든다.'

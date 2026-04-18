@@ -1,6 +1,9 @@
 ---
 id: '2-areas/46-[explain]declarativeOcp'
+type: explain
+slug: declarativeOcp
 title: '선언적 OCP — interactive-os의 확장 설계 철학'
+tags: [explain]
 created: 2026-03-25
 updated: 2026-03-28
 summary: '작성일: 2026-03-25 맥락: CMS 전역 단축키(Cmd+\) 설계 중 "명령형 switch-case vs 선언적 확장"이 쟁점이 되어, 프로젝트를 관통하는 설계 철학을 명시적으로 정립한다.'

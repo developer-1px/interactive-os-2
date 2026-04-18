@@ -1,6 +1,9 @@
 ---
 id: BACKLOGS
+type: note
+slug: backlogs
 title: BACKLOGS
+tags: [p0, p1, p2, retro, x]
 created: 2026-03-21
 updated: 2026-04-17
 legacy:

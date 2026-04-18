@@ -1,6 +1,9 @@
 ---
 id: 4-archive/meta/archive/skill-kanban-v2-review
+type: note
+slug: skillKanbanV2Review
 title: 'Skill Kanban v2 — Review'
+tags: [untagged]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

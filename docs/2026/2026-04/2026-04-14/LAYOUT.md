@@ -1,6 +1,9 @@
 ---
 id: LAYOUT
+type: note
+slug: layout
 title: 'FlatLayout — 선언적 페이지 레이아웃'
+tags: [untagged]
 created: 2026-04-14
 updated: 2026-04-14
 summary: 'SSOT: `src/interactive-os/layout/`'

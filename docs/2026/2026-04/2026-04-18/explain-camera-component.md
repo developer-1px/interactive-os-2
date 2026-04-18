@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/explain-camera-component
+type: explain
+slug: cameraComponent
 title: 'Camera — 뷰포트 프리미티브 해설'
+tags: [mode]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '작성일: 2026-04-17 대상: `src/interactive-os/ui/Camera.tsx` (598줄)'

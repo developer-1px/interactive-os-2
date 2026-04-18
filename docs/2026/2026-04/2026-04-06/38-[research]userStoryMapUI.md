@@ -1,6 +1,9 @@
 ---
 id: '3-resources/38-[research]userStoryMapUI'
+type: note
+slug: userStoryMapUI
 title: 'User Story Map UI in Production Services — 상용 도구들의 레이아웃·인터랙션 패턴'
+tags: [research]
 created: 2026-04-06
 updated: 2026-04-06
 summary: '작성일: 2026-04-05 맥락: 스토리맵 페이지 재구현 전, 상용 서비스의 시각 구조와 인터랙션 패턴을 파악하기 위함'

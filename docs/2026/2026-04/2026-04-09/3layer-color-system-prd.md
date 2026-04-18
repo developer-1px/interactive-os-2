@@ -1,6 +1,9 @@
 ---
 id: 2-areas/design/prds/3layer-color-system-prd
+type: prd
+slug: layerColorSystem
 title: '3층 색상 체계 (sys/brand/tone) + oklch 파생 — PRD'
+tags: [untagged]
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: accent가 focus/CTA/semantic 3역할을 겸임 → sys/brand/tone 분리. oklch h,c 2-input → 모든 상태 색상 + 전경색(흑/백) 자동 파생. `--selection` depth 토큰 폐기.'

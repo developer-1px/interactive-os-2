@@ -1,3 +1,12 @@
+---
+id: requirement
+type: note
+slug: requirement
+title: 'Stage 1 — Requirement'
+tags: [untagged]
+created: 2026-04-18
+updated: 2026-04-18
+---
 # Stage 1 — Requirement
 
 **Pipeline**: `docs/research/pipeline/todo/` (단계별 관측 루프 baseline)

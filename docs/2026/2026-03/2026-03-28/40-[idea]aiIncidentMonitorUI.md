@@ -1,6 +1,9 @@
 ---
 id: '3-resources/40-[idea]aiIncidentMonitorUI'
+type: note
+slug: aiIncidentMonitorUI
 title: 'AI 장애 모니터링 UI 구상 — 2026-03-26'
+tags: [idea, tooling]
 created: 2026-03-28
 updated: 2026-04-11
 legacy:

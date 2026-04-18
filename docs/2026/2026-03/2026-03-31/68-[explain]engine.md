@@ -1,6 +1,9 @@
 ---
 id: '2-areas/engine/68-[explain]engine'
+type: explain
+slug: engine
 title: 'Engine — 빈 껍데기가 모든 인터랙션을 실행하는 방법'
+tags: [explain]
 created: 2026-03-31
 updated: 2026-04-11
 summary: '작성일: 2026-03-31 맥락: interactive-os의 두 번째 레이어(store → **engine** → axis)'

@@ -1,6 +1,9 @@
 ---
 id: 2-areas/harness/prds/guard-os-patterns-task
+type: plan
+slug: guardOsPatterns
 title: guard-os-patterns hook
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-08
 legacy:

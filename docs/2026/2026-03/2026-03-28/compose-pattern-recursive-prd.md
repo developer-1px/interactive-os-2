@@ -1,6 +1,9 @@
 ---
 id: 2-areas/pattern/prds/compose-pattern-recursive-prd
+type: prd
+slug: composePatternRecursive
 title: 'composePattern 재귀 오버라이드 — PRD'
+tags: [untagged]
 created: 2026-03-28
 updated: 2026-04-08
 summary: 'Discussion: v3 대규모 마이그레이션 실패 → 점진 전환 전략. 첫 단계로 keyMap 소유권을 composePattern에 확립하고, 패턴-on-패턴 재귀 합성을 지원한다.'

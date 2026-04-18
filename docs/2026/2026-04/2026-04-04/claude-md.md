@@ -1,6 +1,9 @@
 ---
 id: 2-areas/harness/claude-md
+type: note
+slug: claudeMd
 title: 'CLAUDE.md — 규칙 레퍼런스'
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-04
 summary: '`.claude/CLAUDE.md`는 강제력 ~50%. LLM이 매 세션 시작 시 읽지만, 복잡한 규칙은 무시될 수 있다. **기계적으로 잡을 수 있는 규칙은 훅으로 승격**하는 것이 원칙.'

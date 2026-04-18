@@ -1,6 +1,9 @@
 ---
 id: '3-resources/39-[methodology]universalProjectProfile'
+type: note
+slug: universalProjectProfile
 title: '범용 프로젝트 프로필의 이상적 모습'
+tags: [methodology]
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 맥락: 스킬 에코시스템 범용화를 위해, "프로젝트 설정 레이어"가 어떤 모습이어야 하는지를 시뮬레이션'

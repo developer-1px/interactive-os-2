@@ -1,6 +1,9 @@
 ---
 id: 5-backlogs/modalPluginFlatLayout
+type: note
+slug: modalPluginFlatLayout
 title: 'Modal을 os plugin + FlatLayout overlay로 통일 — 2026-04-11'
+tags: [untagged]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

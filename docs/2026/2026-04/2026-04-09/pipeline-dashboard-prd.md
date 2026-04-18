@@ -1,6 +1,9 @@
 ---
 id: 1-projects/cms/prds/pipeline-dashboard-prd
+type: prd
+slug: pipelineDashboard
 title: 'Pipeline Dashboard — PRD'
+tags: [project]
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: 스킬 파이프라인 산출물을 트리×단계 매트릭스로 가시화하여 누락/다음 행동을 한눈에 파악. 작업 순서는 자유, 구조는 자동.'

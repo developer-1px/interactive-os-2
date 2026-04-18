@@ -1,6 +1,9 @@
 ---
 id: 2-areas/styles/prds/ax-axis-reduction
+type: prd
+slug: axAxisReduction
 title: 'ax 축 감축 + role Required — Blueprint'
+tags: [styles, ax, design-system]
 created: 2026-04-18
 updated: 2026-04-18
 summary: 'ax를 Pit of Success로 전환하는 타입 구조 단계. 축 25→18 감축 + role Required(discriminated union) + surface→text 자동 pairing(Material on-*). 2026-04-10 ax-pit-of-success-prd(값/런타임 불변량)의 후속으로 타입/구조 층을 담당.'
@@ -10,7 +13,6 @@ legacy:
   topics: [styles, ax, design-system]
   relates: [docs/2-areas/styles/prds/ax-pit-of-success-prd.md, docs/2-areas/styles/prds/ax-public-private-split-prd.md, docs/research/ax/02-principles.md, docs/research/ax/03-ax-mapping.md, docs/research/ax/04-gap-plan.md]
 ---
-
 # ax 축 감축 + role Required — Blueprint
 
 > **Discussion**: 2026-04-18 세션 회고 — text-apca 88/88 baseline pass인데 Replay 툴팁 가독 실패. 원인: `Partial<AxPrivate>` 열려 있음 + role optional + rolePreset miss silent. 본질 진단: 03-ax-mapping.md가 inventory(존재 체크)였고 contract audit(반증)이 아니었음. 해결: text/weight/state/scroll/opacity 5축 제거 + role Required로 discriminated union + surface→text 자동 pairing(Material on-*) + padding/gap/shape/border 런타임 throw 승격.

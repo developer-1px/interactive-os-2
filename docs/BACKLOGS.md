@@ -1,3 +1,12 @@
+---
+id: backlogs
+type: note
+slug: backlogs
+title: BACKLOGS
+tags: [untagged]
+created: 2026-03-21
+updated: 2026-04-18
+---
 # BACKLOGS
 
 한 줄로 충분한 백로그. 배경/검증이 필요한 항목은 `docs/5-backlogs/{camelCase}.md` 로.

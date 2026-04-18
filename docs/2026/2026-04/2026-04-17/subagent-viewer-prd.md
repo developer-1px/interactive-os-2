@@ -1,6 +1,9 @@
 ---
 id: 1-projects/replay/prds/subagent-viewer-prd
+type: prd
+slug: subagentViewer
 title: 'SubAgent Viewer — Blueprint'
+tags: [i]
 created: 2026-04-17
 updated: 2026-04-17
 summary: '**Discussion**: replay/live에서 Task(Agent) tool의 내부 tool 동작이 안 보임 → SubAgent 파일을 독립 viewer에 띄우기. 연결선 없이 가로 나열 고정폭. **산출물 유형**: UI 기능 (엔진 일부 확장) **규모 추정**: 파일 3~5개 수정, 1~2개 신규'

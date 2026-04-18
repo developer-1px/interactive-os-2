@@ -1,6 +1,9 @@
 ---
 id: '3-resources/17-[design]uiComponentHierarchy'
+type: note
+slug: uiComponentHierarchy
 title: 'UI Component Hierarchy — 2026-03-23'
+tags: [design]
 created: 2026-03-23
 updated: 2026-03-25
 legacy:

@@ -1,6 +1,9 @@
 ---
 id: 2-areas/axis/prds/selection-neutral-prd
+type: prd
+slug: selectionNeutral
 title: 'Selection Neutral — PRD'
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: selected를 accent→neutral로 전환하여, accent 예산을 activate에 확보'

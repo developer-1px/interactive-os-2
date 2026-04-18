@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/prds/ui-common-interface-prd
+type: prd
+slug: uiCommonInterface
 title: 'UI 완성품 공통 인터페이스 — PRD'
+tags: [untagged]
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: UI 완성품의 3축 모델(Pattern/Plugin/Renderer) 도출. 소비자 커스텀 cliff 해소를 위해 공통 인터페이스 + Plugin renderer 슬롯 + Renderer 주입점 확립.'

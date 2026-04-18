@@ -1,6 +1,9 @@
 ---
 id: samples/artifact-pipeline
+type: note
+slug: artifactPipeline
 title: '산출물 파이프라인 — N:M 관계도'
+tags: [samples]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

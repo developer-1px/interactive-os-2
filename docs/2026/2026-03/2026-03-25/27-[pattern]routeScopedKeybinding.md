@@ -1,6 +1,9 @@
 ---
 id: '3-resources/27-[pattern]routeScopedKeybinding'
+type: note
+slug: routeScopedKeybinding
 title: '라우트 기반 키바인딩 — 페이지/모드 단위 단축키 스코핑 패턴'
+tags: [pattern]
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: interactive-os에서 전역 단축키를 라우트 단위로 활성화/비활성화하는 설계를 검토 중. "AriaRoute" 개념의 외부 선행 사례를 조사.'

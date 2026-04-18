@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/keyline-guardian-proposal
+type: note
+slug: keylineGuardianProposal
 title: 'Keyline Guardian: LLM이 keyline을 유지하면서 컴포넌트를 만들 수 있는 3층 방어 아키텍처'
+tags: [untagged]
 created: 2026-04-18
 updated: 2026-04-18
 legacy:

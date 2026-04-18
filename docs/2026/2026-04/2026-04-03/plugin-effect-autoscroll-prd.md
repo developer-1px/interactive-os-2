@@ -1,6 +1,9 @@
 ---
 id: 2-areas/engine/prds/plugin-effect-autoscroll-prd
+type: prd
+slug: pluginEffectAutoscroll
 title: 'Plugin Effect + Autoscroll — PRD'
+tags: [untagged]
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'Discussion: plugin 시스템에 effect(hook 팩토리) 레이어 추가, autoscroll을 첫 적용 사례로 구현'

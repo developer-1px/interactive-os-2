@@ -1,6 +1,9 @@
 ---
 id: 5-backlogs/uiSdkCatalog
+type: note
+slug: uiSdkCatalog
 title: 'UI SDK 카탈로그 장기 플랜 — 2026-03-23'
+tags: [vision, x]
 created: 2026-03-23
 updated: 2026-03-23
 legacy:

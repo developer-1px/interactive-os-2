@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/prds/project-viewer-redesign-task
+type: plan
+slug: projectViewerRedesign
 title: 'Project Viewer 재설계 — 도메인 서비스 UI 언어'
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 legacy:

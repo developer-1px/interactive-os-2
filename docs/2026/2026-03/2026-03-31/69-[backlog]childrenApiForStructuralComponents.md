@@ -1,6 +1,9 @@
 ---
 id: '0-inbox/69-[backlog]childrenApiForStructuralComponents'
+type: backlog
+slug: childrenApiForStructuralComponents
 title: 'Children API for Structural Components — 2026-03-31'
+tags: [backlog]
 created: 2026-03-31
 updated: 2026-03-31
 legacy:

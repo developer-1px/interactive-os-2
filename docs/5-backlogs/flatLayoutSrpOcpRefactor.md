@@ -1,9 +1,14 @@
 ---
-created_at: 2026-04-19
-status: backlog
-source: handoff-2026-04-19-cmuxPreviewPoc
+id: flatLayoutSrpOcpRefactor
+type: backlog
+slug: flatLayoutSrpOcpRefactor
+title: 'FlatLayout SRP/OCP 리팩토링'
+tags: [untagged]
+created: 2026-04-19
+updated: 2026-04-18
+legacy:
+  legacy_status: backlog
 ---
-
 # FlatLayout SRP/OCP 리팩토링
 
 ## 배경

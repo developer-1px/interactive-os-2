@@ -1,6 +1,9 @@
 ---
 id: 2-areas/pattern/prds/compose-pattern-3arg-prd
+type: prd
+slug: composePattern3arg
 title: 'composePattern 3인자 리팩토링 — PRD'
+tags: [axes, newaxes, newaxis, sel]
 created: 2026-03-29
 updated: 2026-04-08
 summary: 'Discussion: Identity 14필드 god object → 축 인스턴스 SSOT + required 배열 + APG 3섹션 1:1 매핑'

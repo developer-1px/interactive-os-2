@@ -1,6 +1,9 @@
 ---
 id: 2-areas/engine/prds/engine-layer-hardening-prd
+type: prd
+slug: engineLayerHardening
 title: 'Engine Layer Hardening — PRD'
+tags: [untagged]
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: 3-에이전트 엔진 검토에서 도출. 레이어 의존 역전, 정확성 버그, 타입 안전성 갭 7건을 구조적으로 수정한다.'

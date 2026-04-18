@@ -1,6 +1,9 @@
 ---
 id: '3-resources/32-[tooling]layerDependencyEnforcement'
+type: note
+slug: layerDependencyEnforcement
 title: 'TS 레이어 의존성 강제 도구 — 자체 스크립트 vs 표준 도구'
+tags: [tooling]
 created: 2026-03-26
 updated: 2026-03-26
 summary: '작성일: 2026-03-26 맥락: checkLayerDeps.mjs 자체 스크립트(147줄)로 레이어 역참조를 감지 중. 표준 도구로 교체 가능한지 조사.'

@@ -1,6 +1,9 @@
 ---
 id: '3-resources/13-[design]cssTokenNamingConventions'
+type: note
+slug: cssTokenNamingConventions
 title: 'CSS 디자인 토큰 네이밍 약어 관행 — 주요 시스템 비교'
+tags: [data-surface, design]
 created: 2026-03-24
 updated: 2026-03-24
 summary: '작성일: 2026-03-25 맥락: DESIGN.md 5개 번들의 축 이름에 통용 약어 vs 자의적 약어를 구분하기 위한 근거 조사'

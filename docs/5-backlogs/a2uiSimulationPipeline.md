@@ -1,9 +1,14 @@
 ---
-created_at: 2026-04-19
-status: backlog
-source: handoff-2026-04-19-cmuxPreviewPoc
+id: a2uiSimulationPipeline
+type: backlog
+slug: a2uiSimulationPipeline
+title: 'A2UI simulation pipeline — POC에서 정식 파이프라인으로'
+tags: [untagged]
+created: 2026-04-19
+updated: 2026-04-18
+legacy:
+  legacy_status: backlog
 ---
-
 # A2UI simulation pipeline — POC에서 정식 파이프라인으로
 
 ## 배경

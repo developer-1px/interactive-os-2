@@ -82,7 +82,9 @@ function isFrontmatterKey(path: string): path is keyof import('./schema.ts').Doc
 export function validateGlobal(all: ExtractResult[]): ExtractWarning[] {
   const out: ExtractWarning[] = []
   const idToPath = new Map<string, string[]>()
-  const slugToPath = new Map<string, string[]>()
+  // slug uniqueness는 (type, slug) 조합 기준 — 다른 type이면 slug 공유 허용
+  // (예: ariaPanelTrigger prd + ariaPanelTrigger plan은 유효)
+  const typedSlugToPath = new Map<string, string[]>()
   for (const r of all) {
     const id = r.frontmatter.id
     const idArr = idToPath.get(id) ?? []
@@ -90,10 +92,12 @@ export function validateGlobal(all: ExtractResult[]): ExtractWarning[] {
     idToPath.set(id, idArr)
 
     const slug = r.frontmatter.slug
-    if (slug) {
-      const slugArr = slugToPath.get(slug) ?? []
+    const type = r.frontmatter.type
+    if (slug && type) {
+      const key = `${type}|${slug}`
+      const slugArr = typedSlugToPath.get(key) ?? []
       slugArr.push(r.path)
-      slugToPath.set(slug, slugArr)
+      typedSlugToPath.set(key, slugArr)
     }
   }
   for (const [id, paths] of idToPath.entries()) {
@@ -106,13 +110,16 @@ export function validateGlobal(all: ExtractResult[]): ExtractWarning[] {
       })
     }
   }
-  for (const [slug, paths] of slugToPath.entries()) {
+  for (const [key, paths] of typedSlugToPath.entries()) {
     if (paths.length > 1) {
+      const [type, slug] = key.split('|')
+      // slug 중복은 warn — id가 filenameStem으로 unique 보장하므로 식별자 기능은 유지.
+      // 실제 중복은 수동 정리 대상으로 남긴다 (README 월별 index, 주제 파생 등).
       out.push({
         code: 'duplicate-slug',
         field: 'slug',
-        severity: 'error',
-        message: `duplicate slug="${slug}" in: ${paths.join(', ')}`,
+        severity: 'warn',
+        message: `duplicate (type=${type}, slug="${slug}") in: ${paths.join(', ')}`,
       })
     }
   }

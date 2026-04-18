@@ -1,6 +1,9 @@
 ---
 id: 2-areas/engine/prds/native-api-maximize-task
+type: plan
+slug: nativeApiMaximize
 title: 'Native CSS/DOM API 극대화'
+tags: [untagged]
 created: 2026-04-09
 updated: 2026-04-09
 legacy:

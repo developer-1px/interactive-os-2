@@ -1,6 +1,9 @@
 ---
 id: 2-areas/interactiveOsArchitectureVision
+type: note
+slug: interactiveOsArchitectureVision
 title: 'interactive-os — Architecture Vision'
+tags: [untagged]
 created: 2026-03-17
 updated: 2026-03-25
 summary: '작성일: 2026-03-17 현재 상태가 아닌, 프로젝트의 이상적 완성 형태를 그린 로드맵 구조도'

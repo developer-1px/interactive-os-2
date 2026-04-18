@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/prds/a2ui-declarative-surface-prd
+type: prd
+slug: a2uiDeclarativeSurface
 title: 'A2UI Declarative Surface — PRD'
+tags: [untagged]
 created: 2026-04-03
 updated: 2026-04-08
 summary: 'Discussion: React를 내부 구현으로 숨기고, flat 선언만으로 접근성 완비 UI를 조립하는 A2UI 호환 표면 제공'

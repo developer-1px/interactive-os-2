@@ -1,6 +1,9 @@
 ---
 id: '2-areas/styles/72-[explain]ax-mece-review'
+type: explain
+slug: axMeceReview
 title: 'ax() 24축 MECE 검토 — 2026-04-06'
+tags: [explain]
 created: 2026-04-06
 updated: 2026-04-11
 legacy:

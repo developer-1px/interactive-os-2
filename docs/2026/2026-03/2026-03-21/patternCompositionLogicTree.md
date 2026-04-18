@@ -1,6 +1,9 @@
 ---
 id: 2-areas/pattern/patternCompositionLogicTree
+type: note
+slug: patternCompositionLogicTree
 title: 'Pattern Composition 로직트리 — 2026-03-20'
+tags: [untagged]
 created: 2026-03-21
 updated: 2026-03-24
 legacy:

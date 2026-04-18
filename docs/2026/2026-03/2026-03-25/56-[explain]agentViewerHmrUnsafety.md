@@ -1,6 +1,9 @@
 ---
 id: '4-archive/ui/archive/56-[explain]agentViewerHmrUnsafety'
+type: explain
+slug: agentViewerHmrUnsafety
 title: 'AgentViewer HMR 비안전성 — 왜 코드 수정 시 타임라인이 날아가는가'
+tags: [explain]
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-26 맥락: agentViewer 개발 중 파일 수정 시 축적된 타임라인 데이터와 스크롤 위치가 소실된다'

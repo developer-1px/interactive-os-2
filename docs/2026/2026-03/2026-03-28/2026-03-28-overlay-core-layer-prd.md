@@ -1,6 +1,9 @@
 ---
 id: superpowers/specs/2026-03-28-overlay-core-layer-prd
+type: prd
+slug: overlayCoreLayer
 title: 'Overlay Core Layer — PRD'
+tags: [open, superpowers, x]
 created: 2026-03-28
 updated: 2026-03-28
 summary: 'Discussion: 오버레이 컴포넌트(Dialog, Menu, Tooltip 등)가 각자도생으로 구현되어 z-index 충돌, dismiss 미통일, 중첩 미대응 — 브라우저 네이티브 top-layer 기반 통합 코어 레이어 제안'

@@ -1,6 +1,9 @@
 ---
 id: 4-archive/handoffs/handoff-2026-04-12-flatlayout-incident-experiment
+type: handoff
+slug: flatlayoutIncidentExperiment
 title: 'FlatLayout incident 재현 실험 — widget 합성 한계 발견'
+tags: [untagged]
 created: 2026-04-12
 updated: 2026-04-15
 summary: '2026-04-12 세션에서 FlatLayout이 어디까지 incident 수준 화면을 표현할 수 있는지 실험하고 10개 GAP을 발견·일부 해결.'

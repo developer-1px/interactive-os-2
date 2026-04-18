@@ -1,6 +1,9 @@
 ---
 id: 1-projects/aestheticScoring
+type: note
+slug: aestheticScoring
 title: '미감 점수화 — 2축 분석과 방향 — 2026-03-25'
+tags: [design]
 created: 2026-03-25
 updated: 2026-03-25
 legacy:

@@ -1,8 +1,12 @@
 ---
-created_at: 2026-04-18
-session_id: mdviewer-regression
+id: mdviewerRegression
+type: handoff
+slug: mdviewerRegression
+title: 'Handoff: MarkdownViewer 회귀 복구 — `/viewer/docs/*` 스타일·머메이드·스크롤'
+tags: [untagged]
+created: 2026-04-18
+updated: 2026-04-18
 ---
-
 # Handoff: MarkdownViewer 회귀 복구 — `/viewer/docs/*` 스타일·머메이드·스크롤
 
 > `/viewer/docs/2-areas/styles/prds/ax-liquid-glass-prd.md` 에서 mermaid 미렌더 + prose typography 무시 + 스크롤 끊김 3건을 추적·복구하고 main 에 push.

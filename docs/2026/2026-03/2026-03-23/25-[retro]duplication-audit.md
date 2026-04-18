@@ -1,6 +1,9 @@
 ---
 id: '4-archive/meta/archive/25-[retro]duplication-audit'
+type: audit
+slug: duplication
 title: '중복 현황 조사 보고서 — 2026-03-23'
+tags: [retro]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

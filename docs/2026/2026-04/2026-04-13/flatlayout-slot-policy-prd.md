@@ -1,6 +1,9 @@
 ---
 id: 2-areas/layout/prds/flatlayout-slot-policy-prd
+type: prd
+slug: flatlayoutSlotPolicy
 title: 'FlatLayout Slot Policy — PRD'
+tags: [untagged]
 created: 2026-04-13
 updated: 2026-04-13
 summary: 'Discussion: FlatLayout 위젯 컨테이너를 Swing식 "슬롯이 정책 소유" 2층 구조로 전환하여, 스크롤/flex를 엔진이 자동 보장. LLM 결정 지점 0.'

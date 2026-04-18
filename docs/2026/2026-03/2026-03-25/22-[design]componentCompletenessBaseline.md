@@ -1,6 +1,9 @@
 ---
 id: '3-resources/22-[design]componentCompletenessBaseline'
+type: note
+slug: componentCompletenessBaseline
 title: 'Component Completeness Baseline — UI 라이브러리 횡단 조사'
+tags: [data-aria-container, data-pressed, design]
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: CSS Layer Protocol은 정의됐지만, grep compliance만으로는 "디자인이 좋아졌는가"를 측정 못 함. "컴포넌트가 뭘 갖춰야 완성인가"의 레퍼런스가 필요.'

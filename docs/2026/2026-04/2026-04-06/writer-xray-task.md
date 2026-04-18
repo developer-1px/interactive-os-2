@@ -1,6 +1,9 @@
 ---
 id: 1-projects/chat/prds/writer-xray-task
+type: plan
+slug: writerXray
 title: 'Writer 엑스레이 — 구조 시각화 Phase 1'
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 legacy:

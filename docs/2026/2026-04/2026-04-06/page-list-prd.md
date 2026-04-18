@@ -1,6 +1,9 @@
 ---
 id: 1-projects/cms/content-editing/page-selection/page-list/prd
+type: prd
+slug: pageList
 title: 'CMS 랜딩페이지 기능 완결성 — PRD'
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-09
 summary: 'Discussion: QA 탐색에서 "만들다 만" 3건 발견. 콘텐츠가 아닌 기능/디자인 완결성 확보.'

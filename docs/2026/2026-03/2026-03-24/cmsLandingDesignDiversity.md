@@ -1,6 +1,9 @@
 ---
 id: 5-backlogs/cmsLandingDesignDiversity
+type: note
+slug: cmsLandingDesignDiversity
 title: 'CMS 랜딩 디자인 다양화 — 2026-03-24'
+tags: [explain]
 created: 2026-03-24
 updated: 2026-03-24
 legacy:

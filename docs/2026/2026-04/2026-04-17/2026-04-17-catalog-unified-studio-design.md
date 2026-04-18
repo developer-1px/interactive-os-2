@@ -1,6 +1,9 @@
 ---
 id: superpowers/specs/2026-04-17-catalog-unified-studio-design
+type: note
+slug: catalogUnifiedStudioDesign
 title: 'Catalog 통합뷰 설계 (Unified Studio)'
+tags: [superpowers]
 created: 2026-04-17
 updated: 2026-04-17
 summary: '- 작성일: 2026-04-17 - 라우트: `/catalog` 확장 - 목표: 컴포넌트 demo·커버리지·문서를 한 화면에서 보고 편집'

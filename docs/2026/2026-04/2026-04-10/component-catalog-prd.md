@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/prds/component-catalog-prd
+type: prd
+slug: componentCatalog
 title: 'Component Catalog — PRD'
+tags: [untagged]
 created: 2026-04-10
 updated: 2026-04-10
 summary: 'Discussion: ui/ 75개 중 24개만 showcase 등록. 수동 fixture 비용이 병목. *.demo.tsx 컨벤션 + FlatLayout 자동 카탈로그 + visual UI 레이어 + ax() 승격 루프.'

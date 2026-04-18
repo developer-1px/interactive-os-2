@@ -1,6 +1,9 @@
 ---
 id: '4-archive/meta/archive/47-[audit]skillEcosystemReport'
+type: audit
+slug: skillEcosystemReport
 title: '스킬 에코시스템 현황 보고서'
+tags: [audit, methodology]
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 목적: 범용 플러그인 설계 전 현황 파악 — 설계 제안이 아니라 있는 그대로의 지형도'

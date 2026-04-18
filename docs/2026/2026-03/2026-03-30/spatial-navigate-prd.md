@@ -1,6 +1,9 @@
 ---
 id: 2-areas/axis/prds/spatial-navigate-prd
+type: prd
+slug: spatialNavigate
 title: 'Spatial Navigate — PRD'
+tags: [untagged]
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: 2D 공간 탐색(TV 리모컨 방향키)을 os 기본기로 승격. navigate 축에 spatial 전략 추가, DOM rect 기반 방향키 이동 + cross-boundary + sticky cursor를 os가 자동 처리.'

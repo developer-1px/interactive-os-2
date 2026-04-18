@@ -1,6 +1,9 @@
 ---
 id: '3-resources/09-[pattern]baseUiRenderPattern'
+type: note
+slug: baseUiRenderPattern
 title: 'Base UI Render Prop 패턴 — interactive-os에 적용할 힌트'
+tags: [checked, pattern]
 created: 2026-03-23
 updated: 2026-03-24
 summary: '작성일: 2026-03-23 맥락: AriaItem wrapper 제거 후, render API를 Base UI 방식으로 개선하기 위한 근거 수집'

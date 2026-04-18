@@ -1,6 +1,9 @@
 ---
 id: '3-resources/35-[protocol]a2uiAgentToUI'
+type: note
+slug: a2uiAgentToUI
 title: 'A2UI (Agent-to-UI) Protocol — 에이전트가 선언적 JSON으로 UI를 말하는 프로토콜'
+tags: [parentid, protocol, slotname]
 created: 2026-04-03
 updated: 2026-04-03
 summary: '작성일: 2026-04-04 맥락: interactive-os의 ARIA-first UI 컴포넌트가 A2UI 렌더러가 될 수 있는지 매핑 가능성 분석'

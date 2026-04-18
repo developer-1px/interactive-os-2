@@ -1,3 +1,12 @@
+---
+id: axLiquidGlass
+type: prd
+slug: axLiquidGlass
+title: 'ax Liquid Glass 흡수 — Blueprint'
+tags: [untagged]
+created: 2026-04-18
+updated: 2026-04-18
+---
 # ax Liquid Glass 흡수 — Blueprint
 
 > **Discussion**: 2026-04-18 /discuss 대화 — ax Liquid Glass 개념 진화. FRT 게이트 6/6 통과. 근거 메모리: `project_ax_liquid_glass_evolution`, `project_depth_ladder`, `feedback_axis_minimum_via_subset_expansion`, `feedback_naming_design_neutral`

@@ -1,6 +1,9 @@
 ---
 id: samples/information-architecture
+type: note
+slug: informationArchitecture
 title: 'Information Architecture — Aria CMS'
+tags: [samples]
 created: 2026-04-09
 updated: 2026-04-09
 legacy:

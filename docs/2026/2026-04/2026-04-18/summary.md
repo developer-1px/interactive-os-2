@@ -1,3 +1,12 @@
+---
+id: summary
+type: note
+slug: summary
+title: 'Gemma Critique Loop — Meta Summary (Phase 1-a)'
+tags: [untagged]
+created: 2026-04-18
+updated: 2026-04-18
+---
 # Gemma Critique Loop — Meta Summary (Phase 1-a)
 
 **시작일**: 2026-04-18

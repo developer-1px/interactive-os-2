@@ -1,6 +1,9 @@
 ---
 id: '4-archive/meta/archive/23-[sample]progress-v2'
+type: note
+slug: progressV2
 title: 'interactive-os — Architecture Map'
+tags: [sample]
 created: 2026-03-23
 updated: 2026-04-11
 summary: 'LLM 세션 시작 시 프로젝트 현황 파악용. 구조적 변경 시에만 업데이트. Maturity: Concept → Prototype → Validated → Integrated → Production'

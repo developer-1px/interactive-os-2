@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui-dictionary
+type: note
+slug: uiDictionary
 title: UI Component Dictionary
+tags: [untagged]
 created: 2026-03-22
 updated: 2026-03-23
 summary: '보편적 UI 컴포넌트 사전. shadcn/ui + Radix + Base UI 합집합 기준. interactive-os 보유 현황 매핑.'

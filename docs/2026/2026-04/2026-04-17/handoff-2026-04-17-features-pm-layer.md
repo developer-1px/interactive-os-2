@@ -1,6 +1,9 @@
 ---
 id: features-pm-layer
+type: handoff
+slug: featuresPmLayer
 title: 'Handoff: Feature Management 뷰 + PM 레이어 신설'
+tags: [untagged]
 created: 2026-04-17
 updated: 2026-04-18
 summary: 'MEMORY가 PM 도구로 오남용되던 문제를 frontmatter DB + `/features` 뷰로 해결. PRD 🟢 8/8, UI 6버그 수정 후 브라우저 실사용 검증 완료.'

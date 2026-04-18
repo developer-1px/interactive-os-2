@@ -1,6 +1,9 @@
 ---
 id: samples/release-note
+type: note
+slug: releaseNote
 title: Release Notes
+tags: [samples]
 created: 2026-04-09
 updated: 2026-04-09
 summary: '---'

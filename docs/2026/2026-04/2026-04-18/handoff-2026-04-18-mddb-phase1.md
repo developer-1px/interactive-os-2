@@ -1,6 +1,9 @@
 ---
 id: handoff-2026-04-18-mddb-phase1
+type: handoff
+slug: mddbPhase1
 title: 'mddb Phase 1 — L0 결정적 frontmatter 인프라'
+tags: [untagged]
 created: 2026-04-18
 updated: 2026-04-18
 summary: 'discuss → prd → go 완주. 335 md 관리 인프라 착지. Phase 2·3은 별도 PRD로 대기.'

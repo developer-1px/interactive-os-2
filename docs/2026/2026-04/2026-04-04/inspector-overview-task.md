@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/prds/inspector-overview-task
+type: plan
+slug: inspectorOverview
 title: 'Inspector Overview 리디자인'
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-08
 legacy:

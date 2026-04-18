@@ -1,6 +1,9 @@
 ---
 id: 2-areas/distribution/data-component-matrix
+type: note
+slug: dataComponentMatrix
 title: 'Data → Component Matrix'
+tags: [untagged]
 created: 2026-04-12
 updated: 2026-04-12
 summary: 'ARIA OS LLM-facing 카탈로그 SSOT. LLM이 요구사항으로부터 데이터 형태를 식별하면, 이 표가 사용할 컴포넌트를 가리킨다. aria.md(시스템 프롬프트)가 이 매트릭스를 직접 인용한다.'

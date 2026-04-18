@@ -1,6 +1,9 @@
 ---
 id: 1-projects/book/prds/hook-catalog-book-fixes-task
+type: plan
+slug: hookCatalogBookFixes
 title: Hook Catalog + Book Fixes
+tags: [untagged]
 created: 2026-04-07
 updated: 2026-04-08
 legacy:

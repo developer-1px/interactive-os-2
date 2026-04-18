@@ -1,6 +1,9 @@
 ---
 id: 1-projects/features/README
+type: note
+slug: readme
 title: 'Features — PM Layer'
+tags: [untagged]
 created: 2026-04-17
 updated: 2026-04-17
 summary: '1인 개발자용 feature 상태 DB. MEMORY(경험/원칙), PROGRESS(concept map), prds(스펙)과 별개로 **진행 상태·관계·수명주기**만 담는 얇은 레이어.'

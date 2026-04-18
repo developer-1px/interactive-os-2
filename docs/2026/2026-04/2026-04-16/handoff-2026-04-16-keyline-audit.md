@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/handoff-2026-04-16-keyline-audit
+type: handoff
+slug: keylineAudit
 title: 'Handoff: keyline audit 파이프라인 구축'
+tags: [untagged]
 created: 2026-04-16
 updated: 2026-04-16
 summary: 'keylineCheck.mjs에 --audit 모드를 추가하고 /keyline-audit 스킬을 만들어, AI가 시각적 완성도 판정 → 정적 keyline 검증 → 토큰 수정 리포트를 자율 실행하는 수렴 루프 인프라를 구축했다.'

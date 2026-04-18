@@ -1,6 +1,9 @@
 ---
 id: 1-projects/chat/prds/writer-chat-prd
+type: prd
+slug: writerChat
 title: 'Writer Chat Panel — PRD'
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: Writer 앱에 채팅 패널을 추가하여 AI가 열린 MD 파일을 직접 수정하는 편집 경험. MD가 SSOT.'

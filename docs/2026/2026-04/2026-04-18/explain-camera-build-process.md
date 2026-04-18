@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/explain-camera-build-process
+type: explain
+slug: cameraBuildProcess
 title: 'Camera 프리미티브 — 어떻게 만들었는가'
+tags: [untagged]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '작성일: 2026-04-17 맥락: ZoomPane+ZoomPanCanvas 통합 작업(commit c9460d06)의 제작 과정 해설'

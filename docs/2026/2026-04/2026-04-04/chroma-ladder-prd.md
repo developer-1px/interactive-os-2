@@ -1,6 +1,9 @@
 ---
 id: 2-areas/design/prds/chroma-ladder-prd
+type: prd
+slug: chromaLadder
 title: 'Chroma Ladder — Selection 3토큰 분리 — PRD'
+tags: [aria-selected]
 created: 2026-04-04
 updated: 2026-04-08
 summary: 'Discussion: accent 최소화 — chroma=행동 긴급도, hue 250 고정 5단계 사다리'

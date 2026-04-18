@@ -1,6 +1,9 @@
 ---
 id: '3-resources/02-[design]headlessUiDesignCustomization'
+type: note
+slug: headlessUiDesignCustomization
 title: 'Headless UI 위의 디자인 커스터마이제이션 패턴'
+tags: [design]
 created: 2026-03-23
 updated: 2026-03-24
 summary: '작성일: 2026-03-22 맥락: interactive-os(headless) 위에 shadcn/ui 모델의 UI 레이어를 만들 때, 디자인 커스텀을 어떤 방식으로 제공할지 레퍼런스 조사'

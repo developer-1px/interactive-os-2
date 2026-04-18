@@ -1,6 +1,9 @@
 ---
 id: 2-areas/design/prds/improve-design-prd
+type: prd
+slug: improveDesign
 title: 'improve-design — PRD'
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 summary: 'Discussion: LLM이 디자인 결과물을 스스로 채점하고, ax()/ui/ 경로만으로 수정하여 9/10+ 까지 올리는 자동 루프. 해치(module.css)로 점수를 올리면 실패.'

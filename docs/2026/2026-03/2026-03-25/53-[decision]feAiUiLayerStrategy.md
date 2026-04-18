@@ -1,6 +1,9 @@
 ---
 id: '1-projects/feAiUiLayer/53-[decision]feAiUiLayerStrategy'
+type: decision
+slug: feAiUiLayerStrategy
 title: 'FE × AI UI Layer 전략 — 2026-03-25'
+tags: [decision, design, p0, p1, p2]
 created: 2026-03-25
 updated: 2026-03-25
 legacy:

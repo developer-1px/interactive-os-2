@@ -1,6 +1,9 @@
 ---
 id: research/ax/02-principles
+type: note
+slug: principles
 title: '02 Principles — ax 메타 원리 카드'
+tags: [research]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**작성일:** 2026-04-18 **상태:** 초안 v1. 20개 카드. 03 매핑 작업 전 검토 필요. **포맷:** 6항목 Principle Card (원리 / 정의 / 업계 증거 / 수학·인지 근거 / 반증 조건 / ax 매핑 + Examples)'

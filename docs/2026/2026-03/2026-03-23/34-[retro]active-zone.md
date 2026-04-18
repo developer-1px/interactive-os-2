@@ -1,6 +1,9 @@
 ---
 id: '4-archive/axis/archive/34-[retro]active-zone'
+type: retro
+slug: activeZone
 title: 'Retro: Active Zone — 2026-03-24'
+tags: [retro]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

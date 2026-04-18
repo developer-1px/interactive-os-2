@@ -1,6 +1,9 @@
 ---
 id: '2-areas/primitives/47-[ideal]keymapOnlyAria'
+type: note
+slug: keymapOnlyAria
 title: 'keyMap-only Aria — 선언적 OCP로 전역 단축키 처리'
+tags: [explain, ideal]
 created: 2026-03-25
 updated: 2026-04-11
 summary: '작성일: 2026-03-25 맥락: CMS에 `Cmd+\` preview 토글을 추가하면서, engine 없이 keyMap만으로 동작하는 Aria의 이상적 사용 패턴을 시뮬레이션한다. 선행 문서: `46-[explain]declarativeOcp.md` (선언적 OCP 3원칙)'

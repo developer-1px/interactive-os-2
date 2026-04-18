@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/minto-ai-dev-mentoring
+type: minto
+slug: aiDevMentoring
 title: 'AI 시대 개발자 지망생을 위한 멘토링'
+tags: [untagged]
 created: 2026-04-12
 updated: 2026-04-12
 legacy:

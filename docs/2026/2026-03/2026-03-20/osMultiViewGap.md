@@ -1,6 +1,9 @@
 ---
 id: 2-areas/primitives/osMultiViewGap
+type: note
+slug: osMultiViewGap
 title: 'os multi-view gap — 1 Store, 2 Widgets 충돌 해설'
+tags: [untagged]
 created: 2026-03-20
 updated: 2026-03-24
 summary: '작성일: 2026-03-20 맥락: CMS sidebar를 os aria로 전환하면서 드러난 구조적 갭. 수동 구현보다 글루코드가 오히려 증가하여 "세련되지 않다"는 문제 제기.'

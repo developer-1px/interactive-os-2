@@ -1,6 +1,9 @@
 ---
 id: 1-projects/features/prds/feature-mgmt-view-prd
+type: prd
+slug: featureMgmtView
 title: 'Feature Management View — PRD'
+tags: [n]
 created: 2026-04-17
 updated: 2026-04-17
 summary: 'Discussion: MEMORY가 PM 도구로 오남용되는 문제를 해결하기 위해, feature의 status·lifecycle·관계를 전담하는 **PM 레이어**를 신설하고 Productboard Objectives 스타일의 조망 뷰를 제공한다.'

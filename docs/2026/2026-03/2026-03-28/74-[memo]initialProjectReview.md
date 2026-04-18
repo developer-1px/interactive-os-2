@@ -1,6 +1,9 @@
 ---
 id: '4-archive/meta/archive/74-[memo]initialProjectReview'
+type: note
+slug: initialProjectReview
 title: '74-[memo]initialProjectReview'
+tags: [memo]
 created: 2026-03-28
 updated: 2026-04-11
 legacy:

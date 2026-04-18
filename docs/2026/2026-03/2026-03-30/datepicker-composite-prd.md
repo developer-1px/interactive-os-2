@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/prds/datepicker-composite-prd
+type: prd
+slug: datepickerComposite
 title: 'DatePicker Composite — PRD'
+tags: [untagged]
 created: 2026-03-30
 updated: 2026-04-08
 summary: 'Discussion: Gap 3 해소 — 바이브코딩에서 `<DatePicker />` 한 줄로 접근성 완전한 date picker 생산'

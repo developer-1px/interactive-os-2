@@ -1,6 +1,9 @@
 ---
 id: research/ax/03-ax-mapping
+type: note
+slug: axMapping
 title: '03 ax Mapping — 원리 × 25축 Locked/Exposed/Missing/Conflicts/N/A'
+tags: [research]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**작성일:** 2026-04-18 **근거:** `src/styles/ax.ts`, `axPublic.ts`, `axPrivate.ts`, `rolePreset.ts`, `ax.css`, `tokens.css`, `palette.css`, `docs/DESIGN.md` 실독 **목적:** 02 원리 20개 × ax 25축 역매핑으로 **원리 자체의 타당성**과 **축 구현의 완성도**를 동시에 검증 (`feedback_enforcement_multilayer`, `feedback_judgment_priority`)'

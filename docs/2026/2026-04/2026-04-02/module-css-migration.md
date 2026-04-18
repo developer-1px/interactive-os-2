@@ -1,6 +1,9 @@
 ---
 id: 2-areas/design/prds/module-css-migration
+type: note
+slug: moduleCssMigration
 title: 'module.css → ax() 마이그레이션 트래커'
+tags: [untagged]
 created: 2026-04-02
 updated: 2026-04-08
 legacy:

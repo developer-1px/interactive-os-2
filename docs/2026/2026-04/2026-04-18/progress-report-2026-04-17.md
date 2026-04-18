@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/progress-report-2026-04-17
+type: note
+slug: progressReport
 title: 'Aria Progress Report — 2026-04-17'
+tags: [untagged]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '본인 회고용 정식 보고서. 범위: 2025-10-01 ~ 2026-04-17 (약 6.5개월, 1443 커밋). 출처: `docs/PROGRESS.md`, `MEMORY.md`, `.claude/CLAUDE.md`, `docs/DESIGN.md`, `git log`, `src/` 디렉토리 스캔.'

@@ -1,6 +1,9 @@
 ---
 id: 1-projects/finder-viewer/prds/finder-viewer-prd
+type: prd
+slug: finderViewer
 title: 'Finder Viewer — PRD'
+tags: [untagged]
 created: 2026-04-10
 updated: 2026-04-10
 summary: 'Discussion: viewer + docs를 Finder 스타일 단일 탐색 UI로 통합. Apple 미니멀 컨셉.'

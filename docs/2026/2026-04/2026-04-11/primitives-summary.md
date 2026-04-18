@@ -1,6 +1,9 @@
 ---
 id: 4-archive/primitives/summary
+type: note
+slug: primitivesSummary
 title: 'Primitives — 결정 요약'
+tags: [explain]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

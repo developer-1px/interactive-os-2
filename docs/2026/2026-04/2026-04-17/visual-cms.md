@@ -1,6 +1,9 @@
 ---
 id: visual-cms
+type: note
+slug: visualCms
 title: Visual CMS
+tags: [cms, flatlayout, i18n, landing]
 created: 2025-11
 updated: 2026-04-17
 summary: '랜딩 페이지 자체를 편집 대상으로 삼는 Visual CMS. Figma Slides 레이아웃 영감, 하나의 앱 = 하나의 store 원칙 준수.'

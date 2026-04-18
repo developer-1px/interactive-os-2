@@ -1,6 +1,9 @@
 ---
 id: 4-archive/axis/archive/axisV2FiveAxesModel
+type: note
+slug: axisV2FiveAxesModel
 title: 'Axis v2: 5축 모델 — 2026-03-20'
+tags: [untagged]
 created: 2026-03-21
 updated: 2026-04-11
 legacy:

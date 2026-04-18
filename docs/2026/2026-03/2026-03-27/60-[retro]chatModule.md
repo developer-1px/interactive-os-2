@@ -1,6 +1,9 @@
 ---
 id: '4-archive/ui/archive/60-[retro]chatModule'
+type: retro
+slug: chatModule
 title: 'Retro: Gen UI Chat Module — 2026-03-27'
+tags: [retro]
 created: 2026-03-27
 updated: 2026-04-11
 legacy:

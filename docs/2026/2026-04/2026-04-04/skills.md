@@ -1,6 +1,9 @@
 ---
 id: 2-areas/harness/skills
+type: note
+slug: skills
 title: 'Skills — 워크플로우 강제'
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-04
 summary: '스킬은 강제력 ~80%. LLM의 행동 패턴을 구조화하지만, 텍스트 기반이라 100% 보장은 아님. 모든 스킬은 `.claude/skills/{name}/SKILL.md`.'

@@ -1,6 +1,9 @@
 ---
 id: 2-areas/distribution/plans/2026-04-12-single-entry-refactor
+type: note
+slug: singleEntryRefactor
 title: 'Single Entry Refactor — Implementation Plan'
+tags: [untagged]
 created: 2026-04-12
 updated: 2026-04-12
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'

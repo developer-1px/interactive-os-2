@@ -1,6 +1,9 @@
 ---
 id: '3-resources/20-[tooling]showcaseRegistryRefactor'
+type: note
+slug: showcaseRegistryRefactor
 title: 'showcaseRegistry 의존성 트리 — 2026-03-25'
+tags: [tooling]
 created: 2026-03-24
 updated: 2026-03-25
 legacy:

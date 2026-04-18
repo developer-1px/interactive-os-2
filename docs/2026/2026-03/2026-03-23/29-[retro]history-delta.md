@@ -1,6 +1,9 @@
 ---
 id: '4-archive/engine/archive/29-[retro]history-delta'
+type: retro
+slug: historyDelta
 title: 'Retro: History Delta-Based Undo/Redo — 2026-03-23'
+tags: [retro]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

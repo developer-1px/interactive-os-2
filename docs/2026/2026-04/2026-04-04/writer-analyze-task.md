@@ -1,6 +1,9 @@
 ---
 id: 1-projects/chat/prds/writer-analyze-task
+type: plan
+slug: writerAnalyze
 title: Writer Sentence Role Analysis
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-08
 legacy:

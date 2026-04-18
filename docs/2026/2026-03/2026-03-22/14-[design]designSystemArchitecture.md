@@ -1,6 +1,9 @@
 ---
 id: '3-resources/14-[design]designSystemArchitecture'
+type: note
+slug: designSystemArchitecture
 title: '디자인 시스템 현황 — aria 프로젝트의 토큰·스타일·컴포넌트 아키텍처'
+tags: [data-aria-container, data-surface, design, retro]
 created: 2026-03-22
 updated: 2026-03-26
 summary: '작성일: 2026-03-22 맥락: 현재까지 구축된 디자인 시스템의 구조, 결정 이유, 현황을 정리한다.'

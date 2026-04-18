@@ -1,10 +1,13 @@
 ---
-created_at: 2026-04-18
-session_id: chat-redesign-cmux-pipeline
+id: pipelineLocked
+type: handoff
+slug: pipelineLocked
+title: 'Handoff: 개발 파이프라인 5단계 + 게이트 + 엔티티 레이어 고정 + cmux식 /chat 재설계 시작'
+tags: [untagged]
+created: 2026-04-18
+updated: 2026-04-18
 consumed_by: 2026-04-18-session-card
-consumed_at: 2026-04-18
 ---
-
 # Handoff: 개발 파이프라인 5단계 + 게이트 + 엔티티 레이어 고정 + cmux식 /chat 재설계 시작
 
 > 이 세션에서 **앞으로 모든 개발의 표준 순서**가 확정됐다. 5단계 파이프라인 + 3축 훅 게이트 + 도메인 엔티티 분리. 동시에 그 파이프라인을 적용해 `/chat` 의 cmux식 재설계 1차 (entities/chat + 디버그 뷰어) 를 완료. 다음 세션은 이 SSOT 위에서 SessionCard 구현부터 시작.

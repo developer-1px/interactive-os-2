@@ -1,6 +1,9 @@
 ---
 id: 4-archive/primitives/archive/listboxGroupedApgStructure
+type: note
+slug: listboxGroupedApgStructure
 title: 'listboxGrouped APG 구조 불일치 — 2026-03-28'
+tags: [untagged]
 created: 2026-03-28
 updated: 2026-04-11
 legacy:

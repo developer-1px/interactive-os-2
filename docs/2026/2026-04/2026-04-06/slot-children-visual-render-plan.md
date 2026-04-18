@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/prds/slot-children-visual-render-plan
+type: plan
+slug: slotChildrenVisualRender
 title: 'Slot Children 시각적 렌더링 + Auto-drill Implementation Plan'
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'

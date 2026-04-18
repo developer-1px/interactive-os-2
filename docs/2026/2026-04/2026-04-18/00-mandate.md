@@ -1,6 +1,9 @@
 ---
 id: research/ax/00-mandate
+type: note
+slug: mandate
 title: '00 Mandate — ax 메타 원리 연구'
+tags: [research]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**선언일:** 2026-04-18 **이전 상태:** ax = 24축 CSS-in-JS 시스템 (실험 중) **재정의 후:** ax = **현대 UI 디자인 메타 원리의 공식 좌표계**'

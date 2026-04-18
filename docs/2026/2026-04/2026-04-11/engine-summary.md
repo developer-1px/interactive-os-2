@@ -1,6 +1,9 @@
 ---
 id: 4-archive/engine/summary
+type: note
+slug: engineSummary
 title: 'Engine — 결정 요약'
+tags: [explain, retro]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

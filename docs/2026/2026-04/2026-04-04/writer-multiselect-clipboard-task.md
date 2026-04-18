@@ -1,6 +1,9 @@
 ---
 id: 1-projects/chat/prds/writer-multiselect-clipboard-task
+type: plan
+slug: writerMultiselectClipboard
 title: Writer Multi-Select Clipboard
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-08
 legacy:

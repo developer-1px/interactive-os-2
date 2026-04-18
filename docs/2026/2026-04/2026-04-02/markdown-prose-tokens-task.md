@@ -1,6 +1,9 @@
 ---
 id: 2-areas/design/prds/markdown-prose-tokens-task
+type: plan
+slug: markdownProseTokens
 title: 'Markdown Prose 토큰 분리 및 base 정리'
+tags: [untagged]
 created: 2026-04-02
 updated: 2026-04-08
 legacy:

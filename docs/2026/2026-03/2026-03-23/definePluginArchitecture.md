@@ -1,6 +1,9 @@
 ---
 id: 4-archive/engine/archive/definePluginArchitecture
+type: note
+slug: definePluginArchitecture
 title: 'clipboard keyMap → native event 전환 — 2026-03-23'
+tags: [untagged]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

@@ -1,6 +1,9 @@
 ---
 id: superpowers/plans/2026-04-17-catalog-unified-studio
+type: note
+slug: catalogUnifiedStudio
 title: 'Catalog 통합뷰 구현 Plan'
+tags: [catalog, superpowers]
 created: 2026-04-17
 updated: 2026-04-17
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'

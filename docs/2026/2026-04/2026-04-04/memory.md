@@ -1,6 +1,9 @@
 ---
 id: 2-areas/harness/memory
+type: note
+slug: memory
 title: 'Memory — 프로젝트 지식 영속화'
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-04
 summary: 'Memory는 강제력 ~50%. 매 세션 시작 시 MEMORY.md 인덱스가 로딩되지만, 개별 파일은 필요 시에만 읽힌다. **반복 3회 이상이면 feedback 승격, 기계적 감지 가능하면 훅 승격.**'

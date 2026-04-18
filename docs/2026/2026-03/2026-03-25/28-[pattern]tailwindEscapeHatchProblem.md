@@ -1,6 +1,9 @@
 ---
 id: '3-resources/28-[pattern]tailwindEscapeHatchProblem'
+type: note
+slug: tailwindEscapeHatchProblem
 title: 'Tailwind의 Escape Hatch 문제 — 디자인 시스템 프로젝트에서의 충돌과 대안'
+tags: [pattern]
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: interactive-os는 자체 CSS 변수 토큰 시스템(DESIGN.md)을 가지고 있다. 구조적 CSS(레이아웃)를 LLM이 파악하기 어려워서 Tailwind 도입을 검토했으나, escape hatch 남용과 토큰 이중 관리가 우려됨.'

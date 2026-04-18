@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/pyramid-harness-engineering-ai-era
+type: pyramid
+slug: harnessEngineeringAiEra
 title: 'AI 시대 하네스 엔지니어링 특강'
+tags: [untagged]
 created: 2026-04-11
 updated: 2026-04-11
 legacy:

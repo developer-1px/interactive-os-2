@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/componentDesignChecklist
+type: note
+slug: componentDesignChecklist
 title: Component Design Checklist
+tags: [aria-checked, data-compact, data-focused, data-invalid, data-renaming, spacing]
 created: 2026-03-28
 updated: 2026-03-28
 summary: 'shadcn/ui v4 구조 추출 + 우리 토큰 매핑. 레퍼런스·체크리스트·디자인 가이드 3역할. **갱신 시점:** 컴포넌트 디자인 패스 완료 시 상태 갱신. **상태:** ⬜ 미구현 / 🟡 부분 / 🟢 완료 / — 해당 없음'

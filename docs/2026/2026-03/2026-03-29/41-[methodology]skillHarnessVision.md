@@ -1,6 +1,9 @@
 ---
 id: '3-resources/41-[methodology]skillHarnessVision'
+type: note
+slug: skillHarnessVision
 title: 'AI 협업 하네스 — 세션이 쌓일수록 똑똑해지는 사고 운영체제'
+tags: [methodology]
 created: 2026-03-29
 updated: 2026-04-11
 summary: '작성일: 2026-03-29 맥락: 22개 커스텀 스킬, 130개+ memory, 이번 세션의 prd/retrospect 수정 의도에서 역추론'

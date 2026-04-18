@@ -1,6 +1,9 @@
 ---
 id: 2-areas/pattern/prds/form-pattern-detail-panel-prd
+type: prd
+slug: formPatternDetailPanel
 title: 'CMS DetailPanel os화 — form 패턴 + zone 전환 PRD'
+tags: [untagged]
 created: 2026-04-11
 updated: 2026-04-11
 summary: 'Discussion: slot-only 노드에서 Enter drill-down 시 sr-only 프록시에 포커스되어 무반응. form 패턴 신규 + DetailPanel os화 + zone 전환으로 근본 해결.'

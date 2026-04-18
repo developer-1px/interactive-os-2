@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/handoff-2026-04-17-subagent-viewer
+type: handoff
+slug: subagentViewer
 title: 'Handoff: SubAgent Viewer (Blueprint PRD 파이프라인 첫 완주)'
+tags: [untagged]
 created: 2026-04-17
 updated: 2026-04-18
 summary: 'replay/live에서 SubAgent(Task) 내부 tool 동작을 부모 옆 가로 고정폭 viewer로 띄우는 기능 구현. 동시에 /prd 스킬을 Blueprint 형식으로 재설계하고 /handoff에 A0 역PRD 감사 게이트 전면 배치.'

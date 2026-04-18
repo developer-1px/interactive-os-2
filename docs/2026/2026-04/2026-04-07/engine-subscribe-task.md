@@ -1,6 +1,9 @@
 ---
 id: 2-areas/engine/prds/engine-subscribe-task
+type: plan
+slug: engineSubscribe
 title: 'engine.subscribe — Task'
+tags: [untagged]
 created: 2026-04-07
 updated: 2026-04-08
 legacy:

@@ -1,6 +1,9 @@
 ---
 id: 2-areas/pattern/prds/modal-key-trap-prd
+type: prd
+slug: modalKeyTrap
 title: 'Modal Key Trap — PRD'
+tags: [untagged]
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: Book 라우트의 ArrowUp/Down이 TOC 모달을 뚫고 페이지를 넘김. keyMap에 등록된 키만 trap되고 나머지가 leak. findMatchingKey에 `''*''` 와일드카드 fallback을 추가하여 모달이 모든 키를 소비하게 한다.'

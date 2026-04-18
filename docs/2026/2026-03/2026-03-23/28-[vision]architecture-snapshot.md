@@ -1,6 +1,9 @@
 ---
 id: '4-archive/meta/archive/28-[vision]architecture-snapshot'
+type: note
+slug: architectureSnapshot
 title: 'Architecture Snapshot — 2026-03-23'
+tags: [vision]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

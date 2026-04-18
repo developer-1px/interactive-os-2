@@ -1,6 +1,9 @@
 ---
 id: 5-backlogs/identityConfigSlim
+type: note
+slug: identityConfigSlim
 title: 'Identity Config 축소 — 2026-03-29'
+tags: [untagged]
 created: 2026-03-28
 updated: 2026-03-28
 legacy:

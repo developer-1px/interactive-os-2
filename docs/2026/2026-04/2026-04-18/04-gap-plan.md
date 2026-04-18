@@ -1,6 +1,9 @@
 ---
 id: research/ax/04-gap-plan
+type: plan
+slug: gap
 title: '04 Gap Plan — 원리 × 7 Enforcement Layer + 보정 로드맵'
+tags: [research]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**작성일:** 2026-04-18 **입력:** `02-principles.md` (20 원리) + `03-ax-mapping.md` (현재 상태 판정) + `feedback_enforcement_multilayer` memory **목적:** 원리별 **7 enforcement layer** 현재/이상 상태 매핑 → 보정 액션 P0~P3 우선순위화 → DESIGN.md 재편 플랜'

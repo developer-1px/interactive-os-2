@@ -1,6 +1,9 @@
 ---
 id: 2-areas/harness/settings
+type: note
+slug: settings
 title: 'Settings — 훅 등록'
+tags: [untagged]
 created: 2026-04-04
 updated: 2026-04-04
 summary: '`.claude/settings.json`이 훅의 등록/매칭/실행 방식을 결정한다.'

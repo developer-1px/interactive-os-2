@@ -1,6 +1,9 @@
 ---
 id: PROGRESS
+type: note
+slug: progress
 title: 'interactive-os — Architecture Map'
+tags: [untagged]
 created: 2026-03-16
 updated: 2026-04-17
 summary: 'Concept Map + Maturity Tracker. Task list가 아님. > **갱신 시점:** 모듈 추가/삭제 시 행 갱신. Maturity·Gaps는 /retro 시 반영. > **Maturity:** Concept → Prototype → Validated → Integrated → Production **이력:** PROGRESS-ARCHIVE.md (체크리스트 시절 전체 이력)'

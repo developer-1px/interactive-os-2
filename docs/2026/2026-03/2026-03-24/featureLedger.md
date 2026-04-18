@@ -1,6 +1,9 @@
 ---
 id: 3-resources/featureLedger
+type: note
+slug: featureLedger
 title: 'Feature Ledger — 누적적 자기설명 문서의 기존 개념 지도'
+tags: [untagged]
 created: 2026-03-24
 updated: 2026-03-24
 summary: '작성일: 2026-03-25 맥락: interactive-os 스킬 파이프라인에서 "MD를 쓰면 끝"을 만들려는데, feature 단위의 누적 관리 개념이 필요'

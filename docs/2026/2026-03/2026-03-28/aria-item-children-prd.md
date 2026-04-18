@@ -1,6 +1,9 @@
 ---
 id: 2-areas/primitives/prds/aria-item-children-prd
+type: prd
+slug: ariaItemChildren
 title: 'Aria.Item render children — PRD'
+tags: [untagged]
 created: 2026-03-28
 updated: 2026-04-08
 summary: 'Discussion: container node의 자식을 render callback 4번째 인자로 전달하여 APG group wrapper 구조 지원'

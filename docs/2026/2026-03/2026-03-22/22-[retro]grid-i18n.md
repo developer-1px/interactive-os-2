@@ -1,6 +1,9 @@
 ---
 id: '4-archive/axis/archive/22-[retro]grid-i18n'
+type: retro
+slug: gridI18n
 title: 'Retro: Grid 범용화 + CMS i18n Table — 2026-03-23'
+tags: [retro]
 created: 2026-03-22
 updated: 2026-04-11
 legacy:

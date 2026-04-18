@@ -1,6 +1,9 @@
 ---
 id: '3-resources/30-[design]textColorHierarchyTokens'
+type: note
+slug: textColorHierarchyTokens
 title: 'Text Color Hierarchy Tokens — 디자인 시스템별 텍스트 색상 위계 비교'
+tags: [design]
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-26 맥락: Surface 위 text-muted가 WCAG AA를 전면 실패하여, 업계 표준 텍스트 위계 구조와 대비 기준을 조사'

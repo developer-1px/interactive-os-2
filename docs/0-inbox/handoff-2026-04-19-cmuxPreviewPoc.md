@@ -1,7 +1,12 @@
 ---
-created_at: 2026-04-19
+id: cmuxPreviewPoc
+type: handoff
+slug: cmuxPreviewPoc
+title: 'Handoff: cmux preview POC — 선언만으로 매트릭스 + 엔진 버그 2건 수정'
+tags: [untagged]
+created: 2026-04-19
+updated: 2026-04-18
 ---
-
 # Handoff: cmux preview POC — 선언만으로 매트릭스 + 엔진 버그 2건 수정
 
 > /discuss 에서 출발해 "LLM의 시각 미결정성을 FlatLayout 으로 해소한다"는 방향을 검증. `/cmux/preview?scenario=X` 라우트 + 5 시나리오 스냅 매트릭스로 definePage 선언-only 경로가 A2UI 수준으로 작동함을 실증. 파이프라인의 부산물로 엔진 버그 2건 수정, SRP/OCP 위반 1건 지적 받아 backlog 로 이관.

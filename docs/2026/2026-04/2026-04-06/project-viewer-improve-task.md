@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/prds/project-viewer-improve-task
+type: plan
+slug: projectViewerImprove
 title: Project Viewer /improve Task
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 legacy:

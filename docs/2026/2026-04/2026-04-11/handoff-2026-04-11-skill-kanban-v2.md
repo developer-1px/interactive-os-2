@@ -1,6 +1,9 @@
 ---
 id: 4-archive/meta/archive/handoff-2026-04-11-skill-kanban-v2
+type: handoff
+slug: skillKanbanV2
 title: 'Handoff: Skill Kanban v2 — 2패널 모달 + 산출물 표시'
+tags: [untagged]
 created: 2026-04-11
 updated: 2026-04-11
 summary: '2026-04-11 세션에서 Skill Kanban v2 discuss→PRD→구현→simplify 완료. 브라우저 실사용 검증과 디자인 개선이 남음.'

@@ -1,6 +1,9 @@
 ---
 id: 2-areas/engine/prds/plugin-default-keymap-task
+type: plan
+slug: pluginDefaultKeymap
 title: Plugin Default KeyMap + CMS Sidebar Cleanup
+tags: [untagged]
 created: 2026-04-02
 updated: 2026-04-08
 legacy:

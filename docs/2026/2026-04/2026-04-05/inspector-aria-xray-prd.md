@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/prds/inspector-aria-xray-prd
+type: prd
+slug: inspectorAriaXray
 title: 'Inspector ARIA X-Ray — PRD'
+tags: [id, nodeid]
 created: 2026-04-05
 updated: 2026-04-08
 summary: 'Discussion: OS가 생산하는 ARIA를 노드별로 x-ray — Chrome DevTools Accessibility Tree급 세밀도'

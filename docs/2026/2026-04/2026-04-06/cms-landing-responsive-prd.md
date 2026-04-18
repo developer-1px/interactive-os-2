@@ -1,6 +1,9 @@
 ---
 id: 1-projects/cms/prds/cms-landing-responsive-prd
+type: prd
+slug: cmsLandingResponsive
 title: 'CMS 랜딩 반응형 + 빈 상태 품질 개선 — PRD'
+tags: [untagged]
 created: 2026-04-06
 updated: 2026-04-08
 summary: 'Discussion: CMS 랜딩이 interactive-os의 "proof"로서 3뷰포트에서 프로페셔널하게 보여야 하나, 모바일 프리뷰에서 반응형이 작동하지 않고 빈 콘텐츠가 노출됨'

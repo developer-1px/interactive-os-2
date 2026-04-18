@@ -1,6 +1,9 @@
 ---
 id: '3-resources/24-[pattern]agenticBrowserStateCapture'
+type: note
+slug: agenticBrowserStateCapture
 title: 'Agentic Browser State Capture — Accessibility Tree 기반 페이지 상태 표현'
+tags: [checked, disabled, expanded, pattern, pressed, selected]
 created: 2026-03-25
 updated: 2026-03-25
 summary: '작성일: 2026-03-25 맥락: REC(재현 녹화) 기능에 ARIA tree 스냅샷을 도입하기 위해, 에이전틱 브라우저들이 실제로 페이지 상태를 어떻게 캡처하는지 조사'

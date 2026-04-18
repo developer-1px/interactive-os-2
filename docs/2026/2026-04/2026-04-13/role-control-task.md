@@ -1,6 +1,9 @@
 ---
 id: 0-inbox/role-control-task
+type: plan
+slug: roleControl
 title: 'role: ''control'' 축 도입 — size: ''md'' 단일 크기'
+tags: [untagged]
 created: 2026-04-13
 updated: 2026-04-13
 legacy:

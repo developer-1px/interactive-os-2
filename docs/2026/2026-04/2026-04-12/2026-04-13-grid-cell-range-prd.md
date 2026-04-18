@@ -1,6 +1,9 @@
 ---
 id: 2-areas/axis/prds/2026-04-13-grid-cell-range-prd
+type: prd
+slug: gridCellRange
 title: 'Grid 2D Cell Range Selection — PRD'
+tags: [untagged]
 created: 2026-04-12
 updated: 2026-04-12
 summary: 'Discussion: i18n 편집기에서 Shift+←/→ 미작동 발견 → grid 축 공통 미구현 확정 → 키보드 4방향 + Shift+Click + Drag로 2D 사각 셀 영역 선택을 grid 축에 주입. clipboard/Delete가 영역에 작동.'

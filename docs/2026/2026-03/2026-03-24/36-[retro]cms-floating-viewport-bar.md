@@ -1,6 +1,9 @@
 ---
 id: '4-archive/cms/archive/36-[retro]cms-floating-viewport-bar'
+type: retro
+slug: cmsFloatingViewportBar
 title: 'Retro: CMS Floating Viewport Bar — 2026-03-24'
+tags: [retro]
 created: 2026-03-24
 updated: 2026-04-11
 legacy:

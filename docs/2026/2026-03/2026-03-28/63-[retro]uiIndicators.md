@@ -1,6 +1,9 @@
 ---
 id: '4-archive/ui/archive/63-[retro]uiIndicators'
+type: retro
+slug: uiIndicators
 title: 'Retro: UI Indicators Phase 1 — 2026-03-28'
+tags: [retro]
 created: 2026-03-28
 updated: 2026-04-11
 legacy:

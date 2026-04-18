@@ -1,6 +1,9 @@
 ---
 id: 2-areas/axis/prds/v3-migration-plan
+type: plan
+slug: v3Migration
 title: 'v3 Migration Plan — 2026-03-29'
+tags: [untagged]
 created: 2026-03-28
 updated: 2026-04-08
 legacy:

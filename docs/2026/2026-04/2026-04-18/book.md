@@ -1,3 +1,12 @@
+---
+id: book
+type: note
+slug: book
+title: 'Gemma 4 Critique — /book'
+tags: [untagged]
+created: 2026-04-18
+updated: 2026-04-18
+---
 # Gemma 4 Critique — /book
 
 - **Route**: `/book`

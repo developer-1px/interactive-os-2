@@ -1,6 +1,9 @@
 ---
 id: 2-areas/store/prds/store-slots-prd
+type: prd
+slug: storeSlots
 title: 'Store Slots 정규화 — PRD'
+tags: [untagged]
 created: 2026-03-31
 updated: 2026-04-08
 summary: 'Discussion: children(array) + slots(named object props) 이원 정규화로 모든 웹 콘텐츠를 예외 없이 표현. 복합 콘텐츠 drill down 지원.'

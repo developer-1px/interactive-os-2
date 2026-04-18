@@ -1,6 +1,9 @@
 ---
 id: 2-areas/ui/prds/camera-primitive-prd
+type: prd
+slug: cameraPrimitive
 title: 'Camera 프리미티브 — PRD'
+tags: [untagged]
 created: 2026-04-17
 updated: 2026-04-17
 summary: 'Discussion: ZoomPane(imperative) + ZoomPanCanvas(user wheel/pan)를 단일 Camera 프리미티브로 통합. 선언형 shot 시퀀스(time/end/signal advance) + 명령형 focus API, interact/view 모드 분리, 사용자 조작 시 언제나 pause.'

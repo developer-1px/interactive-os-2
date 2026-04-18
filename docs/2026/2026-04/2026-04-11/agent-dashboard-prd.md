@@ -1,6 +1,9 @@
 ---
 id: 2-areas/devtools/prds/agent-dashboard-prd
+type: prd
+slug: agentDashboard
 title: 'Agent Dashboard — PRD'
+tags: [untagged]
 created: 2026-04-11
 updated: 2026-04-11
 summary: 'Discussion: Skill Kanban을 에이전트 대시보드로 재설계. 스킬 분류(Planning/Running/Done) → 사용자 관심사 분류(Waiting/Active/Done). "각 에이전트가 지금 어디서 뭘 하고 있는지 + 산출물 확인"이 핵심 Job.'

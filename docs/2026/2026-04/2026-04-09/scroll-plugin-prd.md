@@ -1,6 +1,9 @@
 ---
 id: 2-areas/engine/prds/scroll-plugin-prd
+type: prd
+slug: scrollPlugin
 title: 'Scroll Plugin — PRD'
+tags: [untagged]
 created: 2026-04-09
 updated: 2026-04-09
 summary: 'Discussion: MD viewer에서 Space/Shift+Space로 반페이지 스크롤. scroll axis 대신 plugin으로 구현 (축 상한 P7 준수, DOM side-effect 전용)'

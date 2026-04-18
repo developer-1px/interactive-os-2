@@ -1,6 +1,9 @@
 ---
 id: '3-resources/42-[tooling]skillWorkflowVisualization'
+type: note
+slug: skillWorkflowVisualization
 title: '스킬 워크플로우 전체 시각화 — 2026-04-08'
+tags: [tooling]
 created: 2026-04-09
 updated: 2026-04-11
 legacy:

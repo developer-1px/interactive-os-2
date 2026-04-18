@@ -1,6 +1,9 @@
 ---
 id: 4-archive/meta/summary
+type: note
+slug: metaSummary
 title: 'Meta — 아카이브 인덱스'
+tags: [audit, explain, memo, question, report, retro, sample, vision]
 created: 2026-04-11
 updated: 2026-04-11
 summary: '프로젝트 스냅샷, 보고서, 메모 등 "결정"이 아닌 시점 기록.'

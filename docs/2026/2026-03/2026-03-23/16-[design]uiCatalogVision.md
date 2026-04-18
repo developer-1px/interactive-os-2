@@ -1,6 +1,9 @@
 ---
 id: '3-resources/16-[design]uiCatalogVision'
+type: note
+slug: uiCatalogVision
 title: 'UI Catalog — 2026-03-23'
+tags: [design]
 created: 2026-03-23
 updated: 2026-03-25
 legacy:

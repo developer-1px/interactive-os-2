@@ -1,3 +1,12 @@
+---
+id: designLoop
+type: prd
+slug: designLoop
+title: 'design-loop — PRD'
+tags: [untagged]
+created: 2026-04-19
+updated: 2026-04-18
+---
 # design-loop — PRD
 
 > **Discussion**: 본 세션 (2026-04-18). /improve 5사이클 답답함 → Critic/Prescriber 2-에이전트 분리 도출

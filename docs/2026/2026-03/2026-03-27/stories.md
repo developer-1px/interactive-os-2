@@ -1,6 +1,9 @@
 ---
 id: 1-projects/cms/stories
+type: note
+slug: stories
 title: 'Visual CMS — User Story Map'
+tags: [untagged]
 created: 2026-03-27
 updated: 2026-04-08
 legacy:

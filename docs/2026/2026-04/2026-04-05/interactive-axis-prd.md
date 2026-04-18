@@ -1,6 +1,9 @@
 ---
 id: 2-areas/axis/prds/interactive-axis-prd
+type: prd
+slug: interactiveAxis
 title: 'Interactive 축 도입 — PRD'
+tags: [aria-level, aria-selected, data-aria-container]
 created: 2026-04-05
 updated: 2026-04-08
 summary: 'Discussion: interactive.css가 ax() 밖에서 role 셀렉터로 상태 시각을 관리 → surface와 competing → interactive 축을 ax()에 추가하여 흡수'

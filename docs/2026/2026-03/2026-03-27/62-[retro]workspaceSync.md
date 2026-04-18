@@ -1,6 +1,9 @@
 ---
 id: '4-archive/ui/archive/62-[retro]workspaceSync'
+type: retro
+slug: workspaceSync
 title: 'Retro: Workspace Sync — 2026-03-28'
+tags: [retro]
 created: 2026-03-27
 updated: 2026-04-11
 legacy:

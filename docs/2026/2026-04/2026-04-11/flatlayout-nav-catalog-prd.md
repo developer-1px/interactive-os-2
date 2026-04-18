@@ -1,6 +1,9 @@
 ---
 id: 2-areas/layout/prds/flatlayout-nav-catalog-prd
+type: prd
+slug: flatlayoutNavCatalog
 title: 'FlatLayout NavNode + 카탈로그 통합 + 시각 개선 — PRD'
+tags: [untagged]
 created: 2026-04-11
 updated: 2026-04-11
 summary: 'Discussion: FlatLayout을 범용 페이지 구조 엔진으로 확장하고, theme/catalog/showcase 3개 페이지를 사이드 Nav + 콘텐츠 구조로 통합하며, 그 과정에서 ax() 축/불변량 충분성을 검증한다.'

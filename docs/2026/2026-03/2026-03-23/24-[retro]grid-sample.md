@@ -1,6 +1,9 @@
 ---
 id: '4-archive/axis/archive/24-[retro]grid-sample'
+type: retro
+slug: gridSample
 title: 'Retro: Grid 샘플 보강 — 2026-03-23'
+tags: [retro, x]
 created: 2026-03-23
 updated: 2026-04-11
 legacy:

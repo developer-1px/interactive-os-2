@@ -1,6 +1,9 @@
 ---
 id: '0-inbox/80-[backlog]shadcn-ui-parity-checklist'
+type: backlog
+slug: shadcnUiParityChecklist
 title: 'shadcn/ui Parity Checklist — 2026-04-16'
+tags: [backlog, placeholder]
 created: 2026-04-16
 updated: 2026-04-16
 legacy:

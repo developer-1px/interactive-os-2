@@ -1,6 +1,9 @@
 ---
 id: flatlayout-engine
+type: note
+slug: flatlayoutEngine
 title: FlatLayout Engine
+tags: [definepage, flatlayout, pull-model, widget]
 created: 2025-10
 updated: 2026-04-17
 summary: '유일 레이아웃 엔진. JSX 트리 대신 flat 선언(`definePage`)으로 XY+Z 배치 소유권을 엔진에 위임. widget은 React 책임, layout은 엔진 책임으로 경계 분리.'

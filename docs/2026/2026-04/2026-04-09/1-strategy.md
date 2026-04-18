@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/stories/doc-browsing/1-strategy
+type: note
+slug: strategy
 title: 'Doc Browsing — Strategy'
+tags: [untagged]
 created: 2026-04-09
 updated: 2026-04-09
 legacy:

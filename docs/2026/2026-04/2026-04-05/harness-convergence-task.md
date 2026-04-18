@@ -1,6 +1,9 @@
 ---
 id: 2-areas/harness/prds/harness-convergence-task
+type: plan
+slug: harnessConvergence
 title: '하네스 수렴 구조 개선'
+tags: [untagged]
 created: 2026-04-05
 updated: 2026-04-08
 legacy:

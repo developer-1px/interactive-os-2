@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/stories/doc-browsing/features/miller-columns/2-design
+type: note
+slug: design
 title: 'Miller Columns — Design'
+tags: [untagged]
 created: 2026-04-09
 updated: 2026-04-09
 legacy:

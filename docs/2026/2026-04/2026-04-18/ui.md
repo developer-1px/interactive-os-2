@@ -1,3 +1,12 @@
+---
+id: ui
+type: note
+slug: ui
+title: 'Gemma 4 Critique — /ui'
+tags: [untagged]
+created: 2026-04-18
+updated: 2026-04-18
+---
 # Gemma 4 Critique — /ui
 
 - **Route**: `/ui`

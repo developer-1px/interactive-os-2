@@ -1,6 +1,9 @@
 ---
 id: samples/task-spec
+type: note
+slug: taskSpec
 title: 'TRD: 슬라이드 복제 기능'
+tags: [samples]
 created: 2026-04-09
 updated: 2026-04-09
 summary: '**요약**: 선택된 section(슬라이드)을 자식 노드 포함 deep copy하여 바로 아래에 삽입한다.'

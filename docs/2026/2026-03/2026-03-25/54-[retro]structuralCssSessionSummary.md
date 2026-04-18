@@ -1,6 +1,9 @@
 ---
 id: '4-archive/design/archive/54-[retro]structuralCssSessionSummary'
+type: retro
+slug: structuralCssSessionSummary
 title: '구조적 CSS의 LLM 한계 + 설계 방향 미결정 — 2026-03-25'
+tags: [explain, ideal, pattern, retro]
 created: 2026-03-25
 updated: 2026-04-11
 legacy:

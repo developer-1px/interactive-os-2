@@ -1,6 +1,9 @@
 ---
 id: research/ax/01-literature-review
+type: note
+slug: literatureReview
 title: '01 Literature Review — 1·2·3군 외부 탐색 통합'
+tags: [research]
 created: 2026-04-18
 updated: 2026-04-18
 summary: '**작성일:** 2026-04-18 **조사 방법:** 3개 independent agent 병렬 탐색 (WebSearch + WebFetch) **조사 대상:** 1군 업계 표준 / 2군 현업·도구 / 3군 원리·수학·인지'

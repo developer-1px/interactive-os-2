@@ -1,6 +1,9 @@
 ---
 id: 2-areas/design/prds/keyline-audit-task
+type: plan
+slug: keylineAudit
 title: 'Keyline Audit 파이프라인'
+tags: [untagged]
 created: 2026-04-15
 updated: 2026-04-15
 legacy:

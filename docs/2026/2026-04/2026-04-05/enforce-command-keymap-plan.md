@@ -1,6 +1,9 @@
 ---
 id: 2-areas/engine/prds/enforce-command-keymap-plan
+type: plan
+slug: enforceCommandKeymap
 title: 'Command 패턴 강제 완성 Implementation Plan'
+tags: [untagged]
 created: 2026-04-05
 updated: 2026-04-08
 summary: '**For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.'

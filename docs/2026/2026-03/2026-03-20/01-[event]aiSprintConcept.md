@@ -1,6 +1,9 @@
 ---
 id: '3-resources/01-[event]aiSprintConcept'
+type: note
+slug: aiSprintConcept
 title: 'AI 스프린트 — AI 스프린트 AI 버전 행사 기획안'
+tags: [event]
 created: 2026-03-20
 updated: 2026-03-24
 summary: '작성일: 2026-03-19 맥락: 7월 AI 스프린트 행사를 위해 행사 담당자와의 미팅 준비 자료'

@@ -1,6 +1,9 @@
 ---
 id: 1-projects/viewer/prds/inspector-improve-task
+type: plan
+slug: inspectorImprove
 title: 'Inspector Improve — Task'
+tags: [untagged]
 created: 2026-04-05
 updated: 2026-04-08
 legacy:

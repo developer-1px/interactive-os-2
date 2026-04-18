@@ -1,6 +1,9 @@
 ---
 id: samples/design-spec
+type: note
+slug: designSpec
 title: 'Design Spec: CMS Toolbar'
+tags: [samples]
 created: 2026-04-09
 updated: 2026-04-18
 legacy:
