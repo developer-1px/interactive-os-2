@@ -1,8 +1,18 @@
 ---
-created_at: 2026-04-17
-slug: features-pm-layer
+id: features-pm-layer
+title: 'Handoff: Feature Management 뷰 + PM 레이어 신설'
+status: inbox
+kind: handoff
+created: 2026-04-17
+updated: 2026-04-18
+summary: 'MEMORY가 PM 도구로 오남용되던 문제를 frontmatter DB + `/features` 뷰로 해결. PRD 🟢 8/8, UI 6버그 수정 후 브라우저 실사용 검증 완료.'
+topics: [0-inbox]
+relates: []
+supersedes: []
+legacy:
+  created_at: 2026-04-17
+  slug: features-pm-layer
 ---
-
 # Handoff: Feature Management 뷰 + PM 레이어 신설
 
 > MEMORY가 PM 도구로 오남용되던 문제를 frontmatter DB + `/features` 뷰로 해결. PRD 🟢 8/8, UI 6버그 수정 후 브라우저 실사용 검증 완료.

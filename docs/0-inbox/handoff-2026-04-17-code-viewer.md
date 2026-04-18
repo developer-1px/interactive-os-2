@@ -1,8 +1,18 @@
 ---
-created_at: 2026-04-17
-session_topic: CodeViewer 대대적 개선
+id: 0-inbox/handoff-2026-04-17-code-viewer
+title: 'Handoff: CodeViewer — preset 4종 + ARIA + VirtualCodeBlock 흡수'
+status: inbox
+kind: handoff
+created: 2026-04-17
+updated: 2026-04-17
+summary: 'CodeBlock → CodeViewer 원자적 rename. VirtualCodeBlock을 `virtualized` prop으로 흡수. preset 4종(presentation/doc/chat/replay)으로 용도 레시피 도입. ARIA 기본(figure + role="region" 조건부). 11곳 사용처 일괄 전환. 통합 테스트 10건 신규.'
+topics: [0-inbox]
+relates: []
+supersedes: []
+legacy:
+  created_at: 2026-04-17
+  session_topic: 'CodeViewer 대대적 개선'
 ---
-
 # Handoff: CodeViewer — preset 4종 + ARIA + VirtualCodeBlock 흡수
 
 > CodeBlock → CodeViewer 원자적 rename. VirtualCodeBlock을 `virtualized` prop으로 흡수. preset 4종(presentation/doc/chat/replay)으로 용도 레시피 도입. ARIA 기본(figure + role="region" 조건부). 11곳 사용처 일괄 전환. 통합 테스트 10건 신규.

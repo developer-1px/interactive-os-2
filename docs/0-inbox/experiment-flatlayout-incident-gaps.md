@@ -1,3 +1,15 @@
+---
+id: 0-inbox/experiment-flatlayout-incident-gaps
+title: 'FlatLayout 깊이 한계 실험 — incident 재현'
+status: inbox
+kind: note
+created: 2026-04-12
+updated: 2026-04-12
+summary: '**날짜**: 2026-04-12 **목적**: FlatLayout + ui 부품 조합만으로 incident 데모를 재현하여 gap을 발견'
+topics: [0-inbox]
+relates: []
+supersedes: []
+---
 # FlatLayout 깊이 한계 실험 — incident 재현
 
 **날짜**: 2026-04-12

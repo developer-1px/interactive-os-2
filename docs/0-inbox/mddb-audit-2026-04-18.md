@@ -1,3 +1,15 @@
+---
+id: 0-inbox/mddb-audit-2026-04-18
+title: 'mddb 소급 설계용 docs/ 현황 감사'
+status: inbox
+kind: note
+created: 2026-04-18
+updated: 2026-04-18
+summary: '**날짜**: 2026-04-18 **목적**: file 기반 md DB 시스템 소급 적용 전 `docs/` 하위 현황 파악 **scope**: `docs/**/*.md` (335 파일) — `memory/`는 Claude 자동 관리 영역이라 제외'
+topics: [0-inbox, tag]
+relates: []
+supersedes: []
+---
 # mddb 소급 설계용 docs/ 현황 감사
 
 **날짜**: 2026-04-18

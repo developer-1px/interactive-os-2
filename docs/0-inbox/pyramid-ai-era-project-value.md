@@ -1,9 +1,14 @@
 ---
-title: AI 시대 이 프로젝트가 중요한 이유
-created: 2026-04-11
+id: 0-inbox/pyramid-ai-era-project-value
+title: 'AI 시대 이 프로젝트가 중요한 이유'
 status: building
+kind: pyramid
+created: 2026-04-11
+updated: 2026-04-18
+topics: [0-inbox]
+relates: []
+supersedes: []
 ---
-
 # AI 시대 이 프로젝트가 중요한 이유
 
 ## 피라미드

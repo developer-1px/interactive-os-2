@@ -1,9 +1,16 @@
 ---
-title: AI 시대 개발자 지망생을 위한 멘토링
-stage: phase2
+id: 0-inbox/minto-ai-dev-mentoring
+title: 'AI 시대 개발자 지망생을 위한 멘토링'
+status: inbox
+kind: note
+created: 2026-04-12
 updated: 2026-04-12
+topics: [0-inbox]
+relates: []
+supersedes: []
+legacy:
+  stage: phase2
 ---
-
 ## 의도
 
 AI가 코딩을 해주는 시대에 개발자 지망생(취준생)이 뭘 준비해야 하는지 — 바이브 코딩만으로는 안 되고, 하네스 엔지니어링을 익히고 경험을 쌓아야 한다.

@@ -1,3 +1,14 @@
+---
+id: 0-inbox/role-control-task
+title: 'role: ''control'' 축 도입 — size: ''md'' 단일 크기'
+status: inbox
+kind: plan
+created: 2026-04-13
+updated: 2026-04-13
+topics: [0-inbox]
+relates: []
+supersedes: []
+---
 # role: 'control' 축 도입 — size: 'md' 단일 크기
 
 ## 배경

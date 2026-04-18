@@ -1,3 +1,14 @@
+---
+id: '0-inbox/80-[backlog]shadcn-ui-parity-checklist'
+title: 'shadcn/ui Parity Checklist — 2026-04-16'
+status: inbox
+kind: backlog
+created: 2026-04-16
+updated: 2026-04-16
+topics: [0-inbox, backlog, placeholder]
+relates: []
+supersedes: []
+---
 # shadcn/ui Parity Checklist — 2026-04-16
 
 ## 배경

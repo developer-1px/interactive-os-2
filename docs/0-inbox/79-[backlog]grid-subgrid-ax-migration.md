@@ -1,3 +1,14 @@
+---
+id: '0-inbox/79-[backlog]grid-subgrid-ax-migration'
+title: 'Grid Subgrid → ax() 축 승격 마이그레이션 — 2026-04-16'
+status: inbox
+kind: backlog
+created: 2026-04-18
+updated: 2026-04-18
+topics: [0-inbox, backlog]
+relates: []
+supersedes: []
+---
 # Grid Subgrid → ax() 축 승격 마이그레이션 — 2026-04-16
 
 ## 배경

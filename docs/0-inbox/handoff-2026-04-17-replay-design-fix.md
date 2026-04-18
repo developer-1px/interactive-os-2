@@ -1,8 +1,18 @@
 ---
-created_at: 2026-04-17
-session_id: 2026-04-17-replay-design-fix
+id: 0-inbox/handoff-2026-04-17-replay-design-fix
+title: 'Handoff: /replay 디자인 5 결함 수정'
+status: inbox
+kind: handoff
+created: 2026-04-17
+updated: 2026-04-18
+summary: 'Shorts 스타일 /replay 뷰어의 5개 결함(사이드바·하단UI·하이라이트·scroll/zoom·search)을 수정하고 SlotCtxRegistry 누수를 리팩토링. cf10a6fa로 커밋 완료, 브라우저 시각 재확인 남음.'
+topics: [0-inbox]
+relates: []
+supersedes: []
+legacy:
+  created_at: 2026-04-17
+  session_id: 2026-04-17-replay-design-fix
 ---
-
 # Handoff: /replay 디자인 5 결함 수정
 
 > Shorts 스타일 /replay 뷰어의 5개 결함(사이드바·하단UI·하이라이트·scroll/zoom·search)을 수정하고 SlotCtxRegistry 누수를 리팩토링. cf10a6fa로 커밋 완료, 브라우저 시각 재확인 남음.

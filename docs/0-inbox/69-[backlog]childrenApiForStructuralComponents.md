@@ -1,3 +1,14 @@
+---
+id: '0-inbox/69-[backlog]childrenApiForStructuralComponents'
+title: 'Children API for Structural Components — 2026-03-31'
+status: inbox
+kind: backlog
+created: 2026-03-31
+updated: 2026-03-31
+topics: [0-inbox, backlog]
+relates: []
+supersedes: []
+---
 # Children API for Structural Components — 2026-03-31
 
 ## 배경

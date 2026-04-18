@@ -1,3 +1,15 @@
+---
+id: 0-inbox/explain-camera-component
+title: 'Camera — 뷰포트 프리미티브 해설'
+status: inbox
+kind: explain
+created: 2026-04-18
+updated: 2026-04-18
+summary: '작성일: 2026-04-17 대상: `src/interactive-os/ui/Camera.tsx` (598줄)'
+topics: [0-inbox, mode]
+relates: []
+supersedes: []
+---
 # Camera — 뷰포트 프리미티브 해설
 
 > 작성일: 2026-04-17

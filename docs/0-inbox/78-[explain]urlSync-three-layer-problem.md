@@ -1,3 +1,15 @@
+---
+id: '0-inbox/78-[explain]urlSync-three-layer-problem'
+title: 'urlSync 보강 논의의 실제 문제 — 3층을 구별하지 못했다'
+status: inbox
+kind: explain
+created: 2026-04-11
+updated: 2026-04-11
+summary: '작성일: 2026-04-11 맥락: viewer URL 딥링크 미작동에서 출발한 urlSync 보강 논의'
+topics: [0-inbox, explain]
+relates: []
+supersedes: []
+---
 # urlSync 보강 논의의 실제 문제 — 3층을 구별하지 못했다
 
 > 작성일: 2026-04-11

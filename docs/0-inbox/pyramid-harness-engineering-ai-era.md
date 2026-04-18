@@ -1,9 +1,14 @@
 ---
-title: AI 시대 하네스 엔지니어링 특강
-created: 2026-04-11
+id: 0-inbox/pyramid-harness-engineering-ai-era
+title: 'AI 시대 하네스 엔지니어링 특강'
 status: building
+kind: pyramid
+created: 2026-04-11
+updated: 2026-04-11
+topics: [0-inbox]
+relates: []
+supersedes: []
 ---
-
 # AI 시대 하네스 엔지니어링 특강
 
 ## 피라미드
