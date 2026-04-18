@@ -22,7 +22,7 @@ export function Progress({ value, tone = 'accent', 'aria-label': ariaLabel }: Pr
       aria-label={ariaLabel}
     >
       <div
-        className={`${ax({ surface: 'action', tone, shape: 'pill', square: 'xs' })} ${styles.fill}`}
+        className={`${ax({ surface: 'action', tone, square: 'xs' })} ${styles.fill}`}
         style={{ width: `${clamped}%` }}
       />
     </div>

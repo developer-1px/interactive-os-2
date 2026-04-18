@@ -10,7 +10,6 @@ import { grid as gridBehavior } from '../pattern/roles/grid'
 import { cellEdit } from '../plugins/cellEdit'
 import { search } from '../plugins/search'
 import { edit, replaceEditPlugin } from '../plugins/edit'
-import styles from './Grid.module.css'
 
 interface ColumnDef {
   key: string
@@ -87,7 +86,7 @@ export function Grid({
     const cells = (node.data as Record<string, unknown>)?.cells as unknown[] | undefined
     return (
       <div
-        className={`${styles.row} ${ax({ role: 'item' })}`}
+        className={ax({ role: 'item' })}
         data-focused={state.focused || undefined}
         data-selected={state.selected || undefined}
         {...props}
@@ -102,9 +101,9 @@ export function Grid({
   }
 
   return (
-    <div className={`${styles.table} ${ax({ width: 'full', flex: '1' })}`} style={gridStyle}>
+    <div className={ax({ layout: 'table', width: 'full', flex: '1' })} style={gridStyle}>
       {header && (
-        <div className={`${styles.header} ${ax({ placement: 'sticky', surface: 'sunken', border: 'bottom' })}`}>
+        <div role="row" className={ax({ placement: 'sticky', surface: 'sunken', border: 'bottom' })}>
           {columns.map((col, i) => (
             <div key={col.key} className={ax({ role: 'item', textStyle: 'overline', text: 'secondary', content: 'text', ...(i < columns.length - 1 ? { border: 'end' } : {}) })}>{col.header}</div>
           ))}

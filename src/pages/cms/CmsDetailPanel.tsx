@@ -19,6 +19,8 @@ import { ScrollArea } from '@os/ui/ScrollArea'
 import { Form } from '@os/ui/Form'
 import type { NodeState } from '@os/pattern/types'
 
+const fieldId = (entry: EditableGroupEntry) => `cms-${entry.nodeId}-${entry.field}`
+
 function buildBreadcrumb(store: NormalizedData, nodeId: string, locale: Locale): string {
   const path: string[] = []
   let current: string | null = nodeId
@@ -167,7 +169,10 @@ function useFieldCommit<T extends HTMLInputElement | HTMLTextAreaElement>(
     : (rawValue as string) ?? ''
 
   useEffect(() => {
-    if (elRef.current && document.activeElement !== elRef.current) {
+    if (!elRef.current) return
+    // Sync from store unless the user has actively edited (value differs from snapshot)
+    const userHasEdited = document.activeElement === elRef.current && elRef.current.value !== snapshotRef.current
+    if (!userHasEdited) {
       elRef.current.value = displayValue
       snapshotRef.current = displayValue
     }
@@ -187,6 +192,13 @@ function useFieldCommit<T extends HTMLInputElement | HTMLTextAreaElement>(
     engine.dispatch(renameCommands.confirmRename(entry.nodeId, entry.field, newValue))
     snapshotRef.current = newText
   }, [entry.nodeId, entry.field, entry.isLocaleMap, rawValue, locale, engine])
+
+  const commitRef = useRef(handleCommit)
+  useEffect(() => { commitRef.current = handleCommit }, [handleCommit])
+
+  useEffect(() => {
+    return () => { commitRef.current() }
+  }, [])
 
   const handleFieldKeyDown = useCallback((e: React.KeyboardEvent) => {
     const mod = e.metaKey || e.ctrlKey
@@ -217,17 +229,19 @@ interface DetailFieldProps {
 }
 
 function ShortTextField({ entry, store, locale, engine }: DetailFieldProps) {
-  const { elRef, displayValue, handleFocus, handleCommit, handleFieldKeyDown } = useFieldCommit<HTMLInputElement>(entry, store, locale, engine)
+  const { elRef, displayValue, handleFocus, handleCommit, handleFieldKeyDown } = useFieldCommit<HTMLTextAreaElement>(entry, store, locale, engine)
 
   return (
     <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
-      <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
-      <input
+      <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`} htmlFor={fieldId(entry)}>{entry.label}</label>
+      <textarea
         ref={elRef}
-        className={`cms-detail-field__input ${ax({ role: 'control', surface: 'input', text: 'primary', content: 'text' })} w-full outline-none`}
-        type="text"
+        id={fieldId(entry)}
+        className={`cms-detail-field__textarea ${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'md' })} w-full outline-none resize-none`}
         name={`${entry.nodeId}.${entry.field}`}
+        data-field={`${entry.nodeId}.${entry.field}`}
         defaultValue={displayValue}
+        rows={2}
         onFocus={handleFocus}
         onBlur={handleCommit}
         onKeyDown={handleFieldKeyDown}
@@ -241,11 +255,13 @@ function LongTextField({ entry, store, locale, engine }: DetailFieldProps) {
 
   return (
     <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
-      <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
+      <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`} htmlFor={fieldId(entry)}>{entry.label}</label>
       <textarea
         ref={elRef}
+        id={fieldId(entry)}
         className={`cms-detail-field__textarea ${ax({ surface: 'input', padding: 'xs', textStyle: 'body', text: 'primary', shape: 'md' })} w-full outline-none`}
         name={`${entry.nodeId}.${entry.field}`}
+        data-field={`${entry.nodeId}.${entry.field}`}
         defaultValue={displayValue}
         rows={4}
         onFocus={handleFocus}
@@ -282,12 +298,14 @@ function UrlField({ entry, store, locale, engine }: DetailFieldProps) {
 
   return (
     <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
-      <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
+      <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`} htmlFor={fieldId(entry)}>{entry.label}</label>
       <input
         ref={elRef}
+        id={fieldId(entry)}
         className={`cms-detail-field__input ${ax({ role: 'control', surface: 'input', text: 'primary', content: 'text' })} w-full outline-none`}
         type="url"
         name={`${entry.nodeId}.${entry.field}`}
+        data-field={`${entry.nodeId}.${entry.field}`}
         defaultValue={displayValue}
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -328,7 +346,7 @@ function ImageField({ entry, store, engine }: DetailFieldProps) {
   }, [])
 
   return (
-    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
+    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`} data-field={`${entry.nodeId}.${entry.field}`}>
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       {currentSrc ? (
         <div className={ax({ placement: 'relative' })}>
@@ -388,7 +406,7 @@ function IconField({ entry, store, engine, expanded }: DetailFieldProps) {
   const hasIcon = CMS_ICON_MAP.has(currentValue)
 
   return (
-    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`}>
+    <div className={`cms-detail-field ${ax({ layout: 'stack', gap: 'xs' })}`} data-field={`${entry.nodeId}.${entry.field}`}>
       <label className={`cms-detail-field__label ${ax({ textStyle: 'caption', weight: 'semi', text: 'muted' })}`}>{entry.label}</label>
       <button
         type="button"

@@ -1,5 +1,5 @@
 // ② 2026-04-03-viewer-command-prd.md
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import type { ViewerTab, FileTab, SearchTab, TerminalTab } from '@os/ui/viewerTypes'
 
 export interface UseViewerTabsReturn {
@@ -29,7 +29,7 @@ export function useViewerTabs(): UseViewerTabsReturn {
     })
   }, [])
 
-  const tabs = [...tabMap.values()]
+  const tabs = useMemo(() => [...tabMap.values()], [tabMap])
   const activeTab = activeTabId ? tabMap.get(activeTabId) ?? null : null
 
   const openFile = useCallback((path: string, content: string): FileTab => {
@@ -73,7 +73,7 @@ export function useViewerTabs(): UseViewerTabsReturn {
     setEditedPaths(new Set())
   }, [])
 
-  return {
+  return useMemo(() => ({
     tabs,
     activeTabId,
     activeTab,
@@ -84,5 +84,5 @@ export function useViewerTabs(): UseViewerTabsReturn {
     markEdited,
     editedPaths,
     clear,
-  }
+  }), [tabs, activeTabId, activeTab, openFile, openSearch, openTerminal, markEdited, editedPaths, clear])
 }

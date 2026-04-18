@@ -341,20 +341,18 @@ function LiveSlot({ slotIndex, sessionId, parentActive, subagentFiles, register 
 
   return (
     <ReplayProvider value={ctx}>
-      <div className={`replay-subagent-row ${ax({ layout: 'scroll-x' })}`}>
-        <ReplayStageWidget />
-        {subagents.map((sub, i) => {
-          const match = subAgentMatches[i]
-          return (
-            <SubAgentStageWidget
-              key={sub.agentHash}
-              session={sub}
-              matchKey={match?.orphan ? null : (match?.key ?? null)}
-              parentSessionId={sessionId ?? ''}
-            />
-          )
-        })}
-      </div>
+      <ReplayStageWidget />
+      {subagents.map((sub, i) => {
+        const match = subAgentMatches[i]
+        return (
+          <SubAgentStageWidget
+            key={sub.agentHash}
+            session={sub}
+            matchKey={match?.orphan ? null : (match?.key ?? null)}
+            parentSessionId={sessionId ?? ''}
+          />
+        )
+      })}
     </ReplayProvider>
   )
 }
@@ -441,7 +439,7 @@ export default function PageReplay() {
       </div>
       <div ref={feedRef} className={`replay-feed ${ax({ scroll: 'y' })}`}>
         {liveSlots.map((slot, i) => (
-          <div key={`live-${slot.id ?? 'empty'}`} className="replay-slot">
+          <div key={`live-${slot.id ?? 'empty'}`} className={`replay-slot ${ax({ layout: 'scroll-x' })}`}>
             {Math.abs(i - currentIndex) <= 1
               ? <LiveSlot
                   slotIndex={-(i + 1)}

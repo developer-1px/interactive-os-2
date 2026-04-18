@@ -10,7 +10,7 @@ export function formSectionRenderer({ entity, renderNode, depth }: A2UIRenderCon
   const actions = (d.actions as Array<{ label: string; variant?: string }>) ?? []
 
   return (
-    <div className={ax({ surface: 'display', padding: 'lg', shape: 'md' })}>
+    <div className={ax({ surface: 'raised', border: 'ring', padding: 'lg', shape: 'md' })}>
       <div className={ax({ layout: 'stack', gap: 'md' })}>
         {title && <div className={ax({ textStyle: 'section' })}>{title}</div>}
         {fields.map((childId) => (

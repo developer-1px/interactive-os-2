@@ -33,10 +33,14 @@ export function processToolEvents(
     // --- File tools ---
     if (tool === 'Read' && evt.filePath) {
       const path = evt.filePath
-      if (!fetchedFiles.has(path) && !fileState.files.has(path)) {
+      const resultText = findNextResult(events, i)
+      if (resultText) {
+        applyRead(fileState, path, resultText)
+        fetchedFiles.add(path)
+      } else if (!fetchedFiles.has(path) && !fileState.files.has(path)) {
         toFetch.add(path)
       }
-      // Deferred: after fetch, open tab + dispatch
+      // Deferred: after fetch (if any), open tab + dispatch
       deferred.push(() => {
         const content = fileState.files.get(path) ?? ''
         viewerTabs.openFile(path, content)

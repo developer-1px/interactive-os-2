@@ -1,113 +1,52 @@
-// ② 2026-03-28-workspace-sync-prd.md
-// @useState-hatch — wsData: Workspace NormalizedData (os ui component owns its own store)
-import { useEffect, useRef, useCallback, useMemo } from 'react'
+// ② 2026-04-17 Agent IDE 3-zone layout
+import { useState, useMemo, useCallback } from 'react'
 import { FlatLayout } from '@os/ui/FlatLayout'
 import { definePage } from '@os/layout/flatLayout'
 import { createWidgetRegistry } from '@os/layout/widgetRegistry'
-import { ChatPane } from './ChatPane'
+import { updateEntityData } from '@os/store/createStore'
 import {
-  createSession,
-  closeSession,
-  setActiveSession,
   useActiveSession,
   useChatSessions,
 } from './chatStore'
-import type { Entity } from '@os/store/types'
-import type { NormalizedData } from '@os/store/types'
-import { useStore } from '@os/store/useStore'
-import {
-  getChildren,
-  getEntityData,
-  updateEntityData,
-} from '@os/store/createStore'
-import { ROOT_ID } from '@os/store/types'
-import type { PaneSize } from '@os/store/types'
-import {
-  createWorkspace,
-  workspaceCommands,
-  collectContentRefs,
-  splitAndAddTab,
-  findTabgroup,
-} from '@os/plugins/workspaceStore'
-import type { TabData, SplitData } from '@os/plugins/workspaceStore'
-import { ChatProvider, type ChatContextValue } from './chatContext'
-import { ChatSidebarWidget, ChatWorkspaceWidget } from './chatWidgets'
+import type { ChatMessage } from '@os/ui/chat/types'
+import { ChatProvider, type ChatContextValue, type SidebarMode } from './chatContext'
+import { ChatSidebarWidget, ChatAreaWidget, ChatBottomPanelWidget } from './chatWidgets'
 import './PageAgentChat.css'
 
 // ── Layout ──
 
 const chatWidgets = createWidgetRegistry({
-  ChatSidebar: ChatSidebarWidget,
-  ChatWorkspace: ChatWorkspaceWidget,
+  Sidebar: ChatSidebarWidget,
+  ChatArea: ChatAreaWidget,
+  BottomPanel: ChatBottomPanelWidget,
 })
 
-const chatLayout = definePage({
+const baseLayout = definePage({
   entities: {
-    root:      { data: { type: 'split', direction: 'horizontal', sizes: [0.2, 'flex'], resizable: false }, children: ['sidebar', 'workspace'] },
-    sidebar:   { data: { type: 'widget', widget: 'ChatSidebar', surface: 'raised' } },
-    workspace: { data: { type: 'widget', widget: 'ChatWorkspace' } },
+    root:        { data: { type: 'split', direction: 'horizontal', sizes: [0.22, 'flex'], resizable: true }, children: ['sidebar', 'main'] },
+    sidebar:     { data: { type: 'widget', widget: 'Sidebar', surface: 'sunken' } },
+    main:        { data: { type: 'split', direction: 'vertical', sizes: ['flex', 0.3], resizable: true }, children: ['chatArea', 'bottomPanel'] },
+    chatArea:    { data: { type: 'widget', widget: 'ChatArea' } },
+    bottomPanel: { data: { type: 'widget', widget: 'BottomPanel', surface: 'sunken', hidden: true } },
   },
 })
 
-// ── Helpers ──
+// ── File extraction ──
 
-function sessionToTab(session: { id: string }): Entity {
-  return {
-    id: `tab-${session.id}`,
-    data: { type: 'tab', label: session.id.slice(0, 8), contentType: 'chat', contentRef: session.id },
-  }
-}
+const FILE_TOOLS = new Set(['Edit', 'Write'])
 
-function syncAsSplitPanes(
-  store: NormalizedData,
-  sessions: { id: string }[],
-): NormalizedData {
-  const existingRefs = collectContentRefs(store)
-  const sessionIds = new Set(sessions.map(s => s.id))
-
-  const toAdd = sessions.filter(s => !existingRefs.has(s.id))
-  const toRemove = [...existingRefs.entries()].filter(([ref]) => !sessionIds.has(ref))
-
-  if (toAdd.length === 0 && toRemove.length === 0) return store
-
-  let s = store
-
-  for (const [, tabId] of toRemove) {
-    s = workspaceCommands.removeTab.reduce(s, tabId)
-  }
-
-  for (const session of toAdd) {
-    const tab = sessionToTab(session)
-    const existingTg = findTabgroup(s)
-
-    if (existingTg) {
-      const existingTabs = getChildren(s, existingTg)
-      if (existingTabs.length === 0) {
-        s = workspaceCommands.createTab.reduce(s, existingTg, tab)
-        s = workspaceCommands.setActiveTab.reduce(s, existingTg, tab.id)
-      } else {
-        s = splitAndAddTab(s, existingTg, 'horizontal', tab)
-      }
+function extractModifiedFiles(messages: ChatMessage[]): string[] {
+  const files = new Set<string>()
+  for (const msg of messages) {
+    for (const block of msg.blocks) {
+      if (block.type !== 'tool_use') continue
+      const data = (block as { data: { name?: string; input?: { file_path?: string } } }).data
+      if (!data?.name || !FILE_TOOLS.has(data.name)) continue
+      const fp = data.input?.file_path
+      if (fp) files.add(fp.replace(/.*\/aria\//, ''))
     }
   }
-
-  const rootChildren = getChildren(s, ROOT_ID)
-  if (rootChildren.length === 1) {
-    const rootChild = rootChildren[0]
-    const data = getEntityData<SplitData>(s, rootChild)
-    if (data?.type === 'split') {
-      const paneCount = getChildren(s, rootChild).length
-      if (paneCount > 1) {
-        const ratio = 1 / paneCount
-        const sizes: PaneSize[] = Array.from({ length: paneCount }, (_, i) =>
-          i === paneCount - 1 ? 'flex' as PaneSize : ratio as PaneSize,
-        )
-        s = updateEntityData(s, rootChild, { sizes })
-      }
-    }
-  }
-
-  return s
+  return [...files]
 }
 
 // ── Page ──
@@ -117,48 +56,34 @@ export default function PageAgentChat() {
   const activeSession = useActiveSession()
   const activeSessionId = activeSession?.id ?? null
 
-  const [wsData, setWsData] = useStore(() => syncAsSplitPanes(createWorkspace(), sessions))
-  const wsDataRef = useRef(wsData)
+  const [sidebarMode, setSidebarMode] = useState<SidebarMode>('sessions')
+  const [bottomVisible, setBottomVisible] = useState(false)
 
-  useEffect(() => {
-    const synced = syncAsSplitPanes(wsDataRef.current, sessions)
-    if (synced !== wsDataRef.current) {
-      wsDataRef.current = synced
-      setWsData(synced)
-    }
-  }, [sessions]) // eslint-disable-line react-hooks/exhaustive-deps
+  const toggleBottom = useCallback(() => setBottomVisible(v => !v), [])
 
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization
-  const handleWorkspaceChange = useCallback((newData: NormalizedData) => {
-    const oldRefs = collectContentRefs(wsDataRef.current)
-    const newRefs = collectContentRefs(newData)
-    for (const [ref] of oldRefs) {
-      if (!newRefs.has(ref)) closeSession(ref)
-    }
-    wsDataRef.current = newData
-    setWsData(newData)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const chatLayout = useMemo(
+    () => updateEntityData(baseLayout, 'bottomPanel', { hidden: !bottomVisible }),
+    [bottomVisible],
+  )
 
-  const handleAddTab = useCallback(() => { createSession() }, [])
-
-  const handleSidebarClick = useCallback((sessionId: string) => {
-    setActiveSession(sessionId)
-  }, [])
-
-  const renderPanel = useCallback((tab: Entity) => {
-    const tabData = tab.data as unknown as TabData
-    if (!tabData?.contentRef) return null
-    return <ChatPane sessionId={tabData.contentRef} />
-  }, [])
+  const modifiedFiles = useMemo(() => {
+    if (!activeSession) return []
+    return extractModifiedFiles(activeSession.messages)
+  }, [activeSession])
 
   const chatCtx = useMemo<ChatContextValue>(() => ({
-    sessions, activeSessionId, wsData,
-    handleWorkspaceChange, handleAddTab, handleSidebarClick, renderPanel,
-  }), [sessions, activeSessionId, wsData, handleWorkspaceChange, handleAddTab, handleSidebarClick, renderPanel])
+    sessions,
+    activeSessionId,
+    sidebarMode,
+    setSidebarMode,
+    bottomVisible,
+    toggleBottom,
+    modifiedFiles,
+  }), [sessions, activeSessionId, sidebarMode, setSidebarMode, bottomVisible, toggleBottom, modifiedFiles])
 
   return (
     <ChatProvider value={chatCtx}>
-      <FlatLayout data={chatLayout} registry={chatWidgets} aria-label="Chat" />
+      <FlatLayout data={chatLayout} registry={chatWidgets} aria-label="Agent IDE" />
     </ChatProvider>
   )
 }

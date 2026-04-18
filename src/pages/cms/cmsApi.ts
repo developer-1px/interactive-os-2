@@ -26,12 +26,22 @@ export interface CmsApi {
 
   /** JSON import로 전체 콘텐츠 교체 */
   import(json: object): void
+
+  /** 현재 locale 조회 */
+  locale(): Locale
+
+  /** locale 변경 (setLocale 콜백이 있을 때만 동작) */
+  setLocale(locale: Locale): void
+
+  /** 사용 가능한 명령어 안내 */
+  help(): string
 }
 
 export function createCmsApi(
   getEngine: () => CommandEngine,
   getStore: () => NormalizedData,
   getLocale: () => Locale,
+  setLocale?: (locale: Locale) => void,
 ): CmsApi {
   return {
     get(nodeId, field) {
@@ -103,6 +113,36 @@ export function createCmsApi(
           engine.dispatch(renameCommands.confirmRename(id, field, value))
         }
       }
+    },
+
+    locale() {
+      return getLocale()
+    },
+
+    setLocale(locale) {
+      if (!setLocale) throw new Error('setLocale callback not provided')
+      setLocale(locale)
+    },
+
+    help() {
+      return [
+        'window.cms API:',
+        '  .list()                        — all nodes with editable fields',
+        '  .inspect(nodeId)               — node data + children',
+        '  .get(nodeId, field)            — read field value (locale-resolved)',
+        '  .update(nodeId, field, value)  — set field value',
+        '  .updateText(nodeId, field, text) — set text (auto LocaleMap)',
+        '  .locale()                      — current locale',
+        '  .setLocale("ko"|"en"|"ja")     — switch locale',
+        '  .export()                      — full JSON export',
+        '  .import(json)                  — full JSON import',
+        '',
+        'Image/Icon fields: use .update() (no DOM input)',
+        '',
+        'DOM selectors:',
+        '  [data-field="nodeId.field"]    — find field element',
+        '  #cms-nodeId-field              — text/url input by id',
+      ].join('\n')
     },
   }
 }

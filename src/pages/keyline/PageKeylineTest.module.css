@@ -1,29 +1,5 @@
 /* Key Line Test — last-mile only (ax() 축에 없는 CSS) */
-
-/* ── Inspector: 누락 하이라이트 ──
-   interactive(ia-*)인데 role(rl-*)이 없는 요소 = 빨간 outline.
-   정상 role = 은은한 초록. 누락만 눈에 띄는 구조. */
-
-/* stylelint-disable selector-pseudo-class-no-unknown */
-.inspector :global(.ia-item):not(:global(.rl-control)):not(:global(.rl-control-group)):not(:global(.rl-item)):not(:global(.rl-badge)),
-.inspector :global(.ia-tab):not(:global(.rl-control)):not(:global(.rl-control-group)):not(:global(.rl-item)):not(:global(.rl-badge)),
-.inspector :global(.ia-check):not(:global(.rl-control)):not(:global(.rl-control-group)):not(:global(.rl-item)):not(:global(.rl-badge)),
-.inspector :global(.ia-cell):not(:global(.rl-control)):not(:global(.rl-control-group)):not(:global(.rl-item)):not(:global(.rl-badge)),
-.inspector :global(.ia-input):not(:global(.rl-control)):not(:global(.rl-control-group)):not(:global(.rl-item)):not(:global(.rl-badge)),
-.inspector :global(.ia-button):not(:global(.rl-control)):not(:global(.rl-control-group)):not(:global(.rl-item)):not(:global(.rl-badge)) {
-  outline: 3px solid rgba(255, 40, 40, 0.9);
-  outline-offset: -2px;
-}
-
-/* 정상 role = 은은한 확인 표시 */
-.inspector :global(.rl-control),
-.inspector :global(.rl-control-group),
-.inspector :global(.rl-item),
-.inspector :global(.rl-badge) {
-  outline: 1px solid rgba(100, 200, 100, 0.3);
-  outline-offset: -1px;
-}
-/* stylelint-enable selector-pseudo-class-no-unknown */
+/* Inspector CSS moved to src/styles/inspect.css (global body.inspect) */
 
 /* ── Raw row: 부품 나란히 ── */
 .rawRow {
@@ -42,4 +18,15 @@
 .vMismatch {
   outline: 2px solid rgba(255, 40, 40, 0.7);
   outline-offset: -1px;
+}
+
+/* ── Offscreen: 측정용 숨김 렌더링 ── */
+.offscreen {
+  max-height: 0;
+  visibility: hidden;
+}
+
+/* ── Height groups: 그룹 헤더가 줄바꿈 강제 ── */
+.groupBreak {
+  flex-basis: 100%;
 }

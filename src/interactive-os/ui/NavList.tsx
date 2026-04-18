@@ -31,7 +31,7 @@ const defaultRenderItem = (props: React.HTMLAttributes<HTMLElement>, item: Recor
     layout: 'row',
     width: 'full',
   })
-  return <div {...props} className={`${props.className ?? ''} ${itemClass}`}>{label}</div>
+  return <div {...props} className={`${props.className ?? ''} ${itemClass}`}><span>{label}</span></div>
 }
 
 const defaultRenderGroupLabel = (label: string): React.ReactNode => (

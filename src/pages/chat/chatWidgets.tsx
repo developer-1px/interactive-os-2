@@ -1,53 +1,37 @@
 import { useMemo, useCallback } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Terminal } from 'lucide-react'
 import { ax } from '@styles/ax'
 import { Badge } from '@os/ui/Badge'
 import { Button } from '@os/ui/Button'
+import { ListBox } from '@os/ui/ListBox'
 import { PanelHeader } from '@os/ui/PanelHeader'
 import { SessionList } from '@os/ui/SessionList'
-import { Workspace } from '@os/ui/Workspace'
+import { TabList } from '@os/ui/TabList'
 import type { SessionItemOptions } from '@os/ui/items'
 import { createStore, ROOT_ID } from '@os/schema'
 import { useChat } from './chatContext'
-import { createSession, closeSession } from './chatStore'
-import type { ChatSession } from './chatStore'
-import type { ChatMessage } from '@os/ui/chat/types'
+import { createSession, closeSession, setActiveSession, useActiveSession } from './chatStore'
+import { ChatPane } from './ChatPane'
+import type { NormalizedData } from '@os/store/types'
 
-// ── File extraction ──
+// ── Sidebar tabs data ──
 
-const FILE_TOOLS = new Set(['Edit', 'Write', 'Read'])
-
-function extractModifiedFiles(messages: ChatMessage[]): string[] {
-  const files = new Set<string>()
-  for (const msg of messages) {
-    for (const block of msg.blocks) {
-      if (block.type !== 'tool_use') continue
-      const data = (block as { data: { name?: string; input?: { file_path?: string } } }).data
-      if (!data?.name || !FILE_TOOLS.has(data.name)) continue
-      if (data.name === 'Read') continue
-      const fp = data.input?.file_path
-      if (fp) files.add(fp.replace(/.*\/aria\//, ''))
-    }
-  }
-  return [...files]
+function buildTabData(): NormalizedData {
+  return createStore({
+    entities: {
+      sessions: { id: 'sessions', data: { label: 'Sessions' } },
+      files: { id: 'files', data: { label: 'Files' } },
+    },
+    relationships: { [ROOT_ID]: ['sessions', 'files'] },
+  })
 }
 
-function SessionFileList({ session }: { session: ChatSession }) {
-  const files = useMemo(() => extractModifiedFiles(session.messages), [session.messages])
-  if (files.length === 0) return null
-  return (
-    <div className={ax({ layout: 'wrap', gap: 'xs' })}>
-      {files.map(f => (
-        <Badge key={f} tone="neutral" variant="outline">{f.split('/').pop()}</Badge>
-      ))}
-    </div>
-  )
-}
+const sidebarTabData = buildTabData()
 
-// ── Sidebar ──
+// ── Sidebar: Sessions list ──
 
-export function ChatSidebarWidget() {
-  const { sessions, activeSessionId, handleSidebarClick } = useChat()
+function SessionsPanel() {
+  const { sessions, activeSessionId } = useChat()
 
   const navData = useMemo(() => {
     const entities: Record<string, { id: string; data: { label: string; state: string } }> = {}
@@ -59,55 +43,91 @@ export function ChatSidebarWidget() {
     return createStore({ entities, relationships: { [ROOT_ID]: rootIds } })
   }, [sessions])
 
-  const sessionMap = useMemo(() => {
-    const map = new Map<string, ChatSession>()
-    for (const s of sessions) map.set(s.id, s)
-    return map
-  }, [sessions])
-
   const handleActivate = useCallback((nodeId: string) => {
-    handleSidebarClick(nodeId)
-  }, [handleSidebarClick])
+    setActiveSession(nodeId)
+  }, [])
 
   const getItemOptions = useCallback((nodeId: string): SessionItemOptions => {
-    const session = sessionMap.get(nodeId)
     const data = navData.entities[nodeId]?.data as { state: string } | undefined
     return {
       status: data?.state === 'running' ? 'running' : 'idle',
       onClose: (id) => closeSession(id),
-      footer: session ? <SessionFileList session={session} /> : undefined,
     }
-  }, [sessionMap, navData])
+  }, [navData])
+
+  if (sessions.length === 0) {
+    return <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No sessions</div>
+  }
 
   return (
-    <>
+    <SessionList
+      data={navData}
+      onActivate={handleActivate}
+      itemOptions={getItemOptions}
+      initialFocus={activeSessionId ?? undefined}
+      aria-label="Sessions"
+    />
+  )
+}
+
+// ── Sidebar: Files list ──
+
+function FilesPanel() {
+  const { modifiedFiles } = useChat()
+
+  const fileData = useMemo(() => {
+    const entities: Record<string, { id: string; data: { label: string } }> = {}
+    const rootIds: string[] = []
+    for (const f of modifiedFiles) {
+      entities[f] = { id: f, data: { label: f } }
+      rootIds.push(f)
+    }
+    return createStore({ entities, relationships: { [ROOT_ID]: rootIds } })
+  }, [modifiedFiles])
+
+  if (modifiedFiles.length === 0) {
+    return <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No modified files</div>
+  }
+
+  return (
+    <ListBox data={fileData} aria-label="Modified files" />
+  )
+}
+
+// ── Sidebar Widget ──
+
+export function ChatSidebarWidget() {
+  const { sidebarMode, setSidebarMode } = useChat()
+
+  const handleTabActivate = useCallback((tabId: string) => {
+    setSidebarMode(tabId as 'sessions' | 'files')
+  }, [setSidebarMode])
+
+  return (
+    <div className={ax({ layout: 'fill' })}>
       <PanelHeader axes={{ layout: 'spread' }}>
-        <span>Sessions</span>
+        <TabList
+          data={sidebarTabData}
+          onActivate={handleTabActivate}
+          initialFocus={sidebarMode}
+          aria-label="Sidebar tabs"
+        />
         <Button icon onClick={createSession} aria-label="New session">
           <Plus size={14} />
         </Button>
       </PanelHeader>
-      {sessions.length === 0 ? (
-        <div className={ax({ padding: 'md', textStyle: 'caption', text: 'muted' })}>No sessions</div>
-      ) : (
-        <SessionList
-          data={navData}
-          onActivate={handleActivate}
-          itemOptions={getItemOptions}
-          initialFocus={activeSessionId ?? undefined}
-          aria-label="Sessions"
-        />
-      )}
-    </>
+      {sidebarMode === 'sessions' ? <SessionsPanel /> : <FilesPanel />}
+    </div>
   )
 }
 
-// ── Workspace (includes empty state) ──
+// ── Chat Area Widget ──
 
-export function ChatWorkspaceWidget() {
-  const { sessions, wsData, handleWorkspaceChange, handleAddTab, renderPanel } = useChat()
+export function ChatAreaWidget() {
+  const { sessions, activeSessionId } = useChat()
+  const activeSession = useActiveSession()
 
-  if (sessions.length === 0) {
+  if (!activeSession || sessions.length === 0) {
     return (
       <div className={ax({ layout: 'center', flex: '1', gap: 'md', text: 'muted' })}>
         <p>Start a new Claude Code session</p>
@@ -118,13 +138,51 @@ export function ChatWorkspaceWidget() {
     )
   }
 
+  return <ChatPane sessionId={activeSessionId!} />
+}
+
+// ── Bottom Panel Widget (tool log) ──
+
+export function ChatBottomPanelWidget() {
+  const activeSession = useActiveSession()
+
+  const toolCalls = useMemo(() => {
+    if (!activeSession) return []
+    const calls: { id: string; name: string; status: string }[] = []
+    for (const msg of activeSession.messages) {
+      msg.blocks.forEach((block, blockIndex) => {
+        if (block.type === 'tool_use' || block.type === 'tool_summary') {
+          const data = (block as { data: { name?: string; status?: string } }).data
+          if (data?.name) {
+            calls.push({ id: `${msg.id}-${blockIndex}-${data.name}`, name: data.name, status: data.status ?? 'done' })
+          }
+        }
+      })
+    }
+    return calls
+  }, [activeSession])
+
   return (
-    <Workspace
-      data={wsData}
-      onChange={handleWorkspaceChange}
-      onAddTab={handleAddTab}
-      renderPanel={renderPanel}
-      aria-label="Chat workspace"
-    />
+    <div className={ax({ layout: 'fill' })}>
+      <PanelHeader axes={{ layout: 'spread' }}>
+        <span className={ax({ layout: 'bar', gap: 'xs' })}>
+          <Terminal size={14} />
+          <span>Tool Log</span>
+          {toolCalls.length > 0 && <Badge tone="neutral" variant="outline">{toolCalls.length}</Badge>}
+        </span>
+      </PanelHeader>
+      <div className={ax({ flex: '1', scroll: 'y', padding: 'sm', textStyle: 'code', gap: 'xs', layout: 'stack' })}>
+        {toolCalls.length === 0 ? (
+          <div className={ax({ text: 'muted', textStyle: 'caption' })}>No tool calls yet</div>
+        ) : (
+          toolCalls.map(tc => (
+            <div key={tc.id} className={ax({ layout: 'bar', gap: 'sm' })}>
+              <Badge tone={tc.status === 'error' ? 'danger' : 'success'} variant="outline">{tc.status}</Badge>
+              <span>{tc.name}</span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   )
 }

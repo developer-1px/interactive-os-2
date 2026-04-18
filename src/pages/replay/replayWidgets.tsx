@@ -7,6 +7,7 @@ import { NavList } from '@os/ui/NavList'
 import { Combobox } from '@os/ui/Combobox'
 import { Button } from '@os/ui/Button'
 import { FileViewer } from '@os/ui/FileViewer'
+import { MarkdownViewer } from '@os/ui/MarkdownViewer'
 import { parseResults } from '@os/ui/SearchResults'
 import { createStore } from '@os/store/createStore'
 import type { NormalizedData } from '@os/store/types'
@@ -129,6 +130,7 @@ export function ReplayStageWidget() {
     messages, isRunning,
     activeTab, fileViewerRef,
     viewerTabs,
+    liveSessionId,
   } = useReplay()
 
   // ── Subtitle text: last assistant text block ──
@@ -147,7 +149,7 @@ export function ReplayStageWidget() {
   }, [messages])
 
   // ── Live: connect and feed IDE ──
-  const liveMessages = useLiveMessages(mode, viewerTabs, fileViewerRef)
+  const liveMessages = useLiveMessages(mode, viewerTabs, fileViewerRef, liveSessionId)
   const displayMessages = mode === 'live' ? liveMessages : messages
 
   // ── Last tool name (from displayMessages so it works in both modes) ──
@@ -237,6 +239,13 @@ export function ReplayStageWidget() {
           />
         )}
 
+        {/* Live-mode: full conversation md content below stage */}
+        {mode === 'live' && (
+          <div className={ax({ flex: 'none', border: 'top' })} style={{ height: '40%', overflow: 'hidden' }}>
+            <MarkdownStage messages={displayMessages} />
+          </div>
+        )}
+
         {/* Tool switch icon splash */}
         {toolSplash && (
           <div
@@ -277,9 +286,14 @@ function useLiveMessages(
   mode: 'replay' | 'live',
   viewerTabs: { openFile: (path: string, content: string) => void; markEdited: (path: string) => void },
   fileViewerRef: RefObject<FileViewerHandle | null>,
+  forcedSessionId?: string | null,
 ) {
   const activeSessions = useActiveSessions()
-  const sessionId = mode === 'live' && activeSessions.length > 0 ? activeSessions[0].id : null
+  const sessionId = mode !== 'live'
+    ? null
+    : forcedSessionId !== undefined
+      ? forcedSessionId
+      : activeSessions.length > 0 ? activeSessions[0].id : null
 
   useEffect(() => {
     if (!sessionId) return
@@ -495,6 +509,50 @@ function ReplaySearchStage({ query, output, toolName }: {
         })}
       </div>
     </div>
+  )
+}
+
+const MAX_LIVE_MESSAGES = 20
+const MAX_TEXT_LEN = 2000
+
+function messagesToMarkdown(messages: ChatMessage[]): string {
+  const recent = messages.slice(-MAX_LIVE_MESSAGES)
+  const out: string[] = []
+  if (messages.length > recent.length) {
+    out.push(`_… (${messages.length - recent.length} earlier messages hidden)_`)
+  }
+  for (const msg of recent) {
+    const header = msg.role === 'user' ? '## 🧑 User' : msg.role === 'assistant' ? '## 🤖 Assistant' : '## 🔧 Tool'
+    out.push(header)
+    for (const block of msg.blocks) {
+      if ((block.type === 'text' || block.type === 'streaming_text') && 'content' in block) {
+        const text = (block as { content: string }).content
+        out.push(text.length > MAX_TEXT_LEN ? text.slice(0, MAX_TEXT_LEN) + '…' : text)
+      } else if (block.type === 'tool_use' && 'data' in block) {
+        const data = block.data as Record<string, unknown>
+        const name = (data.name as string) ?? 'tool'
+        out.push(`**${name}**`)
+      }
+    }
+  }
+  return out.join('\n\n')
+}
+
+function MarkdownStage({ messages }: { messages: ChatMessage[] }) {
+  const content = useMemo(() => messagesToMarkdown(messages), [messages])
+  if (messages.length === 0) {
+    return (
+      <div className={ax({ layout: 'center', flex: '1', text: 'muted', textStyle: 'caption', surface: 'base' })}>
+        에이전트 활동 대기중...
+      </div>
+    )
+  }
+  return (
+    <ScrollArea className={ax({ flex: '1', surface: 'base' })}>
+      <div className={ax({ padding: 'sm' })}>
+        <MarkdownViewer content={content} />
+      </div>
+    </ScrollArea>
   )
 }
 

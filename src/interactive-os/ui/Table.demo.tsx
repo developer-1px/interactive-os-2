@@ -15,9 +15,9 @@ export const meta = {
 const initial: NormalizedData = createStore({
   entities: {
     head: { id: 'head', data: { label: 'Header' } },
-    'h-name': { id: 'h-name', data: { label: 'Name' } },
-    'h-role': { id: 'h-role', data: { label: 'Role' } },
-    'h-status': { id: 'h-status', data: { label: 'Status' } },
+    'h-name': { id: 'h-name', data: { label: 'Name', header: true } },
+    'h-role': { id: 'h-role', data: { label: 'Role', header: true } },
+    'h-status': { id: 'h-status', data: { label: 'Status', header: true } },
     body: { id: 'body', data: { label: 'Body' } },
     row1: { id: 'row1', data: { label: 'Row 1' } },
     'c1-name': { id: 'c1-name', data: { label: 'Alice' } },

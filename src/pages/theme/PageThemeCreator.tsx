@@ -22,7 +22,7 @@ function createTabData() {
       axes: { id: 'axes', data: { label: 'Axes' } },
       components: { id: 'components', data: { label: 'Components' } },
       scenarios: { id: 'scenarios', data: { label: 'Scenarios' } },
-      __selection__: { id: '__selection__', data: { selectedIds: [initialTab] } },
+      __selection__: { id: '__selection__', selectedIds: [initialTab] },
     },
     relationships: { __root__: ['tokens', 'axes', 'components', 'scenarios'] },
   })

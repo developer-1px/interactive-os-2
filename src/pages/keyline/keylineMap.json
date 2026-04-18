@@ -70,9 +70,7 @@
     "designComplete": true
   },
   "CalendarGrid": {
-    "level": "atom",
-    "role": "control",
-    "content": "text",
+    "level": "standalone",
     "designComplete": true
   },
   "Checkbox": {

@@ -25,15 +25,15 @@ const defaultRenderCell = (
   meta: { dayOfMonth: number; isCurrentMonth: boolean },
   onClick?: () => void,
 ): React.ReactElement => (
-  <td
+  <div
     {...props}
-    className={`text-center ${ax({ role: 'control', text: meta.isCurrentMonth ? 'primary' : 'muted', content: 'text', clamp: '1' })}`}
+    className={ax({ interactive: 'item', role: 'control', content: 'text', text: meta.isCurrentMonth ? 'primary' : 'muted' })}
     data-focused={state.focused || undefined}
     data-selected={state.selected || undefined}
     onClick={onClick}
   >
     {meta.dayOfMonth}
-  </td>
+  </div>
 )
 
 export function CalendarGrid({
@@ -64,41 +64,38 @@ export function CalendarGrid({
   }, [cellIds])
 
   return (
-    <table
+    <div
       role="grid"
-      className="border-collapse"
+      className={`ax-interactive ${ax({ layout: 'table' })}`}
+      style={{ '--grid-col-count': 7 } as React.CSSProperties}
       aria-label={ariaLabel}
-      {...(grid.containerProps as React.HTMLAttributes<HTMLTableElement>)}
+      {...(grid.containerProps as React.HTMLAttributes<HTMLDivElement>)}
     >
-      <thead>
-        <tr>
-          {DAYS.map(d => <th key={d} className={`text-center ${ax({ textStyle: 'caption', text: 'muted', padding: 'xs', weight: 'medium' })}`} scope="col">{d}</th>)}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row, ri) => (
-          <tr key={ri}>
-            {row.map(cellId => {
-              const meta = cellMeta.get(cellId)
-              if (!meta) return null
-              const nodeProps = grid.getNodeProps(cellId)
-              const nodeState = grid.getNodeState(cellId)
-              const entity = store.entities[cellId] ?? { id: cellId }
-              return (
-                <React.Fragment key={cellId}>
-                  {defaultRenderCell(
-                    nodeProps as React.HTMLAttributes<HTMLElement>,
-                    entity,
-                    nodeState,
-                    meta,
-                    onActivate ? () => onActivate(cellId) : undefined,
-                  )}
-                </React.Fragment>
-              )
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+      <div role="row">
+        {DAYS.map(d => <div key={d} role="columnheader" className={ax({ role: 'control', layout: 'center', textStyle: 'caption', text: 'muted', weight: 'medium' })}>{d}</div>)}
+      </div>
+      {rows.map((row, ri) => (
+        <div key={ri} role="row">
+          {row.map(cellId => {
+            const meta = cellMeta.get(cellId)
+            if (!meta) return null
+            const nodeProps = grid.getNodeProps(cellId)
+            const nodeState = grid.getNodeState(cellId)
+            const entity = store.entities[cellId] ?? { id: cellId }
+            return (
+              <React.Fragment key={cellId}>
+                {defaultRenderCell(
+                  nodeProps as React.HTMLAttributes<HTMLElement>,
+                  entity,
+                  nodeState,
+                  meta,
+                  onActivate ? () => onActivate(cellId) : undefined,
+                )}
+              </React.Fragment>
+            )
+          })}
+        </div>
+      ))}
+    </div>
   )
 }

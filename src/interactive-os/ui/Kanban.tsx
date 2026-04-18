@@ -108,7 +108,7 @@ export function Kanban({
       <FocusDiv
         key={cardId}
         focused={cardState.focused}
-        className={ax({ recipe: compact ? 'container-sm' : 'container', surface: 'display', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : 'stack', padding: compact ? 'md' : 'lg', gap: compact ? 'md' : 'lg', shape: compact ? 'md' : 'lg', border: compact ? undefined : 'subtle' })}
+        className={ax({ surface: 'raised', border: 'ring', textStyle: compact ? 'caption' : undefined, layout: compact ? 'row' : 'stack', padding: compact ? 'md' : 'lg', gap: compact ? 'md' : 'lg', shape: compact ? 'md' : 'lg' })}
         style={cardStyle}
         title={cardTooltip ?? cardTitle}
         data-weight={cardWeight || undefined}

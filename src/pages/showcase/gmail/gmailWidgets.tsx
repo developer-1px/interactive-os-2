@@ -57,7 +57,7 @@ const folderData = makeFolderData()
 
 export function SidebarWidget() {
   return (
-    <div className={ax({ layout: 'stack', flex: '1', gap: 'sm', padding: 'sm' })}>
+    <div className={ax({ layout: 'stack', flex: '1', padding: 'sm' })}>
       <div className={ax({ interactive: 'button', surface: 'action', tone: 'accent', role: 'control', layout: 'bar', gap: 'sm', content: 'text', shape: 'xl' })}>
         <Pencil size={14} />
         <span>Compose</span>

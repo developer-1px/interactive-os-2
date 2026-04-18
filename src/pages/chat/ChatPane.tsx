@@ -12,6 +12,7 @@ import { sendMessage, clearSession, interruptSession, useChatSession } from './c
 import type { ChatMessage, BlockRendererMap } from '@os/ui/chat/types'
 import { ax } from '@styles/ax'
 import { Button } from '@os/ui/Button'
+import { useChat } from './chatContext'
 import './PageAgentChat.css'
 
 const chatRenderers: BlockRendererMap = {
@@ -96,6 +97,7 @@ function useCommandHighlight(commands: string[], text: string) {
 }
 
 export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (sessionId: string, text: string) => void }) {
+  const { toggleBottom, bottomVisible } = useChat()
   const session = useChatSession(sessionId)
   const composerRef = useRef<ComposerHandle>(null)
   const [inputText, setInputText] = useState('')
@@ -212,6 +214,9 @@ export function ChatPane({ sessionId, onSend }: { sessionId: string; onSend?: (s
                 <span>{(usage.durationMs / 1000).toFixed(1)}s</span>
               </>
             )}
+            <Button icon onClick={toggleBottom} aria-label="Toggle tool log" aria-pressed={bottomVisible}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect y="8" width="12" height="4" rx="1" /><rect y="0" width="12" height="7" rx="1" opacity="0.3" /></svg>
+            </Button>
             <span className={ax({ textStyle: 'code' }) + ' chat-hint'}>/clear to reset</span>
           </div>
         </div>

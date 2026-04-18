@@ -95,6 +95,7 @@ export default function PageCms() {
       () => engine,
       () => storeRef.current,
       () => localeRef.current,
+      setLocale,
     )
     ;(window as any).cms = api
     return () => { delete (window as any).cms }

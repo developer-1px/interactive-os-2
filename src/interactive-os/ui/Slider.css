@@ -24,7 +24,8 @@
   top: 50%;
   width: var(--slider-thumb-size);
   height: var(--slider-thumb-size);
-  background: var(--tone-primary-base);
+  background: var(--bg-white, #fff);
+  box-shadow: var(--shadow-sm);
   transform: translate(-50%, -50%);
   transition: outline-color var(--motion-instant-duration) var(--motion-instant-easing);
 }

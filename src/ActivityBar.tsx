@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Sun, Moon, Presentation, Component, Eye, FolderCode, Palette, ShieldAlert, Languages,
   MessageSquare, BookText, Play, Cable, PenLine, Kanban, SquareKanban, GitBranch,
-  Mail, ListTree,
+  Mail, ListTree, Boxes,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -64,6 +64,7 @@ const appNavItems: NavItem[] = [
   { id: 'cms', label: 'CMS', icon: Presentation, path: '/' },
   { id: 'viewer', label: 'Viewer', icon: FolderCode, path: '/viewer' },
   { id: 'ui-showcase', label: 'UI Showcase', icon: Eye, path: '/ui' },
+  { id: 'catalog', label: 'Catalog', icon: Boxes, path: '/catalog' },
   { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
   { id: 'book', label: 'Book', icon: BookText, path: '/book' },
   { id: 'pipeline', label: 'Pipeline', icon: GitBranch, path: '/pipeline' },

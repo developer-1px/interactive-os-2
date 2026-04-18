@@ -22,7 +22,7 @@ export function masterDetailRenderer({ entity, renderNode, depth }: A2UIRenderCo
       <div className={ax({ flex: '1' })}>
         {masterId && renderNode(masterId, depth + 1)}
       </div>
-      <div className={ax({ surface: 'display', padding: 'md', shape: 'md', flex: '1' })}>
+      <div className={ax({ surface: 'raised', border: 'ring', padding: 'md', shape: 'md', flex: '1' })}>
         {renderNode(detailId, depth + 1)}
       </div>
     </div>

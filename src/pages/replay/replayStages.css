@@ -56,10 +56,14 @@
   backdrop-filter: blur(8px);
 }
 
-/* ── SubAgent viewer row (Live 모드: 부모 + sub N + orphan M) ── */
+/* ── SubAgent viewer row (Live 모드: 부모 + sub N + orphan M) ──
+ * Live .replay-slot이 scroll-x(flex row)로 동작. 첫 자식(Shorts)이 기본 폭을
+ * 차지하고 SubAgent viewer들이 우측으로 누적되어 가로 스크롤된다.
+ */
 
-.replay-subagent-row {
-  overscroll-behavior-x: contain;
+.replay-slot > :first-child {
+  inline-size: 100%;
+  min-inline-size: 360px;
 }
 
 .replay-subagent-viewer {
