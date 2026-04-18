@@ -116,9 +116,14 @@ export function definePage(config: { entities: Record<string, PageEntityConfig> 
 
   // Second pass: build entities and relationships
   for (const [id, cfg] of Object.entries(config.entities)) {
-    const label = cfg.data.type === 'widget'
-      ? (cfg.data as WidgetNode).widget
-      : `${cfg.data.type}: ${id}`
+    // 사용자가 cfg.data.label을 선언했으면 그걸 보존 (TabNode.label 등).
+    // 없을 때만 자동 생성(widget 이름 또는 `${type}: ${id}`).
+    const rawLabel = (cfg.data as Record<string, unknown>).label
+    const label = typeof rawLabel === 'string'
+      ? rawLabel
+      : cfg.data.type === 'widget'
+        ? (cfg.data as WidgetNode).widget
+        : `${cfg.data.type}: ${id}`
     entities[id] = { id, data: { ...cfg.data, label } }
     if (cfg.children) {
       relationships[id] = cfg.children

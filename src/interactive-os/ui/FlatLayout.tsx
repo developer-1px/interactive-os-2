@@ -17,6 +17,7 @@ import { SplitPane } from './SplitPane'
 import { workspaceCommands } from '@os/plugins/workspaceStore'
 import { FlatLayoutContext } from './useFlatLayout'
 import { ViewerTabList } from './ViewerTabList'
+import { Button } from './Button'
 
 // ── Surface context ───────────────────────────────────
 // ② cmux-layout-prd.md — tab 노드 아래 widget이 surrounding tab data를 pull
@@ -242,15 +243,40 @@ const layoutRenderers: Record<string, (ctx: LayoutRenderContext) => React.ReactN
         className={ax({ layout: 'stack', width: 'full', flex: '1', surface })}
         onPointerDownCapture={() => dispatch(layoutCommands.setFocus(nodeId, activeTabId))}
       >
-        <ViewerTabList
-          data={tabBarStore}
-          initialFocus={activeTabId}
-          onActivate={(tabId) => {
-            dispatch(workspaceCommands.setActiveTab(nodeId, tabId))
-            dispatch(layoutCommands.setFocus(nodeId, tabId))
-          }}
-          aria-label={`Tabgroup ${nodeId}`}
-        />
+        <div className={ax({ layout: 'bar', width: 'full' })}>
+          <div className={ax({ flex: '1' })}>
+            <ViewerTabList
+              data={tabBarStore}
+              initialFocus={activeTabId}
+              onActivate={(tabId) => {
+                dispatch(workspaceCommands.setActiveTab(nodeId, tabId))
+                dispatch(layoutCommands.setFocus(nodeId, tabId))
+              }}
+              aria-label={`Tabgroup ${nodeId}`}
+            />
+          </div>
+          <Button
+            icon
+            aria-label="New tab"
+            onClick={() => {
+              // active tab을 복제 — splitHere와 동일 규약.
+              // tab이 하나도 없으면 no-op (addTab이 target paneId 필요).
+              const src = getEntityData<TabNode>(store, activeTabId)
+              if (!src) return
+              const newId = `t-${Date.now().toString(36)}`
+              dispatch(workspaceCommands.addTab(nodeId, {
+                id: newId,
+                data: {
+                  type: 'tab',
+                  label: src.label,
+                  contentType: src.contentType,
+                  contentRef: src.contentRef,
+                },
+              }))
+              dispatch(workspaceCommands.setActiveTab(nodeId, newId))
+            }}
+          >+</Button>
+        </div>
         {renderNode(activeTabId, 'tabgroup')}
       </div>
     )
