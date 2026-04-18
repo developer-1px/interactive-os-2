@@ -15,7 +15,7 @@ import type { SortKey } from './viewerSort'
 export function ViewerSidebarWidget() {
   const { sidebarData, onSidebarActivate } = useViewer()
   return (
-    <div className={ax({ role: 'control-group', surface: 'ghost', layout: 'stack' })}>
+    <div className={ax({ role: 'control-group', layout: 'stack' })}>
       <NavList data={sidebarData} onActivate={onSidebarActivate} aria-label="Sidebar" />
     </div>
   )
