@@ -11,7 +11,11 @@ import {
   chatUiStateSchema,
   sessionCardModelSchema,
   turnUsageSchema,
+  chatSessionFixtures,
+  chatUiStateFixture,
+  CHAT_UI_STATE_ID,
 } from '@entities/chat'
+import type { ChatSession } from './chatStore'
 
 interface CellNode {
   id: string
@@ -178,4 +182,101 @@ export function buildSchemaTree(): NormalizedData {
   }
   relationships[ROOT_ID] = rootChildren
   return createStore({ entities: entities as unknown as Record<string, Entity>, relationships })
+}
+
+// ── Value tree (실제 인스턴스 데이터) ─────────────────────────
+
+function isPlainObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v)
+}
+
+function formatScalar(v: unknown): string {
+  if (v === null) return 'null'
+  if (v === undefined) return 'undefined'
+  if (typeof v === 'string') return v.length > 100 ? `"${v.slice(0, 100)}..."` : `"${v}"`
+  return String(v)
+}
+
+function appendValueFields(
+  entities: Record<string, CellNode>,
+  relationships: Record<string, string[]>,
+  parentId: string,
+  data: Record<string, unknown>,
+): void {
+  const childIds: string[] = []
+  for (const [key, value] of Object.entries(data)) {
+    const childId = `${parentId}.${key}`
+    if (isPlainObject(value)) {
+      pushNode(entities, childId, key, `{${Object.keys(value).length}}`)
+      appendValueFields(entities, relationships, childId, value)
+    } else if (Array.isArray(value)) {
+      pushNode(entities, childId, key, `[${value.length}]`)
+      const arrIds: string[] = []
+      value.forEach((item, i) => {
+        const aid = `${childId}.${i}`
+        if (isPlainObject(item)) {
+          pushNode(entities, aid, `[${i}]`, `{${Object.keys(item).length}}`)
+          appendValueFields(entities, relationships, aid, item)
+        } else {
+          pushNode(entities, aid, `[${i}]`, formatScalar(item))
+        }
+        arrIds.push(aid)
+      })
+      relationships[childId] = arrIds
+    } else {
+      pushNode(entities, childId, key, formatScalar(value))
+    }
+    childIds.push(childId)
+  }
+  relationships[parentId] = childIds
+}
+
+function buildValueTree(
+  groups: Array<{ id: string; label: string; data: Record<string, unknown> }>,
+): NormalizedData {
+  const entities: Record<string, CellNode> = {}
+  const relationships: Record<string, string[]> = {}
+  const rootChildren: string[] = []
+  for (const g of groups) {
+    pushNode(entities, g.id, g.label, '')
+    appendValueFields(entities, relationships, g.id, g.data)
+    rootChildren.push(g.id)
+  }
+  relationships[ROOT_ID] = rootChildren
+  return createStore({ entities: entities as unknown as Record<string, Entity>, relationships })
+}
+
+export interface BuildSource {
+  liveSessions: ChatSession[]
+  liveActiveId: string | null
+  liveUi: { sidebarMode: string; bottomVisible: boolean }
+}
+
+export function buildLiveStateTree(src: BuildSource): NormalizedData {
+  if (src.liveSessions.length === 0) return buildValueTree([])
+  const groups = src.liveSessions.map(s => ({
+    id: s.id,
+    label: s.id,
+    data: s as unknown as Record<string, unknown>,
+  }))
+  groups.push({
+    id: '__ui__',
+    label: '__ui__',
+    data: { activeSessionId: src.liveActiveId, ...src.liveUi } as Record<string, unknown>,
+  })
+  return buildValueTree(groups)
+}
+
+export function buildFixtureTree(): NormalizedData {
+  const groups = Object.entries(chatSessionFixtures).map(([id, s]) => ({
+    id,
+    label: id,
+    data: s as unknown as Record<string, unknown>,
+  }))
+  groups.push({
+    id: CHAT_UI_STATE_ID,
+    label: CHAT_UI_STATE_ID,
+    data: chatUiStateFixture as unknown as Record<string, unknown>,
+  })
+  return buildValueTree(groups)
 }
