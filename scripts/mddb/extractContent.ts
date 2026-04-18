@@ -159,8 +159,8 @@ function formatYamlLine(key: string, value: unknown): string {
 }
 
 function yamlScalar(s: string): string {
-  // 안전 케이스: 특수 문자 없으면 bare
-  if (/^[A-Za-z0-9][A-Za-z0-9 _./:@+=-]*$/.test(s) && !/^(true|false|null|yes|no|~)$/i.test(s)) {
+  // 안전 케이스: 특수 문자 없으면 bare. colon은 YAML key 구분자로 오인되므로 제외.
+  if (/^[A-Za-z0-9][A-Za-z0-9 _./@+=-]*$/.test(s) && !/^(true|false|null|yes|no|~)$/i.test(s)) {
     return s
   }
   // 단일 따옴표 — 내부 ' 는 '' 로 escape
