@@ -1,0 +1,1 @@
+import{r as e,t}from"./Skeleton.demo-BpWlRrna.js";export{t as Demo,e as meta};

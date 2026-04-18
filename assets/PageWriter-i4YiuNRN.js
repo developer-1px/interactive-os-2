@@ -1,0 +1,29 @@
+var e=`/* ── PageWriter last-mile ── */
+
+.writer-heading {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
+  margin-top: var(--space-md);
+}
+
+.writer-heading-l1 {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
+  margin-top: var(--space-lg);
+}
+
+.writer-paragraph {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
+  margin-top: var(--space-xs);
+}
+
+.writer-list {
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
+  margin-top: var(--space-xs);
+}
+
+.writer-hr {
+  border: none;
+  border-top: var(--border-width) solid var(--border-default);
+  /* stylelint-disable-next-line declaration-property-value-disallowed-list -- flow layout spacing */
+  margin: var(--space-md) 0;
+}
+`;export{e as default};

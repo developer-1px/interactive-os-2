@@ -1,0 +1,1 @@
+import{o as e}from"./chunk-CFjPhJqf.js";import{t}from"./react-nm2Ru1Pt.js";var n=e(t(),1);function r(e){let t=(0,n.createContext)(null);function r(){let r=(0,n.useContext)(t);if(!r)throw Error(`use${e} must be used inside ${e}Provider`);return r}return[t.Provider,r]}export{r as t};

@@ -1,0 +1,26 @@
+import{r as e}from"./chunk-CFjPhJqf.js";var t=e({default:()=>n}),n=`/* eslint-disable react-refresh/only-export-components */
+// ② component-catalog-prd.md
+import { ax } from '@styles/ax'
+import { Divider } from './Divider'
+
+export const meta = {
+  slug: 'divider',
+  category: 'ui' as const,
+  label: 'Divider',
+}
+
+export function Demo() {
+  return (
+    <div className={ax({ layout: 'stack', gap: 'md', width: 'md' })}>
+      <span>Above</span>
+      <Divider />
+      <span>Below</span>
+      <div className={ax({ layout: 'row', gap: 'md', square: 'lg' })}>
+        <span>Left</span>
+        <Divider direction="vertical" />
+        <span>Right</span>
+      </div>
+    </div>
+  )
+}
+`;export{t as n,n as t};

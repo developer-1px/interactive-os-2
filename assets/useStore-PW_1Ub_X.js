@@ -1,0 +1,1 @@
+import{o as e}from"./chunk-CFjPhJqf.js";import{t}from"./react-nm2Ru1Pt.js";var n=e(t(),1);function r(e){return(0,n.useState)(e)}export{r as t};

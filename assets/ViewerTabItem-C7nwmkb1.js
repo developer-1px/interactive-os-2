@@ -1,0 +1,1 @@
+import{t as e}from"./file-text-Ci9J9hhG.js";import{t}from"./search-C6AeolEz.js";import{t as n}from"./terminal-COC0LypH.js";import{t as r}from"./jsx-runtime-BJXw1wCY.js";import{t as i}from"./TabItem-D3LcY5uF.js";var a=r(),o={file:e,search:t,terminal:n};function s(t,n,r){return i(t,n,r,{icon:(0,a.jsx)(o[n.data?.type??`file`]??e,{size:12})})}export{s as t};

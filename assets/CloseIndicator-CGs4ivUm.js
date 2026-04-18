@@ -1,0 +1,1 @@
+import{t as e}from"./ax-DELUmbyI.js";import{t}from"./x-D7h0itdO.js";import{t as n}from"./jsx-runtime-BJXw1wCY.js";var r=n();function i({className:n}){return(0,r.jsx)(`span`,{className:[`inline-flex ${e({layout:`center`})}`,`item-indicator--close`,n].filter(Boolean).join(` `),children:(0,r.jsx)(t,{size:`1em`})})}export{i as t};

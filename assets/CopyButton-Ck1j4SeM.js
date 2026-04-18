@@ -1,0 +1,1 @@
+import{t as e}from"./CopyButton-CdNEhEgy.js";export{e as CopyButton};

@@ -1,0 +1,1 @@
+import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({count:t,className:r}){return t<=0?null:(0,n.jsxs)(`span`,{className:[`whitespace-nowrap ${e({flex:`none`})}`,`item-indicator--overflow`,r].filter(Boolean).join(` `),children:[`+`,t]})}export{r as t};

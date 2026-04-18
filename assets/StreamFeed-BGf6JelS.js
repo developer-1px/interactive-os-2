@@ -1,0 +1,49 @@
+var e=`@layer component {
+/* StreamFeed — last-mile CSS (not expressible via ax()) */
+
+:where(.stream-feed) {
+  min-height: 0;
+}
+
+.stream-entry {
+  min-width: 0;
+  max-width: var(--content-md);
+  place-self: center;
+}
+
+.stream-indicator {
+  padding: var(--space-sm) var(--space-md);
+  max-width: var(--content-md);
+  place-self: center;
+}
+
+.stream-dot {
+  width: var(--shape-xs-radius);
+  height: var(--shape-xs-radius);
+  background: var(--tone-primary-base);
+}
+
+.stream-fab {
+  width: var(--sidebar-item-height);
+  height: var(--sidebar-item-height);
+
+  --_bg: var(--surface-overlay);
+  --_bg-hover: var(--bg-hover);
+
+  background: var(--_bg);
+  box-shadow: var(--shadow-md);
+  transition:
+    background var(--motion-instant-duration) var(--motion-instant-easing),
+    color var(--motion-instant-duration) var(--motion-instant-easing);
+  z-index: 1;
+}
+
+.stream-cursor {
+  width: var(--indicator-width);
+  height: var(--icon-sm);
+  background: var(--tone-primary-base);
+  padding-inline-start: var(--border-width);
+  vertical-align: text-bottom;
+}
+}
+`;export{e as default};

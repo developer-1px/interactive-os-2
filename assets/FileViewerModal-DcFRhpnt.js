@@ -1,0 +1,30 @@
+var e=`@layer component {
+/* FileViewerModal — dialog and modal styling */
+.fvm-dialog {
+  padding: 0;
+  max-width: none;
+  max-height: none;
+  width: 100vw;
+  height: 100vh;
+}
+
+.fvm-dialog::backdrop {
+  background: var(--dialog-backdrop);
+}
+
+.fvm-modal {
+  place-self: center;
+  width: 85vw;
+  max-width: var(--content-xl);
+  height: 85vh;
+  box-shadow: var(--shadow-lg);
+}
+
+.fvm-meta-sep {
+  width: var(--border-width);
+  height: var(--shape-md-radius);
+  background: var(--border-default);
+  padding-inline: var(--space-inline-code);
+}
+}
+`;export{e as default};

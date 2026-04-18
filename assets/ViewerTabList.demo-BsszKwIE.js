@@ -1,0 +1,29 @@
+import{r as e}from"./chunk-CFjPhJqf.js";var t=e({default:()=>n}),n=`/* eslint-disable react-refresh/only-export-components */
+// ② component-catalog-prd.md
+import { useState } from 'react'
+import { ViewerTabList } from './ViewerTabList'
+import { createStore } from '@os/store/createStore'
+import { ROOT_ID } from '@os/store/types'
+import type { NormalizedData } from '@os/store/types'
+
+export const meta = {
+  slug: 'viewer-tab-list',
+  category: 'ui',
+  label: 'ViewerTabList',
+}
+
+const initialData: NormalizedData = createStore({
+  entities: {
+    code: { id: 'code', data: { label: 'Code', icon: 'file' } },
+    preview: { id: 'preview', data: { label: 'Preview', icon: 'eye' } },
+    terminal: { id: 'terminal', data: { label: 'Terminal', icon: 'terminal' } },
+  },
+  relationships: { [ROOT_ID]: ['code', 'preview', 'terminal'] },
+})
+
+export function Demo() {
+  const [data, setData] = useState<NormalizedData>(initialData)
+
+  return <ViewerTabList data={data} onChange={setData} aria-label="Viewer tabs" />
+}
+`;export{t as n,n as t};

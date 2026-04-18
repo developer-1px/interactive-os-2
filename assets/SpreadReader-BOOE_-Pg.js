@@ -1,0 +1,1 @@
+import{t as e}from"./SpreadReader-COGwYkwY.js";export{e as SpreadReader};

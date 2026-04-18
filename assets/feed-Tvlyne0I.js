@@ -1,0 +1,1 @@
+import{n as e}from"./navigate-DVHx1lan.js";import{t}from"./composePattern-fnrkFOju.js";var n=e(`vertical`),r=t({role:`feed`,childRole:`article`},[n],{PageDown:n.next,PageUp:n.prev});export{r as t};

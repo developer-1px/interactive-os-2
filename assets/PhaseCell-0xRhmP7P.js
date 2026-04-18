@@ -1,0 +1,24 @@
+var e=`import { ax } from '@styles/ax'
+import { StatusIndicator } from '../indicators'
+
+type PhaseStatus = 'done' | 'wip' | 'empty'
+
+interface PhaseCellProps {
+  status: PhaseStatus | null
+}
+
+const TONE_MAP = {
+  done: 'success',
+  wip: 'warning',
+  empty: 'info',
+} as const
+
+export function PhaseCell({ status }: PhaseCellProps) {
+  if (status === null) return <span />
+  return (
+    <span className={ax({ layout: 'center' })}>
+      <StatusIndicator tone={TONE_MAP[status]} />
+    </span>
+  )
+}
+`;export{e as default};

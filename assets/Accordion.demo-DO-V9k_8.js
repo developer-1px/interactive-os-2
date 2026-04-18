@@ -1,0 +1,1 @@
+import{n as e,r as t}from"./Accordion.demo-8q3Fj1W1.js";export{e as Demo,t as meta};

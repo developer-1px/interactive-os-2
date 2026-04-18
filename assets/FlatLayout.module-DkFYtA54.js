@@ -1,0 +1,35 @@
+var e=`@layer component {
+  .splitPane {
+    flex: var(--split-flex, 1);
+    flex-basis: var(--split-basis, auto);
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .splitChild {
+    height: 100%;
+  }
+
+  .splitChild > * {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .navRoot {
+    height: 100%;
+  }
+
+  .navSidebar {
+    overflow-y: auto;
+    height: 100%;
+    border-right: 1px solid var(--color-border);
+  }
+
+  .navContent {
+    overflow-y: auto;
+    height: 100%;
+    flex: 1;
+  }
+}
+`;export{e as default};

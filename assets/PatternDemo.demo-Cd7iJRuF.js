@@ -1,0 +1,1 @@
+import{r as e,t}from"./PatternDemo.demo-Chui8EWu.js";export{t as Demo,e as meta};

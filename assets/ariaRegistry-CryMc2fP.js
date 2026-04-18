@@ -1,0 +1,1 @@
+var e=new Map,t=new Set;function n(n,r){e.set(n,r),t.forEach(e=>e())}function r(n){e.delete(n),t.forEach(e=>e())}function i(e){return t.add(e),()=>{t.delete(e)}}function a(t){return e.get(t)}function o(){return e}export{r as a,i,a as n,n as r,o as t};

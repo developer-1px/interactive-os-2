@@ -1,0 +1,28 @@
+var e=`/* Timeline — last-mile: connector line + dot visuals */
+
+.timeline-dot {
+  border-radius: 50%;
+  background: var(--color-border-default);
+  flex-shrink: 0;
+}
+
+/* Filled dot when focused */
+[data-focused='true'] > .timeline-marker > .timeline-dot {
+  background: var(--color-accent);
+}
+
+.timeline-connector {
+  min-height: 0.5rem;
+  background: var(--color-border-subtle);
+}
+
+/* Hide connector on last item */
+.timeline-item:last-child .timeline-connector {
+  visibility: hidden;
+}
+
+/* Content spacing between items */
+.timeline-content {
+  padding-block-end: var(--space-sm);
+}
+`;export{e as default};

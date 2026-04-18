@@ -1,0 +1,9 @@
+var e=`@layer component {
+/* TabGroup — close/add button reveal (last-mile: whitespace, italic, opacity transitions) */
+.tab-item {
+  white-space: nowrap;
+}
+.tab-item-preview { font-style: italic; }
+
+}
+`;export{e as default};

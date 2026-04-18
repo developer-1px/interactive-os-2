@@ -1,0 +1,1 @@
+import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({width:t=`full`,height:r=`sm`,shape:i=`rect`}){return(0,n.jsx)(`div`,{className:e({surface:`sunken`,motion:`pulse`,shape:i===`circle`?`pill`:i===`text`?`sm`:`md`,width:i===`circle`?void 0:t,square:r}),"aria-hidden":`true`})}export{r as t};

@@ -1,0 +1,1 @@
+function e(e){return e.data?.label??e.data?.name??e.id}export{e as t};

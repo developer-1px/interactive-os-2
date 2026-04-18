@@ -1,0 +1,16 @@
+var e=`/* Rating — star indicator color states (last-mile: color is not an ax() axis) */
+
+.item-indicator--star {
+  color: var(--color-text-muted);
+  transition: color 120ms ease;
+}
+
+.item-indicator--star-filled {
+  color: var(--color-tone-warning);
+}
+
+.item-indicator--star-icon {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+`;export{e as default};

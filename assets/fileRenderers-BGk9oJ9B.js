@@ -1,0 +1,1 @@
+import{r as e}from"./chunk-CFjPhJqf.js";var t=e({defineFileRenderer:()=>r,getFileRenderer:()=>i,getFileSource:()=>a}),n=new Map;function r(e,t){for(let r of e)n.set(r,t)}function i(e){let t=e.includes(`.`)?e.split(`.`).pop().toLowerCase():``;return n.get(t)}function a(e){return i(e)?.source??`text`}export{a as i,t as n,i as r,r as t};

@@ -1,0 +1,1 @@
+async function e(e){return(await fetch(`/api/fs/tree?root=${encodeURIComponent(e)}`)).json()}async function t(e){return(await fetch(`/api/fs/file?path=${encodeURIComponent(e)}`)).text()}export{e as n,t};

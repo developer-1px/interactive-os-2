@@ -1,0 +1,1 @@
+import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";import{t as n}from"./StatusIndicator-CKv21QwC.js";var r=t(),i={done:`success`,wip:`warning`,empty:`info`};function a({status:t}){return t===null?(0,r.jsx)(`span`,{}):(0,r.jsx)(`span`,{className:e({layout:`center`}),children:(0,r.jsx)(n,{tone:i[t]})})}export{a as t};

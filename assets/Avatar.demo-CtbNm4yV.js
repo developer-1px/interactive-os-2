@@ -1,0 +1,1 @@
+import{n as e,r as t}from"./Avatar.demo-BuSTXPQR.js";export{e as Demo,t as meta};

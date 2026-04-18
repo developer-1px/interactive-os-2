@@ -1,0 +1,1 @@
+import{n as e}from"./navigate-DVHx1lan.js";import{t}from"./composePattern-fnrkFOju.js";import{t as n}from"./select-BliIHyxB.js";var r=e(`activedescendant`),i=n(`single`,{followFocus:!0}),a=t({role:`radiogroup`,childRole:`radio`},[r,i],{ArrowDown:r.nextWrap,ArrowUp:r.prevWrap,ArrowRight:r.nextWrap,ArrowLeft:r.prevWrap,Space:i.toggle,Click:i.selectAndAnchor});export{a as t};

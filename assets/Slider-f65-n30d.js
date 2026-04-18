@@ -1,0 +1,39 @@
+var e=`@layer component {
+/* Slider — track, fill, thumb */
+.slider-label { min-width: calc(var(--space-2xl) * 2); }
+
+.slider-track {
+  --slider-track-height: 4px;
+
+  height: var(--slider-track-height);
+  background: var(--border-strong);
+  border-radius: var(--shape-pill-radius);
+}
+
+.slider-fill {
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--tone-primary-base);
+  border-radius: var(--shape-pill-radius);
+}
+
+.slider-thumb {
+  --slider-thumb-size: var(--icon-md);
+
+  top: 50%;
+  width: var(--slider-thumb-size);
+  height: var(--slider-thumb-size);
+  background: var(--bg-white, #fff);
+  box-shadow: var(--shadow-sm);
+  transform: translate(-50%, -50%);
+  transition: outline-color var(--motion-instant-duration) var(--motion-instant-easing);
+}
+
+[data-focused] .slider-thumb {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.slider-value { min-width: var(--space-2xl); }
+}
+`;export{e as default};

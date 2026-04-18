@@ -1,0 +1,1 @@
+import{n as e}from"./navigate-DVHx1lan.js";import{t}from"./composePattern-fnrkFOju.js";import{t as n}from"./select-BliIHyxB.js";var r=e(`horizontal`),i=n(`single`),a=t({role:`tablist`,childRole:`tab`,panel:`tabpanel`},[r,i],{ArrowRight:r.next,ArrowLeft:r.prev,Home:r.first,End:r.last,Space:i.selectAndAnchor,Enter:i.selectAndAnchor,Click:i.selectAndAnchor});export{a as t};

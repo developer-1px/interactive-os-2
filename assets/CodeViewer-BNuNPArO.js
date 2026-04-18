@@ -1,0 +1,183 @@
+var e=`@layer component {
+/* CodeViewer — last-mile: shiki integration, line numbers, chrome, token highlights */
+/* ② code-viewer-prd.md */
+
+.code-viewer {
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--shape-xl-radius);
+}
+
+.code-viewer--chat,
+.code-viewer--replay {
+  border-radius: var(--shape-md-radius);
+}
+
+.code-viewer--presentation {
+  border-radius: var(--shape-xl-radius);
+}
+
+/* Chrome dots (mac-style) */
+.code-viewer-chrome-dot {
+  width: var(--_dot-size, 10px);
+  height: var(--_dot-size, 10px);
+  border-radius: 50%;
+}
+
+.code-viewer-chrome-dot:nth-child(1) { background: #ff5f56; }
+.code-viewer-chrome-dot:nth-child(2) { background: #ffbd2e; }
+.code-viewer-chrome-dot:nth-child(3) { background: #27c93f; }
+
+/* Shiki pre */
+.code-viewer :is(.shiki.code-viewer-pre) {
+  margin: 0;
+  padding-block: var(--space-md);
+  padding-inline: 0;
+  counter-reset: line;
+  background-image: linear-gradient(var(--surface-base), var(--surface-base)) !important;
+}
+
+.code-viewer-body[data-gutter-offset="0"] :is(.shiki.code-viewer-pre) { counter-reset: line 0; }
+.code-viewer-body[data-gutter-offset] :is(.shiki.code-viewer-pre) {
+  counter-reset: line var(--_gutter-offset, 0);
+}
+
+.code-viewer--chat :is(.shiki.code-viewer-pre),
+.code-viewer--replay :is(.shiki.code-viewer-pre) {
+  padding-block: var(--space-sm);
+}
+
+.code-viewer--presentation :is(.shiki.code-viewer-pre) {
+  padding-block: var(--space-lg);
+  font-size: calc(var(--type-code-size) * 1.15);
+}
+
+/* shiki .line must be block for highlight backgrounds to span full row */
+.code-viewer :is(.shiki.code-viewer-pre) code {
+  display: var(--_flex, flex);
+  flex-direction: var(--_col, column);
+}
+
+.code-viewer :is(.shiki.code-viewer-pre .line) {
+  display: var(--_block, block);
+  padding-left: var(--_gutter-w, 3.5em);
+  padding-right: var(--space-lg);
+  text-indent: calc(-1 * var(--_gutter-w, 3.5em));
+}
+
+.code-viewer :is(.shiki.code-viewer-pre .line.code-line--with-gutter)::before,
+.code-viewer-gutter {
+  display: var(--_inline-block, inline-block);
+  width: var(--_gutter-w, 3.5em);
+}
+
+.code-viewer--no-gutter :is(.shiki.code-viewer-pre .line) {
+  padding-left: var(--space-md);
+  text-indent: 0;
+}
+
+.code-viewer--chat :is(.shiki.code-viewer-pre .line),
+.code-viewer--replay :is(.shiki.code-viewer-pre .line) {
+  padding-right: var(--space-md);
+}
+
+/* Softwrap mode — hanging indent for continuation */
+.code-viewer--wrap :is(.shiki.code-viewer-pre .line) {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* Gutter via counter (non-virtualized) */
+.code-viewer :is(.shiki.code-viewer-pre .line.code-line--with-gutter)::before {
+  counter-increment: line;
+  content: counter(line);
+  padding-right: var(--_gutter-pr, 1em);
+  text-align: right;
+  text-indent: 0;
+  color: var(--text-muted);
+  font-size: var(--type-code-size);
+  user-select: none;
+  opacity: 0.65;
+}
+
+/* Virtualized body uses explicit <span class="code-viewer-gutter"> */
+.code-viewer-gutter {
+  padding-right: var(--_gutter-pr, 1em);
+  text-align: right;
+  text-indent: 0;
+  color: var(--text-muted);
+  font-size: var(--type-code-size);
+  user-select: none;
+  opacity: 0.65;
+}
+
+.code-viewer :is(.shiki.code-viewer-pre .line:has(> .code-viewer-gutter))::before {
+  content: none;
+}
+
+/* Token highlight */
+.code-token {
+  cursor: pointer;
+  border-radius: var(--space-inline-code);
+  transition: background 0.1s;
+}
+
+:where(.code-token):hover {
+  background: var(--tone-primary-dim);
+}
+
+.code-token--highlighted {
+  background-image: linear-gradient(var(--tone-primary-mid), var(--tone-primary-mid)) !important;
+  outline: var(--border-width) solid var(--tone-primary-bright);
+  border-radius: var(--space-inline-code);
+}
+
+/*
+  Line tones — background layers so gutter stays aligned (no padding/border shift).
+  ② code-viewer-prd.md — deleted tone 강화 (15% → 28%) for continuous row legibility.
+*/
+.code-line--edited {
+  background-image:
+    linear-gradient(var(--tone-warning-base), var(--tone-warning-base)),
+    linear-gradient(color-mix(in srgb, var(--tone-warning-base) 12%, transparent), color-mix(in srgb, var(--tone-warning-base) 12%, transparent));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+
+.code-line--selected {
+  background-image:
+    linear-gradient(var(--selection-cursor), var(--selection-cursor)),
+    linear-gradient(var(--selection), var(--selection));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+
+.code-line--deleted {
+  background-image:
+    linear-gradient(var(--tone-destructive-base), var(--tone-destructive-base)),
+    linear-gradient(color-mix(in srgb, var(--tone-destructive-base) 28%, transparent), color-mix(in srgb, var(--tone-destructive-base) 28%, transparent));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+
+.code-line--inserted {
+  background-image:
+    linear-gradient(var(--tone-success-base), var(--tone-success-base)),
+    linear-gradient(color-mix(in srgb, var(--tone-success-base) 15%, transparent), color-mix(in srgb, var(--tone-success-base) 15%, transparent));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+
+.code-line--context {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--tone-success-base) 30%, transparent), color-mix(in srgb, var(--tone-success-base) 30%, transparent)),
+    linear-gradient(color-mix(in srgb, var(--tone-success-base) 5%, transparent), color-mix(in srgb, var(--tone-success-base) 5%, transparent));
+  background-size: var(--indicator-width) 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: left top, left top;
+}
+}
+`;export{e as default};

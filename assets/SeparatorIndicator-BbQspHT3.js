@@ -1,0 +1,1 @@
+import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({orientation:t=`horizontal`,className:r}){let i=t===`horizontal`,a=[`${e({flex:`none`})}${i?` w-full`:``}`,`item-indicator--separator`,r].filter(Boolean).join(` `);return(0,n.jsx)(`div`,{role:`separator`,"aria-orientation":t,className:a})}export{r as t};

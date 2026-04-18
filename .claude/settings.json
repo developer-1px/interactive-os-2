@@ -1,0 +1,224 @@
+{
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "teo-claude-code@teo-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "teo-plugins": {
+      "source": {
+        "source": "settings",
+        "name": "teo-plugins",
+        "plugins": [
+          {
+            "name": "teo-claude-code",
+            "source": {
+              "source": "github",
+              "repo": "developer-1px/teo-claude-code"
+            }
+          }
+        ],
+        "owner": {
+          "name": "유용태"
+        }
+      }
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [{
+          "type": "command",
+          "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/skillEvent.mjs start",
+          "timeout": 3000,
+          "async": true
+        }]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(git *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardBash.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardFilename.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "if": "Write(*.tsx)|Write(*.ts)|Write(*.jsx)|Edit(*.tsx)|Edit(*.ts)|Edit(*.jsx)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardOsPatterns.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "if": "Write(*.css)|Edit(*.css)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardCssAxes.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "if": "Write(*.tsx)|Write(*.ts)|Edit(*.tsx)|Edit(*.ts)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardAxCombinations.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardCodePatterns.mjs",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [{
+          "type": "command",
+          "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/skillEvent.mjs end",
+          "timeout": 3000,
+          "async": true
+        }]
+      },
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/logAgentOps.mjs",
+            "timeout": 5000,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|Bash",
+        "if": "Edit(docs/*.md)|Edit(docs/**/*.md)|Write(docs/*.md)|Write(docs/**/*.md)|Bash(git mv *docs*)|Bash(mv *docs*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkDocLinks.mjs",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "if": "Edit(docs/0-inbox/minto-*.md)|Write(docs/0-inbox/minto-*.md)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/guardMintoNormalForm.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "if": "Write(*.css)|Write(*.tsx)|Write(*.ts)|Edit(*.css)|Edit(*.tsx)|Edit(*.ts)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkDesignTokens.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkTestComponents.mjs",
+            "timeout": 5000,
+            "statusMessage": "Checking test components..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkFileSize.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "if": "Write(*/pages/*/Page*.tsx)|Edit(*/pages/*/Page*.tsx)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/warnFlatLayout.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkSwitchComplexity.mjs",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/checkTypecheck.mjs",
+            "timeout": 15000,
+            "async": true,
+            "statusMessage": "Type checking..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PROJECT_DIR}/.claude/hooks/stopTestGate.mjs",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}

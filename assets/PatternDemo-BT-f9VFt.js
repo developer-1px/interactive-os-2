@@ -1,0 +1,1 @@
+import{t as e}from"./PatternDemo-CVfU_Sgt.js";export{e as PatternDemo};

@@ -1,0 +1,42 @@
+var e=`@layer component {
+/* Composer — last-mile: pseudo-elements, state selectors */
+
+.composer-editor {
+  min-height: calc(var(--leading-snug) * 1em + var(--shape-sm-py) * 2);
+  padding: var(--space-sm) var(--space-md);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.composer-editor[data-overlay] {
+  color: transparent;
+  caret-color: var(--text-primary);
+}
+
+.composer-editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.composer-overlay {
+  padding: var(--space-sm) var(--space-md);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+
+.composer-suggestion-list {
+  padding: 0;
+  list-style: none;
+  max-height: calc(var(--type-body-size) * var(--leading-snug) * 8 + var(--space-xs) * 2);
+  z-index: 1;
+}
+
+.composer-suggestion-item {
+  padding: var(--space-xs) var(--space-md);
+  line-height: var(--leading-snug);
+}
+
+/* suggestion-item hover/selected removed: interactive:'item' handles state via state layer */
+}
+`;export{e as default};

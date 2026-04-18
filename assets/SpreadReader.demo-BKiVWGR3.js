@@ -1,0 +1,1 @@
+import{r as e,t}from"./SpreadReader.demo-B-Ei5U4A.js";export{t as Demo,e as meta};

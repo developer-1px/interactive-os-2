@@ -1,0 +1,1 @@
+import{r as e}from"./chunk-CFjPhJqf.js";import{t}from"./jsx-runtime-BJXw1wCY.js";import{t as n}from"./Composer-CQjCrByE.js";var r=e({Demo:()=>o,meta:()=>a}),i=t(),a={slug:`composer`,category:`ui`,label:`Composer`};function o(){return(0,i.jsx)(n,{placeholder:`Type a message...`,onSubmit:()=>{}})}export{o as n,a as r,r as t};

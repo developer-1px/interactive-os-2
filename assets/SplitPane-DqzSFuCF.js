@@ -1,0 +1,25 @@
+var e=`@layer component {
+/* SplitPane — separator hit areas */
+.split-sep-h {
+  width: var(--border-width);
+  border-left: var(--border-width) solid var(--border-default);
+}
+
+.split-sep-h::before {
+  content: '';
+  position: absolute;
+  inset: 0 calc(-1 * var(--space-xs));
+}
+
+.split-sep-v {
+  height: var(--border-width);
+  border-top: var(--border-width) solid var(--border-default);
+}
+
+.split-sep-v::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--space-xs)) 0;
+}
+}
+`;export{e as default};

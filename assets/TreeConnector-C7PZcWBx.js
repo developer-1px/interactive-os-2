@@ -1,0 +1,1 @@
+import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";var n=t();function r({level:t,isLast:r,className:i}){return t<=0?null:(0,n.jsx)(`span`,{className:[`inline-block h-full ${e({flex:`none`,placement:`relative`})}`,`item-indicator--tree-connector`,r?`item-indicator--tree-connector-last`:``,i].filter(Boolean).join(` `)})}export{r as t};

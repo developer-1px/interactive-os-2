@@ -1,0 +1,7 @@
+var e=`/* last-mile: Mermaid SVG는 외부 라이브러리가 인라인 max-width를 설정하므로 !important 필요 */
+.fullMermaid svg {
+  max-inline-size: 100% !important;
+  max-block-size: 100vh;
+  object-fit: contain;
+}
+`;export{e as default};

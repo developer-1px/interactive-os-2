@@ -1,0 +1,32 @@
+var e=`@layer component {
+/* SelectionOverlay — variant theming via CSS custom properties */
+.sel-overlay-container {
+  pointer-events: none;
+}
+
+.sel-overlay-rect {
+  border: var(--border-width) solid var(--_border, transparent);
+  background: var(--_bg, transparent);
+}
+
+.sel-overlay-label {
+  background: var(--_label-bg);
+  color: var(--_label-color);
+  padding: var(--space-2xs) var(--space-xs);
+}
+
+.sel-overlay-focus {
+  --_border: var(--focus);
+  --_bg: transparent;
+  --_label-bg: var(--focus);
+  --_label-color: var(--tone-primary-foreground);
+}
+
+.sel-overlay-hover {
+  --_border: var(--tone-neutral-base);
+  --_bg: transparent;
+  --_label-bg: var(--tone-neutral-dim);
+  --_label-color: var(--text-secondary);
+}
+}
+`;export{e as default};

@@ -1,0 +1,1 @@
+import{r as e,t}from"./TabGroup.demo-8gaS-W-_.js";export{t as Demo,e as meta};

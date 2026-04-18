@@ -1,0 +1,1 @@
+import{t as e}from"./MenuList-BVk2ue3i.js";export{e as MenuList};

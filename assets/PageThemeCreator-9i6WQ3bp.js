@@ -1,0 +1,208 @@
+var e=`/* ── PageThemeCreator last-mile ── */
+
+.theme-root {
+  grid-column: 2 / -1;
+  max-width: var(--content-max);
+  padding-bottom: var(--space-4xl);
+}
+
+/* ── Tab content area ── */
+
+.theme-tab-content {
+  min-height: 0;
+}
+
+/* ── Page layout: non-equal-column grids ── */
+
+.theme-page-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1.2fr;
+  gap: var(--space-xl);
+}
+
+/* ── Components tab: flat masonry grid ── */
+
+.theme-masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: min-content;
+}
+
+.theme-masonry-head {
+  grid-column: 1 / -1;
+}
+
+.theme-masonry-wide {
+  grid-column: span 2;
+}
+
+.theme-composed-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--space-xl);
+}
+
+/* ── Palette swatches ── */
+
+.theme-palette-swatch[data-stone="0"] {
+  background: var(--stone-0);
+  border: var(--border-width) solid var(--border-subtle);
+}
+.theme-palette-swatch[data-stone="50"]  { background: var(--stone-50); }
+.theme-palette-swatch[data-stone="100"] { background: var(--stone-100); }
+.theme-palette-swatch[data-stone="200"] { background: var(--stone-200); }
+.theme-palette-swatch[data-stone="300"] { background: var(--stone-300); }
+.theme-palette-swatch[data-stone="400"] { background: var(--stone-400); }
+.theme-palette-swatch[data-stone="500"] { background: var(--stone-500); }
+.theme-palette-swatch[data-stone="600"] { background: var(--stone-600); }
+.theme-palette-swatch[data-stone="700"] { background: var(--stone-700); }
+.theme-palette-swatch[data-stone="750"] { background: var(--stone-750); }
+.theme-palette-swatch[data-stone="800"] { background: var(--stone-800); }
+.theme-palette-swatch[data-stone="850"] { background: var(--stone-850); }
+.theme-palette-swatch[data-stone="875"] { background: var(--stone-875); }
+.theme-palette-swatch[data-stone="900"] { background: var(--stone-900); }
+.theme-palette-swatch[data-stone="950"] { background: var(--stone-950); }
+
+/* ── Surface swatches ── */
+
+.theme-swatch[data-surface="action"] {
+  background: var(--bg-hover);
+  cursor: pointer;
+}
+.theme-swatch[data-surface="input"] {
+  background: var(--surface-default);
+  border: var(--border-width) solid var(--border-strong);
+}
+.theme-swatch[data-surface="display"] {
+  background: var(--surface-default);
+  border: var(--border-width) solid var(--border-subtle);
+}
+.theme-swatch[data-surface="overlay"] {
+  background: var(--surface-overlay);
+  box-shadow: var(--shadow-lg);
+}
+.theme-swatch[data-surface="ghost"] {
+  background: transparent;
+  border: var(--border-width) dashed var(--border-subtle);
+}
+.theme-swatch[data-surface="sunken"]  { background: var(--surface-sunken); }
+.theme-swatch[data-surface="base"]    { background: var(--surface-base); }
+
+/* ── Tone swatches ── */
+
+.theme-tone-swatch[data-tone="accent"]  { background: var(--tone-primary-base); }
+.theme-tone-swatch[data-tone="danger"]  { background: var(--tone-destructive-base); }
+.theme-tone-swatch[data-tone="success"] { background: var(--tone-success-base); }
+.theme-tone-swatch[data-tone="warning"] { background: var(--tone-warning-base); }
+.theme-tone-swatch[data-tone="neutral"] { background: var(--bg-hover); }
+
+.theme-tone-dim-swatch[data-tone="accent"]  { background: var(--tone-primary-dim); }
+.theme-tone-dim-swatch[data-tone="danger"]  { background: var(--tone-destructive-dim); }
+.theme-tone-dim-swatch[data-tone="success"] { background: var(--tone-success-dim); }
+.theme-tone-dim-swatch[data-tone="warning"] { background: var(--tone-warning-dim); }
+.theme-tone-dim-swatch[data-tone="neutral"] { background: var(--tone-neutral-dim); }
+
+/* ── Shadow swatches ── */
+
+.theme-shadow-swatch[data-shadow="xs"] { box-shadow: var(--shadow-xs); }
+.theme-shadow-swatch[data-shadow="sm"] { box-shadow: var(--shadow-sm); }
+.theme-shadow-swatch[data-shadow="md"] { box-shadow: var(--shadow-md); }
+.theme-shadow-swatch[data-shadow="lg"] { box-shadow: var(--shadow-lg); }
+
+/* ── Shape swatches ── */
+
+.theme-shape-swatch {
+  background: var(--tone-primary-base);
+}
+
+/* ── Border swatches ── */
+
+.theme-border-swatch[data-border="subtle"]  { border: var(--border-width) solid var(--border-subtle); }
+.theme-border-swatch[data-border="default"] { border: var(--border-width) solid var(--border-default); }
+.theme-border-swatch[data-border="strong"]  { border: var(--border-width) solid var(--border-strong); }
+
+/* ── Spacing bars ── */
+
+.theme-spacing-label {
+  min-width: var(--toolbar-height);
+  text-align: right;
+}
+
+.theme-spacing-bar {
+  height: var(--input-padding-x);
+  background: var(--tone-primary-base);
+}
+.theme-spacing-bar[data-size="xs"] { width: var(--space-xs); }
+.theme-spacing-bar[data-size="sm"] { width: var(--space-sm); }
+.theme-spacing-bar[data-size="md"] { width: var(--space-md); }
+.theme-spacing-bar[data-size="lg"] { width: var(--space-lg); }
+.theme-spacing-bar[data-size="xl"] { width: var(--space-xl); }
+
+/* ── Section fit — shrink to content width ── */
+
+.theme-section-fit { align-self: start; }
+
+/* ── Button label ── */
+
+.theme-btn-label {
+  min-width: var(--space-2xl);
+  text-align: right;
+}
+
+/* ── Typography rows ── */
+
+.theme-type-row:first-child { padding-top: 0; }
+
+/* ── Alerts tone border ── */
+
+.theme-alert[data-tone="success"] {
+  border-left: var(--indicator-width) solid var(--tone-success-base);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.theme-alert[data-tone="accent"] {
+  border-left: var(--indicator-width) solid var(--tone-primary-base);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.theme-alert[data-tone="warning"] {
+  border-left: var(--indicator-width) solid var(--tone-warning-base);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.theme-alert[data-tone="danger"] {
+  border-left: var(--indicator-width) solid var(--tone-destructive-base);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* ── Layout showcase ── */
+
+.theme-layout-box {
+  min-height: var(--space-4xl);
+  border: var(--border-width) dashed var(--border-default);
+}
+
+.theme-layout-child {
+  background: var(--tone-primary-base);
+}
+
+/* ── Composed: notification row ── */
+
+.theme-notif-row:last-child { border-bottom: none; }
+
+/* ── Composed: textarea ── */
+
+.theme-textarea {
+  min-height: var(--space-4xl);
+  resize: vertical;
+  padding: var(--space-sm);
+}
+
+/* ── Preview placeholder ── */
+
+.theme-preview-placeholder {
+  min-height: var(--storymap-col-width);
+  border: var(--indicator-width) dashed var(--border-subtle);
+}
+`;export{e as default};

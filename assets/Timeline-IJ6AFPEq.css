@@ -1,0 +1,1 @@
+.timeline-dot{background:var(--color-border-default);border-radius:50%;flex-shrink:0}[data-focused=true]>.timeline-marker>.timeline-dot{background:var(--color-accent)}.timeline-connector{background:var(--color-border-subtle);min-height:.5rem}.timeline-item:last-child .timeline-connector{visibility:hidden}.timeline-content{padding-block-end:var(--space-sm)}

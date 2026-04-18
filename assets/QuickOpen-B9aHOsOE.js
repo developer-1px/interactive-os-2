@@ -1,0 +1,39 @@
+var e=`@layer component {
+/* QuickOpen — last-mile: positioning, animation, caret, placeholder */
+
+dialog.quick-open-dialog-el {
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: none;
+  max-height: none;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 12vh;
+}
+
+dialog.quick-open-dialog-el::backdrop {
+  background: var(--surface-scrim, rgb(0 0 0 / 50%));
+}
+
+.quick-open-dialog {
+  width: var(--overlay-width);
+  max-height: var(--overlay-width);
+  place-self: center;
+}
+
+.quick-open-input {
+  background: none;
+  caret-color: var(--tone-primary-base);
+}
+
+.quick-open-input::placeholder {
+  color: var(--text-muted);
+  font-weight: var(--type-body-weight);
+}
+
+.quick-open-item-text {
+  min-width: 0;
+}
+}
+`;export{e as default};

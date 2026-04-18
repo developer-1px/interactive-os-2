@@ -1,0 +1,1 @@
+import{r as e,t}from"./SubmenuPanel.demo-C0NuB9lK.js";export{t as Demo,e as meta};

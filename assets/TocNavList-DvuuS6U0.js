@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-BJXw1wCY.js";import{t}from"./TocItem-DdGkTSEI.js";import{t as n}from"./NavList-XQ68ddxs.js";var r=e();function i({data:e,onActivate:i,"aria-label":a}){return(0,r.jsx)(n,{data:e,onActivate:i,renderItem:t,"aria-label":a})}export{i as t};

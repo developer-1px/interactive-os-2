@@ -1,0 +1,1 @@
+import{t as e}from"./ax-DELUmbyI.js";import{t}from"./jsx-runtime-BJXw1wCY.js";import{t as n}from"./aria-QYQeZ4e9.js";var r=t();function i({children:t,empty:i,muted:a}){return(0,r.jsx)(n.SearchHighlight,{children:(0,r.jsx)(`span`,{className:i?e({text:`muted`,surface:`sunken`}):a?e({text:`secondary`}):void 0,children:i?``:t})})}export{i as t};

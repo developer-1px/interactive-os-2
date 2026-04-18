@@ -1,0 +1,1 @@
+import{t as e}from"./types-CTMvwjV3.js";import{n as t}from"./createStore-CgMHIu6e.js";function n(n){return t({entities:{[e]:{id:e},[n]:{id:n}},relationships:{[e]:[n]}})}function r(n,r){let i=Array.from({length:r},(e,t)=>`${n}-${t}`),a={[e]:{id:e}};for(let e of i)a[e]={id:e};return t({entities:a,relationships:{[e]:i}})}export{n,r as t};
