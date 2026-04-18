@@ -79,6 +79,7 @@
     "mddb:validate": "tsx scripts/mddb/cli.ts validate",
     "mddb:audit": "tsx scripts/mddb/cli.ts audit",
     "mddb:relocate": "tsx scripts/mddb/cli.ts relocate",
+    "mddb:backfill": "tsx scripts/mddb/cli.ts backfill",
     "mddb:index": "tsx scripts/mddb/cli.ts index"
   },
   "peerDependencies": {

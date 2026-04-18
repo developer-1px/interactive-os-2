@@ -10,11 +10,12 @@ import { extractFile, extractAll } from './extract.ts'
 import { validateExtract, validateAll } from './validate.ts'
 import { runAudit, writeAuditFile, renderAuditMarkdown } from './audit.ts'
 import { relocate as runRelocate, planRelocate } from './relocate.ts'
+import { backfill as runBackfill, planBackfill } from './backfillTags.ts'
 import { writeIndexFile, DEFAULT_INDEX_PATH } from './buildIndex.ts'
 import { toRelDocsPath, isDocsMd, isMemoryPath, DOCS_ROOT, PROJECT_ROOT, walkDocsMd } from './paths.ts'
 
 export type CliArgs = {
-  subcommand: 'extract' | 'validate' | 'audit' | 'relocate' | 'index'
+  subcommand: 'extract' | 'validate' | 'audit' | 'relocate' | 'backfill' | 'index'
   positionals: string[]
   flags: {
     dryRun?: boolean
@@ -22,10 +23,11 @@ export type CliArgs = {
     outPath?: string
     json?: boolean
     scope?: string
+    sample?: number
   }
 }
 
-const KNOWN_SUBCOMMANDS = ['extract', 'validate', 'audit', 'relocate', 'index'] as const
+const KNOWN_SUBCOMMANDS = ['extract', 'validate', 'audit', 'relocate', 'backfill', 'index'] as const
 
 export function parseArgv(argv: string[]): CliArgs {
   const [first, ...rest] = argv
@@ -51,6 +53,8 @@ export function parseArgv(argv: string[]): CliArgs {
     else if (tok === '--concurrency') flags.concurrency = Number(rest[++i])
     else if (tok === '--path') positionals.push(rest[++i])
     else if (tok.startsWith('--path=')) positionals.push(tok.slice('--path='.length))
+    else if (tok.startsWith('--sample=')) flags.sample = Number(tok.slice('--sample='.length))
+    else if (tok === '--sample') flags.sample = Number(rest[++i])
     else if (tok.startsWith('-')) {
       console.warn(`mddb: unknown flag ignored: ${tok}`)
     } else {
@@ -191,6 +195,59 @@ async function relocateSubcommand(args: CliArgs): Promise<number> {
   }
 }
 
+async function backfillSubcommand(args: CliArgs): Promise<number> {
+  const dryRun = args.flags.dryRun ?? false
+  try {
+    const plan = dryRun ? await planBackfill() : await runBackfill({ dryRun })
+    if (args.flags.json) {
+      console.log(JSON.stringify(plan, null, 2))
+      return 0
+    }
+    console.log(`mddb:backfill dryRun=${dryRun}`)
+    console.log(`  total scanned: ${plan.total}`)
+    console.log(`  changed:       ${plan.changed.length}`)
+    console.log(`  skipped:       ${plan.skipped.length}`)
+    const byReason: Record<string, number> = {}
+    for (const s of plan.skipped) byReason[s.reason] = (byReason[s.reason] ?? 0) + 1
+    if (Object.keys(byReason).length > 0) {
+      console.log('  by skip reason:')
+      for (const [r, c] of Object.entries(byReason).sort()) console.log(`    ${r}: ${c}`)
+    }
+    // tag namespace 분포
+    const nsCount: Record<string, number> = {}
+    for (const e of plan.changed) {
+      for (const t of e.finalLine.split(/\s+/)) {
+        const m = /^#([^/]+)/.exec(t)
+        const ns = m ? m[1] : '(unknown)'
+        nsCount[ns] = (nsCount[ns] ?? 0) + 1
+      }
+    }
+    console.log('  tag namespace 분포 (token count):')
+    for (const [ns, c] of Object.entries(nsCount).sort((a, b) => b[1] - a[1])) {
+      console.log(`    ${ns}: ${c}`)
+    }
+    // 샘플 출력
+    const sampleN = args.flags.sample ?? (dryRun ? 30 : 0)
+    if (sampleN > 0 && plan.changed.length > 0) {
+      const step = Math.max(1, Math.floor(plan.changed.length / sampleN))
+      console.log(`\n  샘플 ${Math.min(sampleN, plan.changed.length)}건 (every ${step}):`)
+      let printed = 0
+      for (let i = 0; i < plan.changed.length && printed < sampleN; i += step) {
+        const e = plan.changed[i]
+        console.log(`    ${e.path}`)
+        console.log(`      → ${e.finalLine}`)
+        if (e.fmRemoved.length > 0) console.log(`      (fm→legacy: ${e.fmRemoved.join(', ')})`)
+        printed++
+      }
+    }
+    if (dryRun) console.log('\n  (dry-run: no files written)')
+    return 0
+  } catch (e) {
+    console.error(`mddb:backfill: ${(e as Error).message}`)
+    return 2
+  }
+}
+
 async function indexSubcommand(args: CliArgs): Promise<number> {
   const outPath = args.flags.outPath ? resolve(PROJECT_ROOT, args.flags.outPath) : DEFAULT_INDEX_PATH
   const index = await writeIndexFile(outPath)
@@ -216,6 +273,7 @@ export async function main(argv: string[]): Promise<number> {
       case 'validate': return await validateSubcommand(args)
       case 'audit': return await auditSubcommand(args)
       case 'relocate': return await relocateSubcommand(args)
+      case 'backfill': return await backfillSubcommand(args)
       case 'index': return await indexSubcommand(args)
     }
   } catch (e) {
